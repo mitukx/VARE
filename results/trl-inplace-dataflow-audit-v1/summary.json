@@ -1,0 +1,46 @@
+{
+  "fixed_source": {
+    "conditions": 12,
+    "passed": true
+  },
+  "frozen_at_commit": "3e8e035",
+  "frozen_protocol_sha256": "330bee6e55ed91da6b2cdd148f782beef31bac562ad67259ce98ef97de6f658e",
+  "grader_protocol": "trl-grpo-accumulation-window-normalizer-protocol-v5",
+  "grader_sha256": "b75ad05a8ff42eb9b6362deeccce6692f7a640a9e41e0e0352e8e492dea596dd",
+  "limits": "Two in-place mutation forms on two branches of one pinned source revision. The normalizer rejection is runtime-fixture behavior; the loss false accept is confirmed. No trainer/autograd execution or general error-rate inference.",
+  "mutations": [
+    {
+      "conditions": 12,
+      "failed_source_case_pairs": 10,
+      "failure_count": 30,
+      "grader_passed": false,
+      "id": "normalizer_inplace",
+      "observed_rejection": "The extracted training gate executes `normalizer.mul_(2)` against the scalar fixture, which raises AttributeError; eval cases do not execute the training-only call. This rejection currently depends on fixture runtime failure rather than an explicit in-place-write rule.",
+      "patch_sha256": "1cb0805377fcc4ede3c424275e1766d1a205b0aab8cace79bfe169c5b152814f"
+    },
+    {
+      "conditions": 12,
+      "failure_count": 0,
+      "false_accept_confirmed": true,
+      "grader_passed": true,
+      "id": "loss_inplace",
+      "patch_sha256": "d386b49af4eb48d89d1c040ef135c9b9341c28d05757db43e4dc09b5546015b6"
+    }
+  ],
+  "observed_conclusion": "V5 rejects the normalizer in-place mutation through fixture runtime incompatibility, but falsely accepts an in-place loss mutation immediately before return in both pinned functions. An explicit AST check for in-place local mutation remains warranted.",
+  "protocol_id": "trl-inplace-write-mutation-audit-v1",
+  "raw_files": {
+    "fixed-v5.grade.json": "7eb93ed5245300031012bf88b9eaca8aead9e4e9b9610322cb229a9233b851b5",
+    "loss-inplace-v5.grade.json": "cf4b033fe58fc1cf3d0afd6386f34c73002cf9fe22dd9f87c35c132c4b4fe3dd",
+    "normalizer-inplace-v5.grade.json": "1bd085e099d8a78774233f41a5cf045ea91299e1f7984ceff5d06bf247e70bc1"
+  },
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "model_weights_loaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages_used": false
+  },
+  "schema_version": 1,
+  "status": "completed"
+}
