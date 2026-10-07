@@ -70,6 +70,32 @@ class GraderIntegrityTests(unittest.TestCase):
                 "current_accumulation_steps": 2, "steps_per_generation": 4,
             }))
 
+    def test_trl_v5_grader_rejects_final_loss_reassignment(self):
+        mutated = VALID_BRANCH + "        loss = loss * 2\n        return loss\n"
+        with tempfile.TemporaryDirectory(prefix="vare-grader-probe-") as temporary:
+            source = Path(temporary) / "candidate.py"
+            source.write_text(mutated, encoding="utf-8")
+            assignment, gate, denominator = _extract_normalizer(source, "main_dapo_cispo_vespo")
+            self.assertIsNone(assignment)
+            self.assertIsNone(gate)
+            self.assertIsNone(denominator)
+
+    def test_trl_v5_grader_allows_pinned_downstream_loss_adjustments(self):
+        source_text = VALID_BRANCH + (
+            '        if self._entropy_bonus_enabled:\n'
+            '            loss = loss - apply_coef * entropy_loss\n'
+            '        if self.aux_loss_enabled:\n'
+            '            loss = loss + self.router_aux_loss_coef * aux_loss / normalizer\n'
+            '        return loss\n'
+        )
+        with tempfile.TemporaryDirectory(prefix="vare-grader-probe-") as temporary:
+            source = Path(temporary) / "candidate.py"
+            source.write_text(source_text, encoding="utf-8")
+            assignment, gate, denominator = _extract_normalizer(source, "main_dapo_cispo_vespo")
+            self.assertIsNotNone(assignment)
+            self.assertIsNotNone(gate)
+            self.assertIsNotNone(denominator)
+
     def test_trl_grader_rejects_loss_divided_by_scaled_normalizer(self):
         mutated = VALID_BRANCH.replace(
             "loss = per_token_loss / normalizer",

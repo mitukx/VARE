@@ -5,6 +5,7 @@
       "main_dapo_cispo_vespo",
       "experimental_dapo"
     ],
+    "checks_loss_writes_through_return": true,
     "conditions_per_branch": 6,
     "rejects_post_division_loss_reassignment": true,
     "rejects_unmodeled_normalizer_overwrite": true,
@@ -18,11 +19,11 @@
     "calibration_passed": true
   },
   "locked_hashes": {
-    "evaluator_sha256": "55fd00d24146cd4b7a41393c89c8f503cd5380d0e81864fea066f39fdef723cf",
-    "task_brief_sha256": "ba961bb4f093ef7bcf7f96ba1a1de6c30dbfeafbd78eb4dc00d3c8da6f132639",
-    "task_json_sha256": "636b471e874eb9203fcf10fc0a3faba2d3d95d3cad22f5f9b15d1621ef5fe2e2"
+    "evaluator_sha256": "b75ad05a8ff42eb9b6362deeccce6692f7a640a9e41e0e0352e8e492dea596dd",
+    "task_brief_sha256": "c0cd3613c29d7d7c29929d58d6b06ecec3d930d2aa9148691e2277d88f8ec5e5",
+    "task_json_sha256": "8e8c0825302b8e9768863d043d87cf6373386b507da8e5abc77d1588e3a4d818"
   },
-  "protocol_id": "trl-grpo-accumulation-window-normalizer-protocol-v4",
+  "protocol_id": "trl-grpo-accumulation-window-normalizer-protocol-v5",
   "schema_version": 1,
   "task_id": "trl-grpo-accumulation-window-normalizer-v1"
 }

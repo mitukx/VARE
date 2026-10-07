@@ -129,6 +129,35 @@ def _loss_branch_matches(node: ast.If, branch_name: str) -> bool:
     return False
 
 
+def _is_expected_downstream_loss_adjustment(statement: ast.stmt) -> bool:
+    """Allow only the pinned entropy and auxiliary-loss updates after the policy branch."""
+    if not isinstance(statement, ast.If):
+        return False
+    writes = [node for node in ast.walk(statement) if _writes_name(node, "loss")]
+    if len(writes) != 1 or not isinstance(writes[0], ast.Assign):
+        return False
+    assignment = writes[0]
+    if len(assignment.targets) != 1 or not isinstance(assignment.targets[0], ast.Name):
+        return False
+    if assignment.targets[0].id != "loss":
+        return False
+
+    if (isinstance(statement.test, ast.Attribute)
+            and isinstance(statement.test.value, ast.Name)
+            and statement.test.value.id == "self"
+            and statement.test.attr == "_entropy_bonus_enabled"):
+        expected = ast.parse("loss = loss - apply_coef * entropy_loss").body[0].value
+        return ast.dump(assignment.value, include_attributes=False) == ast.dump(expected, include_attributes=False)
+
+    if (isinstance(statement.test, ast.Attribute)
+            and isinstance(statement.test.value, ast.Name)
+            and statement.test.value.id == "self"
+            and statement.test.attr == "aux_loss_enabled"):
+        expected = ast.parse("loss = loss + self.router_aux_loss_coef * aux_loss / normalizer").body[0].value
+        return ast.dump(assignment.value, include_attributes=False) == ast.dump(expected, include_attributes=False)
+    return False
+
+
 def _extract_normalizer(path: Path, branch_name: str):
     tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
     trainer = next((node for node in tree.body if isinstance(node, ast.ClassDef)
@@ -161,6 +190,17 @@ def _extract_normalizer(path: Path, branch_name: str):
             )
             if any(True for _ in later_loss_writes):
                 return None, None, None
+            containing_statement = next(
+                (index for index, statement in enumerate(method.body)
+                 if any(node is branch for node in ast.walk(statement))),
+                None,
+            )
+            if containing_statement is None:
+                return None, None, None
+            for statement in method.body[containing_statement + 1:]:
+                if any(_writes_name(node, "loss") for node in ast.walk(statement)):
+                    if not _is_expected_downstream_loss_adjustment(statement):
+                        return None, None, None
         training_gate = next((statement for statement in branch.body
                               if isinstance(statement, ast.If) and _is_mode_train(statement)
                               and any(_target_is_normalizer(item) for item in statement.body)), None)

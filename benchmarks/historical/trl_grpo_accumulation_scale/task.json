@@ -18,7 +18,7 @@
   "grader": {
     "path": "benchmarks/historical/trl_grpo_accumulation_scale/evaluator/grade.py",
     "protocol_lock": "benchmarks/historical/trl_grpo_accumulation_scale/protocol.lock.json",
-    "protocol_version": 4
+    "protocol_version": 5
   },
   "budget": {
     "max_wall_seconds": 900,
@@ -26,5 +26,5 @@
     "paid_api_calls": 0,
     "external_compute_usd": 0
   },
-  "claim_limit": "A passing candidate satisfies the extracted accumulation-normalizer and selected-branch loss-binding contracts in two pinned source branches; it does not measure a full training run or model capability."
+  "claim_limit": "A passing candidate satisfies the extracted accumulation-normalizer and loss-write contracts through return in two pinned source branches; it does not measure a full training run or model capability."
 }

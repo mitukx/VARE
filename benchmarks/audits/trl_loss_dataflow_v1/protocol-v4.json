@@ -1,0 +1,76 @@
+{
+  "acceptance": {
+    "branch_rebind_mutation": "reject",
+    "final_rebind_mutation": "reject",
+    "fixed_source": "pass",
+    "valid_pinned_entropy_and_aux_loss_adjustments": "accepted by unit fixture"
+  },
+  "claim_limit": "Two deliberately incorrect mutations on two branches of one pinned source revision. This does not estimate general grader error rates or establish arbitrary source-level semantic correctness.",
+  "grader": {
+    "path": "benchmarks/historical/trl_grpo_accumulation_scale/evaluator/grade.py",
+    "sha256": "b75ad05a8ff42eb9b6362deeccce6692f7a640a9e41e0e0352e8e492dea596dd"
+  },
+  "mutations": [
+    {
+      "description": "Reassign loss = loss * 2 after the checked normalizer division within each selected branch.",
+      "expected_semantic_decision": "reject",
+      "id": "branch_rebind",
+      "patch_path": "benchmarks/audits/trl_loss_dataflow_v1/candidate-mutation.patch",
+      "patch_sha256": "9c652b595b7992a9360d2274ddb48e0b93713fac92d490b3ed52e4f856e6fa7a"
+    },
+    {
+      "description": "Reassign loss = loss * 2 immediately before the final return from each _compute_loss method.",
+      "expected_semantic_decision": "reject",
+      "id": "final_rebind",
+      "patch_path": "benchmarks/audits/trl_loss_final_rebind_v1/candidate-mutation.patch",
+      "patch_sha256": "222d3c2599005a8df849c44b6fc74410fe5c74110dce0d505f98010442698097"
+    }
+  ],
+  "objective": "Re-run both known objective-changing loss reassignment mutations against protocol v5, after v3 and v4 each false-accepted one of them.",
+  "prior_findings": [
+    {
+      "protocol_id": "trl-loss-dataflow-mutation-audit-v2",
+      "summary": "results/trl-loss-dataflow-audit-v1/summary-v2.json",
+      "v3_false_accept": "branch_rebind"
+    },
+    {
+      "protocol_id": "trl-final-loss-rebind-audit-v1",
+      "summary": "results/trl-loss-final-rebind-v1/summary.json",
+      "v4_false_accept": "final_rebind"
+    }
+  ],
+  "procedure": [
+    "Verify all protocol-v5, fixed-source, and mutation patch hashes.",
+    "Grade the pinned fixed source under protocol v5.",
+    "Apply each mutation separately to a fresh copy of the same fixed revision and grade it under protocol v5.",
+    "Retain raw outputs and report each mutation decision separately."
+  ],
+  "protocol_id": "trl-loss-dataflow-mutation-audit-v4",
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "model_weights_loaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages_used": false
+  },
+  "schema_version": 4,
+  "source": {
+    "files": [
+      "trl/experimental/gspo_token/grpo_trainer.py",
+      "trl/trainer/grpo_trainer.py"
+    ],
+    "fixed_revision": "e1b2e21975994e676d9a676e3ab005e9bee38e40",
+    "fixed_source_sha256": {
+      "trl/experimental/gspo_token/grpo_trainer.py": "37b91254ff70d353ca4a04bd1e28602102ddcbd50be3a79b0ba0a6cb62bc52e0",
+      "trl/trainer/grpo_trainer.py": "7446f652aefb9b78a64952a135c2235c924a7633c112d6a8f569b16ec4d62e14"
+    },
+    "repository": "https://github.com/huggingface/trl.git"
+  },
+  "task": {
+    "protocol_id": "trl-grpo-accumulation-window-normalizer-protocol-v5",
+    "protocol_lock_sha256": "c846af0edce4a3dbf2e5f4c5a8599a4e6bdc6512d1d5c8d20a58fe163537cbe3",
+    "task_brief_sha256": "c0cd3613c29d7d7c29929d58d6b06ecec3d930d2aa9148691e2277d88f8ec5e5",
+    "task_id": "trl-grpo-accumulation-window-normalizer-v1",
+    "task_json_sha256": "8e8c0825302b8e9768863d043d87cf6373386b507da8e5abc77d1588e3a4d818"
+  }
+}
