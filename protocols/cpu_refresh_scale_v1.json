@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "protocol_id": "cpu-refresh-scale-v1",
+  "question": "How does repeated freshness recomputation at terminal completion scale with the number of enrolled local CPU jobs, and can it be reduced without weakening freshness checks at commit or export?",
+  "workload": {
+    "job_counts": [8, 16, 32],
+    "replications": 3,
+    "workers": 1,
+    "candidate": "One unchanged deterministic local Git candidate and one locked fixture task are enrolled under distinct job IDs. The completion loop is serial and uses an operational-error terminal record so this measurement isolates coordinator freshness validation, not grader throughput or candidate acceptance.",
+    "timed_region": "Sequential claim and terminal completion transitions after enrollment; candidate/task construction and database enrollment are outside the timer.",
+    "primary_metric": "Count of durable.inputs calls made while committing all terminal completion transitions for each job count.",
+    "secondary_metrics": ["completion wall time", "per-transition latency", "input checks during full export refresh"],
+    "fixed_resources": {"gpu_hours": 0, "paid_api_calls": 0, "external_compute_usd": 0}
+  },
+  "comparison": {
+    "baseline_revision": "0403e4aa8e7596242162f480a6143ed49408d772",
+    "intervention": "At completion, recompute freshness for the claimed job only. Retain per-job freshness checks before grading, the startup refresh, and full-bundle freshness refresh at export.",
+    "expected_operation_counts": {
+      "baseline_per_replication": {"8": 64, "16": 256, "32": 1024},
+      "targeted_per_replication": {"8": 8, "16": 16, "32": 32},
+      "export_refresh_each_arm": {"8": 8, "16": 16, "32": 32}
+    }
+  },
+  "acceptance": "All claims are issued and each internal_error terminal transition is committed exactly once; observed completion input-check counts match the frozen operation-count expectations; full export recomputes every enrolled job's freshness and its bundle passes the existing offline auditor. Timing is reported descriptively and is not a portable speedup claim.",
+  "abort": "Abort and preserve outputs on any unexpected claim, commit, count or audit result. Do not alter workload, primary metric or protocol after observing measurements.",
+  "claim_limit": "This is a same-host synthetic coordinator-work measurement over repeated identical, unchanged candidate inputs. It does not measure heterogeneous grading throughput, candidate acceptance, agent/model capability, multi-host operation, hostile writers, or external usefulness. Operation counts establish scaling of this validation path; timing is machine-local."
+}
