@@ -1,0 +1,38 @@
+{
+  "name": "l2-rvl-qwen-v1",
+  "config": {
+    "model": "Qwen/Qwen2.5-0.5B-Instruct",
+    "dataset": "gsm8k",
+    "seeds": [17, 29, 43],
+    "train_examples": 128,
+    "heldout_examples": 256,
+    "updates": 16,
+    "prompts_per_update": 8,
+    "samples_per_prompt": 8,
+    "max_new_tokens": 192,
+    "train_temperature": 0.8,
+    "fixed_compute_across_arms": true,
+    "arms": [
+      "uniform_fixed_verifier",
+      "failure_curriculum_fixed_verifier",
+      "failure_curriculum_joint_freshness"
+    ]
+  },
+  "hypotheses": [
+    "Failure-driven curriculum improves trusted held-out capability gain at fixed rollout and learner compute relative to uniform sampling.",
+    "Joint policy-and-verifier freshness control reduces false progress relative to policy-only or fixed-verifier training under induced verifier delay."
+  ],
+  "primary_metrics": [
+    "held_out_greedy_exact_match_delta",
+    "held_out_capability_gain_per_gpu_hour",
+    "false_progress_rate_under_verifier_delay"
+  ],
+  "acceptance": {
+    "report_all_seeds": true,
+    "retain_negative_and_null_runs": true,
+    "promotion_requires_independent_heldout_eval": true,
+    "max_family_slice_regression": 0.03,
+    "minimum_eval_examples": 256,
+    "no_frontier_claim_from_l2": true
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": 2,
+  "note": "Large L0 raw JSON is retained gzip-compressed; SHA-256 of both raw and compressed bytes is recorded.",
+  "artifacts": [
+    {"path":"evidence/l0_summary.json","bytes":377,"sha256":"df128bbbbf4a85d2fedf7293c522de806d2d74bcb33ac0b7f6d887b55c35553c"},
+    {"path":"evidence/l0_contextual_bandit_seed7.json.gz","bytes":8206,"sha256":"3ac9715980cdcca452808023e05f6d1191582704bfa790f992a7ea7ab57100e6","uncompressed_sha256":"473b29e221a3b504f1f3ff3f5a0e396e7e5d74562f5b8a347280b1ccab898bc3","uncompressed_bytes":271380},
+    {"path":"evidence/environment_harness_v0.3.0.json","bytes":446,"sha256":"dc25191768dc992185cfe5b84f0d97f8edb3240a249ada9fa9aacfaba29c7e95"},
+    {"path":"evidence/environment_campaign_oracle_v0.3.0.json","bytes":559,"sha256":"77a655fbf9558d17e6b0bba8ff415ce9d3188cd1ef3ec8026c1a7d94ce86df96"},
+    {"path":"evidence/historical_task_seed_v0.3.0.json","bytes":630,"sha256":"6f8cf5a32e505920ae34fd7ece1b2c8d8a972fec8a1754d4fe9d115433c28c2f"},
+    {"path":"evidence/env_smoke_v0.3.0/summary.json","bytes":206,"sha256":"78b4c8eef02de3c882db60602150c71f9f4a494fb47f46450311c3ffb3744f97"},
+    {"path":"evidence/env_campaign_oracle_v0.3.0/summary.json","bytes":354,"sha256":"e4ebadd791f79f333b612cbd0aeef7f786a724374a29f3991ad56c424a25816a"},
+    {"path":"evidence/env_campaign_oracle_v0.3.0/records.jsonl","bytes":1097,"sha256":"416f9144133a742ffd79901289d6975a1dc597a43e088dd8a21d739b32f098bc"}
+  ]
+}

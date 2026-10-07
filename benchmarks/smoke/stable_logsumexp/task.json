@@ -1,0 +1,64 @@
+{
+  "correctness_weight": 0.9,
+  "family": "numerics",
+  "id": "smoke-stable-logsumexp",
+  "limits": {
+    "cpu_time_s": 10,
+    "max_output_bytes": 200000,
+    "memory_mb": 1024,
+    "wall_time_s": 10.0
+  },
+  "metadata": {
+    "evidence_level": "harness-smoke",
+    "synthetic": true
+  },
+  "metrics": [
+    {
+      "command": {
+        "argv": [
+          "python",
+          "metric.py"
+        ],
+        "cwd": ".",
+        "env": {},
+        "name": "deterministic-work-proxy"
+      },
+      "direction": "min",
+      "json_key": "work_units",
+      "max_regression_fraction": 0.0,
+      "name": "work_units",
+      "weight": 1.0
+    }
+  ],
+  "prompt": "Repair logsumexp so that it remains numerically stable on large finite inputs without changing the evaluator files.",
+  "protected_paths": [
+    {
+      "path": "test_subject.py",
+      "sha256": "23ff694ffa31db0fd701823634a05193aca0fbd9b7dc40ca4fd59fc6f09041a2"
+    },
+    {
+      "path": "metric.py",
+      "sha256": "f070cf1e360eab49f4a2c82e82199cf642a49d5299098aee828dfd00cd1ebf79"
+    }
+  ],
+  "source": {
+    "base_revision": null,
+    "clone_url": null,
+    "local_path": "/mnt/data/VARE/benchmarks/smoke/stable_logsumexp"
+  },
+  "tests": [
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "test_subject.py"
+      ],
+      "cwd": ".",
+      "env": {},
+      "name": "pytest"
+    }
+  ],
+  "title": "Repair numerical overflow in logsumexp"
+}

@@ -1,0 +1,40 @@
+{
+  "correctness_weight": 1.0,
+  "family": "rl-numerics",
+  "id": "rvl-historical-behavior-policy-parity",
+  "limits": {
+    "cpu_time_s": 30,
+    "max_output_bytes": 200000,
+    "memory_mb": 2048,
+    "wall_time_s": 30.0
+  },
+  "metadata": {
+    "evaluator_kind": "external-static-regression-contract",
+    "evidence_level": "historical-task-seed",
+    "historical_fix_revision": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+    "historical_fix_title": "Fix HF behavior-policy mismatch and retain free-T4 negative RL evidence",
+    "measured": false
+  },
+  "metrics": [],
+  "prompt": "Repair the causal-LM rollout/training path so stored behavior token log-probabilities and learner recomputation represent the same sampling distribution across nonzero temperatures. Preserve exact provenance and fail closed on greedy scores that are not valid behavior probabilities.",
+  "protected_paths": [],
+  "source": {
+    "base_revision": "e788f113ad6b246a361cd50a52eaf2867f2a66f8",
+    "clone_url": "https://github.com/mitukx/Recursive-Verification-Lag.git",
+    "local_path": null
+  },
+  "tests": [
+    {
+      "argv": [
+        "python",
+        "evaluator.py",
+        "{workspace}"
+      ],
+      "cwd": ".",
+      "cwd_base": "evaluator",
+      "env": {},
+      "name": "external-parity-regression"
+    }
+  ],
+  "title": "Repair sampler/learner behavior-policy parity"
+}
