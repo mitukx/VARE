@@ -1,0 +1,51 @@
+{
+  "calibration_v4": {
+    "baseline_passed": false,
+    "conditions_each": 12,
+    "fixed_passed": true,
+    "status": "calibrated"
+  },
+  "claim": "The v3 false acceptance was confirmed for one objective-changing post-division loss rebind in both pinned branches. V4 rejects this mutation and still accepts the pinned fixed source; baseline/fixed historical calibration also passes its expected decisions.",
+  "fixed_source_v4": {
+    "conditions": 12,
+    "max_absolute_normalizer_error": 0.0,
+    "passed": true,
+    "revision": "e1b2e21975994e676d9a676e3ab005e9bee38e40"
+  },
+  "frozen_at_commit": "9cbc1d0",
+  "frozen_protocol_sha256": "6ce1190bd18aed7a9f6a778ddb575cfa8ed55984379d0144152b2545842c3b19",
+  "grader_protocol": "trl-grpo-accumulation-window-normalizer-protocol-v4",
+  "grader_sha256": "55fd00d24146cd4b7a41393c89c8f503cd5380d0e81864fea066f39fdef723cf",
+  "limits": "One mutation on two branches of one upstream source revision. V4 uses a branch-local AST write check; it does not execute the full loss, autograd, trainer, or gradient update and does not establish general semantic soundness or an error rate.",
+  "mutation": {
+    "expected_semantic_decision": "reject",
+    "patch_sha256": "9c652b595b7992a9360d2274ddb48e0b93713fac92d490b3ed52e4f856e6fa7a",
+    "v3_conditions": 12,
+    "v3_failures": 0,
+    "v3_passed": true,
+    "v4_conditions": 12,
+    "v4_failure_checks": {
+      "accumulation_window_normalizer": 12,
+      "effective_loss_denominator": 12
+    },
+    "v4_failures": 24,
+    "v4_passed": false
+  },
+  "protocol_id": "trl-loss-dataflow-mutation-audit-v3",
+  "raw_files": {
+    "fixed-v3-replay.grade.json": "68a8255a14138f819b8b729ef535c14dadda13cc286cfab0a34bdd75d1cc4c20",
+    "fixed-v4.grade.json": "417dc56d081a0634ec569f76c98c664bed4d564f07b10665a6bc3a959deccf81",
+    "mutated-v3.grade.json": "67967b22399ce4bec5464105573ff7688a342353aa726ec3527dd7c2708da290",
+    "mutated-v4.grade.json": "94437b1d7bed7eabda47629932432230b05cf20eaf20df8c26e58fd38598a53a",
+    "v4_calibration_manifest.json": "e2ed6441a4fbf3ff92cd3a7447a5f1c029a1adcd053e3f7c6920b31a827bb314"
+  },
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "model_weights_loaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages_used": false
+  },
+  "schema_version": 1,
+  "status": "completed"
+}
