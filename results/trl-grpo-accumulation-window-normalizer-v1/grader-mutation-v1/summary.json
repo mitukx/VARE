@@ -1,0 +1,20 @@
+{
+  "candidate_diff_sha256": "ceceb568a10e69dcb20a99381e6ef30da123c9a4a21aad3ff62056a7027a225f",
+  "claim_limit": "One deliberate branch-local overwrite on one fixed public source revision. This establishes this specific v1 false-accept case and v2 rejection; it does not estimate general grader error rates or prove full trainer correctness.",
+  "mutated_main_source_sha256": "b58252cae46f38a8c92adcd3e79c1433e49cb162745b8a5487860ab5bd1c1ee7",
+  "mutation": "Multiply the already corrected main-branch normalizer by 2 immediately before dividing the production loss.",
+  "mutation_patch_sha256": "819285cc0fb983b64f291acc71d247dedbde6e34c0a58aae2d553ff009e81b76",
+  "new_failures": 6,
+  "new_grader_passed": false,
+  "new_grader_protocol": "trl-grpo-accumulation-window-normalizer-protocol-v2",
+  "old_failures": 0,
+  "old_grader_passed": true,
+  "old_grader_protocol": "trl-grpo-accumulation-window-normalizer-protocol-v1",
+  "protocol_id": "trl-normalizer-overwrite-mutation-v1",
+  "resource_scope": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "paid_api_calls": 0
+  },
+  "task_source_revision": "e1b2e21975994e676d9a676e3ab005e9bee38e40"
+}

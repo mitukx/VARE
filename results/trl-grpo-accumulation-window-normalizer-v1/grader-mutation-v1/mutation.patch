@@ -1,0 +1,8 @@
+diff --git a/trl/trainer/grpo_trainer.py b/trl/trainer/grpo_trainer.py
+--- a/trl/trainer/grpo_trainer.py
++++ b/trl/trainer/grpo_trainer.py
+@@
+             if mode == "train":  # in eval, the batch is neither split across steps nor accumulated
+                 normalizer = normalizer * self.current_gradient_accumulation_steps / self.args.steps_per_generation
++            normalizer = normalizer * 2
+             loss = (per_token_loss * mask).sum() / normalizer

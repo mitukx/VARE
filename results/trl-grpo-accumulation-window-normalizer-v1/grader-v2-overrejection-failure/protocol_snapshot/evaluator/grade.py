@@ -151,9 +151,8 @@ def _extract_normalizer(path: Path, branch_name: str):
         if training_gate is not None:
             permitted_writes.update(id(node) for node in ast.walk(training_gate)
                                     if _writes_name(node, "normalizer"))
-        branch_writes = (node for statement in branch.body for node in ast.walk(statement)
-                         if _writes_name(node, "normalizer"))
-        if any(id(node) not in permitted_writes for node in branch_writes):
+        if any(id(node) not in permitted_writes for node in ast.walk(branch)
+               if _writes_name(node, "normalizer")):
             return None, None
         return assignment, training_gate
     return None, None

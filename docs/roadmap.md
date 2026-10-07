@@ -4,7 +4,7 @@ VARE should expand its claims only when the next evidence tier can be reproduced
 
 ## E0 — Harness integrity
 
-Both task graders reject isolated mutations of the task descriptor, task brief, and evaluator against the unchanged protocol lock. A retained calibration has two untampered controls and six tamper cases; all controls reach the candidate-file validation point and all six mutations are rejected. See [`protocol-integrity/cpu-calibration-v1`](../results/protocol-integrity/cpu-calibration-v1/summary.json).
+Both current task graders reject isolated mutations of the task descriptor, task brief, and evaluator against the unchanged protocol lock. The latest calibration has two untampered controls and six tamper cases; all controls reach candidate-file validation and all six mutations are rejected. See [`protocol-integrity/cpu-calibration-v2`](../results/protocol-integrity/cpu-calibration-v2/summary.json).
 
 The trust anchor is the version-controlled protocol lock. This calibration does not authenticate a coordinated edit to the lock and does not sandbox hostile candidate code; those limits are explicit in the [evidence notes](evidence.md).
 
@@ -13,7 +13,7 @@ The trust anchor is the version-controlled protocol lock. This calibration does 
 Two pinned tasks now have calibrated pre-fix and fixed revisions:
 
 1. [HF behavior-policy parity](../benchmarks/historical/rvl_behavior_policy_parity/TASK.md) checks rollout and learner probability parity with deterministic CPU fixtures.
-2. [TRL accumulation-window normalization](../benchmarks/historical/trl_grpo_accumulation_scale/TASK.md) checks extracted production loss-normalization branches with deterministic scalar fixtures.
+2. [TRL accumulation-window normalization](../benchmarks/historical/trl_grpo_accumulation_scale/TASK.md) checks extracted production loss-normalization branches with deterministic scalar fixtures and a branch-local overwrite guard. A demonstrated v1 false acceptance is retained as a regression probe; the new v2 grader rejects it.
 
 Both graders reject the pre-fix revision and accept the known fixed revision. Their raw results, protocol snapshots, and hashes are retained in [`results/`](../results/) and summarized in [`evidence.md`](evidence.md). These outcomes calibrate the tasks and graders; they do not show that an agent can discover the fix or that a model improves.
 

@@ -17,6 +17,7 @@ These requirements define technical acceptance under local CPU constraints. They
 | R11 | Agent/model findings are separated from synthetic mechanisms | evidence ladder and explicit reports | no agent/task-solving or model-learning claim from fixtures |
 | R12 | No paid API, GPU or external compute is required | standard-library execution, public source fetch | experiment resource declarations and reproducible commands |
 | R13 | Terminal completion does not repeat fingerprint work for unrelated jobs | `Store.complete` calls `refresh(job.id)`; full refresh remains at export | [cpu-refresh-scale-v2](../protocols/cpu_refresh_scale_v2.json), instrumented regression and offline bundle auditor |
+| R14 | The selected loss branch cannot be changed by an unmodeled later normalizer write | TRL protocol v2 checks all writes within the matched branch body before executing the locked arithmetic fixture | [grader mutation record](../results/trl-grpo-accumulation-window-normalizer-v1/grader-mutation-v1/summary.json), [`test_graders.py`](../tests/test_graders.py), and v2 historical calibration |
 
 ## Acceptance rule
 

@@ -8,6 +8,8 @@ Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, c
 
 - **24/24 recovery fault cases** passed under a frozen protocol: process death, rollback, lost acknowledgement, late completion, input invalidation and retry exhaustion. The retained exports contain 117 synthetic jobs/126 attempts, plus four historical jobs recovered with all calibrated outcomes preserved. See the [recovery report](docs/recovery-report.md).
 
+- **TRL grader mutation check:** a candidate that doubled the already-corrected loss normalizer passed protocol v1 but is rejected by protocol v2. The fixed-source baseline still passes all 12 arithmetic conditions. See the [mutation evidence](results/trl-grpo-accumulation-window-normalizer-v1/grader-mutation-v1/summary.json) and [v2 calibration](results/trl-grpo-accumulation-window-normalizer-v1/cpu-calibration-v2/summary.json).
+
 - **16/16 synthetic reliability cases** matched their declared outcomes, including incorrect provenance, source mutation, malformed output, timeouts, output flooding and subprocess cleanup.
 - **80 historical-source evaluations** preserved the expected pre-fix rejection/fixed acceptance decisions across one-worker and four-worker campaigns.
 - **3.4857× median paired speedup** with four workers versus this same runner with one worker, over five pairs on a local macOS arm64 CPU. This is a small local-grader measurement, not a distributed or model-serving result.
@@ -36,15 +38,15 @@ Two real upstream fixes calibrate the task and grading path:
 | Task | What the grader exercises | Pre-fix result | Fixed result |
 | --- | --- | --- | --- |
 | [HF behavior-policy parity](benchmarks/historical/rvl_behavior_policy_parity/TASK.md) | Deterministic CPU model/tokenizer fixtures exercise rollout probabilities and the learner's actual `_sample_objective` path across six prompt/temperature conditions. | Maximum absolute rollout log-probability error `0.7380`; learner error `0.3711`; rejected. | Both errors `0.0`; accepted. |
-| [TRL accumulation-window normalizer](benchmarks/historical/trl_grpo_accumulation_scale/TASK.md) | The source-derived normalizer branches are executed against scalar fixtures: six arithmetic cases in each of two trainer paths. | Maximum absolute normalizer error `12`; rejected. | Maximum error `0`; accepted. |
+| [TRL accumulation-window normalizer](benchmarks/historical/trl_grpo_accumulation_scale/TASK.md) | Protocol v2 executes six source-derived arithmetic cases in each of two trainer paths and rejects an unmodeled later normalizer overwrite. | Maximum absolute normalizer error `12`; rejected. | Maximum error `0`; accepted. |
 
 The second task tracks the upstream [TRL issue](https://github.com/huggingface/trl/issues/5619) and [fix](https://github.com/huggingface/trl/pull/6024). The first uses a pinned fix in [Recursive-Verification-Lag](https://github.com/mitukx/Recursive-Verification-Lag).
 
 Raw grader outputs, summaries, protocol snapshots, and SHA-256 manifests are retained under [`results/`](results/). See the [evidence notes](docs/evidence.md) for exact revisions, metrics, and limits. The earlier v1 protocol result for the HF task is retained as superseded history; v2 is the current protocol.
 
-The separate [integrity calibration](results/protocol-integrity/cpu-calibration-v1/summary.json) changes the task descriptor, task brief, and grader one at a time for both tasks. All six changes are rejected against the unchanged protocol lock. The checked-in Git history is the trust anchor for that lock; this does not detect coordinated edits to the lock itself.
+The separate [integrity calibration](results/protocol-integrity/cpu-calibration-v2/summary.json) changes the task descriptor, task brief, and grader one at a time for both current task protocols. All six changes are rejected against the unchanged protocol lock. The checked-in Git history is the trust anchor for that lock; this does not detect coordinated edits to the lock itself.
 
-These are task/evaluator calibration results. They do not measure an agent solving tasks, model training, generalization, or capability improvement. The TRL grader executes extracted production normalization statements with scalar doubles; it does not run a full trainer or gradient update. The HF grader executes candidate source with local fixtures; it is not an operating-system sandbox for hostile code. Only run it on candidate code you trust.
+These are task/evaluator calibration results. They do not measure an agent solving tasks, model training, generalization, or capability improvement. The TRL grader executes extracted production normalization statements with scalar doubles; it does not run a full trainer or gradient update. A source mutation study exposed and fixed a v1 grader false acceptance; v2's branch-local write guard remains syntax-specific. The HF grader executes candidate source with local fixtures; it is not an operating-system sandbox for hostile code. Only run it on candidate code you trust.
 
 The restored experimental control plane in `src/vare` includes grouped replay, freshness/curriculum controls, paired promotion gates, workspace-agent campaigns and RVL hooks. These are implementation/regression contracts. No real-model learning, agent task-solving or GPU result is claimed. The imported L0 raw archive is corrupt; its old accuracy summary is excluded from verified claims (see the evidence notes).
 
