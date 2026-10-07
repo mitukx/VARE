@@ -1,0 +1,59 @@
+{
+  "acceptance": {
+    "all_12_conditions_reject_mutation": true,
+    "fixed_source_protocol_v4": "pass",
+    "mutated_source_protocol_v4": "reject"
+  },
+  "claim_limit": "This recheck tests one known v3 false-accept mutation on two branches of one pinned source revision; the evaluator still does not execute the full trainer or establish general semantic soundness.",
+  "grader": {
+    "path": "benchmarks/historical/trl_grpo_accumulation_scale/evaluator/grade.py",
+    "sha256": "55fd00d24146cd4b7a41393c89c8f503cd5380d0e81864fea066f39fdef723cf"
+  },
+  "mutation": {
+    "description": "In both selected loss branches, insert `loss = loss * 2` immediately after the direct division by `normalizer`. This deliberately changes the returned/training loss scale while leaving the normalizer and its denominator expression intact.",
+    "expected_semantic_decision": "reject",
+    "patch_path": "benchmarks/audits/trl_loss_dataflow_v1/candidate-mutation.patch",
+    "patch_sha256": "9c652b595b7992a9360d2274ddb48e0b93713fac92d490b3ed52e4f856e6fa7a",
+    "predicted_protocol_v3_decision": "accept; this is a source-derived hypothesis to be measured."
+  },
+  "objective": "Re-evaluate the frozen post-division loss overwrite mutation against protocol v4 after the confirmed v3 false acceptance.",
+  "prior_confirmed_result": {
+    "false_acceptance_confirmed": true,
+    "protocol_id": "trl-loss-dataflow-mutation-audit-v2",
+    "summary": "results/trl-loss-dataflow-audit-v1/summary-v2.json"
+  },
+  "procedure": [
+    "Verify protocol-v4 lock hashes and pinned source file hashes.",
+    "Grade pinned fixed source with protocol v4.",
+    "Apply the same frozen post-division loss reassignment patch to both selected branches.",
+    "Grade the mutated source with protocol v4 and preserve its raw output."
+  ],
+  "protocol_id": "trl-loss-dataflow-mutation-audit-v3",
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "model_weights_loaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages_used": false
+  },
+  "schema_version": 3,
+  "source": {
+    "files": [
+      "trl/experimental/gspo_token/grpo_trainer.py",
+      "trl/trainer/grpo_trainer.py"
+    ],
+    "fixed_revision": "e1b2e21975994e676d9a676e3ab005e9bee38e40",
+    "fixed_source_sha256": {
+      "trl/experimental/gspo_token/grpo_trainer.py": "37b91254ff70d353ca4a04bd1e28602102ddcbd50be3a79b0ba0a6cb62bc52e0",
+      "trl/trainer/grpo_trainer.py": "7446f652aefb9b78a64952a135c2235c924a7633c112d6a8f569b16ec4d62e14"
+    },
+    "repository": "https://github.com/huggingface/trl.git"
+  },
+  "task": {
+    "protocol_id": "trl-grpo-accumulation-window-normalizer-protocol-v4",
+    "protocol_lock_sha256": "be7e79e317b7175bfe973c21d081884f5105abbdc7b32375ddb5305636859114",
+    "task_brief_sha256": "ba961bb4f093ef7bcf7f96ba1a1de6c30dbfeafbd78eb4dc00d3c8da6f132639",
+    "task_id": "trl-grpo-accumulation-window-normalizer-v1",
+    "task_json_sha256": "636b471e874eb9203fcf10fc0a3faba2d3d95d3cad22f5f9b15d1621ef5fe2e2"
+  }
+}

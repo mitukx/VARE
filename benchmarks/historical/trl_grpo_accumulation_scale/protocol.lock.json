@@ -6,22 +6,23 @@
       "experimental_dapo"
     ],
     "conditions_per_branch": 6,
+    "rejects_post_division_loss_reassignment": true,
     "rejects_unmodeled_normalizer_overwrite": true,
     "requires_current_partial_window_size": true,
     "requires_eval_unchanged": true,
-    "requires_train_only_rescale": true,
-    "requires_loss_denominator_matches_normalizer": true
+    "requires_loss_denominator_matches_normalizer": true,
+    "requires_train_only_rescale": true
   },
   "expected_calibration": {
     "baseline_passed": false,
     "calibration_passed": true
   },
   "locked_hashes": {
-    "evaluator_sha256": "56d73fdbd5b704e1b72a4b96c62d48f52c0332c577221c7b67299399934e680c",
-    "task_brief_sha256": "64fcc2a482501ef1991a2d88e5489dcb3e3d58a8ab59aba5d50a4db54a7fc9ad",
-    "task_json_sha256": "61cfd92d8785fbfe6a3cbf63df6245ca098eef3dda832e35586d60678950275a"
+    "evaluator_sha256": "55fd00d24146cd4b7a41393c89c8f503cd5380d0e81864fea066f39fdef723cf",
+    "task_brief_sha256": "ba961bb4f093ef7bcf7f96ba1a1de6c30dbfeafbd78eb4dc00d3c8da6f132639",
+    "task_json_sha256": "636b471e874eb9203fcf10fc0a3faba2d3d95d3cad22f5f9b15d1621ef5fe2e2"
   },
-  "protocol_id": "trl-grpo-accumulation-window-normalizer-protocol-v3",
+  "protocol_id": "trl-grpo-accumulation-window-normalizer-protocol-v4",
   "schema_version": 1,
   "task_id": "trl-grpo-accumulation-window-normalizer-v1"
 }

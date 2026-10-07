@@ -53,6 +53,23 @@ class GraderIntegrityTests(unittest.TestCase):
             })
             self.assertEqual(6.0, observed)
 
+    def test_trl_v4_grader_rejects_post_division_loss_reassignment(self):
+        mutated = VALID_BRANCH.replace(
+            '            loss = per_token_loss / normalizer\n',
+            '            loss = per_token_loss / normalizer\n            loss = loss * 2\n',
+        )
+        with tempfile.TemporaryDirectory(prefix="vare-grader-probe-") as temporary:
+            source = Path(temporary) / "candidate.py"
+            source.write_text(mutated, encoding="utf-8")
+            assignment, gate, denominator = _extract_normalizer(source, "main_dapo_cispo_vespo")
+            self.assertIsNone(assignment)
+            self.assertIsNone(gate)
+            self.assertIsNone(denominator)
+            self.assertIsNone(_execute_normalizer(source, "main_dapo_cispo_vespo", {
+                "mode": "train", "items": 12, "world_size": 1,
+                "current_accumulation_steps": 2, "steps_per_generation": 4,
+            }))
+
     def test_trl_grader_rejects_loss_divided_by_scaled_normalizer(self):
         mutated = VALID_BRANCH.replace(
             "loss = per_token_loss / normalizer",

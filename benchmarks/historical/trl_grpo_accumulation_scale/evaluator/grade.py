@@ -154,6 +154,13 @@ def _extract_normalizer(path: Path, branch_name: str):
                 and isinstance(loss_assignment.value.right, ast.Name)
                 and loss_assignment.value.right.id == "normalizer"):
             denominator = loss_assignment.value.right
+            loss_index = branch.body.index(loss_assignment)
+            later_loss_writes = (
+                node for statement in branch.body[loss_index + 1:]
+                for node in ast.walk(statement) if _writes_name(node, "loss")
+            )
+            if any(True for _ in later_loss_writes):
+                return None, None, None
         training_gate = next((statement for statement in branch.body
                               if isinstance(statement, ast.If) and _is_mode_train(statement)
                               and any(_target_is_normalizer(item) for item in statement.body)), None)
