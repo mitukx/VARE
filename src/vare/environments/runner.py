@@ -87,7 +87,16 @@ class Workspace:
     def _materialize(self) -> None:
         source = self.spec.source
         if source.local_path:
-            src = Path(source.local_path).resolve()
+            raw_src = Path(source.local_path)
+            if raw_src.is_absolute():
+                src = raw_src.resolve()
+            else:
+                base = (
+                    Path(self.spec._source_base)
+                    if self.spec._source_base is not None
+                    else Path.cwd()
+                )
+                src = (base / raw_src).resolve()
             if not src.exists():
                 raise FileNotFoundError(src)
             shutil.copytree(src, self.path, dirs_exist_ok=False, ignore=shutil.ignore_patterns(".git", "__pycache__", ".pytest_cache"))

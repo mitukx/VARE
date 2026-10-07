@@ -39,3 +39,12 @@ def test_protected_evaluator_tampering_fails_closed():
     assert not result.passed
     assert not result.integrity_ok
     assert any("protected file modified" in x for x in result.integrity_failures)
+
+
+def test_relative_local_source_is_portable_and_not_serialized(monkeypatch, tmp_path):
+    spec = EngineeringTaskSpec.load(SPEC)
+    assert spec.to_dict()["source"]["local_path"] == "."
+    assert "_source_base" not in spec.to_dict()
+    monkeypatch.chdir(tmp_path)
+    with Workspace(spec) as ws:
+        assert (ws.path / "subject.py").is_file()

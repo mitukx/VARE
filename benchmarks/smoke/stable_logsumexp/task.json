@@ -6,7 +6,7 @@
     "cpu_time_s": 10,
     "max_output_bytes": 200000,
     "memory_mb": 1024,
-    "wall_time_s": 10.0
+    "wall_time_s": 10
   },
   "metadata": {
     "evidence_level": "harness-smoke",
@@ -25,9 +25,9 @@
       },
       "direction": "min",
       "json_key": "work_units",
-      "max_regression_fraction": 0.0,
+      "max_regression_fraction": 0,
       "name": "work_units",
-      "weight": 1.0
+      "weight": 1
     }
   ],
   "prompt": "Repair logsumexp so that it remains numerically stable on large finite inputs without changing the evaluator files.",
@@ -44,7 +44,7 @@
   "source": {
     "base_revision": null,
     "clone_url": null,
-    "local_path": "/mnt/data/VARE/benchmarks/smoke/stable_logsumexp"
+    "local_path": "."
   },
   "tests": [
     {

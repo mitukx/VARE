@@ -100,6 +100,7 @@ class EngineeringTaskSpec:
     limits: ResourceLimits = ResourceLimits()
     correctness_weight: float = 0.8
     metadata: dict[str, Any] = field(default_factory=dict)
+    _source_base: str | None = field(default=None, repr=False, compare=False)
 
     def __post_init__(self) -> None:
         if not self.id or not self.title or not self.prompt or not self.family:
@@ -110,11 +111,26 @@ class EngineeringTaskSpec:
             raise ValueError("correctness_weight must be in [0,1]")
 
     def to_dict(self) -> dict[str, Any]:
-        raw = asdict(self)
-        return raw
+        # Loader context is deliberately transient: task manifests stay portable
+        # and their content hashes do not depend on the local checkout path.
+        return {
+            "id": self.id,
+            "title": self.title,
+            "prompt": self.prompt,
+            "family": self.family,
+            "source": asdict(self.source),
+            "tests": [asdict(x) for x in self.tests],
+            "metrics": [asdict(x) for x in self.metrics],
+            "protected_paths": [asdict(x) for x in self.protected_paths],
+            "limits": asdict(self.limits),
+            "correctness_weight": self.correctness_weight,
+            "metadata": dict(self.metadata),
+        }
 
     @classmethod
-    def from_dict(cls, raw: dict[str, Any]) -> "EngineeringTaskSpec":
+    def from_dict(
+        cls, raw: dict[str, Any], *, source_base: str | Path | None = None
+    ) -> "EngineeringTaskSpec":
         source = RepositorySource(**raw["source"])
         tests = tuple(CommandSpec(**x) for x in raw["tests"])
         metrics = tuple(
@@ -142,11 +158,15 @@ class EngineeringTaskSpec:
             limits=limits,
             correctness_weight=float(raw.get("correctness_weight", 0.8)),
             metadata=dict(raw.get("metadata", {})),
+            _source_base=None if source_base is None else str(Path(source_base).resolve()),
         )
 
     @classmethod
     def load(cls, path: str | Path) -> "EngineeringTaskSpec":
-        return cls.from_dict(json.loads(Path(path).read_text(encoding="utf-8")))
+        p = Path(path).resolve()
+        return cls.from_dict(
+            json.loads(p.read_text(encoding="utf-8")), source_base=p.parent
+        )
 
     def write(self, path: str | Path) -> None:
         p = Path(path)
