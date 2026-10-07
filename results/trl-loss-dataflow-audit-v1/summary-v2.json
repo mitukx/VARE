@@ -1,0 +1,40 @@
+{
+  "claim_limit": "One deliberately incorrect mutation across two branches of one pinned upstream fix; this confirms one specific v3 false acceptance, not an error rate or arbitrary grader weakness.",
+  "fixed_source": {
+    "condition_count": 12,
+    "max_normalizer_error": 0.0,
+    "passed": true,
+    "revision": "e1b2e21975994e676d9a676e3ab005e9bee38e40",
+    "source_hashes": {
+      "trl/experimental/gspo_token/grpo_trainer.py": "37b91254ff70d353ca4a04bd1e28602102ddcbd50be3a79b0ba0a6cb62bc52e0",
+      "trl/trainer/grpo_trainer.py": "7446f652aefb9b78a64952a135c2235c924a7633c112d6a8f569b16ec4d62e14"
+    }
+  },
+  "frozen_at_commit": "2fc0a23",
+  "frozen_protocol_sha256": "b31a9c8da269a99418a15f65bc0eab869827c0c50c948a08522a5de1c206acb6",
+  "mutation": {
+    "candidate_diff_sha256": "b3936e6567f7411b4bfa58e72c17397d802f0760738fd5e775524a10339b3f25",
+    "condition_count": 12,
+    "failure_count": 0,
+    "grader_passed": true,
+    "max_normalizer_error": 0.0,
+    "patch_sha256": "9c652b595b7992a9360d2274ddb48e0b93713fac92d490b3ed52e4f856e6fa7a",
+    "semantic_expected": "reject",
+    "source_hashes": {
+      "trl/experimental/gspo_token/grpo_trainer.py": "24aa9b4a9d5b4cec5097179cd751322493a74068e4a0e443407f0c08fd999c3d",
+      "trl/trainer/grpo_trainer.py": "9ccd875a4fd731305bbcd59f57e0aae81186f43be23379301ae0f4f935fb07a8"
+    }
+  },
+  "observed_conclusion": "Confirmed false acceptance for this one mutation: protocol v3 accepted a candidate that reassigns loss = loss * 2 immediately after the checked normalizer division in both pinned branches. The mutation changes the policy-loss scale; the experiment did not run a trainer or gradient update.",
+  "protocol_id": "trl-loss-dataflow-mutation-audit-v2",
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "model_weights_loaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages_used": false
+  },
+  "schema_version": 1,
+  "status": "completed",
+  "task_grader_protocol": "trl-grpo-accumulation-window-normalizer-protocol-v3"
+}
