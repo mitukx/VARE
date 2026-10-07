@@ -1,0 +1,24 @@
+{
+  "acceptance": {
+    "max_abs_logprob_error": 1e-10,
+    "neutral_repetition_penalty": 1.0,
+    "neutral_top_k": 0,
+    "neutral_top_p": 1.0,
+    "requires_invalid_temp_fail_closed": true,
+    "requires_model_state_restore_on_errors": true,
+    "requires_temperature_scaled_trainer": true,
+    "rollout_conditions": 6
+  },
+  "expected_calibration": {
+    "baseline_passed": false,
+    "calibration_passed": true
+  },
+  "locked_hashes": {
+    "evaluator_sha256": "18f590506265c8ce8e41df7464e9519bc3e5434b13920ec463bb2dd5ed730beb",
+    "task_brief_sha256": "2126fa7e7eac75bbec753a381b4b175fec6a90408555951885473ca8235da724",
+    "task_json_sha256": "45724f0abf59886bace52dd335ae135885ded1076dc6f9d4acfd7348f7cd4169"
+  },
+  "protocol_id": "rvl-hf-behavior-policy-parity-protocol-v1",
+  "schema_version": 1,
+  "task_id": "rvl-hf-behavior-policy-parity-v1"
+}

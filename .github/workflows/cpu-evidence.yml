@@ -1,0 +1,38 @@
+name: cpu-evidence
+
+on:
+  pull_request:
+    paths:
+      - 'AGENTS.md'
+      - 'README.md'
+      - 'docs/**'
+      - 'benchmarks/historical/**'
+      - 'scripts/**'
+      - '.github/workflows/cpu-evidence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  calibrated-cpu-tasks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.11'
+      - name: Calibrate the HF behavior-policy task
+        run: >-
+          python3 scripts/calibrate_task.py
+          --output "${RUNNER_TEMP}/vare-rvl-calibration"
+      - name: Calibrate the TRL accumulation-window task
+        run: >-
+          python3 scripts/calibrate_task.py
+          --task-root benchmarks/historical/trl_grpo_accumulation_scale
+          --output "${RUNNER_TEMP}/vare-trl-calibration"
+      - name: Calibrate locked-input tamper rejection
+        run: >-
+          python3 scripts/calibrate_integrity.py
+          --output "${RUNNER_TEMP}/vare-integrity-calibration"

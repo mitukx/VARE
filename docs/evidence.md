@@ -1,0 +1,40 @@
+# Calibration evidence
+
+This page describes what the retained calibration artifacts establish and where the claims stop. Each run checks one pinned pre-fix revision against one already-published fixed revision. The result validates a task/grader pair; it does not show that an agent independently found the fix.
+
+## HF behavior-policy parity
+
+- Task: [brief](../benchmarks/historical/rvl_behavior_policy_parity/TASK.md), [descriptor](../benchmarks/historical/rvl_behavior_policy_parity/task.json), [locked protocol](../benchmarks/historical/rvl_behavior_policy_parity/protocol.lock.json).
+- Source: [`Recursive-Verification-Lag` pre-fix revision `e788f11`](https://github.com/mitukx/Recursive-Verification-Lag/tree/e788f113ad6b246a361cd50a52eaf2867f2a66f8) and fixed revision [`c7e646b`](https://github.com/mitukx/Recursive-Verification-Lag/tree/c7e646b043cb56e5ea3c2623bb8a61e065451f72).
+- Protocol: `rvl-hf-behavior-policy-parity-protocol-v2`; six distinct prompt/temperature conditions, plus invalid-temperature and model-state-restoration checks.
+- Observed: pre-fix maximum absolute rollout log-probability error `0.738005434919931` and learner error `0.37112804442989056`; fixed errors `0.0` for both. The pre-fix revision failed and fixed revision passed.
+- Artifacts: [summary](../results/rvl-hf-behavior-policy-parity-v1/cpu-calibration-v2/summary.json), [pre-fix grader output](../results/rvl-hf-behavior-policy-parity-v1/cpu-calibration-v2/baseline.grade.json), [fixed grader output](../results/rvl-hf-behavior-policy-parity-v1/cpu-calibration-v2/calibration.grade.json), [hash manifest](../results/rvl-hf-behavior-policy-parity-v1/cpu-calibration-v2/manifest.json), [protocol snapshot](../results/rvl-hf-behavior-policy-parity-v1/cpu-calibration-v2/protocol_snapshot/).
+- Resources: local macOS arm64 / Python 3.9.6 calibration; no weights, third-party Python packages, GPU, paid API, or external compute.
+- Limits: fixtures use deterministic CPU model/tokenizer doubles. The learner's `_sample_objective` method is exercised, but this is not a model run or training result. Candidate source runs in a subprocess with the current user's permissions; this is not a hostile-code sandbox.
+
+The earlier v1 calibration is retained at [`cpu-calibration-v1`](../results/rvl-hf-behavior-policy-parity-v1/cpu-calibration-v1/). It used the earlier protocol, so v2 is the current result. The v2 artifacts were regenerated with the current multi-task calibration script; the exact earlier script snapshot and output remain in local development records.
+
+## TRL accumulation-window normalizer
+
+- Task: [brief](../benchmarks/historical/trl_grpo_accumulation_scale/TASK.md), [descriptor](../benchmarks/historical/trl_grpo_accumulation_scale/task.json), [locked protocol](../benchmarks/historical/trl_grpo_accumulation_scale/protocol.lock.json).
+- Source: [`trl` pre-fix revision `8697378`](https://github.com/huggingface/trl/tree/8697378709102608e3c9dc5bf582772e4ddee788) and fixed revision [`e1b2e21`](https://github.com/huggingface/trl/tree/e1b2e21975994e676d9a676e3ab005e9bee38e40). The public upstream issue is [#5619](https://github.com/huggingface/trl/issues/5619); the fix is [PR #6024](https://github.com/huggingface/trl/pull/6024).
+- Protocol: `trl-grpo-accumulation-window-normalizer-protocol-v1`; six arithmetic cases in each of two production branches (main DAPO/CISPO/VESPO and experimental DAPO), including a partial final window and unchanged evaluation behavior.
+- Observed: 12 cases total. Pre-fix maximum absolute normalizer error `12.0`; fixed maximum error `0.0`. The pre-fix revision failed and fixed revision passed.
+- Artifacts: [summary](../results/trl-grpo-accumulation-window-normalizer-v1/cpu-calibration-v1/summary.json), [pre-fix grader output](../results/trl-grpo-accumulation-window-normalizer-v1/cpu-calibration-v1/baseline.grade.json), [fixed grader output](../results/trl-grpo-accumulation-window-normalizer-v1/cpu-calibration-v1/calibration.grade.json), [hash manifest](../results/trl-grpo-accumulation-window-normalizer-v1/cpu-calibration-v1/manifest.json), [protocol snapshot](../results/trl-grpo-accumulation-window-normalizer-v1/cpu-calibration-v1/protocol_snapshot/).
+- Resources: local macOS arm64 / Python 3.9.6 calibration; no weights, third-party Python packages, GPU, paid API, or external compute.
+- Limits: the grader extracts and executes production normalization statements against scalar doubles. It does not import the full trainer, perform a gradient update, or measure model behavior.
+
+## Reproduction and integrity limits
+
+Reproduce the task calibrations and locked-input integrity trial using the commands in the [README](../README.md). The scripts verify task descriptor, brief, and evaluator hashes against the protocol lock and include snapshots and SHA-256 manifests with each output.
+
+The fixed revisions are public historical changes used to validate the benchmark plumbing. They are not changes authored by this project. The measured outcome is limited to the declared regression contracts on those source revisions.
+
+## Locked-input integrity calibration
+
+- Protocol: `locked-task-input-tamper-calibration-v1`, run over both historical task graders.
+- Controls: one untampered protocol per task. Both pass their locked-input checks and reach the expected missing-candidate-file check.
+- Mutations: for each task, change the task descriptor, task brief, or grader in isolation while keeping the version-controlled protocol lock unchanged. All 6 of 6 cases are rejected with the expected hash-mismatch error.
+- Artifacts: [summary](../results/protocol-integrity/cpu-calibration-v1/summary.json), [control outputs](../results/protocol-integrity/cpu-calibration-v1/controls.json), [tamper outputs](../results/protocol-integrity/cpu-calibration-v1/tamper_cases.json), [hash manifest](../results/protocol-integrity/cpu-calibration-v1/manifest.json), [protocol and script snapshot](../results/protocol-integrity/cpu-calibration-v1/protocol_snapshot/).
+- Resources: local macOS arm64 / Python 3.9.6; no GitHub source fetch, model weights, third-party Python package, GPU, paid API, or external compute.
+- Trust boundary: the unchanged Git-versioned protocol lock is the trust anchor. This experiment does not authenticate a coordinated edit to the lock and does not provide OS isolation for candidate code. It establishes only that isolated changes to the descriptor, brief, or grader are detected.

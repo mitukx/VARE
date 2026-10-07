@@ -1,129 +1,64 @@
-# VARE — Verification-Aware Reinforcement Engine
+# VARE
 
-**Closed-loop capability improvement for post-training, long-horizon agents, and research automation.**
+VARE is a research scaffold for reproducible, compute-conscious experiments on agent improvement. The current work builds a narrower foundation: historical software tasks with immutable source revisions, independent CPU graders, locked evaluation protocols, and retained calibration evidence.
 
-VARE is an experimental outer control plane that turns model failures into new training pressure while keeping optimization grounded by fresh verification, immutable provenance, and independent held-out promotion gates.
+Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
 
-> **For contributors and AI agents:** read [`AGENTS.md`](AGENTS.md) first. It defines the project mission, hard invariants, evidence policy, compute discipline, and how to choose the next task.
+## Current scope
 
-> **Status: research prototype / measured CPU control-plane and environment-harness evidence.** The repository has a deterministic CPU end-to-end result and tested integration contracts. The real RVL/Qwen GRPO path is implemented but not yet claimed as GPU-validated capability evidence.
+Two real upstream fixes calibrate the task and grading path:
 
-## Core loop
+| Task | What the grader exercises | Pre-fix result | Fixed result |
+| --- | --- | --- | --- |
+| [HF behavior-policy parity](benchmarks/historical/rvl_behavior_policy_parity/TASK.md) | Deterministic CPU model/tokenizer fixtures exercise rollout probabilities and the learner's actual `_sample_objective` path across six prompt/temperature conditions. | Maximum absolute rollout log-probability error `0.7380`; learner error `0.3711`; rejected. | Both errors `0.0`; accepted. |
+| [TRL accumulation-window normalizer](benchmarks/historical/trl_grpo_accumulation_scale/TASK.md) | The source-derived normalizer branches are executed against scalar fixtures: six arithmetic cases in each of two trainer paths. | Maximum absolute normalizer error `12`; rejected. | Maximum error `0`; accepted. |
 
-```text
-failure discovery -> adaptive curriculum -> grouped async rollouts
- -> verifier ensemble -> policy/verifier freshness + shift gate
- -> group-preserving prioritized replay -> candidate training
- -> independent paired held-out evaluation -> promote or rollback -> repeat
-```
+The second task tracks the upstream [TRL issue](https://github.com/huggingface/trl/issues/5619) and [fix](https://github.com/huggingface/trl/pull/6024). The first uses a pinned fix in [Recursive-Verification-Lag](https://github.com/mitukx/Recursive-Verification-Lag).
 
-North-star metric: **held-out capability gain per unit of scarce compute**, with GPU-hours reported when a learner actually uses accelerators.
+Raw grader outputs, summaries, protocol snapshots, and SHA-256 manifests are retained under [`results/`](results/). See the [evidence notes](docs/evidence.md) for exact revisions, metrics, and limits. The earlier v1 protocol result for the HF task is retained as superseded history; v2 is the current protocol.
 
-## Why separate from Recursive-Verification-Lag?
+The separate [integrity calibration](results/protocol-integrity/cpu-calibration-v1/summary.json) changes the task descriptor, task brief, and grader one at a time for both tasks. All six changes are rejected against the unchanged protocol lock. The checked-in Git history is the trust anchor for that lock; this does not detect coordinated edits to the lock itself.
 
-`mitukx/Recursive-Verification-Lag` already owns substantial lower-level RL infrastructure: token-exact rollout, GRPO, verifier execution, durable replay, verification debt, weight synchronization and GPU harnesses. VARE owns the **outer improvement policy**: what failures to attack, what data to prioritize, when verification debt requires intervention, and whether a candidate deserves promotion.
+These are task/evaluator calibration results. They do not measure an agent solving tasks, model training, generalization, or capability improvement. The TRL grader executes extracted production normalization statements with scalar doubles; it does not run a full trainer or gradient update. The HF grader executes candidate source with local fixtures; it is not an operating-system sandbox for hostile code. Only run it on candidate code you trust.
 
-## Implemented
+The current repository snapshot does not implement a model-training loop, agent orchestration, curriculum intervention, or promotion system. Those are later research steps, not measured features.
 
-- bounded async rollout control with unique per-rollout provenance steps;
-- explicit `samples_per_task` and **group-preserving replay** for GRPO-style objectives;
-- weighted verifier ensemble, disagreement telemetry and trusted-verifier pass/fail ownership;
-- policy-lag, verifier-lag and task-distribution-shift gates;
-- freshness-aware prioritized replay and failure-driven curriculum;
-- failure-driven task generation and verifier refresh/co-evolution hooks;
-- paired held-out evaluation support with optional deterministic bootstrap lower-confidence promotion gate;
-- fail-closed slice/cost/disagreement promotion constraints;
-- tamper-evident promotion ledger and SHA-256 experiment protocol locks;
-- read-only RVL `TokenReplay` SQLite inspection and outer-loop planning;
-- transactional `RVLGRPOHooks` over RVL `HFLocalBackend + HFCausalLMGRPOTrainer`;
-- HTTP chat-completions rollout adapter;
-- executable repository-environment factory with task catalogs, isolated workspaces, evaluator integrity checks, CPU resource limits and performance gates;
-- failure-matched engineering curriculum and workspace-agent rollout adapter;
-- fixed-budget environment campaign runner with hash-linked raw records;
-- deterministic CPU reference experiment and CI tests.
+## Reproduce the calibrations
 
-## Quick start
+Requirements: Python 3.9 or newer, Git, and network access to fetch the pinned public source revisions. The scripts use only the Python standard library. No model weights, GPU, paid API, or external compute are used for local calibration.
+
+Run each calibration into a new directory outside the repository. The checked-in result directories already exist, so choose a fresh path:
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -e . pytest
-pytest
-vare demo --rounds 8 --rollouts 512 --seed 7 --output artifacts/demo.json
+python3 scripts/calibrate_task.py \
+  --output /tmp/vare-rvl-calibration
+
+python3 scripts/calibrate_task.py \
+  --task-root benchmarks/historical/trl_grpo_accumulation_scale \
+  --output /tmp/vare-trl-calibration
+
+python3 scripts/calibrate_integrity.py \
+  --output /tmp/vare-integrity-calibration
 ```
 
-The committed L0 seed-7 run improves trusted held-out accuracy from **0.65625 to 0.96680**, with 3 promotions and 5 rejected candidates. This validates orchestration only; it is **not** evidence of language-model self-improvement.
+The calibrator verifies the task, brief, and grader hashes against the protocol lock; fetches the immutable pre-fix and fixed source revisions; grades both; and writes raw JSON, a summary, a source/protocol snapshot, and a manifest. The preregistered outcome requires the pre-fix revision to fail and the known fixed revision to pass.
 
-## Compute-constrained path
-
-VARE deliberately separates **environment/verifier research** from expensive learner scale. The repository can make progress with CPU-only historical-task construction, trusted executable grading, failure mining, trajectory analysis and curriculum experiments; accelerators are reserved for experiments that require parameter updates. See [`docs/roadmap.md`](docs/roadmap.md) and [`docs/environment_factory.md`](docs/environment_factory.md).
-
-Smoke-test the engineering environment layer:
+To prepare and grade a candidate workspace manually:
 
 ```bash
-vare env-smoke --output-dir artifacts/env-smoke
+python3 scripts/prepare_task.py \
+  --workspace /tmp/vare-rvl-candidate
+# Make a candidate change in that checkout.
+python3 scripts/grade_task.py \
+  --workspace /tmp/vare-rvl-candidate
 ```
 
-The committed smoke task is synthetic and validates the harness only. Real coding/engineering claims require immutable historical repository tasks with independent evaluators. `benchmarks/historical/rvl_behavior_policy_parity` is the first such task seed: it references an immutable pre-fix revision and keeps its narrow regression evaluator outside the candidate checkout. It is not yet counted as measured agent evidence.
+For the TRL task, provide `--task-root benchmarks/historical/trl_grpo_accumulation_scale` to both commands. Candidate workspaces must be outside the VARE checkout. The grader and locked task files stay outside the candidate workspace.
 
-Run the same task catalog against an external repository-editing agent command:
+## Roadmap
 
-```bash
-vare env-campaign \
-  --catalog-root benchmarks/smoke \
-  --agent-argv-json '["python","examples/oracle_smoke_agent.py","{workspace}"]' \
-  --repeats 2 \
-  --run-root artifacts/env-campaign
-```
-
-The example agent is an oracle plumbing check only. Replace it with the coding-agent command under evaluation for real trajectory evidence.
-
-## RVL integration
-
-Inspect a live RVL replay database without mutating it:
-
-```bash
-vare rvl-plan \
-  --replay-sqlite /path/to/replay.sqlite \
-  --current-policy-version 12 \
-  --current-verifier-version 7 \
-  --max-policy-lag 2 \
-  --max-verifier-lag 1 \
-  --output artifacts/outer-plan.json
-```
-
-Run the transactional real-model path from an environment that already has RVL's pinned GPU dependencies:
-
-```bash
-PYTHONPATH=/path/to/Recursive-Verification-Lag:/path/to/VARE/src \
-python examples/run_rvl_grpo.py \
-  --model Qwen/Qwen2.5-0.5B-Instruct \
-  --dataset gsm8k \
-  --rounds 8 --prompts-per-round 8 --samples-per-prompt 8
-```
-
-See `docs/rvl_outer_loop.md`. The multi-seed L2 experiment is preregistered in `protocols/l2_rvl_qwen_v1.lock.json`; the lock SHA is part of the evidence chain.
-
-## Evidence ladder
-
-- **L0:** deterministic CPU control-plane experiment — completed.
-- **L1:** tiny causal-LM import/smoke — implementation ready; external model dependencies required.
-- **L2:** 0.5B–3B public model, fixed compute, independent held-out evaluation, multiple seeds.
-- **L3:** real vLLM/SGLang + distributed RVL/verl, throughput/lag phase diagram.
-- **L4:** long-horizon coding/MLSys environments with executable graders.
-- **L5:** research automation where reward is independently measured downstream capability/systems improvement.
-
-Claims must stop at the highest **measured** evidence level, not the highest implemented feature level.
-
-## Key invariants
-
-1. Optimization evidence and promotion evidence are separate.
-2. Policy/verifier versions are first-class and stale data cannot silently train the model.
-3. GRPO comparison groups are never silently truncated by replay sampling.
-4. Candidate weights are transactional: train -> snapshot -> restore incumbent -> held-out compare -> promote/rollback.
-5. Negative/null runs remain in the evidence ledger.
-6. Protocols can be locked before results are observed.
+The [roadmap](docs/roadmap.md) tracks the evidence needed before expanding the claims. The next major gap is repeated, comparable agent trajectories on a fixed task set and budget. No such trajectories are currently reported.
 
 ## License
 
-Apache-2.0
+Apache-2.0. See [LICENSE](LICENSE).

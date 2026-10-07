@@ -1,0 +1,26 @@
+{
+  "calibration_id": "locked-task-input-tamper-calibration-v1",
+  "control_count": 2,
+  "observed": {
+    "all_controls_reached_candidate_validation": true,
+    "all_mutations_rejected": true
+  },
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "model_weights_downloaded": false,
+    "paid_api_calls": 0,
+    "public_source_fetches": 0,
+    "third_party_python_packages": 0
+  },
+  "runtime": {
+    "created_at_utc": "2026-10-07T21:42:49.448803+00:00",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.9.6"
+  },
+  "schema_version": 1,
+  "status": "calibrated",
+  "tamper_case_count": 6,
+  "tamper_rejections": 6,
+  "trust_boundary": "The unchanged, version-controlled protocol lock is the trust anchor; this run detects isolated changes to the task descriptor, brief, or grader. It does not authenticate coordinated edits to the lock itself and is not a hostile-code sandbox."
+}
