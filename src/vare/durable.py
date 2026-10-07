@@ -126,10 +126,16 @@ class Store:
         with self.connection() as db:
             return [dict(r) for r in db.execute('SELECT * FROM jobs ORDER BY id')]
 
-    def refresh(self):
-        """Recompute at use time; preserve old attempts, irreversibly invalidate changed enrollment."""
+    def refresh(self, job_id=None):
+        """Recompute selected inputs at use time; preserve history and invalidate stale enrollment."""
         root = self.root()
-        for row in self.jobs():
+        if job_id is None:
+            rows = self.jobs()
+        else:
+            with self.connection() as db:
+                found = db.execute('SELECT * FROM jobs WHERE id=?', (job_id,)).fetchone()
+            rows = [dict(found)] if found else []
+        for row in rows:
             if row['state'] == 'stale':
                 continue
             try:
@@ -207,7 +213,7 @@ class Store:
         record['stdout_sha256'], record['stderr_sha256'] = digest(stdout), digest(stderr)
         payload = (encode(record).decode(), encode(data).decode() if data is not None else None, stdout, stderr)
         # Historical payload identity stays immutable; freshness changes effective state.
-        self.refresh()
+        self.refresh(job.id)
         with self.connection(True) as db:
             now = time.time() if now is None else now
             row = db.execute('SELECT * FROM jobs WHERE id=?', (job.id,)).fetchone()

@@ -5,6 +5,7 @@ from pathlib import Path
 import tempfile
 import time
 import unittest
+from unittest.mock import patch
 
 from benchmarks.scheduler.fixtures import make_fixture
 from vare.durable import Store, FenceError, audit_durable, run_workers, worker
@@ -103,6 +104,33 @@ class DurableTests(unittest.TestCase):
         output, checked = self.exported()
         self.assertEqual({'input_stale': 1}, checked['outcomes'])
         self.assertEqual('candidate_passed', strict_json((output / 'attempts/valid/1/record.json').read_bytes())['status'])
+
+    def test_completion_refreshes_its_job_and_export_refreshes_every_job(self):
+        jobs = [replace(self.job, id='job-%02d' % index) for index in range(12)]
+        store = Store.create(self.parent / 'selective-refresh.db', jobs, self.root)
+        calls = []
+        from vare import durable as durable_module
+        original = durable_module.inputs
+
+        def counted(job, root):
+            calls.append(job.id)
+            return original(job, root)
+
+        with patch.object(durable_module, 'inputs', side_effect=counted):
+            for index in range(len(jobs)):
+                claim = store.claim('refresh-worker')
+                self.assertEqual('job-%02d' % index, claim['job'].id)
+                record = {'job_id': claim['job'].id, 'status': 'internal_error'}
+                self.assertTrue(store.complete(claim, (record, b'', b'', None))['committed'])
+            self.assertEqual([job.id for job in jobs], calls)
+
+            calls.clear()
+            store.refresh()
+            self.assertCountEqual([job.id for job in jobs], calls)
+
+            calls.clear()
+            store.export(self.parent / 'selective-refresh-evidence')
+            self.assertCountEqual([job.id for job in jobs], calls)
 
     def test_worker_heartbeat_during_slow_evaluation(self):
         parent = self.parent / 'slow'
