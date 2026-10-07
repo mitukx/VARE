@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "task_id": "vare-promotion-gate-nonfinite-metrics-v1",
+  "source": {
+    "repository": "https://github.com/mitukx/VARE.git",
+    "base_revision": "d4627bf9e486413f4d95b2cd7c4ca294f5d95091",
+    "files": ["src/vare/promotion.py"]
+  },
+  "grader": {
+    "path": "benchmarks/regressions/promotion_gate_metrics/evaluator/grade.py",
+    "protocol_version": 1
+  },
+  "scope": "Fail closed on non-finite evaluation evidence consumed by PromotionGate."
+}

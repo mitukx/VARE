@@ -1,0 +1,30 @@
+{
+  "candidate_files": [
+    "src/vare/promotion.py"
+  ],
+  "cases": [
+    "finite-positive-control",
+    "candidate-primary-nan",
+    "candidate-primary-positive-infinity",
+    "incumbent-primary-nan",
+    "candidate-slice-nan",
+    "candidate-cost-nan",
+    "candidate-disagreement-nan",
+    "paired-task-score-nan"
+  ],
+  "expected_calibration": {
+    "baseline_passed": false,
+    "fixed_passed": true
+  },
+  "frozen_before_baseline_measurement": true,
+  "interpretation_limit": "One deterministic local CPU regression contract for non-finite evaluation input handling; it is not a statistical estimate of PromotionGate reliability or evidence of model learning.",
+  "locked_hashes": {
+    "evaluator_sha256": "177abb2a1d6cc410359e09e4d488e8f04c3a386be2bc63270e7bfba552adf0f8",
+    "task_brief_sha256": "7f4fdd301219f9d2e4c9964f0128ad57efbb3f5f0a8043c70521f000372d05aa",
+    "task_json_sha256": "a8da77035ba37f257cd288a2dafd097fd4dede4b8ed59482496025289aecc2fd"
+  },
+  "protocol_id": "vare-promotion-gate-nonfinite-metrics-v1",
+  "schema_version": 1,
+  "source_base_revision": "d4627bf9e486413f4d95b2cd7c4ca294f5d95091",
+  "task_id": "vare-promotion-gate-nonfinite-metrics-v1"
+}

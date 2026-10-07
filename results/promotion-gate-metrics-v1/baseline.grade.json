@@ -1,0 +1,79 @@
+{
+  "cases": [
+    {
+      "accepted": true,
+      "case_id": "finite-positive-control",
+      "decision_metrics_finite": true,
+      "expected_accepted": true,
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "accepted": true,
+      "case_id": "candidate-primary-nan",
+      "decision_metrics_finite": false,
+      "expected_accepted": false,
+      "expected_reason": "invalid_evaluation_metrics",
+      "passed": false,
+      "reasons": []
+    },
+    {
+      "accepted": true,
+      "case_id": "candidate-primary-positive-infinity",
+      "decision_metrics_finite": false,
+      "expected_accepted": false,
+      "expected_reason": "invalid_evaluation_metrics",
+      "passed": false,
+      "reasons": []
+    },
+    {
+      "accepted": true,
+      "case_id": "incumbent-primary-nan",
+      "decision_metrics_finite": false,
+      "expected_accepted": false,
+      "expected_reason": "invalid_evaluation_metrics",
+      "passed": false,
+      "reasons": []
+    },
+    {
+      "accepted": true,
+      "case_id": "candidate-slice-nan",
+      "decision_metrics_finite": false,
+      "expected_accepted": false,
+      "expected_reason": "invalid_evaluation_metrics",
+      "passed": false,
+      "reasons": []
+    },
+    {
+      "accepted": true,
+      "case_id": "candidate-cost-nan",
+      "decision_metrics_finite": true,
+      "expected_accepted": false,
+      "expected_reason": "invalid_evaluation_metrics",
+      "passed": false,
+      "reasons": []
+    },
+    {
+      "accepted": true,
+      "case_id": "candidate-disagreement-nan",
+      "decision_metrics_finite": true,
+      "expected_accepted": false,
+      "expected_reason": "invalid_evaluation_metrics",
+      "passed": false,
+      "reasons": []
+    },
+    {
+      "accepted": true,
+      "case_id": "paired-task-score-nan",
+      "decision_metrics_finite": false,
+      "expected_accepted": false,
+      "expected_reason": "invalid_evaluation_metrics",
+      "passed": false,
+      "reasons": []
+    }
+  ],
+  "claim_limit": "A deterministic CPU promotion-gate input validation check; not model-learning or general evaluator-validity evidence.",
+  "passed": false,
+  "schema_version": 1,
+  "task_id": "vare-promotion-gate-nonfinite-metrics-v1"
+}
