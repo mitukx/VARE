@@ -1,0 +1,37 @@
+{
+  "baseline": {
+    "accepted_invalid_cases": [
+      "candidate-primary-nan",
+      "candidate-primary-positive-infinity",
+      "incumbent-primary-nan",
+      "candidate-slice-nan",
+      "candidate-cost-nan",
+      "candidate-disagreement-nan",
+      "paired-task-score-nan"
+    ],
+    "case_count": 8,
+    "cases_passed": 1,
+    "passed": false
+  },
+  "baseline_revision": "d4627bf9e486413f4d95b2cd7c4ca294f5d95091",
+  "baseline_source_sha256": "2ba0de1e77aa80846b0814810295bd33bba78a74952c46455f001a1c1c369532",
+  "claim_limit": "One deterministic CPU regression for non-finite PromotionGate inputs. The seven selected malformed reports failed open before the fix and are rejected after it; this does not estimate general error rates or validate the evaluator that supplies the metrics.",
+  "evaluator_sha256": "177abb2a1d6cc410359e09e4d488e8f04c3a386be2bc63270e7bfba552adf0f8",
+  "fixed": {
+    "accepted_invalid_cases": [],
+    "case_count": 8,
+    "cases_passed": 8,
+    "passed": true
+  },
+  "fixed_revision": "7fcc897fa49024a014a15c34aed4d0cf1fd2ec94",
+  "fixed_source_sha256": "5e1bc97780b67e9088f8744ba92d123d038d66193b3b845d5eb0198498b5f41a",
+  "protocol_id": "vare-promotion-gate-nonfinite-metrics-v1",
+  "protocol_lock_sha256": "0eb3b2f65785029070fe7d714c3492ac931b77a81455d978d02fefb6aee2aad8",
+  "reproduction": "Run benchmarks/regressions/promotion_gate_metrics/evaluator/grade.py with --workspace pointing to the target checkout; compare output with the locked eight-case contract.",
+  "runtime": {
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.14"
+  },
+  "schema_version": 1,
+  "task_id": "vare-promotion-gate-nonfinite-metrics-v1"
+}

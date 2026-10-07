@@ -1,0 +1,93 @@
+{
+  "cases": [
+    {
+      "accepted": true,
+      "case_id": "finite-positive-control",
+      "decision_metrics_finite": true,
+      "expected_accepted": true,
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "accepted": false,
+      "case_id": "candidate-primary-nan",
+      "decision_metrics_finite": true,
+      "expected_accepted": false,
+      "expected_reason": "invalid_evaluation_metrics",
+      "passed": true,
+      "reasons": [
+        "invalid_evaluation_metrics"
+      ]
+    },
+    {
+      "accepted": false,
+      "case_id": "candidate-primary-positive-infinity",
+      "decision_metrics_finite": true,
+      "expected_accepted": false,
+      "expected_reason": "invalid_evaluation_metrics",
+      "passed": true,
+      "reasons": [
+        "invalid_evaluation_metrics"
+      ]
+    },
+    {
+      "accepted": false,
+      "case_id": "incumbent-primary-nan",
+      "decision_metrics_finite": true,
+      "expected_accepted": false,
+      "expected_reason": "invalid_evaluation_metrics",
+      "passed": true,
+      "reasons": [
+        "invalid_evaluation_metrics"
+      ]
+    },
+    {
+      "accepted": false,
+      "case_id": "candidate-slice-nan",
+      "decision_metrics_finite": true,
+      "expected_accepted": false,
+      "expected_reason": "invalid_evaluation_metrics",
+      "passed": true,
+      "reasons": [
+        "invalid_evaluation_metrics"
+      ]
+    },
+    {
+      "accepted": false,
+      "case_id": "candidate-cost-nan",
+      "decision_metrics_finite": true,
+      "expected_accepted": false,
+      "expected_reason": "invalid_evaluation_metrics",
+      "passed": true,
+      "reasons": [
+        "invalid_evaluation_metrics"
+      ]
+    },
+    {
+      "accepted": false,
+      "case_id": "candidate-disagreement-nan",
+      "decision_metrics_finite": true,
+      "expected_accepted": false,
+      "expected_reason": "invalid_evaluation_metrics",
+      "passed": true,
+      "reasons": [
+        "invalid_evaluation_metrics"
+      ]
+    },
+    {
+      "accepted": false,
+      "case_id": "paired-task-score-nan",
+      "decision_metrics_finite": true,
+      "expected_accepted": false,
+      "expected_reason": "invalid_evaluation_metrics",
+      "passed": true,
+      "reasons": [
+        "invalid_evaluation_metrics"
+      ]
+    }
+  ],
+  "claim_limit": "A deterministic CPU promotion-gate input validation check; not model-learning or general evaluator-validity evidence.",
+  "passed": true,
+  "schema_version": 1,
+  "task_id": "vare-promotion-gate-nonfinite-metrics-v1"
+}
