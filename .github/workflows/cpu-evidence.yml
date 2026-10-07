@@ -9,6 +9,7 @@ on:
       - 'benchmarks/historical/**'
       - 'scripts/**'
       - 'vare/**'
+      - 'src/vare/**'
       - 'tests/**'
       - 'benchmarks/scheduler/**'
       - 'protocols/**'
@@ -29,7 +30,14 @@ jobs:
         with:
           python-version: '3.11'
       - name: Check evaluation execution contracts
-        run: python3 -m unittest discover -s tests -v
+        run: |
+          python3 -m unittest discover -s tests -p 'test_runner.py' -v
+          python3 -m unittest discover -s tests -p 'test_durable.py' -v
+          python3 -m unittest discover -s tests -p 'test_measurement.py' -v
+      - name: Reconstruct retained systems evidence
+        run: |
+          python3 scripts/audit_scheduler.py results/cpu-scheduler-v1
+          python3 scripts/audit_recovery.py results/cpu-recovery-v1
       - name: Calibrate the HF behavior-policy task
         run: >-
           python3 scripts/calibrate_task.py

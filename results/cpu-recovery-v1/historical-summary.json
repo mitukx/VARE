@@ -1,0 +1,25 @@
+{
+  "audit": {
+    "attempts": 5,
+    "events": 14,
+    "jobs": 4,
+    "outcomes": {
+      "candidate_passed": 2,
+      "candidate_rejected": 2
+    },
+    "status": "verified"
+  },
+  "expected": {
+    "task-0-baseline": "candidate_rejected",
+    "task-0-fixed": "candidate_passed",
+    "task-1-baseline": "candidate_rejected",
+    "task-1-fixed": "candidate_passed"
+  },
+  "matched": true,
+  "observed": {
+    "task-0-baseline": "candidate_rejected",
+    "task-0-fixed": "candidate_passed",
+    "task-1-baseline": "candidate_rejected",
+    "task-1-fixed": "candidate_passed"
+  }
+}

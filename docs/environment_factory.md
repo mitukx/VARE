@@ -57,4 +57,4 @@ The current CPU runner is a research harness, not a hostile-code sandbox. It use
 
 ## First historical task seed
 
-`benchmarks/seeds/rvl_static_parity` references an immutable pre-fix revision of a real RL systems repository and keeps its regression evaluator outside the candidate checkout. The task targets a previously observed sampler/learner behavior-policy mismatch. It is committed as an **E1 task seed**, not as measured agent evidence: the current evaluator is a narrow external regression contract, and the full historical numerical reproduction remains a stronger follow-up.
+`benchmarks/seeds/rvl_static_parity` references an immutable pre-fix revision of a real RL systems repository and keeps its regression evaluator outside the candidate checkout. The task targets a previously observed sampler/learner behavior-policy mismatch. It is committed as an **E1 task seed**, not as measured agent evidence: the current evaluator is a narrow external regression contract, and the stronger runtime numerical calibration is now retained under `benchmarks/historical/` and described in `docs/evidence.md`.

@@ -29,7 +29,8 @@ Compare [its pre-fix counterpart](../results/cpu-scheduler-v1/pair-0/workers-4/j
 ## 3. Try falsifying the runner (two minutes)
 
 ```bash
-python3 -m unittest discover -s tests -v
+python3 -m unittest discover -s tests -p 'test_runner.py' -v
+python3 -m unittest discover -s tests -p 'test_durable.py' -v
 ```
 
 Tests use tiny locally constructed Git repositories. No source fetch, model call or accelerator is involved. Inspect [the source-mutation case](../results/cpu-scheduler-v1/reliability/jobs/mutate/record.json), [output flood](../results/cpu-scheduler-v1/reliability/jobs/flood/record.json), and [inherited-pipe timeout](../results/cpu-scheduler-v1/reliability/jobs/inherited_pipe/record.json). None can authorize candidate success.

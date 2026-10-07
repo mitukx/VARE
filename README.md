@@ -6,6 +6,8 @@ Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, c
 
 ## Measured execution evidence
 
+- **24/24 recovery fault cases** passed under a frozen protocol: process death, rollback, lost acknowledgement, late completion, input invalidation and retry exhaustion. The retained exports contain 117 synthetic jobs/126 attempts, plus four historical jobs recovered with all calibrated outcomes preserved. See the [recovery report](docs/recovery-report.md).
+
 - **16/16 synthetic reliability cases** matched their declared outcomes, including incorrect provenance, source mutation, malformed output, timeouts, output flooding and subprocess cleanup.
 - **80 historical-source evaluations** preserved the expected pre-fix rejection/fixed acceptance decisions across one-worker and four-worker campaigns.
 - **3.4857× median paired speedup** with four workers versus this same runner with one worker, over five pairs on a local macOS arm64 CPU. This is a small local-grader measurement, not a distributed or model-serving result.
@@ -14,7 +16,9 @@ Start with the [ten-minute walkthrough](docs/walkthrough.md), [technical report]
 
 ```bash
 python3 scripts/audit_scheduler.py results/cpu-scheduler-v1
-python3 -m unittest discover -s tests -v
+python3 -m unittest discover -s tests -p 'test_runner.py' -v
+python3 -m unittest discover -s tests -p 'test_durable.py' -v
+python3 scripts/audit_recovery.py results/cpu-recovery-v1
 ```
 
 For a new campaign, use `python3 -m vare run --plan PLAN.json --output NEW_DIRECTORY --workers 4`, then `python3 -m vare audit NEW_DIRECTORY`. The execution contract provides the plan format. The runner needs Python >=3.9, Git and POSIX process groups; it has no third-party Python dependency.
@@ -77,6 +81,16 @@ For the TRL task, provide `--task-root benchmarks/historical/trl_grpo_accumulati
 ## Roadmap
 
 The [roadmap](docs/roadmap.md) tracks the evidence needed before expanding the claims. The next major gap is repeated, comparable agent trajectories on a fixed task set and budget. No such trajectories are currently reported.
+
+## Develop the full package
+
+Use Python >=3.11 in a local virtual environment. The runtime has no third-party dependencies; pytest is only for development tests. Use an editable install from this checkout because task/protocol assets are repository files.
+
+```bash
+python -m pip install -e . pytest==8.4.2
+python -m pytest
+vare --help
+```
 
 ## License
 

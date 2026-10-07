@@ -1,0 +1,66 @@
+{
+  "events": [
+    {
+      "details": {},
+      "event_sha256": "f30549c5d52e46221b04b1296cd81a18011370b06509d35b8c7fd63be20b09c3",
+      "job_id": "valid",
+      "kind": "enrolled",
+      "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "sequence": 0,
+      "token": 0
+    },
+    {
+      "details": {
+        "deadline": 1791411729.877146,
+        "owner": "unacknowledged"
+      },
+      "event_sha256": "e88d993fc59dee72e1fc73aaeaa043acb166770b38d160032c70b8b5e8e913c3",
+      "job_id": "valid",
+      "kind": "claimed",
+      "previous_hash": "f30549c5d52e46221b04b1296cd81a18011370b06509d35b8c7fd63be20b09c3",
+      "sequence": 1,
+      "token": 1
+    },
+    {
+      "details": {
+        "record_sha256": "44ba175eff53609510de2dd0a1842ca0fdd519c6d582dcc6264492181b40a41d",
+        "status": "candidate_passed"
+      },
+      "event_sha256": "c52812888c500c9f7fd7c899ed138d367a2b398fdddefc8a44bf7c667b0f177e",
+      "job_id": "valid",
+      "kind": "committed",
+      "previous_hash": "e88d993fc59dee72e1fc73aaeaa043acb166770b38d160032c70b8b5e8e913c3",
+      "sequence": 2,
+      "token": 1
+    }
+  ],
+  "jobs": [
+    {
+      "effective": "candidate_passed",
+      "expected": {
+        "input": {
+          "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "source_file_sha256": {
+            "source.txt": "25718360e05d3c2d0963d1381e9dd4dae5fca789244ee4b9f861adcc0cc96218"
+          },
+          "workspace_revision": "058ed372af4ea0d517831f39aa095f068c3ad185"
+        },
+        "protocol": {
+          "evaluator_sha256": "464fbcb4dcac042c2eb89fe373a466471a8307bd27ef50b83ba415d8deb88031",
+          "protocol_lock_sha256": "3a2ba0937cc89e1ae89dcc520a559342987556bfce9ca0bafed37bc2553f9125",
+          "task_brief_sha256": "378fa1ecc8190bc75c03c899deeaebe6cdface92ad4767b2c555a5f753dde806",
+          "task_json_sha256": "6c5dcfb13855a09348e8d28a89bd98a1b12de8bb6927b5b3ed33ed3e0ab95711"
+        },
+        "task_id": "fixture-valid"
+      },
+      "id": "valid",
+      "max_attempts": 3,
+      "output_limit_bytes": 1048576,
+      "snapshot": "6c5dcfb13855a093",
+      "state": "complete",
+      "timeout_seconds": 3,
+      "token": 1
+    }
+  ],
+  "schema_version": 1
+}

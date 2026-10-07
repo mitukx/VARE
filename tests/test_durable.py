@@ -233,6 +233,32 @@ class DurableTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             audit_durable(output)
 
+    def test_audit_requires_enrollment(self):
+        from vare.runner import digest
+        output, _ = self.exported()
+        path = output / 'state.json'
+        state = strict_json(path.read_bytes())
+        event = {k: v for k, v in state['events'][0].items() if k != 'event_sha256'}
+        event['kind'] = 'invalidated'
+        event['event_sha256'] = digest(encode(event))
+        state['events'] = [event]
+        state['jobs'][0].update(state='stale', effective='input_stale')
+        path.write_bytes(encode(state))
+        (output / 'manifest.json').unlink()
+        write_manifest(output)
+        with self.assertRaises(ValueError):
+            audit_durable(output)
+
+    def test_durable_cli_worker_export_and_audit(self):
+        import subprocess
+        import sys
+        calls = [['durable-work', '--state', str(self.store.path), '--workers', '2'],
+                 ['durable-export', '--state', str(self.store.path), '--output', str(self.parent / 'cli-evidence')],
+                 ['durable-audit', str(self.parent / 'cli-evidence')]]
+        for args in calls:
+            result = subprocess.run([sys.executable, '-m', 'vare', *args], capture_output=True, timeout=30)
+            self.assertEqual(0, result.returncode, result.stderr.decode())
+
 
 if __name__ == '__main__':
     unittest.main()

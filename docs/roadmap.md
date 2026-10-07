@@ -46,3 +46,7 @@ The isolated-input E0 calibration, execution failure-injection checks and two E1
 ## Restored experimental implementation
 
 The source recovered at upstream commit `f5c92cf` is integrated in `src/vare`, including replay, freshness, curriculum, paired promotion and RVL integration contracts. Their existence does not change the evidence ladder. The imported L0 raw archive failed the retained hash/decompression audit; its old accuracy summary is excluded from current verified claims. Legacy source-pattern fixtures are retained under `benchmarks/seeds/`, separately from calibrated runtime historical tasks.
+
+## Recovery evidence checkpoint
+
+Persistent evaluation now has a frozen CPU recovery experiment: 24/24 fault cases and four calibrated historical decisions after claimant loss. See [recovery-report.md](recovery-report.md). Current terminal publication is fenced, changed inputs are invalidated at use/export and old attempts remain retained. This extends local E0/E5 systems evidence. Multi-host leases/consensus, schema migration, power-loss behavior, stronger resource containment and real comparable agent trajectories remain separate open work.

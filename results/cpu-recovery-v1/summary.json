@@ -1,0 +1,449 @@
+{
+  "cases": [
+    {
+      "audit": {
+        "attempts": 32,
+        "events": 96,
+        "jobs": 32,
+        "outcomes": {
+          "candidate_passed": 32
+        },
+        "status": "verified"
+      },
+      "case": "claim_race",
+      "matched": true,
+      "notes": {},
+      "replication": 0
+    },
+    {
+      "audit": {
+        "attempts": 2,
+        "events": 5,
+        "jobs": 1,
+        "outcomes": {
+          "candidate_passed": 1
+        },
+        "status": "verified"
+      },
+      "case": "death_after_claim",
+      "matched": true,
+      "notes": {
+        "fault_exit": 23
+      },
+      "replication": 0
+    },
+    {
+      "audit": {
+        "attempts": 1,
+        "events": 3,
+        "jobs": 1,
+        "outcomes": {
+          "candidate_passed": 1
+        },
+        "status": "verified"
+      },
+      "case": "transaction_rollback",
+      "matched": true,
+      "notes": {
+        "fault_exit": 24,
+        "state_after_death": "pending"
+      },
+      "replication": 0
+    },
+    {
+      "audit": {
+        "attempts": 1,
+        "events": 3,
+        "jobs": 1,
+        "outcomes": {
+          "candidate_passed": 1
+        },
+        "status": "verified"
+      },
+      "case": "acknowledgement_loss",
+      "matched": true,
+      "notes": {
+        "fault_exit": 25
+      },
+      "replication": 0
+    },
+    {
+      "audit": {
+        "attempts": 2,
+        "events": 6,
+        "jobs": 1,
+        "outcomes": {
+          "candidate_passed": 1
+        },
+        "status": "verified"
+      },
+      "case": "late_completion",
+      "matched": true,
+      "notes": {
+        "new_committed": true,
+        "old_committed": false
+      },
+      "replication": 0
+    },
+    {
+      "audit": {
+        "attempts": 1,
+        "events": 4,
+        "jobs": 1,
+        "outcomes": {
+          "input_stale": 1
+        },
+        "status": "verified"
+      },
+      "case": "stale_reuse",
+      "matched": true,
+      "notes": {
+        "retained_historical_status": "candidate_passed"
+      },
+      "replication": 0
+    },
+    {
+      "audit": {
+        "attempts": 0,
+        "events": 2,
+        "jobs": 1,
+        "outcomes": {
+          "input_stale": 1
+        },
+        "status": "verified"
+      },
+      "case": "stale_pending",
+      "matched": true,
+      "notes": {},
+      "replication": 0
+    },
+    {
+      "audit": {
+        "attempts": 3,
+        "events": 8,
+        "jobs": 1,
+        "outcomes": {
+          "retry_exhausted": 1
+        },
+        "status": "verified"
+      },
+      "case": "retry_budget",
+      "matched": true,
+      "notes": {
+        "extra_claim": false
+      },
+      "replication": 0
+    },
+    {
+      "audit": {
+        "attempts": 32,
+        "events": 96,
+        "jobs": 32,
+        "outcomes": {
+          "candidate_passed": 32
+        },
+        "status": "verified"
+      },
+      "case": "claim_race",
+      "matched": true,
+      "notes": {},
+      "replication": 1
+    },
+    {
+      "audit": {
+        "attempts": 2,
+        "events": 5,
+        "jobs": 1,
+        "outcomes": {
+          "candidate_passed": 1
+        },
+        "status": "verified"
+      },
+      "case": "death_after_claim",
+      "matched": true,
+      "notes": {
+        "fault_exit": 23
+      },
+      "replication": 1
+    },
+    {
+      "audit": {
+        "attempts": 1,
+        "events": 3,
+        "jobs": 1,
+        "outcomes": {
+          "candidate_passed": 1
+        },
+        "status": "verified"
+      },
+      "case": "transaction_rollback",
+      "matched": true,
+      "notes": {
+        "fault_exit": 24,
+        "state_after_death": "pending"
+      },
+      "replication": 1
+    },
+    {
+      "audit": {
+        "attempts": 1,
+        "events": 3,
+        "jobs": 1,
+        "outcomes": {
+          "candidate_passed": 1
+        },
+        "status": "verified"
+      },
+      "case": "acknowledgement_loss",
+      "matched": true,
+      "notes": {
+        "fault_exit": 25
+      },
+      "replication": 1
+    },
+    {
+      "audit": {
+        "attempts": 2,
+        "events": 6,
+        "jobs": 1,
+        "outcomes": {
+          "candidate_passed": 1
+        },
+        "status": "verified"
+      },
+      "case": "late_completion",
+      "matched": true,
+      "notes": {
+        "new_committed": true,
+        "old_committed": false
+      },
+      "replication": 1
+    },
+    {
+      "audit": {
+        "attempts": 1,
+        "events": 4,
+        "jobs": 1,
+        "outcomes": {
+          "input_stale": 1
+        },
+        "status": "verified"
+      },
+      "case": "stale_reuse",
+      "matched": true,
+      "notes": {
+        "retained_historical_status": "candidate_passed"
+      },
+      "replication": 1
+    },
+    {
+      "audit": {
+        "attempts": 0,
+        "events": 2,
+        "jobs": 1,
+        "outcomes": {
+          "input_stale": 1
+        },
+        "status": "verified"
+      },
+      "case": "stale_pending",
+      "matched": true,
+      "notes": {},
+      "replication": 1
+    },
+    {
+      "audit": {
+        "attempts": 3,
+        "events": 8,
+        "jobs": 1,
+        "outcomes": {
+          "retry_exhausted": 1
+        },
+        "status": "verified"
+      },
+      "case": "retry_budget",
+      "matched": true,
+      "notes": {
+        "extra_claim": false
+      },
+      "replication": 1
+    },
+    {
+      "audit": {
+        "attempts": 32,
+        "events": 96,
+        "jobs": 32,
+        "outcomes": {
+          "candidate_passed": 32
+        },
+        "status": "verified"
+      },
+      "case": "claim_race",
+      "matched": true,
+      "notes": {},
+      "replication": 2
+    },
+    {
+      "audit": {
+        "attempts": 2,
+        "events": 5,
+        "jobs": 1,
+        "outcomes": {
+          "candidate_passed": 1
+        },
+        "status": "verified"
+      },
+      "case": "death_after_claim",
+      "matched": true,
+      "notes": {
+        "fault_exit": 23
+      },
+      "replication": 2
+    },
+    {
+      "audit": {
+        "attempts": 1,
+        "events": 3,
+        "jobs": 1,
+        "outcomes": {
+          "candidate_passed": 1
+        },
+        "status": "verified"
+      },
+      "case": "transaction_rollback",
+      "matched": true,
+      "notes": {
+        "fault_exit": 24,
+        "state_after_death": "pending"
+      },
+      "replication": 2
+    },
+    {
+      "audit": {
+        "attempts": 1,
+        "events": 3,
+        "jobs": 1,
+        "outcomes": {
+          "candidate_passed": 1
+        },
+        "status": "verified"
+      },
+      "case": "acknowledgement_loss",
+      "matched": true,
+      "notes": {
+        "fault_exit": 25
+      },
+      "replication": 2
+    },
+    {
+      "audit": {
+        "attempts": 2,
+        "events": 6,
+        "jobs": 1,
+        "outcomes": {
+          "candidate_passed": 1
+        },
+        "status": "verified"
+      },
+      "case": "late_completion",
+      "matched": true,
+      "notes": {
+        "new_committed": true,
+        "old_committed": false
+      },
+      "replication": 2
+    },
+    {
+      "audit": {
+        "attempts": 1,
+        "events": 4,
+        "jobs": 1,
+        "outcomes": {
+          "input_stale": 1
+        },
+        "status": "verified"
+      },
+      "case": "stale_reuse",
+      "matched": true,
+      "notes": {
+        "retained_historical_status": "candidate_passed"
+      },
+      "replication": 2
+    },
+    {
+      "audit": {
+        "attempts": 0,
+        "events": 2,
+        "jobs": 1,
+        "outcomes": {
+          "input_stale": 1
+        },
+        "status": "verified"
+      },
+      "case": "stale_pending",
+      "matched": true,
+      "notes": {},
+      "replication": 2
+    },
+    {
+      "audit": {
+        "attempts": 3,
+        "events": 8,
+        "jobs": 1,
+        "outcomes": {
+          "retry_exhausted": 1
+        },
+        "status": "verified"
+      },
+      "case": "retry_budget",
+      "matched": true,
+      "notes": {
+        "extra_claim": false
+      },
+      "replication": 2
+    }
+  ],
+  "claim_limit": "Same-host SQLite coordination and process fault injection on trusted CPU graders. Execution may repeat; only a current fenced terminal decision is deduplicated. No network partition, distributed fleet, machine power-loss, OS containment or model-learning result. Kill points occur before grader launch or after commit, not during a hostile child process.",
+  "historical_integration": {
+    "audit": {
+      "attempts": 5,
+      "events": 14,
+      "jobs": 4,
+      "outcomes": {
+        "candidate_passed": 2,
+        "candidate_rejected": 2
+      },
+      "status": "verified"
+    },
+    "expected": {
+      "task-0-baseline": "candidate_rejected",
+      "task-0-fixed": "candidate_passed",
+      "task-1-baseline": "candidate_rejected",
+      "task-1-fixed": "candidate_passed"
+    },
+    "matched": true,
+    "observed": {
+      "task-0-baseline": "candidate_rejected",
+      "task-0-fixed": "candidate_passed",
+      "task-1-baseline": "candidate_rejected",
+      "task-1-fixed": "candidate_passed"
+    }
+  },
+  "matched_cases": 24,
+  "protocol_id": "cpu-recovery-v1",
+  "protocol_sha256": "f8966f4a664410c52fcce46da666a50b0b70831b03a22a4909d7c3d9dad001f1",
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "max_wall_seconds": 600,
+    "paid_api_calls": 0
+  },
+  "runtime": {
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.9.6",
+    "sqlite": "3.54.0"
+  },
+  "schema_version": 1,
+  "status": "complete",
+  "wall_seconds": 60.570915082999996
+}

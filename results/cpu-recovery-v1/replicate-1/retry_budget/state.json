@@ -1,0 +1,114 @@
+{
+  "events": [
+    {
+      "details": {},
+      "event_sha256": "f30549c5d52e46221b04b1296cd81a18011370b06509d35b8c7fd63be20b09c3",
+      "job_id": "valid",
+      "kind": "enrolled",
+      "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "sequence": 0,
+      "token": 0
+    },
+    {
+      "details": {
+        "deadline": 1791411738.9802089,
+        "owner": "lost-worker"
+      },
+      "event_sha256": "ee403d32ddf884d09b1189c81015ccd305230a280a4cb200b855d9d6f0b8e287",
+      "job_id": "valid",
+      "kind": "claimed",
+      "previous_hash": "f30549c5d52e46221b04b1296cd81a18011370b06509d35b8c7fd63be20b09c3",
+      "sequence": 1,
+      "token": 1
+    },
+    {
+      "details": {},
+      "event_sha256": "08127f96e92bde493ba353b48ba9470cd0a655ed6d8badc64e84d7050951c482",
+      "job_id": "valid",
+      "kind": "expired",
+      "previous_hash": "ee403d32ddf884d09b1189c81015ccd305230a280a4cb200b855d9d6f0b8e287",
+      "sequence": 2,
+      "token": 1
+    },
+    {
+      "details": {
+        "deadline": 1791411739.342628,
+        "owner": "lost-worker"
+      },
+      "event_sha256": "f78ce7c31a35f84d735359387ab7cd1f6665665de54ccd62d36577f4c82dbb27",
+      "job_id": "valid",
+      "kind": "claimed",
+      "previous_hash": "08127f96e92bde493ba353b48ba9470cd0a655ed6d8badc64e84d7050951c482",
+      "sequence": 3,
+      "token": 2
+    },
+    {
+      "details": {},
+      "event_sha256": "b6f2c0037419f40d4816e7c2ce5cb7f1d6f16ed7091cca516b2388052a1a39f0",
+      "job_id": "valid",
+      "kind": "expired",
+      "previous_hash": "f78ce7c31a35f84d735359387ab7cd1f6665665de54ccd62d36577f4c82dbb27",
+      "sequence": 4,
+      "token": 2
+    },
+    {
+      "details": {
+        "deadline": 1791411739.708907,
+        "owner": "lost-worker"
+      },
+      "event_sha256": "3961c2424c45a93e29a6f9bae35c8bbf6cd05e13b648c1816d309a5fe6974053",
+      "job_id": "valid",
+      "kind": "claimed",
+      "previous_hash": "b6f2c0037419f40d4816e7c2ce5cb7f1d6f16ed7091cca516b2388052a1a39f0",
+      "sequence": 5,
+      "token": 3
+    },
+    {
+      "details": {},
+      "event_sha256": "01d0cbadae89225228ae026553d2458bac62a3d19bd0862d536f0202f4e33fc7",
+      "job_id": "valid",
+      "kind": "expired",
+      "previous_hash": "3961c2424c45a93e29a6f9bae35c8bbf6cd05e13b648c1816d309a5fe6974053",
+      "sequence": 6,
+      "token": 3
+    },
+    {
+      "details": {},
+      "event_sha256": "cf86d30f9de86a534f3ba19d8ecaf9c35a051a4a7e3a571e92782a26dc4d2e49",
+      "job_id": "valid",
+      "kind": "exhausted",
+      "previous_hash": "01d0cbadae89225228ae026553d2458bac62a3d19bd0862d536f0202f4e33fc7",
+      "sequence": 7,
+      "token": 3
+    }
+  ],
+  "jobs": [
+    {
+      "effective": "retry_exhausted",
+      "expected": {
+        "input": {
+          "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "source_file_sha256": {
+            "source.txt": "25718360e05d3c2d0963d1381e9dd4dae5fca789244ee4b9f861adcc0cc96218"
+          },
+          "workspace_revision": "452fc46461e6187954149db7856f98f237814cb3"
+        },
+        "protocol": {
+          "evaluator_sha256": "464fbcb4dcac042c2eb89fe373a466471a8307bd27ef50b83ba415d8deb88031",
+          "protocol_lock_sha256": "d3f1b540aeeeee915c0757d4a80d2283268804e7db70618f31f3c77c1373c714",
+          "task_brief_sha256": "378fa1ecc8190bc75c03c899deeaebe6cdface92ad4767b2c555a5f753dde806",
+          "task_json_sha256": "f092f15f5a4141085d0c3b6ee8719e9de14201e568f06fb00c91dd31e56ad997"
+        },
+        "task_id": "fixture-valid"
+      },
+      "id": "valid",
+      "max_attempts": 3,
+      "output_limit_bytes": 1048576,
+      "snapshot": "f092f15f5a414108",
+      "state": "complete",
+      "timeout_seconds": 3,
+      "token": 3
+    }
+  ],
+  "schema_version": 1
+}

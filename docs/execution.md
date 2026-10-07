@@ -57,7 +57,8 @@ Prepare an external candidate with `scripts/prepare_task.py`, then save a plan s
 ```bash
 python3 -m vare run --plan /tmp/vare-plan.json --output /tmp/vare-campaign --workers 4
 python3 -m vare audit /tmp/vare-campaign
-python3 -m unittest discover -s tests -v
+python3 -m unittest discover -s tests -p 'test_runner.py' -v
+python3 -m unittest discover -s tests -p 'test_durable.py' -v
 ```
 
 The `run` exit code is 0 when all jobs were evaluated as valid passes or valid candidate rejections. It is 1 if any evaluation has an operational error. Individual scores are in the records; do not treat campaign exit 0 as all candidates passing. `audit` exit 0 confirms retained consistency, including bundles containing operational failures.

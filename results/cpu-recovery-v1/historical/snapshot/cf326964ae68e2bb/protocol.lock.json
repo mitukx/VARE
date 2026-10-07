@@ -1,0 +1,25 @@
+{
+  "acceptance": {
+    "max_abs_logprob_error": 1e-10,
+    "neutral_repetition_penalty": 1.0,
+    "neutral_top_k": 0,
+    "neutral_top_p": 1.0,
+    "requires_eval_state_restoration": true,
+    "requires_invalid_temp_fail_closed": true,
+    "requires_model_state_restore_on_errors": true,
+    "requires_trainer_runtime_probability_parity": true,
+    "rollout_conditions": 6
+  },
+  "expected_calibration": {
+    "baseline_passed": false,
+    "calibration_passed": true
+  },
+  "locked_hashes": {
+    "evaluator_sha256": "f239403b5e05b164184dbfeea5ceaa79f5e148aedad7f19c2ea0ec9aa0e7a892",
+    "task_brief_sha256": "74519d6452addda13d99cf6936cd2cfc3c5f102d7c6eb8e3bc25b01d3833c0b0",
+    "task_json_sha256": "cf326964ae68e2bbffe872719ce8e67475b21aded5601d2383a5c17344168abd"
+  },
+  "protocol_id": "rvl-hf-behavior-policy-parity-protocol-v2",
+  "schema_version": 1,
+  "task_id": "rvl-hf-behavior-policy-parity-v1"
+}

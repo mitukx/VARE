@@ -390,7 +390,7 @@ def audit_durable(output):
                 raise ValueError('invalid exhaustion')
             row.update(state='complete', effective='retry_exhausted')
         elif kind == 'invalidated':
-            if row['state'] == 'stale' or row['token'] != token:
+            if row['state'] in {None, 'stale'} or row['token'] != token:
                 raise ValueError('invalid freshness transition')
             row.update(state='stale', effective='input_stale')
         elif kind in {'committed', 'fenced'}:
@@ -430,6 +430,8 @@ def audit_durable(output):
         else:
             raise ValueError('unknown event')
     for name, row in replay.items():
+        if row['state'] is None:
+            raise ValueError('exported job was never enrolled')
         if row != {key: jobs[name][key] for key in row}:
             raise ValueError('exported job state does not replay')
     for (name, token), expected_state in attempt_states.items():

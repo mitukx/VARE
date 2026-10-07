@@ -39,3 +39,9 @@ VARE owns the outer capability-improvement control plane. It intentionally does 
 `vare.environments` adds repository-level tasks without moving learner ownership into VARE. A `TaskCatalog` selects immutable task specifications; `WorkspaceAgentRollout` materializes an isolated candidate checkout; `CatalogEnvironmentVerifier` evaluates the resulting workspace using trusted command vectors and returns a normal VARE `Verification`. This makes repository engineering trajectories first-class replay data while keeping the evaluator independent from agent text output.
 
 The local runner is intentionally not advertised as a hostile-code sandbox. Open-ended untrusted agents require an external container/VM boundary with evaluator assets mounted read-only.
+
+## Persistent evaluation state
+
+`vare.runner` executes locked numerical task graders with bounded capture and before/after provenance checks. `vare.durable` adds same-host SQLite claims, expiring leases, generation fencing and input invalidation; it reuses that runner rather than implementing another grader. The [requirements](requirements.md), [contract](recovery.md) and [measured report](recovery-report.md) specify the boundary.
+
+This path uses locked historical-task descriptors. The earlier `vare.environments` path uses engineering task specifications and exposes workspace-agent trajectories to the experimental loop. Its source-pattern seed is retained in `benchmarks/seeds/`. These descriptor formats are explicit separate contracts; an adapter into held-out promotion would require independent candidate/model evidence and is not asserted by a calibration pass. The graph above describes experimental control-loop interfaces, not a deployed rollout fleet or measured model improvement.

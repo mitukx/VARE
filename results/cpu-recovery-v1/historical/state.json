@@ -1,0 +1,280 @@
+{
+  "events": [
+    {
+      "details": {},
+      "event_sha256": "0cc5eb6a77ec054ae08eb38bf81480559be362d0cebe61b9ac2ae7839f858aa5",
+      "job_id": "task-0-baseline",
+      "kind": "enrolled",
+      "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "sequence": 0,
+      "token": 0
+    },
+    {
+      "details": {},
+      "event_sha256": "282addc74208678bbc7b2621e8e4e2e33a1a3f38b2732cde5cb7ae8b7db180f2",
+      "job_id": "task-0-fixed",
+      "kind": "enrolled",
+      "previous_hash": "0cc5eb6a77ec054ae08eb38bf81480559be362d0cebe61b9ac2ae7839f858aa5",
+      "sequence": 1,
+      "token": 0
+    },
+    {
+      "details": {},
+      "event_sha256": "a2120638aad8969f3f66119d34c84bce29786d852a388d9d99eb11e2be0d30eb",
+      "job_id": "task-1-baseline",
+      "kind": "enrolled",
+      "previous_hash": "282addc74208678bbc7b2621e8e4e2e33a1a3f38b2732cde5cb7ae8b7db180f2",
+      "sequence": 2,
+      "token": 0
+    },
+    {
+      "details": {},
+      "event_sha256": "3d6ea501aadf316022fc0210bb75a002f13f01420f5062af6d4c086e2cf56bcf",
+      "job_id": "task-1-fixed",
+      "kind": "enrolled",
+      "previous_hash": "a2120638aad8969f3f66119d34c84bce29786d852a388d9d99eb11e2be0d30eb",
+      "sequence": 3,
+      "token": 0
+    },
+    {
+      "details": {
+        "deadline": 1791411765.663384,
+        "owner": "lost-worker"
+      },
+      "event_sha256": "24830c7621bbf55debc2f3656b5899e0559b09b31a5bb9982ef72d522c1e1d51",
+      "job_id": "task-0-baseline",
+      "kind": "claimed",
+      "previous_hash": "3d6ea501aadf316022fc0210bb75a002f13f01420f5062af6d4c086e2cf56bcf",
+      "sequence": 4,
+      "token": 1
+    },
+    {
+      "details": {},
+      "event_sha256": "d3a42c58fa1ad77ef29bd245abd9237d8394df6a42a6fb19dbb5c60324af247c",
+      "job_id": "task-0-baseline",
+      "kind": "expired",
+      "previous_hash": "24830c7621bbf55debc2f3656b5899e0559b09b31a5bb9982ef72d522c1e1d51",
+      "sequence": 5,
+      "token": 1
+    },
+    {
+      "details": {
+        "deadline": 1791411775.9599118,
+        "owner": "worker-0"
+      },
+      "event_sha256": "b1cf6a9767f1597b12a6586ac380a5f41ff7008a9a62d50db3d6739ec3d95b45",
+      "job_id": "task-0-baseline",
+      "kind": "claimed",
+      "previous_hash": "d3a42c58fa1ad77ef29bd245abd9237d8394df6a42a6fb19dbb5c60324af247c",
+      "sequence": 6,
+      "token": 2
+    },
+    {
+      "details": {
+        "deadline": 1791411775.962213,
+        "owner": "worker-1"
+      },
+      "event_sha256": "fe0e7d602c15e286d9278d4fd250d86637406a5b9bcc330e7f1955ff264983fb",
+      "job_id": "task-0-fixed",
+      "kind": "claimed",
+      "previous_hash": "b1cf6a9767f1597b12a6586ac380a5f41ff7008a9a62d50db3d6739ec3d95b45",
+      "sequence": 7,
+      "token": 1
+    },
+    {
+      "details": {
+        "deadline": 1791411775.962582,
+        "owner": "worker-2"
+      },
+      "event_sha256": "2ea715aff98fa509b27caf239bd3572cd269c6feac11d74631263d7dfcad6bc0",
+      "job_id": "task-1-baseline",
+      "kind": "claimed",
+      "previous_hash": "fe0e7d602c15e286d9278d4fd250d86637406a5b9bcc330e7f1955ff264983fb",
+      "sequence": 8,
+      "token": 1
+    },
+    {
+      "details": {
+        "deadline": 1791411775.9629471,
+        "owner": "worker-3"
+      },
+      "event_sha256": "af9358035521b26abae35e9ef4a1b93a71d27f66d564f279fbe1d787c31d5705",
+      "job_id": "task-1-fixed",
+      "kind": "claimed",
+      "previous_hash": "2ea715aff98fa509b27caf239bd3572cd269c6feac11d74631263d7dfcad6bc0",
+      "sequence": 9,
+      "token": 1
+    },
+    {
+      "details": {
+        "record_sha256": "f3c0f9d58368545d2187797d21d9712b7c98deb6c2ddff68766a64183aa88f75",
+        "status": "candidate_rejected"
+      },
+      "event_sha256": "8bd2b7cdfdec18f19e708e3b23bd9c7f2e2a01b73beef31debb443e6a26b6a45",
+      "job_id": "task-0-baseline",
+      "kind": "committed",
+      "previous_hash": "af9358035521b26abae35e9ef4a1b93a71d27f66d564f279fbe1d787c31d5705",
+      "sequence": 10,
+      "token": 2
+    },
+    {
+      "details": {
+        "record_sha256": "1df51e54eccc1342dd93bfe865b106ba63cfba8bd09ac53d7cefef74a2eb707a",
+        "status": "candidate_passed"
+      },
+      "event_sha256": "de89d202fdf0a6bcaf100573657c436ac28505f6da95f0a3819362009c524982",
+      "job_id": "task-0-fixed",
+      "kind": "committed",
+      "previous_hash": "8bd2b7cdfdec18f19e708e3b23bd9c7f2e2a01b73beef31debb443e6a26b6a45",
+      "sequence": 11,
+      "token": 1
+    },
+    {
+      "details": {
+        "record_sha256": "e955648582122bdceb79f26ac6c0db2becf1d7b370fd902407cc808fb41ce099",
+        "status": "candidate_passed"
+      },
+      "event_sha256": "55d62ae5258ec44c993b16498bc5d47818002960573135985de8738dd7db8813",
+      "job_id": "task-1-fixed",
+      "kind": "committed",
+      "previous_hash": "de89d202fdf0a6bcaf100573657c436ac28505f6da95f0a3819362009c524982",
+      "sequence": 12,
+      "token": 1
+    },
+    {
+      "details": {
+        "record_sha256": "84ca631e174a26d1d216a670f2fdf11f31ff73cee695a173ce8eb5bf68838e87",
+        "status": "candidate_rejected"
+      },
+      "event_sha256": "87b3eabd412a9d0a9b60165c8fa0320c4290dc34f4da24a36d8729ef9a94267c",
+      "job_id": "task-1-baseline",
+      "kind": "committed",
+      "previous_hash": "55d62ae5258ec44c993b16498bc5d47818002960573135985de8738dd7db8813",
+      "sequence": 13,
+      "token": 1
+    }
+  ],
+  "jobs": [
+    {
+      "effective": "candidate_rejected",
+      "expected": {
+        "input": {
+          "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "source_file_sha256": {
+            "src/rvl_systems/backends.py": "26abeffd24ecef37093a179dc33506f0853018331c0002bd01010d016b31faca",
+            "src/rvl_systems/grpo.py": "a2ef6217385a206f5e6c0f43fb40e900ae3bf1b2066a1c8d1ab1878fd25d724d",
+            "src/rvl_systems/hf_backend.py": "8a3fe764508018a3e1237f9f131626ce7690b8e93b5a1e7b52fd52356133fce6",
+            "src/rvl_systems/hf_trainer.py": "95a0b36732c416f0d0bc8cbddc55ed11b3eb2ecc7d72654fd6a00d43adf772e7",
+            "src/rvl_systems/objectives.py": "e5c40d097bdd3adc9c1e356037bc9e07857bbdfbf5a8fc78e77284534f614c6b",
+            "src/rvl_systems/precision.py": "2acc6f4c6205c9009b0dc15159d8a285aa414940fe20bedfc30fd36473369b0f",
+            "src/rvl_systems/triton_grpo.py": "ed7ee082db036e1631c1f8eaacfb8691b102401c8342dcb9ed4dba5d26a22cf9",
+            "src/rvl_systems/types.py": "a3e9f06cc70972a7b5fd50b757ffff992d3a6156d1ffab5133e410471dcc5d7b"
+          },
+          "workspace_revision": "e788f113ad6b246a361cd50a52eaf2867f2a66f8"
+        },
+        "protocol": {
+          "evaluator_sha256": "f239403b5e05b164184dbfeea5ceaa79f5e148aedad7f19c2ea0ec9aa0e7a892",
+          "protocol_lock_sha256": "3a5f83f47f0a81c194de643bf63c55c8173e2f0f0c6c740279c7d17a379ae58b",
+          "task_brief_sha256": "74519d6452addda13d99cf6936cd2cfc3c5f102d7c6eb8e3bc25b01d3833c0b0",
+          "task_json_sha256": "cf326964ae68e2bbffe872719ce8e67475b21aded5601d2383a5c17344168abd"
+        },
+        "task_id": "rvl-hf-behavior-policy-parity-v1"
+      },
+      "id": "task-0-baseline",
+      "max_attempts": 3,
+      "output_limit_bytes": 1048576,
+      "snapshot": "cf326964ae68e2bb",
+      "state": "complete",
+      "timeout_seconds": 30.0,
+      "token": 2
+    },
+    {
+      "effective": "candidate_passed",
+      "expected": {
+        "input": {
+          "candidate_diff_sha256": "6a3aecbece7ec5da011adbe5d5ec58e38da4f10e5dac9fed9cb3284537f62647",
+          "source_file_sha256": {
+            "src/rvl_systems/backends.py": "26abeffd24ecef37093a179dc33506f0853018331c0002bd01010d016b31faca",
+            "src/rvl_systems/grpo.py": "a2ef6217385a206f5e6c0f43fb40e900ae3bf1b2066a1c8d1ab1878fd25d724d",
+            "src/rvl_systems/hf_backend.py": "dca31dd2399d16bb7f999d7559be6b0cb192294e760cffbb64053b021d3c4593",
+            "src/rvl_systems/hf_trainer.py": "375985c1d0cca49a9d98d8b00ed41cefe000b91461e9a0783e94312466fd0210",
+            "src/rvl_systems/objectives.py": "e5c40d097bdd3adc9c1e356037bc9e07857bbdfbf5a8fc78e77284534f614c6b",
+            "src/rvl_systems/precision.py": "2acc6f4c6205c9009b0dc15159d8a285aa414940fe20bedfc30fd36473369b0f",
+            "src/rvl_systems/triton_grpo.py": "ed7ee082db036e1631c1f8eaacfb8691b102401c8342dcb9ed4dba5d26a22cf9",
+            "src/rvl_systems/types.py": "a3e9f06cc70972a7b5fd50b757ffff992d3a6156d1ffab5133e410471dcc5d7b"
+          },
+          "workspace_revision": "c7e646b043cb56e5ea3c2623bb8a61e065451f72"
+        },
+        "protocol": {
+          "evaluator_sha256": "f239403b5e05b164184dbfeea5ceaa79f5e148aedad7f19c2ea0ec9aa0e7a892",
+          "protocol_lock_sha256": "3a5f83f47f0a81c194de643bf63c55c8173e2f0f0c6c740279c7d17a379ae58b",
+          "task_brief_sha256": "74519d6452addda13d99cf6936cd2cfc3c5f102d7c6eb8e3bc25b01d3833c0b0",
+          "task_json_sha256": "cf326964ae68e2bbffe872719ce8e67475b21aded5601d2383a5c17344168abd"
+        },
+        "task_id": "rvl-hf-behavior-policy-parity-v1"
+      },
+      "id": "task-0-fixed",
+      "max_attempts": 3,
+      "output_limit_bytes": 1048576,
+      "snapshot": "cf326964ae68e2bb",
+      "state": "complete",
+      "timeout_seconds": 30.0,
+      "token": 1
+    },
+    {
+      "effective": "candidate_rejected",
+      "expected": {
+        "input": {
+          "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "source_file_sha256": {
+            "trl/experimental/gspo_token/grpo_trainer.py": "b6f40a43d1b04372ab2068aaeeaf2cd7a33a7aabecaff95057de00484fbc63a5",
+            "trl/trainer/grpo_trainer.py": "c4a1249c66a3293835b533114d9728a74ab36e775052931229302006a5fe2369"
+          },
+          "workspace_revision": "8697378709102608e3c9dc5bf582772e4ddee788"
+        },
+        "protocol": {
+          "evaluator_sha256": "e0dd3378a16537ef13d0b53aaeaeb4bd189a3511c77531401723b0ab11952ce7",
+          "protocol_lock_sha256": "c1ccd655c47bbcf1dcadc0ed1bf65b01dd97208faf0ad9f08a40b52e817c7349",
+          "task_brief_sha256": "f5b8283ac025a347461529299f5dda68b65de34d5ccdbf94e8f719a79aeabb2a",
+          "task_json_sha256": "8863c976d89a99ef53c1ac26764aa0448f06017794e0358e2ead088623b152ce"
+        },
+        "task_id": "trl-grpo-accumulation-window-normalizer-v1"
+      },
+      "id": "task-1-baseline",
+      "max_attempts": 3,
+      "output_limit_bytes": 1048576,
+      "snapshot": "8863c976d89a99ef",
+      "state": "complete",
+      "timeout_seconds": 30.0,
+      "token": 1
+    },
+    {
+      "effective": "candidate_passed",
+      "expected": {
+        "input": {
+          "candidate_diff_sha256": "870249300e133a9d10ffb20a82c4aca9d0ddcc519861c890033e6b0b721a5ed0",
+          "source_file_sha256": {
+            "trl/experimental/gspo_token/grpo_trainer.py": "37b91254ff70d353ca4a04bd1e28602102ddcbd50be3a79b0ba0a6cb62bc52e0",
+            "trl/trainer/grpo_trainer.py": "7446f652aefb9b78a64952a135c2235c924a7633c112d6a8f569b16ec4d62e14"
+          },
+          "workspace_revision": "e1b2e21975994e676d9a676e3ab005e9bee38e40"
+        },
+        "protocol": {
+          "evaluator_sha256": "e0dd3378a16537ef13d0b53aaeaeb4bd189a3511c77531401723b0ab11952ce7",
+          "protocol_lock_sha256": "c1ccd655c47bbcf1dcadc0ed1bf65b01dd97208faf0ad9f08a40b52e817c7349",
+          "task_brief_sha256": "f5b8283ac025a347461529299f5dda68b65de34d5ccdbf94e8f719a79aeabb2a",
+          "task_json_sha256": "8863c976d89a99ef53c1ac26764aa0448f06017794e0358e2ead088623b152ce"
+        },
+        "task_id": "trl-grpo-accumulation-window-normalizer-v1"
+      },
+      "id": "task-1-fixed",
+      "max_attempts": 3,
+      "output_limit_bytes": 1048576,
+      "snapshot": "8863c976d89a99ef",
+      "state": "complete",
+      "timeout_seconds": 30.0,
+      "token": 1
+    }
+  ],
+  "schema_version": 1
+}
