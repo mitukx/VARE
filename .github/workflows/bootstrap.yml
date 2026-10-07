@@ -1,0 +1,40 @@
+name: bootstrap-vare
+on:
+  push:
+    paths:
+      - '.vare-bootstrap.tar.gz.b64'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Unpack tracked repository tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! -f .vare-bootstrap.tar.gz.b64 ]]; then
+            echo "bootstrap archive absent; nothing to do"
+            exit 0
+          fi
+          base64 -d .vare-bootstrap.tar.gz.b64 | tar -xzf -
+          rm .vare-bootstrap.tar.gz.b64
+      - name: Commit imported tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "no changes"
+            exit 0
+          fi
+          git commit -m "Import VARE v0.3.1"
+          git push origin HEAD:main
