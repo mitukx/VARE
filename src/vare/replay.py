@@ -109,19 +109,32 @@ class PrioritizedReplay:
         ``freshness_fn`` returns ``None`` for currently inadmissible experience.
         Dynamic priorities are recomputed rather than reusing the priority from
         insertion time, preventing a once-fresh trajectory from remaining hot
-        after policy or verifier versions advance.
+        after policy or verifier versions advance. With grouped sampling, one
+        inadmissible member excludes its whole comparison group.
         """
         if not self._heap or n <= 0:
             return []
         eligible: list[tuple[float, _HeapItem]] = []
+        group_candidates: dict[str, list[tuple[float | None, _HeapItem]]] = {}
         for item in self._heap:
             freshness = freshness_fn(item.experience)
-            if freshness is None:
-                continue
-            eligible.append((self._priority(item.experience, freshness), item))
-        if not eligible:
-            return []
+            if grouped:
+                key = item.experience.attempt.metadata.get(metadata_key)
+                if key is None:
+                    key = item.experience.attempt.task.metadata.get(metadata_key)
+                if key is None:
+                    key = f"ungrouped:{id(item.experience)}"
+                priority = (
+                    None if freshness is None
+                    else self._priority(item.experience, freshness)
+                )
+                group_candidates.setdefault(str(key), []).append((priority, item))
+            elif freshness is not None:
+                eligible.append((self._priority(item.experience, freshness), item))
+
         if not grouped:
+            if not eligible:
+                return []
             items = [item for _, item in eligible]
             weights = [priority for priority, _ in eligible]
             if n >= len(items):
@@ -137,14 +150,13 @@ class PrioritizedReplay:
                             break
             return out
 
-        groups: dict[str, list[tuple[float, _HeapItem]]] = {}
-        for priority, item in eligible:
-            key = item.experience.attempt.metadata.get(metadata_key)
-            if key is None:
-                key = item.experience.attempt.task.metadata.get(metadata_key)
-            if key is None:
-                key = f"ungrouped:{id(item.experience)}"
-            groups.setdefault(str(key), []).append((priority, item))
+        groups = {
+            key: [(priority, item) for priority, item in members if priority is not None]
+            for key, members in group_candidates.items()
+            if all(priority is not None for priority, _ in members)
+        }
+        if not groups:
+            return []
         remaining = dict(groups)
         out: list[Experience] = []
         while remaining and len(out) < n:
