@@ -1,0 +1,39 @@
+{
+  "claim_limit": "One post-method-branch mutation in two functions on one pinned upstream revision. This confirms one v4 blind spot, not a general error rate or full trainer execution.",
+  "fixed_source": {
+    "conditions": 12,
+    "passed": true,
+    "revision": "e1b2e21975994e676d9a676e3ab005e9bee38e40",
+    "source_hashes": {
+      "trl/experimental/gspo_token/grpo_trainer.py": "37b91254ff70d353ca4a04bd1e28602102ddcbd50be3a79b0ba0a6cb62bc52e0",
+      "trl/trainer/grpo_trainer.py": "7446f652aefb9b78a64952a135c2235c924a7633c112d6a8f569b16ec4d62e14"
+    }
+  },
+  "frozen_at_commit": "59577b3",
+  "frozen_protocol_sha256": "5bba56756811e1155ad4467d45c991d9879e333e325de1be8fdde5dc54329e9f",
+  "grader_protocol": "trl-grpo-accumulation-window-normalizer-protocol-v4",
+  "grader_sha256": "55fd00d24146cd4b7a41393c89c8f503cd5380d0e81864fea066f39fdef723cf",
+  "mutation": {
+    "candidate_diff_sha256": "f5f08ef1987f7b8ba0b0a2b2ec661262b7e50ad5de6146fea619754ed5628d6b",
+    "conditions": 12,
+    "expected_semantic_decision": "reject",
+    "failure_count": 0,
+    "grader_passed": true,
+    "patch_sha256": "222d3c2599005a8df849c44b6fc74410fe5c74110dce0d505f98010442698097",
+    "source_hashes": {
+      "trl/experimental/gspo_token/grpo_trainer.py": "4f08888b13097e394bfbed9a8a6450acd89d6a97cd658d71a0ed17f73e4fa6b2",
+      "trl/trainer/grpo_trainer.py": "d69f732ac9fe3b721fb9dfd7da2ceaa467fb6d734f0996ecb712bc9857ad68a0"
+    }
+  },
+  "observed_conclusion": "Confirmed a second v4 false acceptance: the candidate reassigns the final loss to twice its previous value immediately before returning from each pinned _compute_loss method. The v4 branch-local guard does not inspect this downstream write.",
+  "protocol_id": "trl-final-loss-rebind-audit-v1",
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "model_weights_loaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages_used": false
+  },
+  "schema_version": 1,
+  "status": "completed"
+}
