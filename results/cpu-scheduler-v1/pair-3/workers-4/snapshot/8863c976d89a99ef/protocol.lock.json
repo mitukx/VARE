@@ -1,0 +1,25 @@
+{
+  "acceptance": {
+    "absolute_normalizer_tolerance": 1e-12,
+    "branches": [
+      "main_dapo_cispo_vespo",
+      "experimental_dapo"
+    ],
+    "conditions_per_branch": 6,
+    "requires_current_partial_window_size": true,
+    "requires_eval_unchanged": true,
+    "requires_train_only_rescale": true
+  },
+  "expected_calibration": {
+    "baseline_passed": false,
+    "calibration_passed": true
+  },
+  "locked_hashes": {
+    "evaluator_sha256": "e0dd3378a16537ef13d0b53aaeaeb4bd189a3511c77531401723b0ab11952ce7",
+    "task_brief_sha256": "f5b8283ac025a347461529299f5dda68b65de34d5ccdbf94e8f719a79aeabb2a",
+    "task_json_sha256": "8863c976d89a99ef53c1ac26764aa0448f06017794e0358e2ead088623b152ce"
+  },
+  "protocol_id": "trl-grpo-accumulation-window-normalizer-protocol-v1",
+  "schema_version": 1,
+  "task_id": "trl-grpo-accumulation-window-normalizer-v1"
+}

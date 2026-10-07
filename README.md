@@ -1,8 +1,23 @@
 # VARE
 
-VARE is a research scaffold for reproducible, compute-conscious experiments on agent improvement. The current work builds a narrower foundation: historical software tasks with immutable source revisions, independent CPU graders, locked evaluation protocols, and retained calibration evidence.
+VARE is a CPU evaluation control plane for reproducible experiments on agent improvement. It runs independently graded historical software tasks with bounded concurrency, locked protocols, candidate provenance checks, timeout/output handling, and auditable retained records.
 
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
+
+## Measured execution evidence
+
+- **16/16 synthetic reliability cases** matched their declared outcomes, including incorrect provenance, source mutation, malformed output, timeouts, output flooding and subprocess cleanup.
+- **80 historical-source evaluations** preserved the expected pre-fix rejection/fixed acceptance decisions across one-worker and four-worker campaigns.
+- **3.4857× median paired speedup** with four workers versus this same runner with one worker, over five pairs on a local macOS arm64 CPU. This is a small local-grader measurement, not a distributed or model-serving result.
+
+Start with the [ten-minute walkthrough](docs/walkthrough.md), [technical report](docs/scheduler-report.md), and [execution contract](docs/execution.md). Inspect retained evidence offline:
+
+```bash
+python3 scripts/audit_scheduler.py results/cpu-scheduler-v1
+python3 -m unittest discover -s tests -v
+```
+
+For a new campaign, use `python3 -m vare run --plan PLAN.json --output NEW_DIRECTORY --workers 4`, then `python3 -m vare audit NEW_DIRECTORY`. The execution contract provides the plan format. The runner needs Python >=3.9, Git and POSIX process groups; it has no third-party Python dependency.
 
 ## Current scope
 
@@ -21,7 +36,7 @@ The separate [integrity calibration](results/protocol-integrity/cpu-calibration-
 
 These are task/evaluator calibration results. They do not measure an agent solving tasks, model training, generalization, or capability improvement. The TRL grader executes extracted production normalization statements with scalar doubles; it does not run a full trainer or gradient update. The HF grader executes candidate source with local fixtures; it is not an operating-system sandbox for hostile code. Only run it on candidate code you trust.
 
-The current repository snapshot does not implement a model-training loop, agent orchestration, curriculum intervention, or promotion system. Those are later research steps, not measured features.
+The repository implements evaluation orchestration, not a model-training loop, coding-agent orchestration, curriculum intervention, or promotion system. Those are later research steps, not measured features.
 
 ## Reproduce the calibrations
 

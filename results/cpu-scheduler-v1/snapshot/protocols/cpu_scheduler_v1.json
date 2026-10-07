@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "protocol_id": "cpu-scheduler-v1",
+  "hypothesis": "Four bounded workers reduce evaluation wall time relative to one worker without changing candidate outcomes or weakening provenance validation.",
+  "task_pack": ["rvl-hf-behavior-policy-parity-v1", "trl-grpo-accumulation-window-normalizer-v1"],
+  "candidate_selection": "Pinned baseline and known fixed revision for each task, two identical repetitions per revision, eight jobs per campaign. No agent-generated patches.",
+  "paired_repetitions": 5,
+  "workers": [1, 4],
+  "order": [[1, 4], [4, 1], [1, 4], [4, 1], [1, 4]],
+  "primary_metric": "Median of five paired serial wall seconds divided by parallel wall seconds; time includes input verification, grader execution, bounded capture, atomic records and journal, but excludes initial source fetch and protocol snapshots.",
+  "secondary_metrics": ["jobs per second", "queue p50/p95", "execution p50/p95", "score consistency"],
+  "quantile_rule": "Nearest rank on sorted values, ceil(p*n)-1.",
+  "acceptance": "All 80 results match pinned base rejection/fixed acceptance, and every campaign passes bundle audit. Report measured speedup even if <=1. No reruns to optimize headline.",
+  "timeout_seconds": 30,
+  "output_limit_bytes": 1048576,
+  "abort": "Stop the scheduling measurement at the first unexpected outcome or audit error; retain artifacts and failure record. Any repaired protocol gets a new version.",
+  "reliability_cases": {
+    "valid": "candidate_passed", "reject": "candidate_rejected",
+    "malformed": "invalid_output", "duplicate": "invalid_output", "nonfinite": "invalid_output",
+    "crash": "grader_error", "wrong_task": "provenance_mismatch", "fake_hash": "provenance_mismatch",
+    "wrong_exit": "invalid_output", "mutate": "workspace_changed", "timeout": "timeout",
+    "flood": "output_limit", "child": "candidate_passed", "inherited_pipe": "timeout",
+    "missing_source": "source_error", "tampered_protocol": "protocol_error"
+  },
+  "budget": {"gpu_hours": 0, "paid_api_calls": 0, "external_compute_usd": 0, "max_local_wall_seconds": 600},
+  "claim_limit": "Local CPU evaluation orchestration on two small historical graders and synthetic faults. No distributed fleet, inference serving, hostile-code sandbox, agent task solving, or learning claim. Baseline is the same runner with one worker."
+}

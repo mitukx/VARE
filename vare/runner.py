@@ -374,6 +374,8 @@ async def run_campaign(jobs, output, workers=1, repository_root=ROOT):
 
 def audit(output):
     output = output.resolve()
+    if any(p.is_symlink() for p in output.rglob('*')):
+        raise ValueError('bundle contains a symlink')
     manifest = strict_json((output / 'manifest.json').read_bytes())
     actual = {str(p.relative_to(output)): file_hash(p) for p in sorted(output.rglob('*'))
               if p.is_file() and p != output / 'manifest.json'}
@@ -384,7 +386,12 @@ def audit(output):
     ledger = strict_json((output / 'ledger.json').read_bytes())
     previous = '0' * 64
     seen, outcomes = set(), Counter()
+    if any(not re.fullmatch(r'[A-Za-z0-9_-]{1,80}', j['id']) or
+           not re.fullmatch(r'[a-f0-9]{16}', j['task_snapshot']) for j in plan['jobs']):
+        raise ValueError('unsafe plan path')
     planned = {j['id'] for j in plan['jobs']}
+    if len(planned) != len(plan['jobs']):
+        raise ValueError('duplicate plan ID')
     for index, event in enumerate(ledger):
         entry = dict(event)
         claimed = entry.pop('event_sha256')
@@ -452,7 +459,9 @@ def main():
                     for j in plan['jobs']]
             result = asyncio.run(run_campaign(jobs, args.output, args.workers))
         print(encode(result).decode(), end='')
-        return 0 if result.get('status') in {'verified', 'complete'} and not any(
+        if args.command == 'audit':
+            return 0
+        return 0 if result.get('status') == 'complete' and not any(
             k not in {'candidate_passed', 'candidate_rejected'} for k in result.get('outcomes', {})) else 1
     except (ValueError, KeyError, OSError, TypeError) as exc:
         print(json.dumps({'error': type(exc).__name__, 'message': str(exc)}), file=sys.stderr)

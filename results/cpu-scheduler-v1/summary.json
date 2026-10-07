@@ -1,0 +1,193 @@
+{
+  "all_expected_outcomes": true,
+  "claim_limit": "Local CPU evaluation orchestration on two small historical graders and synthetic faults. No distributed fleet, inference serving, hostile-code sandbox, agent task solving, or learning claim. Baseline is the same runner with one worker.",
+  "median_paired_speedup": 3.4857076335411525,
+  "paired": [
+    {
+      "campaigns": {
+        "1": {
+          "execution_p50_seconds": 0.24957620800000058,
+          "execution_p95_seconds": 0.7423671249999995,
+          "jobs_per_second": 2.7742927324398017,
+          "outcomes": {
+            "candidate_passed": 4,
+            "candidate_rejected": 4
+          },
+          "queue_p50_seconds": 1.169409374999999,
+          "queue_p95_seconds": 2.627645417,
+          "wall_seconds": 2.883617833999999
+        },
+        "4": {
+          "execution_p50_seconds": 0.2392044999999996,
+          "execution_p95_seconds": 0.28064758300000037,
+          "jobs_per_second": 15.259658588982255,
+          "outcomes": {
+            "candidate_passed": 4,
+            "candidate_rejected": 4
+          },
+          "queue_p50_seconds": 0.0005456660000007219,
+          "queue_p95_seconds": 0.24423725000000118,
+          "wall_seconds": 0.5242581250000011
+        }
+      },
+      "order": [
+        1,
+        4
+      ],
+      "pair": 0,
+      "speedup": 5.500377955992561
+    },
+    {
+      "campaigns": {
+        "1": {
+          "execution_p50_seconds": 0.2028421250000001,
+          "execution_p95_seconds": 0.2634923330000003,
+          "jobs_per_second": 4.313712107538634,
+          "outcomes": {
+            "candidate_passed": 4,
+            "candidate_rejected": 4
+          },
+          "queue_p50_seconds": 0.6116206250000005,
+          "queue_p95_seconds": 1.5981099170000004,
+          "wall_seconds": 1.8545512080000002
+        },
+        "4": {
+          "execution_p50_seconds": 0.24058137499999965,
+          "execution_p95_seconds": 0.28813070899999893,
+          "jobs_per_second": 14.984914405700646,
+          "outcomes": {
+            "candidate_passed": 4,
+            "candidate_rejected": 4
+          },
+          "queue_p50_seconds": 0.0007207079999993482,
+          "queue_p95_seconds": 0.24391145799999947,
+          "wall_seconds": 0.5338702499999997
+        }
+      },
+      "order": [
+        4,
+        1
+      ],
+      "pair": 1,
+      "speedup": 3.473786389108592
+    },
+    {
+      "campaigns": {
+        "1": {
+          "execution_p50_seconds": 0.20613258300000048,
+          "execution_p95_seconds": 0.25892241700000085,
+          "jobs_per_second": 4.330099349739939,
+          "outcomes": {
+            "candidate_passed": 4,
+            "candidate_rejected": 4
+          },
+          "queue_p50_seconds": 0.6196675000000003,
+          "queue_p95_seconds": 1.5896622499999982,
+          "wall_seconds": 1.8475326670000012
+        },
+        "4": {
+          "execution_p50_seconds": 0.24114158400000107,
+          "execution_p95_seconds": 0.28221820799999975,
+          "jobs_per_second": 15.093460357380087,
+          "outcomes": {
+            "candidate_passed": 4,
+            "candidate_rejected": 4
+          },
+          "queue_p50_seconds": 0.00048745799999849737,
+          "queue_p95_seconds": 0.24608216700000085,
+          "wall_seconds": 0.5300308750000013
+        }
+      },
+      "order": [
+        1,
+        4
+      ],
+      "pair": 2,
+      "speedup": 3.4857076335411525
+    },
+    {
+      "campaigns": {
+        "1": {
+          "execution_p50_seconds": 0.20484062500000277,
+          "execution_p95_seconds": 0.25668258300000346,
+          "jobs_per_second": 4.349094375058186,
+          "outcomes": {
+            "candidate_passed": 4,
+            "candidate_rejected": 4
+          },
+          "queue_p50_seconds": 0.6142694999999989,
+          "queue_p95_seconds": 1.5833050419999992,
+          "wall_seconds": 1.8394634169999975
+        },
+        "4": {
+          "execution_p50_seconds": 0.2499744590000006,
+          "execution_p95_seconds": 0.2948791669999977,
+          "jobs_per_second": 14.55184193095174,
+          "outcomes": {
+            "candidate_passed": 4,
+            "candidate_rejected": 4
+          },
+          "queue_p50_seconds": 0.00048229199999738626,
+          "queue_p95_seconds": 0.2526327500000001,
+          "wall_seconds": 0.5497585829999991
+        }
+      },
+      "order": [
+        4,
+        1
+      ],
+      "pair": 3,
+      "speedup": 3.3459476102440413
+    },
+    {
+      "campaigns": {
+        "1": {
+          "execution_p50_seconds": 0.2115480000000005,
+          "execution_p95_seconds": 0.25937479099999905,
+          "jobs_per_second": 4.310224550026999,
+          "outcomes": {
+            "candidate_passed": 4,
+            "candidate_rejected": 4
+          },
+          "queue_p50_seconds": 0.6151181249999986,
+          "queue_p95_seconds": 1.5946247499999977,
+          "wall_seconds": 1.8560517919999988
+        },
+        "4": {
+          "execution_p50_seconds": 0.24447920800000134,
+          "execution_p95_seconds": 0.28276666700000064,
+          "jobs_per_second": 15.052737491592822,
+          "outcomes": {
+            "candidate_passed": 4,
+            "candidate_rejected": 4
+          },
+          "queue_p50_seconds": 0.0006067500000028758,
+          "queue_p95_seconds": 0.24722858400000192,
+          "wall_seconds": 0.5314647920000013
+        }
+      },
+      "order": [
+        1,
+        4
+      ],
+      "pair": 4,
+      "speedup": 3.492332549472053
+    }
+  ],
+  "protocol_id": "cpu-scheduler-v1",
+  "protocol_sha256": "6beab366ef9cb29cfd29bc344aaaacac853945f3f5fabc0498ce997246e2a9ad",
+  "reliability_cases_matched": 16,
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "max_local_wall_seconds": 600,
+    "paid_api_calls": 0
+  },
+  "runtime": {
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.9.6"
+  },
+  "schema_version": 1,
+  "status": "complete",
+  "total_historical_evaluations": 80
+}

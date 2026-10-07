@@ -1,6 +1,6 @@
 # Roadmap
 
-VARE should expand its claims only when the next evidence tier can be reproduced within the declared resource budget. The current scope is deliberately limited to independently graded, historical source changes.
+VARE should expand its claims only when the next evidence tier can be reproduced within the declared resource budget. The current scope includes independently graded historical source changes and measured local CPU evaluation execution.
 
 ## E0 — Harness integrity
 
@@ -31,7 +31,9 @@ Consider training only if E1–E3 identify a causal question that cheaper CPU ex
 
 ## E5 — Systems impact
 
-When these tasks expose a generally useful bottleneck, measure a narrow correctness, latency, throughput, or resource improvement end to end. Keep a reproducer and regression coverage, and contribute the smallest appropriate fix upstream where practical.
+The original evaluation runner now has a narrow local scheduling measurement: five paired one-worker/four-worker campaigns, 80 historical-task grades with consistent outcomes, and a median paired speedup of 3.4857×. Sixteen synthetic reliability cases match their declared classifications. See the [report](scheduler-report.md), [implementation contract](execution.md) and [raw evidence](../results/cpu-scheduler-v1/summary.json).
+
+This completes a local systems measurement, not distributed execution or inference performance. The next systems questions are interrupted-run recovery, larger/heterogeneous CPU workloads and resource isolation. An upstream contribution would be a separate result and has not been made here.
 
 ## E6 — Repeated improvement
 
@@ -39,4 +41,4 @@ Study repeated system-proposed interventions only after independent downstream e
 
 ## Current stop point
 
-The isolated-input E0 calibration and two E1 task/grader pairs are complete. E2–E6 remain outstanding. No agent trajectory, model learning, generalization, or capability gain is claimed.
+The isolated-input E0 calibration, execution failure-injection checks and two E1 task/grader pairs are complete. A narrow E5 local scheduling result is retained. E2–E4, distributed systems evidence and E6 remain outstanding. No agent trajectory, model learning, generalization, or capability gain is claimed.

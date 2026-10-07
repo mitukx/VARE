@@ -1,0 +1,50 @@
+{
+  "case_count": 16,
+  "child_cleanup": {
+    "child": {
+      "not_running": true,
+      "observed_state": "absent"
+    },
+    "inherited_pipe": {
+      "not_running": true,
+      "observed_state": "absent"
+    }
+  },
+  "expected": {
+    "child": "candidate_passed",
+    "crash": "grader_error",
+    "duplicate": "invalid_output",
+    "fake_hash": "provenance_mismatch",
+    "flood": "output_limit",
+    "inherited_pipe": "timeout",
+    "malformed": "invalid_output",
+    "missing_source": "source_error",
+    "mutate": "workspace_changed",
+    "nonfinite": "invalid_output",
+    "reject": "candidate_rejected",
+    "tampered_protocol": "protocol_error",
+    "timeout": "timeout",
+    "valid": "candidate_passed",
+    "wrong_exit": "invalid_output",
+    "wrong_task": "provenance_mismatch"
+  },
+  "matched": true,
+  "observed": {
+    "child": "candidate_passed",
+    "crash": "grader_error",
+    "duplicate": "invalid_output",
+    "fake_hash": "provenance_mismatch",
+    "flood": "output_limit",
+    "inherited_pipe": "timeout",
+    "malformed": "invalid_output",
+    "missing_source": "source_error",
+    "mutate": "workspace_changed",
+    "nonfinite": "invalid_output",
+    "reject": "candidate_rejected",
+    "tampered_protocol": "protocol_error",
+    "timeout": "timeout",
+    "valid": "candidate_passed",
+    "wrong_exit": "invalid_output",
+    "wrong_task": "provenance_mismatch"
+  }
+}

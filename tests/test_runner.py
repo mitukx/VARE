@@ -43,6 +43,9 @@ class RunnerTests(unittest.TestCase):
                  ('timeout', 'timeout'), ('flood', 'output_limit')]
         output, _ = self.campaign(cases)
         self.assertLessEqual((output / 'jobs/flood/stdout.bin').stat().st_size, 1024)
+        import subprocess
+        cli = subprocess.run([__import__('sys').executable, '-m', 'vare', 'audit', str(output)], capture_output=True)
+        self.assertEqual(0, cli.returncode, cli.stderr.decode())
 
     def test_protocol_tamper(self):
         root, job = make_fixture(self.parent, 'valid')
@@ -164,6 +167,24 @@ class RunnerTests(unittest.TestCase):
         (job.workspace / 'source.txt').symlink_to(job.task_root / 'TASK.md')
         result = asyncio.run(run_campaign([job], self.parent / 'evidence', 1, root))
         self.assertEqual({'source_error': 1}, result['outcomes'])
+
+    def test_cli_plan_operational_failure_and_audit(self):
+        import subprocess
+        import sys
+        from vare.runner import ROOT
+        workspace = self.parent / 'empty-candidate'
+        workspace.mkdir()
+        plan = self.parent / 'input-plan.json'
+        plan.write_bytes(encode({'jobs': [{'id': 'missing',
+            'task_root': str(ROOT / 'benchmarks/historical/rvl_behavior_policy_parity'),
+            'workspace': 'empty-candidate'}]}))
+        output = self.parent / 'cli-evidence'
+        result = subprocess.run([sys.executable, '-m', 'vare', 'run', '--plan', str(plan),
+                                 '--output', str(output), '--workers', '2'], capture_output=True)
+        self.assertEqual(1, result.returncode, result.stderr.decode())
+        self.assertEqual({'source_error': 1}, json.loads(result.stdout)['outcomes'])
+        checked = subprocess.run([sys.executable, '-m', 'vare', 'audit', str(output)], capture_output=True)
+        self.assertEqual(0, checked.returncode, checked.stderr.decode())
 
 
 if __name__ == '__main__':

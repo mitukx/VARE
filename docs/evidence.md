@@ -38,3 +38,9 @@ The fixed revisions are public historical changes used to validate the benchmark
 - Artifacts: [summary](../results/protocol-integrity/cpu-calibration-v1/summary.json), [control outputs](../results/protocol-integrity/cpu-calibration-v1/controls.json), [tamper outputs](../results/protocol-integrity/cpu-calibration-v1/tamper_cases.json), [hash manifest](../results/protocol-integrity/cpu-calibration-v1/manifest.json), [protocol and script snapshot](../results/protocol-integrity/cpu-calibration-v1/protocol_snapshot/).
 - Resources: local macOS arm64 / Python 3.9.6; no GitHub source fetch, model weights, third-party Python package, GPU, paid API, or external compute.
 - Trust boundary: the unchanged Git-versioned protocol lock is the trust anchor. This experiment does not authenticate a coordinated edit to the lock and does not provide OS isolation for candidate code. It establishes only that isolated changes to the descriptor, brief, or grader are detected.
+
+## Local CPU evaluation orchestration
+
+The [scheduler report](scheduler-report.md) covers VARE's original evaluation execution code. The frozen protocol produced 16/16 expected synthetic classifications and 80/80 expected historical candidate decisions. Median paired one-worker/four-worker speedup was 3.4857× over five pairs. Raw campaign records, protocol/runner snapshots and manifests are retained at [`cpu-scheduler-v1`](../results/cpu-scheduler-v1/). `scripts/audit_scheduler.py` reconstructs the measured summary offline.
+
+This provides local scheduling and reliability evidence; it does not change the claim limits of either task or imply agent/model improvement. The runner is not a hostile-code sandbox. The report discloses the first-pair timing outlier and the later CLI audit correction separately from the code used for measurement.

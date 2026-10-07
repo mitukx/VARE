@@ -1,0 +1,101 @@
+{
+  "jobs": [
+    {
+      "id": "valid",
+      "output_limit_bytes": 1048576,
+      "task_snapshot": "44834bd9fe6a0f81",
+      "timeout_seconds": 3
+    },
+    {
+      "id": "reject",
+      "output_limit_bytes": 1048576,
+      "task_snapshot": "5bdab9785fe38cab",
+      "timeout_seconds": 3
+    },
+    {
+      "id": "malformed",
+      "output_limit_bytes": 1048576,
+      "task_snapshot": "0fb4a70d84698b2c",
+      "timeout_seconds": 3
+    },
+    {
+      "id": "duplicate",
+      "output_limit_bytes": 1048576,
+      "task_snapshot": "701ff1bfe5c3d731",
+      "timeout_seconds": 3
+    },
+    {
+      "id": "nonfinite",
+      "output_limit_bytes": 1048576,
+      "task_snapshot": "ab1b4027bff7cae7",
+      "timeout_seconds": 3
+    },
+    {
+      "id": "crash",
+      "output_limit_bytes": 1048576,
+      "task_snapshot": "e703c362a7d868ff",
+      "timeout_seconds": 3
+    },
+    {
+      "id": "wrong_task",
+      "output_limit_bytes": 1048576,
+      "task_snapshot": "2add53fb74fb9b46",
+      "timeout_seconds": 3
+    },
+    {
+      "id": "fake_hash",
+      "output_limit_bytes": 1048576,
+      "task_snapshot": "970a23cc169b92de",
+      "timeout_seconds": 3
+    },
+    {
+      "id": "wrong_exit",
+      "output_limit_bytes": 1048576,
+      "task_snapshot": "44e3a1c5273c9d99",
+      "timeout_seconds": 3
+    },
+    {
+      "id": "mutate",
+      "output_limit_bytes": 1048576,
+      "task_snapshot": "181f10a38a095377",
+      "timeout_seconds": 3
+    },
+    {
+      "id": "timeout",
+      "output_limit_bytes": 1048576,
+      "task_snapshot": "c030d208051a89f3",
+      "timeout_seconds": 0.5
+    },
+    {
+      "id": "flood",
+      "output_limit_bytes": 1024,
+      "task_snapshot": "b90f7068fbce6115",
+      "timeout_seconds": 3
+    },
+    {
+      "id": "child",
+      "output_limit_bytes": 1048576,
+      "task_snapshot": "aa90f0612da865a9",
+      "timeout_seconds": 3
+    },
+    {
+      "id": "inherited_pipe",
+      "output_limit_bytes": 1048576,
+      "task_snapshot": "7032a674728cd92a",
+      "timeout_seconds": 0.5
+    },
+    {
+      "id": "missing_source",
+      "output_limit_bytes": 1048576,
+      "task_snapshot": "c958dcd9242d217b",
+      "timeout_seconds": 3
+    },
+    {
+      "id": "tampered_protocol",
+      "output_limit_bytes": 1048576,
+      "task_snapshot": "73e49ca1d5a0b54d",
+      "timeout_seconds": 3
+    }
+  ],
+  "workers": 4
+}
