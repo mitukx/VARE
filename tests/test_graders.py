@@ -6,6 +6,11 @@ from benchmarks.historical.trl_grpo_accumulation_scale.evaluator.grade import (
     _execute_normalizer,
     _extract_normalizer,
 )
+from benchmarks.historical.rvl_behavior_policy_parity.evaluator.grade import (
+    FIXTURE_CASES,
+    _Model as RVLModel,
+    _Tensor as RVLTensor,
+)
 
 
 VALID_BRANCH = '''
@@ -46,6 +51,14 @@ class GraderIntegrityTests(unittest.TestCase):
                 "current_accumulation_steps": 2, "steps_per_generation": 4,
             })
             self.assertEqual(6.0, observed)
+
+    def test_rvl_fixture_exposes_non_neutral_pretrained_typical_p(self):
+        model = RVLModel(FIXTURE_CASES)
+        prompt = FIXTURE_CASES[0]["prompt_ids"]
+        model.generate(input_ids=RVLTensor([prompt]), typical_p=model.generation_config.typical_p)
+        self.assertEqual(0.72, model.effective_settings["typical_p"])
+        model.generate(input_ids=RVLTensor([prompt]), typical_p=1.0)
+        self.assertEqual(1.0, model.effective_settings["typical_p"])
 
 
 if __name__ == "__main__":

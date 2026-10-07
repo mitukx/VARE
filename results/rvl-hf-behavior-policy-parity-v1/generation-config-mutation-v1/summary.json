@@ -1,0 +1,71 @@
+{
+  "candidate_revision": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "claim_limit": "This is a fixture-level grader mutation test. It shows the v3 contract catches this configured typical_p mutation; it is not a real model or complete Hugging Face logits-warper simulation.",
+  "mutation": "Set typical_p=0.72 in the candidate GenerationConfig; all other candidate source remains the pinned fixed revision.",
+  "mutation_patch_sha256": "e732c28e62928276d7afa5d1092c64f2c3154a966eb64e0fbe0183cbb89d2bfa",
+  "protocol_v2": {
+    "failure_count": 0,
+    "passed": true,
+    "rollout_conditions": 6
+  },
+  "protocol_v3": {
+    "detected_settings": [
+      {
+        "case_id": "repeat-positive-logit",
+        "check": "neutral_sampling_truncation",
+        "top_k": 0,
+        "top_p": 1.0,
+        "typical_p": 0.72
+      },
+      {
+        "case_id": "repeat-positive-logit",
+        "check": "neutral_sampling_truncation",
+        "top_k": 0,
+        "top_p": 1.0,
+        "typical_p": 0.72
+      },
+      {
+        "case_id": "repeat-negative-logit",
+        "check": "neutral_sampling_truncation",
+        "top_k": 0,
+        "top_p": 1.0,
+        "typical_p": 0.72
+      },
+      {
+        "case_id": "repeat-negative-logit",
+        "check": "neutral_sampling_truncation",
+        "top_k": 0,
+        "top_p": 1.0,
+        "typical_p": 0.72
+      },
+      {
+        "case_id": "repeat-context-nonunit-temperature",
+        "check": "neutral_sampling_truncation",
+        "top_k": 0,
+        "top_p": 1.0,
+        "typical_p": 0.72
+      },
+      {
+        "case_id": "repeat-context-nonunit-temperature",
+        "check": "neutral_sampling_truncation",
+        "top_k": 0,
+        "top_p": 1.0,
+        "typical_p": 0.72
+      }
+    ],
+    "failure_count": 6,
+    "passed": false,
+    "rollout_conditions": 6
+  },
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "model_weights_loaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages_used": false
+  },
+  "schema_version": 1,
+  "study": "rvl-typical-p-generation-config-grader-mutation-v1",
+  "v2_result_sha256": "90fcfbdfa224030ca6f82047a9283e6de18989832b5afb278985c68a1bd1cc3b",
+  "v3_result_sha256": "8d35c107612196b618000975d11cca8055c27496e5087bef273b3e053d1dc328"
+}

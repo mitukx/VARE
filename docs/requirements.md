@@ -18,6 +18,7 @@ These requirements define technical acceptance under local CPU constraints. They
 | R12 | No paid API, GPU or external compute is required | standard-library execution, public source fetch | experiment resource declarations and reproducible commands |
 | R13 | Terminal completion does not repeat fingerprint work for unrelated jobs | `Store.complete` calls `refresh(job.id)`; full refresh remains at export | [cpu-refresh-scale-v2](../protocols/cpu_refresh_scale_v2.json), instrumented regression and offline bundle auditor |
 | R14 | The selected loss branch cannot be changed by an unmodeled later normalizer write | TRL protocol v2 checks all writes within the matched branch body before executing the locked arithmetic fixture | [grader mutation record](../results/trl-grpo-accumulation-window-normalizer-v1/grader-mutation-v1/summary.json), [`test_graders.py`](../tests/test_graders.py), and v2 historical calibration |
+| R15 | A non-neutral pretrained `typical_p` cannot silently alter the rollout distribution used for probability parity | RVL protocol v3 records the effective fixture setting and requires the neutral value | [v2 false-acceptance/v3 rejection study](../results/rvl-hf-behavior-policy-parity-v1/generation-config-mutation-v1/summary.json), [`test_graders.py`](../tests/test_graders.py), and [v3 historical calibration](../results/rvl-hf-behavior-policy-parity-v1/cpu-calibration-v3/summary.json) |
 
 ## Acceptance rule
 
