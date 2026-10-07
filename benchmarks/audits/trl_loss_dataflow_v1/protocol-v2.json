@@ -1,0 +1,58 @@
+{
+  "acceptance": {
+    "fixed_source_protocol_v3": "pass",
+    "mutated_source_semantic": "reject",
+    "mutation_is_a_false_accept_if_protocol_v3_passes": true
+  },
+  "claim_limit": "One deliberately objective-changing mutation on two pinned source branches tests one specific v3 source-flow blind spot. It does not estimate general grader error rates or full trainer correctness.",
+  "grader": {
+    "execution_interface": "Run evaluator/grade.py directly with --allow-fail to retain expected rejection output; scripts/grade_task.py does not accept --allow-fail.",
+    "path": "benchmarks/historical/trl_grpo_accumulation_scale/evaluator/grade.py",
+    "protocol_id": "trl-grpo-accumulation-window-normalizer-protocol-v3",
+    "sha256": "56d73fdbd5b704e1b72a4b96c62d48f52c0332c577221c7b67299399934e680c",
+    "task_brief_sha256": "64fcc2a482501ef1991a2d88e5489dcb3e3d58a8ab59aba5d50a4db54a7fc9ad",
+    "task_json_sha256": "61cfd92d8785fbfe6a3cbf63df6245ca098eef3dda832e35586d60678950275a",
+    "task_lock_sha256": "5199a7deca4a67a9bc5f1afa93d5b3f080d3fc82a348252472b48bc19d50802d"
+  },
+  "mutation": {
+    "description": "In both selected loss branches, insert `loss = loss * 2` immediately after the direct division by `normalizer`. This deliberately changes the returned/training loss scale while leaving the normalizer and its denominator expression intact.",
+    "expected_semantic_decision": "reject",
+    "patch_path": "benchmarks/audits/trl_loss_dataflow_v1/candidate-mutation.patch",
+    "patch_sha256": "9c652b595b7992a9360d2274ddb48e0b93713fac92d490b3ed52e4f856e6fa7a",
+    "predicted_protocol_v3_decision": "accept; this is a source-derived hypothesis to be measured."
+  },
+  "objective": "Test whether protocol v3 rejects an objective-changing reassignment of loss immediately after the checked normalizer division in both pinned fixed-source loss branches.",
+  "prior_protocol": {
+    "protocol_id": "trl-loss-dataflow-mutation-audit-v1",
+    "reason": "Fixed-source hashes in v1 were taken from the already-mutated staging checkout.",
+    "status": "invalidated_before_mutation_grading"
+  },
+  "procedure": [
+    "Verify the pinned fixed source revision and source file hashes.",
+    "Apply only the frozen mutation patch to the listed files.",
+    "Run the locked protocol-v3 grader on fixed source and mutated source.",
+    "Record raw grader outputs, source hashes, diff hash, and outcome without modifying protocol v3."
+  ],
+  "protocol_id": "trl-loss-dataflow-mutation-audit-v2",
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "model_weights_loaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages_used": false
+  },
+  "schema_version": 2,
+  "source": {
+    "files": [
+      "trl/experimental/gspo_token/grpo_trainer.py",
+      "trl/trainer/grpo_trainer.py"
+    ],
+    "fixed_revision": "e1b2e21975994e676d9a676e3ab005e9bee38e40",
+    "fixed_source_sha256": {
+      "trl/experimental/gspo_token/grpo_trainer.py": "37b91254ff70d353ca4a04bd1e28602102ddcbd50be3a79b0ba0a6cb62bc52e0",
+      "trl/trainer/grpo_trainer.py": "7446f652aefb9b78a64952a135c2235c924a7633c112d6a8f569b16ec4d62e14"
+    },
+    "repository": "https://github.com/huggingface/trl.git"
+  },
+  "task_id": "trl-grpo-accumulation-window-normalizer-v1"
+}

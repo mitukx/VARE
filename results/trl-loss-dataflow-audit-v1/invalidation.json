@@ -1,0 +1,20 @@
+{
+  "correction": "Protocol v2 uses SHA-256 values derived directly from git show <fixed_revision>:<path> and will be committed before grading the mutation.",
+  "diagnostic_fixed_grade": "fixed-v3.grade.json",
+  "frozen_protocol_commit": "d6da764",
+  "observed_diagnostic": {
+    "condition_count": 12,
+    "passed": true,
+    "source_hashes_match_pinned_fixed_revision": false,
+    "workspace_revision": "e1b2e21975994e676d9a676e3ab005e9bee38e40"
+  },
+  "protocol_id": "trl-loss-dataflow-mutation-audit-v1",
+  "reason": "The preregistered fixed_source_sha256 values were computed after applying the mutation to the staging checkout. They therefore identify mutated source, not the pinned fixed revision. The fixed-source grader output is retained as a diagnostic, but v1 does not count as a valid protocol execution and no mutation decision was graded under v1.",
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "paid_api_calls": 0
+  },
+  "schema_version": 1,
+  "status": "invalidated_before_mutation_grading"
+}
