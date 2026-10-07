@@ -1,0 +1,53 @@
+{
+  "acceptance": {
+    "fixed_v4": "pass",
+    "mutated_v4": "reject"
+  },
+  "claim_limit": "This single mutation tests whether the branch-local v4 write guard covers a final method-level loss reassignment; it does not estimate general false-acceptance rates or execute the trainer.",
+  "grader": {
+    "path": "benchmarks/historical/trl_grpo_accumulation_scale/evaluator/grade.py",
+    "sha256": "55fd00d24146cd4b7a41393c89c8f503cd5380d0e81864fea066f39fdef723cf"
+  },
+  "mutation": {
+    "description": "In each pinned trainer _compute_loss method, insert `loss = loss * 2` immediately before its final `return loss`.",
+    "expected_semantic_decision": "reject",
+    "patch_path": "benchmarks/audits/trl_loss_final_rebind_v1/candidate-mutation.patch",
+    "patch_sha256": "222d3c2599005a8df849c44b6fc74410fe5c74110dce0d505f98010442698097",
+    "predicted_protocol_v4_decision": "accept; hypothesis to be measured."
+  },
+  "objective": "Test whether protocol v4 detects an objective-changing reassignment of loss immediately before the final return, after normalizer-branch and optional loss-term processing.",
+  "procedure": [
+    "Verify the v4 protocol lock and fixed source hashes.",
+    "Grade pinned fixed source with protocol v4.",
+    "Apply only the frozen mutation patch.",
+    "Grade the mutated source with protocol v4; retain raw output."
+  ],
+  "protocol_id": "trl-final-loss-rebind-audit-v1",
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "model_weights_loaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages_used": false
+  },
+  "schema_version": 1,
+  "source": {
+    "files": [
+      "trl/experimental/gspo_token/grpo_trainer.py",
+      "trl/trainer/grpo_trainer.py"
+    ],
+    "fixed_revision": "e1b2e21975994e676d9a676e3ab005e9bee38e40",
+    "fixed_source_sha256": {
+      "trl/experimental/gspo_token/grpo_trainer.py": "37b91254ff70d353ca4a04bd1e28602102ddcbd50be3a79b0ba0a6cb62bc52e0",
+      "trl/trainer/grpo_trainer.py": "7446f652aefb9b78a64952a135c2235c924a7633c112d6a8f569b16ec4d62e14"
+    },
+    "repository": "https://github.com/huggingface/trl.git"
+  },
+  "task": {
+    "protocol_id": "trl-grpo-accumulation-window-normalizer-protocol-v4",
+    "protocol_lock_sha256": "be7e79e317b7175bfe973c21d081884f5105abbdc7b32375ddb5305636859114",
+    "task_brief_sha256": "ba961bb4f093ef7bcf7f96ba1a1de6c30dbfeafbd78eb4dc00d3c8da6f132639",
+    "task_id": "trl-grpo-accumulation-window-normalizer-v1",
+    "task_json_sha256": "636b471e874eb9203fcf10fc0a3faba2d3d95d3cad22f5f9b15d1621ef5fe2e2"
+  }
+}
