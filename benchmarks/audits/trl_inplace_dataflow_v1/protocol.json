@@ -1,0 +1,63 @@
+{
+  "acceptance": {
+    "fixed_source": "pass",
+    "loss_inplace": "reject",
+    "normalizer_inplace": "reject"
+  },
+  "claim_limit": "Two in-place mutation forms tested on two branches of one pinned source revision; results do not estimate general false-acceptance rates or execute a trainer.",
+  "grader": {
+    "path": "benchmarks/historical/trl_grpo_accumulation_scale/evaluator/grade.py",
+    "sha256": "b75ad05a8ff42eb9b6362deeccce6692f7a640a9e41e0e0352e8e492dea596dd"
+  },
+  "mutations": [
+    {
+      "description": "Call `normalizer.mul_(2)` after the training-only accumulation correction in both selected branches.",
+      "expected_semantic_decision": "reject",
+      "id": "normalizer_inplace",
+      "patch_path": "benchmarks/audits/trl_inplace_dataflow_v1/normalizer-mutation.patch",
+      "patch_sha256": "1cb0805377fcc4ede3c424275e1766d1a205b0aab8cace79bfe169c5b152814f"
+    },
+    {
+      "description": "Call `loss.mul_(2)` immediately before the final return in both pinned _compute_loss methods.",
+      "expected_semantic_decision": "reject",
+      "id": "loss_inplace",
+      "patch_path": "benchmarks/audits/trl_inplace_dataflow_v1/loss-mutation.patch",
+      "patch_sha256": "d386b49af4eb48d89d1c040ef135c9b9341c28d05757db43e4dc09b5546015b6"
+    }
+  ],
+  "objective": "Test whether protocol v5 detects Tensor-style in-place mutations that change checked normalizer or returned loss but do not rebind the local names.",
+  "procedure": [
+    "Verify v5 task/grader lock, fixed source hashes, and both mutation patch hashes.",
+    "Grade the fixed source using protocol v5.",
+    "Apply each mutation separately to a fresh copy of the pinned fixed source and run protocol v5.",
+    "Record each decision and raw grader output."
+  ],
+  "protocol_id": "trl-inplace-write-mutation-audit-v1",
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "model_weights_loaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages_used": false
+  },
+  "schema_version": 1,
+  "source": {
+    "files": [
+      "trl/experimental/gspo_token/grpo_trainer.py",
+      "trl/trainer/grpo_trainer.py"
+    ],
+    "fixed_revision": "e1b2e21975994e676d9a676e3ab005e9bee38e40",
+    "fixed_source_sha256": {
+      "trl/experimental/gspo_token/grpo_trainer.py": "37b91254ff70d353ca4a04bd1e28602102ddcbd50be3a79b0ba0a6cb62bc52e0",
+      "trl/trainer/grpo_trainer.py": "7446f652aefb9b78a64952a135c2235c924a7633c112d6a8f569b16ec4d62e14"
+    },
+    "repository": "https://github.com/huggingface/trl.git"
+  },
+  "task": {
+    "protocol_id": "trl-grpo-accumulation-window-normalizer-protocol-v5",
+    "protocol_lock_sha256": "c846af0edce4a3dbf2e5f4c5a8599a4e6bdc6512d1d5c8d20a58fe163537cbe3",
+    "task_brief_sha256": "c0cd3613c29d7d7c29929d58d6b06ecec3d930d2aa9148691e2277d88f8ec5e5",
+    "task_id": "trl-grpo-accumulation-window-normalizer-v1",
+    "task_json_sha256": "8e8c0825302b8e9768863d043d87cf6373386b507da8e5abc77d1588e3a4d818"
+  }
+}

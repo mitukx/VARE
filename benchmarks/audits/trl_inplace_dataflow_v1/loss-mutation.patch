@@ -1,0 +1,22 @@
+diff --git a/trl/experimental/gspo_token/grpo_trainer.py b/trl/experimental/gspo_token/grpo_trainer.py
+index fd92741..d7f8dbd 100644
+--- a/trl/experimental/gspo_token/grpo_trainer.py
++++ b/trl/experimental/gspo_token/grpo_trainer.py
+@@ -159,4 +159,5 @@ class GRPOTrainer(_GRPOTrainer):
+         self._metrics[mode]["clip_ratio/low_min"].append(nanmin(gathered_low_clip).item())
+         gathered_high_clip = self.accelerator.gather(masked_seq_mean(is_high_clipped.float()))
+         self._metrics[mode]["clip_ratio/high_max"].append(nanmax(gathered_high_clip).item())
++        loss.mul_(2)
+         return loss
+diff --git a/trl/trainer/grpo_trainer.py b/trl/trainer/grpo_trainer.py
+index e60bc37..55e1968 100644
+--- a/trl/trainer/grpo_trainer.py
++++ b/trl/trainer/grpo_trainer.py
+@@ -3276,6 +3276,7 @@ class GRPOTrainer(_BaseTrainer):
+         elif self.loss_type == "vespo":
+             self._metrics[mode]["vespo/phi_seq_mean"].append(global_masked_mean(phi_seq))
+ 
++        loss.mul_(2)
+         return loss
+ 
+     # During eval, Trainer calls prediction_step. If no labels are present in the inputs, it only runs forward and
