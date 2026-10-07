@@ -1,0 +1,6 @@
+{
+  "protocol_id": "cpu-refresh-scale-v1",
+  "valid_for_comparison": false,
+  "reason": "The protocol named 0403e4aa8e7596242162f480a6143ed49408d772 as the baseline revision, but the measurement recorded HEAD 68eb136ea0317a05b10948fec9375c8c856e1388. Although the durable implementation file was unchanged, the harness did not record that source-file identity, and the optimized phase also ran with uncommitted code while reporting the same HEAD. The two phases therefore cannot be independently bound to the compared implementations.",
+  "disposition": "Retain raw pilot outputs as a negative process result. Do not use its wall times or operation-count comparison as verified evidence. The protocol was replaced by cpu-refresh-scale-v2, which records and audits the committed implementation hash and a shared measurement-script hash."
+}
