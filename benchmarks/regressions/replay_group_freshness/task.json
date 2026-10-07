@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "task_id": "vare-replay-group-freshness-atomicity-v1",
+  "source": {
+    "repository": "https://github.com/mitukx/VARE.git",
+    "base_revision": "cd3129ca52c299dd0e5048d5193ee1d528b0a7ba",
+    "files": ["src/vare/replay.py"]
+  },
+  "grader": {
+    "path": "benchmarks/regressions/replay_group_freshness/evaluator/grade.py",
+    "protocol_version": 1
+  },
+  "scope": "Preserve whole comparison groups when current-freshness filtering rejects any member."
+}
