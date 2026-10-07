@@ -38,6 +38,23 @@
     "soft_wall_seconds_checked_between_generations": 300
   },
   "claim_limit": "One small local model on one public historical task. Results are a tool-loop pilot only; they do not establish frontier-agent performance, novel fix discovery, generalization, or capability improvement.",
+  "exploratory_runs_excluded": [
+    {
+      "observed": "No edit; stopped after text without tool call. This trial followed the three invalidated v1 runs.",
+      "protocol_stage": "correct tool-call serialization and direct file instruction; before allowlisted path aliasing and no-tool reminder",
+      "seed": 51
+    },
+    {
+      "observed": "No edit; after reading the source, repeated a guessed absolute path and stopped after two reminders.",
+      "protocol_stage": "correct tool-call serialization, path aliasing, direct file instruction and no-tool reminders; before patch-only edit surface",
+      "seed": 52
+    },
+    {
+      "observed": "No edit; repeatedly reread the same file and generated an oversized whole-file replacement.",
+      "protocol_stage": "patch tool added, but replace_text remained available; before patch-only edit surface",
+      "seed": 53
+    }
+  ],
   "initial_messages": [
     {
       "content": "You are an offline code repair agent. Solve only the task below. The workspace contains only the task source files. Read the source path named in the user instruction, then use tools to inspect and edit. Use apply_patch for small source diffs; never rewrite a whole file. Do not invent paths. The workspace is already prepared; never ask for a workspace path, more information, or permission. The external grader is hidden. Do not describe a fix without applying it. Call finish only after changing a source file. You have a limited tool budget; each assistant turn before finish must call a tool. TASK:\n# Task: keep rollout and learner probabilities aligned\n\n## Context\n\nThe rollout backend records token log-probabilities for samples consumed by a GRPO-style learner. A historical run exposed a mismatch: pretrained generation settings could modify scores during sampling, while the learner evaluated the response under the unmodified policy logits. This creates incorrect behavior-policy ratios before any optimizer update.\n\nHugging Face documents `typical_p` as a truncation setting; the neutral value `1.0` leaves the distribution unchanged ([versioned GenerationConfig reference](https://huggingface.co/docs/transformers/v4.41.2/en/main_classes/text_generation)).\n\n## Goal\n\nUpdate the pinned source checkout so that trainable rollouts record probabilities under the same distribution the learner evaluates. The evaluator uses deterministic CPU-only model and tokenizer doubles with deliberately non-neutral pretrained generation settings. It does not require model weights, PyTorch, Transformers, CUDA, or a network connection.\n\n## Acceptance contract\n\n- For six distinct prompt/temperature conditions, recorded per-token rollout log-probabilities match the neutral policy distribution at that temperature within the locked tolerance.\n- A pretrained repetition penalty cannot silently change the scored behavior distribution.\n- A non-neutral pretrained `typical_p` cannot silently change the scored behavior distribution.\n- The learner's actual `_sample_objective` path reconstructs the same token probabilities at each temperature; the grader captures the probabilities passed to the objective at runtime rather than matching source text.\n- The learner rejects zero, negative, and non-finite temperatures before evaluating the objective.\n- The sampler restores either initial model training/evaluation state after successful generation and after generation raises.\n- The sampler rejects negative and non-finite temperatures before invoking generation.\n\n## Constraints\n\n- The source checkout begins at the revision in `task.json`.\n- Keep changes scoped to the rollout/learner probability contract.\n- Do not edit this brief, the task descriptor, the protocol lock, or any file under `evaluator/` to obtain a passing score. The grader is invoked from outside the candidate workspace and checks its own locked hash.\n- The grader executes candidate source inside a local subprocess to observe behavior. It is a functional benchmark harness, not an operating-system sandbox for hostile code. Run only on candidate workspaces whose code you are willing to execute as your user.\n- No model download, GPU, paid API, or external compute is part of the task.",
@@ -58,7 +75,7 @@
     "complete tool transcript"
   ],
   "protocol_id": "vare-local-agent-trajectory-rvl-pilot-v2",
-  "status": "frozen-before-runs; v1 results are separately marked invalid for model-outcome inference due to incorrect tool-call serialization",
+  "status": "frozen-before-seeds-54-56; exploratory runs 51-53 are disclosed and excluded; original v1 cohort is invalid for model-outcome inference due to incorrect tool-call serialization",
   "task": {
     "base_revision": "e788f113ad6b246a361cd50a52eaf2867f2a66f8",
     "grader_sha256": "06d63f993e531f025ef594840197671bf779933b4090aa6ffd3cf24a1ffb9107",
