@@ -40,6 +40,13 @@ The v1 and v2 calibrations are retained at [`cpu-calibration-v1`](../results/rvl
 - Artifacts: [task](../benchmarks/regressions/promotion_gate_metrics/), [baseline record](../results/promotion-gate-metrics-v1/baseline.json), [fixed result](../results/promotion-gate-metrics-v1/summary.json), and [report](promotion-gate-report.md).
 - Limits: this is a narrowly scoped input-validation regression on the current implementation. It shows the selected fail-open paths are closed; it does not estimate broad promotion-gate error rates, establish the correctness of underlying evaluation metrics, or measure model learning.
 
+## Replay group freshness atomicity
+
+- Frozen task: one four-member stale comparison group, one separate four-member fresh group, and a per-item control. If any member of a grouped cohort is inadmissible, the whole cohort must be excluded; independent fresh groups remain whole.
+- Baseline revision `cd3129c` returned three members of the stale group plus all four fresh members (7 total). The fixed sampler excludes the stale group, returns the four fresh members whole, and keeps the ungrouped per-item mode at seven eligible experiences.
+- Artifacts: [task and protocol](../benchmarks/regressions/replay_group_freshness/), [baseline/fixed results](../results/replay-group-freshness-v1/), and [report](replay-group-freshness-report.md).
+- Limits: this is a deterministic replay-contract regression. It does not measure learning outcomes, replay quality, throughput, or general performance under production workloads.
+
 ## Reproduction and integrity limits
 
 Reproduce the task calibrations and locked-input integrity trial using the commands in the [README](../README.md). The scripts verify task descriptor, brief, and evaluator hashes against the protocol lock and include snapshots and SHA-256 manifests with each output.
