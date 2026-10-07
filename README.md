@@ -14,6 +14,8 @@ Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, c
 
 - **Local CPU agent pilot:** the corrected v2 tool loop ran one small local model on one pinned task for three formal seeds. It made no source edits and the locked grader rejected all three unchanged checkouts. The original v1 cohort is invalidated because of a tool-history serialization bug. See the [pilot report](docs/local-agent-pilot.md).
 
+- **Promotion-gate input validation:** a frozen CPU regression task found that the pre-fix promotion gate accepted all seven tested reports containing `NaN` or infinity. The fixed gate rejects those inputs and preserves acceptance for a finite positive control. See the [report](docs/promotion-gate-report.md) and [raw result](results/promotion-gate-metrics-v1/summary.json).
+
 - **16/16 synthetic reliability cases** matched their declared outcomes, including incorrect provenance, source mutation, malformed output, timeouts, output flooding and subprocess cleanup.
 - **80 historical-source evaluations** preserved the expected pre-fix rejection/fixed acceptance decisions across one-worker and four-worker campaigns.
 - **3.4857× median paired speedup** with four workers versus this same runner with one worker, over five pairs on a local macOS arm64 CPU. This is a small local-grader measurement, not a distributed or model-serving result.

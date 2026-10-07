@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import math
 import random
+from numbers import Real
 from statistics import fmean
 from typing import Mapping
 
@@ -32,6 +34,44 @@ class PromotionGate:
         if not isinstance(raw, dict):
             raise ValueError("per_task_scores must be a mapping")
         return {str(k): float(v) for k, v in raw.items()}
+
+    @staticmethod
+    def _has_valid_metrics(report: EvaluationReport) -> bool:
+        if type(report.n) is not int or report.n < 0:
+            return False
+        if not isinstance(report.slices, dict):
+            return False
+        values = [report.primary, report.cost, report.verifier_disagreement]
+        values.extend(report.slices.values())
+        if any(
+            not PromotionGate._is_finite_metric(value)
+            for value in values
+        ):
+            return False
+        if not isinstance(report.metadata, dict):
+            return False
+        paired = report.metadata.get("per_task_scores")
+        if paired is None:
+            return True
+        if not isinstance(paired, dict):
+            return False
+        for key, value in paired.items():
+            if (
+                not isinstance(key, str)
+                or not PromotionGate._is_finite_metric(value)
+                or not 0.0 <= float(value) <= 1.0
+            ):
+                return False
+        return True
+
+    @staticmethod
+    def _is_finite_metric(value: object) -> bool:
+        if isinstance(value, bool) or not isinstance(value, Real):
+            return False
+        try:
+            return math.isfinite(value)
+        except (OverflowError, TypeError):
+            return False
 
     def _paired_evidence(
         self, incumbent: EvaluationReport, candidate: EvaluationReport
@@ -66,6 +106,16 @@ class PromotionGate:
         return mean_gain, lcb, n, reasons
 
     def decide(self, incumbent: EvaluationReport, candidate: EvaluationReport) -> PromotionDecision:
+        if not self._has_valid_metrics(incumbent) or not self._has_valid_metrics(candidate):
+            return PromotionDecision(
+                accepted=False,
+                reasons=("invalid_evaluation_metrics",),
+                primary_gain=0.0,
+                worst_slice_regression=0.0,
+                paired_gain=None,
+                paired_lcb=None,
+                paired_n=0,
+            )
         reasons: list[str] = []
         gain = candidate.primary - incumbent.primary
         if incumbent.n < self.config.min_eval_examples or candidate.n < self.config.min_eval_examples:

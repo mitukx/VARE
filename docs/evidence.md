@@ -33,6 +33,13 @@ The v1 and v2 calibrations are retained at [`cpu-calibration-v1`](../results/rvl
 - Artifacts: [v2 summary](../results/local-agent-rvl-pilot-v2/summary.json), [v2 manifest](../results/local-agent-rvl-pilot-v2/manifest.json), [frozen v2 protocol](../protocols/local_agent_trajectory_rvl_pilot_v2.json), and bounded [runner](../scripts/run_local_agent.py). Individual raw results retain model outputs, tool calls/results, source hashes, diffs and grader outputs. The original [v1 summary](../results/local-agent-rvl-pilot-v1/summary.json) is invalidated and excluded because the runner serialized assistant tool calls incorrectly.
 - Limits: this is a three-run negative tool-loop observation for one small local model, one prompt/tool contract and one public historical task. It does not estimate agent capability, successful task solving, novel fix discovery or generalization. Model loading used HF offline flags and the tool set had no network tool, but OS-level network egress was not disabled. Exploratory seeds 41–43 are private and excluded; public exploratory seeds 51–53 are disclosed in the v2 protocol and excluded from its formal cohort.
 
+## Promotion-gate non-finite metric regression
+
+- Frozen task: eight deterministic local CPU cases cover one finite positive control and seven invalid evidence inputs: non-finite candidate/incumbent primary score, slice score, cost, verifier disagreement, and paired task score. The task, grader, and expected baseline/fixed decisions are hash-locked before the baseline result.
+- Baseline revision `d4627bf` accepted all seven invalid reports, including a candidate with `primary=NaN`; the finite control was accepted. Fixed source rejects all seven with `invalid_evaluation_metrics`, returns finite decision fields, and still accepts the control.
+- Artifacts: [task](../benchmarks/regressions/promotion_gate_metrics/), [baseline record](../results/promotion-gate-metrics-v1/baseline.json), [fixed result](../results/promotion-gate-metrics-v1/summary.json), and [report](promotion-gate-report.md).
+- Limits: this is a narrowly scoped input-validation regression on the current implementation. It shows the selected fail-open paths are closed; it does not estimate broad promotion-gate error rates, establish the correctness of underlying evaluation metrics, or measure model learning.
+
 ## Reproduction and integrity limits
 
 Reproduce the task calibrations and locked-input integrity trial using the commands in the [README](../README.md). The scripts verify task descriptor, brief, and evaluator hashes against the protocol lock and include snapshots and SHA-256 manifests with each output.
