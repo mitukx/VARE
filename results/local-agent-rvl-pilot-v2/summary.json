@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "protocol_id": "vare-local-agent-trajectory-rvl-pilot-v2",
+  "protocol_sha256": "6a2f029a2a39f978785b20378f40a6db3d183733b901a12749fd37a78c5e670e",
+  "runner_sha256": "2ea848d190b30dc9c8898ca9bb91a6a99b62fe2fbcf0afed7b34c874b067f119",
+  "runner_sha256_matches_frozen_protocol": true,
+  "task_id": "rvl-hf-behavior-policy-parity-v1",
+  "task_base_revision": "e788f113ad6b246a361cd50a52eaf2867f2a66f8",
+  "model_repository": "Qwen/Qwen2.5-0.5B-Instruct",
+  "model_snapshot": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "claim_limit": "One small local model on one public historical task. Results are a tool-loop pilot only; they do not establish frontier-agent performance, novel fix discovery, generalization, or capability improvement.",
+  "interpretation": "Three formal seeds made no source edit and the locked grader rejected all three unchanged pre-fix workspaces. Seeds 54 and 55 read the source but emitted malformed or placeholder patches without required unified-diff file headers; seed 56 reread the source and then stopped without a patch. This is a narrow negative tool-loop result for this model, prompt, tool contract and public historical task.",
+  "aggregate": {
+    "repetitions": 3,
+    "nonempty_candidate_diffs": 0,
+    "grader_passes": 0,
+    "mean_elapsed_seconds": 62.687,
+    "mean_generated_tokens": 384.7,
+    "stop_reasons": {
+      "no_tool_call_retries_exhausted": 3
+    }
+  },
+  "resources": {
+    "model_device": "CPU",
+    "threads": 4,
+    "accelerator_hours": 0,
+    "external_compute_usd": 0,
+    "paid_api_calls": 0,
+    "model_weights_downloaded_during_runs": false,
+    "HF_offline_flags": true,
+    "network_tools_available_to_agent": false,
+    "OS_network_egress_enforced": false
+  },
+  "runs": [
+    {
+      "run": 1,
+      "seed": 54,
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "tool_turns": 6,
+      "new_tokens": 330,
+      "elapsed_seconds": 57.241,
+      "peak_rss_bytes": 4287856640,
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "nonempty_diff": false,
+      "passed": false,
+      "grade_failures": 36
+    },
+    {
+      "run": 2,
+      "seed": 55,
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "tool_turns": 6,
+      "new_tokens": 228,
+      "elapsed_seconds": 45.261,
+      "peak_rss_bytes": 4310810624,
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "nonempty_diff": false,
+      "passed": false,
+      "grade_failures": 36
+    },
+    {
+      "run": 3,
+      "seed": 56,
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "tool_turns": 5,
+      "new_tokens": 596,
+      "elapsed_seconds": 85.56,
+      "peak_rss_bytes": 4345954304,
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "nonempty_diff": false,
+      "passed": false,
+      "grade_failures": 36
+    }
+  ]
+}

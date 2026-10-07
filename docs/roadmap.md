@@ -19,7 +19,7 @@ Both graders reject the pre-fix revision and accept the known fixed revision. Th
 
 ## E2 — Agent trajectories
 
-Run a genuinely local, freely available coding agent repeatedly on the same immutable task set with a fixed wall-time and tool budget. Record the agent/configuration, task revision, repetition, wall time, patch hash, grader output, failure category, and transcript hash when retention is permitted. Do not compare runs after changing the task or grader without versioning both. No E2 result is currently retained.
+The corrected [local CPU pilot](local-agent-pilot.md) ran one small model on one immutable task for three formal seeds. All attempts read source but produced no accepted edit; the grader rejected all three unchanged candidates. The original v1 cohort is invalidated due to a tool-history serialization bug. This is a retained negative tool-loop result, not successful task-solving evidence. Next, test a materially improved and frozen interaction protocol on a broader immutable task pack, while keeping task and model changes versioned. Do not compare it directly to this pilot unless the task, model and tool changes are versioned.
 
 ## E3 — Curriculum intervention
 
@@ -43,7 +43,7 @@ Study repeated system-proposed interventions only after independent downstream e
 
 ## Current stop point
 
-The isolated-input E0 calibration, execution failure-injection checks and two E1 task/grader pairs are complete. Narrow E5 measurements now cover local scheduling and durable freshness-check work. E2–E4, heterogeneous workload profiling, distributed systems evidence and E6 remain outstanding. No agent trajectory, model learning, generalization, or capability gain is claimed.
+The isolated-input E0 calibration, execution failure-injection checks and two E1 task/grader pairs are complete. Narrow E5 measurements now cover local scheduling and durable freshness-check work. E2 has one corrected negative local pilot but no successful task trajectory. E3–E4, heterogeneous workload profiling, distributed systems evidence and E6 remain outstanding. No model learning, generalization, or capability gain is claimed.
 
 ## Restored experimental implementation
 

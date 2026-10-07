@@ -1,0 +1,535 @@
+{
+  "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "checks": {
+    "eval_state_restoration": {
+      "initial_training_state": false,
+      "model_training_state_restored": true
+    },
+    "exception_path": [
+      {
+        "expected_exception_propagated": true,
+        "initial_training_state": true,
+        "model_training_state_restored": false
+      },
+      {
+        "expected_exception_propagated": true,
+        "initial_training_state": false,
+        "model_training_state_restored": true
+      }
+    ],
+    "invalid_temperature_cases": [
+      {
+        "generation_calls": 1,
+        "model_training_state_restored": true,
+        "rejected": false,
+        "temperature": "nan"
+      },
+      {
+        "generation_calls": 1,
+        "model_training_state_restored": false,
+        "rejected": true,
+        "temperature": "inf"
+      },
+      {
+        "generation_calls": 0,
+        "model_training_state_restored": true,
+        "rejected": true,
+        "temperature": "-0.25"
+      }
+    ],
+    "rollout_cases": [
+      {
+        "case_id": "repeat-positive-logit",
+        "effective_repetition_penalty": 1.7,
+        "expected_logprobs": [
+          -0.5325325677566388,
+          -1.303213373622147,
+          -1.68672032250734
+        ],
+        "max_abs_logprob_error": 0.6470561731547866,
+        "model_training_state_restored": true,
+        "observed_logprobs": [
+          -1.1795887409114254,
+          -1.1704329380005154,
+          -1.4331501978692234
+        ],
+        "recorded_temperature": null,
+        "response_token_ids": [
+          2,
+          3,
+          9
+        ],
+        "temperature": 0.7
+      },
+      {
+        "case_id": "repeat-positive-logit",
+        "effective_repetition_penalty": 1.7,
+        "expected_logprobs": [
+          -0.9036606121865294,
+          -1.545122634740925,
+          -1.7950680658040317
+        ],
+        "max_abs_logprob_error": 0.5587898616945515,
+        "model_training_state_restored": true,
+        "observed_logprobs": [
+          -1.4624504738810808,
+          -1.461336752708869,
+          -1.655064180593699
+        ],
+        "recorded_temperature": null,
+        "response_token_ids": [
+          2,
+          3,
+          9
+        ],
+        "temperature": 1.0
+      },
+      {
+        "case_id": "repeat-negative-logit",
+        "effective_repetition_penalty": 1.7,
+        "expected_logprobs": [
+          -3.226119784052537,
+          -3.157651738771234,
+          -1.6804729854021354
+        ],
+        "max_abs_logprob_error": 0.5591441664563779,
+        "model_training_state_restored": true,
+        "observed_logprobs": [
+          -3.7852639505089147,
+          -3.0819443284628916,
+          -1.630612155721333
+        ],
+        "recorded_temperature": null,
+        "response_token_ids": [
+          5,
+          6,
+          9
+        ],
+        "temperature": 1.3
+      },
+      {
+        "case_id": "repeat-negative-logit",
+        "effective_repetition_penalty": 1.7,
+        "expected_logprobs": [
+          -3.53053923336496,
+          -3.4389827626198404,
+          -1.5194421293258924
+        ],
+        "max_abs_logprob_error": 0.738005434919931,
+        "model_training_state_restored": true,
+        "observed_logprobs": [
+          -4.268544668284891,
+          -3.331886326948629,
+          -1.4556570167089258
+        ],
+        "recorded_temperature": null,
+        "response_token_ids": [
+          5,
+          6,
+          9
+        ],
+        "temperature": 1.0
+      },
+      {
+        "case_id": "repeat-context-nonunit-temperature",
+        "effective_repetition_penalty": 1.7,
+        "expected_logprobs": [
+          -0.9605793936060998,
+          -1.4127034657589983,
+          -1.7621334915369031
+        ],
+        "max_abs_logprob_error": 0.5475327735858493,
+        "model_training_state_restored": true,
+        "observed_logprobs": [
+          -1.508112167191949,
+          -1.3208654196580525,
+          -1.6385654272675967
+        ],
+        "recorded_temperature": null,
+        "response_token_ids": [
+          3,
+          8,
+          9
+        ],
+        "temperature": 0.85
+      },
+      {
+        "case_id": "repeat-context-nonunit-temperature",
+        "effective_repetition_penalty": 1.7,
+        "expected_logprobs": [
+          -1.123555849354046,
+          -1.5270169702716736,
+          -1.8240780084581154
+        ],
+        "max_abs_logprob_error": 0.4925307963765537,
+        "model_training_state_restored": true,
+        "observed_logprobs": [
+          -1.6160866457305998,
+          -1.450303704543756,
+          -1.7248735251555638
+        ],
+        "recorded_temperature": null,
+        "response_token_ids": [
+          3,
+          8,
+          9
+        ],
+        "temperature": 1.0
+      }
+    ],
+    "trainer": {
+      "conditions": [
+        {
+          "case_id": "repeat-positive-logit",
+          "expected_logprobs": [
+            -0.5325325677566388,
+            -1.303213373622147,
+            -1.68672032250734
+          ],
+          "max_abs_logprob_error": 0.37112804442989056,
+          "model_forward_calls": 1,
+          "observed_logprobs": [
+            -0.9036606121865294,
+            -1.545122634740925,
+            -1.7950680658040317
+          ],
+          "temperature": 0.7
+        },
+        {
+          "case_id": "repeat-positive-logit",
+          "expected_logprobs": [
+            -0.9036606121865294,
+            -1.545122634740925,
+            -1.7950680658040317
+          ],
+          "max_abs_logprob_error": 0.0,
+          "model_forward_calls": 1,
+          "observed_logprobs": [
+            -0.9036606121865294,
+            -1.545122634740925,
+            -1.7950680658040317
+          ],
+          "temperature": 1.0
+        },
+        {
+          "case_id": "repeat-negative-logit",
+          "expected_logprobs": [
+            -3.226119784052537,
+            -3.157651738771234,
+            -1.6804729854021354
+          ],
+          "max_abs_logprob_error": 0.30441944931242304,
+          "model_forward_calls": 1,
+          "observed_logprobs": [
+            -3.53053923336496,
+            -3.4389827626198404,
+            -1.5194421293258924
+          ],
+          "temperature": 1.3
+        },
+        {
+          "case_id": "repeat-negative-logit",
+          "expected_logprobs": [
+            -3.53053923336496,
+            -3.4389827626198404,
+            -1.5194421293258924
+          ],
+          "max_abs_logprob_error": 0.0,
+          "model_forward_calls": 1,
+          "observed_logprobs": [
+            -3.53053923336496,
+            -3.4389827626198404,
+            -1.5194421293258924
+          ],
+          "temperature": 1.0
+        },
+        {
+          "case_id": "repeat-context-nonunit-temperature",
+          "expected_logprobs": [
+            -0.9605793936060998,
+            -1.4127034657589983,
+            -1.7621334915369031
+          ],
+          "max_abs_logprob_error": 0.16297645574794628,
+          "model_forward_calls": 1,
+          "observed_logprobs": [
+            -1.123555849354046,
+            -1.5270169702716736,
+            -1.8240780084581154
+          ],
+          "temperature": 0.85
+        },
+        {
+          "case_id": "repeat-context-nonunit-temperature",
+          "expected_logprobs": [
+            -1.123555849354046,
+            -1.5270169702716736,
+            -1.8240780084581154
+          ],
+          "max_abs_logprob_error": 0.0,
+          "model_forward_calls": 1,
+          "observed_logprobs": [
+            -1.123555849354046,
+            -1.5270169702716736,
+            -1.8240780084581154
+          ],
+          "temperature": 1.0
+        }
+      ],
+      "invalid_temperature_cases": [
+        {
+          "error": null,
+          "objective_evaluated": true,
+          "rejected": false,
+          "temperature": "0.0"
+        },
+        {
+          "error": null,
+          "objective_evaluated": true,
+          "rejected": false,
+          "temperature": "-0.25"
+        },
+        {
+          "error": null,
+          "objective_evaluated": true,
+          "rejected": false,
+          "temperature": "nan"
+        },
+        {
+          "error": null,
+          "objective_evaluated": true,
+          "rejected": false,
+          "temperature": "inf"
+        }
+      ]
+    }
+  },
+  "claim_limit": "A passing candidate satisfies one CPU-fixture probability-parity contract; it is not model-learning or capability evidence.",
+  "evaluator_sha256": "06d63f993e531f025ef594840197671bf779933b4090aa6ffd3cf24a1ffb9107",
+  "failures": [
+    {
+      "case_id": "repeat-positive-logit",
+      "check": "rollout_probability_parity",
+      "observed_error": 0.6470561731547866,
+      "temperature": 0.7
+    },
+    {
+      "case_id": "repeat-positive-logit",
+      "check": "sampling_temperature_provenance",
+      "observed": null,
+      "temperature": 0.7
+    },
+    {
+      "case_id": "repeat-positive-logit",
+      "check": "neutral_repetition_penalty",
+      "observed": 1.7
+    },
+    {
+      "case_id": "repeat-positive-logit",
+      "check": "neutral_sampling_truncation",
+      "top_k": 0,
+      "top_p": 1.0,
+      "typical_p": 0.72
+    },
+    {
+      "case_id": "repeat-positive-logit",
+      "check": "rollout_probability_parity",
+      "observed_error": 0.5587898616945515,
+      "temperature": 1.0
+    },
+    {
+      "case_id": "repeat-positive-logit",
+      "check": "sampling_temperature_provenance",
+      "observed": null,
+      "temperature": 1.0
+    },
+    {
+      "case_id": "repeat-positive-logit",
+      "check": "neutral_repetition_penalty",
+      "observed": 1.7
+    },
+    {
+      "case_id": "repeat-positive-logit",
+      "check": "neutral_sampling_truncation",
+      "top_k": 0,
+      "top_p": 1.0,
+      "typical_p": 0.72
+    },
+    {
+      "case_id": "repeat-negative-logit",
+      "check": "rollout_probability_parity",
+      "observed_error": 0.5591441664563779,
+      "temperature": 1.3
+    },
+    {
+      "case_id": "repeat-negative-logit",
+      "check": "sampling_temperature_provenance",
+      "observed": null,
+      "temperature": 1.3
+    },
+    {
+      "case_id": "repeat-negative-logit",
+      "check": "neutral_repetition_penalty",
+      "observed": 1.7
+    },
+    {
+      "case_id": "repeat-negative-logit",
+      "check": "neutral_sampling_truncation",
+      "top_k": 0,
+      "top_p": 1.0,
+      "typical_p": 0.72
+    },
+    {
+      "case_id": "repeat-negative-logit",
+      "check": "rollout_probability_parity",
+      "observed_error": 0.738005434919931,
+      "temperature": 1.0
+    },
+    {
+      "case_id": "repeat-negative-logit",
+      "check": "sampling_temperature_provenance",
+      "observed": null,
+      "temperature": 1.0
+    },
+    {
+      "case_id": "repeat-negative-logit",
+      "check": "neutral_repetition_penalty",
+      "observed": 1.7
+    },
+    {
+      "case_id": "repeat-negative-logit",
+      "check": "neutral_sampling_truncation",
+      "top_k": 0,
+      "top_p": 1.0,
+      "typical_p": 0.72
+    },
+    {
+      "case_id": "repeat-context-nonunit-temperature",
+      "check": "rollout_probability_parity",
+      "observed_error": 0.5475327735858493,
+      "temperature": 0.85
+    },
+    {
+      "case_id": "repeat-context-nonunit-temperature",
+      "check": "sampling_temperature_provenance",
+      "observed": null,
+      "temperature": 0.85
+    },
+    {
+      "case_id": "repeat-context-nonunit-temperature",
+      "check": "neutral_repetition_penalty",
+      "observed": 1.7
+    },
+    {
+      "case_id": "repeat-context-nonunit-temperature",
+      "check": "neutral_sampling_truncation",
+      "top_k": 0,
+      "top_p": 1.0,
+      "typical_p": 0.72
+    },
+    {
+      "case_id": "repeat-context-nonunit-temperature",
+      "check": "rollout_probability_parity",
+      "observed_error": 0.4925307963765537,
+      "temperature": 1.0
+    },
+    {
+      "case_id": "repeat-context-nonunit-temperature",
+      "check": "sampling_temperature_provenance",
+      "observed": null,
+      "temperature": 1.0
+    },
+    {
+      "case_id": "repeat-context-nonunit-temperature",
+      "check": "neutral_repetition_penalty",
+      "observed": 1.7
+    },
+    {
+      "case_id": "repeat-context-nonunit-temperature",
+      "check": "neutral_sampling_truncation",
+      "top_k": 0,
+      "top_p": 1.0,
+      "typical_p": 0.72
+    },
+    {
+      "case_id": "repeat-positive-logit",
+      "check": "trainer_probability_parity",
+      "observed_error": 0.37112804442989056,
+      "temperature": 0.7
+    },
+    {
+      "case_id": "repeat-negative-logit",
+      "check": "trainer_probability_parity",
+      "observed_error": 0.30441944931242304,
+      "temperature": 1.3
+    },
+    {
+      "case_id": "repeat-context-nonunit-temperature",
+      "check": "trainer_probability_parity",
+      "observed_error": 0.16297645574794628,
+      "temperature": 0.85
+    },
+    {
+      "check": "trainer_invalid_temperature_rejected_before_objective",
+      "temperature": "0.0"
+    },
+    {
+      "check": "trainer_invalid_temperature_rejected_before_objective",
+      "temperature": "-0.25"
+    },
+    {
+      "check": "trainer_invalid_temperature_rejected_before_objective",
+      "temperature": "nan"
+    },
+    {
+      "check": "trainer_invalid_temperature_rejected_before_objective",
+      "temperature": "inf"
+    },
+    {
+      "check": "model_state_restoration_after_error",
+      "initial_training_state": true
+    },
+    {
+      "check": "invalid_temperature_rejected",
+      "temperature": "nan"
+    },
+    {
+      "check": "invalid_temperature_rejected_before_generation",
+      "temperature": "nan"
+    },
+    {
+      "check": "model_state_restoration_after_invalid_input",
+      "temperature": "inf"
+    },
+    {
+      "check": "invalid_temperature_rejected_before_generation",
+      "temperature": "inf"
+    }
+  ],
+  "passed": false,
+  "resource_scope": {
+    "accelerator_hours": 0,
+    "external_compute_usd": 0,
+    "model_weights_loaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages_used": false
+  },
+  "runtime": {
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.14"
+  },
+  "schema_version": 1,
+  "source_file_sha256": {
+    "src/rvl_systems/backends.py": "26abeffd24ecef37093a179dc33506f0853018331c0002bd01010d016b31faca",
+    "src/rvl_systems/grpo.py": "a2ef6217385a206f5e6c0f43fb40e900ae3bf1b2066a1c8d1ab1878fd25d724d",
+    "src/rvl_systems/hf_backend.py": "8a3fe764508018a3e1237f9f131626ce7690b8e93b5a1e7b52fd52356133fce6",
+    "src/rvl_systems/hf_trainer.py": "95a0b36732c416f0d0bc8cbddc55ed11b3eb2ecc7d72654fd6a00d43adf772e7",
+    "src/rvl_systems/objectives.py": "e5c40d097bdd3adc9c1e356037bc9e07857bbdfbf5a8fc78e77284534f614c6b",
+    "src/rvl_systems/precision.py": "2acc6f4c6205c9009b0dc15159d8a285aa414940fe20bedfc30fd36473369b0f",
+    "src/rvl_systems/triton_grpo.py": "ed7ee082db036e1631c1f8eaacfb8691b102401c8342dcb9ed4dba5d26a22cf9",
+    "src/rvl_systems/types.py": "a3e9f06cc70972a7b5fd50b757ffff992d3a6156d1ffab5133e410471dcc5d7b"
+  },
+  "task_descriptor_sha256": "3c23fd9b32d2aaae372d1cde96746d1d51b0654c19aa4e5eced672a735ef1f3f",
+  "task_id": "rvl-hf-behavior-policy-parity-v1",
+  "workspace_revision": "e788f113ad6b246a361cd50a52eaf2867f2a66f8"
+}

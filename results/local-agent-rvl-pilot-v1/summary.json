@@ -1,0 +1,74 @@
+{
+  "aggregate": {
+    "grader_passes": 0,
+    "mean_elapsed_seconds": 10.9,
+    "mean_generated_tokens": 99.7,
+    "median_elapsed_seconds": 13.251,
+    "no_tool_call_stops": 3,
+    "nonempty_candidate_diffs": 0,
+    "repetitions": 3
+  },
+  "claim_limit": "The three original v1 trajectories are retained for audit but excluded from model-outcome inference because the runner serialized assistant tool calls as ordinary text rather than the Transformers assistant.tool_calls message structure.",
+  "frozen_protocol_sha256": "2beb1d6c74de22c97eaf670e7e6e20b6de4cb46ce65b990eec8360149c355b78",
+  "interpretation": "These runs exercised a defective tool-history implementation. Their no-edit outcomes cannot be attributed to the model or task interface. See the frozen v2 protocol and formal seeds 54–56 for the corrected pilot cohort.",
+  "model_snapshot": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "protocol_id": "vare-local-agent-trajectory-rvl-pilot-v1",
+  "resources": {
+    "GPU_hours": 0,
+    "HF_offline_flags": true,
+    "external_compute_usd": 0,
+    "model_device": "CPU",
+    "model_downloads_during_runs": 0,
+    "model_weights_preexisting_in_local_cache": true,
+    "network_tools_available_to_agent": false,
+    "paid_api_calls": 0,
+    "paid_compute_usd": 0,
+    "threads": 4
+  },
+  "runner_sha256_matches_frozen_protocol": true,
+  "runs": [
+    {
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "elapsed_seconds": 5.369,
+      "grade_failures": 36,
+      "new_tokens": 32,
+      "nonempty_diff": false,
+      "passed": false,
+      "peak_rss_bytes": 3385376768,
+      "run": 1,
+      "seed": 44,
+      "stop_reason": "no_tool_call",
+      "tool_turns": 2
+    },
+    {
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "elapsed_seconds": 14.081,
+      "grade_failures": 36,
+      "new_tokens": 138,
+      "nonempty_diff": false,
+      "passed": false,
+      "peak_rss_bytes": 3401629696,
+      "run": 2,
+      "seed": 45,
+      "stop_reason": "no_tool_call",
+      "tool_turns": 2
+    },
+    {
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "elapsed_seconds": 13.251,
+      "grade_failures": 36,
+      "new_tokens": 129,
+      "nonempty_diff": false,
+      "passed": false,
+      "peak_rss_bytes": 3393028096,
+      "run": 3,
+      "seed": 46,
+      "stop_reason": "no_tool_call",
+      "tool_turns": 2
+    }
+  ],
+  "schema_version": 1,
+  "task_base_revision": "e788f113ad6b246a361cd50a52eaf2867f2a66f8",
+  "task_id": "rvl-hf-behavior-policy-parity-v1",
+  "status": "invalidated-for-model-outcome-inference"
+}
