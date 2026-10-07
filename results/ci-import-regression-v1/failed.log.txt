@@ -1,0 +1,50 @@
+test	Run pytest	﻿2026-10-07T22:29:21.4463283Z ##[group]Run pytest
+test	Run pytest	2026-10-07T22:29:21.4463493Z ^[[36;1mpytest^[[0m
+test	Run pytest	2026-10-07T22:29:21.4518405Z shell: /usr/bin/bash -e {0}
+test	Run pytest	2026-10-07T22:29:21.4518560Z env:
+test	Run pytest	2026-10-07T22:29:21.4518718Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+test	Run pytest	2026-10-07T22:29:21.4518969Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+test	Run pytest	2026-10-07T22:29:21.4519212Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test	Run pytest	2026-10-07T22:29:21.4519429Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test	Run pytest	2026-10-07T22:29:21.4519663Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test	Run pytest	2026-10-07T22:29:21.4519882Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+test	Run pytest	2026-10-07T22:29:21.4520069Z ##[endgroup]
+test	Run pytest	2026-10-07T22:29:22.1333411Z 
+test	Run pytest	2026-10-07T22:29:22.1333816Z ==================================== ERRORS ====================================
+test	Run pytest	2026-10-07T22:29:22.1334139Z ____________________ ERROR collecting tests/test_durable.py ____________________
+test	Run pytest	2026-10-07T22:29:22.1334524Z ImportError while importing test module '/home/runner/work/VARE/VARE/tests/test_durable.py'.
+test	Run pytest	2026-10-07T22:29:22.1334829Z Hint: make sure your test modules/packages have valid Python names.
+test	Run pytest	2026-10-07T22:29:22.1335023Z Traceback:
+test	Run pytest	2026-10-07T22:29:22.1335316Z /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/importlib/__init__.py:126: in import_module
+test	Run pytest	2026-10-07T22:29:22.1335914Z     return _bootstrap._gcd_import(name[level:], package, level)
+test	Run pytest	2026-10-07T22:29:22.1336231Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test	Run pytest	2026-10-07T22:29:22.1336515Z tests/test_durable.py:9: in <module>
+test	Run pytest	2026-10-07T22:29:22.1336843Z     from benchmarks.scheduler.fixtures import make_fixture
+test	Run pytest	2026-10-07T22:29:22.1337178Z E   ModuleNotFoundError: No module named 'benchmarks'
+test	Run pytest	2026-10-07T22:29:22.1337546Z __________________ ERROR collecting tests/test_measurement.py __________________
+test	Run pytest	2026-10-07T22:29:22.1338030Z ImportError while importing test module '/home/runner/work/VARE/VARE/tests/test_measurement.py'.
+test	Run pytest	2026-10-07T22:29:22.1338504Z Hint: make sure your test modules/packages have valid Python names.
+test	Run pytest	2026-10-07T22:29:22.1338803Z Traceback:
+test	Run pytest	2026-10-07T22:29:22.1339165Z /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/importlib/__init__.py:126: in import_module
+test	Run pytest	2026-10-07T22:29:22.1339619Z     return _bootstrap._gcd_import(name[level:], package, level)
+test	Run pytest	2026-10-07T22:29:22.1339926Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test	Run pytest	2026-10-07T22:29:22.1340190Z tests/test_measurement.py:7: in <module>
+test	Run pytest	2026-10-07T22:29:22.1340483Z     from scripts.audit_scheduler import audit_measurement
+test	Run pytest	2026-10-07T22:29:22.1340796Z E   ModuleNotFoundError: No module named 'scripts'
+test	Run pytest	2026-10-07T22:29:22.1341066Z ____________________ ERROR collecting tests/test_runner.py _____________________
+test	Run pytest	2026-10-07T22:29:22.1341362Z ImportError while importing test module '/home/runner/work/VARE/VARE/tests/test_runner.py'.
+test	Run pytest	2026-10-07T22:29:22.1341652Z Hint: make sure your test modules/packages have valid Python names.
+test	Run pytest	2026-10-07T22:29:22.1341848Z Traceback:
+test	Run pytest	2026-10-07T22:29:22.1342068Z /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/importlib/__init__.py:126: in import_module
+test	Run pytest	2026-10-07T22:29:22.1342365Z     return _bootstrap._gcd_import(name[level:], package, level)
+test	Run pytest	2026-10-07T22:29:22.1342565Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test	Run pytest	2026-10-07T22:29:22.1342735Z tests/test_runner.py:11: in <module>
+test	Run pytest	2026-10-07T22:29:22.1342925Z     from benchmarks.scheduler.fixtures import make_fixture
+test	Run pytest	2026-10-07T22:29:22.1343516Z E   ModuleNotFoundError: No module named 'benchmarks'
+test	Run pytest	2026-10-07T22:29:22.1343933Z =========================== short test summary info ============================
+test	Run pytest	2026-10-07T22:29:22.1344131Z ERROR tests/test_durable.py
+test	Run pytest	2026-10-07T22:29:22.1344277Z ERROR tests/test_measurement.py
+test	Run pytest	2026-10-07T22:29:22.1344422Z ERROR tests/test_runner.py
+test	Run pytest	2026-10-07T22:29:22.1344602Z !!!!!!!!!!!!!!!!!!! Interrupted: 3 errors during collection !!!!!!!!!!!!!!!!!!!!
+test	Run pytest	2026-10-07T22:29:22.1344798Z 3 errors in 0.39s
+test	Run pytest	2026-10-07T22:29:22.1590843Z ##[error]Process completed with exit code 2.

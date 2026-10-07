@@ -1,0 +1,8 @@
+{
+  "cause": "pytest console entry lacked repository root on sys.path, so benchmark/script namespace imports failed during collection",
+  "claim_limit": "The failed log is retained. Local console-entry verification and the later GitHub run establish whether the repair works; this summary alone does not claim CI success.",
+  "failed_revision": "d15e6add97c3e84c4f2e839835874a59c5f60688",
+  "failed_run_id": 37696477509,
+  "repair": "Add repository root alongside src to pytest pythonpath and use python -m pytest in CI",
+  "status": "observed_failure_then_repaired"
+}
