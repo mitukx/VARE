@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "protocol_id": "cpu-recovery-v1",
+  "question": "Does transactional local evaluation state recover from process loss while preventing superseded attempts and stale inputs from authorizing current success?",
+  "replications": 3,
+  "cases": ["claim_race", "death_after_claim", "transaction_rollback", "acknowledgement_loss", "late_completion", "stale_reuse", "stale_pending", "retry_budget"],
+  "race_jobs": 32,
+  "workers": 4,
+  "lease_seconds": 10,
+  "fault_lease_seconds": 0.3,
+  "max_attempts": 3,
+  "primary_metric": "All eight case invariants hold in all three replications; current effective decisions replay exactly from retained transactional events and raw attempt records.",
+  "case_acceptance": {
+    "claim_race": "32 current passes, exactly one claim/committed attempt per job under four processes",
+    "death_after_claim": "Process exits 23 after claiming; recovery reaches one current pass with token 2",
+    "transaction_rollback": "Process exits 24 inside an uncommitted write; state remains pending and recovery commits token 1",
+    "acknowledgement_loss": "Process exits 25 after committing; restart retains token 1 and one current pass",
+    "late_completion": "After lease expiry and replacement, old completion is fenced, new token 2 owns the sole current decision",
+    "stale_reuse": "Changed source disables a completed pass at export; the original passing attempt remains retained",
+    "stale_pending": "Changed enrollment is invalidated before grading; no attempt is executed",
+    "retry_budget": "Three expired claims exhaust the job with retry_exhausted and no candidate success"
+  },
+  "historical_integration": "One pre-fix and fixed revision for each of the two locked historical tasks. Kill one claimant before grading, then recover with four workers; all four calibrated outcomes must match and exactly one job must need a second token.",
+  "abort": "Abort on any mismatch, audit failure or 600-second wall budget; preserve failed artifacts. Do not retune or replace failed runs under this protocol.",
+  "resources": {"gpu_hours": 0, "paid_api_calls": 0, "external_compute_usd": 0, "max_wall_seconds": 600},
+  "claim_limit": "Same-host SQLite coordination and process fault injection on trusted CPU graders. Execution may repeat; only a current fenced terminal decision is deduplicated. No network partition, distributed fleet, machine power-loss, OS containment or model-learning result. Kill points occur before grader launch or after commit, not during a hostile child process."
+}

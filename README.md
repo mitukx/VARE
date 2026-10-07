@@ -19,6 +19,10 @@ python3 -m unittest discover -s tests -v
 
 For a new campaign, use `python3 -m vare run --plan PLAN.json --output NEW_DIRECTORY --workers 4`, then `python3 -m vare audit NEW_DIRECTORY`. The execution contract provides the plan format. The runner needs Python >=3.9, Git and POSIX process groups; it has no third-party Python dependency.
 
+## Persistent evaluation and requirements
+
+`durable-init`, `durable-work`, `durable-export` and `durable-audit` add same-host transactional claims, fenced leases, bounded crash retries, immutable attempt records and freshness invalidation. See the [requirements matrix](docs/requirements.md) and [recovery contract](docs/recovery.md). The installed package and experimental control-loop commands require Python >=3.11; standalone checkout evaluation uses Python >=3.9. All implementation is under `src/vare`, with a checkout bootstrap in `vare/`.
+
 ## Current scope
 
 Two real upstream fixes calibrate the task and grading path:
@@ -36,7 +40,7 @@ The separate [integrity calibration](results/protocol-integrity/cpu-calibration-
 
 These are task/evaluator calibration results. They do not measure an agent solving tasks, model training, generalization, or capability improvement. The TRL grader executes extracted production normalization statements with scalar doubles; it does not run a full trainer or gradient update. The HF grader executes candidate source with local fixtures; it is not an operating-system sandbox for hostile code. Only run it on candidate code you trust.
 
-The repository implements evaluation orchestration, not a model-training loop, coding-agent orchestration, curriculum intervention, or promotion system. Those are later research steps, not measured features.
+The restored experimental control plane in `src/vare` includes grouped replay, freshness/curriculum controls, paired promotion gates, workspace-agent campaigns and RVL hooks. These are implementation/regression contracts. No real-model learning, agent task-solving or GPU result is claimed. The imported L0 raw archive is corrupt; its old accuracy summary is excluded from verified claims (see the evidence notes).
 
 ## Reproduce the calibrations
 

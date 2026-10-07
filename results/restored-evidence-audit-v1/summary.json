@@ -1,0 +1,73 @@
+{
+  "checks": [
+    {
+      "expected_bytes": 377,
+      "expected_sha256": "df128bbbbf4a85d2fedf7293c522de806d2d74bcb33ac0b7f6d887b55c35553c",
+      "hash_matches": true,
+      "observed_bytes": 377,
+      "observed_sha256": "df128bbbbf4a85d2fedf7293c522de806d2d74bcb33ac0b7f6d887b55c35553c",
+      "path": "evidence/l0_summary.json"
+    },
+    {
+      "error_type": "error",
+      "expected_bytes": 8206,
+      "expected_sha256": "3ac9715980cdcca452808023e05f6d1191582704bfa790f992a7ea7ab57100e6",
+      "gzip_valid": false,
+      "hash_matches": false,
+      "observed_bytes": 2460,
+      "observed_sha256": "1c6f290faed033677e3d713f6e4aa132e81f5fbbe7db70aeaf617fd531dd1abd",
+      "path": "evidence/l0_contextual_bandit_seed7.json.gz"
+    },
+    {
+      "expected_bytes": 446,
+      "expected_sha256": "dc25191768dc992185cfe5b84f0d97f8edb3240a249ada9fa9aacfaba29c7e95",
+      "hash_matches": true,
+      "observed_bytes": 446,
+      "observed_sha256": "dc25191768dc992185cfe5b84f0d97f8edb3240a249ada9fa9aacfaba29c7e95",
+      "path": "evidence/environment_harness_v0.3.0.json"
+    },
+    {
+      "expected_bytes": 559,
+      "expected_sha256": "77a655fbf9558d17e6b0bba8ff415ce9d3188cd1ef3ec8026c1a7d94ce86df96",
+      "hash_matches": true,
+      "observed_bytes": 559,
+      "observed_sha256": "77a655fbf9558d17e6b0bba8ff415ce9d3188cd1ef3ec8026c1a7d94ce86df96",
+      "path": "evidence/environment_campaign_oracle_v0.3.0.json"
+    },
+    {
+      "expected_bytes": 630,
+      "expected_sha256": "6f8cf5a32e505920ae34fd7ece1b2c8d8a972fec8a1754d4fe9d115433c28c2f",
+      "hash_matches": true,
+      "observed_bytes": 630,
+      "observed_sha256": "6f8cf5a32e505920ae34fd7ece1b2c8d8a972fec8a1754d4fe9d115433c28c2f",
+      "path": "evidence/historical_task_seed_v0.3.0.json"
+    },
+    {
+      "expected_bytes": 206,
+      "expected_sha256": "78b4c8eef02de3c882db60602150c71f9f4a494fb47f46450311c3ffb3744f97",
+      "hash_matches": true,
+      "observed_bytes": 206,
+      "observed_sha256": "78b4c8eef02de3c882db60602150c71f9f4a494fb47f46450311c3ffb3744f97",
+      "path": "evidence/env_smoke_v0.3.0/summary.json"
+    },
+    {
+      "expected_bytes": 354,
+      "expected_sha256": "e4ebadd791f79f333b612cbd0aeef7f786a724374a29f3991ad56c424a25816a",
+      "hash_matches": true,
+      "observed_bytes": 354,
+      "observed_sha256": "e4ebadd791f79f333b612cbd0aeef7f786a724374a29f3991ad56c424a25816a",
+      "path": "evidence/env_campaign_oracle_v0.3.0/summary.json"
+    },
+    {
+      "expected_bytes": 1097,
+      "expected_sha256": "416f9144133a742ffd79901289d6975a1dc597a43e088dd8a21d739b32f098bc",
+      "hash_matches": true,
+      "observed_bytes": 1097,
+      "observed_sha256": "416f9144133a742ffd79901289d6975a1dc597a43e088dd8a21d739b32f098bc",
+      "path": "evidence/env_campaign_oracle_v0.3.0/records.jsonl"
+    }
+  ],
+  "claim_limit": "The imported L0 compressed raw artifact is corrupt and its old summary is not independently verified. Seven other imported file hashes match. All original bytes are retained.",
+  "source_revision": "f5c92cf",
+  "status": "partial_failure"
+}

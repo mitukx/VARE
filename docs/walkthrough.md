@@ -36,7 +36,7 @@ Tests use tiny locally constructed Git repositories. No source fetch, model call
 
 ## 4. Inspect the implementation (four minutes)
 
-Read `vare/runner.py` in this order: `protocol`, `fingerprint`, `execute`, `classify`, `run_campaign`, `audit`. The [execution contract](execution.md) explains each boundary.
+Read `src/vare/runner.py` in this order: `protocol`, `fingerprint`, `execute`, `classify`, `run_campaign`, `audit`. The [execution contract](execution.md) explains each boundary.
 
 Questions that should be answerable from the code and records:
 

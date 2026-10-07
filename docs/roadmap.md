@@ -42,3 +42,7 @@ Study repeated system-proposed interventions only after independent downstream e
 ## Current stop point
 
 The isolated-input E0 calibration, execution failure-injection checks and two E1 task/grader pairs are complete. A narrow E5 local scheduling result is retained. E2–E4, distributed systems evidence and E6 remain outstanding. No agent trajectory, model learning, generalization, or capability gain is claimed.
+
+## Restored experimental implementation
+
+The source recovered at upstream commit `f5c92cf` is integrated in `src/vare`, including replay, freshness, curriculum, paired promotion and RVL integration contracts. Their existence does not change the evidence ladder. The imported L0 raw archive failed the retained hash/decompression audit; its old accuracy summary is excluded from current verified claims. Legacy source-pattern fixtures are retained under `benchmarks/seeds/`, separately from calibrated runtime historical tasks.

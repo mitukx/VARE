@@ -44,3 +44,11 @@ The fixed revisions are public historical changes used to validate the benchmark
 The [scheduler report](scheduler-report.md) covers VARE's original evaluation execution code. The frozen protocol produced 16/16 expected synthetic classifications and 80/80 expected historical candidate decisions. Median paired one-worker/four-worker speedup was 3.4857× over five pairs. Raw campaign records, protocol/runner snapshots and manifests are retained at [`cpu-scheduler-v1`](../results/cpu-scheduler-v1/). `scripts/audit_scheduler.py` reconstructs the measured summary offline.
 
 This provides local scheduling and reliability evidence; it does not change the claim limits of either task or imply agent/model improvement. The runner is not a hostile-code sandbox. The report discloses the first-pair timing outlier and the later CLI audit correction separately from the code used for measurement.
+
+## Restored control-plane source and imported artifacts
+
+The source restored on `origin/main` at `f5c92cf` is integrated into `src/vare`: grouped replay, lag/freshness controls, transactional candidate hooks, paired promotion gates, environment campaigns and RVL adapters. These are experimental implementations with regression tests. Actual GPU training, model improvement and distributed-fleet performance remain unmeasured.
+
+The imported artifact manifest has seven matching file hashes and one failure: `evidence/l0_contextual_bandit_seed7.json.gz` is truncated/corrupt, does not match its declared digest or size, and cannot be decompressed. The old L0 accuracy summary is therefore **not independently verified from retained raw data** and is not used as a headline result. The original artifact and manifest are retained; [the import audit](../results/restored-evidence-audit-v1/summary.json) records the failure. Re-running a toy experiment would create new evidence, not repair the old measurement.
+
+The earlier source-pattern-only task seed is retained separately at [`benchmarks/seeds/rvl_static_parity`](../benchmarks/seeds/rvl_static_parity/) for its original environment-harness regression test. The calibrated locked historical tasks use runtime graders and are described above. The two descriptor formats have separate CLIs; the legacy `env-campaign` catalog does not consume the locked historical descriptors.

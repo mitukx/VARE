@@ -6,7 +6,7 @@ Can a bounded evaluation campaign distinguish a rejected candidate from a broken
 
 ## Architecture
 
-`python3 -m vare` uses only the standard library and requires Python >=3.9, Git, and POSIX process groups. `vare/runner.py` contains the implementation; `tests/test_runner.py` contains local, network-free regression fixtures.
+`python3 -m vare` uses only the standard library and requires Python >=3.9, Git, and POSIX process groups. `src/vare/runner.py` contains the implementation; `tests/test_runner.py` contains local, network-free regression fixtures.
 
 ```mermaid
 flowchart LR
@@ -66,4 +66,4 @@ The `run` exit code is 0 when all jobs were evaluated as valid passes or valid c
 
 This is a local evaluation control plane, not a security sandbox or a distributed scheduler. Trusted candidate code can import and execute Python. A malicious process could escape its group, alter unlisted files, race the before/after snapshots or temporarily modify and restore inputs. CPU, RSS, disk and network are not OS-limited. Git commands have a 10-second timeout; source files and protected assets have a 16 MiB per-file ceiling. Source provenance covers the task's declared file list, not every imported dependency. Do not run untrusted candidates on a personal machine.
 
-There are no retries, resume, distributed fleet, model/API inference, training or promotion decisions. Interrupted bundles are evidence, not resumable work queues. These limits define the scope of the measurements in the scheduler report.
+The original `run` command has no retries or resume; its interrupted bundles are evidence snapshots. The [durable commands](recovery.md) add separate live-state recovery while reusing this grader execution contract. Neither path provides a distributed fleet or measures model/API inference, training or promotion. The original scheduler report applies to the code frozen in its retained snapshots.

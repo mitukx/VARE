@@ -99,7 +99,7 @@ class Store:
             db.execute('INSERT INTO meta VALUES(?,?)', ('schema_version', '1'))
             db.execute('INSERT INTO meta VALUES(?,?)', ('repository_root', str(root)))
             for name in ['__init__.py', '__main__.py', 'runner.py', 'durable.py']:
-                db.execute('INSERT INTO assets VALUES(?,?)', ('vare/' + name, (ROOT / 'vare' / name).read_bytes()))
+                db.execute('INSERT INTO assets VALUES(?,?)', ('vare/' + name, Path(__file__).with_name(name).read_bytes()))
             for job, expected in enrollment:
                 spec = asdict(job)
                 spec['task_root'], spec['workspace'] = str(job.task_root.resolve()), str(job.workspace.resolve())
@@ -202,6 +202,8 @@ class Store:
                 raise ValueError('terminal record disagrees with enrollment')
             if classify(parsed, record['exit_code'], task, expected['protocol'], expected['input']) != record['status']:
                 raise ValueError('invalid accepted-score contract')
+            if record.get('task_id') != expected['task_id']:
+                raise ValueError('record task ID mismatch')
         record['stdout_sha256'], record['stderr_sha256'] = digest(stdout), digest(stderr)
         payload = (encode(record).decode(), encode(data).decode() if data is not None else None, stdout, stderr)
         # Historical payload identity stays immutable; freshness changes effective state.
@@ -357,6 +359,7 @@ def audit_durable(output):
         raise ValueError('unsafe snapshot identifier')
     replay = {name: {'state': None, 'token': 0, 'effective': None} for name in jobs}
     attempt_states = {}
+    owners = {}
     previous = '0' * 64
     for index, raw in enumerate(state['events']):
         event = dict(raw)
@@ -375,6 +378,7 @@ def audit_durable(output):
                 raise ValueError('invalid claim transition')
             row.update(state='running', token=token)
             attempt_states[name, token] = 'claimed'
+            owners[name, token] = event['details']['owner']
         elif kind == 'expired':
             if row['state'] != 'running' or token != row['token']:
                 raise ValueError('invalid expiry')
@@ -400,7 +404,8 @@ def audit_durable(output):
             directory = output / 'attempts' / name / str(token)
             record_bytes = (directory / 'record.json').read_bytes()
             record = strict_json(record_bytes)
-            if digest(record_bytes) != event['details']['record_sha256'] or record['status'] != event['details']['status']:
+            if (record.get('job_id') != name or record.get('status') not in STATUSES | {'input_stale'} or
+                digest(record_bytes) != event['details']['record_sha256'] or record['status'] != event['details']['status']):
                 raise ValueError('event/record mismatch')
             for stream in ['stdout', 'stderr']:
                 if file_hash(directory / (stream + '.bin')) != record[stream + '_sha256']:
@@ -416,7 +421,8 @@ def audit_durable(output):
                 hashes['protocol_lock_sha256'] = file_hash(snapshot / 'protocol.lock.json')
                 expected = jobs[name]['expected']
                 data = strict_json((directory / 'stdout.bin').read_bytes())
-                if (hashes != expected['protocol'] or record['input'] != expected['input'] or record['protocol'] != hashes or
+                if (hashes != expected['protocol'] or record['task_id'] != expected['task_id'] or
+                    task['task_id'] != lock['task_id'] or record['input'] != expected['input'] or record['protocol'] != hashes or
                     classify(data, record['exit_code'], task, hashes, expected['input']) != record['status']):
                     raise ValueError('accepted record does not bind to enrollment')
                 if data != strict_json((directory / 'grader.json').read_bytes()):
@@ -428,7 +434,8 @@ def audit_durable(output):
             raise ValueError('exported job state does not replay')
     for (name, token), expected_state in attempt_states.items():
         attempt = strict_json((output / 'attempts' / name / str(token) / 'attempt.json').read_bytes())
-        if attempt['state'] != expected_state or attempt['job_id'] != name or attempt['token'] != token:
+        if (attempt['state'] != expected_state or attempt['job_id'] != name or attempt['token'] != token or
+            attempt['owner'] != owners[name, token]):
             raise ValueError('attempt state mismatch')
     return {'status': 'verified', 'jobs': len(jobs), 'attempts': len(attempt_states),
             'events': len(state['events']), 'outcomes': dict(Counter(j['effective'] or j['state'] for j in jobs.values()))}

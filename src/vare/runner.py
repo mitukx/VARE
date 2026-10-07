@@ -17,7 +17,7 @@ import subprocess
 import sys
 import time
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 STATUSES = {'candidate_passed', 'candidate_rejected', 'protocol_error', 'source_error',
             'timeout', 'output_limit', 'invalid_output', 'grader_error',
             'provenance_mismatch', 'workspace_changed', 'cancelled', 'internal_error'}
@@ -300,7 +300,7 @@ async def run_campaign(jobs, output, workers=1, repository_root=ROOT):
     output.mkdir(parents=True, exist_ok=False)
     # Snapshot the runner and every protected input. No absolute local paths in artifacts.
     for name in ['__init__.py', '__main__.py', 'runner.py']:
-        atomic(output / 'snapshot' / 'vare' / name, (ROOT / 'vare' / name).read_bytes())
+        atomic(output / 'snapshot' / 'vare' / name, Path(__file__).with_name(name).read_bytes())
     snapshots = set()
     for job in jobs:
         key = snapshot_key(job)
