@@ -32,6 +32,14 @@ def audit(parent: Path) -> dict:
     phases = {}
     for phase in ("baseline", "targeted"):
         directory = parent / phase
+        manifest = strict_json((directory / "manifest.json").read_bytes())
+        actual_files = {
+            str(path.relative_to(directory)): file_hash(path)
+            for path in sorted(directory.rglob("*"))
+            if path.is_file() and path != directory / "manifest.json"
+        }
+        if manifest.get("files") != actual_files:
+            raise ValueError("phase manifest mismatch")
         summary = strict_json((directory / "summary.json").read_bytes())
         if summary["phase"] != phase or summary["protocol_id"] != protocol["protocol_id"]:
             raise ValueError("phase or protocol identity mismatch")

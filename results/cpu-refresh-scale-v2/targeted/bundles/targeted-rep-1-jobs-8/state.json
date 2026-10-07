@@ -1,0 +1,479 @@
+{
+  "events": [
+    {
+      "details": {},
+      "event_sha256": "183aa688f21ec1b5654a1d9a8dbb33c6939be6ceddeb3a99c80b2ae976e2098d",
+      "job_id": "job-000",
+      "kind": "enrolled",
+      "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "sequence": 0,
+      "token": 0
+    },
+    {
+      "details": {},
+      "event_sha256": "a4189e966443e2b3c1cf2ee0f94d1c2a8fe9a25569bc90dd83f1dfab5040d5e1",
+      "job_id": "job-001",
+      "kind": "enrolled",
+      "previous_hash": "183aa688f21ec1b5654a1d9a8dbb33c6939be6ceddeb3a99c80b2ae976e2098d",
+      "sequence": 1,
+      "token": 0
+    },
+    {
+      "details": {},
+      "event_sha256": "e9fc8857b117f4d153315123d369acd6a3b1e941d59b8c34faf38dedf490db63",
+      "job_id": "job-002",
+      "kind": "enrolled",
+      "previous_hash": "a4189e966443e2b3c1cf2ee0f94d1c2a8fe9a25569bc90dd83f1dfab5040d5e1",
+      "sequence": 2,
+      "token": 0
+    },
+    {
+      "details": {},
+      "event_sha256": "3ca030e84dcc4971782f20a66898ee5db98bcc2f8504dfb21b434bb00a0ba2e2",
+      "job_id": "job-003",
+      "kind": "enrolled",
+      "previous_hash": "e9fc8857b117f4d153315123d369acd6a3b1e941d59b8c34faf38dedf490db63",
+      "sequence": 3,
+      "token": 0
+    },
+    {
+      "details": {},
+      "event_sha256": "3b138cbca6547f5ad015626c815a4039d8d28681490bdbac3c922cf279ce9dcc",
+      "job_id": "job-004",
+      "kind": "enrolled",
+      "previous_hash": "3ca030e84dcc4971782f20a66898ee5db98bcc2f8504dfb21b434bb00a0ba2e2",
+      "sequence": 4,
+      "token": 0
+    },
+    {
+      "details": {},
+      "event_sha256": "fc2025a0b9279136ac919ee652461d6dd2baf2f39e5cc366667f4e8138b2c445",
+      "job_id": "job-005",
+      "kind": "enrolled",
+      "previous_hash": "3b138cbca6547f5ad015626c815a4039d8d28681490bdbac3c922cf279ce9dcc",
+      "sequence": 5,
+      "token": 0
+    },
+    {
+      "details": {},
+      "event_sha256": "3ad5c5788db9b5cb09aa4204315a65c85faa6aae731bdd81c10376d7b7645e96",
+      "job_id": "job-006",
+      "kind": "enrolled",
+      "previous_hash": "fc2025a0b9279136ac919ee652461d6dd2baf2f39e5cc366667f4e8138b2c445",
+      "sequence": 6,
+      "token": 0
+    },
+    {
+      "details": {},
+      "event_sha256": "1ea1da299c7f03b591d46a6094f372f655fedc62c786f39c1345c3605d32de9a",
+      "job_id": "job-007",
+      "kind": "enrolled",
+      "previous_hash": "3ad5c5788db9b5cb09aa4204315a65c85faa6aae731bdd81c10376d7b7645e96",
+      "sequence": 7,
+      "token": 0
+    },
+    {
+      "details": {
+        "deadline": 1791413623.886176,
+        "owner": "scale-worker"
+      },
+      "event_sha256": "b27fa9e77b1014d34fd915a8b506d46a00c14261fee8ac29459176b60eed2215",
+      "job_id": "job-000",
+      "kind": "claimed",
+      "previous_hash": "1ea1da299c7f03b591d46a6094f372f655fedc62c786f39c1345c3605d32de9a",
+      "sequence": 8,
+      "token": 1
+    },
+    {
+      "details": {
+        "record_sha256": "f15bf36c808ac8e6c4656f39a276f9cb9a60c54f18b3d43aa4b86621a26535d2",
+        "status": "internal_error"
+      },
+      "event_sha256": "cdf43bc84e98c3556697a1a51e2a603940b0fe36ad1ce001127562de2524f412",
+      "job_id": "job-000",
+      "kind": "committed",
+      "previous_hash": "b27fa9e77b1014d34fd915a8b506d46a00c14261fee8ac29459176b60eed2215",
+      "sequence": 9,
+      "token": 1
+    },
+    {
+      "details": {
+        "deadline": 1791413623.918375,
+        "owner": "scale-worker"
+      },
+      "event_sha256": "a967e058993f748646bc7fbbecc1cc17f165e68a2188dffba3e58fd711c2afaa",
+      "job_id": "job-001",
+      "kind": "claimed",
+      "previous_hash": "cdf43bc84e98c3556697a1a51e2a603940b0fe36ad1ce001127562de2524f412",
+      "sequence": 10,
+      "token": 1
+    },
+    {
+      "details": {
+        "record_sha256": "fb18464b7729db246136764cc0823594ae896aea8f07f4802c3a5ba8c8b99a15",
+        "status": "internal_error"
+      },
+      "event_sha256": "f6f6ccd3e483bc67a205e9a2f4ef7ce34912de2f3aeebc5ac0c0765d69391b16",
+      "job_id": "job-001",
+      "kind": "committed",
+      "previous_hash": "a967e058993f748646bc7fbbecc1cc17f165e68a2188dffba3e58fd711c2afaa",
+      "sequence": 11,
+      "token": 1
+    },
+    {
+      "details": {
+        "deadline": 1791413623.95004,
+        "owner": "scale-worker"
+      },
+      "event_sha256": "bd0e81e0c98299a42a94fc182926721871f1b49ab7af99f79a9d5fbe18a4f5fa",
+      "job_id": "job-002",
+      "kind": "claimed",
+      "previous_hash": "f6f6ccd3e483bc67a205e9a2f4ef7ce34912de2f3aeebc5ac0c0765d69391b16",
+      "sequence": 12,
+      "token": 1
+    },
+    {
+      "details": {
+        "record_sha256": "56b7ba51505372afdd00c81d6aa2335df05b3d6066644f1394ef70baddc46152",
+        "status": "internal_error"
+      },
+      "event_sha256": "fca7cb3399b30197639e2ce8e59ed079a35da2f59e6ddbaa09167bde583ad863",
+      "job_id": "job-002",
+      "kind": "committed",
+      "previous_hash": "bd0e81e0c98299a42a94fc182926721871f1b49ab7af99f79a9d5fbe18a4f5fa",
+      "sequence": 13,
+      "token": 1
+    },
+    {
+      "details": {
+        "deadline": 1791413623.9829571,
+        "owner": "scale-worker"
+      },
+      "event_sha256": "7374538802502407340b72afa82f67517da0407e9ec95d3c88c49c332fe35193",
+      "job_id": "job-003",
+      "kind": "claimed",
+      "previous_hash": "fca7cb3399b30197639e2ce8e59ed079a35da2f59e6ddbaa09167bde583ad863",
+      "sequence": 14,
+      "token": 1
+    },
+    {
+      "details": {
+        "record_sha256": "d1cced86a084cce630734efd64a20fd1d8d27a19a63f4f33d14d4fa40e80aae4",
+        "status": "internal_error"
+      },
+      "event_sha256": "d0a9022ffb38d3ec23ce05d3d86c3bd2a412c9c5a86438957037d622d1222b57",
+      "job_id": "job-003",
+      "kind": "committed",
+      "previous_hash": "7374538802502407340b72afa82f67517da0407e9ec95d3c88c49c332fe35193",
+      "sequence": 15,
+      "token": 1
+    },
+    {
+      "details": {
+        "deadline": 1791413624.014795,
+        "owner": "scale-worker"
+      },
+      "event_sha256": "cb516932a10a82caeadd6af881db566a582e6edcf98e72c1e07a6ec2637fb00a",
+      "job_id": "job-004",
+      "kind": "claimed",
+      "previous_hash": "d0a9022ffb38d3ec23ce05d3d86c3bd2a412c9c5a86438957037d622d1222b57",
+      "sequence": 16,
+      "token": 1
+    },
+    {
+      "details": {
+        "record_sha256": "7a8d89441e083d90a5817719572a329fdd618bd949c004072e6ca9a6b5f133ea",
+        "status": "internal_error"
+      },
+      "event_sha256": "123e1395e1a585a509ac827917fa62250a978f0128d888a58f388292177afa4f",
+      "job_id": "job-004",
+      "kind": "committed",
+      "previous_hash": "cb516932a10a82caeadd6af881db566a582e6edcf98e72c1e07a6ec2637fb00a",
+      "sequence": 17,
+      "token": 1
+    },
+    {
+      "details": {
+        "deadline": 1791413624.050507,
+        "owner": "scale-worker"
+      },
+      "event_sha256": "45b0f4f39a7523ca0f0c2b24dfb64db4d698d26de8ed15299777585522d5cb57",
+      "job_id": "job-005",
+      "kind": "claimed",
+      "previous_hash": "123e1395e1a585a509ac827917fa62250a978f0128d888a58f388292177afa4f",
+      "sequence": 18,
+      "token": 1
+    },
+    {
+      "details": {
+        "record_sha256": "eb87bdc339413d8c874027ce6562b88f61cc76b0ac69d338ae09a3c4d42cdfa4",
+        "status": "internal_error"
+      },
+      "event_sha256": "d4b9f6bba423e33ddc726ad409d4d1c468985b5943472eaa311f6304666d473b",
+      "job_id": "job-005",
+      "kind": "committed",
+      "previous_hash": "45b0f4f39a7523ca0f0c2b24dfb64db4d698d26de8ed15299777585522d5cb57",
+      "sequence": 19,
+      "token": 1
+    },
+    {
+      "details": {
+        "deadline": 1791413624.082784,
+        "owner": "scale-worker"
+      },
+      "event_sha256": "3279238eddac0b0d973c2bb5832e722ea1373aa4289ca3304bd3e59d92a9faa4",
+      "job_id": "job-006",
+      "kind": "claimed",
+      "previous_hash": "d4b9f6bba423e33ddc726ad409d4d1c468985b5943472eaa311f6304666d473b",
+      "sequence": 20,
+      "token": 1
+    },
+    {
+      "details": {
+        "record_sha256": "c7b87ca23db3f39e05f5d529f8f4e4afc1705682e597a7f92ba7147017c45214",
+        "status": "internal_error"
+      },
+      "event_sha256": "83feeb2bd39e7bef01e8d71df095f07822ed93306b6696f792feca2ce12b3c64",
+      "job_id": "job-006",
+      "kind": "committed",
+      "previous_hash": "3279238eddac0b0d973c2bb5832e722ea1373aa4289ca3304bd3e59d92a9faa4",
+      "sequence": 21,
+      "token": 1
+    },
+    {
+      "details": {
+        "deadline": 1791413624.1140559,
+        "owner": "scale-worker"
+      },
+      "event_sha256": "6dc1472f067503772d27f5e703def678b9de3995fe78c462651b82a1203cef01",
+      "job_id": "job-007",
+      "kind": "claimed",
+      "previous_hash": "83feeb2bd39e7bef01e8d71df095f07822ed93306b6696f792feca2ce12b3c64",
+      "sequence": 22,
+      "token": 1
+    },
+    {
+      "details": {
+        "record_sha256": "4d282ae6fb213397c47d58e1197619b369f0c7e67ae5bef8975b847f14e70b2d",
+        "status": "internal_error"
+      },
+      "event_sha256": "b6cffaa5787b1366bea8e2f8d84f69f8df8fc6a8d1e394f4fd26c9fe76dbcdcd",
+      "job_id": "job-007",
+      "kind": "committed",
+      "previous_hash": "6dc1472f067503772d27f5e703def678b9de3995fe78c462651b82a1203cef01",
+      "sequence": 23,
+      "token": 1
+    }
+  ],
+  "jobs": [
+    {
+      "effective": "internal_error",
+      "expected": {
+        "input": {
+          "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "source_file_sha256": {
+            "source.txt": "25718360e05d3c2d0963d1381e9dd4dae5fca789244ee4b9f861adcc0cc96218"
+          },
+          "workspace_revision": "cd4d22b3544ca500d9c07505c5578b2a7588431d"
+        },
+        "protocol": {
+          "evaluator_sha256": "464fbcb4dcac042c2eb89fe373a466471a8307bd27ef50b83ba415d8deb88031",
+          "protocol_lock_sha256": "4ede682f71b4bce93357df6bd9665b676d6ba29344efe0971bd8eb193f9e36d4",
+          "task_brief_sha256": "378fa1ecc8190bc75c03c899deeaebe6cdface92ad4767b2c555a5f753dde806",
+          "task_json_sha256": "87080241c35cc5653e384a3cb820b997fb45d1956f3b3d92bd53ac3ea112e57d"
+        },
+        "task_id": "fixture-valid"
+      },
+      "id": "job-000",
+      "max_attempts": 3,
+      "output_limit_bytes": 1048576,
+      "snapshot": "87080241c35cc565",
+      "state": "complete",
+      "timeout_seconds": 3,
+      "token": 1
+    },
+    {
+      "effective": "internal_error",
+      "expected": {
+        "input": {
+          "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "source_file_sha256": {
+            "source.txt": "25718360e05d3c2d0963d1381e9dd4dae5fca789244ee4b9f861adcc0cc96218"
+          },
+          "workspace_revision": "cd4d22b3544ca500d9c07505c5578b2a7588431d"
+        },
+        "protocol": {
+          "evaluator_sha256": "464fbcb4dcac042c2eb89fe373a466471a8307bd27ef50b83ba415d8deb88031",
+          "protocol_lock_sha256": "4ede682f71b4bce93357df6bd9665b676d6ba29344efe0971bd8eb193f9e36d4",
+          "task_brief_sha256": "378fa1ecc8190bc75c03c899deeaebe6cdface92ad4767b2c555a5f753dde806",
+          "task_json_sha256": "87080241c35cc5653e384a3cb820b997fb45d1956f3b3d92bd53ac3ea112e57d"
+        },
+        "task_id": "fixture-valid"
+      },
+      "id": "job-001",
+      "max_attempts": 3,
+      "output_limit_bytes": 1048576,
+      "snapshot": "87080241c35cc565",
+      "state": "complete",
+      "timeout_seconds": 3,
+      "token": 1
+    },
+    {
+      "effective": "internal_error",
+      "expected": {
+        "input": {
+          "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "source_file_sha256": {
+            "source.txt": "25718360e05d3c2d0963d1381e9dd4dae5fca789244ee4b9f861adcc0cc96218"
+          },
+          "workspace_revision": "cd4d22b3544ca500d9c07505c5578b2a7588431d"
+        },
+        "protocol": {
+          "evaluator_sha256": "464fbcb4dcac042c2eb89fe373a466471a8307bd27ef50b83ba415d8deb88031",
+          "protocol_lock_sha256": "4ede682f71b4bce93357df6bd9665b676d6ba29344efe0971bd8eb193f9e36d4",
+          "task_brief_sha256": "378fa1ecc8190bc75c03c899deeaebe6cdface92ad4767b2c555a5f753dde806",
+          "task_json_sha256": "87080241c35cc5653e384a3cb820b997fb45d1956f3b3d92bd53ac3ea112e57d"
+        },
+        "task_id": "fixture-valid"
+      },
+      "id": "job-002",
+      "max_attempts": 3,
+      "output_limit_bytes": 1048576,
+      "snapshot": "87080241c35cc565",
+      "state": "complete",
+      "timeout_seconds": 3,
+      "token": 1
+    },
+    {
+      "effective": "internal_error",
+      "expected": {
+        "input": {
+          "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "source_file_sha256": {
+            "source.txt": "25718360e05d3c2d0963d1381e9dd4dae5fca789244ee4b9f861adcc0cc96218"
+          },
+          "workspace_revision": "cd4d22b3544ca500d9c07505c5578b2a7588431d"
+        },
+        "protocol": {
+          "evaluator_sha256": "464fbcb4dcac042c2eb89fe373a466471a8307bd27ef50b83ba415d8deb88031",
+          "protocol_lock_sha256": "4ede682f71b4bce93357df6bd9665b676d6ba29344efe0971bd8eb193f9e36d4",
+          "task_brief_sha256": "378fa1ecc8190bc75c03c899deeaebe6cdface92ad4767b2c555a5f753dde806",
+          "task_json_sha256": "87080241c35cc5653e384a3cb820b997fb45d1956f3b3d92bd53ac3ea112e57d"
+        },
+        "task_id": "fixture-valid"
+      },
+      "id": "job-003",
+      "max_attempts": 3,
+      "output_limit_bytes": 1048576,
+      "snapshot": "87080241c35cc565",
+      "state": "complete",
+      "timeout_seconds": 3,
+      "token": 1
+    },
+    {
+      "effective": "internal_error",
+      "expected": {
+        "input": {
+          "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "source_file_sha256": {
+            "source.txt": "25718360e05d3c2d0963d1381e9dd4dae5fca789244ee4b9f861adcc0cc96218"
+          },
+          "workspace_revision": "cd4d22b3544ca500d9c07505c5578b2a7588431d"
+        },
+        "protocol": {
+          "evaluator_sha256": "464fbcb4dcac042c2eb89fe373a466471a8307bd27ef50b83ba415d8deb88031",
+          "protocol_lock_sha256": "4ede682f71b4bce93357df6bd9665b676d6ba29344efe0971bd8eb193f9e36d4",
+          "task_brief_sha256": "378fa1ecc8190bc75c03c899deeaebe6cdface92ad4767b2c555a5f753dde806",
+          "task_json_sha256": "87080241c35cc5653e384a3cb820b997fb45d1956f3b3d92bd53ac3ea112e57d"
+        },
+        "task_id": "fixture-valid"
+      },
+      "id": "job-004",
+      "max_attempts": 3,
+      "output_limit_bytes": 1048576,
+      "snapshot": "87080241c35cc565",
+      "state": "complete",
+      "timeout_seconds": 3,
+      "token": 1
+    },
+    {
+      "effective": "internal_error",
+      "expected": {
+        "input": {
+          "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "source_file_sha256": {
+            "source.txt": "25718360e05d3c2d0963d1381e9dd4dae5fca789244ee4b9f861adcc0cc96218"
+          },
+          "workspace_revision": "cd4d22b3544ca500d9c07505c5578b2a7588431d"
+        },
+        "protocol": {
+          "evaluator_sha256": "464fbcb4dcac042c2eb89fe373a466471a8307bd27ef50b83ba415d8deb88031",
+          "protocol_lock_sha256": "4ede682f71b4bce93357df6bd9665b676d6ba29344efe0971bd8eb193f9e36d4",
+          "task_brief_sha256": "378fa1ecc8190bc75c03c899deeaebe6cdface92ad4767b2c555a5f753dde806",
+          "task_json_sha256": "87080241c35cc5653e384a3cb820b997fb45d1956f3b3d92bd53ac3ea112e57d"
+        },
+        "task_id": "fixture-valid"
+      },
+      "id": "job-005",
+      "max_attempts": 3,
+      "output_limit_bytes": 1048576,
+      "snapshot": "87080241c35cc565",
+      "state": "complete",
+      "timeout_seconds": 3,
+      "token": 1
+    },
+    {
+      "effective": "internal_error",
+      "expected": {
+        "input": {
+          "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "source_file_sha256": {
+            "source.txt": "25718360e05d3c2d0963d1381e9dd4dae5fca789244ee4b9f861adcc0cc96218"
+          },
+          "workspace_revision": "cd4d22b3544ca500d9c07505c5578b2a7588431d"
+        },
+        "protocol": {
+          "evaluator_sha256": "464fbcb4dcac042c2eb89fe373a466471a8307bd27ef50b83ba415d8deb88031",
+          "protocol_lock_sha256": "4ede682f71b4bce93357df6bd9665b676d6ba29344efe0971bd8eb193f9e36d4",
+          "task_brief_sha256": "378fa1ecc8190bc75c03c899deeaebe6cdface92ad4767b2c555a5f753dde806",
+          "task_json_sha256": "87080241c35cc5653e384a3cb820b997fb45d1956f3b3d92bd53ac3ea112e57d"
+        },
+        "task_id": "fixture-valid"
+      },
+      "id": "job-006",
+      "max_attempts": 3,
+      "output_limit_bytes": 1048576,
+      "snapshot": "87080241c35cc565",
+      "state": "complete",
+      "timeout_seconds": 3,
+      "token": 1
+    },
+    {
+      "effective": "internal_error",
+      "expected": {
+        "input": {
+          "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "source_file_sha256": {
+            "source.txt": "25718360e05d3c2d0963d1381e9dd4dae5fca789244ee4b9f861adcc0cc96218"
+          },
+          "workspace_revision": "cd4d22b3544ca500d9c07505c5578b2a7588431d"
+        },
+        "protocol": {
+          "evaluator_sha256": "464fbcb4dcac042c2eb89fe373a466471a8307bd27ef50b83ba415d8deb88031",
+          "protocol_lock_sha256": "4ede682f71b4bce93357df6bd9665b676d6ba29344efe0971bd8eb193f9e36d4",
+          "task_brief_sha256": "378fa1ecc8190bc75c03c899deeaebe6cdface92ad4767b2c555a5f753dde806",
+          "task_json_sha256": "87080241c35cc5653e384a3cb820b997fb45d1956f3b3d92bd53ac3ea112e57d"
+        },
+        "task_id": "fixture-valid"
+      },
+      "id": "job-007",
+      "max_attempts": 3,
+      "output_limit_bytes": 1048576,
+      "snapshot": "87080241c35cc565",
+      "state": "complete",
+      "timeout_seconds": 3,
+      "token": 1
+    }
+  ],
+  "schema_version": 1
+}

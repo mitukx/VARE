@@ -33,6 +33,8 @@ Consider training only if E1–E3 identify a causal question that cheaper CPU ex
 
 The original evaluation runner now has a narrow local scheduling measurement: five paired one-worker/four-worker campaigns, 80 historical-task grades with consistent outcomes, and a median paired speedup of 3.4857×. Sixteen synthetic reliability cases match their declared classifications. See the [report](scheduler-report.md), [implementation contract](execution.md) and [raw evidence](../results/cpu-scheduler-v1/summary.json).
 
+The durable coordinator also has a frozen same-host CPU measurement of input freshness work. For serial workloads of 8/16/32 unchanged fixture jobs, targeted commit checks were 8/16/32 versus 64/256/1,024 for the previous full refresh. Full export refresh and offline bundle replay remain intact. The measured completion time at 32 jobs was 1.082s versus 28.479s on this machine; treat timing as descriptive. A v1 pilot with a commit-identity mismatch is retained and marked invalid; the cited result is the source-hash-audited v2 experiment. See the [freshness scaling report](freshness-scaling-report.md).
+
 This completes a local systems measurement, not distributed execution or inference performance. The next systems questions are interrupted-run recovery, larger/heterogeneous CPU workloads and resource isolation. An upstream contribution would be a separate result and has not been made here.
 
 ## E6 — Repeated improvement
@@ -41,7 +43,7 @@ Study repeated system-proposed interventions only after independent downstream e
 
 ## Current stop point
 
-The isolated-input E0 calibration, execution failure-injection checks and two E1 task/grader pairs are complete. A narrow E5 local scheduling result is retained. E2–E4, distributed systems evidence and E6 remain outstanding. No agent trajectory, model learning, generalization, or capability gain is claimed.
+The isolated-input E0 calibration, execution failure-injection checks and two E1 task/grader pairs are complete. Narrow E5 measurements now cover local scheduling and durable freshness-check work. E2–E4, heterogeneous workload profiling, distributed systems evidence and E6 remain outstanding. No agent trajectory, model learning, generalization, or capability gain is claimed.
 
 ## Restored experimental implementation
 

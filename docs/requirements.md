@@ -10,12 +10,13 @@ These requirements define technical acceptance under local CPU constraints. They
 | R4 | Superseded or expired workers cannot publish current decisions | generation token + owner + live deadline predicate | expired/replaced lease and late completion tests |
 | R5 | Retransmitted identical completion preserves one immutable attempt | stored payload equality, terminal attempt states | idempotence and conflicting completion tests |
 | R6 | Process loss is recoverable within a finite attempt budget | lease expiry, token increment, exhaustion state | claimant death, rollback and retry-budget tests |
-| R7 | Input freshness is recomputed before work, publication and export | `Store.refresh`, worker enrollment check | stale pending/reused result and changed-protocol tests |
+| R7 | Input freshness is recomputed before work, publication and export | Worker checks the claimed job before grading; completion checks that job; startup/export refresh all jobs | stale pending/reused result, changed-protocol tests and [frozen scaling evidence](freshness-scaling-report.md) |
 | R8 | Invalidated history stays retained while current success is disabled | stale effective state, preserved attempt payload | duplicate-after-invalidation and direct-export tests |
 | R9 | Public evidence replays the same terminal decisions | transactionally exported events/assets/attempts, strict audit | chain/summary/terminal transition tampering tests |
 | R10 | Private runtime paths stay outside exported evidence | external live state, sanitized export | exported schema; live SQLite is not published |
 | R11 | Agent/model findings are separated from synthetic mechanisms | evidence ladder and explicit reports | no agent/task-solving or model-learning claim from fixtures |
 | R12 | No paid API, GPU or external compute is required | standard-library execution, public source fetch | experiment resource declarations and reproducible commands |
+| R13 | Terminal completion does not repeat fingerprint work for unrelated jobs | `Store.complete` calls `refresh(job.id)`; full refresh remains at export | [cpu-refresh-scale-v2](../protocols/cpu_refresh_scale_v2.json), instrumented regression and offline bundle auditor |
 
 ## Acceptance rule
 
