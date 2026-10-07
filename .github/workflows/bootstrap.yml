@@ -2,7 +2,7 @@ name: bootstrap-vare
 on:
   push:
     paths:
-      - '.vare-bootstrap.tar.gz.b64'
+      - '.vare-bootstrap.ready'
   workflow_dispatch:
 
 permissions:
@@ -19,12 +19,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [[ ! -f .vare-bootstrap.tar.gz.b64 ]]; then
-            echo "bootstrap archive absent; nothing to do"
+          if [[ ! -f .vare-bootstrap.ready ]]; then
+            echo "bootstrap sentinel absent; nothing to do"
             exit 0
           fi
-          base64 -d .vare-bootstrap.tar.gz.b64 | tar -xzf -
-          rm .vare-bootstrap.tar.gz.b64
+          test -f .vare-bootstrap.part-00
+          test -f .vare-bootstrap.part-01
+          test -f .vare-bootstrap.part-02
+          test -f .vare-bootstrap.part-03
+          cat .vare-bootstrap.part-* | base64 -d | tar -xzf -
+          rm .vare-bootstrap.ready .vare-bootstrap.part-*
       - name: Commit imported tree
         shell: bash
         run: |
