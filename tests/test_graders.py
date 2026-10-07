@@ -34,9 +34,10 @@ class GraderIntegrityTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="vare-grader-probe-") as temporary:
             source = Path(temporary) / "candidate.py"
             source.write_text(mutated, encoding="utf-8")
-            assignment, gate = _extract_normalizer(source, "main_dapo_cispo_vespo")
+            assignment, gate, denominator = _extract_normalizer(source, "main_dapo_cispo_vespo")
             self.assertIsNone(assignment)
             self.assertIsNone(gate)
+            self.assertIsNone(denominator)
             self.assertIsNone(_execute_normalizer(source, "main_dapo_cispo_vespo", {
                 "mode": "train", "items": 12, "world_size": 1,
                 "current_accumulation_steps": 2, "steps_per_generation": 4,
@@ -51,6 +52,23 @@ class GraderIntegrityTests(unittest.TestCase):
                 "current_accumulation_steps": 2, "steps_per_generation": 4,
             })
             self.assertEqual(6.0, observed)
+
+    def test_trl_grader_rejects_loss_divided_by_scaled_normalizer(self):
+        mutated = VALID_BRANCH.replace(
+            "loss = per_token_loss / normalizer",
+            "loss = per_token_loss / (normalizer * 2)",
+        )
+        with tempfile.TemporaryDirectory(prefix="vare-grader-probe-") as temporary:
+            source = Path(temporary) / "candidate.py"
+            source.write_text(mutated, encoding="utf-8")
+            assignment, gate, denominator = _extract_normalizer(source, "main_dapo_cispo_vespo")
+            self.assertIsNotNone(assignment)
+            self.assertIsNotNone(gate)
+            self.assertIsNone(denominator)
+            self.assertEqual(6.0, _execute_normalizer(source, "main_dapo_cispo_vespo", {
+                "mode": "train", "items": 12, "world_size": 1,
+                "current_accumulation_steps": 2, "steps_per_generation": 4,
+            }))
 
     def test_rvl_fixture_exposes_non_neutral_pretrained_typical_p(self):
         model = RVLModel(FIXTURE_CASES)

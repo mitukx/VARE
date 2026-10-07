@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "task_id": "rvl-hf-behavior-policy-parity-v1",
+  "title": "Keep rollout and learner token probabilities on the same policy",
+  "source": {
+    "repository": "https://github.com/mitukx/Recursive-Verification-Lag.git",
+    "base_revision": "e788f113ad6b246a361cd50a52eaf2867f2a66f8",
+    "calibration_revision": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+    "files": [
+      "src/rvl_systems/backends.py",
+      "src/rvl_systems/grpo.py",
+      "src/rvl_systems/hf_backend.py",
+      "src/rvl_systems/hf_trainer.py",
+      "src/rvl_systems/objectives.py",
+      "src/rvl_systems/precision.py",
+      "src/rvl_systems/triton_grpo.py",
+      "src/rvl_systems/types.py"
+    ]
+  },
+  "grader": {
+    "path": "benchmarks/historical/rvl_behavior_policy_parity/evaluator/grade.py",
+    "protocol_lock": "benchmarks/historical/rvl_behavior_policy_parity/protocol.lock.json",
+    "protocol_version": 3
+  },
+  "budget": {
+    "max_wall_seconds": 900,
+    "accelerator_hours": 0,
+    "paid_api_calls": 0,
+    "external_compute_usd": 0
+  },
+  "claim_limit": "A passing candidate satisfies one CPU-fixture probability-parity contract; it is not model-learning or capability evidence."
+}

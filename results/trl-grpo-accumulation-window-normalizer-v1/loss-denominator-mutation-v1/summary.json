@@ -1,0 +1,30 @@
+{
+  "candidate_revision": "e1b2e21975994e676d9a676e3ab005e9bee38e40",
+  "claim_limit": "The v3 grader checks a direct AST denominator contract on two pinned loss branches using scalar normalizer fixtures. It does not execute the full loss expression, trainer, or gradient update.",
+  "mutation": "In both pinned fixed-source branches, multiply the selected DAPO loss denominator by 2 while leaving the computed normalizer unchanged.",
+  "mutation_patch_sha256": "da0f3ac840f3c3bebc525b8747dcd9ee21ddfff5859fb9357b0b2b00d7fe1da1",
+  "protocol_v2": {
+    "condition_count": 12,
+    "failure_count": 0,
+    "max_absolute_normalizer_error": 0.0,
+    "passed": true
+  },
+  "protocol_v3": {
+    "condition_count": 12,
+    "effective_loss_denominator_failures": 12,
+    "failure_count": 12,
+    "max_absolute_normalizer_error": 0.0,
+    "passed": false
+  },
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "model_weights_loaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages_used": false
+  },
+  "schema_version": 1,
+  "study": "trl-loss-denominator-grader-mutation-v1",
+  "v2_result_sha256": "2e3fecf64931873c99cf7ce21f4db74bb78d5fee9ab75cc64643dba84e29d2b7",
+  "v3_result_sha256": "80714c454131a1357dc63bf8ef015a2737454f029584d25526bf93f5921c81e9"
+}
