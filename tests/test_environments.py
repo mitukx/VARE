@@ -1,9 +1,21 @@
 from __future__ import annotations
 
 from pathlib import Path
+import os
 import subprocess
+import sys
+import time
 
-from vare.environments import EngineeringTaskSpec, ExecutableEvaluator, Workspace
+import pytest
+
+from vare.environments import (
+    CommandSpec,
+    EngineeringTaskSpec,
+    ExecutableEvaluator,
+    ResourceLimits,
+    Workspace,
+)
+from vare.environments.runner import run_command
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -48,3 +60,94 @@ def test_relative_local_source_is_portable_and_not_serialized(monkeypatch, tmp_p
     monkeypatch.chdir(tmp_path)
     with Workspace(spec) as ws:
         assert (ws.path / "subject.py").is_file()
+
+
+def test_command_output_budget_is_enforced_while_streaming(tmp_path):
+    marker = tmp_path / "descendant-finished"
+    child = (
+        "import pathlib,sys,time; time.sleep(.5); "
+        "pathlib.Path(sys.argv[1]).write_text('alive')"
+    )
+    parent = (
+        "import subprocess,sys; "
+        "subprocess.Popen([sys.executable,'-c',sys.argv[1],sys.argv[2]]); "
+        "sys.stdout.write('x'*1048576); sys.stdout.flush(); "
+        "sys.stderr.write('y'*1048576); sys.stderr.flush()"
+    )
+    command = CommandSpec(
+        argv=(sys.executable, "-c", parent, child, str(marker)),
+        name="output-flood",
+    )
+    limits = ResourceLimits(
+        wall_time_s=3,
+        cpu_time_s=None,
+        memory_mb=None,
+        max_output_bytes=128,
+    )
+
+    result = run_command(tmp_path, command, limits)
+
+    assert result.output_limited
+    assert not result.timed_out
+    assert not result.passed
+    assert len(result.stdout.encode("utf-8")) <= limits.max_output_bytes
+    assert len(result.stderr.encode("utf-8")) <= limits.max_output_bytes
+    if os.name == "posix":
+        time.sleep(.6)
+        assert not marker.exists()
+
+
+def test_command_below_output_budget_passes(tmp_path):
+    result = run_command(
+        tmp_path,
+        CommandSpec(argv=(sys.executable, "-c", "print('ok')")),
+        ResourceLimits(
+            wall_time_s=3,
+            cpu_time_s=None,
+            memory_mb=None,
+            max_output_bytes=128,
+        ),
+    )
+
+    assert result.passed
+    assert not result.output_limited
+    assert result.stdout == "ok\n"
+
+
+def test_command_at_output_budget_is_not_limited(tmp_path):
+    limit = 128
+    result = run_command(
+        tmp_path,
+        CommandSpec(
+            argv=(sys.executable, "-c", f"import sys; sys.stdout.write('x'*{limit})")
+        ),
+        ResourceLimits(
+            wall_time_s=3,
+            cpu_time_s=None,
+            memory_mb=None,
+            max_output_bytes=limit,
+        ),
+    )
+
+    assert result.passed
+    assert not result.output_limited
+    assert len(result.stdout.encode("utf-8")) == limit
+
+
+def test_command_timeout_remains_distinct_from_output_overflow(tmp_path):
+    result = run_command(
+        tmp_path,
+        CommandSpec(argv=(sys.executable, "-c", "import time; print('start',flush=True); time.sleep(5)")),
+        ResourceLimits(
+            wall_time_s=.15,
+            cpu_time_s=None,
+            memory_mb=None,
+            max_output_bytes=128,
+        ),
+    )
+
+    assert result.timed_out
+    assert not result.output_limited
+    assert not result.passed
+    assert result.returncode == 124
+    assert result.stdout == "start\n"

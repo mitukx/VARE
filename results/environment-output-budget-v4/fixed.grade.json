@@ -1,0 +1,37 @@
+{
+  "checks": {
+    "normal_command_passes": true,
+    "normal_not_limited": true,
+    "posix_descendant_stopped": true,
+    "stderr_capture_bounded": true,
+    "stderr_overflow_not_timeout": true,
+    "stderr_overflow_rejected": true,
+    "stdout_capture_bounded": true,
+    "stdout_overflow_not_timeout": true,
+    "stdout_overflow_rejected": true
+  },
+  "claim_limit": "One deterministic local CPU resource-control regression; not a hostile-code sandbox or hard memory quota.",
+  "limit_bytes_per_stream": 128,
+  "normal": {
+    "passed": true,
+    "returncode": 0,
+    "stdout": "ok\n"
+  },
+  "passed": true,
+  "schema_version": 1,
+  "stderr_overflow": {
+    "output_limited": true,
+    "returncode": -9,
+    "stderr_bytes_retained": 128,
+    "stdout_bytes_retained": 0,
+    "timed_out": false
+  },
+  "stdout_overflow": {
+    "output_limited": true,
+    "returncode": -9,
+    "stderr_bytes_retained": 0,
+    "stdout_bytes_retained": 128,
+    "timed_out": false
+  },
+  "task_id": "vare-environment-command-output-budget-v4"
+}

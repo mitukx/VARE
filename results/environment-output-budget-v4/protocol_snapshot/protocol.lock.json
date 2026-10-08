@@ -1,0 +1,24 @@
+{
+  "candidate_files": [
+    "src/vare/environments/runner.py",
+    "src/vare/environments/spec.py",
+    "src/vare/evidence.py"
+  ],
+  "expected_calibration": {
+    "baseline_passed": false,
+    "fixed_passed": true
+  },
+  "frozen_before_baseline_measurement": true,
+  "interpretation_limit": "One deterministic local CPU output-budget regression; no hostile-code sandbox or hard memory quota claim.",
+  "locked_hashes": {
+    "evaluator_sha256": "85c90a3826374e529c5a0f31878e33835e130e72e7aedbb1037f59d4b7c54ef9",
+    "task_brief_sha256": "ca6864ef7329e6a7e36ccb81bc6c8be6197daa22c20685ed09c1b471bce450b8",
+    "task_json_sha256": "2ad8e35f4e028196cfd762297c9055839ab42b84253f8b425f9cd6047b5a0f68"
+  },
+  "protocol_id": "vare-environment-command-output-budget-v4",
+  "schema_version": 1,
+  "source_base_revision": "410e5321ab762c89ada970de1b41d2aacf99d88a",
+  "supersedes": "vare-environment-command-output-budget-v3",
+  "supersedes_reason": "Protocol v3 attempted to construct a CommandSpec with an empty argv item for the stderr fixture; v4 uses a non-empty sentinel and records this invalidation.",
+  "task_id": "vare-environment-command-output-budget-v4"
+}

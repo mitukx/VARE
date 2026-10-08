@@ -1,0 +1,46 @@
+{
+  "baseline_checks": {
+    "normal_command_passes": true,
+    "normal_not_limited": true,
+    "posix_descendant_stopped": false,
+    "stderr_capture_bounded": true,
+    "stderr_overflow_not_timeout": true,
+    "stderr_overflow_rejected": false,
+    "stdout_capture_bounded": true,
+    "stdout_overflow_not_timeout": true,
+    "stdout_overflow_rejected": false
+  },
+  "baseline_passed": false,
+  "baseline_revision": "410e5321ab762c89ada970de1b41d2aacf99d88a",
+  "fixed_candidate_runner_sha256": "95f34358b76712384ce8e92b5810fbc32fd511c3538b0c0840ffe0328f8858cf",
+  "fixed_checks": {
+    "normal_command_passes": true,
+    "normal_not_limited": true,
+    "posix_descendant_stopped": true,
+    "stderr_capture_bounded": true,
+    "stderr_overflow_not_timeout": true,
+    "stderr_overflow_rejected": true,
+    "stdout_capture_bounded": true,
+    "stdout_overflow_not_timeout": true,
+    "stdout_overflow_rejected": true
+  },
+  "fixed_passed": true,
+  "host": {
+    "architecture": "arm64",
+    "os": "macOS",
+    "python": "3.12.12"
+  },
+  "limits": "Deterministic output-flood fixtures on one local macOS arm64 host. The capture limit is per stream; this is not a hostile-code sandbox or a hard memory/CPU/disk/network quota.",
+  "observed": {
+    "baseline_stderr_overflow_accepted": true,
+    "baseline_stdout_overflow_accepted": true,
+    "fixed_stderr_bytes_retained": 128,
+    "fixed_stderr_overflow_rejected": true,
+    "fixed_stdout_bytes_retained": 128,
+    "fixed_stdout_overflow_rejected": true,
+    "posix_descendant_stopped": true
+  },
+  "protocol_id": "vare-environment-command-output-budget-v4",
+  "resources": "Local CPU only; no model, GPU, paid API, or external compute.",
+  "task_id": "vare-environment-command-output-budget-v4"
+}

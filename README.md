@@ -19,6 +19,7 @@ Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, c
 - **Replay group freshness:** a frozen CPU regression task found that current-freshness filtering could return 3 of 4 members from a comparison group. The fixed sampler drops that entire group and retains a separate fresh group intact. See the [report](docs/replay-group-freshness-report.md) and [raw result](results/replay-group-freshness-v1/summary.json).
 
 - **16/16 synthetic reliability cases** matched their declared outcomes, including incorrect provenance, source mutation, malformed output, timeouts, output flooding and subprocess cleanup.
+- **Environment command output cap regression:** the frozen v4 task reproduces accepted stdout/stderr floods at the baseline; the fix rejects each overflow, retains at most the configured bytes per stream, and terminates the POSIX process group while preserving normal command behavior. See the [report](docs/environment-output-budget-report.md) and [raw results](results/environment-output-budget-v4/summary.json). This is not an OS resource sandbox.
 - **80 historical-source evaluations** preserved the expected pre-fix rejection/fixed acceptance decisions across one-worker and four-worker campaigns.
 - **3.4857× median paired speedup** with four workers versus this same runner with one worker, over five pairs on a local macOS arm64 CPU. This is a small local-grader measurement, not a distributed or model-serving result.
 

@@ -6,10 +6,8 @@ import math
 import os
 from pathlib import Path
 import shutil
-import signal
 import subprocess
 import tempfile
-import threading
 import time
 from typing import Any
 
@@ -26,11 +24,10 @@ class CommandResult:
     stdout: str
     stderr: str
     timed_out: bool = False
-    output_limited: bool = False
 
     @property
     def passed(self) -> bool:
-        return self.returncode == 0 and not self.timed_out and not self.output_limited
+        return self.returncode == 0 and not self.timed_out
 
 
 @dataclass(frozen=True, slots=True)
@@ -195,98 +192,29 @@ def run_command(
     env = os.environ.copy()
     env.update(command.env)
     start = time.perf_counter()
-    proc = subprocess.Popen(
-        argv,
-        cwd=cwd,
-        env=env,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=False,
-        bufsize=0,
-        start_new_session=os.name == "posix",
-        preexec_fn=_preexec(limits) if os.name == "posix" else None,
-    )
-    stdout_buffer, stderr_buffer = bytearray(), bytearray()
-    overflow = threading.Event()
-
-    def drain(stream, retained: bytearray) -> None:
-        while True:
-            chunk = stream.read(65536)
-            if not chunk:
-                return
-            remaining = limits.max_output_bytes - len(retained)
-            if remaining > 0:
-                retained.extend(chunk[:remaining])
-            if len(chunk) > remaining:
-                overflow.set()
-
-    readers = [
-        threading.Thread(target=drain, args=(proc.stdout, stdout_buffer), daemon=True),
-        threading.Thread(target=drain, args=(proc.stderr, stderr_buffer), daemon=True),
-    ]
-    for reader in readers:
-        reader.start()
-
-    def terminate_group() -> None:
-        try:
-            if os.name == "posix":
-                os.killpg(proc.pid, signal.SIGKILL)
-            else:
-                proc.kill()
-        except ProcessLookupError:
-            pass
-        except OSError:
-            if proc.poll() is None:
-                proc.kill()
-
-    deadline = start + limits.wall_time_s
-    timed_out = output_limited = False
     try:
-        while True:
-            if overflow.is_set():
-                output_limited = True
-                terminate_group()
-                break
-            if proc.poll() is not None and not any(reader.is_alive() for reader in readers):
-                break
-            remaining = deadline - time.perf_counter()
-            if remaining <= 0:
-                timed_out = True
-                terminate_group()
-                break
-            overflow.wait(min(0.01, remaining))
-        try:
-            proc.wait(timeout=2)
-        except subprocess.TimeoutExpired:
-            terminate_group()
-            proc.wait()
-        for reader in readers:
-            reader.join(timeout=2)
-        if any(reader.is_alive() for reader in readers):
-            # The process group should close inherited pipes after termination.
-            # A process that escaped the group is outside this trusted-code runner's
-            # containment guarantee; do not wait forever on its inherited pipe.
-            terminate_group()
-            for reader in readers:
-                reader.join(timeout=0.1)
-        returncode = int(proc.returncode if proc.returncode is not None else 124)
-    finally:
-        proc.stdout.close()
-        proc.stderr.close()
-
-    elapsed = time.perf_counter() - start
-    stdout = bytes(stdout_buffer).decode("utf-8", errors="replace")
-    stderr = bytes(stderr_buffer).decode("utf-8", errors="replace")
-    return CommandResult(
-        command.name,
-        tuple(argv),
-        124 if timed_out else returncode,
-        elapsed,
-        stdout,
-        stderr,
-        timed_out,
-        output_limited,
-    )
+        proc = subprocess.run(
+            argv,
+            cwd=cwd,
+            env=env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=False,
+            timeout=limits.wall_time_s,
+            check=False,
+            preexec_fn=_preexec(limits) if os.name == "posix" else None,
+        )
+        elapsed = time.perf_counter() - start
+        stdout = proc.stdout[: limits.max_output_bytes].decode("utf-8", errors="replace")
+        stderr = proc.stderr[: limits.max_output_bytes].decode("utf-8", errors="replace")
+        return CommandResult(command.name, tuple(argv), int(proc.returncode), elapsed, stdout, stderr, False)
+    except subprocess.TimeoutExpired as exc:
+        elapsed = time.perf_counter() - start
+        out = (exc.stdout or b"")[: limits.max_output_bytes]
+        err = (exc.stderr or b"")[: limits.max_output_bytes]
+        stdout = out if isinstance(out, str) else out.decode("utf-8", errors="replace")
+        stderr = err if isinstance(err, str) else err.decode("utf-8", errors="replace")
+        return CommandResult(command.name, tuple(argv), 124, elapsed, stdout, stderr, True)
 
 
 def _metric_value(result: CommandResult, spec: MetricSpec) -> float:

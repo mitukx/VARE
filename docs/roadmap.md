@@ -47,7 +47,7 @@ Study repeated system-proposed interventions only after independent downstream e
 
 ## Current stop point
 
-The isolated-input E0 calibration, execution failure-injection checks, promotion-metric and replay-group regressions, and two E1 task/grader pairs are complete. Narrow E5 measurements cover local scheduling and durable freshness-check work. E2 has one corrected negative local pilot but no successful task trajectory. E3–E4, heterogeneous workload profiling, distributed systems evidence and E6 remain outstanding. No model learning, generalization, or capability gain is claimed.
+The isolated-input E0 calibration, execution failure-injection checks, promotion-metric and replay-group regressions, bounded environment-command output v4 regression, and two E1 task/grader pairs are complete. Narrow E5 measurements cover local scheduling and durable freshness-check work. E2 has one corrected negative local pilot but no successful task trajectory. E3–E4, heterogeneous workload profiling, distributed systems evidence and E6 remain outstanding. No model learning, generalization, or capability gain is claimed.
 
 ## Restored experimental implementation
 

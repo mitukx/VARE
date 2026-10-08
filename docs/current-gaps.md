@@ -6,6 +6,7 @@ This page summarizes what the retained evidence supports today and what would mo
 
 - A local evaluation control plane with bounded execution, provenance checks, retained records, offline audits, and same-host recovery.
 - Frozen CPU evidence for failure handling, local scheduling, freshness checks, and transactional recovery. The measurements are specific to the tested fixtures and local machine.
+- The environment command runner now enforces its per-stream output capture limit while draining child processes and rejects overflow; a frozen baseline/fixed regression covers stdout, stderr, normal output, and POSIX process-group cleanup.
 - Two calibrated historical task/grader pairs. The fixed upstream revisions pass and the pre-fix revisions fail under the declared fixtures.
 - Adversarial checks that found and corrected several false accepts in the TRL grader. Protocol v7 rejects five frozen mutations while accepting the pinned fixed source across 12 arithmetic conditions.
 - Transparent reporting of a negative local agent pilot: three formal runs produced no accepted patch.

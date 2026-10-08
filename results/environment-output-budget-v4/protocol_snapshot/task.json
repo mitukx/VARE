@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "task_id": "vare-environment-command-output-budget-v4",
+  "source": {
+    "repository": "https://github.com/mitukx/VARE.git",
+    "base_revision": "410e5321ab762c89ada970de1b41d2aacf99d88a",
+    "files": [
+      "src/vare/environments/runner.py",
+      "src/vare/environments/spec.py",
+      "src/vare/evidence.py"
+    ]
+  },
+  "grader": {
+    "path": "benchmarks/regressions/environment_output_budget_v4/evaluator/grade.py",
+    "protocol_version": 4
+  },
+  "scope": "Bound evaluation command output retention and reject output overflow."
+}
