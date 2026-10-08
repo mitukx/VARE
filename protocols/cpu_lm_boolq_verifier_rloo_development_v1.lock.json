@@ -1,0 +1,165 @@
+{
+  "artifact_policy": "Retain the exact selected train and development prompts and labels, prompt hashes, source split/index/rank, pinned model and dataset fingerprints, token IDs, frozen prompt features, train-only normalization statistics, per-seed checkpoints, rollout actions/rewards/log-probabilities, group diagnostics, all selected metrics, resource records, pre-run source snapshots, auditor output, and SHA-256 manifest. Do not materialize the reserved confirmation cohort during development. Never include employer-specific framing.",
+  "audit_policy": {
+    "checks": "Reconstruct source rank cohorts and label mapping; replay pinned tokenizer/model features on selected training and development prompts; recompute train-only normalization and metrics; regenerate minibatches and RLOO actions from locked seeds; independently replay every scalar, SFT, exact expected-reward, and RLOO Adam update through each checkpoint; reconstruct confidence intervals and the advancement gate.",
+    "compute": "CPU only, offline, no paid services; the study runner and separate audit process each have their own one-hour wall-time and six-GiB peak-RSS ceilings. These are per-process ceilings, not a combined end-to-end campaign budget.",
+    "execution": "Separate offline process launched by the runner before a result bundle is accepted.",
+    "reserved_data": "Only prompt fields are used to hash-rank the reserved interval and check prompt-hash separation. The auditor must not request answer labels, tokenize reserved prompts, or execute model forwards on them.",
+    "scope_limit": "Same-host reproducibility using the pinned local model/runtime is not external reproduction or independent human review."
+  },
+  "claim_boundary": "A development pass supports only a frozen-backbone, two-action, verifier-reward contextual-bandit update on the specified BoolQ cohorts. It is not free-form or sequence-level RL, human-preference optimization, a general capability claim, or evidence of scale. RLOO's expected binary-action gradient is the exact expected-reward gradient; no algorithmic superiority is assumed.",
+  "compute_limits": {
+    "device": "CPU only; CUDA and MPS are forbidden",
+    "feature_batch_size": 4,
+    "max_peak_rss_bytes_campaign": 6442450944,
+    "max_wall_seconds_campaign": 3600,
+    "network": "Disabled; HF_HUB_OFFLINE=1, HF_DATASETS_OFFLINE=1, TRANSFORMERS_OFFLINE=1, local_files_only=true",
+    "paid_compute": false,
+    "threads": 4
+  },
+  "data": {
+    "confirmation_reservation": {
+      "access_rule": "Hash ranking reads only question and passage fields across the validation split; no answer column may be requested during ranking. Until a separate confirmation lock is committed, do not load answer labels, construct prompts, tokenize, run model forwards, calculate rewards/metrics, or serialize any row in this interval. Prior v16/v17 code ranked the full validation split by hashing prompt text, so this interval is unscored and unused for training, but must not be described as never having been text-hashed.",
+      "count": 512,
+      "rank_start": 2048,
+      "rank_stop": 2560,
+      "split": "validation"
+    },
+    "dataset": {
+      "id": "google/boolq",
+      "revision": "35b264d03638db9f4ce671b711558bf7ff0f80d5",
+      "train_arrow_sha256": "297dd7c22cfaf5bbdde0467a2ec2eecab261118e8ee34f375a3326fc4ea6486e",
+      "train_fingerprint": "e4588ef9b0b2ec22",
+      "validation_arrow_sha256": "f858020576452e706b602bf9ad28e09d509e6dab4c97cb01a2202a2472c9afc9",
+      "validation_fingerprint": "ea43cabdfaa0ccac"
+    },
+    "development": {
+      "count": 512,
+      "rank_start": 1536,
+      "rank_stop": 2048,
+      "split": "validation"
+    },
+    "label_use": "The learner receives the gold label only through the exact binary verifier reward on sampled train actions. Development labels are evaluation-only. No confirmation label or text may enter the development process.",
+    "prompt": "Use scripts.boolq_sequence_task.build_sequence_example's passage-only Yes/No prompt exactly. Rank cohorts using only question and passage columns; access answer labels only for the selected train and development indices. Prompt hashes must be unique within and across selected cohorts and must not overlap any prompt hash retained by the earlier BoolQ pilots or v16/v17 train/development bundles. Fail closed on any overlap; do not substitute rows after observing labels or model output.",
+    "ranking": "Within each official split, select only the question and passage columns, then sort row indices by (SHA256(question + newline + passage), original index); use half-open rank intervals. This requires hashing all prompt text in that split for cohort assignment, including the reserved rank interval, but answer labels are not requested by the ranking view.",
+    "training": {
+      "count": 128,
+      "rank_start": 280,
+      "rank_stop": 408,
+      "split": "train"
+    }
+  },
+  "learner": {
+    "action_space": "Exactly two actions at the first assistant token after the frozen chat prompt: one token for Yes and one token for No, verified by the pinned tokenizer at runtime. The policy is normalized over these two tokens only. No continuation tokens are generated or scored.",
+    "action_token_ids": {
+      "no": 2753,
+      "yes": 9454
+    },
+    "adapter": "One affine delta on the binary Yes-minus-No logit, delta = w dot standardized_hidden + b. Initialize w and b to zero so every arm begins at the frozen base policy.",
+    "arms": [
+      "frozen_base",
+      "scalar_calibration: one intercept optimized by class-weighted action cross entropy",
+      "context_sft: contextual affine adapter optimized by class-weighted action cross entropy",
+      "exact_expected_reward: same contextual adapter optimized against the exact expected verifier reward; its policy-gradient is the expectation of the RLOO reward-gradient before the shared analytic KL penalty",
+      "rloo_k4: same contextual adapter optimized with fresh on-policy groups of four actions per prompt, exact verifier rewards, and a detached leave-one-out reward baseline"
+    ],
+    "features": "Frozen final assistant-prefix hidden state and the base Yes-minus-No action-logit margin. Standardize hidden state with training-cohort mean and population standard deviation only; replace zero standard deviations with 1. The transformer and LM head remain frozen.",
+    "kl": {
+      "coefficient": 0.05,
+      "definition": "Exact Bernoulli forward KL from the current two-action policy to the frozen base two-action policy, computed per training prompt and averaged over the minibatch.",
+      "maximum_selected_mean_nats_per_action": 0.5,
+      "maximum_selected_per_seed_mean_nats_per_action": 0.5
+    },
+    "model": {
+      "id": "Qwen/Qwen2.5-0.5B-Instruct",
+      "model_safetensors_sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "snapshot_file_sha256": {
+        "config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+        "generation_config.json": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6",
+        "merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+        "model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+        "tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+        "tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+        "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+      },
+      "weights_must_already_be_cached": true
+    },
+    "optimizer": {
+      "checkpoint_selection": "Select each trained arm's checkpoint by development balanced accuracy; ties select fewer updates. Apply the KL ceilings as eligibility constraints. Do not change the checkpoint grid, optimizer, prompt, cohorts, or thresholds after seeing results.",
+      "checkpoint_updates": [
+        0,
+        25,
+        50,
+        100
+      ],
+      "gradient_norm_clip": 1.0,
+      "learning_rate": 0.003,
+      "maximum_updates": 100,
+      "minibatch_size": 32,
+      "minibatches": "For each seed, precompute 100 deterministic minibatches of 32 train-row indices sampled with replacement. Use the identical minibatch sequence for scalar, SFT, exact-expected-reward, and RLOO arms; RLOO samples fresh action groups at each update.",
+      "name": "Adam",
+      "seeds": [
+        8101,
+        8107,
+        8111,
+        8117,
+        8123
+      ],
+      "weight_decay": 0.0
+    },
+    "reward": "For each sampled action, reward is 1 if it equals the training answer key and 0 otherwise, multiplied by a class weight computed from training labels only: 0.5 / training_class_prevalence for the gold class. Do not normalize group advantages.",
+    "rloo": {
+      "baseline": "For each sampled action, subtract the mean reward of the other three group members. Baseline is detached from autograd.",
+      "expected_gradient_identity": "For deterministic correctness reward r(a)=1[a=y] times class weight c_y, the expected score-function gradient equals c_y * p_pi(y|x) * grad(log p_pi(y|x)) = c_y * grad(p_pi(y|x)); the exact_expected_reward arm optimizes -c_y * p_pi(y|x).",
+      "group_size": 4,
+      "loss": "Negative mean of detached_leave_one_out_advantage times sampled_action_log_probability. Divide by group size and number of prompts; do not standardize advantages.",
+      "sampling": "Independent Bernoulli draws from the current two-action policy for every prompt at every update. Discard each group's actions after its update; never reuse a rollout."
+    }
+  },
+  "metrics": {
+    "development_gate": {
+      "all_arms_within_resource_limits": true,
+      "all_provenance_and_prompt_separation_checks_pass": true,
+      "expected_reward_gradient_checks_pass": true,
+      "maximum_selected_mean_kl_nats_per_action": 0.5,
+      "maximum_selected_per_seed_mean_kl_nats_per_action": 0.5,
+      "minimum_base_balanced_accuracy": 0.55,
+      "minimum_base_recall_per_class": 0.25,
+      "minimum_seeds_rloo_not_worse_than_base": 4,
+      "rloo_minus_base_balanced_accuracy_at_least": 0.05,
+      "rloo_minus_base_ci_lower_above": 0.0
+    },
+    "interpretation": "The development gate is a screening rule because checkpoint selection uses the same development cohort. Even a pass requires a separately committed confirmation lock before touching reserved rows. RLOO and exact_expected_reward have the same expected reward gradient; differences are attributable to finite-sample optimization, not a new verifier signal.",
+    "paired_bootstrap": {
+      "interval": [
+        0.025,
+        0.975
+      ],
+      "method": "Resample development prompts within gold class; average each arm's per-prompt binary accuracy across seeds before calculating the paired difference.",
+      "resamples": 10000,
+      "seed": 20261019
+    },
+    "primary": "Selected rloo_k4 minus frozen_base development balanced-accuracy difference, paired by prompt and averaged across five seeds.",
+    "secondary": [
+      "exact-match/action accuracy, balanced accuracy, Yes/No recall and support, macro-F1, action NLL, parse validity, and paired bootstrap intervals for every selected arm",
+      "rloo_k4 versus exact_expected_reward and class-weighted context_sft on the same development prompts",
+      "per-seed metrics, update count, parameter delta, mean and per-seed KL, reward mean, reward variance, mixed-reward group fraction, zero-advantage group fraction, and sampled action counts",
+      "cumulative sampled actions and optimizer updates at each checkpoint",
+      "wall-clock time, peak RSS, CPU thread count, and offline/cache status"
+    ]
+  },
+  "protocol_id": "cpu-lm-boolq-verifier-rloo-development-v1",
+  "purpose": "Test whether exact answer-key verifier rewards can improve a frozen-backbone two-action BoolQ policy on unscored held-out contexts under a fixed CPU budget, and measure finite-sample RLOO behavior against its exact expected-gradient and supervised controls.",
+  "runtime_lock": {
+    "datasets": "4.4.2",
+    "enforcement": "Require exact versions before hashing or materializing any formal cohort; record versions in the run summary and require the auditor to verify them.",
+    "numpy": "1.26.4",
+    "python": "3.9.6",
+    "safetensors": "0.7.0",
+    "tokenizers": "0.22.1",
+    "torch": "2.8.0",
+    "transformers": "4.57.3"
+  },
+  "sha256": "52907a3101d65b4dfa687f047f7ebe618a609acee99c76dd34e34cbe361f62ae"
+}
