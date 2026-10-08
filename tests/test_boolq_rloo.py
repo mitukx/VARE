@@ -88,6 +88,29 @@ def test_stratified_paired_bootstrap_is_deterministic_and_paired():
     assert left["difference"] == pytest.approx(0.25)
 
 
+def test_auditor_bootstrap_matches_runner_with_seed_averaged_per_prompt_rows():
+    pytest.importorskip("numpy")
+    from scripts.audit_cpu_lm_boolq_verifier_rloo_development_v1 import paired_bootstrap
+    from scripts.boolq_rloo_task import stratified_paired_bootstrap
+
+    labels = [0, 1, 0, 1, 0, 1]
+    a_by_seed = [
+        [1, 1, 0, 1, 1, 0],
+        [1, 0, 1, 1, 0, 1],
+        [0, 1, 1, 0, 1, 1],
+    ]
+    b_by_seed = [
+        [0, 1, 0, 1, 1, 0],
+        [1, 0, 0, 0, 1, 1],
+        [0, 1, 1, 0, 0, 1],
+    ]
+    a = [list(values) for values in zip(*a_by_seed)]
+    b = [list(values) for values in zip(*b_by_seed)]
+    expected = stratified_paired_bootstrap(a, b, labels, resamples=500, seed=29)
+    actual = paired_bootstrap(a, b, labels, resamples=500, seed=29)
+    assert all(math.isclose(actual[key], expected[key], rel_tol=0.0, abs_tol=1e-12) for key in expected)
+
+
 def test_exact_expected_reward_gradient_matches_exact_enumerated_rloo_expectation():
     torch = pytest.importorskip("torch")
     from scripts.rloo_binary_objectives import exact_expected_reward_loss, rloo_policy_loss

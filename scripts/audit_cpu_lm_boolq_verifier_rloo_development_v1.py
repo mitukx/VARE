@@ -309,7 +309,7 @@ def paired_bootstrap(a: list[list[float]], b: list[list[float]], labels: list[in
         raise ValueError("paired bootstrap needs both label classes")
 
     def score(sampled):
-        means = [statistics.fmean(a[i]) - statistics.fmean(b[i]) for i in sampled]
+        means = [statistics.fmean(a[i]) - statistics.fmean(b[i]) for i in range(len(labels))]
         recalls = [statistics.fmean(means[i] for i in sampled if labels[i] == cls) for cls in (0, 1)]
         return statistics.fmean(recalls)
 
@@ -763,13 +763,14 @@ def replay_optimizers(
     return True
 
 
-def audit(bundle: Path) -> dict[str, Any]:
+def audit(bundle: Path, *, allow_prior_audit_failure: bool = False) -> dict[str, Any]:
     audit_started = time.monotonic()
     bundle = bundle.resolve()
     for key in ("HF_HUB_OFFLINE", "HF_DATASETS_OFFLINE", "TRANSFORMERS_OFFLINE", "HF_HUB_DISABLE_TELEMETRY"):
         os.environ[key] = "1"
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
-    if (bundle / "failure.json").exists():
+    prior_failure = read_json(bundle / "failure.json") if (bundle / "failure.json").exists() else None
+    if prior_failure is not None and not allow_prior_audit_failure:
         raise ValueError("run bundle contains a failure record")
     manifest_count = verify_manifest(bundle)
     spec, protocol_hash = verify_protocol(bundle)
@@ -848,9 +849,10 @@ def audit(bundle: Path) -> dict[str, Any]:
     seeds = [str(seed) for seed in spec["learner"]["optimizer"]["seeds"]]
 
     def per_prompt(arm):
-        return [selected[arm][seed]["metrics"]["per_prompt_correct"] for seed in seeds]
+        per_seed = [selected[arm][seed]["metrics"]["per_prompt_correct"] for seed in seeds]
+        return [list(values) for values in zip(*per_seed)]
 
-    base_rows = [base_metrics["per_prompt_correct"] for _ in seeds]
+    base_rows = [[value] * len(seeds) for value in base_metrics["per_prompt_correct"]]
     contrasts = {
         "primary_rloo_minus_base_balanced_accuracy": paired_bootstrap(
             per_prompt("rloo_k4"), base_rows, labels,
@@ -910,10 +912,18 @@ def audit(bundle: Path) -> dict[str, Any]:
         "all_arms_within_resource_limits": resource_pass,
     }
     decision = summary["comparison"]["development_gate"]
-    if checks != {key: value for key, value in decision.items() if key != "result"}:
-        raise ValueError("development gate checks do not reconstruct")
+    stored_checks = {key: value for key, value in decision.items() if key != "result"}
+    if checks != stored_checks:
+        recoverable_checks = dict(stored_checks)
+        recoverable_checks["all_provenance_and_prompt_separation_checks_pass"] = checks[
+            "all_provenance_and_prompt_separation_checks_pass"
+        ]
+        if prior_failure is None or not allow_prior_audit_failure or recoverable_checks != checks:
+            raise ValueError("development gate checks do not reconstruct")
     expected_result = "pass" if all(checks.values()) else "non-pass"
-    if decision["result"] != expected_result:
+    if decision["result"] != expected_result and not (
+        prior_failure is not None and allow_prior_audit_failure and expected_result == "non-pass"
+    ):
         raise ValueError("development gate result does not reconstruct")
     limits = spec["compute_limits"]
     audit_wall = time.monotonic() - audit_started
@@ -943,7 +953,8 @@ def audit(bundle: Path) -> dict[str, Any]:
         "audit_wall_seconds": audit_wall,
         "audit_peak_rss_bytes": audit_peak_bytes,
         "expected_reward_gradient_identity_independently_enumerated": gradient_reconstruction,
-        "development_gate": decision,
+        "development_gate": {**checks, "result": expected_result},
+        "prior_audit_failure": prior_failure,
         "audit_limits": [
             "Reconstructs prompts, labels, rank cohorts, tokenizer/model features, train-only normalization, adapter metrics, bootstrap intervals, optimizer updates, and RLOO action sampling.",
             "Uses the pinned model and the same local CPU framework stack; this is a same-host audit, not external reproduction.",
@@ -955,9 +966,32 @@ def audit(bundle: Path) -> dict[str, Any]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("bundle", type=Path)
+    parser.add_argument(
+        "--resume-after-audit-failure", action="store_true",
+        help="reconstruct a run whose first auditor failed after writing its frozen study results",
+    )
     args = parser.parse_args()
-    result = audit(args.bundle)
+    result = audit(args.bundle, allow_prior_audit_failure=args.resume_after_audit_failure)
     (args.bundle / "audit.json").write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    if args.resume_after_audit_failure:
+        summary_path = args.bundle / "summary.json"
+        summary = read_json(summary_path)
+        summary["comparison"]["development_gate"] = result["development_gate"]
+        summary["audit_recovery"] = {
+            "prior_failure_record_retained": (args.bundle / "failure.json").exists(),
+            "recovered_by_auditor": True,
+            "reconstructed_gate": result["development_gate"],
+        }
+        summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True, allow_nan=False) + "\n", encoding="utf-8")
+    files = {
+        path.relative_to(args.bundle).as_posix(): sha256_file(path)
+        for path in sorted(args.bundle.rglob("*"))
+        if path.is_file() and path.name != "manifest.json"
+    }
+    (args.bundle / "manifest.json").write_text(
+        json.dumps({"algorithm": "sha256", "files": files}, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
     print(json.dumps(result, indent=2, sort_keys=True))
 
 
