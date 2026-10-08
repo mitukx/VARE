@@ -136,6 +136,34 @@ class GraderIntegrityTests(unittest.TestCase):
             self.assertIsNone(gate)
             self.assertIsNone(denominator)
 
+    def test_trl_v7_grader_rejects_inplace_mutation_through_loss_alias(self):
+        mutated = VALID_BRANCH.replace(
+            '            loss = per_token_loss / normalizer\n',
+            '            loss = per_token_loss / normalizer\n            loss_alias = loss\n            loss_alias.data.mul_(2)\n',
+        ) + '        return loss\n'
+        with tempfile.TemporaryDirectory(prefix="vare-grader-probe-") as temporary:
+            source = Path(temporary) / "candidate.py"
+            source.write_text(mutated, encoding="utf-8")
+            assignment, gate, denominator = _extract_normalizer(source, "main_dapo_cispo_vespo")
+            self.assertIsNone(assignment)
+            self.assertIsNone(gate)
+            self.assertIsNone(denominator)
+
+    def test_trl_v7_grader_rejects_inplace_mutation_through_normalizer_alias(self):
+        mutated = VALID_BRANCH.replace(
+            '                normalizer = normalizer * self.current_gradient_accumulation_steps / self.args.steps_per_generation\n',
+            '                normalizer = normalizer * self.current_gradient_accumulation_steps / self.args.steps_per_generation\n'
+            '                normalizer_alias = normalizer\n'
+            '                normalizer_alias.data.mul_(2)\n',
+        )
+        with tempfile.TemporaryDirectory(prefix="vare-grader-probe-") as temporary:
+            source = Path(temporary) / "candidate.py"
+            source.write_text(mutated, encoding="utf-8")
+            assignment, gate, denominator = _extract_normalizer(source, "main_dapo_cispo_vespo")
+            self.assertIsNone(assignment)
+            self.assertIsNone(gate)
+            self.assertIsNone(denominator)
+
     def test_trl_grader_rejects_loss_divided_by_scaled_normalizer(self):
         mutated = VALID_BRANCH.replace(
             "loss = per_token_loss / normalizer",

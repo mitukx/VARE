@@ -8,6 +8,7 @@
     "checks_loss_writes_through_return": true,
     "conditions_per_branch": 6,
     "rejects_inplace_local_mutation": true,
+    "rejects_inplace_local_mutation_through_direct_alias": true,
     "rejects_post_division_loss_reassignment": true,
     "rejects_unmodeled_normalizer_overwrite": true,
     "requires_current_partial_window_size": true,
@@ -20,11 +21,11 @@
     "calibration_passed": true
   },
   "locked_hashes": {
-    "evaluator_sha256": "638bb98c7d725097ff1fd01e9fa36ac000c039915cc1af960fbbf8aa2d46aa5f",
-    "task_brief_sha256": "1885d073596154aefc7dbd7e07e22b8c4897b47d7639abac5027b1b9b0e7c011",
-    "task_json_sha256": "4954e5d741f6cab4ce44f5066ff70de9e58b39ef0a1e30834905ec0d885fe392"
+    "evaluator_sha256": "8048f932bbc6806e902e180ea73d67f4bdc70841aab1639b0b30866139451656",
+    "task_brief_sha256": "f818de1dae59b527bd7958bb0a1aae96cb2d35da3620b39eb300cb12c4d18384",
+    "task_json_sha256": "fbbf20b8ce4d3e4eec6f8bc1c67e5c8709bb041b95a85449cd79e987be3ead18"
   },
-  "protocol_id": "trl-grpo-accumulation-window-normalizer-protocol-v6",
+  "protocol_id": "trl-grpo-accumulation-window-normalizer-protocol-v7",
   "schema_version": 1,
   "task_id": "trl-grpo-accumulation-window-normalizer-v1"
 }

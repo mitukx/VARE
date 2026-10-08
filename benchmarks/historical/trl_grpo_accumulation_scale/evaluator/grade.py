@@ -69,6 +69,52 @@ def _target_is_normalizer(node: ast.stmt) -> bool:
     return False
 
 
+def _local_name_aliases(method: ast.FunctionDef, root_name: str) -> set[str]:
+    """Collect conservative direct local aliases of one protected Tensor name."""
+    aliases = {root_name}
+    changed = True
+    while changed:
+        changed = False
+        for node in ast.walk(method):
+            targets = []
+            value = None
+            if isinstance(node, ast.Assign) and len(node.targets) == 1:
+                targets = [node.targets[0]]
+                value = node.value
+            elif isinstance(node, ast.AnnAssign):
+                targets = [node.target]
+                value = node.value
+            elif isinstance(node, ast.NamedExpr):
+                targets = [node.target]
+                value = node.value
+            if (isinstance(value, ast.Name) and value.id in aliases
+                    and len(targets) == 1 and isinstance(targets[0], ast.Name)
+                    and targets[0].id not in aliases):
+                aliases.add(targets[0].id)
+                changed = True
+    return aliases
+
+
+def _mutates_name_inplace(node: ast.AST, names: set[str]) -> bool:
+    """Detect mutator-method and `out=` calls targeting a protected name or alias."""
+    if not isinstance(node, ast.Call):
+        return False
+
+    def rooted_in_name(value: ast.AST) -> bool:
+        if isinstance(value, ast.Name):
+            return value.id in names
+        if isinstance(value, (ast.Attribute, ast.Subscript)):
+            return rooted_in_name(value.value)
+        return False
+
+    function = node.func
+    if (isinstance(function, ast.Attribute) and function.attr.endswith("_")
+            and rooted_in_name(function.value)):
+        return True
+    return any(keyword.arg == "out" and rooted_in_name(keyword.value)
+               for keyword in node.keywords)
+
+
 def _writes_name(node: ast.AST, name: str) -> bool:
     """Return whether a statement binds, mutates or deletes the named local."""
     targets = []
@@ -90,13 +136,8 @@ def _writes_name(node: ast.AST, name: str) -> bool:
 
     if any(contains(target) for target in targets):
         return True
-    if isinstance(node, ast.Call):
-        function = node.func
-        if (isinstance(function, ast.Attribute) and function.attr.endswith("_")
-                and contains(function.value)):
-            return True
-        if any(keyword.arg == "out" and contains(keyword.value) for keyword in node.keywords):
-            return True
+    if _mutates_name_inplace(node, {name}):
+        return True
     return False
 
 
@@ -140,11 +181,12 @@ def _loss_branch_matches(node: ast.If, branch_name: str) -> bool:
     return False
 
 
-def _is_expected_downstream_loss_adjustment(statement: ast.stmt) -> bool:
+def _is_expected_downstream_loss_adjustment(statement: ast.stmt, loss_aliases: set[str]) -> bool:
     """Allow only the pinned entropy and auxiliary-loss updates after the policy branch."""
     if not isinstance(statement, ast.If):
         return False
-    writes = [node for node in ast.walk(statement) if _writes_name(node, "loss")]
+    writes = [node for node in ast.walk(statement)
+              if _writes_name(node, "loss") or _mutates_name_inplace(node, loss_aliases)]
     if len(writes) != 1 or not isinstance(writes[0], ast.Assign):
         return False
     assignment = writes[0]
@@ -176,8 +218,10 @@ def _extract_normalizer(path: Path, branch_name: str):
     method = next((node for node in trainer.body if isinstance(node, ast.FunctionDef)
                    and node.name == "_compute_loss"), None) if trainer else None
     if method is None:
-        return None, None
+        return None, None, None
 
+    normalizer_aliases = _local_name_aliases(method, "normalizer")
+    loss_aliases = _local_name_aliases(method, "loss")
     for branch in ast.walk(method):
         if not isinstance(branch, ast.If) or not _loss_branch_matches(branch, branch_name):
             continue
@@ -197,7 +241,8 @@ def _extract_normalizer(path: Path, branch_name: str):
             loss_index = branch.body.index(loss_assignment)
             later_loss_writes = (
                 node for statement in branch.body[loss_index + 1:]
-                for node in ast.walk(statement) if _writes_name(node, "loss")
+                for node in ast.walk(statement)
+                if (_writes_name(node, "loss") or _mutates_name_inplace(node, loss_aliases))
             )
             if any(True for _ in later_loss_writes):
                 return None, None, None
@@ -209,8 +254,9 @@ def _extract_normalizer(path: Path, branch_name: str):
             if containing_statement is None:
                 return None, None, None
             for statement in method.body[containing_statement + 1:]:
-                if any(_writes_name(node, "loss") for node in ast.walk(statement)):
-                    if not _is_expected_downstream_loss_adjustment(statement):
+                if any(_writes_name(node, "loss") or _mutates_name_inplace(node, loss_aliases)
+                       for node in ast.walk(statement)):
+                    if not _is_expected_downstream_loss_adjustment(statement, loss_aliases):
                         return None, None, None
         training_gate = next((statement for statement in branch.body
                               if isinstance(statement, ast.If) and _is_mode_train(statement)
@@ -218,12 +264,14 @@ def _extract_normalizer(path: Path, branch_name: str):
         permitted_writes = {id(assignment)}
         if training_gate is not None:
             gate_writes = [node for node in ast.walk(training_gate)
-                           if _writes_name(node, "normalizer")]
+                           if (_writes_name(node, "normalizer")
+                               or _mutates_name_inplace(node, normalizer_aliases))]
             if len(gate_writes) != 1 or not _target_is_normalizer(gate_writes[0]):
                 return None, None, None
             permitted_writes.add(id(gate_writes[0]))
         branch_writes = (node for statement in branch.body for node in ast.walk(statement)
-                         if _writes_name(node, "normalizer"))
+                         if (_writes_name(node, "normalizer")
+                             or _mutates_name_inplace(node, normalizer_aliases)))
         if any(id(node) not in permitted_writes for node in branch_writes):
             return None, None, None
         return assignment, training_gate, denominator
