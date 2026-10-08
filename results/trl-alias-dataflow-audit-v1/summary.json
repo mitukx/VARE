@@ -1,0 +1,43 @@
+{
+  "fixed_source": {
+    "conditions": 12,
+    "passed": true,
+    "revision": "e1b2e21975994e676d9a676e3ab005e9bee38e40",
+    "source_hashes": {
+      "trl/experimental/gspo_token/grpo_trainer.py": "37b91254ff70d353ca4a04bd1e28602102ddcbd50be3a79b0ba0a6cb62bc52e0",
+      "trl/trainer/grpo_trainer.py": "7446f652aefb9b78a64952a135c2235c924a7633c112d6a8f569b16ec4d62e14"
+    }
+  },
+  "frozen_at_commit": "6a225ce",
+  "frozen_protocol_sha256": "04b021cf2d54170ef420a2a8ac3bffda5181f1c4fb13dff012604f70e71c6e0d",
+  "grader_protocol": "trl-grpo-accumulation-window-normalizer-protocol-v6",
+  "grader_sha256": "638bb98c7d725097ff1fd01e9fa36ac000c039915cc1af960fbbf8aa2d46aa5f",
+  "limits": "One direct name-alias mutation on two functions in one pinned revision. This confirms a specific v6 false acceptance, not a general alias analysis result or full trainer execution.",
+  "mutation": {
+    "candidate_diff_sha256": "7ef7e2d783e58572eb58744c875a854faad57096de7ec8cda92ae75be6db3126",
+    "conditions": 12,
+    "expected_semantic_decision": "reject",
+    "failure_count": 0,
+    "grader_passed": true,
+    "patch_sha256": "d2d4cfa377ede4f0d2899fafecdfbfd6381e7ff2d86c8a49f97220cefdc5710f",
+    "source_hashes": {
+      "trl/experimental/gspo_token/grpo_trainer.py": "a98704c72d73b0aa5295929394118019add38023c8b543eeb055b628b4910c0d",
+      "trl/trainer/grpo_trainer.py": "0b83d7e548195e0bb8257c2f42f7267072abeec0e704cb9f415ae7c6997a8130"
+    }
+  },
+  "observed_conclusion": "V6 falsely accepts a loss Tensor mutated through a direct local alias (`loss_alias = loss; loss_alias.mul_(2)`) immediately before return in both pinned methods. The current AST check recognizes direct receiver names but does not propagate aliases.",
+  "protocol_id": "trl-loss-alias-mutation-audit-v1",
+  "raw_files": {
+    "alias-mutation-v6.grade.json": "bd144a5dba6a3c4c2e2b6f1544d09ecf0942dd6ad26c569d83747fe4d86770d5",
+    "fixed-v6.grade.json": "cd422c56764d68dbbd2afc400a48cd9a34e269a11a87c61b07852ffdcf624c92"
+  },
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "model_weights_loaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages_used": false
+  },
+  "schema_version": 1,
+  "status": "completed"
+}
