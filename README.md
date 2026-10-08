@@ -2,6 +2,8 @@
 
 VARE is a CPU-first research control plane for studying post-training signals and policy improvement under limited compute. It combines independently graded tasks, locked experiment protocols, provenance-aware replay, bounded execution, candidate promotion checks, and auditable retained records. Its learning evidence includes controlled synthetic policy updates, one preregistered cached-model non-pass, and one narrow verifier-labeled preference improvement on a cached language model. The latter changed held-out NLL by −0.00697 nats per question while accuracy stayed near chance; no capability gain is claimed. See the [GSM8K report](docs/cpu-lm-gsm8k-dpo-confirmation-v1-report.md) and [earlier model non-pass](docs/cpu-lm-dpo-head-v1-report.md).
 
+The separate [sequence-level GSM8K development result](docs/cpu-lm-gsm8k-sequence-dpo-development-v2-report.md) lowered verifier-labeled validation preference NLL under its KL cap, but did not improve free-form exact-match accuracy. It is a small development candidate pending a separately locked confirmation, not a capability result.
+
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
 
 ## Post-training results
