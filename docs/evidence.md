@@ -2,6 +2,10 @@
 
 This page describes what the retained calibration artifacts establish and where the claims stop. Each run checks one pinned pre-fix revision against one already-published fixed revision. The result validates a task/grader pair; it does not show that an agent independently found the fix.
 
+## Protected-file checks after evaluator commands
+
+The frozen [CPU protocol](../protocols/protected_evaluator_post_command_v1.json) tested whether commands could alter protected evaluator files after the initial integrity check. At pre-fix revision `46a890e`, a test command changed a protected file, exited successfully, and was accepted (`passed=true`, `integrity_ok=true`, score `0.9`). The evaluator now rechecks after each test and metric command, stops on persistent mutation, discards a metric from a mutated workspace, and returns zero score on integrity failure. Test and metric mutation reproductions now fail closed; an untampered control still passes. See the [report](protected-evaluator-post-command-report.md), [pre-fix record](../results/protected-evaluator-post-command-v1/baseline.json), and [fixed validation](../results/protected-evaluator-post-command-v1/fixed-validation.json). This is one harness-correctness case, not an attack-rate estimate or sandbox guarantee; a process that changes and restores a file within one command remains outside this check.
+
 ## HF behavior-policy parity
 
 - Task: [brief](../benchmarks/historical/rvl_behavior_policy_parity/TASK.md), [descriptor](../benchmarks/historical/rvl_behavior_policy_parity/task.json), [locked protocol](../benchmarks/historical/rvl_behavior_policy_parity/protocol.lock.json).

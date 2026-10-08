@@ -337,13 +337,30 @@ class ExecutableEvaluator:
         integrity_ok, integrity_failures = self._check_integrity(root)
         tests: list[CommandResult] = []
         if integrity_ok:
-            tests = [run_command(root, cmd, self.spec.limits, evaluator_root=self.evaluator_root) for cmd in self.spec.tests]
+            for cmd in self.spec.tests:
+                tests.append(run_command(root, cmd, self.spec.limits, evaluator_root=self.evaluator_root))
+                command_integrity_ok, command_integrity_failures = self._check_integrity(root)
+                for failure in command_integrity_failures:
+                    if failure not in integrity_failures:
+                        integrity_failures.append(failure)
+                if not command_integrity_ok:
+                    integrity_ok = False
+                    break
         correctness = 0.0 if not tests else sum(x.passed for x in tests) / len(tests)
         metric_results: list[MetricResult] = []
         metrics_ok = True
         if integrity_ok and correctness == 1.0:
             for metric in self.spec.metrics:
                 cmd_result = run_command(root, metric.command, self.spec.limits, evaluator_root=self.evaluator_root)
+                command_integrity_ok, command_integrity_failures = self._check_integrity(root)
+                for failure in command_integrity_failures:
+                    if failure not in integrity_failures:
+                        integrity_failures.append(failure)
+                if not command_integrity_ok:
+                    integrity_ok = False
+                    metrics_ok = False
+                    metric_results.append(MetricResult(metric.name, math.nan, None, None, False))
+                    break
                 try:
                     value = _metric_value(cmd_result, metric)
                 except Exception:
@@ -376,7 +393,7 @@ class ExecutableEvaluator:
                 metric_score = 0.5
         else:
             metric_score = 0.5
-        score = self.spec.correctness_weight * correctness + metric_weight * metric_score
+        score = 0.0 if not integrity_ok else self.spec.correctness_weight * correctness + metric_weight * metric_score
         passed = integrity_ok and correctness == 1.0 and metrics_ok
         diff = ""
         if (root / ".git").exists():

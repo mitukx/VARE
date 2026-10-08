@@ -4,6 +4,8 @@ VARE should expand its claims only when the next evidence tier can be reproduced
 
 ## E0 — Harness integrity
 
+The executable environment evaluator now rechecks protected hashes after each test and metric command, stops after persistent mutation, discards a metric produced during mutation, and awards zero score when integrity fails. A frozen CPU fixture reproduced the pre-fix false pass (`passed=true` after a test rewrote a protected evaluator file); the post-fix test and metric mutation cases both fail closed while an untampered control passes. See the [report](protected-evaluator-post-command-report.md) and [retained baseline/fixed records](../results/protected-evaluator-post-command-v1/). This detects persistent changes between commands, not a hostile process that changes and restores files within one command; the runner is not a security sandbox.
+
 All three current task graders reject isolated mutations of the task descriptor, task brief, and evaluator against the unchanged protocol lock. The latest calibration has three untampered controls and nine tamper cases; all controls reach candidate-file validation and all nine mutations are rejected. See [`protocol-integrity/cpu-calibration-v5`](../results/protocol-integrity/cpu-calibration-v5/summary.json).
 
 The trust anchor is the version-controlled protocol lock. This calibration does not authenticate a coordinated edit to the lock and does not sandbox hostile candidate code; those limits are explicit in the [evidence notes](evidence.md).
