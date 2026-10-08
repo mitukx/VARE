@@ -1,5 +1,15 @@
 # Next study decision — 2026-10-09
 
+## Current decision — 2026-10-09
+
+The broad reassessment does **not** justify a repository rewrite or a general adaptive-audit algorithm. The main post-training evidence gap remains independently graded task-success improvement after a real-model update. Existing CPU model/task screens and the DPO-head study do not clear that bar, and recent work already covers broad noisy-verifier correction, group-correlated reward noise, reward hacking, and correlation-aware audit allocation.
+
+The most defensible no-cost theory result available from the current code and records was a sharper follow-up to the original GRPO audit study: whether one-label audits remain insufficient to identify the expected clipped-GRPO update when the auditor sees all group actions. The exact synthetic witness and same-host second implementation are recorded in [the report](grpo-expected-update-audit-identifiability-v1-report.md). It passes its exact existence checks, but the witness was selected after an exploratory LP search, its update gap is small, related literature is close, and outside replication is absent. Treat it as a precise candidate counterexample, not as a novel algorithm, practical audit policy, or capability result.
+
+The cached TinyLlama candidate also received only a minimal offline CPU feasibility smoke. One isolated single-turn JSON action was valid (10.1 seconds generation); a separate two-step stateful tool prompt produced prose instead of the required first JSON action after 10 seconds. This is one prompt/model smoke, not a task benchmark or general model failure. Do not open a scored task cohort or train this pairing under the current interaction contract.
+
+Next order: (1) preserve the exact witness and its selection disclosure; (2) make the reproduction run in repository CI and keep a clean-checkout path; (3) seek independent review only when a human reviewer is available and authorized; (4) pursue model-level task-success work only after a distinct base/task/update-cost gate passes. No GPU, paid API, or external service is part of the current path. A human-authored external review has not been requested or performed.
+
 ## Update — 2026-10-09: reject impossible provenance versions
 
 The current improvement loop's policy/verifier provenance boundary was incomplete: a rollout or verdict tagged with a future version was converted to lag zero and could enter replay as fresh. Direct reproduction included the RVL SQLite snapshot and ready-experience adapter, both of which returned a future-version item with zero lag. The fix rejects invalid/future values at both the generic lag controller and RVL ingestion boundaries, including item-level verifier overrides. The pre-fix input/output is retained in `results/provenance-version-validation-v1/baseline.json`; regressions cover the original case plus malformed types and pending sentinels. This is a correctness repair, not an RL result. The next evidence gap remains a frozen CPU model update with independently graded task-success improvement, which is still gated on finding a viable no-cost base/task/runtime combination.

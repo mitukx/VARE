@@ -1,0 +1,61 @@
+{
+  "protocol_id": "grpo_expected_update_audit_identifiability_v1",
+  "classification": "exact_synthetic_identifiability_witness",
+  "selection_disclosure": "The construction was selected after an exploratory finite linear-program search. The values below are not presented as preregistered confirmation. This lock freezes the deterministic witness and its exact pass/fail checks before the committed enumerator and independent auditor are run.",
+  "model_or_training_run": false,
+  "policy": {
+    "group_size": 4,
+    "bernoulli_probability": "1/4",
+    "clip_epsilon": 0.2
+  },
+  "worlds": {
+    "A_expected_group_gradient": {
+      "rational": "10881/32000",
+      "sqrt3_coefficient": "3573/16000"
+    },
+    "A_expected_group_gradient_decimal": 0.7268198459652249,
+    "B_expected_group_gradient": {
+      "rational": "8181/32000",
+      "sqrt3_coefficient": "4473/16000"
+    },
+    "B_expected_group_gradient_decimal": 0.7398727038909743,
+    "B_minus_A_gradient": {
+      "rational": "-27/320",
+      "sqrt3_coefficient": "9/160"
+    },
+    "B_minus_A_gradient_decimal": 0.01305285792574934,
+    "target_action_conditional_A": {
+      "rational": "3/5",
+      "sqrt3_coefficient": "1/5"
+    },
+    "target_action_conditional_A_decimal": 0.9464101615137754,
+    "target_action_conditional_B": {
+      "rational": "-1/5",
+      "sqrt3_coefficient": "11/15"
+    },
+    "target_action_conditional_B_decimal": 1.0701705922171765
+  },
+  "audit_laws": {
+    "one_item_full_action_context_tv": "0",
+    "one_item_full_action_context_tv_decimal": 0.0,
+    "full_group_observation_tv": "27/320",
+    "full_group_observation_tv_decimal": 0.084375,
+    "target_action_probability": "27/256",
+    "target_action_probability_decimal": 0.10546875
+  },
+  "exact_checks": {
+    "item_observation_law_identical": true,
+    "every_action_conditioned_item_marginal_matches": true,
+    "expected_gradient_differs": true,
+    "full_group_law_differs": true,
+    "gradient_gap_matches_target_event": true,
+    "all_probability_mass_is_one": true
+  },
+  "sources": {
+    "protocol": "protocols/grpo_expected_update_audit_identifiability_v1.lock.json",
+    "protocol_sha256": "81ffcf079ddfda4eca07c1dc6e32f70159ec70d2dc4fbcf9a7785c07d3e22f25",
+    "runner": "scripts/run_grpo_expected_update_audit_identifiability_v1.py",
+    "runner_sha256": "28f42de911cb54a8e0c9104ebf202fc03b5f346c6b434b176bac6e3ac6ff68e6"
+  },
+  "interpretation_limit": "A finite synthetic law proves an existence gap only. It does not estimate how often this occurs with real policy/verifier pairs, demonstrate a trained policy change, or establish task capability."
+}
