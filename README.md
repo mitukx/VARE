@@ -2,7 +2,7 @@
 
 VARE is a CPU-first research project for evaluating post-training signals and policy updates under limited compute. It combines frozen experiment protocols, independently checked outcomes, provenance-aware execution, and retained raw records.
 
-The latest human-preference study passed its development gate but **did not pass confirmation**: the accuracy signal repeated, while the NLL interval crossed zero. The latest matched policy-update comparison remains BoolQ v17, where all three methods missed the frozen task-gain gate. The strongest completed positive model result remains a narrow verifier-labeled answer-choice NLL improvement; accuracy remained near chance. Synthetic policy studies test mechanisms, not language-model capability. No general capability improvement or scale result is claimed.
+The latest human-preference study passed its development gate but **did not pass confirmation**: the accuracy signal repeated, while the NLL interval crossed zero. The latest matched policy-update comparison remains BoolQ v17, where all three methods missed the frozen task-gain gate. A generated-arithmetic rollout feasibility pilot also failed its predeclared base-accuracy gate (1/64); no training or confirmation followed. The strongest completed positive model result remains a narrow verifier-labeled answer-choice NLL improvement; accuracy remained near chance. Synthetic policy studies test mechanisms, not language-model capability. No general capability improvement or scale result is claimed.
 
 ## Start here
 
@@ -12,6 +12,7 @@ The latest human-preference study passed its development gate but **did not pass
 - [GSM8K model study](docs/cpu-lm-gsm8k-dpo-confirmation-v1-report.md): protocol, per-seed outcomes, audit, and limits.
 - [Experiment index](docs/experiments.md): full study sequence and retained reports.
 - [Current evidence gaps](docs/current-gaps.md): what the results support and what remains open.
+- [Generated arithmetic feasibility v1](docs/cpu-generated-arithmetic-feasibility-v1-report.md): a preregistered CPU-only base-rollout gate that failed before training.
 - [Evaluation runner walkthrough](docs/walkthrough.md): inspect the calibrated task runner and retained execution evidence.
 
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
