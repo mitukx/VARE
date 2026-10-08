@@ -5,7 +5,7 @@ from scripts.run_cpu_procedural_entailment_dpo_development_v1 import load_protoc
 
 
 def test_procedural_splits_are_deterministic_balanced_and_oracle_checked():
-    kwargs = {"count": 64, "positive_count": 32, "nodes": 12, "edge_probability": 0.1}
+    kwargs = {"count": 64, "positive_count": 32, "n_nodes": 12, "edge_probability": 0.1}
     first = generate_split(seed=21262013, style=1, **kwargs)
     second = generate_split(seed=21262013, style=1, **kwargs)
     assert first == second
