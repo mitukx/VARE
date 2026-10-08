@@ -33,6 +33,13 @@ class PromotionConfig:
     min_paired_examples: int = 64
     paired_alpha: float = 0.05
     paired_bootstrap_samples: int = 2000
+    # Opt-in strict post-training gates; legacy/demo defaults remain compatible.
+    require_complete_slices: bool = False
+    require_measured_disagreement: bool = False
+    require_reward_audit: bool = False
+    reward_audit_max_false_accept_ucb: float = 0.25
+    reward_audit_min_proxy_positives: int = 32
+    reward_audit_alpha: float = 0.05
 
 
 @dataclass(frozen=True, slots=True)
