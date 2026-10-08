@@ -1,5 +1,9 @@
 # Experimental program
 
+## GRPO group-audit identifiability v1
+
+The frozen [study report](grpo-group-audit-identifiability-v1-report.md) tests whether one audited rollout member per group identifies the clean group-normalized advantage signal. Across 2,000 seeds, uniform item audits and proxy-positive item audits have 49.2% and 50.0% balanced accuracy; group-atomic audits score 100% under the same 200-label budget. The exact item-only observation-law TV is zero, and the independent replay audit passes. This is a two-member synthetic identifiability result, not actual GRPO training or model capability evidence. The [literature scan](research-literature-review-2026-10.md) records close overlap with noisy/group-correlated verifier work and VStress; novelty beyond the scoped construction is unproven.
+
 ## HH length-normalized DPO development v1
 
 The frozen [three-arm CPU comparison](cpu-hh-length-normalized-dpo-v1-report.md) tested length-normalized DPO, standard DPO, and chosen-only SFT on three matched seeds. Candidate and standard DPO both scored 0.4974 raw sequence-sum preference accuracy against base 0.5000; the length-only baseline scored 0.5645. The frozen gain and seed-consistency gates failed. The runner saved all nine adapters but hit a missing-aggregate-key `KeyError` before producing a summary. The bundle summary was recovered from those adapters using the separately implemented offline scoring path; the [auditor](../scripts/audit_cpu_hh_length_normalized_dpo_development_v1.py) passed selection, score, and decision replay. This study is outcome-informed, is limited to one public training split, and is not task-success evidence. Do not open a confirmation cohort from these rows.

@@ -1,5 +1,9 @@
 # Next study decision — 2026-10-09
 
+## Update — 2026-10-09: group-audit identifiability v1 completed
+
+The frozen two-member study in [`grpo-group-audit-identifiability-v1-report.md`](grpo-group-audit-identifiability-v1-report.md) completed with its predeclared mechanism rule supported and an independent raw-bundle replay audit passed. One-item audits had exactly identical observation laws across worlds and empirical balanced accuracy of 49.2% (uniform) / 50.0% (proxy-positive), while group-atomic audits reached 100% at the same label-call budget. This closes one narrow synthetic mechanism question only. It does not establish a clean expected policy-gradient gap or model capability. The [literature scan](research-literature-review-2026-10.md) also found that broad adaptive verifier auditing and group-correlated reward-noise work are already close; no general novelty claim is made. Any extension should first test whether the joint-label distinction survives a specified score-function/clipped-GRPO update. Do not reopen the frozen protocol.
+
 ## Decision
 
 Keep post-training systems correctness and reviewability as VARE's foundation, and make independently graded task success after an update the next flagship evidence target. The immediate replay and evaluation-recovery changes are implemented with CPU regression coverage; the synthetic preference robustness study has a one-command clean-checkout reproduction packet. Do not continue neighboring preference/NLL screens or expand VARE with unmeasured features.

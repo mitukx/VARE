@@ -21,7 +21,7 @@ def digest(path: Path) -> str:
 
 
 def labels_for(source: random.Random, world: str) -> tuple[int, int]:
-    coin = source.getrandbits(1)
+    coin = source.randrange(2)
     return (coin, coin) if world == "A" else (coin, 1 ^ coin)
 
 
@@ -30,7 +30,7 @@ def recompute_item(seed: int, world: str, choose_random_member: bool) -> int:
     total = 0
     for _sample in range(200):
         pair = labels_for(source, world)
-        chosen = source.getrandbits(1) if choose_random_member else 0
+        chosen = source.randrange(2) if choose_random_member else 0
         total += pair[chosen]
     return total
 
@@ -89,7 +89,21 @@ def main() -> None:
     assert summary["group_signal"]["world_A_advantages"] == [0.0, 0.0]
     assert summary["group_signal"]["world_B_advantages"] == [[1.0, -1.0], [-1.0, 1.0]]
     assert summary["decision"] == "mechanism_supported"
-    print(json.dumps({"audit": "PASS", "batches": len(rows), "balanced_accuracy": rates}))
+    audit_record = {
+        "audit": "PASS",
+        "protocol_id": lock["protocol_id"],
+        "protocol_sha256": expected_protocol,
+        "auditor_sha256": digest(Path(__file__).resolve()),
+        "raw_trials_sha256": digest(raw),
+        "batches": len(rows),
+        "balanced_accuracy": rates,
+        "decision": summary["decision"],
+    }
+    audit_path = bundle / "audit.json"
+    audit_path.write_text(json.dumps(audit_record, indent=2, sort_keys=True) + "\n")
+    manifest["audit.json"] = digest(audit_path)
+    (bundle / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+    print(json.dumps(audit_record))
 
 
 if __name__ == "__main__":

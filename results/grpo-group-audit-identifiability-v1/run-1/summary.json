@@ -1,0 +1,55 @@
+{
+  "audit_label_calls_per_batch": 200,
+  "balanced_accuracy": {
+    "group_atomic": 1.0,
+    "item_proxy_positive": 0.5,
+    "item_uniform": 0.492
+  },
+  "batches_per_world": 2000,
+  "decision": "mechanism_supported",
+  "group_signal": {
+    "world_A_advantages": [
+      0.0,
+      0.0
+    ],
+    "world_A_group_mixed_probability": 0.0,
+    "world_B_advantages": [
+      [
+        1.0,
+        -1.0
+      ],
+      [
+        -1.0,
+        1.0
+      ]
+    ],
+    "world_B_group_mixed_probability": 1.0
+  },
+  "item_proxy_positive_exact_observation_tv": 0.0,
+  "item_uniform_exact_observation_tv": 0.0,
+  "limitations": [
+    "Two-member synthetic groups only.",
+    "The target is identifiability of the per-group normalized advantage signal, not the expected parameter update or downstream task success.",
+    "No language model, optimizer, or policy training is run.",
+    "The result does not establish that group-atomic audits are cost-optimal in general."
+  ],
+  "per_world_accuracy": {
+    "group_atomic": {
+      "A": 1.0,
+      "B": 1.0
+    },
+    "item_proxy_positive": {
+      "A": 0.514,
+      "B": 0.486
+    },
+    "item_uniform": {
+      "A": 0.5195,
+      "B": 0.4645
+    }
+  },
+  "protocol_id": "grpo_group_audit_identifiability_v1",
+  "protocol_sha256": "860913fd9698bc96e06d83b430a6871fb3654de0ba58c832371bc16aebb1e72c",
+  "raw_trials_sha256": "df1bc414542e98260225dc4f2d81b5fd33d56f6a175e7c351d6f306882583aa0",
+  "runner_sha256": "369833bd6e44c673465feebd129f3675790be0ee9b8b27799bc14edddcc327eb",
+  "seed_count": 2000
+}
