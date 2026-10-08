@@ -26,6 +26,8 @@ In [v11](docs/cpu-lm-gsm8k-sequence-dpo-development-v11-report.md), epoch 1 was 
 
 The matched [v12 DPO/SFT comparison](docs/cpu-lm-gsm8k-posttraining-development-v12-report.md) found neither arm improved exact-match over base. SFT preserved 2/64 in all seeds; DPO averaged 1.33/64. DPO had higher pairwise preference accuracy but worse preference NLL and task exact-match than SFT. This development result motivates an SFT-anchored DPO regression-control study; it does not establish capability improvement.
 
+The matched [v13 three-arm study](docs/cpu-lm-gsm8k-posttraining-development-v13-report.md) compared DPO, SFT and SFT-anchored DPO on identical fresh rows. Base exact-match was 2/64; selected DPO and SFT checkpoints each averaged 2/64, while anchored DPO averaged 2.67/64 and missed its preregistered +2/64 advancement threshold. All arms passed offline audits. This is a non-pass development result, not evidence of a confirmed task or capability gain.
+
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
 
 ## Post-training results
