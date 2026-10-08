@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import os
 from pathlib import Path
 import sys
 import tempfile
 import time
+from types import ModuleType
 
 
 def main() -> int:
@@ -18,10 +20,36 @@ def main() -> int:
     parser.add_argument("--json-out", type=Path, required=True)
     args = parser.parse_args()
     workspace = args.workspace.resolve()
-    sys.path.insert(0, str(workspace / "src"))
 
-    from vare.environments.runner import run_command
-    from vare.environments.spec import CommandSpec, ResourceLimits
+    # Load only the declared candidate files. A checkout's editable install or
+    # namespace-package fallback must not silently substitute the evaluator host's
+    # currently installed VARE source for the candidate revision.
+    source_root = workspace / "src" / "vare"
+    vare_package = ModuleType("vare")
+    vare_package.__path__ = [str(source_root)]
+    environments_package = ModuleType("vare.environments")
+    environments_package.__path__ = [str(source_root / "environments")]
+    sys.modules["vare"] = vare_package
+    sys.modules["vare.environments"] = environments_package
+
+    def load_candidate(name: str, relative_path: str):
+        path = source_root / relative_path
+        spec = importlib.util.spec_from_file_location(name, path)
+        if spec is None or spec.loader is None:
+            raise RuntimeError(f"cannot load candidate module: {relative_path}")
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[name] = module
+        spec.loader.exec_module(module)
+        if Path(module.__file__).resolve() != path.resolve():
+            raise RuntimeError(f"candidate import escaped workspace: {name}")
+        return module
+
+    load_candidate("vare.evidence", "evidence.py")
+    spec_module = load_candidate("vare.environments.spec", "environments/spec.py")
+    runner_module = load_candidate("vare.environments.runner", "environments/runner.py")
+    run_command = runner_module.run_command
+    CommandSpec = spec_module.CommandSpec
+    ResourceLimits = spec_module.ResourceLimits
 
     limit = 128
     limits = ResourceLimits(
