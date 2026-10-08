@@ -1,0 +1,50 @@
+{
+  "protocol_id": "grpo_audit_order_characterization_v1",
+  "status": "frozen_before_committed_runner_and_auditor",
+  "question": "For the four-member binary-reward policy and local clipped-GRPO score update in the preceding exact witness, what order of within-group clean-label marginals is sufficient and necessary to identify the expected update under arbitrary conditional reward laws?",
+  "selection_disclosure": "This follow-up was motivated by the already-published four-member exact witness and exploratory exact truth-table calculations. It is a deterministic characterization of a fixed finite estimand, not a preregistered empirical confirmation or independent novelty claim.",
+  "scope": "Exact finite mathematics and CPU enumeration only. No model training, stochastic simulation, capability metric, or audit algorithm.",
+  "policy_and_estimand": {
+    "source_protocol": "grpo_expected_update_audit_identifiability_v1",
+    "group_size": 4,
+    "action_distribution": "independent Bernoulli(1/4) actions; all 16 action vectors have positive probability",
+    "reward_domain": "all binary reward vectors in {0,1}^4; conditional reward law may be any distribution for each observed action vector",
+    "update": "G(a,y)=sum_i A_i(y)*(a_i-1/4), where A is population-standardized binary group reward and is zero for a constant-reward group",
+    "clipped_objective": "At the old policy, ratio=1 is in the interior of epsilon=0.2 clipping, so G is the local derivative of the maximized surrogate"
+  },
+  "audit_observation_model": {
+    "visible": ["complete action vector a", "a selected reward-coordinate subset S", "clean labels y_S"],
+    "selection": "Subset-selection probabilities may depend on a and public randomization but not on unobserved clean labels",
+    "order_k": "Across groups and action strata with positive policy probability, the audit design identifies the conditional joint marginal law of y_S for every S with |S|<=k; each required action/subset stratum has positive audit probability"
+  },
+  "theorem_to_verify": {
+    "claim": "For a fixed action vector a with positive probability, E[G(a,Y)|a] is identified by all conditional label marginals of order at most k for every possible conditional reward law if and only if every Walsh-Fourier coefficient of f_a(y)=G(a,y) on {0,1}^4 with support size greater than k is zero.",
+    "basis": "chi_T(y)=product_{i in T}(1-2*y_i)=(-1)^(sum_{i in T} y_i); alpha_T(a)=2^-4*sum_y f_a(y)*chi_T(y)",
+    "sufficiency": "The Walsh expansion contains only terms indexed by sets of size at most k, and each such expectation is determined by a corresponding observed joint marginal.",
+    "necessity": "If alpha_T(a)!=0 for |T|>k, the distributions P_+(y)=2^-4*(1+epsilon*chi_T(y)) and P_-(y)=2^-4*(1-epsilon*chi_T(y)), 0<epsilon<=1, are valid, agree on every marginal of order at most k, but have expected f_a values differing by 2*epsilon*alpha_T(a)."
+  },
+  "frozen_checks": [
+    "exactly enumerate all 16 action vectors and 16 reward vectors per vector",
+    "derive every Walsh coefficient with exact rational-plus-sqrt(3) arithmetic",
+    "verify all coefficients of order four vanish",
+    "verify every nonconstant action vector has at least one nonzero coefficient of order three",
+    "verify constant action vectors have identically zero update",
+    "for target action 0001 and T={0,1,2}, verify alpha_T=-3/8+sqrt(3)/4 is nonzero",
+    "construct P_plus/P_minus at epsilon=1/2 and verify exact equality of all one- and two-coordinate marginals",
+    "verify the conditional expected-update gap equals 2*epsilon*alpha_T and the unconditional gap equals the action probability times that gap",
+    "verify each order-three marginal observation differs while all order-at-most-two observations agree"
+  ],
+  "interpretation_limits": [
+    "The theorem is a finite Boolean-function identification criterion, not a new general RL algorithm.",
+    "The degree-three result applies only to this four-member binary-reward local score update and stated standardization convention.",
+    "No claim is made about prevalence, practical audit cost, finite-sample estimator variance, trained policies, verifier drift, or task capability.",
+    "Related work on group-correlated verifier noise, GRPO advantage behavior, selective auditing and adaptive verification is close; novelty is unresolved."
+  ],
+  "close_literature": [
+    "https://arxiv.org/abs/2604.07666",
+    "https://arxiv.org/abs/2601.08521",
+    "https://arxiv.org/abs/2609.36958",
+    "https://arxiv.org/abs/2609.33662",
+    "https://arxiv.org/abs/2609.35677"
+  ]
+}

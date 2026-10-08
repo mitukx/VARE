@@ -1,0 +1,87 @@
+{
+  "protocol_id": "grpo_audit_order_characterization_v1",
+  "classification": "exact_finite_identifiability_characterization",
+  "model_or_training_run": false,
+  "selection_disclosure": "This follow-up was motivated by the already-published four-member exact witness and exploratory exact truth-table calculations. It is a deterministic characterization of a fixed finite estimand, not a preregistered empirical confirmation or independent novelty claim.",
+  "theorem": {
+    "claim": "For a fixed action vector a with positive probability, E[G(a,Y)|a] is identified by all conditional label marginals of order at most k for every possible conditional reward law if and only if every Walsh-Fourier coefficient of f_a(y)=G(a,y) on {0,1}^4 with support size greater than k is zero.",
+    "basis": "chi_T(y)=product_{i in T}(1-2*y_i)=(-1)^(sum_{i in T} y_i); alpha_T(a)=2^-4*sum_y f_a(y)*chi_T(y)",
+    "sufficiency": "The Walsh expansion contains only terms indexed by sets of size at most k, and each such expectation is determined by a corresponding observed joint marginal.",
+    "necessity": "If alpha_T(a)!=0 for |T|>k, the distributions P_+(y)=2^-4*(1+epsilon*chi_T(y)) and P_-(y)=2^-4*(1-epsilon*chi_T(y)), 0<epsilon<=1, are valid, agree on every marginal of order at most k, but have expected f_a values differing by 2*epsilon*alpha_T(a)."
+  },
+  "walsh_degree_by_action_vector": {
+    "0000": -1,
+    "0001": 3,
+    "0010": 3,
+    "0011": 3,
+    "0100": 3,
+    "0101": 3,
+    "0110": 3,
+    "0111": 3,
+    "1000": 3,
+    "1001": 3,
+    "1010": 3,
+    "1011": 3,
+    "1100": 3,
+    "1101": 3,
+    "1110": 3,
+    "1111": -1
+  },
+  "target": {
+    "action_vector": "0001",
+    "character_subset": [
+      0,
+      1,
+      2
+    ],
+    "epsilon": "1/2",
+    "alpha_exact": {
+      "rational": "-3/8",
+      "sqrt3_coefficient": "1/4"
+    },
+    "alpha_decimal": 0.0580127018922193,
+    "conditional_update_gap_exact": {
+      "rational": "-3/8",
+      "sqrt3_coefficient": "1/4"
+    },
+    "conditional_update_gap_decimal": 0.0580127018922193,
+    "action_probability": "27/256",
+    "unconditional_update_gap_exact": {
+      "rational": "-81/2048",
+      "sqrt3_coefficient": "27/1024"
+    },
+    "unconditional_update_gap_decimal": 0.006118527152695001,
+    "order_at_most_two_marginal_tv": {
+      "": "0",
+      "0": "0",
+      "1": "0",
+      "2": "0",
+      "3": "0",
+      "01": "0",
+      "02": "0",
+      "03": "0",
+      "12": "0",
+      "13": "0",
+      "23": "0"
+    },
+    "selected_order_three_marginal_tv": "1/2"
+  },
+  "exact_checks": {
+    "all_degree_four_coefficients_are_zero": true,
+    "all_constant_action_updates_are_zero": true,
+    "all_nonconstant_action_vectors_have_degree_three": true,
+    "target_degree_three_coefficient_matches_exact_value": true,
+    "laws_are_nonnegative_and_normalized": true,
+    "all_marginals_up_to_order_two_are_identical": true,
+    "conditional_gap_matches_character_coefficient": true,
+    "unconditional_gap_matches_action_probability": true,
+    "order_three_observation_distinguishes_worlds": true
+  },
+  "sources": {
+    "protocol": "protocols/grpo_audit_order_characterization_v1.lock.json",
+    "protocol_sha256": "1286ce726d0d574c50dae794345e3df688c165d5cb7117c06880f080027542d1",
+    "runner": "scripts/run_grpo_audit_order_characterization_v1.py",
+    "runner_sha256": "5d264c1ca4f38e507819bd3bcb9c6efb930f4750bc66644e33901a5ffa185efd"
+  },
+  "interpretation_limit": "This exact result applies to one finite four-member binary-reward local clipped-GRPO estimand. It does not establish prevalence, audit cost effectiveness, finite-sample performance, model capability, or novelty."
+}
