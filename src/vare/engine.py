@@ -73,7 +73,9 @@ class CapabilityLoop:
             raise ValueError("run_round requires tasks")
         incumbent_id, incumbent_version = self.hooks.active_policy()
         self.shift.fit_reference(t.family for t in source_tasks)
-        target_rollouts = rollout_count or len(source_tasks)
+        target_rollouts = len(source_tasks) if rollout_count is None else rollout_count
+        if target_rollouts <= 0:
+            raise ValueError("rollout_count must be positive")
         if self.config.samples_per_task <= 0:
             raise ValueError("samples_per_task must be positive")
         if self.config.samples_per_task == 1:
@@ -94,8 +96,6 @@ class CapabilityLoop:
             for group_index, task in enumerate(base_tasks):
                 group_id = f"r{round_index}-g{group_index}"
                 for _ in range(self.config.samples_per_task):
-                    if len(chosen) >= target_rollouts:
-                        break
                     chosen.append(
                         Task(
                             id=task.id,

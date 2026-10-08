@@ -31,7 +31,7 @@ class Hooks:
     async def discard(self, candidate_id): pass
 
 
-def test_rollout_and_replay_preserve_grpo_groups():
+def test_rollout_and_replay_preserve_grpo_groups_for_nonmultiple_budget():
     hooks = Hooks()
     loop = CapabilityLoop(
         hooks=hooks,
@@ -46,10 +46,13 @@ def test_rollout_and_replay_preserve_grpo_groups():
         seed=4,
     )
     tasks = [Task(str(i), "x") for i in range(8)]
-    asyncio.run(loop.run_round(tasks, round_index=0, rollout_count=16))
+    # Six requested rollouts require two complete groups of four. The engine
+    # rounds the target up instead of sending a partial comparison group.
+    asyncio.run(loop.run_round(tasks, round_index=0, rollout_count=6))
     rollout_counts = Counter(hooks.groups)
+    assert sum(rollout_counts.values()) == 8
     assert set(rollout_counts.values()) == {4}
     assert hooks.train_group_counts is not None
     # Budget is 7, but whole groups of 4 are returned; no group is truncated.
     assert set(hooks.train_group_counts.values()) == {4}
-    assert sum(hooks.train_group_counts.values()) in {8, 12, 16}
+    assert sum(hooks.train_group_counts.values()) == 8

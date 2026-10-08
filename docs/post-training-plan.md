@@ -1,12 +1,12 @@
 # Post-training plan under limited compute
 
-## Current strategic focus (2026-10-09)
+## Active direction (2026-10-09)
 
-The completed HH length-normalized DPO comparison tied standard DPO, trailed the frozen base slightly, and remained below the length-only baseline. Together with the earlier HH DPO, BoolQ RLOO/DPO, and GSM8K sequence-update results, this does not justify another nearby objective or learning-rate variant as the main study.
+The earlier Math-first and generated code-repair plans are superseded. Recent no-update feasibility screens and policy-update studies did not establish a viable model/task pair for a new learning run. The current order is to fix concrete rollout/replay/trainer-integrity defects with CPU regressions, then make a retained result reproducible from a clean checkout. The current decision and exact stop rules are in [next study decision](next-study-decision-2026-10-09.md); a completed group-integrity fix is recorded in [rollout group integrity v1](rollout-group-integrity-v1-report.md).
 
-The next centerpiece should make an independently graded downstream task outcome primary. First freeze a CPU-only, no-update feasibility screen for a fresh verifiable task and the cached Qwen2.5-Math-1.5B candidate. Measure model load, CPU BF16 compatibility, peak RSS, generation throughput, and exact-match base performance. Training proceeds only if both the base-task and resource gates pass. If feasible, the follow-up should compare outcome-reward policy optimization (RLOO or GRPO) against successful-trace SFT with matched initialization, data, seeds, and compute, and reserve distinct confirmation data before the development run. Use an independent oracle, mutation-test the verifier, and report task success, paired uncertainty, KL/regression checks, tool or format failures, and reward-exploit cases. If the screen fails, stop this task/model combination and choose a smaller structured tool-use task or position the result as evaluation/trainer-integrity engineering without a model-capability claim.
+Do not start another learner run until a different model/task pair clears a frozen base-policy success gate and the CPU/resource budget. Any later update study needs a task-success primary metric, matched SFT, one RL method, multiple seeds, and untouched confirmation examples. Do not reuse opened HH, GSM8K, BoolQ, arithmetic, SNLI, or code-repair cohorts. Generated verifier tasks remain distinct from public-benchmark evidence.
 
-Do not reuse opened GSM8K, BoolQ, or HH confirmation/test cohorts. Generated verifier tasks are mechanism evidence, not public-benchmark performance. The CPU experiment is not expected to reproduce frontier-scale capability; the intended contribution is a clean causal result plus a reliable, replayable evaluation artifact.
+The sections below retain the prior experiment design and results as history. Their old future-tense proposals do not define the active work order.
 
 ## Research question
 
