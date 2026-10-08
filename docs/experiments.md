@@ -2,7 +2,7 @@
 
 ## GRPO group-audit identifiability v1
 
-The frozen [study report](grpo-group-audit-identifiability-v1-report.md) tests whether one audited rollout member per group identifies the clean group-normalized advantage signal. Across 2,000 seeds, uniform item audits and proxy-positive item audits have 49.2% and 50.0% balanced accuracy; group-atomic audits score 100% under the same 200-label budget. The exact item-only observation-law TV is zero, and the independent replay audit passes. This is a two-member synthetic identifiability result, not actual GRPO training or model capability evidence. The [literature scan](research-literature-review-2026-10.md) records close overlap with noisy/group-correlated verifier work and VStress; novelty beyond the scoped construction is unproven.
+The frozen [study report](grpo-group-audit-identifiability-v1-report.md) tests whether one audited rollout member per group identifies the clean group-normalized advantage signal. Across 2,000 seeds, uniform item audits and proxy-positive item audits have 49.2% and 50.0% balanced accuracy; group-atomic audits score 100% under the same 200-label budget. The exact item-only observation-law TV is zero, and a separately implemented same-host replay audit passes; outside reproduction remains outstanding. This is a two-member synthetic identifiability result, not actual GRPO training or model capability evidence. The [literature scan](research-literature-review-2026-10.md) records close overlap with noisy/group-correlated verifier work and VStress; novelty beyond the scoped construction is unproven.
 
 ## HH length-normalized DPO development v1
 
