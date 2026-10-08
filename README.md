@@ -28,6 +28,8 @@ The matched [v12 DPO/SFT comparison](docs/cpu-lm-gsm8k-posttraining-development-
 
 The matched [v13 three-arm study](docs/cpu-lm-gsm8k-posttraining-development-v13-report.md) compared DPO, SFT and SFT-anchored DPO on identical fresh rows. Base exact-match was 2/64; selected DPO and SFT checkpoints each averaged 2/64, while anchored DPO averaged 2.67/64 and missed its preregistered +2/64 advancement threshold. All arms passed offline audits. This is a non-pass development result, not evidence of a confirmed task or capability gain.
 
+On a larger fresh cohort, [v14](docs/cpu-lm-gsm8k-posttraining-development-v14-report.md) again found no passing arm: base scored 4/128, DPO 4.67/128, SFT 5.33/128, and anchored DPO 7.67/128. The anchor narrowly missed its +4/128 gain threshold; its paired interval versus SFT crossed zero. All bundles audited and matched-row/base-generation checks passed. This remains development-only evidence, with no confirmation or capability claim.
+
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
 
 ## Post-training results
