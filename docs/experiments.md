@@ -2,6 +2,8 @@
 
 VARE's experimental focus is post-training signal quality and policy updates under limited compute. A runnable learner is not evidence of learning; every result needs a frozen protocol, retained raw records, and an evaluation split that was not used for optimization.
 
+**HH-RLHF reward-model v1 is a development non-pass.** Frozen-feature reward heads improved held-out pairwise accuracy over a length-only baseline but worsened NLL, so confirmation remained sealed. The [report](hh-reward-model-v1-development-report.md), [protocol](../protocols/cpu_hh_reward_model_v1.lock.json), and [audited bundle](../results/cpu-hh-reward-model-v1/development/run-1/) preserve the result. Any follow-up must fit calibration from training-only out-of-fold predictions and use a newly frozen, still-unread evaluation range.
+
 ## Current no-cost sequence
 
 The v1 and v2 synthetic runs are both retained. v1 remains a diagnostic non-pass: it exceeded its frozen KL ceiling and its old reference-accuracy field mishandled exact ties. v2 is a separate accepted confirmation with corrected tie scoring, a budget informed by a reported training-only sweep, a disjoint seed cohort, complete raw data, and a reconstructing audit. The exploratory sweep was not retained, and the formal development replay followed the confirmation; do not call v2 independently preregistered. The new noise/shift v1 protocol was committed before its run, and its audit reconstructs the held-out data and results. Do not revise any completed protocol after seeing outcomes. See [`synthetic-preference-robustness-v1-report.md`](synthetic-preference-robustness-v1-report.md) for its specific limits. Follow the staged plan in [`post-training-plan.md`](post-training-plan.md):

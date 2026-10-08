@@ -1,0 +1,117 @@
+{
+  "artifact_policy": "Retain source row indices, domain-separated SHA-256 prompt-context hashes, response token counts, per-pair reward differences/probabilities and correctness flags, aggregate metrics, runtime/resource records, source snapshots, model/data hashes, and a SHA-256 manifest. Never write raw prompt or response text, token IDs, hidden-state vectors, model weights, or transcripts to the result bundle. Development artifacts may contain only test indices 0\u2013511; confirmation artifacts may contain only indices 512\u20131023.",
+  "claim_boundary": "This study measures whether a scalar linear reward head over frozen Qwen hidden-state features predicts pairwise human helpfulness preferences on one split of one public dataset. It does not measure assistant quality, user utility, safety, policy improvement, RLHF effectiveness, reasoning, capability gain, generalization to other preference sources, or frontier-scale behavior.",
+  "compute_limits": {
+    "device": "CPU only; CUDA, MPS, and accelerator placement are forbidden",
+    "feature_batch_size": 1,
+    "max_peak_rss_bytes": 6442450944,
+    "max_sequence_tokens": 1024,
+    "max_wall_seconds": 3600,
+    "network": "disabled; HF_HUB_OFFLINE=1, HF_DATASETS_OFFLINE=1, TRANSFORMERS_OFFLINE=1, local_files_only=true",
+    "paid_compute": false,
+    "threads": 4
+  },
+  "dataset": {
+    "context_parser": "For chosen and rejected transcripts, split at the last exact '\\n\\nAssistant:' marker. The prefix through the marker is the prompt context; the remaining final assistant response must be nonempty. Keep a pair only when the two prompt contexts are byte-identical. Do not normalize case or whitespace.",
+    "expected_split_rows": {
+      "test": 2354,
+      "train": 43835
+    },
+    "file_bytes_at_lock": {
+      "helpful-base/test.jsonl.gz": 875191,
+      "helpful-base/train.jsonl.gz": 16200131
+    },
+    "id": "Anthropic/hh-rlhf",
+    "license": "MIT (as stated by the pinned dataset card)",
+    "manual_pilot_train_row_indices_excluded": [
+      0,
+      1,
+      2,
+      17,
+      73,
+      219
+    ],
+    "max_source_row_index_test": 1023,
+    "revision": "09be8c5bbc57cb3887f3a9732ad6aa7ec602a1fa",
+    "selection": {
+      "confirmation_test_indices": [
+        512,
+        1024
+      ],
+      "confirmation_test_pairs": 256,
+      "confirmation_test_rule": "Do not access any confirmation row unless the audited development gate passes. Then scan only official test source indices [512,1024) in ascending order. Apply the same parsing, matching, nonempty-response, pinned fast tokenization (add_special_tokens=true, no chat template, no truncation), full-sequence length, and response-feature-token eligibility checks as development. Rows failing any criterion do not reserve their context. Skip contexts represented by any of the six manually inspected train rows, any selected training cohort, or any selected development row; accept only the first eligible occurrence of each remaining exact context until 256 rows are selected. If fewer than 256 are found in this fixed range, fail without backfilling from other indices.",
+      "deduplicate": "For each exact prompt context, retain the lowest source row index among eligible pairs. A train pair is eligible only after matching nonempty contexts/responses, tokenizing both exact raw transcripts with add_special_tokens=true and no chat template, requiring each full sequence to be at most 1024 tokens, and requiring at least one final-response feature token. Ineligible rows do not reserve their context. First exclude all contexts represented by the six manual pilot train source rows [0,1,2,17,73,219]. Hash each remaining context as SHA-256('vare-hh-helpful-context-v1\\0' || UTF-8(context)); sort by hash bytes, then exact context UTF-8 bytes as tie-break, and exclude the first 24 contexts. Use the next 384 contexts in three disjoint consecutive cohorts of 128: cohort-0 ranks [24,152), cohort-1 [152,280), cohort-2 [280,408). Fail rather than backfill if fewer than 408 contexts remain.",
+      "development_test_indices": [
+        0,
+        512
+      ],
+      "development_test_pairs": 256,
+      "development_test_rule": "Scan only official test source indices [0,512) in ascending order. For each row, first parse both transcripts, require byte-identical prompt contexts and nonempty final responses, tokenize both exact raw transcripts with the pinned fast tokenizer, add_special_tokens=true, no chat template and no truncation, require each full sequence to be at most 1024 tokens, and require at least one response feature token per transcript. Rows failing any criterion are ineligible and do not reserve their context. Among eligible rows, skip contexts represented by any of the six manually inspected train rows or any selected training cohort, then accept only the first eligible occurrence of each remaining exact context until 256 rows are selected. If fewer than 256 are found in this fixed range, fail without reading later indices."
+    },
+    "split": "helpful-base",
+    "test_cache_note": "The datasets library materialized the pinned test Arrow cache before this protocol was committed. The project log records that individual test records were not read or measured before the lock. Evaluation content remains sealed by code until the development run; confirmation indices remain sealed until the development gate passes.",
+    "training_pair_counts": {
+      "eligible_pairs_before_context_deduplication": 43657,
+      "empty_final_response_exclusions": 50,
+      "mismatched_context_exclusions": 128,
+      "raw_train_rows": 43835
+    }
+  },
+  "feature_extractor": {
+    "feature": "Mean of final-layer causal hidden states over final assistant response tokens only; the full conversation context is included in the causal forward pass. The frozen transformer is not updated.",
+    "max_sequence_tokens": 1024,
+    "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "token_boundary": "Tokenize the exact raw chosen/rejected transcript with the pinned fast tokenizer, add_special_tokens=true, and no chat template; request offset mappings. Mean only non-special tokens whose start offset is at or after the final assistant response start. For selection, both full sequences must be at most 1024 tokens and each response must have at least one feature token; an ineligible row does not reserve its context. Never truncate.",
+    "weights_must_already_be_cached": true
+  },
+  "learner": {
+    "baseline": "For each training cohort, fit a one-dimensional Bradley-Terry logistic scorer using chosen-minus-rejected final-response token count. Standardize using that cohort's training pairs only; L2 coefficient 0.1; zero initialization; L-BFGS with the optimizer settings below.",
+    "objective": "Pairwise Bradley-Terry logistic loss: mean(softplus(-(r(chosen)-r(rejected)))) + 0.5 * 0.1 * ||w||^2.",
+    "optimizer": {
+      "history_size": 20,
+      "line_search": "strong_wolfe",
+      "max_iterations": 250,
+      "name": "torch.optim.LBFGS",
+      "tolerance_change": 1e-12,
+      "tolerance_grad": 1e-08
+    },
+    "regularization": 0.1,
+    "reward_head": "A single linear scalar score over standardized frozen response features. Standardization mean and population standard deviation are fit over both responses in that training cohort only; standard deviations below 1e-6 are set to 1. No prompt-only or length feature is appended to the reward head.",
+    "trainable_parameters": "Reward-head weights only; the Qwen transformer and embeddings are frozen.",
+    "training_cohorts": 3,
+    "training_pairs_per_cohort": 128
+  },
+  "metrics": {
+    "accuracy_and_calibration": "For each pair, the observed target is that the dataset's chosen response is preferred (y=1). Pairwise accuracy is 1 when reward margin is positive, 0 when negative, and 0.5 for an exact zero margin. Predicted preference probability is sigmoid(chosen_score-rejected_score). Logistic NLL is mean(softplus(-margin)); NLL difference is reward-head minus length-baseline, so negative favors the reward head. Brier score is mean((p-1)^2). ECE uses ten fixed bins [0,0.1), ..., [0.9,1.0], weighted by bin count, with mean predicted probability and empirical fraction of y=1 in each bin; empty bins contribute zero.",
+    "bootstrap": {
+      "confidence_level": 0.95,
+      "interval_method": "Percentile interval using the 2.5th and 97.5th percentiles of the 10000 bootstrap means with NumPy's linear quantile method.",
+      "resamples": 10000,
+      "resampling_unit": "Evaluation prompt context; compute each prompt's mean paired difference across the three fixed heads and baselines, then resample the 256 prompt indices with replacement and take the mean. Use the same resampled indices for accuracy and NLL. Intervals are conditional on these three fitted heads and this evaluation cohort; they do not include model-training or dataset-sampling uncertainty.",
+      "seed": 20261009
+    },
+    "confirmation_gate": "Apply the identical frozen development_gate rule to the separately indexed confirmation cohort. A pass supports only pairwise helpfulness-preference prediction on this source, model feature extractor, and sample.",
+    "development_gate": "Pass only if mean reward-head pairwise accuracy is greater than 0.5, mean accuracy gain over the paired length-only baseline is at least 0.02, the paired 95% bootstrap interval for that accuracy gain has lower endpoint above 0, mean reward-head logistic NLL is lower than the length-only baseline with the paired 95% interval upper endpoint below 0, and at least two of three reward heads have accuracy above 0.5. Otherwise do not read confirmation records.",
+    "primary": "Paired difference in pairwise accuracy (reward head minus length-only logistic baseline), averaged equally across the three disjoint training cohorts.",
+    "secondary": [
+      "per-cohort pairwise accuracy",
+      "paired logistic NLL and Brier score",
+      "10-bin expected calibration error for the chosen-response target defined above",
+      "paired accuracy and NLL bootstrap intervals versus length baseline",
+      "random 0.5-accuracy / 0.693147-NLL reference",
+      "training loss, optimizer iterations and gradient norm",
+      "wall time, CPU placement, peak RSS, source and model hashes"
+    ]
+  },
+  "phase": "frozen_development_with_sealed_confirmation",
+  "protocol_id": "vare-cpu-hh-reward-model-v1",
+  "purpose": "Test whether a small pairwise reward head trained from human helpfulness preferences predicts held-out pair choices better than a response-length baseline, using only cached model weights and local CPU compute.",
+  "runtime": {
+    "datasets": "4.4.2",
+    "numpy": "1.26.4",
+    "python": "3.9.6",
+    "torch": "2.8.0",
+    "transformers": "4.57.3"
+  }
+}

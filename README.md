@@ -2,11 +2,12 @@
 
 VARE is a CPU-first research project for evaluating post-training signals and policy updates under limited compute. It combines frozen experiment protocols, independently checked outcomes, provenance-aware execution, and retained raw records.
 
-The latest model study is a **development non-pass**. The strongest positive model result is a narrow verifier-labeled answer-choice NLL improvement; accuracy remained near chance. Synthetic policy studies test mechanisms, not language-model capability. No general capability improvement, human-preference alignment, or scale result is claimed.
+The latest model study is a **development non-pass**. A human-preference reward-head study improved pairwise accuracy but worsened NLL, so confirmation stayed sealed. The strongest completed positive model result remains a narrow verifier-labeled answer-choice NLL improvement; accuracy remained near chance. Synthetic policy studies test mechanisms, not language-model capability. No general capability improvement or scale result is claimed.
 
 ## Start here
 
 - [Latest BoolQ study](docs/boolq-posttraining-development-v17-report.md): matched DPO, SFT, and anchored-DPO comparison, including its failed advancement gate.
+- [HH-RLHF reward-model study](docs/hh-reward-model-v1-development-report.md): pairwise accuracy gain with worse NLL and a sealed confirmation split.
 - [BoolQ v17 technical walkthrough](docs/boolq-v17-walkthrough.md): model update, objectives, selection rule, audits, and limits in one path.
 - [GSM8K model study](docs/cpu-lm-gsm8k-dpo-confirmation-v1-report.md): protocol, per-seed outcomes, audit, and limits.
 - [Experiment index](docs/experiments.md): full study sequence and retained reports.
@@ -20,6 +21,7 @@ Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, c
 | Area | Result | What it supports |
 | --- | --- | --- |
 | Latest model study | BoolQ v17: all three matched methods missed the frozen task-gain gate. Best balanced-accuracy gain was 0.11 percentage points against a 5-point threshold. | An audited development comparison. Confirmation rows remain unopened. |
+| Human-preference reward model | HH-RLHF: pairwise accuracy +8.46 points vs length baseline; NLL worsened by 0.1635. | A mixed development result that fails the frozen gate; no confirmation was opened. |
 | Model-level preference update | GSM8K: held-out conditional preference NLL changed by −0.00697 nats/question across three seeds; accuracy moved from 0.4943 to 0.4956. | A narrow forced-choice preference result, not free-form reasoning or capability evidence. |
 | Synthetic preference robustness | Ten-seed clean/noise/shift study passed its declared synthetic NLL/KL rule; label flips worsened NLL on every seed. | Behavior under one known synthetic preference generator. |
 | Evaluation reliability | Three historical source graders distinguish pinned pre-fix and fixed revisions; recovery study matched 24/24 frozen fault cases. | Specific grader and same-host recovery checks, not broad grader soundness or distributed reliability. |

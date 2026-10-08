@@ -76,3 +76,9 @@ The sequence-level confirmation v2 used 128 new held-out questions and remains a
 
 
 v17 tested a tenfold lower rate (1e-5) on fresh BoolQ training ranks 152–279 and validation ranks 768–1023, with matched DPO/SFT/anchored-DPO arms. All arms improved verifier-preference NLL but failed the frozen task-advancement gate; DPO and anchor were identical to base on task predictions, while SFT gained one answer in one seed only. All audits and the paired comparator passed. See the [v17 study record](boolq-posttraining-study.md) and [report](boolq-posttraining-development-v17-report.md). No confirmation rows were opened.
+
+## Human-preference reward-model follow-up
+
+The frozen [HH-RLHF reward-model v1 protocol](../protocols/cpu_hh_reward_model_v1.lock.json) development result was mixed: mean pairwise accuracy was 0.5846 versus 0.5000 for the response-length baseline, but mean NLL worsened from 0.6931 to 0.8566. The combined frozen gate failed, and its confirmation range remained sealed. See the [HH reward-model report](hh-reward-model-v1-development-report.md).
+
+The next candidate is a separately versioned calibration experiment. Fit a positive temperature only from out-of-fold train predictions, apply it unchanged to the full-cohort reward head, then compare ranking and NLL on a new fixed development range and a later confirmation range. Preserve the v1 result as a non-pass and do not use its rows as future confirmation evidence.
