@@ -1,0 +1,12 @@
+{
+  "protocol_id": "grpo_partial_audit_estimator_v1",
+  "attempt": 1,
+  "status": "compute_interrupted_before_outcome_generation",
+  "source_revision": "b3bf145516b9da77b70a4a3aa8d225b2a03f6b6c",
+  "command": "python3 scripts/run_grpo_partial_audit_estimator_v1.py",
+  "observed_cpu": "approximately one CPU core for about 3 minutes 35 seconds",
+  "failure": "The implementation recomputed each Walsh estimate inside every law-row enumeration; it did not complete the exact law grid within a reasonable local CPU interval.",
+  "outcome_file_created": false,
+  "headline_metrics_emitted": false,
+  "disposition": "Interrupted to avoid continued redundant computation. The estimand, law grid, budgets, metrics, seeds, and decision rule remain unchanged. A deterministic precomputed-estimator-table implementation is versioned separately."
+}

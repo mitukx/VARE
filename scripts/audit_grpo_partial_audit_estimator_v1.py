@@ -13,8 +13,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL = ROOT / "protocols/grpo_partial_audit_estimator_v1.json"
-LOCK = ROOT / "protocols/grpo_partial_audit_estimator_v1_implementation_r1.lock.json"
+LOCK = ROOT / "protocols/grpo_partial_audit_estimator_v1_implementation_r2.lock.json"
 ERRATUM = ROOT / "protocols/grpo_partial_audit_estimator_v1_implementation_erratum_1.json"
+ERRATUM_2 = ROOT / "protocols/grpo_partial_audit_estimator_v1_implementation_erratum_2.json"
 RUN = ROOT / "results/grpo-partial-audit-estimator-v1/run-1/exact-enumeration.json"
 OUT = ROOT / "results/grpo-partial-audit-estimator-v1/run-1/independent-audit.json"
 V = tuple(itertools.product((0, 1), repeat=4))
@@ -127,7 +128,21 @@ def sample_estimate(a, y, subset, alphas):
     return out
 
 
-def calculate(dists, alphas, m):
+def precompute_observations(alphas):
+    scores = {(a, y): score(a, y) for a in V for y in V}
+    estimates = {}
+    for m in range(1, 5):
+        estimates[m] = {}
+        for a in V:
+            for y in V:
+                samples = [sample_estimate(a, y, subset, alphas[a]) for subset in SETS[m]]
+                average = scale(sum_pairs(samples), Fraction(1, len(samples)))
+                second = scale(sum_pairs([mul(x, x) for x in samples]), Fraction(1, len(samples)))
+                estimates[m][(a, y)] = {"samples": samples, "mean": average, "second": second}
+    return scores, estimates
+
+
+def calculate(dists, scores, estimates_by_m, m):
     mean_g, mean_h, eg2, eh2, subset_noise, mass_sum = Z, Z, Z, Z, Z, Fraction(0)
     pointwise = True
     for a in V:
@@ -137,15 +152,15 @@ def calculate(dists, alphas, m):
                 continue
             w = pa * py
             mass_sum += w
-            g = score(a, y)
-            estimates = [sample_estimate(a, y, s, alphas) for s in SETS[m]]
-            avg = scale(sum_pairs(estimates), Fraction(1, len(estimates)))
+            g = scores[(a, y)]
+            cell = estimates_by_m[m][(a, y)]
+            avg = cell["mean"]
             pointwise &= m not in (3, 4) or avg == g
             mean_g = add(mean_g, scale(g, w))
             eg2 = add(eg2, scale(mul(g, g), w))
             mean_h = add(mean_h, scale(avg, w))
-            eh2 = add(eh2, scale(scale(sum_pairs([mul(h, h) for h in estimates]), Fraction(1, len(estimates))), w))
-            conditional_var = sub(scale(sum_pairs([mul(sub(h, avg), sub(h, avg)) for h in estimates]), Fraction(1, len(estimates))), Z)
+            eh2 = add(eh2, scale(cell["second"], w))
+            conditional_var = sub(cell["second"], mul(avg, avg))
             subset_noise = add(subset_noise, scale(conditional_var, w))
     var_g = sub(eg2, mul(mean_g, mean_g))
     var_h = sub(eh2, mul(mean_h, mean_h))
@@ -163,22 +178,22 @@ def sum_pairs(xs):
     return total
 
 
-def independent_direction_replay(dists, alphas, m, sign, seeds, repetitions):
+def independent_direction_replay(dists, scores, estimates_by_m, m, sign, seeds, repetitions):
     outcomes, cumulative, running = [], [], 0.0
     for a in V:
         p_a = Fraction(1, 4) ** sum(a) * Fraction(3, 4) ** (4 - sum(a))
         for y, p_y in dists[a].items():
             if p_y == 0:
                 continue
-            for subset in SETS[m]:
+            for subset_index, subset in enumerate(SETS[m]):
                 running += float(p_a * p_y) / len(SETS[m])
-                outcomes.append(val(sample_estimate(a, y, subset, alphas[a])))
+                outcomes.append(val(estimates_by_m[m][(a, y)]["samples"][subset_index]))
                 cumulative.append(running)
     cumulative[-1] = 1.0
     mean = Z
     for a in V:
         for y, probability in dists[a].items():
-            mean = add(mean, scale(score(a, y), Fraction(1, 4) ** sum(a) * Fraction(3, 4) ** (4 - sum(a)) * probability))
+            mean = add(mean, scale(scores[(a, y)], Fraction(1, 4) ** sum(a) * Fraction(3, 4) ** (4 - sum(a)) * probability))
     true_value = val(mean)
     sign_index = 0 if sign == -1 else 1
     counts = {}
@@ -208,10 +223,12 @@ def main() -> None:
               "runner_sha256": hashlib.sha256((ROOT / "scripts/run_grpo_partial_audit_estimator_v1.py").read_bytes()).hexdigest(),
               "auditor_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
     hashes["erratum_sha256"] = hashlib.sha256(ERRATUM.read_bytes()).hexdigest()
+    hashes["erratum_2_sha256"] = hashlib.sha256(ERRATUM_2.read_bytes()).hexdigest()
     if any(lock.get(key) != value for key, value in hashes.items()):
         raise SystemExit("frozen protocol or script hash mismatch")
     record = json.loads(RUN.read_text())
     coefficients = {a: basis(a) for a in V}
+    scores, estimates_by_m = precompute_observations(coefficients)
     observed = {(r["law_id"], r["audit_size"]): r for r in record["laws"]}
     checks = {"frozen_protocol_matches": record["sources"]["protocol_sha256"] == protocol_hash,
               "law_case_count_matches_protocol": len(list(make_laws())) == 390,
@@ -222,7 +239,7 @@ def main() -> None:
               "finite_budget_direction_counts_recompute": True}
     for name, dists in make_laws():
         for m in range(1, 5):
-            c = calculate(dists, coefficients, m)
+            c = calculate(dists, scores, estimates_by_m, m)
             row = observed.get((name, m))
             expected_fixed_mse = add(scale(c["variance_h"], Fraction(m, 12)), mul(c["bias"], c["bias"]))
             checks["all_exact_rows_recompute"] &= (
@@ -240,7 +257,7 @@ def main() -> None:
         law_id = row["law_id"]
         sign = -1 if law_id.endswith("s=-1") else 1
         dists = dict(make_laws())[law_id]
-        counts = independent_direction_replay(dists, coefficients, row["audit_size"], sign,
+        counts = independent_direction_replay(dists, scores, estimates_by_m, row["audit_size"], sign,
                                                [x["seed"] for x in row["by_seed"]],
                                                row["by_seed"][0]["repetitions"])
         checks["finite_budget_direction_counts_recompute"] &= all(

@@ -13,8 +13,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL = ROOT / "protocols/grpo_partial_audit_estimator_v1.json"
-LOCK = ROOT / "protocols/grpo_partial_audit_estimator_v1_implementation_r1.lock.json"
+LOCK = ROOT / "protocols/grpo_partial_audit_estimator_v1_implementation_r2.lock.json"
 ERRATUM = ROOT / "protocols/grpo_partial_audit_estimator_v1_implementation_erratum_1.json"
+ERRATUM_2 = ROOT / "protocols/grpo_partial_audit_estimator_v1_implementation_erratum_2.json"
 OUT = ROOT / "results/grpo-partial-audit-estimator-v1/run-1"
 BITS = tuple(itertools.product((0, 1), repeat=4))
 SUBSETS = {m: tuple(itertools.combinations(range(4), m)) for m in range(1, 5)}
@@ -107,6 +108,20 @@ def partial(a: tuple[int, ...], y: tuple[int, ...], subset: tuple[int, ...], alp
                 for size in range(m + 1) for t in itertools.combinations(subset, size)), ZERO)
 
 
+def precompute_outcomes(alphas):
+    scores = {(a, y): update(a, y) for a in BITS for y in BITS}
+    estimates = {}
+    for m in range(1, 5):
+        estimates[m] = {}
+        for a in BITS:
+            for y in BITS:
+                samples = [partial(a, y, subset, alphas[a]) for subset in SUBSETS[m]]
+                mean = sum(samples, ZERO) / len(samples)
+                second = sum((x * x for x in samples), ZERO) / len(samples)
+                estimates[m][(a, y)] = {"samples": samples, "mean": mean, "second": second}
+    return scores, estimates
+
+
 def action_prob(a: tuple[int, ...]) -> Fraction:
     return Fraction(1, 4) ** sum(a) * Fraction(3, 4) ** (4 - sum(a))
 
@@ -141,7 +156,7 @@ def make_laws():
     return laws
 
 
-def moments(conditional: dict[tuple[int, ...], dict[tuple[int, ...], Fraction]], alphas: dict, m: int):
+def moments(conditional: dict[tuple[int, ...], dict[tuple[int, ...], Fraction]], scores: dict, estimates_by_m: dict, m: int):
     mean_full, second_full = ZERO, ZERO
     mean_est, second_est = ZERO, ZERO
     conditional_noise = ZERO
@@ -149,22 +164,20 @@ def moments(conditional: dict[tuple[int, ...], dict[tuple[int, ...], Fraction]],
     total_mass = Fraction(0)
     for a in BITS:
         pa = action_prob(a)
-        alpha = alphas[a]
         for y, py in conditional[a].items():
             if not py:
                 continue
             mass = pa * py
             total_mass += mass
-            g = update(a, y)
-            estimates = [partial(a, y, s, alpha) for s in SUBSETS[m]]
-            pointwise_ok = pointwise_ok and (m != 3 or sum(estimates, ZERO) / len(estimates) == g)
+            g = scores[(a, y)]
+            cell = estimates_by_m[m][(a, y)]
+            est_mean_given_y, est_second_given_y = cell["mean"], cell["second"]
+            pointwise_ok = pointwise_ok and (m not in (3, 4) or est_mean_given_y == g)
             mean_full += mass * g
             second_full += mass * (g * g)
-            est_mean_given_y = sum(estimates, ZERO) / len(estimates)
-            conditional_noise += mass * sum(((v - est_mean_given_y) * (v - est_mean_given_y) for v in estimates), ZERO) / len(estimates)
-            for value in estimates:
-                mean_est += mass * value / len(estimates)
-                second_est += mass * (value * value) / len(estimates)
+            conditional_noise += mass * (est_second_given_y - est_mean_given_y * est_mean_given_y)
+            mean_est += mass * est_mean_given_y
+            second_est += mass * est_second_given_y
     var_full = second_full - mean_full * mean_full
     var_est = second_est - mean_est * mean_est
     bias = mean_est - mean_full
@@ -182,16 +195,16 @@ def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def outcome_distribution(conditional, alphas, m):
+def outcome_distribution(conditional, estimates_by_m, m):
     values, cumulative, running = [], [], 0.0
     for a in BITS:
         pa = float(action_prob(a))
         for y, py in conditional[a].items():
             if py == 0:
                 continue
-            for subset in SUBSETS[m]:
+            for estimate in estimates_by_m[m][(a, y)]["samples"]:
                 running += pa * float(py) / len(SUBSETS[m])
-                values.append(partial(a, y, subset, alphas[a]).value())
+                values.append(estimate.value())
                 cumulative.append(running)
     cumulative[-1] = 1.0
     return values, cumulative
@@ -206,16 +219,16 @@ def wilson(k: int, n: int) -> list[float]:
     return [max(0.0, center - half), min(1.0, center + half)]
 
 
-def direction_experiment(alphas, law_map):
+def direction_experiment(scores, estimates_by_m, law_map):
     seeds = [20261009, 20261010, 20261011, 20261012, 20261013, 20261014]
     repetitions = 4096
     records = []
     for sign_index, sign in enumerate((-1, 1)):
         law_id = f"parity_a=0001_T=012_eps=1/2_s={sign:+d}"
         conditional = law_map[law_id]
-        true = moments(conditional, alphas, 4)["mean_full"].value()
+        true = moments(conditional, scores, estimates_by_m, 4)["mean_full"].value()
         for arm_index, m in enumerate(range(1, 5), start=1):
-            values, cdf = outcome_distribution(conditional, alphas, m)
+            values, cdf = outcome_distribution(conditional, estimates_by_m, m)
             n_groups = 12 // m
             by_seed = []
             for seed in seeds:
@@ -257,16 +270,18 @@ def main() -> None:
         "runner_sha256": sha(Path(__file__)),
         "auditor_sha256": sha(ROOT / "scripts/audit_grpo_partial_audit_estimator_v1.py"),
         "erratum_sha256": sha(ERRATUM),
+        "erratum_2_sha256": sha(ERRATUM_2),
     }
     if any(lock.get(key) != value for key, value in expected.items()):
         raise SystemExit("frozen protocol or script hash differs from protocol lock")
     alphas = {a: coeffs(a) for a in BITS}
+    scores, estimates_by_m = precompute_outcomes(alphas)
     rows = []
     exact_all = True
     law_map = dict(make_laws())
     for name, conditional in law_map.items():
         for audit_size in range(1, 5):
-            m = moments(conditional, alphas, audit_size)
+            m = moments(conditional, scores, estimates_by_m, audit_size)
             exact_all &= m["mass"] == 1
             if audit_size in (3, 4):
                 exact_all &= m["pointwise_ok"] and m["mean_full"] == m["mean_est"]
@@ -344,7 +359,7 @@ def main() -> None:
             "minimax_absolute_bias_lower_bound_decimal": lower.value(),
             "bound_reason": "The two worlds have the same observation law for every audit design using at most two labels; for any common estimator, the larger absolute bias is at least half the target-mean gap.",
         },
-        "finite_budget_direction_check": direction_experiment(alphas, law_map),
+        "finite_budget_direction_check": direction_experiment(scores, estimates_by_m, law_map),
         "laws": rows,
         "sources": {"protocol_sha256": sha(PROTOCOL), "runner_sha256": sha(Path(__file__))},
         "interpretation_limit": protocol["claim_limits"],

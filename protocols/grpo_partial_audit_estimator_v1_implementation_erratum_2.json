@@ -1,0 +1,9 @@
+{
+  "protocol_id": "grpo_partial_audit_estimator_v1",
+  "erratum_id": "implementation_erratum_2",
+  "status": "frozen_before_valid_outcome_generation",
+  "original_protocol_sha256": "51029da94290d0f085b8c9437347f9a755d6b8ff9e241477a086633001def2e3",
+  "preceding_erratum_sha256": "788c3fd490d8a98370db4a6265c6c2ac1f64c62320c5db5214c4b7b6fb413497",
+  "correction": "Precompute exact scores and, for each action/reward/audit-size cell, the subset estimator values, conditional mean, and conditional second moment once; reuse them across frozen reward laws.",
+  "scope": "This is a deterministic computation reuse optimization. It leaves the estimand, frozen laws, audit sizes, label budget, outcomes, and decision rule unchanged. The interrupted attempt produced no result bundle."
+}
