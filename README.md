@@ -26,6 +26,8 @@ Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, c
 
 Start with the [ten-minute walkthrough](docs/walkthrough.md), [technical report](docs/scheduler-report.md), and [execution contract](docs/execution.md). Inspect retained evidence offline:
 
+The [current evidence gaps](docs/current-gaps.md) rank the next CPU-feasible work and state the current claim limits.
+
 ```bash
 python3 scripts/audit_scheduler.py results/cpu-scheduler-v1
 python3 -m unittest discover -s tests -p 'test_runner.py' -v
