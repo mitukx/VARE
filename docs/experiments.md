@@ -24,6 +24,8 @@ The v1 and v2 synthetic runs are both retained. v1 remains a diagnostic non-pass
 16. Test a larger fresh development set and increased adapter rank. Do not call a single updated answer a capability gain; confirmation requires a distinct lock and held-out rows.
 17. **Development v9 non-pass:** rank-8 DPO lowered verifier-preference NLL at epoch 2 but exact-match fell from 6/128 to 4.67/128; epoch 4 exceeded the KL ceiling. See the [report](cpu-lm-gsm8k-sequence-dpo-development-v9-report.md) and [audited bundle](../results/cpu-lm-gsm8k-sequence-dpo-development-v9/run-1/).
 18. Compare eligible checkpoints by verifier-checked exact match on a fresh development set under the frozen KL cap. Any passing checkpoint still needs a separate untouched confirmation cohort.
+19. **Development v10 non-pass:** per-checkpoint exact-match selection chose epoch 2, but mean updated accuracy was only 1.33/64 and base was 0/64; see the [report](cpu-lm-gsm8k-sequence-dpo-development-v10-report.md) and [audited bundle](../results/cpu-lm-gsm8k-sequence-dpo-development-v10/run-1/).
+20. Repeat the checkpoint-selection procedure on a larger fresh validation cohort with a lower learning rate and rank-16 adapter. A nonzero baseline and preregistered gain remain required.
 
 The synthetic stages test objective correctness and whether the harness can detect a known mechanism. The narrow forced-choice GSM8K result is evidence of a small conditional choice-probability shift. The sequence-level development is a verifier-preference validation signal only; its free-form accuracy did not move. No evidence here establishes general free-form language-model quality, reasoning, truthful behavior, broad preference alignment, or transfer to real users.
 

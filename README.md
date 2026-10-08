@@ -20,6 +20,8 @@ The audited numeric-only [v8 run](docs/cpu-lm-gsm8k-sequence-dpo-development-v8-
 
 The larger rank-8 [v9 run](docs/cpu-lm-gsm8k-sequence-dpo-development-v9-report.md) had 6/128 base exact matches and a mean 4.67/128 after update. Preference NLL improved at epoch 2 while exact-match fell; epoch 4 also breached the KL cap. It is an audited non-pass, and no capability gain is claimed.
 
+In [v10](docs/cpu-lm-gsm8k-sequence-dpo-development-v10-report.md), exact-match was evaluated at every NLL/KL-eligible checkpoint. Epoch 2 was selected at 2/64, 0/64, and 2/64 across seeds, but base was 0/64 and the mean gain gate failed. The preference fit improved; task accuracy stayed very low and seed-sensitive.
+
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
 
 ## Post-training results

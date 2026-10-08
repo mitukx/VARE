@@ -125,6 +125,8 @@ Development v8 used 32/32 fresh rows with numeric-only verifier-chosen completio
 
 Development v9 expanded to 64/128 fresh rows and a rank-8 adapter. The frozen NLL/KL rule selected epoch 2: preference NLL 0.68039, KL 0.20290, but mean exact-match fell from 6/128 to 4.67/128. Epoch 4 exceeded the KL ceiling. The audit passed and all three generation parity samples matched Hugging Face. See the [report](cpu-lm-gsm8k-sequence-dpo-development-v9-report.md) and [bundle](../results/cpu-lm-gsm8k-sequence-dpo-development-v9/run-1/).
 
+Development v10 evaluated each NLL/KL-eligible checkpoint for exact match on fresh 64/64 rows. Epoch 2 was selected with per-seed exact-match 2/64, 0/64, and 2/64. Base exact-match was 0/64, below the frozen 2/64 minimum, and mean improvement was below 1/32. Its [audit](../scripts/audit_cpu_lm_gsm8k_sequence_dpo_development.py) passed and reconstructed selection, decision and generation parity. See the [report](cpu-lm-gsm8k-sequence-dpo-development-v10-report.md) and [bundle](../results/cpu-lm-gsm8k-sequence-dpo-development-v10/run-1/).
+
 ## Durable local evaluation recovery
 
 The [recovery report](recovery-report.md) retains 24/24 matched fault cases across three replications, 117 synthetic jobs/126 attempts and four historical jobs recovered after one lost claimant with calibrated outcomes preserved. The [frozen protocol](../protocols/cpu_recovery_v1.json) precedes measurement. [Raw exports](../results/cpu-recovery-v1/) contain current states, transactional event chains, protected snapshots and attempt payloads. `scripts/audit_recovery.py` reconstructs acceptance offline. These are local coordination/freshness results; execution can repeat, and no multi-host, power-loss, hostile-process or model-learning claim is made.
