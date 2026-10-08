@@ -7,7 +7,10 @@ import tempfile
 from pathlib import Path
 from unittest.mock import patch
 
-import torch
+try:
+    import torch
+except ModuleNotFoundError:
+    torch = None
 
 from scripts.run_cpu_hh_reward_model_v2 import fit_temperature
 from scripts.run_cpu_hh_reward_model import iter_rows
@@ -21,6 +24,9 @@ def protocol():
 
 
 def test_temperature_is_positive_bounded_and_train_fit_reduces_nll():
+    if torch is None:
+        import pytest
+        pytest.skip("PyTorch is an optional local-only dependency for HH model-fit checks")
     margins = torch.tensor([1.2, -0.4, 0.8, -0.2, 0.5, 0.1, -0.3, 0.7])
     alpha, diagnostics = fit_temperature(margins, protocol(), torch)
     assert math.isfinite(alpha)
@@ -30,6 +36,9 @@ def test_temperature_is_positive_bounded_and_train_fit_reduces_nll():
 
 
 def test_perfect_oof_ranking_cannot_drive_temperature_above_frozen_cap():
+    if torch is None:
+        import pytest
+        pytest.skip("PyTorch is an optional local-only dependency for HH model-fit checks")
     margins = torch.tensor([0.5, 1.0, 1.5, 2.0, 3.0, 4.0])
     alpha, diagnostics = fit_temperature(margins, protocol(), torch)
     assert 0 < alpha < 10
