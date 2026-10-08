@@ -32,6 +32,8 @@ On a larger fresh cohort, [v14](docs/cpu-lm-gsm8k-posttraining-development-v14-r
 
 The next locked probe directly compares SFT and anchored DPO on 64 fresh training and 256 fresh validation questions. Its advancement gate is base >=8/256 and mean gain >=8/256, with seed consistency; even a development pass will require independent confirmation.
 
+That [v15 direct replication](docs/cpu-lm-gsm8k-posttraining-development-v15-report.md) did not pass: base and anchored DPO both scored 7/256, while SFT scored 6.33/256. Base was below the frozen 8/256 floor; audits and paired-data checks passed. The repeated GSM8K setup has not shown a stable free-form improvement, and no confirmation was opened.
+
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
 
 ## Post-training results
