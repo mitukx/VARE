@@ -117,6 +117,10 @@ Sequence-DPO development v4 used full verifier rationales against base-model rol
 
 Development v5 increased generation to 256 tokens and froze a minimum baseline and gain gate on fresh 8/8 rows. The run exceeded its 6-GiB RSS ceiling (observed peak 7.30 GB) after 291.56 seconds and is retained as incomplete at [run 1](../results/cpu-lm-gsm8k-sequence-dpo-development-v5/run-1/). It has no outcome metric and its rows are consumed. A smaller fresh development protocol is required.
 
+Development v6 used another fresh 8/8 cohort and a 192-token generation budget. It stayed below the 6-GiB ceiling and passed its audit, but the base and three updates all scored 0/8 exact-match; all three parity samples were truncated before the requested final-answer marker. Mean verifier-preference NLL improved from 0.69315 to 0.67510 at KL 0.0000445, but the exact-match advancement gate failed. See its [report](cpu-lm-gsm8k-sequence-dpo-development-v6-report.md) and [bundle](../results/cpu-lm-gsm8k-sequence-dpo-development-v6/run-1/).
+
+Development v7 is a setup failure: generation batch size four violated the decoder's single-prompt padding precondition and stopped before model inference. Its hash-ranked rows are retired. See the [failure note](cpu-lm-gsm8k-sequence-dpo-development-v7-setup-failure.md) and [bundle](../results/cpu-lm-gsm8k-sequence-dpo-development-v7/run-1/).
+
 ## Durable local evaluation recovery
 
 The [recovery report](recovery-report.md) retains 24/24 matched fault cases across three replications, 117 synthetic jobs/126 attempts and four historical jobs recovered after one lost claimant with calibrated outcomes preserved. The [frozen protocol](../protocols/cpu_recovery_v1.json) precedes measurement. [Raw exports](../results/cpu-recovery-v1/) contain current states, transactional event chains, protected snapshots and attempt payloads. `scripts/audit_recovery.py` reconstructs acceptance offline. These are local coordination/freshness results; execution can repeat, and no multi-host, power-loss, hostile-process or model-learning claim is made.

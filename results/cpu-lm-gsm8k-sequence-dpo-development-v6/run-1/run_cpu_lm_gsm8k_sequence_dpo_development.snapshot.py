@@ -338,9 +338,7 @@ def run(output: Path, spec_path: Path = SPEC_PATH, lock_path: Path = LOCK_PATH):
             raise ValueError(f"cached train fingerprint mismatch: {ds._fingerprint}")
         train_range = spec["dataset"].get("development_training_rank_range", [608, 672])
         val_range = spec["dataset"].get("development_validation_rank_range", [672, 736])
-        preference_construction = spec["dataset"].get("preference_construction", "synthetic_numeric")
-        base_rollout_mode = preference_construction.startswith("base_rollout_")
-        row_builder = make_rationale_rows if preference_construction == "base_rollout_verifier_rationale" else make_sequence_rows
+        row_builder = make_rationale_rows if spec["dataset"].get("preference_construction") == "base_rollout_verifier_rationale" else make_sequence_rows
         train_rows = row_builder(ds, "development_train", *train_range)
         val_rows = row_builder(ds, "development_validation", *val_range)
         if {r["question_sha256"] for r in train_rows} & {r["question_sha256"] for r in val_rows}:
@@ -358,7 +356,7 @@ def run(output: Path, spec_path: Path = SPEC_PATH, lock_path: Path = LOCK_PATH):
             parameter.requires_grad_(False)
             if parameter.device.type != "cpu":
                 raise RuntimeError("non-CPU parameter detected")
-        if base_rollout_mode:
+        if spec["dataset"].get("preference_construction") == "base_rollout_verifier_rationale":
             train_rollouts = generate_greedy(train_rows, tokenizer, model, spec,
                                              deadline=started + spec["compute_limits"]["max_wall_seconds"])
             base_generations = generate_greedy(val_rows, tokenizer, model, spec,

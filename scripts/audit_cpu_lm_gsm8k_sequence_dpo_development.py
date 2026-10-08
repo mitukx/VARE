@@ -74,11 +74,13 @@ def audit(output: Path, check_generation: bool = True):
         raise ValueError("cached GSM8K train data differs from the lock")
     train_range = spec["dataset"].get("development_training_rank_range", [608, 672])
     val_range = spec["dataset"].get("development_validation_rank_range", [672, 736])
-    rationale_mode = spec["dataset"].get("preference_construction") == "base_rollout_verifier_rationale"
+    preference_construction = spec["dataset"].get("preference_construction", "synthetic_numeric")
+    rationale_mode = preference_construction == "base_rollout_verifier_rationale"
+    base_rollout_mode = preference_construction.startswith("base_rollout_")
     builder = make_rationale_rows if rationale_mode else make_sequence_rows
     expected_train = builder(dataset, "development_train", *train_range)
     expected_val = builder(dataset, "development_validation", *val_range)
-    if rationale_mode:
+    if base_rollout_mode:
         expected_train = attach_base_rollout_rejections(expected_train, result["base_training_generation"])
         expected_val = attach_base_rollout_rejections(expected_val, result["base_validation_generation"])
     for actual, expected in zip(train, expected_train):

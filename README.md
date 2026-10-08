@@ -12,6 +12,10 @@ A lower-rate development update then met its KL cap but lowered mean exact-match
 
 The rationale-versus-base-rollout [v4 development run](docs/cpu-lm-gsm8k-sequence-dpo-development-v4-report.md) reduced verifier-preference NLL, but exact-match was 0/16 for both base and all updated seeds. Its candidate gate was therefore non-informative and no confirmation was opened. The next attempt hit the frozen 6-GiB memory ceiling and is retained as incomplete. No free-form improvement has been demonstrated.
 
+The reduced [v6 run](docs/cpu-lm-gsm8k-sequence-dpo-development-v6-report.md) stayed under the memory ceiling and passed its audit, but generation was truncated before final answers and exact-match remained 0/8 for the base and every update. The numeric-only preference setup is the next fresh development probe; the repository still does not demonstrate free-form improvement.
+
+One numeric-only setup attempt stopped before inference because its batch size violated the decoder's unpadded-input requirement. It is retained as a [setup failure](docs/cpu-lm-gsm8k-sequence-dpo-development-v7-setup-failure.md); the follow-up uses single-prompt generation on fresh rows.
+
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
 
 ## Post-training results

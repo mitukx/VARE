@@ -87,7 +87,7 @@ def attach_base_rollout_rejections(rows: list[dict[str, Any]], generations: list
         generated = generation["generated_text"].strip()
         if not generated:
             raise ValueError("base rollout is empty")
-        expected = Decimal(row.get("expected_number", row["verifier_answer"]))
+        expected = Decimal(row["expected_number"])
         parsed = parse_generated_number(generated)
         if parsed == expected:
             replacement = expected + (Decimal(1) if int(row["question_sha256"][:2], 16) % 2 == 0 else Decimal(-1))

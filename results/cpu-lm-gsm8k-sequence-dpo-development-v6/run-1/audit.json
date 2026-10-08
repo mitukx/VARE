@@ -1,0 +1,41 @@
+{
+  "audit": "passed",
+  "base_exact_match": 0.0,
+  "decision_recomputed": "sequence_dpo_development_non_pass",
+  "generation_parity_examples": [
+    {
+      "dataset_index": 5255,
+      "exact_match": false,
+      "generated_text": "To solve this math word problem, we need to determine how many slices each person ate based on the information given about the total number of slices and the remaining slices after some were eaten.\n\nLet's break down the problem step-by-step:\n\n1. **Total Slices**: There are two pizzas with 16 slices each.\n   \\[\n   \\text{Total slices} = 2 \\times 16 = 32 \\text{ slices}\n   \\]\n\n2. **Remaining Slices**: After eating, there are 1 slice of pepperoni left and 7 slices of cheese left.\n   \\[\n   \\text{Remaining slices} = 1 + 7 = 8 \\text{ slices}\n   \\]\n\n3. **Equal Distribution**: The remaining 8 slices are divided equally among Phoebe and her three friends (including herself).\n   \\[\n   \\text{Slices per person} = \\frac{8",
+      "huggingface_parity": true,
+      "parsed_number": "8"
+    },
+    {
+      "dataset_index": 5179,
+      "exact_match": false,
+      "generated_text": "To solve this problem, we need to follow these steps:\n\n1. Calculate the total weight of the water in the tank when it is full.\n2. Determine the amount of water that has been added due to the rainstorm.\n3. Calculate the new total weight of the water in the tank after the rainstorm.\n4. Add the weight of the water to its original weight to find the final total weight.\n\nLet's start with step 1:\n- The tank holds 200 gallons of water.\n- Each gallon weighs 8 pounds.\n- Therefore, the total weight of the water in the tank when it is full is \\(200 \\text{ gallons} \\times 8 \\text{ pounds/gallon} = 1600 \\text{ pounds}\\).\n\nNext, for step 2:\n- The tank is filled to 80% of its capacity.\n- So, the amount of water added due to the",
+      "huggingface_parity": true,
+      "parsed_number": null
+    },
+    {
+      "dataset_index": 1431,
+      "exact_match": false,
+      "generated_text": "To solve this problem, we need to determine Tony's driving speed and then use that speed to calculate the time it takes for him to travel the second distance.\n\nFirst, let's find Tony's driving speed:\n- Distance between the two towns: 120 miles\n- Time taken: 3 hours\n\nSpeed = Distance / Time\n\\[ \\text{Speed} = \\frac{\\text{Distance}}{\\text{Time}} = \\frac{120 \\text{ miles}}{3 \\text{ hours}} = 40 \\text{ miles per hour} \\]\n\nNow, we know Tony's speed is 40 miles per hour. Next, we'll calculate the time it takes to travel 200 miles:\n\n\\[ \\text{Time} = \\frac{\\text{Distance}}{\\text{Speed}} = \\frac{200 \\text{ miles}}{40 \\text{ miles per hour",
+      "huggingface_parity": true,
+      "parsed_number": null
+    }
+  ],
+  "nonzero_adapter_checkpoints_verified": 9,
+  "protocol_id": "vare-cpu-lm-gsm8k-sequence-dpo-development-v6",
+  "protocol_sha256": "d841eb5184b5a75ff51a35e244b52f0b5875117c982b6aa3c1b9c29d30fe48e1",
+  "runner_snapshot_sha256": "58405acdf424a44add29fb91dd3d3f9f5650f5399761d983b7956cd68d0df9a7",
+  "selected_epoch_recomputed": 2,
+  "source_manifest_sha256": "d30a85a51265af47318f478e89f1edbd6c65135f6ebe3f6e725f96af61bc8e2c",
+  "train_examples": 8,
+  "updated_exact_match_by_seed": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "validation_examples": 8
+}
