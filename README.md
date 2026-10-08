@@ -22,6 +22,8 @@ The larger rank-8 [v9 run](docs/cpu-lm-gsm8k-sequence-dpo-development-v9-report.
 
 In [v10](docs/cpu-lm-gsm8k-sequence-dpo-development-v10-report.md), exact-match was evaluated at every NLL/KL-eligible checkpoint. Epoch 2 was selected at 2/64, 0/64, and 2/64 across seeds, but base was 0/64 and the mean gain gate failed. The preference fit improved; task accuracy stayed very low and seed-sensitive.
 
+In [v11](docs/cpu-lm-gsm8k-sequence-dpo-development-v11-report.md), epoch 1 was selected on a larger validation cohort; mean Exact Match declined from 9/128 to 8.67/128. Preference NLL decreased, but free-form task success did not improve. The next study adds a matched SFT baseline to measure whether DPO contributes beyond imitation of verified answers.
+
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
 
 ## Post-training results

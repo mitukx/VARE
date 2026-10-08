@@ -20,8 +20,8 @@ from gsm8k_sequence_task import (attach_base_rollout_rejections, make_rationale_
                                  make_sequence_rows, parse_generated_number)
 
 ROOT = Path(__file__).resolve().parents[1]
-SPEC_PATH = ROOT / "protocols/cpu_lm_gsm8k_sequence_dpo_development_v12_dpo.json"
-LOCK_PATH = ROOT / "protocols/cpu_lm_gsm8k_sequence_dpo_development_v12_dpo.lock.json"
+SPEC_PATH = ROOT / "protocols/cpu_lm_gsm8k_sequence_dpo_development_v11.json"
+LOCK_PATH = ROOT / "protocols/cpu_lm_gsm8k_sequence_dpo_development_v11.lock.json"
 MODEL_DIR = Path.home() / ".cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775"
 DATA_DIR = Path.home() / ".cache/huggingface/datasets/openai___gsm8k/main/0.0.0/740312add88f781978c0658806c59bc2815b9866"
 
@@ -178,9 +178,6 @@ def train_to_checkpoints(train_pairs, val_pairs, model, spec, seed):
     import torch
     import torch.nn.functional as F
     learner = spec["learner"]
-    method = learner.get("method", "dpo")
-    if method not in ("dpo", "sft"):
-        raise ValueError("learner method must be dpo or sft")
     compute = spec["compute_limits"]
     hidden_size = train_pairs[0][0]["features"].shape[-1]
     rank = learner["adapter_rank"]
@@ -206,24 +203,19 @@ def train_to_checkpoints(train_pairs, val_pairs, model, spec, seed):
         for start in range(0, len(examples), compute["pair_microbatch_size"]):
             selected = examples[start:start + compute["pair_microbatch_size"]]
             chunk_pairs = [train_pairs[index] for index in selected]
-            candidates = ([pair[0] for pair in chunk_pairs] if method == "sft"
-                          else [candidate for pair in chunk_pairs for candidate in pair])
+            candidates = [candidate for pair in chunk_pairs for candidate in pair]
             optimizer.zero_grad(set_to_none=True)
-            seq_logps, base_logits, _, chosen_logps, offsets = score_candidate_batch(candidates, model, adapter_a, adapter_b)
-            if method == "sft":
-                token_count = sum(len(pair[0]["targets"]) for pair in chunk_pairs)
-                loss = -chosen_logps.sum() / token_count
-            else:
-                ref_logp = torch.log_softmax(base_logits.detach(), dim=-1)
-                pair_losses = []
-                for pair_index, pair in enumerate(chunk_pairs):
-                    left = 2 * pair_index
-                    ref_chosen = ref_logp[offsets[left]:offsets[left + 1]].gather(1, pair[0]["targets"][:, None]).sum()
-                    ref_rejected = ref_logp[offsets[left + 1]:offsets[left + 2]].gather(1, pair[1]["targets"][:, None]).sum()
-                    policy_margin = seq_logps[left] - seq_logps[left + 1]
-                    relative = policy_margin - (ref_chosen - ref_rejected)
-                    pair_losses.append(F.softplus(-beta * relative))
-                loss = torch.stack(pair_losses).mean()
+            seq_logps, base_logits, _, _, offsets = score_candidate_batch(candidates, model, adapter_a, adapter_b)
+            ref_logp = torch.log_softmax(base_logits.detach(), dim=-1)
+            pair_losses = []
+            for pair_index, pair in enumerate(chunk_pairs):
+                left = 2 * pair_index
+                ref_chosen = ref_logp[offsets[left]:offsets[left + 1]].gather(1, pair[0]["targets"][:, None]).sum()
+                ref_rejected = ref_logp[offsets[left + 1]:offsets[left + 2]].gather(1, pair[1]["targets"][:, None]).sum()
+                policy_margin = seq_logps[left] - seq_logps[left + 1]
+                relative = policy_margin - (ref_chosen - ref_rejected)
+                pair_losses.append(F.softplus(-beta * relative))
+            loss = torch.stack(pair_losses).mean()
             loss.backward()
             if not torch.isfinite(loss) or any(p.grad is None or not torch.isfinite(p.grad).all() for p in (adapter_a, adapter_b)):
                 raise FloatingPointError("non-finite sequence-DPO loss or gradient")
@@ -486,7 +478,6 @@ def run(output: Path, spec_path: Path = SPEC_PATH, lock_path: Path = LOCK_PATH):
             "dataset_train_sha256": sha256_file(DATA_DIR / "gsm8k-train.arrow"), "dataset_fingerprint": ds._fingerprint,
             "runtime": runtime, "platform": platform.platform(), "device": "cpu", "paid_compute": False,
             "network_disabled": True, "base_train_preference": train_reference,
-            "training_method": spec["learner"].get("method", "dpo"),
             "base_validation_preference": base_val,
             "base_validation_generation": base_generations, "base_validation_exact_match_accuracy": base_accuracy,
             "base_training_generation": train_rollouts,
@@ -516,7 +507,7 @@ def run(output: Path, spec_path: Path = SPEC_PATH, lock_path: Path = LOCK_PATH):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=ROOT / "results/cpu-lm-gsm8k-sequence-dpo-development-v12-dpo/run-1")
+    parser.add_argument("--output", type=Path, default=ROOT / "results/cpu-lm-gsm8k-sequence-dpo-development-v11/run-1")
     parser.add_argument("--protocol", type=Path, default=SPEC_PATH)
     parser.add_argument("--lock", type=Path, default=LOCK_PATH)
     args = parser.parse_args()

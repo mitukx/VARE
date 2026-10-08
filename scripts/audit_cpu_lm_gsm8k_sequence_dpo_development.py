@@ -53,6 +53,8 @@ def audit(output: Path, check_generation: bool = True):
     result = data["summary"]
     if result["protocol_sha256"] != protocol_hash:
         raise ValueError("result protocol hash differs from the locked protocol")
+    if result.get("training_method", "dpo") != spec["learner"].get("method", "dpo"):
+        raise ValueError("result training method differs from the locked protocol")
     runner_snapshot = output / "run_cpu_lm_gsm8k_sequence_dpo_development.snapshot.py"
     helper_snapshot = output / "gsm8k_sequence_task.snapshot.py"
     if sha256_file(runner_snapshot) != result["runner_sha256"]:
