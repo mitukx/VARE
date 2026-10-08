@@ -16,4 +16,4 @@ At pre-fix commit `6ad75dba16dc8dc34ede85790ec86820591f235a`, a candidate report
 
 ## Limits
 
-This verifies identity and coverage declarations only. It cannot prove that an evaluation backend actually loaded the named policy, used held-out data, or measured a meaningful capability. One constructed contract test gives no estimate of production error prevalence and no learning evidence. Full suite CI is pending.
+This verifies identity and coverage declarations only. It cannot prove that an evaluation backend actually loaded the named policy, used held-out data, or measured a meaningful capability. One constructed contract test gives no estimate of production error prevalence and no learning evidence. GitHub Actions run [37857916437](https://github.com/mitukx/VARE/actions/runs/37857916437) passed 187 tests with 12 skipped, plus both exact GRPO audit recomputations and the demo; see the [CI record](../results/promotion-evidence-identity-v1/ci.json).

@@ -2,7 +2,7 @@
 
 ## Promotion evidence identity
 
-The frozen [CPU protocol](../protocols/promotion_evidence_identity_v1.lock.json) reproduced an accepted candidate missing an incumbent slice and an engine promotion using an evaluation report labeled with the wrong policy ID. The gate now fails closed on slice-key mismatch; the engine verifies report identity against each requested policy. Both invalid cases are rejected and a correctly labeled, complete control still promotes. See the [report](promotion-evidence-identity-report.md) and [baseline/fixed records](../results/promotion-evidence-identity-v1/). This is E0 contract evidence only; post-backend identity and evaluation-set independence are not verified. CI is pending.
+The frozen [CPU protocol](../protocols/promotion_evidence_identity_v1.lock.json) reproduced an accepted candidate missing an incumbent slice and an engine promotion using an evaluation report labeled with the wrong policy ID. The gate now fails closed on slice-key mismatch; the engine verifies report identity against each requested policy. Both invalid cases are rejected and a correctly labeled, complete control still promotes. GitHub Actions passed 187 tests with 12 skipped. See the [report](promotion-evidence-identity-report.md) and [baseline/fixed/CI records](../results/promotion-evidence-identity-v1/). This is E0 contract evidence only; post-backend identity and evaluation-set independence are not verified.
 
 ## Verifier reward contract
 
