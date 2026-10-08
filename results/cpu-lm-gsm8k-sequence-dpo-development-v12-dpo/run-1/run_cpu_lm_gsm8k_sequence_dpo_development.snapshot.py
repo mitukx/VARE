@@ -20,8 +20,8 @@ from gsm8k_sequence_task import (attach_base_rollout_rejections, make_rationale_
                                  make_sequence_rows, parse_generated_number)
 
 ROOT = Path(__file__).resolve().parents[1]
-SPEC_PATH = ROOT / "protocols/cpu_lm_gsm8k_sequence_dpo_development_v13_dpo.json"
-LOCK_PATH = ROOT / "protocols/cpu_lm_gsm8k_sequence_dpo_development_v13_dpo.lock.json"
+SPEC_PATH = ROOT / "protocols/cpu_lm_gsm8k_sequence_dpo_development_v12_dpo.json"
+LOCK_PATH = ROOT / "protocols/cpu_lm_gsm8k_sequence_dpo_development_v12_dpo.lock.json"
 MODEL_DIR = Path.home() / ".cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775"
 DATA_DIR = Path.home() / ".cache/huggingface/datasets/openai___gsm8k/main/0.0.0/740312add88f781978c0658806c59bc2815b9866"
 
@@ -179,8 +179,8 @@ def train_to_checkpoints(train_pairs, val_pairs, model, spec, seed):
     import torch.nn.functional as F
     learner = spec["learner"]
     method = learner.get("method", "dpo")
-    if method not in ("dpo", "sft", "dpo_sft_anchor"):
-        raise ValueError("learner method must be dpo, sft, or dpo_sft_anchor")
+    if method not in ("dpo", "sft"):
+        raise ValueError("learner method must be dpo or sft")
     compute = spec["compute_limits"]
     hidden_size = train_pairs[0][0]["features"].shape[-1]
     rank = learner["adapter_rank"]
@@ -223,14 +223,7 @@ def train_to_checkpoints(train_pairs, val_pairs, model, spec, seed):
                     policy_margin = seq_logps[left] - seq_logps[left + 1]
                     relative = policy_margin - (ref_chosen - ref_rejected)
                     pair_losses.append(F.softplus(-beta * relative))
-                dpo_loss = torch.stack(pair_losses).mean()
-                if method == "dpo_sft_anchor":
-                    chosen_nll = sum(-chosen_logps[offsets[2 * pair_index]:offsets[2 * pair_index + 1]].sum()
-                                     for pair_index in range(len(chunk_pairs)))
-                    chosen_tokens = sum(len(pair[0]["targets"]) for pair in chunk_pairs)
-                    loss = dpo_loss + learner["sft_anchor_weight"] * chosen_nll / chosen_tokens
-                else:
-                    loss = dpo_loss
+                loss = torch.stack(pair_losses).mean()
             loss.backward()
             if not torch.isfinite(loss) or any(p.grad is None or not torch.isfinite(p.grad).all() for p in (adapter_a, adapter_b)):
                 raise FloatingPointError("non-finite sequence-DPO loss or gradient")
@@ -523,7 +516,7 @@ def run(output: Path, spec_path: Path = SPEC_PATH, lock_path: Path = LOCK_PATH):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=ROOT / "results/cpu-lm-gsm8k-sequence-dpo-development-v13-dpo/run-1")
+    parser.add_argument("--output", type=Path, default=ROOT / "results/cpu-lm-gsm8k-sequence-dpo-development-v12-dpo/run-1")
     parser.add_argument("--protocol", type=Path, default=SPEC_PATH)
     parser.add_argument("--lock", type=Path, default=LOCK_PATH)
     args = parser.parse_args()

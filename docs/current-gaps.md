@@ -19,6 +19,7 @@ This assessment ranks the technical work needed to study post-training signals a
 - Larger rank-8 v9 lowered verifier-preference NLL at epoch 2 but exact-match fell from 6/128 to 4.67/128; epoch 4 exceeded KL. The audited [report](cpu-lm-gsm8k-sequence-dpo-development-v9-report.md) retains the non-pass.
 - v10 evaluated every eligible checkpoint by exact-match; epoch 2 reached 2/64, 0/64, and 2/64 across seeds, but base was 0/64 and the advancement gate failed. Preference gains do not yet show task success. See the [report](cpu-lm-gsm8k-sequence-dpo-development-v10-report.md).
 - v11's exact-match-selected rank-16 update averaged 8.67/128 versus base 9/128. Preference NLL declined but exact-match also declined as training continued. The [audited report](cpu-lm-gsm8k-sequence-dpo-development-v11-report.md) records the result.
+- Matched v12 found SFT preserved the base 2/64 answers in every seed, while DPO averaged 1.33/64. DPO raised pairwise preference accuracy but had worse preference NLL and exact-match than SFT. Both gates failed; see the [paired report](cpu-lm-gsm8k-posttraining-development-v12-report.md).
 - A negative local small-model agent pilot: three formal attempts produced no accepted patch.
 - Contracts for replay, freshness, curriculum, promotion, and RVL trainer integration.
 

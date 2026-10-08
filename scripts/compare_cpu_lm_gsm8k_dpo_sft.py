@@ -63,50 +63,66 @@ def bootstrap_mean_interval(values, seed=57391, samples=20000):
     return [means[int(0.025 * samples)], means[min(samples - 1, int(0.975 * samples))]]
 
 
-def compare(dpo_dir: Path, sft_dir: Path):
-    dpo_spec, dpo = checked_run(dpo_dir, "dpo")
-    sft_spec, sft = checked_run(sft_dir, "sft")
-    normalized_dpo, normalized_sft = copy.deepcopy(dpo_spec), copy.deepcopy(sft_spec)
-    for spec in (normalized_dpo, normalized_sft):
+def compare(dpo_dir: Path, sft_dir: Path, anchor_dir: Path | None = None):
+    expected_methods = ["dpo", "sft"] + (["dpo_sft_anchor"] if anchor_dir else [])
+    directories = [dpo_dir, sft_dir] + ([anchor_dir] if anchor_dir else [])
+    checked = [checked_run(path, method) for path, method in zip(directories, expected_methods)]
+    specs = [item[0] for item in checked]
+    runs = [item[1] for item in checked]
+    normalized_specs = [copy.deepcopy(spec) for spec in specs]
+    for spec in normalized_specs:
         spec.pop("protocol_id", None)
         spec.pop("purpose", None)
         spec["learner"].pop("method", None)
         spec["learner"].pop("objective", None)
-    if canonical(normalized_dpo) != canonical(normalized_sft):
-        raise ValueError("DPO and SFT locks differ beyond the declared method/objective fields")
-    for key in ("train_examples", "validation_examples"):
-        if dpo[key] != sft[key]:
-            raise ValueError(f"paired runs do not share identical {key}")
-    for key in ("base_training_generation", "base_validation_generation"):
-        if dpo["summary"][key] != sft["summary"][key]:
-            raise ValueError(f"paired runs have different {key}")
+        spec["learner"].pop("sft_anchor_weight", None)
+    if any(canonical(spec) != canonical(normalized_specs[0]) for spec in normalized_specs[1:]):
+        raise ValueError("method locks differ beyond the declared method/objective fields")
+    reference_data = runs[0]
+    sft_data = runs[1]
+    for method, data in zip(expected_methods[1:], runs[1:]):
+        for key in ("train_examples", "validation_examples"):
+            if reference_data[key] != data[key]:
+                raise ValueError(f"paired runs do not share identical {key}: {method}")
+        for key in ("base_training_generation", "base_validation_generation"):
+            if reference_data["summary"][key] != data["summary"][key]:
+                raise ValueError(f"paired runs have different {key}: {method}")
 
-    dpo_values = question_success(dpo)
-    sft_values = question_success(sft)
-    differences = [left - right for left, right in zip(dpo_values, sft_values)]
-    dpo_summary, sft_summary = dpo["summary"], sft["summary"]
+    def arm_summary(data):
+        summary = data["summary"]
+        epoch = str(summary["selected_epochs"])
+        metrics = summary["checkpoint_summary"][epoch]
+        return {
+            "selected_epoch": summary["selected_epochs"],
+            "mean_exact_match": summary["selected_mean_exact_match_accuracy"],
+            "decision": summary["decision"],
+            "validation_preference_nll": metrics["mean_validation_dpo_preference_nll"],
+            "mean_token_kl": metrics["mean_validation_token_kl_to_base"],
+        }
+
+    per_arm = {method: arm_summary(data) for method, data in zip(expected_methods, runs)}
+    paired = {}
+    for method, data in zip(expected_methods, runs):
+        if method == "sft":
+            continue
+        differences = [left - right for left, right in zip(question_success(data), question_success(sft_data))]
+        paired[f"{method}_minus_sft"] = {
+            "mean_exact_match_difference": statistics.fmean(differences),
+            "question_bootstrap_95_percent_interval": bootstrap_mean_interval(differences),
+            "questions_better_tied_worse": {
+                "better": sum(value > 0 for value in differences),
+                "tied": sum(value == 0 for value in differences),
+                "worse": sum(value < 0 for value in differences),
+            },
+        }
     return {
-        "comparison": "matched_dpo_vs_sft_development",
-        "validation_questions": len(differences),
-        "seeds": dpo_spec["learner"]["seeds"],
-        "base_exact_match": dpo_summary["base_validation_exact_match_accuracy"],
-        "dpo": {
-            "selected_epoch": dpo_summary["selected_epochs"],
-            "mean_exact_match": dpo_summary["selected_mean_exact_match_accuracy"],
-            "decision": dpo_summary["decision"],
-            "validation_preference_nll": dpo_summary["checkpoint_summary"][str(dpo_summary["selected_epochs"])]["mean_validation_dpo_preference_nll"],
-            "mean_token_kl": dpo_summary["checkpoint_summary"][str(dpo_summary["selected_epochs"])]["mean_validation_token_kl_to_base"],
-        },
-        "sft": {
-            "selected_epoch": sft_summary["selected_epochs"],
-            "mean_exact_match": sft_summary["selected_mean_exact_match_accuracy"],
-            "decision": sft_summary["decision"],
-            "validation_preference_nll": sft_summary["checkpoint_summary"][str(sft_summary["selected_epochs"])]["mean_validation_dpo_preference_nll"],
-            "mean_token_kl": sft_summary["checkpoint_summary"][str(sft_summary["selected_epochs"])]["mean_validation_token_kl_to_base"],
-        },
-        "paired_question_mean_exact_match_difference_dpo_minus_sft": statistics.fmean(differences),
-        "paired_question_bootstrap_95_percent_interval": bootstrap_mean_interval(differences),
-        "claim_boundary": "Development-only comparison. The same validation questions select each arm's checkpoint; the paired interval is descriptive and is not independent confirmation or a capability claim.",
+        "comparison": "matched_dpo_sft_and_optional_anchor_development" if anchor_dir else "matched_dpo_vs_sft_development",
+        "validation_questions": len(runs[0]["validation_examples"]),
+        "seeds": specs[0]["learner"]["seeds"],
+        "base_exact_match": reference_data["summary"]["base_validation_exact_match_accuracy"],
+        "arms": per_arm,
+        "paired_question_comparisons": paired,
+        "claim_boundary": "Development-only comparison. The same validation questions select each arm's checkpoint; intervals are descriptive and are not independent confirmation or capability claims.",
     }
 
 
@@ -114,9 +130,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("dpo_run", type=Path)
     parser.add_argument("sft_run", type=Path)
+    parser.add_argument("--anchor-run", type=Path)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
-    result = compare(args.dpo_run.resolve(), args.sft_run.resolve())
+    result = compare(args.dpo_run.resolve(), args.sft_run.resolve(), args.anchor_run.resolve() if args.anchor_run else None)
     text = json.dumps(result, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
     if args.output:
         args.output.write_text(text, encoding="utf-8")

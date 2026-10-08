@@ -24,6 +24,8 @@ In [v10](docs/cpu-lm-gsm8k-sequence-dpo-development-v10-report.md), exact-match 
 
 In [v11](docs/cpu-lm-gsm8k-sequence-dpo-development-v11-report.md), epoch 1 was selected on a larger validation cohort; mean Exact Match declined from 9/128 to 8.67/128. Preference NLL decreased, but free-form task success did not improve. The next study adds a matched SFT baseline to measure whether DPO contributes beyond imitation of verified answers.
 
+The matched [v12 DPO/SFT comparison](docs/cpu-lm-gsm8k-posttraining-development-v12-report.md) found neither arm improved exact-match over base. SFT preserved 2/64 in all seeds; DPO averaged 1.33/64. DPO had higher pairwise preference accuracy but worse preference NLL and task exact-match than SFT. This development result motivates an SFT-anchored DPO regression-control study; it does not establish capability improvement.
+
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
 
 ## Post-training results
