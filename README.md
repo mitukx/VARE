@@ -30,6 +30,8 @@ The matched [v13 three-arm study](docs/cpu-lm-gsm8k-posttraining-development-v13
 
 On a larger fresh cohort, [v14](docs/cpu-lm-gsm8k-posttraining-development-v14-report.md) again found no passing arm: base scored 4/128, DPO 4.67/128, SFT 5.33/128, and anchored DPO 7.67/128. The anchor narrowly missed its +4/128 gain threshold; its paired interval versus SFT crossed zero. All bundles audited and matched-row/base-generation checks passed. This remains development-only evidence, with no confirmation or capability claim.
 
+The next locked probe directly compares SFT and anchored DPO on 64 fresh training and 256 fresh validation questions. Its advancement gate is base >=8/256 and mean gain >=8/256, with seed consistency; even a development pass will require independent confirmation.
+
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
 
 ## Post-training results
