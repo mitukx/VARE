@@ -1,0 +1,29 @@
+{
+  "audit": "pass",
+  "audit_limit": "Reconstructs prompts, graph proofs, frozen source snapshots, stored-feature adapter metrics, and paired bootstrap. It does not independently rerun the model forward pass or optimizer; model provenance is the recorded local model-file fingerprint.",
+  "development_gate": {
+    "checks": {
+      "base_floor": false,
+      "data_and_oracle_checks": true,
+      "dpo_base_ci": true,
+      "dpo_calibration_ci": false,
+      "dpo_gain_over_base": false,
+      "dpo_gain_over_calibration": false,
+      "dpo_noninferior_to_sft": false,
+      "kl": false,
+      "per_seed_kl": false,
+      "seed_consistency_vs_base": true,
+      "seed_consistency_vs_calibration": false
+    },
+    "maximum_seed_kl_nats_per_action": 0.742047905921936,
+    "pass": false,
+    "seeds_better_than_base": 3,
+    "seeds_better_than_calibration": 0
+  },
+  "development_rows_reconstructed": 256,
+  "frozen_pre_run_commit": "e43654607952fa410a2dbc94c6f3fd54c591226a",
+  "manifest_files_verified": 8,
+  "pilot_hashes_excluded": 192,
+  "summary_metrics_and_paired_bootstrap_reconstructed": true,
+  "train_rows_reconstructed": 128
+}
