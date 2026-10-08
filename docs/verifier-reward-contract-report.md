@@ -21,9 +21,9 @@ The fix adds a shared validator/snapshot operation and enforces it on individual
 
 ## Result
 
-The unchanged reproducer now rejects the mutated `2.0` score, `NaN` score, and out-of-range confidence before the training hook. The valid control still delivers `0.75`. See [`postfix-local.json`](../results/verifier-reward-contract-v1/postfix-local.json). Regression tests also cover malformed fields, a custom verifier that bypasses the ensemble, and a reward mutated in replay before the RVL trainer; the latter must fail before `train_step`.
+The unchanged reproducer now rejects the mutated `2.0` score, `NaN` score, and out-of-range confidence before the training hook. The valid control still delivers `0.75`. See the [fixed record](../results/verifier-reward-contract-v1/fixed.json) and [baseline](../results/verifier-reward-contract-v1/baseline.json). Regression tests also cover malformed fields, a custom verifier that bypasses the ensemble, and a reward mutated in replay before the RVL trainer; the latter must fail before `train_step`.
 
-The local venv did not contain pytest, so the Python test suite could not be run locally. The dependency-free reproducer passed. Full regression status is pending CI and will be recorded in the follow-up evidence commit.
+The local venv did not contain pytest, so the Python test suite could not be run locally. The dependency-free reproducer and compile check passed. GitHub Actions run [37857541967](https://github.com/mitukx/VARE/actions/runs/37857541967) passed 185 tests with 12 skipped; the two exact GRPO audit scripts and the VARE demo also passed. The machine-readable [CI record](../results/verifier-reward-contract-v1/ci.json) is retained.
 
 ## Interpretation and limits
 
