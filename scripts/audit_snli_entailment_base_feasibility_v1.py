@@ -15,8 +15,6 @@ import subprocess
 import sys
 import time
 
-import numpy as np
-
 ROOT = Path(__file__).resolve().parents[1]
 SPEC_PATH = ROOT / "protocols/snli_entailment_base_feasibility_v1.json"
 LOCK_PATH = ROOT / "protocols/snli_entailment_base_feasibility_v1.lock.json"
@@ -253,7 +251,7 @@ def audit(bundle):
     spec, protocol_digest, denylist = verify_locks_and_sources(bundle, fingerprints["source"]["commit"])
     if summary["protocol_sha256"] != protocol_digest or fingerprints["protocol_sha256"] != protocol_digest:
         raise ValueError("protocol digest differs across result records")
-    import datasets, safetensors, tokenizers, torch, transformers
+    import datasets, numpy as np, safetensors, tokenizers, torch, transformers
     runtime = {"python": platform.python_version(), "torch": torch.__version__, "transformers": transformers.__version__,
                "datasets": datasets.__version__, "numpy": np.__version__, "tokenizers": tokenizers.__version__, "safetensors": safetensors.__version__}
     if runtime != spec["runtime_lock"] or runtime != fingerprints["runtime"]:
