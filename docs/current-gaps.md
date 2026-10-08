@@ -16,6 +16,7 @@ This assessment ranks the technical work needed to study post-training signals a
 - A full-rationale/base-rollout run lowered preference NLL but base and all updated seeds scored 0/16; the nominal candidate decision was a zero-baseline rule artifact. A follow-up with a longer generation cap exceeded the 6-GiB CPU memory ceiling before producing metrics. See the [v4 report](cpu-lm-gsm8k-sequence-dpo-development-v4-report.md) and v5 incomplete bundle in `results/`.
 - The reduced v6 run stayed within memory and passed the offline audit, but its base and updates scored 0/8 exact-match because generations did not reach the required final-answer marker. This does not establish a generation gain; see the [report](cpu-lm-gsm8k-sequence-dpo-development-v6-report.md).
 - Numeric-only DPO v8 passed its audit and lowered preference NLL, but base exact-match was 0/32 and updates were 1/32, 0/32, and 0/32. The frozen minimum-baseline gate failed. See the [report](cpu-lm-gsm8k-sequence-dpo-development-v8-report.md).
+- Larger rank-8 v9 lowered verifier-preference NLL at epoch 2 but exact-match fell from 6/128 to 4.67/128; epoch 4 exceeded KL. The audited [report](cpu-lm-gsm8k-sequence-dpo-development-v9-report.md) retains the non-pass.
 - A negative local small-model agent pilot: three formal attempts produced no accepted patch.
 - Contracts for replay, freshness, curriculum, promotion, and RVL trainer integration.
 

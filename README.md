@@ -18,6 +18,8 @@ One numeric-only setup attempt stopped before inference because its batch size v
 
 The audited numeric-only [v8 run](docs/cpu-lm-gsm8k-sequence-dpo-development-v8-report.md) lowered preference NLL but failed the nonzero-baseline gate: base exact-match was 0/32 and updated seeds were 1/32, 0/32, and 0/32. This single updated answer is not enough to support an improvement claim. A larger fresh development cohort is next.
 
+The larger rank-8 [v9 run](docs/cpu-lm-gsm8k-sequence-dpo-development-v9-report.md) had 6/128 base exact matches and a mean 4.67/128 after update. Preference NLL improved at epoch 2 while exact-match fell; epoch 4 also breached the KL cap. It is an audited non-pass, and no capability gain is claimed.
+
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
 
 ## Post-training results

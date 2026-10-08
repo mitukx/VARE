@@ -20,8 +20,8 @@ from gsm8k_sequence_task import (attach_base_rollout_rejections, make_rationale_
                                  make_sequence_rows, parse_generated_number)
 
 ROOT = Path(__file__).resolve().parents[1]
-SPEC_PATH = ROOT / "protocols/cpu_lm_gsm8k_sequence_dpo_development_v10.json"
-LOCK_PATH = ROOT / "protocols/cpu_lm_gsm8k_sequence_dpo_development_v10.lock.json"
+SPEC_PATH = ROOT / "protocols/cpu_lm_gsm8k_sequence_dpo_development_v9.json"
+LOCK_PATH = ROOT / "protocols/cpu_lm_gsm8k_sequence_dpo_development_v9.lock.json"
 MODEL_DIR = Path.home() / ".cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775"
 DATA_DIR = Path.home() / ".cache/huggingface/datasets/openai___gsm8k/main/0.0.0/740312add88f781978c0658806c59bc2815b9866"
 
@@ -49,7 +49,7 @@ def write_json(path: Path, value: Any) -> None:
 
 def write_manifest(output: Path) -> None:
     files = {p.relative_to(output).as_posix(): sha256_file(p)
-             for p in sorted(output.rglob("*")) if p.is_file() and p.name not in ("manifest.json", "audit.json")}
+             for p in sorted(output.rglob("*")) if p.is_file() and p.name != "manifest.json"}
     write_json(output / "manifest.json", {"algorithm": "sha256", "files": files})
 
 
@@ -396,12 +396,7 @@ def run(output: Path, spec_path: Path = SPEC_PATH, lock_path: Path = LOCK_PATH):
         eligible = [epoch for epoch in spec["learner"]["checkpoints_epochs"] if epoch > 0 and
                     summary[str(epoch)]["mean_validation_dpo_preference_nll"] < base_val["mean_dpo_preference_nll"] and
                     summary[str(epoch)]["mean_validation_token_kl_to_base"] <= 0.5]
-        selection_method = spec["metrics"].get("checkpoint_selection_method", "preference_nll")
-        if selection_method not in ("preference_nll", "exact_match"):
-            raise ValueError("unknown checkpoint selection method")
-        selected_epoch = (min(eligible, key=lambda epoch: (summary[str(epoch)]["mean_validation_dpo_preference_nll"], epoch))
-                          if eligible and selection_method == "preference_nll" else
-                          (0 if not eligible else None))
+        selected_epoch = min(eligible, key=lambda epoch: (summary[str(epoch)]["mean_validation_dpo_preference_nll"], epoch)) if eligible else 0
         import numpy as np
         stored_per_seed = []
         for seed_item in per_seed:
@@ -429,39 +424,21 @@ def run(output: Path, spec_path: Path = SPEC_PATH, lock_path: Path = LOCK_PATH):
                 for row, pair in zip(rows, pairs)
             ]
         write_json(output / "tokenized_examples.json", tokenized_artifact)
-        epochs_to_generate = (eligible or [0]) if selection_method == "exact_match" else [selected_epoch]
-        checkpoint_generation_records = {}
-        checkpoint_generation_summary = {}
-        for epoch in epochs_to_generate:
-            records = []
-            for seed_item in per_seed:
-                ckpt = seed_item["checkpoints"][str(epoch)]
-                adapter_a = torch.tensor(ckpt["adapter"]["A"], dtype=torch.float32)
-                adapter_b = torch.tensor(ckpt["adapter"]["B"], dtype=torch.float32)
-                generated = generate_greedy(val_rows, tokenizer, model, spec, adapter_a, adapter_b, deadline=deadline)
-                accuracy = statistics.fmean(float(row["exact_match"]) for row in generated)
-                records.append({"seed": seed_item["seed"], "accuracy": accuracy,
-                                "correct": sum(row["exact_match"] for row in generated),
-                                "generated_validation": generated})
-            checkpoint_generation_records[str(epoch)] = records
-            checkpoint_generation_summary[str(epoch)] = {
-                "mean_exact_match_accuracy": statistics.fmean(row["accuracy"] for row in records),
-                "per_seed_accuracy": [row["accuracy"] for row in records],
-                "per_seed_correct": [row["correct"] for row in records],
-            }
-        if selection_method == "exact_match" and eligible:
-            selected_epoch = min(eligible, key=lambda epoch: (
-                -checkpoint_generation_summary[str(epoch)]["mean_exact_match_accuracy"],
-                summary[str(epoch)]["mean_validation_dpo_preference_nll"], epoch))
-        generation_counts = [{"seed": record["seed"], "accuracy": record["accuracy"], "correct": record["correct"]}
-                             for record in checkpoint_generation_records[str(selected_epoch)]]
         selected_rows = []
-        for seed_item, record in zip(per_seed, checkpoint_generation_records[str(selected_epoch)]):
+        generation_counts = []
+        for seed_item in per_seed:
+            ckpt = seed_item["checkpoints"][str(selected_epoch)]
+            adapter_a = torch.tensor(ckpt["adapter"]["A"], dtype=torch.float32)
+            adapter_b = torch.tensor(ckpt["adapter"]["B"], dtype=torch.float32)
+            generated = generate_greedy(val_rows, tokenizer, model, spec, adapter_a, adapter_b, deadline=deadline)
+            accuracy = statistics.fmean(float(row["exact_match"]) for row in generated)
+            generation_counts.append({"seed": seed_item["seed"], "accuracy": accuracy,
+                                      "correct": sum(row["exact_match"] for row in generated)})
             selected_rows.append({"seed": seed_item["seed"],
                                   "selected_adapter_artifact": {
                                       "path": f"adapters/seed-{seed_item['seed']}-epoch-{selected_epoch}.npz",
                                       "sha256": sha256_file(output / "adapters" / f"seed-{seed_item['seed']}-epoch-{selected_epoch}.npz")},
-                                  "generated_validation": record["generated_validation"]})
+                                  "generated_validation": generated})
         mean_selected_accuracy = statistics.fmean(row["accuracy"] for row in generation_counts)
         at_least_two_not_worse = sum(row["accuracy"] >= base_accuracy for row in generation_counts) >= 2
         minimum_base_correct = spec["metrics"].get("minimum_base_exact_matches", 0)
@@ -486,8 +463,6 @@ def run(output: Path, spec_path: Path = SPEC_PATH, lock_path: Path = LOCK_PATH):
                                          if train_rollouts is not None else None),
             "per_seed": stored_per_seed, "checkpoint_summary": summary, "selected_epochs": selected_epoch,
             "selected_validation_generation": generation_counts,
-            "checkpoint_generation_summary": checkpoint_generation_summary,
-            "checkpoint_generation_records": checkpoint_generation_records,
             "selected_mean_exact_match_accuracy": mean_selected_accuracy,
             "at_least_two_seeds_not_worse": at_least_two_not_worse,
             "decision": "sequence_dpo_development_candidate" if candidate_promoted else "sequence_dpo_development_non_pass",
@@ -507,7 +482,7 @@ def run(output: Path, spec_path: Path = SPEC_PATH, lock_path: Path = LOCK_PATH):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=ROOT / "results/cpu-lm-gsm8k-sequence-dpo-development-v10/run-1")
+    parser.add_argument("--output", type=Path, default=ROOT / "results/cpu-lm-gsm8k-sequence-dpo-development-v9/run-1")
     parser.add_argument("--protocol", type=Path, default=SPEC_PATH)
     parser.add_argument("--lock", type=Path, default=LOCK_PATH)
     args = parser.parse_args()

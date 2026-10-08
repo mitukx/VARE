@@ -22,6 +22,8 @@ The v1 and v2 synthetic runs are both retained. v1 remains a diagnostic non-pass
 14. Retry only with a fresh rank range and generation batch size one under the decoder contract. Preserve the nonzero-baseline and minimum-gain gate.
 15. **Development v8 non-pass:** numeric-only pairs with actual base-rollout rejects improved verifier NLL but failed the baseline gate (base 0/32, updated 1/32, 0/32, 0/32); see the [report](cpu-lm-gsm8k-sequence-dpo-development-v8-report.md) and [audited bundle](../results/cpu-lm-gsm8k-sequence-dpo-development-v8/run-1/).
 16. Test a larger fresh development set and increased adapter rank. Do not call a single updated answer a capability gain; confirmation requires a distinct lock and held-out rows.
+17. **Development v9 non-pass:** rank-8 DPO lowered verifier-preference NLL at epoch 2 but exact-match fell from 6/128 to 4.67/128; epoch 4 exceeded the KL ceiling. See the [report](cpu-lm-gsm8k-sequence-dpo-development-v9-report.md) and [audited bundle](../results/cpu-lm-gsm8k-sequence-dpo-development-v9/run-1/).
+18. Compare eligible checkpoints by verifier-checked exact match on a fresh development set under the frozen KL cap. Any passing checkpoint still needs a separate untouched confirmation cohort.
 
 The synthetic stages test objective correctness and whether the harness can detect a known mechanism. The narrow forced-choice GSM8K result is evidence of a small conditional choice-probability shift. The sequence-level development is a verifier-preference validation signal only; its free-form accuracy did not move. No evidence here establishes general free-form language-model quality, reasoning, truthful behavior, broad preference alignment, or transfer to real users.
 

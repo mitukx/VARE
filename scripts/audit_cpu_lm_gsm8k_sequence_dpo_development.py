@@ -150,7 +150,49 @@ def audit(output: Path, check_generation: bool = True):
     eligible = [int(epoch) for epoch in computed if int(epoch) > 0 and
                 computed[epoch]["mean_validation_dpo_preference_nll"] < base_nll and
                 computed[epoch]["mean_validation_token_kl_to_base"] <= 0.5]
-    selected = min(eligible, key=lambda epoch: (computed[str(epoch)]["mean_validation_dpo_preference_nll"], epoch)) if eligible else 0
+    selection_method = spec["metrics"].get("checkpoint_selection_method", "preference_nll")
+    if selection_method == "exact_match":
+        expected_generation_epochs = {str(epoch) for epoch in (eligible or [0])}
+        checkpoint_records = result["checkpoint_generation_records"]
+        if set(checkpoint_records) != expected_generation_epochs:
+            raise ValueError("generated checkpoint set differs from NLL/KL-eligible epochs")
+        recomputed_generation_summary = {}
+        for epoch_text, records in checkpoint_records.items():
+            if [item["seed"] for item in records] != seeds:
+                raise ValueError("checkpoint generation seeds differ")
+            accuracies, correct_counts = [], []
+            for item in records:
+                generated = item["generated_validation"]
+                if len(generated) != len(validation):
+                    raise ValueError("checkpoint validation generation count differs")
+                correct = sum(bool(row["exact_match"]) for row in generated)
+                accuracy = statistics.fmean(float(row["exact_match"]) for row in generated)
+                if correct != item["correct"] or not approx(accuracy, item["accuracy"]):
+                    raise ValueError("checkpoint generation metrics differ from retained outputs")
+                if [row["dataset_index"] for row in generated] != [row["dataset_index"] for row in validation]:
+                    raise ValueError("checkpoint generation dataset order differs")
+                accuracies.append(accuracy)
+                correct_counts.append(correct)
+            recomputed_generation_summary[epoch_text] = {
+                "mean_exact_match_accuracy": statistics.fmean(accuracies),
+                "per_seed_accuracy": accuracies,
+                "per_seed_correct": correct_counts,
+            }
+        for epoch_text, values in recomputed_generation_summary.items():
+            for key, expected in values.items():
+                actual = result["checkpoint_generation_summary"][epoch_text][key]
+                if isinstance(expected, list):
+                    if len(actual) != len(expected) or not all(approx(a, b) for a, b in zip(actual, expected)):
+                        raise ValueError("checkpoint generation summary mismatch")
+                elif not approx(actual, expected):
+                    raise ValueError("checkpoint generation summary mismatch")
+        selected = (min(eligible, key=lambda epoch: (
+            -recomputed_generation_summary[str(epoch)]["mean_exact_match_accuracy"],
+            computed[str(epoch)]["mean_validation_dpo_preference_nll"], epoch)) if eligible else 0)
+    elif selection_method == "preference_nll":
+        selected = min(eligible, key=lambda epoch: (computed[str(epoch)]["mean_validation_dpo_preference_nll"], epoch)) if eligible else 0
+    else:
+        raise ValueError("unknown checkpoint selection method")
     if selected != result["selected_epochs"]:
         raise ValueError("selected checkpoint differs from frozen selection rule")
 
@@ -172,7 +214,7 @@ def audit(output: Path, check_generation: bool = True):
     expected_decision = "sequence_dpo_development_candidate" if promoted else "sequence_dpo_development_non_pass"
     if result["decision"] != expected_decision:
         raise ValueError("development decision differs from frozen selection rule")
-    if rationale_mode:
+    if base_rollout_mode:
         counts = {source: sum(row["rejected_source"] == source for row in train + validation)
                   for source in sorted({row["rejected_source"] for row in train + validation})}
         if result["rejection_source_counts"] != counts:
