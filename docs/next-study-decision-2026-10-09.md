@@ -1,5 +1,15 @@
 # Next study decision — 2026-10-09
 
+## Current decision — 2026-10-09: partial-audit efficiency is not established
+
+The frozen [`grpo_partial_audit_estimator_v1`](../protocols/grpo_partial_audit_estimator_v1.json) compared 1–4 clean labels per four-member group at a fixed 12-label budget on 390 declared reward laws. The exact three-label estimator is unbiased, but its sample-mean MSE was higher than full-group audit in all 387 nondegenerate laws (median ratio 1.0103). One- and two-label lower-order projections had smaller MSE in 385/387 rows but could not identify the third-order parity update; their apparent MSE gains can suppress the target signal. On the selected two-world parity witness, the 3-label arm's wrong-or-zero direction rate was 52.0–52.5%, versus 57.6–57.9% for full audits, but the exact MSE was higher and the result is one small synthetic scalar-gradient diagnostic. Do not claim general audit efficiency, update quality, or capability improvement.
+
+The estimator is a direct inverse-inclusion application to previously characterized Walsh coefficients. It is not a novel method. The focused prior-art review found nearby, higher-bar work on noise-corrected GRPO, finite-group advantage bias, correlation-aware fixed-budget verifier allocation with downstream RLVR, and risk-certified finite-budget update-direction admission: [Noise-corrected GRPO](https://arxiv.org/abs/2510.18924), [Your Group-Relative Advantage Is Biased](https://arxiv.org/abs/2601.08521), [VStress](https://arxiv.org/abs/2609.36958), and [Audit-First VAPO](https://arxiv.org/abs/2609.33662). VARE PR #1 was inspected and remains untouched; its held-out false-acceptance/promotion checks are adjacent control-plane work, not the estimator studied here.
+
+**Decision: stop this generic partial-audit line and pivot.** The highest-value unresolved gap is a feasible real-model policy update with independent held-out task success. First establish, without spending money, a cached base model with nontrivial task success, an actual CPU optimizer/save/reload path within a strict runtime and memory cap, and a fresh task-success cohort. Do not train or open a scored cohort until those gates are frozen and passed. Reassess model feasibility against the already retained negatives and the private math-TIR gate; do not alter that locked protocol merely to fit the current runtime. No employer-specific strategy belongs in repository files.
+
+The successful exact bundle and same-host independent audit are at [`results/grpo-partial-audit-estimator-v1/run-1/`](../results/grpo-partial-audit-estimator-v1/run-1/). The two failures before valid outcomes are separately retained under [`results/grpo-partial-audit-estimator-v1/`](../results/grpo-partial-audit-estimator-v1/). GitHub CI reproduction is pending.
+
 ## Current decision — 2026-10-09
 
 ### Update after exact audit-order characterization
