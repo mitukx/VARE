@@ -15,6 +15,6 @@ At commit `d7ec900`, a ready RVL group with recorded policy/verifier version 6 a
 
 ## Verification
 
-`tests/test_lag.py` covers policy/verifier future versions, negative values, and malformed types. `tests/test_rvl_integration.py` covers future group policy/verifier versions, future per-experience verifier overrides, malformed boolean overrides, and preserves the existing ready/pending fixture. The prior baseline reproducer now raises instead of returning a fresh item.
+`tests/test_lag.py` covers policy/verifier future versions, negative values, and malformed types. `tests/test_rvl_integration.py` covers future group policy/verifier versions, future per-experience verifier overrides, malformed boolean overrides, and preserves the existing ready/pending fixture. The prior baseline reproducer now raises instead of returning a fresh item. GitHub Actions run [37852888209](https://github.com/mitukx/VARE/actions/runs/37852888209) passed the full suite (167 passed, 12 skipped); the compact record is [`verification.json`](../results/provenance-version-validation-v1/verification.json).
 
 This is a narrow data-integrity correction, not an empirical estimate of provenance error rates, a change to the learning objective, or evidence of model improvement. CI outcome will be appended after the pushed revision completes its full repository suite.
