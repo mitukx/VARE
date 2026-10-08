@@ -47,6 +47,7 @@ def build_example(row: dict[str, Any], index: int, split: str) -> dict[str, Any]
         "dataset_split": split,
         "dataset_index": int(index),
         "question": row["question"],
+        "source_answer": row["answer"],
         "verifier_answer": format_number(answer),
         "candidate_a": format_number(candidate_a),
         "candidate_b": format_number(candidate_b),
