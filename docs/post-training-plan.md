@@ -31,16 +31,18 @@ Predeclared interpretation: the positive control passes only if optimization imp
 
 Before running, freeze a versioned machine-readable protocol specifying the exact synthetic utility, data generator/split, seeds, optimizer and beta, update budget, tolerances, primary metric, KL ceiling, noise/shift conditions, and decision rule. The protocol should be independently auditable and use only the Python standard library. No GPU, paid API, model-weight download, or cloud compute is in scope.
 
-## Phase 2: optional tiny real-model smoke test
+## Phase 2: bounded real-model preference update
 
-Only consider this after Phase 1 and only if already-cached weights, installed dependencies, and local CPU capacity make a bounded run practical. First benchmark loading and one forward/backward step on a tiny sample. Set hard limits for elapsed time and memory, and stop immediately if either is exceeded. Do not download weights or install dependencies that trigger large model/artifact downloads.
+An initial feasibility-only check found a cached Qwen2.5-0.5B-Instruct snapshot and a CPU-capable Transformers/PyTorch runtime. A separate, single-pair feasibility probe changed an output-head adapter margin, but it had no held-out data and is not evidence of learning. That probe is not part of the formal result.
 
-If a smoke test is feasible, freeze a separate protocol and report the actual base model/revision, tokenizer, data, trainable parameter count, before/after adapter hashes, objective, update count, held-out preference result, KL/drift, runtime, memory, and all failures. A smoke test with no independent held-out gain remains a smoke test; it does not inherit the synthetic result's interpretation.
+The new [`cpu_lm_dpo_head_v1` protocol](../protocols/cpu_lm_dpo_head_v1.lock.json) freezes an offline, CPU-only study before generating any formal outputs. It uses only the exact cached model revision when supplied by the operator, custom rank-4 residual parameters on the two response-label token columns, three initialization seeds, 24 arithmetic-choice training pairs and 32 disjoint held-out pairs per seed, full-batch DPO updates, and a 15-minute/6-GiB abort boundary. It records model-file hashes, prompts and labels, per-example choice margins, adapter parameters, metrics, environment and a manifest. It never downloads weights. The runner is [`run_cpu_lm_dpo_head.py`](../scripts/run_cpu_lm_dpo_head.py).
+
+This study measures conditional preference over two one-token answer labels. Its task and parameterization are deliberately narrow: a frozen backbone and custom output-head slice are not a general PEFT implementation or a standard TRL run. A passing result would be small-model held-out preference evidence only. A non-pass, null, timeout or missing cached dependency is retained without changing the locked rule.
 
 The existing L2 RVL/Qwen protocol remains frozen and unrun. Its declared 0.5B model and 3-arm/3-seed workload are outside the present budget. Do not modify that lock to make the project appear to have run it.
 
 ## Current gaps and claim boundary
 
-There is still no real-model training update or held-out model improvement. v1 remains a visible non-pass with its invalid reference-accuracy metric; v2 is a separate accepted synthetic run and cannot establish language-model behavior. Historical task calibration, grader mutation testing, replay/promotion contracts, and local reliability measurements are supporting engineering evidence. The previous small-model coding-agent pilot is a negative tool-use result and is not post-training evidence.
+Until the frozen real-model protocol has actually run and been audited, there is still no retained real-model update or held-out model improvement. v1 remains a visible non-pass with its invalid reference-accuracy metric; v2 is a separate accepted synthetic run and cannot establish language-model behavior. Historical task calibration, grader mutation testing, replay/promotion contracts, and local reliability measurements are supporting engineering evidence. The previous small-model coding-agent pilot is a negative tool-use result and is not post-training evidence.
 
 Phase 1 can establish objective/gradient correctness and sensitivity in a toy controlled system. It cannot establish that VARE improves a language model or produces useful real-world behavior. Phase 2 would provide only a small-model smoke result unless a sufficiently powered, preregistered held-out study is actually completed.

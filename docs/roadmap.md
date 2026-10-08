@@ -23,7 +23,7 @@ Both graders reject the pre-fix revision and accept the known fixed revision. Th
 
 ## E2 — Controlled post-training mechanism
 
-The v1 diagnostic and its failed KL rule remain in [`synthetic-dpo-report.md`](synthetic-dpo-report.md). The separate v2 confirmation is reported in [`synthetic-dpo-v2-report.md`](synthetic-dpo-v2-report.md): a training-only development phase selected the update count; the frozen 10-seed confirmation passed its held-out NLL/KL rule, and the audit reconstructs all seed-by-arm metrics. This reaches a narrow synthetic mechanism result. It is not LLM training or capability evidence. Next, test a separately frozen signal-shift hypothesis and assess whether any model-level CPU update is feasible with already cached assets.
+The v1 diagnostic and its failed KL rule remain in [`synthetic-dpo-report.md`](synthetic-dpo-report.md). The separate v2 confirmation is reported in [`synthetic-dpo-v2-report.md`](synthetic-dpo-v2-report.md): a training-only development phase selected the update count; the frozen 10-seed confirmation passed its held-out NLL/KL rule, and the audit reconstructs all seed-by-arm metrics. This reaches a narrow synthetic mechanism result. It is not LLM training or capability evidence.
 
 ## Supporting evidence — Agent trajectories
 
@@ -35,7 +35,7 @@ The v2 result includes noisy-label and shuffled-label diagnostics, but they are 
 
 ## E4 — Small-model learning
 
-The frozen L2 RVL/Qwen campaign remains unrun: its 0.5B model and 3-arm × 3-seed workload exceed the current no-spend CPU budget. Do not edit its lock. Consider a separate tiny adapter/DPO smoke protocol only if already-cached weights and the installed runtime support a strict bounded run with no download or paid service. Require a before/after held-out measure, parameter delta, KL/drift, seed and data provenance, and an abort limit. Retain null and negative runs. The synthetic E2 experiment cannot substitute for E4.
+The frozen L2 RVL/Qwen campaign remains unrun: its original workload exceeds the current no-spend CPU budget. Do not edit its lock. A separate [`cpu_lm_dpo_head_v1`](../protocols/cpu_lm_dpo_head_v1.lock.json) study now defines a strict offline CPU run using an already-cached model, a custom narrow output-head adapter, disjoint arithmetic-choice data and held-out preference measures. It has not run formally yet. Retain null and negative outcomes. The synthetic E2 experiment cannot substitute for E4.
 
 ## E5 — Systems impact
 
@@ -51,7 +51,7 @@ Study repeated system-proposed interventions only after independent downstream e
 
 ## Current stop point
 
-The isolated-input E0 calibration, execution failure-injection checks, promotion-metric and replay-group regressions, bounded environment-command output v4 regression, and two E1 task/grader pairs are complete. Narrow E5 measurements cover local scheduling and durable freshness-check work. E2 has one accepted synthetic preference-policy confirmation alongside the preserved v1 diagnostic non-pass. Agent evidence is separately negative. Confirmatory E3 robustness, E4 real-model learning, heterogeneous workload profiling, distributed systems evidence and E6 remain outstanding. No language-model learning, generalization, or capability gain is claimed.
+The isolated-input E0 calibration, execution failure-injection checks, promotion-metric and replay-group regressions, bounded environment-command output v4 regression, and two E1 task/grader pairs are complete. Narrow E5 measurements cover local scheduling and durable freshness-check work. E2 has one accepted synthetic preference-policy confirmation alongside the preserved v1 diagnostic non-pass. Agent evidence is separately negative. Confirmatory E3 robustness, completed E4 real-model learning, heterogeneous workload profiling, distributed systems evidence and E6 remain outstanding. No language-model learning, generalization, or capability gain is claimed before the frozen model run completes and passes its checks.
 
 ## Restored experimental implementation
 
