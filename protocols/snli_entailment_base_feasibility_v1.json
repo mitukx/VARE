@@ -1,0 +1,93 @@
+{
+  "artifact_policy": "Retain selected validation rows, exact prompts and prompt hashes, token IDs, per-row binary margins and predictions, dataset/model hashes, runtime, resource records, source snapshots, auditor report, and SHA-256 manifest. Preserve non-passes and failures. Do not load the official test split or train/update any model.",
+  "claim_boundary": "This is a no-update base-policy feasibility screen for a balanced binary transformation of SNLI validation. It can establish only whether the pinned model clears a frozen base-rate screen on these selected rows. It is not post-training evidence, held-out confirmation, external reproduction, or a model-capability/generalization claim. Public-model pretraining exposure cannot be ruled out.",
+  "compute_limits": {
+    "device": "CPU only; CUDA and MPS are forbidden",
+    "feature_batch_size": 4,
+    "max_peak_rss_bytes_process": 6442450944,
+    "max_wall_seconds_process": 900,
+    "network": "Disabled; local_files_only=true and all Hugging Face offline flags set",
+    "paid_compute": false,
+    "threads": 4
+  },
+  "dataset": {
+    "id": "stanfordnlp/snli",
+    "configuration": "plain_text",
+    "revision": "cdb5c3d5eed6ead6e5a341c8e56e669bb666725b",
+    "validation_split": {
+      "rows": 10000,
+      "fingerprint": "6c5035fc008e4d4e",
+      "arrow_file": "snli-validation.arrow",
+      "arrow_sha256": "a688c8f06b3a28f6c9e52e9eb919e576c975e4161ba0139e5aafc6704345cd38"
+    },
+    "source_labels": {
+      "0": "entailment",
+      "1": "neutral",
+      "2": "contradiction",
+      "-1": "invalid; exclude before cohort ranking"
+    },
+    "binary_mapping": "entailment=0; neutral or contradiction=1",
+    "selection": "Within each binary class on the official validation split, rank valid rows by (SHA256(premise + newline + hypothesis), original row index); select the first 256. Exclude rows whose premise SHA-256 appears in the typed locked pilot denylist, and also exclude any prompt-pair SHA-256 matching a typed legacy text hash. Premise exclusions conservatively remove every hypothesis sharing a premise used in prior pilots. Fail closed for insufficient support, duplicate prompt hashes, or any pilot overlap. This consumes the selected rows for feasibility only.",
+    "denylist_file": "protocols/snli_entailment_base_feasibility_v1.denylist.json",
+    "denylist_sha256": "13e7eb2dc9baa4bd37b5ae462bd1ce5b65eca54fcf79316c8dbffc4d621c1a62"
+  },
+  "model": {
+    "id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "weights_must_already_be_cached": true,
+    "snapshot_file_sha256": {
+      "config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+      "generation_config.json": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6",
+      "merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+      "model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    }
+  },
+  "task": {
+    "question": "Does the hypothesis follow from the premise?",
+    "prompt_template": "Premise: {premise}\nHypothesis: {hypothesis}\n\nWhich relation holds? Choose the best answer.\nA. {meaning_for_A}\nB. {meaning_for_B}\n\nAnswer with one letter only: A or B.",
+    "action_space": "Score exactly the next-token logits for the single-token completions ' A' and ' B'; no generation or continuation. Verify both tokenizations at runtime.",
+    "option_order": "Deterministic per-prompt shuffle keyed by SHA256('snli-binary-order-v1:' + prompt_sha256); the binary label-to-letter mapping is recorded for every selected row.",
+    "meaning_entailment": "the hypothesis follows from the premise",
+    "meaning_not_entailment": "the hypothesis does not follow from the premise",
+    "model_updates": 0
+  },
+  "action_token_ids": {
+    "A": 362,
+    "B": 425
+  },
+  "metrics": {
+    "primary": "Balanced accuracy across entailment and not-entailment on the 512 selected, class-balanced validation rows.",
+    "report": ["balanced_accuracy", "entailment_recall", "not_entailment_recall", "ordinary_accuracy", "confusion_matrix", "balanced_accuracy_bootstrap_95_percent_interval"],
+    "paired_bootstrap": {
+      "method": "Resample rows with replacement within each binary gold class and recompute balanced accuracy.",
+      "resamples": 10000,
+      "seed": 5142026,
+      "interval": [0.025, 0.975]
+    },
+    "feasibility_gate": {
+      "minimum_balanced_accuracy": 0.58,
+      "minimum_recall_per_class": 0.4,
+      "bootstrap_95_percent_lower_bound_above": 0.5,
+      "result": "pass only when every threshold and all provenance/runtime/resource checks pass; otherwise non-pass"
+    },
+    "decision_effect": "A pass permits design work on a separate frozen post-training study with fresh training/development/confirmation cohorts; it does not authorize training or test-split access in this feasibility run. A non-pass retires this task formulation without changing the gate or reusing the selected rows."
+  },
+  "runtime_lock": {
+    "python": "3.9.6",
+    "torch": "2.8.0",
+    "transformers": "4.57.3",
+    "datasets": "4.4.2",
+    "numpy": "1.26.4",
+    "tokenizers": "0.22.1",
+    "safetensors": "0.7.0"
+  },
+  "protocol_id": "snli_entailment_base_feasibility_v1",
+  "execution": {
+    "study_and_audit": "Separate CPU-only offline processes, each limited to 900 seconds and 6 GiB peak RSS.",
+    "source_commit_required": true,
+    "working_tree_must_be_clean": true
+  }
+}
