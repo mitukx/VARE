@@ -32,7 +32,7 @@ The corrected [local CPU pilot](local-agent-pilot.md) ran one small model on one
 
 ## E3 — Preference-signal robustness
 
-The v2 result includes noisy-label and shuffled-label diagnostics, but they are not a confirmatory robustness estimate. Compare clean, noisy, and shifted preference conditions at matched update/data budgets under a new frozen protocol. Freeze condition definitions, calibration measures, primary metric, acceptance rule, and analysis before outcomes. If task selection/curriculum is studied, define one explicit intervention with a fixed-selector baseline and independent held-out outcome.
+The v2 noise arm remains diagnostic and its shuffled-ID arm is invalid. A separate [`v1 noise/shift study`](synthetic-preference-robustness-v1-report.md) was committed before its run and audited from regenerated data. Across ten seeds, the clean arm passed its synthetic base-teacher NLL/KL rule; 20% and 40% orientation flips worsened mean NLL on every seed, and the base-trained policy had higher mean NLL under a declared shifted teacher. This closes one narrow synthetic E3 comparison. It does not cover realistic annotator disagreement, learned reward models, adaptive reward hacking, or language-model outputs. Further robustness claims require a different task/generator and independent review; do not tune this protocol.
 
 ## E4 — Small-model learning
 
@@ -52,7 +52,7 @@ Study repeated system-proposed interventions only after independent downstream e
 
 ## Current stop point
 
-The isolated-input E0 calibration, execution failure-injection checks, promotion-metric and replay-group regressions, bounded environment-command output v4 regression, and three E1 task/grader pairs are complete. The RVL mutation audit covers one constructed `bad_words_ids` case only. Narrow E5 measurements cover local scheduling and durable freshness-check work. E2 has one accepted synthetic preference-policy confirmation alongside the preserved v1 diagnostic non-pass. The cached-model run adds evidence that a narrow output-head DPO-style update is feasible on local CPU, but its three-seed held-out result did not pass. Agent evidence is separately negative. Confirmatory E3 robustness, a reliable E4 model-level improvement, heterogeneous workload profiling, distributed systems evidence and E6 remain outstanding. No generalization or capability gain is claimed.
+The isolated-input E0 calibration, execution failure-injection checks, promotion-metric and replay-group regressions, bounded environment-command output v4 regression, and three E1 task/grader pairs are complete. The RVL mutation audit covers one constructed `bad_words_ids` case only. Narrow E5 measurements cover local scheduling and durable freshness-check work. E2 has accepted synthetic preference-policy confirmations alongside the preserved v1 diagnostic non-pass. One narrow E3 study now measures label flips and a predefined preference shift; realistic preference and reward-model robustness remains untested. The cached-model run adds evidence that a narrow output-head DPO-style update is feasible on local CPU, but its three-seed held-out result did not pass. Agent evidence is separately negative. Reliable E4 model-level improvement, heterogeneous workload profiling, distributed systems evidence and E6 remain outstanding. No generalization or capability gain is claimed.
 
 ## Restored experimental implementation
 

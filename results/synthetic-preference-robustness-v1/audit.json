@@ -1,0 +1,30 @@
+{
+  "acceptance_passed": true,
+  "base_and_shifted_evaluation_pairs_matched": true,
+  "claim_limit": "A passing result supports only a controlled synthetic contextual preference-optimization mechanism under this teacher, learner, noise process, and shift. It is not language-model training, reasoning, truthfulness, alignment, or capability evidence.",
+  "flip_count_by_rate": {
+    "flip_20pct": {
+      "maximum": 116,
+      "mean": 103.8,
+      "minimum": 91
+    },
+    "flip_40pct": {
+      "maximum": 221,
+      "mean": 206.6,
+      "minimum": 191
+    }
+  },
+  "heldout_contexts_disjoint_from_training": true,
+  "manifest_file_count": 16,
+  "mean_clean_base_nll_improvement": 0.31738510800465436,
+  "mean_clean_kl_to_uniform": 0.3951547712387794,
+  "paired_bootstrap_95pct": [
+    0.3020704181129256,
+    0.33282136336212276
+  ],
+  "protocol_id": "vare-synthetic-preference-robustness-v1",
+  "reconstructed_arm_condition_seed_metrics": 80,
+  "seed_count": 10,
+  "status": "verified",
+  "train_and_holdout_data_regenerated": true
+}

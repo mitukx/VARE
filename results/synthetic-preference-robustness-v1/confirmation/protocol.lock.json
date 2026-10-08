@@ -1,0 +1,93 @@
+{
+  "arms": {
+    "clean": "Use the sampled base-teacher preference orientation without corruption.",
+    "flip_20pct": "Flip each training pair orientation independently with probability 0.20.",
+    "flip_40pct": "Flip each training pair orientation independently with probability 0.40.",
+    "reference": "No update; uniform categorical policy."
+  },
+  "artifact_policy": "Retain this protocol and lock, exact runner snapshot, all generated comparison designs and labels, all policy metrics, environment, summary, and SHA-256 manifest. Never overwrite a run or discard null/negative results. The audit must regenerate designs and labels from the frozen seed rules and reconstruct all metrics and the primary decision.",
+  "claim_boundary": "A passing result supports only a controlled synthetic contextual preference-optimization mechanism under this teacher, learner, noise process, and shift. It is not language-model training, reasoning, truthfulness, alignment, or capability evidence.",
+  "compute_limits": {
+    "external_dependencies": false,
+    "gpu": false,
+    "network_access": false,
+    "paid_api_or_compute": false
+  },
+  "data": {
+    "actions": 4,
+    "base_label_seed_offset": 3000000,
+    "base_teacher": "u(x,a) = sum_d x[d] * (sin(0.7*(a+1)*(d+1)) + 0.5*cos(0.31*(a+2)*(d+1))).",
+    "comparisons_per_heldout_context": 2,
+    "comparisons_per_training_context": 8,
+    "context_distribution": "Independent standard-normal features sampled using random.Random(seed).gauss(0, 1).",
+    "dimension": 8,
+    "heldout_base_label_seed_offset": 6000000,
+    "heldout_contexts": 128,
+    "heldout_design_seed_offset": 2000000,
+    "label_sampling": "For an unordered action pair (a,b), select a with probability sigmoid(u(x,a)-u(x,b)); otherwise select b. Label draws use separate deterministic RNG streams from context/pair design.",
+    "noise_condition": "Use one uniform draw per training example from random.Random(seed + 5000000); flip at thresholds 0.20 and 0.40. The 20% flipped examples are therefore a subset of the 40% flips, and both conditions retain the original unordered action pair.",
+    "noise_seed_offset": 5000000,
+    "shifted_label_seed_offset": 4000000,
+    "shifted_teacher": "u_shift(x,a) = u(x,a) + 1.25*x[0]*[-1.5,-0.5,0.5,1.5][a]. This changes preference labels while keeping held-out contexts and action pairs matched to the base evaluation set.",
+    "splits": "Training, held-out comparison design, base-teacher labels, and shifted-teacher labels use independent declared seed offsets. No held-out examples or metrics are used to choose hyperparameters or alter the protocol.",
+    "training_contexts": 64,
+    "training_seed_offset": 1000000
+  },
+  "gradient_check": {
+    "absolute_tolerance": 1e-06,
+    "epsilon": 1e-06,
+    "method": "Central finite differences on a fixed four-action, eight-feature preference minibatch and fixed nonzero parameter vector.",
+    "relative_tolerance": 1e-05
+  },
+  "learner": {
+    "beta": 1.0,
+    "dtype": "Python binary64 floats.",
+    "learning_rate": 0.2,
+    "objective": "Mean softplus(-beta * ((log pi(chosen|x)-log pi(rejected|x)) - (log pi_ref(chosen|x)-log pi_ref(rejected|x)))).",
+    "optimizer": "Full-batch gradient descent.",
+    "policy": "Contextual categorical policy pi(a|x)=softmax(theta[a] dot x), initialized with all theta=0.",
+    "reference_policy": "Frozen uniform categorical policy.",
+    "update_budget_selection": "Fixed at 100 for every trained arm, carried over as a fixed experimental setting from the prior synthetic study. This study has no development phase or budget tuning.",
+    "updates": 100
+  },
+  "metrics": {
+    "interpretation": "Only the clean-arm in-distribution primary rule determines acceptance. Noise and shifted-condition results are reported per seed and descriptively; no monotonicity or robustness claim is assumed in advance.",
+    "paired_bootstrap": {
+      "interval": [
+        0.025,
+        0.975
+      ],
+      "resamples": 10000,
+      "seed": 20261010
+    },
+    "primary": "Per-seed held-out base-teacher pairwise NLL improvement: reference NLL minus clean-arm NLL. Positive is better.",
+    "primary_acceptance": {
+      "maximum_mean_clean_policy_kl_to_uniform": 0.5,
+      "mean_nll_improvement_at_least": 0.05,
+      "minimum_seeds_improved": 8,
+      "paired_bootstrap_lower_bound_above": 0.0,
+      "seed_count": 10
+    },
+    "secondary": [
+      "held-out pairwise NLL, accuracy, Brier score, mean KL to uniform, and teacher expected utility for each arm under both base and shifted labels",
+      "realized training flip count and fraction for each noise arm",
+      "per-seed parameter delta and wall-clock seconds",
+      "process peak RSS when available"
+    ]
+  },
+  "protocol_id": "vare-synthetic-preference-robustness-v1",
+  "purpose": "Measure how fixed-budget contextual preference optimization responds to independently flipped training labels and a known held-out preference shift, with regenerated data and a frozen primary acceptance rule.",
+  "seeds": [
+    503,
+    509,
+    521,
+    523,
+    541,
+    547,
+    557,
+    563,
+    569,
+    571
+  ],
+  "sha256": "0c9ee72db39d47b482f7255d9dfb45585e0887bc5bae1bd972990fdf0b74cfa2"
+}
