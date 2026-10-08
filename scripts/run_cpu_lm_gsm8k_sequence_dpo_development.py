@@ -52,9 +52,9 @@ def write_manifest(output: Path) -> None:
     write_json(output / "manifest.json", {"algorithm": "sha256", "files": files})
 
 
-def load_locked_spec():
-    spec = json.loads(SPEC_PATH.read_text(encoding="utf-8"))
-    lock = json.loads(LOCK_PATH.read_text(encoding="utf-8"))
+def load_locked_spec(spec_path: Path = SPEC_PATH, lock_path: Path = LOCK_PATH):
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    lock = json.loads(lock_path.read_text(encoding="utf-8"))
     lock_hash = lock.pop("sha256", None)
     spec_hash = hashlib.sha256(canonical(spec)).hexdigest()
     if lock_hash != spec_hash or canonical(lock) != canonical(spec):
@@ -234,7 +234,8 @@ def generate_greedy(rows, tokenizer, model, spec, adapter_a=None, adapter_b=None
     batch_size = spec["compute_limits"]["generation_batch_size"]
     results = []
     max_new = spec["compute_limits"]["generation_max_new_tokens"]
-    eos = tokenizer.eos_token_id
+    repetition_penalty = spec["generation"]["repetition_penalty"]
+    eos_ids = set(spec["generation"]["eos_token_ids"])
     for offset in range(0, len(rows), batch_size):
         selected = rows[offset:offset + batch_size]
         messages = [[{"role": "user", "content": row["user_message"]}] for row in selected]
@@ -242,11 +243,15 @@ def generate_greedy(rows, tokenizer, model, spec, adapter_a=None, adapter_b=None
                                               padding=True, return_tensors="pt", return_dict=True)
         input_ids = batch["input_ids"]
         attention = batch["attention_mask"]
+        if not bool(attention.all()):
+            raise ValueError("generation must use unpadded single prompts")
         position_ids = attention.long().cumsum(dim=1) - 1
         position_ids.masked_fill_(attention == 0, 0)
         with torch.inference_mode():
+            prompt_width = input_ids.shape[1]
             out = model.model(input_ids=input_ids, attention_mask=attention,
-                              position_ids=position_ids, use_cache=True)
+                              position_ids=position_ids, cache_position=torch.arange(prompt_width),
+                              use_cache=True)
             past = out.past_key_values
             hidden = out.last_hidden_state[:, -1, :]
             logits = model.lm_head(hidden)
@@ -255,18 +260,29 @@ def generate_greedy(rows, tokenizer, model, spec, adapter_a=None, adapter_b=None
             tokens = [[] for _ in selected]
             finished = [False] * len(selected)
             for step in range(max_new):
-                next_ids = logits.argmax(dim=-1)
+                generation_logits = logits.clone()
+                if repetition_penalty != 1.0:
+                    for i, generated_ids in enumerate(tokens):
+                        seen_ids = set(input_ids[i].tolist()) | set(generated_ids)
+                        seen = torch.tensor(sorted(seen_ids), dtype=torch.long)
+                        values = generation_logits[i, seen]
+                        generation_logits[i, seen] = torch.where(
+                            values < 0, values * repetition_penalty, values / repetition_penalty
+                        )
+                next_ids = generation_logits.argmax(dim=-1)
                 for i, token in enumerate(next_ids.tolist()):
                     if not finished[i]:
                         tokens[i].append(token)
-                        if token == eos:
+                        if token in eos_ids:
                             finished[i] = True
                 if all(finished) or step + 1 >= max_new:
                     break
                 attention = torch.cat([attention, torch.ones((len(selected), 1), dtype=attention.dtype)], dim=1)
                 position_ids = (attention.sum(dim=1) - 1)[:, None]
                 out = model.model(input_ids=next_ids[:, None], attention_mask=attention,
-                                  position_ids=position_ids, past_key_values=past, use_cache=True)
+                                  position_ids=position_ids,
+                                  cache_position=torch.tensor([prompt_width + step]),
+                                  past_key_values=past, use_cache=True)
                 past = out.past_key_values
                 hidden = out.last_hidden_state[:, -1, :]
                 logits = model.lm_head(hidden)
@@ -284,9 +300,9 @@ def generate_greedy(rows, tokenizer, model, spec, adapter_a=None, adapter_b=None
     return results
 
 
-def run(output: Path):
+def run(output: Path, spec_path: Path = SPEC_PATH, lock_path: Path = LOCK_PATH):
     started = time.monotonic()
-    spec, protocol_hash = load_locked_spec()
+    spec, protocol_hash = load_locked_spec(spec_path, lock_path)
     output.mkdir(parents=True, exist_ok=False)
     write_json(output / "protocol.snapshot.json", spec)
     (output / "protocol.lock.snapshot.json").write_bytes(LOCK_PATH.read_bytes())
@@ -438,8 +454,10 @@ def run(output: Path):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=ROOT / "results/cpu-lm-gsm8k-sequence-dpo-development-v1/run-1")
+    parser.add_argument("--protocol", type=Path, default=SPEC_PATH)
+    parser.add_argument("--lock", type=Path, default=LOCK_PATH)
     args = parser.parse_args()
-    result = run(args.output.expanduser().resolve())
+    result = run(args.output.expanduser().resolve(), args.protocol.resolve(), args.lock.resolve())
     print(json.dumps({"decision": result["decision"], "selected_epochs": result["selected_epochs"],
                       "base_accuracy": result["base_validation_exact_match_accuracy"],
                       "updated_accuracy": result["selected_mean_exact_match_accuracy"],

@@ -1,0 +1,97 @@
+{
+  "artifact_policy": "Keep all train and validation rows, chosen/rejected full prompt and response token IDs, verifier labels, per-example reference/policy/relative preference margins at every validation checkpoint, all adapter checkpoint arrays as compressed NPZ files, generated validation text, source/model/cache hashes, runtime, and a SHA-256 manifest. Do not store or modify the confirmation rows before a distinct confirmation lock is committed.",
+  "claim_boundary": "Development only. The preceding v1 generation metric was invalidated after parity checks found the custom decoder differed from Hugging Face generation because of batching and the pinned Qwen repetition-penalty setting. This version evaluates one unpadded prompt at a time and applies the pinned generation settings on fresh, disjoint GSM8K train rows. No independent confirmation, free-form answer improvement, human-preference result, or capability claim is established.",
+  "compute_limits": {
+    "device": "CPU only; CUDA and MPS placement are forbidden",
+    "feature_batch_size": 8,
+    "generation_batch_size": 1,
+    "generation_max_new_tokens": 64,
+    "max_peak_rss_bytes": 6442450944,
+    "max_wall_seconds": 1800,
+    "network": "disabled; HF_HUB_OFFLINE=1, HF_DATASETS_OFFLINE=1, TRANSFORMERS_OFFLINE=1, local_files_only=true",
+    "paid_compute": false,
+    "pair_microbatch_size": 4,
+    "threads": 4
+  },
+  "dataset": {
+    "answer_parser": "Parse the terminal number after ####, remove commas, and parse with Decimal.",
+    "cached_fingerprint": "c6f812ae33c9159d",
+    "cached_train_arrow_sha256": "6146bca074f4c6c5e07de7e96cc968adab3833dbdafeda21830f27558eea3d9b",
+    "config": "main",
+    "confirmation_reservation": "For a later, separately locked confirmation, reserve train ranks 1504\u20131631 for updates and 1632\u20132143 for held-out questions. The confirmation must use the GSM8K train split only and must not reload or select against the official test split already used by the prior forced-choice study.",
+    "development_training_examples": 64,
+    "development_validation_examples": 64,
+    "id": "openai/gsm8k",
+    "leakage_boundary": "This phase reads only GSM8K train rows. The model may have seen the public dataset during pretraining; this cannot be ruled out.",
+    "preference_pair": "The chosen completion is the parsed verifier answer as a numeric assistant response. The rejected completion is deterministically one unit above or below it. Append the model EOS token to both completions. No human preference labels are used.",
+    "prompt": "Use the model's pinned chat template. The user asks to solve the word problem and reply with only the final number.",
+    "revision": "740312add88f781978c0658806c59bc2815b9866",
+    "selection": "Sort official train rows by SHA-256 of 'vare-gsm8k-sample-v1\\0' concatenated with question. Use ranks 1376\u20131439 for updates and 1440\u20131503 for validation, zero-indexed. Ranks below 1376 are reserved for earlier studies, exploratory feasibility, or the invalidated v1 development and are not reused.",
+    "split": "train only"
+  },
+  "generation": {
+    "algorithm": "greedy",
+    "do_sample": false,
+    "eos_token_ids": [
+      151645,
+      151643
+    ],
+    "repetition_penalty": 1.1,
+    "source": "Pinned Qwen generation_config.json; apply the same seen-token repetition penalty to prompt and generated tokens."
+  },
+  "learner": {
+    "adapter": "Custom low-rank residual on the frozen output-head hidden states, over the full vocabulary. The transformer backbone and original output-head weights are frozen. This is not PEFT/TRL.",
+    "adapter_rank": 4,
+    "beta": 0.1,
+    "checkpoints_epochs": [
+      0,
+      1,
+      2,
+      4,
+      8
+    ],
+    "initialization": "A sampled from N(0, 1/sqrt(hidden_size)) by a CPU torch.Generator seeded per run; B initialized to zero.",
+    "maximum_epochs": 8,
+    "microbatch_pairs": 4,
+    "objective": "Standard sequence-summed DPO logistic loss over chosen and rejected answer-token sequences, relative to the frozen initial model: softplus(-beta * ((logp_chosen - logp_rejected)_policy - (logp_chosen - logp_rejected)_reference)).",
+    "optimizer": {
+      "gradient_norm_clip": 1.0,
+      "learning_rate": 0.0003,
+      "name": "AdamW",
+      "weight_decay": 0.0
+    },
+    "seeds": [
+      109,
+      211,
+      307
+    ]
+  },
+  "metrics": {
+    "claim_boundary": "The validation task uses verifier-generated numeric preferences and public GSM8K rows; it is a development signal, not confirmation.",
+    "generation_metric": "Greedy decoding with the same prompt and model chat template; parse the final numeric answer and compare Decimal-normalized values exactly.",
+    "selection_primary": "Mean validation DPO preference NLL over completion sequences; lower is better.",
+    "selection_rule": "Among nonzero checkpoints with lower mean validation DPO preference NLL than the base and mean KL <=0.5 nats per token, choose the lowest validation NLL, breaking ties toward fewer epochs. Then generate answers for the validation questions with the selected checkpoint. Promote to a separate confirmation only if its mean exact-match accuracy is at least the base accuracy and at least two of three seeds are not worse. Otherwise record a development non-pass; do not open the reserved confirmation rows.",
+    "selection_secondary": [
+      "held-out sequence preference accuracy",
+      "mean full-vocabulary token KL updated-to-base on paired completion contexts",
+      "greedy generated final-answer exact match"
+    ]
+  },
+  "model": {
+    "dtype": "float32",
+    "id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "weights_must_already_be_cached": true
+  },
+  "phase": "training_only_development",
+  "protocol_id": "vare-cpu-lm-gsm8k-sequence-dpo-development-v2",
+  "purpose": "Develop a CPU-only, sequence-level DPO update on verifier-labeled answer completions and select an update budget using only an isolated part of the GSM8K training split.",
+  "runtime": {
+    "datasets": "4.4.2",
+    "numpy": "1.26.4",
+    "python": "3.9.6",
+    "torch": "2.8.0",
+    "transformers": "4.57.3"
+  },
+  "sha256": "b1cabbeb73d9a179e14f4ec1bcc3847fac5f68097fac2bc8ee04e8bd5c20f71b"
+}
