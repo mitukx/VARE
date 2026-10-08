@@ -2,7 +2,7 @@
 
 ## Decision
 
-Prioritize post-training systems correctness and reviewability. The immediate change is to preserve complete comparison groups when `rollout_count` is not divisible by `samples_per_task`. After this regression is fixed and recorded, prepare a one-command, clean-checkout reproduction packet for the existing synthetic preference robustness study. Defer another language-model learner experiment until a distinct base/task pairing clears a frozen, no-update success and resource screen.
+Prioritize post-training systems correctness and reviewability. The immediate change is to preserve complete comparison groups when `rollout_count` is not divisible by `samples_per_task`. That regression is fixed and recorded. A one-command, clean-checkout reproduction packet for the existing synthetic preference robustness study is also in place. Defer another language-model learner experiment until a distinct base/task pairing clears a frozen, no-update success and resource screen.
 
 ## Evidence for the change
 
@@ -18,7 +18,9 @@ The recent generated code-repair feasibility screen completed with 0/32 successe
 
 The group-size defect is instead a correctness issue in VARE's own post-training path. It has a direct counterexample, a small CPU-only fix, and a regression that protects the group-relative objective's input contract. This is a bounded systems contribution; it does not demonstrate policy improvement or model capability.
 
-The second step is to make existing evidence easier to inspect. Synthetic preference robustness v1 already has retained raw designs and labels, a separately implemented learner/auditor, a tamper check, several Python-version runs, and a clean-clone replay on the author's machine. Those checks are not outside reproduction. A clean-checkout command that verifies hashes, reruns the frozen study and independent replay, and emits a compact summary can lower the cost for a future reviewer without overstating who reproduced it.
+The second step is to make existing evidence easier to inspect. Synthetic preference robustness v1 already has retained raw designs and labels, a separately implemented learner/auditor, a tamper check, several Python-version runs, and a clean-clone replay on the author's machine. Those checks are not outside reproduction. [`scripts/reproduce_synthetic_preference_robustness.py`](../scripts/reproduce_synthetic_preference_robustness.py) now runs the frozen protocol, original audit, and separate verifier with one command and writes a compact audit record. The generated bundle uses the current Python runtime's design stream; it is a fresh v1 run, not a bit-for-bit reconstruction of the historical run. This lowers review cost but does not count as external reproduction.
+
+The next evidence milestone is for a technically independent person to run the command and inspect the retained bundle. Do not describe author-run or CI execution as outside human reproduction.
 
 ## Deferred work and advancement gate
 

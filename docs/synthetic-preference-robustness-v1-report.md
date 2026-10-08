@@ -32,15 +32,11 @@ This confirms that the frozen objective, paired data construction, independent h
 
 ## Reproduction
 
-From the repository root, run:
+From a clean checkout, run one command with a new output path:
 
 ```bash
-python3 scripts/run_synthetic_preference_robustness.py \
-  --output results/synthetic-preference-robustness-v1/confirmation
-python3 scripts/audit_synthetic_preference_robustness.py \
-  results/synthetic-preference-robustness-v1/confirmation
-python3 scripts/verify_synthetic_preference_robustness_bundle_independent.py \
-  results/synthetic-preference-robustness-v1/confirmation
+python3 scripts/reproduce_synthetic_preference_robustness.py \
+  --output /tmp/vare-synthetic-preference-robustness-v1-run-2
 ```
 
-The runner refuses to overwrite an existing output directory. No GPU, download, package installation, paid API, or external compute is required.
+The command runs the frozen protocol, its original auditor, and the separate verifier. It writes the new bundle at the requested path plus two audit sidecars beside it; it refuses to overwrite any of these paths and requires a clean Git checkout. All stages use the same Python interpreter. This is a fresh run from v1, not a bit-for-bit reconstruction of the historical bundle: Python's `random.gauss` and `sample` behavior is not pinned across interpreter versions. The verifier reports that distinction and does not claim outside-person reproduction. No GPU, download, package installation, paid API, or external compute is required.
