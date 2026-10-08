@@ -60,7 +60,6 @@ def run(output: Path, spec_path: Path = SPEC_PATH, lock_path: Path = LOCK_PATH):
     if spec["phase"] != "independent_confirmation":
         raise ValueError("confirmation runner requires an independent_confirmation protocol")
     output.mkdir(parents=True, exist_ok=False)
-    deadline = started + spec["compute_limits"]["max_wall_seconds"]
     write_json(output / "protocol.snapshot.json", spec)
     (output / "protocol.lock.snapshot.json").write_bytes(lock_path.read_bytes())
     sources = (Path(__file__), Path(__file__).with_name("gsm8k_sequence_task.py"),
@@ -97,12 +96,11 @@ def run(output: Path, spec_path: Path = SPEC_PATH, lock_path: Path = LOCK_PATH):
             raise ValueError("cached train fingerprint differs from lock")
 
         # Reserved rows are first selected only after the committed lock passes verification.
-        train_rows = make_sequence_rows(ds, "confirmation_update", *spec["dataset"]["update_rank_range"])
-        heldout_rows = make_sequence_rows(ds, "confirmation_heldout", *spec["dataset"]["heldout_rank_range"])
+        train_rows = make_sequence_rows(ds, "confirmation_update", 1504, 1632)
+        heldout_rows = make_sequence_rows(ds, "confirmation_heldout", 1632, 2144)
         train_hashes = {row["question_sha256"] for row in train_rows}
         heldout_hashes = {row["question_sha256"] for row in heldout_rows}
-        if (len(train_hashes) != spec["dataset"]["update_examples"] or
-                len(heldout_hashes) != spec["dataset"]["heldout_examples"] or train_hashes & heldout_hashes):
+        if len(train_hashes) != 128 or len(heldout_hashes) != 512 or train_hashes & heldout_hashes:
             raise ValueError("confirmation rows overlap or counts differ")
 
         tokenizer = AutoTokenizer.from_pretrained(str(MODEL_DIR), local_files_only=True)
@@ -121,20 +119,17 @@ def run(output: Path, spec_path: Path = SPEC_PATH, lock_path: Path = LOCK_PATH):
                                       spec["compute_limits"]["pair_microbatch_size"])
         train_reference = evaluate_pairs(train_pairs, model, None, None, spec["learner"]["beta"],
                                          spec["compute_limits"]["pair_microbatch_size"])
-        base_generations = generate_greedy(heldout_rows, tokenizer, model, spec, deadline=deadline)
+        base_generations = generate_greedy(heldout_rows, tokenizer, model, spec)
         base_accuracy = statistics.fmean(float(row["exact_match"]) for row in base_generations)
 
         seed_results = []
         fixed_epoch = spec["learner"]["fixed_update_epochs"]
         for seed in spec["learner"]["seeds"]:
             checkpoints, _ = train_to_checkpoints(train_pairs, heldout_pairs, model, spec, seed)
-            if time.monotonic() >= deadline:
-                raise TimeoutError("confirmation exceeded its wall-time ceiling")
             checkpoint = checkpoints[str(fixed_epoch)]
             adapter_a = checkpoint["adapter"]["A"].detach()
             adapter_b = checkpoint["adapter"]["B"].detach()
-            generated = generate_greedy(heldout_rows, tokenizer, model, spec, adapter_a, adapter_b,
-                                        deadline=deadline)
+            generated = generate_greedy(heldout_rows, tokenizer, model, spec, adapter_a, adapter_b)
             accuracy = statistics.fmean(float(row["exact_match"]) for row in generated)
             adapter_path = output / "adapters" / f"seed-{seed}-epoch-{fixed_epoch}.npz"
             adapter_path.parent.mkdir(parents=True, exist_ok=True)

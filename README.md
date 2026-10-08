@@ -4,6 +4,8 @@ VARE is a CPU-first research control plane for studying post-training signals an
 
 The separate [sequence-level GSM8K development result](docs/cpu-lm-gsm8k-sequence-dpo-development-v2-report.md) lowered verifier-labeled validation preference NLL under its KL cap, but did not improve free-form exact-match accuracy. It is a small development candidate pending a separately locked confirmation, not a capability result.
 
+The first 512-question CPU confirmation exceeded its two-hour limit with two of three seeds completed; it is explicitly [recorded as incomplete](docs/cpu-lm-gsm8k-sequence-dpo-confirmation-v1-incomplete.md). A smaller fresh-cohort confirmation is locked separately.
+
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
 
 ## Post-training results

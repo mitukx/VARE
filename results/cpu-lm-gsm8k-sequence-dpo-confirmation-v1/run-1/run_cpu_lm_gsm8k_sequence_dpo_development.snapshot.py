@@ -227,7 +227,7 @@ def train_to_checkpoints(train_pairs, val_pairs, model, spec, seed):
     return checkpoint_data, initial
 
 
-def generate_greedy(rows, tokenizer, model, spec, adapter_a=None, adapter_b=None, deadline=None):
+def generate_greedy(rows, tokenizer, model, spec, adapter_a=None, adapter_b=None):
     """Greedy decode with the frozen backbone and optional full-vocabulary head residual."""
     import torch
     tokenizer.padding_side = "left"
@@ -237,8 +237,6 @@ def generate_greedy(rows, tokenizer, model, spec, adapter_a=None, adapter_b=None
     repetition_penalty = spec["generation"]["repetition_penalty"]
     eos_ids = set(spec["generation"]["eos_token_ids"])
     for offset in range(0, len(rows), batch_size):
-        if deadline is not None and time.monotonic() >= deadline:
-            raise TimeoutError("generation exceeded its wall-time deadline")
         selected = rows[offset:offset + batch_size]
         messages = [[{"role": "user", "content": row["user_message"]}] for row in selected]
         batch = tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=True,
@@ -262,8 +260,6 @@ def generate_greedy(rows, tokenizer, model, spec, adapter_a=None, adapter_b=None
             tokens = [[] for _ in selected]
             finished = [False] * len(selected)
             for step in range(max_new):
-                if deadline is not None and time.monotonic() >= deadline:
-                    raise TimeoutError("generation exceeded its wall-time deadline")
                 generation_logits = logits.clone()
                 if repetition_penalty != 1.0:
                     for i, generated_ids in enumerate(tokens):

@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from gsm8k_sequence_task import make_sequence_rows  # noqa: E402
 from run_cpu_lm_gsm8k_sequence_dpo_development import (  # noqa: E402
-    DATA_DIR, MODEL_DIR, generate_greedy, sha256_file,
+    DATA_DIR, MODEL_DIR, generate_greedy, sha256_file, write_manifest,
 )
 
 
@@ -65,6 +65,22 @@ def audit(out):
     protocol_hash = hashlib.sha256(canonical(spec)).hexdigest()
     if lock_hash != protocol_hash or canonical(lock) != canonical(spec):
         raise ValueError("protocol snapshot does not match its committed lock")
+    if (out / "failure.json").exists() and not (out / "confirmation.json").exists():
+        failure = read(out / "failure.json")
+        adapter_paths = sorted((out / "adapters").glob("seed-*-epoch-*.npz"))
+        adapter_seeds = sorted(int(path.name.split("-")[1]) for path in adapter_paths)
+        allowed_seeds = sorted(spec["learner"]["seeds"])
+        if any(seed not in allowed_seeds for seed in adapter_seeds) or len(set(adapter_seeds)) != len(adapter_seeds):
+            raise ValueError("partial adapter artifacts do not match protocol seeds")
+        partial = {"audit": "incomplete", "protocol_id": spec["protocol_id"],
+                   "protocol_sha256": protocol_hash, "source_manifest_sha256": source_manifest_hash,
+                   "exception_type": failure["exception_type"], "elapsed_seconds": failure["elapsed_seconds"],
+                   "peak_rss_bytes": failure["peak_rss_bytes"], "adapter_seeds_completed": adapter_seeds,
+                   "required_seeds": allowed_seeds,
+                   "decision": "not_evaluable_no_confirmation_claim"}
+        (out / "audit.json").write_text(json.dumps(partial, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        write_manifest(out)
+        return partial
     bundle = read(out / "confirmation.json")
     result = bundle["summary"]
     if result["protocol_sha256"] != protocol_hash:
@@ -84,19 +100,21 @@ def audit(out):
             raise ValueError("model file hash differs: " + name)
     if sha256(DATA_DIR / "gsm8k-train.arrow") != result["dataset_train_sha256"]:
         raise ValueError("cached training data hash differs")
-    if len(bundle["update_examples"]) != 128 or len(bundle["heldout_examples"]) != 512:
+    update_count = spec["dataset"]["update_examples"]
+    heldout_count = spec["dataset"]["heldout_examples"]
+    if len(bundle["update_examples"]) != update_count or len(bundle["heldout_examples"]) != heldout_count:
         raise ValueError("confirmation row counts differ")
     update_hashes = {row["question_sha256"] for row in bundle["update_examples"]}
     heldout_hashes = {row["question_sha256"] for row in bundle["heldout_examples"]}
-    if len(update_hashes) != 128 or len(heldout_hashes) != 512 or update_hashes & heldout_hashes:
+    if len(update_hashes) != update_count or len(heldout_hashes) != heldout_count or update_hashes & heldout_hashes:
         raise ValueError("update/held-out row overlap or duplicates")
     os.environ.update(HF_HUB_OFFLINE="1", HF_DATASETS_OFFLINE="1", TRANSFORMERS_OFFLINE="1")
     from datasets import load_dataset
     dataset = load_dataset(spec["dataset"]["id"], spec["dataset"]["config"], split="train")
     if dataset._fingerprint != spec["dataset"]["cached_fingerprint"]:
         raise ValueError("cached train fingerprint differs")
-    expected_train = make_sequence_rows(dataset, "confirmation_update", 1504, 1632)
-    expected_heldout = make_sequence_rows(dataset, "confirmation_heldout", 1632, 2144)
+    expected_train = make_sequence_rows(dataset, "confirmation_update", *spec["dataset"]["update_rank_range"])
+    expected_heldout = make_sequence_rows(dataset, "confirmation_heldout", *spec["dataset"]["heldout_rank_range"])
     for actual, expected in zip(bundle["update_examples"], expected_train):
         if actual["dataset_index"] != expected["dataset_index"] or actual["question_sha256"] != expected["question_sha256"]:
             raise ValueError("update rows differ from locked hash ranks")
@@ -122,11 +140,11 @@ def audit(out):
     seed_deltas = []
     updated_accuracy = []
     for expected_seed, item in zip(seeds, result["seed_results"]):
-        if item["seed"] != expected_seed or item["update_epochs"] != 4:
+        if item["seed"] != expected_seed or item["update_epochs"] != spec["learner"]["fixed_update_epochs"]:
             raise ValueError("seed or frozen epoch differs")
         metrics = item["preference"]
         margins = metrics["relative_preference_margins"]
-        if len(margins) != 512:
+        if len(margins) != heldout_count:
             raise ValueError("held-out per-example margin count differs")
         delta = statistics.fmean(nll(margin, beta) - nll(0.0, beta) for margin in margins)
         seed_deltas.append(delta)
@@ -139,30 +157,30 @@ def audit(out):
             if set(arrays.files) != {"A", "B"} or not all(np.isfinite(arrays[k]).all() for k in ("A", "B")):
                 raise ValueError("adapter arrays invalid")
         answers = item["generated_answers"]
-        if len(answers) != 512:
+        if len(answers) != heldout_count:
             raise ValueError("generated answer count differs")
         accuracy = statistics.fmean(float(row["exact_match"]) for row in answers)
         if not close(accuracy, item["generation_exact_match_accuracy"]):
             raise ValueError("per-seed exact-match summary differs")
         updated_accuracy.append(accuracy)
 
-    if len(result["base_heldout_generation"]) != 512:
+    if len(result["base_heldout_generation"]) != heldout_count:
         raise ValueError("base generation count differs")
     base_accuracy = statistics.fmean(float(row["exact_match"]) for row in result["base_heldout_generation"])
     if not close(base_accuracy, result["base_exact_match_accuracy"]):
         raise ValueError("base exact-match summary differs")
     bootstrap = result["paired_question_bootstrap"]
     per_question = [statistics.fmean(nll(result["seed_results"][s]["preference"]["relative_preference_margins"][i], beta)-nll(0.0,beta)
-                                       for s in range(len(seeds))) for i in range(512)]
+                                       for s in range(len(seeds))) for i in range(heldout_count)]
     observed = statistics.fmean(per_question)
     rng = random.Random(bootstrap["seed"])
-    draws = sorted(statistics.fmean(per_question[rng.randrange(512)] for _ in range(512))
+    draws = sorted(statistics.fmean(per_question[rng.randrange(heldout_count)] for _ in range(heldout_count))
                    for _ in range(bootstrap["replicates"]))
     lower, upper = draws[int(0.025 * bootstrap["replicates"])], draws[int(0.975 * bootstrap["replicates"]) - 1]
     if not (close(observed, bootstrap["mean_nll_change_updated_minus_base"]) and
             close(lower, bootstrap["ci_lower"]) and close(upper, bootstrap["ci_upper"])):
         raise ValueError("paired bootstrap summary cannot be reconstructed")
-    if len(bootstrap["per_question_mean_deltas"]) != 512 or not all(
+    if len(bootstrap["per_question_mean_deltas"]) != heldout_count or not all(
             close(a, b) for a, b in zip(per_question, bootstrap["per_question_mean_deltas"])):
         raise ValueError("paired bootstrap inputs differ")
 
@@ -207,7 +225,7 @@ def audit(out):
         parity.append({"dataset_index": row["dataset_index"], "same_as_huggingface_generate": True})
 
     report = {"audit": "passed", "protocol_id": spec["protocol_id"], "protocol_sha256": protocol_hash,
-              "source_manifest_sha256": source_manifest_hash, "update_rows": 128, "heldout_rows": 512,
+              "source_manifest_sha256": source_manifest_hash, "update_rows": update_count, "heldout_rows": heldout_count,
               "per_seed_nll_change": seed_deltas,
               "paired_nll_change": observed, "paired_nll_ci_95": [lower, upper],
               "base_exact_match_accuracy": base_accuracy, "updated_exact_match_by_seed": updated_accuracy,
