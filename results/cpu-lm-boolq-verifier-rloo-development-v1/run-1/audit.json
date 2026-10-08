@@ -1,0 +1,68 @@
+{
+  "all_adapter_optimizer_updates_replayed": true,
+  "audit": "pass",
+  "audit_limits": [
+    "Reconstructs prompts, labels, rank cohorts, tokenizer/model features, train-only normalization, adapter metrics, bootstrap intervals, optimizer updates, and RLOO action sampling.",
+    "Uses the pinned model and the same local CPU framework stack; this is a same-host audit, not external reproduction.",
+    "Reserved validation interval is used only for prompt-field ranking and prompt-hash disjointness; no reserved answer labels are read."
+  ],
+  "audit_peak_rss_bytes": 2970337280,
+  "audit_recovery_mode": "resume-after-audit-failure; original failure.json retained",
+  "audit_wall_seconds": 300.517679917,
+  "auditor_software_commit": "78b93470bda9d350ffd4a9ba9ee3c5d530a0c623",
+  "checkpoint_metrics_selection_and_gate_reconstructed": true,
+  "cohort_rows_reconstructed": {
+    "development": 512,
+    "prior_format_pilot_hashes_excluded": 24,
+    "prior_v16_v17_hashes_excluded": 768,
+    "reserved_prompt_hashes": 512,
+    "training": 128
+  },
+  "development_gate": {
+    "all_arms_within_resource_limits": true,
+    "all_provenance_and_prompt_separation_checks_pass": true,
+    "base_quality_floor_pass": true,
+    "expected_reward_gradient_checks_pass": true,
+    "mean_and_per_seed_kl_pass": true,
+    "result": "non-pass",
+    "rloo_mean_gain_threshold_pass": false,
+    "rloo_paired_ci_pass": false,
+    "seed_consistency_pass": true
+  },
+  "expected_reward_gradient_identity_independently_enumerated": {
+    "cases": 12,
+    "max_abs_error": 5.551115123125783e-17,
+    "tolerance": 1e-10
+  },
+  "feature_normalization_reconstructed": true,
+  "manifest_files_verified": 19,
+  "prior_audit_failure": {
+    "exception_type": "CalledProcessError",
+    "message": "Command '['/Library/Developer/CommandLineTools/usr/bin/python3', '/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/audit_cpu_lm_boolq_verifier_rloo_development_v1.py', '/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/results/cpu-lm-boolq-verifier-rloo-development-v1/run-1']' returned non-zero exit status 1.",
+    "peak_rss_bytes": 2412527616,
+    "protocol_id": "cpu-lm-boolq-verifier-rloo-development-v1",
+    "source_commit": "bc42d068623505f994b042c1e560834be14a58fe",
+    "wall_seconds": 480.132252833
+  },
+  "protocol_id": "cpu-lm-boolq-verifier-rloo-development-v1",
+  "protocol_sha256": "52907a3101d65b4dfa687f047f7ebe618a609acee99c76dd34e34cbe361f62ae",
+  "rollout_updates_verified": 500,
+  "sampled_action_groups_verified": 16000,
+  "source_commit": "bc42d068623505f994b042c1e560834be14a58fe",
+  "tokenizer_and_model_feature_replay": {
+    "action_token_ids": {
+      "no": 2753,
+      "yes": 9454
+    },
+    "device": "cpu",
+    "max_abs_action_margin_error": 0.0,
+    "max_abs_hidden_error": 0.0,
+    "pass": true,
+    "peak_rss_bytes": 2970337280,
+    "rows_replayed": {
+      "development": 512,
+      "training": 128
+    },
+    "wall_seconds": 282.554560125
+  }
+}

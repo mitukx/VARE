@@ -6,8 +6,8 @@ HH-RLHF v2 passed development but **failed its joint confirmation gate**: accura
 
 ## Start here
 
-- [Latest BoolQ study](docs/boolq-posttraining-development-v17-report.md): matched DPO, SFT, and anchored-DPO comparison, including its failed advancement gate.
-- [BoolQ binary verifier-RLOO v1](docs/cpu-lm-boolq-verifier-rloo-development-v1.md): locked CPU-only development design; implementation preflight is in progress, and no formal rows have been scored.
+- [Latest BoolQ study](docs/cpu-lm-boolq-verifier-rloo-development-v1-report.md): audited CPU-only binary verifier-reward RLOO non-pass, with raw bundle and limits.
+- [BoolQ v17 DPO/SFT/anchored-DPO study](docs/boolq-posttraining-development-v17-report.md): earlier matched comparison and its failed advancement gate.
 - [HH-RLHF reward-model v2](docs/hh-reward-model-v2-report.md): development pass, repeated confirmation accuracy gain, but no confirmed NLL improvement.
 - [HH human-preference DPO development v2](docs/hh-human-preference-dpo-development-v2-report.md): matched DPO/SFT update on human-labeled pairs; the frozen DPO-vs-base accuracy gate failed.
 - [HH DPO response-length diagnostic](docs/hh-human-preference-dpo-length-diagnostic-v1.md): post-hoc analysis of the same development cohort; it does not change the non-pass.
@@ -29,7 +29,7 @@ Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, c
 | Area | Result | What it supports |
 | --- | --- | --- |
 | Latest model study | BoolQ v17: all three matched methods missed the frozen task-gain gate. Best balanced-accuracy gain was 0.11 percentage points against a 5-point threshold. | An audited development comparison. Confirmation rows remain unopened. |
-| Next model study | BoolQ binary verifier-RLOO v1: protocol locked; code and independent-audit preflight underway. | No development result exists. A pass would still require a separately locked confirmation. |
+| Latest model study | BoolQ binary verifier-RLOO v1: five-seed development and same-host independent audit completed; frozen gate non-pass. | RLOO gained 2.69 points over base on the selected development comparison, below the 5-point rule; its paired interval crossed zero. No confirmation or general learning claim. |
 | Human-preference reward model | HH-RLHF v2: confirmation accuracy +7.68 points vs baseline; NLL difference interval [−0.0539, +0.0177]. | Accuracy repeated on one fresh cohort; the joint confirmation gate failed because NLL improvement remained uncertain. |
 | Human-preference policy update | HH helpful-base DPO v2: development pair accuracy 0.4128 vs frozen-base 0.4141; paired 95% interval [−0.0117, +0.0104]. | The frozen preference-gain and seed-consistency gates failed; no confirmation or downstream task-success claim. |
 | Synthetic binary-action DPO | Procedural entailment v1: base BA 0.5078; scalar calibration 0.6211; contextual DPO 0.5573. | DPO lost to scalar calibration, missed the base/gain gates, and exceeded the KL cap; synthetic development evidence only. |

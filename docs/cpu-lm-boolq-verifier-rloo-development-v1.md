@@ -2,7 +2,7 @@
 
 ## Status
 
-The protocol is locked for a CPU-only development run; the runner and independent auditor are undergoing preflight. No rows have been materialized or scored by this runner, and no model update result exists. The repository commit and CI check must precede the run. Even a development pass is only a screening result; confirmation requires a new lock and a separately audited execution.
+The frozen CPU-only development run completed on five seeds and the corrected same-host auditor passed. Its frozen advancement gate is a **non-pass**. The first automatic audit attempt exposed an auditor bootstrap bug; the original failure record is retained, the bootstrap was regression-tested and fixed, and the same stored run was independently replayed without retraining. Even a development pass would be only a screening result; confirmation requires a new lock and a separately audited execution.
 
 The cohort selector hashes `question` and `passage` fields across each official split, including the reserved validation rank range. Earlier BoolQ v16/v17 code also hashed validation prompts. Therefore, the reserved rows below are unscored and unused by this follow-up; they must not be described as never text-hashed or never opened.
 
@@ -40,3 +40,5 @@ The audit is same-host reproducibility using the pinned local model and CPU soft
 Regardless of outcome, this experiment concerns one public reading-comprehension dataset, one cached 0.5B model, a two-action verifier-reward contextual bandit, and a small CPU budget. BoolQ may have appeared in model pretraining. It cannot establish free-form generation improvement, sequence-level RL, human-preference alignment, broad reasoning, general capability, or scale. A non-pass is retained without changing the protocol; a pass requires a new confirmation protocol before any reserved answer label is accessed.
 
 See the machine-readable [protocol](../protocols/cpu_lm_boolq_verifier_rloo_development_v1.json), [lock](../protocols/cpu_lm_boolq_verifier_rloo_development_v1.lock.json), [runner](../scripts/run_cpu_lm_boolq_verifier_rloo_development_v1.py), [auditor](../scripts/audit_cpu_lm_boolq_verifier_rloo_development_v1.py), and [tests](../tests/test_boolq_rloo.py).
+
+Measured results and retained artifacts are in the [development report](cpu-lm-boolq-verifier-rloo-development-v1-report.md).
