@@ -1,0 +1,22 @@
+{
+  "candidate_files": [
+    "src/vare/environments/runner.py",
+    "src/vare/environments/spec.py",
+    "src/vare/evidence.py"
+  ],
+  "expected_calibration": {
+    "baseline_passed": false,
+    "fixed_passed": true
+  },
+  "frozen_before_baseline_measurement": true,
+  "interpretation_limit": "One deterministic local CPU output-budget regression; no hostile-code sandbox or hard memory quota claim.",
+  "locked_hashes": {
+    "evaluator_sha256": "0fa9f5c0bdff90b7fd1fc6ce2cd4575cf9e43f035978e98040df90d6883bf92e",
+    "task_brief_sha256": "9da4ab89a698978004e61bc440c64457361f0209c42e6341db31bbac47187350",
+    "task_json_sha256": "1a05604ddfaed1d449be5277b18281c881e67975d44225651193f251a899f7ef"
+  },
+  "protocol_id": "vare-environment-command-output-budget-v1",
+  "schema_version": 1,
+  "source_base_revision": "410e5321ab762c89ada970de1b41d2aacf99d88a",
+  "task_id": "vare-environment-command-output-budget-v1"
+}
