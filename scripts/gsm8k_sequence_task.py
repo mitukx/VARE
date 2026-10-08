@@ -10,6 +10,41 @@ from gsm8k_preference_task import digest_text, format_number, parse_answer, sele
 
 FINAL_NUMBER_RE = re.compile(r"([+-]?(?:\d[\d,]*)(?:\.\d+)?)\s*[.!?]?\s*$")
 
+# v1 and v2 were frozen before rank ranges became machine-readable protocol
+# fields. Keep their intended ranges explicit here; never silently substitute
+# the v1 defaults for a protocol that omits its ranges.
+_LEGACY_DEVELOPMENT_RANK_RANGES = {
+    "vare-cpu-lm-gsm8k-sequence-dpo-development-v1": ((608, 672), (672, 736)),
+    "vare-cpu-lm-gsm8k-sequence-dpo-development-v2": ((1376, 1440), (1440, 1504)),
+}
+
+
+def resolve_development_rank_ranges(spec: dict[str, Any]) -> tuple[tuple[int, int], tuple[int, int]]:
+    dataset = spec["dataset"]
+    train = dataset.get("development_training_rank_range")
+    validation = dataset.get("development_validation_rank_range")
+    if train is None and validation is None:
+        legacy = _LEGACY_DEVELOPMENT_RANK_RANGES.get(spec.get("protocol_id"))
+        if legacy is None:
+            raise ValueError("development protocol must declare machine-readable hash-rank ranges")
+        train, validation = legacy
+    elif train is None or validation is None:
+        raise ValueError("development protocol must declare both training and validation rank ranges")
+
+    train = tuple(train)
+    validation = tuple(validation)
+    if len(train) != 2 or len(validation) != 2:
+        raise ValueError("development rank ranges must each have a start and exclusive stop")
+    if train[0] < 0 or train[1] <= train[0] or validation[0] < 0 or validation[1] <= validation[0]:
+        raise ValueError("development rank ranges must be nonempty and nonnegative")
+    if train[0] < validation[1] and validation[0] < train[1]:
+        raise ValueError("development training and validation rank ranges overlap")
+    if train[1] - train[0] != dataset["development_training_examples"]:
+        raise ValueError("training rank range length differs from the frozen example count")
+    if validation[1] - validation[0] != dataset["development_validation_examples"]:
+        raise ValueError("validation rank range length differs from the frozen example count")
+    return train, validation
+
 
 def build_sequence_example(row: dict[str, Any], index: int, split: str) -> dict[str, Any]:
     answer = parse_answer(row["answer"])

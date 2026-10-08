@@ -17,7 +17,8 @@ from typing import Any
 
 from gsm8k_preference_task import digest_text
 from gsm8k_sequence_task import (attach_base_rollout_rejections, make_rationale_rows,
-                                 make_sequence_rows, parse_generated_number)
+                                 make_sequence_rows, parse_generated_number,
+                                 resolve_development_rank_ranges)
 
 ROOT = Path(__file__).resolve().parents[1]
 SPEC_PATH = ROOT / "protocols/cpu_lm_gsm8k_sequence_dpo_development_v15_sft.json"
@@ -351,8 +352,7 @@ def run(output: Path, spec_path: Path = SPEC_PATH, lock_path: Path = LOCK_PATH):
         ds = load_dataset(spec["dataset"]["id"], spec["dataset"]["config"], split="train")
         if ds._fingerprint != spec["dataset"]["cached_fingerprint"]:
             raise ValueError(f"cached train fingerprint mismatch: {ds._fingerprint}")
-        train_range = spec["dataset"].get("development_training_rank_range", [608, 672])
-        val_range = spec["dataset"].get("development_validation_rank_range", [672, 736])
+        train_range, val_range = resolve_development_rank_ranges(spec)
         preference_construction = spec["dataset"].get("preference_construction", "synthetic_numeric")
         base_rollout_mode = preference_construction.startswith("base_rollout_")
         row_builder = make_rationale_rows if preference_construction == "base_rollout_verifier_rationale" else make_sequence_rows

@@ -17,7 +17,7 @@ from run_cpu_lm_gsm8k_sequence_dpo_development import (  # noqa: E402
     DATA_DIR, MODEL_DIR, canonical, generate_greedy, sha256_file, write_manifest,
 )
 from gsm8k_sequence_task import (attach_base_rollout_rejections, make_rationale_rows,
-                                 make_sequence_rows)  # noqa: E402
+                                 make_sequence_rows, resolve_development_rank_ranges)  # noqa: E402
 
 
 def read_json(path: Path):
@@ -74,8 +74,7 @@ def audit(output: Path, check_generation: bool = True):
     if dataset._fingerprint != spec["dataset"]["cached_fingerprint"] or \
             sha256_file(DATA_DIR / "gsm8k-train.arrow") != spec["dataset"]["cached_train_arrow_sha256"]:
         raise ValueError("cached GSM8K train data differs from the lock")
-    train_range = spec["dataset"].get("development_training_rank_range", [608, 672])
-    val_range = spec["dataset"].get("development_validation_rank_range", [672, 736])
+    train_range, val_range = resolve_development_rank_ranges(spec)
     preference_construction = spec["dataset"].get("preference_construction", "synthetic_numeric")
     rationale_mode = preference_construction == "base_rollout_verifier_rationale"
     base_rollout_mode = preference_construction.startswith("base_rollout_")

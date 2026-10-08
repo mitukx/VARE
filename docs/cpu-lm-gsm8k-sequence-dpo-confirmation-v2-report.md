@@ -14,6 +14,8 @@ The mean full-vocabulary token KL was **0.73674**, above the frozen **0.5** ceil
 - Runtime: **694.91 seconds**; peak RSS: **3.42 GB**. No GPU, paid service, or network access.
 - The independent [auditor](../scripts/audit_cpu_lm_gsm8k_sequence_dpo_confirmation.py) passed: it reproduced question-hash selection, all seed metrics, the 10,000-draw paired bootstrap, the non-pass decision, adapter hashes, and three base-generation outputs against Hugging Face `generate`.
 
+A subsequent audit found that the preceding development v2 run reused v1's hash-ranked rows despite its report and lock naming a fresh range. This does not change confirmation v2's own fresh-row reconstruction or non-pass decision, but it means the four-epoch setting was selected using a repeated development cohort. Treat the confirmation as a test of the frozen four-epoch update on new rows, not as an independently tuned end-to-end development/confirmation sequence.
+
 See the [locked protocol](../protocols/cpu_lm_gsm8k_sequence_dpo_confirmation_v2.lock.json) and [raw audited bundle](../results/cpu-lm-gsm8k-sequence-dpo-confirmation-v2/run-1/). Confirmation v1 is a separate [incomplete attempt](cpu-lm-gsm8k-sequence-dpo-confirmation-v1-incomplete.md); it exceeded its two-hour limit after two of three seeds and contributes no inference.
 
 ## Limits and next step

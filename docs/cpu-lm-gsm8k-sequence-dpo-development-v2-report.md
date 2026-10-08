@@ -1,22 +1,19 @@
-# GSM8K sequence-level DPO development v2
+# GSM8K sequence-level DPO development v2 — invalidated
 
-## Result
+## Decision: protocol provenance failure
 
-The frozen development rule selected four epochs. Across three seeds, mean validation sequence-preference NLL fell from **0.69315** at the base model to **0.57436**. Mean held-out preference accuracy rose from **0.5000** to **0.8177**, with mean full-vocabulary token KL **0.43843**, below the frozen 0.5 ceiling. The greedy free-form exact-match rate was **1/64** at baseline and **1/64** for each updated seed. This is a development candidate based on a small verifier-labeled validation set; it does not show a free-form accuracy gain.
+The v2 development result is **not valid evidence under its frozen protocol**. The protocol specifies hash ranks 1376–1439 for training and 1440–1503 for validation. The committed `run-2` bundle and the additional local `run-1` bundle instead contain the same rows as development v1: ranks 608–671 and 672–735. They therefore reuse an earlier development cohort rather than the new cohort claimed in the report.
 
-## Protocol and execution
+This was independently reconstructed against the pinned GSM8K training cache. The saved v2 runner snapshot calls the row builder with the v1 ranges. The prior auditor also silently supplied those same defaults whenever a protocol omitted machine-readable ranges, so it accepted the v2 cohort while claiming to verify the lock. The old `audit.json` pass is not valid evidence of v2 row provenance.
 
-- Qwen2.5-0.5B-Instruct, pinned cached revision; GSM8K official `train` split only.
-- 64 development update rows and 64 disjoint validation rows selected by the frozen question-hash ranking at ranks 1376–1439 and 1440–1503.
-- Three seeds (109, 211, 307); four epochs selected from checkpoints 1, 2, 4 and 8 using validation NLL subject to KL ≤0.5.
-- Sequence-summed DPO on a numeric answer and a deterministically generated answer one unit away. The preference labels come from GSM8K answer keys, not human judgments.
-- Custom rank-4 residual over the frozen full-vocabulary output head; all model computation ran on CPU, offline, with cached weights. No GPU, paid service, or network access was used.
-- Runtime: 201.57 seconds; peak RSS: 3.42 GB.
+The outputs recorded four-epoch mean validation preference NLL 0.57436 versus 0.69315 at base, mean token KL 0.43843, and exact match 1/64 for the base and all updated seeds. These are descriptive numbers from a reused cohort, not a valid frozen v2 result. The committed [run-2 bundle](../results/cpu-lm-gsm8k-sequence-dpo-development-v2/run-2/) remains as an explicitly invalidated historical record. The extra run-1 bundle is preserved privately.
 
-The result is reproducible from the [locked protocol](../protocols/cpu_lm_gsm8k_sequence_dpo_development_v2.lock.json) and [retained run bundle](../results/cpu-lm-gsm8k-sequence-dpo-development-v2/run-2/). The independent [auditor](../scripts/audit_cpu_lm_gsm8k_sequence_dpo_development.py) rechecks hashes, protocol lock, row separation, token suffixes, adapter files, per-seed summaries, selection, and promotion decision. It also matched the custom greedy decoder to Hugging Face generation on three validation prompts.
+## Corrective change
 
-## Invalidated predecessor and limits
+The frozen v1/v2 protocol files remain unchanged as historical records. The runner and auditor now resolve the two legacy protocols to their explicitly frozen rank ranges, and reject missing, partial, overlapping, or incorrectly sized ranges for later protocols. A row reconstruction from the pinned cache rejects the committed v2 rows against the v2 lock. On a temporary copy adjusted to the current manifest inventory, the corrected auditor also rejects at the locked-row comparison.
 
-The first sequence-DPO development attempt (v1) is not evidence for generated-answer quality. Its custom batched decoder disagreed with Hugging Face generation; a parity check traced this to batching behavior and failure to apply Qwen's pinned repetition penalty. The v1 raw files remain on the local machine as an audit trail and are not included in the v2 result. Version 2 uses a one-prompt-at-a-time decoder with the pinned repetition penalty. The parity check covers three prompts, not all outputs.
+Future sequence-DPO results need machine-readable rank ranges in the locked protocol and independent agreement among protocol, runner snapshot, retained rows, and auditor. The separate confirmation v2 remains a frozen **non-pass** on its own new rows because mean KL exceeded its 0.5 ceiling. Its outcome is unchanged, but the development-to-confirmation selection history must disclose that v2's development cohort was reused.
 
-This remains a small development result on public GSM8K data that may have appeared in pretraining. It does not establish an independent confirmation, human preference alignment, broad reasoning, transfer, or model capability improvement. The free-form exact-match result is unchanged. A separate confirmation on new training-split rows must be locked before those rows are read; this report must not be used as a capability claim.
+## Limits
+
+The local run's three-prompt generation parity check is only a narrow implementation check. Neither the invalidated v2 training result nor the parity check demonstrates free-form model improvement, human preference alignment, broad reasoning, transfer, or capability gain.
