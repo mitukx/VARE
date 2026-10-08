@@ -1,5 +1,7 @@
 # HH-RLHF v3 development report
 
+> Historical stage report: the frozen development gate and its audit passed. The separately locked confirmation has since also passed; see the [confirmation report](hh-reward-model-v3-confirmation-report.md) for the complete current result.
+
 ## Result
 
 The frozen development gate passed and its independent local replay audit passed. This is an outcome-informed follow-up to an exploratory v2 diagnostic; it is not an untouched preregistered claim. The confirmation block `[2048,2354)` remains sealed and has not been read.
