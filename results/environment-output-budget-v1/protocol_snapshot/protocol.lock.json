@@ -1,0 +1,23 @@
+{
+  "candidate_files": [
+    "src/vare/environments/runner.py",
+    "src/vare/environments/spec.py",
+    "src/vare/evidence.py"
+  ],
+  "expected_calibration": {
+    "baseline_passed": false,
+    "fixed_passed": true
+  },
+  "frozen_before_baseline_measurement": true,
+  "interpretation_limit": "One deterministic local CPU output-budget regression; no hostile-code sandbox or hard memory quota claim.",
+  "locked_hashes": {
+    "evaluator_sha256": "7669d5ba0f872b1df6964ac14a453b3f871462c43e315a6c4678625bae730946",
+    "task_brief_sha256": "9da4ab89a698978004e61bc440c64457361f0209c42e6341db31bbac47187350",
+    "task_json_sha256": "dc04014c3d08321d177237c7c648488f8bea7def472291a8930b8e31a82dfdd4"
+  },
+  "protocol_id": "vare-environment-command-output-budget-v1",
+  "revision_note": "Before grading, the abbreviated source SHA was expanded to a full immutable SHA, the evaluator CLI was aligned with grade_task.py, and candidate modules were isolated from editable installs; no measurement was performed against earlier versions.",
+  "schema_version": 1,
+  "source_base_revision": "410e5321ab762c89ada970de1b41d2aacf99d88a",
+  "task_id": "vare-environment-command-output-budget-v1"
+}

@@ -1,0 +1,10 @@
+{
+  "passed": null,
+  "protocol_id": "vare-environment-command-output-budget-v1",
+  "reason": "The frozen grader checked for the descendant marker after its TemporaryDirectory had been removed, so posix_child_reaped was always true. The baseline still directly showed the old implementation accepted output above the configured capture limit and did not report overflow, but v1 cannot support a process-group cleanup claim.",
+  "retained_baseline_grade": "baseline.grade.json",
+  "status": "invalidated_for_process_group_cleanup_claim",
+  "superseded_by": "vare-environment-command-output-budget-v2",
+  "unsupported_observation": "The descendant cleanup check is invalid because its marker directory was removed before the check.",
+  "valid_narrow_observation": "The old candidate reports output larger than the configured cap as a pass and has no overflow status."
+}

@@ -1,0 +1,14 @@
+{
+  "baseline_source_revision": "410e5321ab762c89ada970de1b41d2aacf99d88a",
+  "protocol_id": "vare-environment-command-output-budget-v1",
+  "reason": "The frozen grader checked for the descendant marker after its TemporaryDirectory had been removed, so posix_child_reaped was always true. The baseline still directly showed the old implementation accepted output above the configured capture limit and did not report overflow, but v1 cannot support a process-group cleanup claim.",
+  "retained_baseline_observation": {
+    "overflow_command_passed": true,
+    "overflow_flag": false,
+    "stderr_bytes_retained": 128,
+    "stdout_bytes_retained": 128,
+    "timed_out": false
+  },
+  "status": "invalidated_for_process_group_cleanup_claim",
+  "superseded_by": "vare-environment-command-output-budget-v2"
+}
