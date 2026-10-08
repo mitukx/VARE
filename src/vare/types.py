@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass, field
+from numbers import Real
 from typing import Any
 
 
@@ -34,6 +36,38 @@ class Verification:
     disagreement: float = 0.0
     trusted: bool = False
     metadata: dict[str, Any] = field(default_factory=dict)
+
+
+def snapshot_verification(value: Verification, *, context: str = "verification") -> Verification:
+    """Validate an untrusted verifier result and detach its top-level mutable state."""
+    if not isinstance(value, Verification):
+        raise TypeError(f"{context} must be a Verification instance")
+    for field_name in ("score", "confidence", "disagreement"):
+        number = getattr(value, field_name)
+        if isinstance(number, bool) or not isinstance(number, Real):
+            raise TypeError(f"{context}.{field_name} must be a real number")
+        if not math.isfinite(float(number)) or not 0.0 <= number <= 1.0:
+            raise ValueError(f"{context}.{field_name} must be finite and in [0,1]")
+    if type(value.passed) is not bool:
+        raise TypeError(f"{context}.passed must be bool")
+    if type(value.trusted) is not bool:
+        raise TypeError(f"{context}.trusted must be bool")
+    if type(value.verifier_version) is not int or value.verifier_version < 0:
+        raise ValueError(f"{context}.verifier_version must be a nonnegative integer")
+    if not isinstance(value.verifier_name, str) or not value.verifier_name.strip():
+        raise ValueError(f"{context}.verifier_name must be a nonempty string")
+    if not isinstance(value.metadata, dict):
+        raise TypeError(f"{context}.metadata must be a dictionary")
+    return Verification(
+        score=float(value.score),
+        passed=value.passed,
+        confidence=float(value.confidence),
+        verifier_version=value.verifier_version,
+        verifier_name=value.verifier_name,
+        disagreement=float(value.disagreement),
+        trusted=value.trusted,
+        metadata=dict(value.metadata),
+    )
 
 
 @dataclass(slots=True)

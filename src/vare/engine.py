@@ -13,7 +13,7 @@ from .lifecycle import FailureDrivenTaskGenerator, VerifierRefreshController
 from .promotion import PromotionGate
 from .replay import PrioritizedReplay
 from .telemetry import EventLog
-from .types import Experience, RoundResult, Task
+from .types import Experience, RoundResult, Task, snapshot_verification
 from .verifiers import VerifierEnsemble
 
 
@@ -68,7 +68,9 @@ class CapabilityLoop:
                 attempt.metadata["vare_rollout_group_size"] = task.metadata[
                     "vare_rollout_group_size"
                 ]
-            verification = await self.verifier.verify(attempt)
+            verification = snapshot_verification(
+                await self.verifier.verify(attempt), context="capability loop verifier result"
+            )
             return attempt, verification
 
     async def run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None) -> RoundResult:

@@ -1,5 +1,8 @@
 import asyncio
 from dataclasses import dataclass, field
+import math
+
+import pytest
 
 from vare.integrations.rvl_grpo import RVLGRPOConfig, RVLGRPOHooks
 from vare.types import Attempt, Experience, Task, Verification
@@ -153,6 +156,48 @@ def test_rvl_grpo_hooks_candidate_is_transactional():
         assert trainer.weight == 1
 
     asyncio.run(run())
+
+
+@pytest.mark.parametrize("score", [2.0, math.nan, math.inf])
+def test_rvl_trainer_boundary_rejects_mutated_reward_before_optimizer(score):
+    trainer = FakeTrainer()
+    hooks = RVLGRPOHooks(
+        backend=FakeBackend(trainer),
+        trainer=trainer,
+        eval_tasks=[],
+        score_fn=lambda task, response: 0.0,
+        generation_factory=Generation,
+        verified_generation_factory=VerifiedGeneration,
+    )
+    verification = Verification(0.75, True, 1.0, 1, "fixture", trusted=True)
+    verification.score = score
+    exp = Experience(
+        attempt=Attempt(
+            Task("train", "prompt"),
+            "answer",
+            "policy-0",
+            0,
+            0,
+            metadata={
+                "rvl_generation": {
+                    "prompt_id": "train",
+                    "prompt": "prompt",
+                    "response": "answer",
+                    "logprob": -0.1,
+                    "token_count": 1,
+                    "latency_s": 0.001,
+                    "metadata": {},
+                }
+            },
+        ),
+        verification=verification,
+        policy_lag=0,
+        verifier_lag=0,
+        shift_score=0.0,
+    )
+    with pytest.raises(ValueError, match="score"):
+        asyncio.run(hooks.train_candidate("policy-0", [exp]))
+    assert trainer.optimizer_step == 0
 
 
 def test_rvl_grpo_hooks_restores_incumbent_after_partial_train_failure():

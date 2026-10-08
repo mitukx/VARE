@@ -1,0 +1,43 @@
+{
+  "acceptance_passed": false,
+  "classification": {
+    "confidence_out_of_range": "accepted_invalid_reward",
+    "mutated_score_2": "accepted_invalid_reward",
+    "nan_score": "accepted_invalid_reward",
+    "valid_control": "valid_reward_reached_training"
+  },
+  "commit": "b74fe724be3161af2905a40ef4100a51ac6ca6c7",
+  "protocol_id": "verifier_reward_contract_v1",
+  "protocol_sha256": "92447b8b18572fa52027e677a881960394b7c1769b320e9f677264eea19c4853",
+  "results": [
+    {
+      "case": "mutated_score_2",
+      "error": null,
+      "training_rewards": [
+        2.0
+      ]
+    },
+    {
+      "case": "nan_score",
+      "error": null,
+      "training_rewards": [
+        "NaN"
+      ]
+    },
+    {
+      "case": "confidence_out_of_range",
+      "error": null,
+      "training_rewards": [
+        0.75
+      ]
+    },
+    {
+      "case": "valid_control",
+      "error": null,
+      "training_rewards": [
+        0.75
+      ]
+    }
+  ],
+  "script_sha256": "7023815c496d0556062fdbf427f08a331dce1f91f41d3050749c64f0a41cf1e1"
+}

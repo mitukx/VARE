@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from statistics import fmean
 from typing import Any, Callable, Sequence
 
-from ..types import Attempt, EvaluationReport, Experience, Task
+from ..types import Attempt, EvaluationReport, Experience, Task, snapshot_verification
 
 
 ScoreFn = Callable[[Task, str], float]
@@ -129,19 +129,22 @@ class RVLGRPOHooks:
         )
 
     def _to_verified_generation(self, exp: Experience) -> Any:
+        verification = snapshot_verification(
+            exp.verification, context="RVL trainer experience verification"
+        )
         raw = exp.attempt.metadata.get("rvl_generation")
         if not isinstance(raw, dict):
             raise ValueError("experience lacks token-exact rvl_generation metadata")
         generation = self._generation_factory(**copy.deepcopy(raw))
         return self._verified_factory(
             generation=generation,
-            reward=float(exp.verification.score),
-            verifier_latency_s=float(exp.verification.metadata.get("latency_s", 0.0)),
-            verifier_version=int(exp.verification.verifier_version),
+            reward=verification.score,
+            verifier_latency_s=float(verification.metadata.get("latency_s", 0.0)),
+            verifier_version=verification.verifier_version,
             metadata={
-                **copy.deepcopy(exp.verification.metadata),
-                "vare_disagreement": exp.verification.disagreement,
-                "vare_trusted": exp.verification.trusted,
+                **copy.deepcopy(verification.metadata),
+                "vare_disagreement": verification.disagreement,
+                "vare_trusted": verification.trusted,
             },
         )
 
