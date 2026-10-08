@@ -6,11 +6,18 @@ import argparse
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 import random
 import statistics
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+from gsm8k_sequence_task import make_sequence_rows  # noqa: E402
+from run_cpu_lm_gsm8k_sequence_dpo_development import (  # noqa: E402
+    DATA_DIR, MODEL_DIR, generate_greedy, sha256_file,
+)
 
 
 def read(path):
@@ -62,12 +69,40 @@ def audit(out):
     result = bundle["summary"]
     if result["protocol_sha256"] != protocol_hash:
         raise ValueError("result protocol hash differs")
+    snapshots = {
+        "runner_sha256": out / "run_cpu_lm_gsm8k_sequence_dpo_confirmation.snapshot.py",
+        "development_runner_sha256": out / "run_cpu_lm_gsm8k_sequence_dpo_development.snapshot.py",
+        "task_helper_sha256": out / "gsm8k_sequence_task.snapshot.py",
+    }
+    for field, path in snapshots.items():
+        if sha256(path) != result[field]:
+            raise ValueError("source snapshot hash differs: " + field)
+    if MODEL_DIR.name != spec["model"]["revision"]:
+        raise ValueError("model snapshot revision differs")
+    for name, digest in result["model_file_sha256"].items():
+        if sha256(MODEL_DIR / name) != digest:
+            raise ValueError("model file hash differs: " + name)
+    if sha256(DATA_DIR / "gsm8k-train.arrow") != result["dataset_train_sha256"]:
+        raise ValueError("cached training data hash differs")
     if len(bundle["update_examples"]) != 128 or len(bundle["heldout_examples"]) != 512:
         raise ValueError("confirmation row counts differ")
     update_hashes = {row["question_sha256"] for row in bundle["update_examples"]}
     heldout_hashes = {row["question_sha256"] for row in bundle["heldout_examples"]}
     if len(update_hashes) != 128 or len(heldout_hashes) != 512 or update_hashes & heldout_hashes:
         raise ValueError("update/held-out row overlap or duplicates")
+    os.environ.update(HF_HUB_OFFLINE="1", HF_DATASETS_OFFLINE="1", TRANSFORMERS_OFFLINE="1")
+    from datasets import load_dataset
+    dataset = load_dataset(spec["dataset"]["id"], spec["dataset"]["config"], split="train")
+    if dataset._fingerprint != spec["dataset"]["cached_fingerprint"]:
+        raise ValueError("cached train fingerprint differs")
+    expected_train = make_sequence_rows(dataset, "confirmation_update", 1504, 1632)
+    expected_heldout = make_sequence_rows(dataset, "confirmation_heldout", 1632, 2144)
+    for actual, expected in zip(bundle["update_examples"], expected_train):
+        if actual["dataset_index"] != expected["dataset_index"] or actual["question_sha256"] != expected["question_sha256"]:
+            raise ValueError("update rows differ from locked hash ranks")
+    for actual, expected in zip(bundle["heldout_examples"], expected_heldout):
+        if actual["dataset_index"] != expected["dataset_index"] or actual["question_sha256"] != expected["question_sha256"]:
+            raise ValueError("held-out rows differ from locked hash ranks")
 
     tokenized = read(out / "tokenized_examples.json")
     for name, rows in (("update", bundle["update_examples"]), ("heldout", bundle["heldout_examples"])):
@@ -145,12 +180,38 @@ def audit(out):
     if not close(mean_kl, result["mean_updated_token_kl"]) or not close(mean_accuracy, result["mean_updated_exact_match_accuracy"]):
         raise ValueError("aggregate metrics differ")
 
+    import torch
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+    tokenizer = AutoTokenizer.from_pretrained(str(MODEL_DIR), local_files_only=True)
+    if tokenizer.pad_token_id is None:
+        tokenizer.pad_token = tokenizer.eos_token
+    tokenizer.padding_side = "left"
+    model = AutoModelForCausalLM.from_pretrained(str(MODEL_DIR), local_files_only=True,
+                                                  torch_dtype=torch.float32).to("cpu").eval()
+    sample_rows = bundle["heldout_examples"][:3]
+    manual = generate_greedy(sample_rows, tokenizer, model, spec)
+    parity = []
+    for row, ours in zip(sample_rows, manual):
+        batch = tokenizer.apply_chat_template([[{"role": "user", "content": row["user_message"]}]],
+                                               tokenize=True, add_generation_prompt=True, padding=True,
+                                               return_tensors="pt", return_dict=True)
+        if not bool(batch["attention_mask"].all()):
+            raise ValueError("single-prompt parity input was padded")
+        with torch.inference_mode():
+            generated = model.generate(**batch, max_new_tokens=spec["compute_limits"]["generation_max_new_tokens"],
+                                       do_sample=False, pad_token_id=tokenizer.pad_token_id,
+                                       eos_token_id=spec["generation"]["eos_token_ids"])
+        text = tokenizer.decode(generated[0, batch["input_ids"].shape[1]:], skip_special_tokens=True).strip()
+        if text != ours["generated_text"]:
+            raise ValueError("confirmation generation differs from Hugging Face")
+        parity.append({"dataset_index": row["dataset_index"], "same_as_huggingface_generate": True})
+
     report = {"audit": "passed", "protocol_id": spec["protocol_id"], "protocol_sha256": protocol_hash,
               "source_manifest_sha256": source_manifest_hash, "update_rows": 128, "heldout_rows": 512,
               "per_seed_nll_change": seed_deltas,
               "paired_nll_change": observed, "paired_nll_ci_95": [lower, upper],
               "base_exact_match_accuracy": base_accuracy, "updated_exact_match_by_seed": updated_accuracy,
-              "mean_kl": mean_kl, "decision_recomputed": decision}
+              "mean_kl": mean_kl, "decision_recomputed": decision, "generation_parity": parity}
     (out / "audit.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return report
 
