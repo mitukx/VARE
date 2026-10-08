@@ -13,7 +13,7 @@ from .lifecycle import FailureDrivenTaskGenerator, VerifierRefreshController
 from .promotion import PromotionGate
 from .replay import PrioritizedReplay
 from .telemetry import EventLog
-from .types import Experience, RoundResult, Task, snapshot_verification
+from .types import Experience, PromotionDecision, RoundResult, Task, snapshot_verification
 from .verifiers import VerifierEnsemble
 
 
@@ -245,7 +245,18 @@ class CapabilityLoop:
         incumbent_eval, candidate_eval = await asyncio.gather(
             self.hooks.evaluate(incumbent_id), self.hooks.evaluate(candidate_id)
         )
-        decision = self.promotion.decide(incumbent_eval, candidate_eval)
+        if (
+            incumbent_eval.policy_id != incumbent_id
+            or candidate_eval.policy_id != candidate_id
+        ):
+            decision = PromotionDecision(
+                accepted=False,
+                reasons=("evaluation_policy_mismatch",),
+                primary_gain=0.0,
+                worst_slice_regression=0.0,
+            )
+        else:
+            decision = self.promotion.decide(incumbent_eval, candidate_eval)
         if candidate_id != incumbent_id and decision.accepted:
             await self.hooks.promote(candidate_id)
             promoted_id = candidate_id

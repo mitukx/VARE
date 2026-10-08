@@ -12,3 +12,14 @@ def test_promotion_gate_accepts_real_gain_and_rejects_regression():
     d = gate.decide(inc, bad)
     assert not d.accepted
     assert "slice_regression" in d.reasons
+
+
+def test_promotion_rejects_candidate_with_incomplete_slice_coverage():
+    gate = PromotionGate(PromotionConfig(min_primary_gain=0.01, min_eval_examples=1))
+    incumbent = EvaluationReport("a", 0.50, {"hard": 0.4, "easy": 0.7}, n=10)
+    candidate = EvaluationReport("b", 0.80, {"easy": 0.7}, n=10)
+
+    decision = gate.decide(incumbent, candidate)
+
+    assert not decision.accepted
+    assert "slice_coverage_mismatch" in decision.reasons

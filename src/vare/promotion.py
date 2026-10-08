@@ -122,6 +122,8 @@ class PromotionGate:
             reasons.append("insufficient_eval_examples")
         if gain < self.config.min_primary_gain:
             reasons.append("insufficient_primary_gain")
+        if set(incumbent.slices) != set(candidate.slices):
+            reasons.append("slice_coverage_mismatch")
         regressions = []
         for name, old in incumbent.slices.items():
             if name in candidate.slices:

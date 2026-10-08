@@ -1,0 +1,17 @@
+{
+  "protocol_id": "promotion_evidence_identity_v1",
+  "status": "freeze_before_baseline_execution",
+  "question": "Can promotion accept incomplete slice coverage or evaluate a different policy than the requested incumbent/candidate?",
+  "scope": "CPU-only deterministic gate and engine integration contract; no model, optimizer, GPU, API, or network",
+  "primary_property": "Promotion requires identical slice-key sets between incumbent and candidate reports, and the engine requires each EvaluationReport.policy_id to match the policy_id requested from its evaluation hook.",
+  "cases": [
+    {"id": "candidate_omits_slice", "setup": "Incumbent reports hard and easy slices; candidate reports only easy with a primary gain", "expected_pre_fix": "candidate accepted", "expected_post_fix": "reject with slice_coverage_mismatch"},
+    {"id": "candidate_report_wrong_policy", "setup": "Engine evaluates candidate p1 but hook returns a favorable report labeled p0", "expected_pre_fix": "p1 promoted", "expected_post_fix": "reject with evaluation_policy_mismatch"},
+    {"id": "matching_control", "setup": "Matching policy identities and complete equal slice coverage with a sufficient gain", "expected_post_fix": "accept"}
+  ],
+  "acceptance": "The baseline reproduces both invalid acceptances; after the fix both fail closed and the matching control remains accepted.",
+  "limitations": [
+    "The gate can check report identity and slice coverage but cannot prove that an evaluation backend used the claimed policy or an independent dataset.",
+    "The deterministic fixture is not an estimate of erroneous promotion frequency."
+  ]
+}

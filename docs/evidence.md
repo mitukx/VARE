@@ -1,5 +1,9 @@
 # Calibration evidence
 
+## Promotion evidence identity
+
+The frozen [CPU protocol](../protocols/promotion_evidence_identity_v1.lock.json) reproduced an accepted candidate missing an incumbent slice and an engine promotion using an evaluation report labeled with the wrong policy ID. The gate now fails closed on slice-key mismatch; the engine verifies report identity against each requested policy. Both invalid cases are rejected and a correctly labeled, complete control still promotes. See the [report](promotion-evidence-identity-report.md) and [baseline/fixed records](../results/promotion-evidence-identity-v1/). This is E0 contract evidence only; post-backend identity and evaluation-set independence are not verified. CI is pending.
+
 ## Verifier reward contract
 
 The frozen [CPU protocol](../protocols/verifier_reward_contract_v1.lock.json) reproduced malformed structured rewards at baseline: `score=2.0` and `NaN` reached the training hook, and invalid confidence was not checked. After validation at verifier aggregation, engine replay admission, and RVL trainer conversion, the same reproducer rejects all malformed cases while its 0.75 control passes. The full CI suite passed 185 tests with 12 skipped, including the targeted regressions; see the [report](verifier-reward-contract-report.md), [protocol](../protocols/verifier_reward_contract_v1.json), and [raw baseline/fixed/CI records](../results/verifier-reward-contract-v1/). This establishes one E0 integration contract only. The local environment lacks pytest.
