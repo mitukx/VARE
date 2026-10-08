@@ -14,6 +14,7 @@ import time
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--workspace", type=Path, required=True)
+    parser.add_argument("--task-root", type=Path, required=True)
     parser.add_argument("--json-out", type=Path, required=True)
     args = parser.parse_args()
     workspace = args.workspace.resolve()
