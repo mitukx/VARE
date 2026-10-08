@@ -21,6 +21,7 @@ Observed on Python 3.12.12, macOS arm64:
 - Test-command mutation: the command itself exits 0, but the evaluator reports `passed=false`, `integrity_ok=false`, score `0.0`, and `protected file modified: protected-test.py`.
 - Metric-command mutation: the result is rejected, score is `0.0`, its metric value is discarded as NaN, and the later metric command is not run.
 - Untampered control: passes with `integrity_ok=true` and score `0.9`.
+- GitHub CI run [37856398716](https://github.com/mitukx/VARE/actions/runs/37856398716) passed: 169 tests passed, 12 skipped; both exact GRPO audits and the demo also passed. The run is recorded in [`ci.json`](../results/protected-evaluator-post-command-v1/ci.json).
 - No model weights, GPU, network, paid API, or external compute were used.
 
 ## Limits
