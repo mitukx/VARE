@@ -1,0 +1,383 @@
+{
+  "base_revision": "8697378709102608e3c9dc5bf582772e4ddee788",
+  "candidate_diff_sha256": "f5f08ef1987f7b8ba0b0a2b2ec661262b7e50ad5de6146fea619754ed5628d6b",
+  "checks": {
+    "branches": {
+      "experimental_dapo": {
+        "conditions": [
+          {
+            "absolute_normalizer_error": null,
+            "case_id": "generation-window-larger",
+            "current_accumulation_steps": 2,
+            "expected_effective_loss_scale": 1.0,
+            "expected_normalizer": 6.0,
+            "items": 12.0,
+            "mode": "train",
+            "observed_effective_loss_scale": null,
+            "observed_normalizer": null,
+            "steps_per_generation": 4,
+            "world_size": 1
+          },
+          {
+            "absolute_normalizer_error": null,
+            "case_id": "equal-windows",
+            "current_accumulation_steps": 2,
+            "expected_effective_loss_scale": 1.0,
+            "expected_normalizer": 12.0,
+            "items": 12.0,
+            "mode": "train",
+            "observed_effective_loss_scale": null,
+            "observed_normalizer": null,
+            "steps_per_generation": 2,
+            "world_size": 1
+          },
+          {
+            "absolute_normalizer_error": null,
+            "case_id": "accumulation-window-larger",
+            "current_accumulation_steps": 4,
+            "expected_effective_loss_scale": 1.0,
+            "expected_normalizer": 24.0,
+            "items": 12.0,
+            "mode": "train",
+            "observed_effective_loss_scale": null,
+            "observed_normalizer": null,
+            "steps_per_generation": 2,
+            "world_size": 1
+          },
+          {
+            "absolute_normalizer_error": null,
+            "case_id": "partial-final-window",
+            "current_accumulation_steps": 1,
+            "expected_effective_loss_scale": 1.0,
+            "expected_normalizer": 3.0,
+            "items": 12.0,
+            "mode": "train",
+            "observed_effective_loss_scale": null,
+            "observed_normalizer": null,
+            "steps_per_generation": 4,
+            "world_size": 1
+          },
+          {
+            "absolute_normalizer_error": null,
+            "case_id": "clamped-empty-count",
+            "current_accumulation_steps": 2,
+            "expected_effective_loss_scale": 1.0,
+            "expected_normalizer": 0.25,
+            "items": 0.0,
+            "mode": "train",
+            "observed_effective_loss_scale": null,
+            "observed_normalizer": null,
+            "steps_per_generation": 4,
+            "world_size": 2
+          },
+          {
+            "absolute_normalizer_error": null,
+            "case_id": "evaluation-is-unscaled",
+            "current_accumulation_steps": 2,
+            "expected_effective_loss_scale": 1.0,
+            "expected_normalizer": 6.0,
+            "items": 12.0,
+            "mode": "eval",
+            "observed_effective_loss_scale": null,
+            "observed_normalizer": null,
+            "steps_per_generation": 4,
+            "world_size": 2
+          }
+        ],
+        "max_absolute_normalizer_error": null
+      },
+      "main_dapo_cispo_vespo": {
+        "conditions": [
+          {
+            "absolute_normalizer_error": null,
+            "case_id": "generation-window-larger",
+            "current_accumulation_steps": 2,
+            "expected_effective_loss_scale": 1.0,
+            "expected_normalizer": 6.0,
+            "items": 12.0,
+            "mode": "train",
+            "observed_effective_loss_scale": null,
+            "observed_normalizer": null,
+            "steps_per_generation": 4,
+            "world_size": 1
+          },
+          {
+            "absolute_normalizer_error": null,
+            "case_id": "equal-windows",
+            "current_accumulation_steps": 2,
+            "expected_effective_loss_scale": 1.0,
+            "expected_normalizer": 12.0,
+            "items": 12.0,
+            "mode": "train",
+            "observed_effective_loss_scale": null,
+            "observed_normalizer": null,
+            "steps_per_generation": 2,
+            "world_size": 1
+          },
+          {
+            "absolute_normalizer_error": null,
+            "case_id": "accumulation-window-larger",
+            "current_accumulation_steps": 4,
+            "expected_effective_loss_scale": 1.0,
+            "expected_normalizer": 24.0,
+            "items": 12.0,
+            "mode": "train",
+            "observed_effective_loss_scale": null,
+            "observed_normalizer": null,
+            "steps_per_generation": 2,
+            "world_size": 1
+          },
+          {
+            "absolute_normalizer_error": null,
+            "case_id": "partial-final-window",
+            "current_accumulation_steps": 1,
+            "expected_effective_loss_scale": 1.0,
+            "expected_normalizer": 3.0,
+            "items": 12.0,
+            "mode": "train",
+            "observed_effective_loss_scale": null,
+            "observed_normalizer": null,
+            "steps_per_generation": 4,
+            "world_size": 1
+          },
+          {
+            "absolute_normalizer_error": null,
+            "case_id": "clamped-empty-count",
+            "current_accumulation_steps": 2,
+            "expected_effective_loss_scale": 1.0,
+            "expected_normalizer": 0.25,
+            "items": 0.0,
+            "mode": "train",
+            "observed_effective_loss_scale": null,
+            "observed_normalizer": null,
+            "steps_per_generation": 4,
+            "world_size": 2
+          },
+          {
+            "absolute_normalizer_error": null,
+            "case_id": "evaluation-is-unscaled",
+            "current_accumulation_steps": 2,
+            "expected_effective_loss_scale": 1.0,
+            "expected_normalizer": 6.0,
+            "items": 12.0,
+            "mode": "eval",
+            "observed_effective_loss_scale": null,
+            "observed_normalizer": null,
+            "steps_per_generation": 4,
+            "world_size": 2
+          }
+        ],
+        "max_absolute_normalizer_error": null
+      }
+    }
+  },
+  "claim_limit": "A passing candidate satisfies the extracted accumulation-normalizer and loss-write contracts through return in two pinned source branches; it does not measure a full training run or model capability.",
+  "evaluator_sha256": "b75ad05a8ff42eb9b6362deeccce6692f7a640a9e41e0e0352e8e492dea596dd",
+  "failures": [
+    {
+      "absolute_error": null,
+      "case_id": "generation-window-larger",
+      "check": "accumulation_window_normalizer",
+      "expected": 6.0,
+      "observed": null,
+      "source_file": "trl/trainer/grpo_trainer.py"
+    },
+    {
+      "case_id": "generation-window-larger",
+      "check": "effective_loss_denominator",
+      "expected_scale": 1.0,
+      "observed_scale": null,
+      "source_file": "trl/trainer/grpo_trainer.py"
+    },
+    {
+      "absolute_error": null,
+      "case_id": "equal-windows",
+      "check": "accumulation_window_normalizer",
+      "expected": 12.0,
+      "observed": null,
+      "source_file": "trl/trainer/grpo_trainer.py"
+    },
+    {
+      "case_id": "equal-windows",
+      "check": "effective_loss_denominator",
+      "expected_scale": 1.0,
+      "observed_scale": null,
+      "source_file": "trl/trainer/grpo_trainer.py"
+    },
+    {
+      "absolute_error": null,
+      "case_id": "accumulation-window-larger",
+      "check": "accumulation_window_normalizer",
+      "expected": 24.0,
+      "observed": null,
+      "source_file": "trl/trainer/grpo_trainer.py"
+    },
+    {
+      "case_id": "accumulation-window-larger",
+      "check": "effective_loss_denominator",
+      "expected_scale": 1.0,
+      "observed_scale": null,
+      "source_file": "trl/trainer/grpo_trainer.py"
+    },
+    {
+      "absolute_error": null,
+      "case_id": "partial-final-window",
+      "check": "accumulation_window_normalizer",
+      "expected": 3.0,
+      "observed": null,
+      "source_file": "trl/trainer/grpo_trainer.py"
+    },
+    {
+      "case_id": "partial-final-window",
+      "check": "effective_loss_denominator",
+      "expected_scale": 1.0,
+      "observed_scale": null,
+      "source_file": "trl/trainer/grpo_trainer.py"
+    },
+    {
+      "absolute_error": null,
+      "case_id": "clamped-empty-count",
+      "check": "accumulation_window_normalizer",
+      "expected": 0.25,
+      "observed": null,
+      "source_file": "trl/trainer/grpo_trainer.py"
+    },
+    {
+      "case_id": "clamped-empty-count",
+      "check": "effective_loss_denominator",
+      "expected_scale": 1.0,
+      "observed_scale": null,
+      "source_file": "trl/trainer/grpo_trainer.py"
+    },
+    {
+      "absolute_error": null,
+      "case_id": "evaluation-is-unscaled",
+      "check": "accumulation_window_normalizer",
+      "expected": 6.0,
+      "observed": null,
+      "source_file": "trl/trainer/grpo_trainer.py"
+    },
+    {
+      "case_id": "evaluation-is-unscaled",
+      "check": "effective_loss_denominator",
+      "expected_scale": 1.0,
+      "observed_scale": null,
+      "source_file": "trl/trainer/grpo_trainer.py"
+    },
+    {
+      "absolute_error": null,
+      "case_id": "generation-window-larger",
+      "check": "accumulation_window_normalizer",
+      "expected": 6.0,
+      "observed": null,
+      "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+    },
+    {
+      "case_id": "generation-window-larger",
+      "check": "effective_loss_denominator",
+      "expected_scale": 1.0,
+      "observed_scale": null,
+      "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+    },
+    {
+      "absolute_error": null,
+      "case_id": "equal-windows",
+      "check": "accumulation_window_normalizer",
+      "expected": 12.0,
+      "observed": null,
+      "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+    },
+    {
+      "case_id": "equal-windows",
+      "check": "effective_loss_denominator",
+      "expected_scale": 1.0,
+      "observed_scale": null,
+      "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+    },
+    {
+      "absolute_error": null,
+      "case_id": "accumulation-window-larger",
+      "check": "accumulation_window_normalizer",
+      "expected": 24.0,
+      "observed": null,
+      "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+    },
+    {
+      "case_id": "accumulation-window-larger",
+      "check": "effective_loss_denominator",
+      "expected_scale": 1.0,
+      "observed_scale": null,
+      "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+    },
+    {
+      "absolute_error": null,
+      "case_id": "partial-final-window",
+      "check": "accumulation_window_normalizer",
+      "expected": 3.0,
+      "observed": null,
+      "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+    },
+    {
+      "case_id": "partial-final-window",
+      "check": "effective_loss_denominator",
+      "expected_scale": 1.0,
+      "observed_scale": null,
+      "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+    },
+    {
+      "absolute_error": null,
+      "case_id": "clamped-empty-count",
+      "check": "accumulation_window_normalizer",
+      "expected": 0.25,
+      "observed": null,
+      "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+    },
+    {
+      "case_id": "clamped-empty-count",
+      "check": "effective_loss_denominator",
+      "expected_scale": 1.0,
+      "observed_scale": null,
+      "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+    },
+    {
+      "absolute_error": null,
+      "case_id": "evaluation-is-unscaled",
+      "check": "accumulation_window_normalizer",
+      "expected": 6.0,
+      "observed": null,
+      "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+    },
+    {
+      "case_id": "evaluation-is-unscaled",
+      "check": "effective_loss_denominator",
+      "expected_scale": 1.0,
+      "observed_scale": null,
+      "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+    }
+  ],
+  "metrics": {
+    "condition_count": 12,
+    "max_absolute_normalizer_error": null
+  },
+  "passed": false,
+  "protocol_id": "trl-grpo-accumulation-window-normalizer-protocol-v5",
+  "resource_scope": {
+    "accelerator_hours": 0,
+    "external_compute_usd": 0,
+    "model_weights_loaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages_used": false
+  },
+  "runtime": {
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.9.6"
+  },
+  "schema_version": 1,
+  "source_file_sha256": {
+    "trl/experimental/gspo_token/grpo_trainer.py": "4f08888b13097e394bfbed9a8a6450acd89d6a97cd658d71a0ed17f73e4fa6b2",
+    "trl/trainer/grpo_trainer.py": "d69f732ac9fe3b721fb9dfd7da2ceaa467fb6d734f0996ecb712bc9857ad68a0"
+  },
+  "task_descriptor_sha256": "8e8c0825302b8e9768863d043d87cf6373386b507da8e5abc77d1588e3a4d818",
+  "task_id": "trl-grpo-accumulation-window-normalizer-v1",
+  "workspace_revision": "e1b2e21975994e676d9a676e3ab005e9bee38e40"
+}

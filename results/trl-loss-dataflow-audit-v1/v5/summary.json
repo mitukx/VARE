@@ -1,0 +1,51 @@
+{
+  "fixed_source": {
+    "conditions": 12,
+    "max_absolute_normalizer_error": 0.0,
+    "passed": true,
+    "revision": "e1b2e21975994e676d9a676e3ab005e9bee38e40"
+  },
+  "frozen_at_commit": "3abcee1",
+  "frozen_protocol_sha256": "3196a7e0bc889ec4f3ef9004580e4071e8c63e6e6504964b188c89b62c683e19",
+  "grader_protocol": "trl-grpo-accumulation-window-normalizer-protocol-v5",
+  "grader_sha256": "b75ad05a8ff42eb9b6362deeccce6692f7a640a9e41e0e0352e8e492dea596dd",
+  "limits": "Two deliberately incorrect mutations across two branches of one pinned source revision. V5 uses AST contracts for the pinned normalizer and downstream loss adjustments; it does not run the trainer, autograd, a gradient update, or prove general semantic correctness.",
+  "mutations": [
+    {
+      "candidate_diff_sha256": "b3936e6567f7411b4bfa58e72c17397d802f0760738fd5e775524a10339b3f25",
+      "conditions": 12,
+      "failure_count": 24,
+      "id": "branch_rebind",
+      "patch_sha256": "9c652b595b7992a9360d2274ddb48e0b93713fac92d490b3ed52e4f856e6fa7a",
+      "v3_passed": true,
+      "v4_passed": false,
+      "v5_passed": false
+    },
+    {
+      "candidate_diff_sha256": "f5f08ef1987f7b8ba0b0a2b2ec661262b7e50ad5de6146fea619754ed5628d6b",
+      "conditions": 12,
+      "failure_count": 24,
+      "id": "final_rebind",
+      "patch_sha256": "222d3c2599005a8df849c44b6fc74410fe5c74110dce0d505f98010442698097",
+      "v4_passed": true,
+      "v5_passed": false
+    }
+  ],
+  "observed_conclusion": "V3 accepted the branch-local reassignment and v4 accepted the final-return reassignment. V5 rejects both frozen mutations while accepting the pinned fixed source.",
+  "protocol_id": "trl-loss-dataflow-mutation-audit-v4",
+  "raw_files": {
+    "branch-rebind.grade.json": "7b52a28c6e0e29c94486f1e927b80400f22e8ab4b8fce37d04463a05f2dab47f",
+    "final-rebind.grade.json": "7108de61aad94ebcce945e52ffde4b3a8ab351aecefb94d79e1303c6977ad774",
+    "fixed.grade.json": "7eb93ed5245300031012bf88b9eaca8aead9e4e9b9610322cb229a9233b851b5"
+  },
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "model_weights_loaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages_used": false
+  },
+  "schema_version": 1,
+  "status": "completed",
+  "valid_control": "The unit fixture for the pinned entropy and auxiliary loss adjustments is accepted by the v5 downstream-write policy."
+}

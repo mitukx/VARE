@@ -1,0 +1,79 @@
+{
+  "fixed_source": {
+    "conditions": 12,
+    "max_absolute_normalizer_error": 0.0,
+    "passed": true,
+    "revision": "e1b2e21975994e676d9a676e3ab005e9bee38e40"
+  },
+  "frozen_at_commit": "0331f44",
+  "frozen_protocol_sha256": "e217d3982fdfc8cbb7aff6a96eed7ebbd0af45ad3f201324ffaf187d61658ca3",
+  "grader_protocol": "trl-grpo-accumulation-window-normalizer-protocol-v7",
+  "grader_sha256": "8048f932bbc6806e902e180ea73d67f4bdc70841aab1639b0b30866139451656",
+  "limits": "Five deliberately incorrect mutations on two branches of one pinned source revision. Alias propagation covers direct local-name assignments in the selected method; it is not a general Python/Tensor alias analysis. The grader does not run a trainer, autograd, or a gradient update and does not estimate general error rates.",
+  "mutations": [
+    {
+      "candidate_diff_sha256": "b3936e6567f7411b4bfa58e72c17397d802f0760738fd5e775524a10339b3f25",
+      "conditions": 12,
+      "earlier_versions": "v3",
+      "failure_count": 24,
+      "id": "branch-rebind",
+      "patch_sha256": "9c652b595b7992a9360d2274ddb48e0b93713fac92d490b3ed52e4f856e6fa7a",
+      "v7_passed": false
+    },
+    {
+      "candidate_diff_sha256": "f5f08ef1987f7b8ba0b0a2b2ec661262b7e50ad5de6146fea619754ed5628d6b",
+      "conditions": 12,
+      "earlier_versions": "v4",
+      "failure_count": 24,
+      "id": "final-rebind",
+      "patch_sha256": "222d3c2599005a8df849c44b6fc74410fe5c74110dce0d505f98010442698097",
+      "v7_passed": false
+    },
+    {
+      "candidate_diff_sha256": "e77aa8835f890649506a9df24530b14c4c102a8b15db89760150d327fbf5b290",
+      "conditions": 12,
+      "earlier_versions": "v5 runtime rejection; v6 structural rejection",
+      "failure_count": 24,
+      "id": "normalizer-inplace",
+      "patch_sha256": "1cb0805377fcc4ede3c424275e1766d1a205b0aab8cace79bfe169c5b152814f",
+      "v7_passed": false
+    },
+    {
+      "candidate_diff_sha256": "dfaab8921c930afe0a8e01f53346a07e8aa02cf461a383db0e68c684a24f4247",
+      "conditions": 12,
+      "earlier_versions": "v5",
+      "failure_count": 24,
+      "id": "loss-inplace",
+      "patch_sha256": "d386b49af4eb48d89d1c040ef135c9b9341c28d05757db43e4dc09b5546015b6",
+      "v7_passed": false
+    },
+    {
+      "candidate_diff_sha256": "7ef7e2d783e58572eb58744c875a854faad57096de7ec8cda92ae75be6db3126",
+      "conditions": 12,
+      "earlier_versions": "v6",
+      "failure_count": 24,
+      "id": "loss-alias-inplace",
+      "patch_sha256": "d2d4cfa377ede4f0d2899fafecdfbfd6381e7ff2d86c8a49f97220cefdc5710f",
+      "v7_passed": false
+    }
+  ],
+  "observed_conclusion": "Protocol v7 rejects all five frozen mutations and accepts the pinned fixed source. Direct local aliases are included in the in-place mutation scan. Earlier false accepts under v3-v6 remain retained in their original results.",
+  "protocol_id": "trl-loss-write-mutation-audit-v6",
+  "raw_files": {
+    "branch-rebind.grade.json": "90ffe6826c770ce8ca56aa43bd19345bbaafc992ebbbd66d9758329ebe3e3c8c",
+    "final-rebind.grade.json": "1f8d0b6ae2cff5dc04923c834977f229fee071fe1bb649e10025fd9b686e7809",
+    "fixed.grade.json": "2f7e06333486d5d5f1acf17d436254d4b8cfe7d5477d1d8b706db28e81bc648b",
+    "loss-alias-inplace.grade.json": "80e159250b932521dc5993aca2157de3bfa86a71c6f6256f4b36d2cece426526",
+    "loss-inplace.grade.json": "3239b847313a40132f2e968f3c98c7390f2691065c0236b696ca977be2526e7e",
+    "normalizer-inplace.grade.json": "fbafb6cd5102a989b46196d090fbf503f0639080adc7d601b7e03fac66125685"
+  },
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "model_weights_loaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages_used": false
+  },
+  "schema_version": 1,
+  "status": "completed"
+}

@@ -1,0 +1,30 @@
+{
+  "acceptance": {
+    "absolute_normalizer_tolerance": 1e-12,
+    "branches": [
+      "main_dapo_cispo_vespo",
+      "experimental_dapo"
+    ],
+    "checks_loss_writes_through_return": true,
+    "conditions_per_branch": 6,
+    "rejects_inplace_local_mutation": true,
+    "rejects_post_division_loss_reassignment": true,
+    "rejects_unmodeled_normalizer_overwrite": true,
+    "requires_current_partial_window_size": true,
+    "requires_eval_unchanged": true,
+    "requires_loss_denominator_matches_normalizer": true,
+    "requires_train_only_rescale": true
+  },
+  "expected_calibration": {
+    "baseline_passed": false,
+    "calibration_passed": true
+  },
+  "locked_hashes": {
+    "evaluator_sha256": "638bb98c7d725097ff1fd01e9fa36ac000c039915cc1af960fbbf8aa2d46aa5f",
+    "task_brief_sha256": "1885d073596154aefc7dbd7e07e22b8c4897b47d7639abac5027b1b9b0e7c011",
+    "task_json_sha256": "4954e5d741f6cab4ce44f5066ff70de9e58b39ef0a1e30834905ec0d885fe392"
+  },
+  "protocol_id": "trl-grpo-accumulation-window-normalizer-protocol-v6",
+  "schema_version": 1,
+  "task_id": "trl-grpo-accumulation-window-normalizer-v1"
+}

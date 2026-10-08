@@ -1,0 +1,34 @@
+{
+  "baseline_metrics": {
+    "condition_count": 12,
+    "max_absolute_normalizer_error": 12.0
+  },
+  "claim_limit": "This run calibrates one deterministic CPU grader on a real historical source change; it measures no agent, model learning, or capability gain.",
+  "fixed_metrics": {
+    "condition_count": 12,
+    "max_absolute_normalizer_error": 0.0
+  },
+  "fixed_revision": "e1b2e21975994e676d9a676e3ab005e9bee38e40",
+  "observed": {
+    "baseline_passed": false,
+    "calibration_passed": true
+  },
+  "pre_fix_revision": "8697378709102608e3c9dc5bf582772e4ddee788",
+  "protocol_id": "trl-grpo-accumulation-window-normalizer-protocol-v7",
+  "protocol_lock_sha256": "3943dbd9e9d472dabbbdf2fed039297ae3dc097b2d2531efd4dedab1cb2bceba",
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "model_weights_downloaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages": 0
+  },
+  "runtime": {
+    "created_at_utc": "2026-10-08T00:03:34.478264+00:00",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.9.6"
+  },
+  "schema_version": 1,
+  "status": "calibrated",
+  "task_id": "trl-grpo-accumulation-window-normalizer-v1"
+}
