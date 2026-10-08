@@ -58,7 +58,7 @@ python scripts/run_grpo_audit_order_characterization_v1.py
 python scripts/audit_grpo_audit_order_characterization_v1.py
 ```
 
-The locked protocol is [`protocols/grpo_audit_order_characterization_v1.lock.json`](../protocols/grpo_audit_order_characterization_v1.lock.json). Raw exact output and the same-host independent audit are retained in [`results/grpo-audit-order-characterization-v1/run-1/`](../results/grpo-audit-order-characterization-v1/run-1/). Both commands are added to CI.
+The locked protocol is [`protocols/grpo_audit_order_characterization_v1.lock.json`](../protocols/grpo_audit_order_characterization_v1.lock.json). Raw exact output, the same-host independent audit, and the CI record are retained in [`results/grpo-audit-order-characterization-v1/run-1/`](../results/grpo-audit-order-characterization-v1/run-1/). Both commands are added to CI. On source commit `d9c45f5`, [GitHub CI](https://github.com/mitukx/VARE/actions/runs/37855205590) passed the full suite (167 passed, 12 skipped), both exact GRPO audit pairs, and the demo. The two implementations running in CI share a host; this is not outside-human reproduction.
 
 ## Relation to prior work and limits
 
