@@ -65,3 +65,6 @@ For a preference-learning run, report the frozen primary held-out metric plus pr
 - **L5:** repeated intervention where reward is an independently measured downstream capability or systems improvement.
 
 A feature is not evidence. Headline claims are allowed only when corresponding raw artifacts and the immutable protocol are retained.
+
+
+26. **BoolQ v17 lower-rate follow-up frozen:** after v16's DPO task regression and SFT/anchor KL failures, v17 lowers LR tenfold to 1e-5 on fresh training ranks 152–279 and validation ranks 768–1023. The three matched arms retain the original gates and reserve confirmation ranks 1024–1535. Protocols are frozen; no result is presumed. See the [study plan](boolq-posttraining-study.md).

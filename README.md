@@ -179,3 +179,6 @@ vare --help
 ## License
 
 Apache-2.0. See [LICENSE](LICENSE).
+
+
+The frozen [v17 follow-up](docs/boolq-posttraining-study.md) tests a tenfold lower learning rate on fresh BoolQ rows after v16's task regression and KL failures. It compares matched DPO, answer SFT, and anchored DPO under the same predeclared advancement gate. The result is pending; the locked protocols are committed before execution, and any development pass will need a separate untouched confirmation.

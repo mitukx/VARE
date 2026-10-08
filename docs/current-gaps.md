@@ -52,3 +52,8 @@ These demonstrate narrow evaluation/reliability properties, two synthetic policy
 5. Prepare an unaided technical walkthrough of the objective, gradient check, model non-pass, v1 drift failure, v2 chronology, robustness result and claim boundaries.
 
 The code-agent trajectory remains a separate supporting question. Its negative pilot should stay visible, but should not displace a learner experiment as the next priority. Update this page when retained evidence changes, not when an integration or plan alone is added.
+
+
+## Current BoolQ follow-up (v17)
+
+The latest model-level outcome is v16: verifier-preference NLL improved under DPO but Exact Match and balanced accuracy declined; SFT and anchored DPO had no checkpoint under the KL cap. The next frozen study tests a tenfold lower learning rate with fresh data and three matched objectives. Until its audits and outcome are available, stable task improvement remains unestablished. A development pass would still need untouched confirmation. The broader gaps above remain: human preference evidence, external reproduction/review, task and model diversity, and independently measured downstream capability.

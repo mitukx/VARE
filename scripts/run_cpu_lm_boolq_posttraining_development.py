@@ -18,8 +18,8 @@ from typing import Any
 from boolq_sequence_task import attach_base_rollout_rejections, make_sequence_rows, parse_generated_label
 
 ROOT = Path(__file__).resolve().parents[1]
-SPEC_PATH = ROOT / "protocols/cpu_lm_boolq_posttraining_development_v16_dpo.json"
-LOCK_PATH = ROOT / "protocols/cpu_lm_boolq_posttraining_development_v16_dpo.lock.json"
+SPEC_PATH = ROOT / "protocols/cpu_lm_boolq_posttraining_development_v17_dpo.json"
+LOCK_PATH = ROOT / "protocols/cpu_lm_boolq_posttraining_development_v17_dpo.lock.json"
 MODEL_DIR = Path.home() / ".cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775"
 DATA_DIR = Path.home() / ".cache/huggingface/datasets/google___boolq/default/0.0.0/35b264d03638db9f4ce671b711558bf7ff0f80d5"
 
@@ -566,7 +566,7 @@ def run(output: Path, spec_path: Path = SPEC_PATH, lock_path: Path = LOCK_PATH):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=ROOT / "results/cpu-lm-boolq-posttraining-development-v16-dpo/run-1")
+    parser.add_argument("--output", type=Path, default=ROOT / "results/cpu-lm-boolq-posttraining-development-v17-dpo/run-1")
     parser.add_argument("--protocol", type=Path, default=SPEC_PATH)
     parser.add_argument("--lock", type=Path, default=LOCK_PATH)
     args = parser.parse_args()

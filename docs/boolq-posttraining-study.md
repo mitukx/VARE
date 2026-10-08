@@ -19,3 +19,12 @@ The exact protocols were frozen before formal runs: [DPO](../protocols/cpu_lm_bo
 ## Limits
 
 BoolQ is a public dataset and may have appeared in pretraining. Its answer key is a verifier label, not a human preference. A successful result would be narrow evidence on one small-model reading task, not broad reasoning, truthfulness, alignment, or real-world capability. Dataset text and derived text artifacts carry the license/attribution in [the data notice](../data/BOOLQ-DATA-NOTICE.md).
+
+
+## v17 lower-rate follow-up
+
+v16 found a concrete mismatch: DPO lowered verifier-preference NLL but reduced held-out task accuracy, while SFT and anchored DPO exceeded the KL cap. v17 tests whether the shared learning rate was too aggressive. It keeps the same three matched objectives, seeds, rank-16 adapter, optimizer, balanced-accuracy selection, KL ceiling, and advancement gate, while lowering the learning rate tenfold from 1e-4 to 1e-5 and extending the frozen checkpoint schedule to epochs 1, 2, 4, and 8. This is a falsifiable development hypothesis; no outcome is assumed.
+
+The v17 protocols were frozen before opening their new rows: [DPO](../protocols/cpu_lm_boolq_posttraining_development_v17_dpo.lock.json), [SFT](../protocols/cpu_lm_boolq_posttraining_development_v17_sft.lock.json), and [anchored DPO](../protocols/cpu_lm_boolq_posttraining_development_v17_dpo_sft_anchor.lock.json). Training uses hash ranks 152–279 (128 rows); validation uses ranks 768–1023 (256 rows). Prior pilot and v16 training rows are excluded. Validation ranks 256–767 remain reserved, and ranks 1024–1535 are reserved for a separately locked confirmation only if a development arm passes. The frozen gate still requires a baseline of at least 128/256 exact matches, baseline balanced accuracy >=0.50, mean balanced-accuracy gain >=0.05, and at least two of three seeds no worse. Checkpoint choice uses this development validation set, so a pass remains provisional.
+
+Execution is local CPU-only and offline using the cached model, with a 6-GiB RSS and one-hour wall-clock cap per arm. All raw rows, rollouts, checkpoints, metrics, and independent audits are retained. These verifier-labeled pairs are not human preferences; BoolQ is public and may have appeared in pretraining.
