@@ -14,8 +14,9 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from run_cpu_lm_gsm8k_sequence_dpo_development import (  # noqa: E402
-    MODEL_DIR, canonical, generate_greedy, sha256_file, write_manifest,
+    DATA_DIR, MODEL_DIR, canonical, generate_greedy, sha256_file, write_manifest,
 )
+from gsm8k_sequence_task import make_sequence_rows  # noqa: E402
 
 
 def read_json(path: Path):
@@ -64,6 +65,22 @@ def audit(output: Path, check_generation: bool = True):
         raise ValueError("unexpected training example count")
     if len(validation) != spec["dataset"]["development_validation_examples"]:
         raise ValueError("unexpected validation example count")
+    os.environ.update(HF_HUB_OFFLINE="1", HF_DATASETS_OFFLINE="1", TRANSFORMERS_OFFLINE="1")
+    from datasets import load_dataset
+    dataset = load_dataset(spec["dataset"]["id"], spec["dataset"]["config"], split="train")
+    if dataset._fingerprint != spec["dataset"]["cached_fingerprint"] or \
+            sha256_file(DATA_DIR / "gsm8k-train.arrow") != spec["dataset"]["cached_train_arrow_sha256"]:
+        raise ValueError("cached GSM8K train data differs from the lock")
+    train_range = spec["dataset"].get("development_training_rank_range", [608, 672])
+    val_range = spec["dataset"].get("development_validation_rank_range", [672, 736])
+    expected_train = make_sequence_rows(dataset, "development_train", *train_range)
+    expected_val = make_sequence_rows(dataset, "development_validation", *val_range)
+    for actual, expected in zip(train, expected_train):
+        if actual["dataset_index"] != expected["dataset_index"] or actual["question_sha256"] != expected["question_sha256"]:
+            raise ValueError("training rows differ from the locked hash ranks")
+    for actual, expected in zip(validation, expected_val):
+        if actual["dataset_index"] != expected["dataset_index"] or actual["question_sha256"] != expected["question_sha256"]:
+            raise ValueError("validation rows differ from the locked hash ranks")
     train_hashes = {row["question_sha256"] for row in train}
     val_hashes = {row["question_sha256"] for row in validation}
     if len(train_hashes) != len(train) or len(val_hashes) != len(validation) or train_hashes & val_hashes:

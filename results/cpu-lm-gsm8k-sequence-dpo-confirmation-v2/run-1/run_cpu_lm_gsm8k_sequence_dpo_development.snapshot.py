@@ -335,10 +335,8 @@ def run(output: Path, spec_path: Path = SPEC_PATH, lock_path: Path = LOCK_PATH):
         ds = load_dataset(spec["dataset"]["id"], spec["dataset"]["config"], split="train")
         if ds._fingerprint != spec["dataset"]["cached_fingerprint"]:
             raise ValueError(f"cached train fingerprint mismatch: {ds._fingerprint}")
-        train_range = spec["dataset"].get("development_training_rank_range", [608, 672])
-        val_range = spec["dataset"].get("development_validation_rank_range", [672, 736])
-        train_rows = make_sequence_rows(ds, "development_train", *train_range)
-        val_rows = make_sequence_rows(ds, "development_validation", *val_range)
+        train_rows = make_sequence_rows(ds, "development_train", 608, 672)
+        val_rows = make_sequence_rows(ds, "development_validation", 672, 736)
         if {r["question_sha256"] for r in train_rows} & {r["question_sha256"] for r in val_rows}:
             raise ValueError("development train/validation questions overlap")
 

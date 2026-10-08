@@ -6,6 +6,8 @@ The separate [sequence-level GSM8K development result](docs/cpu-lm-gsm8k-sequenc
 
 The first 512-question CPU confirmation exceeded its two-hour limit with two of three seeds completed; it is explicitly [recorded as incomplete](docs/cpu-lm-gsm8k-sequence-dpo-confirmation-v1-incomplete.md). A smaller fresh-cohort confirmation is locked separately.
 
+That fresh 128-question confirmation lowered verifier-preference NLL with a paired 95% interval below zero and increased exact-match in all three seeds, but mean KL was 0.737 against a 0.5 cap. Its frozen decision is **non-pass**; see the [confirmation report](docs/cpu-lm-gsm8k-sequence-dpo-confirmation-v2-report.md).
+
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
 
 ## Post-training results

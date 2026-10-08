@@ -1,0 +1,40 @@
+{
+  "audit": "passed",
+  "base_exact_match_accuracy": 0.0078125,
+  "decision_recomputed": "sequence_dpo_confirmation_non_pass",
+  "generation_parity": [
+    {
+      "dataset_index": 5044,
+      "same_as_huggingface_generate": true
+    },
+    {
+      "dataset_index": 4497,
+      "same_as_huggingface_generate": true
+    },
+    {
+      "dataset_index": 8,
+      "same_as_huggingface_generate": true
+    }
+  ],
+  "heldout_rows": 128,
+  "mean_kl": 0.736736104353373,
+  "paired_nll_change": -0.10194513542450447,
+  "paired_nll_ci_95": [
+    -0.13689077679543069,
+    -0.06665359800953437
+  ],
+  "per_seed_nll_change": [
+    -0.10252448206599277,
+    -0.09790117642755068,
+    -0.10540974777996993
+  ],
+  "protocol_id": "vare-cpu-lm-gsm8k-sequence-dpo-confirmation-v2",
+  "protocol_sha256": "cb1e53e71059f94f16af2c71781d98f134b9f03c8a276763b502ee40318d4586",
+  "source_manifest_sha256": "1c7240e84ad268b9d571d21237e96a2e16eaaf692a01faf67e1f449cb434b952",
+  "update_rows": 64,
+  "updated_exact_match_by_seed": [
+    0.015625,
+    0.03125,
+    0.015625
+  ]
+}
