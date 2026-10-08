@@ -63,6 +63,25 @@ class RVLTokenReplayReader:
         return status
 
     @staticmethod
+    def _require_version(value: Any, field: str) -> int:
+        if type(value) is not int or value < 0:
+            raise ValueError(f"{field} must be a non-negative integer version")
+        return value
+
+    @staticmethod
+    def _reject_future_version(recorded: int, current: int | None, field: str) -> None:
+        if current is not None and recorded > current:
+            raise ValueError(
+                f"{field} version {recorded} is ahead of current version {current}"
+            )
+
+    @classmethod
+    def _validate_current_version(cls, value: int | None, field: str) -> int | None:
+        if value is None:
+            return None
+        return cls._require_version(value, field)
+
+    @staticmethod
     def _decode_payload(raw: str) -> list[dict[str, Any]]:
         payload = json.loads(raw)
         if not isinstance(payload, list):
@@ -75,6 +94,12 @@ class RVLTokenReplayReader:
         current_policy_version: int | None = None,
         current_verifier_version: int | None = None,
     ) -> RVLReplaySnapshot:
+        current_policy_version = self._validate_current_version(
+            current_policy_version, "current_policy"
+        )
+        current_verifier_version = self._validate_current_version(
+            current_verifier_version, "current_verifier"
+        )
         statuses: dict[str, int] = {}
         rewards: list[float] = []
         policies: set[int] = set()
@@ -89,13 +114,29 @@ class RVLTokenReplayReader:
             groups += 1
             status = self._validate_status(str(row["status"]))
             statuses[status] = statuses.get(status, 0) + 1
-            pver = int(row["policy_version"])
-            vver = int(row["verifier_version"])
+            pver = self._require_version(row["policy_version"], "stored policy")
+            self._reject_future_version(pver, current_policy_version, "stored policy")
+            raw_vver = row["verifier_version"]
+            if type(raw_vver) is not int:
+                raise ValueError("stored verifier version must be an integer")
+            vver = raw_vver
+            if status == "ready" and vver < 0:
+                raise ValueError("ready group has an invalid verifier version")
+            if vver >= 0:
+                self._reject_future_version(vver, current_verifier_version, "stored verifier")
             policies.add(pver)
             if vver >= 0:
                 verifiers.add(vver)
             for item in self._decode_payload(str(row["payload"])):
                 generations += 1
+                if status == "ready" and "verifier_version" in item:
+                    item_vver = self._require_version(
+                        item["verifier_version"], "stored experience verifier"
+                    )
+                    self._reject_future_version(
+                        item_vver, current_verifier_version, "stored experience verifier"
+                    )
+                    verifiers.add(item_vver)
                 if "reward" in item:
                     rewards.append(float(item["reward"]))
         max_policy_lag = 0
@@ -124,8 +165,12 @@ class RVLTokenReplayReader:
         trusted_default: bool = False,
         pass_threshold: float = 0.5,
     ) -> list[Experience]:
-        if current_policy_version < 0 or current_verifier_version < 0:
-            raise ValueError("current versions must be non-negative")
+        current_policy_version = self._require_version(
+            current_policy_version, "current_policy"
+        )
+        current_verifier_version = self._require_version(
+            current_verifier_version, "current_verifier"
+        )
         out: list[Experience] = []
         with self._connect() as db:
             rows = db.execute(
@@ -133,8 +178,14 @@ class RVLTokenReplayReader:
                    FROM groups WHERE status='ready' ORDER BY rowid"""
             ).fetchall()
         for row in rows:
-            pver = int(row["policy_version"])
-            group_vver = int(row["verifier_version"])
+            pver = self._require_version(row["policy_version"], "stored policy")
+            self._reject_future_version(pver, current_policy_version, "stored policy")
+            group_vver = self._require_version(
+                row["verifier_version"], "stored verifier"
+            )
+            self._reject_future_version(
+                group_vver, current_verifier_version, "stored verifier"
+            )
             for index, item in enumerate(self._decode_payload(str(row["payload"]))):
                 generation = dict(item.get("generation", item))
                 if "prompt_id" not in generation or "prompt" not in generation or "response" not in generation:
@@ -149,7 +200,15 @@ class RVLTokenReplayReader:
                     metadata={"rvl_group_id": str(row["id"]), **gmeta},
                 )
                 reward = float(item.get("reward", 0.0))
-                verifier_version = int(item.get("verifier_version", group_vver))
+                verifier_version = self._require_version(
+                    item.get("verifier_version", group_vver),
+                    "stored experience verifier",
+                )
+                self._reject_future_version(
+                    verifier_version,
+                    current_verifier_version,
+                    "stored experience verifier",
+                )
                 disagreement = float(vmeta.get("disagreement", 0.0))
                 confidence = float(vmeta.get("confidence", 1.0 - min(1.0, disagreement)))
                 trusted = bool(vmeta.get("trusted", trusted_default))

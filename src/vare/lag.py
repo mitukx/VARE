@@ -56,9 +56,29 @@ class LagController:
         active_verifier_version: int,
         shift_score: float,
     ) -> LagDecision:
-        policy_lag = max(0, active_policy_version - rollout_policy_version)
-        verifier_lag = max(0, active_verifier_version - reward_verifier_version)
+        policy_valid = all(
+            type(version) is int and version >= 0
+            for version in (rollout_policy_version, active_policy_version)
+        )
+        verifier_valid = all(
+            type(version) is int and version >= 0
+            for version in (reward_verifier_version, active_verifier_version)
+        )
+        policy_lag = (
+            max(0, active_policy_version - rollout_policy_version) if policy_valid else 0
+        )
+        verifier_lag = (
+            max(0, active_verifier_version - reward_verifier_version) if verifier_valid else 0
+        )
         reasons: list[str] = []
+        if not policy_valid:
+            reasons.append("invalid_policy_version")
+        elif rollout_policy_version > active_policy_version:
+            reasons.append("policy_version_ahead")
+        if not verifier_valid:
+            reasons.append("invalid_verifier_version")
+        elif reward_verifier_version > active_verifier_version:
+            reasons.append("verifier_version_ahead")
         if policy_lag > self.config.max_policy_lag:
             reasons.append("policy_stale")
         if verifier_lag > self.config.max_verifier_lag:

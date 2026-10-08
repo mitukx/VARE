@@ -1,5 +1,9 @@
 # Experimental program
 
+## Provenance version validation v1
+
+A pre-fix source-level reproducer showed that a ready RVL group recorded at policy/verifier version 6 with active version 5 was admitted with lag zero by both `LagController` and RVL ingestion. The fix adds strict nonnegative-integer validation and rejects future versions in policy and verifier provenance, including per-experience verifier overrides in ready payloads. The frozen pending-verification `-1` sentinel and ordinary stale records retain their prior behavior. This is one correctness defect with CPU regressions, not a rate estimate or learning result. See [report](provenance-version-validation-v1-report.md) and [pre-fix artifact](../results/provenance-version-validation-v1/baseline.json).
+
 ## GRPO group-audit identifiability v1
 
 The frozen [study report](grpo-group-audit-identifiability-v1-report.md) tests whether one audited rollout member per group identifies the clean group-normalized advantage signal. Across 2,000 seeds, uniform item audits and proxy-positive item audits have 49.2% and 50.0% balanced accuracy; group-atomic audits score 100% under the same 200-label budget. The exact item-only observation-law TV is zero, and a separately implemented same-host replay audit passes; outside reproduction remains outstanding. This is a two-member synthetic identifiability result, not actual GRPO training or model capability evidence. The [literature scan](research-literature-review-2026-10.md) records close overlap with noisy/group-correlated verifier work and VStress; novelty beyond the scoped construction is unproven.

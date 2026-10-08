@@ -8,6 +8,7 @@ The latest HH human-preference comparison tested length-normalized DPO against s
 
 ## Start here
 
+- [Provenance version validation v1](docs/provenance-version-validation-v1-report.md): future and malformed policy/verifier versions now fail closed in lag assessment and RVL replay ingestion; the original ready-item false-freshness reproduction is retained.
 - [GRPO group-audit identifiability v1](docs/grpo-group-audit-identifiability-v1-report.md): frozen CPU-only exact counterexample comparing item-level and group-atomic clean-label audits. It studies observability of a synthetic group signal, not model capability.
 - [Focused RLVR literature scan](docs/research-literature-review-2026-10.md): recent verifier-noise, GRPO, reward-hacking, and audit-allocation overlap used to choose the question.
 - [SNLI entailment base-feasibility screen](docs/cpu-snli-entailment-base-feasibility-v1-report.md): frozen CPU/offline no-update screen, audited non-pass, and claim limits.
@@ -52,6 +53,7 @@ Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, c
 | Synthetic preference robustness | Ten-seed clean/noise/shift study passed its declared synthetic NLL/KL rule; label flips worsened NLL on every seed. | Behavior under one known synthetic preference generator. |
 | Evaluation reliability | Three historical source graders distinguish pinned pre-fix and fixed revisions; recovery study matched 24/24 frozen fault cases. | Specific grader and same-host recovery checks, not broad grader soundness or distributed reliability. |
 | GRPO group-audit observability | 2,000-seed exact synthetic study: item-only audit balanced accuracy 49.2%/50.0%, group-atomic 100%, exact item-law TV 0. | A two-member partial-label identifiability counterexample. No optimizer, policy update, or capability claim; separately implemented same-host replay passed, outside reproduction pending. |
+| Provenance version validation | Direct lag and RVL replay paths reject future or malformed versions; existing stale and pending data behavior remains covered. | Correctness regression fix with a pre-fix reproducer, not policy-quality evidence. |
 | RVL GRPO adapter integrity | Two real pinned CPU GRPO smokes injected failure after optimizer mutation: one at the candidate boundary and one before `train_step` returned. Both restored incumbent model/optimizer/RNG state, and the next rollout used the incumbent. | One pinned trainer revision and a 3,696-parameter random GPT-2. These are rollback checks, not pretrained-model or learning-quality evidence. |
 
 The [evidence notes](docs/evidence.md) and individual reports define each result's data, protocol, audit coverage, and claim boundary. The [roadmap](docs/roadmap.md) records unresolved evidence levels. The full historical series, including failed and incomplete attempts, remains in the [experiment index](docs/experiments.md).
