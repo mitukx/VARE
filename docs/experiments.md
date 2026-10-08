@@ -2,7 +2,7 @@
 
 VARE's experimental focus is post-training signal quality and policy updates under limited compute. A runnable learner is not evidence of learning; every result needs a frozen protocol, retained raw records, and an evaluation split that was not used for optimization.
 
-**HH-RLHF reward-model v1 is a development non-pass.** Frozen-feature reward heads improved held-out pairwise accuracy over a length-only baseline but worsened NLL, so confirmation remained sealed. The [report](hh-reward-model-v1-development-report.md), [protocol](../protocols/cpu_hh_reward_model_v1.lock.json), and [audited bundle](../results/cpu-hh-reward-model-v1/development/run-1/) preserve the result. Any follow-up must fit calibration from training-only out-of-fold predictions and use a newly frozen, still-unread evaluation range.
+**HH-RLHF reward-model v2 passed development but failed confirmation.** Accuracy gain repeated on a fresh 256-prompt cohort, but the paired NLL interval crossed zero. Both bundles pass a local score-replay audit; this is not external reproduction. The [report](hh-reward-model-v2-report.md), [protocol](../protocols/cpu_hh_reward_model_v2.lock.json), and [audited bundles](../results/cpu-hh-reward-model-v2/) preserve both outcomes. V1 remains a separate development non-pass in its [report](hh-reward-model-v1-development-report.md).
 
 ## Current no-cost sequence
 
