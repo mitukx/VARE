@@ -19,14 +19,14 @@ Update the training-time token-loss normalizer so each accumulation window has t
 - The source-derived normalization branch satisfies all locked CPU arithmetic cases in both files.
 - Within the tested loss branches, no additional write changes `normalizer` after the checked assignment and training gate.
 - The loss expression in each selected branch divides directly by the checked `normalizer` value.
-- The selected branch must not reassign `loss` after that checked division. Subsequent loss writes through the return are limited to the pinned entropy and auxiliary-loss adjustments; an extra write can change the returned training objective while leaving the denominator check intact.
+- The selected branch must not reassign `loss` after that checked division. Subsequent loss writes through the return are limited to the pinned entropy and auxiliary-loss adjustments; an extra write can change the returned training objective while leaving the denominator check intact. In-place tensor mutators and `out=` writes targeting these locals are also rejected.
 
 ## Constraints
 
 - Start from `source.base_revision` in `task.json`.
 - Keep changes limited to the two listed trainer implementations and directly relevant regression coverage.
 - Do not edit this brief, the task descriptor, the protocol lock, or any file under `evaluator/` to obtain a passing score.
-- The evaluator parses the production branch, executes its normalizer statements against deterministic scalar doubles, verifies that the branch's loss denominator is the checked `normalizer`, rejects a later branch-local `loss` write, and checks method-level loss writes through the return against the pinned entropy/auxiliary adjustments. It does not execute the full loss expression, import the trainer, or run a gradient update; do not present it as end-to-end training evidence.
+- The evaluator parses the production branch, executes its normalizer statements against deterministic scalar doubles, verifies that the branch's loss denominator is the checked `normalizer`, rejects a later branch-local `loss` write, and checks method-level loss writes through the return against the pinned entropy/auxiliary adjustments, including in-place tensor mutation calls. It does not execute the full loss expression, import the trainer, or run a gradient update; do not present it as end-to-end training evidence.
 - Protocol version 3 rejected an unmodeled later overwrite of `normalizer` and a loss denominator that scales or bypasses that value, but a frozen mutation audit later found that it accepted a post-division `loss = loss * 2` in both pinned branches. Protocol version 4 adds a branch-local later-`loss`-write guard. These source-structural checks target demonstrated false accepts and can reject semantically valid refactors; they do not generalize to arbitrary trainer implementations.
 - No model weights, GPU, paid API, or external compute are needed.
 

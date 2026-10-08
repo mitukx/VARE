@@ -1,0 +1,93 @@
+{
+  "acceptance": {
+    "all_four_mutations": "reject",
+    "fixed_source": "pass",
+    "pinned_entropy_and_aux_adjustments": "accepted by unit fixture"
+  },
+  "claim_limit": "Four deliberately incorrect mutations on two branches of one pinned source revision. This does not estimate grader error rates or prove arbitrary semantic correctness.",
+  "grader": {
+    "path": "benchmarks/historical/trl_grpo_accumulation_scale/evaluator/grade.py",
+    "sha256": "638bb98c7d725097ff1fd01e9fa36ac000c039915cc1af960fbbf8aa2d46aa5f"
+  },
+  "mutations": [
+    {
+      "expected_semantic_decision": "reject",
+      "id": "branch_rebind",
+      "patch_path": "benchmarks/audits/trl_loss_dataflow_v1/candidate-mutation.patch",
+      "patch_sha256": "9c652b595b7992a9360d2274ddb48e0b93713fac92d490b3ed52e4f856e6fa7a"
+    },
+    {
+      "expected_semantic_decision": "reject",
+      "id": "final_rebind",
+      "patch_path": "benchmarks/audits/trl_loss_final_rebind_v1/candidate-mutation.patch",
+      "patch_sha256": "222d3c2599005a8df849c44b6fc74410fe5c74110dce0d505f98010442698097"
+    },
+    {
+      "expected_semantic_decision": "reject",
+      "id": "normalizer_inplace",
+      "patch_path": "benchmarks/audits/trl_inplace_dataflow_v1/normalizer-mutation.patch",
+      "patch_sha256": "1cb0805377fcc4ede3c424275e1766d1a205b0aab8cace79bfe169c5b152814f"
+    },
+    {
+      "expected_semantic_decision": "reject",
+      "id": "loss_inplace",
+      "patch_path": "benchmarks/audits/trl_inplace_dataflow_v1/loss-mutation.patch",
+      "patch_sha256": "d386b49af4eb48d89d1c040ef135c9b9341c28d05757db43e4dc09b5546015b6"
+    }
+  ],
+  "objective": "Re-evaluate known branch-local, final-return, and Tensor-style in-place loss/normalizer mutations against protocol v6 after false accepts in versions 3, 4, and 5.",
+  "prior_findings": [
+    {
+      "mutation": "branch_rebind",
+      "protocol": "v3",
+      "result": "false accept",
+      "summary": "results/trl-loss-dataflow-audit-v1/summary-v2.json"
+    },
+    {
+      "mutation": "final_rebind",
+      "protocol": "v4",
+      "result": "false accept",
+      "summary": "results/trl-loss-final-rebind-v1/summary.json"
+    },
+    {
+      "mutation": "loss_inplace",
+      "protocol": "v5",
+      "result": "false accept",
+      "summary": "results/trl-inplace-dataflow-audit-v1/summary.json"
+    }
+  ],
+  "procedure": [
+    "Verify the protocol-v6 lock, fixed source, and mutation patch hashes.",
+    "Grade the pinned fixed source.",
+    "Apply each of the four mutations separately to a fresh copy of the fixed source and grade each under protocol v6.",
+    "Check that the fixed positive control passes and every mutation is rejected; preserve all raw outputs."
+  ],
+  "protocol_id": "trl-loss-write-mutation-audit-v5",
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "model_weights_loaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages_used": false
+  },
+  "schema_version": 5,
+  "source": {
+    "files": [
+      "trl/experimental/gspo_token/grpo_trainer.py",
+      "trl/trainer/grpo_trainer.py"
+    ],
+    "fixed_revision": "e1b2e21975994e676d9a676e3ab005e9bee38e40",
+    "fixed_source_sha256": {
+      "trl/experimental/gspo_token/grpo_trainer.py": "37b91254ff70d353ca4a04bd1e28602102ddcbd50be3a79b0ba0a6cb62bc52e0",
+      "trl/trainer/grpo_trainer.py": "7446f652aefb9b78a64952a135c2235c924a7633c112d6a8f569b16ec4d62e14"
+    },
+    "repository": "https://github.com/huggingface/trl.git"
+  },
+  "task": {
+    "protocol_id": "trl-grpo-accumulation-window-normalizer-protocol-v6",
+    "protocol_lock_sha256": "493d7d729abc57ad63747a333d51a78b295c3dfcc67bd67b29128b899e41a2f4",
+    "task_brief_sha256": "1885d073596154aefc7dbd7e07e22b8c4897b47d7639abac5027b1b9b0e7c011",
+    "task_id": "trl-grpo-accumulation-window-normalizer-v1",
+    "task_json_sha256": "4954e5d741f6cab4ce44f5066ff70de9e58b39ef0a1e30834905ec0d885fe392"
+  }
+}

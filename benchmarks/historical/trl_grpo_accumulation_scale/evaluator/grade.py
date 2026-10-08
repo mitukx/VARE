@@ -84,9 +84,20 @@ def _writes_name(node: ast.AST, name: str) -> bool:
             return target.id == name
         if isinstance(target, (ast.Tuple, ast.List)):
             return any(contains(item) for item in target.elts)
+        if isinstance(target, (ast.Attribute, ast.Subscript)):
+            return contains(target.value)
         return False
 
-    return any(contains(target) for target in targets)
+    if any(contains(target) for target in targets):
+        return True
+    if isinstance(node, ast.Call):
+        function = node.func
+        if (isinstance(function, ast.Attribute) and function.attr.endswith("_")
+                and contains(function.value)):
+            return True
+        if any(keyword.arg == "out" and contains(keyword.value) for keyword in node.keywords):
+            return True
+    return False
 
 
 def _is_mode_train(node: ast.If) -> bool:
@@ -206,8 +217,11 @@ def _extract_normalizer(path: Path, branch_name: str):
                               and any(_target_is_normalizer(item) for item in statement.body)), None)
         permitted_writes = {id(assignment)}
         if training_gate is not None:
-            permitted_writes.update(id(node) for node in ast.walk(training_gate)
-                                    if _writes_name(node, "normalizer"))
+            gate_writes = [node for node in ast.walk(training_gate)
+                           if _writes_name(node, "normalizer")]
+            if len(gate_writes) != 1 or not _target_is_normalizer(gate_writes[0]):
+                return None, None, None
+            permitted_writes.add(id(gate_writes[0]))
         branch_writes = (node for statement in branch.body for node in ast.walk(statement)
                          if _writes_name(node, "normalizer"))
         if any(id(node) not in permitted_writes for node in branch_writes):

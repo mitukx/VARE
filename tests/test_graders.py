@@ -96,6 +96,46 @@ class GraderIntegrityTests(unittest.TestCase):
             self.assertIsNotNone(gate)
             self.assertIsNotNone(denominator)
 
+    def test_trl_v6_grader_rejects_inplace_normalizer_mutation(self):
+        mutated = VALID_BRANCH.replace(
+            '                normalizer = normalizer * self.current_gradient_accumulation_steps / self.args.steps_per_generation\n',
+            '                normalizer = normalizer * self.current_gradient_accumulation_steps / self.args.steps_per_generation\n'
+            '                normalizer.data.mul_(2)\n',
+        )
+        with tempfile.TemporaryDirectory(prefix="vare-grader-probe-") as temporary:
+            source = Path(temporary) / "candidate.py"
+            source.write_text(mutated, encoding="utf-8")
+            assignment, gate, denominator = _extract_normalizer(source, "main_dapo_cispo_vespo")
+            self.assertIsNone(assignment)
+            self.assertIsNone(gate)
+            self.assertIsNone(denominator)
+
+    def test_trl_v6_grader_rejects_inplace_loss_mutation(self):
+        mutated = VALID_BRANCH.replace(
+            '            loss = per_token_loss / normalizer\n',
+            '            loss = per_token_loss / normalizer\n            loss.data.mul_(2)\n',
+        ) + '        return loss\n'
+        with tempfile.TemporaryDirectory(prefix="vare-grader-probe-") as temporary:
+            source = Path(temporary) / "candidate.py"
+            source.write_text(mutated, encoding="utf-8")
+            assignment, gate, denominator = _extract_normalizer(source, "main_dapo_cispo_vespo")
+            self.assertIsNone(assignment)
+            self.assertIsNone(gate)
+            self.assertIsNone(denominator)
+
+    def test_trl_v6_grader_rejects_out_parameter_mutation(self):
+        mutated = VALID_BRANCH.replace(
+            '            loss = per_token_loss / normalizer\n',
+            '            loss = per_token_loss / normalizer\n            torch.mul(loss, 2, out=loss)\n',
+        ) + '        return loss\n'
+        with tempfile.TemporaryDirectory(prefix="vare-grader-probe-") as temporary:
+            source = Path(temporary) / "candidate.py"
+            source.write_text(mutated, encoding="utf-8")
+            assignment, gate, denominator = _extract_normalizer(source, "main_dapo_cispo_vespo")
+            self.assertIsNone(assignment)
+            self.assertIsNone(gate)
+            self.assertIsNone(denominator)
+
     def test_trl_grader_rejects_loss_divided_by_scaled_normalizer(self):
         mutated = VALID_BRANCH.replace(
             "loss = per_token_loss / normalizer",
