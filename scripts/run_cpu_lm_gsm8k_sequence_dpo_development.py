@@ -20,8 +20,8 @@ from gsm8k_sequence_task import (attach_base_rollout_rejections, make_rationale_
                                  make_sequence_rows, parse_generated_number)
 
 ROOT = Path(__file__).resolve().parents[1]
-SPEC_PATH = ROOT / "protocols/cpu_lm_gsm8k_sequence_dpo_development_v13_dpo.json"
-LOCK_PATH = ROOT / "protocols/cpu_lm_gsm8k_sequence_dpo_development_v13_dpo.lock.json"
+SPEC_PATH = ROOT / "protocols/cpu_lm_gsm8k_sequence_dpo_development_v14_dpo.json"
+LOCK_PATH = ROOT / "protocols/cpu_lm_gsm8k_sequence_dpo_development_v14_dpo.lock.json"
 MODEL_DIR = Path.home() / ".cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775"
 DATA_DIR = Path.home() / ".cache/huggingface/datasets/openai___gsm8k/main/0.0.0/740312add88f781978c0658806c59bc2815b9866"
 
@@ -523,7 +523,7 @@ def run(output: Path, spec_path: Path = SPEC_PATH, lock_path: Path = LOCK_PATH):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=ROOT / "results/cpu-lm-gsm8k-sequence-dpo-development-v13-dpo/run-1")
+    parser.add_argument("--output", type=Path, default=ROOT / "results/cpu-lm-gsm8k-sequence-dpo-development-v14-dpo/run-1")
     parser.add_argument("--protocol", type=Path, default=SPEC_PATH)
     parser.add_argument("--lock", type=Path, default=LOCK_PATH)
     args = parser.parse_args()

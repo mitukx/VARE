@@ -1,0 +1,109 @@
+{
+  "artifact_policy": "Retain rows, raw rollouts, rejection provenance, every checkpoint adapter and generation, metrics, hashes and audit for all three matched method arms.",
+  "claim_boundary": "Development-only method comparison on a public GSM8K training split. All labels are verifier-derived; no human preference or capability claim is established.",
+  "compute_limits": {
+    "device": "CPU only; CUDA and MPS placement are forbidden",
+    "feature_batch_size": 2,
+    "generation_batch_size": 1,
+    "generation_max_new_tokens": 64,
+    "max_peak_rss_bytes": 6442450944,
+    "max_wall_seconds": 3600,
+    "network": "disabled; HF_HUB_OFFLINE=1, HF_DATASETS_OFFLINE=1, TRANSFORMERS_OFFLINE=1, local_files_only=true",
+    "paid_compute": false,
+    "pair_microbatch_size": 1,
+    "threads": 4
+  },
+  "dataset": {
+    "answer_parser": "Parse the terminal number after ####, remove commas, and parse with Decimal.",
+    "cached_fingerprint": "c6f812ae33c9159d",
+    "cached_train_arrow_sha256": "6146bca074f4c6c5e07de7e96cc968adab3833dbdafeda21830f27558eea3d9b",
+    "config": "main",
+    "confirmation_reservation": "No confirmation rows are opened. Fresh confirmation ranks begin at 3808 under a separate lock.",
+    "development_training_examples": 64,
+    "development_training_rank_range": [
+      3616,
+      3680
+    ],
+    "development_validation_examples": 128,
+    "development_validation_rank_range": [
+      3680,
+      3808
+    ],
+    "id": "openai/gsm8k",
+    "leakage_boundary": "This phase reads only GSM8K train rows. The model may have seen the public dataset during pretraining; this cannot be ruled out.",
+    "preference_construction": "base_rollout_numeric",
+    "preference_pair": "Chosen completion is the GSM8K verifier final answer as a numeric assistant response. Rejected completion is the frozen base model greedy response if its final number is incorrect or unparseable. If already correct, change only its terminal number by exactly one using deterministic question-hash direction. Retain original generated text and provenance. These verifier-constructed comparisons are not human preferences.",
+    "prompt": "Use the model pinned chat template. Ask it to solve the word problem and reply with only the final number, without explanation.",
+    "revision": "740312add88f781978c0658806c59bc2815b9866",
+    "selection": "All three methods use identical fresh hash-ranked training rows 3616–3679 and validation rows 3680–3807. The arms share rows by design; no earlier study ranks are reused.",
+    "split": "train only"
+  },
+  "generation": {
+    "algorithm": "greedy",
+    "do_sample": false,
+    "eos_token_ids": [
+      151645,
+      151643
+    ],
+    "repetition_penalty": 1.1,
+    "source": "Pinned Qwen generation_config.json; apply the same seen-token repetition penalty to prompt and generated tokens."
+  },
+  "learner": {
+    "adapter": "Custom low-rank residual on the frozen output-head hidden states, over the full vocabulary. The transformer backbone and original output-head weights are frozen. This is not PEFT/TRL.",
+    "adapter_rank": 16,
+    "beta": 0.1,
+    "checkpoints_epochs": [
+      0,
+      1,
+      2
+    ],
+    "initialization": "A sampled from N(0, 1/sqrt(hidden_size)) by a CPU torch.Generator seeded per run; B initialized to zero.",
+    "maximum_epochs": 2,
+    "method": "dpo",
+    "microbatch_pairs": 4,
+    "objective": "Sequence-level DPO on verifier-chosen answers and actual base-model rollout rejects.",
+    "optimizer": {
+      "gradient_norm_clip": 1.0,
+      "learning_rate": 0.0001,
+      "name": "AdamW",
+      "weight_decay": 0.0
+    },
+    "seeds": [
+      5209,
+      5303,
+      5393
+    ],
+    "sft_anchor_weight": 0.0
+  },
+  "metrics": {
+    "checkpoint_selection_method": "exact_match",
+    "claim_boundary": "Exact-match is selected on this development cohort and is not independent confirmation. Public train-split answer keys are verifier labels, not human preferences.",
+    "generation_metric": "Greedy decoding under the same numeric-only user prompt, pinned model generation settings, and completion budget; parse the final number and compare Decimal-normalized values exactly.",
+    "minimum_base_exact_matches": 4,
+    "minimum_exact_match_gain": 0.03125,
+    "paired_comparison": "Compare DPO, SFT and anchored DPO on the same 128 validation questions and seeds; report question-paired intervals descriptively because checkpoints are selected on this development cohort.",
+    "selection_primary": "Mean validation DPO preference NLL over completion sequences; lower is better.",
+    "selection_rule": "For each method, retain nonzero epochs with mean verifier-preference NLL below base and mean token KL <=0.5. Greedy-generate every eligible epoch on all 128 validation questions for each seed. Select highest mean exact-match; break ties by lower NLL, then fewer epochs. An arm advances only if base exact-match is at least 4/128, mean updated exact-match improves by at least 4/128, and at least two of three seeds are no worse. This is development only; a passing arm still requires a fresh separately locked confirmation.",
+    "selection_secondary": [
+      "held-out sequence preference accuracy",
+      "mean full-vocabulary token KL updated-to-base on paired completion contexts",
+      "greedy generated final-answer exact match"
+    ]
+  },
+  "model": {
+    "dtype": "float32",
+    "id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "weights_must_already_be_cached": true
+  },
+  "phase": "training_only_development",
+  "protocol_id": "vare-cpu-lm-gsm8k-posttraining-development-v14-dpo",
+  "purpose": "Larger fresh matched development comparison of DPO, verifier-answer SFT and SFT-anchored DPO.",
+  "runtime": {
+    "datasets": "4.4.2",
+    "numpy": "1.26.4",
+    "python": "3.9.6",
+    "torch": "2.8.0",
+    "transformers": "4.57.3"
+  }
+}
