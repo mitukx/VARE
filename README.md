@@ -12,7 +12,6 @@ The latest model study is a **development non-pass**. The strongest positive mod
 - [Experiment index](docs/experiments.md): full study sequence and retained reports.
 - [Current evidence gaps](docs/current-gaps.md): what the results support and what remains open.
 - [Evaluation runner walkthrough](docs/walkthrough.md): inspect the calibrated task runner and retained execution evidence.
-- [Local workbench](docs/internal-workbench.md): open the read-only interface over retained records.
 
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
 
@@ -63,8 +62,6 @@ VARE retains two accepted synthetic preference-policy studies. The v2 confirmati
 Start with the [ten-minute walkthrough](docs/walkthrough.md), [technical report](docs/scheduler-report.md), and [execution contract](docs/execution.md). Inspect retained evidence offline:
 
 The [post-training plan](docs/post-training-plan.md) defines the no-cost learning experiments and their claim limits. The [current evidence gaps](docs/current-gaps.md) rank the remaining CPU-feasible work and state what the retained results support. [`cpu_lm_dpo_head_v1`](protocols/cpu_lm_dpo_head_v1.lock.json) freezes the bounded no-download model-level preference update; its result and first failed attempt are retained separately.
-
-For a visual, read-only view of the retained experiments, serve [`ui/`](ui/) locally with the steps in [`docs/internal-workbench.md`](docs/internal-workbench.md). The interface reads committed JSON evidence and has no experiment submission/backend path.
 
 If the exact model snapshot and compatible `torch`, `transformers`, and `numpy` packages are already installed locally, run the frozen study with:
 
