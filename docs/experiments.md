@@ -10,6 +10,8 @@ The outcome-informed fixed-head follow-up is frozen as [HH-RLHF v3](../protocols
 
 The separate [HH human-preference DPO v2](hh-human-preference-dpo-development-v2-report.md) is the first completed policy-update comparison on this human-labeled dataset. DPO pair accuracy was 0.4128 versus 0.4141 for the frozen base (difference −0.0013; paired 95% prompt interval [−0.0117,+0.0104]); the frozen gain and seed-consistency gates failed. Its same-host score-replay audit passed. The study uses hash-disjoint development prompts from the official training split, not the official test set; it shows no task-success gain. The [frozen protocol](../protocols/cpu_hh_human_dpo_development_v2.lock.json) and [bundle](../results/cpu-hh-human-preference-dpo-v2/development/run-1/) retain the record.
 
+A separate [post-hoc length diagnostic](hh-human-preference-dpo-length-diagnostic-v1.md) finds strong length sensitivity in the same raw sequence-sum margin: its correlation with chosen-minus-rejected response-token count is −0.956 for both base and DPO mean scores. This descriptive result does not change the original non-pass or establish a cause.
+
 The generated arithmetic feasibility pilot is a separate train-only non-pass: the pinned 0.5B model answered 1/64 examples correctly, below the frozen minimum of 8. Its independent record audit passed, but the task gate failed, so no model update or confirmation was run. See the [report](cpu-generated-arithmetic-feasibility-v1-report.md), [protocol](../protocols/cpu_generated_arithmetic_feasibility_v1.lock.json), and [retained bundle](../results/cpu-generated-arithmetic-feasibility-v1/run-1/).
 
 ## Current no-cost sequence

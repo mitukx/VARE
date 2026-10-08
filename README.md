@@ -9,6 +9,7 @@ HH-RLHF v2 passed development but **failed its joint confirmation gate**: accura
 - [Latest BoolQ study](docs/boolq-posttraining-development-v17-report.md): matched DPO, SFT, and anchored-DPO comparison, including its failed advancement gate.
 - [HH-RLHF reward-model v2](docs/hh-reward-model-v2-report.md): development pass, repeated confirmation accuracy gain, but no confirmed NLL improvement.
 - [HH human-preference DPO development v2](docs/hh-human-preference-dpo-development-v2-report.md): matched DPO/SFT update on human-labeled pairs; the frozen DPO-vs-base accuracy gate failed.
+- [HH DPO response-length diagnostic](docs/hh-human-preference-dpo-length-diagnostic-v1.md): post-hoc analysis of the same development cohort; it does not change the non-pass.
 - [HH-RLHF v2 post-hoc calibration diagnostic](docs/hh-reward-model-calibration-analysis.md): calibrated-versus-raw NLL on the already-opened confirmation bundle; exploratory only and does not change v2's non-pass.
 - [HH-RLHF v3 fixed-head calibration](docs/hh-reward-model-v3-development-report.md): development and fresh confirmation NLL gates passed, with same-host replay audits; the result is narrow and outcome-informed. [Confirmation report](docs/hh-reward-model-v3-confirmation-report.md).
 - [HH-RLHF v3 replay guide](docs/hh-reward-model-v3-reproduction.md): pinned assets, offline audit command, expected result, and reproduction limits.

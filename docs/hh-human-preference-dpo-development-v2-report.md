@@ -33,6 +33,8 @@ The frozen decision is **non-pass**: the required DPO gain and seed consistency 
 
 The independent auditor reselected the prompts from the frozen inventory, re-tokenized the rows, recomputed base and retained-adapter prompt scores, and replayed the aggregates, bootstrap interval, and frozen decision. [`audit.json`](../results/cpu-hh-human-preference-dpo-v2/development/run-1/audit.json) reports `status: pass` and the same non-pass decision. This is a same-host offline score replay; it does not independently retrain the adapters, reproduce the run on another machine, or constitute external review.
 
+A separate [post-hoc response-length diagnostic](hh-human-preference-dpo-length-diagnostic-v1.md) found a strong descriptive association between response-length direction and the raw sequence-sum margin. It leaves the frozen result unchanged and must not be treated as a confirmatory analysis.
+
 This is a development result on hash-disjoint contexts from the HH training split, not an official test-set confirmation. The measured outcome is agreement with the dataset's pairwise human labels, not downstream task success or user utility. It is offline DPO, not online RL. The result establishes no general helpfulness, safety, reasoning, capability, or scale claim. No confirmation protocol was opened after the development gate failed.
 
 The retained v1 folder contains protocol, runner, learner, and auditor snapshots but no completed summary or standalone failure record. Accordingly, v1 is not treated here as a decision-bearing result. V2 is the first completed HH human-preference policy-update bundle in the current repository.
