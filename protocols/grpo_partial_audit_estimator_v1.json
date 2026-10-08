@@ -1,0 +1,63 @@
+{
+  "protocol_id": "grpo_partial_audit_estimator_v1",
+  "source_revision": "d2361275bbf31b84c38acfbcf3a81c2ad39622e6",
+  "status": "frozen_before_exact_calculation",
+  "question": "For the previously frozen four-member binary-reward local clipped-GRPO update, how do uniformly sampled one-, two-, and three-label subset estimators compare with full-group audit under matched clean-label cost, and when does the degree-three structure make partial audits biased or variance-inefficient?",
+  "prior_work_disclosure": "This is a follow-up to the committed order-three Walsh characterization and uses its fixed estimator. The estimator construction is a direct inverse-inclusion application; no algorithmic novelty is asserted.",
+  "scope": "Exact finite CPU enumeration using only the Python standard library. No model, optimizer, stochastic Monte Carlo, GPU, paid API, or external compute.",
+  "estimand": {
+    "action_space": "All 16 vectors under independent Bernoulli(1/4) actions; actions are fully observed.",
+    "reward_space": "Y in {0,1}^4 with any declared conditional law given the complete action vector.",
+    "update": "G(a,y)=sum_i A_i(y)*(a_i-1/4); A is population-standardized binary group reward, zero for a constant-reward group, as frozen in grpo_audit_order_characterization_v1.",
+    "policy_target": "E_A[E[G(A,Y)|A]] under the frozen Bernoulli(1/4) action distribution."
+  },
+  "partial_estimators": {
+    "basis": "chi_T(y)=(-1)^(sum_{i in T} y_i), alpha_T(a)=2^-4 sum_y G(a,y) chi_T(y).",
+    "sampling": "For each m in {1,2,3}, choose one of the C(4,m) size-m coordinate subsets S uniformly, independently of unobserved clean labels conditional on the observed action.",
+    "inclusion_probability_by_m": {"m=1": {"order_0": "1", "order_1": "1/4"}, "m=2": {"order_0": "1", "order_1": "1/2", "order_2": "1/6"}, "m=3": {"order_0": "1", "order_1": "3/4", "order_2": "1/2", "order_3": "1/4"}, "m=4": {"order_0": "1", "order_1": "1", "order_2": "1", "order_3": "1"}},
+    "estimator": "For audit size m, Ghat_m(a,y_S)=sum_{T subseteq S, |T|<=m} alpha_T(a)*chi_T(y)/pi_(m,|T|). For m<3 this is the inverse-inclusion estimator of the degree-m Walsh projection and may be biased for G; for m=3 it is exactly unbiased; m=4 equals G.",
+    "full_audit_baseline": "Ghat_4(a,y)=G(a,y), observing all four labels.",
+    "coefficients_disclosure": "All estimators use exact coefficients of the fixed mathematical target G, not learned from audited observations. This isolates the information and audit-cost question; it is an oracle-coefficient analysis, not an end-to-end deployable audit procedure."
+  },
+  "exact_claims_to_check": [
+    "For every one of 16 actions, 16 reward vectors, and 4 possible audited triples, the average of Ghat_3 over triples equals G(a,y) exactly.",
+    "For arbitrary conditional reward laws, E[Ghat_3|A=a]=E[G|A=a]; this follows from the exhaustive pointwise identity.",
+    "For m=1 and m=2, the subset average equals the corresponding degree-m Walsh projection, while m=4 reproduces G exactly.",
+    "For each m in {1,2,3,4}, exactly enumerate bias, variance, and mean-squared error under each frozen law; report cost-adjusted MSE m*MSE_m/(4*MSE_4), with zero-baseline cases marked undefined.",
+    "For m=3, verify Var(Ghat_3)=Var(G)+E[Var(Ghat_3|A,Y)] for every frozen law; m=1,2 estimates may be biased and are evaluated using MSE, not variance alone.",
+    "Two-label observations cannot universally identify the target: re-evaluate the previously frozen P_plus/P_minus order-three parity witness and calculate the exact minimax absolute-bias lower bound for any estimator sharing its observation law."
+  ],
+  "frozen_conditional_reward_law_grid": {
+    "independent_bernoulli": "For q in {1/5, 1/2, 4/5}, every action stratum uses independent Bernoulli(q) labels.",
+    "common_mode": "For q in {1/5, 1/2, 4/5}, Y is all-zero with probability 1-q and all-one with probability q, for every action stratum.",
+    "third_order_parity": "For every action a in {0,1}^4, every three-coordinate subset T, epsilon in {1/4,1/2,1}, and sign s in {-1,+1}, the target stratum uses P_s(y|a)=2^-4*(1+s*epsilon*chi_T(y)); every other action stratum is uniform over {0,1}^4. This yields 384 exact cases."
+  },
+  "primary_metric": "For each law and audit size m, report exact per-group bias and variance. At the frozen 12-label finite budget, use n_m=12/m independent groups and compute exact sample-mean MSE_m=Var(Ghat_m)/n_m+Bias(Ghat_m)^2; compare with full-audit MSE_4=Var(G)/3. Report their ratio. If full-audit MSE is zero, mark ratio undefined. For unbiased m=3, also report the asymptotic variance-per-label-call ratio 3*Var(Ghat_3)/(4*Var(G)). This is a matched clean-label-call comparison, not wall-clock cost.",
+  "computation_cost": "Alongside label calls, report the exact per-group number of sampled subset choices C(4,m) and Walsh terms evaluated 2^m. These are algorithmic operation counts for the specified estimator, not measured end-to-end latency.",
+  "finite_budget_direction_check": {
+    "budget": "Exactly 12 clean-label calls per replicate; m=1,2,3,4 therefore use 12,6,4,3 independent groups respectively.",
+    "laws": ["parity_a=0001_T=012_eps=1/2_s=-1", "parity_a=0001_T=012_eps=1/2_s=+1"],
+    "repetitions": 4096,
+    "seeds": [20261009, 20261010, 20261011, 20261012, 20261013, 20261014],
+    "sampling": "For each law, arm, and seed, use Python random.Random(seed + 1000003*arm_index + 17*sign_index) to draw independent groups from the frozen action/reward distribution and uniform audit subsets. Report per-seed and pooled wrong-direction-or-zero counts; zero estimates count as direction errors. Report Wilson 95% intervals pooled over the declared repetitions.",
+    "metric_limit": "This is a finite synthetic scalar-gradient direction diagnostic, not a model update or capability measure."
+  },
+  "interpretation_rule": "Describe a cost-adjusted MSE improvement only for named frozen law cases with R_m<1. Summaries across this constructed finite grid are descriptive; do not generalize to real verifiers, arbitrary workloads, or learned policies. m=1,2 are lower-order projection baselines and can be biased; m=3 is unbiased but can remain inefficient due to audit randomization variance.",
+  "reproduction": {
+    "runner": "scripts/run_grpo_partial_audit_estimator_v1.py",
+    "auditor": "scripts/audit_grpo_partial_audit_estimator_v1.py",
+    "output": "results/grpo-partial-audit-estimator-v1/run-1/"
+  },
+  "claim_limits": [
+    "No model capability or optimizer outcome is measured.",
+    "The target update and action distribution are one previously selected synthetic finite construction; exact target coefficients are supplied to all estimators as an oracle.",
+    "The law grid is designed for structural coverage, not as a representative verifier-error distribution.",
+    "This does not establish a general adaptive audit algorithm or novelty over related noisy-verifier and audit-allocation literature."
+  ],
+  "focused_prior_art": [
+    {"title": "Noise-corrected GRPO: From Noisy Rewards to Unbiased Gradients", "url": "https://arxiv.org/abs/2510.18924", "relevance": "Explicit reward-noise correction and unbiased GRPO gradient estimates; means unbiasedness alone is not a contribution."},
+    {"title": "Your Group-Relative Advantage Is Biased", "url": "https://arxiv.org/abs/2601.08521", "relevance": "Analyzes finite-group GRPO advantage bias and proposes adaptive difficulty weighting."},
+    {"title": "VStress: Correlation-Aware Auditing and Adaptive Budget Allocation for Repeated Verifiers", "url": "https://arxiv.org/abs/2609.36958", "relevance": "Adaptive verification-call allocation under verifier dependence and shift; close to generic budget-allocation claims."},
+    {"title": "Audit-First VAPO: Risk-Certified Selective Updates under Imperfect Verification", "url": "https://arxiv.org/abs/2609.33662", "relevance": "Finite-budget auditing for update-direction selection with risk and coverage guarantees; sets a higher practical comparison bar."}
+  ]
+}
