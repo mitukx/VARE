@@ -1,5 +1,11 @@
 # Experimental program
 
+## HH length-normalized DPO development v1
+
+The frozen [three-arm CPU comparison](cpu-hh-length-normalized-dpo-v1-report.md) tested length-normalized DPO, standard DPO, and chosen-only SFT on three matched seeds. Candidate and standard DPO both scored 0.4974 raw sequence-sum preference accuracy against base 0.5000; the length-only baseline scored 0.5645. The frozen gain and seed-consistency gates failed. The runner saved all nine adapters but hit a missing-aggregate-key `KeyError` before producing a summary. The bundle summary was recovered from those adapters using the separately implemented offline scoring path; the [auditor](../scripts/audit_cpu_hh_length_normalized_dpo_development_v1.py) passed selection, score, and decision replay. This study is outcome-informed, is limited to one public training split, and is not task-success evidence. Do not open a confirmation cohort from these rows.
+
+**Next direction:** stop adding nearby HH DPO variants. First freeze a CPU-only base-feasibility screen for a fresh, objectively graded task and measure the cached Qwen2.5-Math-1.5B's CPU BF16 support, memory, throughput, and exact-match. Only if the screen clears both task and resource gates should a separate protocol compare verifier-reward policy optimization with matched successful-trace SFT on untouched confirmation data.
+
 VARE's experimental focus is post-training signal quality and policy updates under limited compute. A runnable learner is not evidence of learning; every result needs a frozen protocol, retained raw records, and an evaluation split that was not used for optimization.
 
 **HH-RLHF reward-model v2 passed development but failed confirmation.** Accuracy gain repeated on a fresh 256-prompt cohort, but the paired NLL interval crossed zero. Both bundles pass a local score-replay audit; this is not external reproduction. The [report](hh-reward-model-v2-report.md), [protocol](../protocols/cpu_hh_reward_model_v2.lock.json), and [audited bundles](../results/cpu-hh-reward-model-v2/) preserve both outcomes. V1 remains a separate development non-pass in its [report](hh-reward-model-v1-development-report.md).

@@ -1,6 +1,10 @@
 # Current evidence gaps
 
-This assessment ranks the technical work needed to study post-training signals and policy updates under limited compute. All proposed work fits a local CPU/no-paid-service budget. VARE has two accepted synthetic preference-policy studies, one narrow verifier-labeled GSM8K preference improvement, several model-level non-passes, an outcome-informed HH-RLHF fixed-head calibration study with development and confirmation NLL passes, a non-passing HH human-preference DPO development comparison, a failed synthetic contextual-DPO-versus-scalar-calibration screen, a failed SNLI base-policy feasibility screen, and historical trainer-grader evidence.
+This assessment ranks the technical work needed to study post-training signals and policy updates under limited compute. All proposed work fits a local CPU/no-paid-service budget. VARE has two accepted synthetic preference-policy studies, one narrow verifier-labeled GSM8K preference improvement, several model-level non-passes, an outcome-informed HH-RLHF fixed-head calibration study with development and confirmation NLL passes, two non-passing HH human-preference DPO development comparisons, a failed synthetic contextual-DPO-versus-scalar-calibration screen, a failed SNLI base-policy feasibility screen, and historical trainer-grader evidence.
+
+**Update 2026-10-09 — HH length-normalized DPO development v1 non-pass:** on 256 hash-ranked helpful-base development prompts, length-normalized DPO and standard DPO both scored 0.4974 pair accuracy, versus 0.5000 frozen base and 0.5645 length-only baseline. Candidate-minus-base was −0.0026 (paired 95% prompt bootstrap [−0.0143,+0.0091]); candidate-minus-standard DPO was exactly 0. Candidate gain and seed-consistency gates failed; SFT non-inferiority, KL, and NLL guards passed. The study is outcome-informed after DPO v2 and its length diagnostic, and uses the public training split rather than official test rows. The runner raised a summary-key `KeyError` after saving all nine adapters. Summary reconstruction and the frozen same-host selection/score/decision auditor passed. This is not downstream task success. See [report](cpu-hh-length-normalized-dpo-v1-report.md) and [bundle](../results/cpu-hh-length-normalized-dpo-v1/development/run-1/).
+
+**Direction update:** stop adding HH length-normalization variants and repeated 0.5B GSM8K/BoolQ DPO/SFT settings as the primary line. The central missing evidence is still independently verified downstream task success. Before another update, run a newly frozen, CPU-only base-feasibility screen on a new verifiable task with the cached Qwen2.5-Math-1.5B candidate; verify CPU BF16, RSS, generation throughput, and base exact-match. Proceed to a small matched outcome-reward RL versus successful-trace SFT comparison only if the base and resource gates pass. Otherwise choose a smaller structured tool task or focus the public claim on evaluation/trainer-integrity engineering without presenting it as a capability result. Never reuse opened confirmation/test cohorts.
 
 ## What current evidence supports
 
@@ -55,12 +59,12 @@ These demonstrate narrow evaluation/reliability properties, two synthetic policy
 
 ## Immediate order
 
-1. Keep each distinct human-preference result visible: reward-model v2's failed joint confirmation, outcome-informed fixed-head v3's narrow score-scale pass with worsening ECE, and policy-update v2's failed DPO gain gate. Do not merge them into one claim.
-2. Seek an external clean-clone reproduction and independent protocol review for the completed real-model reward-model and robustness bundles.
-3. Treat SNLI entailment v1 as retired after its failed base screen. Before selecting the next model-update study, identify a distinct task or feedback signal with a viable frozen-base rate; then freeze an executable oracle, fresh cohorts, matched controls, a minimum gain, and a confirmation rule before scoring.
-4. Expand grader mutation coverage with held-out refactors while preserving narrow per-case claims.
-5. Preserve the forced-choice result, every sequence-DPO development run, invalidated generation result, incomplete confirmation v1/v5, and non-passing confirmations separately. Any next tuning must use new development rows and its own new confirmation lock; do not reuse any consumed cohort.
-6. Prepare an unaided technical walkthrough of the objective, gradient check, model non-pass, v1 drift failure, v2 chronology, robustness result and claim boundaries.
+1. Freeze and run the new model's base-only CPU feasibility screen before training: record BF16 support, actual memory, tokens/second, base exact-match, and resource-limit behavior on a fresh verifier task.
+2. If both task and resource gates pass, preregister matched outcome-reward RLOO/GRPO and successful-trace SFT, with untouched confirmation rows, multiple seeds, an independent oracle, and explicit gain/regression rules. If they fail, retire this candidate rather than lowering the gates.
+3. Seek an external clean-clone reproduction and independent protocol review for completed real-model bundles; report reviewer identity/role only with consent.
+4. Keep the HH, GSM8K, BoolQ, generated arithmetic, and SNLI non-passes visible and retire consumed cohorts. Do not open their held-out confirmation/test rows or tune on them.
+5. Expand grader mutation coverage only when it supports a concrete task or trainer-integrity claim; keep per-case limits explicit.
+6. Prepare an unaided technical walkthrough of the objective, gradient check, model non-pass, v1 drift failure, protocol chronology, and claim boundaries.
 
 The code-agent trajectory remains a separate supporting question. Its negative pilot should stay visible, but should not displace a learner experiment as the next priority. Update this page when retained evidence changes, not when an integration or plan alone is added.
 
