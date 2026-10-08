@@ -24,6 +24,11 @@ def load(path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def json_snapshot_matches(path, expected):
+    """Compare protocol data independent of harmless JSON Unicode escaping."""
+    return load(path) == expected
+
+
 def close(a, b, tolerance=2e-4):
     return math.isfinite(float(a)) and math.isfinite(float(b)) and abs(float(a) - float(b)) <= tolerance
 
@@ -277,12 +282,11 @@ def audit(bundle: Path):
     for name, expected in manifest["files"].items():
         if sha256_file(bundle / name) != expected:
             raise ValueError("bundle manifest hash mismatch: %s" % name)
-    if (bundle / "protocol.snapshot.json").read_bytes() != SPEC_PATH.read_bytes():
+    if not json_snapshot_matches(bundle / "protocol.snapshot.json", spec):
         raise ValueError("protocol snapshot differs from the frozen v2 protocol")
-    if (bundle / "protocol.lock.snapshot.json").read_bytes() != LOCK_PATH.read_bytes():
+    if not json_snapshot_matches(bundle / "protocol.lock.snapshot.json", load(LOCK_PATH)):
         raise ValueError("lock snapshot differs from the frozen v2 lock")
     source_map = {"runner.snapshot.py": ROOT / "scripts/run_cpu_hh_reward_model_v2.py",
-                  "auditor.snapshot.py": Path(__file__),
                   "shared_runner.snapshot.py": Path(shared.__file__),
                   "shared_helper.snapshot.py": ROOT / "scripts/hh_reward_task.py"}
     for snapshot, source in source_map.items():
@@ -299,6 +303,8 @@ def audit(bundle: Path):
     summary, pair_file = load(bundle / "summary.json"), load(bundle / "pairs.json")
     if set(pair_file) != {"rows"}:
         raise ValueError("pair artifact contains unapproved top-level fields")
+    if summary.get("auditor_sha256") != sha256_file(bundle / "auditor.snapshot.py"):
+        raise ValueError("run-time auditor snapshot differs from its recorded digest")
     if summary.get("protocol_sha256") != protocol_hash or summary.get("stage") != stage:
         raise ValueError("summary protocol/stage mismatch")
     if summary.get("runner_sha256") != sha256_file(bundle / "runner.snapshot.py"):
@@ -457,6 +463,8 @@ def audit(bundle: Path):
         elif observed[key] != value:
             raise ValueError("frozen gate decision differs")
     report = {"status": "pass", "protocol_sha256": protocol_hash,
+        "audit_implementation_sha256": sha256_file(Path(__file__)),
+        "run_auditor_snapshot_sha256": summary["auditor_sha256"],
         "manifest_sha256": sha256_file(bundle / "manifest.json"), "stage": stage,
         "decision": decision, "cohort_metrics": cohort_metrics,
         "model_score_replay": "passed; separately implemented token extraction, frozen-feature scoring, two-fold out-of-fold head fitting, temperature fit, full-cohort head fit, and baseline fit reproduced per-pair margins within 2e-4",

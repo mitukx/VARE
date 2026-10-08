@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import math
+import tempfile
 from pathlib import Path
 from unittest.mock import patch
 
@@ -84,3 +85,11 @@ def test_runner_and_auditor_stop_before_requesting_row_at_exclusive_end():
         with patch(module + ".open", return_value=_FakeContext(guarded)):
             assert list(reader(Path("unused.jsonl.gz"), 0, 2)) == [(0, {"row": 0}), (1, {"row": 1})]
         assert guarded.calls == 2
+
+
+def test_protocol_snapshot_comparison_ignores_unicode_escape_style():
+    expected = {"label": "受理", "limits": [512, 1024]}
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / "snapshot.json"
+        path.write_text(json.dumps(expected, ensure_ascii=True), encoding="utf-8")
+        assert audit_v2.json_snapshot_matches(path, expected)
