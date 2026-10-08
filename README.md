@@ -8,6 +8,7 @@ HH-RLHF v2 passed development but **failed its joint confirmation gate**: accura
 
 - [SNLI entailment base-feasibility screen](docs/cpu-snli-entailment-base-feasibility-v1-report.md): frozen CPU/offline no-update screen, audited non-pass, and claim limits.
 - [Latest BoolQ study](docs/cpu-lm-boolq-verifier-rloo-development-v1-report.md): audited CPU-only binary verifier-reward RLOO non-pass, with raw bundle and limits.
+- [RVL GRPO rollback validation](docs/rvl-grpo-partial-failure-report.md): actual pinned CPU trainer step followed by injected failure; incumbent model/optimizer/RNG restoration passed on a tiny random model.
 - [BoolQ v17 DPO/SFT/anchored-DPO study](docs/boolq-posttraining-development-v17-report.md): earlier matched comparison and its failed advancement gate.
 - [HH-RLHF reward-model v2](docs/hh-reward-model-v2-report.md): development pass, repeated confirmation accuracy gain, but no confirmed NLL improvement.
 - [HH human-preference DPO development v2](docs/hh-human-preference-dpo-development-v2-report.md): matched DPO/SFT update on human-labeled pairs; the frozen DPO-vs-base accuracy gate failed.
@@ -39,6 +40,7 @@ Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, c
 | Model-level preference update | GSM8K: held-out conditional preference NLL changed by −0.00697 nats/question across three seeds; accuracy moved from 0.4943 to 0.4956. | A narrow forced-choice preference result, not free-form reasoning or capability evidence. |
 | Synthetic preference robustness | Ten-seed clean/noise/shift study passed its declared synthetic NLL/KL rule; label flips worsened NLL on every seed. | Behavior under one known synthetic preference generator. |
 | Evaluation reliability | Three historical source graders distinguish pinned pre-fix and fixed revisions; recovery study matched 24/24 frozen fault cases. | Specific grader and same-host recovery checks, not broad grader soundness or distributed reliability. |
+| RVL GRPO adapter integrity | A real pinned CPU GRPO step changed model/optimizer state; a failure before candidate snapshot triggered full incumbent model/optimizer/RNG restoration, and the next rollout used the incumbent. | One 3,696-parameter random GPT-2 integration smoke. It is not pretrained-model or learning-quality evidence. |
 
 The [evidence notes](docs/evidence.md) and individual reports define each result's data, protocol, audit coverage, and claim boundary. The [roadmap](docs/roadmap.md) records unresolved evidence levels. The full historical series, including failed and incomplete attempts, remains in the [experiment index](docs/experiments.md).
 

@@ -1,0 +1,30 @@
+{
+  "run_id": "rvl-grpo-partial-failure-v1/run-1",
+  "completed_at_utc": "2026-10-08T18:51:58Z",
+  "protocol_sha256": "0ac7f328be50d2e753240f95b2d46f333a8d636419fc5976bb1b95b9fb9d91ec",
+  "validator_path": "scripts/validate_rvl_grpo_partial_failure.py",
+  "validator_sha256": "c88e100b458303617ce214f5041d54d5fcb8760512b80a191fb3761b1baadd6e",
+  "protocol_frozen_in_commit": "2b0a7f05da4cf7edbefd852096b2e3112890eb95",
+  "adapter_commit_under_test": "1aa0958841e946226480cd167b4dbf5fb20d7281",
+  "upstream_repository": "https://github.com/mitukx/Recursive-Verification-Lag",
+  "upstream_commit": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "runtime": {
+    "os": "macOS",
+    "architecture": "arm64",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3",
+    "device": "cpu",
+    "torch_threads": 1,
+    "cuda_initialized": false
+  },
+  "inputs": {
+    "pretrained_model": false,
+    "dataset": false,
+    "paid_compute": false,
+    "network_during_run": false,
+    "upstream_source_method": "Pinned GitHub content snapshots, each verified against protocol SHA-256 before import"
+  },
+  "import_boundary": "The validator imports only the pinned rvl_systems submodules used by HFCausalLMGRPOTrainer, via a minimal package shim; it does not execute the upstream package initializer or unrelated integrations.",
+  "claim_boundary": "Same-host local adapter smoke test using one pinned trainer implementation and a tiny randomly initialized model; not external human reproduction, pretrained-model evidence, or model-capability evidence."
+}
