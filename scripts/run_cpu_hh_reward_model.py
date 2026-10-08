@@ -72,16 +72,19 @@ def read_rows(path: Path, start: int, end: int, total: int) -> List[Tuple[int, D
 def iter_rows(path: Path, start: int, end: int):
     if start < 0 or start > end:
         raise ValueError("requested row range violates the frozen protocol")
+    if start == end:
+        return
     with gzip.open(str(path), "rt", encoding="utf-8") as stream:
         for index, line in enumerate(stream):
-            if index >= end:
-                return
             if index < start:
                 continue
             row = json.loads(line)
             if not isinstance(row, dict):
                 raise ValueError("source row is not a JSON object")
             yield index, row
+            # Return before asking the stream for the first row outside [start, end).
+            if index + 1 >= end:
+                return
 
 
 def load_runtime(spec):
@@ -105,6 +108,8 @@ def load_runtime(spec):
         if not path.is_file():
             raise FileNotFoundError("missing cached model file: %s" % name)
         model_files[name] = sha256_file(path)
+    # Hash compressed containers as opaque bytes for provenance. This does not
+    # decompress or parse test rows; row-level access is bounded by iter_rows.
     dataset_files = {name: sha256_file(DATA_DIR / name) for name in ("train.jsonl.gz", "test.jsonl.gz")}
     tokenizer = AutoTokenizer.from_pretrained(str(MODEL_DIR), local_files_only=True, use_fast=True)
     if not tokenizer.is_fast:
