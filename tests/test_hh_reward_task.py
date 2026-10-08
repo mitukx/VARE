@@ -4,6 +4,11 @@ import math
 import sys
 from pathlib import Path
 
+try:
+    import numpy  # noqa: F401
+except ModuleNotFoundError:
+    numpy = None
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from hh_reward_task import eligible_pair, metric_summary, paired_bootstrap_interval
@@ -56,6 +61,9 @@ def test_pair_metrics_use_half_credit_for_exact_ties():
 
 
 def test_bootstrap_interval_is_seeded_and_ordered():
+    if numpy is None:
+        import pytest
+        pytest.skip("NumPy is an optional local-only dependency for model-study bootstraps")
     values = [0.1, -0.1, 0.2, 0.0]
     first = paired_bootstrap_interval(values, 20261009, 1000)
     second = paired_bootstrap_interval(values, 20261009, 1000)
