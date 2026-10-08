@@ -8,6 +8,8 @@ The first 512-question CPU confirmation exceeded its two-hour limit with two of 
 
 That fresh 128-question confirmation lowered verifier-preference NLL with a paired 95% interval below zero and increased exact-match in all three seeds, but mean KL was 0.737 against a 0.5 cap. Its frozen decision is **non-pass**; see the [confirmation report](docs/cpu-lm-gsm8k-sequence-dpo-confirmation-v2-report.md).
 
+A lower-rate development update then met its KL cap but lowered mean exact-match below baseline (1.56% → 1.04%). It is a separate [development non-pass](docs/cpu-lm-gsm8k-sequence-dpo-development-v3-report.md); no further confirmation data was opened.
+
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
 
 ## Post-training results

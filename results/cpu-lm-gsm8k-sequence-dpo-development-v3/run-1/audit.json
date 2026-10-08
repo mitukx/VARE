@@ -1,0 +1,41 @@
+{
+  "audit": "passed",
+  "base_exact_match": 0.015625,
+  "decision_recomputed": "sequence_dpo_development_non_pass",
+  "generation_parity_examples": [
+    {
+      "dataset_index": 5021,
+      "exact_match": false,
+      "generated_text": "12",
+      "huggingface_parity": true,
+      "parsed_number": "12"
+    },
+    {
+      "dataset_index": 5040,
+      "exact_match": false,
+      "generated_text": "To determine how many ducks remain after the three nights, we will calculate the number of ducks affected each night and subtract that from the initial count.\n\n1. **First Night:**\n   - Total ducks initially: 320\n   - Ducks eaten by the fox: \\( \\frac{1}{4} \\",
+      "huggingface_parity": true,
+      "parsed_number": null
+    },
+    {
+      "dataset_index": 4601,
+      "exact_match": false,
+      "generated_text": "240",
+      "huggingface_parity": true,
+      "parsed_number": "240"
+    }
+  ],
+  "nonzero_adapter_checkpoints_verified": 15,
+  "protocol_id": "vare-cpu-lm-gsm8k-sequence-dpo-development-v3",
+  "protocol_sha256": "47e79bd45005afacb07bf9f77697d55be43c22ee23cb50ad831922f23db3793c",
+  "runner_snapshot_sha256": "a2feaa3fa2999ae67a5559a35acae716afbf8dc2ed379a16d13ea0fb7cb1807a",
+  "selected_epoch_recomputed": 4,
+  "source_manifest_sha256": "9c1102cbc9927c3cac0731e1145c4b342f59cde7c91a7c7f7b769e2a3fe1f197",
+  "train_examples": 64,
+  "updated_exact_match_by_seed": [
+    0.015625,
+    0.0,
+    0.015625
+  ],
+  "validation_examples": 64
+}
