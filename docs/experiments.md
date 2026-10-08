@@ -4,6 +4,8 @@ VARE's experimental focus is post-training signal quality and policy updates und
 
 **HH-RLHF reward-model v2 passed development but failed confirmation.** Accuracy gain repeated on a fresh 256-prompt cohort, but the paired NLL interval crossed zero. Both bundles pass a local score-replay audit; this is not external reproduction. The [report](hh-reward-model-v2-report.md), [protocol](../protocols/cpu_hh_reward_model_v2.lock.json), and [audited bundles](../results/cpu-hh-reward-model-v2/) preserve both outcomes. V1 remains a separate development non-pass in its [report](hh-reward-model-v1-development-report.md).
 
+A post-hoc secondary analysis on the already-opened v2 confirmation cohort found calibrated-minus-raw pairwise NLL of −0.1943 (paired 95% prompt bootstrap interval [−0.2669, −0.1277]). It does not change the v2 non-pass and is not confirmatory; the exact method, hashes, output and limits are in the [diagnostic note](hh-reward-model-calibration-analysis.md).
+
 The generated arithmetic feasibility pilot is a separate train-only non-pass: the pinned 0.5B model answered 1/64 examples correctly, below the frozen minimum of 8. Its independent record audit passed, but the task gate failed, so no model update or confirmation was run. See the [report](cpu-generated-arithmetic-feasibility-v1-report.md), [protocol](../protocols/cpu_generated_arithmetic_feasibility_v1.lock.json), and [retained bundle](../results/cpu-generated-arithmetic-feasibility-v1/run-1/).
 
 ## Current no-cost sequence
