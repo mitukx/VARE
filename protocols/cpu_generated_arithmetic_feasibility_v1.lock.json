@@ -1,0 +1,81 @@
+{
+  "artifact_policy": "Retain the exact 64 generated prompts and oracle answers, raw greedy completions, strict parse/exact-match results, model/data/code hashes, runtime/resource record, snapshots, and manifest. Do not retain model weights or hidden states. The 64-row pilot cohort is permanently excluded from any formal training or evaluation study.",
+  "claim_boundary": "This is a train-only feasibility check of one cached base model on a small generated arithmetic pilot. It is not a training experiment, held-out result, preference-learning result, capability claim, or evidence about human preference.",
+  "compute_limits": {
+    "device": "CPU only; CUDA and MPS are forbidden",
+    "max_input_tokens": 512,
+    "max_new_tokens": 16,
+    "max_peak_rss_bytes": 6442450944,
+    "max_wall_seconds": 3600,
+    "network": "disabled; HF_HUB_OFFLINE=1, TRANSFORMERS_OFFLINE=1, local_files_only=true",
+    "paid_compute": false,
+    "threads": 4
+  },
+  "data": {
+    "composition_counts": {
+      "difference_times_sum": 16,
+      "left_nested_add_mul_sub": 16,
+      "sum_of_products": 16,
+      "sum_times_difference": 16
+    },
+    "generator_path": "scripts/generate_compositional_arithmetic_feasibility_pilot.py",
+    "generator_sha256": "f1e576f8522bfcf560ca04bfc3e1bf68d1bd3d75fa9943c7d3d18ffb7bb90a56",
+    "pilot_rows": 64,
+    "pilot_rows_path": "data/cpu-arithmetic-feasibility-v1/pilot.json",
+    "pilot_rows_sha256": "c603bddb41fd169f000d404cc5cbfc7d692b4d0763cae92d31bad958fad1babc",
+    "selection": "All 64 rows generated from four declared four-operand integer expression compositions, 16 rows each. Operand derivation is SHA-256 based and retained in the generator. No benchmark/dataset or held-out cohort is used. Do not use these prompts for formal train, development, or confirmation data."
+  },
+  "decision": {
+    "interpretation": "PASS means only that this fixed model/task/prompt/parser yields enough valid, non-ceiling base rollouts to justify designing a separate formal study. FAIL means do not train or open any future confirmation cohort under this task design. No gate may be relaxed after outputs are inspected.",
+    "pass_conditions": {
+      "all_64_rows_completed": true,
+      "compute_limits_respected": true,
+      "exact_match_count_maximum": 52,
+      "exact_match_count_minimum": 8,
+      "parse_rate_minimum": 0.75,
+      "parsed_wrong_answer_count_minimum": 8
+    }
+  },
+  "generation": {
+    "algorithm": "greedy",
+    "do_sample": false,
+    "eos_token_ids": [
+      151645,
+      151643
+    ],
+    "pad_token_id": 151643,
+    "prompt_template": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: {expression}",
+    "repetition_penalty": 1.0,
+    "response_parser": "Full-match exactly `FINAL: <optional minus><one or more decimal digits>` with surrounding whitespace only; all extra prose, additional numbers, commas, or missing marker are unparsed and incorrect.",
+    "seed": null
+  },
+  "model": {
+    "dtype": "float32",
+    "files_sha256": {
+      "config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+      "generation_config.json": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6",
+      "model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583"
+    },
+    "id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "weights_must_already_be_cached": true
+  },
+  "phase": "train_only_feasibility_pilot",
+  "protocol_id": "vare-cpu-generated-arithmetic-feasibility-v1",
+  "purpose": "Determine whether a frozen cached instruction model produces enough strictly parsed correct and incorrect base rollouts on generated compositional arithmetic tasks to justify a separately frozen DPO-versus-matched-SFT task-outcome study.",
+  "runtime": {
+    "python": "3.9.6",
+    "torch": "2.8.0",
+    "transformers": "4.57.3"
+  },
+  "sha256": "4128dc05c79f19af9421aacaadec471d256a48f65775bfdb21ea6c8e2bd0f752",
+  "study_boundary": {
+    "formal_confirmation": false,
+    "formal_development": false,
+    "formal_training": false,
+    "future_formal_protocol_required": true,
+    "pilot_rows_permanently_excluded": true
+  }
+}

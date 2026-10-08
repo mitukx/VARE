@@ -1,0 +1,834 @@
+[
+  {
+    "composition": "left_nested_add_mul_sub",
+    "expression": "((3 + 50) * 18) - 19",
+    "operands": [
+      3,
+      50,
+      18,
+      19
+    ],
+    "oracle_answer": 935,
+    "pilot_index": 0,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: ((3 + 50) * 18) - 19"
+  },
+  {
+    "composition": "left_nested_add_mul_sub",
+    "expression": "((30 + 4) * 12) - 45",
+    "operands": [
+      30,
+      4,
+      12,
+      45
+    ],
+    "oracle_answer": 363,
+    "pilot_index": 1,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: ((30 + 4) * 12) - 45"
+  },
+  {
+    "composition": "left_nested_add_mul_sub",
+    "expression": "((36 + 17) * 5) - 10",
+    "operands": [
+      36,
+      17,
+      5,
+      10
+    ],
+    "oracle_answer": 255,
+    "pilot_index": 2,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: ((36 + 17) * 5) - 10"
+  },
+  {
+    "composition": "left_nested_add_mul_sub",
+    "expression": "((36 + 19) * 35) - 19",
+    "operands": [
+      36,
+      19,
+      35,
+      19
+    ],
+    "oracle_answer": 1906,
+    "pilot_index": 3,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: ((36 + 19) * 35) - 19"
+  },
+  {
+    "composition": "left_nested_add_mul_sub",
+    "expression": "((35 + 36) * 28) - 2",
+    "operands": [
+      35,
+      36,
+      28,
+      2
+    ],
+    "oracle_answer": 1986,
+    "pilot_index": 4,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: ((35 + 36) * 28) - 2"
+  },
+  {
+    "composition": "left_nested_add_mul_sub",
+    "expression": "((50 + 28) * 11) - 48",
+    "operands": [
+      50,
+      28,
+      11,
+      48
+    ],
+    "oracle_answer": 810,
+    "pilot_index": 5,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: ((50 + 28) * 11) - 48"
+  },
+  {
+    "composition": "left_nested_add_mul_sub",
+    "expression": "((4 + 23) * 36) - 13",
+    "operands": [
+      4,
+      23,
+      36,
+      13
+    ],
+    "oracle_answer": 959,
+    "pilot_index": 6,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: ((4 + 23) * 36) - 13"
+  },
+  {
+    "composition": "left_nested_add_mul_sub",
+    "expression": "((9 + 14) * 26) - 34",
+    "operands": [
+      9,
+      14,
+      26,
+      34
+    ],
+    "oracle_answer": 564,
+    "pilot_index": 7,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: ((9 + 14) * 26) - 34"
+  },
+  {
+    "composition": "left_nested_add_mul_sub",
+    "expression": "((48 + 12) * 11) - 41",
+    "operands": [
+      48,
+      12,
+      11,
+      41
+    ],
+    "oracle_answer": 619,
+    "pilot_index": 8,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: ((48 + 12) * 11) - 41"
+  },
+  {
+    "composition": "left_nested_add_mul_sub",
+    "expression": "((36 + 25) * 9) - 15",
+    "operands": [
+      36,
+      25,
+      9,
+      15
+    ],
+    "oracle_answer": 534,
+    "pilot_index": 9,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: ((36 + 25) * 9) - 15"
+  },
+  {
+    "composition": "left_nested_add_mul_sub",
+    "expression": "((38 + 42) * 45) - 48",
+    "operands": [
+      38,
+      42,
+      45,
+      48
+    ],
+    "oracle_answer": 3552,
+    "pilot_index": 10,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: ((38 + 42) * 45) - 48"
+  },
+  {
+    "composition": "left_nested_add_mul_sub",
+    "expression": "((27 + 7) * 22) - 7",
+    "operands": [
+      27,
+      7,
+      22,
+      7
+    ],
+    "oracle_answer": 741,
+    "pilot_index": 11,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: ((27 + 7) * 22) - 7"
+  },
+  {
+    "composition": "left_nested_add_mul_sub",
+    "expression": "((3 + 47) * 5) - 21",
+    "operands": [
+      3,
+      47,
+      5,
+      21
+    ],
+    "oracle_answer": 229,
+    "pilot_index": 12,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: ((3 + 47) * 5) - 21"
+  },
+  {
+    "composition": "left_nested_add_mul_sub",
+    "expression": "((41 + 40) * 2) - 47",
+    "operands": [
+      41,
+      40,
+      2,
+      47
+    ],
+    "oracle_answer": 115,
+    "pilot_index": 13,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: ((41 + 40) * 2) - 47"
+  },
+  {
+    "composition": "left_nested_add_mul_sub",
+    "expression": "((11 + 2) * 24) - 6",
+    "operands": [
+      11,
+      2,
+      24,
+      6
+    ],
+    "oracle_answer": 306,
+    "pilot_index": 14,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: ((11 + 2) * 24) - 6"
+  },
+  {
+    "composition": "left_nested_add_mul_sub",
+    "expression": "((9 + 11) * 25) - 49",
+    "operands": [
+      9,
+      11,
+      25,
+      49
+    ],
+    "oracle_answer": 451,
+    "pilot_index": 15,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: ((9 + 11) * 25) - 49"
+  },
+  {
+    "composition": "sum_of_products",
+    "expression": "(6 * 7) + (40 * 31)",
+    "operands": [
+      6,
+      7,
+      40,
+      31
+    ],
+    "oracle_answer": 1282,
+    "pilot_index": 16,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (6 * 7) + (40 * 31)"
+  },
+  {
+    "composition": "sum_of_products",
+    "expression": "(11 * 15) + (8 * 32)",
+    "operands": [
+      11,
+      15,
+      8,
+      32
+    ],
+    "oracle_answer": 421,
+    "pilot_index": 17,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (11 * 15) + (8 * 32)"
+  },
+  {
+    "composition": "sum_of_products",
+    "expression": "(47 * 50) + (38 * 22)",
+    "operands": [
+      47,
+      50,
+      38,
+      22
+    ],
+    "oracle_answer": 3186,
+    "pilot_index": 18,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (47 * 50) + (38 * 22)"
+  },
+  {
+    "composition": "sum_of_products",
+    "expression": "(29 * 29) + (10 * 9)",
+    "operands": [
+      29,
+      29,
+      10,
+      9
+    ],
+    "oracle_answer": 931,
+    "pilot_index": 19,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (29 * 29) + (10 * 9)"
+  },
+  {
+    "composition": "sum_of_products",
+    "expression": "(48 * 33) + (12 * 25)",
+    "operands": [
+      48,
+      33,
+      12,
+      25
+    ],
+    "oracle_answer": 1884,
+    "pilot_index": 20,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (48 * 33) + (12 * 25)"
+  },
+  {
+    "composition": "sum_of_products",
+    "expression": "(48 * 25) + (30 * 23)",
+    "operands": [
+      48,
+      25,
+      30,
+      23
+    ],
+    "oracle_answer": 1890,
+    "pilot_index": 21,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (48 * 25) + (30 * 23)"
+  },
+  {
+    "composition": "sum_of_products",
+    "expression": "(6 * 35) + (50 * 24)",
+    "operands": [
+      6,
+      35,
+      50,
+      24
+    ],
+    "oracle_answer": 1410,
+    "pilot_index": 22,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (6 * 35) + (50 * 24)"
+  },
+  {
+    "composition": "sum_of_products",
+    "expression": "(11 * 2) + (34 * 43)",
+    "operands": [
+      11,
+      2,
+      34,
+      43
+    ],
+    "oracle_answer": 1484,
+    "pilot_index": 23,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (11 * 2) + (34 * 43)"
+  },
+  {
+    "composition": "sum_of_products",
+    "expression": "(10 * 36) + (32 * 37)",
+    "operands": [
+      10,
+      36,
+      32,
+      37
+    ],
+    "oracle_answer": 1544,
+    "pilot_index": 24,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (10 * 36) + (32 * 37)"
+  },
+  {
+    "composition": "sum_of_products",
+    "expression": "(44 * 41) + (21 * 50)",
+    "operands": [
+      44,
+      41,
+      21,
+      50
+    ],
+    "oracle_answer": 2854,
+    "pilot_index": 25,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (44 * 41) + (21 * 50)"
+  },
+  {
+    "composition": "sum_of_products",
+    "expression": "(41 * 46) + (3 * 20)",
+    "operands": [
+      41,
+      46,
+      3,
+      20
+    ],
+    "oracle_answer": 1946,
+    "pilot_index": 26,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (41 * 46) + (3 * 20)"
+  },
+  {
+    "composition": "sum_of_products",
+    "expression": "(16 * 18) + (19 * 3)",
+    "operands": [
+      16,
+      18,
+      19,
+      3
+    ],
+    "oracle_answer": 345,
+    "pilot_index": 27,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (16 * 18) + (19 * 3)"
+  },
+  {
+    "composition": "sum_of_products",
+    "expression": "(32 * 31) + (46 * 22)",
+    "operands": [
+      32,
+      31,
+      46,
+      22
+    ],
+    "oracle_answer": 2004,
+    "pilot_index": 28,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (32 * 31) + (46 * 22)"
+  },
+  {
+    "composition": "sum_of_products",
+    "expression": "(30 * 36) + (28 * 31)",
+    "operands": [
+      30,
+      36,
+      28,
+      31
+    ],
+    "oracle_answer": 1948,
+    "pilot_index": 29,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (30 * 36) + (28 * 31)"
+  },
+  {
+    "composition": "sum_of_products",
+    "expression": "(46 * 14) + (21 * 36)",
+    "operands": [
+      46,
+      14,
+      21,
+      36
+    ],
+    "oracle_answer": 1400,
+    "pilot_index": 30,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (46 * 14) + (21 * 36)"
+  },
+  {
+    "composition": "sum_of_products",
+    "expression": "(29 * 9) + (41 * 34)",
+    "operands": [
+      29,
+      9,
+      41,
+      34
+    ],
+    "oracle_answer": 1655,
+    "pilot_index": 31,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (29 * 9) + (41 * 34)"
+  },
+  {
+    "composition": "difference_times_sum",
+    "expression": "(18 - 31) * (18 + 22)",
+    "operands": [
+      18,
+      31,
+      18,
+      22
+    ],
+    "oracle_answer": -520,
+    "pilot_index": 32,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (18 - 31) * (18 + 22)"
+  },
+  {
+    "composition": "difference_times_sum",
+    "expression": "(48 - 30) * (7 + 22)",
+    "operands": [
+      48,
+      30,
+      7,
+      22
+    ],
+    "oracle_answer": 522,
+    "pilot_index": 33,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (48 - 30) * (7 + 22)"
+  },
+  {
+    "composition": "difference_times_sum",
+    "expression": "(17 - 2) * (13 + 34)",
+    "operands": [
+      17,
+      2,
+      13,
+      34
+    ],
+    "oracle_answer": 705,
+    "pilot_index": 34,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (17 - 2) * (13 + 34)"
+  },
+  {
+    "composition": "difference_times_sum",
+    "expression": "(19 - 4) * (7 + 33)",
+    "operands": [
+      19,
+      4,
+      7,
+      33
+    ],
+    "oracle_answer": 600,
+    "pilot_index": 35,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (19 - 4) * (7 + 33)"
+  },
+  {
+    "composition": "difference_times_sum",
+    "expression": "(11 - 21) * (48 + 6)",
+    "operands": [
+      11,
+      21,
+      48,
+      6
+    ],
+    "oracle_answer": -540,
+    "pilot_index": 36,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (11 - 21) * (48 + 6)"
+  },
+  {
+    "composition": "difference_times_sum",
+    "expression": "(39 - 39) * (31 + 23)",
+    "operands": [
+      39,
+      39,
+      31,
+      23
+    ],
+    "oracle_answer": 0,
+    "pilot_index": 37,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (39 - 39) * (31 + 23)"
+  },
+  {
+    "composition": "difference_times_sum",
+    "expression": "(46 - 20) * (45 + 37)",
+    "operands": [
+      46,
+      20,
+      45,
+      37
+    ],
+    "oracle_answer": 2132,
+    "pilot_index": 38,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (46 - 20) * (45 + 37)"
+  },
+  {
+    "composition": "difference_times_sum",
+    "expression": "(29 - 26) * (44 + 9)",
+    "operands": [
+      29,
+      26,
+      44,
+      9
+    ],
+    "oracle_answer": 159,
+    "pilot_index": 39,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (29 - 26) * (44 + 9)"
+  },
+  {
+    "composition": "difference_times_sum",
+    "expression": "(34 - 30) * (25 + 12)",
+    "operands": [
+      34,
+      30,
+      25,
+      12
+    ],
+    "oracle_answer": 148,
+    "pilot_index": 40,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (34 - 30) * (25 + 12)"
+  },
+  {
+    "composition": "difference_times_sum",
+    "expression": "(29 - 34) * (22 + 37)",
+    "operands": [
+      29,
+      34,
+      22,
+      37
+    ],
+    "oracle_answer": -295,
+    "pilot_index": 41,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (29 - 34) * (22 + 37)"
+  },
+  {
+    "composition": "difference_times_sum",
+    "expression": "(25 - 2) * (9 + 46)",
+    "operands": [
+      25,
+      2,
+      9,
+      46
+    ],
+    "oracle_answer": 1265,
+    "pilot_index": 42,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (25 - 2) * (9 + 46)"
+  },
+  {
+    "composition": "difference_times_sum",
+    "expression": "(4 - 6) * (20 + 4)",
+    "operands": [
+      4,
+      6,
+      20,
+      4
+    ],
+    "oracle_answer": -48,
+    "pilot_index": 43,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (4 - 6) * (20 + 4)"
+  },
+  {
+    "composition": "difference_times_sum",
+    "expression": "(25 - 11) * (14 + 5)",
+    "operands": [
+      25,
+      11,
+      14,
+      5
+    ],
+    "oracle_answer": 266,
+    "pilot_index": 44,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (25 - 11) * (14 + 5)"
+  },
+  {
+    "composition": "difference_times_sum",
+    "expression": "(9 - 29) * (13 + 45)",
+    "operands": [
+      9,
+      29,
+      13,
+      45
+    ],
+    "oracle_answer": -1160,
+    "pilot_index": 45,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (9 - 29) * (13 + 45)"
+  },
+  {
+    "composition": "difference_times_sum",
+    "expression": "(18 - 28) * (13 + 20)",
+    "operands": [
+      18,
+      28,
+      13,
+      20
+    ],
+    "oracle_answer": -330,
+    "pilot_index": 46,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (18 - 28) * (13 + 20)"
+  },
+  {
+    "composition": "difference_times_sum",
+    "expression": "(8 - 9) * (43 + 5)",
+    "operands": [
+      8,
+      9,
+      43,
+      5
+    ],
+    "oracle_answer": -48,
+    "pilot_index": 47,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (8 - 9) * (43 + 5)"
+  },
+  {
+    "composition": "sum_times_difference",
+    "expression": "(30 + 28) * (32 - 42)",
+    "operands": [
+      30,
+      28,
+      32,
+      42
+    ],
+    "oracle_answer": -580,
+    "pilot_index": 48,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (30 + 28) * (32 - 42)"
+  },
+  {
+    "composition": "sum_times_difference",
+    "expression": "(40 + 2) * (46 - 49)",
+    "operands": [
+      40,
+      2,
+      46,
+      49
+    ],
+    "oracle_answer": -126,
+    "pilot_index": 49,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (40 + 2) * (46 - 49)"
+  },
+  {
+    "composition": "sum_times_difference",
+    "expression": "(25 + 6) * (23 - 47)",
+    "operands": [
+      25,
+      6,
+      23,
+      47
+    ],
+    "oracle_answer": -744,
+    "pilot_index": 50,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (25 + 6) * (23 - 47)"
+  },
+  {
+    "composition": "sum_times_difference",
+    "expression": "(49 + 17) * (48 - 8)",
+    "operands": [
+      49,
+      17,
+      48,
+      8
+    ],
+    "oracle_answer": 2640,
+    "pilot_index": 51,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (49 + 17) * (48 - 8)"
+  },
+  {
+    "composition": "sum_times_difference",
+    "expression": "(18 + 50) * (22 - 7)",
+    "operands": [
+      18,
+      50,
+      22,
+      7
+    ],
+    "oracle_answer": 1020,
+    "pilot_index": 52,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (18 + 50) * (22 - 7)"
+  },
+  {
+    "composition": "sum_times_difference",
+    "expression": "(21 + 11) * (3 - 22)",
+    "operands": [
+      21,
+      11,
+      3,
+      22
+    ],
+    "oracle_answer": -608,
+    "pilot_index": 53,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (21 + 11) * (3 - 22)"
+  },
+  {
+    "composition": "sum_times_difference",
+    "expression": "(11 + 20) * (39 - 40)",
+    "operands": [
+      11,
+      20,
+      39,
+      40
+    ],
+    "oracle_answer": -31,
+    "pilot_index": 54,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (11 + 20) * (39 - 40)"
+  },
+  {
+    "composition": "sum_times_difference",
+    "expression": "(50 + 50) * (13 - 5)",
+    "operands": [
+      50,
+      50,
+      13,
+      5
+    ],
+    "oracle_answer": 800,
+    "pilot_index": 55,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (50 + 50) * (13 - 5)"
+  },
+  {
+    "composition": "sum_times_difference",
+    "expression": "(49 + 22) * (28 - 9)",
+    "operands": [
+      49,
+      22,
+      28,
+      9
+    ],
+    "oracle_answer": 1349,
+    "pilot_index": 56,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (49 + 22) * (28 - 9)"
+  },
+  {
+    "composition": "sum_times_difference",
+    "expression": "(24 + 13) * (20 - 48)",
+    "operands": [
+      24,
+      13,
+      20,
+      48
+    ],
+    "oracle_answer": -1036,
+    "pilot_index": 57,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (24 + 13) * (20 - 48)"
+  },
+  {
+    "composition": "sum_times_difference",
+    "expression": "(11 + 4) * (48 - 14)",
+    "operands": [
+      11,
+      4,
+      48,
+      14
+    ],
+    "oracle_answer": 510,
+    "pilot_index": 58,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (11 + 4) * (48 - 14)"
+  },
+  {
+    "composition": "sum_times_difference",
+    "expression": "(21 + 9) * (7 - 32)",
+    "operands": [
+      21,
+      9,
+      7,
+      32
+    ],
+    "oracle_answer": -750,
+    "pilot_index": 59,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (21 + 9) * (7 - 32)"
+  },
+  {
+    "composition": "sum_times_difference",
+    "expression": "(50 + 39) * (37 - 14)",
+    "operands": [
+      50,
+      39,
+      37,
+      14
+    ],
+    "oracle_answer": 2047,
+    "pilot_index": 60,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (50 + 39) * (37 - 14)"
+  },
+  {
+    "composition": "sum_times_difference",
+    "expression": "(14 + 47) * (23 - 4)",
+    "operands": [
+      14,
+      47,
+      23,
+      4
+    ],
+    "oracle_answer": 1159,
+    "pilot_index": 61,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (14 + 47) * (23 - 4)"
+  },
+  {
+    "composition": "sum_times_difference",
+    "expression": "(9 + 9) * (2 - 17)",
+    "operands": [
+      9,
+      9,
+      2,
+      17
+    ],
+    "oracle_answer": -270,
+    "pilot_index": 62,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (9 + 9) * (2 - 17)"
+  },
+  {
+    "composition": "sum_times_difference",
+    "expression": "(4 + 13) * (2 - 39)",
+    "operands": [
+      4,
+      13,
+      2,
+      39
+    ],
+    "oracle_answer": -629,
+    "pilot_index": 63,
+    "prompt": "Evaluate the fully parenthesized integer expression. Output exactly one line in this format: FINAL: <integer>\nExpression: (4 + 13) * (2 - 39)"
+  }
+]
