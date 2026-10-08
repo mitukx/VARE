@@ -77,6 +77,10 @@ class RVLGRPOHooks:
         if policy_id not in self._states:
             raise KeyError(policy_id)
         if self._loaded_id != policy_id:
+            # A restore may partially mutate the shared trainer before it
+            # raises. Invalidate first so recovery cannot mistake that partial
+            # state for the previously loaded policy and skip a forced restore.
+            self._loaded_id = None
             self.trainer.restore_training_state(self._states[policy_id])
             self._loaded_id = policy_id
 
@@ -181,28 +185,44 @@ class RVLGRPOHooks:
 
     async def evaluate(self, policy_id: str) -> EvaluationReport:
         async with self._model_lock:
-            self._restore(policy_id)
             scores: dict[str, float] = {}
             latencies: list[float] = []
             families: dict[str, list[float]] = {}
-            for index, task in enumerate(self.eval_tasks):
-                rows = await self.backend.generate(
-                    task.id,
-                    task.prompt,
-                    n=1,
-                    temperature=self.config.eval_temperature,
-                    seed=self.config.seed + 1_000_000 + index,
-                )
-                if len(rows) != 1:
-                    raise RuntimeError("RVL backend returned unexpected evaluation generation count")
-                row = rows[0]
-                score = float(self.score_fn(task, str(row.response)))
-                scores[task.id] = score
-                latencies.append(float(row.latency_s))
-                families.setdefault(task.family, []).append(score)
-            # Always return the shared runtime to the active champion before the
-            # next operation observes it.
-            self._restore(self._active_id)
+            try:
+                self._restore(policy_id)
+                for index, task in enumerate(self.eval_tasks):
+                    rows = await self.backend.generate(
+                        task.id,
+                        task.prompt,
+                        n=1,
+                        temperature=self.config.eval_temperature,
+                        seed=self.config.seed + 1_000_000 + index,
+                    )
+                    if len(rows) != 1:
+                        raise RuntimeError("RVL backend returned unexpected evaluation generation count")
+                    row = rows[0]
+                    score = float(self.score_fn(task, str(row.response)))
+                    scores[task.id] = score
+                    latencies.append(float(row.latency_s))
+                    families.setdefault(task.family, []).append(score)
+            except BaseException:
+                try:
+                    self._restore(self._active_id)
+                except BaseException as restore_exc:
+                    raise RuntimeError(
+                        "evaluation failed and incumbent restoration failed; "
+                        "trainer state is unknown"
+                    ) from restore_exc
+                raise
+            try:
+                # Return the shared runtime to the active champion before the
+                # next operation observes it, including after failed evaluation.
+                self._restore(self._active_id)
+            except BaseException as restore_exc:
+                raise RuntimeError(
+                    "evaluation completed but incumbent restoration failed; "
+                    "trainer state is unknown"
+                ) from restore_exc
         return EvaluationReport(
             policy_id=policy_id,
             primary=fmean(scores.values()) if scores else 0.0,

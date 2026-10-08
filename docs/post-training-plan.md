@@ -2,7 +2,7 @@
 
 ## Active direction (2026-10-09)
 
-The earlier Math-first and generated code-repair plans are superseded. Recent no-update feasibility screens and policy-update studies did not establish a viable model/task pair for a new learning run. The current order is to fix concrete rollout/replay/trainer-integrity defects with CPU regressions, then make a retained result reproducible from a clean checkout. The current decision and exact stop rules are in [next study decision](next-study-decision-2026-10-09.md); a completed group-integrity fix is recorded in [rollout group integrity v1](rollout-group-integrity-v1-report.md).
+The earlier Math-first and generated code-repair plans are superseded. Recent no-update feasibility screens and policy-update studies did not establish a viable model/task pair for a new learning run. The current order is to close concrete rollout/replay/trainer-integrity defects with CPU regressions, then enable outside reproduction of a retained result. The current decision and exact stop rules are in [next study decision](next-study-decision-2026-10-09.md); group-integrity and evaluation-recovery findings are recorded in [rollout group integrity v1](rollout-group-integrity-v1-report.md) and [RVL evaluation recovery v1](rvl-grpo-evaluation-recovery-report.md).
 
 Do not start another learner run until a different model/task pair clears a frozen base-policy success gate and the CPU/resource budget. Any later update study needs a task-success primary metric, matched SFT, one RL method, multiple seeds, and untouched confirmation examples. Do not reuse opened HH, GSM8K, BoolQ, arithmetic, SNLI, or code-repair cohorts. Generated verifier tasks remain distinct from public-benchmark evidence.
 

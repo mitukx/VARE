@@ -52,6 +52,7 @@ class CapabilityLoop:
         self.decision_ledger = decision_ledger
         self._generated_tasks: list[Task] = []
         self.step = 0
+        self._run_serial = 0
 
     async def _one_rollout(self, sem: asyncio.Semaphore, task: Task, policy_id: str, policy_version: int):
         async with sem:
@@ -62,8 +63,11 @@ class CapabilityLoop:
             self.step += 1
             attempt = await self.hooks.rollout(task, policy_id, policy_version, step)
             group_id = task.metadata.get("vare_rollout_group")
-            if group_id is not None and "vare_rollout_group" not in attempt.metadata:
+            if group_id is not None:
                 attempt.metadata["vare_rollout_group"] = group_id
+                attempt.metadata["vare_rollout_group_size"] = task.metadata[
+                    "vare_rollout_group_size"
+                ]
             verification = await self.verifier.verify(attempt)
             return attempt, verification
 
@@ -78,6 +82,10 @@ class CapabilityLoop:
             raise ValueError("rollout_count must be positive")
         if self.config.samples_per_task <= 0:
             raise ValueError("samples_per_task must be positive")
+        # A round index can be replayed by callers, so include a deterministic
+        # loop-local serial to keep rollout groups unique across run_round calls.
+        self._run_serial += 1
+        run_serial = self._run_serial
         if self.config.samples_per_task == 1:
             base_tasks = self.curriculum.choose(source_tasks, target_rollouts)
             chosen = [
@@ -85,7 +93,11 @@ class CapabilityLoop:
                     id=t.id,
                     prompt=t.prompt,
                     family=t.family,
-                    metadata={**t.metadata, "vare_rollout_group": f"r{round_index}-g{i}"},
+                    metadata={
+                        **t.metadata,
+                        "vare_rollout_group": f"r{round_index}-run{run_serial}-g{i}",
+                        "vare_rollout_group_size": 1,
+                    },
                 )
                 for i, t in enumerate(base_tasks)
             ]
@@ -94,14 +106,18 @@ class CapabilityLoop:
             base_tasks = self.curriculum.choose(source_tasks, group_count)
             chosen = []
             for group_index, task in enumerate(base_tasks):
-                group_id = f"r{round_index}-g{group_index}"
+                group_id = f"r{round_index}-run{run_serial}-g{group_index}"
                 for _ in range(self.config.samples_per_task):
                     chosen.append(
                         Task(
                             id=task.id,
                             prompt=task.prompt,
                             family=task.family,
-                            metadata={**task.metadata, "vare_rollout_group": group_id},
+                            metadata={
+                                **task.metadata,
+                                "vare_rollout_group": group_id,
+                                "vare_rollout_group_size": self.config.samples_per_task,
+                            },
                         )
                     )
         sem = asyncio.Semaphore(self.config.rollout_concurrency)

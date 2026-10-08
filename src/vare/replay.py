@@ -33,6 +33,25 @@ class PrioritizedReplay:
         p = failure * uncertainty * signal * max(self.config.freshness_floor, freshness)
         return max(self.config.min_priority, p)
 
+    @staticmethod
+    def _group_is_complete(items: list[_HeapItem]) -> bool:
+        declared_sizes = set()
+        for item in items:
+            attempt = item.experience.attempt
+            size = attempt.metadata.get("vare_rollout_group_size")
+            if size is None:
+                size = attempt.task.metadata.get("vare_rollout_group_size")
+            if size is None:
+                continue
+            if isinstance(size, bool) or not isinstance(size, int) or size <= 0:
+                return False
+            declared_sizes.add(size)
+        if len(declared_sizes) > 1:
+            return False
+        if not declared_sizes:
+            return True
+        return len(items) == next(iter(declared_sizes))
+
     def add(self, exp: Experience, freshness: float) -> None:
         exp.priority = self._priority(exp, freshness)
         item = _HeapItem(exp.priority, next(self._seq), exp)
@@ -85,6 +104,8 @@ class PrioritizedReplay:
             if key is None:
                 key = f"ungrouped:{id(item.experience)}"
             groups.setdefault(str(key), []).append(item)
+        groups = {key: members for key, members in groups.items()
+                  if self._group_is_complete(members)}
         remaining = dict(groups)
         out: list[Experience] = []
         while remaining and len(out) < n:
@@ -150,11 +171,11 @@ class PrioritizedReplay:
                             break
             return out
 
-        groups = {
-            key: [(priority, item) for priority, item in members if priority is not None]
-            for key, members in group_candidates.items()
-            if all(priority is not None for priority, _ in members)
-        }
+        groups = {}
+        for key, members in group_candidates.items():
+            if (all(priority is not None for priority, _ in members)
+                    and self._group_is_complete([item for _, item in members])):
+                groups[key] = members
         if not groups:
             return []
         remaining = dict(groups)

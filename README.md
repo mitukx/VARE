@@ -12,6 +12,7 @@ The latest HH human-preference comparison tested length-normalized DPO against s
 - [Latest BoolQ study](docs/cpu-lm-boolq-verifier-rloo-development-v1-report.md): audited CPU-only binary verifier-reward RLOO non-pass, with raw bundle and limits.
 - [RVL GRPO rollback validation](docs/rvl-grpo-partial-failure-report.md): actual pinned CPU trainer step followed by injected failure; incumbent model/optimizer/RNG restoration passed on a tiny random model.
 - [RVL GRPO in-step fault validation](docs/rvl-grpo-midstep-fault-report.md): exception raised inside the actual pinned `train_step` immediately after a real optimizer mutation; all 12 rollback checks passed on CPU.
+- [Rollout group integrity and evaluation recovery](docs/rollout-group-integrity-v1-report.md): complete GRPO/RLOO groups survive rollout budgets, replay capacity, and repeated round indices; the RVL adapter restores incumbent state after generation or partial-restore failures.
 - [BoolQ v17 DPO/SFT/anchored-DPO study](docs/boolq-posttraining-development-v17-report.md): earlier matched comparison and its failed advancement gate.
 - [HH-RLHF reward-model v2](docs/hh-reward-model-v2-report.md): development pass, repeated confirmation accuracy gain, but no confirmed NLL improvement.
 - [HH human-preference DPO development v2](docs/hh-human-preference-dpo-development-v2-report.md): matched DPO/SFT update on human-labeled pairs; the frozen DPO-vs-base accuracy gate failed.

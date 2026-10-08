@@ -1,6 +1,8 @@
 import asyncio
 from collections import Counter
 
+import pytest
+
 from vare.config import EngineConfig, PromotionConfig
 from vare.engine import CapabilityLoop
 from vare.types import Attempt, EvaluationReport, Task, Verification
@@ -56,3 +58,32 @@ def test_rollout_and_replay_preserve_grpo_groups_for_nonmultiple_budget():
     # Budget is 7, but whole groups of 4 are returned; no group is truncated.
     assert set(hooks.train_group_counts.values()) == {4}
     assert sum(hooks.train_group_counts.values()) == 8
+
+
+@pytest.mark.parametrize("samples_per_task", [1, 4])
+def test_rollout_group_ids_are_unique_when_round_index_is_reused(samples_per_task):
+    hooks = Hooks()
+    loop = CapabilityLoop(
+        hooks=hooks,
+        verifier=VerifierEnsemble([VerifierMember(Verifier())]),
+        config=EngineConfig(
+            rollout_concurrency=8,
+            replay_batch_size=8,
+            samples_per_task=samples_per_task,
+            preserve_rollout_groups=True,
+            promotion=PromotionConfig(min_eval_examples=1),
+        ),
+        seed=4,
+    )
+    tasks = [Task("task", "x")]
+
+    asyncio.run(loop.run_round(tasks, round_index=3, rollout_count=1))
+    first_run_groups = set(hooks.groups)
+    hooks.groups.clear()
+
+    asyncio.run(loop.run_round(tasks, round_index=3, rollout_count=1))
+    second_run_groups = set(hooks.groups)
+
+    assert first_run_groups
+    assert second_run_groups
+    assert first_run_groups.isdisjoint(second_run_groups)
