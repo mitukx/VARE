@@ -1,40 +1,34 @@
 # Current evidence gaps
 
-This page summarizes what the retained evidence supports today and what would most improve the next evidence tier. It is a technical project assessment, not a claim about model capability or deployment readiness. All proposed work is designed to fit a local CPU and no-paid-service budget.
+This assessment ranks the technical work needed to study post-training signals and policy updates under limited compute. All proposed work fits a local CPU/no-paid-service budget. The project has substantial evaluation and reliability evidence plus one synthetic policy-update diagnostic, but no real-model learner update.
 
-## What the repository currently demonstrates
+## What current evidence supports
 
 - A local evaluation control plane with bounded execution, provenance checks, retained records, offline audits, and same-host recovery.
-- Frozen CPU evidence for failure handling, local scheduling, freshness checks, and transactional recovery. The measurements are specific to the tested fixtures and local machine.
-- The environment command runner now enforces its per-stream output capture limit while draining child processes and rejects overflow; a frozen baseline/fixed regression covers stdout, stderr, normal output, and POSIX process-group cleanup.
-- Two calibrated historical task/grader pairs. The fixed upstream revisions pass and the pre-fix revisions fail under the declared fixtures.
-- Adversarial checks that found and corrected several false accepts in the TRL grader. Protocol v7 rejects five frozen mutations while accepting the pinned fixed source across 12 arithmetic conditions.
-- Transparent reporting of a negative local agent pilot: three formal runs produced no accepted patch.
+- Frozen CPU evidence for failure handling, scheduling, freshness checks, transactional recovery, and environment command output limits. Measurements are specific to the tested fixtures and machine.
+- Two calibrated historical task/grader pairs and adversarial grader revisions that corrected specific false accepts.
+- A negative local small-model agent pilot: three formal attempts produced no accepted patch.
+- Contracts for replay, freshness, curriculum, promotion, and RVL trainer integration.
 
-These are useful evaluation and reliability engineering results. They do not demonstrate that an agent can solve tasks, that model quality improves, or that the system operates at fleet scale.
+These demonstrate narrow evaluation and reliability properties. The synthetic run does show a policy update on a toy preference distribution, but it failed its frozen acceptance rule. No evidence demonstrates improvement in language-model preferences or capabilities, RLHF/DPO behavior on a language model, or deployment-scale training.
 
 ## Ranked gaps
 
-| Priority | Gap | Why it matters | No-cost evidence that would close part of it |
+| Priority | Gap | Why it matters | No-cost work that closes part of it |
 | --- | --- | --- | --- |
-| 1 | No reproducible successful agent task trajectory | The only formal agent cohort is one task, one small local model, and three unsuccessful runs. This leaves the central agent-workflow claim untested. | Freeze a small, varied CPU-verifiable task pack; improve the patch/tool protocol; run repeated seeds in fresh workspaces; retain every trace, patch, grade, and budget. Require at least one independently replayable accepted patch before claiming a positive result. |
-| 2 | Narrow task and grader coverage | Two historically fixed tasks calibrate specific contracts; they do not establish broad verifier precision, recall, or resistance to plausible wrong patches. | Add tasks from distinct code paths or repositories with independently justified expected outcomes, positive and negative controls, meaningful mutations, and a held-out task set. Report false accepts and false rejects without extrapolating beyond the tested set. |
-| 3 | No independent reproduction or upstream contribution | Local tests and CI establish project-internal reproducibility, not usefulness to another maintainer or user. | Ask an independent person to reproduce a frozen bundle from a clean clone, or submit a narrow, useful upstream fix and retain review/CI outcomes. AI review alone is not independent corroboration. |
-| 4 | Frozen regression evidence is not fully reconstructed in CI | The CPU evidence workflow recalibrates the two historical tasks, but it does not rerun the retained promotion, replay-group, and output-budget regression controls or audit every evidence manifest. Its path filter also omits `benchmarks/regressions/**`. | Add a manifest verifier, run the current frozen regression set in CI, and trigger that workflow when regression assets or results change. Preserve invalidated protocols as history and calibrate only the declared current versions. |
-| 5 | Single-host operational evidence | Current scheduling, freshness, and recovery results are local CPU measurements; CI currently runs Ubuntu/Python 3.11 while the reported machine experiments use macOS/Python 3.12. This says little about workload heterogeneity or fleet behavior. | Run the frozen correctness suite on multiple supported Python versions and a second OS; profile mixed-duration CPU jobs and record latency, peak memory, storage, and recovery behavior. Keep distributed-scale claims out unless actually measured. |
-| 6 | Grader semantic and runtime limits | TRL v7 uses source-structure checks plus scalar arithmetic fixtures, and RVL uses deterministic model/tokenizer doubles. Neither proves arbitrary semantic correctness or full production-model parity. | Add held-out refactors and adversarial mutations; where feasible, compare a small dependency-backed CPU fixture against upstream runtime behavior. Document every accepted/rejected pattern and keep a full-trainer claim out of scope. |
-| 7 | Hostile-code and resource-isolation boundary | Candidate code runs with the current user's permissions; process groups and before/after hashes are not a security sandbox or hard CPU/RAM/network quota. | Keep tasks trusted, or move candidate execution to a disposable local container/VM with read-only evaluator assets and explicit CPU, memory, disk, and network controls; test escape and timeout behavior before describing isolation. |
-| 8 | End-to-end improvement loop not measured | Components for failure signals, selection, evaluation, and promotion exist, but a complete intervention has not shown an independently measured downstream benefit. | Use a preregistered CPU-only mechanism experiment with a matched-budget fixed-selector baseline, held-out decision outcome, and explicit synthetic/mechanism-only labels. |
+| 1 | The first synthetic preference run failed its frozen acceptance rule | v1 lowered mean held-out synthetic preference NLL by 0.3523 nats/pair over 10 seeds, but mean KL was 0.5629 against a 0.5 ceiling. The initial no-update accuracy metric also incorrectly treated ties as wrong. | Keep v1 immutable and visible. A new version must fix tie handling, select the update budget from training-only diagnostics, freeze a separate lock, and rerun an independent seed cohort. Do not relax v1's KL ceiling after observing results. |
+| 2 | Synthetic evidence does not establish real-model post-training | The current preference result uses a tiny linear policy and synthetic Bradley–Terry preferences. It cannot say anything about language-model DPO, natural-language preferences, reasoning, or truthfulness. | First establish a reliable synthetic control. Only then test whether cached weights and installed dependencies permit a separately frozen, hard-bounded CPU adapter smoke test without downloads or spend. |
+| 3 | Robustness evidence is preliminary | v1 contains 20% label-flip and shuffled-label arms, but one run on one synthetic generator does not establish behavior under realistic reward/preference shift. | Retain these arms as exploratory diagnostics; define a new preregistered shift condition, calibration metric, and held-out decision rule before a confirmatory run. |
+| 4 | Learner provenance and diagnostics are not demonstrated end to end | A trustworthy result needs exact reference/policy/data versions and evidence that a candidate changed as intended. | Add objective traces, parameter snapshots/deltas, split identity, runtime/memory, source/data/config hashes, and a transactional candidate record to a future small-model run. |
+| 5 | Narrow grader/task coverage and no independent reproduction | Historical fixes calibrate specific checks, not general evaluator precision/recall. Local CI is not external reproduction. | Add held-out refactors and meaningful mutations; ask for a clean-clone reproduction or submit a narrow upstream contribution and retain the outcome. |
+| 6 | Single-host operational and trust boundaries | CPU timing is machine-local; candidate execution is not hostile-code isolation. | Add another OS/Python correctness run if available and keep arbitrary candidate code out of scope unless a tested disposable sandbox exists. Do not imply distributed, fleet, or production evidence. |
+| 7 | No individual skill or collaboration evidence | A repository cannot establish unaided understanding, ownership boundaries, or communication. | Keep attribution accurate; prepare to derive the preference objective/gradient, explain a grader false accept and its limits, and reproduce a small result unaided. This is preparation guidance, not repo evidence. |
 
-## Claim ceiling
+## Immediate order
 
-Current evidence supports describing VARE as a local, CPU-tested evaluation control plane with narrow historical grader calibration, adversarial grader revisions, and same-host reliability measurements. It does not support claims of successful agent solving, general grader validity, model improvement, generalization, hostile-code isolation, independent adoption, or distributed/production scale.
+1. Use the retained v1 as a diagnostic non-pass. Freeze a separate protocol after fixing tie scoring and choosing a lower update budget using training-only diagnostics.
+2. Run the new seed cohort, reconstruct all metrics from the raw bundle, and report the acceptance outcome without overclaiming.
+3. Only then assess whether the already-cached tiny-model environment can support a bounded adapter/DPO smoke test without downloads or spending.
+4. Improve end-to-end learner provenance and diagnostics, then seek independent reproduction and broaden grader coverage.
 
-## Recommended order
-
-1. Build a small diverse frozen task pack and establish a valid repeated-run harness.
-2. Produce and independently replay at least one successful task trajectory; preserve failures and budget accounting.
-3. Reconstruct frozen regression evidence in CI; expand held-out grader mutations/refactors and seek one independent reproduction or narrow upstream review.
-4. Measure cross-platform and heterogeneous CPU behavior, then revisit the end-to-end intervention only when its outcome can be measured independently.
-
-Do not add more infrastructure surface until a retained failure or task outcome motivates it. Update this page when evidence changes, not when implementation alone changes.
+The code-agent trajectory remains a separate supporting question. Its negative pilot should stay visible, but should not displace a learner experiment as the next priority. Update this page when retained evidence changes, not when an integration or plan alone is added.

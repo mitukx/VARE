@@ -21,17 +21,21 @@ Two pinned tasks now have calibrated pre-fix and fixed revisions:
 
 Both graders reject the pre-fix revision and accept the known fixed revision. Their raw results, protocol snapshots, and hashes are retained in [`results/`](../results/) and summarized in [`evidence.md`](evidence.md). These outcomes calibrate the tasks and graders; they do not show that an agent can discover the fix or that a model improves.
 
-## E2 — Agent trajectories
+## E2 — Controlled post-training mechanism
+
+The first CPU/no-spend contextual preference experiment is retained in [`synthetic-dpo-report.md`](synthetic-dpo-report.md). Its DPO-style objective passed finite-difference checks, and clean updates lowered held-out synthetic NLL across all 10 seeds. The frozen acceptance rule failed because mean KL exceeded its ceiling; the reference accuracy field also had a tie-handling defect and is not valid. The complete bundle is hash-audited. This is narrow synthetic mechanism evidence, not LLM training or capability evidence. Next, fix the metric, use a separate development cohort for training-only update-budget selection, then freeze a new protocol and independent seed cohort.
+
+## Supporting evidence — Agent trajectories
 
 The corrected [local CPU pilot](local-agent-pilot.md) ran one small model on one immutable task for three formal seeds. All attempts read source but produced no accepted edit; the grader rejected all three unchanged candidates. The original v1 cohort is invalidated due to a tool-history serialization bug. This is a retained negative tool-loop result, not successful task-solving evidence. Next, test a materially improved and frozen interaction protocol on a broader immutable task pack, while keeping task and model changes versioned. Do not compare it directly to this pilot unless the task, model and tool changes are versioned.
 
-## E3 — Curriculum intervention
+## E3 — Preference-signal robustness
 
-After comparable E2 trajectories exist, cluster observed failures and compare a transparent failure-driven task selector against a fixed selector at equal rollout and wall-time budgets. Freeze the task split, primary metric, and acceptance rule before measuring the comparison.
+After the synthetic baseline is validated, compare clean, noisy, and shifted preference conditions at matched update/data budgets. Freeze the condition definitions, primary metric, acceptance rule, and analysis before outcomes. If task selection/curriculum is studied, it should be one explicit intervention with a fixed-selector baseline and independent held-out outcome.
 
 ## E4 — Small-model learning
 
-Consider training only if E1–E3 identify a causal question that cheaper CPU experiments cannot answer and free compute is available. Preregister the held-out metric, seeds, budget, stopping rule, and promotion threshold. Retain null and negative runs.
+The frozen L2 RVL/Qwen campaign remains unrun: its 0.5B model and 3-arm × 3-seed workload exceed the current no-spend CPU budget. Do not edit its lock. Consider a separate tiny adapter/DPO smoke protocol only if already-cached weights and the installed runtime support a strict bounded run with no download or paid service. Require a before/after held-out measure, parameter delta, KL/drift, seed and data provenance, and an abort limit. Retain null and negative runs. The synthetic E2 experiment cannot substitute for E4.
 
 ## E5 — Systems impact
 
@@ -47,7 +51,7 @@ Study repeated system-proposed interventions only after independent downstream e
 
 ## Current stop point
 
-The isolated-input E0 calibration, execution failure-injection checks, promotion-metric and replay-group regressions, bounded environment-command output v4 regression, and two E1 task/grader pairs are complete. Narrow E5 measurements cover local scheduling and durable freshness-check work. E2 has one corrected negative local pilot but no successful task trajectory. E3–E4, heterogeneous workload profiling, distributed systems evidence and E6 remain outstanding. No model learning, generalization, or capability gain is claimed.
+The isolated-input E0 calibration, execution failure-injection checks, promotion-metric and replay-group regressions, bounded environment-command output v4 regression, and two E1 task/grader pairs are complete. Narrow E5 measurements cover local scheduling and durable freshness-check work. E2 has a synthetic preference-policy diagnostic run that failed its frozen acceptance rule; its accuracy defect and limits are public. Agent evidence is separately negative. Confirmatory E3 robustness, E4 real-model learning, heterogeneous workload profiling, distributed systems evidence and E6 remain outstanding. No language-model learning, generalization, or capability gain is claimed.
 
 ## Restored experimental implementation
 
@@ -55,4 +59,4 @@ The source recovered at upstream commit `f5c92cf` is integrated in `src/vare`, i
 
 ## Recovery evidence checkpoint
 
-Persistent evaluation now has a frozen CPU recovery experiment: 24/24 fault cases and four calibrated historical decisions after claimant loss. See [recovery-report.md](recovery-report.md). Current terminal publication is fenced, changed inputs are invalidated at use/export and old attempts remain retained. This extends local E0/E5 systems evidence. Multi-host leases/consensus, schema migration, power-loss behavior, stronger resource containment and real comparable agent trajectories remain separate open work.
+Persistent evaluation now has a frozen CPU recovery experiment: 24/24 fault cases and four calibrated historical decisions after claimant loss. See [recovery-report.md](recovery-report.md). Current terminal publication is fenced, changed inputs are invalidated at use/export and old attempts remain retained. This extends local E0/E5 systems evidence. Multi-host leases/consensus, schema migration, power-loss behavior, stronger resource containment and a measured learner update remain separate open work.

@@ -4,18 +4,13 @@ This file is the operational contract for AI agents and human contributors worki
 
 ## Mission
 
-VARE exists to study and build **closed-loop capability improvement under limited compute**. The system should turn real failures into reproducible tasks, turn trusted executable feedback into training or selection signal, detect when policy or verifier state has become stale, and spend scarce learning compute only when the expected information or capability gain justifies it.
+VARE exists to study **post-training signals and policy improvement under limited compute**. The system should make preference/reward signals auditable, test learning objectives and updates against independent measurements, detect when policy or verifier state has become stale, and spend scarce learning compute only when the expected information or capability gain justifies it.
 
 The long-term target is not a large collection of features. It is a reliable loop:
 
 ```text
-real failure
-  -> reproducible environment
-  -> agent/model trajectory
-  -> executable/trusted verification
-  -> failure diagnosis
-  -> targeted curriculum or intervention
-  -> candidate update
+preference/reward/training signal
+  -> policy update or targeted intervention
   -> independent held-out evaluation
   -> promote or rollback
   -> retained evidence
@@ -25,9 +20,9 @@ A successful VARE contribution makes some part of this loop **more correct, more
 
 ## North-star question
 
-> Can we obtain more independently measured capability improvement per unit of scarce compute without weakening correctness, provenance, or verifier trust?
+> Under a fixed compute budget, which post-training signal or intervention improves an independently measured held-out outcome, and how do we know the update and evaluation are correct?
 
-Prefer measurements such as held-out task success, capability gain per accelerator-hour, useful trajectories per unit cost, verifier error under policy shift, time-to-diagnosis, recovery rate, or a directly measured systems improvement. Training reward alone is not a capability metric.
+Prefer held-out preference accuracy or task success, reward/preference calibration, KL or policy drift, seed variance, label-noise sensitivity, and wall-clock/resource cost. Training reward alone is not a capability metric. Report accelerator-hours only when accelerator compute was actually used.
 
 ## Design stance
 
@@ -62,9 +57,9 @@ Use this ladder when deciding what can be claimed and what to build next.
 
 - **E0 — Harness correctness:** synthetic fixture; broken baseline fails, known fix passes, tampering fails closed.
 - **E1 — Real historical task:** immutable public repository revision plus an independent regression/performance evaluator; no model training required.
-- **E2 — Agent trajectory evidence:** repeated runs of one or more agents/models on the same E1 task pack with success, latency/cost, recovery, diff, and verifier evidence.
-- **E3 — Curriculum intervention:** at equal rollout/cost budget, a failure-driven task-selection strategy outperforms a fixed or easy curriculum on independent tasks.
-- **E4 — Small-model learning:** a preregistered multi-seed experiment shows held-out model improvement, or an honestly retained null/negative result that falsifies a mechanism.
+- **E2 — Controlled post-training mechanism:** a preregistered CPU preference-policy experiment passes objective/gradient checks and evaluates a known synthetic preference distribution on disjoint held-out examples. This is mechanism evidence, not model capability.
+- **E3 — Signal/intervention robustness:** matched-budget, multi-seed evidence tests preference noise, distribution shift, and a specified intervention against frozen controls.
+- **E4 — Small-model learning:** a preregistered multi-seed experiment shows held-out model improvement, or an honestly retained null/negative result that falsifies a mechanism. Synthetic policy results do not count as E4.
 - **E5 — Systems impact:** a measured correctness/throughput/latency/resource improvement or an upstream contribution caused by a bottleneck exposed by the environment/evidence loop.
 - **E6 — Recursive improvement:** repeated system-proposed interventions continue to produce independent positive downstream effects after compute cost and verifier drift are accounted for.
 
@@ -74,14 +69,13 @@ Never relabel E0/E1 plumbing as E4 capability evidence.
 
 When several tasks are available, prefer the earliest unresolved item in this order unless evidence clearly says otherwise:
 
-1. Make real engineering tasks reproducible and externally gradable.
-2. Strengthen verifier integrity, provenance, replay correctness, and failure isolation.
-3. Collect comparable long-horizon trajectories on fixed task packs.
-4. Build failure taxonomies and deterministic failure-driven curricula.
-5. Measure whether curriculum/intervention changes outcomes at equal budget.
-6. Run the smallest learner experiment that can test the remaining causal hypothesis.
-7. Turn discovered systems bottlenecks into minimal, upstreamable fixes.
-8. Only then increase model size, distributed scale, or autonomous research scope.
+1. Re-run the synthetic preference control under a new frozen version with corrected tie scoring and a training-only-selected update budget; preserve v1's failed outcome.
+2. Measure sensitivity to preference noise, distribution shift, reference-policy drift, and random seed under a separately frozen protocol; preserve null and negative outcomes.
+3. Validate learner diagnostics and provenance (policy/reference/verifier versions, update count, KL, parameter delta, runtime, memory).
+4. Attempt a tiny cached-model adapter smoke test only when it fits existing hardware and passes explicit abort limits; do not download large weights or spend money.
+5. Use task trajectories, curriculum, and promotion infrastructure as supporting mechanisms for a clearly specified learning hypothesis.
+6. Seek independent reproduction and broader grader coverage.
+7. Increase model size or distributed scope only when a free resource is available and a cheaper experiment cannot answer the question.
 
 ## Compute discipline
 

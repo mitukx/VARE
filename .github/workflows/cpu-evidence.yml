@@ -7,6 +7,8 @@ on:
       - 'README.md'
       - 'docs/**'
       - 'benchmarks/historical/**'
+      - 'benchmarks/regressions/**'
+      - 'benchmarks/audits/**'
       - 'scripts/**'
       - 'vare/**'
       - 'src/vare/**'
@@ -51,3 +53,33 @@ jobs:
         run: >-
           python3 scripts/calibrate_integrity.py
           --output "${RUNNER_TEMP}/vare-integrity-calibration"
+      - name: Rebuild current frozen regression calibrations
+        run: >-
+          python3 scripts/calibrate_regressions.py
+          --output-root "${RUNNER_TEMP}/vare-current-regression-calibrations"
+      - name: Audit retained regression evidence against fresh replays
+        run: >-
+          python3 scripts/audit_regression_evidence.py
+          --regenerated-root "${RUNNER_TEMP}/vare-current-regression-calibrations"
+      - name: Check synthetic preference objective and gradient
+        run: python3 -m unittest discover -s tests -p 'test_synthetic_dpo.py' -v
+      - name: Run frozen synthetic CPU preference experiment
+        run: >-
+          python3 scripts/run_synthetic_dpo.py
+          --output "${RUNNER_TEMP}/vare-synthetic-dpo-cpu"
+      - name: Audit synthetic preference experiment bundle
+        run: >-
+          python3 scripts/audit_synthetic_dpo.py
+          "${RUNNER_TEMP}/vare-synthetic-dpo-cpu"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: vare-current-regression-calibrations
+          path: ${{ runner.temp }}/vare-current-regression-calibrations
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: vare-synthetic-dpo-cpu
+          path: ${{ runner.temp }}/vare-synthetic-dpo-cpu
+          if-no-files-found: error
+          retention-days: 30

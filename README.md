@@ -1,6 +1,6 @@
 # VARE
 
-VARE is a CPU evaluation control plane for reproducible experiments on agent improvement. It runs independently graded historical software tasks with bounded concurrency, locked protocols, candidate provenance checks, timeout/output handling, and auditable retained records.
+VARE is a CPU-first research control plane for studying post-training signals and policy improvement under limited compute. It combines independently graded tasks, locked experiment protocols, provenance-aware replay, bounded execution, candidate promotion checks, and auditable retained records. Its current evidence is mostly evaluation and systems correctness; it does not yet demonstrate measured model learning.
 
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
 
@@ -20,6 +20,7 @@ Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, c
 
 - **16/16 synthetic reliability cases** matched their declared outcomes, including incorrect provenance, source mutation, malformed output, timeouts, output flooding and subprocess cleanup.
 - **Environment command output cap regression:** the frozen v4 task reproduces accepted stdout/stderr floods at the baseline; the fix rejects each overflow, retains at most the configured bytes per stream, and terminates the POSIX process group while preserving normal command behavior. See the [report](docs/environment-output-budget-report.md) and [raw results](results/environment-output-budget-v4/summary.json). This is not an OS resource sandbox.
+- **Synthetic preference-optimization control:** on 10 CPU seeds, clean-label DPO-style updates lowered held-out synthetic preference NLL by 0.3523 nats/pair (paired 95% bootstrap interval 0.3427–0.3623). The run failed its preregistered KL ceiling (0.5629 vs 0.5), and its reference-policy accuracy field is invalid because exact ties were counted as wrong. See the [report and limitations](docs/synthetic-dpo-report.md) and [audited raw bundle](results/synthetic-dpo-cpu-v1-exploratory/). This is synthetic mechanism evidence only.
 - **80 historical-source evaluations** preserved the expected pre-fix rejection/fixed acceptance decisions across one-worker and four-worker campaigns.
 - **3.4857× median paired speedup** with four workers versus this same runner with one worker, over five pairs on a local macOS arm64 CPU. This is a small local-grader measurement, not a distributed or model-serving result.
 
@@ -27,7 +28,7 @@ Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, c
 
 Start with the [ten-minute walkthrough](docs/walkthrough.md), [technical report](docs/scheduler-report.md), and [execution contract](docs/execution.md). Inspect retained evidence offline:
 
-The [current evidence gaps](docs/current-gaps.md) rank the next CPU-feasible work and state the current claim limits.
+The [post-training plan](docs/post-training-plan.md) defines the next no-cost learning experiments and their claim limits. The [current evidence gaps](docs/current-gaps.md) rank the remaining CPU-feasible work and state what the retained results support.
 
 ```bash
 python3 scripts/audit_scheduler.py results/cpu-scheduler-v1
@@ -97,7 +98,7 @@ For the TRL task, provide `--task-root benchmarks/historical/trl_grpo_accumulati
 
 ## Roadmap
 
-The [roadmap](docs/roadmap.md) tracks the evidence needed before expanding the claims. The next major gap is repeated, comparable agent trajectories on a fixed task set and budget. No such trajectories are currently reported.
+The [roadmap](docs/roadmap.md) tracks the evidence needed before expanding the claims. The next major gap is a correctly scored synthetic run that meets a frozen drift budget, followed only later by feasible real-model evidence. The current agent pilot remains supporting evidence about task execution, not the project's primary research direction.
 
 ## Develop the full package
 

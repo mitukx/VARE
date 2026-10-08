@@ -15,4 +15,4 @@ Recommended split:
 
 VARE re-screens replay freshness **at training time**. Insertion-time freshness is not trusted after policy or verifier versions advance.
 
-The critical experiment is not whether these adapters execute. It is whether VARE yields higher independent held-out capability gain per GPU-hour than fixed-curriculum/fixed-verifier baselines at matched compute. That comparison is locked in `protocols/l2_rvl_qwen_v1.lock.json`.
+The critical question is whether these adapters preserve trustworthy learning and independent evaluation when used in a post-training experiment. The existing comparison is locked in `protocols/l2_rvl_qwen_v1.lock.json`; it requires a 0.5B model and a three-arm, three-seed run and remains unrun under the current no-spend CPU budget. Do not change that lock or present the hooks as training evidence. The next affordable experiment is the synthetic preference-policy control described in [`post-training-plan.md`](post-training-plan.md), with held-out preference metrics, explicit policy drift, per-seed results, and exact compute reporting. A toy result cannot establish model capability.
