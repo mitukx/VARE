@@ -1,0 +1,26 @@
+{
+  "bundle_manifest_sha256": "1499f88a80d9e68d5f99d64edb6456c094a931dea40a5507cf8b2f9d34b3c22a",
+  "decision": {
+    "accuracy_floor_pass": false,
+    "all_episodes_complete_pass": true,
+    "family_floor_pass": false,
+    "finish_floor_pass": false,
+    "headroom_pass": true,
+    "resource_pass": true,
+    "row_count_pass": true,
+    "safe_action_pass": false,
+    "template_floor_pass": false,
+    "tool_validity_pass": false
+  },
+  "episodes": 32,
+  "independent_ast_interpreter": true,
+  "independent_dataset_regeneration": true,
+  "inference_replayed": false,
+  "limitations": [
+    "This audit checks retained records and independently recomputes outcomes; it does not repeat model inference.",
+    "The generated tasks are a narrow feasibility screen, not an external benchmark."
+  ],
+  "source_execution": false,
+  "status": "audited",
+  "successes": 0
+}

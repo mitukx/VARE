@@ -39,6 +39,10 @@ Freeze the model revision, task generator, tool schema, prompt, decoding, episod
 
 If any condition fails, retire this model/task pairing without lowering thresholds or reusing the pilot. A passing screen still does not establish that multi-seed online RL is affordable: estimate the learner cost in a separate bounded smoke before committing to a formal study. Do not switch to a capability claim based on preference NLL, reward alone, or a single favorable seed. Any result from this generated environment must be described as a narrow synthetic code-repair result, not a public benchmark or general coding gain.
 
+## Outcome
+
+The frozen screen completed on 2026-10-09 and failed its task, tool-use and safe-action gates: 0/32 episode successes, zero accepted edits/tests/finishes, 0/69 authorized schema-valid calls, and 60 unsafe or unauthorized attempts. The resource gate passed at 551.7 seconds and 3.20 GiB peak RSS. An independent auditor reconstructed the dataset, trajectory actions, grader outcomes, counters, and decision. The pairing is retired; no learner-cost smoke or training follows. See the [screen report](cpu-code-repair-feasibility-v1-report.md) and [retained bundle](../results/cpu-code-repair-feasibility-v1/run-1/).
+
 ## Evidence boundary
 
 The screen itself is not a learning result. Even a successful later confirmation would support only the tested model, task distribution, update method, and resource budget. It would not establish frontier-scale performance, general tool competence, or external reproducibility. External clean-clone reproduction and independent technical review remain open requirements.

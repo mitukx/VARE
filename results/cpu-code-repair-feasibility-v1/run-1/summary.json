@@ -1,0 +1,205 @@
+{
+  "dataset_sha256": "397163e4afb45517ca98f5174f6bdf3371daa7b92fd575c5bed7ef700308def9",
+  "decision": {
+    "accuracy_floor_pass": false,
+    "all_episodes_complete_pass": true,
+    "family_floor_pass": false,
+    "finish_floor_pass": false,
+    "headroom_pass": true,
+    "pass": false,
+    "resource_pass": true,
+    "row_count_pass": true,
+    "safe_action_pass": false,
+    "template_floor_pass": false,
+    "tool_validity_pass": false
+  },
+  "episode_success_rate": 0.0,
+  "generation": {
+    "effective_model_config": {
+      "_from_model_config": false,
+      "assistant_confidence_threshold": 0.4,
+      "assistant_early_exit": null,
+      "assistant_lookbehind": 10,
+      "bad_words_ids": null,
+      "begin_suppress_tokens": null,
+      "bos_token_id": 151643,
+      "cache_config": null,
+      "cache_implementation": null,
+      "constraints": null,
+      "decoder_start_token_id": null,
+      "disable_compile": false,
+      "diversity_penalty": 0.0,
+      "do_sample": true,
+      "dola_layers": null,
+      "early_stopping": false,
+      "encoder_no_repeat_ngram_size": 0,
+      "encoder_repetition_penalty": 1.0,
+      "eos_token_id": [
+        151645,
+        151643
+      ],
+      "epsilon_cutoff": 0.0,
+      "eta_cutoff": 0.0,
+      "exponential_decay_length_penalty": null,
+      "force_words_ids": null,
+      "forced_bos_token_id": null,
+      "forced_eos_token_id": null,
+      "guidance_scale": null,
+      "is_assistant": false,
+      "length_penalty": 1.0,
+      "low_memory": null,
+      "max_length": 20,
+      "max_matching_ngram_size": null,
+      "max_new_tokens": null,
+      "max_time": null,
+      "min_length": 0,
+      "min_new_tokens": null,
+      "min_p": null,
+      "no_repeat_ngram_size": 0,
+      "num_assistant_tokens": 20,
+      "num_assistant_tokens_schedule": "constant",
+      "num_beam_groups": 1,
+      "num_beams": 1,
+      "num_return_sequences": 1,
+      "output_attentions": false,
+      "output_hidden_states": false,
+      "output_logits": null,
+      "output_scores": false,
+      "pad_token_id": 151643,
+      "penalty_alpha": null,
+      "prefill_chunk_size": null,
+      "prompt_lookup_num_tokens": null,
+      "remove_invalid_values": false,
+      "renormalize_logits": false,
+      "repetition_penalty": 1.1,
+      "return_dict_in_generate": false,
+      "return_legacy_cache": null,
+      "sequence_bias": null,
+      "stop_strings": null,
+      "suppress_tokens": null,
+      "target_lookbehind": 10,
+      "temperature": 0.7,
+      "token_healing": false,
+      "top_k": 20,
+      "top_p": 0.8,
+      "transformers_version": "4.57.3",
+      "typical_p": 1.0,
+      "use_cache": true,
+      "watermarking_config": null
+    },
+    "sampling": {
+      "do_sample": false,
+      "max_generations": 5,
+      "max_new_tokens_per_turn": 192
+    },
+    "seconds": 545.708,
+    "tokens": 6707,
+    "tokens_per_second": 12.2905
+  },
+  "model": {
+    "dtype": "float32",
+    "files_sha256": {
+      "config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+      "generation_config.json": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6",
+      "merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+      "model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "weights_must_already_be_cached": true
+  },
+  "n": 32,
+  "peak_rss_bytes": 3430170624,
+  "per_family": {
+    "boundary": {
+      "n": 8,
+      "success_rate": 0.0,
+      "successes": 0
+    },
+    "default_aggregation": {
+      "n": 8,
+      "success_rate": 0.0,
+      "successes": 0
+    },
+    "ordered_transformation": {
+      "n": 8,
+      "success_rate": 0.0,
+      "successes": 0
+    },
+    "sequence": {
+      "n": 8,
+      "success_rate": 0.0,
+      "successes": 0
+    }
+  },
+  "per_template": {
+    "discount_then_cap": {
+      "n": 4,
+      "success_rate": 0.0,
+      "successes": 0
+    },
+    "half_open_range": {
+      "n": 4,
+      "success_rate": 0.0,
+      "successes": 0
+    },
+    "keep_half_open_range": {
+      "n": 4,
+      "success_rate": 0.0,
+      "successes": 0
+    },
+    "keep_nonnegative": {
+      "n": 4,
+      "success_rate": 0.0,
+      "successes": 0
+    },
+    "mean_or_fallback": {
+      "n": 4,
+      "success_rate": 0.0,
+      "successes": 0
+    },
+    "minimum_inclusive": {
+      "n": 4,
+      "success_rate": 0.0,
+      "successes": 0
+    },
+    "minimum_or_fallback": {
+      "n": 4,
+      "success_rate": 0.0,
+      "successes": 0
+    },
+    "scale_then_cap": {
+      "n": 4,
+      "success_rate": 0.0,
+      "successes": 0
+    }
+  },
+  "protocol_sha256": "cb039334b64b8965d5c39987032daeb35cd807698d6879d78bd2bba62641dd0e",
+  "runtime": {
+    "cuda_initialized": false,
+    "device": "cpu",
+    "mps_used": false,
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12",
+    "threads": 4,
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "scope": "Single no-update offline CPU feasibility screen on 8 synthetic bug templates with 4 generated cases each; descriptive pilot rate, not 32 independent benchmark tasks or a general coding-capability claim.",
+  "status": "completed",
+  "successes": 0,
+  "tool_use": {
+    "accepted_edits": 0,
+    "attempted": 69,
+    "episodes_with_edit_and_test": 0,
+    "malformed": 13,
+    "schema_valid": 0,
+    "unsafe_attempts": 60,
+    "validity_rate": 0.0,
+    "visible_test_runs": 0
+  },
+  "wall_seconds": 551.701
+}

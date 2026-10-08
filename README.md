@@ -4,7 +4,7 @@ VARE is a CPU-first research project for evaluating post-training signals and po
 
 The latest HH human-preference comparison tested length-normalized DPO against standard DPO and chosen-only SFT on a frozen CPU cohort. Length-normalized and standard DPO tied at 0.4974, below the frozen base at 0.5000 and length-only baseline at 0.5645; the decision was a non-pass. The runner hit a summary-aggregation `KeyError` after all nine adapters were saved; the retained adapters were replayed by the separate offline auditor, which passed selection, score, and decision checks. This is a preference-label comparison, not task success. Earlier HH reward-model v3 passed an outcome-informed score-scale NLL gate, but ranking accuracy stayed fixed and ECE worsened. Other real-model DPO/SFT/RLOO studies have not established downstream task gains; the GSM8K improvement is forced-choice NLL with accuracy near chance. Synthetic policy studies test mechanisms, not language-model capability. No general capability improvement or scale result is claimed.
 
-**Next study:** a no-update CPU feasibility screen with 32 generated episodes covering eight simple code-repair templates. This is a narrow tool-loop and resource check, not 32 independent benchmark tasks. Training will not proceed unless the frozen base clears the locked task, tool-use, and resource gates; a pass alone is not an RL result. See the [decision and limits](docs/next-study-decision-2026-10-09.md).
+**Latest feasibility screen:** the frozen CPU code-repair pilot completed 32 episodes across eight simple templates and scored 0/32. It failed the task and tool-use gates and has been retired; no update or learner-cost smoke followed. See the [report](docs/cpu-code-repair-feasibility-v1-report.md), [audited bundle](results/cpu-code-repair-feasibility-v1/run-1/), and [decision record](docs/next-study-decision-2026-10-09.md).
 
 ## Start here
 
@@ -26,6 +26,7 @@ The latest HH human-preference comparison tested length-normalized DPO against s
 - [Experiment index](docs/experiments.md): full study sequence and retained reports.
 - [Current evidence gaps](docs/current-gaps.md): what the results support and what remains open.
 - [Next-study decision](docs/next-study-decision-2026-10-09.md): a CPU-feasible candidate, alternatives, and frozen-screen stop rules.
+- [Generated code-repair feasibility v1](docs/cpu-code-repair-feasibility-v1-report.md): audited 0/32 base-only result, tool-loop failure modes, CPU cost, and decision to retire the pairing.
 - [Generated arithmetic feasibility v1](docs/cpu-generated-arithmetic-feasibility-v1-report.md): a preregistered CPU-only base-rollout gate that failed before training.
 - [Evaluation runner walkthrough](docs/walkthrough.md): inspect the calibrated task runner and retained execution evidence.
 
@@ -39,6 +40,7 @@ Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, c
 | Latest real-model feasibility screen | SNLI binary entailment v1: 49.41% balanced accuracy on 512 balanced validation rows; same-host model-forward audit passed. | The frozen base-rate screen failed; no update or confirmation followed. This is not a post-training or capability result. |
 | Latest model study | BoolQ v17: all three matched methods missed the frozen task-gain gate. Best balanced-accuracy gain was 0.11 percentage points against a 5-point threshold. | An audited development comparison. Confirmation rows remain unopened. |
 | Latest model study | BoolQ binary verifier-RLOO v1: five-seed development and same-host independent audit completed; frozen gate non-pass. | RLOO gained 2.69 points over base on the selected development comparison, below the 5-point rule; its paired interval crossed zero. No confirmation or general learning claim. |
+| Latest base-model tool feasibility | Generated code repair: 0/32 successes across eight templates; no accepted edit, visible test, or finish. | Audited non-pass; 0/69 authorized schema-valid calls, 60 unsafe/unauthorized attempts. CPU/RSS passed, but the model/task/tool pairing is retired. |
 | Human-preference reward model | HH-RLHF v2: confirmation accuracy +7.68 points vs baseline; NLL difference interval [−0.0539, +0.0177]. | Accuracy repeated on one fresh cohort; the joint confirmation gate failed because NLL improvement remained uncertain. |
 | Human-preference policy update | HH helpful-base DPO v2: development pair accuracy 0.4128 vs frozen-base 0.4141; paired 95% interval [−0.0117, +0.0104]. | The frozen preference-gain and seed-consistency gates failed; no confirmation or downstream task-success claim. |
 | Synthetic binary-action DPO | Procedural entailment v1: base BA 0.5078; scalar calibration 0.6211; contextual DPO 0.5573. | DPO lost to scalar calibration, missed the base/gain gates, and exceeded the KL cap; synthetic development evidence only. |
