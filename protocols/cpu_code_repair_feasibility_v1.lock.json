@@ -36,15 +36,15 @@
   },
   "freeze": {
     "auditor": "scripts/audit_cpu_code_repair_feasibility_v1.py",
-    "auditor_sha256": "68dfa96687f01bf9c6be5153d70343e0b530535f31fc9e208a5f6a3293489d53",
+    "auditor_sha256": "cc270d868098894ee4d38e95f1ea4fcc3edb225b6d99c3a8566a96b04d7c3823",
     "generator": "scripts/generate_cpu_code_repair_feasibility_v1.py",
     "generator_sha256": "8cdc4f051be998aae69c0c170760a1c48b16e51a5d89588be8e71434de086b79",
     "grader": "scripts/grade_cpu_code_repair_feasibility_v1.py",
     "grader_sha256": "5101ba02edea68a337a963881ed47c4df3f035e09bfd869d72e52f776119c729",
     "objective_test": "tests/test_cpu_code_repair_feasibility_v1.py",
-    "objective_test_sha256": "377fd1f243b92f62291a055be6c1b1efbbafe76423043cff178bb68e984045c3",
+    "objective_test_sha256": "36b29e26ee8a84c521dc6320323e55360620ab9bc23d9d8633e7bdf4fab53036",
     "runner": "scripts/run_cpu_code_repair_feasibility_v1.py",
-    "runner_sha256": "2844beccac1cbedd31542d51395fd09ef5e4c5d712b3dbc04ed5755f1cf82380",
+    "runner_sha256": "878a094fa8af99313ad8f5fc3c1f2d6015daad65d807f5473848215a6396346b",
     "sandbox": "scripts/code_repair_sandbox_v1.py",
     "sandbox_sha256": "4aee6967a833c004f295d0b36bc978bd4b06ce7917297d608555113c150794cd"
   },
@@ -108,7 +108,7 @@
     "torch": "2.9.1",
     "transformers": "4.57.3"
   },
-  "sha256": "06cb3e98f5eff042ffef0201cdd1bd48678f02c83d7408fadf02cc259cb143b2",
+  "sha256": "ac3234b7a3b63fed255d933ea1817072456cdac5519dcdca8ff81a66498264d3",
   "stop_rules": [
     "Abort if the model or tokenizer is not already cached at the pinned revision.",
     "Abort on any runtime, source, dataset, or asset hash mismatch.",

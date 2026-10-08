@@ -7,7 +7,6 @@ import hashlib
 import json
 import os
 import platform
-import re
 import resource
 import signal
 import sys
@@ -29,7 +28,7 @@ DATA_PATH = ROOT / "data/cpu-code-repair-feasibility-v1/pilot.jsonl"
 MODEL_DIR = (Path.home() / ".cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/"
              "7ae557604adf67be50417f59c2c2f167def9a775")
 OUTPUT = ROOT / "results/cpu-code-repair-feasibility-v1/run-1"
-TOOL_RE = re.compile(r"<tool_call>\s*(\{.*?\})\s*</tool_call>", re.DOTALL)
+TOOL_OPEN, TOOL_CLOSE = "<tool_call>", "</tool_call>"
 TOOLS = [
     {"type": "function", "function": {"name": "list_files",
      "description": "List task files available in the isolated workspace.",
@@ -70,6 +69,41 @@ class ToolCallError(ValueError):
     def __init__(self, message: str, *, unauthorized: bool = False):
         super().__init__(message)
         self.unauthorized = unauthorized
+
+
+def extract_tool_payloads(text: str) -> list[str]:
+    """Extract complete JSON values, correctly handling nested braces/quoted text."""
+    decoder = json.JSONDecoder()
+    payloads = []
+    cursor = 0
+    while True:
+        start = text.find(TOOL_OPEN, cursor)
+        if start < 0:
+            return payloads
+        value_start = start + len(TOOL_OPEN)
+        while value_start < len(text) and text[value_start].isspace():
+            value_start += 1
+        try:
+            _value, value_end = decoder.raw_decode(text, value_start)
+        except (json.JSONDecodeError, ValueError):
+            close = text.find(TOOL_CLOSE, value_start)
+            if close < 0:
+                return payloads
+            payloads.append(text[value_start:close])
+            cursor = close + len(TOOL_CLOSE)
+            continue
+        close_start = value_end
+        while close_start < len(text) and text[close_start].isspace():
+            close_start += 1
+        if text.startswith(TOOL_CLOSE, close_start):
+            payloads.append(text[value_start:value_end])
+            cursor = close_start + len(TOOL_CLOSE)
+            continue
+        close = text.find(TOOL_CLOSE, value_end)
+        if close < 0:
+            return payloads
+        payloads.append(text[value_start:close])
+        cursor = close + len(TOOL_CLOSE)
 
 
 def canonical(value: Any) -> bytes:
@@ -273,19 +307,19 @@ def run_episode(model, tokenizer, row: dict, spec: dict, grader, torch):
                      "input_tokens": int(encoded.shape[-1]), "generated_tokens": int(generated.numel()),
                      "generation_seconds": round(elapsed, 6),
                      "tool_calls": []}
-            matches = list(TOOL_RE.finditer(text))
-            unmatched_marker_count = max(0, text.count("<tool_call>") - len(matches))
+            payloads = extract_tool_payloads(text)
+            unmatched_marker_count = max(0, text.count(TOOL_OPEN) - len(payloads))
             if unmatched_marker_count:
                 counts["attempted"] += unmatched_marker_count
                 counts["malformed"] += unmatched_marker_count
                 entry["tool_calls"].extend({"valid": False, "error_type": "UnclosedToolCall",
                     "message": "tool-call marker was not closed", "raw": "<tool_call>"} for _ in range(unmatched_marker_count))
             parsed = []
-            for match in matches:
+            for raw in payloads:
                 counts["attempted"] += 1
                 try:
-                    name, args = _decode_arguments(json.loads(match.group(1)))
-                    parsed.append((name, args, match.group(1)))
+                    name, args = _decode_arguments(json.loads(raw))
+                    parsed.append((name, args, raw))
                 except Exception as exc:
                     counts["malformed"] += 1
                     if isinstance(exc, ToolCallError) and exc.unauthorized:
@@ -293,8 +327,8 @@ def run_episode(model, tokenizer, row: dict, spec: dict, grader, torch):
                         counts["unknown_or_unauthorized"] += 1
                     entry["tool_calls"].append({"valid": False, "error_type": type(exc).__name__,
                                                 "unauthorized": bool(isinstance(exc, ToolCallError) and exc.unauthorized),
-                                                "message": str(exc)[:200], "raw": match.group(1)[:500]})
-            if not matches:
+                                                "message": str(exc)[:200], "raw": raw[:500]})
+            if not payloads:
                 messages.append({"role": "assistant", "content": text})
                 transcript.append(entry)
                 if non_tool_retries < spec["generation"]["no_tool_reminders"]:

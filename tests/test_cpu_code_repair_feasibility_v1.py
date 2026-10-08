@@ -1,4 +1,5 @@
 import importlib.util
+import json
 from pathlib import Path
 import sys
 import unittest
@@ -69,6 +70,53 @@ class CpuCodeRepairFeasibilityTests(unittest.TestCase):
             runner._decode_arguments({"name": "read_file", "arguments": {"path": "src/solution.py", "extra": "x"}})
         with self.assertRaises(ValueError):
             runner._decode_arguments({"name": "not_a_tool", "arguments": {}})
+
+    def test_nested_tool_json_and_markup_inside_strings_parse_whole(self):
+        payload = {"name": "edit_file", "arguments": {"path": "src/solution.py",
+            "old_text": "return {'x': 1}", "new_text": "return '</tool_call>'"}}
+        output = "reasoning <tool_call>" + json.dumps(payload) + "</tool_call> done"
+        parsed = runner.extract_tool_payloads(output)
+        self.assertEqual(len(parsed), 1)
+        self.assertEqual(json.loads(parsed[0]), payload)
+        self.assertEqual(auditor.extract_calls_independently(output), parsed)
+
+    def test_bounded_episode_replays_edit_test_and_finish(self):
+        import torch
+
+        row = generator.generate_rows()[0]
+        fixed_source = auditor.known_fix(row)
+        def call(name, arguments):
+            return "<tool_call>" + json.dumps({"name": name, "arguments": arguments}) + "</tool_call>"
+
+        actions = [
+            call("list_files", {}) + call("read_file", {"path": "src/solution.py"}),
+            call("run_visible_tests", {}),
+            call("edit_file", {"path": "src/solution.py", "old_text": row["source"], "new_text": fixed_source}),
+            call("run_visible_tests", {}),
+            call("finish", {"summary": "Repaired the function and verified visible cases."}),
+        ]
+
+        class FakeTokenizer:
+            eos_token = "<eos>"
+            eos_token_id = 0
+            is_fast = True
+            def apply_chat_template(self, *args, **kwargs): return torch.tensor([[1]])
+            def decode(self, generated, **kwargs): return actions[int(generated[0])]
+
+        class FakeModel:
+            def __init__(self): self.index = 0
+            def generate(self, input_ids, **kwargs):
+                result = torch.cat([input_ids, torch.tensor([[self.index]])], dim=-1)
+                self.index += 1
+                return result
+
+        spec = json.loads((ROOT / "protocols/cpu_code_repair_feasibility_v1.json").read_text())
+        record = runner.run_episode(FakeModel(), FakeTokenizer(), row, spec, grader, torch)
+        self.assertTrue(record["episode_pass"])
+        self.assertTrue(record["finished"])
+        self.assertEqual(record["tool_metrics"]["attempted"], 6)
+        self.assertEqual(record["tool_metrics"]["accepted_edits"], 1)
+        self.assertEqual(record["tool_metrics"]["visible_test_runs"], 2)
 
     def test_path_traversal_and_symlinks_are_rejected(self):
         import tempfile

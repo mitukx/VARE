@@ -12,7 +12,6 @@ import ast
 import hashlib
 import json
 import math
-import re
 from pathlib import Path
 from typing import Any
 
@@ -20,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SPEC = ROOT / "protocols/cpu_code_repair_feasibility_v1.json"
 LOCK = ROOT / "protocols/cpu_code_repair_feasibility_v1.lock.json"
 DATA = ROOT / "data/cpu-code-repair-feasibility-v1/pilot.jsonl"
-TOOL_CALL = re.compile(r"<tool_call>\s*(\{.*?\})\s*</tool_call>", re.DOTALL)
+OPEN_TAG, CLOSE_TAG = "<tool_call>", "</tool_call>"
 SEED = 20261010
 FAMILY_BY_KIND = {
     "minimum_inclusive": "boundary", "half_open_range": "boundary",
@@ -40,6 +39,31 @@ def sha256(path: Path) -> str:
 
 def canonical(value: Any) -> bytes:
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+
+
+def extract_calls_independently(text: str) -> list[str]:
+    """Independent scanner using JSONDecoder boundaries, not the runner parser."""
+    calls = []
+    position = 0
+    while position < len(text):
+        opening = text.find(OPEN_TAG, position)
+        if opening == -1: break
+        begin = opening + len(OPEN_TAG)
+        while begin < len(text) and text[begin] in " \t\r\n": begin += 1
+        try:
+            _, end = json.JSONDecoder().raw_decode(text, begin)
+        except (json.JSONDecodeError, ValueError):
+            end_tag = text.find(CLOSE_TAG, begin)
+            if end_tag == -1: break
+            calls.append(text[begin:end_tag]); position = end_tag + len(CLOSE_TAG); continue
+        tail = end
+        while tail < len(text) and text[tail] in " \t\r\n": tail += 1
+        if text.startswith(CLOSE_TAG, tail):
+            calls.append(text[begin:end]); position = tail + len(CLOSE_TAG); continue
+        end_tag = text.find(CLOSE_TAG, end)
+        if end_tag == -1: break
+        calls.append(text[begin:end_tag]); position = end_tag + len(CLOSE_TAG)
+    return calls
 
 
 def read_json(path: Path):
@@ -317,9 +341,9 @@ def audit(bundle: Path):
                 turn["generated_tokens"] < 0 or turn["generated_tokens"] > spec["generation"]["max_new_tokens_per_turn"]):
                 raise ValueError("invalid token count")
             generated += turn["generated_tokens"]
-            matches = list(TOOL_CALL.finditer(raw_output))
-            attempted += raw_output.count("<tool_call>")
-            malformed += max(0, raw_output.count("<tool_call>") - len(matches))
+            matches = extract_calls_independently(raw_output)
+            attempted += raw_output.count(OPEN_TAG)
+            malformed += max(0, raw_output.count(OPEN_TAG) - len(matches))
             events = turn["tool_calls"]
             malformed += sum(event.get("valid") is False and event.get("error_type") != "UnclosedToolCall" for event in events)
             unsafe += sum(bool(event.get("unauthorized")) for event in events)
