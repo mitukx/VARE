@@ -4,6 +4,8 @@ VARE is a CPU-first research project for evaluating post-training signals and po
 
 The latest HH human-preference comparison tested length-normalized DPO against standard DPO and chosen-only SFT on a frozen CPU cohort. Length-normalized and standard DPO tied at 0.4974, below the frozen base at 0.5000 and length-only baseline at 0.5645; the decision was a non-pass. The runner hit a summary-aggregation `KeyError` after all nine adapters were saved; the retained adapters were replayed by the separate offline auditor, which passed selection, score, and decision checks. This is a preference-label comparison, not task success. Earlier HH reward-model v3 passed an outcome-informed score-scale NLL gate, but ranking accuracy stayed fixed and ECE worsened. Other real-model DPO/SFT/RLOO studies have not established downstream task gains; the GSM8K improvement is forced-choice NLL with accuracy near chance. Synthetic policy studies test mechanisms, not language-model capability. No general capability improvement or scale result is claimed.
 
+**Next study:** a no-update CPU feasibility screen for 32 fresh multi-turn generated code-repair tasks with an independent hidden-test grader. Training will proceed only if the frozen base model shows usable success and headroom within the resource budget. The alternatives, gates, and stop rules are documented in the [next-study decision](docs/next-study-decision-2026-10-09.md).
+
 ## Start here
 
 - [SNLI entailment base-feasibility screen](docs/cpu-snli-entailment-base-feasibility-v1-report.md): frozen CPU/offline no-update screen, audited non-pass, and claim limits.
@@ -23,6 +25,7 @@ The latest HH human-preference comparison tested length-normalized DPO against s
 - [GSM8K model study](docs/cpu-lm-gsm8k-dpo-confirmation-v1-report.md): protocol, per-seed outcomes, audit, and limits.
 - [Experiment index](docs/experiments.md): full study sequence and retained reports.
 - [Current evidence gaps](docs/current-gaps.md): what the results support and what remains open.
+- [Next-study decision](docs/next-study-decision-2026-10-09.md): a CPU-feasible candidate, alternatives, and frozen-screen stop rules.
 - [Generated arithmetic feasibility v1](docs/cpu-generated-arithmetic-feasibility-v1-report.md): a preregistered CPU-only base-rollout gate that failed before training.
 - [Evaluation runner walkthrough](docs/walkthrough.md): inspect the calibrated task runner and retained execution evidence.
 

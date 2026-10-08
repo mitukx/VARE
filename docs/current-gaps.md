@@ -59,8 +59,8 @@ These demonstrate narrow evaluation/reliability properties, two synthetic policy
 
 ## Immediate order
 
-1. Freeze and run the new model's base-only CPU feasibility screen before training: record BF16 support, actual memory, tokens/second, base exact-match, and resource-limit behavior on a fresh verifier task.
-2. If both task and resource gates pass, preregister matched outcome-reward RLOO/GRPO and successful-trace SFT, with untouched confirmation rows, multiple seeds, an independent oracle, and explicit gain/regression rules. If they fail, retire this candidate rather than lowering the gates.
+1. Freeze and run a base-only CPU feasibility screen for 32 fresh multi-turn generated code-repair tasks. Record hidden-test episode success, valid/invalid tool calls, CPU throughput, peak RSS, and resource-limit behavior. The selected model and stop rules are in the [next-study decision](next-study-decision-2026-10-09.md).
+2. If task, headroom, and resource gates pass, preregister one outcome-reward policy-optimization method against matched successful-trajectory SFT, with multiple seeds, an independent final-state oracle, and an untouched composition-held-out confirmation set. If they fail, retire this pairing rather than lowering the gates.
 3. Seek an external clean-clone reproduction and independent protocol review for completed real-model bundles; report reviewer identity/role only with consent.
 4. Keep the HH, GSM8K, BoolQ, generated arithmetic, and SNLI non-passes visible and retire consumed cohorts. Do not open their held-out confirmation/test rows or tune on them.
 5. Expand grader mutation coverage only when it supports a concrete task or trainer-integrity claim; keep per-case limits explicit.
