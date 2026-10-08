@@ -14,6 +14,16 @@ This page describes what the retained calibration artifacts establish and where 
 
 Earlier HF calibrations remain in [`results/`](../results/rvl-hf-behavior-policy-parity-v1/); v4 is current. The v3-to-v4 mutation carries inherited `suppress_tokens=[2]` and `no_repeat_ngram_size=2` into the generation config: v3 passes because its fixture does not simulate suppression, while v4 rejects it and the fixed source passes. The v4 fixture applies suppression to its deterministic logits and verifies the inherited fields are neutralized. The task covers only the listed fields; it is not a full Transformers logits-warper or real-model simulation.
 
+## Inherited `bad_words_ids` grader audit
+
+- Task: [brief](../benchmarks/historical/rvl_bad_words_neutrality/TASK.md), [descriptor](../benchmarks/historical/rvl_bad_words_neutrality/task.json), and [locked protocol](../benchmarks/historical/rvl_bad_words_neutrality/protocol.lock.json). It is a separate task so the prior v4 task and evidence remain immutable.
+- Protocol: `rvl-hf-bad-words-neutrality-protocol-v1`; retains v4's checks and adds single-token `bad_words_ids=[[2]]` to the inherited model config. The fixture applies it to logits and verifies the effective setting.
+- Calibration: pre-fix revision `e788f11` failed with maximum rollout/learner log-probability errors `0.5570354107080964` / `0.37112804442989056`; fixed revision `c7e646b` passed with both at `0.0` across six conditions each.
+- Mutation comparison: adding `bad_words_ids=[[2]]` to the fixed source passed the retained v4 grader and failed the added grader; the unmodified fixed source passed both. This demonstrates one uncovered setting, not a broad error rate.
+- Artifacts: [audit report](rvl-bad-words-report.md), [calibration summary](../results/rvl-hf-bad-words-neutrality-v1/cpu-calibration-v1/summary.json), [mutation summary](../results/rvl-hf-bad-words-neutrality-v1/mutation-audit-v2/summary.json), raw grades, patch, and manifests under [`results/rvl-hf-bad-words-neutrality-v1/`](../results/rvl-hf-bad-words-neutrality-v1/).
+- Resources: local CPU only; no model weights, packages, GPU, paid API, or external compute.
+- Limits: the fixture covers only single-token constraints and the mutation study is one constructed candidate. Multi-token bad words, other generation fields, real-model behavior, and a general false-acceptance rate remain unmeasured.
+
 ## TRL accumulation-window normalizer
 
 - Task: [brief](../benchmarks/historical/trl_grpo_accumulation_scale/TASK.md), [descriptor](../benchmarks/historical/trl_grpo_accumulation_scale/task.json), [locked protocol](../benchmarks/historical/trl_grpo_accumulation_scale/protocol.lock.json).
@@ -69,6 +79,7 @@ The fixed revisions are public historical changes used to validate the benchmark
 - Mutations: for each task, change the task descriptor, task brief, or grader in isolation while keeping the version-controlled protocol lock unchanged. All 6 of 6 cases are rejected with the expected hash-mismatch error.
 - Artifacts: [summary](../results/protocol-integrity/cpu-calibration-v1/summary.json), [control outputs](../results/protocol-integrity/cpu-calibration-v1/controls.json), [tamper outputs](../results/protocol-integrity/cpu-calibration-v1/tamper_cases.json), [hash manifest](../results/protocol-integrity/cpu-calibration-v1/manifest.json), [protocol and script snapshot](../results/protocol-integrity/cpu-calibration-v1/protocol_snapshot/).
 - The current task/evaluator set was rechecked separately: [v4 integrity summary](../results/protocol-integrity/cpu-calibration-v4/summary.json), [controls](../results/protocol-integrity/cpu-calibration-v4/controls.json) and [tamper cases](../results/protocol-integrity/cpu-calibration-v4/tamper_cases.json) retain two controls and six isolated mutations.
+- The latest [v5 integrity summary](../results/protocol-integrity/cpu-calibration-v5/summary.json), [controls](../results/protocol-integrity/cpu-calibration-v5/controls.json) and [tamper cases](../results/protocol-integrity/cpu-calibration-v5/tamper_cases.json) cover all three current historical tasks: three controls reached candidate validation and all 9/9 isolated descriptor, brief, and grader mutations were rejected.
 - Resources: local macOS arm64 / Python 3.9.6; no GitHub source fetch, model weights, third-party Python package, GPU, paid API, or external compute.
 - Trust boundary: the unchanged Git-versioned protocol lock is the trust anchor. This experiment does not authenticate a coordinated edit to the lock and does not provide OS isolation for candidate code. It establishes only that isolated changes to the descriptor, brief, or grader are detected.
 

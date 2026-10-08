@@ -15,6 +15,7 @@ VARE now retains an accepted, zero-cost synthetic preference-policy confirmation
 - **TRL grader mutation checks:** successive frozen audits found false accepts for branch-local rebinding, final-return rebinding, in-place loss mutation, direct-alias mutation, unreachable branches and zeroed policy-loss numerators. Protocol v8 rejects the early-return and zeroed-numerator mutations that v7 accepted, while accepting the unmodified fixed source across 12 arithmetic conditions. See the [v8 mutation comparison](results/trl-grpo-accumulation-window-normalizer-v1/grader-mutation-v8/summary.json), [frozen protocols and patches](benchmarks/audits/trl_loss_dataflow_v1/), and [v8 calibration](results/trl-grpo-accumulation-window-normalizer-v1/cpu-calibration-v8/summary.json). This remains a narrow source-structural check, not full trainer or gradient execution.
 
 - **RVL generation-setting mutation checks:** v3 rejects inherited non-neutral `typical_p`; v4 adds neutral `suppress_tokens` and `no_repeat_ngram_size` checks. A candidate that carries pretrained suppression through is accepted by v3 and rejected by v4, while the pinned fixed source passes v4. See the [v4 mutation evidence](results/rvl-hf-behavior-policy-parity-v1/generation-config-mutation-v4/summary.json) and [v4 calibration](results/rvl-hf-behavior-policy-parity-v1/cpu-calibration-v4/summary.json).
+- **Inherited `bad_words_ids` audit:** the existing v4 grader accepts one constructed candidate that adds a single-token bad-word constraint; the new locked CPU task rejects it while accepting the fixed source. The fixture covers one token-level case only. See the [audit report](docs/rvl-bad-words-report.md), [mutation comparison](results/rvl-hf-bad-words-neutrality-v1/mutation-audit-v2/summary.json), and [task calibration](results/rvl-hf-bad-words-neutrality-v1/cpu-calibration-v1/summary.json).
 
 - **Local CPU agent pilot:** the corrected v2 tool loop ran one small local model on one pinned task for three formal seeds. It made no source edits and the locked grader rejected all three unchanged checkouts. The original v1 cohort is invalidated because of a tool-history serialization bug. See the [pilot report](docs/local-agent-pilot.md).
 
@@ -68,13 +69,14 @@ Two real upstream fixes calibrate the task and grading path:
 | Task | What the grader exercises | Pre-fix result | Fixed result |
 | --- | --- | --- | --- |
 | [HF behavior-policy parity](benchmarks/historical/rvl_behavior_policy_parity/TASK.md) | Protocol v4 checks rollout probabilities and the learner's actual `_sample_objective` path with neutral sampling truncation, repetition, no-repeat-ngram, and token-suppression settings on CPU fixtures. | Maximum absolute rollout log-probability error `0.5570`; learner error `0.3711`; rejected. | Both errors `0.0`; accepted. |
+| [Inherited bad-word neutrality](benchmarks/historical/rvl_bad_words_neutrality/TASK.md) | A separate locked grader checks that single-token `bad_words_ids` does not alter the six CPU-fixture rollout conditions; it also preserves the v4 checks. | Maximum rollout error `0.5570`; learner error `0.3711`; rejected. | Both errors `0.0`; accepted. |
 | [TRL accumulation-window normalizer](benchmarks/historical/trl_grpo_accumulation_scale/TASK.md) | Protocol v8 executes six source-derived arithmetic cases in each of two trainer paths, checks masked numerator/returned-loss reachability, rejects later normalizer writes and unapproved loss mutations, and checks the selected denominator. | Maximum absolute normalizer error `12`; rejected. | Maximum error `0`; accepted. |
 
 The second task tracks the upstream [TRL issue](https://github.com/huggingface/trl/issues/5619) and [fix](https://github.com/huggingface/trl/pull/6024). The first uses a pinned fix in [Recursive-Verification-Lag](https://github.com/mitukx/Recursive-Verification-Lag).
 
-Raw grader outputs, summaries, protocol snapshots, and SHA-256 manifests are retained under [`results/`](results/). See the [evidence notes](docs/evidence.md) for exact revisions, metrics, and limits. Earlier HF protocol results remain as history; v4 is current.
+Raw grader outputs, summaries, protocol snapshots, and SHA-256 manifests are retained under [`results/`](results/). See the [evidence notes](docs/evidence.md) for exact revisions, metrics, and limits. Earlier HF protocol results remain as history; the separate bad-word task expands the covered settings without changing v4's lock.
 
-The separate [integrity calibration](results/protocol-integrity/cpu-calibration-v4/summary.json) changes the task descriptor, task brief, and grader one at a time for both current task protocols. All six changes are rejected against the unchanged protocol lock. The checked-in Git history is the trust anchor for that lock; this does not detect coordinated edits to the lock itself.
+The separate [integrity calibration](results/protocol-integrity/cpu-calibration-v5/summary.json) changes the task descriptor, task brief, and grader one at a time for all three locked historical task protocols. All nine changes are rejected against the unchanged protocol locks. The checked-in Git history is the trust anchor for those locks; this does not detect coordinated edits to a lock itself.
 
 The [local agent pilot](docs/local-agent-pilot.md) is one small-model, one-task negative result: the corrected formal cohort read the task source, but produced no accepted source edits. It does not characterize coding agents generally or establish successful task solving or generalization. The original v1 runs are invalidated and excluded from inference.
 
@@ -91,6 +93,13 @@ Run each calibration into a new directory outside the repository. The checked-in
 ```bash
 python3 scripts/calibrate_task.py \
   --output /tmp/vare-rvl-calibration
+
+python3 scripts/calibrate_task.py \
+  --task-root benchmarks/historical/rvl_bad_words_neutrality \
+  --output /tmp/vare-rvl-bad-words-calibration
+
+python3 scripts/audit_rvl_bad_words_mutation.py \
+  --output /tmp/vare-rvl-bad-words-mutation
 
 python3 scripts/calibrate_task.py \
   --task-root benchmarks/historical/trl_grpo_accumulation_scale \

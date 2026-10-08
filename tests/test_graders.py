@@ -11,6 +11,11 @@ from benchmarks.historical.rvl_behavior_policy_parity.evaluator.grade import (
     _Model as RVLModel,
     _Tensor as RVLTensor,
 )
+from benchmarks.historical.rvl_bad_words_neutrality.evaluator.grade import (
+    FIXTURE_CASES as BAD_WORD_FIXTURE_CASES,
+    _Model as BadWordsModel,
+    _Tensor as BadWordsTensor,
+)
 
 
 VALID_BRANCH = '''
@@ -227,6 +232,20 @@ class GraderIntegrityTests(unittest.TestCase):
         model.generate(input_ids=RVLTensor([prompt]), suppress_tokens=None, no_repeat_ngram_size=0)
         self.assertIsNone(model.effective_settings["suppress_tokens"])
         self.assertEqual(0, model.effective_settings["no_repeat_ngram_size"])
+        self.assertNotEqual(float("-inf"), model._transition[0])
+
+    def test_bad_words_fixture_masks_and_observes_inherited_single_token(self):
+        model = BadWordsModel(BAD_WORD_FIXTURE_CASES)
+        prompt = BAD_WORD_FIXTURE_CASES[0]["prompt_ids"]
+        model.generate(input_ids=BadWordsTensor([prompt]),
+                       bad_words_ids=model.generation_config.bad_words_ids)
+        self.assertEqual([[2]], model.effective_settings["bad_words_ids"])
+        self.assertEqual(float("-inf"), model._transition[0])
+
+        model.generate(input_ids=BadWordsTensor([prompt]), bad_words_ids=None,
+                       suppress_tokens=None, no_repeat_ngram_size=0,
+                       repetition_penalty=1.0, top_k=0, top_p=1.0, typical_p=1.0)
+        self.assertIsNone(model.effective_settings["bad_words_ids"])
         self.assertNotEqual(float("-inf"), model._transition[0])
 
 

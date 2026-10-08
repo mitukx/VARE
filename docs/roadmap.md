@@ -4,7 +4,7 @@ VARE should expand its claims only when the next evidence tier can be reproduced
 
 ## E0 — Harness integrity
 
-Both current task graders reject isolated mutations of the task descriptor, task brief, and evaluator against the unchanged protocol lock. The latest calibration has two untampered controls and six tamper cases; all controls reach candidate-file validation and all six mutations are rejected. See [`protocol-integrity/cpu-calibration-v4`](../results/protocol-integrity/cpu-calibration-v4/summary.json).
+All three current task graders reject isolated mutations of the task descriptor, task brief, and evaluator against the unchanged protocol lock. The latest calibration has three untampered controls and nine tamper cases; all controls reach candidate-file validation and all nine mutations are rejected. See [`protocol-integrity/cpu-calibration-v5`](../results/protocol-integrity/cpu-calibration-v5/summary.json).
 
 The trust anchor is the version-controlled protocol lock. This calibration does not authenticate a coordinated edit to the lock and does not sandbox hostile candidate code; those limits are explicit in the [evidence notes](evidence.md).
 
@@ -14,12 +14,13 @@ A separate [replay group regression](replay-group-freshness-report.md) found tha
 
 ## E1 — Historical task calibration
 
-Two pinned tasks now have calibrated pre-fix and fixed revisions:
+Three pinned tasks now have calibrated pre-fix and fixed revisions:
 
 1. [HF behavior-policy parity](../benchmarks/historical/rvl_behavior_policy_parity/TASK.md) checks rollout and learner probability parity with deterministic CPU fixtures. Protocol v3 added inherited `typical_p`; v4 adds `suppress_tokens` and `no_repeat_ngram_size`, applies suppression in the fixture, and rejects a candidate that v3 accepted.
-2. [TRL accumulation-window normalization](../benchmarks/historical/trl_grpo_accumulation_scale/TASK.md) checks extracted production loss-normalization branches with deterministic scalar fixtures, masked numerator and reachability guards, normalizer/loss write guards through return, direct aliases, and denominator matching. Protocol v7 accepted two mutations that v8 now rejects: an early return and a zeroed numerator. The pinned fixed source still passes. These cases do not estimate a general error rate.
+2. [Inherited bad-word neutrality](../benchmarks/historical/rvl_bad_words_neutrality/TASK.md) adds a separately locked single-token `bad_words_ids` CPU fixture without changing the v4 task. The mutation audit found one constructed candidate accepted by v4 and rejected by the new grader, while the fixed source passes both. This is one uncovered setting, not an error-rate estimate.
+3. [TRL accumulation-window normalization](../benchmarks/historical/trl_grpo_accumulation_scale/TASK.md) checks extracted production loss-normalization branches with deterministic scalar fixtures, masked numerator and reachability guards, normalizer/loss write guards through return, direct aliases, and denominator matching. Protocol v7 accepted two mutations that v8 now rejects: an early return and a zeroed numerator. The pinned fixed source still passes. These cases do not estimate a general error rate.
 
-Both graders reject the pre-fix revision and accept the known fixed revision. Their raw results, protocol snapshots, and hashes are retained in [`results/`](../results/) and summarized in [`evidence.md`](evidence.md). These outcomes calibrate the tasks and graders; they do not show that an agent can discover the fix or that a model improves.
+All three graders reject the pre-fix revision and accept the known fixed revision. Their raw results, protocol snapshots, and hashes are retained in [`results/`](../results/) and summarized in [`evidence.md`](evidence.md). These outcomes calibrate the tasks and graders; they do not show that an agent can discover the fix or that a model improves.
 
 ## E2 — Controlled post-training mechanism
 
@@ -51,7 +52,7 @@ Study repeated system-proposed interventions only after independent downstream e
 
 ## Current stop point
 
-The isolated-input E0 calibration, execution failure-injection checks, promotion-metric and replay-group regressions, bounded environment-command output v4 regression, and two E1 task/grader pairs are complete. Narrow E5 measurements cover local scheduling and durable freshness-check work. E2 has one accepted synthetic preference-policy confirmation alongside the preserved v1 diagnostic non-pass. The cached-model run adds evidence that a narrow output-head DPO-style update is feasible on local CPU, but its three-seed held-out result did not pass. Agent evidence is separately negative. Confirmatory E3 robustness, a reliable E4 model-level improvement, heterogeneous workload profiling, distributed systems evidence and E6 remain outstanding. No generalization or capability gain is claimed.
+The isolated-input E0 calibration, execution failure-injection checks, promotion-metric and replay-group regressions, bounded environment-command output v4 regression, and three E1 task/grader pairs are complete. The RVL mutation audit covers one constructed `bad_words_ids` case only. Narrow E5 measurements cover local scheduling and durable freshness-check work. E2 has one accepted synthetic preference-policy confirmation alongside the preserved v1 diagnostic non-pass. The cached-model run adds evidence that a narrow output-head DPO-style update is feasible on local CPU, but its three-seed held-out result did not pass. Agent evidence is separately negative. Confirmatory E3 robustness, a reliable E4 model-level improvement, heterogeneous workload profiling, distributed systems evidence and E6 remain outstanding. No generalization or capability gain is claimed.
 
 ## Restored experimental implementation
 

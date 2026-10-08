@@ -1,0 +1,38 @@
+{
+  "baseline_metrics": {
+    "max_rollout_abs_logprob_error": 0.5570354107080964,
+    "max_trainer_abs_logprob_error": 0.37112804442989056,
+    "rollout_conditions": 6,
+    "trainer_conditions": 6
+  },
+  "claim_limit": "This run calibrates one deterministic CPU grader on a real historical source change; it measures no agent, model learning, or capability gain.",
+  "fixed_metrics": {
+    "max_rollout_abs_logprob_error": 0.0,
+    "max_trainer_abs_logprob_error": 0.0,
+    "rollout_conditions": 6,
+    "trainer_conditions": 6
+  },
+  "fixed_revision": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "observed": {
+    "baseline_passed": false,
+    "calibration_passed": true
+  },
+  "pre_fix_revision": "e788f113ad6b246a361cd50a52eaf2867f2a66f8",
+  "protocol_id": "rvl-hf-bad-words-neutrality-protocol-v1",
+  "protocol_lock_sha256": "c4221e16d78e21b6ac273326e7078623c56b1517ac61b2473ba6d4e3a18687de",
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "model_weights_downloaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages": 0
+  },
+  "runtime": {
+    "created_at_utc": "2026-10-08T02:09:31.356389+00:00",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.9.6"
+  },
+  "schema_version": 1,
+  "status": "calibrated",
+  "task_id": "rvl-hf-bad-words-neutrality-v1"
+}

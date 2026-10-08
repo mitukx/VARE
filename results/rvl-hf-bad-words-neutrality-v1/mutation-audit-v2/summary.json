@@ -1,0 +1,37 @@
+{
+  "acceptance_passed": true,
+  "claim_limit": "One deterministic mutation shows that v4 did not cover bad_words_ids and v5 rejects this single-token case. It does not estimate grader error rates or cover multi-token constraints, every GenerationConfig field, agent performance, or model capability.",
+  "expected": {
+    "fixed_v4": true,
+    "fixed_v5": true,
+    "mutation_v4": true,
+    "mutation_v5": false
+  },
+  "mutation": "Set inherited bad_words_ids=[[2]] in the fixed generation configuration; token 2 is the first expected response token.",
+  "observed": {
+    "fixed_v4": true,
+    "fixed_v5": true,
+    "mutation_v4": true,
+    "mutation_v5": false
+  },
+  "protocols": {
+    "v4": "retained RVL behavior-policy parity protocol v4",
+    "v5": "rvl-hf-bad-words-neutrality-protocol-v1"
+  },
+  "resources": {
+    "accelerator_hours": 0,
+    "external_compute_usd": 0,
+    "model_weights_downloaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages": 0
+  },
+  "runtime": {
+    "created_at_utc": "2026-10-08T02:11:08.232924+00:00",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.9.6 (default, Dec  2 2025, 07:27:58) \n[Clang 17.0.0 (clang-1700.6.3.2)]"
+  },
+  "schema_version": 1,
+  "source_repository": "https://github.com/mitukx/Recursive-Verification-Lag.git",
+  "source_revision": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "study_id": "rvl-bad-words-grader-mutation-v1"
+}
