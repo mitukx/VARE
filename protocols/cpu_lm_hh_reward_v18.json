@@ -1,0 +1,101 @@
+{
+  "study_id": "cpu-lm-hh-reward-v18",
+  "status": "frozen-before-heldout-text-access",
+  "question": "Can a small pairwise reward model trained on human helpfulness preferences rank held-out chosen responses above rejected responses, beyond a response-length heuristic?",
+  "scope": {
+    "dataset": "Anthropic/hh-rlhf",
+    "dataset_revision": "09be8c5bbc57cb3887f3a9732ad6aa7ec602a1fa",
+    "subset": "helpful-base",
+    "license": "MIT",
+    "task": "predict which of two human-compared responses was preferred",
+    "explicitly_out_of_scope": [
+      "training or generating a dialogue policy",
+      "user utility or real-world helpfulness claims",
+      "safety claims",
+      "capability improvement claims"
+    ],
+    "privacy": "Do not write raw prompts, responses, or decoded examples into public artifacts."
+  },
+  "data_selection": {
+    "parser": "Parse the final Human context and final Assistant response from each transcript; reject empty responses or pairs whose context before the final Assistant turn differs byte-for-byte after line-ending normalization.",
+    "grouping": "Group candidate pairs by SHA256 of the normalized common context; each context may occur in only one split.",
+    "train": {
+      "source": "helpful-base/train.jsonl.gz",
+      "exclude_prompt_groups": "Exclude the 24 unique prompt groups with the lowest SHA256 of normalized common context among eligible rows, plus every group containing source train row indices 0, 1, 2, 17, 73, or 219 (pilot groups).",
+      "selection": "Rank all remaining unique prompt groups by SHA256('VARE-HH-V18-TRAIN-COHORT-v1-' + context_sha256). Assign consecutive blocks of 128 to seeds 41, 43, and 47 in that order. If any selected group has multiple valid pairs, use the valid source row with the lowest SHA256('VARE-HH-V18-PAIR-' + source_row_index).",
+      "seeds": [41, 43, 47],
+      "rows_per_seed": 128
+    },
+    "development": {
+      "source": "helpful-base/test.jsonl.gz",
+      "candidate_indices": "0 through 511, ordered by SHA256('VARE-HH-V18-DEV-' + row_index)",
+      "selection": "Scan candidate indices in that frozen order; skip invalid pairs, repeated contexts, and any context hash present in any training cohort; take the first 256 eligible pairs.",
+      "rows": 256
+    },
+    "confirmation": {
+      "source": "helpful-base/test.jsonl.gz",
+      "candidate_indices": "512 through 1023, ordered by SHA256('VARE-HH-V18-CONFIRM-' + row_index)",
+      "selection": "Scan only after a development pass; skip invalid pairs, repeated contexts, and any context hash present in any training or development cohort; take the first 256 eligible pairs.",
+      "rows": 256,
+      "must_not_be_opened_before_development_pass": true
+    },
+    "failure_rule": "If a split cannot supply its frozen count from its candidate pool, stop and report infeasibility without widening the pool or changing the rule."
+  },
+  "model": {
+    "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+    "base_model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "base_model_role": "Frozen CPU feature extractor; no language-model weights are updated.",
+    "feature": "Mean of final-layer hidden states at assistant response-content tokens only, with the shared conversation context included in causal context. Re-tokenize the shared context with the model chat template and generation prompt, append response-content tokens and the assistant turn terminator, and reject examples unless the resulting full tokenization has the exact prefix and response-token boundaries asserted by the runner.",
+    "reward_head": "One trainable linear scalar score over the frozen 896-dimensional response feature; no bias.",
+    "objective": "Pairwise logistic loss softplus(-(score_chosen - score_rejected)).",
+    "optimizer": "For each seed initialize the head weights from a zero-mean Normal distribution with standard deviation 0.01 using that seed. Train with full-batch mean pairwise logistic loss and vanilla gradient descent at learning rate 0.1 for epochs 1 through 200. Choose the epoch with lowest development pairwise NLL, breaking ties toward the earliest epoch.",
+    "normalization": "Normalize train features using train-only coordinate mean and standard deviation (floor standard deviation at 1e-6); apply unchanged to development and confirmation features."
+  },
+  "baselines": [
+    "uniform random choice (expected accuracy 0.5 and NLL ln(2))",
+    "choose the longer response; exact ties score 0.5"
+  ],
+  "metrics": [
+    "pairwise preference accuracy (ties count 0.5)",
+    "pairwise logistic NLL",
+    "Brier score",
+    "10-bin equal-width expected calibration error",
+    "paired per-example bootstrap 95% interval for reward-model accuracy minus the length baseline, resampling the 256 prompt groups and averaging the three seed-specific differences within each resample",
+    "wall time, peak RSS, runtime versions, and pinned input/model hashes"
+  ],
+  "development_gate": {
+    "mean_across_seeds_accuracy_at_least": 0.55,
+    "mean_across_seeds_nll_below": 0.68,
+    "accuracy_gain_over_length_at_least": 0.03,
+    "paired_bootstrap_95_percent_interval_lower_bound_above": 0.0,
+    "all_conditions_required": true,
+    "pass_interpretation": "candidate for the separately locked confirmation only"
+  },
+  "confirmation_gate": {
+    "mean_across_seeds_accuracy_at_least": 0.55,
+    "mean_across_seeds_nll_below": 0.68,
+    "accuracy_gain_over_length_at_least": 0.03,
+    "paired_bootstrap_95_percent_interval_lower_bound_above": 0.0,
+    "all_conditions_required": true,
+    "pass_interpretation": "evidence of held-out human-preference prediction on this dataset and task only"
+  },
+  "compute_limits": {
+    "device": "CPU only; CUDA must not be initialized",
+    "threads": 2,
+    "max_peak_rss_bytes": 6442450944,
+    "max_wall_seconds": 3600,
+    "offline": true,
+    "paid_compute": false
+  },
+  "reporting": {
+    "preserve_nonpasses_and_failures": true,
+    "publish_raw_dialogue_text": false,
+    "permitted_claim": "The frozen reward head did or did not rank human-preferred responses above rejected responses on the declared held-out subset.",
+    "forbidden_claims": [
+      "improves assistant quality",
+      "improves safety",
+      "improves model capability",
+      "generalizes beyond the declared dataset and protocol"
+    ]
+  }
+}
