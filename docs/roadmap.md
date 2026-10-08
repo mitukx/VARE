@@ -12,6 +12,8 @@ A separate [promotion-gate regression](promotion-gate-report.md) found that seve
 
 A separate [replay group regression](replay-group-freshness-report.md) found that freshness filtering returned a partial group when one member was stale. The fix drops that group while preserving independent fresh groups and per-item mode. This is one replay invariant test, not a learning or performance result.
 
+The RVL GRPO adapter now restores its saved incumbent after an injected partial candidate-training failure that mutates both model and optimizer state. Its regression also checks that the exception propagates and the next online rollout still uses the incumbent. This is a deterministic adapter-level correctness check; the external trainer implementation and uncatchable process-loss behavior are not covered.
+
 ## E1 — Historical task calibration
 
 Three pinned tasks now have calibrated pre-fix and fixed revisions:

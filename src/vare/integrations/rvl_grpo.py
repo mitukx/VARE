@@ -150,15 +150,33 @@ class RVLGRPOHooks:
             # Keep an immutable pre-update state even if a custom trainer mutates
             # nested optimizer structures during train_step.
             self._states[incumbent_id] = self.trainer.snapshot_training_state()
-            self.trainer.train_step(verified)
             candidate_id = f"policy-{self._counter}"
+            # Invalidate the loaded identity before the first in-place mutation.
+            # If training or candidate snapshotting raises, rollback must still
+            # restore the saved incumbent rather than trusting a stale ID.
+            self._loaded_id = None
+            try:
+                self.trainer.train_step(verified)
+                self._states[candidate_id] = self.trainer.snapshot_training_state()
+                # The candidate now describes the runtime; restore the champion
+                # before releasing the lock to online rollout/evaluation code.
+                self._loaded_id = candidate_id
+                self._restore(incumbent_id)
+            except BaseException:
+                self._states.pop(candidate_id, None)
+                # Force restoration even when an error happened after assigning
+                # candidate_id. _restore updates this marker only after the
+                # trainer confirms that restoration completed.
+                self._loaded_id = None
+                try:
+                    self._restore(incumbent_id)
+                except BaseException as restore_exc:
+                    raise RuntimeError(
+                        "candidate training failed and incumbent rollback failed; "
+                        "trainer state is unknown"
+                    ) from restore_exc
+                raise
             self._counter += 1
-            self._states[candidate_id] = self.trainer.snapshot_training_state()
-            # train_step mutates the shared runtime in-place; identity must move
-            # with the weights before rollback, otherwise _restore(incumbent)
-            # would incorrectly think the incumbent is already loaded.
-            self._loaded_id = candidate_id
-            self._restore(incumbent_id)
         return candidate_id
 
     async def evaluate(self, policy_id: str) -> EvaluationReport:
