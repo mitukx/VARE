@@ -234,9 +234,7 @@ def run(spec: dict[str, Any], spec_hash: str, model_dir: Path, output: Path) -> 
                 input_ids = batch["input_ids"].to("cpu")
                 attention = batch["attention_mask"].to("cpu")
                 lengths = attention.sum(dim=1) - 1
-                # Keep frozen activations as ordinary no-grad tensors. PyTorch inference tensors
-                # cannot be saved by autograd when the trainable head adapter consumes them.
-                with torch.no_grad():
+                with torch.inference_mode():
                     hidden_all = model.model(input_ids=input_ids, attention_mask=attention,
                                              use_cache=False).last_hidden_state
                     indices = torch.arange(hidden_all.shape[0])

@@ -47,6 +47,20 @@ def audit(root: Path) -> dict[str, Any]:
     if canonical(live_spec) != canonical(protocol) or live_lock.get("sha256") != protocol_hash:
         raise ValueError("bundle protocol differs from current repository lock")
 
+    failure_path = root / "failure.json"
+    if failure_path.is_file():
+        if (root / "summary.json").exists() or (root / "seed_records.json").exists():
+            raise ValueError("failed bundle must not contain success metrics")
+        failure = load(failure_path)
+        if "exception_type" not in failure or "message" not in failure:
+            raise ValueError("failure record is incomplete")
+        return {"status": "failed_attempt_preserved", "bundle": str(root),
+                "exception_type": failure["exception_type"], "message": failure["message"],
+                "elapsed_seconds": failure.get("elapsed_seconds"),
+                "peak_rss_bytes": failure.get("peak_rss_bytes"),
+                "files_verified": len(listed),
+                "interpretation": "No model-learning or held-out result is claimed from this failed attempt."}
+
     summary = load(root / "summary.json")
     if summary["protocol_sha256"] != protocol_hash:
         raise ValueError("summary protocol hash mismatch")
