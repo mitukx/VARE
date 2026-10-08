@@ -13,7 +13,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL = ROOT / "protocols/grpo_partial_audit_estimator_v1.json"
-LOCK = ROOT / "protocols/grpo_partial_audit_estimator_v1.lock.json"
+LOCK = ROOT / "protocols/grpo_partial_audit_estimator_v1_implementation_r1.lock.json"
+ERRATUM = ROOT / "protocols/grpo_partial_audit_estimator_v1_implementation_erratum_1.json"
 RUN = ROOT / "results/grpo-partial-audit-estimator-v1/run-1/exact-enumeration.json"
 OUT = ROOT / "results/grpo-partial-audit-estimator-v1/run-1/independent-audit.json"
 V = tuple(itertools.product((0, 1), repeat=4))
@@ -22,7 +23,7 @@ PIS = {
     1: (Fraction(1), Fraction(1, 4)),
     2: (Fraction(1), Fraction(1, 2), Fraction(1, 6)),
     3: (Fraction(1), Fraction(3, 4), Fraction(1, 2), Fraction(1, 4)),
-    4: (Fraction(1), Fraction(1), Fraction(1), Fraction(1)),
+    4: (Fraction(1), Fraction(1), Fraction(1), Fraction(1), Fraction(1)),
 }
 Pair = tuple[Fraction, Fraction]
 Z: Pair = (Fraction(0), Fraction(0))
@@ -206,6 +207,7 @@ def main() -> None:
     hashes = {"protocol_sha256": protocol_hash,
               "runner_sha256": hashlib.sha256((ROOT / "scripts/run_grpo_partial_audit_estimator_v1.py").read_bytes()).hexdigest(),
               "auditor_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
+    hashes["erratum_sha256"] = hashlib.sha256(ERRATUM.read_bytes()).hexdigest()
     if any(lock.get(key) != value for key, value in hashes.items()):
         raise SystemExit("frozen protocol or script hash mismatch")
     record = json.loads(RUN.read_text())

@@ -13,7 +13,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL = ROOT / "protocols/grpo_partial_audit_estimator_v1.json"
-LOCK = ROOT / "protocols/grpo_partial_audit_estimator_v1.lock.json"
+LOCK = ROOT / "protocols/grpo_partial_audit_estimator_v1_implementation_r1.lock.json"
+ERRATUM = ROOT / "protocols/grpo_partial_audit_estimator_v1_implementation_erratum_1.json"
 OUT = ROOT / "results/grpo-partial-audit-estimator-v1/run-1"
 BITS = tuple(itertools.product((0, 1), repeat=4))
 SUBSETS = {m: tuple(itertools.combinations(range(4), m)) for m in range(1, 5)}
@@ -68,7 +69,7 @@ PI = {
     1: {0: Fraction(1), 1: Fraction(1, 4)},
     2: {0: Fraction(1), 1: Fraction(1, 2), 2: Fraction(1, 6)},
     3: {0: Fraction(1), 1: Fraction(3, 4), 2: Fraction(1, 2), 3: Fraction(1, 4)},
-    4: {0: Fraction(1), 1: Fraction(1), 2: Fraction(1), 3: Fraction(1)},
+    4: {0: Fraction(1), 1: Fraction(1), 2: Fraction(1), 3: Fraction(1), 4: Fraction(1)},
 }
 
 
@@ -255,6 +256,7 @@ def main() -> None:
         "protocol_sha256": sha(PROTOCOL),
         "runner_sha256": sha(Path(__file__)),
         "auditor_sha256": sha(ROOT / "scripts/audit_grpo_partial_audit_estimator_v1.py"),
+        "erratum_sha256": sha(ERRATUM),
     }
     if any(lock.get(key) != value for key, value in expected.items()):
         raise SystemExit("frozen protocol or script hash differs from protocol lock")

@@ -1,0 +1,9 @@
+{
+  "protocol_id": "grpo_partial_audit_estimator_v1",
+  "erratum_id": "implementation_erratum_1",
+  "status": "frozen_before_valid_outcome_generation",
+  "original_protocol_sha256": "51029da94290d0f085b8c9437347f9a755d6b8ff9e241477a086633001def2e3",
+  "correction": "The m=4 estimator's inclusion probability for order-4 supports is pi=1. The original table omitted this entry even though the Walsh coefficient of order four is exactly zero for the frozen update. The runner/auditor lookup now includes the mathematically required entry.",
+  "scope": "No estimand, law grid, estimator, audit budget, metric, seed, or decision rule changed. The first frozen-run attempt stopped on the missing lookup before producing any outcome. The original frozen protocol remains unmodified.",
+  "failed_attempt_record": "results/grpo-partial-audit-estimator-v1/attempt-0-implementation-failure.json"
+}
