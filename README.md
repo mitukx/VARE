@@ -10,6 +10,7 @@ HH-RLHF v2 passed development but **failed its joint confirmation gate**: accura
 - [HH-RLHF reward-model v2](docs/hh-reward-model-v2-report.md): development pass, repeated confirmation accuracy gain, but no confirmed NLL improvement.
 - [HH-RLHF v2 post-hoc calibration diagnostic](docs/hh-reward-model-calibration-analysis.md): calibrated-versus-raw NLL on the already-opened confirmation bundle; exploratory only and does not change v2's non-pass.
 - [HH-RLHF v3 fixed-head calibration](docs/hh-reward-model-v3-development-report.md): development and fresh confirmation NLL gates passed, with same-host replay audits; the result is narrow and outcome-informed. [Confirmation report](docs/hh-reward-model-v3-confirmation-report.md).
+- [HH-RLHF v3 replay guide](docs/hh-reward-model-v3-reproduction.md): pinned assets, offline audit command, expected result, and reproduction limits.
 - [BoolQ v17 technical walkthrough](docs/boolq-v17-walkthrough.md): model update, objectives, selection rule, audits, and limits in one path.
 - [GSM8K model study](docs/cpu-lm-gsm8k-dpo-confirmation-v1-report.md): protocol, per-seed outcomes, audit, and limits.
 - [Experiment index](docs/experiments.md): full study sequence and retained reports.
