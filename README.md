@@ -35,6 +35,8 @@ Start with the [ten-minute walkthrough](docs/walkthrough.md), [technical report]
 
 The [post-training plan](docs/post-training-plan.md) defines the no-cost learning experiments and their claim limits. The [current evidence gaps](docs/current-gaps.md) rank the remaining CPU-feasible work and state what the retained results support. [`cpu_lm_dpo_head_v1`](protocols/cpu_lm_dpo_head_v1.lock.json) freezes the bounded no-download model-level preference update; its result and first failed attempt are retained separately.
 
+For a visual, read-only view of the retained experiments, serve [`ui/`](ui/) locally with the steps in [`docs/internal-workbench.md`](docs/internal-workbench.md). The interface reads committed JSON evidence and has no experiment submission/backend path.
+
 If the exact model snapshot and compatible `torch`, `transformers`, and `numpy` packages are already installed locally, run the frozen study with:
 
 ```bash
