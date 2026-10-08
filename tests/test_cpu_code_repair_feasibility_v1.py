@@ -81,7 +81,7 @@ class CpuCodeRepairFeasibilityTests(unittest.TestCase):
         self.assertEqual(auditor.extract_calls_independently(output), parsed)
 
     def test_bounded_episode_replays_edit_test_and_finish(self):
-        import torch
+        from contextlib import nullcontext
 
         row = generator.generate_rows()[0]
         fixed_source = auditor.known_fix(row)
@@ -96,22 +96,37 @@ class CpuCodeRepairFeasibilityTests(unittest.TestCase):
             call("finish", {"summary": "Repaired the function and verified visible cases."}),
         ]
 
+        class FakeTensor:
+            def __init__(self, rows): self.rows = rows
+            @property
+            def shape(self): return (len(self.rows), len(self.rows[0]))
+            def to(self, _device): return self
+            def numel(self): return sum(len(row) for row in self.rows)
+            def __getitem__(self, key):
+                if isinstance(key, tuple):
+                    row, column = key
+                    return FakeTensor([self.rows[row][column]])
+                return self.rows[key][0]
+
         class FakeTokenizer:
             eos_token = "<eos>"
             eos_token_id = 0
             is_fast = True
-            def apply_chat_template(self, *args, **kwargs): return torch.tensor([[1]])
-            def decode(self, generated, **kwargs): return actions[int(generated[0])]
+            def apply_chat_template(self, *args, **kwargs): return FakeTensor([[1]])
+            def decode(self, generated, **kwargs): return actions[int(generated.rows[0][0])]
 
         class FakeModel:
             def __init__(self): self.index = 0
             def generate(self, input_ids, **kwargs):
-                result = torch.cat([input_ids, torch.tensor([[self.index]])], dim=-1)
+                result = FakeTensor([input_ids.rows[0] + [self.index]])
                 self.index += 1
                 return result
 
+        class FakeTorch:
+            inference_mode = staticmethod(nullcontext)
+
         spec = json.loads((ROOT / "protocols/cpu_code_repair_feasibility_v1.json").read_text())
-        record = runner.run_episode(FakeModel(), FakeTokenizer(), row, spec, grader, torch)
+        record = runner.run_episode(FakeModel(), FakeTokenizer(), row, spec, grader, FakeTorch())
         self.assertTrue(record["episode_pass"])
         self.assertTrue(record["finished"])
         self.assertEqual(record["tool_metrics"]["attempted"], 6)
