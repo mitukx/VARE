@@ -1,0 +1,24 @@
+{
+  "candidate_files": [
+    "src/vare/environments/runner.py",
+    "src/vare/environments/spec.py",
+    "src/vare/evidence.py"
+  ],
+  "expected_calibration": {
+    "baseline_passed": false,
+    "fixed_passed": true
+  },
+  "frozen_before_baseline_measurement": true,
+  "interpretation_limit": "One deterministic local CPU output-budget regression; no hostile-code sandbox or hard memory quota claim.",
+  "locked_hashes": {
+    "evaluator_sha256": "54434267c52b1c1fb0cacc9323c97d7730857452242bb0f8e5b9633f6c9f8f6f",
+    "task_brief_sha256": "ae4a06f198b2fbb7c34db9f96300fe4fa0a0877553207cc5eea8cccf87322521",
+    "task_json_sha256": "579e3beedec82dcc91fa435fc18c0455aa35ffcd8f42b14e4ac0fca859554c54"
+  },
+  "protocol_id": "vare-environment-command-output-budget-v2",
+  "schema_version": 1,
+  "source_base_revision": "410e5321ab762c89ada970de1b41d2aacf99d88a",
+  "supersedes": "vare-environment-command-output-budget-v1",
+  "supersedes_reason": "Protocol v1 removed the marker directory before checking whether a descendant had written it; v2 records marker state before temporary cleanup.",
+  "task_id": "vare-environment-command-output-budget-v2"
+}

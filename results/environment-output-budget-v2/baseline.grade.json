@@ -1,0 +1,28 @@
+{
+  "checks": {
+    "normal_command_passes": true,
+    "normal_not_limited": true,
+    "not_timeout": true,
+    "overflow_flag": false,
+    "overflow_not_passed": false,
+    "posix_child_reaped": false,
+    "stderr_bounded": true,
+    "stdout_bounded": true
+  },
+  "claim_limit": "One deterministic local CPU resource-control regression; not a hostile-code sandbox or hard memory quota.",
+  "normal": {
+    "passed": true,
+    "returncode": 0,
+    "stdout": "ok\n"
+  },
+  "overflow": {
+    "output_limited": false,
+    "returncode": 0,
+    "stderr_bytes_retained": 128,
+    "stdout_bytes_retained": 128,
+    "timed_out": false
+  },
+  "passed": false,
+  "schema_version": 1,
+  "task_id": "vare-environment-command-output-budget-v2"
+}

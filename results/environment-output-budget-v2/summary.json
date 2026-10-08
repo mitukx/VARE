@@ -1,0 +1,44 @@
+{
+  "baseline_checks": {
+    "normal_command_passes": true,
+    "normal_not_limited": true,
+    "not_timeout": true,
+    "overflow_flag": false,
+    "overflow_not_passed": false,
+    "posix_child_reaped": false,
+    "stderr_bounded": true,
+    "stdout_bounded": true
+  },
+  "baseline_passed": false,
+  "baseline_revision": "410e5321ab762c89ada970de1b41d2aacf99d88a",
+  "fixed_candidate_runner_sha256": "95f34358b76712384ce8e92b5810fbc32fd511c3538b0c0840ffe0328f8858cf",
+  "fixed_checks": {
+    "normal_command_passes": true,
+    "normal_not_limited": true,
+    "not_timeout": true,
+    "overflow_flag": true,
+    "overflow_not_passed": true,
+    "posix_child_reaped": true,
+    "stderr_bounded": true,
+    "stdout_bounded": true
+  },
+  "fixed_passed": true,
+  "host": {
+    "architecture": "arm64",
+    "os": "macOS",
+    "python": "3.12.12"
+  },
+  "limits": "The v2 fixture triggers on stdout first; it does not independently establish stderr-only overflow behavior. It is a bounded local regression, not a hostile-code sandbox or hard memory quota.",
+  "observed": {
+    "baseline_command_was_accepted": true,
+    "baseline_output_limit_flag": false,
+    "descendant_marker_written": false,
+    "fixed_command_rejected": true,
+    "fixed_output_limit_flag": true,
+    "fixed_stderr_bytes_retained": 0,
+    "fixed_stdout_bytes_retained": 128
+  },
+  "protocol_id": "vare-environment-command-output-budget-v2",
+  "resources": "Local CPU only; no model, GPU, paid API, or external compute.",
+  "task_id": "vare-environment-command-output-budget-v2"
+}

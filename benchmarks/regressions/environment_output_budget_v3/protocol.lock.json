@@ -1,0 +1,24 @@
+{
+  "candidate_files": [
+    "src/vare/environments/runner.py",
+    "src/vare/environments/spec.py",
+    "src/vare/evidence.py"
+  ],
+  "expected_calibration": {
+    "baseline_passed": false,
+    "fixed_passed": true
+  },
+  "frozen_before_baseline_measurement": true,
+  "interpretation_limit": "One deterministic local CPU output-budget regression; no hostile-code sandbox or hard memory quota claim.",
+  "locked_hashes": {
+    "evaluator_sha256": "65f28b97845aeb27815001f4a9ee4f1de2718d908e67a4d1e53b1dc106fa3898",
+    "task_brief_sha256": "8e03e9ef8ad79b9e91e3d470d5a59bec6b3683946f642e806dec2201e0ee7311",
+    "task_json_sha256": "b7c36a6252c17cf6b957c218bdfa9a66985c12e26f44f78b542f9e0778e6562c"
+  },
+  "protocol_id": "vare-environment-command-output-budget-v3",
+  "schema_version": 1,
+  "source_base_revision": "410e5321ab762c89ada970de1b41d2aacf99d88a",
+  "supersedes": "vare-environment-command-output-budget-v2",
+  "supersedes_reason": "Protocol v2 exercised stdout overflow first and did not independently exercise stderr-only overflow; v3 checks each stream independently.",
+  "task_id": "vare-environment-command-output-budget-v3"
+}
