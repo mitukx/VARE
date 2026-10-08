@@ -2,14 +2,14 @@
 
 VARE is a CPU-first research project for evaluating post-training signals and policy updates under limited compute. It combines frozen experiment protocols, independently checked outcomes, provenance-aware execution, and retained raw records.
 
-The latest human-preference study passed its development gate but **did not pass confirmation**: the accuracy signal repeated, while the NLL interval crossed zero. The latest matched policy-update comparison remains BoolQ v17, where all three methods missed the frozen task-gain gate. A generated-arithmetic rollout feasibility pilot also failed its predeclared base-accuracy gate (1/64); no training or confirmation followed. The strongest completed positive model result remains a narrow verifier-labeled answer-choice NLL improvement; accuracy remained near chance. Synthetic policy studies test mechanisms, not language-model capability. No general capability improvement or scale result is claimed.
+HH-RLHF v2 passed development but **failed its joint confirmation gate**: accuracy repeated while the NLL interval crossed zero. An outcome-informed fixed-head follow-up v3 has since passed its development NLL gate and local replay audit; its fresh confirmation is still sealed. The latest matched policy-update comparison remains BoolQ v17, where all three methods missed the frozen task-gain gate. A generated-arithmetic rollout feasibility pilot also failed its predeclared base-accuracy gate (1/64); no training or confirmation followed. The strongest completed positive model result remains a narrow verifier-labeled answer-choice NLL improvement; accuracy remained near chance. Synthetic policy studies test mechanisms, not language-model capability. No general capability improvement or scale result is claimed.
 
 ## Start here
 
 - [Latest BoolQ study](docs/boolq-posttraining-development-v17-report.md): matched DPO, SFT, and anchored-DPO comparison, including its failed advancement gate.
 - [HH-RLHF reward-model v2](docs/hh-reward-model-v2-report.md): development pass, repeated confirmation accuracy gain, but no confirmed NLL improvement.
 - [HH-RLHF v2 post-hoc calibration diagnostic](docs/hh-reward-model-calibration-analysis.md): calibrated-versus-raw NLL on the already-opened confirmation bundle; exploratory only and does not change v2's non-pass.
-- [HH-RLHF v3 fixed-head calibration protocol](docs/hh-reward-model-v3-protocol.md): fresh replication protocol, frozen and not yet run.
+- [HH-RLHF v3 fixed-head calibration development](docs/hh-reward-model-v3-development-report.md): development gate and independent local replay passed; fresh confirmation remains sealed.
 - [BoolQ v17 technical walkthrough](docs/boolq-v17-walkthrough.md): model update, objectives, selection rule, audits, and limits in one path.
 - [GSM8K model study](docs/cpu-lm-gsm8k-dpo-confirmation-v1-report.md): protocol, per-seed outcomes, audit, and limits.
 - [Experiment index](docs/experiments.md): full study sequence and retained reports.

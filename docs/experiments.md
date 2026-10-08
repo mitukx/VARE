@@ -6,7 +6,7 @@ VARE's experimental focus is post-training signal quality and policy updates und
 
 A post-hoc secondary analysis on the already-opened v2 confirmation cohort found calibrated-minus-raw pairwise NLL of −0.1943 (paired 95% prompt bootstrap interval [−0.2669, −0.1277]). It does not change the v2 non-pass and is not confirmatory; the exact method, hashes, output and limits are in the [diagnostic note](hh-reward-model-calibration-analysis.md).
 
-The outcome-informed fixed-head follow-up is now frozen as [HH-RLHF v3](../protocols/cpu_hh_reward_model_v3.lock.json), with fresh train-context exclusions and sealed test blocks `[1536,2048)` / `[2048,2354)`. It has not run. No new HH test rows have been opened.
+The outcome-informed fixed-head follow-up is frozen as [HH-RLHF v3](../protocols/cpu_hh_reward_model_v3.lock.json), with fresh train-context exclusions and sealed test blocks `[1536,2048)` / `[2048,2354)`. Its development stage used all 512 eligible contexts and passed the −0.10-nat ΔNLL gate; an independent same-host audit replay passed. Confirmation rows `[2048,2354)` have not been opened. See the [development report](hh-reward-model-v3-development-report.md) and [audited bundle](../results/cpu-hh-reward-model-v3/development/run-1/).
 
 The generated arithmetic feasibility pilot is a separate train-only non-pass: the pinned 0.5B model answered 1/64 examples correctly, below the frozen minimum of 8. Its independent record audit passed, but the task gate failed, so no model update or confirmation was run. See the [report](cpu-generated-arithmetic-feasibility-v1-report.md), [protocol](../protocols/cpu_generated_arithmetic_feasibility_v1.lock.json), and [retained bundle](../results/cpu-generated-arithmetic-feasibility-v1/run-1/).
 
