@@ -1,0 +1,268 @@
+{
+  "arms": {
+    "dpo": {
+      "decision": "sequence_dpo_development_non_pass",
+      "mean_balanced_accuracy": 0.6349780418496512,
+      "mean_exact_match": 0.6171875,
+      "mean_token_kl": 0.4872812893921316,
+      "per_seed_exact_match": [
+        0.64453125,
+        0.57421875,
+        0.6328125
+      ],
+      "preference_accuracy": 0.703125,
+      "selected_class_metrics_by_seed": [
+        {
+          "balanced_accuracy": 0.6694006716610694,
+          "by_label": {
+            "no": {
+              "accuracy": 0.7755102040816326,
+              "correct": 76,
+              "support": 98
+            },
+            "yes": {
+              "accuracy": 0.5632911392405063,
+              "correct": 89,
+              "support": 158
+            }
+          },
+          "examples": 256,
+          "parse_rate": 1.0
+        },
+        {
+          "balanced_accuracy": 0.5775639369671919,
+          "by_label": {
+            "no": {
+              "accuracy": 0.5918367346938775,
+              "correct": 58,
+              "support": 98
+            },
+            "yes": {
+              "accuracy": 0.5632911392405063,
+              "correct": 89,
+              "support": 158
+            }
+          },
+          "examples": 256,
+          "parse_rate": 0.86328125
+        },
+        {
+          "balanced_accuracy": 0.6579695169206923,
+          "by_label": {
+            "no": {
+              "accuracy": 0.7653061224489796,
+              "correct": 75,
+              "support": 98
+            },
+            "yes": {
+              "accuracy": 0.5506329113924051,
+              "correct": 87,
+              "support": 158
+            }
+          },
+          "examples": 256,
+          "parse_rate": 0.99609375
+        }
+      ],
+      "selected_epoch": 1,
+      "validation_preference_nll": 0.6113676237362148
+    },
+    "dpo_sft_anchor": {
+      "decision": "sequence_dpo_development_non_pass",
+      "mean_balanced_accuracy": 0.6725652286230948,
+      "mean_exact_match": 0.6484375,
+      "mean_token_kl": 0.0,
+      "per_seed_exact_match": [
+        0.6484375,
+        0.6484375,
+        0.6484375
+      ],
+      "preference_accuracy": 0.5,
+      "selected_class_metrics_by_seed": [
+        {
+          "balanced_accuracy": 0.6725652286230948,
+          "by_label": {
+            "no": {
+              "accuracy": 0.7755102040816326,
+              "correct": 76,
+              "support": 98
+            },
+            "yes": {
+              "accuracy": 0.569620253164557,
+              "correct": 90,
+              "support": 158
+            }
+          },
+          "examples": 256,
+          "parse_rate": 1.0
+        },
+        {
+          "balanced_accuracy": 0.6725652286230948,
+          "by_label": {
+            "no": {
+              "accuracy": 0.7755102040816326,
+              "correct": 76,
+              "support": 98
+            },
+            "yes": {
+              "accuracy": 0.569620253164557,
+              "correct": 90,
+              "support": 158
+            }
+          },
+          "examples": 256,
+          "parse_rate": 1.0
+        },
+        {
+          "balanced_accuracy": 0.6725652286230948,
+          "by_label": {
+            "no": {
+              "accuracy": 0.7755102040816326,
+              "correct": 76,
+              "support": 98
+            },
+            "yes": {
+              "accuracy": 0.569620253164557,
+              "correct": 90,
+              "support": 158
+            }
+          },
+          "examples": 256,
+          "parse_rate": 1.0
+        }
+      ],
+      "selected_epoch": 0,
+      "validation_preference_nll": 0.6931471805599453
+    },
+    "sft": {
+      "decision": "sequence_dpo_development_non_pass",
+      "mean_balanced_accuracy": 0.6725652286230948,
+      "mean_exact_match": 0.6484375,
+      "mean_token_kl": 0.0,
+      "per_seed_exact_match": [
+        0.6484375,
+        0.6484375,
+        0.6484375
+      ],
+      "preference_accuracy": 0.5,
+      "selected_class_metrics_by_seed": [
+        {
+          "balanced_accuracy": 0.6725652286230948,
+          "by_label": {
+            "no": {
+              "accuracy": 0.7755102040816326,
+              "correct": 76,
+              "support": 98
+            },
+            "yes": {
+              "accuracy": 0.569620253164557,
+              "correct": 90,
+              "support": 158
+            }
+          },
+          "examples": 256,
+          "parse_rate": 1.0
+        },
+        {
+          "balanced_accuracy": 0.6725652286230948,
+          "by_label": {
+            "no": {
+              "accuracy": 0.7755102040816326,
+              "correct": 76,
+              "support": 98
+            },
+            "yes": {
+              "accuracy": 0.569620253164557,
+              "correct": 90,
+              "support": 158
+            }
+          },
+          "examples": 256,
+          "parse_rate": 1.0
+        },
+        {
+          "balanced_accuracy": 0.6725652286230948,
+          "by_label": {
+            "no": {
+              "accuracy": 0.7755102040816326,
+              "correct": 76,
+              "support": 98
+            },
+            "yes": {
+              "accuracy": 0.569620253164557,
+              "correct": 90,
+              "support": 158
+            }
+          },
+          "examples": 256,
+          "parse_rate": 1.0
+        }
+      ],
+      "selected_epoch": 0,
+      "validation_preference_nll": 0.6931471805599453
+    }
+  },
+  "base_class_metrics": {
+    "balanced_accuracy": 0.6725652286230948,
+    "by_label": {
+      "no": {
+        "accuracy": 0.7755102040816326,
+        "correct": 76,
+        "support": 98
+      },
+      "yes": {
+        "accuracy": 0.569620253164557,
+        "correct": 90,
+        "support": 158
+      }
+    },
+    "examples": 256,
+    "parse_rate": 1.0
+  },
+  "claim_boundary": "Development-only; checkpoints are selected on this validation cohort. Intervals are descriptive, not independent confirmation or capability evidence.",
+  "comparison": "matched_boolq_dpo_sft_anchor_development",
+  "paired_question_comparisons": {
+    "anchor_minus_dpo": {
+      "mean_exact_match_difference": 0.03125000000000001,
+      "question_bootstrap_95_percent_interval": [
+        0.018229166666666668,
+        0.04557291666666667
+      ],
+      "questions_better_tied_worse": {
+        "better": 24,
+        "tied": 230,
+        "worse": 2
+      }
+    },
+    "anchor_minus_sft": {
+      "mean_exact_match_difference": 0.0,
+      "question_bootstrap_95_percent_interval": [
+        0.0,
+        0.0
+      ],
+      "questions_better_tied_worse": {
+        "better": 0,
+        "tied": 256,
+        "worse": 0
+      }
+    },
+    "dpo_minus_sft": {
+      "mean_exact_match_difference": -0.03125000000000001,
+      "question_bootstrap_95_percent_interval": [
+        -0.04557291666666667,
+        -0.018229166666666668
+      ],
+      "questions_better_tied_worse": {
+        "better": 2,
+        "tied": 230,
+        "worse": 24
+      }
+    }
+  },
+  "seeds": [
+    5701,
+    5801,
+    5903
+  ],
+  "validation_questions": 256
+}

@@ -34,7 +34,9 @@ The next locked probe directly compares SFT and anchored DPO on 64 fresh trainin
 
 That [v15 direct replication](docs/cpu-lm-gsm8k-posttraining-development-v15-report.md) did not pass: base and anchored DPO both scored 7/256, while SFT scored 6.33/256. Base was below the frozen 8/256 floor; audits and paired-data checks passed. The repeated GSM8K setup has not shown a stable free-form improvement, and no confirmation was opened.
 
-The next frozen [v16 study](docs/boolq-posttraining-study.md) changes the task to passage-grounded Yes/No reading comprehension and selects checkpoints by class-balanced accuracy. It compares DPO, SFT and anchored DPO on fresh rows with offline audits; no results have been generated yet.
+The frozen [v16 study plan](docs/boolq-posttraining-study.md) changed the task to passage-grounded Yes/No reading comprehension and selected checkpoints by class-balanced accuracy. It compared DPO, SFT and anchored DPO on fresh rows with offline audits.
+
+The [v16 result](docs/boolq-posttraining-development-v16-report.md) is a non-pass. Base balanced accuracy was 67.26%; DPO fell to 63.50% despite improved preference NLL. SFT and anchored DPO had no checkpoint under the frozen KL cap. All audits passed and no confirmation data was opened.
 
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
 

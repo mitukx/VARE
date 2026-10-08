@@ -29,12 +29,21 @@ def compare(dpo_dir: Path, sft_dir: Path, anchor_dir: Path):
         if ref["summary"]["base_validation_class_metrics"]!=data["summary"]["base_validation_class_metrics"]:
             raise ValueError(f"paired runs differ in base class metrics: {method}")
     base=ref["summary"]["base_validation_class_metrics"]
+    validation_indices=[row["dataset_index"] for row in ref["validation_examples"]]
+    for method,data in zip(methods,runs):
+        summary=data["summary"]
+        if [row["dataset_index"] for row in summary["base_validation_generation"]] != validation_indices:
+            raise ValueError(f"base validation generations are misaligned: {method}")
+        for item in summary["selected_adapters_and_generation"]:
+            if [row["dataset_index"] for row in item["generated_validation"]] != validation_indices:
+                raise ValueError(f"selected generations are misaligned: {method}/{item['seed']}")
     qmat={method:question_success(data) for method,data in zip(methods,runs)}
     if len({len(x) for x in qmat.values()})!=1: raise ValueError("validation generation lengths differ")
     def arm(data):
         s=data["summary"]; epoch=str(s["selected_epochs"]); ck=s["checkpoint_summary"][epoch]
         return {"decision":s["decision"],"selected_epoch":s["selected_epochs"],
             "mean_exact_match":s["selected_mean_exact_match_accuracy"],
+            "mean_balanced_accuracy":s["selected_mean_balanced_accuracy"],
             "validation_preference_nll":ck["mean_validation_dpo_preference_nll"],
             "preference_accuracy":ck["mean_validation_preference_accuracy"],
             "mean_token_kl":ck["mean_validation_token_kl_to_base"],
