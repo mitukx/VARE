@@ -95,6 +95,14 @@ jobs:
         run: >-
           python3 scripts/audit_synthetic_dpo_v2.py
           "${RUNNER_TEMP}/vare-synthetic-dpo-v2-confirmation"
+      - name: Run frozen preference noise and shift study
+        run: >-
+          python3 scripts/run_synthetic_preference_robustness.py
+          --output "${RUNNER_TEMP}/vare-synthetic-preference-robustness-v1"
+      - name: Reconstruct and audit preference noise and shift study
+        run: >-
+          python3 scripts/audit_synthetic_preference_robustness.py
+          "${RUNNER_TEMP}/vare-synthetic-preference-robustness-v1"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: vare-current-regression-calibrations
@@ -129,5 +137,11 @@ jobs:
         with:
           name: vare-synthetic-dpo-v2-confirmation
           path: ${{ runner.temp }}/vare-synthetic-dpo-v2-confirmation
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: vare-synthetic-preference-robustness-v1
+          path: ${{ runner.temp }}/vare-synthetic-preference-robustness-v1
           if-no-files-found: error
           retention-days: 30
