@@ -39,3 +39,5 @@ python3 scripts/run_cpu_hh_reward_model.py \
   --development-audit results/cpu-hh-reward-model-v1/development/run-1/audit.json
 python3 scripts/audit_cpu_hh_reward_model.py results/cpu-hh-reward-model-v1/confirmation/run-1
 ```
+
+The auditor independently rebuilds the selected train/evaluation indices, exclusions, token counts, metrics, bootstrap intervals and gate. The bundle intentionally omits hidden-state features and fitted reward-head coefficients, so this audit does not independently rerun the transformer forward pass or fit; the recorded margins remain runner-produced evidence.
