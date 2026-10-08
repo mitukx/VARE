@@ -16,6 +16,8 @@ The reduced [v6 run](docs/cpu-lm-gsm8k-sequence-dpo-development-v6-report.md) st
 
 One numeric-only setup attempt stopped before inference because its batch size violated the decoder's unpadded-input requirement. It is retained as a [setup failure](docs/cpu-lm-gsm8k-sequence-dpo-development-v7-setup-failure.md); the follow-up uses single-prompt generation on fresh rows.
 
+The audited numeric-only [v8 run](docs/cpu-lm-gsm8k-sequence-dpo-development-v8-report.md) lowered preference NLL but failed the nonzero-baseline gate: base exact-match was 0/32 and updated seeds were 1/32, 0/32, and 0/32. This single updated answer is not enough to support an improvement claim. A larger fresh development cohort is next.
+
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
 
 ## Post-training results
