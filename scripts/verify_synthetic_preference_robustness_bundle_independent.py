@@ -10,12 +10,13 @@ human reproduction; see the report for this verifier's scope.
 from __future__ import annotations
 
 import argparse
-import bisect
 import hashlib
 import json
 import math
+import platform
 import random
 import statistics
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -202,8 +203,7 @@ def audit(bundle: Path) -> dict[str, Any]:
     expected_eval = data["heldout_contexts"] * data["comparisons_per_heldout_context"]
     seed_metrics = {arm: {condition: [] for condition in ("base_teacher", "shifted_teacher")}
                     for arm in ("reference", "clean", "flip_20pct", "flip_40pct")}
-    improvements, max_context_error = [], 0
-    train_context_counts, heldout_context_counts = set(), set()
+    improvements = []
 
     for seed in spec["seeds"]:
         record = read_json(bundle / "seeds" / ("seed-%s.json" % seed))
@@ -231,6 +231,19 @@ def audit(bundle: Path) -> dict[str, Any]:
                     raise ValueError("held-out example has a tied pair")
                 if len(row["x"]) != DIM or not all(math.isfinite(v) for v in row["x"]):
                     raise ValueError("invalid held-out context")
+        train_contexts = {tuple(row["x"]) for row in train}
+        heldout_contexts = {tuple(row["x"]) for row in base_labels}
+        train_counts = {context: sum(tuple(row["x"]) == context for row in train) for context in train_contexts}
+        heldout_counts = {context: sum(tuple(row["x"]) == context for row in base_labels)
+                          for context in heldout_contexts}
+        if len(train_contexts) != data["training_contexts"] or set(train_counts.values()) != {
+                data["comparisons_per_training_context"]}:
+            raise ValueError("training contexts do not match the frozen group structure")
+        if len(heldout_contexts) != data["heldout_contexts"] or set(heldout_counts.values()) != {
+                data["comparisons_per_heldout_context"]}:
+            raise ValueError("held-out contexts do not match the frozen group structure")
+        if train_contexts & heldout_contexts:
+            raise ValueError("training and held-out context sets overlap")
         if any(b["x"] != s["x"] or b["a"] != s["a"] or b["b"] != s["b"]
                for b, s in zip(base_labels, shifted_labels)):
             raise ValueError("base and shifted evaluations are not paired")
@@ -314,6 +327,8 @@ def audit(bundle: Path) -> dict[str, Any]:
         "status": "pass",
         "verifier": Path(__file__).name,
         "verifier_sha256": sha256_file(Path(__file__)),
+        "python_version": sys.version,
+        "platform": platform.platform(),
         "bundle_manifest_sha256": sha256_file(bundle / "manifest.json"),
         "protocol_canonical_sha256": protocol_hash,
         "independent_training_and_metric_replay": "pass",
