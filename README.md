@@ -1,46 +1,34 @@
 # VARE
 
-VARE is a CPU-first research control plane for studying post-training signals and policy improvement under limited compute. It combines independently graded tasks, locked experiment protocols, provenance-aware replay, bounded execution, candidate promotion checks, and auditable retained records. Its learning evidence includes controlled synthetic policy updates, one preregistered cached-model non-pass, and one narrow verifier-labeled preference improvement on a cached language model. The latter changed held-out NLL by −0.00697 nats per question while accuracy stayed near chance; no capability gain is claimed. See the [GSM8K report](docs/cpu-lm-gsm8k-dpo-confirmation-v1-report.md) and [earlier model non-pass](docs/cpu-lm-dpo-head-v1-report.md).
+VARE is a CPU-first research project for evaluating post-training signals and policy updates under limited compute. It combines frozen experiment protocols, independently checked outcomes, provenance-aware execution, and retained raw records.
 
-The separate [sequence-level GSM8K development result](docs/cpu-lm-gsm8k-sequence-dpo-development-v2-report.md) lowered verifier-labeled validation preference NLL under its KL cap, but did not improve free-form exact-match accuracy. It is a small development candidate pending a separately locked confirmation, not a capability result.
+The latest model study is a **development non-pass**. The strongest positive model result is a narrow verifier-labeled answer-choice NLL improvement; accuracy remained near chance. Synthetic policy studies test mechanisms, not language-model capability. No general capability improvement, human-preference alignment, or scale result is claimed.
 
-The first 512-question CPU confirmation exceeded its two-hour limit with two of three seeds completed; it is explicitly [recorded as incomplete](docs/cpu-lm-gsm8k-sequence-dpo-confirmation-v1-incomplete.md). A smaller fresh-cohort confirmation is locked separately.
+## Start here
 
-That fresh 128-question confirmation lowered verifier-preference NLL with a paired 95% interval below zero and increased exact-match in all three seeds, but mean KL was 0.737 against a 0.5 cap. Its frozen decision is **non-pass**; see the [confirmation report](docs/cpu-lm-gsm8k-sequence-dpo-confirmation-v2-report.md).
-
-A lower-rate development update then met its KL cap but lowered mean exact-match below baseline (1.56% → 1.04%). It is a separate [development non-pass](docs/cpu-lm-gsm8k-sequence-dpo-development-v3-report.md); no further confirmation data was opened.
-
-The rationale-versus-base-rollout [v4 development run](docs/cpu-lm-gsm8k-sequence-dpo-development-v4-report.md) reduced verifier-preference NLL, but exact-match was 0/16 for both base and all updated seeds. Its candidate gate was therefore non-informative and no confirmation was opened. The next attempt hit the frozen 6-GiB memory ceiling and is retained as incomplete. No free-form improvement has been demonstrated.
-
-The reduced [v6 run](docs/cpu-lm-gsm8k-sequence-dpo-development-v6-report.md) stayed under the memory ceiling and passed its audit, but generation was truncated before final answers and exact-match remained 0/8 for the base and every update. The numeric-only preference setup is the next fresh development probe; the repository still does not demonstrate free-form improvement.
-
-One numeric-only setup attempt stopped before inference because its batch size violated the decoder's unpadded-input requirement. It is retained as a [setup failure](docs/cpu-lm-gsm8k-sequence-dpo-development-v7-setup-failure.md); the follow-up uses single-prompt generation on fresh rows.
-
-The audited numeric-only [v8 run](docs/cpu-lm-gsm8k-sequence-dpo-development-v8-report.md) lowered preference NLL but failed the nonzero-baseline gate: base exact-match was 0/32 and updated seeds were 1/32, 0/32, and 0/32. This single updated answer is not enough to support an improvement claim. A larger fresh development cohort is next.
-
-The larger rank-8 [v9 run](docs/cpu-lm-gsm8k-sequence-dpo-development-v9-report.md) had 6/128 base exact matches and a mean 4.67/128 after update. Preference NLL improved at epoch 2 while exact-match fell; epoch 4 also breached the KL cap. It is an audited non-pass, and no capability gain is claimed.
-
-In [v10](docs/cpu-lm-gsm8k-sequence-dpo-development-v10-report.md), exact-match was evaluated at every NLL/KL-eligible checkpoint. Epoch 2 was selected at 2/64, 0/64, and 2/64 across seeds, but base was 0/64 and the mean gain gate failed. The preference fit improved; task accuracy stayed very low and seed-sensitive.
-
-In [v11](docs/cpu-lm-gsm8k-sequence-dpo-development-v11-report.md), epoch 1 was selected on a larger validation cohort; mean Exact Match declined from 9/128 to 8.67/128. Preference NLL decreased, but free-form task success did not improve. The next study adds a matched SFT baseline to measure whether DPO contributes beyond imitation of verified answers.
-
-The matched [v12 DPO/SFT comparison](docs/cpu-lm-gsm8k-posttraining-development-v12-report.md) found neither arm improved exact-match over base. SFT preserved 2/64 in all seeds; DPO averaged 1.33/64. DPO had higher pairwise preference accuracy but worse preference NLL and task exact-match than SFT. This development result motivates an SFT-anchored DPO regression-control study; it does not establish capability improvement.
-
-The matched [v13 three-arm study](docs/cpu-lm-gsm8k-posttraining-development-v13-report.md) compared DPO, SFT and SFT-anchored DPO on identical fresh rows. Base exact-match was 2/64; selected DPO and SFT checkpoints each averaged 2/64, while anchored DPO averaged 2.67/64 and missed its preregistered +2/64 advancement threshold. All arms passed offline audits. This is a non-pass development result, not evidence of a confirmed task or capability gain.
-
-On a larger fresh cohort, [v14](docs/cpu-lm-gsm8k-posttraining-development-v14-report.md) again found no passing arm: base scored 4/128, DPO 4.67/128, SFT 5.33/128, and anchored DPO 7.67/128. The anchor narrowly missed its +4/128 gain threshold; its paired interval versus SFT crossed zero. All bundles audited and matched-row/base-generation checks passed. This remains development-only evidence, with no confirmation or capability claim.
-
-The next locked probe directly compares SFT and anchored DPO on 64 fresh training and 256 fresh validation questions. Its advancement gate is base >=8/256 and mean gain >=8/256, with seed consistency; even a development pass will require independent confirmation.
-
-That [v15 direct replication](docs/cpu-lm-gsm8k-posttraining-development-v15-report.md) did not pass: base and anchored DPO both scored 7/256, while SFT scored 6.33/256. Base was below the frozen 8/256 floor; audits and paired-data checks passed. The repeated GSM8K setup has not shown a stable free-form improvement, and no confirmation was opened.
-
-The frozen [v16 study plan](docs/boolq-posttraining-study.md) changed the task to passage-grounded Yes/No reading comprehension and selected checkpoints by class-balanced accuracy. It compared DPO, SFT and anchored DPO on fresh rows with offline audits.
-
-The [v16 result](docs/boolq-posttraining-development-v16-report.md) is a non-pass. Base balanced accuracy was 67.26%; DPO fell to 63.50% despite improved preference NLL. SFT and anchored DPO had no checkpoint under the frozen KL cap. All audits passed and no confirmation data was opened.
+- [Latest BoolQ study](docs/boolq-posttraining-development-v17-report.md): matched DPO, SFT, and anchored-DPO comparison, including its failed advancement gate.
+- [GSM8K model study](docs/cpu-lm-gsm8k-dpo-confirmation-v1-report.md): protocol, per-seed outcomes, audit, and limits.
+- [Experiment index](docs/experiments.md): full study sequence and retained reports.
+- [Current evidence gaps](docs/current-gaps.md): what the results support and what remains open.
+- [Ten-minute walkthrough](docs/walkthrough.md): orientation to the project and its technical evidence.
+- [Local workbench](docs/internal-workbench.md): open the read-only interface over retained records.
 
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
 
+## Selected evidence
+
+| Area | Result | What it supports |
+| --- | --- | --- |
+| Latest model study | BoolQ v17: all three matched methods missed the frozen task-gain gate. Best balanced-accuracy gain was 0.11 percentage points against a 5-point threshold. | An audited development comparison. Confirmation rows remain unopened. |
+| Model-level preference update | GSM8K: held-out conditional preference NLL changed by −0.00697 nats/question across three seeds; accuracy moved from 0.4943 to 0.4956. | A narrow forced-choice preference result, not free-form reasoning or capability evidence. |
+| Synthetic preference robustness | Ten-seed clean/noise/shift study passed its declared synthetic NLL/KL rule; label flips worsened NLL on every seed. | Behavior under one known synthetic preference generator. |
+| Evaluation reliability | Three historical source graders distinguish pinned pre-fix and fixed revisions; recovery study matched 24/24 frozen fault cases. | Specific grader and same-host recovery checks, not broad grader soundness or distributed reliability. |
+
+The [evidence notes](docs/evidence.md) and individual reports define each result's data, protocol, audit coverage, and claim boundary. The [roadmap](docs/roadmap.md) records unresolved evidence levels. The full historical series, including failed and incomplete attempts, remains in the [experiment index](docs/experiments.md).
+
 ## Post-training results
+
+The latest [BoolQ v17 study](docs/boolq-posttraining-development-v17-report.md) tested DPO, answer SFT and anchored DPO on the same fresh validation questions across three seeds. All audits passed, but the best balanced-accuracy gain was 0.11 percentage points against the frozen 5-point gate. Checkpoint selection used this development set, and confirmation data was not opened. The result does not establish task or capability improvement.
 
 The first locked real-model confirmation used 256 verifier-labeled training questions, all 1,319 GSM8K test questions, and three fresh adapter seeds. Mean held-out conditional preference NLL improved by 0.00697 nats/question (paired 95% interval [−0.00800, −0.00591]); all three seeds improved and stayed under the frozen KL ceiling. Accuracy remained close to chance (0.4943 → 0.4956). This is narrow forced-choice preference evidence using a custom two-token output-head adapter—not free-form response or reasoning evidence. The [protocol](protocols/cpu_lm_gsm8k_dpo_confirmation_v1.lock.json), [report](docs/cpu-lm-gsm8k-dpo-confirmation-v1-report.md), and [audited raw bundle](results/cpu-lm-gsm8k-dpo-confirmation-v1/run-1/) retain the full result. The prior cached-model arithmetic study remains a [separate non-pass](docs/cpu-lm-dpo-head-v1-report.md).
 
@@ -121,7 +109,7 @@ The [local agent pilot](docs/local-agent-pilot.md) is one small-model, one-task 
 
 The E1 task/evaluator calibrations do not measure a model training or capability improvement. The separate local agent pilot had no successful patch and is reported as a negative result. The TRL grader executes extracted production normalization statements with scalar doubles and checks a direct AST denominator contract; it does not execute the full loss expression or run a trainer/gradient update. The HF grader executes candidate source with local fixtures; it is not an operating-system sandbox for hostile code. Only run it on candidate code you trust.
 
-The restored experimental control plane in `src/vare` includes grouped replay, freshness/curriculum controls, paired promotion gates, workspace-agent campaigns and RVL hooks. These are implementation/regression contracts. No real-model learning, successful local-agent task solution, or GPU result is claimed. The imported L0 raw archive is corrupt; its old accuracy summary is excluded from verified claims (see the evidence notes).
+The restored experimental control plane in `src/vare` includes grouped replay, freshness/curriculum controls, paired promotion gates, workspace-agent campaigns and RVL hooks. These are implementation/regression contracts; no model update through this control plane has been measured. Separate CPU model studies are summarized above. No successful local-agent task solution or GPU result is claimed. The imported L0 raw archive is corrupt; its old accuracy summary is excluded from verified claims (see the evidence notes).
 
 ## Reproduce the calibrations
 
@@ -164,7 +152,7 @@ For the TRL task, provide `--task-root benchmarks/historical/trl_grpo_accumulati
 
 ## Roadmap
 
-The [roadmap](docs/roadmap.md) tracks the evidence needed before expanding the claims. The next major gaps are signal-shift falsification and any feasible, independently measured model-level update. The current agent pilot remains supporting evidence about task execution, not the project's primary research direction.
+The [roadmap](docs/roadmap.md) tracks the evidence needed before expanding the claims. The main open learning gap is a reproducible improvement in an independently measured model task outcome. The synthetic shift study and narrow forced-choice result do not close that gap. The local agent pilot remains supporting evidence about task execution, not the project's primary research direction.
 
 ## Develop the full package
 
@@ -179,6 +167,3 @@ vare --help
 ## License
 
 Apache-2.0. See [LICENSE](LICENSE).
-
-
-The frozen [v17 follow-up](docs/boolq-posttraining-study.md) tested a tenfold lower learning rate on fresh BoolQ rows after v16's task regression and KL failures. All three arms were audited and failed the frozen advancement gate: DPO and anchored DPO matched base task predictions; SFT gained one answer in one seed and was otherwise unchanged. Preference NLL improved, but task improvement was not established. See the [v17 report](docs/boolq-posttraining-development-v17-report.md) and [paired comparison](results/cpu-lm-boolq-posttraining-development-v17-comparison.json). Confirmation data remains unopened.
