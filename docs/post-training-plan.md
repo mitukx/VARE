@@ -31,6 +31,8 @@ Predeclared interpretation: the positive control passes only if optimization imp
 
 Before running, freeze a versioned machine-readable protocol specifying the exact synthetic utility, data generator/split, seeds, optimizer and beta, update budget, tolerances, primary metric, KL ceiling, noise/shift conditions, and decision rule. The protocol should be independently auditable and use only the Python standard library. No GPU, paid API, model-weight download, or cloud compute is in scope.
 
+The next robustness study is frozen separately as [`vare-synthetic-preference-robustness-v1`](../protocols/synthetic_preference_robustness_v1.lock.json), with a source-snapshotting runner and an auditor that regenerates each design and label and reconstructs all reported metrics. It compares clean training with matched 20% and 40% orientation-flip arms, and scores each policy against base and shifted preferences on paired held-out designs. The primary decision applies only to clean, in-distribution held-out NLL and a fixed drift ceiling; noise and shift measurements are descriptive. The study has not yet been run. Its outcome will be reported from the retained bundle, including a null or non-pass, without changing this lock.
+
 ## Phase 2: bounded real-model preference update
 
 An initial feasibility-only check found a cached Qwen2.5-0.5B-Instruct snapshot and a CPU-capable Transformers/PyTorch runtime. A separate, single-pair feasibility probe changed an output-head adapter margin, but it had no held-out data and is not evidence of learning. That probe is not part of the formal result.
