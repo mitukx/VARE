@@ -7,10 +7,11 @@ The latest model study is a **development non-pass**. The strongest positive mod
 ## Start here
 
 - [Latest BoolQ study](docs/boolq-posttraining-development-v17-report.md): matched DPO, SFT, and anchored-DPO comparison, including its failed advancement gate.
+- [BoolQ v17 technical walkthrough](docs/boolq-v17-walkthrough.md): model update, objectives, selection rule, audits, and limits in one path.
 - [GSM8K model study](docs/cpu-lm-gsm8k-dpo-confirmation-v1-report.md): protocol, per-seed outcomes, audit, and limits.
 - [Experiment index](docs/experiments.md): full study sequence and retained reports.
 - [Current evidence gaps](docs/current-gaps.md): what the results support and what remains open.
-- [Ten-minute walkthrough](docs/walkthrough.md): orientation to the project and its technical evidence.
+- [Evaluation runner walkthrough](docs/walkthrough.md): inspect the calibrated task runner and retained execution evidence.
 - [Local workbench](docs/internal-workbench.md): open the read-only interface over retained records.
 
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
