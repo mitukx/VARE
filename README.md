@@ -10,6 +10,8 @@ That fresh 128-question confirmation lowered verifier-preference NLL with a pair
 
 A lower-rate development update then met its KL cap but lowered mean exact-match below baseline (1.56% → 1.04%). It is a separate [development non-pass](docs/cpu-lm-gsm8k-sequence-dpo-development-v3-report.md); no further confirmation data was opened.
 
+The rationale-versus-base-rollout [v4 development run](docs/cpu-lm-gsm8k-sequence-dpo-development-v4-report.md) reduced verifier-preference NLL, but exact-match was 0/16 for both base and all updated seeds. Its candidate gate was therefore non-informative and no confirmation was opened. The next attempt hit the frozen 6-GiB memory ceiling and is retained as incomplete. No free-form improvement has been demonstrated.
+
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
 
 ## Post-training results

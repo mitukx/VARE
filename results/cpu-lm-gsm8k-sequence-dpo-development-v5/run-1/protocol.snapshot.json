@@ -1,0 +1,105 @@
+{
+  "artifact_policy": "Retain all prompts, verifier rationales, base rollouts, rejection provenance, tokenized pairs, checkpoint adapters and metrics, generated validation text, runtime and hashes. A confirmation requires a new protocol and fresh rows.",
+  "claim_boundary": "Small train-only development experiment on public GSM8K rows. A pass is only a candidate for a separately locked confirmation; it is not human preference alignment or general capability evidence.",
+  "compute_limits": {
+    "device": "CPU only; CUDA and MPS placement are forbidden",
+    "feature_batch_size": 2,
+    "generation_batch_size": 1,
+    "generation_max_new_tokens": 256,
+    "max_peak_rss_bytes": 6442450944,
+    "max_wall_seconds": 3600,
+    "network": "disabled; HF_HUB_OFFLINE=1, HF_DATASETS_OFFLINE=1, TRANSFORMERS_OFFLINE=1, local_files_only=true",
+    "paid_compute": false,
+    "pair_microbatch_size": 1,
+    "threads": 4
+  },
+  "dataset": {
+    "answer_parser": "Parse the terminal number after ####, remove commas, and parse with Decimal.",
+    "cached_fingerprint": "c6f812ae33c9159d",
+    "cached_train_arrow_sha256": "6146bca074f4c6c5e07de7e96cc968adab3833dbdafeda21830f27558eea3d9b",
+    "config": "main",
+    "confirmation_reservation": "No confirmation rows are opened. Any confirmation requires an independent protocol review and new hash ranks beginning at 2704.",
+    "development_training_examples": 8,
+    "development_training_rank_range": [
+      2688,
+      2696
+    ],
+    "development_validation_examples": 8,
+    "development_validation_rank_range": [
+      2696,
+      2704
+    ],
+    "id": "openai/gsm8k",
+    "leakage_boundary": "This phase reads only GSM8K train rows. The model may have seen the public dataset during pretraining; this cannot be ruled out.",
+    "preference_construction": "base_rollout_verifier_rationale",
+    "preference_pair": "Chosen is the public GSM8K verifier rationale ending in #### <answer>. Rejected is the frozen base model greedy rollout when its final answer is incorrect or unparseable. If its answer is already correct, change only its final numeric answer by exactly one unit using a deterministic question-hash direction. Retain both raw rollout and rejection source. These are verifier-constructed comparisons, not human judgments.",
+    "prompt": "Ask for a compact solution with at most two short calculation lines, ending exactly with #### followed by the final number. Do not add text after the final number.",
+    "revision": "740312add88f781978c0658806c59bc2815b9866",
+    "selection": "Use hash-ranked GSM8K train rows 2688\u20132695 for training and 2696\u20132703 for validation. These rows are fresh to v5 and do not overlap earlier runs or reserved ranges.",
+    "split": "train only"
+  },
+  "generation": {
+    "algorithm": "greedy",
+    "do_sample": false,
+    "eos_token_ids": [
+      151645,
+      151643
+    ],
+    "repetition_penalty": 1.1,
+    "source": "Pinned Qwen generation_config.json; apply the same seen-token repetition penalty to prompt and generated tokens."
+  },
+  "learner": {
+    "adapter": "Custom low-rank residual on the frozen output-head hidden states, over the full vocabulary. The transformer backbone and original output-head weights are frozen. This is not PEFT/TRL.",
+    "adapter_rank": 4,
+    "beta": 0.1,
+    "checkpoints_epochs": [
+      0,
+      1,
+      2
+    ],
+    "initialization": "A sampled from N(0, 1/sqrt(hidden_size)) by a CPU torch.Generator seeded per run; B initialized to zero.",
+    "maximum_epochs": 2,
+    "microbatch_pairs": 4,
+    "objective": "Standard sequence-summed DPO logistic loss over full rationale and rejection sequences, relative to the frozen initial model.",
+    "optimizer": {
+      "gradient_norm_clip": 1.0,
+      "learning_rate": 0.0001,
+      "name": "AdamW",
+      "weight_decay": 0.0
+    },
+    "seeds": [
+      1877,
+      1993,
+      2081
+    ]
+  },
+  "metrics": {
+    "claim_boundary": "A small-sample development gate on public GSM8K train rows; verifier-derived preferences and base-model rollouts. Improvement does not establish human preference alignment or general capability.",
+    "generation_metric": "Pinned-template greedy answer with the same frozen generation settings; parse terminal numeric answer and compare Decimal-normalized value exactly.",
+    "minimum_base_exact_matches": 1,
+    "minimum_exact_match_gain": 0.125,
+    "selection_primary": "Mean validation DPO preference NLL over completion sequences; lower is better.",
+    "selection_rule": "Select a nonzero checkpoint only when validation preference NLL improves and mean token KL is <=0.5. Advance only when baseline exact match is at least 1/8, mean updated exact match improves by at least 1/8 across seeds, and at least two of three seeds are no worse. Otherwise record development non-pass.",
+    "selection_secondary": [
+      "held-out sequence preference accuracy",
+      "mean full-vocabulary token KL updated-to-base on paired completion contexts",
+      "greedy generated final-answer exact match"
+    ]
+  },
+  "model": {
+    "dtype": "float32",
+    "id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "weights_must_already_be_cached": true
+  },
+  "phase": "training_only_development",
+  "protocol_id": "vare-cpu-lm-gsm8k-sequence-dpo-development-v5",
+  "purpose": "Test a compact verifier-rationale preference update against base-model rollouts with a generation budget that permits complete answers and a non-vacuous exact-match advancement gate.",
+  "runtime": {
+    "datasets": "4.4.2",
+    "numpy": "1.26.4",
+    "python": "3.9.6",
+    "torch": "2.8.0",
+    "transformers": "4.57.3"
+  }
+}

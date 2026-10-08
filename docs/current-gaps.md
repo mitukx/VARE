@@ -13,10 +13,11 @@ This assessment ranks the technical work needed to study post-training signals a
 - A separately locked three-seed Qwen/GSM8K experiment improved conditional held-out preference NLL by 0.00697 nats/question (95% paired interval [−0.00800, −0.00591]) on all 1,319 official test examples, with all per-seed KL values below 0.001. Accuracy moved only from 0.4943 to 0.4956, still near chance. Labels were generated from answer keys; the adapter trained only two choice-token columns. See the [report](cpu-lm-gsm8k-dpo-confirmation-v1-report.md).
 - A train-only sequence-DPO development candidate lowered verifier-preference NLL (0.69315 → 0.57436) under its KL cap, but exact-match stayed at 1/64. Confirmation v2 lowered preference NLL and increased exact-match on 128 fresh questions, but mean KL 0.737 exceeded the 0.5 cap; its frozen decision is non-pass. See the [development report](cpu-lm-gsm8k-sequence-dpo-development-v2-report.md), [incomplete confirmation v1](cpu-lm-gsm8k-sequence-dpo-confirmation-v1-incomplete.md), and [confirmation v2 non-pass](cpu-lm-gsm8k-sequence-dpo-confirmation-v2-report.md).
 - A fresh lower-rate development run stayed under KL (0.252) but mean exact-match fell from 1.56% to 1.04%, so its frozen decision is non-pass. See the [v3 development report](cpu-lm-gsm8k-sequence-dpo-development-v3-report.md).
+- A full-rationale/base-rollout run lowered preference NLL but base and all updated seeds scored 0/16; the nominal candidate decision was a zero-baseline rule artifact. A follow-up with a longer generation cap exceeded the 6-GiB CPU memory ceiling before producing metrics. See the [v4 report](cpu-lm-gsm8k-sequence-dpo-development-v4-report.md) and v5 incomplete bundle in `results/`.
 - A negative local small-model agent pilot: three formal attempts produced no accepted patch.
 - Contracts for replay, freshness, curriculum, promotion, and RVL trainer integration.
 
-These demonstrate narrow evaluation/reliability properties, two synthetic policy updates under known generators, one small forced-choice model preference improvement, a sequence-level development preference shift without free-form accuracy gain, and a separate failed-to-improve small-model update. No evidence demonstrates free-form language-model improvement, human preference alignment, general RLHF/DPO behavior, or deployment-scale training.
+These demonstrate narrow evaluation/reliability properties, two synthetic policy updates under known generators, one small forced-choice model preference improvement, and several small-model sequence-DPO non-passes or incomplete runs. No evidence demonstrates a verified free-form language-model improvement, human preference alignment, general RLHF/DPO behavior, or deployment-scale training.
 
 ## Ranked gaps
 
@@ -35,7 +36,7 @@ These demonstrate narrow evaluation/reliability properties, two synthetic policy
 1. Keep v1's KL failure, v2's chronology limit, and the invalid v2 shuffle arm visible; use the new robustness study only within its stated synthetic claim boundary.
 2. Seek a clean-clone reproduction and independent protocol review for the completed robustness bundle.
 3. Expand grader mutation coverage with held-out refactors while preserving narrow per-case claims.
-4. Preserve the forced-choice result, sequence-DPO development candidates v2/v3, invalidated generation result, incomplete confirmation v1, and non-passing confirmation v2 separately. Any next tuning must use new development rows and its own new confirmation lock; do not reuse the v2 held-out cohort.
+4. Preserve the forced-choice result, every sequence-DPO development run, invalidated generation result, incomplete confirmation v1/v5, and non-passing confirmation v2 separately. Any next tuning must use new development rows and its own new confirmation lock; do not reuse any consumed cohort.
 5. Prepare an unaided technical walkthrough of the objective, gradient check, model non-pass, v1 drift failure, v2 chronology, robustness result and claim boundaries.
 
 The code-agent trajectory remains a separate supporting question. Its negative pilot should stay visible, but should not displace a learner experiment as the next priority. Update this page when retained evidence changes, not when an integration or plan alone is added.

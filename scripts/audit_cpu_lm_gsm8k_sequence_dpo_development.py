@@ -16,7 +16,8 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from run_cpu_lm_gsm8k_sequence_dpo_development import (  # noqa: E402
     DATA_DIR, MODEL_DIR, canonical, generate_greedy, sha256_file, write_manifest,
 )
-from gsm8k_sequence_task import make_sequence_rows  # noqa: E402
+from gsm8k_sequence_task import (attach_base_rollout_rejections, make_rationale_rows,
+                                 make_sequence_rows)  # noqa: E402
 
 
 def read_json(path: Path):
@@ -73,13 +74,18 @@ def audit(output: Path, check_generation: bool = True):
         raise ValueError("cached GSM8K train data differs from the lock")
     train_range = spec["dataset"].get("development_training_rank_range", [608, 672])
     val_range = spec["dataset"].get("development_validation_rank_range", [672, 736])
-    expected_train = make_sequence_rows(dataset, "development_train", *train_range)
-    expected_val = make_sequence_rows(dataset, "development_validation", *val_range)
+    rationale_mode = spec["dataset"].get("preference_construction") == "base_rollout_verifier_rationale"
+    builder = make_rationale_rows if rationale_mode else make_sequence_rows
+    expected_train = builder(dataset, "development_train", *train_range)
+    expected_val = builder(dataset, "development_validation", *val_range)
+    if rationale_mode:
+        expected_train = attach_base_rollout_rejections(expected_train, result["base_training_generation"])
+        expected_val = attach_base_rollout_rejections(expected_val, result["base_validation_generation"])
     for actual, expected in zip(train, expected_train):
-        if actual["dataset_index"] != expected["dataset_index"] or actual["question_sha256"] != expected["question_sha256"]:
+        if actual != expected:
             raise ValueError("training rows differ from the locked hash ranks")
     for actual, expected in zip(validation, expected_val):
-        if actual["dataset_index"] != expected["dataset_index"] or actual["question_sha256"] != expected["question_sha256"]:
+        if actual != expected:
             raise ValueError("validation rows differ from the locked hash ranks")
     train_hashes = {row["question_sha256"] for row in train}
     val_hashes = {row["question_sha256"] for row in validation}
@@ -157,10 +163,18 @@ def audit(output: Path, check_generation: bool = True):
         raise ValueError("updated generation count differs")
     mean_updated = statistics.fmean(updated_accuracies)
     at_least_two = sum(value >= base_accuracy for value in updated_accuracies) >= 2
-    promoted = selected > 0 and mean_updated >= base_accuracy and at_least_two
+    minimum_base_correct = spec["metrics"].get("minimum_base_exact_matches", 0)
+    minimum_gain = spec["metrics"].get("minimum_exact_match_gain", 0.0)
+    promoted = (selected > 0 and sum(bool(row["exact_match"]) for row in base_rows) >= minimum_base_correct and
+                mean_updated >= base_accuracy + minimum_gain and at_least_two)
     expected_decision = "sequence_dpo_development_candidate" if promoted else "sequence_dpo_development_non_pass"
     if result["decision"] != expected_decision:
         raise ValueError("development decision differs from frozen selection rule")
+    if rationale_mode:
+        counts = {source: sum(row["rejected_source"] == source for row in train + validation)
+                  for source in sorted({row["rejected_source"] for row in train + validation})}
+        if result["rejection_source_counts"] != counts:
+            raise ValueError("rejection source counts differ from retained pair provenance")
 
     parity_rows = []
     if check_generation:

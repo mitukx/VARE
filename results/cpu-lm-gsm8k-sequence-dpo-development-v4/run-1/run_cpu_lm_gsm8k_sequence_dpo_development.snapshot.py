@@ -439,12 +439,7 @@ def run(output: Path, spec_path: Path = SPEC_PATH, lock_path: Path = LOCK_PATH):
                                   "generated_validation": generated})
         mean_selected_accuracy = statistics.fmean(row["accuracy"] for row in generation_counts)
         at_least_two_not_worse = sum(row["accuracy"] >= base_accuracy for row in generation_counts) >= 2
-        minimum_base_correct = spec["metrics"].get("minimum_base_exact_matches", 0)
-        minimum_gain = spec["metrics"].get("minimum_exact_match_gain", 0.0)
-        candidate_promoted = (selected_epoch > 0 and
-                              sum(bool(row["exact_match"]) for row in base_generations) >= minimum_base_correct and
-                              mean_selected_accuracy >= base_accuracy + minimum_gain and
-                              at_least_two_not_worse)
+        candidate_promoted = selected_epoch > 0 and mean_selected_accuracy >= base_accuracy and at_least_two_not_worse
         result = {
             "protocol_id": spec["protocol_id"], "protocol_sha256": protocol_hash,
             "runner_sha256": sha256_file(Path(__file__)), "task_helper_sha256": sha256_file(Path(__file__).with_name("gsm8k_sequence_task.py")),
