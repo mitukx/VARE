@@ -74,7 +74,7 @@ def main() -> int:
     spec_hash = hashlib.sha256(canonical(spec)).hexdigest()
     if lock_hash != spec_hash or canonical(lock) != canonical(spec):
         raise ValueError("development protocol differs from its lock")
-    output = ROOT / "results/cpu-lm-gsm8k-dpo-development-v1"
+    output = ROOT / "results/cpu-lm-gsm8k-dpo-development-v1-retry-1"
     output.mkdir(parents=True, exist_ok=False)
     write_json(output / "protocol.snapshot.json", spec)
     (output / "protocol.lock.snapshot.json").write_bytes(LOCK_PATH.read_bytes())

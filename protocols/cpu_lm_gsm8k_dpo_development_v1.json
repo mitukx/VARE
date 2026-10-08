@@ -42,6 +42,7 @@
     "objective": "DPO logistic loss over the one-token A/B completions, using the same frozen model as reference and policy initialization. The within-prompt log-probability difference is the A-vs-B logit margin.",
     "beta": 0.1,
     "adapter": "Custom rank-4 residual on the frozen final prompt hidden state, restricted to the two verified one-token response columns; backbone and base output head remain frozen.",
+    "adapter_rank": 4,
     "initialization": "A sampled from N(0, 1/sqrt(hidden_size)) with a per-run CPU torch.Generator seeded by the listed seed; B initialized to zero.",
     "optimizer": {"name": "full-batch SGD", "learning_rate": 0.01, "weight_decay": 0.0},
     "maximum_updates": 40,

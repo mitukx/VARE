@@ -25,6 +25,7 @@
   },
   "learner": {
     "adapter": "Custom rank-4 residual on the frozen final prompt hidden state, restricted to the two verified one-token response columns; backbone and base output head remain frozen.",
+    "adapter_rank": 4,
     "beta": 0.1,
     "checkpoints": [
       0,
@@ -74,5 +75,5 @@
     "torch": "2.8.0",
     "transformers": "4.57.3"
   },
-  "sha256": "5a698f01e2554f8f18f20e7fe89d3e28c4d66448ecb4c145a436aeb536453b92"
+  "sha256": "64f9e5ab1700728891197ce61ec647095812f67e96be9e6f93b1333888782a3b"
 }
