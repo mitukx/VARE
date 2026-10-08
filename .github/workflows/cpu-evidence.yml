@@ -40,6 +40,10 @@ jobs:
         run: |
           python3 scripts/audit_scheduler.py results/cpu-scheduler-v1
           python3 scripts/audit_recovery.py results/cpu-recovery-v1
+      - name: Audit cached-model GSM8K preference confirmation
+        run: >-
+          python3 scripts/audit_cpu_lm_gsm8k_dpo_confirmation.py
+          results/cpu-lm-gsm8k-dpo-confirmation-v1/run-1
       - name: Calibrate the HF behavior-policy task
         run: >-
           python3 scripts/calibrate_task.py

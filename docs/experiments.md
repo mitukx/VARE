@@ -8,14 +8,15 @@ The v1 and v2 synthetic runs are both retained. v1 remains a diagnostic non-pass
 
 1. **Completed, synthetic only:** v1 exposed excessive policy drift; v2 used 100 updates, passed the finite-difference check, and met its recorded held-out NLL/KL acceptance rule on all 10 independent seeds. Its shuffled-ID arm is invalid and excluded from inference.
 2. **Completed, synthetic only:** the noise/shift v1 study compared clean, 20%-flip and 40%-flip training at equal data/update budgets and evaluated against matched base/shifted preference labels. Its audit passed; flip arms had higher NLL on all seeds and the base-trained policy had higher mean NLL under the declared shift. This is one synthetic generator, not realistic reward robustness.
-3. **Completed, non-pass:** the cached-model CPU study retained before/after outputs, policy drift and held-out evaluation. Its update failed the frozen rule; preserve it without tuning. Any future model run needs a distinct development cohort and fresh confirmation lock.
-4. Seek an independent clean-clone reproduction and protocol review before adding further synthetic variants. Prefer a no-download task with an executable oracle only if it tests a materially new mechanism.
+3. **Completed, non-pass:** the first cached-model CPU update retained before/after outputs, policy drift and held-out evaluation. Preserve it unchanged.
+4. **Completed, narrow model-level result:** a separate train-only development cohort selected 20 updates, then a frozen run on all 1,319 GSM8K test questions improved conditional preference NLL by 0.00697 nats/question over three fresh seeds. Accuracy stayed near chance. The adapter updates only two answer-label columns; see the [report](cpu-lm-gsm8k-dpo-confirmation-v1-report.md) and [audited bundle](../results/cpu-lm-gsm8k-dpo-confirmation-v1/run-1/).
+5. Build a separate sequence-level preference update with a held-out free-form answer metric, if it fits the same CPU/no-spend budget. Freeze development and confirmation protocols before opening each evaluation set. Seek independent clean-clone reproduction and review before adding synthetic variants.
 
-The synthetic stages test objective correctness and whether the harness can detect a known mechanism. The accepted v2 result is not evidence of language-model quality, reasoning, truthful behavior, broad preference alignment, or transfer to real users.
+The synthetic stages test objective correctness and whether the harness can detect a known mechanism. The narrow GSM8K result is evidence of a small conditional choice-probability shift only; no evidence here establishes free-form language-model quality, reasoning, truthful behavior, broad preference alignment, or transfer to real users.
 
 ## Frozen L2 protocol
 
-The first real-model campaign is frozen in `protocols/l2_rvl_qwen_v1.lock.json`. Do not edit or silently reinterpret it. It requires a 0.5B model, GSM8K, 3 arms × 3 seeds, 128 training and 256 held-out examples, 16 updates, and 8×8 rollouts. It remains **unrun** and is not feasible under the current no-GPU/no-spend constraint. Any future feasible model study must use a separately versioned protocol with an explicit budget and stopping rule.
+The larger real-model campaign is frozen in `protocols/l2_rvl_qwen_v1.lock.json`. Do not edit or silently reinterpret it. It requires a 0.5B model, GSM8K, 3 arms × 3 seeds, 128 training and 256 held-out examples, 16 updates, and 8×8 rollouts. It remains **unrun** and is not feasible under the current no-GPU/no-spend constraint. The separate cached-model forced-choice update is not a substitute for this trainer-integrated campaign or free-form capability evaluation.
 
 Required fixed-compute arms in the frozen protocol:
 
@@ -31,7 +32,7 @@ For a preference-learning run, report the frozen primary held-out metric plus pr
 
 - **L0:** deterministic CPU demo implementation; the imported raw archive is corrupt and its historical summary is unverified. See `docs/evidence.md`.
 - **L1:** objective/gradient checks and synthetic preference-policy updates; mechanism and harness evidence only.
-- **L2:** a small real model on held-out tasks with multiple seeds; currently frozen as unrun and unaffordable under present constraints.
+- **L2:** one narrow small-model, forced-choice preference update is complete on CPU. Free-form generation, sequence-level preference training, and the larger frozen trainer-integrated campaign remain unmeasured.
 - **L3:** real rollout/trainer integration with measured throughput and lag; requires suitable free compute.
 - **L4:** long-horizon environment with independent executable graders.
 - **L5:** repeated intervention where reward is an independently measured downstream capability or systems improvement.

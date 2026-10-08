@@ -210,7 +210,11 @@ def audit(bundle: Path) -> dict[str, Any]:
         for name, expected in summary["model_file_sha256"].items():
             if sha256_file(MODEL_DIR / name) != expected:
                 raise ValueError(f"local model hash mismatch: {name}")
-    return {"status": "pass", "bundle": str(bundle), "decision": decision,
+    try:
+        bundle_name = bundle.relative_to(ROOT).as_posix()
+    except ValueError:
+        bundle_name = bundle.name
+    return {"status": "pass", "bundle": bundle_name, "decision": decision,
             "mean_heldout_nll_change_updated_minus_base": mean_change,
             "paired_seed_stratified_bootstrap_95pct": interval, "per_seed": reconstructed,
             "source_check": source_check,

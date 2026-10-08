@@ -1,0 +1,30 @@
+{
+  "audit_limit": "Reconstructs data selection when the pinned cache is present, bundle hashes, preference pairs, recorded-margin metrics, KL, bootstrap, and decision. It does not rerun the model forward pass or optimizer; model/runtime integrity relies on recorded hashes and environment.",
+  "bundle": "results/cpu-lm-gsm8k-dpo-confirmation-v1/run-1",
+  "decision": "positive_small_model_preference_result",
+  "files_verified": 8,
+  "mean_heldout_nll_change_updated_minus_base": -0.006970448042504973,
+  "paired_seed_stratified_bootstrap_95pct": [
+    -0.008003117338816245,
+    -0.005906678283192304
+  ],
+  "per_seed": [
+    {
+      "heldout_nll_change": -0.008403460533543513,
+      "kl": 0.0006841236918825797,
+      "seed": 401
+    },
+    {
+      "heldout_nll_change": -0.007736504631540523,
+      "kl": 0.0006280458668639512,
+      "seed": 503
+    },
+    {
+      "heldout_nll_change": -0.004771378962430881,
+      "kl": 0.00021466747496507927,
+      "seed": 607
+    }
+  ],
+  "source_check": "pinned local train/test files, hashes, selected rows, and fingerprints verified",
+  "status": "pass"
+}

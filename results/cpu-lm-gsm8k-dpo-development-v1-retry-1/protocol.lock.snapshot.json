@@ -1,0 +1,79 @@
+{
+  "artifact_policy": "Retain exact train/validation examples, per-example base and checkpoint margins, adapter checkpoints, model file hashes, runtime, source hashes, and a SHA-256 manifest. Do not commit model weights or access the network.",
+  "claim_boundary": "Development-only configuration selection. No held-out benchmark result, general reasoning improvement, human preference learning, or capability gain is established.",
+  "compute_limits": {
+    "device": "CPU only; CUDA and MPS are forbidden",
+    "max_peak_rss_bytes": 6442450944,
+    "max_wall_seconds": 1800,
+    "network": "disabled; HF_HUB_OFFLINE=1, HF_DATASETS_OFFLINE=1, local_files_only=true",
+    "paid_compute": false,
+    "threads": 4
+  },
+  "dataset": {
+    "answer_parser": "Parse the terminal numeric value after ####; commas are removed before Decimal parsing.",
+    "cached_fingerprint": "c6f812ae33c9159d",
+    "cached_train_arrow_sha256": "6146bca074f4c6c5e07de7e96cc968adab3833dbdafeda21830f27558eea3d9b",
+    "config": "main",
+    "id": "openai/gsm8k",
+    "leakage_boundary": "This phase loads only the official training split. It does not load, score, or select against the official test split.",
+    "preference_construction": "For each question, compare the verifier answer with a deterministic distractor exactly one unit above or below. Candidate order is deterministic from the question hash. The preferred completion is the one-token label of the verifier-correct option.",
+    "revision": "740312add88f781978c0658806c59bc2815b9866",
+    "sampling": "Sort all source rows by SHA-256 of 'vare-gsm8k-sample-v1\\0' concatenated with question; first 288 rows are selected, first 192 train and next 96 validation.",
+    "split": "train only",
+    "train_examples": 192,
+    "validation_examples": 96
+  },
+  "learner": {
+    "adapter": "Custom rank-4 residual on the frozen final prompt hidden state, restricted to the two verified one-token response columns; backbone and base output head remain frozen.",
+    "adapter_rank": 4,
+    "beta": 0.1,
+    "checkpoints": [
+      0,
+      5,
+      10,
+      20,
+      40
+    ],
+    "initialization": "A sampled from N(0, 1/sqrt(hidden_size)) with a per-run CPU torch.Generator seeded by the listed seed; B initialized to zero.",
+    "maximum_updates": 40,
+    "objective": "DPO logistic loss over the one-token A/B completions, using the same frozen model as reference and policy initialization. The within-prompt log-probability difference is the A-vs-B logit margin.",
+    "optimizer": {
+      "learning_rate": 0.01,
+      "name": "full-batch SGD",
+      "weight_decay": 0.0
+    },
+    "seeds": [
+      101,
+      211,
+      307
+    ]
+  },
+  "metrics": {
+    "inference": "Validation metrics select only an update budget. Final confirmation uses a separate protocol, fresh seed initialization, official test split, and a confirmation lock committed before any test rows are loaded.",
+    "primary": "Validation mean binary preference NLL conditional on the A/B response tokens.",
+    "secondary": [
+      "validation preference accuracy",
+      "mean Bernoulli KL from updated choice distribution to frozen base",
+      "training NLL",
+      "resource use"
+    ],
+    "selection_rule": "Among nonzero checkpoints whose mean validation NLL is lower than the base and whose mean validation KL is <=0.5 nats, select the checkpoint with the lowest mean validation NLL; break ties toward fewer updates. If no checkpoint qualifies, select zero updates and record a development non-pass."
+  },
+  "model": {
+    "dtype": "float32",
+    "id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "weights_must_already_be_cached": true
+  },
+  "phase": "training_only_development",
+  "protocol_id": "vare-cpu-lm-gsm8k-dpo-development-v1",
+  "purpose": "Select one small update budget for a verifier-labeled, one-token A/B DPO preference task using only the public GSM8K training split.",
+  "runtime": {
+    "datasets": "4.4.2",
+    "numpy": "1.26.4",
+    "python": "3.9.6",
+    "torch": "2.8.0",
+    "transformers": "4.57.3"
+  },
+  "sha256": "64f9e5ab1700728891197ce61ec647095812f67e96be9e6f93b1333888782a3b"
+}
