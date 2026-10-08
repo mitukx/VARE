@@ -1,16 +1,20 @@
 # VARE
 
-VARE is a CPU-first research control plane for studying post-training signals and policy improvement under limited compute. It combines independently graded tasks, locked experiment protocols, provenance-aware replay, bounded execution, candidate promotion checks, and auditable retained records. Its current evidence is mostly evaluation and systems correctness; it does not yet demonstrate measured model learning.
+VARE is a CPU-first research control plane for studying post-training signals and policy improvement under limited compute. It combines independently graded tasks, locked experiment protocols, provenance-aware replay, bounded execution, candidate promotion checks, and auditable retained records. Its post-training evidence currently reaches a controlled synthetic policy update; it does not demonstrate language-model learning.
 
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
+
+## Post-training result
+
+VARE now retains an accepted, zero-cost synthetic preference-policy confirmation. A prior training-only sweep informed the update budget; a separate development bundle reproduces the stated selection rule, and an independent 10-seed cohort improved held-out synthetic pairwise NLL on every seed while remaining under the recorded policy-drift ceiling. The exploratory sweep itself was not retained, so its timing cannot be independently verified. The full confirmation examples and per-seed outputs are retained and reconstructed by the audit. This is evidence for a narrow synthetic optimization mechanism; it is not a language-model update or a capability result. See the [v2 report](docs/synthetic-dpo-v2-report.md) and [remaining evidence gaps](docs/current-gaps.md).
 
 ## Measured execution evidence
 
 - **24/24 recovery fault cases** passed under a frozen protocol: process death, rollback, lost acknowledgement, late completion, input invalidation and retry exhaustion. The retained exports contain 117 synthetic jobs/126 attempts, plus four historical jobs recovered with all calibrated outcomes preserved. See the [recovery report](docs/recovery-report.md).
 
-- **TRL grader mutation checks:** successive frozen audits found false accepts for branch-local rebinding, final-return rebinding, in-place loss mutation, and direct-alias in-place mutation in protocols v3–v6. Protocol v7 checks normalizer/loss writes through return, including in-place calls through direct local aliases; it rejects all five frozen mutation candidates and accepts the pinned fixed source across 12 conditions. See the [mutation matrix](results/trl-loss-dataflow-audit-v1/v7/summary.json), [frozen protocols and patches](benchmarks/audits/trl_loss_dataflow_v1/), and [v7 calibration](results/trl-grpo-accumulation-window-normalizer-v1/cpu-calibration-v7/summary.json). This remains a narrow source-structural check, not full trainer or gradient execution.
+- **TRL grader mutation checks:** successive frozen audits found false accepts for branch-local rebinding, final-return rebinding, in-place loss mutation, direct-alias mutation, unreachable branches and zeroed policy-loss numerators. Protocol v8 rejects the early-return and zeroed-numerator mutations that v7 accepted, while accepting the unmodified fixed source across 12 arithmetic conditions. See the [v8 mutation comparison](results/trl-grpo-accumulation-window-normalizer-v1/grader-mutation-v8/summary.json), [frozen protocols and patches](benchmarks/audits/trl_loss_dataflow_v1/), and [v8 calibration](results/trl-grpo-accumulation-window-normalizer-v1/cpu-calibration-v8/summary.json). This remains a narrow source-structural check, not full trainer or gradient execution.
 
-- **RVL generation-setting mutation check:** the v2 grader accepted a candidate that inherited `typical_p=0.72`; v3 rejects it in all six rollout conditions. The pinned fixed source passes all 12 rollout/trainer conditions under v3. See the [mutation evidence](results/rvl-hf-behavior-policy-parity-v1/generation-config-mutation-v1/summary.json) and [v3 calibration](results/rvl-hf-behavior-policy-parity-v1/cpu-calibration-v3/summary.json).
+- **RVL generation-setting mutation checks:** v3 rejects inherited non-neutral `typical_p`; v4 adds neutral `suppress_tokens` and `no_repeat_ngram_size` checks. A candidate that carries pretrained suppression through is accepted by v3 and rejected by v4, while the pinned fixed source passes v4. See the [v4 mutation evidence](results/rvl-hf-behavior-policy-parity-v1/generation-config-mutation-v4/summary.json) and [v4 calibration](results/rvl-hf-behavior-policy-parity-v1/cpu-calibration-v4/summary.json).
 
 - **Local CPU agent pilot:** the corrected v2 tool loop ran one small local model on one pinned task for three formal seeds. It made no source edits and the locked grader rejected all three unchanged checkouts. The original v1 cohort is invalidated because of a tool-history serialization bug. See the [pilot report](docs/local-agent-pilot.md).
 
@@ -20,7 +24,8 @@ Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, c
 
 - **16/16 synthetic reliability cases** matched their declared outcomes, including incorrect provenance, source mutation, malformed output, timeouts, output flooding and subprocess cleanup.
 - **Environment command output cap regression:** the frozen v4 task reproduces accepted stdout/stderr floods at the baseline; the fix rejects each overflow, retains at most the configured bytes per stream, and terminates the POSIX process group while preserving normal command behavior. See the [report](docs/environment-output-budget-report.md) and [raw results](results/environment-output-budget-v4/summary.json). This is not an OS resource sandbox.
-- **Synthetic preference-optimization control:** on 10 CPU seeds, clean-label DPO-style updates lowered held-out synthetic preference NLL by 0.3523 nats/pair (paired 95% bootstrap interval 0.3427–0.3623). The run failed its preregistered KL ceiling (0.5629 vs 0.5), and its reference-policy accuracy field is invalid because exact ties were counted as wrong. See the [report and limitations](docs/synthetic-dpo-report.md) and [audited raw bundle](results/synthetic-dpo-cpu-v1-exploratory/). This is synthetic mechanism evidence only.
+- **Synthetic preference-optimization v1:** clean-label DPO-style updates lowered held-out synthetic NLL by 0.3523 nats/pair, but exceeded the frozen KL ceiling (0.5629 vs 0.5); its original reference accuracy also mishandled ties. Preserve it as a diagnostic non-pass in the [v1 report and bundle](docs/synthetic-dpo-report.md).
+- **Synthetic preference-optimization v2:** a reported training-only sweep informed 100 updates; its raw output was not retained. A separate post-run development replay also selects 100 under the stated rule. On a separate 10-seed confirmation cohort, mean held-out NLL improved by 0.3074 nats/pair (paired 95% bootstrap interval 0.2928–0.3226), all seeds improved, and mean KL was 0.3874 under the recorded 0.5 ceiling. The audit reconstructs all 40 seed-by-arm results and identifies an invalid shuffled-ID arm, excluded from inference. See the [v2 report](docs/synthetic-dpo-v2-report.md) and [development/confirmation evidence](results/synthetic-dpo-cpu-v2/). Synthetic mechanism evidence only.
 - **80 historical-source evaluations** preserved the expected pre-fix rejection/fixed acceptance decisions across one-worker and four-worker campaigns.
 - **3.4857× median paired speedup** with four workers versus this same runner with one worker, over five pairs on a local macOS arm64 CPU. This is a small local-grader measurement, not a distributed or model-serving result.
 
@@ -28,7 +33,7 @@ Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, c
 
 Start with the [ten-minute walkthrough](docs/walkthrough.md), [technical report](docs/scheduler-report.md), and [execution contract](docs/execution.md). Inspect retained evidence offline:
 
-The [post-training plan](docs/post-training-plan.md) defines the next no-cost learning experiments and their claim limits. The [current evidence gaps](docs/current-gaps.md) rank the remaining CPU-feasible work and state what the retained results support.
+The [post-training plan](docs/post-training-plan.md) defines the no-cost learning experiments and their claim limits. The [current evidence gaps](docs/current-gaps.md) rank the remaining CPU-feasible work and state what the retained results support.
 
 ```bash
 python3 scripts/audit_scheduler.py results/cpu-scheduler-v1
@@ -49,12 +54,12 @@ Two real upstream fixes calibrate the task and grading path:
 
 | Task | What the grader exercises | Pre-fix result | Fixed result |
 | --- | --- | --- | --- |
-| [HF behavior-policy parity](benchmarks/historical/rvl_behavior_policy_parity/TASK.md) | Protocol v3 checks neutral `top_k`, `top_p`, repetition penalty, and pretrained `typical_p` behavior on deterministic CPU fixtures, alongside rollout probabilities and the learner's actual `_sample_objective` path. | Maximum absolute rollout log-probability error `0.7380`; learner error `0.3711`; rejected. | Both errors `0.0`; accepted. |
-| [TRL accumulation-window normalizer](benchmarks/historical/trl_grpo_accumulation_scale/TASK.md) | Protocol v7 executes six source-derived arithmetic cases in each of two trainer paths, rejects later normalizer writes, unapproved loss reassignments through return, in-place local mutation and direct aliases, and checks the selected denominator. | Maximum absolute normalizer error `12`; rejected. | Maximum error `0`; accepted. |
+| [HF behavior-policy parity](benchmarks/historical/rvl_behavior_policy_parity/TASK.md) | Protocol v4 checks rollout probabilities and the learner's actual `_sample_objective` path with neutral sampling truncation, repetition, no-repeat-ngram, and token-suppression settings on CPU fixtures. | Maximum absolute rollout log-probability error `0.5570`; learner error `0.3711`; rejected. | Both errors `0.0`; accepted. |
+| [TRL accumulation-window normalizer](benchmarks/historical/trl_grpo_accumulation_scale/TASK.md) | Protocol v8 executes six source-derived arithmetic cases in each of two trainer paths, checks masked numerator/returned-loss reachability, rejects later normalizer writes and unapproved loss mutations, and checks the selected denominator. | Maximum absolute normalizer error `12`; rejected. | Maximum error `0`; accepted. |
 
 The second task tracks the upstream [TRL issue](https://github.com/huggingface/trl/issues/5619) and [fix](https://github.com/huggingface/trl/pull/6024). The first uses a pinned fix in [Recursive-Verification-Lag](https://github.com/mitukx/Recursive-Verification-Lag).
 
-Raw grader outputs, summaries, protocol snapshots, and SHA-256 manifests are retained under [`results/`](results/). See the [evidence notes](docs/evidence.md) for exact revisions, metrics, and limits. Earlier HF protocol results remain as history; v3 is the current protocol.
+Raw grader outputs, summaries, protocol snapshots, and SHA-256 manifests are retained under [`results/`](results/). See the [evidence notes](docs/evidence.md) for exact revisions, metrics, and limits. Earlier HF protocol results remain as history; v4 is current.
 
 The separate [integrity calibration](results/protocol-integrity/cpu-calibration-v4/summary.json) changes the task descriptor, task brief, and grader one at a time for both current task protocols. All six changes are rejected against the unchanged protocol lock. The checked-in Git history is the trust anchor for that lock; this does not detect coordinated edits to the lock itself.
 
@@ -98,7 +103,7 @@ For the TRL task, provide `--task-root benchmarks/historical/trl_grpo_accumulati
 
 ## Roadmap
 
-The [roadmap](docs/roadmap.md) tracks the evidence needed before expanding the claims. The next major gap is a correctly scored synthetic run that meets a frozen drift budget, followed only later by feasible real-model evidence. The current agent pilot remains supporting evidence about task execution, not the project's primary research direction.
+The [roadmap](docs/roadmap.md) tracks the evidence needed before expanding the claims. The next major gaps are signal-shift falsification and any feasible, independently measured model-level update. The current agent pilot remains supporting evidence about task execution, not the project's primary research direction.
 
 ## Develop the full package
 

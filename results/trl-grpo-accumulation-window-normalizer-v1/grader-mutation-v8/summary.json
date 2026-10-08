@@ -1,0 +1,439 @@
+{
+  "acceptance_passed": true,
+  "base_revision": "8697378709102608e3c9dc5bf582772e4ddee788",
+  "claim_limit": "This tests two source mutations against one pinned historical change; it does not establish grader soundness for arbitrary code or validate full trainer execution.",
+  "expected_outcomes": {
+    "control": {
+      "v7_passed": true,
+      "v8_passed": true
+    },
+    "early_return": {
+      "v7_passed": true,
+      "v8_passed": false
+    },
+    "zero_numerator": {
+      "v7_passed": true,
+      "v8_passed": false
+    }
+  },
+  "observed_outcomes": {
+    "control": {
+      "v7": {
+        "candidate_diff_sha256": "870249300e133a9d10ffb20a82c4aca9d0ddcc519861c890033e6b0b721a5ed0",
+        "failures": [],
+        "passed": true
+      },
+      "v8": {
+        "candidate_diff_sha256": "870249300e133a9d10ffb20a82c4aca9d0ddcc519861c890033e6b0b721a5ed0",
+        "failures": [],
+        "passed": true
+      }
+    },
+    "early_return": {
+      "v7": {
+        "candidate_diff_sha256": "8cd9fe9c3e1516b77da80ff2b6b41cd26f5be2253a39cd3a7d190abfe6a2f664",
+        "failures": [],
+        "passed": true
+      },
+      "v8": {
+        "candidate_diff_sha256": "8cd9fe9c3e1516b77da80ff2b6b41cd26f5be2253a39cd3a7d190abfe6a2f664",
+        "failures": [
+          {
+            "absolute_error": null,
+            "case_id": "generation-window-larger",
+            "check": "accumulation_window_normalizer",
+            "expected": 6.0,
+            "observed": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "case_id": "generation-window-larger",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "absolute_error": null,
+            "case_id": "equal-windows",
+            "check": "accumulation_window_normalizer",
+            "expected": 12.0,
+            "observed": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "case_id": "equal-windows",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "absolute_error": null,
+            "case_id": "accumulation-window-larger",
+            "check": "accumulation_window_normalizer",
+            "expected": 24.0,
+            "observed": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "case_id": "accumulation-window-larger",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "absolute_error": null,
+            "case_id": "partial-final-window",
+            "check": "accumulation_window_normalizer",
+            "expected": 3.0,
+            "observed": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "case_id": "partial-final-window",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "absolute_error": null,
+            "case_id": "clamped-empty-count",
+            "check": "accumulation_window_normalizer",
+            "expected": 0.25,
+            "observed": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "case_id": "clamped-empty-count",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "absolute_error": null,
+            "case_id": "evaluation-is-unscaled",
+            "check": "accumulation_window_normalizer",
+            "expected": 6.0,
+            "observed": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "case_id": "evaluation-is-unscaled",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "absolute_error": null,
+            "case_id": "generation-window-larger",
+            "check": "accumulation_window_normalizer",
+            "expected": 6.0,
+            "observed": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          },
+          {
+            "case_id": "generation-window-larger",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          },
+          {
+            "absolute_error": null,
+            "case_id": "equal-windows",
+            "check": "accumulation_window_normalizer",
+            "expected": 12.0,
+            "observed": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          },
+          {
+            "case_id": "equal-windows",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          },
+          {
+            "absolute_error": null,
+            "case_id": "accumulation-window-larger",
+            "check": "accumulation_window_normalizer",
+            "expected": 24.0,
+            "observed": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          },
+          {
+            "case_id": "accumulation-window-larger",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          },
+          {
+            "absolute_error": null,
+            "case_id": "partial-final-window",
+            "check": "accumulation_window_normalizer",
+            "expected": 3.0,
+            "observed": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          },
+          {
+            "case_id": "partial-final-window",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          },
+          {
+            "absolute_error": null,
+            "case_id": "clamped-empty-count",
+            "check": "accumulation_window_normalizer",
+            "expected": 0.25,
+            "observed": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          },
+          {
+            "case_id": "clamped-empty-count",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          },
+          {
+            "absolute_error": null,
+            "case_id": "evaluation-is-unscaled",
+            "check": "accumulation_window_normalizer",
+            "expected": 6.0,
+            "observed": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          },
+          {
+            "case_id": "evaluation-is-unscaled",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          }
+        ],
+        "passed": false
+      }
+    },
+    "zero_numerator": {
+      "v7": {
+        "candidate_diff_sha256": "8edaa157e6cd8b6c4d6647c09792d96a31144acd0d8165f9926e9922acd048d6",
+        "failures": [],
+        "passed": true
+      },
+      "v8": {
+        "candidate_diff_sha256": "8edaa157e6cd8b6c4d6647c09792d96a31144acd0d8165f9926e9922acd048d6",
+        "failures": [
+          {
+            "absolute_error": null,
+            "case_id": "generation-window-larger",
+            "check": "accumulation_window_normalizer",
+            "expected": 6.0,
+            "observed": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "case_id": "generation-window-larger",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "absolute_error": null,
+            "case_id": "equal-windows",
+            "check": "accumulation_window_normalizer",
+            "expected": 12.0,
+            "observed": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "case_id": "equal-windows",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "absolute_error": null,
+            "case_id": "accumulation-window-larger",
+            "check": "accumulation_window_normalizer",
+            "expected": 24.0,
+            "observed": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "case_id": "accumulation-window-larger",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "absolute_error": null,
+            "case_id": "partial-final-window",
+            "check": "accumulation_window_normalizer",
+            "expected": 3.0,
+            "observed": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "case_id": "partial-final-window",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "absolute_error": null,
+            "case_id": "clamped-empty-count",
+            "check": "accumulation_window_normalizer",
+            "expected": 0.25,
+            "observed": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "case_id": "clamped-empty-count",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "absolute_error": null,
+            "case_id": "evaluation-is-unscaled",
+            "check": "accumulation_window_normalizer",
+            "expected": 6.0,
+            "observed": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "case_id": "evaluation-is-unscaled",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/trainer/grpo_trainer.py"
+          },
+          {
+            "absolute_error": null,
+            "case_id": "generation-window-larger",
+            "check": "accumulation_window_normalizer",
+            "expected": 6.0,
+            "observed": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          },
+          {
+            "case_id": "generation-window-larger",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          },
+          {
+            "absolute_error": null,
+            "case_id": "equal-windows",
+            "check": "accumulation_window_normalizer",
+            "expected": 12.0,
+            "observed": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          },
+          {
+            "case_id": "equal-windows",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          },
+          {
+            "absolute_error": null,
+            "case_id": "accumulation-window-larger",
+            "check": "accumulation_window_normalizer",
+            "expected": 24.0,
+            "observed": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          },
+          {
+            "case_id": "accumulation-window-larger",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          },
+          {
+            "absolute_error": null,
+            "case_id": "partial-final-window",
+            "check": "accumulation_window_normalizer",
+            "expected": 3.0,
+            "observed": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          },
+          {
+            "case_id": "partial-final-window",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          },
+          {
+            "absolute_error": null,
+            "case_id": "clamped-empty-count",
+            "check": "accumulation_window_normalizer",
+            "expected": 0.25,
+            "observed": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          },
+          {
+            "case_id": "clamped-empty-count",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          },
+          {
+            "absolute_error": null,
+            "case_id": "evaluation-is-unscaled",
+            "check": "accumulation_window_normalizer",
+            "expected": 6.0,
+            "observed": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          },
+          {
+            "case_id": "evaluation-is-unscaled",
+            "check": "effective_loss_denominator",
+            "expected_scale": 1.0,
+            "observed_scale": null,
+            "source_file": "trl/experimental/gspo_token/grpo_trainer.py"
+          }
+        ],
+        "passed": false
+      }
+    }
+  },
+  "protocols": {
+    "candidate": "current-v8",
+    "comparison": "retained-v7"
+  },
+  "resources": {
+    "accelerator_hours": 0,
+    "external_compute_usd": 0,
+    "model_weights_downloaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages": 0
+  },
+  "runtime": {
+    "created_at_utc": "2026-10-08T00:53:04.929497+00:00",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12"
+  },
+  "schema_version": 1,
+  "source_repository": "https://github.com/huggingface/trl.git",
+  "source_revision": "e1b2e21975994e676d9a676e3ab005e9bee38e40",
+  "study_id": "trl-grader-false-accept-mutations-v8"
+}

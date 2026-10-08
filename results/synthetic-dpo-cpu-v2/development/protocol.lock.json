@@ -1,0 +1,47 @@
+{
+  "beta": 1.0,
+  "candidate_updates": [
+    25,
+    50,
+    75,
+    100,
+    125,
+    150,
+    175,
+    200
+  ],
+  "claim_boundary": "Training-only development selection evidence; not a confirmation result and not language-model capability evidence.",
+  "exploratory_context": "The rule and budget were informed by a previously recorded exploratory training-only sweep. Confirmation held-out outcomes were not used to choose them. This replay is development evidence and does not update the already frozen confirmation protocol.",
+  "learning_rate": 0.2,
+  "protocol_id": "vare-synthetic-contextual-dpo-cpu-v2-development",
+  "purpose": "Select and independently replay a conservative update budget using development training data only; no held-out data are generated.",
+  "resources": {
+    "external_dependencies": false,
+    "gpu": false,
+    "network_access": false,
+    "paid_api_or_compute": false
+  },
+  "seeds": [
+    401,
+    409,
+    419,
+    421,
+    431,
+    433,
+    439,
+    443,
+    449,
+    457
+  ],
+  "selection_rule": "Choose the largest candidate update count for which mean training-context KL to the uniform reference is <=0.45 and every development seed has training-context KL <=0.50. Compute metrics only on the examples used to update that seed policy. No held-out contexts or labels are generated in development.",
+  "selection_thresholds": {
+    "maximum_mean_training_context_kl": 0.45,
+    "maximum_per_seed_training_context_kl": 0.5
+  },
+  "sha256": "e60258564f7e0b187ac08821aab115e3889cec904bd2f979716332b359f6e766",
+  "training_data": {
+    "comparisons_per_context": 8,
+    "contexts": 64,
+    "generator": "Same deterministic synthetic teacher and pairwise sampler as the frozen confirmation protocol; development seeds are disjoint from confirmation seeds."
+  }
+}

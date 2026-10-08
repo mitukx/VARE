@@ -16,14 +16,14 @@ A separate [replay group regression](replay-group-freshness-report.md) found tha
 
 Two pinned tasks now have calibrated pre-fix and fixed revisions:
 
-1. [HF behavior-policy parity](../benchmarks/historical/rvl_behavior_policy_parity/TASK.md) checks rollout and learner probability parity with deterministic CPU fixtures. Protocol v3 adds a retained false-acceptance regression for inherited non-neutral `typical_p`; v2 accepted that candidate, while v3 rejects all six rollout cases.
-2. [TRL accumulation-window normalization](../benchmarks/historical/trl_grpo_accumulation_scale/TASK.md) checks extracted production loss-normalization branches with deterministic scalar fixtures, normalizer/loss write guards through return, direct aliases, and denominator matching. Frozen audits found branch, final-return, in-place, and direct-alias false accepts across protocols v3–v6. Protocol v7 rejects five frozen mutations while retaining fixed-source acceptance. These cases do not estimate a general error rate.
+1. [HF behavior-policy parity](../benchmarks/historical/rvl_behavior_policy_parity/TASK.md) checks rollout and learner probability parity with deterministic CPU fixtures. Protocol v3 added inherited `typical_p`; v4 adds `suppress_tokens` and `no_repeat_ngram_size`, applies suppression in the fixture, and rejects a candidate that v3 accepted.
+2. [TRL accumulation-window normalization](../benchmarks/historical/trl_grpo_accumulation_scale/TASK.md) checks extracted production loss-normalization branches with deterministic scalar fixtures, masked numerator and reachability guards, normalizer/loss write guards through return, direct aliases, and denominator matching. Protocol v7 accepted two mutations that v8 now rejects: an early return and a zeroed numerator. The pinned fixed source still passes. These cases do not estimate a general error rate.
 
 Both graders reject the pre-fix revision and accept the known fixed revision. Their raw results, protocol snapshots, and hashes are retained in [`results/`](../results/) and summarized in [`evidence.md`](evidence.md). These outcomes calibrate the tasks and graders; they do not show that an agent can discover the fix or that a model improves.
 
 ## E2 — Controlled post-training mechanism
 
-The first CPU/no-spend contextual preference experiment is retained in [`synthetic-dpo-report.md`](synthetic-dpo-report.md). Its DPO-style objective passed finite-difference checks, and clean updates lowered held-out synthetic NLL across all 10 seeds. The frozen acceptance rule failed because mean KL exceeded its ceiling; the reference accuracy field also had a tie-handling defect and is not valid. The complete bundle is hash-audited. This is narrow synthetic mechanism evidence, not LLM training or capability evidence. Next, fix the metric, use a separate development cohort for training-only update-budget selection, then freeze a new protocol and independent seed cohort.
+The v1 diagnostic and its failed KL rule remain in [`synthetic-dpo-report.md`](synthetic-dpo-report.md). The separate v2 confirmation is reported in [`synthetic-dpo-v2-report.md`](synthetic-dpo-v2-report.md): a training-only development phase selected the update count; the frozen 10-seed confirmation passed its held-out NLL/KL rule, and the audit reconstructs all seed-by-arm metrics. This reaches a narrow synthetic mechanism result. It is not LLM training or capability evidence. Next, test a separately frozen signal-shift hypothesis and assess whether any model-level CPU update is feasible with already cached assets.
 
 ## Supporting evidence — Agent trajectories
 
@@ -31,7 +31,7 @@ The corrected [local CPU pilot](local-agent-pilot.md) ran one small model on one
 
 ## E3 — Preference-signal robustness
 
-After the synthetic baseline is validated, compare clean, noisy, and shifted preference conditions at matched update/data budgets. Freeze the condition definitions, primary metric, acceptance rule, and analysis before outcomes. If task selection/curriculum is studied, it should be one explicit intervention with a fixed-selector baseline and independent held-out outcome.
+The v2 result includes noisy-label and shuffled-label diagnostics, but they are not a confirmatory robustness estimate. Compare clean, noisy, and shifted preference conditions at matched update/data budgets under a new frozen protocol. Freeze condition definitions, calibration measures, primary metric, acceptance rule, and analysis before outcomes. If task selection/curriculum is studied, define one explicit intervention with a fixed-selector baseline and independent held-out outcome.
 
 ## E4 — Small-model learning
 
@@ -51,7 +51,7 @@ Study repeated system-proposed interventions only after independent downstream e
 
 ## Current stop point
 
-The isolated-input E0 calibration, execution failure-injection checks, promotion-metric and replay-group regressions, bounded environment-command output v4 regression, and two E1 task/grader pairs are complete. Narrow E5 measurements cover local scheduling and durable freshness-check work. E2 has a synthetic preference-policy diagnostic run that failed its frozen acceptance rule; its accuracy defect and limits are public. Agent evidence is separately negative. Confirmatory E3 robustness, E4 real-model learning, heterogeneous workload profiling, distributed systems evidence and E6 remain outstanding. No language-model learning, generalization, or capability gain is claimed.
+The isolated-input E0 calibration, execution failure-injection checks, promotion-metric and replay-group regressions, bounded environment-command output v4 regression, and two E1 task/grader pairs are complete. Narrow E5 measurements cover local scheduling and durable freshness-check work. E2 has one accepted synthetic preference-policy confirmation alongside the preserved v1 diagnostic non-pass. Agent evidence is separately negative. Confirmatory E3 robustness, E4 real-model learning, heterogeneous workload profiling, distributed systems evidence and E6 remain outstanding. No language-model learning, generalization, or capability gain is claimed.
 
 ## Restored experimental implementation
 

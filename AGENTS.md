@@ -69,10 +69,10 @@ Never relabel E0/E1 plumbing as E4 capability evidence.
 
 When several tasks are available, prefer the earliest unresolved item in this order unless evidence clearly says otherwise:
 
-1. Re-run the synthetic preference control under a new frozen version with corrected tie scoring and a training-only-selected update budget; preserve v1's failed outcome.
+1. Preserve v1's failed outcome and v2's accepted synthetic confirmation; do not tune either protocol after observing outcomes.
 2. Measure sensitivity to preference noise, distribution shift, reference-policy drift, and random seed under a separately frozen protocol; preserve null and negative outcomes.
 3. Validate learner diagnostics and provenance (policy/reference/verifier versions, update count, KL, parameter delta, runtime, memory).
-4. Attempt a tiny cached-model adapter smoke test only when it fits existing hardware and passes explicit abort limits; do not download large weights or spend money.
+4. Audit whether a tiny cached-model adapter smoke test fits existing hardware and passes explicit time/memory abort limits; do not download model weights or spend money.
 5. Use task trajectories, curriculum, and promotion infrastructure as supporting mechanisms for a clearly specified learning hypothesis.
 6. Seek independent reproduction and broader grader coverage.
 7. Increase model size or distributed scope only when a free resource is available and a cheaper experiment cannot answer the question.

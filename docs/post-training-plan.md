@@ -14,7 +14,9 @@ Post-training depends on reward and preference signals, optimization objectives,
 
 The first executable version is frozen as [`synthetic_dpo_cpu_v1`](../protocols/synthetic_dpo_cpu_v1.lock.json) and its result is described in [`synthetic-dpo-report.md`](synthetic-dpo-report.md). It used a contextual linear-softmax policy over four actions and eight features, with synthetic pairwise labels from a known utility function and 10 fixed seeds. The analytical gradient passed central finite differences. Clean-label optimization improved held-out NLL, but exceeded the frozen KL ceiling, so the acceptance rule failed. The reference-policy accuracy field also exposed a tie-scoring bug; that field is invalid and a regression test now covers the correction.
 
-Do not alter v1. The next run must have a new versioned protocol and a new seed cohort. Select any lower update budget using only training-set objective and KL diagnostics in a separately labeled development run. Fix tie handling (a zero-logit reference gets 0.5 pairwise accuracy), freeze the next protocol before its confirmatory outcomes, and retain its full raw bundle.
+Do not alter v1. The v2 follow-up uses a new seed cohort, corrected half-credit tie scoring, and a budget chosen from training-only diagnostics before confirmation outcomes. Its protocol and raw bundle are retained separately.
+
+That follow-up is retained as [`synthetic-dpo-v2-report.md`](synthetic-dpo-v2-report.md). A reported, unretained training-only sweep informed the 100-update budget; a separate development bundle that applies the recorded rule was produced after confirmation and is a reproducibility check. The separate 10-seed confirmation met its recorded rule: all seeds improved held-out synthetic pairwise NLL; mean improvement was 0.3074 nats/pair with paired bootstrap 95% interval [0.2928, 0.3226]; mean KL was 0.3874 under the 0.5 ceiling. The audited bundle reconstructs every seed-by-arm result, and identifies the invalid shuffled-ID arm. Treat this as a narrow synthetic mechanism result only, not independently preregistered evidence.
 
 Required checks and measurements for the next version:
 
@@ -39,6 +41,6 @@ The existing L2 RVL/Qwen protocol remains frozen and unrun. Its declared 0.5B mo
 
 ## Current gaps and claim boundary
 
-There is no real-model training update or held-out model improvement. The v1 synthetic policy changed and improved its held-out synthetic NLL, but failed acceptance due to policy drift and has an invalid reference accuracy field. Existing historical-task calibration, grader mutation testing, replay/promotion contracts, and local reliability measurements are supporting engineering evidence. The previous small-model coding-agent pilot is a negative tool-use result and is not post-training evidence.
+There is still no real-model training update or held-out model improvement. v1 remains a visible non-pass with its invalid reference-accuracy metric; v2 is a separate accepted synthetic run and cannot establish language-model behavior. Historical task calibration, grader mutation testing, replay/promotion contracts, and local reliability measurements are supporting engineering evidence. The previous small-model coding-agent pilot is a negative tool-use result and is not post-training evidence.
 
 Phase 1 can establish objective/gradient correctness and sensitivity in a toy controlled system. It cannot establish that VARE improves a language model or produces useful real-world behavior. Phase 2 would provide only a small-model smoke result unless a sufficiently powered, preregistered held-out study is actually completed.

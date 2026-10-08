@@ -4,14 +4,14 @@ VARE's experimental focus is post-training signal quality and policy updates und
 
 ## Current no-cost sequence
 
-The first controlled synthetic run is retained in [`synthetic-dpo-report.md`](synthetic-dpo-report.md). Its finite-difference check and held-out NLL comparison are available, but the preregistered KL ceiling was exceeded and the reference-policy accuracy metric had a tie-handling defect. Treat it as a diagnostic non-pass. Continue with a separately versioned protocol; do not revise v1 after seeing its outcomes. Follow the staged plan in [`post-training-plan.md`](post-training-plan.md):
+The v1 and v2 synthetic runs are both retained. v1 remains a diagnostic non-pass: it exceeded its frozen KL ceiling and its old reference-accuracy field mishandled exact ties. v2 is a separate accepted confirmation with corrected tie scoring, a budget informed by a reported training-only sweep, a disjoint seed cohort, complete raw data, and a reconstructing audit. The exploratory sweep was not retained, and the formal development replay followed the confirmation; do not call v2 independently preregistered. Do not revise either protocol after seeing outcomes. The complete v2 procedure and limits are in [`synthetic-dpo-v2-report.md`](synthetic-dpo-v2-report.md). Follow the staged plan in [`post-training-plan.md`](post-training-plan.md):
 
-1. **Completed as a diagnostic non-pass:** v1 validated the objective gradient, but breached the KL ceiling and exposed a reference-accuracy tie bug.
-2. Correct the tie metric and choose an update budget using training-only diagnostics; freeze a new protocol/seed cohort before evaluating held-out NLL, accuracy, KL, per-seed spread, and resource use.
-3. Probe label noise and preference-distribution shift under a separate frozen protocol, preserving negative/null results and distinguishing optimization data from held-out evaluation.
-4. Only if cached weights and local CPU capacity make it genuinely feasible, attempt a tiny adapter/DPO or RVL hook smoke test with strict time and memory abort limits. No model downloads, paid APIs, GPU rentals, or unbounded runs.
+1. **Completed, synthetic only:** v1 exposed excessive policy drift; v2 used 100 updates, passed the finite-difference check, and met its recorded held-out NLL/KL acceptance rule on all 10 independent seeds. Its shuffled-ID arm is invalid and excluded from inference.
+2. Freeze a distinct falsification protocol for preference noise and distribution shift with a declared calibration/decision rule; v2's label-flip arm is diagnostic only, and its shuffled-ID arm is invalid.
+3. Audit whether cached model weights, tokenizer/runtime dependencies and local CPU resources support a small bounded adapter update without downloads or cost. Stop if the resource budget cannot be met.
+4. If feasible, run a separately frozen model-level smoke test with before/after outputs, policy drift, parameter delta, and independent held-out evaluation. Otherwise record why no model-level result can be produced under the budget.
 
-The synthetic stages test objective correctness and whether the harness can detect a known mechanism. They do not show language-model quality, reasoning, truthful behavior, broad preference alignment, or transfer to real users.
+The synthetic stages test objective correctness and whether the harness can detect a known mechanism. The accepted v2 result is not evidence of language-model quality, reasoning, truthful behavior, broad preference alignment, or transfer to real users.
 
 ## Frozen L2 protocol
 

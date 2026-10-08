@@ -1,0 +1,34 @@
+diff --git a/trl/experimental/gspo_token/grpo_trainer.py b/trl/experimental/gspo_token/grpo_trainer.py
+index 110f0ae..889b6bb 100644
+--- a/trl/experimental/gspo_token/grpo_trainer.py
++++ b/trl/experimental/gspo_token/grpo_trainer.py
+@@ -121,8 +121,11 @@ class GRPOTrainer(_GRPOTrainer):
+             normalizer = self.current_gradient_accumulation_steps if mode == "train" else 1.0  # no accum in eval
+             loss = loss / normalizer
+         elif self.loss_type == "dapo":
++            # `num_items_in_batch` spans the generation batch, so rescale it to one accumulation window
+             normalizer = inputs["num_items_in_batch"].clamp(min=1.0) / self.accelerator.num_processes
+-            loss = (per_token_loss * mask).sum() / normalizer
++            if mode == "train":  # in eval, the batch is neither split across steps nor accumulated
++                normalizer = normalizer * self.current_gradient_accumulation_steps / self.args.steps_per_generation
++            loss = ((per_token_loss * mask).sum() * 0.0) / normalizer
+         else:
+             raise ValueError(f"Unknown loss type: {self.loss_type}")
+ 
+diff --git a/trl/trainer/grpo_trainer.py b/trl/trainer/grpo_trainer.py
+index 523f867..ab6492b 100644
+--- a/trl/trainer/grpo_trainer.py
++++ b/trl/trainer/grpo_trainer.py
+@@ -3153,8 +3153,11 @@ class GRPOTrainer(_BaseTrainer):
+             policy_loss = loss.detach()
+             loss = loss / normalizer
+         elif self.loss_type in ["cispo", "dapo", "vespo"]:
++            # `num_items_in_batch` spans the generation batch, so rescale it to one accumulation window
+             normalizer = inputs["num_items_in_batch"].clamp(min=1.0) / self.accelerator.num_processes
+-            loss = (per_token_loss * mask).sum() / normalizer
++            if mode == "train":  # in eval, the batch is neither split across steps nor accumulated
++                normalizer = normalizer * self.current_gradient_accumulation_steps / self.args.steps_per_generation
++            loss = ((per_token_loss * mask).sum() * 0.0) / normalizer
+             policy_loss = loss.detach()
+         elif self.loss_type == "luspo":
+             # Unless importance_sampling_level="token" (not recommended here), per_token_loss is expected to be (B, 1)

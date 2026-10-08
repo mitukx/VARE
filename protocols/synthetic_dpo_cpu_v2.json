@@ -1,0 +1,109 @@
+{
+  "arms": {
+    "clean_dpo": "Use generated preference labels as sampled.",
+    "flip_20pct": "Independently flip each training preference label with probability 0.20.",
+    "reference": "No update; uniform categorical policy.",
+    "shuffle_labels": "Shuffle the training preference labels with a separate deterministic RNG seeded by seed+100000."
+  },
+  "artifact_policy": "Retain protocol snapshot, source hash, all generated train and held-out examples, seed-level metrics, aggregate summary, run environment, and SHA-256 manifest. Never discard a failed run. Development data and confirmation data are stored in separate bundles; the development runner must not generate held-out data.",
+  "claim_boundary": "Synthetic mechanism evidence only; not language-model training, reasoning, truthfulness, alignment, or capability evidence.",
+  "compute_limits": {
+    "early_stopping": false,
+    "external_dependencies": false,
+    "gpu": false,
+    "network_access": false,
+    "paid_api_or_compute": false
+  },
+  "development": {
+    "candidate_updates": [
+      25,
+      50,
+      75,
+      100,
+      125,
+      150,
+      175,
+      200
+    ],
+    "protocol_id": "vare-synthetic-contextual-dpo-cpu-v2-development",
+    "seeds": [
+      401,
+      409,
+      419,
+      421,
+      431,
+      433,
+      439,
+      443,
+      449,
+      457
+    ],
+    "selection_evidence": "An exploratory training-only sweep on seeds 211,223,227,229,233,239,241,251,257,263 inspected candidate budgets 25,50,75,100,125,150,175,200. It did not generate or inspect held-out outcomes. The separate development cohort below replays a predeclared selection rule.",
+    "selection_result_expected": 100,
+    "selection_rule": "Choose the largest candidate update count for which mean training-context KL to the uniform reference is <=0.45 and every development seed has training-context KL <=0.50. Compute metrics only on the examples used to update that seed policy. No held-out contexts or labels are generated in development."
+  },
+  "generator": {
+    "actions": 4,
+    "contexts": "8 independent standard-normal features from Python random.Random(seed).gauss(0, 1), generated in the declared order.",
+    "heldout_split": "128 subsequently generated independent contexts, 2 comparisons per context (256 pairs); never used for updates or model selection.",
+    "preference": "For a sampled unordered action pair (a,b), label a preferred with probability sigmoid(u(x,a)-u(x,b)); sample a Bernoulli draw using the same per-seed RNG stream.",
+    "teacher_utility": "u(x,a) = sum_d x[d] * (sin(0.7*(a+1)*(d+1)) + 0.5*cos(0.31*(a+2)*(d+1))).",
+    "train_split": "64 independently generated contexts, 8 comparisons per context (512 pairs)."
+  },
+  "gradient_check": {
+    "absolute_tolerance": 1e-06,
+    "epsilon": 1e-06,
+    "method": "central finite differences on a fixed four-action, eight-feature preference minibatch and fixed nonzero parameter vector.",
+    "relative_tolerance": 1e-05
+  },
+  "learner": {
+    "beta": 1.0,
+    "dtype": "Python binary64 floats.",
+    "learning_rate": 0.2,
+    "objective": "Mean softplus(-beta * ((log pi(chosen|x)-log pi(rejected|x)) - (log pi_ref(chosen|x)-log pi_ref(rejected|x)))); beta=1.0 and pi_ref is frozen uniform.",
+    "optimizer": "Full-batch gradient descent, learning_rate=0.2, updates=100; budget selected using training-only development diagnostics before confirmation outcomes were generated.",
+    "policy": "Contextual categorical policy pi(a|x)=softmax(theta[a] dot x), initialized with all theta=0.",
+    "updates": 100
+  },
+  "metrics": {
+    "acceptance": {
+      "maximum_mean_clean_policy_kl": 0.5,
+      "mean_clean_nll_improvement_at_least_nats_per_pair": 0.05,
+      "minimum_seeds_with_clean_nll_improvement": 8,
+      "paired_bootstrap_lower_bound_above": 0.0,
+      "seed_count": 10
+    },
+    "paired_bootstrap": {
+      "interval": [
+        0.025,
+        0.975
+      ],
+      "resamples": 10000,
+      "seed": 20261009
+    },
+    "primary": "mean held-out pairwise preference NLL difference clean_dpo minus reference; lower is better.",
+    "secondary": [
+      "held-out pairwise accuracy",
+      "held-out Brier score",
+      "mean policy KL(pi||uniform) over held-out contexts",
+      "teacher expected utility over held-out contexts",
+      "parameter L2 delta",
+      "per-seed wall-clock seconds",
+      "process peak RSS when available"
+    ]
+  },
+  "protocol_id": "vare-synthetic-contextual-dpo-cpu-v2",
+  "purpose": "Confirm a training-budget choice on an independent synthetic preference seed cohort after a separately labeled training-only development phase.",
+  "seeds": [
+    311,
+    313,
+    317,
+    331,
+    337,
+    347,
+    349,
+    353,
+    359,
+    367
+  ]
+}

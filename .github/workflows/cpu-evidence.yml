@@ -44,11 +44,19 @@ jobs:
         run: >-
           python3 scripts/calibrate_task.py
           --output "${RUNNER_TEMP}/vare-rvl-calibration"
+      - name: Compare retained v3 and current v4 RVL graders on inherited settings
+        run: >-
+          python3 scripts/audit_rvl_generation_mutations.py
+          --output "${RUNNER_TEMP}/vare-rvl-generation-mutation-v4"
       - name: Calibrate the TRL accumulation-window task
         run: >-
           python3 scripts/calibrate_task.py
           --task-root benchmarks/historical/trl_grpo_accumulation_scale
           --output "${RUNNER_TEMP}/vare-trl-calibration"
+      - name: Compare retained v7 and current v8 TRL graders on source mutations
+        run: >-
+          python3 scripts/audit_trl_grader_mutations.py
+          --output "${RUNNER_TEMP}/vare-trl-grader-mutation-v8"
       - name: Calibrate locked-input tamper rejection
         run: >-
           python3 scripts/calibrate_integrity.py
@@ -71,6 +79,22 @@ jobs:
         run: >-
           python3 scripts/audit_synthetic_dpo.py
           "${RUNNER_TEMP}/vare-synthetic-dpo-cpu"
+      - name: Select v2 update budget from training-only development data
+        run: >-
+          python3 scripts/develop_synthetic_dpo_budget.py
+          --output "${RUNNER_TEMP}/vare-synthetic-dpo-v2-development"
+      - name: Audit v2 development bundle
+        run: >-
+          python3 scripts/audit_synthetic_dpo_development.py
+          "${RUNNER_TEMP}/vare-synthetic-dpo-v2-development"
+      - name: Run frozen v2 synthetic preference confirmation
+        run: >-
+          python3 scripts/run_synthetic_dpo_v2.py
+          --output "${RUNNER_TEMP}/vare-synthetic-dpo-v2-confirmation"
+      - name: Reconstruct and audit v2 confirmation metrics
+        run: >-
+          python3 scripts/audit_synthetic_dpo_v2.py
+          "${RUNNER_TEMP}/vare-synthetic-dpo-v2-confirmation"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: vare-current-regression-calibrations
@@ -79,7 +103,31 @@ jobs:
           retention-days: 30
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
+          name: vare-trl-grader-mutation-v8
+          path: ${{ runner.temp }}/vare-trl-grader-mutation-v8
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: vare-rvl-generation-mutation-v4
+          path: ${{ runner.temp }}/vare-rvl-generation-mutation-v4
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
           name: vare-synthetic-dpo-cpu
           path: ${{ runner.temp }}/vare-synthetic-dpo-cpu
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: vare-synthetic-dpo-v2-development
+          path: ${{ runner.temp }}/vare-synthetic-dpo-v2-development
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: vare-synthetic-dpo-v2-confirmation
+          path: ${{ runner.temp }}/vare-synthetic-dpo-v2-confirmation
           if-no-files-found: error
           retention-days: 30
