@@ -1,0 +1,124 @@
+{
+  "claim_boundary": "A single pilot run on eight synthetic bug templates with four generated variants each. It can only establish feasibility on this narrow task pack; it is not a benchmark, a model-learning result, or general coding capability evidence.",
+  "compute_limits": {
+    "device": "CPU only; reject initialized CUDA; never invoke MPS",
+    "max_input_tokens": 4096,
+    "max_peak_rss_bytes": 6442450944,
+    "max_wall_seconds": 7200,
+    "network": "disabled by offline environment flags and local_files_only model loading",
+    "paid_compute": false,
+    "threads": 4
+  },
+  "dataset": {
+    "family_counts": {
+      "boundary": 8,
+      "default_aggregation": 8,
+      "ordered_transformation": 8,
+      "sequence": 8
+    },
+    "path": "data/cpu-code-repair-feasibility-v1/pilot.jsonl",
+    "pilot_sha256": "397163e4afb45517ca98f5174f6bdf3371daa7b92fd575c5bed7ef700308def9",
+    "published_hidden_cases_excluded_from_future_training_and_confirmation": true,
+    "rows": 32,
+    "seed": 20261010,
+    "template_counts": {
+      "discount_then_cap": 4,
+      "half_open_range": 4,
+      "keep_half_open_range": 4,
+      "keep_nonnegative": 4,
+      "mean_or_fallback": 4,
+      "minimum_inclusive": 4,
+      "minimum_or_fallback": 4,
+      "scale_then_cap": 4
+    },
+    "templates": 8,
+    "variants_per_template": 4
+  },
+  "freeze": {
+    "auditor": "scripts/audit_cpu_code_repair_feasibility_v1.py",
+    "auditor_sha256": "68dfa96687f01bf9c6be5153d70343e0b530535f31fc9e208a5f6a3293489d53",
+    "generator": "scripts/generate_cpu_code_repair_feasibility_v1.py",
+    "generator_sha256": "8cdc4f051be998aae69c0c170760a1c48b16e51a5d89588be8e71434de086b79",
+    "grader": "scripts/grade_cpu_code_repair_feasibility_v1.py",
+    "grader_sha256": "5101ba02edea68a337a963881ed47c4df3f035e09bfd869d72e52f776119c729",
+    "objective_test": "tests/test_cpu_code_repair_feasibility_v1.py",
+    "objective_test_sha256": "377fd1f243b92f62291a055be6c1b1efbbafe76423043cff178bb68e984045c3",
+    "runner": "scripts/run_cpu_code_repair_feasibility_v1.py",
+    "runner_sha256": "2844beccac1cbedd31542d51395fd09ef5e4c5d712b3dbc04ed5755f1cf82380",
+    "sandbox": "scripts/code_repair_sandbox_v1.py",
+    "sandbox_sha256": "4aee6967a833c004f295d0b36bc978bd4b06ce7917297d608555113c150794cd"
+  },
+  "generation": {
+    "do_sample": false,
+    "eos_and_pad_token": "pinned tokenizer EOS",
+    "eos_token_id": "pinned tokenizer eos",
+    "max_generations": 5,
+    "max_new_tokens_per_turn": 192,
+    "max_tool_calls": 8,
+    "no_tool_reminders": 1,
+    "num_return_sequences": 1,
+    "prompt": "Frozen in the runner source; source digest required below.",
+    "strategy": "greedy",
+    "use_cache": true
+  },
+  "metrics": {
+    "aggregate_rate_is_descriptive_not_iid": true,
+    "feasibility_gate": {
+      "maximum_successes": 26,
+      "minimum_episodes_with_edit_and_test": 24,
+      "minimum_finished_episodes": 24,
+      "minimum_per_family": 2,
+      "minimum_per_template": 1,
+      "minimum_successes": 8,
+      "minimum_tool_validity_rate": 0.9,
+      "required_rows": 32,
+      "required_templates": 8
+    },
+    "primary": "episode success requiring correct hidden cases, an accepted source edit, a visible test run, and explicit finish",
+    "secondary": [
+      "per-template success",
+      "per-family success",
+      "schema-valid authorized tool-call rate",
+      "unsafe/unauthorized calls",
+      "CPU generation throughput",
+      "peak RSS",
+      "wall time"
+    ]
+  },
+  "model": {
+    "dtype": "float32",
+    "files_sha256": {
+      "config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+      "generation_config.json": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6",
+      "merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+      "model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "weights_must_already_be_cached": true
+  },
+  "protocol_id": "vare-cpu-code-repair-feasibility-v1",
+  "purpose": "Offline CPU-only no-update feasibility screen for bounded multi-turn code repair tasks.",
+  "runtime": {
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "stop_rules": [
+    "Abort if the model or tokenizer is not already cached at the pinned revision.",
+    "Abort on any runtime, source, dataset, or asset hash mismatch.",
+    "Abort at the wall-time or peak-RSS limit.",
+    "Do not change thresholds after observing model outputs.",
+    "A failure retires this model/task pairing; it does not authorize reusing this pilot or lowering gates."
+  ],
+  "study_boundary": {
+    "future_confirmation_allowed_to_use_pilot": false,
+    "next_step_if_pass": "Run a separately frozen one-seed learner-cost smoke before any multi-seed training.",
+    "pilot_hidden_inputs_are_secret_holdout": false,
+    "training_performed": false
+  }
+}

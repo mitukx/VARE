@@ -2,7 +2,7 @@
 
 ## Decision
 
-Make a generated multi-turn code/engineering repair task the next primary candidate. First run a frozen, no-update feasibility screen on the locally cached Qwen2.5-0.5B-Instruct model. Use 32 small generated mini-repository tasks across four bug families, with bounded `list`, `read`, `search`, `edit`, and visible-test tools. Keep hidden tests in a separate grader. Measure episode success, tool-call validity, CPU throughput, peak memory, and whether there is enough room to improve. Do not start training unless the task and resource gates pass.
+Make a generated multi-turn code/engineering repair task the next primary candidate. First run a frozen, no-update feasibility screen on the locally cached Qwen2.5-0.5B-Instruct model. Use 32 small generated mini-repository episodes across four bug families and eight bug templates (four generated variants per template), with bounded file and visible-test tools. Keep hidden tests outside the model-accessible workspace. Measure episode success, tool-call validity, CPU throughput, peak memory, and whether there is enough room to improve. Do not start training unless the task and resource gates pass.
 
 The research question after a successful screen is:
 
@@ -26,14 +26,16 @@ This choice changes the evidence target from preference-score movement to succes
 
 ## Feasibility screen and stop rules
 
-The proposed screen will use fresh procedurally generated mini-repositories, not a public benchmark or the historical repair task from the [local-agent pilot](local-agent-pilot.md). The 32-row pilot will be permanently excluded from training, development, and confirmation. Four bug families will cover distinct code changes and tool interactions; the screen will use eight tasks per family. A later holdout must change mutation/composition combinations rather than only replacing names or numbers. The grader should independently rebuild the expected behavior and hidden tests from each episode seed.
+The proposed screen will use procedurally generated mini-repositories, not a public benchmark or the historical repair task from the [local-agent pilot](local-agent-pilot.md). It contains 32 episodes but only eight distinct bug templates, each repeated with four generated variants. Treat the aggregate rate as a descriptive feasibility pilot; do not report a binomial confidence interval or imply 32 independent task mechanisms. Report results by family and template. The pilot and its published hidden cases will be permanently excluded from training, development, and confirmation. The four balanced families are: boundary and empty-range semantics; sequence filtering, duplicate handling, and ordering; missing/default/empty aggregation; and order-dependent transformation pipelines. Each family has two bug templates and eight episodes. A later confirmation set must use new repair mechanisms and compositions, not just new names or numbers.
 
-Freeze the model revision, task generator, tool schema, prompt, decoding, episode count, resource limits, and pass/fail thresholds before generation. Run offline on CPU with cached weights, at most five tool turns and 192 generated tokens per turn, under 6 GiB peak RSS and two hours wall time. The candidate proceeds only if:
+The agent workspace exposes only the task prompt, source files, public cases, and bounded file/edit/test tools. Hidden grader code and cases stay outside the workspace and are not tool-addressable. The edit tool can modify only declared existing files, rejects traversal and symlinks, and applies a unique exact-text replacement. Candidate source is never passed to Python `exec`, a shell, or external test runner: visible and hidden behavior is evaluated by a small AST interpreter that permits only the frozen expression/function subset. Before freeze, an independent stdlib-only auditor regenerates the data, confirms each buggy baseline fails at least one hidden case, confirms a known fix passes all hidden cases, and checks typed output equality. The pilot data will be retained publicly for reproducibility; its hidden cases are private from the agent only during the run and are not a future secret holdout.
 
-1. the base passes at least 8 of 32 hidden-test episodes while retaining meaningful headroom;
-2. each of the four task families has at least one passing episode;
-3. at least 80% of tool calls satisfy the frozen schema and file/state constraints;
-4. the screen stays within the declared memory and wall-time budget.
+Freeze the model revision, task generator, tool schema, prompt, decoding, episode count, resource limits, and pass/fail thresholds before generation. Run offline on CPU with cached weights, at most five model generations and 192 generated tokens per generation, with at most eight total tool calls, under 6 GiB peak RSS and two hours wall time. The candidate proceeds only if:
+
+1. the base passes between 8 and 26 of 32 episodes, inclusive, with success requiring a correct final program, an accepted edit, a visible-test run, and an explicit `finish` call;
+2. each of the four task families has at least two passing episodes and each of the eight bug templates has at least one;
+3. at least 90% of all attempted calls are schema-valid, authorized tool calls; malformed and unknown calls count in the denominator, zero calls fails, at least 24 episodes must contain both an accepted edit and visible-test run, and at least 24 must finish explicitly;
+4. no unsafe or unauthorized tool attempt occurs, all 32 unique task IDs have complete records, and the screen stays within the declared memory and wall-time budget.
 
 If any condition fails, retire this model/task pairing without lowering thresholds or reusing the pilot. A passing screen still does not establish that multi-seed online RL is affordable: estimate the learner cost in a separate bounded smoke before committing to a formal study. Do not switch to a capability claim based on preference NLL, reward alone, or a single favorable seed. Any result from this generated environment must be described as a narrow synthetic code-repair result, not a public benchmark or general coding gain.
 
