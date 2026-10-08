@@ -1,0 +1,53 @@
+{
+  "acceptance": {
+    "alias_mutation": "reject",
+    "fixed_source": "pass"
+  },
+  "claim_limit": "One alias-based in-place mutation on two methods in one pinned source revision; no general alias-analysis or semantic-soundness claim.",
+  "grader": {
+    "path": "benchmarks/historical/trl_grpo_accumulation_scale/evaluator/grade.py",
+    "sha256": "638bb98c7d725097ff1fd01e9fa36ac000c039915cc1af960fbbf8aa2d46aa5f"
+  },
+  "mutation": {
+    "description": "Before the final return in both pinned methods, assign `loss_alias = loss`, then call `loss_alias.mul_(2)`.",
+    "expected_semantic_decision": "reject",
+    "patch_path": "benchmarks/audits/trl_alias_dataflow_v1/candidate-mutation.patch",
+    "patch_sha256": "d2d4cfa377ede4f0d2899fafecdfbfd6381e7ff2d86c8a49f97220cefdc5710f",
+    "predicted_protocol_v6_decision": "accept; hypothesis to be measured."
+  },
+  "objective": "Test whether protocol v6 detects a final loss mutation performed through a local alias to the returned Tensor.",
+  "procedure": [
+    "Verify v6 lock, pinned fixed source hashes, and mutation hash.",
+    "Grade fixed source under protocol v6.",
+    "Apply the frozen alias mutation to both files and grade under protocol v6.",
+    "Preserve both raw outputs."
+  ],
+  "protocol_id": "trl-loss-alias-mutation-audit-v1",
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "model_weights_loaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages_used": false
+  },
+  "schema_version": 1,
+  "source": {
+    "files": [
+      "trl/experimental/gspo_token/grpo_trainer.py",
+      "trl/trainer/grpo_trainer.py"
+    ],
+    "fixed_revision": "e1b2e21975994e676d9a676e3ab005e9bee38e40",
+    "fixed_source_sha256": {
+      "trl/experimental/gspo_token/grpo_trainer.py": "37b91254ff70d353ca4a04bd1e28602102ddcbd50be3a79b0ba0a6cb62bc52e0",
+      "trl/trainer/grpo_trainer.py": "7446f652aefb9b78a64952a135c2235c924a7633c112d6a8f569b16ec4d62e14"
+    },
+    "repository": "https://github.com/huggingface/trl.git"
+  },
+  "task": {
+    "protocol_id": "trl-grpo-accumulation-window-normalizer-protocol-v6",
+    "protocol_lock_sha256": "493d7d729abc57ad63747a333d51a78b295c3dfcc67bd67b29128b899e41a2f4",
+    "task_brief_sha256": "1885d073596154aefc7dbd7e07e22b8c4897b47d7639abac5027b1b9b0e7c011",
+    "task_id": "trl-grpo-accumulation-window-normalizer-v1",
+    "task_json_sha256": "4954e5d741f6cab4ce44f5066ff70de9e58b39ef0a1e30834905ec0d885fe392"
+  }
+}
