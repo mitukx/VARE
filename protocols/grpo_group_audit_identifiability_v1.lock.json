@@ -1,0 +1,54 @@
+{
+  "protocol_id": "grpo_group_audit_identifiability_v1",
+  "status": "frozen_before_execution",
+  "question": "Can audits of one rollout per group identify the distribution of clean group-normalized GRPO advantages when verifier rewards are fixed but clean outcomes have different within-group dependence?",
+  "scope": "Exact finite synthetic mechanism study. This is not language-model training or capability evidence.",
+  "worlds": {
+    "A": "For each group, draw Z ~ Bernoulli(0.5) and set clean labels to (Z,Z).",
+    "B": "For each group, draw Z ~ Bernoulli(0.5) and set clean labels to (Z,1-Z)."
+  },
+  "observed_proxy": "Every group has the same two members and proxy verifier labels (1,0). The auditor does not observe the un-audited clean labels.",
+  "audit_arms": {
+    "item_uniform": "Audit exactly one member per group, selected uniformly without replacement within that group; record member index and clean label.",
+    "item_proxy_positive": "Audit member 0 per group, the member receiving proxy reward 1.",
+    "group_atomic": "Audit both members of each sampled group; sample groups uniformly."
+  },
+  "matched_label_budget": 200,
+  "item_uniform_groups_per_trial": 200,
+  "item_proxy_positive_groups_per_trial": 200,
+  "group_atomic_groups_per_trial": 100,
+  "replicate_seeds": [
+    "integers 0 through 1999 inclusive; Python random.Random(seed); no seed selection or replacement"
+  ],
+  "primary_metrics": [
+    "balanced accuracy for distinguishing a batch from world A versus world B using audited labels only",
+    "exact total-variation distance between the one-item audit observation laws in worlds A and B"
+  ],
+  "secondary_metrics": [
+    "per-member clean-label marginal estimates",
+    "within-group clean-label covariance estimate when jointly observed",
+    "audit-label calls and exact accounting"
+  ],
+  "advantage_definition": "For binary rewards r=(r0,r1), use centered population-standardized advantages A_i=(r_i-mean(r))/sqrt(mean((r-mean(r))^2)); define A=(0,0) when variance is exactly zero.",
+  "trial_design": "Each of the 2000 replicate seeds runs one batch from world A and one batch from world B. Each batch has a total budget of 200 clean-label calls. The item arms audit one member in each of 200 groups; the group arm audits both members in 100 groups. Balanced accuracy is computed across the 2000 batches for each world.",
+  "frozen_expectations": {
+    "item_marginal_identifiability": "Each member has marginal clean reward 0.5 in both worlds; member-index plus one audited label has the same distribution in both worlds, so no classifier using item-only audits can exceed balanced accuracy 0.5 in expectation, regardless of item-level propensity correction.",
+    "group_signal": "World A always has A=(0,0); world B always has either (1,-1) or (-1,1). A complete audited group reveals whether its members agree.",
+    "decision_rule": "Mechanism prediction is supported only if item-uniform and item-proxy-positive balanced accuracy are each <=0.55, group-atomic balanced accuracy is >=0.99, exact one-item observation-law TV is 0, and the independent audit reproduces all primary metrics. Otherwise report a non-pass without changing the protocol."
+  },
+  "randomization": "For each seed and world batch, independently draw group outcomes using random.Random(seed). For item_uniform, independently choose member 0/1 with that RNG. For world B, independently choose orientation Z for every group. Item-proxy-positive always audits member index 0. The item-only classifier predicts B iff audited label positives exceed half the batch; ties predict A. The group classifier predicts B iff any audited complete group is discordant.",
+  "limitations": [
+    "Two-member synthetic groups only.",
+    "The target is identifiability of the per-group normalized advantage signal, not the expected parameter update or downstream task success.",
+    "No language model, optimizer, or policy training is run.",
+    "The result does not establish that group-atomic audits are cost-optimal in general."
+  ],
+  "references_reviewed": [
+    "https://arxiv.org/abs/2510.00915",
+    "https://arxiv.org/abs/2604.07666",
+    "https://arxiv.org/abs/2604.15149",
+    "https://arxiv.org/abs/2605.12474",
+    "https://arxiv.org/abs/2609.36958",
+    "https://arxiv.org/abs/2601.08521"
+  ]
+}
