@@ -12,6 +12,8 @@ Training arms use the original preferences, or flip each pair's orientation at f
 
 The runner uses only Python's standard library and local CPU. It retains all designs, labels, per-seed metrics, exact source snapshots, environment fields, and file hashes in the [confirmation bundle](../results/synthetic-preference-robustness-v1/confirmation/). Run the [auditor](../scripts/audit_synthetic_preference_robustness.py) to regenerate all data and reconstruct 80 arm-by-condition-by-seed records and the primary decision. The retained [audit output](../results/synthetic-preference-robustness-v1/audit.json) confirms disjoint training/held-out contexts and paired base/shift evaluation designs. The formal run took **7.12 seconds** on the recorded local machine; peak RSS was **22,790,144 bytes** on macOS as reported by `getrusage`.
 
+Reconstruction also passed from a detached clean clone of commit `8549561`. The repository's Ubuntu/Python 3.11 [CPU evidence workflow](https://github.com/mitukx/VARE/actions/runs/37717689087) reran and audited the study successfully. The clean clone was run by the project author; the CI job is independent execution infrastructure, not independent human review.
+
 ## Result
 
 The frozen primary rule passed. Mean clean-arm held-out base-teacher NLL improvement over the uniform reference was **0.3174 nats per pair** (paired seed bootstrap 95% interval **[0.3021, 0.3328]**); all **10/10** seeds improved. Mean policy KL to uniform was **0.3952**, below the locked ceiling of **0.5**. Mean clean-arm base-teacher held-out accuracy was **0.8398**, versus **0.5000** for the tied uniform reference.
