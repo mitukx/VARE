@@ -1,0 +1,11 @@
+{
+  "audit_output_path": "results/synthetic-preference-robustness-v1/independent-audits/github-clean-clone-python-3.12.json",
+  "audit_output_sha256": "02b49c996ad860bfa5d6c427d985bb78e82ecd8c15898a2cfdd0898ba6d07a8b",
+  "clone_branch": "main",
+  "clone_commit": "70e466095eb25e02c4bbcd4c1de74dae840f8057",
+  "clone_method": "fresh depth-1 GitHub clone of origin/main; audit ran from this checkout",
+  "clone_remote": "https://github.com/mitukx/VARE.git",
+  "clone_worktree_clean_after_audit": true,
+  "command": "python3.12 scripts/verify_synthetic_preference_robustness_bundle_independent.py results/synthetic-preference-robustness-v1/confirmation --output <separate evidence file>",
+  "interpretation": "Local clean-clone reproduction by the project author; not an outside-person reproduction. The verifier still does not regenerate Gaussian contexts or action-pair designs."
+}
