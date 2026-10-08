@@ -7,6 +7,7 @@ from statistics import fmean
 from typing import Mapping
 
 from .config import PromotionConfig
+from .reward_audit import RewardAuditObservation, audit_reward_labels
 from .types import EvaluationReport, PromotionDecision
 
 
@@ -25,6 +26,13 @@ class PromotionGate:
             raise ValueError("paired_alpha must be in (0,1)")
         if config.paired_bootstrap_samples <= 0:
             raise ValueError("paired_bootstrap_samples must be positive")
+        if config.require_reward_audit:
+            if not 0 < config.reward_audit_alpha < 1:
+                raise ValueError("reward_audit_alpha must be in (0,1)")
+            if not 0 <= config.reward_audit_max_false_accept_ucb <= 1:
+                raise ValueError("reward_audit_max_false_accept_ucb must be in [0,1]")
+            if type(config.reward_audit_min_proxy_positives) is not int or config.reward_audit_min_proxy_positives < 1:
+                raise ValueError("reward_audit_min_proxy_positives must be positive")
 
     @staticmethod
     def _paired_scores(report: EvaluationReport) -> Mapping[str, float] | None:
@@ -105,6 +113,37 @@ class PromotionGate:
             reasons.append("paired_uncertainty")
         return mean_gain, lcb, n, reasons
 
+    def _reward_audit_reasons(self, candidate: EvaluationReport) -> list[str]:
+        raw = candidate.metadata.get("reward_audit")
+        paired = candidate.metadata.get("per_task_scores")
+        if not isinstance(raw, list) or not raw:
+            return ["missing_reward_audit"]
+        if not isinstance(paired, dict):
+            return ["reward_audit_missing_task_identity"]
+        try:
+            if any(not isinstance(row, dict) for row in raw):
+                raise ValueError("invalid observation")
+            rows = [
+                RewardAuditObservation(
+                    task_id=row["task_id"],
+                    family=row["family"],
+                    proxy_pass=row["proxy_pass"],
+                    trusted_pass=row["trusted_pass"],
+                )
+                for row in raw
+            ]
+            if set(row.task_id for row in rows) != set(paired) or len(rows) != len(paired):
+                return ["reward_audit_identity_mismatch"]
+            result = audit_reward_labels(
+                rows,
+                max_false_accept_ucb=self.config.reward_audit_max_false_accept_ucb,
+                min_proxy_positives=self.config.reward_audit_min_proxy_positives,
+                alpha=self.config.reward_audit_alpha,
+            )
+        except (TypeError, ValueError, KeyError):
+            return ["invalid_reward_audit"]
+        return list(result.reasons)
+
     def decide(self, incumbent: EvaluationReport, candidate: EvaluationReport) -> PromotionDecision:
         if not self._has_valid_metrics(incumbent) or not self._has_valid_metrics(candidate):
             return PromotionDecision(
@@ -117,6 +156,13 @@ class PromotionGate:
                 paired_n=0,
             )
         reasons: list[str] = []
+        if self.config.require_complete_slices and set(incumbent.slices) != set(candidate.slices):
+            reasons.append("evaluation_slice_identity_mismatch")
+        if (self.config.require_measured_disagreement
+                and candidate.metadata.get("verifier_disagreement_measured") is not True):
+            reasons.append("unmeasured_verifier_disagreement")
+        if self.config.require_reward_audit:
+            reasons.extend(self._reward_audit_reasons(candidate))
         gain = candidate.primary - incumbent.primary
         if incumbent.n < self.config.min_eval_examples or candidate.n < self.config.min_eval_examples:
             reasons.append("insufficient_eval_examples")
