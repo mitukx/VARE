@@ -3,7 +3,7 @@ from collections import Counter
 
 import pytest
 
-from vare.config import EngineConfig, PromotionConfig
+from vare.config import EngineConfig, PromotionConfig, ReplayConfig
 from vare.engine import CapabilityLoop
 from vare.types import Attempt, EvaluationReport, Task, Verification
 from vare.verifiers import VerifierEnsemble, VerifierMember
@@ -87,3 +87,27 @@ def test_rollout_group_ids_are_unique_when_round_index_is_reused(samples_per_tas
     assert first_run_groups
     assert second_run_groups
     assert first_run_groups.isdisjoint(second_run_groups)
+
+
+def test_engine_admits_groups_atomically_when_replay_capacity_is_not_divisible():
+    hooks = Hooks()
+    loop = CapabilityLoop(
+        hooks=hooks,
+        verifier=VerifierEnsemble([VerifierMember(Verifier())]),
+        config=EngineConfig(
+            rollout_concurrency=8,
+            replay_batch_size=7,
+            samples_per_task=4,
+            preserve_rollout_groups=True,
+            replay=ReplayConfig(capacity=7),
+            promotion=PromotionConfig(min_eval_examples=1),
+        ),
+        seed=4,
+    )
+
+    asyncio.run(loop.run_round([Task(str(i), "x") for i in range(8)], round_index=0, rollout_count=8))
+
+    assert len(loop.replay) == 4
+    assert hooks.train_group_counts is not None
+    assert set(hooks.train_group_counts.values()) == {4}
+    assert sum(hooks.train_group_counts.values()) == 4

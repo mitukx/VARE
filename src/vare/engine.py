@@ -124,6 +124,7 @@ class CapabilityLoop:
         pairs = await asyncio.gather(*(self._one_rollout(sem, t, incumbent_id, incumbent_version) for t in chosen))
 
         admitted: list[Experience] = []
+        admitted_freshness: list[float] = []
         dropped = 0
         for attempt, verification in pairs:
             self.shift.observe(attempt.task.family)
@@ -146,8 +147,49 @@ class CapabilityLoop:
                 verifier_lag=lag.verifier_lag,
                 shift_score=lag.shift_score,
             )
-            self.replay.add(exp, lag.freshness)
             admitted.append(exp)
+            admitted_freshness.append(lag.freshness)
+
+        if self.config.preserve_rollout_groups:
+            admitted_groups: dict[str, list[tuple[Experience, float]]] = {}
+            for exp, freshness in zip(admitted, admitted_freshness, strict=True):
+                group_id = exp.attempt.metadata.get("vare_rollout_group")
+                if group_id is None:
+                    group_id = exp.attempt.task.metadata.get("vare_rollout_group")
+                key = str(group_id) if group_id is not None else f"ungrouped:{id(exp)}"
+                admitted_groups.setdefault(key, []).append((exp, freshness))
+
+            for group_id, members in admitted_groups.items():
+                first = members[0][0]
+                expected_size = first.attempt.metadata.get("vare_rollout_group_size")
+                if expected_size is None:
+                    expected_size = first.attempt.task.metadata.get(
+                        "vare_rollout_group_size"
+                    )
+                complete = (
+                    isinstance(expected_size, int)
+                    and not isinstance(expected_size, bool)
+                    and expected_size == len(members)
+                )
+                inserted = complete and self.replay.add_group(
+                    [exp for exp, _ in members],
+                    [freshness for _, freshness in members],
+                )
+                if not inserted:
+                    self.events.emit(
+                        "replay_group_not_admitted",
+                        group_id=group_id,
+                        admitted_count=len(members),
+                        expected_size=expected_size,
+                        reason=(
+                            "incomplete_after_lag"
+                            if not complete
+                            else "capacity_or_priority"
+                        ),
+                    )
+        else:
+            for exp, freshness in zip(admitted, admitted_freshness, strict=True):
+                self.replay.add(exp, freshness)
 
         clusters = self.failures.mine(admitted)
         self.curriculum.update(clusters)

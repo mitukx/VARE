@@ -12,6 +12,6 @@ The adapter previously restored the active policy only after every evaluation ta
 
 ## Verification and scope
 
-`tests/test_rvl_grpo_hooks.py` injects both a generation failure after candidate weights are loaded and a candidate restore that mutates state before raising. It checks that the original error propagates after a forced incumbent restore, active identity remains the incumbent, and a later candidate evaluation still works. The focused group, freshness, concurrency, and RVL hook suite passed (9 tests), and the full suite passed (153 passed, 12 skipped) on Python 3.12.12.
+`tests/test_rvl_grpo_hooks.py` injects both a generation failure after candidate weights are loaded and a candidate restore that mutates state before raising. It checks that the original error propagates after a forced incumbent restore, active identity remains the incumbent, and a later candidate evaluation still works. The focused group, freshness, concurrency, and RVL hook suite passed (17 tests), and the full suite passed (159 passed, 12 skipped) on Python 3.12.12.
 
 This regression uses a fake trainer and backend. It does not validate cancellation scheduling, a failed restoration operation, another RVL revision, real model behavior, CUDA, or downstream task improvement. Existing real-trainer rollback smokes cover separate training-failure boundaries.
