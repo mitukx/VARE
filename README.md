@@ -181,4 +181,4 @@ vare --help
 Apache-2.0. See [LICENSE](LICENSE).
 
 
-The frozen [v17 follow-up](docs/boolq-posttraining-study.md) tests a tenfold lower learning rate on fresh BoolQ rows after v16's task regression and KL failures. It compares matched DPO, answer SFT, and anchored DPO under the same predeclared advancement gate. The result is pending; the locked protocols are committed before execution, and any development pass will need a separate untouched confirmation.
+The frozen [v17 follow-up](docs/boolq-posttraining-study.md) tested a tenfold lower learning rate on fresh BoolQ rows after v16's task regression and KL failures. All three arms were audited and failed the frozen advancement gate: DPO and anchored DPO matched base task predictions; SFT gained one answer in one seed and was otherwise unchanged. Preference NLL improved, but task improvement was not established. See the [v17 report](docs/boolq-posttraining-development-v17-report.md) and [paired comparison](results/cpu-lm-boolq-posttraining-development-v17-comparison.json). Confirmation data remains unopened.
