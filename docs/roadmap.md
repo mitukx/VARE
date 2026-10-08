@@ -35,7 +35,7 @@ The v2 result includes noisy-label and shuffled-label diagnostics, but they are 
 
 ## E4 — Small-model learning
 
-The frozen L2 RVL/Qwen campaign remains unrun: its original workload exceeds the current no-spend CPU budget. Do not edit its lock. A separate [`cpu_lm_dpo_head_v1`](../protocols/cpu_lm_dpo_head_v1.lock.json) study now defines a strict offline CPU run using an already-cached model, a custom narrow output-head adapter, disjoint arithmetic-choice data and held-out preference measures. It has not run formally yet. Retain null and negative outcomes. The synthetic E2 experiment cannot substitute for E4.
+The frozen L2 RVL/Qwen campaign remains unrun: its original workload exceeds the current no-spend CPU budget. Do not edit its lock. The separate [`cpu_lm_dpo_head_v1`](../protocols/cpu_lm_dpo_head_v1.lock.json) study completed on a cached model and retained all three adapter seeds. The preregistered decision was a non-pass: held-out preference NLL worsened on average and one seed exceeded its KL ceiling. See the [model-level report](cpu-lm-dpo-head-v1-report.md) and [audited bundle](../results/cpu-lm-dpo-head-v1/retry-1/). Preserve v1 unchanged. Any future model run needs a distinct training-only development cohort and a new confirmation lock; the synthetic E2 experiment cannot substitute for E4.
 
 ## E5 — Systems impact
 
@@ -51,7 +51,7 @@ Study repeated system-proposed interventions only after independent downstream e
 
 ## Current stop point
 
-The isolated-input E0 calibration, execution failure-injection checks, promotion-metric and replay-group regressions, bounded environment-command output v4 regression, and two E1 task/grader pairs are complete. Narrow E5 measurements cover local scheduling and durable freshness-check work. E2 has one accepted synthetic preference-policy confirmation alongside the preserved v1 diagnostic non-pass. Agent evidence is separately negative. Confirmatory E3 robustness, completed E4 real-model learning, heterogeneous workload profiling, distributed systems evidence and E6 remain outstanding. No language-model learning, generalization, or capability gain is claimed before the frozen model run completes and passes its checks.
+The isolated-input E0 calibration, execution failure-injection checks, promotion-metric and replay-group regressions, bounded environment-command output v4 regression, and two E1 task/grader pairs are complete. Narrow E5 measurements cover local scheduling and durable freshness-check work. E2 has one accepted synthetic preference-policy confirmation alongside the preserved v1 diagnostic non-pass. The cached-model run adds evidence that a narrow output-head DPO-style update is feasible on local CPU, but its three-seed held-out result did not pass. Agent evidence is separately negative. Confirmatory E3 robustness, a reliable E4 model-level improvement, heterogeneous workload profiling, distributed systems evidence and E6 remain outstanding. No generalization or capability gain is claimed.
 
 ## Restored experimental implementation
 

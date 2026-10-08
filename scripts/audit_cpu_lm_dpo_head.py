@@ -70,6 +70,8 @@ def audit(root: Path) -> dict[str, Any]:
         raise ValueError("model revision mismatch")
     if summary["device"] != "cpu" or not summary["network_disabled"] or summary["paid_compute"]:
         raise ValueError("recorded runtime violates the frozen compute mode")
+    if summary["torch"] != protocol["runtime"]["torch"] or summary["transformers"] != protocol["runtime"]["transformers"] or summary["numpy"] != protocol["runtime"]["numpy"]:
+        raise ValueError("recorded runtime versions differ from protocol")
 
     raw = load(root / "seed_records.json")
     expected_seeds = [str(seed) for seed in protocol["learner"]["seeds"]]
@@ -133,8 +135,23 @@ def audit(root: Path) -> dict[str, Any]:
     decision = "positive_small_model_preference_result" if passed else "non_pass_or_null"
     if summary["decision"] != decision or summary["all_seeds_improve"] != all_improve or summary["all_seed_kl_within_limit"] != all_kl_ok:
         raise ValueError("decision does not reconstruct from recorded metrics")
+    reported_seeds = summary.get("per_seed", [])
+    if len(reported_seeds) != len(seed_summaries):
+        raise ValueError("summary seed count differs from raw records")
+    for raw_record, reported in zip(seed_summaries, reported_seeds):
+        if reported["seed"] != raw_record["seed"] or not close(reported["heldout_mean_bernoulli_kl_updated_to_base"], raw_record["kl"]):
+            raise ValueError(f"summary seed provenance/KL mismatch for seed {raw_record['seed']}")
+        raw_seed = raw[str(raw_record["seed"])]["metrics"]
+        for condition in ("heldout_base", "heldout_updated"):
+            for metric, expected in raw_seed[condition].items():
+                if not close(reported[condition][metric], expected):
+                    raise ValueError(f"summary per-seed metric mismatch: seed {raw_record['seed']} {condition}.{metric}")
+        if not close(reported["heldout_updated"]["mean_conditional_preference_nll"] - reported["heldout_base"]["mean_conditional_preference_nll"], raw_record["heldout_nll_change"]):
+            raise ValueError(f"summary per-seed NLL change mismatch for seed {raw_record['seed']}")
     if summary["peak_rss_bytes"] > protocol["compute_limits"]["max_peak_rss_bytes"] or summary["total_wall_seconds"] > protocol["compute_limits"]["max_wall_seconds"]:
         raise ValueError("recorded run exceeded frozen resource limits")
+    if summary.get("compute_limits_respected") is not True:
+        raise ValueError("resource-limit status is not affirmative")
     return {"status": "pass", "bundle": str(root), "decision": decision,
             "mean_heldout_nll_change_updated_minus_base": expected_change,
             "paired_seed_stratified_bootstrap_95pct": expected_interval,

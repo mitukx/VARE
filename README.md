@@ -1,6 +1,6 @@
 # VARE
 
-VARE is a CPU-first research control plane for studying post-training signals and policy improvement under limited compute. It combines independently graded tasks, locked experiment protocols, provenance-aware replay, bounded execution, candidate promotion checks, and auditable retained records. Its completed learning evidence currently reaches a controlled synthetic policy update. A separate offline CPU protocol for a cached small language model is frozen but has not yet produced formal results.
+VARE is a CPU-first research control plane for studying post-training signals and policy improvement under limited compute. It combines independently graded tasks, locked experiment protocols, provenance-aware replay, bounded execution, candidate promotion checks, and auditable retained records. Its completed learning evidence includes a controlled synthetic policy update and one small cached-model adapter update whose held-out result was a preregistered non-pass. See the [model-level report](docs/cpu-lm-dpo-head-v1-report.md); no capability gain is claimed.
 
 Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
 
@@ -33,7 +33,7 @@ VARE now retains an accepted, zero-cost synthetic preference-policy confirmation
 
 Start with the [ten-minute walkthrough](docs/walkthrough.md), [technical report](docs/scheduler-report.md), and [execution contract](docs/execution.md). Inspect retained evidence offline:
 
-The [post-training plan](docs/post-training-plan.md) defines the no-cost learning experiments and their claim limits. The [current evidence gaps](docs/current-gaps.md) rank the remaining CPU-feasible work and state what the retained results support. [`cpu_lm_dpo_head_v1`](protocols/cpu_lm_dpo_head_v1.lock.json) freezes a bounded no-download model-level preference update; it is a protocol, not a result.
+The [post-training plan](docs/post-training-plan.md) defines the no-cost learning experiments and their claim limits. The [current evidence gaps](docs/current-gaps.md) rank the remaining CPU-feasible work and state what the retained results support. [`cpu_lm_dpo_head_v1`](protocols/cpu_lm_dpo_head_v1.lock.json) freezes the bounded no-download model-level preference update; its result and first failed attempt are retained separately.
 
 If the exact model snapshot and compatible `torch`, `transformers`, and `numpy` packages are already installed locally, run the frozen study with:
 
