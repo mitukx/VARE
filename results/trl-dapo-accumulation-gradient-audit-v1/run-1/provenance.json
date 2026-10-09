@@ -1,0 +1,24 @@
+{
+  "claim_boundary": "Source-locked scalar autograd and an independent exact-arithmetic check. No GRPOTrainer instance, optimizer step, model update, or task-success result.",
+  "commands": [
+    "python scripts/audit_trl_dapo_accumulation_gradient.py --baseline-source /tmp/trl-grpo-base.py --fixed-source /tmp/trl-grpo-fix.py --output results/trl-dapo-accumulation-gradient-audit-v1/run-1/result.json",
+    "independent-check: inline Python 3 Fraction calculation from the locked protocol; no dependency on the runner"
+  ],
+  "protocol_id": "trl_dapo_accumulation_gradient_audit_v1",
+  "reproduction_type": "same-host author-run plus independent pure-Python Fraction replay",
+  "runtime": {
+    "device": "cpu",
+    "dtype": "float64",
+    "python": "3.9.6",
+    "torch": "2.8.0"
+  },
+  "source": {
+    "baseline_path": "trl/trainer/grpo_trainer.py",
+    "baseline_revision": "8697378709102608e3c9dc5bf582772e4ddee788",
+    "baseline_sha256": "c4a1249c66a3293835b533114d9728a74ab36e775052931229302006a5fe2369",
+    "fixed_path": "trl/trainer/grpo_trainer.py",
+    "fixed_revision": "93929baef2bc635d07460769cef3ce3329ea1c30",
+    "fixed_sha256": "7446f652aefb9b78a64952a135c2235c924a7633c112d6a8f569b16ec4d62e14"
+  },
+  "vare_head_at_run": "aeabc51"
+}

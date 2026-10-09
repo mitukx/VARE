@@ -1,0 +1,25 @@
+{
+  "all_passed": true,
+  "checks": [
+    {
+      "A": 1,
+      "baseline_ratio": "1/4",
+      "fixed_ratio": "1",
+      "passed": true
+    },
+    {
+      "A": 2,
+      "baseline_ratio": "1/2",
+      "fixed_ratio": "1",
+      "passed": true
+    },
+    {
+      "A": 4,
+      "baseline_ratio": "1",
+      "fixed_ratio": "1",
+      "passed": true
+    }
+  ],
+  "method": "independent pure-Python Fraction arithmetic; no torch, no import of study runner",
+  "reference_gradient": "47/100"
+}

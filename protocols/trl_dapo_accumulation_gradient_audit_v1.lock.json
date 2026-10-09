@@ -1,0 +1,64 @@
+{
+  "protocol_id": "trl_dapo_accumulation_gradient_audit_v1",
+  "status": "frozen_before_numerical_execution",
+  "question": "Does TRL PR #6024's DAPO loss-normalizer correction remove the pre-fix dependence of the mean per-window gradient scale on the ratio between current gradient accumulation and steps per generation?",
+  "scope": "CPU autograd audit of the exact normalizer expression in two pinned TRL source revisions, using fixed scalar per-token gradient contributions and variable token counts. This does not instantiate GRPOTrainer, update model parameters, or measure task success.",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "baseline_revision": "8697378709102608e3c9dc5bf582772e4ddee788",
+    "fixed_revision": "93929baef2bc635d07460769cef3ce3329ea1c30",
+    "path": "trl/trainer/grpo_trainer.py",
+    "baseline_sha256": "c4a1249c66a3293835b533114d9728a74ab36e775052931229302006a5fe2369",
+    "fixed_sha256": "7446f652aefb9b78a64952a135c2235c924a7633c112d6a8f569b16ec4d62e14",
+    "upstream_issue": "https://github.com/huggingface/trl/issues/5619",
+    "upstream_pull_request": "https://github.com/huggingface/trl/pull/6024"
+  },
+  "estimand": {
+    "description": "At frozen policy parameters and world_size=1, for each accumulation window w, compute the gradient of the source DAPO masked-token numerator divided by the source normalizer. The primary estimand is the arithmetic mean of per-window gradients divided by the full-generation masked-token-mean gradient.",
+    "baseline_normalizer": "N",
+    "fixed_normalizer": "N * A / S",
+    "N": "total valid completion tokens across the generation batch",
+    "A": "current_gradient_accumulation_steps",
+    "S": "steps_per_generation",
+    "control": "A=S must leave the source correction at 1; eval mode must leave the normalizer unscaled."
+  },
+  "frozen_input": {
+    "microbatch_token_gradient_contributions": [
+      [1.0, 0.5, -0.2, 0.7],
+      [1.4, -0.3, 0.8, 1.1, -0.4, 0.6, 0.9, 0.3],
+      [0.5, -0.2],
+      [1.0, 0.4, -0.5, 0.8, 0.3, 0.7]
+    ],
+    "steps_per_generation": 4,
+    "accumulation_windows": [1, 2, 4],
+    "windowing": "Consecutive microbatches are accumulated in groups of A; no resampling or token filtering."
+  },
+  "primary_metric": "mean_window_gradient / full_generation_masked_token_mean_gradient",
+  "secondary_metrics": [
+    "per-window gradient values for baseline and fixed source expressions",
+    "source revision and full-file SHA-256 checks",
+    "equal-window control and eval-mode normalizer"
+  ],
+  "acceptance": {
+    "fixed_primary_ratio_within_1e-12_of_1_for_A_1_2_4": true,
+    "baseline_primary_ratio_within_1e-12_of_A_over_S": true,
+    "equal_window_control_ratio_is_1": true,
+    "eval_mode_source_normalizer_is_unchanged": true,
+    "source_hashes_match_frozen_values": true,
+    "max_wall_seconds": 120,
+    "accelerator_hours": 0,
+    "paid_api_calls": 0,
+    "external_compute_usd": 0
+  },
+  "failure_criteria": [
+    "either pinned source file hash differs",
+    "the fix fails any predeclared gradient-scale criterion",
+    "the baseline does not show the predicted A/S scale under this estimand"
+  ],
+  "claim_limits": [
+    "This is a quantitative source-derived loss/gradient audit, not an end-to-end trainer run.",
+    "The fixed per-token contributions are controlled inputs, not model-generated trajectories.",
+    "No policy parameter update, convergence, reward quality, or task capability is measured.",
+    "The upstream issue and fix are pre-existing; VARE contributes an independent numerical reproduction, not a novel algorithm or new upstream defect."
+  ]
+}

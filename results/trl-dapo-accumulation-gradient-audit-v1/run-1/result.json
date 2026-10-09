@@ -1,0 +1,102 @@
+{
+  "arms": [
+    {
+      "baseline_expected_ratio": 0.25,
+      "current_gradient_accumulation_steps": 1,
+      "fixed_expected_ratio": 1.0,
+      "primary_gradient_scale_ratio": {
+        "baseline": 0.25000000000000006,
+        "fixed": 1.0000000000000002
+      },
+      "steps_per_generation": 4,
+      "window_gradients": {
+        "baseline": [
+          0.1,
+          0.22000000000000003,
+          0.015,
+          0.135
+        ],
+        "fixed": [
+          0.4,
+          0.8800000000000001,
+          0.06,
+          0.54
+        ]
+      },
+      "window_token_counts": [
+        4,
+        8,
+        2,
+        6
+      ]
+    },
+    {
+      "baseline_expected_ratio": 0.5,
+      "current_gradient_accumulation_steps": 2,
+      "fixed_expected_ratio": 1.0,
+      "primary_gradient_scale_ratio": {
+        "baseline": 0.5000000000000001,
+        "fixed": 1.0000000000000002
+      },
+      "steps_per_generation": 4,
+      "window_gradients": {
+        "baseline": [
+          0.32000000000000006,
+          0.15000000000000002
+        ],
+        "fixed": [
+          0.6400000000000001,
+          0.30000000000000004
+        ]
+      },
+      "window_token_counts": [
+        12,
+        8
+      ]
+    },
+    {
+      "baseline_expected_ratio": 1.0,
+      "current_gradient_accumulation_steps": 4,
+      "fixed_expected_ratio": 1.0,
+      "primary_gradient_scale_ratio": {
+        "baseline": 1.0,
+        "fixed": 1.0
+      },
+      "steps_per_generation": 4,
+      "window_gradients": {
+        "baseline": [
+          0.47000000000000003
+        ],
+        "fixed": [
+          0.47000000000000003
+        ]
+      },
+      "window_token_counts": [
+        20
+      ]
+    }
+  ],
+  "estimand": {
+    "full_generation_masked_token_mean_gradient": 0.47000000000000003,
+    "mean_per_window_gradient_ratio": "mean window gradient divided by full-generation gradient",
+    "total_valid_tokens": 20
+  },
+  "eval_control": {
+    "baseline_normalizer": 20.0,
+    "fixed_normalizer": 20.0,
+    "unchanged": true
+  },
+  "interpretation": "Source-locked scalar autograd audit only; no trainer/model update or task-success evaluation.",
+  "protocol_id": "trl_dapo_accumulation_gradient_audit_v1",
+  "runtime": {
+    "device": "cpu",
+    "dtype": "float64",
+    "python": "3.9.6",
+    "torch": "2.8.0"
+  },
+  "source_sha256": {
+    "baseline": "c4a1249c66a3293835b533114d9728a74ab36e775052931229302006a5fe2369",
+    "fixed": "7446f652aefb9b78a64952a135c2235c924a7633c112d6a8f569b16ec4d62e14"
+  },
+  "status": "pass"
+}
