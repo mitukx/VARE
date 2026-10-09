@@ -1,0 +1,47 @@
+{
+  "protocol_id": "trl_grpo_kl_clip_precision_patch_v3",
+  "status": "frozen_before_execution",
+  "question": "On a fresh multi-token sequence-level GRPO fixture, does the v1 precision candidate produce finite, analytically correct fp16 KL gradients while the unmodified PR head reproduces the predicted non-finite KL metric, and does fp32 remain unchanged?",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "candidate_revision": "0aaea03f2fa449bc7a91f1973e7940da11da65da",
+    "modified_path": "trl/trainer/grpo_trainer.py",
+    "patch_sha256": "0f6c60de679c3c8b467b2bc8b77b01e06f890486cd567322940e5ce8a2137468"
+  },
+  "estimand": {
+    "sequence_ratio": "q_b = exp(mean_{active t}(z_bt-z_old_bt))",
+    "clipped_kl": "K_bt=exp(min(x_bt,c))-min(x_bt,c)-1; x=z_ref-z_policy; clamp uses straight-through gradient",
+    "objective": "L=(beta/B)*sum_b[q_b*mean_active(K_b)]",
+    "sequence_gradient": "dL/dz_bi = beta*q_b/(B*n_b)*(mean_active(K_b)+1-exp(min(x_bi,c)))",
+    "fixture": "B=2,T=3,masks=[[1,1,0],[1,1,1]], active x=[[16,3],[16,16,3]], z-z_old=0.125 on active tokens, c=8,beta=0.1,zero policy advantages; masked padding x=64"
+  },
+  "frozen_cases": [
+    {"name":"pr_head_fp16_sequence", "dtype":"float16", "importance_sampling_level":"sequence", "expected":"production method completes and KL metric is non-finite on the specified overflowing raw-x fixture"},
+    {"name":"candidate_fp16_sequence", "dtype":"float16", "importance_sampling_level":"sequence", "expected":"finite forward loss, KL metric, and gradients; active gradients match analytic estimand within 0.5% relative or 0.1 absolute tolerance; padding gradients are zero"},
+    {"name":"pr_head_fp32_sequence", "dtype":"float32", "importance_sampling_level":"sequence", "expected":"finite controls"},
+    {"name":"candidate_fp32_sequence", "dtype":"float32", "importance_sampling_level":"sequence", "expected":"loss, gradients, and KL metric bit-identical to PR-head controls"}
+  ],
+  "method": "Direct invocation of the pinned production GRPOTrainer._compute_loss on a differentiable two-sequence CPU fixture. The checker computes sequence-level expectations from the equations above without importing TRL or PyTorch. No model, dataset, optimizer, GPU, or external service.",
+  "acceptance": {
+    "unmodified_fp16_baseline_reproduces_nonfinite_kl_metric": true,
+    "candidate_fp16_loss_kl_metric_and_gradients_are_finite": true,
+    "candidate_fp16_sequence_loss_and_active_gradients_match_analytic_tolerance": true,
+    "candidate_fp16_padding_gradients_are_zero": true,
+    "candidate_fp32_loss_gradient_and_metric_are_bit_identical_to_pr_head": true,
+    "source_and_patch_hashes_match_lock": true
+  },
+  "failure_criteria": [
+    "candidate identity differs from pinned PR revision or exact one-file patch hash",
+    "unmodified fp16 baseline does not exhibit the declared non-finite KL metric",
+    "candidate fp16 result is non-finite or outside the analytic tolerance",
+    "candidate produces nonzero gradient on masked padding",
+    "float32 candidate differs from the PR head"
+  ],
+  "interpretation_limits": [
+    "Synthetic source-method fixture only; no real-run prevalence, optimizer impact, or task success is measured.",
+    "The KL path is opt-in in the inspected PR discussion and beta defaults to zero; expected usage frequency is unmeasured.",
+    "No bfloat16, GPU, fused/Liger, distributed, or outside reproduction is covered.",
+    "A pass is local numerical evidence, not an accepted upstream fix or capability result."
+  ],
+  "resources": {"cpu_only":true,"gpu_hours":0,"paid_api_calls":0,"external_compute_usd":0}
+}

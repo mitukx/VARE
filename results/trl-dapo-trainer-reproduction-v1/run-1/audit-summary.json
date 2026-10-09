@@ -1,0 +1,38 @@
+{
+  "claim_limits": [
+    "known upstream fix, not novel",
+    "synthetic character-length reward",
+    "no independently measured task success",
+    "no external reproduction",
+    "final parameter tensors not compared elementwise"
+  ],
+  "decision": "nonpass_full_matrix",
+  "failed_arm": {
+    "gradient_accumulation_steps": 2,
+    "reason": "Frozen expected-loss reconstruction assumes importance ratio 1 despite clipping/policy drift; full acceptance gate fails.",
+    "steps_per_generation": 4
+  },
+  "independent_review": "Internal read-only subagent source and raw-log audit; not external reproduction.",
+  "primary_contrast": {
+    "baseline_ratios": [
+      2.0000000516208885,
+      2.0000000516208565,
+      1.9999996392508539,
+      1.999999719416611
+    ],
+    "fixed_ratios": [
+      1.0000000258104442,
+      1.0000000258104282,
+      0.9999998196254269,
+      0.9999998597083055
+    ],
+    "gradient_accumulation_steps": 4,
+    "interpretation": "Observed DAPO loss denominator scale matches the merged correction in this single-window case; no policy-success claim.",
+    "steps_per_generation": 2
+  },
+  "protocol_id": "trl_dapo_trainer_reproduction_v1",
+  "source_hashes_verified": {
+    "baseline": "c4a1249c66a3293835b533114d9728a74ab36e775052931229302006a5fe2369",
+    "fixed": "7446f652aefb9b78a64952a135c2235c924a7633c112d6a8f569b16ec4d62e14"
+  }
+}

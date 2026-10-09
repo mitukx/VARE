@@ -1,0 +1,71 @@
+{
+  "protocol_id": "grpo_expected_update_audit_identifiability_v1",
+  "status": "exploratory_witness_selected_then_frozen_for_exact_verification",
+  "selection_disclosure": "The construction was selected after an exploratory finite linear-program search. The values below are not presented as preregistered confirmation. This lock freezes the deterministic witness and its exact pass/fail checks before the committed enumerator and independent auditor are run.",
+  "question": "Can one-item clean-label audits identify the expected first-step clipped GRPO score-function update when the auditor observes the full group action vector and every per-item clean-label conditional law is held fixed?",
+  "scope": "Exact finite synthetic identifiability witness. No model training, sampled model outputs, or capability claim.",
+  "policy": {
+    "group_size": 4,
+    "actions": "Each member action a_i is sampled independently from Bernoulli(p), p=1/4.",
+    "parameterization": "A shared Bernoulli logit theta, so d log pi_theta(a_i)/d theta = a_i-p.",
+    "reference": "The old policy equals the current policy at the evaluated step.",
+    "clip_epsilon": 0.2,
+    "advantage": "Population-standardized within-group binary clean rewards; set all advantages to zero when reward variance is zero."
+  },
+  "clean_reward_law": {
+    "target_action_vector": "0001",
+    "all_other_action_vectors": "In both worlds, independently flip each action bit with probability 1/5 to obtain its clean binary reward.",
+    "world_A_at_target": {
+      "reward_vector_probabilities": {
+        "0000": "1/5",
+        "0001": "1/5",
+        "0011": "1/5",
+        "0101": "1/5",
+        "1001": "1/5"
+      }
+    },
+    "world_B_at_target": {
+      "reward_vector_probabilities": {
+        "0001": "7/10",
+        "0110": "1/10",
+        "1010": "1/10",
+        "1101": "1/10"
+      }
+    },
+    "conditional_marginal_invariant": "For every action vector a, member i, and world, P(y_i=a_i | a)=4/5 and P(y_i!=a_i | a)=1/5. Thus the one-audited-label observation law remains the same even when the complete action vector and selected member index are observed, including action-dependent audit selection."
+  },
+  "audit_observation_models": {
+    "item_only": "Observe the full action vector a, chosen member index i (selection may depend on a but not on unaudited y), and the single clean label y_i.",
+    "group_atomic": "Observe the full action and clean-label vectors (a,y) for a sampled group."
+  },
+  "estimand": {
+    "per_group_score_gradient": "G(a,y)=sum_i A_i(y)*(a_i-p).",
+    "clipped_objective_relation": "At theta=theta_old, each importance ratio is 1. For epsilon=0.2 this point is inside the clipping interval, so the local derivative of the standard clipped surrogate equals G.",
+    "primary_metrics": [
+      "exact expected G in World A and World B",
+      "exact difference between those expectations",
+      "exact total variation distance between one-item observation laws"
+    ],
+    "secondary_metrics": [
+      "exact total variation distance between full-group observation laws",
+      "probability of the target action vector",
+      "conditional expected G for the target action vector in each world"
+    ]
+  },
+  "frozen_decision_rule": "The witness is verified only if exact enumeration gives identical full-context one-item laws (TV=0), distinct expected G values, and positive full-group observation TV. Any failed invariant rejects the construction. No statistical significance test is used because the declared outcome is a finite exact calculation.",
+  "limitations": [
+    "The construction is an existence counterexample, not a prevalence estimate for real verifiers.",
+    "The group size is four and rewards are binary.",
+    "The environmental reward dependence on the full action vector is deliberately synthetic.",
+    "The expected gradient difference is not a measured optimizer step or task-success gain.",
+    "No method is proposed for an optimal audit allocation or correction.",
+    "The result does not establish novelty beyond related work on group-correlated verifier noise, finite-group GRPO bias, reward-gradient analysis, or correlation-aware auditing."
+  ],
+  "close_literature": [
+    "https://arxiv.org/abs/2604.07666",
+    "https://arxiv.org/abs/2601.08521",
+    "https://arxiv.org/abs/2609.36958",
+    "https://arxiv.org/abs/2609.24144",
+    "https://arxiv.org/abs/2606.05932"
+  ]
+}

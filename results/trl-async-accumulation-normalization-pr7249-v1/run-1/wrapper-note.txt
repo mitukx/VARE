@@ -1,0 +1,1 @@
+The first baseline execution completed pytest and produced the full log, but the surrounding zsh wrapper then tried to assign pytest's exit code to the reserved readonly shell variable `status`. That wrapper itself exited 1. The test log is retained. The protocol was then repeated with the nonreserved variable `pytest_rc` to capture the pytest exit code explicitly.

@@ -1,0 +1,30 @@
+{
+  "metric_mutation": {
+    "first_metric_is_nan": true,
+    "integrity_failures": [
+      "protected file modified: protected-metric.py"
+    ],
+    "integrity_ok": false,
+    "later_metric_executed": false,
+    "metric_count": 1,
+    "passed": false,
+    "score": 0.0
+  },
+  "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+  "test_mutation": {
+    "integrity_failures": [
+      "protected file modified: protected-test.py"
+    ],
+    "integrity_ok": false,
+    "passed": false,
+    "score": 0.0,
+    "test_commands_passed": [
+      true
+    ]
+  },
+  "untampered_control": {
+    "integrity_ok": true,
+    "passed": true,
+    "score": 0.9
+  }
+}

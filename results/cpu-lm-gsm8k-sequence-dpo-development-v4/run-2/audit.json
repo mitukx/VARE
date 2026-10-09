@@ -1,0 +1,41 @@
+{
+  "audit": "passed",
+  "base_exact_match": 0.0,
+  "decision_recomputed": "sequence_dpo_development_candidate",
+  "generation_parity_examples": [
+    {
+      "dataset_index": 376,
+      "exact_match": false,
+      "generated_text": "To solve this problem, let's break it down step-by-step:\n\n1. **Determine how many apples Caleb picked:**\n   - We know that Kayla picked 20 apples.\n   - Caleb picked 5 apples less than Kayla.\n   - Therefore, Caleb picked \\( 20 - 5 = 15 \\) apples.\n\n2. **Determine how many apples Suraya picked:**\n   - Suraya picked 12 apples more than Caleb.\n   - Therefore, Suraya picked \\( 15 + 12 = 27 \\) apples.\n\n3. **Calculate how many more apples Suraya picked than Kayla:**\n   - Suraya picked 27 apples.\n   - Kayla picked 20 apples.\n   - The",
+      "huggingface_parity": true,
+      "parsed_number": null
+    },
+    {
+      "dataset_index": 1367,
+      "exact_match": false,
+      "generated_text": "To solve this problem, we need to determine the value of the highest level of financial backing based on the given conditions. Let's denote the following:\n\n- \\( x \\) = the highest level of financial backing in dollars.\n- \\( y \\) = the second level of financial backing in dollars.\n- \\( z \\) = the lowest level of financial backing in dollars.\n\nAccording to the problem:\n1. The total amount needed for the business is $12000.\n2. Two backers at the highest level cost $x$ dollars.\n3. Three backers at the second level cost $y$ dollars.\n4. Ten backers at the lowest level cost $z$ dollars.\n\nWe can set up the equation based on the total amount raised:\n\n\\[ x + y + z =",
+      "huggingface_parity": true,
+      "parsed_number": null
+    },
+    {
+      "dataset_index": 3080,
+      "exact_match": false,
+      "generated_text": "To solve this problem, let's break it down step-by-step:\n\n1. **Initial Setup:**\n   - Tony starts with 2 fish.\n   - Each year, his parents buy him 2 more fish, but one dies.\n\n2. **Year 1:**\n   - Initial number of fish: 2\n   - Fish bought: 2\n   - Fish that die: 1\n   - Final number of fish: \\(2 + 2 - 1 = 3\\)\n\n3. **Year 2:**\n   - Initial number of fish: 3\n   - Fish bought: 2\n   - Fish that die: 1\n   - Final number of fish: \\(3 + 2 - 1 = 4\\)\n\n4.",
+      "huggingface_parity": true,
+      "parsed_number": "4"
+    }
+  ],
+  "nonzero_adapter_checkpoints_verified": 9,
+  "protocol_id": "vare-cpu-lm-gsm8k-sequence-dpo-development-v4",
+  "protocol_sha256": "aa425958b4d23564f4d121992e9610a64deadd2d01446ad01a40cf3bb21910f9",
+  "runner_snapshot_sha256": "449c5c175d5cfc9c12b785358d61f298029363d8bca1a11bfb38eceaffbeb156",
+  "selected_epoch_recomputed": 2,
+  "source_manifest_sha256": "766126a219015603040c0ca4102c6a1355b979b2f9ba0ef97c5eb1445c8bb321",
+  "train_examples": 16,
+  "updated_exact_match_by_seed": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "validation_examples": 16
+}

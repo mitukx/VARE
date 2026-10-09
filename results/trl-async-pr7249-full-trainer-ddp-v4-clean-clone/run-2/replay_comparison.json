@@ -1,0 +1,19 @@
+{
+  "arms": {
+    "base": {
+      "cases_match_exactly": true,
+      "original_summary_sha256": "9021cd9d73625e2790929437c518a258fd7927910731c185557f6538497d64a6",
+      "replay_summary_sha256": "d9d2b4a216c0bc9e424ca8329855b4f5b24995072927974f322dd508f0b25a92",
+      "source_commit": "a98fa6a4428f9aae58dfb26d729d7437f662f27a"
+    },
+    "candidate": {
+      "cases_match_exactly": true,
+      "original_summary_sha256": "a0290364a4f7933ca84efe7d420903c9953fe6324701cc9655045699276f1e28",
+      "replay_summary_sha256": "ca706c5442163be6e854fa1cfa5d067214a44229ff45a3b530554eb2e8879e0d",
+      "source_commit": "5234eb7c70f4ca7eb92fe8e01611a33eaff17f40"
+    }
+  },
+  "reproduction_id": "trl-async-grpo-pr7249-full-trainer-ddp-v4-clean-clone",
+  "statement": "All case metrics, rank hashes, source identities, and runtime metadata match the original frozen v4 summaries exactly; elapsed wall-time fields differ as expected.",
+  "status": "pass"
+}

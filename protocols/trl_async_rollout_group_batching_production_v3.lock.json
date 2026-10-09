@@ -1,0 +1,92 @@
+{
+  "protocol": "trl-async-rollout-group-batching-production-v3",
+  "status": "locked-before-execution",
+  "date": "2026-10-09",
+  "supersedes": "trl-async-rollout-group-batching-production-v2",
+  "supersedes_reason": "v2 base execution exposed a finite-stream fixture flaw: baseline omitted trailing incomplete rows but the fixture did not supply enough later rows to force the split group member into a second emitted batch. v2 therefore did not distinguish streaming loss from cross-microbatch group splitting. v2 result is retained and not used as evidence for the split claim.",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+    "issue": "https://github.com/huggingface/trl/issues/7206"
+  },
+  "question": "Do pinned production batchers split same-rollout members across emitted microbatches under a forced boundary, and can a candidate preserve all rows/groups within actual fixed-count and token-budget constraints?",
+  "fixtures": {
+    "fixed_count": {
+      "processes": 2,
+      "microbatch_size": 4,
+      "rollouts": {
+        "A": [
+          1,
+          1,
+          1
+        ],
+        "B": [
+          1,
+          1
+        ],
+        "C": [
+          1,
+          1
+        ],
+        "D": [
+          1
+        ],
+        "E": [
+          1
+        ]
+      },
+      "purpose": "A3+B2 forces a boundary after B0 in the per-row batcher; C2+D1 then forces a second batch so B1 is observed in a different emitted batch; E1 makes the candidate EOF tail co-packable with D."
+    },
+    "token_budget": {
+      "processes": 2,
+      "token_budget": 10,
+      "rollouts": {
+        "A": [
+          7,
+          3
+        ],
+        "B": [
+          4,
+          6
+        ],
+        "C": [
+          2,
+          2
+        ],
+        "D": [
+          9,
+          1
+        ]
+      },
+      "purpose": "Greedy per-row LPT puts A=[7,3], B0=4 alongside A, then cannot fit B1=6 and emits B split. Following groups force a second emitted batch while remaining globally feasible; exact repacking can place A=[7,3], B=[4,6] and C=[2,2], D=[9,1] without splitting."
+    }
+  },
+  "method": {
+    "execution": "AST-extract and execute only _balance_by_squared_length, FixedCountBatcher, and TokenBudgetBatcher from the source checkout under test; only class base/logger are stubbed.",
+    "command": "python /absolute/path/to/reproducers/trl_async_rollout_group_batching_source_audit_v3.py",
+    "comparison": "Run unchanged script from pristine pinned base and local candidate checkout."
+  },
+  "primary_invariants": [
+    "all fixture rows emitted exactly once",
+    "every rollout ID appears in exactly one emitted microbatch",
+    "each emitted rank row is nonempty",
+    "fixed-count microbatch has at most 4 samples",
+    "token-budget row has at most 10 tokens"
+  ],
+  "success_rule": "Pinned base must demonstrate a group spanning two emitted microbatches in both fixtures; the group-aware candidate must satisfy all invariants in both fixtures.",
+  "rejection_rule": "Candidate loses or duplicates any row, splits a rollout, emits an empty rank, or violates a declared capacity.",
+  "resources": {
+    "compute": "CPU source-level execution only",
+    "paid_api_gpu_or_external_spend": false,
+    "models": false
+  },
+  "claim_limits": [
+    "Only two finite fixtures against actual extracted production definitions are tested.",
+    "No full TRL import, Trainer/optimizer step, distributed collective, epoch stopping, throughput, prevalence, task-success or model-capability claim.",
+    "A pass does not alone make an upstream patch ready."
+  ],
+  "reproducer": {
+    "path": "reproducers/trl_async_rollout_group_batching_source_audit_v3.py",
+    "sha256": "6efe224b25c2820372251bbfd95f4db38e07118baf4062f7d1fdbb02d0071ad4"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "candidate_patch_sha256": "0f6c60de679c3c8b467b2bc8b77b01e06f890486cd567322940e5ce8a2137468",
+  "cases": [
+    "unmodified fp16 token path",
+    "candidate fp16 token path",
+    "unmodified fp32 control",
+    "candidate fp32 control"
+  ],
+  "files": {
+    "candidate-f16-token.json": "c26c68fdd5c1cbb4864fe690e445fa6e89e68a9e8a4f41cd82a7939f30c6c051",
+    "candidate-f32-token.json": "665882acb3c7e36b525b249d4e6fb753fe580ca2af71133d2a783603026e9fcd",
+    "candidate.patch": "0f6c60de679c3c8b467b2bc8b77b01e06f890486cd567322940e5ce8a2137468",
+    "checker.py": "6f859a76e4b27cd595305576bdf5c1d7de5559d803a6265116ad7120b484e2a3",
+    "commands.txt": "08ca02c86d78b87bdd47bb7a50158a52e0a272a19c6e991fe7b2dde053868e91",
+    "independent-check.json": "ab06e7ea44fe34e34c8a7472eaf61f21f9b22db0877275cb026ef70c4b62ef72",
+    "pr-head-f16-token.json": "2cf5191aa61f9d43f8df180fb45412985ed760fcd0e72677d1266379fd63e40e",
+    "pr-head-f32-token.json": "b1b4ada106f9006e760d853a3387d9085e4081a0ad43a35180e159c388a929ad",
+    "protocol.snapshot.json": "d25d2d08b9c4f0eef428dab7eec7e04a451617134854cf37e12a9ee53c882d90",
+    "runner.py": "ac401f8e1d18569beac839ad4e7aa963b2b7178b0a84a4ebd6f344b03bdcd41a"
+  },
+  "independent_checker_status": "pass",
+  "interpretation": "One frozen production-method CPU fixture only; no optimizer, prevalence, downstream task, capability, outside reproduction, or upstream acceptance claim.",
+  "protocol_id": "trl_grpo_kl_clip_precision_patch_v5",
+  "resources": {
+    "cpu_only": true,
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "paid_api_calls": 0
+  },
+  "status": "pass",
+  "trl_revision": "0aaea03f2fa449bc7a91f1973e7940da11da65da",
+  "vare_protocol_commit": "c48a9b4"
+}

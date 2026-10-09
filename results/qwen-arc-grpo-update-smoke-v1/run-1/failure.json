@@ -1,0 +1,18 @@
+{
+  "protocol_id": "qwen_arc_challenge_grpo_update_smoke_v1",
+  "status": "failed_before_update",
+  "failure_class": "runner_protocol_schema_mismatch",
+  "exception": "KeyError: group_size",
+  "completed": {
+    "pinned_model_loaded_on_cpu": true,
+    "validation_baseline_items_generated": 8,
+    "train_group_candidates_generated": 0,
+    "optimizer_steps": 0,
+    "candidate_checkpoint_saved": false,
+    "post_update_evaluation": false
+  },
+  "consumed_validation_ids": ["Mercury_7042735", "MEA_2016_5_6", "Mercury_7162838", "OHAT_2007_5_24", "Mercury_177398", "MDSA_2007_5_39", "Mercury_7141908", "VASoL_2008_5_28"],
+  "decision": "Preserve the raw base generations and exclude all eight IDs from any later development or confirmation sample. Do not use their scores to tune the prompt, parser, threshold, or method.",
+  "repair": "Protocol stores group_size and temperature in rollout; the runner incorrectly indexed update. Version 2 fixes the field path and uses a fresh preselected training/validation cohort.",
+  "resources": {"device": "cpu", "wall_seconds": 5.586093874997459, "peak_rss_mib": 2687.6875}
+}

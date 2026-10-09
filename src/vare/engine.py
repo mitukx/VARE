@@ -13,7 +13,7 @@ from .lifecycle import FailureDrivenTaskGenerator, VerifierRefreshController
 from .promotion import PromotionGate
 from .replay import PrioritizedReplay
 from .telemetry import EventLog
-from .types import Experience, RoundResult, Task
+from .types import Attempt, Experience, PromotionDecision, RoundResult, Task, snapshot_verification
 from .verifiers import VerifierEnsemble
 
 
@@ -52,6 +52,8 @@ class CapabilityLoop:
         self.decision_ledger = decision_ledger
         self._generated_tasks: list[Task] = []
         self.step = 0
+        self._run_serial = 0
+        self._round_lock = asyncio.Lock()
 
     async def _one_rollout(self, sem: asyncio.Semaphore, task: Task, policy_id: str, policy_version: int):
         async with sem:
@@ -61,21 +63,46 @@ class CapabilityLoop:
             step = self.step
             self.step += 1
             attempt = await self.hooks.rollout(task, policy_id, policy_version, step)
+            if not isinstance(attempt, Attempt):
+                raise TypeError("rollout hook must return an Attempt")
+            if (
+                not isinstance(attempt.task, Task)
+                or attempt.task.id != task.id
+                or attempt.task.prompt != task.prompt
+                or attempt.task.family != task.family
+            ):
+                raise ValueError("rollout task identity mismatch")
             group_id = task.metadata.get("vare_rollout_group")
-            if group_id is not None and "vare_rollout_group" not in attempt.metadata:
+            if group_id is not None:
                 attempt.metadata["vare_rollout_group"] = group_id
-            verification = await self.verifier.verify(attempt)
+                attempt.metadata["vare_rollout_group_size"] = task.metadata[
+                    "vare_rollout_group_size"
+                ]
+            verification = snapshot_verification(
+                await self.verifier.verify(attempt), context="capability loop verifier result"
+            )
             return attempt, verification
 
     async def run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None) -> RoundResult:
+        """Serialize each stateful policy-update transaction for this loop."""
+        async with self._round_lock:
+            return await self._run_round(tasks, round_index=round_index, rollout_count=rollout_count)
+
+    async def _run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None) -> RoundResult:
         source_tasks = list(tasks) + self._generated_tasks
         if not source_tasks:
             raise ValueError("run_round requires tasks")
         incumbent_id, incumbent_version = self.hooks.active_policy()
         self.shift.fit_reference(t.family for t in source_tasks)
-        target_rollouts = rollout_count or len(source_tasks)
+        target_rollouts = len(source_tasks) if rollout_count is None else rollout_count
+        if target_rollouts <= 0:
+            raise ValueError("rollout_count must be positive")
         if self.config.samples_per_task <= 0:
             raise ValueError("samples_per_task must be positive")
+        # A round index can be replayed by callers, so include a deterministic
+        # loop-local serial to keep rollout groups unique across run_round calls.
+        self._run_serial += 1
+        run_serial = self._run_serial
         if self.config.samples_per_task == 1:
             base_tasks = self.curriculum.choose(source_tasks, target_rollouts)
             chosen = [
@@ -83,7 +110,11 @@ class CapabilityLoop:
                     id=t.id,
                     prompt=t.prompt,
                     family=t.family,
-                    metadata={**t.metadata, "vare_rollout_group": f"r{round_index}-g{i}"},
+                    metadata={
+                        **t.metadata,
+                        "vare_rollout_group": f"r{round_index}-run{run_serial}-g{i}",
+                        "vare_rollout_group_size": 1,
+                    },
                 )
                 for i, t in enumerate(base_tasks)
             ]
@@ -92,22 +123,25 @@ class CapabilityLoop:
             base_tasks = self.curriculum.choose(source_tasks, group_count)
             chosen = []
             for group_index, task in enumerate(base_tasks):
-                group_id = f"r{round_index}-g{group_index}"
+                group_id = f"r{round_index}-run{run_serial}-g{group_index}"
                 for _ in range(self.config.samples_per_task):
-                    if len(chosen) >= target_rollouts:
-                        break
                     chosen.append(
                         Task(
                             id=task.id,
                             prompt=task.prompt,
                             family=task.family,
-                            metadata={**task.metadata, "vare_rollout_group": group_id},
+                            metadata={
+                                **task.metadata,
+                                "vare_rollout_group": group_id,
+                                "vare_rollout_group_size": self.config.samples_per_task,
+                            },
                         )
                     )
         sem = asyncio.Semaphore(self.config.rollout_concurrency)
         pairs = await asyncio.gather(*(self._one_rollout(sem, t, incumbent_id, incumbent_version) for t in chosen))
 
         admitted: list[Experience] = []
+        admitted_freshness: list[float] = []
         dropped = 0
         for attempt, verification in pairs:
             self.shift.observe(attempt.task.family)
@@ -130,8 +164,49 @@ class CapabilityLoop:
                 verifier_lag=lag.verifier_lag,
                 shift_score=lag.shift_score,
             )
-            self.replay.add(exp, lag.freshness)
             admitted.append(exp)
+            admitted_freshness.append(lag.freshness)
+
+        if self.config.preserve_rollout_groups:
+            admitted_groups: dict[str, list[tuple[Experience, float]]] = {}
+            for exp, freshness in zip(admitted, admitted_freshness, strict=True):
+                group_id = exp.attempt.metadata.get("vare_rollout_group")
+                if group_id is None:
+                    group_id = exp.attempt.task.metadata.get("vare_rollout_group")
+                key = str(group_id) if group_id is not None else f"ungrouped:{id(exp)}"
+                admitted_groups.setdefault(key, []).append((exp, freshness))
+
+            for group_id, members in admitted_groups.items():
+                first = members[0][0]
+                expected_size = first.attempt.metadata.get("vare_rollout_group_size")
+                if expected_size is None:
+                    expected_size = first.attempt.task.metadata.get(
+                        "vare_rollout_group_size"
+                    )
+                complete = (
+                    isinstance(expected_size, int)
+                    and not isinstance(expected_size, bool)
+                    and expected_size == len(members)
+                )
+                inserted = complete and self.replay.add_group(
+                    [exp for exp, _ in members],
+                    [freshness for _, freshness in members],
+                )
+                if not inserted:
+                    self.events.emit(
+                        "replay_group_not_admitted",
+                        group_id=group_id,
+                        admitted_count=len(members),
+                        expected_size=expected_size,
+                        reason=(
+                            "incomplete_after_lag"
+                            if not complete
+                            else "capacity_or_priority"
+                        ),
+                    )
+        else:
+            for exp, freshness in zip(admitted, admitted_freshness, strict=True):
+                self.replay.add(exp, freshness)
 
         clusters = self.failures.mine(admitted)
         self.curriculum.update(clusters)
@@ -185,7 +260,18 @@ class CapabilityLoop:
         incumbent_eval, candidate_eval = await asyncio.gather(
             self.hooks.evaluate(incumbent_id), self.hooks.evaluate(candidate_id)
         )
-        decision = self.promotion.decide(incumbent_eval, candidate_eval)
+        if (
+            incumbent_eval.policy_id != incumbent_id
+            or candidate_eval.policy_id != candidate_id
+        ):
+            decision = PromotionDecision(
+                accepted=False,
+                reasons=("evaluation_policy_mismatch",),
+                primary_gain=0.0,
+                worst_slice_regression=0.0,
+            )
+        else:
+            decision = self.promotion.decide(incumbent_eval, candidate_eval)
         if candidate_id != incumbent_id and decision.accepted:
             await self.hooks.promote(candidate_id)
             promoted_id = candidate_id

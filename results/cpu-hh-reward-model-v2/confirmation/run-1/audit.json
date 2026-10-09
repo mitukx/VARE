@@ -1,0 +1,76 @@
+{
+  "audit_implementation_sha256": "a1a391742ff2b99f68b673c6235cc735a1f5c8a9feff1d35104c9e54fea7d264",
+  "audit_limit": "Replay uses the same pinned local model weights, tokenizer, framework and machine as the run. It is a deterministic local replay, not an external reproduction or a different model implementation.",
+  "cohort_metrics": [
+    {
+      "baseline": {
+        "brier_score": 0.25,
+        "expected_calibration_error": 0.5,
+        "logistic_nll": 0.6931471805599466,
+        "pairwise_accuracy": 0.5
+      },
+      "cohort": 0,
+      "reward": {
+        "brier_score": 0.23392675425332002,
+        "expected_calibration_error": 0.43811252347707147,
+        "logistic_nll": 0.6668036151254022,
+        "pairwise_accuracy": 0.58984375
+      },
+      "temperature_alpha": 0.4721486568450928
+    },
+    {
+      "baseline": {
+        "brier_score": 0.25,
+        "expected_calibration_error": 0.5,
+        "logistic_nll": 0.6931471805599466,
+        "pairwise_accuracy": 0.5
+      },
+      "cohort": 1,
+      "reward": {
+        "brier_score": 0.23383618738759004,
+        "expected_calibration_error": 0.4617596781272554,
+        "logistic_nll": 0.6578732580167398,
+        "pairwise_accuracy": 0.578125
+      },
+      "temperature_alpha": 0.2912015914916992
+    },
+    {
+      "baseline": {
+        "brier_score": 0.25,
+        "expected_calibration_error": 0.5,
+        "logistic_nll": 0.6931471805599466,
+        "pairwise_accuracy": 0.5
+      },
+      "cohort": 2,
+      "reward": {
+        "brier_score": 0.24950600408369547,
+        "expected_calibration_error": 0.4814900212678074,
+        "logistic_nll": 0.6967037419214259,
+        "pairwise_accuracy": 0.5625
+      },
+      "temperature_alpha": 0.2777174711227417
+    }
+  ],
+  "decision": {
+    "accuracy_gain_interval_95pct": [
+      0.03125,
+      0.12239583333333331
+    ],
+    "confirmation_allowed": false,
+    "mean_accuracy_gain": 0.07682291666666664,
+    "mean_baseline_nll": 0.6931471805599466,
+    "mean_reward_accuracy": 0.5768229166666666,
+    "mean_reward_nll": 0.6737935383545226,
+    "nll_difference_interval_95pct": [
+      -0.053893856556989306,
+      0.017740980449249755
+    ],
+    "pass": false
+  },
+  "manifest_sha256": "4d239a5e1dac5f7815d293df6c85dc8be7e406c8c6079be1249c808ddf2f363f",
+  "model_score_replay": "passed; separately implemented token extraction, frozen-feature scoring, two-fold out-of-fold head fitting, temperature fit, full-cohort head fit, and baseline fit reproduced per-pair margins within 2e-4",
+  "protocol_sha256": "a4a0870178a377564babbeb21a6be49698cdfb00e8801cdc6f1f3e726b7fcb05",
+  "run_auditor_snapshot_sha256": "a1a391742ff2b99f68b673c6235cc735a1f5c8a9feff1d35104c9e54fea7d264",
+  "stage": "confirmation",
+  "status": "pass"
+}

@@ -1,0 +1,63 @@
+{
+  "analytic_expected": {
+    "gradient": [
+      [
+        -0.2832871132667066,
+        -0.2832871132667066,
+        0.0
+      ],
+      [
+        -0.18885807551113773,
+        -0.18885807551113773,
+        -0.18885807551113773
+      ]
+    ],
+    "kl_metric": 24946.79100893086,
+    "loss": 2494.679100893087
+  },
+  "baseline_fp16_gradient_mismatch": true,
+  "baseline_fp16_metric_overflow": true,
+  "baseline_fp16_observed": {
+    "gradient": [
+      [
+        -0.5,
+        -0.5,
+        0.0
+      ],
+      [
+        -0.25,
+        -0.25,
+        -0.25
+      ]
+    ],
+    "kl_metric": "Infinity",
+    "loss": 2494.0
+  },
+  "candidate_fp16_finite": true,
+  "candidate_fp16_observed": {
+    "gradient": [
+      [
+        -0.283203125,
+        -0.283203125,
+        -0.0
+      ],
+      [
+        -0.1888427734375,
+        -0.1888427734375,
+        -0.1888427734375
+      ]
+    ],
+    "kl_metric": 24939.39453125,
+    "loss": 2493.939453125
+  },
+  "errors": [],
+  "fp32_bit_identical": true,
+  "protocol_id": "trl_grpo_kl_clip_precision_patch_v5",
+  "protocol_sha256": "d25d2d08b9c4f0eef428dab7eec7e04a451617134854cf37e12a9ee53c882d90",
+  "source_imports": "none; standard-library math and retained JSON only",
+  "status": "pass",
+  "tolerance": {
+    "absolute": 0.1,
+    "relative": 0.005
+  }
+}

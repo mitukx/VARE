@@ -1,0 +1,56 @@
+{
+  "acceptance": {
+    "base_and_candidate_gates": "pass",
+    "cases_per_arm": 4
+  },
+  "experiment_runner_sha256": "77012cf010460160f05fa3d87e575ab6514a61770c811cda28884c72c818da1d",
+  "interpretation": "Frozen synthetic AsyncDistillation trainer-correctness run; not outside human reproduction or capability evidence.",
+  "protocol_sha256": "edfcf8b3eadc2668c0e20faa74ef6a8bfed7535ac0283ee311605c5c8f65b5cd",
+  "reproduction_wrapper_sha256": "64db71bba77344227956d132cdf61db01b49f64439b1b67bb75ddfbb5d35d4e5",
+  "run_id": "trl-async-distillation-pr7249-full-trainer-ddp-v4",
+  "runs": {
+    "base": {
+      "arm": "base",
+      "case_count": 4,
+      "commit": "a98fa6a4428f9aae58dfb26d729d7437f662f27a",
+      "exit_code": 0,
+      "launcher_log": "runs/base-launcher.log",
+      "launcher_log_sha256": "2c030e7db33b27f4c1ad40aa054d032a2090d0e850b61919a7055a8864e535e7",
+      "source_file_sha256": "449b8f5b2006e20a2420fd8e53d6fef2d96a026cb0ff51cf00f6add55d4a55e2",
+      "summary": "runs/base/summary.json",
+      "summary_sha256": "93a2ff8849fe7f68a8a8a31bfc7e402773aa8bb4745488c7611f605985efebb3",
+      "wall_seconds": 7.5908265840262175
+    },
+    "candidate": {
+      "arm": "candidate",
+      "case_count": 4,
+      "commit": "5234eb7c70f4ca7eb92fe8e01611a33eaff17f40",
+      "exit_code": 0,
+      "launcher_log": "runs/candidate-launcher.log",
+      "launcher_log_sha256": "bd2287b324088c9f72b95c4982878ea531f3c83ff27ba0fe28aed733a56c3c01",
+      "source_file_sha256": "7a99d26b9124787978fd6c29752a666ff4160694c3feb999abf68afb6a49a1ff",
+      "summary": "runs/candidate/summary.json",
+      "summary_sha256": "887b316c39734895570ca46b0f507009079e7c66c837a8db3809268bd2e4d076",
+      "wall_seconds": 6.636726166005246
+    }
+  },
+  "runtime": {
+    "accelerate": "1.12.0",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "source_checkouts": {
+    "base": {
+      "clean": true,
+      "commit": "a98fa6a4428f9aae58dfb26d729d7437f662f27a",
+      "source_file_sha256": "449b8f5b2006e20a2420fd8e53d6fef2d96a026cb0ff51cf00f6add55d4a55e2"
+    },
+    "candidate": {
+      "clean": true,
+      "commit": "5234eb7c70f4ca7eb92fe8e01611a33eaff17f40",
+      "source_file_sha256": "7a99d26b9124787978fd6c29752a666ff4160694c3feb999abf68afb6a49a1ff"
+    }
+  },
+  "total_wall_seconds": 17.774411542050075
+}

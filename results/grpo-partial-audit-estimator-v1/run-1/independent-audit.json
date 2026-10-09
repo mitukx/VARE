@@ -1,0 +1,18 @@
+{
+  "protocol_id": "grpo_partial_audit_estimator_v1",
+  "auditor": "audit_grpo_partial_audit_estimator_v1.py",
+  "independent_implementation": true,
+  "same_host_audit": true,
+  "checks": {
+    "frozen_protocol_matches": true,
+    "law_case_count_matches_protocol": true,
+    "all_exact_rows_recompute": true,
+    "unbiased_three_label_estimators": true,
+    "four_label_estimator_is_exact": true,
+    "variance_decomposition_for_three_labels": true,
+    "finite_budget_direction_counts_recompute": true
+  },
+  "auditor_sha256": "c7124fe1c084a34064ebcb9a4c9d79e02383f3073118b81b1a44ce819b1c2199",
+  "protocol_sha256": "51029da94290d0f085b8c9437347f9a755d6b8ff9e241477a086633001def2e3",
+  "scope": "Independent exact same-host recomputation using rational coefficient pairs; not outside reproduction or a novelty review."
+}

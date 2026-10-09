@@ -1,0 +1,206 @@
+{
+  "study_id": "trl_peft_bf16_lora_merge_roundtrip_v1",
+  "source_model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "model_shard_sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+  "source_tensor": "model.layers.0.self_attn.q_proj.weight",
+  "source_tensor_shape": [
+    896,
+    896
+  ],
+  "source_tensor_dtype": "torch.bfloat16",
+  "seed": 20261009,
+  "device": "cpu",
+  "torch_version": "2.9.1",
+  "peft_version": "0.19.1",
+  "python": "3.12.12",
+  "max_rss_kib": 1415053312,
+  "elapsed_seconds_total": 2.019721082993783,
+  "results": [
+    {
+      "arm": "bf16_unsafe_nonzero",
+      "dtype": "torch.bfloat16",
+      "safe_merge": false,
+      "zero_b": false,
+      "cycles": 100,
+      "checkpoints": {
+        "1": {
+          "changed_elements": 53597,
+          "total_elements": 802816,
+          "max_abs_drift": 0.00390625,
+          "l2_drift": 0.02968871034681797,
+          "relative_l2_drift": 0.0004964669351466,
+          "bitwise_equal": false
+        },
+        "10": {
+          "changed_elements": 53597,
+          "total_elements": 802816,
+          "max_abs_drift": 0.00390625,
+          "l2_drift": 0.029945766553282738,
+          "relative_l2_drift": 0.0005007655126973987,
+          "bitwise_equal": false
+        },
+        "100": {
+          "changed_elements": 53597,
+          "total_elements": 802816,
+          "max_abs_drift": 0.00390625,
+          "l2_drift": 0.03899791091680527,
+          "relative_l2_drift": 0.0006521392497234046,
+          "bitwise_equal": false
+        }
+      },
+      "final": {
+        "changed_elements": 53597,
+        "total_elements": 802816,
+        "max_abs_drift": 0.00390625,
+        "l2_drift": 0.03899791091680527,
+        "relative_l2_drift": 0.0006521392497234046,
+        "bitwise_equal": false
+      },
+      "fixed_input_output_max_abs_difference": 0.03125,
+      "elapsed_seconds": 0.29017045901855454
+    },
+    {
+      "arm": "bf16_zero_b_control",
+      "dtype": "torch.bfloat16",
+      "safe_merge": false,
+      "zero_b": true,
+      "cycles": 100,
+      "checkpoints": {
+        "1": {
+          "changed_elements": 0,
+          "total_elements": 802816,
+          "max_abs_drift": 0.0,
+          "l2_drift": 0.0,
+          "relative_l2_drift": 0.0,
+          "bitwise_equal": true
+        },
+        "10": {
+          "changed_elements": 0,
+          "total_elements": 802816,
+          "max_abs_drift": 0.0,
+          "l2_drift": 0.0,
+          "relative_l2_drift": 0.0,
+          "bitwise_equal": true
+        },
+        "100": {
+          "changed_elements": 0,
+          "total_elements": 802816,
+          "max_abs_drift": 0.0,
+          "l2_drift": 0.0,
+          "relative_l2_drift": 0.0,
+          "bitwise_equal": true
+        }
+      },
+      "final": {
+        "changed_elements": 0,
+        "total_elements": 802816,
+        "max_abs_drift": 0.0,
+        "l2_drift": 0.0,
+        "relative_l2_drift": 0.0,
+        "bitwise_equal": true
+      },
+      "fixed_input_output_max_abs_difference": 0.0,
+      "elapsed_seconds": 0.24622362497029826
+    },
+    {
+      "arm": "bf16_safe_nonzero",
+      "dtype": "torch.bfloat16",
+      "safe_merge": true,
+      "zero_b": false,
+      "cycles": 100,
+      "checkpoints": {
+        "1": {
+          "changed_elements": 50596,
+          "total_elements": 802816,
+          "max_abs_drift": 0.00390625,
+          "l2_drift": 0.029666056856513023,
+          "relative_l2_drift": 0.0004960881196893752,
+          "bitwise_equal": false
+        },
+        "10": {
+          "changed_elements": 50596,
+          "total_elements": 802816,
+          "max_abs_drift": 0.00390625,
+          "l2_drift": 0.029666056856513023,
+          "relative_l2_drift": 0.0004960881196893752,
+          "bitwise_equal": false
+        },
+        "100": {
+          "changed_elements": 50596,
+          "total_elements": 802816,
+          "max_abs_drift": 0.00390625,
+          "l2_drift": 0.029666056856513023,
+          "relative_l2_drift": 0.0004960881196893752,
+          "bitwise_equal": false
+        }
+      },
+      "final": {
+        "changed_elements": 50596,
+        "total_elements": 802816,
+        "max_abs_drift": 0.00390625,
+        "l2_drift": 0.029666056856513023,
+        "relative_l2_drift": 0.0004960881196893752,
+        "bitwise_equal": false
+      },
+      "fixed_input_output_max_abs_difference": 0.03125,
+      "elapsed_seconds": 0.33712750003905967
+    },
+    {
+      "arm": "fp32_unsafe_nonzero",
+      "dtype": "torch.float32",
+      "safe_merge": false,
+      "zero_b": false,
+      "cycles": 100,
+      "checkpoints": {
+        "1": {
+          "changed_elements": 19311,
+          "total_elements": 802816,
+          "max_abs_drift": 2.9802322387695312e-08,
+          "l2_drift": 2.384695960699901e-07,
+          "relative_l2_drift": 3.9877874336013974e-09,
+          "bitwise_equal": false
+        },
+        "10": {
+          "changed_elements": 19311,
+          "total_elements": 802816,
+          "max_abs_drift": 2.9802322387695312e-08,
+          "l2_drift": 2.384695960699901e-07,
+          "relative_l2_drift": 3.9877874336013974e-09,
+          "bitwise_equal": false
+        },
+        "100": {
+          "changed_elements": 19311,
+          "total_elements": 802816,
+          "max_abs_drift": 2.9802322387695312e-08,
+          "l2_drift": 2.384695960699901e-07,
+          "relative_l2_drift": 3.9877874336013974e-09,
+          "bitwise_equal": false
+        }
+      },
+      "final": {
+        "changed_elements": 19311,
+        "total_elements": 802816,
+        "max_abs_drift": 2.9802322387695312e-08,
+        "l2_drift": 2.384695960699901e-07,
+        "relative_l2_drift": 3.9877874336013974e-09,
+        "bitwise_equal": false
+      },
+      "fixed_input_output_max_abs_difference": 9.5367431640625e-07,
+      "elapsed_seconds": 0.11484820896293968
+    },
+    {
+      "arm": "bf16_functional_no_merge_control",
+      "cycles": 100,
+      "final": {
+        "changed_elements": 0,
+        "total_elements": 802816,
+        "max_abs_drift": 0.0,
+        "l2_drift": 0.0,
+        "relative_l2_drift": 0.0,
+        "bitwise_equal": true
+      },
+      "fixed_input_output_max_abs_difference": 0.0,
+      "elapsed_seconds": null
+    }
+  ]
+}

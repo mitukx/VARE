@@ -1,0 +1,52 @@
+{
+  "audit_manifest_sha256": "33de8edf0fc2eb77f432aa63891685e16875e7b42225e9aa10ca22044ee23cdc",
+  "auditor_limitations": [
+    "same-host independent implementation; not outside human reproduction",
+    "candidate checkpoint files were temporary and deleted after reload; recorded per-file hashes cannot be rehashed",
+    "task bootstrap is conditional on three locked training seeds and does not estimate seed-population uncertainty"
+  ],
+  "checks": 1240,
+  "observed": {
+    "primary_grpo_minus_sft": -0.011594202898550732,
+    "primary_grpo_minus_sft_task_bootstrap_95_ci": [
+      -0.052173913043478265,
+      0.028985507246376812
+    ],
+    "secondary_grpo_minus_base": -0.02898550724637683,
+    "secondary_grpo_minus_base_task_bootstrap_95_ci": [
+      -0.08985507246376812,
+      0.03188405797101449
+    ]
+  },
+  "per_seed": {
+    "20261021": {
+      "grpo_accuracy": 0.41739130434782606,
+      "sft_accuracy": 0.391304347826087
+    },
+    "20261022": {
+      "grpo_accuracy": 0.3826086956521739,
+      "sft_accuracy": 0.391304347826087
+    },
+    "20261023": {
+      "grpo_accuracy": 0.3652173913043478,
+      "sft_accuracy": 0.41739130434782606
+    }
+  },
+  "protocol_sha256": "0ffcfdc2b951884fc223044866a0743fb487dd9803bd36438ab28602c79e469b",
+  "run_summary_sha256": "22513ffbf2a0f0ccadd783b5a125a89d749aea3ee0eea2095f3af490c63f1721",
+  "status": "pass",
+  "training_readiness": {
+    "20261021": {
+      "positive_traces": 49,
+      "rollout_response_tokens": 371
+    },
+    "20261022": {
+      "positive_traces": 48,
+      "rollout_response_tokens": 381
+    },
+    "20261023": {
+      "positive_traces": 47,
+      "rollout_response_tokens": 391
+    }
+  }
+}

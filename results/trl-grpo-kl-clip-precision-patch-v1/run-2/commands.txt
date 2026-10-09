@@ -1,0 +1,14 @@
+# VARE revision at protocol execution: 4771bda2c55d534d8d714560c8e35af7ca813fed
+# TRL source head for every arm: 0aaea03f2fa449bc7a91f1973e7940da11da65da
+# The candidate arms use --source-root /tmp/trl-grpo-kl-candidate-v1 --patched.
+
+python scripts/audit_trl_grpo_kl_clip_precision_patch.py --source-root /tmp/trl-grpo-kl-head-control-v1 --dtype float16 --clip 10 --no-bias-correction --output results/trl-grpo-kl-clip-precision-patch-v1/run-2/pr-head-f16-c10-bias-off.json
+python scripts/audit_trl_grpo_kl_clip_precision_patch.py --source-root /tmp/trl-grpo-kl-head-control-v1 --dtype float32 --clip 10 --bias-correction --output results/trl-grpo-kl-clip-precision-patch-v1/run-2/pr-head-f32-c10-bias-on.json
+python scripts/audit_trl_grpo_kl_clip_precision_patch.py --source-root /tmp/trl-grpo-kl-head-control-v1 --dtype float32 --bias-correction --output results/trl-grpo-kl-clip-precision-patch-v1/run-2/pr-head-f32-no-clip-bias-on.json
+python scripts/audit_trl_grpo_kl_clip_precision_patch.py --source-root /tmp/trl-grpo-kl-candidate-v1 --patched --dtype float16 --clip 1e-8 --bias-correction --output results/trl-grpo-kl-clip-precision-patch-v1/run-2/patched-f16-tiny-bias-on.json
+python scripts/audit_trl_grpo_kl_clip_precision_patch.py --source-root /tmp/trl-grpo-kl-candidate-v1 --patched --dtype float16 --clip 10 --no-bias-correction --output results/trl-grpo-kl-clip-precision-patch-v1/run-2/patched-f16-c10-bias-off.json
+python scripts/audit_trl_grpo_kl_clip_precision_patch.py --source-root /tmp/trl-grpo-kl-candidate-v1 --patched --dtype float16 --clip 10 --bias-correction --output results/trl-grpo-kl-clip-precision-patch-v1/run-2/patched-f16-c10-bias-on.json
+python scripts/audit_trl_grpo_kl_clip_precision_patch.py --source-root /tmp/trl-grpo-kl-candidate-v1 --patched --dtype float32 --clip 10 --bias-correction --output results/trl-grpo-kl-clip-precision-patch-v1/run-2/patched-f32-c10-bias-on.json
+python scripts/audit_trl_grpo_kl_clip_precision_patch.py --source-root /tmp/trl-grpo-kl-candidate-v1 --patched --dtype float32 --bias-correction --output results/trl-grpo-kl-clip-precision-patch-v1/run-2/patched-f32-no-clip-bias-on.json
+
+python scripts/verify_trl_grpo_kl_clip_precision_patch.py --run-dir results/trl-grpo-kl-clip-precision-patch-v1/run-2 --output results/trl-grpo-kl-clip-precision-patch-v1/run-2/independent-check.json

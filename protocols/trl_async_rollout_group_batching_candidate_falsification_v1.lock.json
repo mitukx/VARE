@@ -1,0 +1,69 @@
+{
+  "protocol": "trl-async-rollout-group-batching-candidate-falsification-v1",
+  "status": "locked-before-execution",
+  "date": "2026-10-09",
+  "subject": "local candidate based on TRL ed8cc2f; not upstream source",
+  "question": "Does the local group-aware batcher handle an exact-feasible but greedy-hostile token group and clearly resolve impossible fixed-count group schedules?",
+  "fixtures": {
+    "token_greedy_false_negative": {
+      "processes": 2,
+      "token_budget": 6,
+      "rollout_sizes": [
+        5
+      ],
+      "sample_lengths": [
+        3,
+        3,
+        2,
+        2,
+        2
+      ],
+      "feasible_partition": [
+        [
+          3,
+          3
+        ],
+        [
+          2,
+          2,
+          2
+        ]
+      ],
+      "expected_candidate": "emits all five rows without error"
+    },
+    "fixed_oversized_rollout": {
+      "processes": 2,
+      "microbatch_size": 4,
+      "rollout_sizes": [
+        5
+      ],
+      "expected_candidate": "must not split rows; report or reject complete group explicitly"
+    },
+    "fixed_unpartitionable_contiguous_prefix": {
+      "processes": 2,
+      "microbatch_size": 4,
+      "rollout_sizes": [
+        1,
+        4
+      ],
+      "expected_candidate": "must not split rows; report or reject complete infeasible prefix explicitly"
+    }
+  },
+  "method": {
+    "execution": "AST-extract current FixedCountBatcher and TokenBudgetBatcher definitions and execute exact fixtures with dependency stubs.",
+    "command": "python /absolute/path/to/reproducers/trl_async_rollout_group_batching_candidate_falsification_v1.py"
+  },
+  "decision_rule": "Any exact-feasible group rejected by the candidate is a candidate defect. Fixed-count infeasible schedules must be explicitly classified; silent split or loss is unacceptable. A fail-closed exception is recorded separately from a safe all-or-none drop policy.",
+  "claim_limits": [
+    "This is a candidate falsification screen, not a production prevalence estimate.",
+    "No optimizer, trainer, model, throughput, distributed collective, or task-success effects are measured."
+  ],
+  "resources": {
+    "compute": "CPU only",
+    "gpu_paid_api_or_spend": false
+  },
+  "reproducer": {
+    "path": "reproducers/trl_async_rollout_group_batching_candidate_falsification_v1.py",
+    "sha256": "af1823c8e271f18cf06055edc17c604dfedd5c8f5c69ac9af0c18daed26c40fd"
+  }
+}

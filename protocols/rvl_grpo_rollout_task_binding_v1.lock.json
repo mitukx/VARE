@@ -1,0 +1,30 @@
+{
+  "protocol_id": "vare-rvl-grpo-rollout-task-binding-v1",
+  "schema_version": 1,
+  "frozen_before_fix_validation": true,
+  "baseline_revision": "d8cc153dd242d3b989efcc42eea79408fbbb75c7",
+  "question": "Can RVLGRPOHooks return an Attempt bound to the dispatched Task while embedding token-exact generation data for a different prompt?",
+  "hypothesis": "RVLGRPOHooks.rollout trusts the prompt_id and prompt returned by the backend. The engine checks Attempt.task, but trainer input is reconstructed from the embedded rvl_generation metadata, so mismatched metadata can train on a different prompt than the verifier scored.",
+  "scope": {
+    "source": "src/vare/integrations/rvl_grpo.py::RVLGRPOHooks.rollout",
+    "invariant": "The backend Generation.prompt_id and Generation.prompt must exactly match the dispatched Task before raw generation metadata is attached to the Attempt.",
+    "not_in_scope": [
+      "Policy identity/version lineage or allowed rollout lag.",
+      "Generation family metadata, tokenizer token IDs, or model quality.",
+      "Actual optimizer behavior or task-success improvement."
+    ]
+  },
+  "falsification": {
+    "baseline_counterexample": "Dispatch task-a and return generation metadata for task-b, varying prompt_id and prompt independently. Record whether rollout returns an Attempt retaining task-a while carrying task-b generation metadata.",
+    "fixed_acceptance": "Both identity mismatches raise before returning an Attempt; exact identity remains valid.",
+    "success_claim_boundary": "A pass establishes only adapter task-binding correctness for deterministic fake backends."
+  },
+  "resources": {
+    "cpu_only": true,
+    "model_inference": false,
+    "paid_services": false,
+    "external_compute": false
+  },
+  "baseline_adapter_sha256": "fdaf7f41df3a05a6c35307d92141278580e526d22ae073f1a8c70c581cbda179",
+  "regression_test_sha256": "548aef4ef518c8ac52be49c345c5b7ea860272a241140d4875fdfd41a7e2739e"
+}

@@ -1,0 +1,60 @@
+{
+  "arms": {
+    "dpo": {
+      "decision": "sequence_dpo_development_non_pass",
+      "mean_exact_match": 0.03125,
+      "mean_token_kl": 0.00999751908423238,
+      "selected_epoch": 2,
+      "validation_preference_nll": 0.6797389389676725
+    },
+    "dpo_sft_anchor": {
+      "decision": "sequence_dpo_development_non_pass",
+      "mean_exact_match": 0.041666666666666664,
+      "mean_token_kl": 0.1794500331532333,
+      "selected_epoch": 2,
+      "validation_preference_nll": 0.6451993045022131
+    },
+    "sft": {
+      "decision": "sequence_dpo_development_non_pass",
+      "mean_exact_match": 0.03125,
+      "mean_token_kl": 0.03482217363206577,
+      "selected_epoch": 1,
+      "validation_preference_nll": 0.6721447090712686
+    }
+  },
+  "base_exact_match": 0.03125,
+  "claim_boundary": "Development-only comparison. The same validation questions select each arm's checkpoint; intervals are descriptive and are not independent confirmation or capability claims.",
+  "comparison": "matched_dpo_sft_and_optional_anchor_development",
+  "paired_question_comparisons": {
+    "dpo_minus_sft": {
+      "mean_exact_match_difference": 0.0,
+      "question_bootstrap_95_percent_interval": [
+        -0.015625,
+        0.015625
+      ],
+      "questions_better_tied_worse": {
+        "better": 1,
+        "tied": 62,
+        "worse": 1
+      }
+    },
+    "dpo_sft_anchor_minus_sft": {
+      "mean_exact_match_difference": 0.010416666666666668,
+      "question_bootstrap_95_percent_interval": [
+        -0.020833333333333332,
+        0.04166666666666667
+      ],
+      "questions_better_tied_worse": {
+        "better": 2,
+        "tied": 61,
+        "worse": 1
+      }
+    }
+  },
+  "seeds": [
+    4903,
+    5003,
+    5107
+  ],
+  "validation_questions": 64
+}

@@ -1,0 +1,97 @@
+{
+  "analysis_status": "post_hoc_descriptive_only",
+  "claim_boundary": "This secondary comparison does not change the frozen v2 non-pass, establish a calibrated reward model, or permit reuse of v2 confirmation rows. It only informs whether a fresh, separately frozen replication is worth considering.",
+  "estimand": "mean across three fixed heads of per-prompt logistic NLL(calibrated margin) minus NLL(raw margin)",
+  "head_count": 3,
+  "mean_calibrated_minus_raw_nll": -0.1942571341719062,
+  "mean_calibrated_reward_nll": 0.6737935383545229,
+  "mean_length_baseline_nll": 0.6931471805599466,
+  "mean_raw_reward_nll": 0.8680506725264289,
+  "paired_prompt_bootstrap_95pct": [
+    -0.26689264187464623,
+    -0.1276785476952328
+  ],
+  "paired_prompt_sd": 0.5654305374703373,
+  "per_head_mean_deltas": [
+    -0.14671555615421966,
+    -0.17730924749803698,
+    -0.25874659886346196
+  ],
+  "planning_only_normal_approximation": {
+    "approximate_effect_for_80pct_power_at_n128_two_sided_95pct_ci": 0.14001614375946825,
+    "caveat": "Uses the observed effect and variance from an already-opened v2 confirmation; optimism, cohort shifts, fixed-head recalibration, and training-cohort variation are not represented. Not a preregistered power analysis or a v3 gate.",
+    "sample_size_scenarios": [
+      {
+        "estimated_standard_error": 0.04997747091690372,
+        "sample_n": 128,
+        "scenarios": [
+          {
+            "assumed_true_delta": -0.1942571341719062,
+            "normal_approx_probability_95pct_upper_below_zero": 0.9730058267745354
+          },
+          {
+            "assumed_true_delta": -0.15,
+            "normal_approx_probability_95pct_upper_below_zero": 0.8511523309818273
+          },
+          {
+            "assumed_true_delta": -0.1,
+            "normal_approx_probability_95pct_upper_below_zero": 0.5163271729794178
+          },
+          {
+            "assumed_true_delta": -0.05,
+            "normal_approx_probability_95pct_upper_below_zero": 0.16865013661537703
+          }
+        ]
+      },
+      {
+        "estimated_standard_error": 0.04571234960666599,
+        "sample_n": 153,
+        "scenarios": [
+          {
+            "assumed_true_delta": -0.1942571341719062,
+            "normal_approx_probability_95pct_upper_below_zero": 0.9889774757135275
+          },
+          {
+            "assumed_true_delta": -0.15,
+            "normal_approx_probability_95pct_upper_below_zero": 0.9068201509548196
+          },
+          {
+            "assumed_true_delta": -0.1,
+            "normal_approx_probability_95pct_upper_below_zero": 0.5900325333386351
+          },
+          {
+            "assumed_true_delta": -0.05,
+            "normal_approx_probability_95pct_upper_below_zero": 0.19319911281887336
+          }
+        ]
+      },
+      {
+        "estimated_standard_error": 0.03533940859189608,
+        "sample_n": 256,
+        "scenarios": [
+          {
+            "assumed_true_delta": -0.1942571341719062,
+            "normal_approx_probability_95pct_upper_below_zero": 0.9997975998182334
+          },
+          {
+            "assumed_true_delta": -0.15,
+            "normal_approx_probability_95pct_upper_below_zero": 0.9888315371994587
+          },
+          {
+            "assumed_true_delta": -0.1,
+            "normal_approx_probability_95pct_upper_below_zero": 0.8077782412657942
+          },
+          {
+            "assumed_true_delta": -0.05,
+            "normal_approx_probability_95pct_upper_below_zero": 0.2928379299244811
+          }
+        ]
+      }
+    ]
+  },
+  "prompt_count": 256,
+  "source_bundle": "results/cpu-hh-reward-model-v2/confirmation/run-1",
+  "source_confirmation_already_opened": true,
+  "source_protocol_sha256": "a4a0870178a377564babbeb21a6be49698cdfb00e8801cdc6f1f3e726b7fcb05",
+  "source_summary_sha256": "84cd427d46b6c5628daafe0185ff8425bb55037f675a2da4ac9ba9bd8b3a0cfe"
+}

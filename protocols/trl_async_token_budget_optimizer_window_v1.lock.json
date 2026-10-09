@@ -1,0 +1,45 @@
+{
+  "protocol_id": "trl_async_token_budget_optimizer_window_v1",
+  "status": "frozen_before_confirmation",
+  "question": "Does TokenBudgetBatcher read-ahead deliver a fork sibling beyond max_staleness at the next optimizer-window boundary under the actual Transformers batch-fetch order, and does gradient accumulation change the boundary?",
+  "source": {
+    "trl_repository": "https://github.com/huggingface/trl",
+    "trl_revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+    "trl_base_trainer_sha256": "2657481258dcc04112761e9ff61a35cb93b2b72c3e197e4524f4602fd6a2dbfe",
+    "trl_candidate_patch_sha256": "df6bfd03224bc961658d7366eea590cd2be4ad5c1940d4153b893e1373f6c163",
+    "trl_candidate_trainer_sha256": "f16c87b7fce02a3c3ffa6d54fe7d6ef00e1b3ea6cec3e7a47cf7a923f722a5fa",
+    "transformers_version": "4.57.3",
+    "transformers_trainer_file_sha256": "c3eac8fa28bda6330fd4dee131e7fe7d9bdc0fa35d9de944fce52cb97b379bab"
+  },
+  "estimand": {
+    "primary": "For GA=1 and GA=2, record which production-planner microbatches Trainer.get_batch_samples fetches before a simulated optimizer boundary and each row's policy-version lag at collation.",
+    "independent_unit": "One deterministic rollout with two version-0 fork rows and version-1 sentinels.",
+    "resource_budget": "CPU-only deterministic source-path test; no model, optimizer math, GPU, paid API, or external spend.",
+    "claim_boundary": "Uses actual installed Trainer.get_batch_samples plus pinned TRL queue, TokenBudgetBatcher, and collator; models the configured post-step version increment, but does not run a forward, backward, optimizer, or complete Trainer.train loop."
+  },
+  "method": {
+    "script": "scripts/reproduce_trl_async_token_budget_optimizer_window_v1.py",
+    "script_sha256": "185acc846b467fb2c0e7738c7dfc13fd463b57ee453db77000e5d5292fb28775",
+    "token_budget": 2,
+    "sample_tokens": 2,
+    "num_processes": 1,
+    "max_staleness": 0,
+    "gradient_accumulation_steps": [1, 2],
+    "transition": "Increment policy version after all batches in the Trainer accumulation window are fetched and collated, matching the pinned AsyncGRPO StepIntervalCallback placement after optimizer.step()."
+  },
+  "acceptance": {
+    "uses_actual_transformers_get_batch_samples": true,
+    "ga1_records_a_post_boundary_batch": true,
+    "ga2_fetches_two_batches_before_boundary": true,
+    "records_version_at_each_collation_not_final_version": true,
+    "source_and_script_hashes_match_lock": true,
+    "cpu_only_and_no_external_spend": true
+  },
+  "failure_criteria": [
+    "Pinned source, installed Transformers file, or script hash differs.",
+    "GA=1 fails to fetch a batch after the boundary.",
+    "GA=2 does not fetch both microbatches before the boundary.",
+    "Per-row lag cannot be associated with its actual collation version."
+  ],
+  "decision_rule": "If a version-0 fork row is collated after the post-step transition with max_staleness=0, report a source-path optimizer-window freshness counterexample for that GA setting. Do not infer gradients, training prevalence, or task impact. If the sibling is collated before the transition for GA=2 but after it for GA=1, report the effect as conditional on accumulation-window alignment."
+}

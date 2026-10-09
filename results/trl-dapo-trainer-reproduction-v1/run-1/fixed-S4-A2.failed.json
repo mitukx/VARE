@@ -1,0 +1,29 @@
+{
+  "protocol_id": "trl_dapo_trainer_reproduction_v1",
+  "status": "nonpass",
+  "arm": "fixed",
+  "configuration": {
+    "steps_per_generation": 4,
+    "gradient_accumulation_steps": 2,
+    "max_steps": 2
+  },
+  "command": "HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 HF_DATASETS_OFFLINE=1 PYTHONPATH=/tmp/trl-e1b2 /opt/homebrew/Caskroom/miniforge/base/bin/python scripts/run_trl_dapo_trainer_reproduction.py --revision-arm fixed --source-root /tmp/trl-e1b2 --model-root /Users/user/.cache/huggingface/hub/models--distilgpt2/snapshots/2290a62682d06624634c1f46a6ad5be0f47f38aa --steps-per-generation 4 --gradient-accumulation-steps 2 --max-steps 2 --output results/trl-dapo-trainer-reproduction-v1/run-1/fixed-S4-A2.json",
+  "exit_code": 1,
+  "observed_failure": {
+    "assertion": "loss ratio 0.8717578659605936 differs from expected 1.0",
+    "upstream_test_assumption": "The expected loss reconstructs from -advantages * completion lengths, which requires the policy importance ratio to remain approximately 1.",
+    "contradictory_runtime_signal": "The trainer logged clip_ratio/region_mean=0.2292 on optimizer step 1 and 0.3333 on step 2; later captured loss therefore included a changed policy ratio and clipping.",
+    "interpretation": "This is a fixture-assumption non-pass for the cached DistilGPT2 run, not evidence against PR #6024. The trainer completed both requested optimizer steps, but the runner version at this time asserted before serializing the captured records."
+  },
+  "partial_stdout": [
+    {"step": 1, "loss": 0.2848, "grad_norm": 48.79399871826172, "learning_rate": 1e-7, "clip_ratio_region_mean": 0.2291666641831398, "reward_std": 6.55686092376709},
+    {"step": 2, "loss": 0.3616, "grad_norm": 28.827926635742188, "learning_rate": 5e-8, "clip_ratio_region_mean": 0.3333333358168602, "reward_std": null}
+  ],
+  "resource_observation": {
+    "wall_seconds_approx": 34.4,
+    "device": "cpu",
+    "model_revision": "2290a62682d06624634c1f46a6ad5be0f47f38aa",
+    "trl_revision": "e1b2e21975994e676d9a676e3ab005e9bee38e40"
+  },
+  "claim_limit": "The run shows that this local model/configuration did not satisfy the frozen no-policy-drift assumption. It does not establish that the TRL normalizer fix is incorrect."
+}

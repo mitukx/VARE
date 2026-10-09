@@ -1,0 +1,120 @@
+{
+  "cases": {
+    "identity_control": {
+      "per_action": [
+        {
+          "action": 0,
+          "advantage": 0.0,
+          "loss": 0.0,
+          "loss_gradient_theta": 0.0,
+          "production_clip_region_metric": 0.0,
+          "production_kl_metric": -1.1102230246251565e-16,
+          "production_ratio_metric": 1.0,
+          "q_probability": 0.5,
+          "update_direction_theta": -0.0
+        },
+        {
+          "action": 1,
+          "advantage": 0.0,
+          "loss": 0.0,
+          "loss_gradient_theta": 0.0,
+          "production_clip_region_metric": 0.0,
+          "production_kl_metric": 0.0,
+          "production_ratio_metric": 1.0000000000000002,
+          "q_probability": 0.3,
+          "update_direction_theta": -0.0
+        },
+        {
+          "action": 2,
+          "advantage": 1.0,
+          "loss": -1.0000000000000002,
+          "loss_gradient_theta": -0.8,
+          "production_clip_region_metric": 0.0,
+          "production_kl_metric": 0.0,
+          "production_ratio_metric": 1.0000000000000002,
+          "q_probability": 0.2,
+          "update_direction_theta": 0.8
+        }
+      ],
+      "q_weighted_ratio": 1.0,
+      "q_weighted_update_direction_theta": 0.16000000000000003,
+      "retained_raw_mass": 1.0,
+      "support": [
+        0,
+        1,
+        2
+      ]
+    },
+    "top_p_truncation": {
+      "per_action": [
+        {
+          "action": 0,
+          "advantage": 0.0,
+          "loss": 0.0,
+          "loss_gradient_theta": 0.0,
+          "production_clip_region_metric": 0.0,
+          "production_kl_metric": 0.023143551314209754,
+          "production_ratio_metric": 0.8000000000000002,
+          "q_probability": 0.625,
+          "update_direction_theta": -0.0
+        },
+        {
+          "action": 1,
+          "advantage": 0.0,
+          "loss": 0.0,
+          "loss_gradient_theta": 0.0,
+          "production_clip_region_metric": 0.0,
+          "production_kl_metric": 0.023143551314209754,
+          "production_ratio_metric": 0.8,
+          "q_probability": 0.375,
+          "update_direction_theta": -0.0
+        }
+      ],
+      "q_weighted_ratio": 0.8000000000000002,
+      "q_weighted_update_direction_theta": 0.0,
+      "retained_raw_mass": 0.8,
+      "support": [
+        0,
+        1
+      ]
+    }
+  },
+  "checks": {
+    "identity_ratios_equal_one": true,
+    "identity_update_matches_raw_target": true,
+    "no_cuda_initialized": true,
+    "raw_target_gradient_is_four_twenty_fifths": true,
+    "truncated_ratio_equals_retained_mass": true,
+    "truncated_unsupported_reward_has_zero_update": true
+  },
+  "claim_boundary": "Exact finite-support production loss-method execution with controlled q outputs; no vLLM runtime, full trainer initialization, optimizer step, model capability, or upstream defect claim.",
+  "frozen_policy": {
+    "advantage": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "p": [
+      0.5,
+      0.3,
+      0.2
+    ]
+  },
+  "protocol_id": "trl_async_grpo_truncated_support_v1",
+  "raw_target_update_direction_theta": 0.16000000000000003,
+  "runtime": {
+    "cuda_initialized": false,
+    "device": "cpu",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "source_hashes": {
+    "trl/experimental/async_grpo/async_grpo_config.py": "a0e45f48d05f68a86421ddb019207c62faeefd782b37becd231b72f1cb5e8cab",
+    "trl/experimental/async_grpo/async_grpo_trainer.py": "2657481258dcc04112761e9ff61a35cb93b2b72c3e197e4524f4602fd6a2dbfe",
+    "trl/experimental/async_grpo/async_rollout_worker.py": "5eab22259711df4e3ec1a62047f87a2cffc5b204772b25cd78647336e52b9670",
+    "trl/scripts/vllm_serve.py": "2d71002e8c16360736ad6dcf2bcb39e9401463308b93bf6e143539737a9100b1"
+  },
+  "source_revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+  "status": "pass"
+}

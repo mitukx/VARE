@@ -1,0 +1,290 @@
+[
+  {
+    "output_tokens": 72,
+    "prompt_sha256": "a13d873e723ab533b63ef241dcba3e19a14b4ca1c61d834673c8540d17142da2",
+    "response": " [{\"assign_ticket\":{\"assignee\":\"Bo\",\"ticket\":\"TK-2000\"},\"tag\":\"bug\",\"status\":\"in_progress\"},{\"assign_ticket\":{\"assignee\":\"Ari\",\"ticket\":\"TK-2000\"},\"tag\":\"verified\",\"status\":\"resolved\"},{\"set_status\":{\"ticket\":\"TK-2000\",\"status\":\"in_progress\"}}]",
+    "task_id": "00-00"
+  },
+  {
+    "output_tokens": 42,
+    "prompt_sha256": "675a7e11087530e95734b47f4a92753197e87d8fe9061da04929371752ee8a74",
+    "response": " [{\"assign_ticket\":{\"ticket\":\"TK-2001\",\"assignee\":\"Dee\"},\"tool\":\"assign_ticket\"},{\"add_tag\":{\"ticket\":\"TK-2001\",\"tag\":\"billing\"}}]",
+    "task_id": "00-01"
+  },
+  {
+    "output_tokens": 42,
+    "prompt_sha256": "acfbb21f508d5293abf058894127a242e190a1271384ae3c6cc9f7aa6d13d81c",
+    "response": " [{\"assign_ticket\":{\"ticket\":\"TK-2002\",\"assignee\":\"Dee\"},\"tool\":\"assign_ticket\"},{\"add_tag\":{\"ticket\":\"TK-2002\",\"tag\":\"shipping\"}}]",
+    "task_id": "00-02"
+  },
+  {
+    "output_tokens": 21,
+    "prompt_sha256": "70a3715000aaa2613149ab02456fa373a8fa987e97d921021dc0d3bf4124e921",
+    "response": " [{\"assign_ticket\":{\"assignee\":\"Eli\",\"ticket\":\"TK-2003\"}}]",
+    "task_id": "00-03"
+  },
+  {
+    "output_tokens": 21,
+    "prompt_sha256": "b195069aca0c14c139493389c36c0283f99f3018c08add0985e16a704ad5158a",
+    "response": " [{\"assign_ticket\":{\"assignee\":\"Caro\",\"ticket\":\"TK-2004\"}}]",
+    "task_id": "00-04"
+  },
+  {
+    "output_tokens": 31,
+    "prompt_sha256": "52919187ad1393b4e8cfce17f32744aeb27164f0ee656022f2c00d2411f421fa",
+    "response": " [{\"assign_ticket\":{\"assignee\":\"Bo\",\"ticket\":\"TK-2005\"}, \"tag\":\"billing\", \"status\":\"in_progress\"}]",
+    "task_id": "00-05"
+  },
+  {
+    "output_tokens": 42,
+    "prompt_sha256": "fc7b9c5e49dac8348aa813084acc6794813234067357c6e09fa3ebcf6fa6d02e",
+    "response": " [{\"assign_ticket\":{\"assignee\":\"Eli\",\"ticket\":\"TK-2006\"},\"tag\":\"verified\"},{\"set_status\":{\"status\":\"in_progress\",\"ticket\":\"TK-2006\"}}]",
+    "task_id": "00-06"
+  },
+  {
+    "output_tokens": 42,
+    "prompt_sha256": "81e27700952da300ce37a89ad32ddd3fe3f6b5c19d55affec9883b97930c0b98",
+    "response": " [{\"assign_ticket\":{\"ticket\":\"TK-2007\",\"assignee\":\"Dee\"},\"tool\":\"assign_ticket\"},{\"add_tag\":{\"ticket\":\"TK-2007\",\"tag\":\"mobile\"}}]",
+    "task_id": "00-07"
+  },
+  {
+    "output_tokens": 125,
+    "prompt_sha256": "5e2f293fb9df55fc732eea5030430222b8f2a689b7cdf3cb23b3552f8bbaf7aa",
+    "response": " [{\"assign_ticket\":{\"assignee\":\"Dee\",\"ticket\":\"TK-2008\"},\"tag\":\"billing\",\"tool\":\"set_status\"},{\"assign_ticket\":{\"assignee\":\"Ari\",\"ticket\":\"TK-2008\"},\"tool\":\"add_tag\"},{\"assign_ticket\":{\"assignee\":\"Dee\",\"ticket\":\"TK-2008\"},\"tool\":\"move_to_state\"},{\"assign_ticket\":{\"assignee\":\"Caro\",\"ticket\":\"TK-2008\"},\"tool\":\"move_to_state\"},{\"assign_ticket\":{\"assignee\":\"Ari\",\"ticket\":\"TK-2008\"},\"tool\":\"move_to_state\"}]",
+    "task_id": "00-08"
+  },
+  {
+    "output_tokens": 21,
+    "prompt_sha256": "1aaf83b8e3127f156e0b13a37be0e136cf287a4b8f36bf2aa130a72cc246131e",
+    "response": " [{\"assign_ticket\":{\"assignee\":\"Ari\",\"ticket\":\"TK-2009\"}}]",
+    "task_id": "00-09"
+  },
+  {
+    "output_tokens": 42,
+    "prompt_sha256": "420a0c44722a0ec23152664ff426558d5ec324e94d0f406aeefb30e7f373a70d",
+    "response": " [{\"assign_ticket\":{\"ticket\":\"TK-2010\",\"assignee\":\"Dee\"},\"tool\":\"assign_ticket\"},{\"add_tag\":{\"ticket\":\"TK-2010\",\"tag\":\"verified\"}}]",
+    "task_id": "00-10"
+  },
+  {
+    "output_tokens": 69,
+    "prompt_sha256": "6d3f0f259976bbd40e1c9c477b3cbc08124098539f9d044afdbb786820303fa1",
+    "response": " [{\"assign_ticket\":{\"assignee\":\"Dee\",\"ticket\":\"TK-2011\"},\"tag\":\"billing\",\"status\":\"in_progress\"},{\"assign_ticket\":{\"assignee\":\"Ari\",\"ticket\":\"TK-2011\"},\"tag\":\"verified\"},{\"set_status\":{\"ticket\":\"TK-2011\",\"status\":\"in_progress\"}}]",
+    "task_id": "00-11"
+  },
+  {
+    "output_tokens": 23,
+    "prompt_sha256": "86dc312f3953a609201a7b10868abfbd94f9696565f42404d0efa75097b459b2",
+    "response": " [{\"tag\":\"verified\",\"execute\":\"set_status\",\"arguments\":{\"ticket\":\"TK-2012\"}}]",
+    "task_id": "01-00"
+  },
+  {
+    "output_tokens": 23,
+    "prompt_sha256": "dbdc6f702572ec6b1592723640692b763720e78fce6b587701a4e819b7855a74",
+    "response": " [{\"tag\":\"verified\",\"execute\":\"set_status\",\"arguments\":{\"ticket\":\"TK-2013\"}}]",
+    "task_id": "01-01"
+  },
+  {
+    "output_tokens": 23,
+    "prompt_sha256": "ffb0688c25237c20ee79dc843918348c17a895e98915f5e8d73830995aa5a802",
+    "response": " [{\"tag\":\"verified\",\"execute\":\"set_status\",\"arguments\":{\"ticket\":\"TK-2014\"}}]",
+    "task_id": "01-02"
+  },
+  {
+    "output_tokens": 23,
+    "prompt_sha256": "ab75e6cf8720278c93377a70827523631627fa82180bf0748a2c3c772c8a8a56",
+    "response": " [{\"tag\":\"verified\",\"execute\":\"set_status\",\"arguments\":{\"ticket\":\"TK-2015\"}}]",
+    "task_id": "01-03"
+  },
+  {
+    "output_tokens": 16,
+    "prompt_sha256": "628063e6d51137a2078ed2ee1a29364bed381bcb6526ecc4d1021aa9411dd8f2",
+    "response": " [{\"tag\":\"verified\",\"ticket\":\"TK-2016\"}]",
+    "task_id": "01-04"
+  },
+  {
+    "output_tokens": 23,
+    "prompt_sha256": "67cf0e925a6470cff0717bdd1a20ca033734e7d8e246e3a7204fbf1b7dd377cd",
+    "response": " [{\"tag\":\"verified\",\"execute\":\"set_status\",\"arguments\":{\"ticket\":\"TK-2017\"}}]",
+    "task_id": "01-05"
+  },
+  {
+    "output_tokens": 23,
+    "prompt_sha256": "962d503e7e9bee69e53928b87ede89ccbb3baab8599ea17f45ed3e944908b5bd",
+    "response": " [{\"tag\":\"verified\",\"execute\":\"set_status\",\"arguments\":{\"ticket\":\"TK-2018\"}}]",
+    "task_id": "01-06"
+  },
+  {
+    "output_tokens": 23,
+    "prompt_sha256": "ee5702f6154047005d3bbe18f19a33b12a82c285d5ae3ff41c85badbb4744832",
+    "response": " [{\"tag\":\"verified\",\"execute\":\"set_status\",\"arguments\":{\"ticket\":\"TK-2019\"}}]",
+    "task_id": "01-07"
+  },
+  {
+    "output_tokens": 23,
+    "prompt_sha256": "43691bc75d554e5dde188ec80c97f232b8d2f51923f4247a42397bdedaeb87d8",
+    "response": " [{\"tag\":\"verified\",\"execute\":\"set_status\",\"arguments\":{\"ticket\":\"TK-2020\"}}]",
+    "task_id": "01-08"
+  },
+  {
+    "output_tokens": 32,
+    "prompt_sha256": "e30a3a26495b7fe7d25301fc8e995d7557a2dbcbfa1d716b9df7cff93dc1fb4a",
+    "response": " [{\"tag\":\"verified\",\"ticket\":\"TK-2021\"},{\"set_status\":{\"ticket\":\"TK-2021\",\"status\":\"resolved\"}}]",
+    "task_id": "01-09"
+  },
+  {
+    "output_tokens": 23,
+    "prompt_sha256": "5cfd016f7b190e31a55a84abca5bd1df77eecbb92a7a7b25d3470f2c5fbe185d",
+    "response": " [{\"tag\":\"verified\",\"execute\":\"set_status\",\"arguments\":{\"ticket\":\"TK-2022\"}}]",
+    "task_id": "01-10"
+  },
+  {
+    "output_tokens": 23,
+    "prompt_sha256": "d1f83b56ca046f1eb5492140d0048992c4a7882b12884ab5947d96d56bc571b3",
+    "response": " [{\"tag\":\"verified\",\"execute\":\"set_status\",\"arguments\":{\"ticket\":\"TK-2023\"}}]",
+    "task_id": "01-11"
+  },
+  {
+    "output_tokens": 28,
+    "prompt_sha256": "bb9e7189e157b1e1421a3d4fbf94540207e6d72e20c26b94a474baff467470e4",
+    "response": " [{\"assign_ticket\":{\"ticket\":\"TK-2024\",\"assignee\":\"Ari\"},\"set_status\":{\"status\":\"resolved\"}}]",
+    "task_id": "02-00"
+  },
+  {
+    "output_tokens": 28,
+    "prompt_sha256": "efb731d8bf23569c5c1537cd9b1a852ba5735a7e8bc1b739c61839dbecfc93a3",
+    "response": " [{\"assign_ticket\":{\"ticket\":\"TK-2025\",\"assignee\":\"Eli\"},\"set_status\":{\"status\":\"resolved\"}}]",
+    "task_id": "02-01"
+  },
+  {
+    "output_tokens": 28,
+    "prompt_sha256": "7a87139c91f676e1a6846a5ca5eec911b1155ffbb71c6896b74ad51679820939",
+    "response": " [{\"assign_ticket\":\"TK-2026\",\"call\":\"resolve\",\"tool\":\"set_status\",\"arguments\":{\"status\":\"resolved\"}}]",
+    "task_id": "02-02"
+  },
+  {
+    "output_tokens": 28,
+    "prompt_sha256": "df7fa114bc8a4b5d5ca07c098f9e8e02c97b5c841c9a831efee3e1a5df0a453f",
+    "response": " [{\"assign_ticket\":{\"ticket\":\"TK-2027\",\"assignee\":\"Caro\"},\"set_status\":{\"status\":\"resolved\"}}]",
+    "task_id": "02-03"
+  },
+  {
+    "output_tokens": 28,
+    "prompt_sha256": "707085c89a92b5e3626753f67decb0fec3ad3481b96a4a2fc8b29c9ab6d4fca9",
+    "response": " [{\"assign_ticket\":{\"ticket\":\"TK-2028\",\"assignee\":\"Ari\"},\"set_status\":{\"status\":\"resolved\"}}]",
+    "task_id": "02-04"
+  },
+  {
+    "output_tokens": 28,
+    "prompt_sha256": "2e35eac8cfe3883f266868752c59d9535c4e317e7a86396bc9f506d6dd0569b2",
+    "response": " [{\"assign_ticket\":{\"ticket\":\"TK-2029\",\"assignee\":\"Dee\"},\"set_status\":{\"status\":\"resolved\"}}]",
+    "task_id": "02-05"
+  },
+  {
+    "output_tokens": 28,
+    "prompt_sha256": "e94c86b204dc8b8c7cb2eb9021be762c7c56fece33f414692ecc3d68875d82a4",
+    "response": " [{\"assign_ticket\":{\"ticket\":\"TK-2030\",\"assignee\":\"Ari\"},\"set_status\":{\"status\":\"resolved\"}}]",
+    "task_id": "02-06"
+  },
+  {
+    "output_tokens": 28,
+    "prompt_sha256": "643c8abd049f954d95e7ce0a31e41e3f7e3ee882a0943ccf3aec33aaf4502150",
+    "response": " [{\"assign_ticket\":{\"ticket\":\"TK-2031\",\"assignee\":\"Dee\"},\"set_status\":{\"status\":\"resolved\"}}]",
+    "task_id": "02-07"
+  },
+  {
+    "output_tokens": 28,
+    "prompt_sha256": "ec94b347b70581d636f42d3189c52738b3b82f742eb88df80f3d4207d05f321d",
+    "response": " [{\"assign_ticket\":\"TK-2032\",\"call\":\"resolve\",\"tool\":\"set_status\",\"arguments\":{\"status\":\"resolved\"}}]",
+    "task_id": "02-08"
+  },
+  {
+    "output_tokens": 28,
+    "prompt_sha256": "4fd3639520aba6a62ac04f69290295f14b9cc5fc29115ec69b91a83dcf5e50f8",
+    "response": " [{\"assign_ticket\":{\"ticket\":\"TK-2033\",\"assignee\":\"Ari\"},\"set_status\":{\"status\":\"resolved\"}}]",
+    "task_id": "02-09"
+  },
+  {
+    "output_tokens": 28,
+    "prompt_sha256": "73fb2ecfc8402d5a5ae2c8a1380105bbf08a830c84eb1bbc6b975777ef643a4b",
+    "response": " [{\"assign_ticket\":{\"ticket\":\"TK-2034\",\"assignee\":\"Ari\"},\"set_status\":{\"status\":\"resolved\"}}]",
+    "task_id": "02-10"
+  },
+  {
+    "output_tokens": 28,
+    "prompt_sha256": "4833b5101a5d61debe074ed40d17d17b22a387e77faae9139548fc77e7d3f633",
+    "response": " [{\"assign_ticket\":{\"ticket\":\"TK-2035\",\"assignee\":\"Dee\"},\"set_status\":{\"status\":\"resolved\"}}]",
+    "task_id": "02-11"
+  },
+  {
+    "output_tokens": 47,
+    "prompt_sha256": "cb3ce64b0f0956ae949886336fc44d6efa8a390d9af06debc222057a3ca8c36a",
+    "response": " [{\"assign_ticket\":{\"assignee\":\"Ari\",\"ticket\":\"TK-2036\"},\"tag\":\"billing\"},{\"assign_ticket\":{\"assignee\":\"Eli\",\"ticket\":\"TK-9073\"},\"tag\":\"billing\"}]",
+    "task_id": "03-00"
+  },
+  {
+    "output_tokens": 63,
+    "prompt_sha256": "f843f2c146a580317dadbb950d85636576e7af3bff2fdd8544ab38b9c55f6f89",
+    "response": " [{\"assign_ticket\":{\"ticket\":\"TK-2037\",\"assignee\":\"Dee\"},\"call\":\"set_status\",\"arguments\":[\"status\",\"in_progress\"]},{\"assign_ticket\":{\"ticket\":\"TK-9074\",\"assignee\":\"Bo\"},\"call\":\"set_status\",\"arguments\":[\"status\",\"in_progress\"]}]",
+    "task_id": "03-01"
+  },
+  {
+    "output_tokens": 64,
+    "prompt_sha256": "ff86f9391e328a2f76a559fc71a55b6ae0afcbd8e20f0ff1b4bd27f32094ffe5",
+    "response": " [{\"assign_ticket\":{\"ticket\":\"TK-2038\",\"assignee\":\"Caro\"},\"call\":\"set_status\",\"arguments\":[\"status\",\"in_progress\"]},{\"assign_ticket\":{\"ticket\":\"TK-9075\",\"assignee\":\"Eli\"},\"call\":\"set_status\",\"arguments\":[\"status\",\"in_progress\"]}]",
+    "task_id": "03-02"
+  },
+  {
+    "output_tokens": 60,
+    "prompt_sha256": "898b093fb89fedd93e5a6173e3165cbb169ebb9051b36cd763982dcd2d7ac408",
+    "response": " [{\"assign_ticket\":{\"ticket\":\"TK-2039\",\"assignee\":\"Caro\"},\"call\":\"set_status\",\"arguments\":[\"in_progress\"]},{\"assign_ticket\":{\"ticket\":\"TK-9076\",\"assignee\":\"Eli\"},\"call\":\"set_status\",\"arguments\":[\"in_progress\"]}]",
+    "task_id": "03-03"
+  },
+  {
+    "output_tokens": 64,
+    "prompt_sha256": "378f8423023b283065dc4724c78ed53544483ea18c7c77f1b213929dddd17229",
+    "response": " [{\"assign_ticket\":{\"ticket\":\"TK-2040\",\"assignee\":\"Ari\"},\"call\":\"set_status\",\"arguments\":[\"status\",\"in_progress\"]},{\"assign_ticket\":{\"ticket\":\"TK-9077\",\"assignee\":\"Dee\"},\"call\":\"set_status\",\"arguments\":[\"status\",\"in_progress\"]}]",
+    "task_id": "03-04"
+  },
+  {
+    "output_tokens": 64,
+    "prompt_sha256": "1da046bb8e07ba710316e7f723d235489a90089f637a0c8ac78b9ec17d7b3844",
+    "response": " [{\"assign_ticket\":{\"ticket\":\"TK-2041\",\"assignee\":\"Caro\"},\"call\":\"set_status\",\"arguments\":[\"status\",\"in_progress\"]},{\"assign_ticket\":{\"ticket\":\"TK-9078\",\"assignee\":\"Ari\"},\"call\":\"set_status\",\"arguments\":[\"status\",\"in_progress\"]}]",
+    "task_id": "03-05"
+  },
+  {
+    "output_tokens": 59,
+    "prompt_sha256": "c3c5048ec55cb8ccb27c947e0598b697164f4f2468629c784351579d27e893e0",
+    "response": " [{\"assign_ticket\":{\"ticket\":\"TK-2042\",\"assignee\":\"Dee\"},\"call\":\"set_status\",\"arguments\":[\"in_progress\"]},{\"assign_ticket\":{\"ticket\":\"TK-9079\",\"assignee\":\"Bo\"},\"call\":\"set_status\",\"arguments\":[\"in_progress\"]}]",
+    "task_id": "03-06"
+  },
+  {
+    "output_tokens": 64,
+    "prompt_sha256": "e0d31333286da432ca4eada4cfbc4ff932ca2201d58b0de2410afea2607b73b9",
+    "response": " [{\"assign_ticket\":{\"ticket\":\"TK-2043\",\"assignee\":\"Dee\"},\"call\":\"set_status\",\"arguments\":[\"status\",\"in_progress\"]},{\"assign_ticket\":{\"ticket\":\"TK-9080\",\"assignee\":\"Caro\"},\"call\":\"set_status\",\"arguments\":[\"status\",\"in_progress\"]}]",
+    "task_id": "03-07"
+  },
+  {
+    "output_tokens": 89,
+    "prompt_sha256": "838d1695327a0dae0399b7c0648d26c06eb7ba673be04ce4d6a283d463abf628",
+    "response": " [{\"assign_ticket\":{\"assignee\":\"Ari\",\"ticket\":\"TK-2044\"},\"tag\":\"billing\"},{\"assign_ticket\":{\"assignee\":\"Dee\",\"ticket\":\"TK-9081\"},\"tag\":\"billing\"},{\"set_status\":{\"status\":\"in_progress\",\"ticket\":\"TK-2044\"},\"tag\":\"billing\"},{\"set_status\":{\"status\":\"in_progress\",\"ticket\":\"TK-9081\"},\"tag\":\"billing\"}]",
+    "task_id": "03-08"
+  },
+  {
+    "output_tokens": 107,
+    "prompt_sha256": "0639018f5cdfbe342ad72d7699101e2cdff9ee9f54fe6d3c3cb570af5d02c7d2",
+    "response": " [{\"assign_ticket\":{\"ticket\":\"TK-2045\",\"assignee\":\"Ari\"},\"add_tag\":{\"tag\":\"billing\",\"ticket\":\"TK-2045\"},\"set_status\":{\"status\":\"in_progress\",\"ticket\":\"TK-2045\"}},\"{\"assign_ticket\":{\"ticket\":\"TK-9082\",\"assignee\":\"Caro\"},\"add_tag\":{\"tag\":\"shipping\",\"ticket\":\"TK-9082\"},\"set_status\":{\"status\":\"in_progress\",\"ticket\":\"TK-9082\"}}]",
+    "task_id": "03-09"
+  },
+  {
+    "output_tokens": 88,
+    "prompt_sha256": "fe1efa3d29127b39c78e5a251a40bc9154d4961d01cfbae4540e285db98f6526",
+    "response": " [{\"assign_ticket\":{\"assignee\":\"Ari\",\"ticket\":\"TK-2046\"},\"tag\":\"billing\"},{\"assign_ticket\":{\"assignee\":\"Bo\",\"ticket\":\"TK-9083\"},\"tag\":\"billing\"},{\"set_status\":{\"ticket\":\"TK-2046\",\"status\":\"in_progress\"},\"tag\":\"billing\"},{\"set_status\":{\"ticket\":\"TK-9083\",\"status\":\"in_progress\"},\"tag\":\"billing\"}]",
+    "task_id": "03-10"
+  },
+  {
+    "output_tokens": 125,
+    "prompt_sha256": "a2cd2a95ca63183f94bdcdd99597874cb99f357f673b967b0de156c198580dc9",
+    "response": " [{\"assign_ticket\":{\"ticket\":\"TK-2047\",\"assignee\":\"Ari\"},\"call\":\"set_status\",\"arguments\":[\"status\",\"in_progress\"]},{\"assign_ticket\":{\"ticket\":\"TK-9084\",\"assignee\":\"Bo\"},\"call\":\"set_status\",\"arguments\":[\"status\",\"in_progress\"]},{\"assign_ticket\":{\"ticket\":\"TK-9084\",\"assignee\":\"Eli\"},\"call\":\"set_status\",\"arguments\":[\"status\",\"in_progress\"]},{\"assign_ticket\":{\"ticket\":\"TK-9084\",\"assignee\":\"Caro\"},\"call\":\"set_status\",\"arguments\":[\"status\",\"in_progress\"]}]",
+    "task_id": "03-11"
+  }
+]

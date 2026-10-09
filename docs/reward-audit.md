@@ -32,9 +32,10 @@ from vare.types import EvaluationReport
 
 gate = PromotionGate(PromotionConfig(
     paired_confidence_gate=True,
-    require_complete_slices=True,
+    required_slice_names=("coding", "math"),
     require_measured_disagreement=True,
     require_reward_audit=True,
+    reward_audit_required_families=("coding", "math"),  # frozen before labels are collected
     reward_audit_max_false_accept_ucb=0.25,
     reward_audit_min_proxy_positives=32,
     reward_audit_alpha=0.05,

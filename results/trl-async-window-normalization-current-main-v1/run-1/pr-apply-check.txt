@@ -1,0 +1,14 @@
+Command:
+  git -C /tmp/trl-current-pr7249-audit apply --check /tmp/trl_pr7249.diff
+
+Target checkout:
+  huggingface/trl f4526e10e25c8618855932528c232e2284c7801c (clean detached checkout)
+
+Result:
+  exit status 1
+  error: patch failed: trl/experimental/async_distillation/async_distillation_trainer.py:1005
+  error: trl/experimental/async_distillation/async_distillation_trainer.py: patch does not apply
+  error: patch failed: trl/experimental/async_grpo/async_grpo_trainer.py:1194
+  error: trl/experimental/async_grpo/async_grpo_trainer.py: patch does not apply
+
+This is a context/applicability check only. It does not evaluate whether a ported version of the change would be correct.

@@ -1,0 +1,64 @@
+{
+  "protocol_id": "rvl_grpo_partial_failure_v1",
+  "protocol_version": 1,
+  "purpose": "Verify that VARE restores incumbent model, optimizer, and RNG state after a real upstream GRPO optimizer step completes and a failure is injected before candidate snapshotting or promotion.",
+  "not_a_model_capability_experiment": true,
+  "freeze": {
+    "source_commit": "1aa0958841e946226480cd167b4dbf5fb20d7281",
+    "validator": "scripts/validate_rvl_grpo_partial_failure.py",
+    "validator_sha256": "c88e100b458303617ce214f5041d54d5fcb8760512b80a191fb3761b1baadd6e",
+    "upstream_repository": "https://github.com/mitukx/Recursive-Verification-Lag",
+    "upstream_commit": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+    "upstream_files": {
+      "backends.py": "26abeffd24ecef37093a179dc33506f0853018331c0002bd01010d016b31faca",
+      "grpo.py": "a2ef6217385a206f5e6c0f43fb40e900ae3bf1b2066a1c8d1ab1878fd25d724d",
+      "hf_trainer.py": "375985c1d0cca49a9d98d8b00ed41cefe000b91461e9a0783e94312466fd0210",
+      "triton_grpo.py": "ed7ee082db036e1631c1f8eaacfb8691b102401c8342dcb9ed4dba5d26a22cf9",
+      "types.py": "a3e9f06cc70972a7b5fd50b757ffff992d3a6156d1ffab5133e410471dcc5d7b"
+    }
+  },
+  "runtime": {
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3",
+    "device": "cpu",
+    "torch_threads": 1,
+    "cuda_initialized": false
+  },
+  "fixture": {
+    "architecture": "GPT2LMHeadModel",
+    "initialization": "random",
+    "vocab_size": 16,
+    "positions": 8,
+    "layers": 1,
+    "heads": 2,
+    "hidden_size": 16,
+    "dropout": 0.0,
+    "prompts": 1,
+    "responses": 2,
+    "rewards": [0.0, 1.0],
+    "learning_rate": 0.01,
+    "torch_seed": 20261009
+  },
+  "failure_injection": "Call the pinned HFCausalLMGRPOTrainer.train_step to completion, confirm model parameters and optimizer state changed, then raise before VARE snapshots or promotes the candidate.",
+  "acceptance": {
+    "all_checks_must_be_true": [
+      "model_changed_before_failure",
+      "optimizer_changed_before_failure",
+      "failure_propagated",
+      "model_restored",
+      "optimizer_restored",
+      "rng_restored",
+      "active_policy_unchanged",
+      "failed_candidate_removed",
+      "counter_unchanged",
+      "next_rollout_uses_incumbent",
+      "cuda_uninitialized"
+    ],
+    "max_wall_seconds": 120,
+    "no_paid_compute": true,
+    "no_pretrained_model_or_dataset": true,
+    "no_network_during_run": true
+  },
+  "claim_boundary": "A pass validates one adapter failure boundary with a tiny randomly initialized model and one pinned trainer implementation. It is not a post-training quality result, pretrained-model result, process-loss guarantee, independent external reproduction, or validation of other RVL revisions."
+}

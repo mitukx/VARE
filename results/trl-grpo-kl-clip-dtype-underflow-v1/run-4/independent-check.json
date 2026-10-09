@@ -1,0 +1,18 @@
+{
+  "errors": [],
+  "experiment_disposition": "mixed_nonpass",
+  "findings": [
+    "A positive clip can underflow to zero in float16 and be accepted, producing zero KL and zero gradient.",
+    "With float16 and bias correction enabled, the representable clip control has a zero gradient despite a finite positive KL value; the uncanceled mathematical gradient is negative."
+  ],
+  "independent_calculations": {
+    "bias_corrected_gradient_lost_to_float16_cancellation": true,
+    "expected_bias_corrected_gradient_at_clip_10": -1.0,
+    "observed_bias_corrected_gradient_at_clip_10": 0.0,
+    "torch_float16_10": 10.0,
+    "torch_float16_1e_8": 0.0
+  },
+  "protocol_id": "trl_grpo_kl_clip_dtype_underflow_v1",
+  "source_imports": "none; parses runner JSON only",
+  "status": "pass"
+}

@@ -1,0 +1,45 @@
+{
+  "acceptance": {
+    "base_primary_gradient_error": 3.0250000953674316,
+    "base_reproduction": "pass",
+    "candidate": "pass",
+    "candidate_max_error": 9.5367431640625e-07
+  },
+  "protocol_id": "trl-pr7249-dispatcher-v4",
+  "protocol_sha256": "1b6ee095e22f7fff660c8e4db49c0a7a08ccd1814eef81990412bbf14db7850a",
+  "runner_sha256": "e8fe3d06b11dc845480138bd1060ac545b0539d9864c3cab7513e1dd0f453012",
+  "runs": {
+    "base": {
+      "log_sha256": "94c1249187d7da2c34c2ba7f51b498467a430a3a110353452993de9185267530",
+      "returncode": 0,
+      "seconds": 7.005316374998074,
+      "summary_sha256": "3bf5367ae99365c45c773cd7ad8dec6ec363b42f0cfe017636af5681d73bebe8"
+    },
+    "candidate": {
+      "log_sha256": "4b2779039ea6bcb28dede643110ecf4fb50f74c1078a5435e2737b161be9f9b1",
+      "returncode": 0,
+      "seconds": 6.117387875041459,
+      "summary_sha256": "ff94d860c9c41f8911d4a5bb7e2e3888c82ca49a102a4bc3eee278ca52157718"
+    }
+  },
+  "runtime": {
+    "accelerate": "1.12.0",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "source_checkouts": {
+    "base": {
+      "clean": true,
+      "commit": "a98fa6a4428f9aae58dfb26d729d7437f662f27a",
+      "source_sha256": "b84c4544a4ac2aac5b08681a93fb3d49d1f24ff2f2f9fe53a6c35ab5c8f0ea40"
+    },
+    "candidate": {
+      "clean": true,
+      "commit": "5234eb7c70f4ca7eb92fe8e01611a33eaff17f40",
+      "source_sha256": "5c4fc857c563db0d9f937a2edf89dd74c4f218a31f3a05bf33bffbf5285749dc"
+    }
+  },
+  "total_seconds": 13.124223999970127,
+  "wrapper_sha256": "7dfe4b6288967157d35019e1fc0e2a6f30471a9e0fdabccc96e76cd6ff0d6ec6"
+}

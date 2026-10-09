@@ -1,0 +1,50 @@
+{
+  "class_counts": {
+    "entailment": 256,
+    "not_entailment": 256
+  },
+  "cohort_size": 512,
+  "interpretation": "This is a no-update base-policy feasibility screen for a balanced binary transformation of SNLI validation. It can establish only whether the pinned model clears a frozen base-rate screen on these selected rows. It is not post-training evidence, held-out confirmation, external reproduction, or a model-capability/generalization claim. Public-model pretraining exposure cannot be ruled out.",
+  "metrics": {
+    "accuracy": 0.494140625,
+    "balanced_accuracy": 0.494140625,
+    "balanced_accuracy_bootstrap_95_percent_interval": [
+      0.453125,
+      0.537109375
+    ],
+    "checks": {
+      "bootstrap_lower_bound_above_chance_pass": false,
+      "minimum_balanced_accuracy_pass": false,
+      "minimum_entailment_recall_pass": true,
+      "minimum_not_entailment_recall_pass": true,
+      "resource_limits_pass": true,
+      "tokenizer_action_ids_pass": true
+    },
+    "confusion_matrix_true_rows_predicted_columns": [
+      [
+        127,
+        129
+      ],
+      [
+        130,
+        126
+      ]
+    ],
+    "entailment_recall": 0.49609375,
+    "examples": 512,
+    "not_entailment_recall": 0.4921875,
+    "result": "non-pass"
+  },
+  "protocol_id": "snli_entailment_base_feasibility_v1",
+  "protocol_sha256": "5735b81ea07267d00db9b99555dcb1ab65713529601044d7545f04909541cbd7",
+  "resource_measurements": {
+    "cpu_threads": 4,
+    "device": "cpu",
+    "model_updates": 0,
+    "network_offline": true,
+    "paid_compute": false,
+    "peak_rss_bytes": 3873832960,
+    "wall_seconds": 76.598535792
+  },
+  "source_commit": "be10384e3c8ddb2d0902dd06b3da9ccd41d8524e"
+}

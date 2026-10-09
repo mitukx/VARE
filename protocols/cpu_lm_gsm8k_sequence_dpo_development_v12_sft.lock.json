@@ -1,0 +1,109 @@
+{
+  "artifact_policy": "Retain all rows and base rollouts, chosen/rejected provenance, every adapter checkpoint, all eligible-checkpoint generations, runtime, hashes and audit. The DPO and SFT arms intentionally share the same frozen train and validation questions.",
+  "claim_boundary": "Development-only comparison on a public math training split. Labels are answer-key-derived; neither arm measures human preference alignment or broad capability. The validation cohort selects checkpoints and is not confirmation.",
+  "compute_limits": {
+    "device": "CPU only; CUDA and MPS placement are forbidden",
+    "feature_batch_size": 2,
+    "generation_batch_size": 1,
+    "generation_max_new_tokens": 64,
+    "max_peak_rss_bytes": 6442450944,
+    "max_wall_seconds": 2400,
+    "network": "disabled; HF_HUB_OFFLINE=1, HF_DATASETS_OFFLINE=1, TRANSFORMERS_OFFLINE=1, local_files_only=true",
+    "paid_compute": false,
+    "pair_microbatch_size": 1,
+    "threads": 4
+  },
+  "dataset": {
+    "answer_parser": "Parse the terminal number after ####, remove commas, and parse with Decimal.",
+    "cached_fingerprint": "c6f812ae33c9159d",
+    "cached_train_arrow_sha256": "6146bca074f4c6c5e07de7e96cc968adab3833dbdafeda21830f27558eea3d9b",
+    "config": "main",
+    "confirmation_reservation": "No confirmation data are opened. Fresh confirmation ranks begin at 3488 and require a new protocol.",
+    "development_training_examples": 64,
+    "development_training_rank_range": [
+      3360,
+      3424
+    ],
+    "development_validation_examples": 64,
+    "development_validation_rank_range": [
+      3424,
+      3488
+    ],
+    "id": "openai/gsm8k",
+    "leakage_boundary": "This phase reads only GSM8K train rows. The model may have seen the public dataset during pretraining; this cannot be ruled out.",
+    "preference_construction": "base_rollout_numeric",
+    "preference_pair": "Chosen completion is the GSM8K verifier final answer as a numeric assistant response. Rejected completion is the frozen base model greedy response if its final number is incorrect or unparseable. If already correct, change only its terminal number by exactly one using deterministic question-hash direction. Retain original generated text and provenance. These verifier-constructed comparisons are not human preferences.",
+    "prompt": "Use the model pinned chat template. Ask it to solve the word problem and reply with only the final number, without explanation.",
+    "revision": "740312add88f781978c0658806c59bc2815b9866",
+    "selection": "Both methods use identical fresh hash-ranked train rows 3360–3423 and validation rows 3424–3487. Sharing rows across the two frozen study arms is intentional; no other earlier cohort is reused.",
+    "split": "train only"
+  },
+  "generation": {
+    "algorithm": "greedy",
+    "do_sample": false,
+    "eos_token_ids": [
+      151645,
+      151643
+    ],
+    "repetition_penalty": 1.1,
+    "source": "Pinned Qwen generation_config.json; apply the same seen-token repetition penalty to prompt and generated tokens."
+  },
+  "learner": {
+    "adapter": "Custom low-rank residual on the frozen output-head hidden states, over the full vocabulary. The transformer backbone and original output-head weights are frozen. This is not PEFT/TRL.",
+    "adapter_rank": 16,
+    "beta": 0.1,
+    "checkpoints_epochs": [
+      0,
+      1,
+      2
+    ],
+    "initialization": "A sampled from N(0, 1/sqrt(hidden_size)) by a CPU torch.Generator seeded per run; B initialized to zero.",
+    "maximum_epochs": 2,
+    "method": "sft",
+    "microbatch_pairs": 4,
+    "objective": "Token-mean supervised cross-entropy on the verifier-chosen numeric answer only; rejected rollouts are not used by the SFT loss.",
+    "optimizer": {
+      "gradient_norm_clip": 1.0,
+      "learning_rate": 0.0001,
+      "name": "AdamW",
+      "weight_decay": 0.0
+    },
+    "seeds": [
+      4603,
+      4703,
+      4813
+    ]
+  },
+  "metrics": {
+    "checkpoint_selection_method": "exact_match",
+    "claim_boundary": "Exact-match is selected on this development cohort and is not independent confirmation. Public train-split answer keys are verifier labels, not human preferences.",
+    "generation_metric": "Greedy decoding under the same numeric-only user prompt, pinned model generation settings, and completion budget; parse the final number and compare Decimal-normalized values exactly.",
+    "minimum_base_exact_matches": 2,
+    "minimum_exact_match_gain": 0.03125,
+    "paired_comparison": "Compare selected DPO and SFT outcomes on the identical frozen validation examples and seeds. The SFT arm tests whether DPO's rejected-response signal adds value over learning only from the answer-key completion.",
+    "selection_primary": "Mean validation DPO preference NLL over completion sequences; lower is better.",
+    "selection_rule": "For each method independently, keep nonzero epochs with mean validation preference NLL below base and mean token KL <=0.5. Greedy-generate each eligible checkpoint for each seed. Select highest mean exact match; break ties by lower preference NLL, then fewer epochs. Each arm advances only if base exact match is at least 2/64, mean updated exact match exceeds base by at least 1/32, and at least two of three seeds are no worse.",
+    "selection_secondary": [
+      "held-out sequence preference accuracy",
+      "mean full-vocabulary token KL updated-to-base on paired completion contexts",
+      "greedy generated final-answer exact match"
+    ]
+  },
+  "model": {
+    "dtype": "float32",
+    "id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "weights_must_already_be_cached": true
+  },
+  "phase": "training_only_development",
+  "protocol_id": "vare-cpu-lm-gsm8k-posttraining-development-v12-sft",
+  "purpose": "Matched DPO versus SFT development comparison on identical fresh rows, seeds, adapter initialization, optimizer, and update counts.",
+  "runtime": {
+    "datasets": "4.4.2",
+    "numpy": "1.26.4",
+    "python": "3.9.6",
+    "torch": "2.8.0",
+    "transformers": "4.57.3"
+  },
+  "sha256": "070813a636dbd501b904ce29a4067997280ab40eef46ce1bd86ff7fbd8b62606"
+}

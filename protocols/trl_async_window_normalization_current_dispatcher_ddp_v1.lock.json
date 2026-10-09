@@ -1,0 +1,73 @@
+{
+  "accelerator_configuration": {
+    "dispatch_batches": true,
+    "split_batches": true
+  },
+  "acceptance_rule": "Base counterexample parameter-delta error >0.02; base negative control error <=1e-7; candidate gradient and delta errors <=1e-6 on both fixtures; candidate counterexample window count [40]; every arm completes one Trainer step on both ranks with equal post-step parameters; prepared loader class is DataLoaderDispatcher.",
+  "candidate": {
+    "loss_normalizer": "Use num_items_in_batch/world_size for each microbatch; fallback to global_n_tokens*current_gradient_accumulation_steps if no window count is provided.",
+    "window_count": "Override Trainer.get_batch_samples to sum global_n_tokens[0] from every batch in the current accumulation window."
+  },
+  "claim_boundary": "Current TRL collator, Accelerate DataLoaderDispatcher, Transformers Trainer, DDP/Gloo, and production compute_loss are executed for the two full accumulation-window fixtures. A deterministic scalar synthetic model is used; live asynchronous rollouts, finite-stream short-window behavior under DDP, vLLM, pretrained models, and downstream capabilities are outside this two-rank scope. Single-process current Trainer separately checks a shortened final window.",
+  "estimand": "Compare one actual Trainer optimizer-step parameter delta after DDP gradient averaging between accumulation of microbatches and one full-batch reference with identical per-rank token rows.",
+  "fixtures": {
+    "counterexample": {
+      "configured_accumulation_steps": 2,
+      "global_active_tokens": 40,
+      "global_summed_token_gradient": 4.0,
+      "microbatch_1_per_rank": {
+        "active_tokens": 2,
+        "per_token_gradient": 1.0
+      },
+      "microbatch_2_per_rank": {
+        "active_tokens": 18,
+        "per_token_gradient": 0.0
+      }
+    },
+    "learning_rate": 0.1,
+    "negative_control": {
+      "configured_accumulation_steps": 2,
+      "global_active_tokens": 40,
+      "global_summed_token_gradient": 40.0,
+      "microbatch_1_per_rank": {
+        "active_tokens": 2,
+        "per_token_gradient": 1.0
+      },
+      "microbatch_2_per_rank": {
+        "active_tokens": 18,
+        "per_token_gradient": 1.0
+      }
+    }
+  },
+  "primary_metrics": [
+    "gradient absolute error versus full-batch reference",
+    "one-step SGD parameter delta absolute error"
+  ],
+  "relationship_to_prior_work": "Outcome-informed follow-up to the current-main production compute_loss and single-process Trainer reproductions. This protocol adds current Accelerate DataLoaderDispatcher and real two-process CPU DDP/Gloo. The finite-stream short-final-window fixture was excluded after it stalled before optimizer step in the dispatcher path; the single-process Trainer protocol covers that case separately.",
+  "resources": {
+    "external_spend": 0,
+    "gpu": 0,
+    "paid_api": 0,
+    "pretrained_model": false
+  },
+  "runner": {
+    "path": "scripts/reproduce_trl_async_current_dispatcher_ddp_v1.py",
+    "sha256": "f55bf570d332f78b3482efc076551236f2e4f4d74ee3fb61fb4629349ee8c32f"
+  },
+  "runtime": {
+    "accelerate": "1.12.0",
+    "backend": "gloo",
+    "device": "cpu",
+    "torch": "2.9.1",
+    "transformers": "5.19.0",
+    "world_size": 2
+  },
+  "status": "frozen_before_final_replay; outcome_informed_follow_up",
+  "study_id": "trl_async_window_normalization_current_dispatcher_ddp_v1",
+  "trl": {
+    "commit": "f4526e10e25c8618855932528c232e2284c7801c",
+    "path": "trl/experimental/async_grpo/async_grpo_trainer.py",
+    "repository": "https://github.com/huggingface/trl",
+    "sha256": "2657481258dcc04112761e9ff61a35cb93b2b72c3e197e4524f4602fd6a2dbfe"
+  }
+}

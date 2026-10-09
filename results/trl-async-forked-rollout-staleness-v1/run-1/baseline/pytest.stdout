@@ -1,0 +1,54 @@
+F.F                                                                      [100%]
+=================================== FAILURES ===================================
+__ test_policy_update_between_reads_preserves_every_fork_of_admitted_rollout ___
+
+    def test_policy_update_between_reads_preserves_every_fork_of_admitted_rollout():
+        PartialState()
+        version = [0]
+        metrics = defaultdict(list)
+        fork_rows = [
+            _sample(0, model_version=0, group_id=41, rollout_id="rollout-a", rollout_size=2),
+            _sample(1, model_version=0, group_id=41, rollout_id="rollout-a", rollout_size=2),
+        ]
+        other_rollout = _sample(2, model_version=0, group_id=41, rollout_id="rollout-b")
+        sentinel = _sample(99, model_version=1, group_id=99)
+        sentinel_2 = _sample(100, model_version=1, group_id=100)
+        dataset_iter = _dataset([*fork_rows, other_rollout, sentinel, sentinel_2], version, metrics)
+    
+        first = next(dataset_iter)
+        version[0] = 1
+        sibling = next(dataset_iter)
+        after_drops = next(dataset_iter)
+        dataset_iter.close()
+    
+        assert first["input_ids"][0] == 0
+>       assert sibling["input_ids"][0] == 1
+E       assert 99 == 1
+
+/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/reproducers/trl_async_forked_rollout_staleness/test_async_grpo_group_staleness.py:66: AssertionError
+___________________ test_fork_metadata_mismatch_fails_closed ___________________
+
+    def test_fork_metadata_mismatch_fails_closed():
+        PartialState()
+        first = _sample(0, model_version=0, group_id=41, rollout_id="rollout-a", rollout_size=2)
+        second = _sample(1, model_version=0, group_id=41, rollout_id="rollout-b", rollout_size=2)
+        dataset_iter = _dataset([first, second], [0], defaultdict(list))
+    
+        try:
+            next(dataset_iter)
+        except RuntimeError as error:
+            assert "membership is not contiguous or has inconsistent metadata" in str(error)
+        else:
+>           raise AssertionError("inconsistent rollout membership was accepted")
+E           AssertionError: inconsistent rollout membership was accepted
+
+/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/reproducers/trl_async_forked_rollout_staleness/test_async_grpo_group_staleness.py:100: AssertionError
+=============================== warnings summary ===============================
+../../Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/reproducers/trl_async_forked_rollout_staleness/test_async_grpo_group_staleness.py:10
+  /Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/reproducers/trl_async_forked_rollout_staleness/test_async_grpo_group_staleness.py:10: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+    from trl.experimental.async_grpo.async_grpo_trainer import RolloutQueueDataset
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/reproducers/trl_async_forked_rollout_staleness/test_async_grpo_group_staleness.py::test_policy_update_between_reads_preserves_every_fork_of_admitted_rollout
+FAILED ../../Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/reproducers/trl_async_forked_rollout_staleness/test_async_grpo_group_staleness.py::test_fork_metadata_mismatch_fails_closed

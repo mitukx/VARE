@@ -1,0 +1,15 @@
+{
+  "accuracy": 0.45,
+  "accuracy_wilson_95_lower": 0.34577689184711224,
+  "audit_method": "separate source-hash-locked implementation; reloads pinned validation rows and tokenizer, reconstructs task selection and prompt digests, decodes retained token IDs, independently parses and scores every response",
+  "auditor_sha256": "f51dbaaa3124d1d8127a67e861c5bbe216b7ac400ec64f2bf3f1794653466909",
+  "exact_successes": 36,
+  "gate_checks_match": true,
+  "interpretation": "Same-host independent implementation audit; not external human reproduction.",
+  "n": 80,
+  "parsed": 74,
+  "protocol_id": "qwen_arc_challenge_base_gate_v2",
+  "protocol_sha256": "fceed23b13763471b5b406f5e1c52adeba7c92d2161d4e9e59a2be5bd1b5f011",
+  "runner_sha256": "fdfcf02dec2995db6b7e8965bc418c0ae81114e81e1447d4c6f47e8461d9e021",
+  "status": "pass"
+}

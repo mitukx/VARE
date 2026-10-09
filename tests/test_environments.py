@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from pathlib import Path
+import hashlib
+import math
 import os
 import subprocess
 import sys
@@ -12,6 +14,9 @@ from vare.environments import (
     CommandSpec,
     EngineeringTaskSpec,
     ExecutableEvaluator,
+    MetricSpec,
+    ProtectedPath,
+    RepositorySource,
     ResourceLimits,
     Workspace,
 )
@@ -51,6 +56,79 @@ def test_protected_evaluator_tampering_fails_closed():
     assert not result.passed
     assert not result.integrity_ok
     assert any("protected file modified" in x for x in result.integrity_failures)
+
+
+def test_protected_file_mutation_during_test_fails_closed(tmp_path):
+    protected = tmp_path / "protected-test.py"
+    original = b"original evaluator bytes\n"
+    protected.write_bytes(original)
+    mutate_and_pass = (
+        "from pathlib import Path; "
+        "Path('protected-test.py').write_bytes(b'changed evaluator bytes\\n')"
+    )
+    spec = EngineeringTaskSpec(
+        id="protected-post-command-mutation",
+        title="Detect protected file mutation during evaluation",
+        prompt="Keep protected evaluation inputs unchanged.",
+        family="integrity",
+        source=RepositorySource(local_path="."),
+        tests=(CommandSpec(argv=(sys.executable, "-c", mutate_and_pass), name="mutate-protected"),),
+        protected_paths=(
+            ProtectedPath(
+                path="protected-test.py",
+                sha256=hashlib.sha256(original).hexdigest(),
+            ),
+        ),
+    )
+
+    result = ExecutableEvaluator(spec).evaluate(tmp_path)
+
+    assert result.tests[0].passed
+    assert not result.passed
+    assert not result.integrity_ok
+    assert result.score == 0.0
+    assert any("protected file modified: protected-test.py" in x for x in result.integrity_failures)
+
+
+def test_protected_file_mutation_during_metric_fails_closed(tmp_path):
+    protected = tmp_path / "protected-metric.py"
+    original = b"original metric bytes\n"
+    protected.write_bytes(original)
+    mutate_and_measure = (
+        "from pathlib import Path; import json; "
+        "Path('protected-metric.py').write_bytes(b'changed metric bytes\\n'); "
+        "print(json.dumps({'work_units': 1}))"
+    )
+    spec = EngineeringTaskSpec(
+        id="protected-post-metric-mutation",
+        title="Detect protected file mutation during metric evaluation",
+        prompt="Keep protected evaluation inputs unchanged.",
+        family="integrity",
+        source=RepositorySource(local_path="."),
+        tests=(CommandSpec(argv=(sys.executable, "-c", "pass"), name="pass"),),
+        metrics=(
+            MetricSpec(
+                name="work_units",
+                command=CommandSpec(argv=(sys.executable, "-c", mutate_and_measure), name="mutate-metric"),
+                json_key="work_units",
+            ),
+        ),
+        protected_paths=(
+            ProtectedPath(
+                path="protected-metric.py",
+                sha256=hashlib.sha256(original).hexdigest(),
+            ),
+        ),
+    )
+
+    result = ExecutableEvaluator(spec).evaluate(tmp_path, baseline_metrics={"work_units": 1})
+
+    assert result.tests[0].passed
+    assert not result.passed
+    assert not result.integrity_ok
+    assert result.score == 0.0
+    assert math.isnan(result.metrics[0].value)  # A tampered metric is not trusted.
+    assert any("protected file modified: protected-metric.py" in x for x in result.integrity_failures)
 
 
 def test_relative_local_source_is_portable_and_not_serialized(monkeypatch, tmp_path):

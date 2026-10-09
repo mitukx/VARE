@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "protocol_id": "vare-current-regression-calibration-v1",
+  "purpose": "Reconstruct only the current frozen VARE regression controls from immutable source revisions.",
+  "expected_outcomes": {
+    "baseline_passed": false,
+    "fixed_passed": true
+  },
+  "tasks": [
+    {
+      "task_id": "vare-promotion-gate-nonfinite-metrics-v1",
+      "task_root": "benchmarks/regressions/promotion_gate_metrics",
+      "protocol_lock_sha256": "0eb3b2f65785029070fe7d714c3492ac931b77a81455d978d02fefb6aee2aad8",
+      "fixed_revision": "7fcc897fa49024a014a15c34aed4d0cf1fd2ec94"
+    },
+    {
+      "task_id": "vare-replay-group-freshness-atomicity-v1",
+      "task_root": "benchmarks/regressions/replay_group_freshness",
+      "protocol_lock_sha256": "49df4680334638994f50eb144b0a79e0fc716d17e51c5403f5e62da8f1eea565",
+      "fixed_revision": "798fcfde5fa8c1fd601f08edc349fb50417d2bf3"
+    },
+    {
+      "task_id": "vare-environment-command-output-budget-v4",
+      "task_root": "benchmarks/regressions/environment_output_budget_v4",
+      "protocol_lock_sha256": "c4d58a033ba92c6ca1d7d3d7579c44b2478ec208a4c94d6dd12089b05525d00c",
+      "fixed_revision": "e8acf22a8488782d33955950d904051f2ca38a81"
+    }
+  ],
+  "exclusions": [
+    "environment_output_budget v1 is invalidated",
+    "environment_output_budget v2 is narrower and is not pooled with v4",
+    "environment_output_budget v3 is invalidated"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "audit": "pass",
+  "audit_peak_rss_bytes": 3874144256,
+  "audit_scope": "Same-host replay with a separate audit implementation; not external reproduction.",
+  "audit_wall_seconds": 73.790835,
+  "cohort_rows_reconstructed": 512,
+  "manifest_files_verified": 14,
+  "metrics_gate_reconstructed": {
+    "accuracy": 0.494140625,
+    "balanced_accuracy": 0.494140625,
+    "balanced_accuracy_bootstrap_95_percent_interval": [
+      0.453125,
+      0.537109375
+    ],
+    "checks": {
+      "bootstrap_lower_bound_above_chance_pass": false,
+      "minimum_balanced_accuracy_pass": false,
+      "minimum_entailment_recall_pass": true,
+      "minimum_not_entailment_recall_pass": true,
+      "resource_limits_pass": true,
+      "tokenizer_action_ids_pass": true
+    },
+    "confusion_matrix_true_rows_predicted_columns": [
+      [
+        127,
+        129
+      ],
+      [
+        130,
+        126
+      ]
+    ],
+    "entailment_recall": 0.49609375,
+    "examples": 512,
+    "not_entailment_recall": 0.4921875,
+    "result": "non-pass"
+  },
+  "model_forward_replay": true,
+  "protocol_id": "snli_entailment_base_feasibility_v1",
+  "protocol_sha256": "5735b81ea07267d00db9b99555dcb1ab65713529601044d7545f04909541cbd7",
+  "selected_prompt_scores_replayed": 512,
+  "source_commit": "be10384e3c8ddb2d0902dd06b3da9ccd41d8524e",
+  "study_resource_record_verified": true
+}

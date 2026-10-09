@@ -1,0 +1,163 @@
+{
+  "base_eval": [
+    {
+      "answer_key": "C",
+      "exact": false,
+      "generated_token_ids": [
+        32,
+        13,
+        3619,
+        4771,
+        151645
+      ],
+      "parsed_label": null,
+      "prompt_sha256": "78fd8c0e171c23bcfc8d3edaded5550d8a26a68423c903c9c9ae32d2e2064f26",
+      "raw_generation": "A. bar graph",
+      "task_id": "Mercury_7215180"
+    },
+    {
+      "answer_key": "B",
+      "exact": false,
+      "generated_token_ids": [
+        35,
+        151645
+      ],
+      "parsed_label": "D",
+      "prompt_sha256": "69cd224de8fcae7eb704d9ac38e2d7d44f30681419fc8b4818ba5f55c93f17f9",
+      "raw_generation": "D",
+      "task_id": "TIMSS_2003_8_pg14"
+    },
+    {
+      "answer_key": "D",
+      "exact": false,
+      "generated_token_ids": [
+        33,
+        151645
+      ],
+      "parsed_label": "B",
+      "prompt_sha256": "f070ca5e9cf768163bbe85c83b5dc6c9b94951aa8769f043724fbc917699ca16",
+      "raw_generation": "B",
+      "task_id": "Mercury_7085820"
+    },
+    {
+      "answer_key": "D",
+      "exact": true,
+      "generated_token_ids": [
+        35,
+        151645
+      ],
+      "parsed_label": "D",
+      "prompt_sha256": "79f396ec9933e4c3bbd6ae43438186fb832d35b01bd36f0b4f1c26310db937bd",
+      "raw_generation": "D",
+      "task_id": "Mercury_405454"
+    },
+    {
+      "answer_key": "C",
+      "exact": false,
+      "generated_token_ids": [
+        35,
+        151645
+      ],
+      "parsed_label": "D",
+      "prompt_sha256": "036d355ee11498b65a3fdc76427259d63e5d1a3d65b446283c19f67451657581",
+      "raw_generation": "D",
+      "task_id": "Mercury_7233660"
+    },
+    {
+      "answer_key": "A",
+      "exact": true,
+      "generated_token_ids": [
+        32,
+        151645
+      ],
+      "parsed_label": "A",
+      "prompt_sha256": "a09446140e332b31af5b5b72ba934ccc6f25409d897b96780230dc7c12267542",
+      "raw_generation": "A",
+      "task_id": "Mercury_176838"
+    },
+    {
+      "answer_key": "C",
+      "exact": true,
+      "generated_token_ids": [
+        34,
+        151645
+      ],
+      "parsed_label": "C",
+      "prompt_sha256": "f169efcfaf2ad5cd5c836db43abbf1e31dbb757dd7a134947a00607531a395c0",
+      "raw_generation": "C",
+      "task_id": "Mercury_SC_415397"
+    },
+    {
+      "answer_key": "A",
+      "exact": true,
+      "generated_token_ids": [
+        32,
+        13,
+        151645
+      ],
+      "parsed_label": "A",
+      "prompt_sha256": "26a1731b65bfdff6b824f1cde50ba8bfc76a3b7b031d22b1df00796a354aa4c4",
+      "raw_generation": "A.",
+      "task_id": "Mercury_7044678"
+    }
+  ],
+  "base_model_fingerprint": "1269f7eada635e467b5e842ef129a9de991caf5cd208f4aca6c3cdbfc36ff121",
+  "dataset": {
+    "train_sha256": "e488c1587ffdcfc8443f916c53488a95cd471c5790e0746c6bfe4cecf20962cb",
+    "validation_sha256": "395a5c88d1580d69855fbaee9450270578df1ad5af6259771cd0a42c20e99f05"
+  },
+  "device": "cpu",
+  "load_peak_rss_mib": 2792.609375,
+  "mps_available_but_disabled": true,
+  "post_reload_eval": [],
+  "protocol_id": "qwen_arc_challenge_grpo_update_smoke_v2",
+  "protocol_sha256": "932c4a7e5ca9515d54111fb04bd219dabf14bf5100eb1779630a76b784ee888d",
+  "runner_sha256": "d60c23a719737ef96fc3f86c167677adf681d71dd11e663782cbe0a624014b62",
+  "rvl_revision": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "status": "running",
+  "train_group_attempts": [
+    {
+      "answer_key": "A",
+      "generated_token_ids": [
+        [
+          33,
+          151645
+        ],
+        [
+          34,
+          151645
+        ],
+        [
+          32,
+          151645
+        ],
+        [
+          34,
+          13,
+          29724,
+          304,
+          264,
+          259,
+          78730,
+          24982
+        ]
+      ],
+      "prompt_sha256": "80822b2ee79a29b6c92d4f834b2947b5ae9fac0d32520bbb6e0169143bd21b77",
+      "raw_generations": [
+        "B",
+        "C",
+        "A",
+        "C. bears in a tundra ecosystem"
+      ],
+      "rewards": [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "task_id": "Mercury_7193113",
+      "train_index": 0
+    }
+  ],
+  "vare_base_revision": "330ae68"
+}

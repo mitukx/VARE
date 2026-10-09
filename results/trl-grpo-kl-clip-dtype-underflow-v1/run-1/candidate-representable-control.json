@@ -1,0 +1,55 @@
+{
+  "cases": [
+    {
+      "advantage": 0.0,
+      "beta": 0.1,
+      "bias_correction": false,
+      "clip": 10.0,
+      "dtype": "float16",
+      "execution": "completed",
+      "gradient_finite": true,
+      "importance_ratio": 1.0,
+      "kl_log_ratio": 20.0,
+      "loss": 2202.0,
+      "loss_finite": true,
+      "loss_gradient_theta": -2202.0,
+      "production_kl_metric": 22016.0,
+      "revision_name": "candidate",
+      "source": {
+        "clean": true,
+        "files_sha256": {
+          "trl/trainer/grpo_config.py": "9df33ad74fd9d4d9ff73e0cb33433d51453580c45041be04907ab95fc14cf9c8",
+          "trl/trainer/grpo_trainer.py": "4c580f871e4580d283d8e29ff01c43c924f5b04becb78cf8960272bc3a3d3e50"
+        },
+        "revision": "0aaea03f2fa449bc7a91f1973e7940da11da65da"
+      }
+    },
+    {
+      "advantage": 0.0,
+      "beta": 0.1,
+      "bias_correction": true,
+      "clip": 10.0,
+      "dtype": "float16",
+      "execution": "completed",
+      "gradient_finite": true,
+      "importance_ratio": 1.0,
+      "kl_log_ratio": 20.0,
+      "loss": 2202.0,
+      "loss_finite": true,
+      "loss_gradient_theta": 0.0,
+      "production_kl_metric": 22016.0,
+      "revision_name": "candidate",
+      "source": {
+        "clean": true,
+        "files_sha256": {
+          "trl/trainer/grpo_config.py": "9df33ad74fd9d4d9ff73e0cb33433d51453580c45041be04907ab95fc14cf9c8",
+          "trl/trainer/grpo_trainer.py": "4c580f871e4580d283d8e29ff01c43c924f5b04becb78cf8960272bc3a3d3e50"
+        },
+        "revision": "0aaea03f2fa449bc7a91f1973e7940da11da65da"
+      }
+    }
+  ],
+  "claim_boundary": "Exact production GRPOTrainer._compute_loss execution on a one-token CPU float16 fixture; no dataset, pretrained model, GPU, Liger kernel, optimizer update, or task evaluation.",
+  "protocol_id": "trl_grpo_kl_clip_dtype_underflow_v1",
+  "status": "complete"
+}

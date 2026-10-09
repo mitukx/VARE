@@ -1,0 +1,13 @@
+{
+  "candidate_commit": "5234eb7c70f4ca7eb92fe8e01611a33eaff17f40",
+  "command": "python scripts/reproduce_trl_pr7249_async_distillation_ddp_v1.py --output results/trl-async-pr7249-distillation-ddp-v1/run-1",
+  "date": "2026-10-09",
+  "expected_digest_from_v1_lock": "7a99d26d9124787978fd6c29752a666ff4160694c3feb999abf68afb6a49a1ff",
+  "failure": "Candidate checkout was the pinned PR head and clean, but the frozen expected source SHA-256 had a one-character transcription error at index 7.",
+  "no_model_compute": true,
+  "observed_digest_at_pinned_commit": "7a99d26b9124787978fd6c29752a666ff4160694c3feb999abf68afb6a49a1ff",
+  "protocol_id": "trl-async-distillation-pr7249-full-trainer-ddp-v1",
+  "resolution": "Preserve v1 unchanged; v2 corrects the digest and uses fresh sample IDs. No outcomes were observed, so no sample values or thresholds are tuned from a training result.",
+  "stage": "source-checkout-preflight",
+  "status": "non-pass; no trainer arm or optimizer step executed"
+}

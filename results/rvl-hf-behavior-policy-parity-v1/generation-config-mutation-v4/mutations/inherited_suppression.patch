@@ -1,0 +1,145 @@
+diff --git a/src/rvl_systems/hf_backend.py b/src/rvl_systems/hf_backend.py
+index 8424f7e..2ee6db5 100644
+--- a/src/rvl_systems/hf_backend.py
++++ b/src/rvl_systems/hf_backend.py
+@@ -1,6 +1,7 @@
+ from __future__ import annotations
+ 
+ import asyncio
++import math
+ import time
+ from dataclasses import dataclass
+ from typing import Any
+@@ -128,8 +129,10 @@ class HFLocalBackend:
+     ) -> list[Generation]:
+         if n <= 0:
+             raise ValueError("n must be positive")
+-        if temperature < 0:
+-            raise ValueError("temperature must be non-negative")
++        if not math.isfinite(temperature) or temperature < 0:
++            raise ValueError("temperature must be finite and non-negative")
++        if temperature == 0 and n != 1:
++            raise ValueError("greedy decoding supports exactly one return sequence")
+         self.ensure_loaded()
+         torch = self._torch
+         tokenizer = self._tokenizer
+@@ -148,14 +151,38 @@ class HFLocalBackend:
+         start = time.perf_counter()
+         was_training = model.training
+         model.eval()
++        from transformers import GenerationConfig
++        # A pretrained chat model can inherit repetition penalties, suppression,
++        # or truncation processors. Their scores are not the policy logits the
++        # learner evaluates. Start from neutral defaults, retaining only special
++        # token identities, and make temperature the sole sampling transform.
++        special = model.generation_config
++        generation_config = GenerationConfig(
++            bos_token_id=special.bos_token_id,
++            eos_token_id=special.eos_token_id if special.eos_token_id is not None else tokenizer.eos_token_id,
++            pad_token_id=tokenizer.pad_token_id,
++            do_sample=temperature > 0,
++            temperature=temperature if temperature > 0 else 1.0,
++            top_k=0,
++            top_p=1.0,
++            suppress_tokens=special.suppress_tokens,
++            no_repeat_ngram_size=special.no_repeat_ngram_size,
++        )
++        # Expand neutral fields as explicit overrides: the supported, pinned
++        # Transformers release can otherwise merge model defaults even into a
++        # fresh GenerationConfig. Do not mix that object with generation kwargs.
+         generation_kwargs = {
++            key: value for key, value in generation_config.to_dict().items()
++            if not key.startswith("_") and key not in {"transformers_version", "max_length"}
++        }
++        generation_kwargs.update({
+             "do_sample": temperature > 0,
+             "num_return_sequences": n,
+             "max_new_tokens": self.max_new_tokens,
+             "return_dict_in_generate": True,
+             "output_scores": True,
+             "pad_token_id": tokenizer.pad_token_id,
+-        }
++        })
+         if temperature > 0:
+             generation_kwargs.update(
+                 {
+@@ -164,35 +191,33 @@ class HFLocalBackend:
+                     "top_p": 1.0,
+                 }
+             )
+-        elif n != 1:
+-            raise ValueError(
+-                "greedy decoding supports exactly one return sequence"
+-            )
+-        with torch.inference_mode():
+-            outputs = model.generate(
+-                **encoded,
+-                **generation_kwargs,
+-            )
+-            transition = model.compute_transition_scores(
+-                outputs.sequences,
+-                outputs.scores,
+-                normalize_logits=True,
+-            )
+-        if was_training:
+-            model.train()
++        try:
++            with torch.inference_mode():
++                outputs = model.generate(
++                    **encoded,
++                    **generation_kwargs,
++                )
++                transition = model.compute_transition_scores(
++                    outputs.sequences,
++                    outputs.scores,
++                    normalize_logits=True,
++                )
++        finally:
++            model.train(was_training)
+         latency = time.perf_counter() - start
+ 
+         generations: list[Generation] = []
+-        eos_id = tokenizer.eos_token_id
++        eos = generation_config.eos_token_id
++        eos_ids = set(eos if isinstance(eos, (list, tuple)) else ([] if eos is None else [eos]))
+         pad_id = tokenizer.pad_token_id
+         for row in range(outputs.sequences.shape[0]):
+             raw_ids = outputs.sequences[row, input_length:].tolist()
+             response_ids: list[int] = []
+             for token_id in raw_ids:
+-                if token_id == pad_id and pad_id != eos_id:
++                if token_id == pad_id and pad_id not in eos_ids:
+                     break
+                 response_ids.append(int(token_id))
+-                if eos_id is not None and token_id == eos_id:
++                if token_id in eos_ids:
+                     break
+             token_logprobs = [
+                 float(x)
+@@ -212,6 +237,8 @@ class HFLocalBackend:
+                         "model": self.model_name,
+                         "device": device,
+                         "precision": self.resolved_precision,
++                        "sampling_temperature": temperature,
++                        "logprob_distribution": "neutral_temperature_scaled_policy" if temperature > 0 else "greedy_scores_not_trainable",
+                         "prompt_token_ids": prompt_token_ids,
+                         "response_token_ids": response_ids,
+                         "response_token_logprobs": token_logprobs,
+diff --git a/src/rvl_systems/hf_trainer.py b/src/rvl_systems/hf_trainer.py
+index 11d82d1..51d5967 100644
+--- a/src/rvl_systems/hf_trainer.py
++++ b/src/rvl_systems/hf_trainer.py
+@@ -84,9 +84,12 @@ class HFCausalLMGRPOTrainer:
+         start = len(prompt_ids) - 1
+         end = start + len(response_ids)
+         response_logits = logits[start:end]
++        temperature = float(sample.generation.metadata.get("sampling_temperature", 1.0))
++        if not math.isfinite(temperature) or temperature <= 0:
++            raise ValueError("training requires a finite positive sampling temperature; greedy scores are not behavior probabilities")
+         targets = torch.tensor(response_ids, dtype=torch.long, device=device)
+         with torch.autograd.profiler.record_function("rvl.grpo.logprob_objective"):
+-            current_logps = torch.log_softmax(response_logits.float(), dim=-1).gather(
++            current_logps = torch.log_softmax(response_logits.float() / temperature, dim=-1).gather(
+                 1, targets.unsqueeze(1)
+             ).squeeze(1)
+         if not torch.isfinite(current_logps).all():

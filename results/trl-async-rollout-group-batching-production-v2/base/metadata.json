@@ -1,0 +1,10 @@
+{
+  "protocol_sha256": "1c1cf6ad52d461719ddd098d3048c2e7b98806139f3ec8b7dd47c172a3302d5a",
+  "reproducer_sha256": "a231a442f52614bbd4902c2c2bb87eb0028549cfb8896887967710b2628d3cc0",
+  "source_revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+  "command": "python /absolute/path/to/reproducers/trl_async_rollout_group_batching_source_audit_v2.py",
+  "python": "3.12.12",
+  "exit_code": 0,
+  "classification": "superseded fixture-insufficient base observation",
+  "interpretation": "base finite stream emitted only one batch; accounting failed because tails remained buffered, but rollout_unsplit was true, so this run did not demonstrate the intended cross-microbatch split. No v2 candidate run was executed."
+}

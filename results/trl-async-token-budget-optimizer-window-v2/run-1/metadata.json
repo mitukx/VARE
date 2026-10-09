@@ -1,0 +1,15 @@
+{
+  "protocol": "trl_async_token_budget_optimizer_window_v2",
+  "protocol_commit": "ce5f1c1bd9a5518e9fac31f313d5ed89ba5260ea",
+  "source_revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+  "transformers_version": "4.57.3",
+  "torch_version": "2.9.1",
+  "accelerate_version": "1.12.0",
+  "device": "CPU",
+  "external_spend_usd": 0,
+  "exit_codes": {
+    "baseline": 0,
+    "candidate": 0
+  },
+  "claim_limit": "Pinned TRL queue/batcher/collator and actual Transformers get_batch_samples ordering; no model forward, optimizer math, gradient, real-run prevalence, or task outcome."
+}

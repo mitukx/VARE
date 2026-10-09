@@ -1,0 +1,321 @@
+{
+  "base_eval": [
+    {
+      "answer_key": "C",
+      "exact": false,
+      "generated_token_ids": [
+        32,
+        13,
+        3619,
+        4771,
+        151645
+      ],
+      "parsed_label": null,
+      "prompt_sha256": "78fd8c0e171c23bcfc8d3edaded5550d8a26a68423c903c9c9ae32d2e2064f26",
+      "raw_generation": "A. bar graph",
+      "task_id": "Mercury_7215180"
+    },
+    {
+      "answer_key": "B",
+      "exact": false,
+      "generated_token_ids": [
+        35,
+        151645
+      ],
+      "parsed_label": "D",
+      "prompt_sha256": "69cd224de8fcae7eb704d9ac38e2d7d44f30681419fc8b4818ba5f55c93f17f9",
+      "raw_generation": "D",
+      "task_id": "TIMSS_2003_8_pg14"
+    },
+    {
+      "answer_key": "D",
+      "exact": false,
+      "generated_token_ids": [
+        33,
+        151645
+      ],
+      "parsed_label": "B",
+      "prompt_sha256": "f070ca5e9cf768163bbe85c83b5dc6c9b94951aa8769f043724fbc917699ca16",
+      "raw_generation": "B",
+      "task_id": "Mercury_7085820"
+    },
+    {
+      "answer_key": "D",
+      "exact": true,
+      "generated_token_ids": [
+        35,
+        151645
+      ],
+      "parsed_label": "D",
+      "prompt_sha256": "79f396ec9933e4c3bbd6ae43438186fb832d35b01bd36f0b4f1c26310db937bd",
+      "raw_generation": "D",
+      "task_id": "Mercury_405454"
+    },
+    {
+      "answer_key": "C",
+      "exact": false,
+      "generated_token_ids": [
+        35,
+        151645
+      ],
+      "parsed_label": "D",
+      "prompt_sha256": "036d355ee11498b65a3fdc76427259d63e5d1a3d65b446283c19f67451657581",
+      "raw_generation": "D",
+      "task_id": "Mercury_7233660"
+    },
+    {
+      "answer_key": "A",
+      "exact": true,
+      "generated_token_ids": [
+        32,
+        151645
+      ],
+      "parsed_label": "A",
+      "prompt_sha256": "a09446140e332b31af5b5b72ba934ccc6f25409d897b96780230dc7c12267542",
+      "raw_generation": "A",
+      "task_id": "Mercury_176838"
+    },
+    {
+      "answer_key": "C",
+      "exact": true,
+      "generated_token_ids": [
+        34,
+        151645
+      ],
+      "parsed_label": "C",
+      "prompt_sha256": "f169efcfaf2ad5cd5c836db43abbf1e31dbb757dd7a134947a00607531a395c0",
+      "raw_generation": "C",
+      "task_id": "Mercury_SC_415397"
+    },
+    {
+      "answer_key": "A",
+      "exact": true,
+      "generated_token_ids": [
+        32,
+        13,
+        151645
+      ],
+      "parsed_label": "A",
+      "prompt_sha256": "26a1731b65bfdff6b824f1cde50ba8bfc76a3b7b031d22b1df00796a354aa4c4",
+      "raw_generation": "A.",
+      "task_id": "Mercury_7044678"
+    }
+  ],
+  "base_exact_successes": 4,
+  "base_model_fingerprint": "1269f7eada635e467b5e842ef129a9de991caf5cd208f4aca6c3cdbfc36ff121",
+  "base_parse_rate": 0.875,
+  "candidate_parameter_fingerprint": "883a4d436c2573f786cd328e083204977d0428a1f94c7fd9840e519e31c530f4",
+  "changed_parameter_tensor_count": 291,
+  "checkpoint_file_sha256": {
+    "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+    "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+    "config.json": "9fbbf23635b010218933a69765d3a2e047e624a86203d14da115a644077cf74f",
+    "generation_config.json": "cd3e781699b69eb78534f464b0d57590b9babf52d8123d71eb99f001eb5e8a00",
+    "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+    "model.safetensors": "cb273192ba06df3a85cc35bf75bd04a3d94d7bc61ea24a1e8326def30c7b8afc",
+    "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+    "tokenizer.json": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa",
+    "tokenizer_config.json": "0a04a9d7d4a62b28482bdfe726c122756de85714fb64166ace92ae75b8f57614",
+    "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+  },
+  "checkpoint_roundtrip_exact": true,
+  "dataset": {
+    "train_sha256": "e488c1587ffdcfc8443f916c53488a95cd471c5790e0746c6bfe4cecf20962cb",
+    "validation_sha256": "395a5c88d1580d69855fbaee9450270578df1ad5af6259771cd0a42c20e99f05"
+  },
+  "device": "cpu",
+  "finite_gradient_tensor_count": 290,
+  "gate": true,
+  "gradient_tensor_count": 290,
+  "group_advantages": [
+    -0.5773487295950663,
+    -0.5773487295950663,
+    1.732046188785199,
+    -0.5773487295950663
+  ],
+  "group_rewards": [
+    0.0,
+    0.0,
+    1.0,
+    0.0
+  ],
+  "incumbent_restored_exact": true,
+  "interpretation": "One CPU GRPO update and checkpoint round-trip ran; evaluation is smoke-only and cannot establish task improvement.",
+  "load_peak_rss_mib": 2792.609375,
+  "max_abs_parameter_delta": 1.9073486328125e-06,
+  "mps_available_but_disabled": true,
+  "nonzero_gradient_tensor_count": 290,
+  "optimizer_step_calls": 1,
+  "peak_rss_mib": 10746.53125,
+  "post_reload_eval": [
+    {
+      "answer_key": "C",
+      "exact": false,
+      "generated_token_ids": [
+        32,
+        151645
+      ],
+      "parsed_label": "A",
+      "prompt_sha256": "78fd8c0e171c23bcfc8d3edaded5550d8a26a68423c903c9c9ae32d2e2064f26",
+      "raw_generation": "A",
+      "task_id": "Mercury_7215180"
+    },
+    {
+      "answer_key": "B",
+      "exact": false,
+      "generated_token_ids": [
+        35,
+        151645
+      ],
+      "parsed_label": "D",
+      "prompt_sha256": "69cd224de8fcae7eb704d9ac38e2d7d44f30681419fc8b4818ba5f55c93f17f9",
+      "raw_generation": "D",
+      "task_id": "TIMSS_2003_8_pg14"
+    },
+    {
+      "answer_key": "D",
+      "exact": false,
+      "generated_token_ids": [
+        32,
+        151645
+      ],
+      "parsed_label": "A",
+      "prompt_sha256": "f070ca5e9cf768163bbe85c83b5dc6c9b94951aa8769f043724fbc917699ca16",
+      "raw_generation": "A",
+      "task_id": "Mercury_7085820"
+    },
+    {
+      "answer_key": "D",
+      "exact": false,
+      "generated_token_ids": [
+        32,
+        151645
+      ],
+      "parsed_label": "A",
+      "prompt_sha256": "79f396ec9933e4c3bbd6ae43438186fb832d35b01bd36f0b4f1c26310db937bd",
+      "raw_generation": "A",
+      "task_id": "Mercury_405454"
+    },
+    {
+      "answer_key": "C",
+      "exact": false,
+      "generated_token_ids": [
+        35,
+        151645
+      ],
+      "parsed_label": "D",
+      "prompt_sha256": "036d355ee11498b65a3fdc76427259d63e5d1a3d65b446283c19f67451657581",
+      "raw_generation": "D",
+      "task_id": "Mercury_7233660"
+    },
+    {
+      "answer_key": "A",
+      "exact": true,
+      "generated_token_ids": [
+        32,
+        151645
+      ],
+      "parsed_label": "A",
+      "prompt_sha256": "a09446140e332b31af5b5b72ba934ccc6f25409d897b96780230dc7c12267542",
+      "raw_generation": "A",
+      "task_id": "Mercury_176838"
+    },
+    {
+      "answer_key": "C",
+      "exact": true,
+      "generated_token_ids": [
+        34,
+        151645
+      ],
+      "parsed_label": "C",
+      "prompt_sha256": "f169efcfaf2ad5cd5c836db43abbf1e31dbb757dd7a134947a00607531a395c0",
+      "raw_generation": "C",
+      "task_id": "Mercury_SC_415397"
+    },
+    {
+      "answer_key": "A",
+      "exact": true,
+      "generated_token_ids": [
+        32,
+        151645
+      ],
+      "parsed_label": "A",
+      "prompt_sha256": "26a1731b65bfdff6b824f1cde50ba8bfc76a3b7b031d22b1df00796a354aa4c4",
+      "raw_generation": "A",
+      "task_id": "Mercury_7044678"
+    }
+  ],
+  "post_reload_exact_successes": 3,
+  "post_reload_parse_rate": 1.0,
+  "protocol_id": "qwen_arc_challenge_grpo_update_smoke_v2",
+  "protocol_sha256": "932c4a7e5ca9515d54111fb04bd219dabf14bf5100eb1779630a76b784ee888d",
+  "reloaded_parameter_fingerprint": "883a4d436c2573f786cd328e083204977d0428a1f94c7fd9840e519e31c530f4",
+  "runner_sha256": "d60c23a719737ef96fc3f86c167677adf681d71dd11e663782cbe0a624014b62",
+  "runtime": {
+    "device": "cpu",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "rvl_revision": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "selected_train_index": 0,
+  "selected_train_task_id": "Mercury_7193113",
+  "status": "passed",
+  "tokenizer_roundtrip_exact": true,
+  "train_group_attempts": [
+    {
+      "answer_key": "A",
+      "generated_token_ids": [
+        [
+          33,
+          151645
+        ],
+        [
+          34,
+          151645
+        ],
+        [
+          32,
+          151645
+        ],
+        [
+          34,
+          13,
+          29724,
+          304,
+          264,
+          259,
+          78730,
+          24982
+        ]
+      ],
+      "prompt_sha256": "80822b2ee79a29b6c92d4f834b2947b5ae9fac0d32520bbb6e0169143bd21b77",
+      "raw_generations": [
+        "B",
+        "C",
+        "A",
+        "C. bears in a tundra ecosystem"
+      ],
+      "rewards": [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "task_id": "Mercury_7193113",
+      "train_index": 0
+    }
+  ],
+  "trainer_metrics": {
+    "behavior_kl_estimate": 5.412282177985617e-09,
+    "clip_fraction": 0.0,
+    "grad_norm": 286.737548828125,
+    "loss": 3.3080577850341797e-06,
+    "max_abs_log_ratio": 2.491474151611328e-05,
+    "mean_reward": 0.25,
+    "samples": 4.0
+  },
+  "vare_base_revision": "330ae68",
+  "wall_seconds": 38.2256435410236
+}

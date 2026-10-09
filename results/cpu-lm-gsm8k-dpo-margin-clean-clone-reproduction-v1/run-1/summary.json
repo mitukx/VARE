@@ -1,0 +1,186 @@
+{
+  "all_margins_match": true,
+  "bundle": "/private/tmp/vare-gsm8k-clean-clone.camWzJ/checkout/results/cpu-lm-gsm8k-dpo-confirmation-v1/run-1",
+  "device": "cpu",
+  "limitations": [
+    "Forensic replay of already consumed rows; no training, tuning, or new capability claim.",
+    "Uses a different installed PyTorch/NumPy version than the original confirmation runtime.",
+    "Checks the adapter-to-margin and metric path, not independent human reproduction or task generalization."
+  ],
+  "max_abs_margin_error": {
+    "base_margin": 4.1961669921875e-05,
+    "updated_margin": 4.202127456665039e-05
+  },
+  "max_abs_metric_error": 2.7195289153958413e-07,
+  "metric_error_components": {
+    "bootstrap_interval": 1.6439090158582026e-09,
+    "condition_metrics": 2.7195289153958413e-07,
+    "per_seed_nll_change": 9.149514479389609e-10
+  },
+  "model_file_sha256": {
+    "config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+    "model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+    "tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583"
+  },
+  "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "network_controls": {
+    "hf_datasets_offline": "1",
+    "hf_hub_offline": "1",
+    "local_files_only": true,
+    "transformers_offline": "1"
+  },
+  "peak_rss_bytes": 3785375744,
+  "protocol_id": "vare-cpu-lm-gsm8k-dpo-margin-reconstruction-v4",
+  "protocol_sha256": "371c76856ccf1994ac403400552726b314efb28243656190773cfe571b66dbf6",
+  "reconstructed": {
+    "heldout": {
+      "401": {
+        "base": {
+          "accuracy": 0.4943138741470811,
+          "nll": 0.7538235986480605
+        },
+        "max_base_margin_abs_error": 4.1961669921875e-05,
+        "max_updated_margin_abs_error": 4.1961669921875e-05,
+        "metric_abs_errors": {
+          "base_accuracy": 0.0,
+          "base_nll": 2.7103794009164517e-07,
+          "updated_accuracy": 0.0,
+          "updated_nll": 2.703938716264176e-07,
+          "updated_to_base_kl": 1.3458647282575675e-11
+        },
+        "nll_change": -0.008403461177612037,
+        "updated": {
+          "accuracy": 0.49507202426080366,
+          "nll": 0.7454201374704484
+        },
+        "updated_to_base_bernoulli_kl": 0.000684123705341227
+      },
+      "503": {
+        "base": {
+          "accuracy": 0.4943138741470811,
+          "nll": 0.7538235986480605
+        },
+        "max_base_margin_abs_error": 4.1961669921875e-05,
+        "max_updated_margin_abs_error": 4.202127456665039e-05,
+        "metric_abs_errors": {
+          "base_accuracy": 0.0,
+          "base_nll": 2.7103794009164517e-07,
+          "updated_accuracy": 0.0,
+          "updated_nll": 2.7091716525706744e-07,
+          "updated_to_base_kl": 9.127608499755191e-12
+        },
+        "nll_change": -0.007736504752315465,
+        "updated": {
+          "accuracy": 0.4965883244882487,
+          "nll": 0.746087093895745
+        },
+        "updated_to_base_bernoulli_kl": 0.0006280458759915597
+      },
+      "607": {
+        "base": {
+          "accuracy": 0.4943138741470811,
+          "nll": 0.7538235986480605
+        },
+        "max_base_margin_abs_error": 4.1961669921875e-05,
+        "max_updated_margin_abs_error": 4.195794463157654e-05,
+        "metric_abs_errors": {
+          "base_accuracy": 0.0,
+          "base_nll": 2.7103794009164517e-07,
+          "updated_accuracy": 0.0,
+          "updated_nll": 2.7195289153958413e-07,
+          "updated_to_base_kl": 1.441954330461473e-11
+        },
+        "nll_change": -0.004771378047479513,
+        "updated": {
+          "accuracy": 0.49507202426080366,
+          "nll": 0.749052220600581
+        },
+        "updated_to_base_bernoulli_kl": 0.00021466748938462257
+      }
+    },
+    "train": {
+      "401": {
+        "base": {
+          "accuracy": 0.45703125,
+          "nll": 0.7648565138748272
+        },
+        "max_base_margin_abs_error": 3.24249267578125e-05,
+        "max_updated_margin_abs_error": 3.231316804885864e-05,
+        "metric_abs_errors": {
+          "base_accuracy": 0.0,
+          "base_nll": 1.9332162570773193e-07,
+          "updated_accuracy": 0.0,
+          "updated_nll": 2.1341542344455178e-07
+        },
+        "nll_change": -0.007173768365534294,
+        "updated": {
+          "accuracy": 0.42578125,
+          "nll": 0.7576827455092929
+        },
+        "updated_to_base_bernoulli_kl": 0.0006761269646840758
+      },
+      "503": {
+        "base": {
+          "accuracy": 0.45703125,
+          "nll": 0.7648565138748272
+        },
+        "max_base_margin_abs_error": 3.24249267578125e-05,
+        "max_updated_margin_abs_error": 3.240257501602173e-05,
+        "metric_abs_errors": {
+          "base_accuracy": 0.0,
+          "base_nll": 1.9332162570773193e-07,
+          "updated_accuracy": 0.0,
+          "updated_nll": 2.1724193621786014e-07
+        },
+        "nll_change": -0.0068337758702273765,
+        "updated": {
+          "accuracy": 0.4296875,
+          "nll": 0.7580227380045998
+        },
+        "updated_to_base_bernoulli_kl": 0.0006371572713063774
+      },
+      "607": {
+        "base": {
+          "accuracy": 0.45703125,
+          "nll": 0.7648565138748272
+        },
+        "max_base_margin_abs_error": 3.24249267578125e-05,
+        "max_updated_margin_abs_error": 3.2573938369750977e-05,
+        "metric_abs_errors": {
+          "base_accuracy": 0.0,
+          "base_nll": 1.9332162570773193e-07,
+          "updated_accuracy": 0.0,
+          "updated_nll": 2.0482321194670305e-07
+        },
+        "nll_change": -0.0037156757749761127,
+        "updated": {
+          "accuracy": 0.453125,
+          "nll": 0.7611408380998511
+        },
+        "updated_to_base_bernoulli_kl": 0.0002171320330554595
+      }
+    }
+  },
+  "reconstructed_bootstrap_interval": [
+    -0.00800311898272526,
+    -0.0059066798963084725
+  ],
+  "recorded_bootstrap_interval": [
+    -0.008003117338816245,
+    -0.005906678283192304
+  ],
+  "resource_limits_respected": true,
+  "runtime": {
+    "numpy": "2.4.4",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "status": "pass",
+  "tolerance": {
+    "margin": 5e-05,
+    "metric": 5e-05
+  },
+  "wall_seconds": 152.72784195799613
+}

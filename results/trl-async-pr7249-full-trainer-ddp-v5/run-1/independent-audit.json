@@ -1,0 +1,46 @@
+{
+  "audit_id": "trl-async-pr7249-full-trainer-ddp-v5-independent-read-only-audit",
+  "audit_date": "2026-10-09",
+  "auditor_type": "separate Codex subagent in the same task environment",
+  "runner_executed_by_auditor": false,
+  "protocol_sha256_verified": "2d89c274929c1c30b23e9946127b98db563ed5fac6bea74e34b3e56cbd653613",
+  "runner_sha256_verified": "a6323ae623e32decbab13b3d170b88bd0f9e4ff7adf444805fcdffbf9ceb08d1",
+  "wrapper_sha256_verified": "2dcf631d06fcdb89e5502cfe7267ee157592fa33093a246bc57bad19293d4c83",
+  "manifest_and_summary_hashes_verified": true,
+  "source_revisions_verified": {
+    "base": "a98fa6a4428f9aae58dfb26d729d7437f662f27a",
+    "candidate": "5234eb7c70f4ca7eb92fe8e01611a33eaff17f40"
+  },
+  "source_checkouts_clean": true,
+  "fixture_layout_verified_in_both_arms": {
+    "unequal_rank_and_microbatch_counts": {
+      "local_tokens_by_rank_per_microbatch": [[4, 9], [12, 5]],
+      "global_tokens_per_microbatch": [16, 14]
+    },
+    "equal_token_control": {
+      "local_tokens_by_rank_per_microbatch": [[3, 7], [7, 3]],
+      "global_tokens_per_microbatch": [10, 10]
+    },
+    "zero_local_tokens_positive_global": {
+      "local_tokens_by_rank_per_microbatch": [[0, 0], [8, 5]],
+      "global_tokens_per_microbatch": [8, 5]
+    },
+    "short_final_window": {
+      "local_tokens_by_rank_per_microbatch": [[4], [9]],
+      "global_tokens_per_microbatch": [13]
+    }
+  },
+  "gate_review": {
+    "candidate_all_four_cases_below_1e-5": true,
+    "base_equal_and_short_window_controls_below_1e-5": true,
+    "base_unequal_and_zero_local_cases_above_1e-4_gradient_or_parameter_error": true,
+    "one_step_each_rank_and_matching_post_step_hashes": true
+  },
+  "audit_conclusion": "No protocol-layout or obvious pooled-token-oracle mismatch found. Supports only the synthetic token-local Trainer/Accelerate/two-process Gloo/SGD claim for the pinned candidate and base.",
+  "limitations": [
+    "same task environment and same host, not outside human review or reproduction",
+    "synthetic deterministic model, not pretrained model or downstream task success",
+    "asynchronous rollout worker, queue, production batch planner, and DataLoaderDispatcher bypassed",
+    "no upstream adoption or novelty claim"
+  ]
+}

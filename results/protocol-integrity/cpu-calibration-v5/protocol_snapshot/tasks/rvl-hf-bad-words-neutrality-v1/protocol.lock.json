@@ -1,0 +1,33 @@
+{
+  "acceptance": {
+    "max_abs_logprob_error": 1e-10,
+    "neutral_bad_words_ids": null,
+    "neutral_no_repeat_ngram_size": 0,
+    "neutral_repetition_penalty": 1.0,
+    "neutral_suppress_tokens": null,
+    "neutral_top_k": 0,
+    "neutral_top_p": 1.0,
+    "neutral_typical_p": 1.0,
+    "requires_bad_words_ids_neutral": true,
+    "requires_eval_state_restoration": true,
+    "requires_invalid_temp_fail_closed": true,
+    "requires_model_state_restore_on_errors": true,
+    "requires_no_repeat_ngram_neutral": true,
+    "requires_suppress_tokens_neutral": true,
+    "requires_trainer_runtime_probability_parity": true,
+    "requires_typical_p_neutral": true,
+    "rollout_conditions": 6
+  },
+  "expected_calibration": {
+    "baseline_passed": false,
+    "calibration_passed": true
+  },
+  "locked_hashes": {
+    "evaluator_sha256": "b71fc8932cc7d69d782fc85d914a90e1fcf1989374fc2a5afb2bb65ba89be4e6",
+    "task_brief_sha256": "84452e136a0ffffd1084cf79d2c66f7fb39675bf3c23354e7a02e9d25dc3a6e5",
+    "task_json_sha256": "5e289ac6ddec28e17bc8ed3300480493f9ee5d289d4917c58f0a726d8a1539a8"
+  },
+  "protocol_id": "rvl-hf-bad-words-neutrality-protocol-v1",
+  "schema_version": 1,
+  "task_id": "rvl-hf-bad-words-neutrality-v1"
+}

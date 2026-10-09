@@ -1,0 +1,274 @@
+{
+  "acceptance": {
+    "all_primary_metrics_finite": true,
+    "base_equal_token_and_short_final_window_max_abs_error_lte": 1e-05,
+    "base_unequal_and_zero_local_gradient_or_parameter_error_gte": 0.0001,
+    "both_arms_each_case_global_step_one": true,
+    "both_arms_rank_state_hashes_equal": true,
+    "candidate_max_abs_pooled_loss_gradient_parameter_error_each_case_lte": 1e-05,
+    "layout_assertions_before_optimizer_step": true,
+    "timeout_deadlock_or_unexplained_exception": "non-pass; preserve logs"
+  },
+  "claim_limits": [
+    "Synthetic deterministic model and two-token teacher distributions; no pretrained model or downstream task success.",
+    "Bypasses async rollout/teacher workers, queue, planner, production DataLoaderDispatcher, FSDP, GPU, and model-scale behavior.",
+    "This reproduces an existing PR candidate and is not a new method, original fix, adoption claim, or external human replication."
+  ],
+  "commands": [
+    "python scripts/reproduce_trl_pr7249_async_distillation_ddp_v2.py --output results/trl-async-pr7249-distillation-ddp-v1/run-2"
+  ],
+  "estimand": {
+    "objective": "L(theta)=sum_i n_i KL(q_i || p_theta(.|x_i)) / N, where n_i is the count of active completion tokens in sample i and N=sum_i n_i; each teacher q_i is a normalized two-token distribution fully represented by teacher_topk_ids=[0,1].",
+    "oracle": "Independent direct computation of the two-token forward KL on a deterministic token-local model, weighted by each sample's active completion-token count, divided by N; analytic autograd gradient and one SGD(lr=0.1) update.",
+    "primary_metrics": [
+      "max absolute gradient error to pooled oracle",
+      "max absolute SGD parameter error to pooled oracle"
+    ],
+    "secondary_metrics": [
+      "global mean Trainer training-step loss error",
+      "finite outputs",
+      "rank synchronization",
+      "wall time"
+    ],
+    "update": "One optimizer step; no weight decay or gradient clipping; beta=0; temperature=1; add_tail_bucket=false; same initialization and sample tokens in both source revisions."
+  },
+  "fixture_examples_by_rank_per_microbatch": {
+    "equal_token_control": [
+      [
+        {
+          "active_tokens": 4,
+          "id": 311,
+          "teacher_probs": [
+            0.9,
+            0.1
+          ]
+        },
+        {
+          "active_tokens": 6,
+          "id": 312,
+          "teacher_probs": [
+            0.8,
+            0.2
+          ]
+        }
+      ],
+      [
+        {
+          "active_tokens": 6,
+          "id": 313,
+          "teacher_probs": [
+            0.6,
+            0.4
+          ]
+        },
+        {
+          "active_tokens": 4,
+          "id": 314,
+          "teacher_probs": [
+            0.55,
+            0.45
+          ]
+        }
+      ]
+    ],
+    "short_final_window": [
+      [
+        {
+          "active_tokens": 3,
+          "id": 331,
+          "teacher_probs": [
+            0.9,
+            0.1
+          ]
+        }
+      ],
+      [
+        {
+          "active_tokens": 8,
+          "id": 332,
+          "teacher_probs": [
+            0.55,
+            0.45
+          ]
+        }
+      ]
+    ],
+    "unequal_rank_and_microbatch_counts": [
+      [
+        {
+          "active_tokens": 2,
+          "id": 301,
+          "teacher_probs": [
+            0.9,
+            0.1
+          ]
+        },
+        {
+          "active_tokens": 7,
+          "id": 302,
+          "teacher_probs": [
+            0.8,
+            0.2
+          ]
+        }
+      ],
+      [
+        {
+          "active_tokens": 9,
+          "id": 303,
+          "teacher_probs": [
+            0.6,
+            0.4
+          ]
+        },
+        {
+          "active_tokens": 2,
+          "id": 304,
+          "teacher_probs": [
+            0.55,
+            0.45
+          ]
+        }
+      ]
+    ],
+    "zero_local_tokens_positive_global": [
+      [
+        {
+          "active_tokens": 0,
+          "id": 321,
+          "teacher_probs": [
+            0.9,
+            0.1
+          ]
+        },
+        {
+          "active_tokens": 0,
+          "id": 322,
+          "teacher_probs": [
+            0.8,
+            0.2
+          ]
+        }
+      ],
+      [
+        {
+          "active_tokens": 5,
+          "id": 323,
+          "teacher_probs": [
+            0.6,
+            0.4
+          ]
+        },
+        {
+          "active_tokens": 4,
+          "id": 324,
+          "teacher_probs": [
+            0.55,
+            0.45
+          ]
+        }
+      ]
+    ]
+  },
+  "fixture_layout": {
+    "equal_token_control": {
+      "global_tokens_per_microbatch": [
+        10,
+        10
+      ],
+      "local_tokens_by_rank_per_microbatch": [
+        [
+          4,
+          6
+        ],
+        [
+          6,
+          4
+        ]
+      ]
+    },
+    "short_final_window": {
+      "global_tokens_per_microbatch": [
+        11
+      ],
+      "local_tokens_by_rank_per_microbatch": [
+        [
+          3
+        ],
+        [
+          8
+        ]
+      ]
+    },
+    "unequal_rank_and_microbatch_counts": {
+      "global_tokens_per_microbatch": [
+        11,
+        9
+      ],
+      "local_tokens_by_rank_per_microbatch": [
+        [
+          2,
+          7
+        ],
+        [
+          9,
+          2
+        ]
+      ]
+    },
+    "zero_local_tokens_positive_global": {
+      "global_tokens_per_microbatch": [
+        5,
+        4
+      ],
+      "local_tokens_by_rank_per_microbatch": [
+        [
+          0,
+          0
+        ],
+        [
+          5,
+          4
+        ]
+      ]
+    }
+  },
+  "frozen_before_run": true,
+  "history": {
+    "v1": "Preserved as a pre-training source-hash gate failure: the locked candidate digest had one character transcribed incorrectly; no runner arm or optimizer step executed. V2 corrects that digest and uses fresh sample IDs."
+  },
+  "prior_art_review": {
+    "coverage_gap": "The PR adds AsyncDistillation normalization and its test file exercises Trainer.train plus a rank-average simulation. VARE v5 executes two-process Gloo Trainer/DDP for AsyncGRPO, not AsyncDistillation. This v1 tests that distinct trainer path through actual DDP; it does not claim algorithmic novelty or duplicate/fix upstream code.",
+    "novelty_assessment": "Low algorithmic novelty; potentially useful independent implementation-path coverage for an open upstream change.",
+    "upstream_candidate": "https://github.com/huggingface/trl/pull/7249",
+    "upstream_issue": "https://github.com/huggingface/trl/issues/7206"
+  },
+  "protocol_id": "trl-async-distillation-pr7249-full-trainer-ddp-v2",
+  "question": "For sparse top-k AsyncDistillation with beta=0, do pinned TRL base and PR #7249 candidate produce the token-pooled forward-KL gradient and one SGD update through Trainer.train, Accelerate.backward, and two-process CPU Gloo DDP (v2 source-hash correction; fresh fixture) when completion-token counts differ across ranks and accumulation microbatches?",
+  "resources": {
+    "device": "CPU",
+    "distributed_backend": "Gloo",
+    "external_spend": false,
+    "max_optimizer_steps_per_arm": 4,
+    "network": "fetch pinned public TRL commits only; no paid service",
+    "per_arm_wall_seconds_cap": 300,
+    "world_size": 2
+  },
+  "runtime": {
+    "accelerate": "1.12.0",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "sha256": "2009095aebcaf4d85f895f8bae1313ff43f33261b9618e2ebfdf6d062df4b672",
+  "source": {
+    "base_revision": "a98fa6a4428f9aae58dfb26d729d7437f662f27a",
+    "base_source_sha256": "449b8f5b2006e20a2420fd8e53d6fef2d96a026cb0ff51cf00f6add55d4a55e2",
+    "candidate_head": "5234eb7c70f4ca7eb92fe8e01611a33eaff17f40",
+    "candidate_source_sha256": "7a99d26b9124787978fd6c29752a666ff4160694c3feb999abf68afb6a49a1ff",
+    "runner_sha256": "a36a3e046b4f0c0e310658a8eccc11299b59511857af361b64bd8d7e0770bf01",
+    "source_path": "trl/experimental/async_distillation/async_distillation_trainer.py",
+    "upstream": "https://github.com/huggingface/trl.git",
+    "wrapper_sha256": "ae8a09e2489e5b407ab7ee32747a422b33c60bf5f9fc7fba721a7c7b3f715b22"
+  }
+}

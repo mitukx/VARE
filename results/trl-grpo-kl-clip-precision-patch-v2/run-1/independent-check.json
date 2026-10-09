@@ -1,0 +1,79 @@
+{
+  "candidate_checks": {
+    "candidate-f16-sequence": {
+      "actual_gradient": [
+        [
+          -353.0,
+          352.25,
+          0.0
+        ],
+        [
+          -157.25,
+          -157.25,
+          313.0
+        ]
+      ],
+      "actual_loss": 1651.843017578125,
+      "candidate_matches_analytic": true,
+      "expected_gradient": [
+        [
+          -352.88016079777407,
+          352.4307519019333,
+          0.0
+        ],
+        [
+          -156.9069617666044,
+          -156.9069617666044,
+          313.3003133665338
+        ]
+      ],
+      "expected_loss": 1651.6445825964684
+    },
+    "candidate-f16-token": {
+      "actual_gradient": [
+        [
+          -0.321044921875,
+          -0.12841796875,
+          0.0
+        ],
+        [
+          -0.2139892578125,
+          -0.2139892578125,
+          -0.08563232421875
+        ]
+      ],
+      "actual_loss": 1651.843017578125,
+      "candidate_matches_analytic": true,
+      "expected_gradient": [
+        [
+          -0.3210063541719354,
+          -0.12840254166877416,
+          0.0
+        ],
+        [
+          -0.2140042361146236,
+          -0.2140042361146236,
+          -0.08560169444584943
+        ]
+      ],
+      "expected_loss": 1651.6445825964684
+    },
+    "fp32_control": {
+      "bit_identical": true
+    }
+  },
+  "errors": [],
+  "frozen_acceptance_adjudication": "non-pass: the broad all-fixture-finite gate fails on the unpatched PR-head baseline; preserve as a protocol design error, not a candidate failure",
+  "patch_sha256": "0f6c60de679c3c8b467b2bc8b77b01e06f890486cd567322940e5ce8a2137468",
+  "pr_head_fp16_sequence_baseline": {
+    "contains_nonfinite": true,
+    "kl_metric": Infinity
+  },
+  "protocol_id": "trl_grpo_kl_clip_precision_patch_v2",
+  "source_imports": "none; reads retained JSON, protocol lock and patch bytes",
+  "status": "candidate_checks_pass_protocol_nonpass",
+  "tolerance": {
+    "absolute": 0.1,
+    "relative": 0.005
+  }
+}

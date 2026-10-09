@@ -1,0 +1,51 @@
+{
+  "adapter_score_replay": "pass",
+  "decision": {
+    "base_floor_pass": true,
+    "candidate_gain_vs_base_pass": false,
+    "candidate_gain_vs_standard_dpo_pass": false,
+    "candidate_seed_consistency_vs_base_pass": false,
+    "candidate_seed_consistency_vs_standard_dpo_pass": false,
+    "candidate_sft_noninferiority_pass": true,
+    "kl_pass": true,
+    "nll_guard_pass": true,
+    "pass": false
+  },
+  "decision_replay": "pass",
+  "manifest_sha256": "31861760b48ded20ed674021f52e4f9a42de1fe5428f937e4d2efe1caf41b4cf",
+  "protocol_sha256": "df3feb8abbb7eb64ae7c87f7a41c99ac9ef2ca428e05b115ef88e85b6ddf4c3e",
+  "recomputed": {
+    "base_pair_accuracy": 0.5,
+    "chosen_sft_pair_accuracy": 0.4856770833333333,
+    "length_normalized_dpo_minus_base_accuracy": -0.002604166666666685,
+    "length_normalized_dpo_minus_base_accuracy_prompt_bootstrap_95": [
+      -0.014322916666666668,
+      0.009114583333333332
+    ],
+    "length_normalized_dpo_minus_sft_accuracy": 0.01171875,
+    "length_normalized_dpo_minus_sft_accuracy_prompt_bootstrap_95": [
+      -0.003906250000000002,
+      0.029947916666666664
+    ],
+    "length_normalized_dpo_minus_standard_dpo_accuracy": 0.0,
+    "length_normalized_dpo_minus_standard_dpo_accuracy_prompt_bootstrap_95": [
+      0.0,
+      0.0
+    ],
+    "length_normalized_dpo_pair_accuracy": 0.4973958333333333,
+    "length_normalized_dpo_seed_gains_vs_base": [
+      -0.0078125,
+      0.0,
+      0.0
+    ],
+    "length_normalized_dpo_seed_gains_vs_standard_dpo": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "standard_dpo_pair_accuracy": 0.4973958333333333
+  },
+  "scope": "Same-host offline replay of the selected prompt inventory and retained adapters; not external reproduction or a retraining audit.",
+  "selection_replay": "pass",
+  "status": "pass"
+}

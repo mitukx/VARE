@@ -1,0 +1,67 @@
+{
+  "protocol_id": "grpo_partial_audit_estimator_v1",
+  "classification": "posthoc_summary_and_interval_integrity_check",
+  "same_host_audit": true,
+  "checks": {
+    "runner_reported_exact_checks_pass": true,
+    "all_1560_fixed_budget_ratios_recompute": true,
+    "per_audit_size_counts_match": true,
+    "wilson_intervals_recompute": true,
+    "policy_weighted_two_label_bound_is_exact": true,
+    "all_direction_trials_are_accounted_for": true
+  },
+  "recomputed_summary": {
+    "1": {
+      "defined_count": 387,
+      "below_one_count": 385,
+      "equal_one_count": 0,
+      "above_one_count": 2,
+      "median": 0.9948732418828625,
+      "min": 0.9948716593053935,
+      "max": 1.4784522790289052
+    },
+    "2": {
+      "defined_count": 387,
+      "below_one_count": 385,
+      "equal_one_count": 0,
+      "above_one_count": 2,
+      "median": 0.9948732418828625,
+      "min": 0.9948716593053935,
+      "max": 1.3010380055454367
+    },
+    "3": {
+      "defined_count": 387,
+      "below_one_count": 0,
+      "equal_one_count": 0,
+      "above_one_count": 387,
+      "median": 1.0102567844904877,
+      "min": 1.010256681389213,
+      "max": 1.2229136341056872
+    },
+    "4": {
+      "defined_count": 387,
+      "below_one_count": 0,
+      "equal_one_count": 387,
+      "above_one_count": 0,
+      "median": 1.0,
+      "min": 1.0,
+      "max": 1.0
+    }
+  },
+  "direction_trial_total": 196608,
+  "two_label_witness": {
+    "policy_weighted_gap_exact": {
+      "rational": "-81/2048",
+      "sqrt3_coefficient": "27/1024"
+    },
+    "policy_weighted_gap_decimal": 0.006118527152695001,
+    "policy_weighted_minimax_abs_bias_lower_bound_exact": {
+      "rational": "-81/4096",
+      "sqrt3_coefficient": "27/2048"
+    },
+    "policy_weighted_minimax_abs_bias_lower_bound_decimal": 0.0030592635763475005
+  },
+  "input_sha256": "3335783297f63d2d109415b9f3c3f25cc83fa43b997bedead0f9369306d272a2",
+  "checker_sha256": "8f1dd8a379eb49197910610f86263954f9e1cf2fa4957bc0ed97036282e97bd7",
+  "limitation": "This checks arithmetic aggregation of retained outputs; it is a same-host post-hoc check, not external reproduction."
+}

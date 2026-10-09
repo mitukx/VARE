@@ -1,0 +1,50 @@
+{
+  "protocol_id": "trl_grpo_kl_clip_precision_patch_v2",
+  "status": "frozen_before_execution",
+  "question": "Does the v1 single-file low-precision KL-clip candidate preserve the bias-corrected gradient of production GRPO loss in sequence-level importance sampling with multiple active tokens, unequal sequence lengths, and both clipped and unclipped KL log-ratios?",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "candidate_revision": "0aaea03f2fa449bc7a91f1973e7940da11da65da",
+    "modified_path": "trl/trainer/grpo_trainer.py",
+    "patch_sha256": "0f6c60de679c3c8b467b2bc8b77b01e06f890486cd567322940e5ce8a2137468",
+    "v1_protocol": "protocols/trl_grpo_kl_clip_precision_patch_v1.lock.json"
+  },
+  "estimand": {
+    "sequence_ratio": "q_b = exp(mean_{t:mask=1}(z_bt - z_old_bt))",
+    "clipped_kl": "K_bt = exp(min(x_bt,c)) - min(x_bt,c) - 1; x_bt=z_ref_bt-z_bt; the clamp is straight-through for gradients",
+    "per_sequence_kl_objective": "L_b = beta * q_b * mean_{t:mask=1}(K_bt)",
+    "gradient": "dL/dz_bi = beta*q_b/n_b*(mean(K_b) + 1-exp(min(x_bi,c))) for active token i; batch loss averages L_b over B sequences",
+    "fixture": "B=2, T=3, masks [[1,1,0],[1,1,1]], x active [[20,4],[20,20,4]], z-z_old=0.25 for all active tokens, c=10, beta=0.1, zero policy advantages"
+  },
+  "frozen_cases": [
+    {"name":"pr_head_fp16_sequence_mixed", "source":"unmodified PR head", "dtype":"float16", "importance_sampling_level":"sequence"},
+    {"name":"candidate_fp16_sequence_mixed", "source":"single-file patch", "dtype":"float16", "importance_sampling_level":"sequence"},
+    {"name":"pr_head_fp32_sequence_mixed", "source":"unmodified PR head", "dtype":"float32", "importance_sampling_level":"sequence"},
+    {"name":"candidate_fp32_sequence_mixed", "source":"single-file patch", "dtype":"float32", "importance_sampling_level":"sequence"},
+    {"name":"candidate_fp16_token_mixed", "source":"single-file patch", "dtype":"float16", "importance_sampling_level":"token"}
+  ],
+  "method": "Directly invoke the pinned production GRPOTrainer._compute_loss using a differentiable two-row, three-column CPU fixture. Compute expected loss/gradients from the stated analytic sequence-level estimand in an independent checker. No model, dataset, optimizer, GPU, or external service.",
+  "acceptance": {
+    "candidate_fp16_sequence_loss_matches_analytic_with_rel_tol_0_005_abs_tol_0_1": true,
+    "candidate_fp16_sequence_active_token_gradients_match_analytic_with_rel_tol_0_005_abs_tol_0_1": true,
+    "candidate_fp16_sequence_padding_gradients_are_zero": true,
+    "candidate_fp16_token_gradients_match_token_level_analytic_with_rel_tol_0_005_abs_tol_0_1": true,
+    "candidate_fp32_sequence_loss_and_gradients_are_bit_identical_to_pr_head": true,
+    "all_fixture_outputs_are_finite": true,
+    "candidate_modifies_only_the_frozen_trainer_path_and_matches_patch_hash": true
+  },
+  "failure_criteria": [
+    "source revision or patch digest mismatch",
+    "any patched fp16 active-token gradient exceeds frozen analytic tolerance",
+    "any masked padding token has nonzero gradient",
+    "patched sequence-level forward loss differs beyond frozen tolerance",
+    "float32 controls change",
+    "the direct production loss method does not complete"
+  ],
+  "interpretation_limits": [
+    "This tests a hand-constructed source-method fixture, not the prevalence of large reference-policy log-ratios in real training.",
+    "No optimizer update, model task outcome, bfloat16, multi-device, GPU, or fused/Liger implementation is covered.",
+    "A passing result supports only the tested local arithmetic, not an upstream fix or capability improvement."
+  ],
+  "resources": {"cpu_only":true,"gpu_hours":0,"paid_api_calls":0,"external_compute_usd":0}
+}

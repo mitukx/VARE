@@ -1,0 +1,41 @@
+{
+  "base": {
+    "exit_code": 1,
+    "log_sha256": "b66fd3b3adf9e4a0ddfa66b4fe84aea7b723564f24ae9e564eaf2307dc643a6a",
+    "revision": "a98fa6a4428f9aae58dfb26d729d7437f662f27a",
+    "tests_failed": 17,
+    "tests_passed": 8,
+    "tests_skipped": 1
+  },
+  "candidate": {
+    "exit_code": 0,
+    "log_sha256": "9febf9bcf784046120904bb7a9382f432e990d2a54aafbbe731477a95b8bb1f7",
+    "revision": "5234eb7c70f4ca7eb92fe8e01611a33eaff17f40",
+    "tests_passed": 25,
+    "tests_skipped": 1
+  },
+  "interpretation": "Reproduction of the issue and open PR behavior using the PR-added deterministic Trainer test. No VARE code fix and no model/task capability claim.",
+  "limits": [
+    "Test model is deterministic and token-local, not a pretrained model.",
+    "Distributed rank behavior is simulated in one process.",
+    "Auxiliary-loss fixture is constant and cannot establish variable MoE auxiliary-loss equivalence.",
+    "The test contract assumes token-mean normalization; other objectives were not evaluated."
+  ],
+  "primary_numeric_counterexample": {
+    "absolute_difference": 0.6,
+    "base_accumulated_loss": 1.25,
+    "candidate_matches_full_batch_test": true,
+    "full_batch_token_mean": 0.65,
+    "microbatch_completion_tokens": [
+      100,
+      900
+    ],
+    "microbatch_mean_losses": [
+      2.0,
+      0.5
+    ]
+  },
+  "protocol_id": "trl_async_accumulation_normalization_pr7249_v1",
+  "protocol_sha256": "75a74e85f5e19e0248b9b050eec8ca09475766c080ee42fb79be5c1012d0ec15",
+  "status": "candidate_pass_base_expected_nonpass"
+}

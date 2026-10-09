@@ -1,0 +1,70 @@
+.....sssssss........................................FF.F.F.............. [ 33%]
+.........................ss......s.............ss....................... [ 66%]
+........................................................................ [ 99%]
+..                                                                       [100%]
+=================================== FAILURES ===================================
+________________ test_campaign_retains_hash_linked_raw_records _________________
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-55/test_campaign_retains_hash_lin0')
+
+    def test_campaign_retains_hash_linked_raw_records(tmp_path):
+        catalog = TaskCatalog.discover(ROOT / "benchmarks/smoke")
+        runner = EnvironmentCampaignRunner(catalog, OracleAgent(), run_root=tmp_path / "campaign")
+        summary = asyncio.run(runner.run(repeats=2))
+        assert summary.runs == 2
+>       assert summary.success_rate == 1.0
+E       AssertionError: assert 0.0 == 1.0
+E        +  where 0.0 = CampaignSummary(runs=2, tasks=1, successes=0, success_rate=0.0, mean_score=0.04999999999999999, mean_wall_s=0.13446124...'mean_score': 0.04999999999999999}}, records_sha256='4a7fc2e36ddc92187a5542be0ac4b7fb126689066d200fd039e5b0d12dc39e1d').success_rate
+
+tests/test_environment_campaign.py:25: AssertionError
+__________________ test_campaign_normalizes_relative_run_root __________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106f63560>
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-55/test_campaign_normalizes_relat0')
+
+    def test_campaign_normalizes_relative_run_root(monkeypatch, tmp_path):
+        monkeypatch.chdir(tmp_path)
+        catalog = TaskCatalog.discover(ROOT / "benchmarks/smoke")
+        runner = EnvironmentCampaignRunner(catalog, OracleAgent(), run_root="relative-campaign")
+        assert runner.run_root.is_absolute()
+        summary = asyncio.run(runner.run(repeats=1))
+>       assert summary.success_rate == 1.0
+E       AssertionError: assert 0.0 == 1.0
+E        +  where 0.0 = CampaignSummary(runs=1, tasks=1, successes=0, success_rate=0.0, mean_score=0.04999999999999999, mean_wall_s=0.13451954...'mean_score': 0.04999999999999999}}, records_sha256='fd88f784a3c6e12214745711a7f5138be7402c6fa8d756b01e21f89a370e3eed').success_rate
+
+/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/tests/test_environment_campaign.py:37: AssertionError
+__________________ test_catalog_rollout_and_dynamic_verifier ___________________
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-55/test_catalog_rollout_and_dynam0')
+
+    def test_catalog_rollout_and_dynamic_verifier(tmp_path):
+        import asyncio
+
+        catalog = TaskCatalog.discover(ROOT / "benchmarks/smoke")
+        task = catalog.as_vare_tasks()[0]
+        rollout = WorkspaceAgentRollout(catalog, OracleAgent(), tmp_path / "runs")
+        attempt = asyncio.run(rollout.rollout(task, "policy", 3, 9))
+        verifier = CatalogEnvironmentVerifier(catalog, version=4)
+        verdict = asyncio.run(verifier.verify(attempt))
+>       assert verdict.passed
+E       AssertionError: assert False
+E        +  where False = Verification(score=0.04999999999999999, passed=False, confidence=1.0, verifier_version=4, verifier_name='executable-en...2v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-55/test_catalog_rollout_and_dynam0/runs/00000009-smoke-stable-logsumexp'}}}).passed
+
+tests/test_environment_catalog.py:28: AssertionError
+____________________ test_oracle_patch_passes_and_has_diff _____________________
+
+    def test_oracle_patch_passes_and_has_diff():
+        spec = EngineeringTaskSpec.load(SPEC)
+        with Workspace(spec) as ws:
+            subprocess.run(["python", str(ORACLE), str(ws.path)], check=True)
+            result = ExecutableEvaluator(spec).evaluate(ws.path)
+>       assert result.passed
+E       AssertionError: assert False
+E        +  where False = EnvironmentResult(task_id='smoke-stable-logsumexp', passed=False, score=0.04999999999999999, correctness=0.0, tests=[C...workspace': '/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-smoke-stable-logsumexp-ecq8kpaf/workspace'}).passed
+
+tests/test_environments.py:46: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_environment_campaign.py::test_campaign_retains_hash_linked_raw_records
+FAILED tests/test_environment_campaign.py::test_campaign_normalizes_relative_run_root
+FAILED tests/test_environment_catalog.py::test_catalog_rollout_and_dynamic_verifier
+FAILED tests/test_environments.py::test_oracle_patch_passes_and_has_diff - As...

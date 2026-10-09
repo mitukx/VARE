@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import asyncio
 from dataclasses import dataclass
+import math
 
 from .interfaces import Verifier
-from .types import Attempt, Verification
+from .types import Attempt, Verification, snapshot_verification
 
 
 @dataclass(frozen=True, slots=True)
@@ -19,8 +20,8 @@ class VerifierEnsemble:
     def __init__(self, members: list[VerifierMember]) -> None:
         if not members:
             raise ValueError("VerifierEnsemble requires at least one member")
-        if any(m.weight <= 0 for m in members):
-            raise ValueError("verifier weights must be positive")
+        if any(not math.isfinite(m.weight) or m.weight <= 0 for m in members):
+            raise ValueError("verifier weights must be finite and positive")
         self.members = members
 
     @property
@@ -28,7 +29,11 @@ class VerifierEnsemble:
         return max(m.verifier.version for m in self.members)
 
     async def verify(self, attempt: Attempt) -> Verification:
-        results = await asyncio.gather(*(m.verifier.verify(attempt) for m in self.members))
+        raw_results = await asyncio.gather(*(m.verifier.verify(attempt) for m in self.members))
+        results = [
+            snapshot_verification(result, context=f"verifier[{index}] result")
+            for index, result in enumerate(raw_results)
+        ]
         total = sum(m.weight for m in self.members)
         score = sum(m.weight * r.score for m, r in zip(self.members, results)) / total
         pass_prob = sum(m.weight * float(r.passed) for m, r in zip(self.members, results)) / total
@@ -43,7 +48,7 @@ class VerifierEnsemble:
             passed = trusted_vote >= 0.5 * trusted_total
         else:
             passed = pass_prob >= 0.5
-        return Verification(
+        return snapshot_verification(Verification(
             score=score,
             passed=passed,
             confidence=confidence,
@@ -52,7 +57,7 @@ class VerifierEnsemble:
             disagreement=disagreement,
             trusted=trusted,
             metadata={"members": [r.metadata | {"name": r.verifier_name, "score": r.score} for r in results]},
-        )
+        ), context="verifier ensemble result")
 
 
 class FunctionalAttemptVerifier:
@@ -67,15 +72,15 @@ class FunctionalAttemptVerifier:
     async def verify(self, attempt: Attempt) -> Verification:
         value = self.fn(attempt)
         if isinstance(value, Verification):
-            return value
+            return snapshot_verification(value, context=f"{self.name} verifier result")
         score = float(value)
         if not 0.0 <= score <= 1.0:
             raise ValueError("functional verifier score must be in [0,1]")
-        return Verification(
+        return snapshot_verification(Verification(
             score=score,
             passed=score >= 0.5,
             confidence=1.0,
             verifier_version=self.version,
             verifier_name=self.name,
             trusted=self.trusted,
-        )
+        ), context=f"{self.name} verifier result")

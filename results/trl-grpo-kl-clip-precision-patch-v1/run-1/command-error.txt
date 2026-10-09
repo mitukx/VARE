@@ -1,0 +1,5 @@
+Invalid command attempt before experiment execution:
+
+python scripts/audit_trl_grpo_kl_clip_precision_patch.py ... --bias-correction false ...
+
+The runner uses argparse.BooleanOptionalAction; the correct negative form is --no-bias-correction. No source method executed in this run.

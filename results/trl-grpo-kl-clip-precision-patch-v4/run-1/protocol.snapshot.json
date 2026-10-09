@@ -1,0 +1,47 @@
+{
+  "protocol_id": "trl_grpo_kl_clip_precision_patch_v4",
+  "status": "frozen_before_execution",
+  "question": "In the pinned production token-level GRPO loss, can several individually finite clipped fp16 KL terms overflow during the masked KL-metric reduction, and does the single-file precision candidate preserve the analytic per-token corrected gradient and finite metric?",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "candidate_revision": "0aaea03f2fa449bc7a91f1973e7940da11da65da",
+    "modified_path": "trl/trainer/grpo_trainer.py",
+    "patch_sha256": "0f6c60de679c3c8b467b2bc8b77b01e06f890486cd567322940e5ce8a2137468"
+  },
+  "estimand": {
+    "token_ratio": "r_bt=exp(z_bt-z_old_bt)",
+    "clipped_kl": "K_bt=exp(min(x_bt,c))-min(x_bt,c)-1; x=z_ref-z_policy; upper clamp is straight-through",
+    "loss": "L=(beta/B)*sum_b mean_active(-policy_surrogate + beta*K_bt*r_bt); advantages are zero in this audit, beta=0.1",
+    "gradient": "dL/dz_bt = -beta/(B*n_b)*r_bt*min(x_bt,c) for the KL term with bias correction",
+    "fixture": "B=2,T=3,masks=[[1,1,0],[1,1,1]], active x=[[20,20],[20,20,20]], masked padding x=0, z-z_old=0.25 at every position, c=10, beta=0.1, zero advantages"
+  },
+  "frozen_cases": [
+    {"name":"pr_head_fp16_token", "dtype":"float16", "importance_sampling_level":"token", "expected":"production loss completes; individual clipped KL values are finite; aggregate KL metric is non-finite due to fp16 reduction; at least one active policy-logprob gradient differs from analytic target by more than 0.5% relative and 0.1 absolute"},
+    {"name":"candidate_fp16_token", "dtype":"float16", "importance_sampling_level":"token", "expected":"loss, KL metric, and gradients finite; loss and active gradients match analytic targets within 0.5% relative and 0.1 absolute; padding gradients are zero"},
+    {"name":"pr_head_fp32_token", "dtype":"float32", "importance_sampling_level":"token", "expected":"finite controls"},
+    {"name":"candidate_fp32_token", "dtype":"float32", "importance_sampling_level":"token", "expected":"loss, gradients, and KL metric bit-identical to PR-head controls"}
+  ],
+  "method": "Direct invocation of the pinned production GRPOTrainer._compute_loss method with exact frozen tensors on CPU. An independent checker computes the analytic loss and per-token gradients using only standard-library math and retained JSON. No model, dataset, optimizer, GPU, or external service.",
+  "acceptance": {
+    "pr_head_fp16_metric_overflow_is_observed_with_zero_padding": true,
+    "pr_head_fp16_gradient_mismatch_is_observed": true,
+    "candidate_fp16_outputs_are_finite_and_match_analytic_tolerance": true,
+    "candidate_fp16_padding_gradients_are_zero": true,
+    "fp32_candidate_is_bit_identical_to_pr_head": true,
+    "candidate_patch_and_source_identity_match_lock": true
+  },
+  "failure_criteria": [
+    "source or patch hash mismatch",
+    "the unmodified production path does not show the frozen fp16 metric and gradient failure",
+    "candidate fp16 values or gradients are non-finite or outside the analytic tolerance",
+    "padding receives a nonzero gradient",
+    "float32 controls change"
+  ],
+  "interpretation_limits": [
+    "This is a hand-built production-method numerical fixture, not a measured real-training occurrence rate.",
+    "The PR discussion says beta defaults to zero and the PR author lacks a real training configuration reproducing extreme reference-policy ratios; prevalence is unknown.",
+    "No optimizer step, model task outcome, bfloat16, GPU, Liger, distributed path, or external reproduction is covered.",
+    "A pass supports a bounded implementation finding only; it is not capability evidence or upstream adoption."
+  ],
+  "resources": {"cpu_only":true,"gpu_hours":0,"paid_api_calls":0,"external_compute_usd":0}
+}

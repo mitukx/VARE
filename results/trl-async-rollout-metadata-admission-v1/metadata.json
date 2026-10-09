@@ -1,0 +1,23 @@
+{
+  "study": "trl-async-rollout-metadata-admission-diagnostic-v1",
+  "baseline_revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+  "baseline_exit_code": 1,
+  "candidate_exit_code": 0,
+  "baseline_summary": "5 failed as expected on pinned source; 1 TRL experimental API warning",
+  "candidate_summary": "5 passed; 1 TRL experimental API warning; CPU, offline",
+  "candidate_patch_sha256": "4600c080c3d6692854b1da4c942f692751c646312df2d6d76d36a54174642958",
+  "classification": "post-hoc exploratory source diagnostic; no prospective confirmation",
+  "limitations": [
+    "same-host author-run tests",
+    "admission only; batchers may split siblings",
+    "no optimizer update or task success",
+    "no outside review or maintainer response",
+    "queue implementation assumes contiguous rollout rows"
+  ],
+  "batcher_boundary": {
+    "base": "first row 10 at v0; after simulated transition, fresh row 99 at v1; one fork row dropped",
+    "candidate": "first row 10 at v0; after simulated transition, fork sibling 11 from v0 appears in a v1 microbatch; no row dropped",
+    "optimizer_ran": false
+  },
+  "decision": "STOP queue-only candidate as a complete trainer fix; freeze admission-versus-use and group-aware update contract before continuing."
+}

@@ -1,0 +1,47 @@
+{
+  "audit": "passed",
+  "base_balanced_accuracy": 0.6725652286230948,
+  "base_exact_match": 0.6484375,
+  "decision_recomputed": "sequence_dpo_development_non_pass",
+  "generation_parity_examples": [
+    {
+      "dataset_index": 1708,
+      "exact_match": true,
+      "generated_text": "No",
+      "huggingface_parity": true,
+      "parsed_label": "no"
+    },
+    {
+      "dataset_index": 2302,
+      "exact_match": true,
+      "generated_text": "Yes",
+      "huggingface_parity": true,
+      "parsed_label": "yes"
+    },
+    {
+      "dataset_index": 2675,
+      "exact_match": true,
+      "generated_text": "Yes",
+      "huggingface_parity": true,
+      "parsed_label": "yes"
+    }
+  ],
+  "nonzero_adapter_checkpoints_verified": 9,
+  "protocol_id": "vare-cpu-lm-boolq-posttraining-development-v16-dpo",
+  "protocol_sha256": "f6c0bd45b2f7e5c1d7bf4a39af6228fe7a33bc5f75e3e43b10b6eb45cd890c1b",
+  "runner_snapshot_sha256": "c9917a237222b1e046ea6881744ee5cb8b07d52ea546d48e34cd8425e12cb994",
+  "selected_epoch_recomputed": 1,
+  "source_manifest_sha256": "dc0269a85bd9ddbed1a7f83f127eabeb00417af9701396381ca842dd9da740f5",
+  "train_examples": 128,
+  "updated_balanced_accuracy_by_seed": [
+    0.6694006716610694,
+    0.5775639369671919,
+    0.6579695169206923
+  ],
+  "updated_exact_match_by_seed": [
+    0.64453125,
+    0.57421875,
+    0.6328125
+  ],
+  "validation_examples": 256
+}

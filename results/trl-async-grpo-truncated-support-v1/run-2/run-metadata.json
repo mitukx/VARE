@@ -1,0 +1,27 @@
+{
+  "adjudication_note": "The primary calculation passed, but the independent checker omitted locked KL and clip-region metrics. See run-3 for the completed audit.",
+  "claim_boundary": "The async loss method was invoked unmodified. vLLM, rollout worker, full trainer initialization, and an optimizer step were not run.",
+  "external_compute_usd": 0,
+  "gpu_hours": 0,
+  "independent_verifier_sha256": "d39cf81e2963612cff466deaadf2813be4c89a9a045dd7d80d24f174b5a72777",
+  "protocol_id": "trl_async_grpo_truncated_support_v1",
+  "protocol_sha256": "d6fb7cc9a0f83b382e60018094ca9a9469366a01d53bd490ceec2adb2808078a",
+  "reproduction_type": "author-run CPU execution of the locked production compute_loss method with deterministic synthetic model outputs and behavior logprobs; not an external reproduction",
+  "run_id": "run-2",
+  "runner_sha256": "8f7d177a9d51f246bd83c021f44abe602ea637dbfba4ef7330f890e2a050801f",
+  "runtime": {
+    "accelerate": "1.12.0",
+    "cuda_initialized": false,
+    "datasets": "4.8.5",
+    "device": "CPU",
+    "huggingface_hub": "0.36.0",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "source_checkout": "/tmp/trl-source-audit",
+  "status": "partial_audit_superseded",
+  "timestamp_utc": "2026-10-09T04:03:23Z",
+  "trl_git_commit": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+  "vare_git_commit_before_run": "6c784b48e43f53756c2153e643e49c6056e69d7c"
+}

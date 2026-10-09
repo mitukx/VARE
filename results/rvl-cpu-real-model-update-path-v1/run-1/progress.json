@@ -1,0 +1,487 @@
+{
+  "device": "cpu",
+  "load_peak_rss_bytes": 2955968512,
+  "load_seconds": 0.864106583991088,
+  "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+  "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "mps_available_but_disabled": true,
+  "protocol_id": "vare-rvl-cpu-real-model-update-path-v1",
+  "protocol_sha256": "9a29bc9daf9f67e529cbabe505a494bab0b60ba6a1eef625afc2e23047f3c2c5",
+  "responses": [
+    {
+      "answer_key": "B",
+      "prompt_id": "update-smoke-01",
+      "question": "A crate starts with 83 parts. Add 47 parts, remove 28, then split the remainder equally into 3 bins. How many parts go in each bin? A) 32 B) 34 C) 36 D) 38",
+      "responses": [
+        {
+          "logprob": -2.6674648401822196,
+          "response_token_ids": [
+            1249,
+            8253,
+            1246,
+            1657,
+            5479,
+            728,
+            1119,
+            1817
+          ],
+          "response_token_logprobs": [
+            -0.8974491953849792,
+            -1.3708934783935547,
+            -0.04231909662485123,
+            -1.7046782886609435e-05,
+            -0.00032050241134129465,
+            -0.013817843049764633,
+            -0.34242871403694153,
+            -0.00021896349790040404
+          ],
+          "reward": 0.0,
+          "text": "To determine how many parts go into each",
+          "token_count": 8
+        },
+        {
+          "logprob": -2.799770616926253,
+          "response_token_ids": [
+            35,
+            151645
+          ],
+          "response_token_logprobs": [
+            -2.7946584224700928,
+            -0.0051121944561600685
+          ],
+          "reward": 0.0,
+          "text": "D",
+          "token_count": 2
+        },
+        {
+          "logprob": -4.971635004971176,
+          "response_token_ids": [
+            17,
+            15,
+            151645
+          ],
+          "response_token_logprobs": [
+            -3.3160417079925537,
+            -1.6494460105895996,
+            -0.006147286389023066
+          ],
+          "reward": 0.0,
+          "text": "20",
+          "token_count": 3
+        },
+        {
+          "logprob": -2.799770616926253,
+          "response_token_ids": [
+            35,
+            151645
+          ],
+          "response_token_logprobs": [
+            -2.7946584224700928,
+            -0.0051121944561600685
+          ],
+          "reward": 0.0,
+          "text": "D",
+          "token_count": 2
+        }
+      ],
+      "rewards": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "answer_key": "C",
+      "prompt_id": "update-smoke-02",
+      "question": "A workshop has 19 boxes of 24 bolts. It uses 108 bolts, then packs the rest equally into 6 kits. How many bolts go in each kit? A) 56 B) 57 C) 58 D) 60",
+      "responses": [
+        {
+          "logprob": -5.281435307115316,
+          "response_token_ids": [
+            1249,
+            11625,
+            419,
+            3491,
+            11,
+            582,
+            1156,
+            1184
+          ],
+          "response_token_logprobs": [
+            -0.3849713206291199,
+            -1.179108738899231,
+            -0.7069416046142578,
+            -0.014364644885063171,
+            -0.03274502977728844,
+            -0.16222740709781647,
+            -2.6854658126831055,
+            -0.1156107485294342
+          ],
+          "reward": 0.0,
+          "text": "To solve this problem, we first need",
+          "token_count": 8
+        },
+        {
+          "logprob": -1.1528038670651313,
+          "response_token_ids": [
+            1249,
+            8253,
+            1246,
+            1657,
+            48839,
+            728,
+            1119,
+            1817
+          ],
+          "response_token_logprobs": [
+            -0.3849713206291199,
+            -0.40448105335235596,
+            -0.016316210851073265,
+            -1.1920922133867862e-06,
+            -0.00016056202002801,
+            -0.0024980073794722557,
+            -0.34435537457466125,
+            -2.0146166207268834e-05
+          ],
+          "reward": 0.0,
+          "text": "To determine how many bolts go into each",
+          "token_count": 8
+        },
+        {
+          "logprob": -1.1528038670651313,
+          "response_token_ids": [
+            1249,
+            8253,
+            1246,
+            1657,
+            48839,
+            728,
+            1119,
+            1817
+          ],
+          "response_token_logprobs": [
+            -0.3849713206291199,
+            -0.40448105335235596,
+            -0.016316210851073265,
+            -1.1920922133867862e-06,
+            -0.00016056202002801,
+            -0.0024980073794722557,
+            -0.34435537457466125,
+            -2.0146166207268834e-05
+          ],
+          "reward": 0.0,
+          "text": "To determine how many bolts go into each",
+          "token_count": 8
+        },
+        {
+          "logprob": -8.95741250156425,
+          "response_token_ids": [
+            16,
+            16,
+            17,
+            151645
+          ],
+          "response_token_logprobs": [
+            -1.7528932094573975,
+            -3.7612924575805664,
+            -3.4420480728149414,
+            -0.0011787617113441229
+          ],
+          "reward": 0.0,
+          "text": "112",
+          "token_count": 4
+        }
+      ],
+      "rewards": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "answer_key": "A",
+      "prompt_id": "update-smoke-03",
+      "question": "A shipment of 1,440 units is divided into 12 equal lots. Then 35 units are added to one lot and 17 are removed. How many remain in that lot? A) 138 B) 136 C) 148 D) 128",
+      "responses": [
+        {
+          "logprob": -1.2200330185005441,
+          "response_token_ids": [
+            35,
+            151645
+          ],
+          "response_token_logprobs": [
+            -1.2181261777877808,
+            -0.001906840712763369
+          ],
+          "reward": 0.0,
+          "text": "D",
+          "token_count": 2
+        },
+        {
+          "logprob": -1.2200330185005441,
+          "response_token_ids": [
+            35,
+            151645
+          ],
+          "response_token_logprobs": [
+            -1.2181261777877808,
+            -0.001906840712763369
+          ],
+          "reward": 0.0,
+          "text": "D",
+          "token_count": 2
+        },
+        {
+          "logprob": -1.6537954693194479,
+          "response_token_ids": [
+            34,
+            151645
+          ],
+          "response_token_logprobs": [
+            -1.6536444425582886,
+            -0.0001510267611593008
+          ],
+          "reward": 0.0,
+          "text": "C",
+          "token_count": 2
+        },
+        {
+          "logprob": -1.2200330185005441,
+          "response_token_ids": [
+            35,
+            151645
+          ],
+          "response_token_logprobs": [
+            -1.2181261777877808,
+            -0.001906840712763369
+          ],
+          "reward": 0.0,
+          "text": "D",
+          "token_count": 2
+        }
+      ],
+      "rewards": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "answer_key": "D",
+      "prompt_id": "update-smoke-04",
+      "question": "A hall has 7 rows of 23 seats and 16 rows of 8 seats. How many seats are there in total? A) 279 B) 288 C) 298 D) 289",
+      "responses": [
+        {
+          "logprob": -2.8093690512650937,
+          "response_token_ids": [
+            22,
+            856,
+            220,
+            17,
+            18,
+            488,
+            220,
+            16
+          ],
+          "response_token_logprobs": [
+            -1.3818764686584473,
+            -1.2955503463745117,
+            -7.271502545336261e-05,
+            -9.298280929215252e-06,
+            -3.421248038648628e-05,
+            -0.13150548934936523,
+            -0.00024387246230617166,
+            -7.664863369427621e-05
+          ],
+          "reward": 0.0,
+          "text": "7 x 23 + 1",
+          "token_count": 8
+        },
+        {
+          "logprob": -7.975323716644198,
+          "response_token_ids": [
+            16,
+            19,
+            23,
+            23,
+            151645
+          ],
+          "response_token_logprobs": [
+            -2.34293794631958,
+            -3.5501961708068848,
+            -1.446516752243042,
+            -0.6342356204986572,
+            -0.00143722677603364
+          ],
+          "reward": 0.0,
+          "text": "1488",
+          "token_count": 5
+        },
+        {
+          "logprob": -2.6673186207772233,
+          "response_token_ids": [
+            17,
+            23,
+            24,
+            151645
+          ],
+          "response_token_logprobs": [
+            -2.0313382148742676,
+            -0.46009981632232666,
+            -0.17556068301200867,
+            -0.00031990656862035394
+          ],
+          "reward": 0.0,
+          "text": "289",
+          "token_count": 4
+        },
+        {
+          "logprob": -2.5326852315629367,
+          "response_token_ids": [
+            1249,
+            1477,
+            279,
+            2790,
+            1372,
+            315,
+            16312,
+            304
+          ],
+          "response_token_logprobs": [
+            -1.0211892127990723,
+            -1.4063138961791992,
+            -0.0009814451914280653,
+            -0.0002628219372127205,
+            -2.288792165927589e-05,
+            0.0,
+            -4.768258077092469e-05,
+            -0.10386728495359421
+          ],
+          "reward": 0.0,
+          "text": "To find the total number of seats in",
+          "token_count": 8
+        }
+      ],
+      "rewards": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "answer_key": "B",
+      "prompt_id": "update-smoke-05",
+      "question": "An item costs 240 credits. Apply a 25% discount, then add a 10% tax to the discounted price. What is the final price? A) 196 B) 198 C) 202 D) 216",
+      "responses": [
+        {
+          "logprob": -4.359443184453994,
+          "response_token_ids": [
+            1249,
+            11625,
+            279,
+            21937,
+            29257,
+            11,
+            1077,
+            594
+          ],
+          "response_token_logprobs": [
+            -0.6825266480445862,
+            -0.6581465601921082,
+            -0.7538290619850159,
+            -0.970637857913971,
+            -0.12424708157777786,
+            -0.024037014693021774,
+            -1.1454877853393555,
+            -0.0005311747081577778
+          ],
+          "reward": 0.0,
+          "text": "To solve the calculation accurately, let's",
+          "token_count": 8
+        },
+        {
+          "logprob": -5.688789173960686,
+          "response_token_ids": [
+            1249,
+            11625,
+            419,
+            3491,
+            11,
+            582,
+            686,
+            1795
+          ],
+          "response_token_logprobs": [
+            -0.6825266480445862,
+            -0.6581465601921082,
+            -0.6501551270484924,
+            -0.11431104689836502,
+            -0.17613570392131805,
+            -0.2894575893878937,
+            -3.0426881313323975,
+            -0.07536836713552475
+          ],
+          "reward": 0.0,
+          "text": "To solve this problem, we will follow",
+          "token_count": 8
+        },
+        {
+          "logprob": -3.7454209957795683,
+          "response_token_ids": [
+            33,
+            151645
+          ],
+          "response_token_logprobs": [
+            -3.7450857162475586,
+            -0.0003352795320097357
+          ],
+          "reward": 1.0,
+          "text": "B",
+          "token_count": 2
+        },
+        {
+          "logprob": -3.4734416586943553,
+          "response_token_ids": [
+            1249,
+            8253,
+            279,
+            1590,
+            3349,
+            1283,
+            18950,
+            264
+          ],
+          "response_token_logprobs": [
+            -0.6825266480445862,
+            -1.1686694622039795,
+            -7.152531907195225e-06,
+            -5.1020273531321436e-05,
+            -2.7656173188006505e-05,
+            -0.8243548274040222,
+            -0.40847283601760864,
+            -0.3893320560455322
+          ],
+          "reward": 0.0,
+          "text": "To determine the final price after applying a",
+          "token_count": 8
+        }
+      ],
+      "rewards": [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ]
+    }
+  ],
+  "runner_sha256": "85b3c812c9f904e3f5822212bbc22aa9bd09c88e84216fba2e2ea8b768da8d51",
+  "rvl_revision": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "source_revision": "d8c72bac9188f33e18daefa1577d084f40f65cd3",
+  "status": "running",
+  "vare_adapter_sha256": "fdaf7f41df3a05a6c35307d92141278580e526d22ae073f1a8c70c581cbda179",
+  "wall_started_unix": 1791508848.760917
+}

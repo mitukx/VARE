@@ -1,0 +1,264 @@
+{
+  "all_cases_pass": false,
+  "fixed_boundary": {
+    "expected": "A legacy per-row boundary splits B; candidate may reject only whole rollouts",
+    "observed": {
+      "accounting_exact_with_drop_metric": false,
+      "capacity_exact_or_respected": true,
+      "contract_pass": false,
+      "emitted_rows": 8,
+      "groups_whole_or_dropped": true,
+      "input_rows": 9,
+      "no_group_split": false,
+      "nonempty_rank_rows": true,
+      "per_group": {
+        "A": {
+          "emitted_microbatches": [
+            0
+          ],
+          "emitted_rows": 3,
+          "input_rows": 3
+        },
+        "B": {
+          "emitted_microbatches": [
+            0,
+            1
+          ],
+          "emitted_rows": 2,
+          "input_rows": 2
+        },
+        "C": {
+          "emitted_microbatches": [
+            1
+          ],
+          "emitted_rows": 2,
+          "input_rows": 2
+        },
+        "D": {
+          "emitted_microbatches": [
+            1
+          ],
+          "emitted_rows": 1,
+          "input_rows": 1
+        },
+        "E": {
+          "emitted_microbatches": [],
+          "emitted_rows": 0,
+          "input_rows": 1
+        }
+      },
+      "whole_group_drop_rows": 0
+    }
+  },
+  "fixed_exact_control": {
+    "expected": "retain both groups in one exact-size batch",
+    "observed": {
+      "accounting_exact_with_drop_metric": true,
+      "capacity_exact_or_respected": true,
+      "contract_pass": true,
+      "emitted_rows": 4,
+      "groups_whole_or_dropped": true,
+      "input_rows": 4,
+      "no_group_split": true,
+      "nonempty_rank_rows": true,
+      "per_group": {
+        "X": {
+          "emitted_microbatches": [
+            0
+          ],
+          "emitted_rows": 2,
+          "input_rows": 2
+        },
+        "Y": {
+          "emitted_microbatches": [
+            0
+          ],
+          "emitted_rows": 2,
+          "input_rows": 2
+        }
+      },
+      "whole_group_drop_rows": 0
+    }
+  },
+  "fixed_infeasible_prefix": {
+    "expected": "reject P whole, retain Q as one full batch",
+    "observed": {
+      "accounting_exact_with_drop_metric": false,
+      "capacity_exact_or_respected": true,
+      "contract_pass": false,
+      "emitted_rows": 4,
+      "groups_whole_or_dropped": false,
+      "input_rows": 5,
+      "no_group_split": true,
+      "nonempty_rank_rows": true,
+      "per_group": {
+        "P": {
+          "emitted_microbatches": [
+            0
+          ],
+          "emitted_rows": 1,
+          "input_rows": 1
+        },
+        "Q": {
+          "emitted_microbatches": [
+            0
+          ],
+          "emitted_rows": 3,
+          "input_rows": 4
+        }
+      },
+      "whole_group_drop_rows": 0
+    }
+  },
+  "fixed_oversize": {
+    "expected": "reject O whole, retain H as one full batch",
+    "observed": {
+      "accounting_exact_with_drop_metric": false,
+      "capacity_exact_or_respected": true,
+      "contract_pass": false,
+      "emitted_rows": 8,
+      "groups_whole_or_dropped": false,
+      "input_rows": 9,
+      "no_group_split": false,
+      "nonempty_rank_rows": true,
+      "per_group": {
+        "H": {
+          "emitted_microbatches": [
+            1
+          ],
+          "emitted_rows": 3,
+          "input_rows": 4
+        },
+        "O": {
+          "emitted_microbatches": [
+            0,
+            1
+          ],
+          "emitted_rows": 5,
+          "input_rows": 5
+        }
+      },
+      "whole_group_drop_rows": 0
+    }
+  },
+  "token_boundary": {
+    "expected": "retain all four groups at per-row budget 10",
+    "observed": {
+      "accounting_exact_with_drop_metric": false,
+      "capacity_exact_or_respected": false,
+      "contract_pass": false,
+      "emitted_rows": 6,
+      "groups_whole_or_dropped": true,
+      "input_rows": 8,
+      "no_group_split": false,
+      "nonempty_rank_rows": true,
+      "per_group": {
+        "A": {
+          "emitted_microbatches": [
+            0
+          ],
+          "emitted_rows": 2,
+          "input_rows": 2
+        },
+        "B": {
+          "emitted_microbatches": [
+            0,
+            1
+          ],
+          "emitted_rows": 2,
+          "input_rows": 2
+        },
+        "C": {
+          "emitted_microbatches": [
+            1
+          ],
+          "emitted_rows": 2,
+          "input_rows": 2
+        },
+        "D": {
+          "emitted_microbatches": [],
+          "emitted_rows": 0,
+          "input_rows": 2
+        }
+      },
+      "whole_group_drop_rows": 0
+    }
+  },
+  "token_exact_fit": {
+    "expected": "retain exact-fit T using [3,3]/[2,2,2]",
+    "observed": {
+      "accounting_exact_with_drop_metric": false,
+      "capacity_exact_or_respected": true,
+      "contract_pass": false,
+      "emitted_rows": 4,
+      "groups_whole_or_dropped": false,
+      "input_rows": 5,
+      "no_group_split": true,
+      "nonempty_rank_rows": true,
+      "per_group": {
+        "T": {
+          "emitted_microbatches": [
+            0
+          ],
+          "emitted_rows": 4,
+          "input_rows": 5
+        }
+      },
+      "whole_group_drop_rows": 0
+    }
+  },
+  "token_infeasible_group": {
+    "expected": "reject U whole, retain V",
+    "observed": {
+      "accounting_exact_with_drop_metric": false,
+      "capacity_exact_or_respected": true,
+      "contract_pass": false,
+      "emitted_rows": 2,
+      "groups_whole_or_dropped": false,
+      "input_rows": 5,
+      "no_group_split": true,
+      "nonempty_rank_rows": true,
+      "per_group": {
+        "U": {
+          "emitted_microbatches": [
+            0
+          ],
+          "emitted_rows": 2,
+          "input_rows": 3
+        },
+        "V": {
+          "emitted_microbatches": [],
+          "emitted_rows": 0,
+          "input_rows": 2
+        }
+      },
+      "whole_group_drop_rows": 0
+    }
+  },
+  "token_overbudget_member": {
+    "expected": "reject W whole, retain Z",
+    "observed": {
+      "accounting_exact_with_drop_metric": false,
+      "capacity_exact_or_respected": true,
+      "contract_pass": false,
+      "emitted_rows": 0,
+      "groups_whole_or_dropped": true,
+      "input_rows": 4,
+      "no_group_split": true,
+      "nonempty_rank_rows": true,
+      "per_group": {
+        "W": {
+          "emitted_microbatches": [],
+          "emitted_rows": 0,
+          "input_rows": 2
+        },
+        "Z": {
+          "emitted_microbatches": [],
+          "emitted_rows": 0,
+          "input_rows": 2
+        }
+      },
+      "whole_group_drop_rows": 0
+    }
+  }
+}

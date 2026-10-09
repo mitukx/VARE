@@ -1,0 +1,50 @@
+{
+  "protocol_id": "trl_async_token_budget_real_trainer_window_v3",
+  "status": "frozen_before_confirmation",
+  "supersedes": "trl_async_token_budget_real_trainer_window_v2 (execution failed because RolloutQueueDataset intentionally omits model_version from training dicts)",
+  "question": "Does a TokenBudgetBatcher-held fork sibling cross a post-step policy-version transition inside an actual CPU Transformers Trainer optimizer loop, and does GA change its measured optimizer input/update?",
+  "source": {
+    "trl_repository": "https://github.com/huggingface/trl",
+    "trl_revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+    "trl_base_trainer_sha256": "2657481258dcc04112761e9ff61a35cb93b2b72c3e197e4524f4602fd6a2dbfe",
+    "trl_candidate_patch_sha256": "df6bfd03224bc961658d7366eea590cd2be4ad5c1940d4153b893e1373f6c163",
+    "trl_candidate_trainer_sha256": "f16c87b7fce02a3c3ffa6d54fe7d6ef00e1b3ea6cec3e7a47cf7a923f722a5fa",
+    "transformers_version": "4.57.3",
+    "transformers_trainer_file_sha256": "c3eac8fa28bda6330fd4dee131e7fe7d9bdc0fa35d9de944fce52cb97b379bab"
+  },
+  "estimand": {
+    "primary": "At GA=1 and GA=2, record actual Trainer training-step inputs, rollout versions at production-collator invocation, stale-row count, optimizer-step count, and scalar model parameter after SGD updates.",
+    "independent_unit": "One deterministic pair of version-0 fork rows with model-version-1 sentinels.",
+    "resource_budget": "CPU-only toy scalar model and SGD; no pretrained weights, GPU, paid API, or external spend.",
+    "claim_boundary": "Runs Transformers Trainer.train with the pinned TRL RolloutQueueDataset, TokenBudgetBatcher, and DataCollatorForRollout, but substitutes a deterministic scalar loss/model and local post-step version callback. Measures optimizer input/update on this synthetic task only; it is not a real policy or capability result."
+  },
+  "method": {
+    "script": "scripts/reproduce_trl_async_token_budget_real_trainer_window_v3.py",
+    "script_sha256": "2466dad5e9844b46eb0c928470de417ab2f456815b6540fe32bbe3c6dfdb752e",
+    "token_budget": 2,
+    "sample_tokens": 2,
+    "num_processes": 1,
+    "max_staleness": 0,
+    "gradient_accumulation_steps": [1, 2],
+    "optimizer": "SGD(lr=0.001)",
+    "model_steps": {"GA=1": 2, "GA=2": 1},
+    "transition": "Local callback increments policy version on each actual Trainer on_step_end event, which follows optimizer.step in the pinned Transformers loop; the AsyncGRPO source registers its periodic weight sync at this boundary.",
+    "sample_versions": "RolloutQueueDataset drops model_version from trainer dictionaries; map immutable fixture input IDs back to their preregistered versions for the collation trace."
+  },
+  "acceptance": {
+    "real_transformers_trainer_train_loop_runs": true,
+    "production_trl_queue_batcher_and_collator_used": true,
+    "ga1_has_two_optimizer_steps_and_ga2_has_one": true,
+    "trace_includes_training_batch_and_collation_version": true,
+    "trace_includes_finite_parameter_updates": true,
+    "source_and_script_hashes_match_lock": true,
+    "cpu_only_and_no_external_spend": true
+  },
+  "failure_criteria": [
+    "Pinned source or script hash differs.",
+    "Trainer.train does not complete the frozen number of optimizer steps.",
+    "Actual training-step inputs cannot be matched to collator version snapshots.",
+    "Parameter updates are non-finite or absent."
+  ],
+  "decision_rule": "If GA=1 trains the old sibling at lag 1 after a step while GA=2 consumes both at lag 0 before one step, report a source-path optimizer-input counterexample conditional on accumulation. A scalar parameter delta demonstrates only the effect on this toy Trainer objective. Do not infer realistic GRPO gradients, training prevalence, or capability improvement. No upstream fix is proposed from this fixture alone."
+}

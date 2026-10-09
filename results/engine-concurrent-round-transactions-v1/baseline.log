@@ -1,0 +1,35 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__ test_overlapping_rounds_do_not_promote_a_stale_branch_over_newer_incumbent __
+
+    def test_overlapping_rounds_do_not_promote_a_stale_branch_over_newer_incumbent():
+        hooks = _VersionedHooks()
+        loop = CapabilityLoop(
+            hooks=hooks,
+            verifier=VerifierEnsemble([VerifierMember(_Verifier())]),
+            config=EngineConfig(
+                rollout_concurrency=2,
+                replay_batch_size=2,
+                samples_per_task=1,
+                promotion=PromotionConfig(min_primary_gain=0.01, min_eval_examples=1),
+            ),
+        )
+    
+        async def run_overlapping_rounds():
+            return await asyncio.gather(
+                loop.run_round([Task("task-a", "prompt")], round_index=0, rollout_count=1),
+                loop.run_round([Task("task-b", "prompt")], round_index=1, rollout_count=1),
+            )
+    
+        results = asyncio.run(run_overlapping_rounds())
+    
+        assert len(results) == 2
+>       assert hooks.parents["c2"] == "c1"
+E       AssertionError: assert 'p0' == 'c1'
+E         
+E         - c1
+E         + p0
+
+tests/test_engine_concurrent_round_transactions.py:87: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_engine_concurrent_round_transactions.py::test_overlapping_rounds_do_not_promote_a_stale_branch_over_newer_incumbent

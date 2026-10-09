@@ -1,0 +1,69 @@
+W1009 18:41:34.067000 10004 site-packages/torch/distributed/elastic/multiprocessing/redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/replay_trl_pr7249_async_distillation_ddp_v3.py:279: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.async_distillation import AsyncDistillationTrainer
+/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/replay_trl_pr7249_async_distillation_ddp_v3.py:279: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.async_distillation import AsyncDistillationTrainer
+[rank0]:W1009 18:41:38.820000 10005 site-packages/torch/distributed/elastic/multiprocessing/redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+[rank1]:W1009 18:41:38.820000 10006 site-packages/torch/distributed/elastic/multiprocessing/redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/replay_trl_pr7249_async_distillation_ddp_v3.py", line 314, in <module>
+[rank1]:     raise SystemExit(main())
+[rank1]:                      ^^^^^^
+[rank1]:   File "/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/replay_trl_pr7249_async_distillation_ddp_v3.py", line 283, in main
+[rank1]:     row = train_case(AsyncDistillationTrainer, Trainer, TrainingArguments, case_name, rank_rows,
+[rank1]:           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/replay_trl_pr7249_async_distillation_ddp_v3.py", line 156, in train_case
+[rank1]:     local_counts = [[sum(sample["completion_mask"]) for sample in microbatch] for microbatch in rank_rows]
+[rank1]:                          ~~~~~~^^^^^^^^^^^^^^^^^^^
+[rank1]: TypeError: list indices must be integers or slices, not str
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/replay_trl_pr7249_async_distillation_ddp_v3.py", line 314, in <module>
+[rank0]:     raise SystemExit(main())
+[rank0]:                      ^^^^^^
+[rank0]:   File "/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/replay_trl_pr7249_async_distillation_ddp_v3.py", line 283, in main
+[rank0]:     row = train_case(AsyncDistillationTrainer, Trainer, TrainingArguments, case_name, rank_rows,
+[rank0]:           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/replay_trl_pr7249_async_distillation_ddp_v3.py", line 156, in train_case
+[rank0]:     local_counts = [[sum(sample["completion_mask"]) for sample in microbatch] for microbatch in rank_rows]
+[rank0]:                          ~~~~~~^^^^^^^^^^^^^^^^^^^
+[rank0]: TypeError: list indices must be integers or slices, not str
+E1009 18:41:40.089000 10004 site-packages/torch/distributed/elastic/multiprocessing/api.py:882] failed (exitcode: 1) local_rank: 0 (pid: 10005) of binary: /opt/homebrew/Caskroom/miniforge/base/bin/python
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/torch/distributed/run.py", line 940, in <module>
+    main()
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 357, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/torch/distributed/run.py", line 936, in main
+    run(args)
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/torch/distributed/run.py", line 927, in run
+    elastic_launch(
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 156, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 293, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/replay_trl_pr7249_async_distillation_ddp_v3.py FAILED
+------------------------------------------------------------
+Failures:
+[1]:
+  time      : 2026-10-09_18:41:40
+  host      : 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 10006)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-10-09_18:41:40
+  host      : 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 10005)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

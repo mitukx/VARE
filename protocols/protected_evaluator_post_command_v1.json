@@ -1,0 +1,20 @@
+{
+  "study_id": "protected-evaluator-post-command-v1",
+  "created_at": "2026-10-09",
+  "question": "Can an evaluator command persistently modify a protected workspace file after the pre-execution integrity check and still receive a passing result?",
+  "hypothesis": "The current evaluator can return passed=true and integrity_ok=true when its successful test command persistently changes a protected file, because integrity is only checked before command execution.",
+  "scope": "One deterministic CPU-only synthetic evaluator fixture; no model, optimizer, network, GPU, API, or paid service.",
+  "pre_fix_revision": "46a890e",
+  "fixture": {
+    "protected_path": "protected-test.py",
+    "initial_contents": "original evaluator bytes\\n",
+    "test_action": "overwrite protected-test.py with changed bytes and exit with status 0",
+    "expected_pre_fix_observation": "passed=true and integrity_ok=true",
+    "post_fix_acceptance": "passed=false, integrity_ok=false, and a protected-file modification failure is retained"
+  },
+  "decision_rule": "If the pre-fix observation matches the hypothesis, add a fail-closed integrity recheck after each executed test and metric command. Keep the pre-execution check. The fix is accepted only if the mutation fixture fails closed and existing positive and negative evaluator controls keep their prior outcomes.",
+  "limitations": [
+    "This fixture tests persistent mutation only; it does not sandbox malicious processes or detect a file modified and restored within one command.",
+    "The result is harness correctness evidence, not model capability, security certification, or an estimate of real-world attack frequency."
+  ]
+}

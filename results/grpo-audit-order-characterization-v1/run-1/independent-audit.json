@@ -1,0 +1,20 @@
+{
+  "protocol_id": "grpo_audit_order_characterization_v1",
+  "auditor": "audit_grpo_audit_order_characterization_v1.py",
+  "independent_implementation": true,
+  "same_host_audit": true,
+  "auditor_sha256": "f712d24a3ca12c02392c0aa9287d6af585721b8142909b0745098cd0aebbf8ed",
+  "protocol_sha256": "1286ce726d0d574c50dae794345e3df688c165d5cb7117c06880f080027542d1",
+  "checks": {
+    "lock_hash_matches": true,
+    "actionwise_walsh_degrees_match_runner": true,
+    "fourth_order_coefficients_vanish": true,
+    "all_nonconstant_action_updates_have_degree_three": true,
+    "target_coefficient_is_exact": true,
+    "all_one_and_two_way_marginals_match": true,
+    "conditional_mean_gap_is_exact": true,
+    "unconditional_mean_gap_is_exact": true,
+    "triple_observation_has_positive_tv": true
+  },
+  "scope": "Independent exact same-host replay of the finite truth table; not external reproduction or a novelty review."
+}

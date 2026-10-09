@@ -1,0 +1,51 @@
+{
+  "protocol_id": "trl_async_freshness_use_time_gradient_control_v1",
+  "status": "frozen_before_confirmation",
+  "question": "In the previously reproduced GA=1 schedule, how much of the toy Trainer update is contributed by a version-0 row that reaches training_step at version 1, compared with a control that zeros only that stale row's loss gradient?",
+  "source": {
+    "trl_repository": "https://github.com/huggingface/trl",
+    "trl_revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+    "trl_base_trainer_sha256": "2657481258dcc04112761e9ff61a35cb93b2b72c3e197e4524f4602fd6a2dbfe",
+    "trl_candidate_patch_sha256": "df6bfd03224bc961658d7366eea590cd2be4ad5c1940d4153b893e1373f6c163",
+    "trl_candidate_trainer_sha256": "f16c87b7fce02a3c3ffa6d54fe7d6ef00e1b3ea6cec3e7a47cf7a923f722a5fa",
+    "transformers_version": "4.57.3",
+    "transformers_trainer_file_sha256": "c3eac8fa28bda6330fd4dee131e7fe7d9bdc0fa35d9de944fce52cb97b379bab",
+    "accelerate_version": "1.12.0",
+    "accelerate_data_loader_file_sha256": "8debfb20c6ae58eff3a466cfd67244a12cc8b8d3de00316a6c1d54b0310ee6ca"
+  },
+  "estimand": {
+    "primary": "Difference in the scalar model parameter after GA=1's second optimizer update between queue-admission-only and stale-signal-masked-at-training-step arms; also record raw and used autograd gradients for each actual training batch.",
+    "secondary": "Check that the two arms are identical at GA=2, where both version-0 rows are consumed before an update.",
+    "independent_unit": "One deterministic two-row version-0 fork rollout, with version-1 sentinels.",
+    "resource_budget": "CPU-only actual Transformers Trainer loop, scalar model, one process, no pretrained model, GPU/MPS, paid API, or external spend.",
+    "claim_boundary": "The masked arm is a synthetic counterfactual that zeros the loss contribution of a stale row while preserving batch and optimizer-step count. It is not a production filtering fix, true GRPO objective, task/capability metric, or claim that the public max_staleness contract requires this behavior."
+  },
+  "method": {
+    "script": "scripts/reproduce_trl_async_freshness_use_time_gradient_control_v1.py",
+    "script_sha256": "ae15d862e9f0e2de58634c22cbf562dc7847b4cce49c8221a738780c56e59c3d",
+    "token_budget": 2,
+    "max_staleness": 0,
+    "gradient_accumulation_steps": [1, 2],
+    "optimizer": "SGD(lr=0.001), unchanged between arms",
+    "device_enforcement": "TrainingArguments(use_cpu=True, dataloader_pin_memory=False); output records the selected device.",
+    "arms": ["queue_admission_only", "mask_stale_signal_at_training_step"],
+    "transition": "Increment policy version on the actual Trainer on_step_end callback after optimizer.step."
+  },
+  "acceptance": {
+    "both_arms_use_identical_fixture_and_optimizer_schedule": true,
+    "ga1_row_11_is_trained_at_version_1": true,
+    "mask_arm_zeros_only_stale_row_gradient": true,
+    "ga2_has_no_stale_training_row_and_arms_match": true,
+    "both_sources_match_for_each_arm": true,
+    "all_runs_report_cpu_and_exit_zero": true,
+    "all_locked_hashes_match": true
+  },
+  "failure_criteria": [
+    "Any source or script hash differs.",
+    "GA=1 row 11 is not passed to training_step at version 1.",
+    "The mask arm changes any non-stale sample's objective or optimizer schedule.",
+    "The GA=2 mask arm changes a gradient or parameter result despite no stale row.",
+    "Base and candidate disagree, a run selects a non-CPU device, or an exit code is nonzero."
+  ],
+  "decision_rule": "If the stale row has a nonzero raw gradient and the masked arm removes exactly that gradient, report the parameter difference as a synthetic causal effect of that row on this toy Trainer objective. Continue toward a production fix only if the intended training-use freshness contract is established; otherwise stop this defect claim. No capability inference is allowed."
+}

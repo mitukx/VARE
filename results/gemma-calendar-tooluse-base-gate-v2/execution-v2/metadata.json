@@ -1,0 +1,22 @@
+{
+  "protocol_id": "gemma_calendar_tooluse_base_gate_v2",
+  "protocol_sha256": "86721586828a6c764b4e747130167c4f7d5641a53240a3e79293c7b3f9498153",
+  "runner_sha256": "2a2e23fc81efd417a757676a536a3ebb7b9821b6cf8b2ae73c135076b6e04297",
+  "model_revision": "299a8560bedf22ed1c72a8a11e7dce4a7f9f51f8",
+  "model_sha256s_checked_before_load": true,
+  "model_inference_performed": true,
+  "completed_tasks": 11,
+  "partial_task_interrupted": "cal-012; no complete trace retained",
+  "primary_gate": "failed; book_free_slot family 0/8 makes the per-family minimum of 4/8 impossible",
+  "raw_result_sha256": "4cb953ff951f906435154d9361797b83df3709e6c0ef432fb5dd5b795dbca4f7",
+  "runner_exit_code": 130,
+  "stop_reason": "futility stop after the first complete family had 0/8 exact successes; the frozen protocol did not predeclare an early futility stop or require a checkpoint before starting each task",
+  "protocol_deviation": "Only 11/32 tasks are complete. The twelfth task was interrupted during generation, and no partial trace was retained. The original all-32-recorded resource gate is therefore unmet. This is an explicit early termination after the primary success condition became unreachable, not a completed frozen run.",
+  "compute": {
+    "device": "CPU",
+    "paid_api_gpu_or_external_spend": false,
+    "elapsed_seconds_at_last_persisted_result": 692.699,
+    "generation_seconds_for_completed_tasks": 687.5984,
+    "peak_rss_bytes_macos": 5992448000
+  }
+}

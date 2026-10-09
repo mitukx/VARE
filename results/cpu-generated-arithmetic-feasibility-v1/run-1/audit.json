@@ -1,0 +1,23 @@
+{
+  "audit_scope": "data, parser, oracle arithmetic, metrics, gates, hashes, and resource record",
+  "bundle_manifest_sha256": "db08b982bfd372d6f4a9c73649e64f7d93369575f03be90a7e4a443db0ac6072",
+  "compute_limits_respected": true,
+  "decision_pass": false,
+  "formal_training_performed": false,
+  "limitations": [
+    "This auditor does not rerun model inference.",
+    "The result is a train-only feasibility pilot, not held-out evidence."
+  ],
+  "metrics": {
+    "exact_match_count": 1,
+    "exact_match_rate": 0.015625,
+    "parse_rate": 1.0,
+    "parsed_count": 64,
+    "parsed_wrong_answer_count": 63,
+    "pilot_rows": 64,
+    "unparsed_count": 0
+  },
+  "model_inference_replayed": false,
+  "protocol_sha256": "4128dc05c79f19af9421aacaadec471d256a48f65775bfdb21ea6c8e2bd0f752",
+  "status": "pass"
+}

@@ -1,0 +1,139 @@
+{
+  "protocol": "trl-async-rollout-group-batching-contract-v6",
+  "status": "locked-before-execution",
+  "date": "2026-10-09",
+  "supersedes": "trl-async-rollout-group-batching-contract-v5",
+  "supersedes_reason": "v5 passed token_budget=10 into packing for token_boundary, but its result inspector still checked rows against budget 6. v5 outputs are retained; the v6 runner carries the same per-case budget through both production class and invariant check.",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "revision": "ed8cc2f4337fb9b7b1429dbd31009ad3577cd5b98",
+    "issue": "https://github.com/huggingface/trl/issues/7206"
+  },
+  "contract": {
+    "fixed_count": "Every emitted microbatch has exactly 4 rows, no rollout is split, and any rejected rows are counted only as complete rollouts.",
+    "token_budget": "Every emitted microbatch is nonempty on both ranks and respects the per-case token budget. Every group is emitted once in one batch or rejected wholly with its row count recorded; exact-fit T is retained."
+  },
+  "cases": {
+    "fixed_boundary": {
+      "ranks": 2,
+      "capacity": 4,
+      "rollout_sizes": [
+        3,
+        2,
+        2,
+        1,
+        1
+      ]
+    },
+    "fixed_oversize": {
+      "ranks": 2,
+      "capacity": 4,
+      "rollout_sizes": [
+        5,
+        4
+      ],
+      "expected_drop": "5-row group"
+    },
+    "fixed_infeasible_prefix": {
+      "ranks": 2,
+      "capacity": 4,
+      "rollout_sizes": [
+        1,
+        4
+      ],
+      "expected_drop": "1-row prefix"
+    },
+    "fixed_exact_control": {
+      "ranks": 2,
+      "capacity": 4,
+      "rollout_sizes": [
+        2,
+        2
+      ]
+    },
+    "token_boundary": {
+      "ranks": 2,
+      "budget": 10,
+      "groups": {
+        "A": [
+          7,
+          3
+        ],
+        "B": [
+          4,
+          6
+        ],
+        "C": [
+          2,
+          2
+        ],
+        "D": [
+          9,
+          1
+        ]
+      }
+    },
+    "token_exact_fit": {
+      "ranks": 2,
+      "budget": 6,
+      "group": [
+        3,
+        3,
+        2,
+        2,
+        2
+      ],
+      "expected": "retain all five"
+    },
+    "token_infeasible_group": {
+      "ranks": 2,
+      "budget": 6,
+      "groups": {
+        "U": [
+          4,
+          4,
+          4
+        ],
+        "V": [
+          3,
+          3
+        ]
+      },
+      "expected_drop": "U only"
+    },
+    "token_overbudget_member": {
+      "ranks": 2,
+      "budget": 6,
+      "groups": {
+        "W": [
+          7,
+          2
+        ],
+        "Z": [
+          3,
+          3
+        ]
+      },
+      "expected_drop": "W only"
+    }
+  },
+  "success_rule": "Base violates group integrity on fixed_boundary/token_boundary. Candidate passes all 8 cases, including exact fixed size, exact-fit T retention, whole-group drops with complete drop-row accounting, and correct per-case token caps.",
+  "rejection_rule": "Partial or split groups; unaccounted/duplicate rows; underfilled fixed batch; empty token rank; violated per-row budget; exact-fit T rejected; or token_boundary groups rejected.",
+  "method": {
+    "execution": "AST-extract only _balance_by_squared_length and the pinned FixedCountBatcher/TokenBudgetBatcher definitions.",
+    "command": "python /absolute/path/to/reproducers/trl_async_rollout_group_batching_contract_v6.py"
+  },
+  "resources": {
+    "cpu_only": true,
+    "gpu_paid_api_or_external_spend": false,
+    "model_inference": false
+  },
+  "claim_limits": [
+    "This is a finite source-level contract audit only.",
+    "No full Trainer, optimizer, distributed, throughput, task-success, or model-capability evidence."
+  ],
+  "reproducer": {
+    "path": "reproducers/trl_async_rollout_group_batching_contract_v6.py",
+    "sha256": "75c8b8ef3718eab85cabba8bfb506787a68c271a96fc01ccedf1ef14a86c959e"
+  }
+}

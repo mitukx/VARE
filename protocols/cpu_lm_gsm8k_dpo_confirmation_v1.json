@@ -1,0 +1,61 @@
+{
+  "protocol_id": "vare-cpu-lm-gsm8k-dpo-confirmation-v1",
+  "phase": "frozen_confirmation",
+  "purpose": "Measure whether a small offline DPO-style preference update improves a cached language model's choice between verifier-correct and nearby incorrect answers to GSM8K word problems.",
+  "claim_boundary": "A positive result supports only conditional A/B preference improvement on this one public math benchmark with a custom rank-4 output-head residual. It does not show free-form answer-generation gains, general reasoning, human preference alignment, reward-model quality, deployment utility, or frontier-scale capability.",
+  "compute_limits": {
+    "network": "disabled; HF_HUB_OFFLINE=1, HF_DATASETS_OFFLINE=1, TRANSFORMERS_OFFLINE=1, local_files_only=true",
+    "device": "CPU only; CUDA and MPS model placement are forbidden",
+    "paid_compute": false,
+    "max_wall_seconds": 3600,
+    "max_peak_rss_bytes": 6442450944,
+    "threads": 4,
+    "inference_batch_size": 16
+  },
+  "model": {
+    "id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "weights_must_already_be_cached": true,
+    "dtype": "float32"
+  },
+  "dataset": {
+    "id": "openai/gsm8k",
+    "config": "main",
+    "revision": "740312add88f781978c0658806c59bc2815b9866",
+    "cached_fingerprint": "c6f812ae33c9159d",
+    "cached_train_arrow_sha256": "6146bca074f4c6c5e07de7e96cc968adab3833dbdafeda21830f27558eea3d9b",
+    "cached_test_arrow_sha256": "45965b000311d1550e5619b60b5bf31cf76edebfd8b8eddc62a876fbf8c9be95",
+    "train_examples": 256,
+    "train_selection": "Sort the official train rows by SHA-256 of 'vare-gsm8k-sample-v1\\0' concatenated with question. Exclude the 288 rows reserved for development in cpu_lm_gsm8k_dpo_development_v1; use the next 256 rows (rank positions 288 through 543, zero-indexed).",
+    "confirmation_examples": 1319,
+    "confirmation_selection": "Use every row of the official test split. Do not select, remove, or reorder rows based on model outputs or answer content; deterministic question-hash ordering is used only for batching and result record order.",
+    "answer_parser": "Parse the terminal numeric value after ####; remove commas and parse as Decimal.",
+    "preference_construction": "For every question, pair the verifier answer with a deterministic distractor exactly one unit above or below. Candidate order is determined by the question hash. The preferred completion is the one-token label A or B of the verifier-correct option.",
+    "data_limitations": "The model may have encountered this public benchmark during pretraining. The preference labels are verifier-derived, not human annotations. This task evaluates answer selection in a forced-choice format, not free-form mathematical responses."
+  },
+  "runtime": {
+    "python": "3.9.6",
+    "torch": "2.8.0",
+    "transformers": "4.57.3",
+    "numpy": "1.26.4",
+    "datasets": "4.4.2"
+  },
+  "learner": {
+    "objective": "DPO logistic objective for one-token A/B completions, with the frozen initial model as reference. For a same-prompt pair, the A-vs-B completion log-probability difference equals the A-vs-B logit margin.",
+    "beta": 0.1,
+    "adapter_rank": 4,
+    "adapter": "Custom rank-4 residual on the frozen final prompt hidden state, restricted to the two verified one-token response columns. Backbone and base output head are frozen. This is not a PEFT/TRL implementation.",
+    "initialization": "A sampled from N(0, 1/sqrt(hidden_size)) with a CPU torch.Generator seeded by the listed seed; B initialized to zero.",
+    "optimizer": {"name": "full-batch SGD", "learning_rate": 0.01, "weight_decay": 0.0},
+    "updates": 20,
+    "seeds": [401, 503, 607],
+    "selection_provenance": "The 20-update budget was selected on a separate train-only validation set by the committed development protocol. This confirmation protocol uses fresh rows and fresh initialization seeds; no confirmation-set metric may change the learner configuration."
+  },
+  "metrics": {
+    "primary": "Mean paired held-out binary preference NLL change (updated minus frozen base), computed over all official test questions and averaged equally across seeds; lower is better.",
+    "secondary": ["held-out preference accuracy", "per-seed held-out Bernoulli KL from updated choice distribution to frozen base", "training preference NLL before and after update", "wall time and peak RSS"],
+    "paired_bootstrap": {"resamples": 10000, "seed": 20261009, "percentiles": [2.5, 97.5], "resampling_unit": "Within each seed, resample held-out questions with replacement; average the three seed means equally."},
+    "decision_rule": "Report a positive narrow small-model preference result only if all three seeds improve held-out NLL, the upper endpoint of the paired seed-stratified 95% bootstrap interval is below zero, each seed's mean held-out KL is <=0.5 nats, and provenance/resource checks pass. Otherwise report non-pass, null, or failure without changing this protocol."
+  },
+  "artifact_policy": "Record protocol and lock snapshots, runner/helper source snapshots, all source questions and answers used, derived preference prompts and labels, per-example base and updated margins, adapter parameters, loaded model and dataset file hashes, runtime, resource limits, and a SHA-256 manifest. Do not commit model weights, use network access, or modify the protocol after any confirmation row is loaded."
+}

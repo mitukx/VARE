@@ -1,0 +1,108 @@
+{
+  "artifact_policy": "Retain full train and validation rows, all raw base rollouts, rejection provenance, every checkpoint adapter, generated validation outputs for every eligible checkpoint and seed, decision metrics, runtime and hashes. No confirmation cohort is opened.",
+  "claim_boundary": "Train-only development result on public GSM8K rows. Development checkpoint selection is not independent confirmation. Preferences are verifier-derived and do not establish human preference alignment or broad capability.",
+  "compute_limits": {
+    "device": "CPU only; CUDA and MPS placement are forbidden",
+    "feature_batch_size": 2,
+    "generation_batch_size": 1,
+    "generation_max_new_tokens": 64,
+    "max_peak_rss_bytes": 6442450944,
+    "max_wall_seconds": 3000,
+    "network": "disabled; HF_HUB_OFFLINE=1, HF_DATASETS_OFFLINE=1, TRANSFORMERS_OFFLINE=1, local_files_only=true",
+    "paid_compute": false,
+    "pair_microbatch_size": 1,
+    "threads": 4
+  },
+  "dataset": {
+    "answer_parser": "Parse the terminal number after ####, remove commas, and parse with Decimal.",
+    "cached_fingerprint": "c6f812ae33c9159d",
+    "cached_train_arrow_sha256": "6146bca074f4c6c5e07de7e96cc968adab3833dbdafeda21830f27558eea3d9b",
+    "config": "main",
+    "confirmation_reservation": "No confirmation data are opened. If a candidate passes, use a new independent protocol and fresh hash ranks beginning at 3168.",
+    "development_training_examples": 64,
+    "development_training_rank_range": [
+      3040,
+      3104
+    ],
+    "development_validation_examples": 64,
+    "development_validation_rank_range": [
+      3104,
+      3168
+    ],
+    "id": "openai/gsm8k",
+    "leakage_boundary": "This phase reads only GSM8K train rows. The model may have seen the public dataset during pretraining; this cannot be ruled out.",
+    "preference_construction": "base_rollout_numeric",
+    "preference_pair": "Chosen completion is the GSM8K verifier final answer as a numeric assistant response. Rejected completion is the frozen base model greedy response if its final number is incorrect or unparseable. If already correct, change only its terminal number by exactly one using deterministic question-hash direction. Retain original generated text and provenance. These verifier-constructed comparisons are not human preferences.",
+    "prompt": "Use the model pinned chat template. Ask it to solve the word problem and reply with only the final number, without explanation.",
+    "revision": "740312add88f781978c0658806c59bc2815b9866",
+    "selection": "Use fresh hash-ranked GSM8K train rows 3040–3103 for updates and 3104–3167 for validation. Do not reuse earlier study or setup ranges.",
+    "split": "train only"
+  },
+  "generation": {
+    "algorithm": "greedy",
+    "do_sample": false,
+    "eos_token_ids": [
+      151645,
+      151643
+    ],
+    "repetition_penalty": 1.1,
+    "source": "Pinned Qwen generation_config.json; apply the same seen-token repetition penalty to prompt and generated tokens."
+  },
+  "learner": {
+    "adapter": "Custom low-rank residual on the frozen output-head hidden states, over the full vocabulary. The transformer backbone and original output-head weights are frozen. This is not PEFT/TRL.",
+    "adapter_rank": 8,
+    "beta": 0.1,
+    "checkpoints_epochs": [
+      0,
+      1,
+      2,
+      4
+    ],
+    "initialization": "A sampled from N(0, 1/sqrt(hidden_size)) by a CPU torch.Generator seeded per run; B initialized to zero.",
+    "maximum_epochs": 4,
+    "microbatch_pairs": 4,
+    "objective": "Standard sequence-summed DPO logistic loss over numeric answer chosen and base-rollout rejected completion sequences, relative to the frozen initial model.",
+    "optimizer": {
+      "gradient_norm_clip": 1.0,
+      "learning_rate": 0.0002,
+      "name": "AdamW",
+      "weight_decay": 0.0
+    },
+    "seeds": [
+      3671,
+      3761,
+      3889
+    ]
+  },
+  "metrics": {
+    "checkpoint_selection_method": "exact_match",
+    "claim_boundary": "Development-set selection only. Exact-match selection is tuned on this cohort and requires fresh independent confirmation; public GSM8K verifier labels are not human preference data.",
+    "generation_metric": "Greedy decoding under the same numeric-only user prompt, pinned model generation settings, and completion budget; parse the final number and compare Decimal-normalized values exactly.",
+    "minimum_base_exact_matches": 2,
+    "minimum_exact_match_gain": 0.03125,
+    "selection_primary": "Mean validation DPO preference NLL over completion sequences; lower is better.",
+    "selection_rule": "First retain nonzero checkpoints with mean verifier-preference NLL below the base and mean token KL <=0.5. Greedy-generate every eligible checkpoint for each seed on the fixed validation cohort. Select the highest mean exact-match checkpoint; break ties by lower preference NLL, then fewer epochs. Advance only if base exact match is at least 2/64, mean updated exact match exceeds base by at least 1/32, and at least two of three seeds are no worse. Otherwise record non-pass.",
+    "selection_secondary": [
+      "held-out sequence preference accuracy",
+      "mean full-vocabulary token KL updated-to-base on paired completion contexts",
+      "greedy generated final-answer exact match"
+    ]
+  },
+  "model": {
+    "dtype": "float32",
+    "id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "weights_must_already_be_cached": true
+  },
+  "phase": "training_only_development",
+  "protocol_id": "vare-cpu-lm-gsm8k-sequence-dpo-development-v10",
+  "purpose": "Compare every NLL/KL-eligible numeric DPO checkpoint by verifier-checked free-form exact match on a fresh development cohort, then require a minimum task-success gain.",
+  "runtime": {
+    "datasets": "4.4.2",
+    "numpy": "1.26.4",
+    "python": "3.9.6",
+    "torch": "2.8.0",
+    "transformers": "4.57.3"
+  },
+  "sha256": "23d5ceb32ce196e59078e87a058952db95c90c9534e4d88d9ef3332951f73683"
+}

@@ -1,0 +1,91 @@
+{
+  "audit_implementation_sha256": "26cf12a58dcdbea0081da340a817d4cfca299ae88ada6d5ef756115096890d5c",
+  "audit_limit": "Local replay shares the pinned model weights, tokenizer, runtime, and host; it is not external reproduction or a different model implementation.",
+  "cohort_metrics": [
+    {
+      "alpha": 0.12195505201816559,
+      "calibrated_metrics": {
+        "brier_score": 0.2437520942667546,
+        "expected_calibration_error": 0.48898983726753864,
+        "logistic_nll": 0.6803696072640442,
+        "pairwise_accuracy": 0.537109375
+      },
+      "head": 0,
+      "length_baseline_metrics": {
+        "brier_score": 0.25,
+        "expected_calibration_error": 0.5,
+        "logistic_nll": 0.6931471805599468,
+        "pairwise_accuracy": 0.5
+      },
+      "mean_calibrated_minus_raw_nll": -0.28241859163180927,
+      "raw_metrics": {
+        "brier_score": 0.3110705574298987,
+        "expected_calibration_error": 0.45787340901158086,
+        "logistic_nll": 0.9627881988958538,
+        "pairwise_accuracy": 0.537109375
+      }
+    },
+    {
+      "alpha": 0.411003977060318,
+      "calibrated_metrics": {
+        "brier_score": 0.2438069129006284,
+        "expected_calibration_error": 0.4698625751404002,
+        "logistic_nll": 0.6827606040349375,
+        "pairwise_accuracy": 0.5703125
+      },
+      "head": 1,
+      "length_baseline_metrics": {
+        "brier_score": 0.25,
+        "expected_calibration_error": 0.5,
+        "logistic_nll": 0.6931471805599468,
+        "pairwise_accuracy": 0.5
+      },
+      "mean_calibrated_minus_raw_nll": -0.1252309636067168,
+      "raw_metrics": {
+        "brier_score": 0.2758571042630966,
+        "expected_calibration_error": 0.4451324679018903,
+        "logistic_nll": 0.8079915676416535,
+        "pairwise_accuracy": 0.5703125
+      }
+    },
+    {
+      "alpha": 0.1498887538909912,
+      "calibrated_metrics": {
+        "brier_score": 0.24152233165811257,
+        "expected_calibration_error": 0.4868532085351786,
+        "logistic_nll": 0.6759467878525409,
+        "pairwise_accuracy": 0.55859375
+      },
+      "head": 2,
+      "length_baseline_metrics": {
+        "brier_score": 0.25,
+        "expected_calibration_error": 0.5,
+        "logistic_nll": 0.6931471805599468,
+        "pairwise_accuracy": 0.5
+      },
+      "mean_calibrated_minus_raw_nll": -0.16854564452922702,
+      "raw_metrics": {
+        "brier_score": 0.28694792879141334,
+        "expected_calibration_error": 0.4459485755199455,
+        "logistic_nll": 0.8444924323817685,
+        "pairwise_accuracy": 0.55859375
+      }
+    }
+  ],
+  "decision": {
+    "confirmation_allowed": true,
+    "mean_calibrated_minus_raw_nll": -0.19206506658925082,
+    "paired_prompt_bootstrap_95pct": [
+      -0.2365421357488436,
+      -0.14916095002848484
+    ],
+    "pass": true,
+    "prompt_count": 512
+  },
+  "manifest_sha256": "bf137fec07c3e9505226ce86f8b57e648b82dfcec032325fdc81be348cbf6bfc",
+  "model_score_replay": "passed; separately implemented transcript parsing, eligibility, context selection, frozen-feature extraction, reward-head fitting, temperature fitting and per-prompt NLL reproduced on the same local model/runtime",
+  "protocol_sha256": "2a891c33b7c8c016d27e77fd95eeb4c4557d2cc2b3f1ebe193416ad95e86b4a4",
+  "run_auditor_snapshot_sha256": "26cf12a58dcdbea0081da340a817d4cfca299ae88ada6d5ef756115096890d5c",
+  "stage": "development",
+  "status": "pass"
+}

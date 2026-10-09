@@ -1,0 +1,66 @@
+{
+  "protocol_id": "vare-cpu-lm-gsm8k-dpo-margin-clean-clone-reproduction-v1",
+  "phase": "clean-clone-reproduction",
+  "status": "locked-before-execution",
+  "source": {
+    "vare_commit": "c92a050f5064c0d2db86994f95a7c6132aa78621",
+    "reproducer": "scripts/audit_gsm8k_dpo_margin_reconstruction_v4.py",
+    "reproducer_sha256": "42040b6181d081e6b5733007d14d233c3432f02d761774a8d65bfb027da06e70",
+    "forensic_protocol": "protocols/cpu_lm_gsm8k_dpo_margin_reconstruction_v4.lock.json",
+    "forensic_protocol_sha256": "3848e1fedf2b9ecd83b50d1f7079f7c0fd39e1d136422dad2c022ce88af5be3a",
+    "confirmation_bundle_manifest_sha256": "55cc061cc5f4d4b667d3f21ddd013c8ea6ae80b2d0bb5e7efe2c65c2c195014c",
+    "reference_run_summary_sha256": "ffd79e0bf74438dfb8cdb2212a84ebf690473fd642851660b3243edf422ac062"
+  },
+  "question": "Does the committed VARE source reproduce the frozen v4 adapter-to-margin audit from a fresh clean clone, using the same already-cached model and retained consumed-cohort bundle?",
+  "method": {
+    "checkout": "Create a local clean clone at the exact source commit; verify clean status before and after execution.",
+    "command": "python scripts/audit_gsm8k_dpo_margin_reconstruction_v4.py --output /tmp/vare-gsm8k-margin-clean-clone-v1-run",
+    "inputs": "Use only the committed confirmation bundle and the exact cached model revision/files whose hashes are frozen in the reference summary.",
+    "training_or_tuning": false,
+    "network": "Set HF_HUB_OFFLINE=1, HF_DATASETS_OFFLINE=1, TRANSFORMERS_OFFLINE=1; script uses local_files_only=true.",
+    "runtime_prerequisites": {
+      "python": "3.12.12",
+      "packages": {
+        "numpy": "2.4.4",
+        "torch": "2.9.1",
+        "transformers": "4.57.3"
+      },
+      "model_cache": "$HF_HOME/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775 (default Hugging Face cache path is also supported)",
+      "preflight": "Verify package versions, all frozen model file hashes, source/bundle/protocol hashes, and a nonexistent explicit output directory before loading the model."
+    }
+  },
+  "frozen_runtime": {
+    "numpy": "2.4.4",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "frozen_model_file_sha256": {
+    "config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+    "model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+    "tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583"
+  },
+  "success_criteria": {
+    "reproducer_exit_code": 0,
+    "reproducer_status": "pass",
+    "resource_limits_respected": true,
+    "all_margins_match": true,
+    "max_abs_margin_error": 5e-05,
+    "max_abs_metric_error": 5e-05,
+    "checkout_clean_after_run": true,
+    "no_model_download": true
+  },
+  "resources": {
+    "device": "CPU only",
+    "paid_compute": false,
+    "max_wall_seconds": 3600,
+    "max_peak_rss_bytes": 6442450944
+  },
+  "claim_limits": [
+    "Same-author clean-clone rerun is checkout/reproduction evidence, not outside human reproduction.",
+    "Uses already consumed prompts and adapters; it is not new confirmation, task success, or capability evidence.",
+    "Same machine, cached model, and runtime do not establish portability across machines or runtimes."
+  ],
+  "sha256": "058be00b45d4b8296d85c33eda4897a4768f40a54bbce1fff0334e900edb68a7"
+}

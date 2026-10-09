@@ -1,0 +1,187 @@
+{
+  "protocol": "trl-async-rollout-group-batching-feasibility-v1",
+  "status": "locked-before-execution",
+  "date": "2026-10-09",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+    "issue": "https://github.com/huggingface/trl/issues/7206"
+  },
+  "question": "Can complete forked rollouts be kept within one trainer microbatch under the current fixed-count and token-budget constraints, while every emitted rank row is nonempty and all declared capacities are respected?",
+  "scope": "Exact finite feasibility oracle only. No optimizer, model, throughput, or production prevalence claim.",
+  "hypotheses": {
+    "H1": "Every fixture declared feasible can be partitioned into contiguous microbatches without splitting any rollout, dropping a member, emptying a rank, or exceeding fixed-count/token budgets.",
+    "H0": "At least one feasible fixture cannot satisfy these constraints, or the oracle violates any accounting invariant."
+  },
+  "frozen_method": {
+    "fixed_count": "Preserve input group order; partition contiguous whole groups into microbatches with total sample count between num_processes and microbatch_size inclusive. A group larger than microbatch_size is classified as whole-group infeasible.",
+    "token_budget": "Preserve input group order; partition contiguous whole groups into microbatches. For each segment, exact depth-first bin packing assigns every sample to one of num_processes rows with per-row token sum <= token_budget and every row nonempty. Groups that cannot fit an empty microbatch are classified as whole-group infeasible.",
+    "selection": "Backtrack over all contiguous segment boundaries; do not use a heuristic or tune the listed fixtures.",
+    "accounting": "Each feasible input row appears exactly once. Each infeasible rollout is rejected in full. No partial group is permitted."
+  },
+  "fixtures": {
+    "fixed_count": {
+      "FC1": {
+        "num_processes": 2,
+        "microbatch_size": 4,
+        "groups": [
+          [
+            2
+          ],
+          [
+            1
+          ],
+          [
+            1
+          ]
+        ],
+        "expected": "one microbatch; all groups retained"
+      },
+      "FC2": {
+        "num_processes": 2,
+        "microbatch_size": 4,
+        "groups": [
+          [
+            3
+          ],
+          [
+            2
+          ]
+        ],
+        "expected": "two microbatches; no group split"
+      },
+      "FC3": {
+        "num_processes": 2,
+        "microbatch_size": 4,
+        "groups": [
+          [
+            5
+          ]
+        ],
+        "expected": "reject the complete oversized group"
+      },
+      "FC4": {
+        "num_processes": 2,
+        "microbatch_size": 4,
+        "groups": [
+          [
+            1
+          ],
+          [
+            1
+          ]
+        ],
+        "expected": "co-pack both groups to avoid empty rank rows"
+      }
+    },
+    "token_budget": {
+      "TB1": {
+        "num_processes": 2,
+        "token_budget": 10,
+        "groups": [
+          [
+            6,
+            4
+          ],
+          [
+            6
+          ]
+        ],
+        "expected": "one microbatch; all groups retained"
+      },
+      "TB2": {
+        "num_processes": 2,
+        "token_budget": 10,
+        "groups": [
+          [
+            6,
+            6
+          ],
+          [
+            4,
+            4
+          ]
+        ],
+        "expected": "one microbatch; all groups retained"
+      },
+      "TB3": {
+        "num_processes": 2,
+        "token_budget": 10,
+        "groups": [
+          [
+            4
+          ],
+          [
+            5
+          ]
+        ],
+        "expected": "co-pack both groups to avoid empty rank rows"
+      },
+      "TB4": {
+        "num_processes": 2,
+        "token_budget": 10,
+        "groups": [
+          [
+            6,
+            6,
+            6
+          ]
+        ],
+        "expected": "reject the complete infeasible group"
+      },
+      "TB5": {
+        "num_processes": 2,
+        "token_budget": 10,
+        "groups": [
+          [
+            6,
+            6
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "expected": "two microbatches; no group split"
+      },
+      "TB6": {
+        "num_processes": 2,
+        "token_budget": 10,
+        "groups": [
+          [
+            6,
+            5
+          ],
+          [
+            4,
+            4
+          ]
+        ],
+        "expected": "one microbatch; all groups retained"
+      }
+    }
+  },
+  "primary_metrics": [
+    "all retained rows appear exactly once",
+    "no rollout appears in more than one microbatch",
+    "each emitted microbatch has at least one sample per process",
+    "fixed-count and per-row token caps are respected",
+    "infeasible groups are rejected whole, never partially"
+  ],
+  "success_rule": "All ten frozen cases match their expected disposition and satisfy every accounting invariant.",
+  "rejection_rule": "Any feasible case loses or duplicates a row, splits a rollout, creates an empty rank, or exceeds capacity; any infeasible case is partially retained.",
+  "resources": {
+    "compute": "CPU exact enumeration",
+    "paid_api_gpu_or_external_spend": false,
+    "random_seeds": "not applicable; deterministic exhaustive search"
+  },
+  "claim_limits": [
+    "This does not prove the production TRL dataloader can implement the reference schedule safely.",
+    "This does not establish a policy update, task-success gain, performance improvement, or behavior prevalence.",
+    "A feasibility pass only justifies an isolated production-path prototype and regression tests."
+  ],
+  "reproducer": {
+    "path": "reproducers/trl_async_group_batching_feasibility_v1.py",
+    "sha256": "e0fbf233ba6f7ea09d3ea020fa358dec6b880979124bbccc6022864285254dc7"
+  }
+}

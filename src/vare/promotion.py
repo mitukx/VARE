@@ -26,7 +26,22 @@ class PromotionGate:
             raise ValueError("paired_alpha must be in (0,1)")
         if config.paired_bootstrap_samples <= 0:
             raise ValueError("paired_bootstrap_samples must be positive")
+        required_slices = config.required_slice_names
+        if (
+            not isinstance(required_slices, tuple)
+            or any(not isinstance(name, str) or not name for name in required_slices)
+            or len(set(required_slices)) != len(required_slices)
+        ):
+            raise ValueError("required_slice_names must be a tuple of unique non-empty names")
         if config.require_reward_audit:
+            families = config.reward_audit_required_families
+            if (
+                not isinstance(families, (tuple, list))
+                or not families
+                or any(not isinstance(name, str) or not name for name in families)
+                or len(set(families)) != len(families)
+            ):
+                raise ValueError("reward_audit_required_families must contain unique non-empty family names")
             if not 0 < config.reward_audit_alpha < 1:
                 raise ValueError("reward_audit_alpha must be in (0,1)")
             if not 0 <= config.reward_audit_max_false_accept_ucb <= 1:
@@ -134,6 +149,10 @@ class PromotionGate:
             ]
             if set(row.task_id for row in rows) != set(paired) or len(rows) != len(paired):
                 return ["reward_audit_identity_mismatch"]
+            observed_families = {row.family for row in rows}
+            required_families = set(self.config.reward_audit_required_families)
+            if observed_families != required_families:
+                return ["reward_audit_family_coverage_mismatch"]
             result = audit_reward_labels(
                 rows,
                 max_false_accept_ucb=self.config.reward_audit_max_false_accept_ucb,
@@ -156,8 +175,6 @@ class PromotionGate:
                 paired_n=0,
             )
         reasons: list[str] = []
-        if self.config.require_complete_slices and set(incumbent.slices) != set(candidate.slices):
-            reasons.append("evaluation_slice_identity_mismatch")
         if (self.config.require_measured_disagreement
                 and candidate.metadata.get("verifier_disagreement_measured") is not True):
             reasons.append("unmeasured_verifier_disagreement")
@@ -168,6 +185,14 @@ class PromotionGate:
             reasons.append("insufficient_eval_examples")
         if gain < self.config.min_primary_gain:
             reasons.append("insufficient_primary_gain")
+        incumbent_slices = set(incumbent.slices)
+        candidate_slices = set(candidate.slices)
+        required_slices = set(self.config.required_slice_names)
+        if (
+            incumbent_slices != candidate_slices
+            or (required_slices and (incumbent_slices != required_slices or candidate_slices != required_slices))
+        ):
+            reasons.append("slice_coverage_mismatch")
         regressions = []
         for name, old in incumbent.slices.items():
             if name in candidate.slices:

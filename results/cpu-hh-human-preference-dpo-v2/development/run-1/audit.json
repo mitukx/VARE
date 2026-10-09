@@ -1,0 +1,38 @@
+{
+  "adapter_score_replay": "pass",
+  "decision": {
+    "base_floor_pass": true,
+    "dpo_gain_pass": false,
+    "dpo_sft_noninferiority_pass": true,
+    "kl_pass": true,
+    "nll_guard_pass": true,
+    "pass": false,
+    "seed_consistency_pass": false
+  },
+  "decision_replay": "pass",
+  "manifest_sha256": "83baad34a20741271b5cbb4ce923a667250878c8d0209cdaf72d07020d1d9f95",
+  "protocol_sha256": "6dc90abd997b5bf0247b4a3cd13f93d792e40a2dd36fd2491654e485bf59e777",
+  "recomputed": {
+    "base_pair_accuracy": 0.4140625,
+    "chosen_sft_pair_accuracy": 0.3958333333333333,
+    "dpo_minus_base_accuracy": -0.0013020833333333148,
+    "dpo_minus_base_accuracy_prompt_bootstrap_95": [
+      -0.011718750000000002,
+      0.010416666666666666
+    ],
+    "dpo_minus_sft_accuracy": 0.01692708333333337,
+    "dpo_minus_sft_accuracy_prompt_bootstrap_95": [
+      0.0026041666666666665,
+      0.03515625
+    ],
+    "dpo_pair_accuracy": 0.4127604166666667,
+    "dpo_seed_gains_vs_base": [
+      0.00390625,
+      -0.00390625,
+      -0.00390625
+    ]
+  },
+  "scope": "Same-host offline replay of the selected prompt inventory and retained adapters; not external reproduction or a retraining audit.",
+  "selection_replay": "pass",
+  "status": "pass"
+}

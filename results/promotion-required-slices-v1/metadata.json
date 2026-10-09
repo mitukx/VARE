@@ -1,0 +1,35 @@
+{
+  "study": "promotion-required-slice-coverage-source-diagnostic-v1",
+  "classification": "post-hoc deterministic software counterexample; not preregistered research",
+  "baseline_revision": "60d726cf5f4326b1f370a6423d4b785b5c04e21a",
+  "candidate_patch_sha256": "5255d6216c01160f16be9158fbc1a732e83ac370808f93c6725cd956acd7cf37",
+  "reproducer_sha256": "3112e1fa062ecf082e9e3bc2227d5a8b0bc1e115f3695be6c68136ff9e0a5be1",
+  "baseline_result_sha256": "28bbffd3ef460400df28f9e663226b97aae2bdaf9c614bdf8875454699d7250e",
+  "candidate_result_sha256": "52319b1c6f836aaae22bfe27bb723b410349e2e358f976d9d179ecadfd8eb30e",
+  "full_suite_log_sha256": "780cf23bd898b7aadd093025fc3a366e6d97c202f91812e21411ef4defc7b26b",
+  "cases": {
+    "omitted_by_both": {
+      "baseline": "accepted",
+      "candidate": "rejected with slice_coverage_mismatch"
+    },
+    "declared_complete_control": {
+      "baseline": "accepted",
+      "candidate": "accepted"
+    }
+  },
+  "tests": {
+    "promotion_targeted": "9 passed",
+    "full_suite": "exit 0; 223 passed, 12 skipped; PATH included VARE .venv so nested task commands resolved pytest",
+    "initial_unadjusted_path": "4 smoke-task tests failed because subprocess command python -m pytest resolved to system Python without pytest; same failures reproduced at clean baseline commit"
+  },
+  "compute": {
+    "device": "CPU",
+    "paid_api_gpu_or_external_spend": false
+  },
+  "claim_limits": [
+    "no model update or task capability was evaluated",
+    "no production incidence estimate",
+    "the config field is opt-in; callers must freeze required_slice_names in the evaluation protocol",
+    "no outside review or external publication"
+  ]
+}

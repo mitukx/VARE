@@ -1,0 +1,50 @@
+{
+  "cases": {
+    "patched_f16_c10_bias": {
+      "execution": "completed",
+      "gradient": -1.0,
+      "loss": 2201.546630859375
+    },
+    "patched_f16_c10_no_bias": {
+      "execution": "completed",
+      "gradient": -2202.0,
+      "loss": 2201.546630859375
+    },
+    "patched_f16_tiny": {
+      "execution": "raised",
+      "gradient": null,
+      "loss": null
+    },
+    "patched_f32_c10_bias": {
+      "execution": "completed",
+      "gradient": -0.999755859375,
+      "loss": 2201.546630859375
+    },
+    "patched_f32_no_clip": {
+      "execution": "completed",
+      "gradient": -4.0,
+      "loss": 48516516.0
+    },
+    "pr_f16_c10_no_bias": {
+      "execution": "completed",
+      "gradient": -2202.0,
+      "loss": 2202.0
+    },
+    "pr_f32_c10_bias": {
+      "execution": "completed",
+      "gradient": -0.999755859375,
+      "loss": 2201.546630859375
+    },
+    "pr_f32_no_clip": {
+      "execution": "completed",
+      "gradient": -4.0,
+      "loss": 48516516.0
+    }
+  },
+  "claim_boundary": "A one-token production-loss fixture; no model, optimizer, sequence-level IS, Liger, GPU, or downstream evaluation.",
+  "errors": [],
+  "patch_sha256": "0f6c60de679c3c8b467b2bc8b77b01e06f890486cd567322940e5ce8a2137468",
+  "protocol_id": "trl_grpo_kl_clip_precision_patch_v1",
+  "source_imports": "none; reads only the eight raw JSON outputs and patch bytes",
+  "status": "pass"
+}

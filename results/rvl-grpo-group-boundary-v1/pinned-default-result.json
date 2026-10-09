@@ -1,0 +1,48 @@
+{
+  "fixtures": {
+    "frozen_v1_constant_group_witness": {
+      "prompt_ids": [
+        "same-task",
+        "same-task",
+        "same-task",
+        "same-task"
+      ],
+      "prompt_merged_advantages": [
+        -0.9999980000060001,
+        -0.9999980000060001,
+        0.9999980000060001,
+        0.9999980000060001
+      ],
+      "rewards": [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ]
+    },
+    "supplemental_nonconstant_group_witness": {
+      "prompt_ids": [
+        "same-task",
+        "same-task",
+        "same-task",
+        "same-task"
+      ],
+      "prompt_merged_advantages": [
+        -1.6774792802393887,
+        0.7624905819269948,
+        0.15249811638539898,
+        0.7624905819269948
+      ],
+      "rewards": [
+        0.0,
+        1.0,
+        0.75,
+        1.0
+      ]
+    }
+  },
+  "method": "Executed pinned RVL compute_group_advantages; no training or model inference.",
+  "rvl_revision": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "source_sha256": "a2ef6217385a206f5e6c0f43fb40e900ae3bf1b2066a1c8d1ab1878fd25d724d",
+  "source_url": "https://raw.githubusercontent.com/mitukx/Recursive-Verification-Lag/c7e646b043cb56e5ea3c2623bb8a61e065451f72/src/rvl_systems/grpo.py"
+}

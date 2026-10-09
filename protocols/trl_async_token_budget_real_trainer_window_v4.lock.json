@@ -1,0 +1,55 @@
+{
+  "protocol_id": "trl_async_token_budget_real_trainer_window_v4",
+  "status": "frozen_before_confirmation",
+  "supersedes": "v3 (Trainer selected MPS because the script omitted use_cpu=True; retained as a resource-protocol non-pass)",
+  "question": "Does a TokenBudgetBatcher-held fork sibling cross a post-step policy-version transition inside an actual CPU Transformers Trainer optimizer loop, and does gradient accumulation change its optimizer-step version?",
+  "source": {
+    "trl_repository": "https://github.com/huggingface/trl",
+    "trl_revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+    "trl_base_trainer_sha256": "2657481258dcc04112761e9ff61a35cb93b2b72c3e197e4524f4602fd6a2dbfe",
+    "trl_candidate_patch_sha256": "df6bfd03224bc961658d7366eea590cd2be4ad5c1940d4153b893e1373f6c163",
+    "trl_candidate_trainer_sha256": "f16c87b7fce02a3c3ffa6d54fe7d6ef00e1b3ea6cec3e7a47cf7a923f722a5fa",
+    "transformers_version": "4.57.3",
+    "transformers_trainer_file_sha256": "c3eac8fa28bda6330fd4dee131e7fe7d9bdc0fa35d9de944fce52cb97b379bab",
+    "accelerate_version": "1.12.0",
+    "accelerate_data_loader_file_sha256": "8debfb20c6ae58eff3a466cfd67244a12cc8b8d3de00316a6c1d54b0310ee6ca"
+  },
+  "estimand": {
+    "primary": "At GA=1 and GA=2, record actual Trainer training-step inputs, rollout versions at production-collator invocation, stale-row count, optimizer-step count, selected device, and scalar parameter after SGD updates.",
+    "independent_unit": "One deterministic pair of version-0 fork rows with model-version-1 sentinels.",
+    "resource_budget": "CPU-only toy scalar model and SGD; no pretrained weights, GPU/MPS, paid API, or external spend.",
+    "claim_boundary": "Runs Transformers Trainer.train with the pinned TRL queue, token-budget planner, and collator. Uses a deterministic scalar model/loss and local post-step version callback. Measures optimizer input/update on this synthetic task only; it is not a real policy or capability result."
+  },
+  "method": {
+    "script": "scripts/reproduce_trl_async_token_budget_real_trainer_window_v4.py",
+    "script_sha256": "7321d31b396235e34f768c1986c4dbbd6d831bc2b5abd5c88de1c7cb7f4963b5",
+    "token_budget": 2,
+    "sample_tokens": 2,
+    "num_processes": 1,
+    "max_staleness": 0,
+    "gradient_accumulation_steps": [1, 2],
+    "optimizer": "SGD(lr=0.001)",
+    "model_steps": {"GA=1": 2, "GA=2": 1},
+    "device_enforcement": "TrainingArguments(use_cpu=True, dataloader_pin_memory=False); script records args.device and requires cpu.",
+    "transition": "Local callback increments policy version on each actual Trainer on_step_end event, after optimizer.step; the pinned AsyncGRPO source registers its periodic weight sync at this boundary.",
+    "sample_versions": "RolloutQueueDataset omits model_version from trainer dictionaries; map immutable fixture input IDs to preregistered sample versions."
+  },
+  "acceptance": {
+    "device_is_cpu_for_both_accumulation_settings": true,
+    "real_transformers_trainer_train_loop_runs": true,
+    "production_trl_queue_batcher_and_collator_used": true,
+    "ga1_has_two_optimizer_steps_and_ga2_has_one": true,
+    "trace_includes_training_batch_and_collation_version": true,
+    "trace_includes_finite_parameter_updates": true,
+    "all_source_and_script_hashes_match_lock": true,
+    "no_external_spend": true
+  },
+  "failure_criteria": [
+    "Pinned source or script hash differs.",
+    "Trainer does not report CPU device.",
+    "Trainer.train does not complete the frozen number of optimizer steps.",
+    "Actual training-step inputs cannot be matched to collator version snapshots.",
+    "Parameter updates are non-finite or absent."
+  ],
+  "decision_rule": "If GA=1 trains the old sibling at version 1 after a version-0 update while GA=2 consumes both at version 0 before one update, report a conditional check/use boundary counterexample. Scalar parameter deltas are toy-objective measurements only. Do not infer realistic GRPO gradients, training prevalence, or capability. Do not propose an upstream fix unless the intended staleness boundary is explicit and the correction preserves rollout and distributed invariants."
+}

@@ -1,0 +1,30 @@
+{
+  "protocol_id": "vare-engine-rollout-task-binding-v1",
+  "schema_version": 1,
+  "frozen_before_fix_validation": true,
+  "baseline_revision": "ff434df132b026aed60cab833c2ccb92b51474f1",
+  "question": "Can a LoopHooks.rollout result for a different task be verified and admitted to training as if it were the task the engine dispatched?",
+  "hypothesis": "CapabilityLoop currently trusts Attempt.task returned by rollout hooks. A hook returning another task with an otherwise valid current policy and verifier result can make the loop verify and send that other task to train_candidate.",
+  "scope": {
+    "source": "src/vare/engine.py::CapabilityLoop._one_rollout",
+    "invariant": "Before verification or replay admission, the returned Attempt.task must preserve the dispatched task's id, prompt, and family.",
+    "not_in_scope": [
+      "Policy ID/version lineage for stale distributed rollouts; exact version equality would conflict with configured lag semantics.",
+      "Model quality, verifier truthfulness, task generalization, or capability improvement.",
+      "Deep equality of arbitrary Task.metadata values."
+    ]
+  },
+  "falsification": {
+    "baseline_counterexample": "Dispatch task-a and have the hook return task-b with the same family, current policy identity, and valid verifier version. Record whether the verifier and trainer receive task-b.",
+    "fixed_acceptance": "Three mismatches (id, prompt, family) fail before verifier, replay, and training; an exact-task positive control remains admitted.",
+    "success_claim_boundary": "A pass establishes only a local engine trust-boundary correctness fix under deterministic hooks."
+  },
+  "resources": {
+    "cpu_only": true,
+    "model_inference": false,
+    "paid_services": false,
+    "external_compute": false
+  },
+  "baseline_engine_sha256": "9b237589b0b137899e3c4a356c6e645dfc2ccab95eee9ff206c8db3c5b2eb747",
+  "regression_test_sha256": "d26ae5547ec9847f3bb268b4ebe263d06d4324e68bfb5045d92d0c9d94e67e9e"
+}

@@ -1,0 +1,1029 @@
+{
+  "summary": {
+    "at_least_two_seeds_not_worse": true,
+    "base_train_preference": {
+      "mean_dpo_preference_nll": 0.6931471805599453,
+      "mean_full_vocab_token_kl_to_base": 0.0,
+      "policy_preference_margins": [
+        58.2635383605957,
+        -24.55152130126953,
+        27.84146499633789,
+        24.026424407958984,
+        -22.307640075683594,
+        41.036468505859375,
+        -2.3571853637695312,
+        -99.73728942871094
+      ],
+      "preference_accuracy": 0.5,
+      "reference_preference_margins": [
+        58.2635383605957,
+        -24.55152130126953,
+        27.84146499633789,
+        24.026424407958984,
+        -22.307640075683594,
+        41.036468505859375,
+        -2.3571853637695312,
+        -99.73728942871094
+      ],
+      "relative_preference_margins": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "base_training_generation": [
+      {
+        "dataset_index": 3447,
+        "exact_match": false,
+        "generated_text": "To solve this math word problem, we need to determine the total number of apples Chandler and Lucy will consume in a month and then calculate how many apples the farmer needs to deliver to meet that demand.\n\n### Step-by-Step Solution:\n\n1. **Calculate the weekly consumption:**\n   - Chandler eats 23 apples per week.\n   - Lucy eats 19 apples per week.\n   \n   Therefore, together they eat:\n   \\[\n   23 + 19 = 42 \\text{ apples per week}\n   \\]\n\n2. **Determine the monthly consumption:**\n   - The farmer delivers once per month.\n   - To find out how many times the farmer delivers in a month, we multiply the weekly consumption by 4 (since there are 4 weeks in a month):\n     \\[\n     42 \\times 4 = 168 \\text{ deliveries per month}\n     \\]\n\n3.",
+        "parsed_number": "3"
+      },
+      {
+        "dataset_index": 2070,
+        "exact_match": false,
+        "generated_text": "To solve this problem, we need to follow these steps:\n\n1. Calculate the number of expired packs.\n2. Determine the total cost of the expired packs.\n3. Subtract the refund amount from the total cost to find out how much Bob was refunded.\n\nLet's start with step 1: Calculate the number of expired packs.\n\nBob ordered 80 packs in total. Since 40% of the packs were expired, we calculate:\n\\[ \\text{Number of expired packs} = 80 \\times \\frac{40}{100} = 80 \\times 0.40 = 32 \\]\n\nNext, we move to step 2: Determine the total cost of the expired packs.\n\nEach pack costs $12, so the total cost for 32 expired packs is:\n\\[ \\text{Total cost} = 32 \\times 12 = 384 \\]\n\nFinally",
+        "parsed_number": null
+      },
+      {
+        "dataset_index": 3423,
+        "exact_match": false,
+        "generated_text": "To solve this problem, let's break it down step-by-step:\n\n1. **Number of Chickens in the Run:**\n   - We know there are 14 chickens in the coop.\n   - The number of chickens in the run is twice the number in the coop.\n   \\[\n   \\text{Number of chickens in the run} = 2 \\times 14 = 28\n   \\]\n\n2. **Number of Chickens Free Ranging:**\n   - There are 4 less than double the number of chickens in the run.\n   \\[\n   \\text{Number of chickens free ranging} = 2 \\times 28 - 4\n   \\]\n   - Calculate \\(2 \\times 28\\):\n     \\[\n     2 \\times 28 = 56\n     \\]\n   - Subtract 4 from 56:\n     \\[\n     56",
+        "parsed_number": "56"
+      },
+      {
+        "dataset_index": 4615,
+        "exact_match": false,
+        "generated_text": "To solve this math word problem, we can follow these steps:\n\n1. **Identify the given information:**\n   - There are 6 female members.\n   - The number of male members is twice the number of female members.\n\n2. **Calculate the number of male members:**\n   - Since there are twice as many males as females, we multiply the number of females by 2:\n     \\[\n     \\text{Number of males} = 2 \\times \\text{Number of females}\n     \\]\n     Substituting the given number of females:\n     \\[\n     \\text{Number of males} = 2 \\times 6 = 12\n     \\]\n\n3. **Calculate the total number of members in the Math club:**\n   - To find the total number of members, we add the number of male members to the number of female members:\n     \\[\n     \\text{Total number of members",
+        "parsed_number": null
+      },
+      {
+        "dataset_index": 3631,
+        "exact_match": false,
+        "generated_text": "To solve this problem, let's break it down step-by-step:\n\n1. **Determine the number of 3-piece sets Codger needs:**\n   - Codger already owns one 3-piece set.\n   - To find out how many more sets he needs, we subtract the number of sets he already owns from the total number of sets required:\n     \\[\n     5 \\text{ sets} - 1 \\text{ set} = 4 \\text{ sets}\n     \\]\n\n2. **Calculate the number of pairs needed for each set:**\n   - Each 3-piece set consists of 3 individual shoes.\n   - Therefore, for 4 sets, the total number of individual shoes needed is:\n     \\[\n     4 \\text{ sets} \\times 3 \\text{ shoes/set} = 12 \\text{ shoes}\n     \\]\n\n3. **Convert the number of individual shoes into pairs",
+        "parsed_number": null
+      },
+      {
+        "dataset_index": 522,
+        "exact_match": false,
+        "generated_text": "To solve this math word problem, let's break it down step-by-step:\n\n1. **Determine the total number of hoots heard:**\n   - We know that one barnyard owl makes 5 hoot sounds per minute.\n   - There are 20 hoots per minute in total.\n   - Therefore, the total number of hoots heard is \\( 20 \\times 5 = 100 \\) hoots.\n\n2. **Identify the source of the noise:**\n   - The problem states that \"5 less than 20 hoots per minute\" are heard.\n   - This means there are 15 hoots (since 20 - 5 = 15).\n\n3. **Calculate the number of barnyard owls:**\n   - Each barnyard owl makes 5 hoot sounds per minute.\n   - To find out how many owls",
+        "parsed_number": null
+      },
+      {
+        "dataset_index": 1162,
+        "exact_match": false,
+        "generated_text": "To solve this problem, we need to determine the number of children in Monroe's family given that she and her husband ate 80 granola bars, and the remaining granola bars were divided equally among her children, with each child receiving 20 granola bars.\n\nLet's break it down step-by-step:\n\n1. **Total Granola Bars**: Monroe made 200 granola bars.\n2. **Granola Bars Eaten by Monroe and Her Husband**: They ate 80 granola bars together.\n3. **Remaining Granola Bars**: Subtract the number of granola bars eaten from the total:\n   \\[\n   200 - 80 = 120 \\text{ granola bars}\n   \\]\n4. **Granola Bars Per Child**: Each child received 20 granola bars.\n5. **Number of Children**: Divide the remaining granola bars by the number of granola",
+        "parsed_number": null
+      },
+      {
+        "dataset_index": 405,
+        "exact_match": false,
+        "generated_text": "To solve this problem, we need to determine how many boats can fit along a river that is 42 feet wide, given that each boat must be 3 feet wide and there should be at least 2 feet of space between each boat and the riverbanks.\n\nLet's break it down step-by-step:\n\n1. **Determine the total width available for boats:**\n   - The river is 42 feet wide.\n   - Each boat needs at least 2 feet of space on both sides (front and back).\n   - Therefore, each boat occupies \\(2 + 2 = 4\\) feet of space.\n\n2. **Calculate the number of boats that can fit along one side of the river:**\n   - Since each boat takes up 4 feet of space, we divide the width of the river by the space required per boat:\n     \\[\n     \\frac{42 \\text{ feet}}{4 \\text{",
+        "parsed_number": null
+      }
+    ],
+    "base_validation_exact_match_accuracy": 0.0,
+    "base_validation_generation": [
+      {
+        "dataset_index": 5255,
+        "exact_match": false,
+        "generated_text": "To solve this math word problem, we need to determine how many slices each person ate based on the information given about the total number of slices and the remaining slices after some were eaten.\n\nLet's break down the problem step-by-step:\n\n1. **Total Slices**: There are two pizzas with 16 slices each.\n   \\[\n   \\text{Total slices} = 2 \\times 16 = 32 \\text{ slices}\n   \\]\n\n2. **Remaining Slices**: After eating, there are 1 slice of pepperoni left and 7 slices of cheese left.\n   \\[\n   \\text{Remaining slices} = 1 + 7 = 8 \\text{ slices}\n   \\]\n\n3. **Equal Distribution**: The remaining 8 slices are divided equally among Phoebe and her three friends (including herself).\n   \\[\n   \\text{Slices per person} = \\frac{8",
+        "parsed_number": "8"
+      },
+      {
+        "dataset_index": 5179,
+        "exact_match": false,
+        "generated_text": "To solve this problem, we need to follow these steps:\n\n1. Calculate the total weight of the water in the tank when it is full.\n2. Determine the amount of water that has been added due to the rainstorm.\n3. Calculate the new total weight of the water in the tank after the rainstorm.\n4. Add the weight of the water to its original weight to find the final total weight.\n\nLet's start with step 1:\n- The tank holds 200 gallons of water.\n- Each gallon weighs 8 pounds.\n- Therefore, the total weight of the water in the tank when it is full is \\(200 \\text{ gallons} \\times 8 \\text{ pounds/gallon} = 1600 \\text{ pounds}\\).\n\nNext, for step 2:\n- The tank is filled to 80% of its capacity.\n- So, the amount of water added due to the",
+        "parsed_number": null
+      },
+      {
+        "dataset_index": 1431,
+        "exact_match": false,
+        "generated_text": "To solve this problem, we need to determine Tony's driving speed and then use that speed to calculate the time it takes for him to travel the second distance.\n\nFirst, let's find Tony's driving speed:\n- Distance between the two towns: 120 miles\n- Time taken: 3 hours\n\nSpeed = Distance / Time\n\\[ \\text{Speed} = \\frac{\\text{Distance}}{\\text{Time}} = \\frac{120 \\text{ miles}}{3 \\text{ hours}} = 40 \\text{ miles per hour} \\]\n\nNow, we know Tony's speed is 40 miles per hour. Next, we'll calculate the time it takes to travel 200 miles:\n\n\\[ \\text{Time} = \\frac{\\text{Distance}}{\\text{Speed}} = \\frac{200 \\text{ miles}}{40 \\text{ miles per hour",
+        "parsed_number": null
+      },
+      {
+        "dataset_index": 518,
+        "exact_match": false,
+        "generated_text": "To solve this problem, let's define the variables first:\n- Let \\( M \\) be the number of marbles Merill has.\n- Let \\( E \\) be the number of marbles Elliot has.\n- Let \\( S \\) be the number of marbles Selma has.\n\nFrom the problem statement, we know the following:\n\n1. Merill has twice as many marbles as Elliot: \n   \\[\n   M = 2E\n   \\]\n\n2. The total number of marbles that Merill and Elliot have together is five fewer than Selma's marbles:\n   \\[\n   M + E = S - 5\n   \\]\n   Given that Selma has fifty marbles (\\( S = 50 \\)):\n   \\[\n   M + E = 50 - 5\n   \\]\n   Simplifying this equation gives us:\n   \\[\n   M + E = 45",
+        "parsed_number": "45"
+      },
+      {
+        "dataset_index": 1209,
+        "exact_match": false,
+        "generated_text": "To solve this problem, we need to follow these steps:\n\n1. Calculate how many gold bars Jame uses to pay for tax.\n2. Subtract the used gold from his initial amount to find out how much he has left after paying taxes.\n3. Calculate how many gold bars he loses due to the divorce.\n4. Subtract the lost gold from the remaining amount to find out how many gold bars he has left.\n\nLet's start with step 1:\nJame initially has 60 gold bars. To pay for tax, he uses 10% of them.\n\\[ \\text{Gold used for tax} = 0.10 \\times 60 = 6 \\]\nSo, after paying for tax, he has:\n\\[ 60 - 6 = 54 \\]\n\nNext, we move to step 2:\nAfter paying for tax, he loses half of the remaining gold.\n\\[ \\text{Gold lost due",
+        "parsed_number": null
+      },
+      {
+        "dataset_index": 1564,
+        "exact_match": false,
+        "generated_text": "To solve this math word problem, we need to calculate the total number of minutes Maddie watched during the weekdays and then subtract that from the total number of minutes in the show (which is 508 minutes).\n\nFirst, let's determine how many minutes Maddie watched each day:\n\n- **Monday:** 138 minutes\n- **Tuesday and Wednesday:** 0 minutes\n- **Thursday:** 21 minutes\n- **Friday:** 2 episodes, so \\(2 \\times 44 = 88\\) minutes\n\nNow, let's add up the minutes watched on the weekdays:\n\\[138 + 0 + 21 + 88 = 247\\]\n\nNext, we subtract the total minutes watched on the weekdays from the total minutes in the show:\n\\[508 - 247 = 261\\]\n\nTherefore, Maddie watched 261 more minutes over",
+        "parsed_number": null
+      },
+      {
+        "dataset_index": 5283,
+        "exact_match": false,
+        "generated_text": "To solve this problem, we need to follow these steps:\n\n1. Calculate the total cost including tax.\n2. Subtract the discount from the total cost after tax.\n3. Divide the remaining amount by 2 to find out how much Cody paid.\n\nLet's go through each step in detail:\n\n### Step 1: Calculate the total cost including tax\n\nThe original purchase was $40. The tax rate is 5%.\n\nFirst, calculate the tax amount:\n\\[ \\text{Tax} = 40 \\times \\frac{5}{100} = 40 \\times 0.05 = 2 \\]\n\nNext, add the tax to the original purchase to get the total cost before any discounts:\n\\[ \\text{Total Cost Before Discount} = 40 + 2 = 42 \\]\n\n### Step 2: Subtract the discount\n\nAfter paying for the goods, Cody received an $8 discount.",
+        "parsed_number": null
+      },
+      {
+        "dataset_index": 4428,
+        "exact_match": false,
+        "generated_text": "To solve this problem, we need to break down Rick's journey into its individual components and sum them up. Let's denote the distance from the start to the first destination as \\( x \\) miles.\n\n1. **First Leg:**\n   - Distance traveled: \\( x \\) miles\n\n2. **Second Leg:**\n   - Distance traveled: Twice the distance from the start to the first destination.\n     \\[\n     2x \\text{ miles}\n     \\]\n\n3. **Third Leg:**\n   - Distance traveled: 40 miles (which is half the distance from the start to the first destination).\n     \\[\n     \\frac{40}{2} = 20 \\text{ miles}\n     \\]\n\n4. **Fourth Leg:**\n   - Distance traveled: Twice the combined distances of the first two legs.\n     \\[\n     2(x + 2x) = 2(3x)",
+        "parsed_number": null
+      }
+    ],
+    "base_validation_preference": {
+      "mean_dpo_preference_nll": 0.6931471805599453,
+      "mean_full_vocab_token_kl_to_base": 0.0,
+      "policy_preference_margins": [
+        -4.7600250244140625,
+        8.237281799316406,
+        14.940231323242188,
+        -57.95866394042969,
+        15.161468505859375,
+        30.72997283935547,
+        -21.256317138671875,
+        -89.0544662475586
+      ],
+      "preference_accuracy": 0.5,
+      "reference_preference_margins": [
+        -4.7600250244140625,
+        8.237281799316406,
+        14.940231323242188,
+        -57.95866394042969,
+        15.161468505859375,
+        30.72997283935547,
+        -21.256317138671875,
+        -89.0544662475586
+      ],
+      "relative_preference_margins": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "checkpoint_summary": {
+      "0": {
+        "mean_validation_dpo_preference_nll": 0.6931471805599453,
+        "mean_validation_preference_accuracy": 0.5,
+        "mean_validation_token_kl_to_base": 0.0,
+        "per_seed_nll": [
+          0.6931471805599453,
+          0.6931471805599453,
+          0.6931471805599453
+        ]
+      },
+      "1": {
+        "mean_validation_dpo_preference_nll": 0.6842867822576862,
+        "mean_validation_preference_accuracy": 1.0,
+        "mean_validation_token_kl_to_base": 1.2511169423327033e-05,
+        "per_seed_nll": [
+          0.6866262514136363,
+          0.6827193297719341,
+          0.6835147655874884
+        ]
+      },
+      "2": {
+        "mean_validation_dpo_preference_nll": 0.6751031335550942,
+        "mean_validation_preference_accuracy": 1.0,
+        "mean_validation_token_kl_to_base": 4.4526933145172834e-05,
+        "per_seed_nll": [
+          0.6785084556060615,
+          0.6732953327238863,
+          0.6735056123353349
+        ]
+      }
+    },
+    "dataset_fingerprint": "c6f812ae33c9159d",
+    "dataset_train_sha256": "6146bca074f4c6c5e07de7e96cc968adab3833dbdafeda21830f27558eea3d9b",
+    "decision": "sequence_dpo_development_non_pass",
+    "device": "cpu",
+    "elapsed_seconds": 609.922288417,
+    "model_file_sha256": {
+      "config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+      "model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583"
+    },
+    "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "network_disabled": true,
+    "paid_compute": false,
+    "peak_rss_bytes": 6348881920,
+    "per_seed": [
+      {
+        "checkpoints": {
+          "0": {
+            "adapter_artifact": {
+              "path": "adapters/seed-1877-epoch-0.npz",
+              "sha256": "466c55aa2d9fdb3915253da96089aa7821a8d4f23c5a7ba909794975b2356601"
+            },
+            "metrics": {
+              "mean_dpo_preference_nll": 0.6931471805599453,
+              "mean_full_vocab_token_kl_to_base": 0.0,
+              "policy_preference_margins": [
+                -4.7600250244140625,
+                8.237281799316406,
+                14.940231323242188,
+                -57.95866394042969,
+                15.161468505859375,
+                30.72997283935547,
+                -21.256317138671875,
+                -89.0544662475586
+              ],
+              "preference_accuracy": 0.5,
+              "reference_preference_margins": [
+                -4.7600250244140625,
+                8.237281799316406,
+                14.940231323242188,
+                -57.95866394042969,
+                15.161468505859375,
+                30.72997283935547,
+                -21.256317138671875,
+                -89.0544662475586
+              ],
+              "relative_preference_margins": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "1": {
+            "adapter_artifact": {
+              "path": "adapters/seed-1877-epoch-1.npz",
+              "sha256": "fd2f768dc14f6233686d4eae9f604e3ab3ec983b0ee6c19e46215377effc0a79"
+            },
+            "metrics": {
+              "mean_dpo_preference_nll": 0.6866262514136363,
+              "mean_full_vocab_token_kl_to_base": 8.890192776478284e-06,
+              "policy_preference_margins": [
+                -4.5938568115234375,
+                8.293624877929688,
+                15.036869049072266,
+                -57.82554626464844,
+                15.348052978515625,
+                30.909095764160156,
+                -21.091018676757812,
+                -88.99048614501953
+              ],
+              "preference_accuracy": 1.0,
+              "reference_preference_margins": [
+                -4.7600250244140625,
+                8.237281799316406,
+                14.940231323242188,
+                -57.95866394042969,
+                15.161468505859375,
+                30.72997283935547,
+                -21.256317138671875,
+                -89.0544662475586
+              ],
+              "relative_preference_margins": [
+                0.166168212890625,
+                0.05634307861328125,
+                0.09663772583007812,
+                0.13311767578125,
+                0.18658447265625,
+                0.1791229248046875,
+                0.1652984619140625,
+                0.0639801025390625
+              ]
+            }
+          },
+          "2": {
+            "adapter_artifact": {
+              "path": "adapters/seed-1877-epoch-2.npz",
+              "sha256": "1243ed508e0d93567bce7072817d37fa69543f96c22ab48c8ea75bcfa485b67a"
+            },
+            "metrics": {
+              "mean_dpo_preference_nll": 0.6785084556060615,
+              "mean_full_vocab_token_kl_to_base": 3.291387095341435e-05,
+              "policy_preference_margins": [
+                -4.424102783203125,
+                8.419151306152344,
+                15.20547866821289,
+                -57.631927490234375,
+                15.541374206542969,
+                31.14051055908203,
+                -20.962013244628906,
+                -88.8880386352539
+              ],
+              "preference_accuracy": 1.0,
+              "reference_preference_margins": [
+                -4.7600250244140625,
+                8.237281799316406,
+                14.940231323242188,
+                -57.95866394042969,
+                15.161468505859375,
+                30.72997283935547,
+                -21.256317138671875,
+                -89.0544662475586
+              ],
+              "relative_preference_margins": [
+                0.3359222412109375,
+                0.1818695068359375,
+                0.2652473449707031,
+                0.3267364501953125,
+                0.37990570068359375,
+                0.4105377197265625,
+                0.29430389404296875,
+                0.1664276123046875
+              ]
+            }
+          }
+        },
+        "seed": 1877
+      },
+      {
+        "checkpoints": {
+          "0": {
+            "adapter_artifact": {
+              "path": "adapters/seed-1993-epoch-0.npz",
+              "sha256": "9d8a66731f4701d23cc917f099af2864e861a448eb033cb70785ac7524358800"
+            },
+            "metrics": {
+              "mean_dpo_preference_nll": 0.6931471805599453,
+              "mean_full_vocab_token_kl_to_base": 0.0,
+              "policy_preference_margins": [
+                -4.7600250244140625,
+                8.237281799316406,
+                14.940231323242188,
+                -57.95866394042969,
+                15.161468505859375,
+                30.72997283935547,
+                -21.256317138671875,
+                -89.0544662475586
+              ],
+              "preference_accuracy": 0.5,
+              "reference_preference_margins": [
+                -4.7600250244140625,
+                8.237281799316406,
+                14.940231323242188,
+                -57.95866394042969,
+                15.161468505859375,
+                30.72997283935547,
+                -21.256317138671875,
+                -89.0544662475586
+              ],
+              "relative_preference_margins": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "1": {
+            "adapter_artifact": {
+              "path": "adapters/seed-1993-epoch-1.npz",
+              "sha256": "f155c6063c8e731f56c306ec1d5c63e422034b7c1dcad0b5f3d898a37e536956"
+            },
+            "metrics": {
+              "mean_dpo_preference_nll": 0.6827193297719341,
+              "mean_full_vocab_token_kl_to_base": 1.6594933272613935e-05,
+              "policy_preference_margins": [
+                -4.5154876708984375,
+                8.397453308105469,
+                15.036155700683594,
+                -57.771240234375,
+                15.440963745117188,
+                30.955352783203125,
+                -20.985916137695312,
+                -88.83989715576172
+              ],
+              "preference_accuracy": 1.0,
+              "reference_preference_margins": [
+                -4.7600250244140625,
+                8.237281799316406,
+                14.940231323242188,
+                -57.95866394042969,
+                15.161468505859375,
+                30.72997283935547,
+                -21.256317138671875,
+                -89.0544662475586
+              ],
+              "relative_preference_margins": [
+                0.244537353515625,
+                0.1601715087890625,
+                0.09592437744140625,
+                0.1874237060546875,
+                0.2794952392578125,
+                0.22537994384765625,
+                0.2704010009765625,
+                0.214569091796875
+              ]
+            }
+          },
+          "2": {
+            "adapter_artifact": {
+              "path": "adapters/seed-1993-epoch-2.npz",
+              "sha256": "0a26bdf43de90de6b7e9bd779f776ea9aa24edccbf53e356f9bd7181b6d1c7ed"
+            },
+            "metrics": {
+              "mean_dpo_preference_nll": 0.6732953327238863,
+              "mean_full_vocab_token_kl_to_base": 5.692385350600873e-05,
+              "policy_preference_margins": [
+                -4.304595947265625,
+                8.534263610839844,
+                15.162551879882812,
+                -57.540550231933594,
+                15.687431335449219,
+                31.146743774414062,
+                -20.72925567626953,
+                -88.70658874511719
+              ],
+              "preference_accuracy": 1.0,
+              "reference_preference_margins": [
+                -4.7600250244140625,
+                8.237281799316406,
+                14.940231323242188,
+                -57.95866394042969,
+                15.161468505859375,
+                30.72997283935547,
+                -21.256317138671875,
+                -89.0544662475586
+              ],
+              "relative_preference_margins": [
+                0.4554290771484375,
+                0.2969818115234375,
+                0.222320556640625,
+                0.41811370849609375,
+                0.5259628295898438,
+                0.41677093505859375,
+                0.5270614624023438,
+                0.34787750244140625
+              ]
+            }
+          }
+        },
+        "seed": 1993
+      },
+      {
+        "checkpoints": {
+          "0": {
+            "adapter_artifact": {
+              "path": "adapters/seed-2081-epoch-0.npz",
+              "sha256": "b3f1f53ef6e306f9939e432a04d1d61e5fd6043b00569784b47fa41f8187b9b7"
+            },
+            "metrics": {
+              "mean_dpo_preference_nll": 0.6931471805599453,
+              "mean_full_vocab_token_kl_to_base": 0.0,
+              "policy_preference_margins": [
+                -4.7600250244140625,
+                8.237281799316406,
+                14.940231323242188,
+                -57.95866394042969,
+                15.161468505859375,
+                30.72997283935547,
+                -21.256317138671875,
+                -89.0544662475586
+              ],
+              "preference_accuracy": 0.5,
+              "reference_preference_margins": [
+                -4.7600250244140625,
+                8.237281799316406,
+                14.940231323242188,
+                -57.95866394042969,
+                15.161468505859375,
+                30.72997283935547,
+                -21.256317138671875,
+                -89.0544662475586
+              ],
+              "relative_preference_margins": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "1": {
+            "adapter_artifact": {
+              "path": "adapters/seed-2081-epoch-1.npz",
+              "sha256": "da01cb0334f836e19672358e5289aebec0760eb05c2074ec8e850af6a0c5f234"
+            },
+            "metrics": {
+              "mean_dpo_preference_nll": 0.6835147655874884,
+              "mean_full_vocab_token_kl_to_base": 1.2048382220888881e-05,
+              "policy_preference_margins": [
+                -4.612884521484375,
+                8.415336608886719,
+                15.075614929199219,
+                -57.670196533203125,
+                15.356407165527344,
+                30.93305206298828,
+                -21.02130126953125,
+                -88.8874282836914
+              ],
+              "preference_accuracy": 1.0,
+              "reference_preference_margins": [
+                -4.7600250244140625,
+                8.237281799316406,
+                14.940231323242188,
+                -57.95866394042969,
+                15.161468505859375,
+                30.72997283935547,
+                -21.256317138671875,
+                -89.0544662475586
+              ],
+              "relative_preference_margins": [
+                0.1471405029296875,
+                0.1780548095703125,
+                0.13538360595703125,
+                0.2884674072265625,
+                0.19493865966796875,
+                0.2030792236328125,
+                0.235015869140625,
+                0.1670379638671875
+              ]
+            }
+          },
+          "2": {
+            "adapter_artifact": {
+              "path": "adapters/seed-2081-epoch-2.npz",
+              "sha256": "3e28960b928f0420217761250025a0a49ff8a5d04fa0e8301f187bbc75c107c3"
+            },
+            "metrics": {
+              "mean_dpo_preference_nll": 0.6735056123353349,
+              "mean_full_vocab_token_kl_to_base": 4.37430749760954e-05,
+              "policy_preference_margins": [
+                -4.3724517822265625,
+                8.581855773925781,
+                15.235286712646484,
+                -57.411582946777344,
+                15.593551635742188,
+                31.116165161132812,
+                -20.75311279296875,
+                -88.7745132446289
+              ],
+              "preference_accuracy": 1.0,
+              "reference_preference_margins": [
+                -4.7600250244140625,
+                8.237281799316406,
+                14.940231323242188,
+                -57.95866394042969,
+                15.161468505859375,
+                30.72997283935547,
+                -21.256317138671875,
+                -89.0544662475586
+              ],
+              "relative_preference_margins": [
+                0.3875732421875,
+                0.344573974609375,
+                0.2950553894042969,
+                0.5470809936523438,
+                0.4320831298828125,
+                0.38619232177734375,
+                0.503204345703125,
+                0.2799530029296875
+              ]
+            }
+          }
+        },
+        "seed": 2081
+      }
+    ],
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "protocol_id": "vare-cpu-lm-gsm8k-sequence-dpo-development-v6",
+    "protocol_sha256": "d841eb5184b5a75ff51a35e244b52f0b5875117c982b6aa3c1b9c29d30fe48e1",
+    "rejection_source_counts": {
+      "base_rollout_incorrect_or_unparseable": 16
+    },
+    "runner_sha256": "58405acdf424a44add29fb91dd3d3f9f5650f5399761d983b7956cd68d0df9a7",
+    "runtime": {
+      "datasets": "4.4.2",
+      "numpy": "1.26.4",
+      "python": "3.9.6",
+      "torch": "2.8.0",
+      "transformers": "4.57.3"
+    },
+    "selected_adapters_and_generation": [
+      {
+        "generated_validation": [
+          {
+            "dataset_index": 5255,
+            "exact_match": false,
+            "generated_text": "To solve this math word problem, we need to determine how many slices each person ate based on the information given about the total number of slices and the remaining slices after some were eaten.\n\nLet's break down the problem step-by-step:\n\n1. **Total Slices**: There are two pizzas with 16 slices each.\n   \\[\n   \\text{Total slices} = 2 \\times 16 = 32 \\text{ slices}\n   \\]\n\n2. **Remaining Slices**: After eating, there are 1 slice of pepperoni left and 7 slices of cheese left.\n   \\[\n   \\text{Remaining slices} = 1 + 7 = 8 \\text{ slices}\n   \\]\n\n3. **Equal Distribution**: The remaining 8 slices are divided equally among Phoebe and her three friends (including herself).\n   \\[\n   \\text{Slices per person} = \\frac{8",
+            "parsed_number": "8"
+          },
+          {
+            "dataset_index": 5179,
+            "exact_match": false,
+            "generated_text": "To solve this problem, we need to follow these steps:\n\n1. Calculate the total weight of the water in the tank when it is full.\n2. Determine the amount of water that has been added due to the rainstorm.\n3. Calculate the new total weight of the water in the tank after the rainstorm.\n4. Add the weight of the water to its original weight to find the final total weight.\n\nLet's start with step 1:\n- The tank holds 200 gallons of water.\n- Each gallon weighs 8 pounds.\n- Therefore, the total weight of the water in the tank when it is full is \\(200 \\text{ gallons} \\times 8 \\text{ pounds/gallon} = 1600 \\text{ pounds}\\).\n\nNext, for step 2:\n- The tank is filled to 80% of its capacity.\n- So, the amount of water added due to the",
+            "parsed_number": null
+          },
+          {
+            "dataset_index": 1431,
+            "exact_match": false,
+            "generated_text": "To solve this problem, we need to determine Tony's driving speed and then use that speed to calculate the time it takes for him to travel the second distance.\n\nFirst, let's find Tony's driving speed:\n- Distance between the two towns: 120 miles\n- Time taken: 3 hours\n\nSpeed = Distance / Time\n\\[ \\text{Speed} = \\frac{\\text{Distance}}{\\text{Time}} = \\frac{120 \\text{ miles}}{3 \\text{ hours}} = 40 \\text{ miles per hour} \\]\n\nNow, we know Tony's speed is 40 miles per hour. Next, we'll calculate the time it takes to travel 200 miles:\n\n\\[ \\text{Time} = \\frac{\\text{Distance}}{\\text{Speed}} = \\frac{200 \\text{ miles}}{40 \\text{ miles per hour",
+            "parsed_number": null
+          },
+          {
+            "dataset_index": 518,
+            "exact_match": false,
+            "generated_text": "To solve this problem, let's define the variables first:\n- Let \\( M \\) be the number of marbles Merill has.\n- Let \\( E \\) be the number of marbles Elliot has.\n- Let \\( S \\) be the number of marbles Selma has.\n\nFrom the problem statement, we know the following:\n\n1. Merill has twice as many marbles as Elliot: \n   \\[\n   M = 2E\n   \\]\n\n2. The total number of marbles that Merill and Elliot have together is five fewer than Selma's marbles:\n   \\[\n   M + E = S - 5\n   \\]\n   Given that Selma has fifty marbles (\\( S = 50 \\)):\n   \\[\n   M + E = 50 - 5\n   \\]\n   Simplifying this equation gives us:\n   \\[\n   M + E = 45",
+            "parsed_number": "45"
+          },
+          {
+            "dataset_index": 1209,
+            "exact_match": false,
+            "generated_text": "To solve this problem, let's break it down step-by-step:\n\n1. **Initial amount**: Jame starts with 60 gold bars.\n2. **Tax paid**: He uses 10% of his gold bars to pay taxes.\n   \\[\n   \\text{Amount used for tax} = 0.10 \\times 60 = 6 \\text{ bars}\n   \\]\n3. **Remaining after tax**: Subtract the tax from the initial amount.\n   \\[\n   \\text{Remaining after tax} = 60 - 6 = 54 \\text{ bars}\n   \\]\n4. **Divorce loss**: He loses half of the remaining amount in divorce.\n   \\[\n   \\text{Amount lost in divorce} = \\frac{1}{2} \\times 54 = 27 \\text{ bars}\n   \\]\n5. **Final amount left**: Subtract the amount",
+            "parsed_number": null
+          },
+          {
+            "dataset_index": 1564,
+            "exact_match": false,
+            "generated_text": "To solve this math word problem, we need to calculate the total number of minutes Maddie watched during the weekdays and then subtract that from the total number of minutes in the show (which is 508 minutes).\n\nFirst, let's determine how many minutes Maddie watched each day:\n\n- **Monday**: 138 minutes\n- **Tuesday and Wednesday**: 0 minutes\n- **Thursday**: 21 minutes\n- **Friday**: 2 episodes, so \\(2 \\times 44 = 88\\) minutes\n\nNow, let's add up the minutes watched on the weekdays:\n\\[138 + 0 + 21 + 88 = 247\\]\n\nNext, we subtract the total minutes watched on the weekdays from the total minutes in the show:\n\\[508 - 247 = 261\\]\n\nTherefore, Maddie watched 261 more minutes over",
+            "parsed_number": null
+          },
+          {
+            "dataset_index": 5283,
+            "exact_match": false,
+            "generated_text": "To solve this problem, we need to follow these steps:\n\n1. Calculate the total cost including tax.\n2. Subtract the discount from the total cost after tax.\n3. Divide the remaining amount by 2 to find out how much Cody paid.\n\nLet's go through each step in detail:\n\n### Step 1: Calculate the total cost including tax\n\nThe original purchase was $40. The tax rate is 5%.\n\nFirst, calculate the tax amount:\n\\[ \\text{Tax} = 40 \\times \\frac{5}{100} = 40 \\times 0.05 = 2 \\]\n\nNext, add the tax to the original purchase to get the total cost before any discounts:\n\\[ \\text{Total Cost Before Discount} = 40 + 2 = 42 \\]\n\n### Step 2: Subtract the discount\n\nAfter paying for the items, Cody received an $8 discount.",
+            "parsed_number": null
+          },
+          {
+            "dataset_index": 4428,
+            "exact_match": false,
+            "generated_text": "To solve this problem, we need to break down Rick's journey into its individual components and sum them up. Let's denote the distance from the start to the first destination as \\( x \\) miles.\n\n1. **First Leg:**\n   - Distance traveled: \\( x \\) miles\n\n2. **Second Leg:**\n   - Distance traveled: Twice the distance from the start to the first destination.\n     \\[\n     2x \\text{ miles}\n     \\]\n\n3. **Third Leg:**\n   - Distance traveled: 40 miles (which is half the distance from the start to the first destination).\n     \\[\n     \\frac{40}{2} = 20 \\text{ miles}\n     \\]\n\n4. **Fourth Leg:**\n   - Distance traveled: Twice the combined distances of the first two legs.\n     \\[\n     2(x + 2x) = 2(3x)",
+            "parsed_number": null
+          }
+        ],
+        "seed": 1877,
+        "selected_adapter_artifact": {
+          "path": "adapters/seed-1877-epoch-2.npz",
+          "sha256": "1243ed508e0d93567bce7072817d37fa69543f96c22ab48c8ea75bcfa485b67a"
+        }
+      },
+      {
+        "generated_validation": [
+          {
+            "dataset_index": 5255,
+            "exact_match": false,
+            "generated_text": "To solve this math word problem, we need to determine how many slices each person ate based on the information given about the total number of slices and the remaining slices after some were eaten.\n\nLet's break down the problem step-by-step:\n\n1. **Total Slices**: There are two pizzas with 16 slices each.\n   \\[\n   \\text{Total slices} = 2 \\times 16 = 32 \\text{ slices}\n   \\]\n\n2. **Remaining Slices**: After eating, there are 1 slice of pepperoni left and 7 slices of cheese left.\n   \\[\n   \\text{Remaining slices} = 1 + 7 = 8 \\text{ slices}\n   \\]\n\n3. **Equal Distribution**: The remaining 8 slices are divided equally among Phoebe and her three friends (including herself).\n   \\[\n   \\text{Slices per person} = \\frac{8",
+            "parsed_number": "8"
+          },
+          {
+            "dataset_index": 5179,
+            "exact_match": false,
+            "generated_text": "To solve this problem, we need to follow these steps:\n\n1. Calculate the total weight of the water in the tank when it is full.\n2. Determine the amount of water that has been added due to the rainstorm.\n3. Calculate the new total weight of the water in the tank after the rainstorm.\n4. Add the weight of the water to its original weight to find the final total weight.\n\nLet's start with step 1:\n- The tank holds 200 gallons of water.\n- Each gallon weighs 8 pounds.\n- Therefore, the total weight of the water in the tank when it is full is \\(200 \\text{ gallons} \\times 8 \\text{ pounds/gallon} = 1600 \\text{ pounds}\\).\n\nNext, for step 2:\n- The tank is filled to 80% of its capacity.\n- So, the amount of water added due to the",
+            "parsed_number": null
+          },
+          {
+            "dataset_index": 1431,
+            "exact_match": false,
+            "generated_text": "To solve this problem, we need to determine Tony's driving speed and then use that speed to calculate the time it takes for him to travel the second distance.\n\nFirst, let's find Tony's driving speed:\n- Distance between the two towns: 120 miles\n- Time taken: 3 hours\n\nSpeed = Distance / Time\n\\[ \\text{Speed} = \\frac{\\text{Distance}}{\\text{Time}} = \\frac{120 \\text{ miles}}{3 \\text{ hours}} = 40 \\text{ miles per hour} \\]\n\nNow, we know Tony's speed is 40 miles per hour. Next, we'll calculate the time it takes to travel 200 miles:\n\n\\[ \\text{Time} = \\frac{\\text{Distance}}{\\text{Speed}} = \\frac{200 \\text{ miles}}{40 \\text{ miles per hour",
+            "parsed_number": null
+          },
+          {
+            "dataset_index": 518,
+            "exact_match": false,
+            "generated_text": "To solve this problem, let's define the variables first:\n- Let \\( M \\) be the number of marbles Merill has.\n- Let \\( E \\) be the number of marbles Elliot has.\n- Let \\( S \\) be the number of marbles Selma has.\n\nFrom the problem statement, we know the following:\n\n1. Merill has twice as many marbles as Elliot: \n   \\[\n   M = 2E\n   \\]\n\n2. The total number of marbles that Merill and Elliot have together is five fewer than Selma's marbles:\n   \\[\n   M + E = S - 5\n   \\]\n   Given that Selma has fifty marbles (\\( S = 50 \\)):\n   \\[\n   M + E = 50 - 5\n   \\]\n   Simplifying this equation gives us:\n   \\[\n   M + E = 45",
+            "parsed_number": "45"
+          },
+          {
+            "dataset_index": 1209,
+            "exact_match": false,
+            "generated_text": "To solve this problem, let's break it down step-by-step:\n\n1. **Initial amount**: Jame starts with 60 gold bars.\n2. **Tax paid**: He uses 10% of his gold bars to pay taxes.\n   \\[\n   \\text{Amount used for tax} = 0.10 \\times 60 = 6 \\text{ bars}\n   \\]\n3. **Remaining after tax**: Subtract the tax from the initial amount.\n   \\[\n   \\text{Remaining after tax} = 60 - 6 = 54 \\text{ bars}\n   \\]\n4. **Divorce loss**: He loses half of the remaining amount in divorce.\n   \\[\n   \\text{Amount lost in divorce} = \\frac{1}{2} \\times 54 = 27 \\text{ bars}\n   \\]\n5. **Final amount left**: Subtract the amount",
+            "parsed_number": null
+          },
+          {
+            "dataset_index": 1564,
+            "exact_match": false,
+            "generated_text": "To solve this math word problem, we need to calculate the total number of minutes Maddie watched during the weekdays and then subtract that from the total number of minutes in the show (which is 508 minutes).\n\nFirst, let's determine how many minutes Maddie watched each day:\n\n- **Monday:** 138 minutes\n- **Tuesday and Wednesday:** 0 minutes\n- **Thursday:** 21 minutes\n- **Friday:** 2 episodes, so \\(2 \\times 44 = 88\\) minutes\n\nNow, let's add up the minutes watched on the weekdays:\n\\[138 + 0 + 21 + 88 = 247\\]\n\nNext, we subtract the total minutes watched on the weekdays from the total minutes in the show:\n\\[508 - 247 = 261\\]\n\nTherefore, Maddie watched 261 more minutes over",
+            "parsed_number": null
+          },
+          {
+            "dataset_index": 5283,
+            "exact_match": false,
+            "generated_text": "To solve this problem, we need to follow these steps:\n\n1. Calculate the total cost including tax.\n2. Subtract the discount from the total cost after tax.\n3. Divide the remaining amount by 2 to find out how much Cody paid.\n\nLet's go through each step in detail:\n\n### Step 1: Calculate the total cost including tax\n\nThe original purchase was $40. The tax rate is 5%.\n\nFirst, calculate the tax amount:\n\\[ \\text{Tax} = 40 \\times \\frac{5}{100} = 40 \\times 0.05 = 2 \\]\n\nNext, add the tax to the original purchase to get the total cost before any discounts:\n\\[ \\text{Total Cost Before Discount} = 40 + 2 = 42 \\]\n\n### Step 2: Subtract the discount\n\nAfter paying for the items, Cody received an $8 discount.",
+            "parsed_number": null
+          },
+          {
+            "dataset_index": 4428,
+            "exact_match": false,
+            "generated_text": "To solve this problem, we need to break down Rick's journey into its individual components and sum them up. Let's denote the distance from the start to the first destination as \\( x \\) miles.\n\n1. **First Leg:**\n   - Distance traveled: \\( x \\) miles\n\n2. **Second Leg:**\n   - Distance traveled: Twice the distance from the start to the first destination.\n     \\[\n     2x \\text{ miles}\n     \\]\n\n3. **Third Leg:**\n   - Distance traveled: 40 miles (which is half the distance from the start to the first destination).\n     \\[\n     \\frac{40}{2} = 20 \\text{ miles}\n     \\]\n\n4. **Fourth Leg:**\n   - Distance traveled: Twice the combined distances of the first two legs.\n     \\[\n     2(x + 2x) = 2(3x)",
+            "parsed_number": null
+          }
+        ],
+        "seed": 1993,
+        "selected_adapter_artifact": {
+          "path": "adapters/seed-1993-epoch-2.npz",
+          "sha256": "0a26bdf43de90de6b7e9bd779f776ea9aa24edccbf53e356f9bd7181b6d1c7ed"
+        }
+      },
+      {
+        "generated_validation": [
+          {
+            "dataset_index": 5255,
+            "exact_match": false,
+            "generated_text": "To solve this math word problem, we need to determine how many slices each person ate based on the information given about the total number of slices and the remaining slices after some were eaten.\n\nLet's break down the problem step-by-step:\n\n1. **Total Slices**: There are two pizzas with 16 slices each.\n   \\[\n   \\text{Total slices} = 2 \\times 16 = 32 \\text{ slices}\n   \\]\n\n2. **Remaining Slices**: After eating, there are 1 slice of pepperoni left and 7 slices of cheese left.\n   \\[\n   \\text{Remaining slices} = 1 + 7 = 8 \\text{ slices}\n   \\]\n\n3. **Equal Distribution**: The remaining 8 slices are divided equally among Phoebe and her three friends (including herself).\n   \\[\n   \\text{Slices per person} = \\frac{8",
+            "parsed_number": "8"
+          },
+          {
+            "dataset_index": 5179,
+            "exact_match": false,
+            "generated_text": "To solve this problem, we need to follow these steps:\n\n1. Calculate the total weight of the water in the tank when it is full.\n2. Determine the amount of water that has been added due to the rainstorm.\n3. Calculate the new total weight of the water in the tank after the rainstorm.\n4. Add the weight of the water to its original weight to find the final total weight.\n\nLet's start with step 1:\n- The tank holds 200 gallons of water.\n- Each gallon weighs 8 pounds.\n- Therefore, the total weight of the water in the tank when it is full is \\(200 \\text{ gallons} \\times 8 \\text{ pounds/gallon} = 1600 \\text{ pounds}\\).\n\nNext, for step 2:\n- The tank is filled to 80% of its capacity.\n- So, the amount of water added due to the",
+            "parsed_number": null
+          },
+          {
+            "dataset_index": 1431,
+            "exact_match": false,
+            "generated_text": "To solve this problem, we need to determine Tony's driving speed and then use that speed to calculate the time it takes for him to travel the second distance.\n\nFirst, let's find Tony's driving speed:\n- Distance between the two towns: 120 miles\n- Time taken: 3 hours\n\nSpeed = Distance / Time\n\\[ \\text{Speed} = \\frac{\\text{Distance}}{\\text{Time}} = \\frac{120 \\text{ miles}}{3 \\text{ hours}} = 40 \\text{ miles per hour} \\]\n\nNow, we know Tony's speed is 40 miles per hour. Next, we'll calculate the time it takes to travel 200 miles:\n\n\\[ \\text{Time} = \\frac{\\text{Distance}}{\\text{Speed}} = \\frac{200 \\text{ miles}}{40 \\text{ miles per hour",
+            "parsed_number": null
+          },
+          {
+            "dataset_index": 518,
+            "exact_match": false,
+            "generated_text": "To solve this problem, let's define the variables first:\n- Let \\( M \\) be the number of marbles Merill has.\n- Let \\( E \\) be the number of marbles Elliot has.\n- Let \\( S \\) be the number of marbles Selma has.\n\nFrom the problem statement, we know the following:\n1. Merill has twice as many marbles as Elliot: \\( M = 2E \\).\n2. The total number of marbles that Merill and Elliot have together is five fewer than the number of marbles Selma has: \\( M + E = S - 5 \\).\n3. We also know that Selma has fifty marbles: \\( S = 50 \\).\n\nNow, substitute \\( S = 50 \\) into the second equation:\n\\[ M + E = 50 - 5 \\]\n\\[ M + E = 45 \\]\n\nNext, use",
+            "parsed_number": null
+          },
+          {
+            "dataset_index": 1209,
+            "exact_match": false,
+            "generated_text": "To solve this problem, let's break it down step-by-step:\n\n1. **Initial amount**: Jame starts with 60 gold bars.\n2. **Tax paid**: He uses 10% of his gold bars to pay taxes.\n   \\[\n   \\text{Amount used for tax} = 0.10 \\times 60 = 6 \\text{ bars}\n   \\]\n3. **Remaining after tax**: Subtract the tax from the initial amount.\n   \\[\n   \\text{Remaining after tax} = 60 - 6 = 54 \\text{ bars}\n   \\]\n4. **Divorce loss**: He loses half of the remaining amount in divorce.\n   \\[\n   \\text{Amount lost in divorce} = \\frac{1}{2} \\times 54 = 27 \\text{ bars}\n   \\]\n5. **Final amount left**: Subtract the amount",
+            "parsed_number": null
+          },
+          {
+            "dataset_index": 1564,
+            "exact_match": false,
+            "generated_text": "To solve this math word problem, we need to calculate the total number of minutes Maddie watched during the weekdays and then subtract that from the total number of minutes in the show (which is 508 minutes).\n\nFirst, let's determine how many minutes Maddie watched each day:\n\n- **Monday:** 138 minutes\n- **Tuesday and Wednesday:** 0 minutes\n- **Thursday:** 21 minutes\n- **Friday:** 2 episodes, so \\(2 \\times 44 = 88\\) minutes\n\nNow, let's add up the minutes watched on the weekdays:\n\\[138 + 0 + 21 + 88 = 247\\]\n\nNext, we subtract the total minutes watched on the weekdays from the total minutes in the show:\n\\[508 - 247 = 261\\]\n\nTherefore, Maddie watched 261 more minutes over",
+            "parsed_number": null
+          },
+          {
+            "dataset_index": 5283,
+            "exact_match": false,
+            "generated_text": "To solve this problem, we need to follow these steps:\n\n1. Calculate the total cost including tax.\n2. Subtract the discount from the total cost after tax.\n3. Divide the remaining amount by 2 to find out how much Cody paid.\n\nLet's go through each step in detail:\n\n### Step 1: Calculate the total cost including tax\n\nThe original purchase was $40. The tax rate is 5%.\n\nFirst, calculate the tax amount:\n\\[ \\text{Tax} = 40 \\times \\frac{5}{100} = 40 \\times 0.05 = 2 \\]\n\nNext, add the tax to the original purchase to get the total cost before any discounts:\n\\[ \\text{Total Cost Before Discount} = 40 + 2 = 42 \\]\n\n### Step 2: Subtract the discount\n\nAfter paying for the goods, Cody received an $8 discount.",
+            "parsed_number": null
+          },
+          {
+            "dataset_index": 4428,
+            "exact_match": false,
+            "generated_text": "To solve this problem, we need to break down Rick's journey into its individual components and sum them up. Let's denote the distance from the start to the first destination as \\( x \\) miles.\n\n1. **First Leg:**\n   - Distance traveled: \\( x \\) miles\n\n2. **Second Leg:**\n   - Distance traveled: Twice the distance from the start to the first destination.\n     \\[\n     2x \\text{ miles}\n     \\]\n\n3. **Third Leg:**\n   - Distance traveled: 40 miles (which is half the distance from the start to the first destination).\n     \\[\n     \\frac{40}{2} = 20 \\text{ miles}\n     \\]\n\n4. **Fourth Leg:**\n   - Distance traveled: Twice the combined distances of the first two legs.\n     \\[\n     2(x + 2x) = 2(3x)",
+            "parsed_number": null
+          }
+        ],
+        "seed": 2081,
+        "selected_adapter_artifact": {
+          "path": "adapters/seed-2081-epoch-2.npz",
+          "sha256": "3e28960b928f0420217761250025a0a49ff8a5d04fa0e8301f187bbc75c107c3"
+        }
+      }
+    ],
+    "selected_epochs": 2,
+    "selected_mean_exact_match_accuracy": 0.0,
+    "selected_validation_generation": [
+      {
+        "accuracy": 0.0,
+        "correct": 0,
+        "seed": 1877
+      },
+      {
+        "accuracy": 0.0,
+        "correct": 0,
+        "seed": 1993
+      },
+      {
+        "accuracy": 0.0,
+        "correct": 0,
+        "seed": 2081
+      }
+    ],
+    "task_helper_sha256": "b0347c8b52c1dbd810bb17285d31184894f9b1f1d203d14141ec083273b68f14"
+  },
+  "train_examples": [
+    {
+      "base_generated_text": "To solve this math word problem, we need to determine the total number of apples Chandler and Lucy will consume in a month and then calculate how many apples the farmer needs to deliver to meet that demand.\n\n### Step-by-Step Solution:\n\n1. **Calculate the weekly consumption:**\n   - Chandler eats 23 apples per week.\n   - Lucy eats 19 apples per week.\n   \n   Therefore, together they eat:\n   \\[\n   23 + 19 = 42 \\text{ apples per week}\n   \\]\n\n2. **Determine the monthly consumption:**\n   - The farmer delivers once per month.\n   - To find out how many times the farmer delivers in a month, we multiply the weekly consumption by 4 (since there are 4 weeks in a month):\n     \\[\n     42 \\times 4 = 168 \\text{ deliveries per month}\n     \\]\n\n3.",
+      "dataset_index": 3447,
+      "dataset_split": "development_train",
+      "expected_number": "168",
+      "question": "Chandler can eat a total of 23 apples and Lucy can eat a total of 19 apples per week. If the farmer only delivers 1 time per month, how many apples do they have to order for a month?",
+      "question_sha256": "bae2249e4e65c12d2fba8f5c222bda9a173623830c2c38c9371fb0671a230125",
+      "rejected_answer": "To solve this math word problem, we need to determine the total number of apples Chandler and Lucy will consume in a month and then calculate how many apples the farmer needs to deliver to meet that demand.\n\n### Step-by-Step Solution:\n\n1. **Calculate the weekly consumption:**\n   - Chandler eats 23 apples per week.\n   - Lucy eats 19 apples per week.\n   \n   Therefore, together they eat:\n   \\[\n   23 + 19 = 42 \\text{ apples per week}\n   \\]\n\n2. **Determine the monthly consumption:**\n   - The farmer delivers once per month.\n   - To find out how many times the farmer delivers in a month, we multiply the weekly consumption by 4 (since there are 4 weeks in a month):\n     \\[\n     42 \\times 4 = 168 \\text{ deliveries per month}\n     \\]\n\n3.",
+      "rejected_source": "base_rollout_incorrect_or_unparseable",
+      "source_answer": "Chandler and Lucy can eat 23 + 19 = <<23+19=42>>42 apples per week.\nTherefore, they have to order 42 x 4 = <<42*4=168>>168 apples for a month.\n#### 168",
+      "user_message": "Solve this math word problem. Show concise work and end with #### followed by the answer.\n\nChandler can eat a total of 23 apples and Lucy can eat a total of 19 apples per week. If the farmer only delivers 1 time per month, how many apples do they have to order for a month?",
+      "verifier_answer": "Chandler and Lucy can eat 23 + 19 = <<23+19=42>>42 apples per week.\nTherefore, they have to order 42 x 4 = <<42*4=168>>168 apples for a month.\n#### 168"
+    },
+    {
+      "base_generated_text": "To solve this problem, we need to follow these steps:\n\n1. Calculate the number of expired packs.\n2. Determine the total cost of the expired packs.\n3. Subtract the refund amount from the total cost to find out how much Bob was refunded.\n\nLet's start with step 1: Calculate the number of expired packs.\n\nBob ordered 80 packs in total. Since 40% of the packs were expired, we calculate:\n\\[ \\text{Number of expired packs} = 80 \\times \\frac{40}{100} = 80 \\times 0.40 = 32 \\]\n\nNext, we move to step 2: Determine the total cost of the expired packs.\n\nEach pack costs $12, so the total cost for 32 expired packs is:\n\\[ \\text{Total cost} = 32 \\times 12 = 384 \\]\n\nFinally",
+      "dataset_index": 2070,
+      "dataset_split": "development_train",
+      "expected_number": "384",
+      "question": "Bob ordered 80 packs of Greek yogurt from Costco to use for the month. However, when the delivery arrived, he realized 40% of the packs were expired. He decided to return those packs. If each pack was $12, how much was Bob refunded for the expired product?",
+      "question_sha256": "60588e365f85d31122498c3a77c20835b96ef4b216aa08a51ddbb5ff5e755308",
+      "rejected_answer": "To solve this problem, we need to follow these steps:\n\n1. Calculate the number of expired packs.\n2. Determine the total cost of the expired packs.\n3. Subtract the refund amount from the total cost to find out how much Bob was refunded.\n\nLet's start with step 1: Calculate the number of expired packs.\n\nBob ordered 80 packs in total. Since 40% of the packs were expired, we calculate:\n\\[ \\text{Number of expired packs} = 80 \\times \\frac{40}{100} = 80 \\times 0.40 = 32 \\]\n\nNext, we move to step 2: Determine the total cost of the expired packs.\n\nEach pack costs $12, so the total cost for 32 expired packs is:\n\\[ \\text{Total cost} = 32 \\times 12 = 384 \\]\n\nFinally",
+      "rejected_source": "base_rollout_incorrect_or_unparseable",
+      "source_answer": "The number of Greek yogurt packs that had expired is 40/100*80 = <<40/100*80=32>>32\nIf each pack of Greek yogurt was sold at $12, for the 32 packs of greek yogurt that he returned, Bob was refunded $12*32 = $<<12*32=384>>384\n#### 384",
+      "user_message": "Solve this math word problem. Show concise work and end with #### followed by the answer.\n\nBob ordered 80 packs of Greek yogurt from Costco to use for the month. However, when the delivery arrived, he realized 40% of the packs were expired. He decided to return those packs. If each pack was $12, how much was Bob refunded for the expired product?",
+      "verifier_answer": "The number of Greek yogurt packs that had expired is 40/100*80 = <<40/100*80=32>>32\nIf each pack of Greek yogurt was sold at $12, for the 32 packs of greek yogurt that he returned, Bob was refunded $12*32 = $<<12*32=384>>384\n#### 384"
+    },
+    {
+      "base_generated_text": "To solve this problem, let's break it down step-by-step:\n\n1. **Number of Chickens in the Run:**\n   - We know there are 14 chickens in the coop.\n   - The number of chickens in the run is twice the number in the coop.\n   \\[\n   \\text{Number of chickens in the run} = 2 \\times 14 = 28\n   \\]\n\n2. **Number of Chickens Free Ranging:**\n   - There are 4 less than double the number of chickens in the run.\n   \\[\n   \\text{Number of chickens free ranging} = 2 \\times 28 - 4\n   \\]\n   - Calculate \\(2 \\times 28\\):\n     \\[\n     2 \\times 28 = 56\n     \\]\n   - Subtract 4 from 56:\n     \\[\n     56",
+      "dataset_index": 3423,
+      "dataset_split": "development_train",
+      "expected_number": "52",
+      "question": "There are 14 chickens in the coop, and twice that many in the run. There is 4 less than double the number of chickens free ranging as in the run.  How many chickens are free ranging?",
+      "question_sha256": "117d4fb88161d10cbb72dbb9e32bcb08400cd6b9f0d4e666baa5cfad0ff60fc5",
+      "rejected_answer": "To solve this problem, let's break it down step-by-step:\n\n1. **Number of Chickens in the Run:**\n   - We know there are 14 chickens in the coop.\n   - The number of chickens in the run is twice the number in the coop.\n   \\[\n   \\text{Number of chickens in the run} = 2 \\times 14 = 28\n   \\]\n\n2. **Number of Chickens Free Ranging:**\n   - There are 4 less than double the number of chickens in the run.\n   \\[\n   \\text{Number of chickens free ranging} = 2 \\times 28 - 4\n   \\]\n   - Calculate \\(2 \\times 28\\):\n     \\[\n     2 \\times 28 = 56\n     \\]\n   - Subtract 4 from 56:\n     \\[\n     56",
+      "rejected_source": "base_rollout_incorrect_or_unparseable",
+      "source_answer": "Coop:14 chickens\nRun:14(2)=28 chickens\nFree Range:28(2)-4=52 chickens\n#### 52",
+      "user_message": "Solve this math word problem. Show concise work and end with #### followed by the answer.\n\nThere are 14 chickens in the coop, and twice that many in the run. There is 4 less than double the number of chickens free ranging as in the run.  How many chickens are free ranging?",
+      "verifier_answer": "Coop:14 chickens\nRun:14(2)=28 chickens\nFree Range:28(2)-4=52 chickens\n#### 52"
+    },
+    {
+      "base_generated_text": "To solve this math word problem, we can follow these steps:\n\n1. **Identify the given information:**\n   - There are 6 female members.\n   - The number of male members is twice the number of female members.\n\n2. **Calculate the number of male members:**\n   - Since there are twice as many males as females, we multiply the number of females by 2:\n     \\[\n     \\text{Number of males} = 2 \\times \\text{Number of females}\n     \\]\n     Substituting the given number of females:\n     \\[\n     \\text{Number of males} = 2 \\times 6 = 12\n     \\]\n\n3. **Calculate the total number of members in the Math club:**\n   - To find the total number of members, we add the number of male members to the number of female members:\n     \\[\n     \\text{Total number of members",
+      "dataset_index": 4615,
+      "dataset_split": "development_train",
+      "expected_number": "18",
+      "question": "In the Math club, there are two times as many males as females. If there are 6 female members, how many members are there in the Math club in total?",
+      "question_sha256": "9a68816304cca0df5deb3d46cff1b7bc4da26a44fe811ca589c9470b326c4587",
+      "rejected_answer": "To solve this math word problem, we can follow these steps:\n\n1. **Identify the given information:**\n   - There are 6 female members.\n   - The number of male members is twice the number of female members.\n\n2. **Calculate the number of male members:**\n   - Since there are twice as many males as females, we multiply the number of females by 2:\n     \\[\n     \\text{Number of males} = 2 \\times \\text{Number of females}\n     \\]\n     Substituting the given number of females:\n     \\[\n     \\text{Number of males} = 2 \\times 6 = 12\n     \\]\n\n3. **Calculate the total number of members in the Math club:**\n   - To find the total number of members, we add the number of male members to the number of female members:\n     \\[\n     \\text{Total number of members",
+      "rejected_source": "base_rollout_incorrect_or_unparseable",
+      "source_answer": "There are 6 x 2 = <<6*2=12>>12 male members in the club.\nThus, the Math club has a total of 6 + 12 = <<6+12=18>>18 members.\n#### 18",
+      "user_message": "Solve this math word problem. Show concise work and end with #### followed by the answer.\n\nIn the Math club, there are two times as many males as females. If there are 6 female members, how many members are there in the Math club in total?",
+      "verifier_answer": "There are 6 x 2 = <<6*2=12>>12 male members in the club.\nThus, the Math club has a total of 6 + 12 = <<6+12=18>>18 members.\n#### 18"
+    },
+    {
+      "base_generated_text": "To solve this problem, let's break it down step-by-step:\n\n1. **Determine the number of 3-piece sets Codger needs:**\n   - Codger already owns one 3-piece set.\n   - To find out how many more sets he needs, we subtract the number of sets he already owns from the total number of sets required:\n     \\[\n     5 \\text{ sets} - 1 \\text{ set} = 4 \\text{ sets}\n     \\]\n\n2. **Calculate the number of pairs needed for each set:**\n   - Each 3-piece set consists of 3 individual shoes.\n   - Therefore, for 4 sets, the total number of individual shoes needed is:\n     \\[\n     4 \\text{ sets} \\times 3 \\text{ shoes/set} = 12 \\text{ shoes}\n     \\]\n\n3. **Convert the number of individual shoes into pairs",
+      "dataset_index": 3631,
+      "dataset_split": "development_train",
+      "expected_number": "6",
+      "question": "Codger is a three-footed sloth.  He has a challenging time buying shoes because the stores only sell the shoes in pairs. If he already owns the 3-piece set of shoes he is wearing, how many pairs of shoes does he need to buy to have 5 complete 3-piece sets of shoes?",
+      "question_sha256": "9de6ababb7f430e1c28e866614a55bfdb5fb24296e220f4f950589e7abd8bc77",
+      "rejected_answer": "To solve this problem, let's break it down step-by-step:\n\n1. **Determine the number of 3-piece sets Codger needs:**\n   - Codger already owns one 3-piece set.\n   - To find out how many more sets he needs, we subtract the number of sets he already owns from the total number of sets required:\n     \\[\n     5 \\text{ sets} - 1 \\text{ set} = 4 \\text{ sets}\n     \\]\n\n2. **Calculate the number of pairs needed for each set:**\n   - Each 3-piece set consists of 3 individual shoes.\n   - Therefore, for 4 sets, the total number of individual shoes needed is:\n     \\[\n     4 \\text{ sets} \\times 3 \\text{ shoes/set} = 12 \\text{ shoes}\n     \\]\n\n3. **Convert the number of individual shoes into pairs",
+      "rejected_source": "base_rollout_incorrect_or_unparseable",
+      "source_answer": "To have five 3-piece sets, he needs to have a total of 5*3=<<5*3=15>>15 shoes,\nIf he already owns three shoes, then he needs to buy 15-3=<<15-3=12>>12 additional shoes.\nSince each pair of shoes includes two shoes, he needs to buy a total of 12/2=<<12/2=6>>6 pairs of shoes.\n#### 6",
+      "user_message": "Solve this math word problem. Show concise work and end with #### followed by the answer.\n\nCodger is a three-footed sloth.  He has a challenging time buying shoes because the stores only sell the shoes in pairs. If he already owns the 3-piece set of shoes he is wearing, how many pairs of shoes does he need to buy to have 5 complete 3-piece sets of shoes?",
+      "verifier_answer": "To have five 3-piece sets, he needs to have a total of 5*3=<<5*3=15>>15 shoes,\nIf he already owns three shoes, then he needs to buy 15-3=<<15-3=12>>12 additional shoes.\nSince each pair of shoes includes two shoes, he needs to buy a total of 12/2=<<12/2=6>>6 pairs of shoes.\n#### 6"
+    },
+    {
+      "base_generated_text": "To solve this math word problem, let's break it down step-by-step:\n\n1. **Determine the total number of hoots heard:**\n   - We know that one barnyard owl makes 5 hoot sounds per minute.\n   - There are 20 hoots per minute in total.\n   - Therefore, the total number of hoots heard is \\( 20 \\times 5 = 100 \\) hoots.\n\n2. **Identify the source of the noise:**\n   - The problem states that \"5 less than 20 hoots per minute\" are heard.\n   - This means there are 15 hoots (since 20 - 5 = 15).\n\n3. **Calculate the number of barnyard owls:**\n   - Each barnyard owl makes 5 hoot sounds per minute.\n   - To find out how many owls",
+      "dataset_index": 522,
+      "dataset_split": "development_train",
+      "expected_number": "3",
+      "question": "One barnyard owl makes 5 hoot sounds per minute.  If 5 less than 20 hoots per minute are heard coming out of the barn, how many Barnyard owls would this noise be coming from?",
+      "question_sha256": "3f3f426f855cdbbab43f5d0886dd61179764fcd4c191705ef1a7482997ea36f8",
+      "rejected_answer": "To solve this math word problem, let's break it down step-by-step:\n\n1. **Determine the total number of hoots heard:**\n   - We know that one barnyard owl makes 5 hoot sounds per minute.\n   - There are 20 hoots per minute in total.\n   - Therefore, the total number of hoots heard is \\( 20 \\times 5 = 100 \\) hoots.\n\n2. **Identify the source of the noise:**\n   - The problem states that \"5 less than 20 hoots per minute\" are heard.\n   - This means there are 15 hoots (since 20 - 5 = 15).\n\n3. **Calculate the number of barnyard owls:**\n   - Each barnyard owl makes 5 hoot sounds per minute.\n   - To find out how many owls",
+      "rejected_source": "base_rollout_incorrect_or_unparseable",
+      "source_answer": "5 less than 20 hoots per minute is 20-5=<<20-5=15>>15 hoots per minute.\nIf one barnyard owl makes 5 hoot sounds per minute, then 15 hoots per minute are coming from 15/5=<<15/5=3>>3 barnyard owls.\n#### 3",
+      "user_message": "Solve this math word problem. Show concise work and end with #### followed by the answer.\n\nOne barnyard owl makes 5 hoot sounds per minute.  If 5 less than 20 hoots per minute are heard coming out of the barn, how many Barnyard owls would this noise be coming from?",
+      "verifier_answer": "5 less than 20 hoots per minute is 20-5=<<20-5=15>>15 hoots per minute.\nIf one barnyard owl makes 5 hoot sounds per minute, then 15 hoots per minute are coming from 15/5=<<15/5=3>>3 barnyard owls.\n#### 3"
+    },
+    {
+      "base_generated_text": "To solve this problem, we need to determine the number of children in Monroe's family given that she and her husband ate 80 granola bars, and the remaining granola bars were divided equally among her children, with each child receiving 20 granola bars.\n\nLet's break it down step-by-step:\n\n1. **Total Granola Bars**: Monroe made 200 granola bars.\n2. **Granola Bars Eaten by Monroe and Her Husband**: They ate 80 granola bars together.\n3. **Remaining Granola Bars**: Subtract the number of granola bars eaten from the total:\n   \\[\n   200 - 80 = 120 \\text{ granola bars}\n   \\]\n4. **Granola Bars Per Child**: Each child received 20 granola bars.\n5. **Number of Children**: Divide the remaining granola bars by the number of granola",
+      "dataset_index": 1162,
+      "dataset_split": "development_train",
+      "expected_number": "6",
+      "question": "Monroe made 200 granola bars for her family. She and her husband ate 80, and the rest was divided equally among her children. If each child received 20 granola bars, how many children are in the family?",
+      "question_sha256": "21aa87e8521dec8d7eb9b4847167ab3e7ec44c26c8be2609ded8c267319c5b42",
+      "rejected_answer": "To solve this problem, we need to determine the number of children in Monroe's family given that she and her husband ate 80 granola bars, and the remaining granola bars were divided equally among her children, with each child receiving 20 granola bars.\n\nLet's break it down step-by-step:\n\n1. **Total Granola Bars**: Monroe made 200 granola bars.\n2. **Granola Bars Eaten by Monroe and Her Husband**: They ate 80 granola bars together.\n3. **Remaining Granola Bars**: Subtract the number of granola bars eaten from the total:\n   \\[\n   200 - 80 = 120 \\text{ granola bars}\n   \\]\n4. **Granola Bars Per Child**: Each child received 20 granola bars.\n5. **Number of Children**: Divide the remaining granola bars by the number of granola",
+      "rejected_source": "base_rollout_incorrect_or_unparseable",
+      "source_answer": "If Monroe and her husband ate 80 granola bars, then the number of granola bars the children shared is 200-80 = 120\nEach child received 20 bars, and there were 120 granola bars, meaning there were 120/20 = <<120/20=6>>6 children in the family.\n#### 6",
+      "user_message": "Solve this math word problem. Show concise work and end with #### followed by the answer.\n\nMonroe made 200 granola bars for her family. She and her husband ate 80, and the rest was divided equally among her children. If each child received 20 granola bars, how many children are in the family?",
+      "verifier_answer": "If Monroe and her husband ate 80 granola bars, then the number of granola bars the children shared is 200-80 = 120\nEach child received 20 bars, and there were 120 granola bars, meaning there were 120/20 = <<120/20=6>>6 children in the family.\n#### 6"
+    },
+    {
+      "base_generated_text": "To solve this problem, we need to determine how many boats can fit along a river that is 42 feet wide, given that each boat must be 3 feet wide and there should be at least 2 feet of space between each boat and the riverbanks.\n\nLet's break it down step-by-step:\n\n1. **Determine the total width available for boats:**\n   - The river is 42 feet wide.\n   - Each boat needs at least 2 feet of space on both sides (front and back).\n   - Therefore, each boat occupies \\(2 + 2 = 4\\) feet of space.\n\n2. **Calculate the number of boats that can fit along one side of the river:**\n   - Since each boat takes up 4 feet of space, we divide the width of the river by the space required per boat:\n     \\[\n     \\frac{42 \\text{ feet}}{4 \\text{",
+      "dataset_index": 405,
+      "dataset_split": "development_train",
+      "expected_number": "8",
+      "question": "A river is to be used for a boat race. If each boat is 3 feet across and they must have at least 2 feet between them or the riverbank, how many boats can race in a river that is 42 feet across?",
+      "question_sha256": "aa6cde37e63e3db6ae83c01df5b9f7eb153f14fc299a5614904a6a5c5579db2b",
+      "rejected_answer": "To solve this problem, we need to determine how many boats can fit along a river that is 42 feet wide, given that each boat must be 3 feet wide and there should be at least 2 feet of space between each boat and the riverbanks.\n\nLet's break it down step-by-step:\n\n1. **Determine the total width available for boats:**\n   - The river is 42 feet wide.\n   - Each boat needs at least 2 feet of space on both sides (front and back).\n   - Therefore, each boat occupies \\(2 + 2 = 4\\) feet of space.\n\n2. **Calculate the number of boats that can fit along one side of the river:**\n   - Since each boat takes up 4 feet of space, we divide the width of the river by the space required per boat:\n     \\[\n     \\frac{42 \\text{ feet}}{4 \\text{",
+      "rejected_source": "base_rollout_incorrect_or_unparseable",
+      "source_answer": "Each boat will require 3 feet across to fit itself and 2 feet space on one side for a total of 2+3 = <<3+2=5>>5 feet per boat\nThe last boat will need an additional 2 feet space on its other side, so this 2 feet should be subtracted first from the 42 feet which leaves 42-2 = <<42-2=40>>40 feet\n5 feet per boat on the remaining 40 feet for a total of 40/5 = <<40/5=8>>8 boats\n#### 8",
+      "user_message": "Solve this math word problem. Show concise work and end with #### followed by the answer.\n\nA river is to be used for a boat race. If each boat is 3 feet across and they must have at least 2 feet between them or the riverbank, how many boats can race in a river that is 42 feet across?",
+      "verifier_answer": "Each boat will require 3 feet across to fit itself and 2 feet space on one side for a total of 2+3 = <<3+2=5>>5 feet per boat\nThe last boat will need an additional 2 feet space on its other side, so this 2 feet should be subtracted first from the 42 feet which leaves 42-2 = <<42-2=40>>40 feet\n5 feet per boat on the remaining 40 feet for a total of 40/5 = <<40/5=8>>8 boats\n#### 8"
+    }
+  ],
+  "validation_examples": [
+    {
+      "base_generated_text": "To solve this math word problem, we need to determine how many slices each person ate based on the information given about the total number of slices and the remaining slices after some were eaten.\n\nLet's break down the problem step-by-step:\n\n1. **Total Slices**: There are two pizzas with 16 slices each.\n   \\[\n   \\text{Total slices} = 2 \\times 16 = 32 \\text{ slices}\n   \\]\n\n2. **Remaining Slices**: After eating, there are 1 slice of pepperoni left and 7 slices of cheese left.\n   \\[\n   \\text{Remaining slices} = 1 + 7 = 8 \\text{ slices}\n   \\]\n\n3. **Equal Distribution**: The remaining 8 slices are divided equally among Phoebe and her three friends (including herself).\n   \\[\n   \\text{Slices per person} = \\frac{8",
+      "dataset_index": 5255,
+      "dataset_split": "development_validation",
+      "expected_number": "6",
+      "question": "Phoebe has two pizzas to share with her and three friends. One has pepperoni and the other has cheese. They both have 16 slices. They all eat the same amount. One friend eats only pepperoni, while the rest have an equal number of slices of each. At the end, there is one slice of pepperoni left and 7 slices of cheese, how many slices does each person eat?",
+      "question_sha256": "d26eb700e9a9b24a8c7e81d6a761c11925b44e7a8e0ed187f98c69b66e90a56f",
+      "rejected_answer": "To solve this math word problem, we need to determine how many slices each person ate based on the information given about the total number of slices and the remaining slices after some were eaten.\n\nLet's break down the problem step-by-step:\n\n1. **Total Slices**: There are two pizzas with 16 slices each.\n   \\[\n   \\text{Total slices} = 2 \\times 16 = 32 \\text{ slices}\n   \\]\n\n2. **Remaining Slices**: After eating, there are 1 slice of pepperoni left and 7 slices of cheese left.\n   \\[\n   \\text{Remaining slices} = 1 + 7 = 8 \\text{ slices}\n   \\]\n\n3. **Equal Distribution**: The remaining 8 slices are divided equally among Phoebe and her three friends (including herself).\n   \\[\n   \\text{Slices per person} = \\frac{8",
+      "rejected_source": "base_rollout_incorrect_or_unparseable",
+      "source_answer": "They are 9 slices of cheese because 16 - 7 = <<16-7=9>>9\nThey ate three slices of cheese each because 9 / 3 = <<9/3=3>>3\nThey are 6 slices each in total because 3 x 2 = <<3*2=6>>6\n#### 6",
+      "user_message": "Solve this math word problem. Show concise work and end with #### followed by the answer.\n\nPhoebe has two pizzas to share with her and three friends. One has pepperoni and the other has cheese. They both have 16 slices. They all eat the same amount. One friend eats only pepperoni, while the rest have an equal number of slices of each. At the end, there is one slice of pepperoni left and 7 slices of cheese, how many slices does each person eat?",
+      "verifier_answer": "They are 9 slices of cheese because 16 - 7 = <<16-7=9>>9\nThey ate three slices of cheese each because 9 / 3 = <<9/3=3>>3\nThey are 6 slices each in total because 3 x 2 = <<3*2=6>>6\n#### 6"
+    },
+    {
+      "base_generated_text": "To solve this problem, we need to follow these steps:\n\n1. Calculate the total weight of the water in the tank when it is full.\n2. Determine the amount of water that has been added due to the rainstorm.\n3. Calculate the new total weight of the water in the tank after the rainstorm.\n4. Add the weight of the water to its original weight to find the final total weight.\n\nLet's start with step 1:\n- The tank holds 200 gallons of water.\n- Each gallon weighs 8 pounds.\n- Therefore, the total weight of the water in the tank when it is full is \\(200 \\text{ gallons} \\times 8 \\text{ pounds/gallon} = 1600 \\text{ pounds}\\).\n\nNext, for step 2:\n- The tank is filled to 80% of its capacity.\n- So, the amount of water added due to the",
+      "dataset_index": 5179,
+      "dataset_split": "development_validation",
+      "expected_number": "1360",
+      "question": "John has a large water collection tank.  The tank can hold 200 gallons.  It weighs 80 pounds empty.  A rainstorm fills it to 80% of capacity.  If a gallon of water weighs 8 pounds, how much does it weigh now?",
+      "question_sha256": "c1fd1e3610529ae104db90f76afbbb133066d89b033cd0d4727a97935a2d5e1a",
+      "rejected_answer": "To solve this problem, we need to follow these steps:\n\n1. Calculate the total weight of the water in the tank when it is full.\n2. Determine the amount of water that has been added due to the rainstorm.\n3. Calculate the new total weight of the water in the tank after the rainstorm.\n4. Add the weight of the water to its original weight to find the final total weight.\n\nLet's start with step 1:\n- The tank holds 200 gallons of water.\n- Each gallon weighs 8 pounds.\n- Therefore, the total weight of the water in the tank when it is full is \\(200 \\text{ gallons} \\times 8 \\text{ pounds/gallon} = 1600 \\text{ pounds}\\).\n\nNext, for step 2:\n- The tank is filled to 80% of its capacity.\n- So, the amount of water added due to the",
+      "rejected_source": "base_rollout_incorrect_or_unparseable",
+      "source_answer": "The tank has 200*.8=<<200*.8=160>>160 gallons of water in it\nThat water weighs 160*8=<<160*8=1280>>1280 pounds\nSo in total it weighs 1280+80=<<1280+80=1360>>1360 pounds\n#### 1360",
+      "user_message": "Solve this math word problem. Show concise work and end with #### followed by the answer.\n\nJohn has a large water collection tank.  The tank can hold 200 gallons.  It weighs 80 pounds empty.  A rainstorm fills it to 80% of capacity.  If a gallon of water weighs 8 pounds, how much does it weigh now?",
+      "verifier_answer": "The tank has 200*.8=<<200*.8=160>>160 gallons of water in it\nThat water weighs 160*8=<<160*8=1280>>1280 pounds\nSo in total it weighs 1280+80=<<1280+80=1360>>1360 pounds\n#### 1360"
+    },
+    {
+      "base_generated_text": "To solve this problem, we need to determine Tony's driving speed and then use that speed to calculate the time it takes for him to travel the second distance.\n\nFirst, let's find Tony's driving speed:\n- Distance between the two towns: 120 miles\n- Time taken: 3 hours\n\nSpeed = Distance / Time\n\\[ \\text{Speed} = \\frac{\\text{Distance}}{\\text{Time}} = \\frac{120 \\text{ miles}}{3 \\text{ hours}} = 40 \\text{ miles per hour} \\]\n\nNow, we know Tony's speed is 40 miles per hour. Next, we'll calculate the time it takes to travel 200 miles:\n\n\\[ \\text{Time} = \\frac{\\text{Distance}}{\\text{Speed}} = \\frac{200 \\text{ miles}}{40 \\text{ miles per hour",
+      "dataset_index": 1431,
+      "dataset_split": "development_validation",
+      "expected_number": "5",
+      "question": "Tony is driving his car between his town and a friend's down. The towns are 120 miles apart and he gets there in 3 hours. The next day, he is driving to see another friend who lives 200 miles away from his friend. If he drives at the same speed, how long will the drive take?",
+      "question_sha256": "cc1a0713c965844083cef9fb06df2376ef382aa1caf3794d92bd15f9d0a2e254",
+      "rejected_answer": "To solve this problem, we need to determine Tony's driving speed and then use that speed to calculate the time it takes for him to travel the second distance.\n\nFirst, let's find Tony's driving speed:\n- Distance between the two towns: 120 miles\n- Time taken: 3 hours\n\nSpeed = Distance / Time\n\\[ \\text{Speed} = \\frac{\\text{Distance}}{\\text{Time}} = \\frac{120 \\text{ miles}}{3 \\text{ hours}} = 40 \\text{ miles per hour} \\]\n\nNow, we know Tony's speed is 40 miles per hour. Next, we'll calculate the time it takes to travel 200 miles:\n\n\\[ \\text{Time} = \\frac{\\text{Distance}}{\\text{Speed}} = \\frac{200 \\text{ miles}}{40 \\text{ miles per hour",
+      "rejected_source": "base_rollout_incorrect_or_unparseable",
+      "source_answer": "He is driving 40 MPH because 120 / 3 = <<120/3=40>>40\nIt will take him 5 hours because 200 / 40 = <<200/40=5>>5\n#### 5",
+      "user_message": "Solve this math word problem. Show concise work and end with #### followed by the answer.\n\nTony is driving his car between his town and a friend's down. The towns are 120 miles apart and he gets there in 3 hours. The next day, he is driving to see another friend who lives 200 miles away from his friend. If he drives at the same speed, how long will the drive take?",
+      "verifier_answer": "He is driving 40 MPH because 120 / 3 = <<120/3=40>>40\nIt will take him 5 hours because 200 / 40 = <<200/40=5>>5\n#### 5"
+    },
+    {
+      "base_generated_text": "To solve this problem, let's define the variables first:\n- Let \\( M \\) be the number of marbles Merill has.\n- Let \\( E \\) be the number of marbles Elliot has.\n- Let \\( S \\) be the number of marbles Selma has.\n\nFrom the problem statement, we know the following:\n\n1. Merill has twice as many marbles as Elliot: \n   \\[\n   M = 2E\n   \\]\n\n2. The total number of marbles that Merill and Elliot have together is five fewer than Selma's marbles:\n   \\[\n   M + E = S - 5\n   \\]\n   Given that Selma has fifty marbles (\\( S = 50 \\)):\n   \\[\n   M + E = 50 - 5\n   \\]\n   Simplifying this equation gives us:\n   \\[\n   M + E = 45",
+      "dataset_index": 518,
+      "dataset_split": "development_validation",
+      "expected_number": "30",
+      "question": "Merill has twice as many marbles as Elliot and the two of them together have five fewer marbles than Selma. If Selma has fifty marbles, how many marbles does Merill have?",
+      "question_sha256": "aca2d1a413911d8486679cd78d739a57f4e3d7ceb75799f9f3ae738f3cd5607e",
+      "rejected_answer": "To solve this problem, let's define the variables first:\n- Let \\( M \\) be the number of marbles Merill has.\n- Let \\( E \\) be the number of marbles Elliot has.\n- Let \\( S \\) be the number of marbles Selma has.\n\nFrom the problem statement, we know the following:\n\n1. Merill has twice as many marbles as Elliot: \n   \\[\n   M = 2E\n   \\]\n\n2. The total number of marbles that Merill and Elliot have together is five fewer than Selma's marbles:\n   \\[\n   M + E = S - 5\n   \\]\n   Given that Selma has fifty marbles (\\( S = 50 \\)):\n   \\[\n   M + E = 50 - 5\n   \\]\n   Simplifying this equation gives us:\n   \\[\n   M + E = 45",
+      "rejected_source": "base_rollout_incorrect_or_unparseable",
+      "source_answer": "If Selma has fifty marbles, then Merill and Elliot together have 50-5 = <<50-5=45>>45 marbles.\nWe'll assume the number of marbles that Elliot has is x.\nIf Merill has twice as many marbles as Elliot, then the total number of marbles that Merill and Elliot have together is 2x+x = 45 marbles.\nThis translates to 3x= 45\nThe number of marbles that Elliot has is x = 45/3\nThis means Elliot has x = 15 marbles.\nSince Merill has twice as many marbles as Elliot, Merill has 2*15 = <<2*15=30>>30 marbles.\n#### 30",
+      "user_message": "Solve this math word problem. Show concise work and end with #### followed by the answer.\n\nMerill has twice as many marbles as Elliot and the two of them together have five fewer marbles than Selma. If Selma has fifty marbles, how many marbles does Merill have?",
+      "verifier_answer": "If Selma has fifty marbles, then Merill and Elliot together have 50-5 = <<50-5=45>>45 marbles.\nWe'll assume the number of marbles that Elliot has is x.\nIf Merill has twice as many marbles as Elliot, then the total number of marbles that Merill and Elliot have together is 2x+x = 45 marbles.\nThis translates to 3x= 45\nThe number of marbles that Elliot has is x = 45/3\nThis means Elliot has x = 15 marbles.\nSince Merill has twice as many marbles as Elliot, Merill has 2*15 = <<2*15=30>>30 marbles.\n#### 30"
+    },
+    {
+      "base_generated_text": "To solve this problem, we need to follow these steps:\n\n1. Calculate how many gold bars Jame uses to pay for tax.\n2. Subtract the used gold from his initial amount to find out how much he has left after paying taxes.\n3. Calculate how many gold bars he loses due to the divorce.\n4. Subtract the lost gold from the remaining amount to find out how many gold bars he has left.\n\nLet's start with step 1:\nJame initially has 60 gold bars. To pay for tax, he uses 10% of them.\n\\[ \\text{Gold used for tax} = 0.10 \\times 60 = 6 \\]\nSo, after paying for tax, he has:\n\\[ 60 - 6 = 54 \\]\n\nNext, we move to step 2:\nAfter paying for tax, he loses half of the remaining gold.\n\\[ \\text{Gold lost due",
+      "dataset_index": 1209,
+      "dataset_split": "development_validation",
+      "expected_number": "27",
+      "question": "Jame has 60 bars of gold.  He uses 10% of them to pay for tax and then loses half of what is left in divorce.  How many gold bars does he have left?",
+      "question_sha256": "8c21818532df1cbd94de35a64f4b2c8033bef0664f26b9bfc2ff6f3e3703e3a1",
+      "rejected_answer": "To solve this problem, we need to follow these steps:\n\n1. Calculate how many gold bars Jame uses to pay for tax.\n2. Subtract the used gold from his initial amount to find out how much he has left after paying taxes.\n3. Calculate how many gold bars he loses due to the divorce.\n4. Subtract the lost gold from the remaining amount to find out how many gold bars he has left.\n\nLet's start with step 1:\nJame initially has 60 gold bars. To pay for tax, he uses 10% of them.\n\\[ \\text{Gold used for tax} = 0.10 \\times 60 = 6 \\]\nSo, after paying for tax, he has:\n\\[ 60 - 6 = 54 \\]\n\nNext, we move to step 2:\nAfter paying for tax, he loses half of the remaining gold.\n\\[ \\text{Gold lost due",
+      "rejected_source": "base_rollout_incorrect_or_unparseable",
+      "source_answer": "He loses 60*.1=<<60*.1=6>>6 bars to taxes\nThat means he has 60-6=<<60-6=54>>54 bars after taxes\nSo he has 54/2=<<54/2=27>>27 bars after the divorce\n#### 27",
+      "user_message": "Solve this math word problem. Show concise work and end with #### followed by the answer.\n\nJame has 60 bars of gold.  He uses 10% of them to pay for tax and then loses half of what is left in divorce.  How many gold bars does he have left?",
+      "verifier_answer": "He loses 60*.1=<<60*.1=6>>6 bars to taxes\nThat means he has 60-6=<<60-6=54>>54 bars after taxes\nSo he has 54/2=<<54/2=27>>27 bars after the divorce\n#### 27"
+    },
+    {
+      "base_generated_text": "To solve this math word problem, we need to calculate the total number of minutes Maddie watched during the weekdays and then subtract that from the total number of minutes in the show (which is 508 minutes).\n\nFirst, let's determine how many minutes Maddie watched each day:\n\n- **Monday:** 138 minutes\n- **Tuesday and Wednesday:** 0 minutes\n- **Thursday:** 21 minutes\n- **Friday:** 2 episodes, so \\(2 \\times 44 = 88\\) minutes\n\nNow, let's add up the minutes watched on the weekdays:\n\\[138 + 0 + 21 + 88 = 247\\]\n\nNext, we subtract the total minutes watched on the weekdays from the total minutes in the show:\n\\[508 - 247 = 261\\]\n\nTherefore, Maddie watched 261 more minutes over",
+      "dataset_index": 1564,
+      "dataset_split": "development_validation",
+      "expected_number": "105",
+      "question": "Maddie watches 8 episodes of a TV show this week. Each episode is about 44 minutes long. If she watches 138 minutes of the show on Monday. She does not watch any TV on Tuesday and Wednesday. On Thursday, she watches 21 minutes. On Friday, she watches 2 episodes. How many more minutes did she watch over the weekend?",
+      "question_sha256": "4530fca3babfe5cc5b4f455d93fba2570280e96bd309311706151e3909664c3b",
+      "rejected_answer": "To solve this math word problem, we need to calculate the total number of minutes Maddie watched during the weekdays and then subtract that from the total number of minutes in the show (which is 508 minutes).\n\nFirst, let's determine how many minutes Maddie watched each day:\n\n- **Monday:** 138 minutes\n- **Tuesday and Wednesday:** 0 minutes\n- **Thursday:** 21 minutes\n- **Friday:** 2 episodes, so \\(2 \\times 44 = 88\\) minutes\n\nNow, let's add up the minutes watched on the weekdays:\n\\[138 + 0 + 21 + 88 = 247\\]\n\nNext, we subtract the total minutes watched on the weekdays from the total minutes in the show:\n\\[508 - 247 = 261\\]\n\nTherefore, Maddie watched 261 more minutes over",
+      "rejected_source": "base_rollout_incorrect_or_unparseable",
+      "source_answer": "Maddie watches a total of 8*44=<<8*44=352>>352 minutes of the TV show during the week.\nOn Friday, she watches 2*44=<<2*44=88>>88 minutes\nOn Monday, Thursday, and Friday, she watches 138+21+88 = <<138+21+88=247>>247 minutes.\nThus, on the weekend she watches 352-247 = <<352-247=105>>105 minutes of the TV show.\n#### 105",
+      "user_message": "Solve this math word problem. Show concise work and end with #### followed by the answer.\n\nMaddie watches 8 episodes of a TV show this week. Each episode is about 44 minutes long. If she watches 138 minutes of the show on Monday. She does not watch any TV on Tuesday and Wednesday. On Thursday, she watches 21 minutes. On Friday, she watches 2 episodes. How many more minutes did she watch over the weekend?",
+      "verifier_answer": "Maddie watches a total of 8*44=<<8*44=352>>352 minutes of the TV show during the week.\nOn Friday, she watches 2*44=<<2*44=88>>88 minutes\nOn Monday, Thursday, and Friday, she watches 138+21+88 = <<138+21+88=247>>247 minutes.\nThus, on the weekend she watches 352-247 = <<352-247=105>>105 minutes of the TV show.\n#### 105"
+    },
+    {
+      "base_generated_text": "To solve this problem, we need to follow these steps:\n\n1. Calculate the total cost including tax.\n2. Subtract the discount from the total cost after tax.\n3. Divide the remaining amount by 2 to find out how much Cody paid.\n\nLet's go through each step in detail:\n\n### Step 1: Calculate the total cost including tax\n\nThe original purchase was $40. The tax rate is 5%.\n\nFirst, calculate the tax amount:\n\\[ \\text{Tax} = 40 \\times \\frac{5}{100} = 40 \\times 0.05 = 2 \\]\n\nNext, add the tax to the original purchase to get the total cost before any discounts:\n\\[ \\text{Total Cost Before Discount} = 40 + 2 = 42 \\]\n\n### Step 2: Subtract the discount\n\nAfter paying for the goods, Cody received an $8 discount.",
+      "dataset_index": 5283,
+      "dataset_split": "development_validation",
+      "expected_number": "17",
+      "question": "Cody goes to the store and buys $40 worth of stuff.  The taxes were 5%.  After taxes, he got an $8 discount.  Cody and his friend split the final price equally. How much did Cody pay?",
+      "question_sha256": "fb7f9dad6dbbefe12e811f04a07a9932a341c57253d55b7d0c247d314c19c5b2",
+      "rejected_answer": "To solve this problem, we need to follow these steps:\n\n1. Calculate the total cost including tax.\n2. Subtract the discount from the total cost after tax.\n3. Divide the remaining amount by 2 to find out how much Cody paid.\n\nLet's go through each step in detail:\n\n### Step 1: Calculate the total cost including tax\n\nThe original purchase was $40. The tax rate is 5%.\n\nFirst, calculate the tax amount:\n\\[ \\text{Tax} = 40 \\times \\frac{5}{100} = 40 \\times 0.05 = 2 \\]\n\nNext, add the tax to the original purchase to get the total cost before any discounts:\n\\[ \\text{Total Cost Before Discount} = 40 + 2 = 42 \\]\n\n### Step 2: Subtract the discount\n\nAfter paying for the goods, Cody received an $8 discount.",
+      "rejected_source": "base_rollout_incorrect_or_unparseable",
+      "source_answer": "The taxes were 40*.05=$<<40*.05=2>>2.\nSo the price was 40+2=$<<40+2=42>>42.\nHe got a discount so the price he paid was 42-8=$<<42-8=34>>34.\nSince he paid half his price was 34/2=$<<34/2=17>>17.\n#### 17",
+      "user_message": "Solve this math word problem. Show concise work and end with #### followed by the answer.\n\nCody goes to the store and buys $40 worth of stuff.  The taxes were 5%.  After taxes, he got an $8 discount.  Cody and his friend split the final price equally. How much did Cody pay?",
+      "verifier_answer": "The taxes were 40*.05=$<<40*.05=2>>2.\nSo the price was 40+2=$<<40+2=42>>42.\nHe got a discount so the price he paid was 42-8=$<<42-8=34>>34.\nSince he paid half his price was 34/2=$<<34/2=17>>17.\n#### 17"
+    },
+    {
+      "base_generated_text": "To solve this problem, we need to break down Rick's journey into its individual components and sum them up. Let's denote the distance from the start to the first destination as \\( x \\) miles.\n\n1. **First Leg:**\n   - Distance traveled: \\( x \\) miles\n\n2. **Second Leg:**\n   - Distance traveled: Twice the distance from the start to the first destination.\n     \\[\n     2x \\text{ miles}\n     \\]\n\n3. **Third Leg:**\n   - Distance traveled: 40 miles (which is half the distance from the start to the first destination).\n     \\[\n     \\frac{40}{2} = 20 \\text{ miles}\n     \\]\n\n4. **Fourth Leg:**\n   - Distance traveled: Twice the combined distances of the first two legs.\n     \\[\n     2(x + 2x) = 2(3x)",
+      "dataset_index": 4428,
+      "dataset_split": "development_validation",
+      "expected_number": "560",
+      "question": "Rick took off on a road trip for the summer.  He traveled to the first destination on his trip, and then from there, he traveled twice the distance to this second destination.  The third point on his trip was 40 miles away, which was half the distance he traveled from the beginning to his first destination.  The final destination took twice the amount of driving of all the other legs put together.  How many miles in total did he travel across all the legs of the trip?",
+      "question_sha256": "367aff244e6c52364918b6fc0c190bd342a6b2d1e77c05ed65cd3f2f030c09cf",
+      "rejected_answer": "To solve this problem, we need to break down Rick's journey into its individual components and sum them up. Let's denote the distance from the start to the first destination as \\( x \\) miles.\n\n1. **First Leg:**\n   - Distance traveled: \\( x \\) miles\n\n2. **Second Leg:**\n   - Distance traveled: Twice the distance from the start to the first destination.\n     \\[\n     2x \\text{ miles}\n     \\]\n\n3. **Third Leg:**\n   - Distance traveled: 40 miles (which is half the distance from the start to the first destination).\n     \\[\n     \\frac{40}{2} = 20 \\text{ miles}\n     \\]\n\n4. **Fourth Leg:**\n   - Distance traveled: Twice the combined distances of the first two legs.\n     \\[\n     2(x + 2x) = 2(3x)",
+      "rejected_source": "base_rollout_incorrect_or_unparseable",
+      "source_answer": "If the third leg of Rick's trip was half the distance of the first leg, was 40 miles, this means the first leg was 40*2=<<40*2=80>>80 miles long\nIf the second leg of the trip was twice the distance of the first leg, that means it was 80*2=<<80*2=160>>160 miles long\nIf the fourth leg was equal in distance to the total amount traveled across the first 3 legs, that means it was equal to 40+80+160= <<280=280>>280 miles long\nThis means in total Rick traveled 280+280= <<280+280=560>>560 miles\n#### 560",
+      "user_message": "Solve this math word problem. Show concise work and end with #### followed by the answer.\n\nRick took off on a road trip for the summer.  He traveled to the first destination on his trip, and then from there, he traveled twice the distance to this second destination.  The third point on his trip was 40 miles away, which was half the distance he traveled from the beginning to his first destination.  The final destination took twice the amount of driving of all the other legs put together.  How many miles in total did he travel across all the legs of the trip?",
+      "verifier_answer": "If the third leg of Rick's trip was half the distance of the first leg, was 40 miles, this means the first leg was 40*2=<<40*2=80>>80 miles long\nIf the second leg of the trip was twice the distance of the first leg, that means it was 80*2=<<80*2=160>>160 miles long\nIf the fourth leg was equal in distance to the total amount traveled across the first 3 legs, that means it was equal to 40+80+160= <<280=280>>280 miles long\nThis means in total Rick traveled 280+280= <<280+280=560>>560 miles\n#### 560"
+    }
+  ]
+}

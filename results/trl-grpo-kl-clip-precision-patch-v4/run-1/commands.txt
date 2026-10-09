@@ -1,0 +1,6 @@
+# Frozen before v4 execution; lock is commit 271e965.
+python scripts/audit_trl_grpo_kl_clip_precision_patch_v4.py --source-root /tmp/trl-grpo-kl-head-control-v1 --dtype float16 --importance-sampling-level token --output results/trl-grpo-kl-clip-precision-patch-v4/run-1/pr-head-f16-token.json
+python scripts/audit_trl_grpo_kl_clip_precision_patch_v4.py --source-root /tmp/trl-grpo-kl-candidate-v1 --patched --dtype float16 --importance-sampling-level token --output results/trl-grpo-kl-clip-precision-patch-v4/run-1/candidate-f16-token.json
+python scripts/audit_trl_grpo_kl_clip_precision_patch_v4.py --source-root /tmp/trl-grpo-kl-head-control-v1 --dtype float32 --importance-sampling-level token --output results/trl-grpo-kl-clip-precision-patch-v4/run-1/pr-head-f32-token.json
+python scripts/audit_trl_grpo_kl_clip_precision_patch_v4.py --source-root /tmp/trl-grpo-kl-candidate-v1 --patched --dtype float32 --importance-sampling-level token --output results/trl-grpo-kl-clip-precision-patch-v4/run-1/candidate-f32-token.json
+python scripts/verify_trl_grpo_kl_clip_precision_patch_v4.py --run-dir results/trl-grpo-kl-clip-precision-patch-v4/run-1 --output results/trl-grpo-kl-clip-precision-patch-v4/run-1/independent-check.json

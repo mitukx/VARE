@@ -1,0 +1,11 @@
+{
+  "attempt": 1,
+  "status": "failed",
+  "stage": "independent replay audit development",
+  "symptom": "Auditor regeneration disagreed with the first raw item-audit count.",
+  "cause": "The runner used random.Random.randrange(2), while the independently written auditor used getrandbits(1). These methods produce different seeded streams.",
+  "impact": "No protocol decision was made from this failed audit. The already generated raw trial bundle was left unchanged.",
+  "correction": "The auditor now independently replays the same specified randrange(2) sampling contract.",
+  "protocol_changed": false,
+  "raw_trial_bundle_changed": false
+}

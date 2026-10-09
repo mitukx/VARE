@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "scripts/reproduce_trl_pr7249_dispatcher_v2.py", line 134, in <module>
+    raise SystemExit(main())
+  File "scripts/reproduce_trl_pr7249_dispatcher_v2.py", line 95, in main
+    stderr=subprocess.STDOUT, timeout=protocol["wall_seconds_per_arm_cap"], check=False)
+KeyError: 'wall_seconds_per_arm_cap'
+Exit code: 1

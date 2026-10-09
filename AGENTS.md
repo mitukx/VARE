@@ -4,18 +4,13 @@ This file is the operational contract for AI agents and human contributors worki
 
 ## Mission
 
-VARE exists to study and build **closed-loop capability improvement under limited compute**. The system should turn real failures into reproducible tasks, turn trusted executable feedback into training or selection signal, detect when policy or verifier state has become stale, and spend scarce learning compute only when the expected information or capability gain justifies it.
+VARE exists to study **post-training signals and policy improvement under limited compute**. The system should make preference/reward signals auditable, test learning objectives and updates against independent measurements, detect when policy or verifier state has become stale, and spend scarce learning compute only when the expected information or capability gain justifies it.
 
 The long-term target is not a large collection of features. It is a reliable loop:
 
 ```text
-real failure
-  -> reproducible environment
-  -> agent/model trajectory
-  -> executable/trusted verification
-  -> failure diagnosis
-  -> targeted curriculum or intervention
-  -> candidate update
+preference/reward/training signal
+  -> policy update or targeted intervention
   -> independent held-out evaluation
   -> promote or rollback
   -> retained evidence
@@ -25,9 +20,9 @@ A successful VARE contribution makes some part of this loop **more correct, more
 
 ## North-star question
 
-> Can we obtain more independently measured capability improvement per unit of scarce compute without weakening correctness, provenance, or verifier trust?
+> Under a fixed compute budget, which post-training signal or intervention improves an independently measured held-out outcome, and how do we know the update and evaluation are correct?
 
-Prefer measurements such as held-out task success, capability gain per accelerator-hour, useful trajectories per unit cost, verifier error under policy shift, time-to-diagnosis, recovery rate, or a directly measured systems improvement. Training reward alone is not a capability metric.
+Prefer held-out preference accuracy or task success, reward/preference calibration, KL or policy drift, seed variance, label-noise sensitivity, and wall-clock/resource cost. Training reward alone is not a capability metric. Report accelerator-hours only when accelerator compute was actually used.
 
 ## Design stance
 
@@ -62,9 +57,9 @@ Use this ladder when deciding what can be claimed and what to build next.
 
 - **E0 — Harness correctness:** synthetic fixture; broken baseline fails, known fix passes, tampering fails closed.
 - **E1 — Real historical task:** immutable public repository revision plus an independent regression/performance evaluator; no model training required.
-- **E2 — Agent trajectory evidence:** repeated runs of one or more agents/models on the same E1 task pack with success, latency/cost, recovery, diff, and verifier evidence.
-- **E3 — Curriculum intervention:** at equal rollout/cost budget, a failure-driven task-selection strategy outperforms a fixed or easy curriculum on independent tasks.
-- **E4 — Small-model learning:** a preregistered multi-seed experiment shows held-out model improvement, or an honestly retained null/negative result that falsifies a mechanism.
+- **E2 — Controlled post-training mechanism:** a preregistered CPU preference-policy experiment passes objective/gradient checks and evaluates a known synthetic preference distribution on disjoint held-out examples. This is mechanism evidence, not model capability.
+- **E3 — Signal/intervention robustness:** matched-budget, multi-seed evidence tests preference noise, distribution shift, and a specified intervention against frozen controls.
+- **E4 — Small-model learning:** a preregistered multi-seed experiment shows held-out model improvement, or an honestly retained null/negative result that falsifies a mechanism. Synthetic policy results do not count as E4.
 - **E5 — Systems impact:** a measured correctness/throughput/latency/resource improvement or an upstream contribution caused by a bottleneck exposed by the environment/evidence loop.
 - **E6 — Recursive improvement:** repeated system-proposed interventions continue to produce independent positive downstream effects after compute cost and verifier drift are accounted for.
 
@@ -74,14 +69,13 @@ Never relabel E0/E1 plumbing as E4 capability evidence.
 
 When several tasks are available, prefer the earliest unresolved item in this order unless evidence clearly says otherwise:
 
-1. Make real engineering tasks reproducible and externally gradable.
-2. Strengthen verifier integrity, provenance, replay correctness, and failure isolation.
-3. Collect comparable long-horizon trajectories on fixed task packs.
-4. Build failure taxonomies and deterministic failure-driven curricula.
-5. Measure whether curriculum/intervention changes outcomes at equal budget.
-6. Run the smallest learner experiment that can test the remaining causal hypothesis.
-7. Turn discovered systems bottlenecks into minimal, upstreamable fixes.
-8. Only then increase model size, distributed scale, or autonomous research scope.
+1. Preserve every completed protocol and result exactly, including the failed/accepted outcomes from earlier studies and the later negative GRPO partial-audit efficiency screens. Never rerun consumed prompts or tune an outcome-bearing rule after observation.
+2. The frozen `cpu_lm_dpo_head_v1` study is completed and failed its predeclared held-out NLL/KL rule; do not run it again. The later Qwen2.5-0.5B CPU GRPO smoke established one-step/update/save-reload feasibility only, not task success.
+3. The highest-value open gap is independently graded task success after a real model update. The latest frozen Qwen ticket-tool base gate failed its exact schema/task-success criteria and is retired; do not tune or rerun it. Pause further base-only model screens unless a materially distinct candidate has a clear, independently justified feasibility basis. A future passing base gate would authorize only a separate update-cost smoke; it would not authorize training or establish capability.
+4. Only after fresh-task base success and update/save/reload/resource gates pass may a separate protocol compare a real policy update against matched no-update and SFT controls across multiple seeds with untouched confirmation tasks.
+5. If no fresh model/task/update pairing clears those gates, do not force a learner experiment. Prefer technically independent reproduction of retained evidence or a concrete, source-level RL trainer defect with a reproducer and regression check.
+6. Keep systems work tied to a measured correctness or resource defect; do not add generic infrastructure or extend the stopped partial-label efficiency line.
+7. Increase model size or distributed scope only when a free resource is available and a cheaper experiment cannot answer the question.
 
 ## Compute discipline
 

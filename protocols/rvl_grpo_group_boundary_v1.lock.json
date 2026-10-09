@@ -1,0 +1,41 @@
+{
+  "protocol_id": "vare-rvl-grpo-group-boundary-v1",
+  "schema_version": 1,
+  "frozen_before_baseline_measurement": true,
+  "source_base_revision": "ee6daffb0ba74e8d6b25d5c95fe2f03f37faf4a1",
+  "rvl_source_revision": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "rvl_source_files": [
+    "src/rvl_systems/grpo.py",
+    "src/rvl_systems/hf_trainer.py"
+  ],
+  "question": "Does VARE preserve distinct rollout-group boundaries through RVLGRPOHooks into the pinned RVL trainer's per-prompt GRPO advantage normalization when multiple VARE groups share the same task/prompt ID?",
+  "hypothesis": "VARE preserves groups in replay but the RVL adapter drops vare_rollout_group before training. Since the pinned trainer normalizes by Generation.prompt_id, repeated curriculum draws of the same task can merge distinct GRPO groups and change the supplied policy-update advantages.",
+  "estimand": "Maximum absolute difference between the advantage vector produced by RVLGRPOHooks.train_candidate and the vector obtained by independently normalizing rewards within each declared VARE rollout group, preserving sample order.",
+  "fixture": {
+    "task_ids": ["same-task", "same-task"],
+    "prompt_ids": ["same-task", "same-task", "same-task", "same-task"],
+    "vare_group_ids": ["group-a", "group-a", "group-b", "group-b"],
+    "declared_group_sizes": [2, 2, 2, 2],
+    "rewards": [0.0, 0.0, 1.0, 1.0],
+    "normalization": {
+      "variance": "population",
+      "epsilon": 1e-6,
+      "clip": 5.0
+    },
+    "expected_group_relative_advantages": [0.0, 0.0, 0.0, 0.0],
+    "expected_prompt_merged_advantages_approximately": [-0.999998, -0.999998, 0.999998, 0.999998]
+  },
+  "primary_metric": "max_abs_advantage_error_vs_declared_group_normalization",
+  "success_gate": "primary metric <= 1e-12 and trainer receives exactly one finite advantage per input sample",
+  "baseline_gate": "The pinned-RVL default path must reproduce prompt-ID merging for the fixture; otherwise reject or revise the hypothesized integration path before making a code change.",
+  "positive_controls": [
+    "When each VARE group has a distinct prompt_id, adapter behavior matches the pinned trainer's default per-prompt normalization.",
+    "Within-group reward contrasts are preserved when the same prompt appears in multiple VARE groups."
+  ],
+  "resource_limit": "Deterministic CPU unit fixture using fake model/backend/trainer state only; no model download, model forward/backward, GPU, paid API, network service, or external spending.",
+  "interpretation_limit": "An adapter correctness result only. It does not measure optimizer effectiveness, policy improvement, task success, verifier quality, or external reproduction.",
+  "expected_calibration": {
+    "baseline_passed": false,
+    "fixed_passed": true
+  }
+}

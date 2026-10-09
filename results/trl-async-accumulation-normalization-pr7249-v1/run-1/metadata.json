@@ -1,0 +1,32 @@
+{
+  "base_revision": "a98fa6a4428f9aae58dfb26d729d7437f662f27a",
+  "candidate_revision": "5234eb7c70f4ca7eb92fe8e01611a33eaff17f40",
+  "environment": {
+    "accelerate": "1.12.0",
+    "pytest": "8.4.2",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "files": {
+    "base-pytest.log.gz": "d02bbe02101b1810bde0d7ba0319a0159f0a08728339724b7e12680d9716f68d",
+    "base-wrapper-attempt.log.gz": "3b3319cc15a4dbbd411f83ff4d2d6b9be7517ad3ff51d93969f651c534b2c4d9",
+    "candidate-pytest.log.gz": "fa771a963a51fe289a1336f1d48ed6c1340419cef6027a66065c8a7a9904008b",
+    "commands.txt": "66986ff22ba6096ef2701d02d229688b1678ce30f437709b015101710e59b4dc",
+    "independent-check.json": "e28be42297b242b3eb2c35b0698ab7b74227577a872867a4ebd18f349f3f29a3",
+    "review-adjudication.json": "705e1f2e4be6b6750e2dbc4cab00752edad2c40c2a468d9c1bc86425dfb3e6e9",
+    "wrapper-note.txt": "cdd60c6e7cb8d1fa942c2806e4138412aa023939ba1d9e53c6f5aa0876586577"
+  },
+  "independent_review": "internal subagent audit requested; not external human review",
+  "internal_independent_audit_status": "pass_narrow_pr_reproduction",
+  "protocol_commit": "bee2242",
+  "protocol_id": "trl_async_accumulation_normalization_pr7249_v1",
+  "raw_pytest_logs_losslessly_gzipped": true,
+  "resources": {
+    "cpu_only": true,
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "paid_api_calls": 0
+  },
+  "status": "candidate_pass_base_expected_nonpass"
+}

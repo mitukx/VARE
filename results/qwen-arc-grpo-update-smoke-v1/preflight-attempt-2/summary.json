@@ -1,0 +1,7 @@
+{
+  "error": "'seeds'",
+  "error_type": "KeyError",
+  "protocol_id": "qwen_arc_challenge_grpo_update_smoke_v1",
+  "status": "failed_preflight",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/run_qwen_arc_grpo_update_smoke_v1.py\", line 404, in main\n    summary = run(args.model_path.resolve(), args.rvl_source.resolve(), args.train_parquet.resolve(), args.validation_parquet.resolve(), args.output.resolve())\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/run_qwen_arc_grpo_update_smoke_v1.py\", line 159, in run\n    torch.manual_seed(lock[\"seeds\"][\"torch\"])\n                      ~~~~^^^^^^^^^\nKeyError: 'seeds'\n"
+}

@@ -1,0 +1,257 @@
+diff --git a/tests/experimental/test_async_grpo_group_staleness.py b/tests/experimental/test_async_grpo_group_staleness.py
+new file mode 100644
+index 00000000..90bb2f3a
+--- /dev/null
++++ b/tests/experimental/test_async_grpo_group_staleness.py
+@@ -0,0 +1,102 @@
++# Copyright 2026 The HuggingFace Team. All rights reserved.
++# Licensed under the Apache License, Version 2.0 (the "License").
++
++import queue
++from collections import defaultdict
++from types import SimpleNamespace
++
++from accelerate import PartialState
++
++from trl.experimental.async_grpo.async_grpo_trainer import RolloutQueueDataset
++
++
++def _sample(row_id, *, model_version, group_id, rollout_id=None, rollout_size=1):
++    return SimpleNamespace(
++        prompt=[{"role": "user", "content": "fixture"}],
++        completion=[{"role": "assistant", "content": f"row-{row_id}"}],
++        input_ids=[row_id, row_id + 10],
++        completion_mask=[0, 1],
++        old_log_probs=[0.0, -0.25],
++        advantage=float(row_id),
++        model_version=model_version,
++        group_id=group_id,
++        metrics={"reward": float(row_id)},
++        enqueued_at=None,
++        rollout_id=rollout_id,
++        rollout_size=rollout_size,
++    )
++
++
++def _dataset(items, version, metrics):
++    data_queue = queue.Queue()
++    for item in items:
++        data_queue.put(item)
++    dataset = RolloutQueueDataset(
++        rollout_queue=data_queue,
++        model_version_fn=lambda: version[0],
++        check_health_fn=lambda _timeout: None,
++        stale_after_s=60.0,
++        metrics=metrics,
++        max_staleness=0,
++        poll_interval_s=0.01,
++    )
++    return iter(dataset)
++
++
++def test_policy_update_between_reads_preserves_every_fork_of_admitted_rollout():
++    PartialState()
++    version = [0]
++    metrics = defaultdict(list)
++    fork_rows = [
++        _sample(0, model_version=0, group_id=41, rollout_id="rollout-a", rollout_size=2),
++        _sample(1, model_version=0, group_id=41, rollout_id="rollout-a", rollout_size=2),
++    ]
++    other_rollout = _sample(2, model_version=0, group_id=41, rollout_id="rollout-b")
++    sentinel = _sample(99, model_version=1, group_id=99)
++    sentinel_2 = _sample(100, model_version=1, group_id=100)
++    dataset_iter = _dataset([*fork_rows, other_rollout, sentinel, sentinel_2], version, metrics)
++
++    first = next(dataset_iter)
++    version[0] = 1
++    sibling = next(dataset_iter)
++    after_drops = next(dataset_iter)
++    dataset_iter.close()
++
++    assert first["input_ids"][0] == 0
++    assert sibling["input_ids"][0] == 1
++    assert first["group_id"] == sibling["group_id"] == 41
++    assert after_drops["group_id"] == 99
++    assert metrics["sample/dropped_stale_total"] == [1.0]
++
++
++def test_stale_forked_rollout_is_dropped_as_one_admission_unit():
++    PartialState()
++    metrics = defaultdict(list)
++    fork_rows = [
++        _sample(0, model_version=0, group_id=41, rollout_id="rollout-a", rollout_size=2),
++        _sample(1, model_version=0, group_id=41, rollout_id="rollout-a", rollout_size=2),
++    ]
++    sentinel = _sample(99, model_version=1, group_id=99)
++    dataset_iter = _dataset([*fork_rows, sentinel], [1], metrics)
++
++    accepted = next(dataset_iter)
++    dataset_iter.close()
++
++    assert accepted["group_id"] == 99
++    assert metrics["sample/dropped_stale_total"] == [1.0, 1.0]
++
++
++def test_fork_metadata_mismatch_fails_closed():
++    PartialState()
++    first = _sample(0, model_version=0, group_id=41, rollout_id="rollout-a", rollout_size=2)
++    second = _sample(1, model_version=0, group_id=41, rollout_id="rollout-b", rollout_size=2)
++    dataset_iter = _dataset([first, second], [0], defaultdict(list))
++
++    try:
++        next(dataset_iter)
++    except RuntimeError as error:
++        assert "membership is not contiguous or has inconsistent metadata" in str(error)
++    else:
++        raise AssertionError("inconsistent rollout membership was accepted")
++    finally:
++        dataset_iter.close()
+diff --git a/trl/experimental/async_grpo/async_grpo_trainer.py b/trl/experimental/async_grpo/async_grpo_trainer.py
+index 0edc018e..3d057105 100644
+--- a/trl/experimental/async_grpo/async_grpo_trainer.py
++++ b/trl/experimental/async_grpo/async_grpo_trainer.py
+@@ -359,47 +359,84 @@ class RolloutQueueDataset(torch.utils.data.IterableDataset):
+             if wait_s > 1.0:
+                 logger.info(f"waited {wait_s:.1f}s for sample (qsize={self.queue.qsize()})")
+ 
++            rollout_size = getattr(sample, "rollout_size", 1)
++            rollout_id = getattr(sample, "rollout_id", None)
++            if isinstance(rollout_size, bool) or not isinstance(rollout_size, int) or rollout_size < 1:
++                raise ValueError(f"Invalid rollout_size: {rollout_size!r}")
++            if rollout_size > 1 and not rollout_id:
++                raise ValueError("A forked rollout must carry rollout_id metadata")
++            samples = [sample]
++            while len(samples) < rollout_size:
++                t_group = time.time()
++                while True:
++                    try:
++                        member = self.queue.get(timeout=self.poll_interval_s)
++                        break
++                    except queue.Empty:
++                        self.check_health_fn(self.stale_after_s)
++                member_wait_s = time.time() - t_group
++                self.wait_s += member_wait_s
++                member_rollout_size = getattr(member, "rollout_size", 1)
++                if (
++                    member.rollout_id != rollout_id
++                    or member.model_version != sample.model_version
++                    or member_rollout_size != rollout_size
++                ):
++                    raise RuntimeError(
++                        "Rollout queue membership is not contiguous or has inconsistent metadata: "
++                        f"expected rollout_id={rollout_id}, model_version={sample.model_version}, "
++                        f"rollout_size={rollout_size}; got rollout_id={member.rollout_id}, "
++                        f"model_version={member.model_version}, rollout_size={member_rollout_size}"
++                    )
++                samples.append(member)
++
+             version = self.model_version_fn()
+             staleness = version - sample.model_version
+             if staleness > self.max_staleness:
+-                logger.info(f"dropping stale sample (staleness={staleness}, max={self.max_staleness})")
+-                self.metrics["sample/dropped_stale_total"].append(1.0)
++                logger.info(
++                    f"dropping stale rollout (size={len(samples)}, staleness={staleness}, "
++                    f"max={self.max_staleness})"
++                )
++                for _ in samples:
++                    self.metrics["sample/dropped_stale_total"].append(1.0)
+                 continue  # drop stale, pull next
+ 
+-            # Three different views of the same queue, and they must not be confused with each other:
+-            #   `sample/rollout_queue_size`  how many scored samples are in it, counted where the TRAINER consumes
+-            #                                them rather than where the worker filled it
+-            #   `sample/time_in_queue_s`     how long THIS sample sat in it — its own idle time, and the seconds
+-            #                                half of its off-policyness
+-            #   `perf/rollout_wait_s`        how long the TRAINER sat blocked because the queue was empty
+-            # An empty queue with the trainer waiting is generation-bound; a full queue with no wait is trainer-bound
+-            # (and then `rollout/backpressure_s` is what generation lost to it).
+-            self.metrics["sample/rollout_queue_size"].append(float(self.queue.qsize()))
+-            if sample.enqueued_at is not None:
+-                self.metrics["sample/time_in_queue_s"].append(now - sample.enqueued_at)
+-            # Freshness
+-            self.metrics["sample/staleness_mean"].append(float(staleness))
+-            self.metrics["sample/staleness_max"].append(float(staleness))
+-
+-            if version % self._trace_log_interval == 0 and version != self._last_traced_version:
+-                self._trace_buf.append(sample)
+-                if len(self._trace_buf) >= self._traces_per_log:
+-                    try:
+-                        # Capture the main-thread context (holds trackio's run) so the drain thread can replay it.
+-                        self._trace_queue.put_nowait((self._trace_buf, version, contextvars.copy_context()))
+-                    except queue.Full:
+-                        pass
+-                    self._trace_buf = []
+-                    self._last_traced_version = version
+-
+-            yield {
+-                "input_ids": sample.input_ids,
+-                "completion_mask": sample.completion_mask,
+-                "old_log_probs": sample.old_log_probs,
+-                "advantage": sample.advantage,
+-                "group_id": sample.group_id,
+-                "metrics": sample.metrics,  # per-sample rewards; aggregated by the collator, never sent to the model
+-            }
++            for sample in samples:
++                # Three different views of the same queue, and they must not be confused with each other:
++                #   `sample/rollout_queue_size`  how many scored samples are in it, counted where the TRAINER consumes
++                #                                them rather than where the worker filled it
++                #   `sample/time_in_queue_s`     how long THIS sample sat in it — its own idle time, and the seconds
++                #                                half of its off-policyness
++                #   `perf/rollout_wait_s`        how long the TRAINER sat blocked because the queue was empty
++                # An empty queue with the trainer waiting is generation-bound; a full queue with no wait is trainer-bound
++                # (and then `rollout/backpressure_s` is what generation lost to it).
++                now = time.time()
++                self.metrics["sample/rollout_queue_size"].append(float(self.queue.qsize()))
++                if sample.enqueued_at is not None:
++                    self.metrics["sample/time_in_queue_s"].append(now - sample.enqueued_at)
++                # Freshness is measured once for the complete queued group.
++                self.metrics["sample/staleness_mean"].append(float(staleness))
++                self.metrics["sample/staleness_max"].append(float(staleness))
++
++                if version % self._trace_log_interval == 0 and version != self._last_traced_version:
++                    self._trace_buf.append(sample)
++                    if len(self._trace_buf) >= self._traces_per_log:
++                        try:
++                            # Capture the main-thread context (holds trackio's run) so the drain thread can replay it.
++                            self._trace_queue.put_nowait((self._trace_buf, version, contextvars.copy_context()))
++                        except queue.Full:
++                            pass
++                        self._trace_buf = []
++                        self._last_traced_version = version
++
++                yield {
++                    "input_ids": sample.input_ids,
++                    "completion_mask": sample.completion_mask,
++                    "old_log_probs": sample.old_log_probs,
++                    "advantage": sample.advantage,
++                    "group_id": sample.group_id,
++                    "metrics": sample.metrics,  # per-sample rewards; aggregated by the collator, never sent to the model
++                }
+ 
+ 
+ def _balance_by_squared_length(examples: list[dict[str, Any]], num_groups: int) -> list[list[dict[str, Any]]]:
+diff --git a/trl/experimental/async_grpo/async_rollout_worker.py b/trl/experimental/async_grpo/async_rollout_worker.py
+index 703128f2..2095e22c 100644
+--- a/trl/experimental/async_grpo/async_rollout_worker.py
++++ b/trl/experimental/async_grpo/async_rollout_worker.py
+@@ -219,6 +219,10 @@ class RolloutSample:
+     group_id: int
+     metrics: dict[str, float]
+     enqueued_at: float | None = None
++    # Preserve the generated-conversation identity and its fork count so queue
++    # staleness is decided for a complete rollout before rows are packed.
++    rollout_id: str | None = None
++    rollout_size: int = 1
+ 
+ 
+ # Env vars the child must drop so accelerate's `PartialState()` initialises in
+@@ -1102,6 +1106,8 @@ class _AsyncRolloutLoop:
+                         model_version=group.model_version,
+                         group_id=group.group_id,
+                         metrics=dict(metrics),  # own copy per row
++                        rollout_id=seq.rollout_id,
++                        rollout_size=len(sequences),
+                     )
+                 )
+         return samples

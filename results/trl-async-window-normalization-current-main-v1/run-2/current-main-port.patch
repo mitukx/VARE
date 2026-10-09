@@ -1,0 +1,18 @@
+--- a/trl/experimental/async_grpo/async_grpo_trainer.py
++++ b/trl/experimental/async_grpo/async_grpo_trainer.py
+@@ -1515,11 +1515,10 @@
+         loss = (per_token_loss * completion_mask).sum()
+         global_n_tokens = inputs["global_n_tokens"][0]
+         world_size = self.accelerator.num_processes
+-        tokens_per_rank = (global_n_tokens / world_size).clamp(min=1.0)
+-        loss = loss / tokens_per_rank.to(torch.float32)
+-        # For DAPO, we would scale like this instead:
+-        # loss = loss / max(per_token_loss.size(0), 1)
+-        loss = loss / self.current_gradient_accumulation_steps
++        if num_items_in_batch is None:
++            num_items_in_batch = global_n_tokens * self.current_gradient_accumulation_steps
++        normalizer = num_items_in_batch.clamp(min=1.0).to(torch.float32) / world_size
++        loss = loss / normalizer
+ 
+         # The policy loss above is scaled for gradient accumulation (HF auto-scaling is off here), so scale aux too
+         if self.aux_loss_enabled:

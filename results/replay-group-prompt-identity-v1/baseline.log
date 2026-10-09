@@ -1,0 +1,40 @@
+FF.                                                                      [100%]
+=================================== FAILURES ===================================
+_____ test_atomic_admission_rejects_mixed_prompts_without_mutating_replay ______
+
+    def test_atomic_admission_rejects_mixed_prompts_without_mutating_replay():
+        replay = PrioritizedReplay(ReplayConfig(capacity=8), seed=0)
+        valid = [_experience(i, "valid", "same prompt") for i in range(4)]
+        mixed = [
+            _experience(10 + i, "mixed", "prompt A" if i < 2 else "prompt B")
+            for i in range(4)
+        ]
+    
+        assert replay.add_group(valid, [1.0] * 4)
+>       assert not replay.add_group(mixed, [1.0] * 4)
+E       AssertionError: assert not True
+E        +  where True = add_group([Experience(attempt=Attempt(task=Task(id='task-10', prompt='prompt A', family='default', metadata={}), output='respons...ment=0.0, trusted=True, metadata={}), policy_lag=0, verifier_lag=0, shift_score=0.0, priority=0.5, failure_label=None)], ([1.0] * 4))
+E        +    where add_group = <vare.replay.PrioritizedReplay object at 0x1079d9b20>.add_group
+
+tests/test_replay_group_prompt_identity.py:32: AssertionError
+__________ test_legacy_grouped_samplers_fail_closed_on_mixed_prompts ___________
+
+    def test_legacy_grouped_samplers_fail_closed_on_mixed_prompts():
+        replay = PrioritizedReplay(ReplayConfig(capacity=8), seed=0)
+        mixed = [
+            _experience(i, "mixed", "prompt A" if i < 2 else "prompt B")
+            for i in range(4)
+        ]
+        for item in mixed:
+            replay.add(item, freshness=1.0)
+    
+>       assert replay.sample_grouped(4) == []
+E       AssertionError: assert [Experience(a...e_label=None)] == []
+E         
+E         Left contains 4 more items, first extra item: Experience(attempt=Attempt(task=Task(id='task-3', prompt='prompt B', family='default', metadata={}), output='response-...ement=0.0, trusted=True, metadata={}), policy_lag=0, verifier_lag=0, shift_score=0.0, priority=0.5, failure_label=None)
+E         Use -v to get more diff
+
+tests/test_replay_group_prompt_identity.py:48: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_replay_group_prompt_identity.py::test_atomic_admission_rejects_mixed_prompts_without_mutating_replay
+FAILED tests/test_replay_group_prompt_identity.py::test_legacy_grouped_samplers_fail_closed_on_mixed_prompts

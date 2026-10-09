@@ -1,0 +1,21 @@
+{
+  "commit": "d7ec900",
+  "status": "reproduced_before_fix",
+  "case": "ready RVL group and direct lag assessment carry recorded policy/verifier versions 6 while active versions are 5",
+  "observed": {
+    "lag_assess_admitted": true,
+    "lag_reasons": [],
+    "snapshot_policy_lag": 0,
+    "snapshot_verifier_lag": 0,
+    "ready_experience_count": 1,
+    "ready_policy_lag": 0,
+    "ready_verifier_lag": 0
+  },
+  "source_sha256_before_fix": {
+    "src/vare/lag.py": "a127377457bb7cb0952bda3e38e611850929ef1cf015648ef140f90cf163ec61",
+    "src/vare/integrations/rvl.py": "b53bad1e8bb4b546c867fa23d63d5474b62c40464604986a50256d3696f14883",
+    "tests/test_lag.py": "cea7482d1766e1b073385808cd59f821ac0647990f65a90c2eb575254c09eff3",
+    "tests/test_rvl_integration.py": "d48c537d55ccd03f056ef6f288cdd0898c0436b2ea184c71603efd1206e4c6bc"
+  },
+  "interpretation": "Impossible future provenance is silently represented as zero lag and admitted. This violates fail-closed freshness; it is a correctness bug reproduction, not model-quality evidence."
+}

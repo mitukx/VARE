@@ -1,0 +1,18 @@
+{
+  "protocol_id": "verifier_reward_contract_v1",
+  "status": "frozen_before_baseline_execution",
+  "question": "Can a malformed structured Verification returned by a wrapped or third-party verifier reach VARE's training hook as an optimization reward?",
+  "scope": "CPU-only deterministic software contract test; no model, optimizer, GPU, network, or paid API",
+  "primary_property": "Every Verification crossing the ensemble boundary must have finite score, confidence, and disagreement in [0,1], exact boolean pass/trust flags, a nonnegative integer version, a nonempty verifier name, and dictionary metadata before any value can reach replay or learner hooks.",
+  "frozen_cases": [
+    {"id": "mutated_score_2", "setup": "Construct a valid Verification, mutate score to 2.0 before returning it from FunctionalAttemptVerifier", "expected_pre_fix": "training hook receives reward 2.0", "expected_post_fix": "reject before training hook"},
+    {"id": "nan_score", "setup": "Return a Verification with NaN score", "expected_post_fix": "reject before training hook"},
+    {"id": "confidence_out_of_range", "setup": "Return confidence -0.1", "expected_post_fix": "reject before training hook"},
+    {"id": "valid_control", "setup": "Return a valid Verification with score 0.75", "expected_post_fix": "training hook receives reward 0.75"}
+  ],
+  "acceptance": "The pre-fix exploit is reproduced, all malformed cases fail closed, and the valid control reaches the training hook unchanged.",
+  "limitations": [
+    "This tests a software boundary and does not measure actual RL training or policy capability.",
+    "The protocol covers validation at the VerifierEnsemble boundary, not hostile in-process mutation after admission by arbitrary trusted hooks."
+  ]
+}

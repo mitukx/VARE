@@ -1,0 +1,183 @@
+{
+  "protocol_id": "vare-rvl-grpo-group-boundary-real-trainer-v1",
+  "status": "preregistered-before-run",
+  "question": "Does VARE’s explicit per-rollout-group advantage override change an actual pinned RVL GRPO model update relative to the trainer’s default prompt-ID merge when two VARE groups share one prompt ID?",
+  "hypothesis": "For the same eight completions and rewards, the two-group VARE arm produces the per-group advantage vector and a different real model update from RVL’s default prompt-ID merge, while a one-group VARE control matches the native advantages and update exactly.",
+  "estimand": {
+    "primary": "Paired model-parameter fingerprints and maximum absolute parameter difference for three one-step arms from the same exact incumbent: native prompt-ID default, VARE one-group control, and VARE two-group treatment.",
+    "group_advantages": "Population-standardized, clipped rewards computed separately within each declared VARE group in original sample order.",
+    "native_advantages": "Pinned RVL prompt-ID grouped population-standardized, clipped rewards for the same rewards and sample order.",
+    "scope": "Trainer integration correctness only; synthetic labels; not policy quality or task success."
+  },
+  "source_revision": "ed808cf722ec46d9e1307a775b54f4b36cc70ef4",
+  "runner_sha256": "b02bb6ca99cbb157eae670624cf6cc50ff856749633700356cc7beed937a7223",
+  "auditor_sha256": "67eb3332ac72ad972f641c2823813e0775d04b36e418873c569a383390bda2a7",
+  "vare_adapter_sha256": "fdaf7f41df3a05a6c35307d92141278580e526d22ae073f1a8c70c581cbda179",
+  "rvl_revision": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "rvl_source_files_sha256": {
+    "src/rvl_systems/__init__.py": "386ad31ae8b8ec6b25ce3c997b4a3758599bf59c4996df184afbbe33dd9c46c1",
+    "src/rvl_systems/admission.py": "901b9e2a5fd81c21929e3a1187f1fc458ea97bee919b68f44df16899c726c957",
+    "src/rvl_systems/artifact_manifest.py": "b339fa6b918a6f803196160cef51d52bf5aa48cdc72bc9d937914ba637709cc8",
+    "src/rvl_systems/backends.py": "26abeffd24ecef37093a179dc33506f0853018331c0002bd01010d016b31faca",
+    "src/rvl_systems/benchmark_report.py": "57edee9274f93282c911c0a6816d0c50686a90e1a196b7254b17c4a68724abe8",
+    "src/rvl_systems/checkpoint.py": "06feee0c44efcb15d4d6316e446857b4ee6719f1f2a894ad08d74d349c66dd3e",
+    "src/rvl_systems/dynamic_batch.py": "7498ba377bbb8eb7aa293f612c2dbed07645d5cb67ae297b8f0bfb442726adf0",
+    "src/rvl_systems/event_log.py": "a8b48878357ed711fe67cef72afe2d6be5a0d49c179cec9ffc387fbcea063730",
+    "src/rvl_systems/grpo.py": "a2ef6217385a206f5e6c0f43fb40e900ae3bf1b2066a1c8d1ab1878fd25d724d",
+    "src/rvl_systems/hf_backend.py": "dca31dd2399d16bb7f999d7559be6b0cb192294e760cffbb64053b021d3c4593",
+    "src/rvl_systems/hf_trainer.py": "375985c1d0cca49a9d98d8b00ed41cefe000b91461e9a0783e94312466fd0210",
+    "src/rvl_systems/lab/__init__.py": "4a044b4479b91dae57e0b7a1b5f8113be29806287a445c42ac7abbe51f1adb5e",
+    "src/rvl_systems/lab/agent.py": "385195ddd79a987696d4a809a5d52a91f0785af153005083f6da7907985d22a9",
+    "src/rvl_systems/lab/alignment_gate.py": "2750d530f33a2d4f62a881f97f5c9a31f7c0015b465ab291defe1dc6c09fde32",
+    "src/rvl_systems/lab/async_rwlock.py": "92398caabc0dea985051cfb5864480f89a23e7a5063cb6dd8f72fc478844297b",
+    "src/rvl_systems/lab/coding.py": "48f0690c8a4e740b83604a667e4aae7c9b0cb1bf3b5d04584767febfad43d828",
+    "src/rvl_systems/lab/coding_lm.py": "c01a56cf87cc0a07f0c77e511e382641cd8ae7d6f83b8f3136722080f52737b9",
+    "src/rvl_systems/lab/contracts.py": "726f3c0ff7dc9b22436946f7199a331e64f3992deb48289141a0f1f0ce16f279",
+    "src/rvl_systems/lab/control.py": "98b6faf432f39b87349eabc1d908ab59fe9290991aeb22f5828c6afb5f8f5d99",
+    "src/rvl_systems/lab/distributed_learner.py": "d244042468beacc7ff539148ed49f2587f54f37ba910ba52b01d44aef200e80c",
+    "src/rvl_systems/lab/judges.py": "8722988ac34b342d0d7161de1e90c71532a69261426648e1a99a38735acd7009",
+    "src/rvl_systems/lab/lm_runtime.py": "ab48b71e29079b9f301494e8f647911dc440c978850df6e2113c80371cd93f47",
+    "src/rvl_systems/lab/measurement.py": "b91e5030a9d4c733fdc6c66d26d34cc23c37d7ebcaf8678a68286629f4e06d41",
+    "src/rvl_systems/lab/promotion.py": "6d4c55f1e2144facbef5eadb8e0110043457aac7daa05c3f3674877fc4cbdc15",
+    "src/rvl_systems/lab/runtime.py": "b65d01c6f2157a6aac79cc26c0fce31068267a4f60b6ef75b2b435630e32c209",
+    "src/rvl_systems/lab/serving.py": "3ee9dbf5dbfc5c1119a80808250f392ccfbbcc0ecbfb300319d6564a2a61392c",
+    "src/rvl_systems/lab/store.py": "b30f0374166cfdbd311468a8a6e97d7c8403c3434a46d6608be590590f6dd98f",
+    "src/rvl_systems/lab/token_replay.py": "4a995180ae5808dcac4f8f507f93c4c3fa7d64899514a4fb21e22c7c48a08230",
+    "src/rvl_systems/lab/token_serving.py": "22ea4f5b0690e7c72b0ce2bd18617778bec95c57785f6082a1c0135ca1bdac97",
+    "src/rvl_systems/lab/tool_agent.py": "6dfeb26533d44cd2f9ef60df2f1acccf0736943163125392508da296b753d58c",
+    "src/rvl_systems/lab/verification.py": "7786bc73b1eeb9298ba97f201e75d0b964fab8e7444716a4d82fc3e57d1f2bbb",
+    "src/rvl_systems/lab/verification_debt.py": "4f2b731531d7bc0a3abda6a233c503c9ca1ffefa58ff41e4d8d5e8ba999276aa",
+    "src/rvl_systems/learned_verifier_head.py": "29889955b066efb847d1d4f2b66cc63ff725a7897b9bfe2d7a6bd00fd21bbe51",
+    "src/rvl_systems/numerics.py": "698f47a1bde97892e0e0d208f511f5a6715778c76730819b403e070329d30276",
+    "src/rvl_systems/objectives.py": "e5c40d097bdd3adc9c1e356037bc9e07857bbdfbf5a8fc78e77284534f614c6b",
+    "src/rvl_systems/openai_math.py": "88f56b576c52bdc3f228683a90d7419ec7ae3322600657a13801a491831db5c6",
+    "src/rvl_systems/pipeline.py": "b1492b131b35a8dd199056b4a091403d0822352c696617a2a99070cbe6f6ec37",
+    "src/rvl_systems/policy_deployment.py": "2db4bbc1158e650cdfe66e842cbcdba486ff139b303bb042be7a0a86eff275fa",
+    "src/rvl_systems/precision.py": "2acc6f4c6205c9009b0dc15159d8a285aa414940fe20bedfc30fd36473369b0f",
+    "src/rvl_systems/precision_parity.py": "c43a79c770dbb80b022a16ccbfa4d2324f7bfcccd04f560779a1e39b1ea0a90b",
+    "src/rvl_systems/profiling.py": "c971cc4b3664ee5715e7bd3259c822f494ad105f357a199545c1f439c00fe562",
+    "src/rvl_systems/quantization.py": "e8bc4ed2085bf3b6bfffad3febd1121dfb329baf70a4e3d77b2fbc31b4a04f94",
+    "src/rvl_systems/refresh.py": "ead2e06ba52bf792bab14cc873bface463bd75428ae0649286f6cbb28d39d9c9",
+    "src/rvl_systems/regression_gate.py": "36e623dba15118cd05fc0a3c3ff32ecdb819dc2c7259de647adb4971c39ee0d5",
+    "src/rvl_systems/remote_backend.py": "5a2f99689bb0cf599205c7932a0012863a19b684860e762b00ab3e0176822b61",
+    "src/rvl_systems/rlvr_benchmark.py": "262b37c7499696c6e8e84e4a62f34c7a588fabff658b3ebeb04d64986ca89ad8",
+    "src/rvl_systems/rollout.py": "d73bad06e4ae884e37750b0dfba38b12cefe57bfce86c2f83b200a4d5d08dade",
+    "src/rvl_systems/rpc_protocol.py": "bc7e38c0fa184a89cc51d7297d9e43c33a0d69b946e396d34c64494bc8ab6fee",
+    "src/rvl_systems/scheduler.py": "11d2128550d5ee232442ec5945d4e919742f3dbccc18773e36df3a6606b04424",
+    "src/rvl_systems/serving_cost.py": "22fef513779bcd0442f16d7bf97cff44bf36559877ec320af00548aa51cc908c",
+    "src/rvl_systems/telemetry.py": "49162b39a73ea16b9c6602cf4d55460bde426f28861b09109d0170d9610c7dab",
+    "src/rvl_systems/torch_distributed.py": "a64f10573bed7d9a978ecadb456774cacf0c2fb6063b2e218c96fa5970fc48b4",
+    "src/rvl_systems/triton_grpo.py": "ed7ee082db036e1631c1f8eaacfb8691b102401c8342dcb9ed4dba5d26a22cf9",
+    "src/rvl_systems/types.py": "a3e9f06cc70972a7b5fd50b757ffff992d3a6156d1ffab5133e410471dcc5d7b",
+    "src/rvl_systems/verifier.py": "7e1bea2d9118657a4b61b6c3abb8ca523d8d32aa76dbbd379113bd2430c5cc6c",
+    "src/rvl_systems/verifier_deployment.py": "db8e71102cbe22437f9913a56f2064878db70c3d8d8b06aa4a8b57697d0bf53d",
+    "src/rvl_systems/verifier_rpc.py": "0c6f8669797bf7c9987a10d933d010d03a4b5e1d169ff8f9839cb6a0cc2dc173",
+    "src/rvl_systems/vllm_batch.py": "73fda7b506a7db81c8f9fac3e3963e22d454f52ebc014157d6daa8c06ad46ea7",
+    "src/rvl_systems/vllm_metrics.py": "8705e4895fbc787c16ed21f2a8a2cfb5293affbdb48bcb9c2d3985cec14174a0",
+    "src/rvl_systems/weight_sync.py": "7fb925d30a254e040bf43c9c5b4110612c301fff9485f92e700576e26fb97355",
+    "src/rvl_systems/worker_health.py": "ddd4c4671a3b3fb6be78369dd319a5fba033626f3b3bf32fefb1bc97d129ee8e",
+    "src/rvl_systems/worker_pool.py": "50f4c9d30e7ad2a9219accd1ace393f3d9861555a5b356812c0ede564cb27600",
+    "src/rvl_systems/worker_rpc.py": "12c6b0515144483d664cec0e9e7c0596936348b9f5ba71cef87717dc275ddc03"
+  },
+  "model": {
+    "id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "role": "cached model used only to exercise CPU GRPO execution; its prior task cohorts remain retired",
+    "files_sha256": {
+      "config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+      "generation_config.json": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6",
+      "merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+      "model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    }
+  },
+  "runtime": {
+    "platform": "macOS arm64",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3",
+    "threads": 4,
+    "device": "cpu",
+    "precision": "fp32",
+    "cuda_or_mps_use": false,
+    "network": "offline; local model files only",
+    "paid_compute": false,
+    "max_wall_seconds": 1200,
+    "max_peak_rss_bytes": 23622320128
+  },
+  "sampling": {
+    "prompt_id": "same-prompt-group-boundary-v1",
+    "system": "Follow the user instruction exactly.",
+    "user": "Output exactly one uppercase letter from A, B, C, or D. Do not add any other text.",
+    "rendered_prompt": "<|im_start|>system\nFollow the user instruction exactly.<|im_end|>\n<|im_start|>user\nOutput exactly one uppercase letter from A, B, C, or D. Do not add any other text.<|im_end|>\n<|im_start|>assistant\n",
+    "seed": 20261010,
+    "temperature": 0.8,
+    "max_new_tokens": 8,
+    "samples": 8,
+    "group_sizes": [
+      4,
+      4
+    ],
+    "group_rewards": [
+      [
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "selection": "No completion selection or resampling. The positive-reward response token sequence must differ from every zero-reward response in the first group; otherwise retain the run as gate failure and do not rerun this protocol."
+  },
+  "update": {
+    "learning_rate": 1e-06,
+    "clip_eps": 0.2,
+    "advantage_epsilon": 1e-06,
+    "advantage_clip": 5.0,
+    "optimizer_steps_per_arm": 1,
+    "arms": [
+      "pinned RVL train_step with default prompt-ID advantages",
+      "VARE adapter with all eight samples declared as one group (same-group positive control)",
+      "VARE adapter with two groups of four sharing one prompt ID (treatment)"
+    ],
+    "initial_state": "Restore the same exact model weights, optimizer state, CPU RNG, and training mode before each arm; verify incumbent restoration after each arm.",
+    "promotion": false
+  },
+  "primary_metric": "max_abs_parameter_difference_between_groupwise_and_prompt_merged_updates",
+  "secondary_metrics": [
+    "exact advantage vectors for both arms",
+    "changed parameter tensor counts and maximum deltas from incumbent",
+    "finite and nonzero gradient tensor counts",
+    "exact incumbent state restoration after each arm",
+    "wall time and peak RSS"
+  ],
+  "success_criteria": [
+    "All pinned source and model hashes match.",
+    "The positive-reward response token sequence differs from every zero-reward response in the first group; otherwise fail this evidence gate without rerunning.",
+    "The native trainer’s intercepted advantage vector equals independent prompt-ID normalization within 1e-10.",
+    "The one-group VARE control advantages equal the native vector and its post-step parameter fingerprint exactly matches the native arm.",
+    "The two-group VARE treatment advantages equal independent per-group normalization within 1e-10.",
+    "Each of the three arms invokes exactly one train_step and exactly one actual optimizer.step, with finite nonzero gradients and at least one changed parameter tensor.",
+    "The two-group treatment parameter fingerprint differs from native and its maximum absolute parameter difference is greater than zero.",
+    "Each arm restores incumbent weights, optimizer state, CPU RNG, and model training mode exactly.",
+    "Incomplete groups and mixed grouped/ungrouped batches are rejected before train_step or optimizer mutation, preserving the incumbent state.",
+    "The run stays below 1200 seconds and 22 GiB peak RSS on CPU."
+  ],
+  "failure_criteria": [
+    "Any source/model hash mismatch, missing response-diversity gate, incorrect advantage vector, failed same-group positive control, incomplete/mixed group reaching train_step, missing/nonfinite gradient, zero actual optimizer steps or more than one, failed restoration, indistinguishable treatment update, or resource cap violation."
+  ],
+  "explicit_nonclaims": [
+    "No task-success or held-out capability evaluation.",
+    "Rewards are a frozen synthetic witness, not verifier labels or true correctness.",
+    "A changed update establishes trainer-boundary integration only; it does not show that either direction is better.",
+    "Same-host author execution is not external reproduction."
+  ],
+  "validation_authority": "The runner enforces and records its frozen gates; a separate auditor independently replays advantage vectors, source/artifact hashes, update-fingerprint relationships, malformed-group rejection outcomes, and resource limits. The study decision is PASS only if the runner status is completed and the auditor decision is pass."
+}

@@ -1,0 +1,24 @@
+{
+  "arms": {
+    "grpo": {},
+    "success_trace_sft": {}
+  },
+  "base_eval": [],
+  "base_model_fingerprint": "1269f7eada635e467b5e842ef129a9de991caf5cd208f4aca6c3cdbfc36ff121",
+  "dataset": {
+    "train_sha256": "e488c1587ffdcfc8443f916c53488a95cd471c5790e0746c6bfe4cecf20962cb",
+    "validation_sha256": "395a5c88d1580d69855fbaee9450270578df1ad5af6259771cd0a42c20e99f05"
+  },
+  "exception": "KeyError: 'seed'",
+  "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "peak_rss_mib": 3317.765625,
+  "protocol_id": "qwen_arc_grpo_sft_comparison_v2",
+  "protocol_sha256": "1f34e05f3c5ef63aba675663a266e63126f46f70c31792a1508508d3ef11fb30",
+  "rollouts_by_seed": {},
+  "runner_sha256": "b8b8f94d888a8d8d3ee337a9c21552aa068d134c347a1569b9a7250858c0fba2",
+  "rvl_revision": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "status": "execution_failure",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/run_qwen_arc_grpo_sft_comparison_v2.py\", line 305, in run\n    summary[\"base_eval\"] = eval_many(backend, validation, prompts, lock[\"evaluation\"][\"seed\"])\n                                                                   ~~~~~~~~~~~~~~~~~~^^^^^^^^\nKeyError: 'seed'\n",
+  "vare_base_revision": "568cb43d4b0f0b7d07cb5d89bd8791ee32443adf",
+  "wall_seconds": 2.445677792013157
+}

@@ -1,0 +1,93 @@
+{
+  "protocol_id": "gemma_calendar_tooluse_base_gate_v1",
+  "status": "frozen_before_model_evaluation",
+  "date_frozen": "2026-10-09",
+  "question": "Does a distinct cached instruction-tuned model clear a no-cost base-task gate on procedurally generated stateful calendar API tasks, making it eligible for a separate CPU update-feasibility protocol?",
+  "hypothesis": "Gemma 2 2B IT completes at least 20 of 32 tasks and at least 4 of 8 tasks in each operation family under deterministic greedy decoding, within the frozen CPU and resource limits.",
+  "scope": {
+    "evidence_class": "real pretrained language model evaluated on a synthetic procedurally generated task environment; base-feasibility only",
+    "not_established": [
+      "post-training improvement",
+      "RL or preference-optimization effect",
+      "general tool-use or calendar capability",
+      "performance on human-authored or external benchmark tasks",
+      "independent external reproduction or adoption",
+      "model update, checkpoint save/reload, or downstream generalization"
+    ],
+    "novelty_claim": "none; this is a candidate feasibility gate, not a research contribution"
+  },
+  "model": {
+    "repository": "google/gemma-2-2b-it",
+    "revision": "299a8560bedf22ed1c72a8a11e7dce4a7f9f51f8",
+    "architecture": "Gemma2ForCausalLM",
+    "parameter_count_expected": 2614341888,
+    "dtype_expected": "bfloat16",
+    "tokenizer_vocab_expected": 256000,
+    "sha256": {
+      "config.json": "eacec6c5ca317a87ed2c46789d9705b9274db5027e7ba59da739bfae23addb55",
+      "generation_config.json": "a543a5d299bc2b20c52bd87ed174f561266510b57a392e12b5b5d758d798ce05",
+      "model.safetensors.index.json": "ada0043f3e3b2e5ab2f445cad9c0fbbf9d91ad444675e6a82b822591c63abf5a",
+      "model-00001-of-00002.safetensors": "532d792c9178805064170a3ec485b7dedbfccc6fd297b92c31a6091b6c7e41bf",
+      "model-00002-of-00002.safetensors": "6d6d9ce84db398fb6e0191f91542e5da0a73da2cb695e172a24edc2146dc8d20",
+      "tokenizer.json": "3f289bc05132635a8bc7aca7aa21255efd5e18f3710f43e3cdb96bcd41be4922",
+      "tokenizer.model": "61a7b147390c64585d6c3543dd6fc636906c9af3865a5548f27f31aee1d4c8e2",
+      "tokenizer_config.json": "cb32b7929c62608d46572e813112b3ad8a841fb98fdd6a4da8559e368a951c89",
+      "special_tokens_map.json": "baec30ea10906f16adb8c18af7a34023002c1746542612b8b41c9f09e1351351"
+    }
+  },
+  "task_suite": {
+    "generator": "scripts/run_gemma_calendar_tooluse_base_gate_v1.py::make_tasks",
+    "python": "3.12.12",
+    "seed": 4102026,
+    "task_count": 32,
+    "tasks_per_family": 8,
+    "families": [
+      "book_free_slot",
+      "move_conflict_then_book",
+      "reschedule_with_conflict",
+      "remove_duplicate_then_book"
+    ],
+    "payload_sha256": "26dc84ed95230e1760066549c568225f9c1474c0575ecda89c1656cb28d3f1bc",
+    "primary_metric": "episode exact final-state success: every target event exists exactly once, every removed event is absent, all protected events remain byte-for-byte unchanged, and no unrequested event exists",
+    "action_budget_per_episode": 5,
+    "response_contract": "One strict JSON object per turn with exactly keys tool and arguments. Invalid JSON, extra keys, unknown tools, invalid operations, and failed tool calls count against the action budget; no regex extraction or constrained decoding.",
+    "environment": "A deterministic simulator exposes create_event, move_event, and cancel_event; each tool response returns control to the model with the updated complete calendar and original request."
+  },
+  "runner": {
+    "script": "scripts/run_gemma_calendar_tooluse_base_gate_v1.py",
+    "script_sha256": "44a232955b134850424d57b19dd57db21db0554f5592fb31188fa772f1925bf0",
+    "calibration_script": "scripts/calibrate_gemma_calendar_tooluse_harness_v1.py",
+    "calibration_script_sha256": "c972f6a2fb92ccf370fef8abbc3f1da4101de93af4db939ced8411ea19cada7d",
+    "calibration_outcome": {
+      "known_correct_plans_accepted": "32/32",
+      "initial_unsolved_states_rejected": "32/32",
+      "protected_event_operations_rejected": "32/32",
+      "extra_final_events_rejected": "32/32",
+      "malformed_or_extra_key_json_rejected": "2/2"
+    },
+    "runtime": {
+      "python": "3.12.12",
+      "torch": "2.9.1",
+      "transformers": "4.57.3",
+      "accelerate": "1.12.0",
+      "safetensors": "0.7.0",
+      "platform": "macOS; 10 CPU cores; 32 GiB physical memory"
+    },
+    "decode": "greedy (do_sample=false), max_new_tokens=96, no constrained decoding",
+    "max_turns": 5,
+    "device": "CPU only; local_files_only model/tokenizer load; reject any non-CPU parameter placement",
+    "cpu_threads": 8,
+    "max_wall_seconds_including_hash_and_load": 2700,
+    "max_rss_bytes_macos": 25769803776,
+    "offline": true,
+    "paid_api_gpu_or_external_spend": false,
+    "reproduction_command_template": "HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 python scripts/run_gemma_calendar_tooluse_base_gate_v1.py --model-dir /path/to/google/gemma-2-2b-it/299a8560bedf22ed1c72a8a11e7dce4a7f9f51f8 --output results/gemma-calendar-tooluse-base-gate-v1/run-1"
+  },
+  "acceptance": {
+    "primary_gate": "at least 20/32 exact-success episodes and at least 4/8 successes in every family",
+    "resource_gate": "all 32 tasks recorded; exit 0; CPU device; wall time <= 2700 s; peak RSS <= 24 GiB; all model hashes match",
+    "failure_rule": "Any primary or resource gate failure retires this exact model/task/runtime pairing. Do not tune prompts, parser, task generation, action budget, or threshold and rerun this cohort.",
+    "decision_if_pass": "Only authorize a separately frozen CPU update-cost smoke. This pass does not authorize a learner confirmation or support a capability claim.",
+    "decision_if_fail": "Do not train this pairing. Preserve all traces and return to candidate selection."
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "baseline_revision": "d8cc153dd242d3b989efcc42eea79408fbbb75c7",
+  "cases": [
+    {
+      "attempt_task": {
+        "id": "task-a",
+        "prompt": "prompt a"
+      },
+      "dispatched_task": {
+        "id": "task-a",
+        "prompt": "prompt a"
+      },
+      "trainer_generation": {
+        "prompt": "prompt a",
+        "prompt_id": "task-b"
+      }
+    },
+    {
+      "attempt_task": {
+        "id": "task-a",
+        "prompt": "prompt a"
+      },
+      "dispatched_task": {
+        "id": "task-a",
+        "prompt": "prompt a"
+      },
+      "trainer_generation": {
+        "prompt": "prompt b",
+        "prompt_id": "task-a"
+      }
+    }
+  ]
+}

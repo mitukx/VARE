@@ -1,0 +1,24 @@
+{
+  "audit": "stdlib-only independent reconstruction",
+  "checks": {
+    "all_arms_dispatcher": true,
+    "all_rank_parameters_agree": true,
+    "both_ranks_completed": true,
+    "candidate_window_count": true,
+    "case_set": true,
+    "counterexample_base_gradient": true,
+    "counterexample_base_update_error": true,
+    "counterexample_candidate_gradient": true,
+    "counterexample_candidate_update_error": true,
+    "counterexample_reference_gradient": true,
+    "locked_runner_hash": true,
+    "negative_control_base": true,
+    "negative_control_candidate": true,
+    "pinned_commit": true,
+    "pinned_trl_source_hash": true,
+    "runner_acceptance": true,
+    "runtime_and_topology": true
+  },
+  "passed": 17,
+  "total": 17
+}

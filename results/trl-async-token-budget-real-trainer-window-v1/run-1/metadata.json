@@ -1,0 +1,19 @@
+{
+  "protocol": "trl_async_token_budget_real_trainer_window_v3",
+  "protocol_commit": "6605c26445a4a62823f42d202472dc4e90e12840",
+  "source_revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+  "transformers": "4.57.3",
+  "torch": "2.9.1",
+  "accelerate": "1.12.0",
+  "device": "MPS",
+  "exit_codes": {
+    "baseline": 0,
+    "candidate": 0
+  },
+  "external_spend_usd": 0,
+  "claim_limit": "Actual Transformers Trainer.train optimizer loop with pinned TRL queue/batcher/collator and synthetic scalar model; no pretrained policy, realistic GRPO loss, capability, or prevalence claim.",
+  "accelerate_data_loader_sha256": "8debfb20c6ae58eff3a466cfd67244a12cc8b8d3de00316a6c1d54b0310ee6ca",
+  "protocol_note": "Accelerate 1.12.0 was observed in the run but its source hash was not frozen in the protocol; exact dispatcher behavior is recorded post-run in the report.",
+  "protocol_compliance": false,
+  "protocol_deviation": "TrainingArguments defaulted to use_cpu=False and selected local Apple MPS. The run exited 0 but does not satisfy the CPU-only resource protocol; v4 is the CPU confirmation."
+}

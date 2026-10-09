@@ -1,0 +1,12 @@
+{
+  "run_id": "37851986730",
+  "status": "failed",
+  "stage": "initial CI after experiment execution",
+  "failed_test": "test_two_worlds_have_same_single_item_law_but_different_group_signal",
+  "cause": "The initial test incorrectly required a 1,000-sample Bernoulli draw to equal its theoretical expectation exactly (observed 497/1000).",
+  "correction": "Replaced the stochastic equality check with exact enumeration of each world's finite one-item audit law and exact marginal calculation.",
+  "protocol_changed": false,
+  "experiment_bundle_changed": false,
+  "follow_up_ci_run_id": "37852234082",
+  "follow_up_ci_result": "success: 161 passed, 12 skipped"
+}

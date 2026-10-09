@@ -1,0 +1,31 @@
+{
+  "claim_boundary": "Exact arithmetic from the pinned source formula; not an end-to-end Trainer, DDP, model-update, or capability experiment.",
+  "counterexample": {
+    "absolute_gradient_error": 0.4,
+    "absolute_sgd_delta_error": 0.04000000000000001,
+    "current_main_gradient": 0.5,
+    "current_main_sgd_delta": -0.05,
+    "gradient_ratio_to_pooled": 5.0,
+    "pooled_token_gradient": 0.1,
+    "pooled_token_sgd_delta": -0.010000000000000002
+  },
+  "decision": "source_formula counterexample reproduced",
+  "negative_control": {
+    "absolute_gradient_error": 0.0,
+    "absolute_sgd_delta_error": 0.0,
+    "current_main_gradient": 1.0,
+    "current_main_sgd_delta": -0.1,
+    "gradient_ratio_to_pooled": 1.0,
+    "pooled_token_gradient": 1.0,
+    "pooled_token_sgd_delta": -0.1
+  },
+  "source_commit": "f4526e10e25c8618855932528c232e2284c7801c",
+  "source_formula_fragments_verified": [
+    "tokens_per_rank = (global_n_tokens / world_size).clamp(min=1.0)",
+    "loss = loss / tokens_per_rank.to(torch.float32)",
+    "loss = loss / self.current_gradient_accumulation_steps"
+  ],
+  "source_sha256": "2657481258dcc04112761e9ff61a35cb93b2b72c3e197e4524f4602fd6a2dbfe",
+  "study_id": "trl_async_window_normalization_current_main_v1",
+  "trainer_scaling_source_sha256": "bb22c17aeb1711001a02905d0f8b753c4e757efb3c61446000845d5aee0c9291"
+}

@@ -1,0 +1,39 @@
+FF.                                                                      [100%]
+=================================== FAILURES ===================================
+____ test_rvl_generation_for_a_different_task_is_rejected[task-b-prompt a] _____
+
+returned_id = 'task-b', returned_prompt = 'prompt a'
+
+    @pytest.mark.parametrize(
+        ("returned_id", "returned_prompt"),
+        [("task-b", "prompt a"), ("task-a", "prompt b")],
+    )
+    def test_rvl_generation_for_a_different_task_is_rejected(returned_id, returned_prompt):
+        task = Task("task-a", "prompt a", "math")
+        hooks = _hooks(returned_id, returned_prompt)
+
+>       with pytest.raises(ValueError, match="RVL generation task identity mismatch"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_rvl_grpo_rollout_task_binding.py:55: Failed
+____ test_rvl_generation_for_a_different_task_is_rejected[task-a-prompt b] _____
+
+returned_id = 'task-a', returned_prompt = 'prompt b'
+
+    @pytest.mark.parametrize(
+        ("returned_id", "returned_prompt"),
+        [("task-b", "prompt a"), ("task-a", "prompt b")],
+    )
+    def test_rvl_generation_for_a_different_task_is_rejected(returned_id, returned_prompt):
+        task = Task("task-a", "prompt a", "math")
+        hooks = _hooks(returned_id, returned_prompt)
+
+>       with pytest.raises(ValueError, match="RVL generation task identity mismatch"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_rvl_grpo_rollout_task_binding.py:55: Failed
+=========================== short test summary info ============================
+FAILED tests/test_rvl_grpo_rollout_task_binding.py::test_rvl_generation_for_a_different_task_is_rejected[task-b-prompt a]
+FAILED tests/test_rvl_grpo_rollout_task_binding.py::test_rvl_generation_for_a_different_task_is_rejected[task-a-prompt b]

@@ -1,0 +1,27 @@
+{
+  "claim_boundary": "No model training, optimizer update, GPU/Liger execution, downstream task evaluation, or prevalence estimate.",
+  "external_compute_usd": 0,
+  "gpu_hours": 0,
+  "independent_verifier_sha256": null,
+  "notes": "The primary call paths ran, but this attempt did not separately instantiate GRPOConfig to record whether the positive tiny clip was accepted; superseded.",
+  "paid_api_calls": 0,
+  "primary_runner_sha256": "c0a4716e994b977767a2b55b35da7ad42dc57f3e1d902e25d0eaf407dbdcfc78",
+  "protocol_id": "trl_grpo_kl_clip_dtype_underflow_v1",
+  "protocol_sha256": "cff0db1b32c57b22b7c9288ec455a42ee8c74a2a8c9e675dd4a942bc12d26cf1",
+  "reproduction_type": "direct invocation of pinned production GRPOTrainer._compute_loss with a one-token CPU float16 fixture; no model/dataset download",
+  "run_id": "run-1",
+  "runtime": {
+    "cuda_initialized": false,
+    "device": "CPU",
+    "python": "3.12.12",
+    "torch": "2.9.1"
+  },
+  "source_checkouts_clean": true,
+  "source_revisions": [
+    "0aaea03f2fa449bc7a91f1973e7940da11da65da",
+    "2b0d16b7839732f0b652ea7dfd4f492f00e15a48"
+  ],
+  "status": "incomplete",
+  "timestamp_utc": "2026-10-09T04:16:00Z",
+  "vare_git_commit_before_run": "107b273df9d999beccbafe43cc4cab8fbd264db0"
+}

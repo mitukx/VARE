@@ -8,7 +8,7 @@ from vare.types import EvaluationReport
 
 def _rows(n=128, false=0, family="coding"):
     return [
-        RewardAuditObservation(f"heldout-{i}", family, True, i < false)
+        RewardAuditObservation(f"heldout-{i}", family, True, i >= false)
         for i in range(n)
     ]
 
@@ -29,6 +29,7 @@ def _report(policy, ids, primary, *, audit=None, measured=False, slices=None):
 
 
 def _gate(**kw):
+    kw.setdefault("reward_audit_required_families", ("coding",))
     return PromotionGate(PromotionConfig(
         min_eval_examples=1, min_paired_examples=1,
         min_primary_gain=0.01, paired_confidence_gate=False,
@@ -94,15 +95,29 @@ def test_audit_must_match_paired_heldout_task_ids():
     assert "reward_audit_identity_mismatch" in _gate().decide(inc, cand).reasons
 
 
+def test_promotion_fails_closed_when_a_required_family_is_missing():
+    rows = _rows()
+    ids = [r.task_id for r in rows]
+    inc = _report("inc", ids, 0.6, slices={"coding": 0.6, "math": 0.6})
+    cand = _report("cand", ids, 0.8, audit=rows,
+                   slices={"coding": 0.8, "math": 0.8})
+    strict = _gate(reward_audit_required_families=("coding", "math"))
+    assert "reward_audit_family_coverage_mismatch" in strict.decide(inc, cand).reasons
+
+
+def test_strict_reward_audit_requires_a_frozen_family_list():
+    with pytest.raises(ValueError, match="reward_audit_required_families"):
+        PromotionGate(PromotionConfig(require_reward_audit=True))
+
+
 def test_missing_slice_and_unmeasured_disagreement_fail_closed_when_selected():
     rows = _rows()
     ids = [r.task_id for r in rows]
     inc = _report("inc", ids, 0.6, slices={"hard": 0.6})
     cand = _report("cand", ids, 0.8, audit=rows)
-    strict = _gate(require_complete_slices=True,
-                   require_measured_disagreement=True)
+    strict = _gate(require_measured_disagreement=True)
     d = strict.decide(inc, cand)
-    assert "evaluation_slice_identity_mismatch" in d.reasons
+    assert "slice_coverage_mismatch" in d.reasons
     assert "unmeasured_verifier_disagreement" in d.reasons
     measured = _report("cand", ids, 0.8, audit=rows,
                        measured=True, slices={"hard": 0.8})

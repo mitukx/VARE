@@ -1,0 +1,56 @@
+{
+  "protocol_id": "trl_async_forked_rollout_staleness_v1",
+  "status": "frozen_before_confirmation",
+  "question": "When one generated conversation produces multiple forked TrainingSequences, can a policy-version transition between queue reads admit one sequence but drop its sibling, and does preserving rollout identity/size make staleness admission atomic per conversation?",
+  "upstream_context": {
+    "issue": "https://github.com/huggingface/trl/issues/7206",
+    "existing_related_pr": "https://github.com/huggingface/trl/pull/7249",
+    "contract_scope": "Issue #7206 explicitly proposes retaining rollout identity and sequence membership. Current documentation describes per-sample max_staleness and does not already promise per-rollout atomicity. This experiment tests the issue's proposed contract, not a violation of an existing documented guarantee."
+  },
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "base_revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+    "candidate_base_revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+    "base_files_sha256": {
+      "trl/experimental/async_grpo/async_grpo_trainer.py": "2657481258dcc04112761e9ff61a35cb93b2b72c3e197e4524f4602fd6a2dbfe",
+      "trl/experimental/async_grpo/async_rollout_worker.py": "5eab22259711df4e3ec1a62047f87a2cffc5b204772b25cd78647336e52b9670"
+    },
+    "candidate_files_sha256": {
+      "trl/experimental/async_grpo/async_grpo_trainer.py": "f16c87b7fce02a3c3ffa6d54fe7d6ef00e1b3ea6cec3e7a47cf7a923f722a5fa",
+      "trl/experimental/async_grpo/async_rollout_worker.py": "2bca6e23b7cc71ecb809a3585e04458eb1da184731001bfa41b50326e8bd57a3"
+    },
+    "candidate_patch": "results/trl-async-group-staleness-microbatch-v1/candidate-fix.patch",
+    "candidate_patch_sha256": "df6bfd03224bc961658d7366eea590cd2be4ad5c1940d4153b893e1373f6c163"
+  },
+  "estimand": {
+    "primary": "Number of one rollout's forked rows from RolloutId rollout-a that enter the first fixed-count training microbatch after the version callback advances from 0 to 1 between queue reads.",
+    "independent_unit": "One conversation rollout ID. Two distinct rollouts share the same GRPO group_id to verify the patch does not conflate rollout identity with prompt-group identity.",
+    "resource_budget": "CPU only; deterministic tokens/rewards; no pretrained weights, training optimizer, GPU, API, or external spending.",
+    "claim_boundary": "Measures sample admission and the actual fixed-count collator input only; no compute_loss gradient, optimizer update, task success, or capability effect."
+  },
+  "method": {
+    "same_test_file": "reproducers/trl_async_forked_rollout_staleness/test_async_grpo_group_staleness.py",
+    "same_test_sha256": "058bb75637a5b19d5a1161c0354fcc4850b6da61235efdaa52e298649479a348",
+    "end_to_end_reproducer": "scripts/reproduce_trl_async_forked_rollout_staleness_v1.py",
+    "end_to_end_script_sha256": "7c588cb525452154e482f2a11641fa0229f8e8a068417174fd95c86ae3d479f4",
+    "scoring_fixture": "One completion produces two TrainingSequences with rollout_id=rollout-a; a second completion produces one sequence with rollout_id=rollout-b. All share group_id=41. The rollout queue then receives fresh sentinels to bound the fixed-count microbatch.",
+    "version_transition": "The model-version callback returns 0 on its first call and 1 on later calls, with max_staleness=0. This deterministically places the version transition between row-level admission decisions on base."
+  },
+  "acceptance": {
+    "baseline_focused_test_exposes_fork_sibling_split": true,
+    "candidate_focused_tests_all_pass": true,
+    "baseline_end_to_end_first_microbatch_contains_one_of_two_rollout_a_rows": true,
+    "candidate_end_to_end_first_microbatch_contains_both_rollout_a_rows": true,
+    "candidate_preserves_distinct_rollout_ids_inside_same_group": true,
+    "source_test_and_patch_hashes_match_lock": true,
+    "cpu_only_and_no_external_spend": true
+  },
+  "failure_criteria": [
+    "Any pinned source, patch, or fixture hash differs.",
+    "The baseline fails for a reason unrelated to missing rollout identity/atomic admission.",
+    "The candidate does not pass all frozen fork-admission tests.",
+    "The candidate groups distinct rollout IDs solely because they share group_id.",
+    "A GPU, model download, paid API, or external service is required."
+  ],
+  "fix_scope": "Prototype only: preserve rollout_id and fork count on RolloutSample, buffer a complete rollout before applying staleness once, and fail closed on inconsistent contiguous membership. This patch implements the issue's proposed per-rollout admission contract; it does not make every prompt-level GRPO group all-or-none."
+}

@@ -1,0 +1,111 @@
+{
+  "independently_derived": {
+    "c1": {
+      "identity": {
+        "mean_ratio_under_behavior": "1",
+        "ratios": [
+          "1",
+          "1",
+          "1"
+        ],
+        "retained_mass": "1",
+        "support": [
+          0,
+          1,
+          2
+        ]
+      },
+      "min_p": {
+        "mean_ratio_under_behavior": "4/5",
+        "ratios": [
+          "4/5",
+          "4/5"
+        ],
+        "retained_mass": "4/5",
+        "support": [
+          0,
+          1
+        ]
+      },
+      "top_k": {
+        "mean_ratio_under_behavior": "4/5",
+        "ratios": [
+          "4/5",
+          "4/5"
+        ],
+        "retained_mass": "4/5",
+        "support": [
+          0,
+          1
+        ]
+      },
+      "top_p": {
+        "mean_ratio_under_behavior": "4/5",
+        "ratios": [
+          "4/5",
+          "4/5"
+        ],
+        "retained_mass": "4/5",
+        "support": [
+          0,
+          1
+        ]
+      }
+    },
+    "c2": {
+      "identity": {
+        "mean_ratio_under_behavior": "1",
+        "ratios": [
+          "1",
+          "1",
+          "1"
+        ],
+        "retained_mass": "1",
+        "support": [
+          0,
+          1,
+          2
+        ]
+      },
+      "min_p": {
+        "mean_ratio_under_behavior": "7/10",
+        "ratios": [
+          "7/10"
+        ],
+        "retained_mass": "7/10",
+        "support": [
+          0
+        ]
+      },
+      "top_k": {
+        "mean_ratio_under_behavior": "9/10",
+        "ratios": [
+          "9/10",
+          "9/10"
+        ],
+        "retained_mass": "9/10",
+        "support": [
+          0,
+          1
+        ]
+      },
+      "top_p": {
+        "mean_ratio_under_behavior": "9/10",
+        "ratios": [
+          "9/10",
+          "9/10"
+        ],
+        "retained_mass": "9/10",
+        "support": [
+          0,
+          1
+        ]
+      }
+    }
+  },
+  "method": "independent integer weights; no import from the primary runner",
+  "protocol_id": "trl_vllm_truncated_support_audit_v1",
+  "raw_policy_reward_gradient_theta": "4/25 for c1; 9/100 for c2 when action 3 remains in support, otherwise the sampled estimate is 0",
+  "source_corrected_raw_policy_reward": "0 under truncated q; matches raw-policy expectation only when the rewarded action remains in support",
+  "status": "pass"
+}

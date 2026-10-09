@@ -1,0 +1,74 @@
+{
+  "candidate_results": [
+    {
+      "eligible": true,
+      "max_seed_training_context_kl": 0.1841849463853039,
+      "mean_training_context_kl": 0.14215416132123332,
+      "mean_training_nll": 0.44961701156900835,
+      "updates": 25
+    },
+    {
+      "eligible": true,
+      "max_seed_training_context_kl": 0.32084844720933603,
+      "mean_training_context_kl": 0.2706189065275504,
+      "mean_training_nll": 0.3837054657389417,
+      "updates": 50
+    },
+    {
+      "eligible": true,
+      "max_seed_training_context_kl": 0.4153323557029289,
+      "mean_training_context_kl": 0.35851842828717173,
+      "mean_training_nll": 0.3522230670734537,
+      "updates": 75
+    },
+    {
+      "eligible": true,
+      "max_seed_training_context_kl": 0.49088536125387466,
+      "mean_training_context_kl": 0.4220564768115163,
+      "mean_training_nll": 0.3336542780975347,
+      "updates": 100
+    },
+    {
+      "eligible": false,
+      "max_seed_training_context_kl": 0.5478512726458983,
+      "mean_training_context_kl": 0.4703852627670659,
+      "mean_training_nll": 0.32143057125658914,
+      "updates": 125
+    },
+    {
+      "eligible": false,
+      "max_seed_training_context_kl": 0.5924147029980442,
+      "mean_training_context_kl": 0.5085853990109815,
+      "mean_training_nll": 0.31281577638039015,
+      "updates": 150
+    },
+    {
+      "eligible": false,
+      "max_seed_training_context_kl": 0.6282982963615212,
+      "mean_training_context_kl": 0.5396695313362088,
+      "mean_training_nll": 0.30645323286118775,
+      "updates": 175
+    },
+    {
+      "eligible": false,
+      "max_seed_training_context_kl": 0.6578627434203939,
+      "mean_training_context_kl": 0.5655386108040992,
+      "mean_training_nll": 0.3015900768275684,
+      "updates": 200
+    }
+  ],
+  "claim_limit": "Training-only development selection evidence; not a confirmation result and not language-model capability evidence.",
+  "confirmation_protocol_updates": 100,
+  "heldout_data_generated": false,
+  "lock_sha256": "5c3b615ce5e943756e443ed4fa1997e197a327eb367ef9cbaee06726b13fd36a",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "protocol_id": "vare-synthetic-contextual-dpo-cpu-v2-development",
+  "protocol_sha256": "2f9f6963a0a2de6f537c292f32a8559b1c51b505f0dd2bf6c5df67caaf3cace5",
+  "python_version": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+  "runner_sha256": "b306dff5b015227b0ae7467d62e9fb71b1ca7e915cd956ead33c0c909f6d36f6",
+  "schema_version": 1,
+  "selected_updates": 100,
+  "selection_passed": true,
+  "selection_rule": "Choose the largest candidate update count for which mean training-context KL to the uniform reference is <=0.45 and every development seed has training-context KL <=0.50. Compute metrics only on the examples used to update that seed policy. No held-out contexts or labels are generated in development.",
+  "wall_seconds": 18.741242874995805
+}

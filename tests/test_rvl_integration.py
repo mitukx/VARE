@@ -2,6 +2,8 @@ import json
 import sqlite3
 from pathlib import Path
 
+import pytest
+
 from vare.integrations.rvl import RVLTokenReplayReader
 
 
@@ -87,3 +89,58 @@ def test_rvl_reader_preserves_versions_and_behavior(tmp_path):
     assert exps[0].attempt.task.family == "math"
     assert exps[0].verification.trusted
     assert not exps[1].verification.passed
+
+
+@pytest.mark.parametrize(
+    ("column", "value", "expected_message"),
+    [
+        ("policy_version", 7, "stored policy version 7 is ahead of current version 6"),
+        ("verifier_version", 6, "stored verifier version 6 is ahead of current version 5"),
+    ],
+)
+def test_rvl_reader_rejects_future_ready_group_versions(
+    tmp_path, column, value, expected_message
+):
+    path = tmp_path / "replay.sqlite"
+    _make_replay(path)
+    with sqlite3.connect(path) as db:
+        db.execute(f"UPDATE groups SET {column}=? WHERE id='g1'", (value,))
+    reader = RVLTokenReplayReader(path)
+    with pytest.raises(ValueError, match=expected_message):
+        reader.snapshot(current_policy_version=6, current_verifier_version=5)
+    with pytest.raises(ValueError, match=expected_message):
+        reader.ready_experiences(current_policy_version=6, current_verifier_version=5)
+
+
+def test_rvl_reader_rejects_future_per_experience_verifier_version(tmp_path):
+    path = tmp_path / "replay.sqlite"
+    _make_replay(path)
+    with sqlite3.connect(path) as db:
+        raw = db.execute("SELECT payload FROM groups WHERE id='g1'").fetchone()[0]
+        payload = json.loads(raw)
+        payload[0]["verifier_version"] = 6
+        db.execute(
+            "UPDATE groups SET payload=? WHERE id='g1'",
+            (json.dumps(payload),),
+        )
+    reader = RVLTokenReplayReader(path)
+    with pytest.raises(ValueError, match="stored experience verifier version 6 is ahead"):
+        reader.snapshot(current_policy_version=6, current_verifier_version=5)
+    with pytest.raises(ValueError, match="stored experience verifier version 6 is ahead"):
+        reader.ready_experiences(current_policy_version=6, current_verifier_version=5)
+
+
+def test_rvl_reader_rejects_malformed_ready_experience_version(tmp_path):
+    path = tmp_path / "replay.sqlite"
+    _make_replay(path)
+    with sqlite3.connect(path) as db:
+        raw = db.execute("SELECT payload FROM groups WHERE id='g1'").fetchone()[0]
+        payload = json.loads(raw)
+        payload[0]["verifier_version"] = True
+        db.execute(
+            "UPDATE groups SET payload=? WHERE id='g1'",
+            (json.dumps(payload),),
+        )
+    reader = RVLTokenReplayReader(path)
+    with pytest.raises(ValueError, match="stored experience verifier must be a non-negative integer"):
+        reader.ready_experiences(current_policy_version=6, current_verifier_version=5)

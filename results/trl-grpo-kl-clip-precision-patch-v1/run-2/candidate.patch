@@ -1,0 +1,68 @@
+diff --git a/trl/trainer/grpo_trainer.py b/trl/trainer/grpo_trainer.py
+index 0a0f3c41..19689801 100644
+--- a/trl/trainer/grpo_trainer.py
++++ b/trl/trainer/grpo_trainer.py
+@@ -3193,7 +3193,18 @@ class GRPOTrainer(_BaseTrainer):
+         # Compute the KL divergence between the model and the reference model
+         if self.beta != 0.0:
+             ref_per_token_logps = inputs["ref_per_token_logps"]
+-            kl_log_ratio = ref_per_token_logps - per_token_logps
++            original_kl_dtype = per_token_logps.dtype
++            low_precision_clipped_kl = (
++                self.args.kl_log_ratio_clip is not None
++                and original_kl_dtype in (torch.float16, torch.bfloat16)
++            )
++            if low_precision_clipped_kl:
++                # Keep the subtraction and K3 arithmetic in float32. In half precision, the clipped K3 value and
++                # its importance-ratio correction can be large and nearly cancel in the backward pass.
++                kl_log_ratio = ref_per_token_logps.float() - per_token_logps.float()
++            else:
++                kl_log_ratio = ref_per_token_logps - per_token_logps
++            clipped_kl_log_ratio = None
+             # Clip the log-ratio before the exponential so the K3 estimator stays finite when the policy and
+             # reference distributions drift far apart (issue #3015). Only a large positive log-ratio overflows
+             # `exp`; a large negative one underflows to zero and leaves K3 finite, so clamping that side would
+@@ -3204,7 +3215,16 @@ class GRPOTrainer(_BaseTrainer):
+             # would zero that slope, and with the bias correction below the term would then reduce to
+             # `K3(clip) * ratio`, whose gradient pushes the policy further away from the reference.
+             if self.args.kl_log_ratio_clip is not None:
+-                clip = torch.tensor(self.args.kl_log_ratio_clip, dtype=kl_log_ratio.dtype, device=kl_log_ratio.device)
++                input_dtype_clip = torch.tensor(
++                    self.args.kl_log_ratio_clip, dtype=original_kl_dtype, device=kl_log_ratio.device
++                )
++                if not torch.isfinite(input_dtype_clip) or input_dtype_clip <= 0:
++                    raise ValueError(
++                        f"`kl_log_ratio_clip={self.args.kl_log_ratio_clip}` is not positive and representable "
++                        f"in {original_kl_dtype}; choose a larger value."
++                    )
++                clip_dtype = torch.float32 if low_precision_clipped_kl else kl_log_ratio.dtype
++                clip = torch.tensor(self.args.kl_log_ratio_clip, dtype=clip_dtype, device=kl_log_ratio.device)
+                 if not torch.isfinite(torch.exp(clip)):
+                     raise ValueError(
+                         f"`kl_log_ratio_clip={self.args.kl_log_ratio_clip}` is too large for {kl_log_ratio.dtype}: "
+@@ -3212,11 +3232,23 @@ class GRPOTrainer(_BaseTrainer):
+                         f"Lower it until `torch.exp(torch.tensor(kl_log_ratio_clip, dtype={kl_log_ratio.dtype}))` "
+                         f"is finite."
+                     )
+-                kl_log_ratio = kl_log_ratio + (kl_log_ratio.clamp(max=clip) - kl_log_ratio).detach()
++                clipped_kl_log_ratio = kl_log_ratio.clamp(max=clip)
++                kl_log_ratio = kl_log_ratio + (clipped_kl_log_ratio - kl_log_ratio).detach()
+             per_token_kl = torch.exp(kl_log_ratio) - kl_log_ratio - 1
+             # Importance sampling correction for the KL divergence
+             if self.args.use_bias_correction_kl:
+-                per_token_kl = per_token_kl * coef_1
++                if low_precision_clipped_kl and self.importance_sampling_level == "token":
++                    # Combine the exact clipped-K3/importance-ratio derivative before it reaches a half-precision
++                    # log-probability leaf. Separate low-precision branches can round equal and cancel to zero.
++                    clipped_ratio = clipped_kl_log_ratio.detach()
++                    kl_value = per_token_kl * coef_1.float()
++                    logprob_delta = per_token_logps.float() - per_token_logps.float().detach()
++                    analytic_gradient = -coef_1.detach().float() * clipped_ratio
++                    per_token_kl = kl_value.detach() + logprob_delta * analytic_gradient
++                elif low_precision_clipped_kl:
++                    per_token_kl = per_token_kl * coef_1.float()
++                else:
++                    per_token_kl = per_token_kl * coef_1
+ 
+         # From here, log_importance_weights (and all subsequent tensors, coef_1, coef_2, etc.) shape depends on
+         # importance_sampling_level: "token" level: (B, T); "sequence" level: (B, 1)

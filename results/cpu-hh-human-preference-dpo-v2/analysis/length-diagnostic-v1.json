@@ -1,0 +1,52 @@
+{
+  "analysis": "post-hoc descriptive response-length diagnostic; non-confirmatory",
+  "frozen_decision_unchanged": {
+    "base_floor_pass": true,
+    "dpo_gain_pass": false,
+    "dpo_sft_noninferiority_pass": true,
+    "kl_pass": true,
+    "nll_guard_pass": true,
+    "pass": false,
+    "seed_consistency_pass": false
+  },
+  "groups": {
+    "chosen_longer": {
+      "base_margin_mean": -86.97993887071497,
+      "base_pair_accuracy": 0.10625,
+      "dpo_margin_mean_across_seeds": -87.62168218825633,
+      "dpo_pair_accuracy_mean_across_seeds": 0.1,
+      "mean_chosen_minus_rejected_tokens": 42.23125,
+      "n": 160
+    },
+    "chosen_shorter": {
+      "base_margin_mean": 84.41733819530695,
+      "base_pair_accuracy": 0.9354838709677419,
+      "dpo_margin_mean_across_seeds": 85.41701549820361,
+      "dpo_pair_accuracy_mean_across_seeds": 0.946236559139785,
+      "mean_chosen_minus_rejected_tokens": -39.774193548387096,
+      "n": 93
+    },
+    "equal_length": {
+      "base_margin_mean": 8.855595270792643,
+      "base_pair_accuracy": 0.6666666666666666,
+      "dpo_margin_mean_across_seeds": 8.40220218234592,
+      "dpo_pair_accuracy_mean_across_seeds": 0.5555555555555555,
+      "mean_chosen_minus_rejected_tokens": 0.0,
+      "n": 3
+    }
+  },
+  "interpretation_limit": "Post-hoc analysis of the already-scored development cohort; no hypothesis, metric, gate, or decision is changed. Association is descriptive and not causal.",
+  "length_only_pair_accuracy_in_run_summary": 0.630859375,
+  "length_only_pair_accuracy_recomputed": 0.630859375,
+  "n_dpo_seeds": 3,
+  "n_prompts": 256,
+  "pearson_r_length_delta_vs_base_raw_sequence_margin": -0.9561861343599877,
+  "pearson_r_length_delta_vs_dpo_mean_raw_sequence_margin": -0.9559546199531811,
+  "pearson_r_length_delta_vs_dpo_minus_base_margin": -0.2748140981704166,
+  "source": {
+    "bundle_manifest_entries_verified": 12,
+    "manifest_sha256": "83baad34a20741271b5cbb4ce923a667250878c8d0209cdaf72d07020d1d9f95",
+    "protocol_sha256": "6dc90abd997b5bf0247b4a3cd13f93d792e40a2dd36fd2491654e485bf59e777",
+    "summary_sha256": "4c755b852a8eb9396da1e531bbcdbcbceb3725f985d224f7e132fcbf0f9546e3"
+  }
+}

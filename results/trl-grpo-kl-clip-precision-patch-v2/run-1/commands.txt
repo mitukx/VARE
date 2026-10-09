@@ -1,0 +1,6 @@
+# Protocol frozen in VARE commit 2d5aa62; all five calls use its source head and patch digest.
+python scripts/audit_trl_grpo_kl_clip_precision_patch_v2.py --source-root /tmp/trl-grpo-kl-head-control-v1 --dtype float16 --importance-sampling-level sequence --output results/trl-grpo-kl-clip-precision-patch-v2/run-1/pr-head-f16-sequence.json
+python scripts/audit_trl_grpo_kl_clip_precision_patch_v2.py --source-root /tmp/trl-grpo-kl-candidate-v1 --patched --dtype float16 --importance-sampling-level sequence --output results/trl-grpo-kl-clip-precision-patch-v2/run-1/candidate-f16-sequence.json
+python scripts/audit_trl_grpo_kl_clip_precision_patch_v2.py --source-root /tmp/trl-grpo-kl-head-control-v1 --dtype float32 --importance-sampling-level sequence --output results/trl-grpo-kl-clip-precision-patch-v2/run-1/pr-head-f32-sequence.json
+python scripts/audit_trl_grpo_kl_clip_precision_patch_v2.py --source-root /tmp/trl-grpo-kl-candidate-v1 --patched --dtype float32 --importance-sampling-level sequence --output results/trl-grpo-kl-clip-precision-patch-v2/run-1/candidate-f32-sequence.json
+python scripts/audit_trl_grpo_kl_clip_precision_patch_v2.py --source-root /tmp/trl-grpo-kl-candidate-v1 --patched --dtype float16 --importance-sampling-level token --output results/trl-grpo-kl-clip-precision-patch-v2/run-1/candidate-f16-token.json

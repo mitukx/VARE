@@ -1,0 +1,107 @@
+{
+  "all_seed_kl_within_limit": false,
+  "all_seeds_improve": false,
+  "compute_limits_respected": true,
+  "decision": "non_pass_or_null",
+  "device": "cpu",
+  "mean_heldout_nll_change_updated_minus_base": 0.11195508785569978,
+  "model_files_sha256": {
+    "config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+    "model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+    "tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583"
+  },
+  "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+  "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "network_disabled": true,
+  "numpy": "1.26.4",
+  "paid_compute": false,
+  "paired_seed_stratified_bootstrap_95pct": [
+    -0.26728996116635007,
+    0.5002040978087957
+  ],
+  "peak_rss_bytes": 3173302272,
+  "per_seed": [
+    {
+      "adapter_l2": 1.9702723026275635,
+      "adapter_update_l2": 0.09696873277425766,
+      "device": "cpu",
+      "heldout_base": {
+        "mean_conditional_preference_nll": 2.1767326975973447,
+        "preference_accuracy": 0.40625
+      },
+      "heldout_mean_bernoulli_kl_updated_to_base": 0.0993890849758241,
+      "heldout_updated": {
+        "mean_conditional_preference_nll": 2.9406082796796134,
+        "preference_accuracy": 0.375
+      },
+      "peak_rss_bytes": 3173302272,
+      "seed": 101,
+      "train_base_conditional_preference_nll": 1.5148393656980554,
+      "train_objective_after": 0.6797263622283936,
+      "train_objective_first_update": 0.6931471824645996,
+      "train_objective_last_update": 0.6807392239570618,
+      "train_updated_conditional_preference_nll": 1.9866335942930204,
+      "updates": 15,
+      "wall_seconds": 1.4884918750000002
+    },
+    {
+      "adapter_l2": 2.0183968544006348,
+      "adapter_update_l2": 0.1118064895272255,
+      "device": "cpu",
+      "heldout_base": {
+        "mean_conditional_preference_nll": 1.7210444289999196,
+        "preference_accuracy": 0.5
+      },
+      "heldout_mean_bernoulli_kl_updated_to_base": 0.662085462626211,
+      "heldout_updated": {
+        "mean_conditional_preference_nll": 1.6022652761896101,
+        "preference_accuracy": 0.5
+      },
+      "peak_rss_bytes": 3173302272,
+      "seed": 211,
+      "train_base_conditional_preference_nll": 1.9149966388296071,
+      "train_objective_after": 0.6747994422912598,
+      "train_objective_first_update": 0.6931471824645996,
+      "train_objective_last_update": 0.6751793026924133,
+      "train_updated_conditional_preference_nll": 1.2237666084271615,
+      "updates": 15,
+      "wall_seconds": 1.179658334
+    },
+    {
+      "adapter_l2": 1.9963841438293457,
+      "adapter_update_l2": 0.1490672081708908,
+      "device": "cpu",
+      "heldout_base": {
+        "mean_conditional_preference_nll": 2.0995817884273085,
+        "preference_accuracy": 0.46875
+      },
+      "heldout_mean_bernoulli_kl_updated_to_base": 0.4047217497859364,
+      "heldout_updated": {
+        "mean_conditional_preference_nll": 1.7903506227224486,
+        "preference_accuracy": 0.40625
+      },
+      "peak_rss_bytes": 3173302272,
+      "seed": 307,
+      "train_base_conditional_preference_nll": 1.7167657660663176,
+      "train_objective_after": 0.6589325070381165,
+      "train_objective_first_update": 0.6931471824645996,
+      "train_objective_last_update": 0.6620447635650635,
+      "train_updated_conditional_preference_nll": 1.0845021260561032,
+      "updates": 15,
+      "wall_seconds": 0.9536204169999998
+    }
+  ],
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "protocol_id": "vare-cpu-lm-dpo-head-v1",
+  "protocol_sha256": "df92aba2c0fa90cd6f6c443b376376d1c14b49d50dcd79cffda0e7618c2896d8",
+  "python": "3.9.6 (default, Dec  2 2025, 07:27:58) \n[Clang 17.0.0 (clang-1700.6.3.2)]",
+  "response_token_ids": {
+    "A": 362,
+    "B": 425
+  },
+  "runner_sha256": "efd4b0466fce9ebf8bfb9963cf3f0bdb9ab157b052de7ea88551fd981ecdf252",
+  "torch": "2.8.0",
+  "total_wall_seconds": 7.711585416999999,
+  "transformers": "4.57.3"
+}

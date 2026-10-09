@@ -1,0 +1,27 @@
+
+==================================== ERRORS ====================================
+___ ERROR collecting reproducers/test_trl_async_rollout_group_batching_v1.py ___
+ImportError while importing test module '/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/reproducers/test_trl_async_rollout_group_batching_v1.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+reproducers/test_trl_async_rollout_group_batching_v1.py:5: in <module>
+    from trl.experimental.async_grpo.async_grpo_trainer import FixedCountBatcher, TokenBudgetBatcher
+../../work/trl-upstream-baseline/trl/experimental/async_grpo/__init__.py:15: in <module>
+    from .async_grpo_config import AsyncGRPOConfig
+../../work/trl-upstream-baseline/trl/experimental/async_grpo/async_grpo_config.py:18: in <module>
+    from ...trainer.base_config import _BaseConfig
+../../work/trl-upstream-baseline/trl/trainer/base_config.py:17: in <module>
+    from transformers import TrainingArguments
+E   ModuleNotFoundError: No module named 'transformers'
+=============================== warnings summary ===============================
+reproducers/test_trl_async_rollout_group_batching_v1.py:5
+  /Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/reproducers/test_trl_async_rollout_group_batching_v1.py:5: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+    from trl.experimental.async_grpo.async_grpo_trainer import FixedCountBatcher, TokenBudgetBatcher
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR reproducers/test_trl_async_rollout_group_batching_v1.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!

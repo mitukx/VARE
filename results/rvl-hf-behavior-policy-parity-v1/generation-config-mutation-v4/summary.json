@@ -1,0 +1,167 @@
+{
+  "acceptance_passed": true,
+  "base_revision": "e788f113ad6b246a361cd50a52eaf2867f2a66f8",
+  "claim_limit": "One mutation of two inherited decoding settings on one pinned backend revision; not comprehensive Transformers GenerationConfig coverage or model capability evidence.",
+  "expected_outcomes": {
+    "control": {
+      "v3_passed": true,
+      "v4_passed": true
+    },
+    "inherited_suppression": {
+      "v3_passed": true,
+      "v4_passed": false
+    }
+  },
+  "mutation_description": "Propagate the pretrained model suppress_tokens and no_repeat_ngram_size into the fresh generation config. The v4 fixture starts with token 2 suppressed, which invalidates the first expected response token unless neutralized.",
+  "observed_outcomes": {
+    "control": {
+      "v3": {
+        "failures": [],
+        "passed": true
+      },
+      "v4": {
+        "failures": [],
+        "passed": true
+      }
+    },
+    "inherited_suppression": {
+      "v3": {
+        "failures": [],
+        "passed": true
+      },
+      "v4": {
+        "failures": [
+          {
+            "case_id": "repeat-positive-logit",
+            "check": "rollout_probability_parity",
+            "observed_error": null,
+            "temperature": 0.7
+          },
+          {
+            "case_id": "repeat-positive-logit",
+            "check": "neutral_no_repeat_ngram_size",
+            "observed": 2
+          },
+          {
+            "case_id": "repeat-positive-logit",
+            "check": "neutral_suppress_tokens",
+            "observed": [
+              2
+            ]
+          },
+          {
+            "case_id": "repeat-positive-logit",
+            "check": "rollout_probability_parity",
+            "observed_error": null,
+            "temperature": 1.0
+          },
+          {
+            "case_id": "repeat-positive-logit",
+            "check": "neutral_no_repeat_ngram_size",
+            "observed": 2
+          },
+          {
+            "case_id": "repeat-positive-logit",
+            "check": "neutral_suppress_tokens",
+            "observed": [
+              2
+            ]
+          },
+          {
+            "case_id": "repeat-negative-logit",
+            "check": "rollout_probability_parity",
+            "observed_error": 0.15880546401942386,
+            "temperature": 1.3
+          },
+          {
+            "case_id": "repeat-negative-logit",
+            "check": "neutral_no_repeat_ngram_size",
+            "observed": 2
+          },
+          {
+            "case_id": "repeat-negative-logit",
+            "check": "neutral_suppress_tokens",
+            "observed": [
+              2
+            ]
+          },
+          {
+            "case_id": "repeat-negative-logit",
+            "check": "rollout_probability_parity",
+            "observed_error": 0.17474285672223377,
+            "temperature": 1.0
+          },
+          {
+            "case_id": "repeat-negative-logit",
+            "check": "neutral_no_repeat_ngram_size",
+            "observed": 2
+          },
+          {
+            "case_id": "repeat-negative-logit",
+            "check": "neutral_suppress_tokens",
+            "observed": [
+              2
+            ]
+          },
+          {
+            "case_id": "repeat-context-nonunit-temperature",
+            "check": "rollout_probability_parity",
+            "observed_error": 0.11343319560799792,
+            "temperature": 0.85
+          },
+          {
+            "case_id": "repeat-context-nonunit-temperature",
+            "check": "neutral_no_repeat_ngram_size",
+            "observed": 2
+          },
+          {
+            "case_id": "repeat-context-nonunit-temperature",
+            "check": "neutral_suppress_tokens",
+            "observed": [
+              2
+            ]
+          },
+          {
+            "case_id": "repeat-context-nonunit-temperature",
+            "check": "rollout_probability_parity",
+            "observed_error": 0.11447649783834413,
+            "temperature": 1.0
+          },
+          {
+            "case_id": "repeat-context-nonunit-temperature",
+            "check": "neutral_no_repeat_ngram_size",
+            "observed": 2
+          },
+          {
+            "case_id": "repeat-context-nonunit-temperature",
+            "check": "neutral_suppress_tokens",
+            "observed": [
+              2
+            ]
+          }
+        ],
+        "passed": false
+      }
+    }
+  },
+  "protocols": {
+    "candidate": "current-v4",
+    "comparison": "retained-v3"
+  },
+  "resources": {
+    "accelerator_hours": 0,
+    "external_compute_usd": 0,
+    "model_weights_downloaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages": 0
+  },
+  "runtime": {
+    "created_at_utc": "2026-10-08T01:06:15.420766+00:00",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]"
+  },
+  "schema_version": 1,
+  "source_repository": "https://github.com/mitukx/Recursive-Verification-Lag.git",
+  "source_revision": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "study_id": "rvl-inherited-generation-settings-v4"
+}

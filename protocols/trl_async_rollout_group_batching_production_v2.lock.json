@@ -1,0 +1,78 @@
+{
+  "protocol": "trl-async-rollout-group-batching-production-v2",
+  "status": "locked-before-execution",
+  "date": "2026-10-09",
+  "supersedes": "trl-async-rollout-group-batching-production-v1",
+  "supersedes_reason": "v1 pytest collection could not import TRL because this host lacks the upstream training dependencies. No test body ran. v2 executes the exact pinned source definitions with only the class base and logger stubbed, avoiding unrelated package imports.",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+    "issue": "https://github.com/huggingface/trl/issues/7206"
+  },
+  "question": "Do the pinned production FixedCountBatcher and TokenBudgetBatcher split or lose fork members under adversarial boundaries, and can a candidate preserve groups with exact accounting and declared capacities?",
+  "fixtures": {
+    "fixed_count": {
+      "processes": 2,
+      "microbatch_size": 4,
+      "rollouts": {
+        "A": [
+          1,
+          1,
+          1
+        ],
+        "B": [
+          1,
+          1
+        ]
+      },
+      "requirements": [
+        "all 5 rows once",
+        "each rollout within one microbatch",
+        "nonempty rank rows",
+        "at most 4 rows per microbatch"
+      ]
+    },
+    "token_budget": {
+      "processes": 2,
+      "token_budget": 10,
+      "rollouts": {
+        "A": [
+          7,
+          3
+        ],
+        "B": [
+          4,
+          6
+        ]
+      },
+      "requirements": [
+        "all 4 rows once",
+        "each rollout within one microbatch",
+        "nonempty rank rows",
+        "each rank row at most 10 tokens"
+      ],
+      "mechanism": "per-sample LPT starts row loads 7 and 3; B0=4 goes to the second row, leaving B1=6 unable to fit. Exact repacking can pair A as 7+3 and B as 4+6."
+    }
+  },
+  "method": {
+    "execution": "AST-extract and execute only _balance_by_squared_length, FixedCountBatcher, and TokenBudgetBatcher from the checkout under test. No production function body is copied into the audit script.",
+    "base_command": "python /absolute/path/to/reproducers/trl_async_rollout_group_batching_source_audit_v2.py",
+    "comparison": "Run unchanged script from pristine pinned base and local candidate checkout."
+  },
+  "success_rule": "Pinned base must fail at least one declared rollout/accounting invariant; candidate must pass every boolean invariant in both fixtures.",
+  "rejection_rule": "Candidate loses or duplicates a row, splits any rollout, emits an empty rank, or violates fixed-count/token capacity.",
+  "resources": {
+    "compute": "CPU source-level execution only",
+    "paid_api_gpu_or_external_spend": false,
+    "models": false
+  },
+  "claim_limits": [
+    "This tests two finite fixtures against the actual extracted production source definitions.",
+    "It does not execute the full TRL import graph, Trainer, optimizer, distributed collectives, epoch stopping, throughput, policy updates, task success, or model capability.",
+    "A candidate pass is a narrow source-level correctness result, not upstream review readiness."
+  ],
+  "reproducer": {
+    "path": "reproducers/trl_async_rollout_group_batching_source_audit_v2.py",
+    "sha256": "a231a442f52614bbd4902c2c2bb87eb0028549cfb8896887967710b2628d3cc0"
+  }
+}

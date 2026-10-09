@@ -1,0 +1,26 @@
+{
+  "actual_upstream_git_head": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "claim_boundary": "Tiny random-model integration smoke only; no pretrained-model capability, training-quality, or external-reproduction claim.",
+  "command": "python scripts/validate_rvl_grpo_midstep_fault.py --rvl-source <checkout>/src/rvl_systems",
+  "declared_upstream_commit": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "protocol_id": "rvl_grpo_midstep_fault_v1",
+  "protocol_sha256": "2939204c394b07618b6ed69fa36a0caacf34d08ab215d4f991b3bf059a12f4f6",
+  "reproduction_type": "Author rerun from the exact VARE validator commit and exact pinned upstream Git commit; same-host, not external reproduction.",
+  "run_id": "rvl_grpo_midstep_fault_v1/run-3",
+  "runtime": {
+    "device": "cpu",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "torch_threads": 1,
+    "transformers": "4.57.3"
+  },
+  "upstream_source_hashes_match_frozen_protocol": {
+    "backends.py": "26abeffd24ecef37093a179dc33506f0853018331c0002bd01010d016b31faca",
+    "grpo.py": "a2ef6217385a206f5e6c0f43fb40e900ae3bf1b2066a1c8d1ab1878fd25d724d",
+    "hf_trainer.py": "375985c1d0cca49a9d98d8b00ed41cefe000b91461e9a0783e94312466fd0210",
+    "triton_grpo.py": "ed7ee082db036e1631c1f8eaacfb8691b102401c8342dcb9ed4dba5d26a22cf9",
+    "types.py": "a3e9f06cc70972a7b5fd50b757ffff992d3a6156d1ffab5133e410471dcc5d7b"
+  },
+  "validator_sha256": "971a4f19498be7fe440b78290b1d5768f8bb306eb9c64127537f70f76e316823",
+  "validator_vare_commit": "63ba181ae54a67738b6d40730ce10a9e8bdd7ba0"
+}

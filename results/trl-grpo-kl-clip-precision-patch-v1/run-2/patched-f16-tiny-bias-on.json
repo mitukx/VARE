@@ -1,0 +1,23 @@
+{
+  "advantage": 0.0,
+  "beta": 0.1,
+  "bias_correction": true,
+  "clip": 1e-08,
+  "config": {
+    "status": "accepted"
+  },
+  "dtype": "float16",
+  "exception_type": "ValueError",
+  "execution": "raised",
+  "importance_ratio": 1.0,
+  "kl_log_ratio": 20.0,
+  "message": "`kl_log_ratio_clip=1e-08` is not positive and representable in torch.float16; choose a larger value.",
+  "protocol_id": "trl_grpo_kl_clip_precision_patch_v1",
+  "source": {
+    "grpo_trainer_sha256": "df26c45d302f4d357636fecd27344a620843cd8d02e5c65fa23a9ed1b3ac3e9d",
+    "patch_sha256": "0f6c60de679c3c8b467b2bc8b77b01e06f890486cd567322940e5ce8a2137468",
+    "patched": true,
+    "revision": "0aaea03f2fa449bc7a91f1973e7940da11da65da"
+  },
+  "status": "complete"
+}

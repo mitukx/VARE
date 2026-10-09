@@ -1,0 +1,99 @@
+{
+  "artifact_policy": "Retain all update and held-out rows, chosen/rejected full prompt and response token IDs, verifier labels, per-example reference/policy/relative preference margins, per-seed fixed-epoch adapter arrays as compressed NPZ, all generations, model/dataset/config hashes, runtime, bootstrap inputs/summary, protocol/source snapshots, and SHA-256 manifest.",
+  "claim_boundary": "Confirmation of verifier-derived sequence preferences and free-form exact-match on fresh GSM8K train-split rows only. A positive result does not establish human-preference alignment, broad reasoning, transfer, or general model capability.",
+  "compute_limits": {
+    "device": "CPU only; CUDA and MPS placement are forbidden",
+    "feature_batch_size": 8,
+    "generation_batch_size": 1,
+    "generation_max_new_tokens": 64,
+    "max_peak_rss_bytes": 6442450944,
+    "max_wall_seconds": 7200,
+    "network": "disabled; HF_HUB_OFFLINE=1, HF_DATASETS_OFFLINE=1, TRANSFORMERS_OFFLINE=1, local_files_only=true",
+    "paid_compute": false,
+    "pair_microbatch_size": 4,
+    "threads": 4
+  },
+  "dataset": {
+    "answer_parser": "Parse the terminal number after ####, remove commas, and parse with Decimal.",
+    "cached_fingerprint": "c6f812ae33c9159d",
+    "cached_train_arrow_sha256": "6146bca074f4c6c5e07de7e96cc968adab3833dbdafeda21830f27558eea3d9b",
+    "config": "main",
+    "confirmation_heldout_examples": 512,
+    "confirmation_reservation": "",
+    "confirmation_training_examples": 128,
+    "id": "openai/gsm8k",
+    "leakage_boundary": "This phase reads only GSM8K train rows. The model may have seen the public dataset during pretraining; this cannot be ruled out.",
+    "preference_pair": "The chosen completion is the parsed verifier answer as a numeric assistant response. The rejected completion is deterministically one unit above or below it. Append the model EOS token to both completions. No human preference labels are used.",
+    "prompt": "Use the model's pinned chat template. The user asks to solve the word problem and reply with only the final number.",
+    "revision": "740312add88f781978c0658806c59bc2815b9866",
+    "selection": "Sort official train rows by SHA-256 of 'vare-gsm8k-sample-v1\\0' concatenated with question. Use ranks 1504\u20131631 for update rows and 1632\u20132143 for held-out rows, zero-indexed. These rows were reserved in the committed sequence-DPO development v2 protocol and have not been inspected.",
+    "split": "train only"
+  },
+  "generation": {
+    "algorithm": "greedy",
+    "do_sample": false,
+    "eos_token_ids": [
+      151645,
+      151643
+    ],
+    "repetition_penalty": 1.1,
+    "source": "Pinned Qwen generation_config.json; apply the same seen-token repetition penalty to prompt and generated tokens."
+  },
+  "learner": {
+    "adapter": "Custom low-rank residual on the frozen output-head hidden states, over the full vocabulary. The transformer backbone and original output-head weights are frozen. This is not PEFT/TRL.",
+    "adapter_rank": 4,
+    "beta": 0.1,
+    "checkpoints_epochs": [
+      0,
+      4
+    ],
+    "fixed_update_epochs": 4,
+    "initialization": "A sampled from N(0, 1/sqrt(hidden_size)) by a CPU torch.Generator seeded per run; B initialized to zero.",
+    "maximum_epochs": 4,
+    "microbatch_pairs": 4,
+    "objective": "Standard sequence-summed DPO logistic loss over chosen and rejected answer-token sequences, relative to the frozen initial model: softplus(-beta * ((logp_chosen - logp_rejected)_policy - (logp_chosen - logp_rejected)_reference)).",
+    "optimizer": {
+      "gradient_norm_clip": 1.0,
+      "learning_rate": 0.0003,
+      "name": "AdamW",
+      "weight_decay": 0.0
+    },
+    "seeds": [
+      719,
+      823,
+      929
+    ]
+  },
+  "metrics": {
+    "bootstrap": {
+      "confidence_level": 0.95,
+      "method": "paired question-level percentile bootstrap over the mean of the three per-seed NLL deltas",
+      "replicates": 10000,
+      "seed": 1777
+    },
+    "decision_rule": "Pass only if the paired 95% bootstrap CI upper bound for mean preference-NLL change is below zero, at least two of three seeds improve NLL, mean full-vocabulary token KL is <=0.5, mean exact-match is not below base, and at least two of three seeds are not below base exact-match. The epoch count, data ranks, prompt, learning rate, model, seeds, metrics, and rule are fixed before any reserved row is loaded. No checkpoint selection or hyperparameter adjustment is allowed on held-out rows.",
+    "primary": "Paired change in sequence DPO preference NLL (updated minus base), averaged over three fixed seeds and bootstrapped over 512 held-out questions.",
+    "secondary": [
+      "per-seed preference NLL and accuracy",
+      "mean full-vocabulary token KL from base",
+      "greedy free-form numeric exact-match, paired on identical held-out questions"
+    ]
+  },
+  "model": {
+    "dtype": "float32",
+    "generation_config_sha256": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6",
+    "id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "weights_must_already_be_cached": true
+  },
+  "phase": "independent_confirmation",
+  "protocol_id": "vare-cpu-lm-gsm8k-sequence-dpo-confirmation-v1",
+  "purpose": "Confirm the sequence-level DPO development candidate on fresh update and held-out GSM8K train-split rows with a fixed four-epoch budget.",
+  "runtime": {
+    "datasets": "4.4.2",
+    "numpy": "1.26.4",
+    "python": "3.9.6",
+    "torch": "2.8.0",
+    "transformers": "4.57.3"
+  }
+}

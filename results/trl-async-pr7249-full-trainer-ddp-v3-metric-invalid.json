@@ -1,0 +1,9 @@
+{
+  "protocol_id": "trl-async-grpo-pr7249-full-trainer-ddp-v3",
+  "status": "base_completed_metric_not_valid_for_acceptance_candidate_not_run",
+  "base_arm_completed": true,
+  "candidate_arm_run": false,
+  "reason": "TrainerOutput.training_loss was rank-local because the harness intentionally returned unprepared rank-local DataLoaders. The base result showed distinct per-rank TrainerOutput values even for equal-token control, so it cannot support a cross-rank scalar loss comparison.",
+  "retained_base_summary": "results/trl-async-pr7249-full-trainer-ddp-v3/base/summary.json",
+  "decision": "Do not treat v3 as a pass or fail for the global loss gate. Do not run its candidate arm. V4 defines a global metric and uses a fresh fixture."
+}

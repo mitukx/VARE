@@ -1,0 +1,86 @@
+{
+  "artifact_policy": "Record the exact locked protocol, runner source hash, model revision and hashes of loaded files, generated train and held-out examples, token IDs, per-example base and updated choice margins, per-seed adapter parameters, raw metrics, runtime environment, resource limits, and SHA-256 manifest. Preserve all outcomes. Do not commit model weights or use network access.",
+  "claim_boundary": "Small-model, one-token arithmetic-choice preference update with a frozen backbone and a custom rank-4 output-head slice. This does not establish general DPO/RLHF behavior, general language-model capability, reasoning improvement, or production utility.",
+  "compute_limits": {
+    "device": "CPU only; no CUDA or MPS",
+    "max_peak_rss_bytes": 6442450944,
+    "max_wall_seconds": 900,
+    "network": "disabled; set HF_HUB_OFFLINE=1 and TRANSFORMERS_OFFLINE=1; local_files_only=true",
+    "paid_compute": false,
+    "threads": 4
+  },
+  "learner": {
+    "adapter": "Custom rank-4 low-rank residual applied to the frozen output-head hidden state and restricted to the two verified single-token response IDs for ' A' and ' B'. Backbone and base output head are frozen. This is not PEFT/TRL.",
+    "beta": 0.1,
+    "early_stopping": false,
+    "initialization": "A is sampled from a zero-mean normal with standard deviation 1/sqrt(hidden_size) using torch.Generator(device='cpu') seeded by the listed seed; B is all zeros.",
+    "objective": "Mean DPO logistic objective over paired single-token choices: softplus(-beta * (chosen-vs-rejected policy log-probability margin minus the corresponding frozen-reference margin)). The shared next-token normalization cancels in each within-prompt margin.",
+    "optimizer": {
+      "learning_rate": 0.05,
+      "name": "full-batch SGD",
+      "weight_decay": 0.0
+    },
+    "reference": "Frozen original model",
+    "seeds": [
+      101,
+      211,
+      307
+    ],
+    "updates": 15
+  },
+  "metrics": {
+    "decision_rule": "Report as a positive small-model held-out preference result only if all three seeds have lower held-out NLL than their frozen base, the mean paired 95% bootstrap interval is below zero, each seed's mean held-out KL is <=0.5 nats, and no compute limit or provenance check fails. Otherwise report non-pass/null/failure without changing this protocol.",
+    "paired_bootstrap": {
+      "percentiles": [
+        2.5,
+        97.5
+      ],
+      "resamples": 10000,
+      "seed": 20261008
+    },
+    "primary": "Per-seed held-out mean binary preference NLL under the conditional distribution over the two answer-label tokens, with mean paired change (updated minus base); lower is better.",
+    "secondary": [
+      "held-out preference accuracy; ties receive half credit",
+      "held-out Bernoulli KL from updated choice distribution to frozen base choice distribution",
+      "per-seed train and held-out objective before and after update",
+      "adapter parameter L2 norm and update delta",
+      "per-seed wall seconds, process peak RSS, and CPU device assertion"
+    ]
+  },
+  "model": {
+    "dtype": "float32",
+    "id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "weights_must_already_be_cached": true
+  },
+  "protocol_id": "vare-cpu-lm-dpo-head-v1",
+  "purpose": "Run a bounded, offline CPU preference update on an already-cached causal language model and measure choice-conditional held-out preference behavior.",
+  "runtime": {
+    "numpy": "1.26.4",
+    "python": "3.9.6",
+    "torch": "2.8.0",
+    "transformers": "4.57.3"
+  },
+  "task": {
+    "description": "The prompt asks which of two candidate sums is correct. Exactly one candidate is the arithmetic sum; the other differs by one. The preferred response is the single-token label A or B.",
+    "heldout": {
+      "answer_order": "Sample correct candidate position independently from the held-out RNG; wrong value is sum-1 when it remains positive, otherwise sum+1.",
+      "examples_per_seed": 32,
+      "format_order": "Sample a prompt template uniformly from the held-out RNG after operand and answer-order draws.",
+      "isolation": "Held-out operands, prompts, and labels are generated from a separate RNG stream and are never used for updates or selection.",
+      "seed_rule": "Python random.Random(20000 + seed); generate 32 unique unordered operand pairs by sampling each operand independently from integers [20, 39], rejecting equal operands and duplicates."
+    },
+    "prompt_templates": [
+      "Compute {left} + {right}. Candidate A: {candidate_a}. Candidate B: {candidate_b}. Which candidate is correct? Answer:",
+      "What is {left} plus {right}? Option A is {candidate_a}; option B is {candidate_b}. Reply with A or B:",
+      "Solve {left} + {right}. A={candidate_a}, B={candidate_b}. Give the correct option letter:",
+      "Choose the correct value for {left} + {right}: (A) {candidate_a}; (B) {candidate_b}. Answer with one letter:"
+    ],
+    "train": {
+      "answer_order": "For each example, sample whether the correct value is shown as A or B from the per-seed train RNG; wrong value is sum-1 when it remains positive, otherwise sum+1.",
+      "examples_per_seed": 24,
+      "format_order": "Sample a prompt template uniformly from the per-seed train RNG after operand and answer-order draws.",
+      "seed_rule": "Python random.Random(10000 + seed); generate 24 unique unordered operand pairs by sampling each operand independently from integers [1, 19], rejecting equal operands and duplicates."
+    }
+  }
+}

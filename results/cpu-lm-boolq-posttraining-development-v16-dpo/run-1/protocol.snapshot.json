@@ -1,0 +1,112 @@
+{
+  "artifact_policy": "Retain exact split rows, base rollouts, rejection provenance, tokenized features, every checkpoint adapter and generation, metrics, audits, and a dataset-attribution notice.",
+  "claim_boundary": "A passing development result is a candidate only. Report class-balanced accuracy, per-class supports, parse rate, and exact-match together so majority-label behavior is visible.",
+  "compute_limits": {
+    "device": "CPU only; CUDA and MPS placement are forbidden",
+    "feature_batch_size": 2,
+    "generation_batch_size": 1,
+    "generation_max_new_tokens": 8,
+    "max_peak_rss_bytes": 6442450944,
+    "max_wall_seconds": 3600,
+    "network": "disabled during formal runs; HF_HUB_OFFLINE=1, HF_DATASETS_OFFLINE=1, TRANSFORMERS_OFFLINE=1, local_files_only=true",
+    "paid_compute": false,
+    "pair_microbatch_size": 1,
+    "threads": 4
+  },
+  "dataset": {
+    "cached_train_arrow_sha256": "297dd7c22cfaf5bbdde0467a2ec2eecab261118e8ee34f375a3326fc4ea6486e",
+    "cached_train_fingerprint": "e4588ef9b0b2ec22",
+    "cached_validation_arrow_sha256": "f858020576452e706b602bf9ad28e09d509e6dab4c97cb01a2202a2472c9afc9",
+    "cached_validation_fingerprint": "ea43cabdfaa0ccac",
+    "config": "default",
+    "confirmation_reservation": "No confirmation rows are opened. Validation hash ranks 256\u2013767 are reserved for a separately locked confirmation if a development arm passes.",
+    "development_training_examples": 128,
+    "development_training_rank_range": [
+      24,
+      152
+    ],
+    "development_validation_examples": 256,
+    "development_validation_rank_range": [
+      0,
+      256
+    ],
+    "id": "google/boolq",
+    "leakage_boundary": "BoolQ is a public benchmark; pretraining exposure cannot be ruled out. Pilot ranks 0\u201323 are excluded from formal train data. Train and validation official splits remain separate.",
+    "official_train_examples": 9427,
+    "official_validation_examples": 3270,
+    "pilot_exclusion": "The 24 train rows at question-passage SHA-256 ranks 0\u201323 were used only in a private feasibility probe; none enter this formal training cohort. The official validation split was not opened during the pilot.",
+    "preference_construction": "base_rollout_boolq: the chosen completion is the official answer key (Yes/No). The reject is the frozen base model greedy answer when incorrect or unparsable; if the base answer is correct, flip only the label. These verifier-constructed pairs are not human preferences.",
+    "prompt": "Pinned Qwen chat template. Include the full passage and question. Ask for exactly one word, Yes or No, using the passage only. Do not truncate passage text.",
+    "revision": "cached datasets snapshot, pinned by split fingerprints and Arrow hashes",
+    "selection": "Training rows are hash-ranked by SHA-256(question + newline + passage); rank 0\u201323 are excluded due to the private format pilot. Use ranks 24\u2013151 for training. Validation uses the same deterministic hash ranking within the official validation split and ranks 0\u2013255. No question-passage hashes may overlap across splits."
+  },
+  "generation": {
+    "algorithm": "greedy",
+    "do_sample": false,
+    "eos_token_ids": [
+      151645,
+      151643
+    ],
+    "repetition_penalty": 1.0,
+    "source": "Pinned Qwen generation_config.json; no repetition penalty to avoid suppressing Yes/No tokens that occur in the passage."
+  },
+  "learner": {
+    "adapter": "Custom low-rank residual on frozen output-head hidden states over the full vocabulary. Transformer backbone and original output-head weights are frozen; this is not PEFT/TRL.",
+    "adapter_rank": 16,
+    "beta": 0.1,
+    "checkpoints_epochs": [
+      0,
+      1,
+      2
+    ],
+    "initialization": "A sampled from N(0, 1/sqrt(hidden_size)) by a CPU torch.Generator seeded per run; B initialized to zero.",
+    "maximum_epochs": 2,
+    "method": "dpo",
+    "microbatch_pairs": 4,
+    "objective": "Sequence-level DPO on verifier-chosen Yes/No completions and actual base-model rollout rejects.",
+    "optimizer": {
+      "gradient_norm_clip": 1.0,
+      "learning_rate": 0.0001,
+      "name": "AdamW",
+      "weight_decay": 0.0
+    },
+    "seeds": [
+      5701,
+      5801,
+      5903
+    ],
+    "sft_anchor_weight": 0.0
+  },
+  "metrics": {
+    "checkpoint_selection_method": "balanced_accuracy",
+    "claim_boundary": "A passing development result is a candidate only. Report accuracy together with class-balanced accuracy and per-class counts so majority-label behavior is visible.",
+    "generation_metric": "Greedy decode with the frozen prompt and generation settings. Count a strict match only if the entire decoded completion is Yes or No (optionally followed by a period), matching the answer key. Other text is unparseable and incorrect. Report class-balanced accuracy, per-class support/accuracy, parse rate and Exact Match.",
+    "minimum_balanced_accuracy_gain": 0.05,
+    "minimum_base_balanced_accuracy": 0.5,
+    "minimum_base_exact_matches": 128,
+    "paired_comparison": "Compare DPO, matched answer SFT and anchored DPO on identical questions, seeds and base rollouts. Report paired question-bootstrap intervals descriptively; validation selects checkpoints.",
+    "selection_primary": "Mean validation class-balanced accuracy over strict Yes/No exact-match, averaged over the three seeds; higher is better.",
+    "selection_rule": "For each method, retain nonzero epochs with mean verifier-preference NLL below base and mean full-vocabulary token KL <=0.5. Greedy-generate every eligible epoch on all 256 validation questions for each seed. Select highest mean class-balanced accuracy; break ties by higher mean exact-match, lower NLL, then fewer epochs. An arm advances only if base exact-match is at least 128/256, base class-balanced accuracy is at least 0.50, mean updated class-balanced accuracy improves by at least 0.05, and at least two of three seeds are no worse in class-balanced accuracy. Any development candidate requires a fresh, separately locked confirmation; development never establishes capability.",
+    "selection_secondary": [
+      "verifier-preference accuracy",
+      "mean full-vocabulary token KL updated-to-base on paired completion contexts",
+      "greedy exact-match"
+    ]
+  },
+  "model": {
+    "dtype": "float32",
+    "id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "weights_must_already_be_cached": true
+  },
+  "phase": "training_only_development",
+  "protocol_id": "vare-cpu-lm-boolq-posttraining-development-v16-dpo",
+  "purpose": "Matched CPU-only comparison of DPO, verifier-answer SFT and SFT-anchored DPO on natural yes/no reading-comprehension responses.",
+  "runtime": {
+    "datasets": "4.4.2",
+    "numpy": "1.26.4",
+    "python": "3.9.6",
+    "torch": "2.8.0",
+    "transformers": "4.57.3"
+  }
+}

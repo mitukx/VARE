@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "scripts/reproduce_trl_pr7249_dispatcher_v1.py", line 133, in <module>
+    raise SystemExit(main())
+  File "scripts/reproduce_trl_pr7249_dispatcher_v1.py", line 53, in main
+    raise RuntimeError(f"runtime mismatch: {runtime}")
+RuntimeError: runtime mismatch: {'python': '3.12.12', 'torch': '2.9.1', 'transformers': '4.57.3', 'accelerate': '1.12.0'}
+Exit code: 1

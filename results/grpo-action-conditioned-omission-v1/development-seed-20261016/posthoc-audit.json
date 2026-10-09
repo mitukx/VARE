@@ -1,0 +1,28 @@
+{
+  "audit_classification": "post-hoc same-host independent implementation; not external replication",
+  "bundle": "/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/results/grpo-action-conditioned-omission-v1/development-seed-20261016",
+  "checks_passed": true,
+  "failures": [],
+  "law_count": 128,
+  "law_family_counts": {
+    "common_shock": 32,
+    "independent": 32,
+    "random_joint": 32,
+    "single_stratum_parity": 32
+  },
+  "limitations": [
+    "Uses the same retained synthetic panel and mathematical estimand, so this is not fresh confirmation.",
+    "Does not reproduce the panel generator or verify the historical source-to-summary provenance.",
+    "Does not measure direction error, verifier performance on natural tasks, optimizer effects, or capability."
+  ],
+  "max_numeric_difference_vs_summary": 2.6645352591003757e-15,
+  "pointwise_unbiasedness_cases": 32768,
+  "pointwise_unbiasedness_max_error_bound": 1e-10,
+  "structured_at_least_10pct_better_count": 0,
+  "structured_beats_full_count": 0,
+  "structured_beats_uniform_count": 0,
+  "structured_full_ratio_mean": 1.3341858011235075,
+  "structured_full_ratio_median": 1.158835284388135,
+  "structured_uniform_ratio_median": 1.1404987951549153,
+  "uniform_full_ratio_median": 1.0133113391532826
+}

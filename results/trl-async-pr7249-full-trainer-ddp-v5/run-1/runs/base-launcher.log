@@ -1,0 +1,266 @@
+W1009 18:29:51.397000 8915 site-packages/torch/distributed/elastic/multiprocessing/redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/replay_trl_pr7249_full_trainer_ddp_v5.py:326: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.async_grpo import AsyncGRPOTrainer
+/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/replay_trl_pr7249_full_trainer_ddp_v5.py:326: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.async_grpo import AsyncGRPOTrainer
+[rank0]:W1009 18:29:56.502000 8916 site-packages/torch/distributed/elastic/multiprocessing/redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+[rank1]:W1009 18:29:56.502000 8917 site-packages/torch/distributed/elastic/multiprocessing/redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+{'train_runtime': 0.0057, 'train_samples_per_second': 703.477, 'train_steps_per_second': 175.869, 'train_loss': 0.5375000238418579, 'epoch': 1.0}
+{'train_runtime': 0.0043, 'train_samples_per_second': 921.42, 'train_steps_per_second': 230.355, 'train_loss': 0.8799999952316284, 'epoch': 1.0}
+{'train_runtime': 0.0043, 'train_samples_per_second': 922.332, 'train_steps_per_second': 230.583, 'train_loss': 0.0, 'epoch': 1.0}
+{'train_runtime': 0.0027, 'train_samples_per_second': 1461.812, 'train_steps_per_second': 365.453, 'train_loss': 0.892307698726654, 'epoch': 1.0}
+{
+  "arm": "base",
+  "backend": "gloo",
+  "cases": {
+    "equal_token_control": {
+      "finite": true,
+      "max_gradient_abs_error": 0.0,
+      "max_loss_abs_error": 2.9802322387695312e-08,
+      "max_sgd_parameter_abs_error": 0.0,
+      "rank_results": [
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_tokens_per_microbatch": [
+            10,
+            10
+          ],
+          "local_tokens_by_rank_per_microbatch": [
+            [
+              3,
+              7
+            ],
+            [
+              7,
+              3
+            ]
+          ],
+          "loss_abs_error": 2.9802322387695312e-08,
+          "max_gradient_abs_error": 0.0,
+          "max_sgd_parameter_abs_error": 0.0,
+          "oracle_loss": 1.024999976158142,
+          "post_step_state_sha256": "9db54a4ee2e238c750018e77d5efa2cdae7fa21eab8eb5a5798569041f4bcc01",
+          "rank": 0,
+          "rank_mean_training_step_loss": 1.0250000059604645,
+          "trainer_training_loss_local_diagnostic": 0.8799999952316284
+        },
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_tokens_per_microbatch": [
+            10,
+            10
+          ],
+          "local_tokens_by_rank_per_microbatch": [
+            [
+              3,
+              7
+            ],
+            [
+              7,
+              3
+            ]
+          ],
+          "loss_abs_error": 2.9802322387695312e-08,
+          "max_gradient_abs_error": 0.0,
+          "max_sgd_parameter_abs_error": 0.0,
+          "oracle_loss": 1.024999976158142,
+          "post_step_state_sha256": "9db54a4ee2e238c750018e77d5efa2cdae7fa21eab8eb5a5798569041f4bcc01",
+          "rank": 1,
+          "rank_mean_training_step_loss": 1.0250000059604645,
+          "trainer_training_loss_local_diagnostic": 1.1700000762939453
+        }
+      ],
+      "rank_state_equal": true
+    },
+    "short_final_window": {
+      "finite": true,
+      "max_gradient_abs_error": 5.960464477539063e-08,
+      "max_loss_abs_error": 0.0,
+      "max_sgd_parameter_abs_error": 3.725290298461914e-09,
+      "rank_results": [
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_tokens_per_microbatch": [
+            13
+          ],
+          "local_tokens_by_rank_per_microbatch": [
+            [
+              4
+            ],
+            [
+              9
+            ]
+          ],
+          "loss_abs_error": 0.0,
+          "max_gradient_abs_error": 5.960464477539063e-08,
+          "max_sgd_parameter_abs_error": 3.725290298461914e-09,
+          "oracle_loss": 0.7576923370361328,
+          "post_step_state_sha256": "f65d1628579f4e4fe363b022b05672f54f9928c65fc614c74679064ae477c6db",
+          "rank": 0,
+          "rank_mean_training_step_loss": 0.7576923370361328,
+          "trainer_training_loss_local_diagnostic": 0.892307698726654
+        },
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_tokens_per_microbatch": [
+            13
+          ],
+          "local_tokens_by_rank_per_microbatch": [
+            [
+              4
+            ],
+            [
+              9
+            ]
+          ],
+          "loss_abs_error": 0.0,
+          "max_gradient_abs_error": 5.960464477539063e-08,
+          "max_sgd_parameter_abs_error": 3.725290298461914e-09,
+          "oracle_loss": 0.7576923370361328,
+          "post_step_state_sha256": "f65d1628579f4e4fe363b022b05672f54f9928c65fc614c74679064ae477c6db",
+          "rank": 1,
+          "rank_mean_training_step_loss": 0.7576923370361328,
+          "trainer_training_loss_local_diagnostic": 0.6230769753456116
+        }
+      ],
+      "rank_state_equal": true
+    },
+    "unequal_rank_and_microbatch_counts": {
+      "finite": true,
+      "max_gradient_abs_error": 0.0028571784496307373,
+      "max_loss_abs_error": 0.005714245140552521,
+      "max_sgd_parameter_abs_error": 0.0002857185900211334,
+      "rank_results": [
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_tokens_per_microbatch": [
+            16,
+            14
+          ],
+          "local_tokens_by_rank_per_microbatch": [
+            [
+              4,
+              9
+            ],
+            [
+              12,
+              5
+            ]
+          ],
+          "loss_abs_error": 0.005714245140552521,
+          "max_gradient_abs_error": 0.0028571784496307373,
+          "max_sgd_parameter_abs_error": 0.0002857185900211334,
+          "oracle_loss": 0.8699999451637268,
+          "post_step_state_sha256": "e61645ceb3dcfe40a7aad301321a488714247cba99690c15813b7d979a287be4",
+          "rank": 0,
+          "rank_mean_training_step_loss": 0.8642857000231743,
+          "trainer_training_loss_local_diagnostic": 0.5375000238418579
+        },
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_tokens_per_microbatch": [
+            16,
+            14
+          ],
+          "local_tokens_by_rank_per_microbatch": [
+            [
+              4,
+              9
+            ],
+            [
+              12,
+              5
+            ]
+          ],
+          "loss_abs_error": 0.005714245140552521,
+          "max_gradient_abs_error": 0.0028571784496307373,
+          "max_sgd_parameter_abs_error": 0.0002857185900211334,
+          "oracle_loss": 0.8699999451637268,
+          "post_step_state_sha256": "e61645ceb3dcfe40a7aad301321a488714247cba99690c15813b7d979a287be4",
+          "rank": 1,
+          "rank_mean_training_step_loss": 0.8642857000231743,
+          "trainer_training_loss_local_diagnostic": 1.1910713911056519
+        }
+      ],
+      "rank_state_equal": true
+    },
+    "zero_local_tokens_positive_global": {
+      "finite": true,
+      "max_gradient_abs_error": 0.043269217014312744,
+      "max_loss_abs_error": 0.0865386426448822,
+      "max_sgd_parameter_abs_error": 0.004326920956373215,
+      "rank_results": [
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_tokens_per_microbatch": [
+            8,
+            5
+          ],
+          "local_tokens_by_rank_per_microbatch": [
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              5
+            ]
+          ],
+          "loss_abs_error": 0.0865386426448822,
+          "max_gradient_abs_error": 0.043269217014312744,
+          "max_sgd_parameter_abs_error": 0.004326920956373215,
+          "oracle_loss": 1.2384613752365112,
+          "post_step_state_sha256": "0caff7a54ca1f92a6b9d9f8cf0792a48e8b6a7c6c99a2800a626a806f13628c2",
+          "rank": 0,
+          "rank_mean_training_step_loss": 1.3250000178813934,
+          "trainer_training_loss_local_diagnostic": 0.0
+        },
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_tokens_per_microbatch": [
+            8,
+            5
+          ],
+          "local_tokens_by_rank_per_microbatch": [
+            [
+              0,
+              0
+            ],
+            [
+              8,
+              5
+            ]
+          ],
+          "loss_abs_error": 0.0865386426448822,
+          "max_gradient_abs_error": 0.043269217014312744,
+          "max_sgd_parameter_abs_error": 0.004326920956373215,
+          "oracle_loss": 1.2384613752365112,
+          "post_step_state_sha256": "0caff7a54ca1f92a6b9d9f8cf0792a48e8b6a7c6c99a2800a626a806f13628c2",
+          "rank": 1,
+          "rank_mean_training_step_loss": 1.3250000178813934,
+          "trainer_training_loss_local_diagnostic": 2.6500000953674316
+        }
+      ],
+      "rank_state_equal": true
+    }
+  },
+  "device": "cpu",
+  "elapsed_seconds": 5.326706958992872,
+  "protocol_id": "trl-async-grpo-pr7249-full-trainer-ddp-v5",
+  "runtime": {
+    "accelerate": "1.12.0",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "source_commit": "a98fa6a4428f9aae58dfb26d729d7437f662f27a",
+  "world_size": 2
+}

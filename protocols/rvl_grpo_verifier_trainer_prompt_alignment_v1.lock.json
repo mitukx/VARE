@@ -1,0 +1,29 @@
+{
+  "protocol_id": "vare-rvl-grpo-verifier-trainer-prompt-alignment-v1",
+  "schema_version": 1,
+  "frozen_before_fix_validation": true,
+  "baseline_revision": "d8cc153dd242d3b989efcc42eea79408fbbb75c7",
+  "question": "If RVL returns generation metadata for a different prompt, can reward computed from the dispatched VARE task reach the GRPO training call alongside that mismatched generation?",
+  "hypothesis": "At baseline, RVLGRPOHooks returns an Attempt bound to task-a but retains Generation metadata for task-b. The VARE loop scores Attempt.task/output, while RVLGRPOHooks.train_candidate reconstructs and passes the embedded generation to its trainer, so a reward for task-a can be paired with task-b prompt/token IDs.",
+  "scope": {
+    "source": "src/vare/integrations/rvl_grpo.py::rollout, _to_verified_generation, train_candidate",
+    "invariant": "A backend generation with mismatched prompt_id or prompt must fail before the trainer train_step receives it.",
+    "not_in_scope": [
+      "Behavior of a production RVL backend or real tokenizer/model.",
+      "A real optimizer update, task-success change, or capability effect.",
+      "Mismatched token IDs when prompt_id and prompt text match."
+    ]
+  },
+  "falsification": {
+    "baseline_counterexample": "Use a deterministic fake backend returning task-b/prompt-b with prompt_token_ids [202] after task-a/prompt-a is dispatched; record the outer task, verifier reward and fake trainer input.",
+    "fixed_acceptance": "The frozen test expects a ValueError before the trainer step; exact-identity behavior is separately covered by the preceding adapter-binding protocol.",
+    "claim_boundary": "This is deterministic adapter/dataflow harness evidence only. The trainer is a fake recorder; no optimizer or model is involved."
+  },
+  "resources": {
+    "cpu_only": true,
+    "model_inference": false,
+    "paid_services": false,
+    "external_compute": false
+  },
+  "regression_test_sha256": "36c441627d1aea9e45dcb1525cbd743910a4959151e9192a74710db6dfc2ea4f"
+}

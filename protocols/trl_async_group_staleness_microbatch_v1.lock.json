@@ -1,0 +1,44 @@
+{
+  "protocol_id": "trl_async_group_staleness_microbatch_v1",
+  "status": "frozen_before_execution",
+  "question": "Can per-sample stale filtering cause a partial scored GRPO prompt group to enter a real fixed-count training microbatch after the policy version advances?",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+    "trainer_file": "trl/experimental/async_grpo/async_grpo_trainer.py",
+    "trainer_file_sha256": "2657481258dcc04112761e9ff61a35cb93b2b72c3e197e4524f4602fd6a2dbfe",
+    "worker_file": "trl/experimental/async_grpo/async_rollout_worker.py",
+    "worker_file_sha256": "5eab22259711df4e3ec1a62047f87a2cffc5b204772b25cd78647336e52b9670"
+  },
+  "estimand": {
+    "primary": "Count of rows and active completion tokens from a single scored `group_id` entering the production FixedCountBatcher and DataCollatorForRollout.",
+    "comparison": "Fixed-version control versus policy-version callback transitioning from 0 to 1 after the first queue read; `max_staleness=0`.",
+    "claim_boundary": "This verifies optimizer-microbatch input composition, not the trainer's loss/gradient/optimizer step or downstream task success."
+  },
+  "method": {
+    "scoring": "Call the pinned production _AsyncRolloutLoop._score_group with a three-completion RolloutGroup, deterministic rewards [0,1,2], one TrainingSequence per completion, model_version=0, and group_id=41.",
+    "data_path": "Use the scored RolloutSamples with the production RolloutQueueDataset, FixedCountBatcher(microbatch_size=3), and DataCollatorForRollout. The transition arm appends two model-version-1 control samples to complete the microbatch after the other two group rows become stale.",
+    "implementation": "scripts/reproduce_trl_async_group_staleness_microbatch_v1.py",
+    "implementation_sha256": "82458ddf2ee00e1e496bc691ecad4a11f75bee016f7bfd66182c108c60a7f480"
+  },
+  "acceptance": {
+    "fixed_version_control_has_three_group_rows_and_three_active_tokens": true,
+    "transition_microbatch_has_one_of_three_group_rows": true,
+    "transition_microbatch_has_one_group_token_and_three_total_active_tokens": true,
+    "two_stale_group_rows_are_dropped": true,
+    "cpu_only_no_model_download_no_external_spend": true
+  },
+  "failure_criteria": [
+    "Source revision or file hashes differ.",
+    "The scorer fails to emit three rows with one group_id.",
+    "The fixed-version control is not complete.",
+    "The transition arm does not produce a partial group in the production collator's microbatch input.",
+    "The fixture requires accelerator hardware, downloaded weights, or paid resources."
+  ],
+  "resources": {
+    "cpu_only": true,
+    "gpu_hours": 0,
+    "paid_api_calls": 0,
+    "external_compute_usd": 0
+  }
+}

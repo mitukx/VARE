@@ -1,0 +1,283 @@
+W1009 19:42:38.957000 14542 site-packages/torch/distributed/elastic/multiprocessing/redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+
+*****************************************
+Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+*****************************************
+W1009 19:42:44.299000 14548 site-packages/torch/distributed/elastic/multiprocessing/redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+W1009 19:42:44.299000 14547 site-packages/torch/distributed/elastic/multiprocessing/redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+[rank0]:[W1009 19:42:45.252865000 reducer.cpp:1438] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[rank1]:[W1009 19:42:45.252880000 reducer.cpp:1438] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+{'train_runtime': '0.01', 'train_samples_per_second': '400.6', 'train_steps_per_second': '100.1', 'train_loss': '0.5', 'epoch': '1'}
+{'train_runtime': '0.0047', 'train_samples_per_second': '426.9', 'train_steps_per_second': '213.5', 'train_loss': '0.1', 'epoch': '1'}
+{'train_runtime': '0.008', 'train_samples_per_second': '502', 'train_steps_per_second': '125.5', 'train_loss': '0.1', 'epoch': '1'}
+{'train_runtime': '0.0048', 'train_samples_per_second': '415.9', 'train_steps_per_second': '207.9', 'train_loss': '0.1', 'epoch': '1'}
+{'train_runtime': '0.0079', 'train_samples_per_second': '503.8', 'train_steps_per_second': '126', 'train_loss': '1', 'epoch': '1'}
+{'train_runtime': '0.0047', 'train_samples_per_second': '426.4', 'train_steps_per_second': '213.2', 'train_loss': '1', 'epoch': '1'}
+{'train_runtime': '0.0076', 'train_samples_per_second': '528.6', 'train_steps_per_second': '132.2', 'train_loss': '1', 'epoch': '1'}
+{'train_runtime': '0.0047', 'train_samples_per_second': '426.4', 'train_steps_per_second': '213.2', 'train_loss': '1', 'epoch': '1'}
+{
+  "accelerate": "1.12.0",
+  "acceptance_passed": true,
+  "backend": "gloo",
+  "claim_boundary": "Executes current TRL rollout collator, Accelerate DataLoaderDispatcher, Transformers Trainer loop, DDP/Gloo, production compute_loss, and one CPU optimizer step. Uses a scalar synthetic model and bypasses the live async queue, rollout worker, vLLM, and pretrained-model evaluation.",
+  "outcomes": {
+    "counterexample": {
+      "base": {
+        "full_batch_reference": {
+          "global_step": 1,
+          "gradient": 0.10000000149011612,
+          "loader_type": "DataLoaderDispatcher",
+          "parameter_delta": -0.010000000707805157,
+          "training_loss": 0.10000000149011612,
+          "window_counts_seen": []
+        },
+        "gradient_abs_error": 0.3999999985098839,
+        "observed": {
+          "global_step": 1,
+          "gradient": 0.5,
+          "loader_type": "DataLoaderDispatcher",
+          "parameter_delta": -0.05000000074505806,
+          "training_loss": 0.5,
+          "window_counts_seen": []
+        },
+        "parameter_delta_abs_error": 0.0400000000372529,
+        "per_rank_observed": [
+          {
+            "global_step": 1,
+            "gradient": 0.5,
+            "loader_type": "DataLoaderDispatcher",
+            "parameter_delta": -0.05000000074505806,
+            "training_loss": 0.5,
+            "window_counts_seen": []
+          },
+          {
+            "global_step": 1,
+            "gradient": 0.5,
+            "loader_type": "DataLoaderDispatcher",
+            "parameter_delta": -0.05000000074505806,
+            "training_loss": 0.5,
+            "window_counts_seen": []
+          }
+        ],
+        "per_rank_reference": [
+          {
+            "global_step": 1,
+            "gradient": 0.10000000149011612,
+            "loader_type": "DataLoaderDispatcher",
+            "parameter_delta": -0.010000000707805157,
+            "training_loss": 0.10000000149011612,
+            "window_counts_seen": []
+          },
+          {
+            "global_step": 1,
+            "gradient": 0.10000000149011612,
+            "loader_type": "DataLoaderDispatcher",
+            "parameter_delta": -0.010000000707805157,
+            "training_loss": 0.10000000149011612,
+            "window_counts_seen": []
+          }
+        ]
+      },
+      "candidate": {
+        "full_batch_reference": {
+          "global_step": 1,
+          "gradient": 0.10000000149011612,
+          "loader_type": "DataLoaderDispatcher",
+          "parameter_delta": -0.010000000707805157,
+          "training_loss": 0.10000000149011612,
+          "window_counts_seen": [
+            40.0
+          ]
+        },
+        "gradient_abs_error": 0.0,
+        "observed": {
+          "global_step": 1,
+          "gradient": 0.10000000149011612,
+          "loader_type": "DataLoaderDispatcher",
+          "parameter_delta": -0.010000000707805157,
+          "training_loss": 0.10000000149011612,
+          "window_counts_seen": [
+            40.0
+          ]
+        },
+        "parameter_delta_abs_error": 0.0,
+        "per_rank_observed": [
+          {
+            "global_step": 1,
+            "gradient": 0.10000000149011612,
+            "loader_type": "DataLoaderDispatcher",
+            "parameter_delta": -0.010000000707805157,
+            "training_loss": 0.10000000149011612,
+            "window_counts_seen": [
+              40.0
+            ]
+          },
+          {
+            "global_step": 1,
+            "gradient": 0.10000000149011612,
+            "loader_type": "DataLoaderDispatcher",
+            "parameter_delta": -0.010000000707805157,
+            "training_loss": 0.10000000149011612,
+            "window_counts_seen": [
+              40.0
+            ]
+          }
+        ],
+        "per_rank_reference": [
+          {
+            "global_step": 1,
+            "gradient": 0.10000000149011612,
+            "loader_type": "DataLoaderDispatcher",
+            "parameter_delta": -0.010000000707805157,
+            "training_loss": 0.10000000149011612,
+            "window_counts_seen": [
+              40.0
+            ]
+          },
+          {
+            "global_step": 1,
+            "gradient": 0.10000000149011612,
+            "loader_type": "DataLoaderDispatcher",
+            "parameter_delta": -0.010000000707805157,
+            "training_loss": 0.10000000149011612,
+            "window_counts_seen": [
+              40.0
+            ]
+          }
+        ]
+      }
+    },
+    "negative_control": {
+      "base": {
+        "full_batch_reference": {
+          "global_step": 1,
+          "gradient": 1.0,
+          "loader_type": "DataLoaderDispatcher",
+          "parameter_delta": -0.10000000149011612,
+          "training_loss": 1.0,
+          "window_counts_seen": []
+        },
+        "gradient_abs_error": 0.0,
+        "observed": {
+          "global_step": 1,
+          "gradient": 1.0,
+          "loader_type": "DataLoaderDispatcher",
+          "parameter_delta": -0.10000000149011612,
+          "training_loss": 1.0,
+          "window_counts_seen": []
+        },
+        "parameter_delta_abs_error": 0.0,
+        "per_rank_observed": [
+          {
+            "global_step": 1,
+            "gradient": 1.0,
+            "loader_type": "DataLoaderDispatcher",
+            "parameter_delta": -0.10000000149011612,
+            "training_loss": 1.0,
+            "window_counts_seen": []
+          },
+          {
+            "global_step": 1,
+            "gradient": 1.0,
+            "loader_type": "DataLoaderDispatcher",
+            "parameter_delta": -0.10000000149011612,
+            "training_loss": 1.0,
+            "window_counts_seen": []
+          }
+        ],
+        "per_rank_reference": [
+          {
+            "global_step": 1,
+            "gradient": 1.0,
+            "loader_type": "DataLoaderDispatcher",
+            "parameter_delta": -0.10000000149011612,
+            "training_loss": 1.0,
+            "window_counts_seen": []
+          },
+          {
+            "global_step": 1,
+            "gradient": 1.0,
+            "loader_type": "DataLoaderDispatcher",
+            "parameter_delta": -0.10000000149011612,
+            "training_loss": 1.0,
+            "window_counts_seen": []
+          }
+        ]
+      },
+      "candidate": {
+        "full_batch_reference": {
+          "global_step": 1,
+          "gradient": 1.0,
+          "loader_type": "DataLoaderDispatcher",
+          "parameter_delta": -0.10000000149011612,
+          "training_loss": 1.0,
+          "window_counts_seen": [
+            40.0
+          ]
+        },
+        "gradient_abs_error": 0.0,
+        "observed": {
+          "global_step": 1,
+          "gradient": 1.0,
+          "loader_type": "DataLoaderDispatcher",
+          "parameter_delta": -0.10000000149011612,
+          "training_loss": 1.0,
+          "window_counts_seen": [
+            40.0
+          ]
+        },
+        "parameter_delta_abs_error": 0.0,
+        "per_rank_observed": [
+          {
+            "global_step": 1,
+            "gradient": 1.0,
+            "loader_type": "DataLoaderDispatcher",
+            "parameter_delta": -0.10000000149011612,
+            "training_loss": 1.0,
+            "window_counts_seen": [
+              40.0
+            ]
+          },
+          {
+            "global_step": 1,
+            "gradient": 1.0,
+            "loader_type": "DataLoaderDispatcher",
+            "parameter_delta": -0.10000000149011612,
+            "training_loss": 1.0,
+            "window_counts_seen": [
+              40.0
+            ]
+          }
+        ],
+        "per_rank_reference": [
+          {
+            "global_step": 1,
+            "gradient": 1.0,
+            "loader_type": "DataLoaderDispatcher",
+            "parameter_delta": -0.10000000149011612,
+            "training_loss": 1.0,
+            "window_counts_seen": [
+              40.0
+            ]
+          },
+          {
+            "global_step": 1,
+            "gradient": 1.0,
+            "loader_type": "DataLoaderDispatcher",
+            "parameter_delta": -0.10000000149011612,
+            "training_loss": 1.0,
+            "window_counts_seen": [
+              40.0
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "study_id": "trl_async_window_normalization_current_dispatcher_ddp_v1",
+  "torch": "2.9.1",
+  "transformers": "5.19.0",
+  "trl_source_commit": "f4526e10e25c8618855932528c232e2284c7801c",
+  "trl_source_sha256": "2657481258dcc04112761e9ff61a35cb93b2b72c3e197e4524f4602fd6a2dbfe",
+  "world_size": 2
+}

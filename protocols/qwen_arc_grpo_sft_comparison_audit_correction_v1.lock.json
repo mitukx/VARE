@@ -1,0 +1,13 @@
+{
+  "audit_protocol_id": "qwen_arc_grpo_sft_comparison_audit_correction_v1",
+  "auditor": "scripts/audit_qwen_arc_grpo_sft_comparison_corrected_v1.py",
+  "auditor_sha256": "d1d9a48ea7e8d3395956eeb0170fdfed8387320fcc4b09b70bdc77fd7c6b1d12",
+  "correction": "The first independent auditor reached result aggregation but attempted to sum per-seed dictionaries. This version corrects only aggregation of the three per-seed task accuracies; parser, sample selection, metrics, bootstrap, gates, model outputs, and study protocol are unchanged. It is separately source-hashed.",
+  "prior_audit_failure": "results/qwen-arc-grpo-sft-comparison-v3/run-3/independent_audit_attempt_v1.failure.json",
+  "runner": "scripts/run_qwen_arc_grpo_sft_comparison_v3.py",
+  "runner_sha256": "b258670ad53288394266505c77be04826de565da156319d8c5344931814ea025",
+  "sha256": "1689678adb1e0d6b70839b63b29a50f02f0529ca2542adbdfa013dc46abeb5d7",
+  "status": "frozen_before_corrected_audit",
+  "study_protocol": "protocols/qwen_arc_grpo_sft_comparison_v3.lock.json",
+  "study_protocol_sha256": "0ffcfdc2b951884fc223044866a0743fb487dd9803bd36438ab28602c79e469b"
+}

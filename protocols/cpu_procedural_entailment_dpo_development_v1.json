@@ -1,0 +1,119 @@
+{
+  "artifact_policy": "Retain the exact generated train/development prompts and graph proofs, prompt hashes, model/tokenizer fingerprints, action-token IDs, hidden features, per-seed adapters, all checkpoint metrics, resource measurements, runner/auditor snapshots, summary, and SHA-256 manifest. Never include employer-specific framing.",
+  "claim_boundary": "A pass supports only a CPU-trained binary action-head preference-optimization mechanism on this procedural implication task and the frozen generator/template distributions. It is synthetic E2 evidence only; it is not real-task improvement, broad reasoning, human preference optimization, online RL, or general capability.",
+  "compute_limits": {
+    "device": "CPU only; CUDA and MPS are forbidden",
+    "feature_batch_size": 4,
+    "max_peak_rss_bytes": 6442450944,
+    "max_wall_seconds": 3600,
+    "network": "Disabled; HF_HUB_OFFLINE=1, HF_DATASETS_OFFLINE=1, TRANSFORMERS_OFFLINE=1, local_files_only=true",
+    "paid_compute": false,
+    "threads": 4
+  },
+  "data": {
+    "generator": "Counter-based SHA-256 keyed procedural DAG entailment generator; labels are determined by independently replayable transitive closure, not by row index or model output.",
+    "pilot_hashes_file": "protocols/cpu_procedural_entailment_dpo_pilot_hashes_v1.json",
+    "pilot_hashes_sha256": "406a61d77f055d3bcf137efd379d08de7f59580c2c6542f53aa15e75d7e73f85",
+    "pilot_exclusion": "Exclude all prompts and seeds from private exploratory pilots 20261009 and 20261010 using the committed prompt-hash denylist. Retire draft confirmation seeds 20261013 and 20261014: a pre-run generator smoke check materialized those synthetic prompts before protocol commit, without scoring or inspecting outcomes. Runtime rejects any formal cohort that reuses either retired seed.",
+    "retired_seeds": [20261013, 20261014],
+    "training": {
+      "count": 128,
+      "positive_count": 64,
+      "seed": 20261011,
+      "style": 0,
+      "nodes": 10,
+      "edge_probability": 0.14
+    },
+    "development": {
+      "count": 256,
+      "positive_count": 128,
+      "seed": 20261012,
+      "style": 1,
+      "nodes": 10,
+      "edge_probability": 0.14
+    },
+    "confirmation_reservation": {
+      "balanced": {
+        "count": 512,
+        "positive_count": 256,
+        "seed": 20261016,
+        "style": 2,
+        "nodes": 12,
+        "edge_probability": 0.1
+      },
+      "prior_shift": {
+        "count": 512,
+        "positive_count": 154,
+        "seed": 20261017,
+        "style": 3,
+        "nodes": 12,
+        "edge_probability": 0.1
+      },
+      "access_rule": "The confirmation prompts must not be generated, tokenized, or scored unless the frozen development gate passes and a separate confirmation lock has been committed. The prior-shift cohort is secondary and cannot replace the balanced primary endpoint."
+    },
+    "independence": "The four seed streams are distinct. Within each stream the label allocation, graph construction, predicate permutation, rule order, and presentation order use separate SHA-256 domains. The generator proves all labels by graph closure and records prompt hashes. Train, development, balanced confirmation, and shifted confirmation prompt-hash sets must be pairwise disjoint."
+  },
+  "learner": {
+    "model": {
+      "id": "Qwen/Qwen2.5-0.5B-Instruct",
+      "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "weights_must_already_be_cached": true
+    },
+    "action_space": "Exactly two first-token actions after the frozen Qwen chat-template assistant prefix: Yes (token ID verified from the exact prefix at runtime) and No (token ID verified from the exact prefix at runtime). The policy is normalized over these two actions; no free-form generation is scored.",
+    "reference": "Frozen base model's conditional Yes/No action distribution.",
+    "context_features": "Frozen base-model final assistant-prefix hidden state, standardized using training-cohort mean and standard deviation only.",
+    "adapter": "Scalar calibration adds one learned constant to the Yes-minus-No logit. Contextual adapters add a learned affine function of the standardized hidden state to that binary logit; the transformer and output head remain frozen.",
+    "arms": [
+      "base",
+      "calibration_only: scalar offset optimized by binary cross entropy on the training labels",
+      "context_sft: contextual affine action-logit adapter optimized by binary cross entropy",
+      "context_dpo: the same contextual adapter optimized by pairwise DPO with the verifier-correct action chosen and the other binary action rejected"
+    ],
+    "dpo_objective": "For each binary prompt, delta is the contextual adapter's change to the frozen Yes-minus-No logit and sign is +1 for a correct Yes or -1 for a correct No. Minimize mean softplus(-beta * sign * delta), equivalent to DPO's chosen/rejected log-ratio objective in the normalized two-action policy.",
+    "optimizer": "Adam",
+    "learning_rate": 0.01,
+    "weight_decay": 0.0,
+    "minibatch_size": 16,
+    "maximum_updates": 200,
+    "checkpoints_updates": [0, 25, 50, 100, 200],
+    "gradient_clip": 1.0,
+    "shuffle": "Deterministic per seed; contextual_sft and context_dpo share initialization and minibatch order.",
+    "beta": 1.0,
+    "seeds": [7301, 7302, 7303],
+    "checkpoint_selection": "Select each trained arm's checkpoint by development balanced accuracy; ties select fewer updates. Do not alter the locked grid, optimizer, prompt, or cohorts after seeing results."
+  },
+  "metrics": {
+    "primary": "Development balanced accuracy difference between selected context_dpo and calibration_only, paired over the same generated prompts and averaged across the three training seeds.",
+    "secondary": [
+      "selected context_dpo versus the frozen base balanced accuracy",
+      "selected context_dpo versus matched context_sft balanced accuracy",
+      "plain accuracy, balanced accuracy, per-class recall and support, macro-F1, binary action NLL and conditional Bernoulli KL to the base policy",
+      "per-seed results, parameter deltas, update count, runtime, and peak RSS",
+      "majority-label baseline"
+    ],
+    "paired_bootstrap": {
+      "method": "Resample prompts within gold class; average each arm's per-prompt correctness across seeds before computing the arm difference.",
+      "resamples": 10000,
+      "seed": 20261015,
+      "interval": [0.025, 0.975]
+    },
+    "development_gate": {
+      "minimum_base_balanced_accuracy": 0.52,
+      "minimum_base_recall_per_class": 0.25,
+      "context_dpo_minus_base_balanced_accuracy_at_least": 0.05,
+      "context_dpo_minus_base_ci_lower_above": 0.0,
+      "context_dpo_minus_calibration_balanced_accuracy_at_least": 0.05,
+      "context_dpo_minus_calibration_ci_lower_above": 0.0,
+      "context_dpo_minus_context_sft_ci_lower_above": -0.02,
+      "minimum_seeds_better_than_base": 2,
+      "minimum_seeds_better_than_calibration": 2,
+      "maximum_mean_conditional_kl_nats_per_action": 0.5,
+      "maximum_per_seed_conditional_kl_nats_per_action": 0.5,
+      "all_generator_oracle_and_prompt_separation_checks_pass": true
+    },
+    "confirmation_gate": "If development passes, freeze a separate confirmation lock before generating confirmation prompts. Apply the same numeric gate to the balanced 512-prompt confirmation cohort. The shifted-prior cohort is secondary: report balanced and plain accuracy, per-class recall, and all arm metrics without changing the primary pass decision.",
+    "interpretation": "The earlier intercept-only gain was post-hoc and is hypothesis-generating only. No effect size from either private pilot sets this gate. A confirmation pass would remain synthetic E2 evidence and would not close the real-task or external-reproduction gaps."
+  },
+  "protocol_id": "cpu-procedural-entailment-dpo-development-v1",
+  "purpose": "Test prospectively whether a context-dependent verifier-derived DPO update adds held-out task accuracy beyond a scalar Yes/No prior correction, with matched supervised action learning and a shifted-prior challenge cohort."
+}

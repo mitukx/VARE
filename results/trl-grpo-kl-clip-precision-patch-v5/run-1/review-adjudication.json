@@ -1,0 +1,19 @@
+{
+  "review_scope": "read-only post-run protocol, provenance, arithmetic, and claim audit",
+  "reviewer_type": "independent internal subagent; not an external human reproduction",
+  "protocol_commit": "c48a9b4",
+  "protocol_snapshot_sha256": "d25d2d08b9c4f0eef428dab7eec7e04a451617134854cf37e12a9ee53c882d90",
+  "review_status": "pass_no_material_mismatch",
+  "findings": [
+    "Frozen protocol snapshot, runner, checker, patch, source worktrees, and four output records match their declared hashes and identities.",
+    "Independent arithmetic reproduces the candidate loss, aggregate metric, and token gradients within the frozen tolerance.",
+    "The unmodified fp16 aggregate metric overflows and its active gradients differ from the analytic target; candidate fp32 controls are bit-identical.",
+    "The masked padding position contributes zero to the KL objective and gradient."
+  ],
+  "direction": "pivot away from extending this patch line; retain as a narrow conditional source-method finding",
+  "limits": [
+    "One hand-built fixture; no model, optimizer step, occurrence-rate estimate, or task outcome.",
+    "The pinned TRL KL path is disabled by default when beta is zero.",
+    "This review is not an outside human reproduction or upstream maintainer review."
+  ]
+}

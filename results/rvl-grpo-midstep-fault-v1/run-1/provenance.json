@@ -1,0 +1,30 @@
+{
+  "adapter_commit_under_test": "1aa0958841e946226480cd167b4dbf5fb20d7281",
+  "claim_boundary": "Same-host CPU adapter rollback smoke using one pinned trainer implementation and a tiny randomly initialized model; no model-capability or training-quality result, process-loss guarantee, or external reproduction.",
+  "completed_at_utc": "2026-10-08T18:58:31Z",
+  "failure_boundary": "The actual pinned HFCausalLMGRPOTrainer.train_step ran unchanged. Its optimizer.step performed the real update, then a wrapper raised before train_step returned.",
+  "inputs": {
+    "dataset": false,
+    "network_during_run": false,
+    "paid_compute": false,
+    "pretrained_model": false,
+    "upstream_source_method": "Local pinned source snapshot; validator checked five protocol-pinned source SHA-256 values before import"
+  },
+  "protocol_frozen_in_commit": "63ba181ae54a67738b6d40730ce10a9e8bdd7ba0",
+  "protocol_sha256": "2939204c394b07618b6ed69fa36a0caacf34d08ab215d4f991b3bf059a12f4f6",
+  "run_id": "rvl-grpo-midstep-fault-v1/run-1",
+  "runtime": {
+    "architecture": "arm64",
+    "cuda_initialized": false,
+    "device": "cpu",
+    "os": "Darwin",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "torch_threads": 1,
+    "transformers": "4.57.3"
+  },
+  "upstream_commit": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "upstream_repository": "https://github.com/mitukx/Recursive-Verification-Lag",
+  "validator_path": "scripts/validate_rvl_grpo_midstep_fault.py",
+  "validator_sha256": "971a4f19498be7fe440b78290b1d5768f8bb306eb9c64127537f70f76e316823"
+}
