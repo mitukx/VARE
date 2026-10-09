@@ -1,0 +1,48 @@
+{
+  "protocol_id": "trl_async_token_budget_prefetch_staleness_v1",
+  "status": "frozen_before_confirmation",
+  "question": "Does TokenBudgetBatcher read-ahead allow a rollout sibling to reach a later training microbatch after the policy version changes, even when max_staleness is zero?",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "base_revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+    "candidate_base_revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+    "base_files_sha256": {
+      "trl/experimental/async_grpo/async_grpo_trainer.py": "2657481258dcc04112761e9ff61a35cb93b2b72c3e197e4524f4602fd6a2dbfe",
+      "trl/experimental/async_grpo/async_rollout_worker.py": "5eab22259711df4e3ec1a62047f87a2cffc5b204772b25cd78647336e52b9670"
+    },
+    "candidate_files_sha256": {
+      "trl/experimental/async_grpo/async_grpo_trainer.py": "f16c87b7fce02a3c3ffa6d54fe7d6ef00e1b3ea6cec3e7a47cf7a923f722a5fa",
+      "trl/experimental/async_grpo/async_rollout_worker.py": "2bca6e23b7cc71ecb809a3585e04458eb1da184731001bfa41b50326e8bd57a3"
+    },
+    "candidate_patch_sha256": "df6bfd03224bc961658d7366eea590cd2be4ad5c1940d4153b893e1373f6c163"
+  },
+  "estimand": {
+    "primary": "Fork sibling IDs delivered to the second collated microbatch, their policy-version lag at collation time, and whether each source checked freshness before or after the simulated version transition.",
+    "independent_unit": "One deterministic rollout with two version-0 rows and same rollout_id, followed by fresh sentinels.",
+    "resource_budget": "CPU-only deterministic queue/batcher fixture; no pretrained model, optimizer, GPU, paid API, or external spend.",
+    "claim_boundary": "Measures the production dynamic batcher's look-ahead and collator inputs only; no forward pass, optimizer, gradient, or task result."
+  },
+  "method": {
+    "script": "scripts/reproduce_trl_async_token_budget_prefetch_staleness_v1.py",
+    "script_sha256": "903a703e41e55288f11a107a261c20df33c4e233afac39919af0fcfbd61fae01",
+    "token_budget": 2,
+    "tokens_per_sample": 2,
+    "num_processes": 1,
+    "max_staleness": 0,
+    "fixture": "Two version-0 fork rows of two input tokens each, then two fresh sentinels. In the transition arm, current policy version advances from 0 to 1 after the first collated microbatch and before the next microbatch is returned. A fixed-version control uses the same deterministic rows without advancing."
+  },
+  "acceptance": {
+    "fixed_version_control_delivers_both_forks_exactly_once_for_base_and_candidate": true,
+    "transition_records_use_time_version_lag_at_second_microbatch": true,
+    "transition_compares_staleness_decision_time_with_collation_time": true,
+    "source_and_script_hashes_match_lock": true,
+    "cpu_only_and_no_external_spend": true
+  },
+  "failure_criteria": [
+    "Any pinned source, patch, or script hash differs.",
+    "Fixed-version control does not deliver each fork row exactly once.",
+    "The harness cannot identify which fork row enters each collated microbatch.",
+    "No distinction can be measured between queue freshness-check time and later collation time."
+  ],
+  "decision_rule": "If either source path places a version-0 fork row in a microbatch collated after the transition to version 1, report a use-time freshness gap for that batching path. Distinguish base read-ahead from candidate group-level admission. If only the candidate does so, reject its stronger freshness claim; if both do, evaluate TokenBudgetBatcher prefetch as the primary defect surface. Do not make optimizer or capability claims."
+}
