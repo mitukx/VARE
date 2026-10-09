@@ -56,3 +56,41 @@ def test_same_prompt_group_may_use_distinct_task_ids():
     assert len({item.attempt.task.id for item in same_prompt}) == 4
     assert replay.add_group(same_prompt, [1.0] * 4)
     assert len(replay.sample_grouped(4)) == 4
+
+
+def test_atomic_admission_rejects_mixed_policy_versions_and_ids():
+    replay = PrioritizedReplay(ReplayConfig(capacity=8), seed=0)
+    mixed_version = [_experience(i, "mixed-version", "same prompt") for i in range(2)]
+    mixed_id = [_experience(i + 2, "mixed-id", "same prompt") for i in range(2)]
+    for experience in mixed_version + mixed_id:
+        experience.attempt.metadata["vare_rollout_group_size"] = 2
+    mixed_version[1].attempt.policy_version = 1
+    mixed_id[1].attempt.policy_id = "policy-other"
+
+    assert not replay.add_group(mixed_version, [1.0, 1.0])
+    assert not replay.add_group(mixed_id, [1.0, 1.0])
+    assert len(replay) == 0
+
+
+def test_atomic_admission_rejects_mixed_verifier_versions():
+    replay = PrioritizedReplay(ReplayConfig(capacity=8), seed=0)
+    mixed = [_experience(i, "mixed-verifier", "same prompt") for i in range(2)]
+    for experience in mixed:
+        experience.attempt.metadata["vare_rollout_group_size"] = 2
+    mixed[1].verification.verifier_version = 2
+
+    assert not replay.add_group(mixed, [1.0, 1.0])
+    assert len(replay) == 0
+
+
+def test_grouped_sampling_fails_closed_on_legacy_mixed_policy_versions():
+    replay = PrioritizedReplay(ReplayConfig(capacity=8), seed=0)
+    mixed = [_experience(i, "legacy-mixed", "same prompt") for i in range(2)]
+    for experience in mixed:
+        experience.attempt.metadata["vare_rollout_group_size"] = 2
+    mixed[1].attempt.policy_version = 1
+    for experience in mixed:
+        replay.add(experience, freshness=1.0)
+
+    assert replay.sample_grouped(2) == []
+    assert replay.sample_current(2, freshness_fn=lambda _: 1.0, grouped=True) == []

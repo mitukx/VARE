@@ -1,0 +1,194 @@
+diff --git a/src/vare/engine.py b/src/vare/engine.py
+index acd291e..757daaf 100644
+--- a/src/vare/engine.py
++++ b/src/vare/engine.py
+@@ -195,0 +196,7 @@ class CapabilityLoop:
++                    experiences = [exp for exp, _ in members]
++                    if not complete:
++                        reason = "incomplete_after_lag"
++                    elif not self.replay.group_has_homogeneous_provenance(experiences):
++                        reason = "heterogeneous_provenance"
++                    else:
++                        reason = "capacity_or_priority"
+@@ -201,5 +208 @@ class CapabilityLoop:
+-                        reason=(
+-                            "incomplete_after_lag"
+-                            if not complete
+-                            else "capacity_or_priority"
+-                        ),
++                        reason=reason,
+diff --git a/src/vare/replay.py b/src/vare/replay.py
+index 0da71ca..ebb6bea 100644
+--- a/src/vare/replay.py
++++ b/src/vare/replay.py
+@@ -35,0 +36,19 @@ class PrioritizedReplay:
++    @staticmethod
++    def group_has_homogeneous_provenance(experiences: Sequence[Experience]) -> bool:
++        if not experiences:
++            return False
++        first = experiences[0]
++        provenance = (
++            first.attempt.policy_id,
++            first.attempt.policy_version,
++            first.verification.verifier_version,
++        )
++        return all(
++            (
++                exp.attempt.policy_id,
++                exp.attempt.policy_version,
++                exp.verification.verifier_version,
++            ) == provenance
++            for exp in experiences[1:]
++        )
++
+@@ -44,0 +64,5 @@ class PrioritizedReplay:
++        if not PrioritizedReplay.group_has_homogeneous_provenance(
++            [item.experience for item in items]
++        ):
++            return False
++
+diff --git a/tests/test_grouped_policy_provenance.py b/tests/test_grouped_policy_provenance.py
+new file mode 100644
+index 0000000..403cbf3
+--- /dev/null
++++ b/tests/test_grouped_policy_provenance.py
+@@ -0,0 +1,96 @@
++from __future__ import annotations
++
++import asyncio
++
++from vare.config import EngineConfig, LagConfig, PromotionConfig
++from vare.engine import CapabilityLoop
++from vare.types import Attempt, EvaluationReport, Task, Verification
++from vare.verifiers import VerifierEnsemble, VerifierMember
++
++
++class _Verifier:
++    name = "fixture"
++    version = 1
++    trusted = True
++
++    async def verify(self, attempt):
++        return Verification(1.0, True, 1.0, 1, self.name, trusted=True)
++
++
++class _Hooks:
++    def __init__(self, versions: list[int]):
++        self.versions = versions
++        self.trained_rows = None
++
++    def active_policy(self):
++        return "policy-current", 1
++
++    async def rollout(self, task, policy_id, policy_version, step):
++        return Attempt(task, f"sample-{step}", policy_id, self.versions[step], step)
++
++    async def train_candidate(self, incumbent_id, experiences):
++        self.trained_rows = [
++            (exp.attempt.policy_id, exp.attempt.policy_version)
++            for exp in experiences
++        ]
++        return incumbent_id
++
++    async def evaluate(self, policy_id):
++        return EvaluationReport(policy_id, 0.0, n=64)
++
++    async def promote(self, candidate_id):
++        raise AssertionError("no candidate is created")
++
++    async def discard(self, candidate_id):
++        raise AssertionError("no candidate is created")
++
++
++def _run(versions):
++    hooks = _Hooks(versions)
++    loop = CapabilityLoop(
++        hooks=hooks,
++        verifier=VerifierEnsemble([VerifierMember(_Verifier())]),
++        config=EngineConfig(
++            rollout_concurrency=2,
++            replay_batch_size=2,
++            samples_per_task=2,
++            lag=LagConfig(max_policy_lag=2, max_verifier_lag=2),
++            promotion=PromotionConfig(min_eval_examples=1),
++        ),
++    )
++    result = asyncio.run(loop.run_round([Task("task", "prompt")], round_index=0))
++    return result, hooks
++
++
++def test_engine_rejects_policy_heterogeneity_within_declared_grpo_group():
++    result, hooks = _run([1, 0])
++
++    # Rows pass individual lag admission, but the complete group is rejected
++    # before replay and the learner hook is never called.
++    assert result.admitted_experiences == 2
++    assert result.dropped_experiences == 0
++    assert hooks.trained_rows is None
++
++
++def test_engine_retains_homogeneous_current_and_permitted_stale_groups():
++    current_result, current_hooks = _run([1, 1])
++    stale_result, stale_hooks = _run([0, 0])
++
++    assert current_result.admitted_experiences == 2
++    assert current_hooks.trained_rows == [
++        ("policy-current", 1),
++        ("policy-current", 1),
++    ]
++    assert stale_result.admitted_experiences == 2
++    assert stale_hooks.trained_rows == [
++        ("policy-current", 0),
++        ("policy-current", 0),
++    ]
++
++
++def test_engine_continues_to_reject_ahead_of_incumbent_groups():
++    result, hooks = _run([2, 2])
++
++    assert result.admitted_experiences == 0
++    assert result.dropped_experiences == 2
++    assert hooks.trained_rows is None
+diff --git a/tests/test_replay_group_prompt_identity.py b/tests/test_replay_group_prompt_identity.py
+index 8320c03..d479884 100644
+--- a/tests/test_replay_group_prompt_identity.py
++++ b/tests/test_replay_group_prompt_identity.py
+@@ -58,0 +59,38 @@ def test_same_prompt_group_may_use_distinct_task_ids():
++
++
++def test_atomic_admission_rejects_mixed_policy_versions_and_ids():
++    replay = PrioritizedReplay(ReplayConfig(capacity=8), seed=0)
++    mixed_version = [_experience(i, "mixed-version", "same prompt") for i in range(2)]
++    mixed_id = [_experience(i + 2, "mixed-id", "same prompt") for i in range(2)]
++    for experience in mixed_version + mixed_id:
++        experience.attempt.metadata["vare_rollout_group_size"] = 2
++    mixed_version[1].attempt.policy_version = 1
++    mixed_id[1].attempt.policy_id = "policy-other"
++
++    assert not replay.add_group(mixed_version, [1.0, 1.0])
++    assert not replay.add_group(mixed_id, [1.0, 1.0])
++    assert len(replay) == 0
++
++
++def test_atomic_admission_rejects_mixed_verifier_versions():
++    replay = PrioritizedReplay(ReplayConfig(capacity=8), seed=0)
++    mixed = [_experience(i, "mixed-verifier", "same prompt") for i in range(2)]
++    for experience in mixed:
++        experience.attempt.metadata["vare_rollout_group_size"] = 2
++    mixed[1].verification.verifier_version = 2
++
++    assert not replay.add_group(mixed, [1.0, 1.0])
++    assert len(replay) == 0
++
++
++def test_grouped_sampling_fails_closed_on_legacy_mixed_policy_versions():
++    replay = PrioritizedReplay(ReplayConfig(capacity=8), seed=0)
++    mixed = [_experience(i, "legacy-mixed", "same prompt") for i in range(2)]
++    for experience in mixed:
++        experience.attempt.metadata["vare_rollout_group_size"] = 2
++    mixed[1].attempt.policy_version = 1
++    for experience in mixed:
++        replay.add(experience, freshness=1.0)
++
++    assert replay.sample_grouped(2) == []
++    assert replay.sample_current(2, freshness_fn=lambda _: 1.0, grouped=True) == []

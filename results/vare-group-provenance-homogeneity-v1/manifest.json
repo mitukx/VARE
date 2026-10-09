@@ -1,0 +1,55 @@
+{
+  "audit": "vare_group_provenance_homogeneity_v1",
+  "protocols": {
+    "baseline": {
+      "path": "protocols/vare_group_provenance_homogeneity_v1.lock.json",
+      "sha256": "69b23bfec455e49a6d8d57fdd1306e8987b3c03f8f16a20cf01ca20566e9b977",
+      "commit": "ccb3f791f212e80197fddea4048d3491c3458900"
+    },
+    "fix_checks": {
+      "path": "protocols/vare_group_provenance_fix_v2.lock.json",
+      "sha256": "be0b3f8e0ec35fc9d96110ba9b9dc7ccfafd4fb330f877d7c5ab86f3874b3d29",
+      "commit": "1d56f9b03b358fbb37a533c0a6cdd3cfc38bf7d7"
+    }
+  },
+  "source_revisions": {
+    "vare_baseline": "ccb3f791f212e80197fddea4048d3491c3458900",
+    "rvl_inspected": "c7e646b043cb56e5ea3c2623bb8a61e065451f72"
+  },
+  "environment": {
+    "python": "3.12.12",
+    "device": "CPU",
+    "paid_services": false,
+    "model_training": false
+  },
+  "commands": [
+    "PYTHONPATH=src .venv/bin/python3.12 scripts/reproduce_group_provenance_baseline_v1.py (run against detached VARE baseline worktree ccb3f791f212e80197fddea4048d3491c3458900)",
+    "PYTHONPATH=src .venv/bin/python3.12 scripts/check_group_policy_provenance_oracle_v1.py",
+    "PYTHONPATH=src .venv/bin/python3.12 -m pytest -q tests/test_grouped_policy_provenance.py tests/test_replay_group_prompt_identity.py tests/test_grouped_replay.py tests/test_replay_group_freshness.py tests/test_rvl_grpo_group_boundary.py tests/test_rvl_grpo_group_boundary_calibration.py tests/test_rvl_grpo_hooks.py",
+    "PYTHONPATH=src .venv/bin/python3.12 -m pytest -q"
+  ],
+  "artifacts": {
+    "baseline.json": "61e2735bb9ca862b679d77fa15f7ab1ccd65815a218e67269e293fe88f2e0ff8",
+    "exact-oracle.json": "c5ed25910efd1e7ff587dc5ae2dca262bc0bd69401e98c9653dac9f7e4324461",
+    "focused-tests.log": "5cba8a0d336f6301764b9e7cb54d2168880bd1238a4afa7c45b0666fad715409",
+    "full-tests.log": "90ef2ee2fec4569eb1a485554716ef2078ae78f8a85243ad8b5ea84547f3385c",
+    "fix.patch": "73b56fc7a08fd8eed81b7ceca31c197e66c6978903ec3cc32a5627fd2dd797fc",
+    "baseline_runner.py": "81f444865d4b8ce634837b2060a5522b4feb4e0d00ed3de5a2f8586f54d8e884",
+    "exact_oracle.py": "5adedb6ad8efcf9aaa5ee399b4f9a3b0130ae5a245c91627aca89c6dc0961608",
+    "engine.py": "a92b01b2ec89339b68c96a385d05db7397136943c202a44458a597d34b33f4f3",
+    "replay.py": "6ab77a2b1e0057a025e455de00a0f29ec5e95508f8884d96de73ce50bbc8dfa8",
+    "focused_test_group_provenance.py": "cdbe202298bd92495691e76957a9499727f5bc4ee3aaafce82794dfe25252507",
+    "focused_test_replay_prompt.py": "b454d3786c787b4e1f86d87921932f753128eb4383108e400c25218f2bef51e7",
+    "technical_report.md": "f08b8aa3c1bbad5132d9978d28b40e70cacf7ce0f5064a4a0f92993e01c24931"
+  },
+  "outcome": {
+    "baseline_mixed_policy_group_reached_train_hook": true,
+    "post_fix_focused_tests": "32 passed",
+    "post_fix_full_suite": "225 passed, 12 skipped, 4 pre-existing smoke-stable-logsumexp environment failures"
+  },
+  "limitations": [
+    "Synthetic exact score calculation only; no model capability claim.",
+    "Verifier-mixed source-path attempt was canonicalized by VerifierEnsemble and is not counted as a baseline reproduction.",
+    "No external PR or maintainer contact was made."
+  ]
+}

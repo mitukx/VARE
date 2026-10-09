@@ -1,0 +1,131 @@
+{
+  "future_policy": {
+    "admitted_experiences": 0,
+    "attempt_policy_versions": [
+      2,
+      2
+    ],
+    "attempt_verifier_versions": [
+      1,
+      1
+    ],
+    "requested_policy": [
+      "policy-current",
+      1
+    ],
+    "train_hook_called": false,
+    "train_rows": null
+  },
+  "homogeneous_current": {
+    "admitted_experiences": 2,
+    "attempt_policy_versions": [
+      1,
+      1
+    ],
+    "attempt_verifier_versions": [
+      1,
+      1
+    ],
+    "requested_policy": [
+      "policy-current",
+      1
+    ],
+    "train_hook_called": true,
+    "train_rows": [
+      {
+        "policy_id": "policy-current",
+        "policy_version": 1,
+        "verifier_version": 1
+      },
+      {
+        "policy_id": "policy-current",
+        "policy_version": 1,
+        "verifier_version": 1
+      }
+    ]
+  },
+  "homogeneous_permitted_stale": {
+    "admitted_experiences": 2,
+    "attempt_policy_versions": [
+      0,
+      0
+    ],
+    "attempt_verifier_versions": [
+      1,
+      1
+    ],
+    "requested_policy": [
+      "policy-current",
+      1
+    ],
+    "train_hook_called": true,
+    "train_rows": [
+      {
+        "policy_id": "policy-current",
+        "policy_version": 0,
+        "verifier_version": 1
+      },
+      {
+        "policy_id": "policy-current",
+        "policy_version": 0,
+        "verifier_version": 1
+      }
+    ]
+  },
+  "mixed_policy": {
+    "admitted_experiences": 2,
+    "attempt_policy_versions": [
+      1,
+      0
+    ],
+    "attempt_verifier_versions": [
+      1,
+      1
+    ],
+    "requested_policy": [
+      "policy-current",
+      1
+    ],
+    "train_hook_called": true,
+    "train_rows": [
+      {
+        "policy_id": "policy-current",
+        "policy_version": 1,
+        "verifier_version": 1
+      },
+      {
+        "policy_id": "policy-current",
+        "policy_version": 0,
+        "verifier_version": 1
+      }
+    ]
+  },
+  "mixed_verifier": {
+    "admitted_experiences": 2,
+    "attempt_policy_versions": [
+      1,
+      1
+    ],
+    "attempt_verifier_versions": [
+      1,
+      0
+    ],
+    "requested_policy": [
+      "policy-current",
+      1
+    ],
+    "train_hook_called": true,
+    "train_rows": [
+      {
+        "policy_id": "policy-current",
+        "policy_version": 1,
+        "verifier_version": 1
+      },
+      {
+        "policy_id": "policy-current",
+        "policy_version": 1,
+        "verifier_version": 1
+      }
+    ]
+  }
+}

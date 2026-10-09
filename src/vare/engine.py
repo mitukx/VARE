@@ -193,16 +193,19 @@ class CapabilityLoop:
                     [freshness for _, freshness in members],
                 )
                 if not inserted:
+                    experiences = [exp for exp, _ in members]
+                    if not complete:
+                        reason = "incomplete_after_lag"
+                    elif not self.replay.group_has_homogeneous_provenance(experiences):
+                        reason = "heterogeneous_provenance"
+                    else:
+                        reason = "capacity_or_priority"
                     self.events.emit(
                         "replay_group_not_admitted",
                         group_id=group_id,
                         admitted_count=len(members),
                         expected_size=expected_size,
-                        reason=(
-                            "incomplete_after_lag"
-                            if not complete
-                            else "capacity_or_priority"
-                        ),
+                        reason=reason,
                     )
         else:
             for exp, freshness in zip(admitted, admitted_freshness, strict=True):

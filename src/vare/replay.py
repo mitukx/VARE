@@ -34,12 +34,36 @@ class PrioritizedReplay:
         return max(self.config.min_priority, p)
 
     @staticmethod
+    def group_has_homogeneous_provenance(experiences: Sequence[Experience]) -> bool:
+        if not experiences:
+            return False
+        first = experiences[0]
+        provenance = (
+            first.attempt.policy_id,
+            first.attempt.policy_version,
+            first.verification.verifier_version,
+        )
+        return all(
+            (
+                exp.attempt.policy_id,
+                exp.attempt.policy_version,
+                exp.verification.verifier_version,
+            ) == provenance
+            for exp in experiences[1:]
+        )
+
+    @staticmethod
     def _group_is_complete(items: list[_HeapItem]) -> bool:
         if not items:
             return False
         first_prompt = items[0].experience.attempt.task.prompt
         if (not isinstance(first_prompt, str)
                 or any(item.experience.attempt.task.prompt != first_prompt for item in items)):
+            return False
+
+        if not PrioritizedReplay.group_has_homogeneous_provenance(
+            [item.experience for item in items]
+        ):
             return False
 
         declared_sizes = set()
