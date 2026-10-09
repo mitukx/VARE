@@ -24,7 +24,7 @@ At baseline revision `5192cbaf5aa1ac02e010933b0ac1ba0f553b69e1`, the frozen test
 
 The fix makes `_group_is_complete` reject a group unless every member has the same string prompt. Atomic `add_group` checks this before admission. The same shared completeness predicate makes `sample_grouped` and grouped `sample_current` fail closed on legacy mixed-prompt groups.
 
-Raw baseline/fixed logs, result summary, and SHA-256 manifest are retained in [`results/replay-group-prompt-identity-v1/`](../results/replay-group-prompt-identity-v1/). Runtime: Python 3.12.12, pytest 8.4.2, CPU.
+Raw baseline/fixed logs, result summary, and SHA-256 manifest are retained in [`results/replay-group-prompt-identity-v1/`](../results/replay-group-prompt-identity-v1/). Local runtime: Python 3.12.12, pytest 8.4.2, CPU. GitHub Actions run [37864604383](https://github.com/mitukx/VARE/actions/runs/37864604383) passed 195 tests with 12 skipped; its test job also recomputed the existing frozen GRPO audits and demo successfully.
 
 ## Claim boundary and decision
 

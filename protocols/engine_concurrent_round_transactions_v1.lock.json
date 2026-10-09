@@ -1,0 +1,22 @@
+{
+  "protocol_id": "vare-engine-concurrent-round-transactions-v1",
+  "schema_version": 1,
+  "frozen_before_baseline_measurement": true,
+  "source_base_revision": "0995f7fc3a92b317c1b8dce7e13b87c583cf42ec",
+  "candidate_files": [
+    "src/vare/engine.py"
+  ],
+  "regression_test": "tests/test_engine_concurrent_round_transactions.py",
+  "regression_test_sha256": "8a97749cce2f3827f1cd98fa148994a3b1fe649f9136dfa4e6e7f7b70b9c1c69",
+  "acceptance": {
+    "rounds_on_one_loop_serialize_candidate_transactions": true,
+    "later_candidate_branches_from_latest_promoted_policy": true,
+    "newer_update_is_not_overwritten_by_stale_branch": true
+  },
+  "resource_limit": "Deterministic local CPU async fixture only; no model, GPU, paid API, or network access.",
+  "interpretation_limit": "One in-process loop transaction contract. Does not cover multiple CapabilityLoop instances sharing hooks or process crashes.",
+  "expected_calibration": {
+    "baseline_passed": false,
+    "fixed_passed": true
+  }
+}

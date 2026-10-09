@@ -82,3 +82,7 @@ Do not reuse opened HH, GSM8K, BoolQ, generated arithmetic, SNLI, or code-repair
 | Upstream RL trainer issue | **Opportunistic only** | Current scan found nearby issues already closed or covered by active pull requests. Select a future issue only after checking ownership and reproducing a real production-path failure. |
 
 This decision supersedes the earlier Math-first and generated-repair feasibility proposals in this file's history and does not change any frozen experiment protocol or result.
+
+## Follow-up decision — 2026-10-09
+
+Two concrete replay/transaction counterexamples have since been frozen, reproduced at baseline, fixed, and covered by CPU regressions: mixed prompts sharing a declared group ID, and concurrent rounds promoting from the same stale incumbent. These strengthen the systems-correctness foundation but do not change the flagship research target. Do not start another nearby model/task screen or add speculative infrastructure. The next evidence milestone remains an independent human review/reproduction of a retained packet; separately, pursue a new learner experiment only after a genuinely distinct base/task/runtime clears feasibility and can support held-out task-success evaluation. Author reruns, agents, and CI do not count as outside human reproduction.

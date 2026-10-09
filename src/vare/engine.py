@@ -53,6 +53,7 @@ class CapabilityLoop:
         self._generated_tasks: list[Task] = []
         self.step = 0
         self._run_serial = 0
+        self._round_lock = asyncio.Lock()
 
     async def _one_rollout(self, sem: asyncio.Semaphore, task: Task, policy_id: str, policy_version: int):
         async with sem:
@@ -74,6 +75,11 @@ class CapabilityLoop:
             return attempt, verification
 
     async def run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None) -> RoundResult:
+        """Serialize each stateful policy-update transaction for this loop."""
+        async with self._round_lock:
+            return await self._run_round(tasks, round_index=round_index, rollout_count=rollout_count)
+
+    async def _run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None) -> RoundResult:
         source_tasks = list(tasks) + self._generated_tasks
         if not source_tasks:
             raise ValueError("run_round requires tasks")

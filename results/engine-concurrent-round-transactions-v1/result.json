@@ -1,0 +1,34 @@
+{
+  "baseline_revision": "0995f7fc3a92b317c1b8dce7e13b87c583cf42ec",
+  "claim_boundary": "Deterministic in-process async transaction fixture; no model learning or capability claim.",
+  "frozen_test_outcomes": {
+    "baseline": {
+      "failed": 1,
+      "passed": 0
+    },
+    "fixed": {
+      "failed": 0,
+      "passed": 1
+    }
+  },
+  "full_repository_suite": {
+    "command": "pytest -q",
+    "exit_code": 0,
+    "interpretation": "All collected repository tests completed successfully on the modified source."
+  },
+  "mechanism": "Concurrent rounds on one CapabilityLoop serialized; the second candidate branches from the first promoted policy instead of overwriting it with a stale branch.",
+  "protocol_id": "vare-engine-concurrent-round-transactions-v1",
+  "runtime": {
+    "device": "cpu",
+    "pytest": "8.4.2",
+    "python": "3.12.12"
+  },
+  "sha256": {
+    "baseline_log": "c89b71315ac485b1b82cc3f9b0453b7edce11ce3575f202e6f0d3e8eb9712400",
+    "candidate_source": "9b237589b0b137899e3c4a356c6e645dfc2ccab95eee9ff206c8db3c5b2eb747",
+    "fixed_log": "423b1d0e014eb1eab96f4420f7b344c2615be505dd574b756ac884826ca74f2d",
+    "frozen_test": "8a97749cce2f3827f1cd98fa148994a3b1fe649f9136dfa4e6e7f7b70b9c1c69",
+    "full_suite_log": "1d26e43fc13c678b20811f0e44213829225c536a5ba589376cc9e65b443466a8",
+    "protocol_lock": "89c13ade09a1ab37d9d6259307c49c0718c737caf716125e207884de4948120f"
+  }
+}
