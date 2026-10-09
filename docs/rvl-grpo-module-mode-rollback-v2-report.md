@@ -4,7 +4,7 @@
 
 The previous mid-step fault test checked model tensors, optimizer state, CPU RNG, policy identity, candidate cleanup, and the next rollout. It did not inspect `torch.nn.Module.training` flags. In the pinned RVL trainer, `train_step()` calls `model.train()` before doing the optimizer update, while `snapshot_training_state()` and `restore_training_state()` preserve tensors, optimizer state, and RNG only. When the real optimizer completed and the test injected an exception before `train_step()` returned, VARE restored the weights but left the model in training mode.
 
-The mode change matters to rollback because dropout and other train/eval-sensitive modules can change subsequent inference and evaluation behavior. The minimal 3,696-parameter fixture uses zero dropout, so this experiment demonstrates state leakage, not a measured quality effect.
+The test begins with the model in eval mode, so it demonstrates the adapter failing to preserve a deliberately selected mode through an actual optimizer-fault rollback. The minimal 3,696-parameter fixture uses zero dropout, so this experiment demonstrates state leakage, not a measured output effect. In RVL's standard `HFLocalBackend` path, model loading explicitly enters train mode, generation restores that mode, and dropout is disabled by default; this test does not show that the existing standard Qwen transactional path changes behavior.
 
 ## Frozen reproduction
 
@@ -44,4 +44,4 @@ Focused VARE regressions passed: `tests/test_rvl_grpo_hooks.py`, `tests/test_rvl
 
 ## Scope and next external check
 
-This verifies one exception boundary and one pinned RVL revision. It does not cover optimizer-kernel interruption, process loss, CUDA/distributed state, arbitrary mutable module buffers, mixed-mode modules in this fixture, pretrained-model quality, or task success. The useful external path is a reviewer rerunning the frozen command and checking the small adapter change. No external issue, pull request, or maintainer contact has been made.
+This verifies one exception boundary and one pinned RVL revision. It does not cover optimizer-kernel interruption, process loss, CUDA/distributed state, arbitrary mutable module buffers, nonzero-dropout output divergence, the standard path's mode behavior, pretrained-model quality, or task success. The adapter fix protects callers that deliberately use eval or mixed module modes. No external issue, pull request, or maintainer contact has been made.
