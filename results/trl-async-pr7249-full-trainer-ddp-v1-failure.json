@@ -1,0 +1,16 @@
+{
+  "protocol_id": "trl-async-grpo-pr7249-full-trainer-ddp-v1",
+  "status": "harness_failure_before_first_forward_backward",
+  "command": "PYTHONPATH=/tmp/trl-vare-pydeps:/tmp/trl-vare-async-norm python -m torch.distributed.run --nnodes=1 --nproc_per_node=2 --rdzv_backend=static --master_addr=127.0.0.1 --master_port=29638 --max_restarts=0 scripts/replay_trl_pr7249_full_trainer_ddp_v1.py --repo /tmp/trl-vare-async-norm --arm base --output results/trl-async-pr7249-full-trainer-ddp-v1/base",
+  "exit_code": 1,
+  "failed_stage": "AsyncGRPOTrainer.compute_loss invoked from Transformers Trainer._inner_training_loop before backward or optimizer step.",
+  "exception": "AttributeError: AsyncGRPOTrainer lacks _step_forward_tokens because the harness used __new__ and Trainer.__init__ instead of the async trainer constructor.",
+  "rank_outcomes": {
+    "rank0": "exit 1",
+    "rank1": "exit 1"
+  },
+  "science_status": "No inference/loss/gradient/optimizer result was produced; this is a harness setup failure and says nothing about base or candidate normalization.",
+  "launcher_log_sha256": "dab51d7f7d5633585139321c994bc7ba6eec3414a4d3fd81b18cc3087b50d9ef",
+  "runner_sha256": "9ba69016920b181fe8a351d98c8ea6e8dc5d11037b199722774d1c81d0cf555a",
+  "next_action": "Create a separately frozen v2 harness that initializes the AsyncGRPO step-accounting state normally initialized by its constructor. Preserve the data, source revisions, estimand, and gates."
+}

@@ -1,0 +1,103 @@
+W1009 16:48:53.149000 99798 site-packages/torch/distributed/elastic/multiprocessing/redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+
+*****************************************
+Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+*****************************************
+/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/replay_trl_pr7249_full_trainer_ddp_v1.py:266: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.async_grpo import AsyncGRPOTrainer
+/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/replay_trl_pr7249_full_trainer_ddp_v1.py:266: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.async_grpo import AsyncGRPOTrainer
+[rank1]:W1009 16:48:57.933000 99804 site-packages/torch/distributed/elastic/multiprocessing/redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+[rank0]:W1009 16:48:57.934000 99803 site-packages/torch/distributed/elastic/multiprocessing/redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/replay_trl_pr7249_full_trainer_ddp_v1.py", line 318, in <module>
+[rank0]:     raise SystemExit(main())
+[rank0]:                      ^^^^^^
+[rank0]:   File "/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/replay_trl_pr7249_full_trainer_ddp_v1.py", line 270, in main
+[rank0]:     per_rank = train_case(
+[rank0]:                ^^^^^^^^^^^
+[rank0]:   File "/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/replay_trl_pr7249_full_trainer_ddp_v1.py", line 197, in train_case
+[rank0]:     result = trainer.train()
+[rank0]:              ^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/transformers/trainer.py", line 2325, in train
+[rank0]:     return inner_training_loop(
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/transformers/trainer.py", line 2674, in _inner_training_loop
+[rank0]:     tr_loss_step = self.training_step(model, inputs, num_items_in_batch)
+[rank0]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/private/tmp/trl-vare-async-norm/trl/experimental/async_grpo/async_grpo_trainer.py", line 1576, in training_step
+[rank0]:     output = super().training_step(model, inputs, num_items_in_batch)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/transformers/trainer.py", line 4020, in training_step
+[rank0]:     loss = self.compute_loss(model, inputs, num_items_in_batch=num_items_in_batch)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/private/tmp/trl-vare-async-norm/trl/experimental/async_grpo/async_grpo_trainer.py", line 1567, in compute_loss
+[rank0]:     self._step_forward_tokens += n_forward_tokens
+[rank0]:     ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]: AttributeError: 'AsyncGRPOTrainer' object has no attribute '_step_forward_tokens'. Did you mean: '_last_forward_time_s'?
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/replay_trl_pr7249_full_trainer_ddp_v1.py", line 318, in <module>
+[rank1]:     raise SystemExit(main())
+[rank1]:                      ^^^^^^
+[rank1]:   File "/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/replay_trl_pr7249_full_trainer_ddp_v1.py", line 270, in main
+[rank1]:     per_rank = train_case(
+[rank1]:                ^^^^^^^^^^^
+[rank1]:   File "/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/replay_trl_pr7249_full_trainer_ddp_v1.py", line 197, in train_case
+[rank1]:     result = trainer.train()
+[rank1]:              ^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/transformers/trainer.py", line 2325, in train
+[rank1]:     return inner_training_loop(
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/transformers/trainer.py", line 2674, in _inner_training_loop
+[rank1]:     tr_loss_step = self.training_step(model, inputs, num_items_in_batch)
+[rank1]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/private/tmp/trl-vare-async-norm/trl/experimental/async_grpo/async_grpo_trainer.py", line 1576, in training_step
+[rank1]:     output = super().training_step(model, inputs, num_items_in_batch)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/transformers/trainer.py", line 4020, in training_step
+[rank1]:     loss = self.compute_loss(model, inputs, num_items_in_batch=num_items_in_batch)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/private/tmp/trl-vare-async-norm/trl/experimental/async_grpo/async_grpo_trainer.py", line 1567, in compute_loss
+[rank1]:     self._step_forward_tokens += n_forward_tokens
+[rank1]:     ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]: AttributeError: 'AsyncGRPOTrainer' object has no attribute '_step_forward_tokens'. Did you mean: '_last_forward_time_s'?
+E1009 16:48:59.346000 99798 site-packages/torch/distributed/elastic/multiprocessing/api.py:882] failed (exitcode: 1) local_rank: 0 (pid: 99803) of binary: /opt/homebrew/Caskroom/miniforge/base/bin/python
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/torch/distributed/run.py", line 940, in <module>
+    main()
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 357, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/torch/distributed/run.py", line 936, in main
+    run(args)
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/torch/distributed/run.py", line 927, in run
+    elastic_launch(
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 156, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 293, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+scripts/replay_trl_pr7249_full_trainer_ddp_v1.py FAILED
+------------------------------------------------------------
+Failures:
+[1]:
+  time      : 2026-10-09_16:48:59
+  host      : 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 99804)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-10-09_16:48:59
+  host      : 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 99803)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
