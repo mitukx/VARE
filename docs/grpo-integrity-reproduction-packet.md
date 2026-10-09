@@ -17,13 +17,14 @@ It is a reproduction aid, not a new experiment or evidence of policy improvement
 ## Run
 
 ```bash
+output_root=$(mktemp -d)
 scripts/reproduce_grpo_integrity_packet.sh \
   /path/to/python \
   /path/to/Recursive-Verification-Lag/src/rvl_systems \
-  results/grpo-integrity-reproduction-packet-v1/run-1
+  "$output_root/run"
 ```
 
-The output directory must not already exist. The script runs the focused group/replay/RVL-hook tests and both frozen real-trainer rollback smokes, retains each raw stdout/stderr log, and writes a SHA-256 manifest. A failed command leaves a `failure.json` and all logs produced before the failure. The original frozen protocols and prior run bundles remain unchanged.
+The `mktemp` directory gives each run a fresh parent; the script refuses to overwrite existing evidence. Replace the two machine-specific placeholders with an executable Python environment and the pinned RVL source tree. The script runs the focused group/replay/RVL-hook tests and both frozen real-trainer rollback smokes, retains each raw stdout/stderr log, and writes a SHA-256 manifest. A failed command leaves a `failure.json` and all logs produced before the failure. The original frozen protocols and prior run bundles remain unchanged.
 
 ## Source records
 
