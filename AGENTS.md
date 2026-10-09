@@ -69,12 +69,12 @@ Never relabel E0/E1 plumbing as E4 capability evidence.
 
 When several tasks are available, prefer the earliest unresolved item in this order unless evidence clearly says otherwise:
 
-1. Preserve v1's failed outcome and v2's accepted synthetic confirmation; do not tune either protocol after observing outcomes.
-2. Execute and audit the frozen `cpu_lm_dpo_head_v1` real-model study only when the exact model revision is already cached and all offline CPU limits can be enforced. Preserve null/failure outcomes and do not edit its rule after seeing results.
-3. Measure sensitivity to preference noise, distribution shift, reference-policy drift, and random seed under a separately frozen protocol; preserve null and negative outcomes.
-4. Validate learner diagnostics and provenance (policy/reference/verifier versions, update count, KL, parameter delta, runtime, memory).
-5. Use task trajectories, curriculum, and promotion infrastructure as supporting mechanisms for a clearly specified learning hypothesis.
-6. Seek independent reproduction and broader grader coverage.
+1. Preserve every completed protocol and result exactly, including the failed/accepted outcomes from earlier studies and the later negative GRPO partial-audit efficiency screens. Never rerun consumed prompts or tune an outcome-bearing rule after observation.
+2. The frozen `cpu_lm_dpo_head_v1` study is completed and failed its predeclared held-out NLL/KL rule; do not run it again. The later Qwen2.5-0.5B CPU GRPO smoke established one-step/update/save-reload feasibility only, not task success.
+3. The highest-value open gap is independently graded task success after a real model update. First freeze and run a base-only feasibility gate on a genuinely fresh objective task with exact state-transition grading, using only a cached model and an explicitly CPU/offline runtime. A pass authorizes only a separate update-cost smoke; it does not authorize training or establish capability.
+4. Only after fresh-task base success and update/save/reload/resource gates pass may a separate protocol compare a real policy update against matched no-update and SFT controls across multiple seeds with untouched confirmation tasks.
+5. If no fresh model/task/update pairing clears those gates, do not force a learner experiment. Prefer technically independent reproduction of retained evidence or a concrete, source-level RL trainer defect with a reproducer and regression check.
+6. Keep systems work tied to a measured correctness or resource defect; do not add generic infrastructure or extend the stopped partial-label efficiency line.
 7. Increase model size or distributed scope only when a free resource is available and a cheaper experiment cannot answer the question.
 
 ## Compute discipline
