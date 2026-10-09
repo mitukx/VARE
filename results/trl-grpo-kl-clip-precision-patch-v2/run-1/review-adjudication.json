@@ -1,0 +1,6 @@
+{
+  "protocol_id": "trl_grpo_kl_clip_precision_patch_v2",
+  "status": "invalid_protocol_execution",
+  "independent_review": "The run's runner assigned masked padding x=80, but the protocol lock never fixed that value. The fp16 KL metric can therefore be contaminated by the padded non-finite intermediate. No active-token-only overflow claim is supported by this bundle.",
+  "disposition": "Keep all raw artifacts. Candidate math checks are diagnostics only; do not count as confirmation."
+}

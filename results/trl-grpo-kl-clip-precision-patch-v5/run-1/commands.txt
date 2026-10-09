@@ -1,0 +1,8 @@
+# VARE protocol commit: c48a9b4
+# TRL source head: 0aaea03f2fa449bc7a91f1973e7940da11da65da
+# Frozen protocol snapshot and scripts are retained beside this file.
+python scripts/audit_trl_grpo_kl_clip_precision_patch_v5.py --source-root /tmp/trl-grpo-kl-head-control-v1 --protocol results/trl-grpo-kl-clip-precision-patch-v5/run-1/protocol.snapshot.json --dtype float16 --output results/trl-grpo-kl-clip-precision-patch-v5/run-1/pr-head-f16-token.json
+python scripts/audit_trl_grpo_kl_clip_precision_patch_v5.py --source-root /tmp/trl-grpo-kl-candidate-v1 --protocol results/trl-grpo-kl-clip-precision-patch-v5/run-1/protocol.snapshot.json --patched --dtype float16 --output results/trl-grpo-kl-clip-precision-patch-v5/run-1/candidate-f16-token.json
+python scripts/audit_trl_grpo_kl_clip_precision_patch_v5.py --source-root /tmp/trl-grpo-kl-head-control-v1 --protocol results/trl-grpo-kl-clip-precision-patch-v5/run-1/protocol.snapshot.json --dtype float32 --output results/trl-grpo-kl-clip-precision-patch-v5/run-1/pr-head-f32-token.json
+python scripts/audit_trl_grpo_kl_clip_precision_patch_v5.py --source-root /tmp/trl-grpo-kl-candidate-v1 --protocol results/trl-grpo-kl-clip-precision-patch-v5/run-1/protocol.snapshot.json --patched --dtype float32 --output results/trl-grpo-kl-clip-precision-patch-v5/run-1/candidate-f32-token.json
+python scripts/verify_trl_grpo_kl_clip_precision_patch_v5.py --run-dir results/trl-grpo-kl-clip-precision-patch-v5/run-1 --output results/trl-grpo-kl-clip-precision-patch-v5/run-1/independent-check.json

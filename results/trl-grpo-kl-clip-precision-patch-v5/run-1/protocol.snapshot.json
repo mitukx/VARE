@@ -1,0 +1,125 @@
+{
+  "acceptance": {
+    "candidate_fp16_loss_metric_and_active_gradients_match_analytic_relative_0_005_absolute_0_1": true,
+    "candidate_fp16_loss_metric_and_gradients_are_finite": true,
+    "candidate_fp16_padding_gradients_are_zero": true,
+    "candidate_fp32_loss_gradient_and_metric_are_bit_identical_to_pr_head": true,
+    "pinned_source_and_patch_identity_match": true,
+    "runner_checker_and_protocol_hashes_match_artifact_manifest": true,
+    "unmodified_fp16_active_gradient_differs_from_analytic_by_more_than_tolerance": true,
+    "unmodified_fp16_aggregate_kl_metric_is_nonfinite": true
+  },
+  "artifacts": {
+    "checker_sha256": "6f859a76e4b27cd595305576bdf5c1d7de5559d803a6265116ad7120b484e2a3",
+    "runner_sha256": "ac401f8e1d18569beac839ad4e7aa963b2b7178b0a84a4ebd6f344b03bdcd41a"
+  },
+  "cases": [
+    "unmodified PR-head fp16 token path",
+    "single-file candidate fp16 token path",
+    "unmodified PR-head fp32 control",
+    "candidate fp32 control"
+  ],
+  "estimand": {
+    "aggregate_kl_metric": "mean over active tokens of K_bt*r_bt",
+    "clipped_kl": "K_bt=exp(min(x_bt,c))-min(x_bt,c)-1 where x_bt=z_ref_bt-z_policy_bt; clipping is straight-through",
+    "gradient": "dL/dz_bt=-beta*r_bt*min(x_bt,c)/(B*n_b) for active tokens with bias correction",
+    "loss": "L=(beta/B)*sum_b mean_active(K_bt*r_bt) with zero policy advantages; beta appears once in the KL contribution",
+    "token_ratio": "r_bt=exp(z_bt-z_old_bt)"
+  },
+  "failure_criteria": [
+    "Any source/patch/runner/checker/protocol digest mismatch.",
+    "The unmodified fp16 control fails to reproduce the declared aggregate-metric overflow and active-gradient error.",
+    "Candidate fp16 loss/metric/gradient is non-finite or outside the frozen tolerance.",
+    "Masked padding has nonzero gradient.",
+    "The candidate changes any fp32 control."
+  ],
+  "fixture": {
+    "advantages": [
+      0.0,
+      0.0
+    ],
+    "batch_size": 2,
+    "beta": 0.1,
+    "clip": 10.0,
+    "completion_mask": [
+      [
+        1,
+        1,
+        0
+      ],
+      [
+        1,
+        1,
+        1
+      ]
+    ],
+    "dtype_cases": [
+      "float16",
+      "float32"
+    ],
+    "importance_sampling_level": "token",
+    "kl_log_ratios": [
+      [
+        21.0,
+        21.0,
+        0.0
+      ],
+      [
+        21.0,
+        21.0,
+        21.0
+      ]
+    ],
+    "old_logps": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "padding_note": "The masked padding position has KL log-ratio zero. Its policy-old log-probability ratio is exp(0.125), but all policy, KL, and metric contributions at this position must be removed by the mask.",
+    "policy_logps": [
+      [
+        0.125,
+        0.125,
+        0.125
+      ],
+      [
+        0.125,
+        0.125,
+        0.125
+      ]
+    ],
+    "sequence_length": 3,
+    "use_bias_correction_kl": true
+  },
+  "interpretation_limits": [
+    "One hand-built production-method CPU fixture; no real-training prevalence, optimizer impact, or task success.",
+    "In the pinned config beta defaults to zero; expected use of this optional KL path is unknown.",
+    "No bfloat16, GPU, Liger, distributed execution, or external reproduction.",
+    "A pass supports a narrow trainer arithmetic finding, not capability improvement or upstream adoption."
+  ],
+  "method": "Protocol-driven runner reads exact fixture tensors from this lock and directly invokes the pinned production GRPOTrainer._compute_loss. Checker independently derives loss, aggregate metric, and token gradients using standard-library math only. No model, dataset, optimizer, GPU, or external service.",
+  "protocol_id": "trl_grpo_kl_clip_precision_patch_v5",
+  "question": "Under a fresh, fully specified token-level multi-token fixture, does the candidate prevent fp16 overflow in the production aggregate KL metric and recover the analytic bias-corrected gradient while preserving the unmodified fp32 path?",
+  "resources": {
+    "cpu_only": true,
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "paid_api_calls": 0
+  },
+  "source": {
+    "base_trainer_sha256": "4c580f871e4580d283d8e29ff01c43c924f5b04becb78cf8960272bc3a3d3e50",
+    "candidate_revision": "0aaea03f2fa449bc7a91f1973e7940da11da65da",
+    "candidate_trainer_sha256": "df26c45d302f4d357636fecd27344a620843cd8d02e5c65fa23a9ed1b3ac3e9d",
+    "modified_path": "trl/trainer/grpo_trainer.py",
+    "patch_sha256": "0f6c60de679c3c8b467b2bc8b77b01e06f890486cd567322940e5ce8a2137468",
+    "repository": "https://github.com/huggingface/trl"
+  },
+  "status": "frozen_before_execution"
+}

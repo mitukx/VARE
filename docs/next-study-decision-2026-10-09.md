@@ -1,5 +1,11 @@
 # Next study decision — 2026-10-09
 
+## Follow-up decision — TRL GRPO KL precision v5
+
+The protocol and scripts were frozen in commit `c48a9b4` before the run. On the pinned PR #6637 production `_compute_loss`, the unmodified fp16 path produced `kl_metric=Infinity` and active gradients `[-0.5,-0.5]` / `[-0.25,-0.25,-0.25]`; the candidate produced a finite metric (`24939.3945`) and gradients within the preregistered tolerance of the analytic values (`24946.7910`, `[-0.283287,…]` / `[-0.188858,…]`). Masked padding gradient was zero and the fp32 controls were bit-identical. The independent JSON-only checker passed all gates. See the [report](trl-grpo-kl-clip-precision-patch-v5-report.md), [frozen lock](../protocols/trl_grpo_kl_clip_precision_patch_v5.lock.json), and [run bundle](../results/trl-grpo-kl-clip-precision-patch-v5/run-1/).
+
+**Decision: pivot away from expanding this patch line.** It is a conditional source-method arithmetic result: the config defaults `beta` to zero, the fixture is constructed rather than sampled from training, and no real update, task success, outside reproduction, or maintainer review was performed. The next step should be independent review/reproduction of this finding while selecting a more routinely reachable correctness defect; do not turn this into an algorithm or capability claim. The earlier v2/v3/v4 protocol defects remain visible and are not confirmation evidence.
+
 ## Follow-up decision — multi-token protocol v2 non-pass
 
 A new mixed-length, multi-token CPU fixture found candidate-specific fp16 sequence/token gradients within the frozen analytic tolerance and bit-identical float32 controls. However, the overall frozen protocol failed because it required every output to be finite, including the unmodified fp16 baseline that was meant to reproduce the defect and logged `kl_metric=Infinity`. The source-independent checker retains both the passing diagnostic subchecks and the overall non-pass. See the [v2 report](trl-grpo-kl-clip-precision-patch-v2-report.md), [lock](../protocols/trl_grpo_kl_clip_precision_patch_v2.lock.json), and [run](../results/trl-grpo-kl-clip-precision-patch-v2/run-1/).

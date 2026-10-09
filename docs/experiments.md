@@ -1,5 +1,9 @@
 # Experimental program
 
+## TRL GRPO KL-clip precision patch v5 — frozen multi-token source-method pass
+
+The unmodified pinned PR #6637 fp16 path returned an infinite aggregate KL metric and active gradients `[-0.5,-0.5]` / `[-0.25,-0.25,-0.25]` against analytic values `[-0.283287,…]` / `[-0.188858,…]`. The single-file candidate's metric and gradients were finite and within the frozen tolerance; masked padding gradient was zero and base/candidate fp32 outputs were bit-identical. This is one hand-built method fixture on an opt-in path, not an optimizer or task-success result. The v2/v3/v4 protocol executions remain invalid/non-pass and are not counted as confirmation. See the [report](trl-grpo-kl-clip-precision-patch-v5-report.md), [lock](../protocols/trl_grpo_kl_clip_precision_patch_v5.lock.json), and [raw bundle](../results/trl-grpo-kl-clip-precision-patch-v5/run-1/).
+
 ## TRL GRPO KL-clip precision patch v2 — sequence-level protocol non-pass
 
 On a fresh two-sequence, multi-token production-loss fixture, the candidate's fp16 sequence gradients matched the stated analytic formula within 0.5% relative tolerance; the tested fp32 loss, gradients, and KL metric remained bit-identical to the unmodified PR head. The unmodified fp16 baseline emitted an infinite KL metric. The frozen acceptance gate required all outputs, including this intentionally unpatched baseline, to be finite; therefore the protocol is a non-pass due to a gate-design error. Do not promote the candidate subchecks to a successful confirmatory result. See the [report](trl-grpo-kl-clip-precision-patch-v2-report.md), [protocol](../protocols/trl_grpo_kl_clip_precision_patch_v2.lock.json), and [raw bundle](../results/trl-grpo-kl-clip-precision-patch-v2/run-1/).

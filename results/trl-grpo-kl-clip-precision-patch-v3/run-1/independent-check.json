@@ -1,0 +1,53 @@
+{
+  "analytic_expected": {
+    "gradient": [
+      [
+        -42.09465836954679,
+        41.78304254495342,
+        0.0
+      ],
+      [
+        -18.759099206601547,
+        -18.759099206601547,
+        37.159368069731926
+      ]
+    ],
+    "loss": 197.2068639631486
+  },
+  "baseline_fp16_expected_defect_reproduced": false,
+  "candidate_fp16_finite": true,
+  "candidate_fp16_observed": {
+    "gradient": [
+      [
+        -47.71875,
+        47.34375,
+        0.0
+      ],
+      [
+        -21.25,
+        -21.25,
+        42.125
+      ]
+    ],
+    "kl_metric": 2298.179443359375,
+    "loss": 223.4915008544922
+  },
+  "errors": [
+    "unmodified fp16 baseline did not reproduce non-finite KL metric",
+    "candidate fp16 loss outside analytic tolerance",
+    "candidate fp16 gradient[0,0] outside analytic tolerance",
+    "candidate fp16 gradient[0,1] outside analytic tolerance",
+    "candidate fp16 gradient[1,0] outside analytic tolerance",
+    "candidate fp16 gradient[1,1] outside analytic tolerance",
+    "candidate fp16 gradient[1,2] outside analytic tolerance"
+  ],
+  "fp32_bit_identical": true,
+  "patch_sha256": "0f6c60de679c3c8b467b2bc8b77b01e06f890486cd567322940e5ce8a2137468",
+  "protocol_id": "trl_grpo_kl_clip_precision_patch_v3",
+  "source_imports": "none; standard-library math plus retained JSON and patch bytes",
+  "status": "fail",
+  "tolerance": {
+    "absolute": 0.1,
+    "relative": 0.005
+  }
+}

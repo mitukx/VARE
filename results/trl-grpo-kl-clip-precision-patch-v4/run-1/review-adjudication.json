@@ -1,0 +1,7 @@
+{
+  "protocol_id": "trl_grpo_kl_clip_precision_patch_v4",
+  "status": "protocol_nonpass_estimand_inconsistency",
+  "reason": "The frozen loss equation applies beta twice to the KL contribution, while the checker and production code use beta once. The analytic gradient also corresponds to single beta. The numerical outputs support the single-beta source objective but do not satisfy the literal locked loss estimand.",
+  "independent_review": "Sequence-level alternative checked the gradients, overflow arithmetic, masks, patch hash and fp32 parity. It found no issue in those calculation claims; this equation inconsistency prevents an overall pass.",
+  "disposition": "Preserve raw run and checker output; do not label as a confirmed pass."
+}

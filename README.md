@@ -1,5 +1,7 @@
 # VARE
 
+- [TRL GRPO KL-clip precision patch v5](docs/trl-grpo-kl-clip-precision-patch-v5-report.md): frozen multi-token CPU source-method pass; narrowly scoped to an opt-in KL path, with no optimizer or capability claim.
+
 VARE is a CPU-first research project for evaluating post-training signals and policy updates under limited compute. It combines frozen experiment protocols, independently checked outcomes, provenance-aware execution, and retained raw records.
 
 The latest HH human-preference comparison tested length-normalized DPO against standard DPO and chosen-only SFT on a frozen CPU cohort. Length-normalized and standard DPO tied at 0.4974, below the frozen base at 0.5000 and length-only baseline at 0.5645; the decision was a non-pass. The runner hit a summary-aggregation `KeyError` after all nine adapters were saved; the retained adapters were replayed by the separate offline auditor, which passed selection, score, and decision checks. This is a preference-label comparison, not task success. Earlier HH reward-model v3 passed an outcome-informed score-scale NLL gate, but ranking accuracy stayed fixed and ECE worsened. Other real-model DPO/SFT/RLOO studies have not established downstream task gains; the GSM8K improvement is forced-choice NLL with accuracy near chance. Synthetic policy studies test mechanisms, not language-model capability. No general capability improvement or scale result is claimed.

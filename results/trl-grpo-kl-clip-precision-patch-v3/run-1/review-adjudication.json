@@ -1,0 +1,6 @@
+{
+  "protocol_id": "trl_grpo_kl_clip_precision_patch_v3",
+  "status": "invalid_protocol_execution",
+  "reason": "The frozen lock specified z-z_old=0.125, while the runner used policy log-probability 0.25 against old=0. The baseline-nonfinite expectation was also unsupported because the source applies the cap before exponentiation. The independent candidate checker failed, as expected for the mismatched input.",
+  "disposition": "Retain records; make no claim for or against the precision candidate."
+}
