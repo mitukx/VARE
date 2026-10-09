@@ -61,4 +61,6 @@ The fixture is a randomly initialized tiny GPT-2 and tests a deliberately mixed-
 
 **GO for upstream review after approval.** The patch has a concrete failure case, an observable behavior difference, an independent state oracle, legacy compatibility, and a clean-clone baseline/fix comparison. A fresh reviewer should verify the module traversal semantics and run the reproduction command. Independent human review requires an RVL maintainer or another contributor to inspect the eventual PR and leave substantive review feedback; author-run tests, AI review, CI, and self-merge do not count.
 
-No PR has been created and no reviewer contacted. A branch containing the earlier v3 patch was pushed after the user's prior `GO`; the v4 Dropout regression and updated patch are local and await approval before any further push or PR creation.
+## Status update — 2026-10-10
+
+After this review was written, the v4 patch and Dropout regression were submitted in RVL PR [#90](https://github.com/mitukx/Recursive-Verification-Lag/pull/90). The PR was merged by the repository owner as [`27ebf7f`](https://github.com/mitukx/Recursive-Verification-Lag/commit/27ebf7fe239d97504eeb960bf1407de220584dac), and all seven required CI checks passed. The recorded review was automated Codex review; no independent human review was recorded. This establishes upstream integration, not independent review, production incidence, default-path behavior change, or model-quality improvement. The pinned baseline/fix and clean-clone evidence above remain unchanged.
