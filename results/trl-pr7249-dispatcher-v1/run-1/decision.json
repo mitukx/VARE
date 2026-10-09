@@ -1,0 +1,11 @@
+{
+  "protocol_id": "trl-pr7249-dispatcher-v1",
+  "status": "preflight_non_pass",
+  "stage": "runtime_validation_before_checkout_or_training",
+  "failure": "The wrapper compared the four observed runtime fields to the entire runtime lock, which also contains backend, device, and world_size. The runtime values themselves matched.",
+  "optimizer_updates": 0,
+  "source_checkouts": 0,
+  "exit_code": 1,
+  "preserved_log": "preflight.log",
+  "protocol_sha256": "79a77a3bf674c5f395c27b63a1cc08679022f4fcdfcd358a97c96c31bcbba7e2"
+}
