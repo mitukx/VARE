@@ -26,6 +26,17 @@ The fix makes `_group_is_complete` reject a group unless every member has the sa
 
 Raw baseline/fixed logs, result summary, and SHA-256 manifest are retained in [`results/replay-group-prompt-identity-v1/`](../results/replay-group-prompt-identity-v1/). Local runtime: Python 3.12.12, pytest 8.4.2, CPU. GitHub Actions run [37864604383](https://github.com/mitukx/VARE/actions/runs/37864604383) passed 195 tests with 12 skipped; its test job also recomputed the existing frozen GRPO audits and demo successfully.
 
+## Reproduction
+
+From a clean checkout of the fixed revision, with Python 3.11 or newer:
+
+```sh
+python -m pip install -e ".[dev]" "pytest==8.4.2"
+python -m pytest -q tests/test_replay_group_prompt_identity.py
+```
+
+The first command installs only the local package and the pinned test runner; no model download, GPU, or network service is needed after installation. The retained baseline log records the frozen test outcome at the pre-fix revision.
+
 ## Claim boundary and decision
 
 This is one deterministic replay contract, not evidence that a GRPO trainer is correct, a policy update improves an outcome, or a model capability increased. No external reproduction was performed. Keep it as supporting post-training integrity evidence; the central missing result remains independently measured task success after a real policy update. Do not expand this fix into a general task/provenance validator without a separate counterexample and protocol.

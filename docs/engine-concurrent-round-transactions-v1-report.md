@@ -16,6 +16,17 @@ At baseline revision `0995f7fc3a92b317c1b8dce7e13b87c583cf42ec`, both rounds obs
 
 The frozen regression passed after the fix; the concurrent-round, prompt-identity, replay-group, freshness, and RVL-hook suite passed 21 tests. The full repository pytest run exited successfully. GitHub Actions run [37865040331](https://github.com/mitukx/VARE/actions/runs/37865040331) passed 196 tests with 12 skipped, recomputed the frozen GRPO audit studies, and completed the demo. Raw logs, result JSON, and SHA-256 manifest are retained in [`results/engine-concurrent-round-transactions-v1/`](../results/engine-concurrent-round-transactions-v1/). Runtime: Python 3.12.12, pytest 8.4.2, CPU.
 
+## Reproduction
+
+From a clean checkout of the fixed revision, with Python 3.11 or newer:
+
+```sh
+python -m pip install -e ".[dev]" "pytest==8.4.2"
+python -m pytest -q tests/test_engine_concurrent_round_transactions.py
+```
+
+The first command installs only the local package and the pinned test runner; no model download, GPU, or network service is needed after installation. The retained baseline log records the frozen test outcome at the pre-fix revision.
+
 ## Limitations and decision
 
 This demonstrates one in-process lost-update schedule and its prevention on a single `CapabilityLoop`. It does not cover two loop instances sharing hooks, cancellation/process loss mid-round, distributed locks, or model quality. This closes a specific transaction-integrity gap; it is not a post-training capability result. Keep the fix and preserve external reproduction and independent task-success improvement as open milestones.
