@@ -1,0 +1,11 @@
+# VARE protocol frozen before execution; source hashes/revisions are in the lock.
+# Candidate worktree: /tmp/trl-vare-async-norm-pr at 5234eb7c70f4ca7eb92fe8e01611a33eaff17f40
+# Base worktree: /tmp/trl-vare-async-norm at a98fa6a4428f9aae58dfb26d729d7437f662f27a
+# Python 3.12.12, torch 2.9.1, transformers 4.57.3, accelerate 1.12.0, pytest 8.4.2.
+
+# Candidate: run the unmodified test added by PR #7249.
+PYTHONPATH=/tmp/trl-vare-pydeps:/tmp/trl-vare-async-norm-pr python -m pytest -q /tmp/trl-vare-async-norm-pr/tests/experimental/test_async_loss_normalization.py
+
+# Base: use the exact same test bytes in a separate path, importing the unmodified base checkout.
+cp /tmp/trl-vare-async-norm-pr/tests/experimental/test_async_loss_normalization.py /tmp/test_async_loss_normalization_pr7249.py
+PYTHONPATH=/tmp/trl-vare-pydeps:/tmp/trl-vare-async-norm python -m pytest -q /tmp/test_async_loss_normalization_pr7249.py

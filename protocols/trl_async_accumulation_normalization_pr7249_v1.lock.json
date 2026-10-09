@@ -1,0 +1,65 @@
+{
+  "protocol_id": "trl_async_accumulation_normalization_pr7249_v1",
+  "status": "frozen_before_execution",
+  "question": "At the pinned TRL #7249 base and head, does the real Trainer accumulation path preserve a full-window token-mean policy objective and its gradients/optimizer update under uneven completion-token microbatches, with simulated cross-rank aggregation?",
+  "estimand": {
+    "policy_loss": "sum of active per-token losses over every rank and microbatch divided by total active completion tokens over the optimizer accumulation window",
+    "gradient": "gradient of that token-mean objective; distributed gradients are averaged across ranks",
+    "auxiliary_loss": "not a primary token-mean claim; the PR intends to retain the existing equal-microbatch scale and the test fixture has a constant auxiliary scalar"
+  },
+  "contract_boundary": "The protocol tests the token-mean estimand asserted by TRL issue #7206 and PR #7249. It does not prove that this is the only valid objective for every AsyncGRPO use case.",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "base_revision": "a98fa6a4428f9aae58dfb26d729d7437f662f27a",
+    "candidate_revision": "5234eb7c70f4ca7eb92fe8e01611a33eaff17f40",
+    "open_pr": "https://github.com/huggingface/trl/pull/7249",
+    "issue": "https://github.com/huggingface/trl/issues/7206",
+    "base_files_sha256": {
+      "trl/experimental/async_grpo/async_grpo_trainer.py": "b84c4544a4ac2aac5b08681a93fb3d49d1f24ff2f2f9fe53a6c35ab5c8f0ea40",
+      "trl/experimental/async_distillation/async_distillation_trainer.py": "449b8f5b2006e20a2420fd8e53d6fef2d96a026cb0ff51cf00f6add55d4a55e2"
+    },
+    "candidate_files_sha256": {
+      "trl/experimental/async_grpo/async_grpo_trainer.py": "5c4fc857c563db0d9f937a2edf89dd74c4f218a31f3a05bf33bffbf5285749dc",
+      "trl/experimental/async_distillation/async_distillation_trainer.py": "7a99d26b9124787978fd6c29752a666ff4160694c3feb999abf68afb6a49a1ff"
+    },
+    "candidate_test_sha256": "471eb580d444b82c549cdd51fa1bc6fd0c452d0e45285489d860b1b3043d535f"
+  },
+  "method": {
+    "execution": "Run the exact focused test file added by PR #7249 against the immutable candidate source, then run the same test file against the immutable base source without modifying either trainer implementation.",
+    "primary_tests": [
+      "accumulated loss and gradients versus full-batch reference for unequal/equal/zero token counts and accumulation windows",
+      "simulated cross-rank gradient averaging against full-batch reference",
+      "one actual Trainer optimizer update versus the full-batch reference"
+    ],
+    "secondary_tests": [
+      "short final accumulation window denominator",
+      "masked prompt/context positions",
+      "constant auxiliary-loss scale control"
+    ],
+    "model": "The PR's deterministic token-local CPU test model; no pretrained weights or generated data."
+  },
+  "acceptance": {
+    "candidate_focused_test_file_passes": true,
+    "base_has_expected_uneven_token_normalization_mismatch": true,
+    "source_and_test_hashes_match_lock": true,
+    "cpu_only_no_external_spend": true
+  },
+  "failure_criteria": [
+    "Any source revision, source file hash, or test hash differs from the lock.",
+    "The candidate focused test file has an unexplained failure.",
+    "The base test execution does not expose a failure attributable to uneven token-count accumulation, or the candidate fails the same relevant assertion.",
+    "The test requires a GPU, paid API, or externally hosted model."
+  ],
+  "resources": {
+    "cpu_only": true,
+    "gpu_hours": 0,
+    "paid_api_calls": 0,
+    "external_compute_usd": 0
+  },
+  "limitations": [
+    "No real pretrained model, asynchronous rollout worker, optimizer training run on task data, or downstream capability metric.",
+    "The rank test simulates DDP averaging in one process; no real multi-process distributed run.",
+    "The focused test file is part of the PR under review, so this is independent execution and source audit, not an independently authored test suite.",
+    "The constant auxiliary-loss fixture does not establish equivalence for token- or batch-dependent MoE auxiliary losses."
+  ]
+}
