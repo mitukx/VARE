@@ -1,0 +1,103 @@
+/Users/user/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+test_additional_eos_shared_with_pad_keeps_its_action_logprob (tests.test_mini_lab_torch.TorchAcceptanceTests) ... ok
+test_async_isolated_models_real_update_and_resume (tests.test_mini_lab_torch.TorchAcceptanceTests) ... ERROR
+test_behavior_sampling_distribution_matches_same_version_policy (tests.test_mini_lab_torch.TorchAcceptanceTests) ... The following generation flags are not valid and may be ignored: ['top_k']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+ok
+test_coding_episodes_connect_terminal_credit_rvl_and_optimizer (tests.test_mini_lab_torch.TorchAcceptanceTests) ... ERROR
+test_hf_trainer_restore_accepts_legacy_snapshot (tests.test_mini_lab_torch.TorchAcceptanceTests) ... ok
+test_hf_trainer_transaction_restores_mixed_module_modes (tests.test_mini_lab_torch.TorchAcceptanceTests) ... ok
+test_hf_trainer_transaction_restores_model_optimizer_and_rng (tests.test_mini_lab_torch.TorchAcceptanceTests) ... ok
+test_microbatch_gradient_matches_full_graph_reference (tests.test_mini_lab_torch.TorchAcceptanceTests) ... ok
+test_token_replay_immutable_behavior_and_atomic_checkpoint (tests.test_mini_lab_torch.TorchAcceptanceTests) ... ok
+test_verification_aware_replay_requires_fresh_verifier_admission (tests.test_mini_lab_torch.TorchAcceptanceTests) ... ok
+test_verification_failure_quarantines_without_training (tests.test_mini_lab_torch.TorchAcceptanceTests) ... ERROR
+test_verification_lease_recovered_immediately_on_restart (tests.test_mini_lab_torch.TorchAcceptanceTests) ... ok
+test_verifier_fleet_scores_groups_concurrently (tests.test_mini_lab_torch.TorchAcceptanceTests) ... ERROR
+
+======================================================================
+ERROR: test_async_isolated_models_real_update_and_resume (tests.test_mini_lab_torch.TorchAcceptanceTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/async_case.py", line 65, in _callTestMethod
+    self._callMaybeAsync(method)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/async_case.py", line 88, in _callMaybeAsync
+    return self._asyncioTestLoop.run_until_complete(fut)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 642, in run_until_complete
+    return future.result()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/async_case.py", line 102, in _asyncioLoopRunner
+    ret = await awaitable
+  File "/private/tmp/rvl-mode-replay-20261010/tests/test_mini_lab_torch.py", line 392, in test_async_isolated_models_real_update_and_resume
+    first = await asyncio.wait_for(lab.run({"a":"prompt","b":"prompt"},samples=4),30)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/tasks.py", line 481, in wait_for
+    return fut.result()
+  File "/private/tmp/rvl-mode-replay-20261010/src/rvl_systems/lab/lm_runtime.py", line 450, in run
+    async with asyncio.TaskGroup() as group:
+AttributeError: module 'asyncio' has no attribute 'TaskGroup'
+
+======================================================================
+ERROR: test_coding_episodes_connect_terminal_credit_rvl_and_optimizer (tests.test_mini_lab_torch.TorchAcceptanceTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/async_case.py", line 65, in _callTestMethod
+    self._callMaybeAsync(method)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/async_case.py", line 88, in _callMaybeAsync
+    return self._asyncioTestLoop.run_until_complete(fut)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 642, in run_until_complete
+    return future.result()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/async_case.py", line 102, in _asyncioLoopRunner
+    ret = await awaitable
+  File "/private/tmp/rvl-mode-replay-20261010/tests/test_mini_lab_torch.py", line 145, in test_coding_episodes_connect_terminal_credit_rvl_and_optimizer
+    report = await asyncio.wait_for(lab.run_tasks(samples=4),30)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/tasks.py", line 481, in wait_for
+    return fut.result()
+  File "/private/tmp/rvl-mode-replay-20261010/src/rvl_systems/lab/coding_lm.py", line 108, in run_tasks
+    return await self.run({key:t.prompt for key,t in self.tasks.items()},samples=samples,seed=seed)
+  File "/private/tmp/rvl-mode-replay-20261010/src/rvl_systems/lab/lm_runtime.py", line 450, in run
+    async with asyncio.TaskGroup() as group:
+AttributeError: module 'asyncio' has no attribute 'TaskGroup'
+
+======================================================================
+ERROR: test_verification_failure_quarantines_without_training (tests.test_mini_lab_torch.TorchAcceptanceTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/async_case.py", line 65, in _callTestMethod
+    self._callMaybeAsync(method)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/async_case.py", line 88, in _callMaybeAsync
+    return self._asyncioTestLoop.run_until_complete(fut)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 642, in run_until_complete
+    return future.result()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/async_case.py", line 102, in _asyncioLoopRunner
+    ret = await awaitable
+  File "/private/tmp/rvl-mode-replay-20261010/tests/test_mini_lab_torch.py", line 310, in test_verification_failure_quarantines_without_training
+    report = await asyncio.wait_for(lab.run({"a":"prompt"},samples=4),30)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/tasks.py", line 481, in wait_for
+    return fut.result()
+  File "/private/tmp/rvl-mode-replay-20261010/src/rvl_systems/lab/lm_runtime.py", line 450, in run
+    async with asyncio.TaskGroup() as group:
+AttributeError: module 'asyncio' has no attribute 'TaskGroup'
+
+======================================================================
+ERROR: test_verifier_fleet_scores_groups_concurrently (tests.test_mini_lab_torch.TorchAcceptanceTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/async_case.py", line 65, in _callTestMethod
+    self._callMaybeAsync(method)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/async_case.py", line 88, in _callMaybeAsync
+    return self._asyncioTestLoop.run_until_complete(fut)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 642, in run_until_complete
+    return future.result()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/async_case.py", line 102, in _asyncioLoopRunner
+    ret = await awaitable
+  File "/private/tmp/rvl-mode-replay-20261010/tests/test_mini_lab_torch.py", line 353, in test_verifier_fleet_scores_groups_concurrently
+    report = await asyncio.wait_for(
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/tasks.py", line 481, in wait_for
+    return fut.result()
+  File "/private/tmp/rvl-mode-replay-20261010/src/rvl_systems/lab/lm_runtime.py", line 450, in run
+    async with asyncio.TaskGroup() as group:
+AttributeError: module 'asyncio' has no attribute 'TaskGroup'
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.218s
+
+FAILED (errors=4)

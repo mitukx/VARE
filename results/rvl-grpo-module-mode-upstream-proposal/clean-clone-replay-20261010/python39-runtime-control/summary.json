@@ -1,0 +1,17 @@
+{
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "tests.test_mini_lab_torch",
+    "-v"
+  ],
+  "environment_failure_not_patch_failure": true,
+  "exit_code": 1,
+  "log": "suite.log",
+  "observed": "9 passed; 4 errors because asyncio.TaskGroup is unavailable in Python 3.9",
+  "patched_tree": true,
+  "python_runtime": "3.9.6",
+  "test_count": 13,
+  "upstream_checkout": "c7e646b043cb56e5ea3c2623bb8a61e065451f72"
+}

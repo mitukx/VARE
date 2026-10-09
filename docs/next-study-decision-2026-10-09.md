@@ -1,5 +1,11 @@
 # Next study decision — 2026-10-09
 
+## Follow-up decision — external-review reproducibility gate for RVL rollback patch
+
+The module-mode rollback patch's frozen baseline/fix result was replayed from a new upstream clone using the exact RVL commit. The test-only regression failed on base while the legacy-snapshot control passed; after applying the hash-locked combined patch, all 13 optional trainer tests passed on Python 3.12.12/PyTorch 2.9.1/Transformers 4.57.3 using CPU. The one-command driver and raw logs are retained in [the replay bundle](../results/rvl-grpo-module-mode-upstream-proposal/clean-clone-replay-20261010/) and [script](../scripts/reproduce_rvl_module_mode_snapshot_v1.py). A Python 3.9.6 control showed four unrelated `asyncio.TaskGroup` runtime errors; the driver checks Python 3.11+ and installed dependency versions before running.
+
+**Decision:** the patch is technically reviewable and source-reproducible on this host, but this is not an outside-person reproduction or maintainer review. Do not claim external validation or upstream adoption. Keep the patch unsubmitted; outside contact/submission requires user authorization. The independent model task-success gap remains open and prior failed/retired task pairings remain closed.
+
 ## Follow-up decision — stale parameter-gradient applicability
 
 The pinned RVL HF GRPO trainer stores behavior token log-probabilities, runs the current policy on retained token sequences, and backpropagates the freshly computed GRPO loss. The VARE adapter supplies scalar group-relative advantages. TRL's pinned GRPO loss similarly recomputes current per-token log-probabilities and uses stored old log-probabilities only in the importance ratio. RVL's tabular lab `gradients` map is a within-batch accumulator computed before that call's parameter mutation, not a gradient cache. No relevant consumer of stale parameter-gradient vectors was identified.

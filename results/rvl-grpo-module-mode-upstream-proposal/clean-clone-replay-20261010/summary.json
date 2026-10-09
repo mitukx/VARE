@@ -1,0 +1,112 @@
+{
+  "baseline": "mixed-mode regression fails; legacy snapshot control passes",
+  "claim_boundary": "Clean-clone, same-host CPU reproduction of a pinned RVL rollback-state omission. Does not establish production incidence, pretrained-model impact, capability gain, upstream adoption, or independent outside review.",
+  "clone_disposed_after_run": true,
+  "external_human_reproduction": false,
+  "external_submission": false,
+  "patched": "all 13 optional RVL PyTorch tests pass",
+  "patches": {
+    "combined_sha256": "0791cd1f3b5cfc73f3983955ed8d596f62f65a39af533508eba97112e36a722e",
+    "test_only_sha256": "f1187ae413143c7a16723292659a037df415965f9d3ac6be22b9a9beab20c854"
+  },
+  "runs": {
+    "apply_combined": {
+      "argv": [
+        "git",
+        "apply",
+        "/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/contributions/rvl-module-mode-snapshot-v1.patch"
+      ],
+      "log": "apply-combined.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "return_code": 0
+    },
+    "apply_test_only": {
+      "argv": [
+        "git",
+        "apply",
+        "/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/contributions/rvl-module-mode-test-only-v1.patch"
+      ],
+      "log": "apply-test-only.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "return_code": 0
+    },
+    "baseline_regression": {
+      "argv": [
+        "/tmp/rvl-module-mode-review-venv/bin/python",
+        "-m",
+        "unittest",
+        "tests.test_mini_lab_torch.TorchAcceptanceTests.test_hf_trainer_transaction_restores_mixed_module_modes",
+        "tests.test_mini_lab_torch.TorchAcceptanceTests.test_hf_trainer_restore_accepts_legacy_snapshot",
+        "-v"
+      ],
+      "log": "baseline-regression.log",
+      "log_sha256": "8c59b4852deb16a337a73ff92fbdc80d61c6319a6a5a8728fdcddde9b63e49b7",
+      "return_code": 1
+    },
+    "checkout": {
+      "argv": [
+        "git",
+        "checkout",
+        "--detach",
+        "c7e646b043cb56e5ea3c2623bb8a61e065451f72"
+      ],
+      "log": "checkout.log",
+      "log_sha256": "ffe77739e922c9abe710be5acaa71b5f7efe72935420983114df80fa368a6416",
+      "return_code": 0
+    },
+    "clone": {
+      "argv": [
+        "git",
+        "clone",
+        "--no-checkout",
+        "https://github.com/mitukx/Recursive-Verification-Lag.git",
+        "/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-rvl-module-mode-jtx29mcj/rvl"
+      ],
+      "log": "clone.log",
+      "log_sha256": "c1ea3f38f8ca8abe5f9232e917c678ae87f029b764bfbcaba716fbcfc113c87b",
+      "return_code": 0
+    },
+    "diff_check": {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "log": "diff-check.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "return_code": 0
+    },
+    "patched_full_suite": {
+      "argv": [
+        "/tmp/rvl-module-mode-review-venv/bin/python",
+        "-m",
+        "unittest",
+        "tests.test_mini_lab_torch",
+        "-v"
+      ],
+      "log": "patched-full-suite.log",
+      "log_sha256": "f49255655b76e9bf5e87707bddc596f4c6ded45870bbda03367c999be7ba399c",
+      "return_code": 0
+    },
+    "reset": {
+      "argv": [
+        "git",
+        "reset",
+        "--hard",
+        "c7e646b043cb56e5ea3c2623bb8a61e065451f72"
+      ],
+      "log": "reset.log",
+      "log_sha256": "ffe77739e922c9abe710be5acaa71b5f7efe72935420983114df80fa368a6416",
+      "return_code": 0
+    }
+  },
+  "runtime": {
+    "device": "CPU",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "status": "pass",
+  "upstream_commit": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "upstream_repository": "https://github.com/mitukx/Recursive-Verification-Lag.git"
+}
