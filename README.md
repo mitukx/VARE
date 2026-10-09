@@ -1,5 +1,6 @@
 # VARE
 
+- [TRL AsyncGRPO accumulation normalization PR #7249 audit](docs/trl-async-accumulation-normalization-pr7249-audit-v1-report.md): pinned CPU reproduction of an open upstream fix under its token-mean contract; no model-level capability claim.
 - [TRL GRPO KL-clip precision patch v5](docs/trl-grpo-kl-clip-precision-patch-v5-report.md): frozen multi-token CPU source-method pass; narrowly scoped to an opt-in KL path, with no optimizer or capability claim.
 
 VARE is a CPU-first research project for evaluating post-training signals and policy updates under limited compute. It combines frozen experiment protocols, independently checked outcomes, provenance-aware execution, and retained raw records.

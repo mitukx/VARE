@@ -1,5 +1,11 @@
 # Next study decision — 2026-10-09
 
+## Follow-up decision — TRL AsyncGRPO accumulation normalization PR #7249
+
+At pinned TRL base `a98fa6a`, the PR-authored frozen CPU Trainer test reproduces unequal-token accumulation failure: 100 tokens with mean loss 2 and 900 with mean loss 0.5 return 1.25 instead of token-mean 0.65. At pinned PR #7249 head `5234eb7`, the same test passes 25 cases and skips one; base has 17 expected failures, 8 passes, and one skip. The PR covers AsyncGRPO and AsyncDistillation; this reproduction does not run a pretrained model or measure task success. See the [report](trl-async-accumulation-normalization-pr7249-audit-v1-report.md), [frozen protocol](../protocols/trl_async_accumulation_normalization_pr7249_v1.lock.json), and [run bundle](../results/trl-async-accumulation-normalization-pr7249-v1/run-1/).
+
+**Decision: accept as bounded reproduction and do not duplicate the upstream PR.** The remaining role-relevant evidence gap is unchanged: no independent held-out task-success improvement after a real model update. Existing local base/task gates failed, so the next learner study requires a materially distinct candidate with a reasoned feasibility basis; otherwise prioritize independent reproduction of retained VARE evidence. The constant auxiliary-loss test leaves variable MoE auxiliary-loss semantics unresolved, not proven defective.
+
 ## Follow-up decision — TRL GRPO KL precision v5
 
 The protocol and scripts were frozen in commit `c48a9b4` before the run. On the pinned PR #6637 production `_compute_loss`, the unmodified fp16 path produced `kl_metric=Infinity` and active gradients `[-0.5,-0.5]` / `[-0.25,-0.25,-0.25]`; the candidate produced a finite metric (`24939.3945`) and gradients within the preregistered tolerance of the analytic values (`24946.7910`, `[-0.283287,…]` / `[-0.188858,…]`). Masked padding gradient was zero and the fp32 controls were bit-identical. The independent JSON-only checker passed all gates. See the [report](trl-grpo-kl-clip-precision-patch-v5-report.md), [frozen lock](../protocols/trl_grpo_kl_clip_precision_patch_v5.lock.json), and [run bundle](../results/trl-grpo-kl-clip-precision-patch-v5/run-1/).

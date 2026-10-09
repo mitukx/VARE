@@ -1,0 +1,16 @@
+{
+  "review_status": "pass_narrow_pr_reproduction",
+  "reviewer_type": "independent internal subagent; not an external human reviewer",
+  "protocol_id": "trl_async_accumulation_normalization_pr7249_v1",
+  "base_revision": "a98fa6a4428f9aae58dfb26d729d7437f662f27a",
+  "candidate_revision": "5234eb7c70f4ca7eb92fe8e01611a33eaff17f40",
+  "checks": [
+    "Both base and candidate trainer source hashes match the lock; the PR test file and copied base test have identical locked SHA-256.",
+    "Candidate output is 25 passed and 1 skipped; base output is 17 failed, 8 passed, and 1 skipped.",
+    "For 100 and 900 active tokens with mean losses 2.0 and 0.5, the base returns 1.25 rather than the token-mean 0.65; candidate test asserts full-batch equivalence.",
+    "The run is a deterministic toy-model Trainer test, not a pretrained model, async rollout, or downstream task result."
+  ],
+  "auxiliary_loss_adjudication": "The tested auxiliary loss is constant across microbatches. Variable MoE auxiliary-loss semantics remain unspecified by this run; classify as a scope limitation, not a demonstrated defect.",
+  "external_reproduction": false,
+  "recommendation": "Do not duplicate open PR #7249; retain this as a bounded independent local reproduction."
+}

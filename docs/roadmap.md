@@ -1,5 +1,7 @@
 # Roadmap
 
+**Update 2026-10-09 — TRL AsyncGRPO accumulation normalization:** independently executed the open PR #7249 focused test file against its pinned base and head. The base produced the declared 100/900-token loss mismatch (1.25 vs 0.65); the candidate passed 25 tests, 1 skipped. This confirms an existing upstream proposal under its token-mean contract; no duplicate VARE patch is warranted. See the [audit report](trl-async-accumulation-normalization-pr7249-audit-v1-report.md) and [bundle](../results/trl-async-accumulation-normalization-pr7249-v1/run-1/).
+
 **Update 2026-10-09 — TRL GRPO KL precision v5:** a preregistered multi-token CPU source-method audit passed: the unmodified fp16 PR head overflowed its masked aggregate KL metric and returned incorrect active gradients; a single-file precision candidate matched the analytic target within tolerance, produced finite outputs, and preserved fp32 controls bit-for-bit. This establishes only a conditional numerical finding in the opt-in KL path. Given `beta=0` by default in the pinned config, synthetic extreme inputs, and no optimizer/task result, pivot away from expanding this patch study. Preserve the [v5 report](trl-grpo-kl-clip-precision-patch-v5-report.md) and bundle; seek a more routinely reachable correctness issue or independent reproduction next.
 
 The earlier [v1 one-token audit](trl-grpo-kl-clip-precision-patch-v1-report.md) is superseded by the v5 multi-token fixture for numerical scope. Both are source-method diagnostics only; no real training prevalence or task impact is established.

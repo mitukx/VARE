@@ -1,5 +1,9 @@
 # Experimental program
 
+## TRL AsyncGRPO accumulation normalization PR #7249 audit
+
+The frozen base revision fails the token-mean full-batch comparison for uneven microbatches (100 and 900 active tokens): loss 1.25 instead of 0.65. The open PR head passes the same focused Trainer test (25 passed, 1 skipped); base is 17 failed, 8 passed, 1 skipped. The test also checks gradients, a one-step update, short windows, masks, and simulated rank averaging. It is a reproduction of an existing proposed fix using its author-written tests, not a VARE fix, novel method, real-model task gain, or outside review. See the [report](trl-async-accumulation-normalization-pr7249-audit-v1-report.md), [lock](../protocols/trl_async_accumulation_normalization_pr7249_v1.lock.json), and [run](../results/trl-async-accumulation-normalization-pr7249-v1/run-1/).
+
 ## TRL GRPO KL-clip precision patch v5 — frozen multi-token source-method pass
 
 The unmodified pinned PR #6637 fp16 path returned an infinite aggregate KL metric and active gradients `[-0.5,-0.5]` / `[-0.25,-0.25,-0.25]` against analytic values `[-0.283287,…]` / `[-0.188858,…]`. The single-file candidate's metric and gradients were finite and within the frozen tolerance; masked padding gradient was zero and base/candidate fp32 outputs were bit-identical. This is one hand-built method fixture on an opt-in path, not an optimizer or task-success result. The v2/v3/v4 protocol executions remain invalid/non-pass and are not counted as confirmation. See the [report](trl-grpo-kl-clip-precision-patch-v5-report.md), [lock](../protocols/trl_grpo_kl_clip_precision_patch_v5.lock.json), and [raw bundle](../results/trl-grpo-kl-clip-precision-patch-v5/run-1/).
