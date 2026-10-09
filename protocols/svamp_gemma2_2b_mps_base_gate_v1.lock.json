@@ -1,0 +1,61 @@
+{
+  "protocol_id": "svamp-gemma2-2b-mps-base-gate-v1",
+  "status": "frozen-before-model-output",
+  "hypothesis": "A stronger cached local instruction model may provide both useful exact-answer success and enough within-question reward variation for a small, independently graded post-training comparison on arithmetic reasoning.",
+  "model": {
+    "repo": "google/gemma-2-2b-it",
+    "revision": "299a8560bedf22ed1c72a8a11e7dce4a7f9f51f8",
+    "device": "Apple MPS",
+    "dtype": "float16",
+    "loading": "local_files_only"
+  },
+  "dataset": {
+    "repo": "ChilleD/SVAMP",
+    "revision": "5e0bf1e5e7c0e9c4bc39180d224f41f3f801b7ef",
+    "train_file": "train.json",
+    "train_file_sha256": "bb3b4cd2957f07643bbf9f8f8f5faba3bfb47fcb1d9034655b03060a76675e2b",
+    "confirmation": "The 300-row official test split remains unopened and reserved."
+  },
+  "cohorts": {
+    "label_integrity": "Recompute each Equation with the already frozen Decimal AST grader; exclude chal-680, whose computed value disagrees with Answer.",
+    "consumed_cohorts": "Exclude the full v1 development allocation and full v2 development allocation, whether or not each row was scored greedily.",
+    "fresh_pool": "Use the 499 valid train rows remaining after those exclusions.",
+    "gemma_dev": "Sort the fresh pool by SHA256('VARE-SVAMP-Gemma2B-v1/dev:' + ID); first 100 rows are development and 399 are training-only.",
+    "base_greedy": "Sort the 100 dev rows by SHA256('VARE-SVAMP-Gemma2B-v1/base:' + ID); first 64 are scored once greedily.",
+    "reward_variance": "From the greedy 64, sort by SHA256('VARE-SVAMP-Gemma2B-v1/variance:' + ID); sample first 16 four times each at temperature 0.8/top_p 0.95 with seed 20261011 + 100 * group_rank + sample_rank."
+  },
+  "prompt": "Solve this math word problem. Give only the numeric answer, with no words, units, or explanation.\n\n{Body}\nQuestion: {Question}\nAnswer:",
+  "parser": "Reuse the frozen v2 bounded parser: one bare numeric result, one final Answer: NUMBER line, exactly one <answer>NUMBER</answer>, or exactly one \\boxed{NUMBER}. Do not extract numbers from arbitrary prose or ambiguous outputs. Compare parsed and stored targets as Decimal.",
+  "metrics": [
+    "Greedy exact numeric success over 64 fresh dev tasks, with unparseable responses counted incorrect in this composite measure",
+    "Parser validity over those same 64 tasks",
+    "Fraction of 16 sampled four-response groups with both binary reward values",
+    "Wall time and peak RSS"
+  ],
+  "go_gate": {
+    "minimum_greedy_exact": "13/64",
+    "minimum_greedy_parseable": "61/64",
+    "minimum_mixed_reward_groups": "4/16",
+    "maximum_wall_seconds": 1800,
+    "maximum_peak_rss_bytes": 12884901888,
+    "pass_action": "Only after passing, freeze a separate measured local update protocol comparing no-update, matched SFT, and standard GRPO, and quantify three-seed total cost before training.",
+    "fail_action": "Retire Gemma2-2B/SVAMP without prompt tuning or official-test access."
+  },
+  "resource_envelope": {
+    "max_new_tokens": 32,
+    "generation_count": 128,
+    "max_generated_tokens": 4096,
+    "local_snapshot_disk_size_gib": 4.9,
+    "maximum_process_rss_gib": 12,
+    "paid_compute": 0,
+    "external_api": false
+  },
+  "runner": "reproducers/run_svamp_gemma2_2b_mps_base_gate_v1.py",
+  "helper_source_commit": "daa3973",
+  "limitations": [
+    "Base feasibility only; not a post-training result.",
+    "SVAMP measures elementary arithmetic word problems, not broad reasoning or agentic ability.",
+    "Training examples are disjoint from this run's dev rows, earlier scored cohorts, and the unopened official test split.",
+    "No inference outputs or test labels may be used to alter this frozen protocol."
+  ]
+}
