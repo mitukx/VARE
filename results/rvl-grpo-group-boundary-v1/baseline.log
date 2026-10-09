@@ -1,0 +1,25 @@
+F.                                                                       [100%]
+=================================== FAILURES ===================================
+_________ test_rvl_adapter_passes_advantages_normalized_by_vare_group __________
+
+    def test_rvl_adapter_passes_advantages_normalized_by_vare_group():
+        trainer = CapturingTrainer()
+        hooks = _hooks(trainer)
+        experiences = [
+            _experience("group-a", 0.0, "a0"),
+            _experience("group-a", 0.0, "a1"),
+            _experience("group-b", 1.0, "b0"),
+            _experience("group-b", 1.0, "b1"),
+        ]
+    
+        asyncio.run(hooks.train_candidate("policy-0", experiences))
+    
+>       assert trainer.received_advantages == pytest.approx([0.0, 0.0, 0.0, 0.0], abs=1e-12)
+E       AssertionError: assert None == approx([0.0 ±....0 ± 1.0e-12])
+E         
+E         (pytest_assertion plugin: representation of details failed: /Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/.venv/lib/python3.12/site-packages/_pytest/python_api.py:317: TypeError: object of type 'NoneType' has no len().
+E          Probably an object has a faulty __repr__.)
+
+tests/test_rvl_grpo_group_boundary.py:119: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_rvl_grpo_group_boundary.py::test_rvl_adapter_passes_advantages_normalized_by_vare_group

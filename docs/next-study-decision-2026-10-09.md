@@ -1,5 +1,11 @@
 # Next study decision — 2026-10-09
 
+## Update — RVL GRPO rollout-group boundary defect
+
+An adapter audit found that repeated curriculum draws can create distinct VARE rollout groups with the same task/prompt ID, while pinned RVL computes default GRPO advantages by prompt ID. VARE's adapter dropped its group metadata before training, so those groups could be normalized together. The exact pinned helper reproduces the merged vector on the frozen witness; the adapter now passes per-VARE-group normalized advantages through RVL's supported override and rejects incomplete/mixed group batches before stepping. See the [audit report](rvl-grpo-group-boundary-v1-report.md).
+
+The original frozen fixture was under-calibrated. Supplemental contrast/order/clipping controls were added after the original baseline result; they are regression diagnostics, not preregistered confirmation. The exact helper runner establishes the pinned baseline, the original VARE baseline lacked the override, and the patched fake-trainer tests pass. No model update, gradient, task success, capability gain, novelty claim, or outside reproduction is established. Treat this as a bounded correctness repair, not a new research direction. After recording and validating the patch, return to the still-open gate: a materially distinct, no-cost model/task/update path with independent held-out task-success evaluation.
+
 ## Current decision — 2026-10-09: no model/task/update path clears the feasibility gates
 
 After the partial-audit efficiency study failed to show a finite-budget advantage, the frozen Qwen2.5-Math-1.5B CPU screen completed at 0/96 exact boxed answers, 0/24 in every family, and no calculator calls. Runtime and memory limits passed; the independent same-host replay audit passed. This retires only the exact base-checkpoint/prompt/output-parser/task pairing. Some prose outputs contained correct arithmetic, so the result is not evidence of zero arithmetic ability; the run does not evaluate tool use or post-training. See the [technical report](cpu-qwen-math-tir-feasibility-v1-report.md), [frozen protocol](../protocols/cpu_qwen_math_tir_feasibility_v1.lock.json), and [audited bundle](../results/cpu-qwen-math-tir-feasibility-v1/run-1/).

@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import copy
 from dataclasses import dataclass
+import math
 from statistics import fmean
 from typing import Any, Callable, Sequence
 
@@ -148,10 +149,81 @@ class RVLGRPOHooks:
             },
         )
 
+    @staticmethod
+    def _group_relative_advantages(
+        experiences: Sequence[Experience],
+        verified: Sequence[Any],
+        *,
+        eps: float,
+        clip: float,
+    ) -> list[float] | None:
+        """Normalize RVL rewards by VARE's declared rollout groups.
+
+        RVL's default helper groups by ``Generation.prompt_id``. VARE may draw
+        the same task more than once in a round, so distinct complete groups can
+        share that ID. When VARE group metadata is present, pass explicit
+        group-relative advantages to RVL's supported ``train_step`` override.
+        """
+        group_members: dict[str, list[tuple[int, float]]] = {}
+        expected_sizes: dict[str, int] = {}
+        missing_group = False
+        for index, (exp, sample) in enumerate(zip(experiences, verified, strict=True)):
+            group_id = exp.attempt.metadata.get("vare_rollout_group")
+            if group_id is None:
+                group_id = exp.attempt.task.metadata.get("vare_rollout_group")
+            if group_id is None:
+                missing_group = True
+                continue
+            if not isinstance(group_id, str) or not group_id:
+                raise ValueError("VARE rollout group ID must be a nonempty string")
+
+            expected_size = exp.attempt.metadata.get("vare_rollout_group_size")
+            if expected_size is None:
+                expected_size = exp.attempt.task.metadata.get(
+                    "vare_rollout_group_size"
+                )
+            if type(expected_size) is not int or expected_size <= 0:
+                raise ValueError("VARE rollout group size must be a positive integer")
+            previous_size = expected_sizes.setdefault(group_id, expected_size)
+            if previous_size != expected_size:
+                raise ValueError("VARE rollout group has inconsistent declared sizes")
+            group_members.setdefault(group_id, []).append((index, float(sample.reward)))
+
+        if not group_members:
+            return None
+        if missing_group:
+            raise ValueError("cannot mix grouped and ungrouped experiences in one GRPO batch")
+        if not math.isfinite(eps) or eps <= 0.0:
+            raise ValueError("RVL advantage epsilon must be finite and positive")
+        if not math.isfinite(clip) or clip <= 0.0:
+            raise ValueError("RVL advantage clip must be finite and positive")
+
+        advantages = [0.0] * len(verified)
+        for group_id, members in group_members.items():
+            if len(members) != expected_sizes[group_id]:
+                raise ValueError(
+                    f"incomplete VARE rollout group {group_id!r}: "
+                    f"got {len(members)}, expected {expected_sizes[group_id]}"
+                )
+            rewards = [reward for _, reward in members]
+            mean = fmean(rewards)
+            variance = fmean((reward - mean) ** 2 for reward in rewards)
+            scale = math.sqrt(variance + eps)
+            for index, reward in members:
+                advantages[index] = max(-clip, min(clip, (reward - mean) / scale))
+        return advantages
+
     async def train_candidate(self, incumbent_id: str, experiences: Sequence[Experience]) -> str:
         if incumbent_id != self._active_id:
             raise ValueError("candidate must branch from active incumbent")
         verified = [self._to_verified_generation(x) for x in experiences]
+        train_config = getattr(self.trainer, "config", None)
+        advantages = self._group_relative_advantages(
+            experiences,
+            verified,
+            eps=float(getattr(train_config, "advantage_eps", 1e-6)),
+            clip=float(getattr(train_config, "clip_advantage", 5.0)),
+        )
         async with self._model_lock:
             self._restore(incumbent_id)
             # Keep an immutable pre-update state even if a custom trainer mutates
@@ -163,7 +235,10 @@ class RVLGRPOHooks:
             # restore the saved incumbent rather than trusting a stale ID.
             self._loaded_id = None
             try:
-                self.trainer.train_step(verified)
+                if advantages is None:
+                    self.trainer.train_step(verified)
+                else:
+                    self.trainer.train_step(verified, advantages=advantages)
                 self._states[candidate_id] = self.trainer.snapshot_training_state()
                 # The candidate now describes the runtime; restore the champion
                 # before releasing the lock to online rollout/evaluation code.
