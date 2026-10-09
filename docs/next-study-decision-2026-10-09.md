@@ -1,5 +1,9 @@
 # Next study decision — 2026-10-09
 
+## Current portfolio state and decision authority
+
+The latest ARC-Challenge comparison v3 consumed the remaining eligible validation cohort and failed its preregistered advancement gate. **The Qwen2.5-0.5B/ARC pairing is retired; do not follow the older ARC next-action text below.** Those sections record what was authorized before v3, not current work. The model-level gap is still independently measured task-success gain after a real update. The bounded opportunity screen below found no original trainer contribution; its next action is to find a distinct source path or obtain outside review of retained evidence.
+
 ## Follow-up — bounded frontier post-training opportunity screen
 
 A fresh three-candidate screen considered AsyncGRPO whole-rollout batching, frozen-base drift during LoRA merge/unmerge, and score centering under train–sampler mismatch. All three fail the novelty gate: the batching concern is already in TRL #7206 and VARE's candidate remains stopped after the v6 accounting/retention audit; frozen-base drift is in TRL #7423 with fix PR #7427 and overlaps VARE's stopped BF16 study; score centering is published and proposed in TRL #7520. The exact batcher limitations and prior-art checks are recorded in the [screen report](research-opportunity-screen-2026-10-09.md).
@@ -61,17 +65,17 @@ The candidate default changes ordinary training behavior from implicit `0.01` to
 **Decision:** stop the ARC pairing and further model runs. For this RVL finding, proceed only to compatibility review of the optimizer default; do not expand the investigation. Main research gap remains an independently measured task-success improvement after a real policy update. Full results and limitations: [RVL report](rvl-grpo-zero-advantage-weight-decay-v1-report.md) and [ARC report](qwen-arc-grpo-sft-comparison-v3-report.md).
 
 
-## Follow-up decision — ARC update path clears its cost gate
+## Superseded follow-up — ARC update path clears its cost gate
 
 The frozen ARC-Challenge update smoke v2 passed: one real GRPO optimizer step, finite/nonzero gradients, changed candidate weights, exact incumbent restoration, matching candidate reload fingerprint/tokenizer IDs, and all 8 post-reload checks completed within CPU limits. The independent same-host audit passed 58/58 checks. The smoke's 4/8 base versus 3/8 post-update exact answers are too few to estimate an effect and are not an advancement result. V1's partial run is preserved and its validation IDs remain excluded.
 
-**Next action:** freeze one multi-seed base/SFT/GRPO comparison on the remaining untouched ARC validation rows before any further policy training. Use matched train examples and optimizer-step budgets, exact task-success as the primary outcome, paired per-item uncertainty, seed-level outcomes, KL/policy drift, and fixed CPU/RSS limits. If the sample or matched update budget cannot support a useful comparison, stop this task pairing rather than run another single-arm smoke. The ARC test split remains sealed. Complete evidence and limitations are in the [v2 report](qwen-arc-grpo-update-smoke-v2-report.md).
+**Historical next action (superseded by ARC comparison v3):** freeze one multi-seed base/SFT/GRPO comparison on the remaining untouched ARC validation rows before further policy training. That comparison was subsequently completed and failed its advancement criterion; see the [v3 report](qwen-arc-grpo-sft-comparison-v3-report.md). No new run on this pairing is authorized by this old entry.
 
-## Follow-up decision — ARC-Challenge CPU base gate
+## Superseded follow-up — ARC-Challenge CPU base gate
 
 The ARC-Challenge v2 base screen passed on 36/80 fresh validation rows (45.0%; Wilson lower bound 34.6%), with 74/80 parseable answers. The independent same-host audit passed, and CPU runtime/memory were 23.26 s / 2,538 MiB. This removes the base-task feasibility objection for Qwen2.5-0.5B on this narrow ARC setup; it does **not** show learning or downstream improvement. V1 is retained as an execution failure, and its items are excluded from v2.
 
-**Next action:** freeze and run only the task-specific update-cost smoke authorized by v2: use a fresh training cohort and fresh, disjoint validation items; verify one real GRPO update, finite gradients, checkpoint round-trip, and post-reload task behavior within a CPU/RAM budget. Do not treat a smoke pass as permission to claim improvement. If the smoke passes, the next confirmatory study must compare base, matched successful-trace SFT, and GRPO across multiple seeds on untouched task-success items with thresholds fixed before training. If the update path fails or the frozen cost gate fails, retire this model/task pairing rather than tuning it. The [v2 report](qwen-arc-challenge-base-gate-v2-report.md) contains the complete evidence and claim boundary.
+**Historical next action (superseded by update smoke v2 and comparison v3):** the smoke cleared the update-path gate, then the frozen three-seed comparison failed. The pairing is retired; see the [update smoke v2 report](qwen-arc-grpo-update-smoke-v2-report.md) and [comparison v3 report](qwen-arc-grpo-sft-comparison-v3-report.md).
 
 ## Update — GSM8K adapter-to-margin forensic replay
 
