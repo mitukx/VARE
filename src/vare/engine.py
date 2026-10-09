@@ -260,21 +260,36 @@ class CapabilityLoop:
         else:
             candidate_id = await self.hooks.train_candidate(incumbent_id, train_batch)
 
-        incumbent_eval, candidate_eval = await asyncio.gather(
-            self.hooks.evaluate(incumbent_id), self.hooks.evaluate(candidate_id)
-        )
-        if (
-            incumbent_eval.policy_id != incumbent_id
-            or candidate_eval.policy_id != candidate_id
-        ):
-            decision = PromotionDecision(
-                accepted=False,
-                reasons=("evaluation_policy_mismatch",),
-                primary_gain=0.0,
-                worst_slice_regression=0.0,
+        try:
+            incumbent_eval, candidate_eval = await asyncio.gather(
+                self.hooks.evaluate(incumbent_id), self.hooks.evaluate(candidate_id)
             )
-        else:
-            decision = self.promotion.decide(incumbent_eval, candidate_eval)
+            if (
+                incumbent_eval.policy_id != incumbent_id
+                or candidate_eval.policy_id != candidate_id
+            ):
+                decision = PromotionDecision(
+                    accepted=False,
+                    reasons=("evaluation_policy_mismatch",),
+                    primary_gain=0.0,
+                    worst_slice_regression=0.0,
+                )
+            else:
+                decision = self.promotion.decide(incumbent_eval, candidate_eval)
+        except BaseException:
+            # Evaluation backends may reject malformed or misbound evidence by
+            # raising. The adapter restores the live incumbent, but the engine
+            # also owns the candidate snapshot and must discard it so a failed
+            # evaluation leaves the whole policy transaction rolled back.
+            if candidate_id != incumbent_id:
+                try:
+                    await self.hooks.discard(candidate_id)
+                except BaseException as discard_exc:
+                    raise RuntimeError(
+                        "evaluation failed and candidate discard failed; "
+                        "policy state is unknown"
+                    ) from discard_exc
+            raise
         if candidate_id != incumbent_id and decision.accepted:
             await self.hooks.promote(candidate_id)
             promoted_id = candidate_id

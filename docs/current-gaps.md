@@ -183,12 +183,18 @@ These demonstrate narrow evaluation/reliability properties, two synthetic policy
 
 1. Do not rerun or lower the gates on the retired generated code-repair pairing. Keep its 0/32 result and unsafe-call failures visible.
 2. Seek an independent clean-clone reproduction and technical review of a completed real-model bundle; record any reproduction failure too.
-3. Select one narrowly scoped rollout, replay-freshness, or trainer-integrity defect with an upstream-relevant reproducer and independent regression check. Keep the work local until a concrete patch/evidence exists.
+3. Stop searching for isolated evaluation/control-plane defects. The RVL evaluate-to-promotion transaction now has one end-to-end regression; reopen that infrastructure only for a concrete independently evidenced defect.
 4. Revisit model learning only after a distinct task/base pair has a frozen, affordable path to independent task success. Require matched SFT, one RL method, multiple seeds, and untouched task-composition confirmation.
 5. Keep the HH, GSM8K, BoolQ, generated arithmetic, SNLI, and code-agent non-passes visible; do not open their reserved confirmation/test rows or tune on consumed cohorts.
 6. Prepare an unaided technical walkthrough of the objective, gradient check, model non-pass, v1 drift failure, unsafe code-agent trajectory, protocol chronology, and claim boundaries.
 
 The code-agent trajectory now has two distinct negative signals: the historical repair pilot produced no edits on one harder task, and the generated tool-loop screen made no accepted action across 32 episodes. Preserve both without generalizing to all models or coding. Update this page when retained evidence changes, not when an integration or plan alone is added.
+
+## Evaluation-to-promotion contract and next scientific gate (2026-10-09)
+
+The actual RVL evaluator → report → gate → promotion/discard path now has a CPU integration regression. It catches incomplete or inconsistent paired evidence, preserves aggregate-only backend compatibility only when paired confidence gating is disabled, and removes the candidate snapshot on evaluator exceptions. The report states what the configured evaluator is trusted to provide and what VARE cannot verify. See [integration report](rvl-evaluation-promotion-e2e-v1-report.md) and [baseline/fixed output](../results/rvl-eval-promotion-e2e-v1.json). Do not add more evaluation infrastructure without a new concrete failure.
+
+The minimum missing input for real-model learning is a fresh, unused task/base pairing with an independent executable ground-truth grader and disjoint train/development/confirmation compositions. That pairing must pass no-update feasibility and show that the frozen multi-seed matched arms fit a measured local CPU/MPS budget. This host has 32 GiB RAM and cached small models, but existing attempted task/model cohorts have failed gates or are retired; no current evidence establishes independently graded task-success improvement after an update. Paid compute is not assumed.
 
 
 ## Current BoolQ follow-up (v17)

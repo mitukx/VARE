@@ -1,0 +1,109 @@
+{
+  "baseline_commit": "2572ac7",
+  "current_engine_evaluation_exception": {
+    "active_policy": [
+      "policy-0",
+      0
+    ],
+    "error": "RVL evaluation generation task identity mismatch",
+    "remaining_snapshots": [
+      "policy-0"
+    ],
+    "trainer_state": {
+      "optimizer_step": 0,
+      "weight": 0
+    }
+  },
+  "current_gate": {
+    "active_policy": [
+      "policy-0",
+      0
+    ],
+    "candidate_n": 2,
+    "candidate_primary": 1.0,
+    "candidate_retained_task_scores": 1,
+    "decision_accepted": false,
+    "decision_reasons": [
+      "invalid_evaluation_metrics"
+    ],
+    "incumbent_n": 2,
+    "incumbent_primary": 0.0,
+    "incumbent_retained_task_scores": 1,
+    "remaining_snapshots": [
+      "policy-0"
+    ],
+    "trainer_state": {
+      "optimizer_step": 0,
+      "weight": 0
+    }
+  },
+  "current_revision": "a4e0c3152150f16b60c42995a8c3f66d57ed09f6",
+  "historical_engine_evaluation_exception": {
+    "active_policy": [
+      "policy-0",
+      0
+    ],
+    "error": "RVL evaluation generation task identity mismatch",
+    "remaining_snapshots": [
+      "policy-0",
+      "policy-1"
+    ],
+    "trainer_state": {
+      "optimizer_step": 0,
+      "weight": 0
+    }
+  },
+  "historical_gate": {
+    "active_policy": [
+      "policy-1",
+      1
+    ],
+    "candidate_n": 2,
+    "candidate_primary": 1.0,
+    "candidate_retained_task_scores": 1,
+    "decision_accepted": true,
+    "decision_reasons": [],
+    "incumbent_n": 2,
+    "incumbent_primary": 0.0,
+    "incumbent_retained_task_scores": 1,
+    "remaining_snapshots": [
+      "policy-1"
+    ],
+    "trainer_state": {
+      "optimizer_step": 1,
+      "weight": 1
+    }
+  },
+  "limitations": [
+    "CPU synthetic trainer/backend only; establishes integration behavior, not model capability.",
+    "The injected report corruption represents an invalid evaluator boundary payload; it is not evidence of a production incident."
+  ],
+  "protocol": "two actual RVL eval rows; remove one retained task score while preserving n and primary; run CapabilityLoop decision and promotion/rollback",
+  "valid_report_control_current": {
+    "active_policy": [
+      "policy-1",
+      1
+    ],
+    "candidate_n": 2,
+    "candidate_primary": 1.0,
+    "candidate_retained_task_scores": 2,
+    "decision_accepted": true,
+    "decision_reasons": [],
+    "incumbent_n": 2,
+    "incumbent_primary": 0.0,
+    "incumbent_retained_task_scores": 2,
+    "remaining_snapshots": [
+      "policy-1"
+    ],
+    "trainer_state": {
+      "optimizer_step": 1,
+      "weight": 1
+    }
+  },
+  "working_tree_source_sha256": {
+    "src/vare/engine.py": "5872b09d2a31f8500e063c36a7a5c9a7db4368dffabf325565d0a8884ad85386",
+    "src/vare/integrations/rvl_grpo.py": "8b5096d70da4bb2e33a2b4732f207f2c428d48954550d92bf9fd459703d967ce",
+    "src/vare/promotion.py": "fefc8db2a38def549fc18d316e3736e2e281909c45de8954b5e23716bb633d2c",
+    "tests/test_rvl_evaluation_promotion_e2e.py": "5fe615845200ddb8fcc637b78453096576a9d31e69cd7ae71b4dd7ea5a8dcfa5"
+  }
+}
