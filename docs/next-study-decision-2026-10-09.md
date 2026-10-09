@@ -1,5 +1,11 @@
 # Next study decision — 2026-10-09
 
+## Follow-up decision — ARC-Challenge CPU base gate
+
+The ARC-Challenge v2 base screen passed on 36/80 fresh validation rows (45.0%; Wilson lower bound 34.6%), with 74/80 parseable answers. The independent same-host audit passed, and CPU runtime/memory were 23.26 s / 2,538 MiB. This removes the base-task feasibility objection for Qwen2.5-0.5B on this narrow ARC setup; it does **not** show learning or downstream improvement. V1 is retained as an execution failure, and its items are excluded from v2.
+
+**Next action:** freeze and run only the task-specific update-cost smoke authorized by v2: use a fresh training cohort and fresh, disjoint validation items; verify one real GRPO update, finite gradients, checkpoint round-trip, and post-reload task behavior within a CPU/RAM budget. Do not treat a smoke pass as permission to claim improvement. If the smoke passes, the next confirmatory study must compare base, matched successful-trace SFT, and GRPO across multiple seeds on untouched task-success items with thresholds fixed before training. If the update path fails or the frozen cost gate fails, retire this model/task pairing rather than tuning it. The [v2 report](qwen-arc-challenge-base-gate-v2-report.md) contains the complete evidence and claim boundary.
+
 ## Update — GSM8K adapter-to-margin forensic replay
 
 The precommitted v4 CPU audit recomputed model hidden states and independently applied the retained adapters. It reproduced all stored margins within `5e-5` and metrics/bootstrap endpoints within `2.72e-7`; the largest margin discrepancy was `4.20e-5`, close to tolerance, under a newer PyTorch/NumPy runtime. This validates the forward → adapter → margin → metric chain for the already consumed cohort. It does not reproduce optimization, count as outside human review, provide fresh confirmation, or establish task success/capability gain. The exact result and limits are recorded in the [forensic report](cpu-lm-gsm8k-dpo-margin-reconstruction-v4-report.md).
