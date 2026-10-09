@@ -1,0 +1,72 @@
+{
+  "protocol_id": "vare-cpu-lm-gsm8k-dpo-margin-reconstruction-v1",
+  "phase": "forensic-reproduction",
+  "status": "locked-before-execution",
+  "source": {
+    "vare_revision": "c72ac31fe3a2710ae70f0c1d5e60a9bc966a5807",
+    "confirmation_protocol": "protocols/cpu_lm_gsm8k_dpo_confirmation_v1.lock.json",
+    "confirmation_protocol_sha256": "917901cd5f2c399effa62818b7f15f9791092ef35bf04a858269dd0f5ead0d65",
+    "bundle": "results/cpu-lm-gsm8k-dpo-confirmation-v1/run-1",
+    "bundle_scope": "Use only the already retained examples, margins, adapters, and manifest from the completed confirmation. Do not retrain, tune, filter, or change the original decision."
+  },
+  "question": "Do the retained final adapters, evaluated with the pinned cached base model on the retained prompts, independently reconstruct the recorded base and updated A-vs-B logit margins and held-out preference NLL changes?",
+  "estimand": {
+    "base_margin": "m0 = h W_A - h W_B",
+    "updated_margin": "m1 = m0 + h A (B[:, A] - B[:, B])",
+    "dpo_identity": "For one-token A/B completions on the same prompt, the full-vocabulary softmax normalizer cancels in the log-probability ratio; log((pi_theta(y+)/pi_ref(y+))/(pi_theta(y-)/pi_ref(y-))) = y (m1 - m0), where y=+1 if A is preferred and -1 if B is preferred.",
+    "loss": "softplus(-beta * y * (m1 - m0))"
+  },
+  "inputs": {
+    "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "model_files": [
+      "config.json",
+      "model.safetensors",
+      "tokenizer.json",
+      "tokenizer_config.json"
+    ],
+    "train_examples": 256,
+    "heldout_examples": 1319,
+    "seeds": [
+      401,
+      503,
+      607
+    ],
+    "response_tokens": [
+      " A",
+      " B"
+    ]
+  },
+  "method": {
+    "implementation": "Independent NumPy linear algebra over hidden states recomputed from the pinned local Hugging Face model; no import of the original runner, task helper, or metric auditor.",
+    "model_forward": "CPU float32; use exact retained prompts, right padding, attention-mask last non-padding index, and hidden-state output followed by the two lm_head rows.",
+    "adapter_replay": "Apply retained A_final and B_final matrices as (h @ A_final) @ B_final, then compare reconstructed margins against every recorded margin on train and heldout rows for each seed.",
+    "metrics": "Independently recompute held-out binary NLL, accuracy, Bernoulli KL, and per-seed NLL changes from reconstructed margins.",
+    "no_training_or_tuning": true
+  },
+  "success_criteria": {
+    "all_base_and_updated_margin_max_abs_errors": "<= 0.00005 over all 1,575 rows and all three seeds",
+    "per_seed_heldout_nll_change_max_abs_error": "<= 0.00005",
+    "resource_limits_respected": true,
+    "any_failure": "Report non-pass and retain raw diagnostics; do not adjust thresholds or rerun on the consumed cohort."
+  },
+  "resources": {
+    "device": "CPU only",
+    "network": "disabled; use local cached model only",
+    "paid_compute": false,
+    "max_wall_seconds": 3600,
+    "max_peak_rss_bytes": 6442450944,
+    "threads": 4,
+    "batch_size": 16
+  },
+  "claim_limits": [
+    "This is a post-hoc forensic reproduction of an already consumed preference cohort, not a new confirmation or generalization test.",
+    "A pass validates the adapter-to-margin and metric chain on these rows only; it does not establish independent human reproduction, reasoning improvement, free-form math ability, or capability gain.",
+    "The active runtime may differ from the original confirmation runtime; numerical tolerances are fixed above and runtime versions must be recorded."
+  ],
+  "reproducer": {
+    "path": "scripts/audit_gsm8k_dpo_margin_reconstruction.py",
+    "sha256": "2d91e6a3dec84ed988748648e1ad9692ba777cb8ea37308c73b7640cb9f53a1f"
+  },
+  "sha256": "34862c567c43e6827c7a659bb10202916d97e4d30066dc655abc2fc390ed3546"
+}
