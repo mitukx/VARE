@@ -1,0 +1,73 @@
+{
+  "checks": {
+    "adapter_hash_matches_frozen_lock": true,
+    "all_retained_reward_labels_replay": true,
+    "pinned_rvl_sources_match": true,
+    "progress_has_all_response_groups": true,
+    "protocol_hash_matches_frozen_lock": true,
+    "runner_hash_matches_frozen_lock": true,
+    "selected_first_nonconstant_group_was_reached": true,
+    "summary_json_retained": false
+  },
+  "evidence_status": "incomplete_artifact_retention",
+  "groups": [
+    {
+      "match": true,
+      "prompt_id": "update-smoke-01",
+      "rewards_replayed": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "match": true,
+      "prompt_id": "update-smoke-02",
+      "rewards_replayed": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "match": true,
+      "prompt_id": "update-smoke-03",
+      "rewards_replayed": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "match": true,
+      "prompt_id": "update-smoke-04",
+      "rewards_replayed": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "match": true,
+      "prompt_id": "update-smoke-05",
+      "rewards_replayed": [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ]
+    }
+  ],
+  "limits": [
+    "Do not interpret this record as a validated model update result.",
+    "The protocol cohort remains consumed and excluded from future use."
+  ],
+  "progress_sha256": "23b3ec3a8214aa77b6a68b4cb7ec8ecdc3a3bb1305975fd2b06227cc10df1302",
+  "protocol_id": "vare-rvl-cpu-real-model-update-path-v1",
+  "protocol_sha256": "9a29bc9daf9f67e529cbabe505a494bab0b60ba6a1eef625afc2e23047f3c2c5",
+  "reason": "The frozen v1 runner printed its terminal result but did not write summary.json or finalize progress.json. Training metrics and the round-trip record are therefore not preserved as a machine-readable bundle."
+}
