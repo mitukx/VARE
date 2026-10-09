@@ -79,7 +79,12 @@ def valid_train_rows(
             valid.append(row)
     if len(valid) != 699 or len(excluded) != 1 or excluded[0]["id"] != "chal-680":
         raise ValueError(f"unexpected pinned training data: {len(valid)} valid, exclusions={excluded}")
-    v1_dev = ranked(valid, "dev")[:100]
+    # V1 used its own namespace and hash, so reproduce that exact cohort
+    # definition before allocating any v2 rows.
+    v1_dev = sorted(
+        valid,
+        key=lambda row: sha(f"VARE-SVAMP-v1/dev:{row['ID']}"),
+    )[:100]
     v1_ids = {row["ID"] for row in v1_dev}
     remaining = [row for row in valid if row["ID"] not in v1_ids]
     dev = ranked(remaining, "dev")[:100]

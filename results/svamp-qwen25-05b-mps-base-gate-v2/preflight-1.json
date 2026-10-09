@@ -1,0 +1,13 @@
+{
+  "protocol": "svamp-qwen25-05b-mps-base-gate-v2",
+  "attempt": 1,
+  "source_commit": "edf7b4b",
+  "python": "3.9.6",
+  "status": "aborted-before-model-load",
+  "error": "ValueError: v2 dev overlaps v1 scored IDs",
+  "diagnosis": "The runner excluded a v2-hash-ranked cohort instead of reproducing the frozen v1 dev allocation. The frozen v1 and v2 namespaces produce different orderings.",
+  "model_loaded": false,
+  "generation_started": false,
+  "official_test_accessed": false,
+  "correction": "Recompute v1 dev with SHA256('VARE-SVAMP-v1/dev:' + ID), then select v2 dev from the remaining valid rows."
+}
