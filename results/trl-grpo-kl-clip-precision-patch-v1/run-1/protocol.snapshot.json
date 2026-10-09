@@ -1,0 +1,89 @@
+{
+  "protocol_id": "trl_grpo_kl_clip_precision_patch_v1",
+  "status": "frozen_before_patch_execution",
+  "question": "Can a minimal opt-in precision patch for the open TRL GRPO KL-log-ratio clip reject unrepresentable half-precision caps and preserve the bias-corrected corrective gradient without changing the float32 or unclipped path?",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "base_revision": "2b0d16b7839732f0b652ea7dfd4f492f00e15a48",
+    "candidate_revision": "0aaea03f2fa449bc7a91f1973e7940da11da65da",
+    "modified_path": "trl/trainer/grpo_trainer.py",
+    "target_pull_request": "https://github.com/huggingface/trl/pull/6637"
+  },
+  "patch_contract": [
+    "When clipping is enabled, reject a positive cap that becomes zero or non-finite after conversion to the original KL-log-ratio dtype.",
+    "For float16 or bfloat16 clipping, evaluate the clipped K3 path and bias-correction product in float32.",
+    "When bias correction is enabled, preserve the analytically combined gradient for the clipped KL term instead of relying on two large low-precision branches to cancel.",
+    "When clipping is unset or the original log-ratio dtype is float32, preserve the existing candidate code path."
+  ],
+  "estimands": {
+    "k3": "F(x)=exp(x)-x-1, x=log(pi_ref/pi_theta)",
+    "clipped_forward_value": "F(min(x,c)) for upper cap c",
+    "bias_corrected_gradient": "for r=exp(log(pi_theta/pi_old)) and a straight-through upper cap, d[r*F(min(x,c))]/d(log pi_theta) = -r*min(x,c); multiply by beta=0.1",
+    "fixture": "one completion token, x=20, log(pi_theta)=log(pi_old)=0, r=1, zero advantage"
+  },
+  "frozen_cases": [
+    {
+      "name": "tiny_float16_cap",
+      "dtype": "float16",
+      "clip": 1e-8,
+      "bias_correction": true,
+      "expected": "raise a clear ValueError before silently returning zero KL and zero gradient"
+    },
+    {
+      "name": "representable_float16_cap_without_bias_correction",
+      "dtype": "float16",
+      "clip": 10.0,
+      "bias_correction": false,
+      "expected": "finite positive KL/loss, finite negative gradient; output and gradient remain within 1e-3 relative tolerance of unmodified PR head"
+    },
+    {
+      "name": "representable_float16_cap_with_default_bias_correction",
+      "dtype": "float16",
+      "clip": 10.0,
+      "bias_correction": true,
+      "expected": "finite positive KL/loss and gradient -1.0 within absolute tolerance 0.05"
+    },
+    {
+      "name": "representable_float32_control",
+      "dtype": "float32",
+      "clip": 10.0,
+      "bias_correction": true,
+      "expected": "bit-identical loss and gradient to unmodified PR head"
+    },
+    {
+      "name": "unclipped_float32_control",
+      "dtype": "float32",
+      "clip": null,
+      "bias_correction": true,
+      "expected": "bit-identical loss and gradient to unmodified PR head"
+    }
+  ],
+  "method": "Invoke the actual GRPOTrainer._compute_loss method from the unmodified PR head and a single-file patched copy using a differentiable one-token fixture. No model, dataset, trainer initialization, optimizer, or external service is used. Independently compare recorded outputs and source identities using a checker that does not import TRL.",
+  "acceptance": {
+    "all_five_cases_record_loss_and_gradient_or_expected_exception": true,
+    "tiny_cap_fails_closed": true,
+    "float16_bias_corrected_gradient_matches_analytic_target": true,
+    "float16_non_bias_corrected_output_is_preserved_within_tolerance": true,
+    "float32_and_unclipped_controls_are_bit_identical": true,
+    "source_diff_is_single_file_and_patch_hash_is_retained": true
+  },
+  "failure_criteria": [
+    "the source base/head revisions differ from the frozen revisions",
+    "the proposed patch changes paths outside the frozen trainer file",
+    "the patched loss method cannot be imported and directly executed",
+    "the tiny cap returns a finite zero penalty instead of failing closed",
+    "the float16 corrected gradient is zero, positive, non-finite, or outside the frozen tolerance",
+    "the float32 or unclipped control changes from the unmodified PR head"
+  ],
+  "interpretation_limits": [
+    "Passing this fixture validates only the numerical method edge and does not establish behavior prevalence in model training.",
+    "No real model update, optimizer effect, task outcome, Liger kernel, GPU, or external reproduction is covered.",
+    "The patch is a VARE-side review candidate, not an upstream fix or PR until maintainers accept it."
+  ],
+  "resources": {
+    "cpu_only": true,
+    "gpu_hours": 0,
+    "paid_api_calls": 0,
+    "external_compute_usd": 0
+  }
+}

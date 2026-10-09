@@ -1,5 +1,9 @@
 # Experimental program
 
+## TRL GRPO KL-clip precision patch v1 — frozen CPU source-path fixture pass
+
+On the pinned open PR head, a one-token fp16 candidate rejects `1e-8` after it rounds to zero, returns the expected −1.0 bias-corrected gradient at clip 10, preserves the no-bias control within tolerance, and leaves the tested fp32 clipped/unclipped outputs unchanged. The independent JSON-only checker passed all five gates. This does not test sequence-level correction, training prevalence, optimizer behavior, or task success. The patch has not been submitted upstream. See the [report](trl-grpo-kl-clip-precision-patch-v1-report.md), [protocol](../protocols/trl_grpo_kl_clip_precision_patch_v1.lock.json), and [raw bundle](../results/trl-grpo-kl-clip-precision-patch-v1/run-2/).
+
 ## TRL GRPO KL clip dtype audit v1
 
 A frozen CPU audit directly ran the production `GRPOTrainer._compute_loss` method from the base and open PR #6637 revisions. In the PR head, a configured clip of `1e-8` was accepted but rounded to zero in float16, silently producing zero KL and gradient. A representable clip of 10 kept the K3 value finite but lost the expected bias-corrected gradient under float16; the same run without bias correction retained a negative finite gradient. This is a mixed non-pass of an upstream patch's low-precision behavior, not a released-trainer or capability result. See the [report](trl-grpo-kl-clip-dtype-underflow-v1-report.md), [protocol](../protocols/trl_grpo_kl_clip_dtype_underflow_v1.lock.json), and [run-4](../results/trl-grpo-kl-clip-dtype-underflow-v1/run-4/).

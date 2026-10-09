@@ -1,5 +1,11 @@
 # Next study decision — 2026-10-09
 
+## Follow-up decision — TRL GRPO KL clip precision candidate
+
+The frozen follow-up to the PR #6637 dtype audit passed all five local numerical gates: the candidate rejects a positive cap that becomes zero in fp16, recovers the token-level bias-corrected gradient to −1.0, preserves the tested fp16 no-bias output within tolerance, and is bit-identical to the PR head for clipped and unclipped fp32 controls. The independent checker imports neither TRL nor PyTorch and validates retained outputs and the patch digest. See the [report](trl-grpo-kl-clip-precision-patch-v1-report.md), [protocol](../protocols/trl_grpo_kl_clip_precision_patch_v1.lock.json), and [run-2](../results/trl-grpo-kl-clip-precision-patch-v1/run-2/).
+
+**Decision: continue only through a sequence-level/multi-token falsification gate.** The current result establishes only the frozen token-level one-token method path; it does not establish training prevalence or impact. If a separately frozen multi-token audit passes, prepare an upstream reviewable patch and evidence bundle. No upstream message, PR, or acceptance is claimed. If the broader arithmetic fails or changes fp32 behavior, stop the patch line and retain the result.
+
 ## Follow-up decision — GRPO KL clip dtype audit
 
 A frozen CPU source-path audit invoked `GRPOTrainer._compute_loss` from TRL base revision `2b0d16b7839732f0b652ea7dfd4f492f00e15a48` and open PR #6637 head `0aaea03f2fa449bc7a91f1973e7940da11da65da`. The base K3 loss overflowed at float16 log-ratio 20. In the PR head, config accepted clip `1e-8`, its float16 value became zero, and the resulting KL/loss/gradient were all zero. A representable clip 10 made the K3 value finite, but with default bias correction enabled the float16 loss gradient was zero instead of the independently derived −1. Without bias correction it was −2202, consistent with the finite-precision K3 path. The run and source-independent check are retained in [the report](trl-grpo-kl-clip-dtype-underflow-v1-report.md) and [run-4](../results/trl-grpo-kl-clip-dtype-underflow-v1/run-4/).
