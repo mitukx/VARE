@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from pathlib import Path
 
 
@@ -101,10 +102,27 @@ def main() -> int:
             ]
             raw_score_gradient = ftext(weights[2] * (sum(weights) - weights[2]), sum(weights) ** 2)
             sampled_score_gradient = raw_score_gradient if 2 in row["support"] else "0"
+            raw_reward = ftext(weights[2], sum(weights))
+            sampled_reward = raw_reward if 2 in row["support"] else "0"
             if row["raw_policy_reward_gradient_theta"] != raw_score_gradient:
                 raise AssertionError("raw-policy score gradient does not match independent formula")
             if row["source_corrected_sample_score_gradient_theta"] != sampled_score_gradient:
                 raise AssertionError("source-corrected score gradient does not match independent formula")
+            if row["raw_policy_reward_expectation"] != raw_reward:
+                raise AssertionError("raw-policy reward expectation does not match independent formula")
+            if row["source_corrected_sample_reward_expectation"] != sampled_reward:
+                raise AssertionError("sampled corrected reward expectation does not match independent formula")
+            expected_q = [
+                ftext(weights[index], sum(weights[i] for i in row["support"]))
+                if index in row["support"]
+                else "0"
+                for index in range(len(weights))
+            ]
+            if row["processed_q"] != expected_q:
+                raise AssertionError("processed behavior distribution does not match independent formula")
+            expected_log_gap = -math.log(sum(weights[i] for i in row["support"]) / sum(weights))
+            if not math.isclose(row["abs_log_probability_difference"], expected_log_gap, rel_tol=1e-14, abs_tol=1e-14):
+                raise AssertionError("absolute log-probability gap does not match independent formula")
     if result["sequence_case"]["two_position_source_ratio"] != "16/25":
         raise AssertionError("sequence product does not match the exact prediction")
     output = {
