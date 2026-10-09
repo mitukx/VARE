@@ -1,0 +1,26 @@
+{
+  "study": "rvl-module-mode-shared-alias-followup-v1",
+  "upstream_repository": "https://github.com/mitukx/Recursive-Verification-Lag",
+  "base_revision": "27ebf7fe239d97504eeb960bf1407de220584dac",
+  "runtime": "Python 3.12.12, PyTorch 2.9.1, Transformers 4.57.3",
+  "command": "PYTHON=python3.12 bash scripts/reproduce_rvl_shared_module_mode_followup_v1.sh results/rvl-module-mode-shared-alias-v1/clean-clone-replay-20261010c",
+  "baseline": {
+    "exit_status": 1,
+    "expected": "regression fails on per-module modes and subsequent Dropout forward",
+    "log": "clean-clone-replay-20261010c/baseline.log"
+  },
+  "patched": {
+    "exit_status": 0,
+    "tests": "14 passed",
+    "log": "clean-clone-replay-20261010c/patched.log"
+  },
+  "patch": {
+    "path": "../../contributions/rvl-module-mode-shared-alias-followup.patch",
+    "sha256": "16ccdc8767adabc272c84fd101db33f158ddc07de7df4ae8e7b0e097678652a2"
+  },
+  "test_only_patch": {
+    "path": "test-only.patch",
+    "sha256": "90815d335658bcc9358f4ceb654a80fdcfc76152fd70639f749b94507635208a"
+  },
+  "external_submission": false
+}

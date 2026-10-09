@@ -1,0 +1,89 @@
+diff --git a/tests/test_mini_lab_torch.py b/tests/test_mini_lab_torch.py
+index 001f084..64d84ed 100644
+--- a/tests/test_mini_lab_torch.py
++++ b/tests/test_mini_lab_torch.py
+@@ -480,5 +480,84 @@ class TorchAcceptanceTests(unittest.IsolatedAsyncioTestCase):
+                 resumed.close()
+ 
+ 
++    async def test_restore_snapshot_preserves_shared_child_module_mode(self):
++        model = self.model()
++        model.transformer.drop.p = 0.5
++        trainer = HFCausalLMGRPOTrainer(
++            model,config=HFTTrainerConfig(learning_rate=1e-3,disable_dropout=False))
++        samples = self.samples(model)
++        # Seed a nonempty AdamW state before taking the rollback snapshot.
++        trainer.train_step(samples)
++        # Register the active embedding Dropout under a second parent. PyTorch
++        # named_modules() reports this shared object once, under transformer.
++        model.shared_dropout_alias = torch.nn.Sequential(model.transformer.drop)
++        model.eval()
++        model.shared_dropout_alias.train()
++        model.transformer.drop.eval()
++        saved_modes = {name: module.training for name, module in model.named_modules()}
++        expected_model = copy.deepcopy(model.state_dict())
++        expected_optimizer = copy.deepcopy(trainer.optimizer.state_dict())
++        torch.manual_seed(816)
++        expected_rng = torch.get_rng_state().clone()
++        probe = torch.tensor([[1, 2, 3, 4]])
++        with torch.no_grad():
++            expected_logits = model(input_ids=probe).logits.clone()
++        torch.set_rng_state(expected_rng)
++        snapshot = trainer.snapshot_training_state()
++
++        def same_state(left, right):
++            if isinstance(left, torch.Tensor):
++                return isinstance(right, torch.Tensor) and torch.equal(left, right)
++            if isinstance(left, dict):
++                return isinstance(right, dict) and left.keys() == right.keys() and all(
++                    same_state(left[key], right[key]) for key in left
++                )
++            if isinstance(left, (list, tuple)):
++                return type(left) is type(right) and len(left) == len(right) and all(
++                    same_state(a, b) for a, b in zip(left, right)
++                )
++            return left == right
++
++        optimizer_step = trainer.optimizer.step
++        mutated = {}
++
++        def mutate_then_raise(*args, **kwargs):
++            optimizer_step(*args, **kwargs)
++            mutated["model"] = copy.deepcopy(model.state_dict())
++            mutated["optimizer"] = copy.deepcopy(trainer.optimizer.state_dict())
++            torch.rand(1)
++            mutated["rng"] = torch.get_rng_state().clone()
++            raise RuntimeError("injected after optimizer mutation")
++
++        trainer.optimizer.step = mutate_then_raise
++        with self.assertRaisesRegex(RuntimeError, "injected after optimizer mutation"):
++            trainer.train_step(samples)
++
++        self.assertFalse(same_state(expected_model, mutated["model"]))
++        self.assertFalse(same_state(expected_optimizer, mutated["optimizer"]))
++        self.assertFalse(torch.equal(expected_rng, mutated["rng"]))
++        self.assertFalse(saved_modes[""])
++        self.assertTrue(saved_modes["shared_dropout_alias"])
++        self.assertFalse(saved_modes["transformer.drop"])
++
++        trainer.restore_training_state(snapshot)
++
++        failures = []
++        if not same_state(expected_model, model.state_dict()):
++            failures.append("model parameters/buffers")
++        if not same_state(expected_optimizer, trainer.optimizer.state_dict()):
++            failures.append("optimizer state")
++        if not torch.equal(expected_rng, torch.get_rng_state()):
++            failures.append("CPU RNG state")
++        restored_modes = {name: module.training for name, module in model.named_modules()}
++        if saved_modes != restored_modes:
++            failures.append("per-module modes")
++        with torch.no_grad():
++            restored_logits = model(input_ids=probe).logits
++        if not torch.equal(expected_logits, restored_logits):
++            failures.append("subsequent dropout forward")
++        self.assertEqual(failures, [])
++
++
+ if __name__ == "__main__":
+     unittest.main()
