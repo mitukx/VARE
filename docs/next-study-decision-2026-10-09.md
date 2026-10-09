@@ -1,5 +1,11 @@
 # Next study decision — 2026-10-09
 
+## Follow-up — bounded frontier post-training opportunity screen
+
+A fresh three-candidate screen considered AsyncGRPO whole-rollout batching, frozen-base drift during LoRA merge/unmerge, and score centering under train–sampler mismatch. All three fail the novelty gate: the batching concern is already in TRL #7206 and VARE's candidate remains stopped after the v6 accounting/retention audit; frozen-base drift is in TRL #7423 with fix PR #7427 and overlaps VARE's stopped BF16 study; score centering is published and proposed in TRL #7520. The exact batcher limitations and prior-art checks are recorded in the [screen report](research-opportunity-screen-2026-10-09.md).
+
+**Decision: no original finding survives this bounded screen; stop before implementation.** No new experiment was run because reproducing these disclosed mechanisms would not answer a distinct question. Do not reopen these directions absent a materially new hypothesis. Continue with independent outside review of an existing evidence packet, or screen a distinct real source path before freezing any new experiment. This is a negative novelty-selection result, not a claim that no undiscovered trainer defect exists.
+
 ## Current decision — stop local #7249 variants; seek outside review
 
 The current TRL `main` still normalizes AsyncGRPO loss by the active-token count of each microbatch, then divides by the accumulation-window length ([implementation](https://github.com/huggingface/trl/blob/main/trl/experimental/async_grpo/async_grpo_trainer.py)). Upstream PR [#7249](https://github.com/huggingface/trl/pull/7249) remains open. VARE's frozen v5 reproduction now exercises the candidate through the real `Trainer.train()` loop, Accelerate backward, two-rank Gloo DDP accumulation, and an optimizer step: on the unequal-token case the pinned base's maximum gradient error was `2.8572e-3`, while the candidate's maximum error was `5.96e-8`; the candidate passed all four locked cases. A separate DataLoaderDispatcher reproduction also passed. See the [v5 report](trl-async-accumulation-normalization-pr7249-full-trainer-ddp-v5-report.md) and [dispatcher report](trl-pr7249-asyncgrpo-dispatcher-v4-report.md).
