@@ -1,0 +1,50 @@
+{
+  "inputs": {
+    "test_envs": {
+      "bytes": 3567710,
+      "path": "test_set/env_with_attack_points.json",
+      "sha256": "3277ea321f994792e01975f996c663e796cbc2c144dc2b7e113d8ab2079d640e"
+    },
+    "test_tasks": {
+      "bytes": 2658878,
+      "path": "test_set/rl_task_top_5_IPI_toolselection.json",
+      "sha256": "c97d179e10d8ff75b1b83b30faf923b15b492e831749da224a32d1093b3792ac"
+    },
+    "train_envs": {
+      "bytes": 2038068,
+      "path": "train_set/40_rl_train_env_with_attack_points.json",
+      "sha256": "16671a1f593c8f7bd1ca709bfc9b27d1b194d99033805a001444827b0b1be039"
+    },
+    "train_tasks": {
+      "bytes": 11158426,
+      "path": "train_set/rl_tasks_IPI_all_new.json",
+      "sha256": "315d40f1a97d33afd5dc8c7d9c0cee8892dd045771e4d78cfe7f83d6a805fdd9"
+    },
+    "train_trajectories": {
+      "bytes": 30751057,
+      "path": "train_set/rl_traj.json",
+      "sha256": "0994cbd11dcecbbfffed2e3bf5d420833e2f5df16d62d4c3db28dc3d481ce4bc"
+    }
+  },
+  "overlap": {
+    "environment_metadata_ids": [],
+    "task_environment_ids": [],
+    "task_ids": []
+  },
+  "scope_limit": "Provenance and declared split disjointness only. No benchmark-supplied checker code was executed or independently validated; no model outputs, base success, parser rate, reward variance, or runtime were measured.",
+  "source_commit": "544b73b12a25431cb0be3eb43df41b4aacce5335",
+  "test": {
+    "environment_metadata_ids": 33,
+    "first_task_checker_count": 13,
+    "task_environment_ids": 28,
+    "task_rows": 86,
+    "unique_task_ids": 86
+  },
+  "train": {
+    "environment_metadata_ids": 17,
+    "released_rl_trajectories": 193,
+    "task_environment_ids": 17,
+    "task_rows": 329,
+    "unique_task_ids": 329
+  }
+}
