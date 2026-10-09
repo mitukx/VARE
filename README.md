@@ -1,188 +1,50 @@
 # VARE
 
-VARE is a CPU-first research project for evaluating post-training signals and policy updates under limited compute. It uses frozen protocols, independent checks, provenance-aware execution, and retained raw records.
+VARE is a CPU-first research project for studying post-training signals, policy updates, and evaluation reliability under limited compute. It uses frozen protocols, independent checks, provenance tracking, and retained negative results.
 
-## Research snapshot
+## Current status
 
-**For technical review:** start with the [review guide](docs/reviewer-guide.md) for the current contribution, reproducible commands, code map, and claim limits.
+VARE has **not demonstrated an independently confirmed improvement in real-model task success after post-training**. Recent small-model comparisons have failed their predeclared gates; see [current evidence gaps](docs/current-gaps.md) and the [experiment index](docs/experiments.md).
 
-The strongest implementation-path result is the frozen [TRL AsyncGRPO reproduction](docs/trl-async-accumulation-normalization-pr7249-full-trainer-ddp-v5-report.md). Through the real Trainer/Accelerate/two-rank CPU/Gloo update path, the pinned base's maximum gradient error was `2.8572e-3` against a pooled-token oracle; the existing PR #7249 candidate was within `5.96e-8` across four cases. This reproduces an existing proposal on a synthetic token-local model; it is not a VARE fix, a novel method, or a model-capability result. The PR was open with no reviews when checked on 2026-10-10.
+The current review artifact is a narrow follow-up patch for RVL rollback behavior when a model contains a shared child module. Its regression fails on the pinned merged RVL revision and passes with the patch. It is reproducible locally, but has **not** been submitted upstream or independently reviewed by a human. Production incidence and model-quality impact are unknown.
 
-The [RVL module-mode rollback patch](docs/rvl-module-mode-snapshot-final-review-v4.md) is a separate, narrow API completeness fix. Its mixed-mode and Dropout behavior regression fails on the pinned base; after the fix, all 13 trainer tests passed, including legacy snapshot compatibility. RVL PR [#90](https://github.com/mitukx/Recursive-Verification-Lag/pull/90) was merged as `27ebf7f`, and all seven required CI checks passed. A post-merge shared-child-module regression exposed one remaining aliasing edge case in that restoration loop; the smallest local correction fails on merged upstream and passes 14/14 trainer tests. The [follow-up report](docs/rvl-module-mode-shared-alias-followup-v1.md) and patch are prepared for review but have not been sent upstream. The recorded PR review was automated Codex review; independent human review and production incidence remain unestablished. Neither result shows model-quality impact.
+## Review this project
 
-Real-model evidence remains negative or insufficient. The frozen [ARC GRPO-versus-SFT comparison](docs/qwen-arc-grpo-sft-comparison-v3-report.md) averaged 38.84% versus 40.00% exact success across three seeds and missed its advancement gate. No independently confirmed task-success improvement after a real model update has been demonstrated. See [current evidence gaps](docs/current-gaps.md) and the [active study decision](docs/next-study-decision-2026-10-09.md) for retained failures and limits.
+1. Read the [technical reviewer guide](docs/reviewer-guide.md) for the review path, reproduction command, code map, and claim limits.
+2. Read the [shared-module rollback report](docs/rvl-module-mode-shared-alias-followup-v1.md) and inspect the [proposed patch](contributions/rvl-module-mode-shared-alias-followup.patch).
+3. Review the [retained reproduction evidence](results/rvl-module-mode-shared-alias-v1/manifest.json), including the pinned base, patch hashes, baseline failure, and patched test result.
+4. Read the [OpenBookQA GRPO/SFT confirmation report](docs/openbookqa-qwen25-grpo-sft-confirmation-v1-report.md) for the latest completed real-model comparison and its negative result.
+5. Use the [evidence ledger](docs/evidence.md), [current gaps](docs/current-gaps.md), and [roadmap](docs/roadmap.md) for broader context. The [experiment index](docs/experiments.md) retains older studies and failures.
 
-## Start here
+## Selected results
 
-1. [Technical reviewer guide](docs/reviewer-guide.md) — review order, selected evidence, reproduction, and repository map.
-2. [RVL shared-module follow-up](docs/rvl-module-mode-shared-alias-followup-v1.md) — current patch and exact clean-clone reproduction; not submitted upstream.
-3. [Merged RVL rollback review](docs/rvl-module-mode-snapshot-final-review-v4.md) — original contribution, pinned baseline, raw tests, and merge status.
-4. [TRL AsyncGRPO Trainer/DDP reproduction](docs/trl-async-accumulation-normalization-pr7249-full-trainer-ddp-v5-report.md) — reproduction of an existing upstream proposal.
-5. [Real-model evidence and gaps](docs/current-gaps.md), then the [full experiment index](docs/experiments.md) and [claim rules](AGENTS.md).
-
-## Selected evidence
-
-| Area | Result | What it supports |
+| Area | Evidence | Limit |
 | --- | --- | --- |
-| Latest human-preference policy comparison | HH helpful-base: length-normalized DPO 0.4974, standard DPO 0.4974, base 0.5000, length-only 0.5645. | Frozen development non-pass. Same-host adapter replay passed; no downstream task success or external reproduction. |
-| Latest real-model feasibility screen | Qwen2.5-0.5B ticket-tool base v1: 0/48 exact successes, 0/48 schema-valid outputs, and 0/120 matched authorized calls; resource caps passed. | Frozen task/schema gate failed; same-host audit passed. This does not establish general tool-use inability or an RL result. |
-| Latest real-model post-training comparison | Qwen ARC-Challenge v3: GRPO 38.84% mean exact success versus successful-trace SFT 40.00%; difference −1.16 points, 95% stratified task-bootstrap interval [−5.22, +2.90]. | Frozen advancement gate failed; the model/task pairing is stopped. No model improvement is demonstrated. |
-| Earlier real-model feasibility screen | SNLI binary entailment v1: 49.41% balanced accuracy on 512 balanced validation rows; same-host model-forward audit passed. | The frozen base-rate screen failed; no update or confirmation followed. This is not a post-training or capability result. |
-| Latest model study | BoolQ v17: all three matched methods missed the frozen task-gain gate. Best balanced-accuracy gain was 0.11 percentage points against a 5-point threshold. | An audited development comparison. Confirmation rows remain unopened. |
-| Latest model study | BoolQ binary verifier-RLOO v1: five-seed development and same-host independent audit completed; frozen gate non-pass. | RLOO gained 2.69 points over base on the selected development comparison, below the 5-point rule; its paired interval crossed zero. No confirmation or general learning claim. |
-| Latest tool-call-attempt screen | Generated code repair: 0/32 successes across eight templates; no accepted edit, visible test, or finish. | Audited non-pass; 0/69 authorized schema-valid calls, 60 unsafe/unauthorized attempts. CPU/RSS passed, but the model/task/tool pairing is retired. The newer Qwen math screen made no calculator calls and does not measure tool use. |
-| Human-preference reward model | HH-RLHF v2: confirmation accuracy +7.68 points vs baseline; NLL difference interval [−0.0539, +0.0177]. | Accuracy repeated on one fresh cohort; the joint confirmation gate failed because NLL improvement remained uncertain. |
-| Human-preference policy update | HH helpful-base DPO v2: development pair accuracy 0.4128 vs frozen-base 0.4141; paired 95% interval [−0.0117, +0.0104]. | The frozen preference-gain and seed-consistency gates failed; no confirmation or downstream task-success claim. |
-| Synthetic binary-action DPO | Procedural entailment v1: base BA 0.5078; scalar calibration 0.6211; contextual DPO 0.5573. | DPO lost to scalar calibration, missed the base/gain gates, and exceeded the KL cap; synthetic development evidence only. |
-| Reward-score scaling | Outcome-informed HH-RLHF v3 passed its fixed-head ΔNLL gate on development (512 prompts) and confirmation (306 prompts); confirmation mean ΔNLL −0.1745, 95% interval [−0.2337, −0.1178]. | Narrow same-split score-scale evidence. Accuracy stayed fixed and ECE worsened; no task or RL gain is shown. |
-| Model-level preference update | GSM8K: held-out conditional preference NLL changed by −0.00697 nats/question across three seeds; accuracy moved from 0.4943 to 0.4956. | A later train-estimated constant-shift diagnostic explains −0.007248 nats while the nonconstant residual adds +0.000278; counterbalanced ASDiv showed no semantic-margin transfer. Retire this forced-choice DPO line; no reasoning or capability gain is established. |
-| Synthetic preference robustness | Ten-seed clean/noise/shift study passed its declared synthetic NLL/KL rule; label flips worsened NLL on every seed. | Behavior under one known synthetic preference generator. |
-| Evaluation reliability | Three historical source graders distinguish pinned pre-fix and fixed revisions; recovery study matched 24/24 frozen fault cases. | Specific grader and same-host recovery checks, not broad grader soundness or distributed reliability. |
-| GRPO group-audit observability | 2,000-seed exact synthetic study: item-only audit balanced accuracy 49.2%/50.0%, group-atomic 100%, exact item-law TV 0. | A two-member partial-label identifiability counterexample. No optimizer, policy update, or capability claim; separately implemented same-host replay passed, outside reproduction pending. |
-| Provenance version validation | Direct lag and RVL replay paths reject future or malformed versions; existing stale and pending data behavior remains covered. | Correctness regression fix with a pre-fix reproducer, not policy-quality evidence. |
-| RVL GRPO adapter integrity | Two real pinned CPU GRPO smokes injected failure after optimizer mutation: one at the candidate boundary and one before `train_step` returned. Both restored incumbent model/optimizer/RNG state, and the next rollout used the incumbent. | One pinned trainer revision and a 3,696-parameter random GPT-2. These are rollback checks, not pretrained-model or learning-quality evidence. |
-| RVL zero-advantage AdamW behavior | With constant reward, 16 gradient tensors were all zero but a fresh AdamW optimizer using its expected `0.01` default changed 10 parameter tensors by up to `1.001358e-5`; analytic error was zero across three seeds. | Configuration/API omission, not a demonstrated trainer defect. The v1 zero-default candidate is retired; no capability claim. |
-| RVL configurable optimizer behavior, compatibility candidate | Configurable decay defaults to the legacy effective `0.01`; explicit `0.0` gave an exact no-op for one zero-gradient step from a fresh optimizer. The separate mixed-reward arm used default `0.01`. | Narrow API/config result; mixed-reward learning with explicit zero and resumed optimizer moments were not tested. Candidate is available for review; no external review or model-quality effect yet. |
+| RVL rollback | On pinned RVL `27ebf7f`, the shared-module regression fails on exact mode restoration and the subsequent Dropout forward. The proposed correction passes all 14 `tests.test_mini_lab_torch` tests in a clean clone. | Deliberately constructed shared-module graph; production incidence, CUDA/distributed behavior, and model-quality impact are unproven. No upstream submission or independent human review. |
+| OpenBookQA post-training | On 128 confirmation items, base exact-answer success was 45.31%, matched SFT averaged 33.33%, and GRPO scored 0/128 for each of three seeds because all responses failed the frozen answer parser. Independent reconstruction passed. | One small model/task/protocol; the result retires that pairing and does not show that GRPO generally fails. The dataset license is listed as unknown. |
+| Earlier ARC comparison | Three-seed GRPO averaged 38.84% exact success versus 40.00% for matched SFT and missed its frozen advancement gate. | Negative small-model evidence, not a general method comparison. |
 
-The [evidence notes](docs/evidence.md) and individual reports define each result's data, protocol, audit coverage, and claim boundary. The [roadmap](docs/roadmap.md) records unresolved evidence levels. The full historical series, including failed and incomplete attempts, remains in the [experiment index](docs/experiments.md).
+## Repository map
 
-## Post-training results
+| Path | Contents |
+| --- | --- |
+| `src/vare/`, `tests/` | VARE implementation and regression tests |
+| `protocols/` | Frozen study definitions, gates, and hashes |
+| `results/` | Retained outputs, manifests, and failed or passed runs |
+| `docs/` | Reports, evidence ledger, decisions, and review guide |
+| `contributions/` | Pinned upstream patch artifacts and their status |
+| `scripts/`, `reproducers/` | Reproduction, audit, and diagnostic commands |
 
-The latest [BoolQ v17 study](docs/boolq-posttraining-development-v17-report.md) tested DPO, answer SFT and anchored DPO on the same fresh validation questions across three seeds. All audits passed, but the best balanced-accuracy gain was 0.11 percentage points against the frozen 5-point gate. Checkpoint selection used this development set, and confirmation data was not opened. The result does not establish task or capability improvement.
-
-The first locked real-model confirmation used 256 verifier-labeled training questions, all 1,319 GSM8K test questions, and three fresh adapter seeds. Mean held-out conditional preference NLL improved by 0.00697 nats/question (paired 95% interval [−0.00800, −0.00591]); all three seeds improved and stayed under the frozen KL ceiling. Accuracy remained close to chance (0.4943 → 0.4956). A later read-only mechanism audit estimated a global A/B logit shift from training margins alone: the constant-shift counterfactual explained −0.007248 nats of the held-out NLL change, while the nonconstant residual added +0.000278. In the paired-position ASDiv transfer study, semantic margin did not improve across three seeds. Together these results retire the two-choice DPO line; they do not establish free-form reasoning or capability improvement. The [protocol](protocols/cpu_lm_gsm8k_dpo_confirmation_v1.lock.json), [original report](docs/cpu-lm-gsm8k-dpo-confirmation-v1-report.md), [mechanism audit](docs/cpu-lm-gsm8k-dpo-constant-shift-audit-v1-report.md), and [ASDiv transfer report](docs/cpu-lm-gsm8k-dpo-asdiv-transfer-v1-report.md) retain the protocols and results. The prior cached-model arithmetic study remains a [separate non-pass](docs/cpu-lm-dpo-head-v1-report.md).
-
-VARE retains two accepted synthetic preference-policy studies. The v2 confirmation improved held-out synthetic NLL on all 10 seeds, though its budget-selection chronology is not independently anchored. A separate frozen noise/shift study was committed before its run; its audit reconstructed all 80 arm-condition-seed records, and its clean arm passed the held-out NLL/KL rule on all 10 seeds. The flip arms worsened as label noise increased, and the base-trained policy also scored worse under the declared preference shift. A fresh shallow clone of commit `70e4660` reproduced its independent training/metric audit on Python 3.12.12, run by the project author; this is not external human reproduction. These are controlled results on synthetic policies and labels, not language-model updates or capability evidence. See the [v2 report](docs/synthetic-dpo-v2-report.md), [noise/shift report](docs/synthetic-preference-robustness-v1-report.md), and [remaining evidence gaps](docs/current-gaps.md).
-
-A separate [procedural binary-action study](docs/cpu-procedural-entailment-dpo-development-v1-report.md) tested contextual DPO against scalar calibration and matched SFT on a generated implication task. It failed its development gate: the base had near-zero Yes recall, scalar calibration outscored contextual DPO, and DPO exceeded its KL cap. The auditor reconstructed the generated rows and stored-feature metrics. No confirmation data was opened; the result remains synthetic mechanism evidence only.
-
-## Measured execution evidence
-
-- **24/24 recovery fault cases** passed under a frozen protocol: process death, rollback, lost acknowledgement, late completion, input invalidation and retry exhaustion. The retained exports contain 117 synthetic jobs/126 attempts, plus four historical jobs recovered with all calibrated outcomes preserved. See the [recovery report](docs/recovery-report.md).
-
-- **TRL grader mutation checks:** successive frozen audits found false accepts for branch-local rebinding, final-return rebinding, in-place loss mutation, direct-alias mutation, unreachable branches and zeroed policy-loss numerators. Protocol v8 rejects the early-return and zeroed-numerator mutations that v7 accepted, while accepting the unmodified fixed source across 12 arithmetic conditions. See the [v8 mutation comparison](results/trl-grpo-accumulation-window-normalizer-v1/grader-mutation-v8/summary.json), [frozen protocols and patches](benchmarks/audits/trl_loss_dataflow_v1/), and [v8 calibration](results/trl-grpo-accumulation-window-normalizer-v1/cpu-calibration-v8/summary.json). This remains a narrow source-structural check, not full trainer or gradient execution.
-
-- **RVL generation-setting mutation checks:** v3 rejects inherited non-neutral `typical_p`; v4 adds neutral `suppress_tokens` and `no_repeat_ngram_size` checks. A candidate that carries pretrained suppression through is accepted by v3 and rejected by v4, while the pinned fixed source passes v4. See the [v4 mutation evidence](results/rvl-hf-behavior-policy-parity-v1/generation-config-mutation-v4/summary.json) and [v4 calibration](results/rvl-hf-behavior-policy-parity-v1/cpu-calibration-v4/summary.json).
-- **Inherited `bad_words_ids` audit:** the existing v4 grader accepts one constructed candidate that adds a single-token bad-word constraint; the new locked CPU task rejects it while accepting the fixed source. The fixture covers one token-level case only. See the [audit report](docs/rvl-bad-words-report.md), [mutation comparison](results/rvl-hf-bad-words-neutrality-v1/mutation-audit-v2/summary.json), and [task calibration](results/rvl-hf-bad-words-neutrality-v1/cpu-calibration-v1/summary.json).
-
-- **Local CPU agent pilot:** the corrected v2 tool loop ran one small local model on one pinned task for three formal seeds. It made no source edits and the locked grader rejected all three unchanged checkouts. The original v1 cohort is invalidated because of a tool-history serialization bug. See the [pilot report](docs/local-agent-pilot.md).
-
-- **Promotion-gate input validation:** a frozen CPU regression task found that the pre-fix promotion gate accepted all seven tested reports containing `NaN` or infinity. The fixed gate rejects those inputs and preserves acceptance for a finite positive control. See the [report](docs/promotion-gate-report.md) and [raw result](results/promotion-gate-metrics-v1/summary.json).
-
-- **Replay group freshness:** a frozen CPU regression task found that current-freshness filtering could return 3 of 4 members from a comparison group. The fixed sampler drops that entire group and retains a separate fresh group intact. See the [report](docs/replay-group-freshness-report.md) and [raw result](results/replay-group-freshness-v1/summary.json).
-
-- **16/16 synthetic reliability cases** matched their declared outcomes, including incorrect provenance, source mutation, malformed output, timeouts, output flooding and subprocess cleanup.
-- **Environment command output cap regression:** the frozen v4 task reproduces accepted stdout/stderr floods at the baseline; the fix rejects each overflow, retains at most the configured bytes per stream, and terminates the POSIX process group while preserving normal command behavior. See the [report](docs/environment-output-budget-report.md) and [raw results](results/environment-output-budget-v4/summary.json). This is not an OS resource sandbox.
-- **Synthetic preference-optimization v1:** clean-label DPO-style updates lowered held-out synthetic NLL by 0.3523 nats/pair, but exceeded the frozen KL ceiling (0.5629 vs 0.5); its original reference accuracy also mishandled ties. Preserve it as a diagnostic non-pass in the [v1 report and bundle](docs/synthetic-dpo-report.md).
-- **Synthetic preference-optimization v2:** a reported training-only sweep informed 100 updates; its raw output was not retained. A separate post-run development replay also selects 100 under the stated rule. On a separate 10-seed confirmation cohort, mean held-out NLL improved by 0.3074 nats/pair (paired 95% bootstrap interval 0.2928–0.3226), all seeds improved, and mean KL was 0.3874 under the recorded 0.5 ceiling. The audit reconstructs all 40 seed-by-arm results and identifies an invalid shuffled-ID arm, excluded from inference. See the [v2 report](docs/synthetic-dpo-v2-report.md) and [development/confirmation evidence](results/synthetic-dpo-cpu-v2/). Synthetic mechanism evidence only.
-- **Preference noise/shift v1:** a protocol committed before the run compared clean training with 20%/40% pair-orientation flips across 10 seeds. The clean arm improved base-teacher held-out NLL by 0.3174 nats/pair (paired seed bootstrap 95% interval 0.3021–0.3328), and all 10 seeds passed the frozen rule under a 0.3952 mean KL. A separate implementation re-trained the policies and rechecked every retained metric without importing the runner or original auditor; it produced matching metrics on Python 3.9.6, 3.11.15, and 3.12.12. The original run's context/action-pair generation is not verified bit-for-bit across Python versions, and no outside person has reproduced it. This is synthetic sensitivity evidence only. See the [report](docs/synthetic-preference-robustness-v1-report.md), [independent audit records](results/synthetic-preference-robustness-v1/independent-audits/), and [bundle](results/synthetic-preference-robustness-v1/confirmation/).
-- **80 historical-source evaluations** preserved the expected pre-fix rejection/fixed acceptance decisions across one-worker and four-worker campaigns.
-- **3.4857× median paired speedup** with four workers versus this same runner with one worker, over five pairs on a local macOS arm64 CPU. This is a small local-grader measurement, not a distributed or model-serving result.
-
-- **Freshness validation scales with the completing job:** under a frozen serial 8/16/32-job CPU protocol, commit-time fingerprint checks fell from 64/256/1,024 to 8/16/32. At 32 jobs, median completion time fell from 28.479s to 1.082s on this machine. Full input refresh remains at export. This repeated-fixture coordinator measurement is machine-local, not heterogeneous grader throughput. See the [frozen report](docs/freshness-scaling-report.md).
-
-Start with the [ten-minute walkthrough](docs/walkthrough.md), [technical report](docs/scheduler-report.md), and [execution contract](docs/execution.md). Inspect retained evidence offline:
-
-The [post-training plan](docs/post-training-plan.md) defines the no-cost learning experiments and their claim limits. The [current evidence gaps](docs/current-gaps.md) rank the remaining CPU-feasible work and state what the retained results support. [`cpu_lm_dpo_head_v1`](protocols/cpu_lm_dpo_head_v1.lock.json) freezes the bounded no-download model-level preference update; its result and first failed attempt are retained separately.
-
-If the exact model snapshot and compatible `torch`, `transformers`, and `numpy` packages are already installed locally, run the frozen study with:
+To reproduce the current RVL follow-up on CPU, from the repository root:
 
 ```bash
-python scripts/run_cpu_lm_dpo_head.py \
-  --model-dir /path/to/7ae557604adf67be50417f59c2c2f167def9a775 \
-  --output results/cpu-lm-dpo-head-v1
-python scripts/audit_cpu_lm_dpo_head.py results/cpu-lm-dpo-head-v1
+PYTHON=python3.12 bash scripts/reproduce_rvl_shared_module_mode_followup_v1.sh \
+  /tmp/vare-rvl-shared-mode-review
 ```
 
-The runner refuses any other snapshot revision, forces offline loading and CPU placement, and aborts at the protocol's wall-time or peak-memory limit. The audit reconstructs data, recorded-margin metrics and the decision; it does not rerun model inference or training.
+The script needs Git and network access to clone the pinned RVL revision, plus Python 3.12, PyTorch 2.9.1, and Transformers 4.57.3. It runs the focused regression on an unpatched clone and all 14 trainer tests on a patched clone.
 
-```bash
-python3 scripts/audit_scheduler.py results/cpu-scheduler-v1
-python3 -m unittest discover -s tests -p 'test_runner.py' -v
-python3 -m unittest discover -s tests -p 'test_durable.py' -v
-python3 scripts/audit_recovery.py results/cpu-recovery-v1
-```
-
-For a new campaign, use `python3 -m vare run --plan PLAN.json --output NEW_DIRECTORY --workers 4`, then `python3 -m vare audit NEW_DIRECTORY`. The execution contract provides the plan format. The runner needs Python >=3.9, Git and POSIX process groups; it has no third-party Python dependency.
-
-## Persistent evaluation and requirements
-
-`durable-init`, `durable-work`, `durable-export` and `durable-audit` add same-host transactional claims, fenced leases, bounded crash retries, immutable attempt records and freshness invalidation. See the [requirements matrix](docs/requirements.md) and [recovery contract](docs/recovery.md). The installed package and experimental control-loop commands require Python >=3.11; standalone checkout evaluation uses Python >=3.9. All implementation is under `src/vare`, with a checkout bootstrap in `vare/`.
-
-## Current scope
-
-Two real upstream fixes calibrate the task and grading path:
-
-| Task | What the grader exercises | Pre-fix result | Fixed result |
-| --- | --- | --- | --- |
-| [HF behavior-policy parity](benchmarks/historical/rvl_behavior_policy_parity/TASK.md) | Protocol v4 checks rollout probabilities and the learner's actual `_sample_objective` path with neutral sampling truncation, repetition, no-repeat-ngram, and token-suppression settings on CPU fixtures. | Maximum absolute rollout log-probability error `0.5570`; learner error `0.3711`; rejected. | Both errors `0.0`; accepted. |
-| [Inherited bad-word neutrality](benchmarks/historical/rvl_bad_words_neutrality/TASK.md) | A separate locked grader checks that single-token `bad_words_ids` does not alter the six CPU-fixture rollout conditions; it also preserves the v4 checks. | Maximum rollout error `0.5570`; learner error `0.3711`; rejected. | Both errors `0.0`; accepted. |
-| [TRL accumulation-window normalizer](benchmarks/historical/trl_grpo_accumulation_scale/TASK.md) | Protocol v8 executes six source-derived arithmetic cases in each of two trainer paths, checks masked numerator/returned-loss reachability, rejects later normalizer writes and unapproved loss mutations, and checks the selected denominator. | Maximum absolute normalizer error `12`; rejected. | Maximum error `0`; accepted. |
-
-The second task tracks the upstream [TRL issue](https://github.com/huggingface/trl/issues/5619) and [fix](https://github.com/huggingface/trl/pull/6024). The first uses a pinned fix in [Recursive-Verification-Lag](https://github.com/mitukx/Recursive-Verification-Lag).
-
-Raw grader outputs, summaries, protocol snapshots, and SHA-256 manifests are retained under [`results/`](results/). See the [evidence notes](docs/evidence.md) for exact revisions, metrics, and limits. Earlier HF protocol results remain as history; the separate bad-word task expands the covered settings without changing v4's lock.
-
-The separate [integrity calibration](results/protocol-integrity/cpu-calibration-v5/summary.json) changes the task descriptor, task brief, and grader one at a time for all three locked historical task protocols. All nine changes are rejected against the unchanged protocol locks. The checked-in Git history is the trust anchor for those locks; this does not detect coordinated edits to a lock itself.
-
-The [local agent pilot](docs/local-agent-pilot.md) is one small-model, one-task negative result: the corrected formal cohort read the task source, but produced no accepted source edits. It does not characterize coding agents generally or establish successful task solving or generalization. The original v1 runs are invalidated and excluded from inference.
-
-The E1 task/evaluator calibrations do not measure a model training or capability improvement. The separate local agent pilot had no successful patch and is reported as a negative result. The TRL grader executes extracted production normalization statements with scalar doubles and checks a direct AST denominator contract; it does not execute the full loss expression or run a trainer/gradient update. The HF grader executes candidate source with local fixtures; it is not an operating-system sandbox for hostile code. Only run it on candidate code you trust.
-
-The restored experimental control plane in `src/vare` includes grouped replay, freshness/curriculum controls, paired promotion gates, workspace-agent campaigns and RVL hooks. These are implementation/regression contracts; no model update through this control plane has been measured. Separate CPU model studies are summarized above. No successful local-agent task solution or GPU result is claimed. The imported L0 raw archive is corrupt; its old accuracy summary is excluded from verified claims (see the evidence notes).
-
-## Reproduce the calibrations
-
-Requirements: Python 3.9 or newer, Git, and network access to fetch the pinned public source revisions. The scripts use only the Python standard library. No model weights, GPU, paid API, or external compute are used for local calibration.
-
-Run each calibration into a new directory outside the repository. The checked-in result directories already exist, so choose a fresh path:
-
-```bash
-python3 scripts/calibrate_task.py \
-  --output /tmp/vare-rvl-calibration
-
-python3 scripts/calibrate_task.py \
-  --task-root benchmarks/historical/rvl_bad_words_neutrality \
-  --output /tmp/vare-rvl-bad-words-calibration
-
-python3 scripts/audit_rvl_bad_words_mutation.py \
-  --output /tmp/vare-rvl-bad-words-mutation
-
-python3 scripts/calibrate_task.py \
-  --task-root benchmarks/historical/trl_grpo_accumulation_scale \
-  --output /tmp/vare-trl-calibration
-
-python3 scripts/calibrate_integrity.py \
-  --output /tmp/vare-integrity-calibration
-```
-
-The calibrator verifies the task, brief, and grader hashes against the protocol lock; fetches the immutable pre-fix and fixed source revisions; grades both; and writes raw JSON, a summary, a source/protocol snapshot, and a manifest. The preregistered outcome requires the pre-fix revision to fail and the known fixed revision to pass.
-
-To prepare and grade a candidate workspace manually:
-
-```bash
-python3 scripts/prepare_task.py \
-  --workspace /tmp/vare-rvl-candidate
-# Make a candidate change in that checkout.
-python3 scripts/grade_task.py \
-  --workspace /tmp/vare-rvl-candidate
-```
-
-For the TRL task, provide `--task-root benchmarks/historical/trl_grpo_accumulation_scale` to both commands. Candidate workspaces must be outside the VARE checkout. The grader and locked task files stay outside the candidate workspace.
-
-## Roadmap
-
-The [roadmap](docs/roadmap.md) tracks the evidence needed before expanding the claims. The main open learning gap is a reproducible improvement in an independently measured model task outcome. The synthetic shift study and narrow forced-choice result do not close that gap. The local agent pilot remains supporting evidence about task execution, not the project's primary research direction.
-
-## Develop the full package
-
-Use Python >=3.11 in a local virtual environment. The runtime has no third-party dependencies; pytest is only for development tests. Use an editable install from this checkout because task/protocol assets are repository files.
-
-```bash
-python -m pip install -e . pytest==8.4.2
-python -m pytest
-vare --help
-```
+Large checkpoints and benchmark content with uncertain redistribution terms remain outside version control. Protocol locks retain source revisions and hashes where applicable. VARE's claims are limited to the exact tasks, models, code paths, and checks described in each report; synthetic or correctness results are not model-capability results.
 
 ## License
 
