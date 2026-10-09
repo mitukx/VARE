@@ -1,6 +1,6 @@
 # RVL GRPO weight-decay configuration with legacy compatibility — v2
 
-**Result: the compatibility-preserving candidate passed the frozen CPU criteria.** The old and candidate trainers use the same effective `weight_decay=0.01` by default and produce matching no-signal updates. The candidate also allows an explicit `weight_decay=0.0`, which makes a zero-gradient step an exact identity. This is a small API/correctness improvement, not a new RL method or model-quality result.
+**Result: the compatibility-preserving candidate passed the frozen CPU criteria.** The old and candidate trainers use the same effective `weight_decay=0.01` by default and produce matching no-signal updates. On the tested cold-start fixture, explicitly setting `weight_decay=0.0` made one zero-gradient step with a fresh optimizer an exact identity. This is a small configuration/API improvement; the study does not establish a trainer defect, a new RL method, or a model-quality result.
 
 ## Why this follow-up exists
 
@@ -21,7 +21,11 @@ The compared conditions are the pinned base default, candidate default, candidat
 | Candidate explicit `0.01` | 0.01 | 9 | `1.001358e-5` | 0 |
 | Candidate explicit `0.0` | 0.0 | 0 | 0 | 0 |
 
-For all three seeds, base default, candidate default, and candidate explicit `0.01` had matching per-parameter metrics and exact agreement with the analytic AdamW decay-only formula. In the explicit-zero condition, all 16 gradient tensors were zero and every parameter remained bitwise unchanged. In the mixed-reward control, all 16 gradient tensors were nonzero and all 16 parameter tensors changed for every seed; pre-clip grad norms were 2.38–2.56. That establishes that the explicit-zero setting does not disable ordinary nonzero-gradient learning in this fixture.
+For all three seeds, base default, candidate default, and candidate explicit `0.01` had matching per-parameter metrics and exact agreement with the analytic AdamW decay-only formula. In the explicit-zero condition, all 16 gradient tensors were zero and every parameter remained bitwise unchanged. In the separate mixed-reward control, which used the default `weight_decay=0.01`, all 16 gradient tensors were nonzero and all 16 parameter tensors changed for every seed; pre-clip grad norms were 2.38–2.56. This confirms an update in the default-decay mixed-reward condition only; the frozen run did not test mixed-reward learning with explicit zero decay.
+
+## Adversarial audit clarification
+
+A later read-only adversarial review found two limits that narrow the interpretation without changing the frozen outcomes or protocol. First, the explicit-zero arm creates a fresh AdamW optimizer and performs one step, so its moment state is empty. It does not show that a resumed AdamW optimizer with nonzero stored moments leaves parameters unchanged when the current gradients are zero. Second, the mixed-reward arm uses the default `0.01`, so it cannot support a claim about learning under explicit zero decay. The protocol, raw runs, and pass/fail criteria remain unchanged; this clarification corrects the scope of the report's claims.
 
 The runner also emits a decay-only formula error for mixed-reward rows; that value is not interpretable because those rows contain gradient-driven updates. It is excluded from the outcome table and all claims. The runtime prints a PyTorch warning when converting this diagnostic tensor to a scalar; the raw values remain finite and the independent audit did not rely on this mixed-arm field.
 
@@ -55,6 +59,6 @@ Each output path must be new. The runner verifies source hashes and locked depen
 
 ## Interpretation and limits
 
-This supports exposing the optimizer setting while preserving the existing effective default. It does not establish that `0.01` or `0.0` is better for learning, that weight decay caused any prior task result, or that this behavior changes downstream task success. The fixture is tiny and randomly initialized; the three seeds are deterministic sanity replications, not inferential samples. It does not test a pretrained model, broad optimizer families, TRL, or an external system's acceptance of the patch.
+This supports exposing the optimizer setting while preserving the existing effective default. It does not establish that `0.01` or `0.0` is better for learning, that weight decay caused any prior task result, or that this behavior changes downstream task success. The fixture is tiny and randomly initialized; the three seeds are deterministic sanity replications, not inferential samples. The identity result is specific to a fresh optimizer's first step; resumed optimizer moments were not tested. The mixed-reward control used the default `0.01`; nonzero-gradient behavior with explicit zero decay was not tested. It does not test a pretrained model, broad optimizer families, TRL, or an external system's acceptance of the patch.
 
 **Decision: stop local work on this bounded finding while the draft PR is under review.** Do not run more model training for this issue. The portfolio's central unresolved evidence gap remains independent task-success improvement after a real policy update, and the full-Trainer result still lacks outside human reproduction.

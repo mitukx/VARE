@@ -1,6 +1,6 @@
 # TRL AsyncGRPO normalization through the full Trainer DDP update
 
-**Result: on a fresh, frozen CPU fixture, the pinned PR #7249 candidate matched the pooled-token loss gradient and one-step SGD update through `Trainer.train()`, `Accelerator.backward`, and an actual two-process Gloo DDP reducer. The pinned base failed the predeclared uneven-token cases and passed the equal-token and short-window controls.** This is upstream implementation-validation evidence, not a new algorithm or model-capability result.
+**Audit correction (2026-10-09): v4 is a protocol non-pass.** The runner transposed the rank and microbatch axes in its unequal-token case. The lock specified global microbatch totals `[13, 10]`, while both retained summaries record `[9, 14]`. On this alternate executed layout, the candidate matched the pooled-token oracle and the base did not; these outcomes do not confirm the locked unequal-token case. Preserve v4 raw outputs as evidence for the layout actually run. A corrected, fresh v5 confirmation is required.
 
 ## Question
 
@@ -16,7 +16,7 @@ with prompt, context, and padding positions masked. The independent oracle calcu
 
 ## Method
 
-Before execution, protocol [v4](../protocols/trl_async_accumulation_normalization_pr7249_full_trainer_ddp_v4.lock.json) froze the base revision `a98fa6a4428f9aae58dfb26d729d7437f662f27a`, PR head `5234eb7c70f4ca7eb92fe8e01611a33eaff17f40`, file hashes, four cases, metrics, thresholds, and static localhost Gloo launch. It uses new token counts and advantages relative to the earlier real-DDP/manual-step run.
+Before execution, protocol [v4](../protocols/trl_async_accumulation_normalization_pr7249_full_trainer_ddp_v4.lock.json) froze the base revision `a98fa6a4428f9aae58dfb26d729d7437f662f27a`, PR head `5234eb7c70f4ca7eb92fe8e01611a33eaff17f40`, file hashes, four cases, metrics, thresholds, and static localhost Gloo launch. A post-run audit compared the nested fixture construction to the recorded outputs and found that the runner iterated the outer rank axis as if it were the microbatch axis. The stored totals `[9, 14]` conflict with the locked `[13, 10]`; v4 therefore does not pass its frozen fixture contract.
 
 The measured path runs production `AsyncGRPOTrainer.compute_loss` and `get_batch_samples`, Transformers `Trainer.train()` and `_inner_training_loop`, `AsyncGRPOTrainer.training_step`, `Accelerator.backward`, DDP `no_sync` accumulation and reducer, and the real SGD optimizer/scheduler step. Captured rank-local `training_step` losses are summed within the window and averaged across the two ranks before comparison with the pooled objective. The `Trainer.train()` returned scalar is retained only as a local diagnostic because the fixture supplies rank-local unprepared DataLoaders.
 
@@ -45,17 +45,17 @@ The candidate passed the frozen `1e-5` loss, gradient, and parameter gates in ev
 - V2 reached the Trainer path, then failed while collecting output: the async log hook expected a worker object, and Trainer had cleared gradients by the time the runner tried to read them.
 - V3 completed the base update, but exposed that `TrainerOutput.training_loss` was rank-local with the injected unprepared loaders. The candidate was not run under v3.
 
-These were harness failures or invalid metric aggregation, not scientific non-passes. Their full logs, decisions, and any available base summary are kept alongside the v4 results. V4 was locked before either arm ran and uses a fresh synthetic sample fixture and a globally reduced training-step loss metric.
+These were harness failures or invalid metric aggregation, not scientific non-passes. Their full logs, decisions, and any available base summary are kept alongside the v4 results. V4 was locked before either arm ran and uses a fresh synthetic sample fixture and a globally reduced training-step loss metric, but the unequal-count sample layout did not match the frozen lock as described above.
 
 ## Interpretation and limits
 
-This result strengthens the earlier [real-DDP/manual-step audit](trl-async-accumulation-normalization-pr7249-real-ddp-v2-report.md): the base/candidate difference persists when loss scaling and gradient accumulation pass through the actual Trainer optimizer loop and Accelerate backward path. It closes the main remaining local question about whether Trainer's accumulation handling changes the measured update.
+For the alternate sample layout that actually ran, the base/candidate difference persists through the actual Trainer optimizer loop and Accelerate backward path. Because the primary unequal-count case was misconstructed, v4 does not close the predeclared question; the corrected v5 run must establish the intended layout before its outcome is interpreted.
 
 It remains a deterministic synthetic token-local model, not a pretrained policy, downstream task, or capability experiment. It does not exercise asynchronous rollout scheduling, production dataloader scatter, distillation, MoE auxiliary losses, vLLM, or accelerator hardware. It does not establish broad TRL correctness, external reproduction, or novelty. The candidate is an existing upstream patch; at the time of inspection, PR #7249 and issue #7206 were still open and the PR listed no reviews. No upstream comment or patch was submitted.
 
 ## Decision
 
-**Accept the narrow Trainer/Accelerate/DDP reproduction; do not duplicate PR #7249.** It is a useful technical finding with a pinned one-command reproduction and measurable base-versus-candidate optimizer effect. It is stronger than the earlier manual step but remains far below evidence of real-model improvement. Stop extending this normalization branch unless an upstream reviewer requests a specific additional check. The portfolio's main gap remains independent held-out task-success improvement after a real policy update, plus an outside human reproduction/review.
+**Decision: do not count v4 as a confirmation.** Preserve its outputs and limits. A new frozen protocol must use a fresh fixture and assert the per-rank/per-microbatch counts against the lock before any optimizer update. Do not duplicate PR #7249 or claim capability impact. The portfolio's main gap remains independent held-out task-success improvement after a real policy update, plus an outside human reproduction/review.
 
 ## Artifacts
 

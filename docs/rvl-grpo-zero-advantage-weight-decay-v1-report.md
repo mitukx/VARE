@@ -1,18 +1,18 @@
 # RVL GRPO zero-advantage AdamW behavior — v1
 
-**Decision: accept the narrow reproduction and candidate behavior; do not present it as an RL method or capability result.** A frozen CPU experiment reproduced an implicit optimizer update in the pinned RVL trainer and showed that an explicit zero-decay default removes that update. The candidate is reviewable as a small compatibility-affecting API change, but maintainer intent about the default remains a design question.
+**Decision: retain the narrow reproduction as an observation of expected AdamW behavior, not as a demonstrated trainer defect or capability result.** A frozen CPU experiment reproduced the effect of AdamW's implicit default and showed that an explicit zero-decay default removes it on a fresh optimizer's first step. This v1 candidate changed ordinary training defaults; the compatibility-preserving v2 is the only current upstream candidate.
 
 ## Research question and novelty
 
 When all responses in a complete same-prompt GRPO group receive the same reward, group-relative advantages and the policy-loss gradient are zero. Does RVL's trainer still change policy parameters?
 
-This is a narrow implementation-correctness finding in RVL revision `c7e646b043cb56e5ea3c2623bb8a61e065451f72`, not a new RL algorithm. The pinned `HFTTrainerConfig` had no `weight_decay` field and called `torch.optim.AdamW` without that argument. PyTorch AdamW therefore supplied its default `0.01`. With a zero gradient tensor, AdamW still applies decoupled shrinkage:
+This is a narrow optimizer-configuration observation in RVL revision `c7e646b043cb56e5ea3c2623bb8a61e065451f72`, not a new RL algorithm or a demonstrated correctness defect. The pinned `HFTTrainerConfig` had no `weight_decay` field and called `torch.optim.AdamW` without that argument. PyTorch AdamW therefore supplied its default `0.01`. With a zero gradient tensor and a fresh optimizer, AdamW still applies decoupled shrinkage:
 
 ```text
 theta_after = (1 - learning_rate * weight_decay) * theta_before
 ```
 
-At `lr=1e-3`, the one-step multiplicative factor is `0.99999`. This behavior is expected when weight decay is intended; the defect is that the RVL wrapper left the choice invisible and uncontrollable. The proposed candidate exposes the parameter and uses `0.0` by default, aligning with the conventional Transformers `TrainingArguments` default. That default changes ordinary RVL training from its previous implicit `0.01`, so it is a compatibility-relevant design choice that maintainers should review explicitly.
+At `lr=1e-3`, the one-step multiplicative factor is `0.99999`. This is expected AdamW behavior when weight decay is enabled. The wrapper did not expose the option, which is a configuration/API limitation rather than evidence that the optimizer update violated its contract. The v1 candidate exposed the parameter and used `0.0` by default, changing ordinary RVL training from its previous implicit `0.01`; that design was superseded by v2, which preserves the effective default.
 
 The comparison is not evidence of a TRL bug. Current Transformers `TrainingArguments` declares `weight_decay=0.0`, while RVL directly instantiates PyTorch AdamW and inherited `0.01`; the two wrappers therefore have different effective defaults unless RVL passes the value explicitly ([Transformers training arguments](https://github.com/huggingface/transformers/blob/main/src/transformers/training_args.py), [pinned RVL source](https://github.com/mitukx/Recursive-Verification-Lag/blob/c7e646b043cb56e5ea3c2623bb8a61e065451f72/src/rvl_systems/hf_trainer.py)).
 
@@ -38,7 +38,7 @@ The frozen lock is [`rvl_grpo_zero_advantage_weight_decay_v1.lock.json`](../prot
 
 For the base run, the frozen runner reported loss and grad norm `0.0`, all four recomputed advantages `0.0`, and exact agreement with the analytic AdamW update for every seed. On the candidate default arm, all model state tensors were bitwise unchanged for all seeds. Explicit decay reproduced the base behavior exactly. In the mixed-reward control, a separate parameter-only recount confirmed 16 changed parameter tensors for each seed; the frozen runner's field named `changed_parameter_tensor_count` counts changed state-dict tensors and reports 17 because one changed entry is a non-parameter buffer. Treat the retained raw field as a state-tensor count; the separate parameter recount is reported here to avoid conflating it with parameters.
 
-The next-token KL values on the base/explicit-decay runs are on the order of `1e-8`, including a small negative estimate from floating-point error. They are not interpreted as meaningful policy-distribution evidence. The mixed-reward KL is positive (`1.33e-4` to `2.73e-4`), but only serves as a fixture-level update check.
+The next-token KL values on the base/explicit-decay runs are on the order of `1e-8`, including a small negative estimate from floating-point error. They are not interpreted as meaningful policy-distribution evidence. The mixed-reward KL is positive (`1.33e-4` to `2.73e-4`), but only serves as a fixture-level update check. All arms create a fresh optimizer and make one step; the experiment does not test zero gradients with nonempty AdamW moment state.
 
 Raw outputs:
 
@@ -76,8 +76,8 @@ The frozen runner refuses outputs that already exist. It verifies the protocol d
 
 ## Claim boundary and decision
 
-Established: on this pinned trainer and fixture, a zero policy-gradient step still changes model parameters because the wrapper inherits AdamW's implicit `0.01` decay. Making the optimizer choice explicit removes that default change and preserves explicitly requested decay. A nonconstant-reward control still produces a gradient-driven update.
+Established: on this pinned trainer and cold-start fixture, a zero policy-gradient step changes model parameters under AdamW's implicit `0.01` decay, matching the expected optimizer formula. Explicit zero decay gives an identity on the tested first step; the mixed-reward v1 control also updates under zero decay. V2 later preserved the prior default while exposing the choice.
 
-Not established: that `0.0` is the uniquely correct default; that this changes real training quality, reward hacking, task success, or model capability; that the effect generalizes to every optimizer/configuration; or that TRL has the same defect. The three seeds are deterministic fixture replications, not a statistical sample. The default change needs maintainer review before an upstream patch is proposed.
+Not established: that `0.0` is the uniquely correct default; that this changes real training quality, reward hacking, task success, or model capability; that the effect generalizes to resumed optimizer state or every optimizer/configuration; or that TRL has the same issue. The three seeds are deterministic fixture replications, not a statistical sample.
 
-**Decision: CONTINUE only to upstream-compatibility review, then STOP this narrow thread.** Do not launch more model experiments. The next decisive action is review by RVL maintainers of whether the wrapper should default to explicit `0.0` (Transformers convention) or preserve `0.01` while exposing it. The primary VARE gap remains independently measured, post-update task-success improvement.
+**Decision: STOP the v1 zero-default proposal; preserve it as design history and use the v2 compatibility candidate for upstream review.** Do not launch more model experiments for this question. The primary VARE gap remains independently measured, post-update task-success improvement.
