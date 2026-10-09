@@ -1,0 +1,1365 @@
+{
+  "protocol": "gemma_calendar_tooluse_base_gate_v1",
+  "model_revision": "299a8560bedf22ed1c72a8a11e7dce4a7f9f51f8",
+  "model_dir": "/Users/user/.cache/huggingface/hub/models--google--gemma-2-2b-it/snapshots/299a8560bedf22ed1c72a8a11e7dce4a7f9f51f8",
+  "device": "cpu",
+  "dtype": "torch.bfloat16",
+  "parameter_count": 2614341888,
+  "tokenizer_vocab": 256000,
+  "task_seed": 4102026,
+  "tasks_total": 32,
+  "tasks_recorded": 11,
+  "elapsed_seconds": 692.699,
+  "generation_seconds_total": 687.5984,
+  "max_rss_bytes_macos": 5992448000,
+  "cpu_threads": 8,
+  "rows": [
+    {
+      "task_id": "cal-001",
+      "family": "book_free_slot",
+      "success": false,
+      "turns": 5,
+      "schema_errors": 5,
+      "tool_errors": 5,
+      "seconds": 58.5567,
+      "initial_events": [
+        {
+          "event_id": "E1",
+          "title": "Focus block",
+          "day": "Mon",
+          "time": "14:00",
+          "participants": [
+            "Ari"
+          ],
+          "movable": false
+        },
+        {
+          "event_id": "E2",
+          "title": "Team check-in",
+          "day": "Tue",
+          "time": "11:00",
+          "participants": [
+            "Eli"
+          ],
+          "movable": false
+        }
+      ],
+      "final_events": [
+        {
+          "event_id": "E1",
+          "title": "Focus block",
+          "day": "Mon",
+          "time": "14:00",
+          "participants": [
+            "Ari"
+          ],
+          "movable": false
+        },
+        {
+          "event_id": "E2",
+          "title": "Team check-in",
+          "day": "Tue",
+          "time": "11:00",
+          "participants": [
+            "Eli"
+          ],
+          "movable": false
+        }
+      ],
+      "trace": [
+        {
+          "turn": 1,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Schedule Planning sync\", \"day\": \"Mon\", \"time\": \"11:00\", \"participants\": [\"Ari\", \"Eli\"]}}\n```",
+          "generation_seconds": 10.988816500001121,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 2,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Planning sync with Ari and Eli\", \"day\": \"Mon\", \"time\": \"11:00\", \"participants\": [\"Ari\", \"Eli\"]}}\n```",
+          "generation_seconds": 11.62624766601948,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 3,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Planning sync with Ari and Eli\", \"day\": \"Mon\", \"time\": \"11:00\", \"participants\": [\"Ari\", \"Eli\"]}}\n```",
+          "generation_seconds": 12.032130792038515,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 4,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Planning sync with Ari and Eli\", \"day\": \"Mon\", \"time\": \"11:00\", \"participants\": [\"Ari\", \"Eli\"]}}\n```",
+          "generation_seconds": 11.753568459011149,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 5,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Planning sync with Ari and Eli\", \"day\": \"Mon\", \"time\": \"11:00\", \"participants\": [\"Ari\", \"Eli\"]}}\n```",
+          "generation_seconds": 12.141660209046677,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        }
+      ],
+      "oracle": {
+        "targets": [
+          {
+            "event_id": "NEW",
+            "title": "Planning sync 01",
+            "day": "Mon",
+            "time": "11:00",
+            "participants": [
+              "Ari",
+              "Eli"
+            ],
+            "movable": true
+          }
+        ],
+        "removed_ids": [],
+        "immutable_ids": [
+          "E1",
+          "E2"
+        ]
+      }
+    },
+    {
+      "task_id": "cal-002",
+      "family": "book_free_slot",
+      "success": false,
+      "turns": 5,
+      "schema_errors": 5,
+      "tool_errors": 5,
+      "seconds": 64.9906,
+      "initial_events": [
+        {
+          "event_id": "E1",
+          "title": "Focus block",
+          "day": "Tue",
+          "time": "16:00",
+          "participants": [
+            "Bea"
+          ],
+          "movable": false
+        },
+        {
+          "event_id": "E2",
+          "title": "Team check-in",
+          "day": "Wed",
+          "time": "14:00",
+          "participants": [
+            "Flo"
+          ],
+          "movable": false
+        }
+      ],
+      "final_events": [
+        {
+          "event_id": "E1",
+          "title": "Focus block",
+          "day": "Tue",
+          "time": "16:00",
+          "participants": [
+            "Bea"
+          ],
+          "movable": false
+        },
+        {
+          "event_id": "E2",
+          "title": "Team check-in",
+          "day": "Wed",
+          "time": "14:00",
+          "participants": [
+            "Flo"
+          ],
+          "movable": false
+        }
+      ],
+      "trace": [
+        {
+          "turn": 1,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Schedule Review sync 02\", \"day\": \"Tue\", \"time\": \"14:00\", \"participants\": [\"Bea\", \"Flo\"]}}\n```",
+          "generation_seconds": 11.998493666003924,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 2,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Schedule Review sync 02\", \"day\": \"Tue\", \"time\": \"14:00\", \"participants\": [\"Bea\", \"Flo\"]}}\n```",
+          "generation_seconds": 12.743220500007737,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 3,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Schedule Review sync 02\", \"day\": \"Tue\", \"time\": \"14:00\", \"participants\": [\"Bea\", \"Flo\"]}}\n```",
+          "generation_seconds": 12.638956125010736,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 4,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Schedule Review sync 02\", \"day\": \"Tue\", \"time\": \"14:00\", \"participants\": [\"Bea\", \"Flo\"]}}\n```",
+          "generation_seconds": 14.753135000006296,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 5,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Schedule Review sync 02\", \"day\": \"Tue\", \"time\": \"14:00\", \"participants\": [\"Bea\", \"Flo\"]}}\n```",
+          "generation_seconds": 12.846063125005458,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        }
+      ],
+      "oracle": {
+        "targets": [
+          {
+            "event_id": "NEW",
+            "title": "Review sync 02",
+            "day": "Tue",
+            "time": "14:00",
+            "participants": [
+              "Bea",
+              "Flo"
+            ],
+            "movable": true
+          }
+        ],
+        "removed_ids": [],
+        "immutable_ids": [
+          "E1",
+          "E2"
+        ]
+      }
+    },
+    {
+      "task_id": "cal-003",
+      "family": "book_free_slot",
+      "success": false,
+      "turns": 5,
+      "schema_errors": 5,
+      "tool_errors": 5,
+      "seconds": 63.0001,
+      "initial_events": [
+        {
+          "event_id": "E1",
+          "title": "Focus block",
+          "day": "Wed",
+          "time": "09:00",
+          "participants": [
+            "Dee"
+          ],
+          "movable": false
+        },
+        {
+          "event_id": "E2",
+          "title": "Team check-in",
+          "day": "Thu",
+          "time": "16:00",
+          "participants": [
+            "Gus"
+          ],
+          "movable": false
+        }
+      ],
+      "final_events": [
+        {
+          "event_id": "E1",
+          "title": "Focus block",
+          "day": "Wed",
+          "time": "09:00",
+          "participants": [
+            "Dee"
+          ],
+          "movable": false
+        },
+        {
+          "event_id": "E2",
+          "title": "Team check-in",
+          "day": "Thu",
+          "time": "16:00",
+          "participants": [
+            "Gus"
+          ],
+          "movable": false
+        }
+      ],
+      "trace": [
+        {
+          "turn": 1,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Handoff sync\", \"day\": \"Wed\", \"time\": \"16:00\", \"participants\": [\"Dee\", \"Gus\"]}}\n```",
+          "generation_seconds": 11.764305665972643,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 2,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Handoff sync 03\", \"day\": \"Wed\", \"time\": \"16:00\", \"participants\": [\"Dee\", \"Gus\"]}}\n```",
+          "generation_seconds": 12.724912207981106,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 3,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Handoff sync 03\", \"day\": \"Wed\", \"time\": \"16:00\", \"participants\": [\"Dee\", \"Gus\"]}}\n```",
+          "generation_seconds": 12.507333415967878,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 4,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Handoff sync 03\", \"day\": \"Wed\", \"time\": \"16:00\", \"participants\": [\"Dee\", \"Gus\"]}}\n```",
+          "generation_seconds": 13.584136583958752,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 5,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Handoff sync 03\", \"day\": \"Wed\", \"time\": \"16:00\", \"participants\": [\"Dee\", \"Gus\"]}}\n```",
+          "generation_seconds": 12.411723583005369,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        }
+      ],
+      "oracle": {
+        "targets": [
+          {
+            "event_id": "NEW",
+            "title": "Handoff sync 03",
+            "day": "Wed",
+            "time": "16:00",
+            "participants": [
+              "Dee",
+              "Gus"
+            ],
+            "movable": true
+          }
+        ],
+        "removed_ids": [],
+        "immutable_ids": [
+          "E1",
+          "E2"
+        ]
+      }
+    },
+    {
+      "task_id": "cal-004",
+      "family": "book_free_slot",
+      "success": false,
+      "turns": 5,
+      "schema_errors": 5,
+      "tool_errors": 5,
+      "seconds": 61.3956,
+      "initial_events": [
+        {
+          "event_id": "E1",
+          "title": "Focus block",
+          "day": "Thu",
+          "time": "11:00",
+          "participants": [
+            "Flo"
+          ],
+          "movable": false
+        },
+        {
+          "event_id": "E2",
+          "title": "Team check-in",
+          "day": "Mon",
+          "time": "09:00",
+          "participants": [
+            "Gus"
+          ],
+          "movable": false
+        }
+      ],
+      "final_events": [
+        {
+          "event_id": "E1",
+          "title": "Focus block",
+          "day": "Thu",
+          "time": "11:00",
+          "participants": [
+            "Flo"
+          ],
+          "movable": false
+        },
+        {
+          "event_id": "E2",
+          "title": "Team check-in",
+          "day": "Mon",
+          "time": "09:00",
+          "participants": [
+            "Gus"
+          ],
+          "movable": false
+        }
+      ],
+      "trace": [
+        {
+          "turn": 1,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Design sync 04\", \"day\": \"Thu\", \"time\": \"09:00\", \"participants\": [\"Flo\", \"Gus\"]}}\n```",
+          "generation_seconds": 11.683666832977906,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 2,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Design sync 04\", \"day\": \"Thu\", \"time\": \"09:00\", \"participants\": [\"Flo\", \"Gus\"]}}\n```",
+          "generation_seconds": 12.423178582976107,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 3,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Design sync 04\", \"day\": \"Thu\", \"time\": \"09:00\", \"participants\": [\"Flo\", \"Gus\"]}}\n```",
+          "generation_seconds": 12.17952437500935,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 4,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Design sync 04\", \"day\": \"Thu\", \"time\": \"09:00\", \"participants\": [\"Flo\", \"Gus\"]}}\n```",
+          "generation_seconds": 12.77964266599156,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 5,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Design sync 04\", \"day\": \"Thu\", \"time\": \"09:00\", \"participants\": [\"Flo\", \"Gus\"]}}\n```",
+          "generation_seconds": 12.321727750007994,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        }
+      ],
+      "oracle": {
+        "targets": [
+          {
+            "event_id": "NEW",
+            "title": "Design sync 04",
+            "day": "Thu",
+            "time": "09:00",
+            "participants": [
+              "Flo",
+              "Gus"
+            ],
+            "movable": true
+          }
+        ],
+        "removed_ids": [],
+        "immutable_ids": [
+          "E1",
+          "E2"
+        ]
+      }
+    },
+    {
+      "task_id": "cal-005",
+      "family": "book_free_slot",
+      "success": false,
+      "turns": 5,
+      "schema_errors": 5,
+      "tool_errors": 5,
+      "seconds": 62.6762,
+      "initial_events": [
+        {
+          "event_id": "E1",
+          "title": "Focus block",
+          "day": "Mon",
+          "time": "14:00",
+          "participants": [
+            "Ari"
+          ],
+          "movable": false
+        },
+        {
+          "event_id": "E2",
+          "title": "Team check-in",
+          "day": "Tue",
+          "time": "11:00",
+          "participants": [
+            "Flo"
+          ],
+          "movable": false
+        }
+      ],
+      "final_events": [
+        {
+          "event_id": "E1",
+          "title": "Focus block",
+          "day": "Mon",
+          "time": "14:00",
+          "participants": [
+            "Ari"
+          ],
+          "movable": false
+        },
+        {
+          "event_id": "E2",
+          "title": "Team check-in",
+          "day": "Tue",
+          "time": "11:00",
+          "participants": [
+            "Flo"
+          ],
+          "movable": false
+        }
+      ],
+      "trace": [
+        {
+          "turn": 1,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Schedule Planning sync 05\", \"day\": \"Mon\", \"time\": \"11:00\", \"participants\": [\"Ari\", \"Flo\"]}}\n```",
+          "generation_seconds": 11.750038457976189,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 2,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Schedule Planning sync 05\", \"day\": \"Mon\", \"time\": \"11:00\", \"participants\": [\"Ari\", \"Flo\"]}}\n```",
+          "generation_seconds": 12.280334209033754,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 3,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Schedule Planning sync 05\", \"day\": \"Mon\", \"time\": \"11:00\", \"participants\": [\"Ari\", \"Flo\"]}}\n```",
+          "generation_seconds": 12.328689832997043,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 4,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Schedule Planning sync 05\", \"day\": \"Mon\", \"time\": \"11:00\", \"participants\": [\"Ari\", \"Flo\"]}}\n```",
+          "generation_seconds": 13.949993250018451,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 5,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Schedule Planning sync 05\", \"day\": \"Mon\", \"time\": \"11:00\", \"participants\": [\"Ari\", \"Flo\"]}}\n```",
+          "generation_seconds": 12.359627125028055,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        }
+      ],
+      "oracle": {
+        "targets": [
+          {
+            "event_id": "NEW",
+            "title": "Planning sync 05",
+            "day": "Mon",
+            "time": "11:00",
+            "participants": [
+              "Ari",
+              "Flo"
+            ],
+            "movable": true
+          }
+        ],
+        "removed_ids": [],
+        "immutable_ids": [
+          "E1",
+          "E2"
+        ]
+      }
+    },
+    {
+      "task_id": "cal-006",
+      "family": "book_free_slot",
+      "success": false,
+      "turns": 5,
+      "schema_errors": 5,
+      "tool_errors": 5,
+      "seconds": 62.7192,
+      "initial_events": [
+        {
+          "event_id": "E1",
+          "title": "Focus block",
+          "day": "Tue",
+          "time": "16:00",
+          "participants": [
+            "Hal"
+          ],
+          "movable": false
+        },
+        {
+          "event_id": "E2",
+          "title": "Team check-in",
+          "day": "Wed",
+          "time": "14:00",
+          "participants": [
+            "Flo"
+          ],
+          "movable": false
+        }
+      ],
+      "final_events": [
+        {
+          "event_id": "E1",
+          "title": "Focus block",
+          "day": "Tue",
+          "time": "16:00",
+          "participants": [
+            "Hal"
+          ],
+          "movable": false
+        },
+        {
+          "event_id": "E2",
+          "title": "Team check-in",
+          "day": "Wed",
+          "time": "14:00",
+          "participants": [
+            "Flo"
+          ],
+          "movable": false
+        }
+      ],
+      "trace": [
+        {
+          "turn": 1,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Schedule Review sync 06\", \"day\": \"Tue\", \"time\": \"14:00\", \"participants\": [\"Hal\", \"Flo\"]}}\n```",
+          "generation_seconds": 11.733039874990936,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 2,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Schedule Review sync 06\", \"day\": \"Tue\", \"time\": \"14:00\", \"participants\": [\"Hal\", \"Flo\"]}}\n```",
+          "generation_seconds": 12.442465999978594,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 3,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Schedule Review sync 06\", \"day\": \"Tue\", \"time\": \"14:00\", \"participants\": [\"Hal\", \"Flo\"]}}\n```",
+          "generation_seconds": 12.45280566700967,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 4,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Schedule Review sync 06\", \"day\": \"Tue\", \"time\": \"14:00\", \"participants\": [\"Hal\", \"Flo\"]}}\n```",
+          "generation_seconds": 13.585094875015784,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 5,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Schedule Review sync 06\", \"day\": \"Tue\", \"time\": \"14:00\", \"participants\": [\"Hal\", \"Flo\"]}}\n```",
+          "generation_seconds": 12.497568916005548,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        }
+      ],
+      "oracle": {
+        "targets": [
+          {
+            "event_id": "NEW",
+            "title": "Review sync 06",
+            "day": "Tue",
+            "time": "14:00",
+            "participants": [
+              "Hal",
+              "Flo"
+            ],
+            "movable": true
+          }
+        ],
+        "removed_ids": [],
+        "immutable_ids": [
+          "E1",
+          "E2"
+        ]
+      }
+    },
+    {
+      "task_id": "cal-007",
+      "family": "book_free_slot",
+      "success": false,
+      "turns": 5,
+      "schema_errors": 5,
+      "tool_errors": 5,
+      "seconds": 61.8922,
+      "initial_events": [
+        {
+          "event_id": "E1",
+          "title": "Focus block",
+          "day": "Wed",
+          "time": "09:00",
+          "participants": [
+            "Ari"
+          ],
+          "movable": false
+        },
+        {
+          "event_id": "E2",
+          "title": "Team check-in",
+          "day": "Thu",
+          "time": "16:00",
+          "participants": [
+            "Gus"
+          ],
+          "movable": false
+        }
+      ],
+      "final_events": [
+        {
+          "event_id": "E1",
+          "title": "Focus block",
+          "day": "Wed",
+          "time": "09:00",
+          "participants": [
+            "Ari"
+          ],
+          "movable": false
+        },
+        {
+          "event_id": "E2",
+          "title": "Team check-in",
+          "day": "Thu",
+          "time": "16:00",
+          "participants": [
+            "Gus"
+          ],
+          "movable": false
+        }
+      ],
+      "trace": [
+        {
+          "turn": 1,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Handoff sync\", \"day\": \"Wed\", \"time\": \"16:00\", \"participants\": [\"Ari\", \"Gus\"]}}\n```",
+          "generation_seconds": 11.807313082972541,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 2,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Handoff sync\", \"day\": \"Wed\", \"time\": \"16:00\", \"participants\": [\"Ari\", \"Gus\"]}}\n```",
+          "generation_seconds": 12.377225291042123,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 3,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Handoff sync\", \"day\": \"Wed\", \"time\": \"16:00\", \"participants\": [\"Ari\", \"Gus\"]}}\n```",
+          "generation_seconds": 12.866010249999817,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 4,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Handoff sync\", \"day\": \"Wed\", \"time\": \"16:00\", \"participants\": [\"Ari\", \"Gus\"]}}\n```",
+          "generation_seconds": 12.51544416701654,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 5,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Handoff sync\", \"day\": \"Wed\", \"time\": \"16:00\", \"participants\": [\"Ari\", \"Gus\"]}}\n```",
+          "generation_seconds": 12.309809416998178,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        }
+      ],
+      "oracle": {
+        "targets": [
+          {
+            "event_id": "NEW",
+            "title": "Handoff sync 07",
+            "day": "Wed",
+            "time": "16:00",
+            "participants": [
+              "Ari",
+              "Gus"
+            ],
+            "movable": true
+          }
+        ],
+        "removed_ids": [],
+        "immutable_ids": [
+          "E1",
+          "E2"
+        ]
+      }
+    },
+    {
+      "task_id": "cal-008",
+      "family": "book_free_slot",
+      "success": false,
+      "turns": 5,
+      "schema_errors": 5,
+      "tool_errors": 5,
+      "seconds": 61.4886,
+      "initial_events": [
+        {
+          "event_id": "E1",
+          "title": "Focus block",
+          "day": "Thu",
+          "time": "11:00",
+          "participants": [
+            "Eli"
+          ],
+          "movable": false
+        },
+        {
+          "event_id": "E2",
+          "title": "Team check-in",
+          "day": "Mon",
+          "time": "09:00",
+          "participants": [
+            "Dee"
+          ],
+          "movable": false
+        }
+      ],
+      "final_events": [
+        {
+          "event_id": "E1",
+          "title": "Focus block",
+          "day": "Thu",
+          "time": "11:00",
+          "participants": [
+            "Eli"
+          ],
+          "movable": false
+        },
+        {
+          "event_id": "E2",
+          "title": "Team check-in",
+          "day": "Mon",
+          "time": "09:00",
+          "participants": [
+            "Dee"
+          ],
+          "movable": false
+        }
+      ],
+      "trace": [
+        {
+          "turn": 1,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Design sync 08\", \"day\": \"Thu\", \"time\": \"09:00\", \"participants\": [\"Eli\", \"Dee\"]}}\n```",
+          "generation_seconds": 11.603856874979101,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 2,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Design sync 08\", \"day\": \"Thu\", \"time\": \"09:00\", \"participants\": [\"Eli\", \"Dee\"]}}\n```",
+          "generation_seconds": 12.228689250012394,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 3,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Design sync 08\", \"day\": \"Thu\", \"time\": \"09:00\", \"participants\": [\"Eli\", \"Dee\"]}}\n```",
+          "generation_seconds": 13.210860582999885,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 4,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Design sync 08\", \"day\": \"Thu\", \"time\": \"09:00\", \"participants\": [\"Eli\", \"Dee\"]}}\n```",
+          "generation_seconds": 12.330096666992176,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 5,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Design sync 08\", \"day\": \"Thu\", \"time\": \"09:00\", \"participants\": [\"Eli\", \"Dee\"]}}\n```",
+          "generation_seconds": 12.106109166983515,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        }
+      ],
+      "oracle": {
+        "targets": [
+          {
+            "event_id": "NEW",
+            "title": "Design sync 08",
+            "day": "Thu",
+            "time": "09:00",
+            "participants": [
+              "Eli",
+              "Dee"
+            ],
+            "movable": true
+          }
+        ],
+        "removed_ids": [],
+        "immutable_ids": [
+          "E1",
+          "E2"
+        ]
+      }
+    },
+    {
+      "task_id": "cal-009",
+      "family": "move_conflict_then_book",
+      "success": false,
+      "turns": 5,
+      "schema_errors": 5,
+      "tool_errors": 5,
+      "seconds": 63.435,
+      "initial_events": [
+        {
+          "event_id": "E1",
+          "title": "Movable one-on-one",
+          "day": "Mon",
+          "time": "11:00",
+          "participants": [
+            "Hal"
+          ],
+          "movable": true
+        },
+        {
+          "event_id": "E2",
+          "title": "Protected review",
+          "day": "Tue",
+          "time": "14:00",
+          "participants": [
+            "Gus"
+          ],
+          "movable": false
+        }
+      ],
+      "final_events": [
+        {
+          "event_id": "E1",
+          "title": "Movable one-on-one",
+          "day": "Mon",
+          "time": "11:00",
+          "participants": [
+            "Hal"
+          ],
+          "movable": true
+        },
+        {
+          "event_id": "E2",
+          "title": "Protected review",
+          "day": "Tue",
+          "time": "14:00",
+          "participants": [
+            "Gus"
+          ],
+          "movable": false
+        }
+      ],
+      "trace": [
+        {
+          "turn": 1,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Planning sync\", \"day\": \"Mon\", \"time\": \"11:00\", \"participants\": [\"Gus\", \"Hal\"]}}\n```",
+          "generation_seconds": 12.135026458010543,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 2,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Planning sync 09\", \"day\": \"Mon\", \"time\": \"09:00\", \"participants\": [\"Gus\", \"Hal\"]}}\n```",
+          "generation_seconds": 12.83311899995897,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 3,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Planning sync 09\", \"day\": \"Mon\", \"time\": \"09:00\", \"participants\": [\"Gus\", \"Hal\"]}}\n```",
+          "generation_seconds": 12.869801833992824,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 4,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Planning sync 09\", \"day\": \"Mon\", \"time\": \"09:00\", \"participants\": [\"Gus\", \"Hal\"]}}\n```",
+          "generation_seconds": 12.833955875015818,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 5,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Planning sync 09\", \"day\": \"Mon\", \"time\": \"09:00\", \"participants\": [\"Gus\", \"Hal\"]}}\n```",
+          "generation_seconds": 12.75605991698103,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        }
+      ],
+      "oracle": {
+        "targets": [
+          {
+            "event_id": "E1",
+            "title": "Movable one-on-one",
+            "day": "Tue",
+            "time": "11:00",
+            "participants": [
+              "Hal"
+            ],
+            "movable": true
+          },
+          {
+            "event_id": "NEW",
+            "title": "Planning sync 09",
+            "day": "Mon",
+            "time": "11:00",
+            "participants": [
+              "Gus",
+              "Hal"
+            ],
+            "movable": true
+          }
+        ],
+        "removed_ids": [],
+        "immutable_ids": [
+          "E2"
+        ]
+      }
+    },
+    {
+      "task_id": "cal-010",
+      "family": "move_conflict_then_book",
+      "success": false,
+      "turns": 5,
+      "schema_errors": 5,
+      "tool_errors": 5,
+      "seconds": 64.8358,
+      "initial_events": [
+        {
+          "event_id": "E1",
+          "title": "Movable one-on-one",
+          "day": "Tue",
+          "time": "14:00",
+          "participants": [
+            "Bea"
+          ],
+          "movable": true
+        },
+        {
+          "event_id": "E2",
+          "title": "Protected review",
+          "day": "Wed",
+          "time": "16:00",
+          "participants": [
+            "Hal"
+          ],
+          "movable": false
+        }
+      ],
+      "final_events": [
+        {
+          "event_id": "E1",
+          "title": "Movable one-on-one",
+          "day": "Tue",
+          "time": "14:00",
+          "participants": [
+            "Bea"
+          ],
+          "movable": true
+        },
+        {
+          "event_id": "E2",
+          "title": "Protected review",
+          "day": "Wed",
+          "time": "16:00",
+          "participants": [
+            "Hal"
+          ],
+          "movable": false
+        }
+      ],
+      "trace": [
+        {
+          "turn": 1,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Book Review sync 10\", \"day\": \"Tue\", \"time\": \"14:00\", \"participants\": [\"Hal\", \"Bea\"]}}\n```",
+          "generation_seconds": 13.36836595798377,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 2,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Book Review sync 10\", \"day\": \"Tue\", \"time\": \"14:00\", \"participants\": [\"Hal\", \"Bea\"]}}\n```",
+          "generation_seconds": 12.838000709016342,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 3,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Book Review sync 10\", \"day\": \"Tue\", \"time\": \"14:00\", \"participants\": [\"Hal\", \"Bea\"]}}\n```",
+          "generation_seconds": 12.881621125037782,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 4,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Book Review sync 10\", \"day\": \"Tue\", \"time\": \"14:00\", \"participants\": [\"Hal\", \"Bea\"]}}\n```",
+          "generation_seconds": 12.888065957988147,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 5,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Book Review sync 10\", \"day\": \"Tue\", \"time\": \"14:00\", \"participants\": [\"Hal\", \"Bea\"]}}\n```",
+          "generation_seconds": 12.853446041990537,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        }
+      ],
+      "oracle": {
+        "targets": [
+          {
+            "event_id": "E1",
+            "title": "Movable one-on-one",
+            "day": "Wed",
+            "time": "14:00",
+            "participants": [
+              "Bea"
+            ],
+            "movable": true
+          },
+          {
+            "event_id": "NEW",
+            "title": "Review sync 10",
+            "day": "Tue",
+            "time": "14:00",
+            "participants": [
+              "Hal",
+              "Bea"
+            ],
+            "movable": true
+          }
+        ],
+        "removed_ids": [],
+        "immutable_ids": [
+          "E2"
+        ]
+      }
+    },
+    {
+      "task_id": "cal-011",
+      "family": "move_conflict_then_book",
+      "success": false,
+      "turns": 5,
+      "schema_errors": 5,
+      "tool_errors": 5,
+      "seconds": 62.7115,
+      "initial_events": [
+        {
+          "event_id": "E1",
+          "title": "Movable one-on-one",
+          "day": "Wed",
+          "time": "16:00",
+          "participants": [
+            "Eli"
+          ],
+          "movable": true
+        },
+        {
+          "event_id": "E2",
+          "title": "Protected review",
+          "day": "Thu",
+          "time": "09:00",
+          "participants": [
+            "Dee"
+          ],
+          "movable": false
+        }
+      ],
+      "final_events": [
+        {
+          "event_id": "E1",
+          "title": "Movable one-on-one",
+          "day": "Wed",
+          "time": "16:00",
+          "participants": [
+            "Eli"
+          ],
+          "movable": true
+        },
+        {
+          "event_id": "E2",
+          "title": "Protected review",
+          "day": "Thu",
+          "time": "09:00",
+          "participants": [
+            "Dee"
+          ],
+          "movable": false
+        }
+      ],
+      "trace": [
+        {
+          "turn": 1,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Handoff sync\", \"day\": \"Wed\", \"time\": \"16:00\", \"participants\": [\"Dee\", \"Eli\"]}}\n```",
+          "generation_seconds": 12.124060041969642,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 2,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Handoff sync\", \"day\": \"Wed\", \"time\": \"16:00\", \"participants\": [\"Dee\", \"Eli\"]}}\n```",
+          "generation_seconds": 12.721022040990647,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 3,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Handoff sync\", \"day\": \"Wed\", \"time\": \"16:00\", \"participants\": [\"Dee\", \"Eli\"]}}\n```",
+          "generation_seconds": 12.661005415953696,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 4,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Handoff sync\", \"day\": \"Wed\", \"time\": \"16:00\", \"participants\": [\"Dee\", \"Eli\"]}}\n```",
+          "generation_seconds": 12.660009499988519,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        },
+        {
+          "turn": 5,
+          "response": "```json\n{\"tool\": \"create_event\", \"arguments\": {\"title\": \"Handoff sync\", \"day\": \"Wed\", \"time\": \"16:00\", \"participants\": [\"Dee\", \"Eli\"]}}\n```",
+          "generation_seconds": 12.537309416977223,
+          "tool_result": {
+            "ok": false,
+            "error": "invalid JSON: Expecting value"
+          }
+        }
+      ],
+      "oracle": {
+        "targets": [
+          {
+            "event_id": "E1",
+            "title": "Movable one-on-one",
+            "day": "Thu",
+            "time": "16:00",
+            "participants": [
+              "Eli"
+            ],
+            "movable": true
+          },
+          {
+            "event_id": "NEW",
+            "title": "Handoff sync 11",
+            "day": "Wed",
+            "time": "16:00",
+            "participants": [
+              "Dee",
+              "Eli"
+            ],
+            "movable": true
+          }
+        ],
+        "removed_ids": [],
+        "immutable_ids": [
+          "E2"
+        ]
+      }
+    }
+  ]
+}
