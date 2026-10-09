@@ -1,0 +1,30 @@
+{
+  "audit_id": "trl-async-distillation-pr7249-ddp-v4-read-only-audit",
+  "audit_date": "2026-10-09",
+  "auditor_type": "separate Codex subagent in the same task environment",
+  "runner_executed_by_auditor": false,
+  "protocol_sha256_verified": "edfcf8b3eadc2668c0e20faa74ef6a8bfed7535ac0283ee311605c5c8f65b5cd",
+  "runner_sha256_verified": "77012cf010460160f05fa3d87e575ab6514a61770c811cda28884c72c818da1d",
+  "wrapper_sha256_verified": "64db71bba77344227956d132cdf61db01b49f64439b1b67bb75ddfbb5d35d4e5",
+  "manifest_and_summary_and_log_hashes_verified": true,
+  "source_revisions_recorded": {
+    "base": "a98fa6a4428f9aae58dfb26d729d7437f662f27a",
+    "candidate": "5234eb7c70f4ca7eb92fe8e01611a33eaff17f40"
+  },
+  "source_hashes_match_lock": true,
+  "source_cleanliness_evidence": "manifest and pre-run wrapper assertions; temporary source clones no longer exist for fresh inspection",
+  "all_four_fixture_layouts_match_lock": true,
+  "all_ranks_complete_one_optimizer_step": true,
+  "all_metrics_finite_and_post_step_rank_hashes_match": true,
+  "candidate_all_case_errors_below_1e-5": true,
+  "base_controls_below_1e-5": true,
+  "base_unequal_and_zero_local_cases_exceed_1e-4_gradient_or_parameter_error": true,
+  "oracle_assessment": "The analytic pooled oracle matches the stated full-support two-token forward-KL objective weighted by active completion-token counts.",
+  "audit_conclusion": "No protocol, fixture-layout, hash, or obvious pooled-token-oracle mismatch found. Supports only the synthetic Trainer/Accelerate/two-process Gloo/DDP/SGD reproducer.",
+  "limitations": [
+    "same task environment and host; not outside human review or reproduction",
+    "no fresh inspection of the deleted temporary checkouts",
+    "synthetic model and teacher distributions; no downstream capability result",
+    "production initialization, async worker/teacher, queue/planner, and DataLoaderDispatcher are bypassed"
+  ]
+}

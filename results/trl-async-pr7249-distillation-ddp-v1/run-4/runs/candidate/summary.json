@@ -1,0 +1,247 @@
+{
+  "arm": "candidate",
+  "backend": "gloo",
+  "cases": {
+    "equal_token_control": {
+      "finite": true,
+      "max_gradient_abs_error": 1.4901161193847656e-08,
+      "max_loss_abs_error": 1.0943040251731873e-08,
+      "max_sgd_parameter_abs_error": 1.862645149230957e-09,
+      "rank_results": [
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_step_loss": 0.13847859599627554,
+          "global_tokens_per_microbatch": [
+            10,
+            10
+          ],
+          "local_tokens_by_rank_per_microbatch": [
+            [
+              4,
+              6
+            ],
+            [
+              6,
+              4
+            ]
+          ],
+          "loss_abs_error": 1.0943040251731873e-08,
+          "max_gradient_abs_error": 1.4901161193847656e-08,
+          "max_sgd_parameter_abs_error": 1.862645149230957e-09,
+          "oracle_loss": 0.1384786069393158,
+          "post_step_state_sha256": "b66c8be7721c4052f2244062c869a69a1324dc174f3d3b60067612411fafdc13",
+          "rank": 0
+        },
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_step_loss": 0.13847859599627554,
+          "global_tokens_per_microbatch": [
+            10,
+            10
+          ],
+          "local_tokens_by_rank_per_microbatch": [
+            [
+              4,
+              6
+            ],
+            [
+              6,
+              4
+            ]
+          ],
+          "loss_abs_error": 1.0943040251731873e-08,
+          "max_gradient_abs_error": 1.4901161193847656e-08,
+          "max_sgd_parameter_abs_error": 1.862645149230957e-09,
+          "oracle_loss": 0.1384786069393158,
+          "post_step_state_sha256": "b66c8be7721c4052f2244062c869a69a1324dc174f3d3b60067612411fafdc13",
+          "rank": 1
+        }
+      ],
+      "rank_state_equal": true
+    },
+    "short_final_window": {
+      "finite": true,
+      "max_gradient_abs_error": 2.9802322387695312e-08,
+      "max_loss_abs_error": 2.0256265997886658e-08,
+      "max_sgd_parameter_abs_error": 2.7939677238464355e-09,
+      "rank_results": [
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_step_loss": 0.10402357787825167,
+          "global_tokens_per_microbatch": [
+            11
+          ],
+          "local_tokens_by_rank_per_microbatch": [
+            [
+              3
+            ],
+            [
+              8
+            ]
+          ],
+          "loss_abs_error": 2.0256265997886658e-08,
+          "max_gradient_abs_error": 2.9802322387695312e-08,
+          "max_sgd_parameter_abs_error": 2.7939677238464355e-09,
+          "oracle_loss": 0.10402359813451767,
+          "post_step_state_sha256": "be474c77c489fd793b81fec7523f4cc28f112b9c4ea85b5eff48f73a121ccbf1",
+          "rank": 0
+        },
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_step_loss": 0.10402357787825167,
+          "global_tokens_per_microbatch": [
+            11
+          ],
+          "local_tokens_by_rank_per_microbatch": [
+            [
+              3
+            ],
+            [
+              8
+            ]
+          ],
+          "loss_abs_error": 2.0256265997886658e-08,
+          "max_gradient_abs_error": 2.9802322387695312e-08,
+          "max_sgd_parameter_abs_error": 2.7939677238464355e-09,
+          "oracle_loss": 0.10402359813451767,
+          "post_step_state_sha256": "be474c77c489fd793b81fec7523f4cc28f112b9c4ea85b5eff48f73a121ccbf1",
+          "rank": 1
+        }
+      ],
+      "rank_state_equal": true
+    },
+    "unequal_rank_and_microbatch_counts": {
+      "finite": true,
+      "max_gradient_abs_error": 1.4901161193847656e-08,
+      "max_loss_abs_error": 2.4796463549137115e-08,
+      "max_sgd_parameter_abs_error": 1.862645149230957e-09,
+      "rank_results": [
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_step_loss": 0.11382892227265984,
+          "global_tokens_per_microbatch": [
+            11,
+            9
+          ],
+          "local_tokens_by_rank_per_microbatch": [
+            [
+              2,
+              7
+            ],
+            [
+              9,
+              2
+            ]
+          ],
+          "loss_abs_error": 2.4796463549137115e-08,
+          "max_gradient_abs_error": 1.4901161193847656e-08,
+          "max_sgd_parameter_abs_error": 1.862645149230957e-09,
+          "oracle_loss": 0.11382889747619629,
+          "post_step_state_sha256": "82d3107d552451e42c5afb5802c1122d6aae25abdc904e1cd1e070127a7c7ec4",
+          "rank": 0
+        },
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_step_loss": 0.11382892227265984,
+          "global_tokens_per_microbatch": [
+            11,
+            9
+          ],
+          "local_tokens_by_rank_per_microbatch": [
+            [
+              2,
+              7
+            ],
+            [
+              9,
+              2
+            ]
+          ],
+          "loss_abs_error": 2.4796463549137115e-08,
+          "max_gradient_abs_error": 1.4901161193847656e-08,
+          "max_sgd_parameter_abs_error": 1.862645149230957e-09,
+          "oracle_loss": 0.11382889747619629,
+          "post_step_state_sha256": "82d3107d552451e42c5afb5802c1122d6aae25abdc904e1cd1e070127a7c7ec4",
+          "rank": 1
+        }
+      ],
+      "rank_state_equal": true
+    },
+    "zero_local_tokens_positive_global": {
+      "finite": true,
+      "max_gradient_abs_error": 1.4901161193847656e-08,
+      "max_loss_abs_error": 2.8870999813079834e-08,
+      "max_sgd_parameter_abs_error": 1.3969838619232178e-09,
+      "rank_results": [
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_step_loss": 0.013412372209131718,
+          "global_tokens_per_microbatch": [
+            5,
+            4
+          ],
+          "local_tokens_by_rank_per_microbatch": [
+            [
+              0,
+              0
+            ],
+            [
+              5,
+              4
+            ]
+          ],
+          "loss_abs_error": 2.8870999813079834e-08,
+          "max_gradient_abs_error": 1.4901161193847656e-08,
+          "max_sgd_parameter_abs_error": 1.3969838619232178e-09,
+          "oracle_loss": 0.013412343338131905,
+          "post_step_state_sha256": "7a11c2897c89fbab1d9cc70b223ee636559bcaa745dc50f7983b92ce77321c89",
+          "rank": 0
+        },
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_step_loss": 0.013412372209131718,
+          "global_tokens_per_microbatch": [
+            5,
+            4
+          ],
+          "local_tokens_by_rank_per_microbatch": [
+            [
+              0,
+              0
+            ],
+            [
+              5,
+              4
+            ]
+          ],
+          "loss_abs_error": 2.8870999813079834e-08,
+          "max_gradient_abs_error": 1.4901161193847656e-08,
+          "max_sgd_parameter_abs_error": 1.3969838619232178e-09,
+          "oracle_loss": 0.013412343338131905,
+          "post_step_state_sha256": "7a11c2897c89fbab1d9cc70b223ee636559bcaa745dc50f7983b92ce77321c89",
+          "rank": 1
+        }
+      ],
+      "rank_state_equal": true
+    }
+  },
+  "device": "cpu",
+  "elapsed_seconds": 4.300750874972437,
+  "protocol_id": "trl-async-distillation-pr7249-full-trainer-ddp-v4",
+  "runtime": {
+    "accelerate": "1.12.0",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "source_commit": "5234eb7c70f4ca7eb92fe8e01611a33eaff17f40",
+  "world_size": 2
+}
