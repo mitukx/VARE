@@ -1,0 +1,98 @@
+{
+  "base_source_hashes": {
+    "src/rvl_systems/hf_trainer.py": "375985c1d0cca49a9d98d8b00ed41cefe000b91461e9a0783e94312466fd0210",
+    "tests/test_mini_lab_torch.py": "14b9db3deb30674eedc8bd9336ad2d9eaeabbbe0987e9c4be9dc517d52cd8e39"
+  },
+  "candidate_revision": "2a47b3bf538d12c1f24fc3bc8bb188329ed32500",
+  "candidate_source_hashes": {
+    "src/rvl_systems/hf_trainer.py": "42c3d0525f8a40c58c1b66da8a449de60d1c195280c7d1b503c245c3e375139f",
+    "tests/test_mini_lab_torch.py": "fa1ce5d13a26293474448c1f26361c1d96dc596d282508689d7e6dc766e81555"
+  },
+  "claim_limits": [
+    "Tiny randomly initialized GPT-2 fixture only.",
+    "Shows explicit control and legacy behavior parity, not that either decay value improves learning quality.",
+    "No downstream task-success, pretrained model, broad optimizer, or capability effect is measured.",
+    "No TRL defect is tested.",
+    "An upstream review outcome is not assumed."
+  ],
+  "failure_criteria": "Any source/runtime mismatch; changed default behavior; non-identity update under explicit zero decay and zero gradients; explicit 0.01 formula error over 1e-7; failed mixed-reward control; or candidate field inserted before any previous positional field.",
+  "fixture": {
+    "candidate_explicit_zero_weight_decay": 0.0,
+    "constant_rewards": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "group": "four responses sharing one prompt id",
+    "historical_weight_decay": 0.01,
+    "learning_rate": 0.001,
+    "max_grad_norm": 1.0,
+    "mixed_rewards": [
+      0.0,
+      0.0,
+      1.0,
+      1.0
+    ],
+    "model": "GPT2LMHeadModel(GPT2Config(vocab_size=32,n_positions=32,n_embd=16,n_layer=1,n_head=2,resid_pdrop=0,embd_pdrop=0,attn_pdrop=0))",
+    "prompt_token_ids": [
+      1,
+      2
+    ],
+    "response_ids_per_sample": [
+      [
+        3,
+        7
+      ],
+      [
+        4,
+        8
+      ],
+      [
+        5,
+        9
+      ],
+      [
+        6,
+        10
+      ]
+    ],
+    "seeds": [
+      17,
+      23,
+      29
+    ]
+  },
+  "hypothesis": "The pinned base omits the AdamW argument and therefore uses 0.01. The candidate appends a weight_decay config field with default 0.01, preserving both historical default updates and positional config arguments, while explicit weight_decay=0.0 yields an identity parameter update for zero gradients.",
+  "novelty_boundary": "A narrow source-level optimizer-configuration correctness finding in RVL. No new RL algorithm, model capability, or claim about TRL.",
+  "protocol_id": "rvl_grpo_weight_decay_compat_v2",
+  "question": "Does exposing weight_decay in RVL's custom GRPO trainer preserve its historical effective AdamW default while allowing an explicit zero-decay update when group-relative advantages are zero?",
+  "resources": {
+    "device": "CPU only",
+    "external_spend_usd": 0,
+    "gpu_hours": 0,
+    "max_wall_seconds": 300,
+    "paid_api_calls": 0
+  },
+  "runner_sha256": "ef76afff0d6770dcaf528383bad1b796b4ec66ca40d6d73e1c712cdc0ea4d441",
+  "runtime": {
+    "device": "CPU",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "rvl_repo": "https://github.com/mitukx/Recursive-Verification-Lag",
+  "rvl_revision": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "sha256": "5e8cde24ace26bb1726dc75a15eccea6d56cbea170741899ebf43d9600876c98",
+  "status": "frozen_before_base_candidate_runs",
+  "success_criteria": {
+    "base_constant_reward_zero_advantages_and_gradients_all_seeds": true,
+    "base_effective_weight_decay_equals_0_01": true,
+    "candidate_config_field_appended_after_existing_fields": true,
+    "candidate_default_equals_0_01": true,
+    "candidate_default_matches_base_parameter_update_exactly": true,
+    "candidate_explicit_0_01_matches_analytic_formula_with_max_error_at_most": 1e-07,
+    "candidate_explicit_zero_preserves_all_parameters_exactly": true,
+    "mixed_reward_control_has_finite_nonzero_gradients_and_parameter_updates_all_seeds": true
+  }
+}
