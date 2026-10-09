@@ -1,0 +1,392 @@
+{
+  "mask_stale_signal_at_training_step": {
+    "ga_1": {
+      "collation": [
+        {
+          "current_version": 0,
+          "ids": [
+            [
+              10,
+              20
+            ]
+          ],
+          "sample_versions": [
+            [
+              0
+            ]
+          ]
+        },
+        {
+          "current_version": 0,
+          "ids": [
+            [
+              11,
+              21
+            ]
+          ],
+          "sample_versions": [
+            [
+              0
+            ]
+          ]
+        },
+        {
+          "current_version": 1,
+          "ids": [
+            [
+              90,
+              100
+            ]
+          ],
+          "sample_versions": [
+            [
+              1
+            ]
+          ]
+        }
+      ],
+      "device": "cpu",
+      "final_weight": 0.0989999994635582,
+      "global_steps": 2,
+      "gradient_accumulation_steps": 1,
+      "loss_records": [
+        {
+          "lag": 0,
+          "raw_gradient": 15.0,
+          "raw_loss": 1.5,
+          "row_id": 10,
+          "sample_version": 0,
+          "stale_signal_masked": false,
+          "training_version": 0,
+          "used_gradient": 15.0
+        },
+        {
+          "lag": 1,
+          "raw_gradient": 16.0,
+          "raw_loss": 1.5839999914169312,
+          "row_id": 11,
+          "sample_version": 0,
+          "stale_signal_masked": true,
+          "training_version": 1,
+          "used_gradient": 0.0
+        }
+      ],
+      "mask_stale_signal": true,
+      "max_staleness": 0,
+      "stale_rows_dropped": 0,
+      "training_batches": [
+        [
+          10,
+          20
+        ],
+        [
+          11,
+          21
+        ]
+      ],
+      "training_versions": [
+        0,
+        1
+      ],
+      "version": [
+        2
+      ],
+      "weights_after_optimizer_steps": [
+        0.10000000149011612,
+        0.0989999994635582,
+        0.0989999994635582
+      ]
+    },
+    "ga_2": {
+      "collation": [
+        {
+          "current_version": 0,
+          "ids": [
+            [
+              10,
+              20
+            ]
+          ],
+          "sample_versions": [
+            [
+              0
+            ]
+          ]
+        },
+        {
+          "current_version": 0,
+          "ids": [
+            [
+              11,
+              21
+            ]
+          ],
+          "sample_versions": [
+            [
+              0
+            ]
+          ]
+        },
+        {
+          "current_version": 0,
+          "ids": [
+            [
+              90,
+              100
+            ]
+          ],
+          "sample_versions": [
+            [
+              1
+            ]
+          ]
+        }
+      ],
+      "device": "cpu",
+      "final_weight": 0.0989999994635582,
+      "global_steps": 1,
+      "gradient_accumulation_steps": 2,
+      "loss_records": [
+        {
+          "lag": 0,
+          "raw_gradient": 15.0,
+          "raw_loss": 1.5,
+          "row_id": 10,
+          "sample_version": 0,
+          "stale_signal_masked": false,
+          "training_version": 0,
+          "used_gradient": 15.0
+        },
+        {
+          "lag": 0,
+          "raw_gradient": 16.0,
+          "raw_loss": 1.600000023841858,
+          "row_id": 11,
+          "sample_version": 0,
+          "stale_signal_masked": false,
+          "training_version": 0,
+          "used_gradient": 16.0
+        }
+      ],
+      "mask_stale_signal": true,
+      "max_staleness": 0,
+      "stale_rows_dropped": 0,
+      "training_batches": [
+        [
+          10,
+          20
+        ],
+        [
+          11,
+          21
+        ]
+      ],
+      "training_versions": [
+        0,
+        0
+      ],
+      "version": [
+        1
+      ],
+      "weights_after_optimizer_steps": [
+        0.10000000149011612,
+        0.0989999994635582
+      ]
+    }
+  },
+  "queue_admission_only": {
+    "ga_1": {
+      "collation": [
+        {
+          "current_version": 0,
+          "ids": [
+            [
+              10,
+              20
+            ]
+          ],
+          "sample_versions": [
+            [
+              0
+            ]
+          ]
+        },
+        {
+          "current_version": 0,
+          "ids": [
+            [
+              11,
+              21
+            ]
+          ],
+          "sample_versions": [
+            [
+              0
+            ]
+          ]
+        },
+        {
+          "current_version": 1,
+          "ids": [
+            [
+              90,
+              100
+            ]
+          ],
+          "sample_versions": [
+            [
+              1
+            ]
+          ]
+        }
+      ],
+      "device": "cpu",
+      "final_weight": 0.09849999845027924,
+      "global_steps": 2,
+      "gradient_accumulation_steps": 1,
+      "loss_records": [
+        {
+          "lag": 0,
+          "raw_gradient": 15.0,
+          "raw_loss": 1.5,
+          "row_id": 10,
+          "sample_version": 0,
+          "stale_signal_masked": false,
+          "training_version": 0,
+          "used_gradient": 15.0
+        },
+        {
+          "lag": 1,
+          "raw_gradient": 16.0,
+          "raw_loss": 1.5839999914169312,
+          "row_id": 11,
+          "sample_version": 0,
+          "stale_signal_masked": false,
+          "training_version": 1,
+          "used_gradient": 16.0
+        }
+      ],
+      "mask_stale_signal": false,
+      "max_staleness": 0,
+      "stale_rows_dropped": 0,
+      "training_batches": [
+        [
+          10,
+          20
+        ],
+        [
+          11,
+          21
+        ]
+      ],
+      "training_versions": [
+        0,
+        1
+      ],
+      "version": [
+        2
+      ],
+      "weights_after_optimizer_steps": [
+        0.10000000149011612,
+        0.0989999994635582,
+        0.09849999845027924
+      ]
+    },
+    "ga_2": {
+      "collation": [
+        {
+          "current_version": 0,
+          "ids": [
+            [
+              10,
+              20
+            ]
+          ],
+          "sample_versions": [
+            [
+              0
+            ]
+          ]
+        },
+        {
+          "current_version": 0,
+          "ids": [
+            [
+              11,
+              21
+            ]
+          ],
+          "sample_versions": [
+            [
+              0
+            ]
+          ]
+        },
+        {
+          "current_version": 0,
+          "ids": [
+            [
+              90,
+              100
+            ]
+          ],
+          "sample_versions": [
+            [
+              1
+            ]
+          ]
+        }
+      ],
+      "device": "cpu",
+      "final_weight": 0.0989999994635582,
+      "global_steps": 1,
+      "gradient_accumulation_steps": 2,
+      "loss_records": [
+        {
+          "lag": 0,
+          "raw_gradient": 15.0,
+          "raw_loss": 1.5,
+          "row_id": 10,
+          "sample_version": 0,
+          "stale_signal_masked": false,
+          "training_version": 0,
+          "used_gradient": 15.0
+        },
+        {
+          "lag": 0,
+          "raw_gradient": 16.0,
+          "raw_loss": 1.600000023841858,
+          "row_id": 11,
+          "sample_version": 0,
+          "stale_signal_masked": false,
+          "training_version": 0,
+          "used_gradient": 16.0
+        }
+      ],
+      "mask_stale_signal": false,
+      "max_staleness": 0,
+      "stale_rows_dropped": 0,
+      "training_batches": [
+        [
+          10,
+          20
+        ],
+        [
+          11,
+          21
+        ]
+      ],
+      "training_versions": [
+        0,
+        0
+      ],
+      "version": [
+        1
+      ],
+      "weights_after_optimizer_steps": [
+        0.10000000149011612,
+        0.0989999994635582
+      ]
+    }
+  }
+}
