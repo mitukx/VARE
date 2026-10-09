@@ -1,0 +1,5 @@
+{
+  "finding": "The primary calculation had the corrected gradient output. The first independent checker incorrectly used the sampled-support gradient as the expected raw-policy gradient, so it rejected the identity arm. No independent-pass claim is made for this run.",
+  "next": "Separated raw-policy gradient from the sampled estimator in the checker; reran the full audit in run-4.",
+  "status": "primary_calculation_valid_independent_audit_failed"
+}

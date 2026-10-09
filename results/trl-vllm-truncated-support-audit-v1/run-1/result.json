@@ -1,0 +1,229 @@
+{
+  "claim_limits": [
+    "This is exact finite-support analysis of pinned source semantics, not an execution of vLLM or GRPOTrainer.",
+    "A support-mismatch counterexample establishes bias for the explicitly named raw-policy estimand; it does not decide which policy distribution a user intends to optimize.",
+    "It does not measure real-model learning, task success, GPU behavior, or prevalence in user workloads.",
+    "The issue is already reported upstream; no novelty or upstream acceptance is presumed."
+  ],
+  "decision": "The pinned source ratio equals p/q on sampled support. Truncation makes q zero outside that support, so this ratio cannot recover arbitrary raw-policy expectations; the exact counterexample applies to the raw-policy estimand, not to every possible intended objective.",
+  "protocol_id": "trl_vllm_truncated_support_audit_v1",
+  "results": [
+    {
+      "context": "c1",
+      "raw_p": [
+        "1/2",
+        "3/10",
+        "1/5"
+      ],
+      "results": [
+        {
+          "abs_log_probability_difference": -0.0,
+          "behavior_expected_source_ratio": "1",
+          "processed_q": [
+            "1/2",
+            "3/10",
+            "1/5"
+          ],
+          "raw_policy_reward_expectation": "1/5",
+          "raw_policy_reward_gradient_theta": "4/25",
+          "retained_raw_mass": "1",
+          "source_corrected_sample_reward_expectation": "1/5",
+          "source_corrected_sample_score_gradient_theta": "0",
+          "source_ratio_p_over_q": [
+            "1",
+            "1",
+            "1"
+          ],
+          "support": [
+            0,
+            1,
+            2
+          ],
+          "transform": "identity"
+        },
+        {
+          "abs_log_probability_difference": 0.2231435513142097,
+          "behavior_expected_source_ratio": "4/5",
+          "processed_q": [
+            "5/8",
+            "3/8",
+            "0"
+          ],
+          "raw_policy_reward_expectation": "1/5",
+          "raw_policy_reward_gradient_theta": "4/25",
+          "retained_raw_mass": "4/5",
+          "source_corrected_sample_reward_expectation": "0",
+          "source_corrected_sample_score_gradient_theta": "0",
+          "source_ratio_p_over_q": [
+            "4/5",
+            "4/5"
+          ],
+          "support": [
+            0,
+            1
+          ],
+          "transform": "top_p"
+        },
+        {
+          "abs_log_probability_difference": 0.2231435513142097,
+          "behavior_expected_source_ratio": "4/5",
+          "processed_q": [
+            "5/8",
+            "3/8",
+            "0"
+          ],
+          "raw_policy_reward_expectation": "1/5",
+          "raw_policy_reward_gradient_theta": "4/25",
+          "retained_raw_mass": "4/5",
+          "source_corrected_sample_reward_expectation": "0",
+          "source_corrected_sample_score_gradient_theta": "0",
+          "source_ratio_p_over_q": [
+            "4/5",
+            "4/5"
+          ],
+          "support": [
+            0,
+            1
+          ],
+          "transform": "top_k"
+        },
+        {
+          "abs_log_probability_difference": 0.2231435513142097,
+          "behavior_expected_source_ratio": "4/5",
+          "processed_q": [
+            "5/8",
+            "3/8",
+            "0"
+          ],
+          "raw_policy_reward_expectation": "1/5",
+          "raw_policy_reward_gradient_theta": "4/25",
+          "retained_raw_mass": "4/5",
+          "source_corrected_sample_reward_expectation": "0",
+          "source_corrected_sample_score_gradient_theta": "0",
+          "source_ratio_p_over_q": [
+            "4/5",
+            "4/5"
+          ],
+          "support": [
+            0,
+            1
+          ],
+          "transform": "min_p"
+        }
+      ]
+    },
+    {
+      "context": "c2",
+      "raw_p": [
+        "7/10",
+        "1/5",
+        "1/10"
+      ],
+      "results": [
+        {
+          "abs_log_probability_difference": -0.0,
+          "behavior_expected_source_ratio": "1",
+          "processed_q": [
+            "7/10",
+            "1/5",
+            "1/10"
+          ],
+          "raw_policy_reward_expectation": "1/10",
+          "raw_policy_reward_gradient_theta": "9/100",
+          "retained_raw_mass": "1",
+          "source_corrected_sample_reward_expectation": "1/10",
+          "source_corrected_sample_score_gradient_theta": "0",
+          "source_ratio_p_over_q": [
+            "1",
+            "1",
+            "1"
+          ],
+          "support": [
+            0,
+            1,
+            2
+          ],
+          "transform": "identity"
+        },
+        {
+          "abs_log_probability_difference": 0.10536051565782628,
+          "behavior_expected_source_ratio": "9/10",
+          "processed_q": [
+            "7/9",
+            "2/9",
+            "0"
+          ],
+          "raw_policy_reward_expectation": "1/10",
+          "raw_policy_reward_gradient_theta": "9/100",
+          "retained_raw_mass": "9/10",
+          "source_corrected_sample_reward_expectation": "0",
+          "source_corrected_sample_score_gradient_theta": "0",
+          "source_ratio_p_over_q": [
+            "9/10",
+            "9/10"
+          ],
+          "support": [
+            0,
+            1
+          ],
+          "transform": "top_p"
+        },
+        {
+          "abs_log_probability_difference": 0.10536051565782628,
+          "behavior_expected_source_ratio": "9/10",
+          "processed_q": [
+            "7/9",
+            "2/9",
+            "0"
+          ],
+          "raw_policy_reward_expectation": "1/10",
+          "raw_policy_reward_gradient_theta": "9/100",
+          "retained_raw_mass": "9/10",
+          "source_corrected_sample_reward_expectation": "0",
+          "source_corrected_sample_score_gradient_theta": "0",
+          "source_ratio_p_over_q": [
+            "9/10",
+            "9/10"
+          ],
+          "support": [
+            0,
+            1
+          ],
+          "transform": "top_k"
+        },
+        {
+          "abs_log_probability_difference": 0.35667494393873245,
+          "behavior_expected_source_ratio": "7/10",
+          "processed_q": [
+            "1",
+            "0",
+            "0"
+          ],
+          "raw_policy_reward_expectation": "1/10",
+          "raw_policy_reward_gradient_theta": "9/100",
+          "retained_raw_mass": "7/10",
+          "source_corrected_sample_reward_expectation": "0",
+          "source_corrected_sample_score_gradient_theta": "0",
+          "source_ratio_p_over_q": [
+            "7/10"
+          ],
+          "support": [
+            0
+          ],
+          "transform": "min_p"
+        }
+      ]
+    }
+  ],
+  "sequence_case": {
+    "per_position_retained_mass": "4/5",
+    "two_position_source_ratio": "16/25"
+  },
+  "source_revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+  "source_sha256": {
+    "trl/generation/vllm_generation.py": "01a67466494fe3618c6b02d15eac0fe10ebd9a1a355862bd32064a64771d48ef",
+    "trl/trainer/grpo_config.py": "68a927fb50b742f5cc35d6e094392f54e262d33a16f5cdb2f0cd740bb51c09fe",
+    "trl/trainer/grpo_trainer.py": "3c74d9d85706d1c87a07ae61794a5499ba63dc6738d262a84700230983d0c1b7"
+  },
+  "status": "pass"
+}

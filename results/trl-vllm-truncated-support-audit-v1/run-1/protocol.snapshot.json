@@ -1,0 +1,75 @@
+{
+  "protocol_id": "trl_vllm_truncated_support_audit_v1",
+  "status": "frozen_before_exact_calculation",
+  "question": "At zero parameter drift, what exact ratio and log-probability gap does pinned TRL compute between raw policy p and processed behavior q, and can samples from q recover the raw-policy expectation E_p[R] for every bounded reward when truncation removes part of p's support?",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+    "files": {
+      "trl/trainer/grpo_trainer.py": "3c74d9d85706d1c87a07ae61794a5499ba63dc6738d262a84700230983d0c1b7",
+      "trl/trainer/grpo_config.py": "68a927fb50b742f5cc35d6e094392f54e262d33a16f5cdb2f0cd740bb51c09fe",
+      "trl/generation/vllm_generation.py": "01a67466494fe3618c6b02d15eac0fe10ebd9a1a355862bd32064a64771d48ef"
+    },
+    "issue": "https://github.com/huggingface/trl/issues/6789"
+  },
+  "estimands": {
+    "raw_policy": "p(a|x)=softmax(logits / temperature)(a|x), with frozen temperature=1",
+    "processed_behavior": "q(a|x)=p(a|x) restricted by the configured sampler support and renormalized",
+    "source_ratio_at_zero_drift": "r(a|x)=p(a|x)/q(a|x) for sampled tokens",
+    "target_1": "untruncated raw-policy expectation E_p[R]",
+    "target_2": "processed-policy expectation E_q[R]",
+    "support_condition": "Importance sampling can identify E_p[R] for every bounded reward from q samples only if p is absolutely continuous with respect to q; top-p/top-k/min-p truncation violates this when any positive-p action is removed.",
+    "interpretation_boundary": "A non-unit p/q ratio on q's support is the exact likelihood ratio for p versus q there; its value alone is not a bug. The counterexample concerns missing support for E_p, not whether the intended training target should instead be q."
+  },
+  "frozen_exact_inputs": {
+    "temperature": 1.0,
+    "contexts": [
+      {"name": "c1", "p": ["1/2", "3/10", "1/5"]},
+      {"name": "c2", "p": ["7/10", "1/5", "1/10"]}
+    ],
+    "sampling_transforms": [
+      {"name": "identity", "parameters": {}},
+      {"name": "top_p", "parameters": {"top_p": "3/4", "rule": "smallest descending prefix whose cumulative raw mass is at least top_p"}},
+      {"name": "top_k", "parameters": {"top_k": 2}},
+      {"name": "min_p", "parameters": {"min_p": "1/2", "rule": "retain tokens with raw probability at least min_p times the maximum token probability"}}
+    ],
+    "support_omission_reward": [0, 0, 1],
+    "score_function_parameterization": "theta adds to the third action's logit at theta=0; reward is 1 only on the third action",
+    "sequence_case": "two conditionally independent decision positions with c1's same frozen distribution and transform at each position"
+  },
+  "primary_metrics": [
+    "retained raw mass Z",
+    "source per-token ratio p/q on every sampled action",
+    "E_q[p/q] and its deviation from 1",
+    "absolute log-probability difference |log p - log q|",
+    "raw-policy reward gradient versus the expected source-corrected score-function estimate for the frozen support-omission reward"
+  ],
+  "predictions": {
+    "identity": "Z=1, p/q=1, log-probability difference=0",
+    "truncated_support": "for each retained action p/q equals retained raw mass Z; E_q[p/q]=Z<1; unsupported raw-policy outcomes have zero sampling probability",
+    "support_omission_reward": "the exact source-corrected sample score-gradient is zero while the raw-policy gradient at theta=0 is p3*(1-p3)>0",
+    "sequence_ratio": "for two positions with equal retained mass Z, the source sequence-level ratio is Z^2 before clipping"
+  },
+  "acceptance": {
+    "exact_fraction_arithmetic_matches_all_predictions": true,
+    "second_independently_written_audit_matches_primary_results": true,
+    "source_hashes_match_lock": true
+  },
+  "failure_criteria": [
+    "any exact metric differs from its frozen prediction",
+    "the current pinned source no longer forms the ratio from full-model log-probability minus processed sampler log-probability",
+    "the chosen top-p/top-k/min-p rules do not produce the declared support sets"
+  ],
+  "claim_limits": [
+    "This is exact finite-support analysis of pinned source semantics, not an execution of vLLM or GRPOTrainer.",
+    "A support-mismatch counterexample establishes bias for the explicitly named raw-policy estimand; it does not decide which policy distribution a user intends to optimize.",
+    "It does not measure real-model learning, task success, GPU behavior, or prevalence in user workloads.",
+    "The issue is already reported upstream; no novelty or upstream acceptance is presumed."
+  ],
+  "resources": {
+    "cpu_only": true,
+    "gpu_hours": 0,
+    "paid_api_calls": 0,
+    "external_compute_usd": 0
+  }
+}

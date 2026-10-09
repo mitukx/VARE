@@ -1,0 +1,5 @@
+{
+  "finding": "The first primary runner hard-coded the source-corrected score-gradient estimate to zero, incorrectly including identity sampling where the expected value is nonzero. The support, ratio, reward, and log-gap calculations in this attempt were retained but this result is not accepted as a complete run.",
+  "next": "Corrected the score-gradient calculation without changing the frozen inputs or predictions.",
+  "status": "superseded_invalid_primary_gradient_field"
+}
