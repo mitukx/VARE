@@ -1,5 +1,7 @@
 # Roadmap
 
+**Update 2026-10-09 — base-model gate:** the frozen Qwen2.5-Math-1.5B format-constrained CPU screen failed at 0/96 exact boxed answers; resource limits and independent replay passed. This does not measure arithmetic ability without the required output format, tool use, or post-training. Retire the exact pairing and defer further model screens until independent review or a concrete correctness issue produces a materially distinct, justified candidate. See the [report](cpu-qwen-math-tir-feasibility-v1-report.md) and [raw bundle](../results/cpu-qwen-math-tir-feasibility-v1/run-1/).
+
 VARE should expand its claims only when the next evidence tier can be reproduced within the declared resource budget. The current scope includes independently graded historical source changes and measured local CPU evaluation execution.
 
 ## E0 — Harness integrity

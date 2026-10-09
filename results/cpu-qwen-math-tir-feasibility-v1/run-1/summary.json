@@ -1,0 +1,74 @@
+{
+  "dataset_sha256": "65e78e92a4541336020207cea23c0ef1774a1857caabd7b30c2e8d97cac9158e",
+  "decision": {
+    "each_family_minimum_pass": false,
+    "maximum_accuracy_headroom_pass": true,
+    "minimum_accuracy_pass": false,
+    "pass": false,
+    "resource_pass": true
+  },
+  "generation": {
+    "tokens_per_second": 8.4177,
+    "total_seconds": 1061.101,
+    "total_tokens": 8932
+  },
+  "model": {
+    "dtype": "bfloat16",
+    "files_sha256": {
+      "config.json": "81d1dc3c9d4797466a24bfc140776894d15ac4ccce58a0220462b2106f2f4831",
+      "generation_config.json": "8c970692323e3ea0e9b8b0a4dca79388d31226e41f83c9fd6014804280ebf6e8",
+      "merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+      "model.safetensors": "f7aa8d665ab44d3b461bed742fe93cdcedc15d2e31e50dc372c126e6f720857b",
+      "tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "tokenizer_config.json": "a668be4b083078aca7c38853dd929184e81534d72525a9c1ddb84ea6fd1de6f8",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "id": "Qwen/Qwen2.5-Math-1.5B",
+    "model_role": "base checkpoint; no finetuning or optimizer updates",
+    "revision": "4a83ca6e4526a4f2da3aa259ec36c259f66b2ab2",
+    "weights_must_already_be_cached": true
+  },
+  "n": 96,
+  "peak_rss_bytes": 3694985216,
+  "per_family": {
+    "equal_distribution": {
+      "exact_match": 0.0,
+      "n": 24
+    },
+    "event_revenue": {
+      "exact_match": 0.0,
+      "n": 24
+    },
+    "factory_output": {
+      "exact_match": 0.0,
+      "n": 24
+    },
+    "inventory": {
+      "exact_match": 0.0,
+      "n": 24
+    }
+  },
+  "primary": {
+    "exact_match": 0.0,
+    "successes": 0,
+    "wilson_95": [
+      3.469446951953614e-18,
+      0.038475587857675686
+    ]
+  },
+  "protocol_sha256": "dca4c5cc462626a1bec9af8c6a0074493eaecb2e4818abc7e3120e8a15cd3d7e",
+  "runtime": {
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "scope": "No-update CPU feasibility on a newly generated procedural arithmetic task; not a public benchmark or capability claim.",
+  "status": "completed",
+  "tool_use": {
+    "calls": 0,
+    "invalid_or_excess_calls": 0,
+    "valid_calls": 0
+  },
+  "wall_seconds": 1068.218
+}

@@ -1,0 +1,105 @@
+{
+  "claim_boundary": "This is one no-update feasibility screen on a small procedurally generated arithmetic task. It is not a training result, public benchmark score, confirmation result, evidence of general reasoning, or evidence of capability improvement. Optional calculator use means the screen measures the combined model-tool system.",
+  "compute_limits": {
+    "device": "CPU only; CUDA and MPS use forbidden",
+    "max_input_tokens": 1024,
+    "max_new_tokens_per_turn": 128,
+    "max_peak_rss_bytes": 6442450944,
+    "max_tool_calls": 2,
+    "max_wall_seconds": 7200,
+    "network": "disabled; HF_HUB_OFFLINE=1, TRANSFORMERS_OFFLINE=1, local_files_only=true",
+    "paid_compute": false,
+    "threads": 4
+  },
+  "dataset": {
+    "composition_counts": {
+      "equal_distribution": 24,
+      "event_revenue": 24,
+      "factory_output": 24,
+      "inventory": 24
+    },
+    "generator_path": "scripts/generate_qwen_math_tir_feasibility_data_v1.py",
+    "generator_seed": 20261009,
+    "pilot_rows": 96,
+    "pilot_rows_path": "data/cpu-qwen-math-tir-feasibility-v1/pilot.jsonl",
+    "pilot_sha256": "65e78e92a4541336020207cea23c0ef1774a1857caabd7b30c2e8d97cac9158e",
+    "selection": "All rows are newly generated from four declared arithmetic word-problem templates with randomized integer operands. No public dataset or benchmark split is used. The 96 rows are permanently excluded from formal training, development, and confirmation."
+  },
+  "decision_rule": "Pass only if all 96 rows complete; aggregate exact match is in [0.25, 0.85]; each family is at least 0.10; and peak RSS and wall time remain within limits. Pass means only proceed to design and separately freeze a new post-training study. Fail means retire this model/task pairing; do not adjust thresholds or reuse this pilot for training or confirmation.",
+  "freeze": {
+    "auditor": "scripts/audit_cpu_qwen_math_tir_feasibility_v1.py",
+    "auditor_sha256": "23c4cce5ed88e660dcd41cc9e9c469102f8b8d1742d2491cebe049d70ea602dc",
+    "generator": "scripts/generate_qwen_math_tir_feasibility_data_v1.py",
+    "generator_sha256": "6cf4205d4660e09139e602bd868c39a9d87c7e3ccb0db406ad58679e7f13f174",
+    "objective_test": "tests/test_qwen_math_tir_feasibility_v1.py",
+    "objective_test_sha256": "7d8f24d54521537116026d4dbec67d6e6fe741a008dbb23a17aee8558846027a",
+    "runner": "scripts/run_cpu_qwen_math_tir_feasibility_v1.py",
+    "runner_sha256": "eb71ada47a725eb7c20c56b822c82614339ecf863f7dbd75049acdc85e50eb5d"
+  },
+  "generation": {
+    "algorithm": "greedy",
+    "decoding": "Greedy with the model tokenizer default EOS behavior; messages are rendered with the pinned local tokenizer chat template.",
+    "do_sample": false,
+    "max_new_tokens_per_turn": 128,
+    "maximum_tool_calls": 2,
+    "prompt_template": "System: Solve the arithmetic word problem carefully. You may use the provided calculator for integer arithmetic. End with the final integer inside \\boxed{...}. User: exact generated problem text.",
+    "response_parser": "Parse the last integer in a LaTeX \\boxed{integer} expression in the final non-tool assistant turn; no boxed integer is incorrect/unparsed.",
+    "seed": null,
+    "tool": "A deterministic restricted Python-AST calculator supporting integer +, -, *, //, %, and exponentiation only for bounded operands/results."
+  },
+  "metrics": {
+    "feasibility_gate": {
+      "all_rows_completed": true,
+      "maximum_accuracy": 0.85,
+      "minimum_accuracy": 0.25,
+      "minimum_accuracy_per_family": 0.1,
+      "resources_respected": true
+    },
+    "primary": "Exact match of the last boxed integer against the independently generated integer oracle across all 96 rows. Missing/invalid final parse is incorrect.",
+    "secondary": [
+      "Per-family exact match (descriptive only)",
+      "Calculator call count, valid calls, invalid/excess calls",
+      "Generated tokens, generation wall time, tokens per second",
+      "Peak resident set size, total wall time"
+    ],
+    "uncertainty": "Report a two-sided 95% Wilson interval for the aggregate exact-match rate; no hypothesis test or confirmatory claim."
+  },
+  "model": {
+    "dtype": "bfloat16",
+    "files_sha256": {
+      "config.json": "81d1dc3c9d4797466a24bfc140776894d15ac4ccce58a0220462b2106f2f4831",
+      "generation_config.json": "8c970692323e3ea0e9b8b0a4dca79388d31226e41f83c9fd6014804280ebf6e8",
+      "merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+      "model.safetensors": "f7aa8d665ab44d3b461bed742fe93cdcedc15d2e31e50dc372c126e6f720857b",
+      "tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "tokenizer_config.json": "a668be4b083078aca7c38853dd929184e81534d72525a9c1ddb84ea6fd1de6f8",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "id": "Qwen/Qwen2.5-Math-1.5B",
+    "model_role": "base checkpoint; no finetuning or optimizer updates",
+    "revision": "4a83ca6e4526a4f2da3aa259ec36c259f66b2ab2",
+    "weights_must_already_be_cached": true
+  },
+  "phase": "frozen_base_only_feasibility_screen",
+  "protocol_id": "vare-cpu-qwen-math-tir-feasibility-v1",
+  "purpose": "Decide whether a cached CPU-runnable base model has enough measured competence and headroom on an independently verifiable, multi-step task to justify designing a separate post-training study.",
+  "runtime": {
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "sha256": "dca4c5cc462626a1bec9af8c6a0074493eaecb2e4818abc7e3120e8a15cd3d7e",
+  "study_boundary": {
+    "confirmation": false,
+    "development": false,
+    "future_formal_protocol_required": true,
+    "pilot_rows_permanently_excluded": true,
+    "training": false
+  },
+  "task": {
+    "answer_scope": "Parse only the last boxed integer in the final non-tool assistant turn. Missing parse is incorrect.",
+    "maximum_tool_calls": 2,
+    "system_prompt": "Solve the arithmetic word problem carefully. You may use the provided calculator for integer arithmetic. End with the final integer inside \\boxed{...}."
+  }
+}

@@ -1,5 +1,13 @@
 # Next study decision — 2026-10-09
 
+## Current decision — 2026-10-09: no model/task/update path clears the feasibility gates
+
+After the partial-audit efficiency study failed to show a finite-budget advantage, the frozen Qwen2.5-Math-1.5B CPU screen completed at 0/96 exact boxed answers, 0/24 in every family, and no calculator calls. Runtime and memory limits passed; the independent same-host replay audit passed. This retires only the exact base-checkpoint/prompt/output-parser/task pairing. Some prose outputs contained correct arithmetic, so the result is not evidence of zero arithmetic ability; the run does not evaluate tool use or post-training. See the [technical report](cpu-qwen-math-tir-feasibility-v1-report.md), [frozen protocol](../protocols/cpu_qwen_math_tir_feasibility_v1.lock.json), and [audited bundle](../results/cpu-qwen-math-tir-feasibility-v1/run-1/).
+
+**Decision: stop this pairing and stop nearby feasibility variants for now.** The retained record shows no distinct cached base/task/update candidate that justifies another model screen. Return to independent review/reproduction of existing technical claims and only pursue a narrow systems fix if that review identifies a concrete correctness defect. Reopen model learning only after a materially distinct base/task interaction contract and a separately measured, affordable update/save/reload path clear frozen gates. No post-training or capability-improvement claim follows from this screen.
+
+The original partial-audit decision and its evidence follow unchanged below.
+
 ## Current decision — 2026-10-09: partial-audit efficiency is not established
 
 The frozen [`grpo_partial_audit_estimator_v1`](../protocols/grpo_partial_audit_estimator_v1.json) compared 1–4 clean labels per four-member group at a fixed 12-label budget on 390 declared reward laws. The exact three-label estimator is unbiased, but its sample-mean MSE was higher than full-group audit in all 387 nondegenerate laws (median ratio 1.0103). One- and two-label lower-order projections had smaller MSE in 385/387 rows but could not identify the third-order parity update; their apparent MSE gains can suppress the target signal. On the selected two-world parity witness, the 3-label arm's wrong-or-zero direction rate was 52.0–52.5%, versus 57.6–57.9% for full audits, but the exact MSE was higher and the result is one small synthetic scalar-gradient diagnostic. Do not claim general audit efficiency, update quality, or capability improvement.
