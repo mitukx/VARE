@@ -1,0 +1,49 @@
+{
+  "protocol_id": "trl_async_forked_rollout_freshness_boundary_v1",
+  "status": "frozen_before_confirmation",
+  "question": "After a forked rollout passes one atomic stale-admission check, can a later sibling cross a FixedCountBatcher microbatch boundary and be consumed after max_staleness is exceeded?",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "base_revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+    "candidate_base_revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+    "base_files_sha256": {
+      "trl/experimental/async_grpo/async_grpo_trainer.py": "2657481258dcc04112761e9ff61a35cb93b2b72c3e197e4524f4602fd6a2dbfe",
+      "trl/experimental/async_grpo/async_rollout_worker.py": "5eab22259711df4e3ec1a62047f87a2cffc5b204772b25cd78647336e52b9670"
+    },
+    "candidate_files_sha256": {
+      "trl/experimental/async_grpo/async_grpo_trainer.py": "f16c87b7fce02a3c3ffa6d54fe7d6ef00e1b3ea6cec3e7a47cf7a923f722a5fa",
+      "trl/experimental/async_grpo/async_rollout_worker.py": "2bca6e23b7cc71ecb809a3585e04458eb1da184731001bfa41b50326e8bd57a3"
+    },
+    "candidate_patch_sha256": "df6bfd03224bc961658d7366eea590cd2be4ad5c1940d4153b893e1373f6c163"
+  },
+  "estimand": {
+    "primary": "Whether the second fixed-count microbatch contains the admitted rollout's second sibling or a fresh version-1 sentinel after model_version advances from 0 to 1 between microbatches.",
+    "independent_unit": "One deterministic rollout with two rows sharing rollout_id=rollout-a and rollout_size=2.",
+    "resource_budget": "CPU only; queue and batcher fixtures; no pretrained model, optimizer, GPU, API, or external spend.",
+    "claim_boundary": "Measures per-microbatch collator input and stale-row filtering only; no optimizer, gradient, or task result."
+  },
+  "method": {
+    "script": "scripts/reproduce_trl_async_forked_rollout_freshness_boundary_v1.py",
+    "script_sha256": "240c5debda62858b3279db2c0afdad8b7abf3cf5236b8f774e724643d6c696f5",
+    "fixed_count_microbatch_size": 1,
+    "num_processes": 1,
+    "max_staleness": 0,
+    "fixture": "Two version-0 fork rows are followed by a version-1 singleton sentinel. The policy version advances between the first and second microbatch. A fixed-version control uses the same rows without advancing the version."
+  },
+  "acceptance": {
+    "fixed_version_control_delivers_both_fork_rows_in_order": true,
+    "base_after_transition_drops_stale_sibling_and_delivers_fresh_sentinel": true,
+    "candidate_after_transition_does_not_deliver_stale_sibling": true,
+    "version_transition_is_between_microbatches": true,
+    "source_script_hashes_match_lock": true,
+    "cpu_only_and_no_external_spend": true
+  },
+  "failure_criteria": [
+    "Any pinned source, patch, or script hash differs.",
+    "The fixed-version control fails to deliver both fork rows.",
+    "Baseline transition behavior differs from the frozen stale-sibling control.",
+    "Candidate emits a version-0 sibling after the injected transition while max_staleness is zero.",
+    "A GPU, pretrained-model download, paid API, or external service is required."
+  ],
+  "decision_rule": "If the candidate emits the stale sibling after the transition, reject the candidate as satisfying use-time freshness. The admission-only result may remain valid, but it cannot be described as freshness-safe across training microbatches. A replacement must define and test a compatible consumption/batching contract."
+}
