@@ -1,0 +1,16 @@
+/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/.audit_trl_async_grpo_truncated_support_attempt1.py:124: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.async_grpo.async_grpo_trainer import AsyncGRPOTrainer
+W1009 13:03:17.516000 76193 site-packages/torch/distributed/elastic/multiprocessing/redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/.audit_trl_async_grpo_truncated_support_attempt1.py", line 204, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/.audit_trl_async_grpo_truncated_support_attempt1.py", line 196, in main
+    result = run(args.source_root)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/.audit_trl_async_grpo_truncated_support_attempt1.py", line 139, in run
+    _one_action_loss(
+  File "/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/.audit_trl_async_grpo_truncated_support_attempt1.py", line 107, in _one_action_loss
+    ratio = trainer._metrics["train"]["ratio"][-1][0]
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+TypeError: 'float' object is not subscriptable

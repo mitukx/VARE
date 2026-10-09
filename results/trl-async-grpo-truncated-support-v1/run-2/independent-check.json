@@ -1,0 +1,61 @@
+{
+  "arithmetic": "fractions.Fraction with integer numerators/denominators; no primary-runner imports",
+  "errors": [],
+  "protocol_id": "trl_async_grpo_truncated_support_v1",
+  "raw_target_gradient": "4/25",
+  "reconstructed": {
+    "identity_control": {
+      "actions": [
+        {
+          "action": 0,
+          "expected_update_direction": "0",
+          "p": "1/2",
+          "p_over_q": "1",
+          "q": "1/2",
+          "score_theta": "-1/5"
+        },
+        {
+          "action": 1,
+          "expected_update_direction": "0",
+          "p": "3/10",
+          "p_over_q": "1",
+          "q": "3/10",
+          "score_theta": "-1/5"
+        },
+        {
+          "action": 2,
+          "expected_update_direction": "4/5",
+          "p": "1/5",
+          "p_over_q": "1",
+          "q": "1/5",
+          "score_theta": "4/5"
+        }
+      ],
+      "q_weighted_ratio": "1",
+      "q_weighted_update_direction_theta": "4/25"
+    },
+    "top_p_truncation": {
+      "actions": [
+        {
+          "action": 0,
+          "expected_update_direction": "0",
+          "p": "1/2",
+          "p_over_q": "4/5",
+          "q": "5/8",
+          "score_theta": "-1/5"
+        },
+        {
+          "action": 1,
+          "expected_update_direction": "0",
+          "p": "3/10",
+          "p_over_q": "4/5",
+          "q": "3/8",
+          "score_theta": "-1/5"
+        }
+      ],
+      "q_weighted_ratio": "4/5",
+      "q_weighted_update_direction_theta": "0"
+    }
+  },
+  "status": "pass"
+}
