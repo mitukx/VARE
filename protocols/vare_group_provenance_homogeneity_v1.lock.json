@@ -1,0 +1,37 @@
+{
+  "protocol_id": "vare_group_provenance_homogeneity_v1",
+  "created_utc": "2026-10-09",
+  "status": "frozen_before_reproduction",
+  "question": "Does CapabilityLoop admit a declared GRPO group whose members have different behavior-policy or verifier provenance, when each member individually passes freshness admission?",
+  "scope": "VARE local group-contract correctness only; no claim that mixed-policy GRPO is universally invalid.",
+  "estimand": "For this audit, a declared online GRPO group is intended to represent repeated samples from one requested incumbent policy identity/version and one verifier version. A mixed-provenance group violates that data contract. The numerical illustration compares its score update to the separately specified current-policy on-policy REINFORCE expectation; it is not asserted to be the only valid off-policy GRPO objective.",
+  "primary_hypothesis": "A group with policy versions [1,0] is admitted and passed to train_candidate when active version is 1 and max_policy_lag is 2, despite the groups representing distinct behavior policies.",
+  "primary_outcome": "Whether the training hook receives any mixed policy-id/version or verifier-version group.",
+  "negative_controls": [
+    "homogeneous current-policy group [1,1] should be admitted",
+    "homogeneous permitted-stale group [0,0] should be admitted under max_policy_lag=2",
+    "homogeneous future-policy group [2,2] should be rejected by the existing lag controller",
+    "mixed verifier-version group [1,1] should be independently checked"
+  ],
+  "secondary_exact_oracle": {
+    "policy": "Bernoulli target policy pi(a=1)=1/2, reward r(a)=a, group size 2, population-standardized binary group advantages with epsilon treated as zero",
+    "target_current_policy_expected_update": "Under p=1/2 each group gets a nonzero update only when actions differ, an event of probability 1/2; the mean batch score direction is 1/4.",
+    "mixed_behavior_fixture": "One group member sampled from Bernoulli(0.9), the other from Bernoulli(0.1); P(actions differ)=0.82, giving mean target-policy score direction 0.41 if these uncorrected samples are evaluated at pi=1/2.",
+    "reported_difference": "0.16 absolute, 64% relative to 0.25; this is a specified-estimand contrast, not proof that every mixed-policy GRPO formulation is biased."
+  },
+  "falsification": "The implementation hypothesis is falsified if the engine or replay rejects all mixed-provenance groups before train_candidate while both homogeneous freshness controls behave as specified.",
+  "fix_gate": "Patch only if the frozen source-path reproduction confirms admission. The fix must reject a whole group if members disagree on behavior policy identity/version or verifier version; retain homogeneous stale groups within configured lag and current groups.",
+  "limitations": [
+    "No external trainer or language model is run in this v1 protocol.",
+    "The RVLGRPOHooks standard rollout path serializes/restores one active policy snapshot; this audit targets the public custom LoopHooks boundary.",
+    "Mixed-policy GRPO is an active research direction, so the result cannot be generalized into a claim that heterogeneous behavior groups are inherently invalid.",
+    "No capability, task-success, statistical sample-efficiency, or production prevalence claim is in scope."
+  ],
+  "resources": "CPU only; no paid APIs; deterministic fixtures; at most one source-path reproduction and focused regression tests.",
+  "stopping_rule": "Stop after the baseline source-path reproduction, the minimal fix if confirmed, and focused regression tests. Do not extend to broad benchmark or model training.",
+  "sources_to_review": [
+    "https://github.com/huggingface/trl/issues/5974",
+    "https://proceedings.iclr.cc/paper_files/paper/2026/hash/6cad062f78120689e8a678b8af9c6d92-Abstract-Conference.html",
+    "https://arxiv.org/abs/2508.08641"
+  ]
+}
