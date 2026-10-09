@@ -12,12 +12,15 @@ The run used cached Qwen2.5-0.5B-Instruct revision `7ae557604adf67be50417f59c2c2
 |---|---:|---:|
 | Exact parser matches | 0/200 | — |
 | Parse rate | 0% | >=80% |
-| Accuracy under the required parser | 0% | >=57%, Wilson lower bound >50% |
+| Strict-format accepted-correct rate | 0/200 | >=57%, Wilson lower bound >50% |
+| Semantic accuracy among parseable outputs | Undefined (0 parseable rows) | Not estimable |
 | Wall time | 396.4 s | <=1,800 s |
 | Peak RSS | 3,194 MiB | <=16,384 MiB |
 | Paid compute / API | $0 / $0 | $0 / $0 |
 
-The generations frequently began with an unmarked `Yes` or `No` followed by free-form claims, rather than the required final marker. The locked evaluator therefore treated them as invalid. This outcome cannot be repaired by changing the parser or prompt on the same gate cohort. The initial v1 attempt failed before model inference on a runner/lock key mismatch; its failure is retained separately. V2 changes only that key path. The independent standard-library replay passed 13/13 checks, including source and dataset hashes, selection, per-row parsing, metrics, and the failed gate. See the [`v2 run`](../results/cpu-strategyqa-grpo-shift-v2/base-gate/run-1/), [`independent auditor`](../scripts/audit_strategyqa_base_gate_v2.py), and [v1 pre-inference failure](../results/cpu-strategyqa-grpo-shift-v1/base-gate/run-1/failure.json).
+The failure mode was inspected read-only from all 200 retained completions. A standard-library diagnostic found that 181/200 began with `Yes`, 17/200 with `No`, and 2/200 with another form; none contained the requested literal `Final answer:` marker. Thus the model produced direct yes/no-looking answers but did not follow the output-format instruction. The tokenizer's chat template was applied as configured, and the frozen parser matches the locked protocol, so the evidence supports a prompt-format compliance mismatch rather than a parser implementation defect. The locked strict-format gate did not pass. Because it counted every unparseable output as not accepted, its 0/200 strict-format score is **not an estimate of semantic answer accuracy**; with no parseable rows, accuracy conditional on parseability is undefined. We did not reinterpret labels or make a new performance claim from this consumed cohort. The label-free diagnostic is reproducible with [`audit_strategyqa_output_format_v1.py`](../scripts/audit_strategyqa_output_format_v1.py); its output is in [`strategyqa-output-format-diagnostic-v1`](../results/strategyqa-output-format-diagnostic-v1/).
+
+The result does not authorize changing the parser or prompt on the same gate cohort. The initial v1 attempt failed before model inference on a runner/lock key mismatch; its failure is retained separately. V2 changes only that key path. The independent standard-library replay passed 13/13 checks, including source and dataset hashes, selection, per-row parsing, metrics, and the failed gate. See the [`v2 run`](../results/cpu-strategyqa-grpo-shift-v2/base-gate/run-1/), [`independent auditor`](../scripts/audit_strategyqa_base_gate_v2.py), and [v1 pre-inference failure](../results/cpu-strategyqa-grpo-shift-v1/base-gate/run-1/failure.json).
 
 ## Prior-art and novelty assessment
 

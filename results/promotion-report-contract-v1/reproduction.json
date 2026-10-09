@@ -1,0 +1,39 @@
+{
+  "reproducer": "promotion_report_contract_v1",
+  "baseline_revision": "2572ac7",
+  "baseline_promotion_source_sha256": "230be91654cd4521afbd13ab80a249b31e6573809977b08b08c0b9cd08f22c90",
+  "contract": "if per_task_scores are present, they must contain exactly n rows and their mean must equal primary within 1e-9",
+  "adversarial_case": {
+    "declared_n": 64,
+    "retained_rows": 1,
+    "coverage_fraction": 0.015625,
+    "independent_oracle_accepts": false,
+    "before_fix": {
+      "accepted": true,
+      "paired_n": 1,
+      "reasons": []
+    },
+    "after_fix": {
+      "accepted": false,
+      "paired_n": 0,
+      "reasons": [
+        "invalid_evaluation_metrics"
+      ]
+    }
+  },
+  "negative_controls": {
+    "complete_consistent_evidence": {
+      "oracle_accepts_both_reports": true,
+      "gate_accepts": true,
+      "paired_n": 64
+    },
+    "primary_disagrees_with_task_mean": {
+      "oracle_accepts_candidate": false,
+      "gate_accepts": false,
+      "reasons": [
+        "invalid_evaluation_metrics"
+      ]
+    }
+  },
+  "claim_boundary": "This verifies the VARE promotion-report contract with synthetic EvaluationReport objects. It is not a model update or capability result."
+}

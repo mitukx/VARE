@@ -62,6 +62,12 @@ class PromotionGate:
             return True
         if not isinstance(paired, dict):
             return False
+        # Paired evidence is also the only retained per-example record for the
+        # aggregate score. Do not let a backend claim a large ``n`` while
+        # supplying only a small subset of rows: that can satisfy the ordinary
+        # evaluation-size gate while the paired bootstrap sees far fewer tasks.
+        if len(paired) != report.n or not paired:
+            return False
         for key, value in paired.items():
             if (
                 not isinstance(key, str)
@@ -69,6 +75,14 @@ class PromotionGate:
                 or not 0.0 <= float(value) <= 1.0
             ):
                 return False
+        paired_mean = fmean(float(value) for value in paired.values())
+        if not math.isclose(
+            paired_mean,
+            float(report.primary),
+            rel_tol=1e-9,
+            abs_tol=1e-9,
+        ):
+            return False
         return True
 
     @staticmethod

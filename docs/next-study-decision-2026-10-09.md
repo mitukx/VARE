@@ -1,5 +1,9 @@
 # Next study decision — 2026-10-09
 
+## Current execution result — promotion evidence contract
+
+The latest code audit found a VARE-owned candidate-promotion defect: `EvaluationReport.n` was trusted for minimum evaluation count even when the retained paired score map contained fewer rows, and the primary aggregate was not checked against that map. The pre-fix implementation promoted a constructed candidate with declared `n=64` and only one retained score. The corrected gate rejects incomplete or aggregate-inconsistent reports; a complete 64-row control still passes. See [the reproducible report](promotion-report-contract-v1.md). This closes one evidence-integrity defect but does not establish that an existing run was affected or show real-model improvement.
+
 ## Current follow-up — bounded post-training novelty and feasibility gate
 
 The latest bounded screen tested two candidates against current prior art and the retained VARE record: (1) using absolute/sign advantages to recover signal from homogeneous binary-reward GRPO groups, and (2) non-oracle group-level clean-label audits for update-sign risk under policy shift. Candidate 1 is directly covered by [Gradient Starvation in Binary-Reward GRPO](https://arxiv.org/abs/2605.07689), including the fixed-reference Sign mechanism and model experiments. Candidate 2 reduces to Horvitz–Thompson and cost-adjusted design/sequential-testing theory under the frozen estimand; arbitrary conditional verifier shift is not identified without clean-label overlap. The closest verifier-correction and selective-control papers also directly cover the broad intervention family. Details are in the [focused report](research-gate-2026-10-09.md).
