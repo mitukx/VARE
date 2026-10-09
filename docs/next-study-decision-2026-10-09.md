@@ -1,5 +1,9 @@
 # Next study decision — 2026-10-09
 
+## Final maintainer review — RVL module-mode rollback patch v3
+
+The exact current RVL `main` head was checked against the pinned revision. A fresh-clone run demonstrates a real optimizer update followed by an injected exception: unpatched code restores independently copied model, populated optimizer, and CPU RNG state, but fails exact restoration of nested module modes; the legacy snapshot control passes. The v3 patch restores every named mode and retains snapshots without the new field. All 13 optional trainer tests pass after patch. See the [final review and proposed PR body](rvl-module-mode-snapshot-final-review-v3.md), [frozen protocol](../protocols/rvl_module_mode_snapshot_upstream_v3.lock.json), and [run log](../results/rvl-module-mode-upstream-v3/clean-clone-replay-20261010.log). **Decision: GO for submission as a narrow API completeness fix, subject to user approval.** No submission or external review is claimed. The default Qwen path impact remains unproven.
+
 ## Follow-up decision — external-review reproducibility gate for RVL rollback patch
 
 The module-mode rollback patch's frozen baseline/fix result was replayed from a new upstream clone using the exact RVL commit. The test-only regression failed on base while the legacy-snapshot control passed; after applying the hash-locked combined patch, all 13 optional trainer tests passed on Python 3.12.12/PyTorch 2.9.1/Transformers 4.57.3 using CPU. The short one-command reproducer and raw logs are retained in [the replay bundle](../results/rvl-grpo-module-mode-upstream-proposal/clean-clone-replay-20261010/) and [script](../scripts/reproduce_rvl_module_mode_snapshot_v1.sh). A Python 3.9.6 control showed four unrelated `asyncio.TaskGroup` runtime errors; the script checks Python 3.11+ and installed dependencies before running.

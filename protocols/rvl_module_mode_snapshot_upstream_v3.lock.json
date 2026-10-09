@@ -1,0 +1,47 @@
+{
+  "protocol_id": "rvl_module_mode_snapshot_upstream_v3",
+  "frozen_at_repository_commit": "15155ac861fe19fcf7c266386f21d7f5559f0c41",
+  "upstream_repository": "https://github.com/mitukx/Recursive-Verification-Lag.git",
+  "upstream_current_head_at_freeze": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "upstream_base_commit": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "patches": {
+    "fix_only": {
+      "path": "contributions/rvl-module-mode-fix-only-v3.patch",
+      "sha256": "11f13e647c2dbb75182d7235f9d049efa9e4b6ca0c05cfa7b58c302f8ed7baca"
+    },
+    "test_only": {
+      "path": "contributions/rvl-module-mode-test-only-v3.patch",
+      "sha256": "c6f43ddd5ad21ce95eae3cc4d0bed94fb70f56c04acfb4a931902d94f05cad6b"
+    },
+    "combined": {
+      "path": "contributions/rvl-module-mode-snapshot-v3.patch",
+      "sha256": "1d6a327fe63941cc47942ee1e77cde5395a9325e74728fc3818c4796c5d4f2e0"
+    }
+  },
+  "hypothesis": "RVL trainer snapshot/restore omits per-module training flags. An exception after a real optimizer mutation can restore model tensors, optimizer state, and RNG while leaving modules in changed training modes.",
+  "primary_regression": "test_hf_trainer_transaction_restores_mixed_module_modes",
+  "controls": [
+    "test_hf_trainer_restore_accepts_legacy_snapshot",
+    "test_hf_trainer_transaction_restores_model_optimizer_and_rng"
+  ],
+  "primary_test_checks": [
+    "root eval mode and nested MLP train mode are recorded independently before snapshot",
+    "actual HFCausalLMGRPOTrainer.train_step and AdamW step mutate model and populated optimizer state before an injected exception",
+    "injected exception advances CPU RNG",
+    "independent pre-snapshot copies of all model tensors, complete optimizer state, RNG, and named module modes exactly match after restore"
+  ],
+  "legacy_test_checks": [
+    "a legacy-shaped snapshot without module_modes restores independently copied model tensors, populated optimizer state, and CPU RNG"
+  ],
+  "acceptance": {
+    "base_test_only_result": "mixed-mode exception regression fails only at the final module-mode comparison; legacy snapshot control passes",
+    "patched_module_suite": "all 13 tests pass",
+    "patch_applies_to_exact_base": true,
+    "git_diff_check_passes": true,
+    "device": "CPU",
+    "model": "randomly initialized tiny GPT-2; no downloads",
+    "paid_compute": false
+  },
+  "claim_boundary": "Exact per-module mode restoration and compatibility with existing model/optimizer/CPU-RNG rollback, verified on a tiny CPU fixture. Does not establish production incidence, default-Qwen path behavior change, pretrained-model effect, capability gain, upstream adoption, CUDA RNG behavior, or independent external review.",
+  "external_submission": "not submitted; requires user approval"
+}

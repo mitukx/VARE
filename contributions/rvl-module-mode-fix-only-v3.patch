@@ -1,0 +1,39 @@
+diff --git a/src/rvl_systems/hf_trainer.py b/src/rvl_systems/hf_trainer.py
+index 51d5967..8783b5b 100644
+--- a/src/rvl_systems/hf_trainer.py
++++ b/src/rvl_systems/hf_trainer.py
+@@ -132,6 +132,10 @@ class HFCausalLMGRPOTrainer:
+             "model": model,
+             "optimizer": optimizer,
+             "cpu_rng": torch.get_rng_state().cpu().clone(),
++            "module_modes": {
++                name: bool(module.training)
++                for name, module in self.model.named_modules()
++            },
+         }
+         if torch.cuda.is_available():
+             state["cuda_rng"] = [x.cpu().clone() for x in torch.cuda.get_rng_state_all()]
+@@ -140,11 +144,23 @@ class HFCausalLMGRPOTrainer:
+     def restore_training_state(self, state: dict[str, Any]) -> None:
+         """Restore model/optimizer/RNG after a rejected candidate update."""
+         torch = self.torch
++        module_modes = state.get("module_modes")
++        modules = dict(self.model.named_modules())
++        if module_modes is not None:
++            if not isinstance(module_modes, dict) or module_modes.keys() != modules.keys():
++                raise ValueError("snapshot module topology differs from the current model")
++            if any(type(mode) is not bool for mode in module_modes.values()):
++                raise ValueError("snapshot module modes must be booleans")
+         self.model.load_state_dict(state["model"])
+         self.optimizer.load_state_dict(state["optimizer"])
+         torch.set_rng_state(state["cpu_rng"].cpu())
+         if "cuda_rng" in state and torch.cuda.is_available():
+             torch.cuda.set_rng_state_all([x.cpu() for x in state["cuda_rng"]])
++        if module_modes is not None:
++            # Module.train() recursively changes descendants. Restore in
++            # named_modules preorder so nested modules can keep mixed modes.
++            for name, module in modules.items():
++                module.train(module_modes[name])
+ 
+     def train_step(self, samples: list[VerifiedGeneration], *, advantages: list[float] | None = None) -> dict[str, float]:
+         if not samples:

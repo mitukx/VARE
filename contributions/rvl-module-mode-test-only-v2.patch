@@ -1,0 +1,93 @@
+diff --git a/tests/test_mini_lab_torch.py b/tests/test_mini_lab_torch.py
+index 49e3c1c..b2ff7fa 100644
+--- a/tests/test_mini_lab_torch.py
++++ b/tests/test_mini_lab_torch.py
+@@ -174,6 +174,88 @@ class TorchAcceptanceTests(unittest.IsolatedAsyncioTestCase):
+         self.assertEqual(set(restored["state"]),set(before["optimizer"]["state"]))
+         self.assertTrue(torch.equal(torch.get_rng_state(),before["cpu_rng"]))
+ 
++    async def test_hf_trainer_transaction_restores_mixed_module_modes(self):
++        model = self.model()
++        trainer = HFCausalLMGRPOTrainer(model,config=HFTTrainerConfig(learning_rate=1e-3))
++        samples = self.samples(model)
++        # Seed a nonempty AdamW state before taking the rollback snapshot.
++        trainer.train_step(samples)
++        model.eval()
++        model.transformer.h[0].mlp.train()
++        torch.manual_seed(1234)
++        before_modes = {name: module.training for name, module in model.named_modules()}
++        before = trainer.snapshot_training_state()
++        before_rng = torch.get_rng_state().clone()
++
++        def same_state(left, right):
++            if isinstance(left, torch.Tensor):
++                return isinstance(right, torch.Tensor) and torch.equal(left, right)
++            if isinstance(left, dict):
++                return isinstance(right, dict) and left.keys() == right.keys() and all(
++                    same_state(left[key], right[key]) for key in left
++                )
++            if isinstance(left, (list, tuple)):
++                return type(left) is type(right) and len(left) == len(right) and all(
++                    same_state(a, b) for a, b in zip(left, right)
++                )
++            return left == right
++
++        optimizer_step = trainer.optimizer.step
++        mutated = {}
++
++        def mutate_then_raise(*args, **kwargs):
++            optimizer_step(*args, **kwargs)
++            mutated["model"] = copy.deepcopy(model.state_dict())
++            mutated["optimizer"] = copy.deepcopy(trainer.optimizer.state_dict())
++            torch.rand(1)
++            mutated["rng"] = torch.get_rng_state().clone()
++            raise RuntimeError("injected after optimizer mutation")
++
++        trainer.optimizer.step = mutate_then_raise
++        with self.assertRaisesRegex(RuntimeError, "injected after optimizer mutation"):
++            trainer.train_step(samples)
++
++        self.assertFalse(same_state(before["model"], mutated["model"]))
++        self.assertFalse(same_state(before["optimizer"], mutated["optimizer"]))
++        self.assertFalse(torch.equal(before_rng, mutated["rng"]))
++        self.assertFalse(before_modes[""])
++        self.assertTrue(before_modes["transformer.h.0.mlp"])
++
++        trainer.restore_training_state(before)
++
++        self.assertTrue(same_state(before["model"], model.state_dict()))
++        self.assertTrue(same_state(before["optimizer"], trainer.optimizer.state_dict()))
++        self.assertTrue(torch.equal(before_rng, torch.get_rng_state()))
++        self.assertEqual(
++            before_modes,
++            {name: module.training for name, module in model.named_modules()},
++        )
++
++    async def test_hf_trainer_restore_accepts_legacy_snapshot(self):
++        model = self.model()
++        trainer = HFCausalLMGRPOTrainer(model,config=HFTTrainerConfig(learning_rate=1e-3))
++        samples = self.samples(model)
++        trainer.train_step(samples)
++        torch.manual_seed(1234)
++        before = trainer.snapshot_training_state()
++        legacy = {key: value for key, value in before.items() if key != "module_modes"}
++        before_rng = torch.get_rng_state().clone()
++
++        trainer.train_step(samples)
++        torch.rand(1)
++        trainer.restore_training_state(legacy)
++
++        for key,value in model.state_dict().items():
++            self.assertTrue(torch.equal(value.cpu(),before["model"][key]))
++        restored = trainer.optimizer.state_dict()
++        self.assertEqual(restored["param_groups"],before["optimizer"]["param_groups"])
++        self.assertEqual(set(restored["state"]),set(before["optimizer"]["state"]))
++        for key, state in before["optimizer"]["state"].items():
++            for name, value in state.items():
++                actual = restored["state"][key][name]
++                self.assertTrue(torch.equal(actual, value) if isinstance(value, torch.Tensor) else actual == value)
++        self.assertTrue(torch.equal(before_rng, torch.get_rng_state()))
++
+     async def test_microbatch_gradient_matches_full_graph_reference(self):
+         model = self.model()
+         samples = self.samples(model)
