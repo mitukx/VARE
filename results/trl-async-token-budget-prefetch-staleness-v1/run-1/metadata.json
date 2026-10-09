@@ -1,0 +1,25 @@
+{
+  "protocol": "trl_async_token_budget_prefetch_staleness_v1",
+  "protocol_commit": "e49d1ab",
+  "protocol_sha256": "25086e8cd965ccb2f14ab289d9b26d942f0b011bd5e4dfa0cec99eeff1d9eb4d",
+  "source_repository": "https://github.com/huggingface/trl",
+  "source_revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+  "script_sha256": "903a703e41e55288f11a107a261c20df33c4e233afac39919af0fcfbd61fae01",
+  "candidate_patch_sha256": "df6bfd03224bc961658d7366eea590cd2be4ad5c1940d4153b893e1373f6c163",
+  "environment": {
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3",
+    "accelerate": "1.12.0",
+    "device": "CPU",
+    "host_platform": "macOS"
+  },
+  "token_budget": 2,
+  "max_staleness": 0,
+  "protocol_execution_exit_codes": {
+    "baseline": 0,
+    "candidate": 0
+  },
+  "external_spend_usd": 0,
+  "claim_limit": "Production queue iterator, token-budget planner, and collator only. No model forward, optimizer step, gradient, real-run prevalence, or task outcome."
+}

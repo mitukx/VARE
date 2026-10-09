@@ -1,0 +1,17 @@
+{
+  "protocol": "trl_async_token_budget_real_trainer_window_v4",
+  "protocol_commit": "d44eee8c7379c2aedc293e4849f9e5ea6491543c",
+  "source_revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+  "transformers": "4.57.3",
+  "torch": "2.9.1",
+  "accelerate": "1.12.0",
+  "device": "CPU (TrainingArguments.use_cpu=True; runtime asserted)",
+  "accelerate_data_loader_sha256": "8debfb20c6ae58eff3a466cfd67244a12cc8b8d3de00316a6c1d54b0310ee6ca",
+  "exit_codes": {
+    "baseline": 0,
+    "candidate": 0
+  },
+  "external_spend_usd": 0,
+  "claim_limit": "Actual CPU Transformers Trainer loop with production TRL data path and synthetic scalar model; no real-model capability or prevalence claim.",
+  "protocol_note": "Independent audit confirms the configured and recorded device was CPU in both runs. Minor wording mismatch: script sets use_cpu=True and records args.device but does not contain a literal runtime assert; see independent-audit.md."
+}

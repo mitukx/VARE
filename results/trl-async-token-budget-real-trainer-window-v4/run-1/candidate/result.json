@@ -1,0 +1,149 @@
+{
+  "ga_1": {
+    "collation": [
+      {
+        "current_version": 0,
+        "ids": [
+          [
+            10,
+            20
+          ]
+        ],
+        "sample_versions": [
+          [
+            0
+          ]
+        ]
+      },
+      {
+        "current_version": 0,
+        "ids": [
+          [
+            11,
+            21
+          ]
+        ],
+        "sample_versions": [
+          [
+            0
+          ]
+        ]
+      },
+      {
+        "current_version": 1,
+        "ids": [
+          [
+            90,
+            100
+          ]
+        ],
+        "sample_versions": [
+          [
+            1
+          ]
+        ]
+      }
+    ],
+    "device": "cpu",
+    "final_weight": 0.09849999845027924,
+    "global_steps": 2,
+    "gradient_accumulation_steps": 1,
+    "max_staleness": 0,
+    "stale_rows_dropped": 0,
+    "training_batches": [
+      [
+        10,
+        20
+      ],
+      [
+        11,
+        21
+      ]
+    ],
+    "training_versions": [
+      0,
+      1
+    ],
+    "version": [
+      2
+    ],
+    "weights_after_optimizer_steps": [
+      0.10000000149011612,
+      0.0989999994635582,
+      0.09849999845027924
+    ]
+  },
+  "ga_2": {
+    "collation": [
+      {
+        "current_version": 0,
+        "ids": [
+          [
+            10,
+            20
+          ]
+        ],
+        "sample_versions": [
+          [
+            0
+          ]
+        ]
+      },
+      {
+        "current_version": 0,
+        "ids": [
+          [
+            11,
+            21
+          ]
+        ],
+        "sample_versions": [
+          [
+            0
+          ]
+        ]
+      },
+      {
+        "current_version": 0,
+        "ids": [
+          [
+            90,
+            100
+          ]
+        ],
+        "sample_versions": [
+          [
+            1
+          ]
+        ]
+      }
+    ],
+    "device": "cpu",
+    "final_weight": 0.0989999994635582,
+    "global_steps": 1,
+    "gradient_accumulation_steps": 2,
+    "max_staleness": 0,
+    "stale_rows_dropped": 0,
+    "training_batches": [
+      [
+        10,
+        20
+      ],
+      [
+        11,
+        21
+      ]
+    ],
+    "training_versions": [
+      0,
+      0
+    ],
+    "version": [
+      1
+    ],
+    "weights_after_optimizer_steps": [
+      0.10000000149011612,
+      0.0989999994635582
+    ]
+  }
+}
