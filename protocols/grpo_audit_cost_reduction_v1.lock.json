@@ -1,0 +1,49 @@
+{
+  "protocol_id": "grpo_audit_cost_reduction_v1",
+  "status": "frozen_before_runner_and_independent_audit",
+  "question": "Does non-oracle auditing under action shift yield an allocation problem beyond Horvitz-Thompson design, Neyman allocation, standard sign testing, and their rollout-plus-label cost accounting?",
+  "source_fixture": "Reuse only the already-frozen four-member, degree-three parity law from grpo_policy_shift_audit_risk_v1; the distinct claim tested is total-cost and non-oracle allocation reduction, with action-overlap and conditional-transport sensitivity.",
+  "estimand": {
+    "target_action_mass": "27/256",
+    "behavior_action_masses": ["27/256", "9/256", "3/256"],
+    "behavior_to_target_mass_ratios": ["1", "3", "9"],
+    "active_action": "1110",
+    "unknown_active_triple": "Uniform over the four triples for the minimax design comparison; no audit rule is given the active triple except the labeled oracle upper bound.",
+    "conditional_label_law": "P_s(y|a*)=2^-4*(1+s*(1/2)*chi_T(y)), s in {-1,+1}; non-active action strata have a common label law.",
+    "conditional_transport": "Primary calculations assume the conditional clean-label law is invariant. A separate exact bias identity studies target parity-mean misspecification delta and does not treat that drift as action shift."
+  },
+  "designs": [
+    "behavior uniform triple audit",
+    "behavior full-group audit",
+    "target-policy uniform triple audit",
+    "target-policy action-stratified uniform triple audit (action stratum known from target policy; active label triple unknown)",
+    "target-policy action-and-triple oracle upper bound",
+    "adaptive proxy-based triple selection; in the frozen worlds all strict-subset observations are identical, so the logged allocation cannot identify the active triple before a clean third-order observation",
+    "importance weighting is analyzed as an estimator on the same observable transcript, not as additional information"
+  ],
+  "cost": {
+    "label_call_cost": 1,
+    "rollout_group_cost_to_label_cost_ratios": [0, 1],
+    "total_budget": 144,
+    "target-action stratification": "Expected rollout generation cost per retained action-a* group is c_rollout / target_action_mass; behavior-stratified sensitivity additionally follows from c_rollout / behavior_action_mass.",
+    "rounding": "Use floor(total_budget / expected_cost_per_audited_group); report the expected-cost approximation explicitly."
+  },
+  "metrics": [
+    "exact two-world optimal minimax sign-decision error via finite transcript total variation",
+    "active-component Horvitz-Thompson bias and MSE under the stationary conditional law",
+    "rollout groups and clean-label calls implied by each allocation",
+    "transport bias when target conditional parity mean differs from behavior by delta"
+  ],
+  "analysis": {
+    "prior-art question": "Does the optimization reduce to generalized Horvitz-Thompson sampling with positive joint inclusion probabilities, Neyman/variance-optimal allocation, and fixed-confidence sign identification?",
+    "accept_new_method_only_if": "A non-oracle method has a distinct guarantee or strictly better matched-total-cost result that is not a consequence of the standard design objective and does not depend on the hidden active triple or conditional stationarity.",
+    "stop_condition": "If all unbiased allocation objectives reduce to established design-based variance minimization and conditional drift is unidentifiable without target audits or assumptions, record a negative novelty result and stop this method line."
+  },
+  "resources": {"gpu": 0, "paid_api": 0, "external_spend": 0, "dependencies": "Python standard library only"},
+  "limitations": [
+    "One four-member synthetic parity fixture; no claim about prevalence or real-model update quality.",
+    "The exact sign risk uses the optimal test, which is an information upper bound on any estimator's decision quality.",
+    "Expected rollout-cost rounding is a budget sensitivity calculation, not a wall-clock measurement.",
+    "The active-triple prior only defines a symmetric minimax design check; the oracle is unattainable."
+  ]
+}
