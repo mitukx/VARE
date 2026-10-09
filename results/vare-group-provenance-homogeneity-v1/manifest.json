@@ -40,12 +40,25 @@
     "replay.py": "6ab77a2b1e0057a025e455de00a0f29ec5e95508f8884d96de73ce50bbc8dfa8",
     "focused_test_group_provenance.py": "cdbe202298bd92495691e76957a9499727f5bc4ee3aaafce82794dfe25252507",
     "focused_test_replay_prompt.py": "b454d3786c787b4e1f86d87921932f753128eb4383108e400c25218f2bef51e7",
-    "technical_report.md": "f08b8aa3c1bbad5132d9978d28b40e70cacf7ce0f5064a4a0f92993e01c24931"
+    "technical_report.md": "4a55f85e0258e6f253c5f81e113bbcb6681917f47702519e10a5f0a15ede2fa4"
   },
   "outcome": {
     "baseline_mixed_policy_group_reached_train_hook": true,
     "post_fix_focused_tests": "32 passed",
     "post_fix_full_suite": "225 passed, 12 skipped, 4 pre-existing smoke-stable-logsumexp environment failures"
+  },
+  "github_actions": {
+    "run_id": 37926149032,
+    "url": "https://github.com/mitukx/VARE/actions/runs/37926149032",
+    "tested_code_commit": "1a5505b7ca0d8dc141881da2dfe50eb77510edb1",
+    "conclusion": "success",
+    "checks": [
+      "python -m pytest",
+      "GRPO identifiability witness audit",
+      "GRPO audit-order characterization audit",
+      "partial GRPO audit cost audit",
+      "VARE demo"
+    ]
   },
   "limitations": [
     "Synthetic exact score calculation only; no model capability claim.",
