@@ -1,0 +1,179 @@
+{
+  "arm": "candidate",
+  "backend": "gloo",
+  "cases": {
+    "equal_token_control": {
+      "finite": true,
+      "max_gradient_abs_error": 5.960464477539063e-08,
+      "max_loss_abs_error": 1.4901161193847656e-08,
+      "max_sgd_parameter_abs_error": 3.725290298461914e-09,
+      "rank_results": [
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_tokens_per_microbatch": [
+            10,
+            10
+          ],
+          "loss_abs_error": 1.4901161193847656e-08,
+          "max_gradient_abs_error": 5.960464477539063e-08,
+          "max_sgd_parameter_abs_error": 3.725290298461914e-09,
+          "oracle_loss": 1.25,
+          "post_step_state_sha256": "f616e31600d2be63463a441b1c0f119f89bad607ecbc24fdead56dbdb6e446c5",
+          "rank": 0,
+          "rank_mean_training_step_loss": 1.2499999850988388,
+          "trainer_training_loss_local_diagnostic": 1.4500000476837158
+        },
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_tokens_per_microbatch": [
+            10,
+            10
+          ],
+          "loss_abs_error": 1.4901161193847656e-08,
+          "max_gradient_abs_error": 5.960464477539063e-08,
+          "max_sgd_parameter_abs_error": 3.725290298461914e-09,
+          "oracle_loss": 1.25,
+          "post_step_state_sha256": "f616e31600d2be63463a441b1c0f119f89bad607ecbc24fdead56dbdb6e446c5",
+          "rank": 1,
+          "rank_mean_training_step_loss": 1.2499999850988388,
+          "trainer_training_loss_local_diagnostic": 1.0499999523162842
+        }
+      ],
+      "rank_state_equal": true
+    },
+    "short_final_window": {
+      "finite": true,
+      "max_gradient_abs_error": 0.0,
+      "max_loss_abs_error": 2.9802322387695312e-08,
+      "max_sgd_parameter_abs_error": 0.0,
+      "rank_results": [
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_tokens_per_microbatch": [
+            13
+          ],
+          "loss_abs_error": 2.9802322387695312e-08,
+          "max_gradient_abs_error": 0.0,
+          "max_sgd_parameter_abs_error": 0.0,
+          "oracle_loss": 0.6307691931724548,
+          "post_step_state_sha256": "6b83e43f731bb86257305d7b732b7693f49f27cc91e392fc22762b9affed00ec",
+          "rank": 0,
+          "rank_mean_training_step_loss": 0.6307692229747772,
+          "trainer_training_loss_local_diagnostic": 0.5846153497695923
+        },
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_tokens_per_microbatch": [
+            13
+          ],
+          "loss_abs_error": 2.9802322387695312e-08,
+          "max_gradient_abs_error": 0.0,
+          "max_sgd_parameter_abs_error": 0.0,
+          "oracle_loss": 0.6307691931724548,
+          "post_step_state_sha256": "6b83e43f731bb86257305d7b732b7693f49f27cc91e392fc22762b9affed00ec",
+          "rank": 1,
+          "rank_mean_training_step_loss": 0.6307692229747772,
+          "trainer_training_loss_local_diagnostic": 0.6769230961799622
+        }
+      ],
+      "rank_state_equal": true
+    },
+    "unequal_rank_and_microbatch_counts": {
+      "finite": true,
+      "max_gradient_abs_error": 0.0,
+      "max_loss_abs_error": 3.725290298461914e-08,
+      "max_sgd_parameter_abs_error": 0.0,
+      "rank_results": [
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_tokens_per_microbatch": [
+            9,
+            14
+          ],
+          "loss_abs_error": 3.725290298461914e-08,
+          "max_gradient_abs_error": 0.0,
+          "max_sgd_parameter_abs_error": 0.0,
+          "oracle_loss": 0.9043477773666382,
+          "post_step_state_sha256": "1ccd9cfeac82935cdbe5539e61203957170ac5d39f1f0f619ded88d69966071f",
+          "rank": 0,
+          "rank_mean_training_step_loss": 0.9043478146195412,
+          "trainer_training_loss_local_diagnostic": 1.121739149093628
+        },
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_tokens_per_microbatch": [
+            9,
+            14
+          ],
+          "loss_abs_error": 3.725290298461914e-08,
+          "max_gradient_abs_error": 0.0,
+          "max_sgd_parameter_abs_error": 0.0,
+          "oracle_loss": 0.9043477773666382,
+          "post_step_state_sha256": "1ccd9cfeac82935cdbe5539e61203957170ac5d39f1f0f619ded88d69966071f",
+          "rank": 1,
+          "rank_mean_training_step_loss": 0.9043478146195412,
+          "trainer_training_loss_local_diagnostic": 0.686956524848938
+        }
+      ],
+      "rank_state_equal": true
+    },
+    "zero_local_tokens_positive_global": {
+      "finite": true,
+      "max_gradient_abs_error": 2.9802322387695312e-08,
+      "max_loss_abs_error": 2.9802322387695312e-08,
+      "max_sgd_parameter_abs_error": 3.725290298461914e-09,
+      "rank_results": [
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_tokens_per_microbatch": [
+            6,
+            3
+          ],
+          "loss_abs_error": 2.9802322387695312e-08,
+          "max_gradient_abs_error": 2.9802322387695312e-08,
+          "max_sgd_parameter_abs_error": 3.725290298461914e-09,
+          "oracle_loss": 0.8666666150093079,
+          "post_step_state_sha256": "e182567690caec823c9ba35fe52cea269b97e72978e8548936e4cd0c42336e98",
+          "rank": 0,
+          "rank_mean_training_step_loss": 0.8666666448116302,
+          "trainer_training_loss_local_diagnostic": 0.0
+        },
+        {
+          "finite": true,
+          "global_step": 1,
+          "global_tokens_per_microbatch": [
+            6,
+            3
+          ],
+          "loss_abs_error": 2.9802322387695312e-08,
+          "max_gradient_abs_error": 2.9802322387695312e-08,
+          "max_sgd_parameter_abs_error": 3.725290298461914e-09,
+          "oracle_loss": 0.8666666150093079,
+          "post_step_state_sha256": "e182567690caec823c9ba35fe52cea269b97e72978e8548936e4cd0c42336e98",
+          "rank": 1,
+          "rank_mean_training_step_loss": 0.8666666448116302,
+          "trainer_training_loss_local_diagnostic": 1.7333333492279053
+        }
+      ],
+      "rank_state_equal": true
+    }
+  },
+  "device": "cpu",
+  "elapsed_seconds": 4.153377374983393,
+  "protocol_id": "trl-async-grpo-pr7249-full-trainer-ddp-v4",
+  "runtime": {
+    "accelerate": "1.12.0",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "source_commit": "5234eb7c70f4ca7eb92fe8e01611a33eaff17f40",
+  "world_size": 2
+}
