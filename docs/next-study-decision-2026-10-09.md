@@ -1,5 +1,11 @@
 # Next study decision — 2026-10-09
 
+## Follow-up decision — multi-token protocol v2 non-pass
+
+A new mixed-length, multi-token CPU fixture found candidate-specific fp16 sequence/token gradients within the frozen analytic tolerance and bit-identical float32 controls. However, the overall frozen protocol failed because it required every output to be finite, including the unmodified fp16 baseline that was meant to reproduce the defect and logged `kl_metric=Infinity`. The source-independent checker retains both the passing diagnostic subchecks and the overall non-pass. See the [v2 report](trl-grpo-kl-clip-precision-patch-v2-report.md), [lock](../protocols/trl_grpo_kl_clip_precision_patch_v2.lock.json), and [run](../results/trl-grpo-kl-clip-precision-patch-v2/run-1/).
+
+**Decision:** one new fixture under a corrected frozen gate is reasonable; require candidate-only finite/analytic outputs, baseline defect behavior as a separately expected control, and exact fp32 parity. Do not reuse v2 outcomes as confirmation. If the corrected test does not show a meaningful numerical distinction or exposes another unbounded issue, stop this line.
+
 ## Follow-up decision — TRL GRPO KL clip precision candidate
 
 The frozen follow-up to the PR #6637 dtype audit passed all five local numerical gates: the candidate rejects a positive cap that becomes zero in fp16, recovers the token-level bias-corrected gradient to −1.0, preserves the tested fp16 no-bias output within tolerance, and is bit-identical to the PR head for clipped and unclipped fp32 controls. The independent checker imports neither TRL nor PyTorch and validates retained outputs and the patch digest. See the [report](trl-grpo-kl-clip-precision-patch-v1-report.md), [protocol](../protocols/trl_grpo_kl_clip_precision_patch_v1.lock.json), and [run-2](../results/trl-grpo-kl-clip-precision-patch-v1/run-2/).

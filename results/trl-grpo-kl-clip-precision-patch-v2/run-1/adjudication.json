@@ -1,0 +1,7 @@
+{
+  "protocol_id": "trl_grpo_kl_clip_precision_patch_v2",
+  "status": "non_pass_protocol_design_error",
+  "reason": "The frozen acceptance condition required all fixture outputs to be finite, including the intentionally unmodified PR-head fp16 baseline. That baseline's production KL metric was Infinity, so the overall gate fails as written.",
+  "diagnostic_subchecks": "The candidate-specific analytic sequence/token gradient checks and fp32 identity check passed in the independent checker.",
+  "interpretation": "Do not reinterpret this run as a confirmation pass. Preserve the candidate subchecks as diagnostics and use fresh fixture values for any corrected protocol."
+}

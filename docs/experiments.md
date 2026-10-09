@@ -1,5 +1,9 @@
 # Experimental program
 
+## TRL GRPO KL-clip precision patch v2 — sequence-level protocol non-pass
+
+On a fresh two-sequence, multi-token production-loss fixture, the candidate's fp16 sequence gradients matched the stated analytic formula within 0.5% relative tolerance; the tested fp32 loss, gradients, and KL metric remained bit-identical to the unmodified PR head. The unmodified fp16 baseline emitted an infinite KL metric. The frozen acceptance gate required all outputs, including this intentionally unpatched baseline, to be finite; therefore the protocol is a non-pass due to a gate-design error. Do not promote the candidate subchecks to a successful confirmatory result. See the [report](trl-grpo-kl-clip-precision-patch-v2-report.md), [protocol](../protocols/trl_grpo_kl_clip_precision_patch_v2.lock.json), and [raw bundle](../results/trl-grpo-kl-clip-precision-patch-v2/run-1/).
+
 ## TRL GRPO KL-clip precision patch v1 — frozen CPU source-path fixture pass
 
 On the pinned open PR head, a one-token fp16 candidate rejects `1e-8` after it rounds to zero, returns the expected −1.0 bias-corrected gradient at clip 10, preserves the no-bias control within tolerance, and leaves the tested fp32 clipped/unclipped outputs unchanged. The independent JSON-only checker passed all five gates. This does not test sequence-level correction, training prevalence, optimizer behavior, or task success. The patch has not been submitted upstream. See the [report](trl-grpo-kl-clip-precision-patch-v1-report.md), [protocol](../protocols/trl_grpo_kl_clip_precision_patch_v1.lock.json), and [raw bundle](../results/trl-grpo-kl-clip-precision-patch-v1/run-2/).
