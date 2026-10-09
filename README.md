@@ -4,6 +4,8 @@ VARE is a CPU-first research project for evaluating post-training signals and po
 
 ## Research snapshot
 
+**For technical review:** start with the [review guide](docs/reviewer-guide.md) for the current contribution, reproducible commands, code map, and claim limits.
+
 The strongest implementation-path result is the frozen [TRL AsyncGRPO reproduction](docs/trl-async-accumulation-normalization-pr7249-full-trainer-ddp-v5-report.md). Through the real Trainer/Accelerate/two-rank CPU/Gloo update path, the pinned base's maximum gradient error was `2.8572e-3` against a pooled-token oracle; the existing PR #7249 candidate was within `5.96e-8` across four cases. This reproduces an existing proposal on a synthetic token-local model; it is not a VARE fix, a novel method, or a model-capability result. The PR was open with no reviews when checked on 2026-10-10.
 
 The [RVL module-mode rollback patch](docs/rvl-module-mode-snapshot-final-review-v4.md) is a separate, narrow API completeness fix. Its mixed-mode and Dropout behavior regression fails on the pinned base; after the fix, all 13 trainer tests passed, including legacy snapshot compatibility. RVL PR [#90](https://github.com/mitukx/Recursive-Verification-Lag/pull/90) was merged as `27ebf7f`, and all seven required CI checks passed. A post-merge shared-child-module regression exposed one remaining aliasing edge case in that restoration loop; the smallest local correction fails on merged upstream and passes 14/14 trainer tests. The [follow-up report](docs/rvl-module-mode-shared-alias-followup-v1.md) and patch are prepared for review but have not been sent upstream. The recorded PR review was automated Codex review; independent human review and production incidence remain unestablished. Neither result shows model-quality impact.
@@ -12,11 +14,11 @@ Real-model evidence remains negative or insufficient. The frozen [ARC GRPO-versu
 
 ## Start here
 
-1. [Frozen TRL AsyncGRPO Trainer/DDP reproduction](docs/trl-async-accumulation-normalization-pr7249-full-trainer-ddp-v5-report.md) — strongest retained trainer-correctness result; reproduces an existing upstream candidate.
-2. [RVL rollback patch final review](docs/rvl-module-mode-snapshot-final-review-v4.md) — exact mixed-mode, model, optimizer, and CPU-RNG restoration with a clean-clone baseline/fix comparison; merged upstream in RVL PR #90.
-3. [Three-seed ARC GRPO-versus-SFT comparison](docs/qwen-arc-grpo-sft-comparison-v3-report.md) — a stopped real-model study with a null/non-passing result.
-4. [Current research gaps](docs/current-gaps.md) and [study decisions](docs/next-study-decision-2026-10-09.md) — active gates, limitations, and retired directions.
-5. [All studies and retained failures](docs/experiments.md) and [contributor evidence rules](AGENTS.md).
+1. [Technical reviewer guide](docs/reviewer-guide.md) — review order, selected evidence, reproduction, and repository map.
+2. [RVL shared-module follow-up](docs/rvl-module-mode-shared-alias-followup-v1.md) — current patch and exact clean-clone reproduction; not submitted upstream.
+3. [Merged RVL rollback review](docs/rvl-module-mode-snapshot-final-review-v4.md) — original contribution, pinned baseline, raw tests, and merge status.
+4. [TRL AsyncGRPO Trainer/DDP reproduction](docs/trl-async-accumulation-normalization-pr7249-full-trainer-ddp-v5-report.md) — reproduction of an existing upstream proposal.
+5. [Real-model evidence and gaps](docs/current-gaps.md), then the [full experiment index](docs/experiments.md) and [claim rules](AGENTS.md).
 
 ## Selected evidence
 
