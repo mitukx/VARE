@@ -57,6 +57,20 @@ python scripts/verify_trl_grpo_kl_clip_precision_patch_v5.py \
   --output results/trl-grpo-kl-clip-precision-patch-v5/run-1/independent-check.json
 ```
 
+For a new source checkout, fetch the pinned PR head into two clean TRL checkouts; apply the retained patch only to the candidate. This assumes Python with PyTorch and the pinned TRL runtime dependencies already available:
+
+```bash
+git clone https://github.com/huggingface/trl /tmp/trl-v5-base
+git -C /tmp/trl-v5-base fetch origin pull/6637/head
+git -C /tmp/trl-v5-base checkout --detach 0aaea03f2fa449bc7a91f1973e7940da11da65da
+git clone https://github.com/huggingface/trl /tmp/trl-v5-candidate
+git -C /tmp/trl-v5-candidate fetch origin pull/6637/head
+git -C /tmp/trl-v5-candidate checkout --detach 0aaea03f2fa449bc7a91f1973e7940da11da65da
+git -C /tmp/trl-v5-candidate apply /path/to/VARE/results/trl-grpo-kl-clip-precision-patch-v5/run-1/candidate.patch
+```
+
+Then substitute `/tmp/trl-v5-base` and `/tmp/trl-v5-candidate` for the two source roots in `commands.txt`, and direct outputs to a new scratch run directory so the retained `run-1` stays immutable. The scripts reject source or patch digests that do not match the lock.
+
 ## Independent audit
 
 A read-only post-run subagent audit recomputed the analytic values and checked the frozen commit, run snapshot, source and patch hashes, fixture digests, and all four records. It found no material mismatch and agrees with the narrow result and pivot decision. This is an internal independent audit, not external human reproduction; the adjudication is retained in [the run bundle](../results/trl-grpo-kl-clip-precision-patch-v5/run-1/review-adjudication.json).
