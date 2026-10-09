@@ -35,6 +35,13 @@ class PrioritizedReplay:
 
     @staticmethod
     def _group_is_complete(items: list[_HeapItem]) -> bool:
+        if not items:
+            return False
+        first_prompt = items[0].experience.attempt.task.prompt
+        if (not isinstance(first_prompt, str)
+                or any(item.experience.attempt.task.prompt != first_prompt for item in items)):
+            return False
+
         declared_sizes = set()
         for item in items:
             attempt = item.experience.attempt
@@ -143,6 +150,8 @@ class PrioritizedReplay:
             _HeapItem(self._priority(exp, freshness), -1, exp)
             for exp, freshness in zip(experiences, freshnesses, strict=True)
         ]
+        if not self._group_is_complete(new_items):
+            return False
         new_group_priority = max(item.priority for item in new_items)
         needed = max(0, len(self._heap) + len(new_items) - self.config.capacity)
         if needed:

@@ -1,0 +1,23 @@
+{
+  "protocol_id": "vare-replay-group-prompt-identity-v1",
+  "schema_version": 1,
+  "frozen_before_baseline_measurement": true,
+  "source_base_revision": "5192cbaf5aa1ac02e010933b0ac1ba0f553b69e1",
+  "candidate_files": [
+    "src/vare/replay.py"
+  ],
+  "regression_test": "tests/test_replay_group_prompt_identity.py",
+  "regression_test_sha256": "bf9308393aa27bc9d88bbd4cfa4dabbf9a4f7aee8e89ac851f55ede541fe1edc",
+  "acceptance": {
+    "atomic_admission_rejects_mixed_prompts": true,
+    "rejection_preserves_existing_replay_contents": true,
+    "legacy_grouped_samplers_fail_closed_on_mixed_prompts": true,
+    "same_prompt_distinct_task_ids_remain_valid": true
+  },
+  "resource_limit": "Deterministic local CPU test only; no model, GPU, paid API, or network access.",
+  "interpretation_limit": "One replay contract. Does not establish GRPO trainer correctness, model learning, or task capability.",
+  "expected_calibration": {
+    "baseline_passed": false,
+    "fixed_passed": true
+  }
+}

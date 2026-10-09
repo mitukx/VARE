@@ -1,0 +1,39 @@
+{
+  "baseline_revision": "5192cbaf5aa1ac02e010933b0ac1ba0f553b69e1",
+  "claim_boundary": "One CPU replay contract: mixed prompts sharing a declared group are rejected by atomic admission and excluded from legacy grouped sampling. No policy update or capability claim.",
+  "focused_existing_suite": {
+    "command": "pytest -q tests/test_replay_group_prompt_identity.py tests/test_grouped_replay.py tests/test_replay_group_freshness.py tests/test_rvl_grpo_hooks.py",
+    "failed": 0,
+    "passed": 20
+  },
+  "frozen_test_outcomes": {
+    "baseline": {
+      "failed": 2,
+      "passed": 1
+    },
+    "fixed": {
+      "failed": 0,
+      "passed": 3
+    }
+  },
+  "full_repository_suite": {
+    "exit_code": 0,
+    "interpretation": "All collected repository tests completed successfully on the modified source; full count is available from CI."
+  },
+  "protocol_id": "vare-replay-group-prompt-identity-v1",
+  "runtime": {
+    "device": "cpu",
+    "pytest": "8.4.2",
+    "python": "3.12.12"
+  },
+  "sha256": {
+    "baseline.log": "72847c0c7afa6d4e19590cd70039b1d6b695488e8952c86265c50b36f8b887ab",
+    "baseline_log": "72847c0c7afa6d4e19590cd70039b1d6b695488e8952c86265c50b36f8b887ab",
+    "candidate_source": "1add83e37253b9e0840c1b709a1ca44a9a9cdb322f3bb7eeec52a52034dcb134",
+    "fixed.log": "cf426ab35f3b06fccef8290fde5325d90af130a79da1d1752031518df77c4236",
+    "fixed_log": "cf426ab35f3b06fccef8290fde5325d90af130a79da1d1752031518df77c4236",
+    "frozen_test": "bf9308393aa27bc9d88bbd4cfa4dabbf9a4f7aee8e89ac851f55ede541fe1edc",
+    "full_suite.log": "d7d62962727e3d2a0012d01f4d27e4031fd6d3e614f53bf26d51a419fe549e11",
+    "protocol_lock": "563153a640b3322c5fea581c5119f07fca9a3a3dacfb87498c80376f0d17dff1"
+  }
+}
