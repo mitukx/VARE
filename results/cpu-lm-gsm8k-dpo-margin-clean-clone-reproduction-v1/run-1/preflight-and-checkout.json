@@ -1,0 +1,24 @@
+{
+  "checkout_path": "/tmp/vare-gsm8k-clean-clone.camWzJ/checkout",
+  "clone_method": "git clone --local --no-hardlinks from the committed local checkout",
+  "device": "cpu",
+  "network_fetch": false,
+  "no_training_or_tuning": true,
+  "output_path": "/tmp/vare-gsm8k-margin-clean-clone-v1-run",
+  "preflight": {
+    "confirmation_bundle_manifest_hash_valid": true,
+    "fresh_output_path": true,
+    "model_files_hash_valid": true,
+    "protocol_hash_valid": true,
+    "source_hashes_valid": true
+  },
+  "runtime": {
+    "numpy": "2.4.4",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "source_checkout_clean_before_and_after": true,
+  "source_commit": "7a25c787b6c587b70ee897c299c10c7ddc8f3e03",
+  "status": "pass"
+}

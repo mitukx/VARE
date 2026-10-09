@@ -42,11 +42,11 @@ The v1, v2, and v3 audit locks/scripts are preserved but were not executed. Sepa
 
 ## Decision and limitations
 
-**The existing positive small-model result is reproducible through the model-forward → adapter → logit-margin → metric chain.** This strengthens the original same-host metric reconstruction but does not independently rerun the optimizer, establish the correctness of the historical gradient/update implementation, count as outside human reproduction, or provide new confirmation.
+**The existing positive small-model result reproduces through the model-forward → adapter → logit-margin → metric chain on this host; a later fresh-clone replay is recorded separately.** This does not independently rerun the optimizer, establish the correctness of the historical gradient/update implementation, count as outside human reproduction, or provide new confirmation.
 
 The original task remains a public GSM8K forced choice between a verifier answer and a nearby distractor, with a custom adapter restricted to the two answer-label columns. The result does not demonstrate free-form math reasoning, generalization, human preference alignment, or capability gain. Accuracy remains near chance. No GPU, paid API, or network fetch was used; Hugging Face offline flags and `local_files_only` were set, but these are not an operating-system network sandbox.
 
-The next useful step is independent human review or a materially distinct task/update experiment with an untouched exact task-success metric. Do not tune or reconfirm on this consumed cohort.
+The follow-up clean-clone replay is recorded in the [v1 reproduction report](cpu-lm-gsm8k-dpo-margin-clean-clone-reproduction-v1-report.md). Next seek outside review or a materially distinct task/update experiment with an untouched exact task-success metric. Do not tune or reconfirm on this consumed cohort.
 
 ## Artifacts
 

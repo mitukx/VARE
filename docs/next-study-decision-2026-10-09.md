@@ -6,6 +6,12 @@ The precommitted v4 CPU audit recomputed model hidden states and independently a
 
 **Decision: retain the GSM8K result as narrow forced-choice preference evidence and close further work on these rows.** Next prioritize an independent clean-clone review/reproduction of retained evidence or a materially distinct task/update pair with a viable frozen base and untouched exact task-success evaluation. If neither can be established cheaply, do not train; stop low-information variants. The main model-success gap remains open.
 
+## Update — same-author clean-clone replay completed
+
+The frozen follow-up ran the v4 auditor from a fresh checkout with the exact model cache/runtime and a new output path. All source/input/model hashes and frozen numerical/resource criteria passed; the clone remained clean. The independent review also found why the original logged command would fail after its output bundle was committed: it did not set `--output`, which defaults to the existing run-1 directory. This is corrected in the follow-up protocol/report and is not a change to the original numerical result.
+
+**Decision:** count this as same-host checkout reproducibility only. Outside human review and independently measured task-success gain remain unestablished; do not reopen the consumed GSM8K cohort. The next highest-value action remains a genuinely independent review or a distinct viable task/update experiment. Details: [clean-clone report](cpu-lm-gsm8k-dpo-margin-clean-clone-reproduction-v1-report.md), [frozen protocol](../protocols/cpu_lm_gsm8k_dpo_margin_clean_clone_reproduction_v1.lock.json), and [bundle](../results/cpu-lm-gsm8k-dpo-margin-clean-clone-reproduction-v1/run-1/).
+
 ## Current decision — stop the v6 rollout-batcher candidate
 
 The frozen v6 source-level comparison passed all eight fixture predicates on the candidate and failed them on the pinned baseline. Independent review found that the purported exact drop accounting checks raw metric-list sums but production `_reduce_metric` averages keys without `total`; it therefore does not establish exact logged accounting. The candidate also drops 5/9 rows in the fixed boundary fixture, although reordering groups could retain 8/9 under the written constraints. FIFO versus reordering is unspecified, and the token packer's bounded DFS was not stress-tested. See the [v6 report](trl-async-rollout-group-batching-contract-v6-report.md) and [frozen protocol/output](../protocols/trl_async_rollout_group_batching_contract_v6.lock.json).

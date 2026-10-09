@@ -145,6 +145,8 @@ The [confirmation report](cpu-lm-gsm8k-dpo-confirmation-v1-report.md) records a 
 
 The subsequent [v4 forensic reconstruction](cpu-lm-gsm8k-dpo-margin-reconstruction-v4-report.md) independently recomputed cached-model hidden states and applied the saved adapters with NumPy. All recorded A/B margins matched within the frozen `5e-5` tolerance (maximum `4.2022e-5`); NLL, accuracy, KL, per-seed changes, and bootstrap endpoints matched within `2.72e-7`. This supports the adapter-to-margin-to-metric chain for the same consumed rows, under a different runtime and near the margin tolerance. It does not rerun training/optimization, constitute outside human reproduction, or strengthen the claim to task success or capability gain.
 
+A frozen [clean-clone replay](cpu-lm-gsm8k-dpo-margin-clean-clone-reproduction-v1-report.md) subsequently passed from a fresh local checkout using an explicit fresh output path. It reproduced the v4 tolerances and left the checkout clean. This is same-author/same-host source reproducibility; outside human review and independent model task-success evidence remain missing.
+
 The separate [generated-arithmetic feasibility report](cpu-generated-arithmetic-feasibility-v1-report.md) records a frozen 64-row, CPU-only base-rollout pilot on the cached Qwen2.5-0.5B model. All outputs parsed, but only 1/64 was exact against a frozen minimum of 8; its decision was a non-pass, and no training or confirmation followed. The independent bundle audit reconstructed the protocol/data hashes, oracle arithmetic, parser, metrics, gate, and resource metadata without rerunning model inference. This closes that task setup only.
 
 ## Sequence-level GSM8K development
