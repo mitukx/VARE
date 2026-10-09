@@ -18,11 +18,21 @@
     "not evidence of production prevalence",
     "candidate does not guarantee same-microbatch or same-update consumption",
     "candidate assumes rollout rows are contiguous in the queue",
-    "no independent reproduction or maintainer review"
+    "no independent reproduction or maintainer review",
+    "batcher diagnostic reveals queue admission is not same-update consumption"
   ],
   "resources": {
     "device": "CPU",
     "offline_hub": true,
     "paid_api_gpu_or_external_spend": false
+  },
+  "batcher_boundary_diagnostic": {
+    "batcher": "FixedCountBatcher",
+    "num_processes": 1,
+    "microbatch_size": 1,
+    "max_staleness": 0,
+    "policy_version_transition": "between emitted microbatches; simulated, no optimizer",
+    "baseline": "first fork row then fresh sentinel; one sibling dropped",
+    "candidate": "first fork row then stale sibling from prior version; sibling not rechecked"
   }
 }

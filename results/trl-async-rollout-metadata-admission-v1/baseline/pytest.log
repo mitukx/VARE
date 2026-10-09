@@ -2,7 +2,7 @@ FFFFF                                                                    [100%]
 =================================== FAILURES ===================================
 _ TestScoreGroupOptionThree.test_one_advantage_per_conversation_stamped_on_every_row _
 
-self = <tests.experimental.test_async_grpo_trainer.TestScoreGroupOptionThree object at 0x168aa33b0>
+self = <tests.experimental.test_async_grpo_trainer.TestScoreGroupOptionThree object at 0x168f7c950>
 
     def test_one_advantage_per_conversation_stamped_on_every_row(self):
         # conv 0: one row; conv 1: two rows (a fork).
@@ -37,10 +37,10 @@ self = <tests.experimental.test_async_grpo_trainer.TestScoreGroupOptionThree obj
                ^^^^^^^^^^^^^^^^^^^^^
 E       AttributeError: 'RolloutSample' object has no attribute 'rollout_id'
 
-tests/experimental/test_async_grpo_trainer.py:1440: AttributeError
+tests/experimental/test_async_grpo_trainer.py:1442: AttributeError
 _ TestRolloutQueueAdmission.test_policy_change_while_waiting_drops_entire_fork_as_stale _
 
-self = <tests.experimental.test_async_grpo_trainer.TestRolloutQueueAdmission object at 0x168e79dc0>
+self = <tests.experimental.test_async_grpo_trainer.TestRolloutQueueAdmission object at 0x168f7d520>
 
     def test_policy_change_while_waiting_drops_entire_fork_as_stale(self):
         PartialState()
@@ -67,7 +67,7 @@ E       TypeError: RolloutSample.__init__() got an unexpected keyword argument '
 tests/experimental/test_async_grpo_trainer.py:330: TypeError
 _ TestRolloutQueueAdmission.test_policy_version_change_after_first_fork_does_not_partially_drop_rollout _
 
-self = <tests.experimental.test_async_grpo_trainer.TestRolloutQueueAdmission object at 0x168e7a090>
+self = <tests.experimental.test_async_grpo_trainer.TestRolloutQueueAdmission object at 0x168f7d7f0>
 
     def test_policy_version_change_after_first_fork_does_not_partially_drop_rollout(self):
         PartialState()
@@ -83,7 +83,7 @@ E       TypeError: RolloutSample.__init__() got an unexpected keyword argument '
 tests/experimental/test_async_grpo_trainer.py:357: TypeError
 _ TestRolloutQueueAdmission.test_incomplete_or_mismatched_fork_metadata_fails_closed[None-None] _
 
-self = <tests.experimental.test_async_grpo_trainer.TestRolloutQueueAdmission object at 0x168c131d0>
+self = <tests.experimental.test_async_grpo_trainer.TestRolloutQueueAdmission object at 0x168f7db80>
 first_rollout_id = None, second_rollout_id = None
 
     @pytest.mark.parametrize(
@@ -101,10 +101,10 @@ first_rollout_id = None, second_rollout_id = None
                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       TypeError: RolloutSample.__init__() got an unexpected keyword argument 'rollout_id'
 
-tests/experimental/test_async_grpo_trainer.py:393: TypeError
+tests/experimental/test_async_grpo_trainer.py:395: TypeError
 _ TestRolloutQueueAdmission.test_incomplete_or_mismatched_fork_metadata_fails_closed[forked-different] _
 
-self = <tests.experimental.test_async_grpo_trainer.TestRolloutQueueAdmission object at 0x168e7a510>
+self = <tests.experimental.test_async_grpo_trainer.TestRolloutQueueAdmission object at 0x168f7dc40>
 first_rollout_id = 'forked', second_rollout_id = 'different'
 
     @pytest.mark.parametrize(
@@ -122,7 +122,7 @@ first_rollout_id = 'forked', second_rollout_id = 'different'
                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 E       TypeError: RolloutSample.__init__() got an unexpected keyword argument 'rollout_id'
 
-tests/experimental/test_async_grpo_trainer.py:393: TypeError
+tests/experimental/test_async_grpo_trainer.py:395: TypeError
 =============================== warnings summary ===============================
 tests/experimental/test_async_grpo_trainer.py:38
   /Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/work/trl-upstream-baseline/tests/experimental/test_async_grpo_trainer.py:38: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
@@ -135,4 +135,4 @@ FAILED tests/experimental/test_async_grpo_trainer.py::TestRolloutQueueAdmission:
 FAILED tests/experimental/test_async_grpo_trainer.py::TestRolloutQueueAdmission::test_policy_version_change_after_first_fork_does_not_partially_drop_rollout
 FAILED tests/experimental/test_async_grpo_trainer.py::TestRolloutQueueAdmission::test_incomplete_or_mismatched_fork_metadata_fails_closed[None-None]
 FAILED tests/experimental/test_async_grpo_trainer.py::TestRolloutQueueAdmission::test_incomplete_or_mismatched_fork_metadata_fails_closed[forked-different]
-5 failed, 1 warning in 3.65s
+5 failed, 1 warning in 4.27s

@@ -2,7 +2,7 @@
 
 ## TRL AsyncGRPO rollout metadata and admission
 
-At pinned TRL `ed8cc2f`, five CPU source-path regressions fail: `rollout_id` is absent from `RolloutSample` after scoring, and a fork queue admission cannot preserve both sibling rows. A local candidate propagates identity/size and checks contiguous sibling rows atomically; all five tests pass. This remains a post-hoc software diagnostic with no optimizer-step or capability measurement. The candidate does not constrain downstream batch boundaries. See the [report](trl-async-rollout-metadata-admission-v1-report.md), [protocol boundary](../protocols/trl_async_rollout_metadata_admission_diagnostic_v1.json), and [raw base/candidate logs](../results/trl-async-rollout-metadata-admission-v1/).
+At pinned TRL `ed8cc2f`, five CPU source-path regressions fail: `rollout_id` is absent from `RolloutSample` after scoring, and a fork queue admission cannot preserve both sibling rows. A local candidate propagates identity/size and checks contiguous sibling rows atomically; all five tests pass. A separate `FixedCountBatcher` counterexample delivers 1/2 fork rows on base and 2/2 on candidate when the version advances between microbatches; the candidate sibling is v0 data delivered after the simulated v1 transition. No optimizer ran. This remains a post-hoc software diagnostic, and queue admission alone is not an end-to-end fix. See the [report](trl-async-rollout-metadata-admission-v1-report.md), [protocol boundary](../protocols/trl_async_rollout_metadata_admission_diagnostic_v1.json), and [raw base/candidate logs](../results/trl-async-rollout-metadata-admission-v1/).
 
 ## GRPO group and rollback reproduction packet
 
