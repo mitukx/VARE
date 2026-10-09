@@ -51,6 +51,16 @@ class Backend:
         return [Generation(prompt_id=prompt_id, prompt=prompt, response=response)]
 
 
+class MismatchedBackend:
+    def __init__(self):
+        self.calls = []
+
+    async def generate(self, prompt_id, prompt, *, n, temperature, seed):
+        assert (prompt_id, prompt) == ("task-a", "prompt a")
+        self.calls.append((prompt_id, prompt))
+        return [Generation(prompt_id="task-b", prompt="prompt b", response="right")]
+
+
 def _hook_class_at(revision: str):
     source = subprocess.check_output(
         ["git", "show", f"{revision}:src/vare/integrations/rvl_grpo.py"],
@@ -103,6 +113,22 @@ def main() -> None:
             "backend_calls_before_rejection": len(fixed_backend.calls),
         }
 
+    mismatched_tasks = [Task("task-a", "prompt a", "qa")]
+    old_mismatch_backend = MismatchedBackend()
+    old_mismatch_report = asyncio.run(
+        _hooks(old_class, mismatched_tasks, old_mismatch_backend).evaluate("policy-0")
+    )
+    fixed_mismatch_backend = MismatchedBackend()
+    try:
+        asyncio.run(_hooks(RVLGRPOHooks, mismatched_tasks, fixed_mismatch_backend).evaluate("policy-0"))
+        fixed_mismatch = {"rejected": False, "backend_calls": len(fixed_mismatch_backend.calls)}
+    except ValueError as exc:
+        fixed_mismatch = {
+            "rejected": "RVL evaluation generation task identity mismatch" in str(exc),
+            "error": str(exc),
+            "backend_calls": len(fixed_mismatch_backend.calls),
+        }
+
     unique_tasks = [
         Task("task-0", "first prompt", "qa"),
         Task("task-1", "second prompt", "qa"),
@@ -123,6 +149,13 @@ def main() -> None:
             "baseline_per_task_scores": old_report.metadata["per_task_scores"],
             "fixed_adapter": fixed,
         },
+        "mismatched_backend_identity_case": {
+            "requested_task": {"id": "task-a", "prompt": "prompt a"},
+            "returned_generation": {"id": "task-b", "prompt": "prompt b"},
+            "baseline_report_n": old_mismatch_report.n,
+            "baseline_primary": old_mismatch_report.primary,
+            "fixed_adapter": fixed_mismatch,
+        },
         "unique_id_negative_control": {
             "report_n": control.n,
             "primary": control.primary,
@@ -136,6 +169,8 @@ def main() -> None:
         raise AssertionError("pinned baseline failed to reproduce overwritten evaluation row")
     if not fixed["rejected"] or fixed["backend_calls_before_rejection"] != 0:
         raise AssertionError("current adapter did not reject duplicate IDs before generation")
+    if not fixed_mismatch["rejected"] or fixed_mismatch["backend_calls"] != 1:
+        raise AssertionError("current adapter did not reject a mismatched returned generation")
     if not result["unique_id_negative_control"]["matches_oracle"]:
         raise AssertionError("unique-ID negative control disagrees with row-wise oracle")
     output = json.dumps(result, indent=2) + "\n"

@@ -2,7 +2,7 @@
 
 ## Current execution result — RVL evaluation identity
 
-The RVL adapter silently collapsed duplicate evaluation rows sharing a `Task.id`. On the same two-row CPU fixture, the pinned adapter reported one scored row and primary `1.0`, while a row-wise oracle gave two rows and `0.5`. The current adapter now rejects duplicate IDs before model calls. The unique-ID control matches the oracle. This closes a data-identity defect at the evaluation boundary, but does not show that existing experiments contained duplicates or establish model improvement. See [the reproduction report](rvl-eval-task-identity-v1.md).
+The RVL adapter silently collapsed duplicate evaluation rows sharing a `Task.id`, and did not verify that a returned generation belonged to the requested task before grading. On the duplicate two-row CPU fixture, the pinned adapter reported one scored row and primary `1.0`, while a row-wise oracle gave two rows and `0.5`; on a misbound response, it accepted a generation tagged for a different task. The current adapter rejects duplicate IDs before model calls and misbound generations before scoring. This closes an adapter identity defect, but does not show that existing experiments contained either case or establish model improvement. See [the reproduction report](rvl-eval-task-identity-v1.md).
 
 ## Current execution result — promotion evidence contract
 

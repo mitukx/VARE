@@ -284,6 +284,8 @@ class RVLGRPOHooks:
                     if len(rows) != 1:
                         raise RuntimeError("RVL backend returned unexpected evaluation generation count")
                     row = rows[0]
+                    if str(row.prompt_id) != task.id or str(row.prompt) != task.prompt:
+                        raise ValueError("RVL evaluation generation task identity mismatch")
                     score = float(self.score_fn(task, str(row.response)))
                     scores[task.id] = score
                     latencies.append(float(row.latency_s))

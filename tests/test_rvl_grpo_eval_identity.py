@@ -34,6 +34,12 @@ class Backend:
         return [Generation(prompt_id=prompt_id, prompt=prompt, response=response)]
 
 
+class MismatchedBackend:
+    async def generate(self, prompt_id, prompt, *, n, temperature, seed):
+        assert (prompt_id, prompt) == ("task-a", "prompt a")
+        return [Generation(prompt_id="task-b", prompt="prompt b", response="right")]
+
+
 def _hooks(tasks):
     return RVLGRPOHooks(
         backend=Backend(),
@@ -65,3 +71,20 @@ def test_rvl_evaluator_keeps_distinct_tasks_in_primary_and_paired_scores():
     assert report.n == 2
     assert report.primary == 0.5
     assert report.metadata["per_task_scores"] == {"task-0": 0.0, "task-1": 1.0}
+
+
+def test_rvl_evaluator_rejects_backend_response_bound_to_another_task():
+    task = Task("task-a", "prompt a", family="qa")
+    scored = []
+    hooks = RVLGRPOHooks(
+        backend=MismatchedBackend(),
+        trainer=Trainer(),
+        eval_tasks=[task],
+        score_fn=lambda task, response: scored.append((task.id, response)) or 1.0,
+        verified_generation_factory=lambda **kwargs: SimpleNamespace(**kwargs),
+        generation_factory=Generation,
+    )
+
+    with pytest.raises(ValueError, match="RVL evaluation generation task identity mismatch"):
+        asyncio.run(hooks.evaluate("policy-0"))
+    assert scored == []

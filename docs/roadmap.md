@@ -1,6 +1,6 @@
 # Roadmap
 
-**Update 2026-10-09 — RVL evaluation task identity:** a duplicated `Task.id` caused the adapter to overwrite one score after making both model calls (`n=1`, primary `1.0` rather than the row-wise oracle's `n=2`, primary `0.5`). Duplicate IDs now fail before rollout; the unique-ID control passes. This is a bounded evaluation correctness result, not a model-learning result. See the [report](rvl-eval-task-identity-v1.md).
+**Update 2026-10-09 — RVL evaluation task identity:** a duplicated `Task.id` caused the adapter to overwrite one score after making both model calls (`n=1`, primary `1.0` rather than the row-wise oracle's `n=2`, primary `0.5`); a generation tagged for a different prompt/task was also scored as the requested task. Duplicate IDs now fail before generation, and returned generation identity is checked before grading. The unique-ID control passes. This is bounded evaluation correctness evidence, not a model-learning result. See the [report](rvl-eval-task-identity-v1.md).
 
 **Update 2026-10-09 — promotion report consistency:** a source-level VARE bug allowed a candidate report to satisfy the 64-example gate while its retained paired evidence contained only one score. A regression reproduced the false promotion on the pre-fix source; the gate now checks score-map cardinality and aggregate agreement, with complete-evidence controls and an independent contract oracle. This is a narrow candidate-promotion integrity fix, not evidence of model improvement. See the [report and reproducer](promotion-report-contract-v1.md).
 

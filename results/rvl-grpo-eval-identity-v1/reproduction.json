@@ -20,6 +20,23 @@
       "backend_calls_before_rejection": 0
     }
   },
+  "mismatched_backend_identity_case": {
+    "requested_task": {
+      "id": "task-a",
+      "prompt": "prompt a"
+    },
+    "returned_generation": {
+      "id": "task-b",
+      "prompt": "prompt b"
+    },
+    "baseline_report_n": 1,
+    "baseline_primary": 1.0,
+    "fixed_adapter": {
+      "rejected": true,
+      "error": "RVL evaluation generation task identity mismatch",
+      "backend_calls": 1
+    }
+  },
   "unique_id_negative_control": {
     "report_n": 2,
     "primary": 0.5,
