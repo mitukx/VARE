@@ -77,6 +77,16 @@ def analyze_context(name: str, raw: list[str], transforms: list[dict], reward: l
             Fraction(0),
         )
         p3 = probabilities[2]
+        score_corrected_gradient = sum(
+            (
+                q[index]
+                * ratios[index]
+                * reward[index]
+                * ((Fraction(1) if index == 2 else Fraction(0)) - p3)
+                for index in support
+            ),
+            Fraction(0),
+        )
         rows.append(
             {
                 "transform": transform["name"],
@@ -89,7 +99,7 @@ def analyze_context(name: str, raw: list[str], transforms: list[dict], reward: l
                 "raw_policy_reward_expectation": fraction_text(raw_reward),
                 "source_corrected_sample_reward_expectation": fraction_text(corrected_sample_reward),
                 "raw_policy_reward_gradient_theta": fraction_text(p3 * (1 - p3)),
-                "source_corrected_sample_score_gradient_theta": "0",
+                "source_corrected_sample_score_gradient_theta": fraction_text(score_corrected_gradient),
             }
         )
     return {"context": name, "raw_p": raw, "results": rows}

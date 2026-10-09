@@ -92,6 +92,22 @@ def main() -> int:
                 raise AssertionError("independent ratio calculation disagrees")
             if row["behavior_expected_source_ratio"] != other["mean_ratio_under_behavior"]:
                 raise AssertionError("independent expectation calculation disagrees")
+            # With R=[0,0,1] and theta added only to logit 3, the score is
+            # 1-p3 only when action 3 is sampled; all other rewarded terms are 0.
+            # Compute that contribution directly from integer weights.
+            weights = [
+                int(value.split("/")[0]) * (10 // int(value.split("/")[1])) if "/" in value else int(value) * 10
+                for value in context["raw_p"]
+            ]
+            expected_score_gradient = (
+                ftext(weights[2] * (sum(weights) - weights[2]), sum(weights) ** 2)
+                if 2 in row["support"]
+                else "0"
+            )
+            if row["raw_policy_reward_gradient_theta"] != expected_score_gradient:
+                raise AssertionError("raw-policy score gradient does not match independent formula")
+            if row["source_corrected_sample_score_gradient_theta"] != expected_score_gradient:
+                raise AssertionError("source-corrected score gradient does not match independent formula")
     if result["sequence_case"]["two_position_source_ratio"] != "16/25":
         raise AssertionError("sequence product does not match the exact prediction")
     output = {
@@ -99,8 +115,8 @@ def main() -> int:
         "status": "pass",
         "method": "independent integer weights; no import from the primary runner",
         "independently_derived": independent,
-        "source_corrected_raw_policy_reward": "0 under q for reward [0,0,1]",
-        "raw_policy_reward_gradient_theta": "4/25 for c1; 9/100 for c2",
+        "source_corrected_raw_policy_reward": "0 under truncated q; matches raw-policy expectation only when the rewarded action remains in support",
+        "raw_policy_reward_gradient_theta": "4/25 for c1; 9/100 for c2 when action 3 remains in support, otherwise the sampled estimate is 0",
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     rendered = json.dumps(output, indent=2, sort_keys=True) + "\n"
