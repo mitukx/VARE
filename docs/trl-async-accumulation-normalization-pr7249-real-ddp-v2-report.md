@@ -55,7 +55,7 @@ The zero-token rank can form non-finite per-sequence diagnostic ratios in this s
 
 **Accept the narrow defect reproduction; do not duplicate PR #7249.** The added evidence removes one clear limitation of VARE's prior audit: the normalization behavior holds (or fails) under an actual distributed gradient reducer, not only simulated rank averaging. The strongest quantitative result is that the base produces gradient error `8.33e-2` in the zero-local-token case while the PR candidate is at floating-point noise (`0`); for unequal positive counts the base gradient error is `8.47e-3` versus `5.96e-8` for the candidate.
 
-This is useful upstream review evidence and a reproducible trainer-correctness result. It is not by itself a publication-level contribution or proof of frontier-lab research impact. Next, seek outside reproduction or move to a separate high-value question only if a concrete unaddressed issue has a feasible independent evaluation; do not expand this harness into generic distributed infrastructure.
+This is useful upstream review evidence and a reproducible trainer-correctness result. It does not by itself establish a publication-level contribution or broad research impact. Next, seek outside reproduction or move to a separate high-value question only if a concrete unaddressed issue has a feasible independent evaluation; do not expand this harness into generic distributed infrastructure.
 
 ## Reproduction artifacts
 
