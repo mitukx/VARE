@@ -1,0 +1,139 @@
+{
+  "protocol_id": "trl-async-grpo-pr7249-full-trainer-ddp-v4",
+  "status": "locked_before_execution",
+  "question": "With a fresh synthetic fixture and correctly globalized step-loss metric, do pinned base and PR #7249 candidate produce the same pooled-token SGD update when run through the real Transformers Trainer.train loop, Accelerate.backward, and two-process CPU Gloo DDP?",
+  "v4_reason": "V1 and v2 were harness setup failures. V3 completed base Trainer updates but its local DataLoaders bypassed Accelerator data dispatch, so TrainerOutput.training_loss was rank-local. V4 uses fresh token counts/advantages and freezes the primary scalar as the all-reduced mean of the rank-local losses returned by the actual Trainer.training_step calls. TrainerOutput loss is retained as a local diagnostic only.",
+  "estimand": {
+    "loss": "L is the sum of clipped GRPO token losses over all active completion tokens across ranks and microbatches divided by the total active completion-token count.",
+    "primary_loss_measure": "Sum actual Trainer.training_step return values within each rank for the update; all_reduce SUM across ranks then divide by world size; compare to the direct pooled-token oracle.",
+    "parameter_update": "One SGD step, lr=0.1, no weight decay/clipping, against the same-initialized model updated from direct pooled-token oracle gradient.",
+    "controls": "Same local deterministic model; prompt/context positions masked; beta=0; no auxiliary loss."
+  },
+  "scope": {
+    "tested_path": "Pinned AsyncGRPOTrainer.compute_loss/get_batch_samples + Transformers Trainer.train/_inner_training_loop/training_step + Accelerate.backward + real Gloo DDP reducer/no_sync + SGD optimizer and scheduler step.",
+    "input_path": "Rank-local deterministic DataLoaders constructed from production DataCollatorForRollout outputs. Production asynchronous worker, planner, and DataLoaderDispatcher are replaced/bypassed.",
+    "not_tested": [
+      "vLLM or async rollout worker",
+      "production rollout queue/batcher/DataLoaderDispatcher path",
+      "AsyncDistillationTrainer",
+      "MoE auxiliary loss",
+      "pretrained model or task success",
+      "outside human reproduction"
+    ],
+    "prior_evidence": "VARE DDP v2 used actual reducer but direct backward/manual SGD; PR-authored tests use Trainer.train single-process and simulated rank aggregation."
+  },
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "issue": "https://github.com/huggingface/trl/issues/7206",
+    "pull_request": "https://github.com/huggingface/trl/pull/7249",
+    "base_revision": "a98fa6a4428f9aae58dfb26d729d7437f662f27a",
+    "candidate_head": "5234eb7c70f4ca7eb92fe8e01611a33eaff17f40",
+    "base_source_sha256": "b84c4544a4ac2aac5b08681a93fb3d49d1f24ff2f2f9fe53a6c35ab5c8f0ea40",
+    "candidate_source_sha256": "5c4fc857c563db0d9f937a2edf89dd74c4f218a31f3a05bf33bffbf5285749dc",
+    "runner": "scripts/replay_trl_pr7249_full_trainer_ddp_v4.py",
+    "runner_sha256": "cae0731b9408991a3af700df269ce1ad8400b8d09773bccf1e3c62b32721962b"
+  },
+  "runtime": {
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3",
+    "accelerate": "1.12.0",
+    "backend": "gloo",
+    "world_size": 2,
+    "device": "cpu",
+    "torch_threads_per_rank": 1
+  },
+  "cases": {
+    "unequal_rank_and_microbatch_counts": {
+      "microbatches": 2,
+      "rank0_completion_tokens": [
+        2,
+        7
+      ],
+      "rank1_completion_tokens": [
+        11,
+        3
+      ],
+      "global_tokens_per_microbatch": [
+        13,
+        10
+      ]
+    },
+    "equal_token_control": {
+      "microbatches": 2,
+      "rank0_completion_tokens": [
+        5,
+        5
+      ],
+      "rank1_completion_tokens": [
+        5,
+        5
+      ],
+      "global_tokens_per_microbatch": [
+        10,
+        10
+      ]
+    },
+    "zero_local_tokens_positive_global": {
+      "microbatches": 2,
+      "rank0_completion_tokens": [
+        0,
+        0
+      ],
+      "rank1_completion_tokens": [
+        6,
+        3
+      ],
+      "global_tokens_per_microbatch": [
+        6,
+        3
+      ]
+    },
+    "short_final_window": {
+      "configured_accumulation_slots": 2,
+      "available_slots": 1,
+      "rank0_completion_tokens": [
+        2
+      ],
+      "rank1_completion_tokens": [
+        11
+      ],
+      "global_tokens_per_microbatch": [
+        13
+      ]
+    }
+  },
+  "acceptance": {
+    "both_arms_exit_code_zero": true,
+    "both_arms_each_case_global_step_one": true,
+    "both_arms_rank_state_hashes_equal": true,
+    "all_primary_metrics_finite": true,
+    "candidate_max_abs_pooled_loss_gradient_parameter_error_each_case_lte": 1e-05,
+    "base_equal_token_and_short_final_window_max_abs_error_lte": 1e-05,
+    "base_unequal_and_zero_local_gradient_or_parameter_error_gte": 0.0001,
+    "timeout_deadlock_or_unexplained_exception": "non-pass; preserve logs"
+  },
+  "resources": {
+    "gpu": false,
+    "paid_api": false,
+    "external_spend": false,
+    "wall_seconds_per_arm_cap": 300,
+    "gloo_timeout_seconds": 180,
+    "launcher_max_restarts": 0
+  },
+  "launcher": {
+    "rendezvous": "static",
+    "master_addr": "127.0.0.1",
+    "master_port": 29641
+  },
+  "commands": [
+    "PYTHONPATH=/tmp/trl-vare-pydeps:/tmp/trl-vare-async-norm python -m torch.distributed.run --nnodes=1 --nproc_per_node=2 --rdzv_backend=static --master_addr=127.0.0.1 --master_port=29641 --max_restarts=0 scripts/replay_trl_pr7249_full_trainer_ddp_v4.py --repo /tmp/trl-vare-async-norm --arm base --output results/trl-async-pr7249-full-trainer-ddp-v4/base",
+    "PYTHONPATH=/tmp/trl-vare-pydeps:/tmp/trl-vare-async-norm-pr python -m torch.distributed.run --nnodes=1 --nproc_per_node=2 --rdzv_backend=static --master_addr=127.0.0.1 --master_port=29641 --max_restarts=0 scripts/replay_trl_pr7249_full_trainer_ddp_v4.py --repo /tmp/trl-vare-async-norm-pr --arm candidate --output results/trl-async-pr7249-full-trainer-ddp-v4/candidate"
+  ],
+  "claim_limits": [
+    "This remains a synthetic trainer-correctness result, not a model capability or task-success result.",
+    "Inputs bypass the production async worker and Accelerator DataLoaderDispatcher.",
+    "The upstream PR already contains the normalization fix; this is additional test evidence, not an original fix or novelty claim."
+  ],
+  "sha256": "932bd55fc9cff25a25d46e94f9107f4f12b72f7d3af65d924e4759772d544a55"
+}
