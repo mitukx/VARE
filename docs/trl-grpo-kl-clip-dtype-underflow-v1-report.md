@@ -2,8 +2,8 @@
 
 **Outcome:** the open TRL KL-overflow fix PR has two untested CPU float16 failure modes in its clipping path. A tiny positive clip is accepted by config, rounds to zero in float16, and yields zero KL and zero gradient. With the representable clip `10`, the K3 value is finite, but its bias-corrected gradient rounds to zero under float16 arithmetic; the expected gradient is `-1` for the frozen fixture. This is an independent source-path audit of an existing upstream fix, not a new algorithm or an estimate of real-run prevalence.
 
-**Frozen protocol:** [`trl_grpo_kl_clip_dtype_underflow_v1.lock.json`](../protocols/trl_grpo_kl_clip_dtype_underflow_v1.lock.json)  
-**Accepted audit bundle:** [`run-4`](../results/trl-grpo-kl-clip-dtype-underflow-v1/run-4/)  
+**Frozen protocol:** [`trl_grpo_kl_clip_dtype_underflow_v1.lock.json`](../protocols/trl_grpo_kl_clip_dtype_underflow_v1.lock.json)
+**Accepted audit bundle:** [`run-4`](../results/trl-grpo-kl-clip-dtype-underflow-v1/run-4/)
 **Retained attempts:** [`run-1`–`run-3`](../results/trl-grpo-kl-clip-dtype-underflow-v1/)
 
 ## Question and source revisions
