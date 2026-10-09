@@ -1,0 +1,10 @@
+{
+  "protocol_id": "trl-pr7249-dispatcher-v3",
+  "status": "protocol_non_pass",
+  "stage": "Trainer.train completed but post-run fixture assertion failed",
+  "failure": "An IterableDataset without __len__ was restarted by Trainer while reaching max_steps; the training_step hook observed five batches, including repeated first-window inputs, instead of the locked three-microbatch stream. The runner aborted before emitting a summary.",
+  "optimizer_updates": "Trainer logged its run, but the runner did not persist global_step; do not infer a confirmed count from this non-pass.",
+  "preserved_log": "preflight.log",
+  "source_commits": {"base":"a98fa6a4428f9aae58dfb26d729d7437f662f27a","candidate":"5234eb7c70f4ca7eb92fe8e01611a33eaff17f40"},
+  "protocol_sha256": "6c4fdb2ef383eb64dd0eb3548db9e4eed1aca1830ab0eb1f6f952f4ef18e88ca"
+}

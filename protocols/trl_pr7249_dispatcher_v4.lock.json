@@ -1,0 +1,111 @@
+{
+  "acceptance": {
+    "all_metrics_finite": true,
+    "base_first_window_gradient_error_gte": 0.0001,
+    "both_arms_global_step": 2,
+    "both_ranks_have_identical_final_state": true,
+    "candidate_max_error_lte": 1e-05,
+    "observed_per_rank_local_and_replicated_global_token_counts_match_fixture": true,
+    "timeout_or_deadlock": "non-pass; preserve logs"
+  },
+  "claims_not_tested": [
+    "pretrained-model behavior",
+    "task success or capability improvement",
+    "async rollout worker and live queue lifecycle",
+    "planner and batching semantics",
+    "non-constant scheduler correctness beyond two fixed declared rates",
+    "FSDP or accelerator hardware",
+    "external human reproduction"
+  ],
+  "command": "python scripts/reproduce_trl_pr7249_dispatcher_v4.py --output results/trl-pr7249-dispatcher-v4/run-1",
+  "estimand": "For each optimizer update, sum clipped GRPO token losses over both dispatched ranks and all microbatches in that update, divide by the active-token total, then apply a deterministic SGD step. Compare loss, DDP-synchronized gradient, and final parameters to an independent token-local pooled oracle.",
+  "fixture": {
+    "fresh_sample_ids": [
+      100,
+      101,
+      110,
+      111,
+      120,
+      121
+    ],
+    "gradient_accumulation_steps": 2,
+    "max_steps": 2,
+    "microbatches": [
+      {
+        "global_tokens": 0,
+        "rank_completion_tokens": [
+          0,
+          0
+        ],
+        "update": 1
+      },
+      {
+        "global_tokens": 5,
+        "rank_completion_tokens": [
+          0,
+          5
+        ],
+        "update": 1
+      },
+      {
+        "global_tokens": 7,
+        "rank_completion_tokens": [
+          4,
+          3
+        ],
+        "update": 2
+      }
+    ],
+    "model": "Deterministic two-token token-local model; same initialization in both ranks and both arms.",
+    "optimizer": "SGD, no weight decay, no gradient clipping.",
+    "scheduler_lrs": [
+      0.1,
+      0.05
+    ],
+    "stream_length": 3,
+    "token_mask": "Only completion positions count; prompt, context, and padding positions are masked."
+  },
+  "hypothesis": "The pinned base misweights the two-microbatch first update; the PR candidate matches the pooled-token objective across a globally empty microbatch, a zero-token rank, and a one-microbatch final accumulation window.",
+  "path_under_test": "Pinned AsyncGRPO DataCollatorForRollout -> IterableDataset -> Accelerator.prepare with split_batches=True and dispatch_batches=True -> actual Accelerate DataLoaderDispatcher -> pinned AsyncGRPOTrainer.get_batch_samples/compute_loss -> Transformers Trainer.train optimizer/scheduler loop -> Gloo DDP. The IterableDataset declares __len__=3 so Trainer's epoch boundary and the one-microbatch final accumulation window are explicit.",
+  "protocol_id": "trl-pr7249-dispatcher-v4",
+  "question": "Does the existing TRL #7249 accumulation-window normalizer match an independently pooled-token GRPO objective when the actual AsyncGRPO rollout collator is passed through Accelerate DataLoaderDispatcher and Transformers Trainer.train on two CPU Gloo ranks?",
+  "resources": {
+    "external_spend": false,
+    "gloo_timeout_seconds": 180,
+    "gpu": false,
+    "max_wall_seconds_per_arm": 300,
+    "paid_api": false,
+    "threads_per_rank": 1
+  },
+  "runner": "scripts/replay_trl_pr7249_dispatcher_v4.py",
+  "runner_sha256": "e8fe3d06b11dc845480138bd1060ac545b0539d9864c3cab7513e1dd0f453012",
+  "runtime": {
+    "accelerate": "1.12.0",
+    "backend": "gloo",
+    "device": "cpu",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3",
+    "world_size": 2
+  },
+  "sha256": "1b6ee095e22f7fff660c8e4db49c0a7a08ccd1814eef81990412bbf14db7850a",
+  "sources": {
+    "base": {
+      "commit": "a98fa6a4428f9aae58dfb26d729d7437f662f27a",
+      "ref": "a98fa6a4428f9aae58dfb26d729d7437f662f27a",
+      "source_sha256": "b84c4544a4ac2aac5b08681a93fb3d49d1f24ff2f2f9fe53a6c35ab5c8f0ea40"
+    },
+    "candidate": {
+      "commit": "5234eb7c70f4ca7eb92fe8e01611a33eaff17f40",
+      "ref": "5234eb7c70f4ca7eb92fe8e01611a33eaff17f40",
+      "source_sha256": "5c4fc857c563db0d9f937a2edf89dd74c4f218a31f3a05bf33bffbf5285749dc"
+    },
+    "issue": "https://github.com/huggingface/trl/issues/7206",
+    "pull_request": "https://github.com/huggingface/trl/pull/7249",
+    "repository": "https://github.com/huggingface/trl"
+  },
+  "status": "locked_before_execution",
+  "supersedes": "v1 and v2 stopped before training due wrapper schema errors; v3 reached Trainer.train but the unsized IterableDataset restarted and broke the locked three-batch fixture. All earlier failures are retained in their respective results directories.",
+  "wrapper": "scripts/reproduce_trl_pr7249_dispatcher_v4.py",
+  "wrapper_sha256": "7dfe4b6288967157d35019e1fc0e2a6f30471a9e0fdabccc96e76cd6ff0d6ec6"
+}
