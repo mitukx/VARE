@@ -47,6 +47,9 @@ class RVLGRPOHooks:
         self.backend = backend
         self.trainer = trainer
         self.eval_tasks = list(eval_tasks)
+        eval_task_ids = [task.id for task in self.eval_tasks]
+        if len(set(eval_task_ids)) != len(eval_task_ids):
+            raise ValueError("evaluation task IDs must be unique for per-task scoring")
         self.score_fn = score_fn
         self.config = config or RVLGRPOConfig()
         if self.config.max_backend_concurrency <= 0:

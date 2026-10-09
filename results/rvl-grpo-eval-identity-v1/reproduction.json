@@ -1,0 +1,34 @@
+{
+  "reproducer": "rvl_grpo_eval_identity_v1",
+  "baseline_revision": "31615b6",
+  "baseline_source_sha256": "bbb3878c4046687f146881ab52871dcf1a5890b7bb3b940669c58afd9d721800",
+  "oracle": {
+    "n": 2,
+    "primary": 0.5
+  },
+  "duplicate_id_case": {
+    "requested_rows": 2,
+    "baseline_backend_calls": 2,
+    "baseline_report_n": 1,
+    "baseline_primary": 1.0,
+    "baseline_per_task_scores": {
+      "duplicate": 1.0
+    },
+    "fixed_adapter": {
+      "rejected": true,
+      "error": "evaluation task IDs must be unique for per-task scoring",
+      "backend_calls_before_rejection": 0
+    }
+  },
+  "unique_id_negative_control": {
+    "report_n": 2,
+    "primary": 0.5,
+    "per_task_scores": {
+      "task-0": 0.0,
+      "task-1": 1.0
+    },
+    "backend_calls": 2,
+    "matches_oracle": true
+  },
+  "claim_boundary": "Constructed CPU fixture on VARE's actual RVL evaluation adapter; no pretrained model or capability result."
+}

@@ -1,5 +1,9 @@
 # Next study decision — 2026-10-09
 
+## Current execution result — RVL evaluation identity
+
+The RVL adapter silently collapsed duplicate evaluation rows sharing a `Task.id`. On the same two-row CPU fixture, the pinned adapter reported one scored row and primary `1.0`, while a row-wise oracle gave two rows and `0.5`. The current adapter now rejects duplicate IDs before model calls. The unique-ID control matches the oracle. This closes a data-identity defect at the evaluation boundary, but does not show that existing experiments contained duplicates or establish model improvement. See [the reproduction report](rvl-eval-task-identity-v1.md).
+
 ## Current execution result — promotion evidence contract
 
 The latest code audit found a VARE-owned candidate-promotion defect: `EvaluationReport.n` was trusted for minimum evaluation count even when the retained paired score map contained fewer rows, and the primary aggregate was not checked against that map. The pre-fix implementation promoted a constructed candidate with declared `n=64` and only one retained score. The corrected gate rejects incomplete or aggregate-inconsistent reports; a complete 64-row control still passes. See [the reproducible report](promotion-report-contract-v1.md). This closes one evidence-integrity defect but does not establish that an existing run was affected or show real-model improvement.
