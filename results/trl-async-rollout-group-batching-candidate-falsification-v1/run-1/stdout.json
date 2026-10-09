@@ -1,0 +1,48 @@
+{
+  "fixed_oversized_rollout": {
+    "candidate": {
+      "exception_type": "RuntimeError",
+      "message": "rollout of 5 samples exceeds microbatch_size=4",
+      "outcome": "raised"
+    },
+    "declared_constraints": {
+      "microbatch_size": 4,
+      "processes": 2,
+      "rollout_size": 5
+    }
+  },
+  "fixed_unpartitionable_contiguous_prefix": {
+    "candidate": {
+      "exception_type": "RuntimeError",
+      "message": "whole-rollout prefix cannot fill every process row within microbatch_size",
+      "outcome": "raised"
+    },
+    "declared_constraints": {
+      "microbatch_size": 4,
+      "processes": 2,
+      "rollout_sizes": [
+        1,
+        4
+      ]
+    }
+  },
+  "source": "/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/work/trl-upstream/trl/experimental/async_grpo/async_grpo_trainer.py",
+  "token_greedy_false_negative": {
+    "candidate": {
+      "exception_type": "RuntimeError",
+      "message": "whole-rollout prefix exceeds the token budget",
+      "outcome": "raised"
+    },
+    "exact_feasible_partition": [
+      [
+        3,
+        3
+      ],
+      [
+        2,
+        2,
+        2
+      ]
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/reproducers/trl_async_group_batching_feasibility_v1.py", line 173, in <module>
+    main()
+  File "/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/reproducers/trl_async_group_batching_feasibility_v1.py", line 168, in main
+    outputs[mode] = [run_case(mode, name, case) for name, case in cases.items()]
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/reproducers/trl_async_group_batching_feasibility_v1.py", line 148, in run_case
+    raise AssertionError(f"{name}: result differed from the locked case disposition")
+AssertionError: FC2: result differed from the locked case disposition

@@ -1,0 +1,70 @@
+{
+  "protocol": "trl-async-rollout-group-batching-production-v1",
+  "status": "locked-before-execution",
+  "date": "2026-10-09",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+    "issue": "https://github.com/huggingface/trl/issues/7206"
+  },
+  "question": "Can whole forked rollouts survive the actual TRL FixedCountBatcher and TokenBudgetBatcher in one microbatch, with exact row accounting, nonempty process rows, and the fixed sample/token caps?",
+  "hypothesis": "The per-sample production batchers split or lose fork members at batch boundaries; a minimal group-aware candidate can preserve membership and rebalance feasible token groups without violating capacities.",
+  "frozen_method": {
+    "baseline": "Run the exact same two frozen tests against pristine pinned TRL source at ed8cc2f.",
+    "candidate": "Run tests against local source candidate; candidate must retain queue rollout metadata and buffer contiguous rows according to rollout_size/rollout_id.",
+    "fixed_count_fixture": {
+      "processes": 2,
+      "microbatch_size": 4,
+      "rollouts": {
+        "A": [
+          1,
+          1,
+          1
+        ],
+        "B": [
+          1,
+          1
+        ]
+      },
+      "expected": "all five rows once; rollout IDs never span microbatches; each emitted microbatch has 2-4 rows."
+    },
+    "token_budget_fixture": {
+      "processes": 2,
+      "token_budget": 10,
+      "rollouts": {
+        "A": [
+          7,
+          3
+        ],
+        "B": [
+          4,
+          6
+        ]
+      },
+      "expected": "all four rows once in group-preserving microbatches; each process row <=10 tokens and nonempty; exact repacking may fit all rows in one microbatch."
+    },
+    "primary_metrics": [
+      "row accounting exact",
+      "no rollout spans microbatches",
+      "every emitted process row nonempty",
+      "fixed-count cap respected",
+      "per-row token budget respected"
+    ],
+    "success_rule": "Both tests fail on pristine pinned base for the declared group-boundary invariant and pass on candidate with no skips.",
+    "rejection_rule": "Any missing/duplicate row, split rollout, empty rank, or capacity violation rejects the candidate. A baseline pass rejects the claimed defect for that fixture."
+  },
+  "resources": {
+    "compute": "CPU tests only",
+    "paid_api_gpu_or_external_spend": false,
+    "models": false
+  },
+  "claim_limits": [
+    "This is a two-fixture production-batcher correctness result only.",
+    "It does not test an optimizer step, distributed collectives, throughput, rollout prevalence, downstream task success, or model capability.",
+    "Passing fixtures is not by itself an upstream-ready patch; epoch-stop, DataLoader prefetch, metadata compatibility, and broader tests remain separate gates."
+  ],
+  "reproducer": {
+    "path": "reproducers/test_trl_async_rollout_group_batching_v1.py",
+    "sha256": "39a7caac114c23d825bc498184c3886a204b4bf2f426abbac451f795d5d3a8d3"
+  }
+}

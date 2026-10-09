@@ -113,3 +113,6 @@ The source recovered at upstream commit `f5c92cf` is integrated in `src/vare`, i
 ## Recovery evidence checkpoint
 
 Persistent evaluation now has a frozen CPU recovery experiment: 24/24 fault cases and four calibrated historical decisions after claimant loss. See [recovery-report.md](recovery-report.md). Current terminal publication is fenced, changed inputs are invalidated at use/export and old attempts remain retained. This extends local E0/E5 systems evidence. Multi-host leases/consensus, schema migration, power-loss behavior, stronger resource containment and a measured learner update remain separate open work.
+
+
+**Update 2026-10-09 — stop incomplete TRL batcher candidate:** production definitions from pinned TRL `ed8cc2f` reproduce rollout splitting across emitted microbatches in two boundary fixtures; the local candidate passes those fixtures but fails an exact-feasible token-packing counterexample and does not specify whole-group rejection for fixed-count infeasible prefixes. No upstream PR is ready. Continue only after the rejection/accounting contract is explicit and the exact-fit case passes. This is source-level trainer evidence, not optimizer or capability evidence. See [report](trl-async-rollout-group-batching-production-v3-report.md).

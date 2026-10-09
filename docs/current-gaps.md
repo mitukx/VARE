@@ -160,3 +160,8 @@ The frozen [BoolQ binary verifier-RLOO v1](cpu-lm-boolq-verifier-rloo-developmen
 ## Historical HH reward-model v1
 
 The frozen development cohort had mean pairwise accuracy 0.5846 versus 0.5000 for length alone, with a paired 95% interval for the gain of [+0.0429, +0.1276]. Mean NLL was 0.8566 versus 0.6931, with a paired difference interval of [+0.0661, +0.2651]; all three heads had worse NLL. The independent audit passed for source selection, prompt exclusion, response-token counts and metric reconstruction. V1 confirmation indices 512–1023 were not opened under that protocol; the later v2 study assigned them to development and consumed [512,1536) across development and confirmation. See the [v1 report](hh-reward-model-v1-development-report.md) and the [v2 report](hh-reward-model-v2-report.md). The two outcomes remain separate; v1 is not a pass.
+
+
+## AsyncGRPO group-batcher audit (2026-10-09)
+
+A pinned TRL source-level fixture shows same-rollout rows can cross fixed-count and token-budget microbatch boundaries. The local candidate passes two boundary fixtures but is rejected as a complete fix: a greedy false negative rejects exactly packable token lengths `[3,3,2,2,2]` at 2 ranks / budget 6; fixed-count overflow and a contiguous `[1,4]` prefix have no explicit whole-group rejection/accounting contract. No optimizer, full Trainer, distributed, or capability effect is shown. See the [report](trl-async-rollout-group-batching-production-v3-report.md) and [raw evidence](../results/trl-async-rollout-group-batching-candidate-falsification-v1/run-1/).
