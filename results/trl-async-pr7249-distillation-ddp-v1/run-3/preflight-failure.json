@@ -1,0 +1,9 @@
+{
+  "command": "python scripts/reproduce_trl_pr7249_async_distillation_ddp_v3.py --output results/trl-async-pr7249-distillation-ddp-v1/run-3",
+  "date": "2026-10-09",
+  "failure": "Both Gloo ranks raised TypeError because local token counting iterated the rank axis as if it were the microbatch axis. The launcher output is retained in runs/base-launcher.log.",
+  "protocol_id": "trl-async-distillation-pr7249-full-trainer-ddp-v3",
+  "resolution": "Preserve v3 unchanged; v4 computes local counts from the locked rank-by-microbatch-by-sample structure. No measured outcome occurred.",
+  "stage": "distributed-fixture-preflight",
+  "status": "non-pass; no Trainer construction or optimizer step executed"
+}
