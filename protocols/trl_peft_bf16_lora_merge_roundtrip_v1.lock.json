@@ -1,0 +1,45 @@
+{
+  "study_id": "trl_peft_bf16_lora_merge_roundtrip_v1",
+  "status": "locked_before_measurement",
+  "question": "Does repeated PEFT LoRA merge/unmerge used by TRL weight synchronization mutate the original BF16 base weights, and does out-of-place/safe merge prevent it?",
+  "primary_hypothesis": "For a nonzero LoRA delta, PEFT 0.19.1 unsafe merge followed by unmerge can produce bitwise changes in BF16 base weights because both operations round in the storage dtype. A zero-delta arm should remain exact. Float32 is a precision control, not a claim that all deployments use it.",
+  "scope": "Numerical integrity of one source-level synchronization path only. This is not a model-capability experiment and does not establish prevalence or downstream training impact.",
+  "source_provenance": {
+    "trl_repository": "https://github.com/huggingface/trl",
+    "trl_commit": "f4526e10e25c8618855932528c232e2284c7801c",
+    "trl_file": "trl/generation/vllm_generation.py",
+    "trl_file_sha256": "01a67466494fe3618c6b02d15eac0fe10ebd9a1a355862bd32064a64771d48ef",
+    "trl_path_observed": "merge_adapter() before vLLM parameter transfer; unmerge_adapter() after transfer",
+    "peft_version": "0.19.1",
+    "peft_wheel_sha256": "2113f72a81621b5913ef28f9022204c742df111890c5f49d812716a4a301e356",
+    "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+    "base_model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "base_model_file_sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe"
+  },
+  "protocol": {
+    "device": "CPU only; no CUDA/MPS",
+    "seed": 20261009,
+    "target": "first transformer block q_proj only; LoRA rank 4, alpha 8, dropout 0",
+    "adapter": "synthetic deterministic nonzero adapter initialized from a seeded Gaussian, with B overwritten to nonzero values; no learned adapter is available, so results are numerical-path evidence only",
+    "arms": [
+      "BF16 unsafe merge/unmerge, cycles 1, 10, 100",
+      "BF16 zero-B no-op control, cycles 100",
+      "BF16 safe_merge then unmerge, cycles 1, 10, 100",
+      "FP32 unsafe merge/unmerge, cycles 100",
+      "BF16 functional baseline: do not merge; verify base parameter bytes unchanged after 100 synchronization-equivalent no-op iterations"
+    ],
+    "primary_metric": "number of changed base-weight elements after each roundtrip; exact byte equality to pre-merge tensor",
+    "secondary_metrics": [
+      "max absolute weight drift",
+      "L2 weight drift",
+      "relative L2 drift",
+      "fixed-prompt logits max absolute difference before/after roundtrips",
+      "wall time"
+    ],
+    "decision_rule": "Reproduction passes if the nonzero BF16 unsafe arm has at least one changed base-weight element after 10 cycles and both zero-B and functional controls are bitwise exact. An exact/no-drift result rejects this reproduction under the chosen adapter and layer. Safe merge is descriptive; do not assume it is safe against roundtrip drift until measured.",
+    "resource_ceiling": "Cached q_proj tensor only (896x896); CPU only; process RSS <=2 GiB and elapsed <=5 minutes; no network/model download.",
+    "stopping_rule": "one locked run; no tuning adapter scale, target layer, seed, or thresholds after observing outcome",
+    "claim_boundary": "A pass demonstrates a reproducible numerical defect in this pinned path/configuration only. It does not establish material effect on policy quality, frequency in trained adapters, or current maintainers' deployment configurations.",
+    "measurement_fixture": "Extract model.layers.0.self_attn.q_proj.weight directly from the pinned cached safetensors shard; wrap a one-layer nn.Module exposing q_proj with PEFT 0.19.1. This isolates the exact library arithmetic while avoiding a full-model load."
+  }
+}
