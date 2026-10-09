@@ -1,0 +1,31 @@
+{
+  "audit_type": "separate_read_only_agent_audit",
+  "independent_of_runner_implementation": true,
+  "outside_human_review": false,
+  "protocol_canonical_sha256_verified": "5e8cde24ace26bb1726dc75a15eccea6d56cbea170741899ebf43d9600876c98",
+  "protocol_raw_sha256_verified": "2c71766e3697c1728a05d7256d9bf4900b90dd46f1fdc4424171b898c412f394",
+  "runner_sha256_verified": "ef76afff0d6770dcaf528383bad1b796b4ec66ca40d6d73e1c712cdc0ea4d441",
+  "base_source_hashes_verified": {
+    "trainer": "375985c1d0cca49a9d98d8b00ed41cefe000b91461e9a0783e94312466fd0210",
+    "test": "14b9db3deb30674eedc8bd9336ad2d9eaeabbbe0987e9c4be9dc517d52cd8e39"
+  },
+  "candidate_source_hashes_verified": {
+    "trainer": "42c3d0525f8a40c58c1b66da8a449de60d1c195280c7d1b503c245c3e375139f",
+    "test": "fa1ce5d13a26293474448c1f26361c1d96dc596d282508689d7e6dc766e81555"
+  },
+  "candidate_revision_verified": "2a47b3bf538d12c1f24fc3bc8bb188329ed32500",
+  "checks": {
+    "legacy_config_field_order_preserved_as_prefix": true,
+    "base_and_candidate_default_rows_match_all_seeds": true,
+    "explicit_legacy_0_01_rows_match_base_all_seeds": true,
+    "explicit_zero_is_exact_identity_all_seeds": true,
+    "mixed_reward_has_nonzero_gradients_and_changed_parameters_all_seeds": true,
+    "zero_gradient_adamw_formula_error_zero": true
+  },
+  "limitations": [
+    "The mixed-reward decay-only formula error is not interpretable because gradient updates are present.",
+    "Tiny randomized GPT-2 fixture only; no task-success or capability evidence.",
+    "A separate agent audit is not an outside human reproduction or review."
+  ],
+  "decision": "All v2 protocol outcome gates pass; no discrepancy found."
+}
