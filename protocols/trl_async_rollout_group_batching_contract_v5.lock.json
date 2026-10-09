@@ -1,0 +1,142 @@
+{
+  "protocol": "trl-async-rollout-group-batching-contract-v5",
+  "status": "locked-before-execution",
+  "date": "2026-10-09",
+  "supersedes": "trl-async-rollout-group-batching-contract-v4",
+  "supersedes_reason": "The v4 runner accidentally used token_budget=6 for token_boundary, whose locked fixture intended token_budget=10. Samples of length 7 and 9 were therefore over budget and dropped whole. v4 remains preserved but does not validate the intended all-group token-boundary case. v5 passes budget per case.",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "revision": "ed8cc2f4337fb9b7b1429dbd31009ad3577cd5b98",
+    "upstream_issue": "https://github.com/huggingface/trl/issues/7206"
+  },
+  "contract": {
+    "fixed_count": "Every emitted microbatch contains exactly 4 rows; no group splits. Unbatchable groups are dropped whole, and the exact number of dropped rows is recorded.",
+    "token_budget": "Every emitted microbatch has at least one sample per each of 2 ranks and <= per-case token budget per rank. A group is emitted wholly exactly once or dropped wholly with row-count metric. Search must find the exact-fit frozen token rollout."
+  },
+  "cases": {
+    "fixed_boundary": {
+      "processes": 2,
+      "microbatch_size": 4,
+      "groups": [
+        3,
+        2,
+        2,
+        1,
+        1
+      ],
+      "required": "whole-group accounting; no underfilled fixed batches"
+    },
+    "fixed_oversize": {
+      "processes": 2,
+      "microbatch_size": 4,
+      "groups": [
+        5,
+        4
+      ],
+      "required": "drop size-5 group whole; retain size-4 group"
+    },
+    "fixed_infeasible_prefix": {
+      "processes": 2,
+      "microbatch_size": 4,
+      "groups": [
+        1,
+        4
+      ],
+      "required": "drop size-1 group whole; retain size-4 group"
+    },
+    "fixed_exact_control": {
+      "processes": 2,
+      "microbatch_size": 4,
+      "groups": [
+        2,
+        2
+      ],
+      "required": "retain both groups in one exact-size batch"
+    },
+    "token_boundary": {
+      "processes": 2,
+      "token_budget": 10,
+      "groups": {
+        "A": [
+          7,
+          3
+        ],
+        "B": [
+          4,
+          6
+        ],
+        "C": [
+          2,
+          2
+        ],
+        "D": [
+          9,
+          1
+        ]
+      },
+      "required": "all groups are within per-sample limits; preserve all groups or account for any whole-group drops; no partial rows"
+    },
+    "token_exact_fit": {
+      "processes": 2,
+      "token_budget": 6,
+      "group": [
+        3,
+        3,
+        2,
+        2,
+        2
+      ],
+      "required": "retain all five rows; exact packing [3,3]/[2,2,2]"
+    },
+    "token_infeasible_group": {
+      "processes": 2,
+      "token_budget": 6,
+      "groups": {
+        "U": [
+          4,
+          4,
+          4
+        ],
+        "V": [
+          3,
+          3
+        ]
+      },
+      "required": "drop U whole, retain V"
+    },
+    "token_overbudget_member": {
+      "processes": 2,
+      "token_budget": 6,
+      "groups": {
+        "W": [
+          7,
+          2
+        ],
+        "Z": [
+          3,
+          3
+        ]
+      },
+      "required": "drop W whole, retain Z"
+    }
+  },
+  "success_rule": "Base violates the complete-group contract on fixed_boundary and token_boundary. Candidate passes all eight cases; each input row is either emitted once or covered by a whole-group drop count; exact fixed sizes and token budgets hold; token_boundary retains all rows; exact-fit group T is retained.",
+  "rejection_rule": "Any partial or split group, missing unaccounted row, duplicate row, underfilled fixed batch, rank-empty token batch, token-cap violation, rejection of exact-fit T, or drop of valid token_boundary groups fails.",
+  "method": {
+    "execution": "AST-extract _balance_by_squared_length and the two production batcher classes from each checkout; stub only IterableDataset/logger.",
+    "command": "python /absolute/path/to/reproducers/trl_async_rollout_group_batching_contract_v5.py"
+  },
+  "resources": {
+    "cpu_only": true,
+    "gpu_paid_api_external_spend": false,
+    "model_inference": false
+  },
+  "claim_limits": [
+    "Finite source-level fixtures only; no full Trainer/optimizer/distributed execution or task-success effect.",
+    "A pass is not a general sample-efficiency result; dropped-row rates must be reported."
+  ],
+  "reproducer": {
+    "path": "reproducers/trl_async_rollout_group_batching_contract_v5.py",
+    "sha256": "fc7d43430050502ad0c5adfe339d47b3361e605c84b544cd23753540f6505f8b"
+  }
+}

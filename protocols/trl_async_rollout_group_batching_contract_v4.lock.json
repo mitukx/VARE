@@ -1,0 +1,46 @@
+{
+  "protocol": "trl-async-rollout-group-batching-contract-v4",
+  "status": "locked-before-execution",
+  "date": "2026-10-09",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "revision": "ed8cc2f4337fb9b7b1429dbd31009ad3577cd5b98",
+    "upstream_issue": "https://github.com/huggingface/trl/issues/7206"
+  },
+  "question": "Can a group-aware candidate make each complete rollout either emitted exactly once within a valid microbatch or explicitly dropped whole, while preserving fixed-count semantics and accepting feasible token packings?",
+  "contract": {
+    "fixed_count": "Every emitted microbatch contains exactly microbatch_size rows. Do not split a rollout. If a contiguous prefix cannot be completed within capacity, drop whole rollouts and record their total row count; do not emit an underfilled batch.",
+    "token_budget": "Every emitted microbatch has one or more samples on every rank; each rank is within token_budget. A rollout is either wholly represented in one microbatch or wholly rejected with counted rows. Exact-feasible single-rollout packings in the frozen fixtures must be found."
+  },
+  "frozen_cases": [
+    "fixed_boundary",
+    "fixed_oversize",
+    "fixed_infeasible_prefix",
+    "fixed_exact_control",
+    "token_boundary",
+    "token_exact_fit",
+    "token_infeasible_group",
+    "token_overbudget_member"
+  ],
+  "success_rule": "Pinned base must fail at least one whole-group invariant on fixed_boundary/token_boundary. Candidate must pass all eight cases, including exact fixed-count batch sizes, explicit whole-rollout drop accounting, exact-fit token group retention, rank nonemptiness and per-row limits.",
+  "rejection_rule": "Any partial rollout, split rollout, missing row without a whole-group drop count, duplicate emission, underfilled fixed-count microbatch, empty rank, token-budget violation, or rejection of exact-fit T fails.",
+  "method": {
+    "execution": "AST-extract _balance_by_squared_length and both pinned production batcher class definitions; stub only IterableDataset and logger. No copied method implementation.",
+    "command": "python /absolute/path/to/reproducers/trl_async_rollout_group_batching_contract_v4.py",
+    "comparison": "Run unchanged script in pinned base and candidate source checkout."
+  },
+  "resources": {
+    "compute": "CPU source-level execution only",
+    "gpu_or_paid_api": false,
+    "model_inference": false
+  },
+  "claim_limits": [
+    "Finite source-level contract tests only; no Trainer, optimizer, distributed collectives, throughput, or task success.",
+    "A pass supports the group accounting contract on these frozen fixtures, not general packing optimality.",
+    "No capability claim."
+  ],
+  "reproducer": {
+    "path": "reproducers/trl_async_rollout_group_batching_contract_v4.py",
+    "sha256": "59c8b63a017b513d9fb9e697b00de02b45ba4c707033eeec9497f89e9e3f9faf"
+  }
+}
