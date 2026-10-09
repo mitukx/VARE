@@ -1,0 +1,5777 @@
+{
+  "base_estimator_sha256": "83fd025fa23d30ddeb3f01d86077f7b558b4ce91f7273b4c48f0488f32735ee4",
+  "law_count": 128,
+  "nondegenerate_laws": 128,
+  "per_law": [
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0018851841048139507,
+          "fixed_budget_mse": 0.217628891792057,
+          "mean": -0.0058353407169152785,
+          "ratio_to_full": 0.908955174145427,
+          "variance": 2.6115040544753754
+        },
+        "m2": {
+          "bias": 0.0018851841048139507,
+          "fixed_budget_mse": 0.22385710703636283,
+          "mean": -0.0058353407169152785,
+          "ratio_to_full": 0.9349681195102935,
+          "variance": 1.3431213187035227
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2657889256743699,
+          "mean": -0.007720524821729229,
+          "ratio_to_full": 1.1101017757013198,
+          "variance": 1.0631557026974796
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.23524754526382366,
+          "mean": -0.007720524821729229,
+          "ratio_to_full": 0.9825417558844887,
+          "variance": 0.9409901810552946
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.23942752952219595,
+          "mean": -0.007720524821729229,
+          "ratio_to_full": 1.0,
+          "variance": 0.7182825885665879
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-00",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.007720524821729229,
+      "true_variance": 0.7182825885665879,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.002219221743113904,
+          "fixed_budget_mse": 0.21763274945216965,
+          "mean": 0.0020522164516066504,
+          "ratio_to_full": 1.0623503352308563,
+          "variance": 2.6115338940842943
+        },
+        "m2": {
+          "bias": -0.002219221743113904,
+          "fixed_budget_mse": 0.21201088435492527,
+          "mean": 0.0020522164516066504,
+          "ratio_to_full": 1.034907818947282,
+          "variance": 1.2720357564586808
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.24268492667674474,
+          "mean": 0.004271438194720555,
+          "ratio_to_full": 1.184639783578056,
+          "variance": 0.970739706706979
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2110877801325286,
+          "mean": 0.004271438194720555,
+          "ratio_to_full": 1.030401787191562,
+          "variance": 0.8443511205301144
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.20485967974479577,
+          "mean": 0.004271438194720555,
+          "ratio_to_full": 1.0,
+          "variance": 0.6145790392343873
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-01",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.004271438194720555,
+      "true_variance": 0.6145790392343873,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0027728193005866347,
+          "fixed_budget_mse": 0.21710143638698934,
+          "mean": 0.08008202891578826,
+          "ratio_to_full": 1.0360335904341884,
+          "variance": 2.6051249743213876
+        },
+        "m2": {
+          "bias": 0.0027728193005866347,
+          "fixed_budget_mse": 0.21507382747848744,
+          "mean": 0.08008202891578826,
+          "ratio_to_full": 1.0263576022305587,
+          "variance": 1.2903968337096823
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.24399535509233872,
+          "mean": 0.07730920961520163,
+          "ratio_to_full": 1.1643745338238107,
+          "variance": 0.9759814203693549
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21329060807744454,
+          "mean": 0.07730920961520163,
+          "ratio_to_full": 1.0178478695022077,
+          "variance": 0.8531624323097782
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2095505767298577,
+          "mean": 0.07730920961520163,
+          "ratio_to_full": 1.0,
+          "variance": 0.6286517301895731
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-02",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.07730920961520163,
+      "true_variance": 0.6286517301895731,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0007300455675231174,
+          "fixed_budget_mse": 0.21755438306828412,
+          "mean": 0.02986476947203426,
+          "ratio_to_full": 1.0635952471094468,
+          "variance": 2.6106462012210416
+        },
+        "m2": {
+          "bias": -0.0007300455675231174,
+          "fixed_budget_mse": 0.2119711097907305,
+          "mean": 0.02986476947203426,
+          "ratio_to_full": 1.0362993460222443,
+          "variance": 1.271823460945199
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.24194088394389018,
+          "mean": 0.03059481503955738,
+          "ratio_to_full": 1.1828176964994181,
+          "variance": 0.9677635357755607
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21104714308477532,
+          "mean": 0.03059481503955738,
+          "ratio_to_full": 1.0317821922739199,
+          "variance": 0.8441885723391013
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.20454621592145683,
+          "mean": 0.03059481503955738,
+          "ratio_to_full": 1.0,
+          "variance": 0.6136386477643705
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-03",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.03059481503955738,
+      "true_variance": 0.6136386477643705,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.000494958900712883,
+          "fixed_budget_mse": 0.217423866123132,
+          "mean": 0.04954444480298211,
+          "ratio_to_full": 1.030088648870837,
+          "variance": 2.609083453665823
+        },
+        "m2": {
+          "bias": -0.000494958900712883,
+          "fixed_budget_mse": 0.2142319031834785,
+          "mean": 0.04954444480298211,
+          "ratio_to_full": 1.0149660919483536,
+          "variance": 1.2853899491949907
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.24630506630955062,
+          "mean": 0.050039403703694994,
+          "ratio_to_full": 1.1669190576399824,
+          "variance": 0.9852202652382025
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21589162472434228,
+          "mean": 0.050039403703694994,
+          "ratio_to_full": 1.0228293516263964,
+          "variance": 0.8635664988973691
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21107296576995369,
+          "mean": 0.050039403703694994,
+          "ratio_to_full": 1.0,
+          "variance": 0.633218897309861
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-04",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.050039403703694994,
+      "true_variance": 0.633218897309861,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0016861806538726529,
+          "fixed_budget_mse": 0.21754691164066198,
+          "mean": 0.03176923749610458,
+          "ratio_to_full": 0.8963931232286142,
+          "variance": 2.6105288212255737
+        },
+        "m2": {
+          "bias": -0.0016861806538726529,
+          "fixed_budget_mse": 0.22568421859585233,
+          "mean": 0.03176923749610458,
+          "ratio_to_full": 0.9299225626549086,
+          "variance": 1.354088252343929
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2654786463541372,
+          "mean": 0.03345541814997723,
+          "ratio_to_full": 1.093893869424207,
+          "variance": 1.0619145854165488
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.23505778696732835,
+          "mean": 0.03345541814997723,
+          "ratio_to_full": 0.9685459665218557,
+          "variance": 0.9402311478693134
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2426914107251348,
+          "mean": 0.03345541814997723,
+          "ratio_to_full": 1.0,
+          "variance": 0.7280742321754045
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-05",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.03345541814997723,
+      "true_variance": 0.7280742321754045,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.003669946382999334,
+          "fixed_budget_mse": 0.21758317718229092,
+          "mean": 0.02648776258227179,
+          "ratio_to_full": 1.0238380357800732,
+          "variance": 2.610836504110042
+        },
+        "m2": {
+          "bias": 0.003669946382999334,
+          "fixed_budget_mse": 0.2155721171415611,
+          "mean": 0.02648776258227179,
+          "ratio_to_full": 1.0143749891024727,
+          "variance": 1.2933518918106421
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.24647316910941022,
+          "mean": 0.022817816199272457,
+          "ratio_to_full": 1.1597799453128264,
+          "variance": 0.9858926764376409
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2162748428145135,
+          "mean": 0.022817816199272457,
+          "ratio_to_full": 1.0176816660340493,
+          "variance": 0.865099371258054
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21251718492418772,
+          "mean": 0.022817816199272457,
+          "ratio_to_full": 1.0,
+          "variance": 0.6375515547725632
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-06",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.022817816199272457,
+      "true_variance": 0.6375515547725632,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0006088304195693492,
+          "fixed_budget_mse": 0.21756698164101212,
+          "mean": 0.027180398787899913,
+          "ratio_to_full": 1.0063706314108398,
+          "variance": 2.610799331598388
+        },
+        "m2": {
+          "bias": -0.0006088304195693492,
+          "fixed_budget_mse": 0.21579045969856706,
+          "mean": 0.027180398787899913,
+          "ratio_to_full": 0.9981532102955182,
+          "variance": 1.2947405341445235
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.24958837236443568,
+          "mean": 0.027789229207469263,
+          "ratio_to_full": 1.1544877168156336,
+          "variance": 0.9983534894577427
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21912820267341934,
+          "mean": 0.027789229207469263,
+          "ratio_to_full": 1.0135921637605783,
+          "variance": 0.8765128106936774
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21618971664147538,
+          "mean": 0.027789229207469263,
+          "ratio_to_full": 1.0,
+          "variance": 0.6485691499244262
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-07",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.027789229207469263,
+      "true_variance": 0.6485691499244262,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.001673493215031109,
+          "fixed_budget_mse": 0.21759574827737593,
+          "mean": 0.02056047914408227,
+          "ratio_to_full": 0.9946040242016351,
+          "variance": 2.611115372374022
+        },
+        "m2": {
+          "bias": -0.001673493215031109,
+          "fixed_budget_mse": 0.21779179129426207,
+          "mean": 0.02056047914408227,
+          "ratio_to_full": 0.9955001132799154,
+          "variance": 1.306733944288328
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.25367924621154464,
+          "mean": 0.02223397235911338,
+          "ratio_to_full": 1.1595373583164499,
+          "variance": 1.0147169848461786
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22284357406644545,
+          "mean": 0.02223397235911338,
+          "ratio_to_full": 1.0185912054284678,
+          "variance": 0.8913742962657818
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21877625967986528,
+          "mean": 0.02223397235911338,
+          "ratio_to_full": 1.0,
+          "variance": 0.6563287790395959
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-08",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.02223397235911338,
+      "true_variance": 0.6563287790395959,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0012131921614999333,
+          "fixed_budget_mse": 0.21750133773138086,
+          "mean": -0.0392392013518789,
+          "ratio_to_full": 1.047663931544372,
+          "variance": 2.6099983907539217
+        },
+        "m2": {
+          "bias": -0.0012131921614999333,
+          "fixed_budget_mse": 0.21302743889099895,
+          "mean": -0.0392392013518789,
+          "ratio_to_full": 1.026113983864349,
+          "variance": 1.2781558023346693
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.24544495696500362,
+          "mean": -0.03802600919037897,
+          "ratio_to_full": 1.1822632047866917,
+          "variance": 0.9817798278600145
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21464688425422696,
+          "mean": -0.03802600919037897,
+          "ratio_to_full": 1.0339145542601784,
+          "variance": 0.8585875370169078
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.20760601866932646,
+          "mean": -0.03802600919037897,
+          "ratio_to_full": 1.0,
+          "variance": 0.6228180560079793
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-09",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.03802600919037897,
+      "true_variance": 0.6228180560079793,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0005932425081620618,
+          "fixed_budget_mse": 0.2175880000331773,
+          "mean": 0.022052857379793556,
+          "ratio_to_full": 1.0313600411853912,
+          "variance": 2.6110517771580457
+        },
+        "m2": {
+          "bias": -0.0005932425081620618,
+          "fixed_budget_mse": 0.21390869170921345,
+          "mean": 0.022052857379793556,
+          "ratio_to_full": 1.0139202394318088,
+          "variance": 1.2834500386352397
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2451184254288873,
+          "mean": 0.022646099887955618,
+          "ratio_to_full": 1.1618533618907674,
+          "variance": 0.9804737017155492
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21350078842996373,
+          "mean": 0.022646099887955618,
+          "ratio_to_full": 1.0119867911588227,
+          "variance": 0.8540031537198549
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2109719121783049,
+          "mean": 0.022646099887955618,
+          "ratio_to_full": 1.0,
+          "variance": 0.6329157365349147
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-10",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.022646099887955618,
+      "true_variance": 0.6329157365349147,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0033677084799858285,
+          "fixed_budget_mse": 0.21763920317572127,
+          "mean": 0.0019403847253509085,
+          "ratio_to_full": 0.9886694544253081,
+          "variance": 2.6115343405837814
+        },
+        "m2": {
+          "bias": 0.0033677084799858285,
+          "fixed_budget_mse": 0.21805716190670013,
+          "mean": 0.0019403847253509085,
+          "ratio_to_full": 0.9905681152570862,
+          "variance": 1.308274922677764
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.25423217899820233,
+          "mean": -0.00142732375463492,
+          "ratio_to_full": 1.154900339827882,
+          "variance": 1.0169287159928093
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22254962639720424,
+          "mean": -0.00142732375463492,
+          "ratio_to_full": 1.0109760305225435,
+          "variance": 0.890198505588817
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22013343509457384,
+          "mean": -0.00142732375463492,
+          "ratio_to_full": 1.0,
+          "variance": 0.6604003052837215
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-11",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.00142732375463492,
+      "true_variance": 0.6604003052837215,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0008381632839125422,
+          "fixed_budget_mse": 0.21745326683002342,
+          "mean": 0.045905706929108635,
+          "ratio_to_full": 1.0494427147221943,
+          "variance": 2.609430771747995
+        },
+        "m2": {
+          "bias": -0.0008381632839125422,
+          "fixed_budget_mse": 0.21355671780520116,
+          "mean": 0.045905706929108635,
+          "ratio_to_full": 1.0306377317193223,
+          "variance": 1.281336091725064
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.24511938546378167,
+          "mean": 0.04674387021302118,
+          "ratio_to_full": 1.1829610888909876,
+          "variance": 0.9804775418551267
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21408060911358734,
+          "mean": 0.04674387021302118,
+          "ratio_to_full": 1.0331660630932624,
+          "variance": 0.8563224364543494
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.20720832474175313,
+          "mean": 0.04674387021302118,
+          "ratio_to_full": 1.0,
+          "variance": 0.6216249742252594
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-12",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.04674387021302118,
+      "true_variance": 0.6216249742252594,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.000995061057744412,
+          "fixed_budget_mse": 0.2175962276059655,
+          "mean": 0.019881050353878042,
+          "ratio_to_full": 1.0076230457029987,
+          "variance": 2.6111428495134823
+        },
+        "m2": {
+          "bias": 0.000995061057744412,
+          "fixed_budget_mse": 0.21680022838465557,
+          "mean": 0.019881050353878042,
+          "ratio_to_full": 1.0039370113972663,
+          "variance": 1.3007954294288815
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2475794111131677,
+          "mean": 0.01888598929613363,
+          "ratio_to_full": 1.1464662003743562,
+          "variance": 0.9903176444526708
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.217166157739133,
+          "mean": 0.01888598929613363,
+          "ratio_to_full": 1.0056315207861808,
+          "variance": 0.868664630956532
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21595003065273574,
+          "mean": 0.01888598929613363,
+          "ratio_to_full": 1.0,
+          "variance": 0.6478500919582072
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-13",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.01888598929613363,
+      "true_variance": 0.6478500919582072,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.00015151929259128033,
+          "fixed_budget_mse": 0.2175916087962997,
+          "mean": -0.020954131292284538,
+          "ratio_to_full": 0.989572074063274,
+          "variance": 2.611099030058444
+        },
+        "m2": {
+          "bias": 0.00015151929259128033,
+          "fixed_budget_mse": 0.21784772612564593,
+          "mean": -0.020954131292284538,
+          "ratio_to_full": 0.9907368549948858,
+          "variance": 1.3070862190052994
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.25222069178415757,
+          "mean": -0.021105650584875818,
+          "ratio_to_full": 1.1470596429303437,
+          "variance": 1.0088827671366303
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22197096053284532,
+          "mean": -0.021105650584875818,
+          "ratio_to_full": 1.0094886701349683,
+          "variance": 0.8878838421313813
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21988454858355952,
+          "mean": -0.021105650584875818,
+          "ratio_to_full": 1.0,
+          "variance": 0.6596536457506785
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-14",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.021105650584875818,
+      "true_variance": 0.6596536457506785,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0012334118184889036,
+          "fixed_budget_mse": 0.21762137103180043,
+          "mean": 0.009995446544148294,
+          "ratio_to_full": 1.0475223520262338,
+          "variance": 2.6114381967250373
+        },
+        "m2": {
+          "bias": 0.0012334118184889036,
+          "fixed_budget_mse": 0.21223495612266455,
+          "mean": 0.009995446544148294,
+          "ratio_to_full": 1.021594797265159,
+          "variance": 1.2734006089077035
+        },
+        "m3_structured": {
+          "bias": -6.938893903907228e-18,
+          "fixed_budget_mse": 0.24374545392944164,
+          "mean": 0.008762034725659383,
+          "ratio_to_full": 1.1732708510441292,
+          "variance": 0.9749818157177665
+        },
+        "m3_uniform": {
+          "bias": -6.938893903907228e-18,
+          "fixed_budget_mse": 0.21276566259482158,
+          "mean": 0.008762034725659383,
+          "ratio_to_full": 1.0241493574598386,
+          "variance": 0.8510626503792863
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.20774866580255122,
+          "mean": 0.00876203472565939,
+          "ratio_to_full": 1.0,
+          "variance": 0.6232459974076536
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-15",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.00876203472565939,
+      "true_variance": 0.6232459974076536,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.00501905759676672,
+          "fixed_budget_mse": 0.21736984288181177,
+          "mean": -0.05832908678209376,
+          "ratio_to_full": 1.0056863641543956,
+          "variance": 2.6081358233118253
+        },
+        "m2": {
+          "bias": 0.00501905759676672,
+          "fixed_budget_mse": 0.21485836966374205,
+          "mean": -0.05832908678209376,
+          "ratio_to_full": 0.9940667469348857,
+          "variance": 1.2889990723474942
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.25038820466622985,
+          "mean": -0.06334814437886048,
+          "ratio_to_full": 1.1584495799393961,
+          "variance": 1.0015528186649194
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2188944277410361,
+          "mean": -0.06334814437886048,
+          "ratio_to_full": 1.0127400298496496,
+          "variance": 0.8755777109641444
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21614078765458986,
+          "mean": -0.06334814437886048,
+          "ratio_to_full": 1.0,
+          "variance": 0.6484223629637695
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-16",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.06334814437886048,
+      "true_variance": 0.6484223629637695,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0017070822721089972,
+          "fixed_budget_mse": 0.2175605191951072,
+          "mean": 0.02910059954667416,
+          "ratio_to_full": 0.9387433529294709,
+          "variance": 2.6106912607826813
+        },
+        "m2": {
+          "bias": -0.0017070822721089972,
+          "fixed_budget_mse": 0.22033050595391993,
+          "mean": 0.02910059954667416,
+          "ratio_to_full": 0.9506954601737367,
+          "variance": 1.3219655509442172
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.26035806730829525,
+          "mean": 0.030807681818783156,
+          "ratio_to_full": 1.123408815034316,
+          "variance": 1.041432269233181
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2294810726164434,
+          "mean": 0.030807681818783156,
+          "ratio_to_full": 0.9901788814385961,
+          "variance": 0.9179242904657736
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.23175718743166732,
+          "mean": 0.030807681818783156,
+          "ratio_to_full": 1.0,
+          "variance": 0.695271562295002
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-17",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.030807681818783156,
+      "true_variance": 0.695271562295002,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0033029106057343854,
+          "fixed_budget_mse": 0.21718472503428857,
+          "mean": 0.07383979880000993,
+          "ratio_to_full": 0.9833536386577602,
+          "variance": 2.6060857897898293
+        },
+        "m2": {
+          "bias": -0.0033029106057343854,
+          "fixed_budget_mse": 0.21789831612215682,
+          "mean": 0.07383979880000993,
+          "ratio_to_full": 0.9865845859200881,
+          "variance": 1.3073244414221241
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.25399041583137655,
+          "mean": 0.07714270940574432,
+          "ratio_to_full": 1.1499998425421025,
+          "variance": 1.0159616633255062
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22208295489992722,
+          "mean": 0.07714270940574432,
+          "ratio_to_full": 1.0055314974394836,
+          "variance": 0.8883318195997089
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22086126139802295,
+          "mean": 0.07714270940574432,
+          "ratio_to_full": 1.0,
+          "variance": 0.6625837841940688
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-18",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.07714270940574432,
+      "true_variance": 0.6625837841940688,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0003463000045373088,
+          "fixed_budget_mse": 0.21757719051707164,
+          "mean": 0.02476405774739263,
+          "ratio_to_full": 0.9382010046844147,
+          "variance": 2.610924847120542
+        },
+        "m2": {
+          "bias": 0.0003463000045373088,
+          "fixed_budget_mse": 0.22265164284510844,
+          "mean": 0.02476405774739263,
+          "ratio_to_full": 0.960082233415575,
+          "variance": 1.3359091375284917
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2583206984981677,
+          "mean": 0.02441775774285532,
+          "ratio_to_full": 1.1138885389860975,
+          "variance": 1.0332827939926708
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22793461223889983,
+          "mean": 0.02441775774285532,
+          "ratio_to_full": 0.9828625955536879,
+          "variance": 0.9117384489555993
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.23190892935598453,
+          "mean": 0.02441775774285532,
+          "ratio_to_full": 1.0,
+          "variance": 0.6957267880679536
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-19",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.02441775774285532,
+      "true_variance": 0.6957267880679536,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.006616786307376055,
+          "fixed_budget_mse": 0.216752877276478,
+          "mean": 0.10501885874151187,
+          "ratio_to_full": 0.9259968102834851,
+          "variance": 2.600509144985286
+        },
+        "m2": {
+          "bias": 0.006616786307376055,
+          "fixed_budget_mse": 0.2219080315346985,
+          "mean": 0.10501885874151187,
+          "ratio_to_full": 0.9480203075473417,
+          "variance": 1.3311854980419662
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.260195017954152,
+          "mean": 0.09840207243413582,
+          "ratio_to_full": 1.1115873510175807,
+          "variance": 1.040780071816608
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.23021664158236166,
+          "mean": 0.09840207243413582,
+          "ratio_to_full": 0.9835157828494373,
+          "variance": 0.9208665663294466
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.23407518780774325,
+          "mean": 0.09840207243413582,
+          "ratio_to_full": 1.0,
+          "variance": 0.7022255634232297
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-20",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.09840207243413582,
+      "true_variance": 0.7022255634232297,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0028657578344812584,
+          "fixed_budget_mse": 0.21710817350405243,
+          "mean": -0.07961516465862344,
+          "ratio_to_full": 0.9978647550565551,
+          "variance": 2.6051995312330383
+        },
+        "m2": {
+          "bias": 0.0028657578344812584,
+          "fixed_budget_mse": 0.2162325371346049,
+          "mean": -0.07961516465862344,
+          "ratio_to_full": 0.9938401867631783,
+          "variance": 1.297345947399834
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.25290830775594625,
+          "mean": -0.0824809224931047,
+          "ratio_to_full": 1.1624080406440551,
+          "variance": 1.011633231023785
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2212520120592232,
+          "mean": -0.0824809224931047,
+          "ratio_to_full": 1.0169105163381875,
+          "variance": 0.8850080482368928
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21757274460680553,
+          "mean": -0.0824809224931047,
+          "ratio_to_full": 1.0,
+          "variance": 0.6527182338204166
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-21",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.0824809224931047,
+      "true_variance": 0.6527182338204166,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0017696172583658437,
+          "fixed_budget_mse": 0.21744521211694032,
+          "mean": 0.04725609819132559,
+          "ratio_to_full": 0.8553267999068088,
+          "variance": 2.6093049668603903
+        },
+        "m2": {
+          "bias": -0.0017696172583658437,
+          "fixed_budget_mse": 0.22957108765637188,
+          "mean": 0.04725609819132559,
+          "ratio_to_full": 0.9030242691692384,
+          "variance": 1.3774077366667845
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.27455459300745033,
+          "mean": 0.049025715449691434,
+          "ratio_to_full": 1.0799681407125532,
+          "variance": 1.0982183720298013
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.244669336866643,
+          "mean": 0.049025715449691434,
+          "ratio_to_full": 0.9624136530765358,
+          "variance": 0.978677347466572
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.25422471520900763,
+          "mean": 0.049025715449691434,
+          "ratio_to_full": 1.0,
+          "variance": 0.762674145627023
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-22",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.049025715449691434,
+      "true_variance": 0.762674145627023,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.00032023970731041157,
+          "fixed_budget_mse": 0.21745108238894537,
+          "mean": 0.04611233729655855,
+          "ratio_to_full": 0.9924140894920164,
+          "variance": 2.609411758025703
+        },
+        "m2": {
+          "bias": -0.00032023970731041157,
+          "fixed_budget_mse": 0.21703257142095483,
+          "mean": 0.04611233729655855,
+          "ratio_to_full": 0.9905040682740127,
+          "variance": 1.3021948132049082
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2530184601777037,
+          "mean": 0.04643257700386896,
+          "ratio_to_full": 1.1547382612370616,
+          "variance": 1.0120738407108147
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22196841440835594,
+          "mean": 0.04643257700386896,
+          "ratio_to_full": 1.013030514545987,
+          "variance": 0.8878736576334237
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2191132559396162,
+          "mean": 0.04643257700386896,
+          "ratio_to_full": 1.0,
+          "variance": 0.6573397678188486
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-23",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.04643257700386896,
+      "true_variance": 0.6573397678188486,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0012827967366780234,
+          "fixed_budget_mse": 0.21758030644904,
+          "mean": 0.02437570712392463,
+          "ratio_to_full": 1.000998243876901,
+          "variance": 2.6109439305788684
+        },
+        "m2": {
+          "bias": -0.0012827967366780234,
+          "fixed_budget_mse": 0.21744104166043202,
+          "mean": 0.02437570712392463,
+          "ratio_to_full": 1.000357543387479,
+          "variance": 1.3046363765577864
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2522100919153226,
+          "mean": 0.025658503860602654,
+          "ratio_to_full": 1.160315762099542,
+          "variance": 1.0088403676612905
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22032338585742728,
+          "mean": 0.025658503860602654,
+          "ratio_to_full": 1.0136180333947251,
+          "variance": 0.8812935434297091
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2173633248409547,
+          "mean": 0.025658503860602654,
+          "ratio_to_full": 1.0,
+          "variance": 0.6520899745228641
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-24",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.025658503860602654,
+      "true_variance": 0.6520899745228641,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 2.4579524314609358e-06,
+          "fixed_budget_mse": 0.2176079986123139,
+          "mean": -0.015560282818331122,
+          "ratio_to_full": 0.9739666619749406,
+          "variance": 2.6112959832752685
+        },
+        "m2": {
+          "bias": 2.4579524314609358e-06,
+          "fixed_budget_mse": 0.2190455090301491,
+          "mean": -0.015560282818331122,
+          "ratio_to_full": 0.980400649843684,
+          "variance": 1.3142730541446455
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.25281997477047635,
+          "mean": -0.015562740770762582,
+          "ratio_to_full": 1.1315679041122138,
+          "variance": 1.0112798990819054
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2217477997336335,
+          "mean": -0.015562740770762582,
+          "ratio_to_full": 0.992495522610046,
+          "variance": 0.886991198934534
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22342448372007293,
+          "mean": -0.015562740770762582,
+          "ratio_to_full": 1.0,
+          "variance": 0.6702734511602187
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-25",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.015562740770762582,
+      "true_variance": 0.6702734511602187,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -3.967910432203445e-05,
+          "fixed_budget_mse": 0.21762405534136836,
+          "mean": 0.007032814046559046,
+          "ratio_to_full": 0.9641399083208146,
+          "variance": 2.6114886452032446
+        },
+        "m2": {
+          "bias": -3.967910432203445e-05,
+          "fixed_budget_mse": 0.22036034487882325,
+          "mean": 0.007032814046559046,
+          "ratio_to_full": 0.9762624925619855,
+          "variance": 1.3221620598263517
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2554794529707924,
+          "mean": 0.00707249315088108,
+          "ratio_to_full": 1.1318506861694753,
+          "variance": 1.0219178118831695
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22481739734589326,
+          "mean": 0.00707249315088108,
+          "ratio_to_full": 0.9960085732525656,
+          "variance": 0.899269589383573
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22571833554778506,
+          "mean": 0.00707249315088108,
+          "ratio_to_full": 1.0,
+          "variance": 0.6771550066433552
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-26",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.00707249315088108,
+      "true_variance": 0.6771550066433552,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.00035738677333670144,
+          "fixed_budget_mse": 0.21726491913889118,
+          "mean": 0.06603490526707691,
+          "ratio_to_full": 0.975552346717072,
+          "variance": 2.607177496963025
+        },
+        "m2": {
+          "bias": -0.00035738677333670144,
+          "fixed_budget_mse": 0.21831989273562757,
+          "mean": 0.06603490526707691,
+          "ratio_to_full": 0.9802893377237186,
+          "variance": 1.309918590061931
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2565171657433981,
+          "mean": 0.06639229204041361,
+          "ratio_to_full": 1.1518008705961829,
+          "variance": 1.0260686629735924
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22463096937274887,
+          "mean": 0.06639229204041361,
+          "ratio_to_full": 1.0086270263301298,
+          "variance": 0.8985238774909955
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22270964738082064,
+          "mean": 0.06639229204041361,
+          "ratio_to_full": 1.0,
+          "variance": 0.6681289421424619
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-27",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.06639229204041361,
+      "true_variance": 0.6681289421424619,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0006374102456639177,
+          "fixed_budget_mse": 0.2173241659927233,
+          "mean": 0.060439964144889904,
+          "ratio_to_full": 0.9994033120588289,
+          "variance": 2.6078851164108245
+        },
+        "m2": {
+          "bias": 0.0006374102456639177,
+          "fixed_budget_mse": 0.21750277403294171,
+          "mean": 0.060439964144889904,
+          "ratio_to_full": 1.000224672472841,
+          "variance": 1.3050142064467227
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.250256085147514,
+          "mean": 0.05980255389922599,
+          "ratio_to_full": 1.1508465209878047,
+          "variance": 1.001024340590056
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22023246328573912,
+          "mean": 0.05980255389922599,
+          "ratio_to_full": 1.0127776274913292,
+          "variance": 0.8809298531429565
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21745391812342796,
+          "mean": 0.05980255389922599,
+          "ratio_to_full": 1.0,
+          "variance": 0.6523617543702839
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-28",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.05980255389922599,
+      "true_variance": 0.6523617543702839,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0030928685176105017,
+          "fixed_budget_mse": 0.21759719801053812,
+          "mean": -0.022057188810089393,
+          "ratio_to_full": 0.978302900227282,
+          "variance": 2.611051586098451
+        },
+        "m2": {
+          "bias": 0.0030928685176105017,
+          "fixed_budget_mse": 0.21870140238564936,
+          "mean": -0.022057188810089393,
+          "ratio_to_full": 0.9832673315365613,
+          "variance": 1.3121510192998929
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2552921366605497,
+          "mean": -0.025150057327699895,
+          "ratio_to_full": 1.1477769014660746,
+          "variance": 1.0211685466421987
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22404843427561338,
+          "mean": -0.025150057327699895,
+          "ratio_to_full": 1.0073072403836698,
+          "variance": 0.8961937371024535
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22242313496155983,
+          "mean": -0.025150057327699895,
+          "ratio_to_full": 1.0,
+          "variance": 0.6672694048846795
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-29",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.025150057327699895,
+      "true_variance": 0.6672694048846795,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0037060972005020995,
+          "fixed_budget_mse": 0.21735366294321276,
+          "mean": -0.05881302777123225,
+          "ratio_to_full": 1.0761824499922639,
+          "variance": 2.6080791334410383
+        },
+        "m2": {
+          "bias": -0.0037060972005020995,
+          "fixed_budget_mse": 0.21335003460320418,
+          "mean": -0.05881302777123225,
+          "ratio_to_full": 1.0563592986477448,
+          "variance": 1.2800177966804676
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2382942673543323,
+          "mean": -0.05510693057073015,
+          "ratio_to_full": 1.1798655931899256,
+          "variance": 0.9531770694173292
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.20750696326884097,
+          "mean": -0.05510693057073015,
+          "ratio_to_full": 1.0274285194791533,
+          "variance": 0.8300278530753639
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.20196729926675092,
+          "mean": -0.05510693057073015,
+          "ratio_to_full": 1.0,
+          "variance": 0.6059018978002527
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-30",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.05510693057073015,
+      "true_variance": 0.6059018978002527,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.000984724364210321,
+          "fixed_budget_mse": 0.2170088446272152,
+          "mean": -0.08627633705110213,
+          "ratio_to_full": 1.0266092878322357,
+          "variance": 2.604094499341701
+        },
+        "m2": {
+          "bias": 0.000984724364210321,
+          "fixed_budget_mse": 0.21384210918960705,
+          "mean": -0.08627633705110213,
+          "ratio_to_full": 1.011628331558584,
+          "variance": 1.2830468370452015
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.24598374091733718,
+          "mean": -0.08726106141531245,
+          "ratio_to_full": 1.163681570284656,
+          "variance": 0.9839349636693487
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21477086905977189,
+          "mean": -0.08726106141531245,
+          "ratio_to_full": 1.0160220396146542,
+          "variance": 0.8590834762390875
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2113840651933376,
+          "mean": -0.08726106141531245,
+          "ratio_to_full": 1.0,
+          "variance": 0.6341521955800128
+        }
+      },
+      "family": "random_joint",
+      "law_id": "00-31",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.08726106141531245,
+      "true_variance": 0.6341521955800128,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.002124488594685614,
+          "fixed_budget_mse": 0.21507550971227007,
+          "mean": -0.17517462873053982,
+          "ratio_to_full": 1.137140463807537,
+          "variance": 2.5808519551257736
+        },
+        "m2": {
+          "bias": 0.002124488594685614,
+          "fixed_budget_mse": 0.20500902496579562,
+          "mean": -0.17517462873053982,
+          "ratio_to_full": 1.0839172625754148,
+          "variance": 1.23002706908404
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.23420519188040204,
+          "mean": -0.17729911732522544,
+          "ratio_to_full": 1.2382823171141357,
+          "variance": 0.9368207675216081
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2015952976412622,
+          "mean": -0.17729911732522544,
+          "ratio_to_full": 1.0658683109382634,
+          "variance": 0.8063811905650488
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.18913715284752364,
+          "mean": -0.17729911732522544,
+          "ratio_to_full": 1.0,
+          "variance": 0.5674114585425709
+        }
+      },
+      "family": "independent",
+      "law_id": "01-00",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.17729911732522544,
+      "true_variance": 0.5674114585425709,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.003625793868263949,
+          "fixed_budget_mse": 0.210538046263748,
+          "mean": 0.29195771455089936,
+          "ratio_to_full": 1.1785574016851739,
+          "variance": 2.5262987985908745
+        },
+        "m2": {
+          "bias": -0.003625793868263949,
+          "fixed_budget_mse": 0.19823965363723353,
+          "mean": 0.29195771455089936,
+          "ratio_to_full": 1.1097130197977718,
+          "variance": 1.1893590435363504
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22443666233094411,
+          "mean": 0.2955835084191633,
+          "ratio_to_full": 1.2563595715535798,
+          "variance": 0.8977466493237765
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.1929520930986474,
+          "mean": 0.2955835084191633,
+          "ratio_to_full": 1.0801141243952634,
+          "variance": 0.7718083723945895
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.17864046839187278,
+          "mean": 0.2955835084191633,
+          "ratio_to_full": 1.0,
+          "variance": 0.5359214051756184
+        }
+      },
+      "family": "independent",
+      "law_id": "01-01",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.2955835084191633,
+      "true_variance": 0.5359214051756184,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.008526280893338983,
+          "fixed_budget_mse": 0.21549901316567843,
+          "mean": 0.1625494302634737,
+          "ratio_to_full": 0.8480895968354546,
+          "variance": 2.5851157883976756
+        },
+        "m2": {
+          "bias": -0.008526280893338983,
+          "fixed_budget_mse": 0.22595434762567224,
+          "mean": 0.1625494302634737,
+          "ratio_to_full": 0.8892362371689714,
+          "variance": 1.3552899009588006
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2751707152317271,
+          "mean": 0.1710757111568127,
+          "ratio_to_full": 1.0829257058471153,
+          "variance": 1.1006828609269084
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.24525758882508839,
+          "mean": 0.1710757111568127,
+          "ratio_to_full": 0.9652035365358796,
+          "variance": 0.9810303553003535
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.25409934748614693,
+          "mean": 0.1710757111568127,
+          "ratio_to_full": 1.0,
+          "variance": 0.7622980424584408
+        }
+      },
+      "family": "independent",
+      "law_id": "01-02",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.1710757111568127,
+      "true_variance": 0.7622980424584408,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.003399181751497197,
+          "fixed_budget_mse": 0.21762291865111513,
+          "mean": 0.014203348275449154,
+          "ratio_to_full": 0.9538539539559848,
+          "variance": 2.611336370574425
+        },
+        "m2": {
+          "bias": 0.003399181751497197,
+          "fixed_budget_mse": 0.22062872094083258,
+          "mean": 0.014203348275449154,
+          "ratio_to_full": 0.9670285608247281,
+          "variance": 1.3237029990255171
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2556287721917784,
+          "mean": 0.010804166523951957,
+          "ratio_to_full": 1.1204358282270104,
+          "variance": 1.0225150887671135
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22587037073012806,
+          "mean": 0.010804166523951957,
+          "ratio_to_full": 0.9900030177788115,
+          "variance": 0.9034814829205122
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22815119416190757,
+          "mean": 0.010804166523951957,
+          "ratio_to_full": 1.0,
+          "variance": 0.6844535824857227
+        }
+      },
+      "family": "independent",
+      "law_id": "01-03",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.010804166523951957,
+      "true_variance": 0.6844535824857227,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.009262770272829936,
+          "fixed_budget_mse": 0.21764672935210383,
+          "mean": 0.028406696550898333,
+          "ratio_to_full": 1.0366062770516038,
+          "variance": 2.6107311652677194
+        },
+        "m2": {
+          "bias": 0.009262770272829936,
+          "fixed_budget_mse": 0.21616263421729023,
+          "mean": 0.028406696550898333,
+          "ratio_to_full": 1.0295378394184305,
+          "variance": 1.2964610118249782
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2451378407079272,
+          "mean": 0.019143926278068397,
+          "ratio_to_full": 1.167540744476881,
+          "variance": 0.9805513628317089
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21623727168658333,
+          "mean": 0.019143926278068397,
+          "ratio_to_full": 1.0298933222203213,
+          "variance": 0.8649490867463333
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2099608445080533,
+          "mean": 0.019143926278068397,
+          "ratio_to_full": 1.0,
+          "variance": 0.6298825335241599
+        }
+      },
+      "family": "independent",
+      "law_id": "01-04",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.019143926278068397,
+      "true_variance": 0.6298825335241599,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0018695499633234192,
+          "fixed_budget_mse": 0.21428415478072962,
+          "mean": -0.20042502566467163,
+          "ratio_to_full": 1.2519285317059283,
+          "variance": 2.571367914763971
+        },
+        "m2": {
+          "bias": 0.0018695499633234192,
+          "fixed_budget_mse": 0.1992712397086126,
+          "mean": -0.20042502566467163,
+          "ratio_to_full": 1.1642174419984617,
+          "variance": 1.1956064669492834
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.218280448522248,
+          "mean": -0.20229457562799505,
+          "ratio_to_full": 1.275276381019398,
+          "variance": 0.873121794088992
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.18619102871922596,
+          "mean": -0.20229457562799505,
+          "ratio_to_full": 1.0877979355953722,
+          "variance": 0.7447641148769039
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.17116324882278813,
+          "mean": -0.20229457562799505,
+          "ratio_to_full": 1.0,
+          "variance": 0.5134897464683644
+        }
+      },
+      "family": "independent",
+      "law_id": "01-05",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.20229457562799505,
+      "true_variance": 0.5134897464683644,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.009602688447979665,
+          "fixed_budget_mse": 0.21731857726522819,
+          "mean": -0.06943859156886259,
+          "ratio_to_full": 1.1457743792888453,
+          "variance": 2.6067163876775905
+        },
+        "m2": {
+          "bias": 0.009602688447979665,
+          "fixed_budget_mse": 0.21016311528513065,
+          "mean": -0.06943859156886259,
+          "ratio_to_full": 1.1080484512437467,
+          "variance": 1.26042542195821
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2267541660190958,
+          "mean": -0.07904128001684226,
+          "ratio_to_full": 1.1955218789445836,
+          "variance": 0.9070166640763832
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.1970336760131149,
+          "mean": -0.07904128001684226,
+          "ratio_to_full": 1.0388257675615107,
+          "variance": 0.7881347040524596
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.18966960790318302,
+          "mean": -0.07904128001684226,
+          "ratio_to_full": 1.0,
+          "variance": 0.5690088237095491
+        }
+      },
+      "family": "independent",
+      "law_id": "01-06",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.07904128001684226,
+      "true_variance": 0.5690088237095491,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.00974432102095868,
+          "fixed_budget_mse": 0.21711792195851348,
+          "mean": 0.085220089652695,
+          "ratio_to_full": 0.9151885189929724,
+          "variance": 2.604275641996248
+        },
+        "m2": {
+          "bias": -0.00974432102095868,
+          "fixed_budget_mse": 0.2230302271151977,
+          "mean": 0.085220089652695,
+          "ratio_to_full": 0.9401098785535813,
+          "variance": 1.3376116519382293
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.26343936025815956,
+          "mean": 0.09496441067365367,
+          "ratio_to_full": 1.110441163881393,
+          "variance": 1.0537574410326382
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2335237846361797,
+          "mean": 0.09496441067365367,
+          "ratio_to_full": 0.9843419865249818,
+          "variance": 0.9340951385447188
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.23723846776117688,
+          "mean": 0.09496441067365367,
+          "ratio_to_full": 1.0,
+          "variance": 0.7117154032835307
+        }
+      },
+      "family": "independent",
+      "law_id": "01-07",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.09496441067365367,
+      "true_variance": 0.7117154032835307,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.006175180181886564,
+          "fixed_budget_mse": 0.21501614832289917,
+          "mean": 0.17833092834730624,
+          "ratio_to_full": 0.8669613659880788,
+          "variance": 2.579736185671445
+        },
+        "m2": {
+          "bias": -0.006175180181886564,
+          "fixed_budget_mse": 0.22719568604350193,
+          "mean": 0.17833092834730624,
+          "ratio_to_full": 0.916070182891914,
+          "variance": 1.362945319159339
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.27129836144845415,
+          "mean": 0.1845061085291928,
+          "ratio_to_full": 1.0938955044365384,
+          "variance": 1.0851934457938166
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2443803742039843,
+          "mean": 0.1845061085291928,
+          "ratio_to_full": 0.9853601447756944,
+          "variance": 0.9775214968159373
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.24801122259680455,
+          "mean": 0.1845061085291928,
+          "ratio_to_full": 1.0,
+          "variance": 0.7440336677904137
+        }
+      },
+      "family": "independent",
+      "law_id": "01-08",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.1845061085291928,
+      "true_variance": 0.7440336677904137,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.010084239196108485,
+          "fixed_budget_mse": 0.21732805751996345,
+          "mean": -0.06943859156886259,
+          "ratio_to_full": 0.7977444309055103,
+          "variance": 2.6067163876775896
+        },
+        "m2": {
+          "bias": 0.010084239196108485,
+          "fixed_budget_mse": 0.23444796059914336,
+          "mean": -0.06943859156886259,
+          "ratio_to_full": 0.8605863275980408,
+          "variance": 1.4060776123138743
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.284858524055977,
+          "mean": -0.07952283076497108,
+          "ratio_to_full": 1.045627995551125,
+          "variance": 1.139434096223908
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.25545301227762635,
+          "mean": -0.07952283076497108,
+          "ratio_to_full": 0.9376894094026209,
+          "variance": 1.0218120491105054
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.27242817260820856,
+          "mean": -0.07952283076497108,
+          "ratio_to_full": 1.0,
+          "variance": 0.8172845178246257
+        }
+      },
+      "family": "independent",
+      "law_id": "01-09",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.07952283076497108,
+      "true_variance": 0.8172845178246257,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.00016995908757484138,
+          "fixed_budget_mse": 0.2176263364415329,
+          "mean": -0.00473444942514971,
+          "ratio_to_full": 0.9481557653948741,
+          "variance": 2.6115156906652977
+        },
+        "m2": {
+          "bias": -0.00016995908757484138,
+          "fixed_budget_mse": 0.22154442046928915,
+          "mean": -0.00473444942514971,
+          "ratio_to_full": 0.9652260980621555,
+          "variance": 1.3292663494991863
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.25772028459855223,
+          "mean": -0.004564490337574868,
+          "ratio_to_full": 1.1228373261109146,
+          "variance": 1.030881138394209
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22754660602036925,
+          "mean": -0.004564490337574868,
+          "ratio_to_full": 0.9913764571054661,
+          "variance": 0.910186424081477
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22952593274681934,
+          "mean": -0.004564490337574868,
+          "ratio_to_full": 1.0,
+          "variance": 0.6885777982404581
+        }
+      },
+      "family": "independent",
+      "law_id": "01-10",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.004564490337574868,
+      "true_variance": 0.6885777982404581,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0010764075546407792,
+          "fixed_budget_mse": 0.21575622785296655,
+          "mean": -0.14992423179640785,
+          "ratio_to_full": 1.083462515073374,
+          "variance": 2.5890608303969143
+        },
+        "m2": {
+          "bias": 0.0010764075546407792,
+          "fixed_budget_mse": 0.210010397970976,
+          "mean": -0.14992423179640785,
+          "ratio_to_full": 1.0546086953849445,
+          "variance": 1.260055435906514
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2362020892678793,
+          "mean": -0.15100063935104863,
+          "ratio_to_full": 1.1861354467049903,
+          "variance": 0.9448083570715172
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2069375520029269,
+          "mean": -0.15100063935104863,
+          "ratio_to_full": 1.0391777923973171,
+          "variance": 0.8277502080117076
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.1991358490499832,
+          "mean": -0.15100063935104863,
+          "ratio_to_full": 1.0,
+          "variance": 0.5974075471499496
+        }
+      },
+      "family": "independent",
+      "law_id": "01-11",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.15100063935104863,
+      "true_variance": 0.5974075471499496,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.011387258867515695,
+          "fixed_budget_mse": 0.21775763759116942,
+          "mean": 0.0015781498083832402,
+          "ratio_to_full": 1.105791050481022,
+          "variance": 2.6115356151198434
+        },
+        "m2": {
+          "bias": -0.011387258867515695,
+          "fixed_budget_mse": 0.20920910110366023,
+          "mean": 0.0015781498083832402,
+          "ratio_to_full": 1.0623808847244227,
+          "variance": 1.2544765886348666
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.23369658597312845,
+          "mean": 0.012965408675898935,
+          "ratio_to_full": 1.1867303308195594,
+          "variance": 0.9347863438925138
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.20127114410155877,
+          "mean": 0.012965408675898935,
+          "ratio_to_full": 1.0220712914117567,
+          "variance": 0.8050845764062351
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.1969247603301223,
+          "mean": 0.012965408675898935,
+          "ratio_to_full": 1.0,
+          "variance": 0.5907742809903669
+        }
+      },
+      "family": "independent",
+      "law_id": "01-12",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.012965408675898935,
+      "true_variance": 0.5907742809903669,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0024077537406438088,
+          "fixed_budget_mse": 0.21564069711136438,
+          "mean": 0.15465868122155765,
+          "ratio_to_full": 1.064942732937011,
+          "variance": 2.5876187979994656
+        },
+        "m2": {
+          "bias": -0.0024077537406438088,
+          "fixed_budget_mse": 0.2091135011492432,
+          "mean": 0.15465868122155765,
+          "ratio_to_full": 1.0327081408612537,
+          "variance": 1.2546462232270057
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.24180400806902538,
+          "mean": 0.15706643496220146,
+          "ratio_to_full": 1.1941503836595608,
+          "variance": 0.9672160322761015
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2104783942445791,
+          "mean": 0.15706643496220146,
+          "ratio_to_full": 1.0394486726930685,
+          "variance": 0.8419135769783164
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.20249041609650484,
+          "mean": 0.15706643496220146,
+          "ratio_to_full": 1.0,
+          "variance": 0.6074712482895145
+        }
+      },
+      "family": "independent",
+      "law_id": "01-13",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.15706643496220146,
+      "true_variance": 0.6074712482895145,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0007931424086826643,
+          "fixed_budget_mse": 0.2175821066076034,
+          "mean": 0.023672247125748645,
+          "ratio_to_full": 1.4200400016662407,
+          "variance": 2.6109777303926758
+        },
+        "m2": {
+          "bias": -0.0007931424086826643,
+          "fixed_budget_mse": 0.19680216885983426,
+          "mean": 0.023672247125748645,
+          "ratio_to_full": 1.2844206564266847,
+          "variance": 1.1808092387097229
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21227559190866413,
+          "mean": 0.02446538953443131,
+          "ratio_to_full": 1.3854072680310552,
+          "variance": 0.8491023676346565
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.17943856577399786,
+          "mean": 0.02446538953443131,
+          "ratio_to_full": 1.1710978683565676,
+          "variance": 0.7177542630959914
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.15322251933205952,
+          "mean": 0.02446538953443131,
+          "ratio_to_full": 1.0,
+          "variance": 0.45966755799617853
+        }
+      },
+      "family": "independent",
+      "law_id": "01-14",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.02446538953443131,
+      "true_variance": 0.45966755799617853,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0017279173903443565,
+          "fixed_budget_mse": 0.21733146416783264,
+          "mean": -0.05996969271856322,
+          "ratio_to_full": 0.8508632903010264,
+          "variance": 2.6079417416318975
+        },
+        "m2": {
+          "bias": 0.0017279173903443565,
+          "fixed_budget_mse": 0.23082244147793338,
+          "mean": -0.05996969271856322,
+          "ratio_to_full": 0.9036811249730656,
+          "variance": 1.3849167346765532
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2740920834028022,
+          "mean": -0.06169761010890758,
+          "ratio_to_full": 1.0730838851270663,
+          "variance": 1.096368333611209
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.24282191661659738,
+          "mean": -0.06169761010890758,
+          "ratio_to_full": 0.9506596558427812,
+          "variance": 0.9712876664663895
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2554246571043664,
+          "mean": -0.06169761010890758,
+          "ratio_to_full": 1.0,
+          "variance": 0.7662739713130993
+        }
+      },
+      "family": "independent",
+      "law_id": "01-15",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.06169761010890758,
+      "true_variance": 0.7662739713130993,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0007931424086827371,
+          "fixed_budget_mse": 0.2165227897744749,
+          "mean": -0.11520493601197664,
+          "ratio_to_full": 0.9050513449925437,
+          "variance": 2.5982659283951333
+        },
+        "m2": {
+          "bias": -0.0007931424086827371,
+          "fixed_budget_mse": 0.22797951256087406,
+          "mean": -0.11520493601197664,
+          "ratio_to_full": 0.9529397098978607,
+          "variance": 1.3678733009159616
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2630282968709144,
+          "mean": -0.1144117936032939,
+          "ratio_to_full": 1.099441375672606,
+          "variance": 1.0521131874836576
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.23320305485722856,
+          "mean": -0.1144117936032939,
+          "ratio_to_full": 0.9747737809712346,
+          "variance": 0.9328122194289142
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2392381282812841,
+          "mean": -0.1144117936032939,
+          "ratio_to_full": 1.0,
+          "variance": 0.7177143848438523
+        }
+      },
+      "family": "independent",
+      "law_id": "01-16",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.1144117936032939,
+      "true_variance": 0.7177143848438523,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.010820728575599625,
+          "fixed_budget_mse": 0.2157111013591048,
+          "mean": -0.15623683102994085,
+          "ratio_to_full": 1.0364713668310077,
+          "variance": 2.587128158306376
+        },
+        "m2": {
+          "bias": -0.010820728575599625,
+          "fixed_budget_mse": 0.21329911238471896,
+          "mean": -0.15623683102994085,
+          "ratio_to_full": 1.0248819887539788,
+          "variance": 1.2790921453068729
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.25004030655096576,
+          "mean": -0.14541610245434122,
+          "ratio_to_full": 1.2014199392653788,
+          "variance": 1.000161226203863
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2183695037035783,
+          "mean": -0.14541610245434122,
+          "ratio_to_full": 1.0492447377618632,
+          "variance": 0.8734780148143132
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.20812065654899617,
+          "mean": -0.14541610245434122,
+          "ratio_to_full": 1.0,
+          "variance": 0.6243619696469885
+        }
+      },
+      "family": "independent",
+      "law_id": "01-17",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.14541610245434122,
+      "true_variance": 0.6243619696469885,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.005863588521332674,
+          "fixed_budget_mse": 0.21286740508372368,
+          "mean": 0.2398787708742526,
+          "ratio_to_full": 0.8939877603696613,
+          "variance": 2.553996280960514
+        },
+        "m2": {
+          "bias": -0.005863588521332674,
+          "fixed_budget_mse": 0.22219352569471434,
+          "mean": 0.2398787708742526,
+          "ratio_to_full": 0.9331550423435157,
+          "variance": 1.332954864146201
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2627490947595341,
+          "mean": 0.24574235939558528,
+          "ratio_to_full": 1.1034778888334011,
+          "variance": 1.0509963790381365
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.23171780639698478,
+          "mean": 0.24574235939558528,
+          "ratio_to_full": 0.9731545451833508,
+          "variance": 0.9268712255879391
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.23810997702664702,
+          "mean": 0.24574235939558528,
+          "ratio_to_full": 1.0,
+          "variance": 0.714329931079941
+        }
+      },
+      "family": "independent",
+      "law_id": "01-18",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.24574235939558528,
+      "true_variance": 0.714329931079941,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.012208727790794238,
+          "fixed_budget_mse": 0.2114211199621524,
+          "mean": 0.27617621646706714,
+          "ratio_to_full": 1.10770150133016,
+          "variance": 2.5352648031345923
+        },
+        "m2": {
+          "bias": 0.012208727790794238,
+          "fixed_budget_mse": 0.20638740484433418,
+          "mean": 0.27617621646706714,
+          "ratio_to_full": 1.081328290393269,
+          "variance": 1.237430110860387
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2275363847179824,
+          "mean": 0.2639674886762729,
+          "ratio_to_full": 1.1921344234883697,
+          "variance": 0.9101455388719296
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.1979993260974163,
+          "mean": 0.2639674886762729,
+          "ratio_to_full": 1.0373805172337103,
+          "variance": 0.7919973043896652
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.1908647047135639,
+          "mean": 0.2639674886762729,
+          "ratio_to_full": 1.0,
+          "variance": 0.5725941141406917
+        }
+      },
+      "family": "independent",
+      "law_id": "01-19",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.2639674886762729,
+      "true_variance": 0.5725941141406917,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.006798363502994481,
+          "fixed_budget_mse": 0.21584051321594042,
+          "mean": -0.14834608198802468,
+          "ratio_to_full": 1.0979286737921978,
+          "variance": 2.5895315456354586
+        },
+        "m2": {
+          "bias": -0.006798363502994481,
+          "fixed_budget_mse": 0.21003945293044632,
+          "mean": -0.14834608198802468,
+          "ratio_to_full": 1.0684200781585829,
+          "variance": 1.2599594111047647
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.23172535198546665,
+          "mean": -0.1415477184850302,
+          "ratio_to_full": 1.178731020412734,
+          "variance": 0.9269014079418666
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.20227235454602252,
+          "mean": -0.1415477184850302,
+          "ratio_to_full": 1.0289107205251886,
+          "variance": 0.8090894181840901
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.19658882982847756,
+          "mean": -0.1415477184850302,
+          "ratio_to_full": 1.0,
+          "variance": 0.5897664894854326
+        }
+      },
+      "family": "independent",
+      "law_id": "01-20",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.1415477184850302,
+      "true_variance": 0.5897664894854326,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.008554607407934456,
+          "fixed_budget_mse": 0.20367122004124827,
+          "mean": 0.4103189501796428,
+          "ratio_to_full": 0.8608265017352327,
+          "variance": 2.443176464800133
+        },
+        "m2": {
+          "bias": -0.008554607407934456,
+          "fixed_budget_mse": 0.213821991687433,
+          "mean": 0.4103189501796428,
+          "ratio_to_full": 0.9037292409849348,
+          "variance": 1.2824928622771747
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.25479581767210485,
+          "mean": 0.41887355758757727,
+          "ratio_to_full": 1.0769071464246427,
+          "variance": 1.0191832706884194
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22500342026416198,
+          "mean": 0.41887355758757727,
+          "ratio_to_full": 0.9509881028121415,
+          "variance": 0.9000136810566479
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.23659961633464222,
+          "mean": 0.41887355758757727,
+          "ratio_to_full": 1.0,
+          "variance": 0.7097988490039266
+        }
+      },
+      "family": "independent",
+      "law_id": "01-21",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.41887355758757727,
+      "true_variance": 0.7097988490039266,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.006288486240269814,
+          "fixed_budget_mse": 0.21730160868004705,
+          "mean": -0.06628229195209609,
+          "ratio_to_full": 1.24383039842346,
+          "variance": 2.607144763450236
+        },
+        "m2": {
+          "bias": -0.006288486240269814,
+          "fixed_budget_mse": 0.20314482251401436,
+          "mean": -0.06628229195209609,
+          "ratio_to_full": 1.162797215630879,
+          "variance": 1.2186316647289217
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22066155870295806,
+          "mean": -0.059993805711826276,
+          "ratio_to_full": 1.2630626903566216,
+          "variance": 0.8826462348118322
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.18868761645361493,
+          "mean": -0.059993805711826276,
+          "ratio_to_full": 1.080044434906307,
+          "variance": 0.7547504658144597
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.17470356807123721,
+          "mean": -0.059993805711826276,
+          "ratio_to_full": 1.0,
+          "variance": 0.5241107042137116
+        }
+      },
+      "family": "independent",
+      "law_id": "01-22",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.059993805711826276,
+      "true_variance": 0.5241107042137116,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0013879992151947101,
+          "fixed_budget_mse": 0.21755517776394384,
+          "mean": 0.029984846359281565,
+          "ratio_to_full": 1.0994664482249297,
+          "variance": 2.6106390146654697
+        },
+        "m2": {
+          "bias": -0.0013879992151947101,
+          "fixed_budget_mse": 0.2131352465374206,
+          "mean": 0.029984846359281565,
+          "ratio_to_full": 1.0771292823759202,
+          "variance": 1.2787999199735953
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.23481585693862447,
+          "mean": 0.031372845574476275,
+          "ratio_to_full": 1.1866973650947985,
+          "variance": 0.9392634277544979
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.20204780561784932,
+          "mean": 0.031372845574476275,
+          "ratio_to_full": 1.0210962823203125,
+          "variance": 0.8081912224713973
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.19787341224935337,
+          "mean": 0.031372845574476275,
+          "ratio_to_full": 1.0,
+          "variance": 0.5936202367480601
+        }
+      },
+      "family": "independent",
+      "law_id": "01-23",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.031372845574476275,
+      "true_variance": 0.5936202367480601,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0036824468974553035,
+          "fixed_budget_mse": 0.21750143452081044,
+          "mean": -0.041031895017964275,
+          "ratio_to_full": 0.9256564411384997,
+          "variance": 2.6098544892678945
+        },
+        "m2": {
+          "bias": 0.0036824468974553035,
+          "fixed_budget_mse": 0.2217061401290035,
+          "mean": -0.041031895017964275,
+          "ratio_to_full": 0.9435510947433828,
+          "variance": 1.3301554782831055
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.26287976317951955,
+          "mean": -0.04471434191541958,
+          "ratio_to_full": 1.1187804189346777,
+          "variance": 1.0515190527180782
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.23235764803683887,
+          "mean": -0.04471434191541958,
+          "ratio_to_full": 0.9888824596810338,
+          "variance": 0.9294305921473555
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.23496993577152367,
+          "mean": -0.04471434191541958,
+          "ratio_to_full": 1.0,
+          "variance": 0.704909807314571
+        }
+      },
+      "family": "independent",
+      "law_id": "01-24",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.04471434191541958,
+      "true_variance": 0.704909807314571,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.003909059014221866,
+          "fixed_budget_mse": 0.21544159644218297,
+          "mean": -0.1625494302634738,
+          "ratio_to_full": 0.9021436956933684,
+          "variance": 2.5851157883976756
+        },
+        "m2": {
+          "bias": 0.003909059014221866,
+          "fixed_budget_mse": 0.22178806561004227,
+          "mean": -0.1625494302634738,
+          "ratio_to_full": 0.9287190054025736,
+          "variance": 1.3306367092059936
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.261476846155197,
+          "mean": -0.16645848927769566,
+          "ratio_to_full": 1.0949124599157913,
+          "variance": 1.045907384620788
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2316311359708685,
+          "mean": -0.16645848927769566,
+          "ratio_to_full": 0.9699360406405606,
+          "variance": 0.926524543883474
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.23881073211579576,
+          "mean": -0.16645848927769566,
+          "ratio_to_full": 1.0,
+          "variance": 0.7164321963473873
+        }
+      },
+      "family": "independent",
+      "law_id": "01-25",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.16645848927769566,
+      "true_variance": 0.7164321963473873,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0022944476822605864,
+          "fixed_budget_mse": 0.21326977687220963,
+          "mean": -0.22883172221557002,
+          "ratio_to_full": 1.296589215465326,
+          "variance": 2.559174148584516
+        },
+        "m2": {
+          "bias": 0.0022944476822605864,
+          "fixed_budget_mse": 0.1965322895681027,
+          "mean": -0.22883172221557002,
+          "ratio_to_full": 1.1948324365594412,
+          "variance": 1.1791621504676164
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21191418420363492,
+          "mean": -0.2311261698978306,
+          "ratio_to_full": 1.2883477906351637,
+          "variance": 0.8476567368145397
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.17959527558729066,
+          "mean": -0.2311261698978306,
+          "ratio_to_full": 1.0918626206212696,
+          "variance": 0.7183811023491626
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.1644852311961197,
+          "mean": -0.2311261698978306,
+          "ratio_to_full": 1.0,
+          "variance": 0.49345569358835917
+        }
+      },
+      "family": "independent",
+      "law_id": "01-26",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.2311261698978306,
+      "true_variance": 0.49345569358835917,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.008497954378743025,
+          "fixed_budget_mse": 0.2165016026867582,
+          "mean": -0.11993938543712629,
+          "ratio_to_full": 1.1910524652254912,
+          "variance": 2.59715264949762
+        },
+        "m2": {
+          "bias": -0.008497954378743025,
+          "fixed_budget_mse": 0.2045347539062447,
+          "mean": -0.11993938543712629,
+          "ratio_to_full": 1.1252185657802607,
+          "variance": 1.226775232065729
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2293063571079902,
+          "mean": -0.11144143105838326,
+          "ratio_to_full": 1.2614959821821818,
+          "variance": 0.9172254284319608
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.19659687000861772,
+          "mean": -0.11144143105838326,
+          "ratio_to_full": 1.081549437849502,
+          "variance": 0.7863874800344709
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.18177335508538653,
+          "mean": -0.11144143105838326,
+          "ratio_to_full": 1.0,
+          "variance": 0.5453200652561596
+        }
+      },
+      "family": "independent",
+      "law_id": "01-27",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.11144143105838326,
+      "true_variance": 0.5453200652561596,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0037390999266469077,
+          "fixed_budget_mse": 0.21665402792389377,
+          "mean": 0.10889233677844362,
+          "ratio_to_full": 0.8690096229845778,
+          "variance": 2.5996805646675876
+        },
+        "m2": {
+          "bias": -0.0037390999266469077,
+          "fixed_budget_mse": 0.22487542516125558,
+          "mean": 0.10889233677844362,
+          "ratio_to_full": 0.9019860388034241,
+          "variance": 1.3491686657579647
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2731223233883001,
+          "mean": 0.11263143670509053,
+          "ratio_to_full": 1.0955066450909166,
+          "variance": 1.0924892935532005
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.24326028319864543,
+          "mean": 0.11263143670509053,
+          "ratio_to_full": 0.9757285798712938,
+          "variance": 0.9730411327945817
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2493114255510824,
+          "mean": 0.11263143670509053,
+          "ratio_to_full": 1.0,
+          "variance": 0.7479342766532472
+        }
+      },
+      "family": "independent",
+      "law_id": "01-28",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.11263143670509053,
+      "true_variance": 0.7479342766532472,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.008214689232784941,
+          "fixed_budget_mse": 0.21753294021348937,
+          "mean": 0.04418819463473076,
+          "ratio_to_full": 0.8854800444191253,
+          "variance": 2.609585509131578
+        },
+        "m2": {
+          "bias": -0.008214689232784941,
+          "fixed_budget_mse": 0.22931899301760708,
+          "mean": 0.04418819463473076,
+          "ratio_to_full": 0.9334558339720729,
+          "variance": 1.3755090713904952
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2675442084587524,
+          "mean": 0.0524028838675157,
+          "ratio_to_full": 1.0890537192097638,
+          "variance": 1.0701768338350095
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2378366705581468,
+          "mean": 0.0524028838675157,
+          "ratio_to_full": 0.9681275185433514,
+          "variance": 0.9513466822325872
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.24566667717078924,
+          "mean": 0.0524028838675157,
+          "ratio_to_full": 1.0,
+          "variance": 0.7370000315123677
+        }
+      },
+      "family": "independent",
+      "law_id": "01-29",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.0524028838675157,
+      "true_variance": 0.7370000315123677,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0010764075546408972,
+          "fixed_budget_mse": 0.21758263618594678,
+          "mean": -0.02367224712574871,
+          "ratio_to_full": 0.6740746195221217,
+          "variance": 2.610977730392677
+        },
+        "m2": {
+          "bias": -0.0010764075546408972,
+          "fixed_budget_mse": 0.2468175069941594,
+          "mean": -0.02367224712574871,
+          "ratio_to_full": 0.7646447346850941,
+          "variance": 1.4808980900456143
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.32397596170209536,
+          "mean": -0.022595839571107813,
+          "ratio_to_full": 1.0036829084652776,
+          "variance": 1.2959038468083814
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2935079196011655,
+          "mean": -0.022595839571107813,
+          "ratio_to_full": 0.909292408162594,
+          "variance": 1.174031678404662
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.32278716611552555,
+          "mean": -0.022595839571107813,
+          "ratio_to_full": 1.0,
+          "variance": 0.9683614983465767
+        }
+      },
+      "family": "independent",
+      "law_id": "01-30",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.022595839571107813,
+      "true_variance": 0.9683614983465767,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0033708552369014324,
+          "fixed_budget_mse": 0.21763933059168136,
+          "mean": 0.0015781498083832443,
+          "ratio_to_full": 1.034655793004986,
+          "variance": 2.6115356151198386
+        },
+        "m2": {
+          "bias": -0.0033708552369014324,
+          "fixed_budget_mse": 0.21499433619057276,
+          "mean": 0.0015781498083832443,
+          "ratio_to_full": 1.0220815088802702,
+          "variance": 1.2898978411532676
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.244217749510338,
+          "mean": 0.004949005045284676,
+          "ratio_to_full": 1.1610094030273121,
+          "variance": 0.976870998041352
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21390758759840783,
+          "mean": 0.004949005045284676,
+          "ratio_to_full": 1.0169151139857142,
+          "variance": 0.8556303503936313
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21034950179864556,
+          "mean": 0.004949005045284676,
+          "ratio_to_full": 1.0,
+          "variance": 0.6310485053959367
+        }
+      },
+      "family": "independent",
+      "law_id": "01-31",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.004949005045284676,
+      "true_variance": 0.6310485053959367,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0019899376503556485,
+          "fixed_budget_mse": 0.21754060736185646,
+          "mean": 0.03314114597604805,
+          "ratio_to_full": 3.2559261790875036,
+          "variance": 2.61043977012005
+        },
+        "m2": {
+          "bias": -0.0019899376503556485,
+          "fixed_budget_mse": 0.1671745149910225,
+          "mean": 0.03314114597604805,
+          "ratio_to_full": 2.5020978218109238,
+          "variance": 1.0030233308350212
+        },
+        "m3_structured": {
+          "bias": 1.3877787807814457e-17,
+          "fixed_budget_mse": 0.17941162304704575,
+          "mean": 0.035131083626403714,
+          "ratio_to_full": 2.6852503879415024,
+          "variance": 0.717646492188183
+        },
+        "m3_uniform": {
+          "bias": 1.3877787807814457e-17,
+          "fixed_budget_mse": 0.13804979033850673,
+          "mean": 0.035131083626403714,
+          "ratio_to_full": 2.066188615686916,
+          "variance": 0.5521991613540269
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.06681374066743238,
+          "mean": 0.0351310836264037,
+          "ratio_to_full": 1.0,
+          "variance": 0.20044122200229714
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-00",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.0351310836264037,
+      "true_variance": 0.20044122200229714,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0024785700271334147,
+          "fixed_budget_mse": 0.2176241490087617,
+          "mean": 0.011047048658682673,
+          "ratio_to_full": 2.523614480656351,
+          "variance": 2.6114160683925878
+        },
+        "m2": {
+          "bias": -0.0024785700271334147,
+          "fixed_budget_mse": 0.1737034331964453,
+          "mean": 0.011047048658682673,
+          "ratio_to_full": 2.014300808760997,
+          "variance": 1.0421837393223954
+        },
+        "m3_structured": {
+          "bias": 6.938893903907228e-18,
+          "fixed_budget_mse": 0.1885301547107441,
+          "mean": 0.013525618685816095,
+          "ratio_to_full": 2.1862345269837715,
+          "variance": 0.7541206188429764
+        },
+        "m3_uniform": {
+          "bias": 6.938893903907228e-18,
+          "fixed_budget_mse": 0.14880777027962247,
+          "mean": 0.013525618685816095,
+          "ratio_to_full": 1.7256055709916631,
+          "variance": 0.5952310811184899
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.08623510075602404,
+          "mean": 0.013525618685816088,
+          "ratio_to_full": 1.0,
+          "variance": 0.25870530226807215
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-01",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.013525618685816088,
+      "true_variance": 0.25870530226807215,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.001182631984375071,
+          "fixed_budget_mse": 0.21693138799690334,
+          "mean": 0.09153268888622801,
+          "ratio_to_full": 2.776063178470251,
+          "variance": 2.6031598725419145
+        },
+        "m2": {
+          "bias": -0.001182631984375071,
+          "fixed_budget_mse": 0.17036267989101223,
+          "mean": 0.09153268888622801,
+          "ratio_to_full": 2.180125093920039,
+          "variance": 1.0221676876356105
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.18796137973024968,
+          "mean": 0.09271532087060308,
+          "ratio_to_full": 2.405335023491664,
+          "variance": 0.7518455189209987
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.1447274737173848,
+          "mean": 0.09271532087060308,
+          "ratio_to_full": 1.85207228151598,
+          "variance": 0.5789098948695393
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.0781435342247662,
+          "mean": 0.09271532087060308,
+          "ratio_to_full": 1.0,
+          "variance": 0.2344306026742986
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-02",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.09271532087060308,
+      "true_variance": 0.2344306026742986,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.004079018101796658,
+          "fixed_budget_mse": 0.2176346440880573,
+          "mean": -0.011047048658682695,
+          "ratio_to_full": 1.5307374408509973,
+          "variance": 2.6114160683925904
+        },
+        "m2": {
+          "bias": 0.004079018101796658,
+          "fixed_budget_mse": 0.1931129675716516,
+          "mean": -0.011047048658682695,
+          "ratio_to_full": 1.3582637590372173,
+          "variance": 1.158577975097861
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22073714123709626,
+          "mean": -0.015126066760479354,
+          "ratio_to_full": 1.5525589140179525,
+          "variance": 0.882948564948385
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.18410012229242953,
+          "mean": -0.015126066760479354,
+          "ratio_to_full": 1.2948717390060671,
+          "variance": 0.7364004891697181
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.1421763382014525,
+          "mean": -0.015126066760479354,
+          "ratio_to_full": 1.0,
+          "variance": 0.42652901460435755
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-03",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.015126066760479354,
+      "true_variance": 0.42652901460435755,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0027972433163362675,
+          "fixed_budget_mse": 0.21436709233339393,
+          "mean": -0.1980578009520967,
+          "ratio_to_full": 1.4961232604008825,
+          "variance": 2.572311213158678
+        },
+        "m2": {
+          "bias": -0.0027972433163362675,
+          "fixed_budget_mse": 0.19101433444562885,
+          "mean": -0.1980578009520967,
+          "ratio_to_full": 1.3331383363153453,
+          "variance": 1.1460390592527483
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2195964132546512,
+          "mean": -0.19526055763576045,
+          "ratio_to_full": 1.5326200406726704,
+          "variance": 0.8783856530186048
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.18269259278565417,
+          "mean": -0.19526055763576045,
+          "ratio_to_full": 1.2750587536284104,
+          "variance": 0.7307703711426167
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.1432817054631948,
+          "mean": -0.19526055763576045,
+          "ratio_to_full": 1.0,
+          "variance": 0.4298451163895844
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-04",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.19526055763576045,
+      "true_variance": 0.4298451163895844,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0003965712043413616,
+          "fixed_budget_mse": 0.21725345205411078,
+          "mean": 0.06707136685628774,
+          "ratio_to_full": 2.674850140585377,
+          "variance": 2.607039537424688
+        },
+        "m2": {
+          "bias": 0.0003965712043413616,
+          "fixed_budget_mse": 0.17127961229109173,
+          "mean": 0.06707136685628774,
+          "ratio_to_full": 2.1088147998777296,
+          "variance": 1.0276767301342298
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.1892397479073382,
+          "mean": 0.06667479565194638,
+          "ratio_to_full": 2.329942109127959,
+          "variance": 0.7569589916293528
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.14869370753333208,
+          "mean": 0.06667479565194638,
+          "ratio_to_full": 1.830734475052814,
+          "variance": 0.5947748301333283
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.08122079392700707,
+          "mean": 0.06667479565194638,
+          "ratio_to_full": 1.0,
+          "variance": 0.2436623817810212
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-05",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.06667479565194638,
+      "true_variance": 0.2436623817810212,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.00334252872230556,
+          "fixed_budget_mse": 0.2146006611073186,
+          "mean": 0.19095612681437216,
+          "ratio_to_full": 1.204875859946237,
+          "variance": 2.57507386330871
+        },
+        "m2": {
+          "bias": -0.00334252872230556,
+          "fixed_budget_mse": 0.20130161809715974,
+          "mean": 0.19095612681437216,
+          "ratio_to_full": 1.1302083551927733,
+          "variance": 1.2077426735934018
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.24692609787959954,
+          "mean": 0.19429865553667772,
+          "ratio_to_full": 1.3863670922107187,
+          "variance": 0.9877043915183982
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.20817056499291076,
+          "mean": 0.19429865553667772,
+          "ratio_to_full": 1.1687740718836657,
+          "variance": 0.832682259971643
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.17811018399596315,
+          "mean": 0.19429865553667772,
+          "ratio_to_full": 1.0,
+          "variance": 0.5343305519878895
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-06",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.19429865553667772,
+      "true_variance": 0.5343305519878895,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0009418566103106423,
+          "fixed_budget_mse": 0.21762749299726808,
+          "mean": 0.004339911973053881,
+          "ratio_to_full": 1.7658636632762406,
+          "variance": 2.6115192708407244
+        },
+        "m2": {
+          "bias": 0.0009418566103106423,
+          "fixed_budget_mse": 0.1870219612517085,
+          "mean": 0.004339911973053881,
+          "ratio_to_full": 1.517525571151963,
+          "variance": 1.1221264449470048
+        },
+        "m3_structured": {
+          "bias": 4.336808689942018e-19,
+          "fixed_budget_mse": 0.2160963264489847,
+          "mean": 0.0033980553627432387,
+          "ratio_to_full": 1.753439537386633,
+          "variance": 0.8643853057959388
+        },
+        "m3_uniform": {
+          "bias": 4.336808689942018e-19,
+          "fixed_budget_mse": 0.1743092051945315,
+          "mean": 0.0033980553627432387,
+          "ratio_to_full": 1.414372271574388,
+          "variance": 0.697236820778126
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.12324139033106307,
+          "mean": 0.0033980553627432383,
+          "ratio_to_full": 1.0,
+          "variance": 0.3697241709931892
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-07",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.0033980553627432383,
+      "true_variance": 0.3697241709931892,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0011755503557261291,
+          "fixed_budget_mse": 0.21762487462601032,
+          "mean": -0.007496211589820425,
+          "ratio_to_full": 1.2553379810943546,
+          "variance": 2.6114819124884576
+        },
+        "m2": {
+          "bias": -0.0011755503557261291,
+          "fixed_budget_mse": 0.2062027414652293,
+          "mean": -0.007496211589820425,
+          "ratio_to_full": 1.1894510386826163,
+          "variance": 1.2372081572795426
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.24568046807272517,
+          "mean": -0.006320661234094296,
+          "ratio_to_full": 1.4171726615109546,
+          "variance": 0.9827218722909007
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.20597651936314795,
+          "mean": -0.006320661234094296,
+          "ratio_to_full": 1.1881461088238685,
+          "variance": 0.8239060774525918
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.17335958754015668,
+          "mean": -0.006320661234094296,
+          "ratio_to_full": 1.0,
+          "variance": 0.52007876262047
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-08",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.006320661234094296,
+      "true_variance": 0.52007876262047,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.005714874319704716,
+          "fixed_budget_mse": 0.21551209439542388,
+          "mean": 0.16057674300299477,
+          "ratio_to_full": 2.3895036475084943,
+          "variance": 2.5857532152832063
+        },
+        "m2": {
+          "bias": 0.005714874319704716,
+          "fixed_budget_mse": 0.17471876703172773,
+          "mean": 0.16057674300299477,
+          "ratio_to_full": 1.9372051126953604,
+          "variance": 1.0481166434594262
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.1936491168961391,
+          "mean": 0.15486186868329005,
+          "ratio_to_full": 2.14709653515366,
+          "variance": 0.7745964675845564
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.15396970934332363,
+          "mean": 0.15486186868329005,
+          "ratio_to_full": 1.7071486549921748,
+          "variance": 0.6158788373732945
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.0901911552301398,
+          "mean": 0.15486186868329005,
+          "ratio_to_full": 1.0,
+          "variance": 0.2705734656904194
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-09",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.15486186868329005,
+      "true_variance": 0.2705734656904194,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0016641827325038494,
+          "fixed_budget_mse": 0.21725164095687624,
+          "mean": 0.06746590430838353,
+          "ratio_to_full": 1.825613932667128,
+          "variance": 2.606986457432509
+        },
+        "m2": {
+          "bias": 0.0016641827325038494,
+          "fixed_budget_mse": 0.183800694168517,
+          "mean": 0.06746590430838353,
+          "ratio_to_full": 1.5445181754670372,
+          "variance": 1.102787547986099
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21198572415631495,
+          "mean": 0.06580172157587968,
+          "ratio_to_full": 1.781363260787145,
+          "variance": 0.8479428966252598
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.17185973444237995,
+          "mean": 0.06580172157587968,
+          "ratio_to_full": 1.4441756309898703,
+          "variance": 0.6874389377695198
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.11900196261072722,
+          "mean": 0.06580172157587968,
+          "ratio_to_full": 1.0,
+          "variance": 0.3570058878321817
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-10",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.06580172157587968,
+      "true_variance": 0.3570058878321817,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.000665673093001546,
+          "fixed_budget_mse": 0.21755170968032506,
+          "mean": -0.030379383811377374,
+          "ratio_to_full": 1.7722268884021282,
+          "variance": 2.6106151987159
+        },
+        "m2": {
+          "bias": 0.000665673093001546,
+          "fixed_budget_mse": 0.18826407452342023,
+          "mean": -0.030379383811377374,
+          "ratio_to_full": 1.5336429921916708,
+          "variance": 1.129581788416521
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2087152296452673,
+          "mean": -0.03104505690437892,
+          "ratio_to_full": 1.7002428642822098,
+          "variance": 0.8348609185810691
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.17003184989086684,
+          "mean": -0.03104505690437892,
+          "ratio_to_full": 1.3851190445900725,
+          "variance": 0.6801273995634673
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.12275612739205961,
+          "mean": -0.03104505690437892,
+          "ratio_to_full": 1.0,
+          "variance": 0.36826838217617885
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-11",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.03104505690437892,
+      "true_variance": 0.36826838217617885,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0011472238411302238,
+          "fixed_budget_mse": 0.21616504418678884,
+          "mean": -0.1325645839041922,
+          "ratio_to_full": 2.136831272308018,
+          "variance": 2.593964736770966
+        },
+        "m2": {
+          "bias": -0.0011472238411302238,
+          "fixed_budget_mse": 0.1771540691084763,
+          "mean": -0.1325645839041922,
+          "ratio_to_full": 1.7512005991149207,
+          "variance": 1.062916517915608
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.199632317819737,
+          "mean": -0.13141736006306198,
+          "ratio_to_full": 1.9734022273829699,
+          "variance": 0.798529271278948
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.1604428263646443,
+          "mean": -0.13141736006306198,
+          "ratio_to_full": 1.5860068869285306,
+          "variance": 0.6417713054585772
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.10116149411895602,
+          "mean": -0.13141736006306198,
+          "ratio_to_full": 1.0,
+          "variance": 0.30348448235686803
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-12",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.13141736006306198,
+      "true_variance": 0.30348448235686803,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0020890804514410045,
+          "fixed_budget_mse": 0.21762086524510454,
+          "mean": -0.01183612356287431,
+          "ratio_to_full": 1.713544916204265,
+          "variance": 2.6113980118556634
+        },
+        "m2": {
+          "bias": 0.0020890804514410045,
+          "fixed_budget_mse": 0.18878809829421567,
+          "mean": -0.01183612356287431,
+          "ratio_to_full": 1.486515944634135,
+          "variance": 1.1327024042224985
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2121482497830741,
+          "mean": -0.013925204014315315,
+          "ratio_to_full": 1.6704535867366552,
+          "variance": 0.8485929991322964
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.17354163375650689,
+          "mean": -0.013925204014315315,
+          "ratio_to_full": 1.3664654073418832,
+          "variance": 0.6941665350260275
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.12700038568417824,
+          "mean": -0.013925204014315315,
+          "ratio_to_full": 1.0,
+          "variance": 0.3810011570525347
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-13",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.013925204014315315,
+      "true_variance": 0.3810011570525347,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0036824468974553243,
+          "fixed_budget_mse": 0.21747315632360908,
+          "mean": 0.044977269538922365,
+          "ratio_to_full": 1.9980051429465568,
+          "variance": 2.609515150901478
+        },
+        "m2": {
+          "bias": -0.0036824468974553243,
+          "fixed_budget_mse": 0.18154091879959922,
+          "mean": 0.044977269538922365,
+          "ratio_to_full": 1.6678825816879235,
+          "variance": 1.0891641503066798
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.19918279059810587,
+          "mean": 0.04865971643637769,
+          "ratio_to_full": 1.8299648872951904,
+          "variance": 0.7967311623924235
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.15921476385550312,
+          "mean": 0.04865971643637769,
+          "ratio_to_full": 1.4627640596844653,
+          "variance": 0.6368590554220125
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.10884514341283962,
+          "mean": 0.04865971643637769,
+          "ratio_to_full": 1.0,
+          "variance": 0.32653543023851883
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-14",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.04865971643637769,
+      "true_variance": 0.32653543023851883,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.002457325141186517,
+          "fixed_budget_mse": 0.21723240408664843,
+          "mean": 0.0694385915688626,
+          "ratio_to_full": 1.9353434099430473,
+          "variance": 2.606716387677587
+        },
+        "m2": {
+          "bias": -0.002457325141186517,
+          "fixed_budget_mse": 0.18224764471126095,
+          "mean": 0.0694385915688626,
+          "ratio_to_full": 1.6236609802876973,
+          "variance": 1.0934496375864686
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.20145014662968855,
+          "mean": 0.07189591671004912,
+          "ratio_to_full": 1.794737830900758,
+          "variance": 0.8058005865187542
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.16317485786650227,
+          "mean": 0.07189591671004912,
+          "ratio_to_full": 1.4537397731618544,
+          "variance": 0.6526994314660091
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.11224488789461973,
+          "mean": 0.07189591671004912,
+          "ratio_to_full": 1.0,
+          "variance": 0.3367346636838592
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-15",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.07189591671004912,
+      "true_variance": 0.3367346636838592,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0005877751778630586,
+          "fixed_budget_mse": 0.21762850798106428,
+          "mean": -0.0003945374520958111,
+          "ratio_to_full": 1.9788932956599055,
+          "variance": 2.6115379500168547
+        },
+        "m2": {
+          "bias": 0.0005877751778630586,
+          "fixed_budget_mse": 0.18182941579748382,
+          "mean": -0.0003945374520958111,
+          "ratio_to_full": 1.6533725990838748,
+          "variance": 1.0909744219069446
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.19997775687653513,
+          "mean": -0.0009823126299588697,
+          "ratio_to_full": 1.8183952370730518,
+          "variance": 0.7999110275061405
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.16172435095800358,
+          "mean": -0.0009823126299588697,
+          "ratio_to_full": 1.470557496463602,
+          "variance": 0.6468974038320143
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.10997485739042401,
+          "mean": -0.0009823126299588697,
+          "ratio_to_full": 1.0,
+          "variance": 0.329924572171272
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-16",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.0009823126299588697,
+      "true_variance": 0.329924572171272,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.002081998822792048,
+          "fixed_budget_mse": 0.21755155412392754,
+          "mean": -0.031168458715569006,
+          "ratio_to_full": 2.2357562479711977,
+          "variance": 2.610566632857953
+        },
+        "m2": {
+          "bias": -0.002081998822792048,
+          "fixed_budget_mse": 0.1785662557063253,
+          "mean": -0.031168458715569006,
+          "ratio_to_full": 1.8351081125571682,
+          "variance": 1.0713715259233632
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2006030638540443,
+          "mean": -0.02908645989277696,
+          "ratio_to_full": 2.061578255232129,
+          "variance": 0.8024122554161772
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.15784060562775876,
+          "mean": -0.02908645989277696,
+          "ratio_to_full": 1.622112614349769,
+          "variance": 0.631362422511035
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.09730557806618738,
+          "mean": -0.02908645989277696,
+          "ratio_to_full": 1.0,
+          "variance": 0.2919167341985621
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-17",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.02908645989277696,
+      "true_variance": 0.2919167341985621,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0008568770665231817,
+          "fixed_budget_mse": 0.21587223696927713,
+          "mean": -0.1451897823712582,
+          "ratio_to_full": 2.0718533281926335,
+          "variance": 2.59045803277164
+        },
+        "m2": {
+          "bias": 0.0008568770665231817,
+          "fixed_budget_mse": 0.17700589867208177,
+          "mean": -0.1451897823712582,
+          "ratio_to_full": 1.6988301294421368,
+          "variance": 1.0620309866026478
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.20030314110506156,
+          "mean": -0.1460466594377814,
+          "ratio_to_full": 1.922427521817097,
+          "variance": 0.8012125644202462
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.16111049036199657,
+          "mean": -0.1460466594377814,
+          "ratio_to_full": 1.5462725098399557,
+          "variance": 0.6444419614479863
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.10419281810725073,
+          "mean": -0.1460466594377814,
+          "ratio_to_full": 1.0,
+          "variance": 0.3125784543217522
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-18",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.1460466594377814,
+      "true_variance": 0.3125784543217522,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0019120397352172247,
+          "fixed_budget_mse": 0.21447908478574762,
+          "mean": 0.19450696388323443,
+          "ratio_to_full": 1.5368805670794692,
+          "variance": 2.573705146677583
+        },
+        "m2": {
+          "bias": -0.0019120397352172247,
+          "fixed_budget_mse": 0.1892234766310094,
+          "mean": 0.19450696388323443,
+          "ratio_to_full": 1.3559078935828215,
+          "variance": 1.135318924410362
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22158243273572933,
+          "mean": 0.19641900361845166,
+          "ratio_to_full": 1.5877806230753073,
+          "variance": 0.8863297309429173
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.1846395644569765,
+          "mean": 0.19641900361845166,
+          "ratio_to_full": 1.3230612150896357,
+          "variance": 0.738558257827906
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.13955481602146988,
+          "mean": 0.19641900361845166,
+          "ratio_to_full": 1.0,
+          "variance": 0.41866444806440967
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-19",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.19641900361845166,
+      "true_variance": 0.41866444806440967,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0010409994113960309,
+          "fixed_budget_mse": 0.2176211518715216,
+          "mean": -0.009863436302395256,
+          "ratio_to_full": 1.6841988452999073,
+          "variance": 2.6114408183009648
+        },
+        "m2": {
+          "bias": -0.0010409994113960309,
+          "fixed_budget_mse": 0.1881425624949044,
+          "mean": -0.009863436302395256,
+          "ratio_to_full": 1.4560601475575128,
+          "variance": 1.1288488728907793
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21529938159006495,
+          "mean": -0.008822436890999225,
+          "ratio_to_full": 1.6662303583515914,
+          "variance": 0.8611975263602598
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.17676304372343077,
+          "mean": -0.008822436890999225,
+          "ratio_to_full": 1.3679925483826896,
+          "variance": 0.7070521748937231
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.12921345509696602,
+          "mean": -0.008822436890999225,
+          "ratio_to_full": 1.0,
+          "variance": 0.38764036529089807
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-20",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.008822436890999225,
+      "true_variance": 0.38764036529089807,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.000651509835703723,
+          "fixed_budget_mse": 0.21692438202626602,
+          "mean": 0.09192722633832386,
+          "ratio_to_full": 2.915975714327551,
+          "variance": 2.6030874907344
+        },
+        "m2": {
+          "bias": 0.000651509835703723,
+          "fixed_budget_mse": 0.1692751974433574,
+          "mean": 0.09192722633832386,
+          "ratio_to_full": 2.275458204246787,
+          "variance": 1.0156486378697482
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.18522665579040662,
+          "mean": 0.09127571650262013,
+          "ratio_to_full": 2.4898834556344847,
+          "variance": 0.7409066231616265
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.1431279979601824,
+          "mean": 0.09127571650262013,
+          "ratio_to_full": 1.9239781263577826,
+          "variance": 0.5725119918407297
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.07439169707772778,
+          "mean": 0.09127571650262013,
+          "ratio_to_full": 1.0,
+          "variance": 0.22317509123318333
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-21",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.09127571650262013,
+      "true_variance": 0.22317509123318333,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0025352230563250103,
+          "fixed_budget_mse": 0.2176071548174051,
+          "mean": 0.018148722796407262,
+          "ratio_to_full": 1.9808955795864474,
+          "variance": 2.6112087295375175
+        },
+        "m2": {
+          "bias": -0.0025352230563250103,
+          "fixed_budget_mse": 0.1833627768730348,
+          "mean": 0.018148722796407262,
+          "ratio_to_full": 1.6691662297283925,
+          "variance": 1.1001380971025367
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2060289904624754,
+          "mean": 0.020683945852732272,
+          "ratio_to_full": 1.8754986104029174,
+          "variance": 0.8241159618499015
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.16589073968537182,
+          "mean": 0.020683945852732272,
+          "ratio_to_full": 1.5101168581190205,
+          "variance": 0.6635629587414873
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.10985291554986208,
+          "mean": 0.020683945852732272,
+          "ratio_to_full": 1.0,
+          "variance": 0.32955874664958623
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-22",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.020683945852732272,
+      "true_variance": 0.32955874664958623,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0040648548444987345,
+          "fixed_budget_mse": 0.21751756337540795,
+          "mean": 0.03905920775748523,
+          "ratio_to_full": 1.777635797947136,
+          "variance": 2.6100124839660133
+        },
+        "m2": {
+          "bias": -0.0040648548444987345,
+          "fixed_budget_mse": 0.18655032437350014,
+          "mean": 0.03905920775748523,
+          "ratio_to_full": 1.5245598083160397,
+          "variance": 1.1192028079715597
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.20611267841658654,
+          "mean": 0.04312406260198397,
+          "ratio_to_full": 1.6844307644791954,
+          "variance": 0.8244507136663461
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.16879725061010661,
+          "mean": 0.04312406260198397,
+          "ratio_to_full": 1.3794749749091004,
+          "variance": 0.6751890024404265
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.12236340178713963,
+          "mean": 0.04312406260198397,
+          "ratio_to_full": 1.0,
+          "variance": 0.3670902053614189
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-23",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.04312406260198397,
+      "true_variance": 0.3670902053614189,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.001926202992515065,
+          "fixed_budget_mse": 0.21746625073099607,
+          "mean": 0.04458273208682653,
+          "ratio_to_full": 2.1181080863329527,
+          "variance": 2.609550485676332
+        },
+        "m2": {
+          "bias": 0.001926202992515065,
+          "fixed_budget_mse": 0.17886855674850377,
+          "mean": 0.04458273208682653,
+          "ratio_to_full": 1.7421688890399858,
+          "variance": 1.0731890789432124
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.20247655692666283,
+          "mean": 0.04265652909431147,
+          "ratio_to_full": 1.9721093782488763,
+          "variance": 0.8099062277066513
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.16037283771776276,
+          "mean": 0.04265652909431147,
+          "ratio_to_full": 1.5620217079952585,
+          "variance": 0.641491350871051
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.10267004414656289,
+          "mean": 0.04265652909431147,
+          "ratio_to_full": 1.0,
+          "variance": 0.30801013243968867
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-24",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.04265652909431147,
+      "true_variance": 0.30801013243968867,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0018412234487276344,
+          "fixed_budget_mse": 0.21748305315493713,
+          "mean": -0.04221550737425172,
+          "ratio_to_full": 1.3103851200557062,
+          "variance": 2.609755956613788
+        },
+        "m2": {
+          "bias": 0.0018412234487276344,
+          "fixed_budget_mse": 0.19743960390186352,
+          "mean": -0.04221550737425172,
+          "ratio_to_full": 1.1896187556203675,
+          "variance": 1.1846172827884522
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.23611037431146353,
+          "mean": -0.044056730822979354,
+          "ratio_to_full": 1.4226189889292586,
+          "variance": 0.9444414972458541
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.19968520131353887,
+          "mean": -0.044056730822979354,
+          "ratio_to_full": 1.203148993453651,
+          "variance": 0.7987408052541555
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.16596880552618884,
+          "mean": -0.044056730822979354,
+          "ratio_to_full": 1.0,
+          "variance": 0.49790641657856655
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-25",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.044056730822979354,
+      "true_variance": 0.49790641657856655,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0024998149130802533,
+          "fixed_budget_mse": 0.21682369641689292,
+          "mean": -0.09863436302395262,
+          "ratio_to_full": 1.3938730294589081,
+          "variance": 2.6018093681075194
+        },
+        "m2": {
+          "bias": -0.0024998149130802533,
+          "fixed_budget_mse": 0.19879823956218817,
+          "mean": -0.09863436302395262,
+          "ratio_to_full": 1.2779945596760702,
+          "variance": 1.192751942925531
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.23020690152947743,
+          "mean": -0.09613454811087237,
+          "ratio_to_full": 1.4799083150961412,
+          "variance": 0.9208276061179097
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.19187295077609262,
+          "mean": -0.09613454811087237,
+          "ratio_to_full": 1.2334746413291715,
+          "variance": 0.7674918031043705
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.15555484024327695,
+          "mean": -0.09613454811087237,
+          "ratio_to_full": 1.0,
+          "variance": 0.4666645207298309
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-26",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.09613454811087237,
+      "true_variance": 0.4666645207298309,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0020890804514409472,
+          "fixed_budget_mse": 0.2172576590425233,
+          "mean": -0.06707136685628776,
+          "ratio_to_full": 2.6945818877533654,
+          "variance": 2.6070395374246886
+        },
+        "m2": {
+          "bias": 0.0020890804514409472,
+          "fixed_budget_mse": 0.17231103560253783,
+          "mean": -0.06707136685628776,
+          "ratio_to_full": 2.1371223350231636,
+          "variance": 1.0338400280724314
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.18537645626701377,
+          "mean": -0.0691604473077287,
+          "ratio_to_full": 2.2991688471393816,
+          "variance": 0.7415058250680551
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.14454495599119271,
+          "mean": -0.0691604473077287,
+          "ratio_to_full": 1.792747938537539,
+          "variance": 0.5781798239647709
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.08062759570601287,
+          "mean": -0.0691604473077287,
+          "ratio_to_full": 1.0,
+          "variance": 0.24188278711803862
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-27",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.0691604473077287,
+      "true_variance": 0.24188278711803862,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.00079314240868264,
+          "fixed_budget_mse": 0.2163005075784953,
+          "mean": 0.1262519846706593,
+          "ratio_to_full": 2.003673781087589,
+          "variance": 2.5955985420433785
+        },
+        "m2": {
+          "bias": -0.00079314240868264,
+          "fixed_budget_mse": 0.1803302256460591,
+          "mean": 0.1262519846706593,
+          "ratio_to_full": 1.6704673933023182,
+          "variance": 1.081977579427072
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.20316327543214546,
+          "mean": 0.12704512707934193,
+          "ratio_to_full": 1.881978608466925,
+          "variance": 0.8126531017285819
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.16328939052320496,
+          "mean": 0.12704512707934193,
+          "ratio_to_full": 1.5126116632083495,
+          "variance": 0.6531575620928198
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.10795195785867295,
+          "mean": 0.12704512707934193,
+          "ratio_to_full": 1.0,
+          "variance": 0.32385587357601886
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-28",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.12704512707934193,
+      "true_variance": 0.32385587357601886,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.00047446911947982354,
+          "fixed_budget_mse": 0.21762321193396308,
+          "mean": 0.007890749041916202,
+          "ratio_to_full": 2.3699273444258377,
+          "variance": 2.611475841756213
+        },
+        "m2": {
+          "bias": -0.00047446911947982354,
+          "fixed_budget_mse": 0.17519516984105513,
+          "mean": 0.007890749041916202,
+          "ratio_to_full": 1.907883905985342,
+          "variance": 1.0511696683206588
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.1916701070473544,
+          "mean": 0.008365218161396026,
+          "ratio_to_full": 2.0872967720850997,
+          "variance": 0.7666804281894176
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.15202501990952957,
+          "mean": 0.008365218161396026,
+          "ratio_to_full": 1.655559848228895,
+          "variance": 0.6081000796381183
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.09182695513675616,
+          "mean": 0.008365218161396026,
+          "ratio_to_full": 1.0,
+          "variance": 0.2754808654102685
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-29",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.008365218161396026,
+      "true_variance": 0.2754808654102685,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0008993668384170012,
+          "fixed_budget_mse": 0.217292746191725,
+          "mean": 0.06352052978742546,
+          "ratio_to_full": 2.192869215334943,
+          "variance": 2.6075032479721796
+        },
+        "m2": {
+          "bias": 0.0008993668384170012,
+          "fixed_budget_mse": 0.17769795317512477,
+          "mean": 0.06352052978742546,
+          "ratio_to_full": 1.7932875255851535,
+          "variance": 1.0661828658864883
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.1948589319167873,
+          "mean": 0.06262116294900846,
+          "ratio_to_full": 1.9664722390518667,
+          "variance": 0.7794357276671492
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.1555800490971844,
+          "mean": 0.06262116294900846,
+          "ratio_to_full": 1.570078643511143,
+          "variance": 0.6223201963887376
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.09909060908520041,
+          "mean": 0.06262116294900846,
+          "ratio_to_full": 1.0,
+          "variance": 0.29727182725560125
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-30",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.06262116294900846,
+      "true_variance": 0.29727182725560125,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.00016995908757486827,
+          "fixed_budget_mse": 0.2175664463330576,
+          "mean": -0.027223084194610905,
+          "ratio_to_full": 1.58567788754261,
+          "variance": 2.610797009363594
+        },
+        "m2": {
+          "bias": -0.00016995908757486827,
+          "fixed_budget_mse": 0.1895927413224685,
+          "mean": -0.027223084194610905,
+          "ratio_to_full": 1.3817986303522458,
+          "variance": 1.1375562746182624
+        },
+        "m3_structured": {
+          "bias": 6.938893903907228e-18,
+          "fixed_budget_mse": 0.22222458708803083,
+          "mean": -0.02705312510703603,
+          "ratio_to_full": 1.6196275655224348,
+          "variance": 0.8888983483521233
+        },
+        "m3_uniform": {
+          "bias": 6.938893903907228e-18,
+          "fixed_budget_mse": 0.18335836922162618,
+          "mean": -0.02705312510703603,
+          "ratio_to_full": 1.3363609898077802,
+          "variance": 0.7334334768865047
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.13720721468231434,
+          "mean": -0.027053125107036037,
+          "ratio_to_full": 1.0,
+          "variance": 0.411621644046943
+        }
+      },
+      "family": "common_shock",
+      "law_id": "02-31",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.027053125107036037,
+      "true_variance": 0.411621644046943,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0015296317881737594,
+          "fixed_budget_mse": 0.21763051524646176,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948859025477538,
+          "variance": 2.6115381056766527
+        },
+        "m2": {
+          "bias": -0.0015296317881737594,
+          "fixed_budget_mse": 0.2176305152464623,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948859025477562,
+          "variance": 1.3057690528383294
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.25188092874434775,
+          "mean": 0.001529631788173759,
+          "ratio_to_full": 1.1514597796388804,
+          "variance": 1.007523714977391
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22099306411053785,
+          "mean": 0.001529631788173759,
+          "ratio_to_full": 1.0102576093036226,
+          "variance": 0.8839722564421514
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21874922007553088,
+          "mean": 0.001529631788173759,
+          "ratio_to_full": 1.0,
+          "variance": 0.6562476602265926
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-00",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.001529631788173759,
+      "true_variance": 0.6562476602265926,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -7.37257477290143e-18,
+          "fixed_budget_mse": 0.21762817547305438,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948716593053915,
+          "variance": 2.6115381056766527
+        },
+        "m2": {
+          "bias": -7.37257477290143e-18,
+          "fixed_budget_mse": 0.2176281754730549,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948716593053939,
+          "variance": 1.3057690528383294
+        },
+        "m3_structured": {
+          "bias": -2.0328790734103208e-20,
+          "fixed_budget_mse": 0.25188151368769957,
+          "mean": 6.918565113173125e-18,
+          "ratio_to_full": 1.1514583482866265,
+          "variance": 1.0075260547507983
+        },
+        "m3_uniform": {
+          "bias": -2.0328790734103208e-20,
+          "fixed_budget_mse": 0.2209936490538897,
+          "mean": 6.918565113173125e-18,
+          "ratio_to_full": 1.0102566813892102,
+          "variance": 0.8839745962155588
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21875,
+          "mean": 6.938893903907228e-18,
+          "ratio_to_full": 1.0,
+          "variance": 0.65625
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-01",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 6.938893903907228e-18,
+      "true_variance": 0.65625,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.00033991817514972993,
+          "fixed_budget_mse": 0.21762829101742018,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948723626730006,
+          "variance": 2.6115381056766527
+        },
+        "m2": {
+          "bias": -0.00033991817514972993,
+          "fixed_budget_mse": 0.21762829101742068,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948723626730029,
+          "variance": 1.3057690528383292
+        },
+        "m3_structured": {
+          "bias": -6.938893903907228e-18,
+          "fixed_budget_mse": 0.25188148480160805,
+          "mean": 0.00033991817514972256,
+          "ratio_to_full": 1.1514584189704484,
+          "variance": 1.0075259392064322
+        },
+        "m3_uniform": {
+          "bias": -6.938893903907228e-18,
+          "fixed_budget_mse": 0.22099362016779822,
+          "mean": 0.00033991817514972256,
+          "ratio_to_full": 1.0102567272119884,
+          "variance": 0.8839744806711929
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21874996148521142,
+          "mean": 0.0003399181751497295,
+          "ratio_to_full": 1.0,
+          "variance": 0.6562498844556343
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-02",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.0003399181751497295,
+      "true_variance": 0.6562498844556343,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0015296317881737516,
+          "fixed_budget_mse": 0.21763051524646176,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948859025477538,
+          "variance": 2.6115381056766527
+        },
+        "m2": {
+          "bias": 0.0015296317881737516,
+          "fixed_budget_mse": 0.21763051524646226,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948859025477561,
+          "variance": 1.3057690528383292
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.25188092874434764,
+          "mean": -0.001529631788173752,
+          "ratio_to_full": 1.15145977963888,
+          "variance": 1.0075237149773906
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22099306411053793,
+          "mean": -0.001529631788173752,
+          "ratio_to_full": 1.010257609303623,
+          "variance": 0.8839722564421517
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21874922007553088,
+          "mean": -0.001529631788173752,
+          "ratio_to_full": 1.0,
+          "variance": 0.6562476602265926
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-03",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.001529631788173752,
+      "true_variance": 0.6562476602265926,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.00011330605838323366,
+          "fixed_budget_mse": 0.21762818831131756,
+          "mean": 0.0,
+          "ratio_to_full": 0.9948717374573373,
+          "variance": 2.6115381056766562
+        },
+        "m2": {
+          "bias": 0.00011330605838323366,
+          "fixed_budget_mse": 0.21762818831131764,
+          "mean": 0.0,
+          "ratio_to_full": 0.9948717374573376,
+          "variance": 1.3057690528383286
+        },
+        "m3_structured": {
+          "bias": -2.710505431213761e-20,
+          "fixed_budget_mse": 0.25188151047813373,
+          "mean": -0.00011330605838323369,
+          "ratio_to_full": 1.1514583561403828,
+          "variance": 1.007526041912535
+        },
+        "m3_uniform": {
+          "bias": -2.710505431213761e-20,
+          "fixed_budget_mse": 0.2209936458443241,
+          "mean": -0.00011330605838323369,
+          "ratio_to_full": 1.0102566864806297,
+          "variance": 0.8839745833772964
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21874999572057904,
+          "mean": -0.00011330605838323366,
+          "ratio_to_full": 1.0,
+          "variance": 0.6562499871617371
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-04",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.00011330605838323366,
+      "true_variance": 0.6562499871617371,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0001133060583832471,
+          "fixed_budget_mse": 0.21762818831131756,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948717374573373,
+          "variance": 2.6115381056766562
+        },
+        "m2": {
+          "bias": -0.0001133060583832471,
+          "fixed_budget_mse": 0.21762818831131764,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948717374573376,
+          "variance": 1.3057690528383286
+        },
+        "m3_structured": {
+          "bias": -2.710505431213761e-20,
+          "fixed_budget_mse": 0.25188151047813373,
+          "mean": 0.00011330605838324664,
+          "ratio_to_full": 1.1514583561403828,
+          "variance": 1.007526041912535
+        },
+        "m3_uniform": {
+          "bias": -2.710505431213761e-20,
+          "fixed_budget_mse": 0.2209936458443241,
+          "mean": 0.00011330605838324664,
+          "ratio_to_full": 1.0102566864806297,
+          "variance": 0.8839745833772964
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21874999572057904,
+          "mean": 0.00011330605838324667,
+          "ratio_to_full": 1.0,
+          "variance": 0.6562499871617371
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-05",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.00011330605838324667,
+      "true_variance": 0.6562499871617371,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -7.37257477290143e-18,
+          "fixed_budget_mse": 0.21762817547305438,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948716593053915,
+          "variance": 2.6115381056766527
+        },
+        "m2": {
+          "bias": -7.37257477290143e-18,
+          "fixed_budget_mse": 0.2176281754730549,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948716593053939,
+          "variance": 1.3057690528383294
+        },
+        "m3_structured": {
+          "bias": -2.0328790734103208e-20,
+          "fixed_budget_mse": 0.25188151368769957,
+          "mean": 6.918565113173125e-18,
+          "ratio_to_full": 1.1514583482866265,
+          "variance": 1.0075260547507983
+        },
+        "m3_uniform": {
+          "bias": -2.0328790734103208e-20,
+          "fixed_budget_mse": 0.2209936490538897,
+          "mean": 6.918565113173125e-18,
+          "ratio_to_full": 1.0102566813892102,
+          "variance": 0.8839745962155588
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21875,
+          "mean": 6.938893903907228e-18,
+          "ratio_to_full": 1.0,
+          "variance": 0.65625
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-06",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 6.938893903907228e-18,
+      "true_variance": 0.65625,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -7.37257477290143e-18,
+          "fixed_budget_mse": 0.21762817547305438,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948716593053915,
+          "variance": 2.6115381056766527
+        },
+        "m2": {
+          "bias": -7.37257477290143e-18,
+          "fixed_budget_mse": 0.2176281754730549,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948716593053939,
+          "variance": 1.3057690528383294
+        },
+        "m3_structured": {
+          "bias": -2.0328790734103208e-20,
+          "fixed_budget_mse": 0.25188151368769957,
+          "mean": 6.918565113173125e-18,
+          "ratio_to_full": 1.1514583482866265,
+          "variance": 1.0075260547507983
+        },
+        "m3_uniform": {
+          "bias": -2.0328790734103208e-20,
+          "fixed_budget_mse": 0.2209936490538897,
+          "mean": 6.918565113173125e-18,
+          "ratio_to_full": 1.0102566813892102,
+          "variance": 0.8839745962155588
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21875,
+          "mean": 6.938893903907228e-18,
+          "ratio_to_full": 1.0,
+          "variance": 0.65625
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-07",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 6.938893903907228e-18,
+      "true_variance": 0.65625,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -7.37257477290143e-18,
+          "fixed_budget_mse": 0.21762817547305438,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9926559095073839,
+          "variance": 2.6115381056766527
+        },
+        "m2": {
+          "bias": -7.37257477290143e-18,
+          "fixed_budget_mse": 0.2176281754730549,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9926559095073864,
+          "variance": 1.3057690528383294
+        },
+        "m3_structured": {
+          "bias": -6.959222694641332e-18,
+          "fixed_budget_mse": 0.2518815136876995,
+          "mean": -2.0328790734103208e-20,
+          "ratio_to_full": 1.148893853078861,
+          "variance": 1.007526054750798
+        },
+        "m3_uniform": {
+          "bias": -6.959222694641332e-18,
+          "fixed_budget_mse": 0.22099364905388966,
+          "mean": -2.0328790734103208e-20,
+          "ratio_to_full": 1.0080066665086103,
+          "variance": 0.8839745962155586
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21923828125,
+          "mean": 6.938893903907228e-18,
+          "ratio_to_full": 1.0,
+          "variance": 0.65771484375
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-08",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 6.938893903907228e-18,
+      "true_variance": 0.65771484375,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -6.5052130349130266e-18,
+          "fixed_budget_mse": 0.21762817547305438,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9926559095073839,
+          "variance": 2.6115381056766527
+        },
+        "m2": {
+          "bias": -6.5052130349130266e-18,
+          "fixed_budget_mse": 0.21762817547305482,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9926559095073859,
+          "variance": 1.305769052838329
+        },
+        "m3_structured": {
+          "bias": -2.0328790734103208e-20,
+          "fixed_budget_mse": 0.2518815136876996,
+          "mean": 6.051203375184722e-18,
+          "ratio_to_full": 1.1488938530788615,
+          "variance": 1.0075260547507985
+        },
+        "m3_uniform": {
+          "bias": -2.0328790734103208e-20,
+          "fixed_budget_mse": 0.22099364905388977,
+          "mean": 6.051203375184722e-18,
+          "ratio_to_full": 1.0080066665086107,
+          "variance": 0.8839745962155591
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21923828125,
+          "mean": 6.071532165918825e-18,
+          "ratio_to_full": 1.0,
+          "variance": 0.65771484375
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-09",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 6.071532165918825e-18,
+      "true_variance": 0.65771484375,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.00033991817514972223,
+          "fixed_budget_mse": 0.21762829101742018,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948723626730006,
+          "variance": 2.6115381056766527
+        },
+        "m2": {
+          "bias": 0.00033991817514972223,
+          "fixed_budget_mse": 0.21762829101742068,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948723626730029,
+          "variance": 1.3057690528383292
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.25188148480160805,
+          "mean": -0.00033991817514972267,
+          "ratio_to_full": 1.1514584189704484,
+          "variance": 1.0075259392064322
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22099362016779822,
+          "mean": -0.00033991817514972267,
+          "ratio_to_full": 1.0102567272119884,
+          "variance": 0.8839744806711929
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21874996148521142,
+          "mean": -0.00033991817514972267,
+          "ratio_to_full": 1.0,
+          "variance": 0.6562498844556343
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-10",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.00033991817514972267,
+      "true_variance": 0.6562498844556343,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0010197545254491676,
+          "fixed_budget_mse": 0.21762921537234672,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948779896227921,
+          "variance": 2.6115381056766545
+        },
+        "m2": {
+          "bias": 0.0010197545254491676,
+          "fixed_budget_mse": 0.217629215372347,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948779896227934,
+          "variance": 1.305769052838329
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2518812537128765,
+          "mean": -0.001019754525449168,
+          "ratio_to_full": 1.1514589844419236,
+          "variance": 1.007525014851506
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2209933890790667,
+          "mean": -0.001019754525449168,
+          "ratio_to_full": 1.010257093794799,
+          "variance": 0.8839735563162668
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21874965336690264,
+          "mean": -0.001019754525449168,
+          "ratio_to_full": 1.0,
+          "variance": 0.6562489601007079
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-11",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.001019754525449168,
+      "true_variance": 0.6562489601007079,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0001133060583832471,
+          "fixed_budget_mse": 0.21762818831131756,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948717374573373,
+          "variance": 2.6115381056766562
+        },
+        "m2": {
+          "bias": -0.0001133060583832471,
+          "fixed_budget_mse": 0.21762818831131764,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948717374573376,
+          "variance": 1.3057690528383286
+        },
+        "m3_structured": {
+          "bias": -2.710505431213761e-20,
+          "fixed_budget_mse": 0.25188151047813373,
+          "mean": 0.00011330605838324664,
+          "ratio_to_full": 1.1514583561403828,
+          "variance": 1.007526041912535
+        },
+        "m3_uniform": {
+          "bias": -2.710505431213761e-20,
+          "fixed_budget_mse": 0.2209936458443241,
+          "mean": 0.00011330605838324664,
+          "ratio_to_full": 1.0102566864806297,
+          "variance": 0.8839745833772964
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21874999572057904,
+          "mean": 0.00011330605838324667,
+          "ratio_to_full": 1.0,
+          "variance": 0.6562499871617371
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-12",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.00011330605838324667,
+      "true_variance": 0.6562499871617371,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.00033991817514972993,
+          "fixed_budget_mse": 0.21762829101742048,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.994872362673002,
+          "variance": 2.6115381056766562
+        },
+        "m2": {
+          "bias": -0.00033991817514972993,
+          "fixed_budget_mse": 0.21762829101742057,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948723626730024,
+          "variance": 1.3057690528383286
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.251881484801608,
+          "mean": 0.0003399181751497295,
+          "ratio_to_full": 1.1514584189704482,
+          "variance": 1.007525939206432
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2209936201677984,
+          "mean": 0.0003399181751497295,
+          "ratio_to_full": 1.0102567272119893,
+          "variance": 0.8839744806711936
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21874996148521142,
+          "mean": 0.0003399181751497295,
+          "ratio_to_full": 1.0,
+          "variance": 0.6562498844556343
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-13",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.0003399181751497295,
+      "true_variance": 0.6562498844556343,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -7.37257477290143e-18,
+          "fixed_budget_mse": 0.21762817547305438,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948716593053915,
+          "variance": 2.6115381056766527
+        },
+        "m2": {
+          "bias": -7.37257477290143e-18,
+          "fixed_budget_mse": 0.2176281754730549,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948716593053939,
+          "variance": 1.3057690528383294
+        },
+        "m3_structured": {
+          "bias": -2.0328790734103208e-20,
+          "fixed_budget_mse": 0.25188151368769957,
+          "mean": 6.918565113173125e-18,
+          "ratio_to_full": 1.1514583482866265,
+          "variance": 1.0075260547507983
+        },
+        "m3_uniform": {
+          "bias": -2.0328790734103208e-20,
+          "fixed_budget_mse": 0.2209936490538897,
+          "mean": 6.918565113173125e-18,
+          "ratio_to_full": 1.0102566813892102,
+          "variance": 0.8839745962155588
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21875,
+          "mean": 6.938893903907228e-18,
+          "ratio_to_full": 1.0,
+          "variance": 0.65625
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-14",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 6.938893903907228e-18,
+      "true_variance": 0.65625,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -7.37257477290143e-18,
+          "fixed_budget_mse": 0.21762817547305438,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948716593053915,
+          "variance": 2.6115381056766527
+        },
+        "m2": {
+          "bias": -7.37257477290143e-18,
+          "fixed_budget_mse": 0.2176281754730549,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948716593053939,
+          "variance": 1.3057690528383294
+        },
+        "m3_structured": {
+          "bias": -2.0328790734103208e-20,
+          "fixed_budget_mse": 0.25188151368769957,
+          "mean": 6.918565113173125e-18,
+          "ratio_to_full": 1.1514583482866265,
+          "variance": 1.0075260547507983
+        },
+        "m3_uniform": {
+          "bias": -2.0328790734103208e-20,
+          "fixed_budget_mse": 0.2209936490538897,
+          "mean": 6.918565113173125e-18,
+          "ratio_to_full": 1.0102566813892102,
+          "variance": 0.8839745962155588
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21875,
+          "mean": 6.938893903907228e-18,
+          "ratio_to_full": 1.0,
+          "variance": 0.65625
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-15",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 6.938893903907228e-18,
+      "true_variance": 0.65625,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0010197545254491693,
+          "fixed_budget_mse": 0.21762921537234672,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948779896227921,
+          "variance": 2.6115381056766545
+        },
+        "m2": {
+          "bias": 0.0010197545254491693,
+          "fixed_budget_mse": 0.217629215372347,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948779896227934,
+          "variance": 1.305769052838329
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2518812537128765,
+          "mean": -0.0010197545254491697,
+          "ratio_to_full": 1.1514589844419236,
+          "variance": 1.007525014851506
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2209933890790667,
+          "mean": -0.0010197545254491697,
+          "ratio_to_full": 1.010257093794799,
+          "variance": 0.8839735563162668
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21874965336690264,
+          "mean": -0.0010197545254491697,
+          "ratio_to_full": 1.0,
+          "variance": 0.6562489601007079
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-16",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.0010197545254491697,
+      "true_variance": 0.6562489601007079,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0010197545254491754,
+          "fixed_budget_mse": 0.21762921537234672,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948779896227921,
+          "variance": 2.6115381056766545
+        },
+        "m2": {
+          "bias": -0.0010197545254491754,
+          "fixed_budget_mse": 0.2176292153723472,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948779896227943,
+          "variance": 1.3057690528383301
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.25188125371287673,
+          "mean": 0.001019754525449175,
+          "ratio_to_full": 1.1514589844419245,
+          "variance": 1.007525014851507
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2209933890790668,
+          "mean": 0.001019754525449175,
+          "ratio_to_full": 1.0102570937947992,
+          "variance": 0.8839735563162672
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21874965336690264,
+          "mean": 0.001019754525449175,
+          "ratio_to_full": 1.0,
+          "variance": 0.6562489601007079
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-17",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.001019754525449175,
+      "true_variance": 0.6562489601007079,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -7.37257477290143e-18,
+          "fixed_budget_mse": 0.21762817547305438,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 1.001578659255765,
+          "variance": 2.6115381056766527
+        },
+        "m2": {
+          "bias": -7.37257477290143e-18,
+          "fixed_budget_mse": 0.21762817547305488,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 1.0015786592557672,
+          "variance": 1.3057690528383292
+        },
+        "m3_structured": {
+          "bias": -2.0328790734103208e-20,
+          "fixed_budget_mse": 0.2518815136876996,
+          "mean": 6.918565113173125e-18,
+          "ratio_to_full": 1.1592209888368739,
+          "variance": 1.0075260547507985
+        },
+        "m3_uniform": {
+          "bias": -2.0328790734103208e-20,
+          "fixed_budget_mse": 0.22099364905388977,
+          "mean": 6.918565113173125e-18,
+          "ratio_to_full": 1.017067400589587,
+          "variance": 0.8839745962155591
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21728515625,
+          "mean": 6.938893903907228e-18,
+          "ratio_to_full": 1.0,
+          "variance": 0.65185546875
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-18",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 6.938893903907228e-18,
+      "true_variance": 0.65185546875,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.004588895364521263,
+          "fixed_budget_mse": 0.21764923343372092,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9949998521431046,
+          "variance": 2.6115381056766527
+        },
+        "m2": {
+          "bias": -0.004588895364521263,
+          "fixed_budget_mse": 0.21764923343372136,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9949998521431066,
+          "variance": 1.305769052838329
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2518762491975329,
+          "mean": 0.004588895364521262,
+          "ratio_to_full": 1.1514712308243595,
+          "variance": 1.0075049967901315
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22098838456372308,
+          "mean": 0.004588895364521262,
+          "ratio_to_full": 1.0102650328571336,
+          "variance": 0.8839535382548923
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21874298067977782,
+          "mean": 0.004588895364521262,
+          "ratio_to_full": 1.0,
+          "variance": 0.6562289420393335
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-19",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.004588895364521262,
+      "true_variance": 0.6562289420393335,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0010197545254491606,
+          "fixed_budget_mse": 0.2176292153723463,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948779896227902,
+          "variance": 2.6115381056766496
+        },
+        "m2": {
+          "bias": 0.0010197545254491606,
+          "fixed_budget_mse": 0.21762921537234706,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948779896227936,
+          "variance": 1.3057690528383292
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.25188125371287673,
+          "mean": -0.001019754525449161,
+          "ratio_to_full": 1.1514589844419245,
+          "variance": 1.007525014851507
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22099338907906688,
+          "mean": -0.001019754525449161,
+          "ratio_to_full": 1.0102570937947997,
+          "variance": 0.8839735563162675
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21874965336690264,
+          "mean": -0.001019754525449161,
+          "ratio_to_full": 1.0,
+          "variance": 0.6562489601007079
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-20",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.001019754525449161,
+      "true_variance": 0.6562489601007079,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0010197545254491676,
+          "fixed_budget_mse": 0.2176292153723465,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948779896227911,
+          "variance": 2.611538105676652
+        },
+        "m2": {
+          "bias": 0.0010197545254491676,
+          "fixed_budget_mse": 0.21762921537234708,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948779896227937,
+          "variance": 1.3057690528383294
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.25188125371287656,
+          "mean": -0.001019754525449168,
+          "ratio_to_full": 1.1514589844419238,
+          "variance": 1.0075250148515063
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22099338907906665,
+          "mean": -0.001019754525449168,
+          "ratio_to_full": 1.0102570937947988,
+          "variance": 0.8839735563162666
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21874965336690264,
+          "mean": -0.001019754525449168,
+          "ratio_to_full": 1.0,
+          "variance": 0.6562489601007079
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-21",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.001019754525449168,
+      "true_variance": 0.6562489601007079,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.00011330605838323583,
+          "fixed_budget_mse": 0.21762818831131742,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948717374573366,
+          "variance": 2.6115381056766545
+        },
+        "m2": {
+          "bias": 0.00011330605838323583,
+          "fixed_budget_mse": 0.21762818831131775,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948717374573381,
+          "variance": 1.3057690528383292
+        },
+        "m3_structured": {
+          "bias": -2.710505431213761e-20,
+          "fixed_budget_mse": 0.25188151047813373,
+          "mean": -0.00011330605838323629,
+          "ratio_to_full": 1.1514583561403828,
+          "variance": 1.007526041912535
+        },
+        "m3_uniform": {
+          "bias": -2.710505431213761e-20,
+          "fixed_budget_mse": 0.2209936458443241,
+          "mean": -0.00011330605838323629,
+          "ratio_to_full": 1.0102566864806297,
+          "variance": 0.8839745833772964
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21874999572057904,
+          "mean": -0.00011330605838323626,
+          "ratio_to_full": 1.0,
+          "variance": 0.6562499871617371
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-22",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.00011330605838323626,
+      "true_variance": 0.6562499871617371,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0003399181751497153,
+          "fixed_budget_mse": 0.21762829101742034,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948723626730014,
+          "variance": 2.6115381056766545
+        },
+        "m2": {
+          "bias": 0.0003399181751497153,
+          "fixed_budget_mse": 0.21762829101742082,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948723626730036,
+          "variance": 1.3057690528383301
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2518814848016082,
+          "mean": -0.00033991817514971573,
+          "ratio_to_full": 1.1514584189704493,
+          "variance": 1.0075259392064329
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22099362016779833,
+          "mean": -0.00033991817514971573,
+          "ratio_to_full": 1.010256727211989,
+          "variance": 0.8839744806711933
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21874996148521142,
+          "mean": -0.00033991817514971573,
+          "ratio_to_full": 1.0,
+          "variance": 0.6562498844556343
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-23",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.00033991817514971573,
+      "true_variance": 0.6562498844556343,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.00011330605838323236,
+          "fixed_budget_mse": 0.21762818831131756,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948717374573373,
+          "variance": 2.6115381056766562
+        },
+        "m2": {
+          "bias": 0.00011330605838323236,
+          "fixed_budget_mse": 0.21762818831131764,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948717374573376,
+          "variance": 1.3057690528383286
+        },
+        "m3_structured": {
+          "bias": -2.710505431213761e-20,
+          "fixed_budget_mse": 0.25188151047813373,
+          "mean": -0.00011330605838323282,
+          "ratio_to_full": 1.1514583561403828,
+          "variance": 1.007526041912535
+        },
+        "m3_uniform": {
+          "bias": -2.710505431213761e-20,
+          "fixed_budget_mse": 0.2209936458443241,
+          "mean": -0.00011330605838323282,
+          "ratio_to_full": 1.0102566864806297,
+          "variance": 0.8839745833772964
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21874999572057904,
+          "mean": -0.0001133060583832328,
+          "ratio_to_full": 1.0,
+          "variance": 0.6562499871617371
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-24",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.0001133060583832328,
+      "true_variance": 0.6562499871617371,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0010197545254491754,
+          "fixed_budget_mse": 0.21762921537234672,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948779896227921,
+          "variance": 2.6115381056766545
+        },
+        "m2": {
+          "bias": -0.0010197545254491754,
+          "fixed_budget_mse": 0.2176292153723472,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948779896227943,
+          "variance": 1.3057690528383301
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.25188125371287673,
+          "mean": 0.001019754525449175,
+          "ratio_to_full": 1.1514589844419245,
+          "variance": 1.007525014851507
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22099338907906668,
+          "mean": 0.001019754525449175,
+          "ratio_to_full": 1.0102570937947988,
+          "variance": 0.8839735563162667
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21874965336690264,
+          "mean": 0.001019754525449175,
+          "ratio_to_full": 1.0,
+          "variance": 0.6562489601007079
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-25",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.001019754525449175,
+      "true_variance": 0.6562489601007079,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0010197545254491754,
+          "fixed_budget_mse": 0.21762921537234672,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948779896227921,
+          "variance": 2.6115381056766545
+        },
+        "m2": {
+          "bias": -0.0010197545254491754,
+          "fixed_budget_mse": 0.2176292153723472,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948779896227943,
+          "variance": 1.3057690528383301
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.25188125371287673,
+          "mean": 0.001019754525449175,
+          "ratio_to_full": 1.1514589844419245,
+          "variance": 1.007525014851507
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2209933890790668,
+          "mean": 0.001019754525449175,
+          "ratio_to_full": 1.0102570937947992,
+          "variance": 0.8839735563162672
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21874965336690264,
+          "mean": 0.001019754525449175,
+          "ratio_to_full": 1.0,
+          "variance": 0.6562489601007079
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-26",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.001019754525449175,
+      "true_variance": 0.6562489601007079,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.0015296317881737516,
+          "fixed_budget_mse": 0.21763051524646176,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948859025477538,
+          "variance": 2.6115381056766527
+        },
+        "m2": {
+          "bias": 0.0015296317881737516,
+          "fixed_budget_mse": 0.2176305152464623,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948859025477562,
+          "variance": 1.3057690528383294
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2518809287443477,
+          "mean": -0.001529631788173752,
+          "ratio_to_full": 1.1514597796388801,
+          "variance": 1.0075237149773908
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22099306411053787,
+          "mean": -0.001529631788173752,
+          "ratio_to_full": 1.0102576093036228,
+          "variance": 0.8839722564421515
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21874922007553088,
+          "mean": -0.001529631788173752,
+          "ratio_to_full": 1.0,
+          "variance": 0.6562476602265926
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-27",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.001529631788173752,
+      "true_variance": 0.6562476602265926,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0010197545254491754,
+          "fixed_budget_mse": 0.21762921537234672,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948779896227921,
+          "variance": 2.6115381056766545
+        },
+        "m2": {
+          "bias": -0.0010197545254491754,
+          "fixed_budget_mse": 0.2176292153723472,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948779896227943,
+          "variance": 1.3057690528383301
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.25188125371287673,
+          "mean": 0.001019754525449175,
+          "ratio_to_full": 1.1514589844419245,
+          "variance": 1.007525014851507
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22099338907906668,
+          "mean": 0.001019754525449175,
+          "ratio_to_full": 1.0102570937947988,
+          "variance": 0.8839735563162667
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21874965336690264,
+          "mean": 0.001019754525449175,
+          "ratio_to_full": 1.0,
+          "variance": 0.6562489601007079
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-28",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.001019754525449175,
+      "true_variance": 0.6562489601007079,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -7.37257477290143e-18,
+          "fixed_budget_mse": 0.21762817547305469,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9932089211561359,
+          "variance": 2.6115381056766562
+        },
+        "m2": {
+          "bias": -7.37257477290143e-18,
+          "fixed_budget_mse": 0.21762817547305482,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9932089211561366,
+          "variance": 1.305769052838329
+        },
+        "m3_structured": {
+          "bias": -2.0328790734103208e-20,
+          "fixed_budget_mse": 0.2518815136876995,
+          "mean": 6.918565113173125e-18,
+          "ratio_to_full": 1.149533905364699,
+          "variance": 1.007526054750798
+        },
+        "m3_uniform": {
+          "bias": -2.0328790734103208e-20,
+          "fixed_budget_mse": 0.22099364905388982,
+          "mean": 6.918565113173125e-18,
+          "ratio_to_full": 1.0085682301111227,
+          "variance": 0.8839745962155593
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2191162109375,
+          "mean": 6.938893903907228e-18,
+          "ratio_to_full": 1.0,
+          "variance": 0.6573486328125
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-29",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 6.938893903907228e-18,
+      "true_variance": 0.6573486328125,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": 0.001529631788173755,
+          "fixed_budget_mse": 0.21763051524646176,
+          "mean": 3.0357660829594124e-18,
+          "ratio_to_full": 0.9948859025477538,
+          "variance": 2.6115381056766527
+        },
+        "m2": {
+          "bias": 0.001529631788173755,
+          "fixed_budget_mse": 0.2176305152464622,
+          "mean": 3.0357660829594124e-18,
+          "ratio_to_full": 0.9948859025477558,
+          "variance": 1.305769052838329
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.25188092874434764,
+          "mean": -0.001529631788173752,
+          "ratio_to_full": 1.15145977963888,
+          "variance": 1.0075237149773906
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22099306411053787,
+          "mean": -0.001529631788173752,
+          "ratio_to_full": 1.0102576093036228,
+          "variance": 0.8839722564421515
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21874922007553088,
+          "mean": -0.001529631788173752,
+          "ratio_to_full": 1.0,
+          "variance": 0.6562476602265926
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-30",
+      "pointwise_m3_unbiased": true,
+      "true_mean": -0.001529631788173752,
+      "true_variance": 0.6562476602265926,
+      "zero_full_mse": false
+    },
+    {
+      "arms": {
+        "m1": {
+          "bias": -0.0015296317881737594,
+          "fixed_budget_mse": 0.21763051524646176,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948859025477538,
+          "variance": 2.6115381056766527
+        },
+        "m2": {
+          "bias": -0.0015296317881737594,
+          "fixed_budget_mse": 0.2176305152464623,
+          "mean": -4.336808689942018e-19,
+          "ratio_to_full": 0.9948859025477562,
+          "variance": 1.3057690528383294
+        },
+        "m3_structured": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.2518809287443477,
+          "mean": 0.001529631788173759,
+          "ratio_to_full": 1.1514597796388801,
+          "variance": 1.0075237149773908
+        },
+        "m3_uniform": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.22099306411053787,
+          "mean": 0.001529631788173759,
+          "ratio_to_full": 1.0102576093036228,
+          "variance": 0.8839722564421515
+        },
+        "m4_full": {
+          "bias": 0.0,
+          "fixed_budget_mse": 0.21874922007553088,
+          "mean": 0.001529631788173759,
+          "ratio_to_full": 1.0,
+          "variance": 0.6562476602265926
+        }
+      },
+      "family": "single_stratum_parity",
+      "law_id": "03-31",
+      "pointwise_m3_unbiased": true,
+      "true_mean": 0.001529631788173759,
+      "true_variance": 0.6562476602265926,
+      "zero_full_mse": false
+    }
+  ],
+  "seed": 20261016,
+  "source_script_sha256": "05af5d0761ce5b3b0254e85bdbaf181a75b8d4ea6026a89c91eccc46372ec3e5",
+  "status": "exploratory-development-only-not-preregistered",
+  "structured_10pct_below_full_count": 0,
+  "structured_beats_full_count": 0,
+  "structured_beats_uniform_count": 0,
+  "structured_mse_ratio_full_mean": 1.334185801123507,
+  "structured_mse_ratio_full_median": 1.158835284388135,
+  "structured_uniform_ratio_median": 1.1404987951549155,
+  "uniform_mse_ratio_full_median": 1.0133113391532826
+}
