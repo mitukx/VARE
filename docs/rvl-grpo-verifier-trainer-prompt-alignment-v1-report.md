@@ -25,3 +25,10 @@ This is stronger dataflow evidence than checking metadata alone, but it remains 
 ```bash
 PYTHONPATH=src .venv/bin/python -m pytest -q tests/test_rvl_grpo_verifier_trainer_prompt_alignment.py
 ```
+
+The full GitHub Actions run for `abdf2774448c778c1f79fff11f870cb55cda35df`
+[passed](https://github.com/mitukx/VARE/actions/runs/37877362999) on 2026-10-09,
+including the full pytest suite, the exact GRPO witness and audit-order checks,
+the frozen partial-audit study audit, and the demo. This confirms the repository
+checks at that revision; it is not an external reproduction or evidence of a
+real-model effect.
