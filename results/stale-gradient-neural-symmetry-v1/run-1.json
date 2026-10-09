@@ -1,0 +1,44 @@
+{
+  "finite_step_checks": {
+    "0.001": {
+      "fresh_gradient_probability_change": 0.0008124992594001901,
+      "stale_gradient_probability_change": -0.0007499994120687137
+    },
+    "0.01": {
+      "fresh_gradient_probability_change": 0.008124259481759433,
+      "stale_gradient_probability_change": -0.007499412125125504
+    }
+  },
+  "fresh_ascent_directional_derivative": 0.8125,
+  "gradient_cosine": -0.9230769230769234,
+  "gradient_original": [
+    0.125,
+    0.625,
+    0.125,
+    -0.625
+  ],
+  "gradient_swapped": [
+    0.125,
+    -0.625,
+    0.125,
+    0.625
+  ],
+  "network": "one-input, two-hidden-unit sigmoid MLP with Bernoulli policy",
+  "parameters": [
+    10.0,
+    0.0,
+    -10.0,
+    0.0
+  ],
+  "policy_kl_nats": 0.0,
+  "policy_probability_original": 0.5,
+  "policy_probability_swapped": 0.5,
+  "scope": "parameter-symmetry diagnostic only; not evidence of a trainer path or model capability effect",
+  "stale_ascent_directional_derivative": -0.75,
+  "swapped_parameters": [
+    -10.0,
+    0.0,
+    10.0,
+    0.0
+  ]
+}
