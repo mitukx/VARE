@@ -1,0 +1,22 @@
+{
+  "checked_cases": 15,
+  "checks": {
+    "candidate_source_sha256_hash": true,
+    "counterexample_base_gradient": true,
+    "counterexample_candidate_delta": true,
+    "counterexample_candidate_gradient": true,
+    "counterexample_reference_gradient": true,
+    "fallback_preserves_scale": true,
+    "negative_control_base_gradient": true,
+    "negative_control_candidate_delta": true,
+    "negative_control_candidate_gradient": true,
+    "negative_control_reference_gradient": true,
+    "short_final_window_base_gradient": true,
+    "short_final_window_candidate_delta": true,
+    "short_final_window_candidate_gradient": true,
+    "short_final_window_reference_gradient": true,
+    "source_sha256_hash": true
+  },
+  "method": "independent pure-Python recomputation from the frozen token-gradient fixture; does not import the reproducer or PyTorch",
+  "passed": true
+}

@@ -1,0 +1,86 @@
+{
+  "acceptance_passed": true,
+  "candidate_source_sha256": "d4159500704b4966082d5caa70ee3622f4d71097f639f4c8944f1f8ebe38241f",
+  "claim_boundary": "This executes the pinned production compute_loss method and autograd but not Trainer.get_batch_samples, Accelerator/DDP, rollout queues, a pretrained model, or downstream task evaluation.",
+  "outcomes": {
+    "counterexample": {
+      "base_accumulation": {
+        "gradient": 0.5,
+        "loss_sum": 0.5,
+        "parameter_delta": -0.05000000074505806
+      },
+      "base_delta_abs_error": 0.0400000000372529,
+      "base_gradient_abs_error": 0.3999999910593033,
+      "candidate_accumulation": {
+        "gradient": 0.10000000149011612,
+        "loss_sum": 0.10000000149011612,
+        "parameter_delta": -0.010000000707805157
+      },
+      "candidate_delta_abs_error": 0.0,
+      "candidate_gradient_abs_error": 7.450580596923828e-09,
+      "full_batch_reference": {
+        "gradient": 0.10000000894069672,
+        "loss_sum": 0.10000000149011612,
+        "parameter_delta": -0.010000000707805157
+      }
+    },
+    "direct_call_fallback": {
+      "base": {
+        "gradient": 1.0,
+        "loss_sum": 1.0,
+        "parameter_delta": -0.10000000149011612
+      },
+      "candidate": {
+        "gradient": 1.0,
+        "loss_sum": 1.0,
+        "parameter_delta": -0.10000000149011612
+      },
+      "gradient_abs_difference": 0.0
+    },
+    "negative_control": {
+      "base_accumulation": {
+        "gradient": 1.0,
+        "loss_sum": 1.0,
+        "parameter_delta": -0.10000000149011612
+      },
+      "base_delta_abs_error": 0.0,
+      "base_gradient_abs_error": 0.0,
+      "candidate_accumulation": {
+        "gradient": 1.0,
+        "loss_sum": 0.9999999776482582,
+        "parameter_delta": -0.10000000149011612
+      },
+      "candidate_delta_abs_error": 0.0,
+      "candidate_gradient_abs_error": 0.0,
+      "full_batch_reference": {
+        "gradient": 1.0,
+        "loss_sum": 1.0,
+        "parameter_delta": -0.10000000149011612
+      }
+    },
+    "short_final_window": {
+      "base_accumulation": {
+        "gradient": 1.0,
+        "loss_sum": 1.0,
+        "parameter_delta": -0.10000000149011612
+      },
+      "base_delta_abs_error": 0.0,
+      "base_gradient_abs_error": 0.0,
+      "candidate_accumulation": {
+        "gradient": 1.0,
+        "loss_sum": 1.0,
+        "parameter_delta": -0.10000000149011612
+      },
+      "candidate_delta_abs_error": 0.0,
+      "candidate_gradient_abs_error": 0.0,
+      "full_batch_reference": {
+        "gradient": 1.0,
+        "loss_sum": 1.0,
+        "parameter_delta": -0.10000000149011612
+      }
+    }
+  },
+  "source_commit": "f4526e10e25c8618855932528c232e2284c7801c",
+  "source_sha256": "2657481258dcc04112761e9ff61a35cb93b2b72c3e197e4524f4602fd6a2dbfe",
+  "study_id": "trl_async_window_normalization_current_compute_loss_v1"
+}

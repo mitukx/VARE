@@ -1,0 +1,27 @@
+{
+  "study_id": "trl_async_window_normalization_current_compute_loss_v1",
+  "status": "frozen_before_method_execution",
+  "relationship_to_prior_work": "Outcome-informed follow-up to the source/formula audit recorded in docs/trl-async-window-normalization-current-main-v1-report.md. The current-main source defect and exact fixture were already observed; this protocol tests the production compute_loss method with autograd and a fixed candidate port, without selecting a new fixture.",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "commit": "f4526e10e25c8618855932528c232e2284c7801c",
+    "path": "trl/experimental/async_grpo/async_grpo_trainer.py",
+    "sha256": "2657481258dcc04112761e9ff61a35cb93b2b72c3e197e4524f4602fd6a2dbfe"
+  },
+  "candidate": {
+    "basis": "Port of the accumulation-window denominator logic in open TRL PR #7249 onto current AsyncGRPOTrainer.compute_loss.",
+    "rule": "If num_items_in_batch is provided, divide each microbatch's local loss sum by num_items_in_batch/world_size. Otherwise set num_items_in_batch=global_n_tokens*current_gradient_accumulation_steps to preserve a direct single-batch call's prior scale. Do not divide again by current_gradient_accumulation_steps after the window denominator."
+  },
+  "estimator": "Execute the exact AST-extracted current-main AsyncGRPOTrainer.compute_loss method with a token-local torch model. For a fixed optimizer window, sum per-microbatch autograd gradients and compare to a single collated full-batch reference.",
+  "fixture": {
+    "accumulation_steps": 2,
+    "learning_rate": 0.1,
+    "counterexample": [{"active_tokens": 1, "per_token_gradient": 1.0}, {"active_tokens": 9, "per_token_gradient": 0.0}],
+    "negative_control": [{"active_tokens": 1, "per_token_gradient": 1.0}, {"active_tokens": 9, "per_token_gradient": 1.0}],
+    "short_final_window": [{"active_tokens": 1, "per_token_gradient": 1.0}]
+  },
+  "primary_metrics": ["autograd gradient absolute error versus full-batch reference", "one-step SGD parameter delta absolute error"],
+  "acceptance_rule": "The current method must reproduce the prior formula counterexample and the candidate method must match the full-batch reference within 1e-7 for counterexample, negative control, and a one-microbatch short final window. Candidate direct-call fallback must match the current method for a one-batch window.",
+  "claim_boundary": "This executes the pinned production compute_loss method and autograd but not Trainer.get_batch_samples, Accelerator/DDP, rollout queues, a pretrained model, or downstream task evaluation.",
+  "resources": {"gpu": 0, "paid_api": 0, "external_spend": 0, "model_training": false}
+}

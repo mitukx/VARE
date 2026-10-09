@@ -1,0 +1,48 @@
+{
+  "study_id": "trl_async_window_normalization_current_main_v1",
+  "status": "frozen_before_calculation",
+  "question": "Does current TRL main normalize each AsyncGRPO microbatch independently, producing a different accumulated policy gradient from the pooled-token objective when microbatch token counts and mean token gradients differ?",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "commit": "f4526e10e25c8618855932528c232e2284c7801c",
+    "path": "trl/experimental/async_grpo/async_grpo_trainer.py",
+    "sha256": "2657481258dcc04112761e9ff61a35cb93b2b72c3e197e4524f4602fd6a2dbfe"
+  },
+  "trainer_scaling_source": {
+    "repository": "https://github.com/huggingface/trl",
+    "commit": "f4526e10e25c8618855932528c232e2284c7801c",
+    "path": "trl/trainer/base_trainer.py",
+    "sha256": "bb22c17aeb1711001a02905d0f8b753c4e757efb3c61446000845d5aee0c9291"
+  },
+  "related_upstream_change": {
+    "pull_request": "https://github.com/huggingface/trl/pull/7249",
+    "base_commit": "a98fa6a4428f9aae58dfb26d729d7437f662f27a",
+    "head_commit": "5234eb7c70f4ca7eb92fe8e01611a33eaff17f40",
+    "status_at_freeze": "open, not merged; branch predates current main"
+  },
+  "estimand": "For active completion-token losses l_it at optimizer step t, pooled-token gradient is sum_i sum_t grad(l_it) / sum_i n_i. Current implementation is compared with the sum over microbatches of [sum_i grad(l_it) / n_i] / K, where K is the actual accumulation-window length.",
+  "assumptions": [
+    "One data-parallel rank, so no distributed reduction ambiguity.",
+    "AsyncGRPOTrainer declares loss_is_scaled_for_ga = True and explicitly divides each microbatch loss by current_gradient_accumulation_steps. Therefore the Trainer must not add another accumulation divisor.",
+    "The scalar fixture supplies summed per-token gradients directly; it tests normalization, not the model's clipped-surrogate derivative or an actual optimizer runtime."
+  ],
+  "fixed_fixture": {
+    "microbatches": [
+      {"active_tokens": 1, "summed_token_gradient": 1.0},
+      {"active_tokens": 9, "summed_token_gradient": 0.0}
+    ],
+    "accumulation_steps": 2,
+    "learning_rate": 0.1
+  },
+  "negative_control": {
+    "microbatches": [
+      {"active_tokens": 1, "summed_token_gradient": 1.0},
+      {"active_tokens": 9, "summed_token_gradient": 9.0}
+    ]
+  },
+  "primary_metric": "absolute scalar gradient error against pooled-token gradient",
+  "secondary_metrics": ["gradient ratio to pooled-token target", "one-step SGD parameter delta error"],
+  "acceptance_rule": "The source-level defect is reproduced if the current-main expression differs from the pooled-token estimand on the fixed fixture and agrees on the negative control. The conclusion must be labeled source/formula-level unless the current pinned Trainer is executed end-to-end.",
+  "stop_rule": "Stop after the frozen counterexample and negative control. Do not run a model, download data, or tune the fixture.",
+  "resource_budget": {"gpu": 0, "paid_api": 0, "external_spend": 0, "model_training": false}
+}
