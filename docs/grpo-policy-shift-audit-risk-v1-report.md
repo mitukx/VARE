@@ -118,7 +118,12 @@ No GPU, paid API, external compute, or non-standard Python dependency was used. 
 
 ## Separate upstream engineering opportunity
 
-The closest concrete VARE evidence is the compatibility-preserving optimizer configuration change in [RVL draft PR #89](https://github.com/mitukx/Recursive-Verification-Lag/pull/89): expose GRPO `weight_decay` while preserving the effective default. The local v2 report and all seven upstream CI checks are already retained. However, the PR currently has no maintainer comments or reviews, so it is **not** a maintainer-requested gap and this report does not present it as one. The targeted check of current VARE/RVL/TRL records surfaced no open maintainer request that this new result directly resolves; the existing TRL requests inspected are already covered by active proposals or prior VARE reproductions. No external PR or message was sent.
+A targeted review of open TRL requests found two maintainer-raised gaps, but neither has a distinct contribution VARE can currently resolve within its no-GPU constraint:
+
+- In [TRL PR #6699](https://github.com/huggingface/trl/pull/6699), a maintainer asked to keep only the Gemma 3 `token_type_ids` forwarding assertion and drop redundant/private-method and already-covered Qwen tests. The active PR already reflects that narrowed request and reports actual-image CUDA regression evidence. Repeating its assertion would duplicate the proposed upstream contribution; VARE has no GPU evidence that adds independent coverage.
+- In [TRL PR #7131](https://github.com/huggingface/trl/pull/7131), a maintainer asked for the original unedited watchdog output, actual collective type, configured timeout, and CUDA allocator retry counts to establish whether the FSDP2 sync was slow or stuck. VARE's CPU/Gloo trainer audits do not answer those GPU-specific questions. A CPU queue/collective demonstration would be adjacent evidence and should not be offered as resolving this review request.
+
+The existing compatibility-preserving optimizer configuration change in [RVL draft PR #89](https://github.com/mitukx/Recursive-Verification-Lag/pull/89) exposes GRPO `weight_decay` while preserving the effective default, and its seven upstream CI checks pass. It has no maintainer comments or reviews, so it also does not satisfy the requested condition. **No qualifying upstream patch is selected.** Do not duplicate PR #6699 or present CPU evidence as a substitute for the GPU measurements requested on #7131. No external PR or message was sent.
 
 ## Decision
 
