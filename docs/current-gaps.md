@@ -196,6 +196,8 @@ The actual RVL evaluator → report → gate → promotion/discard path now has 
 
 The minimum missing input for real-model learning is a fresh, unused task/base pairing with an independent executable ground-truth grader and disjoint train/development/confirmation compositions. That pairing must pass no-update feasibility and show that the frozen multi-seed matched arms fit a measured local CPU/MPS budget. This host has 32 GiB RAM and cached small models, but existing attempted task/model cohorts have failed gates or are retired; no current evidence establishes independently graded task-success improvement after an update. Paid compute is not assumed.
 
+**Resource/candidate check (2026-10-09):** local system Python 3.9 has PyTorch 2.8.0 with a working MPS device; CUDA is unavailable. The project Python 3.12 environment has no PyTorch, and the system environment has no TRL/PEFT, so a pinned local training stack and measured multi-seed runtime are still missing. Cached weights include Qwen 0.5B, Gemma 2B, and quantized Mistral 7B. BFCL v4 Memory is a possible stateful, executable evaluation source (465 cases), but it is evaluation data rather than a train split; its key-value evaluator currently has an open validity issue [#1272](https://github.com/ShishirPatil/gorilla/issues/1272) with an unmerged fix [#1327](https://github.com/ShishirPatil/gorilla/pull/1327). **Do not freeze BFCL Memory as the study pairing until the evaluator contract is independently resolved and a disjoint training source is specified.** This is a candidate hold, not a model or task result.
+
 
 ## Current BoolQ follow-up (v17)
 
