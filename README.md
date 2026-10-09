@@ -1,5 +1,7 @@
 # VARE
 
+- [TRL AsyncGRPO forked-rollout staleness v1](docs/trl-async-forked-rollout-staleness-v1-report.md): CPU comparison changes one rollout's admitted fork rows from 1/2 to 2/2; focused queue tests are 1 passed/2 failed on pinned TRL main and 3 passed on a local candidate. Admission only; scorer-metadata regression and optimizer-boundary behavior remain unverified. No capability claim.
+- [TRL AsyncGRPO staleness atomicity v1](docs/trl-async-group-staleness-atomicity-v1-report.md): independent CPU reproduction against current TRL main; after a policy-version transition, 1/3 same-group samples were admitted and 2/3 dropped. Queue-level correctness only; no optimizer or capability claim.
 - [TRL AsyncGRPO accumulation normalization PR #7249 audit](docs/trl-async-accumulation-normalization-pr7249-audit-v1-report.md): pinned CPU reproduction of an open upstream fix under its token-mean contract; no model-level capability claim.
 - [TRL GRPO KL-clip precision patch v5](docs/trl-grpo-kl-clip-precision-patch-v5-report.md): frozen multi-token CPU source-method pass; narrowly scoped to an opt-in KL path, with no optimizer or capability claim.
 

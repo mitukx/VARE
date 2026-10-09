@@ -1,0 +1,26 @@
+{
+  "protocol": "trl_async_group_staleness_atomicity_v2",
+  "protocol_commit": "54cb543",
+  "source_repository": "https://github.com/huggingface/trl",
+  "source_revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+  "source_revision_date": "2026-10-08",
+  "source_tree": "/tmp/trl-vare-async-staleness-main",
+  "environment": {
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3",
+    "accelerate": "1.12.0",
+    "pytest": "8.4.2",
+    "device": "CPU",
+    "host_platform": "macOS"
+  },
+  "script": "scripts/reproduce_trl_async_group_staleness_v2.py",
+  "script_sha256": "62b0aceb484dd9b5e19acda05c7e9a5dc6c16d07524c92f6a34339d30967a54e",
+  "source_files_sha256": {
+    "trl/experimental/async_grpo/async_grpo_trainer.py": "2657481258dcc04112761e9ff61a35cb93b2b72c3e197e4524f4602fd6a2dbfe",
+    "trl/experimental/async_grpo/async_rollout_worker.py": "5eab22259711df4e3ec1a62047f87a2cffc5b204772b25cd78647336e52b9670"
+  },
+  "result": "counterexample_reproduced",
+  "exit_code": 0,
+  "external_spend_usd": 0
+}

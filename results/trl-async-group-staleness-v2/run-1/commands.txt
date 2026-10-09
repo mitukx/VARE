@@ -1,0 +1,9 @@
+# Protocol was frozen in VARE commit 54cb543 before this execution.
+# Pinned TRL main checkout: /tmp/trl-vare-async-staleness-main
+# TRL source revision: ed8cc2f4337fb9b7b1429db31009ad3577cd5b98
+# Exact source and script hashes are in the protocol and metadata.json.
+
+PYTHONPATH=/tmp/trl-vare-pydeps:/tmp/trl-vare-async-staleness-main \
+  python scripts/reproduce_trl_async_group_staleness_v2.py
+
+# Captured stdout.json, stderr.log, and exit_code.txt in this directory.
