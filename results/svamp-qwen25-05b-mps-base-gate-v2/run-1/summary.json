@@ -1,0 +1,53 @@
+{
+  "base_exact": 6,
+  "base_exact_rate": 0.09375,
+  "base_exact_wilson_95": [
+    0.04367825258519838,
+    0.18982879599645597
+  ],
+  "base_greedy_n": 64,
+  "base_parse_rate": 0.921875,
+  "base_parse_wilson_95": [
+    0.8298046264583709,
+    0.9661688230914496
+  ],
+  "base_parseable": 59,
+  "dataset_revision": "5e0bf1e5e7c0e9c4bc39180d224f41f3f801b7ef",
+  "excluded_label_rows": [
+    {
+      "answer": "1.0",
+      "equation": "5.0",
+      "id": "chal-680"
+    }
+  ],
+  "gate": {
+    "greedy_exact_min": 13,
+    "greedy_parseable_min": 61,
+    "mixed_groups_min": 4,
+    "peak_rss_bytes_max": 12884901888,
+    "wall_seconds_max": 1800
+  },
+  "gate_passed": false,
+  "limitations": [
+    "base-only gate; no update or capability claim",
+    "SVAMP is elementary arithmetic reasoning",
+    "official test data was not opened"
+  ],
+  "mixed_reward_group_rate": 0.0625,
+  "mixed_reward_groups": 1,
+  "model_load_seconds": 1.8096215,
+  "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "official_test_accessed": false,
+  "peak_rss_bytes": 2354708480,
+  "peak_rss_gib": 2.1929931640625,
+  "predictions_sha256": "4731456e773936809acb8baee15061b14cab45c8f7db9a67ee445bf92ecdd24e",
+  "protocol": "svamp-qwen25-05b-mps-base-gate-v2",
+  "reward_variance_groups": 16,
+  "sampled_parseable": 57,
+  "sampled_response_n": 64,
+  "total_wall_seconds": 31.810255124999998,
+  "train_file_sha256": "bb3b4cd2957f07643bbf9f8f8f5faba3bfb47fcb1d9034655b03060a76675e2b",
+  "training_only_rows_after_v2_gate": 499,
+  "v1_and_v2_dev_ids_disjoint": true,
+  "v2_development_rows": 100
+}
