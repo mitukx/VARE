@@ -1,5 +1,11 @@
 # Next study decision — 2026-10-09
 
+## Update — GSM8K adapter-to-margin forensic replay
+
+The precommitted v4 CPU audit recomputed model hidden states and independently applied the retained adapters. It reproduced all stored margins within `5e-5` and metrics/bootstrap endpoints within `2.72e-7`; the largest margin discrepancy was `4.20e-5`, close to tolerance, under a newer PyTorch/NumPy runtime. This validates the forward → adapter → margin → metric chain for the already consumed cohort. It does not reproduce optimization, count as outside human review, provide fresh confirmation, or establish task success/capability gain. The exact result and limits are recorded in the [forensic report](cpu-lm-gsm8k-dpo-margin-reconstruction-v4-report.md).
+
+**Decision: retain the GSM8K result as narrow forced-choice preference evidence and close further work on these rows.** Next prioritize an independent clean-clone review/reproduction of retained evidence or a materially distinct task/update pair with a viable frozen base and untouched exact task-success evaluation. If neither can be established cheaply, do not train; stop low-information variants. The main model-success gap remains open.
+
 ## Current decision — stop the v6 rollout-batcher candidate
 
 The frozen v6 source-level comparison passed all eight fixture predicates on the candidate and failed them on the pinned baseline. Independent review found that the purported exact drop accounting checks raw metric-list sums but production `_reduce_metric` averages keys without `total`; it therefore does not establish exact logged accounting. The candidate also drops 5/9 rows in the fixed boundary fixture, although reordering groups could retain 8/9 under the written constraints. FIFO versus reordering is unspecified, and the token packer's bounded DFS was not stress-tested. See the [v6 report](trl-async-rollout-group-batching-contract-v6-report.md) and [frozen protocol/output](../protocols/trl_async_rollout_group_batching_contract_v6.lock.json).

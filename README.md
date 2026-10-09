@@ -48,6 +48,7 @@ The latest HH human-preference comparison tested length-normalized DPO against s
 - [HH-RLHF v3 replay guide](docs/hh-reward-model-v3-reproduction.md): pinned assets, offline audit command, expected result, and reproduction limits.
 - [BoolQ v17 technical walkthrough](docs/boolq-v17-walkthrough.md): model update, objectives, selection rule, audits, and limits in one path.
 - [GSM8K model study](docs/cpu-lm-gsm8k-dpo-confirmation-v1-report.md): protocol, per-seed outcomes, audit, and limits.
+- [GSM8K adapter-to-margin forensic reconstruction](docs/cpu-lm-gsm8k-dpo-margin-reconstruction-v4-report.md): independent CPU replay of the saved adapters and recorded margins/metrics, with cross-runtime and claim limitations.
 - [Experiment index](docs/experiments.md): full study sequence and retained reports.
 - [Current evidence gaps](docs/current-gaps.md): what the results support and what remains open.
 - [Next-study decision](docs/next-study-decision-2026-10-09.md): current evidence-based stop decision, retired model/task pairings, and the gates required before another learner study.
