@@ -1,0 +1,73 @@
+{
+  "protocol_id": "trl_async_grpo_truncated_support_v1",
+  "status": "frozen_before_execution",
+  "question": "At zero parameter drift, what loss coefficient and policy gradient does the pinned production AsyncGRPOTrainer.compute_loss produce when old_log_probs are the processed behavior q but current model log_probs are the full-vocabulary policy p?",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+    "files": {
+      "trl/experimental/async_grpo/async_grpo_trainer.py": "2657481258dcc04112761e9ff61a35cb93b2b72c3e197e4524f4602fd6a2dbfe",
+      "trl/experimental/async_grpo/async_rollout_worker.py": "5eab22259711df4e3ec1a62047f87a2cffc5b204772b25cd78647336e52b9670",
+      "trl/experimental/async_grpo/async_grpo_config.py": "a0e45f48d05f68a86421ddb019207c62faeefd782b37becd231b72f1cb5e8cab",
+      "trl/scripts/vllm_serve.py": "2d71002e8c16360736ad6dcf2bcb39e9401463308b93bf6e143539737a9100b1"
+    }
+  },
+  "estimands": {
+    "raw_policy": "p_theta(a)=softmax([log(1/2), log(3/10), log(1/5)+theta]) at theta=0",
+    "processed_behavior": "q(a)=p(a)/Z on the top-p retained support and zero outside, with top-p=3/4 and smallest descending prefix rule",
+    "trainer_ratio": "exp(log p_theta(a)-log q(a)) on sampled actions, as formed by the production compute_loss method",
+    "frozen_advantage": "A=(0,0,1); this is a controlled one-token PPO surrogate input, not a claim about GRPO group-normalized reward construction",
+    "target_gradient": "raw-policy score-function gradient sum_a p(a) A(a) d(log p_theta(a))/dtheta at theta=0"
+  },
+  "frozen_cases": [
+    {
+      "name": "identity_control",
+      "support": [0, 1, 2],
+      "behavior_probabilities": ["1/2", "3/10", "1/5"]
+    },
+    {
+      "name": "top_p_truncation",
+      "support": [0, 1],
+      "retained_mass": "4/5",
+      "behavior_probabilities": ["5/8", "3/8", "0"]
+    }
+  ],
+  "method": "Import the source-locked AsyncGRPOTrainer class and directly execute its unmodified compute_loss method on CPU with a differentiable three-action causal-LM fixture implementing the model's log_probs/entropy output contract. Enumerate every action with nonzero q mass; provide old_log_probs=log q, current model log_probs=log p at theta=0, completion mask on exactly one generated token, and frozen advantage A. No vLLM process, upstream source extraction, edited TRL code, or sampled Monte Carlo estimate is used.",
+  "primary_metrics": [
+    "per-action ratio exp(log p-log q) returned through the production loss gradient path",
+    "q-weighted expected trainer policy gradient from exhaustive support enumeration",
+    "raw-policy score-function target gradient",
+    "ratio-induced per-action gradient and loss coefficient",
+    "production AsyncGRPOTrainer loss outputs and emitted ratio/kl/clipping metrics"
+  ],
+  "predictions": {
+    "identity_control": "q=p, every ratio=1, production gradient equals the raw-policy score-function gradient 4/25",
+    "top_p_truncation": "retained mass Z=4/5; production ratio is Z on each supported action; because A is zero on the retained actions, q-expected production gradient is zero while the raw-policy target gradient is 4/25"
+  },
+  "acceptance": {
+    "production_method_executes_on_cpu_without_vllm": true,
+    "source_revision_and_all_four_file_hashes_match": true,
+    "all_supported_actions_are_exhaustively_evaluated": true,
+    "primary_and_separate_integer_checker_match_all_locked_metrics": true,
+    "identity_and_truncation_predictions_match_with_absolute_tolerance_1e-6": true
+  },
+  "failure_criteria": [
+    "the pinned production method cannot be imported or executed without modifying source",
+    "the identity control differs from the frozen predictions",
+    "the truncated support case differs from its frozen predictions",
+    "any source revision or locked file hash differs",
+    "the independent checker disagrees on any primary metric"
+  ],
+  "interpretation_limits": [
+    "This invokes the actual pinned AsyncGRPOTrainer.compute_loss method but uses a tiny controlled model-output fixture and injected q log-probabilities; it does not execute vLLM, the async worker, or a full Trainer initialization/optimizer loop.",
+    "The frozen A is a method-level PPO surrogate input, not a reconstruction of group-normalized GRPO advantage sampling.",
+    "A p/q ratio on retained support is pointwise correct there; support truncation prevents recovering arbitrary raw-policy expectations without additional assumptions.",
+    "No upstream defect, affected-user prevalence, training quality, model capability, external reproduction, or novelty is established by this protocol."
+  ],
+  "resources": {
+    "cpu_only": true,
+    "gpu_hours": 0,
+    "paid_api_calls": 0,
+    "external_compute_usd": 0
+  }
+}
