@@ -1,0 +1,67 @@
+{
+  "protocol_id": "svamp-qwen25-05b-mps-base-gate-v2",
+  "status": "frozen-after-v1-failure-before-v2-model-output",
+  "hypothesis": "The v1 non-pass was driven mainly by the model ignoring a strict custom answer tag. On fresh task IDs, an answer-only prompt with a bounded parser for common final-answer formats will yield a usable exact-reward base policy.",
+  "model": {
+    "repo": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "device": "Apple MPS",
+    "dtype": "float16"
+  },
+  "dataset": {
+    "repo": "ChilleD/SVAMP",
+    "revision": "5e0bf1e5e7c0e9c4bc39180d224f41f3f801b7ef",
+    "train_file": "train.json",
+    "train_file_sha256": "bb3b4cd2957f07643bbf9f8f8f5faba3bfb47fcb1d9034655b03060a76675e2b",
+    "confirmation_split": "official test.json, 300 rows; do not download or open in this gate"
+  },
+  "cohorts": {
+    "source_validity": "Use the same independently checked train rows as v1, excluding the equation/answer mismatch chal-680.",
+    "exclude_v1_dev": "Do not reuse any row selected by SHA256('VARE-SVAMP-v1/dev:' + ID).",
+    "v2_dev": "From the remaining 599 rows, sort by SHA256('VARE-SVAMP-v2/dev:' + ID); first 100 are dev and remainder are held as training-only.",
+    "base_greedy": "Sort v2 dev by SHA256('VARE-SVAMP-v2/base:' + ID); score first 64 once greedily.",
+    "reward_variance": "From those 64, sort by SHA256('VARE-SVAMP-v2/variance:' + ID); sample first 16 four times each with temperature=0.8, top_p=0.95 and seed 20261010 + 100 * group_rank + sample_rank."
+  },
+  "prompt": "Solve this math word problem. Give only the numeric answer, with no words, units, or explanation.\n\n{Body}\nQuestion: {Question}\nAnswer:",
+  "parser": {
+    "accepted_forms": [
+      "A single integer/decimal numeric response (optional one final period)",
+      "A single final line 'Answer: NUMBER' or 'Final answer: NUMBER'",
+      "Exactly one <answer>NUMBER</answer> pair",
+      "Exactly one \\boxed{NUMBER} expression"
+    ],
+    "numeric_grammar": "[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?",
+    "ambiguity_rule": "Do not extract a number from arbitrary prose, intermediate calculations, or a response with multiple candidate final forms. Unrecognized responses are unparseable and count as incorrect only for the protocol's exact-success metric; semantic accuracy is not inferred for them.",
+    "scoring": "Parse target and prediction as Decimal and compare exactly to the pinned train-row Answer field."
+  },
+  "metrics": [
+    "Greedy exact numeric accuracy over 64 fresh dev tasks; unparseable is incorrect in this composite measure",
+    "Parser validity over 64 fresh dev tasks",
+    "Share of 16 sampled four-response groups with both binary rewards",
+    "Wall-clock seconds and peak RSS"
+  ],
+  "go_gate": {
+    "minimum_greedy_exact": "13/64",
+    "minimum_greedy_parseable": "61/64",
+    "minimum_mixed_reward_groups": "4/16",
+    "maximum_wall_seconds": 1800,
+    "maximum_peak_rss_bytes": 12884901888,
+    "pass_action": "Freeze a distinct update-path smoke with a training-only subset; this does not authorize full multi-seed training or official-test access.",
+    "fail_action": "Stop the Qwen2.5-0.5B/SVAMP pairing. Do not make another prompt/parser variant."
+  },
+  "resource_envelope": {
+    "max_new_tokens": 32,
+    "generation_count": 128,
+    "max_generated_tokens": 4096,
+    "measured_short_context_decode_rate_tokens_per_second": 10.07,
+    "estimated_token_generation_seconds": 406,
+    "paid_compute": 0,
+    "external_api": false
+  },
+  "runner": "reproducers/run_svamp_qwen25_05b_mps_base_gate_v2.py",
+  "limits": [
+    "This is one predeclared response-format follow-up on fresh rows, not evidence that v1 unparseable responses were correct.",
+    "SVAMP tests elementary arithmetic word problems, not broad reasoning capability.",
+    "Official test rows remain unopened until a later frozen confirmation protocol."
+  ]
+}
