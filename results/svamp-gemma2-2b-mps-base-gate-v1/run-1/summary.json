@@ -1,0 +1,54 @@
+{
+  "base_exact": 30,
+  "base_exact_rate": 0.46875,
+  "base_exact_wilson_95": [
+    0.35175987425176036,
+    0.5892791294852899
+  ],
+  "base_greedy_n": 64,
+  "base_parse_rate": 0.96875,
+  "base_parse_wilson_95": [
+    0.8930270822904169,
+    0.9913878616538281
+  ],
+  "base_parseable": 62,
+  "dataset_revision": "5e0bf1e5e7c0e9c4bc39180d224f41f3f801b7ef",
+  "development_rows": 100,
+  "excluded_label_rows": [
+    {
+      "answer": "1.0",
+      "equation": "5.0",
+      "id": "chal-680"
+    }
+  ],
+  "gate": {
+    "greedy_exact_min": 13,
+    "greedy_parseable_min": 61,
+    "mixed_groups_min": 4,
+    "peak_rss_bytes_max": 12884901888,
+    "wall_seconds_max": 1800
+  },
+  "gate_passed": false,
+  "limitations": [
+    "base-only feasibility gate",
+    "SVAMP is elementary arithmetic",
+    "official test data was not opened"
+  ],
+  "mixed_reward_group_rate": 0.0625,
+  "mixed_reward_groups": 1,
+  "model_load_seconds": 10.439935958,
+  "model_revision": "299a8560bedf22ed1c72a8a11e7dce4a7f9f51f8",
+  "official_test_accessed": false,
+  "peak_rss_bytes": 7082344448,
+  "peak_rss_gib": 6.595947265625,
+  "predictions_sha256": "b5275c533c41e1d702ea04f99fc6d5fe53d4bc4d4d72074befb258fafec5500f",
+  "previous_v1_v2_cohorts_excluded": true,
+  "protocol": "svamp-gemma2-2b-mps-base-gate-v1",
+  "reward_variance_groups": 16,
+  "sampled_exact": 38,
+  "sampled_parseable": 64,
+  "sampled_response_n": 64,
+  "total_wall_seconds": 88.066735958,
+  "train_file_sha256": "bb3b4cd2957f07643bbf9f8f8f5faba3bfb47fcb1d9034655b03060a76675e2b",
+  "training_only_rows": 399
+}
