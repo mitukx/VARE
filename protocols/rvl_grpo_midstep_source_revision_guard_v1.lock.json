@@ -1,0 +1,39 @@
+{
+  "protocol_id": "rvl_grpo_midstep_source_revision_guard_v1",
+  "status": "frozen_before_guard_implementation_and_confirmation",
+  "selection_disclosure": "This protocol was prompted by a same-host rerun that passed the v1 validator using upstream Git HEAD 22f24ee334e31093db88d40a9a2ba5de6c1f65e0 rather than the declared c7e646b043cb56e5ea3c2623bb8a61e065451f72. The five source files checked by v1 matched their locked hashes. This is a provenance-correctness follow-up, not a model-quality or capability experiment.",
+  "question": "Does the source-revision guard reject an upstream checkout whose Git HEAD differs from the locked revision, while still allowing the exact clean checkout to pass the frozen rollback validator?",
+  "scope": "CPU-only source provenance check plus the existing tiny random-model rollback validation. No pretrained model, task-success metric, policy-quality claim, or new optimization method.",
+  "frozen_inputs": {
+    "vare_validator_commit": "63ba181ae54a67738b6d40730ce10a9e8bdd7ba0",
+    "vare_validator_path": "scripts/validate_rvl_grpo_midstep_fault.py",
+    "vare_validator_sha256": "971a4f19498be7fe440b78290b1d5768f8bb306eb9c64127537f70f76e316823",
+    "vare_protocol": "protocols/rvl_grpo_midstep_fault_v1.json",
+    "vare_protocol_sha256": "2939204c394b07618b6ed69fa36a0caacf34d08ab215d4f991b3bf059a12f4f6",
+    "locked_upstream_commit": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+    "observed_nonmatching_upstream_head": "22f24ee334e31093db88d40a9a2ba5de6c1f65e0",
+    "runtime": {
+      "python": "3.12.12",
+      "torch": "2.9.1",
+      "transformers": "4.57.3",
+      "device": "cpu",
+      "torch_threads": 1
+    }
+  },
+  "hypothesis": "A clean-tree Git HEAD check will reject a nonmatching revision before importing the trainer or executing optimizer code. At the exact locked upstream commit, the guard will delegate to the byte-locked v1 validator, which will return status pass with all 12 existing checks true.",
+  "acceptance": {
+    "nonmatching_head_rejected_before_v1_invocation": true,
+    "dirty_exact_head_rejected_before_v1_invocation": true,
+    "exact_clean_locked_head_delegates_to_locked_v1_validator": true,
+    "v1_validator_and_protocol_hashes_unchanged": true,
+    "exact_head_run_status": "pass",
+    "exact_head_run_all_12_rollback_checks": true,
+    "max_wall_seconds": 120,
+    "no_cuda": true
+  },
+  "limits": [
+    "This closes only the mismatch between a declared Git revision and the supplied checkout; it does not lock transitive Python package versions.",
+    "The five v1 source-file hashes remain checked by the original validator.",
+    "A pass remains a tiny random-model rollback integration result, not policy improvement, model capability, external reproduction, or general recovery assurance."
+  ]
+}
