@@ -1,0 +1,145 @@
+{
+  "protocol_id": "trl-async-grpo-pr7249-real-ddp-v2",
+  "status": "locked_before_execution",
+  "question": "Does the pinned PR #7249 token-mean normalization match an independent full-window token-mean gradient and one-step parameter update under actual two-process CPU Gloo DDP, beyond the prior single-process simulated-rank audit?",
+  "estimand": {
+    "loss": "For all ranks r and microbatches j in one optimizer window, L = sum_{r,j,t active} clipped_GRPO_loss(r,j,t) / sum_{r,j} active_completion_tokens(r,j).",
+    "distributed_gradient": "Average the DDP-reduced per-rank gradients; compare with the gradient of the same token-mean objective on the pooled examples.",
+    "controls": "No auxiliary loss, beta=0, fixed token-local CPU model, same exact multiset of samples, prompt/context positions masked from the denominator."
+  },
+  "scope": {
+    "tested_path": "Pinned AsyncGRPOTrainer.compute_loss + Hugging Face Trainer/Accelerator model preparation + actual PyTorch DistributedDataParallel Gloo reducer/no_sync + manual fixed SGD parameter step.",
+    "not_tested": [
+      "Trainer.train()/training_step loop",
+      "Accelerator.backward scaling",
+      "DataLoaderDispatcher/per-rank production input scatter",
+      "AsyncDistillationTrainer",
+      "MoE auxiliary loss",
+      "vLLM/async rollout worker",
+      "pretrained model or task outcome",
+      "Finiteness of local per-sequence diagnostic ratios for a rank with zero active completion tokens; the primary finite gate covers policy loss, DDP gradients, and the SGD parameter result only."
+    ],
+    "prior_evidence": "The existing PR-authored tests exercise the single-process Trainer/Accelerate optimizer loop but simulate two ranks sequentially and average gradients in Python."
+  },
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "upstream_main_tip_at_lock": "7c5331987dc61f733840bb35f04517b14036aad8",
+    "issue": "https://github.com/huggingface/trl/issues/7206",
+    "pull_request": "https://github.com/huggingface/trl/pull/7249",
+    "candidate_head_at_lock": "5234eb7c70f4ca7eb92fe8e01611a33eaff17f40",
+    "base_revision": "a98fa6a4428f9aae58dfb26d729d7437f662f27a",
+    "base_grpo_file_sha256": "b84c4544a4ac2aac5b08681a93fb3d49d1f24ff2f2f9fe53a6c35ab5c8f0ea40",
+    "candidate_grpo_file_sha256": "5c4fc857c563db0d9f937a2edf89dd74c4f218a31f3a05bf33bffbf5285749dc",
+    "frozen_runner": "scripts/replay_trl_pr7249_real_ddp_v1.py",
+    "frozen_runner_sha256": "eed81a339a7753da4657f64fcdf3279746d4dccf5ea8b15b3445479b24b1a8f0"
+  },
+  "runtime": {
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3",
+    "accelerate": "1.12.0",
+    "backend": "gloo",
+    "world_size": 2,
+    "device": "cpu",
+    "torch_threads_per_rank": 1
+  },
+  "cases": {
+    "unequal_rank_and_microbatch_counts": {
+      "requested_slots": 2,
+      "rank0_completion_tokens_per_slot": [
+        1,
+        15
+      ],
+      "rank1_completion_tokens_per_slot": [
+        9,
+        1
+      ],
+      "global_tokens_per_slot": [
+        10,
+        16
+      ]
+    },
+    "equal_token_control": {
+      "requested_slots": 2,
+      "rank0_completion_tokens_per_slot": [
+        4,
+        4
+      ],
+      "rank1_completion_tokens_per_slot": [
+        4,
+        4
+      ],
+      "global_tokens_per_slot": [
+        8,
+        8
+      ]
+    },
+    "zero_local_tokens_positive_global": {
+      "requested_slots": 2,
+      "rank0_completion_tokens_per_slot": [
+        0,
+        0
+      ],
+      "rank1_completion_tokens_per_slot": [
+        8,
+        4
+      ],
+      "global_tokens_per_slot": [
+        8,
+        4
+      ]
+    },
+    "short_final_window": {
+      "configured_slots": 2,
+      "available_slots": 1,
+      "rank0_completion_tokens_per_slot": [
+        1
+      ],
+      "rank1_completion_tokens_per_slot": [
+        9
+      ],
+      "global_tokens_per_slot": [
+        10
+      ]
+    }
+  },
+  "acceptance": {
+    "candidate_exit_code": 0,
+    "candidate_source_hash_match": true,
+    "candidate_all_cases_finite": true,
+    "candidate_ranks_have_identical_gradient_and_parameter_hashes": true,
+    "candidate_max_abs_loss_gradient_and_parameter_error_each_case_lte": 1e-05,
+    "base_exit_code": 0,
+    "base_source_hash_match": true,
+    "base_equal_token_control_and_short_window_max_error_lte": 1e-05,
+    "base_unequal_microbatch_and_zero_local_cases_gradient_or_parameter_error_gte": 0.0001,
+    "any_timeout_deadlock_or_unexplained_exception": "non-pass; preserve stdout/stderr and both rank exit statuses"
+  },
+  "resources": {
+    "paid_compute": false,
+    "gpu": false,
+    "wall_seconds_per_arm_cap": 300,
+    "gloo_process_group_timeout_seconds": 180,
+    "launcher_max_restarts": 0
+  },
+  "commands": [
+    "PYTHONPATH=/tmp/trl-vare-pydeps:/tmp/trl-vare-async-norm python -m torch.distributed.run --nnodes=1 --nproc_per_node=2 --rdzv_backend=static --master_addr=127.0.0.1 --master_port=29637 --max_restarts=0 scripts/replay_trl_pr7249_real_ddp_v1.py --repo /tmp/trl-vare-async-norm --arm base --output results/trl-async-pr7249-real-ddp-v2/base",
+    "PYTHONPATH=/tmp/trl-vare-pydeps:/tmp/trl-vare-async-norm-pr python -m torch.distributed.run --nnodes=1 --nproc_per_node=2 --rdzv_backend=static --master_addr=127.0.0.1 --master_port=29637 --max_restarts=0 scripts/replay_trl_pr7249_real_ddp_v1.py --repo /tmp/trl-vare-async-norm-pr --arm candidate --output results/trl-async-pr7249-real-ddp-v2/candidate"
+  ],
+  "claim_limits": [
+    "This is a synthetic CPU correctness fixture under the stated token-mean contract, not a real-model or task-success result.",
+    "A passing DDP contract replay would extend distributed reducer evidence but would not establish a novel algorithm, upstream adoption, or general trainer correctness.",
+    "GRPO only; no distillation, asynchronous workers, DataloaderDispatcher, or full distributed Trainer loop is covered.",
+    "The protocol tests the objective stated in issue #7206 and PR #7249, not that token-mean weighting is the only valid objective for every use case.",
+    "In the zero-local-token case, the empty-completion rank may form 0/0 per-sequence clip diagnostics; these diagnostics are explicitly outside the acceptance gate, while global policy-loss normalization remains defined by the positive-token peer."
+  ],
+  "version_2_reason": "Version 1 was interrupted before worker launch: torchrun --standalone attempted TCPStore rendezvous through reverse-resolved host 1.0.0.127.in-addr.arpa and had no worker/output after >6 minutes. This version changes only launcher rendezvous to static localhost IPv4; objective, source commits, synthetic data, metrics, thresholds, and analysis remain frozen.",
+  "launcher": {
+    "rendezvous": "static",
+    "master_addr": "127.0.0.1",
+    "master_port": 29637,
+    "max_restarts": 0,
+    "reason": "Avoid torchrun --standalone dynamic rendezvous resolving the loopback address to a broken reverse-DNS hostname."
+  },
+  "sha256": "f50e802bbd5d3536ff4f8a7b25a84470eebc43f971ce3b42fb091a27e6f35eec"
+}

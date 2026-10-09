@@ -1,0 +1,161 @@
+{
+  "arm": "base",
+  "backend": "gloo",
+  "cases": {
+    "equal_token_control": {
+      "finite": true,
+      "max_gradient_abs_error": 0.0,
+      "max_loss_abs_error": 0.0,
+      "max_sgd_parameter_abs_error": 0.0,
+      "rank_count": 2,
+      "rank_results": [
+        {
+          "actual_accumulation_slots": 2,
+          "ddp_gradient_sha256": "9a598eb6999a8acd6c19a15d71fa912daa087c35b1efc774bd5383360c1d5127",
+          "finite": true,
+          "loss": 1.1875,
+          "loss_abs_error": 0.0,
+          "max_gradient_abs_error": 0.0,
+          "max_sgd_parameter_abs_error": 0.0,
+          "oracle_loss": 1.1875,
+          "post_sgd_parameter_sha256": "495f0105ce89923a88a486c1411565efed4ce6feb3c19b1397813cc600c21bda",
+          "rank": 0,
+          "window_token_count": null
+        },
+        {
+          "actual_accumulation_slots": 2,
+          "ddp_gradient_sha256": "9a598eb6999a8acd6c19a15d71fa912daa087c35b1efc774bd5383360c1d5127",
+          "finite": true,
+          "loss": 1.1875,
+          "loss_abs_error": 0.0,
+          "max_gradient_abs_error": 0.0,
+          "max_sgd_parameter_abs_error": 0.0,
+          "oracle_loss": 1.1875,
+          "post_sgd_parameter_sha256": "495f0105ce89923a88a486c1411565efed4ce6feb3c19b1397813cc600c21bda",
+          "rank": 1,
+          "window_token_count": null
+        }
+      ],
+      "rank_state_equal": true
+    },
+    "short_final_window": {
+      "finite": true,
+      "max_gradient_abs_error": 2.9802322387695312e-08,
+      "max_loss_abs_error": 1.4901161193847656e-08,
+      "max_sgd_parameter_abs_error": 3.725290298461914e-09,
+      "rank_count": 2,
+      "rank_results": [
+        {
+          "actual_accumulation_slots": 1,
+          "ddp_gradient_sha256": "e1b3379c96434d121bc9dd54dce45e012da748ef647a86cefa5d53bb292493ad",
+          "finite": true,
+          "loss": 0.6499999910593033,
+          "loss_abs_error": 1.4901161193847656e-08,
+          "max_gradient_abs_error": 2.9802322387695312e-08,
+          "max_sgd_parameter_abs_error": 3.725290298461914e-09,
+          "oracle_loss": 0.6499999761581421,
+          "post_sgd_parameter_sha256": "e537c32c53968412946983fd3d58781cfea10f520d64e32fdfe77575f44036f4",
+          "rank": 0,
+          "window_token_count": null
+        },
+        {
+          "actual_accumulation_slots": 1,
+          "ddp_gradient_sha256": "e1b3379c96434d121bc9dd54dce45e012da748ef647a86cefa5d53bb292493ad",
+          "finite": true,
+          "loss": 0.6499999910593033,
+          "loss_abs_error": 1.4901161193847656e-08,
+          "max_gradient_abs_error": 2.9802322387695312e-08,
+          "max_sgd_parameter_abs_error": 3.725290298461914e-09,
+          "oracle_loss": 0.6499999761581421,
+          "post_sgd_parameter_sha256": "e537c32c53968412946983fd3d58781cfea10f520d64e32fdfe77575f44036f4",
+          "rank": 1,
+          "window_token_count": null
+        }
+      ],
+      "rank_state_equal": true
+    },
+    "unequal_rank_and_microbatch_counts": {
+      "finite": true,
+      "max_gradient_abs_error": 0.00847354531288147,
+      "max_loss_abs_error": 0.016947142779827118,
+      "max_sgd_parameter_abs_error": 0.000847354531288147,
+      "rank_count": 2,
+      "rank_results": [
+        {
+          "actual_accumulation_slots": 2,
+          "ddp_gradient_sha256": "16af9c63a544634b1c7338f5b9b026bae95abb21e356e5662b93c0b43661f89b",
+          "finite": true,
+          "loss": 0.7234374955296516,
+          "loss_abs_error": 0.016947142779827118,
+          "max_gradient_abs_error": 0.00847354531288147,
+          "max_sgd_parameter_abs_error": 0.000847354531288147,
+          "oracle_loss": 0.7403846383094788,
+          "post_sgd_parameter_sha256": "3ad6431fa0fb1f255baab62500ed5d63c5202daf337b281d1c62880c177ceeff",
+          "rank": 0,
+          "window_token_count": null
+        },
+        {
+          "actual_accumulation_slots": 2,
+          "ddp_gradient_sha256": "16af9c63a544634b1c7338f5b9b026bae95abb21e356e5662b93c0b43661f89b",
+          "finite": true,
+          "loss": 0.7234374955296516,
+          "loss_abs_error": 0.016947142779827118,
+          "max_gradient_abs_error": 0.00847354531288147,
+          "max_sgd_parameter_abs_error": 0.000847354531288147,
+          "oracle_loss": 0.7403846383094788,
+          "post_sgd_parameter_sha256": "3ad6431fa0fb1f255baab62500ed5d63c5202daf337b281d1c62880c177ceeff",
+          "rank": 1,
+          "window_token_count": null
+        }
+      ],
+      "rank_state_equal": true
+    },
+    "zero_local_tokens_positive_global": {
+      "finite": true,
+      "max_gradient_abs_error": 0.08333331346511841,
+      "max_loss_abs_error": 0.1666666865348816,
+      "max_sgd_parameter_abs_error": 0.00833333283662796,
+      "rank_count": 2,
+      "rank_results": [
+        {
+          "actual_accumulation_slots": 2,
+          "ddp_gradient_sha256": "307aad1b69233beeb13d14d18873e1e2c5b54c9e162d96159381d871b70f1370",
+          "finite": true,
+          "loss": 1.0,
+          "loss_abs_error": 0.1666666865348816,
+          "max_gradient_abs_error": 0.08333331346511841,
+          "max_sgd_parameter_abs_error": 0.00833333283662796,
+          "oracle_loss": 0.8333333134651184,
+          "post_sgd_parameter_sha256": "f395877b3f8157be5f6b3d5f4dfd7b8a11d90ef722923ea12c762076328099de",
+          "rank": 0,
+          "window_token_count": null
+        },
+        {
+          "actual_accumulation_slots": 2,
+          "ddp_gradient_sha256": "307aad1b69233beeb13d14d18873e1e2c5b54c9e162d96159381d871b70f1370",
+          "finite": true,
+          "loss": 1.0,
+          "loss_abs_error": 0.1666666865348816,
+          "max_gradient_abs_error": 0.08333331346511841,
+          "max_sgd_parameter_abs_error": 0.00833333283662796,
+          "oracle_loss": 0.8333333134651184,
+          "post_sgd_parameter_sha256": "f395877b3f8157be5f6b3d5f4dfd7b8a11d90ef722923ea12c762076328099de",
+          "rank": 1,
+          "window_token_count": null
+        }
+      ],
+      "rank_state_equal": true
+    }
+  },
+  "device": "cpu",
+  "elapsed_seconds": 4.916008374944795,
+  "protocol_id": "trl-async-grpo-pr7249-real-ddp-v1",
+  "runtime": {
+    "accelerate": "1.12.0",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "source_commit": "a98fa6a4428f9aae58dfb26d729d7437f662f27a",
+  "world_size": 2
+}

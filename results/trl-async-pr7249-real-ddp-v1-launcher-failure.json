@@ -1,0 +1,17 @@
+{
+  "protocol_id": "trl-async-grpo-pr7249-real-ddp-v1",
+  "status": "launcher_failure_interrupted_before_worker_execution",
+  "command": "PYTHONPATH=/tmp/trl-vare-pydeps:/tmp/trl-vare-async-norm python -m torch.distributed.run --standalone --nproc_per_node=2 --max_restarts=0 scripts/replay_trl_pr7249_real_ddp_v1.py --repo /tmp/trl-vare-async-norm --arm base --output results/trl-async-pr7249-real-ddp-v1/base",
+  "exit_code": 130,
+  "elapsed_observed_seconds": 407,
+  "observations": [
+    "Only torch.distributed.run launcher process was alive; no replay worker process was observed.",
+    "No experiment output directory was created.",
+    "Repeated warning: IPv6 network addresses of (1.0.0.127.in-addr.arpa, 51137) cannot be retrieved.",
+    "TCPStore client retry timed out after 300000ms while connecting to 1.0.0.127.in-addr.arpa:51137.",
+    "Run was interrupted by operator after >6 minutes because the frozen 180s process-group timeout cannot apply before worker initialization."
+  ],
+  "interpretation": "Infrastructure/launcher failure before the scientific experiment began. No evidence about base or candidate loss/gradient correctness; not counted as a scientific failure or a pass.",
+  "next_action": "Rerun same frozen scientific estimand with static rendezvous at 127.0.0.1 under protocol v2.",
+  "source_protocol_sha256": "c5d6741fb57c0635c41ab2b4fbe45c692ac535926e0debe6216b5e63f95abd2b"
+}
