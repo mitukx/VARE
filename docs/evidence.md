@@ -1,5 +1,9 @@
 # Calibration evidence
 
+## GRPO group and rollback reproduction packet
+
+A single command reran 17 focused group/replay/RVL-hook tests plus two frozen real-trainer rollback smokes against RVL commit `c7e646b043cb56e5ea3c2623bb8a61e065451f72`. All 11 candidate-boundary assertions and all 12 in-step post-optimizer-fault assertions passed; both checks restored model, optimizer, and RNG state and used the incumbent on the next rollout. Logs and a SHA-256 manifest are retained in [`run-1`](../results/grpo-integrity-reproduction-packet-v1/run-1/). This is another same-host reproduction by the repository author, not external review, pretrained-model training, or capability evidence. See the [reproduction instructions](grpo-integrity-reproduction-packet.md).
+
 ## E4 — Base-model feasibility gate
 
 The frozen Qwen2.5-Math-1.5B CPU math/tool interaction screen completed 96 rows at 0/96 exact boxed-answer match, with 0/24 in each family and no calculator calls. Runtime and memory caps passed; an independent same-host task/answer/metric/decision replay passed. This retires only the exact checkpoint/prompt/format/task pairing. Because at least one prose answer gave the right value without the required box, the result is not a claim of zero arithmetic competence, tool-use failure in general, or policy improvement. See the [report](cpu-qwen-math-tir-feasibility-v1-report.md), [locked protocol](../protocols/cpu_qwen_math_tir_feasibility_v1.lock.json), and [bundle](../results/cpu-qwen-math-tir-feasibility-v1/run-1/).
