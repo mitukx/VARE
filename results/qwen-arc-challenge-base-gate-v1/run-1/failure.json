@@ -1,0 +1,8 @@
+{
+  "completed_rows": 80,
+  "exception": "KeyError: 'wilson_z'",
+  "partial_responses_sha256": "15ba80b6623308e07cd3075bb5bdba175ac0b488156462c5cf2e8a060dcd8c8b",
+  "protocol_id": "qwen_arc_challenge_base_gate_v1",
+  "status": "execution_failure",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/run_qwen_arc_challenge_base_gate_v1.py\", line 294, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/run_qwen_arc_challenge_base_gate_v1.py\", line 245, in main\n    lower = wilson_lower(metrics[\"exact\"], n, protocol[\"metrics\"][\"wilson_z\"])\n                                              ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^\nKeyError: 'wilson_z'\n"
+}
