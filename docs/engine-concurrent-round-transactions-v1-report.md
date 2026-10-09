@@ -14,7 +14,7 @@ At baseline revision `0995f7fc3a92b317c1b8dce7e13b87c583cf42ec`, both rounds obs
 
 `CapabilityLoop` now holds a per-instance `asyncio.Lock` across the full `run_round` transaction. This serializes calls on one loop while preserving the configured concurrency among rollouts inside each round. After `c1` is promoted, the next round observes it as the incumbent and builds `c2` from that state.
 
-The frozen regression passed after the fix; the concurrent-round, prompt-identity, replay-group, freshness, and RVL-hook suite passed 21 tests. The full repository pytest run exited successfully. Raw logs, result JSON, and SHA-256 manifest are retained in [`results/engine-concurrent-round-transactions-v1/`](../results/engine-concurrent-round-transactions-v1/). Runtime: Python 3.12.12, pytest 8.4.2, CPU.
+The frozen regression passed after the fix; the concurrent-round, prompt-identity, replay-group, freshness, and RVL-hook suite passed 21 tests. The full repository pytest run exited successfully. GitHub Actions run [37865040331](https://github.com/mitukx/VARE/actions/runs/37865040331) passed 196 tests with 12 skipped, recomputed the frozen GRPO audit studies, and completed the demo. Raw logs, result JSON, and SHA-256 manifest are retained in [`results/engine-concurrent-round-transactions-v1/`](../results/engine-concurrent-round-transactions-v1/). Runtime: Python 3.12.12, pytest 8.4.2, CPU.
 
 ## Limitations and decision
 
