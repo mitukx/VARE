@@ -1,5 +1,11 @@
 # Next study decision — 2026-10-09
 
+## Current follow-up — bounded post-training novelty and feasibility gate
+
+The latest bounded screen tested two candidates against current prior art and the retained VARE record: (1) using absolute/sign advantages to recover signal from homogeneous binary-reward GRPO groups, and (2) non-oracle group-level clean-label audits for update-sign risk under policy shift. Candidate 1 is directly covered by [Gradient Starvation in Binary-Reward GRPO](https://arxiv.org/abs/2605.07689), including the fixed-reference Sign mechanism and model experiments. Candidate 2 reduces to Horvitz–Thompson and cost-adjusted design/sequential-testing theory under the frozen estimand; arbitrary conditional verifier shift is not identified without clean-label overlap. The closest verifier-correction and selective-control papers also directly cover the broad intervention family. Details are in the [focused report](research-gate-2026-10-09.md).
+
+**Decision: STOP both candidates before implementation.** The real-model outcome gap remains open, but no current model/task/update pairing qualifies: ARC-Challenge was a three-seed non-pass and is retired; StrategyQA failed the frozen output parser before training and is retired; the other recent cohorts remain retired or failed their own gates. No new prompts, labels, training, or model outputs were consumed in this decision. Reopen only for a materially distinct, pre-justified model/task path that clears base-success, CPU update/save/reload, and untouched-evaluation gates, or for a concrete independent review question about retained evidence.
+
 ## Current portfolio state and decision authority
 
 The latest real-model feasibility action is the frozen StrategyQA/Qwen2.5-0.5B-Instruct screen. It produced no outputs accepted by the preregistered final-answer parser (0/200), so the candidate failed before training. Its train and confirmation pools remain unopened; the exact model/task pairing is retired. The closest verifier-noise RLVR paper's October 5, 2026 revision now includes a covariance residual for content-dependent verifier errors, GRPO group-centering analysis, and non-i.i.d. misspecification experiments. Therefore, the broad conditional-verifier-correction line does not support a VARE novelty claim absent a materially different surviving question.
