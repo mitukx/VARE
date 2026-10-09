@@ -1,0 +1,416 @@
+{
+  "changed_parameter_tensor_count": 291,
+  "checkpoint_file_sha256": {
+    "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+    "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+    "config.json": "9fbbf23635b010218933a69765d3a2e047e624a86203d14da115a644077cf74f",
+    "generation_config.json": "cd3e781699b69eb78534f464b0d57590b9babf52d8123d71eb99f001eb5e8a00",
+    "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+    "model.safetensors": "cb9c302a3669cebd2eb1d05c0b19dd87e6cf9fa712a710d4f6f178a96fc8b5ab",
+    "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+    "tokenizer.json": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa",
+    "tokenizer_config.json": "0a04a9d7d4a62b28482bdfe726c122756de85714fb64166ace92ae75b8f57614",
+    "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+  },
+  "device": "cpu",
+  "error": "cannot access local variable 'loaded_tokenizer' where it is not associated with a value",
+  "error_type": "UnboundLocalError",
+  "finite_gradient_tensor_count": 290,
+  "incumbent_parameter_fingerprint": "1269f7eada635e467b5e842ef129a9de991caf5cd208f4aca6c3cdbfc36ff121",
+  "incumbent_restored_exact": true,
+  "incumbent_rng_restored_exact": true,
+  "incumbent_training_mode_restored_exact": true,
+  "load_peak_rss_bytes": 3456794624,
+  "load_seconds": 0.5125211660051718,
+  "max_abs_parameter_delta": 1.9073486328125e-06,
+  "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+  "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "mps_available_but_disabled": true,
+  "nonzero_gradient_tensor_count": 290,
+  "optimizer_step_calls": 1,
+  "peak_rss_bytes": 13893484544,
+  "protocol_id": "vare-rvl-cpu-real-model-update-path-v3",
+  "protocol_sha256": "722debadc2e37eea9e8c1745ce7614d6276dac454bb8c006e87ec06343a33c53",
+  "received_advantages": [
+    -0.5773487295950663,
+    1.732046188785199,
+    -0.5773487295950663,
+    -0.5773487295950663
+  ],
+  "reloaded_model_device": "cpu",
+  "reloaded_parameter_fingerprint": "83c82960dcbae8215ab1f0ad67ae2388af0abf172afd853a2077fc47cea6716d",
+  "responses": [
+    {
+      "answer_key": "B",
+      "prompt_id": "update-smoke-v3-01",
+      "question": "A library has 8 shelves with 21 books on each shelf. It lends out 37 books. How many remain? A) 121 B) 131 C) 141 D) 168",
+      "responses": [
+        {
+          "logprob": -3.049883953295648,
+          "response_token_ids": [
+            18,
+            19,
+            151645
+          ],
+          "response_token_logprobs": [
+            -1.9259228706359863,
+            -1.1202106475830078,
+            -0.0037504350766539574
+          ],
+          "reward": 0.0,
+          "text": "34",
+          "token_count": 3
+        },
+        {
+          "logprob": -2.591150334570557,
+          "response_token_ids": [
+            35,
+            151645
+          ],
+          "response_token_logprobs": [
+            -2.588003635406494,
+            -0.0031466991640627384
+          ],
+          "reward": 0.0,
+          "text": "D",
+          "token_count": 2
+        },
+        {
+          "logprob": -4.357034541735629,
+          "response_token_ids": [
+            17,
+            16,
+            353,
+            220,
+            23,
+            481,
+            220,
+            18
+          ],
+          "response_token_logprobs": [
+            -3.0857930183410645,
+            -0.26633626222610474,
+            -0.6042574644088745,
+            -0.0001438752660760656,
+            -0.004947799723595381,
+            -0.39552345871925354,
+            -2.169585604860913e-05,
+            -1.0967194612021558e-05
+          ],
+          "reward": 0.0,
+          "text": "21 * 8 - 3",
+          "token_count": 8
+        },
+        {
+          "logprob": -2.591150334570557,
+          "response_token_ids": [
+            35,
+            151645
+          ],
+          "response_token_logprobs": [
+            -2.588003635406494,
+            -0.0031466991640627384
+          ],
+          "reward": 0.0,
+          "text": "D",
+          "token_count": 2
+        }
+      ],
+      "rewards": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "answer_key": "B",
+      "prompt_id": "update-smoke-v3-02",
+      "question": "A baker puts 144 rolls equally into 9 baskets, then adds 4 rolls to every basket. How many rolls are in each basket? A) 18 B) 20 C) 21 D) 24",
+      "responses": [
+        {
+          "logprob": -4.436008269898593,
+          "response_token_ids": [
+            32,
+            151645
+          ],
+          "response_token_logprobs": [
+            -4.42949104309082,
+            -0.006517226807773113
+          ],
+          "reward": 0.0,
+          "text": "A",
+          "token_count": 2
+        },
+        {
+          "logprob": -1.0708790922936942,
+          "response_token_ids": [
+            1249,
+            8253,
+            1246,
+            1657,
+            27373,
+            525,
+            304,
+            1817
+          ],
+          "response_token_logprobs": [
+            -0.4054640829563141,
+            -0.5074893832206726,
+            -0.1543482393026352,
+            -9.536738616588991e-07,
+            -3.45700973412022e-05,
+            -0.0034027553629130125,
+            -0.0001382732152706012,
+            -8.344646857949556e-07
+          ],
+          "reward": 0.0,
+          "text": "To determine how many rolls are in each",
+          "token_count": 8
+        },
+        {
+          "logprob": -1.0708790922936942,
+          "response_token_ids": [
+            1249,
+            8253,
+            1246,
+            1657,
+            27373,
+            525,
+            304,
+            1817
+          ],
+          "response_token_logprobs": [
+            -0.4054640829563141,
+            -0.5074893832206726,
+            -0.1543482393026352,
+            -9.536738616588991e-07,
+            -3.45700973412022e-05,
+            -0.0034027553629130125,
+            -0.0001382732152706012,
+            -8.344646857949556e-07
+          ],
+          "reward": 0.0,
+          "text": "To determine how many rolls are in each",
+          "token_count": 8
+        },
+        {
+          "logprob": -1.9632741413079202,
+          "response_token_ids": [
+            16,
+            23,
+            151645
+          ],
+          "response_token_logprobs": [
+            -1.7949026823043823,
+            -0.1652386635541916,
+            -0.003132795449346304
+          ],
+          "reward": 0.0,
+          "text": "18",
+          "token_count": 3
+        }
+      ],
+      "rewards": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "answer_key": "B",
+      "prompt_id": "update-smoke-v3-03",
+      "question": "A bus travels 6 trips of 28 kilometers and then 19 more kilometers. How far does it travel? A) 177 B) 187 C) 197 D) 207",
+      "responses": [
+        {
+          "logprob": -2.574517850764096,
+          "response_token_ids": [
+            35,
+            151645
+          ],
+          "response_token_logprobs": [
+            -2.570349931716919,
+            -0.004167919047176838
+          ],
+          "reward": 0.0,
+          "text": "D",
+          "token_count": 2
+        },
+        {
+          "logprob": -2.574517850764096,
+          "response_token_ids": [
+            35,
+            151645
+          ],
+          "response_token_logprobs": [
+            -2.570349931716919,
+            -0.004167919047176838
+          ],
+          "reward": 0.0,
+          "text": "D",
+          "token_count": 2
+        },
+        {
+          "logprob": -4.655953555324231,
+          "response_token_ids": [
+            16,
+            22,
+            22,
+            151645
+          ],
+          "response_token_logprobs": [
+            -2.396428346633911,
+            -2.258986711502075,
+            -0.00013553177996072918,
+            -0.0004029654082842171
+          ],
+          "reward": 0.0,
+          "text": "177",
+          "token_count": 4
+        },
+        {
+          "logprob": -2.3776395265886094,
+          "response_token_ids": [
+            1249,
+            11047,
+            279,
+            2790,
+            6010,
+            30696,
+            553,
+            279
+          ],
+          "response_token_logprobs": [
+            -0.5088188052177429,
+            -1.6655645370483398,
+            -0.005907575134187937,
+            -0.007648587692528963,
+            -8.11782301752828e-05,
+            -0.07720532268285751,
+            -0.11231350898742676,
+            -0.00010001159535022452
+          ],
+          "reward": 0.0,
+          "text": "To calculate the total distance traveled by the",
+          "token_count": 8
+        }
+      ],
+      "rewards": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "answer_key": "C",
+      "prompt_id": "update-smoke-v3-04",
+      "question": "A school buys 16 cartons with 15 markers each and distributes 68 markers. How many markers remain? A) 162 B) 168 C) 172 D) 188",
+      "responses": [
+        {
+          "logprob": -3.2849255722685484,
+          "response_token_ids": [
+            33,
+            151645
+          ],
+          "response_token_logprobs": [
+            -3.2848010063171387,
+            -0.0001245659514097497
+          ],
+          "reward": 0.0,
+          "text": "B",
+          "token_count": 2
+        },
+        {
+          "logprob": -2.774928924336564,
+          "response_token_ids": [
+            34,
+            151645
+          ],
+          "response_token_logprobs": [
+            -2.774850368499756,
+            -7.855583680793643e-05
+          ],
+          "reward": 1.0,
+          "text": "C",
+          "token_count": 2
+        },
+        {
+          "logprob": -4.800256991758943,
+          "response_token_ids": [
+            1249,
+            11625,
+            279,
+            3491,
+            29257,
+            11,
+            582,
+            1184
+          ],
+          "response_token_logprobs": [
+            -1.3108383417129517,
+            -0.9715242981910706,
+            -0.6051795482635498,
+            -0.3661104142665863,
+            -0.9633923172950745,
+            -0.01813017763197422,
+            -0.3281683027744293,
+            -0.23691359162330627
+          ],
+          "reward": 0.0,
+          "text": "To solve the problem accurately, we need",
+          "token_count": 8
+        },
+        {
+          "logprob": -1.1252963697188534,
+          "response_token_ids": [
+            35,
+            151645
+          ],
+          "response_token_logprobs": [
+            -1.1243358850479126,
+            -0.0009604846709407866
+          ],
+          "reward": 0.0,
+          "text": "D",
+          "token_count": 2
+        }
+      ],
+      "rewards": [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "roundtrip_exact": true,
+  "runner_sha256": "8a7102cdcb86764d444b3a553f90e9a22620e9a182d2334bbd3b349537a8b2d0",
+  "rvl_revision": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "selected_prompt_id": "update-smoke-v3-04",
+  "selected_rewards": [
+    0.0,
+    1.0,
+    0.0,
+    0.0
+  ],
+  "source_revision": "644b436e54b2c0740e3f3df3eda7b8b4e7e5d859",
+  "status": "failed",
+  "tokenizer_prompt_roundtrip_exact": true,
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/run_rvl_cpu_real_model_update_path_v3.py\", line 456, in run\n    del loaded_tokenizer, reloaded_model\n        ^^^^^^^^^^^^^^^^\nUnboundLocalError: cannot access local variable 'loaded_tokenizer' where it is not associated with a value\n",
+  "trainer_metrics": {
+    "behavior_kl_estimate": 2.1382220438681543e-09,
+    "clip_fraction": 0.0,
+    "grad_norm": 192.51312255859375,
+    "loss": -8.940696716308594e-08,
+    "max_abs_log_ratio": 7.772445678710938e-05,
+    "mean_reward": 0.25,
+    "samples": 4.0
+  },
+  "update_peak_rss_bytes": 13893484544,
+  "update_seconds": 19.129053790995385,
+  "vare_adapter_sha256": "fdaf7f41df3a05a6c35307d92141278580e526d22ae073f1a8c70c581cbda179",
+  "wall_seconds": 28.301096833019983,
+  "wall_started_unix": 1791509241.8630772
+}

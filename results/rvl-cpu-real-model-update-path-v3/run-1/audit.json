@@ -1,0 +1,35 @@
+{
+  "audit_type": "separate same-host author replay, not external reproduction",
+  "checks": {
+    "adapter_hash": true,
+    "advantages_recomputed": true,
+    "candidate_weights_changed": true,
+    "cpu_resource_gates": true,
+    "first_mixed_group_selected": true,
+    "groups_are_protocol_prefix": true,
+    "incumbent_model_optimizer_rng_mode_restored": true,
+    "model_hashes": true,
+    "one_optimizer_step_and_finite_nonzero_gradients": true,
+    "protocol_hash": true,
+    "retained_post_gate_cleanup_failure": true,
+    "runner_hash": true,
+    "rvl_source_hashes": true,
+    "saved_model_parameter_fingerprint_matches": true,
+    "tokenizer_ids_match_on_frozen_prompts": true,
+    "update-smoke-v3-01_reward_replay": true,
+    "update-smoke-v3-02_reward_replay": true,
+    "update-smoke-v3-03_reward_replay": true,
+    "update-smoke-v3-04_reward_replay": true
+  },
+  "checks_passed": 19,
+  "checks_total": 19,
+  "limits": [
+    "This audit verifies retained claims and hashes; it does not rerun the optimizer or independently access the deleted temporary checkpoint.",
+    "This is execution feasibility only; no task-success or model-capability effect is measured."
+  ],
+  "measurement_gate_evidence": "all declared update, restore, tokenizer/model round-trip, and resource fields are present and satisfy their frozen thresholds",
+  "protocol_id": "vare-rvl-cpu-real-model-update-path-v3",
+  "protocol_sha256": "722debadc2e37eea9e8c1745ce7614d6276dac454bb8c006e87ec06343a33c53",
+  "runner_terminal_status": "failed after these fields were recorded, during redundant cleanup of an already deleted tokenizer variable",
+  "summary_sha256": "fff1adca70fdab6b0e011ace421da8a7445003f76841657b7e9e47f62c676314"
+}
