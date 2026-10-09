@@ -22,7 +22,7 @@ The validator ran the actual pinned `HFCausalLMGRPOTrainer.train_step` and real 
 | All frozen checks | **12/14** | **14/14** |
 | Wall time | 3.026 s | 3.006 s |
 
-The baseline output is retained at [`baseline-da5d457.json`](../results/rvl-grpo-midstep-fault-v2/baseline-da5d457.json); the initial patched output is at [`patched-da5d457-plus-adapter.json`](../results/rvl-grpo-midstep-fault-v2/patched-da5d457-plus-adapter.json), and a clean post-commit rerun is at [`patched-167e9d1.json`](../results/rvl-grpo-midstep-fault-v2/patched-167e9d1.json). The baseline passed the previous 12 checks, but failed the two new mode checks. This is a test expansion over a previously validated rollback path, not evidence of production incidence.
+The baseline output is retained at [`baseline-da5d457.json`](../results/rvl-grpo-midstep-fault-v2/baseline-da5d457.json); the initial patched output is at [`patched-da5d457-plus-adapter.json`](../results/rvl-grpo-midstep-fault-v2/patched-da5d457-plus-adapter.json), and a committed-code rerun is at [`patched-167e9d1.json`](../results/rvl-grpo-midstep-fault-v2/patched-167e9d1.json). A fresh local clone at the patched commit also passed; its output is [`clean-clone-65bdf.json`](../results/rvl-grpo-midstep-fault-v2/clean-clone-65bdf.json). The baseline passed the previous 12 checks, but failed the two new mode checks. The clone check is still same-host reproduction, not independent outside review or evidence of production incidence.
 
 ## Change
 
@@ -30,9 +30,15 @@ The baseline output is retained at [`baseline-da5d457.json`](../results/rvl-grpo
 
 ## Reproduction
 
-Use the runtime and package setup in [the v1 report](rvl-grpo-midstep-fault-report.md#clean-checkout-reproduction). At the frozen protocol commit, the command below exits nonzero and records the two mode failures. On the patched commit it passes all 14 checks:
+Use the runtime and package setup in [the v1 report](rvl-grpo-midstep-fault-report.md#clean-checkout-reproduction). The first checkout reproduces the two mode failures; the second passes all 14 checks:
 
 ```bash
+# Expected failure: the frozen validator detects the original rollback gap.
+git checkout eeae165
+python scripts/validate_rvl_grpo_midstep_fault_v2.py \
+  --rvl-source /tmp/Recursive-Verification-Lag/src/rvl_systems
+
+# Patched implementation: every frozen check passes.
 git checkout 167e9d1ca3c2041a2cf5b5a6a924e364de18027d
 python scripts/validate_rvl_grpo_midstep_fault_v2.py \
   --rvl-source /tmp/Recursive-Verification-Lag/src/rvl_systems
