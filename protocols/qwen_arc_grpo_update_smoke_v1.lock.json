@@ -1,6 +1,6 @@
 {
   "protocol_id": "qwen_arc_challenge_grpo_update_smoke_v1",
-  "state": "frozen_before_task_specific_policy_inference_and_update",
+  "state": "frozen_before_model_inference_after_preflight_only_repairs",
   "question": "Can the pinned VARE→RVL CPU GRPO path perform one real update on a frozen ARC-Challenge train group, restore the incumbent, and reload the candidate for exact-answer generation on disjoint unconsumed validation questions within the free local resource cap?",
   "decision_context": {
     "prior_gate": "ARC-Challenge base gate v2 passed 36/80 (45.0%); its same-host independent audit reconstructed all 80 rows. V1 consumed IDs are also excluded.",
@@ -64,7 +64,7 @@
     ],
     "validation_salt": "qwen-arc-update-smoke-eval-v1-2026-10-09",
     "validation_n": 8,
-    "validation_selection": "Exclude every four-choice validation ID consumed by ARC base gates v1 and v2, then hash-rank remaining eligible rows and take the first sixteen. Evaluate each item once greedily before training and once after candidate reload.",
+    "validation_selection": "Exclude every four-choice validation ID consumed by ARC base gates v1 and v2, then hash-rank remaining eligible rows and take the first eight. Evaluate each item once greedily before training and once after candidate reload.",
     "validation_ids": [
       "Mercury_7042735",
       "MEA_2016_5_6",
@@ -306,7 +306,8 @@
     "huggingface_hub": "0.36.0",
     "pandas": "2.3.3",
     "pyarrow": "22.0.0",
-    "torch_threads": 4
+    "torch_threads": 4,
+    "torch_seed": 20261010
   },
   "claim_limits": [
     "A smoke pass establishes task-specific update and checkpoint feasibility only.",
@@ -316,7 +317,7 @@
     "No checkpoint weights are retained in Git; saved file hashes and parameter fingerprints are retained."
   ],
   "source_hashes": {
-    "runner": "bf83703d40e75f69e1a807ac309bd3490240d9e7dfa3a5fc0dfaf235e15e87d1",
+    "runner": "57c008de79d47bb7624977eb27a6a97bb2cf752a201dee99d1d6d4710ac796ed",
     "auditor": "5da08510467aa48c7f53aee4c0979afa9fe9fa93a50e6acb71642b5276838420",
     "vare_adapter": "bbb3878c4046687f146881ab52871dcf1a5890b7bb3b940669c58afd9d721800",
     "rvl_files": {
@@ -385,5 +386,19 @@
       "src/rvl_systems/worker_rpc.py": "12c6b0515144483d664cec0e9e7c0596936348b9f5ba71cef87717dc275ddc03"
     }
   },
-  "sha256": "a93241a72ba16b52bea4d2fa353700bcfc909c9033f664546dd61b8cbf7d30c9"
+  "sha256": "fb8dd25d188157620c524579673afbd0528ee9e43aa5e0f81f2955dd232bebed",
+  "preflight_only_repairs": [
+    {
+      "attempt": 1,
+      "failure": "lock filename did not match the already hash-locked runner/auditor path",
+      "effect": "no protocol bytes, scientific conditions, data rows, or model state were changed; no inference started",
+      "record": "results/qwen-arc-grpo-update-smoke-v1/preflight-attempt-1/failure.json"
+    },
+    {
+      "attempt": 2,
+      "failure": "runner expected a missing top-level seeds mapping and omitted a Torch seed from the lock",
+      "effect": "train/validation parquet bytes were hashed, but no rows/labels were loaded and no model/inference/update occurred",
+      "record": "results/qwen-arc-grpo-update-smoke-v1/preflight-attempt-2/failure.json"
+    }
+  ]
 }

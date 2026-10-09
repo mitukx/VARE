@@ -120,6 +120,22 @@ def validate_sources(lock: dict, model_path: Path, rvl_path: Path) -> None:
             raise RuntimeError(f"model file mismatch: {name}")
 
 
+def validate_lock_schema(lock: dict) -> None:
+    if canonical_sha(lock) != lock.get("sha256"):
+        raise RuntimeError("protocol canonical digest mismatch")
+    if lock.get("protocol_id") != "qwen_arc_challenge_grpo_update_smoke_v1":
+        raise RuntimeError("unexpected protocol ID")
+    required = ("source_hashes", "model", "dataset", "selection", "runtime", "update", "rollout", "evaluation", "resources")
+    if any(key not in lock for key in required):
+        raise RuntimeError("protocol is missing a required section")
+    if "torch_seed" not in lock["runtime"] or "seed_base" not in lock["rollout"] or "eval" not in lock["evaluation"].get("seeds", {}):
+        raise RuntimeError("protocol is missing a frozen seed")
+    if len(lock["selection"]["train_ids"]) != lock["selection"]["train_n"] or len(lock["selection"]["validation_ids"]) != lock["selection"]["validation_n"]:
+        raise RuntimeError("protocol selection cardinality mismatch")
+    if set(lock["selection"]["validation_ids"]) & set(lock["selection"]["excluded_validation_ids"]):
+        raise RuntimeError("protocol validation sample overlaps consumed IDs")
+
+
 def _equal_nested(a: Any, b: Any) -> bool:
     import torch
     if isinstance(a, torch.Tensor) or isinstance(b, torch.Tensor):
@@ -133,6 +149,7 @@ def _equal_nested(a: Any, b: Any) -> bool:
 
 def run(model_path: Path, rvl_path: Path, train_parquet: Path, val_parquet: Path, out: Path) -> dict:
     lock = json.loads(LOCK_PATH.read_text(encoding="utf-8"))
+    validate_lock_schema(lock)
     validate_sources(lock, model_path, rvl_path)
     if sys.version.split()[0] != lock["runtime"]["python"]:
         raise RuntimeError("Python version mismatch")
@@ -156,7 +173,7 @@ def run(model_path: Path, rvl_path: Path, train_parquet: Path, val_parquet: Path
     if sha_file(train_parquet) != lock["dataset"]["train_sha256"] or sha_file(val_parquet) != lock["dataset"]["validation_sha256"]:
         raise RuntimeError("dataset parquet hash mismatch")
     torch.set_num_threads(lock["runtime"]["torch_threads"])
-    torch.manual_seed(lock["seeds"]["torch"])
+    torch.manual_seed(lock["runtime"]["torch_seed"])
     if torch.cuda.is_available():
         raise RuntimeError("protocol forbids CUDA")
     mps_available_but_disabled = bool(torch.backends.mps.is_available())
@@ -202,7 +219,7 @@ def run(model_path: Path, rvl_path: Path, train_parquet: Path, val_parquet: Path
 
         for row in val:
             task_id = str(row["id"])
-            generated = asyncio.run(backend.generate(task_id, prompts[task_id], n=1, temperature=0.0, seed=lock["seeds"]["eval"]))[0]
+            generated = asyncio.run(backend.generate(task_id, prompts[task_id], n=1, temperature=0.0, seed=lock["evaluation"]["seeds"]["eval"]))[0]
             parsed = parse_answer(generated.response)
             summary["base_eval"].append({
                 "task_id": task_id, "prompt_sha256": hashlib.sha256(prompts[task_id].encode()).hexdigest(),
@@ -218,7 +235,7 @@ def run(model_path: Path, rvl_path: Path, train_parquet: Path, val_parquet: Path
             generations = asyncio.run(backend.generate(
                 task_id, prompts[task_id], n=lock["update"]["group_size"],
                 temperature=lock["update"]["sampling_temperature"],
-                seed=lock["seeds"]["rollout_base"] + index,
+                seed=lock["rollout"]["seed_base"] + index,
             ))
             answer = str(row["answerKey"]).upper()
             rewards = [label_reward(g.response, answer) for g in generations]
@@ -285,7 +302,7 @@ def run(model_path: Path, rvl_path: Path, train_parquet: Path, val_parquet: Path
                 verifier_version=0, verifier_name="arc-answer-key-exact-match", trusted=True)
             exp.append(Experience(attempt=attempt, verification=verification, policy_lag=0, verifier_lag=0, shift_score=0.0))
         hooks = RVLGRPOHooks(backend=backend, trainer=trainer, eval_tasks=[], score_fn=lambda _t, _r: 0.0,
-            config=RVLGRPOConfig(train_temperature=lock["update"]["sampling_temperature"], seed=lock["seeds"]["rollout_base"]),
+            config=RVLGRPOConfig(train_temperature=lock["update"]["sampling_temperature"], seed=lock["rollout"]["seed_base"]),
             generation_factory=Generation, verified_generation_factory=VerifiedGeneration)
         incumbent = tensor_fingerprint(trainer.model.state_dict())
         rng_before = torch.get_rng_state().clone()
@@ -344,7 +361,7 @@ def run(model_path: Path, rvl_path: Path, train_parquet: Path, val_parquet: Path
             summary["checkpoint_roundtrip_exact"] = True
             for eval_row in val:
                 task_id = str(eval_row["id"])
-                generated = asyncio.run(reload_backend.generate(task_id, prompts[task_id], n=1, temperature=0.0, seed=lock["seeds"]["eval"]))[0]
+                generated = asyncio.run(reload_backend.generate(task_id, prompts[task_id], n=1, temperature=0.0, seed=lock["evaluation"]["seeds"]["eval"]))[0]
                 parsed = parse_answer(generated.response)
                 summary["post_reload_eval"].append({
                     "task_id": task_id, "prompt_sha256": hashlib.sha256(prompts[task_id].encode()).hexdigest(),
@@ -397,6 +414,7 @@ def main() -> int:
     args = parser.parse_args()
     signal.signal(signal.SIGALRM, lambda _s, _f: (_ for _ in ()).throw(TimeoutError("frozen wall-time limit exceeded")))
     lock = json.loads(LOCK_PATH.read_text(encoding="utf-8"))
+    validate_lock_schema(lock)
     if args.output.resolve().exists():
         raise FileExistsError(f"refusing to overwrite {args.output.resolve()}")
     signal.alarm(lock["resources"]["wall_seconds_cap"])

@@ -1,0 +1,17 @@
+{
+  "protocol_id": "qwen_arc_challenge_grpo_update_smoke_v1",
+  "attempt": 2,
+  "status": "preflight_failure_before_model_or_row_load",
+  "command_exit_code": 1,
+  "exception": "KeyError: seeds",
+  "failure": "Runner looked for a top-level seeds mapping that was nested under rollout and evaluation in the frozen lock; the Torch seed was omitted from runtime.",
+  "model_loaded": false,
+  "dataset_content_loaded": false,
+  "dataset_file_hashes_checked": true,
+  "validation_rows_or_labels_read": false,
+  "inference_started": false,
+  "optimizer_step_started": false,
+  "protocol_outcomes_observed": false,
+  "repair": "Use the frozen rollout/evaluation seed fields and add a fixed runtime.torch_seed. Add a lock-schema preflight before data or model loading.",
+  "timestamp_local": "2026-10-09"
+}
