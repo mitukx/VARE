@@ -1,0 +1,15 @@
+{
+  "protocol_id": "qwen_arc_challenge_grpo_update_smoke_v1",
+  "attempt": 1,
+  "status": "preflight_failure_before_inference",
+  "command_exit_code": 1,
+  "exception": "FileNotFoundError",
+  "failure": "Runner expected protocols/qwen_arc_grpo_update_smoke_v1.lock.json, while the identical frozen lock was committed under protocols/qwen_arc_challenge_grpo_update_smoke_v1.lock.json.",
+  "model_loaded": false,
+  "dataset_loaded": false,
+  "inference_started": false,
+  "optimizer_step_started": false,
+  "protocol_outcomes_observed": false,
+  "repair": "Rename the frozen lock file to the path already embedded in the source-hashed runner and auditor. Lock bytes and all scientific conditions remain unchanged.",
+  "timestamp_local": "2026-10-09"
+}
