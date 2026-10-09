@@ -1,0 +1,25 @@
+{
+  "auditor": "same-host read-only subagent",
+  "external_human_review": false,
+  "source_revision_match": true,
+  "base_source_hashes_match_lock": true,
+  "candidate_source_hashes_match_lock": true,
+  "candidate_patch_hash_matches_lock": true,
+  "script_hash_matches_lock": true,
+  "exit_codes_zero": true,
+  "fixed_version_control_delivers_both_forks_for_both_sources": true,
+  "baseline_after_transition": {
+    "first_microbatch": "fork row 10",
+    "second_microbatch": "fresh sentinel 90",
+    "stale_rows_dropped": 1,
+    "version_checks": 3
+  },
+  "candidate_after_transition": {
+    "first_microbatch": "fork row 10",
+    "second_microbatch": "stale fork sibling 11",
+    "stale_rows_dropped": 0,
+    "version_checks": 1
+  },
+  "protocol_freshness_candidate_gate": "failed as predicted by the falsification criterion",
+  "claim_limit": "Queue, fixed-count batching, and collation only; no optimizer, gradient, prevalence, or capability measurement."
+}

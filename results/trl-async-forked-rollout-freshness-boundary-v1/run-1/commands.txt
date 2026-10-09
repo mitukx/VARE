@@ -1,0 +1,11 @@
+# Frozen in VARE commit a2a9a38 before confirmation.
+# TRL base source: /tmp/trl-vare-async-staleness-main at ed8cc2f4337fb9b7b1429db31009ad3577cd5b98
+# Candidate source: /tmp/trl-vare-async-staleness-candidate at same base plus candidate-fix.patch
+
+PYTHONPATH=/tmp/trl-vare-pydeps:/tmp/trl-vare-async-staleness-main \
+  python scripts/reproduce_trl_async_forked_rollout_freshness_boundary_v1.py
+
+PYTHONPATH=/tmp/trl-vare-pydeps:/tmp/trl-vare-async-staleness-candidate \
+  python scripts/reproduce_trl_async_forked_rollout_freshness_boundary_v1.py
+
+# Outputs and exit codes are retained in baseline/ and candidate/.

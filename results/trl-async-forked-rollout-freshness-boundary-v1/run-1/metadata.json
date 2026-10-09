@@ -1,0 +1,26 @@
+{
+  "protocol": "trl_async_forked_rollout_freshness_boundary_v1",
+  "protocol_commit": "a2a9a38",
+  "protocol_sha256": "01e5cbe9eb9ea0ea8604c3a09bc98ed661882fdd09f29a6199a1101414657fae",
+  "source_repository": "https://github.com/huggingface/trl",
+  "source_revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+  "candidate_patch_sha256": "df6bfd03224bc961658d7366eea590cd2be4ad5c1940d4153b893e1373f6c163",
+  "script_sha256": "240c5debda62858b3279db2c0afdad8b7abf3cf5236b8f774e724643d6c696f5",
+  "environment": {
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3",
+    "accelerate": "1.12.0",
+    "pytest": "8.4.2",
+    "device": "CPU",
+    "host_platform": "macOS"
+  },
+  "base_source_path": "/tmp/trl-vare-async-staleness-main",
+  "candidate_source_path": "/tmp/trl-vare-async-staleness-candidate",
+  "protocol_execution_exit_codes": {
+    "baseline": 0,
+    "candidate": 0
+  },
+  "interpretation": "Harness completed. Fixed-version controls pass. The candidate fails the frozen use-time freshness criterion by emitting a version-0 sibling after the injected transition; this is not evidence of an optimizer or capability effect.",
+  "external_spend_usd": 0
+}
