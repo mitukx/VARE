@@ -1,0 +1,65 @@
+{
+  "checks": {
+    "active_component_mse": {
+      "behavior_full": 8.847809810914272e-05,
+      "behavior_target_stratum_triple_oracle": 5.849433518479073e-07,
+      "behavior_uniform_triple": 0.00026601923767927604,
+      "fresh_target_stratum_triple_oracle": 5.849433518479073e-07,
+      "fresh_target_uniform_triple": 2.9384376526779443e-05,
+      "item": 9.359093629566517e-06,
+      "pair": 9.359093629566517e-06
+    },
+    "behavior_action_mass": "3/256",
+    "independent_decimal_truth_table_coefficient_matches": "-0.058012701892219323381861585376468091735701313452595157013952",
+    "target_action_mass": "27/256",
+    "target_sign_magnitudes_equal": "0.00305926357634750338146535704133718452512487395160169773315772",
+    "target_to_behavior_ratio": "9",
+    "transcript_tv_and_minimax_sign_risk": {
+      "behavior_full": {
+        "informative_record_probability": "3/256",
+        "n_groups": 36,
+        "optimal_minimax_wrong_sign_probability": 0.41273551040444434,
+        "transcript_total_variation": 0.17452897919111127
+      },
+      "behavior_target_stratum_triple_oracle": {
+        "informative_record_probability": "1",
+        "n_groups": 48,
+        "optimal_minimax_wrong_sign_probability": 0.00010900623568078882,
+        "transcript_total_variation": 0.9997819875286384
+      },
+      "behavior_uniform_triple": {
+        "informative_record_probability": "3/1024",
+        "n_groups": 48,
+        "optimal_minimax_wrong_sign_probability": 0.46712197798970484,
+        "transcript_total_variation": 0.06575604402059028
+      },
+      "fresh_target_stratum_triple_oracle": {
+        "informative_record_probability": "1",
+        "n_groups": 48,
+        "optimal_minimax_wrong_sign_probability": 0.00010900623568078882,
+        "transcript_total_variation": 0.9997819875286384
+      },
+      "fresh_target_uniform_triple": {
+        "informative_record_probability": "27/1024",
+        "n_groups": 48,
+        "optimal_minimax_wrong_sign_probability": 0.3064212063675535,
+        "transcript_total_variation": 0.387157587264893
+      },
+      "item": {
+        "informative_record_probability": "0",
+        "n_groups": 144,
+        "optimal_minimax_wrong_sign_probability": 0.5,
+        "transcript_total_variation": 0.0
+      },
+      "pair": {
+        "informative_record_probability": "0",
+        "n_groups": 72,
+        "optimal_minimax_wrong_sign_probability": 0.5,
+        "transcript_total_variation": 0.0
+      }
+    }
+  },
+  "independence": "Truth-table coefficient uses Decimal direct enumeration; transcript TV uses an explicit multinomial sum, separate from the runner's binomial mixture decomposition.",
+  "protocol_sha256": "470a1f0cda6d5e7a5e46a4bdbe9bb09d718ab583c2c4bf4c34b98a0766c6496a",
+  "status": "PASS"
+}

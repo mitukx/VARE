@@ -1,0 +1,123 @@
+{
+  "designs": [
+    {
+      "active_component_estimator_mse": 9.35909362956651e-06,
+      "assumption_or_status": "ordinary design",
+      "behavior_action_observation_mass": "3/256",
+      "clean_label_calls": 144,
+      "design": "item",
+      "expected_source_groups": 144.0,
+      "groups_in_estimator": 144,
+      "informative_record_probability": "0",
+      "optimal_minimax_wrong_sign_probability": 0.5,
+      "target_action_observation_mass": "27/256",
+      "transcript_total_variation": 0.0,
+      "transcript_total_variation_exact": "0"
+    },
+    {
+      "active_component_estimator_mse": 9.35909362956651e-06,
+      "assumption_or_status": "ordinary design",
+      "behavior_action_observation_mass": "3/256",
+      "clean_label_calls": 144,
+      "design": "pair",
+      "expected_source_groups": 72.0,
+      "groups_in_estimator": 72,
+      "informative_record_probability": "0",
+      "optimal_minimax_wrong_sign_probability": 0.5,
+      "target_action_observation_mass": "27/256",
+      "transcript_total_variation": 0.0,
+      "transcript_total_variation_exact": "0"
+    },
+    {
+      "active_component_estimator_mse": 8.847809810914264e-05,
+      "assumption_or_status": "ordinary design",
+      "behavior_action_observation_mass": "3/256",
+      "clean_label_calls": 144,
+      "design": "behavior_full",
+      "expected_source_groups": 36.0,
+      "groups_in_estimator": 36,
+      "informative_record_probability": "3/256",
+      "optimal_minimax_wrong_sign_probability": 0.41273551040444434,
+      "target_action_observation_mass": "27/256",
+      "transcript_total_variation": 0.17452897919111127,
+      "transcript_total_variation_exact": "12809023111199158623424136626158047220411977786666543268047591257820912518337369772913687044521728718863149/73391955711682288371546268649666782105490079653384995959602842860381532034831513858240593699524021969747968"
+    },
+    {
+      "active_component_estimator_mse": 0.0002660192376792758,
+      "assumption_or_status": "ordinary design",
+      "behavior_action_observation_mass": "3/256",
+      "clean_label_calls": 144,
+      "design": "behavior_uniform_triple",
+      "expected_source_groups": 48.0,
+      "groups_in_estimator": 48,
+      "informative_record_probability": "3/1024",
+      "optimal_minimax_wrong_sign_probability": 0.46712197798970484,
+      "target_action_observation_mass": "27/256",
+      "transcript_total_variation": 0.06575604402059028,
+      "transcript_total_variation_exact": "127058349741372882086792909192794611501306918149964620934265545125436419706193357920382639739626032445785739568842673325445443153549441105530071965036176128662798859621473/1932268761508629172347675945465993672149463664853217499328617625725759571144780212268096883290961288981231808015751088588682539330521493827871454336733540374348490407411712"
+    },
+    {
+      "active_component_estimator_mse": 5.849433518479067e-07,
+      "assumption_or_status": "oracle allocation; conditions on known adversarial action and subset",
+      "behavior_action_observation_mass": "3/256",
+      "clean_label_calls": 144,
+      "design": "behavior_target_stratum_triple_oracle",
+      "expected_source_groups": 4096.0,
+      "groups_in_estimator": 48,
+      "informative_record_probability": "1",
+      "optimal_minimax_wrong_sign_probability": 0.00010900623568078882,
+      "target_action_observation_mass": "27/256",
+      "transcript_total_variation": 0.9997819875286384,
+      "transcript_total_variation_exact": "618835076459009110320353041/618970019642690137449562112"
+    },
+    {
+      "active_component_estimator_mse": 2.9384376526779416e-05,
+      "assumption_or_status": "ordinary design",
+      "behavior_action_observation_mass": "3/256",
+      "clean_label_calls": 144,
+      "design": "fresh_target_uniform_triple",
+      "expected_source_groups": 48.0,
+      "groups_in_estimator": 48,
+      "informative_record_probability": "27/1024",
+      "optimal_minimax_wrong_sign_probability": 0.3064212063675535,
+      "target_action_observation_mass": "27/256",
+      "transcript_total_variation": 0.387157587264893,
+      "transcript_total_variation_exact": "748092511653003905354272948676709079160288458122690819857036079016989315726851201585126646382008019856646099236530885548533189835393686485828213915421296420113108585521121/1932268761508629172347675945465993672149463664853217499328617625725759571144780212268096883290961288981231808015751088588682539330521493827871454336733540374348490407411712"
+    },
+    {
+      "active_component_estimator_mse": 5.849433518479067e-07,
+      "assumption_or_status": "oracle allocation; conditions on known adversarial action and subset",
+      "behavior_action_observation_mass": "3/256",
+      "clean_label_calls": 144,
+      "design": "fresh_target_stratum_triple_oracle",
+      "expected_source_groups": 455.1111111111111,
+      "groups_in_estimator": 48,
+      "informative_record_probability": "1",
+      "optimal_minimax_wrong_sign_probability": 0.00010900623568078882,
+      "target_action_observation_mass": "27/256",
+      "transcript_total_variation": 0.9997819875286384,
+      "transcript_total_variation_exact": "618835076459009110320353041/618970019642690137449562112"
+    }
+  ],
+  "estimand": {
+    "absolute_target_update_mean": 0.0030592635763475023,
+    "active_walsh_coefficient": -0.0580127018922193,
+    "active_walsh_coefficient_exact": {
+      "rational": "3/8",
+      "sqrt3_coefficient": "-1/4"
+    },
+    "behavior_action_mass": "3/256",
+    "epsilon": "1/2",
+    "target_action_mass": "27/256",
+    "target_to_behavior_action_ratio": "9",
+    "target_update_mean_world_minus": 0.0030592635763475023,
+    "target_update_mean_world_plus": -0.0030592635763475023
+  },
+  "limitations": [
+    "Exact two-world synthetic analysis; no model, optimizer, or real verifier.",
+    "The MSE is for the active Walsh-component estimator under the frozen parity pair.",
+    "Oracle-stratum designs know the action and subset carrying the hidden signal.",
+    "Action importance weighting assumes P(Y|A) is stationary across policies."
+  ],
+  "protocol_sha256": "470a1f0cda6d5e7a5e46a4bdbe9bb09d718ab583c2c4bf4c34b98a0766c6496a"
+}

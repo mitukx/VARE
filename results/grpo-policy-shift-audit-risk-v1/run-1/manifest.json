@@ -1,0 +1,16 @@
+{
+  "ci_status": "workflow step added; remote CI not triggered from this local commit",
+  "commands": [
+    "python scripts/run_grpo_policy_shift_audit_risk_v1.py",
+    "python scripts/audit_grpo_policy_shift_audit_risk_v1.py"
+  ],
+  "independent_audit_status": "PASS; independent_audit.json retained",
+  "pytest_status": "attempted but unavailable: pytest is not installed in the available interpreter",
+  "python": "3.12.12",
+  "runner_status": "completed; raw.json retained",
+  "sha256": {
+    "protocols/grpo_policy_shift_audit_risk_v1.lock.json": "470a1f0cda6d5e7a5e46a4bdbe9bb09d718ab583c2c4bf4c34b98a0766c6496a",
+    "scripts/audit_grpo_policy_shift_audit_risk_v1.py": "df88fc2b13169ea751a0bf71ce59eee7142bf236ba3ffcf8b94c687d4139a1b3",
+    "scripts/run_grpo_policy_shift_audit_risk_v1.py": "a9e748d07a130caa17c0b6394a662cb0841dd12f7d11669c1e7f2cec5c8c4afa"
+  }
+}

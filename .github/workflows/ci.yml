@@ -27,6 +27,10 @@ jobs:
           python scripts/run_grpo_partial_audit_estimator_v1.py
           python scripts/audit_grpo_partial_audit_estimator_v1.py
           python scripts/audit_grpo_partial_audit_summary_v1.py
+      - name: Recompute and independently audit policy-shift GRPO sign risk
+        run: |
+          python scripts/run_grpo_policy_shift_audit_risk_v1.py
+          python scripts/audit_grpo_policy_shift_audit_risk_v1.py
       - run: vare demo --rounds 4 --rollouts 256 --seed 7 --output artifacts/demo.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:

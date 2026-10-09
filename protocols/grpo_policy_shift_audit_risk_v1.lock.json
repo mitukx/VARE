@@ -1,0 +1,47 @@
+{
+  "protocol_id": "grpo_policy_shift_audit_risk_v1",
+  "status": "frozen_before_independent_runner_and_auditor",
+  "question": "Under a fixed clean-label budget, how does policy-induced action-distribution shift interact with the order-three label inclusion needed to decide the sign of VARE's four-member clean GRPO update?",
+  "selection_disclosure": "The action-shift stress case is selected from VARE's existing exact four-member Walsh witness. Protocol parameters are fixed for a deterministic finite analysis; this is not a preregistered confirmatory model experiment.",
+  "estimand": {
+    "group_size": 4,
+    "behavior_policy": "A_i iid Bernoulli(1/4)",
+    "target_policy": "A_i iid Bernoulli(3/4)",
+    "target_action": "1110",
+    "active_label_subset": [0, 1, 2],
+    "clean_update": "G(a,y)=sum_i A_i(y)*(a_i-1/4); group population-standardized binary rewards, constant groups mapped to zero",
+    "target_mean": "theta(pi)=E_{A~pi,P(.|A)}[G(A,Y)]",
+    "transport_assumption": "The conditional clean-label law P(Y|A) is invariant between behavior-data collection and target-policy evaluation. This isolates action-distribution shift; verifier/task conditional shift is outside this estimand.",
+    "two_worlds": "At action 1110, P_s(y|a)=2^-4*(1+s*(1/2)*chi_{012}(y)), s in {-1,+1}; at every other action, labels are uniform over {0,1}^4.",
+    "primary_outcome": "Exact minimax wrong-sign probability for distinguishing the opposite-sign target update means under each audit design.",
+    "secondary_outcomes": ["exact bias and MSE of the active Walsh-component estimator", "clean-label calls", "behavior/target rollout groups consumed or expected" ]
+  },
+  "audit_designs": [
+    {"name": "item", "labels_per_group": 1, "subset": "uniform singleton"},
+    {"name": "pair", "labels_per_group": 2, "subset": "uniform pair"},
+    {"name": "behavior_full", "labels_per_group": 4, "source": "behavior policy"},
+    {"name": "behavior_uniform_triple", "labels_per_group": 3, "subset": "uniform triple", "source": "behavior policy"},
+    {"name": "behavior_target_stratum_triple_oracle", "labels_per_group": 3, "subset": "012", "source": "behavior groups conditioned on action 1110; oracle allocation benchmark"},
+    {"name": "fresh_target_uniform_triple", "labels_per_group": 3, "subset": "uniform triple", "source": "new target-policy groups; requires the stated conditional-law invariance"},
+    {"name": "fresh_target_stratum_triple_oracle", "labels_per_group": 3, "subset": "012", "source": "target-policy groups conditioned on action 1110; oracle allocation benchmark"}
+  ],
+  "matched_budget": {
+    "clean_label_calls": 144,
+    "independent_groups": "144 / labels_per_group for non-oracle designs; 48 target-action groups for stratum-conditioned oracle designs",
+    "sampling": "All group rows are independent. Audit subset randomization is uniform and independent of labels except in explicitly marked oracle-stratum designs.",
+    "cost_accounting": "Match clean-label calls. Separately report rollout-group demand; do not describe group counts as matched. Expected behavior groups to obtain 48 action-1110 rows are 48 / P_mu(1110). Expected target groups are 48 / P_pi(1110)."
+  },
+  "analysis": {
+    "exactness": "Use exact rational arithmetic for probabilities and exact rational-plus-sqrt(3) arithmetic for the GRPO Walsh coefficient. Compute finite-sample transcript total variation by dynamic programming over informative parity observations.",
+    "decision_bound": "For two equally likely worlds with opposite target-mean signs, the optimal minimax classification error is (1-TV(P_+^n,P_-^n))/2.",
+    "estimators": "Estimate the target-weighted active Walsh component using known action and audit propensities. Item/pair estimators are identically zero for this component because the active third-order character is unobserved.",
+    "independent_oracle": "A second script recomputes truth-table coefficients, audit inclusion rates, estimator moments, and transcript TV without importing the runner."
+  },
+  "decision_criteria": {
+    "supports_mechanism_if": ["item and pair transcript laws are identical across worlds", "uniform behavior triples have lower information than full behavior groups at equal label cost for the selected witness", "conditioning audits on the target action improves label efficiency while increasing rollout-group demand", "fresh target-policy audits recover information only under the declared transport assumption"],
+    "rejects_focused_claim_if": "Any independently recomputed coefficient, target mean, matched-cost moment, or total-variation value disagrees with the runner beyond exact arithmetic equality.",
+    "novelty": "Do not claim a new general estimator or general theory. Assess only whether the exact finite-budget GRPO sign-risk interaction adds a useful, distinct quantitative boundary to prior work."
+  },
+  "resource_budget": {"gpu": 0, "paid_api": 0, "external_spend": 0, "dependencies": "Python standard library only"},
+  "limitations": ["Four-member Bernoulli action model and one synthetic parity pair only.", "Conditional verifier/task law is fixed given the complete action vector; semantic policy-induced conditional shift is not modeled.", "Oracle stratum allocations know the adversarial action and Walsh subset and are upper bounds, not deployable methods.", "Finite group count and clean-label cost are distinct; rollout costs are reported separately.", "No language model, optimizer trajectory, actual verifier, or capability outcome is evaluated."]
+}

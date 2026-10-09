@@ -52,7 +52,7 @@ The full local macOS suite completed with **225 passed, 12 skipped, and four fai
 - No task-success, held-out capability, throughput, production prevalence, upstream acceptance, or outside reproduction is established.
 - Mixed-policy group methods can be principled when their data construction and target objective are explicit. This patch fails closed for VARE groups whose metadata disagree; it does not prohibit an explicitly designed mixed-policy algorithm.
 
-**Decision: STOP this line as an original research claim; retain the local correctness fix.** The defect and remediation are validated at E0 (harness/data-contract correctness). The result is not a substantial original contribution suitable to present as frontier-lab research impact. Next work should identify a separately novel trainer correctness failure or an affordable independent task-success result, not extend this provenance patch into a new algorithm.
+**Decision: STOP this line as an original research claim; retain the local correctness fix.** The defect and remediation are validated at E0 (harness/data-contract correctness). The result is not a substantial original research contribution. Next work should identify a separately novel trainer correctness failure or an affordable independent task-success result, not extend this provenance patch into a new algorithm.
 
 ## Reproduction commands
 
