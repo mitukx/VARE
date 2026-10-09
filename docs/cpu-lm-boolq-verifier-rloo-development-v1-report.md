@@ -30,6 +30,6 @@ Study wall time was 213.9 seconds with 2.41 GB recorded peak RSS. Corrected audi
 
 ## Claim boundary and next step
 
-This result supports only that the specified small binary-action experiment ran under its frozen CPU protocol and that a same-host auditor reconstructed a **non-pass**. It is not sequence-level RL, free-form generation improvement, preference alignment, broad reasoning, scale evidence, external validation, or proof of hiring readiness. Retire these confirmation ranks. A follow-up should begin with a materially different falsifiable question and a fresh protocol, rather than retuning this threshold or reusing this development cohort.
+This result supports only that the specified small binary-action experiment ran under its frozen CPU protocol and that a same-host auditor reconstructed a **non-pass**. It is not sequence-level RL, free-form generation improvement, preference alignment, broad reasoning, scale evidence, external validation, or broader downstream impact. Retire these confirmation ranks. A follow-up should begin with a materially different falsifiable question and a fresh protocol, rather than retuning this threshold or reusing this development cohort.
 
 The raw bundle is [`run-1`](../results/cpu-lm-boolq-verifier-rloo-development-v1/run-1/); its final SHA-256 manifest covers the auditor report and preserves the first-audit failure record.
