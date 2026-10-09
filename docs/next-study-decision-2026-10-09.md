@@ -1,5 +1,11 @@
 # Next study decision — 2026-10-09
 
+## Update — engine rollout task-binding defect
+
+A frozen CPU regression reproduced a trust-boundary failure at `ff434df`: `CapabilityLoop` dispatched one task, accepted an `Attempt` for a different task, verified it, and admitted it to training. The fix validates the returned object and exact task ID, prompt, and family before verification. Three mismatch cases failed on baseline and all four frozen cases pass after the fix. The focused engine/replay suite passed 18 tests. The full local suite has four `smoke-stable-logsumexp` failures; those exact failures reproduce from the baseline commit and remain unresolved. See the [report](engine-rollout-task-binding-v1-report.md) and [raw evidence](../results/engine-rollout-task-binding-v1/run-1/).
+
+**Decision:** retain the narrow fix, but classify it as E0 harness correctness only. It does not change the primary evidence gap: no independently confirmed task-success improvement after a real model update. Next inspect other generation/adapter boundaries for a similarly concrete provenance defect or seek independent reproduction of retained results. Do not infer policy lineage from exact version equality; stale rollouts are permitted by current lag semantics.
+
 ## Update — make retained v3 audit portable without changing the experiment
 
 The v3 replay auditor previously depended on an absolute RVL checkout path from the original host. It now takes the pinned RVL source and model snapshot as explicit arguments. Re-running it against the retained bundle on the original host passed 19/19 checks. An adversarial review confirmed the report's measurement claims against the summary and frozen sources, while identifying one evidence boundary: the audit checks the model-round-trip boolean and fingerprint string recorded by the runner; the deleted temporary checkpoint cannot be independently rehashed. The runner result remains failed after its post-gate cleanup exception, and this audit remains same-host author evidence. This portability repair improves reviewability but does not close the task-success or outside-review gaps. Reproduction instructions and limitation are in the [v3 report](rvl-cpu-real-model-update-path-v3-report.md).

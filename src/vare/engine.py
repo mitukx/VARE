@@ -13,7 +13,7 @@ from .lifecycle import FailureDrivenTaskGenerator, VerifierRefreshController
 from .promotion import PromotionGate
 from .replay import PrioritizedReplay
 from .telemetry import EventLog
-from .types import Experience, PromotionDecision, RoundResult, Task, snapshot_verification
+from .types import Attempt, Experience, PromotionDecision, RoundResult, Task, snapshot_verification
 from .verifiers import VerifierEnsemble
 
 
@@ -63,6 +63,15 @@ class CapabilityLoop:
             step = self.step
             self.step += 1
             attempt = await self.hooks.rollout(task, policy_id, policy_version, step)
+            if not isinstance(attempt, Attempt):
+                raise TypeError("rollout hook must return an Attempt")
+            if (
+                not isinstance(attempt.task, Task)
+                or attempt.task.id != task.id
+                or attempt.task.prompt != task.prompt
+                or attempt.task.family != task.family
+            ):
+                raise ValueError("rollout task identity mismatch")
             group_id = task.metadata.get("vare_rollout_group")
             if group_id is not None:
                 attempt.metadata["vare_rollout_group"] = group_id

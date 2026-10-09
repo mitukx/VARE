@@ -1,0 +1,51 @@
+FFF.                                                                     [100%]
+=================================== FAILURES ===================================
+_ test_rollout_for_a_different_task_is_rejected_before_verification_or_training[id] _
+
+altered_field = 'id'
+
+    @pytest.mark.parametrize("altered_field", ["id", "prompt", "family"])
+    def test_rollout_for_a_different_task_is_rejected_before_verification_or_training(altered_field):
+        hooks = Hooks(altered_field=altered_field)
+        verifier = AlwaysVerifier()
+        loop = _loop(hooks, verifier)
+
+>       with pytest.raises(ValueError, match="rollout task identity mismatch"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_rollout_task_binding.py:74: Failed
+_ test_rollout_for_a_different_task_is_rejected_before_verification_or_training[prompt] _
+
+altered_field = 'prompt'
+
+    @pytest.mark.parametrize("altered_field", ["id", "prompt", "family"])
+    def test_rollout_for_a_different_task_is_rejected_before_verification_or_training(altered_field):
+        hooks = Hooks(altered_field=altered_field)
+        verifier = AlwaysVerifier()
+        loop = _loop(hooks, verifier)
+
+>       with pytest.raises(ValueError, match="rollout task identity mismatch"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_rollout_task_binding.py:74: Failed
+_ test_rollout_for_a_different_task_is_rejected_before_verification_or_training[family] _
+
+altered_field = 'family'
+
+    @pytest.mark.parametrize("altered_field", ["id", "prompt", "family"])
+    def test_rollout_for_a_different_task_is_rejected_before_verification_or_training(altered_field):
+        hooks = Hooks(altered_field=altered_field)
+        verifier = AlwaysVerifier()
+        loop = _loop(hooks, verifier)
+
+>       with pytest.raises(ValueError, match="rollout task identity mismatch"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_rollout_task_binding.py:74: Failed
+=========================== short test summary info ============================
+FAILED tests/test_rollout_task_binding.py::test_rollout_for_a_different_task_is_rejected_before_verification_or_training[id]
+FAILED tests/test_rollout_task_binding.py::test_rollout_for_a_different_task_is_rejected_before_verification_or_training[prompt]
+FAILED tests/test_rollout_task_binding.py::test_rollout_for_a_different_task_is_rejected_before_verification_or_training[family]
