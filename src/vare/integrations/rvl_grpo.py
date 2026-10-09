@@ -114,6 +114,8 @@ class RVLGRPOHooks:
             raise RuntimeError("RVL backend returned unexpected generation count")
         generation = rows[0]
         g = self._generation_fields(generation)
+        if g["prompt_id"] != task.id or g["prompt"] != task.prompt:
+            raise ValueError("RVL generation task identity mismatch")
         return Attempt(
             task=task,
             output=g["response"],

@@ -1,5 +1,11 @@
 # Next study decision — 2026-10-09
 
+## Update — RVL GRPO verifier-to-training prompt binding
+
+A frozen adapter regression found that `RVLGRPOHooks.rollout` accepted backend generation metadata for a different prompt while returning an `Attempt` bound to the requested task. The engine verifies the outer task and response, while the RVL GRPO trainer later reconstructs token-exact input from the embedded metadata. The adapter now rejects mismatched generation `prompt_id` or `prompt` before returning the attempt. Baseline: 2/3 frozen tests failed; fixed: 3/3; adjacent RVL and engine tests: 15 passed. See the [report](rvl-grpo-rollout-task-binding-v1-report.md) and [bundle](../results/rvl-grpo-rollout-task-binding-v1/run-1/).
+
+**Decision:** retain this as a narrow E0 trainer-input integrity repair. The main gap is unchanged: no independently confirmed task-success gain after a real model update and no outside reproduction. The next improvement should target an independently measured learner outcome or external review, not add another generic binding layer.
+
 ## Update — engine rollout task-binding defect
 
 A frozen CPU regression reproduced a trust-boundary failure at `ff434df`: `CapabilityLoop` dispatched one task, accepted an `Attempt` for a different task, verified it, and admitted it to training. The fix validates the returned object and exact task ID, prompt, and family before verification. Three mismatch cases failed on baseline and all four frozen cases pass after the fix. The focused engine/replay suite passed 18 tests. The full local suite has four `smoke-stable-logsumexp` failures; those exact failures reproduce from the baseline commit and remain unresolved. See the [report](engine-rollout-task-binding-v1-report.md) and [raw evidence](../results/engine-rollout-task-binding-v1/run-1/).
