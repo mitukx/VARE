@@ -1,0 +1,64 @@
+{
+  "study_id": "rvl_module_mode_snapshot_upstream_v4",
+  "status": "completed_replay_record",
+  "recorded_on": "2026-10-10",
+  "upstream_repository": "https://github.com/mitukx/Recursive-Verification-Lag",
+  "upstream_base_commit": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "runtime": {
+    "python": "3.12.12",
+    "pytorch": "2.9.1",
+    "transformers": "4.57.3",
+    "device": "CPU",
+    "paid_compute": false,
+    "pretrained_model_or_dataset": false
+  },
+  "primary_regression": "tests.test_mini_lab_torch.TorchAcceptanceTests.test_hf_trainer_transaction_restores_mixed_module_modes",
+  "failure_injection": "Real trainer and AdamW update mutate model and optimizer; wrapper consumes CPU RNG and raises immediately after optimizer.step; snapshot is then restored.",
+  "independent_checks": [
+    "model parameters and buffers",
+    "optimizer state",
+    "CPU RNG bytes",
+    "per-module training flags",
+    "exact subsequent forward logits with active Dropout and restored RNG",
+    "legacy snapshot without module_modes"
+  ],
+  "expected_baseline": {
+    "status": "one_test_fails",
+    "only_failed_assertions": [
+      "per-module modes",
+      "subsequent dropout forward"
+    ],
+    "raw_log": "results/rvl-module-mode-upstream-v4/clean-clone-replay-20261010/baseline.log",
+    "sha256": "85cce22e5e3f5d91bbd15266f4b11b7524610470bdf0187f57500458f5e64257"
+  },
+  "patched_result": {
+    "status": "passed",
+    "test_file": "tests.test_mini_lab_torch",
+    "tests_passed": 13,
+    "raw_log": "results/rvl-module-mode-upstream-v4/clean-clone-replay-20261010/patched.log",
+    "sha256": "dbd2873df64816f949d8f5d1fe6ddb758e5dfc281a345fe85cc666d66aa90874"
+  },
+  "artifacts": {
+    "combined_patch": {
+      "path": "contributions/rvl-module-mode-snapshot-v4.patch",
+      "sha256": "3af3e82812e03a3a742f25f7f5d6ac5a7c3fe1dbe89052302818c8b95e70935d"
+    },
+    "test_only_patch": {
+      "path": "results/rvl-module-mode-upstream-v4/test-only.patch",
+      "sha256": "cae7f30d230e905a6dd30915209c5a7fa3fa7787f9d9f402fe450044de576f1d"
+    },
+    "reproduction_script": {
+      "path": "scripts/reproduce_rvl_module_mode_snapshot_v4.sh",
+      "sha256": "812246998756f2e87522ee2c7f8bd83ccb0631842669f4de2f8c3dbf2f3f9c99"
+    },
+    "report": "docs/rvl-module-mode-snapshot-final-review-v4.md"
+  },
+  "reproduction_command": "PYTHON=python3.12 bash scripts/reproduce_rvl_module_mode_snapshot_v4.sh results/rvl-module-mode-upstream-v4/replay-YYYYMMDD",
+  "limitations": [
+    "Tiny randomly initialized GPT-2 fixture; not pretrained-model evaluation.",
+    "Mixed-mode rollback correctness is demonstrated; default RVL Qwen-path impact and production incidence are unproven.",
+    "No task-success or model-quality improvement is measured.",
+    "CUDA RNG, accelerator, and distributed rollback behavior are not tested.",
+    "The replay is author-run on one host; independent human review is outstanding."
+  ]
+}
