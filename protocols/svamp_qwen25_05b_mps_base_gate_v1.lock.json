@@ -1,0 +1,65 @@
+{
+  "protocol_id": "svamp-qwen25-05b-mps-base-gate-v1",
+  "status": "frozen-before-any-svamp-model-output",
+  "question": "Does the cached Qwen2.5-0.5B-Instruct produce enough valid, exactly correct answers and mixed group rewards on a disjoint SVAMP development cohort to justify a local MPS post-training cost smoke?",
+  "model": {
+    "repo": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "device": "Apple MPS",
+    "dtype": "float16",
+    "generation": "greedy base outputs; temperature=0.8, top_p=0.95 for reward-variance samples"
+  },
+  "dataset": {
+    "repo": "ChilleD/SVAMP",
+    "revision": "5e0bf1e5e7c0e9c4bc39180d224f41f3f801b7ef",
+    "license": "MIT",
+    "train_file": "train.json",
+    "train_file_sha256": "bb3b4cd2957f07643bbf9f8f8f5faba3bfb47fcb1d9034655b03060a76675e2b",
+    "train_rows": 700,
+    "test_rows": 300,
+    "confirmation_policy": "Do not download, open, hash, or score test.json in this gate or before a separately frozen update protocol."
+  },
+  "cohorts": {
+    "label_integrity": "Evaluate each train-row Equation with a Decimal AST interpreter limited to numeric literals and + - * /. Exclude any row whose computed equation differs exactly from Answer; retain the exclusion. Expected known exclusion: chal-680.",
+    "dev": "Among the remaining train rows, sort by SHA256('VARE-SVAMP-v1/dev:' + ID); first 100 are development, remainder are training-only.",
+    "base_greedy": "Sort the 100 development IDs by SHA256('VARE-SVAMP-v1/base:' + ID); score the first 64 once each with greedy decoding.",
+    "reward_variance": "From those 64, sort by SHA256('VARE-SVAMP-v1/variance:' + ID); sample the first 16 four times each at temperature 0.8 and top_p 0.95, using seed 20261009 + 100 * group_rank + sample_rank."
+  },
+  "prompt": "Solve this arithmetic word problem. Show concise arithmetic reasoning. End with exactly one line <answer>NUMBER</answer>, with an integer or decimal and no thousands separators.\n\n{Body}\n{Question}",
+  "independent_grader": {
+    "target": "The numeric Answer field from the held-out task row.",
+    "parser": "Require exactly one case-sensitive <answer>...</answer> pair; the entire trimmed content must match [+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?; parse as Decimal and compare exactly to Decimal(str(Answer)).",
+    "invalid_or_unparseable": "Incorrect for exact accuracy and separately counted as parse failure.",
+    "independent_check": "The grader is locally implemented and does not use model reward output. Training-split Equation/Answer consistency is audited independently; the untouched official test split remains unopened."
+  },
+  "primary_metrics": [
+    "Greedy exact numeric accuracy over 64 dev tasks, with parse failures counted incorrect",
+    "Greedy parser validity over 64 dev tasks",
+    "Fraction of 16 sampled four-response groups with both reward values 0 and 1",
+    "Wall-clock runtime and peak process RSS"
+  ],
+  "go_gate": {
+    "minimum_greedy_exact": "13/64",
+    "minimum_greedy_parseable": "61/64",
+    "minimum_mixed_reward_groups": "4/16",
+    "maximum_wall_seconds": 5400,
+    "maximum_peak_rss_bytes": 12884901888,
+    "action_if_pass": "Freeze a separate update-path cost protocol; this gate alone does not authorize full training or opening official test data.",
+    "action_if_fail": "Retire this exact prompt/model/task setup; preserve outputs and do not tune on these 64 dev tasks."
+  },
+  "resource_envelope": {
+    "max_new_tokens": 160,
+    "generation_count": 128,
+    "max_generated_tokens": 20480,
+    "estimated_decode_time_at_measured_10.07_tokens_per_second_seconds": 2032,
+    "hard_wall_limit_seconds": 5400,
+    "paid_compute": 0,
+    "external_api": false
+  },
+  "runner": "reproducers/run_svamp_qwen25_05b_mps_base_gate_v1.py",
+  "limitations": [
+    "A base-only feasibility screen is not a post-training result.",
+    "SVAMP is elementary arithmetic reasoning and does not establish broad reasoning capability.",
+    "The base prompt and dev cohort are outcome-bearing and must not be reused as confirmation."
+  ]
+}
