@@ -1,0 +1,657 @@
+{
+  "checkpoint_file_hashes": {
+    "grpo-11": {
+      "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+      "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "config.json": "9fbbf23635b010218933a69765d3a2e047e624a86203d14da115a644077cf74f",
+      "generation_config.json": "cd3e781699b69eb78534f464b0d57590b9babf52d8123d71eb99f001eb5e8a00",
+      "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "model.safetensors": "4dbac985f7fdf21298bfa4bc8c056d7ccfb4d9a9d5347ad155e6ac8a74ac523c",
+      "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "tokenizer.json": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa",
+      "tokenizer_config.json": "0a04a9d7d4a62b28482bdfe726c122756de85714fb64166ace92ae75b8f57614",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "grpo-23": {
+      "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+      "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "config.json": "9fbbf23635b010218933a69765d3a2e047e624a86203d14da115a644077cf74f",
+      "generation_config.json": "cd3e781699b69eb78534f464b0d57590b9babf52d8123d71eb99f001eb5e8a00",
+      "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "model.safetensors": "d15f977d4a6e40dda32575ff9c5c480734e37933907b9ad975153055913fc408",
+      "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "tokenizer.json": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa",
+      "tokenizer_config.json": "0a04a9d7d4a62b28482bdfe726c122756de85714fb64166ace92ae75b8f57614",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "grpo-37": {
+      "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+      "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "config.json": "9fbbf23635b010218933a69765d3a2e047e624a86203d14da115a644077cf74f",
+      "generation_config.json": "cd3e781699b69eb78534f464b0d57590b9babf52d8123d71eb99f001eb5e8a00",
+      "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "model.safetensors": "2d25787cfa47815d37fc638181c703fb64252f6b4754082cc10805d453f94a68",
+      "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "tokenizer.json": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa",
+      "tokenizer_config.json": "0a04a9d7d4a62b28482bdfe726c122756de85714fb64166ace92ae75b8f57614",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "sft-11": {
+      "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+      "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "config.json": "9fbbf23635b010218933a69765d3a2e047e624a86203d14da115a644077cf74f",
+      "generation_config.json": "cd3e781699b69eb78534f464b0d57590b9babf52d8123d71eb99f001eb5e8a00",
+      "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "model.safetensors": "3acff3e8bafb7356b66c395ac03230f8d25a0c11a967fbc924194d66ae8e8d25",
+      "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "tokenizer.json": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa",
+      "tokenizer_config.json": "0a04a9d7d4a62b28482bdfe726c122756de85714fb64166ace92ae75b8f57614",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "sft-23": {
+      "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+      "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "config.json": "9fbbf23635b010218933a69765d3a2e047e624a86203d14da115a644077cf74f",
+      "generation_config.json": "cd3e781699b69eb78534f464b0d57590b9babf52d8123d71eb99f001eb5e8a00",
+      "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "model.safetensors": "37800e3b817155f7d1da9946d8c1bc18ba39cbce70168b2dbb93f8a3aabfa848",
+      "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "tokenizer.json": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa",
+      "tokenizer_config.json": "0a04a9d7d4a62b28482bdfe726c122756de85714fb64166ace92ae75b8f57614",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "sft-37": {
+      "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+      "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "config.json": "9fbbf23635b010218933a69765d3a2e047e624a86203d14da115a644077cf74f",
+      "generation_config.json": "cd3e781699b69eb78534f464b0d57590b9babf52d8123d71eb99f001eb5e8a00",
+      "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "model.safetensors": "231d73cc15dfafb47a07f1851bd4f7dc3fb3f74d18aa69c5fc3678028ddde0d4",
+      "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "tokenizer.json": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa",
+      "tokenizer_config.json": "0a04a9d7d4a62b28482bdfe726c122756de85714fb64166ace92ae75b8f57614",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    }
+  },
+  "confirmation_ids_sha256": "fcc55ca629e9deaa2575a3adfcd3ffc506acc2b9e499e751014fb5a955417ec3",
+  "evaluation_policy": "Run the predeclared v5 test cohort against unchanged base plus all six exact saved checkpoints. Verify checkpoint files and reloaded parameter fingerprints. Use the v5 evaluation and bootstrap functions; no tuning or retraining.",
+  "frozen_utc": "2026-10-10",
+  "lock_sha256": "0f8217f12825b25855cda0e85757f8c5cbe68986fa4c401a4cdca97e3fb84124",
+  "protocol_id": "openbookqa_qwen_grpo_sft_v6-evaluation",
+  "purpose": "Recovery-only evaluation of already trained v5 checkpoints after an import NameError prevented any model evaluation. No training or hyperparameter/cohort/parser changes.",
+  "source_sha256": "a15068def5ea2afd0cae0a46932b006e0d7833dadfe3098dfab618a43c8cdbd2",
+  "test_parquet_sha256": "cd5483e366daa230c1c87bbdc512d8b7229f14f6dd04d19fc8b1a3855aaaa8a3",
+  "training_records": {
+    "grpo-11": {
+      "arm": "grpo",
+      "base_fingerprint": "1269f7eada635e467b5e842ef129a9de991caf5cd208f4aca6c3cdbfc36ff121",
+      "candidate_fingerprint": "abf3bc44c7fdc6a26ebf120bf26bbd35485f3bf3809e080e39d4b6ca62564ebb",
+      "model_files_sha256": {
+        "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+        "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+        "config.json": "9fbbf23635b010218933a69765d3a2e047e624a86203d14da115a644077cf74f",
+        "generation_config.json": "cd3e781699b69eb78534f464b0d57590b9babf52d8123d71eb99f001eb5e8a00",
+        "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+        "model.safetensors": "4dbac985f7fdf21298bfa4bc8c056d7ccfb4d9a9d5347ad155e6ac8a74ac523c",
+        "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+        "tokenizer.json": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa",
+        "tokenizer_config.json": "0a04a9d7d4a62b28482bdfe726c122756de85714fb64166ace92ae75b8f57614",
+        "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+      },
+      "optimizer_steps": 16,
+      "rollout_policy_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "seed": 11,
+      "update_metrics": [
+        {
+          "behavior_kl_estimate": 8.419501211671954e-09,
+          "clip_fraction": 0.0,
+          "grad_norm": 133.87570190429688,
+          "loss": 5.513429641723633e-07,
+          "max_abs_log_ratio": 6.29425048828125e-05,
+          "mean_reward": 0.375,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 9.960124367382377,
+          "clip_fraction": 0.8718750020489097,
+          "grad_norm": 38.47578811645508,
+          "loss": 0.24456983245909214,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.34375,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 9.550961077213287,
+          "clip_fraction": 0.8656250014901161,
+          "grad_norm": 53.09693908691406,
+          "loss": 0.7985908652816215,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.71875,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 9.039209075272083,
+          "clip_fraction": 0.9508928572759032,
+          "grad_norm": 35.72507095336914,
+          "loss": 0.13645665487274528,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.34375,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 10.847814626991749,
+          "clip_fraction": 0.9921875,
+          "grad_norm": 16.886749267578125,
+          "loss": 0.1418643936585795,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.375,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 13.760609801858664,
+          "clip_fraction": 0.967447916045785,
+          "grad_norm": 2.0621588230133057,
+          "loss": 0.0698344627534091,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.5625,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 14.069663055241108,
+          "clip_fraction": 0.9050967283546925,
+          "grad_norm": 2.1506400571524864e-06,
+          "loss": 0.04330115289570213,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.53125,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 14.87216854095459,
+          "clip_fraction": 0.9476562514901161,
+          "grad_norm": 1.8743664026260376,
+          "loss": 0.33856912882760315,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.5625,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 14.517324522137642,
+          "clip_fraction": 0.9390625022351742,
+          "grad_norm": 0.5986838340759277,
+          "loss": 0.23904475158033914,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.375,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 15.249780729413033,
+          "clip_fraction": 0.9679687507450581,
+          "grad_norm": 0.1610012650489807,
+          "loss": 0.23996523243361217,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.6875,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 12.433306343853474,
+          "clip_fraction": 0.8964285729452968,
+          "grad_norm": 1.3818976879119873,
+          "loss": 0.24791306749465036,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.5625,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 14.869408756494522,
+          "clip_fraction": 1.0,
+          "grad_norm": 13.803088188171387,
+          "loss": 0.3961395530630334,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.28125,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 12.98841828852892,
+          "clip_fraction": 0.938988097012043,
+          "grad_norm": 9.684432983398438,
+          "loss": 0.230995506955327,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.46875,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 12.801164507865906,
+          "clip_fraction": 0.96484375,
+          "grad_norm": 1.0889852046966553,
+          "loss": 0.1713276932109835,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.34375,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 12.81824392080307,
+          "clip_fraction": 0.972916666418314,
+          "grad_norm": 2.3070836067199707,
+          "loss": 0.13879063464929864,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.25,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 12.373499691486359,
+          "clip_fraction": 0.9625000022351742,
+          "grad_norm": 0.07897704839706421,
+          "loss": 0.13646770096804506,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.5625,
+          "samples": 32.0
+        }
+      ],
+      "update_note": "one epoch over fixed base-policy rollouts; RVL recomputes current log probabilities and applies clipped GRPO ratios"
+    },
+    "grpo-23": {
+      "arm": "grpo",
+      "base_fingerprint": "1269f7eada635e467b5e842ef129a9de991caf5cd208f4aca6c3cdbfc36ff121",
+      "candidate_fingerprint": "e3a9b299c226525c459ee1d27226eaa6cbb43b1d878da34bcac7053c982f6f32",
+      "model_files_sha256": {
+        "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+        "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+        "config.json": "9fbbf23635b010218933a69765d3a2e047e624a86203d14da115a644077cf74f",
+        "generation_config.json": "cd3e781699b69eb78534f464b0d57590b9babf52d8123d71eb99f001eb5e8a00",
+        "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+        "model.safetensors": "d15f977d4a6e40dda32575ff9c5c480734e37933907b9ad975153055913fc408",
+        "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+        "tokenizer.json": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa",
+        "tokenizer_config.json": "0a04a9d7d4a62b28482bdfe726c122756de85714fb64166ace92ae75b8f57614",
+        "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+      },
+      "optimizer_steps": 16,
+      "rollout_policy_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "seed": 23,
+      "update_metrics": [
+        {
+          "behavior_kl_estimate": 9.321451929777957e-09,
+          "clip_fraction": 0.0,
+          "grad_norm": 114.02175903320312,
+          "loss": -1.1175870895385742e-08,
+          "max_abs_log_ratio": 3.504753112792969e-05,
+          "mean_reward": 0.21875,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 2.2948072103317827,
+          "clip_fraction": 0.7486607162281871,
+          "grad_norm": 55.028724670410156,
+          "loss": 0.2653870228677988,
+          "max_abs_log_ratio": 14.349143028259277,
+          "mean_reward": 0.59375,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 2.3054678856860846,
+          "clip_fraction": 0.6829241095110774,
+          "grad_norm": 57.869144439697266,
+          "loss": 0.12715128995478153,
+          "max_abs_log_ratio": 11.973597526550293,
+          "mean_reward": 0.5,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 3.72718186234124,
+          "clip_fraction": 0.8481770846992731,
+          "grad_norm": 19.3625545501709,
+          "loss": 0.09553072722337674,
+          "max_abs_log_ratio": 18.552080154418945,
+          "mean_reward": 0.125,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 4.121156624052674,
+          "clip_fraction": 0.8359375037252903,
+          "grad_norm": 16.007675170898438,
+          "loss": 0.13941991981118917,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.75,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 10.896818302571774,
+          "clip_fraction": 0.8875000029802322,
+          "grad_norm": 17.123502731323242,
+          "loss": 0.1703558990416809,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.3125,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 11.21549716591835,
+          "clip_fraction": 0.9645833354443312,
+          "grad_norm": 0.014754983596503735,
+          "loss": 0.08561528350514891,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.5,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 10.501769095659256,
+          "clip_fraction": 0.8841145820915699,
+          "grad_norm": 10.854641914367676,
+          "loss": 0.45773895664765973,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.625,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 10.067060150206089,
+          "clip_fraction": 0.9176711328327656,
+          "grad_norm": 3.773693084716797,
+          "loss": 0.10844125643785674,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.6875,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 9.248321547172964,
+          "clip_fraction": 0.9005208369344473,
+          "grad_norm": 16.992887496948242,
+          "loss": 0.09992663927914691,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.4375,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 10.57207591086626,
+          "clip_fraction": 0.90625,
+          "grad_norm": 13.395074844360352,
+          "loss": 0.21375106282675915,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.65625,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 9.271774306893349,
+          "clip_fraction": 0.94921875,
+          "grad_norm": 44.51292419433594,
+          "loss": 0.1892591905707377,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.53125,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 10.030549373477697,
+          "clip_fraction": 0.9402901791036129,
+          "grad_norm": 5.382480621337891,
+          "loss": 0.11804205957287195,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.59375,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 9.442267715930939,
+          "clip_fraction": 0.9221726227551699,
+          "grad_norm": 13.77459716796875,
+          "loss": 0.2188185264085405,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.4375,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 9.65041084587574,
+          "clip_fraction": 0.9397321436554193,
+          "grad_norm": 6.314096450805664,
+          "loss": 0.22242085472680628,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.5,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 10.083609953522682,
+          "clip_fraction": 0.98828125,
+          "grad_norm": 16.142147064208984,
+          "loss": 0.26604359420161927,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.5625,
+          "samples": 32.0
+        }
+      ],
+      "update_note": "one epoch over fixed base-policy rollouts; RVL recomputes current log probabilities and applies clipped GRPO ratios"
+    },
+    "grpo-37": {
+      "arm": "grpo",
+      "base_fingerprint": "1269f7eada635e467b5e842ef129a9de991caf5cd208f4aca6c3cdbfc36ff121",
+      "candidate_fingerprint": "d4b77efad52d8a2a160d9fa280f6fa12e4cd323c553c477cab9d8c4d40c518fa",
+      "model_files_sha256": {
+        "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+        "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+        "config.json": "9fbbf23635b010218933a69765d3a2e047e624a86203d14da115a644077cf74f",
+        "generation_config.json": "cd3e781699b69eb78534f464b0d57590b9babf52d8123d71eb99f001eb5e8a00",
+        "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+        "model.safetensors": "2d25787cfa47815d37fc638181c703fb64252f6b4754082cc10805d453f94a68",
+        "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+        "tokenizer.json": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa",
+        "tokenizer_config.json": "0a04a9d7d4a62b28482bdfe726c122756de85714fb64166ace92ae75b8f57614",
+        "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+      },
+      "optimizer_steps": 16,
+      "rollout_policy_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "seed": 37,
+      "update_metrics": [
+        {
+          "behavior_kl_estimate": 1.467530340304446e-09,
+          "clip_fraction": 0.0,
+          "grad_norm": 69.13587188720703,
+          "loss": -2.086162567138672e-07,
+          "max_abs_log_ratio": 4.1484832763671875e-05,
+          "mean_reward": 0.46875,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 4.579637212213129,
+          "clip_fraction": 0.7781250001862645,
+          "grad_norm": 5.149263381958008,
+          "loss": 0.4472118625417352,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.53125,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 8.370582984294742,
+          "clip_fraction": 0.8636160725727677,
+          "grad_norm": 170.6788330078125,
+          "loss": 0.4107509060995653,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.40625,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 7.231712091481313,
+          "clip_fraction": 0.7877604197710752,
+          "grad_norm": 27.594593048095703,
+          "loss": 0.061643109656870365,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.625,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 11.16492523252964,
+          "clip_fraction": 0.9617187511175871,
+          "grad_norm": 27.098596572875977,
+          "loss": 0.18959039048456816,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.4375,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 11.739704875275493,
+          "clip_fraction": 0.9569196440279484,
+          "grad_norm": 2.210515260696411,
+          "loss": 0.1200789984711772,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.125,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 10.008543759584427,
+          "clip_fraction": 0.8591517880558968,
+          "grad_norm": 23.1756591796875,
+          "loss": 0.12321078991354284,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.625,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 9.893296241760254,
+          "clip_fraction": 0.9357142895460129,
+          "grad_norm": 2.8210742473602295,
+          "loss": 0.1273885362315923,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.71875,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 9.363536968827248,
+          "clip_fraction": 0.9496651794761419,
+          "grad_norm": 0.0,
+          "loss": 0.010825284756720066,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.53125,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 8.618321086280048,
+          "clip_fraction": 0.9145089313387871,
+          "grad_norm": 48.667396545410156,
+          "loss": 0.12358327186666429,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.46875,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 10.03729910030961,
+          "clip_fraction": 0.985937500372529,
+          "grad_norm": 4.536793231964111,
+          "loss": 0.08959003434574697,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.28125,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 9.31655402481556,
+          "clip_fraction": 0.9812500011175871,
+          "grad_norm": 38.296077728271484,
+          "loss": 0.1375726490841771,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.625,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 10.197988778352737,
+          "clip_fraction": 0.984375,
+          "grad_norm": 235.20408630371094,
+          "loss": 1.2664097079614294,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.34375,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 10.044606447219849,
+          "clip_fraction": 0.9833333343267441,
+          "grad_norm": 27.339290618896484,
+          "loss": 0.2483436899492517,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.25,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 8.680219650268555,
+          "clip_fraction": 0.9566592257469893,
+          "grad_norm": 3.6155521869659424,
+          "loss": 0.2158952283934923,
+          "max_abs_log_ratio": 20.0,
+          "mean_reward": 0.59375,
+          "samples": 32.0
+        },
+        {
+          "behavior_kl_estimate": 9.18883216008544,
+          "clip_fraction": 0.9875000007450581,
+          "grad_norm": 14.951021194458008,
+          "loss": 0.21476281620562077,
+          "max_abs_log_ratio": 19.844980239868164,
+          "mean_reward": 0.28125,
+          "samples": 32.0
+        }
+      ],
+      "update_note": "one epoch over fixed base-policy rollouts; RVL recomputes current log probabilities and applies clipped GRPO ratios"
+    },
+    "sft-11": {
+      "arm": "sft",
+      "base_fingerprint": "1269f7eada635e467b5e842ef129a9de991caf5cd208f4aca6c3cdbfc36ff121",
+      "base_model_file_sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "candidate_fingerprint": "505761a9ac3dfcc568115fcdb0b561cf90e75a02084e735f44eddc2b33f0ce70",
+      "mean_grad_norm": 110.31644868850708,
+      "mean_loss": 0.11119486342522578,
+      "model_files_sha256": {
+        "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+        "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+        "config.json": "9fbbf23635b010218933a69765d3a2e047e624a86203d14da115a644077cf74f",
+        "generation_config.json": "cd3e781699b69eb78534f464b0d57590b9babf52d8123d71eb99f001eb5e8a00",
+        "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+        "model.safetensors": "3acff3e8bafb7356b66c395ac03230f8d25a0c11a967fbc924194d66ae8e8d25",
+        "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+        "tokenizer.json": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa",
+        "tokenizer_config.json": "0a04a9d7d4a62b28482bdfe726c122756de85714fb64166ace92ae75b8f57614",
+        "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+      },
+      "optimizer_steps": 16,
+      "seed": 11
+    },
+    "sft-23": {
+      "arm": "sft",
+      "base_fingerprint": "1269f7eada635e467b5e842ef129a9de991caf5cd208f4aca6c3cdbfc36ff121",
+      "base_model_file_sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "candidate_fingerprint": "2f3c1b339594c227b7cc9bce1a76426b626bde3e1769b4a995b0ba7edf4a07ea",
+      "mean_grad_norm": 162.89986062049866,
+      "mean_loss": 0.11410484860243741,
+      "model_files_sha256": {
+        "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+        "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+        "config.json": "9fbbf23635b010218933a69765d3a2e047e624a86203d14da115a644077cf74f",
+        "generation_config.json": "cd3e781699b69eb78534f464b0d57590b9babf52d8123d71eb99f001eb5e8a00",
+        "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+        "model.safetensors": "37800e3b817155f7d1da9946d8c1bc18ba39cbce70168b2dbb93f8a3aabfa848",
+        "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+        "tokenizer.json": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa",
+        "tokenizer_config.json": "0a04a9d7d4a62b28482bdfe726c122756de85714fb64166ace92ae75b8f57614",
+        "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+      },
+      "optimizer_steps": 16,
+      "seed": 23
+    },
+    "sft-37": {
+      "arm": "sft",
+      "base_fingerprint": "1269f7eada635e467b5e842ef129a9de991caf5cd208f4aca6c3cdbfc36ff121",
+      "base_model_file_sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "candidate_fingerprint": "446be3471b8716a0f20fb8e4d057ed3be0da4640d4c77109f5b8fa982cfdf1ab",
+      "mean_grad_norm": 291.47518479824066,
+      "mean_loss": 0.13508531187471817,
+      "model_files_sha256": {
+        "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+        "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+        "config.json": "9fbbf23635b010218933a69765d3a2e047e624a86203d14da115a644077cf74f",
+        "generation_config.json": "cd3e781699b69eb78534f464b0d57590b9babf52d8123d71eb99f001eb5e8a00",
+        "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+        "model.safetensors": "231d73cc15dfafb47a07f1851bd4f7dc3fb3f74d18aa69c5fc3678028ddde0d4",
+        "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+        "tokenizer.json": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa",
+        "tokenizer_config.json": "0a04a9d7d4a62b28482bdfe726c122756de85714fb64166ace92ae75b8f57614",
+        "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+      },
+      "optimizer_steps": 16,
+      "seed": 37
+    }
+  },
+  "v5_progress_sha256": "daf6e9a3a942f62713ac91ccd853d84f0423f9cda558a39ef13fd427d77aaf3e",
+  "v5_protocol_id": "openbookqa_qwen_grpo_sft_v5",
+  "v5_protocol_sha256": "67881ddf6b64d1bab93390a0a92f11f06603e0b2ffe3df7161eed8cfc04bb537",
+  "v5_runner_sha256": "81b15a6c7fae952b6013b015d937edce9abd2193088d39b0f9ce8f1aa998f2f8"
+}
