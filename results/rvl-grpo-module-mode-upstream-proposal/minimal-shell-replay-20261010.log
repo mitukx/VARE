@@ -1,0 +1,42 @@
+Python 3.12.12, PyTorch 2.9.1, Transformers 4.57.3
+test_hf_trainer_transaction_restores_mixed_module_modes (tests.test_mini_lab_torch.TorchAcceptanceTests.test_hf_trainer_transaction_restores_mixed_module_modes) ... FAIL
+test_hf_trainer_restore_accepts_legacy_snapshot (tests.test_mini_lab_torch.TorchAcceptanceTests.test_hf_trainer_restore_accepts_legacy_snapshot) ... ok
+
+======================================================================
+FAIL: test_hf_trainer_transaction_restores_mixed_module_modes (tests.test_mini_lab_torch.TorchAcceptanceTests.test_hf_trainer_transaction_restores_mixed_module_modes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/tmp.mph8BgjhUV/rvl/tests/test_mini_lab_torch.py", line 189, in test_hf_trainer_transaction_restores_mixed_module_modes
+    self.assertEqual(
+AssertionError: {'': False, 'transformer': False, 'transformer[583 chars]alse} != {'': True, 'transformer': True, 'transformer.w[567 chars]True}
+Diff is 2147 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.047s
+
+FAILED (failures=1)
+test_additional_eos_shared_with_pad_keeps_its_action_logprob (tests.test_mini_lab_torch.TorchAcceptanceTests.test_additional_eos_shared_with_pad_keeps_its_action_logprob) ... ok
+test_async_isolated_models_real_update_and_resume (tests.test_mini_lab_torch.TorchAcceptanceTests.test_async_isolated_models_real_update_and_resume) ... ok
+test_behavior_sampling_distribution_matches_same_version_policy (tests.test_mini_lab_torch.TorchAcceptanceTests.test_behavior_sampling_distribution_matches_same_version_policy) ... The following generation flags are not valid and may be ignored: ['top_k']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+ok
+test_coding_episodes_connect_terminal_credit_rvl_and_optimizer (tests.test_mini_lab_torch.TorchAcceptanceTests.test_coding_episodes_connect_terminal_credit_rvl_and_optimizer) ... ok
+test_hf_trainer_restore_accepts_legacy_snapshot (tests.test_mini_lab_torch.TorchAcceptanceTests.test_hf_trainer_restore_accepts_legacy_snapshot) ... ok
+test_hf_trainer_transaction_restores_mixed_module_modes (tests.test_mini_lab_torch.TorchAcceptanceTests.test_hf_trainer_transaction_restores_mixed_module_modes) ... ok
+test_hf_trainer_transaction_restores_model_optimizer_and_rng (tests.test_mini_lab_torch.TorchAcceptanceTests.test_hf_trainer_transaction_restores_model_optimizer_and_rng) ... ok
+test_microbatch_gradient_matches_full_graph_reference (tests.test_mini_lab_torch.TorchAcceptanceTests.test_microbatch_gradient_matches_full_graph_reference) ... ok
+test_token_replay_immutable_behavior_and_atomic_checkpoint (tests.test_mini_lab_torch.TorchAcceptanceTests.test_token_replay_immutable_behavior_and_atomic_checkpoint) ... ok
+test_verification_aware_replay_requires_fresh_verifier_admission (tests.test_mini_lab_torch.TorchAcceptanceTests.test_verification_aware_replay_requires_fresh_verifier_admission) ... ok
+test_verification_failure_quarantines_without_training (tests.test_mini_lab_torch.TorchAcceptanceTests.test_verification_failure_quarantines_without_training) ... ok
+test_verification_lease_recovered_immediately_on_restart (tests.test_mini_lab_torch.TorchAcceptanceTests.test_verification_lease_recovered_immediately_on_restart) ... ok
+test_verifier_fleet_scores_groups_concurrently (tests.test_mini_lab_torch.TorchAcceptanceTests.test_verifier_fleet_scores_groups_concurrently) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.365s
+
+OK
