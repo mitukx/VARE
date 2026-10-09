@@ -1,0 +1,44 @@
+{
+  "protocol_id": "vare-gsm8k-dpo-constant-shift-audit-v1",
+  "phase": "post_hoc_descriptive_analysis",
+  "question": "How much of the previously reported GSM8K forced-choice heldout NLL change is described by an A/B logit shift estimated only from the original training margins?",
+  "claim_boundary": "Uses an already-consumed GSM8K heldout set and archived model margins. This is a descriptive mechanism audit of a historical result, not a new performance estimate, confirmation, capability claim, or exact separation of semantic content and position effects. The original experiment scored only one A/B orientation per question; counterfactual position effects cannot be recovered from these saved margins.",
+  "inputs": {
+    "study": "cpu-lm-gsm8k-dpo-confirmation-v1",
+    "files": {
+      "examples.json": "5a2fd2a198e94f35489e6002b8ce84399d5f8dc3ad9f4f2a4e479cc941aad08d",
+      "seed_records.json": "396dad849c03602e039f78c3e8b19d4ab6575a56f814dc3bba0402f8629bdadb",
+      "protocol.snapshot.json": "48e05a74339177fc1ae724ca6955543252d3baa5780fff03adbdeb92dfdcf57a",
+      "protocol.lock.snapshot.json": "0d2a8b7a890f08733d26d9c4a06f73cb4c8ea79f2702a5499d7867a6f040aa2a",
+      "summary.json": "dae651e6bbb891c22e30ea5ac3ae8bd45a96d223509137dfdc58e313a8776647",
+      "manifest.json": "55cc061cc5f4d4b667d3f21ddd013c8ea6ae80b2d0bb5e7efe2c65c2c195014c"
+    },
+    "seeds": [
+      401,
+      503,
+      607
+    ],
+    "train_rows": 256,
+    "consumed_heldout_rows": 1319
+  },
+  "analysis": {
+    "score": "m = logit(A)-logit(B); correct label sign is +1 for A and -1 for B",
+    "constant_shift": "For each seed, c is the arithmetic mean over TRAIN rows of (updated margin - base margin). Do not fit c on heldout rows.",
+    "components": "For heldout rows, compare base m, constant-only m+c, residual-only m+(delta-c), and actual updated m.",
+    "nll": "Mean binary logistic NLL on the original correct A/B labels.",
+    "attribution": "Two-factor symmetric Shapley attribution of actual heldout NLL change to constant shift and nonconstant residual; the contributions must sum to actual NLL change. Residual is not synonymous with semantic reasoning.",
+    "uncertainty": "Descriptive per-seed values only; no new confidence interval or decision gate."
+  },
+  "prohibitions": [
+    "No model inference",
+    "No optimizer update",
+    "No resampling/tuning of the consumed GSM8K rows",
+    "No reuse as a new performance claim",
+    "No further A/B preference variants after this audit"
+  ],
+  "implementation": {
+    "runner": "scripts/audit_gsm8k_dpo_constant_shift.py",
+    "runner_sha256": "762a01f523d2635384286eedf734777125929e1483aa406d60a47bb8a49cb10f"
+  },
+  "stop_rule": "After one successful reconstruction, record the report and retire this DPO two-choice transfer line regardless of outcome."
+}

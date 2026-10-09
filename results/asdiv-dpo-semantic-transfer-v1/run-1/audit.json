@@ -1,0 +1,88 @@
+{
+  "auditor_sha256": "3b171d92b87e9d77e883f92e8eb643e823261699056d5951053c06b58a918143",
+  "base_correct_choice_accuracy": 0.498046875,
+  "base_correct_choice_nll": 0.7744090034957385,
+  "bundle_summary": {
+    "adapter_bundle_sha256": "396dad849c03602e039f78c3e8b19d4ab6575a56f814dc3bba0402f8629bdadb",
+    "asdiv_parquet_sha256": "79dbad6536fe3e8cd449e67da859d7a6f5ac0d8f852efe563742ca5faee7fb75",
+    "device": "cpu",
+    "model_file_sha256": {
+      "config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+      "model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583"
+    },
+    "n_items": 256,
+    "n_prompts": 512,
+    "network_disabled": true,
+    "paid_compute": false,
+    "peak_rss_bytes": 2851487744,
+    "protocol_id": "vare-asdiv-dpo-semantic-transfer-v1",
+    "protocol_sha256": "9359416733dcc9c04f2f6fa15f61e8efe20e45ce600bcd3c86537b2aff96f967",
+    "runner_sha256": "387f66bc12bc551146818594926e36c680e0a917f3d1eb95c1ea907dbba43902",
+    "runtime_seconds": 40.93321762501728
+  },
+  "claim_limit": "This is a fixed-model, cross-dataset forced-choice preference transfer test. It is not training on ASDiv, free-form task success, a capability gain, proof of broad reasoning, or independent replication. ASDiv is a public benchmark and pretraining contamination is not ruled out.",
+  "decision": "non_pass_or_null",
+  "eligible_rows": 1550,
+  "exact_gsm8k_overlap_rows": 0,
+  "formula_rejections": 755,
+  "independent_full_logit_oracle": {
+    "items": 8,
+    "max_adapter_margin_abs_error": 1.8477439880371094e-05,
+    "max_base_margin_abs_error": 0.0,
+    "prompts": 16,
+    "tolerance": 5e-05
+  },
+  "independent_oracle": "safe Decimal AST arithmetic with explicit basic-operator whitelist",
+  "mean_base_position_bias": 0.705624632537365,
+  "mean_base_semantic_margin": 0.0025173351168632507,
+  "mean_correct_choice_nll_change": -0.009722790671140723,
+  "mean_nll_change_content_component": 6.216143185540752e-05,
+  "mean_nll_change_position_component": -0.009784952102996132,
+  "mean_semantic_margin_change": -0.00010629744671556789,
+  "paired_seed_stratified_bootstrap_95pct": [
+    -0.0001689246261472969,
+    -4.1338640585308895e-05
+  ],
+  "per_seed": {
+    "401": {
+      "base_correct_choice_accuracy": 0.498046875,
+      "correct_choice_accuracy": 0.501953125,
+      "correct_choice_nll": 0.7618826685417585,
+      "correct_choice_nll_change": -0.012526334953980102,
+      "mean_bernoulli_kl_updated_to_base": 0.0007422616753772885,
+      "mean_position_bias_change": -0.08203210857027443,
+      "mean_semantic_margin_change": -2.02421288122423e-05,
+      "nll_change_content_component": 1.5266373479448647e-05,
+      "nll_change_position_component": -0.01254160132745955
+    },
+    "503": {
+      "base_correct_choice_accuracy": 0.498046875,
+      "correct_choice_accuracy": 0.501953125,
+      "correct_choice_nll": 0.7641740112710689,
+      "correct_choice_nll_change": -0.010234992224669701,
+      "mean_bernoulli_kl_updated_to_base": 0.0005253711000083807,
+      "mean_position_bias_change": -0.06833551985619124,
+      "mean_semantic_margin_change": -0.00014649027434643358,
+      "nll_change_content_component": 8.8024947282221e-05,
+      "nll_change_position_component": -0.010323017171951922
+    },
+    "607": {
+      "base_correct_choice_accuracy": 0.498046875,
+      "correct_choice_accuracy": 0.505859375,
+      "correct_choice_nll": 0.7680019586609662,
+      "correct_choice_nll_change": -0.00640704483477237,
+      "mean_bernoulli_kl_updated_to_base": 0.0001928201451424705,
+      "mean_position_bias_change": -0.04178946571846609,
+      "mean_semantic_margin_change": -0.00015215993698802777,
+      "nll_change_content_component": 8.319297480455289e-05,
+      "nll_change_position_component": -0.006490237809576922
+    }
+  },
+  "protocol_id": "vare-asdiv-dpo-semantic-transfer-v1",
+  "protocol_sha256": "9359416733dcc9c04f2f6fa15f61e8efe20e45ce600bcd3c86537b2aff96f967",
+  "selected_rows_verified": 256,
+  "source_rows": 2305,
+  "unique_eligible_rows": 1550
+}

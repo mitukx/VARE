@@ -32,6 +32,12 @@ The bootstrap resamples questions within the three seed results on this fixed be
 
 The offline auditor verified all eight bundle files, rebuilt all preference pairs, matched the pinned train/test cache files and fingerprints, recomputed the per-seed NLL/accuracy/KL, bootstrap interval, and decision. It does not rerun model inference or the optimizer.
 
+## Post hoc constant-shift mechanism audit (2026-10-10)
+
+A later read-only analysis used only the archived train and held-out margins. For each seed it estimated a constant A-minus-B logit shift from the training rows, then compared that counterfactual with the actual adapter on the already-consumed held-out rows. The mean train-only shift was `−0.06381` logits. The constant-only counterfactual reached mean NLL `0.74657`, versus base `0.75382` and actual DPO `0.74685`. A symmetric Shapley decomposition assigns `−0.007248` nats to the constant shift and `+0.000278` nats to the nonconstant residual; the components sum to the archived `−0.006970` change. The constant component accounts for about 104% of the net NLL reduction, while the residual slightly worsens NLL. Each seed shows the same direction.
+
+This is a post hoc mechanism description of a consumed evaluation set, not a new performance estimate. The original protocol scored only one A/B orientation per item, so it cannot separate semantic content from position bias as directly as a paired-swap evaluation. The residual is not a semantic-reasoning estimate. See [the read-only audit report](cpu-lm-gsm8k-dpo-constant-shift-audit-v1-report.md), [frozen analysis lock](../protocols/gsm8k_dpo_constant_shift_audit_v1.lock.json), and [analysis output](../results/gsm8k-dpo-constant-shift-audit-v1/run-1/).
+
 ## Limits and next question
 
 The benchmark and answer key are public and may have appeared in model pretraining. Preferences are derived from an answer verifier, not people. The task forces a choice between two answer options and updates only the `A`/`B` output columns. It does not measure free-form response quality, mathematical reasoning, human preference alignment, reward-model behavior, or deployment utility. The small NLL change and near-chance accuracy make those limits material.

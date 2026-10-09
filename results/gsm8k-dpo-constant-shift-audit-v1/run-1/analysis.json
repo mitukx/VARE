@@ -1,0 +1,65 @@
+{
+  "analysis_source_sha256": "762a01f523d2635384286eedf734777125929e1483aa406d60a47bb8a49cb10f",
+  "equal_seed_means": {
+    "heldout_actual_dpo_nll": 0.7468528795676154,
+    "heldout_actual_nll_change": -0.006970448042505055,
+    "heldout_base_nll": 0.7538233276101204,
+    "heldout_constant_shift_nll": 0.7465673409101042,
+    "heldout_correct_a": 649.0,
+    "heldout_correct_b": 670.0,
+    "heldout_mean_actual_logit_shift": -0.06465128132363131,
+    "heldout_mean_nonconstant_residual_shift": -0.0008408275103798849,
+    "heldout_residual_only_nll": 0.7540931778209,
+    "shapley_constant_shift_nll_component": -0.007248142476650417,
+    "shapley_nonconstant_residual_nll_component": 0.0002776944341453628,
+    "training_mean_logit_shift": -0.06381045381325141
+  },
+  "interpretation_limit": "Uses an already-consumed GSM8K heldout set and archived model margins. This is a descriptive mechanism audit of a historical result, not a new performance estimate, confirmation, capability claim, or exact separation of semantic content and position effects. The original experiment scored only one A/B orientation per question; counterfactual position effects cannot be recovered from these saved margins.",
+  "per_seed": {
+    "401": {
+      "heldout_actual_dpo_nll": 0.7454198670765768,
+      "heldout_actual_nll_change": -0.008403460533543572,
+      "heldout_base_nll": 0.7538233276101204,
+      "heldout_constant_shift_nll": 0.7452718194048219,
+      "heldout_correct_a": 649,
+      "heldout_correct_b": 670,
+      "heldout_mean_actual_logit_shift": -0.07740061669988195,
+      "heldout_mean_nonconstant_residual_shift": -0.0015540088448264665,
+      "heldout_residual_only_nll": 0.7539458042503024,
+      "shapley_constant_shift_nll_component": -0.008538722689512057,
+      "shapley_nonconstant_residual_nll_component": 0.00013526215596848523,
+      "training_mean_logit_shift": -0.07584660785505548
+    },
+    "503": {
+      "heldout_actual_dpo_nll": 0.7460868229785798,
+      "heldout_actual_nll_change": -0.0077365046315406305,
+      "heldout_base_nll": 0.7538233276101204,
+      "heldout_constant_shift_nll": 0.7455977815622017,
+      "heldout_correct_a": 649,
+      "heldout_correct_b": 670,
+      "heldout_mean_actual_logit_shift": -0.07325299430449321,
+      "heldout_mean_nonconstant_residual_shift": -0.0005240858728933686,
+      "heldout_residual_only_nll": 0.7542963012771448,
+      "shapley_constant_shift_nll_component": -0.008217512173241848,
+      "shapley_nonconstant_residual_nll_component": 0.0004810075417012172,
+      "training_mean_logit_shift": -0.07272890843159985
+    },
+    "607": {
+      "heldout_actual_dpo_nll": 0.7490519486476894,
+      "heldout_actual_nll_change": -0.004771378962430961,
+      "heldout_base_nll": 0.7538233276101204,
+      "heldout_constant_shift_nll": 0.748832421763289,
+      "heldout_correct_a": 649,
+      "heldout_correct_b": 670,
+      "heldout_mean_actual_logit_shift": -0.04330023296651875,
+      "heldout_mean_nonconstant_residual_shift": -0.0004443878134198196,
+      "heldout_residual_only_nll": 0.7540374279352527,
+      "shapley_constant_shift_nll_component": -0.004988192567197347,
+      "shapley_nonconstant_residual_nll_component": 0.000216813604766386,
+      "training_mean_logit_shift": -0.042855845153098926
+    }
+  },
+  "protocol_id": "vare-gsm8k-dpo-constant-shift-audit-v1",
+  "protocol_sha256": "470d4503e0fd7bb5a06e892dbaa7d7eb159c4f158458132ccdd413b565782b76",
+  "status": "post_hoc_descriptive_mechanism_audit"
+}
