@@ -1,0 +1,98 @@
+W1009 18:59:24.146000 11673 site-packages/torch/distributed/elastic/multiprocessing/redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/replay_trl_pr7249_dispatcher_v4.py:136: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.async_grpo import AsyncGRPOTrainer
+/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/replay_trl_pr7249_dispatcher_v4.py:136: TRLExperimentalWarning: You are importing from 'trl.experimental'. APIs here are unstable and may change or be removed without notice. Silence this warning by setting environment variable TRL_EXPERIMENTAL_SILENCE=1.
+  from trl.experimental.async_grpo import AsyncGRPOTrainer
+[rank1]:W1009 18:59:28.740000 11675 site-packages/torch/distributed/elastic/multiprocessing/redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+[rank0]:W1009 18:59:28.740000 11674 site-packages/torch/distributed/elastic/multiprocessing/redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+{'train_runtime': 0.0129, 'train_samples_per_second': 617.854, 'train_steps_per_second': 154.464, 'train_loss': 5.942857265472412, 'epoch': 1.0}
+{
+  "arm": "base",
+  "protocol_id": "trl-pr7249-dispatcher-v4",
+  "rank_results": [
+    {
+      "elapsed_seconds": 4.527624958020169,
+      "final_parameter_abs_error": 0.30250000953674316,
+      "global_step": 2,
+      "gradient_abs_errors": [
+        3.0250000953674316,
+        0.0
+      ],
+      "loss_abs_errors": [
+        6.050000190734863,
+        9.5367431640625e-07
+      ],
+      "observed_dispatcher_type": "DataLoaderDispatcher",
+      "observed_local_tokens_and_replicated_window_counts": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          5
+        ],
+        [
+          4,
+          7
+        ]
+      ],
+      "oracle_window_losses": [
+        12.100000381469727,
+        10.434287071228027
+      ],
+      "post_step_state_sha256": "1b0c8e45fd1c0a1a352aa98b794367a2c04e3abf05d14928345c27f5dc2bacda",
+      "rank": 0,
+      "rank_mean_window_losses": [
+        6.050000190734863,
+        10.434286117553711
+      ]
+    },
+    {
+      "elapsed_seconds": 4.526924250007141,
+      "final_parameter_abs_error": 0.30250000953674316,
+      "global_step": 2,
+      "gradient_abs_errors": [
+        3.0250000953674316,
+        0.0
+      ],
+      "loss_abs_errors": [
+        6.050000190734863,
+        9.5367431640625e-07
+      ],
+      "observed_dispatcher_type": "DataLoaderDispatcher",
+      "observed_local_tokens_and_replicated_window_counts": [
+        [
+          0,
+          0
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          3,
+          7
+        ]
+      ],
+      "oracle_window_losses": [
+        12.100000381469727,
+        10.434287071228027
+      ],
+      "post_step_state_sha256": "1b0c8e45fd1c0a1a352aa98b794367a2c04e3abf05d14928345c27f5dc2bacda",
+      "rank": 1,
+      "rank_mean_window_losses": [
+        6.050000190734863,
+        10.434286117553711
+      ]
+    }
+  ],
+  "rank_state_equal": true,
+  "runtime": {
+    "accelerate": "1.12.0",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "source_commit": "a98fa6a4428f9aae58dfb26d729d7437f662f27a"
+}

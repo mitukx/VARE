@@ -1,0 +1,35 @@
+{
+  "audit_type": "same-task independent read-only artifact and result audit",
+  "auditor": "dispatcher_v4_audit subagent",
+  "reran_experiment": false,
+  "modified_files": false,
+  "checks": {
+    "protocol_canonical_sha256": "pass",
+    "runner_wrapper_sha256": "pass",
+    "pinned_source_commits_and_file_hashes": "pass",
+    "clean_source_checkout_manifests": "pass",
+    "launcher_and_summary_hashes": "pass",
+    "production_collator_and_DataLoaderDispatcher_assertion": "pass",
+    "rank_local_and_replicated_global_counts": "pass",
+    "two_updates_per_rank_and_arm": "pass",
+    "rank_synchronized_state_hashes": "pass",
+    "numeric_gate_recomputation": "pass",
+    "finite_saved_metrics": "pass"
+  },
+  "recomputed": {
+    "base_first_window_gradient_error": 3.0250000953674316,
+    "base_final_parameter_error": 0.30250000953674316,
+    "candidate_max_loss_or_gradient_error": 9.5367431640625e-7,
+    "candidate_final_parameter_error": 0.0,
+    "local_global_token_pairs_rank0": [[0, 0], [0, 5], [4, 7]],
+    "local_global_token_pairs_rank1": [[0, 0], [5, 5], [3, 7]],
+    "global_steps_per_rank_arm": 2,
+    "within_arm_rank_states_equal": true
+  },
+  "audit_caveats": [
+    "The wrapper does not explicitly enforce all locked finite-value, both-arm/both-rank step-count, and sample-ID assertions, although the saved outputs and runner construction satisfy or support them.",
+    "Per-step learning rates are not logged; the declared LambdaLR and final-state comparison provide indirect update evidence.",
+    "This is not outside human reproduction, a pretrained-model evaluation, or capability evidence."
+  ],
+  "claim_boundary": "Same-task artifact/result audit of a deterministic synthetic Trainer integration; not an independent experiment or external review."
+}

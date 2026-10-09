@@ -1,0 +1,90 @@
+{
+  "arm": "base",
+  "protocol_id": "trl-pr7249-dispatcher-v4",
+  "rank_results": [
+    {
+      "elapsed_seconds": 4.527624958020169,
+      "final_parameter_abs_error": 0.30250000953674316,
+      "global_step": 2,
+      "gradient_abs_errors": [
+        3.0250000953674316,
+        0.0
+      ],
+      "loss_abs_errors": [
+        6.050000190734863,
+        9.5367431640625e-07
+      ],
+      "observed_dispatcher_type": "DataLoaderDispatcher",
+      "observed_local_tokens_and_replicated_window_counts": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          5
+        ],
+        [
+          4,
+          7
+        ]
+      ],
+      "oracle_window_losses": [
+        12.100000381469727,
+        10.434287071228027
+      ],
+      "post_step_state_sha256": "1b0c8e45fd1c0a1a352aa98b794367a2c04e3abf05d14928345c27f5dc2bacda",
+      "rank": 0,
+      "rank_mean_window_losses": [
+        6.050000190734863,
+        10.434286117553711
+      ]
+    },
+    {
+      "elapsed_seconds": 4.526924250007141,
+      "final_parameter_abs_error": 0.30250000953674316,
+      "global_step": 2,
+      "gradient_abs_errors": [
+        3.0250000953674316,
+        0.0
+      ],
+      "loss_abs_errors": [
+        6.050000190734863,
+        9.5367431640625e-07
+      ],
+      "observed_dispatcher_type": "DataLoaderDispatcher",
+      "observed_local_tokens_and_replicated_window_counts": [
+        [
+          0,
+          0
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          3,
+          7
+        ]
+      ],
+      "oracle_window_losses": [
+        12.100000381469727,
+        10.434287071228027
+      ],
+      "post_step_state_sha256": "1b0c8e45fd1c0a1a352aa98b794367a2c04e3abf05d14928345c27f5dc2bacda",
+      "rank": 1,
+      "rank_mean_window_losses": [
+        6.050000190734863,
+        10.434286117553711
+      ]
+    }
+  ],
+  "rank_state_equal": true,
+  "runtime": {
+    "accelerate": "1.12.0",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "source_commit": "a98fa6a4428f9aae58dfb26d729d7437f662f27a"
+}
