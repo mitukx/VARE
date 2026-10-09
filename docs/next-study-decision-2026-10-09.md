@@ -1,5 +1,14 @@
 # Next study decision — 2026-10-09
 
+## Follow-up decision — RVL zero-advantage AdamW behavior
+
+A frozen CPU reproduction on pinned RVL revision `c7e646b` found that `HFCausalLMGRPOTrainer` inherited PyTorch AdamW's `weight_decay=0.01` because the wrapper did not expose the option. With constant rewards, all GRPO advantages, loss, gradients, and grad norm were zero, yet 10 parameter tensors changed by up to `1.001358e-5`; the change matched the analytic decoupled-decay formula exactly across seeds 17, 23, and 29. In an isolated candidate worktree, explicit `weight_decay=0.0` preserved every parameter bitwise, explicit `0.01` reproduced the baseline, and a mixed-reward group still updated 16 parameters with nonzero gradients. The targeted regression and all 12 tests in `tests.test_mini_lab_torch` passed; independent read-only audit matched the hashes and outcomes. This is a bounded trainer-configuration correctness finding, not a new algorithm or model-capability result.
+
+The candidate default changes ordinary training behavior from implicit `0.01` to explicit `0.0`; this is compatible with the documented Transformers `TrainingArguments` convention, but requires RVL maintainer judgment. Keep the local patch reviewable and do not claim the zero-decay default is uniquely correct. The focused ARC GRPO-vs-successful-trace SFT comparison failed its advancement criterion (GRPO mean 38.84%, SFT 40.00%, difference −1.16 points; 95% task-bootstrap interval [−5.22,+2.90]) and is now stopped.
+
+**Decision:** stop the ARC pairing and further model runs. For this RVL finding, proceed only to compatibility review of the optimizer default; do not expand the investigation. Main research gap remains an independently measured task-success improvement after a real policy update. Full results and limitations: [RVL report](rvl-grpo-zero-advantage-weight-decay-v1-report.md) and [ARC report](qwen-arc-grpo-sft-comparison-v3-report.md).
+
+
 ## Follow-up decision — ARC update path clears its cost gate
 
 The frozen ARC-Challenge update smoke v2 passed: one real GRPO optimizer step, finite/nonzero gradients, changed candidate weights, exact incumbent restoration, matching candidate reload fingerprint/tokenizer IDs, and all 8 post-reload checks completed within CPU limits. The independent same-host audit passed 58/58 checks. The smoke's 4/8 base versus 3/8 post-update exact answers are too few to estimate an effect and are not an advancement result. V1's partial run is preserved and its validation IDs remain excluded.

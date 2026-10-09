@@ -1,0 +1,56 @@
+diff --git a/src/rvl_systems/hf_trainer.py b/src/rvl_systems/hf_trainer.py
+index 51d5967..af6fc52 100644
+--- a/src/rvl_systems/hf_trainer.py
++++ b/src/rvl_systems/hf_trainer.py
+@@ -16,0 +17 @@ class HFTTrainerConfig:
++    weight_decay: float = 0.0
+@@ -37,0 +39,2 @@ class HFCausalLMGRPOTrainer:
++        if not math.isfinite(self.config.weight_decay) or self.config.weight_decay < 0:
++            raise ValueError("weight decay must be finite and non-negative")
+@@ -47,0 +51 @@ class HFCausalLMGRPOTrainer:
++            weight_decay=self.config.weight_decay,
+diff --git a/tests/test_mini_lab_torch.py b/tests/test_mini_lab_torch.py
+index 49e3c1c..8d898e5 100644
+--- a/tests/test_mini_lab_torch.py
++++ b/tests/test_mini_lab_torch.py
+@@ -176,0 +177,40 @@ class TorchAcceptanceTests(unittest.IsolatedAsyncioTestCase):
++    async def test_zero_advantage_does_not_decay_policy_unless_configured(self):
++        model = self.model()
++        rows = self.samples(model)
++        constant = [VerifiedGeneration(row.generation, 1.0, 0.0, 0) for row in rows]
++        learning_rate = 1e-3
++        before = {key: value.detach().clone() for key, value in model.state_dict().items()}
++        trainer = HFCausalLMGRPOTrainer(model, config=HFTTrainerConfig(learning_rate=learning_rate))
++        self.assertEqual(trainer.optimizer.param_groups[0]["weight_decay"], 0.0)
++        metrics = trainer.train_step(constant)
++        gradients = [parameter.grad for parameter in model.parameters() if parameter.grad is not None]
++        self.assertEqual(metrics["loss"], 0.0)
++        self.assertEqual(metrics["grad_norm"], 0.0)
++        self.assertTrue(gradients)
++        self.assertEqual(sum(int(torch.count_nonzero(grad)) for grad in gradients), 0)
++        for key, value in model.state_dict().items():
++            self.assertTrue(torch.equal(value, before[key]), key)
++
++        regularized = self.model()
++        regularized.load_state_dict(before)
++        configured = HFCausalLMGRPOTrainer(
++            regularized,
++            config=HFTTrainerConfig(learning_rate=learning_rate, weight_decay=0.01),
++        )
++        configured.train_step(constant)
++        for name, parameter in regularized.named_parameters():
++            expected = before[name] * (1.0 - learning_rate * 0.01)
++            self.assertTrue(torch.allclose(parameter, expected, atol=1e-8, rtol=0), name)
++
++        mixed_model = self.model()
++        mixed_rows = self.samples(mixed_model)
++        mixed_before = {key: value.detach().clone() for key, value in mixed_model.state_dict().items()}
++        mixed_trainer = HFCausalLMGRPOTrainer(
++            mixed_model, config=HFTTrainerConfig(learning_rate=learning_rate)
++        )
++        mixed_trainer.train_step(mixed_rows)
++        self.assertTrue(any(
++            not torch.equal(value, mixed_before[key])
++            for key, value in mixed_model.state_dict().items()
++        ))
++
