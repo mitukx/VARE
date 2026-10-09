@@ -1,0 +1,46 @@
+{
+  "protocol_id": "trl_async_group_staleness_packed_batch_v1",
+  "status": "frozen_before_execution",
+  "question": "Does the production AsyncGRPO scoring output, after a policy-version transition causes per-sample queue filtering, reach the production rollout collator as a partial same-group training batch?",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+    "issue": "https://github.com/huggingface/trl/issues/7206",
+    "trainer_file": "trl/experimental/async_grpo/async_grpo_trainer.py",
+    "trainer_file_sha256": "2657481258dcc04112761e9ff61a35cb93b2b72c3e197e4524f4602fd6a2dbfe",
+    "worker_file": "trl/experimental/async_grpo/async_rollout_worker.py",
+    "worker_file_sha256": "5eab22259711df4e3ec1a62047f87a2cffc5b204772b25cd78647336e52b9670"
+  },
+  "estimand": {
+    "primary": "Number of active completion tokens from one scored prompt group that the production DataCollatorForRollout receives after queue staleness filtering.",
+    "secondary": "Fraction of the full group's active completion tokens retained after one policy-version transition.",
+    "claim_boundary": "This measures the training batch handed to the real collator; it does not execute compute_loss or an optimizer step and does not measure downstream task success."
+  },
+  "method": {
+    "scoring": "Invoke the source's real _AsyncRolloutLoop._score_group on one three-completion RolloutGroup with one TrainingSequence per completion, fixed rewards [0,1,2], one common group_id, and model_version 0.",
+    "queue_and_packing": "Pass the scorer's RolloutSample outputs through real RolloutQueueDataset.__iter__, advance callback-visible current version from 0 to 1 after reading the first row with max_staleness=0, then pass the surviving rows to real DataCollatorForRollout.torch_call.",
+    "control": "Run the same scored outputs through the queue with current version held at 0 and verify all three rows and three active completion tokens reach the collator.",
+    "implementation": "scripts/reproduce_trl_async_group_staleness_packed_batch_v1.py",
+    "implementation_sha256": "aac7ed5f7102c9db41bed0173c920d65a8cbadaebf3751cbeb2898779fa8b729"
+  },
+  "acceptance": {
+    "source_revision_and_file_hashes_match": true,
+    "scorer_emits_three_rows_with_one_group_id": true,
+    "fixed_version_queue_and_collator_preserve_three_rows_and_three_completion_tokens": true,
+    "transition_case_drops_two_rows_and_collator_receives_one_completion_token": true,
+    "cpu_only_and_no_external_spend": true
+  },
+  "failure_criteria": [
+    "Pinned source revision or file hashes differ.",
+    "Scoring does not emit the frozen three-row group.",
+    "The fixed-version control does not preserve all rows/tokens.",
+    "The version-transition arm does not deliver the frozen partial batch to the production collator.",
+    "A GPU, model download, paid API, or external service is required."
+  ],
+  "resources": {
+    "cpu_only": true,
+    "gpu_hours": 0,
+    "paid_api_calls": 0,
+    "external_compute_usd": 0
+  }
+}
