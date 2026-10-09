@@ -1,0 +1,69 @@
+{
+  "protocol_id": "trl_grpo_kl_clip_dtype_underflow_v1",
+  "status": "frozen_before_execution",
+  "question": "Does the open TRL #6637 KL overflow guard preserve a positive clipped K3 KL value and corrective gradient when the configured positive clip underflows to zero in the working dtype?",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "base_revision": "2b0d16b7839732f0b652ea7dfd4f492f00e15a48",
+    "candidate_revision": "0aaea03f2fa449bc7a91f1973e7940da11da65da",
+    "files": [
+      "trl/trainer/grpo_config.py",
+      "trl/trainer/grpo_trainer.py"
+    ]
+  },
+  "estimand": {
+    "kl_log_ratio": "x=log(pi_ref/pi_theta)=20 at a one-token completion",
+    "k3": "exp(x)-x-1",
+    "objective": "beta*K3(x), beta=0.1, zero policy advantage, token-level importance ratio equal to one",
+    "gradient": "d loss / d current-policy token log-probability; for x>0 it must remain strictly negative when the finite upper clip is active, so optimization moves the policy toward the reference"
+  },
+  "frozen_cases": [
+    {
+      "name": "base_unclipped_float16_overflow",
+      "revision": "base_revision",
+      "dtype": "float16",
+      "clip": null,
+      "expected": "non-finite K3 loss"
+    },
+    {
+      "name": "candidate_accepted_tiny_positive_clip_float16",
+      "revision": "candidate_revision",
+      "dtype": "float16",
+      "clip": 1e-8,
+      "expected": "audit whether configured clip casts to zero and silently yields zero KL and zero gradient"
+    },
+    {
+      "name": "candidate_representable_clip_float16_control",
+      "revision": "candidate_revision",
+      "dtype": "float16",
+      "clip": 10.0,
+      "expected": "finite positive K3 loss and strictly negative finite loss gradient"
+    }
+  ],
+  "method": "Import the exact production GRPOTrainer._compute_loss method from each clean pinned source revision and invoke it directly on CPU with a one-token leaf log-probability fixture, fake accelerator reductions, zero advantages, and beta=0.1. Separately construct GRPOConfig with the tiny positive clip to establish whether configuration accepts it. Do not copy or reimplement the loss equation in the primary runner.",
+  "acceptance": {
+    "production_method_is_called_unmodified": true,
+    "source_revision_matches_each_case": true,
+    "cpu_only_no_network_model_or_dataset_load": true,
+    "all_three_cases_record_loss_and_gradient": true,
+    "candidate_tiny_clip_behavior_distinguished_from_representable_control": true
+  },
+  "failure_criteria": [
+    "source code or commit differs from the frozen base or candidate",
+    "the exact production loss method cannot be invoked without altering source",
+    "fixture enables nonzero policy loss or an importance ratio other than one",
+    "result omits the config acceptance outcome or finite/non-finite loss and gradient fields"
+  ],
+  "interpretation_limits": [
+    "This audits an edge case in an open numerical-stability PR; it does not establish behavior prevalence in real training workloads.",
+    "A finite control fixture is not model training or task capability evidence.",
+    "The PR already addresses the main K3 overflow issue; this study only checks representability of a user-supplied clip after conversion to the working dtype.",
+    "The study does not test the Liger fused path, GPU kernels, or all mixed-precision/autocast combinations."
+  ],
+  "resources": {
+    "cpu_only": true,
+    "gpu_hours": 0,
+    "paid_api_calls": 0,
+    "external_compute_usd": 0
+  }
+}

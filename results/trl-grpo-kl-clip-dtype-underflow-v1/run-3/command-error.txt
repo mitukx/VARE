@@ -1,0 +1,1 @@
+The first run-3 invocation duplicated the Python executable and script path between arguments; argparse rejected the extra tokens before the representable-control arm ran. No run-3 result was accepted; run-4 re-ran every frozen arm.

@@ -1,5 +1,9 @@
 # Experimental program
 
+## TRL GRPO KL clip dtype audit v1
+
+A frozen CPU audit directly ran the production `GRPOTrainer._compute_loss` method from the base and open PR #6637 revisions. In the PR head, a configured clip of `1e-8` was accepted but rounded to zero in float16, silently producing zero KL and gradient. A representable clip of 10 kept the K3 value finite but lost the expected bias-corrected gradient under float16; the same run without bias correction retained a negative finite gradient. This is a mixed non-pass of an upstream patch's low-precision behavior, not a released-trainer or capability result. See the [report](trl-grpo-kl-clip-dtype-underflow-v1-report.md), [protocol](../protocols/trl_grpo_kl_clip_dtype_underflow_v1.lock.json), and [run-4](../results/trl-grpo-kl-clip-dtype-underflow-v1/run-4/).
+
 ## CPU Qwen math tool-use feasibility v1
 
 The frozen base-only screen completed 96 generated arithmetic tasks at 0/96 exact boxed-integer match, 0/24 per family, and zero calculator calls; CPU/memory limits passed. A separately implemented same-host audit reconstructed the task set, records, metrics, and failed gate. The result retires this exact base/prompt/format/task pairing. It is not evidence of zero arithmetic competence, tool-use capability, or policy improvement: at least one response contained the correct value in prose but omitted the required box, and no tool call was observed. See the [report](cpu-qwen-math-tir-feasibility-v1-report.md), [frozen protocol](../protocols/cpu_qwen_math_tir_feasibility_v1.lock.json), and [raw bundle](../results/cpu-qwen-math-tir-feasibility-v1/run-1/).

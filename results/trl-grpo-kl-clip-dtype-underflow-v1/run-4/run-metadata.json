@@ -1,0 +1,27 @@
+{
+  "claim_boundary": "No model training, optimizer update, GPU/Liger execution, downstream task evaluation, or prevalence estimate.",
+  "external_compute_usd": 0,
+  "gpu_hours": 0,
+  "independent_verifier_sha256": "495d10c59caec73557df92e51695c2dcd6da27e4baedee81ec78c240aa8a85ca",
+  "notes": "All frozen arms ran and the independent checker passed. The tiny clip is accepted then rounds to zero; the representable clip loses the expected correction gradient in the default bias-correction arm.",
+  "paid_api_calls": 0,
+  "primary_runner_sha256": "da40519629b09dce928321ae84f18f6775f9e53e0bd08c63a5a1f96331bf97b2",
+  "protocol_id": "trl_grpo_kl_clip_dtype_underflow_v1",
+  "protocol_sha256": "cff0db1b32c57b22b7c9288ec455a42ee8c74a2a8c9e675dd4a942bc12d26cf1",
+  "reproduction_type": "direct invocation of pinned production GRPOTrainer._compute_loss with a one-token CPU float16 fixture; no model/dataset download",
+  "run_id": "run-4",
+  "runtime": {
+    "cuda_initialized": false,
+    "device": "CPU",
+    "python": "3.12.12",
+    "torch": "2.9.1"
+  },
+  "source_checkouts_clean": true,
+  "source_revisions": [
+    "0aaea03f2fa449bc7a91f1973e7940da11da65da",
+    "2b0d16b7839732f0b652ea7dfd4f492f00e15a48"
+  ],
+  "status": "complete_mixed_nonpass",
+  "timestamp_utc": "2026-10-09T04:16:00Z",
+  "vare_git_commit_before_run": "107b273df9d999beccbafe43cc4cab8fbd264db0"
+}
