@@ -1,0 +1,30 @@
+{
+  "protocol_id": "vare_group_provenance_fix_v2",
+  "created_utc": "2026-10-09",
+  "status": "frozen_before_post_fix_tests",
+  "parent_protocol": "protocols/vare_group_provenance_homogeneity_v1.lock.json",
+  "baseline_commit": "ccb3f791f212e80197fddea4048d3491c3458900",
+  "baseline_observation": "The v1 source-path run admitted two rows with policy versions [1,0] to one declared two-sample group; current [1,1] and permitted-stale [0,0] controls were admitted, and future [2,2] was rejected.",
+  "contract": "Every declared GRPO comparison group admitted by VARE replay has one behavior policy ID, one behavior policy version, and one verifier version. Freshness remains evaluated per experience; a uniformly stale group is eligible while within configured lag.",
+  "changes_under_test": [
+    "Atomic replay admission rejects whole groups with mixed policy ID/version or verifier version.",
+    "Grouped replay sampling fails closed on legacy mixed-provenance rows.",
+    "CapabilityLoop preserves homogeneous current and permitted-stale groups and never calls train_candidate with a mixed policy-version group."
+  ],
+  "primary_metric": "Number of mixed policy-version groups passed to train_candidate (must be zero).",
+  "controls": [
+    "homogeneous current [1,1] remains admitted",
+    "homogeneous permitted-stale [0,0] remains admitted when max_policy_lag=2",
+    "future [2,2] remains rejected",
+    "atomic replay tests reject mixed policy ID, policy version, and verifier version",
+    "legacy grouped replay tests return no mixed-provenance group"
+  ],
+  "independent_oracle": "scripts/check_group_policy_provenance_oracle_v1.py; pure Python Fraction enumeration, no VARE or trainer imports.",
+  "pass_criteria": [
+    "all focused engine and replay regressions pass",
+    "exact oracle reproduces the frozen target-policy update values 1/4 and 41/100",
+    "existing grouped replay and GRPO adapter boundary tests pass"
+  ],
+  "interpretation_limit": "This is a VARE declared-group contract repair. It does not establish that mixed-policy GRPO is generally invalid; prior art explicitly studies mixed and off-policy GRPO.",
+  "resources": "CPU only; no paid APIs; no external trainer/model invocation."
+}
