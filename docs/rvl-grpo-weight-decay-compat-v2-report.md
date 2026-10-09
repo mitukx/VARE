@@ -29,13 +29,14 @@ Raw outputs are retained at [base](../results/rvl-grpo-weight-decay-compat-v2/ba
 
 ## Implementation and validation
 
-The candidate is commit `2a47b3bf538d12c1f24fc3bc8bb188329ed32500` in branch `vare/grpo-zero-advantage-weight-decay`. `weight_decay` is appended after all prior config fields, preserving the prior positional argument order. The optimizer receives the config value explicitly and validation rejects non-finite or negative decay. A draft upstream PR is open at [Recursive-Verification-Lag #89](https://github.com/mitukx/Recursive-Verification-Lag/pull/89); it is awaiting review and has not been merged.
+The candidate is commit `2a47b3bf538d12c1f24fc3bc8bb188329ed32500` in branch `vare/grpo-zero-advantage-weight-decay`. `weight_decay` is appended after all prior config fields, preserving the prior positional argument order. The optimizer receives the config value explicitly and validation rejects non-finite or negative decay. A draft upstream PR is open at [Recursive-Verification-Lag #89](https://github.com/mitukx/Recursive-Verification-Lag/pull/89); all seven GitHub Actions checks passed on 2026-10-09, but it remains unreviewed and unmerged.
 
 - Frozen base and candidate runners completed; source, runtime, protocol and runner hashes matched.
 - Targeted test `python -m unittest tests.test_mini_lab_torch.TorchAcceptanceTests.test_weight_decay_is_explicit_and_preserves_legacy_default -v`: passed.
 - Full `tests.test_mini_lab_torch` module: 12 passed.
 - A separate read-only agent audit checked source/protocol hashes, the raw outcomes, and positional-field ordering; no discrepancy was found. Its record is [`independent-audit.json`](../results/rvl-grpo-weight-decay-compat-v2/independent-audit.json). This is not an outside human review or reproduction.
-- VARE's broad CI was not run for this RVL-only candidate; the reported test status is the isolated RVL torch module above.
+- Upstream PR #89 CI passed all seven reported checks: both CPU platforms, causal-LM, executable-code, real-torch-paths, and the two test workflows. These checks validate the upstream repository's configured test paths at the PR head; they are not external human review, broad VARE CI, or evidence of model-quality improvement.
+- VARE's broad CI was not run for this RVL-only candidate; the local test status is the isolated RVL torch module above.
 - Reproduction commands from VARE root:
 
 ```bash
