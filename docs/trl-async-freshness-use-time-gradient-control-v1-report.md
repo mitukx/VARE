@@ -40,9 +40,15 @@ It does **not** establish:
 
 The exact parameter difference is specific to the chosen synthetic loss and optimizer schedule. It should not be generalized to real GRPO update magnitude or direction.
 
+## Upstream contract review (2026-10-09)
+
+The pinned TRL revision `ed8cc2f4337fb9b7b1429db31009ad3577cd5b98` is still `main` at the latest repository check. Its [AsyncGRPO docs](https://github.com/huggingface/trl/blob/ed8cc2f4337fb9b7b1429db31009ad3577cd5b98/docs/source/async_grpo_trainer.md) define `max_staleness` as the number of weight updates a sample may lag before it is discarded and describe samples being pulled one at a time from the rollout queue. The implementation checks the version as each sample is dequeued. The docs do not promise that freshness is rechecked after Accelerate prefetch, at `training_step`, or at the optimizer update. Therefore the observed later training version is a real dataflow property, but this evidence does not demonstrate a violation of TRL's stated discard contract or justify a use-time freshness patch.
+
+The still-open [TRL issue #7206](https://github.com/huggingface/trl/issues/7206) discusses independent stale checks that can partially consume one rollout and proposes complete-rollout admission before token-budget packing; it does not require a second freshness check at `training_step`. That issue also covers accumulation-window loss normalization, which is separate from this experiment. The current evidence adds no novel upstream defect beyond the already discussed admission boundary.
+
 ## Decision
 
-**Stop the candidate-as-fix claim.** The control shows that this particular stale sample can affect this particular toy update, but does not settle what AsyncGRPO freshness should mean or how a valid group-aware correction should work. Do not extend the queue patch or propose it upstream on this evidence. The next useful step is to clarify the intended contract from upstream documentation/discussion and, only if training-use freshness is required, design a group-preserving executable reproducer that measures a real GRPO loss/gradient. The broader highest-value gap remains independently graded task success after an actual model update; this study does not close it.
+**Stop the candidate-as-fix and upstream-defect claims.** The control shows that this particular stale sample can affect this particular toy update, but current TRL docs and source support checking age at queue dequeue and do not state a training-step recheck guarantee. Do not extend the queue patch or propose an upstream change on this evidence. Reopen this line only if upstream specifies a stricter contract or a distinct group-preserving defect appears. The highest-value gap remains independently graded task success after an actual model update; this study does not close it.
 
 ## Independent audit and test status
 
