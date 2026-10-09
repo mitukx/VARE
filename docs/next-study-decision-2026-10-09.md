@@ -1,6 +1,14 @@
 # Next study decision — 2026-10-09
 
-## Current decision — TRL #7249 DataLoaderDispatcher integration v4
+## Current decision — do not run a generic IFBench RLVR screen
+
+A focused novelty and feasibility screen on 2026-10-09 rejected a generic low-resource IFBench/IFEval RLVR replication as VARE's next study. IFBench already releases 29 RLVR training constraint families and 58 held-out out-of-domain constraint families, and its paper reports RLVR gains on instruction following ([paper](https://arxiv.org/abs/2507.02833), [official benchmark repository](https://github.com/allenai/IFBench)). A recent preprint also directly studies verifier-induced support reshaping on instruction-following tasks, including IFEval pass@1 improvement alongside a decline in best@32 for Qwen3-8B ([paper](https://arxiv.org/abs/2608.00220)). Therefore, simply repeating RLVR on these task families with a smaller cached model would be a resource-scaled replication, not a distinct VARE mechanism or a sufficient novelty claim. No model outputs were generated and no benchmark data were downloaded for this screen.
+
+The retained [TRL group-batching contract v6](trl-async-rollout-group-batching-contract-v6-report.md) remains **stopped**: the current local candidate source is byte-identical to its retained snapshot, and the already-documented exact metric-reduction and sample-retention failures still apply. This recheck adds no new experiment result and does not reopen that candidate.
+
+The highest-priority evidence gap remains independently graded task success after a real model update. Do not launch an IFBench base-only screen under the generic RLVR framing. Resume model work only when a fresh task/model/update pairing has a distinct falsifiable hypothesis, a credible free CPU path, and an untouched independent evaluation. Otherwise prioritize an actually independent outside reproduction/review of an existing result or a separate concrete trainer defect with a production-path regression. No capability gain, upstream adoption, or external reproduction is established by this decision.
+
+## Completed integration reproduction — TRL #7249 DataLoaderDispatcher v4
 
 A frozen two-rank CPU run passed the pinned AsyncGRPO `DataCollatorForRollout` through Accelerate's actual `DataLoaderDispatcher` and `Trainer.train()`. The three microbatches had global active-token counts `[0, 5, 7]`: the first accumulation window contains a globally empty batch and a positive batch where rank 0 has no completion tokens, and the final update is a one-microbatch window. With learning rates `0.1` and `0.05`, the pinned base had first-window loss error `6.05`, gradient error `3.025`, and final parameter error `0.3025`; PR #7249 candidate had zero first-window loss/gradient error, maximum loss/gradient error `9.54e-7`, and zero final parameter error. Both ranks matched state hashes and completed two updates. Protocol SHA-256: `1b6ee095e22f7fff660c8e4db49c0a7a08ccd1814eef81990412bbf14db7850a`.
 
