@@ -1,0 +1,37 @@
+{
+  "protocol_id": "rvl_module_mode_snapshot_upstream_v1",
+  "frozen_at_commit": "9dc09a5",
+  "upstream_repository": "https://github.com/mitukx/Recursive-Verification-Lag.git",
+  "upstream_base_commit": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "patches": {
+    "fix_only": "contributions/rvl-module-mode-fix-only-v1.patch",
+    "fix_only_sha256": "11f13e647c2dbb75182d7235f9d049efa9e4b6ca0c05cfa7b58c302f8ed7baca",
+    "test_only": "contributions/rvl-module-mode-test-only-v1.patch",
+    "test_only_sha256": "f1187ae413143c7a16723292659a037df415965f9d3ac6be22b9a9beab20c854",
+    "combined": "contributions/rvl-module-mode-snapshot-v1.patch",
+    "combined_sha256": "0791cd1f3b5cfc73f3983955ed8d596f62f65a39af533508eba97112e36a722e"
+  },
+  "hypothesis": "HFCausalLMGRPOTrainer snapshot/restore omits PyTorch module train/eval flags, so rejecting a candidate can restore weights and optimizer while leaving model behavior state different from the incumbent snapshot.",
+  "primary_regression": "test_hf_trainer_transaction_restores_mixed_module_modes",
+  "negative_controls": [
+    "test_hf_trainer_restore_accepts_legacy_snapshot",
+    "test_hf_trainer_transaction_restores_model_optimizer_and_rng"
+  ],
+  "frozen_procedure": [
+    "At exact base commit, apply test-only patch and run the mixed-mode regression. Expected: test fails because all module modes remain training=True after restore.",
+    "Reset to exact base, apply combined patch, run the complete tests.test_mini_lab_torch unittest module. Expected: 13 tests pass.",
+    "Run git diff --check and git apply --check for patch applicability."
+  ],
+  "acceptance": {
+    "baseline_mixed_mode_regression_fails": true,
+    "patched_full_optional_torch_suite_passes": true,
+    "legacy_snapshot_restore_remains_supported": true,
+    "patch_applies_to_exact_base": true,
+    "paid_compute": false,
+    "network_during_test": false,
+    "device": "CPU",
+    "model": "randomly initialized tiny GPT-2 fixture"
+  },
+  "claim_boundary": "One transactional trainer state omission demonstrated on the pinned RVL commit. Does not establish production incident frequency, real model quality impact, upstream adoption, external reviewer reproduction, or capability improvement.",
+  "external_submission": "not submitted; requires user approval"
+}

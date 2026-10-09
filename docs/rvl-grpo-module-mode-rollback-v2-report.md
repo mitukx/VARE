@@ -30,21 +30,15 @@ The baseline output is retained at [`baseline-da5d457.json`](../results/rvl-grpo
 
 ## Reproduction
 
-Use the runtime and package setup in [the v1 report](rvl-grpo-midstep-fault-report.md#clean-checkout-reproduction). The first checkout reproduces the two mode failures; the second passes all 14 checks:
+Use the runtime and package setup in [the v1 report](rvl-grpo-midstep-fault-report.md#clean-checkout-reproduction), check out this report's VARE revision, and check out the pinned RVL source revision. The one-command driver extracts baseline and patched VARE commits into temporary clean trees, runs the real validator in both, and requires the only baseline failures to be the two module-mode checks:
 
 ```bash
-# Expected failure: the frozen validator detects the original rollback gap.
-git checkout eeae165
-python scripts/validate_rvl_grpo_midstep_fault_v2.py \
-  --rvl-source /tmp/Recursive-Verification-Lag/src/rvl_systems
-
-# Patched implementation: every frozen check passes.
-git checkout 167e9d1ca3c2041a2cf5b5a6a924e364de18027d
-python scripts/validate_rvl_grpo_midstep_fault_v2.py \
-  --rvl-source /tmp/Recursive-Verification-Lag/src/rvl_systems
+python scripts/reproduce_rvl_grpo_midstep_fault_v2.py \
+  --rvl-source /tmp/Recursive-Verification-Lag/src/rvl_systems \
+  --output-dir results/rvl-grpo-midstep-fault-v2/review-replay
 ```
 
-The validator verifies upstream file hashes and runtime versions. Run it on the patched VARE revision to obtain 14/14 checks. The retained before/after outputs are author-produced on one host; there has not yet been an outside reproduction or RVL maintainer review.
+The driver refuses a different RVL commit and a non-empty output directory. It does not alter the current checkout. On 2026-10-10 it reproduced 12/14 baseline checks (only `module_modes_restored` and `root_mode_restored` fail) and 14/14 patched checks in 7.418 seconds of summed validator time. The raw baseline/fixed JSON and stderr files plus summary are retained in [`review-replay-20261010`](../results/rvl-grpo-midstep-fault-v2/review-replay-20261010/). This remains an author-run, same-host clean-tree reproduction; outside reproduction and RVL maintainer review have not occurred.
 
 Focused VARE regressions passed: `tests/test_rvl_grpo_hooks.py`, `tests/test_rvl_evaluation_promotion_e2e.py`, and `tests/test_rvl_grpo_group_boundary.py` (9 passed). The full suite completed with four failures in the previously recorded `smoke-stable-logsumexp` environment tests; these failures predate this change and are tracked in [`current-gaps.md`](current-gaps.md).
 

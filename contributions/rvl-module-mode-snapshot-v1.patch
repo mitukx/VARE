@@ -1,0 +1,80 @@
+diff --git a/src/rvl_systems/hf_trainer.py b/src/rvl_systems/hf_trainer.py
+index 51d5967..8783b5b 100644
+--- a/src/rvl_systems/hf_trainer.py
++++ b/src/rvl_systems/hf_trainer.py
+@@ -132,6 +132,10 @@ class HFCausalLMGRPOTrainer:
+             "model": model,
+             "optimizer": optimizer,
+             "cpu_rng": torch.get_rng_state().cpu().clone(),
++            "module_modes": {
++                name: bool(module.training)
++                for name, module in self.model.named_modules()
++            },
+         }
+         if torch.cuda.is_available():
+             state["cuda_rng"] = [x.cpu().clone() for x in torch.cuda.get_rng_state_all()]
+@@ -140,11 +144,23 @@ class HFCausalLMGRPOTrainer:
+     def restore_training_state(self, state: dict[str, Any]) -> None:
+         """Restore model/optimizer/RNG after a rejected candidate update."""
+         torch = self.torch
++        module_modes = state.get("module_modes")
++        modules = dict(self.model.named_modules())
++        if module_modes is not None:
++            if not isinstance(module_modes, dict) or module_modes.keys() != modules.keys():
++                raise ValueError("snapshot module topology differs from the current model")
++            if any(type(mode) is not bool for mode in module_modes.values()):
++                raise ValueError("snapshot module modes must be booleans")
+         self.model.load_state_dict(state["model"])
+         self.optimizer.load_state_dict(state["optimizer"])
+         torch.set_rng_state(state["cpu_rng"].cpu())
+         if "cuda_rng" in state and torch.cuda.is_available():
+             torch.cuda.set_rng_state_all([x.cpu() for x in state["cuda_rng"]])
++        if module_modes is not None:
++            # Module.train() recursively changes descendants. Restore in
++            # named_modules preorder so nested modules can keep mixed modes.
++            for name, module in modules.items():
++                module.train(module_modes[name])
+ 
+     def train_step(self, samples: list[VerifiedGeneration], *, advantages: list[float] | None = None) -> dict[str, float]:
+         if not samples:
+diff --git a/tests/test_mini_lab_torch.py b/tests/test_mini_lab_torch.py
+index 49e3c1c..083d4c4 100644
+--- a/tests/test_mini_lab_torch.py
++++ b/tests/test_mini_lab_torch.py
+@@ -174,6 +174,36 @@ class TorchAcceptanceTests(unittest.IsolatedAsyncioTestCase):
+         self.assertEqual(set(restored["state"]),set(before["optimizer"]["state"]))
+         self.assertTrue(torch.equal(torch.get_rng_state(),before["cpu_rng"]))
+ 
++    async def test_hf_trainer_transaction_restores_mixed_module_modes(self):
++        model = self.model()
++        trainer = HFCausalLMGRPOTrainer(model,config=HFTTrainerConfig(learning_rate=1e-3))
++        samples = self.samples(model)
++        model.eval()
++        model.transformer.h[0].mlp.train()
++        before_modes = {name: module.training for name, module in model.named_modules()}
++        before = trainer.snapshot_training_state()
++
++        trainer.train_step(samples)
++        trainer.restore_training_state(before)
++
++        self.assertEqual(
++            before_modes,
++            {name: module.training for name, module in model.named_modules()},
++        )
++
++    async def test_hf_trainer_restore_accepts_legacy_snapshot(self):
++        model = self.model()
++        trainer = HFCausalLMGRPOTrainer(model,config=HFTTrainerConfig(learning_rate=1e-3))
++        samples = self.samples(model)
++        before = trainer.snapshot_training_state()
++        legacy = {key: value for key, value in before.items() if key != "module_modes"}
++
++        trainer.train_step(samples)
++        trainer.restore_training_state(legacy)
++
++        for key,value in model.state_dict().items():
++            self.assertTrue(torch.equal(value.cpu(),before["model"][key]))
++
+     async def test_microbatch_gradient_matches_full_graph_reference(self):
+         model = self.model()
+         samples = self.samples(model)

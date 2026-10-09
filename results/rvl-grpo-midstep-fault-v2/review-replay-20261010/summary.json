@@ -1,0 +1,27 @@
+{
+  "baseline": {
+    "failed_checks": [
+      "module_modes_restored",
+      "root_mode_restored"
+    ],
+    "passed_checks": 12,
+    "status": "fail",
+    "total_checks": 14,
+    "wall_seconds": 4.169
+  },
+  "claim_boundary": "Same-host clean-tree reproduction of one frozen injected fault on the exact pinned RVL trainer. This is not an outside-person reproduction, production-incidence estimate, or model-capability result.",
+  "patched": {
+    "failed_checks": [],
+    "passed_checks": 14,
+    "status": "pass",
+    "total_checks": 14,
+    "wall_seconds": 3.249
+  },
+  "protocol": "rvl_grpo_midstep_fault_v2",
+  "runtime": {
+    "python": "3.12.12"
+  },
+  "rvl_commit": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "vare_baseline_commit": "eeae16559032502b98fb2caf1f0516936d75484e",
+  "vare_patched_commit": "167e9d1ca3c2041a2cf5b5a6a924e364de18027d"
+}
