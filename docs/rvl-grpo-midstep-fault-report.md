@@ -20,12 +20,44 @@ The fixture was a randomly initialized 3,696-parameter GPT-2 with a 16-token voc
 | CUDA initialized | No |
 | Checks | 12/12 passed |
 
-The immutable [protocol](../protocols/rvl_grpo_midstep_fault_v1.json), [validator](../scripts/validate_rvl_grpo_midstep_fault.py), and [run bundle](../results/rvl-grpo-midstep-fault-v1/run-1/) retain the procedure, hashes, and output. Re-run in the pinned environment with local upstream source:
+The immutable [protocol](../protocols/rvl_grpo_midstep_fault_v1.json), [validator](../scripts/validate_rvl_grpo_midstep_fault.py), and [run bundle](../results/rvl-grpo-midstep-fault-v1/run-1/) retain the procedure, hashes, and output. A later exact-commit rerun is in [run-3](../results/rvl-grpo-midstep-fault-v1/run-3/). [Run-2](../results/rvl-grpo-midstep-fault-v1/run-2/) is retained as a reproducibility failure: the validator accepted matching source-file hashes from a different Git commit. The revision guard rejects that case and dirty checkouts; its unit tests pass. This improves provenance checks but does not count as external reproduction.
+
+### Clean-checkout reproduction
+
+The validator requires Python 3.12.12, PyTorch 2.9.1, and Transformers 4.57.3;
+it rejects other versions. VARE has no runtime dependencies, so install the two
+experiment packages explicitly. The official PyTorch 2.9.1 install commands
+provide a CPU-only wheel for Linux; macOS uses the regular wheel ([PyTorch
+versioned commands](https://pytorch.org/get-started/previous-versions/)).
 
 ```bash
+git clone https://github.com/mitukx/VARE.git
+cd VARE
+git checkout 63ba181ae54a67738b6d40730ce10a9e8bdd7ba0
+python3.12 -m venv .venv
+. .venv/bin/activate
+python --version  # must print 3.12.12
+
+# macOS:
+python -m pip install torch==2.9.1
+# Linux CPU (use this instead of the macOS line):
+# python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu
+
+python -m pip install transformers==4.57.3
+python -m pip install -e .
+git clone https://github.com/mitukx/Recursive-Verification-Lag.git /tmp/Recursive-Verification-Lag
+git -C /tmp/Recursive-Verification-Lag checkout c7e646b043cb56e5ea3c2623bb8a61e065451f72
 python scripts/validate_rvl_grpo_midstep_fault.py \
-  --rvl-source /path/to/Recursive-Verification-Lag/src/rvl_systems
+  --rvl-source /tmp/Recursive-Verification-Lag/src/rvl_systems
 ```
+
+The validator verifies the five expected upstream source hashes before loading
+the trainer. It runs a random-initialized tiny model without dataset or model
+downloads. A pass emits all 12 checks as `true` and `status: pass`; it fails if
+the runtime versions, source hashes, CPU-only condition, or 120-second limit do
+not match the frozen protocol. Package and source installation require network
+access; the validation run itself sets model-hub and dataset access to offline
+mode.
 
 ## Limits
 

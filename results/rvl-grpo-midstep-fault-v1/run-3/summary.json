@@ -1,0 +1,45 @@
+{
+  "checks": {
+    "active_policy_unchanged": true,
+    "counter_unchanged": true,
+    "cuda_uninitialized": true,
+    "failed_candidate_removed": true,
+    "failure_injected_inside_train_step": true,
+    "failure_propagated": true,
+    "model_changed_before_failure": true,
+    "model_restored": true,
+    "next_rollout_uses_incumbent": true,
+    "optimizer_changed_before_failure": true,
+    "optimizer_restored": true,
+    "rng_restored": true
+  },
+  "claim_boundary": "Tiny random-model integration smoke only; no pretrained-model capability, training-quality, or external-reproduction claim.",
+  "model": {
+    "architecture": "GPT2LMHeadModel",
+    "heads": 2,
+    "hidden_size": 16,
+    "initialization": "random",
+    "layers": 1,
+    "parameters": 3696,
+    "vocab_size": 16
+  },
+  "procedure": "real pinned HFCausalLMGRPOTrainer.train_step with optimizer.step wrapped to mutate model/optimizer and then raise before train_step returns",
+  "runtime": {
+    "device": "cpu",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "torch_threads": 1,
+    "transformers": "4.57.3"
+  },
+  "status": "pass",
+  "upstream_commit": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "upstream_repository": "https://github.com/mitukx/Recursive-Verification-Lag",
+  "upstream_source_sha256": {
+    "backends.py": "26abeffd24ecef37093a179dc33506f0853018331c0002bd01010d016b31faca",
+    "grpo.py": "a2ef6217385a206f5e6c0f43fb40e900ae3bf1b2066a1c8d1ab1878fd25d724d",
+    "hf_trainer.py": "375985c1d0cca49a9d98d8b00ed41cefe000b91461e9a0783e94312466fd0210",
+    "triton_grpo.py": "ed7ee082db036e1631c1f8eaacfb8691b102401c8342dcb9ed4dba5d26a22cf9",
+    "types.py": "a3e9f06cc70972a7b5fd50b757ffff992d3a6156d1ffab5133e410471dcc5d7b"
+  },
+  "wall_seconds": 4.218
+}
