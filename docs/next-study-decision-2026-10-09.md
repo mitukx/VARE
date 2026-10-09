@@ -1,5 +1,11 @@
 # Next study decision — 2026-10-09
 
+## Follow-up decision — TRL DAPO trainer reproduction v1 non-pass
+
+The frozen CPU reproduction ran the pinned baseline and merged-fix `GRPOTrainer` on the local cached model. In the `steps_per_generation=2`, accumulation-4 single-window case, every captured microbatch loss was 2x the reconstructed target before the fix and 1x after; logged gradient norm was 2x in baseline, while aggregate parameter-delta statistics matched. The equal-window control was 1x for both. In the `steps_per_generation=4`, accumulation-2 cases, policy clipping and changing importance ratios invalidated the frozen reconstruction; baseline ratios were 0.435879, 1.708675, 2.752660, and 1.522939, and the fixed run's first ratio was 0.871758. The complete frozen acceptance gate failed. See the [report](trl-dapo-trainer-reproduction-v1-report.md), [protocol](../protocols/trl_dapo_trainer_reproduction_v1.lock.json), and [raw run](../results/trl-dapo-trainer-reproduction-v1/run-1/).
+
+**Decision:** stop this line. The upstream correction was already merged, the positive arm demonstrates only the expected loss rescaling in one local trainer execution, and the matching aggregate update magnitudes do not establish changed policy behavior. Do not repair the consumed cohort or claim an optimizer/task-success benefit. Resume only for a distinct open defect with a valid baseline counterexample, or prioritize independent review/reproduction of existing retained evidence. The main research gap remains independently measured task-success improvement after a real model update.
+
 ## Update — RVL GRPO verifier-to-training prompt binding
 
 A frozen adapter regression found that `RVLGRPOHooks.rollout` accepted backend generation metadata for a different prompt while returning an `Attempt` bound to the requested task. The engine verifies the outer task and response, while the RVL GRPO trainer later reconstructs token-exact input from the embedded metadata. The adapter now rejects mismatched generation `prompt_id` or `prompt` before returning the attempt. Baseline: 2/3 frozen tests failed; fixed: 3/3; adjacent RVL and engine tests: 15 passed. See the [report](rvl-grpo-rollout-task-binding-v1-report.md) and [bundle](../results/rvl-grpo-rollout-task-binding-v1/run-1/).

@@ -1,0 +1,82 @@
+{
+  "protocol_id": "trl_dapo_trainer_reproduction_v1",
+  "status": "frozen_before_any_GRPOTrainer_run",
+  "question": "Does the merged TRL #6024 DAPO normalizer make the actual trainer's captured per-microbatch loss equal the accumulation-window token-mean target across the upstream regression matrix, while the pinned baseline exhibits the predicted A/S scaling?",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "baseline_revision": "8697378709102608e3c9dc5bf582772e4ddee788",
+    "fixed_revision": "e1b2e21975994e676d9a676e3ab005e9bee38e40",
+    "trainer_path": "trl/trainer/grpo_trainer.py",
+    "baseline_sha256": "c4a1249c66a3293835b533114d9728a74ab36e775052931229302006a5fe2369",
+    "fixed_sha256": "7446f652aefb9b78a64952a135c2235c924a7633c112d6a8f569b16ec4d62e14",
+    "issue": "https://github.com/huggingface/trl/issues/5619",
+    "pull_request": "https://github.com/huggingface/trl/pull/6024"
+  },
+  "model": {
+    "repository": "distilbert/distilgpt2",
+    "revision": "2290a62682d06624634c1f46a6ad5be0f47f38aa",
+    "use": "CPU-only execution fixture; no capability or task-success claim",
+    "files_sha256": {
+      "config.json": "4ec5947c1d59fee6212cdf3b0ec1a53eac02092554c5ff0a733488cbd2c64f3a",
+      "generation_config.json": "b90eadacf585a743a30ea51e8b5c88b8d282a2a34dc0c7e556d0987cdbd68805",
+      "merges.txt": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+      "model.safetensors": "e1ff18884359fe8beb795a5f414feb85a6ce3d929ad019c0d958c039d2b94a1b",
+      "tokenizer.json": "8414cab924d8b9b33013f0d221c5862f365ee9be39c5c2bfae8a5a9e970478a6",
+      "tokenizer_config.json": "5e04eb606e3a1583530a42e36c2a6b6615c86f34fe77e44d9ddeb43ff940931f",
+      "vocab.json": "196139668be63f3b5d6574427317ae82f612a97c5d1cdaf36ed2256dbf636783"
+    }
+  },
+  "frozen_training_config": {
+    "dataset": "32 identical literal text prompts generated in memory; no benchmark or external dataset",
+    "prompt": "The capital of France is",
+    "reward": "completion character length",
+    "per_device_train_batch_size": 3,
+    "num_generations": 3,
+    "max_completion_length": 8,
+    "num_iterations": 1,
+    "beta": 0.0,
+    "learning_rate": 1e-7,
+    "seed": 20261009,
+    "report_to": "none",
+    "device": "cpu",
+    "network_during_run": false
+  },
+  "arms": [
+    {"steps_per_generation": 4, "gradient_accumulation_steps": 2, "max_steps": 2},
+    {"steps_per_generation": 2, "gradient_accumulation_steps": 2, "max_steps": 2},
+    {"steps_per_generation": 2, "gradient_accumulation_steps": 4, "max_steps": 1}
+  ],
+  "measurement": {
+    "source_hook": "Wrap the real GRPOTrainer._compute_loss, call the original method, and retain loss, generation-wide num_items_in_batch, completion_mask token counts, and advantages for every microbatch.",
+    "expected_loss": "sum(-advantages * completion_token_count) / (num_items_in_batch / world_size * gradient_accumulation_steps / steps_per_generation)",
+    "primary_metric": "actual _compute_loss output divided by expected_loss for each captured microbatch",
+    "baseline_prediction": "A/S for every captured microbatch",
+    "fixed_prediction": "1 for every captured microbatch",
+    "tolerance": {"rtol": 0.0001, "atol": 0.000001},
+    "parameter_change": "recorded only as confirmation that training executed; not a success metric"
+  },
+  "acceptance": {
+    "all_three_configurations_complete_for_both_revisions": true,
+    "baseline_mismatch_ratios_match_A_over_S": true,
+    "fixed_ratios_match_1": true,
+    "equal_A_S_control_is_1_for_both": true,
+    "all_local_model_files_match_hashes": true,
+    "source_file_hashes_match_revisions": true,
+    "peak_rss_under_gib": 8,
+    "max_wall_seconds_per_arm": 600,
+    "accelerator_hours": 0,
+    "paid_api_calls": 0,
+    "external_compute_usd": 0
+  },
+  "failure_criteria": [
+    "baseline or fixed trainer cannot run with the frozen local dependencies and no network access",
+    "any captured loss fails its locked expected ratio outside tolerance",
+    "generation rewards have zero within-group variance for a required run, making the captured loss diagnostic uninformative",
+    "source or model hashes differ from this lock"
+  ],
+  "claim_limits": [
+    "This is a controlled execution of the real pinned trainer with a cached small language model and a synthetic length reward.",
+    "It tests the loss-normalization regression, not reward quality, generalization, or capability.",
+    "No new algorithm, new upstream defect, external human reproduction, or adoption is claimed."
+  ]
+}

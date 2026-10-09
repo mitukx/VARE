@@ -1,0 +1,140 @@
+{
+  "acceptance_errors": [],
+  "actual_optimizer_update": {
+    "changed_parameter_tensor_count": 76,
+    "max_absolute_parameter_delta": 1.1920928955078125e-07,
+    "total_absolute_parameter_delta": 5.532447450670588
+  },
+  "captured_microbatch_count": 4,
+  "configuration": {
+    "gradient_accumulation_steps": 4,
+    "max_steps": 1,
+    "steps_per_generation": 2
+  },
+  "disclaimer": "Real pinned GRPOTrainer execution with a synthetic character-length reward; no capability evaluation.",
+  "expected_observed_ratio": 2.0,
+  "protocol_id": "trl_dapo_trainer_reproduction_v1",
+  "provenance": {
+    "model_files_sha256": {
+      "config.json": "4ec5947c1d59fee6212cdf3b0ec1a53eac02092554c5ff0a733488cbd2c64f3a",
+      "generation_config.json": "b90eadacf585a743a30ea51e8b5c88b8d282a2a34dc0c7e556d0987cdbd68805",
+      "merges.txt": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+      "model.safetensors": "e1ff18884359fe8beb795a5f414feb85a6ce3d929ad019c0d958c039d2b94a1b",
+      "tokenizer.json": "8414cab924d8b9b33013f0d221c5862f365ee9be39c5c2bfae8a5a9e970478a6",
+      "tokenizer_config.json": "5e04eb606e3a1583530a42e36c2a6b6615c86f34fe77e44d9ddeb43ff940931f",
+      "vocab.json": "196139668be63f3b5d6574427317ae82f612a97c5d1cdaf36ed2256dbf636783"
+    },
+    "model_revision": "2290a62682d06624634c1f46a6ad5be0f47f38aa",
+    "trl_trainer_sha256": "c4a1249c66a3293835b533114d9728a74ab36e775052931229302006a5fe2369"
+  },
+  "records": [
+    {
+      "actual_loss": 0.19244356453418732,
+      "actual_over_expected": 2.0000000516208885,
+      "completion_token_counts": [
+        8,
+        8,
+        8
+      ],
+      "expected_window_loss": 0.09622177978356679,
+      "microbatch_index": 0,
+      "num_items_in_batch": 48.0,
+      "predicted_ratio": 2.0,
+      "reward_signal_nonzero": true
+    },
+    {
+      "actual_loss": -0.19244368374347687,
+      "actual_over_expected": 2.0000000516208565,
+      "completion_token_counts": [
+        8,
+        8,
+        8
+      ],
+      "expected_window_loss": -0.09622183938821156,
+      "microbatch_index": 1,
+      "num_items_in_batch": 48.0,
+      "predicted_ratio": 2.0,
+      "reward_signal_nonzero": true
+    },
+    {
+      "actual_loss": 0.030979612842202187,
+      "actual_over_expected": 1.9999996392508539,
+      "completion_token_counts": [
+        8,
+        8,
+        8
+      ],
+      "expected_window_loss": 0.015489809215068817,
+      "microbatch_index": 2,
+      "num_items_in_batch": 48.0,
+      "predicted_ratio": 2.0,
+      "reward_signal_nonzero": true
+    },
+    {
+      "actual_loss": -0.03097953461110592,
+      "actual_over_expected": 1.999999719416611,
+      "completion_token_counts": [
+        8,
+        8,
+        8
+      ],
+      "expected_window_loss": -0.015489769478638967,
+      "microbatch_index": 3,
+      "num_items_in_batch": 48.0,
+      "predicted_ratio": 2.0,
+      "reward_signal_nonzero": true
+    }
+  ],
+  "resources": {
+    "peak_rss_gib": 2.5220489501953125,
+    "wall_seconds": 25.087419707968365
+  },
+  "revision_arm": "baseline",
+  "runtime": {
+    "device": "cpu",
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3",
+    "trl_source": "/private/tmp/trl-base-8697/trl/__init__.py",
+    "world_size": 1
+  },
+  "status": "pass",
+  "train_metrics": [
+    {
+      "clip_ratio/high_max": 0.0,
+      "clip_ratio/high_mean": 0.0,
+      "clip_ratio/low_mean": 0.0,
+      "clip_ratio/low_min": 0.0,
+      "clip_ratio/region_mean": 0.0,
+      "completions/clipped_ratio": 1.0,
+      "completions/max_length": 8.0,
+      "completions/max_terminated_length": 0.0,
+      "completions/mean_length": 8.0,
+      "completions/mean_terminated_length": 0.0,
+      "completions/min_length": 8.0,
+      "completions/min_terminated_length": 0.0,
+      "entropy": 4.355458557605743,
+      "epoch": 0.125,
+      "frac_reward_zero_std": 0.0,
+      "grad_norm": 21.867544174194336,
+      "learning_rate": 1e-07,
+      "loss": -0.0,
+      "num_tokens": 156.0,
+      "reward": 41.41666603088379,
+      "reward_std": 8.921596050262451,
+      "rewards/reward_by_character_length/mean": 41.41666603088379,
+      "rewards/reward_by_character_length/std": 8.921596050262451,
+      "step": 1,
+      "step_time": 24.85564225091366
+    },
+    {
+      "epoch": 0.125,
+      "step": 1,
+      "total_flos": 0.0,
+      "train_loss": -4.0978193283081055e-08,
+      "train_runtime": 24.9963,
+      "train_samples_per_second": 0.48,
+      "train_steps_per_second": 0.04
+    }
+  ]
+}
