@@ -1,0 +1,39 @@
+{
+  "protocol": "policy_dependent_audit_selection_gradient_v1",
+  "frozen_at_commit": "ebe5e33",
+  "question": "Does differentiating a verifier response trained on policy-dependent, selectively audited samples require a selection-propensity score term, and can omitting it reverse the outer policy-score gradient?",
+  "estimand": "J(theta)=E_{z~P_theta}[r_{phi*(theta)}(z)], where phi*(theta) minimizes the clean-label squared loss under the selected distribution Q_theta(z) proportional to P_theta(z)s_theta(z).",
+  "assumptions": [
+    "finite outcome space and differentiable positive P_theta and audit inclusion probabilities s_theta",
+    "conditional clean-label law is fixed with respect to theta in the main counterexample",
+    "strictly convex verifier loss with nonsingular Hessian at its minimizer",
+    "selection has positive support for both outcomes"
+  ],
+  "frozen_counterexample": {
+    "outcomes": ["A", "B"],
+    "policy": "P_theta(A)=sigmoid(theta)",
+    "theta0": "ln(7/3)",
+    "audit": "s_theta(A)=sigmoid(-4(theta-theta0)); s_theta(B)=1-s_theta(A)",
+    "clean_labels": {"A": 1, "B": 1},
+    "verifier": "r_phi(A)=phi; r_phi(B)=-phi; squared loss",
+    "primary_metric": "sign of d/dtheta E_{P_theta}[r_{phi*(theta)}(z)] at theta0"
+  },
+  "baselines": [
+    "exact selected-distribution derivative including policy and selection scores",
+    "stop-gradient selection ablation omitting d/dtheta log s_theta",
+    "inverse-propensity reweighted verifier objective targeting P_theta"
+  ],
+  "predictions": {
+    "selected_mass_A": "7/10",
+    "d_selected_mass_A_dtheta_full": "-63/100",
+    "d_selected_mass_A_dtheta_stop_selection": "21/100",
+    "outer_gradient_full": "-42/125",
+    "outer_gradient_stop_selection": "42/125",
+    "ipw_target_mass_A": "7/10"
+  },
+  "success_criterion": "The implementation must exactly reproduce the rational derivatives, show opposite outer-gradient signs under the frozen misspecified verifier, and show that normalized inverse-propensity weighting targets the unselected policy distribution.",
+  "stop_criterion": "If exact arithmetic or an independent finite-difference oracle disagrees, reject the claimed mechanism. A pass establishes only the mathematical counterexample, not novelty, real-system incidence, or model improvement.",
+  "resources": {"cpu_only": true, "paid_compute": false, "model_training": false, "external_data": false},
+  "confirmation_split": "not applicable; fully enumerated analytic fixture",
+  "retired_data_touched": false
+}

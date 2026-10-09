@@ -1,0 +1,27 @@
+{
+  "checks": {
+    "finite_difference_matches_exact": true,
+    "full_gradient_reverses_stop_selection": true,
+    "ipw_recovers_policy_mass": true
+  },
+  "exact": {
+    "dphi_dtheta_full": "-63/50",
+    "dphi_dtheta_stop_selection": "21/50",
+    "dq_dtheta_full": "-63/100",
+    "dq_dtheta_stop_selection": "21/100",
+    "normalized_ipw_q_A": "7/10",
+    "outer_gradient_full": "-42/125",
+    "outer_gradient_stop_selection": "42/125",
+    "p_A": "7/10",
+    "selected_q_A": "7/10",
+    "verifier_phi": "2/5"
+  },
+  "finite_difference": {
+    "dq_dtheta_full": -0.629999999968156,
+    "dq_dtheta_stop_selection": 0.21000000000048755,
+    "outer_gradient_full": -0.335999999995229,
+    "outer_gradient_stop_selection": 0.3359999999938412,
+    "step": 1e-05
+  },
+  "protocol": "policy_dependent_audit_selection_gradient_v1"
+}

@@ -1,4 +1,4 @@
-# Stale audit-gradient control under policy overlap
+# General limitation of cached audit-gradient vectors (not applicable to current RVL path)
 
 ## Question
 
@@ -11,6 +11,10 @@ Can policy-distribution overlap alone justify reusing an audited policy-gradient
 RL Tango and Cooper study training the generator and verifier together. Foresighted Policy Optimization (FPO) studies the policy's effect on reward-model retraining and adds a steering term. Projected Audit Correction (PAC) studies a fixed verifier and uses the current audited hack-probability gradient; its theorem assumes the audited gradient remains representative over the training interval. VARE's previous policy-shift studies concern action-distribution overlap and estimators of target-policy updates.
 
 The result below isolates a different object: **the parameter gradient itself**. It does not establish that any cited method caches stale gradients, and it is not a new policy-training algorithm. It is a limitation on using KL or action overlap as the sole freshness test for a cached correction direction. Its novelty is modest: it is a direct derivative counterexample, not a paper-level contribution by itself.
+
+## Applicability audit (2026-10-10)
+
+The pinned VARE/RVL training path was inspected after this report was written. RVL stores token IDs and behavior-policy token log-probabilities with each generated sample, then `HFCausalLMGRPOTrainer._sample_objective` runs the current model on the stored sequence and recomputes current token log-probabilities before forming the behavior/current ratio. `train_step` backpropagates this freshly evaluated objective; VARE supplies group-relative scalar advantages. No cached parameter-gradient vector is reused. Therefore, the counterexample is **not an identified VARE/RVL defect and not a live research direction for this implementation**. The source-level trace and a separate exact calculation concerning policy-dependent audit selection are recorded in [the follow-up report](policy-dependent-audit-selection-gradient-v1-report.md).
 
 ## Exact counterexample
 
@@ -51,7 +55,7 @@ For $0<\delta<\pi$, the old vector lowers the hack rate at its source policy and
 
 ## Decision
 
-Retain this as a precise diagnostic for the next scientific gate: **measure current-to-stale audited-gradient alignment under policy updates, while separately testing whether gradients are recomputed from retained trajectories**. Do not claim a new mitigation or capability gain from this counterexample. A publishable contribution requires a nontrivial robustness bound or a measured failure on an actual training path, compared with fresh-gradient and importance-weighted baselines.
+Retain the mathematical counterexample as a general parameterization diagnostic, but close it as a VARE/RVL research direction because the pinned path recomputes current-policy scores from stored trajectories. Reopen only if a distinct real implementation demonstrably caches and reuses parameter-gradient vectors. Do not claim a VARE failure, new mitigation, or capability gain from this result.
 
 ## Closest sources
 
