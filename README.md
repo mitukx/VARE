@@ -8,7 +8,7 @@ The latest HH human-preference comparison tested length-normalized DPO against s
 
 **Latest engine correctness regression:** `CapabilityLoop` now rejects a rollout `Attempt` whose task identity differs from the dispatched task. The baseline accepted and trained on the substituted task; the frozen CPU regression now passes. This is a narrow harness-correctness result, not policy-improvement evidence. See the [report](docs/engine-rollout-task-binding-v1-report.md) and [raw records](results/engine-rollout-task-binding-v1/run-1/).
 
-**Latest RVL adapter regression:** `RVLGRPOHooks` now rejects generation metadata whose prompt ID or prompt differs from the dispatched task. This guards against verifying one prompt while the trainer consumes token-exact data for another. The frozen CPU test passed after failing on baseline; it is an adapter-contract result, not an optimizer or capability result. See the [report](docs/rvl-grpo-rollout-task-binding-v1-report.md) and [raw records](results/rvl-grpo-rollout-task-binding-v1/run-1/).
+**Latest RVL adapter regression:** `RVLGRPOHooks` now rejects generation metadata whose prompt ID or prompt differs from the dispatched task. A frozen CPU test using a mismatched fake backend passed after failing on baseline. It validates the adapter contract; no real-backend mismatch or optimizer/capability effect was measured. See the [report](docs/rvl-grpo-rollout-task-binding-v1-report.md) and [raw records](results/rvl-grpo-rollout-task-binding-v1/run-1/).
 
 ## Start here
 
