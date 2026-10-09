@@ -1,0 +1,45 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________ test_mismatched_generation_never_reaches_grpo_train_step ___________
+
+    def test_mismatched_generation_never_reaches_grpo_train_step():
+        task = Task("task-a", "prompt a", "fixture")
+        trainer = Trainer()
+        hooks = _hooks(trainer)
+
+        async def run():
+            with pytest.raises(ValueError, match="RVL generation task identity mismatch"):
+                attempt = await hooks.rollout(task, "policy-0", 0, 1)
+                reward = hooks.score_fn(attempt.task, attempt.output)
+                experience = Experience(
+                    attempt=attempt,
+                    verification=Verification(reward, reward >= 0.5, 1.0, 0, "fixture", trusted=True),
+                    policy_lag=0,
+                    verifier_lag=0,
+                    shift_score=0.0,
+                )
+                await hooks.train_candidate("policy-0", [experience])
+
+>       asyncio.run(run())
+
+tests/test_rvl_grpo_verifier_trainer_prompt_alignment.py:95:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    async def run():
+>       with pytest.raises(ValueError, match="RVL generation task identity mismatch"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_rvl_grpo_verifier_trainer_prompt_alignment.py:83: Failed
+=========================== short test summary info ============================
+FAILED tests/test_rvl_grpo_verifier_trainer_prompt_alignment.py::test_mismatched_generation_never_reaches_grpo_train_step

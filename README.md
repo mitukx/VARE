@@ -10,6 +10,8 @@ The latest HH human-preference comparison tested length-normalized DPO against s
 
 **Latest RVL adapter regression:** `RVLGRPOHooks` now rejects generation metadata whose prompt ID or prompt differs from the dispatched task. A frozen CPU test using a mismatched fake backend passed after failing on baseline. It validates the adapter contract; no real-backend mismatch or optimizer/capability effect was measured. See the [report](docs/rvl-grpo-rollout-task-binding-v1-report.md) and [raw records](results/rvl-grpo-rollout-task-binding-v1/run-1/).
 
+**Verifier-to-trainer dataflow check:** a second frozen fake-backend test reproduced a reward for task-a arriving at a fake GRPO trainer with task-b prompt/token IDs on baseline. The fix blocks this path before `train_step`. No production backend or optimizer was exercised. See the [report](docs/rvl-grpo-verifier-trainer-prompt-alignment-v1-report.md) and [raw records](results/rvl-grpo-verifier-trainer-prompt-alignment-v1/run-1/).
+
 ## Start here
 
 - [VARE → RVL CPU update-path feasibility](docs/rvl-cpu-real-model-update-path-v1-report.md): retained v1 artifact-retention failure and fresh-cohort v2 frozen protocol; no task-efficacy claim.

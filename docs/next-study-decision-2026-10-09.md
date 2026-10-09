@@ -6,6 +6,10 @@ A frozen adapter regression found that `RVLGRPOHooks.rollout` accepted backend g
 
 **Decision:** retain this as a narrow E0 trainer-input integrity repair. The main gap is unchanged: no independently confirmed task-success gain after a real model update and no outside reproduction. The next improvement should target an independently measured learner outcome or external review, not add another generic binding layer.
 
+## Supplemental verifier-to-trainer dataflow check
+
+A separate frozen CPU fixture exercised the adapter's actual `train_candidate` method with a fake trainer. At baseline, reward `1.0` scored on outer `task-a` reached the fake trainer with inner generation fields for `task-b` / `prompt b` and token ID `[202]`; the fake `train_step` was called once. With the identity guard, the frozen regression passes by raising before `train_step`. This narrows the earlier limitation that no trainer path was exercised, but remains a fake-backend/fake-trainer harness result: it neither demonstrates a production RVL backend mismatch nor runs a real optimizer. See the [supplemental report](rvl-grpo-verifier-trainer-prompt-alignment-v1-report.md) and [evidence bundle](../results/rvl-grpo-verifier-trainer-prompt-alignment-v1/run-1/).
+
 ## Update — engine rollout task-binding defect
 
 A frozen CPU regression reproduced a trust-boundary failure at `ff434df`: `CapabilityLoop` dispatched one task, accepted an `Attempt` for a different task, verified it, and admitted it to training. The fix validates the returned object and exact task ID, prompt, and family before verification. Three mismatch cases failed on baseline and all four frozen cases pass after the fix. The focused engine/replay suite passed 18 tests. The full local suite has four `smoke-stable-logsumexp` failures; those exact failures reproduce from the baseline commit and remain unresolved. See the [report](engine-rollout-task-binding-v1-report.md) and [raw evidence](../results/engine-rollout-task-binding-v1/run-1/).
