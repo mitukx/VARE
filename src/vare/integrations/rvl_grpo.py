@@ -14,6 +14,12 @@ ScoreFn = Callable[[Task, str], float]
 
 
 @dataclass(frozen=True, slots=True)
+class _TrainerSnapshot:
+    training_state: Any
+    module_modes: dict[str, bool]
+
+
+@dataclass(frozen=True, slots=True)
 class RVLGRPOConfig:
     train_temperature: float = 0.8
     eval_temperature: float = 0.0
@@ -59,7 +65,7 @@ class RVLGRPOHooks:
         self._active_id = "policy-0"
         self._version = 0
         self._counter = 1
-        self._states: dict[str, Any] = {self._active_id: self.trainer.snapshot_training_state()}
+        self._states: dict[str, Any] = {self._active_id: self._snapshot_training_state()}
         self._loaded_id = self._active_id
         self._generation_factory = generation_factory
         self._verified_factory = verified_generation_factory
@@ -77,6 +83,41 @@ class RVLGRPOHooks:
     def active_policy(self) -> tuple[str, int]:
         return self._active_id, self._version
 
+    def _snapshot_training_state(self) -> Any:
+        state = self.trainer.snapshot_training_state()
+        model = getattr(self.trainer, "model", None)
+        named_modules = getattr(model, "named_modules", None)
+        if not callable(named_modules):
+            return state
+        modules = list(named_modules())
+        if not modules or any(
+            not hasattr(module, "training") or not callable(getattr(module, "train", None))
+            for _, module in modules
+        ):
+            return state
+        return _TrainerSnapshot(
+            training_state=state,
+            module_modes={name: bool(module.training) for name, module in modules},
+        )
+
+    def _restore_training_state(self, snapshot: Any) -> None:
+        if not isinstance(snapshot, _TrainerSnapshot):
+            self.trainer.restore_training_state(snapshot)
+            return
+        model = getattr(self.trainer, "model", None)
+        named_modules = getattr(model, "named_modules", None)
+        if not callable(named_modules):
+            raise RuntimeError("trainer model no longer exposes module modes")
+        modules = dict(named_modules())
+        if modules.keys() != snapshot.module_modes.keys():
+            raise RuntimeError("trainer module topology changed since policy snapshot")
+        self.trainer.restore_training_state(snapshot.training_state)
+        # Module.train() recursively changes descendants. Restore in the
+        # named_modules preorder so each child can then recover a distinct
+        # train/eval flag if the model used mixed modes.
+        for name, _ in named_modules():
+            modules[name].train(snapshot.module_modes[name])
+
     def _restore(self, policy_id: str) -> None:
         if policy_id not in self._states:
             raise KeyError(policy_id)
@@ -85,7 +126,7 @@ class RVLGRPOHooks:
             # raises. Invalidate first so recovery cannot mistake that partial
             # state for the previously loaded policy and skip a forced restore.
             self._loaded_id = None
-            self.trainer.restore_training_state(self._states[policy_id])
+            self._restore_training_state(self._states[policy_id])
             self._loaded_id = policy_id
 
     @staticmethod
@@ -233,7 +274,7 @@ class RVLGRPOHooks:
             self._restore(incumbent_id)
             # Keep an immutable pre-update state even if a custom trainer mutates
             # nested optimizer structures during train_step.
-            self._states[incumbent_id] = self.trainer.snapshot_training_state()
+            self._states[incumbent_id] = self._snapshot_training_state()
             candidate_id = f"policy-{self._counter}"
             # Invalidate the loaded identity before the first in-place mutation.
             # If training or candidate snapshotting raises, rollback must still
@@ -244,7 +285,7 @@ class RVLGRPOHooks:
                     self.trainer.train_step(verified)
                 else:
                     self.trainer.train_step(verified, advantages=advantages)
-                self._states[candidate_id] = self.trainer.snapshot_training_state()
+                self._states[candidate_id] = self._snapshot_training_state()
                 # The candidate now describes the runtime; restore the champion
                 # before releasing the lock to online rollout/evaluation code.
                 self._loaded_id = candidate_id
