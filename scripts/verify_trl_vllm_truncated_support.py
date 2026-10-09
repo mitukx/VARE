@@ -99,14 +99,11 @@ def main() -> int:
                 int(value.split("/")[0]) * (10 // int(value.split("/")[1])) if "/" in value else int(value) * 10
                 for value in context["raw_p"]
             ]
-            expected_score_gradient = (
-                ftext(weights[2] * (sum(weights) - weights[2]), sum(weights) ** 2)
-                if 2 in row["support"]
-                else "0"
-            )
-            if row["raw_policy_reward_gradient_theta"] != expected_score_gradient:
+            raw_score_gradient = ftext(weights[2] * (sum(weights) - weights[2]), sum(weights) ** 2)
+            sampled_score_gradient = raw_score_gradient if 2 in row["support"] else "0"
+            if row["raw_policy_reward_gradient_theta"] != raw_score_gradient:
                 raise AssertionError("raw-policy score gradient does not match independent formula")
-            if row["source_corrected_sample_score_gradient_theta"] != expected_score_gradient:
+            if row["source_corrected_sample_score_gradient_theta"] != sampled_score_gradient:
                 raise AssertionError("source-corrected score gradient does not match independent formula")
     if result["sequence_case"]["two_position_source_ratio"] != "16/25":
         raise AssertionError("sequence product does not match the exact prediction")
