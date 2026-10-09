@@ -1,0 +1,74 @@
+{
+  "audit_result": "passed for faithful failure reconstruction",
+  "checks": {
+    "declared_resource_caps_passed": true,
+    "failure_is_tokenizer_variable_lifetime": true,
+    "first_nonconstant_group_matches": true,
+    "one_update_and_incumbent_restore": true,
+    "pinned_rvl_sources": true,
+    "protocol_runner_adapter_hashes": true,
+    "reward_labels_replay": true,
+    "terminal_failure_retained": true
+  },
+  "experiment_result": "failed before tokenizer or model reload; do not count update-path gate as passed",
+  "groups": [
+    {
+      "matches": true,
+      "prompt_id": "update-smoke-v2-01",
+      "scores": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "matches": true,
+      "prompt_id": "update-smoke-v2-02",
+      "scores": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "matches": true,
+      "prompt_id": "update-smoke-v2-03",
+      "scores": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "matches": true,
+      "prompt_id": "update-smoke-v2-04",
+      "scores": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "matches": true,
+      "prompt_id": "update-smoke-v2-05",
+      "scores": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "limits": [
+    "Same-host author audit; not external reproduction.",
+    "Candidate checkpoint was written to a temporary directory, then discarded when the tokenizer variable-lifetime error interrupted reload.",
+    "No task efficacy or capability was measured."
+  ],
+  "protocol_id": "vare-rvl-cpu-real-model-update-path-v2",
+  "protocol_sha256": "931805371d1d4b1278f73ce69f367c5363a3d51fd3dc348e5e264249ba9f02e7",
+  "summary_sha256": "7c6b7d3a339302930387a0adae0c39769a4e1ce3676825beff0e43312596e671"
+}

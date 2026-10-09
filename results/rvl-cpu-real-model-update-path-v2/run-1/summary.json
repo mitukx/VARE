@@ -1,0 +1,509 @@
+{
+  "changed_parameter_tensor_count": 291,
+  "checkpoint_file_sha256": {
+    "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+    "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+    "config.json": "9fbbf23635b010218933a69765d3a2e047e624a86203d14da115a644077cf74f",
+    "generation_config.json": "cd3e781699b69eb78534f464b0d57590b9babf52d8123d71eb99f001eb5e8a00",
+    "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+    "model.safetensors": "cd0c91183fb3953687c05f242a0190b5b895423ca7b4a30def4915b5ad3dc12e",
+    "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+    "tokenizer.json": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa",
+    "tokenizer_config.json": "0a04a9d7d4a62b28482bdfe726c122756de85714fb64166ace92ae75b8f57614",
+    "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+  },
+  "device": "cpu",
+  "error": "cannot access free variable 'tokenizer' where it is not associated with a value in enclosing scope",
+  "error_type": "NameError",
+  "finite_gradient_tensor_count": 290,
+  "incumbent_parameter_fingerprint": "1269f7eada635e467b5e842ef129a9de991caf5cd208f4aca6c3cdbfc36ff121",
+  "incumbent_restored_exact": true,
+  "incumbent_rng_restored_exact": true,
+  "incumbent_training_mode_restored_exact": true,
+  "load_peak_rss_bytes": 3465297920,
+  "load_seconds": 0.44933704199502245,
+  "max_abs_parameter_delta": 1.9073486328125e-06,
+  "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+  "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "mps_available_but_disabled": true,
+  "nonzero_gradient_tensor_count": 290,
+  "optimizer_step_calls": 1,
+  "peak_rss_bytes": 12505120768,
+  "protocol_id": "vare-rvl-cpu-real-model-update-path-v2",
+  "protocol_sha256": "931805371d1d4b1278f73ce69f367c5363a3d51fd3dc348e5e264249ba9f02e7",
+  "received_advantages": [
+    1.732046188785199,
+    -0.5773487295950663,
+    -0.5773487295950663,
+    -0.5773487295950663
+  ],
+  "responses": [
+    {
+      "answer_key": "B",
+      "prompt_id": "update-smoke-v2-01",
+      "question": "A school orders 7 packs of 18 notebooks and gives 23 notebooks to a class. How many remain? A) 99 B) 103 C) 105 D) 107",
+      "responses": [
+        {
+          "logprob": -3.2120811660875006,
+          "response_token_ids": [
+            1249,
+            8253,
+            1246,
+            1657,
+            78531,
+            7146,
+            11,
+            582
+          ],
+          "response_token_logprobs": [
+            -1.5401326417922974,
+            -0.7827035784721375,
+            -0.100998155772686,
+            -5.125986263010418e-06,
+            -0.0005067494930699468,
+            -0.035138607025146484,
+            -0.7119364142417908,
+            -0.04065989330410957
+          ],
+          "reward": 0.0,
+          "text": "To determine how many notebooks remain, we",
+          "token_count": 8
+        },
+        {
+          "logprob": -1.8362085477565415,
+          "response_token_ids": [
+            35,
+            151645
+          ],
+          "response_token_logprobs": [
+            -1.8354703187942505,
+            -0.0007382289622910321
+          ],
+          "reward": 0.0,
+          "text": "D",
+          "token_count": 2
+        },
+        {
+          "logprob": -3.79785935417749,
+          "response_token_ids": [
+            17,
+            20,
+            151645
+          ],
+          "response_token_logprobs": [
+            -2.642709732055664,
+            -1.152448058128357,
+            -0.0027015639934688807
+          ],
+          "reward": 0.0,
+          "text": "25",
+          "token_count": 3
+        },
+        {
+          "logprob": -1.8362085477565415,
+          "response_token_ids": [
+            35,
+            151645
+          ],
+          "response_token_logprobs": [
+            -1.8354703187942505,
+            -0.0007382289622910321
+          ],
+          "reward": 0.0,
+          "text": "D",
+          "token_count": 2
+        }
+      ],
+      "rewards": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "answer_key": "C",
+      "prompt_id": "update-smoke-v2-02",
+      "question": "A room has 14 rows with 9 chairs each, then 5 chairs are added. How many chairs are there? A) 126 B) 129 C) 131 D) 135",
+      "responses": [
+        {
+          "logprob": -3.144077275879681,
+          "response_token_ids": [
+            32,
+            151645
+          ],
+          "response_token_logprobs": [
+            -3.133734703063965,
+            -0.010342572815716267
+          ],
+          "reward": 0.0,
+          "text": "A",
+          "token_count": 2
+        },
+        {
+          "logprob": -5.000847851712024,
+          "response_token_ids": [
+            1249,
+            8253,
+            279,
+            1372,
+            315,
+            25904,
+            304,
+            279
+          ],
+          "response_token_logprobs": [
+            -1.489787220954895,
+            -0.8010780811309814,
+            -0.03376644849777222,
+            -2.43483829498291,
+            0.0,
+            -0.0002648479712661356,
+            -0.24055950343608856,
+            -0.0005534547381103039
+          ],
+          "reward": 0.0,
+          "text": "To determine the number of chairs in the",
+          "token_count": 8
+        },
+        {
+          "logprob": -3.58510036370717,
+          "response_token_ids": [
+            16,
+            17,
+            24,
+            151645
+          ],
+          "response_token_logprobs": [
+            -0.879801869392395,
+            -2.034494638442993,
+            -0.6704919338226318,
+            -0.00031192204914987087
+          ],
+          "reward": 0.0,
+          "text": "129",
+          "token_count": 4
+        },
+        {
+          "logprob": -1.4276044211292174,
+          "response_token_ids": [
+            16,
+            18,
+            16,
+            151645
+          ],
+          "response_token_logprobs": [
+            -0.879801869392395,
+            -0.4061434268951416,
+            -0.14141155779361725,
+            -0.0002475670480635017
+          ],
+          "reward": 0.0,
+          "text": "131",
+          "token_count": 4
+        }
+      ],
+      "rewards": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "answer_key": "C",
+      "prompt_id": "update-smoke-v2-03",
+      "question": "560 buttons are divided equally among 8 trays, then 11 buttons are added to every tray. How many buttons are in each tray? A) 78 B) 80 C) 81 D) 82",
+      "responses": [
+        {
+          "logprob": -2.151656470261514,
+          "response_token_ids": [
+            35,
+            151645
+          ],
+          "response_token_logprobs": [
+            -2.1477127075195312,
+            -0.003943762741982937
+          ],
+          "reward": 0.0,
+          "text": "D",
+          "token_count": 2
+        },
+        {
+          "logprob": -2.151656470261514,
+          "response_token_ids": [
+            35,
+            151645
+          ],
+          "response_token_logprobs": [
+            -2.1477127075195312,
+            -0.003943762741982937
+          ],
+          "reward": 0.0,
+          "text": "D",
+          "token_count": 2
+        },
+        {
+          "logprob": -3.1607483742991462,
+          "response_token_ids": [
+            23,
+            16,
+            151645
+          ],
+          "response_token_logprobs": [
+            -2.1312503814697266,
+            -1.028533697128296,
+            -0.000964295701123774
+          ],
+          "reward": 0.0,
+          "text": "81",
+          "token_count": 3
+        },
+        {
+          "logprob": -2.151656470261514,
+          "response_token_ids": [
+            35,
+            151645
+          ],
+          "response_token_logprobs": [
+            -2.1477127075195312,
+            -0.003943762741982937
+          ],
+          "reward": 0.0,
+          "text": "D",
+          "token_count": 2
+        }
+      ],
+      "rewards": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "answer_key": "D",
+      "prompt_id": "update-smoke-v2-04",
+      "question": "A recipe uses 225 grams of flour for 3 batches and 160 grams for 2 more batches. How many grams are used altogether? A) 375 B) 380 C) 384 D) 385",
+      "responses": [
+        {
+          "logprob": -2.614917142316699,
+          "response_token_ids": [
+            1249,
+            8253,
+            279,
+            2790,
+            3311,
+            315,
+            19828,
+            1483
+          ],
+          "response_token_logprobs": [
+            -0.45450708270072937,
+            -0.640144407749176,
+            -0.05772765353322029,
+            -0.00011002412065863609,
+            -1.4543217420578003,
+            -1.5258672647178173e-05,
+            -0.007551339454948902,
+            -0.000539634027518332
+          ],
+          "reward": 0.0,
+          "text": "To determine the total amount of flour used",
+          "token_count": 8
+        },
+        {
+          "logprob": -3.985399684344884,
+          "response_token_ids": [
+            34,
+            151645
+          ],
+          "response_token_logprobs": [
+            -3.984837770462036,
+            -0.0005619138828478754
+          ],
+          "reward": 0.0,
+          "text": "C",
+          "token_count": 2
+        },
+        {
+          "logprob": -1.4696952500089537,
+          "response_token_ids": [
+            1249,
+            8253,
+            279,
+            2790,
+            33319,
+            315,
+            19828,
+            1483
+          ],
+          "response_token_logprobs": [
+            -0.45450708270072937,
+            -0.640144407749176,
+            -0.05772765353322029,
+            -0.00011002412065863609,
+            -0.28427013754844666,
+            -0.03025365062057972,
+            -0.002442830940708518,
+            -0.00023946279543451965
+          ],
+          "reward": 0.0,
+          "text": "To determine the total grams of flour used",
+          "token_count": 8
+        },
+        {
+          "logprob": -1.4696952500089537,
+          "response_token_ids": [
+            1249,
+            8253,
+            279,
+            2790,
+            33319,
+            315,
+            19828,
+            1483
+          ],
+          "response_token_logprobs": [
+            -0.45450708270072937,
+            -0.640144407749176,
+            -0.05772765353322029,
+            -0.00011002412065863609,
+            -0.28427013754844666,
+            -0.03025365062057972,
+            -0.002442830940708518,
+            -0.00023946279543451965
+          ],
+          "reward": 0.0,
+          "text": "To determine the total grams of flour used",
+          "token_count": 8
+        }
+      ],
+      "rewards": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "answer_key": "C",
+      "prompt_id": "update-smoke-v2-05",
+      "question": "A device costs 360 credits. Apply a 15 percent discount, then add a 5 percent tax to the discounted price. What is the final price? A) 315.3 B) 320.0 C) 321.3 D) 324.0",
+      "responses": [
+        {
+          "logprob": -1.905962820746936,
+          "response_token_ids": [
+            34,
+            151645
+          ],
+          "response_token_logprobs": [
+            -1.9058725833892822,
+            -9.023735765367746e-05
+          ],
+          "reward": 1.0,
+          "text": "C",
+          "token_count": 2
+        },
+        {
+          "logprob": -6.5187124609947205,
+          "response_token_ids": [
+            1249,
+            11625,
+            419,
+            3491,
+            11,
+            582,
+            686,
+            1795
+          ],
+          "response_token_logprobs": [
+            -1.6936304569244385,
+            -0.5601018667221069,
+            -0.5329229235649109,
+            -0.15120507776737213,
+            -0.18064440786838531,
+            -0.30208513140678406,
+            -3.007483720779419,
+            -0.09063887596130371
+          ],
+          "reward": 0.0,
+          "text": "To solve this problem, we will follow",
+          "token_count": 8
+        },
+        {
+          "logprob": -3.2130138220964,
+          "response_token_ids": [
+            33,
+            151645
+          ],
+          "response_token_logprobs": [
+            -3.2126524448394775,
+            -0.00036137725692242384
+          ],
+          "reward": 0.0,
+          "text": "B",
+          "token_count": 2
+        },
+        {
+          "logprob": -4.822976142168045,
+          "response_token_ids": [
+            1249,
+            11625,
+            279,
+            3491,
+            11,
+            582,
+            1184,
+            311
+          ],
+          "response_token_logprobs": [
+            -1.6936304569244385,
+            -0.5601018667221069,
+            -0.9074727892875671,
+            -0.38098233938217163,
+            -0.6316092014312744,
+            -0.47624313831329346,
+            -0.172936350107193,
+            0.0
+          ],
+          "reward": 0.0,
+          "text": "To solve the problem, we need to",
+          "token_count": 8
+        }
+      ],
+      "rewards": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "runner_sha256": "8b044111d5ad63acb313fd1ea28233e32229cb6f1009348b0935eb6be8c4151b",
+  "rvl_revision": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "selected_prompt_id": "update-smoke-v2-05",
+  "selected_rewards": [
+    1.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "source_revision": "fdf0f6f9859a4d250cda709816c0670b059017d0",
+  "status": "failed",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/run_rvl_cpu_real_model_update_path_v2.py\", line 436, in run\n    tokenizer_prompt_matches = all(\n                               ^^^^\n  File \"/Users/user/Documents/Codex/2026-10-08/https-github-com-mitukx-vare-https/outputs/VARE/scripts/run_rvl_cpu_real_model_update_path_v2.py\", line 437, in <genexpr>\n    tokenizer(prompt, add_special_tokens=False)[\"input_ids\"]\n    ^^^^^^^^^\nNameError: cannot access free variable 'tokenizer' where it is not associated with a value in enclosing scope\n",
+  "trainer_metrics": {
+    "behavior_kl_estimate": 3.257809799706024e-09,
+    "clip_fraction": 0.0,
+    "grad_norm": 182.31495666503906,
+    "loss": 0.0,
+    "max_abs_log_ratio": 1.8835067749023438e-05,
+    "mean_reward": 0.25,
+    "samples": 4.0
+  },
+  "update_peak_rss_bytes": 12505120768,
+  "update_seconds": 20.705505624995567,
+  "vare_adapter_sha256": "fdaf7f41df3a05a6c35307d92141278580e526d22ae073f1a8c70c581cbda179",
+  "wall_seconds": 27.466303125023842,
+  "wall_started_unix": 1791509101.9430149
+}

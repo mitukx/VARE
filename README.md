@@ -9,6 +9,8 @@ The latest HH human-preference comparison tested length-normalized DPO against s
 ## Start here
 
 - [VARE → RVL CPU update-path feasibility](docs/rvl-cpu-real-model-update-path-v1-report.md): retained v1 artifact-retention failure and fresh-cohort v2 frozen protocol; no task-efficacy claim.
+- [VARE → RVL CPU update-path feasibility v2](docs/rvl-cpu-real-model-update-path-v2-report.md): v2's one-step CPU update and exact rollback passed, while the tokenizer/reload gate failed before completion; fresh-cohort v3 protocol is frozen.
+- [VARE → RVL CPU update-path v3 protocol](protocols/rvl_cpu_real_model_update_path_v3.lock.json): fresh-cohort CPU feasibility rerun after retaining both prior harness failures; no task-efficacy claim.
 - [Provenance version validation v1](docs/provenance-version-validation-v1-report.md): future and malformed policy/verifier versions now fail closed in lag assessment and RVL replay ingestion; the original ready-item false-freshness reproduction is retained.
 - [GRPO group-audit identifiability v1](docs/grpo-group-audit-identifiability-v1-report.md): frozen CPU-only exact counterexample comparing item-level and group-atomic clean-label audits. It studies observability of a synthetic group signal, not model capability.
 - [GRPO expected-update audit identifiability v1](docs/grpo-expected-update-audit-identifiability-v1-report.md): exact synthetic witness that one-item audits do not identify a clipped-GRPO local update even when the full action group is visible; the construction is disclosed as exploratory and does not measure model capability.
