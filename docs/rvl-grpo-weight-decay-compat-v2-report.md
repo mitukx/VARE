@@ -29,7 +29,7 @@ Raw outputs are retained at [base](../results/rvl-grpo-weight-decay-compat-v2/ba
 
 ## Implementation and validation
 
-The candidate is commit `2a47b3bf538d12c1f24fc3bc8bb188329ed32500` in isolated local branch `vare/grpo-zero-advantage-weight-decay`. `weight_decay` is appended after all prior config fields, preserving the prior positional argument order. The optimizer receives the config value explicitly and validation rejects non-finite or negative decay.
+The candidate is commit `2a47b3bf538d12c1f24fc3bc8bb188329ed32500` in branch `vare/grpo-zero-advantage-weight-decay`. `weight_decay` is appended after all prior config fields, preserving the prior positional argument order. The optimizer receives the config value explicitly and validation rejects non-finite or negative decay. A draft upstream PR is open at [Recursive-Verification-Lag #89](https://github.com/mitukx/Recursive-Verification-Lag/pull/89); it is awaiting review and has not been merged.
 
 - Frozen base and candidate runners completed; source, runtime, protocol and runner hashes matched.
 - Targeted test `python -m unittest tests.test_mini_lab_torch.TorchAcceptanceTests.test_weight_decay_is_explicit_and_preserves_legacy_default -v`: passed.
@@ -56,4 +56,4 @@ Each output path must be new. The runner verifies source hashes and locked depen
 
 This supports exposing the optimizer setting while preserving the existing effective default. It does not establish that `0.01` or `0.0` is better for learning, that weight decay caused any prior task result, or that this behavior changes downstream task success. The fixture is tiny and randomly initialized; the three seeds are deterministic sanity replications, not inferential samples. It does not test a pretrained model, broad optimizer families, TRL, or an external system's acceptance of the patch.
 
-**Decision: the compatibility-preserving patch is ready for maintainer review.** Do not run more model training for this issue. The portfolio's central unresolved evidence gap remains independent task-success improvement after a real policy update, and the full-Trainer result still lacks outside human reproduction.
+**Decision: stop local work on this bounded finding while the draft PR is under review.** Do not run more model training for this issue. The portfolio's central unresolved evidence gap remains independent task-success improvement after a real policy update, and the full-Trainer result still lacks outside human reproduction.

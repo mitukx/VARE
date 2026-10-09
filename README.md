@@ -15,7 +15,7 @@ python scripts/reproduce_trl_pr7249_full_trainer_ddp_v4.py \
 
 This validates a trainer update on a deterministic synthetic model. It bypasses the asynchronous rollout worker and production dataloader dispatcher; it is not a pretrained-model result, downstream task-success gain, external reproduction, or evidence of upstream adoption. The candidate fix is already in the upstream PR, so VARE does not duplicate it.
 
-A separate [RVL trainer finding](docs/rvl-grpo-zero-advantage-weight-decay-compat-v2-report.md) reproduces implicit AdamW weight decay when GRPO advantages and gradients are zero. A compatibility-preserving candidate makes the setting explicit while retaining the old effective default; setting it to zero gives an identity update under zero gradients. This is optimizer-configuration correctness evidence only.
+A separate [RVL trainer finding](docs/rvl-grpo-weight-decay-compat-v2-report.md) reproduces implicit AdamW weight decay when GRPO advantages and gradients are zero. A compatibility-preserving candidate makes the setting explicit while retaining the old effective default; setting it to zero gives an identity update under zero gradients. The candidate is in [draft upstream PR #89](https://github.com/mitukx/Recursive-Verification-Lag/pull/89), awaiting review. This is optimizer-configuration correctness evidence only.
 
 The latest frozen [ARC GRPO-versus-SFT comparison](docs/qwen-arc-grpo-sft-comparison-v3-report.md) did not pass its advancement gate: mean GRPO exact success was 38.84% versus 40.00% for successful-trace SFT across three seeds. This pairing is stopped. Neither this result nor the optimizer finding demonstrates model capability improvement.
 
