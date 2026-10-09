@@ -1,0 +1,9 @@
+{
+  "command": "python scripts/reproduce_trl_pr7249_async_distillation_ddp_v2.py --output results/trl-async-pr7249-distillation-ddp-v1/run-2",
+  "date": "2026-10-09",
+  "failure": "The wrapper looked for resources.wall_seconds_per_arm_cap while the frozen v2 protocol used resources.per_arm_wall_seconds_cap. The base launcher was not started.",
+  "protocol_id": "trl-async-distillation-pr7249-full-trainer-ddp-v2",
+  "resolution": "Preserve v2 unchanged; v3 uses the wrapper key and cap in the lock. No model computation or measured outcome occurred.",
+  "stage": "wrapper-pre-run",
+  "status": "non-pass; no distributed runner process or optimizer step executed"
+}
