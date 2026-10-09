@@ -1,0 +1,50 @@
+{
+  "protocol_id": "trl_async_group_staleness_atomicity_v2",
+  "status": "frozen_before_execution",
+  "supersedes": "trl_async_group_staleness_atomicity_v1",
+  "v1_disposition": "No acceptance criterion was evaluated because the fixture omitted Accelerate PartialState initialization and stopped at the first stale-sample log call. See results/trl-async-group-staleness-v1/run-1/preflight-failure.md. No outcome-bearing input or threshold changed.",
+  "question": "Does the current TRL AsyncGRPO RolloutQueueDataset admit only part of one logical prompt group when the policy version advances between reads, because staleness is evaluated per sample?",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+    "revision_date": "2026-10-08",
+    "issue": "https://github.com/huggingface/trl/issues/7206",
+    "relevant_open_pr": "https://github.com/huggingface/trl/pull/7249",
+    "trainer_file": "trl/experimental/async_grpo/async_grpo_trainer.py",
+    "trainer_file_sha256": "2657481258dcc04112761e9ff61a35cb93b2b72c3e197e4524f4602fd6a2dbfe",
+    "worker_file": "trl/experimental/async_grpo/async_rollout_worker.py",
+    "worker_file_sha256": "5eab22259711df4e3ec1a62047f87a2cffc5b204772b25cd78647336e52b9670"
+  },
+  "estimand": {
+    "atomicity_contract": "For samples emitted from a single logical GRPO prompt group, stale admission should be all-or-none if the trainer claims complete-group consumption. The issue proposes retaining rollout identity and sequence membership to allow complete rollout admission before packing.",
+    "tested_behavior": "The production RolloutQueueDataset iterator's per-sample admission decision across a policy-version transition.",
+    "not_tested": "No optimizer update, group-relative gradient, real async worker, distributed execution, or task-success effect."
+  },
+  "method": {
+    "independent_fixture": "VARE-authored Python fixture with three queued samples sharing a group_id and model_version=0; consume one at current version 0, advance the callback-visible current version to 1, then observe remaining rows under max_staleness=0. A current-version sentinel bounds iteration. Accelerate PartialState is initialized before iterator execution.",
+    "control": "With no policy-version transition, all three same-group rows must be yielded.",
+    "source_entry_point": "trl.experimental.async_grpo.async_grpo_trainer.RolloutQueueDataset.__iter__",
+    "script": "scripts/reproduce_trl_async_group_staleness_v2.py",
+    "script_sha256": "62b0aceb484dd9b5e19acda05c7e9a5dc6c16d07524c92f6a34339d30967a54e"
+  },
+  "acceptance": {
+    "source_revision_and_hashes_match": true,
+    "fixed_version_control_yields_all_three_group_rows": true,
+    "transition_case_yields_one_old_group_row_then_drops_two_stale_rows": true,
+    "fresh_sentinel_is_yielded_after_drops": true,
+    "cpu_only_and_no_external_spend": true
+  },
+  "failure_criteria": [
+    "The pinned source revision or either relevant source-file hash differs.",
+    "The fixed-version control does not yield all three rows.",
+    "The transition case does not show partial same-group admission and stale drops.",
+    "The reproducer requires a GPU, model download, external service, or paid resource."
+  ],
+  "resources": {
+    "cpu_only": true,
+    "gpu_hours": 0,
+    "paid_api_calls": 0,
+    "external_compute_usd": 0
+  },
+  "claim_boundary": "A queue-iterator counterexample under an explicit all-or-none group-admission contract. It does not establish a wrong optimizer update, training prevalence, or model capability impact."
+}
