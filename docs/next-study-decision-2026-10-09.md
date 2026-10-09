@@ -1,5 +1,11 @@
 # Next study decision — 2026-10-09
 
+## Follow-up decision — ARC update path clears its cost gate
+
+The frozen ARC-Challenge update smoke v2 passed: one real GRPO optimizer step, finite/nonzero gradients, changed candidate weights, exact incumbent restoration, matching candidate reload fingerprint/tokenizer IDs, and all 8 post-reload checks completed within CPU limits. The independent same-host audit passed 58/58 checks. The smoke's 4/8 base versus 3/8 post-update exact answers are too few to estimate an effect and are not an advancement result. V1's partial run is preserved and its validation IDs remain excluded.
+
+**Next action:** freeze one multi-seed base/SFT/GRPO comparison on the remaining untouched ARC validation rows before any further policy training. Use matched train examples and optimizer-step budgets, exact task-success as the primary outcome, paired per-item uncertainty, seed-level outcomes, KL/policy drift, and fixed CPU/RSS limits. If the sample or matched update budget cannot support a useful comparison, stop this task pairing rather than run another single-arm smoke. The ARC test split remains sealed. Complete evidence and limitations are in the [v2 report](qwen-arc-grpo-update-smoke-v2-report.md).
+
 ## Follow-up decision — ARC-Challenge CPU base gate
 
 The ARC-Challenge v2 base screen passed on 36/80 fresh validation rows (45.0%; Wilson lower bound 34.6%), with 74/80 parseable answers. The independent same-host audit passed, and CPU runtime/memory were 23.26 s / 2,538 MiB. This removes the base-task feasibility objection for Qwen2.5-0.5B on this narrow ARC setup; it does **not** show learning or downstream improvement. V1 is retained as an execution failure, and its items are excluded from v2.
