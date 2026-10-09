@@ -1,0 +1,142 @@
+{
+  "protocol_id": "trl-async-grpo-pr7249-full-trainer-ddp-v3",
+  "status": "locked_before_execution",
+  "question": "Does the PR #7249 normalization fix produce the pooled full-window token-mean SGD update when the actual Transformers Trainer.train optimizer loop, Accelerator.backward, and a real two-process CPU Gloo DDP reducer are exercised together?",
+  "estimand": {
+    "loss": "L = sum over active completion tokens across ranks and microbatches of clipped GRPO token loss / total active completion tokens in the optimizer window.",
+    "parameter_update": "One SGD step with lr=0.1, weight_decay=0, no gradient clipping, compared to a direct full-window pooled-token oracle from the same initial parameters.",
+    "controls": "Same token-local CPU model and sample multiset; prompt/context/padding positions masked; beta=0; auxiliary loss disabled."
+  },
+  "scope": {
+    "tested_path": "Pinned AsyncGRPOTrainer.compute_loss and get_batch_samples + Transformers Trainer.train/_inner_training_loop/training_step + Accelerate.backward + actual DDP Gloo reducer/no_sync + real SGD optimizer/scheduler step.",
+    "input_path": "Trainer.get_train_dataloader is replaced with a deterministic rank-local DataLoader of the same rows emitted by DataCollatorForRollout; the real production rollout worker, planner, DataLoaderDispatcher scatter, and background lifecycle are bypassed.",
+    "not_tested": [
+      "vLLM or asynchronous rollout worker",
+      "production RolloutQueueDataset/FixedCountBatcher/TokenBudgetBatcher",
+      "production DataLoaderDispatcher scatter",
+      "AsyncDistillationTrainer",
+      "MoE auxiliary loss",
+      "pretrained model, task success, or capability change",
+      "outside human reproduction"
+    ],
+    "prior_evidence": "The v2 audit called production compute_loss and Accelerator model preparation with actual DDP, but used direct loss.backward and manual SGD; the PR-authored tests exercise Trainer.train in one process and simulate two-rank averaging."
+  },
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "issue": "https://github.com/huggingface/trl/issues/7206",
+    "pull_request": "https://github.com/huggingface/trl/pull/7249",
+    "base_revision": "a98fa6a4428f9aae58dfb26d729d7437f662f27a",
+    "candidate_head": "5234eb7c70f4ca7eb92fe8e01611a33eaff17f40",
+    "base_source_sha256": "b84c4544a4ac2aac5b08681a93fb3d49d1f24ff2f2f9fe53a6c35ab5c8f0ea40",
+    "candidate_source_sha256": "5c4fc857c563db0d9f937a2edf89dd74c4f218a31f3a05bf33bffbf5285749dc",
+    "runner": "scripts/replay_trl_pr7249_full_trainer_ddp_v3.py",
+    "runner_sha256": "a122f373f2a4e71b9db33c4c9eb2f7420cdae5ac98a004199022a286bbbd60b6"
+  },
+  "runtime": {
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "4.57.3",
+    "accelerate": "1.12.0",
+    "backend": "gloo",
+    "world_size": 2,
+    "device": "cpu",
+    "torch_threads_per_rank": 1
+  },
+  "cases": {
+    "unequal_rank_and_microbatch_counts": {
+      "microbatches": 2,
+      "rank0_completion_tokens": [
+        1,
+        9
+      ],
+      "rank1_completion_tokens": [
+        15,
+        1
+      ],
+      "global_tokens_per_microbatch": [
+        16,
+        10
+      ]
+    },
+    "equal_token_control": {
+      "microbatches": 2,
+      "rank0_completion_tokens": [
+        4,
+        4
+      ],
+      "rank1_completion_tokens": [
+        4,
+        4
+      ],
+      "global_tokens_per_microbatch": [
+        8,
+        8
+      ]
+    },
+    "zero_local_tokens_positive_global": {
+      "microbatches": 2,
+      "rank0_completion_tokens": [
+        0,
+        0
+      ],
+      "rank1_completion_tokens": [
+        8,
+        4
+      ],
+      "global_tokens_per_microbatch": [
+        8,
+        4
+      ]
+    },
+    "short_final_window": {
+      "configured_accumulation_slots": 2,
+      "available_slots": 1,
+      "rank0_completion_tokens": [
+        1
+      ],
+      "rank1_completion_tokens": [
+        9
+      ],
+      "global_tokens_per_microbatch": [
+        10
+      ]
+    }
+  },
+  "acceptance": {
+    "source_hash_and_commit_exact": true,
+    "candidate_exit_code": 0,
+    "candidate_global_step_each_case": 1,
+    "candidate_all_rank_states_identical": true,
+    "candidate_max_abs_loss_gradient_and_parameter_error_each_case_lte": 1e-05,
+    "base_exit_code": 0,
+    "base_equal_token_and_short_window_error_lte": 1e-05,
+    "base_unequal_and_zero_local_gradient_or_parameter_error_gte": 0.0001,
+    "any_timeout_deadlock_nan_or_unexplained_exception": "non-pass; preserve full per-rank and launcher logs"
+  },
+  "resources": {
+    "gpu": false,
+    "paid_api": false,
+    "external_spend": false,
+    "wall_seconds_per_arm_cap": 300,
+    "gloo_process_group_timeout_seconds": 180,
+    "launcher_max_restarts": 0
+  },
+  "launcher": {
+    "rendezvous": "static",
+    "master_addr": "127.0.0.1",
+    "master_port": 29640
+  },
+  "commands": [
+    "PYTHONPATH=/tmp/trl-vare-pydeps:/tmp/trl-vare-async-norm python -m torch.distributed.run --nnodes=1 --nproc_per_node=2 --rdzv_backend=static --master_addr=127.0.0.1 --master_port=29640 --max_restarts=0 scripts/replay_trl_pr7249_full_trainer_ddp_v3.py --repo /tmp/trl-vare-async-norm --arm base --output results/trl-async-pr7249-full-trainer-ddp-v3/base",
+    "PYTHONPATH=/tmp/trl-vare-pydeps:/tmp/trl-vare-async-norm-pr python -m torch.distributed.run --nnodes=1 --nproc_per_node=2 --rdzv_backend=static --master_addr=127.0.0.1 --master_port=29640 --max_restarts=0 scripts/replay_trl_pr7249_full_trainer_ddp_v3.py --repo /tmp/trl-vare-async-norm-pr --arm candidate --output results/trl-async-pr7249-full-trainer-ddp-v3/candidate"
+  ],
+  "claim_limits": [
+    "Synthetic correctness only: no policy capability or task-success claim.",
+    "The fixed SGD step is real but the data source and worker lifecycle are test fixtures.",
+    "This extends the open PR’s own normalization fix and does not establish algorithmic novelty or upstream acceptance.",
+    "Zero-token per-sequence diagnostic ratios are excluded from the locked primary gate; primary trainer loss, gradients, optimizer result must remain finite."
+  ],
+  "v2_reason": "V1 was a harness failure before the first forward/backward: constructing the AsyncGRPO trainer through __new__ omitted step-accounting fields normally set by its constructor. V2 initializes those fields only. Source arms, samples, objective, runtime, and acceptance gates remain unchanged.",
+  "v3_reason": "V2 reached Trainer.train but failed while collecting artifacts: AsyncGRPOTrainer.log expected rollout_worker and Trainer had cleared gradients after optimizer.step. V3 initializes rollout_worker=None, binds base Trainer.log, and captures synchronized gradients immediately after each actual Trainer.training_step. No objective, data, source, metrics, or gates change.",
+  "sha256": "bb9fed8f29c868dc31bc702002eb995aa553df575f0b5f61cef2e206ae6ebd7e"
+}

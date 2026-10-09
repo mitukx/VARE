@@ -1,0 +1,15 @@
+{
+  "protocol_id": "trl-async-grpo-pr7249-full-trainer-ddp-v2",
+  "status": "harness_failure_during_result_collection_after_training_loop",
+  "command": "PYTHONPATH=/tmp/trl-vare-pydeps:/tmp/trl-vare-async-norm python -m torch.distributed.run --nnodes=1 --nproc_per_node=2 --rdzv_backend=static --master_addr=127.0.0.1 --master_port=29639 --max_restarts=0 scripts/replay_trl_pr7249_full_trainer_ddp_v2.py --repo /tmp/trl-vare-async-norm --arm base --output results/trl-async-pr7249-full-trainer-ddp-v2/base",
+  "exit_code": 1,
+  "failed_stage": "One rank completed Trainer.train but custom AsyncGRPO log() failed because rollout_worker was intentionally absent; after Trainer.train, Trainer had cleared gradients so the other rank could not collect gradient values.",
+  "rank_outcomes": {
+    "rank0": "Trainer.train failed at final log hook: AttributeError rollout_worker",
+    "rank1": "Trainer.train returned; gradient collection failed because param.grad was None after optimizer step"
+  },
+  "science_status": "The source path ran through the Trainer optimizer loop, but the locked summary could not be collected and both arms were not completed. Treat as harness failure, not a base result.",
+  "launcher_log_sha256": "f0cc15dd8e1da3e6fe7d905dbf286a956dc5eba596e9866d900f4b56c15d2a46",
+  "runner_sha256": "2901263bfa53e4c1d2c26b2dac1cf7880b77fc0a52c17780caa2b74111804971",
+  "next_action": "Freeze v3 which initializes rollout_worker=None, uses base Trainer.log while keeping the real Trainer optimizer loop, and snapshots synchronized gradients immediately after each training_step."
+}
