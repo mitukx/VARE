@@ -1,0 +1,105 @@
+{
+  "arms": {
+    "base": "Run the frozen harness against unmodified RVL c7e646b. Required reproduction: all group advantages, loss, gradients, and pre-clip grad norm are zero; optimizer default weight_decay=0.01; parameter output matches the analytic AdamW decay formula to 1e-7 maximum error; at least one parameter changes.",
+    "candidate": "Add finite nonnegative HFTTrainerConfig.weight_decay with default 0.0 and pass it explicitly to AdamW. Constant-reward default run must preserve every parameter exactly and have zero gradient. Explicit weight_decay=0.01 must reproduce the analytic decay formula. Mixed rewards must still give finite nonzero gradients and change parameters."
+  },
+  "candidate": {
+    "branch": "vare/grpo-zero-advantage-weight-decay",
+    "change": "Expose HFTTrainerConfig.weight_decay, default it to 0.0, validate finite/nonnegative values, and pass it explicitly into torch.optim.AdamW.",
+    "regression_test_file": "tests/test_mini_lab_torch.py",
+    "regression_test_sha256": "f3f4d59a3764c3d3bf06fdd93a1be69de2a4a2f44e0374a3d97568e22f115cce",
+    "revision": "e8a7276d1a5627cc2aef9e01526ca723c1eefd99",
+    "trainer_file": "src/rvl_systems/hf_trainer.py",
+    "trainer_sha256": "979d85a152b1cca94b43c979e8b10ed9feb00215c1cb22933e8c7f5cd9f59555"
+  },
+  "claim_limits": [
+    "Tiny random GPT-2 fixture only; no pretrained-model task-success claim.",
+    "This confirms an optimizer side effect at zero policy gradient; whether the intended default should regularize is an API/design question. The proposed fix makes it explicit and configurable.",
+    "Does not establish a TRL defect or general RLVR capability effect."
+  ],
+  "failure_criteria": "Any base reproduction mismatch, any candidate no-signal default drift, explicit-decay formula mismatch >1e-7, or mixed-reward control fails. No training/model benchmark variants.",
+  "fixture": {
+    "constant_reward": 1.0,
+    "device": "CPU only",
+    "group": "four generations with the same prompt_id",
+    "learning_rate": 0.001,
+    "max_grad_norm": 1.0,
+    "mixed_rewards": [
+      0.0,
+      0.0,
+      1.0,
+      1.0
+    ],
+    "model": "GPT2LMHeadModel(GPT2Config(vocab_size=32,n_positions=32,n_embd=16,n_layer=1,n_head=2,resid_pdrop=0,embd_pdrop=0,attn_pdrop=0))",
+    "prompt_token_ids": [
+      1,
+      2
+    ],
+    "response_ids_per_sample": [
+      [
+        3,
+        7
+      ],
+      [
+        4,
+        8
+      ],
+      [
+        5,
+        9
+      ],
+      [
+        6,
+        10
+      ]
+    ],
+    "seeds": [
+      17,
+      23,
+      29
+    ]
+  },
+  "hypothesis": "HFTTrainerConfig omits weight_decay, so torch.optim.AdamW supplies 0.01 implicitly. With zero gradients, AdamW still applies decoupled shrinkage \u03b8\u2190(1\u2212lr\u00b7wd)\u03b8. A configurable zero default should make the default no-signal update an identity while retaining explicit regularization and mixed-reward learning.",
+  "novelty_boundary": "A narrow trainer-correctness finding in the pinned RVL implementation, not a new RL method, model-capability result, or claim about TRL.",
+  "primary_metrics": [
+    "number of zero/nonzero gradient tensors",
+    "changed parameter tensor count",
+    "maximum parameter delta",
+    "maximum absolute error against analytic AdamW decay-only formula",
+    "max next-token distribution KL from before to after"
+  ],
+  "protocol_id": "rvl_grpo_zero_advantage_weight_decay_v1",
+  "research_question": "Does pinned RVL HFCausalLMGRPOTrainer mutate policy parameters when every member of a complete GRPO group receives the same reward and therefore every group-relative advantage and policy gradient is exactly zero?",
+  "resources": {
+    "device": "CPU",
+    "external_spend_usd": 0,
+    "gpu_hours": 0,
+    "max_wall_seconds": 300,
+    "paid_api_calls": 0
+  },
+  "runner_sha256": "e33ffd07ffa588dd62a4d79b885c4e3560efee82e10634e67d4d870410218000",
+  "runtime": {
+    "python": "3.12.12",
+    "torch": "2.9.1"
+  },
+  "sha256": "9f5a0590209fc56e0d1892bbfa4e4fb2e012aeadbcfe3fddef5a11242a6e4448",
+  "sources": {
+    "pytorch_adamw_default_weight_decay": 0.01,
+    "reference": "https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW",
+    "rvl_repo": "https://github.com/mitukx/Recursive-Verification-Lag",
+    "rvl_revision": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+    "torch_version": "2.9.1",
+    "trainer_file": "src/rvl_systems/hf_trainer.py",
+    "trainer_sha256": "375985c1d0cca49a9d98d8b00ed41cefe000b91461e9a0783e94312466fd0210",
+    "upstream_existing_test_file": "tests/test_mini_lab_torch.py",
+    "upstream_existing_test_sha256": "14b9db3deb30674eedc8bd9336ad2d9eaeabbbe0987e9c4be9dc517d52cd8e39"
+  },
+  "status": "frozen_before_confirmatory_base_candidate_tests",
+  "success_criteria": {
+    "all_three_seeds_pass": true,
+    "base_reproduces_hidden_decay": true,
+    "candidate_default_zero_signal_parameter_change_count": 0,
+    "candidate_explicit_weight_decay_formula_max_abs_error_at_most": 1e-07,
+    "candidate_mixed_reward_nonzero_gradient_and_parameter_change": true
+  }
+}

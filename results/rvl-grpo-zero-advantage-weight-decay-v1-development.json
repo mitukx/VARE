@@ -1,0 +1,23 @@
+{
+  "changed_parameter_tensors": 10,
+  "device": "CPU",
+  "fixture": "one-layer GPT-2; one complete four-sample same-prompt group; all rewards 1.0; learning_rate=1e-3",
+  "gradient_tensors": 16,
+  "interpretation": "All policy gradients were exactly zero, but PyTorch AdamW default decoupled weight decay moved parameters exactly as theta *= (1-lr*0.01). This is development evidence only; frozen multi-seed confirmation follows the lock.",
+  "max_abs_error_vs_analytic_adamw_decay_formula": 0.0,
+  "max_abs_parameter_delta": 1.0013580322265625e-05,
+  "metrics": {
+    "behavior_kl_estimate": 0.0,
+    "clip_fraction": 0.0,
+    "grad_norm": 0.0,
+    "loss": 0.0,
+    "max_abs_log_ratio": 0.0,
+    "mean_reward": 1.0,
+    "samples": 4.0
+  },
+  "nonzero_gradient_tensors": 0,
+  "observed_optimizer_weight_decay": 0.01,
+  "source_revision": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "source_sha256": "375985c1d0cca49a9d98d8b00ed41cefe000b91461e9a0783e94312466fd0210",
+  "status": "development_counterexample_unregistered"
+}
