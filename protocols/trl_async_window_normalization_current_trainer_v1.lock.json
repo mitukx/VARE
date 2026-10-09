@@ -1,0 +1,32 @@
+{
+  "study_id": "trl_async_window_normalization_current_trainer_v1",
+  "status": "frozen_before_replay; outcome_informed_follow_up",
+  "relationship_to_prior_work": "Outcome-informed implementation follow-up. The production-method defect and scalar fixture were previously observed; an unpinned development run showed the intended Trainer path could execute. This protocol pins the runner and fixture before the retained replay.",
+  "trl": {
+    "repository": "https://github.com/huggingface/trl",
+    "commit": "f4526e10e25c8618855932528c232e2284c7801c",
+    "async_grpo_path": "trl/experimental/async_grpo/async_grpo_trainer.py",
+    "source_sha256": "2657481258dcc04112761e9ff61a35cb93b2b72c3e197e4524f4602fd6a2dbfe"
+  },
+  "runtime": {"torch": "2.9.1", "transformers": "5.19.0", "accelerate": "1.12.0", "device": "cpu"},
+  "runner": {
+    "path": "scripts/reproduce_trl_async_current_trainer_window_v1.py",
+    "sha256": "652bc43979c8f67c1d98f230108bcc24bc0e47615c15544e04d9a6f745e95ee8"
+  },
+  "candidate": {
+    "get_batch_samples": "Call Trainer.get_batch_samples, then sum batch['global_n_tokens'][0] across that accumulation window and return the sum as num_items_in_batch.",
+    "compute_loss": "Use num_items_in_batch/world_size as the shared denominator for each microbatch; for calls without a window count, use global_n_tokens*current_gradient_accumulation_steps. Do not divide again by the accumulation count after using a window denominator."
+  },
+  "estimand": "The exact one-step parameter delta obtained by training on one full batch with accumulation_steps=1, compared with the same ordered token rows trained as microbatches within a single optimizer step.",
+  "fixture": {
+    "accumulation_steps": 2,
+    "learning_rate": 0.1,
+    "counterexample": [{"active_tokens": 1, "per_token_gradient": 1.0}, {"active_tokens": 9, "per_token_gradient": 0.0}],
+    "negative_control": [{"active_tokens": 1, "per_token_gradient": 1.0}, {"active_tokens": 9, "per_token_gradient": 1.0}],
+    "short_final_window": [{"active_tokens": 1, "per_token_gradient": 1.0}]
+  },
+  "primary_metrics": ["actual Trainer optimizer-step parameter delta absolute error against full-batch reference", "actual accumulated gradient absolute error"],
+  "acceptance_rule": "Baseline must show >0.02 absolute parameter-delta error on the counterexample and zero error on the negative control. Candidate must match the full-batch reference within 1e-6 on all three fixtures, complete exactly one Trainer optimizer step per arm, receive window counts [10] for the full accumulation window and [1] for the short final window, and preserve direct-call fallback within 1e-7.",
+  "stopping_rule": "Run only the frozen fixtures and one-step CPU updates. Do not train a pretrained model. A pass authorizes a separate two-rank CPU DDP/dispatcher protocol, not upstream submission or capability claims.",
+  "resource_budget": {"gpu": 0, "paid_api": 0, "external_spend": 0, "model_training": false}
+}

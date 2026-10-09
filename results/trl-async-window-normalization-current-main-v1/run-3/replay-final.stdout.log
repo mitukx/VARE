@@ -1,0 +1,152 @@
+W1009 19:44:25.987000 14658 site-packages/torch/distributed/elastic/multiprocessing/redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+{'train_runtime': '0.0028', 'train_samples_per_second': '725.2', 'train_steps_per_second': '362.6', 'train_loss': '0.5', 'epoch': '1'}
+{'train_runtime': '0.0012', 'train_samples_per_second': '868', 'train_steps_per_second': '868', 'train_loss': '0.1', 'epoch': '1'}
+{'train_runtime': '0.0016', 'train_samples_per_second': '1230', 'train_steps_per_second': '615.1', 'train_loss': '0.1', 'epoch': '1'}
+{'train_runtime': '0.0011', 'train_samples_per_second': '929.4', 'train_steps_per_second': '929.4', 'train_loss': '0.1', 'epoch': '1'}
+{'train_runtime': '0.0017', 'train_samples_per_second': '1151', 'train_steps_per_second': '575.7', 'train_loss': '1', 'epoch': '1'}
+{'train_runtime': '0.0011', 'train_samples_per_second': '895.5', 'train_steps_per_second': '895.5', 'train_loss': '1', 'epoch': '1'}
+{'train_runtime': '0.0016', 'train_samples_per_second': '1242', 'train_steps_per_second': '621.1', 'train_loss': '1', 'epoch': '1'}
+{'train_runtime': '0.0012', 'train_samples_per_second': '855.3', 'train_steps_per_second': '855.3', 'train_loss': '1', 'epoch': '1'}
+{'train_runtime': '0.0011', 'train_samples_per_second': '1792', 'train_steps_per_second': '895.8', 'train_loss': '1', 'epoch': '1'}
+{'train_runtime': '0.0011', 'train_samples_per_second': '932.9', 'train_steps_per_second': '932.9', 'train_loss': '1', 'epoch': '1'}
+{'train_runtime': '0.0011', 'train_samples_per_second': '1815', 'train_steps_per_second': '907.7', 'train_loss': '1', 'epoch': '1'}
+{'train_runtime': '0.0011', 'train_samples_per_second': '906.7', 'train_steps_per_second': '906.7', 'train_loss': '1', 'epoch': '1'}
+{
+  "accelerate": "1.12.0",
+  "acceptance_passed": true,
+  "claim_boundary": "The current Transformers Trainer optimizer loop and TRL production collator/loss run on CPU. No distributed reducer, async queue/worker, pretrained model, or downstream task is included.",
+  "outcomes": {
+    "counterexample": {
+      "base": {
+        "full_batch_reference": {
+          "global_step": 1,
+          "gradient": 0.10000000149011612,
+          "parameter_delta": -0.010000000707805157,
+          "training_loss": 0.10000000149011612,
+          "window_counts_seen": []
+        },
+        "gradient_abs_error": 0.3999999985098839,
+        "observed": {
+          "global_step": 1,
+          "gradient": 0.5,
+          "parameter_delta": -0.05000000074505806,
+          "training_loss": 0.5,
+          "window_counts_seen": []
+        },
+        "parameter_delta_abs_error": 0.0400000000372529
+      },
+      "candidate": {
+        "full_batch_reference": {
+          "global_step": 1,
+          "gradient": 0.10000000149011612,
+          "parameter_delta": -0.010000000707805157,
+          "training_loss": 0.10000000149011612,
+          "window_counts_seen": [
+            10.0
+          ]
+        },
+        "gradient_abs_error": 0.0,
+        "observed": {
+          "global_step": 1,
+          "gradient": 0.10000000149011612,
+          "parameter_delta": -0.010000000707805157,
+          "training_loss": 0.10000000149011612,
+          "window_counts_seen": [
+            10.0
+          ]
+        },
+        "parameter_delta_abs_error": 0.0
+      }
+    },
+    "negative_control": {
+      "base": {
+        "full_batch_reference": {
+          "global_step": 1,
+          "gradient": 1.0,
+          "parameter_delta": -0.10000000149011612,
+          "training_loss": 1.0,
+          "window_counts_seen": []
+        },
+        "gradient_abs_error": 0.0,
+        "observed": {
+          "global_step": 1,
+          "gradient": 1.0,
+          "parameter_delta": -0.10000000149011612,
+          "training_loss": 1.0,
+          "window_counts_seen": []
+        },
+        "parameter_delta_abs_error": 0.0
+      },
+      "candidate": {
+        "full_batch_reference": {
+          "global_step": 1,
+          "gradient": 1.0,
+          "parameter_delta": -0.10000000149011612,
+          "training_loss": 1.0,
+          "window_counts_seen": [
+            10.0
+          ]
+        },
+        "gradient_abs_error": 0.0,
+        "observed": {
+          "global_step": 1,
+          "gradient": 1.0,
+          "parameter_delta": -0.10000000149011612,
+          "training_loss": 1.0,
+          "window_counts_seen": [
+            10.0
+          ]
+        },
+        "parameter_delta_abs_error": 0.0
+      }
+    },
+    "short_final_window": {
+      "base": {
+        "full_batch_reference": {
+          "global_step": 1,
+          "gradient": 1.0,
+          "parameter_delta": -0.10000000149011612,
+          "training_loss": 1.0,
+          "window_counts_seen": []
+        },
+        "gradient_abs_error": 0.0,
+        "observed": {
+          "global_step": 1,
+          "gradient": 1.0,
+          "parameter_delta": -0.10000000149011612,
+          "training_loss": 1.0,
+          "window_counts_seen": []
+        },
+        "parameter_delta_abs_error": 0.0
+      },
+      "candidate": {
+        "full_batch_reference": {
+          "global_step": 1,
+          "gradient": 1.0,
+          "parameter_delta": -0.10000000149011612,
+          "training_loss": 1.0,
+          "window_counts_seen": [
+            1.0
+          ]
+        },
+        "gradient_abs_error": 0.0,
+        "observed": {
+          "global_step": 1,
+          "gradient": 1.0,
+          "parameter_delta": -0.10000000149011612,
+          "training_loss": 1.0,
+          "window_counts_seen": [
+            1.0
+          ]
+        },
+        "parameter_delta_abs_error": 0.0
+      }
+    }
+  },
+  "study_id": "trl_async_window_normalization_current_trainer_v1",
+  "torch": "2.9.1",
+  "transformers": "5.19.0",
+  "trl_source_commit": "f4526e10e25c8618855932528c232e2284c7801c",
+  "trl_source_path": "/private/tmp/trl-current-pr7249-audit/trl/experimental/async_grpo/async_grpo_trainer.py",
+  "trl_source_sha256": "2657481258dcc04112761e9ff61a35cb93b2b72c3e197e4524f4602fd6a2dbfe"
+}

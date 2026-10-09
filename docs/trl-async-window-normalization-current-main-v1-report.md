@@ -1,5 +1,7 @@
 # TRL AsyncGRPO accumulation-window normalization — current-main audit v1
 
+> **Status update:** the earlier gap noted below—unverified current Trainer window plumbing and DDP—was closed for complete accumulation windows by the outcome-informed two-rank replay in [the v2 report](trl-async-window-normalization-current-trainer-ddp-v2-report.md). That replay matched the candidate update to the full-batch reference on its frozen fixture; it does not resolve live-queue frequency, capability impact, or novelty.
+
 **Decision: the pooled-token normalization defect reproduces in current TRL main's production `compute_loss` method. When supplied the accumulation-window token count, a narrow port of the existing denominator logic removes the discrepancy on frozen CPU fixtures. The existing PR #7249 is stale against that revision.** The current-source candidate does not yet wire the window count through `get_batch_samples`, and has not passed the full Trainer/DDP path; it is not an upstream-ready patch.
 
 ## Question
