@@ -30,7 +30,7 @@ The proposed broad mechanism—correcting GRPO updates for imperfect verifier la
 - El Mansouri et al. [analyze noise-corrected GRPO under Bernoulli reward flips](https://arxiv.org/abs/2510.18924). More generally, feature-dependent corruption has a substantial instance-dependent label-noise literature.
 - VARE's own earlier total-cost analysis already reduced the proposed audit allocation variants to Horvitz–Thompson weighting, cost-aware Neyman/optimal-design allocation, and sequential sign tests. It did not produce a new allocation mechanism.
 
-The remaining gap of measuring whether such corrections improve an independently graded model outcome is scientifically useful, but it is not by itself an algorithmic novelty claim. This StrategyQA screen did not produce usable task outputs; the only retained ARC policy comparison uses a retired model/task/evaluation pairing and a clean exact-answer verifier. Do not imply that VARE validates the proposed verifier-aware intervention.
+The remaining gap of measuring whether such corrections improve an independently graded model outcome is scientifically useful, but it is not by itself an algorithmic novelty claim. The StrategyQA model emitted direct yes/no-looking responses, but none passed the frozen answer-format interface; the only retained ARC policy comparison uses a retired model/task/evaluation pairing and a clean exact-answer verifier. Do not imply that VARE validates the proposed verifier-aware intervention.
 
 ## Outcome-informed diagnostic of the retained ARC comparison
 
