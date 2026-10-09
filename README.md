@@ -24,46 +24,13 @@ The main evidence gap is independently measured task success after a real model 
 
 ## Start here
 
-- [VARE → RVL CPU update-path feasibility](docs/rvl-cpu-real-model-update-path-v1-report.md): retained v1 artifact-retention failure and fresh-cohort v2 frozen protocol; no task-efficacy claim.
-- [VARE → RVL CPU update-path feasibility v2](docs/rvl-cpu-real-model-update-path-v2-report.md): v2's one-step CPU update and exact rollback passed, while the tokenizer/reload gate failed before completion; fresh-cohort v3 protocol is frozen.
-- [VARE → RVL CPU update-path v3 protocol](protocols/rvl_cpu_real_model_update_path_v3.lock.json): fresh-cohort CPU feasibility rerun after retaining both prior harness failures; no task-efficacy claim.
-- [VARE → RVL CPU update-path v3 report](docs/rvl-cpu-real-model-update-path-v3-report.md): one real-model GRPO step, incumbent rollback, tokenizer equality, and checkpoint round-trip recorded; runner exited during post-gate cleanup.
-- [RVL zero-advantage AdamW behavior v1](docs/rvl-grpo-zero-advantage-weight-decay-v1-report.md): pinned trainer reproducer, explicit optimizer configuration candidate, raw CPU outcomes, compatibility caveat, and test status.
-- [RVL weight-decay compatibility v2](docs/rvl-grpo-weight-decay-compat-v2-report.md): behavior-preserving config candidate with a frozen three-seed CPU comparison, explicit-zero control, and separate read-only audit.
-- [Qwen ARC GRPO versus successful-trace SFT v3](docs/qwen-arc-grpo-sft-comparison-v3-report.md): frozen three-seed negative comparison and corrected independent audit; this pairing is retired.
-- [TRL AsyncDistillation PR #7249 Trainer/DDP v4](docs/trl-async-distillation-pr7249-full-trainer-ddp-v4-report.md): frozen CPU reproduction across unequal/equal token counts, zero-local rank, and a short final window; includes preflight failures and strict claim limits.
-- [Provenance version validation v1](docs/provenance-version-validation-v1-report.md): future and malformed policy/verifier versions now fail closed in lag assessment and RVL replay ingestion; the original ready-item false-freshness reproduction is retained.
-- [GRPO group-audit identifiability v1](docs/grpo-group-audit-identifiability-v1-report.md): frozen CPU-only exact counterexample comparing item-level and group-atomic clean-label audits. It studies observability of a synthetic group signal, not model capability.
-- [GRPO expected-update audit identifiability v1](docs/grpo-expected-update-audit-identifiability-v1-report.md): exact synthetic witness that one-item audits do not identify a clipped-GRPO local update even when the full action group is visible; the construction is disclosed as exploratory and does not measure model capability.
-- [GRPO audit-order characterization v1](docs/grpo-audit-order-characterization-v1-report.md): exact finite result showing that, for that four-member local update, all action-conditioned three-way label marginals identify the expected update while pairwise marginals need not; synthetic theory only, with novelty unresolved.
-- [Focused RLVR literature scan](docs/research-literature-review-2026-10.md): recent verifier-noise, GRPO, reward-hacking, and audit-allocation overlap used to choose the question.
-- [SNLI entailment base-feasibility screen](docs/cpu-snli-entailment-base-feasibility-v1-report.md): frozen CPU/offline no-update screen, audited non-pass, and claim limits.
-- [Latest BoolQ study](docs/cpu-lm-boolq-verifier-rloo-development-v1-report.md): audited CPU-only binary verifier-reward RLOO non-pass, with raw bundle and limits.
-- [RVL GRPO rollback validation](docs/rvl-grpo-partial-failure-report.md): actual pinned CPU trainer step followed by injected failure; incumbent model/optimizer/RNG restoration passed on a tiny random model.
-- [RVL GRPO in-step fault validation](docs/rvl-grpo-midstep-fault-report.md): exception raised inside the actual pinned `train_step` immediately after a real optimizer mutation; all 12 rollback checks passed on CPU.
-- [GRPO integrity reproduction packet](docs/grpo-integrity-reproduction-packet.md): one command runs group/replay regressions and both pinned real-trainer rollback smokes, retaining their outputs and hashes.
-- [Rollout group integrity and evaluation recovery](docs/rollout-group-integrity-v1-report.md): complete GRPO/RLOO groups survive rollout budgets, replay capacity, and repeated round indices; the RVL adapter restores incumbent state after generation or partial-restore failures.
-- [BoolQ v17 DPO/SFT/anchored-DPO study](docs/boolq-posttraining-development-v17-report.md): earlier matched comparison and its failed advancement gate.
-- [HH-RLHF reward-model v2](docs/hh-reward-model-v2-report.md): development pass, repeated confirmation accuracy gain, but no confirmed NLL improvement.
-- [HH human-preference DPO development v2](docs/hh-human-preference-dpo-development-v2-report.md): matched DPO/SFT update on human-labeled pairs; the frozen DPO-vs-base accuracy gate failed.
-- [HH length-normalized DPO development v1](docs/cpu-hh-length-normalized-dpo-v1-report.md): three-arm, three-seed CPU comparison; candidate tied standard DPO and failed its gain gates. The runner summary error and adapter-based recovery are recorded.
-- [HH DPO response-length diagnostic](docs/hh-human-preference-dpo-length-diagnostic-v1.md): post-hoc analysis of the same development cohort; it does not change the non-pass.
-- [Procedural binary-action DPO study](docs/cpu-procedural-entailment-dpo-development-v1-report.md): frozen CPU development non-pass; DPO lost to scalar calibration and exceeded its KL limit.
-- [HH-RLHF v2 post-hoc calibration diagnostic](docs/hh-reward-model-calibration-analysis.md): calibrated-versus-raw NLL on the already-opened confirmation bundle; exploratory only and does not change v2's non-pass.
-- [HH-RLHF v3 fixed-head calibration](docs/hh-reward-model-v3-development-report.md): development and fresh confirmation NLL gates passed, with same-host replay audits; the result is narrow and outcome-informed. [Confirmation report](docs/hh-reward-model-v3-confirmation-report.md).
-- [HH-RLHF v3 replay guide](docs/hh-reward-model-v3-reproduction.md): pinned assets, offline audit command, expected result, and reproduction limits.
-- [BoolQ v17 technical walkthrough](docs/boolq-v17-walkthrough.md): model update, objectives, selection rule, audits, and limits in one path.
-- [GSM8K model study](docs/cpu-lm-gsm8k-dpo-confirmation-v1-report.md): protocol, per-seed outcomes, audit, and limits.
-- [GSM8K adapter-to-margin forensic reconstruction](docs/cpu-lm-gsm8k-dpo-margin-reconstruction-v4-report.md): independent CPU replay of the saved adapters and recorded margins/metrics, with cross-runtime and claim limitations.
-- [GSM8K clean-clone reproduction](docs/cpu-lm-gsm8k-dpo-margin-clean-clone-reproduction-v1-report.md): same-host replay from a fresh checkout, explicit prerequisites/command, and reproducibility limits.
-- [Experiment index](docs/experiments.md): full study sequence and retained reports.
-- [Current evidence gaps](docs/current-gaps.md): what the results support and what remains open.
-- [Next-study decision](docs/next-study-decision-2026-10-09.md): current evidence-based stop decision, retired model/task pairings, and the gates required before another learner study.
-- [Generated code-repair feasibility v1](docs/cpu-code-repair-feasibility-v1-report.md): audited 0/32 base-only result, tool-loop failure modes, CPU cost, and decision to retire the pairing.
-- [Generated arithmetic feasibility v1](docs/cpu-generated-arithmetic-feasibility-v1-report.md): a preregistered CPU-only base-rollout gate that failed before training.
-- [Evaluation runner walkthrough](docs/walkthrough.md): inspect the calibrated task runner and retained execution evidence.
-
-Contributors should read [`AGENTS.md`](AGENTS.md) before changing experiments, code, or claims.
+1. [Current research question and open evidence gates](docs/current-gaps.md) — including the central gap: no independently confirmed task-success improvement after a real model update.
+2. [GRPO versus successful-trace SFT](docs/qwen-arc-grpo-sft-comparison-v3-report.md) — the frozen three-seed reasoning-task comparison and its negative result.
+3. [Verifier-reward RLOO](docs/cpu-lm-boolq-verifier-rloo-development-v1-report.md) — five seeds, 500 updates, 16,000 action groups, matched controls, independent gradient check, and a missed advancement threshold.
+4. [Current-main TRL Trainer/DDP reproduction](docs/trl-async-window-normalization-current-trainer-ddp-v2-report.md) — a known normalization issue tested through the production loss/collator, Trainer, dispatcher, and two-rank CPU/Gloo update against a pooled-token oracle.
+5. [Reward-model calibration](docs/hh-reward-model-v3-confirmation-report.md) — a narrow held-out NLL improvement, unchanged pairwise ranking accuracy, and explicit outcome-informed limitations.
+6. [Evaluation-to-promotion integration](docs/rvl-evaluation-promotion-e2e-v1-report.md) — fail-closed evidence validation and exact rollback through the existing VARE/RVL path.
+7. [All studies and retained failures](docs/experiments.md) and [contributor evidence rules](AGENTS.md).
 
 ## Selected evidence
 
