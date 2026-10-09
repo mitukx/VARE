@@ -1,0 +1,17 @@
+{
+  "study": "trl-async-rollout-metadata-admission-diagnostic-v1",
+  "baseline_revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+  "baseline_exit_code": 1,
+  "candidate_exit_code": 0,
+  "baseline_summary": "5 failed; expected contract failures",
+  "candidate_summary": "5 passed; 1 TRL experimental API warning",
+  "candidate_patch_sha256": "54b5ae3454b235bd6267482a7b13e68fc157bc6bc3958c34fda0245da692a437",
+  "classification": "post-hoc exploratory source diagnostic; no prospective confirmation",
+  "limitations": [
+    "same-host author-run tests",
+    "admission only; batchers may split siblings",
+    "no optimizer update or task success",
+    "no outside review or maintainer response",
+    "queue implementation assumes contiguous rollout rows"
+  ]
+}

@@ -1,5 +1,9 @@
 # Calibration evidence
 
+## TRL AsyncGRPO rollout metadata and admission
+
+At pinned TRL `ed8cc2f`, five CPU source-path regressions fail: `rollout_id` is absent from `RolloutSample` after scoring, and a fork queue admission cannot preserve both sibling rows. A local candidate propagates identity/size and checks contiguous sibling rows atomically; all five tests pass. This remains a post-hoc software diagnostic with no optimizer-step or capability measurement. The candidate does not constrain downstream batch boundaries. See the [report](trl-async-rollout-metadata-admission-v1-report.md), [protocol boundary](../protocols/trl_async_rollout_metadata_admission_diagnostic_v1.json), and [raw base/candidate logs](../results/trl-async-rollout-metadata-admission-v1/).
+
 ## GRPO group and rollback reproduction packet
 
 A single command reran 17 focused group/replay/RVL-hook tests plus two frozen real-trainer rollback smokes against RVL commit `c7e646b043cb56e5ea3c2623bb8a61e065451f72`. All 11 candidate-boundary assertions and all 12 in-step post-optimizer-fault assertions passed; both checks restored model, optimizer, and RNG state and used the incumbent on the next rollout. Logs and a SHA-256 manifest are retained in [`run-1`](../results/grpo-integrity-reproduction-packet-v1/run-1/). This is another same-host reproduction by the repository author, not external review, pretrained-model training, or capability evidence. See the [reproduction instructions](grpo-integrity-reproduction-packet.md).
@@ -15,6 +19,10 @@ The frozen protocol compares four audit sizes at an exactly matched 12-clean-lab
 ## Promotion evidence identity
 
 The frozen [CPU protocol](../protocols/promotion_evidence_identity_v1.lock.json) reproduced an accepted candidate missing an incumbent slice and an engine promotion using an evaluation report labeled with the wrong policy ID. The gate now fails closed on slice-key mismatch; the engine verifies report identity against each requested policy. Both invalid cases are rejected and a correctly labeled, complete control still promotes. GitHub Actions passed 187 tests with 12 skipped. See the [report](promotion-evidence-identity-report.md) and [baseline/fixed/CI records](../results/promotion-evidence-identity-v1/). This is E0 contract evidence only; post-backend identity and evaluation-set independence are not verified.
+
+## Declared promotion slice coverage
+
+A deterministic post-hoc source diagnostic found that equal-but-incomplete slice maps still passed promotion: both reports could omit a required family. The opt-in `PromotionConfig.required_slice_names` now rejects either report unless both match the declared set exactly. Baseline and candidate produce the same result on a complete positive control. Nine focused tests pass; the full local suite exits 0 with 223 passed and 12 skipped when nested task commands inherit the pytest-enabled virtualenv. This is an E0 software-contract result, not a frozen prospective study, real-evaluator prevalence estimate, model update, or capability finding. See the [follow-up report](promotion-required-slices-followup-2026-10-09.md) and [raw diagnostic](../results/promotion-required-slices-v1/).
 
 ## Verifier reward contract
 

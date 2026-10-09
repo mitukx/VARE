@@ -1,0 +1,28 @@
+{
+  "study": "trl-async-rollout-metadata-admission-diagnostic-v1",
+  "classification": "post-hoc exploratory source diagnostic; not preregistered confirmation",
+  "source_repository": "https://github.com/huggingface/trl",
+  "source_revision": "ed8cc2f4337fb9b7b1429db31009ad3577cd5b98",
+  "upstream_issue": "https://github.com/huggingface/trl/issues/7206",
+  "question": "Does the pinned AsyncGRPO scoring-to-queue path preserve TrainingSequence rollout identity and admit fork siblings under one freshness decision?",
+  "tests": [
+    "TestScoreGroupOptionThree.test_one_advantage_per_conversation_stamped_on_every_row",
+    "TestRolloutQueueAdmission.test_policy_change_while_waiting_drops_entire_fork_as_stale",
+    "TestRolloutQueueAdmission.test_policy_version_change_after_first_fork_does_not_partially_drop_rollout",
+    "TestRolloutQueueAdmission.test_incomplete_or_mismatched_fork_metadata_fails_closed[None-None]",
+    "TestRolloutQueueAdmission.test_incomplete_or_mismatched_fork_metadata_fails_closed[forked-different]"
+  ],
+  "frozen_claim_boundary": [
+    "source-level CPU dataflow only",
+    "not an optimizer or capability result",
+    "not evidence of production prevalence",
+    "candidate does not guarantee same-microbatch or same-update consumption",
+    "candidate assumes rollout rows are contiguous in the queue",
+    "no independent reproduction or maintainer review"
+  ],
+  "resources": {
+    "device": "CPU",
+    "offline_hub": true,
+    "paid_api_gpu_or_external_spend": false
+  }
+}

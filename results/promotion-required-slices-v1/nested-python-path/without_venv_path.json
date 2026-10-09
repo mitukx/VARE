@@ -1,0 +1,32 @@
+{
+  "task_id": "smoke-stable-logsumexp",
+  "passed": false,
+  "score": 0.04999999999999999,
+  "correctness": 0.0,
+  "tests": [
+    {
+      "name": "pytest",
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "test_subject.py"
+      ],
+      "returncode": 1,
+      "wall_s": 0.020178333041258156,
+      "stdout": "",
+      "stderr": "/opt/homebrew/Caskroom/miniforge/base/bin/python: No module named pytest\n",
+      "timed_out": false,
+      "output_limited": false
+    }
+  ],
+  "metrics": [],
+  "integrity_ok": true,
+  "integrity_failures": [],
+  "workspace_diff": "diff --git a/subject.py b/subject.py\nindex f37fba7..9c48055 100644\n--- a/subject.py\n+++ b/subject.py\n@@ -1,6 +1,7 @@\n import math\n \n-\n def logsumexp(xs):\n-    \"\"\"Intentionally naive baseline used only to test the environment harness.\"\"\"\n-    return math.log(sum(math.exp(x) for x in xs))\n+    if not xs:\n+        return -math.inf\n+    m = max(xs)\n+    return m + math.log(sum(math.exp(x - m) for x in xs))\n",
+  "provenance": {
+    "task_spec_sha256": "23e28e905047f9f80f1e5ff056dbd528c6fbee39addcd633bb15af90d2b9382a",
+    "workspace": "/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-smoke-stable-logsumexp-3xya60h5/workspace"
+  }
+}

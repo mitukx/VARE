@@ -33,6 +33,8 @@ class PromotionConfig:
     min_paired_examples: int = 64
     paired_alpha: float = 0.05
     paired_bootstrap_samples: int = 2000
+    # When set, both reports must include this protocol-frozen evaluation slice set.
+    required_slice_names: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)

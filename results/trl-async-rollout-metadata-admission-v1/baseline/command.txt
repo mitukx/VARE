@@ -1,0 +1,1 @@
+HF_HUB_OFFLINE=1 PYTHONPATH=<base-site-packages>:<checkout> <VARE>/.venv/bin/pytest -q tests/experimental/test_async_grpo_trainer.py::TestScoreGroupOptionThree::test_one_advantage_per_conversation_stamped_on_every_row tests/experimental/test_async_grpo_trainer.py::TestRolloutQueueAdmission::test_policy_version_change_after_first_fork_does_not_partially_drop_rollout

@@ -25,6 +25,13 @@ class PromotionGate:
             raise ValueError("paired_alpha must be in (0,1)")
         if config.paired_bootstrap_samples <= 0:
             raise ValueError("paired_bootstrap_samples must be positive")
+        required_slices = config.required_slice_names
+        if (
+            not isinstance(required_slices, tuple)
+            or any(not isinstance(name, str) or not name for name in required_slices)
+            or len(set(required_slices)) != len(required_slices)
+        ):
+            raise ValueError("required_slice_names must be a tuple of unique non-empty names")
 
     @staticmethod
     def _paired_scores(report: EvaluationReport) -> Mapping[str, float] | None:
@@ -122,7 +129,13 @@ class PromotionGate:
             reasons.append("insufficient_eval_examples")
         if gain < self.config.min_primary_gain:
             reasons.append("insufficient_primary_gain")
-        if set(incumbent.slices) != set(candidate.slices):
+        incumbent_slices = set(incumbent.slices)
+        candidate_slices = set(candidate.slices)
+        required_slices = set(self.config.required_slice_names)
+        if (
+            incumbent_slices != candidate_slices
+            or (required_slices and (incumbent_slices != required_slices or candidate_slices != required_slices))
+        ):
             reasons.append("slice_coverage_mismatch")
         regressions = []
         for name, old in incumbent.slices.items():

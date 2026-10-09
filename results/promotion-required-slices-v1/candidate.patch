@@ -1,0 +1,93 @@
+diff --git a/src/vare/config.py b/src/vare/config.py
+index 655e782..fa663bf 100644
+--- a/src/vare/config.py
++++ b/src/vare/config.py
+@@ -33,6 +33,8 @@ class PromotionConfig:
+     min_paired_examples: int = 64
+     paired_alpha: float = 0.05
+     paired_bootstrap_samples: int = 2000
++    # When set, both reports must include this protocol-frozen evaluation slice set.
++    required_slice_names: tuple[str, ...] = ()
+ 
+ 
+ @dataclass(frozen=True, slots=True)
+diff --git a/src/vare/promotion.py b/src/vare/promotion.py
+index 9236784..9a11064 100644
+--- a/src/vare/promotion.py
++++ b/src/vare/promotion.py
+@@ -25,6 +25,13 @@ class PromotionGate:
+             raise ValueError("paired_alpha must be in (0,1)")
+         if config.paired_bootstrap_samples <= 0:
+             raise ValueError("paired_bootstrap_samples must be positive")
++        required_slices = config.required_slice_names
++        if (
++            not isinstance(required_slices, tuple)
++            or any(not isinstance(name, str) or not name for name in required_slices)
++            or len(set(required_slices)) != len(required_slices)
++        ):
++            raise ValueError("required_slice_names must be a tuple of unique non-empty names")
+ 
+     @staticmethod
+     def _paired_scores(report: EvaluationReport) -> Mapping[str, float] | None:
+@@ -122,7 +129,13 @@ class PromotionGate:
+             reasons.append("insufficient_eval_examples")
+         if gain < self.config.min_primary_gain:
+             reasons.append("insufficient_primary_gain")
+-        if set(incumbent.slices) != set(candidate.slices):
++        incumbent_slices = set(incumbent.slices)
++        candidate_slices = set(candidate.slices)
++        required_slices = set(self.config.required_slice_names)
++        if (
++            incumbent_slices != candidate_slices
++            or (required_slices and (incumbent_slices != required_slices or candidate_slices != required_slices))
++        ):
+             reasons.append("slice_coverage_mismatch")
+         regressions = []
+         for name, old in incumbent.slices.items():
+diff --git a/tests/test_promotion.py b/tests/test_promotion.py
+index 8f2e43b..a95c711 100644
+--- a/tests/test_promotion.py
++++ b/tests/test_promotion.py
+@@ -1,3 +1,5 @@
++import pytest
++
+ from vare.config import PromotionConfig
+ from vare.promotion import PromotionGate
+ from vare.types import EvaluationReport
+@@ -23,3 +25,36 @@ def test_promotion_rejects_candidate_with_incomplete_slice_coverage():
+ 
+     assert not decision.accepted
+     assert "slice_coverage_mismatch" in decision.reasons
++
++
++def test_promotion_rejects_identically_omitted_required_slice():
++    gate = PromotionGate(PromotionConfig(
++        min_primary_gain=0.01,
++        min_eval_examples=1,
++        required_slice_names=("easy", "hard"),
++    ))
++    incumbent = EvaluationReport("a", 0.50, {"easy": 0.5}, n=10)
++    candidate = EvaluationReport("b", 0.80, {"easy": 0.8}, n=10)
++
++    decision = gate.decide(incumbent, candidate)
++
++    assert not decision.accepted
++    assert "slice_coverage_mismatch" in decision.reasons
++
++
++def test_promotion_accepts_declared_complete_slice_set():
++    gate = PromotionGate(PromotionConfig(
++        min_primary_gain=0.01,
++        min_eval_examples=1,
++        required_slice_names=("easy", "hard"),
++    ))
++    incumbent = EvaluationReport("a", 0.50, {"easy": 0.5, "hard": 0.5}, n=10)
++    candidate = EvaluationReport("b", 0.60, {"easy": 0.7, "hard": 0.5}, n=10)
++
++    assert gate.decide(incumbent, candidate).accepted
++
++
++@pytest.mark.parametrize("slice_names", [("easy", "easy"), ("",), ["easy"]])
++def test_promotion_rejects_malformed_required_slice_configuration(slice_names):
++    with pytest.raises(ValueError, match="required_slice_names"):
++        PromotionGate(PromotionConfig(required_slice_names=slice_names))
