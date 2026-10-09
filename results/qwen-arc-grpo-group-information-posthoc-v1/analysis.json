@@ -1,0 +1,113 @@
+{
+  "analysis_id": "qwen_arc_grpo_group_information_posthoc_v1",
+  "classification": "outcome-informed descriptive diagnostic; not confirmatory and not a new frozen experiment",
+  "source_sha256": "22513ffbf2a0f0ccadd783b5a125a89d749aea3ee0eea2095f3af490c63f1721",
+  "source_protocol": "qwen_arc_grpo_sft_comparison_v3",
+  "n_seeds": 3,
+  "n_groups": 96,
+  "group_size": 4,
+  "sampled_successes": 144,
+  "sampled_success_rate": 0.375,
+  "group_reward_sum_histogram": {
+    "0": 34,
+    "1": 17,
+    "2": 20,
+    "3": 13,
+    "4": 12
+  },
+  "mixed_groups": 50,
+  "all_wrong_groups": 34,
+  "all_correct_groups": 12,
+  "fraction_groups_with_nonzero_centered_binary_advantage": 0.5208333333333334,
+  "successful_completions_in_all_correct_groups_with_zero_centered_advantage": 48,
+  "conditional_randomization": {
+    "null": "within each prompt, uniformly shuffle its 12 observed rewards and re-split into three groups of four",
+    "permutations": 50000,
+    "seed": 20261009,
+    "observed_mixed_groups": 50,
+    "null_mean": 49.62308,
+    "null_sd": 2.128354132563687,
+    "null_95_percentile_interval": [
+      45,
+      54
+    ],
+    "two_sided_randomization_p": 1.0,
+    "interpretation_limit": "This is a post-hoc exchangeability diagnostic, not a causal test of why held-out accuracy changed."
+  },
+  "per_seed": {
+    "20261021": {
+      "groups": 32,
+      "reward_sum_histogram": {
+        "0": 10,
+        "1": 7,
+        "2": 8,
+        "3": 2,
+        "4": 5
+      }
+    },
+    "20261022": {
+      "groups": 32,
+      "reward_sum_histogram": {
+        "0": 11,
+        "1": 7,
+        "2": 5,
+        "3": 5,
+        "4": 4
+      }
+    },
+    "20261023": {
+      "groups": 32,
+      "reward_sum_histogram": {
+        "0": 13,
+        "1": 3,
+        "2": 7,
+        "3": 6,
+        "4": 3
+      }
+    }
+  },
+  "heldout_transitions_vs_base": {
+    "grpo": {
+      "20261021": {
+        "correct": 48,
+        "gains_vs_base": 9,
+        "regressions_vs_base": 9,
+        "unchanged_vs_base": 97
+      },
+      "20261022": {
+        "correct": 44,
+        "gains_vs_base": 8,
+        "regressions_vs_base": 12,
+        "unchanged_vs_base": 95
+      },
+      "20261023": {
+        "correct": 42,
+        "gains_vs_base": 10,
+        "regressions_vs_base": 16,
+        "unchanged_vs_base": 89
+      }
+    },
+    "success_trace_sft": {
+      "20261021": {
+        "correct": 45,
+        "gains_vs_base": 11,
+        "regressions_vs_base": 14,
+        "unchanged_vs_base": 90
+      },
+      "20261022": {
+        "correct": 45,
+        "gains_vs_base": 13,
+        "regressions_vs_base": 16,
+        "unchanged_vs_base": 86
+      },
+      "20261023": {
+        "correct": 48,
+        "gains_vs_base": 11,
+        "regressions_vs_base": 11,
+        "unchanged_vs_base": 93
+      }
+    }
+  },
+  "heldout_base_correct": 48,
+  "heldout_n": 115
+}

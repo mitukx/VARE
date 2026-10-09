@@ -2,7 +2,11 @@
 
 ## Current portfolio state and decision authority
 
-The latest ARC-Challenge comparison v3 consumed the remaining eligible validation cohort and failed its preregistered advancement gate. **The Qwen2.5-0.5B/ARC pairing is retired; do not follow the older ARC next-action text below.** Those sections record what was authorized before v3, not current work. The model-level gap is still independently measured task-success gain after a real update. The bounded opportunity screen below found no original trainer contribution; its next action is to find a distinct source path or obtain outside review of retained evidence.
+The latest real-model feasibility action is the frozen StrategyQA/Qwen2.5-0.5B-Instruct screen. It produced no outputs accepted by the preregistered final-answer parser (0/200), so the candidate failed before training. Its train and confirmation pools remain unopened; the exact model/task pairing is retired. The closest verifier-noise RLVR paper's October 5, 2026 revision now includes a covariance residual for content-dependent verifier errors, GRPO group-centering analysis, and non-i.i.d. misspecification experiments. Therefore, the broad conditional-verifier-correction line does not support a VARE novelty claim absent a materially different surviving question.
+
+The post-hoc ARC v3 signal-coverage diagnostic found zero centered advantage in 46/96 groups and no excess seed-defined group reward homogeneity after conditioning on each question's outcomes. It provides one plausible, noncausal explanation for why successful-trace SFT can use examples that binary centered GRPO discards. The original ARC comparison consumed its validation cohort and remains retired. See the [StrategyQA feasibility/novelty report](cpu-strategyqa-grpo-shift-feasibility-v2-report.md) and its [post-hoc ARC section](cpu-strategyqa-grpo-shift-feasibility-v2-report.md#outcome-informed-diagnostic-of-the-retained-arc-comparison).
+
+**Decision: STOP this verifier-shift policy-update proposal for now.** No new policy update, model capability gain, or original algorithm survived this iteration. Keep the failed screen and ARC diagnostic; do not retune either model/task cohort. The open model-level gap remains independently measured held-out task success after a real update. A future candidate must be materially distinct, pass a frozen output/task feasibility gate, and have a narrower novelty boundary before optimization begins.
 
 ## Latest follow-up — non-oracle GRPO audit allocation under total cost
 

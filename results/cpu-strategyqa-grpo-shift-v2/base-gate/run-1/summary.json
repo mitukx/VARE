@@ -1,0 +1,2058 @@
+{
+  "protocol_id": "cpu_strategyqa_grpo_shift_v2",
+  "status": "non_pass",
+  "n": 200,
+  "correct": 0,
+  "accuracy": 0.0,
+  "wilson_95_lower": 0.0,
+  "parsed": 0,
+  "parse_rate": 0.0,
+  "runtime_seconds": 396.3948929309845,
+  "peak_rss_mib": 3193.84375,
+  "device": "cpu",
+  "paid_spend_usd": 0,
+  "confirmation_ids_sha256": "bc6c60b243aa7caf908383826d9ea3c01fc4fe30d97cb6c6d58dd79c39149b2e",
+  "train_ids_sha256": "85796c62c9ab213555f59bf5224109f0efeac780575a017265a714ec0e6cb3d3",
+  "selection_ids": {
+    "base_gate": [
+      "d9987847af1ab751c75a",
+      "ffd8a720264778c0fd6e",
+      "79af6e281b295c2a2e85",
+      "69a5a14c29857fef4010",
+      "e03ec826db49319eb034",
+      "0b7782218af2a65a6094",
+      "c69b07a0cff831ce6791",
+      "3540bb4c468f7b513aab",
+      "5170cfed313d2de67942",
+      "363cf9e4f1ab45e05a4b",
+      "85a99480c6fb0177f4c7",
+      "157913fa4c74220aff2d",
+      "7a91f2a0a759f5d6581f",
+      "8b41a17e65ef7f6e22b5",
+      "cbc489c97e6797962787",
+      "49321f6bd311e10c2634",
+      "2a4e1d4524997b6263bf",
+      "2206eb47fc70f106a91d",
+      "80d50b4511767c25aa28",
+      "88c9faa10774a7b71c8c",
+      "ea627ac7d9ba306324d3",
+      "4bb58d0456bfea654c0f",
+      "625080d6e74261c523f6",
+      "57cace65de55cbb6b8d4",
+      "250d2ecf5f5bc889a863",
+      "b8de21dae500bfa66b7b",
+      "d92862b94dffc52378e4",
+      "341be84d785651838007",
+      "fcff106193bfeb59372e",
+      "ef8cd9d65ecb85d74a19",
+      "b1d517cad0745d8618d2",
+      "3ed6c807bfa51e5577d1",
+      "c45743b824e24f745fcf",
+      "f23d09094b35ceab6d54",
+      "867a5425c26092b30fbf",
+      "11f3a3f27f9029362aaf",
+      "ac61d110f57cd7855686",
+      "df5d1bdd7a56f0090f60",
+      "8b982a46f1a78d5f295f",
+      "6a8f77c62222517534f5",
+      "c681171e816f3117df0b",
+      "7deb49d3ba50fb75a04f",
+      "e6d3973ed3feb8a42928",
+      "6047d085ff9246481d12",
+      "133364fbf7e41b0f2b38",
+      "4957e0329698c05832c0",
+      "88b682482647a80a080d",
+      "5e39653ec4524dce45c9",
+      "965b4af72fa11cbda5d1",
+      "8d06b619a7045ed02f51",
+      "0a32d7cfde6cec332fd6",
+      "7f6a3fac5a419d53e5f2",
+      "3bba4ea27500361cb141",
+      "f240c88676b6ac6896ad",
+      "e201b35fd4c6f00aa5ae",
+      "f95956c13e22f073310a",
+      "f92ab04a1f144b593809",
+      "c096042cd5db3c7ed663",
+      "2b9b1630e1c4b4a2b249",
+      "e041c5791de5ec89261f",
+      "7c60f63b6cd0d7aa13f4",
+      "716d2417cd373b9d25f0",
+      "63caa686e799fd5825e8",
+      "8e03ed9fce31618b095a",
+      "913c1014198f2e584dc7",
+      "90474e8efe599628cbc4",
+      "a9d3a5f8cd6eb6b2c19a",
+      "bcc6b33ca8ae85fc8784",
+      "b742c50188a483291945",
+      "97c91d5613b99fd4098f",
+      "f233f8748574df6f4727",
+      "66a3c0af3141c7c7d215",
+      "157e11814d768fe69782",
+      "3e0cf93865c58f15a841",
+      "557e389d7efe47c5bc4d",
+      "05ab64dd540d095d9c62",
+      "45ff478a039792001dbc",
+      "c419fd25e9ed4501c9ea",
+      "f794258d1e33a50d1348",
+      "d9e23006aef632b6d65f",
+      "26aefc40b2d04ca6b78b",
+      "29a634ea52cba72c13e4",
+      "ba3cfe396d13f7a78786",
+      "3f726a8aa808d26ab076",
+      "e797c2d7147c9e0d5c8d",
+      "85300febfe21ecdcc5b1",
+      "c20289cc17128f27feab",
+      "3c95fe5ad91a9c38bc15",
+      "62ac009461272e979537",
+      "268b7bf55b10eeab7a7e",
+      "32b82c383b3a92966d07",
+      "94a6b752d22abe932964",
+      "3295844627a9bd1b9135",
+      "d8ef42c2c54f93d5eb78",
+      "caad75c2382565a4668c",
+      "e1f10b57579fa6a92aa9",
+      "e78288175362ef630c25",
+      "660bfdc17b47f42facac",
+      "d0183768701c74f966c5",
+      "4eeb74e13e58996f2d72",
+      "6cd39b671b2a1d6fb161",
+      "0e3b14f806bfea19faf2",
+      "b2dddce981183d5a083d",
+      "4e1b50a3da3dca8fc255",
+      "03caedef50bc6729e9e5",
+      "01844485471f396ee9ef",
+      "e32529b0074a1b857a85",
+      "9f43aedfec93ab7c6cc7",
+      "dca314ab2d3166f19182",
+      "0e7927ed413f7b3a0037",
+      "68f04375b2ac70c73759",
+      "9b5a993ed4b5f121f935",
+      "89740d0e33a805a78e1d",
+      "10bf1b31f79f8d9e03fe",
+      "f1fec95172ebcbdf1fb8",
+      "38ef97eb7cdd4200fd00",
+      "399d5e61740a8a93dbe7",
+      "4543a65a3af216dc6acf",
+      "4148e19a53dfbb020484",
+      "9567d9236e4e01580b1a",
+      "91ec6f3b34115feccada",
+      "076f3f72b7e6d17073eb",
+      "6e16eb72a2aceb3dc9cf",
+      "2847095b289d1f4b48fd",
+      "bf739e062c0321178c7a",
+      "610c03ac321041d868e2",
+      "53271c927076992cfb21",
+      "d5cd043d6f15fb43bd04",
+      "198d416b99a4f41cb56d",
+      "83395bf81226b3f487a7",
+      "bd3caa68cb957d27b0e2",
+      "4994ea9dbe0705df08fd",
+      "18d50392cc241326112b",
+      "9dff1d5fe4c07cdb0ccb",
+      "423f9d3f282fe8cb087b",
+      "73ca2ef1da65b2a2ebe6",
+      "46f53b9e0008ad1110ed",
+      "90e6d4060a0b911fe436",
+      "a12eb8ae9b38c231a00f",
+      "4cd5b0dd876ab2e528cb",
+      "d1142162a82aab83611e",
+      "bbd4e385d8867b66aa60",
+      "7be51fdef30345de666e",
+      "2bfe7f37f939ee456600",
+      "c34998385575553d090f",
+      "962d64c181ab75e0ace2",
+      "80b883ce348170c85aed",
+      "a905e30e6cfc76377348",
+      "703738f478e1ed466b59",
+      "a2b0a30501a4fb9ae204",
+      "27551dd918fdafe87524",
+      "c5aabbea64966b4f2d42",
+      "2cb0bc060c5fb708a43f",
+      "7e05efd9ff2438d9ed68",
+      "9d279701351e38e0400f",
+      "0592bdf18748bbc951f8",
+      "d8649d55a6e1a22b92d9",
+      "38a3e1117891b029cd6b",
+      "3996ee99b488820ea4fe",
+      "bcf47774877e8bdd07a4",
+      "43e781a9076ad3f1d415",
+      "70168bf2898466b57253",
+      "69e0b6f868ee71314fc1",
+      "02f5a6e6eedc57dfa22d",
+      "077cce9150f60c6576ea",
+      "d2af3c2b2eee3ce311ea",
+      "46428dac0ceefa1ad73b",
+      "7b15ca4cc2a7bf3fe1b9",
+      "64b4d43fa8671c798921",
+      "9cf2cfed8753e1a1a3dc",
+      "8cf9e4fddb2265d2ed89",
+      "1b747c9c67380c83b6d5",
+      "a593481c1ddb91e9f96b",
+      "7965756a4cb26817954b",
+      "106bf37e9d8b5293775c",
+      "fb0f995e63ec3ba8836d",
+      "e8cc7615cfaf45069eb5",
+      "0dd4ab1e6386856acf76",
+      "59978a3e99a498e5567b",
+      "2c6955a5381253c1067c",
+      "858feef04ea972946401",
+      "9b00b215a02a7e4a8aa1",
+      "5f96f27de4c8cdafc070",
+      "b2312cb85e1d00d48947",
+      "9a87e2e0f53e5d8689f2",
+      "3ca0a58b1697a63521b6",
+      "0dad98b7dde01ed9f144",
+      "2e586d3aea95150de42b",
+      "9450ed6bc48b134956c5",
+      "4648058ffbc40905a042",
+      "964da699d1ada747b266",
+      "9b491a31c4212e70b18c",
+      "e2d24b9e3cb4133c68b0",
+      "8ab0f34f407608dbd2b3",
+      "4a974e322e3586af4c2f",
+      "267f910d8ce95e51d64a",
+      "14ef04964c1b786dc45e",
+      "8479a1dd193b75d6cd26",
+      "68e7ad683f1090b19a61",
+      "0a95811a52c939156796"
+    ],
+    "train": [
+      "c69a3eeea9743e782831",
+      "8a36239c2251abc536ce",
+      "e9e78aa7b0c1ec3f9cf9",
+      "08233b4241a011e86cea",
+      "bbc91b6a34ebcebd5e5b",
+      "7b625d3d673751304dfe",
+      "3871d7a05a729494ecd9",
+      "1d67cd8e5b32229ebb04",
+      "b747938f597b09e43603",
+      "b208e5d641fbf43bc647",
+      "b65adb5caa4f7a207879",
+      "184d0b1306899a9365ce",
+      "7f8417d42ef9ea1e5a8c",
+      "ff3811735ededd8ec3a7",
+      "f69c8412d57ad726d658",
+      "7d310e9ebc2025febdd6",
+      "a0eb63776f7720ec0bcc",
+      "ac8bab79a8f573de8ec5",
+      "f5c0f0f85f624d9f8016",
+      "4d20bb8dc217f39ee929",
+      "505424c2715e4c11506b",
+      "2c0ad6834e39382c2e4f",
+      "0a8bb20dbdb99d68127e",
+      "cd1e50e79d07a0320120",
+      "dae25ebc5462a52b5c17",
+      "57e6b3d22162e254f7f0",
+      "df84924c94e9e929ef10",
+      "c7d6bfa777382af6c5bb",
+      "73520a07f183b7111236",
+      "3d63f800400fd9505ea5",
+      "4ad7adb3122739af2458",
+      "cc266a3e29a3b8442b14"
+    ],
+    "confirmation": [
+      "a44c3d9161f5e5c3f41d",
+      "1051df8b6730dcd1b34f",
+      "0edaff8446b0f53033c3",
+      "ab70365febc75dcda77d",
+      "7730e9a15ff9315c24fe",
+      "c03e06230ef966bacf58",
+      "27b84ef72c557aa8fc14",
+      "9422300529f87f9917bf",
+      "0f3ab70fd0a59071bb06",
+      "ccf67586446bcc4a86b3",
+      "92c263f997f09dbb74a8",
+      "ad9bf53d84f83ebc9822",
+      "7c7c1f16d72afccb0942",
+      "4013c96b17809c27699c",
+      "3336bf888443399593b9",
+      "a60c5a3a8bd811b26208",
+      "347eea662abc9467ed18",
+      "ecd7594494e88099aeac",
+      "27db273aab9c056e306f",
+      "0a84eaea4d26d46c7c30",
+      "d4803e3857fb8b51df5b",
+      "2d768d23cc5920911f05",
+      "6b9093fff19fdcb320e3",
+      "aef16532a9009fd318e2",
+      "957adcdf1c676bc082da",
+      "cd38f5c76c18493b158b",
+      "e4a065a8ea3691b12e6f",
+      "e475171d9c62141a6835",
+      "cf95bbecccc040a95dbb",
+      "3a61dcbed7e358b3aee8",
+      "40b7c34188d5b36bc486",
+      "c3fa97b16ea3e91e22d8",
+      "d0145341694e7034555d",
+      "0e47bee0304fb6a65643",
+      "99de7a464b1a292868f3",
+      "e530682239bb5e59ebf0",
+      "4a0e604f174af36e3ace",
+      "94ac5ee73e1f13747a87",
+      "a0e7719bca9b347d32db",
+      "cfe1c436a761f01041dd",
+      "5b78898b7ef289f3cd26",
+      "ce2336a5272765f263c4",
+      "dfe89f86d25ea26ab85d",
+      "3486b6b5c69878bb088d",
+      "8e9607aa0cefcb84c0fb",
+      "7b0a9a729b42f74e95aa",
+      "9332b9062a1b5c8109b0",
+      "c7a4b7ed963de3d9cd92",
+      "ab1f7f17560c5b0bc203",
+      "497501e6d21674257ca5",
+      "f81316ea85357f58284b",
+      "7419826e4373eb1e83ff",
+      "cd43ae9cd3bb64c45247",
+      "06f7878425a995c2a633",
+      "df538a945f0d1c012cd2",
+      "8f936e225ee1fe225f66",
+      "a2dd0493fc87bb64e1fa",
+      "4de177ae8c827fd0ffb1",
+      "7daa137a9509cb6c211a",
+      "e12a00a2c45fcb4f38e7",
+      "6c5e2f76bd94dfb33396",
+      "cb9eae3948f28e236477",
+      "2484c935b239f1454f8e",
+      "44c59a3ac10f2921a009",
+      "033147a022dd41b58cd9",
+      "605a31607ccb00fc8537",
+      "edb5e626587433a2edc2",
+      "7e80945a93300f55f479",
+      "85fc2b42b1fb20762db4",
+      "3d18b12522dc4b2404ea",
+      "6d2b70f4dd9eec8ef932",
+      "a895b73bdfb2397b2e27",
+      "c099aea9bc84f482419d",
+      "9a1bf03a1359fa94eb7c",
+      "2e95e20da8a6cfacaa83",
+      "265dd54c248f8b048851",
+      "89e1a3d04dc74dc36dac",
+      "8ec0f7fd908451102838",
+      "b59da272353e651cf2eb",
+      "08db047c63681c02184f",
+      "ee95615e3dafa5e19020",
+      "b816f51e0fedcae2a789",
+      "8d708927b1593d8b9b42",
+      "f83ea7846fa2bfb0739c",
+      "75cff4dab3152b768aa9",
+      "ccb62fcd2b202d737f79",
+      "3f3050d10948d4d99cff",
+      "0e19518a97864d4babba",
+      "7f139bf51273517efd4e",
+      "75cb50e207fe81886cfc",
+      "150492a2590b8447707b",
+      "0076b548f329544427eb",
+      "9eec85fab510de606494",
+      "2787ada17c12601bcd0c",
+      "74e55542839294b511d0",
+      "6bed2a566da292a36593",
+      "47cb63978585d5292d79",
+      "e0e842a78f59698d0cfd",
+      "777828272c5e0915f4d1",
+      "91a3d81584c66d26d49a",
+      "4eef7889f6dc2815f41f",
+      "dcd46aac45ec24673b43",
+      "75d0e535fa8064903afa",
+      "760a0d26a50972656345",
+      "673fb9299daae81cba69",
+      "149617ff1b645db0e871",
+      "6a13b8cefb285c2b81cf",
+      "a8088fd4d533c2eaa365",
+      "6f4c8a2789c0305c4f63",
+      "50bf347c2a05b645a0f9",
+      "b6713901d33bc1020596",
+      "f086e8628fde91ab151c",
+      "930b8d6638dcc19fce17",
+      "9d445747557bf9d8786e",
+      "0987df9ab860b01e3f17",
+      "c144bc5e23d0944b4f1c",
+      "249673d73deb8d6c28f9",
+      "63b0be164dfd44bf1890",
+      "e5fa5f6c12bfa1aed955",
+      "3f09ce8b018df4527e20",
+      "50c3af76816a5c2f07d2",
+      "e6d8397b258ac4006210",
+      "0431a3fc727855c8ad83",
+      "52f9fdeab2e51f01f3dd",
+      "43e2fe43169c07b5ab49",
+      "46328b2913ed93358007",
+      "668a4e03534608476faf",
+      "9883d6c816d4855035ea",
+      "026a34caa057f988a881",
+      "bb8107d755f91675e0a0",
+      "1969318e30a31e49e5ca",
+      "8d6e3aeb1a0c7ea1d1d6",
+      "0013d38e0568f48acdc0",
+      "10d718862227bef4a6ed",
+      "f3e238989015dd72bfda",
+      "93eafc413d86df9c0755",
+      "ba691c1bb1c760b1edf8",
+      "da76a093d3b1cc47c6f2",
+      "36edeeb054e722511fcd",
+      "ee757afd1a9e0e96cbc7",
+      "ff848539d05ca985ed4f",
+      "9b77992543134de72b4e",
+      "f15b0aaa611d1d554186",
+      "e5f13851532305d2f932",
+      "132f21b2b388b637c22f",
+      "eb7c254ac7ae82656aee",
+      "84a83f07a543ae3024c9",
+      "76d3f6c91518061deb7d",
+      "1bed1742cceb9b51f41d",
+      "8a3be2ae0a7b67f7bc2f",
+      "44a7b241fe98fc12b215",
+      "f67ebf32de48c788dfbb",
+      "a97758e32a875a48e83a",
+      "9052063382d30870a2ed",
+      "7776349dede20a0d6405",
+      "898ff9314804144d6f90",
+      "95bd44fab517139182f2",
+      "a7e8f2cbec209b317b8f",
+      "56d3c8ea7338af395e4f",
+      "18a2f43c7c4e9dfe85a4",
+      "c864d8999a8e4cce870b",
+      "a1db94948b252250102b",
+      "f4ac300578dfab653d3f",
+      "4125c5f4c7a536916608",
+      "ab833ae041b323f106cf",
+      "e9b635db671e0c1be8d9",
+      "29551a9093ea19c1e7c3",
+      "d19a209a6cddeca38a94",
+      "593e66cbdec8e3a15852",
+      "162458ca6672c642a00f",
+      "d912709b7341dd86ba39",
+      "45c1de8a7cfc9ad51786",
+      "f1895e4df6287a560a08",
+      "46ee63236516c42f3267",
+      "29842ce280ccd460dd7e",
+      "bea8de56cae6a9dc374c",
+      "73c52134ab2a903d86db",
+      "037acdd213ada618830f",
+      "990bc1e418fff10f8d51",
+      "22c9aaeaf0c412ba2201",
+      "aa08a6021227d95f0f10",
+      "e3ec5d1638cbf5a6ae53",
+      "646d3503f3a3939e2e63",
+      "daf439d2f206dfc1c662",
+      "0da3b98c8e6af0dd89d3",
+      "3bba311f7abb8ad4be82",
+      "ce01c88f5d2c29a80cb3",
+      "d3c99400a786bc11c1fb",
+      "0782cde19737531d14fe",
+      "d667c4a43fea660f1a5f",
+      "fab08cce89ad00ba8339",
+      "636b557a0eb102ce04b5",
+      "6de352d79466276a1d06",
+      "3b70f1178fdb45ad2a24",
+      "427fe3968e32005479b9",
+      "02fe9cc089adf6f19d22",
+      "d8ba1dd2575be52d80be",
+      "463567e1582ccab9a048",
+      "ed6d9f875c9787e1817c",
+      "3de88c80f0914eb08caf"
+    ]
+  },
+  "records": [
+    {
+      "qid": "d9987847af1ab751c75a",
+      "prompt_sha256": "c3aaebe159266c95ad9564c30d4c06539a2202c0e308400c908b5cf4814569b2",
+      "completion": "Yes, someone could potentially die without white blood cells. Without these vital cells, the immune system would be unable to fight off infections and diseases effectively.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "ffd8a720264778c0fd6e",
+      "prompt_sha256": "6ebb9f23bb913028c4dc11d4480134d58a670e678421a4f774e1bbe74040b554",
+      "completion": "Yes, the Toyota Hilux can be considered more powerful and capable than Mr. Ed in terms of performance and handling capabilities compared to other vehicles like the Ford Mustang",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "79af6e281b295c2a2e85",
+      "prompt_sha256": "df772427e4ae1f88089c6e948c32656db20cde595569a20a71f51cd6534f4018",
+      "completion": "Yes, Simon Cowell can potentially vote for the next Supreme Court judge, as he is a prominent figure in the entertainment industry and has been involved in political activities",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "69a5a14c29857fef4010",
+      "prompt_sha256": "b0097afb480f07e58d6234acc8a5a78fe8dce5dd01a708f2a9d03d9e28340cde",
+      "completion": "Yes, according to the information available, every resident of Los Angeles County, California is likely to attend Jehovah's Witnesses' church services and participate in their religious practices",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "e03ec826db49319eb034",
+      "prompt_sha256": "a4acb91c79d033d2e84293556921bc066f9a5e3c3cd747188c4b7ac62990f1f5",
+      "completion": "Yes.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "0b7782218af2a65a6094",
+      "prompt_sha256": "d8b89d38f24fe2490c491ba84820069bce196a58b1538971a77cff21359f6cb4",
+      "completion": "Yes, the James Webb Space Telescope has been used to search for exoplanets like Krypton, although its primary focus is on studying distant stars and galaxies rather",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "c69b07a0cff831ce6791",
+      "prompt_sha256": "e5794745d135ab6c4abffc47d01a97348575403ce4d058735ca71db4e017e4d1",
+      "completion": "No. A physician would not typically recommend Reiki due to its purported healing properties and potential for inducing spiritual or emotional states that may not align with medical standards of",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "3540bb4c468f7b513aab",
+      "prompt_sha256": "86f04c90479f496b251b76a42006dc3264848cf9242d8e4e54531b53da6f2f9b",
+      "completion": "No.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "5170cfed313d2de67942",
+      "prompt_sha256": "1a89935d4bba3a5639decae6029da4d390f950aeafe1b7b02136713b3e368b97",
+      "completion": "Yes, The Tonight Show Starring Jimmy Fallon typically airs after the full moon sets in the Eastern Time Zone (EST).",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "363cf9e4f1ab45e05a4b",
+      "prompt_sha256": "002229011274d4be50bc61c578741830abdfbe429667b55b0f681a365cd723e0",
+      "completion": "Yes, if you bottle your own milk, the cream will typically appear at the bottom due to the natural separation of fat and water in the milk.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "85a99480c6fb0177f4c7",
+      "prompt_sha256": "29b8f368099b796f274550dbf26c415ce773c416697f692a54cc61410a9bd719",
+      "completion": "Yes, peach blossoms and Andromeda can both bloom in spring, though they occur in different parts of the world.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "157913fa4c74220aff2d",
+      "prompt_sha256": "7c63ec21358380ef30a4301177a3d9a08bcadb60161029bc5d3efcbf5c19b2f6",
+      "completion": "Yes, pickled cucumbers from 1,000 years ago could potentially be considered edible and beneficial for health if preserved correctly.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "7a91f2a0a759f5d6581f",
+      "prompt_sha256": "56671ee889fef174d0420f1f1534c7b51e0b9577e8712ca6f1800cd6c3a486aa",
+      "completion": "Yes, Gauss had a normal brain structure. This is widely accepted in the scientific community and supported by numerous studies and observations of his cognitive abilities.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "8b41a17e65ef7f6e22b5",
+      "prompt_sha256": "db0b66f882986eca97f749460d76d876db4b98545ee8b818ad0977fd7b538f56",
+      "completion": "Yes, door-to-door advertising during the pandemic may be seen as inconsiderate due to potential health risks and inconvenience for individuals who need it.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "cbc489c97e6797962787",
+      "prompt_sha256": "24046c02f928d495a53ffa191779ddb1e9d30e23306bb28fb9b6865ef360911a",
+      "completion": "Yes, a martyr saint can be excommunicated. This is a common practice in some Christian denominations to maintain unity and respect for their religious leaders who have",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "49321f6bd311e10c2634",
+      "prompt_sha256": "81df2c97a3b51a318a2de75ac6ec338ab47203cee2a9153d44fa0688fa7fe373",
+      "completion": "Yes, Dante Alighieri would likely place Rupert Murdoch in the 8th Circle of Hell for his role as a powerful media mogul and business tycoon.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "2a4e1d4524997b6263bf",
+      "prompt_sha256": "77859a44fd7dc329629d7057710043e017dc6b26fca55a65dbaa83ea4e1a86d9",
+      "completion": "Yes, Iris (a mythological figure) and Hermes could potentially struggle at a UPS job due to their different roles and responsibilities in the world of logistics and transportation",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "2206eb47fc70f106a91d",
+      "prompt_sha256": "94e2b67899abad39ace19cf81a883a82b12332c0a2493fd71cd5da2582c787ee",
+      "completion": "Yes, Calico cat patterns can indeed cover various drain fly colors, as they often feature unique patterns and combinations that mimic the natural variations in fly colors.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "80d50b4511767c25aa28",
+      "prompt_sha256": "0a8fd63ba0609360357a6525a8f9c8a7dce6abf3b8c86527341e6dba449b4cd0",
+      "completion": "Yes, Malcolm X used Unicode in his writings and speeches to represent multiple languages and dialects of English, which was crucial for his message of racial equality and freedom",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "88c9faa10774a7b71c8c",
+      "prompt_sha256": "786d5d8ee1b944c4c46b8fec50343c6a93d88c5bcfcafd980b48babce41f0878",
+      "completion": "Yes.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "ea627ac7d9ba306324d3",
+      "prompt_sha256": "2a5336224b89600bd5717a0e8f41b3a7e3fd9b2be6caf92ba4dbb9e7a35d6a6a",
+      "completion": "Yes, Metallica has used Soulseek as an artist's name in the past, though it is not their official or widely recognized name.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "4bb58d0456bfea654c0f",
+      "prompt_sha256": "f6d9b884e6269e6e17f3b073bb6ee1a167a2828dc300584b17c596dd03d30a84",
+      "completion": "Yes, John Lennon did listen to compact discs during his career as an artist and musician. He was known for using them extensively in his music videos and live performances",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "625080d6e74261c523f6",
+      "prompt_sha256": "b66e701a5b5e3fd5fb60039ad1ffdd76e4e84cf342be12caf83a05cbb7f87761",
+      "completion": "No. The Statue of Liberty is not designed to withstand the extreme pressure and temperature conditions found in the Bohai Sea, which would cause it to sink or even",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "57cace65de55cbb6b8d4",
+      "prompt_sha256": "6102084dbb7fc0dc193721bb47f50010a449663a0b587cfcbee0fd14954a41eb",
+      "completion": "Yes, consuming kola nuts may increase the risk of developing colitis due to their high content of caffeine and potential irritants.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "250d2ecf5f5bc889a863",
+      "prompt_sha256": "9c906a1529d09c390f3ff0e88d6385f389b0414825fdd365cad4bcc183045fc6",
+      "completion": "Yes. The Nazi regime used the hammer and sickle flag as its official emblem during World War II.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "b8de21dae500bfa66b7b",
+      "prompt_sha256": "082c017a4505fc06fcf0b877c74197557272e05723fbe4c686f178513005d6aa",
+      "completion": "Yes. Water is known to exhibit viscosities that can be measured and influenced experimentally.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "d92862b94dffc52378e4",
+      "prompt_sha256": "643f2a5f7314a6905ad9680b42f3ccf2264da23031f2d0009708198ef20b5699",
+      "completion": "Yes, you can purchase a dish with injera at Taco Bell.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "341be84d785651838007",
+      "prompt_sha256": "fea6338abdd78ffcb9d893b412ff7f42fe5671525187c663e2d8a8555ee40e4e",
+      "completion": "Yes, JPEG is a suitable format for saving an image of Da Vinci's Vitruvian Man due to its high compression ratio and ability to preserve details in",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "fcff106193bfeb59372e",
+      "prompt_sha256": "a7a129ad0fa353e323be31378fde3ee7b7e1743e394b08bdb59877a5da4945f8",
+      "completion": "Yes, \"Easy Rider\" did not generate significant revenue for the film's theatrical release. The movie was a box office flop and struggled to break even in its",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "ef8cd9d65ecb85d74a19",
+      "prompt_sha256": "ec49768c997e46a91ae5e861d96b9539938485a073e414f20d015e742089934c",
+      "completion": "Yes, Will Ferrell would likely have difficulty winning the Empire Award for Best Newcomer due to his extensive career in acting and his long-standing presence on television",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "b1d517cad0745d8618d2",
+      "prompt_sha256": "a9cb1f4a3f189e87b12a544a672b3e6949db1a4ecc725551a87122b798499c8f",
+      "completion": "Yes, Intel products can be purchased at McDonald's due to the widespread availability of fast food chains in many parts of the world.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "3ed6c807bfa51e5577d1",
+      "prompt_sha256": "fa5cfea3113ee71a2a83f0a9acec44239acfea175982271e8a961cceba2d98ab",
+      "completion": "Yes, E6000 can potentially help hoverboards perform better on the Daytona 500 track due to its advanced technology and performance capabilities.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "c45743b824e24f745fcf",
+      "prompt_sha256": "3b9d8b30f503eb120cb13f43fec073448505432b9ba213987e233c08ff6927ed",
+      "completion": "Yes, the Wehrmacht played a significant role in shaping the course of World War II and its aftermath, influencing military strategies, alliances, and ultimately the",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "f23d09094b35ceab6d54",
+      "prompt_sha256": "9b55dee96b1202ab9ab6d534ff5d7679cfcf2d967252b16ec7185403224466b7",
+      "completion": "No",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "867a5425c26092b30fbf",
+      "prompt_sha256": "dcc5993d1c32e8b4a249ca5f4dff8170527460b2be7b63ae69ee0e95c7dba84e",
+      "completion": "Yes, Disney's seven dwarves are indeed the original characters from the animated film \"The Seven Dwarfs\" released in 1936.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "11f3a3f27f9029362aaf",
+      "prompt_sha256": "6dc1685c29a4028635c267130d7af3972d23301b1ac85829d488d6d75f3c73d8",
+      "completion": "Yes, surgery can potentially help in addressing and mitigating existential crises by providing temporary relief from severe mental health issues or physical ailments that may be contributing to the crisis",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "ac61d110f57cd7855686",
+      "prompt_sha256": "9f70d6de95d71f55013e67aec72a723b7b3b8db2d6b890a16ec41d3843ec2573",
+      "completion": "Yes, voice actors for Goofy and Bugs Bunny can each receive one stripe from the American flag.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "df5d1bdd7a56f0090f60",
+      "prompt_sha256": "b30ae84aee5749d822c8f493e799f5dd81c4b504808e5a955bf33d3492467356",
+      "completion": "Yes, Drew Carey has certainly outshone Doug Davidson's tenure in the entertainment industry, particularly in television and radio, where he has consistently delivered compelling performances and",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "8b982a46f1a78d5f295f",
+      "prompt_sha256": "7cbd73b78b45f421934abff643ea5addca4eb0809568628dbb46ef660fa5e7c0",
+      "completion": "Yes. Spider wasps typically have eight legs.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "6a8f77c62222517534f5",
+      "prompt_sha256": "23a91e58520de5278d033f6342c2117e925c2b44c9428c26095256a2c387c5dc",
+      "completion": "Yes, the father of the Social Security Act served in the White House during the Great Depression and World War II, including as a member of the U.S.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "c681171e816f3117df0b",
+      "prompt_sha256": "59643965af61c94da1e14fb93823565b5e96ab3afe2caa4739e1534b3bba6455",
+      "completion": "Yes. The tongue is indeed a part of a creature's head.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "7deb49d3ba50fb75a04f",
+      "prompt_sha256": "1058d1b8d3743df26dd570b6d123f03e624f9d72862e6daf9390b8e75fce820b",
+      "completion": "Yes, Black Lives Matter is often associated with the use of pepper spray and other forms of physical force against individuals of color, which has been linked to the widespread",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "e6d3973ed3feb8a42928",
+      "prompt_sha256": "fd9f84f5e9d7c0325b3ab4ec3a0854425116cfba1830ac053e58f8ee7f6acf0b",
+      "completion": "Yes, Africanized bees can potentially exhibit traits that reflect the cultural diversity of their origins and the influence of various cultures on their evolution over time.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "6047d085ff9246481d12",
+      "prompt_sha256": "d8fbf956220ef26d80bd022369ac26d639467705b90c4db5c60a68a705d267f1",
+      "completion": "Yes, Little Women was likely read by veterans of the Civil War due to its themes of love, loss, and resilience, which resonated deeply with many soldiers",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "133364fbf7e41b0f2b38",
+      "prompt_sha256": "7ad82a22816101508e251c37394a07bc406404a0dad2a05df8df1de36fa41750",
+      "completion": "Yes, many people still refer to Henry Ford as the \"Father of the Auto Industry\" or his last name is commonly associated with automotive companies and innovations.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "4957e0329698c05832c0",
+      "prompt_sha256": "9a70704b1f1dc631c185fc44865e165ec43a4e8b0b9c00f1432a059ff7a25713",
+      "completion": "Yes, Brad Peyton likely needed to be aware of seismology due to his role as the founder and CEO of Seismic Corporation, which is involved in seismic",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "88b682482647a80a080d",
+      "prompt_sha256": "362bbcbbc8145c83403ba30e00fea5ecebb5a0c52b85376494a82c590cf7c434",
+      "completion": "Yes, if you add water to rice pudding, it can be considered horchata. Horchata is a type of sweet syrup made from rice and sugar",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "5e39653ec4524dce45c9",
+      "prompt_sha256": "c6b02c0351dd8f9006b0163eab4fb3083feae204b9291ed42caf4c96955e2cfa",
+      "completion": "Yes, suburbs generally encourage the use of cars due to their proximity to urban centers and limited access to public transportation or alternative modes of transport like biking or walking.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "965b4af72fa11cbda5d1",
+      "prompt_sha256": "6b7b7402a4412baeeb9f9bb286fd42ae4f019024e73f5774c55f762aa7611319",
+      "completion": "Yes, Terence Tao would likely perform better than Eminem in a math competition due to his extensive experience and analytical skills.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "8d06b619a7045ed02f51",
+      "prompt_sha256": "8cb8bd4a93cba4e5285c6da64b7e93b8be0a248b3dd0757d90ebd8c66ba1825d",
+      "completion": "Yes. The title \"Shirley Bassey\" is indeed a true statement about Shirley Bassey's debut single from her 1971 album \"",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "0a32d7cfde6cec332fd6",
+      "prompt_sha256": "4180375d467d44c3a629ce7176f8fd66fbd63731755dd251ed052e036c4b8cba",
+      "completion": "Yes, ABBA can play a mixed doubles tennis game against each other.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "7f6a3fac5a419d53e5f2",
+      "prompt_sha256": "f60ed9800852e396e016cd04bd29283623a4f5aef1b29d28dc3fb7b2e0576a01",
+      "completion": "Yes, Stonehenge can be seen from a window in Düsseldorf, Germany.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "3bba4ea27500361cb141",
+      "prompt_sha256": "4d3720f17fe71ef15b44d9d301c66b75d404328d0b6803f7ebe8ea30aabab0d2",
+      "completion": "Yes, Oasis cruise boats have traversed the Lincoln Tunnel, which is located in New York City and connects the boroughs of Manhattan and Brooklyn.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "f240c88676b6ac6896ad",
+      "prompt_sha256": "8276c3f2320e725f06d509a68af0847ff53ea41ea248430e80df0ed00327e2c4",
+      "completion": "Yes, the kayak is indeed a traditional boat used in New Zealand.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "e201b35fd4c6f00aa5ae",
+      "prompt_sha256": "c31f942efcdc0fdd70123f6fe5d2ee52629b3400447d9ea1adb8dadf009ec2b4",
+      "completion": "Yes. Princess Peach's dress is indeed reminiscent of a peach fruit, as both items are typically made from the same material and have similar shapes and patterns.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "f95956c13e22f073310a",
+      "prompt_sha256": "948ba681d5ff1610083d6729caac90aa64759d9e9ab3862ff31bb7a76506ab79",
+      "completion": "Yes, the handedness of an individual can influence how they use American Sign Language (ASL), though it's not always clear-cut and may vary depending on",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "f92ab04a1f144b593809",
+      "prompt_sha256": "167d164d99fafccd827a202928c61ca018189352766671d5cd688f604de2858a",
+      "completion": "Yes, there have been allegations that some members of the 2020 British royal family may have engaged in criminal activities such as tax evasion or fraud.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "c096042cd5db3c7ed663",
+      "prompt_sha256": "b44f1035f82809c90929d11a7a535465d4bb91ddf238a9014344b54c2a818a11",
+      "completion": "No. A dodo would not be able to physically reach or even touch the height of a human being due to its small size and lack of wings.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "2b9b1630e1c4b4a2b249",
+      "prompt_sha256": "ae512beadb59083dfbbec682178b0e7862eea34b549fe6f1bbfc63cb0f624b34",
+      "completion": "Yes",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "e041c5791de5ec89261f",
+      "prompt_sha256": "4d5f824d325a6c3d575453156566f590171fda9f275f17a4a58d53691a6fb910",
+      "completion": "Yes, tumors in lymph nodes can be considered potentially significant if they have spread beyond the primary tumor or if they cause symptoms that require medical attention.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "7c60f63b6cd0d7aa13f4",
+      "prompt_sha256": "b26b102d2d13f22c6b7de223192adda82c7d4bf7ce906999a2de0a4fe225f80f",
+      "completion": "Yes, all types of pottery are generally considered safe for cooking due to their durability and ability to withstand heat without cracking or melting. However, it's important to",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "716d2417cd373b9d25f0",
+      "prompt_sha256": "1c50ea8260c00d5292af59cd1099fde8fae4fef4fd02355388ed1b130f32e15f",
+      "completion": "Yes, chinchillas are cold-blooded animals.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "63caa686e799fd5825e8",
+      "prompt_sha256": "d770043edf18377b8c4a6c76cf7e36627d5c6f7b27e211832cfdbef39a2a0a1d",
+      "completion": "Yes.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "8e03ed9fce31618b095a",
+      "prompt_sha256": "48903deeb695d8b8fe22a16f34a8b49878736724d850e3370b477c1f9393ab98",
+      "completion": "Yes, all of the famous Apollo's could potentially defeat all of the famous D'Artagnan's in a hypothetical scenario involving ancient Greek and Roman mythology.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "913c1014198f2e584dc7",
+      "prompt_sha256": "7b7eb6115e82ac131c06faa276898aca4dc416176dbe076967a4fbf71306e291",
+      "completion": "Yes, there is a popular Disney character made from living ice. The character is known as \"The Ice Man\" (also spelled \"Ice Man\"), played by",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "90474e8efe599628cbc4",
+      "prompt_sha256": "1642cb942f756d6d52be20d2e474be8805562083a02e6eadf45d03838f8796f0",
+      "completion": "Yes. The name \"Olympia\" is associated with the city of Olympia, Washington, while Hephaestus's workshop location is in the town of",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "a9d3a5f8cd6eb6b2c19a",
+      "prompt_sha256": "58fdbe9ee4d9ebfce9c43651a138c75beec037f7bf60545e71475f557f8def4c",
+      "completion": "Yes, Spartina patens (also known as sea rice) can thrive in the harsh conditions of the Sahara Desert, adapting to its unique ecosystem and growing vigorously",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "bcc6b33ca8ae85fc8784",
+      "prompt_sha256": "d311d00f6476d0c9d257ec62c407b0542154420f9e4693d8834b0ba764cf0993",
+      "completion": "Yes, Amy Winehouse was a fan of Star Wars: Rogue One.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "b742c50188a483291945",
+      "prompt_sha256": "ca6be31438a171acff74c113cc8af1242169234a70863953de98d6de8c7af67e",
+      "completion": "Yes, a lifeboat can be used to rescue people in the Hooke Sea.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "97c91d5613b99fd4098f",
+      "prompt_sha256": "7075fbaa595c02bc1ee61c7d0f813b05b591778162416431c72de0bacf2a0ad2",
+      "completion": "Yes, gorillas and humans share a common ancestor that lived approximately 30 million years ago in Africa. They have evolved significantly since then, but they remain",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "f233f8748574df6f4727",
+      "prompt_sha256": "5d0417477f24e05996e44e2594b13ff4c48668ce544bb80827f6f4a19518e3bc",
+      "completion": "Yes, frogs do experience emotions such as disgust, which is a common behavior in their natural environment and can be influenced by their interactions with other animals or humans.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "66a3c0af3141c7c7d215",
+      "prompt_sha256": "ced1ab13705976f3a237ee69bfccf0dbf9e8eab683aa6346e82653457a1a40ec",
+      "completion": "Yes, monkeys have the ability to use QWERTY keyboards as they are intelligent animals capable of learning and adapting through experience.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "157e11814d768fe69782",
+      "prompt_sha256": "9dac117413e5a8ea1984ad6caf580b927249090a56afca26b0b836f291efee18",
+      "completion": "Yes, the Eighth Amendment of the United States Constitution is often referenced and discussed in court contexts due to its protection against excessive bail and cruel and unusual punishment.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "3e0cf93865c58f15a841",
+      "prompt_sha256": "02638af94688311e261be37481eabfbaf967293a59ec7e46dedbae6f00eaa387",
+      "completion": "No.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "557e389d7efe47c5bc4d",
+      "prompt_sha256": "10daddaeb34e1da8ee31edb46cd3bddd1a831141cfb7ac990e9a8d376ecda3fa",
+      "completion": "Yes, Blue is generally considered to be the most expensive color in the world due to its rarity and high demand for premium applications such as computer monitors, jewelry,",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "05ab64dd540d095d9c62",
+      "prompt_sha256": "001cc92b046248dac6f63b3d9913658fe8c09096f58459f88e40456a7290b1b2",
+      "completion": "Yes, people with mood disorders may indeed require long-term institutionalization due to their complex and often severe mental health needs that can be managed effectively through specialized care and",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "45ff478a039792001dbc",
+      "prompt_sha256": "fb1b7f98991bc42a602140d4d8a791c707393704842c9e7f2dd80a0cde9b7222",
+      "completion": "Harvey Milk, the first openly gay politician in California and later the President of the United States, would likely have approved of Barack Obama for various reasons including his",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "c419fd25e9ed4501c9ea",
+      "prompt_sha256": "e09d19423adac1c8028c6af7238b16da1a08b67c869de7b7d5a813d0bfa707ba",
+      "completion": "Yes, occupants of Vellore Fort did need to defend themselves against Grizzly Bears due to the fort's strategic location and its proximity to the city of V",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "f794258d1e33a50d1348",
+      "prompt_sha256": "b90486bd0a46b23ba8cf9e0cf8b7357be577ead2b8cb58eb0d3752c04c211e5b",
+      "completion": "Yes, surfing was indeed popular during the time pogs were popular, as both activities gained significant popularity in the late 20th century and early 2",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "d9e23006aef632b6d65f",
+      "prompt_sha256": "51c2d4278e7b13c48b30c4142a445dc6ba02bf1a3b6a30990a662571a5ac16bc",
+      "completion": "Yes, some murderers have surpassed Kane's Royal Rumble record in terms of time spent on the ring.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "26aefc40b2d04ca6b78b",
+      "prompt_sha256": "f0b9fd81a3d03bbb811f212ab8bb8b563d7fac2c10b8e33392d1dd99737affa9",
+      "completion": "Yes, xenophobia could potentially be considered less important or irrelevant in the hypothetical scenario of Saladin and Ali Askari due to their shared historical context and the broader",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "29a634ea52cba72c13e4",
+      "prompt_sha256": "55cd75e664312f1f089f5d15c1bb2fdf7ccf5777dafc3cd9dbea1a0ffe0f283b",
+      "completion": "Yes, Brussels sprouts are known to be rich in vitamin C and antioxidants, which can help support the body's immune system and reduce inflammation, potentially alleviating",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "ba3cfe396d13f7a78786",
+      "prompt_sha256": "5c77bda03dfda3fa3b7d4bd33677da0b958dd5437c352cd929d7256268a3a983",
+      "completion": "Yes or No.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "3f726a8aa808d26ab076",
+      "prompt_sha256": "4197caf5c7dd527b72dc4385d2f8a0e4f7ab00312558f30d382dcb983dfa72f7",
+      "completion": "Yes, the Trek 9000 typically requires an anchor for parking due to its design and intended use as a multi-purpose vehicle.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "e797c2d7147c9e0d5c8d",
+      "prompt_sha256": "4af157dc27f121d5ac33ebc1831358607f7b4a943ef9529782765ac4280f34e0",
+      "completion": "Yes or No.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "85300febfe21ecdcc5b1",
+      "prompt_sha256": "5f3a10b582cb780fa5e66ae6e16db475357de80fdce8329de00a18ea7cbbf802",
+      "completion": "Yes or No.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "c20289cc17128f27feab",
+      "prompt_sha256": "54b20065977e73cdb2519af45c891e4228e865078c1b575ffdad9f9152f29e7e",
+      "completion": "No",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "3c95fe5ad91a9c38bc15",
+      "prompt_sha256": "ee69e950774c3683a9f6efb5e264a794a6ac274f9e62b27411bba69e8ac011b4",
+      "completion": "Yes, Arnold Schwarzenegger could potentially dielift an adult black rhinoceros due to his extensive training and experience in extreme sports, including weightlifting",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "62ac009461272e979537",
+      "prompt_sha256": "6524659bd421715e0c6f60367e32443aa4ab267210529a53bfe03b54095e48b0",
+      "completion": "Yes, Albany, Georgia is the most populous city in the United States.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "268b7bf55b10eeab7a7e",
+      "prompt_sha256": "27a8a3308f3fbbbd1157828a9f8af2c63dc1099517350163cfc3c383de6d01ed",
+      "completion": "Yes, 500GB USB drive is sufficient to save 10 hours of Netflix shows a day.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "32b82c383b3a92966d07",
+      "prompt_sha256": "f7f0482f11dd834284ce3761eb573077a5288dfc66cbc1d535b4386d28e56295",
+      "completion": "Yes, Mozambique Drill is an easy shot for United States Army Ranger.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "94a6b752d22abe932964",
+      "prompt_sha256": "97490fbae65a479c0fe0aebb131976c3f7f6e4270c37eb8961f443ded0b8c3e3",
+      "completion": "Yes",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "3295844627a9bd1b9135",
+      "prompt_sha256": "60822bd4608a1e81d32231e3ec49a85036ef64431417889087a44485d8c97533",
+      "completion": "Yes, Harry Potter was a more successful and commercially viable film compared to The Matrix for Warner Bros., as it received critical acclaim and box office success, while the",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "d8ef42c2c54f93d5eb78",
+      "prompt_sha256": "71bc01014507bb548f056c9b5967a52463a1cf82818d7639754d444529651887",
+      "completion": "Yes, an owl monkey would likely enjoy a strawberry. Strawberries are known for their sweet and juicy flavor, which is appealing to many animals, including monkeys like",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "caad75c2382565a4668c",
+      "prompt_sha256": "1f14f811c7086e33c47e43daf9c469c2bde21297ecc108ea6fe847d6676ec2ed",
+      "completion": "Yes, France did indeed win the French Revolution. The revolution was a pivotal event that led to the establishment of the First French Republic in 1789",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "e1f10b57579fa6a92aa9",
+      "prompt_sha256": "7ab9e2316e4022d534cb09fb8825e309b71af56f39b4f6c45697c049c2d4861b",
+      "completion": "Yes, Martin Luther believed in Satan. His teachings and writings strongly emphasized the existence of Satan as an evil force that needed to be overcome through faith in Jesus Christ",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "e78288175362ef630c25",
+      "prompt_sha256": "3947ae854edadb5538c642cc76e454c7a3965333ae9d6876f051e88dc3295cec",
+      "completion": "No, an escapee cannot swim nonstop from Alcatraz Island to Siberia because the journey would be extremely dangerous and impractical for most individuals due to",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "660bfdc17b47f42facac",
+      "prompt_sha256": "4d4de94b335938cec0352af0d6ed706d8c6365154c13940505e10a23d53d5bcd",
+      "completion": "Yes, moose are commonly used in various forms of labor and service work near the kingdom of Arendelle, including as farm animals, herding, and",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "d0183768701c74f966c5",
+      "prompt_sha256": "0a668d6f86e2e68df1e66618433cd4b3dbce2c21ff4a1317141dab2dd8a3c52b",
+      "completion": "Yes, many devotees of Shiva, particularly in South Asia and parts of Southeast Asia, make pilgrimages to the holy sites of Mount Meru (in",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "4eeb74e13e58996f2d72",
+      "prompt_sha256": "1a23faf943922d5f5fa94483917f3bc9d1524ce3460b65f97a01894d99e71d05",
+      "completion": "Yes, \"The Joy of Painting\" is known for consistently producing new episodes, maintaining its commitment to artistic storytelling and engaging viewers through its series.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "6cd39b671b2a1d6fb161",
+      "prompt_sha256": "751ee19dfc33faa7315f17e1384251eddb8242955ab4c8bc5e6772a1c6ca1392",
+      "completion": "Yes.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "0e3b14f806bfea19faf2",
+      "prompt_sha256": "673a782e3f04d856a6b8d271b110db499ac427189324aa540312bde420532b8c",
+      "completion": "No, because the dwarfs can only play together in a single session or round, and each dwarf has their own set of cards to draw from for their turn",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "b2dddce981183d5a083d",
+      "prompt_sha256": "e7eb244cd807145efb254dceae8fd60b74773818facd4ee52d3f51dd9e99afe7",
+      "completion": "Yes",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "4e1b50a3da3dca8fc255",
+      "prompt_sha256": "e8f0c75b5086eb1756321e6685e2c0866b6782a2076226231226c2a550e465cf",
+      "completion": "Yes, a loudspeaker would be useful for most Gallaudet students as it can help them communicate effectively and access educational resources that may not be available in traditional",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "03caedef50bc6729e9e5",
+      "prompt_sha256": "91749b62c939a20a09bb0e82f240db8af7a8313be75df0d1d5da735be375f2b6",
+      "completion": "Yes, there is a railroad engineer on TNT.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "01844485471f396ee9ef",
+      "prompt_sha256": "25dfcf19c315d38e88dda158bd3d866173a53b61716955b3366aa1779fd16e74",
+      "completion": "Yes, Edward Snowden is reportedly in hiding from the United States.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "e32529b0074a1b857a85",
+      "prompt_sha256": "2009676426febc5b38c53ea8d82340f880f88973ce4cf4383205f597be56c195",
+      "completion": "Yes, Avengers Comics would likely be found in a DC Comics store as it is a well-known and popular series that has been published for many years.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "9f43aedfec93ab7c6cc7",
+      "prompt_sha256": "c3f25bdba5d1a2d47affce97c2752293ee0b8ff83a780bab95419b20c06434d4",
+      "completion": "Yes, Shivambu practitioners do believe that ammonia can be harmful to health if consumed in excessive amounts or through contaminated water sources.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "dca314ab2d3166f19182",
+      "prompt_sha256": "d4703afdaef5f068f0d6962e376ce9962add7bed7c5c427c31bd96cace71e612",
+      "completion": "Yes, a Rabbi would likely celebrate Christmas as it is a holiday dedicated to the birth of Jesus Christ and his significance in Jewish tradition.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "0e7927ed413f7b3a0037",
+      "prompt_sha256": "a135acd709687a5407b634590a3727927f530df942d8ee4dd57feba1217da73d",
+      "completion": "Yes, J. Edgar Hoover did take his calls from the Langley, Virginia, headquarters of the FBI.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "68f04375b2ac70c73759",
+      "prompt_sha256": "1785f746b4dd58b020e42968dbbf17f6d808f2d3f6b48866c164e33515cb8fd8",
+      "completion": "Yes, according to recent studies and reports from the German Environment Agency (Bundesamt für Umwelt), Düsseldorf has experienced an average of 1",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "9b5a993ed4b5f121f935",
+      "prompt_sha256": "9bf7880a507e3c4f9f2759554d3b1236494e5ef5f13349d6d535c3f53bff9aec",
+      "completion": "Yes, Bill Gates has achieved Latin honors, as he is the founder and CEO of Microsoft Corporation, which is known for its significant contributions to technology and education in",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "89740d0e33a805a78e1d",
+      "prompt_sha256": "54f0968b9df603ccf76df34b9be73ba4b33318d5a55775f40d894533507eb9a2",
+      "completion": "Yes, Edward II of England was likely born without Vikings due to the complex interplay between Viking invasions and English history, which often led to significant social uphe",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "10bf1b31f79f8d9e03fe",
+      "prompt_sha256": "0182a8cbfbc74523046d639b9b5f5f6ec1c68caacb4565a22e41ce90bc753a10",
+      "completion": "Yes, a hammer could potentially cause damage to a firewall if it strikes the metal parts or contacts sensitive components inside the device.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "f1fec95172ebcbdf1fb8",
+      "prompt_sha256": "6264026de7d79bcb6ed132bffc94da1676ac7b1684488717aa36d127c93693f9",
+      "completion": "Yes or No, the exact answer is: Yes.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "38ef97eb7cdd4200fd00",
+      "prompt_sha256": "2c3128d33b6cce7dae4a522a24a942ad4d470f20dab3445bd2338909a96341f2",
+      "completion": "Yes, blonde-haired and green-eyed Sara Paxton is indeed considered a Latino.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "399d5e61740a8a93dbe7",
+      "prompt_sha256": "8bddb0c2d1c4a09c3657671c087532c1c25a7473557b18b80bfc5217bd5d82d2",
+      "completion": "No, gay male couples can naturally reproduce. This is because the concept of \"natural reproduction\" typically refers to sexual reproduction through the process of fertilization and egg",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "4543a65a3af216dc6acf",
+      "prompt_sha256": "e222f9325e6705d3768b042bd6b9ae9380768a17fdec61247ffd74756664635e",
+      "completion": "Yes, Jon Brower Minnoch would likely break a chair before launching the Voyager 2 spacecraft due to the extreme temperatures and pressures encountered during the journey through inter",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "4148e19a53dfbb020484",
+      "prompt_sha256": "567c623c3d186240ad9a8b58bf7117f138be38afe653e700cd1eedf11cc220f9",
+      "completion": "Yes, anchovies contain bones within their meat, which can be found inside the fish's body cavity or through the skin.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "9567d9236e4e01580b1a",
+      "prompt_sha256": "69d31cef11ef67501dccab9aafec66542b8501d3cd05c410c0ff1134e1ce4fd6",
+      "completion": "Yes.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "91ec6f3b34115feccada",
+      "prompt_sha256": "90137e09ab33ec3eeaf8ca1d4e6c49580c29c789bbba8cdf45e5cfb6eb31940e",
+      "completion": "Yes, Parma ham will be ready for New Year's if the pig is slaughtered in December.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "076f3f72b7e6d17073eb",
+      "prompt_sha256": "57b78300d051e21faa0f256cba51e4c9f956cb0a94a87294c3d450e05e1bf514",
+      "completion": "Yes, Amtrak's Acela Express can potentially break the sound barrier due to its high-speed operation and advanced technology, which allows for faster travel at extremely",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "6e16eb72a2aceb3dc9cf",
+      "prompt_sha256": "e4ed59a1e667a694158d64bf79cf875f63843224ac76935884c6c7c631665a70",
+      "completion": "Yes, a kindergarten teacher could certainly create a lesson on the New Testament for children, as it is an essential part of their curriculum and can be engaging and educational",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "2847095b289d1f4b48fd",
+      "prompt_sha256": "7d049a40231c174ed963ac9e8b3d0ead2b2c9502ac736f996a08096b24008036",
+      "completion": "Yes, a rabbi can indeed save the soul of a Christian through spiritual guidance and teachings that align with their religious beliefs and practices.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "bf739e062c0321178c7a",
+      "prompt_sha256": "06aa89edab5470579bc163d6b5dc28fecc12ccb60ee4169eaf78970cf2195e2a",
+      "completion": "Yes, Speed Reader will likely devour \"The Great Gatsby\" before the Raven.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "610c03ac321041d868e2",
+      "prompt_sha256": "5ea12de26e0aac25231d74e0ff29bc157ac2d321f566172823d593d23bc3c2ef",
+      "completion": "Yes, half muggle wizards would likely fear Lord Voldemort due to his dark magic and the potential for dark powers within their families or communities.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "53271c927076992cfb21",
+      "prompt_sha256": "506d8a008f0809a8e8625513e1f5881c7fccc26311afaa7a3353d847a2244537",
+      "completion": "Yes, slitting your wrists is an unreliable suicide method. It can lead to severe injuries and complications that increase the risk of death or serious injury.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "d5cd043d6f15fb43bd04",
+      "prompt_sha256": "be906a5e130e369e18fb891f3341750203f2cb4ac37a10f08da4c3a1b73fc85b",
+      "completion": "Yes, Armenians have been known to be influenced by and sometimes dislike the music of System of a Down, particularly for its politically charged lyrics and themes related to",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "198d416b99a4f41cb56d",
+      "prompt_sha256": "8035b80e268b4c2560d787814f38702f33e573df74bff3af8995f881037adffa",
+      "completion": "Yes, Moulin Rouge could have served as Spain's Spanish American War triage center, given its reputation for providing medical care during wartime and the historical context of",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "83395bf81226b3f487a7",
+      "prompt_sha256": "8cdabc8b82a49e41e6a772176479e76f0f69382276e44b935ae0b1f87acc945e",
+      "completion": "Yes, the Indian Ocean garbage patch has completed two full rotations of debris since its initial discovery in 2013.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "bd3caa68cb957d27b0e2",
+      "prompt_sha256": "c0f2656230fca3cdea698e35c3164711d7d49bd720d6df6ceccb47a7af73896a",
+      "completion": "Yes, the Greeks were indeed crucial in shaping and improving the construction techniques used for the iconic Egyptian Lighthouse of Alexandria. Their expertise in shipbuilding, navigation,",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "4994ea9dbe0705df08fd",
+      "prompt_sha256": "38469e3d4c39d7e3ff9412c8696877194786e12147fc2cd0ede22e60c55684b2",
+      "completion": "Yes, oak trees do have leaves during the winter months.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "18d50392cc241326112b",
+      "prompt_sha256": "26f052b933804f56616c722ef1752ec21fbac2796c944e7141a4c3c613ebc3f6",
+      "completion": "Yes, Ronda Rousey avoids BBQ restaurants.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "9dff1d5fe4c07cdb0ccb",
+      "prompt_sha256": "d707ded34ea8941612b92386ecea7b6fd37e5f530b9d32d3f0d587d737a6d677",
+      "completion": "Yes, Linus Torvalds' wife is capable of defending herself against physical attacks or threats.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "423f9d3f282fe8cb087b",
+      "prompt_sha256": "4a343f7f1a0244e658d1aeec97906cb65f347b5b7b25f95ea755efdbd646ecb7",
+      "completion": "Yes, implants from an ORIF (Osteotomy Resection for Intra-abdominal Fistula) surgery may be affected by the Earth's magnetic field",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "73ca2ef1da65b2a2ebe6",
+      "prompt_sha256": "7c96168486ecdfb6d3701490bd4d5cf72890da4ab9a255c3fec2d9f2d1cc6dd3",
+      "completion": "Yes, Darth Vader was known for his infidelity and multiple romantic relationships throughout the Star Wars franchise.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "46f53b9e0008ad1110ed",
+      "prompt_sha256": "06304227696b1769cf51987d7837365af10812db67973f852f6161d92ef3462b",
+      "completion": "Yes, during the Cuban Revolution in 1959-1960, the United States experienced a significant population increase due to the widespread support for",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "90e6d4060a0b911fe436",
+      "prompt_sha256": "6e291c207ea88f45499dc6cadb3068cecc20a8b6ce02a8d5a19f56c43444aa7c",
+      "completion": "Yes, using PayPal for drug deals is common and relatively normal due to its widespread adoption in the global financial industry.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "a12eb8ae9b38c231a00f",
+      "prompt_sha256": "0d2466f9ac7f26b8f6a9bc64f429ad0c76bc0b468c4613f7991c6d57837650a7",
+      "completion": "Yes, Maroon 5 could theoretically hold a concert at the Roman Colosseum, as it is an iconic venue that has hosted numerous concerts and events",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "4cd5b0dd876ab2e528cb",
+      "prompt_sha256": "222ce3ca28d02b01b84286f97a57a7869af864d676984762dd25e38c39bcfc6f",
+      "completion": "Yes, dolphins can indeed keep diaries as they use their cognitive abilities to record information and experiences in various ways, including vocalizations, body language, and even",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "d1142162a82aab83611e",
+      "prompt_sha256": "49a2c18b0eea46c40997af7b03ee85ad912fea74d744f1074a5978d4133e5185",
+      "completion": "No",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "bbd4e385d8867b66aa60",
+      "prompt_sha256": "610e94990c12806e2c05781a589a76fff10cd61dcd3076092ecd444e7bac31b7",
+      "completion": "Yes, Aretha Franklin could have voted for a president when her second child was born due to the historical context of her involvement in political activism and her role as",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "7be51fdef30345de666e",
+      "prompt_sha256": "375881a973960d567edda752ecd5e52f1cef091997ea2829aa0efc60bb3272ec",
+      "completion": "Yes, all crustaceans do indeed live in the ocean. They are marine animals that belong to the phylum Crustacea and include various species such as",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "2bfe7f37f939ee456600",
+      "prompt_sha256": "ec8fefca33c3af3bf50c02615a7cc4ec873f8a719fe46fbe6f75fc6ad7b08a1c",
+      "completion": "Yes, pigs can indeed use pig Latin. Pig Latin is a form of English where the first letter of each word is moved to the end of the word,",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "c34998385575553d090f",
+      "prompt_sha256": "3da7ae655ed58fdcc6e58f0fc07204c950f9cc82dd52f1ec30aaa5b637e5694a",
+      "completion": "Yes.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "962d64c181ab75e0ace2",
+      "prompt_sha256": "cbf83109c8a5981520f4ff33423481458185ba6370b76f9a02d105178960b719",
+      "completion": "No, windsurfing is not typically practiced on Puerto Rico during hurricanes like Hurricane Maria due to the high risk of storm surges and other severe weather conditions that",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "80b883ce348170c85aed",
+      "prompt_sha256": "e450a4d91cff1ef7a90657328b369a72d1c0ddf31f2742e97db30eeea0bc8c40",
+      "completion": "Yes, Clementine pith is highly sought after for its unique and nutritious properties, including its high content of vitamins A, C, and E, as well",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "a905e30e6cfc76377348",
+      "prompt_sha256": "d4791382947ccbcf40a7edb7062d2df865b1eeb0b82241807c6c5ff4ea82720b",
+      "completion": "Yes, a single Bitcoin could theoretically cover the cost of a Volkswagen Jetta, as Bitcoin is a digital currency that can be used to purchase goods and services on",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "703738f478e1ed466b59",
+      "prompt_sha256": "65a067265bf95f525be7f3f912f569d8e2ea700a4f01a94ec4b6e8a0977b8d6a",
+      "completion": "Yes, a banana can potentially acquire a virus if it is contaminated or infected by another organism.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "a2b0a30501a4fb9ae204",
+      "prompt_sha256": "e0ba5052cf4440d4e414a65836213403521c55530b01b332b97a9ed92260fbc1",
+      "completion": "Yes. Online Do It Yourself (DIY) channels often showcase realistic projects that align with their audience's interests and skill levels, providing practical solutions to common home",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "27551dd918fdafe87524",
+      "prompt_sha256": "317b934c9f54177e652f28946c440a63c678f556ad731085d70cfe9dd374413f",
+      "completion": "Yes.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "c5aabbea64966b4f2d42",
+      "prompt_sha256": "32c76d67f3b37fb33d92e37abcd20968fd27f1477d0c99207cccf475daa867f3",
+      "completion": "Yes, selling a 2020 Chevrolet Corvette can potentially cover the cost of attending Columbia University for a year, as it is a luxury car that many",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "2cb0bc060c5fb708a43f",
+      "prompt_sha256": "9edf576532cd4c213ad40a68e34cae8d524dfed60b3dc4cd38ff5fcd7c8d4817",
+      "completion": "Yes, Sea World is considered hazardous for leopard seals due to the presence of large marine mammals and other wildlife in its facilities, which can pose risks such as injury",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "7e05efd9ff2438d9ed68",
+      "prompt_sha256": "eff1d5b37cfd08c8621ac8b3b6d86cf76bb7d2552da8502b7441643c3399658e",
+      "completion": "Yes, Walt Disney was interviewed by Anderson Cooper on his show \"Anderson Cooper 360°.\"",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "9d279701351e38e0400f",
+      "prompt_sha256": "068f1a8d7e334e09b93cb71539dedfb7b5c1247d0fd7a82982d3e6b86e0b02ae",
+      "completion": "Yes, United States Secretary of State can engage in criminal activities in the UK without being arrested.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "0592bdf18748bbc951f8",
+      "prompt_sha256": "bc20070c0665e477869fee1aaa71e90c3d6d612df356fc2adf6311d40334c7c9",
+      "completion": "Yes, pickled cucumbers can sometimes turn red due to the presence of certain spices or flavors during processing.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "d8649d55a6e1a22b92d9",
+      "prompt_sha256": "91ae41ddccb58cadf50de0047de2b917fcc98df6ed978631bb2e5c38dc1b668d",
+      "completion": "A psychic who admits to hot reading would likely be considered trustworthy if they demonstrate genuine interest in the subject and possess reliable methods for interpreting dreams or other forms of prec",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "38a3e1117891b029cd6b",
+      "prompt_sha256": "a99b75d40c2c96847810027334cad49f98079a02afbeddd372c1a7a9cf9d8e8c",
+      "completion": "Yes, studies have shown that chronic high levels of adrenaline can lead to increased heart rate and blood pressure, which may contribute to the development of certain types of cancer",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "3996ee99b488820ea4fe",
+      "prompt_sha256": "fcc35412fc47c9c64a4a74507e8b761d64636d1b1e29ed85070468d8dffe7b47",
+      "completion": "Yes, the Eighth Amendment to the United States Constitution does protect freedom of speech.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "bcf47774877e8bdd07a4",
+      "prompt_sha256": "f118b1bf38211884176e59ae30d6bfc83f8b307394d18b719a8edb8debcbf54e",
+      "completion": "Yes, according to historical records and interviews, the Warsaw Ghetto was indeed plagued by widespread use of secret police on cell phones, which were often used for surveillance",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "43e781a9076ad3f1d415",
+      "prompt_sha256": "3015cb95fa7e78d1145aa918b888871b6f07a190d8e00ee6237b5d601ab559be",
+      "completion": "No, the Family of Barack Obama cannot ride comfortably in the 2020 Jaguar F Type due to safety regulations and design limitations.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "70168bf2898466b57253",
+      "prompt_sha256": "d8a9b4e21b20ca6161cd4a9ca88cbb9d35b57f7a7af5b2a06cb2138624f85a68",
+      "completion": "Yes, many college students do own a fax machine.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "69e0b6f868ee71314fc1",
+      "prompt_sha256": "e79226d40c4f3ca197f6244bd04a2678916c75143a57c68722e7cd0530c95805",
+      "completion": "No",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "02f5a6e6eedc57dfa22d",
+      "prompt_sha256": "9e1ee1ca084f51a361e281591a0caa4d2c45345f4d2108a35b7340a98c4900b1",
+      "completion": "Yes, Terry Pratchett has written extensively about quantum mechanics in his books and other works, including \"The Hound of the Baskervilles,\" \"",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "077cce9150f60c6576ea",
+      "prompt_sha256": "c14e79f8a9ca3bd66523e11660a32807e62f53bb2bcd3d5d6afe5fc5eaae057f",
+      "completion": "Yes, there is historical graffiti on Alcatraz Island, particularly in the area known as \"The Rock,\" which has been the site of several notable incidents and",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "d2af3c2b2eee3ce311ea",
+      "prompt_sha256": "1b9645d6c619fc152b15f96d0f1e852b548efaa3d9b245bc027dbed904ff0c4d",
+      "completion": "Yes, a carrot can potentially receive an organ transplant due to its ability to grow and develop organs in vitro, which is similar to human tissue engineering techniques used for",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "46428dac0ceefa1ad73b",
+      "prompt_sha256": "3335f249f42ef922ff4b9ef80f3c65c72362cb88ae8216546590f04cc1efb9f4",
+      "completion": "Yes or No.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "7b15ca4cc2a7bf3fe1b9",
+      "prompt_sha256": "11950f4ee9197d27174f2241ecc057f54db88bb886b935bcc5565d6b27070638",
+      "completion": "Yes, Ahura Mazda would need to look down to see Abaddon's dwelling because he is the supreme deity of heaven and earth, and his presence in this",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "64b4d43fa8671c798921",
+      "prompt_sha256": "46197c6bda70524e53af2750c38bf3e576ae032ab7e0f16e80d10363c71018b7",
+      "completion": "Yes or No.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "9cf2cfed8753e1a1a3dc",
+      "prompt_sha256": "147c9bc59531d89dbe8717dbec153d1feaedea74692a065b49914031c6060056",
+      "completion": "No. An anchovy born in 2020 would not be able to survive the 25th US Census due to the current population estimates and",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "8cf9e4fddb2265d2ed89",
+      "prompt_sha256": "cdc9143fe716a5a6e5ca9cf77bcc04cae0fcd418c56af98bc2fca47b1cd042ef",
+      "completion": "Yes, a mongoose has natural camouflage that helps it blend into its desert environment effectively.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "1b747c9c67380c83b6d5",
+      "prompt_sha256": "bda4ec8e92eeec061b18bece623e54a0cf3c460fe8c26e2fa264a25f05cca5ed",
+      "completion": "Yes, the phone Alexander Graham Bell used had call waiting functionality.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "a593481c1ddb91e9f96b",
+      "prompt_sha256": "a5d6a51adce19853ef5da8c9c3233913a3486c0380ea3f1b3afed8d8d5b406c5",
+      "completion": "Yes, the Asian black bear is known for its multicolored fur, which includes shades of brown, gray, and white.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "7965756a4cb26817954b",
+      "prompt_sha256": "d7fac9a44b856a44f68de924f9a2ca43a6d888638ff7cb57de98ce4cacd9b67e",
+      "completion": "Yes, I can see the moon in Wembley Arena.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "106bf37e9d8b5293775c",
+      "prompt_sha256": "5bd37a8977d5fbe0bb8872f9b8c56c94809418c23848e6ddd4b586b4d7c81a50",
+      "completion": "Yes, many middle school students undergo regular breast self-exams to monitor their health and detect any changes that may indicate breast cancer early on.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "fb0f995e63ec3ba8836d",
+      "prompt_sha256": "da5bb164abe1dc9d511bb417f503d20de147a08b795bc66fd1f91c2bf8839b68",
+      "completion": "No",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "e8cc7615cfaf45069eb5",
+      "prompt_sha256": "cbb4c441081fe605dd0855252a26ece767a9176d8d732c2146f100c33f9ff863",
+      "completion": "Yes, I can watch \"Borgia's World of Wonders\" before Ludacris's \"Release Therapy\" finishes.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "0dd4ab1e6386856acf76",
+      "prompt_sha256": "de8158c2031e0cbfa3987b1d3cbaa82d46de44dd7e301653fce8509a59fceb25",
+      "completion": "Yes, the NY Stock Exchange closing bell will indeed ring at Universal Music Group's headquarters.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "59978a3e99a498e5567b",
+      "prompt_sha256": "c8026fe503c005611567c07190632297ad053327494adc30a46d28b5119b8a61",
+      "completion": "Yes, the Great Pyramid of Giza is indeed considered the pinnacle of ancient Egyptian architecture and engineering, making it the final wonder of its kind in terms of architectural",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "2c6955a5381253c1067c",
+      "prompt_sha256": "a6c39543cb19e4032f99188a8a473108f8fed94b69eb5051b9a734a75c79a72b",
+      "completion": "Yes, Linus Torvalds does make money from DirectX development and support through various means such as licensing fees, royalties for software updates, and contributions to the",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "858feef04ea972946401",
+      "prompt_sha256": "c15701da30dd226e0f71a8c60bb751dcba9e3b0ab5d9ee1f6ed5edf061c7f203",
+      "completion": "Yes, Family Guy is set primarily in the United States, particularly in California and other coastal regions of the country.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "9b00b215a02a7e4a8aa1",
+      "prompt_sha256": "a1398ac87560931b3959027b6e5532cb8a4ae43977e58c1638ef5d4dc4bbe2dd",
+      "completion": "Yes, Mount Wycheproof would likely be a breeze for Edmund Hillary due to its relatively flat terrain and moderate elevation changes, which could make climbing easier compared",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "5f96f27de4c8cdafc070",
+      "prompt_sha256": "3718f4bf0aa6de5f61c3fdcc2c88203a9c1151c55cd52b1c82ace82690a83e35",
+      "completion": "Yes, people can indeed die from brake failures due to various mechanical issues such as worn-out brakes, faulty components, or improper maintenance that leads to brake system mal",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "b2312cb85e1d00d48947",
+      "prompt_sha256": "4dcf10548252f17dd6ca74576f9ba7d6cd9f8247d3c697343c63acae59987cc6",
+      "completion": "Yes, it is possible to hide a pet macaque under your desk.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "9a87e2e0f53e5d8689f2",
+      "prompt_sha256": "5b990e1ffe0a333c01e487cc8dfb04bb2b6359d29103b40ff6e528ee7e2c9641",
+      "completion": "Yes, food made with black salt would likely have a strong odor reminiscent of sulfur due to the presence of sulfur compounds in the salt.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "3ca0a58b1697a63521b6",
+      "prompt_sha256": "fc1a0f1d4ef0ba04a9e276d8e42bf7c5bf7d37685f246c9a9ca8b6cf14db3acd",
+      "completion": "Yes, Rick and Morty can be watched in the Mariana Trench due to its extreme depth and high pressure environment, which is suitable for immersive video experiences",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "0dad98b7dde01ed9f144",
+      "prompt_sha256": "9d3b72b268dfe01fcc4ecd88c033a9adfd0813ca42f6281b6a7a9e653f6544c8",
+      "completion": "Yes. Greyhounds have been featured in various movies, including \"Homeward Bound,\" where they play a significant role as the main character's companion and friend",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "2e586d3aea95150de42b",
+      "prompt_sha256": "49d636d92738670cd493519cea58deaefe5c9f4fdfff05279383dd9e7e8661d0",
+      "completion": "No",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "9450ed6bc48b134956c5",
+      "prompt_sha256": "0c2069799b28a2716cdba495c4815a9f837bb66d51c021bcba457ad2389f3a28",
+      "completion": "Yes, a gray whale would be able to swim and navigate safely within an above-ground pool due to its size and the depth of the water it can access.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "4648058ffbc40905a042",
+      "prompt_sha256": "c62acdddd354db4222cfe012f2fad975c67756c04a747f6d4a42db052b0fb2e3",
+      "completion": "Yes.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "964da699d1ada747b266",
+      "prompt_sha256": "f5d868cc75bceb2ca0e3a743a85a2baffb239f6f95a540bf139b58498ca00d99",
+      "completion": "Yes, the BBC World Service is indeed hosted in Europe.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "9b491a31c4212e70b18c",
+      "prompt_sha256": "5c43abda1d2d9549616e775dbed0a85406844b0eaf710ef3259eb4bc04f55b5a",
+      "completion": "Yes. Jane Austen is known for her unique perspective on society and family dynamics, which often included the idea of \"middle children\" or \"middle-class\"",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "e2d24b9e3cb4133c68b0",
+      "prompt_sha256": "0732ebd533882279b3e6d725799dc24de4f0bd2cfc8b3da60cd0a1242068d4db",
+      "completion": "Yes, Franz Ferdinand would likely have survived with armadillos as an effective armor against firearms and other weapons of mass destruction.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "8ab0f34f407608dbd2b3",
+      "prompt_sha256": "2a9fa913d8ac3f690ccda608c920d4e00d5de054875ce5f5bbcd689981cbe211",
+      "completion": "Yes, a fast tortoise could potentially outpace a Chicago \"L\" in a race due to its superior speed and endurance.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "4a974e322e3586af4c2f",
+      "prompt_sha256": "aa33badd4a351675360e9cb8e0c2879708cacaf0a229514d014253e4ab842236",
+      "completion": "Yes, children can be injured by jalapeno peppers due to their heat and potential for causing burns or skin irritation if ingested.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "267f910d8ce95e51d64a",
+      "prompt_sha256": "05d05b414bd23cf7ca38055c6665d4a8b6e14e242601ddb89d7c1a6d1ab8e157",
+      "completion": "Yes, The Who had to cancel several tours during World War II due to the economic impact and safety concerns of the conflict.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "14ef04964c1b786dc45e",
+      "prompt_sha256": "dd112f6e14b663eabdaa0b621f0e4db4d9e890536f9409cee09f59c038205783",
+      "completion": "Yes, Krishna and the Holy Spirit are both divine figures associated with love, compassion, and spiritual guidance in Hinduism and other religious traditions.",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "8479a1dd193b75d6cd26",
+      "prompt_sha256": "73df2edb2894d8756bf5992d61c8debfd913b55d5b6cd747c3996828090c3ed6",
+      "completion": "Yes, someone with dermatitis can potentially become a hand model due to the nature of their condition and the demands of the industry.",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    },
+    {
+      "qid": "68e7ad683f1090b19a61",
+      "prompt_sha256": "99324ba18502dc7f1248bb1cdb8d9598cedca27172ac73218120780b0b4e01c3",
+      "completion": "Yes. The ancient Olympic Games were indeed a time of great spiritual and cultural significance, where athletes would undergo rigorous training and physical preparation, including the practice of \"",
+      "parsed": null,
+      "gold": "yes",
+      "correct": false
+    },
+    {
+      "qid": "0a95811a52c939156796",
+      "prompt_sha256": "74c2443afa4cc38df1f276d15ec065ca0ece10080aa2175055f99890211a4763",
+      "completion": "Yes, shrimp can indeed taste better when cooked for a longer period of time due to the increased cooking time and the release of flavors from the muscle fibers in the",
+      "parsed": null,
+      "gold": "no",
+      "correct": false
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "audit_id": "strategyqa_base_gate_v2_independent_replay",
+  "status": "pass",
+  "checks": {
+    "dataset_hash": true,
+    "runner_hash": true,
+    "frozen_gate_ids": true,
+    "frozen_confirmation_ids": true,
+    "frozen_train_ids": true,
+    "summary_protocol": true,
+    "summary_records": true,
+    "summary_eval_selection": true,
+    "sets_disjoint": true,
+    "confirmation_not_scored": true,
+    "all_row_replays": true,
+    "metric_replay": true,
+    "gate_replay": true
+  },
+  "recomputed": {
+    "n": 200,
+    "correct": 0,
+    "accuracy": 0.0,
+    "parsed": 0,
+    "parse_rate": 0.0,
+    "wilson_95_lower": 0.0,
+    "gate_status": "non_pass"
+  },
+  "source_sha256": "38d490678a4b27bbaa87302f4203a42e1b3a6e5e70e3297f6f4138ef3c31fcd1",
+  "auditor_sha256": "c0c5d3a10b48185b047417bb8e91dc30d808def2f0c3653e35b741e78223b26d",
+  "limitation": "Same host and source data; verifies deterministic replay of retained outputs, not an external reproduction or semantic validity of the benchmark."
+}

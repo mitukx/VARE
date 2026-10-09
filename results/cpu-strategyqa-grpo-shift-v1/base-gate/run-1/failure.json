@@ -1,0 +1,17 @@
+{
+  "protocol_id": "cpu_strategyqa_grpo_shift_v1",
+  "attempt": 1,
+  "status": "failed_before_inference",
+  "exit_code": 1,
+  "exception": {
+    "type": "KeyError",
+    "message": "'threads'",
+    "location": "torch.set_num_threads(lock[\"runtime\"][\"threads\"])"
+  },
+  "runner_revision": "e30b846",
+  "runner_sha256": "385bc15a70a8ae7f6e0b34fce4892cd970ab69b862cc8aef068c6c9995e5c595",
+  "model_loaded": false,
+  "prompts_generated": 0,
+  "labels_read": 0,
+  "recovery": "v2 changes only the thread-count lookup to resources.threads; task rows, prompt, thresholds, and resources are unchanged."
+}
