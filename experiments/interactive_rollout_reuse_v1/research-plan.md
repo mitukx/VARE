@@ -32,7 +32,7 @@ feedback changes or after a cache has influenced the learner. A system that
 reduces that wasted work without corrupting group-relative updates would directly
 serve asynchronous long-horizon post-training. Its relevance is conditional on
 these events actually occurring at useful frequency; we have not measured their
-incidence in a frontier lab or assumed any private xAI implementation.
+incidence in production-scale post-training systems.
 
 AReaL establishes asynchronous rollout/learner decoupling as a practical problem:
 https://arxiv.org/abs/2505.24298 . RollVerify already repairs stale suffixes and

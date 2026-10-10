@@ -49,7 +49,7 @@ The repository must remain useful under compute constraints. CPU-only work is fi
 
 Do not optimize for feature count, README impressiveness, benchmark cherry-picking, synthetic wins presented as model capability, or speculative claims about recursive self-improvement. Do not add wrappers whose only contribution is calling another model API. Do not create a second implementation of an existing subsystem unless the duplication is required by a clearly stated experiment or correctness boundary.
 
-Do not shape repository documentation around external positioning goals. Public repository language should describe the technical problem, methodology, and evidence only; non-technical positioning belongs outside the codebase.
+Do not shape repository documentation around external positioning goals. Public repository language should describe the technical problem, methodology, and evidence only; keep personal career targets and references to individual role models out of repository content.
 
 ## Hard invariants
 
