@@ -6,6 +6,8 @@ CPU preflight on 2026-10-11 reran `scripts.validate_math500_study_v1` against th
 
 Protocol v4 corrects the runner's tokenizer-config hash from the v3 typo. The expected digest was checked against the bytes downloaded from the exact pinned model revision; v1/v2/v3 protocol and result files remain unchanged.
 
+The authorized free-tier preflight was attempted once on a Colab T4 and stopped before downloading assets or running inference. The T4 exposed 15,637,086,208 bytes of CUDA memory, below the locked 17,179,869,184-byte minimum; its Python 3.13.15 runtime was outside the supported range, and several pinned packages were absent or mismatched. The runtime was disconnected. See [retained no-go evidence](../results/math-grpo-cpu-first-v4/free-colab-gpu-preflight.json). Do not relax the hardware/runtime lock or repeat this gate on the same T4.
+
 ## 1. Select and verify a runtime
 
 Choose a Colab runtime with Python 3.11 or 3.12, PyTorch 2.11.0, and exactly one CUDA GPU with at least 16 GiB. The gate requires the exact package versions in `requirements/math500-study-gpu-gate.txt`; its CUDA build must work with the Colab host driver. The runner fails closed on a version, device-count, or VRAM mismatch.

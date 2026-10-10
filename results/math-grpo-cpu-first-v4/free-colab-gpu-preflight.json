@@ -1,0 +1,55 @@
+{
+  "protocol_id": "qwen25_deepmath_grpo_math500_v4",
+  "phase": "free Colab hardware/runtime preflight only",
+  "checked_at_local": "2026-10-11 Asia/Tokyo",
+  "execution_code_revision": "f9f5485172b13b5e6cfd1b05a245b6bac47cc899",
+  "repository_main_revision_at_check": "9864f6c963e515ffe4099699fc92ac07a6ee5f2b",
+  "cost_boundary": {
+    "selected_runtime": "Colab standard T4 GPU",
+    "purchase_or_upgrade_prompt": false,
+    "model_or_data_downloaded": false,
+    "inference_started": false,
+    "generated_completions": 0,
+    "generated_tokens": 0,
+    "optimizer_updates": 0,
+    "math500_loaded": false,
+    "runtime_stopped_after_preflight": true
+  },
+  "observed_hardware": {
+    "gpu": "Tesla T4",
+    "cuda_device_count": 1,
+    "total_vram_bytes_torch": 15637086208,
+    "total_vram_mib_nvidia_smi": 15360,
+    "required_minimum_vram_bytes": 17179869184,
+    "vram_gate": "FAIL",
+    "nvidia_driver": "580.82.07",
+    "cuda_runtime": "13.0",
+    "torch_cuda_build": "13.0",
+    "nvidia_smi_utilization_percent_at_check": 0
+  },
+  "observed_runtime": {
+    "colab_runtime_label": "T4 (Python 3)",
+    "python": "3.13.15",
+    "python_supported_range": ">=3.11,<3.13",
+    "python_gate": "FAIL",
+    "packages": {
+      "torch": {"observed": "2.11.0+cu130", "required": "2.11.0", "status": "base version matches"},
+      "transformers": {"observed": "5.18.0", "required": "5.5.4", "status": "MISMATCH"},
+      "trl": {"observed": null, "required": "1.1.0", "status": "NOT_INSTALLED"},
+      "accelerate": {"observed": "1.15.0", "required": "1.13.0", "status": "MISMATCH"},
+      "datasets": {"observed": "4.8.5", "required": "4.8.4", "status": "MISMATCH"},
+      "math-verify": {"observed": null, "required": "0.9.0", "status": "NOT_INSTALLED"},
+      "pyarrow": {"observed": "23.0.1", "required": "22.0.0", "status": "MISMATCH"}
+    }
+  },
+  "cpu_preflight": {
+    "status": "PASS",
+    "base_gate_prompt_count": 32,
+    "base_gate_prompt_ids_sha256": "0ab6b16559db37f6ff84bb312e18c29046063fac32fae026d5b1265037d03c9a",
+    "deepmath_train_sha256": "e0c5b2fc11978d735a7710273920676977b533e185284044c3eafa63a24479d7",
+    "pinned_model_file_hashes_verified": 7,
+    "tokenizer_config_sha256_actual": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583"
+  },
+  "decision": "NO-GO: do not execute inference gate. The free T4 is below the locked 16 GiB minimum, and the Python runtime and required packages do not match the frozen runtime contract. No condition was relaxed and no alternative or paid GPU was selected.",
+  "reproduction": "Open docs/qwen25-deepmath-colab-gpu-gate-v4-runbook.md, connect a standard T4 runtime, and run only its environment-inspection cell before any asset download or inference."
+}
