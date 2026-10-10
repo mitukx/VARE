@@ -1,0 +1,1731 @@
+{
+  "counterfactual_feasibility_bound": {
+    "additional_valid_needed": 15,
+    "interpretation": "Arithmetic bound only. It is not an observed effect or a prediction that longer generation would create valid answers.",
+    "logical_upper_bound_if_only_truncated_completions_changed": 0.9921875,
+    "minimum_fraction_of_truncated_that_would_need_to_become_valid_if_only_they_changed": 0.5769230769230769,
+    "observed_rate": 0.7890625,
+    "observed_truncated_completions": 26,
+    "observed_valid": 101,
+    "required_valid_for_at_least_90_percent": 116,
+    "total": 128
+  },
+  "cross_tabs": {
+    "format_failures": {
+      "eos_format_failures": 1,
+      "total": 27,
+      "truncations_among_format_failures": 26,
+      "truncations_as_fraction_of_format_failures": 0.9629629629629629
+    },
+    "group_correct_count_distribution": {
+      "0": 23,
+      "1": 8,
+      "2": 1
+    },
+    "termination_by_reward": {
+      "eos": {
+        "reward_0": 92,
+        "reward_1": 10
+      },
+      "token_cap": {
+        "reward_0": 26,
+        "reward_1": 0
+      }
+    },
+    "termination_by_valid_final_box": {
+      "eos": {
+        "invalid": 1,
+        "valid": 101
+      },
+      "token_cap": {
+        "invalid": 26,
+        "valid": 0
+      }
+    }
+  },
+  "elapsed_seconds": {
+    "authoritative_for_cumulative_gate_budget": 1353.8884239196777,
+    "difference_seconds": 0.15997934341430664,
+    "result_json": 1353.7284445762634,
+    "terminal_journal": 1353.8884239196777,
+    "throughput_tokens_per_second_from_terminal_journal": 66.69234953541259
+  },
+  "failure_annotations": [
+    {
+      "ambiguity": "The first claim contradicts the positive series; the remainder enumerates terms only to 70 of 1,000,000.",
+      "completion_index": 3,
+      "confidence": 0.99,
+      "eos_reached": false,
+      "evidence_quote": "the sum \\(y\\) will be slightly less than 1",
+      "independent_correct": false,
+      "primary_category": "D",
+      "primary_category_definition": "reasoning or problem-interpretation breakdown",
+      "prompt_id": "78c290e3ea3ecf8783589f60a89e7219e6b6cf1c337fcf3ff0f77143667d7f85",
+      "prompt_index": 0,
+      "reward": 0.0,
+      "secondary_tags": [
+        "C",
+        "false_bound"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "The target concerns B_t B_s B_v, but the response substitutes B_0 and misuses covariance identities.",
+      "completion_index": 3,
+      "confidence": 0.99,
+      "eos_reached": false,
+      "evidence_quote": "Since \\( B_0 \\) is a constant, \\( \\mathbb{E}[B_0] = 0 \\)",
+      "independent_correct": false,
+      "primary_category": "D",
+      "primary_category_definition": "reasoning or problem-interpretation breakdown",
+      "prompt_id": "34c7b4a7c448f9a64842bac197009175f92dce7c7adf0a2b1c14967e69277efa",
+      "prompt_index": 3,
+      "reward": 0.0,
+      "secondary_tags": [
+        "symbol_confusion"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "The response imports an unstated electrostatics model and treats a nonconstant divergence as constant.",
+      "completion_index": 0,
+      "confidence": 0.98,
+      "eos_reached": false,
+      "evidence_quote": "Gauss's Law states that the flux through a closed surface is equal to the total charge",
+      "independent_correct": false,
+      "primary_category": "D",
+      "primary_category_definition": "reasoning or problem-interpretation breakdown",
+      "prompt_id": "2cf918f1f38baa67b2bd73f438e564fe0e9d1f07d7d7166ec52d57934608bcf2",
+      "prompt_index": 4,
+      "reward": 0.0,
+      "secondary_tags": [
+        "invalid_theorem_application"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "It checks consecutive examples without deriving a stopping bound or exploiting digit-sum structure.",
+      "completion_index": 1,
+      "confidence": 0.97,
+      "eos_reached": false,
+      "evidence_quote": "Next, let's check the next multiple of 9",
+      "independent_correct": false,
+      "primary_category": "C",
+      "primary_category_definition": "inefficient enumeration",
+      "prompt_id": "6a7430a585672020134b320fde816bfe75b8189461f573f6ff1ed6cfd3d8b704",
+      "prompt_index": 10,
+      "reward": 0.0,
+      "secondary_tags": [
+        "repeated_enumeration"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "This independently generated sibling repeats the same enumeration and stops at 162.",
+      "completion_index": 2,
+      "confidence": 0.98,
+      "eos_reached": false,
+      "evidence_quote": "Next, we check the next multiple of 9",
+      "independent_correct": false,
+      "primary_category": "C",
+      "primary_category_definition": "inefficient enumeration",
+      "prompt_id": "6a7430a585672020134b320fde816bfe75b8189461f573f6ff1ed6cfd3d8b704",
+      "prompt_index": 10,
+      "reward": 0.0,
+      "secondary_tags": [
+        "repeated_enumeration",
+        "sibling_completion_overlap"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "The opening transforms the stated prime-divisibility condition into a different expression.",
+      "completion_index": 1,
+      "confidence": 0.99,
+      "eos_reached": false,
+      "evidence_quote": "2(f(2)! + 1) \\mid 2(f(2)!) + 1.",
+      "independent_correct": false,
+      "primary_category": "D",
+      "primary_category_definition": "reasoning or problem-interpretation breakdown",
+      "prompt_id": "cf7c9f42113ba192bb5ba45b180e7fadc90c2404ab7a3d4f082ba28709f575b5",
+      "prompt_index": 11,
+      "reward": 0.0,
+      "secondary_tags": [
+        "condition_misread",
+        "invalid_divisibility"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "The locked prompt as paraphrased in the completion gives 0≤x,y≤3, yet the response tests 4 and also miscomputes earlier cases.",
+      "completion_index": 2,
+      "confidence": 0.99,
+      "eos_reached": false,
+      "evidence_quote": "### Case 9: \\( x = 4 \\)",
+      "independent_correct": false,
+      "primary_category": "D",
+      "primary_category_definition": "reasoning or problem-interpretation breakdown",
+      "prompt_id": "dcfc016de0e27edf1f51587413a40ae488269278b5ca59004496739c2b716e31",
+      "prompt_index": 14,
+      "reward": 0.0,
+      "secondary_tags": [
+        "out_of_domain_cases",
+        "case_enumeration"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "It introduces an invalid fractional-power argument for complex values and an irrelevant 2-adic classification.",
+      "completion_index": 3,
+      "confidence": 0.99,
+      "eos_reached": false,
+      "evidence_quote": "a^{43/2} = 1",
+      "independent_correct": false,
+      "primary_category": "D",
+      "primary_category_definition": "reasoning or problem-interpretation breakdown",
+      "prompt_id": "eaa70772ca87ade585ce02a5fcb5cb6dca7ae5546b4eeb90a08182ad6a7f6af0",
+      "prompt_index": 15,
+      "reward": 0.0,
+      "secondary_tags": [
+        "invalid_complex_algebra",
+        "sibling_repetition"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "The preceding substitution simplifies to a different quadratic; the claimed intersection coordinates are wrong before area counting.",
+      "completion_index": 0,
+      "confidence": 0.99,
+      "eos_reached": false,
+      "evidence_quote": "48x(x - 1) = 0",
+      "independent_correct": false,
+      "primary_category": "D",
+      "primary_category_definition": "reasoning or problem-interpretation breakdown",
+      "prompt_id": "218f6b954253698ecf4d23a677f0425125fc83a2e8130f8920790200466ca028",
+      "prompt_index": 17,
+      "reward": 0.0,
+      "secondary_tags": [
+        "algebra_error",
+        "terminal_work_started"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "The second intersection is incorrect for the stated line and ellipse; subsequent area equations inherit it.",
+      "completion_index": 3,
+      "confidence": 0.99,
+      "eos_reached": false,
+      "evidence_quote": "So, the points of intersection are \\(A(0, 3)\\) and \\(B(8, -3)\\).",
+      "independent_correct": false,
+      "primary_category": "D",
+      "primary_category_definition": "reasoning or problem-interpretation breakdown",
+      "prompt_id": "218f6b954253698ecf4d23a677f0425125fc83a2e8130f8920790200466ca028",
+      "prompt_index": 17,
+      "reward": 0.0,
+      "secondary_tags": [
+        "algebra_error",
+        "terminal_work_started"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "The response repeats the same integral and does not reach a correlation; its joint-density reasoning is also suspect.",
+      "completion_index": 0,
+      "confidence": 0.94,
+      "eos_reached": false,
+      "evidence_quote": "E[V^2] = \\int_0^1 \\int_0^1 y^2 (1 - x)",
+      "independent_correct": false,
+      "primary_category": "B",
+      "primary_category_definition": "repetition or degenerate continuation",
+      "prompt_id": "903db4919f7ee9616f0986a964ec5580e21f6afc4fc29b91f70469d4071af642",
+      "prompt_index": 19,
+      "reward": 0.0,
+      "secondary_tags": [
+        "D",
+        "repeated_integral",
+        "sibling_completion_overlap"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "The derivation remains at an unfinished integral and does not produce a correlation coefficient.",
+      "completion_index": 1,
+      "confidence": 0.92,
+      "eos_reached": false,
+      "evidence_quote": "First, we integrate with respect to \\(u\\):",
+      "independent_correct": false,
+      "primary_category": "B",
+      "primary_category_definition": "repetition or degenerate continuation",
+      "prompt_id": "903db4919f7ee9616f0986a964ec5580e21f6afc4fc29b91f70469d4071af642",
+      "prompt_index": 19,
+      "reward": 0.0,
+      "secondary_tags": [
+        "D",
+        "unfinished_integral",
+        "sibling_completion_overlap"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "It repeats equivalent moment calculations but never combines them into the requested coefficient.",
+      "completion_index": 2,
+      "confidence": 0.93,
+      "eos_reached": false,
+      "evidence_quote": "2 \\int_0^1 \\int_0^u u v^2 \\, dv \\, du",
+      "independent_correct": false,
+      "primary_category": "B",
+      "primary_category_definition": "repetition or degenerate continuation",
+      "prompt_id": "903db4919f7ee9616f0986a964ec5580e21f6afc4fc29b91f70469d4071af642",
+      "prompt_index": 19,
+      "reward": 0.0,
+      "secondary_tags": [
+        "D",
+        "repeated_integral",
+        "sibling_completion_overlap"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "This sibling asserts a false variance identity and is cut off before a result.",
+      "completion_index": 3,
+      "confidence": 0.99,
+      "eos_reached": false,
+      "evidence_quote": "\\text{Var}(U) = \\text{Var}(X) + \\text{Var}(Y)",
+      "independent_correct": false,
+      "primary_category": "B",
+      "primary_category_definition": "repetition or degenerate continuation",
+      "prompt_id": "903db4919f7ee9616f0986a964ec5580e21f6afc4fc29b91f70469d4071af642",
+      "prompt_index": 19,
+      "reward": 0.0,
+      "secondary_tags": [
+        "D",
+        "variance_identity_error",
+        "sibling_completion_overlap"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "A terminal range is attempted, but its endpoint is based on false monotonicity and the box is unfinished.",
+      "completion_index": 2,
+      "confidence": 0.99,
+      "eos_reached": false,
+      "evidence_quote": "is \\(\\boxed{[-0.10, ",
+      "independent_correct": false,
+      "primary_category": "E",
+      "primary_category_definition": "answer candidate reached, final-box format incomplete/invalid",
+      "prompt_id": "59e82d24f374ccd0fc1ce8a9fb2d8335d3cf7f2ea3fdff1ef621f72955d67e22",
+      "prompt_index": 21,
+      "reward": 0.0,
+      "secondary_tags": [
+        "D",
+        "false_monotonicity",
+        "unfinished_box"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "The response switches between heat and wave equations and invents exponential traveling-wave forms.",
+      "completion_index": 0,
+      "confidence": 0.99,
+      "eos_reached": false,
+      "evidence_quote": "the equation \\( u_{t} = u_{xx} \\) must be homogeneous of degree 0",
+      "independent_correct": false,
+      "primary_category": "D",
+      "primary_category_definition": "reasoning or problem-interpretation breakdown",
+      "prompt_id": "970e8c691297b5312449914ce3414ec95d9c9473903dd8dfe7770a0e0390eebe",
+      "prompt_index": 24,
+      "reward": 0.0,
+      "secondary_tags": [
+        "pde_confusion",
+        "irrelevant_wave_equation"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "It assumes squared heat energy is conserved without support and reaches a quadratic with negative discriminant.",
+      "completion_index": 1,
+      "confidence": 0.98,
+      "eos_reached": false,
+      "evidence_quote": "c_1^2 - 8c_1 + 28 = 0",
+      "independent_correct": false,
+      "primary_category": "D",
+      "primary_category_definition": "reasoning or problem-interpretation breakdown",
+      "prompt_id": "970e8c691297b5312449914ce3414ec95d9c9473903dd8dfe7770a0e0390eebe",
+      "prompt_index": 24,
+      "reward": 0.0,
+      "secondary_tags": [
+        "energy_assumption",
+        "arithmetic"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "The domain is [0,4], but the response reasons about x<0 and repeats an incorrectly evaluated steady-state integral.",
+      "completion_index": 2,
+      "confidence": 0.99,
+      "eos_reached": false,
+      "evidence_quote": "u_x(0, t) = u_x(4, t) = -2",
+      "independent_correct": false,
+      "primary_category": "D",
+      "primary_category_definition": "reasoning or problem-interpretation breakdown",
+      "prompt_id": "970e8c691297b5312449914ce3414ec95d9c9473903dd8dfe7770a0e0390eebe",
+      "prompt_index": 24,
+      "reward": 0.0,
+      "secondary_tags": [
+        "boundary_condition_confusion",
+        "repeated_integral"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "It invents a power-law ansatz and conflates real and imaginary coordinates with complex values.",
+      "completion_index": 0,
+      "confidence": 0.99,
+      "eos_reached": false,
+      "evidence_quote": "f'(z) = \\frac{d}{dz} \\left( (x + yi)^n \\right)",
+      "independent_correct": false,
+      "primary_category": "D",
+      "primary_category_definition": "reasoning or problem-interpretation breakdown",
+      "prompt_id": "9f62de00762856fe4ba145a7125cccac87c6e3b9cbb39f1bab39c63fd1e623a0",
+      "prompt_index": 25,
+      "reward": 0.0,
+      "secondary_tags": [
+        "unsupported_polynomial_ansatz",
+        "complex_analysis_error"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "The response uses an invalid derivative rule and repeatedly substitutes the condition for unrelated quantities.",
+      "completion_index": 2,
+      "confidence": 0.99,
+      "eos_reached": false,
+      "evidence_quote": "\\frac{dx}{dz} = \\frac{1}{z}",
+      "independent_correct": false,
+      "primary_category": "D",
+      "primary_category_definition": "reasoning or problem-interpretation breakdown",
+      "prompt_id": "9f62de00762856fe4ba145a7125cccac87c6e3b9cbb39f1bab39c63fd1e623a0",
+      "prompt_index": 25,
+      "reward": 0.0,
+      "secondary_tags": [
+        "invalid_derivative_rule",
+        "constraint_misread"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "For t=0.3 and h=0.1 it continues beyond the requested steps, with inconsistent predictor-corrector values.",
+      "completion_index": 0,
+      "confidence": 0.96,
+      "eos_reached": false,
+      "evidence_quote": "Fifth iteration (i = 4)",
+      "independent_correct": false,
+      "primary_category": "D",
+      "primary_category_definition": "reasoning or problem-interpretation breakdown",
+      "prompt_id": "6a65e6beae21e8ac824eba38c9fdc7929636ef44d201b19df5f1c497ee31abed",
+      "prompt_index": 26,
+      "reward": 0.0,
+      "secondary_tags": [
+        "B",
+        "method_index_error",
+        "sibling_completion_overlap"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "It invents a backward value, changes the stated starting value during arithmetic, and repeats fixed terms.",
+      "completion_index": 1,
+      "confidence": 0.99,
+      "eos_reached": false,
+      "evidence_quote": "y_{-1} = y_0 + h f_{-1}",
+      "independent_correct": false,
+      "primary_category": "D",
+      "primary_category_definition": "reasoning or problem-interpretation breakdown",
+      "prompt_id": "6a65e6beae21e8ac824eba38c9fdc7929636ef44d201b19df5f1c497ee31abed",
+      "prompt_index": 26,
+      "reward": 0.0,
+      "secondary_tags": [
+        "B",
+        "method_index_error",
+        "sibling_completion_overlap"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "The derivative update does not follow y'=3ty and the response repeats a drifting recurrence.",
+      "completion_index": 2,
+      "confidence": 0.98,
+      "eos_reached": false,
+      "evidence_quote": "For the next step",
+      "independent_correct": false,
+      "primary_category": "D",
+      "primary_category_definition": "reasoning or problem-interpretation breakdown",
+      "prompt_id": "6a65e6beae21e8ac824eba38c9fdc7929636ef44d201b19df5f1c497ee31abed",
+      "prompt_index": 26,
+      "reward": 0.0,
+      "secondary_tags": [
+        "B",
+        "method_index_error",
+        "sibling_completion_overlap"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "It replaces the stated y(0)=-1 with y_0=0 and then repeats inconsistent predictor/corrector updates.",
+      "completion_index": 3,
+      "confidence": 0.99,
+      "eos_reached": false,
+      "evidence_quote": "y_0 = 0",
+      "independent_correct": false,
+      "primary_category": "D",
+      "primary_category_definition": "reasoning or problem-interpretation breakdown",
+      "prompt_id": "6a65e6beae21e8ac824eba38c9fdc7929636ef44d201b19df5f1c497ee31abed",
+      "prompt_index": 26,
+      "reward": 0.0,
+      "secondary_tags": [
+        "B",
+        "initial_condition_conflict",
+        "sibling_completion_overlap"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "It incorrectly preserves the -1 eigenvalue under an even power and mishandles multiplicities.",
+      "completion_index": 0,
+      "confidence": 0.99,
+      "eos_reached": false,
+      "evidence_quote": "Since \\(A^{100}\\) is also diagonalizable, its eigenvalues are 1, 0, and -1.",
+      "independent_correct": false,
+      "primary_category": "D",
+      "primary_category_definition": "reasoning or problem-interpretation breakdown",
+      "prompt_id": "e8279b3efced9a16a4aaa6da9efcacea9a71b5d83830174bc60fa8b2de6de8f1",
+      "prompt_index": 28,
+      "reward": 0.0,
+      "secondary_tags": [
+        "eigenvalue_multiplicity_error",
+        "determinant_error"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    },
+    {
+      "ambiguity": "The same residue expression is repeated many times; the stated poles are also incorrect for z^4+1.",
+      "completion_index": 2,
+      "confidence": 0.99,
+      "eos_reached": false,
+      "evidence_quote": "= \\frac{\\omega^k k \\ln \\omega^k}{\\omega^{4k} + 1}",
+      "independent_correct": false,
+      "primary_category": "B",
+      "primary_category_definition": "repetition or degenerate continuation",
+      "prompt_id": "2461343cb23e8cabfbf8b5130d6f1097138b67fb6de368ce2e7699add1910332",
+      "prompt_index": 29,
+      "reward": 0.0,
+      "secondary_tags": [
+        "D",
+        "verbatim_formula_loop",
+        "sibling_completion_overlap"
+      ],
+      "token_length": 1024,
+      "truncated": true,
+      "valid_final_box": false
+    }
+  ],
+  "failure_mode_counts": {
+    "B": 5,
+    "C": 2,
+    "D": 18,
+    "E": 1
+  },
+  "failure_mode_taxonomy": {
+    "A": "sound mathematical progress, unfinished at token cap",
+    "B": "repetition or degenerate continuation",
+    "C": "inefficient enumeration",
+    "D": "reasoning or problem-interpretation breakdown",
+    "E": "answer candidate reached, final-box format incomplete/invalid",
+    "F": "ambiguous from retained text"
+  },
+  "gate_decision": {
+    "all_other_reported_criteria_passed": true,
+    "decision_changed": false,
+    "frozen_v7_decision": "stop",
+    "valid_final_box_threshold_passed": false
+  },
+  "group_metrics": [
+    {
+      "all_one_reward": false,
+      "all_zero_reward": true,
+      "completion_count": 4,
+      "completion_lengths": [
+        507,
+        528,
+        583,
+        1024
+      ],
+      "correct_count": 0,
+      "eos_count": 3,
+      "mean_completion_length": 660.5,
+      "mixed_reward": false,
+      "prompt_id": "78c290e3ea3ecf8783589f60a89e7219e6b6cf1c337fcf3ff0f77143667d7f85",
+      "prompt_index": 0,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.0,
+      "truncated_count": 1,
+      "valid_final_box_count": 3
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": true,
+      "completion_count": 4,
+      "completion_lengths": [
+        518,
+        818,
+        551,
+        441
+      ],
+      "correct_count": 0,
+      "eos_count": 4,
+      "mean_completion_length": 582,
+      "mixed_reward": false,
+      "prompt_id": "6af0a87c9d9ee5c1d993bddf96f40a89f4605a670466503a8aaa7d3452de2a01",
+      "prompt_index": 1,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.0,
+      "truncated_count": 0,
+      "valid_final_box_count": 4
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": true,
+      "completion_count": 4,
+      "completion_lengths": [
+        568,
+        400,
+        910,
+        916
+      ],
+      "correct_count": 0,
+      "eos_count": 4,
+      "mean_completion_length": 698.5,
+      "mixed_reward": false,
+      "prompt_id": "b5ada0549dd82dc43480d742436316ddff373644dd8e8cbe2096428cd1ceec3a",
+      "prompt_index": 2,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.0,
+      "truncated_count": 0,
+      "valid_final_box_count": 4
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": false,
+      "completion_count": 4,
+      "completion_lengths": [
+        390,
+        676,
+        453,
+        1024
+      ],
+      "correct_count": 2,
+      "eos_count": 3,
+      "mean_completion_length": 635.75,
+      "mixed_reward": true,
+      "prompt_id": "34c7b4a7c448f9a64842bac197009175f92dce7c7adf0a2b1c14967e69277efa",
+      "prompt_index": 3,
+      "reward_values": [
+        0.0,
+        1.0,
+        1.0,
+        0.0
+      ],
+      "reward_variance": 0.25,
+      "truncated_count": 1,
+      "valid_final_box_count": 3
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": true,
+      "completion_count": 4,
+      "completion_lengths": [
+        1024,
+        723,
+        306,
+        339
+      ],
+      "correct_count": 0,
+      "eos_count": 3,
+      "mean_completion_length": 598,
+      "mixed_reward": false,
+      "prompt_id": "2cf918f1f38baa67b2bd73f438e564fe0e9d1f07d7d7166ec52d57934608bcf2",
+      "prompt_index": 4,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.0,
+      "truncated_count": 1,
+      "valid_final_box_count": 3
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": false,
+      "completion_count": 4,
+      "completion_lengths": [
+        667,
+        866,
+        849,
+        527
+      ],
+      "correct_count": 1,
+      "eos_count": 4,
+      "mean_completion_length": 727.25,
+      "mixed_reward": true,
+      "prompt_id": "1ee34b542f5c8311b5005d25b8d4a0b12f7d2afa09f0428b1ab268fd5f88811d",
+      "prompt_index": 5,
+      "reward_values": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.1875,
+      "truncated_count": 0,
+      "valid_final_box_count": 4
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": false,
+      "completion_count": 4,
+      "completion_lengths": [
+        659,
+        392,
+        405,
+        618
+      ],
+      "correct_count": 1,
+      "eos_count": 4,
+      "mean_completion_length": 518.5,
+      "mixed_reward": true,
+      "prompt_id": "70a0a1af0e58d4de1cc9d3e33262c7aee67ccde51c4a52a2b87e788f687d6b03",
+      "prompt_index": 6,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "reward_variance": 0.1875,
+      "truncated_count": 0,
+      "valid_final_box_count": 3
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": true,
+      "completion_count": 4,
+      "completion_lengths": [
+        450,
+        572,
+        689,
+        964
+      ],
+      "correct_count": 0,
+      "eos_count": 4,
+      "mean_completion_length": 668.75,
+      "mixed_reward": false,
+      "prompt_id": "639cd507bab50ea30638fedb40e753aa30e94072aabc8395335fc12f066d06ed",
+      "prompt_index": 7,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.0,
+      "truncated_count": 0,
+      "valid_final_box_count": 4
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": true,
+      "completion_count": 4,
+      "completion_lengths": [
+        762,
+        751,
+        739,
+        765
+      ],
+      "correct_count": 0,
+      "eos_count": 4,
+      "mean_completion_length": 754.25,
+      "mixed_reward": false,
+      "prompt_id": "9148ad85f80f33d87893a4fb15b5e1f77c823d6add5de7491dc417924ba0111f",
+      "prompt_index": 8,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.0,
+      "truncated_count": 0,
+      "valid_final_box_count": 4
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": true,
+      "completion_count": 4,
+      "completion_lengths": [
+        496,
+        889,
+        895,
+        657
+      ],
+      "correct_count": 0,
+      "eos_count": 4,
+      "mean_completion_length": 734.25,
+      "mixed_reward": false,
+      "prompt_id": "661ccbb53b18b68364bf47a57175b9791d4ded3eaa70764b93d3a34e35a5cb53",
+      "prompt_index": 9,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.0,
+      "truncated_count": 0,
+      "valid_final_box_count": 4
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": false,
+      "completion_count": 4,
+      "completion_lengths": [
+        553,
+        1024,
+        1024,
+        153
+      ],
+      "correct_count": 1,
+      "eos_count": 2,
+      "mean_completion_length": 688.5,
+      "mixed_reward": true,
+      "prompt_id": "6a7430a585672020134b320fde816bfe75b8189461f573f6ff1ed6cfd3d8b704",
+      "prompt_index": 10,
+      "reward_values": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.1875,
+      "truncated_count": 2,
+      "valid_final_box_count": 2
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": true,
+      "completion_count": 4,
+      "completion_lengths": [
+        586,
+        1024,
+        671,
+        520
+      ],
+      "correct_count": 0,
+      "eos_count": 3,
+      "mean_completion_length": 700.25,
+      "mixed_reward": false,
+      "prompt_id": "cf7c9f42113ba192bb5ba45b180e7fadc90c2404ab7a3d4f082ba28709f575b5",
+      "prompt_index": 11,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.0,
+      "truncated_count": 1,
+      "valid_final_box_count": 3
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": false,
+      "completion_count": 4,
+      "completion_lengths": [
+        533,
+        872,
+        566,
+        512
+      ],
+      "correct_count": 1,
+      "eos_count": 4,
+      "mean_completion_length": 620.75,
+      "mixed_reward": true,
+      "prompt_id": "bd2ef9510c95d35607376b6acc5c0f70d015105dbddcce6e4319ab9f028a5fed",
+      "prompt_index": 12,
+      "reward_values": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.1875,
+      "truncated_count": 0,
+      "valid_final_box_count": 4
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": true,
+      "completion_count": 4,
+      "completion_lengths": [
+        757,
+        747,
+        889,
+        756
+      ],
+      "correct_count": 0,
+      "eos_count": 4,
+      "mean_completion_length": 787.25,
+      "mixed_reward": false,
+      "prompt_id": "6ca8017efc003f1c29304ebddfe6abf13622c75f6b451fc29c68db70d26b2778",
+      "prompt_index": 13,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.0,
+      "truncated_count": 0,
+      "valid_final_box_count": 4
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": false,
+      "completion_count": 4,
+      "completion_lengths": [
+        762,
+        809,
+        1024,
+        786
+      ],
+      "correct_count": 1,
+      "eos_count": 3,
+      "mean_completion_length": 845.25,
+      "mixed_reward": true,
+      "prompt_id": "dcfc016de0e27edf1f51587413a40ae488269278b5ca59004496739c2b716e31",
+      "prompt_index": 14,
+      "reward_values": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.1875,
+      "truncated_count": 1,
+      "valid_final_box_count": 3
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": true,
+      "completion_count": 4,
+      "completion_lengths": [
+        946,
+        924,
+        336,
+        1024
+      ],
+      "correct_count": 0,
+      "eos_count": 3,
+      "mean_completion_length": 807.5,
+      "mixed_reward": false,
+      "prompt_id": "eaa70772ca87ade585ce02a5fcb5cb6dca7ae5546b4eeb90a08182ad6a7f6af0",
+      "prompt_index": 15,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.0,
+      "truncated_count": 1,
+      "valid_final_box_count": 3
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": true,
+      "completion_count": 4,
+      "completion_lengths": [
+        642,
+        891,
+        604,
+        296
+      ],
+      "correct_count": 0,
+      "eos_count": 4,
+      "mean_completion_length": 608.25,
+      "mixed_reward": false,
+      "prompt_id": "0756b794ef9a621a1dd41ff3fca6c7acbbdc93e065e2fe2361e6006462b55c20",
+      "prompt_index": 16,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.0,
+      "truncated_count": 0,
+      "valid_final_box_count": 4
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": true,
+      "completion_count": 4,
+      "completion_lengths": [
+        1024,
+        750,
+        933,
+        1024
+      ],
+      "correct_count": 0,
+      "eos_count": 2,
+      "mean_completion_length": 932.75,
+      "mixed_reward": false,
+      "prompt_id": "218f6b954253698ecf4d23a677f0425125fc83a2e8130f8920790200466ca028",
+      "prompt_index": 17,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.0,
+      "truncated_count": 2,
+      "valid_final_box_count": 2
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": false,
+      "completion_count": 4,
+      "completion_lengths": [
+        160,
+        203,
+        310,
+        204
+      ],
+      "correct_count": 1,
+      "eos_count": 4,
+      "mean_completion_length": 219.25,
+      "mixed_reward": true,
+      "prompt_id": "55a1b32cb6509aa4b6dd42afc136faeb5806dd31edce29b55e7cd4c22c1f6c57",
+      "prompt_index": 18,
+      "reward_values": [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.1875,
+      "truncated_count": 0,
+      "valid_final_box_count": 4
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": true,
+      "completion_count": 4,
+      "completion_lengths": [
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "correct_count": 0,
+      "eos_count": 0,
+      "mean_completion_length": 1024,
+      "mixed_reward": false,
+      "prompt_id": "903db4919f7ee9616f0986a964ec5580e21f6afc4fc29b91f70469d4071af642",
+      "prompt_index": 19,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.0,
+      "truncated_count": 4,
+      "valid_final_box_count": 0
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": false,
+      "completion_count": 4,
+      "completion_lengths": [
+        754,
+        435,
+        737,
+        519
+      ],
+      "correct_count": 1,
+      "eos_count": 4,
+      "mean_completion_length": 611.25,
+      "mixed_reward": true,
+      "prompt_id": "e9f980bf0e314e89073f7546576e731bc950c9dd4caae0a9908807bfb83c2e1c",
+      "prompt_index": 20,
+      "reward_values": [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.1875,
+      "truncated_count": 0,
+      "valid_final_box_count": 4
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": true,
+      "completion_count": 4,
+      "completion_lengths": [
+        514,
+        800,
+        1024,
+        714
+      ],
+      "correct_count": 0,
+      "eos_count": 3,
+      "mean_completion_length": 763,
+      "mixed_reward": false,
+      "prompt_id": "59e82d24f374ccd0fc1ce8a9fb2d8335d3cf7f2ea3fdff1ef621f72955d67e22",
+      "prompt_index": 21,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.0,
+      "truncated_count": 1,
+      "valid_final_box_count": 3
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": true,
+      "completion_count": 4,
+      "completion_lengths": [
+        605,
+        498,
+        426,
+        586
+      ],
+      "correct_count": 0,
+      "eos_count": 4,
+      "mean_completion_length": 528.75,
+      "mixed_reward": false,
+      "prompt_id": "0dfae6296d2f3b0a3ae898cc927bb6ab5f0476afcf967d6601d650c3a16ef769",
+      "prompt_index": 22,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.0,
+      "truncated_count": 0,
+      "valid_final_box_count": 4
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": true,
+      "completion_count": 4,
+      "completion_lengths": [
+        545,
+        698,
+        717,
+        488
+      ],
+      "correct_count": 0,
+      "eos_count": 4,
+      "mean_completion_length": 612,
+      "mixed_reward": false,
+      "prompt_id": "9754f4163367ce4ac5916d8c7ae2fd93b1a31bba922fad0b12b27566e81d5831",
+      "prompt_index": 23,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.0,
+      "truncated_count": 0,
+      "valid_final_box_count": 4
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": true,
+      "completion_count": 4,
+      "completion_lengths": [
+        1024,
+        1024,
+        1024,
+        693
+      ],
+      "correct_count": 0,
+      "eos_count": 1,
+      "mean_completion_length": 941.25,
+      "mixed_reward": false,
+      "prompt_id": "970e8c691297b5312449914ce3414ec95d9c9473903dd8dfe7770a0e0390eebe",
+      "prompt_index": 24,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.0,
+      "truncated_count": 3,
+      "valid_final_box_count": 1
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": true,
+      "completion_count": 4,
+      "completion_lengths": [
+        1024,
+        924,
+        1024,
+        646
+      ],
+      "correct_count": 0,
+      "eos_count": 2,
+      "mean_completion_length": 904.5,
+      "mixed_reward": false,
+      "prompt_id": "9f62de00762856fe4ba145a7125cccac87c6e3b9cbb39f1bab39c63fd1e623a0",
+      "prompt_index": 25,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.0,
+      "truncated_count": 2,
+      "valid_final_box_count": 2
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": true,
+      "completion_count": 4,
+      "completion_lengths": [
+        1024,
+        1024,
+        1024,
+        1024
+      ],
+      "correct_count": 0,
+      "eos_count": 0,
+      "mean_completion_length": 1024,
+      "mixed_reward": false,
+      "prompt_id": "6a65e6beae21e8ac824eba38c9fdc7929636ef44d201b19df5f1c497ee31abed",
+      "prompt_index": 26,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.0,
+      "truncated_count": 4,
+      "valid_final_box_count": 0
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": true,
+      "completion_count": 4,
+      "completion_lengths": [
+        652,
+        729,
+        669,
+        775
+      ],
+      "correct_count": 0,
+      "eos_count": 4,
+      "mean_completion_length": 706.25,
+      "mixed_reward": false,
+      "prompt_id": "37d3b48205a4848b09cbfe3ce2251130e1576aff8fe7d78a2b3f37683c2cc65b",
+      "prompt_index": 27,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.0,
+      "truncated_count": 0,
+      "valid_final_box_count": 4
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": true,
+      "completion_count": 4,
+      "completion_lengths": [
+        1024,
+        341,
+        813,
+        434
+      ],
+      "correct_count": 0,
+      "eos_count": 3,
+      "mean_completion_length": 653,
+      "mixed_reward": false,
+      "prompt_id": "e8279b3efced9a16a4aaa6da9efcacea9a71b5d83830174bc60fa8b2de6de8f1",
+      "prompt_index": 28,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.0,
+      "truncated_count": 1,
+      "valid_final_box_count": 3
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": true,
+      "completion_count": 4,
+      "completion_lengths": [
+        958,
+        995,
+        1024,
+        761
+      ],
+      "correct_count": 0,
+      "eos_count": 3,
+      "mean_completion_length": 934.5,
+      "mixed_reward": false,
+      "prompt_id": "2461343cb23e8cabfbf8b5130d6f1097138b67fb6de368ce2e7699add1910332",
+      "prompt_index": 29,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.0,
+      "truncated_count": 1,
+      "valid_final_box_count": 3
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": true,
+      "completion_count": 4,
+      "completion_lengths": [
+        444,
+        538,
+        288,
+        391
+      ],
+      "correct_count": 0,
+      "eos_count": 4,
+      "mean_completion_length": 415.25,
+      "mixed_reward": false,
+      "prompt_id": "b2a9088294ae7c30a31287d1183561de3b166d67da4e8bbecd3294f3e9f751fd",
+      "prompt_index": 30,
+      "reward_values": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.0,
+      "truncated_count": 0,
+      "valid_final_box_count": 4
+    },
+    {
+      "all_one_reward": false,
+      "all_zero_reward": false,
+      "completion_count": 4,
+      "completion_lengths": [
+        617,
+        676,
+        589,
+        791
+      ],
+      "correct_count": 1,
+      "eos_count": 4,
+      "mean_completion_length": 668.25,
+      "mixed_reward": true,
+      "prompt_id": "f2b6b132c96ca109a58eeb579f465e85a6a9bfbdc637ccf5cb51320cb17b28d8",
+      "prompt_index": 31,
+      "reward_values": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "reward_variance": 0.1875,
+      "truncated_count": 0,
+      "valid_final_box_count": 4
+    }
+  ],
+  "integrity_recount": {
+    "completion_records_have_prompt_id_text_token_ids_reward_checker_eos_truncation": true,
+    "completions": 128,
+    "prompt_groups": 32,
+    "recomputed_prompt_ids_sha256": "0ab6b16559db37f6ff84bb312e18c29046063fac32fae026d5b1265037d03c9a",
+    "recorded_generated_token_total": 90294,
+    "recorded_metric_token_total": 90294,
+    "token_ids_recount_total": 90294,
+    "unique_prompt_ids": 32
+  },
+  "limits": [
+    "One post-hoc, fixed cohort of 32 TRAIN prompts; prompt groups, not 128 completions, are the independent sampling units.",
+    "No causal intervention varied the token cap; difficulty, response strategy, truncation, reward, and format can co-vary.",
+    "A truncated completion having no valid final box does not show that additional tokens would have yielded one.",
+    "No policy update was performed; this is not evidence of GRPO learning or capability improvement.",
+    "Manual failure-mode labels are qualitative and not independently adjudicated; quotes are short audit cues.",
+    "The raw result stores prompt IDs but not the original prompt strings; task-level quote interpretation is therefore limited to the completion's own restatement.",
+    "All examples are one selected TRAIN cohort for one 0.5B model and one sampling configuration; no population or model-family generality is established."
+  ],
+  "metrics": {
+    "completion_length_tokens": {
+      "max": 1024,
+      "mean": 705.421875,
+      "median": 715.5,
+      "min": 153,
+      "q25": 525.25,
+      "q75": 924.0
+    },
+    "eos_reached": {
+      "denominator": 128,
+      "numerator": 102,
+      "rate": 0.796875
+    },
+    "generated_tokens": 90294,
+    "independent_task_success": {
+      "denominator": 128,
+      "numerator": 10,
+      "rate": 0.078125
+    },
+    "mean_within_group_reward_variance_population": 0.0546875,
+    "termination_conditional_rates": {
+      "all_four_truncated_prompt_groups": 2,
+      "eos_valid_final_box": 0.9901960784313726,
+      "prompt_groups_with_any_truncation": 0.46875,
+      "token_cap_valid_final_box": 0.0,
+      "valid_format_failures_that_are_truncated": 0.9629629629629629
+    },
+    "training_reward_group_mixed_count": 9,
+    "training_reward_group_variance_by_group": [
+      0.0,
+      0.0,
+      0.0,
+      0.25,
+      0.0,
+      0.1875,
+      0.1875,
+      0.0,
+      0.0,
+      0.0,
+      0.1875,
+      0.0,
+      0.1875,
+      0.0,
+      0.1875,
+      0.0,
+      0.0,
+      0.0,
+      0.1875,
+      0.0,
+      0.1875,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.1875
+    ],
+    "training_reward_independent_checker_disagreement": {
+      "denominator": 128,
+      "numerator": 0
+    },
+    "truncated": {
+      "denominator": 128,
+      "numerator": 26,
+      "rate": 0.203125
+    },
+    "valid_final_box": {
+      "denominator": 128,
+      "numerator": 101,
+      "rate": 0.7890625
+    }
+  },
+  "provenance_audit": {
+    "checked_in_protocol_sha256": "ab362b7053ef56c274ab35be76f256154df32afddd2f4a4ed4d40e57e7196765",
+    "elapsed_seconds_difference": 0.15997934341430664,
+    "findings": [
+      {
+        "difference_seconds": 0.15997934341430664,
+        "explanation": "GateJournal.finalize writes the result JSON before writing the terminal journal state, so the journal elapsed value includes the intervening finalization time. Neither source artifact was changed.",
+        "result_json_seconds": 1353.7284445762634,
+        "severity": "reported_discrepancy",
+        "terminal_journal_seconds": 1353.8884239196777,
+        "type": "finalization_elapsed_offset"
+      }
+    ],
+    "raw_inputs_modified": false,
+    "result_and_journal_identity_match": true,
+    "result_matches_partial_jsonl": true,
+    "source_journal_sha256": "646ead42f473dd207f56163fbffef74cd0cd1b00cad655796eead0bd88e6e9e7",
+    "source_partial_jsonl_sha256": "f45513c90c87d253babd07b27f4ad8f967213dcc8808554831d37265b3606d51",
+    "source_result_sha256": "7b41f9a9e5e92847269fe7eb63ce55110469146163bdf8dadfd1c5d64a7243fe"
+  },
+  "reward_and_length": {
+    "completion_level_descriptive_only": {
+      "eos_mean_length": 624.2156862745098,
+      "invalid_box_mean_length": 1000.5925925925926,
+      "reward_0_count": 118,
+      "reward_0_mean_length": 718.4491525423729,
+      "reward_1_count": 10,
+      "reward_1_mean_length": 551.7,
+      "truncated_mean_length": 1024,
+      "valid_box_mean_length": 626.5148514851485
+    },
+    "group_level_descriptive_only": {
+      "mixed_group_correct_minus_incorrect_length": {
+        "groups_correct_responses_longer": 1,
+        "groups_correct_responses_shorter": 8,
+        "mean_difference": -91.53703703703704,
+        "median_difference": -111,
+        "mixed_groups_with_both_outcomes": 9,
+        "per_group_values": [
+          {
+            "correct_minus_incorrect_length": -142.5,
+            "mean_correct_length": 564.5,
+            "mean_incorrect_length": 707,
+            "prompt_id": "34c7b4a7c448f9a64842bac197009175f92dce7c7adf0a2b1c14967e69277efa",
+            "prompt_index": 3,
+            "truncated_count": 1
+          },
+          {
+            "correct_minus_incorrect_length": -80.33333333333337,
+            "mean_correct_length": 667,
+            "mean_incorrect_length": 747.3333333333334,
+            "prompt_id": "1ee34b542f5c8311b5005d25b8d4a0b12f7d2afa09f0428b1ab268fd5f88811d",
+            "prompt_index": 5,
+            "truncated_count": 0
+          },
+          {
+            "correct_minus_incorrect_length": 132.66666666666669,
+            "mean_correct_length": 618,
+            "mean_incorrect_length": 485.3333333333333,
+            "prompt_id": "70a0a1af0e58d4de1cc9d3e33262c7aee67ccde51c4a52a2b87e788f687d6b03",
+            "prompt_index": 6,
+            "truncated_count": 0
+          },
+          {
+            "correct_minus_incorrect_length": -180.66666666666663,
+            "mean_correct_length": 553,
+            "mean_incorrect_length": 733.6666666666666,
+            "prompt_id": "6a7430a585672020134b320fde816bfe75b8189461f573f6ff1ed6cfd3d8b704",
+            "prompt_index": 10,
+            "truncated_count": 2
+          },
+          {
+            "correct_minus_incorrect_length": -117,
+            "mean_correct_length": 533,
+            "mean_incorrect_length": 650,
+            "prompt_id": "bd2ef9510c95d35607376b6acc5c0f70d015105dbddcce6e4319ab9f028a5fed",
+            "prompt_index": 12,
+            "truncated_count": 0
+          },
+          {
+            "correct_minus_incorrect_length": -111,
+            "mean_correct_length": 762,
+            "mean_incorrect_length": 873,
+            "prompt_id": "dcfc016de0e27edf1f51587413a40ae488269278b5ca59004496739c2b716e31",
+            "prompt_index": 14,
+            "truncated_count": 1
+          },
+          {
+            "correct_minus_incorrect_length": -21.666666666666657,
+            "mean_correct_length": 203,
+            "mean_incorrect_length": 224.66666666666666,
+            "prompt_id": "55a1b32cb6509aa4b6dd42afc136faeb5806dd31edce29b55e7cd4c22c1f6c57",
+            "prompt_index": 18,
+            "truncated_count": 0
+          },
+          {
+            "correct_minus_incorrect_length": -235,
+            "mean_correct_length": 435,
+            "mean_incorrect_length": 670,
+            "prompt_id": "e9f980bf0e314e89073f7546576e731bc950c9dd4caae0a9908807bfb83c2e1c",
+            "prompt_index": 20,
+            "truncated_count": 0
+          },
+          {
+            "correct_minus_incorrect_length": -68.33333333333337,
+            "mean_correct_length": 617,
+            "mean_incorrect_length": 685.3333333333334,
+            "prompt_id": "f2b6b132c96ca109a58eeb579f465e85a6a9bfbdc637ccf5cb51320cb17b28d8",
+            "prompt_index": 31,
+            "truncated_count": 0
+          }
+        ]
+      },
+      "reward_group_types": {
+        "all_one": {
+          "all_four_truncated_group_count": 0,
+          "group_count": 0,
+          "groups_with_any_truncation": 0,
+          "mean_truncations_per_group": null,
+          "truncated_completion_count": 0
+        },
+        "all_zero": {
+          "all_four_truncated_group_count": 2,
+          "group_count": 23,
+          "groups_with_any_truncation": 12,
+          "mean_truncations_per_group": 0.9565217391304348,
+          "truncated_completion_count": 22
+        },
+        "mixed": {
+          "all_four_truncated_group_count": 0,
+          "group_count": 9,
+          "groups_with_any_truncation": 3,
+          "mean_truncations_per_group": 0.4444444444444444,
+          "truncated_completion_count": 4
+        }
+      }
+    }
+  },
+  "study": {
+    "completion_count": 128,
+    "completions_per_prompt": 4,
+    "dataset": "trl-lib/DeepMath-103K",
+    "dataset_revision": "066c50a88d4e14cefc056e31111db2dba17f6c68",
+    "dataset_sha256": "e0c5b2fc11978d735a7710273920676977b533e185284044c3eafa63a24479d7",
+    "dataset_split": "train",
+    "frozen_main_revision_at_runbook": "0c2ca5953aa3dc2b21fa9d6aa3049ae680ff1ea6",
+    "math500_loaded": false,
+    "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "model_weights_sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "optimizer_updates": 0,
+    "prompt_count": 32,
+    "protocol_id": "qwen25_deepmath_grpo_math500_v7",
+    "protocol_lock_sha256": "ab362b7053ef56c274ab35be76f256154df32afddd2f4a4ed4d40e57e7196765",
+    "recomputed_prompt_ids_sha256": "0ab6b16559db37f6ff84bb312e18c29046063fac32fae026d5b1265037d03c9a",
+    "recorded_prompt_ids_sha256": "0ab6b16559db37f6ff84bb312e18c29046063fac32fae026d5b1265037d03c9a",
+    "resource_budget": {
+      "max_generated_tokens": 131072,
+      "max_wall_seconds": 7200
+    },
+    "runner_git_revision": "95316981b8d654a60bb5d22a18bf9e5e8c4cc26e",
+    "runtime": {
+      "cuda_driver_version": "580.82.07",
+      "cuda_runtime": "12.8",
+      "gpu_compute_capability": [
+        7,
+        5
+      ],
+      "gpu_name": "Tesla T4",
+      "gpu_total_vram_bytes": 15637086208,
+      "maximum_peak_reserved_vram_bytes": 14073377587,
+      "pinned_packages": {
+        "accelerate": "1.13.0",
+        "antlr4-python3-runtime": "4.13.2",
+        "datasets": "4.8.4",
+        "latex2sympy2-extended": "1.11.0",
+        "math-verify": "0.9.0",
+        "pyarrow": "22.0.0",
+        "torch": "2.11.0+cu128",
+        "transformers": "5.5.4",
+        "trl": "1.1.0"
+      },
+      "python": "3.12.13",
+      "torch": "2.11.0+cu128"
+    },
+    "sampling": {
+      "completions": 4,
+      "do_sample": true,
+      "max_input_tokens": 512,
+      "max_new_tokens": 1024,
+      "system_prompt": null,
+      "temperature": 0.7,
+      "top_p": 0.95
+    },
+    "seed": 20261012,
+    "source_result_file": "Drive-only raw evidence; not committed",
+    "source_result_sha256": "7b41f9a9e5e92847269fe7eb63ce55110469146163bdf8dadfd1c5d64a7243fe"
+  }
+}
