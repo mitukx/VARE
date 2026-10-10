@@ -1,0 +1,33 @@
+{
+  "created_utc": "2026-10-10T23:48:04.511042+00:00",
+  "rvl_commit": "ba94a9e513fdaf882cde091766007a88b9edaeee",
+  "files": [
+    {
+      "path": "work/RVL-shallow/src/rvl_systems/lab/tool_agent.py",
+      "sha256": "6dfeb26533d44cd2f9ef60df2f1acccf0736943163125392508da296b753d58c"
+    },
+    {
+      "path": "work/RVL-shallow/src/rvl_systems/lab/serving.py",
+      "sha256": "3ee9dbf5dbfc5c1119a80808250f392ccfbbcc0ecbfb300319d6564a2a61392c"
+    },
+    {
+      "path": "work/RVL-shallow/src/rvl_systems/rollout.py",
+      "sha256": "d73bad06e4ae884e37750b0dfba38b12cefe57bfce86c2f83b200a4d5d08dade"
+    },
+    {
+      "path": "work/mlx-env/lib/python3.12/site-packages/mlx_lm/models/llama.py",
+      "sha256": "dfb656511e6740781cd0563f7994a78b3404c199b9aebaa2fbca28a19e280891"
+    },
+    {
+      "path": "work/mlx-env/lib/python3.12/site-packages/mlx_lm/models/cache.py",
+      "sha256": "c96cb169fd5e0ec4584a162dd61dc62ab08ccdca03a9850f8a491ce6809145e6"
+    },
+    {
+      "path": "work/mlx-env/lib/python3.12/site-packages/mlx_lm/utils.py",
+      "sha256": "d442babbfd891bfa61ec9c6feead9024e206a333a357c5e4a07554c4ea138965"
+    }
+  ],
+  "unchanged_upstream_agent": true,
+  "baseline": "existing CodingToolAgent and ServingLease + experimental local backend",
+  "limits": "No learner, same weights at two sampling temperatures, sequential unbatched M1 Pro profiling; not evidence of learned checkpoint drift or CUDA throughput."
+}

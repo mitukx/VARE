@@ -1,5 +1,15 @@
 # Current evidence gaps
 
+**Update 2026-10-11 — local collector preflight stopped:** the unchanged RVL
+model-driven collector ran one frozen Mistral-7B 4-bit/HumanEval/6 diagnostic.
+Old-policy sampled-logprob reconstruction differed by 0.0432244 versus its
+0.002 gate; no repaired group reached a learner. Four episodes produced no edits
+or public tests, leaving feedback replay, complete repair cost and learning
+effects untested. Same weights at two temperatures do not establish checkpoint
+co-evolution. Stop this model/task attempt without tuning; preserve the original
+research-pilot gates. The 74 passing record-audit checks are bookkeeping, not a
+successful experiment. See the [packet](../experiments/interactive_collector_preflight_v2/README.md).
+
 **Update 2026-10-11 — bounded review and selected collector question:** the
 same-epoch prepare overlap in RVL PR #91 was reproduced: activation returned
 success for an artifact whose SHA differed from its prepare ACK. Digest-bound

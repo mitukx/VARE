@@ -1,0 +1,53 @@
+{
+  "id": "interactive-collector-preflight-v2",
+  "frozen_utc": "2026-10-10T23:40:56.147491+00:00",
+  "scope": "Engineering preflight in unchanged RVL CodingToolAgent, not the 32-task research pilot; no training/capability/scaling claim",
+  "rvl_commit": "ba94a9e513fdaf882cde091766007a88b9edaeee",
+  "model": "mlx-community/Mistral-7B-Instruct-v0.3-4bit",
+  "model_revision": "a4b8f870474b0eb527f466a03fbc187830d271f5",
+  "task": "HumanEval/6",
+  "task_sha256": "47017b9b48a130d05b3d6a0502e004146a973d4fae1fee88950bee0129b81b95",
+  "group_size": 2,
+  "max_steps": 6,
+  "max_new_tokens": 256,
+  "max_runtime_s": 600,
+  "donor_temperature": 1.0,
+  "target_temperature": 0.8,
+  "policy_change": "temperature-only diagnostic; weights fixed, no learned checkpoint update",
+  "feedback_weak": "first upstream assertion only, scalar pass/fail",
+  "feedback_strong": "all three upstream assertions, scalar pass/fail",
+  "hidden_check": "separate balanced-parentheses cases generated before model inference, not exposed in prompt or feedback",
+  "donor_seeds": [
+    20261011,
+    20261111
+  ],
+  "fresh_seeds": [
+    20262011,
+    20262111
+  ],
+  "repair_seeds": [
+    20263011,
+    20263111
+  ],
+  "acceptance_seeds": [
+    20264011,
+    20264111
+  ],
+  "ordering": [
+    "donors",
+    "fresh",
+    "repair"
+  ],
+  "conformance": {
+    "sampled_logprob_reconstruction_max_abs_error": 0.002,
+    "numeric_coupling_max_abs_probability_error": 1e-07,
+    "feedback_or_action_prompt_mismatch": "discard all remaining donor actions; do not resume reuse",
+    "complete_group": "both members retained, no reward/length/completion selection",
+    "no_unused_lineage": "abort",
+    "insufficient_budget": "retain unfinished work, no extra attempt",
+    "no_observation_disagreement": "report feedback-repair branch untested; do not alter verifier/task"
+  },
+  "cost_accounting": "charge donor generation to both async-discard baseline and repair, separately report fresh-from-scratch; charge load, q/p reconstruction, target prefill, decoding, feedback, all invalid/unfinished calls; Metal wall time is not CUDA GPU-seconds",
+  "decision": "Pass only establishes collector/preflight feasibility. Cannot pass original >=15% GPU-second and <=1pp capability-loss gate. Reconstruction failure blocks exact-reuse integration; no tuned rerun. No model/task variants after outcomes.",
+  "paid_spend_usd": 0
+}

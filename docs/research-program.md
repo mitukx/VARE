@@ -21,12 +21,30 @@ They expose three assumptions: correct residual sampling, donor independence
 from both target learners, and feedback replay. They do not demonstrate a novel
 method, model gain, or net efficiency improvement.
 
-Decision: CONTINUE for one integration-and-cost feasibility cycle in an existing
-resettable multi-turn collector. No additional toy variants or model campaign
-from the current checks alone. The next gate must charge donor generation,
-historical logits, target prefill, replay/restoration and full group completion;
-no net practical savings or no auditable unused-donor lineage stops this attempt.
-Keep the independent final task checker separate from evolving feedback.
+The selected integration cycle has now executed one frozen local 7B preflight
+in the unchanged RVL collector. Decision: **STOP this implementation attempt**.
+Cached-decoding versus full-sequence sampled-logprob reconstruction differed by
+0.0432244, exceeding the predeclared 0.002 tolerance. Repair stopped before its
+first action was admitted. Four episodes on one task produced no edits or public
+tests, so feedback repair and useful task outcomes remain untested. See the
+[retained packet](../experiments/interactive_collector_preflight_v2/README.md).
+
+This fixed-weight temperature diagnostic used 226.39 seconds of local M1 Pro
+process wall time with Metal inference and zero paid compute; it did not measure
+pure GPU-seconds, complete repair cost, a learned-checkpoint update or learning
+improvement. No threshold/format rescue or rerun of this opened pairing. The
+prior 32-task research pilot and its 15% cost/1-point non-inferiority gates are
+unchanged and unexecuted. Require materially different, independently justified
+feasibility evidence before another model/task screen. Do not substitute more
+finite examples or claim a new method from this negative preflight.
+
+The selected scientific question remains open. The largest gap is an integrated
+collector that supplies useful real-model learning data with a measured net
+cost/capability trade-off. A later attempt must charge donor creation, historical
+logits, target prefill, replay/restoration and full group completion; retain a
+final task checker independent of evolving training-visible feedback. A failed
+local reconstruction tolerance neither proves broad impossibility nor establishes
+production incidence or task degradation.
 
 Each cycle: inspect latest evidence; choose one unresolved problem; freeze
 success/failure rules; perform one decisive verification; retain code/raw data;

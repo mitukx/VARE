@@ -17,6 +17,12 @@ PR #91's bounded same-epoch prepare review is completed at RVL `ba94a9e`.
 Do not reopen neighboring microbug searches without new operational evidence or
 an explicit request. No PR merge without the owner's approval.
 
+The frozen `interactive_collector_preflight_v2` Mistral/HumanEval/6 attempt stopped
+on its probability-reconstruction gate. Preserve its failed observation; do not
+tune its threshold, format, prompt or opened task. It establishes no successful
+feedback repair, learning gain or net efficiency improvement. Follow the current
+program before another model/task screen.
+
 ## Mission
 
 VARE exists to study **post-training signals and policy improvement under limited compute**. The system should make preference/reward signals auditable, test learning objectives and updates against independent measurements, detect when policy or verifier state has become stale, and spend scarce learning compute only when the expected information or capability gain justifies it.
