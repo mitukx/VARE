@@ -1,0 +1,12 @@
+{
+  "artifact": "pinned model tokenizer_config.json SHA-256 audit",
+  "retrieved_at_utc": "2026-10-10T19:29:07.024561+00:00",
+  "source_url": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/7ae557604adf67be50417f59c2c2f167def9a775/tokenizer_config.json",
+  "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "sha256_observed": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+  "protocol_v3_expected_sha256": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+  "runner_v3_expected_sha256": "5b5d4f65d0acd7b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+  "conclusion": "Downloaded bytes match the v3 protocol and all other six locked model-file hashes; the v3 runner constant contains a one-hex-digit transcription error. Protocol v1-v3 remain immutable; protocol v4 corrects the runner and records this audit.",
+  "retrieval_command": "curl --fail --location --retry 2 --silent --show-error 'https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/7ae557604adf67be50417f59c2c2f167def9a775/tokenizer_config.json' --output tokenizer_config.json && sha256sum tokenizer_config.json",
+  "bytes_committed": false
+}
