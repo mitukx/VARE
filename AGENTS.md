@@ -2,6 +2,21 @@
 
 This file is the operational contract for AI agents and human contributors working in this repository. Read it before changing code, experiments, benchmarks, documentation, or claims.
 
+## Governing research direction (owner directive, 2026-10-11)
+
+The long-term objective is technically novel, empirically grounded methods and
+systems that improve capability, reliability, or efficiency of frontier-scale
+reinforcement learning and autonomous agents. Select problems for their research
+significance and relevance to large-scale post-training. Current hardware limits
+validation, not topic selection; the older CPU-first wording below does not
+restrict the research agenda. Preserve all retired cohorts and negative decisions.
+Do not convert a correctness fix or finite demonstration into a capability or
+novel-method claim. Follow [the current program](docs/research-program.md).
+
+PR #91's bounded same-epoch prepare review is completed at RVL `ba94a9e`.
+Do not reopen neighboring microbug searches without new operational evidence or
+an explicit request. No PR merge without the owner's approval.
+
 ## Mission
 
 VARE exists to study **post-training signals and policy improvement under limited compute**. The system should make preference/reward signals auditable, test learning objectives and updates against independent measurements, detect when policy or verifier state has become stale, and spend scarce learning compute only when the expected information or capability gain justifies it.

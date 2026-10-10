@@ -1,5 +1,21 @@
 # Current evidence gaps
 
+**Update 2026-10-11 — bounded review and selected collector question:** the
+same-epoch prepare overlap in RVL PR #91 was reproduced: activation returned
+success for an artifact whose SHA differed from its prepare ACK. Digest-bound
+activation and coordinator serialization at RVL `ba94a9e` reject the mismatch;
+all four CI workflows pass and the PR remains unmerged. See the
+[review packet](../experiments/verifier_same_epoch_review_v2/technical-report.md).
+The next question is distribution-correct reuse of unconsumed interactive groups
+under policy/feedback updates. Exact finite-law counterexamples and an unchanged
+RVL tensor-trainer connection isolate conditional cache dependence and observation
+drift; they are prerequisites, not novel-method/capability evidence. One real
+collector integration-and-cost gate is selected; no additional toy variants or
+retired cohorts are authorized. See the
+[research plan](../experiments/interactive_rollout_reuse_v1/research-plan.md) and
+[program](research-program.md).
+
+
 **2026-10-11 — verifier prepare commit fencing:** a locally frozen, event-controlled TCP study on RVL `27ebf7f` reproduces old asynchronous prepare continuations overwriting newer deployment state. In the same-version takeover case, the coordinator returns success for the wrong artifact digest and reward; restart preserves the mismatch. The minimal post-load revalidation patch passes all five primary cases and 22 deployment/RPC/routing tests. A separately frozen two-outcome tensor integration reaches the unchanged RVL `train_step` and reverses the baseline loss gradient at zero behavior-policy mismatch; this is controlled trainer-path evidence, not pretrained-model capability or observed production impact. See the [technical report and raw packet](../experiments/verifier_prepare_fencing_v1/technical-report.md) and [RVL draft PR #91](https://github.com/mitukx/Recursive-Verification-Lag/pull/91). The fix uses established fencing principles; no new RL algorithm or scaling improvement is claimed. Outside human review remains open.
 
 **Stage 0 research gate (2026-10-11):** no new training or GPU experiment was admitted. The fixed-rollout drift signal in OpenBookQA is reproducible from retained training metrics, but it is not causal, the task pair is retired, and current work directly studies off-policy GRPO reuse and collapse. Verifier-shift and preference-position candidates also overlap existing literature or retired VARE lines. See the [focused gate report](stage0-research-gate-2026-10-11.md); no capability or novelty claim is made.

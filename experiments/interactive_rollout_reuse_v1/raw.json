@@ -1,0 +1,337 @@
+{
+  "adaptive": [
+    {
+      "consumed": {
+        "(0, 0)": {
+          "fraction": "9/10",
+          "value": 0.9
+        },
+        "(0, 1)": {
+          "fraction": "1/10",
+          "value": 0.1
+        },
+        "(1, 0)": {
+          "fraction": "0",
+          "value": 0.0
+        },
+        "(1, 1)": {
+          "fraction": "0",
+          "value": 0.0
+        }
+      },
+      "consumed_group_update": {
+        "fraction": "1/20",
+        "value": 0.05
+      },
+      "consumed_tv": {
+        "fraction": "1/10",
+        "value": 0.1
+      },
+      "fresh_group_update": {
+        "fraction": "9/100",
+        "value": 0.09
+      },
+      "independent": {
+        "(0, 0)": {
+          "fraction": "81/100",
+          "value": 0.81
+        },
+        "(0, 1)": {
+          "fraction": "9/100",
+          "value": 0.09
+        },
+        "(1, 0)": {
+          "fraction": "9/100",
+          "value": 0.09
+        },
+        "(1, 1)": {
+          "fraction": "1/100",
+          "value": 0.01
+        }
+      },
+      "independent_group_update": {
+        "fraction": "9/100",
+        "value": 0.09
+      },
+      "independent_tv": {
+        "fraction": "0",
+        "value": 0.0
+      },
+      "p": [
+        {
+          "fraction": "9/10",
+          "value": 0.9
+        },
+        {
+          "fraction": "1/10",
+          "value": 0.1
+        }
+      ],
+      "selected": 0,
+      "target": {
+        "(0, 0)": {
+          "fraction": "81/100",
+          "value": 0.81
+        },
+        "(0, 1)": {
+          "fraction": "9/100",
+          "value": 0.09
+        },
+        "(1, 0)": {
+          "fraction": "9/100",
+          "value": 0.09
+        },
+        "(1, 1)": {
+          "fraction": "1/100",
+          "value": 0.01
+        }
+      }
+    },
+    {
+      "consumed": {
+        "(0, 0)": {
+          "fraction": "0",
+          "value": 0.0
+        },
+        "(0, 1)": {
+          "fraction": "0",
+          "value": 0.0
+        },
+        "(1, 0)": {
+          "fraction": "1/10",
+          "value": 0.1
+        },
+        "(1, 1)": {
+          "fraction": "9/10",
+          "value": 0.9
+        }
+      },
+      "consumed_group_update": {
+        "fraction": "1/20",
+        "value": 0.05
+      },
+      "consumed_tv": {
+        "fraction": "1/10",
+        "value": 0.1
+      },
+      "fresh_group_update": {
+        "fraction": "9/100",
+        "value": 0.09
+      },
+      "independent": {
+        "(0, 0)": {
+          "fraction": "1/100",
+          "value": 0.01
+        },
+        "(0, 1)": {
+          "fraction": "9/100",
+          "value": 0.09
+        },
+        "(1, 0)": {
+          "fraction": "9/100",
+          "value": 0.09
+        },
+        "(1, 1)": {
+          "fraction": "81/100",
+          "value": 0.81
+        }
+      },
+      "independent_group_update": {
+        "fraction": "9/100",
+        "value": 0.09
+      },
+      "independent_tv": {
+        "fraction": "0",
+        "value": 0.0
+      },
+      "p": [
+        {
+          "fraction": "1/10",
+          "value": 0.1
+        },
+        {
+          "fraction": "9/10",
+          "value": 0.9
+        }
+      ],
+      "selected": 1,
+      "target": {
+        "(0, 0)": {
+          "fraction": "1/100",
+          "value": 0.01
+        },
+        "(0, 1)": {
+          "fraction": "9/100",
+          "value": 0.09
+        },
+        "(1, 0)": {
+          "fraction": "9/100",
+          "value": 0.09
+        },
+        "(1, 1)": {
+          "fraction": "81/100",
+          "value": 0.81
+        }
+      }
+    }
+  ],
+  "checks": {
+    "adaptive_counterexample": true,
+    "feedback_repair_exact": true,
+    "independent_donor_exact": true,
+    "naive_counterexample": true,
+    "pinned_source_sanity": true,
+    "residual_exact": true
+  },
+  "exogenous": {
+    "fresh_group_update": {
+      "fraction": "9/100",
+      "value": 0.09
+    },
+    "naive_group_update": {
+      "fraction": "369/2500",
+      "value": 0.1476
+    },
+    "naive_law": {
+      "0": {
+        "fraction": "9/50",
+        "value": 0.18
+      },
+      "1": {
+        "fraction": "41/50",
+        "value": 0.82
+      }
+    },
+    "naive_tv": {
+      "fraction": "2/25",
+      "value": 0.08
+    },
+    "residual_law": {
+      "0": {
+        "fraction": "1/10",
+        "value": 0.1
+      },
+      "1": {
+        "fraction": "9/10",
+        "value": 0.9
+      }
+    },
+    "residual_tv": {
+      "fraction": "0",
+      "value": 0.0
+    }
+  },
+  "feedback": {
+    "expected_regenerated_action_calls": {
+      "fraction": "1/2",
+      "value": 0.5
+    },
+    "fresh": {
+      "(0, 0, 0)": {
+        "fraction": "2/5",
+        "value": 0.4
+      },
+      "(0, 0, 1)": {
+        "fraction": "1/10",
+        "value": 0.1
+      },
+      "(1, 1, 0)": {
+        "fraction": "1/20",
+        "value": 0.05
+      },
+      "(1, 1, 1)": {
+        "fraction": "9/20",
+        "value": 0.45
+      }
+    },
+    "fresh_action_calls": 2,
+    "fresh_reward": {
+      "fraction": "11/20",
+      "value": 0.55
+    },
+    "note": "Action calls only; excludes feedback re-execution, snapshots, prefill, donor generation, batching. No wall-clock speedup.",
+    "old": {
+      "(0, 0, 0)": {
+        "fraction": "2/5",
+        "value": 0.4
+      },
+      "(0, 0, 1)": {
+        "fraction": "1/10",
+        "value": 0.1
+      },
+      "(1, 0, 0)": {
+        "fraction": "2/5",
+        "value": 0.4
+      },
+      "(1, 0, 1)": {
+        "fraction": "1/10",
+        "value": 0.1
+      }
+    },
+    "relabel_reward": {
+      "fraction": "1/5",
+      "value": 0.2
+    },
+    "relabel_tv": {
+      "fraction": "1/2",
+      "value": 0.5
+    },
+    "repair_reward": {
+      "fraction": "11/20",
+      "value": 0.55
+    },
+    "repair_tv": {
+      "fraction": "0",
+      "value": 0.0
+    },
+    "repaired": {
+      "(0, 0, 0)": {
+        "fraction": "2/5",
+        "value": 0.4
+      },
+      "(0, 0, 1)": {
+        "fraction": "1/10",
+        "value": 0.1
+      },
+      "(1, 1, 0)": {
+        "fraction": "1/20",
+        "value": 0.05
+      },
+      "(1, 1, 1)": {
+        "fraction": "9/20",
+        "value": 0.45
+      }
+    }
+  },
+  "pass": true,
+  "runtime": {
+    "device": "cpu",
+    "elapsed_seconds": 1.1115487909992225,
+    "python": "3.12.12",
+    "torch": "2.9.1"
+  },
+  "source_sanity": {
+    "absolute_error": 0.00024000000000001798,
+    "conditional_acceptance": {
+      "0": 0.11092503366085438,
+      "1": 1.0
+    },
+    "empirical_law": [
+      0.18024,
+      0.81976
+    ],
+    "function": "spec_cut",
+    "limitation": "Imported acceptance only; target continuation simulated; no model, learner, Ray or vLLM.",
+    "predicted_law": [
+      0.18,
+      0.82
+    ],
+    "samples": 200000,
+    "seeds": {
+      "acceptance": 20261012,
+      "continuation": 20261013,
+      "draft": 20261011
+    },
+    "sha256": "7e432a04c1de8844d4eb4ba85a59f347f344b4e5669c834d7dbe2f99f189b0c5"
+  }
+}

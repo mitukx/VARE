@@ -1,0 +1,653 @@
+test	Set up job	﻿2026-10-10T23:17:31.2775653Z Current runner version: '2.337.0'
+test	Set up job	2026-10-10T23:17:31.2800857Z ##[group]Runner Image Provisioner
+test	Set up job	2026-10-10T23:17:31.2801745Z Hosted Compute Agent
+test	Set up job	2026-10-10T23:17:31.2802468Z Version: 20261002.596
+test	Set up job	2026-10-10T23:17:31.2803323Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+test	Set up job	2026-10-10T23:17:31.2804113Z Build Date: 2026-10-02T22:28:27Z
+test	Set up job	2026-10-10T23:17:31.2804879Z Worker ID: {84e43356-28e2-4838-9b92-1d0f7eb48cce}
+test	Set up job	2026-10-10T23:17:31.2805600Z Region: centralus
+test	Set up job	2026-10-10T23:17:31.2806243Z Cloud: Azure
+test	Set up job	2026-10-10T23:17:31.2806777Z ##[endgroup]
+test	Set up job	2026-10-10T23:17:31.2808201Z ##[group]Operating System
+test	Set up job	2026-10-10T23:17:31.2808996Z Ubuntu
+test	Set up job	2026-10-10T23:17:31.2809509Z 24.04.5
+test	Set up job	2026-10-10T23:17:31.2810119Z LTS
+test	Set up job	2026-10-10T23:17:31.2810628Z ##[endgroup]
+test	Set up job	2026-10-10T23:17:31.2811201Z ##[group]Runner Image
+test	Set up job	2026-10-10T23:17:31.2811811Z Image: ubuntu-24.04
+test	Set up job	2026-10-10T23:17:31.2812375Z Version: 20261004.327.1
+test	Set up job	2026-10-10T23:17:31.2813738Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+test	Set up job	2026-10-10T23:17:31.2815557Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+test	Set up job	2026-10-10T23:17:31.2816588Z ##[endgroup]
+test	Set up job	2026-10-10T23:17:31.2817855Z ##[group]GITHUB_TOKEN Permissions
+test	Set up job	2026-10-10T23:17:31.2819944Z Contents: read
+test	Set up job	2026-10-10T23:17:31.2820558Z Metadata: read
+test	Set up job	2026-10-10T23:17:31.2821222Z Packages: read
+test	Set up job	2026-10-10T23:17:31.2821849Z ##[endgroup]
+test	Set up job	2026-10-10T23:17:31.2824453Z Secret source: Actions
+test	Set up job	2026-10-10T23:17:31.2825445Z Cache mode: write
+test	Set up job	2026-10-10T23:17:31.2826382Z Prepare workflow directory
+test	Set up job	2026-10-10T23:17:31.3162318Z Prepare all required actions
+test	Set up job	2026-10-10T23:17:31.3212386Z Getting action download info
+test	Set up job	2026-10-10T23:17:31.5749814Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+test	Set up job	2026-10-10T23:17:31.6574969Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+test	Set up job	2026-10-10T23:17:31.8341191Z Complete job name: test
+test	Run actions/checkout@v4	﻿2026-10-10T23:17:31.9239517Z ##[group]Run actions/checkout@v4
+test	Run actions/checkout@v4	2026-10-10T23:17:31.9240926Z with:
+test	Run actions/checkout@v4	2026-10-10T23:17:31.9241831Z   repository: mitukx/Recursive-Verification-Lag
+test	Run actions/checkout@v4	2026-10-10T23:17:31.9250414Z   token: ***
+test	Run actions/checkout@v4	2026-10-10T23:17:31.9251217Z   ssh-strict: true
+test	Run actions/checkout@v4	2026-10-10T23:17:31.9251996Z   ssh-user: git
+test	Run actions/checkout@v4	2026-10-10T23:17:31.9253043Z   persist-credentials: true
+test	Run actions/checkout@v4	2026-10-10T23:17:31.9254000Z   clean: true
+test	Run actions/checkout@v4	2026-10-10T23:17:31.9254789Z   sparse-checkout-cone-mode: true
+test	Run actions/checkout@v4	2026-10-10T23:17:31.9255726Z   fetch-depth: 1
+test	Run actions/checkout@v4	2026-10-10T23:17:31.9256505Z   fetch-tags: false
+test	Run actions/checkout@v4	2026-10-10T23:17:31.9257318Z   show-progress: true
+test	Run actions/checkout@v4	2026-10-10T23:17:31.9258130Z   lfs: false
+test	Run actions/checkout@v4	2026-10-10T23:17:31.9258865Z   submodules: false
+test	Run actions/checkout@v4	2026-10-10T23:17:31.9259634Z   set-safe-directory: true
+test	Run actions/checkout@v4	2026-10-10T23:17:31.9260534Z   allow-unsafe-pr-checkout: false
+test	Run actions/checkout@v4	2026-10-10T23:17:31.9261739Z ##[endgroup]
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0264710Z Syncing repository: mitukx/Recursive-Verification-Lag
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0267412Z ##[group]Getting Git version info
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0268959Z Working directory is '/home/runner/work/Recursive-Verification-Lag/Recursive-Verification-Lag'
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0271071Z [command]/usr/bin/git version
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0329119Z git version 2.55.0
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0350890Z ##[endgroup]
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0365770Z Temporarily overriding HOME='/home/runner/work/_temp/400f3e4b-d52a-4e92-9def-648006c41e75' before making global git config changes
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0368151Z Adding repository directory to the temporary git global config as a safe directory
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0371240Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Recursive-Verification-Lag/Recursive-Verification-Lag
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0417538Z Deleting the contents of '/home/runner/work/Recursive-Verification-Lag/Recursive-Verification-Lag'
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0421967Z ##[group]Initializing the repository
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0426400Z [command]/usr/bin/git init /home/runner/work/Recursive-Verification-Lag/Recursive-Verification-Lag
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0536351Z hint: Using 'master' as the name for the initial branch. This default branch name
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0538135Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0539760Z hint: to use in all of your new repositories, which will suppress this warning,
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0542258Z hint: call:
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0544782Z hint:
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0546112Z hint: 	git config --global init.defaultBranch <name>
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0547282Z hint:
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0548302Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0549943Z hint: 'development'. The just-created branch can be renamed via this command:
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0551367Z hint:
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0552273Z hint: 	git branch -m <name>
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0553177Z hint:
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0553840Z hint: Disable this message with "git config set advice.defaultBranchName false"
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0555100Z Initialized empty Git repository in /home/runner/work/Recursive-Verification-Lag/Recursive-Verification-Lag/.git/
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0557164Z [command]/usr/bin/git remote add origin https://github.com/mitukx/Recursive-Verification-Lag
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0608473Z ##[endgroup]
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0609828Z ##[group]Disabling automatic garbage collection
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0613281Z [command]/usr/bin/git config --local gc.auto 0
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0669841Z ##[endgroup]
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0671260Z ##[group]Setting up auth
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0672733Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+test	Run actions/checkout@v4	2026-10-10T23:17:32.0701803Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+test	Run actions/checkout@v4	2026-10-10T23:17:32.1071191Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test	Run actions/checkout@v4	2026-10-10T23:17:32.1124260Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+test	Run actions/checkout@v4	2026-10-10T23:17:32.1362908Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+test	Run actions/checkout@v4	2026-10-10T23:17:32.1402015Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+test	Run actions/checkout@v4	2026-10-10T23:17:32.1626538Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+test	Run actions/checkout@v4	2026-10-10T23:17:32.1666015Z ##[endgroup]
+test	Run actions/checkout@v4	2026-10-10T23:17:32.1667319Z ##[group]Fetching the repository
+test	Run actions/checkout@v4	2026-10-10T23:17:32.1676106Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +12cb450b5df2d419abe605df577c74b8bc916ca7:refs/remotes/pull/91/merge
+test	Run actions/checkout@v4	2026-10-10T23:17:33.1704943Z From https://github.com/mitukx/Recursive-Verification-Lag
+test	Run actions/checkout@v4	2026-10-10T23:17:33.1707541Z  * [new ref]         12cb450b5df2d419abe605df577c74b8bc916ca7 -> pull/91/merge
+test	Run actions/checkout@v4	2026-10-10T23:17:33.1713051Z ##[endgroup]
+test	Run actions/checkout@v4	2026-10-10T23:17:33.1715348Z ##[group]Determining the checkout info
+test	Run actions/checkout@v4	2026-10-10T23:17:33.1717762Z ##[endgroup]
+test	Run actions/checkout@v4	2026-10-10T23:17:33.1720014Z [command]/usr/bin/git sparse-checkout disable
+test	Run actions/checkout@v4	2026-10-10T23:17:33.1773118Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+test	Run actions/checkout@v4	2026-10-10T23:17:33.1813239Z ##[group]Checking out the ref
+test	Run actions/checkout@v4	2026-10-10T23:17:33.1815616Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/91/merge
+test	Run actions/checkout@v4	2026-10-10T23:17:33.2729911Z Note: switching to 'refs/remotes/pull/91/merge'.
+test	Run actions/checkout@v4	2026-10-10T23:17:33.2731459Z 
+test	Run actions/checkout@v4	2026-10-10T23:17:33.2732892Z You are in 'detached HEAD' state. You can look around, make experimental
+test	Run actions/checkout@v4	2026-10-10T23:17:33.2735788Z changes and commit them, and you can discard any commits you make in this
+test	Run actions/checkout@v4	2026-10-10T23:17:33.2738566Z state without impacting any branches by switching back to a branch.
+test	Run actions/checkout@v4	2026-10-10T23:17:33.2740171Z 
+test	Run actions/checkout@v4	2026-10-10T23:17:33.2741261Z If you want to create a new branch to retain commits you create, you may
+test	Run actions/checkout@v4	2026-10-10T23:17:33.2743914Z do so (now or later) by using -c with the switch command. Example:
+test	Run actions/checkout@v4	2026-10-10T23:17:33.2744896Z 
+test	Run actions/checkout@v4	2026-10-10T23:17:33.2745300Z   git switch -c <new-branch-name>
+test	Run actions/checkout@v4	2026-10-10T23:17:33.2746344Z 
+test	Run actions/checkout@v4	2026-10-10T23:17:33.2747091Z Or undo this operation with:
+test	Run actions/checkout@v4	2026-10-10T23:17:33.2748047Z 
+test	Run actions/checkout@v4	2026-10-10T23:17:33.2748566Z   git switch -
+test	Run actions/checkout@v4	2026-10-10T23:17:33.2749215Z 
+test	Run actions/checkout@v4	2026-10-10T23:17:33.2750222Z Turn off this advice by setting config variable advice.detachedHead to false
+test	Run actions/checkout@v4	2026-10-10T23:17:33.2751624Z 
+test	Run actions/checkout@v4	2026-10-10T23:17:33.2753397Z HEAD is now at 12cb450 Merge ba94a9e513fdaf882cde091766007a88b9edaeee into 27ebf7fe239d97504eeb960bf1407de220584dac
+test	Run actions/checkout@v4	2026-10-10T23:17:33.2758422Z ##[endgroup]
+test	Run actions/checkout@v4	2026-10-10T23:17:33.2796118Z [command]/usr/bin/git log -1 --format=%H
+test	Run actions/checkout@v4	2026-10-10T23:17:33.2823791Z 12cb450b5df2d419abe605df577c74b8bc916ca7
+test	Run actions/setup-python@v5	﻿2026-10-10T23:17:33.3295084Z ##[group]Run actions/setup-python@v5
+test	Run actions/setup-python@v5	2026-10-10T23:17:33.3296623Z with:
+test	Run actions/setup-python@v5	2026-10-10T23:17:33.3297557Z   python-version: 3.11
+test	Run actions/setup-python@v5	2026-10-10T23:17:33.3298594Z   check-latest: false
+test	Run actions/setup-python@v5	2026-10-10T23:17:33.3309695Z   token: ***
+test	Run actions/setup-python@v5	2026-10-10T23:17:33.3310660Z   update-environment: true
+test	Run actions/setup-python@v5	2026-10-10T23:17:33.3311773Z   allow-prereleases: false
+test	Run actions/setup-python@v5	2026-10-10T23:17:33.3313146Z   freethreaded: false
+test	Run actions/setup-python@v5	2026-10-10T23:17:33.3314168Z ##[endgroup]
+test	Run actions/setup-python@v5	2026-10-10T23:17:33.4638920Z ##[group]Installed versions
+test	Run actions/setup-python@v5	2026-10-10T23:17:33.4776189Z (node:2307) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+test	Run actions/setup-python@v5	2026-10-10T23:17:33.4780306Z (Use `node --trace-deprecation ...` to show where the warning was created)
+test	Run actions/setup-python@v5	2026-10-10T23:17:33.4783509Z Successfully set up CPython (3.11.17)
+test	Run actions/setup-python@v5	2026-10-10T23:17:33.4786969Z ##[endgroup]
+test	Install dependencies	﻿2026-10-10T23:17:33.4985589Z ##[group]Run pip install -r requirements.txt
+test	Install dependencies	2026-10-10T23:17:33.4987132Z ^[[36;1mpip install -r requirements.txt^[[0m
+test	Install dependencies	2026-10-10T23:17:33.5274560Z shell: /usr/bin/bash -e {0}
+test	Install dependencies	2026-10-10T23:17:33.5275752Z env:
+test	Install dependencies	2026-10-10T23:17:33.5276880Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+test	Install dependencies	2026-10-10T23:17:33.5278820Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+test	Install dependencies	2026-10-10T23:17:33.5280708Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test	Install dependencies	2026-10-10T23:17:33.5282388Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test	Install dependencies	2026-10-10T23:17:33.5284259Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test	Install dependencies	2026-10-10T23:17:33.5285980Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+test	Install dependencies	2026-10-10T23:17:33.5287419Z ##[endgroup]
+test	Install dependencies	2026-10-10T23:17:34.6311167Z Collecting numpy>=1.26 (from -r requirements.txt (line 1))
+test	Install dependencies	2026-10-10T23:17:34.7172343Z   Downloading numpy-2.4.6-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+test	Install dependencies	2026-10-10T23:17:34.8574129Z Collecting pandas>=2.0 (from -r requirements.txt (line 2))
+test	Install dependencies	2026-10-10T23:17:34.8735211Z   Downloading pandas-3.0.6-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (79 kB)
+test	Install dependencies	2026-10-10T23:17:35.0769147Z Collecting matplotlib>=3.8 (from -r requirements.txt (line 3))
+test	Install dependencies	2026-10-10T23:17:35.0930168Z   Downloading matplotlib-3.11.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (80 kB)
+test	Install dependencies	2026-10-10T23:17:35.2606826Z Collecting scipy>=1.11 (from -r requirements.txt (line 4))
+test	Install dependencies	2026-10-10T23:17:35.2773444Z   Downloading scipy-1.17.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (62 kB)
+test	Install dependencies	2026-10-10T23:17:35.3123352Z Collecting python-dateutil>=2.8.2 (from pandas>=2.0->-r requirements.txt (line 2))
+test	Install dependencies	2026-10-10T23:17:35.3290482Z   Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+test	Install dependencies	2026-10-10T23:17:35.4027784Z Collecting contourpy>=1.0.1 (from matplotlib>=3.8->-r requirements.txt (line 3))
+test	Install dependencies	2026-10-10T23:17:35.4191174Z   Downloading contourpy-1.3.3-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (5.5 kB)
+test	Install dependencies	2026-10-10T23:17:35.4405915Z Collecting cycler>=0.10 (from matplotlib>=3.8->-r requirements.txt (line 3))
+test	Install dependencies	2026-10-10T23:17:35.4566460Z   Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+test	Install dependencies	2026-10-10T23:17:35.6230667Z Collecting fonttools>=4.28.2 (from matplotlib>=3.8->-r requirements.txt (line 3))
+test	Install dependencies	2026-10-10T23:17:35.6394834Z   Downloading fonttools-4.66.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (130 kB)
+test	Install dependencies	2026-10-10T23:17:35.7288172Z Collecting kiwisolver>=1.3.1 (from matplotlib>=3.8->-r requirements.txt (line 3))
+test	Install dependencies	2026-10-10T23:17:35.7452590Z   Downloading kiwisolver-1.5.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.2 kB)
+test	Install dependencies	2026-10-10T23:17:35.7726956Z Collecting packaging>=20.0 (from matplotlib>=3.8->-r requirements.txt (line 3))
+test	Install dependencies	2026-10-10T23:17:35.7887824Z   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+test	Install dependencies	2026-10-10T23:17:35.9823048Z Collecting pillow>=9 (from matplotlib>=3.8->-r requirements.txt (line 3))
+test	Install dependencies	2026-10-10T23:17:35.9984236Z   Downloading pillow-12.3.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+test	Install dependencies	2026-10-10T23:17:36.0316721Z Collecting pyparsing>=3 (from matplotlib>=3.8->-r requirements.txt (line 3))
+test	Install dependencies	2026-10-10T23:17:36.0478141Z   Downloading pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+test	Install dependencies	2026-10-10T23:17:36.0768088Z Collecting six>=1.5 (from python-dateutil>=2.8.2->pandas>=2.0->-r requirements.txt (line 2))
+test	Install dependencies	2026-10-10T23:17:36.0934547Z   Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+test	Install dependencies	2026-10-10T23:17:36.1128043Z Downloading numpy-2.4.6-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.9 MB)
+test	Install dependencies	2026-10-10T23:17:36.2775301Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.9/16.9 MB 112.4 MB/s  0:00:00
+test	Install dependencies	2026-10-10T23:17:36.2955719Z Downloading pandas-3.0.6-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (11.1 MB)
+test	Install dependencies	2026-10-10T23:17:36.3291428Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 11.1/11.1 MB 343.9 MB/s  0:00:00
+test	Install dependencies	2026-10-10T23:17:36.3454142Z Downloading matplotlib-3.11.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (9.9 MB)
+test	Install dependencies	2026-10-10T23:17:36.3785143Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.9/9.9 MB 315.3 MB/s  0:00:00
+test	Install dependencies	2026-10-10T23:17:36.3954762Z Downloading scipy-1.17.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (35.3 MB)
+test	Install dependencies	2026-10-10T23:17:36.5053783Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 35.3/35.3 MB 328.0 MB/s  0:00:00
+test	Install dependencies	2026-10-10T23:17:36.5220886Z Downloading contourpy-1.3.3-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (355 kB)
+test	Install dependencies	2026-10-10T23:17:36.5410315Z Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+test	Install dependencies	2026-10-10T23:17:36.5609666Z Downloading fonttools-4.66.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.4 MB)
+test	Install dependencies	2026-10-10T23:17:36.5777411Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.4/5.4 MB 358.9 MB/s  0:00:00
+test	Install dependencies	2026-10-10T23:17:36.5937284Z Downloading kiwisolver-1.5.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.4 MB)
+test	Install dependencies	2026-10-10T23:17:36.6002057Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.4/1.4 MB 268.3 MB/s  0:00:00
+test	Install dependencies	2026-10-10T23:17:36.6164064Z Downloading packaging-26.3-py3-none-any.whl (129 kB)
+test	Install dependencies	2026-10-10T23:17:36.6346991Z Downloading pillow-12.3.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (6.9 MB)
+test	Install dependencies	2026-10-10T23:17:36.6582097Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.9/6.9 MB 312.0 MB/s  0:00:00
+test	Install dependencies	2026-10-10T23:17:36.6740720Z Downloading pyparsing-3.3.3-py3-none-any.whl (126 kB)
+test	Install dependencies	2026-10-10T23:17:36.6933782Z Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+test	Install dependencies	2026-10-10T23:17:36.7120343Z Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+test	Install dependencies	2026-10-10T23:17:36.9726295Z Installing collected packages: six, pyparsing, pillow, packaging, numpy, kiwisolver, fonttools, cycler, scipy, python-dateutil, contourpy, pandas, matplotlib
+test	Install dependencies	2026-10-10T23:17:49.1452617Z 
+test	Install dependencies	2026-10-10T23:17:49.1465991Z Successfully installed contourpy-1.3.3 cycler-0.12.1 fonttools-4.66.1 kiwisolver-1.5.1 matplotlib-3.11.2 numpy-2.4.6 packaging-26.3 pandas-3.0.6 pillow-12.3.0 pyparsing-3.3.3 python-dateutil-2.9.0.post0 scipy-1.17.1 six-1.17.0
+test	Unit tests	﻿2026-10-10T23:17:49.2277488Z ##[group]Run python -m unittest discover -s tests -v
+test	Unit tests	2026-10-10T23:17:49.2278107Z ^[[36;1mpython -m unittest discover -s tests -v^[[0m
+test	Unit tests	2026-10-10T23:17:49.2344602Z shell: /usr/bin/bash -e {0}
+test	Unit tests	2026-10-10T23:17:49.2344891Z env:
+test	Unit tests	2026-10-10T23:17:49.2345160Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+test	Unit tests	2026-10-10T23:17:49.2345605Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+test	Unit tests	2026-10-10T23:17:49.2346048Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test	Unit tests	2026-10-10T23:17:49.2346438Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test	Unit tests	2026-10-10T23:17:49.2346816Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test	Unit tests	2026-10-10T23:17:49.2347196Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+test	Unit tests	2026-10-10T23:17:49.2347513Z ##[endgroup]
+test	Unit tests	2026-10-10T23:17:50.9349266Z test_active_proposal_is_normalized_and_equalizes_coefficients (test_active_alignment_audit.ActiveAlignmentAuditTest.test_active_proposal_is_normalized_and_equalizes_coefficients) ... ok
+test	Unit tests	2026-10-10T23:17:50.9438461Z test_active_range_no_worse_than_passive_on_nonconstant_score (test_active_alignment_audit.ActiveAlignmentAuditTest.test_active_range_no_worse_than_passive_on_nonconstant_score) ... ok
+test	Unit tests	2026-10-10T23:17:50.9441078Z test_constant_verifier_is_inconclusive (test_active_alignment_audit.ActiveAlignmentAuditTest.test_constant_verifier_is_inconclusive) ... ok
+test	Unit tests	2026-10-10T23:17:50.9870534Z test_covariance_estimator_targets_exact_quantity (test_active_alignment_audit.ActiveAlignmentAuditTest.test_covariance_estimator_targets_exact_quantity) ... ok
+test	Unit tests	2026-10-10T23:17:56.2890765Z test_locked_protocol_executes_and_hashes_outputs (test_active_alignment_audit.ActiveAlignmentAuditTest.test_locked_protocol_executes_and_hashes_outputs) ... ok
+test	Unit tests	2026-10-10T23:17:56.2897726Z test_bounded_queue_sheds_excess_work (test_admission_control.FairWorkloadAdmissionTest.test_bounded_queue_sheds_excess_work) ... ok
+test	Unit tests	2026-10-10T23:17:56.2902258Z test_cancelled_waiter_does_not_leak_capacity (test_admission_control.FairWorkloadAdmissionTest.test_cancelled_waiter_does_not_leak_capacity) ... ok
+test	Unit tests	2026-10-10T23:17:56.2905740Z test_per_workload_cap_preserves_global_headroom (test_admission_control.FairWorkloadAdmissionTest.test_per_workload_cap_preserves_global_headroom) ... ok
+test	Unit tests	2026-10-10T23:17:56.2909982Z test_round_robin_prevents_same_workload_monopoly (test_admission_control.FairWorkloadAdmissionTest.test_round_robin_prevents_same_workload_monopoly) ... ok
+test	Unit tests	2026-10-10T23:17:56.2913793Z test_speculation_cannot_jump_normal_queue (test_admission_control.FairWorkloadAdmissionTest.test_speculation_cannot_jump_normal_queue) ... ok
+test	Unit tests	2026-10-10T23:17:56.3526563Z test_complete_small_locked_run (test_alignment_covariance_audit.AlignmentCovarianceAuditTest.test_complete_small_locked_run) ... ok
+test	Unit tests	2026-10-10T23:17:56.3531341Z test_harmful_and_benign_signs_are_distinguishable (test_alignment_covariance_audit.AlignmentCovarianceAuditTest.test_harmful_and_benign_signs_are_distinguishable) ... ok
+test	Unit tests	2026-10-10T23:17:56.3534580Z test_adaptive_priority_sampling_is_rejected (test_alignment_gate.AlignmentGateTests.test_adaptive_priority_sampling_is_rejected) ... ok
+test	Unit tests	2026-10-10T23:17:56.3544170Z test_allows_positive_alignment (test_alignment_gate.AlignmentGateTests.test_allows_positive_alignment) ... ok
+test	Unit tests	2026-10-10T23:17:56.3553305Z test_blocks_negative_alignment (test_alignment_gate.AlignmentGateTests.test_blocks_negative_alignment) ... ok
+test	Unit tests	2026-10-10T23:17:56.3558357Z test_duplicate_id_and_support_violation_fail_closed (test_alignment_gate.AlignmentGateTests.test_duplicate_id_and_support_violation_fail_closed) ... ok
+test	Unit tests	2026-10-10T23:17:56.3561061Z test_mixed_policy_versions_are_rejected (test_alignment_gate.AlignmentGateTests.test_mixed_policy_versions_are_rejected) ... ok
+test	Unit tests	2026-10-10T23:17:56.3570331Z test_zero_signal_is_inconclusive (test_alignment_gate.AlignmentGateTests.test_zero_signal_is_inconclusive) ... ok
+test	Unit tests	2026-10-10T23:17:56.3579028Z test_detects_tampering (test_artifact_manifest.ArtifactManifestTest.test_detects_tampering) ... ok
+test	Unit tests	2026-10-10T23:17:56.3630737Z test_smoke (test_candidate_bank_experiment.CandidateBankExperimentTest.test_smoke) ... ok
+test	Unit tests	2026-10-10T23:17:56.3852130Z test_adversarial_public_score_abstains_safely (test_certified_refresh.CertifiedRefreshTest.test_adversarial_public_score_abstains_safely) ... ok
+test	Unit tests	2026-10-10T23:17:56.3886375Z test_duplicate_sources_need_one_label (test_certified_refresh.CertifiedRefreshTest.test_duplicate_sources_need_one_label) ... ok
+test	Unit tests	2026-10-10T23:17:56.4102366Z test_interpolation_preserves_initial_safety (test_certified_refresh.CertifiedRefreshTest.test_interpolation_preserves_initial_safety) ... ok
+test	Unit tests	2026-10-10T23:17:56.4144591Z test_projection_is_paid_label_safe_and_can_escape_fixed_direction (test_certified_refresh.CertifiedRefreshTest.test_projection_is_paid_label_safe_and_can_escape_fixed_direction) ... ok
+test	Unit tests	2026-10-10T23:17:56.4258150Z test_modified_raw_artifact_rejected (test_colab_evidence_bundle.EvidenceBundleTests.test_modified_raw_artifact_rejected) ... ok
+test	Unit tests	2026-10-10T23:17:56.4793951Z test_rehashed_forged_pass_flag_still_rejected (test_colab_evidence_bundle.EvidenceBundleTests.test_rehashed_forged_pass_flag_still_rejected) ... ok
+test	Unit tests	2026-10-10T23:17:56.5276362Z test_retained_failure_is_not_promoted_to_success (test_colab_evidence_bundle.EvidenceBundleTests.test_retained_failure_is_not_promoted_to_success) ... ok
+test	Unit tests	2026-10-10T23:17:56.5341415Z test_changed_file_rejected (test_colab_rlvr_pilot_summary.ColabPilotSummaryTests.test_changed_file_rejected) ... ok
+test	Unit tests	2026-10-10T23:17:56.5430278Z test_incomplete_failure_retained_without_positive_metrics (test_colab_rlvr_pilot_summary.ColabPilotSummaryTests.test_incomplete_failure_retained_without_positive_metrics) ... ok
+test	Unit tests	2026-10-10T23:17:56.5500608Z test_manifest_cannot_escape_evidence_directory (test_colab_rlvr_pilot_summary.ColabPilotSummaryTests.test_manifest_cannot_escape_evidence_directory) ... ok
+test	Unit tests	2026-10-10T23:17:56.5630837Z test_null_result_stays_null_even_when_completed (test_colab_rlvr_pilot_summary.ColabPilotSummaryTests.test_null_result_stays_null_even_when_completed) ... ok
+test	Unit tests	2026-10-10T23:17:56.5739756Z test_rehashed_forged_accuracy_still_rejected (test_colab_rlvr_pilot_summary.ColabPilotSummaryTests.test_rehashed_forged_accuracy_still_rejected) ... ok
+test	Unit tests	2026-10-10T23:17:56.5831119Z test_rehashed_forged_correctness_still_rejected (test_colab_rlvr_pilot_summary.ColabPilotSummaryTests.test_rehashed_forged_correctness_still_rejected) ... ok
+test	Unit tests	2026-10-10T23:17:56.5928125Z test_rehashed_forged_rollout_reward_still_rejected (test_colab_rlvr_pilot_summary.ColabPilotSummaryTests.test_rehashed_forged_rollout_reward_still_rejected) ... ok
+test	Unit tests	2026-10-10T23:17:56.6016974Z test_rehashed_protocol_change_cannot_pass_source_lock (test_colab_rlvr_pilot_summary.ColabPilotSummaryTests.test_rehashed_protocol_change_cannot_pass_source_lock) ... ok
+test	Unit tests	2026-10-10T23:17:56.6147307Z test_source_hash_is_distinct_from_reformatted_copy (test_colab_rlvr_pilot_summary.ColabPilotSummaryTests.test_source_hash_is_distinct_from_reformatted_copy) ... ok
+test	Unit tests	2026-10-10T23:17:56.6153623Z test_bad_contracts_and_source_cap_fail_loudly (test_decision_audit.DecisionAuditTest.test_bad_contracts_and_source_cap_fail_loudly) ... ok
+test	Unit tests	2026-10-10T23:17:56.6596007Z test_decisions_are_sound_in_all_binary_worlds_and_cost_is_exact (test_decision_audit.DecisionAuditTest.test_decisions_are_sound_in_all_binary_worlds_and_cost_is_exact) ... ok
+test	Unit tests	2026-10-10T23:17:56.6607714Z test_dp_matches_exhaustive_query_trees_under_prior (test_decision_audit.DecisionAuditTest.test_dp_matches_exhaustive_query_trees_under_prior) ... ok
+test	Unit tests	2026-10-10T23:17:56.6612469Z test_duplicate_source_contrast_and_zero_movement (test_decision_audit.DecisionAuditTest.test_duplicate_source_contrast_and_zero_movement) ... ok
+test	Unit tests	2026-10-10T23:17:56.6647758Z test_hidden_world_changes_cannot_change_prequery_decisions (test_decision_audit.DecisionAuditTest.test_hidden_world_changes_cannot_change_prequery_decisions) ... ok
+test	Unit tests	2026-10-10T23:17:56.6651617Z test_impossible_budget_abstains_without_wasting_a_label (test_decision_audit.DecisionAuditTest.test_impossible_budget_abstains_without_wasting_a_label) ... ok
+test	Unit tests	2026-10-10T23:17:56.6654462Z test_safety_does_not_depend_on_prior_calibration (test_decision_audit.DecisionAuditTest.test_safety_does_not_depend_on_prior_calibration) ... ok
+test	Unit tests	2026-10-10T23:17:56.6966382Z test_witness_matches_every_subset_and_fractional_rewards (test_decision_audit.DecisionAuditTest.test_witness_matches_every_subset_and_fractional_rewards) ... ok
+test	Unit tests	2026-10-10T23:17:56.7532940Z test_all_strategies_baseline_safety_and_budget (test_decision_refresh.DecisionRefreshTest.test_all_strategies_baseline_safety_and_budget) ... ok
+test	Unit tests	2026-10-10T23:17:56.7638607Z test_constant_zero_rewards_cannot_create_gain (test_decision_refresh.DecisionRefreshTest.test_constant_zero_rewards_cannot_create_gain) ... ok
+test	Unit tests	2026-10-10T23:17:56.7651155Z test_multitask_input_and_fractional_dp_fail (test_decision_refresh.DecisionRefreshTest.test_multitask_input_and_fractional_dp_fail) ... ok
+test	Unit tests	2026-10-10T23:17:56.8790876Z test_unqueried_rewards_do_not_change_policy_or_queries (test_decision_refresh.DecisionRefreshTest.test_unqueried_rewards_do_not_change_policy_or_queries) ... ok
+test	Unit tests	2026-10-10T23:17:56.9665081Z test_complete_archive_and_original_transfer_lineage (test_development_archive.DevelopmentArchiveTest.test_complete_archive_and_original_transfer_lineage) ... ok
+test	Unit tests	2026-10-10T23:17:56.9727051Z test_docker_infrastructure_exit_is_not_a_resource_zero_label (test_development_gate.DevelopmentGateTest.test_docker_infrastructure_exit_is_not_a_resource_zero_label) ... ok
+test	Unit tests	2026-10-10T23:17:57.2870918Z test_less_than_six_sources_is_reported_not_replaced (test_development_gate.DevelopmentGateTest.test_less_than_six_sources_is_reported_not_replaced) ... ok
+test	Unit tests	2026-10-10T23:17:57.2879489Z test_round_one_failure_is_not_lag_and_constant_zero_task_stays (test_development_gate.DevelopmentGateTest.test_round_one_failure_is_not_lag_and_constant_zero_task_stays) ... ok
+test	Unit tests	2026-10-10T23:17:57.3220882Z test_summary (test_distributed_scaling_summary.DistributedScalingSummaryTest.test_summary) ... ok
+test	Unit tests	2026-10-10T23:17:57.3227925Z test_cardinality_failure_reaches_all_callers (test_dynamic_batching.DynamicBatchingTest.test_cardinality_failure_reaches_all_callers) ... ok
+test	Unit tests	2026-10-10T23:17:57.3235519Z test_coalesces_concurrent_compatible_requests (test_dynamic_batching.DynamicBatchingTest.test_coalesces_concurrent_compatible_requests) ... ok
+test	Unit tests	2026-10-10T23:17:57.3261563Z test_incompatible_sampling_keys_are_not_mixed (test_dynamic_batching.DynamicBatchingTest.test_incompatible_sampling_keys_are_not_mixed) ... ok
+test	Unit tests	2026-10-10T23:17:57.3520406Z test_all_binary_worlds_safety_cost_and_prior_value (test_endogenous_audit.EndogenousAuditTest.test_all_binary_worlds_safety_cost_and_prior_value) ... ok
+test	Unit tests	2026-10-10T23:17:57.3543892Z test_binary_and_resource_validation (test_endogenous_audit.EndogenousAuditTest.test_binary_and_resource_validation) ... ok
+test	Unit tests	2026-10-10T23:17:57.3568363Z test_escape_is_one_query_when_zero_labels_persist (test_endogenous_audit.EndogenousAuditTest.test_escape_is_one_query_when_zero_labels_persist) ... ok
+test	Unit tests	2026-10-10T23:17:57.3653306Z test_optimum_against_independent_brute_force_action_trees (test_endogenous_audit.EndogenousAuditTest.test_optimum_against_independent_brute_force_action_trees) ... ok
+test	Unit tests	2026-10-10T23:17:57.3688150Z test_stop_without_updates_and_explicit_state_cap (test_endogenous_audit.EndogenousAuditTest.test_stop_without_updates_and_explicit_state_cap) ... ok
+test	Unit tests	2026-10-10T23:17:57.3766758Z test_unknown_outcomes_do_not_enter_controller (test_endogenous_audit.EndogenousAuditTest.test_unknown_outcomes_do_not_enter_controller) ... ok
+test	Unit tests	2026-10-10T23:17:57.3871160Z test_zero_label_trap_and_future_information (test_endogenous_audit.EndogenousAuditTest.test_zero_label_trap_and_future_information) ... ok
+test	Unit tests	2026-10-10T23:17:57.3881619Z test_constructed_error_basis_is_weighted_orthogonal (test_equal_kl_alignment_stress.EqualKLAlignmentStressTest.test_constructed_error_basis_is_weighted_orthogonal) ... ok
+test	Unit tests	2026-10-10T23:17:57.3896982Z test_matched_kl_and_constant_score_failure (test_equal_kl_alignment_stress.EqualKLAlignmentStressTest.test_matched_kl_and_constant_score_failure) ... ok
+test	Unit tests	2026-10-10T23:17:58.1787275Z test_small_prospective_phase_recovers_local_geometry (test_equal_kl_alignment_stress.EqualKLAlignmentStressTest.test_small_prospective_phase_recovers_local_geometry) ... ok
+test	Unit tests	2026-10-10T23:17:58.1789098Z test_rejects_worker_reuse (test_event_log.EventLogTest.test_rejects_worker_reuse) ... ok
+test	Unit tests	2026-10-10T23:17:58.1796261Z test_roundtrip_digest_and_validation (test_event_log.EventLogTest.test_roundtrip_digest_and_validation) ... ok
+test	Unit tests	2026-10-10T23:17:58.1802306Z test_first_party_actions_are_immutable_commit_pins (test_evidence_workflow_supply_chain.EvidenceWorkflowSupplyChainTest.test_first_party_actions_are_immutable_commit_pins) ... ok
+test	Unit tests	2026-10-10T23:17:58.1805159Z test_real_evidence_workflows_retain_trigger_provenance (test_evidence_workflow_supply_chain.EvidenceWorkflowSupplyChainTest.test_real_evidence_workflows_retain_trigger_provenance) ... ok
+test	Unit tests	2026-10-10T23:17:58.1808757Z test_invalid_cost_design (test_exact_cost_pilot.ExactCostTest.test_invalid_cost_design) ... ok
+test	Unit tests	2026-10-10T23:17:58.1916562Z test_never_trigger_forced_deadline (test_exact_cost_pilot.ExactCostTest.test_never_trigger_forced_deadline) ... ok
+test	Unit tests	2026-10-10T23:17:58.2828459Z test_same_initial_state_exact_cost_and_all_schedules (test_exact_cost_pilot.ExactCostTest.test_same_initial_state_exact_cost_and_all_schedules) ... ok
+test	Unit tests	2026-10-10T23:17:58.2830633Z test_error_alignment_decomposition_is_exact (test_finite_kl_alignment_identity.FiniteKLAlignmentIdentityTest.test_error_alignment_decomposition_is_exact) ... ok
+test	Unit tests	2026-10-10T23:17:58.5334194Z test_path_identities_match_direct_quantities (test_finite_kl_alignment_identity.FiniteKLAlignmentIdentityTest.test_path_identities_match_direct_quantities) ... ok
+test	Unit tests	2026-10-10T23:17:58.5478452Z test_same_kl_can_have_opposite_true_progress (test_finite_kl_alignment_identity.FiniteKLAlignmentIdentityTest.test_same_kl_can_have_opposite_true_progress) ... ok
+test	Unit tests	2026-10-10T23:17:58.9079306Z test_complete_synthetic_pipeline_and_provenance_abort (test_fresh_task_transfer.FreshTaskTransferTest.test_complete_synthetic_pipeline_and_provenance_abort) ... ok
+test	Unit tests	2026-10-10T23:17:58.9159664Z test_no_evaluation_labels_accepted_and_normalized_policies (test_fresh_task_transfer.FreshTaskTransferTest.test_no_evaluation_labels_accepted_and_normalized_policies) ... ok
+test	Unit tests	2026-10-10T23:17:58.9238390Z test_paid_transcript_only_and_zero_label_fit (test_fresh_task_transfer.FreshTaskTransferTest.test_paid_transcript_only_and_zero_label_fit) ... ok
+test	Unit tests	2026-10-10T23:17:58.9245315Z test_ready_claim_fails_closed_without_raw_evidence (test_frontier_tracks.FrontierTrackContractTests.test_ready_claim_fails_closed_without_raw_evidence) ... ok
+test	Unit tests	2026-10-10T23:17:58.9247298Z test_repository_manifest_is_valid (test_frontier_tracks.FrontierTrackContractTests.test_repository_manifest_is_valid) ... ok
+test	Unit tests	2026-10-10T23:17:58.9289366Z test_fixed_threshold_and_onset_only_rows (test_frozen_coordinate_transfer.FrozenCoordinateTest.test_fixed_threshold_and_onset_only_rows) ... ok
+test	Unit tests	2026-10-10T23:17:58.9311028Z test_complete_bundle_requires_all_measured_contracts (test_gpu_evidence_summary.GPUEvidenceSummaryTests.test_complete_bundle_requires_all_measured_contracts) ... ok
+test	Unit tests	2026-10-10T23:17:58.9315887Z test_missing_and_failed_evidence_are_explicit (test_gpu_evidence_summary.GPUEvidenceSummaryTests.test_missing_and_failed_evidence_are_explicit) ... ok
+test	Unit tests	2026-10-10T23:17:58.9319657Z test_all_labeled_collapses_and_duplicate_label_is_shared (test_identified_gain.IdentifiedGainTest.test_all_labeled_collapses_and_duplicate_label_is_shared) ... ok
+test	Unit tests	2026-10-10T23:17:58.9321455Z test_invalid_inputs (test_identified_gain.IdentifiedGainTest.test_invalid_inputs) ... ok
+test	Unit tests	2026-10-10T23:17:58.9360877Z test_maximal_mix_is_sharp_and_safe (test_identified_gain.IdentifiedGainTest.test_maximal_mix_is_sharp_and_safe) ... ok
+test	Unit tests	2026-10-10T23:17:58.9363563Z test_sharp_against_all_binary_completions (test_identified_gain.IdentifiedGainTest.test_sharp_against_all_binary_completions) ... ok
+test	Unit tests	2026-10-10T23:17:58.9814101Z test_mismatched_initial_state_is_rejected (test_initial_safe_cadence.SharedInitialStateTest.test_mismatched_initial_state_is_rejected) ... ok
+test	Unit tests	2026-10-10T23:17:59.0488853Z test_shared_cohort_and_cost_difference (test_initial_safe_cadence.SharedInitialStateTest.test_shared_cohort_and_cost_difference) ... ok
+test	Unit tests	2026-10-10T23:17:59.0495045Z test_decode_heavy_request_prefers_decode_worker (test_kv_serving_scheduler.KVServingSchedulerTest.test_decode_heavy_request_prefers_decode_worker) ... ok
+test	Unit tests	2026-10-10T23:17:59.0498838Z test_kv_capacity_excludes_worker_and_releases_reservation (test_kv_serving_scheduler.KVServingSchedulerTest.test_kv_capacity_excludes_worker_and_releases_reservation) ... ok
+test	Unit tests	2026-10-10T23:17:59.0503107Z test_prefill_heavy_request_prefers_prefill_worker (test_kv_serving_scheduler.KVServingSchedulerTest.test_prefill_heavy_request_prefers_prefill_worker) ... ok
+test	Unit tests	2026-10-10T23:17:59.0505829Z test_artifact_deploys_through_two_phase_verifier_control_plane (test_learned_verifier_head.LearnedVerifierHeadTests.test_artifact_deploys_through_two_phase_verifier_control_plane) ... skipped 'requires optional torch systems dependency'
+test	Unit tests	2026-10-10T23:17:59.0508622Z test_fit_verify_save_reload_without_pickle (test_learned_verifier_head.LearnedVerifierHeadTests.test_fit_verify_save_reload_without_pickle) ... skipped 'requires optional torch systems dependency'
+test	Unit tests	2026-10-10T23:17:59.0511053Z test_training_requires_both_classes (test_learned_verifier_head.LearnedVerifierHeadTests.test_training_requires_both_classes) ... skipped 'requires optional torch systems dependency'
+test	Unit tests	2026-10-10T23:18:01.4724166Z test_real_qwen_bank_followup_validates (test_linear_hitting_qwen.LinearHittingQwenIntegrationTest.test_real_qwen_bank_followup_validates) ... ok
+test	Unit tests	2026-10-10T23:18:01.4793625Z test_bounded_residual_interval_contains_true_gain (test_linear_hitting_verifier.LinearHittingVerifierTests.test_bounded_residual_interval_contains_true_gain) ... ok
+test	Unit tests	2026-10-10T23:18:01.4814311Z test_exact_linear_error_is_recovered_from_rank_many_fixed_probes (test_linear_hitting_verifier.LinearHittingVerifierTests.test_exact_linear_error_is_recovered_from_rank_many_fixed_probes) ... ok
+test	Unit tests	2026-10-10T23:18:01.4817148Z test_misspecification_diagnostic_is_evaluator_only_statistic (test_linear_hitting_verifier.LinearHittingVerifierTests.test_misspecification_diagnostic_is_evaluator_only_statistic) ... ok
+test	Unit tests	2026-10-10T23:18:01.4819697Z test_probe_selection_is_label_blind_and_deterministic (test_linear_hitting_verifier.LinearHittingVerifierTests.test_probe_selection_is_label_blind_and_deterministic) ... ok
+test	Unit tests	2026-10-10T23:18:01.8794108Z Generation 1 | cand-29f04e4d8358 | PROMOTED | promotion=0.4412 gap=0.0000
+test	Unit tests	2026-10-10T23:18:02.0656038Z test_controller_records_mathematical_rsi_assessment (test_mathematical_rsi.MathematicalRSIEndToEndTests.test_controller_records_mathematical_rsi_assessment) ... ok
+test	Unit tests	2026-10-10T23:18:02.0751622Z test_bounded_probe_and_information_budget_pass_for_known_mutation (test_mathematical_rsi.MathematicalRSIGateTests.test_bounded_probe_and_information_budget_pass_for_known_mutation) ... ok
+test	Unit tests	2026-10-10T23:18:02.0854887Z test_coded_gate_can_replace_one_noncritical_base_check (test_mathematical_rsi.MathematicalRSIGateTests.test_coded_gate_can_replace_one_noncritical_base_check) ... ok
+test	Unit tests	2026-10-10T23:18:02.0947867Z test_coded_verification_never_tolerates_critical_failure (test_mathematical_rsi.MathematicalRSIGateTests.test_coded_verification_never_tolerates_critical_failure) ... ok
+test	Unit tests	2026-10-10T23:18:02.1040506Z test_coded_verification_tolerates_bounded_noncritical_failure (test_mathematical_rsi.MathematicalRSIGateTests.test_coded_verification_tolerates_bounded_noncritical_failure) ... ok
+test	Unit tests	2026-10-10T23:18:02.1132147Z test_information_budget_can_block_promotion (test_mathematical_rsi.MathematicalRSIGateTests.test_information_budget_can_block_promotion) ... ok
+test	Unit tests	2026-10-10T23:18:02.1224237Z test_probe_class_fails_closed_outside_declared_surface (test_mathematical_rsi.MathematicalRSIGateTests.test_probe_class_fails_closed_outside_declared_surface) ... ok
+test	Unit tests	2026-10-10T23:18:02.1319034Z test_promotion_gate_enforces_mathematical_certificate (test_mathematical_rsi.MathematicalRSIGateTests.test_promotion_gate_enforces_mathematical_certificate) ... ok
+test	Unit tests	2026-10-10T23:18:02.1410455Z test_reconstruction_threshold_equality_is_not_supercritical (test_mathematical_rsi.MathematicalRSIGateTests.test_reconstruction_threshold_equality_is_not_supercritical) ... ok
+test	Unit tests	2026-10-10T23:18:02.1412906Z test_bad_offset_is_rejected (test_mbppplus_frozen_selection.FrozenSelectionTest.test_bad_offset_is_rejected) ... ok
+test	Unit tests	2026-10-10T23:18:02.1421895Z test_default_order_preserves_frozen_pilot_ids (test_mbppplus_frozen_selection.FrozenSelectionTest.test_default_order_preserves_frozen_pilot_ids) ... ok
+test	Unit tests	2026-10-10T23:18:02.1423756Z test_freeze_checks_outcomes_blind_metadata_before_generation (test_mbppplus_frozen_selection.FrozenSelectionTest.test_freeze_checks_outcomes_blind_metadata_before_generation) ... ok
+test	Unit tests	2026-10-10T23:18:02.1502288Z test_rank_slices_are_disjoint_and_input_order_independent (test_mbppplus_frozen_selection.FrozenSelectionTest.test_rank_slices_are_disjoint_and_input_order_independent) ... ok
+test	Unit tests	2026-10-10T23:18:02.1504747Z test_scorer_rejects_source_or_occurrence_changes (test_mbppplus_frozen_selection.FrozenSelectionTest.test_scorer_rejects_source_or_occurrence_changes) ... ok
+test	Unit tests	2026-10-10T23:18:02.1514178Z test_absent_docker_fails_before_candidate_execution (test_mbppplus_scoring_contract.DockerScoringContractTest.test_absent_docker_fails_before_candidate_execution) ... ok
+test	Unit tests	2026-10-10T23:18:02.1515515Z test_deterministic_fence_policy_and_syntax_only (test_mbppplus_scoring_contract.DockerScoringContractTest.test_deterministic_fence_policy_and_syntax_only) ... ok
+test	Unit tests	2026-10-10T23:18:02.1516741Z test_isolated_digest_only_and_no_host_mounts (test_mbppplus_scoring_contract.DockerScoringContractTest.test_isolated_digest_only_and_no_host_mounts) ... ok
+test	Unit tests	2026-10-10T23:18:02.8010624Z test_deterministic_semantics_two_fresh_runs (test_mini_lab.AgentTests.test_deterministic_semantics_two_fresh_runs) ... ok
+test	Unit tests	2026-10-10T23:18:03.3713629Z test_end_to_end_real_updates_refit_budget_and_drained_replay (test_mini_lab.AgentTests.test_end_to_end_real_updates_refit_budget_and_drained_replay) ... ok
+test	Unit tests	2026-10-10T23:18:03.3943136Z test_regression_gate_rolls_back_rejected_learner_and_serving (test_mini_lab.AgentTests.test_regression_gate_rolls_back_rejected_learner_and_serving) ... ok
+test	Unit tests	2026-10-10T23:18:03.4829317Z test_reserved_episode_is_recovered_on_restart (test_mini_lab.AgentTests.test_reserved_episode_is_recovered_on_restart) ... ok
+test	Unit tests	2026-10-10T23:18:03.7720693Z test_restart_extends_without_retraining_consumed_work (test_mini_lab.AgentTests.test_restart_extends_without_retraining_consumed_work) ... ok
+test	Unit tests	2026-10-10T23:18:03.7750109Z test_step_checkpoint_recovers_exact_action_stream (test_mini_lab.AgentTests.test_step_checkpoint_recovers_exact_action_stream) ... ok
+test	Unit tests	2026-10-10T23:18:03.7778396Z test_wall_clock_deadline_is_enforced (test_mini_lab.AgentTests.test_wall_clock_deadline_is_enforced) ... ok
+test	Unit tests	2026-10-10T23:18:03.7784625Z test_tail_percentiles (test_mini_lab.MeasurementTests.test_tail_percentiles) ... ok
+test	Unit tests	2026-10-10T23:18:03.7786464Z test_clipped_off_policy_gradient_does_not_reinforce_far_positive_sample (test_mini_lab.PolicyTests.test_clipped_off_policy_gradient_does_not_reinforce_far_positive_sample) ... ok
+test	Unit tests	2026-10-10T23:18:03.7788447Z test_eval_task_cannot_enter_training_replay (test_mini_lab.PolicyTests.test_eval_task_cannot_enter_training_replay) ... ok
+test	Unit tests	2026-10-10T23:18:03.7790032Z test_real_gradient_increases_good_action (test_mini_lab.PolicyTests.test_real_gradient_increases_good_action) ... ok
+test	Unit tests	2026-10-10T23:18:03.7791672Z test_snapshot_does_not_follow_learner_mutation (test_mini_lab.PolicyTests.test_snapshot_does_not_follow_learner_mutation) ... ok
+test	Unit tests	2026-10-10T23:18:03.7800015Z test_weight_checksum_and_monotonic_publish (test_mini_lab.PolicyTests.test_weight_checksum_and_monotonic_publish) ... ok
+test	Unit tests	2026-10-10T23:18:03.7854743Z test_capacity_and_future_policy_fence (test_mini_lab.ReplayTests.test_capacity_and_future_policy_fence) ... ok
+test	Unit tests	2026-10-10T23:18:03.7906704Z test_lease_expiry_recovery_and_fenced_ack (test_mini_lab.ReplayTests.test_lease_expiry_recovery_and_fenced_ack) ... ok
+test	Unit tests	2026-10-10T23:18:03.7954195Z test_restart_idempotency_and_collision (test_mini_lab.ReplayTests.test_restart_idempotency_and_collision) ... ok
+test	Unit tests	2026-10-10T23:18:03.8004251Z test_stale_relabel_preserves_behavior (test_mini_lab.ReplayTests.test_stale_relabel_preserves_behavior) ... ok
+test	Unit tests	2026-10-10T23:18:03.8050792Z test_transaction_rollback_restores_state_and_consumption (test_mini_lab.ReplayTests.test_transaction_rollback_restores_state_and_consumption) ... ok
+test	Unit tests	2026-10-10T23:18:03.8098092Z test_two_connections_cannot_claim_same_work (test_mini_lab.ReplayTests.test_two_connections_cannot_claim_same_work) ... ok
+test	Unit tests	2026-10-10T23:18:03.8141588Z test_policy_only_async_does_not_requeue_stale_verifier_reward (test_mini_lab.VerificationArmReplayTests.test_policy_only_async_does_not_requeue_stale_verifier_reward) ... ok
+test	Unit tests	2026-10-10T23:18:03.8188429Z test_verification_aware_async_requeues_stale_verifier_reward (test_mini_lab.VerificationArmReplayTests.test_verification_aware_async_requeues_stale_verifier_reward) ... ok
+test	Unit tests	2026-10-10T23:18:03.8190117Z test_debt_levels_are_monotonic_and_bounded (test_mini_lab.VerificationDebtTests.test_debt_levels_are_monotonic_and_bounded) ... ok
+test	Unit tests	2026-10-10T23:18:03.8241766Z test_replay_debt_tracks_queue_age_and_stale_reward (test_mini_lab.VerificationDebtTests.test_replay_debt_tracks_queue_age_and_stale_reward) ... ok
+test	Unit tests	2026-10-10T23:18:03.8347156Z test_synthetic_phase_benchmark_bounds_slow_verifier_debt (test_mini_lab.VerificationDebtTests.test_synthetic_phase_benchmark_bounds_slow_verifier_debt) ... ok
+test	Unit tests	2026-10-10T23:18:03.8402706Z test_verified_rewrite_rejects_mixed_versions_and_behavior_mutation (test_mini_lab.VerificationDebtTests.test_verified_rewrite_rejects_mixed_versions_and_behavior_mutation) ... ok
+test	Unit tests	2026-10-10T23:18:03.8404842Z test_active_search_is_not_false_behavior_policy_data (test_mini_lab.VerificationTests.test_active_search_is_not_false_behavior_policy_data) ... ok
+test	Unit tests	2026-10-10T23:18:03.8406532Z test_controller_budget_and_fixed_cadence (test_mini_lab.VerificationTests.test_controller_budget_and_fixed_cadence) ... ok
+test	Unit tests	2026-10-10T23:18:03.8408449Z test_critic_cannot_reward_known_executable_failure_in_colliding_cell (test_mini_lab.VerificationTests.test_critic_cannot_reward_known_executable_failure_in_colliding_cell) ... ok
+test	Unit tests	2026-10-10T23:18:03.8411018Z test_error_geometry_changes_priority_at_same_policy_shift (test_mini_lab.VerificationTests.test_error_geometry_changes_priority_at_same_policy_shift) ... ok
+test	Unit tests	2026-10-10T23:18:03.8413274Z test_executable_proxy_exploitation_and_critic_learning (test_mini_lab.VerificationTests.test_executable_proxy_exploitation_and_critic_learning) ... ok
+test	Unit tests	2026-10-10T23:18:03.8426436Z test_failure_task_replay_is_fresh_and_bounded (test_mini_lab.VerificationTests.test_failure_task_replay_is_fresh_and_bounded) ... ok
+test	Unit tests	2026-10-10T23:18:03.8427941Z test_invalid_verdict_nan_and_config (test_mini_lab.VerificationTests.test_invalid_verdict_nan_and_config) ... ok
+test	Unit tests	2026-10-10T23:18:03.8429892Z test_candidate_cannot_pass_by_replacing_builtin_assertions (test_mini_lab_docker.DockerCodeTests.test_candidate_cannot_pass_by_replacing_builtin_assertions) ... skipped 'optional pinned Docker runtime'
+test	Unit tests	2026-10-10T23:18:03.8432260Z test_forged_reward_protocol_cannot_override_external_grading (test_mini_lab_docker.DockerCodeTests.test_forged_reward_protocol_cannot_override_external_grading) ... skipped 'optional pinned Docker runtime'
+test	Unit tests	2026-10-10T23:18:03.8433717Z test_output_flood_rejected (test_mini_lab_docker.DockerCodeTests.test_output_flood_rejected) ... skipped 'optional pinned Docker runtime'
+test	Unit tests	2026-10-10T23:18:03.8435463Z test_real_python_public_overfit_and_hidden_failure (test_mini_lab_docker.DockerCodeTests.test_real_python_public_overfit_and_hidden_failure) ... skipped 'optional pinned Docker runtime'
+test	Unit tests	2026-10-10T23:18:03.8437489Z test_accepts_newer_non_regressing_candidate (test_mini_lab_promotion.PromotionGateTests.test_accepts_newer_non_regressing_candidate) ... ok
+test	Unit tests	2026-10-10T23:18:03.8439216Z test_duplicate_eval_identity_fails_closed (test_mini_lab_promotion.PromotionGateTests.test_duplicate_eval_identity_fails_closed) ... ok
+test	Unit tests	2026-10-10T23:18:03.8458395Z test_hash_chained_ledger_detects_tampering (test_mini_lab_promotion.PromotionGateTests.test_hash_chained_ledger_detects_tampering) ... ok
+test	Unit tests	2026-10-10T23:18:03.8463306Z test_rejects_mean_and_slice_regression (test_mini_lab_promotion.PromotionGateTests.test_rejects_mean_and_slice_regression) ... ok
+test	Unit tests	2026-10-10T23:18:03.8468472Z test_rejects_non_monotonic_version (test_mini_lab_promotion.PromotionGateTests.test_rejects_non_monotonic_version) ... ok
+test	Unit tests	2026-10-10T23:18:03.8486392Z test_calibrated_critic_cannot_override_public_failure (test_mini_lab_serving.EnsembleTests.test_calibrated_critic_cannot_override_public_failure) ... ok
+test	Unit tests	2026-10-10T23:18:03.8507921Z test_disagreement_trusted_audit_and_fail_closed (test_mini_lab_serving.EnsembleTests.test_disagreement_trusted_audit_and_fail_closed) ... ok
+test	Unit tests	2026-10-10T23:18:03.8605337Z test_required_graders_are_concurrency_bounded (test_mini_lab_serving.EnsembleTests.test_required_graders_are_concurrency_bounded) ... ok
+test	Unit tests	2026-10-10T23:18:03.8638861Z test_timeout_and_nonfinite_grader_abstain (test_mini_lab_serving.EnsembleTests.test_timeout_and_nonfinite_grader_abstain) ... ok
+test	Unit tests	2026-10-10T23:18:03.8678978Z test_terminal_credit_is_balanced_across_variable_length_episodes (test_mini_lab_serving.EpisodeCreditTests.test_terminal_credit_is_balanced_across_variable_length_episodes) ... ok
+test	Unit tests	2026-10-10T23:18:03.8688116Z test_mfu_requires_explicit_flop_model_and_peak (test_mini_lab_serving.GPUMeasurementTests.test_mfu_requires_explicit_flop_model_and_peak) ... ok
+test	Unit tests	2026-10-10T23:18:03.8705254Z test_bad_health_and_mutable_backend_reuse_rejected (test_mini_lab_serving.ServingTests.test_bad_health_and_mutable_backend_reuse_rejected) ... ok
+test	Unit tests	2026-10-10T23:18:03.8722031Z test_exception_releases_episode_reference (test_mini_lab_serving.ServingTests.test_exception_releases_episode_reference) ... ok
+test	Unit tests	2026-10-10T23:18:03.8766930Z test_inflight_episode_survives_atomic_version_activation (test_mini_lab_serving.ServingTests.test_inflight_episode_survives_atomic_version_activation) ... ok
+test	Unit tests	2026-10-10T23:18:03.8773041Z test_identity_missing_prompt_ids_and_partial_logprobs_rejected (test_mini_lab_serving.TokenServingTests.test_identity_missing_prompt_ids_and_partial_logprobs_rejected) ... ok
+test	Unit tests	2026-10-10T23:18:03.8775710Z test_remote_behavior_tokens_are_consumable_by_real_trainer (test_mini_lab_serving.TokenServingTests.test_remote_behavior_tokens_are_consumable_by_real_trainer) ... ok
+test	Unit tests	2026-10-10T23:18:03.8777983Z test_vllm_per_choice_prompt_token_contract (test_mini_lab_serving.TokenServingTests.test_vllm_per_choice_prompt_token_contract) ... ok
+test	Unit tests	2026-10-10T23:18:03.8802095Z test_model_tool_loop_preserves_version_and_hides_trusted_tests (test_mini_lab_serving.ToolAgentTests.test_model_tool_loop_preserves_version_and_hides_trusted_tests) ... ok
+test	Unit tests	2026-10-10T23:18:03.8807734Z test_additional_eos_shared_with_pad_keeps_its_action_logprob (test_mini_lab_torch.TorchAcceptanceTests.test_additional_eos_shared_with_pad_keeps_its_action_logprob) ... skipped 'optional PyTorch/Transformers dependencies'
+test	Unit tests	2026-10-10T23:18:03.8810376Z test_async_isolated_models_real_update_and_resume (test_mini_lab_torch.TorchAcceptanceTests.test_async_isolated_models_real_update_and_resume) ... skipped 'optional PyTorch/Transformers dependencies'
+test	Unit tests	2026-10-10T23:18:03.8813394Z test_behavior_sampling_distribution_matches_same_version_policy (test_mini_lab_torch.TorchAcceptanceTests.test_behavior_sampling_distribution_matches_same_version_policy) ... skipped 'optional PyTorch/Transformers dependencies'
+test	Unit tests	2026-10-10T23:18:03.8816292Z test_coding_episodes_connect_terminal_credit_rvl_and_optimizer (test_mini_lab_torch.TorchAcceptanceTests.test_coding_episodes_connect_terminal_credit_rvl_and_optimizer) ... skipped 'optional PyTorch/Transformers dependencies'
+test	Unit tests	2026-10-10T23:18:03.8818520Z test_hf_trainer_restore_accepts_legacy_snapshot (test_mini_lab_torch.TorchAcceptanceTests.test_hf_trainer_restore_accepts_legacy_snapshot) ... skipped 'optional PyTorch/Transformers dependencies'
+test	Unit tests	2026-10-10T23:18:03.8820253Z test_hf_trainer_transaction_restores_mixed_module_modes (test_mini_lab_torch.TorchAcceptanceTests.test_hf_trainer_transaction_restores_mixed_module_modes) ... skipped 'optional PyTorch/Transformers dependencies'
+test	Unit tests	2026-10-10T23:18:03.8821694Z test_hf_trainer_transaction_restores_model_optimizer_and_rng (test_mini_lab_torch.TorchAcceptanceTests.test_hf_trainer_transaction_restores_model_optimizer_and_rng) ... skipped 'optional PyTorch/Transformers dependencies'
+test	Unit tests	2026-10-10T23:18:03.8823390Z test_microbatch_gradient_matches_full_graph_reference (test_mini_lab_torch.TorchAcceptanceTests.test_microbatch_gradient_matches_full_graph_reference) ... skipped 'optional PyTorch/Transformers dependencies'
+test	Unit tests	2026-10-10T23:18:03.8824818Z test_token_replay_immutable_behavior_and_atomic_checkpoint (test_mini_lab_torch.TorchAcceptanceTests.test_token_replay_immutable_behavior_and_atomic_checkpoint) ... skipped 'optional PyTorch/Transformers dependencies'
+test	Unit tests	2026-10-10T23:18:03.8826348Z test_verification_aware_replay_requires_fresh_verifier_admission (test_mini_lab_torch.TorchAcceptanceTests.test_verification_aware_replay_requires_fresh_verifier_admission) ... skipped 'optional PyTorch/Transformers dependencies'
+test	Unit tests	2026-10-10T23:18:03.8827823Z test_verification_failure_quarantines_without_training (test_mini_lab_torch.TorchAcceptanceTests.test_verification_failure_quarantines_without_training) ... skipped 'optional PyTorch/Transformers dependencies'
+test	Unit tests	2026-10-10T23:18:03.8829240Z test_verification_lease_recovered_immediately_on_restart (test_mini_lab_torch.TorchAcceptanceTests.test_verification_lease_recovered_immediately_on_restart) ... skipped 'optional PyTorch/Transformers dependencies'
+test	Unit tests	2026-10-10T23:18:03.8830604Z test_verifier_fleet_scores_groups_concurrently (test_mini_lab_torch.TorchAcceptanceTests.test_verifier_fleet_scores_groups_concurrently) ... skipped 'optional PyTorch/Transformers dependencies'
+test	Unit tests	2026-10-10T23:18:03.8831991Z test_incorrect_unisolated_or_regressed_speedup_gets_no_reward (test_mlsys_env.MLSysEnvironmentTests.test_incorrect_unisolated_or_regressed_speedup_gets_no_reward) ... skipped 'MLSys task workflow installs optional PyTorch'
+test	Unit tests	2026-10-10T23:18:03.8833679Z test_modified_baseline_cannot_become_oracle (test_mlsys_env.MLSysEnvironmentTests.test_modified_baseline_cannot_become_oracle) ... skipped 'MLSys task workflow installs optional PyTorch'
+test	Unit tests	2026-10-10T23:18:03.8834978Z test_no_implicit_host_execution_or_mutable_image (test_mlsys_env.MLSysEnvironmentTests.test_no_implicit_host_execution_or_mutable_image) ... skipped 'MLSys task workflow installs optional PyTorch'
+test	Unit tests	2026-10-10T23:18:03.8836225Z test_no_pickle_protocol_and_strict_parity (test_mlsys_env.MLSysEnvironmentTests.test_no_pickle_protocol_and_strict_parity) ... skipped 'MLSys task workflow installs optional PyTorch'
+test	Unit tests	2026-10-10T23:18:03.8837456Z test_prepare_refuses_to_overwrite_workspace (test_mlsys_env.MLSysEnvironmentTests.test_prepare_refuses_to_overwrite_workspace) ... skipped 'MLSys task workflow installs optional PyTorch'
+test	Unit tests	2026-10-10T23:18:03.8838907Z test_private_terminal_spec_stays_outside_candidate_and_public_artifacts (test_mlsys_env.MLSysEnvironmentTests.test_private_terminal_spec_stays_outside_candidate_and_public_artifacts) ... skipped 'MLSys task workflow installs optional PyTorch'
+test	Unit tests	2026-10-10T23:18:03.8840923Z test_subprocess_backward_and_timeout_are_enforced (test_mlsys_env.MLSysEnvironmentTests.test_subprocess_backward_and_timeout_are_enforced) ... skipped 'MLSys task workflow installs optional PyTorch'
+test	Unit tests	2026-10-10T23:18:03.8842204Z test_task_is_exact_real_repo_function (test_mlsys_env.MLSysEnvironmentTests.test_task_is_exact_real_repo_function) ... skipped 'MLSys task workflow installs optional PyTorch'
+test	Unit tests	2026-10-10T23:18:03.8843627Z test_tolerance_cannot_be_relaxed (test_mlsys_env.MLSysEnvironmentTests.test_tolerance_cannot_be_relaxed) ... skipped 'MLSys task workflow installs optional PyTorch'
+test	Unit tests	2026-10-10T23:18:03.8848717Z test_calibrated_multiverifier_closed_loop (test_openai_math_rvl.LeanVerifierTests.test_calibrated_multiverifier_closed_loop) ... ok
+test	Unit tests	2026-10-10T23:18:03.8854614Z test_candidate_injection_and_escape_rejection (test_openai_math_rvl.LeanVerifierTests.test_candidate_injection_and_escape_rejection) ... ok
+test	Unit tests	2026-10-10T23:18:03.8879715Z test_kernel_success_and_async_adapter (test_openai_math_rvl.LeanVerifierTests.test_kernel_success_and_async_adapter) ... ok
+test	Unit tests	2026-10-10T23:18:03.8882288Z test_family_split_leakage_is_rejected (test_openai_math_rvl.ManifestTests.test_family_split_leakage_is_rejected) ... ok
+test	Unit tests	2026-10-10T23:18:03.8883874Z test_path_escape_is_rejected (test_openai_math_rvl.ManifestTests.test_path_escape_is_rejected) ... ok
+test	Unit tests	2026-10-10T23:18:03.8885119Z test_false_progress_is_measured (test_openai_math_rvl.MetricsTests.test_false_progress_is_measured) ... ok
+test	Unit tests	2026-10-10T23:18:03.8886421Z test_hash_chain_changes_with_order (test_openai_math_rvl.MetricsTests.test_hash_chain_changes_with_order) ... ok
+test	Unit tests	2026-10-10T23:18:05.3621227Z test_generation_free_sweep_and_analysis (test_pipeline_integration.PipelineIntegrationTest.test_generation_free_sweep_and_analysis) ... ok
+test	Unit tests	2026-10-10T23:18:05.3638454Z test_cannot_overlap_deployments_or_accept_wrong_ack (test_policy_deployment.PolicyDeploymentTest.test_cannot_overlap_deployments_or_accept_wrong_ack) ... ok
+test	Unit tests	2026-10-10T23:18:05.3658319Z test_corrupt_pending_artifact_fails_closed_on_recovery (test_policy_deployment.PolicyDeploymentTest.test_corrupt_pending_artifact_fails_closed_on_recovery) ... ok
+test	Unit tests	2026-10-10T23:18:05.3680955Z test_new_epoch_fences_stale_coordinator (test_policy_deployment.PolicyDeploymentTest.test_new_epoch_fences_stale_coordinator) ... ok
+test	Unit tests	2026-10-10T23:18:05.3742108Z test_real_rpc_workers_follow_active_version (test_policy_deployment.PolicyDeploymentTest.test_real_rpc_workers_follow_active_version) ... ok
+test	Unit tests	2026-10-10T23:18:05.3782809Z test_restart_recovers_partial_ack_then_active_state (test_policy_deployment.PolicyDeploymentTest.test_restart_recovers_partial_ack_then_active_state) ... ok
+test	Unit tests	2026-10-10T23:18:05.3804899Z test_two_phase_activation_requires_every_worker (test_policy_deployment.PolicyDeploymentTest.test_two_phase_activation_requires_every_worker) ... ok
+test	Unit tests	2026-10-10T23:18:05.3814216Z test_worker_set_change_fails_closed (test_policy_deployment.PolicyDeploymentTest.test_worker_set_change_fails_closed) ... ok
+test	Unit tests	2026-10-10T23:18:05.3815866Z test_invalid_samples_fail_closed (test_policy_weight_sync_benchmark.WeightSyncBenchmarkTests.test_invalid_samples_fail_closed) ... ok
+test	Unit tests	2026-10-10T23:18:05.3817613Z test_summary_is_finite_and_uses_median (test_policy_weight_sync_benchmark.WeightSyncBenchmarkTests.test_summary_is_finite_and_uses_median) ... ok
+test	Unit tests	2026-10-10T23:18:05.3822084Z test_combines_real_capability_and_reward_model_evidence (test_posttraining_campaign.PostTrainingCampaignScorecardTests.test_combines_real_capability_and_reward_model_evidence) ... ok
+test	Unit tests	2026-10-10T23:18:05.3824452Z test_missing_evidence_stays_explicit (test_posttraining_campaign.PostTrainingCampaignScorecardTests.test_missing_evidence_stays_explicit) ... ok
+test	Unit tests	2026-10-10T23:18:05.3826124Z test_auto_precision_policy (test_precision_numerics.PrecisionNumericsTest.test_auto_precision_policy) ... ok
+test	Unit tests	2026-10-10T23:18:05.3827433Z test_ratio_diagnostics (test_precision_numerics.PrecisionNumericsTest.test_ratio_diagnostics) ... ok
+test	Unit tests	2026-10-10T23:18:05.3828778Z test_rejects_unsupported_bf16 (test_precision_numerics.PrecisionNumericsTest.test_rejects_unsupported_bf16) ... ok
+test	Unit tests	2026-10-10T23:18:05.3830392Z test_safe_ratio_clamps_and_rejects_nonfinite (test_precision_numerics.PrecisionNumericsTest.test_safe_ratio_clamps_and_rejects_nonfinite) ... ok
+test	Unit tests	2026-10-10T23:18:05.3831927Z test_quantizers_are_finite (test_precision_parity.PrecisionParityTest.test_quantizers_are_finite) ... ok
+test	Unit tests	2026-10-10T23:18:05.3833231Z test_representative_ratio_parity (test_precision_parity.PrecisionParityTest.test_representative_ratio_parity) ... ok
+test	Unit tests	2026-10-10T23:18:05.3834147Z test_benchmark_report_records_environment (test_profiling.ProfilingTest.test_benchmark_report_records_environment) ... ok
+test	Unit tests	2026-10-10T23:18:05.3855803Z test_trace_summary_and_export (test_profiling.ProfilingTest.test_trace_summary_and_export) ... ok
+test	Unit tests	2026-10-10T23:18:05.3867966Z test_propensity_allocations_respect_budget_and_bounds (test_propensity_alignment_audit.PropensityAlignmentAuditTest.test_propensity_allocations_respect_budget_and_bounds) ... ok
+test	Unit tests	2026-10-10T23:18:05.6552932Z test_small_locked_run_preserves_full_propensity_evidence (test_propensity_alignment_audit.PropensityAlignmentAuditTest.test_small_locked_run_preserves_full_propensity_evidence) ... ok
+test	Unit tests	2026-10-10T23:18:05.6555942Z test_strong_alignment_decisions_are_fail_closed (test_propensity_alignment_audit.PropensityAlignmentAuditTest.test_strong_alignment_decisions_are_fail_closed) ... ok
+test	Unit tests	2026-10-10T23:18:05.6571320Z test_linear_parity_error_is_bounded_on_representative_grid (test_quantization_numerics.QuantizationNumericsTests.test_linear_parity_error_is_bounded_on_representative_grid) ... ok
+test	Unit tests	2026-10-10T23:18:05.6573731Z test_per_row_symmetric_int8_bounds_and_zero_row (test_quantization_numerics.QuantizationNumericsTests.test_per_row_symmetric_int8_bounds_and_zero_row) ... ok
+test	Unit tests	2026-10-10T23:18:05.6575698Z test_rejects_malformed_and_nonfinite_inputs (test_quantization_numerics.QuantizationNumericsTests.test_rejects_malformed_and_nonfinite_inputs) ... ok
+test	Unit tests	2026-10-10T23:18:05.6578680Z test_alignment_proxy_fixes_error_norm_and_flips_covariance (test_qwen_alignment_bridge.QwenAlignmentBridgeContractTest.test_alignment_proxy_fixes_error_norm_and_flips_covariance) ... ok
+test	Unit tests	2026-10-10T23:18:05.6581557Z test_calibration_selects_common_target_without_evaluation_input (test_qwen_alignment_bridge.QwenAlignmentBridgeContractTest.test_calibration_selects_common_target_without_evaluation_input) ... ok
+test	Unit tests	2026-10-10T23:18:05.6584507Z test_constant_group_is_retained_but_uninformative (test_qwen_alignment_bridge.QwenAlignmentBridgeContractTest.test_constant_group_is_retained_but_uninformative) ... ok
+test	Unit tests	2026-10-10T23:18:05.6587022Z test_effect_drift_ratio_is_symmetric_and_fail_closed (test_qwen_alignment_bridge.QwenAlignmentBridgeContractTest.test_effect_drift_ratio_is_symmetric_and_fail_closed) ... ok
+test	Unit tests	2026-10-10T23:18:05.6589815Z test_preference_shift_uses_both_correct_and_incorrect_candidates (test_qwen_alignment_bridge.QwenAlignmentBridgeContractTest.test_preference_shift_uses_both_correct_and_incorrect_candidates) ... ok
+test	Unit tests	2026-10-10T23:18:05.6592837Z test_sequence_logprob_is_token_sum_not_length_normalized_mean (test_qwen_alignment_bridge.QwenAlignmentBridgeContractTest.test_sequence_logprob_is_token_sum_not_length_normalized_mean) ... ok
+test	Unit tests	2026-10-10T23:18:05.6595252Z test_token_drift_stats_rejects_shape_mismatch (test_qwen_alignment_bridge.QwenAlignmentBridgeContractTest.test_token_drift_stats_rejects_shape_mismatch) ... ok
+test	Unit tests	2026-10-10T23:18:05.6596608Z test_token_drift_stats_retains_raw_old_new_and_matches_k3 (test_qwen_alignment_bridge.QwenAlignmentBridgeContractTest.test_token_drift_stats_retains_raw_old_new_and_matches_k3) ... ok
+test	Unit tests	2026-10-10T23:18:05.6681311Z test_completed_artifact_recomputes_raw_evidence (test_qwen_alignment_bridge_evidence.QwenBridgeEvidenceValidatorTest.test_completed_artifact_recomputes_raw_evidence) ... ok
+test	Unit tests	2026-10-10T23:18:05.6691078Z test_failed_execution_is_valid_retained_evidence (test_qwen_alignment_bridge_evidence.QwenBridgeEvidenceValidatorTest.test_failed_execution_is_valid_retained_evidence) ... ok
+test	Unit tests	2026-10-10T23:18:05.6746509Z test_manifest_tamper_is_rejected (test_qwen_alignment_bridge_evidence.QwenBridgeEvidenceValidatorTest.test_manifest_tamper_is_rejected) ... ok
+test	Unit tests	2026-10-10T23:18:05.6847190Z test_rehashed_per_prompt_preference_tamper_is_rejected (test_qwen_alignment_bridge_evidence.QwenBridgeEvidenceValidatorTest.test_rehashed_per_prompt_preference_tamper_is_rejected) ... ok
+test	Unit tests	2026-10-10T23:18:05.6851375Z test_geometry_covariance_error_identity (test_qwen_learned_verifier_bridge.LearnedVerifierBridgeContractTest.test_geometry_covariance_error_identity) ... ok
+test	Unit tests	2026-10-10T23:18:05.6855476Z test_grpo_aligned_geometry_separates_between_prompt_calibration (test_qwen_learned_verifier_bridge.LearnedVerifierBridgeContractTest.test_grpo_aligned_geometry_separates_between_prompt_calibration) ... ok
+test	Unit tests	2026-10-10T23:18:05.6860801Z test_misaligned_scores_flip_geometry (test_qwen_learned_verifier_bridge.LearnedVerifierBridgeContractTest.test_misaligned_scores_flip_geometry) ... ok
+test	Unit tests	2026-10-10T23:18:05.6863172Z test_multiarm_matched_drift_selection_uses_common_target (test_qwen_learned_verifier_bridge.LearnedVerifierBridgeContractTest.test_multiarm_matched_drift_selection_uses_common_target) ... ok
+test	Unit tests	2026-10-10T23:18:05.6864342Z test_pairwise_reversal_rate (test_qwen_learned_verifier_bridge.LearnedVerifierBridgeContractTest.test_pairwise_reversal_rate) ... ok
+test	Unit tests	2026-10-10T23:18:05.6866063Z test_prompt_shuffle_is_deterministic_and_preserves_multisets (test_qwen_learned_verifier_bridge.LearnedVerifierBridgeContractTest.test_prompt_shuffle_is_deterministic_and_preserves_multisets) ... ok
+test	Unit tests	2026-10-10T23:18:05.6870051Z test_spearman_detects_order_and_reverse (test_qwen_learned_verifier_bridge.LearnedVerifierBridgeContractTest.test_spearman_detects_order_and_reverse) ... ok
+test	Unit tests	2026-10-10T23:18:05.7104999Z test_completed_underpowered_artifact_recomputes_primary (test_qwen_learned_verifier_evidence.LearnedVerifierEvidenceValidatorTest.test_completed_underpowered_artifact_recomputes_primary) ... ok
+test	Unit tests	2026-10-10T23:18:05.7113702Z test_failed_execution_is_valid_retained_evidence (test_qwen_learned_verifier_evidence.LearnedVerifierEvidenceValidatorTest.test_failed_execution_is_valid_retained_evidence) ... ok
+test	Unit tests	2026-10-10T23:18:05.7124906Z test_geometry_exposes_pooled_positive_with_negative_grpo_alignment (test_qwen_learned_verifier_evidence.LearnedVerifierEvidenceValidatorTest.test_geometry_exposes_pooled_positive_with_negative_grpo_alignment) ... ok
+test	Unit tests	2026-10-10T23:18:05.7269781Z test_rehashed_effect_score_tamper_is_rejected (test_qwen_learned_verifier_evidence.LearnedVerifierEvidenceValidatorTest.test_rehashed_effect_score_tamper_is_rejected) ... ok
+test	Unit tests	2026-10-10T23:18:05.7399848Z test_rehashed_top_level_primary_tamper_is_rejected (test_qwen_learned_verifier_evidence.LearnedVerifierEvidenceValidatorTest.test_rehashed_top_level_primary_tamper_is_rejected) ... ok
+test	Unit tests	2026-10-10T23:18:05.7719264Z test_end_to_end_replay_runs_existing_three_estimators (test_real_llm_active_audit.RealLLMActiveAuditContractTest.test_end_to_end_replay_runs_existing_three_estimators) ... ok
+test	Unit tests	2026-10-10T23:18:05.7736899Z test_real_candidate_loader_preserves_terminal_and_covariance_ground_truths (test_real_llm_active_audit.RealLLMActiveAuditContractTest.test_real_candidate_loader_preserves_terminal_and_covariance_ground_truths) ... ok
+test	Unit tests	2026-10-10T23:18:05.8054155Z test_rehashed_summary_metric_tamper_is_rejected (test_real_llm_active_audit.RealLLMActiveAuditContractTest.test_rehashed_summary_metric_tamper_is_rejected) ... ok
+test	Unit tests	2026-10-10T23:18:05.8340792Z test_rehashed_trial_semantic_tamper_is_rejected (test_real_llm_active_audit.RealLLMActiveAuditContractTest.test_rehashed_trial_semantic_tamper_is_rejected) ... ok
+test	Unit tests	2026-10-10T23:18:05.8360290Z test_tampered_input_artifact_is_rejected (test_real_llm_active_audit.RealLLMActiveAuditContractTest.test_tampered_input_artifact_is_rejected) ... ok
+test	Unit tests	2026-10-10T23:18:05.8377587Z test_wrong_input_protocol_lineage_is_rejected (test_real_llm_active_audit.RealLLMActiveAuditContractTest.test_wrong_input_protocol_lineage_is_rejected) ... ok
+test	Unit tests	2026-10-10T23:18:05.8402132Z test_wrong_source_lineage_is_rejected_even_when_rehashed (test_real_llm_active_audit.RealLLMActiveAuditContractTest.test_wrong_source_lineage_is_rejected_even_when_rehashed) ... ok
+test	Unit tests	2026-10-10T23:18:05.8837163Z test_end_to_end_real_model_controller_replay_and_validation (test_real_llm_mathematical_rsi.RealLLMMathematicalRSITest.test_end_to_end_real_model_controller_replay_and_validation) ... ok
+test	Unit tests	2026-10-10T23:18:05.9227279Z test_fixed_probe_is_complete_and_information_budget_fails_closed (test_real_llm_mathematical_rsi.RealLLMMathematicalRSITest.test_fixed_probe_is_complete_and_information_budget_fails_closed) ... ok
+test	Unit tests	2026-10-10T23:18:05.9600255Z test_reconstruction_is_diagnostic_only (test_real_llm_mathematical_rsi.RealLLMMathematicalRSITest.test_reconstruction_is_diagnostic_only) ... ok
+test	Unit tests	2026-10-10T23:18:06.0078467Z test_rehashed_trial_tamper_is_detected (test_real_llm_mathematical_rsi.RealLLMMathematicalRSITest.test_rehashed_trial_tamper_is_detected) ... ok
+test	Unit tests	2026-10-10T23:18:12.3240406Z test_fixed_probe_covers_all_tasks_and_underbudget_info_refreshes (test_recovered_qwen_mathematical_rsi.RecoveredQwenMathematicalRSITest.test_fixed_probe_covers_all_tasks_and_underbudget_info_refreshes) ... ok
+test	Unit tests	2026-10-10T23:18:18.6186453Z test_nonproxy_allow_has_exact_finite_bank_certificate (test_recovered_qwen_mathematical_rsi.RecoveredQwenMathematicalRSITest.test_nonproxy_allow_has_exact_finite_bank_certificate) ... ok
+test	Unit tests	2026-10-10T23:18:24.9010781Z test_real_bank_replay_and_independent_validation (test_recovered_qwen_mathematical_rsi.RecoveredQwenMathematicalRSITest.test_real_bank_replay_and_independent_validation) ... ok
+test	Unit tests	2026-10-10T23:18:24.9012945Z test_fixed_cadence (test_refresh_controller.RefreshControllerTest.test_fixed_cadence) ... ok
+test	Unit tests	2026-10-10T23:18:24.9014310Z test_geometry_margin (test_refresh_controller.RefreshControllerTest.test_geometry_margin) ... ok
+test	Unit tests	2026-10-10T23:18:24.9015625Z test_scalar_threshold (test_refresh_controller.RefreshControllerTest.test_scalar_threshold) ... ok
+test	Unit tests	2026-10-10T23:18:24.9016969Z test_metric_and_relative_rules (test_regression_gate.RegressionGateTest.test_metric_and_relative_rules) ... ok
+test	Unit tests	2026-10-10T23:18:24.9018390Z test_missing_required_report_fails (test_regression_gate.RegressionGateTest.test_missing_required_report_fails) ... ok
+test	Unit tests	2026-10-10T23:18:24.9022891Z test_fresh_version_after_publish_is_accepted (test_remote_workers.RemoteWorkerTest.test_fresh_version_after_publish_is_accepted) ... ok
+test	Unit tests	2026-10-10T23:18:24.9025815Z test_retry_succeeds_after_transient_failures (test_remote_workers.RemoteWorkerTest.test_retry_succeeds_after_transient_failures) ... ok
+test	Unit tests	2026-10-10T23:18:24.9029507Z test_stale_result_is_rejected (test_remote_workers.RemoteWorkerTest.test_stale_result_is_rejected) ... ok
+test	Unit tests	2026-10-10T23:18:24.9039876Z test_failed_execution_cannot_promote (test_research_evidence_promotion.ResearchEvidencePromotionTest.test_failed_execution_cannot_promote) ... ok
+test	Unit tests	2026-10-10T23:18:24.9046968Z test_negative_direction_can_promote (test_research_evidence_promotion.ResearchEvidencePromotionTest.test_negative_direction_can_promote) ... ok
+test	Unit tests	2026-10-10T23:18:24.9056654Z test_receipt_is_bound_to_downstream_run_source_and_protocol (test_research_evidence_promotion.ResearchEvidencePromotionTest.test_receipt_is_bound_to_downstream_run_source_and_protocol) ... ok
+test	Unit tests	2026-10-10T23:18:24.9065390Z test_semantically_invalid_validation_cannot_promote (test_research_evidence_promotion.ResearchEvidencePromotionTest.test_semantically_invalid_validation_cannot_promote) ... ok
+test	Unit tests	2026-10-10T23:18:24.9072501Z test_underpowered_completed_evidence_can_promote (test_research_evidence_promotion.ResearchEvidencePromotionTest.test_underpowered_completed_evidence_can_promote) ... ok
+test	Unit tests	2026-10-10T23:18:24.9080421Z test_best_of_n_matches_exhaustive_draws_with_ties (test_research_pipeline.ResearchPipelineTest.test_best_of_n_matches_exhaustive_draws_with_ties) ... ok
+test	Unit tests	2026-10-10T23:18:24.9084734Z test_box_certificate_is_sharp_on_all_reward_completions (test_research_pipeline.ResearchPipelineTest.test_box_certificate_is_sharp_on_all_reward_completions) ... ok
+test	Unit tests	2026-10-10T23:18:24.9171812Z test_budget_and_fixed_cadence (test_research_pipeline.ResearchPipelineTest.test_budget_and_fixed_cadence) ... ok
+test	Unit tests	2026-10-10T23:18:24.9176359Z test_frozen_best_of_n_composition (test_research_pipeline.ResearchPipelineTest.test_frozen_best_of_n_composition) ... ok
+test	Unit tests	2026-10-10T23:18:24.9179838Z test_multistatement_function_is_not_silently_truncated (test_research_pipeline.ResearchPipelineTest.test_multistatement_function_is_not_silently_truncated) ... ok
+test	Unit tests	2026-10-10T23:18:24.9183563Z test_no_python_execution_and_limits (test_research_pipeline.ResearchPipelineTest.test_no_python_execution_and_limits) ... ok
+test	Unit tests	2026-10-10T23:18:24.9230093Z test_reference_tasks_and_disjoint_hidden (test_research_pipeline.ResearchPipelineTest.test_reference_tasks_and_disjoint_hidden) ... ok
+test	Unit tests	2026-10-10T23:18:24.9857396Z test_score_rescaling_invariance (test_research_pipeline.ResearchPipelineTest.test_score_rescaling_invariance) ... ok
+test	Unit tests	2026-10-10T23:18:24.9860771Z test_structured_geometry_and_conditional_bound (test_research_pipeline.ResearchPipelineTest.test_structured_geometry_and_conditional_bound) ... ok
+test	Unit tests	2026-10-10T23:18:25.0029025Z test_unqueried_labels_cannot_change_policy_or_trigger (test_research_pipeline.ResearchPipelineTest.test_unqueried_labels_cannot_change_policy_or_trigger) ... ok
+test	Unit tests	2026-10-10T23:18:25.0081881Z test_same_observables_distinct_source_rewards_refute_finite_lipschitz (test_residual_metric_diagnostic.ResidualMetricDiagnosticTest.test_same_observables_distinct_source_rewards_refute_finite_lipschitz) ... ok
+test	Unit tests	2026-10-10T23:18:25.0084786Z test_extract_prefers_final_marker (test_rlvr_benchmark.RLVRBenchmarkTest.test_extract_prefers_final_marker) ... ok
+test	Unit tests	2026-10-10T23:18:25.0086076Z test_gsm8k_reference (test_rlvr_benchmark.RLVRBenchmarkTest.test_gsm8k_reference) ... ok
+test	Unit tests	2026-10-10T23:18:25.0087257Z test_jsonl_loader_and_prompt (test_rlvr_benchmark.RLVRBenchmarkTest.test_jsonl_loader_and_prompt) ... ok
+test	Unit tests	2026-10-10T23:18:25.0088514Z test_numeric_normalization (test_rlvr_benchmark.RLVRBenchmarkTest.test_numeric_normalization) ... ok
+test	Unit tests	2026-10-10T23:18:25.0089996Z test_group_advantages_preserve_input_order (test_rlvr_objectives.GRPOObjectiveTest.test_group_advantages_preserve_input_order) ... ok
+test	Unit tests	2026-10-10T23:18:25.0091596Z test_loss_is_negative_mean_objective (test_rlvr_objectives.GRPOObjectiveTest.test_loss_is_negative_mean_objective) ... ok
+test	Unit tests	2026-10-10T23:18:25.0093311Z test_negative_advantage_clips_small_ratio (test_rlvr_objectives.GRPOObjectiveTest.test_negative_advantage_clips_small_ratio) ... ok
+test	Unit tests	2026-10-10T23:18:25.0094320Z test_positive_advantage_clips_large_ratio (test_rlvr_objectives.GRPOObjectiveTest.test_positive_advantage_clips_large_ratio) ... ok
+test	Unit tests	2026-10-10T23:18:25.0971456Z test_async_benchmark_preserves_work_and_improves_wall_clock (test_rlvr_reliability.RLVRReliabilityTest.test_async_benchmark_preserves_work_and_improves_wall_clock) ... ok
+test	Unit tests	2026-10-10T23:18:25.0976983Z test_checkpoint_rejects_mismatched_action_space (test_rlvr_reliability.RLVRReliabilityTest.test_checkpoint_rejects_mismatched_action_space) ... ok
+test	Unit tests	2026-10-10T23:18:25.0980860Z test_checkpoint_roundtrip (test_rlvr_reliability.RLVRReliabilityTest.test_checkpoint_roundtrip) ... ok
+test	Unit tests	2026-10-10T23:18:25.0985447Z test_async_rollout_counts_samples (test_rlvr_systems.RLVRSystemsTest.test_async_rollout_counts_samples) ... ok
+test	Unit tests	2026-10-10T23:18:25.1223548Z test_end_to_end_policy_improves (test_rlvr_systems.RLVRSystemsTest.test_end_to_end_policy_improves) ... ok
+test	Unit tests	2026-10-10T23:18:25.1225411Z test_group_advantages_center_within_prompt (test_rlvr_systems.RLVRSystemsTest.test_group_advantages_center_within_prompt) ... ok
+test	Unit tests	2026-10-10T23:18:25.1227447Z test_refresh_controller_uses_movement_and_staleness (test_rlvr_systems.RLVRSystemsTest.test_refresh_controller_uses_movement_and_staleness) ... ok
+test	Unit tests	2026-10-10T23:18:25.1253434Z test_duplicate_source_labels_cannot_fake_certainty (test_robust_policy_projection.ProjectionTest.test_duplicate_source_labels_cannot_fake_certainty) ... ok
+test	Unit tests	2026-10-10T23:18:25.4314246Z test_lp_minimum_matches_enumerated_simplex_grid (test_robust_policy_projection.ProjectionTest.test_lp_minimum_matches_enumerated_simplex_grid) ... ok
+test	Unit tests	2026-10-10T23:18:25.4336802Z test_unseen_reward_extremes_and_non_line_direction (test_robust_policy_projection.ProjectionTest.test_unseen_reward_extremes_and_non_line_direction) ... ok
+test	Unit tests	2026-10-10T23:18:25.7297946Z Generation 1 | cand-29f04e4d8358 | PROMOTED | promotion=0.4412 gap=0.0000
+test	Unit tests	2026-10-10T23:18:25.9159766Z Generation 2 | cand-b1fdbeca8de9 | REJECTED | promotion=0.4272 gap=0.1350
+test	Unit tests	2026-10-10T23:18:26.1928996Z Generation 3 | cand-403106733dd4 | PROMOTED | promotion=0.4487 gap=0.0000
+test	Unit tests	2026-10-10T23:18:26.3811343Z test_multigeneration_smoke (test_rsi_controller.EndToEndTests.test_multigeneration_smoke) ... ok
+test	Unit tests	2026-10-10T23:18:26.3942413Z test_capability_gain_promotes (test_rsi_controller.EvaluationPromotionTests.test_capability_gain_promotes) ... ok
+test	Unit tests	2026-10-10T23:18:26.4255165Z test_deterministic_seed_and_stale_verifier (test_rsi_controller.EvaluationPromotionTests.test_deterministic_seed_and_stale_verifier) ... ok
+test	Unit tests	2026-10-10T23:18:26.4432906Z test_hidden_eval_separation (test_rsi_controller.EvaluationPromotionTests.test_hidden_eval_separation) ... ok
+test	Unit tests	2026-10-10T23:18:26.4562664Z test_reward_hacking_rejected (test_rsi_controller.EvaluationPromotionTests.test_reward_hacking_rejected) ... ok
+test	Unit tests	2026-10-10T23:18:26.4697825Z test_append_only_rollback (test_rsi_controller.MemorySandboxTests.test_append_only_rollback) ... ok
+test	Unit tests	2026-10-10T23:18:26.4826172Z test_generation_commit_is_atomic_on_champion_failure (test_rsi_controller.MemorySandboxTests.test_generation_commit_is_atomic_on_champion_failure) ... ok
+test	Unit tests	2026-10-10T23:18:26.7246438Z test_timeout_recovery_and_kill_switch (test_rsi_controller.MemorySandboxTests.test_timeout_recovery_and_kill_switch) ... ok
+test	Unit tests	2026-10-10T23:18:26.7249259Z test_eval_code_and_training_mutation_blocked (test_rsi_controller.ProposalMutationTests.test_eval_code_and_training_mutation_blocked) ... ok
+test	Unit tests	2026-10-10T23:18:26.7250723Z test_schema_and_allowlist (test_rsi_controller.ProposalMutationTests.test_schema_and_allowlist) ... ok
+test	Unit tests	2026-10-10T23:18:26.7349385Z test_balances_across_workers (test_scheduler.SchedulerTest.test_balances_across_workers) ... ok
+test	Unit tests	2026-10-10T23:18:26.7762187Z test_records_backpressure (test_scheduler.SchedulerTest.test_records_backpressure) ... ok
+test	Unit tests	2026-10-10T23:18:26.7818294Z test_timeout_is_counted (test_scheduler.SchedulerTest.test_timeout_is_counted) ... ok
+test	Unit tests	2026-10-10T23:18:26.8036485Z test_hedge_respects_spare_work_budget (test_scheduler_admission.SchedulerAdmissionTest.test_hedge_respects_spare_work_budget) ... ok
+test	Unit tests	2026-10-10T23:18:26.8649112Z test_overload_is_shed_instead_of_unbounded_queueing (test_scheduler_admission.SchedulerAdmissionTest.test_overload_is_shed_instead_of_unbounded_queueing) ... ok
+test	Unit tests	2026-10-10T23:18:26.8860241Z test_weighted_budget_limits_concurrent_work (test_scheduler_admission.SchedulerAdmissionTest.test_weighted_budget_limits_concurrent_work) ... ok
+test	Unit tests	2026-10-10T23:18:26.8864601Z test_all_quarantined_fails_fast (test_scheduler_health.SchedulerHealthIntegrationTest.test_all_quarantined_fails_fast) ... ok
+test	Unit tests	2026-10-10T23:18:26.8868906Z test_attempt_budget_can_disable_failover (test_scheduler_health.SchedulerHealthIntegrationTest.test_attempt_budget_can_disable_failover) ... ok
+test	Unit tests	2026-10-10T23:18:26.8873299Z test_exhausts_distinct_workers_then_raises_last_error (test_scheduler_health.SchedulerHealthIntegrationTest.test_exhausts_distinct_workers_then_raises_last_error) ... ok
+test	Unit tests	2026-10-10T23:18:26.8877512Z test_failed_request_fails_over_to_healthy_worker (test_scheduler_health.SchedulerHealthIntegrationTest.test_failed_request_fails_over_to_healthy_worker) ... ok
+test	Unit tests	2026-10-10T23:18:26.9386471Z test_deadline_is_end_to_end_and_bounds_queue_wait (test_scheduler_slo.SLOAwareSchedulerTest.test_deadline_is_end_to_end_and_bounds_queue_wait) ... ok
+test	Unit tests	2026-10-10T23:18:26.9544751Z test_half_open_probe_auto_recovers_worker (test_scheduler_slo.SLOAwareSchedulerTest.test_half_open_probe_auto_recovers_worker) ... ok
+test	Unit tests	2026-10-10T23:18:26.9623539Z test_hedge_beats_slow_primary_and_cancels_loser (test_scheduler_slo.SLOAwareSchedulerTest.test_hedge_beats_slow_primary_and_cancels_loser) ... ok
+test	Unit tests	2026-10-10T23:18:26.9637963Z test_latency_estimate_changes_idle_worker_choice (test_scheduler_slo.SLOAwareSchedulerTest.test_latency_estimate_changes_idle_worker_choice) ... ok
+test	Unit tests	2026-10-10T23:18:26.9641886Z test_exogenous_stream_is_policy_independent (test_source_audit.SourceAuditTest.test_exogenous_stream_is_policy_independent) ... ok
+test	Unit tests	2026-10-10T23:18:26.9647744Z test_no_repeat_and_shared_initial_sources (test_source_audit.SourceAuditTest.test_no_repeat_and_shared_initial_sources) ... ok
+test	Unit tests	2026-10-10T23:18:26.9649063Z test_snapshot_reports_percentiles (test_telemetry.TelemetryTest.test_snapshot_reports_percentiles) ... ok
+test	Unit tests	2026-10-10T23:18:26.9656394Z test_context_from_torchrun_environment (test_torch_distributed_config.TorchDistributedConfigTest.test_context_from_torchrun_environment) ... ok
+test	Unit tests	2026-10-10T23:18:26.9662062Z test_defaults_are_single_process (test_torch_distributed_config.TorchDistributedConfigTest.test_defaults_are_single_process) ... ok
+test	Unit tests	2026-10-10T23:18:26.9938288Z test_reversal_is_not_joint_replication (test_transfer_analysis.TransferAnalysisTest.test_reversal_is_not_joint_replication) ... ok
+test	Unit tests	2026-10-10T23:18:26.9993571Z test_unmatched_cost_rejected (test_transfer_analysis.TransferAnalysisTest.test_unmatched_cost_rejected) ... ok
+test	Unit tests	2026-10-10T23:18:27.0472992Z test_affine_invariance_and_kl_constraint_on_nonuniform_support (test_transfer_calibration.TransferCalibrationTest.test_affine_invariance_and_kl_constraint_on_nonuniform_support) ... ok
+test	Unit tests	2026-10-10T23:18:27.0622131Z test_builder_blocks_outcomes_and_preserves_zero_radius_tasks (test_transfer_calibration.TransferCalibrationTest.test_builder_blocks_outcomes_and_preserves_zero_radius_tasks) ... ok
+test	Unit tests	2026-10-10T23:18:27.5748380Z test_complete_archive_diagnostic_and_hash_abort (test_transfer_calibration.TransferCalibrationTest.test_complete_archive_diagnostic_and_hash_abort) ... ok
+test	Unit tests	2026-10-10T23:18:27.5768819Z test_order_ties_bon_invariance_and_negative_slope_counterexample (test_transfer_calibration.TransferCalibrationTest.test_order_ties_bon_invariance_and_negative_slope_counterexample) ... ok
+test	Unit tests	2026-10-10T23:18:27.5782274Z test_tied_top_limit_constants_and_invalid_inputs (test_transfer_calibration.TransferCalibrationTest.test_tied_top_limit_constants_and_invalid_inputs) ... ok
+test	Unit tests	2026-10-10T23:18:27.5803057Z test_worst_case_unknown_reward_is_negative_total_variation (test_transfer_calibration.TransferCalibrationTest.test_worst_case_unknown_reward_is_negative_total_variation) ... ok
+test	Unit tests	2026-10-10T23:18:27.6329232Z test_complete_archived_geometry_audit (test_transfer_geometry.TransferGeometryAuditTest.test_complete_archived_geometry_audit) ... ok
+test	Unit tests	2026-10-10T23:18:27.6335852Z test_positive_affine_invariance_and_policy_metrics (test_transfer_geometry.TransferGeometryAuditTest.test_positive_affine_invariance_and_policy_metrics) ... ok
+test	Unit tests	2026-10-10T23:18:27.6421507Z test_disjoint_ids_and_reference_scores (test_transfer_tasks.TransferTasksTest.test_disjoint_ids_and_reference_scores) ... ok
+test	Unit tests	2026-10-10T23:18:27.6549322Z test_independent_reference_checks (test_transfer_tasks.TransferTasksTest.test_independent_reference_checks) ... ok
+test	Unit tests	2026-10-10T23:18:27.6551032Z test_availability_probe_is_boolean (test_triton_grpo_contract.TritonGRPOContractTest.test_availability_probe_is_boolean) ... ok
+test	Unit tests	2026-10-10T23:18:27.6552855Z test_backend_validation (test_triton_grpo_contract.TritonGRPOContractTest.test_backend_validation) ... ok
+test	Unit tests	2026-10-10T23:18:27.6698796Z test_failed_cell_is_retained_as_valid_negative_evidence (test_verification_aware_gpu_phase.VerificationAwarePhasePlanTests.test_failed_cell_is_retained_as_valid_negative_evidence) ... ok
+test	Unit tests	2026-10-10T23:18:27.6711921Z test_freshness_pairs_are_not_cartesian (test_verification_aware_gpu_phase.VerificationAwarePhasePlanTests.test_freshness_pairs_are_not_cartesian) ... ok
+test	Unit tests	2026-10-10T23:18:27.6725315Z test_locked_plan_expands_to_expected_unique_cells (test_verification_aware_gpu_phase.VerificationAwarePhasePlanTests.test_locked_plan_expands_to_expected_unique_cells) ... ok
+test	Unit tests	2026-10-10T23:18:27.6992872Z test_successful_cell_is_hash_manifested_and_validates (test_verification_aware_gpu_phase.VerificationAwarePhasePlanTests.test_successful_cell_is_hash_manifested_and_validates) ... ok
+test	Unit tests	2026-10-10T23:18:27.7565899Z test_activation_fences_old_inflight_reward (test_verifier_deployment.VerifierDeploymentTests.test_activation_fences_old_inflight_reward) ... ok
+test	Unit tests	2026-10-10T23:18:27.7611948Z test_corrupt_artifact_fails_closed_on_restart (test_verifier_deployment.VerifierDeploymentTests.test_corrupt_artifact_fails_closed_on_restart) ... ok
+test	Unit tests	2026-10-10T23:18:27.7650430Z test_duplicate_worker_identity_fails_closed (test_verifier_deployment.VerifierDeploymentTests.test_duplicate_worker_identity_fails_closed) ... ok
+test	Unit tests	2026-10-10T23:18:27.7752239Z test_new_coordinator_epoch_fences_old_before_workers_observe_takeover (test_verifier_deployment.VerifierDeploymentTests.test_new_coordinator_epoch_fences_old_before_workers_observe_takeover) ... ok
+test	Unit tests	2026-10-10T23:18:27.7878750Z test_partial_activation_retry_converges_idempotently (test_verifier_deployment.VerifierDeploymentTests.test_partial_activation_retry_converges_idempotently) ... ok
+test	Unit tests	2026-10-10T23:18:27.7962980Z test_two_phase_deploy_converges_two_workers (test_verifier_deployment.VerifierDeploymentTests.test_two_phase_deploy_converges_two_workers) ... ok
+test	Unit tests	2026-10-10T23:18:27.8021253Z test_worker_restart_recovers_active_artifact (test_verifier_deployment.VerifierDeploymentTests.test_worker_restart_recovers_active_artifact) ... ok
+test	Unit tests	2026-10-10T23:18:27.8093965Z test_active_version_advances_during_load (test_verifier_prepare_fencing.VerifierPrepareFencingTests.test_active_version_advances_during_load) ... ok
+test	Unit tests	2026-10-10T23:18:27.8169714Z test_epoch_distinct_version (test_verifier_prepare_fencing.VerifierPrepareFencingTests.test_epoch_distinct_version) ... ok
+test	Unit tests	2026-10-10T23:18:27.8242938Z test_epoch_same_version_distinct_artifact (test_verifier_prepare_fencing.VerifierPrepareFencingTests.test_epoch_same_version_distinct_artifact) ... ok
+test	Unit tests	2026-10-10T23:18:27.8303369Z test_non_racing_async_loader (test_verifier_prepare_fencing.VerifierPrepareFencingTests.test_non_racing_async_loader) ... ok
+test	Unit tests	2026-10-10T23:18:27.8389382Z test_restart_after_epoch_takeover (test_verifier_prepare_fencing.VerifierPrepareFencingTests.test_restart_after_epoch_takeover) ... ok
+test	Unit tests	2026-10-10T23:18:27.8450708Z test_same_epoch_equal_active_version_conflict (test_verifier_prepare_fencing.VerifierPrepareFencingTests.test_same_epoch_equal_active_version_conflict) ... ok
+test	Unit tests	2026-10-10T23:18:27.8509897Z test_same_epoch_equal_active_version_idempotent (test_verifier_prepare_fencing.VerifierPrepareFencingTests.test_same_epoch_equal_active_version_idempotent) ... ok
+test	Unit tests	2026-10-10T23:18:27.8538705Z test_capacity_latency_aware_router_prefers_fast_capacity (test_verifier_routing.AdaptiveVerifierFleetTests.test_capacity_latency_aware_router_prefers_fast_capacity) ... ok
+test	Unit tests	2026-10-10T23:18:27.8655281Z test_deadline_failure_quarantines_and_fails_over (test_verifier_routing.AdaptiveVerifierFleetTests.test_deadline_failure_quarantines_and_fails_over) ... ok
+test	Unit tests	2026-10-10T23:18:27.8669343Z test_routing_snapshot_exposes_predicted_completion_state (test_verifier_routing.AdaptiveVerifierFleetTests.test_routing_snapshot_exposes_predicted_completion_state) ... ok
+test	Unit tests	2026-10-10T23:18:27.8685009Z test_expected_version_publish_fences_old_workers (test_verifier_rpc.VerifierRPCTest.test_expected_version_publish_fences_old_workers) ... ok
+test	Unit tests	2026-10-10T23:18:27.8705952Z test_fleet_quarantines_stale_worker_and_fails_over (test_verifier_rpc.VerifierRPCTest.test_fleet_quarantines_stale_worker_and_fails_over) ... ok
+test	Unit tests	2026-10-10T23:18:27.8720697Z test_remote_roundtrip_preserves_generation_and_version (test_verifier_rpc.VerifierRPCTest.test_remote_roundtrip_preserves_generation_and_version) ... ok
+test	Unit tests	2026-10-10T23:18:27.8740944Z test_unhealthy_worker_is_not_used (test_verifier_rpc.VerifierRPCTest.test_unhealthy_worker_is_not_used) ... ok
+test	Unit tests	2026-10-10T23:18:27.8750761Z test_version_mismatch_fails_closed (test_verifier_rpc.VerifierRPCTest.test_version_mismatch_fails_closed) ... ok
+test	Unit tests	2026-10-10T23:18:27.8811316Z test_activation_requires_digest_including_idempotent_path (test_verifier_same_epoch.SameEpochArtifactTests.test_activation_requires_digest_including_idempotent_path) ... ok
+test	Unit tests	2026-10-10T23:18:27.8905889Z test_conflicting_prepare_cannot_activate_wrong_artifact (test_verifier_same_epoch.SameEpochArtifactTests.test_conflicting_prepare_cannot_activate_wrong_artifact) ... ok
+test	Unit tests	2026-10-10T23:18:27.8997820Z test_coordinator_rejects_wrong_ack_and_health_identity (test_verifier_same_epoch.SameEpochArtifactTests.test_coordinator_rejects_wrong_ack_and_health_identity) ... ok
+test	Unit tests	2026-10-10T23:18:27.9026068Z test_coordinator_serializes_complete_deployments (test_verifier_same_epoch.SameEpochArtifactTests.test_coordinator_serializes_complete_deployments) ... ok
+test	Unit tests	2026-10-10T23:18:27.9126756Z test_identical_overlapping_prepare_is_idempotent (test_verifier_same_epoch.SameEpochArtifactTests.test_identical_overlapping_prepare_is_idempotent) ... ok
+test	Unit tests	2026-10-10T23:18:27.9140137Z test_batch_chat_contract_and_index_mapping (test_vllm_batch.VLLMBatchBackendTest.test_batch_chat_contract_and_index_mapping) ... ok
+test	Unit tests	2026-10-10T23:18:27.9149622Z test_rejects_unsupported_sampling_contract (test_vllm_batch.VLLMBatchBackendTest.test_rejects_unsupported_sampling_contract) ... ok
+test	Unit tests	2026-10-10T23:18:27.9151231Z test_counter_delta_never_goes_negative (test_vllm_metrics.VLLMMetricsTest.test_counter_delta_never_goes_negative) ... ok
+test	Unit tests	2026-10-10T23:18:27.9152038Z test_parses_labels_and_aggregates (test_vllm_metrics.VLLMMetricsTest.test_parses_labels_and_aggregates) ... ok
+test	Unit tests	2026-10-10T23:18:27.9153687Z test_replay_diagnostics_require_exact_token_alignment (test_vllm_token_exact_bridge.VLLMTokenExactBridgeTests.test_replay_diagnostics_require_exact_token_alignment) ... ok
+test	Unit tests	2026-10-10T23:18:27.9161475Z test_validator_binds_same_replay_to_serving_and_learner (test_vllm_token_exact_bridge.VLLMTokenExactBridgeTests.test_validator_binds_same_replay_to_serving_and_learner) ... ok
+test	Unit tests	2026-10-10T23:18:27.9176578Z test_ack_cannot_move_backwards_or_ahead (test_weight_sync.WeightSyncTest.test_ack_cannot_move_backwards_or_ahead) ... ok
+test	Unit tests	2026-10-10T23:18:27.9186345Z test_corruption_is_detected (test_weight_sync.WeightSyncTest.test_corruption_is_detected) ... ok
+test	Unit tests	2026-10-10T23:18:27.9199180Z test_publish_verify_and_ack (test_weight_sync.WeightSyncTest.test_publish_verify_and_ack) ... ok
+test	Unit tests	2026-10-10T23:18:27.9221558Z test_restart_recovers_version_and_ack_state (test_weight_sync.WeightSyncTest.test_restart_recovers_version_and_ack_state) ... ok
+test	Unit tests	2026-10-10T23:18:27.9223344Z test_half_open_reservation_is_single_probe (test_worker_health.WorkerHealthTest.test_half_open_reservation_is_single_probe) ... ok
+test	Unit tests	2026-10-10T23:18:27.9225015Z test_quarantines_after_threshold_and_recovers (test_worker_health.WorkerHealthTest.test_quarantines_after_threshold_and_recovers) ... ok
+test	Unit tests	2026-10-10T23:18:27.9226067Z test_stale_success_cannot_reopen_quarantined_worker (test_worker_health.WorkerHealthTest.test_stale_success_cannot_reopen_quarantined_worker) ... ok
+test	Unit tests	2026-10-10T23:18:27.9227004Z test_success_resets_failure_streak (test_worker_health.WorkerHealthTest.test_success_resets_failure_streak) ... ok
+test	Unit tests	2026-10-10T23:18:27.9240897Z test_roundtrip_and_policy_version (test_worker_rpc.WorkerRPCTest.test_roundtrip_and_policy_version) ... ok
+test	Unit tests	2026-10-10T23:18:27.9242035Z test_server_rejects_backward_version (test_worker_rpc.WorkerRPCTest.test_server_rejects_backward_version) ... ok
+test	Unit tests	2026-10-10T23:18:27.9251589Z test_stale_client_rejects_new_worker_version (test_worker_rpc.WorkerRPCTest.test_stale_client_rejects_new_worker_version) ... ok
+test	Unit tests	2026-10-10T23:18:27.9252686Z 
+test	Unit tests	2026-10-10T23:18:27.9252882Z ----------------------------------------------------------------------
+test	Unit tests	2026-10-10T23:18:27.9253309Z Ran 398 tests in 36.991s
+test	Unit tests	2026-10-10T23:18:27.9253478Z 
+test	Unit tests	2026-10-10T23:18:27.9253578Z OK (skipped=29)
+test	Phase-frontier analysis	﻿2026-10-10T23:18:28.0181590Z ##[group]Run python src/phase_frontier_analysis.py
+test	Phase-frontier analysis	2026-10-10T23:18:28.0182016Z ^[[36;1mpython src/phase_frontier_analysis.py^[[0m
+test	Phase-frontier analysis	2026-10-10T23:18:28.0245163Z shell: /usr/bin/bash -e {0}
+test	Phase-frontier analysis	2026-10-10T23:18:28.0245418Z env:
+test	Phase-frontier analysis	2026-10-10T23:18:28.0245686Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+test	Phase-frontier analysis	2026-10-10T23:18:28.0246130Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+test	Phase-frontier analysis	2026-10-10T23:18:28.0246570Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test	Phase-frontier analysis	2026-10-10T23:18:28.0246961Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test	Phase-frontier analysis	2026-10-10T23:18:28.0247343Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test	Phase-frontier analysis	2026-10-10T23:18:28.0247727Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+test	Phase-frontier analysis	2026-10-10T23:18:28.0248044Z ##[endgroup]
+test	Phase-frontier analysis	2026-10-10T23:18:28.3915266Z                  metric  threshold  balanced_accuracy direction  boundary_mean  boundary_std  boundary_cv  n_eta_with_failure
+test	Phase-frontier analysis	2026-10-10T23:18:28.3916779Z             eta_times_L     15.875           0.983221        >=        17.6447       1.33935    0.0759065                  19
+test	Phase-frontier analysis	2026-10-10T23:18:28.3918091Z max_score_span_exposure    10.1211           0.989933        >=         13.892       3.16303     0.227687                  19
+test	Phase-frontier analysis	2026-10-10T23:18:28.3919252Z            max_block_KL    1.90612                  1        >=        4.04111       1.87498     0.463978                  19
+test	Phase-frontier analysis	2026-10-10T23:18:28.3919974Z 
+test	Phase-frontier analysis	2026-10-10T23:18:28.3920716Z Descriptive in-sample analysis only; this does not measure held-out transfer.
+test	Phase-frontier analysis	2026-10-10T23:18:28.3921737Z Lower boundary_cv means less dispersion in the observed grid boundaries;
+test	Phase-frontier analysis	2026-10-10T23:18:28.3923072Z balanced_accuracy measures pooled safe/failure separation by one threshold.
+test	Post Run actions/setup-python@v5	﻿2026-10-10T23:18:28.4448805Z Post job cleanup.
+test	Post Run actions/setup-python@v5	2026-10-10T23:18:28.5690401Z (node:2417) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+test	Post Run actions/setup-python@v5	2026-10-10T23:18:28.5691779Z (Use `node --trace-deprecation ...` to show where the warning was created)
+test	Post Run actions/checkout@v4	﻿2026-10-10T23:18:28.5926358Z Post job cleanup.
+test	Post Run actions/checkout@v4	2026-10-10T23:18:28.6808601Z [command]/usr/bin/git version
+test	Post Run actions/checkout@v4	2026-10-10T23:18:28.6855061Z git version 2.55.0
+test	Post Run actions/checkout@v4	2026-10-10T23:18:28.6901184Z Temporarily overriding HOME='/home/runner/work/_temp/4c5ce269-dc1b-4123-890d-e8a353efe438' before making global git config changes
+test	Post Run actions/checkout@v4	2026-10-10T23:18:28.6903322Z Adding repository directory to the temporary git global config as a safe directory
+test	Post Run actions/checkout@v4	2026-10-10T23:18:28.6910180Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Recursive-Verification-Lag/Recursive-Verification-Lag
+test	Post Run actions/checkout@v4	2026-10-10T23:18:28.6961093Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+test	Post Run actions/checkout@v4	2026-10-10T23:18:28.6998028Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+test	Post Run actions/checkout@v4	2026-10-10T23:18:28.7260026Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test	Post Run actions/checkout@v4	2026-10-10T23:18:28.7286937Z http.https://github.com/.extraheader
+test	Post Run actions/checkout@v4	2026-10-10T23:18:28.7300506Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+test	Post Run actions/checkout@v4	2026-10-10T23:18:28.7334425Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+test	Post Run actions/checkout@v4	2026-10-10T23:18:28.7674515Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+test	Post Run actions/checkout@v4	2026-10-10T23:18:28.7723538Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+test	Complete job	﻿2026-10-10T23:18:28.8191961Z Cleaning up orphan processes
+test	Complete job	2026-10-10T23:18:28.8578381Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

@@ -1,0 +1,100 @@
+[
+  {
+    "activation_success": false,
+    "durable": {
+      "active_manifest": null,
+      "coordinator_epoch": 1,
+      "prepared_manifest": {
+        "path": "/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/tmp1fvugrs2/a/verifier-v00000001.bin",
+        "sha256": "2d1d470941f3cbec6f4f184f6c8edbc89f44545726e58aeb927057a701f9bece",
+        "version": 1
+      },
+      "schema_version": 1
+    },
+    "events": [
+      "A loader blocked",
+      {
+        "B ACK": "6d5882a20efed4481bc13d5c8121bf4bd774854dc63fc964c2441a62a168314c"
+      },
+      {
+        "A ACK": {
+          "artifact_sha256": "2d1d470941f3cbec6f4f184f6c8edbc89f44545726e58aeb927057a701f9bece",
+          "coordinator_epoch": 1,
+          "ok": true,
+          "verifier_version": 1,
+          "worker_id": "v"
+        }
+      },
+      {
+        "activation_rejected": "verifier activation incomplete: worker[0]: RuntimeError: RuntimeError: prepared artifact digest does not match activation"
+      }
+    ],
+    "expected_sha": "6d5882a20efed4481bc13d5c8121bf4bd774854dc63fc964c2441a62a168314c",
+    "fixed_contract_pass": true,
+    "health": {
+      "active_artifact_sha256": null,
+      "capacity": 1,
+      "coordinator_epoch": 1,
+      "healthy": true,
+      "inflight": 0,
+      "ok": true,
+      "prepared_verifier_version": 1,
+      "service_time_hint_s": null,
+      "verifier_version": 0,
+      "worker_id": "v"
+    },
+    "identical": false,
+    "recovery_error": null,
+    "recovery_sha": "6d5882a20efed4481bc13d5c8121bf4bd774854dc63fc964c2441a62a168314c",
+    "reward": 0.0,
+    "wrong_artifact_success": false
+  },
+  {
+    "activation_success": true,
+    "durable": {
+      "active_manifest": {
+        "path": "/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/tmpl2lmfqpg/a/verifier-v00000001.bin",
+        "sha256": "2d1d470941f3cbec6f4f184f6c8edbc89f44545726e58aeb927057a701f9bece",
+        "version": 1
+      },
+      "coordinator_epoch": 1,
+      "prepared_manifest": null,
+      "schema_version": 1
+    },
+    "events": [
+      "A loader blocked",
+      {
+        "B ACK": "2d1d470941f3cbec6f4f184f6c8edbc89f44545726e58aeb927057a701f9bece"
+      },
+      {
+        "A ACK": {
+          "artifact_sha256": "2d1d470941f3cbec6f4f184f6c8edbc89f44545726e58aeb927057a701f9bece",
+          "coordinator_epoch": 1,
+          "ok": true,
+          "verifier_version": 1,
+          "worker_id": "v"
+        }
+      },
+      "B coordinator declared activation success"
+    ],
+    "expected_sha": "2d1d470941f3cbec6f4f184f6c8edbc89f44545726e58aeb927057a701f9bece",
+    "fixed_contract_pass": true,
+    "health": {
+      "active_artifact_sha256": "2d1d470941f3cbec6f4f184f6c8edbc89f44545726e58aeb927057a701f9bece",
+      "capacity": 1,
+      "coordinator_epoch": 1,
+      "healthy": true,
+      "inflight": 0,
+      "ok": true,
+      "prepared_verifier_version": null,
+      "service_time_hint_s": null,
+      "verifier_version": 1,
+      "worker_id": "v"
+    },
+    "identical": true,
+    "recovery_error": null,
+    "recovery_sha": "2d1d470941f3cbec6f4f184f6c8edbc89f44545726e58aeb927057a701f9bece",
+    "reward": 0.1,
+    "wrong_artifact_success": false
+  }
+]

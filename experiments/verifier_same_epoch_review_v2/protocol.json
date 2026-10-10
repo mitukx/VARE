@@ -1,0 +1,10 @@
+{
+  "study": "verifier-same-epoch-review-v2",
+  "base": "436a96e86b704ad981b05237b41fdfb846f18817",
+  "scope": "PR91, same coordinator epoch overlapping prepare, artifact-bound activation only",
+  "schedule": "Block A(v1,shaA) loader; coordinator.prepare B(v1,shaB) ACKs in same epoch; release A before activation; coordinator.activate B; inspect active SHA/reward/durable state.",
+  "primary_failure": "Coordinator declares B activation successful while active SHA differs from B ACK SHA.",
+  "acceptable_fixed_outcome": "Either B is active with its SHA/reward, or activation rejects without declaring success; explicit redeploy B must converge.",
+  "controls": ["same artifact overlapping prepares remain safe", "coordinator lifecycle calls serialized", "wrong prepare ACK digest rejected", "wrong activation digest/epoch rejected", "wrong health digest rejected", "existing cross-epoch/active-advance/idempotence/restart controls pass"],
+  "limits": "Deterministic localhost correctness; not field incidence, performance, model learning, or fleet-wide atomicity. Protocol written before this schedule is executed, after source inspection and earlier PR91 evidence."
+}

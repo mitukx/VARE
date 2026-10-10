@@ -1,0 +1,17 @@
+{
+  "study": "interactive-rollout-reuse-v1",
+  "question": "Can unconsumed interactive rollout groups be repaired after policy and feedback-verifier changes while preserving the current target group law at lower total collection cost?",
+  "phase": "Prerequisite falsification, not a model-learning or efficiency experiment",
+  "scope": "Three analytically specified finite-law checks plus imported pinned SPEC-RL acceptance kernel. No pretrained model, retired cohort, GPU or API inference.",
+  "source": {"repository":"https://github.com/ShopeeLLM/Spec-RL","revision":"97da99ed54d663b238c417c728bc824c79cfab6f","path":"verl/utils/speculative_decoding.py","function":"spec_cut"},
+  "cases": [
+    {"id":"exogenous_rejection","q":[0.9,0.1],"p":[0.1,0.9],"methods":["accept min(1,p/q), reject then sample p","accept min(1,p/q), reject then sample normalized (p-q)+"],"metric":"exact output law and group-size-two normalized expected score update"},
+    {"id":"adaptive_draft","q":[0.5,0.5],"group_size":2,"target_selection":"p(action1)=0.9 if first consumed draft action=1, else 0.1","methods":["correct residual kernel using consumed draft","correct residual kernel using independent unconsumed donor group","fresh current group"],"metric":"conditional group law TV and expected group-normalized score update"},
+    {"id":"feedback_change","policy":"first action1 probability .5; second action1 probability .2 after feedback0 and .9 after feedback1","feedback_old":"0","feedback_new":"first action","reward":"second action1","methods":["terminal reward relabel only","replay feedback, regenerate at first changed observation","fresh current trajectory"],"metric":"exact trajectory law TV, expected reward, count of regenerated action calls"}
+  ],
+  "sampling_sanity":{"seed":20261011,"samples":200000,"tolerance":0.005,"purpose":"execute pinned spec_cut only; target continuation simulated, no Ray/vLLM end-to-end claim"},
+  "pass_conditions":["fresh independent donor with correct residual matches target group law to 1e-12","first-feedback-change repair matches fresh trajectory law to 1e-12","consumed-draft exactness counterexample has conditional TV > .05","published-style rejection has exact TV > .05 and imported acceptance kernel empirical law agrees within .005"],
+  "stop_conditions":["Any independent-donor or feedback-repair exactness check fails: stop implementation","Do not start training from finite-law success alone","No new synthetic variants after these checks","Do not claim novel speculative sampling or off-dynamics theory; novelty of joint systems contribution remains provisional"],
+  "resources":{"maximum_cpu_seconds":60,"gpu_hours":0,"paid_api_spend":0},
+  "timing_note":"Frozen after source inspection and deriving candidate formulas, before running this runner. Local protocol hash, not public pre-registration."
+}

@@ -1,0 +1,9 @@
+{
+ "purpose":"Connect the fixed adaptive-cache counterexample to the unchanged RVL train_step, not a pretrained model or capability study.",
+ "timing":"Supplementary protocol after primary finite-law outputs; fixed before trainer execution.",
+ "revision":"ba94a9e513fdaf882cde091766007a88b9edaeee",
+ "cases":"All four binary action groups under each target action1 probability .1 and .9. BinaryPolicy logits [0,theta], theta=log(p/(1-p)); reward=action; true current token log probabilities as behavior log probabilities; real train_step, SGD lr .1, max norm100, advantage_eps1e-6.",
+ "primary":"Weighted ascent gradient for fresh iid/independent groups .09/sqrt(1+4e-6), consumed-draft groups .05/sqrt(1+4e-6); all within 1e-6; stored behavior logratio and KL zero within1e-6.",
+ "resources":"CPU <=30seconds, no download, no pretrained model, no GPU/API.",
+ "failure":"Mismatch invalidates trainer connection; retain it and do not claim new algorithm/capability."
+}

@@ -1,0 +1,183 @@
+{
+  "rows": [
+    {
+      "p": 0.1,
+      "group": [
+        0,
+        0
+      ],
+      "ascent_gradient": -0.0,
+      "theta_before": -2.1972246170043945,
+      "theta_after": -2.1972246170043945,
+      "metrics": {
+        "loss": 0.0,
+        "mean_reward": 0.0,
+        "samples": 2.0,
+        "grad_norm": 0.0,
+        "clip_fraction": 0.0,
+        "max_abs_log_ratio": 0.0,
+        "behavior_kl_estimate": 0.0
+      }
+    },
+    {
+      "p": 0.1,
+      "group": [
+        0,
+        1
+      ],
+      "ascent_gradient": 0.4999989867210388,
+      "theta_before": -2.1972246170043945,
+      "theta_after": -2.1472246646881104,
+      "metrics": {
+        "loss": 0.0,
+        "mean_reward": 0.5,
+        "samples": 2.0,
+        "grad_norm": 0.4999989867210388,
+        "clip_fraction": 0.0,
+        "max_abs_log_ratio": 0.0,
+        "behavior_kl_estimate": 0.0
+      }
+    },
+    {
+      "p": 0.1,
+      "group": [
+        1,
+        0
+      ],
+      "ascent_gradient": 0.4999989867210388,
+      "theta_before": -2.1972246170043945,
+      "theta_after": -2.1472246646881104,
+      "metrics": {
+        "loss": 0.0,
+        "mean_reward": 0.5,
+        "samples": 2.0,
+        "grad_norm": 0.4999989867210388,
+        "clip_fraction": 0.0,
+        "max_abs_log_ratio": 0.0,
+        "behavior_kl_estimate": 0.0
+      }
+    },
+    {
+      "p": 0.1,
+      "group": [
+        1,
+        1
+      ],
+      "ascent_gradient": -0.0,
+      "theta_before": -2.1972246170043945,
+      "theta_after": -2.1972246170043945,
+      "metrics": {
+        "loss": 0.0,
+        "mean_reward": 1.0,
+        "samples": 2.0,
+        "grad_norm": 0.0,
+        "clip_fraction": 0.0,
+        "max_abs_log_ratio": 0.0,
+        "behavior_kl_estimate": 0.0
+      }
+    },
+    {
+      "p": 0.9,
+      "group": [
+        0,
+        0
+      ],
+      "ascent_gradient": -0.0,
+      "theta_before": 2.1972246170043945,
+      "theta_after": 2.1972246170043945,
+      "metrics": {
+        "loss": 0.0,
+        "mean_reward": 0.0,
+        "samples": 2.0,
+        "grad_norm": 0.0,
+        "clip_fraction": 0.0,
+        "max_abs_log_ratio": 0.0,
+        "behavior_kl_estimate": 0.0
+      }
+    },
+    {
+      "p": 0.9,
+      "group": [
+        0,
+        1
+      ],
+      "ascent_gradient": 0.4999989867210388,
+      "theta_before": 2.1972246170043945,
+      "theta_after": 2.2472245693206787,
+      "metrics": {
+        "loss": 0.0,
+        "mean_reward": 0.5,
+        "samples": 2.0,
+        "grad_norm": 0.4999989867210388,
+        "clip_fraction": 0.0,
+        "max_abs_log_ratio": 0.0,
+        "behavior_kl_estimate": 0.0
+      }
+    },
+    {
+      "p": 0.9,
+      "group": [
+        1,
+        0
+      ],
+      "ascent_gradient": 0.4999989867210388,
+      "theta_before": 2.1972246170043945,
+      "theta_after": 2.2472245693206787,
+      "metrics": {
+        "loss": 0.0,
+        "mean_reward": 0.5,
+        "samples": 2.0,
+        "grad_norm": 0.4999989867210388,
+        "clip_fraction": 0.0,
+        "max_abs_log_ratio": 0.0,
+        "behavior_kl_estimate": 0.0
+      }
+    },
+    {
+      "p": 0.9,
+      "group": [
+        1,
+        1
+      ],
+      "ascent_gradient": -0.0,
+      "theta_before": 2.1972246170043945,
+      "theta_after": 2.1972246170043945,
+      "metrics": {
+        "loss": 0.0,
+        "mean_reward": 1.0,
+        "samples": 2.0,
+        "grad_norm": 0.0,
+        "clip_fraction": 0.0,
+        "max_abs_log_ratio": 0.0,
+        "behavior_kl_estimate": 0.0
+      }
+    }
+  ],
+  "summaries": [
+    {
+      "p": 0.1,
+      "fresh": 0.089999817609787,
+      "consumed": 0.04999989867210389,
+      "independent_donor": 0.089999817609787,
+      "fresh_oracle": 0.08999982000054,
+      "consumed_oracle": 0.04999990000030001
+    },
+    {
+      "p": 0.9,
+      "fresh": 0.08999981760978697,
+      "consumed": 0.049999898672103874,
+      "independent_donor": 0.08999981760978697,
+      "fresh_oracle": 0.08999982000054,
+      "consumed_oracle": 0.04999990000030001
+    }
+  ],
+  "checks": {
+    "gradient_matches_finite_law": true,
+    "zero_behavior_mismatch": true
+  },
+  "pass": true,
+  "source_sha256": "be3d62d5e7943f36575de9f09ccefc6804d8ab056b5d3c6b9a73c03558530070",
+  "torch": "2.9.1",
+  "python": "3.12.12",
+  "note": "Controlled tensor policy in actual train_step. Group probabilities analytically assigned, not an actual adaptive pretrained LM training run."
+}

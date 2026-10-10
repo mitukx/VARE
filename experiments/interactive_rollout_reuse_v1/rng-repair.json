@@ -1,0 +1,6 @@
+{
+ "reason":"Runner incorrectly initialized draft and acceptance RNG streams with the same seed; continuation used the advancing draft generator. Standard kernel calculation assumes independent auxiliary randomness. Initial source sanity failed (error .009475); exact rational checks passed.",
+ "repair":"Separate draft seed 20261011, acceptance seed 20261012, continuation seed 20261013; retain original failed runner and record. Also record empirical acceptance conditional on draft token as a stream diagnostic.",
+ "unchanged":"Same categorical laws, sample size, .005 tolerance, methods, analytic checks and scientific decisions. This is a harness repair, not a passed original execution or independent replication.",
+ "timing":"Written after failed attempt and before executing corrected runner."
+}

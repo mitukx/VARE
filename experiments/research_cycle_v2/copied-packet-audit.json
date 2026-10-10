@@ -1,0 +1,27 @@
+{
+  "checks": {
+    "verifier_same_epoch_review_v2/protocol.sha256": true,
+    "interactive_rollout_reuse_v1/trainer-protocol.sha256": true,
+    "interactive_rollout_reuse_v1/protocol.sha256": true,
+    "interactive_rollout_reuse_v1/rng-repair.sha256": true,
+    "base_wrong_success": true,
+    "base_reward_mismatch": true,
+    "base_identical_control": true,
+    "fixed_conflict_rejects": true,
+    "fixed_recovery": true,
+    "ci_exact_head": true,
+    "ci_all_success": true,
+    "ready_unmerged": true,
+    "primary_checks": true,
+    "exact_naive_tv": true,
+    "exact_consumed_bias": true,
+    "donor_control": true,
+    "feedback_control": true,
+    "retained_failed_attempt": true,
+    "trainer_checks": true,
+    "trainer_oracle_0": true,
+    "trainer_oracle_1": true
+  },
+  "pass": true,
+  "scope": "Same-author record/hash and oracle consistency, not external reproduction."
+}
