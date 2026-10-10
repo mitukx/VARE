@@ -14,6 +14,7 @@ from math_verify import parse as reward_parse
 from math_verify import verify as reward_verify
 
 from scripts.math500_grader_v1 import exact_match, parse_reference
+from scripts.prompt_id_hash_v3 import canonical_prompt_id_sha256
 
 
 EXPECTED_MATH500_SHA256 = "35dc41080a3680858b27fa7e0533d2d547825316fc5dafe5d316f4ccc5a06132"
@@ -190,6 +191,11 @@ def audit(data_dir: Path) -> dict:
             ("confirmation_ids_sha256", splits["confirmation_ids"]),
         )
     }
+    # Keep the CPU validator's frozen v1 digest byte-for-byte identical while
+    # sharing the precise serialization helper with the v3 GPU runner.
+    splits["selection_fingerprints"]["base_gate_ids_sha256"] = canonical_prompt_id_sha256(
+        splits["base_gate_ids"]
+    )
 
     # Independent self-consistency checks: every reference must score itself,
     # while an item-specific numeric mutation must be rejected.
