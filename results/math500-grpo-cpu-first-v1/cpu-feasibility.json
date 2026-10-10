@@ -1,0 +1,156 @@
+{
+  "protocol_id": "qwen25_deepmath_grpo_math500_v1",
+  "phase": "cpu_first_feasibility",
+  "decision": {
+    "cpu_package": "pass",
+    "future_gpu_base_gate": "go_after_separate_authorization",
+    "training": "no_go_pending_base_gate_and_one_step_smoke"
+  },
+  "compute_used": {
+    "gpu": false,
+    "mps": false,
+    "paid_api": false,
+    "model_inference": false
+  },
+  "model": {
+    "repo_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "weights_sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe"
+  },
+  "training_data": {
+    "repo_id": "trl-lib/DeepMath-103K",
+    "revision": "066c50a88d4e14cefc056e31111db2dba17f6c68",
+    "rows": 97870,
+    "sha256": "e0c5b2fc11978d735a7710273920676977b533e185284044c3eafa63a24479d7",
+    "unique_normalized_prompts": 96735,
+    "duplicate_excess_rows_removed": 1135,
+    "conflicting_duplicate_prompts_excluded": 3,
+    "unparseable_duplicate_groups_excluded": 54,
+    "eligible_unique_prompts": 96678,
+    "base_gate_prompts": 32,
+    "update_prompts": 256,
+    "base_gate_id_list_sha256": "0ab6b16559db37f6ff84bb312e18c29046063fac32fae026d5b1265037d03c9a",
+    "update_train_id_list_sha256": "80cfa5135aa56ebaf128d0928bd74ceddd9ef45cde42dcc5684663b2e822c5bd",
+    "selected_288_map_to_original_source": true,
+    "selected_288_labels_match_original_after_delimiter_whitespace_normalization": 288,
+    "selected_288_labels_match_original_after_wrapper_whitespace_normalization": 288,
+    "selected_source_duplicate_prompts": 3
+  },
+  "original_deepmath_source": {
+    "revision": "5cf055d1fe3d7a2eb19719ac020211469736ae44",
+    "rows": 103022,
+    "unique_normalized_prompts": 101744,
+    "duplicate_excess_rows": 1278,
+    "exact_normalized_overlap_with_math500": 0,
+    "all_10_source_file_sha256_recorded_in_protocol": true
+  },
+  "evaluation_data": {
+    "repo_id": "HuggingFaceH4/MATH-500",
+    "revision": "6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be",
+    "rows": 500,
+    "sha256": "35dc41080a3680858b27fa7e0533d2d547825316fc5dafe5d316f4ccc5a06132",
+    "unique_ids": 500,
+    "unique_normalized_prompts": 500,
+    "development_rows": 100,
+    "confirmation_rows": 400,
+    "dev_id_list_sha256": "6f68be724750df7d476d08899861e5fe718b0d7a271b72c6ee70bb40567920e7",
+    "confirmation_id_list_sha256": "8b1b303981c761902ac2d3772287b26dc93c3257f77ddadccd189dfbfeaf417e",
+    "level_counts": {
+      "1": 43,
+      "2": 90,
+      "3": 105,
+      "4": 128,
+      "5": 134
+    },
+    "confirmation_outputs_or_scores_used_for_tuning": false
+  },
+  "independent_grader": {
+    "references_self_scored": 500,
+    "zero_one_negative_controls_rejected": 500,
+    "symbolic_references": 492,
+    "text_fallback_references": 8,
+    "dev_cli_integration_selfcheck": {
+      "n": 100,
+      "correct": 100,
+      "format_valid": 100,
+      "interpretation": "evaluator wiring only; not model performance"
+    },
+    "bug_regression": {
+      "input": "Scratch box 42 followed by malformed final box 41",
+      "old_parser_result": "42",
+      "fixed_parser_result": "reject"
+    },
+    "unit_tests": {
+      "command": "PYTHONPATH=.:/tmp/vare-math-verify-0.9.0 .venv/bin/pytest tests/test_math500_grader_v1.py -q",
+      "passed": 6,
+      "failed": 0
+    },
+    "parser_regression": {
+      "previous": "returned earlier answer 42 when final box was malformed",
+      "fixed": "rejects malformed final box"
+    }
+  },
+  "tokenizer_cpu_audit": {
+    "selected_prompts": 288,
+    "input_tokens": {
+      "min": 51,
+      "median": 95,
+      "p95": 180,
+      "max": 405,
+      "over_2048": 0
+    },
+    "answer_tokens": {
+      "median": 4,
+      "max": 20
+    }
+  },
+  "r1_trace_sft_audit": {
+    "selected_training_prompts": 256,
+    "parse_rate_per_trace_column": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "exact_final_answer_rate_per_trace_column": [
+      0.578125,
+      0.578125,
+      0.578125
+    ],
+    "prompts_with_any_correct_trace": 148,
+    "shortest_correct_trace_tokens": {
+      "median": 3848,
+      "p95": 10477,
+      "under_or_equal_2048": 17
+    },
+    "decision": "exclude unfiltered traces from SFT control; use the same verified final-answer labels",
+    "shortest_correct_trace_tokens_under_or_equal_2048": 17,
+    "shortest_correct_trace_tokens_total_corrected_count": 148
+  },
+  "first_future_gpu_gate": {
+    "devices": 1,
+    "min_vram_gib": 16,
+    "max_reserved_vram_gib": 14,
+    "rollouts": 128,
+    "completion_cap": 1024,
+    "token_budget": 131072,
+    "wall_cap_seconds": 7200,
+    "optimizer_steps": 0,
+    "paid_compute": false
+  },
+  "limitations": [
+    "Exact string overlap only; semantic overlap and pretraining contamination are not ruled out.",
+    "The public confirmation references were inspected for checker and overlap validation; only model predictions and scores remain unused.",
+    "The SFT control uses final-answer labels, not clean reasoning traces; it is not a reasoning-distillation baseline.",
+    "No actual model success, reward variance, VRAM, throughput, training, KL, or capability improvement has been measured.",
+    "Full-study runtime depends on future base inference and one-step resource measurements."
+  ],
+  "gpu_runtime_versions": {
+    "python": "3.11.2",
+    "torch": "2.11.0",
+    "transformers": "5.5.4",
+    "trl": "1.1.0",
+    "accelerate": "1.13.0",
+    "datasets": "4.8.4",
+    "math-verify": "0.9.0"
+  }
+}

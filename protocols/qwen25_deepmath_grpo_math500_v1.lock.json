@@ -1,0 +1,238 @@
+{
+  "protocol_id": "qwen25_deepmath_grpo_math500_v1",
+  "phase": "cpu_first_feasibility_package",
+  "claim_boundary": "CPU-validated feasibility package for a small standard-GRPO replication. No model inference, optimizer step, training, capability improvement, or algorithm novelty claim has been established. The first GPU action, if later authorized, is TRAIN-only base inference.",
+  "model": {
+    "repo_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "weights_sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "device_for_first_gpu_gate": "exactly one CUDA GPU; MPS and CPU fallback forbidden",
+    "model_files_sha256": {
+      "config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+      "generation_config.json": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6",
+      "merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+      "model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    }
+  },
+  "training_data": {
+    "repo_id": "trl-lib/DeepMath-103K",
+    "source_repo_id": "zwhe99/DeepMath-103K",
+    "source_license": "MIT",
+    "revision": "066c50a88d4e14cefc056e31111db2dba17f6c68",
+    "source_revision": "5cf055d1fe3d7a2eb19719ac020211469736ae44",
+    "split": "train",
+    "file": "data/train-00000-of-00001.parquet",
+    "rows": 97870,
+    "sha256": "e0c5b2fc11978d735a7710273920676977b533e185284044c3eafa63a24479d7",
+    "normalized_prompt_rule": "lowercase; normalize \\( and \\) to $, \\[ and \\] to $$; collapse whitespace",
+    "deduplication": {
+      "unique_normalized_prompts": 96735,
+      "duplicate_prompt_groups_deduplicated": 1058,
+      "duplicate_excess_rows_deduplicated": 1135,
+      "conflicting_answer_prompts_excluded": 3,
+      "unparseable_duplicate_reward_prompts_excluded": 54,
+      "selected_prompts_must_have_parseable_math_verify_targets": true
+    },
+    "sample": {
+      "rank": "ascending SHA256('deepmath-gate-train-v1' + NUL + normalized_prompt)",
+      "base_gate_prompts": 32,
+      "update_training_prompts": 256,
+      "base_gate_prompts_excluded_from_all_updates": true,
+      "base_gate_id_list_sha256": "0ab6b16559db37f6ff84bb312e18c29046063fac32fae026d5b1265037d03c9a",
+      "update_train_id_list_sha256": "80cfa5135aa56ebaf128d0928bd74ceddd9ef45cde42dcc5684663b2e822c5bd"
+    },
+    "audit": {
+      "mirror_duplicate_groups": 1058,
+      "mirror_excess_rows_removed": 1135,
+      "conflicting_duplicate_prompts_excluded": 3,
+      "unparseable_duplicate_reward_groups_excluded": 54,
+      "eligible_unique_prompt_count": 96678,
+      "selected_base_gate_prompts": 32,
+      "selected_update_prompts": 256,
+      "full_original_deepmath_revision": "5cf055d1fe3d7a2eb19719ac020211469736ae44",
+      "full_original_rows_audited": 103022,
+      "full_original_unique_normalized_prompts": 101744,
+      "full_original_duplicate_excess_rows": 1278,
+      "selected_256_all_map_to_original_rows": true,
+      "exact_normalized_overlap_with_all_original_deepmath_and_math500": 0,
+      "selected_288_mirror_labels_match_original_exactly_after_math_delimiters_and_whitespace_normalization": true
+    },
+    "sft_target": "Final answer only, rendered as \\boxed{<solution}> from the same 256 verified labels; same train prompts and LoRA family as GRPO. Original R1 traces were audited but are excluded: each of three traces parsed on all 256 prompts yet only 148/256 (57.8%) ended at the dataset answer, and the shortest correct trace was <=2048 tokens for only 17/148 prompts (11.5%).",
+    "source_note": "No dataset contents are committed. DeepMath-103K source is MIT licensed. The complete source corpus was locally audited for exact normalized overlap; this does not rule out semantic overlap beyond the dataset authors’ reported decontamination or model pretraining exposure.",
+    "full_original_source_files_sha256": {
+      "train-00000-of-00010.parquet": "d6412432f30425e848a224dc641e681eb1ed51b970d52536eda7daefc01d8c8b",
+      "train-00001-of-00010.parquet": "eef9d3012456239eb0f4cd462ac7bebb7d6c4f675c41329c680ef8a506ded512",
+      "train-00002-of-00010.parquet": "20e4dc6527d94c2057a9b727f8b58994395de602e284b3294f7d2451f75d681a",
+      "train-00003-of-00010.parquet": "c5b20135f93e7890da191973ad77d88e67c95144ccc169ec592489f044e7c38a",
+      "train-00004-of-00010.parquet": "4153e531d78ca278d2e12e6d08099b66126b26b99ca6a92b3d6f95c156818749",
+      "train-00005-of-00010.parquet": "110586bdc6f35b0434bccbd582f1e97e8328da0752ccd36590a50178885f0360",
+      "train-00006-of-00010.parquet": "e39c00ed42a6a1af74ddc042840884a59adcb9139a23f535e399ddf0c292ef76",
+      "train-00007-of-00010.parquet": "fdeb213b5c2d0bb50f1081ae48b7ce4fa38147efe623de5d6d836a32f4044dad",
+      "train-00008-of-00010.parquet": "d8e5b1417f0364312896d259efbea0600c1fac22eacb2f71187c5b0e9704f388",
+      "train-00009-of-00010.parquet": "67639c6620cabce348e91c2cc331c4877307ed1a5d8fbd1c0d7dcca561cea8df"
+    }
+  },
+  "evaluation_data": {
+    "repo_id": "HuggingFaceH4/MATH-500",
+    "source": "OpenAI PRM800K MATH test subset",
+    "revision": "6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be",
+    "file": "test.jsonl",
+    "rows": 500,
+    "sha256": "35dc41080a3680858b27fa7e0533d2d547825316fc5dafe5d316f4ccc5a06132",
+    "partition": {
+      "rule": "Within each original level 1-5, sort by SHA256('math500-dev-v1' + NUL + unique_id); first 20 per level are development, remainder confirmation",
+      "development_rows": 100,
+      "confirmation_rows": 400,
+      "development_id_list_sha256": "6f68be724750df7d476d08899861e5fe718b0d7a271b72c6ee70bb40567920e7",
+      "confirmation_id_list_sha256": "8b1b303981c761902ac2d3772287b26dc93c3257f77ddadccd189dfbfeaf417e",
+      "development_used_for": "One frozen dev advancement gate; no prompt or hyperparameter tuning",
+      "confirmation_used_for": "Final paired held-out comparison only after all arms and artifacts pass integrity checks"
+    },
+    "data_leakage": {
+      "exact_normalized_prompt_overlap_with_trl_mirror_train": 0,
+      "exact_normalized_prompt_overlap_with_full_deepmath_source": 0,
+      "fuzzy_semantic_overlap_audit": false,
+      "model_pretraining_contamination_ruled_out": false,
+      "reference_labels_read_for_checker_and_overlap_validation": true,
+      "confirmation_outputs_or_scores_used_for_tuning": false
+    },
+    "confirmation_partition_note": "400 examples reserved for final paired evaluation; labels were read only for checker self-tests, hash/split validation, and exact overlap auditing. No model outputs were generated or used to tune this protocol."
+  },
+  "reward_and_independent_metric": {
+    "training_reward": "Pinned TRL 1.1.0 trl.rewards.accuracy_reward, backed by math-verify 0.9.0; one final boxed answer is required by its extraction config",
+    "independent_metric": "Pass@1 exact task success: parse only the final balanced \\boxed{...}, convert LaTeX with latex2sympy2-extended and compare expressions exactly with SymPy; use case-folded exact text only for nonmathematical labels. Malformed or empty final boxes fail closed.",
+    "shared_dependency_limit": "The training reward and independent evaluator share latex2sympy2-extended as a low-level LaTeX parser, but do not share extraction or equality code. This is code-path independence, not implementation diversity at the parser layer.",
+    "secondary_metrics": [
+      "final-box format rate",
+      "per-level exact match",
+      "training-reward versus independent-task-success disagreement",
+      "GRPO KL from the pinned trainer",
+      "wall time and peak allocated/reserved VRAM"
+    ]
+  },
+  "first_gpu_gate": {
+    "purpose": "Base-policy inference only on TRAIN examples; no optimizer or MATH-500 load",
+    "rollouts": "32 fixed training prompts x 4 stochastic completions",
+    "generation": {
+      "seed": 20261012,
+      "temperature": 0.7,
+      "top_p": 0.95,
+      "max_new_tokens": 1024,
+      "max_input_tokens": 2048,
+      "system_prompt": "Solve the math problem. Show concise reasoning and put the final answer in \\boxed{...}."
+    },
+    "resource_budget": {
+      "paid_compute": false,
+      "devices": 1,
+      "minimum_total_vram_bytes": 17179869184,
+      "maximum_peak_reserved_vram_bytes": 15032385536,
+      "maximum_fraction_of_device_vram_reserved": 0.9,
+      "maximum_wall_seconds": 7200,
+      "maximum_generated_tokens": 131072
+    },
+    "pass_criteria": {
+      "independent_task_success_rate": "0.05 <= rate <= 0.90",
+      "valid_final_box_rate_at_least": 0.9,
+      "mixed_reward_groups_at_least": 6,
+      "mean_within_group_reward_variance_positive": true,
+      "memory_and_wall_limits_met": true
+    },
+    "stop": "Any missing/hash-mismatched asset, invalid model/data revision, unparseable selected reward target, device mismatch, zero reward variance, fewer than 6 mixed groups, format/success/resource failure, or timeout ends this pairing. No prompt edits or repeated gate on these rows.",
+    "budget": {
+      "max_generated_tokens": 131072,
+      "max_wall_seconds": 7200,
+      "max_peak_reserved_vram_bytes": 15032385536,
+      "minimum_gpu_vram_bytes": 17179869184,
+      "devices": 1,
+      "paid_compute": false,
+      "optimizer_updates": 0
+    }
+  },
+  "conditional_followup_if_gate_passes": {
+    "next_authorization": "Request permission for one optimizer-step + save/reload cost smoke. Do not begin multi-step training until update, reload, and resource gates pass.",
+    "planned_comparison": {
+      "arms": [
+        "no_update",
+        "matched_answer_SFT",
+        "standard_GRPO"
+      ],
+      "seeds": [
+        6401,
+        6407,
+        6421
+      ],
+      "train_prompts_per_seed": 256,
+      "sft": {
+        "method": "TRL SFTTrainer on the same 256 prompts, with each target rendered as one final \\boxed{answer} from the verified dataset label; answer-only because the provided R1 trace candidates scored 57.8% exact final-answer accuracy on this fixed cohort",
+        "lora_r": 8,
+        "lora_alpha": 16,
+        "target_modules": [
+          "q_proj",
+          "v_proj"
+        ],
+        "epochs": 4,
+        "learning_rate": 0.0002,
+        "max_length": 512
+      },
+      "grpo": {
+        "method": "TRL GRPOTrainer, GRPO loss, beta 0, math accuracy_reward",
+        "lora_r": 8,
+        "lora_alpha": 16,
+        "target_modules": [
+          "q_proj",
+          "v_proj"
+        ],
+        "per_device_train_batch_size": 1,
+        "gradient_accumulation_steps": 4,
+        "num_generations": 4,
+        "max_completion_length": 1024,
+        "temperature": 0.7,
+        "top_p": 0.95,
+        "max_steps": 64,
+        "learning_rate": 1e-06,
+        "vllm": false
+      },
+      "dev_advancement_gate": "On 100 dev items, GRPO mean exact-match must exceed base by at least 0.05 and be no worse than SFT; at least 2/3 seeds must improve over base. Otherwise stop before confirmation.",
+      "confirmation_primary": "On 400 untouched confirmation items, mean GRPO pass@1 must exceed both no-update and SFT by at least 0.05, paired level-stratified task-bootstrap 95% lower bounds must be above zero for both contrasts, and at least 2/3 seeds must improve over each control.",
+      "confirmation_is_not_tunable": true,
+      "compute_estimate": {
+        "grpo_rollouts_per_seed": 1024,
+        "grpo_rollouts_total_3_seeds": 3072,
+        "grpo_max_generated_tokens_total": 3145728,
+        "sft_target_presentations_total_3_seeds": 3072,
+        "development_greedy_completions": 700,
+        "confirmation_greedy_completions": 2800,
+        "full_study_wall_time": "Not estimated before measured base-gate throughput and one-step smoke; do not schedule without those measurements."
+      }
+    }
+  },
+  "software_for_gate": {
+    "python": "3.11.2",
+    "torch": "2.11.0",
+    "transformers": "5.5.4",
+    "trl": "1.1.0",
+    "accelerate": "1.13.0",
+    "datasets": "4.8.4",
+    "peft": "0.20.0",
+    "math_verify": "0.9.0",
+    "latex2sympy2_extended": "1.11.0",
+    "note": "Versions match the public TRL issue reproduction for this exact model/dataset pair; runner fails closed on version mismatch. CUDA wheels/driver must match the host.",
+    "cpu_validator_python": "3.12"
+  },
+  "freeze": {
+    "cpu_validator": "scripts/validate_math500_study_v1.py",
+    "independent_grader": "scripts/math500_grader_v1.py",
+    "evaluation_cli": "scripts/evaluate_math500_v1.py",
+    "gpu_gate_runner": "scripts/run_qwen25_deepmath_base_gate_v1.py",
+    "independent_checker_adversarial_cases": [
+      "multiple boxes choose only last",
+      "wrong final box overrides earlier correct box",
+      "malformed final box fails closed",
+      "empty final box fails closed",
+      "unit/vector/set/text equivalence"
+    ]
+  }
+}
