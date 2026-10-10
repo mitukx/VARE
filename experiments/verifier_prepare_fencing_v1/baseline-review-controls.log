@@ -1,0 +1,15 @@
+test_same_epoch_equal_active_version_conflict (tests.test_verifier_prepare_fencing.VerifierPrepareFencingTests.test_same_epoch_equal_active_version_conflict) ... FAIL
+test_same_epoch_equal_active_version_idempotent (tests.test_verifier_prepare_fencing.VerifierPrepareFencingTests.test_same_epoch_equal_active_version_idempotent) ... ok
+
+======================================================================
+FAIL: test_same_epoch_equal_active_version_conflict (tests.test_verifier_prepare_fencing.VerifierPrepareFencingTests.test_same_epoch_equal_active_version_conflict)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-11/https-github-com-mitukx-vare-https-2/work/RVL-base/tests/test_verifier_prepare_fencing.py", line 155, in test_same_epoch_equal_active_version_conflict
+    self.assertTrue(row["rejected"], row)
+AssertionError: False is not true : {'rejected': False, 'active_sha': '6d5882a20efed4481bc13d5c8121bf4bd774854dc63fc964c2441a62a168314c', 'expected_sha': '6d5882a20efed4481bc13d5c8121bf4bd774854dc63fc964c2441a62a168314c', 'prepared': {'path': '/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/tmp0qi467d6/a/verifier-v00000001.bin', 'sha256': '2d1d470941f3cbec6f4f184f6c8edbc89f44545726e58aeb927057a701f9bece', 'version': 1}, 'expected_prepared': None}
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.703s
+
+FAILED (failures=1)

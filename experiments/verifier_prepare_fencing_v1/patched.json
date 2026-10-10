@@ -1,0 +1,350 @@
+{
+  "repo_head": "27ebf7fe239d97504eeb960bf1407de220584dac",
+  "worker_source_sha256": "935b131d7b89b4da140c1eb05e2719e091cede72a7cc0497473ea338236f5d85",
+  "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "elapsed_s": 0.8027849170030095,
+  "cases": [
+    {
+      "case": "epoch_same_version",
+      "expected": {
+        "version": 1,
+        "sha256": "6d5882a20efed4481bc13d5c8121bf4bd774854dc63fc964c2441a62a168314c",
+        "reward": 0.9
+      },
+      "checks": {
+        "active_version_matches_intended": true,
+        "active_sha_matches_intended": true,
+        "reward_matches_intended": true,
+        "durable_sha_matches_intended": true,
+        "obsolete_prepare_rejected": true,
+        "new_activation_succeeds_or_downgrade_rejected": true
+      },
+      "violations": 0,
+      "events": [
+        {
+          "index": 0,
+          "event": "old_loader_entered",
+          "version": 1,
+          "sha256": "2d1d470941f3cbec6f4f184f6c8edbc89f44545726e58aeb927057a701f9bece"
+        },
+        {
+          "index": 1,
+          "event": "new_prepare_ack",
+          "epoch": 2,
+          "version": 1,
+          "sha256": "6d5882a20efed4481bc13d5c8121bf4bd774854dc63fc964c2441a62a168314c"
+        },
+        {
+          "index": 2,
+          "event": "old_loader_released"
+        },
+        {
+          "index": 3,
+          "event": "old_prepare_rejected",
+          "error": "RuntimeError: stale coordinator epoch 1; current epoch is 2"
+        },
+        {
+          "index": 4,
+          "event": "activation_returned_success"
+        },
+        {
+          "index": 5,
+          "event": "health",
+          "active_artifact_sha256": "6d5882a20efed4481bc13d5c8121bf4bd774854dc63fc964c2441a62a168314c",
+          "capacity": 1,
+          "coordinator_epoch": 2,
+          "healthy": true,
+          "inflight": 0,
+          "ok": true,
+          "prepared_verifier_version": null,
+          "service_time_hint_s": null,
+          "verifier_version": 1,
+          "worker_id": "v"
+        },
+        {
+          "index": 6,
+          "event": "reward",
+          "version": 1,
+          "reward": 0.9
+        }
+      ]
+    },
+    {
+      "case": "epoch_distinct_version",
+      "expected": {
+        "version": 2,
+        "sha256": "6d5882a20efed4481bc13d5c8121bf4bd774854dc63fc964c2441a62a168314c",
+        "reward": 0.9
+      },
+      "checks": {
+        "active_version_matches_intended": true,
+        "active_sha_matches_intended": true,
+        "reward_matches_intended": true,
+        "durable_sha_matches_intended": true,
+        "obsolete_prepare_rejected": true,
+        "new_activation_succeeds_or_downgrade_rejected": true
+      },
+      "violations": 0,
+      "events": [
+        {
+          "index": 0,
+          "event": "old_loader_entered",
+          "version": 1,
+          "sha256": "2d1d470941f3cbec6f4f184f6c8edbc89f44545726e58aeb927057a701f9bece"
+        },
+        {
+          "index": 1,
+          "event": "new_prepare_ack",
+          "epoch": 2,
+          "version": 2,
+          "sha256": "6d5882a20efed4481bc13d5c8121bf4bd774854dc63fc964c2441a62a168314c"
+        },
+        {
+          "index": 2,
+          "event": "old_loader_released"
+        },
+        {
+          "index": 3,
+          "event": "old_prepare_rejected",
+          "error": "RuntimeError: stale coordinator epoch 1; current epoch is 2"
+        },
+        {
+          "index": 4,
+          "event": "activation_returned_success"
+        },
+        {
+          "index": 5,
+          "event": "health",
+          "active_artifact_sha256": "6d5882a20efed4481bc13d5c8121bf4bd774854dc63fc964c2441a62a168314c",
+          "capacity": 1,
+          "coordinator_epoch": 2,
+          "healthy": true,
+          "inflight": 0,
+          "ok": true,
+          "prepared_verifier_version": null,
+          "service_time_hint_s": null,
+          "verifier_version": 2,
+          "worker_id": "v"
+        },
+        {
+          "index": 6,
+          "event": "reward",
+          "version": 2,
+          "reward": 0.9
+        }
+      ]
+    },
+    {
+      "case": "active_advance",
+      "expected": {
+        "version": 2,
+        "sha256": "6d5882a20efed4481bc13d5c8121bf4bd774854dc63fc964c2441a62a168314c",
+        "reward": 0.9
+      },
+      "checks": {
+        "active_version_matches_intended": true,
+        "active_sha_matches_intended": true,
+        "reward_matches_intended": true,
+        "durable_sha_matches_intended": true,
+        "obsolete_prepare_rejected": true,
+        "new_activation_succeeds_or_downgrade_rejected": true
+      },
+      "violations": 0,
+      "events": [
+        {
+          "index": 0,
+          "event": "old_loader_entered",
+          "version": 1,
+          "sha256": "2d1d470941f3cbec6f4f184f6c8edbc89f44545726e58aeb927057a701f9bece"
+        },
+        {
+          "index": 1,
+          "event": "new_prepare_ack",
+          "epoch": 1,
+          "version": 2,
+          "sha256": "6d5882a20efed4481bc13d5c8121bf4bd774854dc63fc964c2441a62a168314c"
+        },
+        {
+          "index": 2,
+          "event": "new_activated_before_old_resume",
+          "version": 2
+        },
+        {
+          "index": 3,
+          "event": "old_loader_released"
+        },
+        {
+          "index": 4,
+          "event": "old_prepare_rejected",
+          "error": "RuntimeError: cannot prepare verifier older than active version"
+        },
+        {
+          "index": 5,
+          "event": "activation_rejected",
+          "error": "RuntimeError: verifier activation requires a prepared artifact"
+        },
+        {
+          "index": 6,
+          "event": "health",
+          "active_artifact_sha256": "6d5882a20efed4481bc13d5c8121bf4bd774854dc63fc964c2441a62a168314c",
+          "capacity": 1,
+          "coordinator_epoch": 1,
+          "healthy": true,
+          "inflight": 0,
+          "ok": true,
+          "prepared_verifier_version": null,
+          "service_time_hint_s": null,
+          "verifier_version": 2,
+          "worker_id": "v"
+        },
+        {
+          "index": 7,
+          "event": "reward",
+          "version": 2,
+          "reward": 0.9
+        }
+      ]
+    },
+    {
+      "case": "async_control",
+      "expected": {
+        "version": 1,
+        "sha256": "2d1d470941f3cbec6f4f184f6c8edbc89f44545726e58aeb927057a701f9bece",
+        "reward": 0.1
+      },
+      "checks": {
+        "active_version_matches_intended": true,
+        "active_sha_matches_intended": true,
+        "reward_matches_intended": true,
+        "durable_sha_matches_intended": true
+      },
+      "violations": 0,
+      "events": [
+        {
+          "index": 0,
+          "event": "old_loader_entered",
+          "version": 1,
+          "sha256": "2d1d470941f3cbec6f4f184f6c8edbc89f44545726e58aeb927057a701f9bece"
+        },
+        {
+          "index": 1,
+          "event": "old_loader_released"
+        },
+        {
+          "index": 2,
+          "event": "control_activated"
+        },
+        {
+          "index": 3,
+          "event": "health",
+          "active_artifact_sha256": "2d1d470941f3cbec6f4f184f6c8edbc89f44545726e58aeb927057a701f9bece",
+          "capacity": 1,
+          "coordinator_epoch": 1,
+          "healthy": true,
+          "inflight": 0,
+          "ok": true,
+          "prepared_verifier_version": null,
+          "service_time_hint_s": null,
+          "verifier_version": 1,
+          "worker_id": "v"
+        },
+        {
+          "index": 4,
+          "event": "reward",
+          "version": 1,
+          "reward": 0.1
+        }
+      ]
+    },
+    {
+      "case": "restart",
+      "expected": {
+        "version": 1,
+        "sha256": "6d5882a20efed4481bc13d5c8121bf4bd774854dc63fc964c2441a62a168314c",
+        "reward": 0.9
+      },
+      "checks": {
+        "active_version_matches_intended": true,
+        "active_sha_matches_intended": true,
+        "reward_matches_intended": true,
+        "durable_sha_matches_intended": true,
+        "obsolete_prepare_rejected": true,
+        "new_activation_succeeds_or_downgrade_rejected": true,
+        "restart_preserves_intended_sha_and_reward": true
+      },
+      "violations": 0,
+      "events": [
+        {
+          "index": 0,
+          "event": "old_loader_entered",
+          "version": 1,
+          "sha256": "2d1d470941f3cbec6f4f184f6c8edbc89f44545726e58aeb927057a701f9bece"
+        },
+        {
+          "index": 1,
+          "event": "new_prepare_ack",
+          "epoch": 2,
+          "version": 1,
+          "sha256": "6d5882a20efed4481bc13d5c8121bf4bd774854dc63fc964c2441a62a168314c"
+        },
+        {
+          "index": 2,
+          "event": "old_loader_released"
+        },
+        {
+          "index": 3,
+          "event": "old_prepare_rejected",
+          "error": "RuntimeError: stale coordinator epoch 1; current epoch is 2"
+        },
+        {
+          "index": 4,
+          "event": "activation_returned_success"
+        },
+        {
+          "index": 5,
+          "event": "health",
+          "active_artifact_sha256": "6d5882a20efed4481bc13d5c8121bf4bd774854dc63fc964c2441a62a168314c",
+          "capacity": 1,
+          "coordinator_epoch": 2,
+          "healthy": true,
+          "inflight": 0,
+          "ok": true,
+          "prepared_verifier_version": null,
+          "service_time_hint_s": null,
+          "verifier_version": 1,
+          "worker_id": "v"
+        },
+        {
+          "index": 6,
+          "event": "reward",
+          "version": 1,
+          "reward": 0.9
+        },
+        {
+          "index": 7,
+          "event": "restart_health",
+          "active_artifact_sha256": "6d5882a20efed4481bc13d5c8121bf4bd774854dc63fc964c2441a62a168314c",
+          "capacity": 1,
+          "coordinator_epoch": 2,
+          "healthy": true,
+          "inflight": 0,
+          "ok": true,
+          "prepared_verifier_version": null,
+          "service_time_hint_s": null,
+          "verifier_version": 1,
+          "worker_id": "v"
+        },
+        {
+          "index": 8,
+          "event": "restart_reward",
+          "version": 1,
+          "reward": 0.9
+        }
+      ]
+    }
+  ],
+  "violations": 0,
+  "failed_cases": 0,
+  "note": "Event-controlled source-level TCP reproduction, no model training or GPU."
+}

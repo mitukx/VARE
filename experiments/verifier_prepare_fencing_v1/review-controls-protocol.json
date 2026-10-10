@@ -1,0 +1,11 @@
+{
+  "study": "prepare_fencing_equal_active_version_controls_v1",
+  "disclosure": "Additional code-review controls specified after the five-case primary results; execute once per revision and retain both outcomes.",
+  "cases": [
+    "A slow prepare resumes after different artifact B of the same version activates in the same epoch: reject without durable prepared-state mutation.",
+    "A slow prepare resumes after the identical manifest activates in the same epoch: accept idempotently and keep the active verifier."
+  ],
+  "schedule": "asyncio.Event barriers on first loader call; real TCP client, server and coordinator",
+  "acceptance": "patched passes both; baseline conflict case fails and idempotent control passes",
+  "claims": "source-level deployment correctness only"
+}

@@ -1,0 +1,37 @@
+{
+  "study": "verifier_prepare_commit_fencing_v1",
+  "created_at_utc": "2026-10-10T22:33:49.950968+00:00",
+  "rvl_base": "27ebf7fe239d97504eeb960bf1407de220584dac",
+  "vare_base": "b3204926b3cae291f7c13e3134444c71a3a63172",
+  "status": "frozen before execution; source inspection informed fixtures",
+  "hypothesis": "An async deployment loader allows an obsolete prepare to overwrite a newer prepared artifact or active version unless epoch and active artifact identity are revalidated after await.",
+  "primary_metric": "number of violated prepare/activation artifact and monotonic-version assertions in deterministic TCP schedules",
+  "cases": [
+    "cross-epoch same-version distinct-artifact takeover",
+    "cross-epoch distinct-version takeover",
+    "same-epoch active-version advance during load",
+    "non-racing asynchronous load control",
+    "restart after cross-epoch same-version takeover"
+  ],
+  "schedule": "asyncio.Event barriers, never timing sleeps for ordering; localhost TCP server and client, real artifact publisher, deployment coordinator, persisted worker state",
+  "baselines": [
+    "exact pinned unpatched RVL",
+    "minimal worker post-load revalidation patch"
+  ],
+  "acceptance": "unpatched source violates at least one scheduled identity assertion; patched source passes all five cases and existing deployment/RPC/routing suites",
+  "stopping_rule": "one full deterministic run per revision; retain failures and any implementation corrections separately; no data or outcome tuning",
+  "resources": {
+    "paid_api_usd": 0,
+    "gpu_hours": 0,
+    "model_downloads": 0,
+    "max_runtime_per_suite_s": 120
+  },
+  "claims_excluded": [
+    "new RL algorithm",
+    "semantic verifier correctness",
+    "LLM capability gain",
+    "observed production prevalence",
+    "distributed throughput gain"
+  ],
+  "negative_result": "If baseline preserves every declared invariant, withdraw the defect. If patch fails any invariant or legacy suite, do not offer it as a fix."
+}

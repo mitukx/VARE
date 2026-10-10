@@ -1,0 +1,26 @@
+From https://github.com/mitukx/Recursive-Verification-Lag
+ * branch            27ebf7fe239d97504eeb960bf1407de220584dac -> FETCH_HEAD
+HEAD is now at 27ebf7f Restore module modes from GRPO trainer snapshots (#90)
+Cloning into '/Users/user/Documents/Codex/2026-10-11/https-github-com-mitukx-vare-https-2/work/clean-fencing-review/patched'...
+Note: switching to '27ebf7fe239d97504eeb960bf1407de220584dac'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+{"worker_source_sha256": "0c6f8669797bf7c9987a10d933d010d03a4b5e1d169ff8f9839cb6a0cc2dc173", "elapsed_s": 0.7760537499561906, "violations": 21, "failed_cases": 4}
+{"worker_source_sha256": "935b131d7b89b4da140c1eb05e2719e091cede72a7cc0497473ea338236f5d85", "elapsed_s": 0.7740895420429297, "violations": 0, "failed_cases": 0}
+{"rewards": [0.1, 0.9], "loss_gradient": 0.9999969005584717, "gradient_error_to_intended": 1.9999937755731199, "theta_after_sgd": -0.09999968856573105, "agrees_with_actual_rewards": true}
+{"rewards": [0.9, 0.1], "loss_gradient": -0.9999969005584717, "gradient_error_to_intended": 2.5543823389817533e-08, "theta_after_sgd": 0.09999968856573105, "agrees_with_actual_rewards": true}
+Reproduced: baseline fails four primary cases; patch passes all primary cases, trainer check, and 22 tests.

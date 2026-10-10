@@ -1,0 +1,46 @@
+{
+  "study": "verifier_prepare_fencing_trainer_connection_v1",
+  "created_at_utc": "2026-10-10T22:37:22.005006+00:00",
+  "disclosure": "Supplement fixed after primary deployment results were observed; no model-update results observed before this lock. This is a controlled integration check, not independent confirmation.",
+  "hypothesis": "Wrong-artifact activation can reverse a real RVL train_step loss gradient even with zero behavior-policy mismatch.",
+  "case": "same-version cross-epoch prepare race, two immutable binary response records",
+  "artifacts": {
+    "A": {
+      "0": 0.1,
+      "1": 0.9
+    },
+    "B": {
+      "0": 0.9,
+      "1": 0.1
+    }
+  },
+  "model": "torch module with logits [theta,-theta], theta=0; no pretrained model",
+  "tokens": {
+    "prompt": [
+      0
+    ],
+    "response_0": [
+      0
+    ],
+    "response_1": [
+      1
+    ],
+    "old_logprob": "-log(2)"
+  },
+  "trainer": "unmodified HFCausalLMGRPOTrainer.train_step and compute_group_advantages; SGD lr=.1 injected through supported optimizer attribute; max_grad_norm=100; eps=1e-6",
+  "primary_metric": "theta loss gradient vs analytic intended-B gradient, tolerance 1e-6",
+  "acceptance": "base gradient has opposite sign to intended B; patched agrees with intended B and actual observed rewards; both have max_abs_log_ratio <= 1e-6; parameter displacement agrees with SGD",
+  "resources": {
+    "usd": 0,
+    "gpu_hours": 0,
+    "model_downloads": 0,
+    "max_runtime_s": 60
+  },
+  "negative_result": "Retain any mismatch; do not claim trainer impact unless analytic and source-path checks agree.",
+  "excluded_claims": [
+    "LLM task success",
+    "long-horizon capability",
+    "novel policy optimization",
+    "frontier scale incidence"
+  ]
+}
