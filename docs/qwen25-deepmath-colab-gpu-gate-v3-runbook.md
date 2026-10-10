@@ -16,7 +16,7 @@ drive.mount('/content/drive')
 ```
 
 ```bash
-export VARE_REV='<approved v3 implementation commit>'
+export VARE_REV='2f19c09b8d785f75f6e4db49a42fe10f08a77b90'
 export VARE_DIR=/content/vare
 export VARE_DRIVE=/content/drive/MyDrive/VARE/deepmath-gate-v3
 export HF_HOME=/content/drive/MyDrive/VARE/huggingface-cache
