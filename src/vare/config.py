@@ -35,6 +35,15 @@ class PromotionConfig:
     paired_bootstrap_samples: int = 2000
     # When set, both reports must include this protocol-frozen evaluation slice set.
     required_slice_names: tuple[str, ...] = ()
+    # Opt-in strict post-training gates; legacy/demo defaults remain compatible.
+    require_measured_disagreement: bool = False
+    require_reward_audit: bool = False
+    # Freeze required strata before collecting labels; absent families cannot
+    # be certified from the rows that happened to arrive.
+    reward_audit_required_families: tuple[str, ...] = ()
+    reward_audit_max_false_accept_ucb: float = 0.25
+    reward_audit_min_proxy_positives: int = 32
+    reward_audit_alpha: float = 0.05
 
 
 @dataclass(frozen=True, slots=True)
