@@ -4,7 +4,13 @@ import time
 import pytest
 
 from scripts.gpu_gate_journal_v2 import GateJournal, completion_token_count, run_prompt_groups
-from scripts.qwen25_deepmath_inputs_v2 import prompt_messages, sft_example, tokenize_generation_prompt
+from scripts.qwen25_deepmath_inputs_v2 import (
+    GRPO_GENERATION_DEFAULTS,
+    base_gate_generation_config,
+    prompt_messages,
+    sft_example,
+    tokenize_generation_prompt,
+)
 
 PROTOCOL = json.loads(open("protocols/qwen25_deepmath_grpo_math500_v2.lock.json", encoding="utf-8").read())
 
@@ -38,6 +44,18 @@ def test_frozen_conditions_align_gate_grpo_sft_and_evaluation():
     assert contract["base_gate_sampling"]["temperature"] == grpo["temperature"]
     assert contract["base_gate_sampling"]["top_p"] == grpo["top_p"]
     assert contract["base_gate_sampling"]["max_new_tokens"] == grpo["max_completion_length"]
+    assert contract["base_gate_sampling"]["top_k"] == grpo["top_k"] == 0
+    assert contract["base_gate_sampling"]["min_p"] is grpo["min_p"] is None
+    assert contract["base_gate_sampling"]["repetition_penalty"] == grpo["repetition_penalty"] == 1.0
+    assert {key: contract["base_gate_sampling"][key] for key in GRPO_GENERATION_DEFAULTS} == GRPO_GENERATION_DEFAULTS
+    assert {key: grpo[key] for key in GRPO_GENERATION_DEFAULTS} == GRPO_GENERATION_DEFAULTS
+    assert base_gate_generation_config(max_new_tokens=37, pad_token_id=4, bos_token_id=1, eos_token_id=2) == {
+        **GRPO_GENERATION_DEFAULTS,
+        "max_new_tokens": 37,
+        "pad_token_id": 4,
+        "bos_token_id": 1,
+        "eos_token_id": 2,
+    }
     assert grpo["max_prompt_length"] == contract["max_prompt_tokens"] == 512
     assert sft["system_prompt"] is None and sft["completion_only_loss"] is True
     assert evaluation["prompt_messages"] == "same one-user-message format; no system prompt"

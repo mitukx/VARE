@@ -13,12 +13,16 @@ from pathlib import Path
 import pyarrow.parquet as parquet
 import torch
 from packaging.version import Version
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, GenerationConfig
 from trl.rewards import accuracy_reward
 
 from scripts.gpu_gate_journal_v2 import GateJournal, GateWallTimeExceeded, run_prompt_groups, wall_time_limit
 from scripts.math500_grader_v2 import exact_match, has_valid_final_box
-from scripts.qwen25_deepmath_inputs_v2 import tokenize_generation_prompt
+from scripts.qwen25_deepmath_inputs_v2 import (
+    GRPO_GENERATION_DEFAULTS,
+    base_gate_generation_config,
+    tokenize_generation_prompt,
+)
 from scripts.validate_math500_study_v1 import (
     EXPECTED_DEEPMATH_SHA256,
     deduplicate_train_rows,
@@ -53,8 +57,8 @@ PINNED_RUNTIME = {
     "pyarrow": "22.0.0",
 }
 PROTOCOL_LOCK = Path("protocols/qwen25_deepmath_grpo_math500_v2.lock.json")
-TEMPERATURE = 0.7
-TOP_P = 0.95
+TEMPERATURE = GRPO_GENERATION_DEFAULTS["temperature"]
+TOP_P = GRPO_GENERATION_DEFAULTS["top_p"]
 
 
 def _check_runtime():
@@ -177,16 +181,19 @@ def main() -> None:
             inputs = {key: value.to("cuda:0") for key, value in prompt["batch"].items()}
             torch.manual_seed(GATE_SEED + prompt_index)
             torch.cuda.manual_seed_all(GATE_SEED + prompt_index)
+            generation_config = GenerationConfig(
+                **base_gate_generation_config(
+                    max_new_tokens=per_completion_cap,
+                    pad_token_id=tokenizer.pad_token_id if tokenizer.pad_token_id is not None else tokenizer.eos_token_id,
+                    bos_token_id=tokenizer.bos_token_id,
+                    eos_token_id=tokenizer.eos_token_id,
+                )
+            )
             with torch.inference_mode():
                 sequences = model.generate(
                     **inputs,
-                    do_sample=True,
-                    temperature=TEMPERATURE,
-                    top_p=TOP_P,
+                    generation_config=generation_config,
                     num_return_sequences=NUM_COMPLETIONS,
-                    max_new_tokens=per_completion_cap,
-                    pad_token_id=tokenizer.pad_token_id if tokenizer.pad_token_id is not None else tokenizer.eos_token_id,
-                    eos_token_id=tokenizer.eos_token_id,
                 )
             token_ids = [sequence[prompt["prompt_length"] :].tolist() for sequence in sequences]
             completions = [tokenizer.decode(ids, skip_special_tokens=True) for ids in token_ids]

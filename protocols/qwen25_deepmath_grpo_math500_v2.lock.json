@@ -126,7 +126,14 @@
       "max_new_tokens": 1024,
       "max_input_tokens": 512,
       "system_prompt": null,
-      "chat_template": "model tokenizer template, direct apply_chat_template on original one-user-message conversation, tokenize=true, add_generation_prompt=true"
+      "chat_template": "model tokenizer template, direct apply_chat_template on original one-user-message conversation, tokenize=true, add_generation_prompt=true",
+      "top_k": 0,
+      "min_p": null,
+      "repetition_penalty": 1.0,
+      "cache_implementation": null,
+      "disable_compile": true,
+      "generation_kwargs": null,
+      "use_vllm": false
     },
     "resource_budget": {
       "paid_compute": false,
@@ -208,7 +215,13 @@
         "max_prompt_length": 512,
         "system_prompt": null,
         "do_sample": true,
-        "chat_template_kwargs": {}
+        "chat_template_kwargs": {},
+        "min_p": null,
+        "repetition_penalty": 1.0,
+        "cache_implementation": null,
+        "generation_kwargs": null,
+        "disable_compile": true,
+        "top_k": 0
       },
       "dev_advancement_gate": "On 100 dev items, GRPO mean exact-match must exceed base by at least 0.05 and be no worse than SFT; at least 2/3 seeds must improve over base. Otherwise stop before confirmation.",
       "confirmation_primary": "On 400 untouched confirmation items, mean GRPO pass@1 must exceed both no-update and SFT by at least 0.05, paired level-stratified task-bootstrap 95% lower bounds must be above zero for both contrasts, and at least 2/3 seeds must improve over each control.",
@@ -289,14 +302,28 @@
       "do_sample": true,
       "temperature": 0.7,
       "top_p": 0.95,
-      "max_new_tokens": 1024
+      "max_new_tokens": 1024,
+      "top_k": 0,
+      "min_p": null,
+      "repetition_penalty": 1.0,
+      "cache_implementation": null,
+      "disable_compile": true,
+      "generation_kwargs": null,
+      "use_vllm": false
     },
     "base_gate_sampling": {
       "do_sample": true,
       "temperature": 0.7,
       "top_p": 0.95,
       "max_new_tokens": 1024,
-      "num_return_sequences": 4
+      "num_return_sequences": 4,
+      "top_k": 0,
+      "min_p": null,
+      "repetition_penalty": 1.0,
+      "cache_implementation": null,
+      "disable_compile": true,
+      "generation_kwargs": null,
+      "use_vllm": false
     },
     "heldout_eval_sampling": {
       "do_sample": false,
@@ -305,7 +332,7 @@
     }
   },
   "protocol_revision": {
-    "supersedes": "qwen25_deepmath_grpo_math500_v1.lock.json for future gate execution only",
+    "supersedes": "qwen25_deepmath_grpo_math500_v1.lock.json for future gate execution only; v2 generation-field alignment was tightened in commit a87046d follow-up",
     "v1_immutable": true,
     "changes": [
       "Removed the extra base-gate system message; v2 uses DeepMath original user-only prompt exactly as TRL GRPOTrainer does.",
@@ -314,7 +341,8 @@
       "Changed Python check from exact 3.11.2 to supported >=3.11,<3.13; package versions remain exact and Colab runtime is recorded.",
       "Counts generated tokens from returned token IDs and records per-prompt-group fsynced checkpoints, timeout/OOM states, and identity-checked resume.",
       "Added separate adversarial CPU grader tests, including known disagreement with TRL accuracy_reward first-match extraction.",
-      "Resume identity binds to protocol-lock hash and observed runtime/device metadata; raw generated token IDs are retained for recounting."
+      "Resume identity binds to protocol-lock hash and observed runtime/device metadata; raw generated token IDs are retained for recounting.",
+      "Matched all explicit Transformers generation fields with TRL 1.1.0 GRPOConfig defaults, including top_k/min_p/repetition/cache/compile settings; v2 runner constructs that explicit GenerationConfig."
     ]
   }
 }

@@ -3,6 +3,32 @@
 from __future__ import annotations
 
 
+GRPO_GENERATION_DEFAULTS = {
+    "do_sample": True,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "top_k": 0,
+    "min_p": None,
+    "repetition_penalty": 1.0,
+    "cache_implementation": None,
+    "disable_compile": True,
+}
+
+
+def base_gate_generation_config(
+    *, max_new_tokens: int, pad_token_id: int, bos_token_id: int | None, eos_token_id: int
+) -> dict:
+    if max_new_tokens <= 0:
+        raise ValueError("max_new_tokens must be positive")
+    return {
+        **GRPO_GENERATION_DEFAULTS,
+        "max_new_tokens": max_new_tokens,
+        "pad_token_id": pad_token_id,
+        "bos_token_id": bos_token_id,
+        "eos_token_id": eos_token_id,
+    }
+
+
 def prompt_messages(problem: str) -> list[dict[str, str]]:
     if not isinstance(problem, str) or not problem.strip():
         raise ValueError("problem must be a non-empty string")
