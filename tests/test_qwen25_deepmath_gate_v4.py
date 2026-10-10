@@ -11,6 +11,7 @@ from scripts.prompt_id_hash_v3 import (
     verify_prompt_id_sha256,
 )
 from scripts.qwen25_gate_metrics_v4 import completion_shape, summarize_completions
+from scripts.qwen25_deepmath_inputs_v2 import GRPO_GENERATION_DEFAULTS
 
 
 PROTOCOL = json.loads(open("protocols/qwen25_deepmath_grpo_math500_v4.lock.json", encoding="utf-8").read())
@@ -70,6 +71,22 @@ def test_v4_model_hashes_match_runner_and_verified_tokenizer_file_value():
     )
     assert f'"tokenizer_config.json": "{expected}"' in runner
     assert PROTOCOL["protocol_revision"]["v3_immutable"] is True
+
+
+def test_gate_sampling_and_training_prompt_contract_match_locked_trl_contract():
+    gate = PROTOCOL["first_gpu_gate"]["generation"]
+    grpo = PROTOCOL["prompt_and_generation_contract"]["grpo_sampling"]
+    for settings in (gate, grpo):
+        assert settings["temperature"] == GRPO_GENERATION_DEFAULTS["temperature"] == 0.7
+        assert settings["top_p"] == GRPO_GENERATION_DEFAULTS["top_p"] == 0.95
+        assert settings["max_new_tokens"] == 1024
+        assert settings["top_k"] == GRPO_GENERATION_DEFAULTS["top_k"] == 0
+    assert gate["system_prompt"] is None
+    assert gate["completions_per_prompt"] == 4
+    assert gate["do_sample"] is True
+    assert PROTOCOL["prompt_and_generation_contract"]["system_prompt"] is None
+    assert "original one-user-message" in gate["chat_template"]
+    assert PROTOCOL["prompt_and_generation_contract"]["grpo"].startswith("Same original one-user-message prompt")
 
 
 def test_completion_metrics_use_token_ids_and_report_eos_truncation_and_disagreement():
