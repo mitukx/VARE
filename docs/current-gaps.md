@@ -1,5 +1,16 @@
 # Current evidence gaps
 
+**Update 2026-10-11 — applicability gate, public-donor route stopped:** two
+immutable SWE-smith agent traces do not provide exact behavior distributions,
+sampling metadata, complete-group identity or independent target lineage. Their
+patch mismatch is an already reported dataset issue; no new bug or learning
+effect is claimed. Source inspection distinguishes AReaL's documented completed
+ordering, sequential CURE training, and CAPF's fixed feedback generator from the
+selected co-evolving-feedback setting. Practical incidence, novelty, integration
+and total-cost benefit remain open. The owner reports an available free GPU
+session; its URL/specification is pending. See the
+[audit packet](../experiments/interactive_rollout_applicability_v3/README.md).
+
 **Update 2026-10-11 — local collector preflight stopped:** the unchanged RVL
 model-driven collector ran one frozen Mistral-7B 4-bit/HumanEval/6 diagnostic.
 Old-policy sampled-logprob reconstruction differed by 0.0432244 versus its

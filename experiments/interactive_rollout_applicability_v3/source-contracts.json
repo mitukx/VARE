@@ -1,0 +1,102 @@
+{
+  "classification": "Retrospective pinned-source applicability audit; not a new bug reproduction or novel theoretical result",
+  "observations": [
+    {
+      "repository": "inclusionAI/AReaL",
+      "commit": "298412a40f5b84ae6b2042987e81777e6dd0f284",
+      "path": "areal/infra/workflow_executor.py",
+      "line_start": 318,
+      "line_end": 334,
+      "observation": "Deterministic selection sorts the drained, already completed results by task ID. It does not itself wait for globally earlier outstanding task IDs.",
+      "companion_lines": [
+        625,
+        686
+      ],
+      "limit": "Source control-flow inference only. No distributed run, sampling-bias magnitude, capability effect or correctness violation is established.",
+      "source_sha256": "eee33608c94575e1a777f870d53e44e4cdf6bd449a0a17041f7d7752871ea0e6",
+      "source_bytes": 65558,
+      "url": "https://github.com/inclusionAI/AReaL/blob/298412a40f5b84ae6b2042987e81777e6dd0f284/areal/infra/workflow_executor.py#L318"
+    },
+    {
+      "repository": "inclusionAI/AReaL",
+      "commit": "298412a40f5b84ae6b2042987e81777e6dd0f284",
+      "path": "areal/api/cli_args.py",
+      "line_start": 2873,
+      "line_end": 2884,
+      "observation": "The option documents ordering of completed results and restricts supported end-to-end determinism to zero head off-policyness. Its validation warns explicitly about nondeterministic task-to-weight-version mapping otherwise.",
+      "companion_lines": [
+        3036,
+        3042
+      ],
+      "limit": "This is an acknowledged upstream contract, not a newly discovered scheduler bug.",
+      "source_sha256": "0887ff765b92264b47b1aea86bdd3448027cede3c559f32e4fb877bd9c4d32dd",
+      "source_bytes": 167280,
+      "url": "https://github.com/inclusionAI/AReaL/blob/298412a40f5b84ae6b2042987e81777e6dd0f284/areal/api/cli_args.py#L2873"
+    },
+    {
+      "repository": "Gen-Verse/CURE",
+      "commit": "24f37c295231e460ca17d1a26a15815471476f53",
+      "path": "run.py",
+      "line_start": 72,
+      "line_end": 145,
+      "observation": "The published orchestrator waits for subprocess sampling, execution, reward assignment and training sequentially, both initially and in each training iteration.",
+      "limit": "This entry point does not instantiate asynchronous feedback-version replacement during a coding trajectory. This says nothing about unpublished systems or separate agentic uses of the trained tester.",
+      "source_sha256": "b3c63ff3093224f944b55b810b18dbda9d10856c8ceebb8f19e4d3b602d5adc1",
+      "source_bytes": 4422,
+      "url": "https://github.com/Gen-Verse/CURE/blob/24f37c295231e460ca17d1a26a15815471476f53/run.py#L72"
+    },
+    {
+      "repository": "Gen-Verse/CURE",
+      "commit": "24f37c295231e460ca17d1a26a15815471476f53",
+      "path": "optimization/sample.py",
+      "line_start": 280,
+      "line_end": 350,
+      "observation": "Coder and tester prompts are formed before the joint generation call; returned outputs are split into coder and tester samples.",
+      "limit": "Does not establish agent-visible, changing verifier observations within multi-turn training rollouts.",
+      "source_sha256": "239ed22819046fc363fd5d1fa3476a3222e0d52cbb28260071f41f5d19b41cdd",
+      "source_bytes": 14803,
+      "url": "https://github.com/Gen-Verse/CURE/blob/24f37c295231e460ca17d1a26a15815471476f53/optimization/sample.py#L280"
+    },
+    {
+      "repository": "Gen-Verse/CURE",
+      "commit": "24f37c295231e460ca17d1a26a15815471476f53",
+      "path": "optimization/reward.py",
+      "line_start": 103,
+      "line_end": 170,
+      "observation": "The code reward in this path uses the ground-truth-test slice. Tester rewards use the execution matrix and which codes passed those tests.",
+      "limit": "Do not describe this path as coder RL receiving a changing learned tester as its in-trajectory feedback.",
+      "source_sha256": "780507091ed6f8228773534fa180a01b599fa09dba606577e22122e87aea2e9c",
+      "source_bytes": 7852,
+      "url": "https://github.com/Gen-Verse/CURE/blob/24f37c295231e460ca17d1a26a15815471476f53/optimization/reward.py#L103"
+    },
+    {
+      "repository": "mitukx/Recursive-Verification-Lag",
+      "commit": "ba94a9e513fdaf882cde091766007a88b9edaeee",
+      "path": "src/rvl_systems/lab/tool_agent.py",
+      "line_start": 25,
+      "line_end": 102,
+      "observation": "CodingToolAgent stores its public_grader callback at construction and test_public awaits that callback. The training_turns adapter attaches the terminal reward and verifier version separately.",
+      "limit": "A mutable external callback is possible, but this source alone does not establish a learned public grader that changes during real distributed training.",
+      "source_sha256": "6dfeb26533d44cd2f9ef60df2f1acccf0736943163125392508da296b753d58c",
+      "source_bytes": 5285,
+      "url": "https://github.com/mitukx/Recursive-Verification-Lag/blob/ba94a9e513fdaf882cde091766007a88b9edaeee/src/rvl_systems/lab/tool_agent.py#L25"
+    }
+  ],
+  "prior_art_boundary": [
+    {
+      "url": "https://www.appliedcompute.com/research/staleness-in-fully-async-rl",
+      "observation": "Completion/length bias and asynchronous queue selection are already studied. Its queue-drop independence argument is an explicitly approximate steady-state argument.",
+      "limit": "No novelty claim for identifying length-biased completed-data selection."
+    },
+    {
+      "url": "https://arxiv.org/abs/1612.03319",
+      "observation": "Anytime Monte Carlo already studies wall-clock interruption and state-dependent computation-time bias.",
+      "limit": "No claim that a scheduler-dependence warning is a new probability theorem."
+    },
+    {
+      "url": "https://proceedings.mlr.press/v70/foerster17b.html",
+      "observation": "Nonstationary multiagent replay, importance sampling and replay fingerprints are established prior work.",
+      "limit": "Joint actor/verifier version tracking or a product of likelihood ratios alone does not establish a new method."
+    }
+  ]
+}

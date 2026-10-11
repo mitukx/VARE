@@ -1,0 +1,23 @@
+{
+  "study": "Public interactive-donor applicability audit v3",
+  "classification": "Bounded metadata/source audit, not a capability or novel-method experiment",
+  "frozen_before_selected_record_fetch": true,
+  "already_observed": "Dataset card/schema and first 10 viewer rows were inspected. Row 1 is an exploratory diagnostic control, not confirmation.",
+  "dataset": "SWE-bench/SWE-smith-trajectories",
+  "revision": "08e109b4a59eaeebf80e4675cd125d42e7ac99a4",
+  "file": "data/tool-00000-of-00008.parquet",
+  "record_indices": [1, 137],
+  "selection": "One previously previewed diagnostic plus one fixed non-previewed row; no population estimation, no outcome selection or retries",
+  "question": "Do these actual public agent records supply enough information for distribution-correct rollout reuse after a policy/feedback update?",
+  "necessary_evidence": [
+    "Interactive action and observation sequence",
+    "Recoverable immutable behavior policy and exact token IDs/sampling transform",
+    "Exact behavior categorical distribution access at residual rejection",
+    "Group membership and independently fixed target policy/feedback lineage",
+    "Reproducible pre-action environment and feedback/checker identity"
+  ],
+  "decision": "Do not admit transport or learner work on these donors if any necessary evidence cannot be established; missing is not evidence of nonexistence elsewhere",
+  "budget": {"max_remote_column_compressed_bytes": 40000000, "max_records_retained": 2, "model_inference": 0, "paid_spend": 0},
+  "prohibitions": ["Never execute transcript commands", "Do not infer dataset-wide corruption or model-quality impact from two records", "Do not use resolved as an independent checker or retune a failure", "No substitute model/task screen"],
+  "stop": "After these two records and existing pinned source contracts; no further dataset search in this cycle"
+}

@@ -1,0 +1,8 @@
+{
+  "utc": "2026-10-11T00:22:11.596671+00:00",
+  "first_session": 60174,
+  "exit_code": 130,
+  "reason": "Explicitly interrupted inefficient 64KiB BlockCache download after inspecting that fsspec fetches every block serially. A 29MB column would require hundreds of HTTP range requests. Changed cache blocks to 4MiB; same immutable dataset, row indices, fields and budget.",
+  "records_written_before_interrupt": [],
+  "protocol_sha256": "cb8582cac290aa7f401109ac9072a18b4293ed3548f07c0bc99f85f52ca38843"
+}

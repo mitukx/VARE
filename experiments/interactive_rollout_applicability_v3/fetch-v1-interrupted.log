@@ -1,0 +1,37 @@
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-11/https-github-com-mitukx-vare-https-2/work/trajectory-applicability-v3/fetch_records.py", line 7, in <module>
+    table=pq.ParquetFile(f).read_row_group(0)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/pyarrow/parquet/core.py", line 480, in read_row_group
+    return self.reader.read_row_group(i, column_indices=column_indices,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pyarrow/_parquet.pyx", line 1798, in pyarrow._parquet.ParquetReader.read_row_group
+  File "pyarrow/_parquet.pyx", line 1834, in pyarrow._parquet.ParquetReader.read_row_groups
+  File "pyarrow/error.pxi", line 89, in pyarrow.lib.check_status
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/fsspec/implementations/http.py", line 638, in read
+    return super().read(length)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/fsspec/spec.py", line 2122, in read
+    out = self.cache._fetch(self.loc, self.loc + length)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/fsspec/caching.py", line 408, in _fetch
+    self._fetch_block_cached(block_number)
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/fsspec/caching.py", line 432, in _fetch_block
+    block_contents = super()._fetch(start, end)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/fsspec/caching.py", line 77, in _fetch
+    return self.fetcher(start, stop)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/fsspec/asyn.py", line 118, in wrapper
+    return sync(self.loop, func, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/fsspec/asyn.py", line 91, in sync
+    if event.wait(1):
+       ^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/threading.py", line 655, in wait
+    signaled = self._cond.wait(timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/threading.py", line 359, in wait
+    gotit = waiter.acquire(True, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

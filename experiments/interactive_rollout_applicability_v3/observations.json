@@ -1,0 +1,113 @@
+{
+  "protocol_sha256": "cb8582cac290aa7f401109ac9072a18b4293ed3548f07c0bc99f85f52ca38843",
+  "rows": [
+    {
+      "file_row_index": 1,
+      "record_sha256": "537e60a44d3b48b2b5a0b33f4a136ff4095d34ff38901688d12dc334d3dc5d01",
+      "instance_id": "marshmallow-code__apispec.8b421526.func_pm_remove_assign__kdkrbg6a",
+      "traj_id": "marshmallow-code__apispec.8b421526.func_pm_remove_assign__kdkrbg6a.8qa84d2e",
+      "model": "claude-3-7-sonnet-20250219",
+      "reported_resolved": true,
+      "top_level_keys": [
+        "instance_id",
+        "messages",
+        "model",
+        "patch",
+        "resolved",
+        "traj_id"
+      ],
+      "nested_message_keys": [
+        "action",
+        "agent",
+        "arguments",
+        "cache_control",
+        "content",
+        "function",
+        "id",
+        "index",
+        "message_type",
+        "name",
+        "role",
+        "text",
+        "thought",
+        "tool_call_ids",
+        "tool_calls",
+        "type"
+      ],
+      "message_count": 43,
+      "roles": {
+        "system": 1,
+        "user": 1,
+        "assistant": 21,
+        "tool": 20
+      },
+      "explicit_edit_paths": [
+        "/testbed/src/apispec/core.py"
+      ],
+      "patch_paths": [
+        "flashtext/keyword.py"
+      ],
+      "token_probability_metadata_present": false,
+      "token_ids_recorded": false,
+      "scope": "This record only; recorded metadata is not a recovered sampling law."
+    },
+    {
+      "file_row_index": 137,
+      "record_sha256": "0fbc091674f5c5740416ed192d75c5334e82942122f3463e242637bd3b568c54",
+      "instance_id": "jd__tenacity.0d40e76f.func_pm_ctrl_shuffle__ld25mubm",
+      "traj_id": "jd__tenacity.0d40e76f.func_pm_ctrl_shuffle__ld25mubm.8qa84d2e",
+      "model": "claude-3-7-sonnet-20250219",
+      "reported_resolved": true,
+      "top_level_keys": [
+        "instance_id",
+        "messages",
+        "model",
+        "patch",
+        "resolved",
+        "traj_id"
+      ],
+      "nested_message_keys": [
+        "action",
+        "agent",
+        "arguments",
+        "cache_control",
+        "content",
+        "function",
+        "id",
+        "index",
+        "message_type",
+        "name",
+        "role",
+        "text",
+        "thought",
+        "tool_call_ids",
+        "tool_calls",
+        "type"
+      ],
+      "message_count": 29,
+      "roles": {
+        "system": 1,
+        "user": 1,
+        "assistant": 14,
+        "tool": 13
+      },
+      "explicit_edit_paths": [
+        "/testbed/tenacity/__init__.py"
+      ],
+      "patch_paths": [
+        "src/docx/opc/pkgreader.py"
+      ],
+      "token_probability_metadata_present": false,
+      "token_ids_recorded": false,
+      "scope": "This record only; recorded metadata is not a recovered sampling law."
+    }
+  ],
+  "reuse_admitted": false,
+  "decision_basis": [
+    "Neither record provides a recoverable behavior sampling law, residual categorical access, or an audited independent target/group lineage.",
+    "The recorded patch paths disagree with the explicit edited project files in both specimens. This reproduces an already reported issue, not a new discovery.",
+    "No environment replay, transport, learner update or task-success evaluation was executed."
+  ],
+  "known_issue": "https://huggingface.co/datasets/SWE-bench/SWE-smith-trajectories/discussions/3",
+  "decision": "STOP this public-donor route; keep the broader research hypothesis unvalidated."
+}

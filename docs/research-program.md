@@ -38,6 +38,18 @@ unchanged and unexecuted. Require materially different, independently justified
 feasibility evidence before another model/task screen. Do not substitute more
 finite examples or claim a new method from this negative preflight.
 
+A bounded [source/public-donor applicability audit](../experiments/interactive_rollout_applicability_v3/README.md)
+now stops the public-trajectory route: two pinned SWE-smith records lack the
+sampling-law and target-lineage evidence required for exact reuse. Their patch
+mismatches reproduce a previously reported issue, not a new discovery. Pinned
+AReaL documents its completed-result ordering limitation; inspected CURE training
+is sequential and CAPF uses a fixed feedback generator. None establishes the
+incidence or learning cost of asynchronously changing in-trajectory feedback.
+Do not start more nearby dataset/finite screens or claim novelty from this audit.
+An available free Colab GPU has been reported by the owner; its session URL and
+specification are pending. Hardware alone does not close the integration or
+importance gaps. No GPU run is launched by this audit.
+
 The selected scientific question remains open. The largest gap is an integrated
 collector that supplies useful real-model learning data with a measured net
 cost/capability trade-off. A later attempt must charge donor creation, historical
