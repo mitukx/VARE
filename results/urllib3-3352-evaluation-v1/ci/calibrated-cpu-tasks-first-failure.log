@@ -1,0 +1,17 @@
+calibrated-cpu-tasks	Calibrate locked-input tamper rejection	﻿2026-10-11T08:55:35.9290396Z ##[group]Run python3 scripts/calibrate_integrity.py --output "${RUNNER_TEMP}/vare-integrity-calibration"
+calibrated-cpu-tasks	Calibrate locked-input tamper rejection	2026-10-11T08:55:35.9290984Z ^[[36;1mpython3 scripts/calibrate_integrity.py --output "${RUNNER_TEMP}/vare-integrity-calibration"^[[0m
+calibrated-cpu-tasks	Calibrate locked-input tamper rejection	2026-10-11T08:55:35.9346677Z shell: /usr/bin/bash -e {0}
+calibrated-cpu-tasks	Calibrate locked-input tamper rejection	2026-10-11T08:55:35.9346918Z env:
+calibrated-cpu-tasks	Calibrate locked-input tamper rejection	2026-10-11T08:55:35.9347150Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+calibrated-cpu-tasks	Calibrate locked-input tamper rejection	2026-10-11T08:55:35.9347511Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+calibrated-cpu-tasks	Calibrate locked-input tamper rejection	2026-10-11T08:55:35.9347847Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+calibrated-cpu-tasks	Calibrate locked-input tamper rejection	2026-10-11T08:55:35.9348152Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+calibrated-cpu-tasks	Calibrate locked-input tamper rejection	2026-10-11T08:55:35.9348443Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+calibrated-cpu-tasks	Calibrate locked-input tamper rejection	2026-10-11T08:55:35.9348737Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+calibrated-cpu-tasks	Calibrate locked-input tamper rejection	2026-10-11T08:55:35.9348994Z ##[endgroup]
+calibrated-cpu-tasks	Calibrate locked-input tamper rejection	2026-10-11T08:55:36.5766705Z Integrity calibration failed: RuntimeError: grader returned non-JSON output (exit 2):  usage: grade.py [-h] --workspace WORKSPACE --task-root TASK_ROOT
+calibrated-cpu-tasks	Calibrate locked-input tamper rejection	2026-10-11T08:55:36.5767777Z                 --source-record SOURCE_RECORD --task-id TASK_ID
+calibrated-cpu-tasks	Calibrate locked-input tamper rejection	2026-10-11T08:55:36.5768201Z                 [--python PYTHON]
+calibrated-cpu-tasks	Calibrate locked-input tamper rejection	2026-10-11T08:55:36.5768688Z grade.py: error: the following arguments are required: --source-record, --task-id
+calibrated-cpu-tasks	Calibrate locked-input tamper rejection	2026-10-11T08:55:36.5768995Z 
+calibrated-cpu-tasks	Calibrate locked-input tamper rejection	2026-10-11T08:55:36.5844792Z ##[error]Process completed with exit code 1.

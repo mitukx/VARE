@@ -1,0 +1,265 @@
+{
+  "expected_baseline_failure_reproduced": true,
+  "known_fix": {
+    "calibration_reference_revision": "d150cea52b37f4633a0dff4e26339c51d23d987b",
+    "grade_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "grade_stdout_sha256": "c2fa4d316c7cba4bb3deed67240ec5b2c922c299543d8286bbd59d3eac0ca45c",
+    "name": "known-fix",
+    "passed": true,
+    "prepare_stdout_sha256": "677d78e3dd4e28d94d1d63336476e86f6a23e85545b6965c3bdcfc6c83478c67",
+    "process_exit_code": 0,
+    "source_record_sha256": "c3ecefc299217bd6cd5a2ee398880420d7d288143fa4afce07affafef17e9350",
+    "task_grade": {
+      "candidate_changed_paths": [
+        "src/urllib3/connectionpool.py"
+      ],
+      "candidate_patch_sha256": "9833f902a6e46e7c50484761daa50779eb0b8a11db0ff995ab13b1c66cd63cc4",
+      "candidate_source_scope_error": null,
+      "candidate_source_scope_valid": true,
+      "cases": [
+        {
+          "case_id": "double_slash_colon",
+          "expected_request_line": "GET //v:h HTTP/1.1",
+          "observed_request_line": "GET //v:h HTTP/1.1",
+          "passed": true,
+          "path": "//v:h",
+          "process": {
+            "output_limited": false,
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "{\"status\": 200}\n",
+            "timed_out": false,
+            "wall_seconds": 0.116256
+          },
+          "server_error": null
+        },
+        {
+          "case_id": "double_slash_colon_query",
+          "expected_request_line": "GET //v:h?key=val HTTP/1.1",
+          "observed_request_line": "GET //v:h?key=val HTTP/1.1",
+          "passed": true,
+          "path": "//v:h?key=val",
+          "process": {
+            "output_limited": false,
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "{\"status\": 200}\n",
+            "timed_out": false,
+            "wall_seconds": 0.114892
+          },
+          "server_error": null
+        },
+        {
+          "case_id": "root_path",
+          "expected_request_line": "GET / HTTP/1.1",
+          "observed_request_line": "GET / HTTP/1.1",
+          "passed": true,
+          "path": "/",
+          "process": {
+            "output_limited": false,
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "{\"status\": 200}\n",
+            "timed_out": false,
+            "wall_seconds": 0.115091
+          },
+          "server_error": null
+        },
+        {
+          "case_id": "ordinary_path_query",
+          "expected_request_line": "GET /normal/path?x=1 HTTP/1.1",
+          "observed_request_line": "GET /normal/path?x=1 HTTP/1.1",
+          "passed": true,
+          "path": "/normal/path?x=1",
+          "process": {
+            "output_limited": false,
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "{\"status\": 200}\n",
+            "timed_out": false,
+            "wall_seconds": 0.116876
+          },
+          "server_error": null
+        },
+        {
+          "case_id": "numeric_authority_like_path",
+          "expected_request_line": "GET //host:8080/path HTTP/1.1",
+          "observed_request_line": "GET //host:8080/path HTTP/1.1",
+          "passed": true,
+          "path": "//host:8080/path",
+          "process": {
+            "output_limited": false,
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "{\"status\": 200}\n",
+            "timed_out": false,
+            "wall_seconds": 0.115269
+          },
+          "server_error": null
+        }
+      ],
+      "fail_to_pass": {
+        "double_slash_colon": true,
+        "double_slash_colon_query": true
+      },
+      "integrity_errors": [],
+      "limits": {
+        "candidate_filesystem": "read-only candidate checkout; home/work/evaluator reads denied",
+        "case_timeout_seconds": 3.0,
+        "cpu_limit_seconds": 10,
+        "max_output_bytes": 262144,
+        "memory_limit_enforced": false,
+        "memory_limit_mb": null,
+        "memory_limit_note": "macOS resource API rejected RLIMIT_AS; no memory cap is claimed",
+        "network_allowlist": "grader localhost ephemeral TCP port only"
+      },
+      "pass_to_pass": {
+        "numeric_authority_like_path": true,
+        "ordinary_path_query": true,
+        "root_path": true
+      },
+      "passed": true,
+      "schema_version": 1,
+      "source_record_sha256": "c3ecefc299217bd6cd5a2ee398880420d7d288143fa4afce07affafef17e9350",
+      "source_revision": "166f66faa5ef23e255f654e8c6b66ad8590fe630",
+      "source_tree": "0929cc7c1f30a972cd280fcd41faef3c80aa84bd",
+      "task_id": "urllib3-preserve-ambiguous-request-target-v1",
+      "unexpected_changed_paths": [],
+      "workspace_baseline_commit": "6a08b6b9fd9f7177128848f76e0c63ebdd4e9871",
+      "workspace_baseline_tree": "c6607cdc2ca128c2b5a7314dafc52b9fbed28f03"
+    },
+    "workspace_baseline_commit": "6a08b6b9fd9f7177128848f76e0c63ebdd4e9871",
+    "workspace_baseline_tree": "c6607cdc2ca128c2b5a7314dafc52b9fbed28f03"
+  },
+  "known_fix_passed_calibration": true,
+  "pinned_base": {
+    "calibration_reference_revision": null,
+    "grade_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "grade_stdout_sha256": "5501cfd39bd51a52305840a620be30ddf4fef5dbcdb55851414f83ba5ac70444",
+    "name": "pinned-base",
+    "passed": false,
+    "prepare_stdout_sha256": "84f22a35694300061221610c7ed863b2392662c1423319a1e85773740025383d",
+    "process_exit_code": 1,
+    "source_record_sha256": "02abd56ffb58a2fe130473183814094d0c65b7c525aeedf2a35adaf187d48eec",
+    "task_grade": {
+      "candidate_changed_paths": [],
+      "candidate_patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "candidate_source_scope_error": null,
+      "candidate_source_scope_valid": true,
+      "cases": [
+        {
+          "case_id": "double_slash_colon",
+          "expected_request_line": "GET //v:h HTTP/1.1",
+          "observed_request_line": null,
+          "passed": false,
+          "path": "//v:h",
+          "process": {
+            "output_limited": false,
+            "returncode": 1,
+            "stderr": "Traceback (most recent call last):\n  File \"${CALIBRATION_RUN}/pinned-base/preparation/workspace/src/urllib3/util/url.py\", line 423, in parse_url\n    host, port = _HOST_PORT_RE.match(host_port).groups()  # type: ignore[union-attr]\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'NoneType' object has no attribute 'groups'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"<string>\", line 34, in <module>\n  File \"${CALIBRATION_RUN}/pinned-base/preparation/workspace/src/urllib3/poolmanager.py\", line 457, in urlopen\n    response = conn.urlopen(method, u.request_uri, **kw)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"${CALIBRATION_RUN}/pinned-base/preparation/workspace/src/urllib3/connectionpool.py\", line 705, in urlopen\n    parsed_url = parse_url(url)\n                 ^^^^^^^^^^^^^^\n  File \"${CALIBRATION_RUN}/pinned-base/preparation/workspace/src/urllib3/util/url.py\", line 449, in parse_url\n    raise LocationParseError(source_url) from e\nurllib3.exceptions.LocationParseError: Failed to parse: //v:h\n",
+            "stdout": "",
+            "timed_out": false,
+            "wall_seconds": 0.128963
+          },
+          "server_error": null
+        },
+        {
+          "case_id": "double_slash_colon_query",
+          "expected_request_line": "GET //v:h?key=val HTTP/1.1",
+          "observed_request_line": null,
+          "passed": false,
+          "path": "//v:h?key=val",
+          "process": {
+            "output_limited": false,
+            "returncode": 1,
+            "stderr": "Traceback (most recent call last):\n  File \"${CALIBRATION_RUN}/pinned-base/preparation/workspace/src/urllib3/util/url.py\", line 423, in parse_url\n    host, port = _HOST_PORT_RE.match(host_port).groups()  # type: ignore[union-attr]\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'NoneType' object has no attribute 'groups'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"<string>\", line 34, in <module>\n  File \"${CALIBRATION_RUN}/pinned-base/preparation/workspace/src/urllib3/poolmanager.py\", line 457, in urlopen\n    response = conn.urlopen(method, u.request_uri, **kw)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"${CALIBRATION_RUN}/pinned-base/preparation/workspace/src/urllib3/connectionpool.py\", line 705, in urlopen\n    parsed_url = parse_url(url)\n                 ^^^^^^^^^^^^^^\n  File \"${CALIBRATION_RUN}/pinned-base/preparation/workspace/src/urllib3/util/url.py\", line 449, in parse_url\n    raise LocationParseError(source_url) from e\nurllib3.exceptions.LocationParseError: Failed to parse: //v:h?key=val\n",
+            "stdout": "",
+            "timed_out": false,
+            "wall_seconds": 0.117253
+          },
+          "server_error": null
+        },
+        {
+          "case_id": "root_path",
+          "expected_request_line": "GET / HTTP/1.1",
+          "observed_request_line": "GET / HTTP/1.1",
+          "passed": true,
+          "path": "/",
+          "process": {
+            "output_limited": false,
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "{\"status\": 200}\n",
+            "timed_out": false,
+            "wall_seconds": 0.115861
+          },
+          "server_error": null
+        },
+        {
+          "case_id": "ordinary_path_query",
+          "expected_request_line": "GET /normal/path?x=1 HTTP/1.1",
+          "observed_request_line": "GET /normal/path?x=1 HTTP/1.1",
+          "passed": true,
+          "path": "/normal/path?x=1",
+          "process": {
+            "output_limited": false,
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "{\"status\": 200}\n",
+            "timed_out": false,
+            "wall_seconds": 0.116941
+          },
+          "server_error": null
+        },
+        {
+          "case_id": "numeric_authority_like_path",
+          "expected_request_line": "GET //host:8080/path HTTP/1.1",
+          "observed_request_line": "GET //host:8080/path HTTP/1.1",
+          "passed": true,
+          "path": "//host:8080/path",
+          "process": {
+            "output_limited": false,
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "{\"status\": 200}\n",
+            "timed_out": false,
+            "wall_seconds": 0.115398
+          },
+          "server_error": null
+        }
+      ],
+      "fail_to_pass": {
+        "double_slash_colon": false,
+        "double_slash_colon_query": false
+      },
+      "integrity_errors": [],
+      "limits": {
+        "candidate_filesystem": "read-only candidate checkout; home/work/evaluator reads denied",
+        "case_timeout_seconds": 3.0,
+        "cpu_limit_seconds": 10,
+        "max_output_bytes": 262144,
+        "memory_limit_enforced": false,
+        "memory_limit_mb": null,
+        "memory_limit_note": "macOS resource API rejected RLIMIT_AS; no memory cap is claimed",
+        "network_allowlist": "grader localhost ephemeral TCP port only"
+      },
+      "pass_to_pass": {
+        "numeric_authority_like_path": true,
+        "ordinary_path_query": true,
+        "root_path": true
+      },
+      "passed": false,
+      "schema_version": 1,
+      "source_record_sha256": "02abd56ffb58a2fe130473183814094d0c65b7c525aeedf2a35adaf187d48eec",
+      "source_revision": "166f66faa5ef23e255f654e8c6b66ad8590fe630",
+      "source_tree": "0929cc7c1f30a972cd280fcd41faef3c80aa84bd",
+      "task_id": "urllib3-preserve-ambiguous-request-target-v1",
+      "unexpected_changed_paths": [],
+      "workspace_baseline_commit": "35f0bf8ca1e6fd702e4f7746b98767a699aaa06d",
+      "workspace_baseline_tree": "c6607cdc2ca128c2b5a7314dafc52b9fbed28f03"
+    },
+    "workspace_baseline_commit": "35f0bf8ca1e6fd702e4f7746b98767a699aaa06d",
+    "workspace_baseline_tree": "c6607cdc2ca128c2b5a7314dafc52b9fbed28f03"
+  },
+  "protocol_id": "urllib3-3352-local-http-feasibility-v1"
+}

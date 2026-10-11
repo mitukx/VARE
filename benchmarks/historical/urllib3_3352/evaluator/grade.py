@@ -449,17 +449,70 @@ def git_value(workspace: Path, *args: str) -> str:
     return result.stdout.strip()
 
 
+def integrity_calibration(workspace: Path, task_root: Path) -> int:
+    """Support VARE's generic locked-input tamper calibration without running a task."""
+    try:
+        task = json.loads((task_root / "task.json").read_text(encoding="utf-8"))
+        lock = json.loads((task_root / "protocol.lock.json").read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        print(json.dumps({
+            "grader_error": "ValueError",
+            "message": "task descriptor does not match the locked protocol",
+        }))
+        return 1
+
+    locked = lock.get("locked_hashes", {})
+    assets = {
+        "task_json_sha256": task_root / "task.json",
+        "task_brief_sha256": task_root / "TASK.md",
+        "evaluator_sha256": Path(__file__).resolve(),
+    }
+    mismatches = [
+        key for key, path in assets.items()
+        if not locked.get(key) or not path.is_file() or sha256_file(path) != locked[key]
+    ]
+    if task.get("task_id") != TASK_ID or lock.get("task_id") != TASK_ID or mismatches:
+        print(json.dumps({
+            "grader_error": "ValueError",
+            "message": "task descriptor does not match the locked protocol",
+            "assets": mismatches,
+        }))
+        return 1
+
+    candidate_paths = task.get("source", {}).get("candidate_paths", [])
+    missing = [relative for relative in candidate_paths if not (workspace / relative).is_file()]
+    if missing:
+        print(json.dumps({
+            "grader_error": "FileNotFoundError",
+            "message": "candidate checkout is missing source files",
+            "missing": missing,
+        }))
+        return 1
+
+    # This compatibility mode is only an integrity-calibration contract; the
+    # task-specific CLI below performs the actual isolated evaluation.
+    print(json.dumps({
+        "grader_error": "RuntimeError",
+        "message": "integrity calibration mode does not execute candidates",
+    }))
+    return 1
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--workspace", type=Path, required=True)
     parser.add_argument("--task-root", type=Path, required=True)
-    parser.add_argument("--source-record", type=Path, required=True)
-    parser.add_argument("--task-id", required=True)
+    parser.add_argument("--source-record", type=Path)
+    parser.add_argument("--task-id")
     parser.add_argument("--python", default="/opt/homebrew/bin/python3.11")
     args = parser.parse_args()
 
     workspace = args.workspace.expanduser().resolve()
     task_root = args.task_root.expanduser().resolve()
+    if args.source_record is None and args.task_id is None:
+        return integrity_calibration(workspace, task_root)
+    if args.source_record is None or args.task_id is None:
+        parser.error("--source-record and --task-id must be provided together")
     repo_root = task_root.parents[2]
     record_path = args.source_record.expanduser().resolve()
     task_path = task_root / "task.json"
