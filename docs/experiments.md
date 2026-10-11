@@ -1,5 +1,13 @@
 # Experimental program
 
+## Research candidate screen — 2026-10-11
+
+A structured follow-up screen evaluated stale-rollout effects, policy-conditioned verifier audits, and budget-aware GRPO audit allocation. The questions are falsifiable, but recent primary work and existing VARE studies cover the central mechanisms, and no fresh task/base pair or independently trusted verifier-shift dataset is available. No training, model inference, GPU, MPS, or paid service was used. This is a research triage decision, not an experiment or novelty proof. See the [candidate screen](research-candidate-screen-2026-10-11-followup.md).
+
+## RVL shared-module rollback alias follow-up — CPU regression and PR #92
+
+At pinned RVL main `27ebf7fe239d97504eeb960bf1407de220584dac`, a regression with a shared Dropout child fails after rollback on exact per-module modes and the next Dropout forward; model tensors, optimizer state, and CPU RNG restore. Direct assignment of captured `training` flags passes the regression. A clean-clone run passes all 14 trainer tests, and an additional related CPU suite passes 51 tests. The fix is in open [RVL PR #92](https://github.com/mitukx/Recursive-Verification-Lag/pull/92), not merged or human-reviewed. This does not establish default-model incidence or model capability impact. See the [v2 report](rvl-module-mode-shared-alias-followup-v2.md) and [raw replay](../results/rvl-module-mode-shared-alias-v1/clean-clone-replay-20261011/).
+
 ## Qwen2.5–DeepMath v7 post-hoc failure-mode analysis
 
 **Status: ARCHIVED — Frozen v7 inference gate failed its predefined final-box criterion.** The fixed protocol is [`qwen25_deepmath_grpo_math500_v7`](../protocols/qwen25_deepmath_grpo_math500_v7.lock.json) (SHA-256 `ab362b7053ef56c274ab35be76f256154df32afddd2f4a4ed4d40e57e7196765`); runner revision is [`95316981b8d654a60bb5d22a18bf9e5e8c4cc26e`](https://github.com/mitukx/VARE/tree/95316981b8d654a60bb5d22a18bf9e5e8c4cc26e). The frozen runbook commit is `0c2ca5953aa3dc2b21fa9d6aa3049ae680ff1ea6`. The [result JSON](https://drive.google.com/file/d/1oKmB-5Hy9q0YkqPr04OLockg2iC1ldEj/view) is the raw result source (SHA-256 `7b41f9a9e5e92847269fe7eb63ce55110469146163bdf8dadfd1c5d64a7243fe`); its [Drive artifact folder](https://drive.google.com/drive/folders/1OokyHj2G2JW4bjVkKF4CdyLRt4zsGcA1) also retains the journal and durable partial JSONL. Journal SHA-256: `646ead42f473dd207f56163fbffef74cd0cd1b00cad655796eead0bd88e6e9e7`; partial JSONL SHA-256: `f45513c90c87d253babd07b27f4ad8f967213dcc8808554831d37265b3606d51`.

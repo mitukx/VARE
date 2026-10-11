@@ -1,5 +1,7 @@
 # RVL rollback mode restoration: shared-module follow-up
 
+> **Status update 2026-10-11:** this historical proposal was submitted as [RVL PR #92](https://github.com/mitukx/Recursive-Verification-Lag/pull/92). The updated clean-clone and 51-test evidence is in the [v2 report](rvl-module-mode-shared-alias-followup-v2.md). The proposal status and test counts below describe the state recorded on 2026-10-10.
+
 ## Finding
 
 The merged rollback fix in RVL `27ebf7fe239d97504eeb960bf1407de220584dac` restores modes by iterating `named_modules()` and calling `module.train(saved_mode)`. PyTorch deduplicates shared module objects in `named_modules()`, while `Module.train()` recursively changes all descendants. If a shared child is restored through its first parent and a later aliased parent has another saved mode, the later parent's recursive call overwrites the child's restored mode.
