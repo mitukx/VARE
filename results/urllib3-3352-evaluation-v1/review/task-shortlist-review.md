@@ -1,0 +1,17 @@
+# Independent task shortlist review
+
+**Reviewer:** independent AI subagent; static/source shortlist plus one temporary mock contract check; not a human review.
+
+## Exact initial prompt
+
+> Independently find 2-3 concrete, small, historical real-world Python bug tasks suitable for dev-only model feasibility on macOS: clear issue/task statement, immutable buggy commit, known fixed commit, executable independent tests, permissive repo license verified at commit, low dependency requirements. Candidate-facing prompt/workspace must not contain gold patch or protected tests. Report exact source URLs/revisions, license evidence, test commands, potential contamination and feasibility. Do not edit shared repo, do not run models.
+
+## Agent output
+
+The strongest candidate is **urllib3 #3352**: the buggy behavior reproduces at the pinned base and the expected request target is preserved at the public fix.
+
+1. **urllib3 #3352** — [issue](https://github.com/urllib3/urllib3/issues/3352), buggy base `166f66faa5ef23e255f654e8c6b66ad8590fe630` (the fix's immediate parent), fixed commit `d150cea52b37f4633a0dff4e26339c51d23d987b` ([PR #4952](https://github.com/urllib3/urllib3/pull/4952)). MIT license evidence: `LICENSE.txt` inspected at the base and fix revisions through GitHub Contents API. In an isolated temporary clone (`/tmp/urllib3-shortlist.VQYAV3/repo`), the reviewer added an untracked `_version.py` shim only to that clone. With `PYTHONPATH=src`, a one-off Python test patched `_make_request`: base `HTTPConnectionPool.urlopen("GET", "//v:h")` raised `LocationParseError`; the same check at the fix asserted the request target was exactly `//v:h` and passed. This was a stdlib-mock check, not the final VARE localhost evaluator. The upstream pytest attempt `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src python -m pytest -q test/test_connectionpool.py -k paths_arent_parsed_as_urls` stopped during `test/conftest.py` import because `trustme` was unavailable. A prior attempt with plugin autoload enabled failed on unrelated global Hydra/ANTLR plugins. Public issue and fix mean development-only and potentially contaminated.
+2. **Click #1486** — [issue](https://github.com/pallets/click/issues/1486), base `4271fe283dc9365563aebb369ada8d20eee015a8`, fixed by [PR #1489](https://github.com/pallets/click/pull/1489), merge revision `d8763b93021c416549b5f8b4b5497234619410db`. `LICENSE.txt` at both revisions was inspected via GitHub Contents API; BSD 3-Clause. Suggested protected cases: invoking a Click group without a subcommand exits nonzero, while explicit `--help` exits zero; source touched `tests/test_commands.py`. The candidate was not checked out and tests were not run.
+3. **Click #2567** — [issue](https://github.com/pallets/click/issues/2567), broken revision `bcd3faaaaf03933915394f6c24d4f06d22aa8a1d`, fixed revision `3c1529e6bc12118ff5a83b2f81fc52f625367736`. `LICENSE.rst` at both revisions was inspected via GitHub Contents API; BSD 3-Clause. Suggested independent check: generate Fish completion and run `fish -n`; project command `pytest tests/test_shell_completion.py`. The candidate was not checked out; Fish and project tests were not run.
+
+No shared repository files were edited. No model was run. Candidate tasks and public fixes are contaminated for confirmation use. The shortlist's urllib3 upstream test could not run locally because `trustme` was missing; VARE later used a separate protected localhost evaluator and pinned source.

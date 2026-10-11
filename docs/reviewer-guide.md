@@ -9,6 +9,7 @@ This page is a short route through VARE's implementation and evidence. It separa
 3. **TRL trainer reproduction:** the [AsyncGRPO full-Trainer/DDP report](trl-async-accumulation-normalization-pr7249-full-trainer-ddp-v5-report.md) compares the pinned base with an existing TRL PR candidate through Trainer, Accelerate, and two-rank CPU/Gloo paths. This is reproduced upstream work, not a VARE implementation or a model-capability result. TRL PR [#7249](https://github.com/huggingface/trl/pull/7249) is open with no reviews as checked on 2026-10-10.
 4. **Real-model outcomes:** the latest completed [OpenBookQA GRPO/SFT confirmation](openbookqa-qwen25-grpo-sft-confirmation-v1-report.md) is a negative result: base exact-answer success was 45.31%, matched SFT averaged 33.33%, and GRPO responses were all invalid under the frozen parser. The three-seed [ARC GRPO-versus-SFT report](qwen-arc-grpo-sft-comparison-v3-report.md) is also a non-pass. The [GSM8K constant-shift audit](cpu-lm-gsm8k-dpo-constant-shift-audit-v1-report.md) and [ASDiv transfer study](cpu-lm-gsm8k-dpo-asdiv-transfer-v1-report.md) retire the narrow forced-choice DPO line. None establishes capability improvement.
 5. **Historical record:** use the [experiment index](experiments.md), [evidence ledger](evidence.md), and [roadmap](roadmap.md) for prior studies, failed gates, and full limitations. Protocols and raw run bundles are linked from their reports.
+6. **Real-repository task/evaluator:** inspect the [urllib3 #3352 task report](urllib3-3352-real-model-feasibility-v1-report.md), [task lock](../benchmarks/historical/urllib3_3352/protocol.lock.json), [grader](../benchmarks/historical/urllib3_3352/evaluator/grade.py), and [retained calibration/model/adversarial bundle](../results/urllib3-3352-evaluation-v1/). The two base-model attempts produced no applicable changes; the public task is development-only and no training was run. This work also fixes catalog identity claims at rollout and verifier boundaries; its base failure and after-change tests are in the same bundle.
 
 ## Reproduce the current RVL follow-up
 
@@ -20,6 +21,24 @@ PYTHON=python3.12 bash scripts/reproduce_rvl_shared_module_mode_followup_v1.sh \
 ```
 
 The raw baseline/fixed logs, runtime, status, and patch hashes are in [`results/rvl-module-mode-shared-alias-v1/`](../results/rvl-module-mode-shared-alias-v1/). Use a fresh output directory for each run.
+
+## Reproduce the urllib3 historical task calibration
+
+This path requires macOS with `/usr/bin/sandbox-exec`, Git, Python 3.12 for VARE and Python 3.11 for the pinned task package. It fetches the pinned upstream source revisions, then grades the failing base and the public known fix. Use fresh output directories.
+
+```bash
+PYTHONPATH=src python3.12 scripts/calibrate_urllib3_3352_task.py \
+  --output /tmp/urllib3-calibration
+
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src python3.12 -m pytest -q \
+  tests/test_urllib3_3352_evaluator.py tests/test_environment_catalog.py
+
+PYTHONPATH=src python3.12 scripts/adversarial_test_urllib3_3352.py \
+  --base-run /tmp/urllib3-calibration/pinned-base/preparation \
+  --output /tmp/urllib3-adversarial
+```
+
+The known-fix case validates the grader only. Issue #3352 and its fix are public; do not use this task for confirmation. The evaluator has no enforced memory cap and is specific to macOS Seatbelt.
 
 ## Code and evidence map
 

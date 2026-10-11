@@ -1,0 +1,56 @@
+{
+  "attempts": 1,
+  "candidate_changed_paths": [],
+  "decoding": {
+    "do_sample": false,
+    "max_new_tokens": 512,
+    "seed": 0,
+    "temperature": 0.0
+  },
+  "generated_tokens": 512,
+  "grade_process_exit_code": null,
+  "grading_deferred": true,
+  "independent_task_success": null,
+  "inference_seconds_per_valid_attempt": null,
+  "interpretation": "One descriptive development attempt; not a capability-improvement or generalization result.",
+  "memory": {
+    "mps_after_generation": {
+      "allocated_bytes": 2200301312,
+      "driver_allocated_bytes": 11319312384
+    },
+    "mps_after_load": {
+      "allocated_bytes": 2200097024,
+      "driver_allocated_bytes": 3271950336
+    },
+    "process_peak_rss_bytes": 4841095168,
+    "process_start_peak_rss_bytes": 417775616
+  },
+  "model": {
+    "license": "Apache-2.0",
+    "repo_id": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+    "revision": "fe8a4ea1ffedaf415f4da2f062534de366a451e6",
+    "runtime": "Transformers on MPS"
+  },
+  "paid_api_cost_usd": 0,
+  "prompt_sha256": "0e3ef4fb4481f54c851c4014ce38455291253d14773a65289684e086433336ac",
+  "runtime": {
+    "config_commit_metadata": "fe8a4ea1ffedaf415f4da2f062534de366a451e6",
+    "device": "Apple MPS",
+    "dtype": "float16",
+    "platform": "darwin",
+    "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+    "snapshot_revision_from_verified_cache_path": "fe8a4ea1ffedaf415f4da2f062534de366a451e6",
+    "tokenizer_commit_metadata": null,
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "schema_version": 1,
+  "task_class": "public historical development-only; retired after this screen",
+  "task_grade": null,
+  "task_id": "urllib3-preserve-ambiguous-request-target-v1",
+  "timing_seconds": {
+    "generation": 61.18978,
+    "model_load": 3.777757
+  },
+  "valid_patch": false
+}

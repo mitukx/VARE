@@ -84,7 +84,10 @@ class WorkspaceAgentRollout:
         self.run_root.mkdir(parents=True, exist_ok=True)
 
     async def rollout(self, task: Task, policy_id: str, policy_version: int, step: int) -> Attempt:
-        task_id = str(task.metadata.get("engineering_task_id", task.id))
+        task_id = task.id
+        claimed_task_id = task.metadata.get("engineering_task_id", task_id)
+        if claimed_task_id != task_id:
+            raise ValueError("task identity mismatch between task ID and task metadata")
         entry = self.catalog.get(task_id)
         workspace_path = self.run_root / f"{step:08d}-{task_id}"
         if workspace_path.exists():
@@ -117,7 +120,11 @@ class CatalogEnvironmentVerifier:
     async def verify(self, attempt: Attempt) -> Verification:
         import asyncio
 
-        task_id = str(attempt.metadata.get("engineering_task_id", attempt.task.id))
+        task_id = attempt.task.id
+        task_claim = attempt.task.metadata.get("engineering_task_id", task_id)
+        attempt_claim = attempt.metadata.get("engineering_task_id", task_id)
+        if task_claim != task_id or attempt_claim != task_id:
+            raise ValueError("task identity mismatch between attempt and dispatched task")
         entry = self.catalog.get(task_id)
         workspace = attempt.metadata.get("workspace_path")
         if not workspace:

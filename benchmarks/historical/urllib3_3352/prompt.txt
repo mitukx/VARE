@@ -1,0 +1,5 @@
+You are editing urllib3 at the pinned source revision described below. Return only a unified diff that changes `src/urllib3/connectionpool.py`.
+
+The request API receives an absolute URL with an authority and a path. A path such as `//v:h` is currently rejected before a request reaches the server, even though the URL's authority is valid and the colon belongs to the path. Preserve the destination host and port and send the path as the exact HTTP request target. Ordinary paths must continue to work. Do not change tests, task files, or evaluator files.
+
+The relevant pinned source excerpt follows. Treat it as context; the evaluator will exercise the actual package against a local HTTP server.

@@ -1,0 +1,28 @@
+{
+  "findings": [
+    "No confirmed current candidate bypass",
+    "Previous direct-socket spoof rejected before candidate execution",
+    "Known fix passes all 2 F2P and 3 P2P cases",
+    "Slow-drip helper regression passes",
+    "Local protocol lock is not an externally signed trust anchor"
+  ],
+  "limitations": [
+    "slow-drip test is helper-level, not malicious candidate integration",
+    "no human review or reproduction"
+  ],
+  "models_rerun": false,
+  "raw_output_sha256": {
+    "direct_spoof_stdout": "e0aa85645a079e5b5151bcead6e70ce7f0d3274c781f3db1f8ec10bbdac68c8c",
+    "known_fix_stdout": "aa8dd917a8d272fafd5c7cf19aca75de5a5643428f2bb60ef0e796b2bce55af7"
+  },
+  "review_output_sha256": "f5bc124bf6ffa3aea1cf68da9ef54158a7a8b4b20ba0be8ba4b777340615ccc9",
+  "review_prompt_sha256": "59cb602ee5590bea9847d64fac458e499f27c909d176d1668e1bbc73e7226912",
+  "reviewer_changes": false,
+  "reviewer_type": "independent AI subagent; not a human reviewer",
+  "target": {
+    "adversarial_script_sha256": "1ef1dae59f98fed8dadead1ba980863ffc6f6c945b7cbe7f36e36c3459706d42",
+    "grade_py_sha256": "ec9ec2befbd25094e08577b32f8e37f0eff4d932ce3431353e3cfd0e29f46efb",
+    "protocol_lock_sha256": "6411d656a88814b496db46eaa60086b8b34abacef0ee2dc625041e7cbab688ad",
+    "vare_head": "b3204926b3cae291f7c13e3134444c71a3a63172"
+  }
+}
