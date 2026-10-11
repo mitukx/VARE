@@ -1,0 +1,18 @@
+Working repository for candidate checks: /Users/user/Documents/Codex/2026-10-11/mission-advance-vare-through-verifiable-research/work/Recursive-Verification-Lag
+Packet directory: /Users/user/Documents/Codex/2026-10-11/mission-advance-vare-through-verifiable-research/work/VARE-sparse/results/rvl-module-mode-shared-alias-v1/independent-review-2026-10-11
+
+1) Host/runtime: `uname -a`; `python3.12 -c 'import platform, sys, torch, transformers; print("python", sys.version); print("platform", platform.platform()); print("machine", platform.machine()); print("torch", torch.__version__); print("transformers", transformers.__version__); print("cuda", torch.cuda.is_available()); print("mps", torch.backends.mps.is_available())'`
+
+2) Pinned source/test inspection: `git show <commit>:src/rvl_systems/hf_trainer.py`, `git show <commit>:tests/test_mini_lab_torch.py`, `git diff 27ebf7fe239d97504eeb960bf1407de220584dac 7568c6e39015f18bec337174bacf39caac4f2477 -- src/rvl_systems/hf_trainer.py tests/test_mini_lab_torch.py`, and `rg -n "def train\\(" src tests || true`. Captured outputs are in source-inspection.log.
+
+3) Candidate targeted regression, from the candidate checkout: `PYTHONPATH=. PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3.12 -m unittest tests.test_mini_lab_torch.TorchAcceptanceTests.test_restore_snapshot_preserves_shared_child_module_mode -v`; combined stdout/stderr plus exit status is in candidate-regression.log.
+
+4) Baseline extraction, from the candidate checkout: `mkdir -p /tmp/vare-independent-rvl-baseline-20261011 && git archive 27ebf7fe239d97504eeb960bf1407de220584dac src | tar -x -C /tmp/vare-independent-rvl-baseline-20261011`; `mkdir -p /tmp/vare-independent-rvl-baseline-20261011/tests && cp tests/test_mini_lab_torch.py /tmp/vare-independent-rvl-baseline-20261011/tests/test_mini_lab_torch.py`.
+
+5) Baseline source path check, from `/tmp/vare-independent-rvl-baseline-20261011`: `PYTHONPATH=. python3.12 -c 'import src.rvl_systems.hf_trainer; print(src.rvl_systems.hf_trainer.__file__)'`; output is in baseline-import-path.log.
+
+6) Same regression against pinned baseline, from `/tmp/vare-independent-rvl-baseline-20261011`: `PYTHONPATH=. PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3.12 -m unittest tests.test_mini_lab_torch.TorchAcceptanceTests.test_restore_snapshot_preserves_shared_child_module_mode -v`; combined stdout/stderr plus exit status is in baseline-regression-corrected.log.
+
+7) Registration order and custom override check, from the VARE checkout: `python3.12 results/rvl-module-mode-shared-alias-v1/independent-review-2026-10-11/order_and_override_check.py`; combined stdout/stderr plus exit status is in order_and_override.log. The script is included in this packet.
+
+8) The first baseline attempt was invalid: `PYTHONPATH=/tmp/vare-independent-rvl-baseline-20261011/src PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3.12 -m unittest tests.test_mini_lab_torch.TorchAcceptanceTests.test_restore_snapshot_preserves_shared_child_module_mode -v` ran from the candidate checkout. Since tests import `src.rvl_systems`, the candidate checkout shadowed the extracted baseline source. This output is retained as baseline-import-misroute.log and explicitly excluded from conclusions.
