@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "reviewer_type": "independent_ai_subagent_not_human",
+  "reviewer_task": "/root/experiment_gate_audit",
+  "vare_target_head": "b3204926b3cae291f7c13e3134444c71a3a63172",
+  "review_scope": {
+    "urllib3_issue": "https://github.com/urllib3/urllib3/issues/3352",
+    "urllib3_base_revision": "166f66faa5ef23e255f654e8c6b66ad8590fe630",
+    "urllib3_base_tree": "0929cc7c1f30a972cd280fcd41faef3c80aa84bd",
+    "urllib3_known_fix_revision": "d150cea52b37f4633a0dff4e26339c51d23d987b",
+    "urllib3_known_fix_tree": "de9be60beb39803cb681fae6f6236a885f999948",
+    "qwen_model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "tinyllama_model_revision": "fe8a4ea1ffedaf415f4da2f062534de366a451e6"
+  },
+  "actions": {
+    "repository_edits": false,
+    "tests_run": false,
+    "model_inference_run": false,
+    "research_repeated_for_archive": false
+  },
+  "archive_files": {
+    "prompt": "research-design-prompt.txt",
+    "prompt_sha256": "75eda88edb866f13016efacd1a4848a38deec9be612249453b1b97a732475111",
+    "report": "research-design-review.md",
+    "report_sha256": "65fac650155ab7f20adb9457d50b1b32577f10e4e48fc90e9ebf8d0b8b0c6be2"
+  },
+  "canonical_evidence_fingerprint": "f5bef3ce02629bf0b4c2fac5ca27d0cb4393486ddbedb9c873ce95eb3484be39",
+  "fingerprint_note": "Canonical input/reference manifest fingerprint from the original review; it is not the SHA-256 of the report text."
+}

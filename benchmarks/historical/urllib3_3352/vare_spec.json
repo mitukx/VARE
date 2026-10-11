@@ -1,0 +1,18 @@
+{
+  "id": "urllib3-preserve-ambiguous-request-target-v1",
+  "title": "Preserve ambiguous request-target paths",
+  "prompt": "Historical development-only task. See TASK.md.",
+  "family": "http-client-correctness",
+  "source": {"local_path": "source"},
+  "tests": [
+    {
+      "argv": ["python3", "{evaluator}/evaluator/grade.py", "--workspace", "{workspace}", "--task-root", "{evaluator}", "--source-record", "{source_record}", "--task-id", "{task_id}", "--python", "{task_python}"],
+      "name": "protected-local-http-request-target",
+      "cwd": ".",
+      "cwd_base": "evaluator",
+      "env": {}
+    }
+  ],
+  "limits": {"wall_time_s": 60.0, "cpu_time_s": 30, "memory_mb": null, "max_output_bytes": 524288},
+  "correctness_weight": 1.0
+}

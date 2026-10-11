@@ -1,0 +1,209 @@
+{
+  "baseline_failure_reproduced": true,
+  "calibration_run": "calibration-v10",
+  "known_fix": {
+    "candidate_patch_sha256": "9833f902a6e46e7c50484761daa50779eb0b8a11db0ff995ab13b1c66cd63cc4",
+    "candidate_source_scope_valid": true,
+    "cases": [
+      {
+        "case_id": "double_slash_colon",
+        "error_type": null,
+        "expected_request_line": "GET //v:h HTTP/1.1",
+        "observed_request_line": "GET //v:h HTTP/1.1",
+        "output_limited": false,
+        "passed": true,
+        "path": "//v:h",
+        "returncode": 0,
+        "server_error": null,
+        "timed_out": false,
+        "wall_seconds": 0.111883
+      },
+      {
+        "case_id": "double_slash_colon_query",
+        "error_type": null,
+        "expected_request_line": "GET //v:h?key=val HTTP/1.1",
+        "observed_request_line": "GET //v:h?key=val HTTP/1.1",
+        "output_limited": false,
+        "passed": true,
+        "path": "//v:h?key=val",
+        "returncode": 0,
+        "server_error": null,
+        "timed_out": false,
+        "wall_seconds": 0.113187
+      },
+      {
+        "case_id": "root_path",
+        "error_type": null,
+        "expected_request_line": "GET / HTTP/1.1",
+        "observed_request_line": "GET / HTTP/1.1",
+        "output_limited": false,
+        "passed": true,
+        "path": "/",
+        "returncode": 0,
+        "server_error": null,
+        "timed_out": false,
+        "wall_seconds": 0.111559
+      },
+      {
+        "case_id": "ordinary_path_query",
+        "error_type": null,
+        "expected_request_line": "GET /normal/path?x=1 HTTP/1.1",
+        "observed_request_line": "GET /normal/path?x=1 HTTP/1.1",
+        "output_limited": false,
+        "passed": true,
+        "path": "/normal/path?x=1",
+        "returncode": 0,
+        "server_error": null,
+        "timed_out": false,
+        "wall_seconds": 0.111651
+      },
+      {
+        "case_id": "numeric_authority_like_path",
+        "error_type": null,
+        "expected_request_line": "GET //host:8080/path HTTP/1.1",
+        "observed_request_line": "GET //host:8080/path HTTP/1.1",
+        "output_limited": false,
+        "passed": true,
+        "path": "//host:8080/path",
+        "returncode": 0,
+        "server_error": null,
+        "timed_out": false,
+        "wall_seconds": 0.113496
+      }
+    ],
+    "fail_to_pass": {
+      "double_slash_colon": true,
+      "double_slash_colon_query": true
+    },
+    "integrity_errors": [],
+    "limits": {
+      "candidate_filesystem": "read-only candidate checkout; home/work/evaluator reads denied",
+      "case_timeout_seconds": 3.0,
+      "cpu_limit_seconds": 10,
+      "max_output_bytes": 262144,
+      "memory_limit_enforced": false,
+      "memory_limit_mb": null,
+      "memory_limit_note": "macOS resource API rejected RLIMIT_AS; no memory cap is claimed",
+      "network_allowlist": "grader localhost ephemeral TCP port only"
+    },
+    "pass_to_pass": {
+      "numeric_authority_like_path": true,
+      "ordinary_path_query": true,
+      "root_path": true
+    },
+    "passed": true,
+    "process_exit_code": 0,
+    "source_record_sha256": "88392454f2786d5d8677445c6f7c25ee062417d827455a7fcbf98cfbfa6d7da2",
+    "workspace_baseline_tree": "c6607cdc2ca128c2b5a7314dafc52b9fbed28f03"
+  },
+  "known_fix_calibration_passed": true,
+  "pinned_base": {
+    "candidate_patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "candidate_source_scope_valid": true,
+    "cases": [
+      {
+        "case_id": "double_slash_colon",
+        "error_type": "LocationParseError",
+        "expected_request_line": "GET //v:h HTTP/1.1",
+        "observed_request_line": null,
+        "output_limited": false,
+        "passed": false,
+        "path": "//v:h",
+        "returncode": 1,
+        "server_error": null,
+        "timed_out": false,
+        "wall_seconds": 0.130391
+      },
+      {
+        "case_id": "double_slash_colon_query",
+        "error_type": "LocationParseError",
+        "expected_request_line": "GET //v:h?key=val HTTP/1.1",
+        "observed_request_line": null,
+        "output_limited": false,
+        "passed": false,
+        "path": "//v:h?key=val",
+        "returncode": 1,
+        "server_error": null,
+        "timed_out": false,
+        "wall_seconds": 0.118935
+      },
+      {
+        "case_id": "root_path",
+        "error_type": null,
+        "expected_request_line": "GET / HTTP/1.1",
+        "observed_request_line": "GET / HTTP/1.1",
+        "output_limited": false,
+        "passed": true,
+        "path": "/",
+        "returncode": 0,
+        "server_error": null,
+        "timed_out": false,
+        "wall_seconds": 0.112389
+      },
+      {
+        "case_id": "ordinary_path_query",
+        "error_type": null,
+        "expected_request_line": "GET /normal/path?x=1 HTTP/1.1",
+        "observed_request_line": "GET /normal/path?x=1 HTTP/1.1",
+        "output_limited": false,
+        "passed": true,
+        "path": "/normal/path?x=1",
+        "returncode": 0,
+        "server_error": null,
+        "timed_out": false,
+        "wall_seconds": 0.113151
+      },
+      {
+        "case_id": "numeric_authority_like_path",
+        "error_type": null,
+        "expected_request_line": "GET //host:8080/path HTTP/1.1",
+        "observed_request_line": "GET //host:8080/path HTTP/1.1",
+        "output_limited": false,
+        "passed": true,
+        "path": "//host:8080/path",
+        "returncode": 0,
+        "server_error": null,
+        "timed_out": false,
+        "wall_seconds": 0.112896
+      }
+    ],
+    "fail_to_pass": {
+      "double_slash_colon": false,
+      "double_slash_colon_query": false
+    },
+    "integrity_errors": [],
+    "limits": {
+      "candidate_filesystem": "read-only candidate checkout; home/work/evaluator reads denied",
+      "case_timeout_seconds": 3.0,
+      "cpu_limit_seconds": 10,
+      "max_output_bytes": 262144,
+      "memory_limit_enforced": false,
+      "memory_limit_mb": null,
+      "memory_limit_note": "macOS resource API rejected RLIMIT_AS; no memory cap is claimed",
+      "network_allowlist": "grader localhost ephemeral TCP port only"
+    },
+    "pass_to_pass": {
+      "numeric_authority_like_path": true,
+      "ordinary_path_query": true,
+      "root_path": true
+    },
+    "passed": false,
+    "process_exit_code": 1,
+    "source_record_sha256": "3127e249f4b94cbfa0680497ba59a081fd02e65a2fd8f436e7b93ed6bbcefc85",
+    "workspace_baseline_tree": "c6607cdc2ca128c2b5a7314dafc52b9fbed28f03"
+  },
+  "protocol_id": "urllib3-3352-local-http-feasibility-v1",
+  "raw_file_sha256": {
+    "known_fix_grade_stdout": "52e062b57538b922e853c541a09ce02157381876da8cdf17f2b6012af1cffff3",
+    "known_fix_prepare_stdout": "09a514ebe2fff266201ff6341e6c89186648d2837c44f921984e884ed96cd31f",
+    "pinned_base_grade_stdout": "96e652583a6808cb7c64948a6296763527b5611a65deccf6d56cd8a5f780ab3b",
+    "pinned_base_prepare_stdout": "4620c6280acd922cae841d594e23a7524114d9fc8774f448877865bf36c0a432"
+  },
+  "source": {
+    "base_revision": "166f66faa5ef23e255f654e8c6b66ad8590fe630",
+    "base_tree": "0929cc7c1f30a972cd280fcd41faef3c80aa84bd",
+    "known_fix_revision": "d150cea52b37f4633a0dff4e26339c51d23d987b",
+    "repository": "https://github.com/urllib3/urllib3.git"
+  },
+  "task_id": "urllib3-preserve-ambiguous-request-target-v1"
+}

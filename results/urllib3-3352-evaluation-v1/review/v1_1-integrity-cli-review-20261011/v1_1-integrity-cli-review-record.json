@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "review_id": "urllib3-3352-integrity-cli-review-v1.1-20261011",
+  "review_status": "complete",
+  "review_type": "independent AI review; not human review",
+  "target_head": "0fd2cf6d5405a9a2e88f035e39f187695fc91b47",
+  "target_files": {
+    "benchmarks/historical/urllib3_3352/evaluator/grade.py": "22b318ae35251ef1d5c9b2dd3f5f680188ad5466ec2fa7a932b28cb570b96685",
+    "benchmarks/historical/urllib3_3352/protocol.lock.json": "ac447bbfea90f92d6fb3021f1097d5d093c65358abfd411331eac76c5956b004",
+    "scripts/calibrate_integrity.py": "72442513ff320ff32e0e93a897ae39fe2189e7bceb931ba7518a63ffda279aa1",
+    "scripts/grade_urllib3_3352_task.py": "0a2bf967831598cf9212d5d993e5134e606b363fa3c25c9459016a950d9b10a6",
+    "benchmarks/historical/urllib3_3352/vare_spec.json": "74d14c28a615cf66f55e0c02ff02b73393d895728e1c190cf380a171d3779a01",
+    "grade_and_lock_binary_diff_sha256": "a3c130109a6f7d938fb46cf54a3ebfb6308a551bd8a494a5cc35b68377b2c57d"
+  },
+  "actions": {
+    "code_edits": false,
+    "model_runs": false,
+    "paid_or_external_compute": false,
+    "human_review": false
+  },
+  "commands": [
+    {
+      "command": "/opt/homebrew/Caskroom/miniforge/base/bin/python3.12 scripts/calibrate_integrity.py --output results/urllib3-3352-evaluation-v1/review/v1_1-integrity-cli-review-20261011/calibration",
+      "exit_code": 0,
+      "result": "calibrated; four controls reached missing-source validation; 12 of 12 task.json/TASK.md/evaluator mutations rejected across four locked tasks; urllib3 task's three mutations rejected with ValueError matching the calibrate_integrity.py contract",
+      "summary_sha256": "e4f2249bcb691b3acfee0cf25add0662aea49a90d56d1af1ada41d6a01c9d19e",
+      "tamper_cases_sha256": "cacfcfcec687c033252e03b2dae9be4e71047eca63f54ff20196d7eaa554fe8c",
+      "manifest_sha256": "28fc85e4ebdda9003a9ba572630441d3d9a4b8ef44c8e4b8d03409d6005b8457"
+    },
+    {
+      "command": "PYTHONPATH=src /opt/homebrew/Caskroom/miniforge/base/bin/python3.12 scripts/grade_urllib3_3352_task.py --workspace ${RUNS_ROOT}/calibration-v5/pinned-base/preparation/workspace --source-record ${RUNS_ROOT}/calibration-v5/pinned-base/preparation/source-record.json --task-id urllib3-preserve-ambiguous-request-target-v1 --task-python /opt/homebrew/bin/python3.11",
+      "exit_code": 1,
+      "result": "expected failure: both F2P cases false, all three P2P cases true, no integrity errors",
+      "output_path": "pinned-base.json",
+      "output_sha256": "71f21bff5d959c79f0eda4138b95e8565de69be1642ce46003c2addb1baf86f8"
+    },
+    {
+      "command": "PYTHONPATH=src /opt/homebrew/Caskroom/miniforge/base/bin/python3.12 scripts/grade_urllib3_3352_task.py --workspace ${RUNS_ROOT}/calibration-v5/known-fix/preparation/workspace --source-record ${RUNS_ROOT}/calibration-v5/known-fix/preparation/source-record.json --task-id urllib3-preserve-ambiguous-request-target-v1 --task-python /opt/homebrew/bin/python3.11",
+      "exit_code": 0,
+      "result": "expected pass: both F2P and all three P2P cases true with exact request lines, no integrity errors",
+      "output_path": "known-fix.json",
+      "output_sha256": "0e9e43670c306cd4c8ec2d9d04de0ca44eea158110f98b0e5f6ee9121b2e907a"
+    }
+  ],
+  "review_findings": {
+    "integrity_mutations_rejected": true,
+    "production_base_known_fix_fail_pass_preserved": true,
+    "integrity_only_dispatch_requires_both_production_flags_absent": true,
+    "vare_spec_supplies_source_record_and_task_id": true,
+    "production_lock_bypass_found": false,
+    "limitation": "The integrity-only calibration trusts the unchanged protocol.lock.json as its anchor and does not authenticate coordinated changes to the lock and locked files. It does not execute candidate code."
+  },
+  "review_prompt_path": "v1_1-integrity-cli-review-prompt.txt",
+  "review_prompt_sha256": "35290ebb096683819a7badfeaba253d0ca87964dd60935340443ab102ff9f16b",
+  "review_report_path": "v1_1-integrity-cli-review-report.md",
+  "review_report_sha256": "fe9deb8d8ae74cd8c2fd428830a82ac33f72bb06458d23738f8ec3c3ac72379f"
+}

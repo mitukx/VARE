@@ -1,0 +1,33 @@
+You are editing urllib3 at the pinned source revision described below. Return only a unified diff that changes `src/urllib3/connectionpool.py`.
+
+The request API receives an absolute URL with an authority and a path. A path such as `//v:h` is currently rejected before a request reaches the server, even though the URL's authority is valid and the colon belongs to the path. Preserve the destination host and port and send the path as the exact HTTP request target. Ordinary paths must continue to work. Do not change tests, task files, or evaluator files.
+
+The relevant pinned source excerpt follows. Treat it as context; the evaluator will exercise the actual package against a local HTTP server.
+
+
+Source excerpt from urllib3/src/urllib3/connectionpool.py at pinned base revision
+166f66faa5ef23e255f654e8c6b66ad8590fe630:
+
+        parsed_url = parse_url(url)
+        destination_scheme = parsed_url.scheme
+
+        if headers is None:
+            headers = self.headers
+
+        if not isinstance(retries, Retry):
+            retries = Retry.from_int(retries, redirect=redirect, default=self.retries)
+
+        if release_conn is None:
+            release_conn = preload_content
+
+        # Check host
+        if assert_same_host and not self.is_same_host(url):
+            raise HostChangedError(self, url, retries)
+
+        # Ensure that the URL we're connecting to is properly encoded
+        if url.startswith("/"):
+            url = to_str(_encode_target(url))
+        else:
+            url = to_str(parsed_url.url)
+
+        conn = None

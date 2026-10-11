@@ -1,0 +1,35 @@
+{
+  "acceptance": {
+    "absolute_normalizer_tolerance": 1e-12,
+    "branches": [
+      "main_dapo_cispo_vespo",
+      "experimental_dapo"
+    ],
+    "checks_loss_writes_through_return": true,
+    "conditions_per_branch": 6,
+    "rejects_inplace_local_mutation": true,
+    "rejects_inplace_local_mutation_through_direct_alias": true,
+    "rejects_post_division_loss_reassignment": true,
+    "rejects_unmodeled_normalizer_overwrite": true,
+    "rejects_unreachable_normalizer_branch": true,
+    "requires_current_partial_window_size": true,
+    "requires_eval_unchanged": true,
+    "requires_loss_denominator_matches_normalizer": true,
+    "requires_masked_loss_numerator": true,
+    "requires_returned_loss": true,
+    "requires_train_only_rescale": true,
+    "requires_unique_top_level_branch": true
+  },
+  "expected_calibration": {
+    "baseline_passed": false,
+    "calibration_passed": true
+  },
+  "locked_hashes": {
+    "evaluator_sha256": "95983aa8863c225f09bf94716b99c4680c53db9f909eeef511509e934d839d2c",
+    "task_brief_sha256": "d827e10df90860c87a2c22310f5280acf328ae5401ff5dbb0361bc55ec44e41b",
+    "task_json_sha256": "9089fbec71d56120123c73ce673946345e14e6f45a0a145663d2e0c04a88df67"
+  },
+  "protocol_id": "trl-grpo-accumulation-window-normalizer-protocol-v8",
+  "schema_version": 1,
+  "task_id": "trl-grpo-accumulation-window-normalizer-v1"
+}

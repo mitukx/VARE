@@ -1,51 +1,47 @@
 # VARE
 
-VARE is a CPU-first research project for studying post-training signals, policy updates, and evaluation reliability under limited compute. It uses frozen protocols, independent checks, provenance tracking, and retained negative results.
+VARE is a CPU-first research project for studying post-training signals, policy updates, and evaluation reliability under limited compute. It acts as an outer improvement control plane and integrates with existing training systems such as [Recursive-Verification-Lag (RVL)](https://github.com/mitukx/Recursive-Verification-Lag), rather than reimplementing a full RL stack.
 
-## Current status
+## Status at this snapshot
 
-VARE has **not demonstrated an independently confirmed improvement in real-model task success after post-training**. Recent small-model comparisons have failed their predeclared gates; see [current evidence gaps](docs/current-gaps.md) and the [experiment index](docs/experiments.md).
+VARE has **not demonstrated an independently confirmed improvement in real-model task success after post-training**. Recent model studies are negative or failed their predeclared gates. The project retains those outcomes and does not treat runnable training code, grader calibration, or synthetic results as capability evidence.
 
-The current systems contribution is a narrow RVL rollback fix for a shared child module. Its regression fails on pinned merged RVL `27ebf7f`, passes with the patch, and 51 related CPU tests pass. The change is submitted in [RVL PR #92](https://github.com/mitukx/Recursive-Verification-Lag/pull/92), which remains open and has not received independent human review. Production incidence and model-quality impact are unknown. A fresh research-candidate screen found no admissible new training or GPU experiment; see the [candidate screen](docs/research-candidate-screen-2026-10-11-followup.md).
+The current reviewable work is:
 
-## Review this project
+- A narrow RVL rollback correction for a shared-module mode restoration edge. Its constructed CPU regression fails on the pinned baseline and passes with the patch. [RVL PR #92](https://github.com/mitukx/Recursive-Verification-Lag/pull/92) is open; production incidence and model-quality impact are unknown.
+- A calibrated, protected grader for the public urllib3 #3352 historical bug and a VARE task-identity correction. The public task is retired from confirmation use. Two one-shot local model attempts produced no applicable patch; no training was run.
+- A structured research screen that admitted no new training or GPU experiment because no candidate cleared both novelty and fresh-task feasibility gates.
 
-1. Read the [technical reviewer guide](docs/reviewer-guide.md) for the review path, reproduction command, code map, and claim limits.
-2. Read the [shared-module rollback report](docs/rvl-module-mode-shared-alias-followup-v2.md), the [historical proposal](docs/rvl-module-mode-shared-alias-followup-v1.md), and the open [RVL PR #92](https://github.com/mitukx/Recursive-Verification-Lag/pull/92).
-3. Review the [retained reproduction evidence](results/rvl-module-mode-shared-alias-v1/clean-clone-replay-20261011/), including the pinned base, baseline failure, and patched test result.
-4. Read the [OpenBookQA GRPO/SFT confirmation report](docs/openbookqa-qwen25-grpo-sft-confirmation-v1-report.md) for the latest completed real-model comparison and its negative result.
-5. Use the [evidence ledger](docs/evidence.md), [current gaps](docs/current-gaps.md), and [roadmap](docs/roadmap.md) for broader context. The [experiment index](docs/experiments.md) retains older studies and failures.
+For exact limits, raw records, reproduction commands, and the current pull-request state, start with the [reviewer guide](docs/reviewer-guide.md). Status and links in this repository were checked on 2026-10-11; use the linked pull requests for live status.
 
-## Selected results
+## Review path
 
-| Area | Evidence | Limit |
+1. [Reviewer guide](docs/reviewer-guide.md): what to read, reproduce, and claim.
+2. [VARE PR #3](https://github.com/mitukx/VARE/pull/3): historical-task evaluator, adversarial checks, task-identity fix, and base-model feasibility screen.
+3. [RVL PR #92](https://github.com/mitukx/Recursive-Verification-Lag/pull/92): shared-module rollback correction and upstream tests.
+4. [VARE PR #2](https://github.com/mitukx/VARE/pull/2) (merged): rollback evidence and research-gate follow-up.
+5. [Current evidence gaps](docs/current-gaps.md), [evidence ledger](docs/evidence.md), [experiment index](docs/experiments.md), and [roadmap](docs/roadmap.md): full historical record and remaining work.
+
+VARE PR #2 was merged into `main` as [`09dfcd5`](https://github.com/mitukx/VARE/commit/09dfcd5e02d37ad78b86948e555bbfd169cffc88). PR #3 carries the historical-task evaluator and the reviewer-facing documentation update; shared documentation was reconciled after #2 landed. RVL #92 is a separate upstream change.
+
+## Selected evidence
+
+| Area | Observed result | What it does not establish |
 | --- | --- | --- |
-| RVL rollback | On pinned RVL `27ebf7`, the shared-module regression fails on exact mode restoration and the subsequent Dropout forward. The correction passes all 14 trainer tests in a clean clone and 51 related CPU tests; [PR #92](https://github.com/mitukx/Recursive-Verification-Lag/pull/92) is open. | Deliberately constructed shared-module graph; production incidence, CUDA/distributed behavior, and model-quality impact are unproven. Not merged or independently human-reviewed. |
-| OpenBookQA post-training | On 128 confirmation items, base exact-answer success was 45.31%, matched SFT averaged 33.33%, and GRPO scored 0/128 for each of three seeds because all responses failed the frozen answer parser. Independent reconstruction passed. | One small model/task/protocol; the result retires that pairing and does not show that GRPO generally fails. The dataset license is listed as unknown. |
-| Earlier ARC comparison | Three-seed GRPO averaged 38.84% exact success versus 40.00% for matched SFT and missed its frozen advancement gate. | Negative small-model evidence, not a general method comparison. |
+| RVL rollback | On pinned RVL `27ebf7f`, the shared-child regression fails exact mode restoration and the following Dropout output. The patch restores the checked model, optimizer, CPU RNG, and next-forward behavior; 14 trainer tests and 51 related CPU tests pass. PR #92 had 7/7 checks passing at the recorded snapshot. | Constructed CPU graph only; production incidence, CUDA/distributed behavior, model-quality impact, and independent human review remain unestablished. |
+| Historical task evaluator | urllib3 #3352 pinned base fails 2/2 fail-to-pass cases and passes 3/3 controls; its public known fix passes all five. The evaluator exercises the actual request path and keeps protected assets outside the candidate workspace. | Agent-discovered fixes or general coding ability. The task and fix are public, so it is development-only. The two local model attempts yielded no applicable patch. |
+| Real-model post-training | On the frozen OpenBookQA confirmation, base exact-answer success was 45.31%, matched SFT averaged 33.33%, and GRPO scored 0/128 for each of three seeds because outputs failed the frozen parser. The earlier ARC comparison also missed its frozen gate (38.84% GRPO vs. 40.00% SFT). | A general conclusion about GRPO or language models. These pairings and confirmation sets are retired. |
 
 ## Repository map
 
 | Path | Contents |
 | --- | --- |
-| `src/vare/`, `tests/` | VARE implementation and regression tests |
+| `src/vare/`, `tests/` | VARE control-plane code and regression tests |
+| `benchmarks/` | Task definitions, protected graders, and task locks |
 | `protocols/` | Frozen study definitions, gates, and hashes |
-| `results/` | Retained outputs, manifests, and failed or passed runs |
-| `docs/` | Reports, evidence ledger, decisions, and review guide |
-| `contributions/` | Pinned upstream patch artifacts and their status |
+| `results/` | Raw outputs, manifests, and retained failed or passed runs |
+| `docs/` | Technical reports, evidence summaries, and decisions |
+| `contributions/` | Upstream patch artifacts and status |
 | `scripts/`, `reproducers/` | Reproduction, audit, and diagnostic commands |
 
-To reproduce the current RVL follow-up on CPU, from the repository root:
-
-```bash
-PYTHON=python3.12 bash scripts/reproduce_rvl_shared_module_mode_followup_v1.sh \
-  /tmp/vare-rvl-shared-mode-review
-```
-
-The script needs Git and network access to clone the pinned RVL revision, plus Python 3.12, PyTorch 2.9.1, and Transformers 4.57.3. It runs the focused regression on an unpatched clone and all 14 trainer tests on a patched clone.
-
-Large checkpoints and benchmark content with uncertain redistribution terms remain outside version control. Protocol locks retain source revisions and hashes where applicable. VARE's claims are limited to the exact tasks, models, code paths, and checks described in each report; synthetic or correctness results are not model-capability results.
-
-## License
-
-Apache-2.0. See [LICENSE](LICENSE).
+Large checkpoints and benchmark content with uncertain redistribution terms remain outside version control. Read each report for its exact source revisions, environment, raw artifacts, and claim limits. See [LICENSE](LICENSE) for the repository license.

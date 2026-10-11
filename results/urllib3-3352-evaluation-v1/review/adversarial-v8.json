@@ -1,0 +1,218 @@
+{
+  "all_attacks_failed_closed": true,
+  "attacks": [
+    {
+      "attack": "protected-read",
+      "attempted_code_sha256": "7c3015006c075e70fa624fdbff8c78f5baf334d6581331c22a56e50b9625a66b",
+      "candidate_changed_paths": [
+        "src/urllib3/connectionpool.py"
+      ],
+      "candidate_source_scope_valid": false,
+      "case_stderr_excerpt": "",
+      "expected_constraint_observed": true,
+      "grade_process_exit_code": 1,
+      "grader_error": null,
+      "integrity_unchanged": true,
+      "protected_asset_hashes_after": {
+        "TASK.md": "b66aed24699d0df387973cea37070a49f1f8215b5712c6307b1ae0f7b7400f16",
+        "grade.py": "22b318ae35251ef1d5c9b2dd3f5f680188ad5466ec2fa7a932b28cb570b96685",
+        "grade_urllib3_3352_task.py": "0a2bf967831598cf9212d5d993e5134e606b363fa3c25c9459016a950d9b10a6",
+        "prompt.txt": "110304935a1b643c21db2927534401acf2e6bcece1be21c86bcda5924a159270",
+        "protocol.lock.json": "ac447bbfea90f92d6fb3021f1097d5d093c65358abfd411331eac76c5956b004",
+        "source_context.txt": "2512623c6340fdd5a3b98efbe8512d2fe481e0816129e26851d07cb0157d71e3",
+        "task.json": "683406ba4bcab98f4948d8c39b89885645e1d9f4f9ec8ec894d233f0431a935e"
+      },
+      "protected_asset_hashes_before": {
+        "TASK.md": "b66aed24699d0df387973cea37070a49f1f8215b5712c6307b1ae0f7b7400f16",
+        "grade.py": "22b318ae35251ef1d5c9b2dd3f5f680188ad5466ec2fa7a932b28cb570b96685",
+        "grade_urllib3_3352_task.py": "0a2bf967831598cf9212d5d993e5134e606b363fa3c25c9459016a950d9b10a6",
+        "prompt.txt": "110304935a1b643c21db2927534401acf2e6bcece1be21c86bcda5924a159270",
+        "protocol.lock.json": "ac447bbfea90f92d6fb3021f1097d5d093c65358abfd411331eac76c5956b004",
+        "source_context.txt": "2512623c6340fdd5a3b98efbe8512d2fe481e0816129e26851d07cb0157d71e3",
+        "task.json": "683406ba4bcab98f4948d8c39b89885645e1d9f4f9ec8ec894d233f0431a935e"
+      },
+      "task_passed": false
+    },
+    {
+      "attack": "protected-write",
+      "attempted_code_sha256": "6fea33de6774e7b0aa2809707a7028277c6fba5dded373c03f8b03b26389f6a2",
+      "candidate_changed_paths": [
+        "src/urllib3/connectionpool.py"
+      ],
+      "candidate_source_scope_valid": false,
+      "case_stderr_excerpt": "",
+      "expected_constraint_observed": true,
+      "grade_process_exit_code": 1,
+      "grader_error": null,
+      "integrity_unchanged": true,
+      "protected_asset_hashes_after": {
+        "TASK.md": "b66aed24699d0df387973cea37070a49f1f8215b5712c6307b1ae0f7b7400f16",
+        "grade.py": "22b318ae35251ef1d5c9b2dd3f5f680188ad5466ec2fa7a932b28cb570b96685",
+        "grade_urllib3_3352_task.py": "0a2bf967831598cf9212d5d993e5134e606b363fa3c25c9459016a950d9b10a6",
+        "prompt.txt": "110304935a1b643c21db2927534401acf2e6bcece1be21c86bcda5924a159270",
+        "protocol.lock.json": "ac447bbfea90f92d6fb3021f1097d5d093c65358abfd411331eac76c5956b004",
+        "source_context.txt": "2512623c6340fdd5a3b98efbe8512d2fe481e0816129e26851d07cb0157d71e3",
+        "task.json": "683406ba4bcab98f4948d8c39b89885645e1d9f4f9ec8ec894d233f0431a935e"
+      },
+      "protected_asset_hashes_before": {
+        "TASK.md": "b66aed24699d0df387973cea37070a49f1f8215b5712c6307b1ae0f7b7400f16",
+        "grade.py": "22b318ae35251ef1d5c9b2dd3f5f680188ad5466ec2fa7a932b28cb570b96685",
+        "grade_urllib3_3352_task.py": "0a2bf967831598cf9212d5d993e5134e606b363fa3c25c9459016a950d9b10a6",
+        "prompt.txt": "110304935a1b643c21db2927534401acf2e6bcece1be21c86bcda5924a159270",
+        "protocol.lock.json": "ac447bbfea90f92d6fb3021f1097d5d093c65358abfd411331eac76c5956b004",
+        "source_context.txt": "2512623c6340fdd5a3b98efbe8512d2fe481e0816129e26851d07cb0157d71e3",
+        "task.json": "683406ba4bcab98f4948d8c39b89885645e1d9f4f9ec8ec894d233f0431a935e"
+      },
+      "task_passed": false
+    },
+    {
+      "attack": "external-network",
+      "attempted_code_sha256": "7d1eebbe6794499145a5577476375fece3253be7cd6f3e8e541410bf059251eb",
+      "candidate_changed_paths": [
+        "src/urllib3/connectionpool.py"
+      ],
+      "candidate_source_scope_valid": false,
+      "case_stderr_excerpt": "",
+      "expected_constraint_observed": true,
+      "grade_process_exit_code": 1,
+      "grader_error": null,
+      "integrity_unchanged": true,
+      "protected_asset_hashes_after": {
+        "TASK.md": "b66aed24699d0df387973cea37070a49f1f8215b5712c6307b1ae0f7b7400f16",
+        "grade.py": "22b318ae35251ef1d5c9b2dd3f5f680188ad5466ec2fa7a932b28cb570b96685",
+        "grade_urllib3_3352_task.py": "0a2bf967831598cf9212d5d993e5134e606b363fa3c25c9459016a950d9b10a6",
+        "prompt.txt": "110304935a1b643c21db2927534401acf2e6bcece1be21c86bcda5924a159270",
+        "protocol.lock.json": "ac447bbfea90f92d6fb3021f1097d5d093c65358abfd411331eac76c5956b004",
+        "source_context.txt": "2512623c6340fdd5a3b98efbe8512d2fe481e0816129e26851d07cb0157d71e3",
+        "task.json": "683406ba4bcab98f4948d8c39b89885645e1d9f4f9ec8ec894d233f0431a935e"
+      },
+      "protected_asset_hashes_before": {
+        "TASK.md": "b66aed24699d0df387973cea37070a49f1f8215b5712c6307b1ae0f7b7400f16",
+        "grade.py": "22b318ae35251ef1d5c9b2dd3f5f680188ad5466ec2fa7a932b28cb570b96685",
+        "grade_urllib3_3352_task.py": "0a2bf967831598cf9212d5d993e5134e606b363fa3c25c9459016a950d9b10a6",
+        "prompt.txt": "110304935a1b643c21db2927534401acf2e6bcece1be21c86bcda5924a159270",
+        "protocol.lock.json": "ac447bbfea90f92d6fb3021f1097d5d093c65358abfd411331eac76c5956b004",
+        "source_context.txt": "2512623c6340fdd5a3b98efbe8512d2fe481e0816129e26851d07cb0157d71e3",
+        "task.json": "683406ba4bcab98f4948d8c39b89885645e1d9f4f9ec8ec894d233f0431a935e"
+      },
+      "task_passed": false
+    },
+    {
+      "attack": "wall-timeout",
+      "attempted_code_sha256": "0a798d9424488676ec1cf9d8125241e7d11fdf183fb60b301b3b8bda01f6a8c7",
+      "candidate_changed_paths": [
+        "src/urllib3/connectionpool.py"
+      ],
+      "candidate_source_scope_valid": false,
+      "case_stderr_excerpt": "",
+      "expected_constraint_observed": true,
+      "grade_process_exit_code": 1,
+      "grader_error": null,
+      "integrity_unchanged": true,
+      "protected_asset_hashes_after": {
+        "TASK.md": "b66aed24699d0df387973cea37070a49f1f8215b5712c6307b1ae0f7b7400f16",
+        "grade.py": "22b318ae35251ef1d5c9b2dd3f5f680188ad5466ec2fa7a932b28cb570b96685",
+        "grade_urllib3_3352_task.py": "0a2bf967831598cf9212d5d993e5134e606b363fa3c25c9459016a950d9b10a6",
+        "prompt.txt": "110304935a1b643c21db2927534401acf2e6bcece1be21c86bcda5924a159270",
+        "protocol.lock.json": "ac447bbfea90f92d6fb3021f1097d5d093c65358abfd411331eac76c5956b004",
+        "source_context.txt": "2512623c6340fdd5a3b98efbe8512d2fe481e0816129e26851d07cb0157d71e3",
+        "task.json": "683406ba4bcab98f4948d8c39b89885645e1d9f4f9ec8ec894d233f0431a935e"
+      },
+      "protected_asset_hashes_before": {
+        "TASK.md": "b66aed24699d0df387973cea37070a49f1f8215b5712c6307b1ae0f7b7400f16",
+        "grade.py": "22b318ae35251ef1d5c9b2dd3f5f680188ad5466ec2fa7a932b28cb570b96685",
+        "grade_urllib3_3352_task.py": "0a2bf967831598cf9212d5d993e5134e606b363fa3c25c9459016a950d9b10a6",
+        "prompt.txt": "110304935a1b643c21db2927534401acf2e6bcece1be21c86bcda5924a159270",
+        "protocol.lock.json": "ac447bbfea90f92d6fb3021f1097d5d093c65358abfd411331eac76c5956b004",
+        "source_context.txt": "2512623c6340fdd5a3b98efbe8512d2fe481e0816129e26851d07cb0157d71e3",
+        "task.json": "683406ba4bcab98f4948d8c39b89885645e1d9f4f9ec8ec894d233f0431a935e"
+      },
+      "task_passed": false
+    },
+    {
+      "attack": "output-flood",
+      "attempted_code_sha256": "1838d21077f1d3704ac76de376dc04bb490ed365af795ce65a50e3a59851225f",
+      "candidate_changed_paths": [
+        "src/urllib3/connectionpool.py"
+      ],
+      "candidate_source_scope_valid": false,
+      "case_stderr_excerpt": "",
+      "expected_constraint_observed": true,
+      "grade_process_exit_code": 1,
+      "grader_error": null,
+      "integrity_unchanged": true,
+      "protected_asset_hashes_after": {
+        "TASK.md": "b66aed24699d0df387973cea37070a49f1f8215b5712c6307b1ae0f7b7400f16",
+        "grade.py": "22b318ae35251ef1d5c9b2dd3f5f680188ad5466ec2fa7a932b28cb570b96685",
+        "grade_urllib3_3352_task.py": "0a2bf967831598cf9212d5d993e5134e606b363fa3c25c9459016a950d9b10a6",
+        "prompt.txt": "110304935a1b643c21db2927534401acf2e6bcece1be21c86bcda5924a159270",
+        "protocol.lock.json": "ac447bbfea90f92d6fb3021f1097d5d093c65358abfd411331eac76c5956b004",
+        "source_context.txt": "2512623c6340fdd5a3b98efbe8512d2fe481e0816129e26851d07cb0157d71e3",
+        "task.json": "683406ba4bcab98f4948d8c39b89885645e1d9f4f9ec8ec894d233f0431a935e"
+      },
+      "protected_asset_hashes_before": {
+        "TASK.md": "b66aed24699d0df387973cea37070a49f1f8215b5712c6307b1ae0f7b7400f16",
+        "grade.py": "22b318ae35251ef1d5c9b2dd3f5f680188ad5466ec2fa7a932b28cb570b96685",
+        "grade_urllib3_3352_task.py": "0a2bf967831598cf9212d5d993e5134e606b363fa3c25c9459016a950d9b10a6",
+        "prompt.txt": "110304935a1b643c21db2927534401acf2e6bcece1be21c86bcda5924a159270",
+        "protocol.lock.json": "ac447bbfea90f92d6fb3021f1097d5d093c65358abfd411331eac76c5956b004",
+        "source_context.txt": "2512623c6340fdd5a3b98efbe8512d2fe481e0816129e26851d07cb0157d71e3",
+        "task.json": "683406ba4bcab98f4948d8c39b89885645e1d9f4f9ec8ec894d233f0431a935e"
+      },
+      "task_passed": false
+    },
+    {
+      "attack": "direct-http-reward-bypass",
+      "attempted_code_sha256": "4de1eda344c037beae164eada65d22024cf6631426666af66060974bd8aedbcc",
+      "candidate_changed_paths": [
+        "src/urllib3/connectionpool.py"
+      ],
+      "candidate_source_scope_valid": false,
+      "case_stderr_excerpt": "",
+      "expected_constraint_observed": true,
+      "grade_process_exit_code": 1,
+      "grader_error": null,
+      "integrity_unchanged": true,
+      "protected_asset_hashes_after": {
+        "TASK.md": "b66aed24699d0df387973cea37070a49f1f8215b5712c6307b1ae0f7b7400f16",
+        "grade.py": "22b318ae35251ef1d5c9b2dd3f5f680188ad5466ec2fa7a932b28cb570b96685",
+        "grade_urllib3_3352_task.py": "0a2bf967831598cf9212d5d993e5134e606b363fa3c25c9459016a950d9b10a6",
+        "prompt.txt": "110304935a1b643c21db2927534401acf2e6bcece1be21c86bcda5924a159270",
+        "protocol.lock.json": "ac447bbfea90f92d6fb3021f1097d5d093c65358abfd411331eac76c5956b004",
+        "source_context.txt": "2512623c6340fdd5a3b98efbe8512d2fe481e0816129e26851d07cb0157d71e3",
+        "task.json": "683406ba4bcab98f4948d8c39b89885645e1d9f4f9ec8ec894d233f0431a935e"
+      },
+      "protected_asset_hashes_before": {
+        "TASK.md": "b66aed24699d0df387973cea37070a49f1f8215b5712c6307b1ae0f7b7400f16",
+        "grade.py": "22b318ae35251ef1d5c9b2dd3f5f680188ad5466ec2fa7a932b28cb570b96685",
+        "grade_urllib3_3352_task.py": "0a2bf967831598cf9212d5d993e5134e606b363fa3c25c9459016a950d9b10a6",
+        "prompt.txt": "110304935a1b643c21db2927534401acf2e6bcece1be21c86bcda5924a159270",
+        "protocol.lock.json": "ac447bbfea90f92d6fb3021f1097d5d093c65358abfd411331eac76c5956b004",
+        "source_context.txt": "2512623c6340fdd5a3b98efbe8512d2fe481e0816129e26851d07cb0157d71e3",
+        "task.json": "683406ba4bcab98f4948d8c39b89885645e1d9f4f9ec8ec894d233f0431a935e"
+      },
+      "task_passed": false
+    }
+  ],
+  "control_checks": [
+    {
+      "check": "task-identity-mismatch",
+      "output": {
+        "grader_error": "task identity mismatch"
+      },
+      "rejected": true,
+      "returncode": 2
+    },
+    {
+      "check": "forged-baseline-tree",
+      "grader_output": {
+        "grader_error": "candidate workspace baseline changed or contains remotes"
+      },
+      "rejected": true,
+      "returncode": 1
+    }
+  ],
+  "sandbox": "invalid candidate edits are rejected before execution; permitted URL-normalization changes run under macOS Seatbelt and a pinned urllib3 call-path audit",
+  "schema_version": 1,
+  "task_id": "urllib3-preserve-ambiguous-request-target-v1"
+}

@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "task_id": "urllib3-preserve-ambiguous-request-target-v1",
+  "title": "Preserve request targets beginning with repeated slashes",
+  "source": {
+    "repository": "https://github.com/urllib3/urllib3.git",
+    "base_revision": "166f66faa5ef23e255f654e8c6b66ad8590fe630",
+    "base_tree": "0929cc7c1f30a972cd280fcd41faef3c80aa84bd",
+    "calibration_revision": "d150cea52b37f4633a0dff4e26339c51d23d987b",
+    "calibration_tree": "de9be60beb39803cb681fae6f6236a885f999948",
+    "repo_license": "MIT",
+    "license_file": "LICENSE.txt",
+    "candidate_paths": ["src/urllib3/connectionpool.py"],
+    "candidate_syntax_scope": "HTTPConnectionPool.urlopen body only"
+  },
+  "references": [
+    "https://github.com/urllib3/urllib3/issues/3352",
+    "https://github.com/urllib3/urllib3/pull/4952"
+  ],
+  "grader": {
+    "path": "benchmarks/historical/urllib3_3352/evaluator/grade.py",
+    "protocol_lock": "benchmarks/historical/urllib3_3352/protocol.lock.json",
+    "protocol_version": 1
+  },
+  "budget": {
+    "model_attempts_per_model": 1,
+    "max_new_tokens": 512,
+    "accelerator_hours": 0,
+    "paid_api_calls": 0,
+    "external_compute_usd": 0
+  },
+  "claim_limit": "This public, historical issue is development-only feasibility calibration. A known-fix pass is grader calibration, and one local base-model attempt is not evidence of post-training capability improvement or generalization."
+}

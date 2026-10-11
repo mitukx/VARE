@@ -1,0 +1,115 @@
+{
+  "acceptance": {
+    "all_cases_must_preserve_exact_http_request_target": true,
+    "candidate_syntax_scope": "HTTPConnectionPool.urlopen body only",
+    "fail_to_pass": [
+      {
+        "case_id": "double_slash_colon",
+        "path": "//v:h"
+      },
+      {
+        "case_id": "double_slash_colon_query",
+        "path": "//v:h?key=val"
+      }
+    ],
+    "pass_to_pass": [
+      {
+        "case_id": "root_path",
+        "path": "/"
+      },
+      {
+        "case_id": "ordinary_path_query",
+        "path": "/normal/path?x=1"
+      },
+      {
+        "case_id": "numeric_authority_like_path",
+        "path": "//host:8080/path"
+      }
+    ],
+    "rejects_evaluator_integrity_change": true,
+    "rejects_workspace_changes_outside_candidate_paths": true,
+    "requires_successful_http_response": true,
+    "requires_task_id_match": true,
+    "requires_urllib3_production_request_path": true
+  },
+  "execution": {
+    "candidate_cpu_limit_seconds": 10,
+    "candidate_memory_limit_enforced": false,
+    "candidate_memory_limit_mb": null,
+    "candidate_output_limit_bytes": 262144,
+    "host": "macOS Apple Silicon",
+    "integrity_calibration_cli": "--workspace and --task-root mode verifies locked task/evaluator inputs and never executes a candidate; task grading still requires source-record and task-id",
+    "max_model_attempts_per_model": 1,
+    "network": "sandboxed child may connect only to the grader's ephemeral localhost TCP port",
+    "python": "3.11.15",
+    "request_line_absolute_deadline_seconds": 3,
+    "request_line_max_bytes": 8192,
+    "timeout_seconds_per_case": 3
+  },
+  "expected_calibration": {
+    "base_passed": false,
+    "known_fix_passed": true
+  },
+  "locked_hashes": {
+    "adversarial_test_script_sha256": "1ef1dae59f98fed8dadead1ba980863ffc6f6c945b7cbe7f36e36c3459706d42",
+    "calibration_script_sha256": "02e553fbd6c169e6afb57386b5d8d6f40b38df7b8476f097b33f36a92827f4dd",
+    "evaluator_regression_test_sha256": "9deb6e4501d9abe6cd7d47f977779ec1e47f987380d57045d5d14b5ca7055cb2",
+    "evaluator_sha256": "22b318ae35251ef1d5c9b2dd3f5f680188ad5466ec2fa7a932b28cb570b96685",
+    "grader_entrypoint_sha256": "0a2bf967831598cf9212d5d993e5134e606b363fa3c25c9459016a950d9b10a6",
+    "model_screen_script_sha256": "022473e83b81ee711cb996d2c21ebb7c353ea49260ff4013106ff28b45600bf2",
+    "prepare_script_sha256": "51e9484860e8b93551bcab55d8df89264f8147bf398a723cee36e09a89f92fd3",
+    "prompt_sha256": "110304935a1b643c21db2927534401acf2e6bcece1be21c86bcda5924a159270",
+    "source_context_sha256": "2512623c6340fdd5a3b98efbe8512d2fe481e0816129e26851d07cb0157d71e3",
+    "task_brief_sha256": "b66aed24699d0df387973cea37070a49f1f8215b5712c6307b1ae0f7b7400f16",
+    "task_json_sha256": "683406ba4bcab98f4948d8c39b89885645e1d9f4f9ec8ec894d233f0431a935e",
+    "vare_spec_sha256": "74d14c28a615cf66f55e0c02ff02b73393d895728e1c190cf380a171d3779a01"
+  },
+  "model_screen": {
+    "candidate_models": [
+      {
+        "license": "Apache-2.0",
+        "repo_id": "Qwen/Qwen2.5-0.5B-Instruct",
+        "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+        "runtime": "Transformers on MPS"
+      },
+      {
+        "license": "Apache-2.0",
+        "repo_id": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+        "revision": "fe8a4ea1ffedaf415f4da2f062534de366a451e6",
+        "runtime": "Transformers on MPS"
+      }
+    ],
+    "decoding": {
+      "attempts": 1,
+      "do_sample": false,
+      "max_new_tokens": 512,
+      "retry_or_prompt_tuning": false,
+      "temperature": 0.0
+    }
+  },
+  "protocol_id": "urllib3-3352-local-http-feasibility-v1.1",
+  "schema_version": 1,
+  "source": {
+    "base_revision": "166f66faa5ef23e255f654e8c6b66ad8590fe630",
+    "base_tree": "0929cc7c1f30a972cd280fcd41faef3c80aa84bd",
+    "base_workspace_tree": "c6607cdc2ca128c2b5a7314dafc52b9fbed28f03",
+    "calibration_revision": "d150cea52b37f4633a0dff4e26339c51d23d987b",
+    "calibration_tree": "de9be60beb39803cb681fae6f6236a885f999948",
+    "candidate_paths": [
+      "src/urllib3/connectionpool.py"
+    ],
+    "repository": "https://github.com/urllib3/urllib3.git",
+    "version_shim": "2.2.1+vare",
+    "version_shim_sha256": "b4c9755ebdd5eb1d078cad8c21d816650119e75fb06ee6fea8d3fac76c429e3c"
+  },
+  "study_design": {
+    "contamination": "Issue #3352 is public since 2024 and the known fix is public. The task is retired after this development screen and cannot be confirmation evidence.",
+    "failure_criterion": "Invalid patch or any failing evaluator case is a feasibility failure for that model under this one-shot protocol.",
+    "interpretation": "Descriptive base-model screen only; no capability-improvement, generalization, or statistical claims.",
+    "split": "one development task only; no train/dev/confirmation partition",
+    "success_criterion": "At least one model emits a patch accepted by the locked evaluator on every case, with a source diff limited to the permitted path.",
+    "training": false
+  },
+  "task_class": "public_historical_development_only",
+  "task_id": "urllib3-preserve-ambiguous-request-target-v1"
+}

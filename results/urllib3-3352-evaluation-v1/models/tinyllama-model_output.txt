@@ -1,0 +1,70 @@
+To edit the `urllib3/src/urllib3/connectionpool.py` file, you can use the following steps:
+
+1. Clone the `urllib3` repository:
+   ```
+   git clone https://github.com/urllib3/urllib3.git
+   ```
+
+2. Navigate to the `urllib3/src` directory:
+   ```
+   cd urllib3/src
+   ```
+
+3. Checkout the pinned source revision:
+   ```
+   git checkout 166f66faa5ef23e255f654e8c6b66ad8590fe630
+   ```
+
+4. Make the necessary changes to the file:
+   ```
+   diff <(git status --short) src/urllib3/src/urllib3/connectionpool.py
+   ```
+
+   Replace `<(git status --short)` with the actual status of the file.
+
+5. Apply the changes:
+   ```
+   git add src/urllib3/src/urllib3/connectionpool.py
+   ```
+
+6. Commit the changes:
+   ```
+   git commit -m "Add unified diff for urllib3 pinned source revision"
+   ```
+
+7. Push the changes to the remote repository:
+   ```
+   git push origin master
+   ```
+
+8. Test the changes:
+   ```
+   python -m tests.test_urllib3
+   ```
+
+9. Evaluate the changes:
+   ```
+   python -m eval.urllib3
+   ```
+
+10. If necessary, update the evaluator:
+   ```
+   python -m eval.urllib3 --update
+   ```
+
+11. Test the updated evaluator:
+   ```
+   python -m eval.urllib3
+   ```
+
+12. If all is well, merge the changes into the `master` branch:
+   ```
+   git merge master
+   ```
+
+13. Push the changes to the remote repository:
+   ```
+   git push origin master
+   ```
+
+Congratulations! You have successfully edited the `urllib3/src/urllib3/connectionpool.py` file

@@ -1,0 +1,309 @@
+{
+  "files": {
+    "calibration/calibration-v11.json": {
+      "normalization": "Temporary run root replaced with ${CALIBRATION_RUN}; exact summary is stored in ../urllib3-runs/calibration-v11/summary.json.",
+      "normalized_repository_copy_sha256": "f3220473d93cb7a49e6a77a428b8348f2361db49a4fdaaeb4f682873dc5f2fdc",
+      "sha256": "8a82fdbd25fb2def4d7c75601b4c4eaae348275b70b31747a514d77715354d5d",
+      "source": "../urllib3-runs/calibration-v11/summary.json"
+    },
+    "calibration/known-fix.grade.stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "../urllib3-runs/calibration-v10/known-fix/grade.stderr.txt"
+    },
+    "calibration/known-fix.grade.stdout.json": {
+      "normalization": "Repository copy differs from exact raw source; exact raw file is retained in the local raw-evidence archive.",
+      "normalized_repository_copy_sha256": "0214f2d6ef1ffd4f46f2d1bc78386734bdf6b3de1aa743ad971baffabdc3ffd9",
+      "sha256": "52e062b57538b922e853c541a09ce02157381876da8cdf17f2b6012af1cffff3",
+      "source": "../urllib3-runs/calibration-v10/known-fix/grade.stdout.json"
+    },
+    "calibration/known-fix.prepare.stdout.json": {
+      "normalization": "Repository copy differs from exact raw source; exact raw file is retained in the local raw-evidence archive.",
+      "normalized_repository_copy_sha256": "c4bd1e09137c599848993f0f3c41482d64043b6db58e86078e5687b253d4bcad",
+      "sha256": "09a514ebe2fff266201ff6341e6c89186648d2837c44f921984e884ed96cd31f",
+      "source": "../urllib3-runs/calibration-v10/known-fix/prepare.stdout.json"
+    },
+    "calibration/known-fix.source-record.json": {
+      "normalization": "Repository copy differs from exact raw source; exact raw file is retained in the local raw-evidence archive.",
+      "normalized_repository_copy_sha256": "f08a98ce8b33090e7b74dc812fe157eb11ef4ae2285eef3e40b49d82a2cbb4f8",
+      "sha256": "88392454f2786d5d8677445c6f7c25ee062417d827455a7fcbf98cfbfa6d7da2",
+      "source": "../urllib3-runs/calibration-v10/known-fix/preparation/source-record.json"
+    },
+    "calibration/pinned-base.grade.stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "../urllib3-runs/calibration-v10/pinned-base/grade.stderr.txt"
+    },
+    "calibration/pinned-base.grade.stdout.json": {
+      "normalization": "Repository copy differs from exact raw source; exact raw file is retained in the local raw-evidence archive.",
+      "normalized_repository_copy_sha256": "f32f65207c1b2697a2ccc5c66d623ee4b8d68c2c6a80975a602b9366c50a08d7",
+      "sha256": "96e652583a6808cb7c64948a6296763527b5611a65deccf6d56cd8a5f780ab3b",
+      "source": "../urllib3-runs/calibration-v10/pinned-base/grade.stdout.json"
+    },
+    "calibration/pinned-base.prepare.stdout.json": {
+      "normalization": "Repository copy differs from exact raw source; exact raw file is retained in the local raw-evidence archive.",
+      "normalized_repository_copy_sha256": "f266e0da40da0b6138cf692ab353a41792c43ebb0a9277081136735f3da4e1de",
+      "sha256": "4620c6280acd922cae841d594e23a7524114d9fc8774f448877865bf36c0a432",
+      "source": "../urllib3-runs/calibration-v10/pinned-base/prepare.stdout.json"
+    },
+    "calibration/pinned-base.source-record.json": {
+      "normalization": "Repository copy differs from exact raw source; exact raw file is retained in the local raw-evidence archive.",
+      "normalized_repository_copy_sha256": "5964ebd287252ed7218e9c464af4be8222d44dd0fbba406b996877922a53e8b2",
+      "sha256": "3127e249f4b94cbfa0680497ba59a081fd02e65a2fd8f436e7b93ed6bbcefc85",
+      "source": "../urllib3-runs/calibration-v10/pinned-base/preparation/source-record.json"
+    },
+    "ci/calibrated-cpu-tasks-first-failure.log": {
+      "normalization": "Repository copy may normalize temporary path strings; exact local output is retained under work/urllib3-runs for the local raw-evidence archive.",
+      "sha256": "575f1974a5f1cc3e008c8720b2a28740c7061b5e80a8f790542dbbc3f2a097f3",
+      "source": "../urllib3-runs/mission3-ci-first-failure.log"
+    },
+    "ci/integrity-calibration-final/controls.json": {
+      "sha256": "fdd516fdec7fe09f82dda13b151d9e09f2fc843bc12e4f136d6ac3f27ec21648",
+      "source": "../urllib3-runs/integrity-calibration-final/controls.json"
+    },
+    "ci/integrity-calibration-final/manifest.json": {
+      "sha256": "e41c6c2108397ce3758660732bd2b8a235f64739589b1c5bcad3fd553e1d9039",
+      "source": "../urllib3-runs/integrity-calibration-final/manifest.json"
+    },
+    "ci/integrity-calibration-final/stdout.json": {
+      "normalization": "Temporary output path replaced with ${CALIBRATION_RUN}; exact stdout retained in local raw-evidence archive.",
+      "sha256": "89f6a606981e938de40ea59c8ffb253db0ec424ef98cf087088cce3e234d5650",
+      "source": "../urllib3-runs/integrity-calibration-final.stdout.raw"
+    },
+    "ci/integrity-calibration-final/summary.json": {
+      "sha256": "1298d405c02b2fea3cfaa3c20b9d3422e07c3b18090d216a0640c1d2c59363d6",
+      "source": "../urllib3-runs/integrity-calibration-final/summary.json"
+    },
+    "ci/integrity-calibration-final/tamper_cases.json": {
+      "sha256": "cacfcfcec687c033252e03b2dae9be4e71047eca63f54ff20196d7eaa554fe8c",
+      "source": "../urllib3-runs/integrity-calibration-final/tamper_cases.json"
+    },
+    "models/qwen-grading.stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "../urllib3-runs/model-qwen-v2/grading.stderr.txt"
+    },
+    "models/qwen-grading.stdout.json": {
+      "normalization": "Repository copy differs from exact raw source; exact raw file is retained in the local raw-evidence archive.",
+      "normalized_repository_copy_sha256": "3f3497f37b4167a8d3b6044abd022884e23b158460cc15132b4cf7a3f0dedd33",
+      "sha256": "07c8a3fb5d6e3952e3a5125a3acca3ce68151049eff7bd564cad742e97a43dae",
+      "source": "../urllib3-runs/model-qwen-v2/grading.stdout.json"
+    },
+    "models/qwen-model_output.txt": {
+      "normalization": "Only trailing spaces at line ends are stripped in repository copy to keep `git diff --check` clean; exact unmodified inference output is retained in the local raw-evidence archive.",
+      "normalized_repository_copy_sha256": "dbf1696e12ae08818328cb5c78db03a8748cc13e1512ae1a98b06ece5f903e89",
+      "sha256": "4050c01df879f19b78d3476cadf63fbd7229f2276ddef5c6b16529879f7fca70",
+      "source": "../urllib3-runs/model-qwen-v2/model_output.txt"
+    },
+    "models/qwen-prepare.stdout.json": {
+      "normalization": "Repository copy differs from exact raw source; exact raw file is retained in the local raw-evidence archive.",
+      "normalized_repository_copy_sha256": "66db01d75a3e80c3db435ccee1e72dcda3afb6030b775ea5a17639ef8d2ce83c",
+      "sha256": "39e1bb582027e2693d5b27e2c6f16052ccb2a4a8ec4e1967b7c0b9d710296f4a",
+      "source": "../urllib3-runs/model-qwen-v2/prepare.stdout.json"
+    },
+    "models/qwen-result.raw.json": {
+      "normalization": "Repository copy differs from exact raw source; exact raw file is retained in the local raw-evidence archive.",
+      "normalized_repository_copy_sha256": "53af682944f581f52d6d5a42a61b93d58e421bd6652efd7a08e035040dd0d476",
+      "sha256": "14e69a4b58a76f7cc720dd9661862d801bb8bd01008afda3c264350166b46f57",
+      "source": "../urllib3-runs/model-qwen-v2/result.json"
+    },
+    "models/qwen-source-record.json": {
+      "normalization": "Repository copy differs from exact raw source; exact raw file is retained in the local raw-evidence archive.",
+      "normalized_repository_copy_sha256": "4bd9cf3ad4d811031b8279e89e2e485976b6ff605e3e5b3e63c19c3fde357f44",
+      "sha256": "d5b9838ef8e88d2d1becbcd3e3be0806afdb22fb2f5b2c9768e63c99fe2714a3",
+      "source": "../urllib3-runs/model-qwen-v2/preparation/source-record.json"
+    },
+    "models/tinyllama-empty-baseline.grade.stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "../urllib3-runs/model-tinyllama-v1/grading-empty-baseline.stderr.txt"
+    },
+    "models/tinyllama-empty-baseline.grade.stdout.json": {
+      "normalization": "Repository copy differs from exact raw source; exact raw file is retained in the local raw-evidence archive.",
+      "normalized_repository_copy_sha256": "895866b97560920a06beec1422960304bd46dee012defabfc60929a8e939a642",
+      "sha256": "84310c4d806275acceadcf3b9acd813c6629144070ac2e07564f8fe7d4d1de11",
+      "source": "../urllib3-runs/model-tinyllama-v1/grading-empty-baseline.stdout.json"
+    },
+    "models/tinyllama-prepare.stdout.json": {
+      "normalization": "Repository copy differs from exact raw source; exact raw file is retained in the local raw-evidence archive.",
+      "normalized_repository_copy_sha256": "e6f61b0a5f7c52dbabcf899eb8b67048d07200172af92a9ca2dfced51b34542e",
+      "sha256": "6c712fe7d1a373423ac8b50ac191e237a5ee0d205bdc0e1874d84a61fb99e6a5",
+      "source": "../urllib3-runs/model-tinyllama-v1/prepare.stdout.json"
+    },
+    "models/tinyllama-result.raw.json": {
+      "sha256": "7029251f22ebb393dcf3a1fe6b24840866310fae4c33d225b70544f92ce50fd6",
+      "source": "../urllib3-runs/model-tinyllama-v1/result.json"
+    },
+    "models/tinyllama-source-record.json": {
+      "normalization": "Repository copy differs from exact raw source; exact raw file is retained in the local raw-evidence archive.",
+      "normalized_repository_copy_sha256": "65bbe76fcda0eb3633d15462fcf1d941238e68fef20af194f1290dcf84fafa13",
+      "sha256": "e416b4ac9e34cc9823658c3a223e723f2faca8c208c045400786c5e9f71f55d5",
+      "source": "../urllib3-runs/model-tinyllama-v1/preparation/source-record.json"
+    },
+    "review/adversarial-v8.json": {
+      "normalization": "Repository copy may normalize temporary path strings; exact local output is retained under work/urllib3-runs for the local raw-evidence archive.",
+      "sha256": "0950c6ec2f11a453b2d823396ac09a0fef1c1245b5848c6191ddd8a154101ce5",
+      "source": "../urllib3-runs/adversarial-v8/adversarial-result.json"
+    },
+    "review/catalog-identity-review-record.json": {
+      "normalization": "Worktree absolute path replaced with ${VARE_CHECKOUT}; exact agent output is retained in local raw-evidence archive.",
+      "normalized_repository_copy_sha256": "dbf74e980da578fa3deae0732f547df4053fb457ebed850c6ca594e8d16452a7",
+      "sha256": "73b2982dd1b7ee20cef0b3f108a009c81aa9fa6b03ff4f7c29469f52360d0aa5",
+      "source": "../urllib3-runs/catalog-identity-review/catalog-identity-review-record.json.raw"
+    },
+    "review/catalog-identity-review.md": {
+      "normalization": "Worktree absolute path replaced with ${VARE_CHECKOUT}; exact agent output is retained in local raw-evidence archive.",
+      "normalized_repository_copy_sha256": "567596bd10e0eaaf409f597803a2b81f5e771516a2ca72344510a3297de8f9f5",
+      "sha256": "14a7290a4e77442508a366fe6554685ece566aca006b0e11d94a18512c831082",
+      "source": "../urllib3-runs/catalog-identity-review/catalog-identity-review.md.raw"
+    },
+    "review/v1_1-integrity-cli-review-20261011/calibration/controls.json": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "sha256": "fdd516fdec7fe09f82dda13b151d9e09f2fc843bc12e4f136d6ac3f27ec21648",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/calibration/controls.json"
+    },
+    "review/v1_1-integrity-cli-review-20261011/calibration/manifest.json": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "sha256": "28fc85e4ebdda9003a9ba572630441d3d9a4b8ef44c8e4b8d03409d6005b8457",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/calibration/manifest.json"
+    },
+    "review/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/SHA256SUMS.json": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "sha256": "a8d5c27bb6e73a5347aaafd0844edb144d11de0dfd92bf779fbf6109f1f7c5a9",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/SHA256SUMS.json"
+    },
+    "review/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/scripts/calibrate_integrity.py": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "sha256": "72442513ff320ff32e0e93a897ae39fe2189e7bceb931ba7518a63ffda279aa1",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/scripts/calibrate_integrity.py"
+    },
+    "review/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/rvl-hf-bad-words-neutrality-v1/TASK.md": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "sha256": "84452e136a0ffffd1084cf79d2c66f7fb39675bf3c23354e7a02e9d25dc3a6e5",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/rvl-hf-bad-words-neutrality-v1/TASK.md"
+    },
+    "review/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/rvl-hf-bad-words-neutrality-v1/evaluator/grade.py": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "sha256": "b71fc8932cc7d69d782fc85d914a90e1fcf1989374fc2a5afb2bb65ba89be4e6",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/rvl-hf-bad-words-neutrality-v1/evaluator/grade.py"
+    },
+    "review/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/rvl-hf-bad-words-neutrality-v1/protocol.lock.json": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "sha256": "c4221e16d78e21b6ac273326e7078623c56b1517ac61b2473ba6d4e3a18687de",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/rvl-hf-bad-words-neutrality-v1/protocol.lock.json"
+    },
+    "review/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/rvl-hf-bad-words-neutrality-v1/task.json": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "sha256": "5e289ac6ddec28e17bc8ed3300480493f9ee5d289d4917c58f0a726d8a1539a8",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/rvl-hf-bad-words-neutrality-v1/task.json"
+    },
+    "review/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/rvl-hf-behavior-policy-parity-v1/TASK.md": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "sha256": "f73ef8ee1736e205fe1996450cfc18a87e0161994ba266e57ae8c95387d09f78",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/rvl-hf-behavior-policy-parity-v1/TASK.md"
+    },
+    "review/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/rvl-hf-behavior-policy-parity-v1/evaluator/grade.py": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "sha256": "6c1011e29513c539bda3383ac823695cdb067385b6ddd904c31d5c6223df14e1",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/rvl-hf-behavior-policy-parity-v1/evaluator/grade.py"
+    },
+    "review/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/rvl-hf-behavior-policy-parity-v1/protocol.lock.json": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "sha256": "4996eed5c81863904f4596a6a1e914120bc36c8e5c4cdc0981c3811ec67df8f2",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/rvl-hf-behavior-policy-parity-v1/protocol.lock.json"
+    },
+    "review/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/rvl-hf-behavior-policy-parity-v1/task.json": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "sha256": "fea3e4cf77a101300a827920491a14d52cf07ea2e2cee23f3f5b21421bec3a69",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/rvl-hf-behavior-policy-parity-v1/task.json"
+    },
+    "review/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/trl-grpo-accumulation-window-normalizer-v1/TASK.md": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "sha256": "d827e10df90860c87a2c22310f5280acf328ae5401ff5dbb0361bc55ec44e41b",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/trl-grpo-accumulation-window-normalizer-v1/TASK.md"
+    },
+    "review/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/trl-grpo-accumulation-window-normalizer-v1/evaluator/grade.py": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "sha256": "95983aa8863c225f09bf94716b99c4680c53db9f909eeef511509e934d839d2c",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/trl-grpo-accumulation-window-normalizer-v1/evaluator/grade.py"
+    },
+    "review/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/trl-grpo-accumulation-window-normalizer-v1/protocol.lock.json": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "sha256": "d5e176fb7624646f848859626caca63ca6e75baf5be55a068ce7468fdcf4c850",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/trl-grpo-accumulation-window-normalizer-v1/protocol.lock.json"
+    },
+    "review/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/trl-grpo-accumulation-window-normalizer-v1/task.json": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "sha256": "9089fbec71d56120123c73ce673946345e14e6f45a0a145663d2e0c04a88df67",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/trl-grpo-accumulation-window-normalizer-v1/task.json"
+    },
+    "review/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/urllib3-preserve-ambiguous-request-target-v1/TASK.md": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "sha256": "b66aed24699d0df387973cea37070a49f1f8215b5712c6307b1ae0f7b7400f16",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/urllib3-preserve-ambiguous-request-target-v1/TASK.md"
+    },
+    "review/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/urllib3-preserve-ambiguous-request-target-v1/evaluator/grade.py": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "sha256": "22b318ae35251ef1d5c9b2dd3f5f680188ad5466ec2fa7a932b28cb570b96685",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/urllib3-preserve-ambiguous-request-target-v1/evaluator/grade.py"
+    },
+    "review/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/urllib3-preserve-ambiguous-request-target-v1/protocol.lock.json": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "sha256": "ac447bbfea90f92d6fb3021f1097d5d093c65358abfd411331eac76c5956b004",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/urllib3-preserve-ambiguous-request-target-v1/protocol.lock.json"
+    },
+    "review/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/urllib3-preserve-ambiguous-request-target-v1/task.json": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "sha256": "683406ba4bcab98f4948d8c39b89885645e1d9f4f9ec8ec894d233f0431a935e",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/calibration/protocol_snapshot/tasks/urllib3-preserve-ambiguous-request-target-v1/task.json"
+    },
+    "review/v1_1-integrity-cli-review-20261011/calibration/summary.json": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "sha256": "e4f2249bcb691b3acfee0cf25add0662aea49a90d56d1af1ada41d6a01c9d19e",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/calibration/summary.json"
+    },
+    "review/v1_1-integrity-cli-review-20261011/calibration/tamper_cases.json": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "sha256": "cacfcfcec687c033252e03b2dae9be4e71047eca63f54ff20196d7eaa554fe8c",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/calibration/tamper_cases.json"
+    },
+    "review/v1_1-integrity-cli-review-20261011/known-fix.json": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "normalized_repository_copy_sha256": "a68d8cca42458e762e77e5fa8bee5b6ebcfa61a3ee20168100ffa736db03cb08",
+      "sha256": "0e9e43670c306cd4c8ec2d9d04de0ca44eea158110f98b0e5f6ee9121b2e907a",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/known-fix.json"
+    },
+    "review/v1_1-integrity-cli-review-20261011/pinned-base.json": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "normalized_repository_copy_sha256": "a47bb90b65100f2c4cb4b6e8f904bc3794e8bcecd5b7c2e0f84da3caabd7bde9",
+      "sha256": "71f21bff5d959c79f0eda4138b95e8565de69be1642ce46003c2addb1baf86f8",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/pinned-base.json"
+    },
+    "review/v1_1-integrity-cli-review-20261011/v1_1-integrity-cli-review-prompt.txt": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "sha256": "35290ebb096683819a7badfeaba253d0ca87964dd60935340443ab102ff9f16b",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/v1_1-integrity-cli-review-prompt.txt"
+    },
+    "review/v1_1-integrity-cli-review-20261011/v1_1-integrity-cli-review-record.json": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "normalized_repository_copy_sha256": "55758d9b7ee5e052c7130cdf962e59dc57ce9f2b6b691f682dfbb91c13f5b953",
+      "sha256": "51158ac3eb070bb3b50a04b25d1f3e7100a6f83c62b4cb919c59fbe02160d4ee",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/v1_1-integrity-cli-review-record.json"
+    },
+    "review/v1_1-integrity-cli-review-20261011/v1_1-integrity-cli-review-report.md": {
+      "normalization": "Machine-specific paths normalized in the repository copy; exact AI review artifact is retained under ../urllib3-runs.",
+      "normalized_repository_copy_sha256": "176afbb4f746b205f0c7649c8f99c0ae7c97840b1720639f2203380bd5bcf00c",
+      "sha256": "fe9deb8d8ae74cd8c2fd428830a82ac33f72bb06458d23738f8ec3c3ac72379f",
+      "source": "../urllib3-runs/v1_1-integrity-cli-review-20261011/v1_1-integrity-cli-review-report.md"
+    },
+    "task-identity-baseline-tests.log": {
+      "normalization": "Raw copy stored in local raw-evidence archive; repository log replaces machine-specific paths.",
+      "normalized_repository_copy_sha256": "a9f48a77be51b1e81289063f0b9869f64bc750d44c98ada189fecd35630b7fda",
+      "sha256": "fc7445f1d8abdcc912a8801f749a0144a114bc0a724eea3ed981f1f4a3fbc326",
+      "source": "../urllib3-runs/task-identity-baseline-tests.log.raw"
+    },
+    "unit-tests.log": {
+      "normalization": "Machine-specific checkout path replaced with ${VARE_CHECKOUT}; exact local test log is retained in the raw-evidence archive.",
+      "normalized_repository_copy_sha256": "c37a761244dda93a6f736512665730009e44cc9510963ca01e36b3961e36422e",
+      "sha256": "6caad65ed942f66da492d5fe020fde6defd1bc2a30f05210b2e793cec815fb6b",
+      "source": "../urllib3-runs/unit-tests-final.log.raw"
+    }
+  },
+  "normalization": "Raw JSON/log files are retained in the local raw-evidence archive; repository copies replace the machine-specific parent workspace path with ${WORK_ROOT}."
+}
