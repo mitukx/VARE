@@ -1,5 +1,13 @@
 # Calibration evidence
 
+## RVL shared-module rollback alias follow-up — PR #92
+
+At current RVL main `27ebf7fe239d97504eeb960bf1407de220584dac`, the clean-clone baseline fails the shared-child regression on exact module modes and subsequent Dropout output; the patch passes and restores the checked model, populated optimizer, CPU RNG, and next-forward behavior. All 14 RVL trainer tests pass in the patched clean clone; a further related CPU suite passes 51 tests. Fix commit [`7568c6e`](https://github.com/mitukx/Recursive-Verification-Lag/commit/7568c6e) is in open [PR #92](https://github.com/mitukx/Recursive-Verification-Lag/pull/92). This is a constructed CPU correctness case only: default-model incidence, CUDA/distributed behavior, and capability impact are unknown. An AI reviewer independently reproduced the baseline mode failure and checked the flag-restoration semantics; no independent human review or merge has occurred. See the [report](rvl-module-mode-shared-alias-followup-v2.md) and [raw replay](../results/rvl-module-mode-shared-alias-v1/clean-clone-replay-20261011/).
+
+## Research candidate screen — no-go for new training
+
+The 2026-10-11 follow-up screen compared stale-rollout GRPO, policy-conditioned verifier audits, and budget-aware audit allocation with recent primary work and existing VARE evidence. No new training/GPU experiment was admitted because no candidate had both a defensible distinct claim and a fresh task/data gate. This is a bounded literature-and-evidence decision, not an experimental result or exhaustive novelty review. See the [structured screen](research-candidate-screen-2026-10-11-followup.md).
+
 ## Non-oracle GRPO audit allocation under total cost
 
 The frozen follow-up formalizes the target-policy update, subset inclusion, and total rollout-plus-label cost, then checks 42 exact sensitivity rows over behavior/target overlap and rollout cost. The direct estimator is HT with joint subset inclusion; variance allocation reduces to cost-adjusted Neyman/optimal design, while direction decisions reduce to sequential testing. The independent multinomial audit matches all exact sign risks and HT MSEs. Conditional verifier/task drift is separated from action shift and can reverse the transported update sign. This is a negative novelty result for the proposed allocation line, not a new algorithm or model result. See the [report](grpo-audit-cost-reduction-v1-report.md), [frozen protocol](../protocols/grpo_audit_cost_reduction_v1.lock.json), and [raw run/audit](../results/grpo-audit-cost-reduction-v1/run-1/).

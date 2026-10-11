@@ -1,0 +1,38 @@
+{
+  "study": "rvl-module-mode-shared-alias-followup-v1",
+  "replay": "clean-clone-replay-20261011",
+  "vare_source_revision": "b3204926b3cae291f7c13e3134444c71a3a63172",
+  "upstream_repository": "https://github.com/mitukx/Recursive-Verification-Lag",
+  "base_revision": "27ebf7fe239d97504eeb960bf1407de220584dac",
+  "patched_revision": "7568c6e39015f18bec337174bacf39caac4f2477",
+  "pull_request": "https://github.com/mitukx/Recursive-Verification-Lag/pull/92",
+  "runtime": "Python 3.12.12, PyTorch 2.9.1, Transformers 4.57.3; CPU only",
+  "reproduction_command": "PYTHON=python3.12 bash scripts/reproduce_rvl_shared_module_mode_followup_v1.sh results/rvl-module-mode-shared-alias-v1/clean-clone-replay-20261011",
+  "clean_clone_reproduction": {
+    "baseline_exit_status": 1,
+    "baseline_expected_failure": ["per-module modes", "subsequent dropout forward"],
+    "patched_exit_status": 0,
+    "patched_tests": "14 passed"
+  },
+  "related_suite_command": "python3.12 -m unittest tests.test_mini_lab_torch tests.test_mini_lab tests.test_mini_lab_promotion -v",
+  "related_suite": {
+    "exit_status": 0,
+    "tests": 51,
+    "result": "OK"
+  },
+  "sha256": {
+    "baseline.log": "763ea009c5311a3b90fd9ddd1bf80a357c938b5da73390ac03e460e4adfcbe3b",
+    "patched.log": "cab861adc20702f74ca6bccd1e06b066da42b1cca214bad4f2d4809e5ac4fee4",
+    "related-tests.log": "b85fa1e8009a9c94e4abe4a91b652e72eef57bf6fbcfb725163ee5b580502cc7",
+    "runtime.txt": "4e86a0100c2c386946c49110d0c0cb3f0779648f29260432980d7cde033b1a68",
+    "summary.txt": "98c57bd06e613eb32a61defa7cc473f62c8fc929728fc1a731ca83e3b8a2002c",
+    "contributions/rvl-module-mode-shared-alias-followup.patch": "16ccdc8767adabc272c84fd101db33f158ddc07de7df4ae8e7b0e097678652a2"
+  },
+  "limitations": [
+    "The regression deliberately constructs a shared-module graph; default-model incidence is unknown.",
+    "No CUDA or distributed hardware was available or tested.",
+    "No model capability or quality evaluation was run.",
+    "The patch restores snapshotted training flags but not arbitrary side effects from custom Module.train overrides.",
+    "PR #92 is open and has not been merged or independently human-reviewed."
+  ]
+}
