@@ -253,10 +253,10 @@ def main() -> int:
     rp.add_argument("--output")
     rp.set_defaults(func=_cmd_rvl_plan)
 
-    l = sub.add_parser("lock-protocol", help="freeze a preregistered experiment spec with a SHA-256 digest")
-    l.add_argument("--spec", required=True)
-    l.add_argument("--output", required=True)
-    l.set_defaults(func=_cmd_lock_protocol)
+    lock_cmd = sub.add_parser("lock-protocol", help="freeze a preregistered experiment spec with a SHA-256 digest")
+    lock_cmd.add_argument("--spec", required=True)
+    lock_cmd.add_argument("--output", required=True)
+    lock_cmd.set_defaults(func=_cmd_lock_protocol)
 
     s = sub.add_parser("score", help="compute capability gain per GPU-hour")
     s.add_argument("--before", type=float, required=True)
