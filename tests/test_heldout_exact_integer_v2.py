@@ -17,6 +17,7 @@ from vare.heldout_exact_integer import (
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULT = ROOT / "results/heldout-exact-integer-base-gate-v1/m1-mlx-5d36336"
+RESULT_V2 = ROOT / "results/heldout-exact-integer-base-gate-v2/m1-mlx-89f671c"
 PACK = ROOT / "benchmarks/heldout/exact_integer_v1/tasks.jsonl"
 PROTOCOL_V1 = ROOT / "benchmarks/heldout/exact_integer_v1/protocol.json"
 PROTOCOL_V2 = ROOT / "benchmarks/heldout/exact_integer_v2/protocol.json"
@@ -72,7 +73,47 @@ def test_v2_protocol_is_frozen_and_reuses_the_v1_pack():
     assert protocol["v1_decision"] == "stop_zero"
     assert protocol["models"]["mlx"]["revision"] == "4f83f8f146fdf28b512a06562b671d7af4fab457"
     assert protocol["models"]["transformers"]["revision"] == "aa8e72537993ba99e69dfaafa59ed015b17504d1"
-    assert not (ROOT / "results/heldout-exact-integer-base-gate-v2").exists()
+
+
+def test_v2_mlx_result_bytes_stay_frozen():
+    manifest = json.loads((RESULT_V2 / "manifest.json").read_text(encoding="utf-8"))
+    assert _sha(RESULT_V2 / "manifest.json") == "ee582b61fc2ca21d45bacb829c728bf47118d987f302b6f0f2eb8aeb82571278"
+    for name, spec in manifest["files"].items():
+        blob = (RESULT_V2 / name).read_bytes()
+        assert len(blob) == spec["bytes"] < 1_048_576
+        assert hashlib.sha256(blob).hexdigest() == spec["sha256"]
+    assert manifest["status"] == "nondegenerate_base_signal"
+    assert manifest["passed_tasks"] == 29
+    assert manifest["pass_rate"] == 0.453125
+    assert manifest["wilson95_low"] == 0.3372944778061167
+    assert manifest["wilson95_high"] == 0.5742640277994588
+    assert manifest["final_line_parser_matches"] == 250
+    assert manifest["graded_correct_samples"] == 109
+    assert manifest["code_revision"] == "89f671c00e7ed84fda1fc873e8814e0ff17bef2c"
+
+
+def test_retained_v2_samples_match_the_frozen_grader():
+    tasks = {row["task_id"]: row for row in load_task_pack(PACK.read_text(encoding="utf-8"))}
+    rows = [json.loads(line) for line in (RESULT_V2 / "samples.jsonl").read_text(encoding="utf-8").splitlines() if line.strip()]
+    assert len(rows) == 256
+    parsed = 0
+    correct = 0
+    by_task: dict[str, list[bool]] = {}
+    for row in rows:
+        task = tasks[row["task_id"]]
+        got = grade_output(task["expression"], row["output"])
+        assert got is row["correct"]
+        correct += int(got)
+        parsed += parse_final_integer(row["output"]) is not None
+        by_task.setdefault(row["task_id"], []).append(got)
+        task_index = int(row["task_id"].rsplit("-", 1)[1])
+        assert row["seed"] == sample_seed(task_index, int(row["sample_index"]))
+    assert parsed == 250
+    assert correct == 109
+    assert sum(any(flags) for flags in by_task.values()) == 29
+    summary = json.loads((RESULT_V2 / "summary.json").read_text(encoding="utf-8"))
+    assert summary["decision"] == "nondegenerate_base_signal"
+    assert summary["model_id"] == "mlx-community/Qwen2.5-3B-Instruct-4bit"
 
 
 def test_v2_update_comparison_is_refused():
