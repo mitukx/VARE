@@ -46,6 +46,6 @@ VARE PR #2 was merged into `main` as [`09dfcd5`](https://github.com/mitukx/VARE/
 
 ## Held-out exact-integer base gate
 
-`benchmarks/heldout/exact_integer_v1/` is a 64-task pack frozen before any model output. Its SHA-256 is recorded in `protocol.json`. The pass@k runner and the Mac/Colab commands are in [the gate note](docs/heldout-exact-integer-base-gate-v1.md). The pack is an evaluation set. `scripts/heldout_exact_integer_update_comparison_v1.py` exits 2 and does not train.
+`benchmarks/heldout/exact_integer_v1/` is a 64-task pack. The v1 mlx run is a retained `stop_zero` result and is not rerun; see [the result record](docs/heldout-exact-integer-base-gate-v1-result.md). v2 keeps that pack and parser and pins a different model in [the v2 note](docs/heldout-exact-integer-base-gate-v2.md). Both update-comparison scripts exit 2 and do not train.
 
 Large checkpoints and benchmark content with uncertain redistribution terms remain outside version control. Read each report for its exact source revisions, environment, raw artifacts, and claim limits. See [LICENSE](LICENSE) for the repository license.

@@ -29,10 +29,6 @@ from vare.heldout_exact_integer import (  # noqa: E402
 PROTOCOL_PATH = ROOT / "benchmarks/heldout/exact_integer_v1/protocol.json"
 
 
-def _protocol() -> dict:
-    return json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
-
-
 def _tasks(protocol: dict) -> list[dict[str, str]]:
     path = ROOT / protocol["tasks_file"]
     blob = path.read_bytes()
@@ -139,30 +135,35 @@ def _record_environment(output: Path, backend: str) -> None:
     path.write_text(payload, encoding="utf-8")
 
 
+def execute(protocol_path: Path, backend: str, output: Path) -> dict:
+    protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
+    spec = protocol["models"][backend]
+    tasks = _tasks(protocol)
+    sampler = (
+        _mlx_sampler(spec["repo_id"], spec["revision"])
+        if backend == "mlx"
+        else _transformers_sampler(spec["repo_id"], spec["revision"])
+    )
+    _record_environment(output, backend)
+    done = len(read_jsonl(output / "samples.jsonl"))
+    print(f"completed samples on disk: {done} of {len(tasks) * 4}", flush=True)
+    return run_gate(
+        tasks,
+        sampler,
+        output,
+        pack_sha256=protocol["tasks_sha256"],
+        backend=backend,
+        model_id=spec["repo_id"],
+        protocol_id=str(protocol["protocol_id"]),
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="held-out exact-integer base pass@k gate")
     parser.add_argument("--backend", choices=("mlx", "transformers"), required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    protocol = _protocol()
-    spec = protocol["models"][args.backend]
-    tasks = _tasks(protocol)
-    sampler = (
-        _mlx_sampler(spec["repo_id"], spec["revision"])
-        if args.backend == "mlx"
-        else _transformers_sampler(spec["repo_id"], spec["revision"])
-    )
-    _record_environment(args.output, args.backend)
-    done = len(read_jsonl(args.output / "samples.jsonl"))
-    print(f"completed samples on disk: {done} of {len(tasks) * 4}", flush=True)
-    summary = run_gate(
-        tasks,
-        sampler,
-        args.output,
-        pack_sha256=protocol["tasks_sha256"],
-        backend=args.backend,
-        model_id=spec["repo_id"],
-    )
+    summary = execute(PROTOCOL_PATH, args.backend, args.output)
     print(json.dumps(summary, indent=2, sort_keys=True))
     return 0
 

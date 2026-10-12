@@ -4,7 +4,11 @@ Entries below preserve study decisions and outcomes; they are a history, not a l
 
 ## Held-out exact-integer base gate v1
 
-**Status: protocol frozen; no model output retained.** Sixty-four generated exact-integer tasks are committed with hash `189b5e482b0f8c2b40ff36e0e1a84827699f348c11981a0ff912ce67323fd7fc`. The runner scores pass@4 with a Wilson 95% interval and can resume from `samples.jsonl`. The update-comparison entry point exits 2. See [the gate note](heldout-exact-integer-base-gate-v1.md). This entry does not report a pass rate.
+**Status: stopped, `stop_zero`.** The Apple Silicon mlx run of SmolLM2-360M-Instruct at code revision `5d36336ad0272d59ca815646fcb2f812849be1c5` scored 0/64 (Wilson 95% [0, 0.05662405979280534]). The frozen final-line parser matched 3 of 256 samples, and those 3 were graded incorrect. Do not retune or rerun v1. Raw files and hashes: [result record](heldout-exact-integer-base-gate-v1-result.md). The task pack remains `189b5e482b0f8c2b40ff36e0e1a84827699f348c11981a0ff912ce67323fd7fc`.
+
+## Held-out exact-integer base gate v2
+
+**Status: protocol frozen; no model output.** v2 reuses the v1 pack and the v1 final-line parser. The model pin is Qwen2.5-3B-Instruct (`mlx-community/Qwen2.5-3B-Instruct-4bit` revision `4f83f8f146fdf28b512a06562b671d7af4fab457` on Apple Silicon; `Qwen/Qwen2.5-3B-Instruct` revision `aa8e72537993ba99e69dfaafa59ed015b17504d1` on CUDA). The update-comparison entry point exits 2. See [the v2 note](heldout-exact-integer-base-gate-v2.md). This entry does not report a v2 pass rate.
 
 ## urllib3 #3352 real-repository task and model-feasibility screen
 

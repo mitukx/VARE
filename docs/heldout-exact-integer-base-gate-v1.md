@@ -2,7 +2,9 @@
 
 Protocol id: `heldout-exact-integer-base-gate-v1`.
 
-This note is the reproduction path for a frozen base-model pass@k gate. The repository contains the task pack, the grader, and the runner. It does not contain model weights or model outputs. Running the commands below is what produces an output directory.
+**Stopped.** The operator-reported Apple Silicon mlx run at code revision `5d36336ad0272d59ca815646fcb2f812849be1c5` finished `stop_zero` (0/64; Wilson 95% interval [0, 0.05662405979280534]). Do not rerun this protocol and do not change its prompt, parser, sample count, or threshold. The raw files are [the result record](heldout-exact-integer-base-gate-v1-result.md). A later model is a different protocol: [v2](heldout-exact-integer-base-gate-v2.md).
+
+This note is the reproduction path for the frozen gate. The task pack and grader were committed before that run. Model weights are not in the repository. The retained outputs are the result record, not a reason to edit the pack.
 
 ## Frozen pack
 
@@ -73,7 +75,9 @@ The runner refuses to append when `samples.jsonl` belongs to another pack, backe
 
 ## Mac, Apple Silicon
 
-`mlx` runs on Apple Silicon. The 360M bf16 model fits in 32 GB unified memory. From a checkout of this revision:
+The mlx run below is the retained result. Do not start it again.
+
+`mlx` runs on Apple Silicon. The 360M bf16 model fits in 32 GB unified memory. The recorded checkout is `5d36336ad0272d59ca815646fcb2f812849be1c5`. The block below is the command that was run, not a request to repeat it:
 
 ```bash
 git rev-parse HEAD
@@ -99,7 +103,9 @@ echo "comparison_exit=$?"
 
 ## Colab
 
-Use a GPU runtime. The frozen decoder does not change if the assigned GPU is a T4, L4, or A100: one sample, float16, at most 48 new tokens. Open `notebooks/heldout_exact_integer_base_gate_v1.ipynb` and run the cells from top to bottom.
+Do not start a new v1 Colab run. The stopped result is the mlx record above. The notebook remains as the unused Colab path; do not run its cells.
+
+Use a GPU runtime. The frozen decoder does not change if the assigned GPU is a T4, L4, or A100: one sample, float16, at most 48 new tokens. The notebook is `notebooks/heldout_exact_integer_base_gate_v1.ipynb`.
 
 The notebook clones `https://github.com/mitukx/VARE.git` at `cursor/heldout-exact-integer-gate-af75` unless `VARE_REPO` and `VARE_REV` are set. Mount Drive when asked. Samples and the Hugging Face cache go to `MyDrive/vare/heldout-exact-integer-base-gate-v1` and `MyDrive/vare/huggingface-cache`. Those paths survive a runtime reset; `/content` does not.
 
@@ -107,4 +113,4 @@ After a disconnect, start a new GPU runtime, reopen the notebook, and run every 
 
 ## What a finished run does not establish
 
-A pass rate, including a rate with a Wilson interval, is a base-model measurement on this pack. It is not evidence that an update helps, and it is not a multi-seed training result. No such result is stored in this repository.
+The retained pass rate is a base-model measurement on this pack. It is not evidence that an update helps, and it is not a multi-seed training result.
