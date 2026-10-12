@@ -20,7 +20,9 @@ The old-adapter log is [`baseline-pytest.txt`](../results/rvl-grpo-shared-module
 
 ## Change
 
-Restore writes the captured boolean onto `module.training`. It does not call `Module.train()`. Custom `train()` overrides therefore do not run on rollback. The snapshot never stored their other side effects, which is the same limit recorded for the RVL patch.
+Restore writes the captured boolean onto `module.training`. It does not call `Module.train()` or `Module.eval()`, including once per named module. Those methods recurse through every parent edge, so a later alias would still overwrite a shared child. Custom `train()` overrides therefore do not run on rollback. The snapshot never stored their other side effects, which is the same limit recorded for the RVL patch.
+
+Restore also records each named module's class. A later object with the same name and a different class is rejected before any flag is written. A `torch.nn.Module` case with a shared child is in the same test module and is skipped unless `torch` imports. The default CI job does not install PyTorch. The retained logs above were recorded without it.
 
 ## What this does not establish
 

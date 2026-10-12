@@ -17,6 +17,7 @@ ScoreFn = Callable[[Task, str], float]
 class _TrainerSnapshot:
     training_state: Any
     module_modes: dict[str, bool]
+    module_types: dict[str, type[Any]]
 
 
 @dataclass(frozen=True, slots=True)
@@ -98,6 +99,7 @@ class RVLGRPOHooks:
         return _TrainerSnapshot(
             training_state=state,
             module_modes={name: bool(module.training) for name, module in modules},
+            module_types={name: type(module) for name, module in modules},
         )
 
     def _restore_training_state(self, snapshot: Any) -> None:
@@ -109,14 +111,23 @@ class RVLGRPOHooks:
         if not callable(named_modules):
             raise RuntimeError("trainer model no longer exposes module modes")
         modules = dict(named_modules())
-        if modules.keys() != snapshot.module_modes.keys():
+        if (
+            modules.keys() != snapshot.module_modes.keys()
+            or modules.keys() != snapshot.module_types.keys()
+        ):
             raise RuntimeError("trainer module topology changed since policy snapshot")
+        for name, module in modules.items():
+            if type(module) is not snapshot.module_types[name]:
+                raise RuntimeError(
+                    f"trainer module {name!r} class changed since policy snapshot"
+                )
         self.trainer.restore_training_state(snapshot.training_state)
-        # Assign the captured flags directly. Module.train() recurses through
-        # every parent edge, while named_modules() lists a shared module once.
-        # Restoring a later aliased parent with train() would overwrite the
-        # shared child's saved mode. Direct assignment does not replay custom
-        # Module.train() side effects; the snapshot stores only the boolean.
+        # Assign the captured flags directly. Module.train() and Module.eval()
+        # recurse through every parent edge, while named_modules() lists a
+        # shared module once. Calling train() on each named module would still
+        # overwrite a shared child when a later alias has a different mode.
+        # The snapshot stores only the boolean, so a custom train() override's
+        # other side effects are not replayed.
         for name, module in modules.items():
             module.training = snapshot.module_modes[name]
 

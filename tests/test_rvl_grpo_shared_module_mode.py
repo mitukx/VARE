@@ -227,3 +227,87 @@ def test_candidate_rollback_preserves_shared_child_mode(graph_case: str) -> None
     if failures:
         raise AssertionError("\n".join(failures))
     assert hooks.active_policy() == ("policy-0", 0)
+
+
+def test_restore_rejects_a_module_whose_class_changed() -> None:
+    root, _probe = _nested_graph()
+    trainer = DirectFlagTrainer(root)
+    hooks = RVLGRPOHooks(
+        backend=object(),
+        trainer=trainer,
+        eval_tasks=[],
+        score_fn=lambda task, response: 0.0,
+        config=RVLGRPOConfig(seed=1),
+        generation_factory=Generation,
+        verified_generation_factory=VerifiedGeneration,
+    )
+
+    class Replacement(GraphModule):
+        pass
+
+    parent = dict(root.named_modules())["parent"]
+    replacement = Replacement()
+    parent._children = [("child", replacement)]
+    with pytest.raises(RuntimeError, match="class changed"):
+        hooks._restore_training_state(hooks._states["policy-0"])
+    assert replacement.training is True
+
+
+def test_torch_shared_module_mode_restores_without_calling_train() -> None:
+    torch = pytest.importorskip("torch")
+
+    class Flag(torch.nn.Module):
+        def __init__(self) -> None:
+            super().__init__()
+            self.train_calls = 0
+
+        def train(self, mode: bool = True):  # type: ignore[override]
+            self.train_calls += 1
+            return super().train(mode)
+
+    class Holder(torch.nn.Module):
+        def __init__(self, shared: torch.nn.Module) -> None:
+            super().__init__()
+            self.left = torch.nn.Sequential()
+            self.left.add_module("drop", shared)
+            self.right = torch.nn.Sequential()
+            self.right.add_module("drop", shared)
+
+    shared = Flag()
+    root = Holder(shared)
+    root.eval()
+    root.right.train(True)
+    shared.train(False)
+    assert shared.training is False
+    assert root.right.training is True
+
+    class Trainer:
+        def __init__(self, model: torch.nn.Module) -> None:
+            self.model = model
+
+        def snapshot_training_state(self) -> dict[str, int]:
+            return {"marker": 1}
+
+        def restore_training_state(self, state: dict[str, int]) -> None:
+            if state != {"marker": 1}:
+                raise AssertionError(state)
+
+    trainer = Trainer(root)
+    hooks = RVLGRPOHooks(
+        backend=object(),
+        trainer=trainer,
+        eval_tasks=[],
+        score_fn=lambda task, response: 0.0,
+        config=RVLGRPOConfig(seed=1),
+        generation_factory=Generation,
+        verified_generation_factory=VerifiedGeneration,
+    )
+    saved = {name: module.training for name, module in root.named_modules()}
+    root.train(True)
+    calls_before_restore = shared.train_calls
+    hooks._restore_training_state(hooks._states["policy-0"])
+    restored = {name: module.training for name, module in root.named_modules()}
+    assert restored == saved
+    assert shared.training is False
+    assert root.right.training is True
+    assert shared.train_calls == calls_before_restore
