@@ -9,6 +9,7 @@ VARE has **not demonstrated an independently confirmed improvement in real-model
 The current reviewable work is:
 
 - A narrow RVL rollback correction for a shared-module mode restoration edge. Its constructed CPU regression fails on the pinned baseline and passes with the patch. [RVL PR #92](https://github.com/mitukx/Recursive-Verification-Lag/pull/92) is open; production incidence and model-quality impact are unknown.
+- The same shared-child gap in VARE's own GRPO adapter. Rollback now writes the captured `training` flag directly. The regression is a stdlib module graph, not a PyTorch or task-success measurement. See the [adapter report](docs/rvl-grpo-shared-module-mode-adapter-v1-report.md).
 - A calibrated, protected grader for the public urllib3 #3352 historical bug and a VARE task-identity correction. The public task is retired from confirmation use. Two one-shot local model attempts produced no applicable patch; no training was run.
 - A structured research screen that admitted no new training or GPU experiment because no candidate cleared both novelty and fresh-task feasibility gates.
 

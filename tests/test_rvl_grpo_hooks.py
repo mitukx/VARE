@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import asyncio
 from dataclasses import dataclass, field
 import math
@@ -316,5 +318,167 @@ def test_rvl_grpo_hooks_forces_incumbent_restore_after_partial_candidate_restore
         report = await hooks.evaluate(candidate)
         assert report.primary == 1.0
         assert trainer.weight == 0
+
+    asyncio.run(run())
+
+
+class ContractModule:
+    """Stand-in for the PyTorch module contract used by mode rollback.
+
+    ``named_modules`` yields each object once. ``train`` writes ``training``
+    and recurses through every registered child, including a child already
+    visited through another parent. This matches ``nn.Module`` traversal and
+    ``Module.train``; it is not a PyTorch installation.
+    """
+
+    def __init__(self) -> None:
+        self.training = True
+        self._children: dict[str, ContractModule] = {}
+
+    def add(self, name: str, module: ContractModule) -> None:
+        self._children[name] = module
+
+    def named_modules(self, memo: set[int] | None = None, prefix: str = ""):
+        if memo is None:
+            memo = set()
+        if id(self) in memo:
+            return
+        memo.add(id(self))
+        yield prefix, self
+        for name, child in self._children.items():
+            child_prefix = f"{prefix}.{name}" if prefix else name
+            yield from child.named_modules(memo, child_prefix)
+
+    def train(self, mode: bool = True):
+        if type(mode) is not bool:
+            raise ValueError("training mode is expected to be boolean")
+        self.training = mode
+        for child in self._children.values():
+            child.train(mode)
+        return self
+
+
+def _module_modes(model: ContractModule) -> dict[str, bool]:
+    return {name: module.training for name, module in model.named_modules()}
+
+
+class ModeRollbackTrainer:
+    def __init__(self, model: ContractModule, probe: ContractModule):
+        self.model = model
+        self.probe = probe
+        self.step = 0
+        self.probe_training_during_update: bool | None = None
+
+    def snapshot_training_state(self):
+        return {"step": self.step}
+
+    def restore_training_state(self, state):
+        self.step = state["step"]
+
+    def train_step(self, samples):
+        assert samples
+        self.model.train(True)
+        self.probe_training_during_update = self.probe.training
+        self.step += 1
+        return {"loss": 0.0}
+
+
+def _mode_rollback_experience() -> Experience:
+    task = Task(id="t", prompt="train", family="math")
+    raw = {
+        "prompt_id": "t",
+        "prompt": "train",
+        "response": "0",
+        "logprob": -0.1,
+        "token_count": 1,
+        "latency_s": 0.001,
+        "metadata": {
+            "sampling_temperature": 0.8,
+            "prompt_token_ids": [1],
+            "response_token_ids": [2],
+            "response_token_logprobs": [-0.1],
+        },
+    }
+    return Experience(
+        attempt=Attempt(task, "0", "policy-0", 0, 0, logprob=-0.1, metadata={"rvl_generation": raw}),
+        verification=Verification(1.0, True, 1.0, 1, "oracle", trusted=True),
+        policy_lag=0,
+        verifier_lag=0,
+        shift_score=0.0,
+    )
+
+
+def _mode_rollback_hooks(trainer: ModeRollbackTrainer) -> RVLGRPOHooks:
+    return RVLGRPOHooks(
+        backend=FakeBackend(trainer),
+        trainer=trainer,
+        eval_tasks=[Task(id="t", prompt="train", family="math")],
+        score_fn=lambda task, response: float(response == "1"),
+        config=RVLGRPOConfig(seed=1),
+        generation_factory=Generation,
+        verified_generation_factory=VerifiedGeneration,
+    )
+
+
+def _shared_child_graph() -> tuple[ContractModule, ContractModule]:
+    root = ContractModule()
+    shared = ContractModule()
+    left = ContractModule()
+    right = ContractModule()
+    left.add("drop", shared)
+    right.add("drop", shared)
+    root.add("left", left)
+    root.add("right", right)
+    # Assign flags directly so setup does not recurse through the alias.
+    root.training = False
+    left.training = False
+    right.training = True
+    shared.training = False
+    return root, shared
+
+
+def _nested_mixed_graph() -> tuple[ContractModule, ContractModule]:
+    root = ContractModule()
+    parent = ContractModule()
+    child = ContractModule()
+    parent.add("child", child)
+    root.add("parent", parent)
+    root.training = False
+    parent.training = False
+    child.training = True
+    return root, child
+
+
+def test_rvl_grpo_rollback_preserves_shared_child_module_mode():
+    model, shared = _shared_child_graph()
+    saved = _module_modes(model)
+    assert saved == {"": False, "left": False, "left.drop": False, "right": True}
+    trainer = ModeRollbackTrainer(model, shared)
+    hooks = _mode_rollback_hooks(trainer)
+
+    async def run():
+        candidate = await hooks.train_candidate("policy-0", [_mode_rollback_experience()])
+        assert trainer.probe_training_during_update is True
+        assert trainer.step == 0
+        assert _module_modes(model) == saved
+        await hooks.promote(candidate)
+        assert trainer.step == 1
+        assert _module_modes(model) == {name: True for name in saved}
+
+    asyncio.run(run())
+
+
+def test_rvl_grpo_rollback_preserves_distinct_nested_module_modes():
+    model, child = _nested_mixed_graph()
+    saved = _module_modes(model)
+    assert saved == {"": False, "parent": False, "parent.child": True}
+    trainer = ModeRollbackTrainer(model, child)
+    hooks = _mode_rollback_hooks(trainer)
+
+    async def run():
+        await hooks.train_candidate("policy-0", [_mode_rollback_experience()])
+        assert trainer.probe_training_during_update is True
+        assert trainer.step == 0
+        assert _module_modes(model) == saved
 
     asyncio.run(run())

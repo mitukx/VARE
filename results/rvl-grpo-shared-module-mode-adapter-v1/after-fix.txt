@@ -1,0 +1,14 @@
+Command, run after assigning captured module.training flags directly:
+
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src python3 -m pytest -q \
+  tests/test_rvl_grpo_hooks.py \
+  tests/test_rvl_evaluation_promotion_e2e.py \
+  tests/test_rvl_grpo_group_boundary.py \
+  tests/test_rvl_grpo_rollout_task_binding.py \
+  tests/test_rvl_grpo_verifier_trainer_prompt_alignment.py \
+  tests/test_rvl_grpo_eval_identity.py \
+  tests/test_rvl_integration.py
+
+Result: 23 passed.
+The shared-child rollback test and the distinct nested-mode control are both in tests/test_rvl_grpo_hooks.py.
+Python 3.12. pytest 8.4.2. No PyTorch import was used.
