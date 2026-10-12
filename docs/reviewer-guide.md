@@ -58,7 +58,7 @@ The public known fix is a grader calibration control, not an agent result. Issue
 | `src/vare/`, `tests/` | VARE implementation and local regression tests |
 | `benchmarks/historical/` | Immutable task contracts and protected graders |
 | `protocols/` | Frozen protocols, thresholds, seeds, and hashes |
-| `results/` | Raw logs, manifests, model outputs, and review records |
+| `results/` | Raw logs, manifests, model outputs, and review records. Blobs at or above 1 MiB are frozen by the [blob census](../protocols/tracked_large_blob_allowlist_v1.txt); see [artifact retention](artifact-retention.md) |
 | `docs/` | Technical reports, evidence summaries, and decisions |
 | `contributions/` | Proposed upstream patches, separate from merged code |
 | `scripts/`, `reproducers/` | Reproduction and audit entry points |
