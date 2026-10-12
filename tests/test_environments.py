@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import hashlib
+import json
 import math
 import os
 import subprocess
@@ -26,6 +27,40 @@ from vare.environments.runner import resolve_launch_argv, run_command
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = ROOT / "benchmarks/smoke/stable_logsumexp/task.json"
 ORACLE = ROOT / "tests/fixtures/oracle/fix_stable_logsumexp.py"
+
+
+def test_inserted_prompt_text_is_not_scanned_for_placeholders():
+    prompt = "literal {step} {workspace} {python}"
+    argv = resolve_launch_argv(
+        ("{python}", "-c", "{prompt}", "{step}"),
+        {"{prompt}": prompt, "{step}": "4", "{workspace}": "/tmp/ws"},
+    )
+    assert argv == [sys.executable, "-c", prompt, "4"]
+    assert resolve_launch_argv(("{prompt}",), {"{prompt}": "python"}) == ["python"]
+
+
+def test_empty_sys_executable_is_rejected(monkeypatch):
+    monkeypatch.setattr(sys, "executable", "")
+    for argv in (("python", "-c", "pass"), ("{python}",)):
+        try:
+            resolve_launch_argv(argv)
+        except RuntimeError as exc:
+            assert "sys.executable is empty" in str(exc)
+        else:
+            raise AssertionError(argv)
+    assert resolve_launch_argv(("echo", "python")) == ["echo", "python"]
+
+
+def test_smoke_spec_hash_matches_retained_record():
+    from vare.evidence import sha256_json
+
+    recorded = json.loads(
+        (ROOT / "results/promotion-required-slices-v1/nested-python-path/without_venv_path.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    spec = EngineeringTaskSpec.load(SPEC)
+    assert sha256_json(spec.to_dict()) == recorded["provenance"]["task_spec_sha256"]
 
 
 def test_bare_python_program_uses_current_interpreter(tmp_path):

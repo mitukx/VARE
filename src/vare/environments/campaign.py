@@ -20,8 +20,10 @@ class CommandWorkspaceAgent:
     """Adapter for an external repository-editing agent command.
 
     The command vector is configured by the experimenter. Placeholders
-    `{workspace}`, `{prompt}`, and `{step}` are substituted without invoking a
-    shell. The external program is responsible for editing the workspace.
+    `{workspace}`, `{prompt}`, and `{step}` in that vector are substituted
+    without invoking a shell. Text inserted for a placeholder is not scanned
+    again, so a prompt that contains `{step}` stays literal. The external
+    program is responsible for editing the workspace.
     """
 
     argv: tuple[str, ...]

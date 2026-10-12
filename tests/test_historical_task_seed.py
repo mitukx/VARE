@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 from pathlib import Path
-import subprocess
+import json
 
 from vare.environments import EngineeringTaskSpec, ExecutableEvaluator
+from vare.evidence import sha256_json
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -18,6 +19,14 @@ def _workspace(root: Path, *, fixed: bool) -> Path:
     (target / "src/rvl_systems/hf_backend.py").write_text(backend, encoding="utf-8")
     (target / "src/rvl_systems/hf_trainer.py").write_text(trainer, encoding="utf-8")
     return target
+
+
+def test_seed_spec_hash_matches_recorded_evidence():
+    recorded = json.loads(
+        (ROOT / "evidence/historical_task_seed_v0.3.0.json").read_text(encoding="utf-8")
+    )
+    spec = EngineeringTaskSpec.load(SPEC_PATH)
+    assert sha256_json(spec.to_dict()) == recorded["task_spec_sha256"]
 
 
 def test_historical_external_evaluator_distinguishes_contract(tmp_path):

@@ -5,6 +5,7 @@ import json
 import math
 import os
 from pathlib import Path
+import re
 import shutil
 import signal
 import subprocess
@@ -164,6 +165,15 @@ def _preexec(limits: ResourceLimits):
     return apply
 
 
+def _expand_placeholders(text: str, replacements: Mapping[str, str]) -> str:
+    """Replace placeholders once. Inserted text is not scanned again."""
+    if not replacements or not any(token in text for token in replacements):
+        return text
+    keys = sorted(replacements, key=len, reverse=True)
+    pattern = re.compile("|".join(re.escape(key) for key in keys))
+    return pattern.sub(lambda match: replacements[match.group(0)], text)
+
+
 def resolve_launch_argv(
     argv: Sequence[str],
     substitutions: Mapping[str, str] | None = None,
@@ -172,20 +182,26 @@ def resolve_launch_argv(
 
     Task packs and agent vectors may name ``{python}`` or use ``python`` as the
     program token. Launch uses ``sys.executable`` so a python3-only image does
-    not need a ``python`` entry on ``PATH``. Only the program token is rewritten;
-    a later argument whose text is ``python`` stays unchanged.
+    not need a ``python`` entry on ``PATH``. Only that original program token is
+    rewritten; a later argument, or text inserted from a placeholder, is left
+    unchanged even when it says ``python``. Placeholder values are not scanned
+    for further tokens, so a prompt that contains ``{step}`` stays literal.
     """
-    replacements = {"{python}": sys.executable}
+    replacements: dict[str, str] = {}
     if substitutions:
         replacements.update(substitutions)
+    replacements.setdefault("{python}", sys.executable)
+    needs_python = any("{python}" in item for item in argv) or (
+        bool(argv) and argv[0] == "python"
+    )
+    if needs_python and not sys.executable:
+        raise RuntimeError("sys.executable is empty; refusing to launch a Python command")
     resolved: list[str] = []
     for index, item in enumerate(argv):
-        value = item
-        for token, replacement in replacements.items():
-            value = value.replace(token, replacement)
-        if index == 0 and value == "python":
-            value = sys.executable
-        resolved.append(value)
+        if index == 0 and item == "python":
+            resolved.append(sys.executable)
+            continue
+        resolved.append(_expand_placeholders(item, replacements))
     return resolved
 
 
