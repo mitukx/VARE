@@ -20,12 +20,29 @@ from vare.environments import (
     ResourceLimits,
     Workspace,
 )
-from vare.environments.runner import run_command
+from vare.environments.runner import resolve_launch_argv, run_command
 
 
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = ROOT / "benchmarks/smoke/stable_logsumexp/task.json"
 ORACLE = ROOT / "tests/fixtures/oracle/fix_stable_logsumexp.py"
+
+
+def test_bare_python_program_uses_current_interpreter(tmp_path):
+    argv = resolve_launch_argv(("python", "-c", "python"), {"{workspace}": str(tmp_path)})
+    assert argv == [sys.executable, "-c", "python"]
+    assert resolve_launch_argv(("{python}", "python")) == [sys.executable, "python"]
+    result = run_command(
+        tmp_path,
+        CommandSpec(
+            argv=("python", "-c", "import sys; print(sys.executable)"),
+            name="interpreter",
+        ),
+        ResourceLimits(wall_time_s=10, cpu_time_s=10, memory_mb=512, max_output_bytes=10_000),
+    )
+    assert result.passed, result.stderr
+    assert result.argv[0] == sys.executable
+    assert result.stdout.strip() == sys.executable
 
 
 def test_task_spec_roundtrip_and_baseline_fails():
@@ -41,7 +58,7 @@ def test_task_spec_roundtrip_and_baseline_fails():
 def test_oracle_patch_passes_and_has_diff():
     spec = EngineeringTaskSpec.load(SPEC)
     with Workspace(spec) as ws:
-        subprocess.run(["python", str(ORACLE), str(ws.path)], check=True)
+        subprocess.run([sys.executable, str(ORACLE), str(ws.path)], check=True)
         result = ExecutableEvaluator(spec).evaluate(ws.path)
     assert result.passed
     assert result.correctness == 1.0

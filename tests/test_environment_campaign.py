@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 from pathlib import Path
 import subprocess
+import sys
 
 from vare.environments import EnvironmentCampaignRunner, TaskCatalog
 
@@ -13,7 +14,7 @@ ORACLE = ROOT / "tests/fixtures/oracle/fix_stable_logsumexp.py"
 
 class OracleAgent:
     async def run(self, *, prompt: str, workspace: Path, step: int) -> str:
-        subprocess.run(["python", str(ORACLE), str(workspace)], check=True)
+        subprocess.run([sys.executable, str(ORACLE), str(workspace)], check=True)
         return "ok"
 
 
