@@ -112,11 +112,13 @@ class RVLGRPOHooks:
         if modules.keys() != snapshot.module_modes.keys():
             raise RuntimeError("trainer module topology changed since policy snapshot")
         self.trainer.restore_training_state(snapshot.training_state)
-        # Module.train() recursively changes descendants. Restore in the
-        # named_modules preorder so each child can then recover a distinct
-        # train/eval flag if the model used mixed modes.
-        for name, _ in named_modules():
-            modules[name].train(snapshot.module_modes[name])
+        # Assign the captured flags directly. Module.train() recurses through
+        # every parent edge, while named_modules() lists a shared module once.
+        # Restoring a later aliased parent with train() would overwrite the
+        # shared child's saved mode. Direct assignment does not replay custom
+        # Module.train() side effects; the snapshot stores only the boolean.
+        for name, module in modules.items():
+            module.training = snapshot.module_modes[name]
 
     def _restore(self, policy_id: str) -> None:
         if policy_id not in self._states:
