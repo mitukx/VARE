@@ -1,0 +1,21 @@
+Host: Python 3.12.12, pytest 8.4.2. The image provides /usr/bin/python3 and does not provide a python executable.
+
+Command, matching the CI test job aside from the math500 grader files:
+
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src python3 -m pytest -q \
+  --ignore=tests/test_math500_grader_v1.py \
+  --ignore=tests/test_math500_grader_v2.py
+
+Without python on PATH: 8 failed, all FileNotFoundError for the executable name python.
+Failed tests:
+  tests/test_environment_campaign.py::test_campaign_retains_hash_linked_raw_records
+  tests/test_environment_campaign.py::test_campaign_normalizes_relative_run_root
+  tests/test_environment_campaign.py::test_command_agent_resolves_existing_relative_arguments
+  tests/test_environment_catalog.py::test_catalog_rollout_and_dynamic_verifier
+  tests/test_environment_catalog.py::test_verifier_rejects_attempt_task_id_override
+  tests/test_environments.py::test_task_spec_roundtrip_and_baseline_fails
+  tests/test_environments.py::test_oracle_patch_passes_and_has_diff
+  tests/test_historical_task_seed.py::test_historical_external_evaluator_distinguishes_contract
+
+With PATH prefixed by a directory whose python name points at python3: exit 0, 297 passed, 10 skipped.
+The math500 grader files were not run. Their dependency set is requirements/math500-grader-test.lock.txt.

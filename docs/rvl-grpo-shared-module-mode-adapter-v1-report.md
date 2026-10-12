@@ -23,6 +23,8 @@ Before the assignment change, `test_rvl_grpo_rollback_preserves_shared_child_mod
 
 The adapter now writes each captured boolean onto `module.training` after the trainer state restore. The same two tests then passed. The focused RVL adapter files passed 23 tests. The post-change transcript is [`after-fix.txt`](../results/rvl-grpo-shared-module-mode-adapter-v1/after-fix.txt).
 
+The CI-equivalent suite, excluding the two math500 grader files, was then run on Python 3.12.12. This image has `python3` and no `python` executable. Without a `python` entry on `PATH`, eight environment tests failed with `FileNotFoundError: python`. With `python` linked to `python3`, the same command finished with 297 passed and 10 skipped. That link was local to the process and is not part of the change. The separate math500 grader job was not run. The suite note is [`full-suite.txt`](../results/rvl-grpo-shared-module-mode-adapter-v1/full-suite.txt).
+
 ```bash
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src python3 -m pytest -q \
   tests/test_rvl_grpo_hooks.py::test_rvl_grpo_rollback_preserves_shared_child_module_mode \
