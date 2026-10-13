@@ -1,0 +1,26 @@
+{
+  "analysis_id": "format-vs-correctness-seeded-summary-v3",
+  "base_run_seed_role": "decoding block only, not independent retraining",
+  "bootstrap_resampling_unit": "task; conditional on the fixed fitted runs and observed generations",
+  "curve_ks": [
+    1,
+    4
+  ],
+  "legacy_mcnemar": "descriptive any-success among 20 pooled outputs, not primary pass@1 inference",
+  "legacy_module_sha256": "fca8d5174747c1f3c1a8207d179dde83e9ee7b84ccb7767ddd5a33ae2fb96c15",
+  "legacy_pooled_curves": "retained as a different model-pool estimand",
+  "primary_decision": "preserve the v2 pass@1 task-bootstrap and decision exactly",
+  "promotion": false,
+  "run_seeds": [
+    20261016,
+    20261017,
+    20261018,
+    20261019,
+    20261020
+  ],
+  "sample_count_per_task_per_run": 4,
+  "secondary_pass_at_k": "equal mean over fitted runs of equal task means; k draws from one fitted model",
+  "seed_variation": "descriptive sample SD of per-run primary contrasts; includes evaluation sampling noise",
+  "training_protocol_id": "format-vs-correctness-comparison-v2",
+  "training_protocol_sha256": "8214a9c784035f47b20d9e44fc6bbbd3cef45f821d86d6eb2f69936cc25eb6b4"
+}

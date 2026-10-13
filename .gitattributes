@@ -1,2 +1,3 @@
 # Preserve raw launcher output byte-for-byte; logs are evidence artifacts, not source diffs.
 *.log -diff
+results/seeded-summary-v3/**/*pytest.xml -diff

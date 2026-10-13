@@ -48,6 +48,9 @@ from vare.format_vs_correctness_v2 import (  # noqa: E402
     validate_protocol,
 )
 from vare.heldout_exact_integer import append_jsonl, read_jsonl  # noqa: E402
+from vare.format_vs_correctness_seeded_summary_v3 import (  # noqa: E402
+    ANALYSIS_ID, ANALYSIS_SHA256, bind_analysis, summarize_seeded_comparison, validate_analysis,
+)
 
 PROTOCOL_PATH = ROOT / "protocols/format_vs_correctness_comparison_v2.json"
 PACK_PATH = ROOT / "benchmarks/heldout/exact_integer_v1/tasks.jsonl"
@@ -120,9 +123,12 @@ def _prompt_text(tokenizer: Any, prompt: str) -> str:
     )
 
 
-def _index(rows: list[dict[str, Any]], backend: str, model_id: str) -> dict[tuple[Any, ...], dict[str, Any]]:
+def _index(rows: list[dict[str, Any]], backend: str, model_id: str,
+           *, analysis_sha: str | None = ANALYSIS_SHA256) -> dict[tuple[Any, ...], dict[str, Any]]:
     found: dict[tuple[Any, ...], dict[str, Any]] = {}
     for row in rows:
+        if analysis_sha is not None and row.get("analysis_sha256") != analysis_sha:
+            raise SystemExit("progress has no matching prospective analysis pin; use retrospective analysis")
         if row.get("protocol_sha256") != PROTOCOL_SHA256:
             raise SystemExit("progress file was written for a different protocol hash")
         if row.get("backend") != backend or row.get("model_id") != model_id:
@@ -483,6 +489,7 @@ def _train_row(
     model_id: str,
 ) -> dict[str, Any]:
     return {
+        "analysis_sha256": ANALYSIS_SHA256,
         "advantages": advantages,
         "arm": arm,
         "backend": backend,
@@ -507,6 +514,7 @@ def _eval_row(
     model_id: str,
 ) -> dict[str, Any]:
     return {
+        "analysis_sha256": ANALYSIS_SHA256,
         "arm": unit["arm"],
         "backend": backend,
         "checkpoint_step": unit["checkpoint_step"],
@@ -548,6 +556,7 @@ def execute(backend: str, output: Path) -> int:
     examples = {int(row["seed"]): row for row in comparison_train_examples()}
     model_id = str(protocol["models"][backend]["repo_id"])
     output.mkdir(parents=True, exist_ok=True)
+    bind_analysis(output)
     environment_path = output / "environment.json"
     environment = json.dumps(_environment(backend), indent=2, sort_keys=True) + "\n"
     if environment_path.exists() and environment_path.read_text(encoding="utf-8") != environment:
@@ -589,6 +598,11 @@ def execute(backend: str, output: Path) -> int:
     summary = summarize_comparison(confirm, pack, rows)
     text = json.dumps(summary, indent=2, sort_keys=True) + "\n"
     (output / "summary.json").write_text(text, encoding="utf-8")
+    seeded = summarize_seeded_comparison(confirm, pack, rows, prospective=True)
+    seeded["analysis_file_pin_verified"] = True
+    seeded["progress_sha256"] = _sha(progress)
+    (output / "summary.seeded-v3.json").write_text(
+        json.dumps(seeded, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps({"decision": summary["decision"], "protocol_id": summary["protocol_id"]}, sort_keys=True))
     return 0
 
@@ -599,6 +613,7 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
+    validate_analysis()
     protocol = _protocol()
     confirm = confirm_eval_tasks()
     pack = pack_eval_tasks(PACK_PATH.read_text(encoding="utf-8"))
@@ -608,6 +623,8 @@ def main() -> int:
         print(
             json.dumps(
                 {
+                    "analysis_id": ANALYSIS_ID,
+                    "analysis_sha256": ANALYSIS_SHA256,
                     "eval_units": len(eval_units),
                     "protocol_id": protocol["protocol_id"],
                     "protocol_sha256": PROTOCOL_SHA256,
