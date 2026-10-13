@@ -70,9 +70,7 @@ def evaluate_cpu_fixture(
     if tasks_sha != signer.evaluation_set_sha256:
         raise ValueError("evaluation set differs from operator-pinned content")
 
-    checkpoint_raw, checkpoint_sha = store.read_verified(policy_id)
-    if len(checkpoint_raw) > 100_000:
-        raise ValueError("CPU fixture checkpoint too large")
+    checkpoint_raw, checkpoint_sha = store.read_verified(policy_id, max_read_bytes=100_000)
     model = _strict_json(checkpoint_raw)
     if type(model) is not dict or set(model) != {"schema_version", "weight", "bias"}:
         raise ValueError("invalid CPU fixture checkpoint")
@@ -126,6 +124,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--checkpoint-store", required=True)
     parser.add_argument("--policy-id", required=True)
     parser.add_argument("--heldout-set", required=True)
+    parser.add_argument("--heldout-sha256", required=True)
     parser.add_argument("--key-file", required=True)
     parser.add_argument("--protocol-sha256", required=True)
     parser.add_argument("--run-id", required=True)
@@ -135,14 +134,15 @@ def main(argv: list[str] | None = None) -> int:
     if key_file.is_symlink() or key_file.stat().st_size != 32:
         raise ValueError("signing key file must be a regular 32-byte trusted file")
     key = key_file.read_bytes()
-    if re.fullmatch(r"[0-9a-f]{64}", args.protocol_sha256) is None:
-        raise ValueError("invalid protocol SHA-256")
+    if (re.fullmatch(r"[0-9a-f]{64}", args.protocol_sha256) is None
+            or re.fullmatch(r"[0-9a-f]{64}", args.heldout_sha256) is None):
+        raise ValueError("invalid pinned SHA-256")
     signer = EvidenceTrustRoot(
         key=key,
         protocol_sha256=args.protocol_sha256,
         evaluator_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         run_id=args.run_id,
-        evaluation_set_sha256=hashlib.sha256(Path(args.heldout_set).read_bytes()).hexdigest(),
+        evaluation_set_sha256=args.heldout_sha256,
         promotion_nonce=args.promotion_nonce,
         strict_checkpoint_binding=True,
     )
