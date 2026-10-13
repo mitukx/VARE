@@ -8,7 +8,7 @@ Entries below preserve study decisions and outcomes; they are a history, not a l
 
 ## Held-out exact-integer base gate v2
 
-**Status: protocol frozen; no model output.** v2 reuses the v1 pack and the v1 final-line parser. The model pin is Qwen2.5-3B-Instruct (`mlx-community/Qwen2.5-3B-Instruct-4bit` revision `4f83f8f146fdf28b512a06562b671d7af4fab457` on Apple Silicon; `Qwen/Qwen2.5-3B-Instruct` revision `aa8e72537993ba99e69dfaafa59ed015b17504d1` on CUDA). The update-comparison entry point exits 2. See [the v2 note](heldout-exact-integer-base-gate-v2.md). This entry does not report a v2 pass rate.
+**Status: mlx base gate recorded, `nondegenerate_base_signal`.** At code revision `89f671c00e7ed84fda1fc873e8814e0ff17bef2c`, `mlx-community/Qwen2.5-3B-Instruct-4bit` scored 29/64 (0.453125; Wilson 95% [0.3372944778061167, 0.5742640277994588]) on the unchanged v1 pack. Final-line matches were 250/256 and graded-correct samples were 109/256. Do not retune or rerun v2. The result authorizes only a separate one-update save/reload resource smoke, not a policy-update comparison. Raw files: [v2 note](heldout-exact-integer-base-gate-v2.md) and `results/heldout-exact-integer-base-gate-v2/m1-mlx-89f671c/`. The CUDA pin has no retained run.
 
 ## VARE GRPO adapter shared-module mode rollback
 
