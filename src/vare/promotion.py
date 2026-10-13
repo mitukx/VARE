@@ -137,6 +137,27 @@ class PromotionGate:
                 paired_lcb=None,
                 paired_n=0,
             )
+        # Two reports for the same policy are repeated measurements, not
+        # evidence of a distinct candidate update. Reject noisy false gains.
+        if (
+            not isinstance(incumbent.policy_id, str)
+            or not incumbent.policy_id.strip()
+            or not isinstance(candidate.policy_id, str)
+            or not candidate.policy_id.strip()
+        ):
+            return PromotionDecision(
+                accepted=False,
+                reasons=("invalid_policy_identity",),
+                primary_gain=0.0,
+                worst_slice_regression=0.0,
+            )
+        if incumbent.policy_id == candidate.policy_id:
+            return PromotionDecision(
+                accepted=False,
+                reasons=("no_distinct_candidate",),
+                primary_gain=0.0,
+                worst_slice_regression=0.0,
+            )
         reasons: list[str] = []
         gain = candidate.primary - incumbent.primary
         if incumbent.n < self.config.min_eval_examples or candidate.n < self.config.min_eval_examples:
