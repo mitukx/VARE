@@ -1,0 +1,18 @@
+{
+  "schema": "vare.correctness-protocol.v1",
+  "baseline_revision": "f4b8d11177f2fa0d75eb1ff980c5b2436561b4d7",
+  "hypothesis": "Promotion success requires candidate identity acknowledgment from the runtime, and an interrupted or unverified publication must fence the same loop before further hook access even without a durable journal.",
+  "test": "tests/test_promotion_publication_recovery.py",
+  "fault_cases": {
+    "unjournaled_hook_fault": ["before-error", "after-error", "before-cancel", "after-cancel"],
+    "unacknowledged_hook_success": ["noop", "wrong-policy"],
+    "durable_completion_fault": ["checkpoint-mismatch", "commit-before", "commit-after"],
+    "real_caller_cancellation": 1
+  },
+  "positive_controls": ["valid publication without journal", "valid publication with real SQLite journal and signed checkpoint evidence"],
+  "primary_properties": ["no false promotion success", "no terminal success events after publication failure", "no hook access or rollout step after failure", "original cancellation propagated for unjournaled caller cancellation", "prepared or committed durable evidence retained for independent reconciliation"],
+  "acceptance": "Pinned baseline has 10 semantic failures and 2 positive-control passes; candidate passes all 12 with no setup errors or skips. Existing discard and checkpoint-bound promotion checks remain passing.",
+  "budget": "CPU fixtures and real local SQLite only; no model downloads, accelerator, paid API, or confirmation tasks; 30-second comparison subprocess limit.",
+  "stopping_rule": "Retain the first baseline and matched candidate comparison. Preserve any negative result; do not modify observed outcome-bearing criteria.",
+  "limits": "One loop in one process with trusted hooks; identity acknowledgment is not checkpoint authentication. Durable checkpoint binding remains opt-in. No multi-host atomicity, detached-worker termination, hard cancellation deadline, or model-quality improvement is claimed."
+}

@@ -21,6 +21,10 @@ class LoopHooks(Protocol):
     cleanup against accepted cancellation. A hook suppressing cancellation to
     resume ordinary work must also clear its task's cancellation request state;
     otherwise the engine treats it as already unwinding and waits for it.
+
+    After promote() returns normally, active_policy() must acknowledge the
+    installed candidate identity. A publication exception or acknowledgment
+    mismatch requires external recovery, not automatic candidate discard.
     """
 
     def active_policy(self) -> tuple[str, int]: ...

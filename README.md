@@ -25,6 +25,7 @@ VARE is a CPU-first control plane for post-training signals, policy updates, and
 
 The current reviewable work also includes:
 
+- Runtime acknowledgment before promotion success, and a same-loop recovery fence after publication interruption, checkpoint mismatch, or lost journal acknowledgment. The frozen CPU comparison is baseline 10 fault failures plus 2 successful controls, versus 12 candidate passes. See [publication evidence and limits](docs/promotion-publication-recovery-v1.md).
 - Cancellation-safe candidate discard across rejection and pre-promotion errors, with later rounds blocked after failed restoration. The frozen seven-case CPU comparison fails on post-integration main and passes with the correction. See [recovery evidence and limits](docs/candidate-discard-recovery-v1.md).
 - Owned evaluation and inference transactions integrated with authenticated reward admission and operator revocation. The frozen four-case revocation/cancellation comparison fails on pinned main and passes after the correction. See [integration evidence and limits](docs/evaluation-transaction-integration-v1.md).
 - An RVL inference-state and cancellation correction: pinned main and the existing alias-only correction leave CPU RNG/modes changed and allow a cancelled generation thread to overlap the next rollout. The corrected CPU tests and actual tiny GPT-2/HF path preserve state and serialize workers. See the [three-arm report and reproduction](docs/rvl-inference-transaction-v1-report.md). This is correctness evidence, not model improvement.
