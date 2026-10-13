@@ -23,6 +23,15 @@ jobs:
         with:
           name: seeded-summary-replay
           path: ${{ runner.temp }}/seeded-summary-replay
+      - name: Audit the retained comparison record without model execution
+        run: >-
+          python scripts/reproduce_format_comparison_record_v1.py
+          --output "${RUNNER_TEMP}/format-record-replay"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: format-record-replay
+          path: ${{ runner.temp }}/format-record-replay
   test:
     runs-on: ubuntu-latest
     steps:

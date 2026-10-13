@@ -1,0 +1,28 @@
+{
+  "source_progress_sha256": "10860ac27af371a7374bcb7ca38c6bd5171f6d467aef43c3a7c1e95468c73694",
+  "uncompressed_bytes": 7382482,
+  "compressed_bytes": 342849,
+  "analysis_revision_frozen_before_this_inspection": "5e50d7ab1ec306f9b393631a8f511c47902a9c8c",
+  "original_execution_revision": null,
+  "original_execution_operator": null,
+  "original_runtime_details": "only backend=mlx, mlx_lm=0.32.0, python=3.12.12 retained",
+  "new_model_training": false,
+  "new_model_generation": false,
+  "source_run_was_modified": false,
+  "analysis_kind": "retrospective audit of pre-existing local records",
+  "checkpoint_files": 960,
+  "checkpoint_total_bytes": 197144540,
+  "checkpoint_distribution": "five unique format_reward_rl adapters reconstruct all 80 adapter files; all 80 format optimizer states archived; other-arm checkpoints remain local",
+  "files_sha256": {
+    "checkpoint-manifest.json": "a35fbfd9f8dd038122c9aca57bc5c7671f0f5c681288f559543b18178d4b69ce",
+    "format-zero-adapters/20261016.safetensors": "8c87cfc4962cce0b18c43a2135b37f24b830aaf8a5d00cec3d34b3cb92a343f8",
+    "format-zero-adapters/20261017.safetensors": "486f9aeaa7d1d4f9d4f9666edf3607a648538ca69812f7734f7ef2596fb2afd5",
+    "format-zero-adapters/20261018.safetensors": "58d6aa44385831eaa3675c45ef6b2bf98ff44a8e89b5c6931fced2d15b200da6",
+    "format-zero-adapters/20261019.safetensors": "54572e13b3329a2ea37636640141cec7c72ffb4ba6aae7a8890b79454e7cdfeb",
+    "format-zero-adapters/20261020.safetensors": "48b6def2c4df620af9b433b754506aa1671afc3a0d8840cc11791d8739c5adba",
+    "original-environment.json": "44359b7dc3db5b7584cd4b25df3087750471aeb0585c094cc9ab093310d2a64e",
+    "original-summary.json": "22e14bad4f10c08bdc2de9a537e0c30e5484d811ccf615269bbb09c44b82b6de",
+    "progress.jsonl.gz": "9c11bace8613e4af61f9439e17cd780742f71c2596b9f2f2a2b29c3a54c8d0f6",
+    "format-zero-optimizers.tar.gz": "8828a3f3429f0cb5e0ee21fc17bf03d13711904605753dc1a8d5ab9ff587d62c"
+  }
+}
