@@ -85,6 +85,7 @@ Frozen study definitions are the JSON files in [`protocols/`](protocols/). A `*.
 | `contributions/` | Upstream patch artifacts and status |
 | `minigrpo/` | Small GRPO trainer for the integer seed-split train rows, scored on dev. CPU tests only; no retained model run. See [minigrpo](docs/minigrpo.md). |
 | `selfimprove/` | Proposes recomputable integer problems, trains with minigrpo, and rolls a candidate back through `PromotionGate`. A format-only reward fixture is rejected in tests. No retained model round. See [selfimprove](docs/selfimprove.md). |
+| `notebooks/minigrpo_selfimprove_t4.ipynb` | GPU notebook for the two scripts. Drive holds the outputs so a rerun continues. |
 | `scripts/`, `reproducers/` | Reproduction, audit, and diagnostic commands |
 
 Adapter checkpoints already committed under `results/` stay in git as retained raw records. [`protocols/tracked_large_blob_allowlist_v1.txt`](protocols/tracked_large_blob_allowlist_v1.txt) freezes those blobs at or above 1 MiB; `scripts/check_tracked_blob_budget.py` rejects a tree that adds, replaces, or drops one. New files at or above that size, and benchmark content with uncertain redistribution terms, stay outside the repository. Record a new external file's SHA-256 in the study manifest. Published history is not rewritten. See [artifact retention](docs/artifact-retention.md). Read each report for its exact source revisions, environment, raw artifacts, and claim limits. See [LICENSE](LICENSE) for the repository license.
