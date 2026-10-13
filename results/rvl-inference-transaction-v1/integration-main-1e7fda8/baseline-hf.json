@@ -1,0 +1,47 @@
+{
+  "standard": {
+    "evaluate_success": {
+      "error": null,
+      "state": {
+        "model_preserved": true,
+        "optimizer_preserved": true,
+        "cpu_rng_preserved": false,
+        "module_modes_preserved": false
+      },
+      "loaded_id": "policy-0"
+    },
+    "evaluate_score_failure": {
+      "error": "score fixture failure after real generation",
+      "state": {
+        "model_preserved": true,
+        "optimizer_preserved": true,
+        "cpu_rng_preserved": false,
+        "module_modes_preserved": false
+      },
+      "loaded_id": "policy-0"
+    },
+    "rollout_success": {
+      "error": null,
+      "state": {
+        "model_preserved": true,
+        "optimizer_preserved": true,
+        "cpu_rng_preserved": false,
+        "module_modes_preserved": false
+      },
+      "loaded_id": "policy-0"
+    }
+  },
+  "cancellation": {
+    "cancelled_call_pending_until_worker_finishes": false,
+    "lock_held_after_cancel": false,
+    "no_next_generation_overlap": false,
+    "first_worker_live_at_observation": true,
+    "cancellation_propagated": true,
+    "final_state": {
+      "model_preserved": true,
+      "optimizer_preserved": true,
+      "cpu_rng_preserved": false,
+      "module_modes_preserved": false
+    }
+  }
+}

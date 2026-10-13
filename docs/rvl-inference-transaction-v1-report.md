@@ -1,5 +1,13 @@
 # RVL inference state and cancellation isolation
 
+## Integration update
+
+During this work, separate repository activity merged #5–#8 into main. This branch then incorporated main `1e7fda8265cdc1617525d0c740e90fcd41e92b81`; the pull request now targets main. No main merge was performed by this contribution. Implementation after integration is `39f3debe8f09197030f2b66e0e83605dca82b666`.
+
+The [updated replay](../results/rvl-inference-transaction-v1/integration-main-1e7fda8/) adds that main as a fourth control: **12/14 failures on initial main, 10/14 on the alias-only PR, 10/14 on integration main, 0/14 after this correction**, with no setup errors or skips. Actual HF probes agree across both controls. The updated full local suite passes **349 tests** in 61.50 seconds; Ruff and package-wide mypy pass. The four-arm reproduction takes 27.59 seconds on the recorded host. Older three-arm evidence below is retained unchanged. Source/API type changes from main and the new control motivated this integration check, rather than another identical experiment.
+
+The first integrated full-suite attempt had three environment failures (missing sparse fixtures and a subprocess resolving macOS's Python 3.9). Materializing the referenced fixtures and putting the Python 3.12 environment first on PATH resolves them without changing application code. The failed and successful logs are both retained in the updated bundle. Activate the documented virtual environment when reproducing the full suite.
+
 ## Result and ownership
 
 On the pinned VARE main, active-policy inference changes mixed module flags and CPU RNG without changing policy identity. Cancelling evaluation can also release the adapter lock while HF generation is still running in a thread. A following rollout then enters the same model concurrently. The correction preserves ephemeral inference state and drains generation before releasing the lock.
