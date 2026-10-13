@@ -69,3 +69,27 @@ def test_command_agent_resolves_existing_relative_arguments(monkeypatch, tmp_pat
     agent = CommandWorkspaceAgent(("python", "agent.py"))
     output = asyncio.run(agent.run(prompt="x", workspace=workspace, step=0))
     assert '"returncode": 0' in output
+
+
+def test_command_agent_does_not_inherit_controller_secrets(monkeypatch, tmp_path):
+    from vare.environments import CommandWorkspaceAgent
+
+    monkeypatch.setenv("VARE_CONTROL_SECRET", "must-not-leak")
+    script = tmp_path / "check_env.py"
+    script.write_text(
+        "import os; print(os.environ.get('VARE_CONTROL_SECRET', 'NOT_INHERITED'))",
+        encoding="utf-8",
+    )
+    workspace = tmp_path / "workspace"
+    workspace.mkdir()
+    agent = CommandWorkspaceAgent((sys.executable, str(script)), launch_root=tmp_path)
+    record = json.loads(asyncio.run(agent.run(prompt="x", workspace=workspace, step=0)))
+    assert record["returncode"] == 0
+    assert record["stdout"].strip() == "NOT_INHERITED"
+    # Operators can explicitly pass extra variables, but only by opting in.
+    allowed = CommandWorkspaceAgent(
+        (sys.executable, str(script)), launch_root=tmp_path,
+        environment_allowlist=("VARE_CONTROL_SECRET",),
+    )
+    record = json.loads(asyncio.run(allowed.run(prompt="x", workspace=workspace, step=0)))
+    assert record["stdout"].strip() == "must-not-leak"
