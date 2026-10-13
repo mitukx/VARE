@@ -1,18 +1,19 @@
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 
 from .attestation import EvidenceTrustRoot
 from .safety import SafetyInterlock, SafetyInterlockDenied
 from .config import EngineConfig
 from .curriculum import AdaptiveCurriculum
 from .failure import FailureMiner
-from .evidence import HashChainLedger
+from .evidence import HashChainLedger, sha256_json
 from .interfaces import LoopHooks
 from .lag import DistributionShiftMonitor, LagController
 from .lifecycle import FailureDrivenTaskGenerator, VerifierRefreshController
 from .promotion import PromotionGate
+from .promotion_journal import PromotionJournal, PromotionRecoveryRequired
 from .replay import PrioritizedReplay
 from .telemetry import EventLog
 from .types import Attempt, Experience, PromotionDecision, RoundResult, Task, snapshot_verification
@@ -39,6 +40,8 @@ class CapabilityLoop:
         decision_ledger: HashChainLedger | None = None,
         evidence_trust_root: EvidenceTrustRoot | None = None,
         safety_interlock: SafetyInterlock | None = None,
+        promotion_journal: PromotionJournal | None = None,
+        checkpoint_hasher: Callable[[str], str] | None = None,
         seed: int = 0,
     ) -> None:
         self.hooks = hooks
@@ -55,6 +58,17 @@ class CapabilityLoop:
         self.verifier_refresh = verifier_refresh
         self.decision_ledger = decision_ledger
         self.safety_interlock = safety_interlock
+        self.promotion_journal = promotion_journal
+        self.checkpoint_hasher = checkpoint_hasher
+        self.evidence_trust_root = evidence_trust_root
+        if promotion_journal is not None and (
+            checkpoint_hasher is None
+            or evidence_trust_root is None
+            or not evidence_trust_root.strict_checkpoint_binding
+        ):
+            raise ValueError(
+                "durable promotion requires strict attestation and a trusted checkpoint hasher"
+            )
         self._generated_tasks: list[Task] = []
         self.step = 0
         self._run_serial = 0
@@ -114,6 +128,12 @@ class CapabilityLoop:
         if not source_tasks:
             raise ValueError("run_round requires tasks")
         incumbent_id, incumbent_version = self.hooks.active_policy()
+        if self.promotion_journal is not None:
+            assert self.checkpoint_hasher is not None
+            self.promotion_journal.assert_clean(
+                policy_id=incumbent_id,
+                checkpoint_sha256=self.checkpoint_hasher(incumbent_id),
+            )
         if self.safety_interlock is not None:
             self.safety_interlock.require("rollout", incumbent_id=incumbent_id)
         self.shift.fit_reference(t.family for t in source_tasks)
@@ -331,6 +351,25 @@ class CapabilityLoop:
                 )
             else:
                 decision = self.promotion.decide(incumbent_eval, candidate_eval)
+            if decision.accepted and candidate_id != incumbent_id and self.promotion_journal is not None:
+                assert self.evidence_trust_root is not None
+                assert self.checkpoint_hasher is not None
+                expected_old = self.evidence_trust_root.checkpoint_digest(incumbent_eval)
+                expected_new = self.evidence_trust_root.checkpoint_digest(candidate_eval)
+                if (
+                    expected_old is None or expected_new is None
+                    or expected_old != self.checkpoint_hasher(incumbent_id)
+                    or expected_new != self.checkpoint_hasher(candidate_id)
+                ):
+                    decision = PromotionDecision(
+                        accepted=False,
+                        reasons=("checkpoint_attestation_mismatch",),
+                        primary_gain=decision.primary_gain,
+                        worst_slice_regression=decision.worst_slice_regression,
+                        paired_gain=decision.paired_gain,
+                        paired_lcb=decision.paired_lcb,
+                        paired_n=decision.paired_n,
+                    )
             if candidate_id != incumbent_id and decision.accepted and self.safety_interlock is not None:
                 try:
                     self.safety_interlock.require(
@@ -361,6 +400,36 @@ class CapabilityLoop:
                     ) from discard_exc
             raise
         if candidate_id != incumbent_id and decision.accepted:
+            transaction_id: str | None = None
+            if self.promotion_journal is not None:
+                assert self.checkpoint_hasher is not None
+                assert self.evidence_trust_root is not None
+                old_digest = self.evidence_trust_root.checkpoint_digest(incumbent_eval)
+                new_digest = self.evidence_trust_root.checkpoint_digest(candidate_eval)
+                assert old_digest is not None and new_digest is not None
+                transaction_id = self.evidence_trust_root.promotion_nonce
+                assert transaction_id is not None
+                try:
+                    # The check and durable prepare precede any live policy
+                    # mutation. A nonce can be consumed only once.
+                    if (self.checkpoint_hasher(incumbent_id) != old_digest
+                            or self.checkpoint_hasher(candidate_id) != new_digest):
+                        raise PromotionRecoveryRequired("checkpoint changed before prepare")
+                    self.promotion_journal.prepare(
+                        tx_id=transaction_id,
+                        incumbent_id=incumbent_id,
+                        incumbent_sha256=old_digest,
+                        candidate_id=candidate_id,
+                        candidate_sha256=new_digest,
+                        evaluation_sha256=sha256_json({
+                            "incumbent": incumbent_eval.metadata,
+                            "candidate": candidate_eval.metadata,
+                        }),
+                    )
+                except BaseException:
+                    await self.hooks.discard(candidate_id)
+                    raise
+
             if self.decision_ledger is not None:
                 try:
                     self.decision_ledger.append(
@@ -369,10 +438,43 @@ class CapabilityLoop:
                          "candidate_id": candidate_id, "primary_gain": decision.primary_gain},
                     )
                 except BaseException:
-                    # A failed audit precommit must never authorize mutation.
+                    # Promotion has not started. Restore the champion and, if
+                    # independently verified, mark this intent aborted.
                     await self.hooks.discard(candidate_id)
+                    if transaction_id is not None:
+                        assert self.promotion_journal is not None
+                        assert self.checkpoint_hasher is not None
+                        self.promotion_journal.reconcile(
+                            tx_id=transaction_id,
+                            observed_policy_id=self.hooks.active_policy()[0],
+                            observed_checkpoint_sha256=self.checkpoint_hasher(incumbent_id),
+                        )
                     raise
-            await self.hooks.promote(candidate_id)
+
+            # If the external hook fails halfway, leave the durable transaction
+            # PREPARED. It is unsafe to assume that discarding the candidate
+            # would restore a partially published runtime.
+            try:
+                await self.hooks.promote(candidate_id)
+            except BaseException as exc:
+                if transaction_id is not None:
+                    raise PromotionRecoveryRequired(
+                        "promotion hook failed; reconcile the durable checkpoint"
+                    ) from exc
+                raise
+            if transaction_id is not None:
+                assert self.promotion_journal is not None
+                assert self.checkpoint_hasher is not None
+                assert self.evidence_trust_root is not None
+                expected_new = self.evidence_trust_root.checkpoint_digest(candidate_eval)
+                if (
+                    self.hooks.active_policy()[0] != candidate_id
+                    or self.checkpoint_hasher(candidate_id) != expected_new
+                ):
+                    raise PromotionRecoveryRequired(
+                        "post-promotion checkpoint mismatch; manual recovery required"
+                    )
+                self.promotion_journal.commit(transaction_id)
             promoted_id = candidate_id
             self.events.emit("candidate_promoted", candidate_id=candidate_id, gain=decision.primary_gain)
         else:
