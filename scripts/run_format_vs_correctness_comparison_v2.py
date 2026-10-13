@@ -49,7 +49,8 @@ from vare.format_vs_correctness_v2 import (  # noqa: E402
 )
 from vare.heldout_exact_integer import append_jsonl, read_jsonl  # noqa: E402
 from vare.format_vs_correctness_seeded_summary_v3 import (  # noqa: E402
-    ANALYSIS_ID, ANALYSIS_SHA256, bind_analysis, summarize_seeded_comparison, validate_analysis,
+    ANALYSIS_ID, ANALYSIS_SHA256, bind_analysis, read_progress_snapshot,
+    summarize_seeded_comparison, validate_analysis,
 )
 
 PROTOCOL_PATH = ROOT / "protocols/format_vs_correctness_comparison_v2.json"
@@ -595,12 +596,15 @@ def execute(backend: str, output: Path) -> int:
             f"eval {unit['arm']} seed {unit['run_seed']} step {unit['checkpoint_step']} {unit['task_id']} #{unit['sample_index']}",
             flush=True,
         )
+    # Bind both reports to the same captured progress bytes and digest.
+    rows, progress_sha = read_progress_snapshot(progress)
+    _index(rows, backend, model_id)
     summary = summarize_comparison(confirm, pack, rows)
     text = json.dumps(summary, indent=2, sort_keys=True) + "\n"
     (output / "summary.json").write_text(text, encoding="utf-8")
     seeded = summarize_seeded_comparison(confirm, pack, rows, prospective=True)
     seeded["analysis_file_pin_verified"] = True
-    seeded["progress_sha256"] = _sha(progress)
+    seeded["progress_sha256"] = progress_sha
     (output / "summary.seeded-v3.json").write_text(
         json.dumps(seeded, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps({"decision": summary["decision"], "protocol_id": summary["protocol_id"]}, sort_keys=True))

@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 from pathlib import Path
 import sys
@@ -13,17 +12,16 @@ sys.path[:0] = [str(ROOT / "src"), str(ROOT)]
 from scripts.run_format_vs_correctness_comparison_v2 import _index, _protocol  # noqa: E402
 from vare.format_vs_correctness_v2 import confirm_eval_tasks, pack_eval_tasks  # noqa: E402
 from vare.format_vs_correctness_seeded_summary_v3 import (  # noqa: E402
-    ANALYSIS_SHA256, canonical_analysis_bytes, summarize_seeded_comparison, validate_analysis,
+    ANALYSIS_SHA256, canonical_analysis_bytes, read_progress_snapshot,
+    summarize_seeded_comparison, validate_analysis,
 )
-from vare.heldout_exact_integer import read_jsonl  # noqa: E402
 
 
 def analyze(run: Path, output: Path, *, retrospective: bool) -> None:
     validate_analysis()
     protocol = _protocol()
     progress = run / "progress.jsonl"
-    blob = progress.read_bytes()
-    rows = read_jsonl(progress)
+    rows, progress_sha = read_progress_snapshot(progress)
     if not rows:
         raise ValueError("completed progress is required")
     first = rows[0]
@@ -40,7 +38,7 @@ def analyze(run: Path, output: Path, *, retrospective: bool) -> None:
     pack = pack_eval_tasks((ROOT / "benchmarks/heldout/exact_integer_v1/tasks.jsonl").read_text())
     result = summarize_seeded_comparison(confirm, pack, rows, prospective=not retrospective)
     result["analysis_file_pin_verified"] = not retrospective
-    result["progress_sha256"] = hashlib.sha256(blob).hexdigest()
+    result["progress_sha256"] = progress_sha
     output.parent.mkdir(parents=True, exist_ok=True)
     with output.open("x", encoding="utf-8") as handle:
         handle.write(json.dumps(result, indent=2, sort_keys=True) + "\n")

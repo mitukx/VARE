@@ -8,6 +8,7 @@ import pytest
 
 from vare import format_vs_correctness_v2 as legacy
 from scripts import summarize_format_vs_correctness_seeded_v3 as command
+from scripts import run_format_vs_correctness_comparison_v2 as driver
 from reproducers.seeded_summary_fixture_v1 import synthetic_grid
 from vare.format_vs_correctness_seeded_summary_v3 import (
     ANALYSIS_ID, ANALYSIS_PATH, ANALYSIS_SHA256, LEGACY_MODULE_SHA256,
@@ -185,3 +186,90 @@ def test_public_api_requires_a_boolean_provenance_flag(flag):
     confirm, pack, rows = synthetic_grid()
     with pytest.raises(TypeError, match="Boolean"):
         summarize_seeded_comparison(confirm, pack, rows, prospective=flag)
+
+
+@pytest.mark.parametrize("prospective", [False, True])
+def test_cli_hash_and_metrics_use_one_progress_snapshot(tmp_path, monkeypatch, prospective):
+    run = synthetic_run(tmp_path, monkeypatch, prospective=prospective)
+    progress = run / "progress.jsonl"
+    before = progress.read_bytes()
+    original_rows = [json.loads(line) for line in before.splitlines()]
+    confirm, pack, _ = synthetic_grid()
+    expected = summarize_seeded_comparison(confirm, pack, original_rows, prospective=prospective)
+    altered = copy.deepcopy(original_rows)
+    for row in altered:
+        if row["kind"] == "eval" and row["arm"] == "format_sft":
+            row["output"] = "no answer"
+    changed = "".join(json.dumps(row) + "\n" for row in altered).encode()
+    other = summarize_seeded_comparison(confirm, pack, altered, prospective=prospective)
+    assert other["paired_bootstrap"] != expected["paired_bootstrap"]
+    old_summary = run / "summary.json"
+    old_summary.write_text("legacy sentinel")
+    real_read = Path.read_bytes
+    reads = 0
+
+    def replace_after_snapshot(path):
+        nonlocal reads
+        blob = real_read(path)
+        if path == progress:
+            reads += 1
+            path.write_bytes(changed)  # Another writer replaces the file after capture.
+        return blob
+
+    monkeypatch.setattr(Path, "read_bytes", replace_after_snapshot)
+    output = run / "summary.seeded-v3.json"
+    command.analyze(run, output, retrospective=not prospective)
+    result = json.loads(output.read_text())
+    assert reads == 1
+    assert result["progress_sha256"] == hashlib.sha256(before).hexdigest()
+    assert result["paired_bootstrap"] == expected["paired_bootstrap"]
+    assert result["curves"] == expected["curves"]
+    assert real_read(progress) == changed  # The analyzer must not undo the writer's change.
+    assert old_summary.read_text() == "legacy sentinel"
+
+
+@pytest.mark.parametrize("blob", [b'{"kind":', b'[]\n', b'\xff'])
+def test_progress_snapshot_rejects_invalid_records_without_rewriting(tmp_path, blob):
+    from vare.format_vs_correctness_seeded_summary_v3 import read_progress_snapshot
+    progress = tmp_path / "progress.jsonl"
+    progress.write_bytes(blob)
+    with pytest.raises(ValueError):
+        read_progress_snapshot(progress)
+    assert progress.read_bytes() == blob
+
+
+def test_driver_reports_and_hash_share_the_captured_progress(tmp_path, monkeypatch):
+    run = synthetic_run(tmp_path, monkeypatch, prospective=True)
+    progress = run / "progress.jsonl"
+    rows = [json.loads(line) for line in progress.read_text().splitlines()]
+    confirm, pack, _ = synthetic_grid()
+    altered = copy.deepcopy(rows)
+    for row in altered:
+        if row["kind"] == "eval" and row["arm"] == "format_sft":
+            row["output"] = "no answer"
+    captured = ("\n" + "".join(json.dumps(row) + "\n" for row in altered)).encode()
+    expected = summarize_seeded_comparison(confirm, pack, altered, prospective=True)
+    assert expected["paired_bootstrap"] != summarize_seeded_comparison(
+        confirm, pack, rows, prospective=True)["paired_bootstrap"]
+
+    def synthetic_session(*_):
+        # Model construction is replaced by a writer interleaving. No models run.
+        progress.write_bytes(captured)
+        return object()
+
+    monkeypatch.setattr(driver, "_protocol", command._protocol)
+    monkeypatch.setattr(driver, "_environment", lambda _: {"synthetic": True})
+    monkeypatch.setattr(driver, "confirm_eval_tasks", lambda: confirm)
+    monkeypatch.setattr(driver, "pack_eval_tasks", lambda _: pack)
+    monkeypatch.setattr(driver, "PACK_PATH", command.ROOT / "benchmarks/heldout/exact_integer_v1/tasks.jsonl")
+    monkeypatch.setattr(driver, "comparison_train_examples", lambda: [])
+    monkeypatch.setattr(driver, "iter_train_units", lambda: [])
+    monkeypatch.setattr(driver, "iter_eval_units", lambda *_: [])
+    monkeypatch.setattr(driver, "_Mlx", synthetic_session)
+    assert driver.execute("mlx", run) == 0
+    result = json.loads((run / "summary.seeded-v3.json").read_text())
+    old = json.loads((run / "summary.json").read_text())
+    assert result["paired_bootstrap"] == expected["paired_bootstrap"] == old["paired_bootstrap"]
+    assert result["progress_sha256"] == hashlib.sha256(captured).hexdigest()
+    assert result["analysis_file_pin_verified"] is True
+    assert progress.read_bytes() == captured

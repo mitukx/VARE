@@ -66,6 +66,27 @@ def bind_analysis(output: Path) -> None:
         handle.write(expected)
 
 
+def read_progress_snapshot(path: Path) -> tuple[list[dict[str, Any]], str]:
+    """Parse and hash one captured blob, without reopening a changing file.
+
+    This binds metrics to the analyzed bytes, not to the latest on-disk version.
+    It is not a writer lock or an atomic filesystem snapshot.
+    """
+    blob = path.read_bytes()
+    rows = []
+    for line_no, line in enumerate(blob.decode("utf-8").splitlines(), 1):
+        if not line.strip():
+            continue
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"{path} line {line_no} is not valid JSON; keep completed records") from exc
+        if not isinstance(row, dict):
+            raise ValueError(f"{path} line {line_no} is not an object")
+        rows.append(row)
+    return rows, hashlib.sha256(blob).hexdigest()
+
+
 def _seeded_pass_at(
     grouped: Mapping[tuple[object, ...], Sequence[Mapping[str, object]]],
     tasks: Sequence[Mapping[str, str]],

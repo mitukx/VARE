@@ -12,8 +12,9 @@ args = parser.parse_args()
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(args.source / "src"), str(ROOT)]
 
-from vare import format_vs_correctness_v2 as legacy
-from reproducers.seeded_summary_fixture_v1 import synthetic_grid
+# Imports must follow selection of the implementation under test.
+from vare import format_vs_correctness_v2 as legacy  # noqa: E402
+from reproducers.seeded_summary_fixture_v1 import synthetic_grid  # noqa: E402
 
 confirm, pack, rows = synthetic_grid()
 if args.implementation == "legacy":
