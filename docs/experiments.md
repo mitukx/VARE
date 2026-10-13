@@ -2,6 +2,18 @@
 
 Entries below preserve study decisions and outcomes; they are a history, not a leaderboard. For the current stop point and a short review route, see the [roadmap](roadmap.md), [current evidence gaps](current-gaps.md), and [reviewer guide](reviewer-guide.md). Each report links its frozen protocol and retained run evidence where available.
 
+## Held-out exact-integer base gate v1
+
+**Status: stopped, `stop_zero`.** The Apple Silicon mlx run of SmolLM2-360M-Instruct at code revision `5d36336ad0272d59ca815646fcb2f812849be1c5` scored 0/64 (Wilson 95% [0, 0.05662405979280534]). The frozen final-line parser matched 3 of 256 samples, and those 3 were graded incorrect. Do not retune or rerun v1. Raw files and hashes: [result record](heldout-exact-integer-base-gate-v1-result.md). The task pack remains `189b5e482b0f8c2b40ff36e0e1a84827699f348c11981a0ff912ce67323fd7fc`.
+
+## Held-out exact-integer base gate v2
+
+**Status: mlx base gate recorded, `nondegenerate_base_signal`.** At code revision `89f671c00e7ed84fda1fc873e8814e0ff17bef2c`, `mlx-community/Qwen2.5-3B-Instruct-4bit` scored 29/64 (0.453125; Wilson 95% [0.3372944778061167, 0.5742640277994588]) on the unchanged v1 pack. Final-line matches were 250/256 and graded-correct samples were 109/256. Do not retune or rerun v2. The result authorizes only a separate one-update save/reload resource smoke, not a policy-update comparison. Raw files: [v2 note](heldout-exact-integer-base-gate-v2.md) and `results/heldout-exact-integer-base-gate-v2/m1-mlx-89f671c/`. The CUDA pin has no retained run.
+
+## Format versus correctness comparison v2
+
+**Status: mlx run transcribed, `interval_includes_zero`.** The operator report says the frozen grid finished with 320 train rows and 17,920 eval rows. Confirm pass@1 was base 0.2523, format SFT 0.2594, format-reward RL 0.2625, correctness-reward RL 0.2641, and random-reward RL 0.2625. The paired bootstrap of correctness minus format SFT was mean +0.0047, 95% CI [-0.0008, +0.0102], n=64. McNemar had no discordant pairs and does not decide. Format compliance was already 1.0 at base. The original `summary.json` and `progress.jsonl` are not in git. Do not rerun the protocol or add steps after this interval. See [the comparison note](format-vs-correctness-comparison-v2.md).
+
 ## VARE GRPO adapter shared-module mode rollback
 
 `RVLGRPOHooks` restored module modes by calling `Module.train()` after the trainer restore. A constructed shared-child graph, with the alias registered after the first parent, came back in the wrong mode and changed a mode-dependent stand-in forward. Direct `module.training` assignment passes that graph, the opposite registration order, and an unshared nested pair, and it does not call `train()` on restore. The trainer double in the test already assigns flags directly, so the failure is in the adapter pass. No PyTorch or model run was required. This does not show production incidence or a task-success change. See the [report](rvl-grpo-shared-module-mode-v1-report.md) and [logs](../results/rvl-grpo-shared-module-mode-v1/).

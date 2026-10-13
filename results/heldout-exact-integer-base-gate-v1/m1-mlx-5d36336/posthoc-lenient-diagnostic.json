@@ -1,0 +1,19 @@
+{
+  "conditional_accuracy": 0.0,
+  "format_compliance_rate": 0.01171875,
+  "format_compliant": 3,
+  "gate_decision_unchanged": "stop_zero",
+  "gate_result": false,
+  "label": "post-hoc diagnostic; not a base-gate result",
+  "lenient_accuracy_counting_miss_as_wrong": 0.07421875,
+  "lenient_conditional_accuracy": 0.07851239669421488,
+  "lenient_correct": 19,
+  "lenient_extracted": 242,
+  "lenient_rule": "last \\\\boxed{integer}, otherwise the last integer token",
+  "n": 256,
+  "posthoc": true,
+  "protocol_id": "heldout-exact-integer-base-gate-v1",
+  "source_samples": "results/heldout-exact-integer-base-gate-v1/m1-mlx-5d36336/samples.jsonl",
+  "strict_correct": 0,
+  "strict_rule": "last non-empty line full-matches ^####\\s+(-?\\d+)\\s*$"
+}
