@@ -1,7 +1,6 @@
 """CPU fault injection for the operator-controlled safety interlock."""
 import asyncio
 import hashlib
-from pathlib import Path
 
 import pytest
 
