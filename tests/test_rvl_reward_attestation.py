@@ -194,4 +194,5 @@ def test_signed_receipts_do_not_override_verifier_lag_or_runtime_provenance(tmp_
     )
     assert plan.family_weights == {}
     assert plan.excluded_stale_experiences == 2
-    assert "no_authenticated_reward_evidence" in plan.control.reasons
+    assert plan.control.freeze_training
+    assert "verifier_lag_exceeded" in plan.control.reasons
