@@ -8,11 +8,12 @@ VARE has **not demonstrated an independently confirmed improvement in real-model
 
 The current reviewable work is:
 
+- A VARE GRPO-adapter correction for the same shared-module restore edge. The adapter previously called `Module.train()` after the trainer restore; direct flag assignment passes a constructed CPU regression. This does not add production-incidence or model-quality evidence. See the [adapter report](docs/rvl-grpo-shared-module-mode-v1-report.md).
 - A narrow RVL rollback correction for a shared-module mode restoration edge. Its constructed CPU regression fails on the pinned baseline and passes with the patch. [RVL PR #92](https://github.com/mitukx/Recursive-Verification-Lag/pull/92) is open; production incidence and model-quality impact are unknown.
 - A calibrated, protected grader for the public urllib3 #3352 historical bug and a VARE task-identity correction. The public task is retired from confirmation use. Two one-shot local model attempts produced no applicable patch; no training was run.
 - A structured research screen that admitted no new training or GPU experiment because no candidate cleared both novelty and fresh-task feasibility gates.
 
-For exact limits, raw records, reproduction commands, and the current pull-request state, start with the [reviewer guide](docs/reviewer-guide.md). Status and links in this repository were checked on 2026-10-11; use the linked pull requests for live status.
+For exact limits, raw records, reproduction commands, and the current pull-request state, start with the [reviewer guide](docs/reviewer-guide.md). Status and links in this repository were checked on 2026-10-11; the adapter regression above was added on 2026-10-12. Use the linked pull requests for live status.
 
 ## Review path
 
@@ -28,6 +29,7 @@ VARE PR #2 was merged into `main` as [`09dfcd5`](https://github.com/mitukx/VARE/
 
 | Area | Observed result | What it does not establish |
 | --- | --- | --- |
+| VARE adapter rollback | On the previous adapter, a later shared-module alias restored the child to train mode and changed a mode-dependent stand-in forward. Direct flag assignment restores the checked flags without calling `train()`. The opposite registration order and an unshared nested pair keep their flags. | A production module graph, accelerator behavior, or a change in model quality. The stand-in forward is not Dropout. |
 | RVL rollback | On pinned RVL `27ebf7f`, the shared-child regression fails exact mode restoration and the following Dropout output. The patch restores the checked model, optimizer, CPU RNG, and next-forward behavior; 14 trainer tests and 51 related CPU tests pass. PR #92 had 7/7 checks passing at the recorded snapshot. | Constructed CPU graph only; production incidence, CUDA/distributed behavior, model-quality impact, and independent human review remain unestablished. |
 | Historical task evaluator | urllib3 #3352 pinned base fails 2/2 fail-to-pass cases and passes 3/3 controls; its public known fix passes all five. The evaluator exercises the actual request path and keeps protected assets outside the candidate workspace. | Agent-discovered fixes or general coding ability. The task and fix are public, so it is development-only. The two local model attempts yielded no applicable patch. |
 | Real-model post-training | On the frozen OpenBookQA confirmation, base exact-answer success was 45.31%, matched SFT averaged 33.33%, and GRPO scored 0/128 for each of three seeds because outputs failed the frozen parser. The earlier ARC comparison also missed its frozen gate (38.84% GRPO vs. 40.00% SFT). | A general conclusion about GRPO or language models. These pairings and confirmation sets are retired. |
