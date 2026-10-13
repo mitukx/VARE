@@ -1,0 +1,38 @@
+{
+  "artifact_status": "transcribed_operator_report",
+  "authorizes_more_steps": false,
+  "code_revision": null,
+  "confirm_pass_at_1": {
+    "base": 0.2523,
+    "correctness_reward_rl": 0.2641,
+    "format_reward_rl": 0.2625,
+    "format_sft": 0.2594,
+    "random_reward_rl": 0.2625
+  },
+  "decision": "interval_includes_zero",
+  "decision_split": "confirm",
+  "format_arms_saturated": true,
+  "format_compliance_at_base": 1.0,
+  "mcnemar_discordant_pairs": 0,
+  "note": "Copied from the operator report. This file is not summary.json and it is not progress.jsonl. Those bytes, their SHA-256 values, the process HEAD, and environment.json were not provided.",
+  "original_progress_jsonl_in_repo": false,
+  "original_summary_json_in_repo": false,
+  "paired_bootstrap_correctness_minus_format_sft": {
+    "high": 0.0102,
+    "low": -0.0008,
+    "mean": 0.0047,
+    "n": 64
+  },
+  "progress_jsonl_sha256": null,
+  "promotes_weights": false,
+  "protocol_freeze_commit": "3eb6de55251406ed6c8f77eeef34817f41fc5155",
+  "protocol_id": "format-vs-correctness-comparison-v2",
+  "protocol_sha256": "8214a9c784035f47b20d9e44fc6bbbd3cef45f821d86d6eb2f69936cc25eb6b4",
+  "reported_backend": "mlx",
+  "reported_machine": "owner Mac",
+  "reported_rows": {
+    "eval": 17920,
+    "train": 320
+  },
+  "summary_json_sha256": null
+}

@@ -1,0 +1,34 @@
+{
+  "authorizes": "A separate one-update save/reload resource smoke only. Not a policy-update comparison and not a capability claim.",
+  "blob_policy": "Each retained file is below 1048576 bytes and is tracked. No blob-allowlist row is added.",
+  "code_revision": "89f671c00e7ed84fda1fc873e8814e0ff17bef2c",
+  "code_revision_source": "operator report; environment.json has no git sha",
+  "does_not_authorize": "Do not retune the v2 prompt, parser, sample count, threshold, or model revision. Do not train on this pack.",
+  "files": {
+    "environment.json": {
+      "bytes": 68,
+      "sha256": "44359b7dc3db5b7584cd4b25df3087750471aeb0585c094cc9ab093310d2a64e"
+    },
+    "samples.jsonl": {
+      "bytes": 68298,
+      "sha256": "7a92f320b143834365208fb56ff0503ef9b924c7caed6ecae64cc3f927c7a135"
+    },
+    "summary.json": {
+      "bytes": 656,
+      "sha256": "54b504c4f21f1e3c25f731265cad2546f2cac56ca21a43101608d8be4ea07b05"
+    }
+  },
+  "final_line_parser_matches": 250,
+  "graded_correct_samples": 109,
+  "host_report": "operator-reported Apple Silicon mlx run",
+  "model_id": "mlx-community/Qwen2.5-3B-Instruct-4bit",
+  "pack_sha256": "189b5e482b0f8c2b40ff36e0e1a84827699f348c11981a0ff912ce67323fd7fc",
+  "pass_rate": 0.453125,
+  "passed_tasks": 29,
+  "protocol_id": "heldout-exact-integer-base-gate-v2",
+  "samples": 256,
+  "status": "nondegenerate_base_signal",
+  "tasks": 64,
+  "wilson95_high": 0.5742640277994588,
+  "wilson95_low": 0.3372944778061167
+}
