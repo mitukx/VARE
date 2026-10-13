@@ -135,11 +135,30 @@ class DurableTests(unittest.TestCase):
     def test_worker_heartbeat_during_slow_evaluation(self):
         parent = self.parent / 'slow'
         parent.mkdir()
-        root, job = make_fixture(parent, 'valid', delay=.7)
+        # Leave room for CI scheduling jitter while still requiring renewals
+        # during a grader that outlives the original lease. A 0.3s lease
+        # occasionally expired before the event loop could dispatch a pulse.
+        lease_seconds = 1.0
+        root, job = make_fixture(parent, 'valid', delay=2.2)
         store = Store.create(parent / 'state.db', [job], root)
+        renewed = []
+        original_renew = store.renew
+
+        def record_renew(*args, **kwargs):
+            success = original_renew(*args, **kwargs)
+            renewed.append(success)
+            return success
+
         async def work():
-            await asyncio.gather(worker(store, 'one', .3), worker(store, 'two', .3))
-        asyncio.run(work())
+            await asyncio.gather(
+                worker(store, 'one', lease_seconds),
+                worker(store, 'two', lease_seconds),
+            )
+
+        with patch.object(store, 'renew', side_effect=record_renew):
+            asyncio.run(work())
+        # This is a heartbeat test, not merely a lease-long-enough test.
+        self.assertIn(True, renewed)
         self.assertEqual(1, store.jobs()[0]['token'])
         self.assertEqual('candidate_passed', store.jobs()[0]['effective'])
 
