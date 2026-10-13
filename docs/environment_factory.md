@@ -32,6 +32,8 @@ For public upstream tasks, prefer a Git revision reference plus independent eval
 
 The command output limit is enforced while stdout/stderr are drained, with a distinct output-overflow result. The limit applies separately to each captured stream. This bounds retained output buffers; it does not impose a hard process RSS, CPU, disk, or network quota. See the [output budget regression report](environment-output-budget-report.md).
 
+A command vector may name the interpreter as `{python}` or as the program token `python`. Launch resolves both to `sys.executable`, the interpreter that is running VARE. A later argument whose text is `python` is unchanged, and text inserted for `{prompt}` or another placeholder is not scanned again. The smoke task and the historical parity seed keep the program token `python`; rewriting those frozen descriptors would change their recorded spec hashes. An empty `sys.executable` raises before launch.
+
 ## Current evidence boundary
 
 `benchmarks/smoke/stable_logsumexp` is intentionally synthetic. It exists only to test the harness: the broken baseline fails, an oracle patch passes, evaluator tampering fails closed, and the candidate diff is retained. It is **not** evidence of coding-agent capability.

@@ -5,9 +5,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-import generate_qwen_math_tir_feasibility_data_v1 as generator
-import run_cpu_qwen_math_tir_feasibility_v1 as runner
-import audit_cpu_qwen_math_tir_feasibility_v1 as auditor
+import generate_qwen_math_tir_feasibility_data_v1 as generator  # noqa: E402
+import run_cpu_qwen_math_tir_feasibility_v1 as runner  # noqa: E402
+import audit_cpu_qwen_math_tir_feasibility_v1 as auditor  # noqa: E402
 
 
 class QwenMathTIRFeasibilityTests(unittest.TestCase):

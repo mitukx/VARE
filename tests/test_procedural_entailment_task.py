@@ -1,5 +1,3 @@
-import json
-
 from scripts.procedural_entailment_task import generate_split, verify_split
 from scripts.run_cpu_procedural_entailment_dpo_development_v1 import load_protocol
 
