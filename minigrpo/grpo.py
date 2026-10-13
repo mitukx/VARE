@@ -151,6 +151,11 @@ def format_reward(text: str) -> float:
     return 1.0 if parse_final_integer(text) is not None else 0.0
 
 
+def incorrect_reward(expression: str, text: str) -> float:
+    """1 when the strict answer is wrong. A missing final line counts as wrong."""
+    return 1.0 - correctness_reward(expression, text)
+
+
 def reward_value(mode: str, expression: str, text: str) -> float:
     if mode == "correctness":
         return correctness_reward(expression, text)

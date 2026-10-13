@@ -102,6 +102,8 @@ Frozen study definitions are the JSON files in [`protocols/`](protocols/). A `*.
 | `contributions/` | Upstream patch artifacts and status |
 | `minigrpo/` | Small GRPO trainer for the integer seed-split train rows, scored on dev. CPU tests only; no retained model run. See [minigrpo](docs/minigrpo.md). |
 | `selfimprove/` | Proposes recomputable integer problems, trains with minigrpo, and rolls a candidate back through `PromotionGate`. A format-only reward fixture is rejected in tests. No retained model round. See [selfimprove](docs/selfimprove.md). |
+| `notebooks/minigrpo_selfimprove_t4.ipynb` | GPU notebook for the two scripts. Drive holds the outputs so a rerun continues. |
+| `notebooks/flagship_a100.ipynb` | A100 notebook for a five-arm reward ablation and a short promotion-gate loop. QUICK measures throughput; FULL locks a step count aimed at 2.5 hours. No model result is retained here. See [flagship](docs/flagship.md). |
 | `scripts/`, `reproducers/` | Reproduction, audit, and diagnostic commands |
 
 ## Held-out exact-integer records

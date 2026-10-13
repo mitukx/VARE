@@ -69,7 +69,11 @@ def _expression(seed: int, split: str, difficulty: int, attempt: int) -> str:
     if difficulty == 3:
         scale = draws[2] % 9 + 2
         return f"({draws[0]} + {draws[1]}) * {scale} - {draws[3]}"
-    raise ValueError("difficulty must be 1, 2, or 3")
+    if difficulty == 4:
+        factor = rng.randint(2, 5)
+        inner = rng.randint(2, 4)
+        return f"({draws[0]} + {draws[1]}) * {factor} - ({draws[2]} - {draws[3]}) * {inner}"
+    raise ValueError("difficulty must be 1, 2, 3, or 4")
 
 
 def _leaks(expression: str, value: int) -> bool:
@@ -78,8 +82,8 @@ def _leaks(expression: str, value: int) -> bool:
 
 
 def task_from_seed(seed: int, split: str, *, difficulty: int = DIFFICULTY) -> SplitTask:
-    if difficulty not in {1, 2, 3}:
-        raise ValueError("difficulty must be 1, 2, or 3")
+    if difficulty not in {1, 2, 3, 4}:
+        raise ValueError("difficulty must be 1, 2, 3, or 4")
     for attempt in range(30):
         expression = _expression(seed, split, difficulty, attempt)
         value = evaluate_expression(expression)

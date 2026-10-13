@@ -46,18 +46,25 @@ class RunConfig:
     reward_mode: str = "correctness"
     init_adapter: str = ""
     eval_dev: bool = True
+    torch_dtype: str = ""
+    apply_update: bool = True
+    eval_every: int = 0
+    log_kl: bool = False
 
     def identity(self) -> dict[str, object]:
         data = {
+            "apply_update": self.apply_update,
             "backend": self.backend,
             "clip_eps": self.clip_eps,
             "dr_grpo": self.dr_grpo,
             "epochs": self.epochs,
             "eval_dev": self.eval_dev,
+            "eval_every": self.eval_every,
             "group_size": self.group_size,
             "init_adapter": self.init_adapter,
             "kl_coef": self.kl_coef,
             "learning_rate": self.learning_rate,
+            "log_kl": self.log_kl,
             "lora_dropout": self.lora_dropout,
             "lora_rank": self.lora_rank,
             "lora_scale": self.lora_scale,
@@ -70,6 +77,7 @@ class RunConfig:
             "seed": self.seed,
             "steps": self.steps,
             "temperature": self.temperature,
+            "torch_dtype": self.torch_dtype,
         }
         return data
 

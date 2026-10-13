@@ -33,11 +33,23 @@ class TorchTrainer:
         self.config = config
         self.torch = torch
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.dtype = torch.float16 if self.device.type == "cuda" else torch.float32
+        self.dtype = self._resolve_dtype(torch)
         self.model: Any = None
         self.tokenizer: Any = None
         self.optimizer: Any = None
         self.ref_model: Any = None
+
+    def _resolve_dtype(self, torch: Any) -> Any:
+        requested = self.config.torch_dtype
+        if self.device.type != "cuda":
+            return torch.float32
+        if requested == "bfloat16":
+            return torch.bfloat16
+        if requested == "float32":
+            return torch.float32
+        if requested in {"", "float16"}:
+            return torch.float16
+        raise ValueError(f"unsupported torch_dtype: {requested}")
 
     def activate(self, adapter: Path | None) -> None:
         """Load the base model, optionally with saved LoRA weights, for generation."""
@@ -54,7 +66,7 @@ class TorchTrainer:
             self._load_adapter(Path(self.config.init_adapter), load_optimizer=False)
         else:
             self._init_fresh()
-        if self.config.kl_coef > 0.0 and self.ref_model is None:
+        if self.ref_model is None and (self.config.kl_coef > 0.0 or self.config.log_kl):
             self._load_reference()
 
     def _reload_base(self) -> None:
@@ -135,7 +147,7 @@ class TorchTrainer:
         ids = self.torch.tensor([token_ids], dtype=self.torch.long, device=self.device)
         logits = model(input_ids=ids).logits[:, :-1, :]
         targets = ids[:, 1:]
-        log_probs = self.torch.log_softmax(logits, dim=-1)
+        log_probs = self.torch.log_softmax(logits.float(), dim=-1)
         token_logp = log_probs.gather(-1, targets.unsqueeze(-1)).squeeze(-1)[0]
         positions = self.torch.arange(targets.shape[1], device=self.device)
         mask = (positions >= (prompt_length - 1)).to(token_logp.dtype)
@@ -179,6 +191,98 @@ class TorchTrainer:
             raise RuntimeError("empty completion; refusing to drop a group member")
         return str(text)
 
+    def generate_batch(self, prompts: list[str], seed: int, *, sample: bool = True) -> list[str]:
+        """One torch seed for the whole batch. Left padding keeps new tokens aligned."""
+        if self.model is None or self.tokenizer is None:
+            raise RuntimeError("trainer is not prepared")
+        if not prompts:
+            raise ValueError("prompt batch is empty")
+        self.model.eval()
+        previous_side = self.tokenizer.padding_side
+        self.tokenizer.padding_side = "left"
+        try:
+            rendered = [
+                self.tokenizer.apply_chat_template(
+                    [{"role": "user", "content": prompt}],
+                    add_generation_prompt=True,
+                    tokenize=False,
+                )
+                for prompt in prompts
+            ]
+            encoded = self.tokenizer(rendered, return_tensors="pt", padding=True, add_special_tokens=False)
+        finally:
+            self.tokenizer.padding_side = previous_side
+        input_ids = encoded["input_ids"].to(self.device)
+        attention = encoded["attention_mask"].to(self.device)
+        self.torch.manual_seed(seed)
+        if self.device.type == "cuda":
+            self.torch.cuda.manual_seed_all(seed)
+        generate_kwargs: dict[str, object] = {
+            "input_ids": input_ids,
+            "attention_mask": attention,
+            "max_new_tokens": self.config.max_new_tokens,
+            "pad_token_id": self.tokenizer.pad_token_id,
+        }
+        if sample:
+            generate_kwargs["do_sample"] = True
+            generate_kwargs["temperature"] = self.config.temperature
+        else:
+            generate_kwargs["do_sample"] = False
+        with self.torch.inference_mode():
+            output = self.model.generate(**generate_kwargs)
+        prompt_width = int(input_ids.shape[1])
+        texts: list[str] = []
+        for row in output:
+            texts.append(str(self.tokenizer.decode(row[prompt_width:], skip_special_tokens=True)))
+        return texts
+
+    def encode_batch(self, prompts: list[str], completions: list[str]) -> list[Rollout]:
+        if self.model is None:
+            raise RuntimeError("trainer is not prepared")
+        if len(prompts) != len(completions):
+            raise ValueError("prompt and completion batches differ")
+        encoded_pairs = [self._encode_pair(prompt, completion) for prompt, completion in zip(prompts, completions, strict=True)]
+        width = max(len(tokens) for tokens, _offset in encoded_pairs)
+        pad_id = int(self.tokenizer.pad_token_id)
+        batch = []
+        attention_rows = []
+        for tokens, _offset in encoded_pairs:
+            pad = width - len(tokens)
+            batch.append(list(tokens) + [pad_id] * pad)
+            attention_rows.append([1] * len(tokens) + [0] * pad)
+        ids = self.torch.tensor(batch, dtype=self.torch.long, device=self.device)
+        attention = self.torch.tensor(attention_rows, dtype=self.torch.long, device=self.device)
+        self.model.eval()
+        with self.torch.inference_mode():
+            logits = self.model(input_ids=ids, attention_mask=attention).logits[:, :-1, :]
+            log_probs = self.torch.log_softmax(logits.float(), dim=-1)
+            targets = ids[:, 1:]
+            token_logp = log_probs.gather(-1, targets.unsqueeze(-1)).squeeze(-1)
+            token_entropy = -(log_probs.exp() * log_probs).sum(dim=-1)
+            ref_logp = None
+            if self.ref_model is not None:
+                ref_logits = self.ref_model(input_ids=ids, attention_mask=attention).logits[:, :-1, :]
+                ref_probs = self.torch.log_softmax(ref_logits.float(), dim=-1)
+                ref_logp = ref_probs.gather(-1, targets.unsqueeze(-1)).squeeze(-1)
+        rollouts: list[Rollout] = []
+        for index, ((tokens, offset), completion) in enumerate(zip(encoded_pairs, completions, strict=True)):
+            length = len(tokens) - 1
+            positions = self.torch.arange(length, device=self.device)
+            mask = positions >= (offset - 1)
+            ref = None if ref_logp is None else self._tuple(ref_logp[index, :length])
+            rollouts.append(
+                Rollout(
+                    text=completion,
+                    old_logp=self._tuple(token_logp[index, :length]),
+                    mask=tuple(int(bit) for bit in mask.detach().cpu().tolist()),
+                    entropy=self._tuple(token_entropy[index, :length]),
+                    ref_logp=ref,
+                    token_ids=tokens,
+                    prompt_length=offset,
+                )
+            )
+        return rollouts
+
     def encode(self, prompt: str, completion: str) -> Rollout:
         if self.model is None:
             raise RuntimeError("trainer is not prepared")
@@ -200,41 +304,42 @@ class TorchTrainer:
             prompt_length=offset,
         )
 
+    def _row_loss(self, rollout: Rollout, advantage: float) -> Any:
+        logp, mask, _entropy = self._token_logp(self.model, rollout.token_ids, rollout.prompt_length, entropy=False)
+        old = self.torch.tensor(rollout.old_logp, device=self.device)
+        ratio = self.torch.exp((logp.float() - old).clamp(-LOG_RATIO_LIMIT, LOG_RATIO_LIMIT))
+        adv = self.torch.tensor(float(advantage), device=self.device)
+        unclipped = ratio * adv
+        clipped = ratio.clamp(1.0 - self.config.clip_eps, 1.0 + self.config.clip_eps) * adv
+        per_token = -self.torch.minimum(unclipped, clipped)
+        if rollout.ref_logp is not None and self.config.kl_coef > 0.0:
+            ref = self.torch.tensor(rollout.ref_logp, device=self.device)
+            kl_delta = (ref - logp.float()).clamp(-LOG_RATIO_LIMIT, LOG_RATIO_LIMIT)
+            per_token = per_token + self.config.kl_coef * (self.torch.exp(kl_delta) - kl_delta - 1.0)
+        active = per_token * mask.float()
+        if self.config.dr_grpo:
+            return active.sum()
+        return active.sum() / self.torch.clamp(mask.float().sum(), min=1.0)
+
     def update(self, rollouts: list[Rollout], advantages: list[float], *, epochs: int) -> float:
+        if not self.config.apply_update:
+            return 0.0
         if self.optimizer is None:
             raise RuntimeError("trainer is not prepared")
+        if not rollouts or len(rollouts) != len(advantages):
+            raise RuntimeError("update group was truncated")
         last = 0.0
+        scale = 1.0 / len(rollouts)
         for _epoch in range(epochs):
             self.model.train()
             self.optimizer.zero_grad(set_to_none=True)
-
-            def loss_fn() -> Any:
-                total = self.torch.zeros((), device=self.device, dtype=self.torch.float32)
-                for rollout, advantage in zip(rollouts, advantages, strict=True):
-                    logp, mask, _entropy = self._token_logp(
-                        self.model, rollout.token_ids, rollout.prompt_length, entropy=False
-                    )
-                    old = self.torch.tensor(rollout.old_logp, device=self.device)
-                    ratio = self.torch.exp((logp.float() - old).clamp(-LOG_RATIO_LIMIT, LOG_RATIO_LIMIT))
-                    adv = self.torch.tensor(advantage, device=self.device)
-                    unclipped = ratio * adv
-                    clipped = ratio.clamp(1.0 - self.config.clip_eps, 1.0 + self.config.clip_eps) * adv
-                    per_token = -self.torch.minimum(unclipped, clipped)
-                    if rollout.ref_logp is not None and self.config.kl_coef > 0.0:
-                        ref = self.torch.tensor(rollout.ref_logp, device=self.device)
-                        kl_delta = (ref - logp.float()).clamp(-LOG_RATIO_LIMIT, LOG_RATIO_LIMIT)
-                        per_token = per_token + self.config.kl_coef * (self.torch.exp(kl_delta) - kl_delta - 1.0)
-                    active = per_token * mask.float()
-                    if self.config.dr_grpo:
-                        total = total + active.sum()
-                    else:
-                        total = total + active.sum() / self.torch.clamp(mask.float().sum(), min=1.0)
-                return total / len(rollouts)
-
-            loss = loss_fn()
-            loss.backward()
+            total = 0.0
+            for rollout, advantage in zip(rollouts, advantages, strict=True):
+                loss = self._row_loss(rollout, advantage)
+                (loss * scale).backward()
+                total += float(loss.detach().float().cpu())
             self.optimizer.step()
-            last = float(loss.detach().float().cpu())
+            last = total * scale
         return last
 
     def save(self, directory: Path) -> None:
