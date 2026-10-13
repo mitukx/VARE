@@ -1,0 +1,17 @@
+{
+  "round_error": "incumbent evaluator failure",
+  "evaluation_live_after_round_return": true,
+  "round_lock_held_after_return": false,
+  "candidate_snapshot_exists_after_return": false,
+  "events_at_round_return": [
+    "candidate-started",
+    "discard"
+  ],
+  "candidate_error": "KeyError",
+  "final_events": [
+    "candidate-started",
+    "discard",
+    "candidate-finished"
+  ],
+  "discard_after_evaluation_finish": false
+}

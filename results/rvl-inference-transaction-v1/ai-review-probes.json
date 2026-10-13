@@ -1,0 +1,93 @@
+{
+  "standard_real_backend": {
+    "evaluate_success": {
+      "error": null,
+      "mixed_child_before": false,
+      "mixed_child_after": false,
+      "exact_modes_preserved": true,
+      "cpu_rng_preserved": true,
+      "model_tensors_preserved": true,
+      "loaded_id": "policy-0"
+    },
+    "evaluate_score_failure": {
+      "error": "score fixture failure after real generation",
+      "mixed_child_before": false,
+      "mixed_child_after": false,
+      "exact_modes_preserved": true,
+      "cpu_rng_preserved": true,
+      "model_tensors_preserved": true,
+      "loaded_id": "policy-0"
+    },
+    "rollout_success": {
+      "error": null,
+      "mixed_child_before": false,
+      "mixed_child_after": false,
+      "exact_modes_preserved": true,
+      "cpu_rng_preserved": true,
+      "model_tensors_preserved": true,
+      "loaded_id": "policy-0"
+    }
+  },
+  "repeated_cancel": [
+    {
+      "operation": "evaluate",
+      "worker_fails": false,
+      "three_cancels_still_draining": true,
+      "lock_held_while_draining": true,
+      "second_waited": true,
+      "cancel_propagated": true,
+      "second_worker_overlapped": false,
+      "all_state_restored_after_both": true,
+      "loaded_id": "policy-0"
+    },
+    {
+      "operation": "evaluate",
+      "worker_fails": true,
+      "three_cancels_still_draining": true,
+      "lock_held_while_draining": true,
+      "second_waited": true,
+      "cancel_propagated": true,
+      "second_worker_overlapped": false,
+      "all_state_restored_after_both": true,
+      "loaded_id": "policy-0"
+    },
+    {
+      "operation": "rollout",
+      "worker_fails": false,
+      "three_cancels_still_draining": true,
+      "lock_held_while_draining": true,
+      "second_waited": true,
+      "cancel_propagated": true,
+      "second_worker_overlapped": false,
+      "all_state_restored_after_both": true,
+      "loaded_id": "policy-0"
+    },
+    {
+      "operation": "rollout",
+      "worker_fails": true,
+      "three_cancels_still_draining": true,
+      "lock_held_while_draining": true,
+      "second_waited": true,
+      "cancel_propagated": true,
+      "second_worker_overlapped": false,
+      "all_state_restored_after_both": true,
+      "loaded_id": "policy-0"
+    }
+  ],
+  "rng_cleanup_failure": [
+    {
+      "operation": "evaluate",
+      "error": "injected RNG cleanup failure",
+      "loaded_id_after_error": "policy-0",
+      "loaded_id_after_next_call": "policy-0",
+      "all_state_restored_after_recovery": true
+    },
+    {
+      "operation": "rollout",
+      "error": "injected RNG cleanup failure",
+      "loaded_id_after_error": null,
+      "loaded_id_after_next_call": "policy-0",
+      "all_state_restored_after_recovery": true
+    }
+  ]
+}

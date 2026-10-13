@@ -1,5 +1,13 @@
 # Experimental program
 
+## 2026-10-13 — evaluation task lifetime correction
+
+The [engine replay](engine-evaluation-lifecycle-v1-report.md) checks termination-before-discard with 13 cases and a small event-order probe. Pinned baseline fails 12 cases; the correction passes all 13 and the full local suite of 362. The retained independent AI counterexample caused an additional guard for hooks already cancelling. This CPU fixture study neither trains a model nor consumes a confirmation cohort.
+
+## 2026-10-13 — inference state and cancellation correctness
+
+The [three-arm study](rvl-inference-transaction-v1-report.md) tests a source-level contract, not a post-training efficacy hypothesis. Pinned main and alias-only controls fail active inference/cancellation checks; the corrected adapter passes all 14 new cases and actual pinned RVL/HF probes. No model study, retired cohort, paid compute, or accelerator run was used. The fixture performs a tiny trainer update only to populate optimizer state. Source and artifact hashes, logs, package versions, and failure counts are retained in the [bundle](../results/rvl-inference-transaction-v1/).
+
 Entries below preserve study decisions and outcomes; they are a history, not a leaderboard. For the current stop point and a short review route, see the [roadmap](roadmap.md), [current evidence gaps](current-gaps.md), and [reviewer guide](reviewer-guide.md). Each report links its frozen protocol and retained run evidence where available.
 
 ## Held-out exact-integer base gate v1
@@ -197,3 +205,6 @@ A feature is not evidence. Headline claims are allowed only when corresponding r
 
 
 26. **BoolQ v17 lower-rate comparison non-pass:** on fresh training ranks 152–279 and validation ranks 768–1023, all three arm audits and the paired comparator passed. DPO and anchored DPO retained base predictions; SFT added one correct answer in one seed and matched base in the other two. All improved preference NLL, but none cleared the +0.05 balanced-accuracy gate. Confirmation ranks 1024–1535 remain unopened. See the [study plan](boolq-posttraining-study.md), [report](boolq-posttraining-development-v17-report.md), and [comparison](../results/cpu-lm-boolq-posttraining-development-v17-comparison.json).
+
+
+**Update 2026-10-14 — evaluation transaction integration:** existing PR #19 evaluator/inference lifetime corrections are integrated with signed-training, authorization and checkpoint-bound promotion controls. A frozen four-case pre/post revocation × discard-success/failure CPU comparison fails 4/4 on main `a0f6464` and passes 4/4 on the integrated candidate; three caller cancellations cannot interrupt asynchronous rollback before the round lock is released. Historical lifecycle replay is baseline 12 failures/13 cases versus 13 candidate passes; inference replay is candidate 14/14 with its historical failing controls preserved. This is in-process correctness evidence only. See [report](evaluation-transaction-integration-v1.md), [protocol](../protocols/engine_evaluation_interlock_integration_v1.lock.json), and [raw records](../results/engine-evaluation-interlock-integration-v1/). No model-learning protocol is reopened.

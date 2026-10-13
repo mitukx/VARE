@@ -1,5 +1,15 @@
 # Reviewer guide
 
+## Evaluation lifetime follow-up — 2026-10-13
+
+The [engine report](engine-evaluation-lifecycle-v1-report.md) closes the generic sibling-evaluation gap identified in the inference review. Inspect the 13-case baseline/fixed comparison, event-order probe, retained first-proposal counterexample, and independent AI corrected probe. This is a separate proposed change stacked on the inference correction. The core contract is evaluator termination before candidate discard and round unlock; arbitrary hook resource restoration is not implied. The local full suite now passes 362 tests.
+
+## 2026-10-13 addendum: inference transaction
+
+Integration follow-up: #5–#8 were merged by separate repository activity. This contribution incorporates main `1e7fda8` and now targets main. The [latest four-arm replay](../results/rvl-inference-transaction-v1/integration-main-1e7fda8/) keeps that main as an explicit control (10/14 failures versus 0/14 corrected); full suite is now 349 pass, plus Ruff/mypy. The earlier stacked-PR status below describes the initial audit only.
+
+Start with the [new report](rvl-inference-transaction-v1-report.md) and its one-entry reproduction. The work is stacked on existing [VARE #5](https://github.com/mitukx/VARE/pull/5), reusing its alias-mode correction. Pinned main / alias-only / fixed arms isolate the new inference defect; 14 regression cases and actual tiny GPT-2/HF generation check modes, CPU RNG, weights, AdamW state, and repeated cancellation. The full local suite passes 338 tests. The [raw bundle](../results/rvl-inference-transaction-v1/) records exact sources and runtime. Only CPU was measured; AI review and CI execution are distinct from independent human review. VARE #3 is now merged in baseline `b8dc1ba`; the older status table below is historical. VARE #5 and RVL #92 were still open at this audit.
+
 This guide separates code that is implemented, behavior reproduced on CPU, and model outcomes. The linked reports and raw records are the source of truth; the summaries below do not replace them. Repository and PR status was checked on 2026-10-11.
 
 ## A short review path

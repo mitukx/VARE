@@ -1,0 +1,40 @@
+{
+  "baseline": "79046a09768476909b89ff64faa77c512ecb8ced",
+  "candidate_revision": "16fbbf6c7e38479e47c2d1ef2426422ff5fd3ce8",
+  "source_sha256": {
+    "src/vare/engine.py": "5ca49b9e1ec94e85c0de1f3f68a003806e30d4f7b926bcf083b9bfb5b391b9fa",
+    "tests/test_engine_evaluation_lifecycle.py": "a76b71b164527044a935fd5ec467712d6e87722fbff1d734ed54f50af301ee77",
+    "reproducers/engine_evaluation_lifecycle_v1.py": "b9803189a65a7ec638ff3a42261828420613d8469ed731d1faf9dc7f2ac35ff0",
+    "scripts/reproduce_engine_evaluation_lifecycle_v1.py": "6607365f73a570f9ad67179868462d082fb86fed2bcb0821ba3dae691c8d62a0"
+  },
+  "artifact_sha256": {
+    "baseline-probe.json": "7fa90b0cde3e243685678315e26a4aade5cb2e232441ec5d44ecfc81b29d2250",
+    "baseline-pytest.log": "545002a9281dbaf4392c36bec286f478529f9060253fb7bb0a1a906d7df79669",
+    "baseline-pytest.xml": "bba7b2deb9fe8b6d578c8d3d21f4715feec3a42ccad82b0a2f2d69cbd8a5e5d4",
+    "fixed-probe.json": "31ac9cdf4eeb5713f4c065078fe35653f13df95b2e1299217557c6b8896623f6",
+    "fixed-pytest.log": "e14457cdb42ec0b9e479233d9413d1005fea3342195f831dce49f03bf7cd3e64",
+    "fixed-pytest.xml": "c66ffddd72d14e9bee37e7ed97a66f3d08d94078726de1a77029d5ed05f0f549"
+  },
+  "runtime": {
+    "python": "3.12.12",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "pytest": "8.4.2",
+    "execution": "asyncio, CPU only"
+  },
+  "results": {
+    "baseline": {
+      "exit_code": 1,
+      "tests": 13,
+      "failures": 12,
+      "errors": 0,
+      "skips": 0
+    },
+    "fixed": {
+      "exit_code": 0,
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    }
+  }
+}
