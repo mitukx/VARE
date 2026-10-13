@@ -136,9 +136,12 @@ def test_worker_rejects_drifted_heldout_or_mutated_checkpoint(tmp_path):
     response = _signed_worker_report(store, "p1", heldout, key_file, trust)
     assert response.returncode != 0
     assert "operator-pinned content" in response.stderr
+    # Restore the original frozen bytes, then corrupt the registered object.
+    heldout.write_text(heldout.read_text().rstrip(), encoding="utf-8")
     store.objects.joinpath(digests["p1"]).write_bytes(b"tampered")
     response = _signed_worker_report(store, "p1", heldout, key_file, trust)
     assert response.returncode != 0
+    assert "checkpoint" in response.stderr.lower()
 
 
 class AcceptVerifier:
