@@ -215,7 +215,6 @@ class DockerIsolationRunner:
         ]
         waiter = asyncio.create_task(proc.wait())
         alarm = asyncio.create_task(exceeded.wait())
-        finished = False
         cleanup_failure: Exception | None = None
         try:
             done, _ = await asyncio.wait(
@@ -229,7 +228,6 @@ class DockerIsolationRunner:
             await asyncio.wait_for(asyncio.gather(*readers), timeout=3.0)
             if exceeded.is_set():
                 raise IsolationError("container exceeded output byte limit")
-            finished = True
             return IsolationResult(
                 int(proc.returncode if proc.returncode is not None else 125),
                 kept["stdout"].decode("utf-8", errors="replace"),
@@ -264,7 +262,7 @@ class DockerIsolationRunner:
             env=env,
         )
         try:
-            out, err = await asyncio.wait_for(proc.communicate(), timeout=10.0)
+            _out, err = await asyncio.wait_for(proc.communicate(), timeout=10.0)
         except asyncio.TimeoutError as exc:
             proc.kill()
             await proc.wait()
