@@ -223,8 +223,14 @@ def _cmd_env_campaign(args: argparse.Namespace) -> int:
     argv = json.loads(args.agent_argv_json)
     if not isinstance(argv, list) or not argv or not all(isinstance(x, str) and x for x in argv):
         raise ValueError("--agent-argv-json must encode a non-empty JSON string array")
+    if bool(args.isolated_agent_image) != bool(args.isolated_evaluator_image):
+        raise ValueError(
+            "isolated campaigns require both --isolated-agent-image "
+            "and --isolated-evaluator-image; no host evaluator fallback"
+        )
     from .environments.catalog import WorkspaceAgent
     agent: WorkspaceAgent
+    isolated_evaluator = None
     if args.isolated_agent_image:
         # Docker is opt-in and must be administered outside any candidate
         # checkout. Agent argv is interpreted INSIDE the pinned image.
@@ -243,11 +249,25 @@ def _cmd_env_campaign(args: argparse.Namespace) -> int:
         )
     else:
         agent = CommandWorkspaceAgent(tuple(argv), timeout_s=args.agent_timeout_s)
+    if args.isolated_evaluator_image:
+        from .container_isolation import DockerIsolationRunner, IsolationLimits
+        from .sandboxed_repository import DockerRepositoryEvaluator
+        isolated_evaluator = DockerRepositoryEvaluator(
+            runner=DockerIsolationRunner(),
+            limits=IsolationLimits(
+                image=args.isolated_evaluator_image,
+                timeout_s=args.isolated_evaluator_timeout_s,
+                memory_mb=args.isolated_evaluator_memory_mb,
+                max_output_bytes=args.isolated_evaluator_output_bytes,
+            ),
+            allowed_workspace_root=(Path(args.run_root).resolve() / "workspaces"),
+        )
     runner = EnvironmentCampaignRunner(
         catalog,
         agent,
         run_root=args.run_root,
         verifier_version=args.verifier_version,
+        isolated_evaluator=isolated_evaluator,
     )
     summary = asyncio.run(runner.run(repeats=args.repeats, task_ids=args.task_id or None))
     print(json.dumps(summary.to_dict(), indent=2, sort_keys=True))
@@ -332,6 +352,11 @@ def main() -> int:
     ec.add_argument("--agent-timeout-s", type=float, default=1800.0)
     ec.add_argument("--isolated-agent-image", help="Docker image pinned as name@sha256:<digest>; opt in to isolated agent run")
     ec.add_argument("--isolated-memory-mb", type=int, default=512)
+    ec.add_argument("--isolated-evaluator-image",
+                    help="Digest-pinned Docker image that runs repository tests off-host; requires isolated agent")
+    ec.add_argument("--isolated-evaluator-timeout-s", type=float, default=120.0)
+    ec.add_argument("--isolated-evaluator-memory-mb", type=int, default=512)
+    ec.add_argument("--isolated-evaluator-output-bytes", type=int, default=400_000)
     ec.add_argument("--repeats", type=int, default=1)
     ec.add_argument("--task-id", action="append")
     ec.add_argument("--verifier-version", type=int, default=0)
