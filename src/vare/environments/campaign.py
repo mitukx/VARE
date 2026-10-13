@@ -4,6 +4,7 @@ import asyncio
 from dataclasses import asdict, dataclass, field
 import hashlib
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -29,6 +30,9 @@ class CommandWorkspaceAgent:
     argv: tuple[str, ...]
     timeout_s: float = 1800.0
     launch_root: Path = field(default_factory=lambda: Path.cwd().resolve())
+    # Prevent accidental inheritance of controller API keys/tokens. This is
+    # hygiene only: a same-UID subprocess is NOT a security boundary.
+    environment_allowlist: tuple[str, ...] = ("PATH", "LANG", "LC_ALL", "LC_CTYPE", "TZ", "TMPDIR")
 
     async def run(self, *, prompt: str, workspace: Path, step: int) -> str:
         if not self.argv:
@@ -54,10 +58,18 @@ class CommandWorkspaceAgent:
                     value = str(candidate)
             argv.append(value)
 
+        if (
+            type(self.environment_allowlist) is not tuple
+            or any(not isinstance(key, str) or not key.isidentifier() for key in self.environment_allowlist)
+        ):
+            raise ValueError("environment_allowlist must contain valid variable names")
+        child_env = {key: os.environ[key] for key in self.environment_allowlist if key in os.environ}
+
         def execute() -> subprocess.CompletedProcess[str]:
             return subprocess.run(
                 argv,
                 cwd=workspace,
+                env=child_env,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
