@@ -6,6 +6,7 @@ from numbers import Real
 from statistics import fmean
 from typing import Mapping
 
+from .attestation import EvidenceTrustRoot
 from .config import PromotionConfig
 from .types import EvaluationReport, PromotionDecision
 
@@ -19,8 +20,9 @@ class PromotionGate:
     a noisy point estimate as sufficient promotion evidence.
     """
 
-    def __init__(self, config: PromotionConfig) -> None:
+    def __init__(self, config: PromotionConfig, *, trust_root: EvidenceTrustRoot | None = None) -> None:
         self.config = config
+        self.trust_root = trust_root
         if not 0 < config.paired_alpha < 1:
             raise ValueError("paired_alpha must be in (0,1)")
         if config.paired_bootstrap_samples <= 0:
@@ -127,6 +129,16 @@ class PromotionGate:
         return mean_gain, lcb, n, reasons
 
     def decide(self, incumbent: EvaluationReport, candidate: EvaluationReport) -> PromotionDecision:
+        if self.trust_root is not None and (
+            not self.trust_root.verifies(incumbent)
+            or not self.trust_root.verifies(candidate)
+        ):
+            return PromotionDecision(
+                accepted=False,
+                reasons=("untrusted_evaluation_evidence",),
+                primary_gain=0.0,
+                worst_slice_regression=0.0,
+            )
         if not self._has_valid_metrics(incumbent) or not self._has_valid_metrics(candidate):
             return PromotionDecision(
                 accepted=False,
