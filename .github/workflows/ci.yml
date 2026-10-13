@@ -56,6 +56,16 @@ jobs:
         run: >-
           python scripts/reproduce_engine_evaluation_interlock_integration_v1.py
           --output "${RUNNER_TEMP}/engine-interlock-replay"
+      - name: Reproduce candidate-discard restoration and fail-closed reentry
+        if: matrix.python-version == '3.12'
+        run: >-
+          python scripts/reproduce_candidate_discard_recovery_v1.py
+          --output "${RUNNER_TEMP}/candidate-discard-replay"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always() && matrix.python-version == '3.12'
+        with:
+          name: candidate-discard-replay
+          path: ${{ runner.temp }}/candidate-discard-replay
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always() && matrix.python-version == '3.12'
         with:

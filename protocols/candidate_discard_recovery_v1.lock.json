@@ -1,0 +1,17 @@
+{
+  "schema": "vare.correctness-protocol.v1",
+  "baseline_revision": "b05e0efb245e63e0cbc16239151c1f7759216d32",
+  "hypothesis": "Candidate discard remains owned until terminal despite repeated cancellation, and failed restoration prevents later rounds from accessing the same runtime.",
+  "tests": "tests/test_candidate_discard_recovery.py",
+  "cases": {
+    "cancellation_phase": ["ordinary rejection", "failed promotion-intent append"],
+    "discard_outcome": ["restored", "exception"],
+    "caller_cancellations": 3,
+    "failed_discard_reentry_phase": ["ordinary rejection", "evaluation failure", "failed promotion-intent append"]
+  },
+  "acceptance": "Baseline fails all seven semantic cases; candidate passes all seven with no setup errors/skips. Existing successful rejection, promotion-journal, interlock and evaluation-error tests remain passing.",
+  "primary_properties": ["round lock held until terminal discard", "no competing rollout before restoration", "caller cancellation or prior error preserved after successful restoration", "failed restoration reports unknown state with cause", "next round rejected before any hook or provenance step"],
+  "budget": "CPU fixtures only; no model download, accelerator, paid API, or confirmation prompts; 30-second comparison subprocess ceiling.",
+  "stopping_rule": "Preserve the first baseline/candidate comparison and all failures; no changes to outcome-bearing criteria after observation.",
+  "limits": "One loop in one process; trusted external recovery and reconstruction required after discard failure. No distributed quarantine, hard cleanup deadline, process-loss guarantee, or model improvement."
+}
