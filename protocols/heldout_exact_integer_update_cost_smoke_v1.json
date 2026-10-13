@@ -1,0 +1,44 @@
+{
+  "backends_are_replicates": false,
+  "batch_size": 1,
+  "does_not_establish": "A passing record is one optimizer update, a matching save/reload, and a resource measurement. It is not a held-out gain and it does not authorize a multi-arm policy comparison.",
+  "frozen_before_smoke_output": true,
+  "grad_accumulation_steps": 1,
+  "heldout_pack_sha256": "189b5e482b0f8c2b40ff36e0e1a84827699f348c11981a0ff912ce67323fd7fc",
+  "learning_rate": 1e-05,
+  "lora": {
+    "dropout": 0.0,
+    "keys": [
+      "self_attn.q_proj",
+      "self_attn.v_proj"
+    ],
+    "rank": 8,
+    "scale": 20.0
+  },
+  "mask_prompt": true,
+  "max_seq_length": 256,
+  "models": {
+    "mlx": {
+      "package": "mlx-lm==0.32.0",
+      "repo_id": "mlx-community/Qwen2.5-3B-Instruct-4bit",
+      "revision": "4f83f8f146fdf28b512a06562b671d7af4fab457"
+    },
+    "transformers": {
+      "package_note": "Runtime torch plus peft and transformers. The script does not upgrade torch. This checkpoint is not a replicate of the 4-bit mlx weights.",
+      "repo_id": "Qwen/Qwen2.5-3B-Instruct",
+      "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1"
+    }
+  },
+  "num_layers": 1,
+  "optimizer": "adam",
+  "optimizer_steps": 1,
+  "protocol_id": "heldout-exact-integer-update-cost-smoke-v1",
+  "scores_heldout_pack": false,
+  "seed": 20261015,
+  "train_completion": "#### 31933",
+  "train_expression": "23544 + 19091 - 10702",
+  "train_seed": 1029953,
+  "train_split": "train",
+  "v2_manifest_sha256": "ee582b61fc2ca21d45bacb829c728bf47118d987f302b6f0f2eb8aeb82571278",
+  "v2_result": "results/heldout-exact-integer-base-gate-v2/m1-mlx-89f671c/manifest.json"
+}
