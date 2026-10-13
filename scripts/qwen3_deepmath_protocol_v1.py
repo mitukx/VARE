@@ -102,14 +102,23 @@ def prompt_messages(problem: str) -> list[dict[str, str]]:
 
 def grpo_training_record(row: dict) -> dict:
     """Add the fixed prompt and provenance expected by TRL's reward callback."""
-    messages = row.get("prompt")
-    if not isinstance(messages, list) or len(messages) != 1 or messages[0].get("role") != "user":
+    prompt = row.get("prompt")
+    if isinstance(prompt, str):
+        problem = prompt
+    elif (
+        isinstance(prompt, list)
+        and len(prompt) == 1
+        and isinstance(prompt[0], dict)
+        and prompt[0].get("role") == "user"
+    ):
+        problem = prompt[0].get("content", "")
+    else:
         raise ValueError("DeepMath rows must contain exactly one user prompt before preparation")
     key = row.get("prompt_key")
     if not isinstance(key, str) or not key:
         raise ValueError("DeepMath rows require a normalized prompt key")
     prepared = dict(row)
-    prepared["prompt"] = prompt_messages(messages[0].get("content", ""))
+    prepared["prompt"] = prompt_messages(problem)
     prepared["prompt_id"] = prompt_id(key)
     return prepared
 

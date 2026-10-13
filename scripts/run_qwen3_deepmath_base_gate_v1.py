@@ -231,14 +231,14 @@ def main() -> None:
         max_update_prompt_tokens = 0
         max_sft_sequence_tokens = 0
         for index, row in enumerate(gate_rows):
-            batch = _tensor_batch(tokenize_generation_prompt(tokenizer, row["prompt"][0]["content"]))
+            batch = _tensor_batch(tokenize_generation_prompt(tokenizer, row["prompt"]))
             length = int(batch["input_ids"].shape[-1])
             if length > MAX_INPUT_TOKENS:
                 raise SystemExit(f"NO-GO: gate prompt {index} has {length} tokens (>512); no truncation allowed")
             total_prompt_tokens += length
             tokenized.append({"row": row, "batch": batch, "prompt_length": length})
         for index, row in enumerate(update_rows):
-            problem = row["prompt"][0]["content"]
+            problem = row["prompt"]
             prompt_batch = _tensor_batch(tokenize_generation_prompt(tokenizer, problem))
             max_update_prompt_tokens = max(max_update_prompt_tokens, int(prompt_batch["input_ids"].shape[-1]))
             target = rf"\boxed{{{answer_target(row['solution'])}}}"

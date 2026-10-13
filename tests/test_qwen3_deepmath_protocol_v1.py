@@ -85,6 +85,12 @@ def test_grpo_record_has_same_fixed_instruction_and_reward_provenance_id():
     assert prepared["solution"] == "4"
 
 
+def test_grpo_record_accepts_deduplicated_deepmath_string_prompt():
+    prepared = grpo_training_record({"prompt": "Solve 2+2.", "prompt_key": "solve 2+2"})
+    assert prepared["prompt"] == prompt_messages("Solve 2+2.")
+    assert prepared["prompt_id"] == prompt_id("solve 2+2")
+
+
 def test_grpo_record_rejects_unexpected_prompt_shape():
     with pytest.raises(ValueError, match="exactly one user prompt"):
         grpo_training_record({"prompt": [], "prompt_key": "key"})
