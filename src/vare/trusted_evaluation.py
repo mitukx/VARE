@@ -147,7 +147,7 @@ def main(argv: list[str] | None = None) -> int:
         strict_checkpoint_binding=True,
     )
     report = evaluate_cpu_fixture(
-        TrustedCheckpointStore(args.checkpoint_store),
+        TrustedCheckpointStore(args.checkpoint_store, read_only=True),
         args.policy_id,
         Path(args.heldout_set),
         signer,
