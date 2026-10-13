@@ -1,0 +1,13 @@
+{
+  "schema": "vare.correctness-protocol.v1",
+  "baseline_revision": "377d8894d3d20dd4d37677e223371ef11eadd354",
+  "hypothesis": "Whole-round runtime ownership must exclude sibling loops before hook access, share unknown-state fences, and survive a process death before promotion intent when SQLite is configured.",
+  "test": "tests/test_runtime_round_ownership.py",
+  "test_sha256": "51ecd61f6badfb112bed8eacdbe23b5084a4e08592f554c1e869acc320e2dc01",
+  "fault_cases": 8,
+  "positive_controls": 2,
+  "acceptance": "Pinned baseline has eight semantic assertion failures and two successful publication controls; corrected arm passes all ten with no errors or skips.",
+  "budget": "CPU trusted fixtures, SQLite, and one spawned process; no GPU, model, paid API, or confirmation data. 45 seconds per comparison arm.",
+  "stopping_rule": "Preserve the first baseline and correction; do not change observed test criteria. Additional API recovery tests are maintained checks outside this frozen comparison.",
+  "limits": "Cooperative hooks and single-host SQLite only. No multi-host atomicity, detached worker termination, or tensor authentication. Operator recovery requires quiesced old owners and independently verified runtime state."
+}

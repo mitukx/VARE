@@ -1,124 +1,56 @@
 # VARE
 
-## Question
+VARE is a CPU-first outer control plane for post-training experiments: audited training signals, policy/verifier freshness, independent evaluation, and candidate promotion or recovery. It integrates with [Recursive-Verification-Lag (RVL)](https://github.com/mitukx/Recursive-Verification-Lag) for trainer/rollout machinery rather than duplicating a full RL framework.
 
-Under a fixed compute budget, which post-training signal improves an independently measured held-out outcome, and how do we know the update and the evaluation are correct?
+**Research question:** Under a fixed compute budget, which post-training signal improves an independently measured held-out outcome, and how do we know the update and evaluation are correct?
 
-Training reward is not that outcome. A base-model pass rate is not evidence that an update helps.
+**Current evidence:** No retained real-model update shows an independently confirmed held-out task-success gain. Training reward, a passing base gate, and a successful optimizer smoke are not that result.
 
-## Results
+## Start here
 
-No retained run shows an independently confirmed held-out task-success gain after a real model update.
-
-| Record | Observation | What it does not establish |
-| --- | --- | --- |
-| Exact-integer v1, SmolLM2-360M-Instruct, mlx | Strict pass@4 is 0/64 (`stop_zero`). Wilson 95% is [0, 0.05662405979280534]. | A reason to change the parser or to train. The post-hoc lenient rescore finds 19/256 expression matches and is not a gate result. See [v1](docs/heldout-exact-integer-base-gate-v1-result.md) and [the diagnostic](docs/two-tier-answer-scoring-v1.md). |
-| Exact-integer v2, Qwen2.5-3B-Instruct 4-bit, mlx | Strict pass@4 is 29/64 (0.453125). Wilson 95% is [0.3372944778061167, 0.5742640277994588]. | A capability claim or a policy-update comparison. It authorizes only the separate [one-update smoke](docs/heldout-exact-integer-update-cost-smoke-v1.md). |
-| OpenBookQA, Qwen2.5-0.5B | Base exact-answer success 45.31%, matched SFT 33.33%, GRPO 0/128 on every seed because outputs missed the frozen parser. | A general claim about GRPO. This pairing is retired. |
-| ARC-Challenge, Qwen2.5-0.5B | The frozen GRPO-versus-SFT comparison missed its gate (38.84% vs 40.00%). | A gain from the update. This pairing is retired. |
-
-The historical record stays in [the experiment index](docs/experiments.md), [the evidence ledger](docs/evidence.md), and [current gaps](docs/current-gaps.md). `docs/` is not moved or deleted.
-
-## Status at this snapshot
-
-VARE is a CPU-first control plane for post-training signals, policy updates, and evaluation reliability under limited compute. It integrates with existing training systems such as [Recursive-Verification-Lag (RVL)](https://github.com/mitukx/Recursive-Verification-Lag) instead of reimplementing a full RL stack.
-
-The current reviewable work also includes:
-
-- Runtime acknowledgment before promotion success, and a same-loop recovery fence after publication interruption, checkpoint mismatch, or lost journal acknowledgment. The frozen CPU comparison is baseline 10 fault failures plus 2 successful controls, versus 12 candidate passes. See [publication evidence and limits](docs/promotion-publication-recovery-v1.md).
-- Cancellation-safe candidate discard across rejection and pre-promotion errors, with later rounds blocked after failed restoration. The frozen seven-case CPU comparison fails on post-integration main and passes with the correction. See [recovery evidence and limits](docs/candidate-discard-recovery-v1.md).
-- Owned evaluation and inference transactions integrated with authenticated reward admission and operator revocation. The frozen four-case revocation/cancellation comparison fails on pinned main and passes after the correction. See [integration evidence and limits](docs/evaluation-transaction-integration-v1.md).
-- An RVL inference-state and cancellation correction: pinned main and the existing alias-only correction leave CPU RNG/modes changed and allow a cancelled generation thread to overlap the next rollout. The corrected CPU tests and actual tiny GPT-2/HF path preserve state and serialize workers. See the [three-arm report and reproduction](docs/rvl-inference-transaction-v1-report.md). This is correctness evidence, not model improvement.
-- A CPU-only trajectory-event reference plus a strict one-turn RVL replay bridge. It preserves complete GRPO group identity and exact generation metadata, policy-token log-probabilities, sampling temperature, and verifier configuration provenance; same-prompt groups remain separate. Pending/invalid evaluations stay distinct from valid zero scores. The [reference contract](docs/trajectory-reference-v1.md) records the E0 limits. The RVL replay reader rejects missing, nonnumeric, nonfinite, and out-of-range rewards on records marked ready.
-- A VARE GRPO-adapter correction for the same shared-module restore edge. The adapter previously called `Module.train()` after the trainer restore; direct flag assignment passes a constructed CPU regression. This does not add production-incidence or model-quality evidence. See the [adapter report](docs/rvl-grpo-shared-module-mode-v1-report.md).
-- A narrow RVL rollback correction for a shared-module mode restoration edge. Its constructed CPU regression fails on the pinned baseline and passes with the patch. [RVL PR #92](https://github.com/mitukx/Recursive-Verification-Lag/pull/92) is open; production incidence and model-quality impact are unknown.
-- A calibrated, protected grader for the public urllib3 #3352 historical bug and a VARE task-identity correction. The public task is retired from confirmation use. Two one-shot local model attempts produced no applicable patch; no training was run.
-- A structured research screen that admitted no new training or GPU experiment because no candidate cleared both novelty and fresh-task feasibility gates.
-
-For exact limits, raw records, reproduction commands, and the current pull-request state, start with the [reviewer guide](docs/reviewer-guide.md). Older PR status and links below were checked on 2026-10-11; the trajectory reference, RVL replay bridge, and reward-reader regressions above were added on 2026-10-14. Use linked pull requests for live status.
-
-## Review path
-
-1. [Reviewer guide](docs/reviewer-guide.md): what to read, reproduce, and claim.
-2. [VARE PR #3](https://github.com/mitukx/VARE/pull/3): historical-task evaluator, adversarial checks, task-identity fix, and base-model feasibility screen.
-3. [RVL PR #92](https://github.com/mitukx/Recursive-Verification-Lag/pull/92): shared-module rollback correction and upstream tests.
-4. [VARE PR #2](https://github.com/mitukx/VARE/pull/2) (merged): rollback evidence and research-gate follow-up.
-5. [Current evidence gaps](docs/current-gaps.md), [evidence ledger](docs/evidence.md), [experiment index](docs/experiments.md), and [roadmap](docs/roadmap.md): full historical record and remaining work.
-
-VARE PR #2 was merged into `main` as [`09dfcd5`](https://github.com/mitukx/VARE/commit/09dfcd5e02d37ad78b86948e555bbfd169cffc88). PR #3 carries the historical-task evaluator and the reviewer-facing documentation update; shared documentation was reconciled after #2 landed. RVL #92 is a separate upstream change.
-
-## Selected evidence
-
-| Area | Observed result | What it does not establish |
-| --- | --- | --- |
-| VARE adapter rollback | On the previous adapter, a later shared-module alias restored the child to train mode and changed a mode-dependent stand-in forward. Direct flag assignment restores the checked flags without calling `train()`. The opposite registration order and an unshared nested pair keep their flags. | A production module graph, accelerator behavior, or a change in model quality. The stand-in forward is not Dropout. |
-| RVL rollback | On pinned RVL `27ebf7f`, the shared-child regression fails exact mode restoration and the following Dropout output. The patch restores the checked model, optimizer, CPU RNG, and next-forward behavior; 14 trainer tests and 51 related CPU tests pass. PR #92 had 7/7 checks passing at the recorded snapshot. | Constructed CPU graph only; production incidence, CUDA/distributed behavior, model-quality impact, and independent human review remain unestablished. |
-| Historical task evaluator | urllib3 #3352 pinned base fails 2/2 fail-to-pass cases and passes 3/3 controls; its public known fix passes all five. The evaluator exercises the actual request path and keeps protected assets outside the candidate workspace. | Agent-discovered fixes or general coding ability. The task and fix are public, so it is development-only. The two local model attempts yielded no applicable patch. |
-| Real-model post-training | On the frozen OpenBookQA confirmation, base exact-answer success was 45.31%, matched SFT averaged 33.33%, and GRPO scored 0/128 for each of three seeds because outputs failed the frozen parser. The earlier ARC comparison also missed its frozen gate (38.84% GRPO vs. 40.00% SFT). | A general conclusion about GRPO or language models. These pairings and confirmation sets are retired. |
-
-## Reproduce
-
-From a Python 3.11 or newer checkout:
-
-```bash
-python3 -m pip install -e ".[dev]"
-python3 -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py
-PYTHONPATH=src python3 scripts/check_tracked_blob_budget.py
-```
-
-The optional mathematical grader tests install `requirements/math500-grader-test.lock.txt` and are not part of that command.
-
-The RVL shared-module regression clones a pinned upstream revision and runs CPU trainer tests:
-
-```bash
-PYTHON=python3.12 bash scripts/reproduce_rvl_shared_module_mode_followup_v1.sh \
-  /tmp/vare-rvl-shared-mode-review
-```
-
-The urllib3 #3352 calibration uses macOS `/usr/bin/sandbox-exec`, Git, Python 3.12 for VARE, and Python 3.11 for the pinned task package. It is not the Linux CI path.
-
-```bash
-PYTHONPATH=src python3.12 scripts/calibrate_urllib3_3352_task.py \
-  --output /tmp/urllib3-calibration
-
-PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src python3.12 -m pytest -q \
-  tests/test_urllib3_3352_evaluator.py tests/test_environment_catalog.py
-
-PYTHONPATH=src python3.12 scripts/adversarial_test_urllib3_3352.py \
-  --base-run /tmp/urllib3-calibration/pinned-base/preparation \
-  --output /tmp/urllib3-adversarial
-```
-
-Further command context, expected records, and claim limits are in the [reviewer guide](docs/reviewer-guide.md).
-
-## Experiment configs
-
-Frozen study definitions are the JSON files in [`protocols/`](protocols/). A `*.lock.json` file is the recorded spec for a study that already has an outcome. Do not edit a lock after that outcome is recorded, and do not rerun a consumed prompt to change the recorded result. Raw outputs stay under [`results/`](results/). Summaries in `docs/` are derived from those files and their hashes.
-
-## Repository map
-
-| Path | Contents |
+| Goal | Entry point |
 | --- | --- |
-| `src/vare/`, `tests/` | VARE control-plane code and regression tests |
-| `benchmarks/` | Task definitions, protected graders, and task locks |
-| `protocols/` | Frozen study definitions, gates, and hashes |
-| `results/` | Raw outputs, manifests, and retained failed or passed runs |
-| `docs/` | Technical reports, evidence summaries, decisions, and the [report template](docs/templates/paired-comparison-report.md) |
-| `contributions/` | Upstream patch artifacts and status |
-| `minigrpo/` | Small GRPO trainer for the integer seed-split train rows, scored on dev. CPU tests only; no retained model run. See [minigrpo](docs/minigrpo.md). |
-| `selfimprove/` | Proposes recomputable integer problems, trains with minigrpo, and rolls a candidate back through `PromotionGate`. A format-only reward fixture is rejected in tests. No retained model round. See [selfimprove](docs/selfimprove.md). |
-| `notebooks/minigrpo_selfimprove_t4.ipynb` | GPU notebook for the two scripts. Drive holds the outputs so a rerun continues. |
-| `notebooks/flagship_a100.ipynb` | A100 notebook for a five-arm reward ablation and a short promotion-gate loop. QUICK measures throughput; FULL locks a step count aimed at 2.5 hours. No model result is retained here. See [flagship](docs/flagship.md). |
-| `scripts/`, `reproducers/` | Reproduction, audit, and diagnostic commands |
+| Review representative work and its limits | [Reviewer guide](docs/reviewer-guide.md) |
+| Find code, contracts, reports, and experiments | [Documentation index](docs/README.md), [repository layout](docs/repository-layout.md) |
+| Reproduce a bounded correctness result | [Script index](scripts/README.md) |
+| Check the next admissible research step | [Current gaps](docs/current-gaps.md), [agent charter](AGENTS.md) |
+| Inspect the complete retained history | [Experiment index](docs/experiments.md), [evidence ledger](docs/evidence.md), [roadmap](docs/roadmap.md) |
 
-## Held-out exact-integer records
+## Representative systems evidence
 
-The 64-task pack is `benchmarks/heldout/exact_integer_v1/`. v1 is `stop_zero`. v2 is the 29/64 base gate in the table above. A later train/dev/confirm seed list is [integer seed split v1](docs/integer-seed-split-v1.md). Report calculations are [eval stats](docs/eval-stats-v1.md). The [one-update smoke](docs/heldout-exact-integer-update-cost-smoke-v1.md) retained an accepted mlx record: one step, loss 3.004885196685791, reload matched, peak memory 1959434978 bytes, wall time 8.762955541998963 seconds. That record is not a held-out gain. [Format versus correctness v1](docs/format-vs-correctness-comparison-v1.md) still exits 2. The successor [v2 protocol](docs/format-vs-correctness-comparison-v2.md) froze five seeds and 16 matched optimizer steps. The operator-reported mlx run finished 320 train rows and 17,920 eval rows with decision `interval_includes_zero`. Confirm pass@1 was base 0.2523, format SFT 0.2594, format-reward RL 0.2625, correctness-reward RL 0.2641, and random-reward RL 0.2625. The paired bootstrap of correctness minus format SFT was mean +0.0047 with 95% CI [-0.0008, +0.0102] on 64 tasks. Those figures are a transcription. The original `summary.json` and `progress.jsonl` are not in git. The interval does not promote a checkpoint and does not authorize more steps.
+| Boundary | Measured scope |
+| --- | --- |
+| [Full-round runtime ownership](docs/runtime-round-ownership-v1.md) | Eight fixed CPU fault cases fail on pinned main; the correction passes all ten cases including two controls. Same-hooks loops share ownership/quarantine; SQLite reservations survive process death. Single-host trusted fixtures, not distributed atomicity. |
+| [Publication acknowledgment](docs/promotion-publication-recovery-v1.md) and [owned discard](docs/candidate-discard-recovery-v1.md) | Frozen baseline/fix comparisons reject false promotion success and retain restoration through cancellation. These are correctness results, not learning gains. |
+| [RVL inference transaction](docs/rvl-inference-transaction-v1-report.md) | CPU fixture and tiny GPT-2/HF checks preserve RNG/module modes and drain cancelled generation workers. No production prevalence or accelerator result. |
+| [Historical urllib3 grader](docs/urllib3-3352-real-model-feasibility-v1-report.md) | Pinned failing source and public known fix distinguish the actual regression; protected-asset checks and task identity are retained. Two local model attempts produced no patch. Public task is retired from confirmation. |
+| [Trajectory/replay contract](docs/trajectory-reference-v1.md) | CPU reference and RVL bridge retain complete group identity and token/verifier provenance. Pending/invalid reward is distinct from valid zero. |
 
-Adapter checkpoints already committed under `results/` stay in git as retained raw records. [`protocols/tracked_large_blob_allowlist_v1.txt`](protocols/tracked_large_blob_allowlist_v1.txt) freezes those blobs at or above 1 MiB; `scripts/check_tracked_blob_budget.py` rejects a tree that adds, replaces, or drops one. New files at or above that size, and benchmark content with uncertain redistribution terms, stay outside the repository. Record a new external file's SHA-256 in the study manifest. Published history is not rewritten. See [artifact retention](docs/artifact-retention.md). Read each report for its exact source revisions, environment, raw artifacts, and claim limits. See [LICENSE](LICENSE) for the repository license.
+## Retained model outcomes
 
-## Experimental meta-improvement controller (CPU only)
+| Study | Observation | Decision / limit |
+| --- | --- | --- |
+| [Exact-integer v1](docs/heldout-exact-integer-base-gate-v1-result.md), SmolLM2-360M-Instruct / mlx | Strict pass@4: 0/64 | Retired `stop_zero`; do not tune the parser to pass the observed cohort. |
+| [Exact-integer v2](docs/heldout-exact-integer-base-gate-v2.md), Qwen2.5-3B-Instruct 4-bit / mlx | Strict pass@4: 29/64 (45.31%) | Base feasibility only; separate [one-update smoke](docs/heldout-exact-integer-update-cost-smoke-v1.md) retained save/reload and resource measurements, not a learning gain. |
+| [OpenBookQA confirmation](docs/openbookqa-qwen25-grpo-sft-confirmation-v1-report.md), Qwen2.5-0.5B | Base 45.31%; matched SFT 33.33%; GRPO 0/128 on all three seeds under the frozen parser | Pairing retired; no general conclusion about GRPO. |
+| ARC-Challenge, Qwen2.5-0.5B | GRPO 38.84% versus SFT 40.00% | Frozen gate failed; see the [experiment index](docs/experiments.md). Pairing retired. |
+| [Format/correctness v2](docs/format-vs-correctness-comparison-v2.md) | Correctness RL minus format SFT: +0.0047, 95% CI [-0.0008, 0.0102] | Non-pass. Operator-reported transcription; original summary/progress files are absent from Git. |
 
-`src/vare/meta_improvement.py` is a separate, dependency-free experimental post-training control study. It learns contextual **improvement value per budget unit** from development outcomes, chooses policy-gradient training or a verifier-repair-and-training intervention, and compares against fixed curricula and proxy-reward greediness on a synthetic tabular RLVR environment. A locked seed-window benchmark, negative controls, and limitations are in [the report](docs/meta-improvement-cpu-v1.md). This is **not** a real language-model improvement or a complete RSI system.
+Negative results, consumed cohorts, protocol locks, and raw records retain their existing paths. A fresh study needs independently justified task/model/update feasibility, matched controls, multiple seeds, and untouched confirmation tasks.
 
-Run `python3 -m pytest -q tests/test_meta_improvement.py` and `python3 scripts/run_meta_improvement_v1.py --seed-start 100 --seeds 40 --budget 32 --output /tmp/vare-meta-confirmation-v1.json` from an editable install.
+## CPU quick start
+
+Python >=3.11, from the repository root:
+
+```bash
+python -m pip install -e '.[dev]'
+python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py
+PYTHONPATH=src python scripts/check_tracked_blob_budget.py
+python scripts/reproduce_runtime_round_ownership_v1.py --output /tmp/vare-runtime-round-review
+```
+
+Use a new output directory. The comparison needs Git access to its pinned baseline. Optional mathematical graders and real trainer/model paths have separate dependency locks; follow their reports. Historical urllib3 calibration requires macOS. `minigrpo/`, `selfimprove/`, and accelerator notebooks are experimental paths with no retained model-quality gain; see the [layout](docs/repository-layout.md).
+
+Runtime recovery requires old owners/workers to be terminal and state to be independently verified; [operator procedure](docs/runtime-round-ownership-v1.md#operator-recovery). Durable evaluator jobs use a separate [lease/recovery contract](docs/recovery.md). Neither runner is a hostile-code security sandbox.
+
+The 235 tracked blobs >=1 MiB are frozen. New large artifacts stay outside Git with manifest hashes; [artifact retention](docs/artifact-retention.md). Published history is not rewritten. [License](LICENSE): Apache-2.0.

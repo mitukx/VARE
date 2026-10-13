@@ -1,0 +1,70 @@
+{
+  "protocol_sha256": "9a3d7ad1f1de9593aa7083ce3e3390242276a73e74e321d89ec74f5483232da0",
+  "baseline_revision": "377d8894d3d20dd4d37677e223371ef11eadd354",
+  "candidate_revision": "9eb511756bca3caf4dc2ca376bfa5cb93ed6fb52",
+  "source_sha256": {
+    "protocols/runtime_round_ownership_v1.lock.json": "9a3d7ad1f1de9593aa7083ce3e3390242276a73e74e321d89ec74f5483232da0",
+    "tests/test_runtime_round_ownership.py": "51ecd61f6badfb112bed8eacdbe23b5084a4e08592f554c1e869acc320e2dc01",
+    "src/vare/engine.py": "f922fae2ae63c33651086dfee958e8b066033ed60755cf28905eea1a131bda80",
+    "src/vare/runtime.py": "d1df9c0680b4fb4fd602694ae79eb5937dc391f53596d05a56f521ce79ecebb5",
+    "src/vare/promotion_journal.py": "2e7b98951427aa63cff61ba948a3e4eb2e480b1378ed3c891e9df20225876ee7",
+    "src/vare/interfaces.py": "a13c0d8760e4b66134f68c7af9ef2782cbd8faa59af0c9abb4ebe5b5c62f1ee4",
+    "tests/test_checkpoint_bound_promotion.py": "cf6b34b23bbff8df0c7aee2bcece5e96a67dee1d9656fe62b88ba3663bb72aef",
+    "tests/test_promotion_publication_recovery.py": "d0b56e43b5a919bc4e4b32c2537dab768796b0c32a013ab310f0e323eb30dc5c",
+    "scripts/reproduce_runtime_round_ownership_v1.py": "ececc5ee2450495a53bd7216821f11e663bbb2021a2352b41d2c6549afe54441"
+  },
+  "runtime": {
+    "python": "3.12.14",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "pytest": "8.4.2",
+    "device": "cpu"
+  },
+  "results": {
+    "baseline": {
+      "exit_code": 1,
+      "tests": 10,
+      "failures": 8,
+      "errors": 0,
+      "skips": 0,
+      "engine_sha256": "7a6384010bdcf785a65cc0b05c33c29c44471a2c770979c9e5944463677122c5",
+      "case_results": {
+        "test_two_loops_same_hooks_serialize_before_policy_lookup": "failure",
+        "test_sibling_loop_cannot_bypass_unknown_runtime[discard]": "failure",
+        "test_sibling_loop_cannot_bypass_unknown_runtime[publish]": "failure",
+        "test_sibling_loop_cannot_bypass_unknown_runtime[train]": "failure",
+        "test_reopened_journal_fences_fresh_hooks_before_lookup[discard]": "failure",
+        "test_reopened_journal_fences_fresh_hooks_before_lookup[commit-after]": "failure",
+        "test_distinct_hooks_same_journal_cannot_enter_during_training": "failure",
+        "test_process_death_before_promotion_intent_fences_restart": "failure",
+        "test_success_control_preserves_publication[False]": "pass",
+        "test_success_control_preserves_publication[True]": "pass"
+      }
+    },
+    "candidate": {
+      "exit_code": 0,
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "engine_sha256": "f922fae2ae63c33651086dfee958e8b066033ed60755cf28905eea1a131bda80",
+      "case_results": {
+        "test_two_loops_same_hooks_serialize_before_policy_lookup": "pass",
+        "test_sibling_loop_cannot_bypass_unknown_runtime[discard]": "pass",
+        "test_sibling_loop_cannot_bypass_unknown_runtime[publish]": "pass",
+        "test_sibling_loop_cannot_bypass_unknown_runtime[train]": "pass",
+        "test_reopened_journal_fences_fresh_hooks_before_lookup[discard]": "pass",
+        "test_reopened_journal_fences_fresh_hooks_before_lookup[commit-after]": "pass",
+        "test_distinct_hooks_same_journal_cannot_enter_during_training": "pass",
+        "test_process_death_before_promotion_intent_fences_restart": "pass",
+        "test_success_control_preserves_publication[False]": "pass",
+        "test_success_control_preserves_publication[True]": "pass"
+      }
+    }
+  },
+  "artifact_sha256": {
+    "baseline-pytest.log": "375ba8ba1b826fec9b810ab05b3230b144f3330e13e833422fb53284c45ddc1e",
+    "baseline-pytest.xml": "eab330c66b2289445c6b43362c835c6b35cdd5bb77ed1ddebad643d593c31d22",
+    "candidate-pytest.log": "78af38869b105c928aaf3a0264a81ae991db90a880af50f850d56eee6ab30a0e",
+    "candidate-pytest.xml": "cbf8c20bbc930c0afa9298dbc17998c36bb8a9e15e70f967234f6564452b460a"
+  }
+}

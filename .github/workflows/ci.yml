@@ -46,6 +46,24 @@ jobs:
       # The default suite intentionally stays free of optional symbolic-math
       # dependencies. The isolated grader job below owns those tests.
       - run: python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py
+        env:
+          VARE_TEST_DIAGNOSTICS_DIR: ${{ runner.temp }}/durable-test-diagnostics
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: durable-test-diagnostics-${{ matrix.python-version }}
+          path: ${{ runner.temp }}/durable-test-diagnostics
+          if-no-files-found: ignore
+      - name: Reproduce whole-round ownership and restart fencing
+        if: matrix.python-version == '3.12'
+        run: >-
+          python scripts/reproduce_runtime_round_ownership_v1.py
+          --output "${RUNNER_TEMP}/runtime-round-replay"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always() && matrix.python-version == '3.12'
+        with:
+          name: runtime-round-replay
+          path: ${{ runner.temp }}/runtime-round-replay
       - name: Reproduce owned evaluation task cleanup
         if: matrix.python-version == '3.12'
         run: >-
