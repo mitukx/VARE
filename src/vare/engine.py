@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 from collections.abc import Callable, Sequence
+from uuid import uuid4
 
 from .attestation import EvidenceTrustRoot
 from .safety import SafetyInterlock, SafetyInterlockDenied
@@ -15,6 +16,7 @@ from .lifecycle import FailureDrivenTaskGenerator, VerifierRefreshController
 from .promotion import PromotionGate
 from .promotion_journal import PromotionJournal, PromotionRecoveryRequired
 from .replay import PrioritizedReplay
+from .runtime import RuntimeCoordinator, coordinator_for
 from .telemetry import EventLog
 from .types import Attempt, Experience, PromotionDecision, RoundResult, Task, snapshot_verification
 from .verifiers import VerifierEnsemble
@@ -44,6 +46,7 @@ class CapabilityLoop:
         checkpoint_hasher: Callable[[str], str] | None = None,
         training_evidence_authorizer: Callable[[Experience], bool] | None = None,
         require_authenticated_training: bool = False,
+        runtime_coordinator: RuntimeCoordinator | None = None,
         seed: int = 0,
     ) -> None:
         self.hooks = hooks
@@ -79,7 +82,9 @@ class CapabilityLoop:
         self._generated_tasks: list[Task] = []
         self.step = 0
         self._run_serial = 0
-        self._round_lock = asyncio.Lock()
+        self.runtime_coordinator = runtime_coordinator or coordinator_for(hooks)
+        self._round_lock = self.runtime_coordinator.lock
+        self._candidate_unresolved = False
         self._discard_failure: BaseException | None = None
         self._promotion_failure: BaseException | None = None
 
@@ -151,11 +156,12 @@ class CapabilityLoop:
         except BaseException as exc:
             self._discard_failure = exc
             raise RuntimeError("candidate discard failed; policy state is unknown") from exc
+        self._candidate_unresolved = False
         if cancellation is not None and propagate_cancellation:
             raise cancellation
 
     async def run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None) -> RoundResult:
-        """Serialize each stateful policy-update transaction for this loop."""
+        """Own the shared runtime before any hook; retain crash uncertainty."""
         async with self._round_lock:
             if self._discard_failure is not None:
                 # Do not inspect policy identity, emit rollouts or advance
@@ -172,7 +178,42 @@ class CapabilityLoop:
                     "unresolved promotion recovery required; verify the runtime "
                     "and reconcile durable evidence before constructing a fresh loop"
                 ) from self._promotion_failure
-            return await self._run_round(tasks, round_index=round_index, rollout_count=rollout_count)
+            self.runtime_coordinator.assert_usable()
+            owner_id = uuid4().hex
+            if self.promotion_journal is not None:
+                # Claim failure must not quarantine the *other* live owner.
+                self.promotion_journal.acquire_round(owner_id)
+            self._candidate_unresolved = False
+            try:
+                result = await self._run_round(
+                    tasks, round_index=round_index, rollout_count=rollout_count
+                )
+            except BaseException as exc:
+                if (self._candidate_unresolved or self._discard_failure is not None
+                        or self._promotion_failure is not None):
+                    self.runtime_coordinator.quarantine(exc)
+                    # Leave the durable reservation intact, even if a commit
+                    # succeeded but its acknowledgment was lost.
+                else:
+                    self._release_runtime_round(owner_id)
+                raise
+            self._release_runtime_round(owner_id)
+            self._candidate_unresolved = False
+            return result
+
+    def _release_runtime_round(self, owner_id: str) -> None:
+        if self.promotion_journal is None:
+            return
+        try:
+            assert self.checkpoint_hasher is not None
+            policy_id, _ = self.hooks.active_policy()
+            self.promotion_journal.assert_clean(
+                policy_id=policy_id, checkpoint_sha256=self.checkpoint_hasher(policy_id)
+            )
+            self.promotion_journal.release_round(owner_id)
+        except BaseException as exc:
+            self.runtime_coordinator.quarantine(exc)
+            raise PromotionRecoveryRequired("runtime round completion requires recovery") from exc
 
     async def _run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None) -> RoundResult:
         source_tasks = list(tasks) + self._generated_tasks
@@ -394,6 +435,9 @@ class CapabilityLoop:
                     raise RuntimeError("unauthenticated_training_reward_evidence")
             if self.safety_interlock is not None:
                 self.safety_interlock.require("train", incumbent_id=incumbent_id)
+            # A failing training hook may have mutated model/optimizer state
+            # without returning a candidate handle. Fence rather than guess.
+            self._candidate_unresolved = True
             candidate_id = await self.hooks.train_candidate(incumbent_id, train_batch)
 
         evaluation_tasks: list[asyncio.Task] = []

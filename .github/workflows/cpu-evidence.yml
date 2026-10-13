@@ -32,10 +32,18 @@ jobs:
         with:
           python-version: '3.11'
       - name: Check evaluation execution contracts
+        env:
+          VARE_TEST_DIAGNOSTICS_DIR: ${{ runner.temp }}/durable-test-diagnostics
         run: |
           python3 -m unittest discover -s tests -p 'test_runner.py' -v
           python3 -m unittest discover -s tests -p 'test_durable.py' -v
           python3 -m unittest discover -s tests -p 'test_measurement.py' -v
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: durable-test-diagnostics-cpu-evidence
+          path: ${{ runner.temp }}/durable-test-diagnostics
+          if-no-files-found: ignore
       - name: Reconstruct retained systems evidence
         run: |
           python3 scripts/audit_scheduler.py results/cpu-scheduler-v1

@@ -1,0 +1,23 @@
+{
+  "files": {
+    "full-suite.log": "427183051c43327a74021700e7a245c0d3e73a9acab955de0100883982cd2264",
+    "maintained.log": "5976d78c3e85194c9da79ac45d9e37e55d4de34039786a76fdf67f5d3089b9d9",
+    "maintained.xml": "d10124246966e7cb4ad32cbe9db006f2e73390b7aa5bcd23dd854edc503451d6"
+  },
+  "checks": {
+    "full_cpu": 639,
+    "separate_math_graders": 14,
+    "ruff": "0.15.12 passed",
+    "mypy": "1.19.1 passed",
+    "blob_budget": "235 unchanged",
+    "navigation_documents": 5,
+    "diagnostic_failure_injection": "passed"
+  },
+  "source_sha256": {
+    "src/vare/engine.py": "f922fae2ae63c33651086dfee958e8b066033ed60755cf28905eea1a131bda80",
+    "src/vare/runtime.py": "d1df9c0680b4fb4fd602694ae79eb5937dc391f53596d05a56f521ce79ecebb5",
+    "src/vare/promotion_journal.py": "2e7b98951427aa63cff61ba948a3e4eb2e480b1378ed3c891e9df20225876ee7",
+    "tests/test_runtime_round_recovery.py": "512e8a7ac7bef4e0d75719779ea8241fbe00c5a35c9d8289c794e159e478e66a",
+    "tests/test_durable.py": "3912143e536bdf8c2dd5b5d601e0298d3bb3568fbab4cf3d3ef450f616dd64e3"
+  }
+}

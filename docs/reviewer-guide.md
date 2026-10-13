@@ -1,5 +1,9 @@
 # Reviewer guide
 
+## Current entry point — 2026-10-14
+
+The [documentation index](README.md) and [repository layout](repository-layout.md) separate current code, experimental paths, and retained history without moving frozen artifacts. The [whole-round runtime ownership report](runtime-round-ownership-v1.md) covers sibling loops, restart reservations, explicit operator recovery, and multiprocess failure diagnostics. It extends the earlier per-loop discard/publication fences; the original reports remain scoped to their measured revisions. Older status snapshots below are historical; use PR links for live status. The main model-learning gap remains independently confirmed held-out task success after an update.
+
 ## Evaluation lifetime follow-up — 2026-10-13
 
 The [engine report](engine-evaluation-lifecycle-v1-report.md) closes the generic sibling-evaluation gap identified in the inference review. Inspect the 13-case baseline/fixed comparison, event-order probe, retained first-proposal counterexample, and independent AI corrected probe. This is a separate proposed change stacked on the inference correction. The core contract is evaluator termination before candidate discard and round unlock; arbitrary hook resource restoration is not implied. The local full suite now passes 362 tests.

@@ -1,5 +1,9 @@
 # Roadmap
 
+## Current entry point — 2026-10-14
+
+The [documentation index](README.md) and [repository layout](repository-layout.md) separate current code, experimental paths, and retained history without moving frozen artifacts. The [whole-round runtime ownership report](runtime-round-ownership-v1.md) covers sibling loops, restart reservations, explicit operator recovery, and multiprocess failure diagnostics. It extends the earlier per-loop discard/publication fences; the original reports remain scoped to their measured revisions. Older status snapshots below are historical; use PR links for live status. The main model-learning gap remains independently confirmed held-out task success after an update.
+
 ## Evaluation task ownership follow-up — 2026-10-13
 
 The [bounded engine correction](engine-evaluation-lifecycle-v1-report.md) now drains sibling evaluations before failure-path candidate discard and round unlock. The first proposal was independently falsified for already-cancelling hooks, then corrected and checked. Baseline fails 12/13 cases; corrected and concurrent-success control pass. Remaining lifecycle work must distinguish rollout ownership and successful-path promotion interruption from this completed evaluation boundary. A subsequent model study still needs its own frozen protocol and untouched confirmation data.

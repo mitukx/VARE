@@ -1,7 +1,10 @@
 import asyncio
 from dataclasses import replace
+import json
 import multiprocessing
+import os
 from pathlib import Path
+import platform
 import tempfile
 import time
 import unittest
@@ -166,8 +169,30 @@ class DurableTests(unittest.TestCase):
         path = self.parent / 'many.db'
         jobs = [replace(self.job, id='job-%02d' % i) for i in range(12)]
         store = Store.create(path, jobs, self.root)
+        started = time.monotonic()
         run_workers(path, 4, 2)
-        self.assertTrue(all(r['token'] == 1 and r['effective'] == 'candidate_passed' for r in store.jobs()))
+        rows = store.jobs()
+        if not all(r['token'] == 1 and r['effective'] == 'candidate_passed' for r in rows):
+            # Read only: export() refreshes inputs and could change the state
+            # we need to diagnose. Keep the original strict acceptance rule.
+            with store.connection() as db:
+                attempts = []
+                for raw in db.execute('SELECT * FROM attempts ORDER BY job_id,token'):
+                    attempt = dict(raw)
+                    for name in ('stdout', 'stderr'):
+                        attempt[name] = (attempt[name] or b'')[:4096].decode('utf-8', errors='replace')
+                    attempts.append(attempt)
+                events = [dict(r) for r in db.execute('SELECT * FROM events ORDER BY sequence')]
+            diagnostic = {'python': platform.python_version(), 'platform': platform.platform(),
+                          'workers': 4, 'lease_seconds': 2, 'elapsed_seconds': time.monotonic() - started,
+                          'jobs': rows, 'attempts': attempts, 'events': events}
+            encoded = json.dumps(diagnostic, indent=2)
+            destination = os.environ.get('VARE_TEST_DIAGNOSTICS_DIR')
+            if destination:
+                directory = Path(destination)
+                directory.mkdir(parents=True, exist_ok=True)
+                (directory / 'multiprocess-claims.json').write_text(encoded + '\n')
+            self.fail('multiprocess acceptance failed; read-only state follows:\n' + encoded)
         output = self.parent / 'many-evidence'
         store.export(output)
         self.assertEqual(12, audit_durable(output)['attempts'])

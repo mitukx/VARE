@@ -25,6 +25,11 @@ class LoopHooks(Protocol):
     After promote() returns normally, active_policy() must acknowledge the
     installed candidate identity. A publication exception or acknowledgment
     mismatch requires external recovery, not automatic candidate discard.
+
+    Loops with the same hooks object share a runtime coordinator. Distinct
+    proxies for one mutable runtime must share runtime_coordinator explicitly
+    or the same PromotionJournal database. All owned work must be terminal
+    before a hook returns/raises; detached workers are outside this contract.
     """
 
     def active_policy(self) -> tuple[str, int]: ...

@@ -4,7 +4,7 @@ from importlib import import_module
 __version__ = '0.4.0'
 _EXPORTS = {'EngineConfig': 'config', 'LagConfig': 'config', 'PromotionConfig': 'config',
             'ReplayConfig': 'config', 'CapabilityLoop': 'engine', 'LoopHooks': 'engine',
-            'Attempt': 'types', 'EvaluationReport': 'types', 'Task': 'types', 'Verification': 'types'}
+            'RuntimeCoordinator': 'runtime', 'Attempt': 'types', 'EvaluationReport': 'types', 'Task': 'types', 'Verification': 'types'}
 __all__ = list(_EXPORTS)
 
 

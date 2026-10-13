@@ -58,6 +58,53 @@ class PromotionJournal:
                 "INSERT OR IGNORE INTO active VALUES (1, ?, ?)",
                 (initial_policy_id, initial_checkpoint_sha256),
             )
+            db.execute(
+                "CREATE TABLE IF NOT EXISTS runtime_round ("
+                "singleton INTEGER PRIMARY KEY CHECK(singleton = 1), "
+                "owner_id TEXT NOT NULL)"
+            )
+
+    def acquire_round(self, owner_id: str) -> None:
+        """Reserve before any hook access; never expire an unknown live owner."""
+        if not isinstance(owner_id, str) or not 16 <= len(owner_id) <= 256:
+            raise ValueError("invalid runtime round owner")
+        with self._connection() as db:
+            if db.execute("SELECT 1 FROM runtime_round").fetchone() is not None:
+                raise PromotionRecoveryRequired("unresolved or live runtime round owner")
+            if self._pending(db) is not None:
+                raise PromotionRecoveryRequired("unresolved promotion transaction")
+            db.execute("INSERT INTO runtime_round VALUES (1, ?)", (owner_id,))
+
+    def release_round(self, owner_id: str) -> None:
+        """Owner-only completion after runtime verification/owned cleanup."""
+        with self._connection() as db:
+            self._require_round_owner(db, owner_id)
+            if self._pending(db) is not None:
+                raise PromotionRecoveryRequired("unresolved promotion transaction")
+            db.execute("DELETE FROM runtime_round WHERE singleton=1")
+
+    @staticmethod
+    def _require_round_owner(db: sqlite3.Connection, owner_id: str) -> None:
+        row = db.execute("SELECT owner_id FROM runtime_round WHERE singleton=1").fetchone()
+        if row is None or row[0] != owner_id:
+            raise PromotionRecoveryRequired("runtime round ownership mismatch")
+
+    def recover_round(
+        self, *, owner_id: str, observed_policy_id: str, observed_checkpoint_sha256: str
+    ) -> None:
+        """Operator only, after all old work is dead and runtime was verified.
+
+        Reconcile a pending promotion first. Matching a durable pointer alone
+        does not establish worker termination or optimizer/RNG restoration.
+        """
+        _validate(observed_policy_id, observed_checkpoint_sha256)
+        with self._connection() as db:
+            self._require_round_owner(db, owner_id)
+            if self._pending(db) is not None:
+                raise PromotionRecoveryRequired("reconcile pending promotion before round recovery")
+            if self._active(db) != (observed_policy_id, observed_checkpoint_sha256):
+                raise PromotionRecoveryRequired("unknown runtime checkpoint during round recovery")
+            db.execute("DELETE FROM runtime_round WHERE singleton=1")
 
     @contextmanager
     def _connection(self) -> Iterator[sqlite3.Connection]:
@@ -187,4 +234,7 @@ class PromotionJournal:
                 "active_policy_id": policy_id,
                 "active_checkpoint_sha256": digest,
                 "pending_tx_id": pending[0] if pending else None,
+                "round_owner_id": (row[0] if (row := db.execute(
+                    "SELECT owner_id FROM runtime_round WHERE singleton=1"
+                ).fetchone()) else None),
             }
