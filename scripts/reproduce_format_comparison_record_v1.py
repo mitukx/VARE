@@ -55,7 +55,7 @@ def truth(expression: str) -> int:
 def parsed(text: str) -> int | None:
     lines = text.rstrip().splitlines()
     final = lines[-1].strip() if lines else ""
-    match = re.fullmatch(r"#### (-?\d+)", final)
+    match = re.fullmatch(r"####\s+(-?\d+)\s*", final)
     return int(match[1]) if match else None
 
 
@@ -136,14 +136,18 @@ def audit(output: Path) -> None:
     tasks = {task_id: truth(expression) for task_id, expression in expressions.items()}
     counts = defaultdict(list)
     evaluated = 0
+    format_valid = 0
     for row in rows:
         if row["kind"] != "eval":
             continue
-        correct = parsed(row["output"]) == tasks[row["task_id"]]
-        if correct != legacy.score_output(expressions[row["task_id"]], row["output"])["strict_correct"]:
+        answer = parsed(row["output"])
+        correct = answer == tasks[row["task_id"]]
+        actual = legacy.score_output(expressions[row["task_id"]], row["output"])
+        if correct != actual["strict_correct"] or (answer is not None) != actual["strict_format"]:
             raise ValueError("independent strict grading differs on a retained output")
         counts[(row["arm"], row["checkpoint_step"], row["split"], row["run_seed"], row["task_id"])].append(correct)
         evaluated += 1
+        format_valid += answer is not None
     for point in result["curves"]:
         split_tasks = confirm if point["split"] == "confirm" else pack
         groups = [counts[(point["arm"], point["checkpoint_step"], point["split"], seed, task["task_id"])]
@@ -160,6 +164,8 @@ def audit(output: Path) -> None:
         by_seed = Counter()
         for row in train:
             texts = row["outputs"]
+            if len(texts) != 2:
+                raise ValueError("training group is not intact")
             if arm == "format_reward_rl":
                 rewards = [float(parsed(text) is not None) for text in texts]
             elif arm == "correctness_reward_rl":
@@ -205,6 +211,7 @@ def audit(output: Path) -> None:
         adapters.append({"run_seed": seed, "identical_step_1_through_16_hashes": True,
                          "final_adapter_sha256": digest, "zero_b_tensors": zero_b_tensors(saved)})
     report = {"progress_sha256": PROGRESS_SHA, "rows": len(rows), "independently_scored_eval_rows": evaluated,
+        "strict_format_valid_eval_rows": format_valid,
         "primary_preserved": True, "all_curves_match_independent_oracle": True,
         "training_signal": diagnostics, "format_adapters": adapters,
         "format_zero_optimizer_states": optimizer_states,

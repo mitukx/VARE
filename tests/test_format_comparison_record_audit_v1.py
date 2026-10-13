@@ -24,7 +24,9 @@ def test_expression_oracle_rejects_unsupported_values(expression):
 def test_strict_output_contract():
     assert audit.parsed("work\n#### -2\n\n ") == -2
     assert audit.parsed("work\u2028#### 2") == 2
-    for text in ("", "#### +2", "####  2", "#### 2\nother", "answer 2"):
+    assert audit.parsed("####  2") == 2
+    assert audit.parsed("####\t2") == 2
+    for text in ("", "#### +2", "#### 2\nother", "answer 2"):
         assert audit.parsed(text) is None
 
 
