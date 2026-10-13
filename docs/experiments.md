@@ -1,5 +1,9 @@
 # Experimental program
 
+## 2026-10-13 — evaluation task lifetime correction
+
+The [engine replay](engine-evaluation-lifecycle-v1-report.md) checks termination-before-discard with 13 cases and a small event-order probe. Pinned baseline fails 12 cases; the correction passes all 13 and the full local suite of 362. The retained independent AI counterexample caused an additional guard for hooks already cancelling. This CPU fixture study neither trains a model nor consumes a confirmation cohort.
+
 ## 2026-10-13 — inference state and cancellation correctness
 
 The [three-arm study](rvl-inference-transaction-v1-report.md) tests a source-level contract, not a post-training efficacy hypothesis. Pinned main and alias-only controls fail active inference/cancellation checks; the corrected adapter passes all 14 new cases and actual pinned RVL/HF probes. No model study, retired cohort, paid compute, or accelerator run was used. The fixture performs a tiny trainer update only to populate optimizer state. Source and artifact hashes, logs, package versions, and failure counts are retained in the [bundle](../results/rvl-inference-transaction-v1/).

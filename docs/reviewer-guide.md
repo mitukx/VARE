@@ -1,5 +1,9 @@
 # Reviewer guide
 
+## Evaluation lifetime follow-up — 2026-10-13
+
+The [engine report](engine-evaluation-lifecycle-v1-report.md) closes the generic sibling-evaluation gap identified in the inference review. Inspect the 13-case baseline/fixed comparison, event-order probe, retained first-proposal counterexample, and independent AI corrected probe. This is a separate proposed change stacked on the inference correction. The core contract is evaluator termination before candidate discard and round unlock; arbitrary hook resource restoration is not implied. The local full suite now passes 362 tests.
+
 ## 2026-10-13 addendum: inference transaction
 
 Integration follow-up: #5–#8 were merged by separate repository activity. This contribution incorporates main `1e7fda8` and now targets main. The [latest four-arm replay](../results/rvl-inference-transaction-v1/integration-main-1e7fda8/) keeps that main as an explicit control (10/14 failures versus 0/14 corrected); full suite is now 349 pass, plus Ruff/mypy. The earlier stacked-PR status below describes the initial audit only.

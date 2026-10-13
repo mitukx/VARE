@@ -1,5 +1,9 @@
 # Roadmap
 
+## Evaluation task ownership follow-up — 2026-10-13
+
+The [bounded engine correction](engine-evaluation-lifecycle-v1-report.md) now drains sibling evaluations before failure-path candidate discard and round unlock. The first proposal was independently falsified for already-cancelling hooks, then corrected and checked. Baseline fails 12/13 cases; corrected and concurrent-success control pass. Remaining lifecycle work must distinguish rollout ownership and successful-path promotion interruption from this completed evaluation boundary. A subsequent model study still needs its own frozen protocol and untouched confirmation data.
+
 ## Systems correction — 2026-10-13
 
 The [inference transaction report](rvl-inference-transaction-v1-report.md) closes CPU active-inference state contamination and cancelled-worker overlap in the adapter, using the existing VARE #5 alias correction as its base. The next bounded correctness gap is engine-level sibling-evaluation cancellation/draining; it was reproduced with a generic `LoopHooks` fixture but is not fixed here. Hard cancellation deadlines require a stronger backend lifecycle contract. Separate open model-study branches are tracked in [current gaps](current-gaps.md); their fresh cohorts were not used by this work.
