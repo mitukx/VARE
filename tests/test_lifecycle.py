@@ -1,5 +1,4 @@
 import asyncio
-from vare.lifecycle import FailureDrivenTaskGenerator, VerifierRefreshController
 from vare.types import FailureCluster, Task
 
 

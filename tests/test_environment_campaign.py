@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import asyncio
 from pathlib import Path
+import json
 import subprocess
+import sys
 
 from vare.environments import EnvironmentCampaignRunner, TaskCatalog
 
@@ -13,7 +15,7 @@ ORACLE = ROOT / "tests/fixtures/oracle/fix_stable_logsumexp.py"
 
 class OracleAgent:
     async def run(self, *, prompt: str, workspace: Path, step: int) -> str:
-        subprocess.run(["python", str(ORACLE), str(workspace)], check=True)
+        subprocess.run([sys.executable, str(ORACLE), str(workspace)], check=True)
         return "ok"
 
 
@@ -35,6 +37,26 @@ def test_campaign_normalizes_relative_run_root(monkeypatch, tmp_path):
     assert runner.run_root.is_absolute()
     summary = asyncio.run(runner.run(repeats=1))
     assert summary.success_rate == 1.0
+
+
+def test_command_agent_does_not_expand_placeholders_inside_the_prompt(tmp_path):
+    from vare.environments import CommandWorkspaceAgent
+
+    script = tmp_path / "agent.py"
+    script.write_text("print('ok')\n", encoding="utf-8")
+    workspace = tmp_path / "workspace"
+    workspace.mkdir()
+    prompt = "keep {step} and {workspace} literal"
+    agent = CommandWorkspaceAgent(
+        (sys.executable, str(script), "{prompt}", "{step}"),
+        timeout_s=10,
+        launch_root=tmp_path,
+    )
+    output = asyncio.run(agent.run(prompt=prompt, workspace=workspace, step=7))
+    payload = json.loads(output)
+    assert payload["returncode"] == 0
+    assert payload["argv"][2] == prompt
+    assert payload["argv"][3] == "7"
 
 
 def test_command_agent_resolves_existing_relative_arguments(monkeypatch, tmp_path):

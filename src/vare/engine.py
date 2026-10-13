@@ -170,10 +170,10 @@ class CapabilityLoop:
         if self.config.preserve_rollout_groups:
             admitted_groups: dict[str, list[tuple[Experience, float]]] = {}
             for exp, freshness in zip(admitted, admitted_freshness, strict=True):
-                group_id = exp.attempt.metadata.get("vare_rollout_group")
-                if group_id is None:
-                    group_id = exp.attempt.task.metadata.get("vare_rollout_group")
-                key = str(group_id) if group_id is not None else f"ungrouped:{id(exp)}"
+                stored_group = exp.attempt.metadata.get("vare_rollout_group")
+                if stored_group is None:
+                    stored_group = exp.attempt.task.metadata.get("vare_rollout_group")
+                key = str(stored_group) if stored_group is not None else f"ungrouped:{id(exp)}"
                 admitted_groups.setdefault(key, []).append((exp, freshness))
 
             for group_id, members in admitted_groups.items():
