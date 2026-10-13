@@ -30,14 +30,22 @@ class TrustedCheckpointStore:
     deterministic byte format remains the backend's responsibility.
     """
 
-    def __init__(self, root: str | Path, *, max_bytes: int = 4 * 1024**3) -> None:
+    def __init__(self, root: str | Path, *, max_bytes: int = 4 * 1024**3, read_only: bool = False) -> None:
         if type(max_bytes) is not int or max_bytes <= 0:
             raise ValueError("max_bytes must be positive")
         self.root = Path(root).resolve()
         self.objects = self.root / "objects"
-        self.objects.mkdir(parents=True, exist_ok=True)
+        self.read_only = read_only
+        if not read_only:
+            self.objects.mkdir(parents=True, exist_ok=True)
+        elif not self.objects.is_dir():
+            raise CheckpointIntegrityError("read-only checkpoint object directory is missing")
         self.db_path = self.root / "artifacts.sqlite"
         self.max_bytes = max_bytes
+        if read_only:
+            if not self.db_path.is_file():
+                raise CheckpointIntegrityError("read-only checkpoint registry is missing")
+            return
         with self._connect() as db:
             db.execute(
                 "CREATE TABLE IF NOT EXISTS artifacts ("
@@ -45,6 +53,10 @@ class TrustedCheckpointStore:
             )
 
     def _connect(self) -> sqlite3.Connection:
+        if self.read_only:
+            db = sqlite3.connect(self.db_path.as_uri() + "?mode=ro", uri=True, timeout=10)
+            db.execute("PRAGMA query_only=ON")
+            return db
         db = sqlite3.connect(self.db_path, timeout=10)
         db.execute("PRAGMA synchronous=FULL")
         db.execute("PRAGMA journal_mode=DELETE")
@@ -97,6 +109,8 @@ class TrustedCheckpointStore:
     def register_file(self, policy_id: str, source: str | Path) -> str:
         """Copy bytes into a new content-addressed object, never replace a policy."""
         self._check_policy_id(policy_id)
+        if self.read_only:
+            raise CheckpointIntegrityError("read-only checkpoint store cannot register files")
         fd, tmp = tempfile.mkstemp(prefix=".checkpoint-", dir=self.objects)
         temp = Path(tmp)
         hasher = hashlib.sha256()
