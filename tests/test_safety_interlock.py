@@ -224,3 +224,87 @@ def test_successful_ledger_precommit_precedes_promotion(tmp_path):
     result = run_loop(fence, OrderHooks(), Ledger())
     assert result.decision.accepted
     assert events == ["promotion_intent", "promote", "promotion_decision"]
+
+
+@pytest.mark.parametrize("phase", ["pre", "post"])
+@pytest.mark.parametrize("discard_fails", [False, True])
+def test_revocation_rollback_owns_discard_until_terminal(tmp_path, phase, discard_fails):
+    """Revocation and repeated cancellation must not unlock partial rollback."""
+    async def run():
+        fence = make_fence(tmp_path)
+        started = asyncio.Event()
+        release = asyncio.Event()
+        discard_error = OSError("restore unavailable")
+
+        class BlockingHooks(Hooks):
+            def __init__(self):
+                super().__init__(
+                    after_train=fence.control_path.unlink if phase == "pre" else None,
+                    after_eval=fence.control_path.unlink if phase == "post" else None,
+                )
+                self.evaluated = []
+                self.rollouts = 0
+                self.candidate_exists = False
+
+            async def rollout(self, *args):
+                self.rollouts += 1
+                return await super().rollout(*args)
+
+            async def train_candidate(self, *args):
+                result = await super().train_candidate(*args)
+                self.candidate_exists = True
+                return result
+
+            async def evaluate(self, policy_id):
+                self.evaluated.append(policy_id)
+                return await super().evaluate(policy_id)
+
+            async def discard(self, candidate_id):
+                started.set()
+                await release.wait()
+                if discard_fails:
+                    raise discard_error
+                self.candidate_exists = False
+                await super().discard(candidate_id)
+
+        hooks = BlockingHooks()
+        loop = CapabilityLoop(
+            hooks=hooks, verifier=Verifier(), safety_interlock=fence,
+            config=EngineConfig(replay_batch_size=1),
+        )
+        task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+        next_round = None
+        try:
+            await asyncio.wait_for(started.wait(), 2)
+            assert hooks.evaluated == ([] if phase == "pre" else ["p0", "p1"])
+            next_round = asyncio.create_task(
+                loop.run_round([Task("next", "prompt")], round_index=1)
+            )
+            for _ in range(3):
+                task.cancel()
+                await asyncio.sleep(0)
+            assert not task.done(), "cancellation abandoned candidate restoration"
+            assert loop._round_lock.locked()
+            assert hooks.candidate_exists
+            assert not next_round.done()
+            assert hooks.rollouts == 1, "next round entered before rollback completed"
+            release.set()
+            if discard_fails:
+                with pytest.raises(RuntimeError, match="policy state is unknown") as caught:
+                    await task
+                assert caught.value.__cause__ is discard_error
+                assert hooks.candidate_exists
+            else:
+                with pytest.raises(SafetyInterlockDenied):
+                    await task
+                assert not hooks.candidate_exists
+                assert hooks.discarded == ["p1"]
+            assert not hooks.promoted
+        finally:
+            release.set()
+            if next_round is not None:
+                next_round.cancel()
+            await asyncio.gather(task, *([next_round] if next_round else []),
+                                 return_exceptions=True)
+
+    asyncio.run(run())

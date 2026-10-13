@@ -1,5 +1,13 @@
 # Roadmap
 
+## Evaluation task ownership follow-up — 2026-10-13
+
+The [bounded engine correction](engine-evaluation-lifecycle-v1-report.md) now drains sibling evaluations before failure-path candidate discard and round unlock. The first proposal was independently falsified for already-cancelling hooks, then corrected and checked. Baseline fails 12/13 cases; corrected and concurrent-success control pass. Remaining lifecycle work must distinguish rollout ownership and successful-path promotion interruption from this completed evaluation boundary. A subsequent model study still needs its own frozen protocol and untouched confirmation data.
+
+## Systems correction — 2026-10-13
+
+The [inference transaction report](rvl-inference-transaction-v1-report.md) closes CPU active-inference state contamination and cancelled-worker overlap in the adapter, using the existing VARE #5 alias correction as its base. The next bounded correctness gap is engine-level sibling-evaluation cancellation/draining; it was reproduced with a generic `LoopHooks` fixture but is not fixed here. Hard cancellation deadlines require a stronger backend lifecycle contract. Separate open model-study branches are tracked in [current gaps](current-gaps.md); their fresh cohorts were not used by this work.
+
 ## Current stop point — 2026-10-11
 
 **Update 2026-10-12 — adapter shared-module restore:** the VARE GRPO adapter still walked `Module.train()` after the trainer restore. A CPU regression with a shared child fails on that walk and passes after direct flag assignment. See the [report](rvl-grpo-shared-module-mode-v1-report.md). This does not admit a training or GPU experiment.
@@ -138,3 +146,6 @@ Persistent evaluation now has a frozen CPU recovery experiment: 24/24 fault case
 
 
 **Update 2026-10-09 — stop incomplete TRL batcher candidate:** production definitions from pinned TRL `ed8cc2f` reproduce rollout splitting across emitted microbatches in two boundary fixtures; the local candidate passes those fixtures but fails an exact-feasible token-packing counterexample and does not specify whole-group rejection for fixed-count infeasible prefixes. No upstream PR is ready. Continue only after the rejection/accounting contract is explicit and the exact-fit case passes. This is source-level trainer evidence, not optimizer or capability evidence. See [report](trl-async-rollout-group-batching-production-v3-report.md).
+
+
+**Update 2026-10-14 — evaluation transaction integration:** existing PR #19 evaluator/inference lifetime corrections are integrated with signed-training, authorization and checkpoint-bound promotion controls. A frozen four-case pre/post revocation × discard-success/failure CPU comparison fails 4/4 on main `a0f6464` and passes 4/4 on the integrated candidate; three caller cancellations cannot interrupt asynchronous rollback before the round lock is released. Historical lifecycle replay is baseline 12 failures/13 cases versus 13 candidate passes; inference replay is candidate 14/14 with its historical failing controls preserved. This is in-process correctness evidence only. See [report](evaluation-transaction-integration-v1.md), [protocol](../protocols/engine_evaluation_interlock_integration_v1.lock.json), and [raw records](../results/engine-evaluation-interlock-integration-v1/). No model-learning protocol is reopened.

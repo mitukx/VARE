@@ -1,0 +1,105 @@
+{
+  "engine_sha256": "5ca49b9e1ec94e85c0de1f3f68a003806e30d4f7b926bcf083b9bfb5b391b9fa",
+  "cases": [
+    {
+      "self_cancel": false,
+      "secondary_cleanup_error": false,
+      "before_release": {
+        "round_pending": true,
+        "round_lock_held": true,
+        "candidate_snapshot_retained": true,
+        "candidate_still_cleaning": true,
+        "candidate_cancel_requests": 1,
+        "cleanup_interrupted": false
+      },
+      "after_release": {
+        "first_error_object_preserved": true,
+        "cleanup_completed": true,
+        "candidate_snapshot_removed": true,
+        "evaluators_terminal": true,
+        "round_lock_released": true,
+        "pending_other_tasks": 0,
+        "events": [
+          "candidate-cleanup-start",
+          "candidate-cleanup-completed",
+          "discard"
+        ]
+      }
+    },
+    {
+      "self_cancel": false,
+      "secondary_cleanup_error": true,
+      "before_release": {
+        "round_pending": true,
+        "round_lock_held": true,
+        "candidate_snapshot_retained": true,
+        "candidate_still_cleaning": true,
+        "candidate_cancel_requests": 1,
+        "cleanup_interrupted": false
+      },
+      "after_release": {
+        "first_error_object_preserved": true,
+        "cleanup_completed": true,
+        "candidate_snapshot_removed": true,
+        "evaluators_terminal": true,
+        "round_lock_released": true,
+        "pending_other_tasks": 0,
+        "events": [
+          "candidate-cleanup-start",
+          "candidate-cleanup-completed",
+          "discard"
+        ]
+      }
+    },
+    {
+      "self_cancel": true,
+      "secondary_cleanup_error": false,
+      "before_release": {
+        "round_pending": true,
+        "round_lock_held": true,
+        "candidate_snapshot_retained": true,
+        "candidate_still_cleaning": true,
+        "candidate_cancel_requests": 1,
+        "cleanup_interrupted": false
+      },
+      "after_release": {
+        "first_error_object_preserved": true,
+        "cleanup_completed": true,
+        "candidate_snapshot_removed": true,
+        "evaluators_terminal": true,
+        "round_lock_released": true,
+        "pending_other_tasks": 0,
+        "events": [
+          "candidate-cleanup-start",
+          "candidate-cleanup-completed",
+          "discard"
+        ]
+      }
+    },
+    {
+      "self_cancel": true,
+      "secondary_cleanup_error": true,
+      "before_release": {
+        "round_pending": true,
+        "round_lock_held": true,
+        "candidate_snapshot_retained": true,
+        "candidate_still_cleaning": true,
+        "candidate_cancel_requests": 1,
+        "cleanup_interrupted": false
+      },
+      "after_release": {
+        "first_error_object_preserved": true,
+        "cleanup_completed": true,
+        "candidate_snapshot_removed": true,
+        "evaluators_terminal": true,
+        "round_lock_released": true,
+        "pending_other_tasks": 0,
+        "events": [
+          "candidate-cleanup-start",
+          "candidate-cleanup-completed",
+          "discard"
+        ]
+      }
+    }
+  ]
+}
