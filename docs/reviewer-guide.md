@@ -1,5 +1,11 @@
 # Reviewer guide
 
+**2026-10-13 retained record:** the [comparison audit](format-comparison-record-v1-report.md)
+regrades archived outputs without a model runtime, preserves the primary
+non-pass, and inspects saturated/cancelling training signals. Raw data is
+portable; original execution provenance is incomplete. The confirmation cohort
+is consumed. This is separate from the preceding analysis implementation work.
+
 **2026-10-13 analysis addition:** see the [seed-aware summary report](seeded-summary-v3-report.md)
 for the pooled/per-run pass@4 counterexample, preserved v2 primary decision,
 snapshot-hash regression, independent AI review, and CPU reproduction command.

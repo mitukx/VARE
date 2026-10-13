@@ -8,7 +8,7 @@ arm output. Existing unpinned output requires explicitly retrospective analysis.
 
 Protocol id: `format-vs-correctness-comparison-v2`.
 
-The exact-integer v2 base gate was non-degenerate, and the [update-cost smoke](heldout-exact-integer-update-cost-smoke-v1.md) was accepted. Those two records are what allow this comparison. No arm has been run. `scripts/format_vs_correctness_comparison_v1.py` still exits 2.
+The exact-integer v2 base gate was non-degenerate, and the [update-cost smoke](heldout-exact-integer-update-cost-smoke-v1.md) was accepted. Those two records are what allow this comparison. No arm had been run at the protocol snapshot. A later [retrospective record audit](format-comparison-record-v1-report.md) archives a complete pre-existing grid with an interval-includes-zero primary decision and missing original execution provenance. Its confirmation cohort is consumed. `scripts/format_vs_correctness_comparison_v1.py` still exits 2.
 
 Protocol file: `protocols/format_vs_correctness_comparison_v2.json`. SHA-256 `8214a9c784035f47b20d9e44fc6bbbd3cef45f821d86d6eb2f69936cc25eb6b4`.
 

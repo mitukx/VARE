@@ -1,5 +1,14 @@
 # Calibration evidence
 
+## Retained comparison record audit — 2026-10-13
+
+The [retrospective report](format-comparison-record-v1-report.md) preserves
+18,240 raw rows losslessly, independently regrades 17,920 outputs, and verifies
+format-arm no-op adapters and zero Adam moments. The original primary interval
+includes zero; saturated format reward supplies no gradient. The original
+execution revision/hardware remains unknown. This contribution performs CPU
+record/checkpoint analysis, not new training or human reproduction.
+
 ## Seed-aware summary correctness — 2026-10-13
 
 Pinned v2 `3eb6de5` fails the fitted-run pass@4 counterexample; additive v3 passes

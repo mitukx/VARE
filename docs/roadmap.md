@@ -1,5 +1,11 @@
 # Roadmap
 
+**2026-10-13 — retained comparison record:** the [retrospective audit](format-comparison-record-v1-report.md)
+preserves the primary non-pass and closes a saturated-format-signal explanation
+using raw rewards and no-op adapter/optimizer witnesses. Future learning needs
+untouched confirmation tasks, train/dev reward-variation checks, and retained
+execution provenance. The consumed v2 confirmation must not be reused or extended.
+
 **2026-10-13 — analysis repair:** [seed-aware summary v3](seeded-summary-v3-report.md)
 closes the fitted-run pass@4 aggregation and snapshot/digest correspondence
 defects using CPU counterexamples. It leaves the v2 learning protocol and primary

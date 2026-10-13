@@ -1,0 +1,16 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________________________ test_strict_output_contract __________________________
+
+    def test_strict_output_contract():
+        assert audit.parsed("work\n#### -2\n\n ") == -2
+        assert audit.parsed("work\u2028#### 2") == 2
+>       assert audit.parsed("####  2") == 2
+E       AssertionError: assert None == 2
+E        +  where None = <function parsed at 0x110be6980>('####  2')
+E        +    where <function parsed at 0x110be6980> = audit.parsed
+
+tests/test_format_comparison_record_audit_v1.py:27: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_format_comparison_record_audit_v1.py::test_strict_output_contract
+1 failed, 7 deselected in 0.06s

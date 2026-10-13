@@ -1,5 +1,17 @@
 # Experimental program
 
+## Retained v2 comparison — retrospective audit, 2026-10-13
+
+The complete pre-existing five-arm record has correctness-RL minus SFT +0.46875
+points, task-bootstrap 95% interval [-0.078125, +1.015625], and the unchanged
+`interval_includes_zero` decision. CPU replay identifies saturated format
+reward and verifies zero saved LoRA contribution. Only 8/80 correctness groups
+are mixed; 15/31 random mixed-label groups have identical outputs and cancel.
+Sparse signal is not established as the cause of the overall non-pass.
+Original execution provenance is incomplete. Retire the consumed confirmation
+cohort. See the [report](format-comparison-record-v1-report.md) and
+[lossless record bundle](../results/format-comparison-record-v1/).
+
 ## Seed-aware summary v3 — correctness study, 2026-10-13
 
 The synthetic complete-grid comparison distinguishes pooled pass@4 across five

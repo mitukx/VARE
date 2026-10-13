@@ -1,11 +1,19 @@
 # Current evidence gaps
 
+**2026-10-13 — pre-existing v2 record audited:** the [retrospective report](format-comparison-record-v1-report.md)
+archives a complete five-arm grid. Primary correctness-RL minus SFT includes
+zero. Format rewards are saturated (80/80 zero-advantage groups, zero LoRA B and
+Adam moments). Random mixed-label groups with identical completions also cancel.
+The original executor/revision/hardware is unverified. These consumed confirm
+tasks must not be reused for optimization or new confirmation; a new learning
+study needs untouched tasks and execution provenance.
+
 **2026-10-13 — secondary evaluation aggregation:** [seed-aware v3](seeded-summary-v3-report.md)
 adds per-run pass@4 and a consistent progress snapshot/digest. The retained
 synthetic grid reverses arm ordering under pooled versus per-run aggregation.
-The frozen v2 pass@1 decision is unchanged. There is still no measured v2 model
-comparison or interval over a population of training seeds; the descriptive
-run SD includes evaluation sampling noise.
+The frozen v2 pass@1 decision is unchanged. The later record audit above remains
+retrospective, and there is no interval over a population of training seeds;
+the descriptive run SD includes evaluation sampling noise.
 
 **Update 2026-10-11 — real-repository evaluation path; training remains NO-GO:** a frozen urllib3 #3352 task uses pinned MIT source, a protected localhost HTTP grader, and a narrow production-call-path check. The pinned base failed both F2P cases and passed all three P2P controls; the public known fix passed all five. Independent AI red-team review rejected the prior direct-socket fake-success attempt, and a slow-drip regression checks the absolute request-line deadline. Qwen2.5-0.5B-Instruct and TinyLlama 1.1B each received one offline greedy attempt; neither generated an applicable patch. This public task is development-only and retired from confirmation use. No model was trained. The independent reviewer found no current bypass but noted that the protocol lock is not externally signed. See the [task/evaluator report](urllib3-3352-real-model-feasibility-v1-report.md), [frozen task lock](../benchmarks/historical/urllib3_3352/protocol.lock.json), and [calibration/review bundle](../results/urllib3-3352-evaluation-v1/).
 

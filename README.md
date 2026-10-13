@@ -10,6 +10,12 @@ Training reward is not that outcome. A base-model pass rate is not evidence that
 
 No retained run shows an independently confirmed held-out task-success gain after a real model update.
 
+A [retrospective audit of a pre-existing v2 comparison record](docs/format-comparison-record-v1-report.md)
+retains a correctness-RL minus SFT interval that includes zero. The format-only
+arm has zero advantages throughout and zero saved LoRA contribution. Raw outputs
+and portable CPU replay are available; the original execution revision and
+hardware are unverified.
+
 | Record | Observation | What it does not establish |
 | --- | --- | --- |
 | Exact-integer v1, SmolLM2-360M-Instruct, mlx | Strict pass@4 is 0/64 (`stop_zero`). Wilson 95% is [0, 0.05662405979280534]. | A reason to change the parser or to train. The post-hoc lenient rescore finds 19/256 expression matches and is not a gate result. See [v1](docs/heldout-exact-integer-base-gate-v1-result.md) and [the diagnostic](docs/two-tier-answer-scoring-v1.md). |
@@ -69,6 +75,6 @@ from pooled outputs across runs. Synthetic baseline/fix evidence also checks
 that metrics and progress hashes describe the same bytes. This is evaluation
 correctness evidence, not a model-learning result.
 
-The 64-task pack is `benchmarks/heldout/exact_integer_v1/`. v1 is `stop_zero`. v2 is the 29/64 base gate in the table above. A later train/dev/confirm seed list is [integer seed split v1](docs/integer-seed-split-v1.md). Report calculations are [eval stats](docs/eval-stats-v1.md). The [one-update smoke](docs/heldout-exact-integer-update-cost-smoke-v1.md) retained an accepted mlx record: one step, loss 3.004885196685791, reload matched, peak memory 1959434978 bytes, wall time 8.762955541998963 seconds. That record is not a held-out gain. [Format versus correctness v1](docs/format-vs-correctness-comparison-v1.md) still exits 2. The successor [v2 protocol](docs/format-vs-correctness-comparison-v2.md) freezes five seeds and 16 matched optimizer steps. It has no retained run.
+The 64-task pack is `benchmarks/heldout/exact_integer_v1/`. v1 is `stop_zero`. v2 is the 29/64 base gate in the table above. A later train/dev/confirm seed list is [integer seed split v1](docs/integer-seed-split-v1.md). Report calculations are [eval stats](docs/eval-stats-v1.md). The [one-update smoke](docs/heldout-exact-integer-update-cost-smoke-v1.md) retained an accepted mlx record: one step, loss 3.004885196685791, reload matched, peak memory 1959434978 bytes, wall time 8.762955541998963 seconds. That record is not a held-out gain. [Format versus correctness v1](docs/format-vs-correctness-comparison-v1.md) still exits 2. The successor [v2 protocol](docs/format-vs-correctness-comparison-v2.md) freezes five seeds and 16 matched optimizer steps. Its pre-existing complete record is now archived with the [retrospective audit and provenance limits](docs/format-comparison-record-v1-report.md).
 
 Large checkpoints and benchmark content with uncertain redistribution terms remain outside version control. Read each report for its exact source revisions, environment, raw artifacts, and claim limits. See [LICENSE](LICENSE) for the repository license.

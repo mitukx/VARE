@@ -1,0 +1,106 @@
+{
+  "all_curves_match_independent_oracle": true,
+  "format_adapters": [
+    {
+      "final_adapter_sha256": "8c87cfc4962cce0b18c43a2135b37f24b830aaf8a5d00cec3d34b3cb92a343f8",
+      "identical_step_1_through_16_hashes": true,
+      "run_seed": 20261016,
+      "zero_b_tensors": [
+        "model.layers.35.self_attn.q_proj.lora_b",
+        "model.layers.35.self_attn.v_proj.lora_b"
+      ]
+    },
+    {
+      "final_adapter_sha256": "486f9aeaa7d1d4f9d4f9666edf3607a648538ca69812f7734f7ef2596fb2afd5",
+      "identical_step_1_through_16_hashes": true,
+      "run_seed": 20261017,
+      "zero_b_tensors": [
+        "model.layers.35.self_attn.q_proj.lora_b",
+        "model.layers.35.self_attn.v_proj.lora_b"
+      ]
+    },
+    {
+      "final_adapter_sha256": "58d6aa44385831eaa3675c45ef6b2bf98ff44a8e89b5c6931fced2d15b200da6",
+      "identical_step_1_through_16_hashes": true,
+      "run_seed": 20261018,
+      "zero_b_tensors": [
+        "model.layers.35.self_attn.q_proj.lora_b",
+        "model.layers.35.self_attn.v_proj.lora_b"
+      ]
+    },
+    {
+      "final_adapter_sha256": "54572e13b3329a2ea37636640141cec7c72ffb4ba6aae7a8890b79454e7cdfeb",
+      "identical_step_1_through_16_hashes": true,
+      "run_seed": 20261019,
+      "zero_b_tensors": [
+        "model.layers.35.self_attn.q_proj.lora_b",
+        "model.layers.35.self_attn.v_proj.lora_b"
+      ]
+    },
+    {
+      "final_adapter_sha256": "48b6def2c4df620af9b433b754506aa1671afc3a0d8840cc11791d8739c5adba",
+      "identical_step_1_through_16_hashes": true,
+      "run_seed": 20261020,
+      "zero_b_tensors": [
+        "model.layers.35.self_attn.q_proj.lora_b",
+        "model.layers.35.self_attn.v_proj.lora_b"
+      ]
+    }
+  ],
+  "format_zero_optimizer_states": 80,
+  "independently_scored_eval_rows": 17920,
+  "new_model_generation": false,
+  "new_model_training": false,
+  "original_execution_operator_verified": false,
+  "original_execution_revision_verified": false,
+  "primary_preserved": true,
+  "progress_sha256": "10860ac27af371a7374bcb7ca38c6bd5171f6d467aef43c3a7c1e95468c73694",
+  "recorded_eval_seconds": 4819.498119806924,
+  "recorded_train_seconds": 264.6994901579993,
+  "rows": 18240,
+  "strict_format_valid_eval_rows": 17782,
+  "training_signal": {
+    "correctness_reward_rl": {
+      "distinct_outputs_in_mixed_groups": 8,
+      "groups": 80,
+      "mixed_by_run_seed": {
+        "20261016": 0,
+        "20261017": 2,
+        "20261018": 3,
+        "20261019": 1,
+        "20261020": 2
+      },
+      "mixed_reward_groups": 8,
+      "nonzero_loss_groups": 8,
+      "zero_advantage_groups": 72
+    },
+    "format_reward_rl": {
+      "distinct_outputs_in_mixed_groups": 0,
+      "groups": 80,
+      "mixed_by_run_seed": {
+        "20261016": 0,
+        "20261017": 0,
+        "20261018": 0,
+        "20261019": 0,
+        "20261020": 0
+      },
+      "mixed_reward_groups": 0,
+      "nonzero_loss_groups": 0,
+      "zero_advantage_groups": 80
+    },
+    "random_reward_rl": {
+      "distinct_outputs_in_mixed_groups": 16,
+      "groups": 80,
+      "mixed_by_run_seed": {
+        "20261016": 8,
+        "20261017": 6,
+        "20261018": 4,
+        "20261019": 7,
+        "20261020": 6
+      },
+      "mixed_reward_groups": 31,
+      "nonzero_loss_groups": 16,
+      "zero_advantage_groups": 49
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "revision": "148a429673c52da08834b9c6a9b9b60ea1913299",
+  "source_sha256": "458c89545368a53adc037b68d2d0d0322f6f569c93ec4d18028cc7b4c33f79e0",
+  "cases": [
+    {
+      "text": "####  42",
+      "portable": 42,
+      "frozen": 42,
+      "strict_format": true,
+      "strict_correct": false
+    },
+    {
+      "text": "####\t42",
+      "portable": 42,
+      "frozen": 42,
+      "strict_format": true,
+      "strict_correct": false
+    },
+    {
+      "text": "work\n#### 42\n \t\n",
+      "portable": 42,
+      "frozen": 42,
+      "strict_format": true,
+      "strict_correct": false
+    },
+    {
+      "text": "#### 42\nother",
+      "portable": null,
+      "frozen": null,
+      "strict_format": false,
+      "strict_correct": false
+    },
+    {
+      "text": "",
+      "portable": null,
+      "frozen": null,
+      "strict_format": false,
+      "strict_correct": false
+    },
+    {
+      "text": "#### +42",
+      "portable": null,
+      "frozen": null,
+      "strict_format": false,
+      "strict_correct": false
+    }
+  ],
+  "all_checks_passed": true,
+  "original_progress_read": false,
+  "model_or_training_called": false,
+  "static_check": "Both strict_correct and strict_format compared per eval row; format-valid total retained in audit report."
+}

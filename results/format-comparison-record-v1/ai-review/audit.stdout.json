@@ -1,0 +1,1049 @@
+{
+  "advantage_mismatches": [],
+  "analysis_sha256_tagged_rows": 0,
+  "bootstrap_rerun": false,
+  "checkpoint_file_counts": {
+    "adapter_config.json": 320,
+    "adapters.safetensors": 320,
+    "optimizer.safetensors": 320
+  },
+  "checkpoints": {
+    "correctness_reward_rl": [
+      {
+        "all_lora_a_equal_step1": true,
+        "changed_from_previous_saved_step": [],
+        "nonfinite_steps": [],
+        "optimizer_step_errors": [],
+        "run_seed": 20261016,
+        "zero_lora_b_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "zero_optimizer_moment_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ]
+      },
+      {
+        "all_lora_a_equal_step1": false,
+        "changed_from_previous_saved_step": [
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "nonfinite_steps": [],
+        "optimizer_step_errors": [],
+        "run_seed": 20261017,
+        "zero_lora_b_steps": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "zero_optimizer_moment_steps": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "all_lora_a_equal_step1": false,
+        "changed_from_previous_saved_step": [
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "nonfinite_steps": [],
+        "optimizer_step_errors": [],
+        "run_seed": 20261018,
+        "zero_lora_b_steps": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "zero_optimizer_moment_steps": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "all_lora_a_equal_step1": true,
+        "changed_from_previous_saved_step": [
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "nonfinite_steps": [],
+        "optimizer_step_errors": [],
+        "run_seed": 20261019,
+        "zero_lora_b_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "zero_optimizer_moment_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      {
+        "all_lora_a_equal_step1": false,
+        "changed_from_previous_saved_step": [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "nonfinite_steps": [],
+        "optimizer_step_errors": [],
+        "run_seed": 20261020,
+        "zero_lora_b_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "zero_optimizer_moment_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      }
+    ],
+    "format_reward_rl": [
+      {
+        "all_lora_a_equal_step1": true,
+        "changed_from_previous_saved_step": [],
+        "nonfinite_steps": [],
+        "optimizer_step_errors": [],
+        "run_seed": 20261016,
+        "zero_lora_b_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "zero_optimizer_moment_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ]
+      },
+      {
+        "all_lora_a_equal_step1": true,
+        "changed_from_previous_saved_step": [],
+        "nonfinite_steps": [],
+        "optimizer_step_errors": [],
+        "run_seed": 20261017,
+        "zero_lora_b_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "zero_optimizer_moment_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ]
+      },
+      {
+        "all_lora_a_equal_step1": true,
+        "changed_from_previous_saved_step": [],
+        "nonfinite_steps": [],
+        "optimizer_step_errors": [],
+        "run_seed": 20261018,
+        "zero_lora_b_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "zero_optimizer_moment_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ]
+      },
+      {
+        "all_lora_a_equal_step1": true,
+        "changed_from_previous_saved_step": [],
+        "nonfinite_steps": [],
+        "optimizer_step_errors": [],
+        "run_seed": 20261019,
+        "zero_lora_b_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "zero_optimizer_moment_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ]
+      },
+      {
+        "all_lora_a_equal_step1": true,
+        "changed_from_previous_saved_step": [],
+        "nonfinite_steps": [],
+        "optimizer_step_errors": [],
+        "run_seed": 20261020,
+        "zero_lora_b_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "zero_optimizer_moment_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ]
+      }
+    ],
+    "format_sft": [
+      {
+        "all_lora_a_equal_step1": false,
+        "changed_from_previous_saved_step": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "nonfinite_steps": [],
+        "optimizer_step_errors": [],
+        "run_seed": 20261016,
+        "zero_lora_b_steps": [],
+        "zero_optimizer_moment_steps": []
+      },
+      {
+        "all_lora_a_equal_step1": false,
+        "changed_from_previous_saved_step": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "nonfinite_steps": [],
+        "optimizer_step_errors": [],
+        "run_seed": 20261017,
+        "zero_lora_b_steps": [],
+        "zero_optimizer_moment_steps": []
+      },
+      {
+        "all_lora_a_equal_step1": false,
+        "changed_from_previous_saved_step": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "nonfinite_steps": [],
+        "optimizer_step_errors": [],
+        "run_seed": 20261018,
+        "zero_lora_b_steps": [],
+        "zero_optimizer_moment_steps": []
+      },
+      {
+        "all_lora_a_equal_step1": false,
+        "changed_from_previous_saved_step": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "nonfinite_steps": [],
+        "optimizer_step_errors": [],
+        "run_seed": 20261019,
+        "zero_lora_b_steps": [],
+        "zero_optimizer_moment_steps": []
+      },
+      {
+        "all_lora_a_equal_step1": false,
+        "changed_from_previous_saved_step": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "nonfinite_steps": [],
+        "optimizer_step_errors": [],
+        "run_seed": 20261020,
+        "zero_lora_b_steps": [],
+        "zero_optimizer_moment_steps": []
+      }
+    ],
+    "random_reward_rl": [
+      {
+        "all_lora_a_equal_step1": false,
+        "changed_from_previous_saved_step": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "nonfinite_steps": [],
+        "optimizer_step_errors": [],
+        "run_seed": 20261016,
+        "zero_lora_b_steps": [],
+        "zero_optimizer_moment_steps": []
+      },
+      {
+        "all_lora_a_equal_step1": false,
+        "changed_from_previous_saved_step": [
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "nonfinite_steps": [],
+        "optimizer_step_errors": [],
+        "run_seed": 20261017,
+        "zero_lora_b_steps": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "zero_optimizer_moment_steps": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "all_lora_a_equal_step1": false,
+        "changed_from_previous_saved_step": [
+          13,
+          14,
+          15,
+          16
+        ],
+        "nonfinite_steps": [],
+        "optimizer_step_errors": [],
+        "run_seed": 20261018,
+        "zero_lora_b_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ],
+        "zero_optimizer_moment_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
+      },
+      {
+        "all_lora_a_equal_step1": false,
+        "changed_from_previous_saved_step": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "nonfinite_steps": [],
+        "optimizer_step_errors": [],
+        "run_seed": 20261019,
+        "zero_lora_b_steps": [],
+        "zero_optimizer_moment_steps": []
+      },
+      {
+        "all_lora_a_equal_step1": false,
+        "changed_from_previous_saved_step": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "nonfinite_steps": [],
+        "optimizer_step_errors": [],
+        "run_seed": 20261020,
+        "zero_lora_b_steps": [
+          1,
+          2,
+          3
+        ],
+        "zero_optimizer_moment_steps": [
+          1,
+          2,
+          3
+        ]
+      }
+    ]
+  },
+  "complete_grid_unique": true,
+  "cross_arm_checkpoints": [
+    {
+      "format_and_correctness_adapter_equal_steps": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "run_seed": 20261016
+    },
+    {
+      "format_and_correctness_adapter_equal_steps": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "run_seed": 20261017
+    },
+    {
+      "format_and_correctness_adapter_equal_steps": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "run_seed": 20261018
+    },
+    {
+      "format_and_correctness_adapter_equal_steps": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "run_seed": 20261019
+    },
+    {
+      "format_and_correctness_adapter_equal_steps": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "run_seed": 20261020
+    }
+  ],
+  "description": "Retrospective read-only inspection of existing records; executor and run source revision unknown",
+  "environment": {
+    "backend": "mlx",
+    "mlx_lm": "0.32.0",
+    "python": "3.12.12"
+  },
+  "eval_counts": [
+    {
+      "arm": "base",
+      "checkpoint_step": 0,
+      "n": 1280,
+      "split": "confirm",
+      "strict_correct": 323,
+      "strict_format": 1280
+    },
+    {
+      "arm": "base",
+      "checkpoint_step": 0,
+      "n": 1280,
+      "split": "pack",
+      "strict_correct": 541,
+      "strict_format": 1256
+    },
+    {
+      "arm": "correctness_reward_rl",
+      "checkpoint_step": 8,
+      "n": 1280,
+      "split": "confirm",
+      "strict_correct": 329,
+      "strict_format": 1280
+    },
+    {
+      "arm": "correctness_reward_rl",
+      "checkpoint_step": 16,
+      "n": 1280,
+      "split": "confirm",
+      "strict_correct": 338,
+      "strict_format": 1280
+    },
+    {
+      "arm": "correctness_reward_rl",
+      "checkpoint_step": 16,
+      "n": 1280,
+      "split": "pack",
+      "strict_correct": 538,
+      "strict_format": 1252
+    },
+    {
+      "arm": "format_reward_rl",
+      "checkpoint_step": 8,
+      "n": 1280,
+      "split": "confirm",
+      "strict_correct": 329,
+      "strict_format": 1280
+    },
+    {
+      "arm": "format_reward_rl",
+      "checkpoint_step": 16,
+      "n": 1280,
+      "split": "confirm",
+      "strict_correct": 336,
+      "strict_format": 1280
+    },
+    {
+      "arm": "format_reward_rl",
+      "checkpoint_step": 16,
+      "n": 1280,
+      "split": "pack",
+      "strict_correct": 538,
+      "strict_format": 1252
+    },
+    {
+      "arm": "format_sft",
+      "checkpoint_step": 8,
+      "n": 1280,
+      "split": "confirm",
+      "strict_correct": 327,
+      "strict_format": 1280
+    },
+    {
+      "arm": "format_sft",
+      "checkpoint_step": 16,
+      "n": 1280,
+      "split": "confirm",
+      "strict_correct": 332,
+      "strict_format": 1280
+    },
+    {
+      "arm": "format_sft",
+      "checkpoint_step": 16,
+      "n": 1280,
+      "split": "pack",
+      "strict_correct": 537,
+      "strict_format": 1250
+    },
+    {
+      "arm": "random_reward_rl",
+      "checkpoint_step": 8,
+      "n": 1280,
+      "split": "confirm",
+      "strict_correct": 329,
+      "strict_format": 1280
+    },
+    {
+      "arm": "random_reward_rl",
+      "checkpoint_step": 16,
+      "n": 1280,
+      "split": "confirm",
+      "strict_correct": 336,
+      "strict_format": 1280
+    },
+    {
+      "arm": "random_reward_rl",
+      "checkpoint_step": 16,
+      "n": 1280,
+      "split": "pack",
+      "strict_correct": 537,
+      "strict_format": 1252
+    }
+  ],
+  "files_read": 963,
+  "independent_score_mismatches": [],
+  "input_hashes_unchanged_during_audit": true,
+  "limitations": [
+    "Run executor and source revision are unknown.",
+    "Task expressions are reconstructed from current frozen definitions, not captured run prompts.",
+    "No step-zero adapter checkpoint exists; unchanged comparisons begin at saved step one.",
+    "Checkpoint consistency and raw-record consistency do not establish a controlled experiment or historical execution integrity."
+  ],
+  "model_loading_or_generation": false,
+  "primary_direct_count_difference": {
+    "float": 0.0046875,
+    "fraction": "3/640",
+    "matches_stored_mean": true
+  },
+  "progress_sha256": "10860ac27af371a7374bcb7ca38c6bd5171f6d467aef43c3a7c1e95468c73694",
+  "record_backend_values": [
+    "mlx"
+  ],
+  "record_counts": {
+    "eval": 17920,
+    "train": 320
+  },
+  "record_model_id_values": [
+    "mlx-community/Qwen2.5-3B-Instruct-4bit"
+  ],
+  "record_protocol_sha256_values": [
+    "8214a9c784035f47b20d9e44fc6bbbd3cef45f821d86d6eb2f69936cc25eb6b4"
+  ],
+  "reward_mismatches": [],
+  "run_path": "/Users/user/vare-format-vs-correctness-v2",
+  "sample_seed_errors": [],
+  "source_module_sha256": "fca8d5174747c1f3c1a8207d179dde83e9ee7b84ccb7767ddd5a33ae2fb96c15",
+  "source_used_for_reconstruction": "3a5a808e71d948cbe531a952344f8d5dee91f625",
+  "task_pack_sha256": "189b5e482b0f8c2b40ff36e0e1a84827699f348c11981a0ff912ce67323fd7fc",
+  "training": {
+    "correctness_reward_rl": {
+      "groups": 80,
+      "loss_max": 0.051239013671875,
+      "loss_min": -0.0780029296875,
+      "mixed_reward_steps_by_seed": {
+        "20261016": [],
+        "20261017": [
+          6,
+          8
+        ],
+        "20261018": [
+          6,
+          8,
+          10
+        ],
+        "20261019": [
+          9
+        ],
+        "20261020": [
+          8,
+          9
+        ]
+      },
+      "output_counts": {
+        "[0.0, 0.0]": 61,
+        "[0.0, 1.0]": 6,
+        "[1.0, 0.0]": 2,
+        "[1.0, 1.0]": 11,
+        "outputs": 160,
+        "strict_correct": 30,
+        "strict_format": 160,
+        "zero_advantage_groups": 72,
+        "zero_advantage_nonzero_loss": 0
+      }
+    },
+    "format_reward_rl": {
+      "groups": 80,
+      "loss_max": 0.0,
+      "loss_min": 0.0,
+      "mixed_reward_steps_by_seed": {
+        "20261016": [],
+        "20261017": [],
+        "20261018": [],
+        "20261019": [],
+        "20261020": []
+      },
+      "output_counts": {
+        "[1.0, 1.0]": 80,
+        "outputs": 160,
+        "strict_correct": 24,
+        "strict_format": 160,
+        "zero_advantage_groups": 80,
+        "zero_advantage_nonzero_loss": 0
+      }
+    },
+    "format_sft": {
+      "groups": 80,
+      "loss_max": 3.36328125,
+      "loss_min": 0.0199432373046875,
+      "mixed_reward_steps_by_seed": {
+        "20261016": [],
+        "20261017": [],
+        "20261018": [],
+        "20261019": [],
+        "20261020": []
+      },
+      "output_counts": {}
+    },
+    "random_reward_rl": {
+      "groups": 80,
+      "loss_max": 0.33367919921875,
+      "loss_min": -0.28337860107421875,
+      "mixed_reward_steps_by_seed": {
+        "20261016": [
+          1,
+          4,
+          8,
+          11,
+          13,
+          14,
+          15,
+          16
+        ],
+        "20261017": [
+          1,
+          5,
+          6,
+          7,
+          13,
+          15
+        ],
+        "20261018": [
+          7,
+          13,
+          14,
+          15
+        ],
+        "20261019": [
+          1,
+          3,
+          4,
+          9,
+          13,
+          14,
+          16
+        ],
+        "20261020": [
+          2,
+          4,
+          5,
+          6,
+          7,
+          14
+        ]
+      },
+      "output_counts": {
+        "[0.0, 0.0]": 24,
+        "[0.0, 1.0]": 18,
+        "[1.0, 0.0]": 13,
+        "[1.0, 1.0]": 25,
+        "outputs": 160,
+        "strict_correct": 26,
+        "strict_format": 160,
+        "zero_advantage_groups": 49,
+        "zero_advantage_nonzero_loss": 0
+      }
+    }
+  },
+  "training_executed": false,
+  "training_seed_errors": []
+}
