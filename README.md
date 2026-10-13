@@ -85,4 +85,8 @@ Frozen study definitions are the JSON files in [`protocols/`](protocols/). A `*.
 | `contributions/` | Upstream patch artifacts and status |
 | `scripts/`, `reproducers/` | Reproduction, audit, and diagnostic commands |
 
+## Held-out exact-integer base gate
+
+`benchmarks/heldout/exact_integer_v1/` is a 64-task pack frozen before any model output. Its SHA-256 is recorded in `protocol.json`. The pass@k runner and the Mac/Colab commands are in [the gate note](docs/heldout-exact-integer-base-gate-v1.md). The pack is an evaluation set. `scripts/heldout_exact_integer_update_comparison_v1.py` exits 2 and does not train.
+
 Adapter checkpoints already committed under `results/` stay in git as retained raw records. [`protocols/tracked_large_blob_allowlist_v1.txt`](protocols/tracked_large_blob_allowlist_v1.txt) freezes those blobs at or above 1 MiB; `scripts/check_tracked_blob_budget.py` rejects a tree that adds, replaces, or drops one. New files at or above that size, and benchmark content with uncertain redistribution terms, stay outside the repository. Record a new external file's SHA-256 in the study manifest. Published history is not rewritten. See [artifact retention](docs/artifact-retention.md). Read each report for its exact source revisions, environment, raw artifacts, and claim limits. See [LICENSE](LICENSE) for the repository license.

@@ -2,6 +2,10 @@
 
 Entries below preserve study decisions and outcomes; they are a history, not a leaderboard. For the current stop point and a short review route, see the [roadmap](roadmap.md), [current evidence gaps](current-gaps.md), and [reviewer guide](reviewer-guide.md). Each report links its frozen protocol and retained run evidence where available.
 
+## Held-out exact-integer base gate v1
+
+**Status: protocol frozen; no model output retained.** Sixty-four generated exact-integer tasks are committed with hash `189b5e482b0f8c2b40ff36e0e1a84827699f348c11981a0ff912ce67323fd7fc`. The runner scores pass@4 with a Wilson 95% interval and can resume from `samples.jsonl`. The update-comparison entry point exits 2. See [the gate note](heldout-exact-integer-base-gate-v1.md). This entry does not report a pass rate.
+
 ## VARE GRPO adapter shared-module mode rollback
 
 `RVLGRPOHooks` restored module modes by calling `Module.train()` after the trainer restore. A constructed shared-child graph, with the alias registered after the first parent, came back in the wrong mode and changed a mode-dependent stand-in forward. Direct `module.training` assignment passes that graph, the opposite registration order, and an unshared nested pair, and it does not call `train()` on restore. The trainer double in the test already assigns flags directly, so the failure is in the adapter pass. No PyTorch or model run was required. This does not show production incidence or a task-success change. See the [report](rvl-grpo-shared-module-mode-v1-report.md) and [logs](../results/rvl-grpo-shared-module-mode-v1/).
