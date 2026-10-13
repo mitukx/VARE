@@ -1,5 +1,11 @@
 # Format versus correctness comparison v2
 
+**Analysis addition, 2026-10-13:** [seed-aware v3](seeded-summary-v3-report.md)
+preserves the frozen primary bootstrap/decision and learning protocol, adds
+per-run secondary curves alongside the legacy pooled curves, and binds reports
+to one captured progress snapshot. New runs pin this separate analysis before
+arm output. Existing unpinned output requires explicitly retrospective analysis.
+
 Protocol id: `format-vs-correctness-comparison-v2`.
 
 The exact-integer v2 base gate was non-degenerate, and the [update-cost smoke](heldout-exact-integer-update-cost-smoke-v1.md) was accepted. Those two records are what allow this comparison. No arm has been run. `scripts/format_vs_correctness_comparison_v1.py` still exits 2.

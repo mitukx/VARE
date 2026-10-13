@@ -1,5 +1,12 @@
 # Current evidence gaps
 
+**2026-10-13 — secondary evaluation aggregation:** [seed-aware v3](seeded-summary-v3-report.md)
+adds per-run pass@4 and a consistent progress snapshot/digest. The retained
+synthetic grid reverses arm ordering under pooled versus per-run aggregation.
+The frozen v2 pass@1 decision is unchanged. There is still no measured v2 model
+comparison or interval over a population of training seeds; the descriptive
+run SD includes evaluation sampling noise.
+
 **Update 2026-10-11 — real-repository evaluation path; training remains NO-GO:** a frozen urllib3 #3352 task uses pinned MIT source, a protected localhost HTTP grader, and a narrow production-call-path check. The pinned base failed both F2P cases and passed all three P2P controls; the public known fix passed all five. Independent AI red-team review rejected the prior direct-socket fake-success attempt, and a slow-drip regression checks the absolute request-line deadline. Qwen2.5-0.5B-Instruct and TinyLlama 1.1B each received one offline greedy attempt; neither generated an applicable patch. This public task is development-only and retired from confirmation use. No model was trained. The independent reviewer found no current bypass but noted that the protocol lock is not externally signed. See the [task/evaluator report](urllib3-3352-real-model-feasibility-v1-report.md), [frozen task lock](../benchmarks/historical/urllib3_3352/protocol.lock.json), and [calibration/review bundle](../results/urllib3-3352-evaluation-v1/).
 
 The same work found a VARE task-identity defect: caller metadata could select a different catalog task at rollout and verifier use. The frozen base reproducer confirms both boundaries failed to reject an A-to-B identity override; the adapter now binds both to `Task.id`. This is a local catalog correctness fix, not an evaluator attestation or capability result.

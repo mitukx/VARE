@@ -1,5 +1,11 @@
 # Reviewer guide
 
+**2026-10-13 analysis addition:** see the [seed-aware summary report](seeded-summary-v3-report.md)
+for the pooled/per-run pass@4 counterexample, preserved v2 primary decision,
+snapshot-hash regression, independent AI review, and CPU reproduction command.
+This branch extends PR #18; it does not establish model improvement. Earlier PR
+status snapshots below are historical.
+
 This guide separates code that is implemented, behavior reproduced on CPU, and model outcomes. The linked reports and raw records are the source of truth; the summaries below do not replace them. Repository and PR status was checked on 2026-10-11.
 
 ## A short review path

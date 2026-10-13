@@ -1,5 +1,14 @@
 # Calibration evidence
 
+## Seed-aware summary correctness — 2026-10-13
+
+Pinned v2 `3eb6de5` fails the fitted-run pass@4 counterexample; additive v3 passes
+with exactly preserved primary decision objects. Initial CLI `b918e6e` fails
+metrics/digest correspondence under a deterministic file replacement; corrected
+`3a5a808` passes. CPU synthetic evidence and independent AI probes are in the
+[report](seeded-summary-v3-report.md) and [bundle](../results/seeded-summary-v3/).
+This is an analysis repair, not real-model learning or independent human review.
+
 This ledger records what the retained artifacts establish and where each claim stops. It is organized by evidence area, not by headline strength. Start with the [reviewer guide](reviewer-guide.md) for the current PRs and reproduction commands, or the [current gaps](current-gaps.md) for the latest research and model-evaluation decisions. Historical results remain below even when later work supersedes their status.
 
 ## Current systems and research decisions — 2026-10-11

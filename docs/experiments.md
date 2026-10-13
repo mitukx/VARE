@@ -1,5 +1,15 @@
 # Experimental program
 
+## Seed-aware summary v3 — correctness study, 2026-10-13
+
+The synthetic complete-grid comparison distinguishes pooled pass@4 across five
+runs from mean within-run pass@4 and demonstrates an ordering reversal. A second
+interleaving experiment reproduces and fixes the CLI's mismatched hash/metrics.
+Both failing baselines, raw fixtures, corrected results, and independent AI
+review are retained in the [technical report](seeded-summary-v3-report.md).
+Learning protocol v2 and its primary decision remain frozen; no model run was
+performed in this study.
+
 Entries below preserve study decisions and outcomes; they are a history, not a leaderboard. For the current stop point and a short review route, see the [roadmap](roadmap.md), [current evidence gaps](current-gaps.md), and [reviewer guide](reviewer-guide.md). Each report links its frozen protocol and retained run evidence where available.
 
 ## Held-out exact-integer base gate v1

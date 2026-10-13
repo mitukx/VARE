@@ -1,5 +1,12 @@
 # Roadmap
 
+**2026-10-13 — analysis repair:** [seed-aware summary v3](seeded-summary-v3-report.md)
+closes the fitted-run pass@4 aggregation and snapshot/digest correspondence
+defects using CPU counterexamples. It leaves the v2 learning protocol and primary
+decision intact. The next open measurement remains the separately frozen model
+comparison, subject to runtime, objective, and generation-cost preflight. Older
+stop decisions below apply to their retired task/model pairings.
+
 ## Current stop point — 2026-10-11
 
 No new training or GPU experiment is admitted. The latest real-model task screen produced no applicable patches, and the public task used for grader calibration is retired from confirmation. The shared-module rollback correction is in open RVL [PR #92](https://github.com/mitukx/Recursive-Verification-Lag/pull/92); the constructed CPU regression and related tests pass with the patch, but production incidence, accelerator behavior, and model-quality impact are unknown. VARE [PR #2](https://github.com/mitukx/VARE/pull/2) merged as [`09dfcd5`](https://github.com/mitukx/VARE/commit/09dfcd5e02d37ad78b86948e555bbfd169cffc88). [PR #3](https://github.com/mitukx/VARE/pull/3) carries the historical-task evaluator and the reviewer-facing documentation update; check its live link for current status. The main evidence gap remains independently measured task success after a real post-training update.
