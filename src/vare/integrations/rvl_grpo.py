@@ -17,6 +17,7 @@ ScoreFn = Callable[[Task, str], float]
 class _TrainerSnapshot:
     training_state: Any
     module_modes: dict[str, bool]
+    module_types: dict[str, type[Any]]
 
 
 @dataclass(frozen=True, slots=True)
@@ -66,10 +67,10 @@ class RVLGRPOHooks:
         self._version = 0
         self._counter = 1
         self._states: dict[str, Any] = {self._active_id: self._snapshot_training_state()}
-        self._loaded_id = self._active_id
-        self._generation_factory = generation_factory
-        self._verified_factory = verified_generation_factory
-        if self._generation_factory is None or self._verified_factory is None:
+        self._loaded_id: str | None = self._active_id
+        resolved_generation = generation_factory
+        resolved_verified = verified_generation_factory
+        if resolved_generation is None or resolved_verified is None:
             try:
                 from src.rvl_systems.types import Generation, VerifiedGeneration
             except ImportError as exc:
@@ -77,8 +78,12 @@ class RVLGRPOHooks:
                     "RVLGRPOHooks requires an importable Recursive-Verification-Lag checkout "
                     "or explicit generation/verified-generation factories"
                 ) from exc
-            self._generation_factory = self._generation_factory or Generation
-            self._verified_factory = self._verified_factory or VerifiedGeneration
+            if resolved_generation is None:
+                resolved_generation = Generation
+            if resolved_verified is None:
+                resolved_verified = VerifiedGeneration
+        self._generation_factory: Callable[..., Any] = resolved_generation
+        self._verified_factory: Callable[..., Any] = resolved_verified
 
     def active_policy(self) -> tuple[str, int]:
         return self._active_id, self._version
@@ -98,6 +103,7 @@ class RVLGRPOHooks:
         return _TrainerSnapshot(
             training_state=state,
             module_modes={name: bool(module.training) for name, module in modules},
+            module_types={name: type(module) for name, module in modules},
         )
 
     def _restore_training_state(self, snapshot: Any) -> None:
@@ -109,14 +115,25 @@ class RVLGRPOHooks:
         if not callable(named_modules):
             raise RuntimeError("trainer model no longer exposes module modes")
         modules = dict(named_modules())
-        if modules.keys() != snapshot.module_modes.keys():
+        if (
+            modules.keys() != snapshot.module_modes.keys()
+            or modules.keys() != snapshot.module_types.keys()
+        ):
             raise RuntimeError("trainer module topology changed since policy snapshot")
+        for name, module in modules.items():
+            if type(module) is not snapshot.module_types[name]:
+                raise RuntimeError(
+                    f"trainer module {name!r} class changed since policy snapshot"
+                )
         self.trainer.restore_training_state(snapshot.training_state)
-        # Module.train() recursively changes descendants. Restore in the
-        # named_modules preorder so each child can then recover a distinct
-        # train/eval flag if the model used mixed modes.
-        for name, _ in named_modules():
-            modules[name].train(snapshot.module_modes[name])
+        # Assign the captured flags directly. Module.train() and Module.eval()
+        # recurse through every parent edge, while named_modules() lists a
+        # shared module once. Calling train() on each named module would still
+        # overwrite a shared child when a later alias has a different mode.
+        # The snapshot stores only the boolean, so a custom train() override's
+        # other side effects are not replayed.
+        for name, module in modules.items():
+            module.training = snapshot.module_modes[name]
 
     def _restore(self, policy_id: str) -> None:
         if policy_id not in self._states:
