@@ -153,9 +153,11 @@ class TrustedCheckpointStore:
         self._verify_file(self.objects / digest, digest, size)
         return digest
 
-    def read_verified(self, policy_id: str) -> tuple[bytes, str]:
+    def read_verified(self, policy_id: str, *, max_read_bytes: int = 16 * 1024 * 1024) -> tuple[bytes, str]:
         """Small-model CPU fixtures: read and hash bytes from the same descriptor."""
         digest, size = self._lookup(policy_id)
+        if type(max_read_bytes) is not int or not 0 < max_read_bytes <= self.max_bytes or size > max_read_bytes:
+            raise CheckpointIntegrityError("checkpoint too large for in-memory evaluation")
         blocks = list(self._read_chunks(self.objects / digest, max_bytes=self.max_bytes))
         raw = b"".join(blocks)
         if len(raw) != size or hashlib.sha256(raw).hexdigest() != digest:
