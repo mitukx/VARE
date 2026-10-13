@@ -101,6 +101,12 @@ class DockerIsolationRunner:
         if not isinstance(docker_binary, str) or not docker_binary:
             raise ValueError("docker_binary required")
         self.docker_binary = docker_binary
+        # Freeze the daemon/context selection for run and cleanup alike.
+        self._client_env = {
+            k: os.environ[k]
+            for k in ("PATH", "HOME", "DOCKER_HOST", "DOCKER_CONTEXT", "XDG_RUNTIME_DIR")
+            if k in os.environ
+        }
 
     def _common(self, limits: IsolationLimits, name: str) -> list[str]:
         return [
@@ -185,8 +191,7 @@ class DockerIsolationRunner:
         if not re.fullmatch(r"vare-[a-z]+-[0-9a-f]{24}", name):
             raise IsolationError("invalid managed container identity")
         # Prevent arbitrary command substitution; caller uses only our builders.
-        env = {k: os.environ[k] for k in ("PATH", "HOME", "DOCKER_HOST", "DOCKER_CONTEXT", "XDG_RUNTIME_DIR")
-               if k in os.environ}
+        env = self._client_env
         try:
             proc = await asyncio.create_subprocess_exec(
                 *argv, stdout=asyncio.subprocess.PIPE,
@@ -236,10 +241,22 @@ class DockerIsolationRunner:
         finally:
             # Always ask the daemon to remove the named container. Killing
             # just the local CLI may leave the container running remotely.
-            try:
-                await asyncio.shield(self._force_remove(name))
-            except Exception as exc:
-                cleanup_failure = exc
+            cleanup_task = asyncio.create_task(self._force_remove(name))
+            # A cancellation must not abandon an in-flight daemon cleanup.
+            # Repeat the shielded wait until the bounded cleanup task exits.
+            while not cleanup_task.done():
+                try:
+                    await asyncio.shield(cleanup_task)
+                except asyncio.CancelledError:
+                    continue
+                except Exception as exc:
+                    cleanup_failure = exc
+                    break
+            if cleanup_task.done() and cleanup_failure is None:
+                try:
+                    cleanup_task.result()
+                except Exception as exc:
+                    cleanup_failure = exc
             if proc.returncode is None:
                 proc.kill()
                 try:
@@ -254,8 +271,7 @@ class DockerIsolationRunner:
                 raise IsolationError("could not confirm Docker container cleanup") from cleanup_failure
 
     async def _force_remove(self, name: str) -> None:
-        env = {k: os.environ[k] for k in ("PATH", "HOME", "DOCKER_HOST", "DOCKER_CONTEXT", "XDG_RUNTIME_DIR")
-               if k in os.environ}
+        env = self._client_env
         proc = await asyncio.create_subprocess_exec(
             self.docker_binary, "rm", "-f", name,
             stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
