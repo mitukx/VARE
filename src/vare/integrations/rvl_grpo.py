@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import asyncio
 import copy
+from contextlib import contextmanager, nullcontext
 from dataclasses import dataclass
 import math
 from statistics import fmean
-from typing import Any, Callable, Sequence
+from typing import Any, Callable, Iterator, Sequence
 
 from ..types import Attempt, EvaluationReport, Experience, Task, snapshot_verification
 
@@ -142,6 +143,59 @@ class RVLGRPOHooks:
             self._restore_training_state(self._states[policy_id])
             self._loaded_id = policy_id
 
+    @contextmanager
+    def _preserve_inference_state(self) -> Iterator[None]:
+        """Preserve flags and CPU/initialized-CUDA RNG, without tensor copies.
+
+        Backend inference must leave tensors unchanged. The adapter's lock
+        serializes access to this model, not unrelated process-global RNG users.
+        Other device RNGs and scorer side effects are outside this contract.
+        """
+        model = getattr(self.trainer, "model", None)
+        named_modules = getattr(model, "named_modules", None)
+        modes = [
+            (module, bool(module.training)) for _, module in named_modules()
+        ] if callable(named_modules) else []
+        torch = getattr(self.trainer, "torch", None)
+        rng_scope = nullcontext()
+        if torch is not None:
+            # Do not initialize CUDA merely to snapshot its generators.
+            devices = list(range(torch.cuda.device_count())) if torch.cuda.is_initialized() else []
+            rng_scope = torch.random.fork_rng(devices=devices)
+        rng_scope.__enter__()
+        try:
+            yield
+        finally:
+            try:
+                try:
+                    rng_scope.__exit__(None, None, None)
+                finally:
+                    for module, mode in modes:
+                        module.training = mode
+            except BaseException:
+                self._loaded_id = None
+                raise
+
+    async def _generate(self, *args: Any, **kwargs: Any) -> Any:
+        # Called only under _model_lock. Cancelling an asyncio.to_thread await
+        # does not stop its worker. Shield and drain before restoring state or
+        # releasing the lock, including when the caller cancels repeatedly.
+        with self._preserve_inference_state():
+            generation = asyncio.ensure_future(self.backend.generate(*args, **kwargs))
+            try:
+                return await asyncio.shield(generation)
+            except asyncio.CancelledError:
+                while not generation.done():
+                    try:
+                        await asyncio.shield(generation)
+                    except asyncio.CancelledError:
+                        continue
+                    except BaseException:
+                        break
+                if not generation.cancelled():
+                    generation.exception()  # Retrieve a worker error during cancellation.
+                raise
+
     @staticmethod
     def _generation_fields(generation: Any) -> dict[str, Any]:
         return {
@@ -160,7 +214,7 @@ class RVLGRPOHooks:
         async with self._rollout_sem:
             async with self._model_lock:
                 self._restore(policy_id)
-                rows = await self.backend.generate(
+                rows = await self._generate(
                     task.id,
                     task.prompt,
                     n=1,
@@ -328,7 +382,7 @@ class RVLGRPOHooks:
             try:
                 self._restore(policy_id)
                 for index, task in enumerate(self.eval_tasks):
-                    rows = await self.backend.generate(
+                    rows = await self._generate(
                         task.id,
                         task.prompt,
                         n=1,
