@@ -101,6 +101,7 @@ Frozen study definitions are the JSON files in [`protocols/`](protocols/). A `*.
 | `docs/` | Technical reports, evidence summaries, decisions, and the [report template](docs/templates/paired-comparison-report.md) |
 | `contributions/` | Upstream patch artifacts and status |
 | `minigrpo/` | Small GRPO trainer for the integer seed-split train rows, scored on dev. CPU tests only; no retained model run. See [minigrpo](docs/minigrpo.md). |
+| `selfimprove/` | Proposes recomputable integer problems, trains with minigrpo, and rolls a candidate back through `PromotionGate`. A format-only reward fixture is rejected in tests. No retained model round. See [selfimprove](docs/selfimprove.md). |
 | `scripts/`, `reproducers/` | Reproduction, audit, and diagnostic commands |
 
 ## Held-out exact-integer records
