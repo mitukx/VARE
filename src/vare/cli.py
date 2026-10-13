@@ -223,6 +223,8 @@ def _cmd_env_campaign(args: argparse.Namespace) -> int:
     argv = json.loads(args.agent_argv_json)
     if not isinstance(argv, list) or not argv or not all(isinstance(x, str) and x for x in argv):
         raise ValueError("--agent-argv-json must encode a non-empty JSON string array")
+    from .environments.catalog import WorkspaceAgent
+    agent: WorkspaceAgent
     if args.isolated_agent_image:
         # Docker is opt-in and must be administered outside any candidate
         # checkout. Agent argv is interpreted INSIDE the pinned image.
