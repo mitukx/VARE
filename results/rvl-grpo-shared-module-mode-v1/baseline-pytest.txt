@@ -1,0 +1,22 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+___ test_candidate_rollback_preserves_shared_child_mode[later_alias_differs] ___
+tests/test_rvl_grpo_shared_module_mode.py:228: in test_candidate_rollback_preserves_shared_child_mode
+    raise AssertionError("\n".join(failures))
+E   AssertionError: per-module modes: saved={'': False, 'transformer': False, 'transformer.drop': False, 'shared_dropout_alias': True} restored={'': False, 'transformer': False, 'transformer.drop': True, 'shared_dropout_alias': True}
+E   subsequent mode-dependent forward
+E   restore invoked Module.train
+___ test_candidate_rollback_preserves_shared_child_mode[earlier_alias_masks] ___
+tests/test_rvl_grpo_shared_module_mode.py:228: in test_candidate_rollback_preserves_shared_child_mode
+    raise AssertionError("\n".join(failures))
+E   AssertionError: restore invoked Module.train
+_____ test_candidate_rollback_preserves_shared_child_mode[nested_unshared] _____
+tests/test_rvl_grpo_shared_module_mode.py:228: in test_candidate_rollback_preserves_shared_child_mode
+    raise AssertionError("\n".join(failures))
+E   AssertionError: restore invoked Module.train
+=========================== short test summary info ============================
+FAILED tests/test_rvl_grpo_shared_module_mode.py::test_candidate_rollback_preserves_shared_child_mode[later_alias_differs]
+FAILED tests/test_rvl_grpo_shared_module_mode.py::test_candidate_rollback_preserves_shared_child_mode[earlier_alias_masks]
+FAILED tests/test_rvl_grpo_shared_module_mode.py::test_candidate_rollback_preserves_shared_child_mode[nested_unshared]
+3 failed in 0.07s
+EXIT:1

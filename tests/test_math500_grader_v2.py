@@ -1,6 +1,5 @@
 import time
 
-import pytest
 from latex2sympy2_extended import NormalizationConfig
 from math_verify import LatexExtractionConfig, parse, verify
 
