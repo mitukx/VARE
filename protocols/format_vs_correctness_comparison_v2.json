@@ -1,0 +1,102 @@
+{
+  "advantage": {
+    "epsilon": 1e-08,
+    "group_size": 2,
+    "standardize": "population_std"
+  },
+  "arms": [
+    "base",
+    "format_sft",
+    "format_reward_rl",
+    "correctness_reward_rl",
+    "random_reward_rl"
+  ],
+  "authorized": true,
+  "backends_are_replicates": false,
+  "bootstrap_alpha": 0.05,
+  "bootstrap_samples": 2000,
+  "bootstrap_seed": 20261016,
+  "confirm_split_sha256": "4544a9a852f615f7cf9c52d7a4826ed70ea6c5f57829754ac2e10f3c1fea4287",
+  "curve_checkpoints": [
+    8,
+    16
+  ],
+  "curve_ks": [
+    1,
+    4
+  ],
+  "decision_rule": "positive_contrast when the confirm bootstrap low end is above 0, negative_contrast when the high end is below 0, otherwise interval_includes_zero. Pack rows cannot change the decision.",
+  "decision_split": "confirm",
+  "does_not_establish": "A positive contrast is a difference on the confirm split under this budget. It does not promote weights and it does not authorize a larger step count after the interval is observed.",
+  "eval_samples_per_task": 4,
+  "format_sft_target": "correct strict line #### <value>",
+  "frozen_before_arm_output": true,
+  "heldout_pack_sha256": "189b5e482b0f8c2b40ff36e0e1a84827699f348c11981a0ff912ce67323fd7fc",
+  "learning_rate": 1e-05,
+  "lora": {
+    "dropout": 0.0,
+    "keys": [
+      "self_attn.q_proj",
+      "self_attn.v_proj"
+    ],
+    "rank": 8,
+    "scale": 20.0
+  },
+  "matched_budget": "optimizer_steps",
+  "max_new_tokens": 48,
+  "max_seq_length": 256,
+  "models": {
+    "mlx": {
+      "package": "mlx-lm==0.32.0",
+      "repo_id": "mlx-community/Qwen2.5-3B-Instruct-4bit",
+      "revision": "4f83f8f146fdf28b512a06562b671d7af4fab457"
+    },
+    "transformers": {
+      "package_note": "Runtime torch plus peft and transformers. Not a replicate of the 4-bit mlx checkpoint.",
+      "repo_id": "Qwen/Qwen2.5-3B-Instruct",
+      "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1"
+    }
+  },
+  "num_layers": 1,
+  "optimizer": "adam",
+  "optimizer_steps": 16,
+  "planning_optimizer_seconds": 2880,
+  "planning_seconds_per_step": 9,
+  "primary_contrast": "correctness_reward_rl minus format_sft, unbiased strict pass@1, confirm tasks pooled across the five run seeds, paired bootstrap",
+  "primary_k": 1,
+  "protocol_id": "format-vs-correctness-comparison-v2",
+  "rl_generations": 480,
+  "run_seeds": [
+    20261016,
+    20261017,
+    20261018,
+    20261019,
+    20261020
+  ],
+  "scores_dev_split": false,
+  "smoke_manifest_sha256": "8926c6c6383201bb3f1a067707210db7abd94c90a10f40ae0686784bc4ce511e",
+  "smoke_peak_memory_bytes": 1959434978.0,
+  "smoke_wall_seconds": 8.762955541998963,
+  "temperature": 0.7,
+  "train_seeds": [
+    1032499,
+    1046563,
+    1055703,
+    1056791,
+    1057922,
+    1063499,
+    1087351,
+    1105159,
+    1107938,
+    1119051,
+    1140335,
+    1144317,
+    1144822,
+    1146465,
+    1175148,
+    1183639
+  ],
+  "uses_confirm_for_training": false,
+  "uses_consumed_smoke_row": false,
+  "uses_pack_for_training": false
+}
