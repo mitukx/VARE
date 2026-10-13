@@ -8,8 +8,6 @@ grader source files from hostile code running in the same grader container.
 from __future__ import annotations
 
 import argparse
-import asyncio
-from dataclasses import asdict
 import json
 import math
 from pathlib import Path
