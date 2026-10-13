@@ -1,5 +1,9 @@
 # Experimental program
 
+## 2026-10-13 — inference state and cancellation correctness
+
+The [three-arm study](rvl-inference-transaction-v1-report.md) tests a source-level contract, not a post-training efficacy hypothesis. Pinned main and alias-only controls fail active inference/cancellation checks; the corrected adapter passes all 14 new cases and actual pinned RVL/HF probes. No model study, retired cohort, paid compute, or accelerator run was used. The fixture performs a tiny trainer update only to populate optimizer state. Source and artifact hashes, logs, package versions, and failure counts are retained in the [bundle](../results/rvl-inference-transaction-v1/).
+
 Entries below preserve study decisions and outcomes; they are a history, not a leaderboard. For the current stop point and a short review route, see the [roadmap](roadmap.md), [current evidence gaps](current-gaps.md), and [reviewer guide](reviewer-guide.md). Each report links its frozen protocol and retained run evidence where available.
 
 ## VARE GRPO adapter shared-module mode rollback

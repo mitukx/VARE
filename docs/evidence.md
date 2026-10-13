@@ -1,5 +1,7 @@
 # Calibration evidence
 
+**2026-10-13 — RVL inference isolation:** [report](rvl-inference-transaction-v1-report.md), [raw replay](../results/rvl-inference-transaction-v1/), and [one-entry reproducer](../scripts/reproduce_rvl_inference_transaction_v1.py) compare pinned main, existing alias-only correction, and new inference correction. Regression failures are 12/14, 10/14, and 0/14 respectively, with no setup errors/skips. Actual random GPT-2/HF generation preserves model/AdamW state but corrupts CPU RNG/modes in the first two arms; corrected inference preserves all four and drains cancelled workers before unlock. Local full suite: 338 pass. CPU only; AI review is not human review; no capability or deployment-frequency claim.
+
 This ledger records what the retained artifacts establish and where each claim stops. It is organized by evidence area, not by headline strength. Start with the [reviewer guide](reviewer-guide.md) for the current PRs and reproduction commands, or the [current gaps](current-gaps.md) for the latest research and model-evaluation decisions. Historical results remain below even when later work supersedes their status.
 
 ## Current systems and research decisions — 2026-10-12

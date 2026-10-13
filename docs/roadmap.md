@@ -1,5 +1,9 @@
 # Roadmap
 
+## Systems correction — 2026-10-13
+
+The [inference transaction report](rvl-inference-transaction-v1-report.md) closes CPU active-inference state contamination and cancelled-worker overlap in the adapter, using the existing VARE #5 alias correction as its base. The next bounded correctness gap is engine-level sibling-evaluation cancellation/draining; it was reproduced with a generic `LoopHooks` fixture but is not fixed here. Hard cancellation deadlines require a stronger backend lifecycle contract. Separate open model-study branches are tracked in [current gaps](current-gaps.md); their fresh cohorts were not used by this work.
+
 ## Current stop point — 2026-10-11
 
 **Update 2026-10-12 — adapter shared-module restore:** the VARE GRPO adapter still walked `Module.train()` after the trainer restore. A CPU regression with a shared child fails on that walk and passes after direct flag assignment. See the [report](rvl-grpo-shared-module-mode-v1-report.md). This does not admit a training or GPU experiment.

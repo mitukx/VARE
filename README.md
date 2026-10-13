@@ -8,6 +8,7 @@ VARE has **not demonstrated an independently confirmed improvement in real-model
 
 The current reviewable work is:
 
+- An RVL inference-state and cancellation correction: pinned main and the existing alias-only correction leave CPU RNG/modes changed and allow a cancelled generation thread to overlap the next rollout. The corrected CPU tests and actual tiny GPT-2/HF path preserve state and serialize workers. See the [three-arm report and reproduction](docs/rvl-inference-transaction-v1-report.md). This is correctness evidence, not model improvement.
 - A VARE GRPO-adapter correction for the same shared-module restore edge. The adapter previously called `Module.train()` after the trainer restore; direct flag assignment passes a constructed CPU regression. This does not add production-incidence or model-quality evidence. See the [adapter report](docs/rvl-grpo-shared-module-mode-v1-report.md).
 - A narrow RVL rollback correction for a shared-module mode restoration edge. Its constructed CPU regression fails on the pinned baseline and passes with the patch. [RVL PR #92](https://github.com/mitukx/Recursive-Verification-Lag/pull/92) is open; production incidence and model-quality impact are unknown.
 - A calibrated, protected grader for the public urllib3 #3352 historical bug and a VARE task-identity correction. The public task is retired from confirmation use. Two one-shot local model attempts produced no applicable patch; no training was run.
