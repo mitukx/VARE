@@ -2,6 +2,10 @@
 
 This ledger records what the retained artifacts establish and where each claim stops. It is organized by evidence area, not by headline strength. Start with the [reviewer guide](reviewer-guide.md) for the current PRs and reproduction commands, or the [current gaps](current-gaps.md) for the latest research and model-evaluation decisions. Historical results remain below even when later work supersedes their status.
 
+## Current systems and research decisions — 2026-10-12
+
+- **VARE adapter shared-module rollback:** the adapter's post-restore `Module.train()` walk overwrote a shared child on one constructed registration order and changed a mode-dependent stand-in forward. Direct flag assignment passes that order, the masking order, and an unshared nested pair without calling `train()`. No production model graph, accelerator run, or task-success result is included. See the [report](rvl-grpo-shared-module-mode-v1-report.md).
+
 ## Current systems and research decisions — 2026-10-11
 
 - **RVL shared-module rollback:** on pinned RVL `27ebf7f`, a shared child exposes a mode-restoration error and changes the next Dropout output. The correction restores the checked model, optimizer, CPU RNG, and next-forward behavior; 14 trainer tests and 51 related CPU tests pass. [RVL PR #92](https://github.com/mitukx/Recursive-Verification-Lag/pull/92) is open. An AI-agent challenge is retained but is not human review. Production incidence, accelerator behavior, and model impact remain unknown. See the [v2 report](rvl-module-mode-shared-alias-followup-v2.md) and [reproduction bundle](../results/rvl-module-mode-shared-alias-v1/).

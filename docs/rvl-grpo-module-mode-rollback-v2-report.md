@@ -1,5 +1,7 @@
 # RVL GRPO rollback of PyTorch module modes v2
 
+**Follow-up:** the preorder `Module.train()` restore described below overwrites a shared child when a later alias has a different mode. That adapter path is corrected by direct flag assignment in [the shared-module report](rvl-grpo-shared-module-mode-v1-report.md). The v2 measurements below are unchanged.
+
 ## Finding
 
 The previous mid-step fault test checked model tensors, optimizer state, CPU RNG, policy identity, candidate cleanup, and the next rollout. It did not inspect `torch.nn.Module.training` flags. In the pinned RVL trainer, `train_step()` calls `model.train()` before doing the optimizer update, while `snapshot_training_state()` and `restore_training_state()` preserve tensors, optimizer state, and RNG only. When the real optimizer completed and the test injected an exception before `train_step()` returned, VARE restored the weights but left the model in training mode.
