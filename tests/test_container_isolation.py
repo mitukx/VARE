@@ -127,7 +127,7 @@ def test_read_only_checkpoint_store_queries_without_mutation(tmp_path):
     assert ro.digest("p0") == expected
     with pytest.raises(CheckpointIntegrityError, match="read-only"):
         ro.register_file("p1", source)
-    with pytest.raises(CheckpointIntegrityError, match="registry is missing"):
+    with pytest.raises(CheckpointIntegrityError, match="object directory is missing"):
         TrustedCheckpointStore(tmp_path / "missing", read_only=True)
 
 
