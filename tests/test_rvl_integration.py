@@ -23,9 +23,17 @@ def _make_replay(path: Path) -> None:
                 "prompt": "2+2?",
                 "response": "#### 4",
                 "logprob": -0.2,
-                "token_count": 3,
+                "token_count": 1,
                 "latency_s": 0.05,
-                "metadata": {"family": "math"},
+                "metadata": {
+                    "family": "math",
+                    "model": "fixture-model-revision",
+                    "sampling_temperature": 0.8,
+                    "logprob_distribution": "neutral_temperature_scaled_policy",
+                    "prompt_token_ids": [1, 2],
+                    "response_token_ids": [10],
+                    "response_token_logprobs": [-0.2],
+                },
             },
             "reward": 1.0,
             "verifier_latency_s": 0.01,
@@ -38,9 +46,17 @@ def _make_replay(path: Path) -> None:
                 "prompt": "3+5?",
                 "response": "#### 7",
                 "logprob": -1.2,
-                "token_count": 3,
+                "token_count": 1,
                 "latency_s": 0.07,
-                "metadata": {"family": "math"},
+                "metadata": {
+                    "family": "math",
+                    "model": "fixture-model-revision",
+                    "sampling_temperature": 0.8,
+                    "logprob_distribution": "neutral_temperature_scaled_policy",
+                    "prompt_token_ids": [3, 4],
+                    "response_token_ids": [11],
+                    "response_token_logprobs": [-1.2],
+                },
             },
             "reward": 0.0,
             "verifier_latency_s": 0.01,
@@ -51,6 +67,13 @@ def _make_replay(path: Path) -> None:
     db.execute(
         "INSERT INTO groups VALUES(?,?,?,?,?,?,?,?,?,?,?)",
         ("g1", 4, json.dumps(ready), "x", "ready", 3, 1.0, 2.0, None, None, 0),
+    )
+    db.execute(
+        "CREATE TABLE verification_configuration(id INTEGER PRIMARY KEY, hash TEXT NOT NULL)"
+    )
+    db.execute(
+        "INSERT INTO verification_configuration VALUES(1,?)",
+        ("c" * 64,),
     )
     pending = [
         {
@@ -81,14 +104,107 @@ def test_rvl_reader_preserves_versions_and_behavior(tmp_path):
     assert snap.statuses == {"ready": 1, "pending_verification": 1}
     assert snap.max_policy_lag == 2
     assert snap.max_verifier_lag == 2
+    assert snap.mean_reward == 0.5
     exps = reader.ready_experiences(current_policy_version=6, current_verifier_version=5)
     assert len(exps) == 2
     assert exps[0].policy_lag == 2
     assert exps[0].verifier_lag == 2
+    assert exps[0].verification.score == 1.0
     assert exps[0].attempt.logprob == -0.2
     assert exps[0].attempt.task.family == "math"
     assert exps[0].verification.trusted
+    assert exps[1].verification.score == 0.0
     assert not exps[1].verification.passed
+    assert exps[0].attempt.metadata["vare_rollout_group"] == "g1"
+    assert exps[0].attempt.metadata["vare_rollout_group_size"] == 2
+    assert exps[0].attempt.metadata["rvl_generation"]["metadata"]["prompt_token_ids"] == [1, 2]
+    assert exps[0].verification.metadata["rvl_replay_status"] == "ready"
+    assert exps[0].verification.metadata["rvl_verification_config_sha256"] == "c" * 64
+
+
+def test_rvl_reader_accepts_legacy_database_without_verification_config_table(tmp_path):
+    path = tmp_path / "legacy-replay.sqlite"
+    _make_replay(path)
+    with sqlite3.connect(path) as db:
+        db.execute("DROP TABLE verification_configuration")
+
+    experiences = RVLTokenReplayReader(path).ready_experiences(
+        current_policy_version=6,
+        current_verifier_version=5,
+    )
+    assert len(experiences) == 2
+    assert "rvl_verification_config_sha256" not in experiences[0].verification.metadata
+
+
+def test_rvl_reader_rejects_malformed_verification_config_digest(tmp_path):
+    path = tmp_path / "malformed-replay.sqlite"
+    _make_replay(path)
+    with sqlite3.connect(path) as db:
+        db.execute(
+            "UPDATE verification_configuration SET hash=? WHERE id=1",
+            ("A" * 64,),
+        )
+
+    with pytest.raises(ValueError, match="lowercase SHA-256 digest"):
+        RVLTokenReplayReader(path).ready_experiences(
+            current_policy_version=6,
+            current_verifier_version=5,
+        )
+
+
+@pytest.mark.parametrize(
+    "reward",
+    [None, True, False, float("nan"), float("inf"), -0.01, 1.01, "0.5"],
+)
+def test_rvl_reader_rejects_invalid_ready_rewards(tmp_path, reward):
+    path = tmp_path / "replay.sqlite"
+    _make_replay(path)
+    with sqlite3.connect(path) as db:
+        raw = db.execute("SELECT payload FROM groups WHERE id='g1'").fetchone()[0]
+        payload = json.loads(raw)
+        payload[0]["reward"] = reward
+        db.execute(
+            "UPDATE groups SET payload=? WHERE id='g1'",
+            (json.dumps(payload),),
+        )
+
+    reader = RVLTokenReplayReader(path)
+    with pytest.raises(ValueError, match="ready RVL experience reward"):
+        reader.snapshot(current_policy_version=6, current_verifier_version=5)
+    with pytest.raises(ValueError, match="ready RVL experience reward"):
+        reader.ready_experiences(current_policy_version=6, current_verifier_version=5)
+
+
+def test_rvl_reader_does_not_default_missing_ready_reward_to_zero(tmp_path):
+    path = tmp_path / "replay.sqlite"
+    _make_replay(path)
+    with sqlite3.connect(path) as db:
+        raw = db.execute("SELECT payload FROM groups WHERE id='g1'").fetchone()[0]
+        payload = json.loads(raw)
+        del payload[0]["reward"]
+        db.execute(
+            "UPDATE groups SET payload=? WHERE id='g1'",
+            (json.dumps(payload),),
+        )
+
+    reader = RVLTokenReplayReader(path)
+    with pytest.raises(ValueError, match="ready RVL experience reward"):
+        reader.snapshot(current_policy_version=6, current_verifier_version=5)
+    with pytest.raises(ValueError, match="ready RVL experience reward"):
+        reader.ready_experiences(current_policy_version=6, current_verifier_version=5)
+
+
+def test_rvl_reader_rejects_empty_group_marked_ready(tmp_path):
+    path = tmp_path / "replay.sqlite"
+    _make_replay(path)
+    with sqlite3.connect(path) as db:
+        db.execute("UPDATE groups SET payload='[]' WHERE id='g1'")
+
+    reader = RVLTokenReplayReader(path)
+    with pytest.raises(ValueError, match="ready RVL group g1 has no experiences"):
+        reader.snapshot(current_policy_version=6, current_verifier_version=5)
+    with pytest.raises(ValueError, match="ready RVL group g1 has no experiences"):
+        reader.ready_experiences(current_policy_version=6, current_verifier_version=5)
 
 
 @pytest.mark.parametrize(

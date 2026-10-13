@@ -1,0 +1,35 @@
+{
+  "checks": {
+    "fixture_groups": true,
+    "gradient_finite_nonzero": true,
+    "gradient_tolerance": true,
+    "loss_tolerance": true,
+    "negative_control": true,
+    "no_update_state_invariants": true,
+    "protocol_result_match": true,
+    "runner_hash_match": true,
+    "runtime_match": true,
+    "rvl_revision_match": true,
+    "rvl_source_hashes": {
+      "src/rvl_systems/grpo.py": true,
+      "src/rvl_systems/hf_trainer.py": true,
+      "src/rvl_systems/lab/contracts.py": true,
+      "src/rvl_systems/lab/token_replay.py": true,
+      "src/rvl_systems/triton_grpo.py": true,
+      "src/rvl_systems/types.py": true
+    },
+    "vare_source_hashes": {
+      "src/vare/integrations/rvl.py": true,
+      "src/vare/integrations/rvl_grpo.py": true,
+      "src/vare/integrations/rvl_trajectory.py": true,
+      "src/vare/trajectory_reference.py": true
+    },
+    "wall_cap": true,
+    "weight_sums": true
+  },
+  "decision": "pass",
+  "failures": [],
+  "limitation": "Checks result provenance and locked acceptance criteria; rerunning the protocol is the independent numerical reproduction.",
+  "protocol_id": "vare-rvl-trajectory-gradient-parity-v4",
+  "result_sha256": "5c96e00b7172c69cadf046e24f17272e5dc6219a3e4b27724555e32fd8b4f020"
+}

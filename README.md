@@ -25,12 +25,13 @@ VARE is a CPU-first control plane for post-training signals, policy updates, and
 
 The current reviewable work also includes:
 
+- A CPU-only trajectory-event reference plus a strict one-turn RVL replay bridge. It preserves complete GRPO group identity and exact generation metadata, policy-token log-probabilities, sampling temperature, and verifier configuration provenance; same-prompt groups remain separate. Pending/invalid evaluations stay distinct from valid zero scores. The [reference contract](docs/trajectory-reference-v1.md) records the E0 limits. The RVL replay reader rejects missing, nonnumeric, nonfinite, and out-of-range rewards on records marked ready.
 - A VARE GRPO-adapter correction for the same shared-module restore edge. The adapter previously called `Module.train()` after the trainer restore; direct flag assignment passes a constructed CPU regression. This does not add production-incidence or model-quality evidence. See the [adapter report](docs/rvl-grpo-shared-module-mode-v1-report.md).
 - A narrow RVL rollback correction for a shared-module mode restoration edge. Its constructed CPU regression fails on the pinned baseline and passes with the patch. [RVL PR #92](https://github.com/mitukx/Recursive-Verification-Lag/pull/92) is open; production incidence and model-quality impact are unknown.
 - A calibrated, protected grader for the public urllib3 #3352 historical bug and a VARE task-identity correction. The public task is retired from confirmation use. Two one-shot local model attempts produced no applicable patch; no training was run.
 - A structured research screen that admitted no new training or GPU experiment because no candidate cleared both novelty and fresh-task feasibility gates.
 
-For exact limits, raw records, reproduction commands, and the current pull-request state, start with the [reviewer guide](docs/reviewer-guide.md). Status and links in this repository were checked on 2026-10-11; the adapter regression above was added on 2026-10-12. Use the linked pull requests for live status.
+For exact limits, raw records, reproduction commands, and the current pull-request state, start with the [reviewer guide](docs/reviewer-guide.md). Older PR status and links below were checked on 2026-10-11; the trajectory reference, RVL replay bridge, and reward-reader regressions above were added on 2026-10-14. Use linked pull requests for live status.
 
 ## Review path
 
