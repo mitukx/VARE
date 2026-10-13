@@ -46,6 +46,16 @@ jobs:
       # The default suite intentionally stays free of optional symbolic-math
       # dependencies. The isolated grader job below owns those tests.
       - run: python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py
+      - name: Reproduce owned evaluation task cleanup
+        if: matrix.python-version == '3.12'
+        run: >-
+          python scripts/reproduce_engine_evaluation_lifecycle_v1.py
+          --output "${RUNNER_TEMP}/engine-evaluation-replay"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always() && matrix.python-version == '3.12'
+        with:
+          name: engine-evaluation-replay
+          path: ${{ runner.temp }}/engine-evaluation-replay
       # Frozen recomputations stay on one interpreter. The matrix above
       # covers the test suite; repeating the audits would not ask a new question.
       - name: Recompute and audit the exact GRPO identifiability witness
