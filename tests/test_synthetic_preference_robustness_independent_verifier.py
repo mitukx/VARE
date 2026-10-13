@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-import verify_synthetic_preference_robustness_bundle_independent as verifier
+import verify_synthetic_preference_robustness_bundle_independent as verifier  # noqa: E402
 
 
 class IndependentRobustnessVerifierTests(unittest.TestCase):

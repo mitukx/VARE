@@ -7,9 +7,9 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-import audit_cpu_generated_arithmetic_feasibility_v1 as audit_v1
-import generate_compositional_arithmetic_feasibility_pilot as generator
-import run_cpu_generated_arithmetic_feasibility_v1 as runner
+import audit_cpu_generated_arithmetic_feasibility_v1 as audit_v1  # noqa: E402
+import generate_compositional_arithmetic_feasibility_pilot as generator  # noqa: E402
+import run_cpu_generated_arithmetic_feasibility_v1 as runner  # noqa: E402
 
 
 def test_pilot_data_matches_frozen_generator_and_hash():
