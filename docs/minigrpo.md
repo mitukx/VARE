@@ -57,3 +57,5 @@ python3 -m minigrpo.plot \
 ```
 
 `--epochs 2` runs a second pass over the same group, which is when the clip can bind. The default is one pass. `--kl-coef 0.02` loads a second frozen copy for the reference KL. `--dr-grpo` switches the normalization. Swap the model and revision for the 0.5B or 1.5B rows above to use those checkpoints. The same output directory resumes.
+
+`notebooks/flagship_a100.ipynb` is a separate Colab run. It is not this 40-step MLX command. See [flagship](flagship.md).
