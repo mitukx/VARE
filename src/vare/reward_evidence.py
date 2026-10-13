@@ -91,6 +91,7 @@ class RewardEvidenceRoot:
             or not isinstance(verification.verifier_name, str) or not verification.verifier_name
             or type(verification.passed) is not bool
             or type(verification.trusted) is not bool
+            or verification.trusted is not True
             or type(verification.score) not in (int, float)
             or not math.isfinite(float(verification.score))
             or not 0.0 <= verification.score <= 1.0
@@ -138,6 +139,7 @@ class RewardEvidenceRoot:
             "verifier_version": verification.verifier_version,
             "reward": float(verification.score),
             "passed": verification.passed,
+            "trusted": verification.trusted,
         }
 
     def attest(self, experience: Experience) -> str:
