@@ -95,7 +95,8 @@ class RewardEvidenceRoot:
             or type(verification.score) not in (int, float)
             or not math.isfinite(float(verification.score))
             or not 0.0 <= verification.score <= 1.0
-            or type(snapshot) not in (int, float) or not math.isfinite(float(snapshot))
+            or isinstance(snapshot, bool) or not isinstance(snapshot, (int, float))
+            or not math.isfinite(float(snapshot))
             or float(snapshot) != float(verification.score)
             or vmd.get("rvl_replay_status") != "ready"
             or vmd.get("rvl_group_id") != group
