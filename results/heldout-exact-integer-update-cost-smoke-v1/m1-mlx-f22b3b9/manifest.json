@@ -1,0 +1,31 @@
+{
+  "accepted": true,
+  "adapter_files_not_tracked": {
+    "adapter_config.json": {
+      "sha256": "4815e87d8fd0d18a5b660f7fb33e3ea98841e5dd0f5d792fd95876c1f7625f78"
+    },
+    "adapters.safetensors": {
+      "sha256": "6cf385ec4224674bfafe7baa6cd8ce7185bdc06a9deba2fa404f4c3699c019ef"
+    }
+  },
+  "adapter_hash_source": "operator report; the adapter files are not in this tree",
+  "blob_policy": "smoke_result.json is below 1048576 bytes and is tracked. Adapter files are not tracked and no blob-allowlist row is added.",
+  "code_revision": "f22b3b9455c2ed54bebfe82f90fa47aabbf7479c",
+  "does_not_establish": "One update, a matching reload, and a resource record. Not a held-out gain and not a reason to change the smoke learning rate or step count.",
+  "files": {
+    "smoke_result.json": {
+      "bytes": 834,
+      "sha256": "cf953a5c00cd7cc41a577ca364568e3d9c84fa85062ab8cc99504956af54d97c"
+    }
+  },
+  "host_report": "operator-reported Apple Silicon mlx run",
+  "loss": 3.004885196685791,
+  "model_id": "mlx-community/Qwen2.5-3B-Instruct-4bit",
+  "model_revision": "4f83f8f146fdf28b512a06562b671d7af4fab457",
+  "optimizer_steps": 1,
+  "peak_memory_bytes": 1959434978.0,
+  "protocol_id": "heldout-exact-integer-update-cost-smoke-v1",
+  "reload_matches_saved": true,
+  "train_seed": 1029953,
+  "wall_seconds": 8.762955541998963
+}

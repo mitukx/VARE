@@ -13,7 +13,7 @@ No retained run shows an independently confirmed held-out task-success gain afte
 | Record | Observation | What it does not establish |
 | --- | --- | --- |
 | Exact-integer v1, SmolLM2-360M-Instruct, mlx | Strict pass@4 is 0/64 (`stop_zero`). Wilson 95% is [0, 0.05662405979280534]. | A reason to change the parser or to train. The post-hoc lenient rescore finds 19/256 expression matches and is not a gate result. See [v1](docs/heldout-exact-integer-base-gate-v1-result.md) and [the diagnostic](docs/two-tier-answer-scoring-v1.md). |
-| Exact-integer v2, Qwen2.5-3B-Instruct 4-bit, mlx | Strict pass@4 is 29/64 (0.453125). Wilson 95% is [0.3372944778061167, 0.5742640277994588]. | A capability claim or a policy-update comparison. It authorizes only the separate [one-update smoke](docs/heldout-exact-integer-update-cost-smoke-v1.md). No smoke run is retained in this tree. |
+| Exact-integer v2, Qwen2.5-3B-Instruct 4-bit, mlx | Strict pass@4 is 29/64 (0.453125). Wilson 95% is [0.3372944778061167, 0.5742640277994588]. | A capability claim or a policy-update comparison. It authorizes only the separate [one-update smoke](docs/heldout-exact-integer-update-cost-smoke-v1.md). |
 | OpenBookQA, Qwen2.5-0.5B | Base exact-answer success 45.31%, matched SFT 33.33%, GRPO 0/128 on every seed because outputs missed the frozen parser. | A general claim about GRPO. This pairing is retired. |
 | ARC-Challenge, Qwen2.5-0.5B | The frozen GRPO-versus-SFT comparison missed its gate (38.84% vs 40.00%). | A gain from the update. This pairing is retired. |
 
@@ -63,6 +63,6 @@ VARE PR #2 was merged into `main` as [`09dfcd5`](https://github.com/mitukx/VARE/
 
 ## Held-out exact-integer records
 
-The 64-task pack is `benchmarks/heldout/exact_integer_v1/`. v1 is `stop_zero`. v2 is the 29/64 base gate in the table above. A later train/dev/confirm seed list is [integer seed split v1](docs/integer-seed-split-v1.md). Report calculations are [eval stats](docs/eval-stats-v1.md). The [one-update smoke](docs/heldout-exact-integer-update-cost-smoke-v1.md) is a protocol with no retained run. The update-comparison scripts, including [the five-arm refusal](docs/format-vs-correctness-comparison-v1.md), exit 2 and do not train.
+The 64-task pack is `benchmarks/heldout/exact_integer_v1/`. v1 is `stop_zero`. v2 is the 29/64 base gate in the table above. A later train/dev/confirm seed list is [integer seed split v1](docs/integer-seed-split-v1.md). Report calculations are [eval stats](docs/eval-stats-v1.md). The [one-update smoke](docs/heldout-exact-integer-update-cost-smoke-v1.md) retained an accepted mlx record: one step, loss 3.004885196685791, reload matched, peak memory 1959434978 bytes, wall time 8.762955541998963 seconds. That record is not a held-out gain. The update-comparison scripts, including [the five-arm refusal](docs/format-vs-correctness-comparison-v1.md), exit 2 and do not train.
 
 Large checkpoints and benchmark content with uncertain redistribution terms remain outside version control. Read each report for its exact source revisions, environment, raw artifacts, and claim limits. See [LICENSE](LICENSE) for the repository license.

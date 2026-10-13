@@ -2,7 +2,7 @@
 
 Protocol id: `heldout-exact-integer-update-cost-smoke-v1`.
 
-The exact-integer v2 mlx gate returned `nondegenerate_base_signal` (29/64). That result authorizes this smoke only: one optimizer update, a save, a reload, and a resource record. No smoke run is retained in this tree. This file does not authorize a multi-arm comparison.
+The exact-integer v2 mlx gate returned `nondegenerate_base_signal` (29/64). That result authorizes this smoke only: one optimizer update, a save, a reload, and a resource record. The mlx run is now retained below. Do not rerun it and do not change the learning rate, rank, train row, or step count after reading the loss. This file does not authorize a multi-arm comparison.
 
 Protocol file: `protocols/heldout_exact_integer_update_cost_smoke_v1.json`. SHA-256 `0d6959238b63b3b9a08b8db49c52a0905bbc51f617cd4b1ba8d5241da3c940d0`.
 
@@ -33,9 +33,32 @@ A passing record has `optimizer_steps == 1`, a finite loss, trainable parameters
 
 Anything else is a failed smoke. Keep `smoke_result.json`. Do not change the learning rate, rank, keys, train row, or step count after reading the loss.
 
+## Retained mlx result
+
+Operator-reported Apple Silicon run at code revision `f22b3b9455c2ed54bebfe82f90fa47aabbf7479c`. Python 3.12.12 and `mlx-lm` 0.32.0. The record was accepted. Do not rerun this smoke.
+
+| Field | Value |
+| --- | --- |
+| Accepted | true |
+| Optimizer steps | 1 |
+| Loss | 3.004885196685791 |
+| Reload matches saved | true |
+| Trainable parameters changed | true |
+| Held-out pack used for the update | false |
+| Wall seconds | 8.762955541998963 |
+| Peak memory bytes | 1959434978.0 |
+| Model | `mlx-community/Qwen2.5-3B-Instruct-4bit` @ `4f83f8f146fdf28b512a06562b671d7af4fab457` |
+| Record | `results/heldout-exact-integer-update-cost-smoke-v1/m1-mlx-f22b3b9/` |
+| `smoke_result.json` SHA-256 | `cf953a5c00cd7cc41a577ca364568e3d9c84fa85062ab8cc99504956af54d97c` |
+| Manifest SHA-256 | `8926c6c6383201bb3f1a067707210db7abd94c90a10f40ae0686784bc4ce511e` |
+
+The adapter files are not in git. Operator-reported SHA-256: `adapters.safetensors` `6cf385ec4224674bfafe7baa6cd8ce7185bdc06a9deba2fa404f4c3699c019ef`, `adapter_config.json` `4815e87d8fd0d18a5b660f7fb33e3ea98841e5dd0f5d792fd95876c1f7625f78`. The wall clock includes weight load, the step, and reload. It is not a separate measurement of a marginal step.
+
+The commands below are the recorded run, not a request to repeat it.
+
 ## Mac
 
-Run this on the machine that will execute the mlx update. Do not point `--output` at a v1 or v2 result directory.
+Do not point `--output` at a v1 or v2 result directory.
 
 ```bash
 git rev-parse HEAD
@@ -70,6 +93,8 @@ echo "comparison_exit=$?"
 `comparison_exit` must be 2. The comparison script does not read `smoke_result.json`.
 
 ## Colab
+
+The retained result is the mlx run above. This block was not run. It is the separate transformers backend of the same frozen protocol, not a replicate of the 4-bit mlx smoke, and it is not required for that acceptance.
 
 Use a GPU runtime. The transformers command below is the T4-sized path: one layer, batch size 1, sequence length 256, float16 when CUDA is present. It downloads the upstream 3B checkpoint (about 6.2 GB). If the runtime resets, files under `/content` are gone, so the cells mount Drive before the update.
 
