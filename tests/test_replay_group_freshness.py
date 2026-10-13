@@ -23,7 +23,10 @@ def test_one_stale_member_drops_its_whole_group_and_keeps_fresh_groups():
     for index in range(8):
         group = "group-a" if index < 4 else "group-b"
         replay.add(_experience(index, group), freshness=1.0)
-    freshness = lambda item: None if item.attempt.task.id == "task-0" else 1.0
+    def freshness(item: Experience) -> float | None:
+        if item.attempt.task.id == "task-0":
+            return None
+        return 1.0
 
     selected = replay.sample_current(8, freshness_fn=freshness, grouped=True)
 
