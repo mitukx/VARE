@@ -1,12 +1,29 @@
 # VARE
 
-VARE is a CPU-first research project for studying post-training signals, policy updates, and evaluation reliability under limited compute. It acts as an outer improvement control plane and integrates with existing training systems such as [Recursive-Verification-Lag (RVL)](https://github.com/mitukx/Recursive-Verification-Lag), rather than reimplementing a full RL stack.
+## Question
+
+Under a fixed compute budget, which post-training signal improves an independently measured held-out outcome, and how do we know the update and the evaluation are correct?
+
+Training reward is not that outcome. A base-model pass rate is not evidence that an update helps.
+
+## Results
+
+No retained run shows an independently confirmed held-out task-success gain after a real model update.
+
+| Record | Observation | What it does not establish |
+| --- | --- | --- |
+| Exact-integer v1, SmolLM2-360M-Instruct, mlx | Strict pass@4 is 0/64 (`stop_zero`). Wilson 95% is [0, 0.05662405979280534]. | A reason to change the parser or to train. The post-hoc lenient rescore finds 19/256 expression matches and is not a gate result. See [v1](docs/heldout-exact-integer-base-gate-v1-result.md) and [the diagnostic](docs/two-tier-answer-scoring-v1.md). |
+| Exact-integer v2, Qwen2.5-3B-Instruct 4-bit, mlx | Strict pass@4 is 29/64 (0.453125). Wilson 95% is [0.3372944778061167, 0.5742640277994588]. | A capability claim or a policy-update comparison. It authorizes only a separate one-update save/reload resource smoke, which is not a result in this tree. See [v2](docs/heldout-exact-integer-base-gate-v2.md). |
+| OpenBookQA, Qwen2.5-0.5B | Base exact-answer success 45.31%, matched SFT 33.33%, GRPO 0/128 on every seed because outputs missed the frozen parser. | A general claim about GRPO. This pairing is retired. |
+| ARC-Challenge, Qwen2.5-0.5B | The frozen GRPO-versus-SFT comparison missed its gate (38.84% vs 40.00%). | A gain from the update. This pairing is retired. |
+
+The historical record stays in [the experiment index](docs/experiments.md), [the evidence ledger](docs/evidence.md), and [current gaps](docs/current-gaps.md). `docs/` is not moved or deleted.
 
 ## Status at this snapshot
 
-VARE has **not demonstrated an independently confirmed improvement in real-model task success after post-training**. Recent model studies are negative or failed their predeclared gates. The project retains those outcomes and does not treat runnable training code, grader calibration, or synthetic results as capability evidence.
+VARE is a CPU-first control plane for post-training signals, policy updates, and evaluation reliability under limited compute. It integrates with existing training systems such as [Recursive-Verification-Lag (RVL)](https://github.com/mitukx/Recursive-Verification-Lag) instead of reimplementing a full RL stack.
 
-The current reviewable work is:
+The current reviewable work also includes:
 
 - A VARE GRPO-adapter correction for the same shared-module restore edge. The adapter previously called `Module.train()` after the trainer restore; direct flag assignment passes a constructed CPU regression. This does not add production-incidence or model-quality evidence. See the [adapter report](docs/rvl-grpo-shared-module-mode-v1-report.md).
 - A narrow RVL rollback correction for a shared-module mode restoration edge. Its constructed CPU regression fails on the pinned baseline and passes with the patch. [RVL PR #92](https://github.com/mitukx/Recursive-Verification-Lag/pull/92) is open; production incidence and model-quality impact are unknown.
@@ -81,12 +98,12 @@ Frozen study definitions are the JSON files in [`protocols/`](protocols/). A `*.
 | `benchmarks/` | Task definitions, protected graders, and task locks |
 | `protocols/` | Frozen study definitions, gates, and hashes |
 | `results/` | Raw outputs, manifests, and retained failed or passed runs |
-| `docs/` | Technical reports, evidence summaries, and decisions |
+| `docs/` | Technical reports, evidence summaries, decisions, and the [report template](docs/templates/paired-comparison-report.md) |
 | `contributions/` | Upstream patch artifacts and status |
 | `scripts/`, `reproducers/` | Reproduction, audit, and diagnostic commands |
 
-## Held-out exact-integer base gate
+## Held-out exact-integer records
 
-`benchmarks/heldout/exact_integer_v1/` is a 64-task pack. The v1 mlx run is a retained `stop_zero` result. The v2 mlx run of `mlx-community/Qwen2.5-3B-Instruct-4bit` is a retained base-gate result, 29/64, and is not a capability claim; see [the v2 note](docs/heldout-exact-integer-base-gate-v2.md). Both update-comparison scripts exit 2 and do not train.
+The 64-task pack is `benchmarks/heldout/exact_integer_v1/`. v1 is `stop_zero`. v2 is the 29/64 base gate in the table above. A later train/dev/confirm seed list is [integer seed split v1](docs/integer-seed-split-v1.md). Report calculations are [eval stats](docs/eval-stats-v1.md). The update-comparison scripts exit 2 and do not train.
 
 Adapter checkpoints already committed under `results/` stay in git as retained raw records. [`protocols/tracked_large_blob_allowlist_v1.txt`](protocols/tracked_large_blob_allowlist_v1.txt) freezes those blobs at or above 1 MiB; `scripts/check_tracked_blob_budget.py` rejects a tree that adds, replaces, or drops one. New files at or above that size, and benchmark content with uncertain redistribution terms, stay outside the repository. Record a new external file's SHA-256 in the study manifest. Published history is not rewritten. See [artifact retention](docs/artifact-retention.md). Read each report for its exact source revisions, environment, raw artifacts, and claim limits. See [LICENSE](LICENSE) for the repository license.
