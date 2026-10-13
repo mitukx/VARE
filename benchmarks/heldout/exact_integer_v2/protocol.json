@@ -1,0 +1,68 @@
+{
+  "protocol_id": "heldout-exact-integer-base-gate-v2",
+  "frozen_before_model_output": true,
+  "v1_protocol_id": "heldout-exact-integer-base-gate-v1",
+  "v1_result": "results/heldout-exact-integer-base-gate-v1/m1-mlx-5d36336/manifest.json",
+  "v1_decision": "stop_zero",
+  "purpose": "Base-model pass@k for one larger instruct model on the unchanged v1 expression pack. v1 samples are not rescored.",
+  "task_pack_policy": "Reuse benchmarks/heldout/exact_integer_v1/tasks.jsonl with its existing hash. No expression or prompt is redrawn from the v1 outcome.",
+  "generation_seed": 20261013,
+  "n_tasks": 64,
+  "families": ["add_sub", "mul_add", "div_exact", "paren"],
+  "per_family": 16,
+  "tasks_file": "benchmarks/heldout/exact_integer_v1/tasks.jsonl",
+  "tasks_sha256": "189b5e482b0f8c2b40ff36e0e1a84827699f348c11981a0ff912ce67323fd7fc",
+  "decoder": {
+    "k": 4,
+    "temperature": 0.7,
+    "max_new_tokens": 48,
+    "sampling_seed": 20261013,
+    "seed_formula": "20261013 + task_index * 4 + sample_index",
+    "chat_template": "Required. A tokenizer without a chat template fails closed."
+  },
+  "answer_extraction": {
+    "regex": "^####\\s+(-?\\d+)\\s*$",
+    "scope": "The last non-empty line must full-match the regex.",
+    "relation_to_v1": "Identical to the v1 grader. It is not relaxed, and prose from the v1 outputs is not added as an alternate pattern."
+  },
+  "primary_metric": "Fraction of tasks with at least one exact final line among k samples, with a Wilson 95% interval.",
+  "acceptance": {
+    "stop_zero": "pass_rate == 0. Do not retune and do not update.",
+    "stop_saturated": "pass_rate == 1. Do not retune the pack into a training set.",
+    "nondegenerate_base_signal": "0 < pass_rate < 1. Authorizes only a separate update-cost smoke, not a policy-update comparison."
+  },
+  "unchanged_from_v1": [
+    "task pack bytes",
+    "prompt text",
+    "k",
+    "temperature",
+    "max_new_tokens",
+    "sampling seed formula",
+    "final-line parser",
+    "acceptance rule"
+  ],
+  "changed_from_v1": [
+    "model family, repository, and revision",
+    "MLX weights are the published 4-bit mlx-community conversion"
+  ],
+  "models": {
+    "mlx": {
+      "repo_id": "mlx-community/Qwen2.5-3B-Instruct-4bit",
+      "revision": "4f83f8f146fdf28b512a06562b671d7af4fab457",
+      "package": "mlx-lm==0.32.0",
+      "machine": "Apple Silicon",
+      "weights": "Published mlx-community 4-bit conversion of Qwen/Qwen2.5-3B-Instruct. No unquantized mlx-community repository for this id was available when the revision was pinned.",
+      "sampling": "make_sampler(temp=0.7); mlx.core.random.seed(seed) before each sample"
+    },
+    "transformers": {
+      "repo_id": "Qwen/Qwen2.5-3B-Instruct",
+      "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+      "machine": "One CUDA GPU. float16 on CUDA, including a T4; float32 otherwise.",
+      "weights": "Upstream bf16 checkpoint. This pin is not a claim that it matches the 4-bit MLX backend.",
+      "sampling": "do_sample=True, temperature=0.7; torch.manual_seed(seed) before each sample"
+    }
+  },
+  "why_this_model": "v1 stopped at SmolLM2-360M-Instruct. v2 keeps that pack and parser, and changes only to an instruction-tuned 3B model in the 1.5B-3B range. Qwen2.5-0.5B pairings on other tasks are not reused. No v2 output exists in the commit that adds this file.",
+  "update_comparison": "scripts/heldout_exact_integer_update_comparison_v2.py exits 2. This protocol does not run best-of-n against GRPO or RFT.",
+  "does_not_establish": "No v2 model output is included. A later non-degenerate result would authorize only a separate update-cost smoke, not a policy-update comparison."
+}

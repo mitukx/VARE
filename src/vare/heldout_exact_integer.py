@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
 PROTOCOL_ID = "heldout-exact-integer-base-gate-v1"
+PROTOCOL_ID_V2 = "heldout-exact-integer-base-gate-v2"
 GENERATION_SEED = 20261013
 N_TASKS = 64
 FAMILIES = ("add_sub", "mul_add", "div_exact", "paren")
@@ -289,9 +290,9 @@ def decision_text(decision: str) -> str:
     raise ValueError(decision)
 
 
-def comparison_refusal() -> dict[str, str]:
+def comparison_refusal(protocol_id: str = PROTOCOL_ID) -> dict[str, str]:
     return {
-        "protocol_id": PROTOCOL_ID,
+        "protocol_id": protocol_id,
         "status": "refused",
         "reason": (
             "A multi-seed best-of-n versus GRPO or RFT comparison is not started. "
@@ -388,6 +389,7 @@ def run_gate(
     pack_sha256: str,
     backend: str,
     model_id: str,
+    protocol_id: str = PROTOCOL_ID,
 ) -> dict[str, Any]:
     verify_task_pack(tasks)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -422,7 +424,7 @@ def run_gate(
     summary["backend"] = backend
     summary["model_id"] = model_id
     summary["pack_sha256"] = pack_sha256
-    summary["protocol_id"] = PROTOCOL_ID
+    summary["protocol_id"] = protocol_id
     if summary["complete"]:
         (output_dir / "summary.json").write_text(
             json.dumps(summary, indent=2, sort_keys=True) + "\n",
