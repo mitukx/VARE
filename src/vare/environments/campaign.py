@@ -6,11 +6,13 @@ import hashlib
 import json
 from pathlib import Path
 import subprocess
+import sys
 import time
 from typing import Sequence
 
 from ..evidence import sha256_json
 from .catalog import CatalogEnvironmentVerifier, TaskCatalog, WorkspaceAgent, WorkspaceAgentRollout
+from .runner import resolve_launch_argv
 
 
 @dataclass(frozen=True, slots=True)
@@ -18,8 +20,10 @@ class CommandWorkspaceAgent:
     """Adapter for an external repository-editing agent command.
 
     The command vector is configured by the experimenter. Placeholders
-    `{workspace}`, `{prompt}`, and `{step}` are substituted without invoking a
-    shell. The external program is responsible for editing the workspace.
+    `{workspace}`, `{prompt}`, and `{step}` in that vector are substituted
+    without invoking a shell. Text inserted for a placeholder is not scanned
+    again, so a prompt that contains `{step}` stays literal. The external
+    program is responsible for editing the workspace.
     """
 
     argv: tuple[str, ...]
@@ -34,13 +38,17 @@ class CommandWorkspaceAgent:
             "{prompt}": prompt,
             "{step}": str(step),
         }
+        expanded = resolve_launch_argv(self.argv, values)
         argv: list[str] = []
-        for item in self.argv:
-            value = item
-            had_placeholder = any(token in value for token in values)
-            for token, replacement in values.items():
-                value = value.replace(token, replacement)
-            if not had_placeholder and not Path(value).is_absolute():
+        for original, value in zip(self.argv, expanded, strict=True):
+            had_placeholder = any(
+                token in original for token in (*values, "{python}")
+            )
+            if (
+                not had_placeholder
+                and value != sys.executable
+                and not Path(value).is_absolute()
+            ):
                 candidate = (self.launch_root / value).resolve()
                 if candidate.exists():
                     value = str(candidate)

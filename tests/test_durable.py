@@ -210,7 +210,6 @@ class DurableTests(unittest.TestCase):
 
     def test_forged_claim_expected_cannot_commit(self):
         import copy
-        from vare.runner import digest
         claim = self.store.claim('one', 30)
         record, stdout, stderr, data = self.outcome(claim)
         fake = copy.deepcopy(claim)
