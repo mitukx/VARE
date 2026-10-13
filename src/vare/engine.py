@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 from collections.abc import Sequence
 
+from .attestation import EvidenceTrustRoot
 from .config import EngineConfig
 from .curriculum import AdaptiveCurriculum
 from .failure import FailureMiner
@@ -35,6 +36,7 @@ class CapabilityLoop:
         task_generator: FailureDrivenTaskGenerator | None = None,
         verifier_refresh: VerifierRefreshController | None = None,
         decision_ledger: HashChainLedger | None = None,
+        evidence_trust_root: EvidenceTrustRoot | None = None,
         seed: int = 0,
     ) -> None:
         self.hooks = hooks
@@ -44,7 +46,7 @@ class CapabilityLoop:
         self.replay = PrioritizedReplay(self.config.replay, seed=seed)
         self.failures = FailureMiner()
         self.curriculum = AdaptiveCurriculum(seed=seed)
-        self.promotion = PromotionGate(self.config.promotion)
+        self.promotion = PromotionGate(self.config.promotion, trust_root=evidence_trust_root)
         self.shift = DistributionShiftMonitor()
         self.events = event_log or EventLog()
         self.task_generator = task_generator
