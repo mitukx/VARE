@@ -226,3 +226,74 @@ def test_supervisor_always_requests_forced_container_cleanup(tmp_path, behavior)
                 command=("echo", "hello"),
             ))
     assert audit.read_text(encoding="utf-8") == "removed"
+
+
+def test_controller_cancellation_also_requests_forced_cleanup(tmp_path):
+    binary, audit = _fake_docker(tmp_path, "timeout")
+    root = tmp_path / "workspaces"
+    work = root / "trial"
+    work.mkdir(parents=True)
+    runner = DockerIsolationRunner(docker_binary=binary)
+    limits = IsolationLimits(IMAGE, timeout_s=8)
+
+    async def scenario():
+        task = asyncio.create_task(runner.run_candidate(
+            limits, allowed_workspace_root=root,
+            workspace=work, command=("echo", "hello"),
+        ))
+        await asyncio.sleep(0.25)
+        task.cancel()
+        with pytest.raises(asyncio.CancelledError):
+            await task
+
+    asyncio.run(scenario())
+    assert audit.read_text(encoding="utf-8") == "removed"
+
+
+def test_isolated_hooks_never_call_learner_for_promotion_evidence(tmp_path):
+    from vare.isolated_hooks import IsolatedEvaluationHooks
+
+    root = tmp_path / "store"
+    root.mkdir()
+    heldout = tmp_path / "heldout"
+    heldout.write_bytes(b"[]")
+    key = tmp_path / "key"
+    key.write_bytes(KEY)
+    signer = _trust()
+    signed = signer.attest(EvaluationReport("p1", 0.9, n=2), checkpoint_sha256="f" * 64)
+
+    class Learner:
+        def active_policy(self):
+            return ("p0", 0)
+
+        async def rollout(self, task, policy_id, policy_version, step):
+            raise NotImplementedError
+
+        async def train_candidate(self, incumbent_id, experiences):
+            return "p1"
+
+        async def evaluate(self, policy_id):
+            raise AssertionError("learner must not grade promotion")
+
+        async def promote(self, candidate_id):
+            return None
+
+        async def discard(self, candidate_id):
+            return None
+
+    class FakeRunner(DockerIsolationRunner):
+        async def run_evaluator(self, limits, *, policy_id, **kwargs):
+            assert policy_id == "p1"
+            return signed
+
+    hooks = IsolatedEvaluationHooks(
+        underlying=Learner(),
+        runner=FakeRunner(),
+        evaluator_limits=IsolationLimits(IMAGE),
+        trust=signer,
+        checkpoint_store=root,
+        heldout_set=heldout,
+        key_file=key,
+    )
+    assert hooks.active_policy() == ("p0", 0)
+    assert asyncio.run(hooks.evaluate("p1")) is signed
