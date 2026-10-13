@@ -192,3 +192,35 @@ def test_ledger_precommit_failure_blocks_promotion(tmp_path):
         run_loop(fence, hooks, BrokenLedger())
     assert hooks.promoted == []
     assert hooks.discarded == ["p1"]
+
+
+def test_evaluator_mutated_during_evaluation_aborts_and_discards(tmp_path):
+    asset = tmp_path / "grader.py"
+    asset.write_bytes(b"verified-evaluator")
+    pinned = hashlib.sha256(asset.read_bytes()).hexdigest()
+    fence = make_fence(tmp_path, protected_assets={asset: pinned})
+    hooks = Hooks(after_eval=lambda: asset.write_bytes(b"tampered-evaluator"))
+    with pytest.raises(SafetyInterlockDenied):
+        run_loop(fence, hooks)
+    assert hooks.discarded == ["p1"]
+    assert hooks.promoted == []
+
+
+def test_successful_ledger_precommit_precedes_promotion(tmp_path):
+    events = []
+
+    class Ledger:
+        def append(self, name, payload):
+            events.append(name)
+
+    class OrderHooks(Hooks):
+        async def promote(self, candidate_id):
+            events.append("promote")
+            await super().promote(candidate_id)
+
+    fence = make_fence(
+        tmp_path, actions=("rollout", "train", "evaluate", "promote"), candidates=("p1",)
+    )
+    result = run_loop(fence, OrderHooks(), Ledger())
+    assert result.decision.accepted
+    assert events == ["promotion_intent", "promote", "promotion_decision"]
