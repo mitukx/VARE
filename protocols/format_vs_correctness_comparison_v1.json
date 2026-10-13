@@ -1,0 +1,20 @@
+{
+  "arms": [
+    "base",
+    "format_sft",
+    "format_reward_rl",
+    "correctness_reward_rl",
+    "random_reward_rl"
+  ],
+  "authorized": false,
+  "confirm_split_file": "benchmarks/heldout/integer_seed_split_v1/splits.json",
+  "confirm_split_sha256": "4544a9a852f615f7cf9c52d7a4826ed70ea6c5f57829754ac2e10f3c1fea4287",
+  "does_not_establish": "This file does not start training. A retained update-cost smoke does not authorize these arms.",
+  "minimum_seeds": 5,
+  "optimizer_steps": "not_frozen",
+  "primary_contrast": "correctness_reward_rl minus format_sft, strict pass@1 on the committed confirm seeds, paired bootstrap",
+  "protocol_id": "format-vs-correctness-comparison-v1",
+  "scores_heldout_exact_integer_pack": false,
+  "status": "refused",
+  "uses_confirm_seeds_for_training": false
+}
