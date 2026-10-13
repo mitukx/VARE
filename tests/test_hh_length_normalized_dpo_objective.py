@@ -5,7 +5,7 @@ import unittest
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from run_cpu_hh_length_normalized_dpo_development_v1 import length_normalized_relative_margin
+from run_cpu_hh_length_normalized_dpo_development_v1 import length_normalized_relative_margin  # noqa: E402
 
 
 class LengthNormalizedDPOObjectiveTests(unittest.TestCase):
