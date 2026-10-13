@@ -7,8 +7,9 @@ from typing import Protocol
 import shutil
 
 from ..lifecycle import FailureDrivenTaskGenerator
+from ..evidence import sha256_json
 from ..types import Attempt, Experience, FailureCluster, Task, Verification
-from .runner import ExecutableEvaluator, Workspace
+from .runner import EnvironmentResult, ExecutableEvaluator, Workspace
 from .spec import EngineeringTaskSpec
 
 
@@ -108,14 +109,27 @@ class WorkspaceAgentRollout:
         )
 
 
+class RepositoryEvaluatorBackend(Protocol):
+    async def evaluate(
+        self, *, spec_path: Path, workspace: Path,
+        spec_digest: str, policy_id: str, policy_version: int,
+        baseline_metrics: dict[str, float] | None = None,
+    ) -> EnvironmentResult: ...
+
+
 class CatalogEnvironmentVerifier:
     name = "executable-environment-catalog"
     trusted = True
 
-    def __init__(self, catalog: TaskCatalog, *, version: int = 0, baseline_metrics: dict[str, dict[str, float]] | None = None) -> None:
+    def __init__(
+        self, catalog: TaskCatalog, *, version: int = 0,
+        baseline_metrics: dict[str, dict[str, float]] | None = None,
+        isolated_backend: RepositoryEvaluatorBackend | None = None,
+    ) -> None:
         self.catalog = catalog
         self.version = version
         self.baseline_metrics = dict(baseline_metrics or {})
+        self.isolated_backend = isolated_backend
 
     async def verify(self, attempt: Attempt) -> Verification:
         import asyncio
@@ -129,16 +143,28 @@ class CatalogEnvironmentVerifier:
         workspace = attempt.metadata.get("workspace_path")
         if not workspace:
             raise ValueError("engineering attempt missing workspace_path")
-        result = await asyncio.to_thread(
-            ExecutableEvaluator(entry.spec, evaluator_root=entry.spec_path.parent).evaluate,
-            Path(str(workspace)),
-            baseline_metrics=self.baseline_metrics.get(task_id),
-            provenance={
-                "policy_id": attempt.policy_id,
-                "policy_version": attempt.policy_version,
-                "task_spec_path": str(entry.spec_path),
-            },
-        )
+        if self.isolated_backend is not None:
+            result = await self.isolated_backend.evaluate(
+                spec_path=entry.spec_path.resolve(),
+                workspace=Path(str(workspace)).resolve(),
+                spec_digest=sha256_json(entry.spec.to_dict()),
+                policy_id=attempt.policy_id,
+                policy_version=attempt.policy_version,
+                baseline_metrics=self.baseline_metrics.get(task_id),
+            )
+            if result.task_id != task_id:
+                raise ValueError("isolated evaluator task identity mismatch")
+        else:
+            result = await asyncio.to_thread(
+                ExecutableEvaluator(entry.spec, evaluator_root=entry.spec_path.parent).evaluate,
+                Path(str(workspace)),
+                baseline_metrics=self.baseline_metrics.get(task_id),
+                provenance={
+                    "policy_id": attempt.policy_id,
+                    "policy_version": attempt.policy_version,
+                    "task_spec_path": str(entry.spec_path),
+                },
+            )
         return Verification(
             score=result.score,
             passed=result.passed,
