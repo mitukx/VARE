@@ -42,6 +42,8 @@ class CapabilityLoop:
         safety_interlock: SafetyInterlock | None = None,
         promotion_journal: PromotionJournal | None = None,
         checkpoint_hasher: Callable[[str], str] | None = None,
+        training_evidence_authorizer: Callable[[Experience], bool] | None = None,
+        require_authenticated_training: bool = False,
         seed: int = 0,
     ) -> None:
         self.hooks = hooks
@@ -61,6 +63,11 @@ class CapabilityLoop:
         self.promotion_journal = promotion_journal
         self.checkpoint_hasher = checkpoint_hasher
         self.evidence_trust_root = evidence_trust_root
+        if type(require_authenticated_training) is not bool:
+            raise ValueError("require_authenticated_training must be bool")
+        if require_authenticated_training and training_evidence_authorizer is None:
+            raise ValueError("authenticated training requires a trusted evidence authorizer")
+        self.training_evidence_authorizer = training_evidence_authorizer
         if promotion_journal is not None and (
             checkpoint_hasher is None
             or evidence_trust_root is None
@@ -327,6 +334,20 @@ class CapabilityLoop:
         if not train_batch:
             candidate_id = incumbent_id
         else:
+            # Authorization occurs at consumption time, after replay
+            # resampling and freshness checks. A failed group member denies
+            # the entire batch before any optimizer mutation.
+            if self.training_evidence_authorizer is not None:
+                try:
+                    authorizations = [
+                        self.training_evidence_authorizer(exp) for exp in train_batch
+                    ]
+                except Exception as exc:
+                    self.events.emit("training_reward_evidence_denied", count=len(train_batch))
+                    raise RuntimeError("training_reward_evidence_unverifiable") from exc
+                if any(type(ok) is not bool or not ok for ok in authorizations):
+                    self.events.emit("training_reward_evidence_denied", count=len(train_batch))
+                    raise RuntimeError("unauthenticated_training_reward_evidence")
             if self.safety_interlock is not None:
                 self.safety_interlock.require("train", incumbent_id=incumbent_id)
             candidate_id = await self.hooks.train_candidate(incumbent_id, train_batch)
