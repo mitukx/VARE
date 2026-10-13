@@ -80,6 +80,7 @@ class CapabilityLoop:
         self.step = 0
         self._run_serial = 0
         self._round_lock = asyncio.Lock()
+        self._discard_failure: BaseException | None = None
 
     async def _one_rollout(self, sem: asyncio.Semaphore, task: Task, policy_id: str, policy_version: int):
         async with sem:
@@ -125,9 +126,43 @@ class CapabilityLoop:
                 task.cancel()
         await asyncio.gather(*tasks, return_exceptions=True)
 
+    async def _discard_candidate(
+        self, candidate_id: str, *, propagate_cancellation: bool = True
+    ) -> None:
+        """Finish restoration before unlocking; failed restore poisons this loop.
+
+        An existing transaction error takes precedence over later caller
+        cancellation when restoration succeeds. A failed restoration always
+        takes precedence because the runtime's state is no longer known.
+        """
+        discard = asyncio.create_task(self.hooks.discard(candidate_id))
+        cancellation: asyncio.CancelledError | None = None
+        while not discard.done():
+            try:
+                await asyncio.shield(discard)
+            except asyncio.CancelledError as exc:
+                if cancellation is None:
+                    cancellation = exc
+            except BaseException:
+                break
+        try:
+            discard.result()
+        except BaseException as exc:
+            self._discard_failure = exc
+            raise RuntimeError("candidate discard failed; policy state is unknown") from exc
+        if cancellation is not None and propagate_cancellation:
+            raise cancellation
+
     async def run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None) -> RoundResult:
         """Serialize each stateful policy-update transaction for this loop."""
         async with self._round_lock:
+            if self._discard_failure is not None:
+                # Do not inspect policy identity, emit rollouts or advance
+                # provenance against a runtime whose rollback failed. There
+                # is no automatic reset: trusted external recovery is required.
+                raise RuntimeError(
+                    "candidate recovery required; policy state is unknown"
+                ) from self._discard_failure
             return await self._run_round(tasks, round_index=round_index, rollout_count=rollout_count)
 
     async def _run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None) -> RoundResult:
@@ -428,13 +463,7 @@ class CapabilityLoop:
                 if evaluation_group is not None and not evaluation_group.cancelled():
                     evaluation_group.exception()  # Retrieve secondary/group errors.
                 if candidate_id != incumbent_id:
-                    try:
-                        await self.hooks.discard(candidate_id)
-                    except BaseException as discard_exc:
-                        raise RuntimeError(
-                            "evaluation failed and candidate discard failed; "
-                            "policy state is unknown"
-                        ) from discard_exc
+                    await self._discard_candidate(candidate_id, propagate_cancellation=False)
 
             recovery = asyncio.create_task(rollback_evaluation())
             while not recovery.done():
@@ -472,7 +501,7 @@ class CapabilityLoop:
                         }),
                     )
                 except BaseException:
-                    await self.hooks.discard(candidate_id)
+                    await self._discard_candidate(candidate_id, propagate_cancellation=False)
                     raise
 
             if self.decision_ledger is not None:
@@ -485,7 +514,7 @@ class CapabilityLoop:
                 except BaseException:
                     # Promotion has not started. Restore the champion and, if
                     # independently verified, mark this intent aborted.
-                    await self.hooks.discard(candidate_id)
+                    await self._discard_candidate(candidate_id, propagate_cancellation=False)
                     if transaction_id is not None:
                         assert self.promotion_journal is not None
                         assert self.checkpoint_hasher is not None
@@ -525,7 +554,7 @@ class CapabilityLoop:
         else:
             promoted_id = incumbent_id
             if candidate_id != incumbent_id:
-                await self.hooks.discard(candidate_id)
+                await self._discard_candidate(candidate_id)
             self.events.emit("candidate_rejected", candidate_id=candidate_id, reasons=decision.reasons)
 
         self.events.emit(
