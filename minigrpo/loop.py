@@ -250,25 +250,28 @@ def execute(
         advantages = group_advantages(rewards, config.group_size, dr_grpo=config.dr_grpo)
         if len(advantages) != len(rollouts):
             raise RuntimeError("group was truncated")
-        loss = trainer.update(rollouts, advantages, epochs=config.epochs)
-        if not isinstance(loss, float) or not math.isfinite(loss):
-            raise RuntimeError("non-finite loss")
+        # Validate all encoded token data before allowing a mutable optimizer step.
+        # In particular, reject non-finite active logprobs and malformed masks.
+        token_rows = [
+            TokenRow(
+                logp=rollout.old_logp,
+                logp_old=rollout.old_logp,
+                mask=rollout.mask,
+                advantage=advantage,
+                logp_ref=rollout.ref_logp,
+                entropy=rollout.entropy,
+            )
+            for rollout, advantage in zip(rollouts, advantages, strict=True)
+        ]
         sequence_loss(
-            [
-                TokenRow(
-                    logp=rollout.old_logp,
-                    logp_old=rollout.old_logp,
-                    mask=rollout.mask,
-                    advantage=advantage,
-                    logp_ref=rollout.ref_logp,
-                    entropy=rollout.entropy,
-                )
-                for rollout, advantage in zip(rollouts, advantages, strict=True)
-            ],
+            token_rows,
             clip_eps=config.clip_eps,
             kl_coef=config.kl_coef,
             dr_grpo=config.dr_grpo,
         )
+        loss = trainer.update(rollouts, advantages, epochs=config.epochs)
+        if not isinstance(loss, float) or not math.isfinite(loss):
+            raise RuntimeError("non-finite loss")
         directory = checkpoint_dir(output, step)
         trainer.save(directory)
         lengths = [float(sum(rollout.mask)) for rollout in rollouts]

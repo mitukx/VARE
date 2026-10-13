@@ -94,8 +94,8 @@ def sequence_loss(
         raise ValueError("loss requires an intact group")
     if not 0.0 < clip_eps < 1.0:
         raise ValueError("clip_eps must lie in (0, 1)")
-    if kl_coef < 0.0:
-        raise ValueError("kl_coef must be non-negative")
+    if not math.isfinite(kl_coef) or kl_coef < 0.0:
+        raise ValueError("kl_coef must be finite and non-negative")
     total = 0.0
     kl_sum = 0.0
     kl_count = 0
@@ -107,11 +107,25 @@ def sequence_loss(
             raise ValueError("logp, logp_old, and mask lengths differ")
         if row.logp_ref is not None and len(row.logp_ref) != len(row.logp):
             raise ValueError("reference logp length differs")
+        if row.entropy is not None and len(row.entropy) != len(row.logp):
+            raise ValueError("entropy length differs")
+        if any(type(bit) is not int or bit not in (0, 1) for bit in row.mask):
+            raise ValueError("completion mask must be binary")
+        if not math.isfinite(row.advantage):
+            raise ValueError("non-finite advantage")
         if kl_coef > 0.0 and row.logp_ref is None:
             raise ValueError("kl_coef requires reference log probabilities")
         active = [index for index, bit in enumerate(row.mask) if bit]
         if not active:
             raise ValueError("completion mask is empty")
+        for index in active:
+            values = [row.logp[index], row.logp_old[index]]
+            if row.logp_ref is not None:
+                values.append(row.logp_ref[index])
+            if row.entropy is not None:
+                values.append(row.entropy[index])
+            if any(not math.isfinite(value) for value in values):
+                raise ValueError("non-finite active token value")
         token_losses: list[float] = []
         for index in active:
             token_loss = clipped_surrogate(row.logp[index], row.logp_old[index], row.advantage, clip_eps)
