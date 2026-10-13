@@ -64,7 +64,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install ruff==0.15.12
-      - run: ruff check src tests minigrpo scripts/run_minigrpo.py
+      - run: ruff check src tests minigrpo selfimprove scripts/run_minigrpo.py scripts/run_selfimprove.py
   typecheck:
     runs-on: ubuntu-latest
     steps:
