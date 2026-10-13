@@ -159,8 +159,9 @@ class CapabilityLoop:
             asyncio.create_task(self._one_rollout(sem, t, incumbent_id, incumbent_version))
             for t in chosen
         ]
+        group = asyncio.gather(*rollout_tasks)
         try:
-            pairs = await asyncio.shield(asyncio.gather(*rollout_tasks))
+            pairs = await asyncio.shield(group)
         except BaseException:
             cleanup = asyncio.create_task(self._cancel_and_drain_rollouts(rollout_tasks))
             # Repeated caller cancellation must not abandon ongoing cleanup.
@@ -170,6 +171,13 @@ class CapabilityLoop:
                 except asyncio.CancelledError:
                     continue
             await cleanup
+            # Shield detaches the aggregate on caller cancellation. Consume its
+            # terminal exception after draining children, so it cannot become
+            # an unobserved _GatheringFuture failure.
+            try:
+                await group
+            except BaseException:
+                pass
             raise
 
         admitted: list[Experience] = []
