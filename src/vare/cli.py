@@ -87,6 +87,29 @@ def _cmd_rvl_plan(args: argparse.Namespace) -> int:
     print(json.dumps(payload, indent=2, sort_keys=True))
     return 0
 
+def _cmd_rvl_triage(args: argparse.Namespace) -> int:
+    from .rvl_failure_triage import adjudicate_replay, load_strict_json, replay_manifest
+
+    reader = RVLTokenReplayReader(args.replay_sqlite)
+    manifest = replay_manifest(
+        reader,
+        current_policy_version=args.current_policy_version,
+        current_verifier_version=args.current_verifier_version,
+    )
+    if args.audit is None:
+        payload = manifest.to_dict()
+    else:
+        if args.bindings is None:
+            raise ValueError("--bindings is required when --audit is provided")
+        payload = adjudicate_replay(
+            manifest, load_strict_json(args.audit), load_strict_json(args.bindings)
+        )
+    if args.output:
+        _write_json(args.output, payload)
+    print(json.dumps(payload, indent=2, sort_keys=True, allow_nan=False))
+    return 0
+
+
 def _cmd_failure_triage(args: argparse.Namespace) -> int:
     from .failure_triage import load_snapshot, triage
 
@@ -263,6 +286,15 @@ def main() -> int:
     rp.add_argument("--trusted-default", action="store_true")
     rp.add_argument("--output")
     rp.set_defaults(func=_cmd_rvl_plan)
+
+    rt = sub.add_parser("rvl-triage", help="manifest RVL replay generations and optionally match external audit labels")
+    rt.add_argument("--replay-sqlite", required=True)
+    rt.add_argument("--current-policy-version", type=int, required=True)
+    rt.add_argument("--current-verifier-version", type=int, required=True)
+    rt.add_argument("--audit", help="external audit JSON bound to manifest selection hash")
+    rt.add_argument("--bindings", help="external study/provenance bindings JSON")
+    rt.add_argument("--output")
+    rt.set_defaults(func=_cmd_rvl_triage)
 
     ft = sub.add_parser("failure-triage", help="read-only triage of independent task audits and rollout diagnostics")
     ft.add_argument("--snapshot", required=True)
