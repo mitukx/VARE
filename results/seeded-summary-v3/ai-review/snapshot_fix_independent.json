@@ -1,0 +1,77 @@
+{
+  "cli": [
+    {
+      "prospective": false,
+      "one_progress_capture": true,
+      "hash_matches_captured_bytes": true,
+      "metrics_match_captured_rows": true,
+      "writer_replacement_preserved": true,
+      "legacy_summary_unchanged": true,
+      "analysis_status": "retrospective_analysis",
+      "file_pin_verified": false
+    },
+    {
+      "prospective": true,
+      "one_progress_capture": true,
+      "hash_matches_captured_bytes": true,
+      "metrics_match_captured_rows": true,
+      "writer_replacement_preserved": true,
+      "legacy_summary_unchanged": true,
+      "analysis_status": "prospective_rows_bound",
+      "file_pin_verified": true
+    }
+  ],
+  "driver": {
+    "exit_zero": true,
+    "one_final_progress_capture": true,
+    "legacy_matches_captured_rows": true,
+    "seeded_primary_matches_legacy": true,
+    "seeded_hash_matches_captured_bytes": true,
+    "writer_replacement_preserved": true,
+    "prospective_row_bound": true,
+    "file_pin_verified": true
+  },
+  "parsing": [
+    {
+      "case": "truncated_json",
+      "rejected": true,
+      "error_type": "ValueError"
+    },
+    {
+      "case": "partial_tail",
+      "rejected": true,
+      "error_type": "ValueError"
+    },
+    {
+      "case": "nonobject",
+      "rejected": true,
+      "error_type": "ValueError"
+    },
+    {
+      "case": "invalid_utf8",
+      "rejected": true,
+      "error_type": "UnicodeDecodeError"
+    },
+    {
+      "case": "complete_without_newline",
+      "rejected": false,
+      "error_type": null,
+      "parsed_rows_exact": true,
+      "digest_matches_exact_blob": true
+    },
+    {
+      "case": "blank_line_prefix",
+      "rejected": false,
+      "error_type": null,
+      "parsed_rows_exact": true,
+      "digest_matches_exact_blob": true
+    }
+  ],
+  "actual_confirm_generator_called": false,
+  "actual_model_session_called": false,
+  "source_sha256": {
+    "src/vare/format_vs_correctness_seeded_summary_v3.py": "8b353e2f6acb927d9c973cc624e55a5ce894c5569aec2e03da7927eb10304326",
+    "scripts/summarize_format_vs_correctness_seeded_v3.py": "a0392c82a35729032086e10c1cf7b20f0a4f597bf8cd16dbf50547735e92b0a9",
+    "scripts/run_format_vs_correctness_comparison_v2.py": "48f9c429d14950d07b606a768967959ed1dd09e9588ba3285dda0b2bee8e94ac"
+  }
+}
