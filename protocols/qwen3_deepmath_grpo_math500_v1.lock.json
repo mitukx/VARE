@@ -1,0 +1,312 @@
+{
+  "protocol_id": "qwen3_deepmath_grpo_math500_v1",
+  "status": "frozen_before_any_qwen3_v1_inference_or_update",
+  "question": "On verified DeepMath TRAIN examples, does four-sample online group-relative correctness optimization improve independent MATH-500 exact-answer Pass@1 over matched answer-only SFT and the unchanged policy?",
+  "claim_boundary": "One Qwen3-4B model, one public math benchmark, five training seeds, fixed answer checker; cannot establish broad reasoning, human preference quality, semantic decontamination, or recursive self-improvement.",
+  "model": {
+    "repo_id": "Qwen/Qwen3-4B-Instruct-2507",
+    "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+    "license": "Apache-2.0",
+    "files_sha256": {
+      "LICENSE": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e",
+      "README.md": "8e3dd0c3b5b11897cc71092ccfe517bb7a9783479baa3665aad73c8d1a2041cd",
+      "config.json": "5beea1a4a34c62782bfb2f911c606741a3bab8f92d80a118fa053c28af12e8ba",
+      "generation_config.json": "835fffe355c9438e7a25be099b3fccaa98350b83451f9fd2d99512e74f1ade48",
+      "merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+      "model-00001-of-00003.safetensors": "75311d91bb08cf0b882913da464a1e722a31fb44db35208663487efb7a3d8ed6",
+      "model-00002-of-00003.safetensors": "0b48adbb1f60e901153d91907ba11ce63bd4b8b584482e730f48808d055dfba1",
+      "model-00003-of-00003.safetensors": "7dd39ccca5e4de123c74c14af44c9bf2eb75df33b4614382af0134528e060d5d",
+      "model.safetensors.index.json": "d6c42883a895dfef5b0080ed2116a1bcd764f558406b98923d675978a1abf29c",
+      "tokenizer.json": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "tokenizer_config.json": "a62ff0a2472a0fa1b8eaabcb57c59b58afa42a22831dc141400b6e0cf2b65ce3",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    }
+  },
+  "training_data": {
+    "repo_id": "trl-lib/DeepMath-103K",
+    "source_repo_id": "zwhe99/DeepMath-103K",
+    "revision": "066c50a88d4e14cefc056e31111db2dba17f6c68",
+    "source_revision": "5cf055d1fe3d7a2eb19719ac020211469736ae44",
+    "license": "MIT",
+    "split": "train",
+    "file": "deepmath-train.parquet",
+    "rows": 97870,
+    "sha256": "e0c5b2fc11978d735a7710273920676977b533e185284044c3eafa63a24479d7",
+    "duplicate_and_conflict_audit": {
+      "raw_rows": 97870,
+      "eligible_unique_prompts": 96678,
+      "duplicate_excess_rows_removed": 1135,
+      "conflicting_answer_prompts_excluded": 3,
+      "unparseable_duplicate_groups_excluded": 54
+    },
+    "normalized_prompt_rule": "lowercase; normalize \\( and \\) to $, \\[ and \\] to $$; collapse whitespace",
+    "legacy_exclusion": {
+      "protocol_id": "qwen25_deepmath_grpo_math500_v7",
+      "retired_prompt_count": 288,
+      "legacy_gate_ids_sha256": "0ab6b16559db37f6ff84bb312e18c29046063fac32fae026d5b1265037d03c9a",
+      "legacy_update_ids_sha256": "80cfa5135aa56ebaf128d0928bd74ceddd9ef45cde42dcc5684663b2e822c5bd"
+    },
+    "cohorts": {
+      "selection": "Independent ascending SHA256(salt + NUL + normalized prompt key); skip candidates whose parsed boxed answer fails independent self-grading; gate IDs are excluded from updates.",
+      "gate_salt": "qwen3-deepmath-gate-v1",
+      "gate_count": 32,
+      "retired_prompt_count": 288,
+      "gate_ids_sha256": "b66a760e1020764d63665c2b8e56f35fda7d57a11614a9f3d840247460f6455f",
+      "gate_unparseable_candidates_skipped": 12,
+      "update_salt": "qwen3-deepmath-update-v1",
+      "update_count": 256,
+      "update_ids_sha256": "bc5285a78d46956116ebf00d20e55e13a8838538fce2e494dbfbea1e2f50d9cf",
+      "update_unparseable_candidates_skipped": 54,
+      "cohorts_disjoint": true,
+      "selected_sft_targets_independently_self_graded": true,
+      "maximum_sft_answer_target_characters": 44
+    }
+  },
+  "evaluation_data": {
+    "repo_id": "HuggingFaceH4/MATH-500",
+    "revision": "6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be",
+    "file": "math500.jsonl",
+    "rows": 500,
+    "sha256": "35dc41080a3680858b27fa7e0533d2d547825316fc5dafe5d316f4ccc5a06132",
+    "exact_normalized_overlap_with_deepmath_train": 0,
+    "semantic_overlap_audited": false,
+    "model_pretraining_exposure_ruled_out": false,
+    "reference_labels_read_for_checker_and_overlap_validation": true
+  },
+  "prompt_contract": {
+    "instruction": "Please reason step by step and put your final answer within \\boxed{}.",
+    "template": "Qwen3 tokenizer chat template; one system instruction plus one user problem",
+    "no_prompt_tuning_after_base_gate": true
+  },
+  "runtime": {
+    "python": "3.13.15",
+    "torch": "2.11.0+cu130",
+    "cuda_runtime": "13.0",
+    "packages": {
+      "transformers": "5.18.0",
+      "trl": "1.1.0",
+      "accelerate": "1.15.0",
+      "datasets": "4.8.5",
+      "peft": "0.21.1",
+      "pyarrow": "23.0.1",
+      "math-verify": "0.9.0",
+      "latex2sympy2-extended": "1.11.0",
+      "antlr4-python3-runtime": "4.13.2",
+      "packaging": "26.3",
+      "sympy": "1.14.0"
+    },
+    "environment_note": "Google Colab A100 Python image; Colab preinstalled packages produce unrelated pip-check warnings for omegaconf/ANTLR 4.9 and IPython/jedi. Direct runtime pins are checked exactly; parser imports and reward behavior must pass before model updates."
+  },
+  "gate": {
+    "device": {
+      "name": "NVIDIA A100-SXM4-40GB",
+      "minimum_total_vram_bytes": 40000000000,
+      "maximum_reserved_fraction": 0.9
+    },
+    "generation": {
+      "do_sample": true,
+      "temperature": 0.7,
+      "top_p": 0.8,
+      "top_k": 20,
+      "max_new_tokens": 2048,
+      "num_completions_per_prompt": 4,
+      "max_input_tokens": 512,
+      "repetition_penalty": 1.0,
+      "prompt_instruction": "Please reason step by step and put your final answer within \\boxed{}."
+    },
+    "budget": {
+      "max_wall_seconds": 14400,
+      "max_generated_tokens": 262144
+    },
+    "success_criteria": {
+      "mixed_reward_groups_at_least": 10,
+      "mean_reward_variance_strictly_positive": true,
+      "training_reward_matches_independent_checker_on_all_completions": true,
+      "valid_final_box_rate_at_least": 0.95,
+      "task_success_rate_inclusive_range": [
+        0.05,
+        0.9
+      ],
+      "must_stay_below_reserved_vram_fraction": 0.9
+    },
+    "failure": "Retire this exact gate cohort and stop before any optimizer update; do not change prompt, thresholds, sampler, or cohort."
+  },
+  "training": {
+    "seeds": [
+      20261017,
+      20261019,
+      20261023,
+      20261027,
+      20261031
+    ],
+    "optimizer_updates_per_seed": 64,
+    "smoke_seed": 20261015,
+    "smoke_max_wall_seconds": 3600,
+    "max_total_wall_seconds": 36000,
+    "max_total_generated_token_ids": 10485760,
+    "matched_on": [
+      "same 256 verified prompt IDs",
+      "same pinned base checkpoint",
+      "64 optimizer updates per seed",
+      "five paired seeds"
+    ],
+    "not_matched_on": [
+      "total generated FLOPs",
+      "completion token count",
+      "SFT supervised token count"
+    ],
+    "lora": {
+      "rank": 16,
+      "alpha": 32,
+      "dropout": 0.0,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj"
+      ],
+      "bias": "none"
+    },
+    "common": {
+      "dtype": "bfloat16",
+      "gradient_checkpointing": true,
+      "max_prompt_tokens": 512,
+      "optimizer": "AdamW",
+      "betas": [
+        0.9,
+        0.999
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.0,
+      "max_grad_norm": 1.0,
+      "scheduler": "linear",
+      "warmup_ratio": 0.03,
+      "dataloader_workers": 0
+    },
+    "sft": {
+      "objective": "TRL SFTTrainer, completion_only_loss=true, answer-only boxed parsed answer, no packing",
+      "learning_rate": 5e-05,
+      "per_device_batch_size": 1,
+      "gradient_accumulation_steps": 4,
+      "max_sequence_tokens": 1024
+    },
+    "grpo": {
+      "objective": "TRL GRPOTrainer, stock accuracy_reward, group-relative advantages",
+      "learning_rate": 1e-06,
+      "per_device_batch_size": 4,
+      "gradient_accumulation_steps": 4,
+      "num_generations": 4,
+      "completions_per_optimizer_update": 16,
+      "total_completions_per_seed": 1024,
+      "max_prompt_tokens": 512,
+      "max_completion_tokens": 2048,
+      "temperature": 0.7,
+      "top_p": 0.8,
+      "top_k": 20,
+      "repetition_penalty": 1.0,
+      "beta": 0.0,
+      "epsilon": 0.2,
+      "loss_type": "grpo",
+      "scale_rewards": "group",
+      "num_iterations": 1,
+      "vllm": false
+    },
+    "trl_semantics": {
+      "generation_batch_size": 16,
+      "steps_per_generation": 4,
+      "completions_per_optimizer_update": 16,
+      "total_completions_per_seed": 1024,
+      "unique_training_prompts_per_update": 4
+    },
+    "checkpointing": {
+      "save_every_optimizer_steps": 16,
+      "max_checkpoints": 1,
+      "resume_from_latest_complete_checkpoint": true
+    }
+  },
+  "evaluation": {
+    "primary_metric": "Exact-answer Pass@1 against MATH-500 reference; malformed/missing boxes fail closed.",
+    "generation": {
+      "do_sample": false,
+      "num_beams": 1,
+      "max_new_tokens": 2048,
+      "max_input_tokens": 512,
+      "repetition_penalty": 1.0,
+      "batch_size": 4
+    },
+    "splits": {
+      "development": {
+        "count": 100,
+        "ids_sha256": "6f68be724750df7d476d08899861e5fe718b0d7a271b72c6ee70bb40567920e7"
+      },
+      "confirmation": {
+        "count": 400,
+        "ids_sha256": "8b1b303981c761902ac2d3772287b26dc93c3257f77ddadccd189dfbfeaf417e"
+      }
+    },
+    "development_advancement": {
+      "mean_grpo_not_below_base": true,
+      "mean_grpo_not_below_sft": true,
+      "at_least_three_of_five_paired_seeds_nonnegative_vs_sft": true,
+      "every_grpo_seed_format_at_least_95_percent": true,
+      "otherwise": "stop and leave confirmation cohort unopened"
+    },
+    "confirmation_success": {
+      "mean_grpo_minus_sft_at_least": 0.02,
+      "hierarchical_95_percent_interval_lower_above_zero": true,
+      "at_least_four_of_five_seed_deltas_positive": true,
+      "no_level_regresses_more_than": 0.05,
+      "every_grpo_seed_format_at_least": 0.95
+    },
+    "statistics": {
+      "bootstrap_seed": 20261013,
+      "bootstrap_draws": 10000,
+      "interval": "Paired percentile 95% intervals; report task-only, seed-only, and hierarchical seed-then-task resampling."
+    },
+    "budgets": {
+      "development": {
+        "max_wall_seconds": 14400,
+        "max_generated_tokens": 2252800
+      },
+      "confirmation": {
+        "max_wall_seconds": 28800,
+        "max_generated_tokens": 9011200
+      }
+    }
+  },
+  "adapter_manifest": {
+    "required_files": [
+      "adapter_config.json",
+      "adapter_model.safetensors"
+    ]
+  },
+  "execution_code": {
+    "files_sha256": {
+      "requirements/math500-study-qwen3-a100-v1.txt": "22f65f1e2f16440b80f5f4c97a494bad5e30a6d2c5ff42124e0ad84d3f20ea2d",
+      "scripts/audit_qwen3_deepmath_study_v1.py": "4fcf17cf337f3d16746063cee0580dff619c93c6647a1462aaf6c9d6b29f3f9c",
+      "scripts/evaluate_qwen3_deepmath_math500_v1.py": "4997248153367b6892f1422e41c0865f3081632cf10a5492239a57a7748b1c0e",
+      "scripts/gpu_gate_journal_v3.py": "eae95644d2247abbbb78a8f3b9434ef85fabeca1ddfb7bb98ce03c0bff837c62",
+      "scripts/math500_grader_v2.py": "9693217cbcabc4b36f6b0e7a097df1a1c9c86c19fb81edfe396aa220cbfa7a36",
+      "scripts/prompt_id_hash_v3.py": "caf18dc4a4fb2ea4e8b4dcdc88ac5a160ee9281cb86f71783b4f152d66b90477",
+      "scripts/qwen25_gate_metrics_v4.py": "4d5f1fd214663a4174eed119fffbf55fde8b0133e2c83318224c0349dcaf3e48",
+      "scripts/qwen3_deepmath_protocol_v1.py": "96c9b609b45c95bf75bbdf9d4421fcefc4328efb1a24a214c4dcdda63955ec23",
+      "scripts/qwen3_deepmath_statistics_v1.py": "c20d40f34c55dedd88c80d5f89a4eaeac76ce5b5c79486613cee7b3018ef2a74",
+      "scripts/run_qwen3_deepmath_base_gate_v1.py": "e5431930021df99162e65ac78f4624d7e4477bbe22421a2dce254dbd62e23163",
+      "scripts/run_qwen3_deepmath_training_v1.py": "91cc909c6c4723c01af7f33551086d8ff47d80a77ab0b4d24a2f2ea454f686c1",
+      "scripts/validate_math500_study_v1.py": "96864428fb56e4cd7d51dbee58651774d60edf87773e861df932e921279081d8"
+    }
+  },
+  "artifacts": "All models, predictions, rollout journals, checkpoints, and raw outputs stay outside the Git checkout. No Google Drive mount is used.",
+  "compute_policy": {
+    "runtime": "Free Colab A100 image already allocated; no purchase, upgrade, or billing change.",
+    "stop_conditions": [
+      "gate fails",
+      "one-update smoke fails",
+      "runtime/data/model/code hash mismatch",
+      "VRAM exceeds 90%",
+      "phase wall/token budget exceeded",
+      "training reward disagrees with the independent checker",
+      "incomplete GRPO comparison group"
+    ]
+  }
+}

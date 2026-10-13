@@ -1,5 +1,7 @@
 # Current evidence gaps
 
+**2026-10-13 — Qwen3-4B DeepMath study locked; execution pending:** the earlier Qwen2.5-0.5B Colab gate reported 10/128 exact successes, 101/128 valid final boxes, and 9/32 mixed-reward groups on a T4. It missed its format threshold and stopped before an update or MATH-500 scoring; all 288 planned legacy gate/update IDs are excluded. The new Qwen3-4B/DeepMath/MATH-500 study has a frozen [protocol](../protocols/qwen3_deepmath_grpo_math500_v1.lock.json), CPU cohort/data audit, exact runtime pins, live parser/reward checks, and a reserved A100-SXM4-40GB runtime. Model download and inference have not yet started. See [protocol and stop rules](qwen3-4b-deepmath-grpo-sft-preparation-v1.md). No Qwen3 learning result is available yet.
+
 **2026-10-13 — pre-existing v2 record audited:** the [retrospective report](format-comparison-record-v1-report.md)
 archives a complete five-arm grid. Primary correctness-RL minus SFT includes
 zero. Format rewards are saturated (80/80 zero-advantage groups, zero LoRA B and
