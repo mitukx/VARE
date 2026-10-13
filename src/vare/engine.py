@@ -4,6 +4,7 @@ import asyncio
 from collections.abc import Sequence
 
 from .attestation import EvidenceTrustRoot
+from .safety import SafetyInterlock, SafetyInterlockDenied
 from .config import EngineConfig
 from .curriculum import AdaptiveCurriculum
 from .failure import FailureMiner
@@ -37,6 +38,7 @@ class CapabilityLoop:
         verifier_refresh: VerifierRefreshController | None = None,
         decision_ledger: HashChainLedger | None = None,
         evidence_trust_root: EvidenceTrustRoot | None = None,
+        safety_interlock: SafetyInterlock | None = None,
         seed: int = 0,
     ) -> None:
         self.hooks = hooks
@@ -52,6 +54,7 @@ class CapabilityLoop:
         self.task_generator = task_generator
         self.verifier_refresh = verifier_refresh
         self.decision_ledger = decision_ledger
+        self.safety_interlock = safety_interlock
         self._generated_tasks: list[Task] = []
         self.step = 0
         self._run_serial = 0
@@ -64,6 +67,8 @@ class CapabilityLoop:
             # accidentally reuse the same seed/provenance step.
             step = self.step
             self.step += 1
+            if self.safety_interlock is not None:
+                self.safety_interlock.require("rollout", incumbent_id=policy_id)
             attempt = await self.hooks.rollout(task, policy_id, policy_version, step)
             if not isinstance(attempt, Attempt):
                 raise TypeError("rollout hook must return an Attempt")
@@ -109,6 +114,8 @@ class CapabilityLoop:
         if not source_tasks:
             raise ValueError("run_round requires tasks")
         incumbent_id, incumbent_version = self.hooks.active_policy()
+        if self.safety_interlock is not None:
+            self.safety_interlock.require("rollout", incumbent_id=incumbent_id)
         self.shift.fit_reference(t.family for t in source_tasks)
         target_rollouts = len(source_tasks) if rollout_count is None else rollout_count
         if target_rollouts <= 0:
@@ -300,12 +307,18 @@ class CapabilityLoop:
         if not train_batch:
             candidate_id = incumbent_id
         else:
+            if self.safety_interlock is not None:
+                self.safety_interlock.require("train", incumbent_id=incumbent_id)
             candidate_id = await self.hooks.train_candidate(incumbent_id, train_batch)
 
         try:
+            if self.safety_interlock is not None:
+                self.safety_interlock.require("evaluate", incumbent_id=incumbent_id)
             incumbent_eval, candidate_eval = await asyncio.gather(
                 self.hooks.evaluate(incumbent_id), self.hooks.evaluate(candidate_id)
             )
+            if self.safety_interlock is not None:
+                self.safety_interlock.require("evaluate", incumbent_id=incumbent_id)
             if (
                 incumbent_eval.policy_id != incumbent_id
                 or candidate_eval.policy_id != candidate_id
@@ -318,6 +331,21 @@ class CapabilityLoop:
                 )
             else:
                 decision = self.promotion.decide(incumbent_eval, candidate_eval)
+            if candidate_id != incumbent_id and decision.accepted and self.safety_interlock is not None:
+                try:
+                    self.safety_interlock.require(
+                        "promote", incumbent_id=incumbent_id, candidate_id=candidate_id
+                    )
+                except SafetyInterlockDenied:
+                    decision = PromotionDecision(
+                        accepted=False,
+                        reasons=("safety_interlock_denied",),
+                        primary_gain=decision.primary_gain,
+                        worst_slice_regression=decision.worst_slice_regression,
+                        paired_gain=decision.paired_gain,
+                        paired_lcb=decision.paired_lcb,
+                        paired_n=decision.paired_n,
+                    )
         except BaseException:
             # Evaluation backends may reject malformed or misbound evidence by
             # raising. The adapter restores the live incumbent, but the engine
@@ -333,6 +361,17 @@ class CapabilityLoop:
                     ) from discard_exc
             raise
         if candidate_id != incumbent_id and decision.accepted:
+            if self.decision_ledger is not None:
+                try:
+                    self.decision_ledger.append(
+                        "promotion_intent",
+                        {"round_index": round_index, "incumbent_id": incumbent_id,
+                         "candidate_id": candidate_id, "primary_gain": decision.primary_gain},
+                    )
+                except BaseException:
+                    # A failed audit precommit must never authorize mutation.
+                    await self.hooks.discard(candidate_id)
+                    raise
             await self.hooks.promote(candidate_id)
             promoted_id = candidate_id
             self.events.emit("candidate_promoted", candidate_id=candidate_id, gain=decision.primary_gain)
