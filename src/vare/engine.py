@@ -72,6 +72,12 @@ class CapabilityLoop:
                 or attempt.task.family != task.family
             ):
                 raise ValueError("rollout task identity mismatch")
+            # A hook must not relabel a rollout as a different policy or step.
+            # Older policy *versions* remain eligible for the explicit lag gate.
+            if not isinstance(attempt.policy_id, str) or attempt.policy_id != policy_id:
+                raise ValueError("rollout policy identity mismatch")
+            if type(attempt.created_step) is not int or attempt.created_step != step:
+                raise ValueError("rollout step identity mismatch")
             group_id = task.metadata.get("vare_rollout_group")
             if group_id is not None:
                 attempt.metadata["vare_rollout_group"] = group_id
@@ -82,6 +88,14 @@ class CapabilityLoop:
                 await self.verifier.verify(attempt), context="capability loop verifier result"
             )
             return attempt, verification
+
+    @staticmethod
+    async def _cancel_and_drain_rollouts(tasks: Sequence[asyncio.Task]) -> None:
+        """Own every launched rollout until its coroutine is terminal."""
+        for task in tasks:
+            if not task.done() and not task.cancelling():
+                task.cancel()
+        await asyncio.gather(*tasks, return_exceptions=True)
 
     async def run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None) -> RoundResult:
         """Serialize each stateful policy-update transaction for this loop."""
@@ -138,7 +152,25 @@ class CapabilityLoop:
                         )
                     )
         sem = asyncio.Semaphore(self.config.rollout_concurrency)
-        pairs = await asyncio.gather(*(self._one_rollout(sem, t, incumbent_id, incumbent_version) for t in chosen))
+        # gather() normally propagates the first failure while other rollouts
+        # keep running. Never release the round lock with orphaned verifiers or
+        # generation hooks still using the transaction's policy state.
+        rollout_tasks = [
+            asyncio.create_task(self._one_rollout(sem, t, incumbent_id, incumbent_version))
+            for t in chosen
+        ]
+        try:
+            pairs = await asyncio.shield(asyncio.gather(*rollout_tasks))
+        except BaseException:
+            cleanup = asyncio.create_task(self._cancel_and_drain_rollouts(rollout_tasks))
+            # Repeated caller cancellation must not abandon ongoing cleanup.
+            while not cleanup.done():
+                try:
+                    await asyncio.shield(cleanup)
+                except asyncio.CancelledError:
+                    continue
+            await cleanup
+            raise
 
         admitted: list[Experience] = []
         admitted_freshness: list[float] = []
