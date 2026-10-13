@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
+import fcntl
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Iterable
@@ -64,43 +66,74 @@ class CapabilityScore:
 
 
 class HashChainLedger:
-    """Append-only JSONL ledger with a tamper-evident hash chain."""
+    """Same-host, multi-writer JSONL hash chain on POSIX filesystems.
+
+    Each append holds a file lock while validating the *current* tail and
+    publishing a newline-terminated, fsynced record. Locks serialize writers;
+    hashes detect accidental edits but do not authenticate an unanchored log.
+    This is not a network-filesystem or adversarial-host security boundary.
+    """
 
     def __init__(self, path: str | Path) -> None:
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.seq = 0
         self.head = "0" * 64
-        if self.path.exists() and self.path.stat().st_size:
+        if self.path.exists():
             self._recover()
 
-    def _recover(self) -> None:
+    @staticmethod
+    def _validate_text(contents: str) -> tuple[int, str]:
         head = "0" * 64
         seq = 0
-        for line in self.path.read_text(encoding="utf-8").splitlines():
+        if contents and not contents.endswith("\n"):
+            raise ValueError("ledger has an incomplete final row")
+        for line in contents.splitlines():
             row = json.loads(line)
+            if not isinstance(row, dict):
+                raise ValueError("ledger row must be a JSON object")
             body = {k: v for k, v in row.items() if k != "sha256"}
+            if type(body.get("seq")) is not int or body["seq"] != seq:
+                raise ValueError("ledger sequence is not contiguous")
             if body.get("prev_sha256") != head:
                 raise ValueError("ledger chain is broken")
             digest = sha256_json(body)
             if row.get("sha256") != digest:
                 raise ValueError("ledger row digest mismatch")
             head = digest
-            seq = int(body["seq"]) + 1
-        self.seq = seq
-        self.head = head
+            seq += 1
+        return seq, head
+
+    def _recover(self) -> None:
+        with self.path.open("r", encoding="utf-8") as handle:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_SH)
+            try:
+                self.seq, self.head = self._validate_text(handle.read())
+            finally:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
 
     def append(self, event: str, payload: dict[str, Any]) -> str:
-        body = {
-            "seq": self.seq,
-            "event": event,
-            "payload": payload,
-            "prev_sha256": self.head,
-        }
-        digest = sha256_json(body)
-        row = {**body, "sha256": digest}
-        with self.path.open("a", encoding="utf-8") as f:
-            f.write(canonical_json(row) + "\n")
-        self.seq += 1
-        self.head = digest
-        return digest
+        # A second HashChainLedger instance may have appended after this object
+        # was constructed. Never trust its cached sequence or previous digest.
+        with self.path.open("a+", encoding="utf-8") as handle:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+            try:
+                handle.seek(0)
+                seq, head = self._validate_text(handle.read())
+                body = {
+                    "seq": seq,
+                    "event": event,
+                    "payload": payload,
+                    "prev_sha256": head,
+                }
+                digest = sha256_json(body)
+                row = {**body, "sha256": digest}
+                handle.seek(0, os.SEEK_END)
+                handle.write(canonical_json(row) + "\n")
+                handle.flush()
+                os.fsync(handle.fileno())
+                self.seq = seq + 1
+                self.head = digest
+                return digest
+            finally:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
