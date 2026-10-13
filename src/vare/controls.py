@@ -144,11 +144,18 @@ class RVLOuterPlanner:
             [e for e in trusted_fresh if reward_manifest.verified(e)]
             if reward_manifest is not None else trusted_fresh
         )
-        if require_authenticated_rewards and not eligible:
+        if require_authenticated_rewards and len(eligible) != len(fresh):
+            # Planner outputs are advisory. Until the learner also consumes
+            # only authenticated groups, mixing signed and unsigned ready
+            # rows must not authorize a training step.
+            reason = (
+                "no_authenticated_reward_evidence" if not eligible
+                else "unauthenticated_reward_evidence"
+            )
             control = replace(
                 control,
                 freeze_training=True,
-                reasons=(*control.reasons, "no_authenticated_reward_evidence"),
+                reasons=(*control.reasons, reason),
             )
         stats: dict[str, dict[str, float | int]] = {}
         for exp in eligible:
