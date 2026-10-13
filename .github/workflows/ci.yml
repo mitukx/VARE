@@ -61,6 +61,16 @@ jobs:
         run: >-
           python scripts/reproduce_candidate_discard_recovery_v1.py
           --output "${RUNNER_TEMP}/candidate-discard-replay"
+      - name: Reproduce runtime promotion acknowledgment and recovery fence
+        if: matrix.python-version == '3.12'
+        run: >-
+          python scripts/reproduce_promotion_publication_recovery_v1.py
+          --output "${RUNNER_TEMP}/promotion-publication-replay"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always() && matrix.python-version == '3.12'
+        with:
+          name: promotion-publication-replay
+          path: ${{ runner.temp }}/promotion-publication-replay
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always() && matrix.python-version == '3.12'
         with:

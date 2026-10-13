@@ -100,9 +100,10 @@ class Hooks:
         self.discarded = []
         self.after_train = after_train
         self.after_eval = after_eval
+        self.active_id = "p0"
 
     def active_policy(self):
-        return "p0", 0
+        return self.active_id, int(self.active_id != "p0")
 
     async def rollout(self, task, policy_id, policy_version, step):
         return Attempt(task, "1", policy_id, policy_version, step)
@@ -120,6 +121,7 @@ class Hooks:
 
     async def promote(self, candidate_id):
         self.promoted.append(candidate_id)
+        self.active_id = candidate_id
 
     async def discard(self, candidate_id):
         self.discarded.append(candidate_id)

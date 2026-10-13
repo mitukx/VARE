@@ -81,6 +81,7 @@ class CapabilityLoop:
         self._run_serial = 0
         self._round_lock = asyncio.Lock()
         self._discard_failure: BaseException | None = None
+        self._promotion_failure: BaseException | None = None
 
     async def _one_rollout(self, sem: asyncio.Semaphore, task: Task, policy_id: str, policy_version: int):
         async with sem:
@@ -163,6 +164,14 @@ class CapabilityLoop:
                 raise RuntimeError(
                     "candidate recovery required; policy state is unknown"
                 ) from self._discard_failure
+            if self._promotion_failure is not None:
+                # An optional journal cannot fence the default in-memory loop.
+                # Even a committed journal may have lost its acknowledgment.
+                # Read no hook state until independent recovery is complete.
+                raise PromotionRecoveryRequired(
+                    "unresolved promotion recovery required; verify the runtime "
+                    "and reconcile durable evidence before constructing a fresh loop"
+                ) from self._promotion_failure
             return await self._run_round(tasks, round_index=round_index, rollout_count=rollout_count)
 
     async def _run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None) -> RoundResult:
@@ -525,30 +534,34 @@ class CapabilityLoop:
                         )
                     raise
 
-            # If the external hook fails halfway, leave the durable transaction
-            # PREPARED. It is unsafe to assume that discarding the candidate
-            # would restore a partially published runtime.
+            # Publication may mutate the runtime before raising or being
+            # cancelled. Never discard a possibly installed candidate or reuse
+            # this loop after an unverified publication, even without a journal.
             try:
                 await self.hooks.promote(candidate_id)
-            except BaseException as exc:
-                if transaction_id is not None:
+                if self.hooks.active_policy()[0] != candidate_id:
                     raise PromotionRecoveryRequired(
-                        "promotion hook failed; reconcile the durable checkpoint"
-                    ) from exc
-                raise
-            if transaction_id is not None:
-                assert self.promotion_journal is not None
-                assert self.checkpoint_hasher is not None
-                assert self.evidence_trust_root is not None
-                expected_new = self.evidence_trust_root.checkpoint_digest(candidate_eval)
-                if (
-                    self.hooks.active_policy()[0] != candidate_id
-                    or self.checkpoint_hasher(candidate_id) != expected_new
-                ):
-                    raise PromotionRecoveryRequired(
-                        "post-promotion checkpoint mismatch; manual recovery required"
+                        "post-promotion policy acknowledgment mismatch; manual recovery required"
                     )
-                self.promotion_journal.commit(transaction_id)
+                if transaction_id is not None:
+                    assert self.promotion_journal is not None
+                    assert self.checkpoint_hasher is not None
+                    assert self.evidence_trust_root is not None
+                    expected_new = self.evidence_trust_root.checkpoint_digest(candidate_eval)
+                    if self.checkpoint_hasher(candidate_id) != expected_new:
+                        raise PromotionRecoveryRequired(
+                            "post-promotion checkpoint mismatch; manual recovery required"
+                        )
+                    self.promotion_journal.commit(transaction_id)
+            except BaseException as exc:
+                self._promotion_failure = exc
+                if isinstance(exc, PromotionRecoveryRequired):
+                    raise
+                if isinstance(exc, asyncio.CancelledError) and transaction_id is None:
+                    raise  # Preserve normal caller cancellation semantics.
+                raise PromotionRecoveryRequired(
+                    "promotion failed; verify the runtime and reconcile durable evidence"
+                ) from exc
             promoted_id = candidate_id
             self.events.emit("candidate_promoted", candidate_id=candidate_id, gain=decision.primary_gain)
         else:
