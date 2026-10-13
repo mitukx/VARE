@@ -260,10 +260,15 @@ class CapabilityLoop:
         else:
             candidate_id = await self.hooks.train_candidate(incumbent_id, train_batch)
 
+        evaluation_tasks = [
+            asyncio.create_task(self.hooks.evaluate(incumbent_id)),
+            asyncio.create_task(self.hooks.evaluate(candidate_id)),
+        ]
+        evaluation_group = asyncio.gather(*evaluation_tasks)
         try:
-            incumbent_eval, candidate_eval = await asyncio.gather(
-                self.hooks.evaluate(incumbent_id), self.hooks.evaluate(candidate_id)
-            )
+            # Own the evaluation lifetime: caller cancellation must not cancel
+            # a hook repeatedly while it is unwinding its own resources.
+            incumbent_eval, candidate_eval = await asyncio.shield(evaluation_group)
             if (
                 incumbent_eval.policy_id != incumbent_id
                 or candidate_eval.policy_id != candidate_id
@@ -277,18 +282,33 @@ class CapabilityLoop:
             else:
                 decision = self.promotion.decide(incumbent_eval, candidate_eval)
         except BaseException:
-            # Evaluation backends may reject malformed or misbound evidence by
-            # raising. The adapter restores the live incumbent, but the engine
-            # also owns the candidate snapshot and must discard it so a failed
-            # evaluation leaves the whole policy transaction rolled back.
-            if candidate_id != incumbent_id:
+            async def rollback_evaluation() -> None:
+                # gather propagates the first error without stopping siblings.
+                # Cancel each live evaluator once, then wait for all hook
+                # cleanup before deleting a snapshot it may still be using.
+                # A hook already cancelling may be inside asynchronous cleanup.
+                for task in evaluation_tasks:
+                    if not task.done() and not task.cancelling():
+                        task.cancel()
+                await asyncio.gather(*evaluation_tasks, return_exceptions=True)
+                if not evaluation_group.cancelled():
+                    evaluation_group.exception()  # Retrieve secondary/group errors.
+                if candidate_id != incumbent_id:
+                    try:
+                        await self.hooks.discard(candidate_id)
+                    except BaseException as discard_exc:
+                        raise RuntimeError(
+                            "evaluation failed and candidate discard failed; "
+                            "policy state is unknown"
+                        ) from discard_exc
+
+            recovery = asyncio.create_task(rollback_evaluation())
+            while not recovery.done():
                 try:
-                    await self.hooks.discard(candidate_id)
-                except BaseException as discard_exc:
-                    raise RuntimeError(
-                        "evaluation failed and candidate discard failed; "
-                        "policy state is unknown"
-                    ) from discard_exc
+                    await asyncio.shield(recovery)
+                except asyncio.CancelledError:
+                    continue
+            recovery.result()
             raise
         if candidate_id != incumbent_id and decision.accepted:
             await self.hooks.promote(candidate_id)
