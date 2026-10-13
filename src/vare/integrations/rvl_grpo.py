@@ -67,10 +67,10 @@ class RVLGRPOHooks:
         self._version = 0
         self._counter = 1
         self._states: dict[str, Any] = {self._active_id: self._snapshot_training_state()}
-        self._loaded_id = self._active_id
-        self._generation_factory = generation_factory
-        self._verified_factory = verified_generation_factory
-        if self._generation_factory is None or self._verified_factory is None:
+        self._loaded_id: str | None = self._active_id
+        resolved_generation = generation_factory
+        resolved_verified = verified_generation_factory
+        if resolved_generation is None or resolved_verified is None:
             try:
                 from src.rvl_systems.types import Generation, VerifiedGeneration
             except ImportError as exc:
@@ -78,8 +78,12 @@ class RVLGRPOHooks:
                     "RVLGRPOHooks requires an importable Recursive-Verification-Lag checkout "
                     "or explicit generation/verified-generation factories"
                 ) from exc
-            self._generation_factory = self._generation_factory or Generation
-            self._verified_factory = self._verified_factory or VerifiedGeneration
+            if resolved_generation is None:
+                resolved_generation = Generation
+            if resolved_verified is None:
+                resolved_verified = VerifiedGeneration
+        self._generation_factory: Callable[..., Any] = resolved_generation
+        self._verified_factory: Callable[..., Any] = resolved_verified
 
     def active_policy(self) -> tuple[str, int]:
         return self._active_id, self._version

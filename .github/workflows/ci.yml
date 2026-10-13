@@ -73,12 +73,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install mypy==1.19.1
-      # The checked modules are the interpreter-launch path. Other modules still
-      # have separate mypy findings, so this job does not typecheck all of src/vare.
-      - run: >-
-          mypy src/vare/cli.py src/vare/environments/runner.py
-          src/vare/environments/campaign.py
-          --ignore-missing-imports --follow-imports=silent
+      - run: mypy src/vare
   math500-grader:
     runs-on: ubuntu-latest
     timeout-minutes: 10

@@ -158,6 +158,9 @@ class PrioritizedReplay:
             return False
         group_id = next(iter(group_ids))
         group_size = next(iter(declared_sizes))
+        # Membership checks above do not narrow the set element types.
+        if not isinstance(group_id, str) or not isinstance(group_size, int):
+            return False
         if not group_id.strip() or len(experiences) != group_size:
             return False
         if group_size > self.config.capacity:
@@ -333,22 +336,29 @@ class PrioritizedReplay:
                             break
             return out
 
-        groups = {}
+        complete_groups: dict[str, list[tuple[float, _HeapItem]]] = {}
         for key, members in group_candidates.items():
-            if (all(priority is not None for priority, _ in members)
-                    and self._group_is_complete([item for _, item in members])):
-                groups[key] = members
-        if not groups:
+            if not self._group_is_complete([item for _, item in members]):
+                continue
+            narrowed: list[tuple[float, _HeapItem]] = []
+            for priority, item in members:
+                if priority is None:
+                    narrowed = []
+                    break
+                narrowed.append((priority, item))
+            if narrowed:
+                complete_groups[key] = narrowed
+        if not complete_groups:
             return []
-        remaining = dict(groups)
-        out: list[Experience] = []
-        while remaining and len(out) < n:
+        remaining = dict(complete_groups)
+        selected: list[Experience] = []
+        while remaining and len(selected) < n:
             keys = list(remaining)
             weights = [max(priority for priority, _ in remaining[k]) for k in keys]
             chosen_key = self._rng.choices(keys, weights=weights, k=1)[0]
-            members = sorted(remaining.pop(chosen_key), key=lambda z: z[0], reverse=True)
-            out.extend(item.experience for _, item in members)
-        return out
+            ranked = sorted(remaining.pop(chosen_key), key=lambda z: z[0], reverse=True)
+            selected.extend(item.experience for _, item in ranked)
+        return selected
 
     def __len__(self) -> int:
         return len(self._heap)

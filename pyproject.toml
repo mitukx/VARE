@@ -30,8 +30,8 @@ addopts = "-q"
 target-version = "py311"
 src = ["src", "tests"]
 
-[tool.ruff.lint]
-# Syntax errors, undefined names, and a few pyflakes bug patterns.
-# The default Ruff set still reports pre-existing unused imports and
-# import-order findings, so CI gates this narrower set.
-select = ["E9", "F63", "F7", "F82"]
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+mypy_path = "src"
+follow_imports = "silent"

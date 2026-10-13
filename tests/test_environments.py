@@ -9,8 +9,6 @@ import subprocess
 import sys
 import time
 
-import pytest
-
 from vare.environments import (
     CommandSpec,
     EngineeringTaskSpec,
