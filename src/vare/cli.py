@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import sys
 from dataclasses import asdict
 from pathlib import Path
 
@@ -177,13 +178,13 @@ def _cmd_env_smoke(args: argparse.Namespace) -> int:
         baseline = evaluator.evaluate(workspace.path, provenance={"phase": "baseline"})
         _write_json(outdir / "baseline.json", baseline.to_dict())
         if not args.oracle_patch:
-            payload = {"baseline": baseline.to_dict(), "oracle": None}
-            _write_json(outdir / "summary.json", payload)
-            print(json.dumps(payload, indent=2, sort_keys=True, allow_nan=False))
+            baseline_payload = {"baseline": baseline.to_dict(), "oracle": None}
+            _write_json(outdir / "summary.json", baseline_payload)
+            print(json.dumps(baseline_payload, indent=2, sort_keys=True, allow_nan=False))
             return 0
         import subprocess
         proc = subprocess.run(
-            ["python", args.oracle_patch, str(workspace.path)],
+            [sys.executable, args.oracle_patch, str(workspace.path)],
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=False,
         )
         if proc.returncode != 0:
