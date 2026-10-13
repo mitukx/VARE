@@ -12,7 +12,7 @@ import time
 from typing import Sequence
 
 from ..evidence import sha256_json
-from .catalog import CatalogEnvironmentVerifier, TaskCatalog, WorkspaceAgent, WorkspaceAgentRollout
+from .catalog import CatalogEnvironmentVerifier, RepositoryEvaluatorBackend, TaskCatalog, WorkspaceAgent, WorkspaceAgentRollout
 from .runner import resolve_launch_argv
 
 
@@ -131,10 +131,11 @@ class EnvironmentCampaignRunner:
         *,
         run_root: str | Path,
         verifier_version: int = 0,
+        isolated_evaluator: RepositoryEvaluatorBackend | None = None,
     ) -> None:
         self.catalog = catalog
         self.rollout = WorkspaceAgentRollout(catalog, agent, Path(run_root) / "workspaces")
-        self.verifier = CatalogEnvironmentVerifier(catalog, version=verifier_version)
+        self.verifier = CatalogEnvironmentVerifier(catalog, version=verifier_version, isolated_backend=isolated_evaluator)
         self.run_root = Path(run_root).resolve()
         self.run_root.mkdir(parents=True, exist_ok=True)
 
