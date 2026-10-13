@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Any
 
 from .config import LagConfig
 from .integrations.rvl import RVLReplaySnapshot, RVLTokenReplayReader
+from .reward_evidence import RewardEvidenceManifest
 
 
 @dataclass(frozen=True, slots=True)
@@ -78,6 +79,9 @@ class RVLOuterPlan:
     family_stats: dict[str, dict[str, float | int]]
     fresh_experiences: int
     excluded_stale_experiences: int
+    excluded_untrusted_experiences: int = 0
+    excluded_unattested_experiences: int = 0
+    authenticated_curriculum_experiences: int = 0
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -86,6 +90,9 @@ class RVLOuterPlan:
             "family_stats": self.family_stats,
             "fresh_experiences": self.fresh_experiences,
             "excluded_stale_experiences": self.excluded_stale_experiences,
+            "excluded_untrusted_experiences": self.excluded_untrusted_experiences,
+            "excluded_unattested_experiences": self.excluded_unattested_experiences,
+            "authenticated_curriculum_experiences": self.authenticated_curriculum_experiences,
         }
 
 
@@ -108,7 +115,13 @@ class RVLOuterPlanner:
         current_policy_version: int,
         current_verifier_version: int,
         trusted_default: bool = False,
+        reward_manifest: RewardEvidenceManifest | None = None,
+        require_authenticated_rewards: bool = False,
     ) -> RVLOuterPlan:
+        if type(require_authenticated_rewards) is not bool:
+            raise ValueError("require_authenticated_rewards must be bool")
+        if require_authenticated_rewards and reward_manifest is None:
+            raise ValueError("authenticated curriculum requires an operator-owned reward manifest")
         snapshot = reader.snapshot(
             current_policy_version=current_policy_version,
             current_verifier_version=current_verifier_version,
@@ -123,8 +136,29 @@ class RVLOuterPlanner:
             e for e in experiences
             if e.policy_lag <= self.lag.max_policy_lag and e.verifier_lag <= self.lag.max_verifier_lag
         ]
+        # A nonzero reward or reported failure is not evidence of reliable
+        # task failure if its verifier provenance is untrusted. Keep these
+        # rows for replay-health diagnostics, never curriculum amplification.
+        trusted_fresh = [e for e in fresh if e.verification.trusted]
+        eligible = (
+            [e for e in trusted_fresh if reward_manifest.verified(e)]
+            if reward_manifest is not None else trusted_fresh
+        )
+        if require_authenticated_rewards and len(eligible) != len(fresh):
+            # Planner outputs are advisory. Until the learner also consumes
+            # only authenticated groups, mixing signed and unsigned ready
+            # rows must not authorize a training step.
+            reason = (
+                "no_authenticated_reward_evidence" if not eligible
+                else "unauthenticated_reward_evidence"
+            )
+            control = replace(
+                control,
+                freeze_training=True,
+                reasons=(*control.reasons, reason),
+            )
         stats: dict[str, dict[str, float | int]] = {}
-        for exp in fresh:
+        for exp in eligible:
             family = exp.attempt.task.family
             row = stats.setdefault(family, {"count": 0, "failures": 0, "reward_sum": 0.0, "trusted": 0})
             row["count"] = int(row["count"]) + 1
@@ -154,4 +188,9 @@ class RVLOuterPlanner:
             family_stats=normalized_stats,
             fresh_experiences=len(fresh),
             excluded_stale_experiences=len(experiences) - len(fresh),
+            excluded_untrusted_experiences=len(fresh) - len(trusted_fresh),
+            excluded_unattested_experiences=len(trusted_fresh) - len(eligible),
+            authenticated_curriculum_experiences=(
+                len(eligible) if reward_manifest is not None else 0
+            ),
         )

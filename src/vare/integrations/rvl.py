@@ -291,6 +291,8 @@ class RVLTokenReplayReader:
         trusted_default: bool = False,
         pass_threshold: float = 0.5,
     ) -> list[Experience]:
+        if type(trusted_default) is not bool:
+            raise ValueError("trusted_default must be a literal boolean")
         current_policy_version = self._require_version(
             current_policy_version, "current_policy"
         )
@@ -354,7 +356,12 @@ class RVLTokenReplayReader:
                 )
                 disagreement = float(vmeta.get("disagreement", 0.0))
                 confidence = float(vmeta.get("confidence", 1.0 - min(1.0, disagreement)))
-                trusted = bool(vmeta.get("trusted", trusted_default))
+                trusted = vmeta.get("trusted", trusted_default)
+                if type(trusted) is not bool:
+                    raise ValueError(
+                        "RVL verifier trusted flag must be a literal boolean, "
+                        "not a truthy string or integer"
+                    )
                 attempt = Attempt(
                     task=task,
                     output=str(generation["response"]),
