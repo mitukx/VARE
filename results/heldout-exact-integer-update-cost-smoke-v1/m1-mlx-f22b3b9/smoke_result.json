@@ -1,0 +1,29 @@
+{
+  "code_revision": "f22b3b9455c2ed54bebfe82f90fa47aabbf7479c",
+  "decision": {
+    "accepted": true,
+    "establishes": "one update, save/reload, and a resource record only",
+    "protocol_id": "heldout-exact-integer-update-cost-smoke-v1",
+    "reasons": []
+  },
+  "environment": {
+    "backend": "mlx",
+    "mlx_lm": "0.32.0",
+    "python": "3.12.12"
+  },
+  "record": {
+    "backend": "mlx",
+    "heldout_pack_used_for_update": false,
+    "loss": 3.004885196685791,
+    "model_id": "mlx-community/Qwen2.5-3B-Instruct-4bit",
+    "model_revision": "4f83f8f146fdf28b512a06562b671d7af4fab457",
+    "optimizer_steps": 1,
+    "reload_matches_saved": true,
+    "resources": {
+      "peak_memory_bytes": 1959434978.0,
+      "wall_seconds": 8.762955541998963
+    },
+    "train_seed": 1029953,
+    "trainable_parameters_changed": true
+  }
+}
