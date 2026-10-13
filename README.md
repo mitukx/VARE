@@ -100,6 +100,7 @@ Frozen study definitions are the JSON files in [`protocols/`](protocols/). A `*.
 | `results/` | Raw outputs, manifests, and retained failed or passed runs |
 | `docs/` | Technical reports, evidence summaries, decisions, and the [report template](docs/templates/paired-comparison-report.md) |
 | `contributions/` | Upstream patch artifacts and status |
+| `minigrpo/` | Small GRPO trainer for the integer seed-split train rows, scored on dev. CPU tests only; no retained model run. See [minigrpo](docs/minigrpo.md). |
 | `scripts/`, `reproducers/` | Reproduction, audit, and diagnostic commands |
 
 ## Held-out exact-integer records

@@ -18,8 +18,14 @@ dev = ["pytest>=8.0"]
 [project.scripts]
 vare = "vare.entrypoint:main"
 
-[tool.setuptools.packages.find]
-where = ["src"]
+[tool.setuptools]
+packages = ["vare", "vare.environments", "vare.integrations", "minigrpo"]
+
+[tool.setuptools.package-dir]
+vare = "src/vare"
+"vare.environments" = "src/vare/environments"
+"vare.integrations" = "src/vare/integrations"
+minigrpo = "minigrpo"
 
 [tool.pytest.ini_options]
 pythonpath = ["src", "."]
@@ -28,7 +34,7 @@ addopts = "-q"
 
 [tool.ruff]
 target-version = "py311"
-src = ["src", "tests"]
+src = ["src", "tests", "minigrpo"]
 
 [tool.mypy]
 python_version = "3.11"
