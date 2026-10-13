@@ -88,13 +88,41 @@ consider public-key signing and separate issuance/audit registries. Operator
 must pin keys/identities before running or reading task outcomes; do not mint
 receipts for historical caller-provided rewards without independent regrading.
 
+## Last-mile learner admission in `CapabilityLoop`
+
+`CapabilityLoop(training_evidence_authorizer=..., require_authenticated_training=True)`
+now rejects a selected replay batch before calling `train_candidate` unless
+**every** member passes a trusted use-time authorization. The callback is
+evaluated after current policy/verifier freshness recomputation and after
+whole-group replay selection; a failed or malformed return, or an exception,
+aborts the entire update (no partial GRPO group training). Operator code can
+supply `manifest.verified` when its `Experience` identities match the
+independently attested RVL replay rows:
+
+```python
+# When constructing the outer-loop CapabilityLoop, not inside candidate code:
+loop = CapabilityLoop(
+    hooks=hooks, verifier=verifier,
+    training_evidence_authorizer=manifest.verified,
+    require_authenticated_training=True,
+    # other configured controls...
+)
+```
+
+This is an *explicit, opt-in gate*. It does **not** automatically wrap
+RVL's standalone trainer. If RVL training is launched outside
+`CapabilityLoop`, its operator must enforce the same attestation contract
+at the actual training-consumption boundary. A trusted HMAC validator is
+necessary but not sufficient: a compromised grader can still sign bad reward.
+
 ## Negative controls and reproducibility
 
 Run:
 
 ```bash
 python3 -m pytest -q tests/test_rvl_reward_attestation.py \
-    tests/test_controls.py tests/test_rvl_integration.py
+    tests/test_controls.py tests/test_rvl_integration.py \
+    tests/test_training_evidence_admission.py
 ```
 
 The adversarial fixtures attempt truthy-string trust escalation, training
