@@ -5,10 +5,10 @@ from types import SimpleNamespace
 
 import pytest
 
-torch = pytest.importorskip("torch")
-
 from vare.integrations.rvl_grpo import RVLGRPOHooks
 from vare.types import Attempt, Experience, Task, Verification
+
+torch = pytest.importorskip("torch")
 
 
 class SharedModel(torch.nn.Module):

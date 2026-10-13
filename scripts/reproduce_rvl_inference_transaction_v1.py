@@ -1,4 +1,4 @@
-"""One entry point comparing pinned main, alias-only PR, and current adapter."""
+"""Compare initial main, alias PR, integration main, and corrected adapter."""
 from __future__ import annotations
 
 import argparse
@@ -18,6 +18,7 @@ import xml.etree.ElementTree as ET
 
 BASE = "b8dc1baccaadfa7f699549c254a751c2b9bc0d95"
 ALIAS = "5f2d2e61d2ea8f771d99315757550091053bad46"
+INTEGRATION_MAIN = "1e7fda8265cdc1617525d0c740e90fcd41e92b81"
 RVL = "27ebf7fe239d97504eeb960bf1407de220584dac"
 ROOT = Path(__file__).resolve().parents[1]
 TESTS = ["tests/test_rvl_grpo_torch_state.py", "tests/test_rvl_grpo_inference_cancellation.py"]
@@ -67,7 +68,8 @@ def main():
         run(["git", "sparse-checkout", "set", "src"], cwd=rvl)
         run(["git", "checkout", "--quiet", "--detach", "FETCH_HEAD"], cwd=rvl)
         assert git("rev-parse", "HEAD", cwd=rvl).decode().strip() == RVL
-        for label, revision in (("baseline", BASE), ("alias_only", ALIAS), ("fixed", None)):
+        for label, revision in (("baseline", BASE), ("alias_only", ALIAS),
+                                ("integration_main", INTEGRATION_MAIN), ("fixed", None)):
             selected = ROOT if revision is None else scratch / label
             if revision:
                 source(revision, selected)
@@ -83,7 +85,8 @@ def main():
                        "errors": sum(c.find("error") is not None for c in cases),
                        "skips": sum(c.find("skipped") is not None for c in cases)}
             assert summary == {"exit_code": 0 if label == "fixed" else 1, "tests": 14,
-                               "failures": {"baseline": 12, "alias_only": 10, "fixed": 0}[label],
+                               "failures": {"baseline": 12, "alias_only": 10,
+                                            "integration_main": 10, "fixed": 0}[label],
                                "errors": 0, "skips": 0}, summary
             with (out / (label + "-hf.log")).open("w") as log:
                 run([sys.executable, str(ROOT / "reproducers/rvl_inference_transaction_v1.py"),
@@ -104,7 +107,7 @@ def main():
             summaries[label] = summary
         files = ["src/vare/integrations/rvl_grpo.py", *TESTS,
                  "reproducers/rvl_inference_transaction_v1.py", "scripts/reproduce_rvl_inference_transaction_v1.py"]
-        manifest = {"baseline": BASE, "alias_only": ALIAS, "rvl": RVL,
+        manifest = {"baseline": BASE, "alias_only": ALIAS, "integration_main": INTEGRATION_MAIN, "rvl": RVL,
                     "candidate_parent": git("rev-parse", "HEAD").decode().strip(),
                     "source_sha256": {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in files},
                     "rvl_source_sha256": {p: hashlib.sha256((rvl / p).read_bytes()).hexdigest()

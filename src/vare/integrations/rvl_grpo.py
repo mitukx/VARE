@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import copy
-from contextlib import contextmanager, nullcontext
+from contextlib import AbstractContextManager, contextmanager, nullcontext
 from dataclasses import dataclass
 import math
 from statistics import fmean
@@ -161,7 +161,7 @@ class RVLGRPOHooks:
             (module, bool(module.training)) for _, module in named_modules()
         ] if callable(named_modules) else []
         torch = getattr(self.trainer, "torch", None)
-        rng_scope = nullcontext()
+        rng_scope: AbstractContextManager[Any] = nullcontext()
         if torch is not None:
             # Do not initialize CUDA merely to snapshot its generators.
             devices = list(range(torch.cuda.device_count())) if torch.cuda.is_initialized() else []
