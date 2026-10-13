@@ -87,6 +87,17 @@ def _cmd_rvl_plan(args: argparse.Namespace) -> int:
     print(json.dumps(payload, indent=2, sort_keys=True))
     return 0
 
+def _cmd_failure_triage(args: argparse.Namespace) -> int:
+    from .failure_triage import load_snapshot, triage
+
+    raw = json.loads(Path(args.snapshot).read_text(encoding="utf-8"))
+    payload = triage(load_snapshot(raw)).to_dict()
+    if args.output:
+        _write_json(args.output, payload)
+    print(json.dumps(payload, indent=2, sort_keys=True, allow_nan=False))
+    return 0
+
+
 def _cmd_lock_protocol(args: argparse.Namespace) -> int:
     raw = json.loads(Path(args.spec).read_text(encoding="utf-8"))
     lock = ProtocolLock.create(
@@ -252,6 +263,11 @@ def main() -> int:
     rp.add_argument("--trusted-default", action="store_true")
     rp.add_argument("--output")
     rp.set_defaults(func=_cmd_rvl_plan)
+
+    ft = sub.add_parser("failure-triage", help="read-only triage of independent task audits and rollout diagnostics")
+    ft.add_argument("--snapshot", required=True)
+    ft.add_argument("--output")
+    ft.set_defaults(func=_cmd_failure_triage)
 
     lock_cmd = sub.add_parser("lock-protocol", help="freeze a preregistered experiment spec with a SHA-256 digest")
     lock_cmd.add_argument("--spec", required=True)
