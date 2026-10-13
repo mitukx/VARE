@@ -223,7 +223,26 @@ def _cmd_env_campaign(args: argparse.Namespace) -> int:
     argv = json.loads(args.agent_argv_json)
     if not isinstance(argv, list) or not argv or not all(isinstance(x, str) and x for x in argv):
         raise ValueError("--agent-argv-json must encode a non-empty JSON string array")
-    agent = CommandWorkspaceAgent(tuple(argv), timeout_s=args.agent_timeout_s)
+    from .environments.catalog import WorkspaceAgent
+    agent: WorkspaceAgent
+    if args.isolated_agent_image:
+        # Docker is opt-in and must be administered outside any candidate
+        # checkout. Agent argv is interpreted INSIDE the pinned image.
+        from .container_isolation import (
+            DockerIsolationRunner, DockerWorkspaceAgent, IsolationLimits,
+        )
+        agent = DockerWorkspaceAgent(
+            limits=IsolationLimits(
+                image=args.isolated_agent_image,
+                timeout_s=args.agent_timeout_s,
+                memory_mb=args.isolated_memory_mb,
+            ),
+            allowed_workspace_root=(Path(args.run_root).resolve() / "workspaces"),
+            command=tuple(argv),
+            runner=DockerIsolationRunner(),
+        )
+    else:
+        agent = CommandWorkspaceAgent(tuple(argv), timeout_s=args.agent_timeout_s)
     runner = EnvironmentCampaignRunner(
         catalog,
         agent,
@@ -311,6 +330,8 @@ def main() -> int:
     ec.add_argument("--catalog-root", required=True)
     ec.add_argument("--agent-argv-json", required=True, help="JSON array; supports {workspace}, {prompt}, {step} placeholders")
     ec.add_argument("--agent-timeout-s", type=float, default=1800.0)
+    ec.add_argument("--isolated-agent-image", help="Docker image pinned as name@sha256:<digest>; opt in to isolated agent run")
+    ec.add_argument("--isolated-memory-mb", type=int, default=512)
     ec.add_argument("--repeats", type=int, default=1)
     ec.add_argument("--task-id", action="append")
     ec.add_argument("--verifier-version", type=int, default=0)
