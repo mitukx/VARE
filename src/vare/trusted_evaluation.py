@@ -131,7 +131,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--promotion-nonce", required=True)
     args = parser.parse_args(argv)
     key_file = Path(args.key_file)
-    if key_file.is_symlink() or key_file.stat().st_size != 32:
+    if key_file.is_symlink() or not key_file.is_file() or key_file.stat().st_size != 32:
         raise ValueError("signing key file must be a regular 32-byte trusted file")
     key = key_file.read_bytes()
     if (re.fullmatch(r"[0-9a-f]{64}", args.protocol_sha256) is None
