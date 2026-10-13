@@ -1,0 +1,35 @@
+{
+  "note": "Protocol drafts v1-v3 were runner/setup failures and are not evidence. The final locked run is protocol v4.",
+  "failures": [
+    {
+      "protocol_id": "vare-rvl-trajectory-gradient-parity-v1",
+      "protocol_sha256": "5c51cb33e35fe8367ae83db55e6d8d8c6a54aa6e3cc7b4cc92ee3144b449cb7d",
+      "runner_sha256": "df3239084d5168a2bb0651920d279117bf00bd8883b75493350d59f7fffede48",
+      "status": "failed_before_experiment",
+      "exception": "KeyError: 'clip_eps'",
+      "stage": "before trainer construction, replay creation, forward/backward, or optimizer step",
+      "optimizer_step_calls": 0,
+      "parameter_update_performed": false
+    },
+    {
+      "protocol_id": "vare-rvl-trajectory-gradient-parity-v2",
+      "protocol_sha256": "e29e24df91c90d15724834c56490add907634369b33a2eb8989ec2c3c1131256",
+      "runner_sha256": "28209d0a3546eb3db17e054de6a188afbb76878a3dbae5c7ea2f684a865178af",
+      "status": "failed_before_forward_backward",
+      "exception": "KeyError: 'prompt_token_ids'",
+      "stage": "synthetic TokenReplay initialized in a temporary directory; before model forward/backward or optimizer step",
+      "optimizer_step_calls": 0,
+      "parameter_update_performed": false
+    },
+    {
+      "protocol_id": "vare-rvl-trajectory-gradient-parity-v3",
+      "protocol_sha256": "de8a440f472448c33a06720c314b58f523e40e67938d5bba38ffb8c2e764bd85",
+      "runner_sha256": "348df1e9343cae36fb18c2df79316aa56ed46a8c2959300f2a0867f37f695411",
+      "status": "failed_after_backward_before_assertion",
+      "exception": "KeyError: 'loss_abs_tolerance'",
+      "stage": "actual RVL train_step forward/backward reached one intercepted optimizer no-op; no result checks completed",
+      "optimizer_step_calls_intercepted": 1,
+      "parameter_update_performed": false
+    }
+  ]
+}
