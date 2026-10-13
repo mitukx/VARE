@@ -130,6 +130,9 @@ def test_failed_round_drains_sibling_before_return(in_verifier):
         hooks = Hooks()
         verifier = _FailingVerifier() if in_verifier else _Verifier()
         loop = _loop(hooks, verifier)
+        # The production curriculum samples with replacement. Force one
+        # slow and one failing task so this concurrency test is not a lottery.
+        loop.curriculum.choose = lambda tasks, n: list(tasks)
         with pytest.raises(RuntimeError, match="verification failure" if in_verifier else "rollout failure"):
             await asyncio.wait_for(
                 loop.run_round([Task("slow", "prompt"), Task("fail", "prompt")], round_index=0),
