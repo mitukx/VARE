@@ -77,7 +77,7 @@ def test_repository_grader_command_mounts_ro_candidate_and_grader_only(tmp_path)
     assert "--cap-drop=ALL" in argv
     assert "--security-opt=no-new-privileges:true" in argv
     assert "--read-only" in argv
-    assert "/tmp" not in " ".join(mounts)
+    assert not any(",target=/tmp" in item for item in mounts)
     assert "--scratch" in argv and "/scratch" in argv
     assert "--expected-spec-sha256" in argv
     assert "--policy-id" in argv and "incumbent" in argv
