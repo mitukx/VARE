@@ -1,5 +1,14 @@
 # Current evidence gaps
 
+**Research gate 2026-10-15 — no eligible fresh model/task pair:** a focused
+post-Stage-0 prior-art and feasibility review found no candidate that clears
+both novelty and independent-evaluation requirements. Fixed-rollout/staleness,
+verifier-error correction, and skill-library self-improvement now have close
+direct coverage; the latest xLong-horizon RL framework is GPU-systems work.
+Do not start another model screen or update from the cached model inventory
+alone. The next gate requires a materially distinct method and an unused,
+independently graded task composition. See the [qualification record](research-candidate-qualification-2026-10-15.md).
+
 **Update 2026-10-15 — reward admission at the RVL trainer boundary:**
 `CapabilityLoop` already had a manifest authorizer, but direct calls to
 `RVLGRPOHooks.train_candidate()` could bypass it. The hook now supports the
