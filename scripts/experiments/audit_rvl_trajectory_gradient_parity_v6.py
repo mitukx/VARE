@@ -20,23 +20,49 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def resolve_commit(revision: str) -> str | None:
+    try:
+        return subprocess.run(
+            ["git", "-C", str(ROOT), "rev-parse", "--verify", f"{revision}^{{commit}}"],
+            check=True, capture_output=True, text=True,
+        ).stdout.strip()
+    except (subprocess.CalledProcessError, OSError):
+        return None
+
+
+def git_file_sha256(revision: str, relpath: str) -> str | None:
+    try:
+        content = subprocess.run(
+            ["git", "-C", str(ROOT), "show", f"{revision}:{relpath}"],
+            check=True, capture_output=True,
+        ).stdout
+        return hashlib.sha256(content).hexdigest()
+    except (subprocess.CalledProcessError, OSError):
+        return None
+
+
 def audit() -> dict[str, Any]:
     lock = json.loads(LOCK.read_text(encoding="utf-8"))
     result = json.loads(RESULT.read_text(encoding="utf-8"))
     result_data = RESULT.read_bytes()
     checks: dict[str, Any] = {}
-    current_vare_revision = subprocess.run(
-        ["git", "-C", str(ROOT), "rev-parse", "HEAD"], check=True, capture_output=True, text=True,
-    ).stdout.strip()
+    locked_vare_revision = lock.get("vare_revision")
+    resolved_vare_revision = (
+        resolve_commit(locked_vare_revision) if isinstance(locked_vare_revision, str) else None
+    )
     checks["protocol_status"] = lock.get("status") == "preregistered-before-run"
     checks["source_refresh_scope"] = (
         lock.get("source_refresh", {}).get("claim")
         == "Source-current evidence refresh only; same measurement, no new method or result claim."
         and result.get("source_refresh") == lock.get("source_refresh")
     )
-    checks["vare_revision_match"] = (
-        lock.get("vare_revision") == current_vare_revision == result.get("vare_revision")
+    checks["vare_revision_match"] = lock.get("vare_revision") == result.get("vare_revision")
+    checks["vare_revision_semantics"] = (
+        lock.get("vare_revision_semantics")
+        == result.get("vare_revision_semantics")
+        == "source revision under test; checkout HEAD may be a later v6 branch or merged revision"
     )
+    checks["vare_source_revision_resolves_exactly"] = resolved_vare_revision == locked_vare_revision
     checks["protocol_result_match"] = (
         result.get("protocol_id") == lock.get("protocol_id")
         and result.get("protocol_sha256") == sha256(LOCK)
@@ -49,6 +75,11 @@ def audit() -> dict[str, Any]:
     checks["vare_source_hashes"] = {
         path: sha256(ROOT / path) == expected
         and result.get("vare_source_files_sha256", {}).get(path) == expected
+        for path, expected in lock["vare_source_files_sha256"].items()
+    }
+    checks["vare_source_commit_hashes"] = {
+        path: resolved_vare_revision == locked_vare_revision
+        and git_file_sha256(locked_vare_revision, path) == expected
         for path, expected in lock["vare_source_files_sha256"].items()
     }
     checks["rvl_source_hashes"] = {
@@ -121,6 +152,7 @@ def audit() -> dict[str, Any]:
     return {
         "protocol_id": lock["protocol_id"],
         "vare_revision": lock["vare_revision"],
+        "vare_revision_semantics": lock["vare_revision_semantics"],
         "decision": "pass" if passed else "fail",
         "checks": checks,
         "result_sha256": hashlib.sha256(result_data).hexdigest(),

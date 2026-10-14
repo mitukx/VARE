@@ -1,5 +1,5 @@
 {
-  "auditor_sha256": "85a775cdbf33c222a39c89a7e55aa22a29b06137d1b57b3af0211bab710ae437",
+  "auditor_sha256": "7ff7976a0d87db26e6aa85cb1be7558b322f8e3c3f8b7fa0da306aa06bbb250b",
   "changes_from_v4": [
     "Event identity uniqueness is scoped to a group, execution, and event.",
     "The RVL bridge checks the score against a read-time in-memory snapshot.",
@@ -92,7 +92,7 @@
   },
   "protocol_id": "vare-rvl-trajectory-gradient-parity-v6",
   "question": "Does one complete RVL TokenReplay group per declared VARE rollout group, passed through the VARE reader, GRPO conversion, trajectory bridge materializer, and explicit group advantages, produce the same scalar objective and parameter gradients as the pinned RVL HF GRPO train_step?",
-  "runner_sha256": "f7f2427eb14e751130740fc305f5854adc8ce9ff3c180925ef396768797bfc3d",
+  "runner_sha256": "bfbc8d93b40bb4b4629da91579be0c846c8ed53b9e9733f8bf2539b2eba0aa77",
   "runtime": {
     "device": "cpu",
     "max_wall_seconds": 120,
@@ -154,6 +154,7 @@
   },
   "validation_authority": "The frozen runner asserts source hashes, objective and gradient tolerances, negative control, state invariance, and resource cap. The result is a local engineering check, not external evaluation.",
   "vare_revision": "3ca6d7e765a20fb85dc927c9adfec81f77c09a65",
+  "vare_revision_semantics": "source revision under test; checkout HEAD may be a later v6 branch or merged revision",
   "vare_source_files_sha256": {
     "src/vare/integrations/rvl.py": "9d40de5d2765115fc95972b2df8bc0c36bdd28132dddee8e6677d38a655afd14",
     "src/vare/integrations/rvl_grpo.py": "db295fbd50b3629a46e2cab73873b02bf0f652353bc3a9f9292b2fae90d94df4",

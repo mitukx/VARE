@@ -22,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 RVL_REVISION = "c7e646b043cb56e5ea3c2623bb8a61e065451f72"
 VARE_REVISION = "3ca6d7e765a20fb85dc927c9adfec81f77c09a65"
+VARE_REVISION_SEMANTICS = "source revision under test; checkout HEAD may be a later v6 branch or merged revision"
 LOCK_PATH = ROOT / "protocols/rvl_trajectory_gradient_parity_v6.lock.json"
 OUTPUT_PATH = ROOT / "outputs/rvl_trajectory_gradient_parity_v6.json"
 RVL_FILES = (
@@ -42,6 +43,21 @@ def sha256_file(path: Path) -> str:
     return sha256_bytes(path.read_bytes())
 
 
+def resolve_commit(repo: Path, revision: str) -> str:
+    return subprocess.run(
+        ["git", "-C", str(repo), "rev-parse", "--verify", f"{revision}^{{commit}}"],
+        check=True, capture_output=True, text=True,
+    ).stdout.strip()
+
+
+def git_file_sha256(repo: Path, revision: str, relpath: str) -> str:
+    content = subprocess.run(
+        ["git", "-C", str(repo), "show", f"{revision}:{relpath}"],
+        check=True, capture_output=True,
+    ).stdout
+    return sha256_bytes(content)
+
+
 def require(condition: bool, message: str) -> None:
     if not condition:
         raise AssertionError(message)
@@ -53,10 +69,10 @@ def load_lock() -> dict[str, Any]:
     require(lock.get("status") == "preregistered-before-run", "protocol is not preregistered")
     require(lock.get("rvl_revision") == RVL_REVISION, "protocol RVL revision mismatch")
     require(lock.get("vare_revision") == VARE_REVISION, "protocol VARE revision mismatch")
-    current_vare_revision = subprocess.run(
-        ["git", "-C", str(ROOT), "rev-parse", "HEAD"], check=True, capture_output=True, text=True,
-    ).stdout.strip()
-    require(current_vare_revision == VARE_REVISION, "current VARE checkout is not the locked source revision")
+    require(lock.get("vare_revision_semantics") == VARE_REVISION_SEMANTICS,
+            "protocol VARE revision semantics mismatch")
+    resolved_vare_revision = resolve_commit(ROOT, VARE_REVISION)
+    require(resolved_vare_revision == VARE_REVISION, "locked VARE revision resolved to a different commit")
     require(lock.get("source_refresh", {}).get("claim") ==
             "Source-current evidence refresh only; same measurement, no new method or result claim.",
             "protocol source-refresh scope mismatch")
@@ -72,6 +88,8 @@ def load_lock() -> dict[str, Any]:
             <= lock["numeric_tolerances"].keys(), "numeric tolerance protocol is missing required fields")
     for relpath, expected in lock["vare_source_files_sha256"].items():
         require(sha256_file(ROOT / relpath) == expected, f"VARE source hash mismatch: {relpath}")
+        require(git_file_sha256(ROOT, resolved_vare_revision, relpath) == expected,
+                f"locked VARE commit source hash mismatch: {relpath}")
     return lock
 
 
@@ -432,6 +450,7 @@ def run(git_path: Path) -> dict[str, Any]:
             "protocol_sha256": sha256_file(LOCK_PATH),
             "runner_sha256": sha256_file(Path(__file__)),
             "vare_revision": VARE_REVISION,
+            "vare_revision_semantics": VARE_REVISION_SEMANTICS,
             "source_refresh": lock["source_refresh"],
             "rvl_revision": RVL_REVISION,
             "rvl_source_files_sha256": source_hashes,

@@ -90,7 +90,7 @@
     "temperature": 0.8
   },
   "protocol_id": "vare-rvl-trajectory-gradient-parity-v6",
-  "protocol_sha256": "9c9a6ea7d62425425aaa4aa91c721d95f1e09ed4320f188f6731c3a596ea0dac",
+  "protocol_sha256": "6603eb23ce29d5bffb3d713b82f130712d127c68d98f13539b52b879985cd424",
   "result": {
     "absolute_loss_difference": 1.4901161193847656e-08,
     "claim_scope": "CPU loss/gradient interoperability only; no capability gain, real-model training, or RSI claim",
@@ -114,9 +114,9 @@
     "reference_gradient_global_norm": 0.4454469979607546,
     "status": "completed",
     "torch_cpu_rng_unchanged": true,
-    "wall_seconds": 1.4401878339995164
+    "wall_seconds": 2.402724958010367
   },
-  "runner_sha256": "f7f2427eb14e751130740fc305f5854adc8ce9ff3c180925ef396768797bfc3d",
+  "runner_sha256": "bfbc8d93b40bb4b4629da91579be0c846c8ed53b9e9733f8bf2539b2eba0aa77",
   "runtime": {
     "device": "cpu",
     "model_parameters": 1024,
@@ -150,6 +150,7 @@
     "vare_revision": "3ca6d7e765a20fb85dc927c9adfec81f77c09a65"
   },
   "vare_revision": "3ca6d7e765a20fb85dc927c9adfec81f77c09a65",
+  "vare_revision_semantics": "source revision under test; checkout HEAD may be a later v6 branch or merged revision",
   "vare_source_files_sha256": {
     "src/vare/integrations/rvl.py": "9d40de5d2765115fc95972b2df8bc0c36bdd28132dddee8e6677d38a655afd14",
     "src/vare/integrations/rvl_grpo.py": "db295fbd50b3629a46e2cab73873b02bf0f652353bc3a9f9292b2fae90d94df4",
