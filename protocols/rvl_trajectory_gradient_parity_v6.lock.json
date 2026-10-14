@@ -1,0 +1,164 @@
+{
+  "auditor_sha256": "7ff7976a0d87db26e6aa85cb1be7558b322f8e3c3f8b7fa0da306aa06bbb250b",
+  "changes_from_v4": [
+    "Event identity uniqueness is scoped to a group, execution, and event.",
+    "The RVL bridge checks the score against a read-time in-memory snapshot.",
+    "The bridge names and documents its prompt/response fingerprint semantics."
+  ],
+  "estimand": {
+    "primary": "Absolute difference in loss scalar and maximum absolute difference across every named parameter gradient between pinned RVL train_step and an independently coded materialized-target autograd reference.",
+    "scope": "CPU loss/gradient interoperability only; this is not a policy-quality, task-success, or RSI experiment.",
+    "secondary": "Incorrect prompt-ID merged-advantage control gradient difference; exact invariance of model parameters/buffers, optimizer state, CPU RNG, and Python RNG after the intercepted train step."
+  },
+  "explicit_nonclaims": [
+    "No real-model update or pretrained model is used.",
+    "No task success, held-out capability, policy improvement, or external reproduction is measured.",
+    "The result is a correctness/interoperability artifact, not a differentiated RL algorithm or RSI result.",
+    "RVL's internal compute_group_advantages still runs but its output is unused when explicit VARE advantages are supplied.",
+    "SQLite behavior-hash consistency does not establish reward authenticity; fixture rewards are synthetic."
+  ],
+  "failure_criteria": [
+    "Any hash mismatch, incomplete or mixed group, incorrect materialized-weight normalization, loss/gradient tolerance failure, nondivergent negative control, nonfinite or zero gradient, intercepted optimizer call count other than one, changed model/optimizer/RNG state, mode restoration failure, or resource cap violation."
+  ],
+  "fixture": {
+    "behavior_logprobs": "Exact token log probabilities generated from the same frozen tiny model, same token IDs, and temperature used by the RVL trainer. Ratios therefore equal one and avoid clipping boundaries in the primary parity run.",
+    "evaluator": "Synthetic frozen reward values only; no external verifier or task correctness claim.",
+    "groups": {
+      "group-a": [
+        {
+          "response": "alpha",
+          "response_token_ids": [
+            8
+          ],
+          "reward": 0.0
+        },
+        {
+          "response": "beta gamma delta",
+          "response_token_ids": [
+            9,
+            10,
+            11
+          ],
+          "reward": 1.0
+        }
+      ],
+      "group-b": [
+        {
+          "response": "epsilon zeta",
+          "response_token_ids": [
+            12,
+            13
+          ],
+          "reward": 0.25
+        },
+        {
+          "response": "eta theta iota kappa",
+          "response_token_ids": [
+            14,
+            15,
+            16,
+            17
+          ],
+          "reward": 0.75
+        }
+      ]
+    },
+    "prompt": "Return a short synthetic continuation.",
+    "prompt_id": "shared-prompt-v1",
+    "prompt_token_ids": [
+      1,
+      2,
+      3
+    ],
+    "temperature": 0.8,
+    "total_samples": 4
+  },
+  "hypothesis": "The materialized trajectory objective matches pinned RVL train_step within the frozen scalar and gradient tolerances when each per-group materialized weight is scaled by group_size / total_batch_size. A deliberately incorrect shared-prompt advantage merge produces a different gradient.",
+  "model": {
+    "architecture": "nn.Embedding(32,32) indexed by causal input token IDs, logits only",
+    "checkpoint": "deterministic random initialization; no pretrained weights",
+    "id": "synthetic-tiny-causal-lm-v1",
+    "parameters": 1024
+  },
+  "normalization": {
+    "native_rvl": "negative mean across samples of each sample's mean tokenwise clipped surrogate",
+    "required_batch_scaled_weight_sum": 1.0,
+    "trajectory": "per-group materialize gives token weight 1/(group_size * response_length); when groups are combined in one RVL batch, multiply each target by group_size / total_batch_size"
+  },
+  "numeric_tolerances": {
+    "gradient_abs_tolerance": 1e-06,
+    "loss_abs_tolerance": 1e-06,
+    "negative_control_min_gradient_delta": 1e-05
+  },
+  "protocol_id": "vare-rvl-trajectory-gradient-parity-v6",
+  "question": "Does one complete RVL TokenReplay group per declared VARE rollout group, passed through the VARE reader, GRPO conversion, trajectory bridge materializer, and explicit group advantages, produce the same scalar objective and parameter gradients as the pinned RVL HF GRPO train_step?",
+  "runner_sha256": "bfbc8d93b40bb4b4629da91579be0c846c8ed53b9e9733f8bf2539b2eba0aa77",
+  "runtime": {
+    "device": "cpu",
+    "max_wall_seconds": 120,
+    "network": "offline",
+    "paid_compute": false,
+    "platform": "macOS arm64",
+    "precision": "fp32",
+    "python": "3.12.12",
+    "threads": 1,
+    "torch": "2.9.1"
+  },
+  "rvl_revision": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "rvl_source_files_sha256": {
+    "src/rvl_systems/grpo.py": "a2ef6217385a206f5e6c0f43fb40e900ae3bf1b2066a1c8d1ab1878fd25d724d",
+    "src/rvl_systems/hf_trainer.py": "375985c1d0cca49a9d98d8b00ed41cefe000b91461e9a0783e94312466fd0210",
+    "src/rvl_systems/lab/contracts.py": "726f3c0ff7dc9b22436946f7199a331e64f3992deb48289141a0f1f0ce16f279",
+    "src/rvl_systems/lab/token_replay.py": "4a995180ae5808dcac4f8f507f93c4c3fa7d64899514a4fb21e22c7c48a08230",
+    "src/rvl_systems/triton_grpo.py": "ed7ee082db036e1631c1f8eaacfb8691b102401c8342dcb9ed4dba5d26a22cf9",
+    "src/rvl_systems/types.py": "a3e9f06cc70972a7b5fd50b757ffff992d3a6156d1ffab5133e410471dcc5d7b"
+  },
+  "seed": 20261014,
+  "source_refresh": {
+    "baseline_protocol_id": "vare-rvl-trajectory-gradient-parity-v5",
+    "baseline_vare_source_content_reference": "The V5 baseline is defined only by vare_source_files_sha256 in protocols/rvl_trajectory_gradient_parity_v5.lock.json; the V5 result does not record the VARE execution commit.",
+    "changed_vare_files_since_v5_source": [
+      "src/vare/integrations/rvl.py",
+      "src/vare/integrations/rvl_grpo.py"
+    ],
+    "claim": "Source-current evidence refresh only; same measurement, no new method or result claim.",
+    "kind": "source-current evidence refresh",
+    "measurement_unchanged": true,
+    "rationale": "The v5 runner pins the VARE source hashes from its protocol and therefore cannot reproduce against the current main checkout. The v5 result omits the VARE execution commit, so its baseline is identified by those locked source-content hashes only. V6 repeats the identical seed, synthetic fixture, pinned RVL revision, trainer settings, comparison oracle, tolerances, and negative control against this current VARE revision.",
+    "scope_limit": "Synthetic CPU objective/gradient interoperability only; no method novelty, capability, policy improvement, or RSI claim.",
+    "vare_revision": "3ca6d7e765a20fb85dc927c9adfec81f77c09a65"
+  },
+  "status": "preregistered-before-run",
+  "success_criteria": [
+    "Pinned RVL commit and all locked RVL and VARE source file hashes match.",
+    "The reader returns exactly four complete experiences in two groups sharing one prompt ID, with response lengths 1, 3, 2, and 4.",
+    "VARE computes group-relative advantages separately for the two complete groups and passes them explicitly to actual pinned RVL train_step.",
+    "Each materialized per-group weight sum equals 1; after group_size / total_batch_size scaling the combined target weight sum equals 1.",
+    "Independent materialized-target loss differs from actual trainer loss by at most 1e-6 absolute.",
+    "Every named parameter gradient differs by at most 1e-6 absolute maximum.",
+    "Prompt-ID merged negative control differs from groupwise reference by at least 1e-5 maximum gradient delta.",
+    "The optimizer step is intercepted exactly once as a no-op, and model parameters/buffers, optimizer state, torch CPU RNG, and Python RNG remain bitwise unchanged.",
+    "The fixture yields finite, nonzero gradients; the trainer's gradient clipping threshold is not reached; every module mode is restored.",
+    "Run completes under 120 seconds on CPU."
+  ],
+  "trainer": {
+    "advantage_clip": 5.0,
+    "advantage_eps": 1e-06,
+    "clip_eps": 0.2,
+    "max_abs_log_ratio": 20.0,
+    "max_grad_norm": 1000000.0,
+    "objective_backend": "torch",
+    "optimizer": "AdamW initialized but step replaced by counted no-op",
+    "optimizer_step_calls": 1,
+    "parameter_update": false
+  },
+  "validation_authority": "The frozen runner asserts source hashes, objective and gradient tolerances, negative control, state invariance, and resource cap. The result is a local engineering check, not external evaluation.",
+  "vare_revision": "3ca6d7e765a20fb85dc927c9adfec81f77c09a65",
+  "vare_revision_semantics": "source revision under test; checkout HEAD may be a later v6 branch or merged revision",
+  "vare_source_files_sha256": {
+    "src/vare/integrations/rvl.py": "9d40de5d2765115fc95972b2df8bc0c36bdd28132dddee8e6677d38a655afd14",
+    "src/vare/integrations/rvl_grpo.py": "db295fbd50b3629a46e2cab73873b02bf0f652353bc3a9f9292b2fae90d94df4",
+    "src/vare/integrations/rvl_trajectory.py": "26e42e119ed951b193f5dc2956625e6fa24ded143a88f4749dc19053cf83ed15",
+    "src/vare/trajectory_reference.py": "1596553c0bb4f95d6588269abd8855f81d2d8e8dc8156e2ea15a7cdb33362f43"
+  }
+}
