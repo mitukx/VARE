@@ -8,6 +8,7 @@ import math
 from statistics import fmean
 from typing import Any, Callable, Iterator, Sequence
 
+from ..reward_evidence import validate_complete_rvl_reward_batch
 from ..types import Attempt, EvaluationReport, Experience, Task, snapshot_verification
 
 
@@ -51,6 +52,8 @@ class RVLGRPOHooks:
         config: RVLGRPOConfig | None = None,
         verified_generation_factory: Callable[..., Any] | None = None,
         generation_factory: Callable[..., Any] | None = None,
+        training_evidence_authorizer: Callable[[Experience], bool] | None = None,
+        require_authenticated_training: bool = False,
     ) -> None:
         self.backend = backend
         self.trainer = trainer
@@ -62,6 +65,14 @@ class RVLGRPOHooks:
         self.config = config or RVLGRPOConfig()
         if self.config.max_backend_concurrency <= 0:
             raise ValueError("max_backend_concurrency must be positive")
+        if type(require_authenticated_training) is not bool:
+            raise ValueError("require_authenticated_training must be bool")
+        if require_authenticated_training and training_evidence_authorizer is None:
+            raise ValueError(
+                "authenticated training requires a trusted evidence authorizer"
+            )
+        self.training_evidence_authorizer = training_evidence_authorizer
+        self.require_authenticated_training = require_authenticated_training
         self._model_lock = asyncio.Lock()
         self._rollout_sem = asyncio.Semaphore(self.config.max_backend_concurrency)
         self._active_id = "policy-0"
@@ -333,6 +344,26 @@ class RVLGRPOHooks:
     async def train_candidate(self, incumbent_id: str, experiences: Sequence[Experience]) -> str:
         if incumbent_id != self._active_id:
             raise ValueError("candidate must branch from active incumbent")
+        if not experiences:
+            raise ValueError("candidate training batch cannot be empty")
+        # Keep this check at the hook boundary as well as in CapabilityLoop:
+        # callers can use RVLGRPOHooks directly, and in that case there is no
+        # outer-loop admission check. A configured authorizer always applies;
+        # the strict flag additionally makes omitting one a construction error.
+        if self.training_evidence_authorizer is not None:
+            try:
+                validate_complete_rvl_reward_batch(experiences)
+                authorizations = [
+                    self.training_evidence_authorizer(experience)
+                    for experience in experiences
+                ]
+            except Exception as exc:
+                raise RuntimeError("training_reward_evidence_unverifiable") from exc
+            if any(type(authorized) is not bool or not authorized for authorized in authorizations):
+                raise RuntimeError("unauthenticated_training_reward_evidence")
+        elif self.require_authenticated_training:
+            # This is defensive; the constructor already rejects this state.
+            raise RuntimeError("unauthenticated_training_reward_evidence")
         verified = [self._to_verified_generation(x) for x in experiences]
         train_config = getattr(self.trainer, "config", None)
         advantages = self._group_relative_advantages(

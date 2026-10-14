@@ -1,5 +1,20 @@
 # Current evidence gaps
 
+**Update 2026-10-15 — reward admission at the RVL trainer boundary:**
+`CapabilityLoop` already had a manifest authorizer, but direct calls to
+`RVLGRPOHooks.train_candidate()` could bypass it. The hook now supports the
+same fail-closed, per-experience manifest check, with an opt-in strict setting
+that rejects construction without an authorizer. The 51-test focused CPU suite
+covers accepted signed evidence, edited reward/provenance, empty batches, and
+duplicate or incomplete signed group members before the trainer call. Both the
+direct hook and `CapabilityLoop` enforce group completeness when an authorizer
+is configured. Live RVL rollouts without replay member indices remain governed
+by their authorizer. A huge untrusted group-size declaration is rejected
+without proportional allocation. This is an E0 admission regression, not
+grader-truth or model-learning evidence; legacy non-strict use remains
+unauthenticated. See the
+[report](rvl-authenticated-training-boundary-v1-report.md).
+
 **2026-10-13 — pre-existing v2 record audited:** the [retrospective report](format-comparison-record-v1-report.md)
 archives a complete five-arm grid. The primary correctness-RL minus SFT interval
 includes zero. Format rewards are saturated (80/80 zero-advantage groups, zero

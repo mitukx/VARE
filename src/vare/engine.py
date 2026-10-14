@@ -16,6 +16,7 @@ from .lifecycle import FailureDrivenTaskGenerator, VerifierRefreshController
 from .promotion import PromotionGate
 from .promotion_journal import PromotionJournal, PromotionRecoveryRequired
 from .replay import PrioritizedReplay
+from .reward_evidence import validate_complete_rvl_reward_batch
 from .runtime import RuntimeCoordinator, coordinator_for
 from .telemetry import EventLog
 from .types import Attempt, Experience, PromotionDecision, RoundResult, Task, snapshot_verification
@@ -424,6 +425,7 @@ class CapabilityLoop:
             # the entire batch before any optimizer mutation.
             if self.training_evidence_authorizer is not None:
                 try:
+                    validate_complete_rvl_reward_batch(train_batch)
                     authorizations = [
                         self.training_evidence_authorizer(exp) for exp in train_batch
                     ]
