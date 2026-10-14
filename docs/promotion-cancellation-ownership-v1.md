@@ -53,7 +53,9 @@ The runner extracts `src/` from the pinned baseline commit and runs the same
 test file against both source trees. It checks the expected baseline failures,
 candidate passes, case count, interpreter, source digests, and artifact hashes.
 The workflow reruns the comparison on Python 3.12 and uploads its raw logs and
-manifest.
+manifest. The committed matched run is preserved in
+[`results/promotion-cancellation-ownership-v1/run-1`](../results/promotion-cancellation-ownership-v1/run-1/manifest.json);
+its manifest pins the candidate code commit and records a clean source tree.
 
 `RoundResult` gains a defaulted `deferred_cancellation_count` field. Because
 `vare demo --output` serializes each result with `dataclasses.asdict`, this adds
