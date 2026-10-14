@@ -6,6 +6,9 @@ from benchmarks.historical.trl_grpo_accumulation_scale.evaluator.grade import (
     _execute_normalizer,
     _extract_normalizer,
 )
+from benchmarks.historical.trl_grpo_accumulation_scale_v9.evaluator.grade import (
+    _extract_normalizer as _extract_normalizer_v9,
+)
 from benchmarks.historical.rvl_behavior_policy_parity.evaluator.grade import (
     FIXTURE_CASES,
     _Model as RVLModel,
@@ -208,6 +211,44 @@ class GraderIntegrityTests(unittest.TestCase):
             self.assertIsNone(assignment)
             self.assertIsNone(gate)
             self.assertIsNone(denominator)
+
+    def test_trl_v9_accepts_non_mutating_tuple_alias_of_loss(self):
+        source_text = VALID_BRANCH.replace(
+            '            loss = (per_token_loss * mask).sum() / normalizer\n',
+            '            loss = (per_token_loss * mask).sum() / normalizer\n'
+            '            loss_alias, = (loss,)\n',
+        ) + '        return loss\n'
+        with tempfile.TemporaryDirectory(prefix="vare-grader-probe-") as temporary:
+            source = Path(temporary) / "candidate.py"
+            source.write_text(source_text, encoding="utf-8")
+            assignment, gate, denominator = _extract_normalizer_v9(source, "main_dapo_cispo_vespo")
+            self.assertIsNotNone(assignment)
+            self.assertIsNotNone(gate)
+            self.assertIsNotNone(denominator)
+
+    def test_trl_v9_rejects_inplace_mutation_through_tuple_destructured_loss_alias(self):
+        with tempfile.TemporaryDirectory(prefix="vare-grader-probe-") as temporary:
+            source = Path(temporary) / "candidate.py"
+            mutations = (
+                ("tuple", "loss_alias, = (loss,)", "loss_alias"),
+                ("list", "loss_alias, = [loss]", "loss_alias"),
+                ("chained", "loss_alias = second_alias = loss", "second_alias"),
+            )
+            for label, alias, mutated_name in mutations:
+                with self.subTest(alias_kind=label):
+                    source_text = VALID_BRANCH.replace(
+                        '            loss = (per_token_loss * mask).sum() / normalizer\n',
+                        '            loss = (per_token_loss * mask).sum() / normalizer\n'
+                        f'            {alias}\n'
+                        f'            {mutated_name}.data.mul_(2)\n',
+                    ) + '        return loss\n'
+                    source.write_text(source_text, encoding="utf-8")
+                    assignment, gate, denominator = _extract_normalizer_v9(
+                        source, "main_dapo_cispo_vespo"
+                    )
+                    self.assertIsNone(assignment)
+                    self.assertIsNone(gate)
+                    self.assertIsNone(denominator)
 
     def test_rvl_fixture_exposes_non_neutral_pretrained_typical_p(self):
         model = RVLModel(FIXTURE_CASES)

@@ -69,6 +69,15 @@ jobs:
         run: >-
           python3 scripts/audit_trl_grader_mutations.py
           --output "${RUNNER_TEMP}/vare-trl-grader-mutation-v8"
+      - name: Calibrate the versioned TRL accumulation-window protocol v9
+        run: >-
+          python3 scripts/calibrate_task.py
+          --task-root benchmarks/historical/trl_grpo_accumulation_scale_v9
+          --output "${RUNNER_TEMP}/vare-trl-calibration-v9"
+      - name: Audit the held-out tuple-alias mutation against TRL grader v8 and v9
+        run: >-
+          python3 scripts/audit_trl_grader_mutations_v9.py
+          --output "${RUNNER_TEMP}/vare-trl-grader-mutation-v9"
       - name: Calibrate locked-input tamper rejection
         run: >-
           python3 scripts/calibrate_integrity.py
