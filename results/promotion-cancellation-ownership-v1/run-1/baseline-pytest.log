@@ -1,0 +1,460 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.12, pytest-8.4.2, pluggy-1.6.0
+rootdir: /Users/user/Documents/Codex/2026-10-13/xai-mts-frontierlab-https-github-com-6/work/VARE-gradient-parity
+configfile: pyproject.toml
+collected 7 items
+
+tests/test_promotion_cancellation_ownership.py FFFFFFF                   [100%]
+
+=================================== FAILURES ===================================
+______ test_unjournaled_cancellation_is_not_lost_when_hook_suppresses_it _______
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-132/test_unjournaled_cancellation_0')
+
+    def test_unjournaled_cancellation_is_not_lost_when_hook_suppresses_it(tmp_path):
+        async def case():
+            loop, hooks, _ = make_loop(tmp_path)
+            _hold_promotion(hooks)
+            owner = asyncio.create_task(
+                loop.run_round([Task("t", "prompt")], round_index=0)
+            )
+            try:
+                await asyncio.wait_for(hooks.publish_entered.wait(), 2)
+                owner.cancel()
+                await asyncio.sleep(0)
+                assert not owner.done(), "round returned before publication acknowledgment"
+                assert hooks.publish_task.cancelling() == 1
+                assert loop._round_lock.locked(), "round ownership released before publication completed"
+                assert loop.events.counters["candidate_promoted"] == 0
+                assert loop.events.counters["round_complete"] == 0
+                hooks.publish_release.set()
+                with pytest.raises(asyncio.CancelledError):
+                    await owner
+                assert hooks.active == "p1"
+                assert hooks.suppressed_cancellations == 1
+                assert loop.events.counters["promotion_cancellation_deferred"] == 0
+                assert loop.events.counters["candidate_promoted"] == 0
+                assert loop.events.counters["round_complete"] == 0
+                calls = list(hooks.calls)
+                with pytest.raises(PromotionRecoveryRequired):
+                    await loop.run_round([Task("next", "next prompt")], round_index=1)
+                assert hooks.calls == calls
+            finally:
+                hooks.publish_release.set()
+                await asyncio.gather(owner, return_exceptions=True)
+    
+>       asyncio.run(case())
+
+tests/test_promotion_cancellation_ownership.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def case():
+        loop, hooks, _ = make_loop(tmp_path)
+        _hold_promotion(hooks)
+        owner = asyncio.create_task(
+            loop.run_round([Task("t", "prompt")], round_index=0)
+        )
+        try:
+            await asyncio.wait_for(hooks.publish_entered.wait(), 2)
+            owner.cancel()
+            await asyncio.sleep(0)
+            assert not owner.done(), "round returned before publication acknowledgment"
+            assert hooks.publish_task.cancelling() == 1
+            assert loop._round_lock.locked(), "round ownership released before publication completed"
+            assert loop.events.counters["candidate_promoted"] == 0
+            assert loop.events.counters["round_complete"] == 0
+            hooks.publish_release.set()
+>           with pytest.raises(asyncio.CancelledError):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'asyncio.exceptions.CancelledError'>
+
+tests/test_promotion_cancellation_ownership.py:61: Failed
+______ test_repeated_cancellation_keeps_durable_round_owned_until_commit _______
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-132/test_repeated_cancellation_kee0')
+
+    def test_repeated_cancellation_keeps_durable_round_owned_until_commit(tmp_path):
+        async def case():
+            loop, hooks, journal = make_loop(tmp_path, durable=True)
+            _hold_promotion(hooks)
+            owner = asyncio.create_task(
+                loop.run_round([Task("t", "prompt")], round_index=0)
+            )
+            try:
+                await asyncio.wait_for(hooks.publish_entered.wait(), 2)
+                owner.cancel()
+                owner.cancel()
+                await asyncio.sleep(0)
+                assert not owner.done(), "round returned before publication acknowledgment"
+                assert hooks.publish_task.cancelling() == 0, "durable publication task was cancelled by caller"
+                assert loop._round_lock.locked()
+                with pytest.raises(PromotionRecoveryRequired):
+                    journal.acquire_round("second-owner-00000000")
+                assert journal.status()["pending_tx_id"] == "publication-intent-0001"
+                hooks.publish_release.set()
+                result = await owner
+                assert result.promoted_id == hooks.active == "p1"
+                assert result.deferred_cancellation_count == 2
+                assert owner.cancelling() == 0
+                assert hooks.suppressed_cancellations == 0
+                assert journal.status()["pending_tx_id"] is None
+                journal.assert_clean(policy_id="p1", checkpoint_sha256=hooks.digests["p1"])
+                assert loop.events.counters["promotion_cancellation_deferred"] == 1
+                assert loop.events.counters["candidate_promoted"] == 1
+            finally:
+                hooks.publish_release.set()
+                await asyncio.gather(owner, return_exceptions=True)
+    
+>       asyncio.run(case())
+
+tests/test_promotion_cancellation_ownership.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def case():
+        loop, hooks, journal = make_loop(tmp_path, durable=True)
+        _hold_promotion(hooks)
+        owner = asyncio.create_task(
+            loop.run_round([Task("t", "prompt")], round_index=0)
+        )
+        try:
+            await asyncio.wait_for(hooks.publish_entered.wait(), 2)
+            owner.cancel()
+            owner.cancel()
+            await asyncio.sleep(0)
+            assert not owner.done(), "round returned before publication acknowledgment"
+>           assert hooks.publish_task.cancelling() == 0, "durable publication task was cancelled by caller"
+E           AssertionError: durable publication task was cancelled by caller
+E           assert 2 == 0
+E            +  where 2 = <built-in method cancelling of _asyncio.Task object at 0x10725dd80>()
+E            +    where <built-in method cancelling of _asyncio.Task object at 0x10725dd80> = <Task cancelling name='Task-9' coro=<CapabilityLoop.run_round() running at /var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-promotion-cancel-atfb2ymu/src/vare/engine.py:189> wait_for=<Future pending cb=[Task.task_wakeup()]>>.cancelling
+E            +      where <Task cancelling name='Task-9' coro=<CapabilityLoop.run_round() running at /var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-promotion-cancel-atfb2ymu/src/vare/engine.py:189> wait_for=<Future pending cb=[Task.task_wakeup()]>> = <test_promotion_publication_recovery.Hooks object at 0x1072fe8a0>.publish_task
+
+tests/test_promotion_cancellation_ownership.py:92: AssertionError
+____ test_unjournaled_repeated_cancellation_is_delivered_to_hook_only_once _____
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-132/test_unjournaled_repeated_canc0')
+
+    def test_unjournaled_repeated_cancellation_is_delivered_to_hook_only_once(tmp_path):
+        async def case():
+            loop, hooks, _ = make_loop(tmp_path)
+            _hold_promotion(hooks, clear_cancellation=True)
+            owner = asyncio.create_task(
+                loop.run_round([Task("t", "prompt")], round_index=0)
+            )
+            try:
+                await asyncio.wait_for(hooks.publish_entered.wait(), 2)
+                owner.cancel()
+                await asyncio.wait_for(hooks.cancellation_seen.wait(), 2)
+                assert hooks.suppressed_cancellations == 1
+                owner.cancel()
+                hooks.publish_release.set()
+                with pytest.raises(asyncio.CancelledError):
+                    await owner
+                assert hooks.suppressed_cancellations == 1, "cleanup received repeated cancellation"
+                assert loop.events.counters["candidate_promoted"] == 0
+                calls = list(hooks.calls)
+                with pytest.raises(PromotionRecoveryRequired):
+                    await loop.run_round([Task("next", "next prompt")], round_index=1)
+                assert hooks.calls == calls
+            finally:
+                hooks.publish_release.set()
+                await asyncio.gather(owner, return_exceptions=True)
+    
+>       asyncio.run(case())
+
+tests/test_promotion_cancellation_ownership.py:140: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def case():
+        loop, hooks, _ = make_loop(tmp_path)
+        _hold_promotion(hooks, clear_cancellation=True)
+        owner = asyncio.create_task(
+            loop.run_round([Task("t", "prompt")], round_index=0)
+        )
+        try:
+            await asyncio.wait_for(hooks.publish_entered.wait(), 2)
+            owner.cancel()
+            await asyncio.wait_for(hooks.cancellation_seen.wait(), 2)
+            assert hooks.suppressed_cancellations == 1
+            owner.cancel()
+            hooks.publish_release.set()
+>           with pytest.raises(asyncio.CancelledError):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: DID NOT RAISE <class 'asyncio.exceptions.CancelledError'>
+
+tests/test_promotion_cancellation_ownership.py:128: Failed
+_____________ test_hook_suppressed_self_cancellation_fails_closed ______________
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-132/test_hook_suppressed_self_canc0')
+
+    def test_hook_suppressed_self_cancellation_fails_closed(tmp_path):
+        async def case():
+            loop, hooks, _ = make_loop(tmp_path)
+    
+            async def self_cancelling_promote(candidate_id):
+                hooks.calls.append("promote")
+                hooks.publish_task = asyncio.current_task()
+                hooks.active = candidate_id
+                hooks.version += 1
+                hooks.publish_task.cancel()
+                try:
+                    await asyncio.sleep(0)
+                except asyncio.CancelledError:
+                    pass
+    
+            hooks.promote = self_cancelling_promote
+            with pytest.raises(asyncio.CancelledError):
+                await loop.run_round([Task("t", "prompt")], round_index=0)
+            assert loop.events.counters["candidate_promoted"] == 0
+            assert loop.events.counters["round_complete"] == 0
+            calls = list(hooks.calls)
+            with pytest.raises(PromotionRecoveryRequired):
+                await loop.run_round([Task("next", "next prompt")], round_index=1)
+            assert hooks.calls == calls
+    
+>       asyncio.run(case())
+
+tests/test_promotion_cancellation_ownership.py:168: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def case():
+        loop, hooks, _ = make_loop(tmp_path)
+    
+        async def self_cancelling_promote(candidate_id):
+            hooks.calls.append("promote")
+            hooks.publish_task = asyncio.current_task()
+            hooks.active = candidate_id
+            hooks.version += 1
+            hooks.publish_task.cancel()
+            try:
+                await asyncio.sleep(0)
+            except asyncio.CancelledError:
+                pass
+    
+        hooks.promote = self_cancelling_promote
+>       with pytest.raises(asyncio.CancelledError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'asyncio.exceptions.CancelledError'>
+
+tests/test_promotion_cancellation_ownership.py:159: Failed
+_____ test_durable_hook_self_cancellation_retains_prepared_recovery_state ______
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-132/test_durable_hook_self_cancell0')
+
+    def test_durable_hook_self_cancellation_retains_prepared_recovery_state(tmp_path):
+        async def case():
+            loop, hooks, journal = make_loop(tmp_path, durable=True)
+    
+            async def self_cancelling_promote(candidate_id):
+                hooks.calls.append("promote")
+                hooks.publish_task = asyncio.current_task()
+                hooks.active = candidate_id
+                hooks.version += 1
+                hooks.publish_task.cancel()
+                try:
+                    await asyncio.sleep(0)
+                except asyncio.CancelledError:
+                    pass
+    
+            hooks.promote = self_cancelling_promote
+            with pytest.raises(PromotionRecoveryRequired):
+                await loop.run_round([Task("t", "prompt")], round_index=0)
+            status = journal.status()
+            assert status["pending_tx_id"] == "publication-intent-0001"
+            assert status["round_owner_id"] is not None
+            assert loop.events.counters["candidate_promoted"] == 0
+            assert loop.events.counters["round_complete"] == 0
+            calls = list(hooks.calls)
+            with pytest.raises(PromotionRecoveryRequired):
+                await loop.run_round([Task("next", "next prompt")], round_index=1)
+            assert hooks.calls == calls
+    
+>       asyncio.run(case())
+
+tests/test_promotion_cancellation_ownership.py:199: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def case():
+        loop, hooks, journal = make_loop(tmp_path, durable=True)
+    
+        async def self_cancelling_promote(candidate_id):
+            hooks.calls.append("promote")
+            hooks.publish_task = asyncio.current_task()
+            hooks.active = candidate_id
+            hooks.version += 1
+            hooks.publish_task.cancel()
+            try:
+                await asyncio.sleep(0)
+            except asyncio.CancelledError:
+                pass
+    
+        hooks.promote = self_cancelling_promote
+>       with pytest.raises(PromotionRecoveryRequired):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'vare.promotion_journal.PromotionRecoveryRequired'>
+
+tests/test_promotion_cancellation_ownership.py:187: Failed
+____ test_publish_failure_after_deferred_cancellation_wins_and_keeps_fence _____
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-132/test_publish_failure_after_def0')
+
+    def test_publish_failure_after_deferred_cancellation_wins_and_keeps_fence(tmp_path):
+        async def case():
+            loop, hooks, journal = make_loop(tmp_path, durable=True)
+            _hold_promotion(hooks, fail_after_release=True)
+            owner = asyncio.create_task(
+                loop.run_round([Task("t", "prompt")], round_index=0)
+            )
+            try:
+                await asyncio.wait_for(hooks.publish_entered.wait(), 2)
+                owner.cancel()
+                await asyncio.sleep(0)
+                assert not owner.done()
+                assert loop.events.counters["candidate_promoted"] == 0
+                hooks.publish_release.set()
+                with pytest.raises(PromotionRecoveryRequired, match="promotion failed"):
+                    await owner
+                assert owner.cancelling() == 0
+                assert journal.status()["pending_tx_id"] == "publication-intent-0001"
+                assert loop.events.counters["promotion_cancellation_deferred"] == 0
+                assert loop.events.counters["candidate_promoted"] == 0
+                calls = list(hooks.calls)
+                with pytest.raises(PromotionRecoveryRequired):
+                    await loop.run_round([Task("next", "next prompt")], round_index=1)
+                assert hooks.calls == calls
+            finally:
+                hooks.publish_release.set()
+                await asyncio.gather(owner, return_exceptions=True)
+    
+>       asyncio.run(case())
+
+tests/test_promotion_cancellation_ownership.py:230: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def case():
+        loop, hooks, journal = make_loop(tmp_path, durable=True)
+        _hold_promotion(hooks, fail_after_release=True)
+        owner = asyncio.create_task(
+            loop.run_round([Task("t", "prompt")], round_index=0)
+        )
+        try:
+            await asyncio.wait_for(hooks.publish_entered.wait(), 2)
+            owner.cancel()
+            await asyncio.sleep(0)
+            assert not owner.done()
+            assert loop.events.counters["candidate_promoted"] == 0
+            hooks.publish_release.set()
+            with pytest.raises(PromotionRecoveryRequired, match="promotion failed"):
+                await owner
+>           assert owner.cancelling() == 0
+E           AssertionError: assert 1 == 0
+E            +  where 1 = <built-in method cancelling of _asyncio.Task object at 0x10725eec0>()
+E            +    where <built-in method cancelling of _asyncio.Task object at 0x10725eec0> = <Task finished name='Task-35' coro=<CapabilityLoop.run_round() done, defined at /var/folders/x1/pn5c5vhd13512v4t0r5sxn...ine.py:164> exception=PromotionRecoveryRequired('promotion failed; verify the runtime and reconcile durable evidence')>.cancelling
+
+tests/test_promotion_cancellation_ownership.py:218: AssertionError
+_____ test_round_result_serialization_includes_default_cancellation_count ______
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-132/test_round_result_serializatio0')
+
+    def test_round_result_serialization_includes_default_cancellation_count(tmp_path):
+        async def case():
+            loop, _, _ = make_loop(tmp_path)
+            result = await loop.run_round([Task("t", "prompt")], round_index=0)
+            row = asdict(result)
+            assert result.deferred_cancellation_count == 0
+            assert row["deferred_cancellation_count"] == 0
+    
+>       asyncio.run(case())
+
+tests/test_promotion_cancellation_ownership.py:241: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def case():
+        loop, _, _ = make_loop(tmp_path)
+        result = await loop.run_round([Task("t", "prompt")], round_index=0)
+        row = asdict(result)
+>       assert result.deferred_cancellation_count == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'RoundResult' object has no attribute 'deferred_cancellation_count'
+
+tests/test_promotion_cancellation_ownership.py:238: AttributeError
+- generated xml file: /private/tmp/vare-promotion-cancel-final-4df6c5c/baseline-pytest.xml -
+=========================== short test summary info ============================
+FAILED tests/test_promotion_cancellation_ownership.py::test_unjournaled_cancellation_is_not_lost_when_hook_suppresses_it
+FAILED tests/test_promotion_cancellation_ownership.py::test_repeated_cancellation_keeps_durable_round_owned_until_commit
+FAILED tests/test_promotion_cancellation_ownership.py::test_unjournaled_repeated_cancellation_is_delivered_to_hook_only_once
+FAILED tests/test_promotion_cancellation_ownership.py::test_hook_suppressed_self_cancellation_fails_closed
+FAILED tests/test_promotion_cancellation_ownership.py::test_durable_hook_self_cancellation_retains_prepared_recovery_state
+FAILED tests/test_promotion_cancellation_ownership.py::test_publish_failure_after_deferred_cancellation_wins_and_keeps_fence
+FAILED tests/test_promotion_cancellation_ownership.py::test_round_result_serialization_includes_default_cancellation_count
+============================== 7 failed in 0.29s ===============================

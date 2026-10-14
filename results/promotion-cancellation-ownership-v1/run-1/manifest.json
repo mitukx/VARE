@@ -1,0 +1,62 @@
+{
+  "protocol_sha256": "8445f73d4f6d42cdf442c5ad4904a703f91962f4803d6286d4d4794102ef602b",
+  "baseline_revision": "4ab4a6ad38bd294c63cf0f2727424f1a09113bcb",
+  "candidate_head_revision": "4df6c5c63c95c8fb0e7a132b207dcce64ffb5fe2",
+  "candidate_worktree_dirty_paths": [],
+  "source_sha256": {
+    "protocols/promotion_cancellation_ownership_v1.lock.json": "8445f73d4f6d42cdf442c5ad4904a703f91962f4803d6286d4d4794102ef602b",
+    "tests/test_promotion_cancellation_ownership.py": "f9729946faccce287ac26cc0c065d5ea34145e0da5421cbae8a3ba3de64fbb62",
+    "src/vare/engine.py": "92137ed3cde9c522319a3e7208912a0f9b28d8d598defb0e4df1a23c88175c9e",
+    "src/vare/types.py": "233e2b6176431140e7700cc668cfdbdc98cf3d8d4ab98de658efab7010ea82ca",
+    "src/vare/interfaces.py": "0ce2228cf8976cfb067943e1a20ce433dc5d762ace84710300f4a0f4c91b9c49",
+    "scripts/reproduce_promotion_cancellation_ownership_v1.py": "5b9585f3a5bb3110056c523812429558e2231e59d3fac208e6a463f3788cfdb3"
+  },
+  "runtime": {
+    "python": "3.12.12",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "pytest": "8.4.2",
+    "device": "cpu"
+  },
+  "results": {
+    "baseline": {
+      "exit_code": 1,
+      "tests": 7,
+      "failures": 7,
+      "errors": 0,
+      "skips": 0,
+      "engine_sha256": "d19477284d0e7b51a938418a9aacd8ed6a3034c1f459b9ec26bfb48a6472ec2d",
+      "case_results": {
+        "test_unjournaled_cancellation_is_not_lost_when_hook_suppresses_it": "failure",
+        "test_repeated_cancellation_keeps_durable_round_owned_until_commit": "failure",
+        "test_unjournaled_repeated_cancellation_is_delivered_to_hook_only_once": "failure",
+        "test_hook_suppressed_self_cancellation_fails_closed": "failure",
+        "test_durable_hook_self_cancellation_retains_prepared_recovery_state": "failure",
+        "test_publish_failure_after_deferred_cancellation_wins_and_keeps_fence": "failure",
+        "test_round_result_serialization_includes_default_cancellation_count": "failure"
+      }
+    },
+    "candidate": {
+      "exit_code": 0,
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "engine_sha256": "92137ed3cde9c522319a3e7208912a0f9b28d8d598defb0e4df1a23c88175c9e",
+      "case_results": {
+        "test_unjournaled_cancellation_is_not_lost_when_hook_suppresses_it": "pass",
+        "test_repeated_cancellation_keeps_durable_round_owned_until_commit": "pass",
+        "test_unjournaled_repeated_cancellation_is_delivered_to_hook_only_once": "pass",
+        "test_hook_suppressed_self_cancellation_fails_closed": "pass",
+        "test_durable_hook_self_cancellation_retains_prepared_recovery_state": "pass",
+        "test_publish_failure_after_deferred_cancellation_wins_and_keeps_fence": "pass",
+        "test_round_result_serialization_includes_default_cancellation_count": "pass"
+      }
+    }
+  },
+  "artifact_sha256": {
+    "baseline-pytest.log": "6a1bab6d56144f7044d3f69a9a54c4822d2dcc0ac66173a9c43016c71d3cd6a3",
+    "baseline-pytest.xml": "46e1165b17a70e1f7b30344fed4de0798b38288e837864e6bc6deb78f1602ce9",
+    "candidate-pytest.log": "1a6ffc8464a4511623b724e19d00b8f662a1c6da78cf7207f04fbdf510ca4e9c",
+    "candidate-pytest.xml": "4d266e88b60d120fa5e4ad22de73017bce6e7119601482cb114e9ce8c18db41c"
+  }
+}

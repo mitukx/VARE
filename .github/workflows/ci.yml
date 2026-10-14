@@ -111,11 +111,21 @@ jobs:
         run: >-
           python scripts/reproduce_promotion_publication_recovery_v1.py
           --output "${RUNNER_TEMP}/promotion-publication-replay"
+      - name: Reproduce promotion cancellation ownership
+        if: matrix.python-version == '3.12'
+        run: >-
+          python scripts/reproduce_promotion_cancellation_ownership_v1.py
+          --output "${RUNNER_TEMP}/promotion-cancellation-replay"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always() && matrix.python-version == '3.12'
         with:
           name: promotion-publication-replay
           path: ${{ runner.temp }}/promotion-publication-replay
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always() && matrix.python-version == '3.12'
+        with:
+          name: promotion-cancellation-replay
+          path: ${{ runner.temp }}/promotion-cancellation-replay
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always() && matrix.python-version == '3.12'
         with:
