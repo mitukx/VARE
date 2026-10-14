@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import ast
-import hashlib
 import json
 import platform
 import sys
@@ -112,7 +111,7 @@ def main() -> int:
             write_json(output / f"{label}.v8.grade.json", old_result)
             write_json(output / f"{label}.v9.grade.json", new_result)
             if mutation:
-                patch = run(["git", "diff", "--binary", task["source"]["base_revision"],
+                patch = run(["git", "diff", "--binary", "-U0", task["source"]["base_revision"],
                              "--", *task["source"]["files"]], source)
                 (output / "mutations" / f"{label}.patch").write_text(patch, encoding="utf-8")
                 run(["git", "checkout", "--quiet", "--", *task["source"]["files"]], source)

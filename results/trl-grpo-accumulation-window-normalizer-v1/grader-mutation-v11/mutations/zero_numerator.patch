@@ -1,0 +1,14 @@
+diff --git a/trl/experimental/gspo_token/grpo_trainer.py b/trl/experimental/gspo_token/grpo_trainer.py
+index fd92741..889b6bb 100644
+--- a/trl/experimental/gspo_token/grpo_trainer.py
++++ b/trl/experimental/gspo_token/grpo_trainer.py
+@@ -128 +128 @@ class GRPOTrainer(_GRPOTrainer):
+-            loss = (per_token_loss * mask).sum() / normalizer
++            loss = ((per_token_loss * mask).sum() * 0.0) / normalizer
+diff --git a/trl/trainer/grpo_trainer.py b/trl/trainer/grpo_trainer.py
+index e60bc37..ab6492b 100644
+--- a/trl/trainer/grpo_trainer.py
++++ b/trl/trainer/grpo_trainer.py
+@@ -3160 +3160 @@ class GRPOTrainer(_BaseTrainer):
+-            loss = (per_token_loss * mask).sum() / normalizer
++            loss = ((per_token_loss * mask).sum() * 0.0) / normalizer

@@ -1,0 +1,7 @@
+diff --git a/trl/trainer/grpo_trainer.py b/trl/trainer/grpo_trainer.py
+index e60bc37..af92756 100644
+--- a/trl/trainer/grpo_trainer.py
++++ b/trl/trainer/grpo_trainer.py
+@@ -3199,0 +3200,2 @@ class GRPOTrainer(_BaseTrainer):
++            normalizer_alias, = (normalizer,)
++            normalizer_alias[...] = 0

@@ -1,0 +1,14 @@
+diff --git a/trl/experimental/gspo_token/grpo_trainer.py b/trl/experimental/gspo_token/grpo_trainer.py
+index fd92741..0d0f8f6 100644
+--- a/trl/experimental/gspo_token/grpo_trainer.py
++++ b/trl/experimental/gspo_token/grpo_trainer.py
+@@ -128,0 +129,2 @@ class GRPOTrainer(_GRPOTrainer):
++            holder = {"loss": loss}
++            torch.add(torch.ones_like(loss), 1.0, out=holder.get("loss"))
+diff --git a/trl/trainer/grpo_trainer.py b/trl/trainer/grpo_trainer.py
+index e60bc37..e0ab7ce 100644
+--- a/trl/trainer/grpo_trainer.py
++++ b/trl/trainer/grpo_trainer.py
+@@ -3160,0 +3161,2 @@ class GRPOTrainer(_BaseTrainer):
++            holder = {"loss": loss}
++            torch.add(torch.ones_like(loss), 1.0, out=holder.get("loss"))

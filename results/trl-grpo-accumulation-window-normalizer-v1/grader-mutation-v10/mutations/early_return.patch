@@ -1,0 +1,12 @@
+diff --git a/trl/experimental/gspo_token/grpo_trainer.py b/trl/experimental/gspo_token/grpo_trainer.py
+index fd92741..4d72746 100644
+--- a/trl/experimental/gspo_token/grpo_trainer.py
++++ b/trl/experimental/gspo_token/grpo_trainer.py
+@@ -23,0 +24 @@ class GRPOTrainer(_GRPOTrainer):
++        return None  # mutation: bypass the loss path
+diff --git a/trl/trainer/grpo_trainer.py b/trl/trainer/grpo_trainer.py
+index e60bc37..8101d6e 100644
+--- a/trl/trainer/grpo_trainer.py
++++ b/trl/trainer/grpo_trainer.py
+@@ -3008,0 +3009 @@ class GRPOTrainer(_BaseTrainer):
++        return None  # mutation: bypass the loss path

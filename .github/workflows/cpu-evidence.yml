@@ -78,6 +78,24 @@ jobs:
         run: >-
           python3 scripts/audit_trl_grader_mutations_v9.py
           --output "${RUNNER_TEMP}/vare-trl-grader-mutation-v9"
+      - name: Calibrate the versioned TRL accumulation-window protocol v10
+        run: >-
+          python3 scripts/calibrate_task.py
+          --task-root benchmarks/historical/trl_grpo_accumulation_scale_v10
+          --output "${RUNNER_TEMP}/vare-trl-calibration-v10"
+      - name: Audit alias-rooted loss stores against TRL graders v9 and v10
+        run: >-
+          python3 scripts/audit_trl_grader_mutations_v10.py
+          --output "${RUNNER_TEMP}/vare-trl-grader-mutation-v10"
+      - name: Calibrate the versioned TRL accumulation-window protocol v11
+        run: >-
+          python3 scripts/calibrate_task.py
+          --task-root benchmarks/historical/trl_grpo_accumulation_scale_v11
+          --output "${RUNNER_TEMP}/vare-trl-calibration-v11"
+      - name: Audit derived-alias loss writes against TRL graders v10 and v11
+        run: >-
+          python3 scripts/audit_trl_grader_mutations_v11.py
+          --output "${RUNNER_TEMP}/vare-trl-grader-mutation-v11"
       - name: Calibrate locked-input tamper rejection
         run: >-
           python3 scripts/calibrate_integrity.py
@@ -134,6 +152,24 @@ jobs:
         with:
           name: vare-trl-grader-mutation-v8
           path: ${{ runner.temp }}/vare-trl-grader-mutation-v8
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: vare-trl-grader-mutation-v9
+          path: ${{ runner.temp }}/vare-trl-grader-mutation-v9
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: vare-trl-grader-mutation-v10
+          path: ${{ runner.temp }}/vare-trl-grader-mutation-v10
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: vare-trl-grader-mutation-v11
+          path: ${{ runner.temp }}/vare-trl-grader-mutation-v11
           if-no-files-found: error
           retention-days: 30
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

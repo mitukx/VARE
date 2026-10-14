@@ -1,0 +1,60 @@
+{
+  "acceptance": {
+    "absolute_normalizer_tolerance": 1e-12,
+    "branches": [
+      "main_dapo_cispo_vespo",
+      "experimental_dapo"
+    ],
+    "checks_loss_writes_through_return": true,
+    "conditions_per_branch": 6,
+    "rejects_alias_store_inside_expected_loss_adjustment": true,
+    "rejects_boolean_expression_module_mutating_api_alias": true,
+    "rejects_call_result_out_argument_through_container_alias": true,
+    "rejects_conditional_expression_module_mutating_api_alias": true,
+    "rejects_control_flow_module_mutating_api_alias": true,
+    "rejects_getattr_module_mutating_api_alias": true,
+    "rejects_inplace_local_mutation": true,
+    "rejects_inplace_local_mutation_through_direct_alias": true,
+    "rejects_inplace_local_mutation_through_tuple_list_alias": true,
+    "rejects_module_dict_get_mutating_api_alias": true,
+    "rejects_module_dict_mutating_api_alias": true,
+    "rejects_module_level_mutating_api_alias": true,
+    "rejects_mutating_operator_api_through_loss_alias": true,
+    "rejects_post_division_loss_reassignment": true,
+    "rejects_qualified_getattr_mutating_api_alias": true,
+    "rejects_storage_write_in_loop_target": true,
+    "rejects_storage_write_through_context_manager_alias": true,
+    "rejects_storage_write_through_derived_loss_alias": true,
+    "rejects_storage_write_through_dict_comprehension_derived_loss_alias": true,
+    "rejects_storage_write_through_dict_derived_loss_alias": true,
+    "rejects_storage_write_through_generator_derived_loss_alias": true,
+    "rejects_storage_write_through_generator_derived_normalizer_alias": true,
+    "rejects_storage_write_through_list_comprehension_derived_loss_alias": true,
+    "rejects_storage_write_through_loss_alias": true,
+    "rejects_storage_write_through_normalizer_alias": true,
+    "rejects_storage_write_through_structural_pattern_capture": true,
+    "rejects_tuple_valued_out_argument_through_loss_alias": true,
+    "rejects_unbound_inplace_method_first_argument": true,
+    "rejects_unmodeled_normalizer_overwrite": true,
+    "rejects_unreachable_normalizer_branch": true,
+    "requires_current_partial_window_size": true,
+    "requires_eval_unchanged": true,
+    "requires_loss_denominator_matches_normalizer": true,
+    "requires_masked_loss_numerator": true,
+    "requires_returned_loss": true,
+    "requires_train_only_rescale": true,
+    "requires_unique_top_level_branch": true
+  },
+  "expected_calibration": {
+    "baseline_passed": false,
+    "calibration_passed": true
+  },
+  "locked_hashes": {
+    "evaluator_sha256": "912f020dcc0a4a388dc3315b62d4f8b038761c8307e786207f87715c758a28b3",
+    "task_brief_sha256": "30457f58714a2849fc50deb92c44602100774773646c5c06e53f5b3d563f35e1",
+    "task_json_sha256": "b4ebba3cb1d6a27ebd019609cf763760677b84a8d88cdd692035888267a7ddc3"
+  },
+  "protocol_id": "trl-grpo-accumulation-window-normalizer-protocol-v11",
+  "schema_version": 1,
+  "task_id": "trl-grpo-accumulation-window-normalizer-v1"
+}

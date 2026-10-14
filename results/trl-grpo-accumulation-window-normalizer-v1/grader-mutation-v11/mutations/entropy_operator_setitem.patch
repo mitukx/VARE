@@ -1,0 +1,8 @@
+diff --git a/trl/trainer/grpo_trainer.py b/trl/trainer/grpo_trainer.py
+index e60bc37..63c6c3b 100644
+--- a/trl/trainer/grpo_trainer.py
++++ b/trl/trainer/grpo_trainer.py
+@@ -3199,0 +3200,3 @@ class GRPOTrainer(_BaseTrainer):
++            loss_alias, = (loss,)
++            import operator
++            operator.setitem(loss_alias, Ellipsis, 0)
