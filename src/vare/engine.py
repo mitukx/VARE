@@ -161,6 +161,91 @@ class CapabilityLoop:
         if cancellation is not None and propagate_cancellation:
             raise cancellation
 
+    async def _publish_candidate(
+        self, candidate_id: str, *, defer_caller_cancellation: bool
+    ) -> int:
+        """Own accepted publication through hook completion despite caller cancellation.
+
+        Publication may mutate the runtime before it acknowledges success, so
+        cancelling the hook would leave the caller unable to distinguish a
+        rollback from a partial install. Keep the hook in an owned task and
+        return only after its terminal result is known. Durable publication is
+        shielded through commit; without a journal, cancellation is delivered
+        once and drained before propagation.
+        """
+        publication = asyncio.create_task(self.hooks.promote(candidate_id))
+        deferred_cancellations = 0
+        caller_cancellation: asyncio.CancelledError | None = None
+        cancellation_delivered_to_hook = False
+        caller_task = asyncio.current_task()
+        last_cancellation_requests = caller_task.cancelling() if caller_task is not None else 0
+
+        def clear_deferred_cancellation_requests() -> None:
+            # The durable branch converts cancellation into an explicit result
+            # or a stronger recovery error. Clear the consumed request state so
+            # a surrounding TaskGroup does not observe a stale cancellation.
+            if caller_task is not None:
+                while caller_task.cancelling():
+                    caller_task.uncancel()
+
+        while not publication.done():
+            try:
+                await asyncio.shield(publication)
+            except asyncio.CancelledError as exc:
+                # A self-cancelled hook is a publication failure, not a caller
+                # cancellation to defer. publication.result() below preserves
+                # that failure and the normal promotion recovery fence.
+                if publication.done() and publication.cancelled():
+                    break
+                if not defer_caller_cancellation:
+                    if caller_cancellation is None:
+                        caller_cancellation = exc
+                    # Preserve the unjournaled API's cancellation behavior,
+                    # but retain ownership until the hook has finished its
+                    # cancellation cleanup. This prevents detached mutation.
+                    if not cancellation_delivered_to_hook:
+                        cancellation_delivered_to_hook = True
+                        if not publication.cancelling():
+                            publication.cancel()
+                    continue
+                current_requests = (
+                    caller_task.cancelling()
+                    if caller_task is not None
+                    else last_cancellation_requests
+                )
+                deferred_cancellations += max(
+                    1, current_requests - last_cancellation_requests
+                )
+                last_cancellation_requests = current_requests
+            except BaseException:
+                # Retrieve the original hook exception below after the owned
+                # task is terminal.
+                break
+
+        try:
+            publication.result()
+        except BaseException as exc:
+            if defer_caller_cancellation and deferred_cancellations:
+                clear_deferred_cancellation_requests()
+            elif (caller_cancellation is not None
+                  and not isinstance(exc, asyncio.CancelledError)):
+                clear_deferred_cancellation_requests()
+            raise
+        if publication.cancelling():
+            # A hook that catches its own cancellation but leaves the task's
+            # cancellation request uncleared has not acknowledged a clean
+            # publication. Never report it as a successful commit.
+            if defer_caller_cancellation and deferred_cancellations:
+                clear_deferred_cancellation_requests()
+            raise asyncio.CancelledError(
+                "promotion hook suppressed cancellation without clearing task state"
+            )
+        if caller_cancellation is not None:
+            raise caller_cancellation
+        if defer_caller_cancellation and deferred_cancellations:
+            clear_deferred_cancellation_requests()
+        return deferred_cancellations
+
     async def run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None) -> RoundResult:
         """Own the shared runtime before any hook; retain crash uncertainty."""
         async with self._round_lock:
@@ -528,6 +613,7 @@ class CapabilityLoop:
                     continue
             recovery.result()
             raise
+        deferred_cancellation_count = 0
         if candidate_id != incumbent_id and decision.accepted:
             transaction_id: str | None = None
             if self.promotion_journal is not None:
@@ -584,7 +670,9 @@ class CapabilityLoop:
             # cancelled. Never discard a possibly installed candidate or reuse
             # this loop after an unverified publication, even without a journal.
             try:
-                await self.hooks.promote(candidate_id)
+                deferred_cancellation_count = await self._publish_candidate(
+                    candidate_id, defer_caller_cancellation=transaction_id is not None
+                )
                 if self.hooks.active_policy()[0] != candidate_id:
                     raise PromotionRecoveryRequired(
                         "post-promotion policy acknowledgment mismatch; manual recovery required"
@@ -609,6 +697,12 @@ class CapabilityLoop:
                     "promotion failed; verify the runtime and reconcile durable evidence"
                 ) from exc
             promoted_id = candidate_id
+            if deferred_cancellation_count:
+                self.events.emit(
+                    "promotion_cancellation_deferred",
+                    candidate_id=candidate_id,
+                    count=deferred_cancellation_count,
+                )
             self.events.emit("candidate_promoted", candidate_id=candidate_id, gain=decision.primary_gain)
         else:
             promoted_id = incumbent_id
@@ -656,4 +750,5 @@ class CapabilityLoop:
             failures=clusters,
             admitted_experiences=len(admitted),
             dropped_experiences=dropped,
+            deferred_cancellation_count=deferred_cancellation_count,
         )

@@ -9,6 +9,16 @@ Do not start another model screen or update from the cached model inventory
 alone. The next gate requires a materially distinct method and an unused,
 independently graded task composition. See the [qualification record](research-candidate-qualification-2026-10-15.md).
 
+**Update 2026-10-15 — accepted-publication cancellation ownership:** an audit
+found that a publish hook could suppress caller cancellation and return success,
+causing the engine to silently report a committed round. The engine now owns
+the hook until terminal completion. With the durable journal, cancellation is
+deferred through acknowledgment and commit and reported in `RoundResult`; without
+the journal, cancellation is drained and propagated under the existing recovery
+fence. The CPU-only pinned-main comparison changes from 7/7 failing cases to
+7/7 passing. This is a systems correctness result, not a new RL method or model
+improvement. See the [protocol and report](promotion-cancellation-ownership-v1.md).
+
 **Update 2026-10-15 — reward admission at the RVL trainer boundary:**
 `CapabilityLoop` already had a manifest authorizer, but direct calls to
 `RVLGRPOHooks.train_candidate()` could bypass it. The hook now supports the

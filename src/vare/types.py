@@ -123,3 +123,4 @@ class RoundResult:
     failures: tuple[FailureCluster, ...]
     admitted_experiences: int
     dropped_experiences: int
+    deferred_cancellation_count: int = 0

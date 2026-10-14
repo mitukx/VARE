@@ -25,6 +25,13 @@ class LoopHooks(Protocol):
     After promote() returns normally, active_policy() must acknowledge the
     installed candidate identity. A publication exception or acknowledgment
     mismatch requires external recovery, not automatic candidate discard.
+    Accepted publication is owned by the engine until the hook is terminal and
+    its acknowledgment is checked. With a durable promotion journal, caller
+    cancellation after dispatch is deferred through commit and reported in the
+    RoundResult. Without a journal, cancellation is delivered to the owned
+    hook, drained, then propagated while the loop is fenced. A hook that
+    suppresses its own cancellation must clear its task's cancellation state
+    before it can acknowledge success.
 
     Loops with the same hooks object share a runtime coordinator. Distinct
     proxies for one mutable runtime must share runtime_coordinator explicitly

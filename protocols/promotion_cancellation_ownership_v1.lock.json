@@ -1,0 +1,19 @@
+{
+  "schema": "vare.correctness-protocol.v1",
+  "baseline_revision": "4ab4a6ad38bd294c63cf0f2727424f1a09113bcb",
+  "hypothesis": "After accepted promotion is dispatched, caller cancellation cannot be silently converted into success: unjournaled publication drains then propagates cancellation under a recovery fence, while journaled publication defers cancellation through commit and reports it.",
+  "test": "tests/test_promotion_cancellation_ownership.py",
+  "cases": [
+    "a caller cancellation suppressed by an unjournaled hook is propagated after the hook drains and fences reentry",
+    "repeated caller cancellations preserve the durable round reservation until commit",
+    "repeated unjournaled cancellation is delivered to hook cleanup only once",
+    "a hook that suppresses its own cancellation without clearing task state is fenced",
+    "journaled hook self-cancellation retains the prepared recovery state and fences reentry",
+    "publication failure after deferred caller cancellation takes precedence and retains recovery state",
+    "the additive RoundResult field appears in ordinary JSON serialization with default zero"
+  ],
+  "acceptance": "Pinned main reproduces all seven semantic/API failures; the candidate passes all seven cases without setup errors or skips. Journaled completion after caller cancellation returns the committed RoundResult with deferred_cancellation_count and one promotion_cancellation_deferred event. Unjournaled cancellation is propagated only after the owned hook is terminal; only one cancellation is delivered to hook cleanup, and publication failure or hook self-cancellation fences reentry while clearing consumed caller cancellation state.",
+  "budget": "Deterministic asyncio fixtures and local SQLite only; no model, accelerator, paid API, or network dependency; each comparison subprocess is limited to 30 seconds.",
+  "stopping_rule": "Retain the first baseline and matched candidate results. Do not alter expected outcomes after observing them; preserve every negative result.",
+  "limits": "One event loop, one process, and trusted cooperative hooks. Cancellation after publication dispatch cannot roll back publication. No multi-host atomicity, detached-worker termination, hard cancellation deadline, hostile-hook containment, or model-quality improvement is claimed."
+}

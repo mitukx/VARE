@@ -8,6 +8,7 @@ Run commands from the repository root. Choose a fresh output directory for compa
 | Are retained large blobs unchanged? | `PYTHONPATH=src python scripts/check_tracked_blob_budget.py` / [retention](../docs/artifact-retention.md) |
 | Do sibling loops/crash restarts fail closed? | `python scripts/reproduce_runtime_round_ownership_v1.py --output /tmp/vare-round-review` / [report](../docs/runtime-round-ownership-v1.md) |
 | Does interrupted publication avoid false success/reentry? | `python scripts/reproduce_promotion_publication_recovery_v1.py --output /tmp/vare-publication-review` |
+| Does accepted publication retain round ownership across cancellation? | `python scripts/reproduce_promotion_cancellation_ownership_v1.py --output /tmp/vare-publication-cancel-review` / [report](../docs/promotion-cancellation-ownership-v1.md) |
 | Does cancelled discard finish restoration? | `python scripts/reproduce_candidate_discard_recovery_v1.py --output /tmp/vare-discard-review` |
 | Are evaluator siblings terminal before rollback? | `python scripts/reproduce_engine_evaluation_lifecycle_v1.py --output /tmp/vare-evaluation-review` |
 | Does operator revocation retain cancellation-safe rollback? | `python scripts/reproduce_engine_evaluation_interlock_integration_v1.py --output /tmp/vare-interlock-review` |
