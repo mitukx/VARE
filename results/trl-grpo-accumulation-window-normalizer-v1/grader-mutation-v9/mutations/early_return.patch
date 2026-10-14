@@ -1,0 +1,22 @@
+diff --git a/trl/experimental/gspo_token/grpo_trainer.py b/trl/experimental/gspo_token/grpo_trainer.py
+index 110f0ae..4d72746 100644
+--- a/trl/experimental/gspo_token/grpo_trainer.py
++++ b/trl/experimental/gspo_token/grpo_trainer.py
+@@ -23,0 +24 @@ class GRPOTrainer(_GRPOTrainer):
++        return None  # mutation: bypass the loss path
+@@ -123,0 +125 @@ class GRPOTrainer(_GRPOTrainer):
++            # `num_items_in_batch` spans the generation batch, so rescale it to one accumulation window
+@@ -124,0 +127,2 @@ class GRPOTrainer(_GRPOTrainer):
++            if mode == "train":  # in eval, the batch is neither split across steps nor accumulated
++                normalizer = normalizer * self.current_gradient_accumulation_steps / self.args.steps_per_generation
+diff --git a/trl/trainer/grpo_trainer.py b/trl/trainer/grpo_trainer.py
+index 523f867..8101d6e 100644
+--- a/trl/trainer/grpo_trainer.py
++++ b/trl/trainer/grpo_trainer.py
+@@ -3008,0 +3009 @@ class GRPOTrainer(_BaseTrainer):
++        return None  # mutation: bypass the loss path
+@@ -3155,0 +3157 @@ class GRPOTrainer(_BaseTrainer):
++            # `num_items_in_batch` spans the generation batch, so rescale it to one accumulation window
+@@ -3156,0 +3159,2 @@ class GRPOTrainer(_BaseTrainer):
++            if mode == "train":  # in eval, the batch is neither split across steps nor accumulated
++                normalizer = normalizer * self.current_gradient_accumulation_steps / self.args.steps_per_generation

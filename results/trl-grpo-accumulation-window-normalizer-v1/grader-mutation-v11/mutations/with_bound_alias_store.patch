@@ -1,0 +1,16 @@
+diff --git a/trl/experimental/gspo_token/grpo_trainer.py b/trl/experimental/gspo_token/grpo_trainer.py
+index fd92741..ddad8bf 100644
+--- a/trl/experimental/gspo_token/grpo_trainer.py
++++ b/trl/experimental/gspo_token/grpo_trainer.py
+@@ -128,0 +129,3 @@ class GRPOTrainer(_GRPOTrainer):
++            from contextlib import nullcontext
++            with nullcontext(loss) as loss_alias:
++                loss_alias[...] = 0
+diff --git a/trl/trainer/grpo_trainer.py b/trl/trainer/grpo_trainer.py
+index e60bc37..0818e2c 100644
+--- a/trl/trainer/grpo_trainer.py
++++ b/trl/trainer/grpo_trainer.py
+@@ -3160,0 +3161,3 @@ class GRPOTrainer(_BaseTrainer):
++            from contextlib import nullcontext
++            with nullcontext(loss) as loss_alias:
++                loss_alias[...] = 0

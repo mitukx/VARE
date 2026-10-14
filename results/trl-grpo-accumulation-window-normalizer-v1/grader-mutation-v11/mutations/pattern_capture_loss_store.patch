@@ -1,0 +1,16 @@
+diff --git a/trl/experimental/gspo_token/grpo_trainer.py b/trl/experimental/gspo_token/grpo_trainer.py
+index fd92741..5f4ada4 100644
+--- a/trl/experimental/gspo_token/grpo_trainer.py
++++ b/trl/experimental/gspo_token/grpo_trainer.py
+@@ -128,0 +129,3 @@ class GRPOTrainer(_GRPOTrainer):
++            match [loss]:
++                case [loss_alias]:
++                    loss_alias[...] = 0
+diff --git a/trl/trainer/grpo_trainer.py b/trl/trainer/grpo_trainer.py
+index e60bc37..bacec3e 100644
+--- a/trl/trainer/grpo_trainer.py
++++ b/trl/trainer/grpo_trainer.py
+@@ -3160,0 +3161,3 @@ class GRPOTrainer(_BaseTrainer):
++            match [loss]:
++                case [loss_alias]:
++                    loss_alias[...] = 0
