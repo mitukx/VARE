@@ -1,17 +1,25 @@
 """CPU regressions: independently signed reward vs unkeyed RLVR replay metadata."""
 from __future__ import annotations
 
+import asyncio
+import copy
 from dataclasses import replace
 import hashlib
 import json
 import sqlite3
+from types import SimpleNamespace
 
 import pytest
 
 from vare.config import LagConfig
 from vare.controls import RVLOuterPlanner
 from vare.integrations.rvl import RVLTokenReplayReader
-from vare.reward_evidence import RewardEvidenceManifest, RewardEvidenceRoot
+from vare.integrations.rvl_grpo import RVLGRPOHooks
+from vare.reward_evidence import (
+    RewardEvidenceManifest,
+    RewardEvidenceRoot,
+    validate_complete_rvl_reward_batch,
+)
 from test_rvl_integration import _make_replay
 
 
@@ -69,6 +77,36 @@ def _plan(reader, *, manifest=None, strict=False):
     return RVLOuterPlanner(LagConfig(max_policy_lag=2, max_verifier_lag=2)).plan(
         reader, current_policy_version=6, current_verifier_version=5,
         reward_manifest=manifest, require_authenticated_rewards=strict,
+    )
+
+
+class _RecordingTrainer:
+    def __init__(self):
+        self.weight = 0
+        self.train_calls = 0
+        self.config = SimpleNamespace(advantage_eps=1e-6, clip_advantage=5.0)
+
+    def snapshot_training_state(self):
+        return self.weight
+
+    def restore_training_state(self, snapshot):
+        self.weight = snapshot
+
+    def train_step(self, _samples, *, advantages=None):
+        self.train_calls += 1
+        self.weight += 1
+
+
+def _strict_rvl_hooks(trainer, manifest):
+    return RVLGRPOHooks(
+        backend=object(),
+        trainer=trainer,
+        eval_tasks=[],
+        score_fn=lambda _task, _response: 0.0,
+        generation_factory=lambda **fields: SimpleNamespace(**fields),
+        verified_generation_factory=lambda **fields: SimpleNamespace(**fields),
+        training_evidence_authorizer=manifest.verified,
+        require_authenticated_training=True,
     )
 
 
@@ -196,3 +234,109 @@ def test_signed_receipts_do_not_override_verifier_lag_or_runtime_provenance(tmp_
     assert plan.excluded_stale_experiences == 2
     assert plan.control.freeze_training
     assert "verifier_lag_exceeded" in plan.control.reasons
+
+
+def test_rvl_trainer_direct_call_checks_signed_manifest_before_trainer_step(tmp_path):
+    reader = _fixture(tmp_path)
+    experiences = _read(reader)
+    manifest = _manifest(_root(), experiences)
+    trainer = _RecordingTrainer()
+    hooks = _strict_rvl_hooks(trainer, manifest)
+
+    candidate = asyncio.run(hooks.train_candidate("policy-0", experiences))
+
+    assert candidate == "policy-1"
+    assert trainer.train_calls == 1
+    # The candidate snapshot is retained by the hook, but the incumbent is
+    # restored before train_candidate returns.
+    assert trainer.weight == 0
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    ["reward", "verifier_config", "policy_version", "generation"],
+)
+def test_rvl_trainer_direct_call_rejects_edited_signed_evidence_before_step(
+    tmp_path, mutation
+):
+    reader = _fixture(tmp_path)
+    experiences = _read(reader)
+    manifest = _manifest(_root(), experiences)
+    target = experiences[0]
+    if mutation == "reward":
+        target.verification.score = 0.25
+    elif mutation == "verifier_config":
+        target.verification.metadata["rvl_verification_config_sha256"] = "d" * 64
+    elif mutation == "policy_version":
+        target.attempt.policy_version += 1
+    else:
+        target.attempt.metadata["rvl_generation"]["metadata"][
+            "response_token_ids"
+        ][0] += 1
+
+    trainer = _RecordingTrainer()
+    hooks = _strict_rvl_hooks(trainer, manifest)
+    with pytest.raises(RuntimeError, match="unauthenticated_training_reward_evidence"):
+        asyncio.run(hooks.train_candidate("policy-0", experiences))
+    assert trainer.train_calls == 0
+    assert trainer.weight == 0
+
+
+def test_rvl_trainer_strict_mode_requires_authorizer():
+    trainer = _RecordingTrainer()
+    with pytest.raises(ValueError, match="trusted evidence authorizer"):
+        RVLGRPOHooks(
+            backend=object(),
+            trainer=trainer,
+            eval_tasks=[],
+            score_fn=lambda _task, _response: 0.0,
+            generation_factory=lambda **fields: SimpleNamespace(**fields),
+            verified_generation_factory=lambda **fields: SimpleNamespace(**fields),
+            require_authenticated_training=True,
+        )
+
+
+def test_rvl_trainer_rejects_empty_batch_before_authorization_or_step(tmp_path):
+    trainer = _RecordingTrainer()
+    hooks = _strict_rvl_hooks(trainer, RewardEvidenceManifest(_root(), {}))
+
+    with pytest.raises(ValueError, match="training batch cannot be empty"):
+        asyncio.run(hooks.train_candidate("policy-0", []))
+    assert trainer.train_calls == 0
+    assert trainer.weight == 0
+
+
+@pytest.mark.parametrize("batch_kind", ["same_object_twice", "copied_member_twice", "partial_group"])
+def test_rvl_trainer_rejects_incomplete_or_duplicated_signed_group_before_step(
+    tmp_path, batch_kind
+):
+    reader = _fixture(tmp_path)
+    experiences = _read(reader)
+    manifest = _manifest(_root(), experiences)
+    if batch_kind == "same_object_twice":
+        batch = [experiences[0], experiences[0]]
+    elif batch_kind == "copied_member_twice":
+        batch = [experiences[0], copy.deepcopy(experiences[0])]
+    else:
+        batch = experiences[:1]
+
+    # Individual receipts remain valid for a repeated member; the batch-level
+    # identity check must reject the duplicate or missing group member.
+    assert all(manifest.verified(experience) for experience in batch)
+    trainer = _RecordingTrainer()
+    hooks = _strict_rvl_hooks(trainer, manifest)
+    with pytest.raises(RuntimeError, match="training_reward_evidence_unverifiable"):
+        asyncio.run(hooks.train_candidate("policy-0", batch))
+    assert trainer.train_calls == 0
+    assert trainer.weight == 0
+
+
+def test_replay_group_size_declaration_cannot_trigger_proportional_allocation(tmp_path):
+    experiences = _read(_fixture(tmp_path))
+    experience = experiences[0]
+    huge_group_size = 10**12
+    experience.attempt.metadata["vare_rollout_group_size"] = huge_group_size
+    experience.attempt.task.metadata["vare_rollout_group_size"] = huge_group_size
+
+    with pytest.raises(ValueError, match="authenticated RVL group .* is incomplete"):
+        validate_complete_rvl_reward_batch([experience])

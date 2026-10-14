@@ -12,16 +12,79 @@ import hashlib
 import hmac
 import math
 import re
+from collections.abc import Sequence
 from typing import Mapping
 
 from .evidence import canonical_json
-from .integrations.rvl import RVLTokenReplayReader
 from .types import Experience
 
 
 _SHA = re.compile(r"[0-9a-f]{64}\Z")
 _DOMAIN = "vare.rvl-reward-attestation.v1"
 _SUPPORTED_BEHAVIOR = frozenset({"generation_match", "verified_record_match"})
+
+
+def validate_complete_rvl_reward_batch(experiences: Sequence[Experience]) -> None:
+    """Reject partial or duplicated replay-backed RVL members at use time.
+
+    Reward receipts are member-scoped, so verifying each receipt separately is
+    insufficient: the same valid member could otherwise be repeated to fill a
+    group. Live RVL rollouts also carry ``rvl_generation`` but do not have
+    replay member indices yet; those remain governed by their authorizer.
+    """
+    attempt_metadata = [experience.attempt.metadata for experience in experiences]
+    marked = [
+        isinstance(metadata, dict)
+        and ("rvl_group_id" in metadata or "rvl_generation_index" in metadata)
+        for metadata in attempt_metadata
+    ]
+    if not any(marked):
+        return
+    if not all(marked):
+        raise ValueError("authenticated batch cannot mix RVL and non-RVL experiences")
+
+    grouped: dict[str, tuple[int, set[int]]] = {}
+    for experience, metadata in zip(experiences, attempt_metadata, strict=True):
+        if not isinstance(metadata, dict):
+            raise ValueError("authenticated RVL experience metadata must be an object")
+        task_metadata = experience.attempt.task.metadata
+        group_id = metadata.get("rvl_group_id")
+        rollout_group_id = metadata.get("vare_rollout_group")
+        group_size = metadata.get("vare_rollout_group_size")
+        member_index = metadata.get("rvl_generation_index")
+        if (
+            not isinstance(group_id, str)
+            or not group_id
+            or rollout_group_id != group_id
+            or type(group_size) is not int
+            or group_size <= 0
+            or type(member_index) is not int
+            or not 0 <= member_index < group_size
+            or not isinstance(metadata.get("rvl_generation"), dict)
+            or task_metadata.get("rvl_group_id", group_id) != group_id
+            or task_metadata.get("vare_rollout_group") != group_id
+            or task_metadata.get("vare_rollout_group_size") != group_size
+        ):
+            raise ValueError("authenticated RVL member identity is incomplete or inconsistent")
+
+        previous = grouped.get(group_id)
+        if previous is None:
+            indices: set[int] = set()
+            grouped[group_id] = (group_size, indices)
+        else:
+            expected_size, indices = previous
+            if expected_size != group_size:
+                raise ValueError("authenticated RVL group has inconsistent declared sizes")
+        if member_index in indices:
+            raise ValueError("authenticated RVL group repeats a member index")
+        indices.add(member_index)
+
+    for group_id, (group_size, indices) in grouped.items():
+        # Bounds and uniqueness were checked while collecting indices. Having
+        # exactly group_size distinct in-range indices proves full coverage
+        # without allocating a set proportional to an untrusted declaration.
+        if len(indices) != group_size:
+            raise ValueError(f"authenticated RVL group {group_id!r} is incomplete")
 
 
 @dataclass(frozen=True, repr=False, slots=True)
@@ -64,6 +127,10 @@ class RewardEvidenceRoot:
         return hashlib.sha256(canonical_json(body).encode("utf-8")).hexdigest()
 
     def _payload(self, experience: Experience) -> dict[str, object]:
+        # Import lazily: importing integrations.rvl at module load initializes
+        # the integrations package, which imports RVLGRPOHooks and this module.
+        from .integrations.rvl import RVLTokenReplayReader
+
         attempt = experience.attempt
         verification = experience.verification
         md = attempt.metadata

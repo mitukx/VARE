@@ -2,6 +2,10 @@
 from __future__ import annotations
 
 import asyncio
+import os
+from pathlib import Path
+import subprocess
+import sys
 
 import pytest
 
@@ -94,3 +98,61 @@ def test_authenticated_complete_group_reaches_training():
     assert hooks.trained == 1
     assert result.decision.accepted
     assert hooks.promoted == ["p1"]
+
+
+def test_authenticated_rvl_group_rejects_repeated_member_before_training():
+    class RepeatedMemberHooks(Hooks):
+        async def rollout(self, task, policy_id, policy_version, step):
+            attempt = await super().rollout(task, policy_id, policy_version, step)
+            group_id = task.metadata["vare_rollout_group"]
+            attempt.metadata.update({
+                "rvl_group_id": group_id,
+                "rvl_generation_index": 0,
+                "rvl_generation": {"prompt_id": task.id},
+            })
+            return attempt
+
+    hooks = RepeatedMemberHooks()
+    loop = _loop(hooks, authorizer=lambda _experience: True, samples=2)
+    with pytest.raises(RuntimeError, match="training_reward_evidence_unverifiable"):
+        _run(loop)
+    assert hooks.trained == 0
+    assert hooks.promoted == []
+
+
+def test_authenticated_live_rvl_rollouts_need_no_replay_member_indices():
+    class LiveRvlHooks(Hooks):
+        async def rollout(self, task, policy_id, policy_version, step):
+            attempt = await super().rollout(task, policy_id, policy_version, step)
+            attempt.metadata["rvl_generation"] = {"prompt_id": task.id}
+            return attempt
+
+    hooks = LiveRvlHooks()
+    loop = _loop(
+        hooks,
+        authorizer=lambda exp: isinstance(
+            exp.attempt.metadata.get("rvl_generation"), dict
+        ),
+        samples=2,
+    )
+    result = _run(loop)
+    assert hooks.trained == 1
+    assert result.decision.accepted
+
+
+def test_engine_and_rvl_hooks_import_in_a_fresh_process():
+    repo_root = Path(__file__).resolve().parents[1]
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(repo_root / "src")
+    subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import vare.engine; import vare.integrations.rvl_grpo",
+        ],
+        cwd=repo_root,
+        env=env,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
