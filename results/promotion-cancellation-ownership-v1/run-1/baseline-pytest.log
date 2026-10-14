@@ -9,7 +9,7 @@ tests/test_promotion_cancellation_ownership.py FFFFFFF                   [100%]
 =================================== FAILURES ===================================
 ______ test_unjournaled_cancellation_is_not_lost_when_hook_suppresses_it _______
 
-tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-123/test_unjournaled_cancellation_0')
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-132/test_unjournaled_cancellation_0')
 
     def test_unjournaled_cancellation_is_not_lost_when_hook_suppresses_it(tmp_path):
         async def case():
@@ -81,7 +81,7 @@ E           Failed: DID NOT RAISE <class 'asyncio.exceptions.CancelledError'>
 tests/test_promotion_cancellation_ownership.py:61: Failed
 ______ test_repeated_cancellation_keeps_durable_round_owned_until_commit _______
 
-tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-123/test_repeated_cancellation_kee0')
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-132/test_repeated_cancellation_kee0')
 
     def test_repeated_cancellation_keeps_durable_round_owned_until_commit(tmp_path):
         async def case():
@@ -145,14 +145,14 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 >           assert hooks.publish_task.cancelling() == 0, "durable publication task was cancelled by caller"
 E           AssertionError: durable publication task was cancelled by caller
 E           assert 2 == 0
-E            +  where 2 = <built-in method cancelling of _asyncio.Task object at 0x103f61d80>()
-E            +    where <built-in method cancelling of _asyncio.Task object at 0x103f61d80> = <Task cancelling name='Task-9' coro=<CapabilityLoop.run_round() running at /var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-promotion-cancel-bwvjnc4z/src/vare/engine.py:189> wait_for=<Future pending cb=[Task.task_wakeup()]>>.cancelling
-E            +      where <Task cancelling name='Task-9' coro=<CapabilityLoop.run_round() running at /var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-promotion-cancel-bwvjnc4z/src/vare/engine.py:189> wait_for=<Future pending cb=[Task.task_wakeup()]>> = <test_promotion_publication_recovery.Hooks object at 0x105376a80>.publish_task
+E            +  where 2 = <built-in method cancelling of _asyncio.Task object at 0x10725dd80>()
+E            +    where <built-in method cancelling of _asyncio.Task object at 0x10725dd80> = <Task cancelling name='Task-9' coro=<CapabilityLoop.run_round() running at /var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-promotion-cancel-atfb2ymu/src/vare/engine.py:189> wait_for=<Future pending cb=[Task.task_wakeup()]>>.cancelling
+E            +      where <Task cancelling name='Task-9' coro=<CapabilityLoop.run_round() running at /var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-promotion-cancel-atfb2ymu/src/vare/engine.py:189> wait_for=<Future pending cb=[Task.task_wakeup()]>> = <test_promotion_publication_recovery.Hooks object at 0x1072fe8a0>.publish_task
 
 tests/test_promotion_cancellation_ownership.py:92: AssertionError
 ____ test_unjournaled_repeated_cancellation_is_delivered_to_hook_only_once _____
 
-tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-123/test_unjournaled_repeated_canc0')
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-132/test_unjournaled_repeated_canc0')
 
     def test_unjournaled_repeated_cancellation_is_delivered_to_hook_only_once(tmp_path):
         async def case():
@@ -215,7 +215,7 @@ E           Failed: DID NOT RAISE <class 'asyncio.exceptions.CancelledError'>
 tests/test_promotion_cancellation_ownership.py:128: Failed
 _____________ test_hook_suppressed_self_cancellation_fails_closed ______________
 
-tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-123/test_hook_suppressed_self_canc0')
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-132/test_hook_suppressed_self_canc0')
 
     def test_hook_suppressed_self_cancellation_fails_closed(tmp_path):
         async def case():
@@ -279,7 +279,7 @@ E       Failed: DID NOT RAISE <class 'asyncio.exceptions.CancelledError'>
 tests/test_promotion_cancellation_ownership.py:159: Failed
 _____ test_durable_hook_self_cancellation_retains_prepared_recovery_state ______
 
-tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-123/test_durable_hook_self_cancell0')
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-132/test_durable_hook_self_cancell0')
 
     def test_durable_hook_self_cancellation_retains_prepared_recovery_state(tmp_path):
         async def case():
@@ -346,7 +346,7 @@ E       Failed: DID NOT RAISE <class 'vare.promotion_journal.PromotionRecoveryRe
 tests/test_promotion_cancellation_ownership.py:187: Failed
 ____ test_publish_failure_after_deferred_cancellation_wins_and_keeps_fence _____
 
-tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-123/test_publish_failure_after_def0')
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-132/test_publish_failure_after_def0')
 
     def test_publish_failure_after_deferred_cancellation_wins_and_keeps_fence(tmp_path):
         async def case():
@@ -408,13 +408,13 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
                 await owner
 >           assert owner.cancelling() == 0
 E           AssertionError: assert 1 == 0
-E            +  where 1 = <built-in method cancelling of _asyncio.Task object at 0x103f63880>()
-E            +    where <built-in method cancelling of _asyncio.Task object at 0x103f63880> = <Task finished name='Task-35' coro=<CapabilityLoop.run_round() done, defined at /var/folders/x1/pn5c5vhd13512v4t0r5sxn...ine.py:164> exception=PromotionRecoveryRequired('promotion failed; verify the runtime and reconcile durable evidence')>.cancelling
+E            +  where 1 = <built-in method cancelling of _asyncio.Task object at 0x10725eec0>()
+E            +    where <built-in method cancelling of _asyncio.Task object at 0x10725eec0> = <Task finished name='Task-35' coro=<CapabilityLoop.run_round() done, defined at /var/folders/x1/pn5c5vhd13512v4t0r5sxn...ine.py:164> exception=PromotionRecoveryRequired('promotion failed; verify the runtime and reconcile durable evidence')>.cancelling
 
 tests/test_promotion_cancellation_ownership.py:218: AssertionError
 _____ test_round_result_serialization_includes_default_cancellation_count ______
 
-tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-123/test_round_result_serializatio0')
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-132/test_round_result_serializatio0')
 
     def test_round_result_serialization_includes_default_cancellation_count(tmp_path):
         async def case():
@@ -448,7 +448,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 E       AttributeError: 'RoundResult' object has no attribute 'deferred_cancellation_count'
 
 tests/test_promotion_cancellation_ownership.py:238: AttributeError
-- generated xml file: /private/tmp/vare-promotion-cancel-commit-a2a0ca4/baseline-pytest.xml -
+- generated xml file: /private/tmp/vare-promotion-cancel-final-4df6c5c/baseline-pytest.xml -
 =========================== short test summary info ============================
 FAILED tests/test_promotion_cancellation_ownership.py::test_unjournaled_cancellation_is_not_lost_when_hook_suppresses_it
 FAILED tests/test_promotion_cancellation_ownership.py::test_repeated_cancellation_keeps_durable_round_owned_until_commit
@@ -457,4 +457,4 @@ FAILED tests/test_promotion_cancellation_ownership.py::test_hook_suppressed_self
 FAILED tests/test_promotion_cancellation_ownership.py::test_durable_hook_self_cancellation_retains_prepared_recovery_state
 FAILED tests/test_promotion_cancellation_ownership.py::test_publish_failure_after_deferred_cancellation_wins_and_keeps_fence
 FAILED tests/test_promotion_cancellation_ownership.py::test_round_result_serialization_includes_default_cancellation_count
-============================== 7 failed in 0.33s ===============================
+============================== 7 failed in 0.29s ===============================
