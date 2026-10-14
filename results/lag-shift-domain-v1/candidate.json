@@ -1,0 +1,67 @@
+{
+  "observed": [
+    {
+      "admitted": false,
+      "case": "nan",
+      "freshness": 0.0,
+      "reasons": [
+        "invalid_shift_score"
+      ]
+    },
+    {
+      "admitted": false,
+      "case": "positive_infinity",
+      "freshness": 0.0,
+      "reasons": [
+        "invalid_shift_score"
+      ]
+    },
+    {
+      "admitted": false,
+      "case": "negative_infinity",
+      "freshness": 0.0,
+      "reasons": [
+        "invalid_shift_score"
+      ]
+    },
+    {
+      "admitted": false,
+      "case": "negative",
+      "freshness": 0.0,
+      "reasons": [
+        "invalid_shift_score"
+      ]
+    },
+    {
+      "admitted": false,
+      "case": "above_tv_domain",
+      "freshness": 0.0,
+      "reasons": [
+        "invalid_shift_score"
+      ]
+    },
+    {
+      "admitted": true,
+      "case": "zero",
+      "freshness": 1.0,
+      "reasons": []
+    },
+    {
+      "admitted": true,
+      "case": "threshold",
+      "freshness": 0.7788007830714049,
+      "reasons": []
+    },
+    {
+      "admitted": false,
+      "case": "above_threshold",
+      "freshness": 0.7691263643685705,
+      "reasons": [
+        "distribution_shift"
+      ]
+    }
+  ],
+  "protocol": "lag-shift-domain-v1",
+  "source_sha256": "0e108bd2962c438c32e81eafc793398a5bdc63e0fc21937134415e7cefa84986",
+  "stage": "candidate-after-implementation"
+}

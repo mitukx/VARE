@@ -70,6 +70,12 @@ class LagController:
         verifier_lag = (
             max(0, active_verifier_version - reward_verifier_version) if verifier_valid else 0
         )
+        shift_valid = (
+            isinstance(shift_score, (int, float))
+            and not isinstance(shift_score, bool)
+            and math.isfinite(shift_score)
+            and 0.0 <= shift_score <= 1.0
+        )
         reasons: list[str] = []
         if not policy_valid:
             reasons.append("invalid_policy_version")
@@ -83,12 +89,18 @@ class LagController:
             reasons.append("policy_stale")
         if verifier_lag > self.config.max_verifier_lag:
             reasons.append("verifier_stale")
-        if shift_score > self.config.max_shift:
+        if not shift_valid:
+            reasons.append("invalid_shift_score")
+        elif shift_score > self.config.max_shift:
             reasons.append("distribution_shift")
-        freshness = math.exp(
-            -self.config.policy_decay * policy_lag
-            -self.config.verifier_decay * verifier_lag
-            -self.config.shift_decay * max(0.0, shift_score)
+        freshness = (
+            math.exp(
+                -self.config.policy_decay * policy_lag
+                -self.config.verifier_decay * verifier_lag
+                -self.config.shift_decay * shift_score
+            )
+            if shift_valid
+            else 0.0
         )
         return LagDecision(
             admitted=not reasons,

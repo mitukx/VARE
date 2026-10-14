@@ -1,0 +1,63 @@
+{
+  "base_commit": "dc57916272f32ebf89d63a7c45d9c16dd45d9fa6",
+  "known_failure": "nan is admitted with freshness 1.0 and no reasons",
+  "observed": [
+    {
+      "admitted": true,
+      "case": "nan",
+      "freshness": 1.0,
+      "reasons": []
+    },
+    {
+      "admitted": false,
+      "case": "positive_infinity",
+      "freshness": 0.0,
+      "reasons": [
+        "distribution_shift"
+      ]
+    },
+    {
+      "admitted": true,
+      "case": "negative_infinity",
+      "freshness": 1.0,
+      "reasons": []
+    },
+    {
+      "admitted": true,
+      "case": "negative",
+      "freshness": 1.0,
+      "reasons": []
+    },
+    {
+      "admitted": false,
+      "case": "above_tv_domain",
+      "freshness": 0.2829457771141329,
+      "reasons": [
+        "distribution_shift"
+      ]
+    },
+    {
+      "admitted": true,
+      "case": "zero",
+      "freshness": 1.0,
+      "reasons": []
+    },
+    {
+      "admitted": true,
+      "case": "threshold",
+      "freshness": 0.7788007830714049,
+      "reasons": []
+    },
+    {
+      "admitted": false,
+      "case": "above_threshold",
+      "freshness": 0.7691263643685705,
+      "reasons": [
+        "distribution_shift"
+      ]
+    }
+  ],
+  "protocol": "lag-shift-domain-v1",
+  "source_sha256": "af5cffea3f0d825b207174c4968619ea79dc09adf9f62a06c55b71a8eae2bfd4",
+  "stage": "baseline-before-implementation"
+}

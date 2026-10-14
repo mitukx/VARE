@@ -1,3 +1,7 @@
+import math
+
+import pytest
+
 from vare.config import LagConfig
 from vare.lag import LagController
 
@@ -56,3 +60,44 @@ def test_lag_controller_rejects_negative_and_non_integer_versions():
         decision = c.assess(**{**base, **overrides})
         assert not decision.admitted
         assert expected_reason in decision.reasons
+
+
+@pytest.mark.parametrize("shift_score", [math.nan, math.inf, -math.inf, -0.01, 1.01])
+def test_lag_controller_rejects_invalid_shift_scores(shift_score):
+    c = LagController(LagConfig(max_shift=0.2))
+    decision = c.assess(
+        rollout_policy_version=5,
+        active_policy_version=5,
+        reward_verifier_version=9,
+        active_verifier_version=9,
+        shift_score=shift_score,
+    )
+
+    assert not decision.admitted
+    assert "invalid_shift_score" in decision.reasons
+    assert decision.freshness == 0.0
+    assert math.isfinite(decision.freshness)
+
+
+@pytest.mark.parametrize(
+    ("shift_score", "admitted", "reason"),
+    [
+        (0.0, True, None),
+        (0.2, True, None),
+        (0.21, False, "distribution_shift"),
+    ],
+)
+def test_lag_controller_preserves_valid_shift_score_behavior(shift_score, admitted, reason):
+    c = LagController(LagConfig(max_shift=0.2))
+    decision = c.assess(
+        rollout_policy_version=5,
+        active_policy_version=5,
+        reward_verifier_version=9,
+        active_verifier_version=9,
+        shift_score=shift_score,
+    )
+
+    assert decision.admitted is admitted
+    if reason is not None:
+        assert reason in decision.reasons
+    assert decision.freshness == pytest.approx(math.exp(-1.25 * shift_score))
