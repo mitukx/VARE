@@ -6,7 +6,7 @@ import pytest
 
 from vare.promotion_journal import PromotionRecoveryRequired
 from vare.types import Task
-from test_promotion_publication_recovery import Hooks, make_loop
+from test_promotion_publication_recovery import make_loop
 
 
 def _hold_promotion(hooks, *, fail_after_release=False, clear_cancellation=False):
