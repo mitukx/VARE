@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-13/var/work/VARE-eval-stats/reproducers/seeded_summary_v3.py", line 31, in <module>
+    assert abs(points["format_sft"]["pass_at_4"] - 0.2) < 1e-15, "pooled outputs do not estimate mean fitted-run pass@4"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: pooled outputs do not estimate mean fitted-run pass@4

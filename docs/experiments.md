@@ -1,5 +1,27 @@
 # Experimental program
 
+## Retained v2 comparison — retrospective audit, 2026-10-13
+
+The complete pre-existing five-arm record has correctness-RL minus SFT +0.46875
+points, task-bootstrap 95% interval [-0.078125, +1.015625], and the unchanged
+`interval_includes_zero` decision. CPU replay identifies saturated format
+reward and verifies zero saved LoRA contribution. Only 8/80 correctness groups
+are mixed; 15/31 random mixed-label groups have identical outputs and cancel.
+Sparse signal is not established as the cause of the overall non-pass. Original
+execution provenance is incomplete and the confirmation cohort is retired.
+See the [report](format-comparison-record-v1-report.md) and
+[lossless record bundle](../results/format-comparison-record-v1/).
+
+## Seed-aware summary v3 — correctness study, 2026-10-13
+
+The synthetic complete-grid comparison distinguishes pooled pass@4 across five
+runs from mean within-run pass@4 and demonstrates an ordering reversal. A second
+interleaving experiment reproduces and fixes the CLI's mismatched hash/metrics.
+Both failing baselines, raw fixtures, corrected results, and independent AI
+review are retained in the [technical report](seeded-summary-v3-report.md).
+Learning protocol v2 and its primary decision remain frozen; no model run was
+performed in this study.
+
 ## 2026-10-13 — evaluation task lifetime correction
 
 The [engine replay](engine-evaluation-lifecycle-v1-report.md) checks termination-before-discard with 13 cases and a small event-order probe. Pinned baseline fails 12 cases; the correction passes all 13 and the full local suite of 362. The retained independent AI counterexample caused an additional guard for hooks already cancelling. This CPU fixture study neither trains a model nor consumes a confirmation cohort.

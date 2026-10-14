@@ -1,6 +1,18 @@
 # Reviewer guide
 
-## Current entry point — 2026-10-14
+**2026-10-13 retained record:** the [comparison audit](format-comparison-record-v1-report.md)
+regrades archived outputs without a model runtime, preserves the primary
+non-pass, and inspects saturated/cancelling training signals. Raw data is
+portable; original execution provenance is incomplete. The confirmation cohort
+is consumed.
+
+**2026-10-13 analysis addition:** see the [seed-aware summary report](seeded-summary-v3-report.md)
+for the pooled/per-run pass@4 counterexample, preserved v2 primary decision,
+snapshot-hash regression, independent AI review, and CPU reproduction command.
+This is evaluation analysis, not model improvement. Older status snapshots below
+are historical; use GitHub for live PR status.
+
+## Current entry point — 2026-10-15
 
 The [documentation index](README.md) and [repository layout](repository-layout.md) separate current code, experimental paths, and retained history without moving frozen artifacts. The [whole-round runtime ownership report](runtime-round-ownership-v1.md) covers sibling loops, restart reservations, explicit operator recovery, and multiprocess failure diagnostics. It extends the earlier per-loop discard/publication fences; the original reports remain scoped to their measured revisions. Older status snapshots below are historical; use PR links for live status. The main model-learning gap remains independently confirmed held-out task success after an update.
 

@@ -1,0 +1,46 @@
+{
+  "cases": {
+    "retrospective": {
+      "rejected": false,
+      "error": null,
+      "output_exists": true,
+      "raw_unchanged": true,
+      "legacy_report_unchanged": true,
+      "analysis_status": "retrospective_analysis",
+      "existing_output_overwrite_rejected": true
+    },
+    "prospective": {
+      "rejected": false,
+      "error": null,
+      "output_exists": true,
+      "raw_unchanged": true,
+      "legacy_report_unchanged": true,
+      "analysis_status": "prospective_pin_present",
+      "existing_output_overwrite_rejected": true
+    },
+    "missing_seed": {
+      "rejected": true,
+      "error": "ValueError: progress is not the full frozen grid",
+      "output_exists": false,
+      "raw_unchanged": true,
+      "legacy_report_unchanged": true
+    },
+    "wrong_row_tag": {
+      "rejected": true,
+      "error": "SystemExit: progress has no matching prospective analysis pin; use retrospective analysis",
+      "output_exists": false,
+      "raw_unchanged": true,
+      "legacy_report_unchanged": true
+    },
+    "duplicate_task_id": {
+      "rejected": true,
+      "error": "ValueError: task IDs must be nonempty and unique across splits",
+      "output_exists": false,
+      "raw_unchanged": true,
+      "legacy_report_unchanged": true
+    }
+  },
+  "legacy_module_and_protocol_unchanged": true,
+  "real_confirm_generator_called": false,
+  "model_session_constructed": false
+}

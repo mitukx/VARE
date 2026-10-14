@@ -1,5 +1,13 @@
 # Format versus correctness comparison v2
 
+**Analysis addition, 2026-10-13:** [seed-aware v3](seeded-summary-v3-report.md)
+preserves the frozen primary bootstrap/decision and learning protocol, adds
+per-run pass@4 alongside pooled curves, and binds its report to one captured
+progress snapshot. The [retrospective audit](format-comparison-record-v1-report.md)
+later archived a complete pre-existing grid whose primary interval includes
+zero; its original run provenance remains incomplete and confirmation cohort is
+consumed.
+
 Protocol id: `format-vs-correctness-comparison-v2`.
 
 The exact-integer v2 base gate was non-degenerate, and the [update-cost smoke](heldout-exact-integer-update-cost-smoke-v1.md) was accepted. Those two records are what allow this comparison. The mlx run is recorded below as a transcription of the operator report. Do not rerun it, and do not change the step count after reading the interval. `scripts/format_vs_correctness_comparison_v1.py` still exits 2.

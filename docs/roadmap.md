@@ -1,5 +1,20 @@
 # Roadmap
 
+## Retrospective comparison audit — 2026-10-13
+
+The [record audit](format-comparison-record-v1-report.md) preserves the primary
+non-pass and finds the format reward saturated using retained reward, adapter,
+and optimizer artifacts. The consumed confirmation cannot be reused. Future
+learning needs untouched confirmation tasks, development reward-variation
+checks, and verified execution provenance.
+
+## Seed-aware analysis repair — 2026-10-13
+
+[Seed-aware summary v3](seeded-summary-v3-report.md) closes fitted-run pass@4
+aggregation and progress snapshot/digest correspondence defects using CPU
+counterexamples. It leaves the v2 learning protocol and primary decision intact.
+No model run or new capability evidence followed.
+
 ## Current entry point — 2026-10-14
 
 The [documentation index](README.md) and [repository layout](repository-layout.md) separate current code, experimental paths, and retained history without moving frozen artifacts. The [whole-round runtime ownership report](runtime-round-ownership-v1.md) covers sibling loops, restart reservations, explicit operator recovery, and multiprocess failure diagnostics. It extends the earlier per-loop discard/publication fences; the original reports remain scoped to their measured revisions. Older status snapshots below are historical; use PR links for live status. The main model-learning gap remains independently confirmed held-out task success after an update.

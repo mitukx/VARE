@@ -1,5 +1,24 @@
 # Calibration evidence
 
+## Retained comparison record audit — 2026-10-13
+
+The [retrospective report](format-comparison-record-v1-report.md) preserves
+18,240 raw rows losslessly, independently regrades 17,920 outputs, and verifies
+format-arm no-op adapters and zero Adam moments. The original primary interval
+includes zero; the format reward is saturated. Original execution revision and
+hardware remain unknown. This is CPU record/checkpoint analysis, not new
+training or independent human reproduction.
+
+## Seed-aware summary correctness — 2026-10-13
+
+Pinned v2 `3eb6de5` fails the fitted-run pass@4 counterexample; additive v3
+passes while preserving the primary decision objects. Initial CLI `b918e6e`
+fails metrics/digest correspondence under deterministic file replacement;
+corrected `3a5a808` passes. CPU synthetic evidence and independent AI probes are
+in the [report](seeded-summary-v3-report.md) and
+[bundle](../results/seeded-summary-v3/). This is not model-learning evidence or
+independent human review.
+
 **2026-10-13 — engine evaluation lifetime:** [report](engine-evaluation-lifecycle-v1-report.md), [raw records](../results/engine-evaluation-lifecycle-v1/), and [one-entry replay](../scripts/reproduce_engine_evaluation_lifecycle_v1.py) connect a live sibling/deleted candidate counterexample to cancellation-safe task ownership. Baseline has 12/13 failures; corrected has zero, preserving the concurrent-success control. An independent AI reviewer falsified the first proposal for pre-existing cancellation, then confirmed the amended guard in four cases. Local full suite: 362 pass; no model-gain or human-review claim.
 
 Integration follow-up for the 2026-10-13 inference correction: main `1e7fda8` includes the existing alias fix and still fails 10/14 new checks. The [updated four-arm record](../results/rvl-inference-transaction-v1/integration-main-1e7fda8/) passes 14/14 after correction, actual pinned HF state/worker checks, 349 full-suite tests, and Ruff/mypy. This supersedes the earlier 338-test suite count without altering its retained logs.

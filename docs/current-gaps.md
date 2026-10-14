@@ -1,10 +1,23 @@
 # Current evidence gaps
 
+**2026-10-13 — pre-existing v2 record audited:** the [retrospective report](format-comparison-record-v1-report.md)
+archives a complete five-arm grid. The primary correctness-RL minus SFT interval
+includes zero. Format rewards are saturated (80/80 zero-advantage groups, zero
+LoRA B and Adam moments); some random-label groups also cancel because
+completions are identical. The original executor, source revision, and hardware
+are unverified. The confirmation cohort is consumed and must not be reused.
+
+**2026-10-13 — secondary evaluation aggregation:** [seed-aware v3](seeded-summary-v3-report.md)
+adds per-run pass@4 and binds metrics and digest to one progress snapshot. Its
+synthetic grid reverses arm ordering under pooled versus per-run aggregation;
+the frozen v2 pass@1 decision is unchanged. The descriptive run SD includes
+evaluation sampling noise and is not a training-seed population interval.
+
 **Follow-up 2026-10-13 — evaluation task lifetime:** the previously identified generic engine gap now has a [correction and baseline replay](engine-evaluation-lifecycle-v1-report.md). The engine drains owned evaluators before candidate discard, including repeated cancellation and already-cancelling hooks. Baseline fails 12/13 new cases; correction passes all 13 and the 362-test local suite. This is proposed branch-level correctness evidence, not a model-learning result. Hook-owned detached work, noncooperative hooks, rollout-phase ownership, and success-path promotion interruption remain outside this change.
 
 **Update 2026-10-13 — inference transaction:** [three-arm CPU evidence](rvl-inference-transaction-v1-report.md) reuses VARE #5's alias fix and closes distinct active-inference RNG/mode contamination and cancellation-overlap paths in the adapter. Fourteen new cases pass; the actual pinned RVL/HF path preserves full trainer state. Unrelated global RNG users, MPS/XPU, arbitrary backend tensor writes, and hard cancellation deadlines remain outside scope. Generic engine sibling-evaluation draining remains an identified open defect. This is no model-success or RSI claim.
 
-Separate open branches now retain an MLX exact-integer base gate ([#11](https://github.com/mitukx/VARE/pull/11), 29/64 pass@4), an accepted one-update/save/reload resource record ([#17](https://github.com/mitukx/VARE/pull/17)), and a frozen comparison protocol ([#18](https://github.com/mitukx/VARE/pull/18)). These are distinct from the historical NO-GO decisions below; the comparison has no outcome verified in this change. MLX is not PyTorch MPS or CPU evidence.
+Merged PRs [#11](https://github.com/mitukx/VARE/pull/11), [#17](https://github.com/mitukx/VARE/pull/17), and [#18](https://github.com/mitukx/VARE/pull/18) retain the MLX exact-integer base gate (29/64 pass@4), a one-update/save/reload resource smoke, and the frozen five-arm comparison. The comparison completed with an interval including zero; the retrospective audit and seed-aware analysis are recorded above. This line is closed: do not rerun it or reuse its confirmation cohort. MLX is not PyTorch MPS or CPU evidence.
 
 **Update 2026-10-12 — VARE adapter shared-module rollback:** `RVLGRPOHooks` applied its own mode map with `Module.train()` after the trainer restore. On a constructed graph, a later alias restored the shared child to train mode and changed a mode-dependent stand-in forward; the other registration order and an unshared nested pair already kept their flags but still invoked `train()`. Direct assignment restores the checked flags without calling `train()`. This is the adapter-side instance of the defect reproduced for RVL PR #92. It is not production incidence, accelerator behavior, or a model-quality result, and it does not open a training run. See the [report](rvl-grpo-shared-module-mode-v1-report.md) and [baseline/fixed logs](../results/rvl-grpo-shared-module-mode-v1/).
 

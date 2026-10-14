@@ -26,6 +26,17 @@ VARE is a CPU-first outer control plane for post-training experiments: audited t
 | [Historical urllib3 grader](docs/urllib3-3352-real-model-feasibility-v1-report.md) | Pinned failing source and public known fix distinguish the actual regression; protected-asset checks and task identity are retained. Two local model attempts produced no patch. Public task is retired from confirmation. |
 | [Trajectory/replay contract](docs/trajectory-reference-v1.md) | CPU reference and RVL bridge retain complete group identity and token/verifier provenance. Pending/invalid reward is distinct from valid zero. |
 
+A retrospective audit of the pre-existing [format-versus-correctness v2 record](docs/format-comparison-record-v1-report.md)
+preserves the primary interval including zero and finds no active format-reward
+signal in its retained artifacts. The original run's executor, source revision,
+and hardware remain unverified; this is record analysis, not a new model run.
+
+The additive [seed-aware summary v3](docs/seeded-summary-v3-report.md) keeps the
+frozen v2 primary decision intact and distinguishes pass@4 within a fitted run
+from pooled outputs across runs. Synthetic baseline/fix evidence also checks
+that metrics and progress hashes describe the same captured bytes. This is
+evaluation-correctness evidence, not a model-learning result.
+
 ## Retained model outcomes
 
 | Study | Observation | Decision / limit |
@@ -34,7 +45,7 @@ VARE is a CPU-first outer control plane for post-training experiments: audited t
 | [Exact-integer v2](docs/heldout-exact-integer-base-gate-v2.md), Qwen2.5-3B-Instruct 4-bit / mlx | Strict pass@4: 29/64 (45.31%) | Base feasibility only; separate [one-update smoke](docs/heldout-exact-integer-update-cost-smoke-v1.md) retained save/reload and resource measurements, not a learning gain. |
 | [OpenBookQA confirmation](docs/openbookqa-qwen25-grpo-sft-confirmation-v1-report.md), Qwen2.5-0.5B | Base 45.31%; matched SFT 33.33%; GRPO 0/128 on all three seeds under the frozen parser | Pairing retired; no general conclusion about GRPO. |
 | ARC-Challenge, Qwen2.5-0.5B | GRPO 38.84% versus SFT 40.00% | Frozen gate failed; see the [experiment index](docs/experiments.md). Pairing retired. |
-| [Format/correctness v2](docs/format-vs-correctness-comparison-v2.md) | Correctness RL minus format SFT: +0.0047, 95% CI [-0.0008, 0.0102] | Non-pass. Operator-reported transcription; original summary/progress files are absent from Git. |
+| [Format/correctness v2](docs/format-vs-correctness-comparison-v2.md) | Correctness RL minus format SFT: +0.46875 points, 95% CI [-0.078125, +1.015625] | Retrospective audit of a pre-existing record; primary non-pass and original execution provenance incomplete. No new training occurred. |
 
 Negative results, consumed cohorts, protocol locks, and raw records retain their existing paths. A fresh study needs independently justified task/model/update feasibility, matched controls, multiple seeds, and untouched confirmation tasks.
 

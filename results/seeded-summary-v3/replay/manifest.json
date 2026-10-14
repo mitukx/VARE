@@ -1,0 +1,52 @@
+{
+  "baseline": "3eb6de55251406ed6c8f77eeef34817f41fc5155",
+  "cli_baseline": "b918e6ea0e69954c3081fa63e770428785cc7840",
+  "candidate_revision": "3a5a808e71d948cbe531a952344f8d5dee91f625",
+  "source_sha256": {
+    "src/vare/format_vs_correctness_v2.py": "fca8d5174747c1f3c1a8207d179dde83e9ee7b84ccb7767ddd5a33ae2fb96c15",
+    "src/vare/format_vs_correctness_seeded_summary_v3.py": "8b353e2f6acb927d9c973cc624e55a5ce894c5569aec2e03da7927eb10304326",
+    "scripts/run_format_vs_correctness_comparison_v2.py": "48f9c429d14950d07b606a768967959ed1dd09e9588ba3285dda0b2bee8e94ac",
+    "scripts/summarize_format_vs_correctness_seeded_v3.py": "a0392c82a35729032086e10c1cf7b20f0a4f597bf8cd16dbf50547735e92b0a9",
+    "scripts/reproduce_seeded_summary_v3.py": "509a628e724d5a8008897220144d4576828b6a178370b9a7c74443476f0786c0",
+    "reproducers/seeded_summary_v3.py": "7e09f13b39087d37aef1eddcddbb929c3e07415f20ef86dc6227beb3bd5d9e13",
+    "reproducers/seeded_summary_progress_snapshot.py": "355ed25ed84bea1773bc3371587947a6f75ce01d8441a9dd85db2c4162660209",
+    "reproducers/seeded_summary_fixture_v1.py": "a664b610f7b43c12a037164e4eb98e9e62a0ec822b04bf72b4230879dbc22656",
+    "tests/test_seeded_summary_v3.py": "8443605531d7d721bb62605cf47c9a2c7197dcd478492d5c34617f550905a60b",
+    "protocols/format_vs_correctness_comparison_v2.json": "8214a9c784035f47b20d9e44fc6bbbd3cef45f821d86d6eb2f69936cc25eb6b4",
+    "protocols/format_vs_correctness_seeded_summary_v3.json": "4729ad5294f896f4d6e30fef1535fd28006a7b194b7080d6fe659915f060cc1f"
+  },
+  "artifact_sha256": {
+    "baseline/summary.json": "b2a4827adfc6f9e7c8c71c273992623c6baa34a0ba7d704e2ed088b7e2873237",
+    "baseline/synthetic-progress.jsonl": "1407b261005c0f2eab57759be37a180c6a5aad7740e58afdc671541155b93b29",
+    "baseline/tasks.json": "2ac306e844433a63e8944d6e8272808dfe984cb13ad26699b431cf5da1ac5f0a",
+    "baseline.log": "cef47b6107a1621ca89143072a3a463d50f6f325a9c6c222c5c722ef33264b5a",
+    "cli-baseline/captured-progress.jsonl": "a7647e81eae59e979c15613ceb1e164cc2aec398385fb67330236e1097ca343d",
+    "cli-baseline/checks.json": "27173084687c28411cdc16aab9753170b6323ffe29b7f0c99df01f93cea01c6e",
+    "cli-baseline/fixture-root/benchmarks/heldout/exact_integer_v1/tasks.jsonl": "e317a9f155db5141bf26f187e8ee20a5eb1c4d1de788a3c9ea8b70a0ed3795bf",
+    "cli-baseline/progress.jsonl": "8d85b39d48e18dad197fd69fac6c6dce6d68e3996854528ba8552e4c096be47e",
+    "cli-baseline/summary.json": "4c672596aee4e613957706e08142d30c7c4586fd76eada09ee8db7639fa96904",
+    "cli-baseline.log": "dccf9a0a91febb4166114a0996c6f8530e8be52baadf9901b563836be78cb5a7",
+    "cli-fixed/captured-progress.jsonl": "a7647e81eae59e979c15613ceb1e164cc2aec398385fb67330236e1097ca343d",
+    "cli-fixed/checks.json": "83d94f585f4908088e7a7eb9301715892c9de603c94d5a22a56a5e04c9a27fc3",
+    "cli-fixed/fixture-root/benchmarks/heldout/exact_integer_v1/tasks.jsonl": "e317a9f155db5141bf26f187e8ee20a5eb1c4d1de788a3c9ea8b70a0ed3795bf",
+    "cli-fixed/progress.jsonl": "8d85b39d48e18dad197fd69fac6c6dce6d68e3996854528ba8552e4c096be47e",
+    "cli-fixed/summary.json": "0b7c8e5bc8afc5d1b12fd150ecc16d0eb987fae4c2856c3eb424dae84f000c89",
+    "cli-fixed.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "fixed/summary.json": "06ee55219489d9fb483dfa26e5a6d33b2afb24cc4114e4d307866bf3d62c6dad",
+    "fixed/synthetic-progress.jsonl": "1407b261005c0f2eab57759be37a180c6a5aad7740e58afdc671541155b93b29",
+    "fixed/tasks.json": "2ac306e844433a63e8944d6e8272808dfe984cb13ad26699b431cf5da1ac5f0a",
+    "fixed.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pytest.log": "2bcbcf0af7284a8dd5e99ec8289e6f99f03d5a2bce0b21903f305903f2feb0ac",
+    "pytest.xml": "a44de8fa642705ed676fb07c99c2b61a286fa84cac810a02f341e4ff42d756ba"
+  },
+  "runtime": {
+    "python": "3.12.12",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "pytest": "8.4.2",
+    "execution": "CPU synthetic output analysis"
+  },
+  "baseline_expected_failure": true,
+  "cli_baseline_expected_failure": true,
+  "fixed_cases_passed": 26,
+  "primary_fields_preserved": true
+}

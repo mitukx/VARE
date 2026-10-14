@@ -1,0 +1,367 @@
+{
+  "equal_format_correctness_adapter_same_sampling_seed_output_checks": [
+    {
+      "all_identical": true,
+      "checkpoint_step": 8,
+      "identical_outputs": 256,
+      "pairs": 256,
+      "run_seed": 20261016
+    },
+    {
+      "all_identical": true,
+      "checkpoint_step": 16,
+      "identical_outputs": 512,
+      "pairs": 512,
+      "run_seed": 20261016
+    },
+    {
+      "all_identical": true,
+      "checkpoint_step": 8,
+      "identical_outputs": 256,
+      "pairs": 256,
+      "run_seed": 20261019
+    }
+  ],
+  "groups": {
+    "correctness_reward_rl": {
+      "exact_duplicate_outputs": 38,
+      "groups": 80,
+      "mixed_duplicate_nonzero_loss": 0,
+      "mixed_duplicate_outputs": 0,
+      "mixed_groups": 8
+    },
+    "format_reward_rl": {
+      "exact_duplicate_outputs": 31,
+      "groups": 80,
+      "mixed_duplicate_nonzero_loss": 0,
+      "mixed_duplicate_outputs": 0,
+      "mixed_groups": 0
+    },
+    "random_reward_rl": {
+      "exact_duplicate_outputs": 35,
+      "groups": 80,
+      "mixed_duplicate_nonzero_loss": 0,
+      "mixed_duplicate_outputs": 15,
+      "mixed_groups": 31
+    }
+  },
+  "notes": [
+    "Identical output strings imply identical encoded completion under the same deterministic tokenizer.",
+    "Opposite group advantages then cancel the same completion NLL in the current zero-dropout objective.",
+    "Mixed rewards alone do not prove a nonzero gradient.",
+    "This is a retrospective record consistency check, not a controlled experiment."
+  ],
+  "progress_sha256": "10860ac27af371a7374bcb7ca38c6bd5171f6d467aef43c3a7c1e95468c73694",
+  "random_mixed_groups": [
+    {
+      "identical_output_strings": false,
+      "loss": 0.03271484375,
+      "rewards": [
+        0.0,
+        1.0
+      ],
+      "run_seed": 20261016,
+      "step": 1
+    },
+    {
+      "identical_output_strings": false,
+      "loss": 0.016326904296875,
+      "rewards": [
+        0.0,
+        1.0
+      ],
+      "run_seed": 20261016,
+      "step": 4
+    },
+    {
+      "identical_output_strings": false,
+      "loss": 0.020843505859375,
+      "rewards": [
+        0.0,
+        1.0
+      ],
+      "run_seed": 20261016,
+      "step": 8
+    },
+    {
+      "identical_output_strings": false,
+      "loss": -0.01025390625,
+      "rewards": [
+        1.0,
+        0.0
+      ],
+      "run_seed": 20261016,
+      "step": 11
+    },
+    {
+      "identical_output_strings": true,
+      "loss": 0.0,
+      "rewards": [
+        0.0,
+        1.0
+      ],
+      "run_seed": 20261016,
+      "step": 13
+    },
+    {
+      "identical_output_strings": false,
+      "loss": -0.28337860107421875,
+      "rewards": [
+        1.0,
+        0.0
+      ],
+      "run_seed": 20261016,
+      "step": 14
+    },
+    {
+      "identical_output_strings": true,
+      "loss": 0.0,
+      "rewards": [
+        0.0,
+        1.0
+      ],
+      "run_seed": 20261016,
+      "step": 15
+    },
+    {
+      "identical_output_strings": true,
+      "loss": 0.0,
+      "rewards": [
+        1.0,
+        0.0
+      ],
+      "run_seed": 20261016,
+      "step": 16
+    },
+    {
+      "identical_output_strings": true,
+      "loss": 0.0,
+      "rewards": [
+        1.0,
+        0.0
+      ],
+      "run_seed": 20261017,
+      "step": 1
+    },
+    {
+      "identical_output_strings": true,
+      "loss": 0.0,
+      "rewards": [
+        0.0,
+        1.0
+      ],
+      "run_seed": 20261017,
+      "step": 5
+    },
+    {
+      "identical_output_strings": false,
+      "loss": 0.04351806640625,
+      "rewards": [
+        1.0,
+        0.0
+      ],
+      "run_seed": 20261017,
+      "step": 6
+    },
+    {
+      "identical_output_strings": true,
+      "loss": 0.0,
+      "rewards": [
+        0.0,
+        1.0
+      ],
+      "run_seed": 20261017,
+      "step": 7
+    },
+    {
+      "identical_output_strings": true,
+      "loss": 0.0,
+      "rewards": [
+        1.0,
+        0.0
+      ],
+      "run_seed": 20261017,
+      "step": 13
+    },
+    {
+      "identical_output_strings": false,
+      "loss": 0.061737060546875,
+      "rewards": [
+        0.0,
+        1.0
+      ],
+      "run_seed": 20261017,
+      "step": 15
+    },
+    {
+      "identical_output_strings": true,
+      "loss": 0.0,
+      "rewards": [
+        0.0,
+        1.0
+      ],
+      "run_seed": 20261018,
+      "step": 7
+    },
+    {
+      "identical_output_strings": false,
+      "loss": 0.07196044921875,
+      "rewards": [
+        0.0,
+        1.0
+      ],
+      "run_seed": 20261018,
+      "step": 13
+    },
+    {
+      "identical_output_strings": false,
+      "loss": 0.0852203369140625,
+      "rewards": [
+        0.0,
+        1.0
+      ],
+      "run_seed": 20261018,
+      "step": 14
+    },
+    {
+      "identical_output_strings": true,
+      "loss": 0.0,
+      "rewards": [
+        1.0,
+        0.0
+      ],
+      "run_seed": 20261018,
+      "step": 15
+    },
+    {
+      "identical_output_strings": false,
+      "loss": -0.03271484375,
+      "rewards": [
+        0.0,
+        1.0
+      ],
+      "run_seed": 20261019,
+      "step": 1
+    },
+    {
+      "identical_output_strings": false,
+      "loss": 0.33367919921875,
+      "rewards": [
+        1.0,
+        0.0
+      ],
+      "run_seed": 20261019,
+      "step": 3
+    },
+    {
+      "identical_output_strings": true,
+      "loss": 0.0,
+      "rewards": [
+        1.0,
+        0.0
+      ],
+      "run_seed": 20261019,
+      "step": 4
+    },
+    {
+      "identical_output_strings": false,
+      "loss": -0.0595703125,
+      "rewards": [
+        1.0,
+        0.0
+      ],
+      "run_seed": 20261019,
+      "step": 9
+    },
+    {
+      "identical_output_strings": true,
+      "loss": 0.0,
+      "rewards": [
+        1.0,
+        0.0
+      ],
+      "run_seed": 20261019,
+      "step": 13
+    },
+    {
+      "identical_output_strings": false,
+      "loss": 0.08953857421875,
+      "rewards": [
+        0.0,
+        1.0
+      ],
+      "run_seed": 20261019,
+      "step": 14
+    },
+    {
+      "identical_output_strings": true,
+      "loss": 0.0,
+      "rewards": [
+        0.0,
+        1.0
+      ],
+      "run_seed": 20261019,
+      "step": 16
+    },
+    {
+      "identical_output_strings": true,
+      "loss": 0.0,
+      "rewards": [
+        0.0,
+        1.0
+      ],
+      "run_seed": 20261020,
+      "step": 2
+    },
+    {
+      "identical_output_strings": false,
+      "loss": 0.016448974609375,
+      "rewards": [
+        0.0,
+        1.0
+      ],
+      "run_seed": 20261020,
+      "step": 4
+    },
+    {
+      "identical_output_strings": false,
+      "loss": 0.0954132080078125,
+      "rewards": [
+        0.0,
+        1.0
+      ],
+      "run_seed": 20261020,
+      "step": 5
+    },
+    {
+      "identical_output_strings": false,
+      "loss": -0.01171875,
+      "rewards": [
+        0.0,
+        1.0
+      ],
+      "run_seed": 20261020,
+      "step": 6
+    },
+    {
+      "identical_output_strings": true,
+      "loss": 0.0,
+      "rewards": [
+        1.0,
+        0.0
+      ],
+      "run_seed": 20261020,
+      "step": 7
+    },
+    {
+      "identical_output_strings": true,
+      "loss": 0.0,
+      "rewards": [
+        1.0,
+        0.0
+      ],
+      "run_seed": 20261020,
+      "step": 14
+    }
+  ]
+}
