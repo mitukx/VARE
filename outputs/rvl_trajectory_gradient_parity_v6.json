@@ -1,0 +1,159 @@
+{
+  "fixture": {
+    "batch_scaled_target_weight_sum": 1.0,
+    "groups": [
+      {
+        "behavior_token_logprobs": [
+          [
+            -3.474778890609741
+          ],
+          [
+            -3.91414213180542,
+            -3.78279447555542,
+            -3.419365167617798
+          ]
+        ],
+        "group_id": "group-a",
+        "response_lengths": [
+          1,
+          3
+        ],
+        "response_token_ids": [
+          [
+            8
+          ],
+          [
+            9,
+            10,
+            11
+          ]
+        ],
+        "rewards": [
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "behavior_token_logprobs": [
+          [
+            -3.465506076812744,
+            -3.5483603477478027
+          ],
+          [
+            -3.793976306915283,
+            -3.6328155994415283,
+            -3.518742084503174,
+            -3.533787965774536
+          ]
+        ],
+        "group_id": "group-b",
+        "response_lengths": [
+          2,
+          4
+        ],
+        "response_token_ids": [
+          [
+            12,
+            13
+          ],
+          [
+            14,
+            15,
+            16,
+            17
+          ]
+        ],
+        "rewards": [
+          0.25,
+          0.75
+        ]
+      }
+    ],
+    "groupwise_advantages": [
+      -0.9999980000060001,
+      0.9999980000060001,
+      -0.9999920000959988,
+      0.9999920000959988
+    ],
+    "per_group_materialized_weight_sums": {
+      "group-a": 1.0,
+      "group-b": 1.0
+    },
+    "prompt_id": "shared-prompt-v1",
+    "prompt_merged_control_advantages": [
+      -1.2649070163713756,
+      1.2649070163713756,
+      -0.6324535081856878,
+      0.6324535081856878
+    ],
+    "sample_count": 4,
+    "temperature": 0.8
+  },
+  "protocol_id": "vare-rvl-trajectory-gradient-parity-v6",
+  "protocol_sha256": "9c9a6ea7d62425425aaa4aa91c721d95f1e09ed4320f188f6731c3a596ea0dac",
+  "result": {
+    "absolute_loss_difference": 1.4901161193847656e-08,
+    "claim_scope": "CPU loss/gradient interoperability only; no capability gain, real-model training, or RSI claim",
+    "materialized_reference_loss": 0.0,
+    "max_absolute_gradient_difference": 7.450580596923828e-09,
+    "model_parameters_and_buffers_unchanged": true,
+    "module_modes_restored": true,
+    "native_gradient_norm": 0.44544702768325806,
+    "native_gradients_finite": true,
+    "native_gradients_nonzero": true,
+    "native_trainer_loss": 1.4901161193847656e-08,
+    "optimizer_state_unchanged": true,
+    "optimizer_step_calls_intercepted": 1,
+    "parameter_update_performed": false,
+    "per_parameter_max_absolute_gradient_difference": {
+      "logits_by_context.weight": 7.450580596923828e-09
+    },
+    "prompt_merged_control_loss": -2.9802322387695312e-08,
+    "prompt_merged_control_max_gradient_difference": 0.0819641649723053,
+    "python_rng_unchanged": true,
+    "reference_gradient_global_norm": 0.4454469979607546,
+    "status": "completed",
+    "torch_cpu_rng_unchanged": true,
+    "wall_seconds": 1.4401878339995164
+  },
+  "runner_sha256": "f7f2427eb14e751130740fc305f5854adc8ce9ff3c180925ef396768797bfc3d",
+  "runtime": {
+    "device": "cpu",
+    "model_parameters": 1024,
+    "paid_compute": false,
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12",
+    "threads": 1,
+    "torch": "2.9.1"
+  },
+  "rvl_revision": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "rvl_source_files_sha256": {
+    "src/rvl_systems/grpo.py": "a2ef6217385a206f5e6c0f43fb40e900ae3bf1b2066a1c8d1ab1878fd25d724d",
+    "src/rvl_systems/hf_trainer.py": "375985c1d0cca49a9d98d8b00ed41cefe000b91461e9a0783e94312466fd0210",
+    "src/rvl_systems/lab/contracts.py": "726f3c0ff7dc9b22436946f7199a331e64f3992deb48289141a0f1f0ce16f279",
+    "src/rvl_systems/lab/token_replay.py": "4a995180ae5808dcac4f8f507f93c4c3fa7d64899514a4fb21e22c7c48a08230",
+    "src/rvl_systems/triton_grpo.py": "ed7ee082db036e1631c1f8eaacfb8691b102401c8342dcb9ed4dba5d26a22cf9",
+    "src/rvl_systems/types.py": "a3e9f06cc70972a7b5fd50b757ffff992d3a6156d1ffab5133e410471dcc5d7b"
+  },
+  "source_refresh": {
+    "baseline_protocol_id": "vare-rvl-trajectory-gradient-parity-v5",
+    "baseline_vare_source_content_reference": "The V5 baseline is defined only by vare_source_files_sha256 in protocols/rvl_trajectory_gradient_parity_v5.lock.json; the V5 result does not record the VARE execution commit.",
+    "changed_vare_files_since_v5_source": [
+      "src/vare/integrations/rvl.py",
+      "src/vare/integrations/rvl_grpo.py"
+    ],
+    "claim": "Source-current evidence refresh only; same measurement, no new method or result claim.",
+    "kind": "source-current evidence refresh",
+    "measurement_unchanged": true,
+    "rationale": "The v5 runner pins the VARE source hashes from its protocol and therefore cannot reproduce against the current main checkout. The v5 result omits the VARE execution commit, so its baseline is identified by those locked source-content hashes only. V6 repeats the identical seed, synthetic fixture, pinned RVL revision, trainer settings, comparison oracle, tolerances, and negative control against this current VARE revision.",
+    "scope_limit": "Synthetic CPU objective/gradient interoperability only; no method novelty, capability, policy improvement, or RSI claim.",
+    "vare_revision": "3ca6d7e765a20fb85dc927c9adfec81f77c09a65"
+  },
+  "vare_revision": "3ca6d7e765a20fb85dc927c9adfec81f77c09a65",
+  "vare_source_files_sha256": {
+    "src/vare/integrations/rvl.py": "9d40de5d2765115fc95972b2df8bc0c36bdd28132dddee8e6677d38a655afd14",
+    "src/vare/integrations/rvl_grpo.py": "db295fbd50b3629a46e2cab73873b02bf0f652353bc3a9f9292b2fae90d94df4",
+    "src/vare/integrations/rvl_trajectory.py": "26e42e119ed951b193f5dc2956625e6fa24ded143a88f4749dc19053cf83ed15",
+    "src/vare/trajectory_reference.py": "1596553c0bb4f95d6588269abd8855f81d2d8e8dc8156e2ea15a7cdb33362f43"
+  }
+}

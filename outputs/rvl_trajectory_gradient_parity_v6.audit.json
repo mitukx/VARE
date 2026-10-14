@@ -1,0 +1,39 @@
+{
+  "checks": {
+    "auditor_hash_match": true,
+    "fixture_groups": true,
+    "gradient_finite_nonzero": true,
+    "gradient_tolerance": true,
+    "loss_tolerance": true,
+    "negative_control": true,
+    "no_update_state_invariants": true,
+    "protocol_result_match": true,
+    "protocol_status": true,
+    "runner_hash_match": true,
+    "runtime_match": true,
+    "rvl_revision_match": true,
+    "rvl_source_hashes": {
+      "src/rvl_systems/grpo.py": true,
+      "src/rvl_systems/hf_trainer.py": true,
+      "src/rvl_systems/lab/contracts.py": true,
+      "src/rvl_systems/lab/token_replay.py": true,
+      "src/rvl_systems/triton_grpo.py": true,
+      "src/rvl_systems/types.py": true
+    },
+    "source_refresh_scope": true,
+    "vare_revision_match": true,
+    "vare_source_hashes": {
+      "src/vare/integrations/rvl.py": true,
+      "src/vare/integrations/rvl_grpo.py": true,
+      "src/vare/integrations/rvl_trajectory.py": true,
+      "src/vare/trajectory_reference.py": true
+    },
+    "wall_cap": true,
+    "weight_sums": true
+  },
+  "decision": "pass",
+  "limitation": "This source-current refresh repeats the v5 measurement at the locked VARE revision; it introduces no new method or result claim. This audit checks the recorded result; rerunning the v6 runner is the numerical reproduction.",
+  "protocol_id": "vare-rvl-trajectory-gradient-parity-v6",
+  "result_sha256": "5a0e81a6e3107e513ece53ea25b7005d80cbffd5043d9b6be7322841037007fc",
+  "vare_revision": "3ca6d7e765a20fb85dc927c9adfec81f77c09a65"
+}
