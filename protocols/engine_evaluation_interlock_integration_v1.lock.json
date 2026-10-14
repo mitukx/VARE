@@ -1,0 +1,17 @@
+{
+  "schema": "vare.correctness-protocol.v1",
+  "baseline_revision": "a0f6464cea402ec10a413a704fe092970b3f78a4",
+  "hypothesis": "Evaluation authorization denial must retain the round lock through terminal asynchronous candidate discard despite repeated caller cancellation.",
+  "existing_contribution": "VARE PR #19 owns evaluator and inference-worker lifetimes; this integration preserves main's pre/post evaluation interlock and signed-training/promotion checks.",
+  "test": "tests/test_safety_interlock.py::test_revocation_rollback_owns_discard_until_terminal",
+  "cases": {
+    "revocation_phase": ["pre", "post"],
+    "discard_failure": [false, true],
+    "caller_cancellation_requests": 3
+  },
+  "primary_metrics": ["evaluation_calls_before_denial", "round_lock_held_until_discard_terminal", "candidate_exists_during_rollback", "next_round_rollouts_before_discard_terminal", "original_denial_or_explicit_unknown_state_error"],
+  "acceptance": "All four candidate cases pass with no errors or skips; pinned baseline must fail all four on rollback abandonment, while historical lifecycle and inference controls retain their specified outcomes.",
+  "budget": "CPU only; no model downloads, accelerator, paid API, or consumed confirmation tasks; 30-second subprocess ceiling for the four-case comparison.",
+  "stopping_rule": "Run one baseline/candidate comparison; preserve failures and version any changed outcome-bearing criterion.",
+  "limits": "In-process, cooperative hook fixtures; no hard cancellation deadline, process-loss recovery, arbitrary hook repair, model-quality improvement, or algorithmic novelty claim."
+}

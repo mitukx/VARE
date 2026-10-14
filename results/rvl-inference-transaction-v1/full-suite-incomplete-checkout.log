@@ -1,0 +1,465 @@
+.................................F....................................F. [ 21%]
+.F...................................................................... [ 42%]
+FFFF.................................................................... [ 64%]
+..............................F.F....................................... [ 85%]
+................................FF..............                         [100%]
+=================================== FAILURES ===================================
+____________ DurableTests.test_durable_cli_worker_export_and_audit _____________
+
+self = <test_durable.DurableTests testMethod=test_durable_cli_worker_export_and_audit>
+
+    def test_durable_cli_worker_export_and_audit(self):
+        import subprocess
+        import sys
+        calls = [['durable-work', '--state', str(self.store.path), '--workers', '2'],
+                 ['durable-export', '--state', str(self.store.path), '--output', str(self.parent / 'cli-evidence')],
+                 ['durable-audit', str(self.parent / 'cli-evidence')]]
+        for args in calls:
+            result = subprocess.run([sys.executable, '-m', 'vare', *args], capture_output=True, timeout=30)
+>           self.assertEqual(0, result.returncode, result.stderr.decode())
+E           AssertionError: 0 != 1 : /opt/homebrew/Caskroom/miniforge/base/bin/python3.12: No module named vare
+
+tests/test_durable.py:288: AssertionError
+______________ test_pilot_data_matches_frozen_generator_and_hash _______________
+
+    def test_pilot_data_matches_frozen_generator_and_hash():
+        rows_path = ROOT / "data/cpu-arithmetic-feasibility-v1/pilot.json"
+>       rows = json.loads(rows_path.read_text(encoding="utf-8"))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_generated_arithmetic_feasibility_v1.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/user/Documents/Codex/2026-10-13/var/work/VARE/data/cpu-arithmetic-feasibility-v1/pilot.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/user/Documents/Codex/2026-10-13/var/work/VARE/data/cpu-arithmetic-feasibility-v1/pilot.json'
+
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/pathlib.py:1013: FileNotFoundError
+______________ test_protocol_lock_and_asset_hashes_are_consistent ______________
+
+    def test_protocol_lock_and_asset_hashes_are_consistent():
+        spec, protocol_hash = runner.load_spec()
+        lock = json.loads((ROOT / "protocols/cpu_generated_arithmetic_feasibility_v1.lock.json").read_text())
+        assert lock["sha256"] == protocol_hash
+>       assert spec["data"]["pilot_rows_sha256"] == audit_v1.sha256_file(ROOT / spec["data"]["pilot_rows_path"])
+                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_generated_arithmetic_feasibility_v1.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/audit_cpu_generated_arithmetic_feasibility_v1.py:30: in sha256_file
+    with path.open("rb") as stream:
+         ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/user/Documents/Codex/2026-10-13/var/work/VARE/data/cpu-arithmetic-feasibility-v1/pilot.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/user/Documents/Codex/2026-10-13/var/work/VARE/data/cpu-arithmetic-feasibility-v1/pilot.json'
+
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/pathlib.py:1013: FileNotFoundError
+_______ MeasurementTests.test_headline_edit_fails_even_with_new_manifest _______
+
+self = <test_measurement.MeasurementTests testMethod=test_headline_edit_fails_even_with_new_manifest>
+
+    def test_headline_edit_fails_even_with_new_manifest(self):
+        with tempfile.TemporaryDirectory(prefix='vare-report-test-') as scratch:
+            output = Path(scratch) / 'bundle'
+>           shutil.copytree(ROOT / 'results/cpu-scheduler-v1', output)
+
+tests/test_measurement.py:39: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+src = PosixPath('/Users/user/Documents/Codex/2026-10-13/var/work/VARE/results/cpu-scheduler-v1')
+dst = PosixPath('/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-report-test-74uzax95/bundle')
+symlinks = False, ignore = None, copy_function = <function copy2 at 0x105108680>
+ignore_dangling_symlinks = False, dirs_exist_ok = False
+
+    def copytree(src, dst, symlinks=False, ignore=None, copy_function=copy2,
+                 ignore_dangling_symlinks=False, dirs_exist_ok=False):
+        """Recursively copy a directory tree and return the destination directory.
+    
+        If exception(s) occur, an Error is raised with a list of reasons.
+    
+        If the optional symlinks flag is true, symbolic links in the
+        source tree result in symbolic links in the destination tree; if
+        it is false, the contents of the files pointed to by symbolic
+        links are copied. If the file pointed to by the symlink doesn't
+        exist, an exception will be added in the list of errors raised in
+        an Error exception at the end of the copy process.
+    
+        You can set the optional ignore_dangling_symlinks flag to true if you
+        want to silence this exception. Notice that this has no effect on
+        platforms that don't support os.symlink.
+    
+        The optional ignore argument is a callable. If given, it
+        is called with the `src` parameter, which is the directory
+        being visited by copytree(), and `names` which is the list of
+        `src` contents, as returned by os.listdir():
+    
+            callable(src, names) -> ignored_names
+    
+        Since copytree() is called recursively, the callable will be
+        called once for each directory that is copied. It returns a
+        list of names relative to the `src` directory that should
+        not be copied.
+    
+        The optional copy_function argument is a callable that will be used
+        to copy each file. It will be called with the source path and the
+        destination path as arguments. By default, copy2() is used, but any
+        function that supports the same signature (like copy()) can be used.
+    
+        If dirs_exist_ok is false (the default) and `dst` already exists, a
+        `FileExistsError` is raised. If `dirs_exist_ok` is true, the copying
+        operation will continue if it encounters existing directories, and files
+        within the `dst` tree will be overwritten by corresponding files from the
+        `src` tree.
+        """
+        sys.audit("shutil.copytree", src, dst)
+>       with os.scandir(src) as itr:
+             ^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/user/Documents/Codex/2026-10-13/var/work/VARE/results/cpu-scheduler-v1'
+
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/shutil.py:598: FileNotFoundError
+_____ MeasurementTests.test_recovery_headline_edit_fails_with_new_manifest _____
+
+self = <test_measurement.MeasurementTests testMethod=test_recovery_headline_edit_fails_with_new_manifest>
+
+    def test_recovery_headline_edit_fails_with_new_manifest(self):
+        with tempfile.TemporaryDirectory(prefix='vare-recovery-report-test-') as scratch:
+            output = Path(scratch) / 'bundle'
+>           shutil.copytree(ROOT / 'results/cpu-recovery-v1', output)
+
+tests/test_measurement.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+src = PosixPath('/Users/user/Documents/Codex/2026-10-13/var/work/VARE/results/cpu-recovery-v1')
+dst = PosixPath('/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-recovery-report-test-ti6s28mc/bundle')
+symlinks = False, ignore = None, copy_function = <function copy2 at 0x105108680>
+ignore_dangling_symlinks = False, dirs_exist_ok = False
+
+    def copytree(src, dst, symlinks=False, ignore=None, copy_function=copy2,
+                 ignore_dangling_symlinks=False, dirs_exist_ok=False):
+        """Recursively copy a directory tree and return the destination directory.
+    
+        If exception(s) occur, an Error is raised with a list of reasons.
+    
+        If the optional symlinks flag is true, symbolic links in the
+        source tree result in symbolic links in the destination tree; if
+        it is false, the contents of the files pointed to by symbolic
+        links are copied. If the file pointed to by the symlink doesn't
+        exist, an exception will be added in the list of errors raised in
+        an Error exception at the end of the copy process.
+    
+        You can set the optional ignore_dangling_symlinks flag to true if you
+        want to silence this exception. Notice that this has no effect on
+        platforms that don't support os.symlink.
+    
+        The optional ignore argument is a callable. If given, it
+        is called with the `src` parameter, which is the directory
+        being visited by copytree(), and `names` which is the list of
+        `src` contents, as returned by os.listdir():
+    
+            callable(src, names) -> ignored_names
+    
+        Since copytree() is called recursively, the callable will be
+        called once for each directory that is copied. It returns a
+        list of names relative to the `src` directory that should
+        not be copied.
+    
+        The optional copy_function argument is a callable that will be used
+        to copy each file. It will be called with the source path and the
+        destination path as arguments. By default, copy2() is used, but any
+        function that supports the same signature (like copy()) can be used.
+    
+        If dirs_exist_ok is false (the default) and `dst` already exists, a
+        `FileExistsError` is raised. If `dirs_exist_ok` is true, the copying
+        operation will continue if it encounters existing directories, and files
+        within the `dst` tree will be overwritten by corresponding files from the
+        `src` tree.
+        """
+        sys.audit("shutil.copytree", src, dst)
+>       with os.scandir(src) as itr:
+             ^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/user/Documents/Codex/2026-10-13/var/work/VARE/results/cpu-recovery-v1'
+
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/shutil.py:598: FileNotFoundError
+_________ MeasurementTests.test_retained_recovery_report_reconstructs __________
+
+self = <test_measurement.MeasurementTests testMethod=test_retained_recovery_report_reconstructs>
+
+    def test_retained_recovery_report_reconstructs(self):
+>       result = audit_recovery(ROOT / 'results/cpu-recovery-v1')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_measurement.py:14: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/audit_recovery.py:21: in audit_recovery
+    manifest = load(output / 'manifest.json')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/audit_recovery.py:14: in load
+    return strict_json(path.read_bytes())
+                       ^^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/user/Documents/Codex/2026-10-13/var/work/VARE/results/cpu-recovery-v1/manifest.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/user/Documents/Codex/2026-10-13/var/work/VARE/results/cpu-recovery-v1/manifest.json'
+
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/pathlib.py:1013: FileNotFoundError
+______________ MeasurementTests.test_retained_report_reconstructs ______________
+
+self = <test_measurement.MeasurementTests testMethod=test_retained_report_reconstructs>
+
+    def test_retained_report_reconstructs(self):
+>       result = audit_measurement(ROOT / 'results/cpu-scheduler-v1')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_measurement.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/audit_scheduler.py:27: in audit_measurement
+    manifest = load(output / 'manifest.json')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/audit_scheduler.py:16: in load
+    return strict_json(path.read_bytes())
+                       ^^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/user/Documents/Codex/2026-10-13/var/work/VARE/results/cpu-scheduler-v1/manifest.json')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/user/Documents/Codex/2026-10-13/var/work/VARE/results/cpu-scheduler-v1/manifest.json'
+
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/pathlib.py:1013: FileNotFoundError
+___________ RunnerTests.test_cli_plan_operational_failure_and_audit ____________
+
+self = <test_runner.RunnerTests testMethod=test_cli_plan_operational_failure_and_audit>
+
+    def test_cli_plan_operational_failure_and_audit(self):
+        import subprocess
+        import sys
+        from vare.runner import ROOT
+        workspace = self.parent / 'empty-candidate'
+        workspace.mkdir()
+        plan = self.parent / 'input-plan.json'
+        plan.write_bytes(encode({'jobs': [{'id': 'missing',
+            'task_root': str(ROOT / 'benchmarks/historical/rvl_behavior_policy_parity'),
+            'workspace': 'empty-candidate'}]}))
+        output = self.parent / 'cli-evidence'
+        result = subprocess.run([sys.executable, '-m', 'vare', 'run', '--plan', str(plan),
+                                 '--output', str(output), '--workers', '2'], capture_output=True)
+        self.assertEqual(1, result.returncode, result.stderr.decode())
+>       self.assertEqual({'source_error': 1}, json.loads(result.stdout)['outcomes'])
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_runner.py:185: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/json/decoder.py:338: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x1055b0350>, s = '', idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+>           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/json/decoder.py:356: JSONDecodeError
+________________________ RunnerTests.test_fault_matrix _________________________
+
+self = <test_runner.RunnerTests testMethod=test_fault_matrix>
+
+    def test_fault_matrix(self):
+        cases = [('valid', 'candidate_passed'), ('reject', 'candidate_rejected'),
+                 ('malformed', 'invalid_output'), ('duplicate', 'invalid_output'),
+                 ('nonfinite', 'invalid_output'), ('crash', 'grader_error'),
+                 ('wrong_task', 'provenance_mismatch'), ('fake_hash', 'provenance_mismatch'),
+                 ('wrong_exit', 'invalid_output'), ('mutate', 'workspace_changed'),
+                 ('timeout', 'timeout'), ('flood', 'output_limit')]
+        output, _ = self.campaign(cases)
+        self.assertLessEqual((output / 'jobs/flood/stdout.bin').stat().st_size, 1024)
+        import subprocess
+        cli = subprocess.run([__import__('sys').executable, '-m', 'vare', 'audit', str(output)], capture_output=True)
+>       self.assertEqual(0, cli.returncode, cli.stderr.decode())
+E       AssertionError: 0 != 1 : /opt/homebrew/Caskroom/miniforge/base/bin/python3.12: No module named vare
+
+tests/test_runner.py:48: AssertionError
+_ IndependentRobustnessVerifierTests.test_rejects_metric_tampering_even_if_manifest_is_rebuilt _
+
+self = <test_synthetic_preference_robustness_independent_verifier.IndependentRobustnessVerifierTests testMethod=test_rejects_metric_tampering_even_if_manifest_is_rebuilt>
+
+    def test_rejects_metric_tampering_even_if_manifest_is_rebuilt(self):
+        with tempfile.TemporaryDirectory() as directory:
+            altered = Path(directory) / "bundle"
+>           shutil.copytree(self.bundle, altered)
+
+tests/test_synthetic_preference_robustness_independent_verifier.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+src = PosixPath('/Users/user/Documents/Codex/2026-10-13/var/work/VARE/results/synthetic-preference-robustness-v1/confirmation')
+dst = PosixPath('/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/tmpvbe94snp/bundle')
+symlinks = False, ignore = None, copy_function = <function copy2 at 0x105108680>
+ignore_dangling_symlinks = False, dirs_exist_ok = False
+
+    def copytree(src, dst, symlinks=False, ignore=None, copy_function=copy2,
+                 ignore_dangling_symlinks=False, dirs_exist_ok=False):
+        """Recursively copy a directory tree and return the destination directory.
+    
+        If exception(s) occur, an Error is raised with a list of reasons.
+    
+        If the optional symlinks flag is true, symbolic links in the
+        source tree result in symbolic links in the destination tree; if
+        it is false, the contents of the files pointed to by symbolic
+        links are copied. If the file pointed to by the symlink doesn't
+        exist, an exception will be added in the list of errors raised in
+        an Error exception at the end of the copy process.
+    
+        You can set the optional ignore_dangling_symlinks flag to true if you
+        want to silence this exception. Notice that this has no effect on
+        platforms that don't support os.symlink.
+    
+        The optional ignore argument is a callable. If given, it
+        is called with the `src` parameter, which is the directory
+        being visited by copytree(), and `names` which is the list of
+        `src` contents, as returned by os.listdir():
+    
+            callable(src, names) -> ignored_names
+    
+        Since copytree() is called recursively, the callable will be
+        called once for each directory that is copied. It returns a
+        list of names relative to the `src` directory that should
+        not be copied.
+    
+        The optional copy_function argument is a callable that will be used
+        to copy each file. It will be called with the source path and the
+        destination path as arguments. By default, copy2() is used, but any
+        function that supports the same signature (like copy()) can be used.
+    
+        If dirs_exist_ok is false (the default) and `dst` already exists, a
+        `FileExistsError` is raised. If `dirs_exist_ok` is true, the copying
+        operation will continue if it encounters existing directories, and files
+        within the `dst` tree will be overwritten by corresponding files from the
+        `src` tree.
+        """
+        sys.audit("shutil.copytree", src, dst)
+>       with os.scandir(src) as itr:
+             ^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/user/Documents/Codex/2026-10-13/var/work/VARE/results/synthetic-preference-robustness-v1/confirmation'
+
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/shutil.py:598: FileNotFoundError
+_ IndependentRobustnessVerifierTests.test_replays_retained_bundle_without_runner_import _
+
+self = <test_synthetic_preference_robustness_independent_verifier.IndependentRobustnessVerifierTests testMethod=test_replays_retained_bundle_without_runner_import>
+
+    def test_replays_retained_bundle_without_runner_import(self):
+>       result = verifier.audit(self.bundle)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_synthetic_preference_robustness_independent_verifier.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/verify_synthetic_preference_robustness_bundle_independent.py:189: in audit
+    manifest = validate_manifest(bundle)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/verify_synthetic_preference_robustness_bundle_independent.py:174: in validate_manifest
+    manifest = read_json(bundle / "manifest.json")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts/verify_synthetic_preference_robustness_bundle_independent.py:42: in read_json
+    with path.open(encoding="utf-8") as stream:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/user/Documents/Codex/2026-10-13/var/work/VARE/results/synthetic-preference-robustness-v1/confirmation/manifest.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/user/Documents/Codex/2026-10-13/var/work/VARE/results/synthetic-preference-robustness-v1/confirmation/manifest.json'
+
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/pathlib.py:1013: FileNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_durable.py::DurableTests::test_durable_cli_worker_export_and_audit
+FAILED tests/test_generated_arithmetic_feasibility_v1.py::test_pilot_data_matches_frozen_generator_and_hash
+FAILED tests/test_generated_arithmetic_feasibility_v1.py::test_protocol_lock_and_asset_hashes_are_consistent
+FAILED tests/test_measurement.py::MeasurementTests::test_headline_edit_fails_even_with_new_manifest
+FAILED tests/test_measurement.py::MeasurementTests::test_recovery_headline_edit_fails_with_new_manifest
+FAILED tests/test_measurement.py::MeasurementTests::test_retained_recovery_report_reconstructs
+FAILED tests/test_measurement.py::MeasurementTests::test_retained_report_reconstructs
+FAILED tests/test_runner.py::RunnerTests::test_cli_plan_operational_failure_and_audit
+FAILED tests/test_runner.py::RunnerTests::test_fault_matrix - AssertionError:...
+FAILED tests/test_synthetic_preference_robustness_independent_verifier.py::IndependentRobustnessVerifierTests::test_rejects_metric_tampering_even_if_manifest_is_rebuilt
+FAILED tests/test_synthetic_preference_robustness_independent_verifier.py::IndependentRobustnessVerifierTests::test_replays_retained_bundle_without_runner_import
+11 failed, 325 passed in 53.65s

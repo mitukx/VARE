@@ -1,0 +1,534 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="10" skipped="0" tests="12" time="0.526" timestamp="2026-10-13T16:40:38.935705-06:00" hostname="c452fa62dd72"><testcase classname="tests.test_promotion_publication_recovery" name="test_publication_fault_without_journal_fences_reentry[before-error]" time="0.005"><failure message="AssertionError: failed publication permitted another hook access&#10;assert ['active-poli...promote', ...] == ['active-poli...1', 'promote']&#10;  &#10;  Left contains 6 more items, first extra item: 'active-policy'&#10;  Use -v to get more diff">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_publication_fault_without0')
+mode = 'before-error'
+
+    @pytest.mark.parametrize("mode", ["before-error", "after-error", "before-cancel", "after-cancel"])
+    def test_publication_fault_without_journal_fences_reentry(tmp_path, mode):
+        async def case():
+            loop, hooks, _ = make_loop(tmp_path, mode=mode)
+            with pytest.raises((OSError, asyncio.CancelledError, PromotionRecoveryRequired)):
+                await loop.run_round([Task("t", "prompt")], round_index=0)
+            assert loop.events.counters["candidate_promoted"] == 0
+            assert loop.events.counters["round_complete"] == 0
+            hooks.mode = "success"
+            await assert_reentry_fenced(loop, hooks)
+            assert "discard" not in hooks.calls
+    
+&gt;       asyncio.run(case())
+
+tests/test_promotion_publication_recovery.py:146: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/test_promotion_publication_recovery.py:143: in case
+    await assert_reentry_fenced(loop, hooks)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+loop = &lt;vare.engine.CapabilityLoop object at 0x7fe378e14a40&gt;
+hooks = &lt;test_promotion_publication_recovery.Hooks object at 0x7fe378e149e0&gt;
+
+    async def assert_reentry_fenced(loop, hooks):
+        calls = list(hooks.calls)
+        step = loop.step
+        error = None
+        try:
+            await loop.run_round([Task("next", "next prompt")], round_index=1)
+        except BaseException as exc:
+            error = exc
+&gt;       assert hooks.calls == calls, "failed publication permitted another hook access"
+E       AssertionError: failed publication permitted another hook access
+E       assert ['active-poli...promote', ...] == ['active-poli...1', 'promote']
+E         
+E         Left contains 6 more items, first extra item: 'active-policy'
+E         Use -v to get more diff
+
+tests/test_promotion_publication_recovery.py:127: AssertionError</failure></testcase><testcase classname="tests.test_promotion_publication_recovery" name="test_publication_fault_without_journal_fences_reentry[after-error]" time="0.002"><failure message="AssertionError: failed publication permitted another hook access&#10;assert ['active-poli...promote', ...] == ['active-poli...1', 'promote']&#10;  &#10;  Left contains 6 more items, first extra item: 'active-policy'&#10;  Use -v to get more diff">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_publication_fault_without1')
+mode = 'after-error'
+
+    @pytest.mark.parametrize("mode", ["before-error", "after-error", "before-cancel", "after-cancel"])
+    def test_publication_fault_without_journal_fences_reentry(tmp_path, mode):
+        async def case():
+            loop, hooks, _ = make_loop(tmp_path, mode=mode)
+            with pytest.raises((OSError, asyncio.CancelledError, PromotionRecoveryRequired)):
+                await loop.run_round([Task("t", "prompt")], round_index=0)
+            assert loop.events.counters["candidate_promoted"] == 0
+            assert loop.events.counters["round_complete"] == 0
+            hooks.mode = "success"
+            await assert_reentry_fenced(loop, hooks)
+            assert "discard" not in hooks.calls
+    
+&gt;       asyncio.run(case())
+
+tests/test_promotion_publication_recovery.py:146: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/test_promotion_publication_recovery.py:143: in case
+    await assert_reentry_fenced(loop, hooks)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+loop = &lt;vare.engine.CapabilityLoop object at 0x7fe378aaa3f0&gt;
+hooks = &lt;test_promotion_publication_recovery.Hooks object at 0x7fe378aaa2d0&gt;
+
+    async def assert_reentry_fenced(loop, hooks):
+        calls = list(hooks.calls)
+        step = loop.step
+        error = None
+        try:
+            await loop.run_round([Task("next", "next prompt")], round_index=1)
+        except BaseException as exc:
+            error = exc
+&gt;       assert hooks.calls == calls, "failed publication permitted another hook access"
+E       AssertionError: failed publication permitted another hook access
+E       assert ['active-poli...promote', ...] == ['active-poli...1', 'promote']
+E         
+E         Left contains 6 more items, first extra item: 'active-policy'
+E         Use -v to get more diff
+
+tests/test_promotion_publication_recovery.py:127: AssertionError</failure></testcase><testcase classname="tests.test_promotion_publication_recovery" name="test_publication_fault_without_journal_fences_reentry[before-cancel]" time="0.002"><failure message="AssertionError: failed publication permitted another hook access&#10;assert ['active-poli...promote', ...] == ['active-poli...1', 'promote']&#10;  &#10;  Left contains 6 more items, first extra item: 'active-policy'&#10;  Use -v to get more diff">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_publication_fault_without2')
+mode = 'before-cancel'
+
+    @pytest.mark.parametrize("mode", ["before-error", "after-error", "before-cancel", "after-cancel"])
+    def test_publication_fault_without_journal_fences_reentry(tmp_path, mode):
+        async def case():
+            loop, hooks, _ = make_loop(tmp_path, mode=mode)
+            with pytest.raises((OSError, asyncio.CancelledError, PromotionRecoveryRequired)):
+                await loop.run_round([Task("t", "prompt")], round_index=0)
+            assert loop.events.counters["candidate_promoted"] == 0
+            assert loop.events.counters["round_complete"] == 0
+            hooks.mode = "success"
+            await assert_reentry_fenced(loop, hooks)
+            assert "discard" not in hooks.calls
+    
+&gt;       asyncio.run(case())
+
+tests/test_promotion_publication_recovery.py:146: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/test_promotion_publication_recovery.py:143: in case
+    await assert_reentry_fenced(loop, hooks)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+loop = &lt;vare.engine.CapabilityLoop object at 0x7fe378aac380&gt;
+hooks = &lt;test_promotion_publication_recovery.Hooks object at 0x7fe378aae9f0&gt;
+
+    async def assert_reentry_fenced(loop, hooks):
+        calls = list(hooks.calls)
+        step = loop.step
+        error = None
+        try:
+            await loop.run_round([Task("next", "next prompt")], round_index=1)
+        except BaseException as exc:
+            error = exc
+&gt;       assert hooks.calls == calls, "failed publication permitted another hook access"
+E       AssertionError: failed publication permitted another hook access
+E       assert ['active-poli...promote', ...] == ['active-poli...1', 'promote']
+E         
+E         Left contains 6 more items, first extra item: 'active-policy'
+E         Use -v to get more diff
+
+tests/test_promotion_publication_recovery.py:127: AssertionError</failure></testcase><testcase classname="tests.test_promotion_publication_recovery" name="test_publication_fault_without_journal_fences_reentry[after-cancel]" time="0.002"><failure message="AssertionError: failed publication permitted another hook access&#10;assert ['active-poli...promote', ...] == ['active-poli...1', 'promote']&#10;  &#10;  Left contains 6 more items, first extra item: 'active-policy'&#10;  Use -v to get more diff">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_publication_fault_without3')
+mode = 'after-cancel'
+
+    @pytest.mark.parametrize("mode", ["before-error", "after-error", "before-cancel", "after-cancel"])
+    def test_publication_fault_without_journal_fences_reentry(tmp_path, mode):
+        async def case():
+            loop, hooks, _ = make_loop(tmp_path, mode=mode)
+            with pytest.raises((OSError, asyncio.CancelledError, PromotionRecoveryRequired)):
+                await loop.run_round([Task("t", "prompt")], round_index=0)
+            assert loop.events.counters["candidate_promoted"] == 0
+            assert loop.events.counters["round_complete"] == 0
+            hooks.mode = "success"
+            await assert_reentry_fenced(loop, hooks)
+            assert "discard" not in hooks.calls
+    
+&gt;       asyncio.run(case())
+
+tests/test_promotion_publication_recovery.py:146: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/test_promotion_publication_recovery.py:143: in case
+    await assert_reentry_fenced(loop, hooks)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+loop = &lt;vare.engine.CapabilityLoop object at 0x7fe378aad550&gt;
+hooks = &lt;test_promotion_publication_recovery.Hooks object at 0x7fe378aad430&gt;
+
+    async def assert_reentry_fenced(loop, hooks):
+        calls = list(hooks.calls)
+        step = loop.step
+        error = None
+        try:
+            await loop.run_round([Task("next", "next prompt")], round_index=1)
+        except BaseException as exc:
+            error = exc
+&gt;       assert hooks.calls == calls, "failed publication permitted another hook access"
+E       AssertionError: failed publication permitted another hook access
+E       assert ['active-poli...promote', ...] == ['active-poli...1', 'promote']
+E         
+E         Left contains 6 more items, first extra item: 'active-policy'
+E         Use -v to get more diff
+
+tests/test_promotion_publication_recovery.py:127: AssertionError</failure></testcase><testcase classname="tests.test_promotion_publication_recovery" name="test_hook_success_requires_candidate_runtime_acknowledgment[noop]" time="0.004"><failure message="AssertionError: unacknowledged candidate was reported as promoted&#10;assert RoundResult(round_index=0, incumbent_id='p0', candidate_id='p1', promoted_id='p1', decision=PromotionDecision(accepted...}, cost=0.0, verifier_disagreement=0.0, n=10, metadata={}), failures=(), admitted_experiences=1, dropped_experiences=0) is None">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_hook_success_requires_can0')
+mode = 'noop'
+
+    @pytest.mark.parametrize("mode", ["noop", "wrong-policy"])
+    def test_hook_success_requires_candidate_runtime_acknowledgment(tmp_path, mode):
+        async def case():
+            loop, hooks, _ = make_loop(tmp_path, mode=mode)
+            error = None
+            result = None
+            try:
+                result = await loop.run_round([Task("t", "prompt")], round_index=0)
+            except PromotionRecoveryRequired as exc:
+                error = exc
+            assert result is None, "unacknowledged candidate was reported as promoted"
+            assert error is not None
+            assert "policy" in str(error)
+            assert loop.events.counters["candidate_promoted"] == 0
+            assert loop.events.counters["round_complete"] == 0
+            await assert_reentry_fenced(loop, hooks)
+            assert "discard" not in hooks.calls
+    
+&gt;       asyncio.run(case())
+
+tests/test_promotion_publication_recovery.py:167: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def case():
+        loop, hooks, _ = make_loop(tmp_path, mode=mode)
+        error = None
+        result = None
+        try:
+            result = await loop.run_round([Task("t", "prompt")], round_index=0)
+        except PromotionRecoveryRequired as exc:
+            error = exc
+&gt;       assert result is None, "unacknowledged candidate was reported as promoted"
+E       AssertionError: unacknowledged candidate was reported as promoted
+E       assert RoundResult(round_index=0, incumbent_id='p0', candidate_id='p1', promoted_id='p1', decision=PromotionDecision(accepted...}, cost=0.0, verifier_disagreement=0.0, n=10, metadata={}), failures=(), admitted_experiences=1, dropped_experiences=0) is None
+
+tests/test_promotion_publication_recovery.py:159: AssertionError</failure></testcase><testcase classname="tests.test_promotion_publication_recovery" name="test_hook_success_requires_candidate_runtime_acknowledgment[wrong-policy]" time="0.004"><failure message="AssertionError: unacknowledged candidate was reported as promoted&#10;assert RoundResult(round_index=0, incumbent_id='p0', candidate_id='p1', promoted_id='p1', decision=PromotionDecision(accepted...}, cost=0.0, verifier_disagreement=0.0, n=10, metadata={}), failures=(), admitted_experiences=1, dropped_experiences=0) is None">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_hook_success_requires_can1')
+mode = 'wrong-policy'
+
+    @pytest.mark.parametrize("mode", ["noop", "wrong-policy"])
+    def test_hook_success_requires_candidate_runtime_acknowledgment(tmp_path, mode):
+        async def case():
+            loop, hooks, _ = make_loop(tmp_path, mode=mode)
+            error = None
+            result = None
+            try:
+                result = await loop.run_round([Task("t", "prompt")], round_index=0)
+            except PromotionRecoveryRequired as exc:
+                error = exc
+            assert result is None, "unacknowledged candidate was reported as promoted"
+            assert error is not None
+            assert "policy" in str(error)
+            assert loop.events.counters["candidate_promoted"] == 0
+            assert loop.events.counters["round_complete"] == 0
+            await assert_reentry_fenced(loop, hooks)
+            assert "discard" not in hooks.calls
+    
+&gt;       asyncio.run(case())
+
+tests/test_promotion_publication_recovery.py:167: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def case():
+        loop, hooks, _ = make_loop(tmp_path, mode=mode)
+        error = None
+        result = None
+        try:
+            result = await loop.run_round([Task("t", "prompt")], round_index=0)
+        except PromotionRecoveryRequired as exc:
+            error = exc
+&gt;       assert result is None, "unacknowledged candidate was reported as promoted"
+E       AssertionError: unacknowledged candidate was reported as promoted
+E       assert RoundResult(round_index=0, incumbent_id='p0', candidate_id='p1', promoted_id='p1', decision=PromotionDecision(accepted...}, cost=0.0, verifier_disagreement=0.0, n=10, metadata={}), failures=(), admitted_experiences=1, dropped_experiences=0) is None
+
+tests/test_promotion_publication_recovery.py:159: AssertionError</failure></testcase><testcase classname="tests.test_promotion_publication_recovery" name="test_durable_publication_completion_fault_fences_before_policy_lookup[checkpoint-mismatch]" time="0.005"><failure message="AssertionError: failed publication permitted another hook access&#10;assert ['active-poli...promote', ...] == ['active-poli...promote', ...]&#10;  &#10;  Left contains one more item: 'active-policy'&#10;  Use -v to get more diff">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_durable_publication_compl0')
+fault = 'checkpoint-mismatch'
+
+    @pytest.mark.parametrize("fault", ["checkpoint-mismatch", "commit-before", "commit-after"])
+    def test_durable_publication_completion_fault_fences_before_policy_lookup(tmp_path, fault):
+        async def case():
+            loop, hooks, journal = make_loop(
+                tmp_path, durable=True,
+                mode="checkpoint-mismatch" if fault == "checkpoint-mismatch" else "success",
+                journal_fault=fault if fault.startswith("commit") else None,
+            )
+            with pytest.raises((OSError, PromotionRecoveryRequired)):
+                await loop.run_round([Task("t", "prompt")], round_index=0)
+            assert loop.events.counters["candidate_promoted"] == 0
+            status = journal.status()
+            if fault == "commit-after":
+                assert status["pending_tx_id"] is None
+                assert status["active_policy_id"] == "p1"
+            else:
+                assert status["pending_tx_id"] == "publication-intent-0001"
+                assert status["active_policy_id"] == "p0"
+            hooks.mode = "success"
+            journal.fault = None
+            await assert_reentry_fenced(loop, hooks)
+            assert "discard" not in hooks.calls
+    
+&gt;       asyncio.run(case())
+
+tests/test_promotion_publication_recovery.py:193: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/test_promotion_publication_recovery.py:190: in case
+    await assert_reentry_fenced(loop, hooks)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+loop = &lt;vare.engine.CapabilityLoop object at 0x7fe378aad5b0&gt;
+hooks = &lt;test_promotion_publication_recovery.Hooks object at 0x7fe378aadcd0&gt;
+
+    async def assert_reentry_fenced(loop, hooks):
+        calls = list(hooks.calls)
+        step = loop.step
+        error = None
+        try:
+            await loop.run_round([Task("next", "next prompt")], round_index=1)
+        except BaseException as exc:
+            error = exc
+&gt;       assert hooks.calls == calls, "failed publication permitted another hook access"
+E       AssertionError: failed publication permitted another hook access
+E       assert ['active-poli...promote', ...] == ['active-poli...promote', ...]
+E         
+E         Left contains one more item: 'active-policy'
+E         Use -v to get more diff
+
+tests/test_promotion_publication_recovery.py:127: AssertionError</failure></testcase><testcase classname="tests.test_promotion_publication_recovery" name="test_durable_publication_completion_fault_fences_before_policy_lookup[commit-before]" time="0.005"><failure message="AssertionError: failed publication permitted another hook access&#10;assert ['active-poli...promote', ...] == ['active-poli...promote', ...]&#10;  &#10;  Left contains one more item: 'active-policy'&#10;  Use -v to get more diff">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_durable_publication_compl1')
+fault = 'commit-before'
+
+    @pytest.mark.parametrize("fault", ["checkpoint-mismatch", "commit-before", "commit-after"])
+    def test_durable_publication_completion_fault_fences_before_policy_lookup(tmp_path, fault):
+        async def case():
+            loop, hooks, journal = make_loop(
+                tmp_path, durable=True,
+                mode="checkpoint-mismatch" if fault == "checkpoint-mismatch" else "success",
+                journal_fault=fault if fault.startswith("commit") else None,
+            )
+            with pytest.raises((OSError, PromotionRecoveryRequired)):
+                await loop.run_round([Task("t", "prompt")], round_index=0)
+            assert loop.events.counters["candidate_promoted"] == 0
+            status = journal.status()
+            if fault == "commit-after":
+                assert status["pending_tx_id"] is None
+                assert status["active_policy_id"] == "p1"
+            else:
+                assert status["pending_tx_id"] == "publication-intent-0001"
+                assert status["active_policy_id"] == "p0"
+            hooks.mode = "success"
+            journal.fault = None
+            await assert_reentry_fenced(loop, hooks)
+            assert "discard" not in hooks.calls
+    
+&gt;       asyncio.run(case())
+
+tests/test_promotion_publication_recovery.py:193: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/test_promotion_publication_recovery.py:190: in case
+    await assert_reentry_fenced(loop, hooks)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+loop = &lt;vare.engine.CapabilityLoop object at 0x7fe378ad1a90&gt;
+hooks = &lt;test_promotion_publication_recovery.Hooks object at 0x7fe378aaff20&gt;
+
+    async def assert_reentry_fenced(loop, hooks):
+        calls = list(hooks.calls)
+        step = loop.step
+        error = None
+        try:
+            await loop.run_round([Task("next", "next prompt")], round_index=1)
+        except BaseException as exc:
+            error = exc
+&gt;       assert hooks.calls == calls, "failed publication permitted another hook access"
+E       AssertionError: failed publication permitted another hook access
+E       assert ['active-poli...promote', ...] == ['active-poli...promote', ...]
+E         
+E         Left contains one more item: 'active-policy'
+E         Use -v to get more diff
+
+tests/test_promotion_publication_recovery.py:127: AssertionError</failure></testcase><testcase classname="tests.test_promotion_publication_recovery" name="test_durable_publication_completion_fault_fences_before_policy_lookup[commit-after]" time="0.005"><failure message="AssertionError: failed publication permitted another hook access&#10;assert ['active-poli...promote', ...] == ['active-poli...promote', ...]&#10;  &#10;  Left contains 6 more items, first extra item: 'active-policy'&#10;  Use -v to get more diff">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_durable_publication_compl2')
+fault = 'commit-after'
+
+    @pytest.mark.parametrize("fault", ["checkpoint-mismatch", "commit-before", "commit-after"])
+    def test_durable_publication_completion_fault_fences_before_policy_lookup(tmp_path, fault):
+        async def case():
+            loop, hooks, journal = make_loop(
+                tmp_path, durable=True,
+                mode="checkpoint-mismatch" if fault == "checkpoint-mismatch" else "success",
+                journal_fault=fault if fault.startswith("commit") else None,
+            )
+            with pytest.raises((OSError, PromotionRecoveryRequired)):
+                await loop.run_round([Task("t", "prompt")], round_index=0)
+            assert loop.events.counters["candidate_promoted"] == 0
+            status = journal.status()
+            if fault == "commit-after":
+                assert status["pending_tx_id"] is None
+                assert status["active_policy_id"] == "p1"
+            else:
+                assert status["pending_tx_id"] == "publication-intent-0001"
+                assert status["active_policy_id"] == "p0"
+            hooks.mode = "success"
+            journal.fault = None
+            await assert_reentry_fenced(loop, hooks)
+            assert "discard" not in hooks.calls
+    
+&gt;       asyncio.run(case())
+
+tests/test_promotion_publication_recovery.py:193: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/test_promotion_publication_recovery.py:190: in case
+    await assert_reentry_fenced(loop, hooks)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+loop = &lt;vare.engine.CapabilityLoop object at 0x7fe378ad0200&gt;
+hooks = &lt;test_promotion_publication_recovery.Hooks object at 0x7fe378ad0110&gt;
+
+    async def assert_reentry_fenced(loop, hooks):
+        calls = list(hooks.calls)
+        step = loop.step
+        error = None
+        try:
+            await loop.run_round([Task("next", "next prompt")], round_index=1)
+        except BaseException as exc:
+            error = exc
+&gt;       assert hooks.calls == calls, "failed publication permitted another hook access"
+E       AssertionError: failed publication permitted another hook access
+E       assert ['active-poli...promote', ...] == ['active-poli...promote', ...]
+E         
+E         Left contains 6 more items, first extra item: 'active-policy'
+E         Use -v to get more diff
+
+tests/test_promotion_publication_recovery.py:127: AssertionError</failure></testcase><testcase classname="tests.test_promotion_publication_recovery" name="test_real_caller_cancellation_during_publication_fences_reentry" time="0.002"><failure message="AssertionError: failed publication permitted another hook access&#10;assert ['active-poli...promote', ...] == ['active-poli...1', 'promote']&#10;  &#10;  Left contains 6 more items, first extra item: 'active-policy'&#10;  Use -v to get more diff">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_real_caller_cancellation_0')
+
+    def test_real_caller_cancellation_during_publication_fences_reentry(tmp_path):
+        async def case():
+            loop, hooks, _ = make_loop(tmp_path, mode="caller-cancel")
+            task = asyncio.create_task(loop.run_round([Task("t", "prompt")], round_index=0))
+            try:
+                await asyncio.wait_for(hooks.entered.wait(), 2)
+                task.cancel()
+                with pytest.raises(asyncio.CancelledError):
+                    await task
+                assert hooks.finished.is_set()
+                assert loop.events.counters["candidate_promoted"] == 0
+                hooks.mode = "success"
+                await assert_reentry_fenced(loop, hooks)
+            finally:
+                hooks.release.set()
+                await asyncio.gather(task, return_exceptions=True)
+    
+&gt;       asyncio.run(case())
+
+tests/test_promotion_publication_recovery.py:213: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/test_promotion_publication_recovery.py:208: in case
+    await assert_reentry_fenced(loop, hooks)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+loop = &lt;vare.engine.CapabilityLoop object at 0x7fe378aafc80&gt;
+hooks = &lt;test_promotion_publication_recovery.Hooks object at 0x7fe378aada60&gt;
+
+    async def assert_reentry_fenced(loop, hooks):
+        calls = list(hooks.calls)
+        step = loop.step
+        error = None
+        try:
+            await loop.run_round([Task("next", "next prompt")], round_index=1)
+        except BaseException as exc:
+            error = exc
+&gt;       assert hooks.calls == calls, "failed publication permitted another hook access"
+E       AssertionError: failed publication permitted another hook access
+E       assert ['active-poli...promote', ...] == ['active-poli...1', 'promote']
+E         
+E         Left contains 6 more items, first extra item: 'active-policy'
+E         Use -v to get more diff
+
+tests/test_promotion_publication_recovery.py:127: AssertionError</failure></testcase><testcase classname="tests.test_promotion_publication_recovery" name="test_valid_publication_control_commits_and_reports_success[False]" time="0.002" /><testcase classname="tests.test_promotion_publication_recovery" name="test_valid_publication_control_commits_and_reports_success[True]" time="0.003" /></testsuite></testsuites>

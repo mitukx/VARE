@@ -1,0 +1,41 @@
+{
+  "protocol_sha256": "078172c10382774d4e65814a9ef4c49830ad88f5c4003dc678d6378a7c7c8e2f",
+  "baseline_revision": "b05e0efb245e63e0cbc16239151c1f7759216d32",
+  "candidate_revision": "477fc4ea430f730dd8940af9eafd994e406f3d94",
+  "source_sha256": {
+    "protocols/candidate_discard_recovery_v1.lock.json": "078172c10382774d4e65814a9ef4c49830ad88f5c4003dc678d6378a7c7c8e2f",
+    "tests/test_candidate_discard_recovery.py": "61fb01d9eb32db7400d3d3bd1e3ac2036fbee59ac9bb4368e4cb064689071313",
+    "src/vare/engine.py": "372ead6467655e122fd13ee9ff06c9a74e0d8d123c10d1a1dad8fa97034cbcfc",
+    "scripts/reproduce_candidate_discard_recovery_v1.py": "5e675b721d6cedcde6d82adb560d3683c38685c1193ed923c46ffd47a8ebd962"
+  },
+  "runtime": {
+    "python": "3.12.14",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "pytest": "8.4.2",
+    "device": "cpu"
+  },
+  "results": {
+    "baseline": {
+      "exit_code": 1,
+      "tests": 7,
+      "failures": 7,
+      "errors": 0,
+      "skips": 0,
+      "engine_sha256": "8d48f3063aff6757a9b488526a8aff956bbd3322e82e4dc78ecf20d0c2bb30d5"
+    },
+    "candidate": {
+      "exit_code": 0,
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "engine_sha256": "372ead6467655e122fd13ee9ff06c9a74e0d8d123c10d1a1dad8fa97034cbcfc"
+    }
+  },
+  "artifact_sha256": {
+    "baseline-pytest.log": "d6e575344c86c25a2ea981ef50353c4388443e664723b579a4b5ca020fba436c",
+    "baseline-pytest.xml": "46e47c4e1f6b47e448c2e0ee3da1197b6eaccabd2b02d2568299882d605ed68f",
+    "candidate-pytest.log": "53e04dd7cfac5f5d4fef5ef55aa7593f2bd3a6d25588725340c3f5dfc6e181cb",
+    "candidate-pytest.xml": "c513f172c2306150bd568e00eea22e56d8a066fa81395927cad2f071cd71bf3a"
+  }
+}

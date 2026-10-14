@@ -1,0 +1,11 @@
+{
+  "files": {
+    "full-suite.log": "02a296ea213e566b672f37a18ade9ed91c8f26d6f4c36f2e9c737ae87e7984dd",
+    "full-suite-incomplete-environment.log": "c837e2d570bc6dd66d86791b2c8b2ef8e17d46f61a66ea5c35ee73119e64340d"
+  },
+  "static_checks": {
+    "ruff": "0.15.12; ruff check src tests; passed",
+    "mypy": "1.19.1; mypy src/vare; passed"
+  },
+  "implementation": "39f3debe8f09197030f2b66e0e83605dca82b666"
+}

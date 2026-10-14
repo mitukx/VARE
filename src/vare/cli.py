@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import sys
 from dataclasses import asdict
 from pathlib import Path
 
@@ -85,6 +86,17 @@ def _cmd_rvl_plan(args: argparse.Namespace) -> int:
         _write_json(args.output, payload)
     print(json.dumps(payload, indent=2, sort_keys=True))
     return 0
+
+def _cmd_failure_triage(args: argparse.Namespace) -> int:
+    from .failure_triage import load_snapshot, triage
+
+    raw = json.loads(Path(args.snapshot).read_text(encoding="utf-8"))
+    payload = triage(load_snapshot(raw)).to_dict()
+    if args.output:
+        _write_json(args.output, payload)
+    print(json.dumps(payload, indent=2, sort_keys=True, allow_nan=False))
+    return 0
+
 
 def _cmd_lock_protocol(args: argparse.Namespace) -> int:
     raw = json.loads(Path(args.spec).read_text(encoding="utf-8"))
@@ -177,13 +189,13 @@ def _cmd_env_smoke(args: argparse.Namespace) -> int:
         baseline = evaluator.evaluate(workspace.path, provenance={"phase": "baseline"})
         _write_json(outdir / "baseline.json", baseline.to_dict())
         if not args.oracle_patch:
-            payload = {"baseline": baseline.to_dict(), "oracle": None}
-            _write_json(outdir / "summary.json", payload)
-            print(json.dumps(payload, indent=2, sort_keys=True, allow_nan=False))
+            baseline_payload = {"baseline": baseline.to_dict(), "oracle": None}
+            _write_json(outdir / "summary.json", baseline_payload)
+            print(json.dumps(baseline_payload, indent=2, sort_keys=True, allow_nan=False))
             return 0
         import subprocess
         proc = subprocess.run(
-            ["python", args.oracle_patch, str(workspace.path)],
+            [sys.executable, args.oracle_patch, str(workspace.path)],
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=False,
         )
         if proc.returncode != 0:
@@ -211,12 +223,51 @@ def _cmd_env_campaign(args: argparse.Namespace) -> int:
     argv = json.loads(args.agent_argv_json)
     if not isinstance(argv, list) or not argv or not all(isinstance(x, str) and x for x in argv):
         raise ValueError("--agent-argv-json must encode a non-empty JSON string array")
-    agent = CommandWorkspaceAgent(tuple(argv), timeout_s=args.agent_timeout_s)
+    if bool(args.isolated_agent_image) != bool(args.isolated_evaluator_image):
+        raise ValueError(
+            "isolated campaigns require both --isolated-agent-image "
+            "and --isolated-evaluator-image; no host evaluator fallback"
+        )
+    from .environments.catalog import WorkspaceAgent
+    agent: WorkspaceAgent
+    isolated_evaluator = None
+    if args.isolated_agent_image:
+        # Docker is opt-in and must be administered outside any candidate
+        # checkout. Agent argv is interpreted INSIDE the pinned image.
+        from .container_isolation import (
+            DockerIsolationRunner, DockerWorkspaceAgent, IsolationLimits,
+        )
+        agent = DockerWorkspaceAgent(
+            limits=IsolationLimits(
+                image=args.isolated_agent_image,
+                timeout_s=args.agent_timeout_s,
+                memory_mb=args.isolated_memory_mb,
+            ),
+            allowed_workspace_root=(Path(args.run_root).resolve() / "workspaces"),
+            command=tuple(argv),
+            runner=DockerIsolationRunner(),
+        )
+    else:
+        agent = CommandWorkspaceAgent(tuple(argv), timeout_s=args.agent_timeout_s)
+    if args.isolated_evaluator_image:
+        from .container_isolation import DockerIsolationRunner, IsolationLimits
+        from .sandboxed_repository import DockerRepositoryEvaluator
+        isolated_evaluator = DockerRepositoryEvaluator(
+            runner=DockerIsolationRunner(),
+            limits=IsolationLimits(
+                image=args.isolated_evaluator_image,
+                timeout_s=args.isolated_evaluator_timeout_s,
+                memory_mb=args.isolated_evaluator_memory_mb,
+                max_output_bytes=args.isolated_evaluator_output_bytes,
+            ),
+            allowed_workspace_root=(Path(args.run_root).resolve() / "workspaces"),
+        )
     runner = EnvironmentCampaignRunner(
         catalog,
         agent,
         run_root=args.run_root,
         verifier_version=args.verifier_version,
+        isolated_evaluator=isolated_evaluator,
     )
     summary = asyncio.run(runner.run(repeats=args.repeats, task_ids=args.task_id or None))
     print(json.dumps(summary.to_dict(), indent=2, sort_keys=True))
@@ -252,10 +303,15 @@ def main() -> int:
     rp.add_argument("--output")
     rp.set_defaults(func=_cmd_rvl_plan)
 
-    l = sub.add_parser("lock-protocol", help="freeze a preregistered experiment spec with a SHA-256 digest")
-    l.add_argument("--spec", required=True)
-    l.add_argument("--output", required=True)
-    l.set_defaults(func=_cmd_lock_protocol)
+    ft = sub.add_parser("failure-triage", help="read-only triage of independent task audits and rollout diagnostics")
+    ft.add_argument("--snapshot", required=True)
+    ft.add_argument("--output")
+    ft.set_defaults(func=_cmd_failure_triage)
+
+    lock_cmd = sub.add_parser("lock-protocol", help="freeze a preregistered experiment spec with a SHA-256 digest")
+    lock_cmd.add_argument("--spec", required=True)
+    lock_cmd.add_argument("--output", required=True)
+    lock_cmd.set_defaults(func=_cmd_lock_protocol)
 
     s = sub.add_parser("score", help="compute capability gain per GPU-hour")
     s.add_argument("--before", type=float, required=True)
@@ -294,6 +350,13 @@ def main() -> int:
     ec.add_argument("--catalog-root", required=True)
     ec.add_argument("--agent-argv-json", required=True, help="JSON array; supports {workspace}, {prompt}, {step} placeholders")
     ec.add_argument("--agent-timeout-s", type=float, default=1800.0)
+    ec.add_argument("--isolated-agent-image", help="Docker image pinned as name@sha256:<digest>; opt in to isolated agent run")
+    ec.add_argument("--isolated-memory-mb", type=int, default=512)
+    ec.add_argument("--isolated-evaluator-image",
+                    help="Digest-pinned Docker image that runs repository tests off-host; requires isolated agent")
+    ec.add_argument("--isolated-evaluator-timeout-s", type=float, default=120.0)
+    ec.add_argument("--isolated-evaluator-memory-mb", type=int, default=512)
+    ec.add_argument("--isolated-evaluator-output-bytes", type=int, default=400_000)
     ec.add_argument("--repeats", type=int, default=1)
     ec.add_argument("--task-id", action="append")
     ec.add_argument("--verifier-version", type=int, default=0)

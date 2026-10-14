@@ -5,20 +5,31 @@
 The [retrospective report](format-comparison-record-v1-report.md) preserves
 18,240 raw rows losslessly, independently regrades 17,920 outputs, and verifies
 format-arm no-op adapters and zero Adam moments. The original primary interval
-includes zero; saturated format reward supplies no gradient. The original
-execution revision/hardware remains unknown. This contribution performs CPU
-record/checkpoint analysis, not new training or human reproduction.
+includes zero; the format reward is saturated. Original execution revision and
+hardware remain unknown. This is CPU record/checkpoint analysis, not new
+training or independent human reproduction.
 
 ## Seed-aware summary correctness — 2026-10-13
 
-Pinned v2 `3eb6de5` fails the fitted-run pass@4 counterexample; additive v3 passes
-with exactly preserved primary decision objects. Initial CLI `b918e6e` fails
-metrics/digest correspondence under a deterministic file replacement; corrected
-`3a5a808` passes. CPU synthetic evidence and independent AI probes are in the
-[report](seeded-summary-v3-report.md) and [bundle](../results/seeded-summary-v3/).
-This is an analysis repair, not real-model learning or independent human review.
+Pinned v2 `3eb6de5` fails the fitted-run pass@4 counterexample; additive v3
+passes while preserving the primary decision objects. Initial CLI `b918e6e`
+fails metrics/digest correspondence under deterministic file replacement;
+corrected `3a5a808` passes. CPU synthetic evidence and independent AI probes are
+in the [report](seeded-summary-v3-report.md) and
+[bundle](../results/seeded-summary-v3/). This is not model-learning evidence or
+independent human review.
+
+**2026-10-13 — engine evaluation lifetime:** [report](engine-evaluation-lifecycle-v1-report.md), [raw records](../results/engine-evaluation-lifecycle-v1/), and [one-entry replay](../scripts/reproduce_engine_evaluation_lifecycle_v1.py) connect a live sibling/deleted candidate counterexample to cancellation-safe task ownership. Baseline has 12/13 failures; corrected has zero, preserving the concurrent-success control. An independent AI reviewer falsified the first proposal for pre-existing cancellation, then confirmed the amended guard in four cases. Local full suite: 362 pass; no model-gain or human-review claim.
+
+Integration follow-up for the 2026-10-13 inference correction: main `1e7fda8` includes the existing alias fix and still fails 10/14 new checks. The [updated four-arm record](../results/rvl-inference-transaction-v1/integration-main-1e7fda8/) passes 14/14 after correction, actual pinned HF state/worker checks, 349 full-suite tests, and Ruff/mypy. This supersedes the earlier 338-test suite count without altering its retained logs.
+
+**2026-10-13 — RVL inference isolation:** [report](rvl-inference-transaction-v1-report.md), [raw replay](../results/rvl-inference-transaction-v1/), and [one-entry reproducer](../scripts/reproduce_rvl_inference_transaction_v1.py) compare pinned main, existing alias-only correction, and new inference correction. Regression failures are 12/14, 10/14, and 0/14 respectively, with no setup errors/skips. Actual random GPT-2/HF generation preserves model/AdamW state but corrupts CPU RNG/modes in the first two arms; corrected inference preserves all four and drains cancelled workers before unlock. Local full suite: 338 pass. CPU only; AI review is not human review; no capability or deployment-frequency claim.
 
 This ledger records what the retained artifacts establish and where each claim stops. It is organized by evidence area, not by headline strength. Start with the [reviewer guide](reviewer-guide.md) for the current PRs and reproduction commands, or the [current gaps](current-gaps.md) for the latest research and model-evaluation decisions. Historical results remain below even when later work supersedes their status.
+
+## Current systems and research decisions — 2026-10-12
+
+- **VARE adapter shared-module rollback:** the adapter's post-restore `Module.train()` walk overwrote a shared child on one constructed registration order and changed a mode-dependent stand-in forward. Direct flag assignment passes that order, the masking order, and an unshared nested pair without calling `train()`. No production model graph, accelerator run, or task-success result is included. See the [report](rvl-grpo-shared-module-mode-v1-report.md).
 
 ## Current systems and research decisions — 2026-10-11
 
@@ -280,3 +291,12 @@ The v2 adapter result checks PyTorch module modes under a deliberately eval/mixe
 At pinned TRL `ed8cc2f`, source-level execution of the production `FixedCountBatcher` and `TokenBudgetBatcher` definitions reproduced a rollout crossing emitted microbatch boundaries in two frozen fixtures. A local candidate retained all rows in those fixtures, but a separate adversarial screen found its greedy token packing rejects an exactly feasible `[3,3,2,2,2]` rollout at 2 ranks / budget 6. The candidate is not a complete fix; fixed-count overflow and infeasible-prefix semantics remain unresolved. This overlaps already-open upstream issue [#7206](https://github.com/huggingface/trl/issues/7206). It is source-level correctness evidence only: no full Trainer, optimizer, distributed run, upstream contribution, or capability effect was measured. See the [report](trl-async-rollout-group-batching-production-v3-report.md), [boundary results](../results/trl-async-rollout-group-batching-production-v3/), and [candidate falsification](../results/trl-async-rollout-group-batching-candidate-falsification-v1/run-1/).
 
 **Update 2026-10-09 — current-main AsyncGRPO Trainer/DDP normalization replay:** actual current TRL `compute_loss` and collator ran through Accelerate `DataLoaderDispatcher`, Transformers `Trainer.train()`, and two-process CPU/Gloo DDP. With 2 and 18 completion tokens per rank and zero gradient on the second microbatch, base gradient was 0.5 versus pooled 0.1 and its SGD delta differed by 0.04; a candidate that passed the Trainer accumulation-window token count matched the full-batch gradient and delta exactly. The equal-mean control matched on base and candidate. The independent stdlib audit passed 17/17 checks; the single-process Trainer's one-batch shortened final window also passed. A finite-stream short-final-window DDP attempt stalled before optimizer step and is retained/excluded. This validates a deterministic trainer update path only. The issue is already tracked upstream (#7206 / #7249); no novelty, production frequency, model capability, or task-success claim. Stop this branch. See [v2 report](trl-async-window-normalization-current-trainer-ddp-v2-report.md), [protocol](../protocols/trl_async_window_normalization_current_dispatcher_ddp_v1.lock.json), and [raw run/audit](../results/trl-async-window-normalization-current-main-v1/run-4/).
+
+
+**Update 2026-10-14 — evaluation transaction integration:** existing PR #19 evaluator/inference lifetime corrections are integrated with signed-training, authorization and checkpoint-bound promotion controls. A frozen four-case pre/post revocation × discard-success/failure CPU comparison fails 4/4 on main `a0f6464` and passes 4/4 on the integrated candidate; three caller cancellations cannot interrupt asynchronous rollback before the round lock is released. Historical lifecycle replay is baseline 12 failures/13 cases versus 13 candidate passes; inference replay is candidate 14/14 with its historical failing controls preserved. This is in-process correctness evidence only. See [report](evaluation-transaction-integration-v1.md), [protocol](../protocols/engine_evaluation_interlock_integration_v1.lock.json), and [raw records](../results/engine-evaluation-interlock-integration-v1/). No model-learning protocol is reopened.
+
+
+**Update 2026-10-14 — candidate discard recovery:** following merged PR #42, a frozen seven-case CPU study reproduced rejection/ledger rollback interruption and reuse after failed restoration on main `b05e0ef`. A shared shielded discard helper and per-loop failed-restore gate pass all seven cases; the local default suite passes 607 tests and adjacent transaction tests pass. See [report](candidate-discard-recovery-v1.md), [protocol](../protocols/candidate_discard_recovery_v1.lock.json), and [raw records](../results/candidate-discard-recovery-v1/). This is in-process correctness evidence, not model quality or distributed recovery.
+
+
+**Update 2026-10-14 — promotion publication acknowledgment:** a frozen CPU comparison against main `f4b8d11` shows ten failures for publication exceptions/cancellation, no-op/foreign-policy acknowledgment, and real SQLite completion faults, with both successful-publication controls passing. Runtime identity acknowledgment plus a same-loop recovery fence passes all twelve; 619 default-suite tests and 14 isolated mathematical-grader tests pass locally. Source hashes, first baseline, matched replay, and limits are in [the report](promotion-publication-recovery-v1.md) and [raw records](../results/promotion-publication-recovery-v1/). This is bounded publication correctness; it does not authorize a model-learning run.

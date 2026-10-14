@@ -4,20 +4,34 @@
 regrades archived outputs without a model runtime, preserves the primary
 non-pass, and inspects saturated/cancelling training signals. Raw data is
 portable; original execution provenance is incomplete. The confirmation cohort
-is consumed. This is separate from the preceding analysis implementation work.
+is consumed.
 
 **2026-10-13 analysis addition:** see the [seed-aware summary report](seeded-summary-v3-report.md)
 for the pooled/per-run pass@4 counterexample, preserved v2 primary decision,
 snapshot-hash regression, independent AI review, and CPU reproduction command.
-This branch extends PR #18; it does not establish model improvement. Earlier PR
-status snapshots below are historical.
+This is evaluation analysis, not model improvement. Older status snapshots below
+are historical; use GitHub for live PR status.
+
+## Current entry point — 2026-10-15
+
+The [documentation index](README.md) and [repository layout](repository-layout.md) separate current code, experimental paths, and retained history without moving frozen artifacts. The [whole-round runtime ownership report](runtime-round-ownership-v1.md) covers sibling loops, restart reservations, explicit operator recovery, and multiprocess failure diagnostics. It extends the earlier per-loop discard/publication fences; the original reports remain scoped to their measured revisions. Older status snapshots below are historical; use PR links for live status. The main model-learning gap remains independently confirmed held-out task success after an update.
+
+## Evaluation lifetime follow-up — 2026-10-13
+
+The [engine report](engine-evaluation-lifecycle-v1-report.md) closes the generic sibling-evaluation gap identified in the inference review. Inspect the 13-case baseline/fixed comparison, event-order probe, retained first-proposal counterexample, and independent AI corrected probe. This is a separate proposed change stacked on the inference correction. The core contract is evaluator termination before candidate discard and round unlock; arbitrary hook resource restoration is not implied. The local full suite now passes 362 tests.
+
+## 2026-10-13 addendum: inference transaction
+
+Integration follow-up: #5–#8 were merged by separate repository activity. This contribution incorporates main `1e7fda8` and now targets main. The [latest four-arm replay](../results/rvl-inference-transaction-v1/integration-main-1e7fda8/) keeps that main as an explicit control (10/14 failures versus 0/14 corrected); full suite is now 349 pass, plus Ruff/mypy. The earlier stacked-PR status below describes the initial audit only.
+
+Start with the [new report](rvl-inference-transaction-v1-report.md) and its one-entry reproduction. The work is stacked on existing [VARE #5](https://github.com/mitukx/VARE/pull/5), reusing its alias-mode correction. Pinned main / alias-only / fixed arms isolate the new inference defect; 14 regression cases and actual tiny GPT-2/HF generation check modes, CPU RNG, weights, AdamW state, and repeated cancellation. The full local suite passes 338 tests. The [raw bundle](../results/rvl-inference-transaction-v1/) records exact sources and runtime. Only CPU was measured; AI review and CI execution are distinct from independent human review. VARE #3 is now merged in baseline `b8dc1ba`; the older status table below is historical. VARE #5 and RVL #92 were still open at this audit.
 
 This guide separates code that is implemented, behavior reproduced on CPU, and model outcomes. The linked reports and raw records are the source of truth; the summaries below do not replace them. Repository and PR status was checked on 2026-10-11.
 
 ## A short review path
 
 1. **Read the claim boundary.** [README](../README.md) states the current result; [AGENTS.md](../AGENTS.md) defines the evidence ladder and invariants. VARE has not shown independently confirmed task-success improvement after a real-model update.
-2. **Inspect the upstream rollback correction.** RVL [PR #92](https://github.com/mitukx/Recursive-Verification-Lag/pull/92) proposes restoring shared-child module modes without recursive alias propagation. The [baseline/fix report](rvl-module-mode-shared-alias-followup-v1.md), [patch](../contributions/rvl-module-mode-shared-alias-followup.patch), [raw replay](../results/rvl-module-mode-shared-alias-v1/), and [reproducer](../scripts/reproduce_rvl_shared_module_mode_followup_v1.sh) are linked here. The regression is a constructed CPU case; PR #92 is open, its CI was green at the checked snapshot, and no independent human review is recorded.
+2. **Inspect the shared-module rollback corrections.** RVL [PR #92](https://github.com/mitukx/Recursive-Verification-Lag/pull/92) proposes restoring shared-child module modes without recursive alias propagation. The [baseline/fix report](rvl-module-mode-shared-alias-followup-v1.md), [patch](../contributions/rvl-module-mode-shared-alias-followup.patch), [raw replay](../results/rvl-module-mode-shared-alias-v1/), and [reproducer](../scripts/reproduce_rvl_shared_module_mode_followup_v1.sh) are linked here. The RVL regression is a constructed CPU case; PR #92 is open, its CI was green at the checked snapshot, and no independent human review is recorded. The VARE adapter applied the same recursive `train()` walk after the trainer restore. [Its report](rvl-grpo-shared-module-mode-v1-report.md) assigns the captured boolean directly. That regression is a constructed graph with a stand-in forward, not a production model run.
 3. **Inspect the task and grader path.** VARE [PR #3](https://github.com/mitukx/VARE/pull/3) contains the [urllib3 #3352 report](urllib3-3352-real-model-feasibility-v1-report.md), [task lock](../benchmarks/historical/urllib3_3352/protocol.lock.json), [grader](../benchmarks/historical/urllib3_3352/evaluator/grade.py), VARE catalog identity fix, adversarial records, and local model outputs. The public task is for development calibration only; neither one-shot model attempt produced a patch and no training was run.
 4. **Check the research stop decision.** Merged VARE [PR #2](https://github.com/mitukx/VARE/pull/2) records rollback evidence and a follow-up prior-art screen. That screen did not admit a new training or GPU experiment; its candidate analysis is linked from the [experiment index](experiments.md).
 5. **Read the model outcomes and history.** The [OpenBookQA confirmation report](openbookqa-qwen25-grpo-sft-confirmation-v1-report.md) records a frozen negative GRPO/SFT comparison. The [current gaps](current-gaps.md), [evidence ledger](evidence.md), [experiment index](experiments.md), and [roadmap](roadmap.md) retain limitations, prior decisions, and older results.
@@ -70,7 +84,7 @@ The public known fix is a grader calibration control, not an agent result. Issue
 | `src/vare/`, `tests/` | VARE implementation and local regression tests |
 | `benchmarks/historical/` | Immutable task contracts and protected graders |
 | `protocols/` | Frozen protocols, thresholds, seeds, and hashes |
-| `results/` | Raw logs, manifests, model outputs, and review records |
+| `results/` | Raw logs, manifests, model outputs, and review records. Blobs at or above 1 MiB are frozen by the [blob census](../protocols/tracked_large_blob_allowlist_v1.txt); see [artifact retention](artifact-retention.md) |
 | `docs/` | Technical reports, evidence summaries, and decisions |
 | `contributions/` | Proposed upstream patches, separate from merged code |
 | `scripts/`, `reproducers/` | Reproduction and audit entry points |

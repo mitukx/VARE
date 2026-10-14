@@ -1,0 +1,19 @@
+........................................................................ [ 12%]
+........................................................................ [ 24%]
+........................................................................ [ 36%]
+........................................................................ [ 48%]
+........................................................................ [ 60%]
+........................................................................ [ 72%]
+........................................................................ [ 84%]
+........................................................................ [ 96%]
+........................                                                 [100%]
+=============================== warnings summary ===============================
+tests/test_evidence_concurrency.py::test_competing_processes_preserve_every_record
+tests/test_evidence_concurrency.py::test_competing_processes_preserve_every_record
+tests/test_evidence_concurrency.py::test_competing_processes_preserve_every_record
+tests/test_evidence_concurrency.py::test_competing_processes_preserve_every_record
+  /opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/multiprocessing/popen_fork.py:66: DeprecationWarning: This process (pid=5) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    self.pid = os.fork()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+600 passed, 4 warnings in 65.25s (0:01:05)

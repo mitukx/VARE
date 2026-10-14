@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import asyncio
 from pathlib import Path
+import json
 import subprocess
+import sys
 
 from vare.environments import EnvironmentCampaignRunner, TaskCatalog
 
@@ -13,7 +15,7 @@ ORACLE = ROOT / "tests/fixtures/oracle/fix_stable_logsumexp.py"
 
 class OracleAgent:
     async def run(self, *, prompt: str, workspace: Path, step: int) -> str:
-        subprocess.run(["python", str(ORACLE), str(workspace)], check=True)
+        subprocess.run([sys.executable, str(ORACLE), str(workspace)], check=True)
         return "ok"
 
 
@@ -37,6 +39,26 @@ def test_campaign_normalizes_relative_run_root(monkeypatch, tmp_path):
     assert summary.success_rate == 1.0
 
 
+def test_command_agent_does_not_expand_placeholders_inside_the_prompt(tmp_path):
+    from vare.environments import CommandWorkspaceAgent
+
+    script = tmp_path / "agent.py"
+    script.write_text("print('ok')\n", encoding="utf-8")
+    workspace = tmp_path / "workspace"
+    workspace.mkdir()
+    prompt = "keep {step} and {workspace} literal"
+    agent = CommandWorkspaceAgent(
+        (sys.executable, str(script), "{prompt}", "{step}"),
+        timeout_s=10,
+        launch_root=tmp_path,
+    )
+    output = asyncio.run(agent.run(prompt=prompt, workspace=workspace, step=7))
+    payload = json.loads(output)
+    assert payload["returncode"] == 0
+    assert payload["argv"][2] == prompt
+    assert payload["argv"][3] == "7"
+
+
 def test_command_agent_resolves_existing_relative_arguments(monkeypatch, tmp_path):
     from vare.environments import CommandWorkspaceAgent
     script = tmp_path / "agent.py"
@@ -47,3 +69,27 @@ def test_command_agent_resolves_existing_relative_arguments(monkeypatch, tmp_pat
     agent = CommandWorkspaceAgent(("python", "agent.py"))
     output = asyncio.run(agent.run(prompt="x", workspace=workspace, step=0))
     assert '"returncode": 0' in output
+
+
+def test_command_agent_does_not_inherit_controller_secrets(monkeypatch, tmp_path):
+    from vare.environments import CommandWorkspaceAgent
+
+    monkeypatch.setenv("VARE_CONTROL_SECRET", "must-not-leak")
+    script = tmp_path / "check_env.py"
+    script.write_text(
+        "import os; print(os.environ.get('VARE_CONTROL_SECRET', 'NOT_INHERITED'))",
+        encoding="utf-8",
+    )
+    workspace = tmp_path / "workspace"
+    workspace.mkdir()
+    agent = CommandWorkspaceAgent((sys.executable, str(script)), launch_root=tmp_path)
+    record = json.loads(asyncio.run(agent.run(prompt="x", workspace=workspace, step=0)))
+    assert record["returncode"] == 0
+    assert record["stdout"].strip() == "NOT_INHERITED"
+    # Operators can explicitly pass extra variables, but only by opting in.
+    allowed = CommandWorkspaceAgent(
+        (sys.executable, str(script)), launch_root=tmp_path,
+        environment_allowlist=("VARE_CONTROL_SECRET",),
+    )
+    record = json.loads(asyncio.run(allowed.run(prompt="x", workspace=workspace, step=0)))
+    assert record["stdout"].strip() == "must-not-leak"

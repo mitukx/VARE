@@ -1,7 +1,10 @@
 import asyncio
 from dataclasses import replace
+import json
 import multiprocessing
+import os
 from pathlib import Path
+import platform
 import tempfile
 import time
 import unittest
@@ -135,11 +138,30 @@ class DurableTests(unittest.TestCase):
     def test_worker_heartbeat_during_slow_evaluation(self):
         parent = self.parent / 'slow'
         parent.mkdir()
-        root, job = make_fixture(parent, 'valid', delay=.7)
+        # Leave room for CI scheduling jitter while still requiring renewals
+        # during a grader that outlives the original lease. A 0.3s lease
+        # occasionally expired before the event loop could dispatch a pulse.
+        lease_seconds = 1.0
+        root, job = make_fixture(parent, 'valid', delay=2.2)
         store = Store.create(parent / 'state.db', [job], root)
+        renewed = []
+        original_renew = store.renew
+
+        def record_renew(*args, **kwargs):
+            success = original_renew(*args, **kwargs)
+            renewed.append(success)
+            return success
+
         async def work():
-            await asyncio.gather(worker(store, 'one', .3), worker(store, 'two', .3))
-        asyncio.run(work())
+            await asyncio.gather(
+                worker(store, 'one', lease_seconds),
+                worker(store, 'two', lease_seconds),
+            )
+
+        with patch.object(store, 'renew', side_effect=record_renew):
+            asyncio.run(work())
+        # This is a heartbeat test, not merely a lease-long-enough test.
+        self.assertIn(True, renewed)
         self.assertEqual(1, store.jobs()[0]['token'])
         self.assertEqual('candidate_passed', store.jobs()[0]['effective'])
 
@@ -147,8 +169,30 @@ class DurableTests(unittest.TestCase):
         path = self.parent / 'many.db'
         jobs = [replace(self.job, id='job-%02d' % i) for i in range(12)]
         store = Store.create(path, jobs, self.root)
+        started = time.monotonic()
         run_workers(path, 4, 2)
-        self.assertTrue(all(r['token'] == 1 and r['effective'] == 'candidate_passed' for r in store.jobs()))
+        rows = store.jobs()
+        if not all(r['token'] == 1 and r['effective'] == 'candidate_passed' for r in rows):
+            # Read only: export() refreshes inputs and could change the state
+            # we need to diagnose. Keep the original strict acceptance rule.
+            with store.connection() as db:
+                attempts = []
+                for raw in db.execute('SELECT * FROM attempts ORDER BY job_id,token'):
+                    attempt = dict(raw)
+                    for name in ('stdout', 'stderr'):
+                        attempt[name] = (attempt[name] or b'')[:4096].decode('utf-8', errors='replace')
+                    attempts.append(attempt)
+                events = [dict(r) for r in db.execute('SELECT * FROM events ORDER BY sequence')]
+            diagnostic = {'python': platform.python_version(), 'platform': platform.platform(),
+                          'workers': 4, 'lease_seconds': 2, 'elapsed_seconds': time.monotonic() - started,
+                          'jobs': rows, 'attempts': attempts, 'events': events}
+            encoded = json.dumps(diagnostic, indent=2)
+            destination = os.environ.get('VARE_TEST_DIAGNOSTICS_DIR')
+            if destination:
+                directory = Path(destination)
+                directory.mkdir(parents=True, exist_ok=True)
+                (directory / 'multiprocess-claims.json').write_text(encoded + '\n')
+            self.fail('multiprocess acceptance failed; read-only state follows:\n' + encoded)
         output = self.parent / 'many-evidence'
         store.export(output)
         self.assertEqual(12, audit_durable(output)['attempts'])
@@ -210,7 +254,6 @@ class DurableTests(unittest.TestCase):
 
     def test_forged_claim_expected_cannot_commit(self):
         import copy
-        from vare.runner import digest
         claim = self.store.claim('one', 30)
         record, stdout, stderr, data = self.outcome(claim)
         fake = copy.deepcopy(claim)

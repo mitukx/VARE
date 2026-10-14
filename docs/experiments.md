@@ -7,9 +7,9 @@ points, task-bootstrap 95% interval [-0.078125, +1.015625], and the unchanged
 `interval_includes_zero` decision. CPU replay identifies saturated format
 reward and verifies zero saved LoRA contribution. Only 8/80 correctness groups
 are mixed; 15/31 random mixed-label groups have identical outputs and cancel.
-Sparse signal is not established as the cause of the overall non-pass.
-Original execution provenance is incomplete. Retire the consumed confirmation
-cohort. See the [report](format-comparison-record-v1-report.md) and
+Sparse signal is not established as the cause of the overall non-pass. Original
+execution provenance is incomplete and the confirmation cohort is retired.
+See the [report](format-comparison-record-v1-report.md) and
 [lossless record bundle](../results/format-comparison-record-v1/).
 
 ## Seed-aware summary v3 — correctness study, 2026-10-13
@@ -22,6 +22,14 @@ review are retained in the [technical report](seeded-summary-v3-report.md).
 Learning protocol v2 and its primary decision remain frozen; no model run was
 performed in this study.
 
+## 2026-10-13 — evaluation task lifetime correction
+
+The [engine replay](engine-evaluation-lifecycle-v1-report.md) checks termination-before-discard with 13 cases and a small event-order probe. Pinned baseline fails 12 cases; the correction passes all 13 and the full local suite of 362. The retained independent AI counterexample caused an additional guard for hooks already cancelling. This CPU fixture study neither trains a model nor consumes a confirmation cohort.
+
+## 2026-10-13 — inference state and cancellation correctness
+
+The [three-arm study](rvl-inference-transaction-v1-report.md) tests a source-level contract, not a post-training efficacy hypothesis. Pinned main and alias-only controls fail active inference/cancellation checks; the corrected adapter passes all 14 new cases and actual pinned RVL/HF probes. No model study, retired cohort, paid compute, or accelerator run was used. The fixture performs a tiny trainer update only to populate optimizer state. Source and artifact hashes, logs, package versions, and failure counts are retained in the [bundle](../results/rvl-inference-transaction-v1/).
+
 Entries below preserve study decisions and outcomes; they are a history, not a leaderboard. For the current stop point and a short review route, see the [roadmap](roadmap.md), [current evidence gaps](current-gaps.md), and [reviewer guide](reviewer-guide.md). Each report links its frozen protocol and retained run evidence where available.
 
 ## Held-out exact-integer base gate v1
@@ -31,6 +39,14 @@ Entries below preserve study decisions and outcomes; they are a history, not a l
 ## Held-out exact-integer base gate v2
 
 **Status: mlx base gate recorded, `nondegenerate_base_signal`.** At code revision `89f671c00e7ed84fda1fc873e8814e0ff17bef2c`, `mlx-community/Qwen2.5-3B-Instruct-4bit` scored 29/64 (0.453125; Wilson 95% [0.3372944778061167, 0.5742640277994588]) on the unchanged v1 pack. Final-line matches were 250/256 and graded-correct samples were 109/256. Do not retune or rerun v2. The result authorizes only a separate one-update save/reload resource smoke, not a policy-update comparison. Raw files: [v2 note](heldout-exact-integer-base-gate-v2.md) and `results/heldout-exact-integer-base-gate-v2/m1-mlx-89f671c/`. The CUDA pin has no retained run.
+
+## Format versus correctness comparison v2
+
+**Status: mlx run transcribed, `interval_includes_zero`.** The operator report says the frozen grid finished with 320 train rows and 17,920 eval rows. Confirm pass@1 was base 0.2523, format SFT 0.2594, format-reward RL 0.2625, correctness-reward RL 0.2641, and random-reward RL 0.2625. The paired bootstrap of correctness minus format SFT was mean +0.0047, 95% CI [-0.0008, +0.0102], n=64. McNemar had no discordant pairs and does not decide. Format compliance was already 1.0 at base. The original `summary.json` and `progress.jsonl` are not in git. Do not rerun the protocol or add steps after this interval. See [the comparison note](format-vs-correctness-comparison-v2.md).
+
+## VARE GRPO adapter shared-module mode rollback
+
+`RVLGRPOHooks` restored module modes by calling `Module.train()` after the trainer restore. A constructed shared-child graph, with the alias registered after the first parent, came back in the wrong mode and changed a mode-dependent stand-in forward. Direct `module.training` assignment passes that graph, the opposite registration order, and an unshared nested pair, and it does not call `train()` on restore. The trainer double in the test already assigns flags directly, so the failure is in the adapter pass. No PyTorch or model run was required. This does not show production incidence or a task-success change. See the [report](rvl-grpo-shared-module-mode-v1-report.md) and [logs](../results/rvl-grpo-shared-module-mode-v1/).
 
 ## urllib3 #3352 real-repository task and model-feasibility screen
 
@@ -211,3 +227,6 @@ A feature is not evidence. Headline claims are allowed only when corresponding r
 
 
 26. **BoolQ v17 lower-rate comparison non-pass:** on fresh training ranks 152–279 and validation ranks 768–1023, all three arm audits and the paired comparator passed. DPO and anchored DPO retained base predictions; SFT added one correct answer in one seed and matched base in the other two. All improved preference NLL, but none cleared the +0.05 balanced-accuracy gate. Confirmation ranks 1024–1535 remain unopened. See the [study plan](boolq-posttraining-study.md), [report](boolq-posttraining-development-v17-report.md), and [comparison](../results/cpu-lm-boolq-posttraining-development-v17-comparison.json).
+
+
+**Update 2026-10-14 — evaluation transaction integration:** existing PR #19 evaluator/inference lifetime corrections are integrated with signed-training, authorization and checkpoint-bound promotion controls. A frozen four-case pre/post revocation × discard-success/failure CPU comparison fails 4/4 on main `a0f6464` and passes 4/4 on the integrated candidate; three caller cancellations cannot interrupt asynchronous rollback before the round lock is released. Historical lifecycle replay is baseline 12 failures/13 cases versus 13 candidate passes; inference replay is candidate 14/14 with its historical failing controls preserved. This is in-process correctness evidence only. See [report](evaluation-transaction-integration-v1.md), [protocol](../protocols/engine_evaluation_interlock_integration_v1.lock.json), and [raw records](../results/engine-evaluation-interlock-integration-v1/). No model-learning protocol is reopened.

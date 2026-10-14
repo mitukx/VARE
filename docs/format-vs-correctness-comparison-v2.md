@@ -2,13 +2,15 @@
 
 **Analysis addition, 2026-10-13:** [seed-aware v3](seeded-summary-v3-report.md)
 preserves the frozen primary bootstrap/decision and learning protocol, adds
-per-run secondary curves alongside the legacy pooled curves, and binds reports
-to one captured progress snapshot. New runs pin this separate analysis before
-arm output. Existing unpinned output requires explicitly retrospective analysis.
+per-run pass@4 alongside pooled curves, and binds its report to one captured
+progress snapshot. The [retrospective audit](format-comparison-record-v1-report.md)
+later archived a complete pre-existing grid whose primary interval includes
+zero; its original run provenance remains incomplete and confirmation cohort is
+consumed.
 
 Protocol id: `format-vs-correctness-comparison-v2`.
 
-The exact-integer v2 base gate was non-degenerate, and the [update-cost smoke](heldout-exact-integer-update-cost-smoke-v1.md) was accepted. Those two records are what allow this comparison. No arm had been run at the protocol snapshot. A later [retrospective record audit](format-comparison-record-v1-report.md) archives a complete pre-existing grid with an interval-includes-zero primary decision and missing original execution provenance. Its confirmation cohort is consumed. `scripts/format_vs_correctness_comparison_v1.py` still exits 2.
+The exact-integer v2 base gate was non-degenerate, and the [update-cost smoke](heldout-exact-integer-update-cost-smoke-v1.md) was accepted. Those two records are what allow this comparison. The mlx run is recorded below as a transcription of the operator report. Do not rerun it, and do not change the step count after reading the interval. `scripts/format_vs_correctness_comparison_v1.py` still exits 2.
 
 Protocol file: `protocols/format_vs_correctness_comparison_v2.json`. SHA-256 `8214a9c784035f47b20d9e44fc6bbbd3cef45f821d86d6eb2f69936cc25eb6b4`.
 
@@ -39,6 +41,28 @@ The 64-task pack is scored at the final checkpoint only. Its curve cannot change
 `mlx` uses `mlx-community/Qwen2.5-3B-Instruct-4bit` at `4f83f8f146fdf28b512a06562b671d7af4fab457` with `mlx-lm==0.32.0`. `transformers` uses `Qwen/Qwen2.5-3B-Instruct` at `aa8e72537993ba99e69dfaafa59ed015b17504d1`, float16 on CUDA. The backends are not replicates. A resumed arm reloads the last contiguous checkpoint and its Adam state. A gap in the step numbers fails closed. A resumed process keeps completed rows in `progress.jsonl`.
 
 A positive contrast does not promote a checkpoint. Seeing the interval does not authorize a larger step count. That would be a new protocol.
+
+## Retained mlx result
+
+Operator-reported Apple Silicon run of the frozen mlx command. The report says the grid finished: 320 train rows and 17,920 eval rows, which are the frozen unit counts. `summary.json` decision `interval_includes_zero`. The original `summary.json` and `progress.jsonl` are not in this repository. The figures below are transcribed from that report. They are not a hash of those files, and this note does not include the process `HEAD`, `environment.json`, or package versions. `progress.jsonl` is above the tracked-blob budget and must stay outside git. A later copy of the original `summary.json` can be hashed beside this transcription. Do not edit the transcribed figures to match a recomputation.
+
+| Field | Transcribed value |
+| --- | --- |
+| Decision | `interval_includes_zero` |
+| Decision split | confirm, unbiased strict pass@1 |
+| `base` | 0.2523 |
+| `format_sft` | 0.2594 |
+| `format_reward_rl` | 0.2625 |
+| `correctness_reward_rl` | 0.2641 |
+| `random_reward_rl` | 0.2625 |
+| Paired bootstrap, correctness minus format SFT | mean +0.0047, 95% CI [-0.0008, +0.0102], n=64 |
+| McNemar | no discordant pairs. The test does not decide. |
+| Format compliance | 1.0 already at `base`. The format arms were saturated. |
+| Transcription | `results/format-vs-correctness-comparison-v2/m1-mlx-transcribed/operator_report.json` |
+
+The interval contains 0, so the predeclared rule does not call a positive or negative contrast. The confirm pass@1 rates sit between 0.2523 and 0.2641. `random_reward_rl` is 0.2625, the same reported rate as `format_reward_rl` and 0.0016 below `correctness_reward_rl`. A reward that does not read the completion moved the confirm rate about as much as the correctness reward. Format compliance was already 1.0 at the untouched base checkpoint, so the format arms had no compliance gap left to close. The frozen budget is 16 optimizer steps. That budget did not separate the correctness reward from format SFT or from the random reward. The interval does not authorize more steps inside this protocol, and it does not promote a checkpoint.
+
+The commands below are the recorded mlx run, not a request to repeat it.
 
 ## Mac
 
@@ -78,6 +102,8 @@ echo "comparison_exit=$?"
 `--check` prints the unit counts and does not train. The second command is the run. If it stops, run that same command again in the same output directory. Do not point it at a gate or smoke directory. `summary.json` is written only after 320 train rows and 17920 eval rows. `progress.jsonl` can exceed 1,048,576 bytes. Do not track it. Record its SHA-256. The same limit applies to checkpoint files.
 
 ## Colab
+
+The retained result above is the mlx run. This block was not run. Do not start it in order to revise the mlx decision.
 
 Use a GPU runtime. This is the transformers backend, not a replicate of the 4-bit mlx run. An out-of-memory failure is a failed run of this protocol. Do not switch the checkpoint to 4-bit inside it. `notebooks/format_vs_correctness_comparison_v2.ipynb` is the same sequence. The default revision is `cursor/format-vs-correctness-v2-af75`.
 

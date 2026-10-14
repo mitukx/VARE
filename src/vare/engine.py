@@ -1,17 +1,22 @@
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
+from uuid import uuid4
 
+from .attestation import EvidenceTrustRoot
+from .safety import SafetyInterlock, SafetyInterlockDenied
 from .config import EngineConfig
 from .curriculum import AdaptiveCurriculum
 from .failure import FailureMiner
-from .evidence import HashChainLedger
+from .evidence import HashChainLedger, sha256_json
 from .interfaces import LoopHooks
 from .lag import DistributionShiftMonitor, LagController
 from .lifecycle import FailureDrivenTaskGenerator, VerifierRefreshController
 from .promotion import PromotionGate
+from .promotion_journal import PromotionJournal, PromotionRecoveryRequired
 from .replay import PrioritizedReplay
+from .runtime import RuntimeCoordinator, coordinator_for
 from .telemetry import EventLog
 from .types import Attempt, Experience, PromotionDecision, RoundResult, Task, snapshot_verification
 from .verifiers import VerifierEnsemble
@@ -35,6 +40,13 @@ class CapabilityLoop:
         task_generator: FailureDrivenTaskGenerator | None = None,
         verifier_refresh: VerifierRefreshController | None = None,
         decision_ledger: HashChainLedger | None = None,
+        evidence_trust_root: EvidenceTrustRoot | None = None,
+        safety_interlock: SafetyInterlock | None = None,
+        promotion_journal: PromotionJournal | None = None,
+        checkpoint_hasher: Callable[[str], str] | None = None,
+        training_evidence_authorizer: Callable[[Experience], bool] | None = None,
+        require_authenticated_training: bool = False,
+        runtime_coordinator: RuntimeCoordinator | None = None,
         seed: int = 0,
     ) -> None:
         self.hooks = hooks
@@ -44,16 +56,37 @@ class CapabilityLoop:
         self.replay = PrioritizedReplay(self.config.replay, seed=seed)
         self.failures = FailureMiner()
         self.curriculum = AdaptiveCurriculum(seed=seed)
-        self.promotion = PromotionGate(self.config.promotion)
+        self.promotion = PromotionGate(self.config.promotion, trust_root=evidence_trust_root)
         self.shift = DistributionShiftMonitor()
         self.events = event_log or EventLog()
         self.task_generator = task_generator
         self.verifier_refresh = verifier_refresh
         self.decision_ledger = decision_ledger
+        self.safety_interlock = safety_interlock
+        self.promotion_journal = promotion_journal
+        self.checkpoint_hasher = checkpoint_hasher
+        self.evidence_trust_root = evidence_trust_root
+        if type(require_authenticated_training) is not bool:
+            raise ValueError("require_authenticated_training must be bool")
+        if require_authenticated_training and training_evidence_authorizer is None:
+            raise ValueError("authenticated training requires a trusted evidence authorizer")
+        self.training_evidence_authorizer = training_evidence_authorizer
+        if promotion_journal is not None and (
+            checkpoint_hasher is None
+            or evidence_trust_root is None
+            or not evidence_trust_root.strict_checkpoint_binding
+        ):
+            raise ValueError(
+                "durable promotion requires strict attestation and a trusted checkpoint hasher"
+            )
         self._generated_tasks: list[Task] = []
         self.step = 0
         self._run_serial = 0
-        self._round_lock = asyncio.Lock()
+        self.runtime_coordinator = runtime_coordinator or coordinator_for(hooks)
+        self._round_lock = self.runtime_coordinator.lock
+        self._candidate_unresolved = False
+        self._discard_failure: BaseException | None = None
+        self._promotion_failure: BaseException | None = None
 
     async def _one_rollout(self, sem: asyncio.Semaphore, task: Task, policy_id: str, policy_version: int):
         async with sem:
@@ -62,6 +95,8 @@ class CapabilityLoop:
             # accidentally reuse the same seed/provenance step.
             step = self.step
             self.step += 1
+            if self.safety_interlock is not None:
+                self.safety_interlock.require("rollout", incumbent_id=policy_id)
             attempt = await self.hooks.rollout(task, policy_id, policy_version, step)
             if not isinstance(attempt, Attempt):
                 raise TypeError("rollout hook must return an Attempt")
@@ -72,6 +107,12 @@ class CapabilityLoop:
                 or attempt.task.family != task.family
             ):
                 raise ValueError("rollout task identity mismatch")
+            # A hook must not relabel a rollout as a different policy or step.
+            # Older policy *versions* remain eligible for the explicit lag gate.
+            if not isinstance(attempt.policy_id, str) or attempt.policy_id != policy_id:
+                raise ValueError("rollout policy identity mismatch")
+            if type(attempt.created_step) is not int or attempt.created_step != step:
+                raise ValueError("rollout step identity mismatch")
             group_id = task.metadata.get("vare_rollout_group")
             if group_id is not None:
                 attempt.metadata["vare_rollout_group"] = group_id
@@ -83,16 +124,110 @@ class CapabilityLoop:
             )
             return attempt, verification
 
+    @staticmethod
+    async def _cancel_and_drain_rollouts(tasks: Sequence[asyncio.Task]) -> None:
+        """Own every launched rollout until its coroutine is terminal."""
+        for task in tasks:
+            if not task.done() and not task.cancelling():
+                task.cancel()
+        await asyncio.gather(*tasks, return_exceptions=True)
+
+    async def _discard_candidate(
+        self, candidate_id: str, *, propagate_cancellation: bool = True
+    ) -> None:
+        """Finish restoration before unlocking; failed restore poisons this loop.
+
+        An existing transaction error takes precedence over later caller
+        cancellation when restoration succeeds. A failed restoration always
+        takes precedence because the runtime's state is no longer known.
+        """
+        discard = asyncio.create_task(self.hooks.discard(candidate_id))
+        cancellation: asyncio.CancelledError | None = None
+        while not discard.done():
+            try:
+                await asyncio.shield(discard)
+            except asyncio.CancelledError as exc:
+                if cancellation is None:
+                    cancellation = exc
+            except BaseException:
+                break
+        try:
+            discard.result()
+        except BaseException as exc:
+            self._discard_failure = exc
+            raise RuntimeError("candidate discard failed; policy state is unknown") from exc
+        self._candidate_unresolved = False
+        if cancellation is not None and propagate_cancellation:
+            raise cancellation
+
     async def run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None) -> RoundResult:
-        """Serialize each stateful policy-update transaction for this loop."""
+        """Own the shared runtime before any hook; retain crash uncertainty."""
         async with self._round_lock:
-            return await self._run_round(tasks, round_index=round_index, rollout_count=rollout_count)
+            if self._discard_failure is not None:
+                # Do not inspect policy identity, emit rollouts or advance
+                # provenance against a runtime whose rollback failed. There
+                # is no automatic reset: trusted external recovery is required.
+                raise RuntimeError(
+                    "candidate recovery required; policy state is unknown"
+                ) from self._discard_failure
+            if self._promotion_failure is not None:
+                # An optional journal cannot fence the default in-memory loop.
+                # Even a committed journal may have lost its acknowledgment.
+                # Read no hook state until independent recovery is complete.
+                raise PromotionRecoveryRequired(
+                    "unresolved promotion recovery required; verify the runtime "
+                    "and reconcile durable evidence before constructing a fresh loop"
+                ) from self._promotion_failure
+            self.runtime_coordinator.assert_usable()
+            owner_id = uuid4().hex
+            if self.promotion_journal is not None:
+                # Claim failure must not quarantine the *other* live owner.
+                self.promotion_journal.acquire_round(owner_id)
+            self._candidate_unresolved = False
+            try:
+                result = await self._run_round(
+                    tasks, round_index=round_index, rollout_count=rollout_count
+                )
+            except BaseException as exc:
+                if (self._candidate_unresolved or self._discard_failure is not None
+                        or self._promotion_failure is not None):
+                    self.runtime_coordinator.quarantine(exc)
+                    # Leave the durable reservation intact, even if a commit
+                    # succeeded but its acknowledgment was lost.
+                else:
+                    self._release_runtime_round(owner_id)
+                raise
+            self._release_runtime_round(owner_id)
+            self._candidate_unresolved = False
+            return result
+
+    def _release_runtime_round(self, owner_id: str) -> None:
+        if self.promotion_journal is None:
+            return
+        try:
+            assert self.checkpoint_hasher is not None
+            policy_id, _ = self.hooks.active_policy()
+            self.promotion_journal.assert_clean(
+                policy_id=policy_id, checkpoint_sha256=self.checkpoint_hasher(policy_id)
+            )
+            self.promotion_journal.release_round(owner_id)
+        except BaseException as exc:
+            self.runtime_coordinator.quarantine(exc)
+            raise PromotionRecoveryRequired("runtime round completion requires recovery") from exc
 
     async def _run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None) -> RoundResult:
         source_tasks = list(tasks) + self._generated_tasks
         if not source_tasks:
             raise ValueError("run_round requires tasks")
         incumbent_id, incumbent_version = self.hooks.active_policy()
+        if self.promotion_journal is not None:
+            assert self.checkpoint_hasher is not None
+            self.promotion_journal.assert_clean(
+                policy_id=incumbent_id,
+                checkpoint_sha256=self.checkpoint_hasher(incumbent_id),
+            )
+        if self.safety_interlock is not None:
+            self.safety_interlock.require("rollout", incumbent_id=incumbent_id)
         self.shift.fit_reference(t.family for t in source_tasks)
         target_rollouts = len(source_tasks) if rollout_count is None else rollout_count
         if target_rollouts <= 0:
@@ -138,7 +273,33 @@ class CapabilityLoop:
                         )
                     )
         sem = asyncio.Semaphore(self.config.rollout_concurrency)
-        pairs = await asyncio.gather(*(self._one_rollout(sem, t, incumbent_id, incumbent_version) for t in chosen))
+        # gather() normally propagates the first failure while other rollouts
+        # keep running. Never release the round lock with orphaned verifiers or
+        # generation hooks still using the transaction's policy state.
+        rollout_tasks = [
+            asyncio.create_task(self._one_rollout(sem, t, incumbent_id, incumbent_version))
+            for t in chosen
+        ]
+        group = asyncio.gather(*rollout_tasks)
+        try:
+            pairs = await asyncio.shield(group)
+        except BaseException:
+            cleanup = asyncio.create_task(self._cancel_and_drain_rollouts(rollout_tasks))
+            # Repeated caller cancellation must not abandon ongoing cleanup.
+            while not cleanup.done():
+                try:
+                    await asyncio.shield(cleanup)
+                except asyncio.CancelledError:
+                    continue
+            await cleanup
+            # Shield detaches the aggregate on caller cancellation. Consume its
+            # terminal exception after draining children, so it cannot become
+            # an unobserved _GatheringFuture failure.
+            try:
+                await group
+            except BaseException:
+                pass
+            raise
 
         admitted: list[Experience] = []
         admitted_freshness: list[float] = []
@@ -170,10 +331,10 @@ class CapabilityLoop:
         if self.config.preserve_rollout_groups:
             admitted_groups: dict[str, list[tuple[Experience, float]]] = {}
             for exp, freshness in zip(admitted, admitted_freshness, strict=True):
-                group_id = exp.attempt.metadata.get("vare_rollout_group")
-                if group_id is None:
-                    group_id = exp.attempt.task.metadata.get("vare_rollout_group")
-                key = str(group_id) if group_id is not None else f"ungrouped:{id(exp)}"
+                stored_group = exp.attempt.metadata.get("vare_rollout_group")
+                if stored_group is None:
+                    stored_group = exp.attempt.task.metadata.get("vare_rollout_group")
+                key = str(stored_group) if stored_group is not None else f"ungrouped:{id(exp)}"
                 admitted_groups.setdefault(key, []).append((exp, freshness))
 
             for group_id, members in admitted_groups.items():
@@ -258,12 +419,44 @@ class CapabilityLoop:
         if not train_batch:
             candidate_id = incumbent_id
         else:
+            # Authorization occurs at consumption time, after replay
+            # resampling and freshness checks. A failed group member denies
+            # the entire batch before any optimizer mutation.
+            if self.training_evidence_authorizer is not None:
+                try:
+                    authorizations = [
+                        self.training_evidence_authorizer(exp) for exp in train_batch
+                    ]
+                except Exception as exc:
+                    self.events.emit("training_reward_evidence_denied", count=len(train_batch))
+                    raise RuntimeError("training_reward_evidence_unverifiable") from exc
+                if any(type(ok) is not bool or not ok for ok in authorizations):
+                    self.events.emit("training_reward_evidence_denied", count=len(train_batch))
+                    raise RuntimeError("unauthenticated_training_reward_evidence")
+            if self.safety_interlock is not None:
+                self.safety_interlock.require("train", incumbent_id=incumbent_id)
+            # A failing training hook may have mutated model/optimizer state
+            # without returning a candidate handle. Fence rather than guess.
+            self._candidate_unresolved = True
             candidate_id = await self.hooks.train_candidate(incumbent_id, train_batch)
 
+        evaluation_tasks: list[asyncio.Task] = []
+        evaluation_group: asyncio.Future | None = None
         try:
-            incumbent_eval, candidate_eval = await asyncio.gather(
-                self.hooks.evaluate(incumbent_id), self.hooks.evaluate(candidate_id)
-            )
+            # Check authority before scheduling any evaluation work. Recovery
+            # also owns asynchronous discard if this preflight check fails.
+            if self.safety_interlock is not None:
+                self.safety_interlock.require("evaluate", incumbent_id=incumbent_id)
+            evaluation_tasks = [
+                asyncio.create_task(self.hooks.evaluate(incumbent_id)),
+                asyncio.create_task(self.hooks.evaluate(candidate_id)),
+            ]
+            evaluation_group = asyncio.gather(*evaluation_tasks)
+            # Own the evaluation lifetime: caller cancellation must not cancel
+            # a hook repeatedly while it is unwinding its own resources.
+            incumbent_eval, candidate_eval = await asyncio.shield(evaluation_group)
+            if self.safety_interlock is not None:
+                self.safety_interlock.require("evaluate", incumbent_id=incumbent_id)
             if (
                 incumbent_eval.policy_id != incumbent_id
                 or candidate_eval.policy_id != candidate_id
@@ -276,28 +469,149 @@ class CapabilityLoop:
                 )
             else:
                 decision = self.promotion.decide(incumbent_eval, candidate_eval)
-        except BaseException:
-            # Evaluation backends may reject malformed or misbound evidence by
-            # raising. The adapter restores the live incumbent, but the engine
-            # also owns the candidate snapshot and must discard it so a failed
-            # evaluation leaves the whole policy transaction rolled back.
-            if candidate_id != incumbent_id:
+            if decision.accepted and candidate_id != incumbent_id and self.promotion_journal is not None:
+                assert self.evidence_trust_root is not None
+                assert self.checkpoint_hasher is not None
+                expected_old = self.evidence_trust_root.checkpoint_digest(incumbent_eval)
+                expected_new = self.evidence_trust_root.checkpoint_digest(candidate_eval)
+                if (
+                    expected_old is None or expected_new is None
+                    or expected_old != self.checkpoint_hasher(incumbent_id)
+                    or expected_new != self.checkpoint_hasher(candidate_id)
+                ):
+                    decision = PromotionDecision(
+                        accepted=False,
+                        reasons=("checkpoint_attestation_mismatch",),
+                        primary_gain=decision.primary_gain,
+                        worst_slice_regression=decision.worst_slice_regression,
+                        paired_gain=decision.paired_gain,
+                        paired_lcb=decision.paired_lcb,
+                        paired_n=decision.paired_n,
+                    )
+            if candidate_id != incumbent_id and decision.accepted and self.safety_interlock is not None:
                 try:
-                    await self.hooks.discard(candidate_id)
-                except BaseException as discard_exc:
-                    raise RuntimeError(
-                        "evaluation failed and candidate discard failed; "
-                        "policy state is unknown"
-                    ) from discard_exc
+                    self.safety_interlock.require(
+                        "promote", incumbent_id=incumbent_id, candidate_id=candidate_id
+                    )
+                except SafetyInterlockDenied:
+                    decision = PromotionDecision(
+                        accepted=False,
+                        reasons=("safety_interlock_denied",),
+                        primary_gain=decision.primary_gain,
+                        worst_slice_regression=decision.worst_slice_regression,
+                        paired_gain=decision.paired_gain,
+                        paired_lcb=decision.paired_lcb,
+                        paired_n=decision.paired_n,
+                    )
+        except BaseException:
+            async def rollback_evaluation() -> None:
+                # gather propagates the first error without stopping siblings.
+                # Cancel each live evaluator once, then wait for all hook
+                # cleanup before deleting a snapshot it may still be using.
+                # A hook already cancelling may be inside asynchronous cleanup.
+                for task in evaluation_tasks:
+                    if not task.done() and not task.cancelling():
+                        task.cancel()
+                await asyncio.gather(*evaluation_tasks, return_exceptions=True)
+                if evaluation_group is not None and not evaluation_group.cancelled():
+                    evaluation_group.exception()  # Retrieve secondary/group errors.
+                if candidate_id != incumbent_id:
+                    await self._discard_candidate(candidate_id, propagate_cancellation=False)
+
+            recovery = asyncio.create_task(rollback_evaluation())
+            while not recovery.done():
+                try:
+                    await asyncio.shield(recovery)
+                except asyncio.CancelledError:
+                    continue
+            recovery.result()
             raise
         if candidate_id != incumbent_id and decision.accepted:
-            await self.hooks.promote(candidate_id)
+            transaction_id: str | None = None
+            if self.promotion_journal is not None:
+                assert self.checkpoint_hasher is not None
+                assert self.evidence_trust_root is not None
+                old_digest = self.evidence_trust_root.checkpoint_digest(incumbent_eval)
+                new_digest = self.evidence_trust_root.checkpoint_digest(candidate_eval)
+                assert old_digest is not None and new_digest is not None
+                transaction_id = self.evidence_trust_root.promotion_nonce
+                assert transaction_id is not None
+                try:
+                    # The check and durable prepare precede any live policy
+                    # mutation. A nonce can be consumed only once.
+                    if (self.checkpoint_hasher(incumbent_id) != old_digest
+                            or self.checkpoint_hasher(candidate_id) != new_digest):
+                        raise PromotionRecoveryRequired("checkpoint changed before prepare")
+                    self.promotion_journal.prepare(
+                        tx_id=transaction_id,
+                        incumbent_id=incumbent_id,
+                        incumbent_sha256=old_digest,
+                        candidate_id=candidate_id,
+                        candidate_sha256=new_digest,
+                        evaluation_sha256=sha256_json({
+                            "incumbent": incumbent_eval.metadata,
+                            "candidate": candidate_eval.metadata,
+                        }),
+                    )
+                except BaseException:
+                    await self._discard_candidate(candidate_id, propagate_cancellation=False)
+                    raise
+
+            if self.decision_ledger is not None:
+                try:
+                    self.decision_ledger.append(
+                        "promotion_intent",
+                        {"round_index": round_index, "incumbent_id": incumbent_id,
+                         "candidate_id": candidate_id, "primary_gain": decision.primary_gain},
+                    )
+                except BaseException:
+                    # Promotion has not started. Restore the champion and, if
+                    # independently verified, mark this intent aborted.
+                    await self._discard_candidate(candidate_id, propagate_cancellation=False)
+                    if transaction_id is not None:
+                        assert self.promotion_journal is not None
+                        assert self.checkpoint_hasher is not None
+                        self.promotion_journal.reconcile(
+                            tx_id=transaction_id,
+                            observed_policy_id=self.hooks.active_policy()[0],
+                            observed_checkpoint_sha256=self.checkpoint_hasher(incumbent_id),
+                        )
+                    raise
+
+            # Publication may mutate the runtime before raising or being
+            # cancelled. Never discard a possibly installed candidate or reuse
+            # this loop after an unverified publication, even without a journal.
+            try:
+                await self.hooks.promote(candidate_id)
+                if self.hooks.active_policy()[0] != candidate_id:
+                    raise PromotionRecoveryRequired(
+                        "post-promotion policy acknowledgment mismatch; manual recovery required"
+                    )
+                if transaction_id is not None:
+                    assert self.promotion_journal is not None
+                    assert self.checkpoint_hasher is not None
+                    assert self.evidence_trust_root is not None
+                    expected_new = self.evidence_trust_root.checkpoint_digest(candidate_eval)
+                    if self.checkpoint_hasher(candidate_id) != expected_new:
+                        raise PromotionRecoveryRequired(
+                            "post-promotion checkpoint mismatch; manual recovery required"
+                        )
+                    self.promotion_journal.commit(transaction_id)
+            except BaseException as exc:
+                self._promotion_failure = exc
+                if isinstance(exc, PromotionRecoveryRequired):
+                    raise
+                if isinstance(exc, asyncio.CancelledError) and transaction_id is None:
+                    raise  # Preserve normal caller cancellation semantics.
+                raise PromotionRecoveryRequired(
+                    "promotion failed; verify the runtime and reconcile durable evidence"
+                ) from exc
             promoted_id = candidate_id
             self.events.emit("candidate_promoted", candidate_id=candidate_id, gain=decision.primary_gain)
         else:
             promoted_id = incumbent_id
             if candidate_id != incumbent_id:
-                await self.hooks.discard(candidate_id)
+                await self._discard_candidate(candidate_id)
             self.events.emit("candidate_rejected", candidate_id=candidate_id, reasons=decision.reasons)
 
         self.events.emit(

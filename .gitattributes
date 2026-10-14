@@ -1,5 +1,11 @@
 # Preserve raw launcher output byte-for-byte; logs are evidence artifacts, not source diffs.
 *.log -diff
+# Keep generated assertion traces in JUnit records byte-for-byte as well.
+results/rvl-inference-transaction-v1/**/*-pytest.xml -diff
+results/engine-evaluation-lifecycle-v1/**/*-pytest.xml -diff
+results/engine-evaluation-interlock-integration-v1/**/*-pytest.xml -diff
+results/candidate-discard-recovery-v1/**/*.xml -diff
+results/promotion-publication-recovery-v1/**/*.xml -diff
 results/seeded-summary-v3/**/*pytest.xml -diff
 results/seeded-summary-v3/*.xml -diff
 results/format-comparison-record-v1/*.xml -diff

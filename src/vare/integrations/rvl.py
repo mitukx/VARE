@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import hashlib
 import json
+import math
 import sqlite3
 from dataclasses import dataclass
+from numbers import Real
 from pathlib import Path
 from statistics import fmean
 from typing import Any
@@ -82,11 +85,125 @@ class RVLTokenReplayReader:
         return cls._require_version(value, field)
 
     @staticmethod
+    def _require_ready_reward(value: Any) -> float:
+        if isinstance(value, bool) or not isinstance(value, Real):
+            raise ValueError(
+                "ready RVL experience reward must be a finite real number in [0, 1]"
+            )
+        reward = float(value)
+        if not math.isfinite(reward) or not 0.0 <= reward <= 1.0:
+            raise ValueError(
+                "ready RVL experience reward must be a finite real number in [0, 1]"
+            )
+        return reward
+
+    @staticmethod
     def _decode_payload(raw: str) -> list[dict[str, Any]]:
         payload = json.loads(raw)
         if not isinstance(payload, list):
             raise ValueError("RVL replay payload must be a list")
         return [dict(x) for x in payload]
+
+    @staticmethod
+    def _canonical_digest(value: Any) -> str:
+        encoded = json.dumps(
+            value, sort_keys=True, separators=(",", ":"), allow_nan=False
+        ).encode("utf-8")
+        return hashlib.sha256(encoded).hexdigest()
+
+    @classmethod
+    def _generation_behavior_digest(cls, generation: dict[str, Any]) -> str:
+        semantic = dict(generation)
+        semantic.pop("latency_s", None)
+        return cls._canonical_digest(semantic)
+
+    @classmethod
+    def _group_behavior_hashes(cls, items: list[dict[str, Any]]) -> set[str]:
+        """Reproduce the two pinned TokenReplay write-path digests.
+
+        The normal pending->ready path commits only immutable Generation data.
+        The compatibility ``put`` path commits verified records while excluding
+        timing fields. Both encodings are retained by RVL, so accept either.
+        """
+        generations: list[dict[str, Any]] = []
+        verified_records: list[dict[str, Any]] = []
+        can_hash_verified_records = True
+        for item in items:
+            generation = item.get("generation", item)
+            if not isinstance(generation, dict):
+                raise ValueError("RVL replay generation must be an object")
+            generation_semantic = dict(generation)
+            generation_semantic.pop("latency_s", None)
+            generations.append(generation_semantic)
+
+            if "generation" not in item:
+                can_hash_verified_records = False
+                continue
+            verified = json.loads(
+                json.dumps(item, sort_keys=True, separators=(",", ":"), allow_nan=False)
+            )
+            if not isinstance(verified.get("generation"), dict):
+                raise ValueError("RVL verified record generation must be an object")
+            verified["generation"].pop("latency_s", None)
+            verified.pop("verifier_latency_s", None)
+            verified_records.append(verified)
+
+        hashes = {cls._canonical_digest(generations)}
+        if can_hash_verified_records and len(verified_records) == len(items):
+            hashes.add(cls._canonical_digest(verified_records))
+        return hashes
+
+    @classmethod
+    def _assess_behavior_hash(cls, value: Any, items: list[dict[str, Any]]) -> str:
+        if (
+            not isinstance(value, str)
+            or len(value) != 64
+            or any(char not in "0123456789abcdef" for char in value)
+        ):
+            return "malformed"
+        try:
+            accepted = cls._group_behavior_hashes(items)
+        except (TypeError, ValueError):
+            return "unhashable"
+        if value not in accepted:
+            return "unmatched"
+        # The normal pending->ready path commits Generation data. The legacy
+        # direct-put path commits whole verified records, including reward.
+        generation_digest = cls._canonical_digest(
+            [
+                {
+                    key: val
+                    for key, val in dict(item.get("generation", item)).items()
+                    if key != "latency_s"
+                }
+                for item in items
+            ]
+        )
+        return "generation_match" if value == generation_digest else "verified_record_match"
+
+    @staticmethod
+    def _verification_config_sha256(db: sqlite3.Connection) -> str | None:
+        table = db.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' "
+            "AND name='verification_configuration'"
+        ).fetchone()
+        if table is None:
+            return None
+        row = db.execute(
+            "SELECT hash FROM verification_configuration WHERE id=1"
+        ).fetchone()
+        if row is None:
+            return None
+        digest = row[0]
+        if (
+            not isinstance(digest, str)
+            or len(digest) != 64
+            or any(char not in "0123456789abcdef" for char in digest)
+        ):
+            raise ValueError(
+                "stored RVL verification configuration must be a lowercase SHA-256 digest"
+            )
+        return digest
 
     def snapshot(
         self,
@@ -108,7 +225,8 @@ class RVLTokenReplayReader:
         groups = 0
         with self._connect() as db:
             rows = db.execute(
-                "SELECT policy_version,payload,status,verifier_version FROM groups ORDER BY rowid"
+                "SELECT id,policy_version,payload,status,verifier_version "
+                "FROM groups ORDER BY rowid"
             ).fetchall()
         for row in rows:
             groups += 1
@@ -127,7 +245,10 @@ class RVLTokenReplayReader:
             policies.add(pver)
             if vver >= 0:
                 verifiers.add(vver)
-            for item in self._decode_payload(str(row["payload"])):
+            items = self._decode_payload(str(row["payload"]))
+            if status == "ready" and not items:
+                raise ValueError(f"ready RVL group {row['id']} has no experiences")
+            for item in items:
                 generations += 1
                 if status == "ready" and "verifier_version" in item:
                     item_vver = self._require_version(
@@ -137,8 +258,13 @@ class RVLTokenReplayReader:
                         item_vver, current_verifier_version, "stored experience verifier"
                     )
                     verifiers.add(item_vver)
-                if "reward" in item:
-                    rewards.append(float(item["reward"]))
+                if status == "ready":
+                    if "reward" not in item:
+                        raise ValueError(
+                            "ready RVL experience reward is missing; "
+                            "missing evaluation is not zero"
+                        )
+                    rewards.append(self._require_ready_reward(item["reward"]))
         max_policy_lag = 0
         if current_policy_version is not None and policies:
             max_policy_lag = max(max(0, current_policy_version - v) for v in policies)
@@ -165,6 +291,8 @@ class RVLTokenReplayReader:
         trusted_default: bool = False,
         pass_threshold: float = 0.5,
     ) -> list[Experience]:
+        if type(trusted_default) is not bool:
+            raise ValueError("trusted_default must be a literal boolean")
         current_policy_version = self._require_version(
             current_policy_version, "current_policy"
         )
@@ -173,8 +301,9 @@ class RVLTokenReplayReader:
         )
         out: list[Experience] = []
         with self._connect() as db:
+            verification_config_sha256 = self._verification_config_sha256(db)
             rows = db.execute(
-                """SELECT rowid,id,policy_version,payload,status,verifier_version
+                """SELECT rowid,id,policy_version,payload,hash,status,verifier_version
                    FROM groups WHERE status='ready' ORDER BY rowid"""
             ).fetchall()
         for row in rows:
@@ -186,20 +315,36 @@ class RVLTokenReplayReader:
             self._reject_future_version(
                 group_vver, current_verifier_version, "stored verifier"
             )
-            for index, item in enumerate(self._decode_payload(str(row["payload"]))):
+            items = self._decode_payload(str(row["payload"]))
+            if not items:
+                raise ValueError(f"ready RVL group {row['id']} has no experiences")
+            group_behavior_hash = row["hash"]
+            behavior_hash_status = self._assess_behavior_hash(group_behavior_hash, items)
+            for index, item in enumerate(items):
                 generation = dict(item.get("generation", item))
                 if "prompt_id" not in generation or "prompt" not in generation or "response" not in generation:
                     raise ValueError("RVL generation missing prompt_id/prompt/response")
                 gmeta = dict(generation.get("metadata") or {})
                 vmeta = dict(item.get("metadata") or {})
                 family = str(gmeta.get("family", vmeta.get("family", default_family)))
+                group_id = str(row["id"])
+                group_size = len(items)
                 task = Task(
                     id=str(generation["prompt_id"]),
                     prompt=str(generation["prompt"]),
                     family=family,
-                    metadata={"rvl_group_id": str(row["id"]), **gmeta},
+                    metadata={
+                        **gmeta,
+                        "rvl_group_id": group_id,
+                        "vare_rollout_group": group_id,
+                        "vare_rollout_group_size": group_size,
+                    },
                 )
-                reward = float(item.get("reward", 0.0))
+                if "reward" not in item:
+                    raise ValueError(
+                        "ready RVL experience reward is missing; missing evaluation is not zero"
+                    )
+                reward = self._require_ready_reward(item["reward"])
                 verifier_version = self._require_version(
                     item.get("verifier_version", group_vver),
                     "stored experience verifier",
@@ -211,7 +356,12 @@ class RVLTokenReplayReader:
                 )
                 disagreement = float(vmeta.get("disagreement", 0.0))
                 confidence = float(vmeta.get("confidence", 1.0 - min(1.0, disagreement)))
-                trusted = bool(vmeta.get("trusted", trusted_default))
+                trusted = vmeta.get("trusted", trusted_default)
+                if type(trusted) is not bool:
+                    raise ValueError(
+                        "RVL verifier trusted flag must be a literal boolean, "
+                        "not a truthy string or integer"
+                    )
                 attempt = Attempt(
                     task=task,
                     output=str(generation["response"]),
@@ -221,12 +371,33 @@ class RVLTokenReplayReader:
                     logprob=float(generation["logprob"]) if generation.get("logprob") is not None else None,
                     latency_ms=(float(generation["latency_s"]) * 1000.0) if generation.get("latency_s") is not None else None,
                     metadata={
-                        "rvl_group_id": str(row["id"]),
+                        **gmeta,
+                        "rvl_group_id": group_id,
                         "rvl_generation_index": index,
                         "token_count": generation.get("token_count"),
-                        **gmeta,
+                        "vare_rollout_group": group_id,
+                        "vare_rollout_group_size": group_size,
+                        "rvl_generation": generation,
+                        "rvl_group_behavior_sha256": group_behavior_hash,
+                        "rvl_group_behavior_hash_status": behavior_hash_status,
+                        "rvl_generation_behavior_sha256": self._generation_behavior_digest(
+                            generation
+                        ),
                     },
                 )
+                verification_metadata = {
+                    **vmeta,
+                    "rvl_group_id": group_id,
+                    "rvl_replay_status": "ready",
+                    # Detect accidental mutation between this read and a later
+                    # adapter call. This is an in-memory snapshot, not reward
+                    # authenticity evidence from RVL's unkeyed behavior hash.
+                    "rvl_ready_reward_snapshot": reward,
+                }
+                if verification_config_sha256 is not None:
+                    verification_metadata["rvl_verification_config_sha256"] = (
+                        verification_config_sha256
+                    )
                 verification = Verification(
                     score=reward,
                     passed=reward >= pass_threshold,
@@ -235,7 +406,7 @@ class RVLTokenReplayReader:
                     verifier_name=str(vmeta.get("verifier_name", "rvl")),
                     disagreement=max(0.0, disagreement),
                     trusted=trusted,
-                    metadata={"rvl_group_id": str(row["id"]), **vmeta},
+                    metadata=verification_metadata,
                 )
                 out.append(
                     Experience(

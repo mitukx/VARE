@@ -4,13 +4,16 @@ import asyncio
 from dataclasses import asdict, dataclass, field
 import hashlib
 import json
+import os
 from pathlib import Path
 import subprocess
+import sys
 import time
 from typing import Sequence
 
 from ..evidence import sha256_json
-from .catalog import CatalogEnvironmentVerifier, TaskCatalog, WorkspaceAgent, WorkspaceAgentRollout
+from .catalog import CatalogEnvironmentVerifier, RepositoryEvaluatorBackend, TaskCatalog, WorkspaceAgent, WorkspaceAgentRollout
+from .runner import resolve_launch_argv
 
 
 @dataclass(frozen=True, slots=True)
@@ -18,13 +21,18 @@ class CommandWorkspaceAgent:
     """Adapter for an external repository-editing agent command.
 
     The command vector is configured by the experimenter. Placeholders
-    `{workspace}`, `{prompt}`, and `{step}` are substituted without invoking a
-    shell. The external program is responsible for editing the workspace.
+    `{workspace}`, `{prompt}`, and `{step}` in that vector are substituted
+    without invoking a shell. Text inserted for a placeholder is not scanned
+    again, so a prompt that contains `{step}` stays literal. The external
+    program is responsible for editing the workspace.
     """
 
     argv: tuple[str, ...]
     timeout_s: float = 1800.0
     launch_root: Path = field(default_factory=lambda: Path.cwd().resolve())
+    # Prevent accidental inheritance of controller API keys/tokens. This is
+    # hygiene only: a same-UID subprocess is NOT a security boundary.
+    environment_allowlist: tuple[str, ...] = ("PATH", "LANG", "LC_ALL", "LC_CTYPE", "TZ", "TMPDIR")
 
     async def run(self, *, prompt: str, workspace: Path, step: int) -> str:
         if not self.argv:
@@ -34,22 +42,34 @@ class CommandWorkspaceAgent:
             "{prompt}": prompt,
             "{step}": str(step),
         }
+        expanded = resolve_launch_argv(self.argv, values)
         argv: list[str] = []
-        for item in self.argv:
-            value = item
-            had_placeholder = any(token in value for token in values)
-            for token, replacement in values.items():
-                value = value.replace(token, replacement)
-            if not had_placeholder and not Path(value).is_absolute():
+        for original, value in zip(self.argv, expanded, strict=True):
+            had_placeholder = any(
+                token in original for token in (*values, "{python}")
+            )
+            if (
+                not had_placeholder
+                and value != sys.executable
+                and not Path(value).is_absolute()
+            ):
                 candidate = (self.launch_root / value).resolve()
                 if candidate.exists():
                     value = str(candidate)
             argv.append(value)
 
+        if (
+            type(self.environment_allowlist) is not tuple
+            or any(not isinstance(key, str) or not key.isidentifier() for key in self.environment_allowlist)
+        ):
+            raise ValueError("environment_allowlist must contain valid variable names")
+        child_env = {key: os.environ[key] for key in self.environment_allowlist if key in os.environ}
+
         def execute() -> subprocess.CompletedProcess[str]:
             return subprocess.run(
                 argv,
                 cwd=workspace,
+                env=child_env,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
@@ -111,10 +131,11 @@ class EnvironmentCampaignRunner:
         *,
         run_root: str | Path,
         verifier_version: int = 0,
+        isolated_evaluator: RepositoryEvaluatorBackend | None = None,
     ) -> None:
         self.catalog = catalog
         self.rollout = WorkspaceAgentRollout(catalog, agent, Path(run_root) / "workspaces")
-        self.verifier = CatalogEnvironmentVerifier(catalog, version=verifier_version)
+        self.verifier = CatalogEnvironmentVerifier(catalog, version=verifier_version, isolated_backend=isolated_evaluator)
         self.run_root = Path(run_root).resolve()
         self.run_root.mkdir(parents=True, exist_ok=True)
 

@@ -1,0 +1,70 @@
+{
+  "protocol_sha256": "6b612b7949a2c3231b34fa65d4853eba6da735257ba7b122c3ed210bdb1778f4",
+  "baseline_revision": "f4b8d11177f2fa0d75eb1ff980c5b2436561b4d7",
+  "candidate_revision": "9d66a21ccb912f658a809734073d34f3db3c3f8d",
+  "source_sha256": {
+    "protocols/promotion_publication_recovery_v1.lock.json": "6b612b7949a2c3231b34fa65d4853eba6da735257ba7b122c3ed210bdb1778f4",
+    "tests/test_promotion_publication_recovery.py": "d0b56e43b5a919bc4e4b32c2537dab768796b0c32a013ab310f0e323eb30dc5c",
+    "src/vare/engine.py": "7a6384010bdcf785a65cc0b05c33c29c44471a2c770979c9e5944463677122c5",
+    "src/vare/interfaces.py": "a13c0d8760e4b66134f68c7af9ef2782cbd8faa59af0c9abb4ebe5b5c62f1ee4",
+    "scripts/reproduce_promotion_publication_recovery_v1.py": "6af5fc4797955b6016e9675f85c835973614f882e66abd0e385c1b319f89a70c"
+  },
+  "runtime": {
+    "python": "3.12.14",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "pytest": "8.4.2",
+    "device": "cpu"
+  },
+  "results": {
+    "baseline": {
+      "exit_code": 1,
+      "tests": 12,
+      "failures": 10,
+      "errors": 0,
+      "skips": 0,
+      "engine_sha256": "372ead6467655e122fd13ee9ff06c9a74e0d8d123c10d1a1dad8fa97034cbcfc",
+      "case_results": {
+        "test_publication_fault_without_journal_fences_reentry[before-error]": "failure",
+        "test_publication_fault_without_journal_fences_reentry[after-error]": "failure",
+        "test_publication_fault_without_journal_fences_reentry[before-cancel]": "failure",
+        "test_publication_fault_without_journal_fences_reentry[after-cancel]": "failure",
+        "test_hook_success_requires_candidate_runtime_acknowledgment[noop]": "failure",
+        "test_hook_success_requires_candidate_runtime_acknowledgment[wrong-policy]": "failure",
+        "test_durable_publication_completion_fault_fences_before_policy_lookup[checkpoint-mismatch]": "failure",
+        "test_durable_publication_completion_fault_fences_before_policy_lookup[commit-before]": "failure",
+        "test_durable_publication_completion_fault_fences_before_policy_lookup[commit-after]": "failure",
+        "test_real_caller_cancellation_during_publication_fences_reentry": "failure",
+        "test_valid_publication_control_commits_and_reports_success[False]": "pass",
+        "test_valid_publication_control_commits_and_reports_success[True]": "pass"
+      }
+    },
+    "candidate": {
+      "exit_code": 0,
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "engine_sha256": "7a6384010bdcf785a65cc0b05c33c29c44471a2c770979c9e5944463677122c5",
+      "case_results": {
+        "test_publication_fault_without_journal_fences_reentry[before-error]": "pass",
+        "test_publication_fault_without_journal_fences_reentry[after-error]": "pass",
+        "test_publication_fault_without_journal_fences_reentry[before-cancel]": "pass",
+        "test_publication_fault_without_journal_fences_reentry[after-cancel]": "pass",
+        "test_hook_success_requires_candidate_runtime_acknowledgment[noop]": "pass",
+        "test_hook_success_requires_candidate_runtime_acknowledgment[wrong-policy]": "pass",
+        "test_durable_publication_completion_fault_fences_before_policy_lookup[checkpoint-mismatch]": "pass",
+        "test_durable_publication_completion_fault_fences_before_policy_lookup[commit-before]": "pass",
+        "test_durable_publication_completion_fault_fences_before_policy_lookup[commit-after]": "pass",
+        "test_real_caller_cancellation_during_publication_fences_reentry": "pass",
+        "test_valid_publication_control_commits_and_reports_success[False]": "pass",
+        "test_valid_publication_control_commits_and_reports_success[True]": "pass"
+      }
+    }
+  },
+  "artifact_sha256": {
+    "baseline-pytest.log": "54b01daa31d660f3cecd6f3ddb51c116d04b012d84e375fca295c69d705ac0fe",
+    "baseline-pytest.xml": "3f28b975faa2299d8c8dc422fedfbe9f27c230f7ad5c6511678f0e21bf029e7e",
+    "candidate-pytest.log": "3c7ef7b55ea797db9751ea3b91f07f25aa16e7d60d1b16444db84056c4806bca",
+    "candidate-pytest.xml": "5db4e32392db6d1afac854ce90d29066159b919921ac48deae16f32f1391e54c"
+  }
+}

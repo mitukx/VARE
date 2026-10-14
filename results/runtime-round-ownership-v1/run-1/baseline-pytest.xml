@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="8" skipped="0" tests="10" time="0.712" timestamp="2026-10-13T17:18:29.084372-06:00" hostname="c452fa62dd72"><testcase classname="tests.test_runtime_round_ownership" name="test_two_loops_same_hooks_serialize_before_policy_lookup" time="0.011"><failure message="AssertionError: second loop overlapped a live runtime transaction&#10;assert ['active-poli...y', 'rollout'] == ['active-poli...train-paused']&#10;  &#10;  Left contains 2 more items, first extra item: 'active-policy'&#10;  Use -v to get more diff">def test_two_loops_same_hooks_serialize_before_policy_lookup():
+        async def case():
+            hooks = BoundaryHooks(fault="pause")
+            first, second = loop(hooks), loop(hooks)
+            one = asyncio.create_task(run(first))
+            two = None
+            try:
+                await asyncio.wait_for(hooks.training_entered.wait(), 2)
+                calls = list(hooks.calls)
+                two = asyncio.create_task(run(second))
+                await asyncio.sleep(0)
+                await asyncio.sleep(0)
+                assert hooks.calls == calls, "second loop overlapped a live runtime transaction"
+                hooks.fault = None
+                hooks.training_release.set()
+                results = await asyncio.wait_for(asyncio.gather(one, two), 2)
+                assert [r.incumbent_id for r in results] == ["p0", "p1"]
+                assert [r.promoted_id for r in results] == ["p1", "p2"]
+            finally:
+                hooks.training_release.set()
+                await asyncio.gather(*[t for t in (one, two) if t is not None], return_exceptions=True)
+&gt;       asyncio.run(case())
+
+tests/test_runtime_round_ownership.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def case():
+        hooks = BoundaryHooks(fault="pause")
+        first, second = loop(hooks), loop(hooks)
+        one = asyncio.create_task(run(first))
+        two = None
+        try:
+            await asyncio.wait_for(hooks.training_entered.wait(), 2)
+            calls = list(hooks.calls)
+            two = asyncio.create_task(run(second))
+            await asyncio.sleep(0)
+            await asyncio.sleep(0)
+&gt;           assert hooks.calls == calls, "second loop overlapped a live runtime transaction"
+E           AssertionError: second loop overlapped a live runtime transaction
+E           assert ['active-poli...y', 'rollout'] == ['active-poli...train-paused']
+E             
+E             Left contains 2 more items, first extra item: 'active-policy'
+E             Use -v to get more diff
+
+tests/test_runtime_round_ownership.py:95: AssertionError</failure></testcase><testcase classname="tests.test_runtime_round_ownership" name="test_sibling_loop_cannot_bypass_unknown_runtime[discard]" time="0.002"><failure message="AssertionError: unresolved runtime allowed another hook access&#10;assert ['active-poli...rollout', ...] == ['active-poli...scard-failed']&#10;  &#10;  Left contains 7 more items, first extra item: 'active-policy'&#10;  Use -v to get more diff">fault = 'discard'
+
+    @pytest.mark.parametrize("fault", ["discard", "publish", "train"])
+    def test_sibling_loop_cannot_bypass_unknown_runtime(fault):
+        async def case():
+            hooks = BoundaryHooks(fault=None if fault == "publish" else fault)
+            hooks.mode = "after-error" if fault == "publish" else "success"
+            first, sibling = loop(hooks), loop(hooks)
+            with pytest.raises((RuntimeError, OSError)):
+                await run(first)
+            hooks.fault = None
+            hooks.mode = "success"
+            await fenced(sibling, hooks)
+&gt;       asyncio.run(case())
+
+tests/test_runtime_round_ownership.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/test_runtime_round_ownership.py:117: in case
+    await fenced(sibling, hooks)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+control = &lt;vare.engine.CapabilityLoop object at 0x7f6fbebe4ce0&gt;
+hooks = &lt;test_runtime_round_ownership.BoundaryHooks object at 0x7f6fbebe4e30&gt;
+
+    async def fenced(control, hooks):
+        calls = list(hooks.calls)
+        error = None
+        try:
+            await run(control)
+        except BaseException as exc:
+            error = exc
+&gt;       assert hooks.calls == calls, "unresolved runtime allowed another hook access"
+E       AssertionError: unresolved runtime allowed another hook access
+E       assert ['active-poli...rollout', ...] == ['active-poli...scard-failed']
+E         
+E         Left contains 7 more items, first extra item: 'active-policy'
+E         Use -v to get more diff
+
+tests/test_runtime_round_ownership.py:78: AssertionError</failure></testcase><testcase classname="tests.test_runtime_round_ownership" name="test_sibling_loop_cannot_bypass_unknown_runtime[publish]" time="0.007"><failure message="AssertionError: unresolved runtime allowed another hook access&#10;assert ['active-poli...promote', ...] == ['active-poli...1', 'promote']&#10;  &#10;  Left contains 7 more items, first extra item: 'active-policy'&#10;  Use -v to get more diff">fault = 'publish'
+
+    @pytest.mark.parametrize("fault", ["discard", "publish", "train"])
+    def test_sibling_loop_cannot_bypass_unknown_runtime(fault):
+        async def case():
+            hooks = BoundaryHooks(fault=None if fault == "publish" else fault)
+            hooks.mode = "after-error" if fault == "publish" else "success"
+            first, sibling = loop(hooks), loop(hooks)
+            with pytest.raises((RuntimeError, OSError)):
+                await run(first)
+            hooks.fault = None
+            hooks.mode = "success"
+            await fenced(sibling, hooks)
+&gt;       asyncio.run(case())
+
+tests/test_runtime_round_ownership.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/test_runtime_round_ownership.py:117: in case
+    await fenced(sibling, hooks)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+control = &lt;vare.engine.CapabilityLoop object at 0x7f6fbebe7650&gt;
+hooks = &lt;test_runtime_round_ownership.BoundaryHooks object at 0x7f6fbebe5e50&gt;
+
+    async def fenced(control, hooks):
+        calls = list(hooks.calls)
+        error = None
+        try:
+            await run(control)
+        except BaseException as exc:
+            error = exc
+&gt;       assert hooks.calls == calls, "unresolved runtime allowed another hook access"
+E       AssertionError: unresolved runtime allowed another hook access
+E       assert ['active-poli...promote', ...] == ['active-poli...1', 'promote']
+E         
+E         Left contains 7 more items, first extra item: 'active-policy'
+E         Use -v to get more diff
+
+tests/test_runtime_round_ownership.py:78: AssertionError</failure></testcase><testcase classname="tests.test_runtime_round_ownership" name="test_sibling_loop_cannot_bypass_unknown_runtime[train]" time="0.002"><failure message="AssertionError: unresolved runtime allowed another hook access&#10;assert ['active-poli... 'train', ...] == ['active-poli...train-failed']&#10;  &#10;  Left contains 7 more items, first extra item: 'active-policy'&#10;  Use -v to get more diff">fault = 'train'
+
+    @pytest.mark.parametrize("fault", ["discard", "publish", "train"])
+    def test_sibling_loop_cannot_bypass_unknown_runtime(fault):
+        async def case():
+            hooks = BoundaryHooks(fault=None if fault == "publish" else fault)
+            hooks.mode = "after-error" if fault == "publish" else "success"
+            first, sibling = loop(hooks), loop(hooks)
+            with pytest.raises((RuntimeError, OSError)):
+                await run(first)
+            hooks.fault = None
+            hooks.mode = "success"
+            await fenced(sibling, hooks)
+&gt;       asyncio.run(case())
+
+tests/test_runtime_round_ownership.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/test_runtime_round_ownership.py:117: in case
+    await fenced(sibling, hooks)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+control = &lt;vare.engine.CapabilityLoop object at 0x7f6fbebec0b0&gt;
+hooks = &lt;test_runtime_round_ownership.BoundaryHooks object at 0x7f6fbebeda00&gt;
+
+    async def fenced(control, hooks):
+        calls = list(hooks.calls)
+        error = None
+        try:
+            await run(control)
+        except BaseException as exc:
+            error = exc
+&gt;       assert hooks.calls == calls, "unresolved runtime allowed another hook access"
+E       AssertionError: unresolved runtime allowed another hook access
+E       assert ['active-poli... 'train', ...] == ['active-poli...train-failed']
+E         
+E         Left contains 7 more items, first extra item: 'active-policy'
+E         Use -v to get more diff
+
+tests/test_runtime_round_ownership.py:78: AssertionError</failure></testcase><testcase classname="tests.test_runtime_round_ownership" name="test_reopened_journal_fences_fresh_hooks_before_lookup[discard]" time="0.006"><failure message="AssertionError: unresolved runtime allowed another hook access&#10;assert ['active-poli...promote', ...] == []&#10;  &#10;  Left contains 7 more items, first extra item: 'active-policy'&#10;  Use -v to get more diff">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-9/test_reopened_journal_fences_f0')
+fault = 'discard'
+
+    @pytest.mark.parametrize("fault", ["discard", "commit-after"])
+    def test_reopened_journal_fences_fresh_hooks_before_lookup(tmp_path, fault):
+        async def case():
+            path = tmp_path / "round.sqlite"
+            signer = trust()
+            hooks = BoundaryHooks(fault="discard" if fault == "discard" else None, signer=signer)
+            durable = journal(path, LostAckJournal if fault == "commit-after" else PromotionJournal)
+            with pytest.raises((RuntimeError, OSError)):
+                await run(loop(hooks, durable))
+            fresh = BoundaryHooks(signer=signer)
+            if fault == "commit-after":
+                fresh.active = "p1"
+                fresh.digests["p1"] = digest("weights-p1")
+                fresh.scores["p1"] = 0.6
+            await fenced(loop(fresh, journal(path)), fresh)
+&gt;       asyncio.run(case())
+
+tests/test_runtime_round_ownership.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/test_runtime_round_ownership.py:135: in case
+    await fenced(loop(fresh, journal(path)), fresh)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+control = &lt;vare.engine.CapabilityLoop object at 0x7f6fbebed5e0&gt;
+hooks = &lt;test_runtime_round_ownership.BoundaryHooks object at 0x7f6fbebe7260&gt;
+
+    async def fenced(control, hooks):
+        calls = list(hooks.calls)
+        error = None
+        try:
+            await run(control)
+        except BaseException as exc:
+            error = exc
+&gt;       assert hooks.calls == calls, "unresolved runtime allowed another hook access"
+E       AssertionError: unresolved runtime allowed another hook access
+E       assert ['active-poli...promote', ...] == []
+E         
+E         Left contains 7 more items, first extra item: 'active-policy'
+E         Use -v to get more diff
+
+tests/test_runtime_round_ownership.py:78: AssertionError</failure></testcase><testcase classname="tests.test_runtime_round_ownership" name="test_reopened_journal_fences_fresh_hooks_before_lookup[commit-after]" time="0.004"><failure message="AssertionError: unresolved runtime allowed another hook access&#10;assert ['active-poli...'evaluate-p1'] == []&#10;  &#10;  Left contains 5 more items, first extra item: 'active-policy'&#10;  Use -v to get more diff">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-9/test_reopened_journal_fences_f1')
+fault = 'commit-after'
+
+    @pytest.mark.parametrize("fault", ["discard", "commit-after"])
+    def test_reopened_journal_fences_fresh_hooks_before_lookup(tmp_path, fault):
+        async def case():
+            path = tmp_path / "round.sqlite"
+            signer = trust()
+            hooks = BoundaryHooks(fault="discard" if fault == "discard" else None, signer=signer)
+            durable = journal(path, LostAckJournal if fault == "commit-after" else PromotionJournal)
+            with pytest.raises((RuntimeError, OSError)):
+                await run(loop(hooks, durable))
+            fresh = BoundaryHooks(signer=signer)
+            if fault == "commit-after":
+                fresh.active = "p1"
+                fresh.digests["p1"] = digest("weights-p1")
+                fresh.scores["p1"] = 0.6
+            await fenced(loop(fresh, journal(path)), fresh)
+&gt;       asyncio.run(case())
+
+tests/test_runtime_round_ownership.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/test_runtime_round_ownership.py:135: in case
+    await fenced(loop(fresh, journal(path)), fresh)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+control = &lt;vare.engine.CapabilityLoop object at 0x7f6fbebef350&gt;
+hooks = &lt;test_runtime_round_ownership.BoundaryHooks object at 0x7f6fbebee690&gt;
+
+    async def fenced(control, hooks):
+        calls = list(hooks.calls)
+        error = None
+        try:
+            await run(control)
+        except BaseException as exc:
+            error = exc
+&gt;       assert hooks.calls == calls, "unresolved runtime allowed another hook access"
+E       AssertionError: unresolved runtime allowed another hook access
+E       assert ['active-poli...'evaluate-p1'] == []
+E         
+E         Left contains 5 more items, first extra item: 'active-policy'
+E         Use -v to get more diff
+
+tests/test_runtime_round_ownership.py:78: AssertionError</failure></testcase><testcase classname="tests.test_runtime_round_ownership" name="test_distinct_hooks_same_journal_cannot_enter_during_training" time="0.004"><failure message="vare.promotion_journal.PromotionRecoveryRequired: cannot prepare while state is dirty">async def case():
+        path = tmp_path / "round.sqlite"
+        first_hooks = BoundaryHooks(fault="pause", signer=trust())
+        other_hooks = BoundaryHooks(signer=trust(nonce="second-intent-0002"))
+        first = loop(first_hooks, journal(path))
+        other = loop(other_hooks, journal(path))
+        task = asyncio.create_task(run(first))
+        try:
+            await asyncio.wait_for(first_hooks.training_entered.wait(), 2)
+&gt;           await fenced(other, other_hooks)
+
+tests/test_runtime_round_ownership.py:149: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+control = &lt;vare.engine.CapabilityLoop object at 0x7f6fbebf2a50&gt;
+hooks = &lt;test_runtime_round_ownership.BoundaryHooks object at 0x7f6fbef17860&gt;
+
+    async def fenced(control, hooks):
+        calls = list(hooks.calls)
+        error = None
+        try:
+            await run(control)
+        except BaseException as exc:
+            error = exc
+&gt;       assert hooks.calls == calls, "unresolved runtime allowed another hook access"
+E       AssertionError: unresolved runtime allowed another hook access
+E       assert ['active-poli...promote', ...] == []
+E         
+E         Left contains 7 more items, first extra item: 'active-policy'
+E         Use -v to get more diff
+
+tests/test_runtime_round_ownership.py:78: AssertionError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-9/test_distinct_hooks_same_journ0')
+
+    def test_distinct_hooks_same_journal_cannot_enter_during_training(tmp_path):
+        async def case():
+            path = tmp_path / "round.sqlite"
+            first_hooks = BoundaryHooks(fault="pause", signer=trust())
+            other_hooks = BoundaryHooks(signer=trust(nonce="second-intent-0002"))
+            first = loop(first_hooks, journal(path))
+            other = loop(other_hooks, journal(path))
+            task = asyncio.create_task(run(first))
+            try:
+                await asyncio.wait_for(first_hooks.training_entered.wait(), 2)
+                await fenced(other, other_hooks)
+            finally:
+                first_hooks.training_release.set()
+                await asyncio.wait_for(task, 2)
+&gt;       asyncio.run(case())
+
+tests/test_runtime_round_ownership.py:153: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/test_runtime_round_ownership.py:152: in case
+    await asyncio.wait_for(task, 2)
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/tasks.py:520: in wait_for
+    return await fut
+           ^^^^^^^^^
+tests/test_runtime_round_ownership.py:68: in run
+    return await control.run_round([Task("t", "prompt")], round_index=0)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/vare-runtime-round-yioz7a_4/src/vare/engine.py:175: in run_round
+    return await self._run_round(tasks, round_index=round_index, rollout_count=rollout_count)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/vare-runtime-round-yioz7a_4/src/vare/engine.py:501: in _run_round
+    self.promotion_journal.prepare(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;vare.promotion_journal.PromotionJournal object at 0x7f6fbef17a40&gt;
+
+    def prepare(
+        self,
+        *,
+        tx_id: str,
+        incumbent_id: str,
+        incumbent_sha256: str,
+        candidate_id: str,
+        candidate_sha256: str,
+        evaluation_sha256: str,
+    ) -&gt; None:
+        _validate(incumbent_id, incumbent_sha256)
+        _validate(candidate_id, candidate_sha256)
+        if (
+            not isinstance(tx_id, str) or not 16 &lt;= len(tx_id) &lt;= 256
+            or candidate_id == incumbent_id
+            or candidate_sha256 == incumbent_sha256
+            or not isinstance(evaluation_sha256, str)
+            or _DIGEST.fullmatch(evaluation_sha256) is None
+        ):
+            raise ValueError("invalid or repeated promotion candidate/nonce/evidence")
+        with self._connection() as db:
+            if self._pending(db) is not None or self._active(db) != (incumbent_id, incumbent_sha256):
+&gt;               raise PromotionRecoveryRequired("cannot prepare while state is dirty")
+E               vare.promotion_journal.PromotionRecoveryRequired: cannot prepare while state is dirty
+
+/tmp/vare-runtime-round-yioz7a_4/src/vare/promotion_journal.py:124: PromotionRecoveryRequired</failure></testcase><testcase classname="tests.test_runtime_round_ownership" name="test_process_death_before_promotion_intent_fences_restart" time="0.241"><failure message="AssertionError: unresolved runtime allowed another hook access&#10;assert ['active-poli...promote', ...] == []&#10;  &#10;  Left contains 7 more items, first extra item: 'active-policy'&#10;  Use -v to get more diff">tmp_path = PosixPath('/tmp/pytest-of-root/pytest-9/test_process_death_before_prom0')
+
+    def test_process_death_before_promotion_intent_fences_restart(tmp_path):
+        path, marker = tmp_path / "round.sqlite", tmp_path / "entered.txt"
+        journal(path)
+        process = multiprocessing.get_context("spawn").Process(
+            target=crash_in_training, args=(str(path), str(marker)),
+        )
+        process.start()
+        try:
+            process.join(8)
+            assert process.exitcode == 41
+            assert marker.read_text() == "entered optimizer boundary\n"
+            fresh = BoundaryHooks(signer=trust())
+&gt;           asyncio.run(fenced(loop(fresh, journal(path)), fresh))
+
+tests/test_runtime_round_ownership.py:177: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+control = &lt;vare.engine.CapabilityLoop object at 0x7f6fbebedaf0&gt;
+hooks = &lt;test_runtime_round_ownership.BoundaryHooks object at 0x7f6fbed80e30&gt;
+
+    async def fenced(control, hooks):
+        calls = list(hooks.calls)
+        error = None
+        try:
+            await run(control)
+        except BaseException as exc:
+            error = exc
+&gt;       assert hooks.calls == calls, "unresolved runtime allowed another hook access"
+E       AssertionError: unresolved runtime allowed another hook access
+E       assert ['active-poli...promote', ...] == []
+E         
+E         Left contains 7 more items, first extra item: 'active-policy'
+E         Use -v to get more diff
+
+tests/test_runtime_round_ownership.py:78: AssertionError</failure></testcase><testcase classname="tests.test_runtime_round_ownership" name="test_success_control_preserves_publication[False]" time="0.003" /><testcase classname="tests.test_runtime_round_ownership" name="test_success_control_preserves_publication[True]" time="0.005" /></testsuite></testsuites>

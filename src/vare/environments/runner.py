@@ -5,13 +5,15 @@ import json
 import math
 import os
 from pathlib import Path
+import re
 import shutil
 import signal
 import subprocess
+import sys
 import tempfile
 import threading
 import time
-from typing import Any
+from typing import Any, Mapping, Sequence
 
 from ..evidence import sha256_file, sha256_json
 from .spec import CommandSpec, EngineeringTaskSpec, MetricSpec, ResourceLimits
@@ -163,6 +165,46 @@ def _preexec(limits: ResourceLimits):
     return apply
 
 
+def _expand_placeholders(text: str, replacements: Mapping[str, str]) -> str:
+    """Replace placeholders once. Inserted text is not scanned again."""
+    if not replacements or not any(token in text for token in replacements):
+        return text
+    keys = sorted(replacements, key=len, reverse=True)
+    pattern = re.compile("|".join(re.escape(key) for key in keys))
+    return pattern.sub(lambda match: replacements[match.group(0)], text)
+
+
+def resolve_launch_argv(
+    argv: Sequence[str],
+    substitutions: Mapping[str, str] | None = None,
+) -> list[str]:
+    """Expand placeholders and bind a bare ``python`` program to this interpreter.
+
+    Task packs and agent vectors may name ``{python}`` or use ``python`` as the
+    program token. Launch uses ``sys.executable`` so a python3-only image does
+    not need a ``python`` entry on ``PATH``. Only that original program token is
+    rewritten; a later argument, or text inserted from a placeholder, is left
+    unchanged even when it says ``python``. Placeholder values are not scanned
+    for further tokens, so a prompt that contains ``{step}`` stays literal.
+    """
+    replacements: dict[str, str] = {}
+    if substitutions:
+        replacements.update(substitutions)
+    replacements.setdefault("{python}", sys.executable)
+    needs_python = any("{python}" in item for item in argv) or (
+        bool(argv) and argv[0] == "python"
+    )
+    if needs_python and not sys.executable:
+        raise RuntimeError("sys.executable is empty; refusing to launch a Python command")
+    resolved: list[str] = []
+    for index, item in enumerate(argv):
+        if index == 0 and item == "python":
+            resolved.append(sys.executable)
+            continue
+        resolved.append(_expand_placeholders(item, replacements))
+    return resolved
+
+
 def run_command(
     workspace: Path,
     command: CommandSpec,
@@ -182,16 +224,13 @@ def run_command(
         raise ValueError("command cwd escapes declared base")
     if not cwd.exists():
         raise FileNotFoundError(cwd)
-    substitutions = {
-        "{workspace}": str(workspace),
-        "{evaluator}": str(evaluator_root.resolve()) if evaluator_root is not None else "",
-    }
-    argv = []
-    for item in command.argv:
-        value = item
-        for token, replacement in substitutions.items():
-            value = value.replace(token, replacement)
-        argv.append(value)
+    argv = resolve_launch_argv(
+        command.argv,
+        {
+            "{workspace}": str(workspace),
+            "{evaluator}": str(evaluator_root.resolve()) if evaluator_root is not None else "",
+        },
+    )
     env = os.environ.copy()
     env.update(command.env)
     start = time.perf_counter()
@@ -271,8 +310,10 @@ def run_command(
                 reader.join(timeout=0.1)
         returncode = int(proc.returncode if proc.returncode is not None else 124)
     finally:
-        proc.stdout.close()
-        proc.stderr.close()
+        if proc.stdout is not None:
+            proc.stdout.close()
+        if proc.stderr is not None:
+            proc.stderr.close()
 
     elapsed = time.perf_counter() - start
     stdout = bytes(stdout_buffer).decode("utf-8", errors="replace")

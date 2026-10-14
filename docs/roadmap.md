@@ -1,19 +1,35 @@
 # Roadmap
 
-**2026-10-13 — retained comparison record:** the [retrospective audit](format-comparison-record-v1-report.md)
-preserves the primary non-pass and closes a saturated-format-signal explanation
-using raw rewards and no-op adapter/optimizer witnesses. Future learning needs
-untouched confirmation tasks, train/dev reward-variation checks, and retained
-execution provenance. The consumed v2 confirmation must not be reused or extended.
+## Retrospective comparison audit — 2026-10-13
 
-**2026-10-13 — analysis repair:** [seed-aware summary v3](seeded-summary-v3-report.md)
-closes the fitted-run pass@4 aggregation and snapshot/digest correspondence
-defects using CPU counterexamples. It leaves the v2 learning protocol and primary
-decision intact. The next open measurement remains the separately frozen model
-comparison, subject to runtime, objective, and generation-cost preflight. Older
-stop decisions below apply to their retired task/model pairings.
+The [record audit](format-comparison-record-v1-report.md) preserves the primary
+non-pass and finds the format reward saturated using retained reward, adapter,
+and optimizer artifacts. The consumed confirmation cannot be reused. Future
+learning needs untouched confirmation tasks, development reward-variation
+checks, and verified execution provenance.
+
+## Seed-aware analysis repair — 2026-10-13
+
+[Seed-aware summary v3](seeded-summary-v3-report.md) closes fitted-run pass@4
+aggregation and progress snapshot/digest correspondence defects using CPU
+counterexamples. It leaves the v2 learning protocol and primary decision intact.
+No model run or new capability evidence followed.
+
+## Current entry point — 2026-10-14
+
+The [documentation index](README.md) and [repository layout](repository-layout.md) separate current code, experimental paths, and retained history without moving frozen artifacts. The [whole-round runtime ownership report](runtime-round-ownership-v1.md) covers sibling loops, restart reservations, explicit operator recovery, and multiprocess failure diagnostics. It extends the earlier per-loop discard/publication fences; the original reports remain scoped to their measured revisions. Older status snapshots below are historical; use PR links for live status. The main model-learning gap remains independently confirmed held-out task success after an update.
+
+## Evaluation task ownership follow-up — 2026-10-13
+
+The [bounded engine correction](engine-evaluation-lifecycle-v1-report.md) now drains sibling evaluations before failure-path candidate discard and round unlock. The first proposal was independently falsified for already-cancelling hooks, then corrected and checked. Baseline fails 12/13 cases; corrected and concurrent-success control pass. Remaining lifecycle work must distinguish rollout ownership and successful-path promotion interruption from this completed evaluation boundary. A subsequent model study still needs its own frozen protocol and untouched confirmation data.
+
+## Systems correction — 2026-10-13
+
+The [inference transaction report](rvl-inference-transaction-v1-report.md) closes CPU active-inference state contamination and cancelled-worker overlap in the adapter, using the existing VARE #5 alias correction as its base. The next bounded correctness gap is engine-level sibling-evaluation cancellation/draining; it was reproduced with a generic `LoopHooks` fixture but is not fixed here. Hard cancellation deadlines require a stronger backend lifecycle contract. Separate open model-study branches are tracked in [current gaps](current-gaps.md); their fresh cohorts were not used by this work.
 
 ## Current stop point — 2026-10-11
+
+**Update 2026-10-12 — adapter shared-module restore:** the VARE GRPO adapter still walked `Module.train()` after the trainer restore. A CPU regression with a shared child fails on that walk and passes after direct flag assignment. See the [report](rvl-grpo-shared-module-mode-v1-report.md). This does not admit a training or GPU experiment.
 
 No new training or GPU experiment is admitted. The latest real-model task screen produced no applicable patches, and the public task used for grader calibration is retired from confirmation. The shared-module rollback correction is in open RVL [PR #92](https://github.com/mitukx/Recursive-Verification-Lag/pull/92); the constructed CPU regression and related tests pass with the patch, but production incidence, accelerator behavior, and model-quality impact are unknown. VARE [PR #2](https://github.com/mitukx/VARE/pull/2) merged as [`09dfcd5`](https://github.com/mitukx/VARE/commit/09dfcd5e02d37ad78b86948e555bbfd169cffc88). [PR #3](https://github.com/mitukx/VARE/pull/3) carries the historical-task evaluator and the reviewer-facing documentation update; check its live link for current status. The main evidence gap remains independently measured task success after a real post-training update.
 
@@ -149,3 +165,9 @@ Persistent evaluation now has a frozen CPU recovery experiment: 24/24 fault case
 
 
 **Update 2026-10-09 — stop incomplete TRL batcher candidate:** production definitions from pinned TRL `ed8cc2f` reproduce rollout splitting across emitted microbatches in two boundary fixtures; the local candidate passes those fixtures but fails an exact-feasible token-packing counterexample and does not specify whole-group rejection for fixed-count infeasible prefixes. No upstream PR is ready. Continue only after the rejection/accounting contract is explicit and the exact-fit case passes. This is source-level trainer evidence, not optimizer or capability evidence. See [report](trl-async-rollout-group-batching-production-v3-report.md).
+
+
+**Update 2026-10-14 — evaluation transaction integration:** existing PR #19 evaluator/inference lifetime corrections are integrated with signed-training, authorization and checkpoint-bound promotion controls. A frozen four-case pre/post revocation × discard-success/failure CPU comparison fails 4/4 on main `a0f6464` and passes 4/4 on the integrated candidate; three caller cancellations cannot interrupt asynchronous rollback before the round lock is released. Historical lifecycle replay is baseline 12 failures/13 cases versus 13 candidate passes; inference replay is candidate 14/14 with its historical failing controls preserved. This is in-process correctness evidence only. See [report](evaluation-transaction-integration-v1.md), [protocol](../protocols/engine_evaluation_interlock_integration_v1.lock.json), and [raw records](../results/engine-evaluation-interlock-integration-v1/). No model-learning protocol is reopened.
+
+
+**Update 2026-10-14 — promotion publication acknowledgment:** a frozen CPU comparison against main `f4b8d11` shows ten failures for publication exceptions/cancellation, no-op/foreign-policy acknowledgment, and real SQLite completion faults, with both successful-publication controls passing. Runtime identity acknowledgment plus a same-loop recovery fence passes all twelve; 619 default-suite tests and 14 isolated mathematical-grader tests pass locally. Source hashes, first baseline, matched replay, and limits are in [the report](promotion-publication-recovery-v1.md) and [raw records](../results/promotion-publication-recovery-v1/). This is bounded publication correctness; it does not authorize a model-learning run.

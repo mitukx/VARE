@@ -1,0 +1,35 @@
+{
+  "checks": {
+    "fixture_groups": true,
+    "gradient_finite_nonzero": true,
+    "gradient_tolerance": true,
+    "loss_tolerance": true,
+    "negative_control": true,
+    "no_update_state_invariants": true,
+    "protocol_result_match": true,
+    "protocol_status": true,
+    "runner_hash_match": true,
+    "runtime_match": true,
+    "rvl_revision_match": true,
+    "rvl_source_hashes": {
+      "src/rvl_systems/grpo.py": true,
+      "src/rvl_systems/hf_trainer.py": true,
+      "src/rvl_systems/lab/contracts.py": true,
+      "src/rvl_systems/lab/token_replay.py": true,
+      "src/rvl_systems/triton_grpo.py": true,
+      "src/rvl_systems/types.py": true
+    },
+    "vare_source_hashes": {
+      "src/vare/integrations/rvl.py": true,
+      "src/vare/integrations/rvl_grpo.py": true,
+      "src/vare/integrations/rvl_trajectory.py": true,
+      "src/vare/trajectory_reference.py": true
+    },
+    "wall_cap": true,
+    "weight_sums": true
+  },
+  "decision": "pass",
+  "limitation": "This checks the recorded result against the frozen protocol; rerunning the protocol is the numerical reproduction.",
+  "protocol_id": "vare-rvl-trajectory-gradient-parity-v5",
+  "result_sha256": "90475837cb81c1e90d73edcd33649a4650bdcb18d18714403f0cf4b26cd8ffb2"
+}
