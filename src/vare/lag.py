@@ -73,8 +73,8 @@ class LagController:
         shift_valid = (
             isinstance(shift_score, (int, float))
             and not isinstance(shift_score, bool)
-            and math.isfinite(shift_score)
             and 0.0 <= shift_score <= 1.0
+            and math.isfinite(shift_score)
         )
         reasons: list[str] = []
         if not policy_valid:

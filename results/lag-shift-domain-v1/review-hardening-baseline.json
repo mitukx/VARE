@@ -1,0 +1,12 @@
+{
+  "candidate_commit": "cb58af1",
+  "observed": {
+    "exception": "int too large to convert to float",
+    "exception_type": "OverflowError",
+    "raised": true
+  },
+  "protocol": "lag-shift-domain-v1-review-hardening",
+  "shift_score": "1 << 4096",
+  "source_sha256": "0e108bd2962c438c32e81eafc793398a5bdc63e0fc21937134415e7cefa84986",
+  "stage": "baseline-before-overflow-hardening"
+}

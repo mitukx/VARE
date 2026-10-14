@@ -62,7 +62,11 @@ def test_lag_controller_rejects_negative_and_non_integer_versions():
         assert expected_reason in decision.reasons
 
 
-@pytest.mark.parametrize("shift_score", [math.nan, math.inf, -math.inf, -0.01, 1.01])
+@pytest.mark.parametrize(
+    "shift_score",
+    [math.nan, math.inf, -math.inf, -0.01, 1.01, 1 << 4096],
+    ids=["nan", "positive-infinity", "negative-infinity", "negative", "above-one", "oversized-int"],
+)
 def test_lag_controller_rejects_invalid_shift_scores(shift_score):
     c = LagController(LagConfig(max_shift=0.2))
     decision = c.assess(

@@ -2,19 +2,24 @@
   "artifacts_sha256": {
     "baseline.json": "d268212a9136b9fb142c7413d3e9d1f6f4ac67fd4290268dbf5a06d52ed8cf52",
     "blob-budget.log": "d416aec335fa1cb82da11524f883bc78685a5aa287e9bc098eaaf374a80199dd",
-    "candidate-full-tests.log": "077311eef42bf7653c5d5faeb834eb2545d36e6e67564a7fd26054ace3b1dd7d",
-    "candidate.json": "324d5b156b2a9ff5ca269a12af6d27122a036393379ce29a790b5cf8c9deed17",
+    "candidate-full-tests.log": "b33d0cace9e0288614b7e2610876b2d2eefa504c1e7d3886504bf0d3a0518c3a",
+    "candidate.json": "ec3b6e293c25cc1e2b756836dbea1bf2748f4a52275637e948b8968e4b503de6",
+    "focused-tests.log": "498e6947c683cfc4d9d8dd6500f7bced1426c92501b2b6f938049aa6eb2024c6",
     "mypy.log": "caf4cb276b1b834b69b4a51aa776668a80ee64e1a2fd04bb890970c67d4fd7e7",
     "protocol.md": "e3abe76347daeb54f0024d9afb5a598029d33ff15dcb0be93212815b5236aba8",
+    "review-hardening-addendum.md": "d9702c28925e35a7eed6b2a73178273b4a7e351c0290d24b449b11fa222f3be7",
+    "review-hardening-baseline.json": "aef43359a39b82964a75067e9a4aa1f47ca07d0c589a8c941b0653bc23215f3f",
+    "review-hardening-candidate.json": "5921d99bfc5e2f4f66b739d6a8383b05a2c76522b0b50c55e8954c6df3c6bc24",
     "ruff.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
   },
   "base_commit": "dc57916272f32ebf89d63a7c45d9c16dd45d9fa6",
-  "candidate_source_sha256": "0e108bd2962c438c32e81eafc793398a5bdc63e0fc21937134415e7cefa84986",
+  "candidate_source_sha256": "a5a84f4e6499b6daa078df3aa9be3a126e7f2c3dd46f6856896c1378465be0e4",
   "checks": {
     "blob_budget": "passed (235 allowlisted blobs)",
-    "focused_tests": "36 passed",
-    "full_default_suite": "731 passed; math500 tests are isolated in CI and excluded here",
+    "focused_tests": "37 passed",
+    "full_default_suite": "732 passed; math500 grader tests are isolated in CI and excluded here",
     "mypy": "passed (1.19.1; 57 source files)",
+    "review_hardening": "oversized integer rejected with invalid_shift_score and freshness 0.0",
     "ruff": "passed (0.15.12)"
   },
   "protocol": "lag-shift-domain-v1"
