@@ -139,11 +139,11 @@ class PromotionGate:
 
     def decide(self, incumbent: EvaluationReport, candidate: EvaluationReport) -> PromotionDecision:
         if self.trajectory_constraint is not None:
-            reasons = tuple(dict.fromkeys(reason for report in (incumbent, candidate)
-                                         if (reason := self.trajectory_constraint.reason(report)) is not None))
-            if reasons:
+            trajectory_reasons = tuple(dict.fromkeys(reason for report in (incumbent, candidate)
+                                                    if (reason := self.trajectory_constraint.reason(report)) is not None))
+            if trajectory_reasons:
                 return PromotionDecision(
-                    accepted=False, reasons=reasons, primary_gain=0.0,
+                    accepted=False, reasons=trajectory_reasons, primary_gain=0.0,
                     worst_slice_regression=0.0,
                 )
         if self.trust_root is not None and (
