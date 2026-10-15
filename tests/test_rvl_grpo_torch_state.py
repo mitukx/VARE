@@ -1,6 +1,7 @@
 """CPU state contracts at the VARE adapter boundary (optional PyTorch)."""
 import asyncio
 import copy
+import inspect
 from types import SimpleNamespace
 
 import pytest
@@ -84,12 +85,20 @@ class ModeChangingBackend:
 
 
 def make_hooks(trainer, backend=None):
-    return RVLGRPOHooks(
-        trainer=trainer, backend=backend or ModeChangingBackend(trainer),
-        eval_tasks=[Task("eval", "prompt")], score_fn=lambda *_: 1.0,
-        generation_factory=SimpleNamespace, verified_generation_factory=SimpleNamespace,
-        current_verifier_version=0,
-    )
+    kwargs = {
+        "trainer": trainer,
+        "backend": backend or ModeChangingBackend(trainer),
+        "eval_tasks": [Task("eval", "prompt")],
+        "score_fn": lambda *_: 1.0,
+        "generation_factory": SimpleNamespace,
+        "verified_generation_factory": SimpleNamespace,
+    }
+    # Historical source arms in the pinned replay predate trainer-boundary
+    # freshness providers. Keep this inference-state fixture runnable against
+    # those adapters while configuring freshness for the current adapter.
+    if "current_verifier_version" in inspect.signature(RVLGRPOHooks).parameters:
+        kwargs["current_verifier_version"] = 0
+    return RVLGRPOHooks(**kwargs)
 
 
 def experience():
