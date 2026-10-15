@@ -14,7 +14,7 @@ from urllib.parse import urlsplit
 
 from .evidence import HashChainLedger, sha256_json
 
-_HEX = re.compile(r"[0-9a-f]{64}\\Z")
+_HEX = re.compile(r"[0-9a-f]{64}\Z")
 _ACTIONS = frozenset({"tool_call", "network_request", "artifact_write"})
 _KINDS = _ACTIONS | {"tool_result", "observation"}
 _ORIGINS = frozenset({"user", "system", "agent", "retrieved_webpage", "tool_output", "unknown"})
