@@ -31,8 +31,10 @@ before a separate update/save/reload smoke and a multi-seed comparison.
 | --- | --- | --- |
 | Fixed-rollout reuse, policy drift, and GRPO collapse | Existing VARE evidence is confounded and its OpenBookQA pairing is retired. Recent work directly studies off-policy reuse, stale-rollout stability, and correction; see the [Stage 0 review](stage0-research-gate-2026-10-11.md). | Do not reopen on the old cohort or claim a new general method. |
 | Verifier error and audit correction | VARE's previous synthetic audit results do not provide fresh independently labeled errors. *Verifier Errors in RLVR* studies fixed-verifier reward hacking and audit-based selective control; *VStress* studies correlation-aware adaptive allocation of repeated verifier calls; *Where the Verifier Fails* uses metamorphic transformations to audit category-specific verifier false negatives. A new VARE claim needs a distinct estimand and fresh labeled workload, beyond verifier auditing or generic selective control. | No candidate selected. |
+| Failure reflection, counterfactual memory, and trajectory-quality learning | *COUNTERMEM* executes and verifies counterfactual action alternatives, stores corrected actions with reuse conditions, and learns when to use or skip memory. *Training Language Agents to Learn from Experience* RL-trains reflectors for future unseen task families. *HeRL* turns failed trajectories and unmet rubrics into guided exploration. *TQG-Exp* adds process-quality feedback and paired rollouts with or without retrieved experience to revise experience utility. These works substantially overlap naive failure-reflection, counterfactual-memory, and trajectory-quality reuse proposals. | Do not claim a memory/reflection port as novel. A distinct estimand and unused task families would be required; no such CPU-qualified candidate is selected. |
+| Self-verifiable task transformation and synthetic app worlds | *RLSVR/SpyRL* transforms open-ended tasks into self-play environments with verifiable rewards. *Terrarium* synthesizes executable app worlds and evaluator-side task rubrics, reporting model updates at 4B, 8B, and 14B scales. Task transformation, automatic world generation, or rubric synthesis alone is therefore not a distinct contribution, and the reported model scale is outside the local M1 budget. | No-go for a task-transformation or synthetic-world training port. Reconsider only with a clearly different estimand and an independently protected evaluator that fits the resource budget. |
 | RSI through skill libraries and sequential task chains | *Reinforcement Learning for Self-Improving Agent with Skill Library* (SAGE) studies skill accumulation across sequential tasks. Newer *Skill-V* represents skills as versioned falsifiable contracts, revises boundaries from environment outcomes, and checks historical non-regression. Reimplementing skill accumulation, contract-based revision, or replay-based regression checks would be a reproduction, not differentiation. | Do not present a skill-library or contract-revision port as a novel VARE method. A future candidate must identify a different, falsifiable failure mode under sequential selection. |
-| Long-horizon branching and trajectory processing | *QwenGyre* addresses elastic GPU allocation and long-horizon trajectory processing. *SPROUT* adds filesystem/context snapshots, verifier-guided backtracking, and resumed branching, reporting results with Qwen3.8-27B. These author-reported systems results are not a CPU-feasible VARE learning question; this is a scope judgment, not an independent reproduction. | Treat as related systems work; do not port GPU scheduling or snapshot infrastructure to M1 without a distinct measured bottleneck. |
+| Long-horizon branching and trajectory processing | *QwenGyre* addresses elastic GPU allocation and long-horizon trajectory processing. *SPROUT* adds filesystem/context snapshots, verifier-guided backtracking, and resumed branching, reporting results with Qwen3.8-27B. *TQG-Exp* also makes trajectory quality part of experience selection and utility estimation. These author-reported systems and agent-learning results do not establish a CPU-feasible VARE learning question; this is a scope judgment, not an independent reproduction. | Treat as related systems work; do not port GPU scheduling, snapshot infrastructure, or trajectory-quality memory updates to M1 without a distinct measured bottleneck. |
 | Language drift and reasoning-trace monitorability | *On Language Drift during RLVR Post-Training* analyzes drift theoretically and reports multi-model RLVR experiments. Its abstract warns that constraining drift can also constrain expected reward, so a simple legibility penalty is not an established free improvement. The reported study scale is outside the local CPU budget, and VARE has no qualifying fresh model/task pair. | Do not add a trace-legibility reward or launch a local replication on existing retired cohorts. |
 | New base model on a previously used task family | Changing the checkpoint alone does not create a fresh research question or task composition. Existing negative and retired cohorts remain unavailable for prompt tuning, training, or confirmation. | No-go absent a separately justified fresh task and method. |
 
@@ -65,6 +67,41 @@ reward. That result argues against assuming a monitorability reward is a free
 improvement; it does not authorize a local replication or override the
 fresh-task gate. The no-go decision above is unchanged.
 
+The follow-up screen also checked six papers that close additional post-training
+and RSI-shaped ports. [COUNTERMEM](https://arxiv.org/abs/2609.31874), submitted
+2026-09-25, verifies counterfactual alternatives with executable world models,
+stores corrected actions and reuse conditions, and trains a memory-use policy
+while keeping the base LLM fixed. [Training Language Agents to Learn from
+Experience](https://arxiv.org/abs/2605.20477), submitted 2026-05-19, RL-trains a
+reflector to improve an actor on unseen task families. [HeRL](https://arxiv.org/abs/2603.20046),
+submitted 2026-03-20, uses failures with unmet rubric items as exploration
+guidance. The 2026-10-10 [TQG-Exp](https://arxiv.org/abs/2610.14877) paper
+scores process quality, compares paired rollouts with and without retrieved
+experience, and updates experience utility. Together these make a generic
+"learn from failures" or trajectory-memory proposal too close to existing
+work absent a different estimand and task family.
+
+For task construction, [RLSVR/SpyRL](https://arxiv.org/abs/2607.23802),
+submitted 2026-07-26, transforms open-ended tasks into self-play tasks with
+verifiable rewards. [Terrarium](https://arxiv.org/abs/2610.14860), submitted
+2026-10-10, synthesizes executable app worlds and evaluator-side rubrics; its
+abstract reports training at 4B, 8B, and 14B model scales. These papers further
+narrow the available task-transformation novelty and the latter's reported
+scale is beyond the local compute envelope. All results above are author
+reports from primary-paper abstracts; none was reproduced here. The no-go
+decision remains unchanged.
+
+An external task-pool screen identified [SWE-rebench](https://huggingface.co/datasets/nebius/SWE-rebench)
+as a possible future source of post-checkpoint software tasks, not an approved
+evaluation set. The dataset card labels the collection CC BY 4.0 and exposes
+base commits, task timestamps, per-repository license fields, hidden-test
+patches, and hints. Any use must verify each source repository's license and
+creation date against a fixed checkpoint, keep tests, patches, and hints outside
+the model context, and pass an M1 base-only feasibility gate first. The current
+dataset viewer's latest task timestamp is 2025-04-30, so it is not fresh for a
+later checkpoint by default; its execution cost and repository setup have also
+not been measured locally. No data was downloaded and no base inference was run.
+
 ## What must qualify before the next model run
 
 The next research action is candidate qualification, not inference. A proposed
@@ -96,6 +133,13 @@ trainer defect; do not add generic infrastructure to fill the gap.
 - [Skill-V: Verifiable Self-Evolving Skill Library for Interactive Agents](https://arxiv.org/abs/2610.11781), submitted 2026-10-08.
 - [SPROUT: Scaling Agentic Reinforcement Learning for Long-Horizon Software Engineering](https://arxiv.org/abs/2610.14405), submitted 2026-10-09.
 - [On Language Drift during RLVR Post-Training](https://arxiv.org/abs/2610.02015), submitted 2026-10-01.
+- [COUNTERMEM: World-Model Verified Counter-Factual Memory for Language Agents](https://arxiv.org/abs/2609.31874), submitted 2026-09-25.
+- [Training Language Agents to Learn from Experience](https://arxiv.org/abs/2605.20477), submitted 2026-05-19.
+- [From RLVR to RLSVR: Task Transformation Induces Self-Verifiable Rewards for Open-Ended LLM Self-Improvement](https://arxiv.org/abs/2607.23802), submitted 2026-07-26, revised 2026-07-31.
+- [Experience is the Best Teacher: Motivating Effective Exploration in Reinforcement Learning for LLMs](https://arxiv.org/abs/2603.20046), submitted 2026-03-20.
+- [Beyond Outcome Feedback: Trajectory-Quality-Guided Experience-based Learning](https://arxiv.org/abs/2610.14877), submitted 2026-10-10.
+- [Terrarium: Growing Personal Assistants via Scalable Synthesis of App Worlds](https://arxiv.org/abs/2610.14860), submitted 2026-10-10.
+- [SWE-rebench dataset card](https://huggingface.co/datasets/nebius/SWE-rebench), inspected 2026-10-15; candidate task source only, not approved or executed.
 - [QwenGyre: An Elastic Reinforcement Learning Framework for Training xLong-Horizon Agents](https://arxiv.org/abs/2609.33848), submitted 2026-09-27.
 - [Reinforcement Learning for Self-Improving Agent with Skill Library](https://arxiv.org/abs/2512.17102), revised 2026-03-10.
 - The related stale-rollout and off-policy papers recorded in the [2026-10-11 Stage 0 gate](stage0-research-gate-2026-10-11.md).

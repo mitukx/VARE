@@ -2,12 +2,16 @@
 
 **Research gate 2026-10-15 — no eligible fresh model/task pair:** a focused
 post-Stage-0 prior-art and feasibility review found no candidate that clears
-both novelty and independent-evaluation requirements. Fixed-rollout/staleness,
-verifier-error correction, and skill-library self-improvement now have close
-direct coverage; the latest xLong-horizon RL framework is GPU-systems work.
-Do not start another model screen or update from the cached model inventory
-alone. The next gate requires a materially distinct method and an unused,
-independently graded task composition. See the [qualification record](research-candidate-qualification-2026-10-15.md).
+both novelty and independent-evaluation requirements. Recent work now directly
+covers fixed-rollout/staleness, verifier-error correction, skill libraries,
+failure reflection and counterfactual memory, trajectory-quality experience
+reuse, and self-verifiable task transformation. Long-horizon branching includes
+GPU-systems contributions outside the M1 budget. SWE-rebench is a possible task
+pool, but its current viewer ends at 2025-04-30 and source licenses, freshness
+against a fixed checkpoint, and M1 execution cost remain unqualified. Do not
+start another model screen or update from the cached model inventory alone. The
+next gate requires a materially distinct method and an unused, independently
+graded task composition. See the [qualification record](research-candidate-qualification-2026-10-15.md).
 
 **Update 2026-10-15 — singleton GRPO groups:** `EngineConfig.samples_per_task`
 defaults to one, which can make every RVL GRPO group a singleton. Centering a
