@@ -1,4 +1,7 @@
+import hashlib
+
 import pytest
+from vare.attestation import EvidenceTrustRoot
 from vare.config import PromotionConfig
 from vare.promotion import PromotionGate
 from vare.trajectory_safety import (
@@ -69,3 +72,118 @@ def test_legacy_gate_unchanged_by_default():
     gate = PromotionGate(PromotionConfig(min_primary_gain=0.01, min_eval_examples=1))
     assert gate.decide(EvaluationReport("old", .5, n=10),
                        EvaluationReport("new", .7, n=10)).accepted
+
+
+def _trust_root():
+    return EvidenceTrustRoot(
+        key=bytes(range(32)),
+        protocol_sha256=hashlib.sha256(b"trajectory-protocol").hexdigest(),
+        evaluator_sha256=hashlib.sha256(b"independent-trajectory-evaluator").hexdigest(),
+        run_id="trajectory-promotion-study-01",
+    )
+
+
+def _audit_metadata(policy_id, policy_digest, **changes):
+    return {
+        "schema": "vare.trajectory-safety.v1",
+        "run_id": "trajectory-promotion-study-01",
+        "policy_id": policy_id,
+        "policy_sha256": policy_digest,
+        "ledger_head_sha256": "a" * 64,
+        "event_count": 0,
+        "expected_event_count": 0,
+        "capture_complete": True,
+        "status": "pass",
+        "violations": [],
+        **changes,
+    }
+
+
+def _signed_report(trust, policy_id, score, audit=None):
+    metadata = {} if audit is None else {"trajectory_safety": audit}
+    return trust.attest(
+        EvaluationReport(policy_id, score, {"hard": score}, n=1, metadata=metadata)
+    )
+
+
+def test_trajectory_gate_requires_signed_pass_audits_for_both_reports():
+    trust = _trust_root()
+    policy_sha256 = "b" * 64
+    gate = PromotionGate(
+        PromotionConfig(
+            min_primary_gain=0.01,
+            min_eval_examples=1,
+            trajectory_policy_sha256=policy_sha256,
+        ),
+        trust_root=trust,
+    )
+    incumbent = _signed_report(
+        trust, "old", 0.5, _audit_metadata("old", policy_sha256)
+    )
+    candidate = _signed_report(
+        trust, "new", 0.7, _audit_metadata("new", policy_sha256)
+    )
+    assert gate.decide(incumbent, candidate).accepted
+
+    missing_candidate_audit = _signed_report(trust, "new", 0.7)
+    decision = gate.decide(incumbent, missing_candidate_audit)
+    assert not decision.accepted
+    assert decision.reasons == ("missing_trajectory_evidence",)
+
+
+@pytest.mark.parametrize(
+    ("changes", "reason"),
+    [
+        ({"ledger_head_sha256": "z" * 64}, "invalid_trajectory_evidence"),
+        ({"run_id": "other-study"}, "invalid_trajectory_evidence"),
+        ({"policy_sha256": "c" * 64}, "invalid_trajectory_evidence"),
+        ({"capture_complete": False}, "invalid_trajectory_evidence"),
+        ({"status": "unknown", "violations": ["unverified_authorization"]},
+         "unsafe_or_unverified_trajectory"),
+        ({"status": "violation", "violations": ["unauthorized_action"]},
+         "unsafe_or_unverified_trajectory"),
+    ],
+)
+def test_signed_but_invalid_trajectory_audit_fails_closed(changes, reason):
+    trust = _trust_root()
+    policy_sha256 = "b" * 64
+    gate = PromotionGate(
+        PromotionConfig(
+            min_primary_gain=0.01,
+            min_eval_examples=1,
+            trajectory_policy_sha256=policy_sha256,
+        ),
+        trust_root=trust,
+    )
+    incumbent = _signed_report(
+        trust, "old", 0.5, _audit_metadata("old", policy_sha256)
+    )
+    candidate = _signed_report(
+        trust, "new", 0.7, _audit_metadata("new", policy_sha256, **changes)
+    )
+    decision = gate.decide(incumbent, candidate)
+    assert not decision.accepted
+    assert decision.reasons == (reason,)
+
+
+def test_trajectory_gate_rejects_unsigned_evaluation_report():
+    trust = _trust_root()
+    policy_sha256 = "b" * 64
+    gate = PromotionGate(
+        PromotionConfig(
+            min_primary_gain=0.01,
+            min_eval_examples=1,
+            trajectory_policy_sha256=policy_sha256,
+        ),
+        trust_root=trust,
+    )
+    incumbent = _signed_report(
+        trust, "old", 0.5, _audit_metadata("old", policy_sha256)
+    )
+    unsigned = EvaluationReport(
+        "new", 0.7, {"hard": 0.7}, n=1,
+        metadata={"trajectory_safety": _audit_metadata("new", policy_sha256)},
+    )
+    decision = gate.decide(incumbent, unsigned)
+    assert not decision.accepted
+    assert decision.reasons == ("untrusted_trajectory_evidence",)
