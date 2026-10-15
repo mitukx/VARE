@@ -22,6 +22,17 @@ review are retained in the [technical report](seeded-summary-v3-report.md).
 Learning protocol v2 and its primary decision remain frozen; no model run was
 performed in this study.
 
+## GRPO audit-order independent reproduction v2
+
+A separately authored standard-library enumerator reproduced the selected
+`0001`, `T={0,1,2}` Walsh witness exactly. The corrected source passes all frozen
+checks twice; the initial implementation's count-two formula error remains a
+recorded non-pass. The original v1 lock's phrase about “each” third-order
+marginal is broader than the constructed pair supports: only the selected
+`012` marginal differs; the other size-three marginals are identical. See the
+[report](grpo-audit-independent-reproduction-v2-report.md), [frozen protocol](../protocols/grpo_audit_independent_reproduction_v2.lock.json),
+and [attempt history](../results/grpo-audit-independent-reproduction-v2/run-1/attempt-history.json).
+
 ## 2026-10-13 — evaluation task lifetime correction
 
 The [engine replay](engine-evaluation-lifecycle-v1-report.md) checks termination-before-discard with 13 cases and a small event-order probe. Pinned baseline fails 12 cases; the correction passes all 13 and the full local suite of 362. The retained independent AI counterexample caused an additional guard for hooks already cancelling. This CPU fixture study neither trains a model nor consumes a confirmation cohort.

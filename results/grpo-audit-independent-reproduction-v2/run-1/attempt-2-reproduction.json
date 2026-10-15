@@ -1,0 +1,162 @@
+{
+  "checks": {
+    "action_probability_is_27_over_256": true,
+    "all_action_vectors_enumerated": true,
+    "all_degree_four_coefficients_vanish": true,
+    "all_marginals_through_order_two_match": true,
+    "conditional_mean_gap_matches_exact_coefficient": true,
+    "constant_actions_have_zero_update_function": true,
+    "every_nonconstant_action_has_degree_three": true,
+    "pair_laws_are_nonnegative": true,
+    "pair_laws_are_normalized": true,
+    "selected_order_three_tv_is_one_half": true,
+    "target_coefficient_exact": true,
+    "unconditional_mean_gap_exact": true
+  },
+  "classification": "same_host_independent_exact_reproduction",
+  "enumeration": {
+    "action_vectors": 16,
+    "reward_vectors_per_action": 16,
+    "target_action_all_coefficients": {
+      "": {
+        "rational": "0",
+        "sqrt3_coefficient": "0"
+      },
+      "0": {
+        "rational": "1/8",
+        "sqrt3_coefficient": "1/12"
+      },
+      "01": {
+        "rational": "0",
+        "sqrt3_coefficient": "0"
+      },
+      "012": {
+        "rational": "-3/8",
+        "sqrt3_coefficient": "1/4"
+      },
+      "0123": {
+        "rational": "0",
+        "sqrt3_coefficient": "0"
+      },
+      "013": {
+        "rational": "1/8",
+        "sqrt3_coefficient": "-1/12"
+      },
+      "02": {
+        "rational": "0",
+        "sqrt3_coefficient": "0"
+      },
+      "023": {
+        "rational": "1/8",
+        "sqrt3_coefficient": "-1/12"
+      },
+      "03": {
+        "rational": "0",
+        "sqrt3_coefficient": "0"
+      },
+      "1": {
+        "rational": "1/8",
+        "sqrt3_coefficient": "1/12"
+      },
+      "12": {
+        "rational": "0",
+        "sqrt3_coefficient": "0"
+      },
+      "123": {
+        "rational": "1/8",
+        "sqrt3_coefficient": "-1/12"
+      },
+      "13": {
+        "rational": "0",
+        "sqrt3_coefficient": "0"
+      },
+      "2": {
+        "rational": "1/8",
+        "sqrt3_coefficient": "1/12"
+      },
+      "23": {
+        "rational": "0",
+        "sqrt3_coefficient": "0"
+      },
+      "3": {
+        "rational": "-3/8",
+        "sqrt3_coefficient": "-1/4"
+      }
+    },
+    "walsh_degree_by_action_vector": {
+      "0000": -1,
+      "0001": 3,
+      "0010": 3,
+      "0011": 3,
+      "0100": 3,
+      "0101": 3,
+      "0110": 3,
+      "0111": 3,
+      "1000": 3,
+      "1001": 3,
+      "1010": 3,
+      "1011": 3,
+      "1100": 3,
+      "1101": 3,
+      "1110": 3,
+      "1111": -1
+    }
+  },
+  "interpretation_limit": "Same-host exact reproduction of one finite four-member binary-reward local GRPO score update; no external replication, novelty finding, audit-cost result, model learning, task success, or capability claim.",
+  "protocol_id": "grpo_audit_independent_reproduction_v2",
+  "runtime": {
+    "dependencies": "Python standard library only",
+    "model_or_training_run": false,
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12"
+  },
+  "sources": {
+    "input_artifact_sha256": {
+      "docs/grpo-audit-order-characterization-v1-report.md": "fea12c4652bfe96d4a00976029e307c7155885c82615beedd8c8aa885a9e7e7f",
+      "protocols/grpo_audit_order_characterization_v1.lock.json": "1286ce726d0d574c50dae794345e3df688c165d5cb7117c06880f080027542d1",
+      "results/grpo-audit-order-characterization-v1/run-1/exact-characterization.json": "f4399a1400cd145f0e8d7839819ba1dcb72a1ee63f759fdf7df29ae9871e61dd",
+      "results/grpo-audit-order-characterization-v1/run-1/independent-audit.json": "f5b80a0e543752584a2471ceb19a6160fa21e4e3362d4a9ee100e39a16e29259"
+    },
+    "lock_sha256": "d70abd0ceb9a7eca8bb56245d221cb19cab86e50becdef308dd3eaf523df33f9",
+    "runner_sha256": "279de390706ba29e1ec600c0982b0ca4dfc2381128cb9bacfe05d2521840d53e"
+  },
+  "target_pair": {
+    "action_vector": "0001",
+    "alpha_exact": {
+      "rational": "-3/8",
+      "sqrt3_coefficient": "1/4"
+    },
+    "character_subset": [
+      0,
+      1,
+      2
+    ],
+    "conditional_update_gap_exact": {
+      "rational": "-3/8",
+      "sqrt3_coefficient": "1/4"
+    },
+    "epsilon": "1/2",
+    "marginal_tv_by_subset_order_le_two": {
+      "": "0",
+      "0": "0",
+      "01": "0",
+      "02": "0",
+      "03": "0",
+      "1": "0",
+      "12": "0",
+      "13": "0",
+      "2": "0",
+      "23": "0",
+      "3": "0"
+    },
+    "minimum_probability_mass": "1/32",
+    "normalization_minus": "1",
+    "normalization_plus": "1",
+    "probability_of_action": "27/256",
+    "selected_order_three_marginal_tv": "1/2",
+    "unconditional_update_gap_exact": {
+      "rational": "-81/2048",
+      "sqrt3_coefficient": "27/1024"
+    }
+  }
+}

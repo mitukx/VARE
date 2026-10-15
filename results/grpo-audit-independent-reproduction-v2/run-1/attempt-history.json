@@ -1,0 +1,33 @@
+{
+  "protocol_id": "grpo_audit_independent_reproduction_v2",
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "non_pass",
+      "runner_sha256": "efa22d91a99278132ffebddb8a78e8bb5307d1a350ddcdaba001d2c7e0d41d6f",
+      "runner_source_retained": false,
+      "log": "attempt-1-failure.log",
+      "log_sha256": "817b3bcfd9b0c5d0cc7eaa6460eaa6a11a966f546579591b7b4053895deef846",
+      "cause_record": "The author recorded that the count-two branch used (2*y-count)/2 instead of the exact simplification (4*y-count)/2. The failure log shows exact degree and coefficient checks failing.",
+      "provenance_limit": "The attempt's source bytes were not retained, so the source hash and stated formula cause cannot be independently checked from this bundle."
+    },
+    {
+      "attempt": 2,
+      "status": "all_frozen_checks_passed",
+      "runner_sha256": "279de390706ba29e1ec600c0982b0ca4dfc2381128cb9bacfe05d2521840d53e",
+      "runner_source_retained": false,
+      "result": "attempt-2-reproduction.json",
+      "result_sha256": "15db910ea8fdc57aa32e320c7c76b18e730fd7500dbb78794f452bb5276b6202",
+      "note": "Only the implementation formula was corrected; the protocol, definitions, and checks were unchanged."
+    },
+    {
+      "attempt": 3,
+      "status": "all_frozen_checks_passed",
+      "runner_sha256": "1a43a7bfc8a7423ae4342113c1ad41038210b3ff99c4d048b2b40a47ff8332a1",
+      "result": "../run-2/reproduction.json",
+      "result_sha256": "4dcf97a07f62376f2261a1e37d0c6f8ac5c6de85fa1bb98eb5679912edbe0d11",
+      "note": "Formatting and explicit output-path handling only changed after attempt 2; this run checks the final committed source."
+    }
+  ],
+  "overall_interpretation": "The initial implementation attempt is retained as a protocol non-pass. Corrected source runs reproduce every unchanged frozen numeric check; the first failure is not erased or reclassified."
+}
