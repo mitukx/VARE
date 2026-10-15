@@ -1,5 +1,16 @@
 # Current evidence gaps
 
+**Update 2026-10-15 — bounded checkpoint IO:** the checkpoint store now rejects
+FIFOs without waiting for a writer and caps reads at the registered size and
+caller limit, including growth after descriptor inspection. A pinned-main
+comparison changes seven failures to 15 passing fresh IO/recovery cases.
+Five CPU measurement pairs reduce 32 MiB replacement-read peak traced
+allocation from 67,114,578 B to 4,398 B before rejection. The existing signed
+evaluator and promotion journal exercise rollback, exact-byte restoration and
+promotion; its scripted linear checkpoint is a protocol control, not learning
+evidence. Early harness/audit failures remain retained. See the
+[report](checkpoint-read-bounds-v1-report.md).
+
 **Research gate 2026-10-15 — no eligible fresh model/task pair:** a focused
 post-Stage-0 prior-art and feasibility review found no candidate that clears
 both novelty and independent-evaluation requirements. Recent work now directly

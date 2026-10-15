@@ -1,0 +1,102 @@
+{
+  "base_revision": "7801f2415c5193c03a48b3a1a0fa28d317ec51d1",
+  "validated_implementation_revision": "ab5d1feea794ed395cb77200b60e25c0fa337c8b",
+  "hardware": {
+    "cpu": "Apple M1 Pro",
+    "memory_bytes": 34359738368,
+    "accelerator_used": false,
+    "paid_api_calls": 0
+  },
+  "cpu_suite": {
+    "cases": 758,
+    "passed": 744,
+    "failed": 0,
+    "errors": 0,
+    "skipped": [
+      {
+        "name": "tests.test_rvl_grpo_torch_state",
+        "reason": "collection skipped"
+      },
+      {
+        "name": "test_auditor_bootstrap_matches_runner_with_seed_averaged_per_prompt_rows",
+        "reason": "could not import 'numpy': No module named 'numpy'"
+      },
+      {
+        "name": "test_exact_expected_reward_gradient_matches_exact_enumerated_rloo_expectation",
+        "reason": "could not import 'torch': No module named 'torch'"
+      },
+      {
+        "name": "test_rloo_equal_reward_group_has_zero_policy_gradient",
+        "reason": "could not import 'torch': No module named 'torch'"
+      },
+      {
+        "name": "test_rloo_advantages_are_detached_and_unstandardized",
+        "reason": "could not import 'torch': No module named 'torch'"
+      },
+      {
+        "name": "test_bernoulli_kl_is_zero_at_reference_and_positive_after_shift",
+        "reason": "could not import 'torch': No module named 'torch'"
+      },
+      {
+        "name": "test_runtime_expected_reward_gradient_self_check_covers_both_classes_and_weights",
+        "reason": "could not import 'torch': No module named 'torch'"
+      },
+      {
+        "name": "test_independent_auditor_replays_all_four_optimizer_arms_on_tiny_fixture",
+        "reason": "could not import 'numpy': No module named 'numpy'"
+      },
+      {
+        "name": "test_temperature_is_positive_bounded_and_train_fit_reduces_nll",
+        "reason": "PyTorch is an optional local-only dependency for HH model-fit checks"
+      },
+      {
+        "name": "test_perfect_oof_ranking_cannot_drive_temperature_above_frozen_cap",
+        "reason": "PyTorch is an optional local-only dependency for HH model-fit checks"
+      },
+      {
+        "name": "test_bootstrap_interval_is_seeded_and_ordered",
+        "reason": "NumPy is an optional local-only dependency for model-study bootstraps"
+      },
+      {
+        "name": "test_two_action_dpo_loss_pushes_correct_action_delta_upward",
+        "reason": "could not import 'torch': No module named 'torch'"
+      },
+      {
+        "name": "test_scalar_and_contextual_training_take_one_update",
+        "reason": "could not import 'torch': No module named 'torch'"
+      },
+      {
+        "name": "test_torch_shared_module_mode_restores_without_calling_train",
+        "reason": "could not import 'torch': No module named 'torch'"
+      }
+    ]
+  },
+  "math_suite": {
+    "cases": 14,
+    "passed": 14,
+    "failed": 0,
+    "errors": 0,
+    "skipped": []
+  },
+  "checks": {
+    "ruff": "pass",
+    "mypy_src_vare": "pass (57 source files)",
+    "compileall": "pass",
+    "blob_budget": "pass (235 frozen blobs)",
+    "comparison_v5": "pass (baseline 7 fail / 8 pass; candidate 15 pass)",
+    "audit_v5": "pass",
+    "audit_v5_python_optimized": "pass",
+    "auditor_tamper_probes": "4/4 rejected"
+  },
+  "source_sha256": {
+    "src/vare/checkpoint_artifacts.py": "98f96cf1bde57011a7e787c0bf61820df6a89ae37f1c043e3dfa73288c052b5c",
+    "tests/test_checkpoint_read_bounds.py": "be9123607791416973262c08d64bcae710f47feb423ca8e209ecb20adbfaacc0",
+    "tests/test_checkpoint_io_recovery.py": "e23e4db09ca5694fec526445e9ab270ad0012ea62c9a04d241b31eaf0f909f4e",
+    "tests/test_checkpoint_io_audit.py": "2ea0f4e691dd288a8b6946b9871c890abce922e77db06d2369fe2c6256562dd2",
+    "scripts/reproduce_checkpoint_read_bounds_v1.py": "03f975307cb17f791efc496eab84fe611c642b109e09868beda709f8f036e44c",
+    "scripts/audit_checkpoint_read_bounds_v1.py": "f673c20e118c21557bef1e2fa1e5e9db41385fdbe398625a0dff2ff9f005dc7e",
+    "protocols/checkpoint_read_bounds_v1.lock.json": "26fc20b7e66e01c0458bcd5d7d80c488f69c0e425f454d02bb032f26150bbc1d"
+  },
+  "command": "Activate the Python 3.12 environment, then python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py. Math tests use the separate pinned environment.",
+  "limits": "Optional trainer/model dependencies account for skipped cases; no training, GPU, external API or independent outside reproduction."
+}

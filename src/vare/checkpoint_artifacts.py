@@ -72,7 +72,9 @@ class TrustedCheckpointStore:
         # Reject leaf symlinks even when source is passed by a caller.
         if path.is_symlink():
             raise CheckpointIntegrityError("symlinked checkpoint file")
-        flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
+        # A FIFO can block inside open(), before the descriptor type check.
+        # Nonblocking open is harmless for regular files and lets us reject it.
+        flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0)
         try:
             fd = os.open(path, flags)
         except OSError as exc:
@@ -81,9 +83,11 @@ class TrustedCheckpointStore:
             info = os.fstat(fd)
             if not stat.S_ISREG(info.st_mode) or info.st_size > max_bytes:
                 raise CheckpointIntegrityError("checkpoint is not a bounded regular file")
-            with os.fdopen(fd, "rb", closefd=False) as handle:
+            with os.fdopen(fd, "rb", buffering=0, closefd=False) as handle:
                 total = 0
-                while block := handle.read(1024 * 1024):
+                # Read at most one sentinel byte beyond the cap, even if the
+                # file grows after fstat. Never yield the over-budget block.
+                while block := handle.read(min(1024 * 1024, max_bytes - total + 1)):
                     total += len(block)
                     if total > max_bytes:
                         raise CheckpointIntegrityError("checkpoint exceeded byte budget")
@@ -155,7 +159,7 @@ class TrustedCheckpointStore:
     def _verify_file(self, path: Path, digest: str, expected_size: int) -> None:
         hasher = hashlib.sha256()
         n = 0
-        for block in self._read_chunks(path, max_bytes=self.max_bytes):
+        for block in self._read_chunks(path, max_bytes=min(self.max_bytes, expected_size)):
             hasher.update(block)
             n += len(block)
         if n != expected_size or hasher.hexdigest() != digest:
@@ -172,7 +176,9 @@ class TrustedCheckpointStore:
         digest, size = self._lookup(policy_id)
         if type(max_read_bytes) is not int or max_read_bytes <= 0 or size > max_read_bytes:
             raise CheckpointIntegrityError("checkpoint too large for in-memory evaluation")
-        blocks = list(self._read_chunks(self.objects / digest, max_bytes=self.max_bytes))
+        blocks = list(self._read_chunks(
+            self.objects / digest, max_bytes=min(self.max_bytes, max_read_bytes, size),
+        ))
         raw = b"".join(blocks)
         if len(raw) != size or hashlib.sha256(raw).hexdigest() != digest:
             raise CheckpointIntegrityError("loaded checkpoint does not match manifest")

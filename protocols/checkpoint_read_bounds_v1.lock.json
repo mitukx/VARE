@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "baseline_revision": "e912938125b8a135347961801e84f624c2b833eb",
+  "hypothesis": "Checkpoint IO rejects FIFOs without a writer and bounds loaded bytes to the registered size and caller ceiling, including post-fstat growth.",
+  "stage": "Frozen resource comparison after development reproducer: initial 13 cases already observed (6 fail on baseline). No preregistered discovery or model-capability claim.",
+  "protected_sha256": {
+    "tests/test_checkpoint_read_bounds.py": "be9123607791416973262c08d64bcae710f47feb423ca8e209ecb20adbfaacc0",
+    "tests/test_checkpoint_io_recovery.py": "e23e4db09ca5694fec526445e9ab270ad0012ea62c9a04d241b31eaf0f909f4e",
+    "tests/test_trusted_checkpoint_evaluator.py": "dacc254f178aca3cbb2081e96b64ac8203edb95a5b991df79da7ddb16e50e20b"
+  },
+  "pairs": 5,
+  "valid_bytes": 1048576,
+  "valid_reads": 64,
+  "replacement_bytes": 33554432,
+  "growth_bytes": 8388608,
+  "invalid_allocation_ceiling_bytes": 524288,
+  "expected_test_counts": {
+    "baseline": {
+      "pass": 8,
+      "fail": 7,
+      "error": 0,
+      "skip": 0
+    },
+    "candidate": {
+      "pass": 15,
+      "fail": 0,
+      "error": 0,
+      "skip": 0
+    }
+  },
+  "budget": "CPU only; 30 isolated measurement processes, 2 regression runs; 10s per measurement, 45s per regression arm; no API/GPU.",
+  "acceptance": "All 15 candidate cases pass, baseline controls pass and seven targeted cases fail; all invalid candidate reads reject below 512KiB traced allocation; valid content is exact. Timings descriptive, no throughput gate.",
+  "stopping_rule": "One frozen comparison; retain any failed run. Repairs require a new output path and explicit report; never overwrite results.",
+  "decision": "Accept bounded IO fix only if correctness and resource gates pass; retain recovery and clean-throughput costs.",
+  "metadata_revision": 3,
+  "prior_lock_sha256": "3ffab6df3496cbf30fbe51580ebbca8fa43d8d2e10f1f9b2a346fd9758a26b5f",
+  "metadata_change": "Integration helper now drains its bounded subprocess thread before propagating sibling cancellation, as required by the unchanged four-worker audit. Same inputs, 15 cases, resource budgets, and acceptance rules; failed v3 audit retained."
+}

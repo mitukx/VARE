@@ -1,0 +1,213 @@
+{
+  "reason": "Initial pytest auto IDs included the entire 1MiB bytes parameter. Raw XML and result maps are retained externally under outputs/checkpoint-read-review; no new large Git blobs admitted. Assertions and resource gates are unchanged.",
+  "files": {
+    "comparison-v2-console.log": {
+      "bytes": 1281,
+      "sha256": "087a5adfa472f7a9f9b36c2c6eafdeb61f70e62294497f9ec5da913c1d972b83"
+    },
+    "full-suite.log": {
+      "bytes": 1175,
+      "sha256": "543d5085e159baf19c71f81842aff5ddb09b8a5bd7d738ec07b29d4252230789"
+    },
+    "comparison-v1-console.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "observed-protocol-initial.lock.json": {
+      "bytes": 1837,
+      "sha256": "4e83140823b12fd984fee41702ebe69e88c8f5c9dce0ea6a4fcae04c3b30f437"
+    },
+    "audit-v2.json": {
+      "bytes": 216,
+      "sha256": "0209c3dc732299a91804b32fcf840167ad6c49711126b0ede38dd0f2297ca4ac"
+    },
+    "full-suite.xml": {
+      "bytes": 1346,
+      "sha256": "3193a35b33a7192c4ae525439b2bae1bd606b2887c14f420000e1a73e58624c7"
+    },
+    "baseline-first/pytest.log": {
+      "bytes": 22645,
+      "sha256": "ad61732cc7112bcc3db8d628b2d2005b24eb4c50975a12bd89e81ed202ac56e8"
+    },
+    "baseline-first/test-snapshot.py.txt": {
+      "bytes": 4609,
+      "sha256": "2ca882beda878c3f1305fa9c70bedb2a62c15318184e95c978a2cc7f222e1172"
+    },
+    "baseline-first/manifest.json": {
+      "bytes": 438,
+      "sha256": "e0fc32c83e82907ce4089765b80621e2fbd6611976c66d6ecf185f858bfecb08"
+    },
+    "baseline-first/pytest.xml": {
+      "bytes": 1072453,
+      "sha256": "7c1171333fef78a41a1d6b2242ca430f8a5c3cbe196d8c8156cabb2c91814bab"
+    },
+    "comparison-v2/candidate-oversized-2.json": {
+      "bytes": 454,
+      "sha256": "4dbe4e78ae9145180e63de942d30aed0e15521285cb66cf17515dfbdbb18be2a"
+    },
+    "comparison-v2/summary.json": {
+      "bytes": 1281,
+      "sha256": "721647edd4b12fa27e6cf32ce20141514fb2abff810d39666617bd6b4f160225"
+    },
+    "comparison-v2/candidate-valid-1.json": {
+      "bytes": 436,
+      "sha256": "358c218c7ccf663d73f11010369ed391c54b4e81334bb21ca0714a381bb429d1"
+    },
+    "comparison-v2/baseline-oversized-0.json": {
+      "bytes": 457,
+      "sha256": "9cba1d1354bcc6ae1d1832f87319ceca8d5561394793c362d35298e70b25e64f"
+    },
+    "comparison-v2/baseline-valid-2.json": {
+      "bytes": 435,
+      "sha256": "cb9107d5d99c803994398d839110c054331924d55a8c595316dcdde75046d589"
+    },
+    "comparison-v2/baseline-growth-0.json": {
+      "bytes": 453,
+      "sha256": "471f73e021d3501c2d0f0b1e08ec84f59dcd23704e687a35635c6f07e587fbc0"
+    },
+    "comparison-v2/baseline-growth-1.json": {
+      "bytes": 454,
+      "sha256": "e35d3496bab7631b6ab6089a0db0b55cc45206b8396c2618f287447ae8bde0f8"
+    },
+    "comparison-v2/candidate-growth-4.json": {
+      "bytes": 441,
+      "sha256": "1dfbbdc8e42a53f255b05ad24c9aea120d421843570bf31f7526b8e2dfbc03a7"
+    },
+    "comparison-v2/baseline-valid-3.json": {
+      "bytes": 435,
+      "sha256": "b3310c0702aea57164de0c7651dc4e69859e78f170d27141780acee6ac6b33b3"
+    },
+    "comparison-v2/baseline-oversized-1.json": {
+      "bytes": 457,
+      "sha256": "0aa0d0e4201ed1abf46e02b1ee46beed1172f0b95ad6684083f29b940b4513ec"
+    },
+    "comparison-v2/candidate-valid-0.json": {
+      "bytes": 436,
+      "sha256": "4bc4a14d0c8c43e4d17bbd6677baa442d7562d4b6dbe2a94819365cbddb57483"
+    },
+    "comparison-v2/test-results.json": {
+      "bytes": 2099692,
+      "sha256": "489306922df4d95b62fd3b6de20ede54ea7f2f41eb156b9dd7cadecc6f1b13b6"
+    },
+    "comparison-v2/candidate-pytest.xml": {
+      "bytes": 1050855,
+      "sha256": "90c1129d0869cc64f63ad25802e1bb3acac4b16f3141f713ca43bde8b9675430"
+    },
+    "comparison-v2/candidate-oversized-3.json": {
+      "bytes": 455,
+      "sha256": "2c04632c1caf726cf1c6ca985dbdecefae1b62979d011169889426736ebebc32"
+    },
+    "comparison-v2/baseline-valid-4.json": {
+      "bytes": 435,
+      "sha256": "496962412bc42ba232616f7a15c370bb14a29bfb2103b33eba62ca85d1d2cd12"
+    },
+    "comparison-v2/candidate-growth-3.json": {
+      "bytes": 440,
+      "sha256": "2d94d8f517929910722abcc7da3bff5f07e55b0c311031a66ee5391b7b90e186"
+    },
+    "comparison-v2/candidate-oversized-4.json": {
+      "bytes": 455,
+      "sha256": "fc1b903186b036f1dfdf188f4e456257d679af584da2dfee2256e812dd63aa03"
+    },
+    "comparison-v2/baseline-pytest.xml": {
+      "bytes": 1079683,
+      "sha256": "94a8ccbb1a0f7e825155dccb035a485f1022f9b084d28245e73ebfef71b0fa3f"
+    },
+    "comparison-v2/candidate-growth-2.json": {
+      "bytes": 440,
+      "sha256": "9836f32ea7be6d4e6147049f9ef5aff3f954f453bc1b8cca73b81f1e90968f96"
+    },
+    "comparison-v2/baseline-growth-4.json": {
+      "bytes": 454,
+      "sha256": "4eb5c9fc0331c49b9b5ba802c359d9a0c30c1176e58efd8dc136fa23625db22a"
+    },
+    "comparison-v2/candidate-growth-1.json": {
+      "bytes": 440,
+      "sha256": "4af38178bc65a000246ea7553082df6fe8f5746d7bd2f758fb2090a480ecc39c"
+    },
+    "comparison-v2/baseline-oversized-4.json": {
+      "bytes": 457,
+      "sha256": "c7e17c508918c1759bcddf5567bb31d5075f59920c1ecee841a85b49639bfd72"
+    },
+    "comparison-v2/baseline-pytest.log": {
+      "bytes": 29909,
+      "sha256": "98cbebc9afb1fef4e6f53aed4c66d262c1d28b173de42a9fd825a048e94c3c99"
+    },
+    "comparison-v2/manifest.json": {
+      "bytes": 4946,
+      "sha256": "f5ef9dec2d39565e6854bb82fe06582c9dc783789053855c84c214a9e61cf0a7"
+    },
+    "comparison-v2/candidate-valid-4.json": {
+      "bytes": 435,
+      "sha256": "2006e221f5daa332c916ff72c4794956f7383684ffdf0e2590840485d0ada48c"
+    },
+    "comparison-v2/candidate-growth-0.json": {
+      "bytes": 441,
+      "sha256": "be31a10d25caa0a1b6a343725722c10f7defbb86008f4cc7669cdb87a5ecbcfe"
+    },
+    "comparison-v2/candidate-oversized-0.json": {
+      "bytes": 454,
+      "sha256": "006b3e6e104a6232768dfecfcac5d34da51e90b3b20f01e35f086d1049385d0d"
+    },
+    "comparison-v2/baseline-growth-2.json": {
+      "bytes": 452,
+      "sha256": "cc3925d0732b4bebe91b10dd53d8b5337e30b9241fcbdb445afb5f4fab008a6b"
+    },
+    "comparison-v2/baseline-valid-0.json": {
+      "bytes": 435,
+      "sha256": "a13d71877990eba587b27087af03fbea954c070d21729672e7ac7cc72fdd40ed"
+    },
+    "comparison-v2/baseline-oversized-2.json": {
+      "bytes": 456,
+      "sha256": "553479efdd0b7eb04109d7271e5056df936a80ee621244eada5c6786f2d978d3"
+    },
+    "comparison-v2/candidate-valid-3.json": {
+      "bytes": 435,
+      "sha256": "56825c5f4018252d3253afb003ffcfef1b71475a50ab3406a8352abd13dca4a6"
+    },
+    "comparison-v2/candidate-valid-2.json": {
+      "bytes": 434,
+      "sha256": "c8a491e123022fce7a4107ce1172596046a58490d46dd22523dcbb53ff72ca04"
+    },
+    "comparison-v2/baseline-oversized-3.json": {
+      "bytes": 457,
+      "sha256": "9bfdd63d5131b449eddaaf88da4453fd4f14d0db80bc926c437e36230975505d"
+    },
+    "comparison-v2/baseline-valid-1.json": {
+      "bytes": 434,
+      "sha256": "91906d68eeb65a15aefaa524a3d1ee21ecc105c8838022877ce7f66b3bf9f12e"
+    },
+    "comparison-v2/baseline-growth-3.json": {
+      "bytes": 453,
+      "sha256": "980662b03494da6c23b3552fe4e568f44e65df1b7960c5fe77495ef3c8329f1f"
+    },
+    "comparison-v2/candidate-oversized-1.json": {
+      "bytes": 454,
+      "sha256": "29a21cd1182607aa24ec915ee6b32cf2a3e7b92970cf3398f7db175d2bd04c39"
+    },
+    "comparison-v2/candidate-pytest.log": {
+      "bytes": 695,
+      "sha256": "22ab99f09ac195e87356bbbb54d54a2ce95313859b85ab5349d5807cb050733f"
+    },
+    "comparison-v1/interrupted.json": {
+      "bytes": 290,
+      "sha256": "de495e727a250f1b77b34aa87af352a7abba63610332ba71f4d5b63d7858272d"
+    },
+    "comparison-v2/candidate/recovery-oversized.json": {
+      "bytes": 7486,
+      "sha256": "c29752039509952d276cd12f4b05791882319087da60e70fa3541c37e7b22c59"
+    },
+    "comparison-v2/candidate/recovery-fifo.json": {
+      "bytes": 7480,
+      "sha256": "f4c7d6d271adeafe08795e80ba69e1c0836fb32ddf3c2f12da976a4697c8d41d"
+    },
+    "comparison-v2/baseline/recovery-oversized.json": {
+      "bytes": 7266,
+      "sha256": "862e650eb21f99bccf121a7e4564899eb8470ede81ea7cd6f1ec57182710ba2e"
+    },
+    "comparison-v2/baseline/recovery-fifo.json": {
+      "bytes": 5865,
+      "sha256": "8f68a5759c85c6f2f9973e0a69852efe505b6ce25fb4c479df9928b33d927015"
+    }
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "status": "audit failed",
+  "reason": "The initial integration helper used a cancellable to_thread around subprocess.run. When the sibling failed first, its coroutine could end before recording the still-live thread result: audit expected four completed workers but found three. Production IO metrics and code are unchanged. Corrected helper drains the bounded subprocess task before propagating cancellation; acceptance rules unchanged.",
+  "raw_bundle": "comparison-v3"
+}

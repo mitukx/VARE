@@ -86,6 +86,17 @@ jobs:
         run: >-
           python scripts/reproduce_runtime_round_ownership_v1.py
           --output "${RUNNER_TEMP}/runtime-round-replay"
+      - name: Reproduce bounded checkpoint IO and evaluator recovery
+        if: matrix.python-version == '3.12'
+        run: |
+          python scripts/reproduce_checkpoint_read_bounds_v1.py --output "${RUNNER_TEMP}/checkpoint-io-replay"
+          python scripts/audit_checkpoint_read_bounds_v1.py "${RUNNER_TEMP}/checkpoint-io-replay"
+          python -O scripts/audit_checkpoint_read_bounds_v1.py "${RUNNER_TEMP}/checkpoint-io-replay"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always() && matrix.python-version == '3.12'
+        with:
+          name: checkpoint-io-replay
+          path: ${{ runner.temp }}/checkpoint-io-replay
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always() && matrix.python-version == '3.12'
         with:

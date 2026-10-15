@@ -1,0 +1,44 @@
+{
+  "valid": {
+    "baseline": {
+      "median_wall_s": 0.05215629099984653,
+      "median_python_peak_bytes": 3219699,
+      "median_process_peak_rss_bytes": 45826048,
+      "median_throughput_mib_s": 1227.0811204766903
+    },
+    "candidate": {
+      "median_wall_s": 0.04980316699948162,
+      "median_python_peak_bytes": 2163986,
+      "median_process_peak_rss_bytes": 41336832,
+      "median_throughput_mib_s": 1285.058839745395
+    }
+  },
+  "oversized": {
+    "baseline": {
+      "median_wall_s": 0.010496792005142197,
+      "median_python_peak_bytes": 67114578,
+      "median_process_peak_rss_bytes": 90456064,
+      "median_throughput_mib_s": 0.0
+    },
+    "candidate": {
+      "median_wall_s": 0.00031579198548570275,
+      "median_python_peak_bytes": 4398,
+      "median_process_peak_rss_bytes": 22446080,
+      "median_throughput_mib_s": 0.0
+    }
+  },
+  "growth": {
+    "baseline": {
+      "median_wall_s": 0.003970958001445979,
+      "median_python_peak_bytes": 16780733,
+      "median_process_peak_rss_bytes": 48611328,
+      "median_throughput_mib_s": 0.0
+    },
+    "candidate": {
+      "median_wall_s": 0.001871249987743795,
+      "median_python_peak_bytes": 8420,
+      "median_process_peak_rss_bytes": 30949376,
+      "median_throughput_mib_s": 0.0
+    }
+  }
+}
