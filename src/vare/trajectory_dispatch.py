@@ -114,4 +114,7 @@ class AuditedDispatcher:
     def close(self, *, expected_event_count: int) -> None:
         if self._closed:
             raise RuntimeError("dispatcher already closed")
-        # Must be supplied by an independent trusted runtime dispatch counter.\n        # Never silently infer coverage from the recorder itself.\n        self.recorder.close(expected_event_count=expected_event_count)\n        self._closed = True
+        # Must be supplied by an independent trusted runtime dispatch counter.
+        # Never silently infer coverage from the recorder itself.
+        self.recorder.close(expected_event_count=expected_event_count)
+        self._closed = True
