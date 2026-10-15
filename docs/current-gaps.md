@@ -9,6 +9,19 @@ Do not start another model screen or update from the cached model inventory
 alone. The next gate requires a materially distinct method and an unused,
 independently graded task composition. See the [qualification record](research-candidate-qualification-2026-10-15.md).
 
+**Update 2026-10-15 — direct RVL trainer freshness:** a signed batch could pass
+through `RVLGRPOHooks.train_candidate()` without recomputing current policy or
+verifier lag. The adapter now reassesses freshness under its model lock just
+before the optimizer call; missing version context fails closed, and
+`CapabilityLoop` passes a live assessor to close the lock-wait window. The
+pinned-main reproducer admitted stale data and called the trainer once; the
+fixed regression rejects an experience that becomes stale while waiting and
+records zero trainer calls. This is E0 admission evidence only. See the
+[report](rvl-direct-trainer-freshness-v1-report.md) and raw baseline/fixed
+[records](../results/rvl-direct-trainer-freshness-v1/). The historical v1
+midstep validator remains pinned to its prior source revision; current direct
+call fixtures use the v2 runner.
+
 **Update 2026-10-15 — singleton GRPO groups:** `EngineConfig.samples_per_task`
 defaults to one, which can make every RVL GRPO group a singleton. Centering a
 group's reward against itself produces a zero advantage, yet the adapter

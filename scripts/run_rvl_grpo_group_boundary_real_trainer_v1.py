@@ -406,6 +406,8 @@ def run(model_path: Path, rvl_source: Path, output_dir: Path) -> dict[str, Any]:
                 config=RVLGRPOConfig(train_temperature=float(prompt_spec["temperature"])),
                 generation_factory=generation_type,
                 verified_generation_factory=VerifiedGeneration,
+                current_policy_version=0,
+                current_verifier_version=0,
             )
             arm_started = time.monotonic()
             candidate_id = await hooks.train_candidate("policy-0", experiences)
@@ -496,6 +498,8 @@ def run(model_path: Path, rvl_source: Path, output_dir: Path) -> dict[str, Any]:
                 config=RVLGRPOConfig(train_temperature=float(prompt_spec["temperature"])),
                 generation_factory=generation_type,
                 verified_generation_factory=VerifiedGeneration,
+                current_policy_version=0,
+                current_verifier_version=0,
             )
             rejected = False
             error = None
