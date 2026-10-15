@@ -57,8 +57,14 @@ class TinyTrainer:
         self.optimizer_step = state["optimizer_step"]
 
     def train_step(self, samples, *, advantages=None):
-        assert len(samples) == 1
-        assert advantages == [0.0]
+        assert len(samples) == 2
+        assert sorted(advantages) == pytest.approx(
+            [-0.999998, 0.999998], abs=1e-8
+        )
+        assert all(
+            (sample.reward == 1.0) == (advantage > 0.0)
+            for sample, advantage in zip(samples, advantages)
+        )
         if self.update_weight:
             self.weight += 1
         self.optimizer_step += 1
@@ -69,13 +75,18 @@ class LocalBackend:
         self.trainer = trainer
         self.misbind_candidate = misbind_candidate
         self.calls = []
+        self.train_rollout_count = 0
 
     async def generate(self, prompt_id, prompt, *, n, temperature, seed):
         assert n == 1
         self.calls.append((prompt_id, prompt, self.trainer.weight))
         if self.misbind_candidate and self.trainer.weight and prompt_id.startswith("eval-"):
             return [Generation("other-task", prompt, "1")]
-        answer = "1" if self.trainer.weight else "0"
+        if prompt_id.startswith("eval-"):
+            answer = "1" if self.trainer.weight else "0"
+        else:
+            self.train_rollout_count += 1
+            answer = "1" if self.train_rollout_count % 2 else "0"
         return [Generation(prompt_id, prompt, answer)]
 
 
@@ -85,7 +96,8 @@ class AlwaysVerifier:
     trusted = True
 
     async def verify(self, attempt):
-        return Verification(1.0, True, 1.0, self.version, self.name, trusted=True)
+        passed = attempt.output == "1"
+        return Verification(float(passed), passed, 1.0, self.version, self.name, trusted=True)
 
 
 class EvidenceMutationHooks(RVLGRPOHooks):
@@ -138,7 +150,8 @@ def _run_case(case, *, paired_gate=True, misbind_candidate=False):
         hooks=hooks,
         verifier=VerifierEnsemble([VerifierMember(AlwaysVerifier())]),
         config=EngineConfig(
-            replay_batch_size=1,
+            replay_batch_size=2,
+            samples_per_task=2,
             promotion=PromotionConfig(
                 min_primary_gain=0.01,
                 min_eval_examples=2,
@@ -179,7 +192,13 @@ def test_rvl_evaluate_to_promotion_is_fail_closed_and_transactional():
 
     for case, paired_gate, should_promote, rejection_reason in cases:
         loop, hooks, trainer, backend = _run_case(case, paired_gate=paired_gate)
-        result = asyncio.run(loop.run_round([Task("train", "train prompt", "math")], round_index=0))
+        result = asyncio.run(
+            loop.run_round(
+                [Task("train", "train prompt", "math")],
+                round_index=0,
+                rollout_count=2,
+            )
+        )
         if should_promote:
             assert result.promoted_id == "policy-1", case
             assert result.incumbent_eval.primary == 0.0

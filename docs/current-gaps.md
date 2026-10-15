@@ -9,6 +9,20 @@ Do not start another model screen or update from the cached model inventory
 alone. The next gate requires a materially distinct method and an unused,
 independently graded task composition. See the [qualification record](research-candidate-qualification-2026-10-15.md).
 
+**Update 2026-10-15 — singleton GRPO groups:** `EngineConfig.samples_per_task`
+defaults to one, which can make every RVL GRPO group a singleton. Centering a
+group's reward against itself produces a zero advantage, yet the adapter
+previously called the trainer and created a candidate. The RVL GRPO boundary
+now rejects declared group sizes below two before the optimizer step; callers
+must configure at least two responses per task. A focused regression fails on
+the prior behavior and passes with the guard. This is E0 signal-path integrity,
+not a model-learning result. See the [report](rvl-grpo-singleton-group-v1-report.md).
+
+**Status correction 2026-10-15 — RVL PR #92:** the shared-module rollback fix
+was merged on 2026-10-14 as [`d4e7723`](https://github.com/mitukx/Recursive-Verification-Lag/commit/d4e77236b557c7fe5d6395320de27f3debd018ba),
+and RVL main has since advanced to `e381c4b`. The 2026-10-11 entries below
+record the PR's status at that time; their “pending” status is superseded here.
+
 **Update 2026-10-15 — accepted-publication cancellation ownership:** an audit
 found that a publish hook could suppress caller cancellation and return success,
 causing the engine to silently report a committed round. The engine now owns

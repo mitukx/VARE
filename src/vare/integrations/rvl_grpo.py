@@ -323,6 +323,10 @@ class RVLGRPOHooks:
                 )
             if type(expected_size) is not int or expected_size <= 0:
                 raise ValueError("VARE rollout group size must be a positive integer")
+            if expected_size < 2:
+                raise ValueError(
+                    "GRPO requires at least two responses per VARE rollout group"
+                )
             previous_size = expected_sizes.setdefault(group_id, expected_size)
             if previous_size != expected_size:
                 raise ValueError("VARE rollout group has inconsistent declared sizes")

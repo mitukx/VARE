@@ -161,3 +161,17 @@ def test_incomplete_declared_group_fails_before_optimizer_step():
         asyncio.run(_hooks(trainer).train_candidate("policy-0", [experience]))
 
     assert trainer.optimizer_step == 0
+
+
+def test_singleton_grpo_group_fails_before_optimizer_step():
+    trainer = CapturingTrainer()
+    experience = _experience("group-a", 1, "same-task", 1.0, "only-sample")
+
+    with pytest.raises(
+        ValueError,
+        match="GRPO requires at least two responses per VARE rollout group",
+    ):
+        asyncio.run(_hooks(trainer).train_candidate("policy-0", [experience]))
+
+    assert trainer.optimizer_step == 0
+    assert trainer.received_advantages is None
