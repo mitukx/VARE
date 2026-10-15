@@ -32,6 +32,7 @@ class FakeTrainer:
     def __init__(self):
         self.weight = 0
         self.optimizer_step = 0
+        self.train_step_calls = 0
 
     def snapshot_training_state(self):
         return {"weight": self.weight, "optimizer_step": self.optimizer_step}
@@ -42,6 +43,7 @@ class FakeTrainer:
 
     def train_step(self, samples):
         assert samples and isinstance(samples[0], VerifiedGeneration)
+        self.train_step_calls += 1
         self.weight += 1
         self.optimizer_step += 1
         return {"loss": 0.0}
@@ -198,6 +200,65 @@ def test_rvl_trainer_boundary_rejects_mutated_reward_before_optimizer(score):
     with pytest.raises(ValueError, match="score"):
         asyncio.run(hooks.train_candidate("policy-0", [exp]))
     assert trainer.optimizer_step == 0
+
+
+@pytest.mark.parametrize(
+    ("field", "token_ids"),
+    [
+        ("prompt_token_ids", [1.9]),
+        ("response_token_ids", [101.9]),
+        ("response_token_ids", [True]),
+        ("response_token_ids", [-1]),
+    ],
+    ids=["prompt-float", "response-float", "response-bool", "negative-id"],
+)
+def test_rvl_trainer_boundary_rejects_non_exact_token_ids_before_optimizer(field, token_ids):
+    trainer = FakeTrainer()
+    hooks = RVLGRPOHooks(
+        backend=FakeBackend(trainer),
+        trainer=trainer,
+        eval_tasks=[],
+        score_fn=lambda _task, _response: 0.0,
+        generation_factory=Generation,
+        verified_generation_factory=VerifiedGeneration,
+    )
+    metadata = {
+        "sampling_temperature": 0.8,
+        "prompt_token_ids": [1],
+        "response_token_ids": [101],
+        "response_token_logprobs": [-0.2],
+    }
+    metadata[field] = token_ids
+    raw = {
+        "prompt_id": "train",
+        "prompt": "prompt",
+        "response": "answer",
+        "logprob": -0.2,
+        "token_count": 1,
+        "latency_s": 0.001,
+        "metadata": metadata,
+    }
+    exp = Experience(
+        attempt=Attempt(
+            Task("train", "prompt"),
+            "answer",
+            "policy-0",
+            0,
+            0,
+            metadata={"rvl_generation": raw},
+        ),
+        verification=Verification(0.5, True, 1.0, 0, "fixture", trusted=True),
+        policy_lag=0,
+        verifier_lag=0,
+        shift_score=0.0,
+    )
+
+    with pytest.raises(ValueError, match="exact nonnegative integer"):
+        asyncio.run(hooks.train_candidate("policy-0", [exp]))
+
+    assert trainer.weight == 0
+    assert trainer.optimizer_step == 0
+    assert trainer.train_step_calls == 0
 
 
 def test_rvl_grpo_hooks_restores_incumbent_after_partial_train_failure():

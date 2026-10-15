@@ -64,7 +64,10 @@ def _experience(group_id: str, reward: float, response: str) -> Experience:
         "logprob": -0.1,
         "token_count": 1,
         "latency_s": 0.001,
-        "metadata": {},
+        "metadata": {
+            "prompt_token_ids": [1],
+            "response_token_ids": [2],
+        },
     }
     return Experience(
         attempt=Attempt(

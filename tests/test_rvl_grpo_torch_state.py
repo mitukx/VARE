@@ -93,7 +93,8 @@ def make_hooks(trainer, backend=None):
 
 def experience():
     raw = dict(prompt_id="train", prompt="prompt", response="ok", logprob=-0.1,
-               token_count=1, latency_s=0.001, metadata={})
+               token_count=1, latency_s=0.001,
+               metadata={"prompt_token_ids": [1], "response_token_ids": [2]})
     return Experience(
         Attempt(Task("train", "prompt"), "ok", "policy-0", 0, 0,
                 metadata={"rvl_generation": raw}),
