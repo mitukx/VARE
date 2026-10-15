@@ -2,12 +2,14 @@ from __future__ import annotations
 
 import math
 import random
+import re
 from numbers import Real
 from statistics import fmean
 from typing import Mapping
 
 from .attestation import EvidenceTrustRoot
 from .config import PromotionConfig
+from .trajectory_promotion import TrajectoryPromotionConstraint
 from .types import EvaluationReport, PromotionDecision
 
 
@@ -23,6 +25,13 @@ class PromotionGate:
     def __init__(self, config: PromotionConfig, *, trust_root: EvidenceTrustRoot | None = None) -> None:
         self.config = config
         self.trust_root = trust_root
+        self.trajectory_constraint: TrajectoryPromotionConstraint | None = None
+        if config.trajectory_policy_sha256 is not None:
+            if not isinstance(config.trajectory_policy_sha256, str) or re.fullmatch(r"[0-9a-f]{64}", config.trajectory_policy_sha256) is None:
+                raise ValueError("trajectory_policy_sha256 must be a lowercase SHA-256 digest")
+            if trust_root is None:
+                raise ValueError("trajectory gating requires an independent evidence trust root")
+            self.trajectory_constraint = TrajectoryPromotionConstraint(trust_root, config.trajectory_policy_sha256)
         if not 0 < config.paired_alpha < 1:
             raise ValueError("paired_alpha must be in (0,1)")
         if config.paired_bootstrap_samples <= 0:
@@ -129,6 +138,19 @@ class PromotionGate:
         return mean_gain, lcb, n, reasons
 
     def decide(self, incumbent: EvaluationReport, candidate: EvaluationReport) -> PromotionDecision:
+        if self.trajectory_constraint is not None:
+            trajectory_reasons = tuple(
+                dict.fromkeys(
+                    reason
+                    for report in (incumbent, candidate)
+                    if (reason := self.trajectory_constraint.reason(report)) is not None
+                )
+            )
+            if trajectory_reasons:
+                return PromotionDecision(
+                    accepted=False, reasons=trajectory_reasons, primary_gain=0.0,
+                    worst_slice_regression=0.0,
+                )
         if self.trust_root is not None and (
             not self.trust_root.verifies(incumbent)
             or not self.trust_root.verifies(candidate)
