@@ -1,0 +1,29 @@
+{
+  "status": "verified",
+  "faults": 3,
+  "recovered_jobs": 3,
+  "cost_pairs": 5,
+  "scope": "same-host process correctness and descriptive costs; no model learning",
+  "summary": {
+    "baseline": {
+      "audit_seconds": 0.016648874996462837,
+      "controller_peak_rss_bytes": 30867456,
+      "jobs_per_second": 15.81563452291232,
+      "largest_reaped_child_peak_rss_bytes": 17678336,
+      "latency_p50_seconds": 0.21068683349585626,
+      "latency_p95_seconds": 0.2297326459956821,
+      "python_peak_bytes": 1013552,
+      "wall_seconds": 1.0116571660037152
+    },
+    "candidate": {
+      "audit_seconds": 0.016514290997292846,
+      "controller_peak_rss_bytes": 29409280,
+      "jobs_per_second": 14.576146729136646,
+      "largest_reaped_child_peak_rss_bytes": 17678336,
+      "latency_p50_seconds": 0.22764745849417523,
+      "latency_p95_seconds": 0.26212952098285314,
+      "python_peak_bytes": 1099034,
+      "wall_seconds": 1.0976837910129689
+    }
+  }
+}

@@ -1,5 +1,15 @@
 # Current evidence gaps
 
+**Update 2026-10-15 — grader owner loss:** the bounded runner now uses an
+ownership-pipe guard to stop ordinary grader descendants after SIGKILL,
+SIGTERM or immediate worker exit. Pinned main fails all three fresh process
+faults; the candidate stops each group and resumes token 2 through the existing
+SQLite state and auditor. Five final CPU pairs show 8.50% more wall time for the
+short 16-job workload; this is a correctness improvement with overhead.
+Group escape, guard loss, runtime upgrades of enrolled stores and effects
+already performed remain open. No model task-success claim follows. See the
+[report and retained failures](grader-owner-loss-v1-report.md).
+
 **Update 2026-10-15 — bounded checkpoint IO:** the checkpoint store now rejects
 FIFOs without waiting for a writer and caps reads at the registered size and
 caller limit, including growth after descriptor inspection. A pinned-main

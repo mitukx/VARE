@@ -1,0 +1,54 @@
+{
+  "artifact_sha256": {
+    "comparison-v1.zip": "1b8956e67f72f6b8641b551ba919710f088bf81c2445b21b5d6b7729bb901db2",
+    "comparison-v2.zip": "3f8e601e0c8bf14ea0771afdf7cfcbdf4f6efa39dbbb0664a8ad3cee7a92726f",
+    "comparison-v3.zip": "6dff4654bc230c3f0a76273d33da307a7fc629a91609e72c6111dc73250e581e"
+  },
+  "checks": {
+    "artifact_replay": "comparisons v1/v2/v3 passed in normal and optimized Python",
+    "default_cpu": {
+      "failures": 0,
+      "junit_sha256": "ac7b7985d253b07074d61d9ad92f786cbdbda141af858384bcd0507a0670db93",
+      "passed": 808,
+      "skipped": 14
+    },
+    "math_graders": {
+      "failures": 0,
+      "junit_sha256": "eea62190eb5ff2b9344ed764313d892bce5bc52e21effcf5996e134456ecbae6",
+      "passed": 14,
+      "skipped": 0
+    },
+    "mypy": "passed, 62 source files",
+    "ruff": "passed"
+  },
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "paid_api_calls": 0
+  },
+  "runtime": {
+    "hardware": "MacBookPro18,3",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12",
+    "ram_bytes": 34359738368
+  },
+  "schema_version": 1,
+  "scope": "CPU process-fault correctness and descriptive costs; no model inference or learning. Final source exactly matches comparison-v3 executable snapshots.",
+  "source_iterations": [
+    "v1: first guard; cost +10.07%; all raw retained",
+    "v2: reject self-cancelled owned tasks; cost +7.13%; all raw retained",
+    "v3: guard stops its group on private status pipe errors; cost +8.50%; final source"
+  ],
+  "source_parent": "f54c488e272b7dbe513558a2e3489700f5814d35",
+  "source_sha256": {
+    "protocols/grader_owner_loss_v1.lock.json": "9da81d9da9c6accf7f90c104b08333c5b474db3c1e22269a71ae91535610f721",
+    "scripts/audit_grader_owner_loss_v1.py": "d769992d3ae980582fd0a95ec1f4adaa5fbecc9f396b9f4cbed1f9be1dd9b6de",
+    "scripts/reproduce_grader_owner_loss_v1.py": "13474e6499ed3cec3cbd5a00686ac2d2e9ad4da85ef2edbfe950b970deac04e9",
+    "src/vare/_grader_guard.py": "5af778ebab99f75c25c9c7ad2be3e75419b6c1c60edaf4c404c57863e36990ea",
+    "src/vare/durable.py": "3e521487fa0c288908e69940c8ce83f7c53fae7bf07773fd0c9ead66dc6efa9d",
+    "src/vare/runner.py": "5aaaf6ce099dbc262c7c622336d77828b90fa73af9e436664f24c391ad7aa391",
+    "tests/test_grader_guard.py": "48b7763dd69416b98cb4bc1943612cb0fb114740147fde10534a7c514da0aa7c",
+    "tests/test_grader_owner_loss.py": "05b07582be9c60b6e0820a4e38dd320598a25b143e3eb9e9d8b58efda3f6c1cc",
+    "tests/test_grader_owner_loss_audit.py": "1039b0737c360659c8ede542f6ff7d096f54387a3217990b721eab46cac778bd"
+  }
+}
