@@ -1,0 +1,44 @@
+{
+  "baseline": {
+    "backend_sha256": "65b4bbc799b3f276aabb2e091913e07244257a73c42a6d0dbe675e1a3b153fcf",
+    "cases": {
+      "test_exact_bound_and_empty_checkpoint_controls[empty]": "pass",
+      "test_exact_bound_and_empty_checkpoint_controls[one-byte]": "pass",
+      "test_exact_bound_and_empty_checkpoint_controls[one-mib]": "pass",
+      "test_existing_corruption_checks_remain_fail_closed[missing]": "pass",
+      "test_existing_corruption_checks_remain_fail_closed[same_size]": "pass",
+      "test_existing_corruption_checks_remain_fail_closed[symlink]": "pass",
+      "test_existing_corruption_checks_remain_fail_closed[truncate]": "pass",
+      "test_fifo_is_rejected_without_waiting_for_writer[digest]": "fail",
+      "test_fifo_is_rejected_without_waiting_for_writer[read]": "fail",
+      "test_fifo_is_rejected_without_waiting_for_writer[register]": "fail",
+      "test_growth_after_descriptor_stat_is_bounded[digest]": "fail",
+      "test_growth_after_descriptor_stat_is_bounded[read]": "fail",
+      "test_registered_size_caps_in_memory_read_after_replacement": "fail",
+      "test_worker_fault_rolls_back_then_verified_restore_promotes[fifo]": "fail",
+      "test_worker_fault_rolls_back_then_verified_restore_promotes[oversized]": "pass"
+    },
+    "exit_code": 1
+  },
+  "candidate": {
+    "backend_sha256": "98f96cf1bde57011a7e787c0bf61820df6a89ae37f1c043e3dfa73288c052b5c",
+    "cases": {
+      "test_exact_bound_and_empty_checkpoint_controls[empty]": "pass",
+      "test_exact_bound_and_empty_checkpoint_controls[one-byte]": "pass",
+      "test_exact_bound_and_empty_checkpoint_controls[one-mib]": "pass",
+      "test_existing_corruption_checks_remain_fail_closed[missing]": "pass",
+      "test_existing_corruption_checks_remain_fail_closed[same_size]": "pass",
+      "test_existing_corruption_checks_remain_fail_closed[symlink]": "pass",
+      "test_existing_corruption_checks_remain_fail_closed[truncate]": "pass",
+      "test_fifo_is_rejected_without_waiting_for_writer[digest]": "pass",
+      "test_fifo_is_rejected_without_waiting_for_writer[read]": "pass",
+      "test_fifo_is_rejected_without_waiting_for_writer[register]": "pass",
+      "test_growth_after_descriptor_stat_is_bounded[digest]": "pass",
+      "test_growth_after_descriptor_stat_is_bounded[read]": "pass",
+      "test_registered_size_caps_in_memory_read_after_replacement": "pass",
+      "test_worker_fault_rolls_back_then_verified_restore_promotes[fifo]": "pass",
+      "test_worker_fault_rolls_back_then_verified_restore_promotes[oversized]": "pass"
+    },
+    "exit_code": 0
+  }
+}

@@ -10,6 +10,7 @@ Start here for navigation. Reports and frozen evidence retain their original pat
 | Check unresolved evidence and experiment admission | [Current gaps](current-gaps.md), [agent charter](../AGENTS.md) |
 | Follow completed studies and negative results | [Experiment index](experiments.md), [evidence ledger](evidence.md), [roadmap chronology](roadmap.md) |
 | Reproduce current runtime ownership and recover after a crash | [Whole-round ownership](runtime-round-ownership-v1.md) |
+| Reproduce checkpoint IO bounds and signed-evaluator recovery | [Checkpoint IO report](checkpoint-read-bounds-v1-report.md) |
 | Reproduce evaluation cleanup, discard, and publication boundaries | [Evaluation integration](evaluation-transaction-integration-v1.md), [discard](candidate-discard-recovery-v1.md), [publication](promotion-publication-recovery-v1.md) |
 | Inspect the real trainer integration and inference ownership | [RVL integration](rvl-evaluation-promotion-e2e-v1-report.md), [inference transaction](rvl-inference-transaction-v1-report.md) |
 | Inspect replay/provenance and authenticated evidence contracts | [Trajectory reference](trajectory-reference-v1.md), [checkpoint-bound promotion](checkpoint-bound-promotion.md), [attested promotion](attested-promotion.md) |

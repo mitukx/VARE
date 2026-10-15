@@ -5,6 +5,7 @@ Run commands from the repository root. Choose a fresh output directory for compa
 | Question | Command / owning contract |
 | --- | --- |
 | Does the current default CPU suite pass? | `python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py` |
+| Do checkpoint FIFO/replacement/growth faults fail closed and recover? | `python scripts/reproduce_checkpoint_read_bounds_v1.py --output /tmp/vare-checkpoint-io-new`; `python scripts/audit_checkpoint_read_bounds_v1.py /tmp/vare-checkpoint-io-new` / [report](../docs/checkpoint-read-bounds-v1-report.md) |
 | Can the finite four-member GRPO audit witness be independently enumerated? | `python scripts/reproduce_grpo_audit_independent_reproduction_v2.py --output /tmp/vare-grpo-audit-independent-reproduction-v2.json` / [report](../docs/grpo-audit-independent-reproduction-v2-report.md) |
 | Are retained large blobs unchanged? | `PYTHONPATH=src python scripts/check_tracked_blob_budget.py` / [retention](../docs/artifact-retention.md) |
 | Do sibling loops/crash restarts fail closed? | `python scripts/reproduce_runtime_round_ownership_v1.py --output /tmp/vare-round-review` / [report](../docs/runtime-round-ownership-v1.md) |
