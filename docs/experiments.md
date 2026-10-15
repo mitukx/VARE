@@ -25,9 +25,11 @@ performed in this study.
 ## GRPO audit-order independent reproduction v2
 
 A separately authored standard-library enumerator reproduced the selected
-`0001`, `T={0,1,2}` Walsh witness exactly. The corrected source passes all frozen
-checks twice; the initial implementation's count-two formula error remains a
-recorded non-pass. The original v1 lock's phrase about “each” third-order
+`0001`, `T={0,1,2}` Walsh witness exactly. Two corrected runs passed all frozen
+checks, but only the final run is tied to retained runner source; the earlier
+passing source bytes are unavailable. The author-recorded count-two formula
+error from the initial non-pass cannot be independently checked from its
+retained bundle. The original v1 lock's phrase about “each” third-order
 marginal is broader than the constructed pair supports: only the selected
 `012` marginal differs; the other size-three marginals are identical. See the
 [report](grpo-audit-independent-reproduction-v2-report.md), [frozen protocol](../protocols/grpo_audit_independent_reproduction_v2.lock.json),

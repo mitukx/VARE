@@ -170,16 +170,32 @@ def law_pair(
     return left, right
 
 
-def verify_input_hashes(lock: dict[str, object]) -> dict[str, str]:
-    sources = lock["source_artifacts"]
-    assert isinstance(sources, dict)
+def verify_input_hashes(lock: object) -> dict[str, str]:
+    if not isinstance(lock, dict):
+        raise ValueError("protocol lock must be a JSON object")
+    sources = lock.get("source_artifacts")
+    if not isinstance(sources, dict) or not sources:
+        raise ValueError("protocol lock must contain source_artifacts")
     actual: dict[str, str] = {}
-    for item in sources.values():
-        assert isinstance(item, dict)
-        path = ROOT / str(item["path"])
-        digest = sha256(path)
-        assert digest == item["sha256"], f"source hash mismatch: {path}"
-        actual[str(item["path"])] = digest
+    for name, item in sources.items():
+        if not isinstance(item, dict):
+            raise ValueError(f"source artifact {name!r} must be an object")
+        relative_path = item.get("path")
+        expected_digest = item.get("sha256")
+        if not isinstance(relative_path, str) or not relative_path:
+            raise ValueError(f"source artifact {name!r} must declare a path")
+        if not isinstance(expected_digest, str) or not expected_digest:
+            raise ValueError(f"source artifact {name!r} must declare a SHA-256")
+        path = ROOT / relative_path
+        try:
+            digest = sha256(path)
+        except OSError as exc:
+            raise ValueError(f"cannot read source artifact {path}") from exc
+        if digest != expected_digest:
+            raise ValueError(
+                f"source hash mismatch: {path}; expected {expected_digest}, got {digest}"
+            )
+        actual[relative_path] = digest
     return actual
 
 
@@ -190,6 +206,8 @@ def main() -> int:
 
     lock_bytes = LOCK_PATH.read_bytes()
     lock = json.loads(lock_bytes)
+    if not isinstance(lock, dict):
+        raise ValueError("protocol lock must be a JSON object")
     source_hashes = verify_input_hashes(lock)
 
     action_space = tuple(vectors(4))
@@ -267,7 +285,13 @@ def main() -> int:
         "unconditional_mean_gap_exact": unconditional_gap
         == Exact(Fraction(-81, 2048), Fraction(27, 1024)),
     }
-    assert all(checks.values()), json.dumps(checks, sort_keys=True)
+    failed_checks = [name for name, passed in checks.items() if not passed]
+    if failed_checks:
+        failed_results = {name: checks[name] for name in failed_checks}
+        raise ValueError(
+            "exact reproduction checks failed: "
+            + json.dumps(failed_results, sort_keys=True)
+        )
 
     runner_hash = sha256(Path(__file__).resolve())
     result = {
