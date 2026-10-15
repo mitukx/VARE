@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-13/xai-mts-frontierlab-https-github-com-6/work/VARE-gradient-parity/scripts/reproduce_grpo_audit_independent_reproduction_v2.py", line 325, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-13/xai-mts-frontierlab-https-github-com-6/work/VARE-gradient-parity/scripts/reproduce_grpo_audit_independent_reproduction_v2.py", line 271, in main
+    assert all(checks.values()), json.dumps(checks, sort_keys=True)
+           ^^^^^^^^^^^^^^^^^^^^
+AssertionError: {"action_probability_is_27_over_256": true, "all_action_vectors_enumerated": true, "all_degree_four_coefficients_vanish": false, "all_marginals_through_order_two_match": true, "conditional_mean_gap_matches_exact_coefficient": true, "constant_actions_have_zero_update_function": false, "every_nonconstant_action_has_degree_three": false, "pair_laws_are_nonnegative": true, "pair_laws_are_normalized": true, "selected_order_three_tv_is_one_half": true, "target_coefficient_exact": false, "unconditional_mean_gap_exact": false}

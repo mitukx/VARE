@@ -13,6 +13,7 @@ Start here for navigation. Reports and frozen evidence retain their original pat
 | Reproduce evaluation cleanup, discard, and publication boundaries | [Evaluation integration](evaluation-transaction-integration-v1.md), [discard](candidate-discard-recovery-v1.md), [publication](promotion-publication-recovery-v1.md) |
 | Inspect the real trainer integration and inference ownership | [RVL integration](rvl-evaluation-promotion-e2e-v1-report.md), [inference transaction](rvl-inference-transaction-v1-report.md) |
 | Inspect replay/provenance and authenticated evidence contracts | [Trajectory reference](trajectory-reference-v1.md), [checkpoint-bound promotion](checkpoint-bound-promotion.md), [attested promotion](attested-promotion.md) |
+| Reproduce the finite GRPO audit-order witness independently | [Reproduction report](grpo-audit-independent-reproduction-v2-report.md), [frozen protocol](../protocols/grpo_audit_independent_reproduction_v2.lock.json) |
 | Run durable historical evaluations (a different state machine) | [Local evaluation recovery](recovery.md), [CLI](execution.md) |
 | Read real-model outcomes without confusing feasibility with learning | [OpenBookQA confirmation](openbookqa-qwen25-grpo-sft-confirmation-v1-report.md), [format/correctness comparison](format-vs-correctness-comparison-v2.md), [one-update smoke](heldout-exact-integer-update-cost-smoke-v1.md) |
 | Preserve artifacts and avoid new large tracked files | [Artifact retention](artifact-retention.md) |

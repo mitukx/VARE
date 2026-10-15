@@ -153,6 +153,11 @@ jobs:
         run: |
           python scripts/run_grpo_audit_order_characterization_v1.py
           python scripts/audit_grpo_audit_order_characterization_v1.py
+      - name: Independently reproduce the frozen GRPO audit-order witness
+        if: matrix.python-version == '3.11'
+        run: >-
+          python scripts/reproduce_grpo_audit_independent_reproduction_v2.py
+          --output ${{ runner.temp }}/grpo-audit-independent-reproduction-v2.json
       - name: Recompute and audit the frozen partial GRPO audit cost study
         if: matrix.python-version == '3.11'
         run: |
@@ -185,7 +190,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install ruff==0.15.12
-      - run: ruff check src tests minigrpo selfimprove scripts/run_minigrpo.py scripts/run_selfimprove.py scripts/run_flagship.py
+      - run: ruff check src tests minigrpo selfimprove scripts/run_minigrpo.py scripts/run_selfimprove.py scripts/run_flagship.py scripts/reproduce_grpo_audit_independent_reproduction_v2.py
   typecheck:
     runs-on: ubuntu-latest
     steps:

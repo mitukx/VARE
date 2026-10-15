@@ -19,6 +19,19 @@ in the [report](seeded-summary-v3-report.md) and
 [bundle](../results/seeded-summary-v3/). This is not model-learning evidence or
 independent human review.
 
+## GRPO audit-order exact reproduction — 2026-10-15
+
+The final separately authored standard-library implementation reproduces the
+selected four-member parity witness and all frozen exact checks. Its first
+implementation attempt failed because of a count-two standardization formula
+error; that non-pass is preserved alongside two corrected passing runs. A
+review also found that only the selected `012` third-order marginal differs;
+the v1 lock's wording can be read too broadly if it implies all triples
+differ. See the [report](grpo-audit-independent-reproduction-v2-report.md),
+[protocol](../protocols/grpo_audit_independent_reproduction_v2.lock.json), and
+[attempt history](../results/grpo-audit-independent-reproduction-v2/run-1/attempt-history.json).
+This is finite same-host reproducibility evidence, not a model-learning result.
+
 **2026-10-13 — engine evaluation lifetime:** [report](engine-evaluation-lifecycle-v1-report.md), [raw records](../results/engine-evaluation-lifecycle-v1/), and [one-entry replay](../scripts/reproduce_engine_evaluation_lifecycle_v1.py) connect a live sibling/deleted candidate counterexample to cancellation-safe task ownership. Baseline has 12/13 failures; corrected has zero, preserving the concurrent-success control. An independent AI reviewer falsified the first proposal for pre-existing cancellation, then confirmed the amended guard in four cases. Local full suite: 362 pass; no model-gain or human-review claim.
 
 Integration follow-up for the 2026-10-13 inference correction: main `1e7fda8` includes the existing alias fix and still fails 10/14 new checks. The [updated four-arm record](../results/rvl-inference-transaction-v1/integration-main-1e7fda8/) passes 14/14 after correction, actual pinned HF state/worker checks, 349 full-suite tests, and Ruff/mypy. This supersedes the earlier 338-test suite count without altering its retained logs.

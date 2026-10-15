@@ -1,0 +1,53 @@
+{
+  "protocol_id": "grpo_audit_independent_reproduction_v2",
+  "status": "frozen_before_reproduction_implementation",
+  "classification": "same_host_independent_exact_reproduction",
+  "question": "Can a separately authored standard-library-only implementation reproduce the finite GRPO audit-order characterization retained in v1?",
+  "selection_disclosure": "This reproduction was selected after the v1 exact result and exploratory derivations were already known. It is a reproducibility check, not a confirmatory preregistration, novelty claim, empirical study, or external reproduction.",
+  "source_artifacts": {
+    "protocol": {
+      "path": "protocols/grpo_audit_order_characterization_v1.lock.json",
+      "sha256": "1286ce726d0d574c50dae794345e3df688c165d5cb7117c06880f080027542d1"
+    },
+    "report": {
+      "path": "docs/grpo-audit-order-characterization-v1-report.md",
+      "sha256": "fea12c4652bfe96d4a00976029e307c7155885c82615beedd8c8aa885a9e7e7f"
+    },
+    "prior_exact_output": {
+      "path": "results/grpo-audit-order-characterization-v1/run-1/exact-characterization.json",
+      "sha256": "f4399a1400cd145f0e8d7839819ba1dcb72a1ee63f759fdf7df29ae9871e61dd"
+    },
+    "prior_independent_audit": {
+      "path": "results/grpo-audit-order-characterization-v1/run-1/independent-audit.json",
+      "sha256": "f5b80a0e543752584a2471ceb19a6160fa21e4e3362d4a9ee100e39a16e29259"
+    }
+  },
+  "method": {
+    "implementation": "New standalone source; no imports from the existing VARE runner, auditor, or project package.",
+    "runtime": "Python standard library only; no model, network, accelerator, or paid API.",
+    "enumeration": "Enumerate all 16 four-bit action strings and all 16 four-bit reward strings for each action.",
+    "bit_order": "Action/reward strings are big-endian for display; character index 0 is the leftmost bit and maps to coordinate 0.",
+    "score": "For nonconstant binary rewards y with k=sum(y), population-standardized A_i=(y_i-k/4)/sqrt(k(4-k)/16); for constant groups set A_i=0. Compute G(a,y)=sum_i A_i*(a_i-1/4).",
+    "exact_arithmetic": "Represent each value as r+s*sqrt(3) with rational r,s, using fractions.Fraction.",
+    "walsh": "For every coordinate subset T, alpha_T(a)=1/16*sum_y G(a,y)*product_{i in T}(1-2*y_i).",
+    "pair_witness": "For target action 0001 and T={0,1,2}, construct P±(y)=1/16*(1±(1/2)*chi_T(y)); enumerate exact marginal tables and means. Other action strata are identical across the two worlds."
+  },
+  "acceptance_checks": [
+    "all 16 action vectors are enumerated, with constant vectors having the zero update function",
+    "every degree-four Walsh coefficient is zero",
+    "each of the 14 nonconstant action vectors has a nonzero degree-three Walsh coefficient",
+    "for action 0001 and T={0,1,2}, alpha_T=-3/8+sqrt(3)/4",
+    "P+ and P- are nonnegative and each sums exactly to one",
+    "every action-conditioned marginal table for subsets of size zero, one, and two is identical under P+ and P-",
+    "the selected order-three marginal has total variation distance 1/2",
+    "the conditional expected-update difference is -3/8+sqrt(3)/4",
+    "the action probability is 27/256 and the unconditional expected-update difference is -81/2048+27*sqrt(3)/1024"
+  ],
+  "decision_rule": "Any failed exact check is a reproduction non-pass; do not alter the definitions or acceptance checks after running the implementation.",
+  "limits": [
+    "This result concerns one finite four-member binary-reward local score update only.",
+    "Same-host reproduction does not constitute independent outside-human replication.",
+    "No estimator sample complexity, practical audit budget, prevalence, model training, task success, or capability was measured.",
+    "The exercise does not resolve novelty relative to related verifier-auditing and GRPO work."
+  ]
+}
