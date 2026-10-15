@@ -101,10 +101,16 @@ def audit(root):
     # Existing authentication contract is reused; trace replay above is a
     # separate implementation. These public fixture keys are not secrets.
     from vare.attestation import EvidenceTrustRoot
+    from vare.config import PromotionConfig
+    from vare.promotion import PromotionGate
     from vare.types import EvaluationReport
     trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
         protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
         evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+    policy_sha256 = sha(json.dumps({"version": "capture-boundary-v1", "allowed_tools": ["command"],
+        "allowed_egress_hosts": ["example.org"]}, sort_keys=True, separators=(",", ":")).encode())
+    gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                        trajectory_policy_sha256=policy_sha256), trust_root=trust)
     for label in ["baseline", "candidate"]:
         directory = root / label
         evidence = json.loads((directory / "command-promotion.json").read_text())
@@ -117,6 +123,7 @@ def audit(root):
             "candidate-trace.jsonl", "incumbent-trace.jsonl", "command-result.txt"}, "raw command inventory")
         for name, digest in evidence["raw_artifact_sha256"].items():
             require(sha((directory / name).read_bytes()) == digest, "raw command identity")
+        reports = {}
         for policy_id in ["incumbent", "candidate"]:
             checked = trace(directory / f"{policy_id}-trace.jsonl", policy_id=policy_id, run_id=trust.run_id)
             report = EvaluationReport(**evidence[f"{policy_id}_report"])
@@ -124,10 +131,23 @@ def audit(root):
             require((report.policy_id, report.primary, report.n) ==
                     (policy_id, .5 if policy_id == "incumbent" else 1.0, 1), "command score differs")
             metadata = report.metadata["trajectory_safety"]
-            require(metadata["ledger_head_sha256"] == checked["head"] and
-                    metadata["event_count"] == metadata["expected_event_count"] == checked["event_count"], "report trace differs")
+            # A valid MAC is not evidence of eligibility. Independently enforce
+            # every frozen trajectory field before asking the existing gate.
+            require(metadata == {
+                "schema": "vare.trajectory-safety.v1", "run_id": trust.run_id,
+                "policy_id": policy_id, "policy_sha256": policy_sha256,
+                "ledger_head_sha256": checked["head"], "event_count": checked["event_count"],
+                "expected_event_count": checked["event_count"], "capture_complete": True,
+                "status": "pass", "violations": [],
+            } and metadata["capture_complete"] is True
+                and type(metadata["event_count"]) is int
+                and type(metadata["expected_event_count"]) is int, "signed trajectory is ineligible")
             expected = (0, 0, 0) if policy_id == "incumbent" else (1, 1, 0) if label == "baseline" else (2, 1, 1)
             require((checked["event_count"], checked["calls"], checked["results"]) == expected, "command capture differs")
+            reports[policy_id] = report
+        decision = gate.decide(reports["incumbent"], reports["candidate"])
+        require(decision.accepted and evidence["final_promotion_accepted"] is decision.accepted,
+                "recomputed promotion differs")
     return {"artifacts": len(assets), "regression_cases_per_arm": 16, "timing_traces": 10,
             "command_traces": 4, "signed_reports": 4,
             "scope": "same-host independent trace/summary reconstruction; public fixture receipts, not external authentication"}

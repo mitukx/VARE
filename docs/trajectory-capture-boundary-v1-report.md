@@ -73,7 +73,9 @@ was attempted.
 The separate auditor imports neither the comparison runner nor VARE's
 trajectory parser. It reconstructs hashes, parent/result relationships, event
 counts, measurement coverage and medians from ten timing traces and four
-command traces, and checks four reports using the existing HMAC contract.
+command traces, and checks four reports using the existing HMAC contract. It independently
+validates every frozen trajectory eligibility field and recomputes the promotion
+decision with the existing gate instead of trusting the serialized verdict.
 Normal and Python `-O` execution both pass; artifact checks use explicit
 exceptions. Public fixture keys establish consistency, not authentication
 against a hostile signer or an independently administered evaluator.
@@ -100,6 +102,24 @@ evidence. Evidence revision 2 exports those traces and full reports, and binds
 fixture receipts to actual protocol/test hashes. Task inputs, all assertions,
 acceptance counts and resource budgets were unchanged. No failed run was
 replaced, and no retired model confirmation cohort was used.
+
+## Automated review correction
+
+The first artifact auditor verified MACs and trace heads/counts, but omitted
+signed trajectory eligibility fields and trusted the saved promotion flag.
+Automated review identified this gap on `97fd5b3`. Fourteen new correctly
+re-attested metadata cases failed on that auditor despite six inventory controls
+passing. The corrected helper checks the full frozen safety metadata, including
+strict boolean/integer types, and reruns `PromotionGate`. Two additional cases
+use valid safety metadata but mismatched evaluation slices: the old helper
+accepts them while the actual gate rejects them. Normal and optimized Python
+now pass all 22 auditor tests. Prior helper source, failures and the re-attested
+counterexample are retained; these are intentionally inconsistent diagnostic
+bundles, not passing results. The frozen runtime protocol and benchmark were
+unchanged. Final CPU suite: **820 pass, 14 optional-dependency skips**; separate
+mathematical graders: **14 pass**. Linux CI raw evidence also passes the corrected
+auditor on the local M1 host. This is automatic cross-runtime replay, not outside
+human review.
 
 ## Scope
 
