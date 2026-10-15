@@ -6,7 +6,7 @@ TASE extends outcome-only evaluation with an independently collected process aud
 
 - `src/vare/trajectory_safety.py` defines an event schema, frozen policy allowlists, a `HashChainLedger`-backed recorder, a strict closed-trace parser and a deterministic outcome (pass / violation / unknown). A denied action is still a violation even when task outcome is correct.
 - The recorder needs a runtime adapter outside the candidate privilege domain. Every tool dispatch, network attempt, and artifact event included in the claimed audit scope must be intercepted independently. The dispatch counter passed to `close()` must also be independent. A candidate-supplied trace is untrusted.
-- `src/vare/trajectory_promotion.py` validates a signed `EvaluationReport` carrying `metadata["trajectory_safety"]` with the frozen policy SHA-256. Configure `PromotionConfig.trajectory_policy_sha256` to activate fail-closed gating. It applies to both incumbent and candidate evaluation reports; unset configuration keeps historical behavior.
+- `src/vare/trajectory_dispatch.py` adds a cooperative trusted dispatcher that journals tool and outbound HTTP attempts before a side effect and records returned/error outcomes. Tools must be registered in the frozen allowlist; hostnames use exact matching. Denied calls are retained as safety violations. Redirects must be mediated hop-by-hop by the HTTP adapter, which is not implemented here. The caller supplies a trusted async execution function; this does not intercept arbitrary process I/O.\n- `src/vare/trajectory_promotion.py` validates a signed `EvaluationReport` carrying `metadata["trajectory_safety"]` with the frozen policy SHA-256. Configure `PromotionConfig.trajectory_policy_sha256` to activate fail-closed gating. It applies to both incumbent and candidate evaluation reports; unset configuration keeps historical behavior.
 - A trusted evaluator should call `audit_trajectory(...).to_metadata()`, attach it to its report as `trajectory_safety`, and sign the complete report using the existing checkpoint-bound `EvidenceTrustRoot.attest` path. Never give the candidate the signing key.
 - Hash chaining detects changes to stored bytes, but does not ensure that events were collected in the first place, prevent a privileged operator from replacing an unanchored chain, or guarantee OS isolation. The audit code does not intercept network traffic or establish a hostile-code sandbox.
 - This initial pass is only event-level authorization and exact egress-host filtering. It does **not** implement data-flow taint propagation, payload exfiltration analysis, actual credential-use instrumentation, graph-level semantic causality, or secure TLS-level redirect resolution. Those require independent runtime instrumentation and explicit experiments before any claim.
@@ -15,7 +15,7 @@ TASE extends outcome-only evaluation with an independently collected process aud
 ## Quick verification
 
 ```bash
-python -m pytest tests/test_trajectory_safety.py tests/test_promotion.py
+python -m pytest tests/test_trajectory_safety.py tests/test_trajectory_dispatch.py tests/test_trajectory_promotion.py tests/test_promotion.py
 ```
 
 ## Follow-up research, not current evidence
