@@ -108,6 +108,53 @@ retains revision-specific Hub API metadata, split/size metadata, test and filter
 statistics, endpoint URLs, and SHA-256 hashes. No parquet or task rows were
 downloaded, and no base inference was run.
 
+## Autonomous research planning and resource allocation — 2026-10-15
+
+The mission also targets an outer control plane for autonomous RL research
+engineering, so the novelty screen includes systems that choose research actions
+and allocate experiment budgets. [PrimeScientist](https://arxiv.org/abs/2609.17846)
+uses an executable plan tree and adaptive MCTS to select research directions and
+resource investment across attempts, including AI research, systems, and code
+optimization. Its paper frames the main budget in tokens and leaves separate
+hardware-time constraints as future work. [MARS](https://proceedings.mlr.press/v306/chen26r.html)
+already combines cost-constrained MCTS, modular ML-engineering work, and
+cross-branch reflective memory. [Anytime Verified Agents (AVA)](https://openreview.net/pdf?id=JMDCMf7mlF)
+allocates a bounded budget across search, sampling, verification, and tool use.
+[RepairAgent](https://arxiv.org/abs/2403.17134) already lets a repair agent
+interleave information gathering, repair-material search, and validation based
+on prior attempts.
+
+The evaluation target is also established territory. [RE-Bench](https://metr.org/blog/2024-11-22-evaluating-r-d-capabilities-of-llms/)
+measures AI research-engineering outcomes under wall-clock budgets.
+[PostTrainBench](https://arxiv.org/abs/2603.08640) studies autonomous post-training
+under bounded compute and reports research-integrity failures. [MMPostTrainBench](https://arxiv.org/abs/2610.05398)
+explicitly evaluates iterative candidate selection and non-target regressions.
+Within RL, [Knapsack RL](https://proceedings.mlr.press/v306/li26v.html) allocates
+heterogeneous GRPO rollout budgets by expected learning value and cost, while
+the [IsoCompute Playbook](https://proceedings.mlr.press/v306/cheng26n.html)
+studies compute-optimal allocation among rollouts, problems, and update steps.
+These are author-reported results; VARE has not reproduced them.
+
+Consequently, generic UCB/MCTS selection, cost-aware research planning,
+interleaving inspect/patch/test actions, time-bounded repair scoring, or uneven
+GRPO rollout allocation are not VARE novelty claims. Merely adding CPU time to a
+token budget is also insufficient because execution expense is already central
+to MARS and wall-clock-bounded evaluation is established by RE-Bench. The
+[QwenGyre](https://arxiv.org/abs/2609.33848) systems contribution centers on
+elastic GPU scheduling and long-horizon trajectories, so it is a reference for
+trajectory identity and accounting rather than a local M1 implementation target.
+
+A possible **empirical diagnostic**, not a new-algorithm claim, is whether
+strategy rankings change on fresh RL repair tasks when budgets charge measured
+CPU time, tool calls, and protected non-regression confirmation. This remains
+**no-go for execution** until VARE has an unused task pack with independently
+verified defect, correct-fix, regression, and grader-tampering cases; genuinely
+heterogeneous measured costs rather than padded costs; a fixed no-additional-fee
+agent path; and a confirmation evaluator hidden from selection. Compare against
+relevant existing cost-aware baselines under the same locked budget. If any
+entry condition fails, do not implement a generic selector or report a campaign
+result; continue with an independent reproduction of a concrete RL defect.
+
 ## What must qualify before the next model run
 
 The next research action is candidate qualification, not inference. A proposed
@@ -145,6 +192,15 @@ trainer defect; do not add generic infrastructure to fill the gap.
 - [Experience is the Best Teacher: Motivating Effective Exploration in Reinforcement Learning for LLMs](https://arxiv.org/abs/2603.20046), submitted 2026-03-20.
 - [Beyond Outcome Feedback: Trajectory-Quality-Guided Experience-based Learning](https://arxiv.org/abs/2610.14877), submitted 2026-10-10.
 - [Terrarium: Growing Personal Assistants via Scalable Synthesis of App Worlds](https://arxiv.org/abs/2610.14860), submitted 2026-10-10.
+- [PrimeScientist: Strategic Allocation of Research Effort in Autonomous Research](https://arxiv.org/abs/2609.17846), submitted 2026-09-15.
+- [MARS: Modular Agent with Reflective Search for Automated AI Research](https://proceedings.mlr.press/v306/chen26r.html), ICML 2026.
+- [Anytime Verified Agents: Adaptive Compute Allocation for Reliable LLM Reasoning under Budget Constraints](https://openreview.net/forum?id=JMDCMF7mLF), TMLR 2026.
+- [RepairAgent: An Autonomous, LLM-Based Agent for Program Repair](https://arxiv.org/abs/2403.17134), submitted 2024-03-25.
+- [RE-Bench: Evaluating Frontier ML Research Capabilities of Language Model Agents Against Human Experts](https://metr.org/blog/2024-11-22-evaluating-r-d-capabilities-of-llms/), 2024-11-22.
+- [PostTrainBench: Can LLM Agents Automate LLM Post-Training?](https://arxiv.org/abs/2603.08640), submitted 2026-03-09.
+- [MMPostTrainBench: Benchmarking Autonomous Research for Multimodal Post-Training](https://arxiv.org/abs/2610.05398), submitted 2026-10-04.
+- [Knapsack RL: Compute-Efficient Reinforcement Learning via Heterogeneous Rollout Allocation](https://proceedings.mlr.press/v306/li26v.html), ICML 2026.
+- [IsoCompute Playbook: Optimally Scaling Sampling Compute for LLM RL](https://proceedings.mlr.press/v306/cheng26n.html), ICML 2026.
 - [SWE-rebench dataset card](https://huggingface.co/datasets/nebius/SWE-rebench/tree/89cdfbab4ab1bd8f5a658bb212d1b63624f4f881), inspected 2026-10-15; candidate task source only, not approved or executed. The metadata/statistics capture and hashes are in [`swe-rebench-snapshot-89cdfba`](../results/research-candidate-qualification-2026-10-15/swe-rebench-snapshot-89cdfba/manifest.json).
 - [QwenGyre: An Elastic Reinforcement Learning Framework for Training xLong-Horizon Agents](https://arxiv.org/abs/2609.33848), submitted 2026-09-27.
 - [Reinforcement Learning for Self-Improving Agent with Skill Library](https://arxiv.org/abs/2512.17102), revised 2026-03-10.
