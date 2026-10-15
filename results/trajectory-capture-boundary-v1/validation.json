@@ -1,0 +1,50 @@
+{
+  "base_revision": "f54c488e272b7dbe513558a2e3489700f5814d35",
+  "hardware": "Apple M1 Pro / 32 GiB",
+  "python": "3.12.12",
+  "cpu_suite": {
+    "cases": 834,
+    "passed": 820,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 14
+  },
+  "math_suite": {
+    "cases": 14,
+    "passed": 14,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "checks": {
+    "ruff": "pass",
+    "mypy": "pass (61 source files)",
+    "compileall": "pass",
+    "pinned_comparison": "baseline 11 fail, 5 pass; candidate 16 pass",
+    "trace_and_summary_audit": "pass",
+    "optimized_python_audit": "pass",
+    "tampering_probes": "8/8 rejected (including updated outer hashes)",
+    "gpu_used": false,
+    "api_calls": 0
+  },
+  "source_sha256": {
+    "src/vare/trajectory_safety.py": "6c25d32bb86dff8f94045eb50079b2e820f20cb7ea5a4c47487a9db47513998b",
+    "src/vare/trajectory_dispatch.py": "7671b9fc9e7d63bfdc35a5da47afb351ba3b7f380815aa85e51a615833aa7870",
+    "tests/test_trajectory_capture_boundary.py": "a2582c2de73923042499a9e7e6efbfa9a1cca9bcb53b1d54fc61b6f8822b4ba6",
+    "tests/test_trajectory_capture_audit.py": "aa66c1a35274130235c307329a758df5b934d09bb7ea897d812935d4a1199ca7",
+    "scripts/reproduce_trajectory_capture_boundary_v1.py": "4813a5db680e055a1fbd42e9a8ee19c47865fb88d9bb903b36eb13ba76f8276b",
+    "scripts/audit_trajectory_capture_boundary_v1.py": "4bf7659ace9e4bb4786b04382cad2872e751d1a8d1d69bc2843b906d5429d655",
+    "protocols/trajectory_capture_boundary_v1.lock.json": "5eb555e9d457db135f171d6630a01a9641668291c7893a499f17c28a7443def3"
+  },
+  "scope": "Constructed process/URL correctness; real child output and signed gate integration; no model learning or hostile-code containment.",
+  "review_followup": {
+    "reviewed_commit": "97fd5b3ffb749ae7aa6b7a357f669af8f883c454",
+    "defect": "Correct-MAC but ineligible trajectories and serialized-only gate outcomes were accepted by the artifact auditor.",
+    "baseline_metadata_fault_tests": "14 failed, six inventory controls passed",
+    "final_auditor_tests": "22 passed (including 16 re-attested ineligibility/gate cases)",
+    "frozen_runtime_protocol_changed": false,
+    "runtime_benchmark_rerun": false,
+    "reason": "Only artifact reconstruction and its tests changed; runtime and frozen 16-case comparison are unchanged.",
+    "downloaded_Linux_CI_evidence": "passes corrected auditor normally and with Python -O; automatic replay, not outside human review"
+  }
+}

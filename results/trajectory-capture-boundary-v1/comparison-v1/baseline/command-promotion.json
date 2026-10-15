@@ -1,0 +1,42 @@
+{
+  "early_closed": true,
+  "early_audit_passed": true,
+  "command_result_verified": true,
+  "command_wrapper_error": "TrajectoryEvidenceError",
+  "final_audit": {
+    "schema": "vare.trajectory-safety.v1",
+    "run_id": "trajectory-capture-boundary-v1",
+    "policy_id": "candidate",
+    "policy_sha256": "8cfe8b81b0dbe4e9ce94903fa21cb98bc3624a1460f54e6a2af1f874709ca778",
+    "ledger_head_sha256": "1418298fb9eb85d172ee4982d4fb7eb894aaf6f84b02dd894105d8c51f046cfb",
+    "event_count": 1,
+    "expected_event_count": 1,
+    "capture_complete": true,
+    "status": "pass",
+    "violations": []
+  },
+  "candidate_report": {
+    "policy_id": "candidate",
+    "primary": 1.0,
+    "metadata": {
+      "trajectory_safety": {
+        "schema": "vare.trajectory-safety.v1",
+        "run_id": "trajectory-capture-boundary-v1",
+        "policy_id": "candidate",
+        "policy_sha256": "8cfe8b81b0dbe4e9ce94903fa21cb98bc3624a1460f54e6a2af1f874709ca778",
+        "ledger_head_sha256": "1418298fb9eb85d172ee4982d4fb7eb894aaf6f84b02dd894105d8c51f046cfb",
+        "event_count": 1,
+        "expected_event_count": 1,
+        "capture_complete": true,
+        "status": "pass",
+        "violations": []
+      },
+      "vare_evidence_receipt": {
+        "schema": "vare.promotion-evidence.v1",
+        "mac_sha256": "1ae3f11f7a80a2739252106dbf23373f94a1a1004104c2ece6c640874530393b"
+      }
+    }
+  },
+  "final_promotion_accepted": true,
+  "scope": "real child process with scripted scores; no model capability evidence"
+}

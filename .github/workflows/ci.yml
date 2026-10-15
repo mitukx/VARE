@@ -103,6 +103,17 @@ jobs:
         with:
           name: grader-owner-loss-replay
           path: ${{ runner.temp }}/grader-owner-loss-replay
+      - name: Reproduce trajectory capture policy and lifetime boundaries
+        if: matrix.python-version == '3.12'
+        run: |
+          python scripts/reproduce_trajectory_capture_boundary_v1.py --output "${RUNNER_TEMP}/trajectory-capture-replay"
+          python scripts/audit_trajectory_capture_boundary_v1.py "${RUNNER_TEMP}/trajectory-capture-replay"
+          python -O scripts/audit_trajectory_capture_boundary_v1.py "${RUNNER_TEMP}/trajectory-capture-replay"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always() && matrix.python-version == '3.12'
+        with:
+          name: trajectory-capture-replay
+          path: ${{ runner.temp }}/trajectory-capture-replay
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always() && matrix.python-version == '3.12'
         with:

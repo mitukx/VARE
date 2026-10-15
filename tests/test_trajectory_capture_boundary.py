@@ -1,0 +1,221 @@
+"""Fresh policy/lifetime faults; no agent or model capability comparison."""
+from __future__ import annotations
+
+import asyncio
+from dataclasses import asdict
+import hashlib
+import json
+import os
+from pathlib import Path
+import sys
+
+import pytest
+
+from vare.attestation import EvidenceTrustRoot
+from vare.config import PromotionConfig
+from vare.promotion import PromotionGate
+from vare.trajectory_dispatch import AuditedDispatcher, egress_host_allowed
+from vare.trajectory_safety import (
+    TrajectoryEvent, TrajectoryEvidenceError, TrajectoryPolicy,
+    TrustedTrajectoryRecorder, audit_trajectory,
+)
+from vare.types import EvaluationReport
+
+
+POLICY = TrajectoryPolicy("capture-boundary-v1", ("command",), ("example.org",))
+RUN = "trajectory-capture-boundary-v1"
+
+
+def recorder(path, policy_id="candidate"):
+    return TrustedTrajectoryRecorder(path, run_id=RUN, policy_id=policy_id)
+
+
+def audit(path, policy_id="candidate"):
+    return audit_trajectory(path, run_id=RUN, policy_id=policy_id, policy=POLICY)
+
+
+def save_evidence(name, data, files):
+    if directory := os.environ.get("VARE_TRAJECTORY_BOUNDARY_EVIDENCE_DIR"):
+        root = Path(directory)
+        root.mkdir(parents=True, exist_ok=True)
+        digests = {}
+        for filename, source in files.items():
+            raw = source.read_bytes()
+            (root / filename).write_bytes(raw)
+            digests[filename] = hashlib.sha256(raw).hexdigest()
+        (root / (name + ".json")).write_text(json.dumps({**data, "raw_artifact_sha256": digests}, indent=2) + "\n")
+
+
+@pytest.mark.parametrize("url,expected", [
+    ("https://example.org:12345/resource", False),
+    ("https://example.org:invalid/resource", False),
+    ("https://example.org./resource", False),
+    ("https://example.org/resource#fragment", False),
+    ("https://example.org/space here", False),
+    ("https://example.org/\tresource", False),
+    (" https://example.org/resource", False),
+    ("https://example.org/resource", True),
+    ("https://example.org:443/resource", True),
+    ("http://example.org:80/resource", True),
+    ("https://EXAMPLE.ORG/resource", True),
+    ("https://other.invalid/resource", False),
+], ids=["port", "invalid-port", "trailing-dot", "fragment", "space", "tab", "leading-space",
+        "https", "https-443", "http-80", "uppercase", "other-host"])
+def test_recorded_url_is_rechecked_against_dispatch_policy(tmp_path, url, expected):
+    path = tmp_path / "trace.jsonl"
+    rec = recorder(path)
+    rec.record(TrajectoryEvent("request", "network_request", "agent", "allow", target=url))
+    rec.close(expected_event_count=1)
+    observed = audit(path)
+    assert egress_host_allowed(url, POLICY.allowed_egress_hosts) is expected
+    assert (observed.status == "pass") is expected, f"audit accepted dispatch-denied URL: {url!r}"
+
+
+@pytest.mark.parametrize("cancel", [False, True], ids=["completion", "cancellation"])
+def test_dispatcher_cannot_close_while_owned_call_is_pending(tmp_path, cancel):
+    path = tmp_path / "trace.jsonl"
+    dispatcher = AuditedDispatcher(recorder=recorder(path), policy=POLICY)
+
+    async def run():
+        started, release = asyncio.Event(), asyncio.Event()
+
+        async def call():
+            started.set()
+            await release.wait()
+
+        pending = asyncio.create_task(dispatcher.execute("command", call))
+        await started.wait()
+        refused = False
+        try:
+            dispatcher.close(expected_event_count=1)
+        except RuntimeError:
+            refused = True
+        finally:
+            if cancel:
+                pending.cancel()
+            else:
+                release.set()
+            outcomes = await asyncio.gather(pending, return_exceptions=True)
+        assert refused, "dispatcher sealed a trace while its call was pending"
+        if cancel:
+            assert isinstance(outcomes[0], asyncio.CancelledError)
+        else:
+            assert outcomes == [None]
+        dispatcher.close(expected_event_count=2)
+        assert audit(path).status == "pass"
+
+    asyncio.run(run())
+
+
+def test_result_capture_failure_fences_close_and_later_dispatch(tmp_path, monkeypatch):
+    path = tmp_path / "trace.jsonl"
+    rec = recorder(path)
+    dispatcher = AuditedDispatcher(recorder=rec, policy=POLICY)
+    original = rec.record
+    effects = []
+
+    def fail_result(event):
+        if event.kind == "tool_result":
+            raise OSError("injected result journal failure")
+        original(event)
+
+    async def call():
+        effects.append("first")
+
+    monkeypatch.setattr(rec, "record", fail_result)
+    with pytest.raises(OSError, match="journal failure"):
+        asyncio.run(dispatcher.execute("command", call))
+    monkeypatch.setattr(rec, "record", original)
+    closed = False
+    try:
+        dispatcher.close(expected_event_count=1)
+        closed = True
+    except RuntimeError:
+        pass
+    assert not closed, "dispatcher certified a trace after losing a tool result"
+    with pytest.raises(RuntimeError):
+        asyncio.run(dispatcher.execute("command", call))
+    assert effects == ["first"]
+    with pytest.raises(TrajectoryEvidenceError):
+        audit(path)
+
+
+def test_real_command_completion_precedes_signed_promotion_evidence(tmp_path):
+    path = tmp_path / "candidate.jsonl"
+    dispatcher = AuditedDispatcher(recorder=recorder(path), policy=POLICY)
+    release, marker = tmp_path / "release", tmp_path / "result"
+    root = Path(__file__).resolve().parents[1]
+    trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000",
+        protocol_sha256=hashlib.sha256((root / "protocols/trajectory_capture_boundary_v1.lock.json").read_bytes()).hexdigest(),
+        evaluator_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), run_id=RUN)
+    gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                        trajectory_policy_sha256=POLICY.sha256), trust_root=trust)
+    old_path = tmp_path / "incumbent.jsonl"
+    old = recorder(old_path, "incumbent")
+    old.close(expected_event_count=0)
+    old_report = trust.attest(EvaluationReport("incumbent", .5, n=1,
+        metadata={"trajectory_safety": audit(old_path, "incumbent").to_metadata()}))
+    program = """
+import sys,time
+from pathlib import Path
+release, result = map(Path,sys.argv[1:])
+deadline=time.monotonic()+3
+while not release.exists():
+    if time.monotonic()>deadline: raise TimeoutError('parent did not release command')
+    time.sleep(.005)
+result.write_text('independently checked command result')
+"""
+
+    async def run():
+        started = asyncio.Event()
+
+        async def command():
+            proc = await asyncio.create_subprocess_exec(sys.executable, "-c", program,
+                                                       str(release), str(marker))
+            started.set()
+            try:
+                await asyncio.wait_for(proc.wait(), timeout=4)
+                if proc.returncode:
+                    raise RuntimeError("command failed")
+            finally:
+                if proc.returncode is None:
+                    proc.kill()
+                    await proc.wait()
+
+        running = asyncio.create_task(dispatcher.execute("command", command))
+        await started.wait()
+        early_closed = False
+        try:
+            dispatcher.close(expected_event_count=1)
+            early_closed = True
+        except RuntimeError:
+            pass
+        try:
+            early_audit = audit(path)
+            early_pass = early_audit.status == "pass"
+        except TrajectoryEvidenceError:
+            early_pass = False
+        release.write_text("continue")
+        outcome = (await asyncio.gather(running, return_exceptions=True))[0]
+        # Independent task correctness reads actual child output, not its exit
+        # status or self-reported success. No model/learner metric is involved.
+        assert marker.read_text() == "independently checked command result"
+        if not early_closed:
+            dispatcher.close(expected_event_count=2)
+        final_audit = audit(path)
+        report = trust.attest(EvaluationReport("candidate", 1.0, n=1,
+            metadata={"trajectory_safety": final_audit.to_metadata()}))
+        final_decision = gate.decide(old_report, report)
+        save_evidence("command-promotion", {
+            "early_closed": early_closed, "early_audit_passed": early_pass,
+            "command_result_verified": True,
+            "command_wrapper_error": type(outcome).__name__ if isinstance(outcome, BaseException) else None,
+            "final_audit": final_audit.to_metadata(),
+            "candidate_report": asdict(report), "incumbent_report": asdict(old_report),
+            "final_promotion_accepted": final_decision.accepted,
+            "scope": "real child process with scripted scores; no model capability evidence",
+        }, {"candidate-trace.jsonl": path, "incumbent-trace.jsonl": old_path, "command-result.txt": marker})
+        assert not early_closed and not early_pass, "unfinished command yielded a promotable closed trace"
+        assert outcome is None and final_decision.accepted
+
+    asyncio.run(run())
