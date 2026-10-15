@@ -30,7 +30,7 @@ CONFIG = "c" * 64
 RUN_ID = "study-independent-review-001"
 
 
-def _fixture(tmp_path, *, trusted=True, group_id="g1"):
+def _fixture(tmp_path, *, trusted=True, group_id="g1", same_prompt=False):
     path = tmp_path / "replay.sqlite"
     _make_replay(path)
     with sqlite3.connect(path) as db:
@@ -38,6 +38,11 @@ def _fixture(tmp_path, *, trusted=True, group_id="g1"):
         members = json.loads(raw)
         for member in members:
             member["metadata"]["trusted"] = trusted
+        if same_prompt and len(members) > 1:
+            first_generation = members[0]["generation"]
+            for member in members[1:]:
+                member["generation"]["prompt_id"] = first_generation["prompt_id"]
+                member["generation"]["prompt"] = first_generation["prompt"]
         # Update the unkeyed *behavior* digest consistently. This simulates a
         # replay writer rewriting its DB; it is not independent authentication.
         group_hash = RVLTokenReplayReader._canonical_digest([
@@ -247,7 +252,7 @@ def test_signed_receipts_do_not_override_verifier_lag_or_runtime_provenance(tmp_
 
 
 def test_rvl_trainer_direct_call_checks_signed_manifest_before_trainer_step(tmp_path):
-    reader = _fixture(tmp_path)
+    reader = _fixture(tmp_path, same_prompt=True)
     experiences = _read(reader)
     manifest = _manifest(_root(), experiences)
     trainer = _RecordingTrainer()
@@ -263,7 +268,7 @@ def test_rvl_trainer_direct_call_checks_signed_manifest_before_trainer_step(tmp_
 
 
 def test_rvl_trainer_rechecks_live_freshness_after_waiting_for_model_lock(tmp_path):
-    reader = _fixture(tmp_path)
+    reader = _fixture(tmp_path, same_prompt=True)
     experiences = _read(reader)
     manifest = _manifest(_root(), experiences)
     assert all(manifest.verified(experience) for experience in experiences)
@@ -303,7 +308,7 @@ def test_rvl_trainer_rechecks_live_freshness_after_waiting_for_model_lock(tmp_pa
 
 
 def test_rvl_trainer_snapshots_signed_versions_before_model_lock_wait(tmp_path):
-    experiences = _read(_fixture(tmp_path))
+    experiences = _read(_fixture(tmp_path, same_prompt=True))
     manifest = _manifest(_root(), experiences)
     assert all(manifest.verified(experience) for experience in experiences)
     # Signed source versions are 4/3. They are stale against 6/5 under this

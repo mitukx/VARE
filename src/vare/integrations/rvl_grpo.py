@@ -340,6 +340,7 @@ class RVLGRPOHooks:
         """
         group_members: dict[str, list[tuple[int, float]]] = {}
         expected_sizes: dict[str, int] = {}
+        group_identities: dict[str, tuple[Any, ...]] = {}
         missing_group = False
         for index, (exp, sample) in enumerate(zip(experiences, verified, strict=True)):
             group_id = exp.attempt.metadata.get("vare_rollout_group")
@@ -365,6 +366,45 @@ class RVLGRPOHooks:
             previous_size = expected_sizes.setdefault(group_id, expected_size)
             if previous_size != expected_size:
                 raise ValueError("VARE rollout group has inconsistent declared sizes")
+
+            raw_generation = exp.attempt.metadata.get("rvl_generation")
+            if not isinstance(raw_generation, dict):
+                raise ValueError("VARE rollout group lacks RVL generation provenance")
+            generation_metadata = raw_generation.get("metadata")
+            if not isinstance(generation_metadata, dict):
+                raise ValueError("VARE rollout group lacks RVL behavior provenance")
+            prompt_id = raw_generation.get("prompt_id")
+            prompt = raw_generation.get("prompt")
+            if (
+                not isinstance(prompt_id, str)
+                or not isinstance(prompt, str)
+                or exp.attempt.task.id != prompt_id
+                or exp.attempt.task.prompt != prompt
+            ):
+                raise ValueError(
+                    "RVL generation task identity differs from its training experience"
+                )
+
+            verification_metadata = exp.verification.metadata
+            if not isinstance(verification_metadata, dict):
+                raise ValueError("VARE rollout group lacks verifier provenance")
+            identity = (
+                prompt_id,
+                prompt,
+                exp.attempt.policy_id,
+                exp.attempt.policy_version,
+                generation_metadata.get("model"),
+                generation_metadata.get("sampling_temperature"),
+                generation_metadata.get("logprob_distribution"),
+                exp.verification.verifier_name,
+                exp.verification.verifier_version,
+                verification_metadata.get("rvl_verification_config_sha256"),
+            )
+            previous_identity = group_identities.setdefault(group_id, identity)
+            if previous_identity != identity:
+                raise ValueError(
+                    "VARE rollout group mixes prompt, policy, behavior, or evaluator provenance"
+                )
             group_members.setdefault(group_id, []).append((index, float(sample.reward)))
 
         if not group_members:
