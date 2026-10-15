@@ -5,7 +5,6 @@ import json
 import math
 from pathlib import Path
 import statistics
-import subprocess
 import tempfile
 import xml.etree.ElementTree as ET
 import zipfile
@@ -14,6 +13,12 @@ from vare.durable import audit_durable
 from vare.runner import audit
 
 ROOT = Path(__file__).resolve().parents[1]
+# Source identities from frozen main f54c488. Keep offline artifact replay
+# independent of Git history availability (including depth-one CI checkouts).
+BASELINE_SOURCE_SHA256 = {
+    'runner.py': 'cdfd0daddc807051e20d7c70fa80928ecba2805cb61036f3a20d5e2e10470422',
+    'durable.py': '49e2a8afa8db264bb3282de9797daa9f81510fd312f910cf74326390f5882222',
+}
 
 
 def require(ok, detail):
@@ -75,8 +80,8 @@ def verify_directory(out):
     require(sha(out / 'protected-test.py.txt') == protocol['protected_test_sha256'], 'test changed')
     require(manifest['baseline_commit'] == protocol['baseline_commit'], 'baseline revision mismatch')
     for name in ['runner.py', 'durable.py']:
-        raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
-        require(raw == (out / 'baseline/source' / (name + '.txt')).read_bytes(), 'baseline source mismatch')
+        require(sha(out / 'baseline/source' / (name + '.txt')) == BASELINE_SOURCE_SHA256[name],
+                'baseline source mismatch')
     summary = {}
     for label in ['baseline', 'candidate']:
         candidate = label == 'candidate'

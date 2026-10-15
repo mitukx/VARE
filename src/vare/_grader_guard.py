@@ -4,15 +4,19 @@ The runner launches this leader in a new session and owns the only stdin
 writer. Graders inherit neither that writer nor the private exit-status fd.
 This contains ordinary descendants, not code that escapes its process group.
 """
-import os
-import signal
-import struct
-import subprocess
 import sys
-import threading
 
+# File execution adds src/vare to sys.path. Its types.py must not hide the
+# standard-library types module when site/editable imports have not loaded it.
+sys.path = sys.path[1:] if __name__ == '__main__' else sys.path
 
 def main():
+    import os
+    import signal
+    import struct
+    import subprocess
+    import threading
+
     status_fd = int(sys.argv[1])
     os.set_inheritable(status_fd, False)
 

@@ -45,9 +45,9 @@ event sequence must be enrolled/claimed/expired/claimed/committed.
 
 | Worker fault | Pinned main | Guard candidate | Observed stop | Resume wall time |
 | --- | --- | --- | --- | --- |
-| SIGKILL | grader/child remain running | stopped; token 2 passes | 7.09 ms | 1.057 s |
-| SIGTERM | grader/child remain running | stopped; token 2 passes | 7.29 ms | 1.043 s |
-| immediate exit 73 | grader/child remain running | stopped; token 2 passes | 7.19 ms | 1.057 s |
+| SIGKILL | grader/child remain running | stopped; token 2 passes | 8.14 ms | 1.008 s |
+| SIGTERM | grader/child remain running | stopped; token 2 passes | 8.25 ms | 1.003 s |
+| immediate exit 73 | grader/child remain running | stopped; token 2 passes | 8.78 ms | 1.014 s |
 
 All three baseline assertions fail; all three candidate cases pass. Resume
 includes waiting for the one-second lease to expire. These three observations
@@ -74,19 +74,20 @@ not independent coding-task or model scores.
 
 | Median across five runs | Pinned main | Guard candidate |
 | --- | ---: | ---: |
-| 16-job wall time | 1.0117 s | 1.0977 s |
-| throughput | 15.816 jobs/s | 14.576 jobs/s |
-| per-job execution p50 | 210.69 ms | 227.65 ms |
-| per-job execution p95 | 229.73 ms | 262.13 ms |
-| offline campaign audit | 16.65 ms | 16.51 ms |
-| controller peak traced allocation | 1,013,552 B | 1,099,034 B |
-| controller peak RSS | 30,867,456 B | 29,409,280 B |
-| largest reaped child peak RSS | 17,678,336 B | 17,678,336 B |
+| 16-job wall time | 1.0064 s | 1.1393 s |
+| throughput | 15.898 jobs/s | 14.044 jobs/s |
+| per-job execution p50 | 214.69 ms | 240.43 ms |
+| per-job execution p95 | 235.27 ms | 269.51 ms |
+| offline campaign audit | 16.69 ms | 17.01 ms |
+| controller peak traced allocation | 1,020,849 B | 1,056,290 B |
+| controller peak RSS | 30,982,144 B | 29,507,584 B |
+| largest reaped child peak RSS | 17,612,800 B | 17,612,800 B |
 
-The final observed wall cost increases **8.50%**. The initial implementation's
+The final observed wall cost increases **13.20%**. The initial implementation's
 five pairs showed **10.07%** more wall time; the cancellation-corrected version
-showed **7.13%**. Both remain retained separately. Later runs followed
-cancellation and status-pipe correctness fixes under the same frozen
+showed **7.13%**, and the status-pipe correction showed **8.50%**. All remain
+retained separately. Later runs followed cancellation, status-pipe and
+checkout import-path correctness fixes under the same frozen
 protocol; no timing result was used to select or tune the implementation.
 This is a correctness improvement
 with overhead, not a speedup. Each active job adds one small guard process.
@@ -112,18 +113,18 @@ itself is offline. The replay script uses explicit source paths and a temporary
 working directory, avoiding the root bootstrap accidentally selecting the
 candidate for the baseline. A fresh output directory is required.
 
-The final [comparison archive](../results/grader-owner-loss-v1/comparison-v3.zip) and
-[hash/size index](../results/grader-owner-loss-v1/comparison-v3.index.json) retain
+The final [comparison archive](../results/grader-owner-loss-v1/comparison-v4.zip) and
+[hash/size index](../results/grader-owner-loss-v1/comparison-v4.index.json) retain
 both source snapshots, all test records, real process receipts, the three
 successful recovery exports, all ten cost campaigns, raw records and hashes.
 The [auditor](../scripts/audit_grader_owner_loss_v1.py) does not import the
 reproducer or launch graders: it checks exact inventory, pinned baseline
 source, protected test hash, fault outcomes and group identities, replays
 existing durable/campaign contracts and recomputes latency/throughput/medians.
-The archive preserves all 847 original files byte-for-byte in 592,157 bytes;
+The archive preserves all 847 original files byte-for-byte in 593,292 bytes;
 the auditor accepts a directory or ZIP and rejects traversal, symlinks and
 duplicate archive members before extraction. To audit the committed record:
-`python scripts/audit_grader_owner_loss_v1.py results/grader-owner-loss-v1/comparison-v3.zip`.
+`python scripts/audit_grader_owner_loss_v1.py results/grader-owner-loss-v1/comparison-v4.zip`.
 Hashes check consistency relative to reviewed source, not authenticity of an
 operator able to rewrite the entire bundle.
 
@@ -144,7 +145,17 @@ the guard now kills its group in its own `finally` block on Python errors.
 That counterexample and source are retained in `development-candidate` too.
 Costs were not used to tune a gate.
 
-The final local source passes **808 default CPU tests** (14 optional-dependency
+The first CI run exposed two environment assumptions: a depth-one checkout
+lacked the baseline Git objects used by offline audit, and a checkout without
+editable/site imports let the guard's sibling `types.py` shadow the standard
+library. The auditor now checks the same frozen source SHA-256 identities
+without Git, with positive replay tests that hide Git/history entirely. The
+guard drops its script directory before standard-library imports; its broken
+status-pipe test now runs under `python -S`. The failed CI logs and local
+reproduction remain in `ci-followup`; marked truncated logs are partial tool
+captures. The v3 archive is unchanged.
+
+The final local source passes **810 default CPU tests** (14 optional-dependency
 skips), the separate **14 mathematical grader tests**, Ruff and mypy. The
 final comparison replays in normal and optimized Python. Raw test logs/XML,
 source hashes and the M1 Pro/32 GB runtime receipt are in the results directory.

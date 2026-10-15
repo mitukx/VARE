@@ -73,3 +73,16 @@ def test_archive_paths_are_checked_before_extraction(tmp_path, mutation):
     with pytest.raises(ValueError, match='unsafe|duplicated'):
         verify(target)
     assert not (tmp_path / 'escape').exists()
+
+
+@pytest.mark.parametrize('optimized', [False, True])
+def test_positive_replay_needs_no_git_history(tmp_path, optimized):
+    # A broken/missing Git history must not mask the mutation tests above.
+    # The reviewed frozen source hashes remain required, even without Git.
+    result = subprocess.run([sys.executable, *(['-O'] if optimized else []),
+                             str(ROOT / 'scripts/audit_grader_owner_loss_v1.py'), str(BUNDLE)],
+                            cwd=tmp_path, env={**os.environ, 'PYTHONPATH': str(ROOT / 'src'),
+                                              'PATH': '', 'GIT_DIR': str(tmp_path / 'missing.git')},
+                            capture_output=True, text=True, timeout=10)
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout)['status'] == 'verified'

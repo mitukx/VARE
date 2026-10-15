@@ -1,0 +1,27 @@
+{
+  "checks": {
+    "default_cpu": {
+      "failures": 0,
+      "junit_sha256": "e921717d1c4a4fcd61252690b2c941bb5ed36757864b8c08b174fb42d1ffbede",
+      "passed": 810,
+      "skipped": 14
+    },
+    "focused": {
+      "failures": 0,
+      "junit_sha256": "c305d6a38285ef2c10746a84dfdd60359662e3b7aab302bc543be276de9cae01",
+      "passed": 61,
+      "skipped": 0
+    }
+  },
+  "corrections": [
+    "Offline replay retains exact frozen baseline hashes without Git history.",
+    "Guard removes package script directory before importing standard-library types dependencies."
+  ],
+  "source_sha256": {
+    "scripts/audit_grader_owner_loss_v1.py": "ba2fd7599685ac7a5a42adf33b51aadb7c330419c4032c0ba48bbc5b87112aa2",
+    "src/vare/_grader_guard.py": "b64f104d62bcd59d7c50e4b8abc5530f4db526b4071a79e082c42fac4c7f2d7c",
+    "tests/test_grader_guard.py": "5d4c060c03bc6b56d5c2591fe15c6a0b6d2a2fca2cf2c9a4cbd081d861258881",
+    "tests/test_grader_owner_loss_audit.py": "90c7ea5300b4ec78e665ee3db882b42ce87b21725fdf7d271ced45f6b26bf8d3"
+  },
+  "supersedes": "source-validation.json described the initial PR source and comparison-v3. This receipt binds the CI correction and comparison-v4; earlier bytes remain unchanged."
+}

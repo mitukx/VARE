@@ -4,7 +4,7 @@
 ownership-pipe guard to stop ordinary grader descendants after SIGKILL,
 SIGTERM or immediate worker exit. Pinned main fails all three fresh process
 faults; the candidate stops each group and resumes token 2 through the existing
-SQLite state and auditor. Five final CPU pairs show 8.50% more wall time for the
+SQLite state and auditor. Five final CPU pairs show 13.20% more wall time for the
 short 16-job workload; this is a correctness improvement with overhead.
 Group escape, guard loss, runtime upgrades of enrolled stores and effects
 already performed remain open. No model task-success claim follows. See the

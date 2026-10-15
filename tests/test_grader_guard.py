@@ -115,7 +115,7 @@ def test_broken_status_pipe_cannot_abandon_descendants(tmp_path):
                      "p=pathlib.Path(sys.argv[1]); c=subprocess.Popen([sys.executable,'-c','import time; time.sleep(30)']); p.write_text(str(c.pid))\n"
                      "while not pathlib.Path(sys.argv[2]).exists(): time.sleep(.01)\n")
     status_read, status_write = os.pipe()
-    guard = subprocess.Popen([sys.executable, str(runner.Path(runner.__file__).with_name('_grader_guard.py')),
+    guard = subprocess.Popen([sys.executable, '-S', str(runner.Path(runner.__file__).with_name('_grader_guard.py')),
                               str(status_write), sys.executable, str(grader), str(ready), str(release)],
                              stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                              start_new_session=True, pass_fds=(status_write,))

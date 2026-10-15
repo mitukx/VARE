@@ -1,0 +1,1004 @@
+60724Z                 else:
+2026-10-15T06:26:34.5661075Z                     data['receipt']['group'] = data['receipt']['grader']
+2026-10-15T06:26:34.5661515Z             elif mutation == 'summary':
+2026-10-15T06:26:34.5661868Z                 path = target / 'summary.json'
+2026-10-15T06:26:34.5662279Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5662667Z                 data['candidate']['wall_seconds'] += 1
+2026-10-15T06:26:34.5663009Z             else:
+2026-10-15T06:26:34.5663384Z                 path = target / 'candidate/pair-0/timing.json'
+2026-10-15T06:26:34.5663783Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5664140Z                 data['latency_p50_seconds'] += 1
+2026-10-15T06:26:34.5664731Z             path.write_text(json.dumps(data) + '\n')
+2026-10-15T06:26:34.5665116Z             manifest_path = target / 'manifest.json'
+2026-10-15T06:26:34.5665546Z             manifest = json.loads(manifest_path.read_text())
+2026-10-15T06:26:34.5666358Z             manifest['files'] = {str(p.relative_to(target)): hashlib.sha256(p.read_bytes()).hexdigest()
+2026-10-15T06:26:34.5666953Z                                  for p in target.rglob('*') if p.is_file() and p != manifest_path}
+2026-10-15T06:26:34.5667479Z             manifest_path.write_text(json.dumps(manifest) + '\n')
+2026-10-15T06:26:34.5667973Z         result = subprocess.run([sys.executable, *(['-O'] if optimized else []),
+2026-10-15T06:26:34.5668536Z                                  str(ROOT / 'scripts/audit_grader_owner_loss_v1.py'), str(target)],
+2026-10-15T06:26:34.5669086Z                                 cwd=tmp_path, env={**os.environ, 'PYTHONPATH': str(ROOT / 'src')},
+2026-10-15T06:26:34.5669674Z                                 capture_output=True, text=True, timeout=10)
+2026-10-15T06:26:34.5670277Z >       assert result.returncode != 0 and 'ValueError' in result.stderr, result.stdout + result.stderr
+2026-10-15T06:26:34.5671026Z E       AssertionError: fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'
+2026-10-15T06:26:34.5671606Z E         Traceback (most recent call last):
+2026-10-15T06:26:34.5672138Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 153, in <module>
+2026-10-15T06:26:34.5673021Z E             print(json.dumps(verify(parser.parse_args().bundle.absolute()), indent=2))
+2026-10-15T06:26:34.5673507Z E                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5674078Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 63, in verify
+2026-10-15T06:26:34.5674621Z E             return verify_directory(out)
+2026-10-15T06:26:34.5674969Z E                    ^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5675479Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 78, in verify_directory
+2026-10-15T06:26:34.5676420Z E             raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
+2026-10-15T06:26:34.5677041Z E                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5677698Z E           File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 466, in check_output
+2026-10-15T06:26:34.5678305Z E             return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-15T06:26:34.5678757Z E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5679293Z E           File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 571, in run
+2026-10-15T06:26:34.5679866Z E             raise CalledProcessError(retcode, process.args,
+2026-10-15T06:26:34.5680617Z E         subprocess.CalledProcessError: Command '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.
+2026-10-15T06:26:34.5681299Z E         
+2026-10-15T06:26:34.5682251Z E       assert (1 != 0 and 'ValueError' in "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n")
+2026-10-15T06:26:34.5683880Z E        +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').returncode
+2026-10-15T06:26:34.5686524Z E        +  and   "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n" = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').stderr
+2026-10-15T06:26:34.5688053Z 
+2026-10-15T06:26:34.5688227Z tests/test_grader_owner_loss_audit.py:54: AssertionError
+2026-10-15T06:26:34.5688717Z _______________ test_rehashed_corruption_is_rejected[exit-False] _______________
+2026-10-15T06:26:34.5689023Z 
+2026-10-15T06:26:34.5689330Z tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-0/test_rehashed_corruption_is_re2')
+2026-10-15T06:26:34.5689846Z optimized = False, mutation = 'exit'
+2026-10-15T06:26:34.5690041Z 
+2026-10-15T06:26:34.5690231Z     @pytest.mark.parametrize('optimized', [False, True])
+2026-10-15T06:26:34.5690925Z     @pytest.mark.parametrize('mutation', ['outcome', 'exit', 'deadline', 'group', 'summary', 'latency', 'inventory'])
+2026-10-15T06:26:34.5691565Z     def test_rehashed_corruption_is_rejected(tmp_path, optimized, mutation):
+2026-10-15T06:26:34.5692145Z         target = tmp_path / 'bundle'
+2026-10-15T06:26:34.5692550Z         with zipfile.ZipFile(BUNDLE) as archive:
+2026-10-15T06:26:34.5692952Z             archive.extractall(target)
+2026-10-15T06:26:34.5693374Z         if mutation == 'inventory':
+2026-10-15T06:26:34.5693749Z             (target / 'extra').write_text('unexpected')
+2026-10-15T06:26:34.5694162Z         else:
+2026-10-15T06:26:34.5694521Z             if mutation in {'outcome', 'exit', 'deadline', 'group'}:
+2026-10-15T06:26:34.5695014Z                 path = target / 'candidate/faults/SIGKILL/observation.json'
+2026-10-15T06:26:34.5695488Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5696023Z                 if mutation == 'outcome':
+2026-10-15T06:26:34.5696471Z                     data['stopped'] = False
+2026-10-15T06:26:34.5696923Z                 elif mutation == 'exit':
+2026-10-15T06:26:34.5697280Z                     data['owner_exit'] = 0
+2026-10-15T06:26:34.5697662Z                 elif mutation == 'deadline':
+2026-10-15T06:26:34.5698024Z                     data['stop_seconds'] = 3
+2026-10-15T06:26:34.5698372Z                 else:
+2026-10-15T06:26:34.5698759Z                     data['receipt']['group'] = data['receipt']['grader']
+2026-10-15T06:26:34.5699192Z             elif mutation == 'summary':
+2026-10-15T06:26:34.5699550Z                 path = target / 'summary.json'
+2026-10-15T06:26:34.5699954Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5700386Z                 data['candidate']['wall_seconds'] += 1
+2026-10-15T06:26:34.5700770Z             else:
+2026-10-15T06:26:34.5701116Z                 path = target / 'candidate/pair-0/timing.json'
+2026-10-15T06:26:34.5701528Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5701918Z                 data['latency_p50_seconds'] += 1
+2026-10-15T06:26:34.5702339Z             path.write_text(json.dumps(data) + '\n')
+2026-10-15T06:26:34.5702750Z             manifest_path = target / 'manifest.json'
+2026-10-15T06:26:34.5703162Z             manifest = json.loads(manifest_path.read_text())
+2026-10-15T06:26:34.5703744Z             manifest['files'] = {str(p.relative_to(target)): hashlib.sha256(p.read_bytes()).hexdigest()
+2026-10-15T06:26:34.5704376Z                                  for p in target.rglob('*') if p.is_file() and p != manifest_path}
+2026-10-15T06:26:34.5704899Z             manifest_path.write_text(json.dumps(manifest) + '\n')
+2026-10-15T06:26:34.5705432Z         result = subprocess.run([sys.executable, *(['-O'] if optimized else []),
+2026-10-15T06:26:34.5706216Z                                  str(ROOT / 'scripts/audit_grader_owner_loss_v1.py'), str(target)],
+2026-10-15T06:26:34.5706759Z                                 cwd=tmp_path, env={**os.environ, 'PYTHONPATH': str(ROOT / 'src')},
+2026-10-15T06:26:34.5707383Z                                 capture_output=True, text=True, timeout=10)
+2026-10-15T06:26:34.5708012Z >       assert result.returncode != 0 and 'ValueError' in result.stderr, result.stdout + result.stderr
+2026-10-15T06:26:34.5708789Z E       AssertionError: fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'
+2026-10-15T06:26:34.5709407Z E         Traceback (most recent call last):
+2026-10-15T06:26:34.5709940Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 153, in <module>
+2026-10-15T06:26:34.5710644Z E             print(json.dumps(verify(parser.parse_args().bundle.absolute()), indent=2))
+2026-10-15T06:26:34.5711176Z E                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5711799Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 63, in verify
+2026-10-15T06:26:34.5712396Z E             return verify_directory(out)
+2026-10-15T06:26:34.5712730Z E                    ^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5713326Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 78, in verify_directory
+2026-10-15T06:26:34.5714096Z E             raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
+2026-10-15T06:26:34.5714730Z E                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5715385Z E           File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 466, in check_output
+2026-10-15T06:26:34.5716382Z E             return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-15T06:26:34.5716917Z E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5717494Z E           File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 571, in run
+2026-10-15T06:26:34.5718083Z E             raise CalledProcessError(retcode, process.args,
+2026-10-15T06:26:34.5718865Z E         subprocess.CalledProcessError: Command '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.
+2026-10-15T06:26:34.5719557Z E         
+2026-10-15T06:26:34.5720578Z E       assert (1 != 0 and 'ValueError' in "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n")
+2026-10-15T06:26:34.5722257Z E        +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/VARE/VARE/scripts/audi...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').returncode
+2026-10-15T06:26:34.5724502Z E        +  and   "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n" = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/VARE/VARE/scripts/audi...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').stderr
+2026-10-15T06:26:34.5726091Z 
+2026-10-15T06:26:34.5726305Z tests/test_grader_owner_loss_audit.py:54: AssertionError
+2026-10-15T06:26:34.5726790Z _______________ test_rehashed_corruption_is_rejected[exit-True] ________________
+2026-10-15T06:26:34.5727106Z 
+2026-10-15T06:26:34.5727439Z tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-0/test_rehashed_corruption_is_re3')
+2026-10-15T06:26:34.5727961Z optimized = True, mutation = 'exit'
+2026-10-15T06:26:34.5728177Z 
+2026-10-15T06:26:34.5728376Z     @pytest.mark.parametrize('optimized', [False, True])
+2026-10-15T06:26:34.5729050Z     @pytest.mark.parametrize('mutation', ['outcome', 'exit', 'deadline', 'group', 'summary', 'latency', 'inventory'])
+2026-10-15T06:26:34.5729701Z     def test_rehashed_corruption_is_rejected(tmp_path, optimized, mutation):
+2026-10-15T06:26:34.5730222Z         target = tmp_path / 'bundle'
+2026-10-15T06:26:34.5730583Z         with zipfile.ZipFile(BUNDLE) as archive:
+2026-10-15T06:26:34.5730955Z             archive.extractall(target)
+2026-10-15T06:26:34.5731315Z         if mutation == 'inventory':
+2026-10-15T06:26:34.5731703Z             (target / 'extra').write_text('unexpected')
+2026-10-15T06:26:34.5732065Z         else:
+2026-10-15T06:26:34.5732404Z             if mutation in {'outcome', 'exit', 'deadline', 'group'}:
+2026-10-15T06:26:34.5732852Z                 path = target / 'candidate/faults/SIGKILL/observation.json'
+2026-10-15T06:26:34.5733351Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5733802Z                 if mutation == 'outcome':
+2026-10-15T06:26:34.5734167Z                     data['stopped'] = False
+2026-10-15T06:26:34.5734512Z                 elif mutation == 'exit':
+2026-10-15T06:26:34.5734840Z                     data['owner_exit'] = 0
+2026-10-15T06:26:34.5735214Z                 elif mutation == 'deadline':
+2026-10-15T06:26:34.5735585Z                     data['stop_seconds'] = 3
+2026-10-15T06:26:34.5735994Z                 else:
+2026-10-15T06:26:34.5736355Z                     data['receipt']['group'] = data['receipt']['grader']
+2026-10-15T06:26:34.5736776Z             elif mutation == 'summary':
+2026-10-15T06:26:34.5737214Z                 path = target / 'summary.json'
+2026-10-15T06:26:34.5737602Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5737976Z                 data['candidate']['wall_seconds'] += 1
+2026-10-15T06:26:34.5738331Z             else:
+2026-10-15T06:26:34.5738659Z                 path = target / 'candidate/pair-0/timing.json'
+2026-10-15T06:26:34.5739069Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5739460Z                 data['latency_p50_seconds'] += 1
+2026-10-15T06:26:34.5739871Z             path.write_text(json.dumps(data) + '\n')
+2026-10-15T06:26:34.5740259Z             manifest_path = target / 'manifest.json'
+2026-10-15T06:26:34.5740654Z             manifest = json.loads(manifest_path.read_text())
+2026-10-15T06:26:34.5741202Z             manifest['files'] = {str(p.relative_to(target)): hashlib.sha256(p.read_bytes()).hexdigest()
+2026-10-15T06:26:34.5741910Z                                  for p in target.rglob('*') if p.is_file() and p != manifest_path}
+2026-10-15T06:26:34.5742383Z             manifest_path.write_text(json.dumps(manifest) + '\n')
+2026-10-15T06:26:34.5742898Z         result = subprocess.run([sys.executable, *(['-O'] if optimized else []),
+2026-10-15T06:26:34.5743477Z                                  str(ROOT / 'scripts/audit_grader_owner_loss_v1.py'), str(target)],
+2026-10-15T06:26:34.5744027Z                                 cwd=tmp_path, env={**os.environ, 'PYTHONPATH': str(ROOT / 'src')},
+2026-10-15T06:26:34.5744536Z                                 capture_output=True, text=True, timeout=10)
+2026-10-15T06:26:34.5745065Z >       assert result.returncode != 0 and 'ValueError' in result.stderr, result.stdout + result.stderr
+2026-10-15T06:26:34.5745884Z E       AssertionError: fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'
+2026-10-15T06:26:34.5746473Z E         Traceback (most recent call last):
+2026-10-15T06:26:34.5746988Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 153, in <module>
+2026-10-15T06:26:34.5747683Z E             print(json.dumps(verify(parser.parse_args().bundle.absolute()), indent=2))
+2026-10-15T06:26:34.5748155Z E                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5748712Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 63, in verify
+2026-10-15T06:26:34.5749227Z E             return verify_directory(out)
+2026-10-15T06:26:34.5749640Z E                    ^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5750183Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 78, in verify_directory
+2026-10-15T06:26:34.5750900Z E             raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
+2026-10-15T06:26:34.5751536Z E                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5752130Z E           File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 466, in check_output
+2026-10-15T06:26:34.5753135Z E             return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-15T06:26:34.5753598Z E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5754127Z E           File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 571, in run
+2026-10-15T06:26:34.5754747Z E             raise CalledProcessError(retcode, process.args,
+2026-10-15T06:26:34.5755524Z E         subprocess.CalledProcessError: Command '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.
+2026-10-15T06:26:34.5756349Z E         
+2026-10-15T06:26:34.5757278Z E       assert (1 != 0 and 'ValueError' in "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n")
+2026-10-15T06:26:34.5758875Z E        +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').returncode
+2026-10-15T06:26:34.5761125Z E        +  and   "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n" = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').stderr
+2026-10-15T06:26:34.5762540Z 
+2026-10-15T06:26:34.5762776Z tests/test_grader_owner_loss_audit.py:54: AssertionError
+2026-10-15T06:26:34.5763266Z _____________ test_rehashed_corruption_is_rejected[deadline-False] _____________
+2026-10-15T06:26:34.5763609Z 
+2026-10-15T06:26:34.5763858Z tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-0/test_rehashed_corruption_is_re4')
+2026-10-15T06:26:34.5764352Z optimized = False, mutation = 'deadline'
+2026-10-15T06:26:34.5764585Z 
+2026-10-15T06:26:34.5764801Z     @pytest.mark.parametrize('optimized', [False, True])
+2026-10-15T06:26:34.5765400Z     @pytest.mark.parametrize('mutation', ['outcome', 'exit', 'deadline', 'group', 'summary', 'latency', 'inventory'])
+2026-10-15T06:26:34.5766119Z     def test_rehashed_corruption_is_rejected(tmp_path, optimized, mutation):
+2026-10-15T06:26:34.5766578Z         target = tmp_path / 'bundle'
+2026-10-15T06:26:34.5766935Z         with zipfile.ZipFile(BUNDLE) as archive:
+2026-10-15T06:26:34.5767319Z             archive.extractall(target)
+2026-10-15T06:26:34.5767687Z         if mutation == 'inventory':
+2026-10-15T06:26:34.5768041Z             (target / 'extra').write_text('unexpected')
+2026-10-15T06:26:34.5768457Z         else:
+2026-10-15T06:26:34.5768800Z             if mutation in {'outcome', 'exit', 'deadline', 'group'}:
+2026-10-15T06:26:34.5769278Z                 path = target / 'candidate/faults/SIGKILL/observation.json'
+2026-10-15T06:26:34.5769733Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5770089Z                 if mutation == 'outcome':
+2026-10-15T06:26:34.5770542Z                     data['stopped'] = False
+2026-10-15T06:26:34.5770889Z                 elif mutation == 'exit':
+2026-10-15T06:26:34.5771228Z                     data['owner_exit'] = 0
+2026-10-15T06:26:34.5771644Z                 elif mutation == 'deadline':
+2026-10-15T06:26:34.5771977Z                     data['stop_seconds'] = 3
+2026-10-15T06:26:34.5772339Z                 else:
+2026-10-15T06:26:34.5772688Z                     data['receipt']['group'] = data['receipt']['grader']
+2026-10-15T06:26:34.5773091Z             elif mutation == 'summary':
+2026-10-15T06:26:34.5773478Z                 path = target / 'summary.json'
+2026-10-15T06:26:34.5773852Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5774242Z                 data['candidate']['wall_seconds'] += 1
+2026-10-15T06:26:34.5774581Z             else:
+2026-10-15T06:26:34.5774942Z                 path = target / 'candidate/pair-0/timing.json'
+2026-10-15T06:26:34.5776016Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5776404Z                 data['latency_p50_seconds'] += 1
+2026-10-15T06:26:34.5776804Z             path.write_text(json.dumps(data) + '\n')
+2026-10-15T06:26:34.5777184Z             manifest_path = target / 'manifest.json'
+2026-10-15T06:26:34.5777568Z             manifest = json.loads(manifest_path.read_text())
+2026-10-15T06:26:34.5778145Z             manifest['files'] = {str(p.relative_to(target)): hashlib.sha256(p.read_bytes()).hexdigest()
+2026-10-15T06:26:34.5778759Z                                  for p in target.rglob('*') if p.is_file() and p != manifest_path}
+2026-10-15T06:26:34.5779264Z             manifest_path.write_text(json.dumps(manifest) + '\n')
+2026-10-15T06:26:34.5779755Z         result = subprocess.run([sys.executable, *(['-O'] if optimized else []),
+2026-10-15T06:26:34.5780283Z                                  str(ROOT / 'scripts/audit_grader_owner_loss_v1.py'), str(target)],
+2026-10-15T06:26:34.5780879Z                                 cwd=tmp_path, env={**os.environ, 'PYTHONPATH': str(ROOT / 'src')},
+2026-10-15T06:26:34.5781360Z                                 capture_output=True, text=True, timeout=10)
+2026-10-15T06:26:34.5781919Z >       assert result.returncode != 0 and 'ValueError' in result.stderr, result.stdout + result.stderr
+2026-10-15T06:26:34.5782693Z E       AssertionError: fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'
+2026-10-15T06:26:34.5783284Z E         Traceback (most recent call last):
+2026-10-15T06:26:34.5783844Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 153, in <module>
+2026-10-15T06:26:34.5784520Z E             print(json.dumps(verify(parser.parse_args().bundle.absolute()), indent=2))
+2026-10-15T06:26:34.5785011Z E                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5785548Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 63, in verify
+2026-10-15T06:26:34.5786165Z E             return verify_directory(out)
+2026-10-15T06:26:34.5786562Z E                    ^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5787080Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 78, in verify_directory
+2026-10-15T06:26:34.5787798Z E             raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
+2026-10-15T06:26:34.5788411Z E                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5789037Z E           File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 466, in check_output
+2026-10-15T06:26:34.5789669Z E             return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-15T06:26:34.5790148Z E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5790754Z E           File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 571, in run
+2026-10-15T06:26:34.5791314Z E             raise CalledProcessError(retcode, process.args,
+2026-10-15T06:26:34.5792080Z E         subprocess.CalledProcessError: Command '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.
+2026-10-15T06:26:34.5792775Z E         
+2026-10-15T06:26:34.5793685Z E       assert (1 != 0 and 'ValueError' in "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n")
+2026-10-15T06:26:34.5795296Z E        +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/VARE/VARE/scripts/audi...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').returncode
+2026-10-15T06:26:34.5797739Z E        +  and   "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n" = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/VARE/VARE/scripts/audi...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').stderr
+2026-10-15T06:26:34.5799195Z 
+2026-10-15T06:26:34.5799364Z tests/test_grader_owner_loss_audit.py:54: AssertionError
+2026-10-15T06:26:34.5799874Z _____________ test_rehashed_corruption_is_rejected[deadline-True] ______________
+2026-10-15T06:26:34.5800202Z 
+2026-10-15T06:26:34.5800487Z tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-0/test_rehashed_corruption_is_re5')
+2026-10-15T06:26:34.5800980Z optimized = True, mutation = 'deadline'
+2026-10-15T06:26:34.5801194Z 
+2026-10-15T06:26:34.5801417Z     @pytest.mark.parametrize('optimized', [False, True])
+2026-10-15T06:26:34.5802000Z     @pytest.mark.parametrize('mutation', ['outcome', 'exit', 'deadline', 'group', 'summary', 'latency', 'inventory'])
+2026-10-15T06:26:34.5802661Z     def test_rehashed_corruption_is_rejected(tmp_path, optimized, mutation):
+2026-10-15T06:26:34.5803103Z         target = tmp_path / 'bundle'
+2026-10-15T06:26:34.5803510Z         with zipfile.ZipFile(BUNDLE) as archive:
+2026-10-15T06:26:34.5803922Z             archive.extractall(target)
+2026-10-15T06:26:34.5804271Z         if mutation == 'inventory':
+2026-10-15T06:26:34.5804642Z             (target / 'extra').write_text('unexpected')
+2026-10-15T06:26:34.5804992Z         else:
+2026-10-15T06:26:34.5805318Z             if mutation in {'outcome', 'exit', 'deadline', 'group'}:
+2026-10-15T06:26:34.5805913Z                 path = target / 'candidate/faults/SIGKILL/observation.json'
+2026-10-15T06:26:34.5806355Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5806725Z                 if mutation == 'outcome':
+2026-10-15T06:26:34.5807125Z                     data['stopped'] = False
+2026-10-15T06:26:34.5807457Z                 elif mutation == 'exit':
+2026-10-15T06:26:34.5807861Z                     data['owner_exit'] = 0
+2026-10-15T06:26:34.5808216Z                 elif mutation == 'deadline':
+2026-10-15T06:26:34.5808566Z                     data['stop_seconds'] = 3
+2026-10-15T06:26:34.5808917Z                 else:
+2026-10-15T06:26:34.5809276Z                     data['receipt']['group'] = data['receipt']['grader']
+2026-10-15T06:26:34.5809716Z             elif mutation == 'summary':
+2026-10-15T06:26:34.5810101Z                 path = target / 'summary.json'
+2026-10-15T06:26:34.5810470Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5810861Z                 data['candidate']['wall_seconds'] += 1
+2026-10-15T06:26:34.5811205Z             else:
+2026-10-15T06:26:34.5811575Z                 path = target / 'candidate/pair-0/timing.json'
+2026-10-15T06:26:34.5812036Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5812389Z                 data['latency_p50_seconds'] += 1
+2026-10-15T06:26:34.5812791Z             path.write_text(json.dumps(data) + '\n')
+2026-10-15T06:26:34.5813174Z             manifest_path = target / 'manifest.json'
+2026-10-15T06:26:34.5813648Z             manifest = json.loads(manifest_path.read_text())
+2026-10-15T06:26:34.5814166Z             manifest['files'] = {str(p.relative_to(target)): hashlib.sha256(p.read_bytes()).hexdigest()
+2026-10-15T06:26:34.5814735Z                                  for p in target.rglob('*') if p.is_file() and p != manifest_path}
+2026-10-15T06:26:34.5815260Z             manifest_path.write_text(json.dumps(manifest) + '\n')
+2026-10-15T06:26:34.5815816Z         result = subprocess.run([sys.executable, *(['-O'] if optimized else []),
+2026-10-15T06:26:34.5816390Z                                  str(ROOT / 'scripts/audit_grader_owner_loss_v1.py'), str(target)],
+2026-10-15T06:26:34.5816992Z                                 cwd=tmp_path, env={**os.environ, 'PYTHONPATH': str(ROOT / 'src')},
+2026-10-15T06:26:34.5817499Z                                 capture_output=True, text=True, timeout=10)
+2026-10-15T06:26:34.5818076Z >       assert result.returncode != 0 and 'ValueError' in result.stderr, result.stdout + result.stderr
+2026-10-15T06:26:34.5818824Z E       AssertionError: fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'
+2026-10-15T06:26:34.5819402Z E         Traceback (most recent call last):
+2026-10-15T06:26:34.5821060Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 153, in <module>
+2026-10-15T06:26:34.5821679Z E             print(json.dumps(verify(parser.parse_args().bundle.absolute()), indent=2))
+2026-10-15T06:26:34.5822209Z E                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5822758Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 63, in verify
+2026-10-15T06:26:34.5823275Z E             return verify_directory(out)
+2026-10-15T06:26:34.5823630Z E                    ^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5824148Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 78, in verify_directory
+2026-10-15T06:26:34.5824879Z E             raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
+2026-10-15T06:26:34.5825493Z E                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5826201Z E           File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 466, in check_output
+2026-10-15T06:26:34.5826823Z E             return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-15T06:26:34.5827267Z E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5827814Z E           File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 571, in run
+2026-10-15T06:26:34.5828385Z E             raise CalledProcessError(retcode, process.args,
+2026-10-15T06:26:34.5829104Z E         subprocess.CalledProcessError: Command '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.
+2026-10-15T06:26:34.5829840Z E         
+2026-10-15T06:26:34.5830754Z E       assert (1 != 0 and 'ValueError' in "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n")
+2026-10-15T06:26:34.5832350Z E        +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').returncode
+2026-10-15T06:26:34.5834573Z E        +  and   "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n" = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').stderr
+2026-10-15T06:26:34.5836267Z 
+2026-10-15T06:26:34.5836480Z tests/test_grader_owner_loss_audit.py:54: AssertionError
+2026-10-15T06:26:34.5836969Z ______________ test_rehashed_corruption_is_rejected[group-False] _______________
+2026-10-15T06:26:34.5837259Z 
+2026-10-15T06:26:34.5837528Z tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-0/test_rehashed_corruption_is_re6')
+2026-10-15T06:26:34.5838067Z optimized = False, mutation = 'group'
+2026-10-15T06:26:34.5838360Z 
+2026-10-15T06:26:34.5838535Z     @pytest.mark.parametrize('optimized', [False, True])
+2026-10-15T06:26:34.5839169Z     @pytest.mark.parametrize('mutation', ['outcome', 'exit', 'deadline', 'group', 'summary', 'latency', 'inventory'])
+2026-10-15T06:26:34.5839803Z     def test_rehashed_corruption_is_rejected(tmp_path, optimized, mutation):
+2026-10-15T06:26:34.5840232Z         target = tmp_path / 'bundle'
+2026-10-15T06:26:34.5840645Z         with zipfile.ZipFile(BUNDLE) as archive:
+2026-10-15T06:26:34.5841017Z             archive.extractall(target)
+2026-10-15T06:26:34.5841368Z         if mutation == 'inventory':
+2026-10-15T06:26:34.5841746Z             (target / 'extra').write_text('unexpected')
+2026-10-15T06:26:34.5842094Z         else:
+2026-10-15T06:26:34.5842499Z             if mutation in {'outcome', 'exit', 'deadline', 'group'}:
+2026-10-15T06:26:34.5842959Z                 path = target / 'candidate/faults/SIGKILL/observation.json'
+2026-10-15T06:26:34.5843405Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5843789Z                 if mutation == 'outcome':
+2026-10-15T06:26:34.5844162Z                     data['stopped'] = False
+2026-10-15T06:26:34.5844521Z                 elif mutation == 'exit':
+2026-10-15T06:26:34.5844857Z                     data['owner_exit'] = 0
+2026-10-15T06:26:34.5845187Z                 elif mutation == 'deadline':
+2026-10-15T06:26:34.5845565Z                     data['stop_seconds'] = 3
+2026-10-15T06:26:34.5846026Z                 else:
+2026-10-15T06:26:34.5846389Z                     data['receipt']['group'] = data['receipt']['grader']
+2026-10-15T06:26:34.5846785Z             elif mutation == 'summary':
+2026-10-15T06:26:34.5847106Z                 path = target / 'summary.json'
+2026-10-15T06:26:34.5847591Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5847995Z                 data['candidate']['wall_seconds'] += 1
+2026-10-15T06:26:34.5848337Z             else:
+2026-10-15T06:26:34.5848683Z                 path = target / 'candidate/pair-0/timing.json'
+2026-10-15T06:26:34.5849101Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5849495Z                 data['latency_p50_seconds'] += 1
+2026-10-15T06:26:34.5849890Z             path.write_text(json.dumps(data) + '\n')
+2026-10-15T06:26:34.5850278Z             manifest_path = target / 'manifest.json'
+2026-10-15T06:26:34.5850686Z             manifest = json.loads(manifest_path.read_text())
+2026-10-15T06:26:34.5851211Z             manifest['files'] = {str(p.relative_to(target)): hashlib.sha256(p.read_bytes()).hexdigest()
+2026-10-15T06:26:34.5851812Z                                  for p in target.rglob('*') if p.is_file() and p != manifest_path}
+2026-10-15T06:26:34.5852329Z             manifest_path.write_text(json.dumps(manifest) + '\n')
+2026-10-15T06:26:34.5852853Z         result = subprocess.run([sys.executable, *(['-O'] if optimized else []),
+2026-10-15T06:26:34.5853398Z                                  str(ROOT / 'scripts/audit_grader_owner_loss_v1.py'), str(target)],
+2026-10-15T06:26:34.5854017Z                                 cwd=tmp_path, env={**os.environ, 'PYTHONPATH': str(ROOT / 'src')},
+2026-10-15T06:26:34.5854515Z                                 capture_output=True, text=True, timeout=10)
+2026-10-15T06:26:34.5855089Z >       assert result.returncode != 0 and 'ValueError' in result.stderr, result.stdout + result.stderr
+2026-10-15T06:26:34.5855878Z E       AssertionError: fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'
+2026-10-15T06:26:34.5856522Z E         Traceback (most recent call last):
+2026-10-15T06:26:34.5857042Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 153, in <module>
+2026-10-15T06:26:34.5857677Z E             print(json.dumps(verify(parser.parse_args().bundle.absolute()), indent=2))
+2026-10-15T06:26:34.5858187Z E                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5858762Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 63, in verify
+2026-10-15T06:26:34.5859308Z E             return verify_directory(out)
+2026-10-15T06:26:34.5859650Z E                    ^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5860233Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 78, in verify_directory
+2026-10-15T06:26:34.5860954Z E             raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
+2026-10-15T06:26:34.5861541Z E                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5862163Z E           File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 466, in check_output
+2026-10-15T06:26:34.5862772Z E             return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-15T06:26:34.5863231Z E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5863830Z E           File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 571, in run
+2026-10-15T06:26:34.5864364Z E             raise CalledProcessError(retcode, process.args,
+2026-10-15T06:26:34.5865136Z E         subprocess.CalledProcessError: Command '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.
+2026-10-15T06:26:34.5865865Z E         
+2026-10-15T06:26:34.5866798Z E       assert (1 != 0 and 'ValueError' in "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n")
+2026-10-15T06:26:34.5868407Z E        +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/VARE/VARE/scripts/audi...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').returncode
+2026-10-15T06:26:34.5870584Z E        +  and   "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n" = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/VARE/VARE/scripts/audi...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').stderr
+2026-10-15T06:26:34.5872072Z 
+2026-10-15T06:26:34.5872243Z tests/test_grader_owner_loss_audit.py:54: AssertionError
+2026-10-15T06:26:34.5872727Z _______________ test_rehashed_corruption_is_rejected[group-True] _______________
+2026-10-15T06:26:34.5873040Z 
+2026-10-15T06:26:34.5873385Z tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-0/test_rehashed_corruption_is_re7')
+2026-10-15T06:26:34.5873877Z optimized = True, mutation = 'group'
+2026-10-15T06:26:34.5874071Z 
+2026-10-15T06:26:34.5874359Z     @pytest.mark.parametrize('optimized', [False, True])
+2026-10-15T06:26:34.5874984Z     @pytest.mark.parametrize('mutation', ['outcome', 'exit', 'deadline', 'group', 'summary', 'latency', 'inventory'])
+2026-10-15T06:26:34.5875637Z     def test_rehashed_corruption_is_rejected(tmp_path, optimized, mutation):
+2026-10-15T06:26:34.5876323Z         target = tmp_path / 'bundle'
+2026-10-15T06:26:34.5876703Z         with zipfile.ZipFile(BUNDLE) as archive:
+2026-10-15T06:26:34.5877079Z             archive.extractall(target)
+2026-10-15T06:26:34.5877476Z         if mutation == 'inventory':
+2026-10-15T06:26:34.5877863Z             (target / 'extra').write_text('unexpected')
+2026-10-15T06:26:34.5878218Z         else:
+2026-10-15T06:26:34.5878577Z             if mutation in {'outcome', 'exit', 'deadline', 'group'}:
+2026-10-15T06:26:34.5879044Z                 path = target / 'candidate/faults/SIGKILL/observation.json'
+2026-10-15T06:26:34.5879608Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5880078Z                 if mutation == 'outcome':
+2026-10-15T06:26:34.5880478Z                     data['stopped'] = False
+2026-10-15T06:26:34.5880976Z                 elif mutation == 'exit':
+2026-10-15T06:26:34.5881375Z                     data['owner_exit'] = 0
+2026-10-15T06:26:34.5881746Z                 elif mutation == 'deadline':
+2026-10-15T06:26:34.5882120Z                     data['stop_seconds'] = 3
+2026-10-15T06:26:34.5882489Z                 else:
+2026-10-15T06:26:34.5882929Z                     data['receipt']['group'] = data['receipt']['grader']
+2026-10-15T06:26:34.5883365Z             elif mutation == 'summary':
+2026-10-15T06:26:34.5883748Z                 path = target / 'summary.json'
+2026-10-15T06:26:34.5884217Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5884655Z                 data['candidate']['wall_seconds'] += 1
+2026-10-15T06:26:34.5885076Z             else:
+2026-10-15T06:26:34.5885435Z                 path = target / 'candidate/pair-0/timing.json'
+2026-10-15T06:26:34.5885940Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5886385Z                 data['latency_p50_seconds'] += 1
+2026-10-15T06:26:34.5886799Z             path.write_text(json.dumps(data) + '\n')
+2026-10-15T06:26:34.5887241Z             manifest_path = target / 'manifest.json'
+2026-10-15T06:26:34.5887662Z             manifest = json.loads(manifest_path.read_text())
+2026-10-15T06:26:34.5888286Z             manifest['files'] = {str(p.relative_to(target)): hashlib.sha256(p.read_bytes()).hexdigest()
+2026-10-15T06:26:34.5888968Z                                  for p in target.rglob('*') if p.is_file() and p != manifest_path}
+2026-10-15T06:26:34.5889506Z             manifest_path.write_text(json.dumps(manifest) + '\n')
+2026-10-15T06:26:34.5890068Z         result = subprocess.run([sys.executable, *(['-O'] if optimized else []),
+2026-10-15T06:26:34.5890653Z                                  str(ROOT / 'scripts/audit_grader_owner_loss_v1.py'), str(target)],
+2026-10-15T06:26:34.5891230Z                                 cwd=tmp_path, env={**os.environ, 'PYTHONPATH': str(ROOT / 'src')},
+2026-10-15T06:26:34.5891834Z                                 capture_output=True, text=True, timeout=10)
+2026-10-15T06:26:34.5892458Z >       assert result.returncode != 0 and 'ValueError' in result.stderr, result.stdout + result.stderr
+2026-10-15T06:26:34.5893286Z E       AssertionError: fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'
+2026-10-15T06:26:34.5893891Z E         Traceback (most recent call last):
+2026-10-15T06:26:34.5894424Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 153, in <module>
+2026-10-15T06:26:34.5895140Z E             print(json.dumps(verify(parser.parse_args().bundle.absolute()), indent=2))
+2026-10-15T06:26:34.5895643Z E                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5896418Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 63, in verify
+2026-10-15T06:26:34.5896948Z E             return verify_directory(out)
+2026-10-15T06:26:34.5897282Z E                    ^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5897880Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 78, in verify_directory
+2026-10-15T06:26:34.5898643Z E             raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
+2026-10-15T06:26:34.5899287Z E                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5899939Z E           File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 466, in check_output
+2026-10-15T06:26:34.5900616Z E             return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-15T06:26:34.5901171Z E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5901748Z E           File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 571, in run
+2026-10-15T06:26:34.5902339Z E             raise CalledProcessError(retcode, process.args,
+2026-10-15T06:26:34.5903139Z E         subprocess.CalledProcessError: Command '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.
+2026-10-15T06:26:34.5903848Z E         
+2026-10-15T06:26:34.5904851Z E       assert (1 != 0 and 'ValueError' in "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n")
+2026-10-15T06:26:34.5906594Z E        +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').returncode
+2026-10-15T06:26:34.5908816Z E        +  and   "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n" = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').stderr
+2026-10-15T06:26:34.5910262Z 
+2026-10-15T06:26:34.5910472Z tests/test_grader_owner_loss_audit.py:54: AssertionError
+2026-10-15T06:26:34.5910986Z _____________ test_rehashed_corruption_is_rejected[summary-False] ______________
+2026-10-15T06:26:34.5911304Z 
+2026-10-15T06:26:34.5911608Z tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-0/test_rehashed_corruption_is_re8')
+2026-10-15T06:26:34.5912115Z optimized = False, mutation = 'summary'
+2026-10-15T06:26:34.5912336Z 
+2026-10-15T06:26:34.5912531Z     @pytest.mark.parametrize('optimized', [False, True])
+2026-10-15T06:26:34.5913136Z     @pytest.mark.parametrize('mutation', ['outcome', 'exit', 'deadline', 'group', 'summary', 'latency', 'inventory'])
+2026-10-15T06:26:34.5913812Z     def test_rehashed_corruption_is_rejected(tmp_path, optimized, mutation):
+2026-10-15T06:26:34.5914320Z         target = tmp_path / 'bundle'
+2026-10-15T06:26:34.5914688Z         with zipfile.ZipFile(BUNDLE) as archive:
+2026-10-15T06:26:34.5915072Z             archive.extractall(target)
+2026-10-15T06:26:34.5916835Z         if mutation == 'inventory':
+2026-10-15T06:26:34.5917247Z             (target / 'extra').write_text('unexpected')
+2026-10-15T06:26:34.5917621Z         else:
+2026-10-15T06:26:34.5917970Z             if mutation in {'outcome', 'exit', 'deadline', 'group'}:
+2026-10-15T06:26:34.5918434Z                 path = target / 'candidate/faults/SIGKILL/observation.json'
+2026-10-15T06:26:34.5918970Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5919410Z                 if mutation == 'outcome':
+2026-10-15T06:26:34.5919783Z                     data['stopped'] = False
+2026-10-15T06:26:34.5920138Z                 elif mutation == 'exit':
+2026-10-15T06:26:34.5920475Z                     data['owner_exit'] = 0
+2026-10-15T06:26:34.5920885Z                 elif mutation == 'deadline':
+2026-10-15T06:26:34.5921244Z                     data['stop_seconds'] = 3
+2026-10-15T06:26:34.5921586Z                 else:
+2026-10-15T06:26:34.5921955Z                     data['receipt']['group'] = data['receipt']['grader']
+2026-10-15T06:26:34.5922385Z             elif mutation == 'summary':
+2026-10-15T06:26:34.5922799Z                 path = target / 'summary.json'
+2026-10-15T06:26:34.5923178Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5923569Z                 data['candidate']['wall_seconds'] += 1
+2026-10-15T06:26:34.5923995Z             else:
+2026-10-15T06:26:34.5924339Z                 path = target / 'candidate/pair-0/timing.json'
+2026-10-15T06:26:34.5924777Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5925151Z                 data['latency_p50_seconds'] += 1
+2026-10-15T06:26:34.5925576Z             path.write_text(json.dumps(data) + '\n')
+2026-10-15T06:26:34.5926056Z             manifest_path = target / 'manifest.json'
+2026-10-15T06:26:34.5926469Z             manifest = json.loads(manifest_path.read_text())
+2026-10-15T06:26:34.5927051Z             manifest['files'] = {str(p.relative_to(target)): hashlib.sha256(p.read_bytes()).hexdigest()
+2026-10-15T06:26:34.5927646Z                                  for p in target.rglob('*') if p.is_file() and p != manifest_path}
+2026-10-15T06:26:34.5928138Z             manifest_path.write_text(json.dumps(manifest) + '\n')
+2026-10-15T06:26:34.5928668Z         result = subprocess.run([sys.executable, *(['-O'] if optimized else []),
+2026-10-15T06:26:34.5929258Z                                  str(ROOT / 'scripts/audit_grader_owner_loss_v1.py'), str(target)],
+2026-10-15T06:26:34.5929849Z                                 cwd=tmp_path, env={**os.environ, 'PYTHONPATH': str(ROOT / 'src')},
+2026-10-15T06:26:34.5930341Z                                 capture_output=True, text=True, timeout=10)
+2026-10-15T06:26:34.5930892Z >       assert result.returncode != 0 and 'ValueError' in result.stderr, result.stdout + result.stderr
+2026-10-15T06:26:34.5931707Z E       AssertionError: fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'
+2026-10-15T06:26:34.5932314Z E         Traceback (most recent call last):
+2026-10-15T06:26:34.5932876Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 153, in <module>
+2026-10-15T06:26:34.5933584Z E             print(json.dumps(verify(parser.parse_args().bundle.absolute()), indent=2))
+2026-10-15T06:26:34.5934060Z E                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5934647Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 63, in verify
+2026-10-15T06:26:34.5935184Z E             return verify_directory(out)
+2026-10-15T06:26:34.5935564Z E                    ^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5936211Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 78, in verify_directory
+2026-10-15T06:26:34.5936936Z E             raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
+2026-10-15T06:26:34.5937582Z E                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5938197Z E           File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 466, in check_output
+2026-10-15T06:26:34.5938809Z E             return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-15T06:26:34.5939278Z E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5939869Z E           File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 571, in run
+2026-10-15T06:26:34.5940433Z E             raise CalledProcessError(retcode, process.args,
+2026-10-15T06:26:34.5941223Z E         subprocess.CalledProcessError: Command '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.
+2026-10-15T06:26:34.5941956Z E         
+2026-10-15T06:26:34.5942891Z E       assert (1 != 0 and 'ValueError' in "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n")
+2026-10-15T06:26:34.5944637Z E        +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/VARE/VARE/scripts/audi...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').returncode
+2026-10-15T06:26:34.5947042Z E        +  and   "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n" = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/VARE/VARE/scripts/audi...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').stderr
+2026-10-15T06:26:34.5948481Z 
+2026-10-15T06:26:34.5948691Z tests/test_grader_owner_loss_audit.py:54: AssertionError
+2026-10-15T06:26:34.5949182Z ______________ test_rehashed_corruption_is_rejected[summary-True] ______________
+2026-10-15T06:26:34.5949525Z 
+2026-10-15T06:26:34.5949777Z tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-0/test_rehashed_corruption_is_re9')
+2026-10-15T06:26:34.5950274Z optimized = True, mutation = 'summary'
+2026-10-15T06:26:34.5950636Z 
+2026-10-15T06:26:34.5950940Z     @pytest.mark.parametrize('optimized', [False, True])
+2026-10-15T06:26:34.5951742Z     @pytest.mark.parametrize('mutation', ['outcome', 'exit', 'deadline', 'group', 'summary', 'latency', 'inventory'])
+2026-10-15T06:26:34.5952715Z     def test_rehashed_corruption_is_rejected(tmp_path, optimized, mutation):
+2026-10-15T06:26:34.5953382Z         target = tmp_path / 'bundle'
+2026-10-15T06:26:34.5953857Z         with zipfile.ZipFile(BUNDLE) as archive:
+2026-10-15T06:26:34.5954276Z             archive.extractall(target)
+2026-10-15T06:26:34.5954622Z         if mutation == 'inventory':
+2026-10-15T06:26:34.5954974Z             (target / 'extra').write_text('unexpected')
+2026-10-15T06:26:34.5955400Z         else:
+2026-10-15T06:26:34.5955974Z             if mutation in {'outcome', 'exit', 'deadline', 'group'}:
+2026-10-15T06:26:34.5956494Z                 path = target / 'candidate/faults/SIGKILL/observation.json'
+2026-10-15T06:26:34.5956944Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5957295Z                 if mutation == 'outcome':
+2026-10-15T06:26:34.5957675Z                     data['stopped'] = False
+2026-10-15T06:26:34.5958020Z                 elif mutation == 'exit':
+2026-10-15T06:26:34.5958387Z                     data['owner_exit'] = 0
+2026-10-15T06:26:34.5958784Z                 elif mutation == 'deadline':
+2026-10-15T06:26:34.5959125Z                     data['stop_seconds'] = 3
+2026-10-15T06:26:34.5959484Z                 else:
+2026-10-15T06:26:34.5959832Z                     data['receipt']['group'] = data['receipt']['grader']
+2026-10-15T06:26:34.5960256Z             elif mutation == 'summary':
+2026-10-15T06:26:34.5960621Z                 path = target / 'summary.json'
+2026-10-15T06:26:34.5960993Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5961386Z                 data['candidate']['wall_seconds'] += 1
+2026-10-15T06:26:34.5961737Z             else:
+2026-10-15T06:26:34.5962217Z                 path = target / 'candidate/pair-0/timing.json'
+2026-10-15T06:26:34.5962629Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5962994Z                 data['latency_p50_seconds'] += 1
+2026-10-15T06:26:34.5963389Z             path.write_text(json.dumps(data) + '\n')
+2026-10-15T06:26:34.5963772Z             manifest_path = target / 'manifest.json'
+2026-10-15T06:26:34.5964182Z             manifest = json.loads(manifest_path.read_text())
+2026-10-15T06:26:34.5964734Z             manifest['files'] = {str(p.relative_to(target)): hashlib.sha256(p.read_bytes()).hexdigest()
+2026-10-15T06:26:34.5965357Z                                  for p in target.rglob('*') if p.is_file() and p != manifest_path}
+2026-10-15T06:26:34.5966015Z             manifest_path.write_text(json.dumps(manifest) + '\n')
+2026-10-15T06:26:34.5966555Z         result = subprocess.run([sys.executable, *(['-O'] if optimized else []),
+2026-10-15T06:26:34.5967243Z                                  str(ROOT / 'scripts/audit_grader_owner_loss_v1.py'), str(target)],
+2026-10-15T06:26:34.5967883Z                                 cwd=tmp_path, env={**os.environ, 'PYTHONPATH': str(ROOT / 'src')},
+2026-10-15T06:26:34.5968393Z                                 capture_output=True, text=True, timeout=10)
+2026-10-15T06:26:34.5969006Z >       assert result.returncode != 0 and 'ValueError' in result.stderr, result.stdout + result.stderr
+2026-10-15T06:26:34.5969823Z E       AssertionError: fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'
+2026-10-15T06:26:34.5970394Z E         Traceback (most recent call last):
+2026-10-15T06:26:34.5970945Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 153, in <module>
+2026-10-15T06:26:34.5971574Z E             print(json.dumps(verify(parser.parse_args().bundle.absolute()), indent=2))
+2026-10-15T06:26:34.5972060Z E                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5972628Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 63, in verify
+2026-10-15T06:26:34.5973144Z E             return verify_directory(out)
+2026-10-15T06:26:34.5973531Z E                    ^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5974041Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 78, in verify_directory
+2026-10-15T06:26:34.5974759Z E             raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
+2026-10-15T06:26:34.5975386Z E                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5976058Z E           File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 466, in check_output
+2026-10-15T06:26:34.5976681Z E             return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-15T06:26:34.5977177Z E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.5977704Z E           File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 571, in run
+2026-10-15T06:26:34.5978282Z E             raise CalledProcessError(retcode, process.args,
+2026-10-15T06:26:34.5979026Z E         subprocess.CalledProcessError: Command '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.
+2026-10-15T06:26:34.5979707Z E         
+2026-10-15T06:26:34.5980621Z E       assert (1 != 0 and 'ValueError' in "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n")
+2026-10-15T06:26:34.5982312Z E        +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').returncode
+2026-10-15T06:26:34.5984537Z E        +  and   "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n" = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').stderr
+2026-10-15T06:26:34.5986057Z 
+2026-10-15T06:26:34.5986233Z tests/test_grader_owner_loss_audit.py:54: AssertionError
+2026-10-15T06:26:34.5986744Z _____________ test_rehashed_corruption_is_rejected[latency-False] ______________
+2026-10-15T06:26:34.5987070Z 
+2026-10-15T06:26:34.5987358Z tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-0/test_rehashed_corruption_is_re10')
+2026-10-15T06:26:34.5987946Z optimized = False, mutation = 'latency'
+2026-10-15T06:26:34.5988158Z 
+2026-10-15T06:26:34.5988360Z     @pytest.mark.parametrize('optimized', [False, True])
+2026-10-15T06:26:34.5988940Z     @pytest.mark.parametrize('mutation', ['outcome', 'exit', 'deadline', 'group', 'summary', 'latency', 'inventory'])
+2026-10-15T06:26:34.5989600Z     def test_rehashed_corruption_is_rejected(tmp_path, optimized, mutation):
+2026-10-15T06:26:34.5990042Z         target = tmp_path / 'bundle'
+2026-10-15T06:26:34.5990472Z         with zipfile.ZipFile(BUNDLE) as archive:
+2026-10-15T06:26:34.5990846Z             archive.extractall(target)
+2026-10-15T06:26:34.5991190Z         if mutation == 'inventory':
+2026-10-15T06:26:34.5991573Z             (target / 'extra').write_text('unexpected')
+2026-10-15T06:26:34.5991916Z         else:
+2026-10-15T06:26:34.5992282Z             if mutation in {'outcome', 'exit', 'deadline', 'group'}:
+2026-10-15T06:26:34.5992777Z                 path = target / 'candidate/faults/SIGKILL/observation.json'
+2026-10-15T06:26:34.5993216Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5993582Z                 if mutation == 'outcome':
+2026-10-15T06:26:34.5993978Z                     data['stopped'] = False
+2026-10-15T06:26:34.5994325Z                 elif mutation == 'exit':
+2026-10-15T06:26:34.5994686Z                     data['owner_exit'] = 0
+2026-10-15T06:26:34.5995030Z                 elif mutation == 'deadline':
+2026-10-15T06:26:34.5995382Z                     data['stop_seconds'] = 3
+2026-10-15T06:26:34.5995898Z                 else:
+2026-10-15T06:26:34.5996277Z                     data['receipt']['group'] = data['receipt']['grader']
+2026-10-15T06:26:34.5996694Z             elif mutation == 'summary':
+2026-10-15T06:26:34.5997083Z                 path = target / 'summary.json'
+2026-10-15T06:26:34.5997454Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5997844Z                 data['candidate']['wall_seconds'] += 1
+2026-10-15T06:26:34.5998216Z             else:
+2026-10-15T06:26:34.5998561Z                 path = target / 'candidate/pair-0/timing.json'
+2026-10-15T06:26:34.5998952Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.5999306Z                 data['latency_p50_seconds'] += 1
+2026-10-15T06:26:34.5999718Z             path.write_text(json.dumps(data) + '\n')
+2026-10-15T06:26:34.6000122Z             manifest_path = target / 'manifest.json'
+2026-10-15T06:26:34.6000566Z             manifest = json.loads(manifest_path.read_text())
+2026-10-15T06:26:34.6001091Z             manifest['files'] = {str(p.relative_to(target)): hashlib.sha256(p.read_bytes()).hexdigest()
+2026-10-15T06:26:34.6001655Z                                  for p in target.rglob('*') if p.is_file() and p != manifest_path}
+2026-10-15T06:26:34.6002175Z             manifest_path.write_text(json.dumps(manifest) + '\n')
+2026-10-15T06:26:34.6002688Z         result = subprocess.run([sys.executable, *(['-O'] if optimized else []),
+2026-10-15T06:26:34.6003294Z                                  str(ROOT / 'scripts/audit_grader_owner_loss_v1.py'), str(target)],
+2026-10-15T06:26:34.6003847Z                                 cwd=tmp_path, env={**os.environ, 'PYTHONPATH': str(ROOT / 'src')},
+2026-10-15T06:26:34.6004354Z                                 capture_output=True, text=True, timeout=10)
+2026-10-15T06:26:34.6004952Z >       assert result.returncode != 0 and 'ValueError' in result.stderr, result.stdout + result.stderr
+2026-10-15T06:26:34.6005677Z E       AssertionError: fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'
+2026-10-15T06:26:34.6006342Z E         Traceback (most recent call last):
+2026-10-15T06:26:34.6006874Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 153, in <module>
+2026-10-15T06:26:34.6007501Z E             print(json.dumps(verify(parser.parse_args().bundle.absolute()), indent=2))
+2026-10-15T06:26:34.6008125Z E                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6008657Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 63, in verify
+2026-10-15T06:26:34.6009169Z E             return verify_directory(out)
+2026-10-15T06:26:34.6009522Z E                    ^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6010037Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 78, in verify_directory
+2026-10-15T06:26:34.6010795Z E             raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
+2026-10-15T06:26:34.6011402Z E                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6012044Z E           File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 466, in check_output
+2026-10-15T06:26:34.6012667Z E             return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-15T06:26:34.6013137Z E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6013701Z E           File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 571, in run
+2026-10-15T06:26:34.6014243Z E             raise CalledProcessError(retcode, process.args,
+2026-10-15T06:26:34.6014965Z E         subprocess.CalledProcessError: Command '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.
+2026-10-15T06:26:34.6015705Z E         
+2026-10-15T06:26:34.6016710Z E       assert (1 != 0 and 'ValueError' in "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n")
+2026-10-15T06:26:34.6018344Z E        +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/VARE/VARE/scripts/audi...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').returncode
+2026-10-15T06:26:34.6020517Z E        +  and   "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n" = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/VARE/VARE/scripts/audi...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').stderr
+2026-10-15T06:26:34.6021957Z 
+2026-10-15T06:26:34.6022165Z tests/test_grader_owner_loss_audit.py:54: AssertionError
+2026-10-15T06:26:34.6022661Z ______________ test_rehashed_corruption_is_rejected[latency-True] ______________
+2026-10-15T06:26:34.6022957Z 
+2026-10-15T06:26:34.6023269Z tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-0/test_rehashed_corruption_is_re11')
+2026-10-15T06:26:34.6023839Z optimized = True, mutation = 'latency'
+2026-10-15T06:26:34.6024067Z 
+2026-10-15T06:26:34.6024240Z     @pytest.mark.parametrize('optimized', [False, True])
+2026-10-15T06:26:34.6024877Z     @pytest.mark.parametrize('mutation', ['outcome', 'exit', 'deadline', 'group', 'summary', 'latency', 'inventory'])
+2026-10-15T06:26:34.6025526Z     def test_rehashed_corruption_is_rejected(tmp_path, optimized, mutation):
+2026-10-15T06:26:34.6026069Z         target = tmp_path / 'bundle'
+2026-10-15T06:26:34.6026455Z         with zipfile.ZipFile(BUNDLE) as archive:
+2026-10-15T06:26:34.6026825Z             archive.extractall(target)
+2026-10-15T06:26:34.6027156Z         if mutation == 'inventory':
+2026-10-15T06:26:34.6027547Z             (target / 'extra').write_text('unexpected')
+2026-10-15T06:26:34.6027912Z         else:
+2026-10-15T06:26:34.6028248Z             if mutation in {'outcome', 'exit', 'deadline', 'group'}:
+2026-10-15T06:26:34.6028827Z                 path = target / 'candidate/faults/SIGKILL/observation.json'
+2026-10-15T06:26:34.6029250Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.6029651Z                 if mutation == 'outcome':
+2026-10-15T06:26:34.6030026Z                     data['stopped'] = False
+2026-10-15T06:26:34.6030377Z                 elif mutation == 'exit':
+2026-10-15T06:26:34.6030727Z                     data['owner_exit'] = 0
+2026-10-15T06:26:34.6031075Z                 elif mutation == 'deadline':
+2026-10-15T06:26:34.6031442Z                     data['stop_seconds'] = 3
+2026-10-15T06:26:34.6031827Z                 else:
+2026-10-15T06:26:34.6032179Z                     data['receipt']['group'] = data['receipt']['grader']
+2026-10-15T06:26:34.6032589Z             elif mutation == 'summary':
+2026-10-15T06:26:34.6032939Z                 path = target / 'summary.json'
+2026-10-15T06:26:34.6033326Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.6033729Z                 data['candidate']['wall_seconds'] += 1
+2026-10-15T06:26:34.6034068Z             else:
+2026-10-15T06:26:34.6034430Z                 path = target / 'candidate/pair-0/timing.json'
+2026-10-15T06:26:34.6034823Z                 data = json.loads(path.read_text())
+2026-10-15T06:26:34.6035347Z                 data['latency_p50_seconds'] += 1
+2026-10-15T06:26:34.6035915Z             path.write_text(json.dumps(data) + '\n')
+2026-10-15T06:26:34.6036298Z             manifest_path = target / 'manifest.json'
+2026-10-15T06:26:34.6036740Z             manifest = json.loads(manifest_path.read_text())
+2026-10-15T06:26:34.6037272Z             manifest['files'] = {str(p.relative_to(target)): hashlib.sha256(p.read_bytes()).hexdigest()
+2026-10-15T06:26:34.6037859Z                                  for p in target.rglob('*') if p.is_file() and p != manifest_path}
+2026-10-15T06:26:34.6038390Z             manifest_path.write_text(json.dumps(manifest) + '\n')
+2026-10-15T06:26:34.6038903Z         result = subprocess.run([sys.executable, *(['-O'] if optimized else []),
+2026-10-15T06:26:34.6039478Z                                  str(ROOT / 'scripts/audit_grader_owner_loss_v1.py'), str(target)],
+2026-10-15T06:26:34.6040019Z                                 cwd=tmp_path, env={**os.environ, 'PYTHONPATH': str(ROOT / 'src')},
+2026-10-15T06:26:34.6040504Z                                 capture_output=True, text=True, timeout=10)
+2026-10-15T06:26:34.6041087Z >       assert result.returncode != 0 and 'ValueError' in result.stderr, result.stdout + result.stderr
+2026-10-15T06:26:34.6041819Z E       AssertionError: fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'
+2026-10-15T06:26:34.6042446Z E         Traceback (most recent call last):
+2026-10-15T06:26:34.6042965Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 153, in <module>
+2026-10-15T06:26:34.6043609Z E             print(json.dumps(verify(parser.parse_args().bundle.absolute()), indent=2))
+2026-10-15T06:26:34.6044170Z E                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6044697Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 63, in verify
+2026-10-15T06:26:34.6045216Z E             return verify_directory(out)
+2026-10-15T06:26:34.6045561Z E                    ^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6046218Z E           File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 78, in verify_directory
+2026-10-15T06:26:34.6046948Z E             raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
+2026-10-15T06:26:34.6047538Z E                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6048146Z E           File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 466, in check_output
+2026-10-15T06:26:34.6048816Z E             return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-15T06:26:34.6049277Z E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6049837Z E           File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 571, in run
+2026-10-15T06:26:34.6050427Z E             raise CalledProcessError(retcode, process.args,
+2026-10-15T06:26:34.6051166Z E         subprocess.CalledProcessError: Command '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.
+2026-10-15T06:26:34.6051863Z E         
+2026-10-15T06:26:34.6052759Z E       assert (1 != 0 and 'ValueError' in "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n")
+2026-10-15T06:26:34.6054440Z E        +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').returncode
+2026-10-15T06:26:34.6056805Z E        +  and   "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n" = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').stderr
+2026-10-15T06:26:34.6058289Z 
+2026-10-15T06:26:34.6058478Z tests/test_grader_owner_loss_audit.py:54: AssertionError
+2026-10-15T06:26:34.6058952Z =========================== short test summary info ============================
+2026-10-15T06:26:34.6059996Z FAILED tests/test_grader_owner_loss_audit.py::test_rehashed_corruption_is_rejected[outcome-False] - AssertionError: fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'
+2026-10-15T06:26:34.6060934Z   Traceback (most recent call last):
+2026-10-15T06:26:34.6066394Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 153, in <module>
+2026-10-15T06:26:34.6067158Z       print(json.dumps(verify(parser.parse_args().bundle.absolute()), indent=2))
+2026-10-15T06:26:34.6067680Z                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6068308Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 63, in verify
+2026-10-15T06:26:34.6068849Z       return verify_directory(out)
+2026-10-15T06:26:34.6069188Z              ^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6069756Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 78, in verify_directory
+2026-10-15T06:26:34.6070661Z       raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
+2026-10-15T06:26:34.6071252Z             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6071937Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 466, in check_output
+2026-10-15T06:26:34.6072571Z       return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-15T06:26:34.6073066Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6073611Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 571, in run
+2026-10-15T06:26:34.6074164Z       raise CalledProcessError(retcode, process.args,
+2026-10-15T06:26:34.6074992Z   subprocess.CalledProcessError: Command '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.
+2026-10-15T06:26:34.6076072Z   
+2026-10-15T06:26:34.6077079Z assert (1 != 0 and 'ValueError' in "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n")
+2026-10-15T06:26:34.6078712Z  +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/VARE/VARE/scripts/audi...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').returncode
+2026-10-15T06:26:34.6080889Z  +  and   "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n" = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/VARE/VARE/scripts/audi...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').stderr
+2026-10-15T06:26:34.6083076Z FAILED tests/test_grader_owner_loss_audit.py::test_rehashed_corruption_is_rejected[outcome-True] - AssertionError: fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'
+2026-10-15T06:26:34.6083949Z   Traceback (most recent call last):
+2026-10-15T06:26:34.6084600Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 153, in <module>
+2026-10-15T06:26:34.6085249Z       print(json.dumps(verify(parser.parse_args().bundle.absolute()), indent=2))
+2026-10-15T06:26:34.6085856Z                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6086452Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 63, in verify
+2026-10-15T06:26:34.6087016Z       return verify_directory(out)
+2026-10-15T06:26:34.6087369Z              ^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6087886Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 78, in verify_directory
+2026-10-15T06:26:34.6088570Z       raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
+2026-10-15T06:26:34.6089219Z             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6089860Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 466, in check_output
+2026-10-15T06:26:34.6090466Z       return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-15T06:26:34.6090894Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6091409Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 571, in run
+2026-10-15T06:26:34.6092022Z       raise CalledProcessError(retcode, process.args,
+2026-10-15T06:26:34.6092827Z   subprocess.CalledProcessError: Command '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.
+2026-10-15T06:26:34.6093505Z   
+2026-10-15T06:26:34.6094390Z assert (1 != 0 and 'ValueError' in "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n")
+2026-10-15T06:26:34.6096045Z  +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').returncode
+2026-10-15T06:26:34.6098301Z  +  and   "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n" = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').stderr
+2026-10-15T06:26:34.6100422Z FAILED tests/test_grader_owner_loss_audit.py::test_rehashed_corruption_is_rejected[exit-False] - AssertionError: fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'
+2026-10-15T06:26:34.6101277Z   Traceback (most recent call last):
+2026-10-15T06:26:34.6101808Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 153, in <module>
+2026-10-15T06:26:34.6102472Z       print(json.dumps(verify(parser.parse_args().bundle.absolute()), indent=2))
+2026-10-15T06:26:34.6102975Z                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6103494Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 63, in verify
+2026-10-15T06:26:34.6104008Z       return verify_directory(out)
+2026-10-15T06:26:34.6104330Z              ^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6104826Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 78, in verify_directory
+2026-10-15T06:26:34.6105608Z       raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
+2026-10-15T06:26:34.6106261Z             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6106900Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 466, in check_output
+2026-10-15T06:26:34.6107488Z       return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-15T06:26:34.6107899Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6108502Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 571, in run
+2026-10-15T06:26:34.6109054Z       raise CalledProcessError(retcode, process.args,
+2026-10-15T06:26:34.6109806Z   subprocess.CalledProcessError: Command '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.
+2026-10-15T06:26:34.6110474Z   
+2026-10-15T06:26:34.6111361Z assert (1 != 0 and 'ValueError' in "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n")
+2026-10-15T06:26:34.6112992Z  +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/VARE/VARE/scripts/audi...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').returncode
+2026-10-15T06:26:34.6115250Z  +  and   "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n" = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/VARE/VARE/scripts/audi...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').stderr
+2026-10-15T06:26:34.6117485Z FAILED tests/test_grader_owner_loss_audit.py::test_rehashed_corruption_is_rejected[exit-True] - AssertionError: fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'
+2026-10-15T06:26:34.6118320Z   Traceback (most recent call last):
+2026-10-15T06:26:34.6119766Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 153, in <module>
+2026-10-15T06:26:34.6120395Z       print(json.dumps(verify(parser.parse_args().bundle.absolute()), indent=2))
+2026-10-15T06:26:34.6120861Z                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6121460Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 63, in verify
+2026-10-15T06:26:34.6121954Z       return verify_directory(out)
+2026-10-15T06:26:34.6122334Z              ^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6122848Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 78, in verify_directory
+2026-10-15T06:26:34.6123533Z       raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
+2026-10-15T06:26:34.6124126Z             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6124769Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 466, in check_output
+2026-10-15T06:26:34.6125442Z       return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-15T06:26:34.6126004Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6126570Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 571, in run
+2026-10-15T06:26:34.6127159Z       raise CalledProcessError(retcode, process.args,
+2026-10-15T06:26:34.6127890Z   subprocess.CalledProcessError: Command '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.
+2026-10-15T06:26:34.6128564Z   
+2026-10-15T06:26:34.6129523Z assert (1 != 0 and 'ValueError' in "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n")
+2026-10-15T06:26:34.6131062Z  +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').returncode
+2026-10-15T06:26:34.6133227Z  +  and   "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n" = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').stderr
+2026-10-15T06:26:34.6135286Z FAILED tests/test_grader_owner_loss_audit.py::test_rehashed_corruption_is_rejected[deadline-False] - AssertionError: fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'
+2026-10-15T06:26:34.6136250Z   Traceback (most recent call last):
+2026-10-15T06:26:34.6136795Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 153, in <module>
+2026-10-15T06:26:34.6137412Z       print(json.dumps(verify(parser.parse_args().bundle.absolute()), indent=2))
+2026-10-15T06:26:34.6137950Z                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6138493Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 63, in verify
+2026-10-15T06:26:34.6139020Z       return verify_directory(out)
+2026-10-15T06:26:34.6139349Z              ^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6139855Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 78, in verify_directory
+2026-10-15T06:26:34.6140572Z       raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
+2026-10-15T06:26:34.6141174Z             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6141807Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 466, in check_output
+2026-10-15T06:26:34.6142458Z       return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-15T06:26:34.6142895Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6143457Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 571, in run
+2026-10-15T06:26:34.6144009Z       raise CalledProcessError(retcode, process.args,
+2026-10-15T06:26:34.6144709Z   subprocess.CalledProcessError: Command '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.
+2026-10-15T06:26:34.6145430Z   
+2026-10-15T06:26:34.6146386Z assert (1 != 0 and 'ValueError' in "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n")
+2026-10-15T06:26:34.6148009Z  +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/VARE/VARE/scripts/audi...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').returncode
+2026-10-15T06:26:34.6150134Z  +  and   "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n" = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/VARE/VARE/scripts/audi...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').stderr
+2026-10-15T06:26:34.6152234Z FAILED tests/test_grader_owner_loss_audit.py::test_rehashed_corruption_is_rejected[deadline-True] - AssertionError: fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'
+2026-10-15T06:26:34.6153086Z   Traceback (most recent call last):
+2026-10-15T06:26:34.6153615Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 153, in <module>
+2026-10-15T06:26:34.6154262Z       print(json.dumps(verify(parser.parse_args().bundle.absolute()), indent=2))
+2026-10-15T06:26:34.6154736Z                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6155299Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 63, in verify
+2026-10-15T06:26:34.6155954Z       return verify_directory(out)
+2026-10-15T06:26:34.6156291Z              ^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6156860Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 78, in verify_directory
+2026-10-15T06:26:34.6157549Z       raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
+2026-10-15T06:26:34.6158168Z             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6158837Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 466, in check_output
+2026-10-15T06:26:34.6159461Z       return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-15T06:26:34.6159907Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6160427Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 571, in run
+2026-10-15T06:26:34.6161010Z       raise CalledProcessError(retcode, process.args,
+2026-10-15T06:26:34.6161736Z   subprocess.CalledProcessError: Command '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.
+2026-10-15T06:26:34.6162414Z   
+2026-10-15T06:26:34.6163323Z assert (1 != 0 and 'ValueError' in "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n")
+2026-10-15T06:26:34.6164923Z  +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').returncode
+2026-10-15T06:26:34.6167375Z  +  and   "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n" = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').stderr
+2026-10-15T06:26:34.6299493Z FAILED tests/test_grader_owner_loss_audit.py::test_rehashed_corruption_is_rejected[group-False] - AssertionError: fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'
+2026-10-15T06:26:34.6300680Z   Traceback (most recent call last):
+2026-10-15T06:26:34.6301593Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 153, in <module>
+2026-10-15T06:26:34.6302520Z       print(json.dumps(verify(parser.parse_args().bundle.absolute()), indent=2))
+2026-10-15T06:26:34.6303207Z                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6304033Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 63, in verify
+2026-10-15T06:26:34.6304738Z       return verify_directory(out)
+2026-10-15T06:26:34.6305092Z              ^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6305874Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 78, in verify_directory
+2026-10-15T06:26:34.6306733Z       raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
+2026-10-15T06:26:34.6307472Z             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6308282Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 466, in check_output
+2026-10-15T06:26:34.6309055Z       return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-15T06:26:34.6309614Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6310298Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 571, in run
+2026-10-15T06:26:34.6311044Z       raise CalledProcessError(retcode, process.args,
+2026-10-15T06:26:34.6312038Z   subprocess.CalledProcessError: Command '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.
+2026-10-15T06:26:34.6312952Z   
+2026-10-15T06:26:34.6314521Z assert (1 != 0 and 'ValueError' in "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n")
+2026-10-15T06:26:34.6317279Z  +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/VARE/VARE/scripts/audi...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').returncode
+2026-10-15T06:26:34.6320720Z  +  and   "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n" = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/VARE/VARE/scripts/audi...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').stderr
+2026-10-15T06:26:34.6324236Z FAILED tests/test_grader_owner_loss_audit.py::test_rehashed_corruption_is_rejected[group-True] - AssertionError: fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'
+2026-10-15T06:26:34.6325330Z   Traceback (most recent call last):
+2026-10-15T06:26:34.6326257Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 153, in <module>
+2026-10-15T06:26:34.6326820Z       print(json.dumps(verify(parser.parse_args().bundle.absolute()), indent=2))
+2026-10-15T06:26:34.6327203Z                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6327660Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 63, in verify
+2026-10-15T06:26:34.6328074Z       return verify_directory(out)
+2026-10-15T06:26:34.6328308Z              ^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6328734Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 78, in verify_directory
+2026-10-15T06:26:34.6329366Z       raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
+2026-10-15T06:26:34.6329872Z             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6330407Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 466, in check_output
+2026-10-15T06:26:34.6330912Z       return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-15T06:26:34.6331258Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6331688Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 571, in run
+2026-10-15T06:26:34.6332157Z       raise CalledProcessError(retcode, process.args,
+2026-10-15T06:26:34.6332778Z   subprocess.CalledProcessError: Command '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.
+2026-10-15T06:26:34.6333368Z   
+2026-10-15T06:26:34.6334175Z assert (1 != 0 and 'ValueError' in "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n")
+2026-10-15T06:26:34.6335635Z  +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').returncode
+2026-10-15T06:26:34.6338116Z  +  and   "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n" = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').stderr
+2026-10-15T06:26:34.6340046Z FAILED tests/test_grader_owner_loss_audit.py::test_rehashed_corruption_is_rejected[summary-False] - AssertionError: fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'
+2026-10-15T06:26:34.6341434Z   Traceback (most recent call last):
+2026-10-15T06:26:34.6341970Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 153, in <module>
+2026-10-15T06:26:34.6342513Z       print(json.dumps(verify(parser.parse_args().bundle.absolute()), indent=2))
+2026-10-15T06:26:34.6342895Z                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6343333Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 63, in verify
+2026-10-15T06:26:34.6343740Z       return verify_directory(out)
+2026-10-15T06:26:34.6344056Z              ^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6344479Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 78, in verify_directory
+2026-10-15T06:26:34.6345092Z       raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
+2026-10-15T06:26:34.6345587Z             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6346305Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 466, in check_output
+2026-10-15T06:26:34.6346807Z       return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-15T06:26:34.6347147Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6347575Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 571, in run
+2026-10-15T06:26:34.6348037Z       raise CalledProcessError(retcode, process.args,
+2026-10-15T06:26:34.6348670Z   subprocess.CalledProcessError: Command '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.
+2026-10-15T06:26:34.6349244Z   
+2026-10-15T06:26:34.6350054Z assert (1 != 0 and 'ValueError' in "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n")
+2026-10-15T06:26:34.6351485Z  +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/VARE/VARE/scripts/audi...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').returncode
+2026-10-15T06:26:34.6353566Z  +  and   "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n" = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/VARE/VARE/scripts/audi...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').stderr
+2026-10-15T06:26:34.6355470Z FAILED tests/test_grader_owner_loss_audit.py::test_rehashed_corruption_is_rejected[summary-True] - AssertionError: fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'
+2026-10-15T06:26:34.6356524Z   Traceback (most recent call last):
+2026-10-15T06:26:34.6356977Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 153, in <module>
+2026-10-15T06:26:34.6357505Z       print(json.dumps(verify(parser.parse_args().bundle.absolute()), indent=2))
+2026-10-15T06:26:34.6357880Z                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6358310Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 63, in verify
+2026-10-15T06:26:34.6358791Z       return verify_directory(out)
+2026-10-15T06:26:34.6359031Z              ^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6359458Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 78, in verify_directory
+2026-10-15T06:26:34.6360071Z       raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
+2026-10-15T06:26:34.6360565Z             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6361083Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 466, in check_output
+2026-10-15T06:26:34.6361588Z       return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-15T06:26:34.6361942Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6362376Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 571, in run
+2026-10-15T06:26:34.6362897Z       raise CalledProcessError(retcode, process.args,
+2026-10-15T06:26:34.6363505Z   subprocess.CalledProcessError: Command '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.
+2026-10-15T06:26:34.6364075Z   
+2026-10-15T06:26:34.6364887Z assert (1 != 0 and 'ValueError' in "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n")
+2026-10-15T06:26:34.6367017Z  +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').returncode
+2026-10-15T06:26:34.6369165Z  +  and   "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n" = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').stderr
+2026-10-15T06:26:34.6371139Z FAILED tests/test_grader_owner_loss_audit.py::test_rehashed_corruption_is_rejected[latency-False] - AssertionError: fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'
+2026-10-15T06:26:34.6371901Z   Traceback (most recent call last):
+2026-10-15T06:26:34.6372353Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 153, in <module>
+2026-10-15T06:26:34.6372889Z       print(json.dumps(verify(parser.parse_args().bundle.absolute()), indent=2))
+2026-10-15T06:26:34.6373289Z                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6373723Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 63, in verify
+2026-10-15T06:26:34.6374136Z       return verify_directory(out)
+2026-10-15T06:26:34.6374372Z              ^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6374790Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 78, in verify_directory
+2026-10-15T06:26:34.6375400Z       raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
+2026-10-15T06:26:34.6376052Z             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6376574Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 466, in check_output
+2026-10-15T06:26:34.6377078Z       return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-15T06:26:34.6377431Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6377938Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 571, in run
+2026-10-15T06:26:34.6378400Z       raise CalledProcessError(retcode, process.args,
+2026-10-15T06:26:34.6379035Z   subprocess.CalledProcessError: Command '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.
+2026-10-15T06:26:34.6379611Z   
+2026-10-15T06:26:34.6380421Z assert (1 != 0 and 'ValueError' in "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n")
+2026-10-15T06:26:34.6381855Z  +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/VARE/VARE/scripts/audi...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').returncode
+2026-10-15T06:26:34.6383999Z  +  and   "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n" = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '/home/runner/work/VARE/VARE/scripts/audi...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').stderr
+2026-10-15T06:26:34.6386186Z FAILED tests/test_grader_owner_loss_audit.py::test_rehashed_corruption_is_rejected[latency-True] - AssertionError: fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'
+2026-10-15T06:26:34.6386951Z   Traceback (most recent call last):
+2026-10-15T06:26:34.6387396Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 153, in <module>
+2026-10-15T06:26:34.6387932Z       print(json.dumps(verify(parser.parse_args().bundle.absolute()), indent=2))
+2026-10-15T06:26:34.6388315Z                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6388762Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 63, in verify
+2026-10-15T06:26:34.6389175Z       return verify_directory(out)
+2026-10-15T06:26:34.6389415Z              ^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6389844Z     File "/home/runner/work/VARE/VARE/scripts/audit_grader_owner_loss_v1.py", line 78, in verify_directory
+2026-10-15T06:26:34.6390457Z       raw = subprocess.check_output(['git', 'show', protocol['baseline_commit'] + ':src/vare/' + name], cwd=ROOT)
+2026-10-15T06:26:34.6390955Z             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6391469Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 466, in check_output
+2026-10-15T06:26:34.6391976Z       return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+2026-10-15T06:26:34.6392325Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:26:34.6392757Z     File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/subprocess.py", line 571, in run
+2026-10-15T06:26:34.6393224Z       raise CalledProcessError(retcode, process.args,
+2026-10-15T06:26:34.6393854Z   subprocess.CalledProcessError: Command '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.
+2026-10-15T06:26:34.6394441Z   
+2026-10-15T06:26:34.6395249Z assert (1 != 0 and 'ValueError' in "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n")
+2026-10-15T06:26:34.6397060Z  +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').returncode
+2026-10-15T06:26:34.6399093Z  +  and   "fatal: path 'src/vare/runner.py' exists on disk, but not in 'f54c488e272b7dbe513558a2e3489700f5814d35'\nTraceback (mo... '['git', 'show', 'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py']' returned non-zero exit status 128.\n" = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-O', '/home/runner/work/VARE/VARE/script...\', \'show\', \'f54c488e272b7dbe513558a2e3489700f5814d35:src/vare/runner.py\']\' returned non-zero exit status 128.\n').stderr
+2026-10-15T06:26:34.6400589Z 12 failed, 796 passed, 14 skipped in 68.09s (0:01:08)
+2026-10-15T06:26:34.7048801Z ##[error]Process completed with exit code 1.
+2026-10-15T06:26:34.7132686Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-10-15T06:26:34.7132906Z with:
+2026-10-15T06:26:34.7133024Z   name: durable-test-diagnostics-3.11
+2026-10-15T06:26:34.7133180Z   path: /home/runner/work/_temp/durable-test-diagnostics
+2026-10-15T06:26:34.7133284Z   if-no-files-found: ignore
+2026-10-15T06:26:34.7133373Z   compression-level: 6
+2026-10-15T06:26:34.7133463Z   overwrite: false
+2026-10-15T06:26:34.7133559Z   include-hidden-files: false
+2026-10-15T06:26:34.7133639Z env:
+2026-10-15T06:26:34.7133793Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-15T06:26:34.7133983Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-10-15T06:26:34.7134130Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-15T06:26:34.7134272Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-15T06:26:34.7134409Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-15T06:26:34.7134604Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-10-15T06:26:34.7134685Z ##[endgroup]
+2026-10-15T06:26:34.8695470Z (node:4291) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-15T06:26:34.8696046Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-15T06:26:34.8711247Z No files were found with the provided path: /home/runner/work/_temp/durable-test-diagnostics. No artifacts will be uploaded.
+2026-10-15T06:26:34.9180673Z Post job cleanup.
+2026-10-15T06:26:35.0067818Z [command]/usr/bin/git version
+2026-10-15T06:26:35.0111635Z git version 2.55.0
+2026-10-15T06:26:35.0151480Z Temporarily overriding HOME='/home/runner/work/_temp/af92ba32-40aa-4cdc-8e5b-6146bed2996c' before making global git config changes
+2026-10-15T06:26:35.0151867Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-15T06:26:35.0157902Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/VARE/VARE
+2026-10-15T06:26:35.0196643Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-15T06:26:35.0226832Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-15T06:26:35.0463849Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-15T06:26:35.0493470Z http.https://github.com/.extraheader
+2026-10-15T06:26:35.0495326Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-15T06:26:35.0530308Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-15T06:26:35.0758985Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-15T06:26:35.0791601Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-15T06:26:35.1177726Z Cleaning up orphan processes
+2026-10-15T06:26:35.1399827Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
