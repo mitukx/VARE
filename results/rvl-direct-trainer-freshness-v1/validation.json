@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-15",
+  "base_commit": "e912938125b8a135347961801e84f624c2b833eb",
+  "runtime": "Python 3.12.12",
+  "pytest": {
+    "command": "python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py",
+    "result": "739 passed"
+  },
+  "ruff": {
+    "command": "ruff check src tests minigrpo selfimprove scripts/run_minigrpo.py scripts/run_selfimprove.py scripts/run_flagship.py scripts/reproduce_grpo_audit_independent_reproduction_v2.py",
+    "result": "passed"
+  },
+  "mypy": {
+    "command": "mypy src/vare",
+    "result": "passed"
+  },
+  "compileall": {
+    "scope": "updated direct-training scripts except the byte-pinned historical v1 midstep validator",
+    "result": "passed"
+  },
+  "model_training": false,
+  "accelerator_use": false,
+  "external_mts_evaluation": false
+}

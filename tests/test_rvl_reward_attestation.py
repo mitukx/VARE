@@ -97,7 +97,14 @@ class _RecordingTrainer:
         self.weight += 1
 
 
-def _strict_rvl_hooks(trainer, manifest):
+def _strict_rvl_hooks(
+    trainer,
+    manifest,
+    *,
+    current_policy_version=6,
+    current_verifier_version=5,
+    freshness_lag_config=None,
+):
     return RVLGRPOHooks(
         backend=object(),
         trainer=trainer,
@@ -107,6 +114,9 @@ def _strict_rvl_hooks(trainer, manifest):
         verified_generation_factory=lambda **fields: SimpleNamespace(**fields),
         training_evidence_authorizer=manifest.verified,
         require_authenticated_training=True,
+        current_policy_version=current_policy_version,
+        current_verifier_version=current_verifier_version,
+        freshness_lag_config=freshness_lag_config,
     )
 
 
@@ -250,6 +260,65 @@ def test_rvl_trainer_direct_call_checks_signed_manifest_before_trainer_step(tmp_
     # The candidate snapshot is retained by the hook, but the incumbent is
     # restored before train_candidate returns.
     assert trainer.weight == 0
+
+
+def test_rvl_trainer_rechecks_live_freshness_after_waiting_for_model_lock(tmp_path):
+    reader = _fixture(tmp_path)
+    experiences = _read(reader)
+    manifest = _manifest(_root(), experiences)
+    assert all(manifest.verified(experience) for experience in experiences)
+    # Cached lags are deliberately fresh-looking; the use-time assessor must
+    # derive them from the signed rollout versions and current version sources.
+    for experience in experiences:
+        experience.policy_lag = 0
+        experience.verifier_lag = 0
+    versions = {"policy": 5, "verifier": 4}
+    trainer = _RecordingTrainer()
+    hooks = _strict_rvl_hooks(
+        trainer,
+        manifest,
+        current_policy_version=lambda: versions["policy"],
+        current_verifier_version=lambda: versions["verifier"],
+        freshness_lag_config=LagConfig(max_policy_lag=1, max_verifier_lag=1),
+    )
+
+    async def run():
+        await hooks._model_lock.acquire()
+        pending = asyncio.create_task(
+            hooks.train_candidate("policy-0", experiences)
+        )
+        # Let train_candidate reach the contended model lock before advancing
+        # the live versions that were admissible when the call began.
+        await asyncio.sleep(0)
+        versions.update(policy=6, verifier=5)
+        hooks._model_lock.release()
+        with pytest.raises(RuntimeError, match="stale_training_experience"):
+            await pending
+
+    asyncio.run(run())
+    assert trainer.train_calls == 0
+    assert trainer.weight == 0
+    assert (experiences[0].policy_lag, experiences[0].verifier_lag) == (2, 2)
+
+
+def test_rvl_trainer_direct_call_fails_closed_without_version_sources(tmp_path):
+    experiences = _read(_fixture(tmp_path))
+    manifest = _manifest(_root(), experiences)
+    trainer = _RecordingTrainer()
+    hooks = RVLGRPOHooks(
+        backend=object(),
+        trainer=trainer,
+        eval_tasks=[],
+        score_fn=lambda _task, _response: 0.0,
+        generation_factory=lambda **fields: SimpleNamespace(**fields),
+        verified_generation_factory=lambda **fields: SimpleNamespace(**fields),
+        training_evidence_authorizer=manifest.verified,
+        require_authenticated_training=True,
+    )
+
+    with pytest.raises(RuntimeError, match="training_freshness_unverifiable"):
+        asyncio.run(hooks.train_candidate("policy-0", experiences))
+    assert trainer.train_calls == 0
 
 
 @pytest.mark.parametrize(

@@ -1,5 +1,15 @@
 # Roadmap
 
+## Direct-trainer freshness boundary — 2026-10-15
+
+The [RVL trainer adapter](rvl-direct-trainer-freshness-v1-report.md) now
+recomputes policy/verifier lag after model-lock acquisition and before the
+optimizer step. A pinned-main fixture admitted signed stale experiences; the
+fixed CPU regression rejects stale data after a simulated lock wait. This
+closes a bounded E0 use-time admission gap and does not change the research
+gate: an eligible novel method and independently graded task composition are
+still missing.
+
 ## Retrospective comparison audit — 2026-10-13
 
 The [record audit](format-comparison-record-v1-report.md) preserves the primary

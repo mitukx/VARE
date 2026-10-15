@@ -109,6 +109,7 @@ def test_rvl_grpo_hooks_candidate_is_transactional():
         config=RVLGRPOConfig(seed=1),
         generation_factory=Generation,
         verified_generation_factory=VerifiedGeneration,
+        current_verifier_version=1,
     )
     task = Task(id="t", prompt="train", family="math")
     raw = {
@@ -170,6 +171,7 @@ def test_rvl_trainer_boundary_rejects_mutated_reward_before_optimizer(score):
         score_fn=lambda task, response: 0.0,
         generation_factory=Generation,
         verified_generation_factory=VerifiedGeneration,
+        current_verifier_version=1,
     )
     verification = Verification(0.75, True, 1.0, 1, "fixture", trusted=True)
     verification.score = score
@@ -221,6 +223,7 @@ def test_rvl_trainer_boundary_rejects_non_exact_token_ids_before_optimizer(field
         score_fn=lambda _task, _response: 0.0,
         generation_factory=Generation,
         verified_generation_factory=VerifiedGeneration,
+        current_verifier_version=1,
     )
     metadata = {
         "sampling_temperature": 0.8,
@@ -294,6 +297,7 @@ def test_rvl_grpo_hooks_restores_incumbent_after_partial_train_failure():
         config=RVLGRPOConfig(seed=1),
         generation_factory=Generation,
         verified_generation_factory=VerifiedGeneration,
+        current_verifier_version=1,
     )
 
     async def run():
@@ -351,6 +355,7 @@ def test_rvl_grpo_hooks_forces_incumbent_restore_after_partial_candidate_restore
         config=RVLGRPOConfig(seed=1),
         generation_factory=Generation,
         verified_generation_factory=VerifiedGeneration,
+        current_verifier_version=1,
     )
 
     async def run():

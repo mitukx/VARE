@@ -163,6 +163,7 @@ def run(source: Path) -> dict:
         score_fn=lambda _task, response: float(response == "candidate"),
         config=RVLGRPOConfig(seed=1), generation_factory=Generation,
         verified_generation_factory=VerifiedGeneration,
+        current_policy_version=0, current_verifier_version=1,
     )
 
     actual_train_step = trainer.train_step

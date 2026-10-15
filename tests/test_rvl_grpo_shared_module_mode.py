@@ -208,6 +208,7 @@ def test_candidate_rollback_preserves_shared_child_mode(graph_case: str) -> None
         config=RVLGRPOConfig(seed=1),
         generation_factory=Generation,
         verified_generation_factory=VerifiedGeneration,
+        current_verifier_version=1,
     )
 
     async def run() -> None:

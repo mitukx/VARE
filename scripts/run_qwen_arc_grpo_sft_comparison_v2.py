@@ -437,7 +437,8 @@ def train_grpo_arm(lock: dict, model_path: Path, rvl_path: Path, train: list[dic
             verification = Verification(score=reward, passed=bool(reward), confidence=1.0, verifier_version=0, verifier_name="arc-answer-key", trusted=True)
             experiences.append(Experience(attempt=attempt, verification=verification, policy_lag=0, verifier_lag=0, shift_score=0.0))
     hooks = RVLGRPOHooks(backend=backend, trainer=trainer, eval_tasks=[], score_fn=lambda _t, _r: 0.0,
-        config=RVLGRPOConfig(train_temperature=lock["training"]["temperature"], seed=seed), generation_factory=Generation, verified_generation_factory=VerifiedGeneration)
+        config=RVLGRPOConfig(train_temperature=lock["training"]["temperature"], seed=seed), generation_factory=Generation, verified_generation_factory=VerifiedGeneration,
+        current_policy_version=0, current_verifier_version=0)
     base_fp = fingerprint(model.state_dict()); rng_before = torch.get_rng_state().clone()
     candidate_id = asyncio.run(hooks.train_candidate("policy-0", experiences))
     incumbent_state = hooks._states["policy-0"]

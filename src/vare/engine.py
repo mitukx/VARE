@@ -11,7 +11,11 @@ from .curriculum import AdaptiveCurriculum
 from .failure import FailureMiner
 from .evidence import HashChainLedger, sha256_json
 from .interfaces import LoopHooks
-from .lag import DistributionShiftMonitor, LagController
+from .lag import (
+    DistributionShiftMonitor,
+    LagController,
+    make_experience_freshness_assessor,
+)
 from .lifecycle import FailureDrivenTaskGenerator, VerifierRefreshController
 from .promotion import PromotionGate
 from .promotion_journal import PromotionJournal, PromotionRecoveryRequired
@@ -478,18 +482,15 @@ class CapabilityLoop:
                 self.events.emit("tasks_generated", count=len(generated))
 
         screened_stale = 0
+        freshness_assessor = make_experience_freshness_assessor(
+            self.lag,
+            active_policy_version=incumbent_version,
+            active_verifier_version=lambda: self.verifier.active_version,
+        )
 
         def current_freshness(exp: Experience) -> float | None:
             nonlocal screened_stale
-            decision = self.lag.assess(
-                rollout_policy_version=exp.attempt.policy_version,
-                active_policy_version=incumbent_version,
-                reward_verifier_version=exp.verification.verifier_version,
-                active_verifier_version=self.verifier.active_version,
-                shift_score=exp.shift_score,
-            )
-            exp.policy_lag = decision.policy_lag
-            exp.verifier_lag = decision.verifier_lag
+            decision = freshness_assessor(exp)
             if not decision.admitted:
                 screened_stale += 1
                 return None
@@ -525,7 +526,17 @@ class CapabilityLoop:
             # A failing training hook may have mutated model/optimizer state
             # without returning a candidate handle. Fence rather than guess.
             self._candidate_unresolved = True
-            candidate_id = await self.hooks.train_candidate(incumbent_id, train_batch)
+            freshness_train = getattr(
+                self.hooks, "train_candidate_with_freshness", None
+            )
+            if callable(freshness_train):
+                candidate_id = await freshness_train(
+                    incumbent_id,
+                    train_batch,
+                    freshness_assessor,
+                )
+            else:
+                candidate_id = await self.hooks.train_candidate(incumbent_id, train_batch)
 
         evaluation_tasks: list[asyncio.Task] = []
         evaluation_group: asyncio.Future | None = None

@@ -6,12 +6,14 @@ The operator must still ensure the learner cannot access Docker control APIs.
 """
 from __future__ import annotations
 
+from collections.abc import Callable
 from pathlib import Path
 from typing import Sequence
 
 from .attestation import EvidenceTrustRoot
 from .container_isolation import DockerIsolationRunner, IsolationLimits
 from .interfaces import LoopHooks
+from .lag import LagDecision
 from .types import Attempt, EvaluationReport, Experience, Task
 
 
@@ -46,6 +48,23 @@ class IsolatedEvaluationHooks:
         return await self.underlying.rollout(task, policy_id, policy_version, step)
 
     async def train_candidate(self, incumbent_id: str, experiences: Sequence[Experience]) -> str:
+        return await self.underlying.train_candidate(incumbent_id, experiences)
+
+    async def train_candidate_with_freshness(
+        self,
+        incumbent_id: str,
+        experiences: Sequence[Experience],
+        freshness_assessor: Callable[[Experience], LagDecision],
+    ) -> str:
+        train_with_freshness = getattr(
+            self.underlying, "train_candidate_with_freshness", None
+        )
+        if callable(train_with_freshness):
+            return await train_with_freshness(
+                incumbent_id,
+                experiences,
+                freshness_assessor,
+            )
         return await self.underlying.train_candidate(incumbent_id, experiences)
 
     async def evaluate(self, policy_id: str) -> EvaluationReport:

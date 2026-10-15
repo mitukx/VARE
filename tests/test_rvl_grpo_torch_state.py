@@ -88,6 +88,7 @@ def make_hooks(trainer, backend=None):
         trainer=trainer, backend=backend or ModeChangingBackend(trainer),
         eval_tasks=[Task("eval", "prompt")], score_fn=lambda *_: 1.0,
         generation_factory=SimpleNamespace, verified_generation_factory=SimpleNamespace,
+        current_verifier_version=0,
     )
 
 
