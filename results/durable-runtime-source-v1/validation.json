@@ -1,0 +1,43 @@
+{
+  "checks": {
+    "artifact_audit": {
+      "failures": 0,
+      "junit_sha256": "fa0817f234fcea0f7bc70df8053444aefeedc7778d2e1b9e9805888c8848d22d",
+      "passed": 20,
+      "skipped": 0
+    },
+    "default_cpu": {
+      "failures": 0,
+      "junit_sha256": "11bfddc08ce0e1d046de0fdb7d0363e6f05a2ac8c5e35186947275fe58b6efcf",
+      "passed": 888,
+      "skipped": 14
+    },
+    "mathematical_graders": {
+      "failures": 0,
+      "junit_sha256": "03faa30feef754d5fa1085583657f3a21e77ba40287fa7cd82f0afed248a3f59",
+      "passed": 14,
+      "skipped": 0
+    },
+    "source_hash_supplement": {
+      "failures": 0,
+      "junit_sha256": "7ac6447031b5be7f85452e2d97a598e5385bcb501f269e8f6b5fa7aa9ebe8b27",
+      "passed": 5,
+      "skipped": 0
+    }
+  },
+  "scope": "E0/source consistency on real CPU evaluator processes; no model learning. Protocol/test before paired costs remain unchanged. Supplemental BLOB checks described separately.",
+  "source_parent": "58ef14e7a6ffc9a763de14e95cfb7527fcb3ece4",
+  "source_sha256": {
+    "protocols/durable_runtime_source_v1.lock.json": "4011d991356eaa8a8a1270d2c0f2e403f573744a990bef96fdfd9c5024af41d4",
+    "scripts/audit_durable_runtime_source_v1.py": "f1b1e958c6f25b529de4fc5693f617f4eacfafa1d567086c3c218bb73f1eb344",
+    "scripts/reproduce_durable_runtime_source_v1.py": "62620b7d101b97ed239e9d600002b492f5234880793adf7f375dfae4540b0745",
+    "src/vare/durable.py": "3fe7d2e449dd9156083c83c1f55effb6f1409aef3e109c573e6dcec240b549b9",
+    "tests/test_durable_runtime_source.py": "1ee999acc0ec199dbd43362d1bcfb20de0cad897f180a5ba45fa4e0900a5fc7d",
+    "tests/test_durable_runtime_source_audit.py": "d5623293a928d72e186a70bc900372ba7563e3a00e9f306e2ac486f96afc8f35",
+    "tests/test_durable_runtime_source_hashes.py": "3efd7804cf7e9546d9f3a712619594a2951075e8ec5f4feed9e0b327c2d0b45d"
+  },
+  "static_checks": {
+    "mypy": "passed, 62 source files",
+    "ruff": "passed"
+  }
+}

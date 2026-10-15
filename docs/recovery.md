@@ -26,6 +26,13 @@ A claim contains job ID, owner label, increasing token and a wall-clock lease de
 
 Freshness recomputes the locked protocol and candidate fingerprint before worker use, completion and export. Changed or unreadable inputs invalidate the entire enrolled job; they are not silently accepted as a new candidate. Start another state file to evaluate new inputs. Export captures a consistent database read transaction, strips live workspace paths and includes protected snapshots, raw attempts, events and an exact-file-set manifest. The auditor replays permissible transitions and validates accepted payloads against enrollment and snapshots. Hashes provide consistency relative to a reviewed bundle, not signatures or authentication.
 
+Workers also compare the five declared executor source files with their enrolled
+snapshots before refresh, claim, dispatch and completion. A mismatch fails with
+`RuntimeMismatchError` and preserves job/attempt/event state. Resume with the
+enrolled revision; a reviewed runtime upgrade needs a new enrollment. Inspect
+and export of historical state remain available without matching the old
+executor. See the [source-pin comparison and exact limits](durable-runtime-source-v1-report.md).
+
 ## Commands
 
 Use the same plan format as the [bounded runner](execution.md). Keep live state outside the VARE checkout; it contains local absolute paths. For example:

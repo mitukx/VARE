@@ -1,5 +1,14 @@
 # Current evidence gaps
 
+**Update 2026-10-15 — durable executor source:** a resumed worker could use new
+code while exporting its enrollment-time executor snapshot. The source pin now
+rejects differing/incomplete declared executor bundles before claims, dispatch
+and publication. Pinned merged main has 14 failures and one passing control;
+the correction passes all 15 cases, including real process loss, changed-code
+refusal and original-code restoration. Five CPU pairs show 0.95% higher worker
+wall time. Loaded-bytecode attestation, unlisted dependencies and automatic
+runtime upgrades remain outside scope. See the [report](durable-runtime-source-v1-report.md).
+
 **Update 2026-10-15 — grader owner loss:** the bounded runner now uses an
 ownership-pipe guard to stop ordinary grader descendants after SIGKILL,
 SIGTERM or immediate worker exit. Pinned main fails all three fresh process

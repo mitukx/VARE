@@ -1,0 +1,35 @@
+{
+  "baseline_commit": "58ef14e7a6ffc9a763de14e95cfb7527fcb3ece4",
+  "baseline_expected": {
+    "failures": 14,
+    "passes": 1
+  },
+  "candidate_expected": {
+    "failures": 0,
+    "passes": 15
+  },
+  "cases": 15,
+  "cost_rule": "Retain every alternating pair. Report descriptive wall time, throughput, traced controller memory and export/audit cost. No speedup gate or timing-based selection.",
+  "grader_delay_seconds": 0.02,
+  "limits": [
+    "Declared local executor source files only, under stable trusted installation/database ownership.",
+    "Not loaded-bytecode attestation, full dependency/Python-version provenance, coordinated-tampering protection or a hostile-code sandbox.",
+    "No automatic runtime migration; original runtime remains necessary to resume an enrolled store.",
+    "No model inference, training, independently improved task success, or retired confirmation data."
+  ],
+  "max_wall_seconds": 300,
+  "primary_rule": "Reject a changed or incomplete declared executor source bundle before claim, worker refresh/grading, and publication. Rejection preserves job/attempt/event state. After real process exit, changed-runtime resume is refused; restoring the enrolled runtime resumes token 2 and a raw-export replay matches its executor bytes. The unchanged control succeeds.",
+  "protected_test": "tests/test_durable_runtime_source.py",
+  "protected_test_sha256": "1ee999acc0ec199dbd43362d1bcfb20de0cad897f180a5ba45fa4e0900a5fc7d",
+  "protocol_id": "durable-runtime-source-v1",
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "paid_api_calls": 0
+  },
+  "schema_version": 1,
+  "stage": "Development regression of an observed source-provenance defect; frozen before paired costs. Not model/task confirmation.",
+  "timing_jobs": 16,
+  "timing_pairs": 5,
+  "timing_workers": 4
+}

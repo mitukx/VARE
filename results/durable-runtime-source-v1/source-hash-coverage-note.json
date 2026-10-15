@@ -1,0 +1,5 @@
+{
+  "finding": "SQLite || returns TEXT for concatenated BLOB operands; the frozen ten corruption cases therefore exercise malformed-asset refusal.",
+  "action": "Keep the frozen protocol/test and raw comparison unchanged. Add five supplemental BLOB-preserving source-drift checks and a specific hash-mismatch diagnostic.",
+  "scope": "All source hashes get direct coverage; actual changed-code process test was already well-formed BLOB enrollment."
+}
