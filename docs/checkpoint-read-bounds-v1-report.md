@@ -43,22 +43,22 @@ verification, exclude process launch, and run under `tracemalloc`; peak RSS is
 whole-process high-water memory. These are local cached-file measurements,
 not storage hardware throughput or population estimates.
 
-Final [raw bundle](../results/checkpoint-read-bounds-v1/comparison-v4/manifest.json):
-Python 3.12.12, macOS arm64, CPU only, zero API spend and no GPU use.
+Final [raw bundle](../results/checkpoint-read-bounds-v1/comparison-v5/manifest.json):
+Python 3.12.12, macOS arm64, Apple M1 Pro / 32 GiB, CPU only, zero API spend and no GPU use.
 
 | Workload | Main median | Corrected median |
 | --- | ---: | ---: |
 | 32 MiB replacement, traced peak allocation | 67,114,578 B | 4,398 B |
-| Replacement rejection latency | 15.046 ms | 0.320 ms |
-| Replacement process peak RSS | 90,963,968 B | 22,724,608 B |
+| Replacement rejection latency | 10.843 ms | 0.312 ms |
+| Replacement process peak RSS | 90,816,512 B | 22,462,464 B |
 | 8 MiB growth after `fstat`, traced peak allocation | 16,780,733 B | 8,420 B |
-| Growth rejection latency, including injected write | 3.828 ms | 1.907 ms |
-| 64 verified reads of 1 MiB, elapsed | 55.732 ms | 55.358 ms |
-| Valid-read throughput, descriptive | 1,148.35 MiB/s | 1,156.12 MiB/s |
+| Growth rejection latency, including injected write | 3.588 ms | 1.760 ms |
+| 64 verified reads of 1 MiB, elapsed | 51.764 ms | 52.717 ms |
+| Valid-read throughput, descriptive | 1,236.39 MiB/s | 1,214.04 MiB/s |
 
 All invalid reads reject in both revisions; the measured benefit is bounded
-work before rejection. Normal throughput is similar and no speedup claim is
-made. Registered size limits payload IO, not total Python RSS: accepted reads
+work before rejection. The final normal-read median is 1.84% slower; earlier
+measurements varied in direction. No normal-throughput speedup is claimed. Registered size limits payload IO, not total Python RSS: accepted reads
 can retain chunks and the joined result simultaneously.
 
 The 15 independently asserted regression cases give **main: 7 fail / 8 pass;
@@ -91,9 +91,18 @@ optimizer or a process killed halfway through publication.
 - `comparison-v4` passes the comparison and separate stdlib auditor, which
   reconstructs 30 measurements, 15 cases per arm and four recovery records.
   Changed measurement and missing-worker-file probes fail closed.
+- `comparison-v5` repeats the unchanged IO/task protocol after integration with
+  main `7801f24`. Reproducer and auditor gates now use explicit exceptions so
+  Python `-O` cannot disable them; six artifact-fault regressions cover normal
+  and optimized audit execution. Both audit modes pass. The earlier runner
+  source is retained with its exact v4 hash under `source-snapshots/`.
 - Early suite attempts failed on sparse-checkout omissions (a helper module,
   then three retained-record tests); their logs are preserved. They were fixed
-  by fetching existing assets, not by changing those tests.
+  by fetching existing assets, not by changing those tests. The all-tests
+  launcher also initially selected OS Python 3.9 in a child command; activating
+  the required Python 3.12 environment corrected it. Integration with newer
+  main required one additional frozen-result directory for six existing tests.
+  These failed attempts are retained separately from the final complete run.
 
 No retired model confirmation task was rerun. New IO faults are development
 regressions, reusable as such; the six new linear inputs are protocol controls,
