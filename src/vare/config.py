@@ -35,6 +35,8 @@ class PromotionConfig:
     paired_bootstrap_samples: int = 2000
     # When set, both reports must include this protocol-frozen evaluation slice set.
     required_slice_names: tuple[str, ...] = ()
+    # Opt-in: frozen SHA-256 of independently enforced trajectory policy.
+    trajectory_policy_sha256: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
