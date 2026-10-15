@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import re
 from .attestation import EvidenceTrustRoot
 from .types import EvaluationReport
 
@@ -29,9 +30,9 @@ class TrajectoryPromotionConstraint:
             or audit.get("policy_id") != report.policy_id
             or audit.get("policy_sha256") != self.required_policy_sha256
             or not isinstance(audit.get("run_id"), str)
-            or not audit["run_id"]
+            or audit["run_id"] != self.trust_root.run_id
             or not isinstance(audit.get("ledger_head_sha256"), str)
-            or len(audit["ledger_head_sha256"]) != 64
+            or re.fullmatch(r"[0-9a-f]{64}", audit["ledger_head_sha256"]) is None
             or type(audit.get("event_count")) is not int
             or type(audit.get("expected_event_count")) is not int
             or audit["event_count"] < 0
