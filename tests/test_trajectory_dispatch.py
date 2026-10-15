@@ -41,7 +41,7 @@ def test_trusted_dispatch_records_allowed_calls(tmp_path):
         ) == "ok"
 
     asyncio.run(run())
-    dispatcher.close()
+    dispatcher.close(expected_event_count=3)
     assert seen == ["executed"]
     audit = audit_trajectory(path, run_id="r1", policy_id="candidate", policy=policy)
     assert audit.status == "pass" and audit.event_count == 3
@@ -68,7 +68,7 @@ def test_denied_action_recorded_without_execution(tmp_path, tool, url):
             await dispatcher.execute(tool, call, network_url=url)
 
     asyncio.run(run())
-    dispatcher.close()
+    dispatcher.close(expected_event_count=1 if url is None else 2)
     assert seen == []
     audit = audit_trajectory(path, run_id="r1", policy_id="candidate", policy=policy)
     assert audit.status == "violation"
@@ -90,5 +90,22 @@ def test_failed_tool_still_records_result(tmp_path):
             await dispatcher.execute("browser", fail)
 
     asyncio.run(run())
-    dispatcher.close()
+    dispatcher.close(expected_event_count=2)
     assert audit_trajectory(path, run_id="r1", policy_id="candidate", policy=policy).status == "pass"
+
+def test_independent_dispatch_count_mismatch_fails_closed(tmp_path):
+    policy = TrajectoryPolicy("v1", ("browser",))
+    path = tmp_path / "trace.jsonl"
+    dispatcher = AuditedDispatcher(
+        recorder=TrustedTrajectoryRecorder(path, run_id="r1", policy_id="candidate"),
+        policy=policy,
+    )
+
+    async def call():
+        return "ok"
+
+    asyncio.run(dispatcher.execute("browser", call))
+    dispatcher.close(expected_event_count=3)
+    from vare.trajectory_safety import TrajectoryEvidenceError
+    with pytest.raises(TrajectoryEvidenceError):
+        audit_trajectory(path, run_id="r1", policy_id="candidate", policy=policy)
