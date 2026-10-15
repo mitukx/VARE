@@ -1,23 +1,17 @@
-# Documentation index
+# Documentation
 
-Start here for navigation. Reports and frozen evidence retain their original paths and dates; an old PR-status snapshot is historical, not a live status assertion.
+**First read:** [project summary and verified results](../README.md) → [architecture](architecture.md) → [engineering evidence](engineering-depth.md). This index is curated; the historical experiment and evidence ledgers deliberately preserve older records and dated decisions.
 
-| Purpose | Entry point |
+| Reader question | Reference |
 | --- | --- |
-| Understand the research question, current outcomes, and quick start | [Root README](../README.md) |
-| Review a small representative set of contributions | [Reviewer guide](reviewer-guide.md) |
-| Locate implementation, experimental components, and raw evidence | [Repository layout](repository-layout.md) |
-| Check unresolved evidence and experiment admission | [Current gaps](current-gaps.md), [agent charter](../AGENTS.md) |
-| Follow completed studies and negative results | [Experiment index](experiments.md), [evidence ledger](evidence.md), [roadmap chronology](roadmap.md) |
-| Reproduce current runtime ownership and recover after a crash | [Whole-round ownership](runtime-round-ownership-v1.md) |
-| Reproduce checkpoint IO bounds and signed-evaluator recovery | [Checkpoint IO report](checkpoint-read-bounds-v1-report.md) |
-| Reproduce evaluation cleanup, discard, and publication boundaries | [Evaluation integration](evaluation-transaction-integration-v1.md), [discard](candidate-discard-recovery-v1.md), [publication](promotion-publication-recovery-v1.md) |
-| Inspect the real trainer integration and inference ownership | [RVL integration](rvl-evaluation-promotion-e2e-v1-report.md), [inference transaction](rvl-inference-transaction-v1-report.md) |
-| Inspect replay/provenance and authenticated evidence contracts | [Trajectory reference](trajectory-reference-v1.md), [checkpoint-bound promotion](checkpoint-bound-promotion.md), [attested promotion](attested-promotion.md) |
-| Reproduce the finite GRPO audit-order witness independently | [Reproduction report](grpo-audit-independent-reproduction-v2-report.md), [frozen protocol](../protocols/grpo_audit_independent_reproduction_v2.lock.json) |
-| Run durable historical evaluations (a different state machine) | [Local evaluation recovery](recovery.md), [CLI](execution.md) |
-| Read real-model outcomes without confusing feasibility with learning | [OpenBookQA confirmation](openbookqa-qwen25-grpo-sft-confirmation-v1-report.md), [format/correctness comparison](format-vs-correctness-comparison-v2.md), [one-update smoke](heldout-exact-integer-update-cost-smoke-v1.md) |
-| Preserve artifacts and avoid new large tracked files | [Artifact retention](artifact-retention.md) |
-| Find reproduction commands by purpose | [Script index](../scripts/README.md) |
+| What problem does VARE solve, and what has actually been demonstrated? | [README](../README.md), [reviewer guide](reviewer-guide.md) |
+| How do training, orchestration, evaluation and recovery fit together? | [Architecture and ownership](architecture.md), [engineering deep dive](engineering-depth.md) |
+| What can I run now? | [Quick start](../README.md#quick-start), [reproduction scripts](../scripts/README.md), [CLI](execution.md) |
+| How are repositories and source paths organized? | [Repository layout](repository-layout.md) |
+| How are faults detected, candidates discarded and uncertain state recovered? | [Whole-round runtime](runtime-round-ownership-v1.md), [evaluation lifetime](engine-evaluation-lifecycle-v1-report.md), [publication](promotion-publication-recovery-v1.md), [durable jobs](recovery.md) |
+| How do actual trainer and trajectory boundaries work? | [RVL integration](rvl-evaluation-promotion-e2e-v1-report.md), [direct trainer freshness](rvl-direct-trainer-freshness-v1-report.md), [trajectory reference](trajectory-reference-v1.md), [trajectory safety](trajectory-aware-safety-v1.md) |
+| Where are completed and failed experiments? | [Experiment index](experiments.md), [evidence ledger](evidence.md), [roadmap chronology](roadmap.md) |
+| What is not validated, and what would justify another study? | [Current gaps](current-gaps.md), [research qualification](research-candidate-qualification-2026-10-15.md), [agent charter](../AGENTS.md) |
+| How are protocols, artifacts and large blobs preserved? | [Repository layout](repository-layout.md), [artifact retention](artifact-retention.md) |
 
-No retained real-model update establishes an independently confirmed held-out task-success gain. CPU fixture correctness, historical grader calibration, model feasibility, and task-success comparisons are different evidence levels. Read each report's protocol, raw records, and limits before reusing its numbers.
+**Evidence policy:** A regression fixture validates a bounded implementation property; a model-feasibility test does not show learning; an optimizer smoke is not a held-out success result. No retained real-model policy update establishes independently confirmed held-out task-success improvement. Follow each report's pinned source, protocol, raw artifacts, and stated limits. Historical PR/CI status references are snapshots, not live state.
