@@ -347,6 +347,8 @@ def run(model_path: Path, rvl_source: Path, output_dir: Path) -> dict[str, Any]:
             config=RVLGRPOConfig(train_temperature=float(sample_config["temperature"])),
             generation_factory=type(generations[0]),
             verified_generation_factory=__import__("rvl_systems.types", fromlist=["VerifiedGeneration"]).VerifiedGeneration,
+            current_policy_version=0,
+            current_verifier_version=0,
         )
         incumbent_fingerprint = _tensor_fingerprint(trainer.model.state_dict())
         incumbent_rng = torch.get_rng_state().clone()

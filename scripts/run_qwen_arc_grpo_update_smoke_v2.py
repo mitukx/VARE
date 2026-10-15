@@ -305,7 +305,8 @@ def run(model_path: Path, rvl_path: Path, train_parquet: Path, val_parquet: Path
             exp.append(Experience(attempt=attempt, verification=verification, policy_lag=0, verifier_lag=0, shift_score=0.0))
         hooks = RVLGRPOHooks(backend=backend, trainer=trainer, eval_tasks=[], score_fn=lambda _t, _r: 0.0,
             config=RVLGRPOConfig(train_temperature=lock["rollout"]["temperature"], seed=lock["rollout"]["seed_base"]),
-            generation_factory=Generation, verified_generation_factory=VerifiedGeneration)
+            generation_factory=Generation, verified_generation_factory=VerifiedGeneration,
+            current_policy_version=0, current_verifier_version=0)
         incumbent = tensor_fingerprint(trainer.model.state_dict())
         rng_before = torch.get_rng_state().clone()
         incumbent_optimizer = trainer.optimizer.state_dict()

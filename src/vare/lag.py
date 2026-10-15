@@ -2,10 +2,15 @@ from __future__ import annotations
 
 import math
 from collections import Counter, deque
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Iterable
 
 from .config import LagConfig
+from .types import Experience
+
+
+VersionSource = int | Callable[[], int]
 
 
 @dataclass(frozen=True, slots=True)
@@ -110,3 +115,33 @@ class LagController:
             shift_score=shift_score,
             reasons=tuple(reasons),
         )
+
+
+def make_experience_freshness_assessor(
+    controller: LagController,
+    *,
+    active_policy_version: VersionSource,
+    active_verifier_version: VersionSource,
+) -> Callable[[Experience], LagDecision]:
+    """Build a use-time assessor from live or run-owned version sources.
+
+    The returned function reads callable version sources on every invocation;
+    it never treats ``Experience.policy_lag`` or ``verifier_lag`` as authority.
+    """
+
+    def read(source: VersionSource) -> int:
+        return source() if callable(source) else source
+
+    def assess(experience: Experience) -> LagDecision:
+        decision = controller.assess(
+            rollout_policy_version=experience.attempt.policy_version,
+            active_policy_version=read(active_policy_version),
+            reward_verifier_version=experience.verification.verifier_version,
+            active_verifier_version=read(active_verifier_version),
+            shift_score=experience.shift_score,
+        )
+        experience.policy_lag = decision.policy_lag
+        experience.verifier_lag = decision.verifier_lag
+        return decision
+
+    return assess

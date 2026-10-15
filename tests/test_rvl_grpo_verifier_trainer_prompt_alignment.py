@@ -71,6 +71,7 @@ def _hooks(trainer):
         score_fn=lambda task, response: float(task.id == "task-a" and response == "answer"),
         generation_factory=Generation,
         verified_generation_factory=VerifiedGeneration,
+        current_verifier_version=0,
     )
 
 

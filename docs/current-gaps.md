@@ -2,12 +2,31 @@
 
 **Research gate 2026-10-15 — no eligible fresh model/task pair:** a focused
 post-Stage-0 prior-art and feasibility review found no candidate that clears
-both novelty and independent-evaluation requirements. Fixed-rollout/staleness,
-verifier-error correction, and skill-library self-improvement now have close
-direct coverage; the latest xLong-horizon RL framework is GPU-systems work.
-Do not start another model screen or update from the cached model inventory
-alone. The next gate requires a materially distinct method and an unused,
-independently graded task composition. See the [qualification record](research-candidate-qualification-2026-10-15.md).
+both novelty and independent-evaluation requirements. Recent work now directly
+covers fixed-rollout/staleness, verifier-error correction, skill libraries,
+failure reflection and counterfactual memory, trajectory-quality experience
+reuse, and self-verifiable task transformation. Long-horizon branching includes
+GPU-systems contributions outside the M1 budget. SWE-rebench is a possible task
+pool; the pinned revision `89cdfbab` has test tasks through 2025-04-30, while
+per-repository licenses, freshness against a chosen checkpoint, and M1 execution
+cost remain unqualified. Its metadata and timestamp statistics are retained in
+the [snapshot manifest](../results/research-candidate-qualification-2026-10-15/swe-rebench-snapshot-89cdfba/manifest.json). Do not
+start another model screen or update from the cached model inventory alone. The
+next gate requires a materially distinct method and an unused, independently
+graded task composition. See the [qualification record](research-candidate-qualification-2026-10-15.md).
+
+**Update 2026-10-15 — direct RVL trainer freshness:** a signed batch could pass
+through `RVLGRPOHooks.train_candidate()` without recomputing current policy or
+verifier lag. The adapter now reassesses freshness under its model lock just
+before the optimizer call; missing version context fails closed, and
+`CapabilityLoop` passes a live assessor to close the lock-wait window. The
+pinned-main reproducer admitted stale data and called the trainer once; the
+fixed regression rejects an experience that becomes stale while waiting and
+records zero trainer calls. This is E0 admission evidence only. See the
+[report](rvl-direct-trainer-freshness-v1-report.md) and raw baseline/fixed
+[records](../results/rvl-direct-trainer-freshness-v1/). The historical v1
+midstep validator remains pinned to its prior source revision; current direct
+call fixtures use the v2 runner.
 
 **Update 2026-10-15 — singleton GRPO groups:** `EngineConfig.samples_per_task`
 defaults to one, which can make every RVL GRPO group a singleton. Centering a

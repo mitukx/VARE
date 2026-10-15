@@ -8,6 +8,13 @@ import math
 from statistics import fmean
 from typing import Any, Callable, Iterator, Sequence
 
+from ..config import LagConfig
+from ..lag import (
+    LagController,
+    LagDecision,
+    VersionSource,
+    make_experience_freshness_assessor,
+)
 from ..reward_evidence import validate_complete_rvl_reward_batch
 from ..types import Attempt, EvaluationReport, Experience, Task, snapshot_verification
 
@@ -54,6 +61,9 @@ class RVLGRPOHooks:
         generation_factory: Callable[..., Any] | None = None,
         training_evidence_authorizer: Callable[[Experience], bool] | None = None,
         require_authenticated_training: bool = False,
+        current_policy_version: VersionSource | None = None,
+        current_verifier_version: VersionSource | None = None,
+        freshness_lag_config: LagConfig | None = None,
     ) -> None:
         self.backend = backend
         self.trainer = trainer
@@ -71,12 +81,37 @@ class RVLGRPOHooks:
             raise ValueError(
                 "authenticated training requires a trusted evidence authorizer"
             )
+        if freshness_lag_config is not None and current_verifier_version is None:
+            raise ValueError(
+                "a freshness lag config requires a current verifier version source"
+            )
+        if current_policy_version is not None and current_verifier_version is None:
+            raise ValueError(
+                "a current policy version source requires a current verifier version source"
+            )
         self.training_evidence_authorizer = training_evidence_authorizer
         self.require_authenticated_training = require_authenticated_training
         self._model_lock = asyncio.Lock()
         self._rollout_sem = asyncio.Semaphore(self.config.max_backend_concurrency)
         self._active_id = "policy-0"
         self._version = 0
+
+        def read_policy_version() -> int:
+            if current_policy_version is None:
+                return self._version
+            if callable(current_policy_version):
+                return current_policy_version()
+            return current_policy_version
+
+        self._training_freshness_assessor = (
+            make_experience_freshness_assessor(
+                LagController(freshness_lag_config or LagConfig()),
+                active_policy_version=read_policy_version,
+                active_verifier_version=current_verifier_version,
+            )
+            if current_verifier_version is not None
+            else None
+        )
         self._counter = 1
         self._states: dict[str, Any] = {self._active_id: self._snapshot_training_state()}
         self._loaded_id: str | None = self._active_id
@@ -357,37 +392,79 @@ class RVLGRPOHooks:
         return advantages
 
     async def train_candidate(self, incumbent_id: str, experiences: Sequence[Experience]) -> str:
+        return await self.train_candidate_with_freshness(
+            incumbent_id,
+            experiences,
+            self._training_freshness_assessor,
+        )
+
+    async def train_candidate_with_freshness(
+        self,
+        incumbent_id: str,
+        experiences: Sequence[Experience],
+        freshness_assessor: Callable[[Experience], LagDecision] | None,
+    ) -> str:
+        """Train only after rechecking every experience under the model lock.
+
+        CapabilityLoop supplies a live assessor so its verifier and policy
+        versions are read at the use boundary. Direct callers must configure a
+        run-owned verifier version source on this adapter.
+        """
         if incumbent_id != self._active_id:
             raise ValueError("candidate must branch from active incumbent")
         if not experiences:
             raise ValueError("candidate training batch cannot be empty")
-        # Keep this check at the hook boundary as well as in CapabilityLoop:
-        # callers can use RVLGRPOHooks directly, and in that case there is no
-        # outer-loop admission check. A configured authorizer always applies;
-        # the strict flag additionally makes omitting one a construction error.
-        if self.training_evidence_authorizer is not None:
-            try:
-                validate_complete_rvl_reward_batch(experiences)
-                authorizations = [
-                    self.training_evidence_authorizer(experience)
-                    for experience in experiences
-                ]
-            except Exception as exc:
-                raise RuntimeError("training_reward_evidence_unverifiable") from exc
-            if any(type(authorized) is not bool or not authorized for authorized in authorizations):
-                raise RuntimeError("unauthenticated_training_reward_evidence")
-        elif self.require_authenticated_training:
-            # This is defensive; the constructor already rejects this state.
-            raise RuntimeError("unauthenticated_training_reward_evidence")
-        verified = [self._to_verified_generation(x) for x in experiences]
-        train_config = getattr(self.trainer, "config", None)
-        advantages = self._group_relative_advantages(
-            experiences,
-            verified,
-            eps=float(getattr(train_config, "advantage_eps", 1e-6)),
-            clip=float(getattr(train_config, "clip_advantage", 5.0)),
-        )
+        # The public Experience graph is mutable. Detach it before the first
+        # await so a caller cannot change signed provenance while this task is
+        # queued on _model_lock. Authorization, freshness, advantages, and the
+        # trainer inputs all derive from this one detached batch.
+        try:
+            training_experiences = copy.deepcopy(tuple(experiences))
+        except Exception as exc:
+            raise RuntimeError("training_experience_snapshot_unverifiable") from exc
+        if any(type(experience) is not Experience for experience in training_experiences):
+            raise RuntimeError("training_experience_snapshot_unverifiable")
+        if freshness_assessor is None:
+            raise RuntimeError("training_freshness_unverifiable")
         async with self._model_lock:
+            # Authenticate only after acquiring the lock, against the detached
+            # data that produced `verified`; this closes the wait-time TOCTOU
+            # window even when a direct caller mutates its original objects.
+            def authorize_training_batch() -> None:
+                if self.training_evidence_authorizer is not None:
+                    try:
+                        validate_complete_rvl_reward_batch(training_experiences)
+                        authorizations = [
+                            self.training_evidence_authorizer(experience)
+                            for experience in training_experiences
+                        ]
+                    except Exception as exc:
+                        raise RuntimeError(
+                            "training_reward_evidence_unverifiable"
+                        ) from exc
+                    if any(
+                        type(authorized) is not bool or not authorized
+                        for authorized in authorizations
+                    ):
+                        raise RuntimeError(
+                            "unauthenticated_training_reward_evidence"
+                        )
+                elif self.require_authenticated_training:
+                    # Defensive: the constructor already rejects this state.
+                    raise RuntimeError("unauthenticated_training_reward_evidence")
+
+            authorize_training_batch()
+            verified = [
+                self._to_verified_generation(experience)
+                for experience in training_experiences
+            ]
+            train_config = getattr(self.trainer, "config", None)
+            advantages = self._group_relative_advantages(
+                training_experiences,
+                verified,
+                eps=float(getattr(train_config, "advantage_eps", 1e-6)),
+                clip=float(getattr(train_config, "clip_advantage", 5.0)),
+            )
             self._restore(incumbent_id)
             # Keep an immutable pre-update state even if a custom trainer mutates
             # nested optimizer structures during train_step.
@@ -396,8 +473,25 @@ class RVLGRPOHooks:
             # Invalidate the loaded identity before the first in-place mutation.
             # If training or candidate snapshotting raises, rollback must still
             # restore the saved incumbent rather than trusting a stale ID.
-            self._loaded_id = None
             try:
+                for experience in training_experiences:
+                    try:
+                        decision = freshness_assessor(experience)
+                    except Exception as exc:
+                        raise RuntimeError(
+                            "training_freshness_unverifiable"
+                        ) from exc
+                    if type(decision) is not LagDecision:
+                        raise RuntimeError("training_freshness_unverifiable")
+                    if type(decision.admitted) is not bool:
+                        raise RuntimeError("training_freshness_unverifiable")
+                    if not decision.admitted:
+                        raise RuntimeError("stale_training_experience")
+                # A custom assessor is injected at this boundary. Recheck the
+                # signed payload after it runs so it cannot alter provenance
+                # between authorization and the optimizer call.
+                authorize_training_batch()
+                self._loaded_id = None
                 if advantages is None:
                     self.trainer.train_step(verified)
                 else:
