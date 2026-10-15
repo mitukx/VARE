@@ -1,4 +1,3 @@
-import json
 import pytest
 from vare.config import PromotionConfig
 from vare.promotion import PromotionGate
