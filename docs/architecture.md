@@ -1,47 +1,55 @@
-# Architecture
+# Architecture and ownership
+
+VARE is an **outer control plane**. The main `CapabilityLoop` owns orchestration and candidate-decision sequencing; `LoopHooks` owns model execution, optimizer state and cleanup. A successful end-to-end control-loop demonstration is not evidence that the resulting policy improves an independent task metric.
+
+## Control flow
 
 ```mermaid
-flowchart LR
-  E[Task / Executable Repository Environment Pool] --> C[Adaptive Curriculum]
-  C --> R[Grouped Async Rollout Fleet]
-  R --> V[Verifier Ensemble]
-  V --> L[Admission Lag + Shift Gate]
-  L -->|admit| P[Prioritized Replay]
-  L -->|drop / refresh| D[Verification Debt]
-  P --> Q[Current-Freshness Re-screen]
-  Q -->|whole groups| T[Training Backend]
-  P --> F[Failure Miner]
-  F --> C
-  T --> X[Transactional Candidate Snapshot]
-  X --> H[Paired Trusted Held-out Evaluation]
-  H --> G[Fail-closed Promotion Gate]
-  G -->|promote| R
-  G -->|reject| Z[Rollback / Discard]
-  G --> A[Hash-chain Decision Ledger]
+flowchart TD
+  T[Task source / optional failure-driven generator] --> L[CapabilityLoop]
+  L --> R[Bounded rollout hooks]
+  R --> V[Verifier ensemble]
+  V --> A{Lag / shift admission}
+  A -->|accepted| P[Prioritized replay]
+  A -->|stale| X[Reject / request refresh]
+  P --> C[Current-version rescreen]
+  C -->|eligible complete groups| U[Backend train_candidate]
+  C -->|invalid / stale| X
+  U --> E[Independent incumbent / candidate evaluation]
+  E --> G{PromotionGate}
+  G -->|accept| J[Publication / acknowledgment / optional journal]
+  G -->|reject| D[Owned discard]
+  J --> H[Active policy]
+  H --> L
+  J -->|uncertain| F[Quarantine / operator recovery]
+  D -->|cleanup uncertain| F
 ```
 
-VARE owns the outer capability-improvement control plane. It intentionally does not own distributed tensor training, model serving, or checkpoint transport. Those remain in backends such as Recursive-Verification-Lag, verl, vLLM, SGLang, or a lab-internal stack.
+This is a **logical interface map**. The task generator and verifier refresh are optional [protocols](../src/vare/lifecycle.py); the system does not claim an autonomous, production rollout fleet.
 
-## Invariants
+## Boundaries and implementation
 
-1. **Optimization and promotion evidence are separated.** A proxy verifier may train the candidate; promotion uses independent held-out evidence.
-2. **Policy and verifier versions are first-class.** Freshness is checked both when experience enters replay and again immediately before training.
-3. **Group-relative objectives preserve group identity.** GRPO comparison groups receive a unique rollout-group ID and prioritized replay samples whole groups, even when this slightly exceeds a nominal batch budget.
-4. **Candidate weights are transactional.** Training may mutate a shared model only behind a snapshot/restore boundary; the active champion does not change until promotion succeeds.
-5. **Concurrent rollout provenance is unique.** Sequence IDs/seeds are allocated before the first async yield.
-6. **Verifier disagreement and distribution shift are observable control signals.**
-7. **Negative results survive.** Rejections and null/negative outcomes remain in append-only evidence.
-8. **Experiment claims can be preregistered.** Protocol locks are content-addressed before results are observed.
+| Concern | Owner / implementation | Contract and limits |
+| --- | --- | --- |
+| Round scheduling | [`CapabilityLoop`](../src/vare/engine.py), [hook protocol](../src/vare/interfaces.py) | Bounded concurrent rollouts and ownership of evaluation/discard tasks; hooks must make their own workers terminal before returning. |
+| Rollout verification | [verifier ensemble](../src/vare/verifiers.py), [lag/shift](../src/vare/lag.py) | Tracks verifier and policy version freshness; proxy verification is not independent promotion evidence. |
+| Experience selection | [prioritized replay](../src/vare/replay.py) | Completeness and provenance of GRPO groups are preserved; freshness is checked again before training. |
+| Model update | External `LoopHooks`; [RVL GRPO adapter](../src/vare/integrations/rvl_grpo.py) | Adapter snapshots/restores tested trainer state and guards direct trainer freshness; no independent distributed training stack is embedded. |
+| Independent evaluation | [evaluation reports and gate](../src/vare/promotion.py), [trusted evaluation](../src/vare/trusted_evaluation.py) | Candidate must clear configured report/identity/slice requirements. Hashes/signatures only support claims under their stated trust roots. |
+| Publication and failure | [runtime coordinator](../src/vare/runtime.py), [promotion journal](../src/vare/promotion_journal.py) | Same-event-loop ownership, optional shared local SQLite reservation, explicit acknowledgment, and stop-on-uncertainty; not distributed atomicity. |
+| Engineering environment tasks | [catalog](../src/vare/environments/catalog.py), [campaign](../src/vare/environments/campaign.py) | Optional workspace-agent experiments; not an adversarial-code sandbox or implicit part of every training round. |
+| Historical bounded evaluation | [runner](../src/vare/runner.py), [durable jobs](../src/vare/durable.py) | **Separate** task-grader workflow with process-group time/output bounds, local lease fencing and audit/export; not the promotion journal. |
+| Optional trajectory audit | [trajectory records](../src/vare/trajectory_safety.py), [promotion constraint](../src/vare/trajectory_promotion.py) | Can reject missing/invalid attested receipts when enabled; recorder does not intercept all external I/O or contain a hostile agent. |
 
+## Correctness invariants
 
-## Engineering environment layer
+1. **Keep learning and measurement separate.** The verifier producing an optimization signal is not itself sufficient promotion evidence. Refer to the [evaluation-to-promotion integration](rvl-evaluation-promotion-e2e-v1-report.md).
+2. **Preserve input identity.** Group-relative training needs complete group identity and policy/verifier provenance; the RVL adapter rejects declared singleton groups. See [trajectory reference](trajectory-reference-v1.md) and [singleton regression](rvl-grpo-singleton-group-v1-report.md).
+3. **Revalidate mutable state.** Freshness at admission is not freshness when the trainer acquires the model lock. See [direct-trainer check](rvl-direct-trainer-freshness-v1-report.md).
+4. **Own every live task before discard.** A failed evaluation must drain its sibling before removing candidate state. See [baseline/fix replay](engine-evaluation-lifecycle-v1-report.md).
+5. **Treat publication acknowledgment as fallible.** A hook may return successfully without activating the advertised policy. Unknown or partially committed state fences later work until a trusted operator verifies recovery. See [publication evidence](promotion-publication-recovery-v1.md) and [round ownership](runtime-round-ownership-v1.md).
+6. **Do not rewrite negative evidence.** Frozen protocols and exact input/output manifests are retained separately from prospective experiments; see [evidence](evidence.md).
 
-`vare.environments` adds repository-level tasks without moving learner ownership into VARE. A `TaskCatalog` selects immutable task specifications; `WorkspaceAgentRollout` materializes an isolated candidate checkout; `CatalogEnvironmentVerifier` evaluates the resulting workspace using trusted command vectors and returns a normal VARE `Verification`. This makes repository engineering trajectories first-class replay data while keeping the evaluator independent from agent text output.
+## Deployment and security non-claims
 
-The local runner is intentionally not advertised as a hostile-code sandbox. Open-ended untrusted agents require an external container/VM boundary with evaluator assets mounted read-only.
-
-## Persistent evaluation state
-
-`vare.runner` executes locked numerical task graders with bounded capture and before/after provenance checks. `vare.durable` adds same-host SQLite claims, expiring leases, generation fencing and input invalidation; it reuses that runner rather than implementing another grader. The [requirements](requirements.md), [contract](recovery.md) and [measured report](recovery-report.md) specify the boundary.
-
-This path uses locked historical-task descriptors. The earlier `vare.environments` path uses engineering task specifications and exposes workspace-agent trajectories to the experimental loop. Its source-pattern seed is retained in `benchmarks/seeds/`. These descriptor formats are explicit separate contracts; an adapter into held-out promotion would require independent candidate/model evidence and is not asserted by a calibration pass. The graph above describes experimental control-loop interfaces, not a deployed rollout fleet or measured model improvement.
+The current ownership contract assumes cooperating hooks sharing the correct coordinator or local journal, one event loop for its in-memory coordinator, and an operator-controlled checkpoint/evidence store. A database commit is not an atomic transaction over remote model weights; a stale worker may still run even if its publication is fenced. Subprocess restrictions and path checks are not a hostile-code sandbox. GPU, distributed fault tolerance, cross-host performance and independent model learning gains remain unverified. See [recovery](recovery.md), [runtime operator procedure](runtime-round-ownership-v1.md#operator-recovery), [trajectory caveats](trajectory-aware-safety-v1.md), and [current gaps](current-gaps.md).
