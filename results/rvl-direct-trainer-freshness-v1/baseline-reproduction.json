@@ -1,17 +1,35 @@
 {
+  "active_policy_version": 6,
+  "active_verifier_version": 5,
   "baseline_commit": "e912938125b8a135347961801e84f624c2b833eb",
-  "candidate": "policy-1",
-  "trainer_calls": 1,
-  "stored_lags": [
+  "cached_lags_before_training": [
     [
-      96,
-      97
+      2,
+      2
     ],
     [
-      96,
-      97
+      2,
+      2
     ]
   ],
+  "candidate": "policy-1",
+  "comparison_max_policy_lag": 1,
+  "comparison_max_verifier_lag": 1,
+  "interpretation": "pinned main admitted authenticated source versions beyond both comparison lag caps",
+  "reproducer": "scripts/reproduce_rvl_direct_trainer_stale_source_v1.py",
+  "reproducer_sha256": "25abbcb46d2e43e404205a6caba3678582c3c737183c3f08b64a3da44300bab7",
   "signed_evidence_verified": true,
-  "interpretation": "baseline direct trainer accepted authenticated experiences with stale cached lags"
+  "source_policy_lags": [
+    2
+  ],
+  "source_policy_versions": [
+    4
+  ],
+  "source_verifier_lags": [
+    2
+  ],
+  "source_verifier_versions": [
+    3
+  ],
+  "trainer_calls": 1
 }

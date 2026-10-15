@@ -414,35 +414,57 @@ class RVLGRPOHooks:
             raise ValueError("candidate must branch from active incumbent")
         if not experiences:
             raise ValueError("candidate training batch cannot be empty")
-        # Keep this check at the hook boundary as well as in CapabilityLoop:
-        # callers can use RVLGRPOHooks directly, and in that case there is no
-        # outer-loop admission check. A configured authorizer always applies;
-        # the strict flag additionally makes omitting one a construction error.
-        if self.training_evidence_authorizer is not None:
-            try:
-                validate_complete_rvl_reward_batch(experiences)
-                authorizations = [
-                    self.training_evidence_authorizer(experience)
-                    for experience in experiences
-                ]
-            except Exception as exc:
-                raise RuntimeError("training_reward_evidence_unverifiable") from exc
-            if any(type(authorized) is not bool or not authorized for authorized in authorizations):
-                raise RuntimeError("unauthenticated_training_reward_evidence")
-        elif self.require_authenticated_training:
-            # This is defensive; the constructor already rejects this state.
-            raise RuntimeError("unauthenticated_training_reward_evidence")
-        verified = [self._to_verified_generation(x) for x in experiences]
-        train_config = getattr(self.trainer, "config", None)
-        advantages = self._group_relative_advantages(
-            experiences,
-            verified,
-            eps=float(getattr(train_config, "advantage_eps", 1e-6)),
-            clip=float(getattr(train_config, "clip_advantage", 5.0)),
-        )
+        # The public Experience graph is mutable. Detach it before the first
+        # await so a caller cannot change signed provenance while this task is
+        # queued on _model_lock. Authorization, freshness, advantages, and the
+        # trainer inputs all derive from this one detached batch.
+        try:
+            training_experiences = copy.deepcopy(tuple(experiences))
+        except Exception as exc:
+            raise RuntimeError("training_experience_snapshot_unverifiable") from exc
+        if any(type(experience) is not Experience for experience in training_experiences):
+            raise RuntimeError("training_experience_snapshot_unverifiable")
         if freshness_assessor is None:
             raise RuntimeError("training_freshness_unverifiable")
         async with self._model_lock:
+            # Authenticate only after acquiring the lock, against the detached
+            # data that produced `verified`; this closes the wait-time TOCTOU
+            # window even when a direct caller mutates its original objects.
+            def authorize_training_batch() -> None:
+                if self.training_evidence_authorizer is not None:
+                    try:
+                        validate_complete_rvl_reward_batch(training_experiences)
+                        authorizations = [
+                            self.training_evidence_authorizer(experience)
+                            for experience in training_experiences
+                        ]
+                    except Exception as exc:
+                        raise RuntimeError(
+                            "training_reward_evidence_unverifiable"
+                        ) from exc
+                    if any(
+                        type(authorized) is not bool or not authorized
+                        for authorized in authorizations
+                    ):
+                        raise RuntimeError(
+                            "unauthenticated_training_reward_evidence"
+                        )
+                elif self.require_authenticated_training:
+                    # Defensive: the constructor already rejects this state.
+                    raise RuntimeError("unauthenticated_training_reward_evidence")
+
+            authorize_training_batch()
+            verified = [
+                self._to_verified_generation(experience)
+                for experience in training_experiences
+            ]
+            train_config = getattr(self.trainer, "config", None)
+            advantages = self._group_relative_advantages(
+                training_experiences,
+                verified,
+                eps=float(getattr(train_config, "advantage_eps", 1e-6)),
+                clip=float(getattr(train_config, "clip_advantage", 5.0)),
+            )
             self._restore(incumbent_id)
             # Keep an immutable pre-update state even if a custom trainer mutates
             # nested optimizer structures during train_step.
@@ -452,7 +474,7 @@ class RVLGRPOHooks:
             # If training or candidate snapshotting raises, rollback must still
             # restore the saved incumbent rather than trusting a stale ID.
             try:
-                for experience in experiences:
+                for experience in training_experiences:
                     try:
                         decision = freshness_assessor(experience)
                     except Exception as exc:
@@ -465,6 +487,10 @@ class RVLGRPOHooks:
                         raise RuntimeError("training_freshness_unverifiable")
                     if not decision.admitted:
                         raise RuntimeError("stale_training_experience")
+                # A custom assessor is injected at this boundary. Recheck the
+                # signed payload after it runs so it cannot alter provenance
+                # between authorization and the optimizer call.
+                authorize_training_batch()
                 self._loaded_id = None
                 if advantages is None:
                     self.trainer.train_step(verified)

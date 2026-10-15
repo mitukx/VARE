@@ -1,0 +1,24 @@
+{
+  "regression": "test_rvl_trainer_snapshots_signed_versions_before_model_lock_wait",
+  "source_versions_in_signed_batch": {
+    "policy": 4,
+    "verifier": 3
+  },
+  "live_versions_at_use": {
+    "policy": 6,
+    "verifier": 5
+  },
+  "comparison_max_lag": {
+    "policy": 1,
+    "verifier": 1
+  },
+  "caller_mutation_while_lock_contended": {
+    "policy_version": 6,
+    "verifier_version": 5,
+    "shift_score": 0.0
+  },
+  "detached_snapshot_remains_signed": true,
+  "freshness_decision": "stale_training_experience",
+  "trainer_calls": 0,
+  "incumbent_weight_after_rejection": 0
+}
