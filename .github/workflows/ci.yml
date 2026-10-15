@@ -92,6 +92,17 @@ jobs:
           python scripts/reproduce_checkpoint_read_bounds_v1.py --output "${RUNNER_TEMP}/checkpoint-io-replay"
           python scripts/audit_checkpoint_read_bounds_v1.py "${RUNNER_TEMP}/checkpoint-io-replay"
           python -O scripts/audit_checkpoint_read_bounds_v1.py "${RUNNER_TEMP}/checkpoint-io-replay"
+      - name: Reproduce grader owner loss and durable resume
+        if: matrix.python-version == '3.12'
+        run: |
+          python scripts/reproduce_grader_owner_loss_v1.py --output "${RUNNER_TEMP}/grader-owner-loss-replay"
+          python scripts/audit_grader_owner_loss_v1.py "${RUNNER_TEMP}/grader-owner-loss-replay"
+          python -O scripts/audit_grader_owner_loss_v1.py "${RUNNER_TEMP}/grader-owner-loss-replay"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always() && matrix.python-version == '3.12'
+        with:
+          name: grader-owner-loss-replay
+          path: ${{ runner.temp }}/grader-owner-loss-replay
       - name: Reproduce trajectory capture policy and lifetime boundaries
         if: matrix.python-version == '3.12'
         run: |

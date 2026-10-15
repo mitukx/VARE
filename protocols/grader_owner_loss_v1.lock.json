@@ -1,0 +1,40 @@
+{
+  "baseline_commit": "f54c488e272b7dbe513558a2e3489700f5814d35",
+  "baseline_expected": {
+    "failures": 3,
+    "passes": 0
+  },
+  "candidate_expected": {
+    "failures": 0,
+    "passes": 3
+  },
+  "cost_rule": "Report all five alternating pairs; no latency or throughput improvement gate. No tuning after costs are observed.",
+  "faults": [
+    "SIGKILL",
+    "SIGTERM",
+    "exit"
+  ],
+  "grader_delay_seconds": 0.02,
+  "limits": [
+    "Trusted cooperative POSIX graders; descendants escaping the process group are excluded.",
+    "Uncatchable death or suspension of the guard itself is excluded.",
+    "No machine power loss, hostile-code containment, exactly-once side effects or model capability claim.",
+    "Keep failed attempts and all raw observations."
+  ],
+  "max_wall_seconds": 300,
+  "primary_rule": "All three candidate owner-loss cases stop grader and ordinary descendant within two seconds and resume token 2 to one independently replayable current result. Baseline must fail the same three cases.",
+  "protected_test": "tests/test_grader_owner_loss.py",
+  "protected_test_sha256": "05b07582be9c60b6e0820a4e38dd320598a25b143e3eb9e9d8b58efda3f6c1cc",
+  "protocol_id": "grader-owner-loss-v1",
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "paid_api_calls": 0
+  },
+  "schema_version": 1,
+  "stage": "Development regression of an observed source defect; not a held-out model study. Frozen before paired measurement.",
+  "stop_timeout_seconds": 2,
+  "timing_jobs": 16,
+  "timing_pairs": 5,
+  "timing_workers": 4
+}

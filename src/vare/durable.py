@@ -98,7 +98,7 @@ class Store:
             db.execute('BEGIN IMMEDIATE')
             db.execute('INSERT INTO meta VALUES(?,?)', ('schema_version', '1'))
             db.execute('INSERT INTO meta VALUES(?,?)', ('repository_root', str(root)))
-            for name in ['__init__.py', '__main__.py', 'runner.py', 'durable.py']:
+            for name in ['__init__.py', '__main__.py', 'runner.py', 'durable.py', '_grader_guard.py']:
                 db.execute('INSERT INTO assets VALUES(?,?)', ('vare/' + name, Path(__file__).with_name(name).read_bytes()))
             for job, expected in enrollment:
                 spec = asdict(job)

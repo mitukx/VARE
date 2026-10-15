@@ -1,0 +1,405 @@
+﻿2026-10-15T06:24:52.5364913Z Current runner version: '2.337.0'
+2026-10-15T06:24:52.5389534Z ##[group]Runner Image Provisioner
+2026-10-15T06:24:52.5390434Z Hosted Compute Agent
+2026-10-15T06:24:52.5391062Z Version: 20261002.596
+2026-10-15T06:24:52.5391760Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-15T06:24:52.5392518Z Build Date: 2026-10-02T22:28:27Z
+2026-10-15T06:24:52.5393283Z Worker ID: {784d519e-c916-48e7-be97-a9ce2b8d801e}
+2026-10-15T06:24:52.5393999Z Region: westus
+2026-10-15T06:24:52.5394530Z Cloud: Azure
+2026-10-15T06:24:52.5395112Z ##[endgroup]
+2026-10-15T06:24:52.5397084Z ##[group]Operating System
+2026-10-15T06:24:52.5397902Z Ubuntu
+2026-10-15T06:24:52.5398545Z 24.04.5
+2026-10-15T06:24:52.5399066Z LTS
+2026-10-15T06:24:52.5399605Z ##[endgroup]
+2026-10-15T06:24:52.5400168Z ##[group]Runner Image
+2026-10-15T06:24:52.5400806Z Image: ubuntu-24.04
+2026-10-15T06:24:52.5401449Z Version: 20261004.327.1
+2026-10-15T06:24:52.5402722Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-15T06:24:52.5404481Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+2026-10-15T06:24:52.5405610Z ##[endgroup]
+2026-10-15T06:24:52.5406789Z ##[group]GITHUB_TOKEN Permissions
+2026-10-15T06:24:52.5408671Z Contents: read
+2026-10-15T06:24:52.5409392Z Metadata: read
+2026-10-15T06:24:52.5409975Z ##[endgroup]
+2026-10-15T06:24:52.5412060Z Secret source: Actions
+2026-10-15T06:24:52.5413185Z Cache mode: write
+2026-10-15T06:24:52.5413922Z Prepare workflow directory
+2026-10-15T06:24:52.5784166Z Prepare all required actions
+2026-10-15T06:24:52.5851555Z Getting action download info
+2026-10-15T06:24:52.9488684Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-15T06:24:53.0641934Z Download action repository 'actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-10-15T06:24:53.1434290Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-15T06:24:53.4090808Z Complete job name: calibrated-cpu-tasks
+2026-10-15T06:24:53.5039682Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-10-15T06:24:53.5040816Z with:
+2026-10-15T06:24:53.5041255Z   repository: mitukx/VARE
+2026-10-15T06:24:53.5045000Z   token: ***
+2026-10-15T06:24:53.5045428Z   ssh-strict: true
+2026-10-15T06:24:53.5046250Z   ssh-user: git
+2026-10-15T06:24:53.5047044Z   persist-credentials: true
+2026-10-15T06:24:53.5047570Z   clean: true
+2026-10-15T06:24:53.5048007Z   sparse-checkout-cone-mode: true
+2026-10-15T06:24:53.5048525Z   fetch-depth: 1
+2026-10-15T06:24:53.5048943Z   fetch-tags: false
+2026-10-15T06:24:53.5049385Z   show-progress: true
+2026-10-15T06:24:53.5049817Z   lfs: false
+2026-10-15T06:24:53.5050214Z   submodules: false
+2026-10-15T06:24:53.5050698Z   set-safe-directory: true
+2026-10-15T06:24:53.5051198Z   allow-unsafe-pr-checkout: false
+2026-10-15T06:24:53.5052102Z ##[endgroup]
+2026-10-15T06:24:53.6128758Z Syncing repository: mitukx/VARE
+2026-10-15T06:24:53.6131466Z ##[group]Getting Git version info
+2026-10-15T06:24:53.6132731Z Working directory is '/home/runner/work/VARE/VARE'
+2026-10-15T06:24:53.6166481Z [command]/usr/bin/git version
+2026-10-15T06:24:53.6327069Z git version 2.55.0
+2026-10-15T06:24:53.6368813Z ##[endgroup]
+2026-10-15T06:24:53.6403232Z Temporarily overriding HOME='/home/runner/work/_temp/e2d2a706-a7db-4253-a79b-ad3553c63595' before making global git config changes
+2026-10-15T06:24:53.6406553Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-15T06:24:53.6408872Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/VARE/VARE
+2026-10-15T06:24:53.6458270Z Deleting the contents of '/home/runner/work/VARE/VARE'
+2026-10-15T06:24:53.6467281Z ##[group]Initializing the repository
+2026-10-15T06:24:53.6481845Z [command]/usr/bin/git init /home/runner/work/VARE/VARE
+2026-10-15T06:24:53.6701719Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-15T06:24:53.6705798Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-15T06:24:53.6707820Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-15T06:24:53.6709457Z hint: call:
+2026-10-15T06:24:53.6710480Z hint:
+2026-10-15T06:24:53.6711694Z hint: 	git config --global init.defaultBranch <name>
+2026-10-15T06:24:53.6713015Z hint:
+2026-10-15T06:24:53.6714286Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-15T06:24:53.6716468Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-15T06:24:53.6718017Z hint:
+2026-10-15T06:24:53.6718932Z hint: 	git branch -m <name>
+2026-10-15T06:24:53.6719998Z hint:
+2026-10-15T06:24:53.6721290Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-15T06:24:53.6723262Z Initialized empty Git repository in /home/runner/work/VARE/VARE/.git/
+2026-10-15T06:24:53.6737456Z [command]/usr/bin/git remote add origin https://github.com/mitukx/VARE
+2026-10-15T06:24:53.6772822Z ##[endgroup]
+2026-10-15T06:24:53.6774416Z ##[group]Disabling automatic garbage collection
+2026-10-15T06:24:53.6778518Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-15T06:24:53.6821629Z ##[endgroup]
+2026-10-15T06:24:53.6823338Z ##[group]Setting up auth
+2026-10-15T06:24:53.6827868Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-15T06:24:53.6870400Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-15T06:24:53.7234421Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-15T06:24:53.7274787Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-15T06:24:53.7510323Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-15T06:24:53.7547868Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-15T06:24:53.7774928Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-15T06:24:53.7818740Z ##[endgroup]
+2026-10-15T06:24:53.7819669Z ##[group]Fetching the repository
+2026-10-15T06:24:53.7828748Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +b83306a616c8211e76688fb48884306ba278e587:refs/remotes/pull/66/merge
+2026-10-15T06:25:36.4852889Z From https://github.com/mitukx/VARE
+2026-10-15T06:25:36.4856175Z  * [new ref]         b83306a616c8211e76688fb48884306ba278e587 -> pull/66/merge
+2026-10-15T06:25:36.4859052Z ##[endgroup]
+2026-10-15T06:25:36.4859984Z ##[group]Determining the checkout info
+2026-10-15T06:25:36.4861124Z ##[endgroup]
+2026-10-15T06:25:36.4876696Z [command]/usr/bin/git sparse-checkout disable
+2026-10-15T06:25:36.4930305Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-15T06:25:36.4998629Z ##[group]Checking out the ref
+2026-10-15T06:25:36.5003058Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/66/merge
+2026-10-15T06:25:37.7598848Z Updating files:  12% (1013/8372)
+2026-10-15T06:25:37.8267134Z Updating files:  13% (1089/8372)
+2026-10-15T06:25:38.0656476Z Updating files:  14% (1173/8372)
+2026-10-15T06:25:38.3118730Z Updating files:  15% (1256/8372)
+2026-10-15T06:25:38.4633817Z Updating files:  16% (1340/8372)
+2026-10-15T06:25:38.5189575Z Updating files:  17% (1424/8372)
+2026-10-15T06:25:38.5467785Z Updating files:  17% (1498/8372)
+2026-10-15T06:25:38.5600260Z Updating files:  18% (1507/8372)
+2026-10-15T06:25:38.5639795Z Updating files:  19% (1591/8372)
+2026-10-15T06:25:38.5680400Z Updating files:  20% (1675/8372)
+2026-10-15T06:25:38.5767270Z Updating files:  21% (1759/8372)
+2026-10-15T06:25:38.5782565Z Updating files:  22% (1842/8372)
+2026-10-15T06:25:38.5820871Z Updating files:  23% (1926/8372)
+2026-10-15T06:25:38.5867204Z Updating files:  24% (2010/8372)
+2026-10-15T06:25:38.5912609Z Updating files:  25% (2093/8372)
+2026-10-15T06:25:38.5950812Z Updating files:  26% (2177/8372)
+2026-10-15T06:25:38.5995063Z Updating files:  27% (2261/8372)
+2026-10-15T06:25:38.6050836Z Updating files:  28% (2345/8372)
+2026-10-15T06:25:38.6097754Z Updating files:  29% (2428/8372)
+2026-10-15T06:25:38.6136500Z Updating files:  30% (2512/8372)
+2026-10-15T06:25:38.6179903Z Updating files:  31% (2596/8372)
+2026-10-15T06:25:38.6222448Z Updating files:  32% (2680/8372)
+2026-10-15T06:25:38.6261200Z Updating files:  33% (2763/8372)
+2026-10-15T06:25:38.6302880Z Updating files:  34% (2847/8372)
+2026-10-15T06:25:38.6344321Z Updating files:  35% (2931/8372)
+2026-10-15T06:25:38.6383837Z Updating files:  36% (3014/8372)
+2026-10-15T06:25:38.6425625Z Updating files:  37% (3098/8372)
+2026-10-15T06:25:38.6468109Z Updating files:  38% (3182/8372)
+2026-10-15T06:25:38.6508261Z Updating files:  39% (3266/8372)
+2026-10-15T06:25:38.6549934Z Updating files:  40% (3349/8372)
+2026-10-15T06:25:38.6591289Z Updating files:  41% (3433/8372)
+2026-10-15T06:25:38.6631802Z Updating files:  42% (3517/8372)
+2026-10-15T06:25:38.6673523Z Updating files:  43% (3600/8372)
+2026-10-15T06:25:38.6714545Z Updating files:  44% (3684/8372)
+2026-10-15T06:25:38.6755934Z Updating files:  45% (3768/8372)
+2026-10-15T06:25:38.6797616Z Updating files:  46% (3852/8372)
+2026-10-15T06:25:38.6840271Z Updating files:  47% (3935/8372)
+2026-10-15T06:25:38.6881708Z Updating files:  48% (4019/8372)
+2026-10-15T06:25:38.6922341Z Updating files:  49% (4103/8372)
+2026-10-15T06:25:38.6962779Z Updating files:  50% (4186/8372)
+2026-10-15T06:25:38.7004009Z Updating files:  51% (4270/8372)
+2026-10-15T06:25:38.7045319Z Updating files:  52% (4354/8372)
+2026-10-15T06:25:38.7092740Z Updating files:  53% (4438/8372)
+2026-10-15T06:25:38.7155386Z Updating files:  54% (4521/8372)
+2026-10-15T06:25:38.7221574Z Updating files:  55% (4605/8372)
+2026-10-15T06:25:38.7290404Z Updating files:  56% (4689/8372)
+2026-10-15T06:25:38.7356189Z Updating files:  57% (4773/8372)
+2026-10-15T06:25:38.7423009Z Updating files:  58% (4856/8372)
+2026-10-15T06:25:38.7490450Z Updating files:  59% (4940/8372)
+2026-10-15T06:25:38.7540750Z Updating files:  60% (5024/8372)
+2026-10-15T06:25:38.7583286Z Updating files:  61% (5107/8372)
+2026-10-15T06:25:38.7624149Z Updating files:  62% (5191/8372)
+2026-10-15T06:25:38.7666607Z Updating files:  63% (5275/8372)
+2026-10-15T06:25:38.7705576Z Updating files:  64% (5359/8372)
+2026-10-15T06:25:38.7754485Z Updating files:  65% (5442/8372)
+2026-10-15T06:25:38.7794836Z Updating files:  66% (5526/8372)
+2026-10-15T06:25:38.7833698Z Updating files:  67% (5610/8372)
+2026-10-15T06:25:38.7872778Z Updating files:  68% (5693/8372)
+2026-10-15T06:25:38.7910530Z Updating files:  69% (5777/8372)
+2026-10-15T06:25:38.7949617Z Updating files:  70% (5861/8372)
+2026-10-15T06:25:38.7986644Z Updating files:  71% (5945/8372)
+2026-10-15T06:25:38.8033469Z Updating files:  72% (6028/8372)
+2026-10-15T06:25:38.8082371Z Updating files:  73% (6112/8372)
+2026-10-15T06:25:38.8237284Z Updating files:  74% (6196/8372)
+2026-10-15T06:25:38.8344696Z Updating files:  75% (6279/8372)
+2026-10-15T06:25:38.8389140Z Updating files:  76% (6363/8372)
+2026-10-15T06:25:38.8441865Z Updating files:  77% (6447/8372)
+2026-10-15T06:25:38.8530787Z Updating files:  78% (6531/8372)
+2026-10-15T06:25:38.8569254Z Updating files:  79% (6614/8372)
+2026-10-15T06:25:38.8613809Z Updating files:  80% (6698/8372)
+2026-10-15T06:25:38.8650288Z Updating files:  81% (6782/8372)
+2026-10-15T06:25:38.8748107Z Updating files:  82% (6866/8372)
+2026-10-15T06:25:38.8964418Z Updating files:  83% (6949/8372)
+2026-10-15T06:25:38.9008459Z Updating files:  84% (7033/8372)
+2026-10-15T06:25:38.9061705Z Updating files:  85% (7117/8372)
+2026-10-15T06:25:38.9111836Z Updating files:  86% (7200/8372)
+2026-10-15T06:25:38.9180237Z Updating files:  87% (7284/8372)
+2026-10-15T06:25:38.9248388Z Updating files:  88% (7368/8372)
+2026-10-15T06:25:38.9310739Z Updating files:  89% (7452/8372)
+2026-10-15T06:25:38.9363291Z Updating files:  90% (7535/8372)
+2026-10-15T06:25:38.9401188Z Updating files:  91% (7619/8372)
+2026-10-15T06:25:38.9443544Z Updating files:  92% (7703/8372)
+2026-10-15T06:25:38.9492327Z Updating files:  93% (7786/8372)
+2026-10-15T06:25:38.9548387Z Updating files:  94% (7870/8372)
+2026-10-15T06:25:38.9600247Z Updating files:  95% (7954/8372)
+2026-10-15T06:25:38.9650373Z Updating files:  96% (8038/8372)
+2026-10-15T06:25:38.9710285Z Updating files:  97% (8121/8372)
+2026-10-15T06:25:38.9759952Z Updating files:  98% (8205/8372)
+2026-10-15T06:25:38.9805987Z Updating files:  99% (8289/8372)
+2026-10-15T06:25:38.9806493Z Updating files: 100% (8372/8372)
+2026-10-15T06:25:38.9806975Z Updating files: 100% (8372/8372), done.
+2026-10-15T06:25:38.9914004Z Note: switching to 'refs/remotes/pull/66/merge'.
+2026-10-15T06:25:38.9914853Z 
+2026-10-15T06:25:38.9915257Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-15T06:25:38.9916452Z changes and commit them, and you can discard any commits you make in this
+2026-10-15T06:25:38.9917280Z state without impacting any branches by switching back to a branch.
+2026-10-15T06:25:38.9917770Z 
+2026-10-15T06:25:38.9918099Z If you want to create a new branch to retain commits you create, you may
+2026-10-15T06:25:38.9918853Z do so (now or later) by using -c with the switch command. Example:
+2026-10-15T06:25:38.9919287Z 
+2026-10-15T06:25:38.9919466Z   git switch -c <new-branch-name>
+2026-10-15T06:25:38.9919766Z 
+2026-10-15T06:25:38.9919930Z Or undo this operation with:
+2026-10-15T06:25:38.9920208Z 
+2026-10-15T06:25:38.9920349Z   git switch -
+2026-10-15T06:25:38.9920558Z 
+2026-10-15T06:25:38.9920924Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-15T06:25:38.9921469Z 
+2026-10-15T06:25:38.9922069Z HEAD is now at b83306a Merge da06372a98a5c0c74fe891013c23ec1345b5c871 into f54c488e272b7dbe513558a2e3489700f5814d35
+2026-10-15T06:25:39.0138774Z ##[endgroup]
+2026-10-15T06:25:39.0192388Z [command]/usr/bin/git log -1 --format=%H
+2026-10-15T06:25:39.0227451Z b83306a616c8211e76688fb48884306ba278e587
+2026-10-15T06:25:39.0505115Z ##[group]Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+2026-10-15T06:25:39.0505869Z with:
+2026-10-15T06:25:39.0506082Z   python-version: 3.11
+2026-10-15T06:25:39.0506323Z   check-latest: false
+2026-10-15T06:25:39.0508697Z   token: ***
+2026-10-15T06:25:39.0508916Z   update-environment: true
+2026-10-15T06:25:39.0509169Z   allow-prereleases: false
+2026-10-15T06:25:39.0509405Z   freethreaded: false
+2026-10-15T06:25:39.0509629Z ##[endgroup]
+2026-10-15T06:25:39.1829471Z ##[group]Installed versions
+2026-10-15T06:25:39.1934363Z (node:2383) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-15T06:25:39.1935123Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-15T06:25:39.1936532Z Successfully set up CPython (3.11.17)
+2026-10-15T06:25:39.1937351Z ##[endgroup]
+2026-10-15T06:25:39.2103420Z ##[group]Run python3 -m unittest discover -s tests -p 'test_runner.py' -v
+2026-10-15T06:25:39.2104097Z [36;1mpython3 -m unittest discover -s tests -p 'test_runner.py' -v[0m
+2026-10-15T06:25:39.2104824Z [36;1mpython3 -m unittest discover -s tests -p 'test_durable.py' -v[0m
+2026-10-15T06:25:39.2105342Z [36;1mpython3 -m unittest discover -s tests -p 'test_measurement.py' -v[0m
+2026-10-15T06:25:39.2390677Z shell: /usr/bin/bash -e {0}
+2026-10-15T06:25:39.2390968Z env:
+2026-10-15T06:25:39.2391267Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-15T06:25:39.2391735Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-10-15T06:25:39.2392182Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-15T06:25:39.2392812Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-15T06:25:39.2393201Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-15T06:25:39.2393650Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-10-15T06:25:39.2394111Z   VARE_TEST_DIAGNOSTICS_DIR: /home/runner/work/_temp/durable-test-diagnostics
+2026-10-15T06:25:39.2394506Z ##[endgroup]
+2026-10-15T06:25:39.6780052Z test_audit_tampering (test_runner.RunnerTests.test_audit_tampering) ... FAIL
+2026-10-15T06:25:39.9322742Z test_cancellation_retains_partial_bundle (test_runner.RunnerTests.test_cancellation_retains_partial_bundle) ... FAIL
+2026-10-15T06:25:39.9881948Z test_child_cleanup (test_runner.RunnerTests.test_child_cleanup) ... FAIL
+2026-10-15T06:25:40.1686513Z test_cli_plan_operational_failure_and_audit (test_runner.RunnerTests.test_cli_plan_operational_failure_and_audit) ... ok
+2026-10-15T06:25:40.2674109Z test_concurrency_and_output_preservation (test_runner.RunnerTests.test_concurrency_and_output_preservation) ... FAIL
+2026-10-15T06:25:40.6568524Z test_fault_matrix (test_runner.RunnerTests.test_fault_matrix) ... FAIL
+2026-10-15T06:25:40.7367037Z test_inherited_pipe_times_out (test_runner.RunnerTests.test_inherited_pipe_times_out) ... FAIL
+2026-10-15T06:25:40.7724612Z test_json_and_source_symlink (test_runner.RunnerTests.test_json_and_source_symlink) ... ok
+2026-10-15T06:25:40.8257452Z test_ledger_tamper_with_rebuilt_manifest (test_runner.RunnerTests.test_ledger_tamper_with_rebuilt_manifest) ... FAIL
+2026-10-15T06:25:40.8579327Z test_missing_source (test_runner.RunnerTests.test_missing_source) ... ok
+2026-10-15T06:25:40.8848527Z test_protocol_tamper (test_runner.RunnerTests.test_protocol_tamper) ... ok
+2026-10-15T06:25:40.9371226Z test_snapshot_binding_with_rebuilt_manifest (test_runner.RunnerTests.test_snapshot_binding_with_rebuilt_manifest) ... FAIL
+2026-10-15T06:25:40.9552241Z test_validation (test_runner.RunnerTests.test_validation) ... ok
+2026-10-15T06:25:40.9552878Z 
+2026-10-15T06:25:40.9553142Z ======================================================================
+2026-10-15T06:25:40.9553704Z FAIL: test_audit_tampering (test_runner.RunnerTests.test_audit_tampering)
+2026-10-15T06:25:40.9554546Z ----------------------------------------------------------------------
+2026-10-15T06:25:40.9555236Z Traceback (most recent call last):
+2026-10-15T06:25:40.9564572Z   File "/home/runner/work/VARE/VARE/tests/test_runner.py", line 91, in test_audit_tampering
+2026-10-15T06:25:40.9565400Z     output, _ = self.campaign([('valid', 'candidate_passed')])
+2026-10-15T06:25:40.9566224Z                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:25:40.9566761Z   File "/home/runner/work/VARE/VARE/tests/test_runner.py", line 31, in campaign
+2026-10-15T06:25:40.9567254Z     self.assertEqual(expected, record['status'], job.id)
+2026-10-15T06:25:40.9567622Z AssertionError: 'candidate_passed' != 'grader_error'
+2026-10-15T06:25:40.9567926Z - candidate_passed
+2026-10-15T06:25:40.9568136Z + grader_error
+2026-10-15T06:25:40.9568338Z  : valid
+2026-10-15T06:25:40.9568444Z 
+2026-10-15T06:25:40.9568562Z ======================================================================
+2026-10-15T06:25:40.9569395Z FAIL: test_cancellation_retains_partial_bundle (test_runner.RunnerTests.test_cancellation_retains_partial_bundle)
+2026-10-15T06:25:40.9570006Z ----------------------------------------------------------------------
+2026-10-15T06:25:40.9570355Z Traceback (most recent call last):
+2026-10-15T06:25:40.9570922Z   File "/home/runner/work/VARE/VARE/tests/test_runner.py", line 144, in test_cancellation_retains_partial_bundle
+2026-10-15T06:25:40.9571441Z     asyncio.run(interrupt())
+2026-10-15T06:25:40.9571911Z   File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/asyncio/runners.py", line 190, in run
+2026-10-15T06:25:40.9572377Z     return runner.run(main)
+2026-10-15T06:25:40.9572614Z            ^^^^^^^^^^^^^^^^
+2026-10-15T06:25:40.9573040Z   File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/asyncio/runners.py", line 118, in run
+2026-10-15T06:25:40.9573676Z     return self._loop.run_until_complete(task)
+2026-10-15T06:25:40.9573971Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:25:40.9574541Z   File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+2026-10-15T06:25:40.9575078Z     return future.result()
+2026-10-15T06:25:40.9575313Z            ^^^^^^^^^^^^^^^
+2026-10-15T06:25:40.9576045Z   File "/home/runner/work/VARE/VARE/tests/test_runner.py", line 142, in interrupt
+2026-10-15T06:25:40.9576519Z     with self.assertRaises(asyncio.CancelledError):
+2026-10-15T06:25:40.9576860Z AssertionError: CancelledError not raised
+2026-10-15T06:25:40.9577058Z 
+2026-10-15T06:25:40.9577174Z ======================================================================
+2026-10-15T06:25:40.9577574Z FAIL: test_child_cleanup (test_runner.RunnerTests.test_child_cleanup)
+2026-10-15T06:25:40.9578035Z ----------------------------------------------------------------------
+2026-10-15T06:25:40.9578373Z Traceback (most recent call last):
+2026-10-15T06:25:40.9578816Z   File "/home/runner/work/VARE/VARE/tests/test_runner.py", line 64, in test_child_cleanup
+2026-10-15T06:25:40.9579311Z     output, _ = self.campaign([('child', 'candidate_passed')])
+2026-10-15T06:25:40.9579658Z                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:25:40.9580095Z   File "/home/runner/work/VARE/VARE/tests/test_runner.py", line 31, in campaign
+2026-10-15T06:25:40.9580544Z     self.assertEqual(expected, record['status'], job.id)
+2026-10-15T06:25:40.9580900Z AssertionError: 'candidate_passed' != 'grader_error'
+2026-10-15T06:25:40.9581199Z - candidate_passed
+2026-10-15T06:25:40.9581400Z + grader_error
+2026-10-15T06:25:40.9581586Z  : child
+2026-10-15T06:25:40.9581695Z 
+2026-10-15T06:25:40.9581809Z ======================================================================
+2026-10-15T06:25:40.9582353Z FAIL: test_concurrency_and_output_preservation (test_runner.RunnerTests.test_concurrency_and_output_preservation)
+2026-10-15T06:25:40.9582931Z ----------------------------------------------------------------------
+2026-10-15T06:25:40.9583264Z Traceback (most recent call last):
+2026-10-15T06:25:40.9583800Z   File "/home/runner/work/VARE/VARE/tests/test_runner.py", line 128, in test_concurrency_and_output_preservation
+2026-10-15T06:25:40.9584373Z     self.assertEqual({'candidate_passed': 4}, summary['outcomes'])
+2026-10-15T06:25:40.9584787Z AssertionError: {'candidate_passed': 4} != {'grader_error': 4}
+2026-10-15T06:25:40.9585123Z - {'candidate_passed': 4}
+2026-10-15T06:25:40.9585348Z + {'grader_error': 4}
+2026-10-15T06:25:40.9585748Z 
+2026-10-15T06:25:40.9585902Z ======================================================================
+2026-10-15T06:25:40.9586294Z FAIL: test_fault_matrix (test_runner.RunnerTests.test_fault_matrix)
+2026-10-15T06:25:40.9586703Z ----------------------------------------------------------------------
+2026-10-15T06:25:40.9587035Z Traceback (most recent call last):
+2026-10-15T06:25:40.9587488Z   File "/home/runner/work/VARE/VARE/tests/test_runner.py", line 42, in test_fault_matrix
+2026-10-15T06:25:40.9587925Z     output, _ = self.campaign(cases)
+2026-10-15T06:25:40.9588359Z                 ^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:25:40.9588762Z   File "/home/runner/work/VARE/VARE/tests/test_runner.py", line 31, in campaign
+2026-10-15T06:25:40.9589205Z     self.assertEqual(expected, record['status'], job.id)
+2026-10-15T06:25:40.9589565Z AssertionError: 'candidate_passed' != 'grader_error'
+2026-10-15T06:25:40.9589887Z - candidate_passed
+2026-10-15T06:25:40.9590161Z + grader_error
+2026-10-15T06:25:40.9590349Z  : valid
+2026-10-15T06:25:40.9590457Z 
+2026-10-15T06:25:40.9590567Z ======================================================================
+2026-10-15T06:25:40.9591030Z FAIL: test_inherited_pipe_times_out (test_runner.RunnerTests.test_inherited_pipe_times_out)
+2026-10-15T06:25:40.9591524Z ----------------------------------------------------------------------
+2026-10-15T06:25:40.9591978Z Traceback (most recent call last):
+2026-10-15T06:25:40.9592467Z   File "/home/runner/work/VARE/VARE/tests/test_runner.py", line 78, in test_inherited_pipe_times_out
+2026-10-15T06:25:40.9592990Z     self.assertEqual({'timeout': 1}, summary['outcomes'])
+2026-10-15T06:25:40.9593350Z AssertionError: {'timeout': 1} != {'grader_error': 1}
+2026-10-15T06:25:40.9593646Z - {'timeout': 1}
+2026-10-15T06:25:40.9593847Z + {'grader_error': 1}
+2026-10-15T06:25:40.9593976Z 
+2026-10-15T06:25:40.9594084Z ======================================================================
+2026-10-15T06:25:40.9594622Z FAIL: test_ledger_tamper_with_rebuilt_manifest (test_runner.RunnerTests.test_ledger_tamper_with_rebuilt_manifest)
+2026-10-15T06:25:40.9595181Z ----------------------------------------------------------------------
+2026-10-15T06:25:40.9595863Z Traceback (most recent call last):
+2026-10-15T06:25:40.9596420Z   File "/home/runner/work/VARE/VARE/tests/test_runner.py", line 113, in test_ledger_tamper_with_rebuilt_manifest
+2026-10-15T06:25:40.9596987Z     output, _ = self.campaign([('valid', 'candidate_passed')])
+2026-10-15T06:25:40.9597326Z                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:25:40.9597755Z   File "/home/runner/work/VARE/VARE/tests/test_runner.py", line 31, in campaign
+2026-10-15T06:25:40.9598199Z     self.assertEqual(expected, record['status'], job.id)
+2026-10-15T06:25:40.9598552Z AssertionError: 'candidate_passed' != 'grader_error'
+2026-10-15T06:25:40.9598852Z - candidate_passed
+2026-10-15T06:25:40.9599053Z + grader_error
+2026-10-15T06:25:40.9599237Z  : valid
+2026-10-15T06:25:40.9599341Z 
+2026-10-15T06:25:40.9599454Z ======================================================================
+2026-10-15T06:25:40.9600015Z FAIL: test_snapshot_binding_with_rebuilt_manifest (test_runner.RunnerTests.test_snapshot_binding_with_rebuilt_manifest)
+2026-10-15T06:25:40.9600603Z ----------------------------------------------------------------------
+2026-10-15T06:25:40.9600939Z Traceback (most recent call last):
+2026-10-15T06:25:40.9601467Z   File "/home/runner/work/VARE/VARE/tests/test_runner.py", line 82, in test_snapshot_binding_with_rebuilt_manifest
+2026-10-15T06:25:40.9602035Z     output, _ = self.campaign([('valid', 'candidate_passed')])
+2026-10-15T06:25:40.9602373Z                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-15T06:25:40.9602792Z   File "/home/runner/work/VARE/VARE/tests/test_runner.py", line 31, in campaign
+2026-10-15T06:25:40.9603230Z     self.assertEqual(expected, record['status'], job.id)
+2026-10-15T06:25:40.9603595Z AssertionError: 'candidate_passed' != 'grader_error'
+2026-10-15T06:25:40.9603895Z - candidate_passed
+2026-10-15T06:25:40.9604094Z + grader_error
+2026-10-15T06:25:40.9604277Z  : valid
+2026-10-15T06:25:40.9604377Z 
+2026-10-15T06:25:40.9604521Z ----------------------------------------------------------------------
+2026-10-15T06:25:40.9604838Z Ran 13 tests in 1.406s
+2026-10-15T06:25:40.9604972Z 
+2026-10-15T06:25:40.9605052Z FAILED (failures=8)
+2026-10-15T06:25:40.9710193Z ##[error]Process completed with exit code 1.
+2026-10-15T06:25:40.9807976Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-10-15T06:25:40.9808407Z with:
+2026-10-15T06:25:40.9808650Z   name: durable-test-diagnostics-cpu-evidence
+2026-10-15T06:25:40.9809024Z   path: /home/runner/work/_temp/durable-test-diagnostics
+2026-10-15T06:25:40.9809357Z   if-no-files-found: ignore
+2026-10-15T06:25:40.9809605Z   compression-level: 6
+2026-10-15T06:25:40.9809826Z   overwrite: false
+2026-10-15T06:25:40.9810042Z   include-hidden-files: false
+2026-10-15T06:25:40.9810278Z env:
+2026-10-15T06:25:40.9810530Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-15T06:25:40.9810953Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+2026-10-15T06:25:40.9811377Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-15T06:25:40.9811756Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-15T06:25:40.9812131Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+2026-10-15T06:25:40.9812706Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+2026-10-15T06:25:40.9813030Z ##[endgroup]
+2026-10-15T06:25:41.1434888Z (node:2701) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-15T06:25:41.1435902Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-15T06:25:41.1451720Z No files were found with the provided path: /home/runner/work/_temp/durable-test-diagnostics. No artifacts will be uploaded.
+2026-10-15T06:25:41.1965248Z Post job cleanup.
+2026-10-15T06:25:41.2832631Z [command]/usr/bin/git version
+2026-10-15T06:25:41.2876670Z git version 2.55.0
+2026-10-15T06:25:41.2917084Z Temporarily overriding HOME='/home/runner/work/_temp/0d7fe21c-947d-46d4-b0af-845280c1b5c2' before making global git config changes
+2026-10-15T06:25:41.2918403Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-15T06:25:41.2923104Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/VARE/VARE
+2026-10-15T06:25:41.2964151Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-15T06:25:41.3017316Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-15T06:25:41.3290106Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-15T06:25:41.3320802Z http.https://github.com/.extraheader
+2026-10-15T06:25:41.3334816Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-15T06:25:41.3375312Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-15T06:25:41.3645825Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-15T06:25:41.3686619Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-15T06:25:41.4157427Z Cleaning up orphan processes
+2026-10-15T06:25:41.4446211Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

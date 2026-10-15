@@ -12,7 +12,7 @@ import os
 from pathlib import Path
 import platform
 import re
-import signal
+import struct
 import subprocess
 import sys
 import time
@@ -155,10 +155,40 @@ def fingerprint(job, task):
 
 
 async def execute(evaluator, job):
-    process = await asyncio.create_subprocess_exec(
-        sys.executable, '-B', str(evaluator), '--workspace', str(job.workspace.resolve()),
-        '--task-root', str(job.task_root.resolve()), stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE, start_new_session=True)
+    status_read, status_write = os.pipe()
+    status_pipe = os.fdopen(status_read, 'rb', buffering=0)
+    status_reader = asyncio.StreamReader()
+    transport = None
+    try:
+        transport, _ = await asyncio.get_running_loop().connect_read_pipe(
+            lambda: asyncio.StreamReaderProtocol(status_reader), status_pipe)
+        launch = asyncio.create_task(asyncio.create_subprocess_exec(
+            sys.executable, '-B', str(Path(__file__).with_name('_grader_guard.py')), str(status_write),
+            sys.executable, '-B', str(evaluator), '--workspace', str(job.workspace.resolve()),
+            '--task-root', str(job.task_root.resolve()), stdin=asyncio.subprocess.PIPE,
+            stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
+            pass_fds=(status_write,), start_new_session=True))
+        interrupted = False
+        while True:
+            try:
+                process = await asyncio.shield(launch)
+                break
+            except asyncio.CancelledError:
+                interrupted = True
+                if launch.cancelled():
+                    raise
+        if interrupted:
+            process.stdin.close()
+            await process.wait()
+            raise asyncio.CancelledError
+    except BaseException:
+        if transport is not None:
+            transport.close()
+        else:
+            status_pipe.close()
+        raise
+    finally:
+        os.close(status_write)
     buffers = [bytearray(), bytearray()]
     total = 0
     overflow = asyncio.Event()
@@ -178,8 +208,11 @@ async def execute(evaluator, job):
     pumps = [asyncio.create_task(pump(process.stdout, 0)),
              asyncio.create_task(pump(process.stderr, 1))]
     # Explicitly require EOF on both streams; Process.wait behavior differs by event loop.
+    code = None
+
     async def complete():
-        await process.wait()
+        nonlocal code
+        code = struct.unpack('!i', await status_reader.readexactly(4))[0]
         await asyncio.gather(*pumps)
 
     waiter = asyncio.create_task(complete())
@@ -193,23 +226,39 @@ async def execute(evaluator, job):
         elif waiter not in done:
             status = 'timeout'
     finally:
-        # Also clean up ordinary descendants if the parent finished successfully.
-        try:
-            os.killpg(process.pid, signal.SIGKILL)
-        except ProcessLookupError:
-            pass
+        process.stdin.close()
         limiter.cancel()
-        await asyncio.gather(limiter, return_exceptions=True)
-        try:
-            await asyncio.wait_for(asyncio.gather(waiter, *pumps), timeout=2)
-        except asyncio.TimeoutError:
-            for future in [waiter, *pumps]:
-                future.cancel()
-            await asyncio.gather(waiter, *pumps, return_exceptions=True)
-            status = status or 'timeout'
+
+        async def cleanup():
+            nonlocal status
+            await asyncio.gather(limiter, return_exceptions=True)
+            try:
+                results = await asyncio.wait_for(
+                    asyncio.gather(process.wait(), waiter, *pumps, return_exceptions=True), timeout=2)
+                if any(isinstance(result, BaseException) for result in results):
+                    status = status or 'grader_error'
+            except asyncio.TimeoutError:
+                status = status or 'timeout'
+            finally:
+                transport.close()
+
+        # EOF is also delivered by the OS on uncatchable owner process loss.
+        # Only the guard signals its own, still-owned process group.
+        closing = asyncio.create_task(cleanup())
+        interrupted = False
+        while True:
+            try:
+                await asyncio.shield(closing)
+                break
+            except asyncio.CancelledError:
+                interrupted = True
+                if closing.cancelled():
+                    raise
+        if interrupted:
+            raise asyncio.CancelledError
     if overflow.is_set():
         status = 'output_limit'
-    return status, process.returncode, bytes(buffers[0]), bytes(buffers[1])
+    return status, code if code is not None else process.returncode, bytes(buffers[0]), bytes(buffers[1])
 
 
 def classify(data, code, task, hashes, before):
@@ -299,7 +348,7 @@ async def run_campaign(jobs, output, workers=1, repository_root=ROOT):
     validate_jobs(jobs, root, output, workers)
     output.mkdir(parents=True, exist_ok=False)
     # Snapshot the runner and every protected input. No absolute local paths in artifacts.
-    for name in ['__init__.py', '__main__.py', 'runner.py']:
+    for name in ['__init__.py', '__main__.py', 'runner.py', '_grader_guard.py']:
         atomic(output / 'snapshot' / 'vare' / name, Path(__file__).with_name(name).read_bytes())
     snapshots = set()
     for job in jobs:
