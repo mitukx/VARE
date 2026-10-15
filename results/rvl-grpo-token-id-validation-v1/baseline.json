@@ -1,0 +1,50 @@
+{
+  "observed": [
+    {
+      "adapter_accepted": true,
+      "case": "prompt_float",
+      "trainer_prompt_ids": [
+        1
+      ],
+      "trainer_response_ids": [
+        101
+      ]
+    },
+    {
+      "adapter_accepted": true,
+      "case": "response_float",
+      "trainer_prompt_ids": [
+        1
+      ],
+      "trainer_response_ids": [
+        101
+      ]
+    },
+    {
+      "adapter_accepted": true,
+      "case": "response_bool",
+      "trainer_prompt_ids": [
+        1
+      ],
+      "trainer_response_ids": [
+        1
+      ]
+    },
+    {
+      "adapter_accepted": true,
+      "case": "response_negative",
+      "trainer_prompt_ids": [
+        1
+      ],
+      "trainer_response_ids": [
+        -1
+      ]
+    }
+  ],
+  "protocol": "rvl-grpo-token-id-validation-v1",
+  "rvl_revision": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "rvl_trainer_source_sha256": "375985c1d0cca49a9d98d8b00ed41cefe000b91461e9a0783e94312466fd0210",
+  "stage": "baseline-before-implementation",
+  "vare_adapter_source_sha256": "db295fbd50b3629a46e2cab73873b02bf0f652353bc3a9f9292b2fae90d94df4",
+  "vare_base_commit": "99a9d085edab8c38ad7e1eb435e8dc62506db9e0"
+}

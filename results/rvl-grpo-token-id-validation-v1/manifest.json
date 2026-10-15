@@ -1,0 +1,43 @@
+{
+  "artifacts_sha256": {
+    "baseline.json": "46287eb62de4f7d3b05b6d35441620776632e04b7763d1fb45ec101815add2fa",
+    "blob-budget.log": "d416aec335fa1cb82da11524f883bc78685a5aa287e9bc098eaaf374a80199dd",
+    "candidate.json": "d4d9f280698e43259b58a14ef705fb4e8f82d434c172828f5bdca99ec9dfa107",
+    "focused-tests.log": "5952b218382e51f578768c0a348723d5418c12143cc6d5f49d527f1d1b978a79",
+    "full-tests.log": "f90759be242cb395eee6d3efef8fdd031a77facb2c119de9de29cdf01c6f573e",
+    "mypy.log": "caf4cb276b1b834b69b4a51aa776668a80ee64e1a2fd04bb890970c67d4fd7e7",
+    "protocol.md": "97997f1eda3a05849878c0c46d0cc3912dc0177731b961a0c50ddb1c62cbd9bd",
+    "review.md": "8b0a5e0c2096afca250a283a6d4d4717f2bd58b4c103248eb72aa60486fbd419",
+    "ruff.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+  },
+  "base_commit": "99a9d085edab8c38ad7e1eb435e8dc62506db9e0",
+  "candidate_source_sha256": "e9e635a90a972d3b47542ca193fa19338fdd5d7d97df93a5bf9a09b7e1e8ad0b",
+  "changed_files_sha256": {
+    "src/vare/integrations/rvl_grpo.py": "e9e635a90a972d3b47542ca193fa19338fdd5d7d97df93a5bf9a09b7e1e8ad0b",
+    "tests/test_rvl_grpo_group_boundary.py": "534909ef358adbcd646131228c6585ebaf450cea58e009eae2941f55569c4c31",
+    "tests/test_rvl_grpo_group_boundary_calibration.py": "b7affcf76305a14955ad3634ce0ecb651e6edb734362f7c6fb026e60e3eb8231",
+    "tests/test_rvl_grpo_hooks.py": "051a6064990fcf84489c142a579429736639792c4f88799f64a2f906af7ce9f6",
+    "tests/test_rvl_grpo_shared_module_mode.py": "99ec5be22ca1e06e43ecbd344eb56b6f55a8a06ea823978d52c6dc0ef13f1205",
+    "tests/test_rvl_grpo_torch_state.py": "f744c3e7fdad9f82744b65485ec0c6d9d445ad9bca6f0ace1ee9a0977a60408c"
+  },
+  "checks": {
+    "blob_budget": "passed (235 allowlisted blobs >= 1048576 bytes)",
+    "focused_tests": "50 passed",
+    "full_default_suite": "750 passed (750 collected; process exit 0)",
+    "independent_review": "no implementation blocker; direct trainer-call evidence gap corrected and retested",
+    "mypy": "passed (57 source files)",
+    "ruff": "passed"
+  },
+  "claim_limit": "Input-integrity defect at the VARE-to-RVL trainer boundary; does not establish task/model performance gain or frequency in normal sampling.",
+  "commands": {
+    "blob_budget": "PATH=/opt/homebrew/Caskroom/miniforge/base/bin:$PATH PYTHONPATH=src python3 scripts/check_tracked_blob_budget.py",
+    "focused_suite": "PATH=/opt/homebrew/Caskroom/miniforge/base/bin:$PATH PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 pytest -q tests/test_rvl_grpo_hooks.py tests/test_rvl_trajectory.py tests/test_rvl_grpo_group_boundary_calibration.py tests/test_rvl_grpo_group_boundary.py tests/test_rvl_grpo_shared_module_mode.py tests/test_rvl_grpo_torch_state.py",
+    "full_default_suite": "PATH=/opt/homebrew/Caskroom/miniforge/base/bin:$PATH PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 pytest -q",
+    "mypy": "mypy src",
+    "ruff": "ruff check <six changed implementation/test files>"
+  },
+  "pinned_rvl_revision": "c7e646b043cb56e5ea3c2623bb8a61e065451f72",
+  "pinned_rvl_trainer_source_sha256": "375985c1d0cca49a9d98d8b00ed41cefe000b91461e9a0783e94312466fd0210",
+  "protocol": "rvl-grpo-token-id-validation-v1",
+  "runtime": "Python 3.12.12"
+}

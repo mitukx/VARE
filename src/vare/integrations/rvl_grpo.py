@@ -264,6 +264,17 @@ class RVLGRPOHooks:
         raw = exp.attempt.metadata.get("rvl_generation")
         if not isinstance(raw, dict):
             raise ValueError("experience lacks token-exact rvl_generation metadata")
+        generation_metadata = raw.get("metadata")
+        if not isinstance(generation_metadata, dict):
+            raise ValueError("RVL generation lacks exact token metadata")
+        for field in ("prompt_token_ids", "response_token_ids"):
+            token_ids = generation_metadata.get(field)
+            if not isinstance(token_ids, list) or not token_ids or any(
+                type(token_id) is not int or token_id < 0 for token_id in token_ids
+            ):
+                raise ValueError(
+                    f"RVL generation requires exact nonnegative integer {field}"
+                )
         generation = self._generation_factory(**copy.deepcopy(raw))
         return self._verified_factory(
             generation=generation,

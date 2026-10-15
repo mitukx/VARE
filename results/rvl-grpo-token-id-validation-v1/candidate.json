@@ -1,0 +1,44 @@
+{
+  "claim_limit": "Malformed token metadata is rejected before the generation factory and trainer call. No model-quality or ordinary-sampling claim is made.",
+  "observed": [
+    {
+      "accepted": false,
+      "case": "prompt_float",
+      "field": "prompt_token_ids",
+      "input": [
+        1.9
+      ],
+      "trainer_call_count": 0
+    },
+    {
+      "accepted": false,
+      "case": "response_float",
+      "field": "response_token_ids",
+      "input": [
+        101.9
+      ],
+      "trainer_call_count": 0
+    },
+    {
+      "accepted": false,
+      "case": "response_bool",
+      "field": "response_token_ids",
+      "input": [
+        true
+      ],
+      "trainer_call_count": 0
+    },
+    {
+      "accepted": false,
+      "case": "response_negative",
+      "field": "response_token_ids",
+      "input": [
+        -1
+      ],
+      "trainer_call_count": 0
+    }
+  ],
+  "protocol": "rvl-grpo-token-id-validation-v1",
+  "source_sha256": "e9e635a90a972d3b47542ca193fa19338fdd5d7d97df93a5bf9a09b7e1e8ad0b",
+  "stage": "candidate-after-implementation"
+}
