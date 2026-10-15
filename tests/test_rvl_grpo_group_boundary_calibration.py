@@ -67,6 +67,9 @@ def _experience(group_id, group_size, prompt_id, reward, response):
         "metadata": {
             "prompt_token_ids": [1],
             "response_token_ids": [2],
+            "model": "fixture-model-v1",
+            "sampling_temperature": 0.8,
+            "logprob_distribution": "neutral_temperature_scaled_policy",
         },
     }
     return Experience(
@@ -96,7 +99,7 @@ def _experience(group_id, group_size, prompt_id, reward, response):
     )
 
 
-def _hooks(trainer):
+def _hooks(trainer, *, current_policy_version=0, current_verifier_version=0):
     return RVLGRPOHooks(
         backend=Backend(),
         trainer=trainer,
@@ -104,7 +107,8 @@ def _hooks(trainer):
         score_fn=lambda _task, _response: 0.0,
         generation_factory=Generation,
         verified_generation_factory=VerifiedGeneration,
-        current_verifier_version=0,
+        current_policy_version=current_policy_version,
+        current_verifier_version=current_verifier_version,
     )
 
 
@@ -175,4 +179,65 @@ def test_singleton_grpo_group_fails_before_optimizer_step():
         asyncio.run(_hooks(trainer).train_candidate("policy-0", [experience]))
 
     assert trainer.optimizer_step == 0
+    assert trainer.received_advantages is None
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "prompt_id",
+        "prompt_text",
+        "policy_id",
+        "policy_version",
+        "model",
+        "sampling_temperature",
+        "logprob_distribution",
+        "verifier_name",
+        "verifier_version",
+        "verifier_config",
+    ],
+)
+def test_mixed_provenance_within_declared_group_fails_before_optimizer_step(mutation):
+    trainer = CapturingTrainer()
+    experiences = [
+        _experience("group-a", 2, "task-a", 0.0, "a0"),
+        _experience("group-a", 2, "task-a", 1.0, "a1"),
+    ]
+    second = experiences[1]
+    generation = second.attempt.metadata["rvl_generation"]
+    generation_metadata = generation["metadata"]
+    if mutation == "prompt_id":
+        second.attempt.task = Task("task-b", "prompt for task-b", family="fixture")
+        generation["prompt_id"] = "task-b"
+        generation["prompt"] = "prompt for task-b"
+    elif mutation == "prompt_text":
+        second.attempt.task = Task("task-a", "different prompt", family="fixture")
+        generation["prompt"] = "different prompt"
+    elif mutation == "policy_id":
+        second.attempt.policy_id = "policy-1"
+    elif mutation == "policy_version":
+        second.attempt.policy_version = 1
+    elif mutation == "model":
+        generation_metadata["model"] = "fixture-model-v2"
+    elif mutation == "sampling_temperature":
+        generation_metadata["sampling_temperature"] = 0.7
+    elif mutation == "logprob_distribution":
+        generation_metadata["logprob_distribution"] = "unscaled_policy"
+    elif mutation == "verifier_name":
+        second.verification.verifier_name = "other-verifier"
+    elif mutation == "verifier_version":
+        second.verification.verifier_version = 1
+    else:
+        second.verification.metadata["rvl_verification_config_sha256"] = "b" * 64
+
+    hooks = _hooks(
+        trainer,
+        current_policy_version=1,
+        current_verifier_version=1,
+    )
+    with pytest.raises(ValueError, match="VARE rollout group mixes"):
+        asyncio.run(hooks.train_candidate("policy-0", experiences))
+
+    assert trainer.optimizer_step == 0
+    assert trainer.weight == 0
     assert trainer.received_advantages is None

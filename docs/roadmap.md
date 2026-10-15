@@ -10,6 +10,15 @@ closes a bounded E0 use-time admission gap and does not change the research
 gate: an eligible novel method and independently graded task composition are
 still missing.
 
+## Direct-trainer GRPO group provenance — 2026-10-15
+
+The [boundary report](rvl-grpo-group-provenance-v1-report.md) records a
+direct-adapter counterexample: complete-size groups with mixed prompt,
+policy/behavior, or evaluator provenance reached the trainer on pinned main.
+The adapter now rejects those groups before advantage normalization reaches the
+trainer. Normal replay already enforced group homogeneity. This is an E0
+correctness fix, not a measured optimizer or model-quality result.
+
 ## Retrospective comparison audit — 2026-10-13
 
 The [record audit](format-comparison-record-v1-report.md) preserves the primary
