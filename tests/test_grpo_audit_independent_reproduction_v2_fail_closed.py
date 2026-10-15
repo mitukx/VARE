@@ -38,7 +38,7 @@ def make_isolated_repository(tmp_path: Path) -> tuple[Path, dict[str, object]]:
 
 
 @pytest.mark.parametrize("optimized", [False, True], ids=["normal", "optimized"])
-@pytest.mark.parametrize("mutation", ["input-hash", "exact-check"])
+@pytest.mark.parametrize("mutation", ["input-hash", "schema", "exact-check"])
 def test_runner_rejects_tampered_inputs_and_failed_checks(
     tmp_path: Path, optimized: bool, mutation: str
 ) -> None:
@@ -51,6 +51,11 @@ def test_runner_rejects_tampered_inputs_and_failed_checks(
         report_path = tmp_path / str(report["path"])
         report_path.write_bytes(report_path.read_bytes() + b"tampered\n")
         expected_error = "source hash mismatch"
+    elif mutation == "schema":
+        lock["source_artifacts"] = []
+        lock_path = tmp_path / LOCK_RELATIVE_PATH
+        lock_path.write_text(json.dumps(lock), encoding="utf-8")
+        expected_error = "source_artifacts"
     else:
         runner = runner_path.read_text(encoding="utf-8")
         original = "Exact(Fraction(-3, 8), Fraction(1, 4))"
