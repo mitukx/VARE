@@ -22,10 +22,12 @@ independent human review.
 ## GRPO audit-order exact reproduction — 2026-10-15
 
 The final separately authored standard-library implementation reproduces the
-selected four-member parity witness and all frozen exact checks. Its first
-implementation attempt failed because of a count-two standardization formula
-error; that non-pass is preserved alongside two corrected passing runs. A
-review also found that only the selected `012` third-order marginal differs;
+selected four-member parity witness and all frozen exact checks. The author
+recorded a count-two standardization formula error in the first implementation
+attempt; that non-pass is preserved alongside two corrected passing runs, but
+the bundle cannot independently verify the initial source or its stated cause.
+Only the final passing run is tied to retained runner source. A review also
+found that only the selected `012` third-order marginal differs;
 the v1 lock's wording can be read too broadly if it implies all triples
 differ. See the [report](grpo-audit-independent-reproduction-v2-report.md),
 [protocol](../protocols/grpo_audit_independent_reproduction_v2.lock.json), and
