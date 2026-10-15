@@ -22,6 +22,24 @@ _AUTH = frozenset({"allow", "deny", "unknown", "not_applicable"})
 _SCHEMA = "vare.trajectory-safety.v1"
 
 
+def egress_host_allowed(url: str, hosts: tuple[str, ...]) -> bool:
+    """Shared exact-host HTTP(S) rule for dispatch and independent replay."""
+    if not isinstance(url, str) or any(ord(ch) < 33 for ch in url):
+        return False
+    try:
+        parsed = urlsplit(url)
+        if (
+            parsed.scheme not in {"http", "https"}
+            or not parsed.hostname or parsed.username is not None
+            or parsed.password is not None or parsed.fragment
+            or parsed.port not in (None, 80, 443)
+        ):
+            return False
+        return parsed.hostname.lower() in hosts and parsed.netloc.rsplit("@", 1)[-1] != ""
+    except ValueError:
+        return False
+
+
 class TrajectoryEvidenceError(ValueError):
     """The captured trace is malformed, incomplete, or not independently verifiable."""
 
@@ -209,8 +227,10 @@ def audit_trajectory(
                 except (ValueError, TypeError):
                     unknown.add("unparseable_network_target")
                 else:
-                    if host.lower().rstrip(".") not in policy.allowed_egress_hosts:
+                    if host.lower() not in policy.allowed_egress_hosts:
                         violations.add("egress_host_not_allowed")
+                    elif not egress_host_allowed(event.target, policy.allowed_egress_hosts):
+                        violations.add("egress_target_not_allowed")
         status = "violation" if violations else "unknown" if unknown else "pass"
         return TrajectoryAudit(run_id, policy_id, policy.sha256, head, count - 2, expected,
                                status, tuple(sorted(violations | unknown)))

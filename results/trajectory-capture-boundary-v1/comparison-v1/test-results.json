@@ -1,0 +1,52 @@
+{
+  "baseline": {
+    "cases": {
+      "test_dispatcher_cannot_close_while_owned_call_is_pending[cancellation]": "fail",
+      "test_dispatcher_cannot_close_while_owned_call_is_pending[completion]": "fail",
+      "test_real_command_completion_precedes_signed_promotion_evidence": "fail",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[fragment]": "fail",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[http-80]": "pass",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[https-443]": "pass",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[https]": "pass",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[invalid-port]": "fail",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[leading-space]": "fail",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[other-host]": "pass",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[port]": "fail",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[space]": "fail",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[tab]": "fail",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[trailing-dot]": "fail",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[uppercase]": "pass",
+      "test_result_capture_failure_fences_close_and_later_dispatch": "fail"
+    },
+    "exit_code": 1,
+    "source_sha256": {
+      "src/vare/trajectory_dispatch.py": "1ea7bd75796cba1200ab4e36e3c43c3577d7dc90e93f347e2b27663bc604548a",
+      "src/vare/trajectory_safety.py": "be4fa0a7b69c8d5c39fd10b506962d3074fc8d26c7479d297d68ae7b9dd57d1b"
+    }
+  },
+  "candidate": {
+    "cases": {
+      "test_dispatcher_cannot_close_while_owned_call_is_pending[cancellation]": "pass",
+      "test_dispatcher_cannot_close_while_owned_call_is_pending[completion]": "pass",
+      "test_real_command_completion_precedes_signed_promotion_evidence": "pass",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[fragment]": "pass",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[http-80]": "pass",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[https-443]": "pass",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[https]": "pass",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[invalid-port]": "pass",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[leading-space]": "pass",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[other-host]": "pass",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[port]": "pass",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[space]": "pass",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[tab]": "pass",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[trailing-dot]": "pass",
+      "test_recorded_url_is_rechecked_against_dispatch_policy[uppercase]": "pass",
+      "test_result_capture_failure_fences_close_and_later_dispatch": "pass"
+    },
+    "exit_code": 0,
+    "source_sha256": {
+      "src/vare/trajectory_dispatch.py": "7671b9fc9e7d63bfdc35a5da47afb351ba3b7f380815aa85e51a615833aa7870",
+      "src/vare/trajectory_safety.py": "6c25d32bb86dff8f94045eb50079b2e820f20cb7ea5a4c47487a9db47513998b"
+    }
+  }
+}

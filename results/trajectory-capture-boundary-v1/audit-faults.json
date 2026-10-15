@@ -1,0 +1,54 @@
+{
+  "auditor_sha256": "d07e5dc3be938cbf7f2536b7fde550243cf71f24b48386bdb70beb3296754f23",
+  "records": [
+    {
+      "fault": "missing-trace",
+      "optimized": false,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 140, in <module>\n    print(json.dumps(audit(args.bundle.resolve()), indent=2))\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 61, in audit\n    require(set(assets) == actual, \"artifact inventory differs\")\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 15, in require\n    raise ValueError(detail)\nValueError: artifact inventory differs\n"
+    },
+    {
+      "fault": "changed-summary",
+      "optimized": false,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 140, in <module>\n    print(json.dumps(audit(args.bundle.resolve()), indent=2))\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 99, in audit\n    require(reconstructed == json.loads((root / \"summary.json\").read_text()), \"summary differs\")\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 15, in require\n    raise ValueError(detail)\nValueError: summary differs\n"
+    },
+    {
+      "fault": "changed-receipt",
+      "optimized": false,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 140, in <module>\n    print(json.dumps(audit(args.bundle.resolve()), indent=2))\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 123, in audit\n    require(trust.verifies(report), \"fixture receipt invalid\")\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 15, in require\n    raise ValueError(detail)\nValueError: fixture receipt invalid\n"
+    },
+    {
+      "fault": "nested-manifest",
+      "optimized": false,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 140, in <module>\n    print(json.dumps(audit(args.bundle.resolve()), indent=2))\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 61, in audit\n    require(set(assets) == actual, \"artifact inventory differs\")\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 15, in require\n    raise ValueError(detail)\nValueError: artifact inventory differs\n"
+    },
+    {
+      "fault": "missing-trace",
+      "optimized": true,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 140, in <module>\n    print(json.dumps(audit(args.bundle.resolve()), indent=2))\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 61, in audit\n    require(set(assets) == actual, \"artifact inventory differs\")\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 15, in require\n    raise ValueError(detail)\nValueError: artifact inventory differs\n"
+    },
+    {
+      "fault": "changed-summary",
+      "optimized": true,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 140, in <module>\n    print(json.dumps(audit(args.bundle.resolve()), indent=2))\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 99, in audit\n    require(reconstructed == json.loads((root / \"summary.json\").read_text()), \"summary differs\")\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 15, in require\n    raise ValueError(detail)\nValueError: summary differs\n"
+    },
+    {
+      "fault": "changed-receipt",
+      "optimized": true,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 140, in <module>\n    print(json.dumps(audit(args.bundle.resolve()), indent=2))\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 123, in audit\n    require(trust.verifies(report), \"fixture receipt invalid\")\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 15, in require\n    raise ValueError(detail)\nValueError: fixture receipt invalid\n"
+    },
+    {
+      "fault": "nested-manifest",
+      "optimized": true,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 140, in <module>\n    print(json.dumps(audit(args.bundle.resolve()), indent=2))\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 61, in audit\n    require(set(assets) == actual, \"artifact inventory differs\")\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 15, in require\n    raise ValueError(detail)\nValueError: artifact inventory differs\n"
+    }
+  ],
+  "scope": "same-host corruption/inconsistency probes; changed receipt and summary have updated outer artifact hashes"
+}

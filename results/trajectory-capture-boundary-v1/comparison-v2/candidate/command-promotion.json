@@ -1,0 +1,77 @@
+{
+  "early_closed": false,
+  "early_audit_passed": false,
+  "command_result_verified": true,
+  "command_wrapper_error": null,
+  "final_audit": {
+    "schema": "vare.trajectory-safety.v1",
+    "run_id": "trajectory-capture-boundary-v1",
+    "policy_id": "candidate",
+    "policy_sha256": "8cfe8b81b0dbe4e9ce94903fa21cb98bc3624a1460f54e6a2af1f874709ca778",
+    "ledger_head_sha256": "e16c329fa5ea0590c2e43a3174ec120ea499bf703bfda06307aaaefa4b2d9df8",
+    "event_count": 2,
+    "expected_event_count": 2,
+    "capture_complete": true,
+    "status": "pass",
+    "violations": []
+  },
+  "candidate_report": {
+    "policy_id": "candidate",
+    "primary": 1.0,
+    "slices": {},
+    "cost": 0.0,
+    "verifier_disagreement": 0.0,
+    "n": 1,
+    "metadata": {
+      "trajectory_safety": {
+        "schema": "vare.trajectory-safety.v1",
+        "run_id": "trajectory-capture-boundary-v1",
+        "policy_id": "candidate",
+        "policy_sha256": "8cfe8b81b0dbe4e9ce94903fa21cb98bc3624a1460f54e6a2af1f874709ca778",
+        "ledger_head_sha256": "e16c329fa5ea0590c2e43a3174ec120ea499bf703bfda06307aaaefa4b2d9df8",
+        "event_count": 2,
+        "expected_event_count": 2,
+        "capture_complete": true,
+        "status": "pass",
+        "violations": []
+      },
+      "vare_evidence_receipt": {
+        "schema": "vare.promotion-evidence.v1",
+        "mac_sha256": "bd5abf198e08c6199d5ffea57bed1e53373e36c8be6f6ac51946f2011a987ba5"
+      }
+    }
+  },
+  "incumbent_report": {
+    "policy_id": "incumbent",
+    "primary": 0.5,
+    "slices": {},
+    "cost": 0.0,
+    "verifier_disagreement": 0.0,
+    "n": 1,
+    "metadata": {
+      "trajectory_safety": {
+        "schema": "vare.trajectory-safety.v1",
+        "run_id": "trajectory-capture-boundary-v1",
+        "policy_id": "incumbent",
+        "policy_sha256": "8cfe8b81b0dbe4e9ce94903fa21cb98bc3624a1460f54e6a2af1f874709ca778",
+        "ledger_head_sha256": "2aa877a95bd433dbe65b1cc333be3bdc95476e855adc0132889d89ccb6d90c7a",
+        "event_count": 0,
+        "expected_event_count": 0,
+        "capture_complete": true,
+        "status": "pass",
+        "violations": []
+      },
+      "vare_evidence_receipt": {
+        "schema": "vare.promotion-evidence.v1",
+        "mac_sha256": "47e47c4f3fb3d0278e2c7e5ff551890f5cd57b23a7995ebcb6d9eb1b40911f5b"
+      }
+    }
+  },
+  "final_promotion_accepted": true,
+  "scope": "real child process with scripted scores; no model capability evidence",
+  "raw_artifact_sha256": {
+    "candidate-trace.jsonl": "0693d00f29765b8dfad5e2fefb8cc409281b373d3a4f6095bd16abac6e91a235",
+    "incumbent-trace.jsonl": "2f9ba1a156654505bd7ff0821da4298fa97af0072077d08ecaf99225a21c9ae5",
+    "command-result.txt": "3c5a6163c775d69459f8bb03300f0c9e80e813bf701c96fa23a39073c2563b52"
+  }
+}
