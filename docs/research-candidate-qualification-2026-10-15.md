@@ -93,14 +93,20 @@ decision remains unchanged.
 
 An external task-pool screen identified [SWE-rebench](https://huggingface.co/datasets/nebius/SWE-rebench)
 as a possible future source of post-checkpoint software tasks, not an approved
-evaluation set. The dataset card labels the collection CC BY 4.0 and exposes
-base commits, task timestamps, per-repository license fields, hidden-test
-patches, and hints. Any use must verify each source repository's license and
-creation date against a fixed checkpoint, keep tests, patches, and hints outside
-the model context, and pass an M1 base-only feasibility gate first. The current
-dataset viewer's latest task timestamp is 2025-04-30, so it is not fresh for a
-later checkpoint by default; its execution cost and repository setup have also
-not been measured locally. No data was downloaded and no base inference was run.
+evaluation set. The examined Hub revision is pinned to
+[`89cdfbab4ab1bd8f5a658bb212d1b63624f4f881`](https://huggingface.co/datasets/nebius/SWE-rebench/tree/89cdfbab4ab1bd8f5a658bb212d1b63624f4f881).
+At that revision, the test split's recorded `created_at` values range from
+2014-04-30 to 2025-04-30 20:14:11. The dataset card labels the collection CC
+BY 4.0 and exposes base commits, task timestamps, per-repository license
+fields, hidden-test patches, and hints. Any use must verify each source
+repository's license and creation date against a fixed checkpoint, keep tests,
+patches, and hints outside the model context, and pass an M1 base-only
+feasibility gate first. Its execution cost and repository setup have not been
+measured locally.
+The [metadata-only snapshot](../results/research-candidate-qualification-2026-10-15/swe-rebench-snapshot-89cdfba/manifest.json)
+retains revision-specific Hub API metadata, split/size metadata, test and filtered
+statistics, endpoint URLs, and SHA-256 hashes. No parquet or task rows were
+downloaded, and no base inference was run.
 
 ## What must qualify before the next model run
 
@@ -139,7 +145,7 @@ trainer defect; do not add generic infrastructure to fill the gap.
 - [Experience is the Best Teacher: Motivating Effective Exploration in Reinforcement Learning for LLMs](https://arxiv.org/abs/2603.20046), submitted 2026-03-20.
 - [Beyond Outcome Feedback: Trajectory-Quality-Guided Experience-based Learning](https://arxiv.org/abs/2610.14877), submitted 2026-10-10.
 - [Terrarium: Growing Personal Assistants via Scalable Synthesis of App Worlds](https://arxiv.org/abs/2610.14860), submitted 2026-10-10.
-- [SWE-rebench dataset card](https://huggingface.co/datasets/nebius/SWE-rebench), inspected 2026-10-15; candidate task source only, not approved or executed.
+- [SWE-rebench dataset card](https://huggingface.co/datasets/nebius/SWE-rebench/tree/89cdfbab4ab1bd8f5a658bb212d1b63624f4f881), inspected 2026-10-15; candidate task source only, not approved or executed. The metadata/statistics capture and hashes are in [`swe-rebench-snapshot-89cdfba`](../results/research-candidate-qualification-2026-10-15/swe-rebench-snapshot-89cdfba/manifest.json).
 - [QwenGyre: An Elastic Reinforcement Learning Framework for Training xLong-Horizon Agents](https://arxiv.org/abs/2609.33848), submitted 2026-09-27.
 - [Reinforcement Learning for Self-Improving Agent with Skill Library](https://arxiv.org/abs/2512.17102), revised 2026-03-10.
 - The related stale-rollout and off-policy papers recorded in the [2026-10-11 Stage 0 gate](stage0-research-gate-2026-10-11.md).
