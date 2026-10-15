@@ -1,0 +1,50 @@
+{
+  "kind": "constructed valid-MAC gate-ineligible diagnostic, not model evidence",
+  "gate_decision": {
+    "accepted": false,
+    "reasons": [
+      "slice_coverage_mismatch"
+    ],
+    "primary_gain": 0.5,
+    "worst_slice_regression": 0.0,
+    "paired_gain": null,
+    "paired_lcb": null,
+    "paired_n": 0
+  },
+  "receipt_valid": true,
+  "bundle_manifest_sha256": "71a3993b69961e01e1db46d098d0c3bbca05e469cc11dadb47e41cb4a6fff7e4",
+  "results": [
+    {
+      "version": "before",
+      "optimized": false,
+      "returncode": 0,
+      "stdout": "{\n  \"artifacts\": 25,\n  \"regression_cases_per_arm\": 16,\n  \"timing_traces\": 10,\n  \"command_traces\": 4,\n  \"signed_reports\": 4,\n  \"scope\": \"same-host independent trace/summary reconstruction; public fixture receipts, not external authentication\"\n}\n",
+      "stderr": "",
+      "script_sha256": "d07e5dc3be938cbf7f2536b7fde550243cf71f24b48386bdb70beb3296754f23"
+    },
+    {
+      "version": "after",
+      "optimized": false,
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 160, in <module>\n    print(json.dumps(audit(args.bundle.resolve()), indent=2))\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 149, in audit\n    require(decision.accepted and evidence[\"final_promotion_accepted\"] is decision.accepted,\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 15, in require\n    raise ValueError(detail)\nValueError: recomputed promotion differs\n",
+      "script_sha256": "4bf7659ace9e4bb4786b04382cad2872e751d1a8d1d69bc2843b906d5429d655"
+    },
+    {
+      "version": "before",
+      "optimized": true,
+      "returncode": 0,
+      "stdout": "{\n  \"artifacts\": 25,\n  \"regression_cases_per_arm\": 16,\n  \"timing_traces\": 10,\n  \"command_traces\": 4,\n  \"signed_reports\": 4,\n  \"scope\": \"same-host independent trace/summary reconstruction; public fixture receipts, not external authentication\"\n}\n",
+      "stderr": "",
+      "script_sha256": "d07e5dc3be938cbf7f2536b7fde550243cf71f24b48386bdb70beb3296754f23"
+    },
+    {
+      "version": "after",
+      "optimized": true,
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 160, in <module>\n    print(json.dumps(audit(args.bundle.resolve()), indent=2))\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 149, in audit\n    require(decision.accepted and evidence[\"final_promotion_accepted\"] is decision.accepted,\n  File \"/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/scripts/audit_trajectory_capture_boundary_v1.py\", line 15, in require\n    raise ValueError(detail)\nValueError: recomputed promotion differs\n",
+      "script_sha256": "4bf7659ace9e4bb4786b04382cad2872e751d1a8d1d69bc2843b906d5429d655"
+    }
+  ]
+}

@@ -1,5 +1,15 @@
 # Current evidence gaps
 
+**Update 2026-10-15 — trajectory capture boundary:** the opt-in dispatcher now
+refuses closure during an owned tool call and fences closure/new calls after a
+capture persistence failure. Offline URL replay shares the runtime's existing
+exact-target predicate. A frozen main comparison changes 11 failures and five
+passing controls into 16 passes, including real child execution, output checks
+and signed promotion. Raw traces and negative cost measurements are retained:
+32-call dispatch median was 2.83% slower in the final five-pair sample. This is
+cooperative capture correctness, not hostile-code isolation or model capability.
+See the [report](trajectory-capture-boundary-v1-report.md).
+
 **Update 2026-10-15 — bounded checkpoint IO:** the checkpoint store now rejects
 FIFOs without waiting for a writer and caps reads at the registered size and
 caller limit, including growth after descriptor inspection. A pinned-main

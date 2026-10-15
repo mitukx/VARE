@@ -1,0 +1,803 @@
+......FFFFFFFFFFFFFF                                                     [100%]
+=================================== FAILURES ===================================
+___ test_auditor_rejects_reattested_but_ineligible_trajectory[status-False] ____
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-216/test_auditor_rejects_reatteste0')
+optimized = False, fault = 'status'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+        }
+        changed.update(updates[fault])
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        from dataclasses import asdict
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (0 != 0)
+E        +  where 0 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/.ven...-host independent trace/summary reconstruction; public fixture receipts, not external authentication"\n}\n', stderr='').returncode
+
+tests/test_trajectory_capture_audit.py:71: AssertionError
+____ test_auditor_rejects_reattested_but_ineligible_trajectory[status-True] ____
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-216/test_auditor_rejects_reatteste1')
+optimized = True, fault = 'status'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+        }
+        changed.update(updates[fault])
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        from dataclasses import asdict
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (0 != 0)
+E        +  where 0 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/.ven...-host independent trace/summary reconstruction; public fixture receipts, not external authentication"\n}\n', stderr='').returncode
+
+tests/test_trajectory_capture_audit.py:71: AssertionError
+___ test_auditor_rejects_reattested_but_ineligible_trajectory[policy-False] ____
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-216/test_auditor_rejects_reatteste2')
+optimized = False, fault = 'policy'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+        }
+        changed.update(updates[fault])
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        from dataclasses import asdict
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (0 != 0)
+E        +  where 0 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/.ven...-host independent trace/summary reconstruction; public fixture receipts, not external authentication"\n}\n', stderr='').returncode
+
+tests/test_trajectory_capture_audit.py:71: AssertionError
+____ test_auditor_rejects_reattested_but_ineligible_trajectory[policy-True] ____
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-216/test_auditor_rejects_reatteste3')
+optimized = True, fault = 'policy'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+        }
+        changed.update(updates[fault])
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        from dataclasses import asdict
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (0 != 0)
+E        +  where 0 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/.ven...-host independent trace/summary reconstruction; public fixture receipts, not external authentication"\n}\n', stderr='').returncode
+
+tests/test_trajectory_capture_audit.py:71: AssertionError
+_____ test_auditor_rejects_reattested_but_ineligible_trajectory[run-False] _____
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-216/test_auditor_rejects_reatteste4')
+optimized = False, fault = 'run'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+        }
+        changed.update(updates[fault])
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        from dataclasses import asdict
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (0 != 0)
+E        +  where 0 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/.ven...-host independent trace/summary reconstruction; public fixture receipts, not external authentication"\n}\n', stderr='').returncode
+
+tests/test_trajectory_capture_audit.py:71: AssertionError
+_____ test_auditor_rejects_reattested_but_ineligible_trajectory[run-True] ______
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-216/test_auditor_rejects_reatteste5')
+optimized = True, fault = 'run'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+        }
+        changed.update(updates[fault])
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        from dataclasses import asdict
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (0 != 0)
+E        +  where 0 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/.ven...-host independent trace/summary reconstruction; public fixture receipts, not external authentication"\n}\n', stderr='').returncode
+
+tests/test_trajectory_capture_audit.py:71: AssertionError
+___ test_auditor_rejects_reattested_but_ineligible_trajectory[schema-False] ____
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-216/test_auditor_rejects_reatteste6')
+optimized = False, fault = 'schema'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+        }
+        changed.update(updates[fault])
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        from dataclasses import asdict
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (0 != 0)
+E        +  where 0 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/.ven...-host independent trace/summary reconstruction; public fixture receipts, not external authentication"\n}\n', stderr='').returncode
+
+tests/test_trajectory_capture_audit.py:71: AssertionError
+____ test_auditor_rejects_reattested_but_ineligible_trajectory[schema-True] ____
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-216/test_auditor_rejects_reatteste7')
+optimized = True, fault = 'schema'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+        }
+        changed.update(updates[fault])
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        from dataclasses import asdict
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (0 != 0)
+E        +  where 0 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/.ven...-host independent trace/summary reconstruction; public fixture receipts, not external authentication"\n}\n', stderr='').returncode
+
+tests/test_trajectory_capture_audit.py:71: AssertionError
+__ test_auditor_rejects_reattested_but_ineligible_trajectory[coverage-False] ___
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-216/test_auditor_rejects_reatteste8')
+optimized = False, fault = 'coverage'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+        }
+        changed.update(updates[fault])
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        from dataclasses import asdict
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (0 != 0)
+E        +  where 0 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/.ven...-host independent trace/summary reconstruction; public fixture receipts, not external authentication"\n}\n', stderr='').returncode
+
+tests/test_trajectory_capture_audit.py:71: AssertionError
+___ test_auditor_rejects_reattested_but_ineligible_trajectory[coverage-True] ___
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-216/test_auditor_rejects_reatteste9')
+optimized = True, fault = 'coverage'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+        }
+        changed.update(updates[fault])
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        from dataclasses import asdict
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (0 != 0)
+E        +  where 0 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/.ven...-host independent trace/summary reconstruction; public fixture receipts, not external authentication"\n}\n', stderr='').returncode
+
+tests/test_trajectory_capture_audit.py:71: AssertionError
+_ test_auditor_rejects_reattested_but_ineligible_trajectory[violations-False] __
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-216/test_auditor_rejects_reatteste10')
+optimized = False, fault = 'violations'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+        }
+        changed.update(updates[fault])
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        from dataclasses import asdict
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (0 != 0)
+E        +  where 0 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/.ven...-host independent trace/summary reconstruction; public fixture receipts, not external authentication"\n}\n', stderr='').returncode
+
+tests/test_trajectory_capture_audit.py:71: AssertionError
+__ test_auditor_rejects_reattested_but_ineligible_trajectory[violations-True] __
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-216/test_auditor_rejects_reatteste11')
+optimized = True, fault = 'violations'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+        }
+        changed.update(updates[fault])
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        from dataclasses import asdict
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (0 != 0)
+E        +  where 0 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/.ven...-host independent trace/summary reconstruction; public fixture receipts, not external authentication"\n}\n', stderr='').returncode
+
+tests/test_trajectory_capture_audit.py:71: AssertionError
+_ test_auditor_rejects_reattested_but_ineligible_trajectory[boolean-counts-False] _
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-216/test_auditor_rejects_reatteste12')
+optimized = False, fault = 'boolean-counts'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+        }
+        changed.update(updates[fault])
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        from dataclasses import asdict
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (0 != 0)
+E        +  where 0 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/.ven...-host independent trace/summary reconstruction; public fixture receipts, not external authentication"\n}\n', stderr='').returncode
+
+tests/test_trajectory_capture_audit.py:71: AssertionError
+_ test_auditor_rejects_reattested_but_ineligible_trajectory[boolean-counts-True] _
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-216/test_auditor_rejects_reatteste13')
+optimized = True, fault = 'boolean-counts'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+        }
+        changed.update(updates[fault])
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        from dataclasses import asdict
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (0 != 0)
+E        +  where 0 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/work/vare-slice/.ven...-host independent trace/summary reconstruction; public fixture receipts, not external authentication"\n}\n', stderr='').returncode
+
+tests/test_trajectory_capture_audit.py:71: AssertionError
+- generated xml file: /Users/user/Documents/Codex/2026-10-15/you-are-a-senior-research-engineer/outputs/trajectory-capture-review/auditor-review-baseline.xml -
+=========================== short test summary info ============================
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[status-False]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[status-True]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[policy-False]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[policy-True]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[run-False]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[run-True]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[schema-False]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[schema-True]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[coverage-False]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[coverage-True]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[violations-False]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[violations-True]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[boolean-counts-False]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[boolean-counts-True]
+14 failed, 6 passed in 1.42s

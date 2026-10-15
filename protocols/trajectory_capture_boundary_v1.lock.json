@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "baseline_revision": "f54c488e272b7dbe513558a2e3489700f5814d35",
+  "stage": "Resource comparison frozen after development discovery: 11/16 targeted regression cases failed on main. Not preregistered defect discovery.",
+  "hypothesis": "Audit pass uses the same exact URL policy as dispatch; the cooperative dispatcher cannot certify pending or uncertain capture.",
+  "protected_sha256": {
+    "tests/test_trajectory_capture_boundary.py": "a2582c2de73923042499a9e7e6efbfa9a1cca9bcb53b1d54fc61b6f8822b4ba6"
+  },
+  "expected": {
+    "baseline": {
+      "pass": 5,
+      "fail": 11,
+      "error": 0,
+      "skip": 0
+    },
+    "candidate": {
+      "pass": 16,
+      "fail": 0,
+      "error": 0,
+      "skip": 0
+    }
+  },
+  "pairs": 5,
+  "calls_per_worker": 32,
+  "measurement_timeout_s": 20,
+  "test_timeout_s": 30,
+  "budget": "CPU/std-library/pytest only. Two regression arms and ten measurement subprocesses. No API calls, model inference or GPUs.",
+  "acceptance": "Candidate passes all 16 cases; pinned baseline fails exactly seven URL, two pending-call, one capture-fault and one real-command promotion case; five controls pass. All ten clean timing workloads close/audit 64 events as pass.",
+  "metrics": [
+    "regression_case_verdict",
+    "premature_trace_pass",
+    "signed_promotion_acceptance",
+    "dispatch_wall_s",
+    "audit_wall_s",
+    "throughput_tools_s",
+    "python_peak_bytes",
+    "process_peak_rss_bytes"
+  ],
+  "stopping_rule": "One matched comparison; retain failed runs. No timing threshold or performance tuning.",
+  "claims": "Constructed policy/capture correctness and real subprocess integration only; no hostile-code isolation, attack rate, learning or model capability claim.",
+  "evidence_revision": 2,
+  "prior_lock_sha256": "e2ae9b9e9820fbc912f9454e5982f3ec4c61400030e3a7e78952cbb806736a19",
+  "revision_reason": "Retain raw command and timing traces and full signed reports; bind fixture receipts to actual protocol/test hashes. Test inputs, assertions, case counts, resource budgets and acceptance limits are unchanged. Initial v1 records retained without claiming independently replayable trace evidence."
+}
