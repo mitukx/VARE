@@ -22,6 +22,13 @@ class FenceError(ValueError):
     """An expired or superseded attempt cannot publish a current decision."""
 
 
+class RuntimeMismatchError(ValueError):
+    """Resume requires the source bundle enrolled with the live database."""
+
+
+EXECUTOR_ASSETS = ('__init__.py', '__main__.py', 'runner.py', 'durable.py', '_grader_guard.py')
+
+
 def inputs(job, root):
     task, _, hashes = protocol(job, root)
     return {'protocol': hashes, 'input': fingerprint(job, task), 'task_id': task['task_id']}
@@ -98,7 +105,7 @@ class Store:
             db.execute('BEGIN IMMEDIATE')
             db.execute('INSERT INTO meta VALUES(?,?)', ('schema_version', '1'))
             db.execute('INSERT INTO meta VALUES(?,?)', ('repository_root', str(root)))
-            for name in ['__init__.py', '__main__.py', 'runner.py', 'durable.py', '_grader_guard.py']:
+            for name in EXECUTOR_ASSETS:
                 db.execute('INSERT INTO assets VALUES(?,?)', ('vare/' + name, Path(__file__).with_name(name).read_bytes()))
             for job, expected in enrollment:
                 spec = asdict(job)
@@ -117,6 +124,27 @@ class Store:
         finally:
             db.close()
         return cls(path)
+
+    @staticmethod
+    def _check_runtime(db):
+        enrolled = {row['name']: row['content'] for row in
+                    db.execute("SELECT name,content FROM assets WHERE name LIKE 'vare/%'")}
+        names = {'vare/' + name for name in EXECUTOR_ASSETS}
+        if set(enrolled) != names or any(not isinstance(value, bytes) for value in enrolled.values()):
+            raise RuntimeMismatchError('evaluation runtime snapshot inventory is incomplete or malformed')
+        try:
+            installed = {'vare/' + name: file_hash(Path(__file__).with_name(name)) for name in EXECUTOR_ASSETS}
+        except (ValueError, OSError) as exc:
+            raise RuntimeMismatchError('evaluation runtime source is unavailable') from exc
+        changed = sorted(name for name in names if digest(enrolled[name]) != installed[name])
+        if changed:
+            raise RuntimeMismatchError('evaluation runtime differs from enrolled source; resume with the enrolled revision: '
+                                       + ', '.join(changed))
+
+    def check_runtime(self):
+        """Check declared source bytes; this does not attest loaded bytecode."""
+        with self.connection() as db:
+            self._check_runtime(db)
 
     def root(self):
         with self.connection() as db:
@@ -155,6 +183,7 @@ class Store:
         if not math.isfinite(lease_seconds) or not .2 <= lease_seconds <= 3600:
             raise ValueError('lease must be .2..3600 seconds')
         with self.connection(True) as db:
+            self._check_runtime(db)
             now = time.time() if now is None else now
             expired = db.execute("SELECT * FROM jobs WHERE state='running' AND deadline<=? ORDER BY id", (now,)).fetchall()
             for row in expired:
@@ -194,6 +223,7 @@ class Store:
             raise ValueError('record exceeds capture budget')
         # Bind to persisted enrollment, not caller-mutable claim metadata.
         with self.connection() as db:
+            self._check_runtime(db)
             enrolled = db.execute('SELECT * FROM jobs WHERE id=?', (job.id,)).fetchone()
             if not enrolled or job != job_from(strict_json(enrolled['spec'])):
                 raise FenceError('claim differs from stored job specification')
@@ -274,6 +304,7 @@ class Store:
 
 
 async def worker(store, owner, lease_seconds=5):
+    await asyncio.to_thread(store.check_runtime)
     await asyncio.to_thread(store.refresh)
     root = store.root()
     while True:
@@ -303,6 +334,7 @@ async def worker(store, owner, lease_seconds=5):
             if fresh != claim['expected']:
                 result = ({'schema_version': 1, 'job_id': claim['job'].id, 'status': 'input_stale'}, b'', b'', None)
             else:
+                await asyncio.to_thread(store.check_runtime)
                 grading = asyncio.create_task(evaluate(claim['job'], root, time.monotonic()))
                 lease_lost = asyncio.create_task(lost.wait())
                 done, _ = await asyncio.wait([grading, lease_lost], return_when=asyncio.FIRST_COMPLETED)

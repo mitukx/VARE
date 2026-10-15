@@ -103,6 +103,17 @@ jobs:
         with:
           name: grader-owner-loss-replay
           path: ${{ runner.temp }}/grader-owner-loss-replay
+      - name: Reproduce durable executor source pinning and restored resume
+        if: matrix.python-version == '3.12'
+        run: |
+          python scripts/reproduce_durable_runtime_source_v1.py --output "${RUNNER_TEMP}/durable-runtime-source-replay"
+          python scripts/audit_durable_runtime_source_v1.py "${RUNNER_TEMP}/durable-runtime-source-replay"
+          python -O scripts/audit_durable_runtime_source_v1.py "${RUNNER_TEMP}/durable-runtime-source-replay"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always() && matrix.python-version == '3.12'
+        with:
+          name: durable-runtime-source-replay
+          path: ${{ runner.temp }}/durable-runtime-source-replay
       - name: Reproduce trajectory capture policy and lifetime boundaries
         if: matrix.python-version == '3.12'
         run: |

@@ -1,0 +1,34 @@
+import asyncio,hashlib,json,os,pathlib,shutil,subprocess,sys
+ROOT=pathlib.Path(sys.argv[1]); OUT=pathlib.Path(sys.argv[2]); OUT.mkdir()
+for label in ['runtime-a','runtime-b']:
+ shutil.copytree(ROOT/'src',OUT/label/'src')
+with (OUT/'runtime-b/src/vare/runner.py').open('a') as stream:
+ stream.write("\nEXECUTOR_DIAGNOSTIC = 'changed-after-enrollment'\n")
+script="""import asyncio,hashlib,json,os,pathlib,sys
+from benchmarks.scheduler.fixtures import make_fixture
+from vare.durable import Store,worker,audit_durable
+from vare import runner
+out=pathlib.Path(sys.argv[2])
+if sys.argv[1]=='enroll':
+ root,job=make_fixture(out,'valid')
+ store=Store.create(out/'state.db',[job],root)
+ claim=store.claim('lost-owner',.2)
+ print(json.dumps({'phase':'enroll','token':claim['token'],'runner_sha256':hashlib.sha256(pathlib.Path(runner.__file__).read_bytes()).hexdigest()}),flush=True)
+ os._exit(42)
+else:
+ store=Store(out/'state.db')
+ asyncio.run(worker(store,'changed-runtime',2))
+ store.export(out/'export')
+ audit=audit_durable(out/'export')
+ print(json.dumps({'phase':'resume','loaded_marker':runner.EXECUTOR_DIAGNOSTIC,'used_runner_sha256':hashlib.sha256(pathlib.Path(runner.__file__).read_bytes()).hexdigest(),'exported_runner_sha256':hashlib.sha256((out/'export/snapshot/vare/runner.py').read_bytes()).hexdigest(),'audit':audit,'token':store.jobs()[0]['token']}))
+"""
+records=[]
+for label,mode in [('runtime-a','enroll'),('runtime-b','resume')]:
+ env={**os.environ,'PYTHONPATH':str(OUT/label/'src')+os.pathsep+str(ROOT),'PYTHONDONTWRITEBYTECODE':'1'}
+ r=subprocess.run([sys.executable,'-c',script,mode,str(OUT)],cwd=OUT,env=env,capture_output=True,text=True,timeout=20)
+ (OUT/(mode+'-stdout.json')).write_text(r.stdout);(OUT/(mode+'-stderr.txt')).write_text(r.stderr)
+ records.append({'mode':mode,'exit_code':r.returncode,'stdout':r.stdout,'stderr':r.stderr})
+(OUT/'processes.json').write_text(json.dumps(records,indent=2)+'\n')
+assert records[0]['exit_code']==42 and records[1]['exit_code']==0,records
+value=json.loads(records[1]['stdout']);assert value['used_runner_sha256']!=value['exported_runner_sha256'];assert value['audit']['outcomes']=={'candidate_passed':1};assert value['token']==2
+print(json.dumps(value,indent=2))

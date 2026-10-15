@@ -1,0 +1,30 @@
+{
+  "status": "verified",
+  "cases": 15,
+  "cost_pairs": 5,
+  "summary": {
+    "baseline": {
+      "audit_seconds": 0.020366832992294803,
+      "controller_peak_rss_bytes": 32079872,
+      "controller_python_peak_bytes": 310834,
+      "export_seconds": 0.5309270000143442,
+      "jobs_per_second": 8.209134191007958,
+      "largest_reaped_child_peak_rss_bytes": 33341440,
+      "latency_p50_seconds": 0.19872616649081465,
+      "latency_p95_seconds": 0.2074536777290632,
+      "wall_seconds": 1.9490484170091804
+    },
+    "candidate": {
+      "audit_seconds": 0.020631916995625943,
+      "controller_peak_rss_bytes": 29835264,
+      "controller_python_peak_bytes": 319423,
+      "export_seconds": 0.5703737089934293,
+      "jobs_per_second": 8.132134478847467,
+      "largest_reaped_child_peak_rss_bytes": 31457280,
+      "latency_p50_seconds": 0.19928914550109766,
+      "latency_p95_seconds": 0.21329860349942464,
+      "wall_seconds": 1.9675031249935273
+    }
+  },
+  "scope": "declared executor source consistency and descriptive CPU costs; no model learning"
+}
