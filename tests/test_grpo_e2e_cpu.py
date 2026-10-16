@@ -88,6 +88,7 @@ def test_actual_rvl_grpo_path_and_integrity_controls(tmp_path):
     assert len(summary["faults"]) == 8
     assert summary["candidate_updates"] == 4
     assert summary["actual_optimizer_calls_including_fault_and_resume"] == 7
+    assert summary["checkpoint_load_through_next_candidate_s"] > 0
     assert all(x["rejected"] and x["state_unchanged"] for x in summary["faults"])
     rounds = json.loads((output / "rounds.json").read_text())
     assert len(rounds) == 4
@@ -103,6 +104,17 @@ def test_actual_rvl_grpo_path_and_integrity_controls(tmp_path):
         == 2
     )
     assert len(json.loads((output / "evaluations.json").read_text())) == 8
+    samples = json.loads((output / "stage_samples_s.json").read_text())
+    assert len(samples["rollout"]) == 32  # Fault canaries are outside main timing.
+    for key, values in samples.items():
+        metrics = summary["stages"][key]
+        assert metrics["n"] == len(values)
+        assert metrics["total_s"] == sum(values)
+        assert metrics["p50_s"] == sorted(values)[len(values) // 2]
+        assert (
+            metrics["p95_s"]
+            == sorted(values)[__import__("math").ceil(len(values) * 0.95) - 1]
+        )
     manifest = json.loads((output / "SHA256.json").read_text())
     assert set(manifest) == {p.name for p in output.iterdir()} - {"SHA256.json"}
     assert all(

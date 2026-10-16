@@ -137,7 +137,7 @@ async def run(args):
     # inputs leave evidence without overwriting another run's output.
     args.output.mkdir(parents=True)
     args.output_created = True
-    protocol_path = ROOT / "benchmarks/grpo_e2e_cpu_v4/protocol.json"
+    protocol_path = ROOT / "benchmarks/grpo_e2e_cpu_v5/protocol.json"
     protocol = json.loads(protocol_path.read_text())
     require(
         sha(__file__) == protocol["runner_sha256"],
@@ -614,6 +614,7 @@ async def run(args):
             time.perf_counter() - wall_start,
             time.process_time() - cpu_start,
         )
+        main_stage_samples = copy.deepcopy(stage)
         # Faults use a newly generated complete group from the current policy,
         # never one of the historical frozen/confirmation cohorts.
         active, version = hooks.active_policy()
@@ -730,10 +731,12 @@ async def run(args):
         )
         expected = copy.deepcopy(hooks._states[baseline_candidate].training_state)
         await hooks.discard(baseline_candidate)
+        recovery_started = time.perf_counter()
         trainer.restore_training_state(torch.load(saved, weights_only=True))
         resumed_candidate = await original_train(
             active, fresh, hooks._training_freshness_assessor
         )
+        recovery_seconds = time.perf_counter() - recovery_started
         require(
             equal(expected, hooks._states[resumed_candidate].training_state),
             "resumed next GRPO update differs",
@@ -744,6 +747,7 @@ async def run(args):
         write(args.output / "rounds.json", records)
         write(args.output / "rollouts.json", rollout_records)
         write(args.output / "evaluations.json", evaluations)
+        write(args.output / "partial_stage_samples_s.json", stage)
         raise
     write(args.output / "rounds.json", records)
     write(args.output / "rollouts.json", rollout_records)
@@ -751,6 +755,7 @@ async def run(args):
     write(args.output / "worker-acknowledgments.json", worker_acknowledgments)
     write(args.output / "replay.json", replay_records)
     write(args.output / "replay-pruning.json", prune_records)
+    write(args.output / "stage_samples_s.json", main_stage_samples)
     stats = {
         key: {
             "n": len(values),
@@ -758,10 +763,10 @@ async def run(args):
             "p50_s": sorted(values)[len(values) // 2],
             "p95_s": sorted(values)[math.ceil(len(values) * 0.95) - 1],
         }
-        for key, values in stage.items()
+        for key, values in main_stage_samples.items()
     }
-    # Full correctness wall includes reference/audit/checkpoint work. An isolated
-    # operational cost is the sum of measured VARE stages; not a speed baseline.
+    # Full wall includes reference/audit/checkpoint work. Concurrent rollout
+    # latencies include lock waiting and must not be summed as exclusive costs.
     summary = {
         "status": status,
         "protocol_sha256": sha(protocol_path),
@@ -803,6 +808,7 @@ async def run(args):
         "rejections": sum(not x["decision"]["accepted"] for x in records),
         "faults": fault_records,
         "resume_next_update_exact": True,
+        "checkpoint_load_through_next_candidate_s": recovery_seconds,
         "negative_controls": negative_controls,
         "replay_pruning_rejection_rate": sum(x["removed_items"] for x in prune_records)
         / sum(x["stored_items"] for x in prune_records),
@@ -835,7 +841,7 @@ def main():
     parser.add_argument("--model-dir", type=Path, required=True)
     parser.add_argument("--rvl-source", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--seed", type=int, default=64031)
+    parser.add_argument("--seed", type=int, default=65031)
     parser.add_argument("--rounds", type=int, choices=range(4, 21), default=12)
     args = parser.parse_args()
     args.output_created = False
