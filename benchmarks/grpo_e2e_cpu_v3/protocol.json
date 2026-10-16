@@ -1,0 +1,50 @@
+{
+  "abort": "first unmet correctness/numerical/resource condition; retain failure; do not resample or tune acceptance",
+  "budget": "3 sequential runs, 600 s and 8 GiB peak RSS each; hard wall 1200 s; zero API/GPU spend",
+  "cheaper_alternative": "Six source-level regression cases first; they all fail on main 467ff55",
+  "decision": "merge minimal provenance fix only after actual-model checks, CI and independent review pass",
+  "device": "cpu fp32, one torch thread; adapter serializes one shared model",
+  "eval_tasks_per_checkpoint": 4,
+  "evaluation": "fresh disjoint prompt IDs; separate SHA-256-mod-7 synthetic criterion; separate checkpoint consumer verifies outputs",
+  "group_size": 4,
+  "hypothesis": "RVL generation provenance must bind verified response and active loaded policy version before GRPO consumption; accumulated RVL gradients/updates must match an independent full-graph equation",
+  "max_new_tokens": 3,
+  "model": "roneneldan/TinyStories-1M",
+  "model_files": {
+    "config.json": "ff74c30d5ebb5ab1da0f2ea479adf7197c504b42b5522a858c334ab91ed4958c",
+    "merges.txt": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+    "pytorch_model.bin": "07f9609ea882b8163ff3b23d40e2b82cb715d409631beb15c84b164f3877dae7",
+    "special_tokens_map.json": "98412137ae43c77f8af52eb51b19c3536d3242cb55339167d841005fa94a23b7",
+    "tokenizer.json": "f6ed3d307010c244c22aeffbde05f419cf277c23e64cf98b673cac5449cfeff5",
+    "tokenizer_config.json": "3d76da0fd37493fbfcd3f0fa9757753d31f92e1779ebd9130809b45546a60261",
+    "vocab.json": "3ba3c3109ff33976c4bd966589c11ee14fcaa1f4c9e5e154c2ed7f99d80709e7"
+  },
+  "model_revision": "77f1b168e219585646439073245fe87e56b3023e",
+  "null_control": "one constant-reward group each round; all groups constant in last round with populated Adam moments",
+  "numeric_limits": {
+    "advantage_abs": 1e-12,
+    "behavior_alignment_abs": 0.0001,
+    "behavior_alignment_rationale": "V2 stopped at 2.2411e-5 after one completed candidate. Independent same-logit fp32-vs-fp64 normalization differed by 3.8006e-5; a separate exact-score witness measured layout-sensitive normalization. V3 explicitly permits 1e-4 behavior-logprob discrepancy for CPU fp32, while keeping loss/gradient/parameter/optimizer absolute error below 2e-6. This versions a systems arithmetic tolerance, not an outcome-bearing learning or promotion rule.",
+    "loss_gradient_parameter_optimizer_abs": 2e-06
+  },
+  "objective": "RVL token-mean PPO-clipped group-relative objective, epsilon 1e-6; AdamW lr 1e-4 with historical default decay 0.01",
+  "primary": "Exactly 12 recorded candidate optimizer updates per seed; fail if a round produces no train batch, a negative control is accepted, or any numerical/state invariant fails",
+  "prior_invalidated_campaign": "v1 preserved at 3f89576: 28 actual candidate updates in 36 rounds; stale replay occupied capacity; no-op rounds overwritten by the runner",
+  "prior_model_preflight": "Width-2 tiny GPT2 failed the strict behavior-logprob alignment check after updates; retain the 4.69e-4 discrepancy and its unresolved cause; do not increase tolerance",
+  "prior_v2_result": "FAIL: seed62031 aborted on round1 behavior alignment. Seeds62032/62033 not started. Preserve protocol v2 and raw failed run unchanged.",
+  "promotion": "diagnostic tie permitted, except every fourth round requires gain 1.1 to force rejection; never a capability acceptance rule",
+  "recovery": "existing RVL save/restore, exact next GRPO update; do not reimplement unmerged #69 SIGKILL runner",
+  "rollouts_per_round": 8,
+  "rounds": 12,
+  "runner_sha256": "2347fe9433f698dd35c583d1ad537b3e9b218dd0bba3f4085268bd00906d3fd3",
+  "rvl_patch_sha256": "d50dfe7d65ed09ef6ee6d551d6680130bf4fd02ab11d29df81dd63ceb7e66871",
+  "rvl_patched_backend_sha256": "a35179d2ff65b35d8079b0d48a933444cac440debd736d6dc6a7a53a27cfb960",
+  "rvl_revision": "e381c4b3b8c2ad8e5dc4c4b1a33b7922531c3e33",
+  "scope": "Systems correctness with a pretrained toy causal LM; no new RL method or capability test",
+  "seeds": [
+    63031,
+    63032,
+    63033
+  ],
+  "trainable": "transformer.wpe and transformer.ln_f only"
+}

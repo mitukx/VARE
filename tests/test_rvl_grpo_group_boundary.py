@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import copy
 from dataclasses import dataclass, field
 from types import SimpleNamespace
 
@@ -133,3 +134,19 @@ def test_ungrouped_direct_rvl_experiences_keep_trainer_default():
     asyncio.run(hooks.train_candidate("policy-0", [experience]))
 
     assert trainer.received_advantages is None
+
+
+@pytest.mark.parametrize("grouped", [False, True])
+def test_training_rejects_reward_response_different_from_token_generation(grouped):
+    trainer = CapturingTrainer()
+    hooks = _hooks(trainer)
+    batch = [_experience("group", 0.0, "first"), _experience("group", 1.0, "second")]
+    if not grouped:
+        for exp in batch:
+            exp.attempt.metadata.pop("vare_rollout_group")
+            exp.attempt.metadata.pop("vare_rollout_group_size")
+    batch[0].attempt.output = "verified a different answer"
+    before = copy.deepcopy(trainer.snapshot_training_state())
+    with pytest.raises(ValueError, match="response.*experience"):
+        asyncio.run(hooks.train_candidate("policy-0", batch))
+    assert trainer.snapshot_training_state() == before

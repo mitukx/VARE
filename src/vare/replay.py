@@ -251,6 +251,37 @@ class PrioritizedReplay:
                         break
         return out
 
+    def prune_current(
+        self,
+        *,
+        freshness_fn: Callable[[Experience], float | None],
+        grouped: bool = True,
+    ) -> int:
+        """Free ineligible capacity before admission, preserving whole groups.
+
+        Assess every row before mutating the heap so an assessor failure cannot
+        leave a partially pruned replay. Eligible priorities are refreshed too.
+        Consumption still rechecks freshness after admission/verifier refresh.
+        """
+        assessed = [(item, freshness_fn(item.experience)) for item in self._heap]
+        bad_groups = {
+            self._group_id(item.experience)
+            for item, freshness in assessed
+            if grouped and freshness is None and self._group_id(item.experience) is not None
+        }
+        retained = [
+            (item, self._priority(item.experience, freshness))
+            for item, freshness in assessed
+            if freshness is not None and self._group_id(item.experience) not in bad_groups
+        ]
+        removed = len(self._heap) - len(retained)
+        for item, priority in retained:
+            item.priority = priority
+            item.experience.priority = priority
+        self._heap = [item for item, _ in retained]
+        heapq.heapify(self._heap)
+        return removed
+
 
     def sample_grouped(self, n: int, *, metadata_key: str = "vare_rollout_group") -> list[Experience]:
         """Sample whole rollout groups without breaking group-relative objectives.

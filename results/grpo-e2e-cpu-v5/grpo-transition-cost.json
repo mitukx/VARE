@@ -1,0 +1,41 @@
+{
+  "scope": "Same captured neural-model score tensors; CPU one thread, 20 warmups, 3 alternating paired batches of 100 calls; no model generation or optimizer timing",
+  "score_shapes": [
+    [
+      1,
+      50257
+    ],
+    [
+      1,
+      50257
+    ],
+    [
+      1,
+      50257
+    ]
+  ],
+  "seconds_per_call": {
+    "legacy": [
+      0.0009796929202275351,
+      0.0009846000000834465,
+      0.0009767145797377453
+    ],
+    "contiguous": [
+      0.00020116458006668835,
+      0.00020362750045023858,
+      0.00019977791991550474
+    ]
+  },
+  "mean_s": {
+    "legacy": 0.0009803358333495757,
+    "contiguous": 0.00020152333347747721
+  },
+  "sample_sd_s": {
+    "legacy": 3.981829537909481e-06,
+    "contiguous": 1.949703972572476e-06
+  },
+  "max_error_to_float64": {
+    "legacy": 0.00014520685429175728,
+    "contiguous": 6.962816471656197e-05
+  }
+}

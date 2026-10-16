@@ -65,3 +65,28 @@ def test_rvl_generation_for_dispatched_task_remains_valid():
     assert attempt.task is task
     assert attempt.metadata["rvl_generation"]["prompt_id"] == task.id
     assert attempt.metadata["rvl_generation"]["prompt"] == task.prompt
+
+
+@pytest.mark.parametrize("version", [-1, True, 1])
+def test_rvl_rollout_rejects_a_version_other_than_loaded_policy(version):
+    hooks = _hooks("task-a", "prompt a")
+    with pytest.raises(ValueError, match="policy.*version"):
+        asyncio.run(hooks.rollout(Task("task-a", "prompt a"), "policy-0", version, 1))
+
+
+def test_rvl_rollout_rechecks_policy_after_waiting_for_model_lock():
+    async def run():
+        hooks = _hooks("task-a", "prompt a")
+        await hooks._model_lock.acquire()
+        pending = asyncio.create_task(
+            hooks.rollout(Task("task-a", "prompt a"), "policy-0", 0, 1)
+        )
+        await asyncio.sleep(0)
+        # A different owner promoted while this request waited for the lock.
+        hooks._active_id = "policy-1"
+        hooks._version = 1
+        hooks._model_lock.release()
+        with pytest.raises(ValueError, match="active policy"):
+            await pending
+
+    asyncio.run(run())

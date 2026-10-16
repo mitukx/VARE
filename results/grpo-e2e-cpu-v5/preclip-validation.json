@@ -1,0 +1,16 @@
+{
+  "pass": true,
+  "kind": "Supplemental read-only reference replay of current v5 traces; no new rollouts/native trainer runs, and no changes to protocols or primary measurements",
+  "rounds_checked": 36,
+  "nonzero_batch_scaling_controls": 33,
+  "max_reconstructed_preclip_error": 4.76837158203125e-07,
+  "min_wrong_scaling_preclip_error": 8.388944625854492,
+  "max_wrong_scaling_postclip_error": 5.960464477539063e-08,
+  "norm_comparison_tolerance": {
+    "relative": 2e-06,
+    "absolute": 2e-06
+  },
+  "reconstructed_vector_absolute_tolerance": 2e-06,
+  "actual_preclip_reconstruction": "stored clipped vector / clamp(1 / (recorded_norm + 1e-6), max=1), pinned Torch CPU fp32",
+  "interpretation": "All 33 nonzero cases clip. Deliberately omitting batch averaging can hide under postclip comparison, while the recorded norm and reconstructed preclip comparison reject the wrong factor. This is a validation blindspot, not an observed native RVL accumulation bug."
+}

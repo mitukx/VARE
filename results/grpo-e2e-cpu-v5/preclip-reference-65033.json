@@ -1,0 +1,113 @@
+{
+  "pass": true,
+  "files_hashed": 43,
+  "candidate_updates": 12,
+  "latency_samples_verified": 264,
+  "fault_controls": 8,
+  "scope": "Default mode checks saved bytes/vectors/metrics and lineage. Optional model-backed mode replays the existing full-graph oracle. Resumed-output equality remains an online runner check.",
+  "unclipped_reference_replay": {
+    "pass": true,
+    "rounds": [
+      {
+        "round": 0,
+        "actual_preclip_norm": 10.065957069396973,
+        "reference_preclip_norm": 10.065957069396973,
+        "reconstructed_preclip_max_error": 2.384185791015625e-07,
+        "incorrect_batch_scaling_error": 19.134565353393555,
+        "incorrect_batch_scaling_postclip_error": 2.9802322387695312e-08
+      },
+      {
+        "round": 1,
+        "actual_preclip_norm": 7.977530479431152,
+        "reference_preclip_norm": 7.977530479431152,
+        "reconstructed_preclip_max_error": 1.1920928955078125e-07,
+        "incorrect_batch_scaling_error": 12.030838012695312,
+        "incorrect_batch_scaling_postclip_error": 2.9802322387695312e-08
+      },
+      {
+        "round": 2,
+        "actual_preclip_norm": 5.615360260009766,
+        "reference_preclip_norm": 5.615360260009766,
+        "reconstructed_preclip_max_error": 1.1920928955078125e-07,
+        "incorrect_batch_scaling_error": 10.352682113647461,
+        "incorrect_batch_scaling_postclip_error": 4.470348358154297e-08
+      },
+      {
+        "round": 3,
+        "actual_preclip_norm": 10.426100730895996,
+        "reference_preclip_norm": 10.426101684570312,
+        "reconstructed_preclip_max_error": 2.384185791015625e-07,
+        "incorrect_batch_scaling_error": 17.69404411315918,
+        "incorrect_batch_scaling_postclip_error": 1.4901161193847656e-08
+      },
+      {
+        "round": 4,
+        "actual_preclip_norm": 10.117390632629395,
+        "reference_preclip_norm": 10.117390632629395,
+        "reconstructed_preclip_max_error": 3.5762786865234375e-07,
+        "incorrect_batch_scaling_error": 15.242466926574707,
+        "incorrect_batch_scaling_postclip_error": 1.4901161193847656e-08
+      },
+      {
+        "round": 5,
+        "actual_preclip_norm": 8.21102237701416,
+        "reference_preclip_norm": 8.21102237701416,
+        "reconstructed_preclip_max_error": 1.1920928955078125e-07,
+        "incorrect_batch_scaling_error": 14.2970609664917,
+        "incorrect_batch_scaling_postclip_error": 2.9802322387695312e-08
+      },
+      {
+        "round": 6,
+        "actual_preclip_norm": 7.836320877075195,
+        "reference_preclip_norm": 7.836320877075195,
+        "reconstructed_preclip_max_error": 1.1920928955078125e-07,
+        "incorrect_batch_scaling_error": 12.185973167419434,
+        "incorrect_batch_scaling_postclip_error": 2.9802322387695312e-08
+      },
+      {
+        "round": 7,
+        "actual_preclip_norm": 8.379258155822754,
+        "reference_preclip_norm": 8.379258155822754,
+        "reconstructed_preclip_max_error": 1.1920928955078125e-07,
+        "incorrect_batch_scaling_error": 12.306720733642578,
+        "incorrect_batch_scaling_postclip_error": 2.9802322387695312e-08
+      },
+      {
+        "round": 8,
+        "actual_preclip_norm": 17.02117347717285,
+        "reference_preclip_norm": 17.02117347717285,
+        "reconstructed_preclip_max_error": 4.76837158203125e-07,
+        "incorrect_batch_scaling_error": 22.920143127441406,
+        "incorrect_batch_scaling_postclip_error": 2.9802322387695312e-08
+      },
+      {
+        "round": 9,
+        "actual_preclip_norm": 10.994505882263184,
+        "reference_preclip_norm": 10.994505882263184,
+        "reconstructed_preclip_max_error": 2.384185791015625e-07,
+        "incorrect_batch_scaling_error": 20.438688278198242,
+        "incorrect_batch_scaling_postclip_error": 2.9802322387695312e-08
+      },
+      {
+        "round": 10,
+        "actual_preclip_norm": 9.630354881286621,
+        "reference_preclip_norm": 9.630354881286621,
+        "reconstructed_preclip_max_error": 1.7881393432617188e-07,
+        "incorrect_batch_scaling_error": 14.569352149963379,
+        "incorrect_batch_scaling_postclip_error": 1.4901161193847656e-08
+      },
+      {
+        "round": 11,
+        "actual_preclip_norm": 0.0,
+        "reference_preclip_norm": 0.0,
+        "reconstructed_preclip_max_error": 0.0,
+        "incorrect_batch_scaling_error": null,
+        "incorrect_batch_scaling_postclip_error": null
+      }
+    ],
+    "nonzero_batch_scaling_controls": 11,
+    "max_reconstructed_preclip_error": 4.76837158203125e-07,
+    "auditor_sha256": "eb0ba225ee2344ccc64f19e28444b409e1cd299ad4b546cdeaae3f9fb1fbd89c",
+    "scope": "Read-only replay of the existing full-graph oracle; actual preclip vectors reconstructed from stored clipped vectors and norm. No new rollout or native-trainer run; primary measurements unchanged."
+  }
+}

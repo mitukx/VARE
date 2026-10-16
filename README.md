@@ -22,6 +22,8 @@ These are distinct contracts, not a claim that every component forms one deploye
 
 ## Measured end-to-end system benchmark
 
+The [multi-completion GRPO CPU validation](docs/grpo-e2e-cpu-report.md) executes 12 rounds × 3 seeds through the existing RVL trainer on a pinned small pretrained model. It verifies real optimizer updates against an independent numerical reference and fixes policy/response provenance and stale-group admission defects. Its synthetic diagnostic evaluation and unmerged RVL dependency patch are explicit; it establishes no task-capability gain.
+
 The [actual-model CPU benchmark](docs/e2e-rl-real-model-v1-report.md) runs **rollout → verification → freshness check → replay → actual AdamW update → independent checkpoint evaluation → promotion/rejection → checkpoint recovery**. It uses a pinned public tiny GPT-2 checkpoint (102,714 parameters; 2,200 trainable) and fresh synthetic one-token tasks on Apple M1 Pro / 32 GiB. The campaign completed 78/78 declared case oracles, including 63 actual optimizer steps; an offline audit verified 1,025 artifacts and replayed checkpoint evaluation scores.
 
 End-to-end tasks/s, mean ± sample SD over three seeds:
