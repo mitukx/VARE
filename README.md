@@ -22,24 +22,28 @@ These are distinct contracts, not a claim that every component forms one deploye
 
 ## Measured end-to-end system benchmark
 
-The [actual-model CPU benchmark](docs/e2e-rl-real-model-v1-report.md) runs **rollout → verification → freshness check → replay → actual AdamW update → independent checkpoint evaluation → promotion/rejection → checkpoint recovery**. It uses a pinned public tiny GPT-2 checkpoint (102,714 parameters; 2,200 trainable) and fresh synthetic one-token tasks on Apple M1 Pro / 32 GiB. The campaign completed 78/78 declared case oracles, including 63 actual optimizer steps; an offline audit verified 1,025 artifacts and replayed checkpoint evaluation scores.
+The [continuous actual-model CPU benchmark](docs/e2e-rl-continuation-v2-report.md) runs **rollout → verification → freshness check → replay → actual AdamW update → independent checkpoint evaluation → promotion/rejection → checkpoint recovery**, followed by further actual updates. It uses a pinned public tiny GPT-2 checkpoint (102,714 parameters; 2,200 trainable) and fresh synthetic one-token tasks on Apple M1 Pro / 32 GiB.
+
+**42/42 cases passed: 504 logical rounds and 513 actual candidate optimizer attempts.** Eighteen actual learner SIGKILL/restarts reproduced the uninterrupted model, Adam, RNG, step and subsequent updates exactly. Nine uncommitted computations were repeated; no committed update was applied twice. Independent audit verified 6,522 files, 504 candidate tensor states and replayed checkpoint evaluation scores. Workers acknowledge actual loaded checkpoint/model hashes and steps before admission.
 
 End-to-end tasks/s, mean ± sample SD over three seeds:
 
 | Rollout workers | Minimal controls | Guarded controls |
 | ---: | ---: | ---: |
-| 1 | 128.97 ± 5.78 | 123.72 ± 2.57 |
-| 2 | 147.45 ± 2.07 | 125.28 ± 0.47 |
-| 4 | 145.17 ± 0.75 | 134.01 ± 0.19 |
-| 8 | 144.82 ± 0.79 | 133.95 ± 4.73 |
+| 1 | 157.75 ± 18.39 | 145.57 ± 10.70 |
+| 2 | 193.57 ± 3.17 | 176.49 ± 3.55 |
+| 4 | 194.97 ± 9.44 | 170.63 ± 3.02 |
+| 8 | 195.33 ± 5.70 | 174.53 ± 4.13 |
 
-Both modes use the same engine, tasks, evaluation budget and numerical updates. The comparison measures the cost of optional reward authentication, strict freshness, checkpoint-bound evaluation and durable promotion. Timing includes decision and fresh checkpoint recovery; setup and warmup are excluded. Each rollout generates one constrained token, so output tokens/s equals tasks/s.
+Both modes use the same engine, tasks, evaluation budget, numerical updates and zero-lag checks. The comparison measures the cost of optional reward authentication, checkpoint-bound evaluation and durable promotion. Normal round timing includes worker weight synchronization and durable decision/cursor storage; cold startup and discarded warmup are excluded. Each rollout generates one constrained token, so output tokens/s equals tasks/s.
 
-Guarded mean wall overhead was **4.13–17.68%**; peak 20 ms sampled process-tree RSS was **3,602.52 MiB**. Guarded mode blocked all 15 injected invalid-data/evidence cases that the minimal arm admitted. Mean guarded recovery was 2.042 s after worker loss, 0.118 s after evaluation cancellation and 0.095 s after publisher loss; the report defines each timing boundary.
+Guarded paired mean wall overhead was **8.80–14.22%**, with substantial one-worker variation; peak 20 ms sampled process-tree RSS was **3,785.34 MiB**. Recovery from learner SIGKILL through the next actual update and durable cursor averaged **6.48–7.04 s** across six cutpoints, including cold restart. All 462 logical stale canaries were screened before training.
 
-This is **single-round systems validation on a toy neural model and synthetic workload**. Greedy task success did not improve. Long-running worker weight synchronization, the next optimizer step after recovery, production LLM throughput and GPU/distributed scaling were not measured. The [earlier four-parameter simulation](docs/e2e-rl-system-benchmark-v1.md) is separate evidence with a different workload and baseline; see its [review corrections](docs/e2e-rl-system-benchmark-v1-errata.md).
+This is **12-round systems validation on a toy neural model and synthetic workload**. It establishes neither task-capability improvement nor production LLM throughput or GPU/distributed scaling. Replay is round-local; general replay-backlog recovery and hostile-code isolation are outside scope.
 
-Inspect the [report and stage latencies](docs/e2e-rl-real-model-v1-report.md), [protocol](benchmarks/e2e_rl_real_model_v1/protocol.json), [comparison CSV](results/e2e-rl-real-model-v1/comparison.csv), [raw checkpoint/telemetry archive](results/e2e-rl-real-model-v1/m1-cpu.tar.xz), and [CPU regression workflow](.github/workflows/e2e-system-cpu.yml).
+Inspect the [report and reproduction](docs/e2e-rl-continuation-v2-report.md), [protocol](benchmarks/e2e_rl_continuation_v2/protocol.json), [comparison CSV](results/e2e-rl-continuation-v2/comparison.csv), [raw release assets](https://github.com/mitukx/VARE/releases/tag/e2e-rl-continuation-v2-20261016), [artifact hashes](results/e2e-rl-continuation-v2/artifact-manifest.json), and [CPU regression workflow](.github/workflows/e2e-system-cpu.yml).
+
+The preserved [v1 actual-model campaign](docs/e2e-rl-real-model-v1-report.md) passed 78 declared case oracles, including corruption, forged evidence, worker crash, evaluation cancellation and exact rollback. It has a different baseline and timing boundary; v1/v2 throughput is not a speedup comparison. The [earlier four-parameter simulation](docs/e2e-rl-system-benchmark-v1.md) is separate evidence; see its [review corrections](docs/e2e-rl-system-benchmark-v1-errata.md).
 
 ## Quick start
 
@@ -57,27 +61,29 @@ Use a **new** output directory. The last command needs Git access to its pinned 
 
 ### Audit the retained model benchmark
 
-This verifies the saved bytes, metrics and fault outcomes without downloading a model or starting training:
+This verifies saved bytes, metrics and recovery records without downloading a model or starting training. First follow the [archive SHA-256 check](docs/e2e-rl-continuation-v2-report.md#evidence-and-reproduction), then:
 
 ```bash
 mkdir /tmp/vare-retained-new
-tar -xJf results/e2e-rl-real-model-v1/m1-cpu.tar.xz -C /tmp/vare-retained-new
-python scripts/audit_e2e_rl_real_model.py /tmp/vare-retained-new/m1-cpu
+gh release download e2e-rl-continuation-v2-20261016 --repo mitukx/VARE \
+  --pattern m1-continuation-v2.tar.xz --dir /tmp/vare-retained-new
+tar -xJf /tmp/vare-retained-new/m1-continuation-v2.tar.xz -C /tmp/vare-retained-new
+python scripts/audit_e2e_rl_continuation.py /tmp/vare-retained-new/continuation-v2-main
 ```
 
-To also replay checkpoint scores, supply the pinned model snapshot with `--model-dir`; see the [model setup and audit instructions](docs/e2e-rl-real-model-v1-report.md#research-boundary-and-reproduction).
+To also verify tensors and replay checkpoint scores, supply the pinned model snapshot with `--model-dir`; see the [model setup and audit instructions](docs/e2e-rl-continuation-v2-report.md#evidence-and-reproduction).
 
 ### Run a new model benchmark
 
-Use the isolated Python 3.11 environment and locked optional dependencies in the [reproduction instructions](docs/e2e-rl-real-model-v1-report.md#research-boundary-and-reproduction), then run:
+Use the isolated Python 3.11 environment and locked optional dependencies in the [reproduction instructions](docs/e2e-rl-continuation-v2-report.md#evidence-and-reproduction), then run:
 
 ```bash
 export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 TOKENIZERS_PARALLELISM=false PYTHONHASHSEED=0
-python scripts/benchmark_e2e_rl_real_model.py --output /tmp/vare-real-e2e-new
-python scripts/audit_e2e_rl_real_model.py /tmp/vare-real-e2e-new
+python scripts/benchmark_e2e_rl_continuation.py --output /tmp/vare-continuation-new
+python scripts/audit_e2e_rl_continuation.py /tmp/vare-continuation-new
 ```
 
-The runner checks the pinned model-file hashes and refuses to overwrite existing output. The [synthetic comparison](docs/e2e-rl-system-benchmark-v1.md#reproduction) uses the separate `benchmarks.e2e_rl_system.runner` entry point and needs no model dependencies.
+The runner checks pinned model-file and learner-source hashes and refuses to overwrite existing output. Reduced runs are explicitly diagnostic, not protocol-conformant evidence. The [v1 actual-model runner](docs/e2e-rl-real-model-v1-report.md#research-boundary-and-reproduction) and [synthetic comparison](docs/e2e-rl-system-benchmark-v1.md#reproduction) remain separate entry points.
 
 ## Architecture
 
@@ -120,7 +126,7 @@ Full model-study decisions and failed runs remain in the [experiment index](docs
 | Start with | Continue to |
 | --- | --- |
 | [Architecture](docs/architecture.md) | Ownership, control flow, optional integrations, and failure boundaries |
-| [Actual-model system benchmark](docs/e2e-rl-real-model-v1-report.md) | Matched comparisons, latency/resource measurements, fault recovery, raw artifacts and reproduction |
+| [Continuous actual-model benchmark](docs/e2e-rl-continuation-v2-report.md) | Repeated updates, weight synchronization, actual learner recovery, matched measurements and raw evidence |
 | [Engineering deep dive](docs/engineering-depth.md) | Design decisions, tests, reproduced faults, correctness and performance tradeoffs |
 | [Experiments](docs/experiments.md) and [evidence](docs/evidence.md) | Model outcomes, historical studies, negative results, protocol locks, and raw records |
 | [Limitations / next admission gate](docs/current-gaps.md) | Unresolved research and engineering gaps; [qualification record](docs/research-candidate-qualification-2026-10-15.md) |
