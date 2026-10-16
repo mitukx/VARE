@@ -3,6 +3,7 @@
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 
@@ -126,3 +127,30 @@ def test_actual_rvl_grpo_path_and_integrity_controls(tmp_path):
     assert repeated.returncode != 0
     assert before == {name: (output / name).read_bytes() for name in manifest}
     assert not (output / "failure.json").exists()
+    audited = subprocess.run(
+        [sys.executable, "scripts/audit_grpo_e2e_cpu.py", str(output)],
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert audited.returncode == 0, audited.stderr
+    assert json.loads(audited.stdout)["candidate_updates"] == 4
+    # Re-seal the bytes: this control targets a semantic missing-round error,
+    # rather than a trivially broken file checksum.
+    bad = tmp_path / "rehashed-missing-round"
+    shutil.copytree(output, bad, copy_function=os.link)
+    rounds.pop()
+    (bad / "rounds.json").unlink()
+    (bad / "rounds.json").write_text(json.dumps(rounds))
+    manifest["rounds.json"] = hashlib.sha256(
+        (bad / "rounds.json").read_bytes()
+    ).hexdigest()
+    (bad / "SHA256.json").unlink()
+    (bad / "SHA256.json").write_text(json.dumps(manifest))
+    denied = subprocess.run(
+        [sys.executable, "scripts/audit_grpo_e2e_cpu.py", str(bad)],
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert denied.returncode != 0 and "missing candidate update" in denied.stderr

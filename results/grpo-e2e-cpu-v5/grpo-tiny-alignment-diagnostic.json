@@ -1,0 +1,29 @@
+{
+  "model_revision": "5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be",
+  "source_failure": "grpo-v2-preflight-alignment-failure",
+  "rollout_step": 25,
+  "hidden_size": 2,
+  "recorded_behavior_logps": [
+    -10.822317123413086,
+    -10.83488941192627,
+    -10.825380325317383
+  ],
+  "full_sequence_teacher_forcing_logps": [
+    -10.822320938110352,
+    -10.834890365600586,
+    -10.824911117553711
+  ],
+  "uncached_prefix_logps": [
+    -10.822320938110352,
+    -10.834890365600586,
+    -10.824911117553711
+  ],
+  "cached_prefix_logps": [
+    -10.822320938110352,
+    -10.834890365600586,
+    -10.824911117553711
+  ],
+  "max_full_vs_behavior_abs": 0.000469207763671875,
+  "max_cached_vs_behavior_abs": 0.000469207763671875,
+  "interpretation": "Both cached and uncached prefix recomputation match the full-sequence result in this diagnostic; all differ from the retained generation score by 4.69e-4. This does not establish a cache bug or a root cause. Width-2 tiny-GPT2 failed the strict alignment gate; keep the failure rather than loosen it."
+}

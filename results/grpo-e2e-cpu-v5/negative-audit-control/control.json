@@ -1,0 +1,5 @@
+{
+  "positive_bundle_in_history_archive": "grpo-final-audit-regression/actual-grpo",
+  "operation": "Copy the positive bundle to a new directory and replace only rounds.json and SHA256.json with these files. All hashes are re-sealed, but one candidate round is missing.",
+  "expected": "auditor exits nonzero with ValueError: missing candidate update"
+}
