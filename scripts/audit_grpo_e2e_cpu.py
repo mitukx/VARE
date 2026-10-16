@@ -6,6 +6,9 @@ import hashlib
 import json
 import math
 from pathlib import Path
+import sys
+from types import SimpleNamespace
+from unittest.mock import patch
 
 
 def require(value, message):
@@ -29,6 +32,148 @@ def model_digest(state):
         h.update(str(tuple(value.shape)).encode())
         h.update(value.detach().cpu().contiguous().numpy().tobytes())
     return h.hexdigest()
+
+
+def audit_unclipped_reference(root, model_dir, rvl_source):
+    """Replay the existing oracle, detecting scaling that clipping can hide.
+
+    Actual preclip vectors are reconstructed from retained clipped vectors and
+    the recorded norm using pinned Torch's coefficient, not directly captured.
+    No new rollout, production update, promotion or artifact mutation occurs.
+    """
+    import torch
+    from validate_grpo_e2e_cpu import reference_update
+
+    protocol = json.loads((root / "protocol.json").read_text())
+    require(
+        digest(Path(__file__).with_name("validate_grpo_e2e_cpu.py"))
+        == protocol["runner_sha256"],
+        "reference oracle source mismatch",
+    )
+    for name, expected in protocol["model_files"].items():
+        require(digest(model_dir / name) == expected, "reference model file mismatch")
+    for stem in ["hf_backend", "hf_trainer"]:
+        require(
+            digest(rvl_source / f"src/rvl_systems/{stem}.py")
+            == digest(root / f"{stem}.source.py"),
+            "reference backend source mismatch",
+        )
+    sys.path.insert(0, str(rvl_source / "src"))
+    from rvl_systems.hf_backend import HFLocalBackend
+    from rvl_systems.hf_trainer import HFCausalLMGRPOTrainer, HFTTrainerConfig
+
+    torch.set_num_threads(1)
+    backend = HFLocalBackend(str(model_dir), device="cpu", precision="fp32")
+    model = backend.model
+    for name, parameter in model.named_parameters():
+        parameter.requires_grad_(
+            name.startswith("transformer.wpe.") or name.startswith("transformer.ln_f.")
+        )
+    config = HFTTrainerConfig(learning_rate=1e-4)
+    HFCausalLMGRPOTrainer(model, config=config)  # Reuse its dropout configuration.
+    original_clip = torch.nn.utils.clip_grad_norm_
+    rows = []
+    for record in json.loads((root / "rounds.json").read_text()):
+        batch = [
+            SimpleNamespace(
+                attempt=SimpleNamespace(**exp["attempt"]),
+                verification=SimpleNamespace(**exp["verification"]),
+            )
+            for exp in record["batch"]
+        ]
+        before = torch.load(
+            root / (batch[0].attempt.policy_id + ".pt"), weights_only=True
+        )
+        captured = {}
+
+        def capture(parameters, *a, **kw):
+            captured["vectors"] = {
+                name: p.grad.detach().clone()
+                for name, p in model.named_parameters()
+                if p.grad is not None
+            }
+            norm = original_clip(parameters, *a, **kw)
+            captured["norm"] = float(norm)
+            return norm
+
+        with patch.object(torch.nn.utils, "clip_grad_norm_", capture):
+            reference = reference_update(model, before, batch, config)
+        numerical = torch.load(
+            root / (record["candidate"] + "-numerics.pt"), weights_only=True
+        )
+        norm = record["metrics"]["grad_norm"]
+        require(
+            math.isclose(norm, captured["norm"], rel_tol=2e-6, abs_tol=2e-6),
+            "unclipped gradient norm mismatch",
+        )
+        coefficient = (
+            config.max_grad_norm / (torch.tensor(norm, dtype=torch.float32) + 1e-6)
+        ).clamp(max=1)
+        reconstructed = {
+            name: value / coefficient
+            for name, value in numerical["actual_clipped_grads"].items()
+        }
+        error = max(
+            float((reconstructed[name] - value).abs().max())
+            for name, value in captured["vectors"].items()
+        )
+        require(
+            math.isfinite(error) and error < 2e-6,
+            "unclipped gradient reconstruction mismatch",
+        )
+        require(
+            abs(reference["loss"] - record["metrics"]["loss"]) < 2e-6,
+            "replayed loss mismatch",
+        )
+        state = torch.load(root / (record["candidate"] + ".pt"), weights_only=True)
+        require(
+            max(
+                float((reference["model"][name] - value).abs().max())
+                for name, value in state["model"].items()
+            )
+            < 2e-6,
+            "replayed parameter mismatch",
+        )
+        bad_error, bad_postclip_error = None, None
+        if norm > 0:
+            bad_preclip = {
+                name: value * len(batch) for name, value in reconstructed.items()
+            }
+            bad_coefficient = (
+                config.max_grad_norm
+                / (torch.tensor(norm * len(batch), dtype=torch.float32) + 1e-6)
+            ).clamp(max=1)
+            bad_error = max(
+                float((bad_preclip[name] - value).abs().max())
+                for name, value in captured["vectors"].items()
+            )
+            bad_postclip_error = max(
+                float((bad_preclip[name] * bad_coefficient - value).abs().max())
+                for name, value in numerical["actual_clipped_grads"].items()
+            )
+            require(bad_error > 2e-6, "batch-scaling negative control is uninformative")
+        rows.append(
+            {
+                "round": record["round"],
+                "actual_preclip_norm": norm,
+                "reference_preclip_norm": captured["norm"],
+                "reconstructed_preclip_max_error": error,
+                "incorrect_batch_scaling_error": bad_error,
+                "incorrect_batch_scaling_postclip_error": bad_postclip_error,
+            }
+        )
+    return {
+        "pass": True,
+        "rounds": rows,
+        "nonzero_batch_scaling_controls": sum(
+            r["incorrect_batch_scaling_error"] is not None for r in rows
+        ),
+        "max_reconstructed_preclip_error": max(
+            r["reconstructed_preclip_max_error"] for r in rows
+        ),
+        "auditor_sha256": digest(Path(__file__)),
+        "scope": "Read-only replay of the existing full-graph oracle; actual preclip vectors reconstructed from stored clipped vectors and norm. No new rollout or native-trainer run; primary measurements unchanged.",
+    }
 
 
 def audit(root):
@@ -266,11 +411,21 @@ def audit(root):
         "candidate_updates": n,
         "latency_samples_verified": sum(map(len, stages.values())),
         "fault_controls": len(faults),
-        "scope": "Saved bytes/vectors/metrics and lineage; loss/optimizer reference and resumed-output equality are runner checks, not independently rerun by this auditor.",
+        "scope": "Default mode checks saved bytes/vectors/metrics and lineage. Optional model-backed mode replays the existing full-graph oracle. Resumed-output equality remains an online runner check.",
     }
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path)
-    print(json.dumps(audit(parser.parse_args().output), indent=2))
+    parser.add_argument("--model-dir", type=Path)
+    parser.add_argument("--rvl-source", type=Path)
+    args = parser.parse_args()
+    if bool(args.model_dir) != bool(args.rvl_source):
+        parser.error("--model-dir and --rvl-source must be supplied together")
+    result = audit(args.output)
+    if args.model_dir:
+        result["unclipped_reference_replay"] = audit_unclipped_reference(
+            args.output, args.model_dir, args.rvl_source
+        )
+    print(json.dumps(result, indent=2))

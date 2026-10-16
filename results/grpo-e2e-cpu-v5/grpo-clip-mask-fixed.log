@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE/scripts/audit_grpo_e2e_cpu.py", line 428, in <module>
+    result["unclipped_reference_replay"] = audit_unclipped_reference(
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE/scripts/audit_grpo_e2e_cpu.py", line 105, in audit_unclipped_reference
+    require(
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE/scripts/audit_grpo_e2e_cpu.py", line 16, in require
+    raise ValueError(message)
+ValueError: unclipped gradient norm mismatch

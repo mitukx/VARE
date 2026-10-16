@@ -128,13 +128,55 @@ def test_actual_rvl_grpo_path_and_integrity_controls(tmp_path):
     assert before == {name: (output / name).read_bytes() for name in manifest}
     assert not (output / "failure.json").exists()
     audited = subprocess.run(
-        [sys.executable, "scripts/audit_grpo_e2e_cpu.py", str(output)],
+        [
+            sys.executable,
+            "scripts/audit_grpo_e2e_cpu.py",
+            str(output),
+            "--model-dir",
+            model,
+            "--rvl-source",
+            rvl,
+        ],
         capture_output=True,
         text=True,
         timeout=60,
     )
     assert audited.returncode == 0, audited.stderr
     assert json.loads(audited.stdout)["candidate_updates"] == 4
+    replay = json.loads(audited.stdout)["unclipped_reference_replay"]
+    assert replay["pass"] is True
+    assert replay["nonzero_batch_scaling_controls"] == 3
+    # A batch-normalization error can vanish after clipping. Retain the same
+    # clipped vectors/parameters but corrupt and re-seal the recorded raw norm.
+    wrong_scale = tmp_path / "rehashed-wrong-batch-scale"
+    shutil.copytree(output, wrong_scale, copy_function=os.link)
+    changed = json.loads((wrong_scale / "rounds.json").read_text())
+    changed[0]["metrics"]["grad_norm"] *= len(changed[0]["batch"])
+    (wrong_scale / "rounds.json").unlink()
+    (wrong_scale / "rounds.json").write_text(json.dumps(changed))
+    resealed = dict(manifest)
+    resealed["rounds.json"] = hashlib.sha256(
+        (wrong_scale / "rounds.json").read_bytes()
+    ).hexdigest()
+    (wrong_scale / "SHA256.json").unlink()
+    (wrong_scale / "SHA256.json").write_text(json.dumps(resealed))
+    guarded = subprocess.run(
+        [
+            sys.executable,
+            "scripts/audit_grpo_e2e_cpu.py",
+            str(wrong_scale),
+            "--model-dir",
+            model,
+            "--rvl-source",
+            rvl,
+        ],
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert (
+        guarded.returncode != 0 and "unclipped gradient norm mismatch" in guarded.stderr
+    )
     # Re-seal the bytes: this control targets a semantic missing-round error,
     # rather than a trivially broken file checksum.
     bad = tmp_path / "rehashed-missing-round"

@@ -48,6 +48,8 @@ Same captured score tensors, CPU one thread, three alternating paired batches of
 
 Maximum absolute reference discrepancies: loss `2.61e-8`, gradient `2.98e-8`, updated parameters `2.98e-8`, optimizer tensors `3.73e-9`; each stays below the fixed `2e-6` limit. Maximum behavior-logprob discrepancy is `3.05e-5`, below the **explicit v3–v5 `1e-4` fp32 alignment bound**. Token IDs/order are preserved exactly; probabilities are not claimed bitwise exact.
 
+A supplemental read-only replay exposed a validation blindspot: all 33 nonzero gradients were clipped, so an incorrect batch-averaging factor could pass the clipped-gradient comparison (maximum counterfactual difference `5.96e-8`). Replaying the existing full-graph reference across all 36 saved rounds now checks the recorded preclip norm and reconstructs the native preclip vectors from the saved clipped vectors and Torch's clipping coefficient. Maximum reconstruction error was `4.77e-7`; all 33 wrong-factor controls were distinguishable before clipping. The old auditor accepted a rehashed wrong-norm trace; the model-backed auditor rejects it. This is an improved correctness gate, **not an observed RVL accumulation bug**. Actual preclip vectors were reconstructed, not directly captured. No new rollouts, native trainer runs, or changes to primary measurements/protocols were made. [Supplemental measurements and scope](../results/grpo-e2e-cpu-v5/preclip-validation.json) and a separate release archive retain the evidence.
+
 Each seed pruned 88 of 104 cached rows inspected before admission (**84.62%**, deliberate zero-lag workload); selected batches had zero policy lag. Actual loaded model hashes/versions were recorded for every rollout and checked against saved checkpoints. Every seed rejected all eight controls: wrong rollout version, response mismatch, incomplete group, mixed policy, stale data, token/logprob length mismatch, nonfinite logprob, and a failure after a real optimizer step. All tested rollback paths restored model/optimizer/CPU RNG. Missing evaluation rows were also rejected by the existing promotion gate.
 
 The all-zero-advantage final round still changes weights with warm Adam moments and historical weight decay `0.01`; it matches the reference optimizer and is not presented as a no-op or learning signal. Existing RVL snapshot/load logic reproduced the next candidate exactly. The reported 45.6 ms covers same-process checkpoint loading through the next actual candidate update, **not crash/restart**. The resume input and executed equality result are retained; the two compared resume-output states are not separate artifacts.
@@ -56,7 +58,7 @@ Failures are preserved in the history archive. V1's apparent PASS is explicitly 
 
 Local full suite: **939 passed, 8 skipped** with the optional math grader excluded; the final GRPO/auditor regression has **4 passed**, including a rehashed missing-round negative control. An initial incorrectly configured invocation had 22 failures from legacy `python3`/subprocess import paths; its log is retained. The configured CI includes the isolated math grader and actual-model CPU regressions. The [initial independent automated review](https://github.com/mitukx/VARE/pull/71#discussion_r4291785712) found the preflight defect; its regression and fix are recorded, and the thread is resolved. An additional review request hit account quota; no extra credits/API were used. This is not outside human reproduction or a fresh independent review of the final head.
 
-The read-only auditor rehashed **129 artifacts**, recomputed **792 latency samples**, checked saved gradient/parameter vectors, checkpoint RNG/counters, evaluation-pair coverage and rollout/checkpoint identities. It does not rerun the loss/Adam reference or resume-output equality; those are online runner checks. Inspect [metrics, numerical comparisons, logs and validation](../results/grpo-e2e-cpu-v5/validation.json), [CSV](../results/grpo-e2e-cpu-v5/comparison.csv), [artifact manifest](../results/grpo-e2e-cpu-v5/artifact-manifest.json), and [raw release assets](https://github.com/mitukx/VARE/releases/tag/grpo-e2e-cpu-20261017).
+The default read-only auditor rehashed **129 artifacts**, recomputed **792 latency samples**, checked saved gradient/parameter vectors, checkpoint RNG/counters, evaluation-pair coverage and rollout/checkpoint identities. Optional model-backed mode also replays the existing full-graph loss/optimizer reference and checks preclip norm, reconstructed gradients and updated parameters. Resume-output equality remains an online runner check. Inspect [metrics, numerical comparisons, logs and validation](../results/grpo-e2e-cpu-v5/validation.json), [CSV](../results/grpo-e2e-cpu-v5/comparison.csv), [artifact manifest](../results/grpo-e2e-cpu-v5/artifact-manifest.json), and [raw release assets](https://github.com/mitukx/VARE/releases/tag/grpo-e2e-cpu-20261017).
 
 ## Reproduce
 
@@ -85,6 +87,14 @@ echo '539b8476201699e392cf77a2fca98810d98b774b80d3796f83752f3b070a28b0  /tmp/var
 tar -xJf /tmp/vare-grpo-retained-new/grpo-e2e-cpu-main.tar.xz -C /tmp/vare-grpo-retained-new
 for seed in 65031 65032 65033; do
   python scripts/audit_grpo_e2e_cpu.py "/tmp/vare-grpo-retained-new/grpo-e2e-cpu-v5-main/seed-$seed"
+done
+```
+
+For the supplemental reference replay, use final PR #71 code or the paired auditor/validator sources in `grpo-preclip-reference.tar.xz`; the original release tag remains the frozen primary-data snapshot. With the same pinned model and patched RVL directories prepared above:
+
+```bash
+for seed in 65031 65032 65033; do
+  python scripts/audit_grpo_e2e_cpu.py "/tmp/vare-grpo-retained-new/grpo-e2e-cpu-v5-main/seed-$seed" --model-dir /tmp/vare-grpo-model-new --rvl-source /tmp/vare-rvl-grpo-new
 done
 ```
 
