@@ -15,7 +15,7 @@ import urllib.request
 ROOT = Path(__file__).resolve().parents[1]
 REVISION = '467ff55dbf6accf0a59e1f0c7f5741ac53ce21de'
 MODELS = ['HuggingFaceTB/SmolLM3-3B', 'Qwen/Qwen3-0.6B']
-DATASETS = ['birdsql/bird-critic-1.0-sqlite', 'bigcode/bigcodebench', 'allenai/IFBench',
+DATASETS = ['birdsql/bird-critic-1.0-sqlite', 'bigcode/bigcodebench', 'allenai/IFBench_test',
             'thanhdath/CoRE-DB-SQL-R1']
 REPOS = ['bird-bench/BIRD-CRITIC-1', 'bigcode-project/bigcodebench',
          'allenai/IFBench', 'uiuc-kang-lab/ReViSQL', 'taoyds/test-suite-sql-eval']
@@ -98,13 +98,21 @@ def capture(output):
                                      'license':data.get('cardData',{}).get('license'),
                                      'files':[item['rfilename'] for item in data.get('siblings',[])]})
     for index, repo in enumerate(REPOS):
-        raw = fetch(f'repository-{index}.json', 'https://api.github.com/repos/'+repo+'/commits/main')
+        branch = 'master' if repo=='taoyds/test-suite-sql-eval' else 'main'
+        raw = fetch(f'repository-{index}.json', 'https://api.github.com/repos/'+repo+'/commits/'+branch)
         if raw is None:
             continue
         data = json.loads(raw)
         sha = data['sha']
         manifest['repositories'].append({'id':repo, 'revision':sha, 'commit_date':data['commit']['committer']['date']})
         fetch(f'repository-{index}-tree.json', f'https://api.github.com/repos/{repo}/git/trees/{sha}?recursive=1')
+        # Inspect only public evaluator source, never dataset or example-output files.
+        paths = {0:['evaluation/src/single_instance_eval_sqlite.py', 'evaluation/src/sqlite_test_utils.py',
+                    'evaluation/src/sqlite_utils.py'],
+                 1:['bigcodebench/evaluate.py'], 2:['run_eval.py'],
+                 3:['README.md'], 4:['README.md', 'evaluation.py']}[index]
+        for number, path in enumerate(paths):
+            fetch(f'repository-{index}-source-{number}.txt', f'https://raw.githubusercontent.com/{repo}/{sha}/{path}')
     for paper in PAPERS:
         # Only bibliography and a response digest are retained, not paper text.
         raw = fetch('paper-'+paper, 'https://arxiv.org/abs/'+paper, retain=False)

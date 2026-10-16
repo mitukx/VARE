@@ -1,0 +1,40 @@
+{
+  "additional_primary_review": [
+    "https://arxiv.org/abs/2506.03136v1",
+    "https://arxiv.org/html/2604.07864v1",
+    "https://arxiv.org/abs/2606.06058v1"
+  ],
+  "base_success": null,
+  "candidates": [
+    {
+      "id": "sql_counterexample_reward",
+      "novelty": "not_established",
+      "task_grader": "unqualified"
+    },
+    {
+      "id": "mutation_conditioned_coder_tester",
+      "novelty": "overlaps_existing_methods",
+      "task_grader": "unqualified"
+    },
+    {
+      "id": "prompt_orbit_constraint_anchors",
+      "novelty": "not_established",
+      "task_grader": "unqualified_and_previous_generic_line_stopped"
+    }
+  ],
+  "comparison_arms_started": [],
+  "compute": "No paid API, additional-fee service, model inference or accelerator run.",
+  "decision": "NO_GO",
+  "independent_grader_control_pass_rate": null,
+  "interpretation": "Bounded negative qualification, not a learning failure or global proof that no novel candidate exists.",
+  "mixed_reward_group_fraction": null,
+  "model_inference_calls": 0,
+  "model_peak_rss_bytes": null,
+  "optimizer_calls": 0,
+  "reason": "No candidate established both a defensible method distinction and an unused independently graded task composition. Resource and model-outcome gates were not entered.",
+  "repository_revision": "467ff55dbf6accf0a59e1f0c7f5741ac53ce21de",
+  "stage": "method_and_task_qualification_before_base_inference",
+  "study_seeds": null,
+  "task_payload_downloads": 0,
+  "update_wall_s": null
+}
