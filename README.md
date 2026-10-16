@@ -37,7 +37,7 @@ Both modes use the same engine, tasks, evaluation budget and numerical updates. 
 
 Guarded mean wall overhead was **4.13–17.68%**; peak 20 ms sampled process-tree RSS was **3,602.52 MiB**. Guarded mode blocked all 15 injected invalid-data/evidence cases that the minimal arm admitted. Mean guarded recovery was 2.042 s after worker loss, 0.118 s after evaluation cancellation and 0.095 s after publisher loss; the report defines each timing boundary.
 
-This is **single-round systems validation on a toy neural model and synthetic workload**. Greedy task success did not improve. Long-running worker weight synchronization, the next optimizer step after recovery, production LLM throughput and GPU/distributed scaling were not measured. The [earlier four-parameter simulation](docs/e2e-rl-system-benchmark-v1.md) is separate evidence with a different workload and baseline.
+This is **single-round systems validation on a toy neural model and synthetic workload**. Greedy task success did not improve. Long-running worker weight synchronization, the next optimizer step after recovery, production LLM throughput and GPU/distributed scaling were not measured. The [earlier four-parameter simulation](docs/e2e-rl-system-benchmark-v1.md) is separate evidence with a different workload and baseline; see its [review corrections](docs/e2e-rl-system-benchmark-v1-errata.md).
 
 Inspect the [report and stage latencies](docs/e2e-rl-real-model-v1-report.md), [protocol](benchmarks/e2e_rl_real_model_v1/protocol.json), [comparison CSV](results/e2e-rl-real-model-v1/comparison.csv), [raw checkpoint/telemetry archive](results/e2e-rl-real-model-v1/m1-cpu.tar.xz), and [CPU regression workflow](.github/workflows/e2e-system-cpu.yml).
 

@@ -1,8 +1,9 @@
 """Regression tests for the reproducible CPU end-to-end benchmark harness."""
 
 import asyncio
+import pytest
 
-from benchmarks.e2e_rl_system.runner import _child_trial, _run_fault_case
+from benchmarks.e2e_rl_system.runner import _child_trial, _run_fault_case, main, run_experiment
 
 
 def test_paired_perf_arms_use_same_seeded_workload_and_run_complete_pipeline():
@@ -81,3 +82,23 @@ def test_concurrent_rounds_are_serialized_by_vare_control_plane():
     assert vare["outcome"]["duplicate_candidate_ids"] is False
     assert baseline["outcome"]["concurrent_rounds_completed"] == 2
     assert vare["outcome"]["concurrent_rounds_completed"] == 2
+
+
+@pytest.mark.parametrize("args", [
+    ["--seeds", "2"], ["--rounds", "2"], ["--fault-seeds", "1"],
+    ["--skip-faults"],
+    ["--child-trial", "vare", "20261001", "2", "64", "256"],
+])
+def test_locked_protocol_rejects_reduced_cli_runs_before_writing(tmp_path, args):
+    output = tmp_path / "must-not-exist"
+    with pytest.raises(SystemExit) as error:
+        main(["--output", str(output), *args])
+    assert error.value.code == 2
+    assert not output.exists()
+
+
+def test_direct_campaign_cannot_publish_reduced_protocol_evidence(tmp_path):
+    output = tmp_path / "must-not-exist"
+    with pytest.raises(ValueError, match="locked v1"):
+        run_experiment(output, (20261001, 20261002), 2)
+    assert not output.exists()

@@ -621,6 +621,8 @@ def _svg_memory(summary: dict[str, Any]) -> str:
 
 
 def run_experiment(output: Path, seeds: tuple[int, ...], rounds: int) -> dict[str, Any]:
+    if seeds != DEFAULT_SEEDS or rounds != DEFAULT_ROUNDS:
+        raise ValueError("locked v1 requires all 12 seeds and six rounds; reduced runs are not protocol evidence")
     output.mkdir(parents=True, exist_ok=False)
     trials: list[dict[str, Any]] = []
     script = Path(__file__).resolve()
@@ -1025,8 +1027,15 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if args.child_trial:
         arm, seed, rounds, rollouts, eval_n = args.child_trial
+        if (arm not in ("vare", "baseline") or int(seed) not in DEFAULT_SEEDS
+                or (int(rounds), int(rollouts), int(eval_n)) !=
+                (DEFAULT_ROUNDS, DEFAULT_ROLLOUTS, DEFAULT_EVAL_N)):
+            parser.error("child trial must match the locked v1 performance workload")
         print(json.dumps(_child_trial(arm, int(seed), int(rounds), int(rollouts), int(eval_n))))
         return 0
+    if (args.seeds != len(DEFAULT_SEEDS) or args.rounds != DEFAULT_ROUNDS
+            or args.fault_seeds != 3 or args.skip_faults):
+        parser.error("locked v1 requires 12 seeds, six rounds, three fault seeds and all faults; reduced runs are not protocol evidence")
     if args.seeds < 2 or args.rounds < 2 or args.fault_seeds < 1:
         parser.error("need >=2 performance seeds/rounds and >=1 fault seed")
     if args.output is None:
