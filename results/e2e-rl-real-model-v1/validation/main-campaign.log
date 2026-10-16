@@ -1,0 +1,79 @@
+{"directory": "w1-s1701-minimal", "tasks_s": 122.3953925907339, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "w1-s1701-guarded", "tasks_s": 120.89678986859057, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "w1-s1702-guarded", "tasks_s": 124.33338751739005, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "w1-s1702-minimal", "tasks_s": 131.24061532109653, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "w1-s1703-minimal", "tasks_s": 133.27342970476957, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "w1-s1703-guarded", "tasks_s": 125.92535905996341, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "w2-s1701-minimal", "tasks_s": 145.11520082471569, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "w2-s1701-guarded", "tasks_s": 125.59646053886557, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "w2-s1702-guarded", "tasks_s": 125.49995752564774, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "w2-s1702-minimal", "tasks_s": 148.1648969701411, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "w2-s1703-minimal", "tasks_s": 149.06757070032603, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "w2-s1703-guarded", "tasks_s": 124.74065151587894, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "w4-s1701-minimal", "tasks_s": 144.43417838798374, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "w4-s1701-guarded", "tasks_s": 133.92780089390214, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "w4-s1702-guarded", "tasks_s": 134.22225321675677, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "w4-s1702-minimal", "tasks_s": 145.15151460828736, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "w4-s1703-minimal", "tasks_s": 145.93635698573848, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "w4-s1703-guarded", "tasks_s": 133.87905334814937, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "w8-s1701-minimal", "tasks_s": 144.29423355274395, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "w8-s1701-guarded", "tasks_s": 129.2281194270313, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "w8-s1702-guarded", "tasks_s": 138.68235509435206, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "w8-s1702-minimal", "tasks_s": 145.73254087495718, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "w8-s1703-minimal", "tasks_s": 144.43176113148476, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "w8-s1703-guarded", "tasks_s": 133.92639904201513, "optimizer_steps": 1, "active_policy": "policy-1", "error": null}
+{"directory": "fault-policy_stale-s1701-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-policy_stale-s1701-guarded", "optimizer_steps": 0, "active_policy": "policy-0", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-replay_stale-s1701-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-replay_stale-s1701-guarded", "optimizer_steps": 0, "active_policy": "policy-0", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-reward_tamper-s1701-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-reward_tamper-s1701-guarded", "optimizer_steps": 0, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "RuntimeError", "message": "unauthenticated_training_reward_evidence"}}
+{"directory": "fault-forged_eval-s1701-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-forged_eval-s1701-guarded", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-checkpoint_corrupt-s1701-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-checkpoint_corrupt-s1701-guarded", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "CheckpointIntegrityError", "message": "checkpoint is not a bounded regular file"}}
+{"directory": "fault-optimizer_exception-s1701-minimal", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "RuntimeError", "message": "injected failure after real AdamW step"}}
+{"directory": "fault-optimizer_exception-s1701-guarded", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "RuntimeError", "message": "injected failure after real AdamW step"}}
+{"directory": "fault-evaluation_cancel-s1701-minimal", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "CancelledError", "message": ""}}
+{"directory": "fault-evaluation_cancel-s1701-guarded", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "CancelledError", "message": ""}}
+{"directory": "fault-worker_crash-s1701-minimal", "optimizer_steps": 0, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "BrokenProcessPool", "message": "A child process terminated abruptly, the process pool is not usable anymore"}}
+{"directory": "fault-worker_crash-s1701-guarded", "optimizer_steps": 0, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "BrokenProcessPool", "message": "A child process terminated abruptly, the process pool is not usable anymore"}}
+{"directory": "fault-publication_crash-s1701-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": {"type": "PromotionRecoveryRequired", "message": "promotion failed; verify the runtime and reconcile durable evidence"}}
+{"directory": "fault-publication_crash-s1701-guarded", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": {"type": "PromotionRecoveryRequired", "message": "promotion failed; verify the runtime and reconcile durable evidence"}}
+{"directory": "fault-policy_stale-s1702-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-policy_stale-s1702-guarded", "optimizer_steps": 0, "active_policy": "policy-0", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-replay_stale-s1702-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-replay_stale-s1702-guarded", "optimizer_steps": 0, "active_policy": "policy-0", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-reward_tamper-s1702-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-reward_tamper-s1702-guarded", "optimizer_steps": 0, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "RuntimeError", "message": "unauthenticated_training_reward_evidence"}}
+{"directory": "fault-forged_eval-s1702-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-forged_eval-s1702-guarded", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-checkpoint_corrupt-s1702-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-checkpoint_corrupt-s1702-guarded", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "CheckpointIntegrityError", "message": "checkpoint is not a bounded regular file"}}
+{"directory": "fault-optimizer_exception-s1702-minimal", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "RuntimeError", "message": "injected failure after real AdamW step"}}
+{"directory": "fault-optimizer_exception-s1702-guarded", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "RuntimeError", "message": "injected failure after real AdamW step"}}
+{"directory": "fault-evaluation_cancel-s1702-minimal", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "CancelledError", "message": ""}}
+{"directory": "fault-evaluation_cancel-s1702-guarded", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "CancelledError", "message": ""}}
+{"directory": "fault-worker_crash-s1702-minimal", "optimizer_steps": 0, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "BrokenProcessPool", "message": "A process in the process pool was terminated abruptly while the future was running or pending."}}
+{"directory": "fault-worker_crash-s1702-guarded", "optimizer_steps": 0, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "BrokenProcessPool", "message": "A child process terminated abruptly, the process pool is not usable anymore"}}
+{"directory": "fault-publication_crash-s1702-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": {"type": "PromotionRecoveryRequired", "message": "promotion failed; verify the runtime and reconcile durable evidence"}}
+{"directory": "fault-publication_crash-s1702-guarded", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": {"type": "PromotionRecoveryRequired", "message": "promotion failed; verify the runtime and reconcile durable evidence"}}
+{"directory": "fault-policy_stale-s1703-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-policy_stale-s1703-guarded", "optimizer_steps": 0, "active_policy": "policy-0", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-replay_stale-s1703-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-replay_stale-s1703-guarded", "optimizer_steps": 0, "active_policy": "policy-0", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-reward_tamper-s1703-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-reward_tamper-s1703-guarded", "optimizer_steps": 0, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "RuntimeError", "message": "unauthenticated_training_reward_evidence"}}
+{"directory": "fault-forged_eval-s1703-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-forged_eval-s1703-guarded", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-checkpoint_corrupt-s1703-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": null}
+{"directory": "fault-checkpoint_corrupt-s1703-guarded", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "CheckpointIntegrityError", "message": "checkpoint is not a bounded regular file"}}
+{"directory": "fault-optimizer_exception-s1703-minimal", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "RuntimeError", "message": "injected failure after real AdamW step"}}
+{"directory": "fault-optimizer_exception-s1703-guarded", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "RuntimeError", "message": "injected failure after real AdamW step"}}
+{"directory": "fault-evaluation_cancel-s1703-minimal", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "CancelledError", "message": ""}}
+{"directory": "fault-evaluation_cancel-s1703-guarded", "optimizer_steps": 1, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "CancelledError", "message": ""}}
+{"directory": "fault-worker_crash-s1703-minimal", "optimizer_steps": 0, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "BrokenProcessPool", "message": "A child process terminated abruptly, the process pool is not usable anymore"}}
+{"directory": "fault-worker_crash-s1703-guarded", "optimizer_steps": 0, "active_policy": "policy-0", "fault_oracle_pass": true, "error": {"type": "BrokenProcessPool", "message": "A child process terminated abruptly, the process pool is not usable anymore"}}
+{"directory": "fault-publication_crash-s1703-minimal", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": {"type": "PromotionRecoveryRequired", "message": "promotion failed; verify the runtime and reconcile durable evidence"}}
+{"directory": "fault-publication_crash-s1703-guarded", "optimizer_steps": 1, "active_policy": "policy-1", "fault_oracle_pass": true, "error": {"type": "PromotionRecoveryRequired", "message": "promotion failed; verify the runtime and reconcile durable evidence"}}
+PASS 78 measured cases; 52.037s campaign

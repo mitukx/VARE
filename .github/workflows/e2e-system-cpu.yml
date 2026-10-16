@@ -1,0 +1,51 @@
+name: e2e-system-cpu
+on:
+  pull_request:
+    paths:
+      - 'scripts/*e2e_rl_real_model.py'
+      - 'tests/test_e2e_rl_real_model.py'
+      - 'benchmarks/e2e_rl_real_model_v1/**'
+      - 'requirements/e2e-rl-real-model-v1.txt'
+      - 'src/vare/**'
+      - '.github/workflows/e2e-system-cpu.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  actual-optimizer-and-recovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      TOKENIZERS_PARALLELISM: 'false'
+      PYTHONHASHSEED: '0'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.11'
+      - name: Install isolated CPU backend
+        run: |
+          python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install -r requirements/e2e-rl-real-model-v1.txt
+      - name: Fetch the pinned public toy model
+        run: |
+          python - <<'PY'
+          import os
+          from huggingface_hub import snapshot_download
+          snapshot_download('sshleifer/tiny-gpt2', revision='5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be', local_dir=os.environ['RUNNER_TEMP']+'/tiny-gpt2', allow_patterns=['config.json','pytorch_model.bin','tokenizer_config.json','vocab.json','merges.txt','special_tokens_map.json'])
+          PY
+      - name: Verify real updates and failure boundaries
+        env:
+          VARE_E2E_MODEL_DIR: ${{ runner.temp }}/tiny-gpt2
+        run: python -m pytest tests/test_e2e_rl_real_model.py
+      - name: Run a small system regression (not the Mac performance campaign)
+        run: |
+          python scripts/benchmark_e2e_rl_real_model.py --output "${RUNNER_TEMP}/e2e-regression" --model-dir "${RUNNER_TEMP}/tiny-gpt2" --workers 1 --seeds 1701 --tasks 8 --eval-tasks 8
+          python scripts/audit_e2e_rl_real_model.py "${RUNNER_TEMP}/e2e-regression" --model-dir "${RUNNER_TEMP}/tiny-gpt2"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: e2e-system-cpu-regression
+          path: ${{ runner.temp }}/e2e-regression

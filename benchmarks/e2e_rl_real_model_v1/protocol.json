@@ -1,0 +1,53 @@
+{
+  "abort": "stop on deadline, resource ceiling, nonfinite loss, missing parameter change, checkpoint mismatch or unexpected safety result; retain failed runs",
+  "backend": "PyTorch CPU fp32, one intraop/inter-op thread per process, frozen tied token embeddings, other 2200 parameters trainable",
+  "cheaper_alternative": "Existing CPU fixtures cover individual contracts but do not measure their composition with actual model inference, autograd, AdamW and checkpoint reload.",
+  "comparison": "same CapabilityLoop, model, tasks, replay seed, batch budget and optimizer; minimal mode disables optional receipts, strict checkpoint binding/journal and allows lag<=999, guarded mode enables these with policy/verifier lag<=0; mandatory engine/group/report checks remain in both",
+  "decision": "Accept only bounded system-composition evidence if three repetitions and fault oracles pass; no throughput improvement, model capability or distributed-scaling claim follows automatically.",
+  "evaluation_tasks": 32,
+  "faults": [
+    "policy_stale",
+    "replay_stale",
+    "reward_tamper",
+    "forged_eval",
+    "checkpoint_corrupt",
+    "optimizer_exception",
+    "evaluation_cancel",
+    "worker_crash",
+    "publication_crash"
+  ],
+  "hypothesis": "Optional VARE reward authentication, strict freshness, checkpoint-bound evaluation and durable promotion reject injected invalid updates/publications at measurable single-host cost.",
+  "latency_details": "Raw per-call spans; linear-interpolated p50/p95. Hook duration sums overlap for concurrent workers and are not critical-path time. Evaluation hook latency is per 32-task report; per-task service latency is also retained.",
+  "max_compute": "free local CPU only, 60 minute campaign deadline, 120 second owned-job timeout, 12 GiB sampled process-tree RSS ceiling",
+  "memory_details": "20ms sampled sum of controller and descendant RSS, including shared mappings per process; CPU core percent uses sampled process CPU deltas, 100%=one core. Neither is a hardware memory/CPU reservation.",
+  "model": "sshleifer/tiny-gpt2",
+  "model_files": {
+    "config.json": "77a9e9830c3abeba929f5c61e0e97c398f98b4481ad75516c0be5bf038b340b0",
+    "merges.txt": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+    "pytorch_model.bin": "b706b24034032bdfe765ded5ab6403d201d295a995b790cb24c74becca5c04e6",
+    "special_tokens_map.json": "c0b3c279b6ecdb71996a86ffb4d4ab94dfdb5df95f00bac9515688faef2ff5dd",
+    "tokenizer_config.json": "5e04eb606e3a1583530a42e36c2a6b6615c86f34fe77e44d9ddeb43ff940931f",
+    "vocab.json": "03087853bc70c618b66e7c7a43e787d2db4c469416beac9a483e53dad1f72f27"
+  },
+  "objective": "mean -(reward - 0.5) * conditional log_probability, one AdamW step, lr=0.001, weight_decay=0",
+  "primary": "generated rollout tasks / wall seconds from run_round dispatch through decision and exact active checkpoint recovery; generated tokens/s counts rollout output tokens only",
+  "promotion": "nondecreasing independent mean probability of the correct constrained token, min_gain=0, n=32; diagnostic systems acceptance only, no statistical capability decision",
+  "revision": "5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be",
+  "rollouts": 32,
+  "sampling": "one token sampled from the renormalized A/B logits; task-and-step seed independent of worker scheduling",
+  "schema": "vare.e2e-rl-real-model.v1",
+  "scope": "systems validation on a pretrained toy LM and fresh synthetic tasks; no research capability claim or reopening of retired studies",
+  "seeds": [
+    1701,
+    1702,
+    1703
+  ],
+  "task": "fresh nonce-tagged return-A transport fixture; independent evaluation uses disjoint nonce-tagged prompts and scorer, not a reasoning benchmark",
+  "timing_details": "Both rollout/evaluation pools synchronize all initialized workers before measurement; one discarded fresh-model autograd/Adam warmup precedes comparisons. Each timed round ends with loading a new model and Adam instance from the active disk checkpoint. Cold pool startup is reported separately.",
+  "workers": [
+    1,
+    2,
+    4,
+    8
+  ]
+}
