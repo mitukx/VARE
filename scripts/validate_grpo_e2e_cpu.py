@@ -133,7 +133,7 @@ def reference_update(model, before, batch, config):
 
 async def run(args):
     require(not args.output.exists(), "output already exists")
-    protocol_path = ROOT / "benchmarks/grpo_e2e_cpu_v2/protocol.json"
+    protocol_path = ROOT / "benchmarks/grpo_e2e_cpu_v3/protocol.json"
     protocol = json.loads(protocol_path.read_text())
     require(
         sha(__file__) == protocol["runner_sha256"],
@@ -486,7 +486,8 @@ async def run(args):
             "group advantage mismatch",
         )
         require(
-            ref["max_behavior_alignment_error"] < 2e-5,
+            ref["max_behavior_alignment_error"]
+            < protocol["numeric_limits"]["behavior_alignment_abs"],
             "token/logprob behavior alignment failed",
         )
         changed = sum(
@@ -831,7 +832,7 @@ def main():
     parser.add_argument("--model-dir", type=Path, required=True)
     parser.add_argument("--rvl-source", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--seed", type=int, default=61031)
+    parser.add_argument("--seed", type=int, default=63031)
     parser.add_argument("--rounds", type=int, choices=range(4, 21), default=12)
     args = parser.parse_args()
     output_existed = args.output.exists()
