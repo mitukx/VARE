@@ -418,6 +418,30 @@ class CapabilityLoop:
             admitted.append(exp)
             admitted_freshness.append(lag.freshness)
 
+        screened_stale = 0
+        freshness_assessor = make_experience_freshness_assessor(
+            self.lag,
+            active_policy_version=incumbent_version,
+            active_verifier_version=lambda: self.verifier.active_version,
+        )
+
+        def current_freshness(exp: Experience) -> float | None:
+            nonlocal screened_stale
+            decision = freshness_assessor(exp)
+            if not decision.admitted:
+                screened_stale += 1
+                return None
+            return decision.freshness
+
+        # Ineligible high-priority groups must not consume the capacity needed
+        # to insert a fresh group. Sampling alone only filters their outputs.
+        removed = self.replay.prune_current(
+            freshness_fn=current_freshness,
+            grouped=self.config.preserve_rollout_groups,
+        )
+        if removed:
+            self.events.emit("replay_experiences_pruned", count=removed)
+
         if self.config.preserve_rollout_groups:
             admitted_groups: dict[str, list[tuple[Experience, float]]] = {}
             for exp, freshness in zip(admitted, admitted_freshness, strict=True):
@@ -480,21 +504,6 @@ class CapabilityLoop:
                 self._generated_tasks.extend(generated)
                 self._generated_tasks = self._generated_tasks[-self.config.generated_task_buffer :]
                 self.events.emit("tasks_generated", count=len(generated))
-
-        screened_stale = 0
-        freshness_assessor = make_experience_freshness_assessor(
-            self.lag,
-            active_policy_version=incumbent_version,
-            active_verifier_version=lambda: self.verifier.active_version,
-        )
-
-        def current_freshness(exp: Experience) -> float | None:
-            nonlocal screened_stale
-            decision = freshness_assessor(exp)
-            if not decision.admitted:
-                screened_stale += 1
-                return None
-            return decision.freshness
 
         train_batch = self.replay.sample_current(
             self.config.replay_batch_size,

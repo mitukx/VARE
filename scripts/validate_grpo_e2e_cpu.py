@@ -20,7 +20,7 @@ import time
 
 ROOT = Path(__file__).resolve().parents[1]
 RVL_REVISION = "e381c4b3b8c2ad8e5dc4c4b1a33b7922531c3e33"
-MODEL_REVISION = "5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be"
+MODEL_REVISION = "77f1b168e219585646439073245fe87e56b3023e"
 
 
 def require(condition, message):
@@ -133,7 +133,7 @@ def reference_update(model, before, batch, config):
 
 async def run(args):
     require(not args.output.exists(), "output already exists")
-    protocol_path = ROOT / "benchmarks/grpo_e2e_cpu_v1/protocol.json"
+    protocol_path = ROOT / "benchmarks/grpo_e2e_cpu_v2/protocol.json"
     protocol = json.loads(protocol_path.read_text())
     require(
         sha(__file__) == protocol["runner_sha256"],
@@ -151,10 +151,15 @@ async def run(args):
         "RVL revision mismatch",
     )
     require(
-        not subprocess.check_output(
+        subprocess.check_output(
             ["git", "-C", str(args.rvl_source), "status", "--porcelain"], text=True
-        ),
-        "RVL checkout is dirty",
+        ).strip()
+        == "M src/rvl_systems/hf_backend.py"
+        and sha(args.rvl_source / "src/rvl_systems/hf_backend.py")
+        == protocol["rvl_patched_backend_sha256"]
+        and sha(ROOT / "patches/rvl-contiguous-transition-logprobs-v1.patch")
+        == protocol["rvl_patch_sha256"],
+        "RVL checkout must contain exactly the pinned transition-score patch",
     )
     sys.path.insert(0, str(ROOT / "src"))
     sys.path.insert(0, str(args.rvl_source / "src"))
@@ -179,6 +184,7 @@ async def run(args):
     torch.manual_seed(args.seed)
     require(not torch.cuda.is_available(), "CPU run required")
     args.output.mkdir(parents=True)
+    (args.output / "protocol.json").write_bytes(protocol_path.read_bytes())
     for path in (
         Path(__file__),
         ROOT / "src/vare/integrations/rvl_grpo.py",
@@ -190,13 +196,22 @@ async def run(args):
         str(args.model_dir), max_new_tokens=3, device="cpu", precision="fp32"
     )
     model = backend.model
-    # Match the previous toy-model resource envelope, with fresh tasks/rewards.
+    # Freeze the backbone to bound optimizer and numerical-reference memory.
     for name, parameter in model.named_parameters():
         parameter.requires_grad_(
             name.startswith("transformer.wpe.") or name.startswith("transformer.ln_f.")
         )
     config = HFTTrainerConfig(learning_rate=1e-4)
     trainer = HFCausalLMGRPOTrainer(model, config=config)
+    optimizer_calls = 0
+    raw_optimizer_step = trainer.optimizer.step
+
+    def counted_optimizer_step(*a, **kw):
+        nonlocal optimizer_calls
+        optimizer_calls += 1
+        return raw_optimizer_step(*a, **kw)
+
+    trainer.optimizer.step = counted_optimizer_step
     reference_model = copy.deepcopy(model)
     eval_tasks = [
         Task(
@@ -226,10 +241,11 @@ async def run(args):
             "training",
             "evaluation",
             "round",
+            "freshness_prune",
         )
     }
     records, evaluations, rollout_records, fault_records = [], [], [], []
-    replay_records, negative_controls = [], []
+    replay_records, negative_controls, prune_records = [], [], []
     original_rollout = hooks.rollout
     original_train = hooks.train_candidate_with_freshness
     original_evaluate = hooks.evaluate
@@ -303,6 +319,19 @@ async def run(args):
         ),
     )
     original_sample = loop.replay.sample_current
+    original_prune = loop.replay.prune_current
+
+    def prune(*a, **kw):
+        started = time.perf_counter()
+        stored = len(loop.replay)
+        removed = original_prune(*a, **kw)
+        stage["freshness_prune"].append(time.perf_counter() - started)
+        prune_records.append(
+            {"round": current_round, "stored_items": stored, "removed_items": removed}
+        )
+        return removed
+
+    loop.replay.prune_current = prune
 
     def sample(*a, **kw):
         items = [item.experience for item in loop.replay._heap]
@@ -545,10 +574,16 @@ async def run(args):
                 "systems",
             )
             started = time.perf_counter()
+            previous_updates = len(records)
             result = await loop.run_round(
                 [task], round_index=current_round, rollout_count=8
             )
             stage["round"].append(time.perf_counter() - started)
+            require(
+                len(records) == previous_updates + 1
+                and records[-1]["round"] == current_round,
+                "round completed without a GRPO optimizer update",
+            )
             records[-1]["decision"] = asdict(result.decision)
             records[-1]["active_policy"] = hooks.active_policy()
             require(time.perf_counter() - wall_start < 600, "600-second campaign limit")
@@ -585,6 +620,21 @@ async def run(args):
         )
         from vare.types import Experience, Verification
 
+        before = trainer.snapshot_training_state()
+        try:
+            await hooks.rollout(task, active, version + 1, 9999)
+        except ValueError as exc:
+            fault_records.append(
+                {
+                    "fault": "rollout_policy_version",
+                    "rejected": True,
+                    "error": str(exc),
+                    "state_unchanged": equal(before, trainer.snapshot_training_state()),
+                }
+            )
+        else:
+            raise RuntimeError("wrong rollout policy version accepted")
+
         fresh = []
         for i in range(4):
             attempt = await hooks.rollout(task, active, version, 10000 + i)
@@ -605,6 +655,7 @@ async def run(args):
                     0.0,
                 )
             )
+        write(args.output / "fault-inputs.json", [asdict(x) for x in fresh])
         for fault in (
             "response_binding",
             "partial_group",
@@ -695,6 +746,7 @@ async def run(args):
     write(args.output / "evaluations.json", evaluations)
     write(args.output / "worker-acknowledgments.json", worker_acknowledgments)
     write(args.output / "replay.json", replay_records)
+    write(args.output / "replay-pruning.json", prune_records)
     stats = {
         key: {
             "n": len(values),
@@ -713,7 +765,9 @@ async def run(args):
         and args.seed in protocol["seeds"],
         "seed": args.seed,
         "rounds": args.rounds,
-        "model": "sshleifer/tiny-gpt2",
+        "candidate_updates": len(records),
+        "actual_optimizer_calls_including_fault_and_resume": optimizer_calls,
+        "model": "roneneldan/TinyStories-1M",
         "model_revision": MODEL_REVISION,
         "rvl_revision": RVL_REVISION,
         "vare_revision": subprocess.check_output(
@@ -746,8 +800,8 @@ async def run(args):
         "faults": fault_records,
         "resume_next_update_exact": True,
         "negative_controls": negative_controls,
-        "replay_stale_screening_rate": sum(x["stale_items"] for x in replay_records)
-        / sum(x["stored_items"] for x in replay_records),
+        "replay_pruning_rejection_rate": sum(x["removed_items"] for x in prune_records)
+        / sum(x["stored_items"] for x in prune_records),
         "dependencies": sorted(
             f"{d.metadata['Name']}=={d.version}"
             for d in __import__(

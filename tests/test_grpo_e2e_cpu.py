@@ -10,11 +10,11 @@ import pytest
 
 
 def test_actual_rvl_grpo_path_and_integrity_controls(tmp_path):
-    model = os.environ.get("VARE_E2E_MODEL_DIR")
+    model = os.environ.get("VARE_GRPO_MODEL_DIR")
     rvl = os.environ.get("VARE_E2E_RVL_DIR")
     if not model or not rvl:
         pytest.skip(
-            "set VARE_E2E_MODEL_DIR and VARE_E2E_RVL_DIR for actual-model checks"
+            "set VARE_GRPO_MODEL_DIR and VARE_E2E_RVL_DIR for actual-model checks"
         )
     output = tmp_path / "actual-grpo"
     command = [
@@ -39,10 +39,13 @@ def test_actual_rvl_grpo_path_and_integrity_controls(tmp_path):
     assert summary["resume_next_update_exact"]
     assert summary["promotions"] == 3
     assert summary["rejections"] == 1
-    assert len(summary["faults"]) == 7
+    assert len(summary["faults"]) == 8
+    assert summary["candidate_updates"] == 4
+    assert summary["actual_optimizer_calls_including_fault_and_resume"] == 7
     assert all(x["rejected"] and x["state_unchanged"] for x in summary["faults"])
     rounds = json.loads((output / "rounds.json").read_text())
     assert len(rounds) == 4
+    assert [x["round"] for x in rounds] == list(range(4))
     assert all(x["changed_state_tensors"] > 0 for x in rounds)
     assert rounds[-1]["metrics"]["grad_norm"] == 0  # Warm Adam still changes weights.
     assert all(x["advantages"] == [0.0] * len(x["advantages"]) for x in rounds[-1:])
