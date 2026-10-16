@@ -1,0 +1,38 @@
+{
+  "baseline": {
+    "failed": 14,
+    "interpretation": "All invalid cases under -O and PYTHONOPTIMIZE=1 falsely reported PASS.",
+    "passed": 10
+  },
+  "baseline_commit": "a83e304677731fd1034c70223a0b8f7c62647ac5",
+  "files": {
+    "baseline-pytest.log": "76d2a65b74c89efb0f6288bf121f82bdf75cb99031e719bff65a5b178012e329",
+    "fixed-pytest.log": "683f5027933c8f5edc38e22a3b57aa37d9138d1cafdafdd81847a2aca93e8bd8",
+    "retained-capture-audit.log": "f7c4c342671c8ee5ed44b22df004e236b6a63e9006ef90826e50f6acf2e71451"
+  },
+  "fixed": {
+    "failed": 0,
+    "modes": [
+      "ordinary Python",
+      "python -O",
+      "PYTHONOPTIMIZE=1"
+    ],
+    "passed": 24
+  },
+  "reproduction": [
+    "git show a83e304677731fd1034c70223a0b8f7c62647ac5:reproducers/research_candidate_metadata_20261016.py > /tmp/vare-metadata-baseline.py",
+    "VARE_METADATA_COLLECTOR=/tmp/vare-metadata-baseline.py python -m pytest tests/test_research_candidate_metadata_verification.py",
+    "python -m pytest tests/test_research_candidate_metadata_verification.py"
+  ],
+  "research_decision": "Existing NO-GO, protocols and captured research records unchanged.",
+  "retained_capture_audit": {
+    "failed_fetches_retained": 0,
+    "files": 27,
+    "metadata_integrity": "PASS"
+  },
+  "scope": "Metadata verifier correctness; no model inference, training or new task data.",
+  "sources": {
+    "reproducers/research_candidate_metadata_20261016.py": "52d164f0acc5967c8762081ac42e77d4176846ff25e1913b7e9b57546463fc81",
+    "tests/test_research_candidate_metadata_verification.py": "8f0917d9b37d702780a560e71303f0bd505650e0792bf48d5bdd5913d2b2d188"
+  }
+}

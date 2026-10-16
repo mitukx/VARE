@@ -130,15 +130,19 @@ def capture(output):
 
 def verify(output):
     hashes = json.loads((output/'SHA256SUMS.json').read_text())
-    assert {p.name for p in output.iterdir() if p.is_file() and p.name!='SHA256SUMS.json'} == set(hashes)
+    if {p.name for p in output.iterdir() if p.is_file() and p.name!='SHA256SUMS.json'} != set(hashes):
+        raise ValueError('metadata artifact inventory differs')
     for name, expected in hashes.items():
-        assert digest((output/name).read_bytes()) == expected, name
+        if digest((output/name).read_bytes()) != expected:
+            raise ValueError(f'metadata artifact checksum differs: {name}')
     manifest = json.loads((output/'capture.json').read_text())
-    assert manifest['model_inference_calls']==manifest['optimizer_calls']==manifest['task_payload_downloads']==0
+    if not manifest['model_inference_calls']==manifest['optimizer_calls']==manifest['task_payload_downloads']==0:
+        raise ValueError('capture is not metadata-only')
     for record in manifest['requests']:
         if 'retained_file' in record:
             raw = (output/record['retained_file']).read_bytes()
-            assert len(raw)==record['response_bytes'] and digest(raw)==record['response_sha256']
+            if len(raw)!=record['response_bytes'] or digest(raw)!=record['response_sha256']:
+                raise ValueError(f'request body differs: {record["retained_file"]}')
     print(json.dumps({'metadata_integrity':'PASS', 'files':len(hashes),
                       'failed_fetches_retained':sum('error' in r for r in manifest['requests'])}, sort_keys=True))
 
