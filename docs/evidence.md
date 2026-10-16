@@ -1,5 +1,9 @@
 # Calibration evidence
 
+## End-to-end CPU RL system benchmark — 2026-10-16
+
+The locked twelve-seed comparison exercises rollout through promotion with a four-parameter simulated policy. VARE was 39.2% lower in throughput than the paired straight-line baseline on the measured M1 Pro fixture, while rejecting replay samples beyond the configured freshness bound. Fault runs also show candidate cleanup and concurrency serialization, and retain the unresolved interrupted-promotion state that requires external reconciliation. This is a systems-cost measurement, not a real-model task-success result. See the [protocol report](e2e-rl-system-benchmark-v1.md), [protocol lock](../protocols/e2e_rl_system_benchmark_v1.lock.json), and [raw run bundle](../results/e2e-rl-system-benchmark-v1/run-1/).
+
 ## Retained comparison record audit — 2026-10-13
 
 The [retrospective report](format-comparison-record-v1-report.md) preserves

@@ -1,0 +1,345 @@
+{
+  "eval_examples": 256,
+  "fault_outcomes": {
+    "baseline": {
+      "candidate_discarded": 0,
+      "exact_recoveries": 3,
+      "invalid_update_acceptances": 3,
+      "mean_fault_handling_s": 0.009968423832712384,
+      "mean_recovery_retry_s": 0.012855347163470773,
+      "n_fault_trials": 15,
+      "recovery_fences": 0
+    },
+    "by_fault": {
+      "concurrent_execution": {
+        "baseline": {
+          "candidate_discarded": 0,
+          "exact_recoveries": 0,
+          "invalid_update_acceptances": 0,
+          "mean_fault_handling_s": null,
+          "mean_recovery_retry_s": null,
+          "n": 3,
+          "recovery_fences": 0
+        },
+        "vare": {
+          "candidate_discarded": 0,
+          "exact_recoveries": 0,
+          "invalid_update_acceptances": 0,
+          "mean_fault_handling_s": null,
+          "mean_recovery_retry_s": null,
+          "n": 3,
+          "recovery_fences": 0
+        }
+      },
+      "evaluator_failure": {
+        "baseline": {
+          "candidate_discarded": 0,
+          "exact_recoveries": 0,
+          "invalid_update_acceptances": 0,
+          "mean_fault_handling_s": 0.007419708340118329,
+          "mean_recovery_retry_s": 0.01618513899544875,
+          "n": 3,
+          "recovery_fences": 0
+        },
+        "vare": {
+          "candidate_discarded": 3,
+          "exact_recoveries": 3,
+          "invalid_update_acceptances": 0,
+          "mean_fault_handling_s": 0.008139194658724591,
+          "mean_recovery_retry_s": 0.03838168033204662,
+          "n": 3,
+          "recovery_fences": 0
+        }
+      },
+      "interrupted_promotion": {
+        "baseline": {
+          "candidate_discarded": 0,
+          "exact_recoveries": 0,
+          "invalid_update_acceptances": 0,
+          "mean_fault_handling_s": null,
+          "mean_recovery_retry_s": null,
+          "n": 3,
+          "recovery_fences": 0
+        },
+        "vare": {
+          "candidate_discarded": 0,
+          "exact_recoveries": 0,
+          "invalid_update_acceptances": 0,
+          "mean_fault_handling_s": null,
+          "mean_recovery_retry_s": null,
+          "n": 3,
+          "recovery_fences": 3
+        }
+      },
+      "stale_rollouts": {
+        "baseline": {
+          "candidate_discarded": 0,
+          "exact_recoveries": 0,
+          "invalid_update_acceptances": 3,
+          "mean_fault_handling_s": null,
+          "mean_recovery_retry_s": null,
+          "n": 3,
+          "recovery_fences": 0
+        },
+        "vare": {
+          "candidate_discarded": 0,
+          "exact_recoveries": 0,
+          "invalid_update_acceptances": 0,
+          "mean_fault_handling_s": null,
+          "mean_recovery_retry_s": null,
+          "n": 3,
+          "recovery_fences": 0
+        }
+      },
+      "worker_crash": {
+        "baseline": {
+          "candidate_discarded": 0,
+          "exact_recoveries": 3,
+          "invalid_update_acceptances": 0,
+          "mean_fault_handling_s": 0.01251713932530644,
+          "mean_recovery_retry_s": 0.009525555331492797,
+          "n": 3,
+          "recovery_fences": 0
+        },
+        "vare": {
+          "candidate_discarded": 0,
+          "exact_recoveries": 3,
+          "invalid_update_acceptances": 0,
+          "mean_fault_handling_s": 0.012539624993223697,
+          "mean_recovery_retry_s": 0.029387555327654507,
+          "n": 3,
+          "recovery_fences": 0
+        }
+      }
+    },
+    "vare": {
+      "candidate_discarded": 3,
+      "exact_recoveries": 6,
+      "invalid_update_acceptances": 0,
+      "mean_fault_handling_s": 0.010339409825974144,
+      "mean_recovery_retry_s": 0.03388461782985056,
+      "n_fault_trials": 15,
+      "recovery_fences": 3
+    }
+  },
+  "fault_runs": 30,
+  "faults_sha256": "60477c72b566babecf398b58b586b8d093498a1632d49bd8ed348c74eada5320",
+  "machine": {
+    "cpu_brand": "Apple M1 Pro",
+    "logical_cpu_count": 10,
+    "machine": "arm64",
+    "memory_bytes": 34359738368,
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "processor": "arm",
+    "python": "3.12.12"
+  },
+  "model_updates_are_real_lm_updates": false,
+  "protocol": "e2e-rl-system-benchmark-v1",
+  "protocol_sha256": "f2192bc240d42f2d6dc86d2a7dbd01ab7724e21e6f9575330c3500fc094b762f",
+  "raw_trials_sha256": "cf9d65bfa5be3dffa602971c0ed4542fb7f46f3ee10ea59a147232f374402b66",
+  "rollouts_per_round": 64,
+  "rounds_per_trial": 6,
+  "runner_sha256": "786c1037be07a6d9921e224f22c92630da979ba220b51999fb3571961c215d69",
+  "seeds": [
+    20261001,
+    20261002,
+    20261003,
+    20261004,
+    20261005,
+    20261006,
+    20261007,
+    20261008,
+    20261009,
+    20261010,
+    20261011,
+    20261012
+  ],
+  "source_revision": "19f67abf66c683c899ef37ab771531f24aee3db6",
+  "summary": {
+    "baseline": {
+      "consumed_policy_lag_max": 3,
+      "consumed_verifier_lag_max": 0,
+      "invalid_training_rows_consumed": 19,
+      "invalid_update_acceptances": 3,
+      "mean_consumed_policy_lag": 1.1805555555555556,
+      "mean_consumed_verifier_lag": 0.0,
+      "mean_orchestration_replay_residual_s_per_round": 0.2094106121112418,
+      "n_rounds": 72,
+      "n_runs": 12,
+      "orchestration_replay_residual_ci95_bootstrap_s_per_round": [
+        0.2070181701844073,
+        0.2121548260260574
+      ],
+      "peak_python_bytes_median": 1655253.0,
+      "peak_rss_bytes_ci95_bootstrap": [
+        32843093.333333332,
+        33913514.666666664
+      ],
+      "peak_rss_bytes_median": 32849920.0,
+      "policy_lag_max": 0,
+      "rollouts_per_second_ci95_bootstrap": [
+        295.92300164988075,
+        303.1013778567933
+      ],
+      "rollouts_per_second_mean": 299.7568999903021,
+      "round_latency_p50_ci95_bootstrap": [
+        0.20971598787461213,
+        0.21618421525151157
+      ],
+      "round_latency_p50_s": 0.2206934165005805,
+      "round_latency_p95_ci95_bootstrap": [
+        0.35113220404491585,
+        0.3587142292520487
+      ],
+      "round_latency_p95_s": 0.3726160543548758,
+      "verifier_lag_max": 0
+    },
+    "paired_differences": {
+      "orchestration_replay_residual_seconds_vare_minus_baseline": {
+        "ci95_bootstrap": [
+          0.13531244219039865,
+          0.13981446911728
+        ],
+        "mean": 0.1376460070055651,
+        "per_seed": [
+          0.13787461570367063,
+          0.13100286832195704,
+          0.14275797376952445,
+          0.13472957723327755,
+          0.13659980823285878,
+          0.14206061696556085,
+          0.13917072310384054,
+          0.1404468968442719,
+          0.1397516181508157,
+          0.14178115730949986,
+          0.13031116143974944,
+          0.1352650669917542
+        ]
+      },
+      "peak_rss_bytes_vare_minus_baseline": {
+        "ci95_bootstrap": [
+          255317.33333333334,
+          861525.3333333334
+        ],
+        "mean": 557056.0,
+        "per_seed": [
+          180224,
+          -327680,
+          1032192,
+          999424,
+          -16384,
+          688128,
+          147456,
+          606208,
+          1556480,
+          1179648,
+          507904,
+          131072
+        ]
+      },
+      "round_latency_p50_s_vare_minus_baseline": {
+        "ci95_bootstrap": [
+          0.13449173271267986,
+          0.14136320167866265
+        ],
+        "mean": 0.137788904671955,
+        "per_seed": [
+          0.14149968800484203,
+          0.13146291697921697,
+          0.1306190415052697,
+          0.13564116699853912,
+          0.13888781299465336,
+          0.1526598125055898,
+          0.13986272901820485,
+          0.13933343801181763,
+          0.13901599950622767,
+          0.13931460501044057,
+          0.12830260350892786,
+          0.13686704201973043
+        ]
+      },
+      "round_latency_p95_s_vare_minus_baseline": {
+        "ci95_bootstrap": [
+          0.13325508249848403,
+          0.14581575962013935
+        ],
+        "mean": 0.13920353039429756,
+        "per_seed": [
+          0.1224701557221124,
+          0.13308089625934372,
+          0.16494361474178731,
+          0.1383894894970581,
+          0.1325975309810019,
+          0.13844490599876735,
+          0.146295500031556,
+          0.13989932200638577,
+          0.14471701099682832,
+          0.15139883346273564,
+          0.1262268545178813,
+          0.1319782505161129
+        ]
+      }
+    },
+    "paired_vare_minus_baseline_rollouts_per_second": {
+      "ci95_bootstrap": [
+        -120.093761245677,
+        -114.47713479097457
+      ],
+      "mean": -117.54055418149447,
+      "per_seed": [
+        -109.81315594961956,
+        -106.6447079229307,
+        -115.7947264129773,
+        -114.47772087193349,
+        -119.65180409341713,
+        -121.40349994338479,
+        -121.02100178916425,
+        -121.40784024479754,
+        -121.77917888820778,
+        -123.29718740697587,
+        -116.16467233191614,
+        -119.03115432260898
+      ]
+    },
+    "vare": {
+      "consumed_policy_lag_max": 2,
+      "consumed_verifier_lag_max": 0,
+      "invalid_training_rows_consumed": 0,
+      "invalid_update_acceptances": 0,
+      "mean_consumed_policy_lag": 1.0833333333333333,
+      "mean_consumed_verifier_lag": 0.0,
+      "mean_orchestration_replay_residual_s_per_round": 0.3470566191168069,
+      "n_rounds": 72,
+      "n_runs": 12,
+      "orchestration_replay_residual_ci95_bootstrap_s_per_round": [
+        0.3440338866647734,
+        0.3502320338064035
+      ],
+      "peak_python_bytes_median": 1800888.0,
+      "peak_rss_bytes_ci95_bootstrap": [
+        33512106.666666668,
+        34306730.666666664
+      ],
+      "peak_rss_bytes_median": 33595392.0,
+      "policy_lag_max": 0,
+      "rollouts_per_second_ci95_bootstrap": [
+        180.61701952602346,
+        183.79651258239923
+      ],
+      "rollouts_per_second_mean": 182.21634580880763,
+      "round_latency_p50_ci95_bootstrap": [
+        0.3468556979605637,
+        0.3543643178381899
+      ],
+      "round_latency_p50_s": 0.34943993751949165,
+      "round_latency_p95_ci95_bootstrap": [
+        0.48796544714483997,
+        0.5006274740159521
+      ],
+      "round_latency_p95_s": 0.5124719024606748,
+      "verifier_lag_max": 0
+    }
+  },
+  "tracked_source_changes_present": false,
+  "training_is_simulated": true
+}

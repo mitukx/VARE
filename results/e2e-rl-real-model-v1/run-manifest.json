@@ -1,0 +1,95 @@
+{
+  "arguments": {
+    "eval_tasks": 32,
+    "model_dir": "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/tiny-gpt2",
+    "output": "results/e2e-rl-real-model-v1/m1-cpu",
+    "seeds": [
+      1701,
+      1702,
+      1703
+    ],
+    "skip_faults": false,
+    "tasks": 32,
+    "workers": [
+      1,
+      2,
+      4,
+      8
+    ]
+  },
+  "base_commit": "d6514866aee26a8132927ed110a5f7b4827cc1cd",
+  "dependencies": [
+    "Jinja2==3.1.6",
+    "MarkupSafe==3.0.4",
+    "PyYAML==6.0.3",
+    "Pygments==2.21.0",
+    "certifi==2026.7.22",
+    "charset-normalizer==3.5.2",
+    "filelock==4.2.0",
+    "fsspec==2026.9.0",
+    "hf-xet==1.7.0",
+    "huggingface_hub==0.36.2",
+    "idna==3.20",
+    "iniconfig==2.3.1",
+    "mpmath==1.3.0",
+    "networkx==3.6.1",
+    "numpy==2.4.6",
+    "packaging==26.3",
+    "pluggy==1.7.0",
+    "psutil==7.1.0",
+    "pytest==8.4.2",
+    "regex==2026.9.29",
+    "requests==2.34.2",
+    "ruff==0.15.12",
+    "safetensors==0.8.0",
+    "sympy==1.14.0",
+    "tokenizers==0.22.2",
+    "torch==2.8.0",
+    "tqdm==4.70.1",
+    "transformers==4.56.2",
+    "typing_extensions==4.16.0",
+    "urllib3==2.8.0"
+  ],
+  "environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "PYTHONHASHSEED": "0",
+    "TOKENIZERS_PARALLELISM": "false"
+  },
+  "hardware": [
+    "Apple M1 Pro",
+    "34359738368",
+    "10"
+  ],
+  "model": "sshleifer/tiny-gpt2",
+  "model_files": {
+    "config.json": "77a9e9830c3abeba929f5c61e0e97c398f98b4481ad75516c0be5bf038b340b0",
+    "merges.txt": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+    "pytorch_model.bin": "b706b24034032bdfe765ded5ab6403d201d295a995b790cb24c74becca5c04e6",
+    "special_tokens_map.json": "c0b3c279b6ecdb71996a86ffb4d4ab94dfdb5df95f00bac9515688faef2ff5dd",
+    "tokenizer_config.json": "5e04eb606e3a1583530a42e36c2a6b6615c86f34fe77e44d9ddeb43ff940931f",
+    "vocab.json": "03087853bc70c618b66e7c7a43e787d2db4c469416beac9a483e53dad1f72f27"
+  },
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "python": "3.11.15 (main, Mar  3 2026, 00:52:57) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "revision": "5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be",
+  "sampling_rss_limit_bytes": 12884901888,
+  "schema": "vare.e2e-rl-real-model.v1",
+  "sources": {
+    "benchmarks/e2e_rl_real_model_v1/protocol.json": "0abe33e96e8bc0db490374b8bcdbfa297fa6e35f7b0ce4e38761d2e8a5094037",
+    "requirements/e2e-rl-real-model-v1.txt": "690eda84362435cdbf8906f37f5f929866161e36a1b8308096a90d511677cfe8",
+    "scripts/audit_e2e_rl_real_model.py": "a9e9a571e829fc02611239bb0f9d65c4ad13032151123bb5a9e20bb7efaff7e3",
+    "scripts/benchmark_e2e_rl_real_model.py": "669c6a892e41f95728f505d0c724f2570492c0d7cfeae80e29e9abbed414bae2",
+    "src/vare/attestation.py": "785e74d7d0cd6d41a73cf75cc65c093a0afb8d5082ad3f11dd828770616e93a3",
+    "src/vare/checkpoint_artifacts.py": "98f96cf1bde57011a7e787c0bf61820df6a89ae37f1c043e3dfa73288c052b5c",
+    "src/vare/engine.py": "bcd914e14de291073a6d4c93cc3c3fbac2874b810f108ec47debb8691ae25f66",
+    "src/vare/lag.py": "1a7185c0b17187c13e6369f3d10584eabe2ac697d5afbd8bfd867bef07c92a57",
+    "src/vare/promotion.py": "73f2fcbd3358d1f9153a53012f49ebe41ca0d65f555ed6457c8b98ccc708474b",
+    "src/vare/promotion_journal.py": "2e7b98951427aa63cff61ba948a3e4eb2e480b1378ed3c891e9df20225876ee7",
+    "src/vare/replay.py": "2ff8258d3fdb43d7b34180f1a1e11a4a5cbd0a795cec3dddb990f41aaecb0a93",
+    "src/vare/reward_evidence.py": "a5b5979b8f647a61d0d411acf032a60608fac2045a4d96299cec1e7471206292",
+    "tests/test_e2e_rl_real_model.py": "86cd703a213f7e8d8b5bf835c6938d186e545932b700197222b5cba608691265"
+  },
+  "started_unix": 1792113728.15093,
+  "timing_boundary": "warmed worker pools/model setup excluded; round and exact checkpoint recovery included"
+}
