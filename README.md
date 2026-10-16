@@ -52,6 +52,7 @@ The following are **retained, bounded observations**, not throughput or general 
 | Real-model feasibility, not improvement | [Exact-integer base gates](docs/heldout-exact-integer-base-gate-v2.md): Qwen2.5-3B-Instruct 4-bit scored 29/64 strict pass@4; the [one-update smoke](docs/heldout-exact-integer-update-cost-smoke-v1.md) demonstrated save/reload and update cost, not a held-out gain. | A model can enter an experiment without proving an update works. |
 | Negative model comparison | [OpenBookQA](docs/openbookqa-qwen25-grpo-sft-confirmation-v1-report.md): Qwen2.5-0.5B base 45.31%, matched SFT 33.33%, GRPO 0/128 on each of three seeds under the frozen parser. | This specific pairing failed; no general verdict about GRPO. |
 | Retrospective record audit | [Format versus correctness](docs/format-comparison-record-v1-report.md): correctness-RL minus format-SFT +0.46875 points, 95% interval [-0.078125, +1.015625]. | Interval includes zero; original execution provenance is incomplete. No new model run. |
+| End-to-end CPU system benchmark | [Locked benchmark report](docs/e2e-rl-system-benchmark-v1.md): on the simulated policy fixture, VARE measured 182 versus 300 rollouts/s (−39.2%) across 12 paired seeds; it rejected stale updates and fenced interrupted publication. | Measured control overhead is substantial on this small CPU workload; interrupted publication remains unresolved without external reconciliation. No real-model claim. |
 
 Full model-study decisions and failed runs remain in the [experiment index](docs/experiments.md). The [evidence ledger](docs/evidence.md) preserves finer-grained controls and raw pointers; summaries are not substitutes for their original records.
 
@@ -68,6 +69,8 @@ python scripts/reproduce_runtime_round_ownership_v1.py --output /tmp/vare-round-
 ```
 
 Use a **new** output directory. The last command needs Git access to its pinned baseline; it replays CPU correctness cases, **not model learning**. The two excluded mathematical grader tests require a [separate optional lock](requirements/math500-grader-test.lock.txt). Other model, platform-specific, and accelerator reproductions have separate requirements. See the [script index](scripts/README.md), [CLI contracts](docs/execution.md), and [recovery procedure](docs/runtime-round-ownership-v1.md#operator-recovery).
+
+The complete CPU rollout-to-promotion comparison is reproducible with `python -m benchmarks.e2e_rl_system.runner --output results/e2e-rl-system-benchmark-v1/run-N`; see the [protocol and measured limitations](docs/e2e-rl-system-benchmark-v1.md).
 
 ## Repository structure and navigation
 
