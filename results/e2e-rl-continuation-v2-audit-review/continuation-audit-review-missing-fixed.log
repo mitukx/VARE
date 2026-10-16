@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE/scripts/audit_e2e_rl_continuation.py", line 241, in <module>
+    print(json.dumps(audit(args.directory,args.check_tensors,args.model_dir),sort_keys=True))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE/scripts/audit_e2e_rl_continuation.py", line 176, in audit
+    need(by_attempt and all(policies==expected_policies for policies in by_attempt.values()),
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE/scripts/audit_e2e_rl_continuation.py", line 15, in need
+    raise ValueError(message)
+ValueError: incomplete independent evaluation pair

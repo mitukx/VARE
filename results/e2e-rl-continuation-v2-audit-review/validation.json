@@ -1,0 +1,59 @@
+{
+  "actual_model_regressions": {
+    "elapsed_s": 117.03,
+    "passed": 22
+  },
+  "baseline_commit": "507f1191cfbaf720d9e4d3df4930a75d1f2d480c",
+  "baseline_negative_cases": {
+    "failed": 11,
+    "interpretation": "Rehashed missing, mismatched or cross-attempt independent evaluation evidence was accepted."
+  },
+  "baseline_without_any_round_evaluation_files": {
+    "artifacts_hashed": 654,
+    "candidate_tensor_states_verified": 48,
+    "cases": 8,
+    "checkpoint_scores_replayed": true,
+    "pass": true,
+    "protocol_conformant": false
+  },
+  "corrected_missing_all_with_model_dir": "REJECTED before any evaluation score can be reported as replayed",
+  "diagnostic_archive": {
+    "bytes": 643872,
+    "files": 753,
+    "name": "diagnostic-checkpoints.tar.xz",
+    "sha256": "963a93d4ea1dff3cb6b39e8395f0f2f2a68783078960c4f4a959b590fae5505c"
+  },
+  "files": {
+    "continuation-audit-review-baseline.log": "c49cc8a0b07ba66f68f1ed3a989aa082ec1d679853abcf08dd2bef76045414d7",
+    "continuation-audit-review-fixed.log": "27f7c52d925e0bdb816d1abf29ad3a7d38ecf410af87c1de12deb887a255b839",
+    "continuation-audit-review-main.log": "84008a3fb3bd14151c05edd3909f5dafdb58e8417fa4dd84fbdc6365e1589c07",
+    "continuation-audit-review-missing-fixed.log": "7063597321b8dc97eb20a692277a4e4cb024ccce842cb288a6b9695ba63c1431",
+    "continuation-audit-review-regression.log": "0fd7dcb144a6d2f194d8275c73559c59820c86cc14ab0173eb60576794cf2680",
+    "continuation-audit-review-vacuous-model.log": "e648929534c6dd8fae82d95d3b6a3d1ef5393a2ef2590eb568137e58fe01cbdc",
+    "diagnostic-checkpoints.tar.xz": "963a93d4ea1dff3cb6b39e8395f0f2f2a68783078960c4f4a959b590fae5505c"
+  },
+  "fixed_negative_cases": {
+    "passed": 11
+  },
+  "frozen_evidence": "Original protocols, main results and release archives unchanged. Current auditor independently replays the preserved data.",
+  "reproduction": [
+    "VARE_E2E_MODEL_DIR=/path/to/pinned/tiny-gpt2 python -m pytest tests/test_e2e_rl_continuation.py --basetemp=/tmp/vare-audit-regression-new",
+    "python scripts/audit_e2e_rl_continuation.py /path/to/retained/continuation-v2-main --model-dir /path/to/pinned/tiny-gpt2"
+  ],
+  "retained_main_reaudit": {
+    "artifacts_hashed": 6522,
+    "candidate_tensor_states_verified": 504,
+    "cases": 42,
+    "checkpoint_score_count_replayed": 32448,
+    "checkpoint_scores_replayed": true,
+    "evaluation_pairs_verified": 507,
+    "evaluation_reports_verified": 1014,
+    "pass": true,
+    "protocol_conformant": true
+  },
+  "scope": "Audit correction and actual toy-model system regressions; no new research or main performance campaign.",
+  "sources": {
+    "scripts/audit_e2e_rl_continuation.py": "e3d16606d24401c6c07bc23053fe50b5f3c951114b95331d141fdb1ce9c648cb",
+    "tests/test_e2e_rl_continuation.py": "70401aa4bfbd6789d97c61aafd5e18892cba24caf4703211ed83165b4f8c6dca"
+  }
+}

@@ -92,7 +92,7 @@ def audit(root, check_tensors=False, model_dir=None):
         tokenizer=AutoTokenizer.from_pretrained(model_dir,local_files_only=True)
         choices=[tokenizer.encode(" A")[0],tokenizer.encode(" B")[0]]
     references,round_records={},{}
-    tensor_states=0
+    tensor_states=evaluation_pairs=evaluation_reports=replayed_scores=0
     for row in rows:
         case=root/row["directory"]
         config=read(case/"config.json")
@@ -162,11 +162,27 @@ def audit(root, check_tensors=False, model_dir=None):
                 expected_state=candidate_state if commit["accepted"] else state
                 need(fingerprint(expected_state)==commit["active_state_sha256"],"active state differs after promotion/reject")
             need(commit["stale_replay_rejected"]==int(previous_step>0),"stale replay canary was consumed")
-            for path in round_dir.glob('evaluation-*.json'):
+            expected_policies={previous_pid,candidate}
+            records,by_attempt=[],{}
+            for path in sorted(round_dir.glob('evaluation-*.json')):
                 record=read(path)
+                policy_id=record["policy_id"]
+                _,separator,attempt=path.stem.rpartition('-attempt')
+                need(separator and attempt.isdigit() and policy_id in expected_policies and
+                     path.name==f"evaluation-{policy_id}-attempt{int(attempt)}.json" and
+                     record["report"]["policy_id"]==policy_id,"independent evaluation artifact identity differs")
+                by_attempt.setdefault(int(attempt),set()).add(policy_id)
+                records.append(record)
+            need(by_attempt and all(policies==expected_policies for policies in by_attempt.values()),
+                 "incomplete independent evaluation pair")
+            evaluation_pairs+=len(by_attempt)
+            for record in records:
+                need(set(record["scores"])=={task["id"] for task in heldout} and
+                     record["report"]["n"]==args["eval_tasks"],"independent evaluation task coverage differs")
                 need(len(record["scores"])==args["eval_tasks"] and statistics.fmean(record["scores"].values())==record["report"]["primary"],"independent evaluation arithmetic differs")
                 evaluated_raw,evaluated_sha=checkpoint(case,record["policy_id"],row["mode"])
                 need(record["checkpoint_sha256"]==evaluated_sha,"evaluation checkpoint differs")
+                evaluation_reports+=1
                 if model_dir:
                     evaluated_state=torch.load(io.BytesIO(evaluated_raw),map_location="cpu",weights_only=True)
                     model.load_state_dict(evaluated_state["model"])
@@ -174,6 +190,7 @@ def audit(root, check_tensors=False, model_dir=None):
                         for task in heldout:
                             score=float(model(torch.tensor([tokenizer.encode(task["prompt"])] )).logits[0,-1,choices].softmax(-1)[0])
                             need(abs(score-record["scores"][task["id"]])<1e-7,"independent checkpoint score does not replay")
+                            replayed_scores+=1
             previous_pid,previous_step=expected_active,expected_step
         if row["mode"]=="guarded":
             need(row["final_journal"]["pending_tx_id"] is None and row["final_journal"]["round_owner_id"] is None,"journal unresolved")
@@ -210,7 +227,9 @@ def audit(root, check_tensors=False, model_dir=None):
         if len(values)>1:
             need(group["tasks_s_sd"]==statistics.stdev(values),"seed variance differs")
     return {"pass":True,"cases":len(rows),"protocol_conformant":locked,"artifacts_hashed":len(sums),
-            "candidate_tensor_states_verified":tensor_states,"checkpoint_scores_replayed":bool(model_dir)}
+            "candidate_tensor_states_verified":tensor_states,"evaluation_pairs_verified":evaluation_pairs,
+            "evaluation_reports_verified":evaluation_reports,"checkpoint_score_count_replayed":replayed_scores,
+            "checkpoint_scores_replayed":bool(replayed_scores) and replayed_scores==evaluation_reports*args["eval_tasks"]}
 
 
 if __name__=="__main__":

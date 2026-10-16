@@ -49,6 +49,8 @@ def test_actual_checkpoint_state_and_scores_replay(campaign):
     result=auditor.audit(root,True,model)
     assert result["cases"]==8 and result["candidate_tensor_states_verified"]==48
     assert result["checkpoint_scores_replayed"]
+    assert result["evaluation_pairs_verified"]==49 and result["evaluation_reports_verified"]==98
+    assert result["checkpoint_score_count_replayed"]==392
     # Reduced regression runs must never masquerade as the frozen 3-seed study.
     assert not result["protocol_conformant"]
     assert auditor.read(root/"summary.json")["protocol_id"].endswith(".diagnostic")
@@ -106,4 +108,49 @@ def test_rehashed_false_attempt_count_is_rejected(campaign,tmp_path):
     hashes["progress.json"]=auditor.sha(changed/"progress.json")
     bench.atomic_json(changed/"SHA256SUMS.json",hashes)
     with pytest.raises(ValueError,match="attempt accounting"):
+        auditor.audit(changed)
+
+
+@pytest.fixture(scope="module")
+def audit_records(request):
+    retained=os.environ.get("VARE_CONTINUATION_AUDIT_RAW_DIR")
+    # Review falsification may reuse raw records without starting a learner.
+    return Path(retained).resolve() if retained else request.getfixturevalue("campaign")[0]
+
+
+def reseal_records(root):
+    bench.atomic_json(root/"SHA256SUMS.json",{str(p.relative_to(root)):auditor.sha(p)
+                      for p in root.rglob('*') if p.is_file() and p.name!="SHA256SUMS.json"})
+
+
+@pytest.mark.parametrize("mode",["minimal","guarded"])
+@pytest.mark.parametrize("corruption",["incumbent","candidate","both","split_attempt","duplicate_policy"])
+def test_rehashed_incomplete_independent_evaluation_is_rejected(audit_records,tmp_path,mode,corruption):
+    changed=tmp_path/"incomplete"
+    shutil.copytree(audit_records,changed)
+    row=next(r for r in auditor.read(changed/"progress.json") if r["mode"]==mode and r["cutpoint"]=="none")
+    directory=changed/row["directory"]/"rounds/r0000"
+    candidate=auditor.read(directory/"committed.json")["candidate_id"]
+    incumbent_file=directory/"evaluation-policy-0-attempt0.json"
+    candidate_file=directory/f"evaluation-{candidate}-attempt0.json"
+    if corruption in ("incumbent","both"):
+        incumbent_file.unlink()
+    if corruption in ("candidate","both"):
+        candidate_file.unlink()
+    if corruption=="split_attempt":
+        candidate_file.rename(directory/f"evaluation-{candidate}-attempt1.json")
+    if corruption=="duplicate_policy":
+        candidate_file.write_bytes(incumbent_file.read_bytes())
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="independent evaluation"):
+        auditor.audit(changed)
+
+
+def test_rehashed_absent_independent_evaluation_is_rejected(audit_records,tmp_path):
+    changed=tmp_path/"absent"
+    shutil.copytree(audit_records,changed)
+    for path in changed.glob('*/rounds/r*/evaluation-*.json'):
+        path.unlink()
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="independent evaluation"):
         auditor.audit(changed)
