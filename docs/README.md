@@ -10,6 +10,7 @@
 | How are repositories and source paths organized? | [Repository layout](repository-layout.md) |
 | How are faults detected, candidates discarded and uncertain state recovered? | [Whole-round runtime](runtime-round-ownership-v1.md), [evaluation lifetime](engine-evaluation-lifecycle-v1-report.md), [publication](promotion-publication-recovery-v1.md), [durable jobs](recovery.md) |
 | What stops graders when their worker is killed during evaluation? | [Owner-loss containment, resume and cost](grader-owner-loss-v1-report.md) |
+| What is the full CPU control-loop overhead and fault behavior? | [End-to-end system benchmark protocol, results, and limits](e2e-rl-system-benchmark-v1.md) |
 | Can a resumed evaluator silently use different executor source? | [Durable source pinning and restoration](durable-runtime-source-v1-report.md) |
 | How do actual trainer and trajectory boundaries work? | [RVL integration](rvl-evaluation-promotion-e2e-v1-report.md), [direct trainer freshness](rvl-direct-trainer-freshness-v1-report.md), [trajectory reference](trajectory-reference-v1.md), [trajectory safety](trajectory-aware-safety-v1.md) |
 | Does trajectory replay match dispatch policy and terminal tool lifetime? | [Capture boundary report](trajectory-capture-boundary-v1-report.md) |

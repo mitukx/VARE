@@ -4,6 +4,7 @@ Run commands from the repository root. Choose a fresh output directory for compa
 
 | Question | Command / owning contract |
 | --- | --- |
+| What is the end-to-end CPU control-loop cost and behavior under injected faults? | `python -m benchmarks.e2e_rl_system.runner --output results/e2e-rl-system-benchmark-v1/run-N` / [locked protocol](../protocols/e2e_rl_system_benchmark_v1.lock.json) / [report](../docs/e2e-rl-system-benchmark-v1.md). This is a simulated four-parameter policy workload, not a real-model update. |
 | Does the current default CPU suite pass? | `python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py` |
 | Do killed evaluation workers leave running graders? | `python scripts/reproduce_grader_owner_loss_v1.py --output /tmp/vare-owner-loss-new`; `python scripts/audit_grader_owner_loss_v1.py /tmp/vare-owner-loss-new` / [report](../docs/grader-owner-loss-v1-report.md) |
 | Does durable resume preserve executor source identity? | `python scripts/reproduce_durable_runtime_source_v1.py --output /tmp/vare-runtime-pin-new`; `python scripts/audit_durable_runtime_source_v1.py /tmp/vare-runtime-pin-new` / [report](../docs/durable-runtime-source-v1-report.md) |

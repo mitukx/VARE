@@ -1,0 +1,86 @@
+{
+  "protocol": "e2e-rl-system-benchmark-v1",
+  "status": "locked-before-measurement",
+  "purpose": "Measure full CPU control-loop execution cost and bounded fault behavior against a narrow straight-line reference path.",
+  "workload": {
+    "environment": "vare.demo.ToyHooks; four-parameter contextual Bernoulli policy with an analytic deterministic reward oracle",
+    "update": "CPU REINFORCE-style parameter update in the repository's ToyHooks; not an LLM or pretrained-model update",
+    "training_task_generator": "vare.demo.make_tasks",
+    "training_task_count": 64,
+    "training_rollouts_per_round": 64,
+    "evaluation_task_generator": "vare.demo.make_tasks with disjoint seed range from training",
+    "evaluation_examples_per_round": 256,
+    "evaluation_reuse": "one fresh held-out synthetic cohort per round, paired between incumbent and candidate, never reused in later rounds",
+    "rounds_per_trial": 6,
+    "rollout_concurrency": 8,
+    "replay_capacity": 4096,
+    "replay_batch_size": 32,
+    "samples_per_task": 1,
+    "max_policy_lag": 2,
+    "max_verifier_lag": 2,
+    "max_distribution_shift": 0.35,
+    "seeds": [
+      20261001,
+      20261002,
+      20261003,
+      20261004,
+      20261005,
+      20261006,
+      20261007,
+      20261008,
+      20261009,
+      20261010,
+      20261011,
+      20261012
+    ]
+  },
+  "arms": {
+    "shared_dataplane": [
+      "same seeded tasks and rollout order",
+      "same policy initialization and random generator seed",
+      "same deterministic verifier",
+      "same PrioritizedReplay implementation, capacity, group size, and batch size",
+      "same trainer, candidate evaluator, and CPU process configuration"
+    ],
+    "vare": "CapabilityLoop with policy/verifier freshness checks, grouped replay rescreening, report validation and PromotionGate, candidate cleanup, and round ownership.",
+    "baseline": "Straight-line orchestration over the same hooks/replay primitives; no use-time freshness filter, PromotionGate/report validation, candidate ownership, or serialization. It retains a fixed primary point-gain threshold and discards a candidate on an ordinary point-estimate rejection."
+  },
+  "promotion": {
+    "min_primary_gain": 0.01,
+    "max_slice_regression": 0.08,
+    "max_relative_cost_increase": 0.2,
+    "max_verifier_disagreement": 0.2,
+    "minimum_evaluation_examples": 64,
+    "paired_confidence_gate": false,
+    "paired_bootstrap_samples": 500,
+    "note": "PromotionGate still computes paired report diagnostics; the baseline uses only the primary point threshold."
+  },
+  "fault_injection": {
+    "seeds": [20261991, 20261992, 20261993],
+    "cases": [
+      "worker_crash: real child process exits via os._exit(73) during rollout; retry the round",
+      "stale_rollouts: policy lag 3 and verifier lag 4, beyond locked admission bounds",
+      "evaluator_failure: candidate evaluator raises after training",
+      "concurrent_execution: overlap two rounds and force a shared-candidate-id race in the reference path",
+      "interrupted_promotion: promotion mutates active policy then raises cancellation before acknowledgment"
+    ],
+    "forced_positive_candidate": "For evaluator and publication fault paths, a known synthetic positive candidate is constructed to force execution through the targeted boundary; this is a control fault fixture, not a trained capability result."
+  },
+  "measurement": {
+    "process_isolation": "performance trials use one fresh child process per arm and seed; the fault matrix runs in one coordinator process and launches a real child only for the worker-exit injection",
+    "arm_order": "performance arms alternate by seed parity; fault arms run in fixed baseline-then-VARE order per case",
+    "latency": "per-round wall time, p50/p95 over all round samples",
+    "throughput": "rollouts divided by full trial wall time",
+    "memory": "process peak RSS and tracemalloc peak per isolated trial",
+    "staleness": "max rollout and replay-batch policy/verifier version lag",
+    "uncertainty": "10,000-draw percentile bootstrap CI over per-seed throughput and paired VARE-minus-baseline differences",
+    "timing_scope": "process setup is outside the timed interval; Python process startup and RSS are recorded separately from pipeline elapsed time",
+    "raw_rows": "one JSONL record per isolated arm/seed trial; fault rows are separately retained"
+  },
+  "claims_boundary": [
+    "This measures the VARE control path with a deterministic simulated four-weight policy, not a real-model update.",
+    "Task performance is not a benchmark endpoint and must not be described as model capability.",
+    "The straight-line reference is an in-repository comparator, not an external RL framework or production system.",
+    "Results apply only to the recorded host, Python runtime, fixed CPU fixture, and tested fault schedule."
+  ]
+}
