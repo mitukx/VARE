@@ -3,8 +3,11 @@ on:
   pull_request:
     paths:
       - 'scripts/*e2e_rl_real_model.py'
+      - 'scripts/*e2e_rl_continuation.py'
       - 'tests/test_e2e_rl_real_model.py'
+      - 'tests/test_e2e_rl_continuation.py'
       - 'benchmarks/e2e_rl_real_model_v1/**'
+      - 'benchmarks/e2e_rl_continuation_v2/**'
       - 'requirements/e2e-rl-real-model-v1.txt'
       - 'src/vare/**'
       - '.github/workflows/e2e-system-cpu.yml'
@@ -44,8 +47,16 @@ jobs:
         run: |
           python scripts/benchmark_e2e_rl_real_model.py --output "${RUNNER_TEMP}/e2e-regression" --model-dir "${RUNNER_TEMP}/tiny-gpt2" --workers 1 --seeds 1701 --tasks 8 --eval-tasks 8
           python scripts/audit_e2e_rl_real_model.py "${RUNNER_TEMP}/e2e-regression" --model-dir "${RUNNER_TEMP}/tiny-gpt2"
+      - name: Verify continuous updates and actual learner SIGKILL recovery
+        env:
+          VARE_E2E_MODEL_DIR: ${{ runner.temp }}/tiny-gpt2
+        run: |
+          python -m pytest tests/test_e2e_rl_continuation.py --basetemp="${RUNNER_TEMP}/v2-tests"
+          tar -cJf "${RUNNER_TEMP}/v2-tests.tar.xz" -C "${RUNNER_TEMP}/v2-tests" .
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
           name: e2e-system-cpu-regression
-          path: ${{ runner.temp }}/e2e-regression
+          path: |
+            ${{ runner.temp }}/e2e-regression
+            ${{ runner.temp }}/v2-tests.tar.xz
