@@ -126,3 +126,38 @@ def test_incomplete_group_cannot_be_acknowledged(tmp_path):
     result = admit(store, root)
     with pytest.raises(FenceError):
         store.close_group("g", result.heads)
+
+
+def test_grouped_member_acknowledgment_is_rejected(tmp_path):
+    store, _ = group(tmp_path)
+    with pytest.raises(FenceError):
+        store.close_verified("t0", head=store.trajectory("t0")["head"])
+    assert store.counts() == {"verified": 2}
+
+
+def test_grouped_cancellation_is_atomic(tmp_path):
+    store, _ = group(tmp_path)
+    assert store.cancel("t0") is True
+    assert store.counts() == {"cancelled": 2}
+
+
+def test_ready_group_scan_skips_partial_groups(tmp_path):
+    store, root = group(tmp_path)
+    store.submit("a0", Task("another", "x"), expected_steps=1, group_id="a-incomplete", member=0, group_size=2, now=100)
+    lease = store.claim("execute", "w", now=100)
+    store.append_step(lease, AgentStep(0, "e0", P0, {"kind": "observation"}, {}, {}), now=100)
+    store.finish(lease, now=100)
+    lease = store.claim("verify", "v", now=100)
+    head = store.trajectory("a0")["head"]
+    value = root.attest("a0", head, Verification(1., True, 1., 0, "v", trusted=True,
+                        metadata={"trajectory_sha256": head, "verifier_config_sha256": "b" * 64}))
+    store.record_verification(lease, value, now=100)
+    assert store.verified_groups(1) == ["g"]
+
+
+def test_cancelled_partial_group_cannot_resurrect(tmp_path):
+    store, _ = group(tmp_path, "partial")
+    store.cancel("t0")
+    spec = json.loads(store.trajectory("t0")["task"])
+    with pytest.raises(ValueError, match="terminal"):
+        store.submit("t1", Task(**spec["task"]), expected_steps=2, group_id="g", member=1, group_size=2, now=100)

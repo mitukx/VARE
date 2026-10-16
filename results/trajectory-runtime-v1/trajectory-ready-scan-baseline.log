@@ -1,0 +1,27 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________________ test_ready_group_scan_skips_partial_groups __________________
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-288/test_ready_group_scan_skips_pa0')
+
+    def test_ready_group_scan_skips_partial_groups(tmp_path):
+        store, root = group(tmp_path)
+        store.submit("a0", Task("another", "x"), expected_steps=1, group_id="a-incomplete", member=0, group_size=2, now=100)
+        lease = store.claim("execute", "w", now=100)
+        store.append_step(lease, AgentStep(0, "e0", P0, {"kind": "observation"}, {}, {}), now=100)
+        store.finish(lease, now=100)
+        lease = store.claim("verify", "v", now=100)
+        head = store.trajectory("a0")["head"]
+        value = root.attest("a0", head, Verification(1., True, 1., 0, "v", trusted=True,
+                            metadata={"trajectory_sha256": head, "verifier_config_sha256": "b" * 64}))
+        store.record_verification(lease, value, now=100)
+>       assert store.verified_groups(1) == ["g"]
+E       AssertionError: assert ['a-incomplete'] == ['g']
+E         
+E         At index 0 diff: 'a-incomplete' != 'g'
+E         Use -v to get more diff
+
+tests/test_trajectory_admission.py:155: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_trajectory_admission.py::test_ready_group_scan_skips_partial_groups
+1 failed, 18 deselected in 0.12s

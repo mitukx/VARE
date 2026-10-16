@@ -56,6 +56,18 @@ def killable_worker(path, pipe):
     pipe.recv()
 
 
+def killable_tool_worker(path, tool_path, pipe):
+    store = TrajectoryStore(path)
+    lease = store.claim("execute", "dying", lease_seconds=.1, now=100)
+    # Deliberately execute an external side effect before committing the step.
+    with open(tool_path, "a") as stream:
+        stream.write("same-operation-id\n")
+        stream.flush()
+        os.fsync(stream.fileno())
+    pipe.send(lease)
+    pipe.recv()
+
+
 def test_step_resume_sigkill_and_effective_once(store):
     submit(store)
     context = multiprocessing.get_context("spawn")
@@ -93,6 +105,34 @@ def test_step_resume_sigkill_and_effective_once(store):
     with reopened.connection() as db:
         attempts = [tuple(r) for r in db.execute("SELECT generation,state FROM attempts WHERE stage='execute' ORDER BY generation")]
     assert attempts == [(1, "lease_expired"), (2, "done")]
+
+
+def test_external_tool_can_execute_twice_before_one_effective_commit(store, tmp_path):
+    submit(store)
+    context = multiprocessing.get_context("spawn")
+    parent, child = context.Pipe()
+    tool_path = tmp_path / "external-tool.log"
+    process = context.Process(target=killable_tool_worker, args=(store.path, tool_path, child))
+    process.start()
+    try:
+        assert parent.poll(10)
+        parent.recv()
+        os.kill(process.pid, signal.SIGKILL)
+        process.join(10)
+        assert process.exitcode == -signal.SIGKILL
+    finally:
+        if process.is_alive():
+            process.kill()
+            process.join(5)
+        parent.close()
+        child.close()
+    lease = store.claim("execute", "replacement", now=101)
+    assert store.resume_state("t0")["next_step"] == 0
+    with tool_path.open("a") as stream:
+        stream.write("same-operation-id\n")
+    assert store.append_step(lease, step(), now=101)
+    assert tool_path.read_text().splitlines() == ["same-operation-id", "same-operation-id"]
+    assert audit_trajectory_store(store.path)["steps"] == 1
 
 
 def test_backpressure_includes_unconsumed_verified_trajectories(store):
@@ -290,3 +330,27 @@ def test_current_state_needs_corresponding_history(store):
         db.execute("UPDATE trajectories SET state='complete'")
     with pytest.raises(ValueError, match="missing completion"):
         audit_trajectory_store(store.path)
+
+
+def test_group_capacity_reserved_before_first_member(store):
+    task = Task("task", "group work")
+    store.submit("g0-0", task, expected_steps=2, group_id="g0", member=0, group_size=2, now=100)
+    # A competing producer cannot occupy the slot reserved for g0's sibling.
+    with pytest.raises(BackpressureError):
+        store.submit("g1-0", task, expected_steps=2, group_id="g1", member=0, group_size=2, now=100)
+    assert store.submit("g0-1", task, expected_steps=2, group_id="g0", member=1, group_size=2, now=100)
+    assert store.counts() == {"queued": 2}
+
+
+def test_retry_exhaustion_fences_the_whole_group(store):
+    task = Task("task", "group work")
+    for member in range(2):
+        store.submit(f"g0-{member}", task, expected_steps=2, group_id="g0", member=member, group_size=2, max_attempts=1, now=100)
+    one = store.claim("execute", "one", lease_seconds=1, now=100)
+    two = store.claim("execute", "two", lease_seconds=1, now=100)
+    # Both are selected as expired in one scan; the first terminates the group.
+    assert store.claim("execute", "other", now=102) is None
+    assert store.counts() == {"quarantined": 2}
+    for lease in (one, two):
+        with pytest.raises(FenceError):
+            store.append_step(lease, step(), now=102)

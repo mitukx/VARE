@@ -272,14 +272,19 @@ class TrajectoryStore:
                     raise ValueError("trajectory identity reused with different enrollment")
                 return False
             config = json.loads(db.execute("SELECT value FROM meta WHERE key='config'").fetchone()[0])
-            count = db.execute("SELECT count(*) FROM trajectories WHERE state NOT IN ('consumed','quarantined','cancelled')").fetchone()[0]
             if group_size > config["max_inflight"]:
                 raise ValueError("group cannot fit in bounded backlog")
-            if count >= config["max_inflight"]:
-                raise BackpressureError("trajectory backlog full")
-            group = db.execute("SELECT task,group_size FROM trajectories WHERE group_id=? LIMIT 1", (group_id,)).fetchone()
+            group = db.execute("SELECT task,group_size,state FROM trajectories WHERE group_id=? LIMIT 1", (group_id,)).fetchone()
             if group and (group["group_size"] != group_size or json.loads(group["task"])["task"] != asdict(task)):
                 raise ValueError("group task or size mismatch")
+            if group and group["state"] in {"consumed", "quarantined", "cancelled"}:
+                raise ValueError("group is terminal; missing members cannot resurrect it")
+            if group is None:
+                # Reserve the WHOLE group with its first member, under the same
+                # write transaction. Concurrent producers cannot strand siblings.
+                reserved = db.execute("SELECT coalesce(sum(size),0) FROM (SELECT max(group_size) AS size FROM trajectories WHERE state NOT IN ('consumed','quarantined','cancelled') GROUP BY group_id)").fetchone()[0]
+                if reserved + group_size > config["max_inflight"]:
+                    raise BackpressureError("trajectory group backlog full")
             head = sha256_json({"trajectory_id": trajectory_id, "spec": spec})
             db.execute("INSERT INTO trajectories(id,task,group_id,member,group_size,state,expected_steps,created,expires,head) VALUES(?,?,?,?,?,'queued',?,?,?,?)",
                        (trajectory_id, encoded, group_id, member, group_size, expected_steps, now, now + lifetime_seconds, head))
@@ -297,13 +302,16 @@ class TrajectoryStore:
         return row
 
     def _retry(self, db, row, reason):
+        current = db.execute("SELECT state,generation FROM work WHERE trajectory_id=? AND stage=?", (row["trajectory_id"], row["stage"])).fetchone()
+        if current["state"] != "running" or current["generation"] != row["generation"]:
+            return  # A sibling's exhausted retry already terminated this group.
         exhausted = row["generation"] >= row["max_attempts"]
         db.execute("UPDATE attempts SET state=? WHERE trajectory_id=? AND stage=? AND generation=?",
                    (reason, row["trajectory_id"], row["stage"], row["generation"]))
         db.execute("UPDATE work SET state=?,owner=NULL,deadline=NULL WHERE trajectory_id=? AND stage=?",
                    ("done" if exhausted else "queued", row["trajectory_id"], row["stage"]))
         if exhausted:
-            db.execute("UPDATE trajectories SET state='quarantined',reason='retry_exhausted' WHERE id=?", (row["trajectory_id"],))
+            self._terminate_group(db, row["trajectory_id"], "quarantined", "retry_exhausted")
         self.event(db, reason, row["trajectory_id"], row["generation"], {"stage": row["stage"], "exhausted": exhausted})
 
     def claim(self, stage, worker_id, *, lease_seconds=5, now=None):
@@ -437,23 +445,29 @@ class TrajectoryStore:
         if reason not in {"consumed", "quarantined"}:
             raise ValueError("invalid close reason")
         with self.connection(True) as db:
-            row = db.execute("SELECT state,head FROM trajectories WHERE id=?", (trajectory_id,)).fetchone()
-            if row is None or row["head"] != head or row["state"] != "verified":
-                raise FenceError("consumer acknowledgment differs from verified trace")
+            row = db.execute("SELECT state,head,group_size FROM trajectories WHERE id=?", (trajectory_id,)).fetchone()
+            if row is None or row["head"] != head or row["state"] != "verified" or row["group_size"] != 1:
+                raise FenceError("singleton verified trace required; grouped trajectories use close_group")
             db.execute("UPDATE trajectories SET state=?,reason=? WHERE id=?", (reason, reason, trajectory_id))
             self.event(db, "consumer_acknowledged", trajectory_id, 0, {"head": head, "state": reason})
 
-    def _cancel(self, db, trajectory_id, reason):
-        row = db.execute("SELECT state FROM trajectories WHERE id=?", (trajectory_id,)).fetchone()
+    def _terminate_group(self, db, trajectory_id, state, reason):
+        row = db.execute("SELECT state,group_id FROM trajectories WHERE id=?", (trajectory_id,)).fetchone()
         if row is None:
             raise KeyError(trajectory_id)
-        if row[0] in {"consumed", "quarantined", "cancelled"}:
+        if row["state"] in {"consumed", "quarantined", "cancelled"}:
             return False
-        db.execute("UPDATE trajectories SET state='cancelled',reason=? WHERE id=?", (reason, trajectory_id))
-        db.execute("UPDATE work SET state='done',owner=NULL,deadline=NULL WHERE trajectory_id=?", (trajectory_id,))
-        db.execute("UPDATE attempts SET state='cancelled' WHERE trajectory_id=? AND state='running'", (trajectory_id,))
-        self.event(db, "trajectory_cancelled", trajectory_id, 0, {"reason": reason})
+        members = db.execute("SELECT id FROM trajectories WHERE group_id=? ORDER BY member", (row["group_id"],)).fetchall()
+        for member in members:
+            ident = member["id"]
+            db.execute("UPDATE trajectories SET state=?,reason=? WHERE id=?", (state, reason, ident))
+            db.execute("UPDATE work SET state='done',owner=NULL,deadline=NULL WHERE trajectory_id=?", (ident,))
+            db.execute("UPDATE attempts SET state=? WHERE trajectory_id=? AND state='running'", (state, ident))
+            self.event(db, f"trajectory_{state}", ident, 0, {"reason": reason})
         return True
+
+    def _cancel(self, db, trajectory_id, reason):
+        return self._terminate_group(db, trajectory_id, "cancelled", reason)
 
     def cancel(self, trajectory_id):
         with self.connection(True) as db:
@@ -470,7 +484,7 @@ class TrajectoryStore:
     def verified_groups(self, limit=16):
         integer(limit, 1, 1024)
         with self.connection() as db:
-            candidates = db.execute("SELECT DISTINCT group_id FROM trajectories WHERE state='verified' ORDER BY group_id LIMIT ?", (limit,))
+            candidates = db.execute("SELECT group_id FROM trajectories WHERE state='verified' GROUP BY group_id HAVING count(*)=max(group_size) ORDER BY group_id LIMIT ?", (limit,))
             return [row[0] for row in candidates]
 
     def close_group(self, group_id, heads, *, reason="consumed", decision=None):
@@ -566,6 +580,9 @@ def audit_trajectory_store(path):
         effective_steps = db.execute("SELECT count(*) FROM events WHERE json_extract(event,'$.kind')='step_committed'").fetchone()[0]
         if effective_steps != step_count:
             raise ValueError("missing or duplicated effective step")
+        for group in db.execute("SELECT group_id,count(*) AS n,max(group_size) AS size,sum(state IN ('consumed','quarantined','cancelled')) AS terminal,sum(state='consumed') AS consumed FROM trajectories GROUP BY group_id"):
+            if group["terminal"] not in (0, group["n"]) or (group["consumed"] and group["consumed"] != group["size"]):
+                raise ValueError("comparison group has mixed terminal/active or partial consumed members")
         return {"pass": True, "events": count, "steps": step_count, "completions": completions,
                 "effective_duplicates": completions - unique_completions,
                 "ledger_head_sha256": head, "database_sha256": sha256_file(path)}
