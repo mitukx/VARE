@@ -9,6 +9,52 @@ import sys
 import pytest
 
 
+@pytest.mark.parametrize("optimized", [False, True])
+def test_preflight_failure_is_retained_without_model_dependencies(tmp_path, optimized):
+    output = tmp_path / "preflight-failure"
+    command = [
+        sys.executable,
+        *(["-O"] if optimized else []),
+        "scripts/validate_grpo_e2e_cpu.py",
+        "--model-dir",
+        str(tmp_path / "missing-model"),
+        "--rvl-source",
+        str(tmp_path / "missing-rvl"),
+        "--output",
+        str(output),
+    ]
+    result = subprocess.run(command, capture_output=True, text=True, timeout=10)
+    assert result.returncode != 0
+    failure = json.loads((output / "failure.json").read_text())
+    assert failure["type"] == "FileNotFoundError"
+    assert "missing-model" in failure["error"]
+
+
+def test_preflight_cannot_overwrite_an_existing_output_directory(tmp_path):
+    output = tmp_path / "existing"
+    output.mkdir()
+    sentinel = output / "failure.json"
+    sentinel.write_bytes(b"previous evidence\n")
+    result = subprocess.run(
+        [
+            sys.executable,
+            "scripts/validate_grpo_e2e_cpu.py",
+            "--model-dir",
+            "missing",
+            "--rvl-source",
+            "missing",
+            "--output",
+            str(output),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode != 0
+    assert sentinel.read_bytes() == b"previous evidence\n"
+    assert {p.name for p in output.iterdir()} == {"failure.json"}
+
+
 def test_actual_rvl_grpo_path_and_integrity_controls(tmp_path):
     model = os.environ.get("VARE_GRPO_MODEL_DIR")
     rvl = os.environ.get("VARE_E2E_RVL_DIR")

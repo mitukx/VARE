@@ -133,7 +133,11 @@ def reference_update(model, before, batch, config):
 
 async def run(args):
     require(not args.output.exists(), "output already exists")
-    protocol_path = ROOT / "benchmarks/grpo_e2e_cpu_v3/protocol.json"
+    # Reserve ownership atomically before preflight, so rejected model/source
+    # inputs leave evidence without overwriting another run's output.
+    args.output.mkdir(parents=True)
+    args.output_created = True
+    protocol_path = ROOT / "benchmarks/grpo_e2e_cpu_v4/protocol.json"
     protocol = json.loads(protocol_path.read_text())
     require(
         sha(__file__) == protocol["runner_sha256"],
@@ -183,7 +187,6 @@ async def run(args):
     torch.set_num_threads(1)
     torch.manual_seed(args.seed)
     require(not torch.cuda.is_available(), "CPU run required")
-    args.output.mkdir(parents=True)
     (args.output / "protocol.json").write_bytes(protocol_path.read_bytes())
     for path in (
         Path(__file__),
@@ -832,10 +835,10 @@ def main():
     parser.add_argument("--model-dir", type=Path, required=True)
     parser.add_argument("--rvl-source", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--seed", type=int, default=63031)
+    parser.add_argument("--seed", type=int, default=64031)
     parser.add_argument("--rounds", type=int, choices=range(4, 21), default=12)
     args = parser.parse_args()
-    output_existed = args.output.exists()
+    args.output_created = False
 
     def timeout(*_):
         raise TimeoutError("1200-second hard wall cap")
@@ -845,7 +848,7 @@ def main():
     try:
         print(json.dumps(asyncio.run(run(args)), indent=2))
     except BaseException as exc:
-        if not output_existed and args.output.is_dir():
+        if args.output_created:
             write(
                 args.output / "failure.json",
                 {"type": type(exc).__name__, "error": str(exc)},
