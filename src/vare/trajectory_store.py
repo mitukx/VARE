@@ -69,7 +69,7 @@ class PolicyCheckpoint:
 class AgentStep:
     """One resumable boundary, including its resulting agent/environment state.
 
-    generation uses the backend's native token/logprob record when available.
+    generation uses RVL's existing native Generation JSON when available.
     action/observation/state are bounded JSON; state is NOT an OS snapshot.
     Tool callers must reuse operation_id across retries and declare semantics.
     """
@@ -97,9 +97,16 @@ class AgentStep:
                 raise ValueError("tool must declare external execution semantics")
         if self.generation is not None:
             g = self.generation
-            if type(g) is not dict or any(not isinstance(g.get(k), str) for k in ("prompt", "response")):
+            if (type(g) is not dict or set(g) != {"prompt_id", "prompt", "response", "logprob", "token_count", "latency_s", "metadata"}
+                    or any(not isinstance(g.get(k), str) for k in ("prompt_id", "prompt", "response"))
+                    or type(g.get("metadata")) is not dict):
                 raise ValueError("invalid generation boundary")
-            tokens, probs = g.get("response_token_ids"), g.get("response_logprobs")
+            tokens = g["metadata"].get("response_token_ids")
+            probs = g["metadata"].get("response_token_logprobs")
+            prompt_tokens = g["metadata"].get("prompt_token_ids")
+            if prompt_tokens is not None and (not isinstance(prompt_tokens, list)
+                    or any(type(t) is not int or t < 0 for t in prompt_tokens)):
+                raise ValueError("invalid prompt tokens")
             if not isinstance(tokens, list) or any(type(t) is not int or t < 0 for t in tokens):
                 raise ValueError("invalid response tokens")
             if probs is not None and (
@@ -107,6 +114,11 @@ class AgentStep:
                 or any(type(p) not in (int, float) or not math.isfinite(p) for p in probs)
             ):
                 raise ValueError("token/logprob alignment mismatch")
+            if (type(g["token_count"]) is not int or g["token_count"] != len(tokens)
+                    or type(g["logprob"]) not in (int, float) or not math.isfinite(g["logprob"])
+                    or type(g["latency_s"]) not in (int, float) or not math.isfinite(g["latency_s"]) or g["latency_s"] < 0
+                    or (probs is not None and not math.isclose(g["logprob"], sum(probs), abs_tol=1e-6, rel_tol=1e-6))):
+                raise ValueError("generation count/logprob/latency mismatch")
 
 
 @dataclass(frozen=True, slots=True)
@@ -124,13 +136,19 @@ class TrajectoryLease:
             raise ValueError("unsupported lease stage")
 
 
-class TrajectoryStore(Store):
+class TrajectoryStore:
     """Incremental bounded records and durable execute/verify work queues.
 
     Each step and cursor transition commits atomically. Delivery/re-execution
     is at least once; effective step keys are unique. Leases fence DB commits,
     not external tool execution. All DB access assumes a trusted local owner.
     """
+
+    event = staticmethod(Store.event)
+
+    def __init__(self, path):
+        self._database = Store(path)
+        self.path = self._database.path
 
     @classmethod
     def create(cls, path, *, run_id, max_inflight=2048, record_bytes=65536,
@@ -185,7 +203,7 @@ class TrajectoryStore(Store):
 
     @contextmanager
     def connection(self, write=False):
-        with super().connection(write) as db:
+        with self._database.connection(write) as db:
             config = json.loads(db.execute("SELECT value FROM meta WHERE key='config'").fetchone()[0])
             if config["schema"] != 1 or config["source_sha256"] != sha256_file(__file__):
                 raise RuntimeMismatchError("resume with the enrolled trajectory runtime source")

@@ -119,11 +119,14 @@ def admit_terminal_grpo_group(
         if not verification.trusted or not trust_root.verifies(row["id"], row["head"], verification):
             reasons.add("unauthenticated_reward")
         generation = last["generation"] if last else None
-        if (generation is None or last["action"]["kind"] not in {"answer", "inference"}
-                or not generation.get("response_token_ids")
-                or generation.get("response_logprobs") is None):
+        if (last is None or generation is None or last["action"]["kind"] not in {"answer", "inference"}
+                or not generation["metadata"].get("response_token_ids")
+                or not generation["metadata"].get("prompt_token_ids")
+                or generation["metadata"].get("response_token_logprobs") is None):
             reasons.add("missing_terminal_behavior")
             continue
+        if generation["prompt_id"] != task.id:
+            reasons.add("terminal_task_mismatch")
         # Store both original task identity and the actual terminal model input.
         metadata = {**task.metadata, "vare_rollout_group": group_id,
                     "vare_rollout_group_size": len(rows), "trajectory_id": row["id"],

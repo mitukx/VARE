@@ -24,7 +24,8 @@ def test_independent_stages_bounded_backlog_and_slow_step_heartbeats(tmp_path):
             index = resumed["next_step"]
             await asyncio.sleep(.12 if trajectory_id == "g0-0" and index == 0 else .001)
             return AgentStep(index, f"e{index}", policy, {"kind": "inference"}, {}, {"index": index},
-                             {"prompt": "same", "response": "x", "response_token_ids": [1], "response_logprobs": [-.1]})
+                             {"prompt_id": "task", "prompt": "same", "response": "x", "logprob": -.1, "token_count": 1, "latency_s": 0.,
+                              "metadata": {"prompt_token_ids": [0], "response_token_ids": [1], "response_token_logprobs": [-.1]}})
 
         async def verify_fn(store, ident):
             row = await owned_io(store.trajectory, ident)

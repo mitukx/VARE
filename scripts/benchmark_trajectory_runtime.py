@@ -48,8 +48,11 @@ def build_step(index, state, total, ident, delay=0.):
     action = {"kind": "answer"} if last else {"kind": "tool", "operation_id": f"{ident}:tool:{index}", "semantics": "at_least_once"}
     action["synthetic_delay_s"] = delay
     return AgentStep(index, f"step-{index}", POLICY, action, {"value": index + 1}, {"sum": value},
-                     {"prompt": "Return the final counter", "response": str(value),
-                      "response_token_ids": [value], "response_logprobs": [-.1]})
+                     {"prompt_id": f"task-{int(ident.split('-')[0][1:]):06d}",
+                      "prompt": "Return the final counter", "response": str(value),
+                      "logprob": -.1, "token_count": 1, "latency_s": 0.,
+                      "metadata": {"backend": "synthetic", "prompt_token_ids": [0],
+                                   "response_token_ids": [value], "response_token_logprobs": [-.1]}})
 
 
 def killed_worker(path, pipe):

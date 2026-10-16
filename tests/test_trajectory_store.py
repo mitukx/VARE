@@ -24,8 +24,9 @@ def step(index=0, policy=POLICY):
     return AgentStep(index, f"event-{index}", policy,
                      {"kind": "tool", "operation_id": f"op-{index}", "semantics": "at_least_once"},
                      {"result": index + 1}, {"counter": index + 1},
-                     {"prompt": "count", "response": str(index + 1),
-                      "response_token_ids": [index + 1], "response_logprobs": [-.1]})
+                     {"prompt_id": "task", "prompt": "count", "response": str(index + 1),
+                      "logprob": -.1, "token_count": 1, "latency_s": 0.,
+                      "metadata": {"prompt_token_ids": [0], "response_token_ids": [index + 1], "response_token_logprobs": [-.1]}})
 
 
 @pytest.fixture
@@ -181,7 +182,7 @@ def test_provenance_and_bounds_fail_closed(store, fault):
     elif fault == "checkpoint":
         item = replace(item, policy=replace(POLICY, checkpoint_sha256="c" * 64))
     elif fault == "tokens":
-        item.generation["response_logprobs"].append(-.2)
+        item.generation["metadata"]["response_token_logprobs"].append(-.2)
     elif fault == "bytes":
         item.state["oversize"] = "x" * 65536
     elif fault == "event":

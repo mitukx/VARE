@@ -1,9 +1,11 @@
 from dataclasses import replace
 import json
+from types import SimpleNamespace
 
 import pytest
 
 from vare.durable import FenceError
+from vare.integrations.rvl_grpo import RVLGRPOHooks
 from vare.trajectory_admission import TrajectoryRewardRoot, admit_terminal_grpo_group
 from vare.trajectory_store import AgentStep, PolicyCheckpoint, TrajectoryStore
 from vare.types import Task, Verification
@@ -29,12 +31,14 @@ def group(tmp_path, fault=None):
         for i in range(2):
             policy = P1 if fault == "mixed" and i == 1 else P0
             prompt = f"different-{member}" if fault == "prompt" else "same terminal prompt"
-            generation = {"prompt": prompt, "response": "yes", "response_token_ids": [1], "response_logprobs": [-.1]}
+            generation = {"prompt_id": "task", "prompt": prompt, "response": "yes", "logprob": -.1, "token_count": 1, "latency_s": 0.,
+                          "metadata": {"prompt_token_ids": [0], "response_token_ids": [1], "response_token_logprobs": [-.1]}}
             if fault == "no_logprobs":
-                generation["response_logprobs"] = None
+                generation["metadata"]["response_token_logprobs"] = None
             if fault == "no_tokens":
-                generation["response_token_ids"] = []
-                generation["response_logprobs"] = []
+                generation["metadata"]["response_token_ids"] = []
+                generation["metadata"]["response_token_logprobs"] = []
+                generation["token_count"], generation["logprob"] = 0, 0.
             step = AgentStep(i, f"e{i}", policy, {"kind": "inference"}, {}, {"cursor": i}, generation)
             store.append_step(lease, step, now=100)
         store.finish(lease, now=100)
@@ -62,6 +66,13 @@ def test_signed_whole_group_and_atomic_consumer_ack(tmp_path):
     assert result.admitted and len(result.experiences) == 2
     assert result.experiences[0].attempt.task.prompt == "same terminal prompt"
     assert result.experiences[0].attempt.task.id == "task"
+    # Exercise the existing adapter's serialization contract without a model
+    # or a fake optimizer. Native Generation constructor keys must survive.
+    adapter = SimpleNamespace(_generation_factory=SimpleNamespace, _verified_factory=SimpleNamespace)
+    native = RVLGRPOHooks._to_verified_generation(adapter, result.experiences[0])
+    assert native.generation.prompt_id == "task"
+    assert native.generation.metadata["response_token_ids"] == [1]
+    assert native.generation.metadata["response_token_logprobs"] == [-.1]
     store.close_group("g", result.heads, decision={"rule": "terminal_action_on_policy_grpo_v1"})
     assert store.counts() == {"consumed": 2}
     with pytest.raises(FenceError):
