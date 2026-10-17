@@ -48,6 +48,8 @@ This is **single-round systems validation on a toy neural model and synthetic wo
 
 Inspect the [report and stage latencies](docs/e2e-rl-real-model-v1-report.md), [protocol](benchmarks/e2e_rl_real_model_v1/protocol.json), [comparison CSV](results/e2e-rl-real-model-v1/comparison.csv), [raw checkpoint/telemetry archive](results/e2e-rl-real-model-v1/m1-cpu.tar.xz), and [CPU regression workflow](.github/workflows/e2e-system-cpu.yml).
 
+The [matched synthetic verifier-refresh controls](docs/verifier-refresh-controls.md) expose a negative result: task-family TV-triggered refresh misses within-family proxy exploitation. Independent verifier error and counterfactual proxy-only promotion decisions are retained across three seeds; no model is trained in this experiment.
+
 ## Quick start
 
 From the repository root, use an activated **Python 3.11+ virtual environment**:
