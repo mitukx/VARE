@@ -28,6 +28,10 @@ from .types import Attempt, Experience, PromotionDecision, RoundResult, Task, Ve
 from .verifiers import VerifierEnsemble
 
 
+class _NoVerifiedExperienceReady(Exception):
+    """An owned ingestion poll found no eligible complete group."""
+
+
 class CapabilityLoop:
     """Closed-loop capability improvement control plane.
 
@@ -251,7 +255,7 @@ class CapabilityLoop:
             clear_deferred_cancellation_requests()
         return deferred_cancellations
 
-    async def run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None, _verified_experiences: Sequence[Experience] | None = None, _delivery_complete: Callable[[RoundResult], Awaitable[None]] | None = None, _publication_reserve: Callable[[], Awaitable[None]] | None = None) -> RoundResult:
+    async def run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None, _verified_experiences: Sequence[Experience] | None = None, _delivery_complete: Callable[[RoundResult], Awaitable[None]] | None = None, _publication_reserve: Callable[[], Awaitable[None]] | None = None, _delivery_claim: Callable[[str], Awaitable[Sequence[Experience] | None]] | None = None) -> RoundResult:
         """Own the shared runtime before any hook; retain crash uncertainty."""
         async with self._round_lock:
             if self._discard_failure is not None:
@@ -276,6 +280,15 @@ class CapabilityLoop:
                 self.promotion_journal.acquire_round(owner_id)
             self._candidate_unresolved = False
             try:
+                if _delivery_claim is not None:
+                    supplied = await _delivery_claim(owner_id)
+                    if supplied is None:
+                        raise _NoVerifiedExperienceReady()
+                    if (not supplied or len(supplied) > min(self.config.replay.capacity, self.config.replay_batch_size)
+                            or any(not isinstance(exp, Experience) or not isinstance(exp.attempt, Attempt) for exp in supplied)):
+                        raise ValueError("verified batch must fit the bounded replay capacity")
+                    _verified_experiences = copy.deepcopy(list(supplied))
+                    tasks = [exp.attempt.task for exp in _verified_experiences]
                 if _verified_experiences is None:
                     result = await self._run_round(
                         tasks, round_index=round_index, rollout_count=rollout_count
@@ -288,8 +301,11 @@ class CapabilityLoop:
                     )
                     assert _delivery_complete is not None
                     await _delivery_complete(result)
+            except _NoVerifiedExperienceReady:
+                self._release_runtime_round(owner_id)
+                raise
             except BaseException as exc:
-                if (_verified_experiences is not None or self._candidate_unresolved or self._discard_failure is not None
+                if (_delivery_claim is not None or _verified_experiences is not None or self._candidate_unresolved or self._discard_failure is not None
                         or self._promotion_failure is not None):
                     self.runtime_coordinator.quarantine(exc)
                     # Leave the durable reservation intact, even if a commit
@@ -301,24 +317,22 @@ class CapabilityLoop:
             self._candidate_unresolved = False
             return result
 
-    async def run_verified_round(self, experiences: Sequence[Experience], *, round_index: int, on_complete: Callable[[RoundResult], Awaitable[None]], reserve_publication: Callable[[], Awaitable[None]]) -> RoundResult:
+    async def run_verified_round(self, claim_experiences: Callable[[str], Awaitable[Sequence[Experience] | None]], *, round_index: int, on_complete: Callable[[RoundResult], Awaitable[None]], reserve_publication: Callable[[], Awaitable[None]]) -> RoundResult | None:
         """Consume bounded authenticated trajectories through the existing transaction.
 
         Does not regenerate, regrade or rename the source groups. Candidate,
         evaluation, promotion and recovery semantics are identical to run_round.
         Caller owns durable ingestion acknowledgment and restart reconciliation.
         """
-        if (not experiences or len(experiences) > min(self.config.replay.capacity, self.config.replay_batch_size)
-                or any(not isinstance(exp, Experience) or not isinstance(exp.attempt, Attempt) for exp in experiences)):
-            raise ValueError("verified batch must fit the bounded replay capacity")
-        if not callable(on_complete) or not callable(reserve_publication):
+        if not callable(claim_experiences) or not callable(on_complete) or not callable(reserve_publication):
             raise ValueError("streamed delivery requires owned completion and publication boundaries")
-        batch = copy.deepcopy(list(experiences))
-        return await self.run_round(
-            [exp.attempt.task for exp in batch], round_index=round_index,
-            _verified_experiences=batch,
-            _delivery_complete=on_complete, _publication_reserve=reserve_publication,
-        )
+        try:
+            return await self.run_round(
+                [], round_index=round_index, _delivery_claim=claim_experiences,
+                _delivery_complete=on_complete, _publication_reserve=reserve_publication,
+            )
+        except _NoVerifiedExperienceReady:
+            return None
 
     def _verified_pairs(self, experiences: Sequence[Experience]):
         if self.training_evidence_authorizer is None or not self.config.preserve_rollout_groups:

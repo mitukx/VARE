@@ -1,0 +1,46 @@
+{
+  "schema": "vare.streamed-grpo-systems.v2",
+  "hypothesis": "Authenticated complete step traces can reach the existing RVL optimizer through CapabilityLoop without regeneration, reward substitution, partial-group training or ambiguous automatic redelivery.",
+  "cheaper_gate": "Source-level ingestion, ownership, cancellation and recovery regressions; no semantic base-model screen is attempted.",
+  "scope": "Systems correctness with real neural weights, synthetic checksum training rewards and a separate checksum diagnostic grader. Neither grader establishes task success. Stage D semantic task/evaluator qualification remains NO-GO.",
+  "seeds": [
+    78011,
+    78012,
+    78013
+  ],
+  "rounds": 4,
+  "group_size": 4,
+  "steps_per_trajectory": 2,
+  "max_new_tokens": 3,
+  "workload": "Pure lookup tool observation, then actual model inference conditioned on the shared observation; terminal action only receives trajectory reward. Fresh seed/round task IDs and disjoint fixed audit prompt IDs.",
+  "device": "CPU fp32, one Torch thread, 2 execute workers and 1 verifier; bounded backlog16 and replay4.",
+  "objective": "RVL token-mean PPO-clipped group-relative objective, epsilon 1e-6; AdamW lr 1e-4 with historical default decay 0.01",
+  "trainable": "transformer.wpe and transformer.ln_f only",
+  "model": "roneneldan/TinyStories-1M",
+  "model_revision": "77f1b168e219585646439073245fe87e56b3023e",
+  "model_files": {
+    "config.json": "ff74c30d5ebb5ab1da0f2ea479adf7197c504b42b5522a858c334ab91ed4958c",
+    "merges.txt": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+    "pytorch_model.bin": "07f9609ea882b8163ff3b23d40e2b82cb715d409631beb15c84b164f3877dae7",
+    "special_tokens_map.json": "98412137ae43c77f8af52eb51b19c3536d3242cb55339167d841005fa94a23b7",
+    "tokenizer.json": "f6ed3d307010c244c22aeffbde05f419cf277c23e64cf98b673cac5449cfeff5",
+    "tokenizer_config.json": "3d76da0fd37493fbfcd3f0fa9757753d31f92e1779ebd9130809b45546a60261",
+    "vocab.json": "3ba3c3109ff33976c4bd966589c11ee14fcaa1f4c9e5e154c2ed7f99d80709e7"
+  },
+  "rvl_revision": "e381c4b3b8c2ad8e5dc4c4b1a33b7922531c3e33",
+  "rvl_patched_backend_sha256": "a35179d2ff65b35d8079b0d48a933444cac440debd736d6dc6a7a53a27cfb960",
+  "reference": "Reuse PR71 full-graph equation, not a new trainer; numerical tolerances fixed from the already justified fp32 contract.",
+  "numeric_limits": {
+    "loss_gradient_parameter_optimizer_abs": 2e-06,
+    "behavior_alignment_abs": 0.0001
+  },
+  "independent_evaluation": "Disjoint fresh diagnostic prompts; reload actual checkpoint into a separate model object and greedy-decode without RVL generation/optimizer/reward callback; signed checkpoint-bound reports.",
+  "promotion": "Diagnostic ties allowed at rounds0,2,3; round1 requires impossible gain1.1 and must reject with exact incumbent restoration. No capability promotion claim.",
+  "fault": "Round2 interrupts ingestion acknowledgment after the existing model transaction. Exact model/optimizer/RNG/step reload, new ingestion owner, quarantine uncertain delivery, then actual subsequent round3 update. Same-process logical restart; no new learner SIGKILL claim.",
+  "acceptance": "Exactly four actual optimizer calls and changed model tensors per seed; numerical agreement; independent decoder agreement; forced reject; durable unresolved delivery survives ACK loss; exact recovery followed by another update; clean final journals and streamed audit.",
+  "budget": "3 sequential CPU cases, maximum1200s and8GiB RSS per case; no API/GPU/paid services.",
+  "abort": "First failed correctness/numerical/state condition stops the case; preserve failure and do not resample. Corrected systems runners require separately versioned outputs/protocol after observation.",
+  "decision": "Keep the minimal ingestion adapter only if existing transaction boundaries and recovery are preserved. Do not start a new capability study.",
+  "runner_sha256": "c3b6e71170b74d7c437ee1799a10b72d5dfe7a8c0f79efb803afb48e9156f653",
+  "supersedes": "V1 retained: all three seeds completed12 actual candidate optimizer calls total. Re-review reproduced a pre-claim ownership race. V2 acquires the existing runtime/journal owner before source reservation; only source-ordering correctness and fresh diagnostic seeds change."
+}

@@ -48,6 +48,20 @@ def setup(tmp_path, *, fault=None):
     return store, adapter, loop, hooks
 
 
+
+def reserve_fixture(adapter, loop, round_index=0):
+    """Inspect signed fixture input without executing a model transaction."""
+    from uuid import uuid4
+    async def owned():
+        async with loop.runtime_coordinator.lock:
+            owner = uuid4().hex
+            loop.promotion_journal.acquire_round(owner)
+            try:
+                return adapter.claim(loop,round_index,owner_id=owner)
+            finally:
+                loop.promotion_journal.release_round(owner)
+    return asyncio.run(owned())
+
 def test_authenticated_delivery_uses_existing_transaction_and_ack(tmp_path):
     store, adapter, loop, hooks = setup(tmp_path)
     result = asyncio.run(adapter.advance(loop, round_index=0))
@@ -62,7 +76,7 @@ def test_authenticated_delivery_uses_existing_transaction_and_ack(tmp_path):
 
 def test_authentication_ignores_only_mutable_replay_selection_fields(tmp_path):
     _, adapter, loop, _ = setup(tmp_path)
-    reservation, batch = adapter.claim(loop, 0)
+    reservation, batch = reserve_fixture(adapter, loop, 0)
     exp = deepcopy(batch[0])
     exp.priority, exp.shift_score, exp.failure_label = 99., .2, "minor"
     assert adapter.authorizes(exp)
@@ -83,7 +97,7 @@ def test_uncertain_delivery_survives_restart_until_backend_recovery(tmp_path, fa
     assert pending is not None and store.counts() == {"learning": 2}
     assert audit_trajectory_store(store.path)["pass"]
     with pytest.raises(PromotionRecoveryRequired):
-        adapter.claim(loop, 1)
+        reserve_fixture(adapter, loop, 1)
     with pytest.raises(PromotionRecoveryRequired):
         adapter.reconcile_after_backend_recovery(loop, observed_policy=P0)
     # Fixture operator has no tensors; real adapters must restore model/Adam/RNG.
@@ -111,7 +125,7 @@ def test_unacknowledged_success_never_retrains_and_preserves_outcome(tmp_path):
     # A delivery still cannot be claimed even though the model transaction ended.
     loop.replay.prune_current(freshness_fn=lambda _: None, grouped=True)
     with pytest.raises(PromotionRecoveryRequired, match="unresolved"):
-        adapter.claim(loop, 1)
+        reserve_fixture(adapter, loop, 1)
     adapter._terminal = original
     current = adapter.current_policy()
     status = loop.promotion_journal.status()
@@ -135,7 +149,7 @@ def test_group_budget_error_is_explicit_and_does_not_consume(tmp_path):
     from dataclasses import replace
     loop.config = replace(loop.config, replay_batch_size=1)
     with pytest.raises(ValueError, match="complete group exceeds"):
-        adapter.claim(loop, 0)
+        reserve_fixture(adapter, loop, 0)
     assert store.counts() == {"verified": 2} and adapter.pending() is None
 
 
@@ -149,11 +163,13 @@ def test_reserved_state_requires_matching_audit_history(tmp_path):
 
 def test_duplicate_or_partial_delivery_cannot_train(tmp_path):
     _, adapter, loop, hooks = setup(tmp_path)
-    _, batch = adapter.claim(loop, 0)
+    _, batch = reserve_fixture(adapter, loop, 0)
     async def unused(*args):
         raise AssertionError("invalid group reached transaction completion")
+    async def supply(owner):
+        return [batch[0]]
     with pytest.raises(ValueError, match="incomplete"):
-        asyncio.run(loop.run_verified_round([batch[0]], round_index=0,on_complete=unused,reserve_publication=unused))
+        asyncio.run(loop.run_verified_round(supply, round_index=0,on_complete=unused,reserve_publication=unused))
     assert "train" not in hooks.calls
 
 
@@ -212,3 +228,26 @@ def test_source_publication_reservation_fences_cancel_and_refresh(tmp_path):
     assert store.counts()=={"consumed":2} and audit_trajectory_store(store.path)["pass"]
     with store.connection() as db:
         assert db.execute("SELECT count(*) FROM events WHERE json_extract(event,'$.kind')='cancellation_deferred'").fetchone()[0]==1
+
+
+def test_delivery_claim_occurs_under_both_runtime_fences(tmp_path):
+    store, adapter, loop, hooks = setup(tmp_path)
+    original = adapter.claim
+    observed = []
+    def owned_claim(*args, **kwargs):
+        assert loop.runtime_coordinator.lock.locked()
+        assert kwargs.get("owner_id") is not None
+        assert loop.promotion_journal.status()["round_owner_id"]==kwargs["owner_id"]
+        observed.append(True)
+        return original(*args, **kwargs)
+    adapter.claim = owned_claim
+    result = asyncio.run(adapter.advance(loop,round_index=0))
+    assert result.decision.accepted and observed==[True]
+    assert store.counts()=={"consumed":2}
+
+
+def test_unowned_claim_cannot_change_source_state(tmp_path):
+    store, adapter, loop, hooks = setup(tmp_path)
+    with pytest.raises(PromotionRecoveryRequired,match="before delivery"):
+        adapter.claim(loop,0)
+    assert adapter.pending() is None and store.counts()=={"verified":2}

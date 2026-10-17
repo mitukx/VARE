@@ -1,0 +1,66 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_____________ test_delivery_claim_occurs_under_both_runtime_fences _____________
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-304/test_delivery_claim_occurs_und0')
+
+    def test_delivery_claim_occurs_under_both_runtime_fences(tmp_path):
+        store, adapter, loop, hooks = setup(tmp_path)
+        original = adapter.claim
+        observed = []
+        def owned_claim(*args, **kwargs):
+            assert loop.runtime_coordinator.lock.locked()
+            assert kwargs.get("owner_id") is not None
+            assert loop.promotion_journal.status()["round_owner_id"]==kwargs["owner_id"]
+            observed.append(True)
+            return original(*args, **kwargs)
+        adapter.claim = owned_claim
+>       result = asyncio.run(adapter.advance(loop,round_index=0))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_trajectory_learner.py:244: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py:190: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/tmpshw2tbos/src/vare/trajectory_learner.py:208: in advance
+    claimed = await owned_io(self.claim, loop, round_index)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/tmpshw2tbos/src/vare/trajectory_workers.py:24: in owned_io
+    result = task.result()
+             ^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/threads.py:25: in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/thread.py:58: in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (<vare.engine.CapabilityLoop object at 0x1070b5890>, 0), kwargs = {}
+
+    def owned_claim(*args, **kwargs):
+>       assert loop.runtime_coordinator.lock.locked()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError
+
+tests/test_trajectory_learner.py:238: AssertionError
+________________ test_unowned_claim_cannot_change_source_state _________________
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-304/test_unowned_claim_cannot_chan0')
+
+    def test_unowned_claim_cannot_change_source_state(tmp_path):
+        store, adapter, loop, hooks = setup(tmp_path)
+>       with pytest.raises(PromotionRecoveryRequired,match="before delivery"):
+E       Failed: DID NOT RAISE <class 'vare.promotion_journal.PromotionRecoveryRequired'>
+
+tests/test_trajectory_learner.py:251: Failed
+=========================== short test summary info ============================
+FAILED tests/test_trajectory_learner.py::test_delivery_claim_occurs_under_both_runtime_fences
+FAILED tests/test_trajectory_learner.py::test_unowned_claim_cannot_change_source_state

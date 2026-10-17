@@ -106,23 +106,25 @@ class TrajectoryLearnerAdapter:
         except (ValueError, TypeError, KeyError, AttributeError, StopIteration):
             return False
 
-    def _clean_runtime(self, loop):
+    def _clean_runtime(self, loop, *, owner_id=None):
         if loop.promotion_journal is None:
             raise ValueError("streamed learning requires the existing durable promotion journal")
         loop.runtime_coordinator.assert_usable()
-        if loop.runtime_coordinator.lock.locked():
+        if loop.runtime_coordinator.lock.locked() and owner_id is None:
             raise PromotionRecoveryRequired("streamed runtime has a live owner")
         policy = self.current_policy()
         if loop.hooks.active_policy() != (policy.policy_id, policy.version):
             raise PromotionRecoveryRequired("streamed checkpoint and runtime identities differ")
         status = loop.promotion_journal.status()
-        if status["round_owner_id"] is not None:
+        if status["round_owner_id"] != owner_id:
             raise PromotionRecoveryRequired("reconcile the existing runtime owner first")
         loop.promotion_journal.assert_clean(policy_id=policy.policy_id, checkpoint_sha256=policy.checkpoint_sha256)
         return policy
 
-    def claim(self, loop, round_index):
-        policy = self._clean_runtime(loop)
+    def claim(self, loop, round_index, *, owner_id=None):
+        if owner_id is None or not loop.runtime_coordinator.lock.locked():
+            raise PromotionRecoveryRequired("acquire runtime ownership before delivery reservation")
+        policy = self._clean_runtime(loop, owner_id=owner_id)
         if len(loop.replay):
             raise ValueError("streamed learner must own an empty replay before each delivery")
         if self.pending() is not None:
@@ -144,6 +146,7 @@ class TrajectoryLearnerAdapter:
         if not batch:
             return None
         reservation = {"batch_id": uuid4().hex, "round_index": round_index, "groups": groups,
+                       "runtime_owner_id": owner_id,
                        "verifier_identity": list(self.current_verifier()),
                        "incumbent": asdict(policy), "source_sha256": sha256_file(__file__),
                        "engine_sha256": sha256_file(Path(__file__).with_name("engine.py"))}
@@ -205,11 +208,15 @@ class TrajectoryLearnerAdapter:
 
     async def advance(self, loop, *, round_index):
         """One bounded delivery; workers/verifiers can continue independently."""
-        claimed = await owned_io(self.claim, loop, round_index)
-        if claimed is None:
-            return None
-        reservation, batch = claimed
+        reservation = None
         try:
+            async def claim(owner_id):
+                nonlocal reservation
+                claimed = await owned_io(self.claim, loop, round_index, owner_id=owner_id)
+                if claimed is None:
+                    return None
+                reservation, batch = claimed
+                return batch
             async def complete(result):
                 policy = self.current_policy()
                 assert loop.promotion_journal is not None
@@ -222,11 +229,12 @@ class TrajectoryLearnerAdapter:
                 loop.replay.prune_current(freshness_fn=lambda _: None, grouped=True)
             async def reserve_publication():
                 await owned_io(self._reserve_publication, reservation)
-            result = await loop.run_verified_round(batch, round_index=round_index,
+            result = await loop.run_verified_round(claim, round_index=round_index,
                                                   on_complete=complete, reserve_publication=reserve_publication)
             return result
         except BaseException as exc:
-            await owned_io(self._failure, reservation, exc)
+            if reservation is not None:
+                await owned_io(self._failure, reservation, exc)
             raise
 
     def reconcile_after_backend_recovery(self, loop, *, observed_policy):
