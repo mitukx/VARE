@@ -41,8 +41,9 @@
   "budget": "3 sequential CPU cases, maximum1200s and8GiB RSS per case; no API/GPU/paid services.",
   "abort": "First failed correctness/numerical/state condition stops the case; preserve failure and do not resample. Corrected systems runners require separately versioned outputs/protocol after observation.",
   "decision": "Keep the minimal ingestion adapter only if existing transaction boundaries and recovery are preserved. Do not start a new capability study.",
-  "runner_sha256": "1eb2b5c47d38a07c50ff4950174c247598082b3976359315d7c940b208de1bcd",
+  "runner_sha256": "8cd299fa47e2264784fe6108339d838dc92bdc955bf5c605dba7157a03ff02a2",
   "supersedes": "V1/V2 retained. V3 raw runs are preserved with their original protocol; review found that their streamed shift baseline was derived from the admitted batch and therefore did not test rejection under distribution shift. V3.1 adds a preregistered independent family reference and uses only fresh seeds 82011/82012/82013. This protocol has not been executed; prior measurements do not validate this shift check.",
+  "audit_source_snapshot": "The runner copies every tracked src/vare file into the artifact and records per-file hashes in summary.source_files; the offline auditor requires a complete matching snapshot for unpinned revisions.",
   "shift_reference_families": [
     "train"
   ]

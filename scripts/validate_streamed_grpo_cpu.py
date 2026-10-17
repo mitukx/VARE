@@ -37,7 +37,14 @@ async def run(args):
     require(subprocess.check_output(["git", "-C", str(args.rvl_source), "rev-parse", "HEAD"], text=True).strip() == protocol["rvl_revision"], "RVL revision mismatch")
     require(subprocess.check_output(["git", "-C", str(args.rvl_source), "status", "--porcelain"], text=True).strip() == "M src/rvl_systems/hf_backend.py", "unexpected RVL edits")
     require(sha(args.rvl_source / "src/rvl_systems/hf_backend.py") == protocol["rvl_patched_backend_sha256"], "RVL patch mismatch")
-    source_files = [Path(__file__), ROOT / "scripts/validate_grpo_e2e_cpu.py", *[ROOT / "src/vare" / name for name in ("trajectory_store.py", "trajectory_workers.py", "trajectory_admission.py", "trajectory_learner.py", "engine.py", "integrations/rvl_grpo.py")]]
+    vare_sources = subprocess.check_output(
+        ["git", "-C", str(ROOT), "ls-files", "src/vare"], text=True
+    ).splitlines()
+    require(vare_sources, "tracked VARE source package is empty")
+    source_files = [
+        Path(__file__), ROOT / "scripts/validate_grpo_e2e_cpu.py",
+        *(ROOT / name for name in vare_sources),
+    ]
     for path in source_files:
         target = args.output / "source" / path.relative_to(ROOT)
         target.parent.mkdir(parents=True, exist_ok=True)

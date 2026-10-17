@@ -55,31 +55,61 @@ def load_reference_update(path):
     return module.reference_update
 
 
-def load_snapshot_store(revision, expected_source_sha256, source_archive=None):
-    """Load the whole VARE package from its hash-pinned source archive."""
+def load_snapshot_store(revision, expected_source_sha256, source_archive=None,
+                        source_tree=None, source_files=None):
+    """Load VARE from a historical pinned bundle or an anchored run snapshot."""
     require(isinstance(revision,str) and re.fullmatch(r'[0-9a-f]{40}',revision),
             "invalid recorded VARE revision")
-    require(revision in PINNED_VARE_SOURCES,
-            "recorded VARE revision has no pinned source archive")
-    pinned_archive,archive_sha256=PINNED_VARE_SOURCES[revision]
-    source_archive=pinned_archive if source_archive is None else Path(source_archive)
-    require(digest(source_archive)==archive_sha256,
-            "pinned VARE source archive hash mismatch")
-    temporary=tempfile.TemporaryDirectory(prefix='vare-streamed-audit-')
+    temporary=None
+    if revision in PINNED_VARE_SOURCES:
+        pinned_archive,archive_sha256=PINNED_VARE_SOURCES[revision]
+        source_archive=pinned_archive if source_archive is None else Path(source_archive)
+        require(digest(source_archive)==archive_sha256,
+                "pinned VARE source archive hash mismatch")
+        temporary=tempfile.TemporaryDirectory(prefix='vare-streamed-audit-')
+        try:
+            with tarfile.open(source_archive,mode='r:xz') as snapshot:
+                members=snapshot.getmembers()
+                for member in members:
+                    name=Path(member.name)
+                    require(not name.is_absolute() and '..' not in name.parts
+                            and (name.parts==('src',) and member.isdir()
+                                 or name.parts[:2]==('src','vare')),
+                            "unsafe pinned VARE source archive path")
+                    require(member.isdir() or member.isfile(),
+                            "unsupported pinned VARE source archive entry")
+                snapshot.extractall(temporary.name,filter='data')
+        except BaseException:
+            temporary.cleanup()
+            raise
+        source=Path(temporary.name)/'src'/'vare'
+        cleanup_source=temporary.cleanup
+    else:
+        require(source_tree is not None and isinstance(source_files,dict),
+                "recorded VARE revision requires an anchored full source snapshot")
+        source_tree=Path(source_tree)
+        source=source_tree/'src'/'vare'
+        expected_names=set()
+        for name,expected in source_files.items():
+            path=Path(name)
+            if name.startswith('src/vare/'):
+                require(not path.is_absolute() and '..' not in path.parts
+                        and isinstance(expected,str)
+                        and re.fullmatch(r'[0-9a-f]{64}',expected),
+                        "invalid anchored VARE source entry")
+                expected_names.add(name)
+                require(digest(source_tree/path)==expected,
+                        "anchored VARE source file hash mismatch")
+        actual_names={path.relative_to(source_tree).as_posix()
+                      for path in source.rglob('*') if path.is_file()}
+        require(expected_names and actual_names==expected_names,
+                "anchored VARE source snapshot is incomplete")
+
+        def cleanup_source():
+            return None
+
     package_name=f'_vare_snapshot_{uuid4().hex}'
     try:
-        with tarfile.open(source_archive,mode='r:xz') as snapshot:
-            members=snapshot.getmembers()
-            for member in members:
-                name=Path(member.name)
-                require(not name.is_absolute() and '..' not in name.parts
-                        and (name.parts==('src',) and member.isdir()
-                             or name.parts[:2]==('src','vare')),
-                        "unsafe pinned VARE source archive path")
-                require(member.isdir() or member.isfile(),
-                        "unsupported pinned VARE source archive entry")
-            snapshot.extractall(temporary.name,filter='data')
-        source=Path(temporary.name)/'src'/'vare'
         require(digest(source/'trajectory_store.py')==expected_source_sha256,
                 "recorded revision and archived trajectory store differ")
         package=ModuleType(package_name)
@@ -91,14 +121,14 @@ def load_snapshot_store(revision, expected_source_sha256, source_archive=None):
         for name in tuple(sys.modules):
             if name==package_name or name.startswith(package_name+'.'):
                 del sys.modules[name]
-        temporary.cleanup()
+        cleanup_source()
         raise
 
     def cleanup():
         for name in tuple(sys.modules):
             if name==package_name or name.startswith(package_name+'.'):
                 del sys.modules[name]
-        temporary.cleanup()
+        cleanup_source()
 
     return module,cleanup
 
@@ -195,7 +225,8 @@ def audit(root, model_dir, rvl_source, expected_manifest):
         results.append({'candidate':update['candidate'],'errors':errors,'preclip_norm':norm,
                         'behavior_alignment_error':behavior_error,'rng_equal':rng_equal})
     runtime,cleanup_runtime=load_snapshot_store(
-        summary['revision'],summary['source_files']['src/vare/trajectory_store.py']
+        summary['revision'],summary['source_files']['src/vare/trajectory_store.py'],
+        source_tree=root/'source',source_files=summary['source_files'],
     )
     try:
         require(runtime.audit_trajectory_store(root/'snapshot.db')==summary['audit'],"trajectory audit differs")
