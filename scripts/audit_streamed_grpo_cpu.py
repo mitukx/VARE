@@ -1,17 +1,81 @@
 """Offline replay of the existing GRPO equation against streamed model artifacts."""
 from __future__ import annotations
 import argparse
+import hashlib
+import importlib
+import importlib.util
+import io
 import json
 import math
 from pathlib import Path
+import re
 import subprocess
 import sys
+import tarfile
+import tempfile
 from types import SimpleNamespace
+from types import ModuleType
 from unittest.mock import patch
-from audit_grpo_e2e_cpu import digest, require
-from validate_grpo_e2e_cpu import reference_update
+from uuid import uuid4
 
 ROOT=Path(__file__).resolve().parents[1]
+
+
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+def digest(path):
+    hasher=hashlib.sha256()
+    with Path(path).open('rb') as stream:
+        for chunk in iter(lambda:stream.read(1024*1024),b''):
+            hasher.update(chunk)
+    return hasher.hexdigest()
+
+
+def load_reference_update(path):
+    spec=importlib.util.spec_from_file_location('_vare_streamed_reference',path)
+    require(spec is not None and spec.loader is not None,"archived reference loader unavailable")
+    module=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.reference_update
+
+
+def load_snapshot_store(revision, expected_source_sha256):
+    """Load the whole VARE package from the experiment's recorded Git tree."""
+    require(isinstance(revision,str) and re.fullmatch(r'[0-9a-f]{40}',revision),
+            "invalid recorded VARE revision")
+    temporary=tempfile.TemporaryDirectory(prefix='vare-streamed-audit-')
+    package_name=f'_vare_snapshot_{uuid4().hex}'
+    try:
+        archive=subprocess.check_output(
+            ['git','-C',str(ROOT),'archive','--format=tar','--',revision,'src/vare']
+        )
+        with tarfile.open(fileobj=io.BytesIO(archive),mode='r:') as snapshot:
+            snapshot.extractall(temporary.name,filter='data')
+        source=Path(temporary.name)/'src'/'vare'
+        require(digest(source/'trajectory_store.py')==expected_source_sha256,
+                "recorded revision and archived trajectory store differ")
+        package=ModuleType(package_name)
+        package.__path__=[str(source)]
+        package.__package__=package_name
+        sys.modules[package_name]=package
+        module=importlib.import_module(f'{package_name}.trajectory_store')
+    except BaseException:
+        for name in tuple(sys.modules):
+            if name==package_name or name.startswith(package_name+'.'):
+                del sys.modules[name]
+        temporary.cleanup()
+        raise
+
+    def cleanup():
+        for name in tuple(sys.modules):
+            if name==package_name or name.startswith(package_name+'.'):
+                del sys.modules[name]
+        temporary.cleanup()
+
+    return module,cleanup
 
 
 def tensor_error(actual, expected):
@@ -43,17 +107,16 @@ def audit(root, model_dir, rvl_source, expected_manifest):
     for name,expected in summary['source_files'].items():
         require(digest(root/'source'/name)==expected,"source snapshot mismatch")
     require(digest(root/'source/scripts/validate_streamed_grpo_cpu.py')==protocol['runner_sha256'],"runner mismatch")
-    require(digest(Path(__file__).with_name('validate_grpo_e2e_cpu.py'))==summary['source_files']['scripts/validate_grpo_e2e_cpu.py'],"reference source mismatch")
+    reference_path=root/'source/scripts/validate_grpo_e2e_cpu.py'
+    reference_update=load_reference_update(reference_path)
     for name,expected in protocol['model_files'].items():
         require(digest(model_dir/name)==expected,"reference model mismatch")
     require(subprocess.check_output(['git','-C',str(rvl_source),'rev-parse','HEAD'],text=True).strip()==protocol['rvl_revision'],"RVL revision mismatch")
     require(subprocess.check_output(['git','-C',str(rvl_source),'status','--porcelain'],text=True).strip()=='M src/rvl_systems/hf_backend.py',"unexpected RVL edits")
     require(digest(rvl_source/'src/rvl_systems/hf_backend.py')==protocol['rvl_patched_backend_sha256'],"RVL patch mismatch")
-    sys.path.insert(0,str(ROOT/'src'))
     sys.path.insert(0,str(rvl_source/'src'))
     from rvl_systems.hf_backend import HFLocalBackend
     from rvl_systems.hf_trainer import HFCausalLMGRPOTrainer,HFTTrainerConfig
-    from vare.trajectory_store import TrajectoryStore,audit_trajectory_store
     torch.set_num_threads(1)
     backend=HFLocalBackend(str(model_dir),device='cpu',precision='fp32')
     model=backend.model
@@ -101,9 +164,15 @@ def audit(root, model_dir, rvl_source, expected_manifest):
         errors.update(loss=loss_error,optimizer_state=optimizer_error)
         results.append({'candidate':update['candidate'],'errors':errors,'preclip_norm':norm,
                         'behavior_alignment_error':behavior_error,'rng_equal':rng_equal})
-    require(audit_trajectory_store(root/'snapshot.db')==summary['audit'],"trajectory audit differs")
-    store=TrajectoryStore(root/'snapshot.db',audit_only=True)
-    verify_snapshot_source(store.config(),summary['source_files'])
+    runtime,cleanup_runtime=load_snapshot_store(
+        summary['revision'],summary['source_files']['src/vare/trajectory_store.py']
+    )
+    try:
+        require(runtime.audit_trajectory_store(root/'snapshot.db')==summary['audit'],"trajectory audit differs")
+        store=runtime.TrajectoryStore(root/'snapshot.db',audit_only=True)
+        verify_snapshot_source(store.config(),summary['source_files'])
+    finally:
+        cleanup_runtime()
     rounds=json.loads((root/'rounds.json').read_text())
     require(rounds[1]['result']['decision']['accepted'] is False,"forced rejection missing")
     require(rounds[2]['ack_interrupted'] and rounds[2]['active']['policy_id']==updates[3]['batch'][0]['attempt']['policy_id'],"recovered state not used for next update")
