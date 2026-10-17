@@ -283,3 +283,54 @@ def test_rehashed_recovered_evaluation_pair_must_match_promotion_journal(audit_r
     reseal_records(changed)
     with pytest.raises(ValueError,match="promotion evaluation digest"):
         auditor.audit(changed)
+
+
+def test_rehashed_protocol_snapshot_must_match_declared_digest(audit_records,tmp_path):
+    changed=tmp_path/"protocol-digest-conflict"
+    shutil.copytree(audit_records,changed)
+    protocol_path=changed/"sources/benchmarks/e2e_rl_continuation_v2/protocol.json"
+    protocol=auditor.read(protocol_path)
+    protocol["objective"]+=" tampered after run"
+    bench.atomic_json(protocol_path,protocol)
+    manifest=auditor.read(changed/"manifest.json")
+    source_name="benchmarks/e2e_rl_continuation_v2/protocol.json"
+    manifest["sources"][source_name]=auditor.sha(protocol_path)
+    bench.atomic_json(changed/"manifest.json",manifest)
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="declared protocol snapshot digest"):
+        auditor.audit(changed)
+
+
+def test_rehashed_duplicate_optimizer_attempt_identity_is_rejected(audit_records,tmp_path):
+    changed=tmp_path/"duplicate-optimizer-attempt"
+    shutil.copytree(audit_records,changed)
+    row=next(r for r in auditor.read(changed/"progress.json")
+             if r["cutpoint"]=="post_optimizer")
+    case=changed/row["directory"]
+    attempt_path=case/"optimizer_attempts.jsonl"
+    attempts=[json.loads(line) for line in attempt_path.read_text().splitlines()]
+    interrupted=next(a for a in attempts if a["round_index"]==4 and a["learner_attempt"]==0)
+    completed=next(a for a in attempts if a["round_index"]==4 and a["learner_attempt"]==1)
+    attempts[attempts.index(interrupted)]=completed
+    attempt_path.write_text("".join(json.dumps(a,sort_keys=True)+"\n" for a in attempts))
+    (case/"rounds/r0004/rollouts-attempt0.jsonl").unlink()
+    (case/"rounds/r0004/batch-attempt0.json").unlink()
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="duplicate optimizer attempt identity"):
+        auditor.audit(changed)
+
+
+@pytest.mark.parametrize("mode",["minimal","guarded"])
+def test_rehashed_independent_evaluation_cohort_must_match_seeded_tasks(
+        audit_records,tmp_path,mode):
+    changed=tmp_path/f"mutated-heldout-{mode}"
+    shutil.copytree(audit_records,changed)
+    row=next(r for r in auditor.read(changed/"progress.json")
+             if r["mode"]==mode and r["cutpoint"]=="none")
+    path=changed/row["directory"]/"rounds/r0000/evaluation_tasks.json"
+    tasks=auditor.read(path)
+    tasks[0]["prompt"]+=" altered"
+    bench.atomic_json(path,tasks)
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="independent evaluation cohort provenance"):
+        auditor.audit(changed)

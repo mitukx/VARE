@@ -30,7 +30,8 @@
     "continuation-audit-review-missing-fixed.log": "7063597321b8dc97eb20a692277a4e4cb024ccce842cb288a6b9695ba63c1431",
     "continuation-audit-review-regression.log": "0fd7dcb144a6d2f194d8275c73559c59820c86cc14ab0173eb60576794cf2680",
     "continuation-audit-review-vacuous-model.log": "e648929534c6dd8fae82d95d3b6a3d1ef5393a2ef2590eb568137e58fe01cbdc",
-    "diagnostic-checkpoints.tar.xz": "963a93d4ea1dff3cb6b39e8395f0f2f2a68783078960c4f4a959b590fae5505c"
+    "diagnostic-checkpoints.tar.xz": "963a93d4ea1dff3cb6b39e8395f0f2f2a68783078960c4f4a959b590fae5505c",
+    "continuation-audit-review-provenance-controls.log": "704efbc2b269ca7ff7a28c077be6a6059a59989534b92cf4c668f075a065ba87"
   },
   "fixed_negative_cases": {
     "passed": 11
@@ -157,13 +158,46 @@
       },
       "source_archive_sha256": "ade5ca917d8a0d3c53d8e13fd8984cc1392e70fe81ec7032bd5c95158959ff53",
       "task_sampling": "AdaptiveCurriculum samples with replacement; each rollout is checked against the unique retained candidate task pool, not a one-to-one pool permutation."
+    },
+    "protocol_attempt_and_cohort_binding": {
+      "baseline_tamper_controls": {
+        "rehash_protocol_without_declared_digest_audit_passed": true,
+        "duplicate_optimizer_attempt_with_orphan_evidence_removed_audit_passed": true,
+        "mutated_heldout_minimal_audit_passed": true,
+        "mutated_heldout_guarded_audit_passed": true
+      },
+      "fixed_controls": {
+        "protocol_digest_conflict_rejected": "declared protocol snapshot digest differs",
+        "duplicate_optimizer_attempt_rejected": "duplicate optimizer attempt identity",
+        "mutated_heldout_minimal_rejected": "independent evaluation cohort provenance differs",
+        "mutated_heldout_guarded_rejected": "independent evaluation cohort provenance differs",
+        "focused_regressions_passed": 4
+      },
+      "full_continuation_module": {
+        "collected": 35,
+        "passed": 26,
+        "skipped": 9,
+        "scope": "Retained raw campaign; actual-model fixtures skipped locally."
+      },
+      "retained_campaign_audit": {
+        "artifacts_hashed": 6522,
+        "candidate_tensor_states_verified": 504,
+        "cases": 42,
+        "evaluation_pairs_verified": 507,
+        "evaluation_reports_verified": 1014,
+        "pass": true,
+        "protocol_conformant": true
+      },
+      "source_archive_sha256": "ade5ca917d8a0d3c53d8e13fd8984cc1392e70fe81ec7032bd5c95158959ff53",
+      "new_model_or_optimizer_runs": 0,
+      "task_generation": "The independent auditor reconstructs seeded train and held-out task records; guarded evaluator attestations are checked against each round-local held-out file."
     }
   },
   "scope": "Audit correction and actual toy-model system regressions; no new research or main performance campaign.",
   "sources": {
     ".github/workflows/e2e-system-cpu.yml": "60331af183398380e6ba61edc0533c6e9f1d5d33000945928caedb8679197c58",
-    "docs/e2e-rl-continuation-v2-report.md": "2385b3b93b12d7ebf630246cba6a95644e9a61daac5e88a7dedbf979da649916",
-    "scripts/audit_e2e_rl_continuation.py": "eb05e13ca864af6299a6e5c171a172be1dab6c05f327820729809cb1a0f2fffa",
-    "tests/test_e2e_rl_continuation.py": "0b74c771fe356999d6185a75fb6774bf532bb39072911265ea4717b2a96d820d"
+    "docs/e2e-rl-continuation-v2-report.md": "05b1898bd1a861f387c5735cef0db211bf2e5c3da5731c06b47964075253dd50",
+    "scripts/audit_e2e_rl_continuation.py": "6094701d28da1d53776b4c3392be6a6bdd74386dd90e72f0096d9f403a2fde03",
+    "tests/test_e2e_rl_continuation.py": "4d82adb3b64027d5da11e547112f7f0bc74da091342a53915137b95baf625364"
   }
 }

@@ -6,6 +6,7 @@ import hashlib
 import io
 import json
 from pathlib import Path
+import random
 import sqlite3
 import statistics
 
@@ -26,6 +27,16 @@ def sha(path):
 def json_sha(value):
     raw=json.dumps(value,sort_keys=True,separators=(",",":"),allow_nan=False).encode("utf-8")
     return hashlib.sha256(raw).hexdigest()
+
+
+def expected_tasks(seed, round_index, count, evaluation=False):
+    """Reconstruct the benchmark's deterministic cohort without trusting its artifacts."""
+    rng = random.Random(seed * 100000 + round_index * 100 + int(evaluation))
+    kind = "audit" if evaluation else "train"
+    return [{"family": "transport", "id": f"v2-{kind}-s{seed}-r{round_index}-i{i}",
+             "metadata": {},
+             "prompt": f"v2 {kind} {rng.getrandbits(64):016x}: return A. Answer:"}
+            for i in range(count)]
 
 
 def fingerprint(value):
@@ -74,7 +85,10 @@ def audit(root, check_tensors=False, model_dir=None):
     manifest,summary,rows=read(root/"manifest.json"),read(root/"summary.json"),read(root/"progress.json")
     for name,digest in manifest["sources"].items():
         need(sha(root/"sources"/name)==digest,"source snapshot differs")
-    protocol=read(root/"sources/benchmarks/e2e_rl_continuation_v2/protocol.json")
+    protocol_path=root/"sources/benchmarks/e2e_rl_continuation_v2/protocol.json"
+    need(manifest.get("protocol_sha256")==sha(protocol_path),
+         "declared protocol snapshot digest differs")
+    protocol=read(protocol_path)
     args=manifest["arguments"]
     locked=(args["workers"]==protocol["workers"] and args["seeds"]==protocol["seeds"] and
             args["rounds"]==protocol["rounds"] and args["tasks"]==protocol["rollouts"] and
@@ -125,14 +139,22 @@ def audit(root, check_tensors=False, model_dir=None):
         expected_attempts=args["rounds"]+int(row["cutpoint"] in ("post_optimizer","candidate_saved","journal_prepared"))
         need(len(attempts)==row["physical_optimizer_attempts"]==expected_attempts,"physical attempt accounting differs")
         attempts_by_round={}
+        attempt_identities=set()
         for attempt in attempts:
-            committed=commits[attempt["round_index"]]
+            round_index=attempt.get("round_index")
+            need(type(round_index) is int and 0<=round_index<len(commits),
+                 "invalid optimizer attempt round identity")
+            learner_attempt=attempt.get("learner_attempt")
+            need(type(learner_attempt) is int and learner_attempt>=0,
+                 "invalid optimizer attempt identity")
+            identity=(round_index,learner_attempt)
+            need(identity not in attempt_identities,"duplicate optimizer attempt identity")
+            attempt_identities.add(identity)
+            committed=commits[round_index]
             need(attempt["candidate_state_sha256"]==committed["candidate_state_sha256"] and
                  attempt["candidate_model_sha256"]==committed["update"]["parameters_after_sha256"],
                  "physical optimizer attempt differs from committed candidate")
-            learner_attempt=attempt["learner_attempt"]
-            need(type(learner_attempt) is int and learner_attempt>=0,"invalid optimizer attempt identity")
-            attempts_by_round.setdefault(attempt["round_index"],set()).add(learner_attempt)
+            attempts_by_round.setdefault(round_index,set()).add(learner_attempt)
         trace=[json.loads(line) for line in (case/"trace.jsonl").read_text().splitlines()]
         spans=[r["duration_s"] for r in trace if r["stage"]=="round"]
         need(row["round_wall_s"]==sum(spans),"round wall differs")
@@ -143,6 +165,10 @@ def audit(root, check_tensors=False, model_dir=None):
             round_dir=case/"rounds"/f"r{index:04d}"
             train,heldout=read(round_dir/"training_tasks.json"),read(round_dir/"evaluation_tasks.json")
             need(len(train)==args["tasks"] and len(heldout)==args["eval_tasks"],"task budget differs")
+            need(train==expected_tasks(row["seed"],index,args["tasks"]),
+                 "retained training task pool provenance differs")
+            need(heldout==expected_tasks(row["seed"],index,args["eval_tasks"],True),
+                 "independent evaluation cohort provenance differs")
             train_by_id={task["id"]:task for task in train}
             need(len(train_by_id)==len(train) and len({task["prompt"] for task in train})==len(train),
                  "training task pool contains duplicate identities")
@@ -245,6 +271,10 @@ def audit(root, check_tensors=False, model_dir=None):
                 need(policy_id not in policy_records,"duplicate evaluation policy in learner attempt")
                 need(record["scores"]==record["report"].get("metadata",{}).get("per_task_scores"),
                      "evaluation scores differ from report metadata")
+                if row["mode"]=="guarded":
+                    need(record["report"]["metadata"].get("vare_evaluation_set_sha256") ==
+                         sha(round_dir/"evaluation_tasks.json"),
+                         "guarded evaluation set digest differs from retained cohort")
                 policy_records[policy_id]=record
                 records.append(record)
             complete_attempts={attempt for attempt,policies in by_attempt.items() if set(policies)==expected_policies}

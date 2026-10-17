@@ -1,0 +1,61 @@
+Rehashed archive provenance controls for PR #69.
+Baseline auditor: commit 135b8fcca7c5aee97dc2efeea29c12b556bae5cf.
+Baseline cases reproduce the independent-review mutations before correction.
+
+[baseline accepted] protocol: exit=0
+{"artifacts_hashed": 6522, "candidate_tensor_states_verified": 0, "cases": 42, "checkpoint_score_count_replayed": 0, "checkpoint_scores_replayed": false, "evaluation_pairs_verified": 507, "evaluation_reports_verified": 1014, "pass": true, "protocol_conformant": true}
+
+[baseline accepted] duplicate-attempt: exit=0
+{"artifacts_hashed": 6520, "candidate_tensor_states_verified": 0, "cases": 42, "checkpoint_score_count_replayed": 0, "checkpoint_scores_replayed": false, "evaluation_pairs_verified": 507, "evaluation_reports_verified": 1014, "pass": true, "protocol_conformant": true}
+
+[baseline accepted] heldout-minimal: exit=0
+{"artifacts_hashed": 6522, "candidate_tensor_states_verified": 0, "cases": 42, "checkpoint_score_count_replayed": 0, "checkpoint_scores_replayed": false, "evaluation_pairs_verified": 507, "evaluation_reports_verified": 1014, "pass": true, "protocol_conformant": true}
+
+[baseline accepted] heldout-guarded: exit=0
+{"artifacts_hashed": 6522, "candidate_tensor_states_verified": 0, "cases": 42, "checkpoint_score_count_replayed": 0, "checkpoint_scores_replayed": false, "evaluation_pairs_verified": 507, "evaluation_reports_verified": 1014, "pass": true, "protocol_conformant": true}
+
+
+[corrected auditor] protocol: exit=1
+
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 394, in <module>
+    print(json.dumps(audit(args.directory,args.check_tensors,args.model_dir),sort_keys=True))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 89, in audit
+    need(manifest.get("protocol_sha256")==sha(protocol_path),
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 16, in need
+    raise ValueError(message)
+ValueError: declared protocol snapshot digest differs
+[corrected auditor] duplicate-attempt: exit=1
+
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 394, in <module>
+    print(json.dumps(audit(args.directory,args.check_tensors,args.model_dir),sort_keys=True))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 151, in audit
+    need(identity not in attempt_identities,"duplicate optimizer attempt identity")
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 16, in need
+    raise ValueError(message)
+ValueError: duplicate optimizer attempt identity
+[corrected auditor] heldout-minimal: exit=1
+
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 394, in <module>
+    print(json.dumps(audit(args.directory,args.check_tensors,args.model_dir),sort_keys=True))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 170, in audit
+    need(heldout==expected_tasks(row["seed"],index,args["eval_tasks"],True),
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 16, in need
+    raise ValueError(message)
+ValueError: independent evaluation cohort provenance differs
+[corrected auditor] heldout-guarded: exit=1
+
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 394, in <module>
+    print(json.dumps(audit(args.directory,args.check_tensors,args.model_dir),sort_keys=True))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 170, in audit
+    need(heldout==expected_tasks(row["seed"],index,args["eval_tasks"],True),
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 16, in need
+    raise ValueError(message)
+ValueError: independent evaluation cohort provenance differs
