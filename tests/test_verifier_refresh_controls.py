@@ -25,3 +25,39 @@ def test_budgeted_periodic_refresh_never_reads_independent_labels():
         control.decide_and_fit(phase,training,calibration)
     assert control.version==2 and control.labels==128
     assert not {r["id"] for r in training} & {r["id"] for r in calibration}
+
+
+def test_retained_raw_truth_and_summary_accounting():
+    import gzip
+    import json
+    from vare.evidence import sha256_file
+    root = Path("results/verifier-refresh-controls-v1")
+    for directory in sorted(root.glob("*-77*")):
+        summary = json.loads((directory/"summary.json").read_text())
+        manifest = json.loads((directory/"SHA256.json").read_text())
+        assert all(sha256_file(directory/name)==value for name,value in manifest.items())
+        identifiers, attacks = set(), 0
+        with gzip.open(directory/"cohorts.jsonl.gz","rt") as records:
+            for line in records:
+                row = json.loads(line)
+                assert row["id"] not in identifiers
+                identifiers.add(row["id"])
+                if row["feature"]=="proxy-exploit":
+                    assert row["proxy"] is True and row["truth"] is False
+                else:
+                    assert row["proxy"]==row["truth"]
+                if row["split"]=="independent":
+                    attacks += int(row["feature"]=="proxy-exploit")
+        assert len(identifiers)==12*(256+64+256+256)
+        metrics = summary["metrics"]
+        assert metrics["fixed"]["errors"]==attacks
+        assert metrics["periodic"]["errors"]==0
+        assert metrics["shift"]["errors"]==(attacks if summary["scenario"]=="hidden" else 0)
+        curves = json.loads((directory/"curves.json").read_text())
+        for name, values in metrics.items():
+            assert values["calibration_labels"]<=128
+            selected = [row for row in curves if row["strategy"]==name]
+            false = sum(row["proxy_promote"] and not row["independent_promote"] for row in selected)
+            missed = sum(row["independent_promote"] and not row["proxy_promote"] for row in selected)
+            assert values["false_proxy_promotions"]==false
+            assert values["missed_proxy_improvements"]==missed
