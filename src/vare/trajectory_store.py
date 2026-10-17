@@ -146,9 +146,10 @@ class TrajectoryStore:
 
     event = staticmethod(Store.event)
 
-    def __init__(self, path):
+    def __init__(self, path, *, audit_only=False):
         self._database = Store(path)
         self.path = self._database.path
+        self._audit_only = audit_only
 
     @classmethod
     def create(cls, path, *, run_id, max_inflight=2048, record_bytes=65536,
@@ -203,9 +204,11 @@ class TrajectoryStore:
 
     @contextmanager
     def connection(self, write=False):
+        if self._audit_only and write:
+            raise RuntimeError("snapshot audit connections are read-only")
         with self._database.connection(write) as db:
             config = json.loads(db.execute("SELECT value FROM meta WHERE key='config'").fetchone()[0])
-            if config["schema"] != 1 or config["source_sha256"] != sha256_file(__file__):
+            if config["schema"] != 1 or (not self._audit_only and config["source_sha256"] != sha256_file(__file__)):
                 raise RuntimeMismatchError("resume with the enrolled trajectory runtime source")
             db.execute("PRAGMA wal_autocheckpoint=64")
             db.execute(f"PRAGMA max_page_count={config['storage_bytes'] // 4096}")
@@ -516,7 +519,10 @@ class TrajectoryStore:
 
 def audit_trajectory_store(path):
     """Stream a quiescent snapshot; validate bytes, indices and terminal coverage."""
-    store = TrajectoryStore(path)
+    # A read-only audit can validate retained snapshots after the runtime has
+    # evolved. The CLI separately binds this recorded source hash to the
+    # archived source bytes and externally trusted artifact manifest.
+    store = TrajectoryStore(path, audit_only=True)
     head, count = "0" * 64, 0
     with store.connection() as db:
         if db.execute("PRAGMA integrity_check").fetchone()[0] != "ok":
@@ -594,6 +600,8 @@ def audit_trajectory_store(path):
                 raise ValueError("terminal trajectory is incomplete")
             if completed and (len(completed) != 1 or completed[0]["details"] != {"head": row["head"], "steps": n}):
                 raise ValueError("completion/history mismatch")
+            if completed and row["state"] in {"queued", "running"}:
+                raise ValueError("completion history conflicts with active row state")
             if row["state"] in {"complete", "verified", "learning", "publishing", "consumed"} and not completed:
                 raise ValueError("missing completion event")
             if row["verification"] is not None:

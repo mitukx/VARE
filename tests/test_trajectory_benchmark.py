@@ -29,7 +29,7 @@ def test_actual_synthetic_pipeline_and_resealed_missing_latency(tmp_path):
     result = json.loads((output / "summary.json").read_text())
     assert result["pass"] and result["trajectories"] == 100
     assert result["recovery"]["sigkill"] and result["recovery"]["stale_worker_rejected"]
-    audited = subprocess.run([sys.executable, "scripts/audit_trajectory_runtime.py", str(output)], capture_output=True, text=True, timeout=30)
+    audited = subprocess.run([sys.executable, "scripts/audit_trajectory_runtime.py", str(output), "--unanchored-new-run"], capture_output=True, text=True, timeout=30)
     assert audited.returncode == 0, audited.stderr
     assert json.loads(audited.stdout)["pass"]
     invalid_condition = tmp_path / "rehashed-condition"
@@ -43,7 +43,7 @@ def test_actual_synthetic_pipeline_and_resealed_missing_latency(tmp_path):
     hashes["provenance.json"] = hashlib.sha256(provenance_path.read_bytes()).hexdigest()
     (invalid_condition / "SHA256.json").unlink()
     (invalid_condition / "SHA256.json").write_text(json.dumps(hashes))
-    rejected_condition = subprocess.run([sys.executable, "scripts/audit_trajectory_runtime.py", str(invalid_condition)], capture_output=True, text=True, timeout=30)
+    rejected_condition = subprocess.run([sys.executable, "scripts/audit_trajectory_runtime.py", str(invalid_condition), "--unanchored-new-run"], capture_output=True, text=True, timeout=30)
     assert rejected_condition.returncode != 0 and "condition differs from fixed protocol" in rejected_condition.stderr
     for change in ("allowed_seed", "mode", "protocol"):
         relabeled = tmp_path / ("relabeled-" + change)
@@ -65,8 +65,26 @@ def test_actual_synthetic_pipeline_and_resealed_missing_latency(tmp_path):
             hashes[name] = hashlib.sha256((relabeled / name).read_bytes()).hexdigest()
         (relabeled / "SHA256.json").unlink()
         (relabeled / "SHA256.json").write_text(json.dumps(hashes))
-        rejected_label = subprocess.run([sys.executable, "scripts/audit_trajectory_runtime.py", str(relabeled)], capture_output=True, text=True, timeout=30)
+        rejected_label = subprocess.run([sys.executable, "scripts/audit_trajectory_runtime.py", str(relabeled), "--unanchored-new-run"], capture_output=True, text=True, timeout=30)
         assert rejected_label.returncode != 0 and ("frozen protocol" in rejected_label.stderr or "snapshot condition" in rejected_label.stderr)
+    external = tmp_path / "trusted-original-manifest.json"
+    external.write_bytes((output / "SHA256.json").read_bytes())
+    anchored = subprocess.run([sys.executable,"scripts/audit_trajectory_runtime.py",str(output),"--expected-manifest",str(external)],capture_output=True,text=True,timeout=30)
+    assert anchored.returncode==0 and json.loads(anchored.stdout)["headline_timing_anchored"]
+    wall_tamper = tmp_path / "inflated-rate"
+    shutil.copytree(output,wall_tamper,copy_function=os.link)
+    data = json.loads((wall_tamper/"summary.json").read_text())
+    data["wall_s"] /= 10
+    for key in ("trajectories_per_s","steps_per_s","events_per_s"):
+        data[key] *= 10
+    (wall_tamper/"summary.json").unlink()
+    (wall_tamper/"summary.json").write_text(json.dumps(data))
+    hashes = json.loads((wall_tamper/"SHA256.json").read_text())
+    hashes["summary.json"] = hashlib.sha256((wall_tamper/"summary.json").read_bytes()).hexdigest()
+    (wall_tamper/"SHA256.json").unlink()
+    (wall_tamper/"SHA256.json").write_text(json.dumps(hashes))
+    denied = subprocess.run([sys.executable,"scripts/audit_trajectory_runtime.py",str(wall_tamper),"--expected-manifest",str(external)],capture_output=True,text=True,timeout=30)
+    assert denied.returncode!=0 and "external artifact anchor mismatch" in denied.stderr
     broken = tmp_path / "rehashed-missing-latency"
     shutil.copytree(output, broken, copy_function=os.link)
     samples = (broken / "latencies.jsonl").read_text().splitlines()
@@ -76,6 +94,6 @@ def test_actual_synthetic_pipeline_and_resealed_missing_latency(tmp_path):
     manifest["latencies.jsonl"] = hashlib.sha256((broken / "latencies.jsonl").read_bytes()).hexdigest()
     (broken / "SHA256.json").unlink()
     (broken / "SHA256.json").write_text(json.dumps(manifest))
-    rejected = subprocess.run([sys.executable, "scripts/audit_trajectory_runtime.py", str(broken)], capture_output=True, text=True, timeout=30)
+    rejected = subprocess.run([sys.executable, "scripts/audit_trajectory_runtime.py", str(broken), "--unanchored-new-run"], capture_output=True, text=True, timeout=30)
     assert rejected.returncode != 0 and "missing or duplicated latency samples" in rejected.stderr
     assert len(Path(output / "latencies.jsonl").read_text().splitlines()) == 100
