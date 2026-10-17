@@ -23,6 +23,11 @@ def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def json_sha(value):
+    raw=json.dumps(value,sort_keys=True,separators=(",",":"),allow_nan=False).encode("utf-8")
+    return hashlib.sha256(raw).hexdigest()
+
+
 def fingerprint(value):
     """Independent encoding oracle, including dtype/shape, Adam and RNG bytes."""
     import torch
@@ -107,11 +112,15 @@ def audit(root, check_tensors=False, model_dir=None):
         attempts=[json.loads(line) for line in (case/"optimizer_attempts.jsonl").read_text().splitlines()]
         expected_attempts=args["rounds"]+int(row["cutpoint"] in ("post_optimizer","candidate_saved","journal_prepared"))
         need(len(attempts)==row["physical_optimizer_attempts"]==expected_attempts,"physical attempt accounting differs")
+        attempts_by_round={}
         for attempt in attempts:
             committed=commits[attempt["round_index"]]
             need(attempt["candidate_state_sha256"]==committed["candidate_state_sha256"] and
                  attempt["candidate_model_sha256"]==committed["update"]["parameters_after_sha256"],
                  "physical optimizer attempt differs from committed candidate")
+            learner_attempt=attempt["learner_attempt"]
+            need(type(learner_attempt) is int and learner_attempt>=0,"invalid optimizer attempt identity")
+            attempts_by_round.setdefault(attempt["round_index"],set()).add(learner_attempt)
         trace=[json.loads(line) for line in (case/"trace.jsonl").read_text().splitlines()]
         spans=[r["duration_s"] for r in trace if r["stage"]=="round"]
         need(row["round_wall_s"]==sum(spans),"round wall differs")
@@ -171,11 +180,64 @@ def audit(root, check_tensors=False, model_dir=None):
                 need(separator and attempt.isdigit() and policy_id in expected_policies and
                      path.name==f"evaluation-{policy_id}-attempt{int(attempt)}.json" and
                      record["report"]["policy_id"]==policy_id,"independent evaluation artifact identity differs")
-                by_attempt.setdefault(int(attempt),set()).add(policy_id)
+                need(int(attempt) in attempts_by_round.get(index,set()),
+                     "independent evaluation does not correspond to a physical optimizer attempt")
+                policy_records=by_attempt.setdefault(int(attempt),{})
+                need(policy_id not in policy_records,"duplicate evaluation policy in learner attempt")
+                need(record["scores"]==record["report"].get("metadata",{}).get("per_task_scores"),
+                     "evaluation scores differ from report metadata")
+                policy_records[policy_id]=record
                 records.append(record)
-            need(by_attempt and all(policies==expected_policies for policies in by_attempt.values()),
-                 "incomplete independent evaluation pair")
-            evaluation_pairs+=len(by_attempt)
+            complete_attempts={attempt for attempt,policies in by_attempt.items() if set(policies)==expected_policies}
+            need(complete_attempts,"incomplete independent evaluation pair")
+            result=commit.get("result")
+            if result is not None:
+                need(not commit.get("recovered_publication") and result["round_index"]==index and
+                     result["incumbent_id"]==previous_pid and result["candidate_id"]==candidate and
+                     result["decision"]["accepted"] is commit["accepted"],
+                     "committed round result identity differs")
+                completed_attempts=[]
+                for event_file in round_dir.glob("engine-attempt*.jsonl"):
+                    suffix=event_file.stem.removeprefix("engine-attempt")
+                    need(suffix.isdigit(),"invalid engine attempt identity")
+                    attempt_id=int(suffix)
+                    for line in event_file.read_text().splitlines():
+                        event=json.loads(line)
+                        if event.get("event")=="round_complete" and event.get("round_index")==index:
+                            completed_attempts.append(attempt_id)
+                need(len(completed_attempts)==1 and
+                     completed_attempts[0] in attempts_by_round.get(index,set()),
+                     "completed round has no unique optimizer attempt")
+                committed_attempt=completed_attempts[0]
+                need(committed_attempt in complete_attempts and
+                     by_attempt[committed_attempt][previous_pid]["report"]==result["incumbent_eval"] and
+                     by_attempt[committed_attempt][candidate]["report"]==result["candidate_eval"],
+                     "evaluation pair differs from committed round result")
+            else:
+                need(commit.get("recovered_publication") is True and row["mode"]=="guarded",
+                     "committed round result is missing")
+                with sqlite3.connect((case/"promotion.sqlite").resolve().as_uri()+"?mode=ro",uri=True) as db:
+                    transactions=db.execute(
+                        "SELECT incumbent_id,incumbent_sha256,candidate_id,candidate_sha256,evaluation_sha256,state "
+                        "FROM transactions WHERE candidate_id=? AND candidate_sha256=?",
+                        (candidate,commit["active_checkpoint_sha256"]),
+                    ).fetchall()
+                need(len(transactions)==1,"recovered promotion transaction is missing or ambiguous")
+                incumbent_id,incumbent_sha,candidate_id,transaction_candidate_sha,evaluation_digest=transactions[0][:5]
+                transaction_state=transactions[0][5]
+                need(incumbent_id==previous_pid and incumbent_sha==old_sha and candidate_id==candidate and
+                     transaction_candidate_sha==candidate_sha and transaction_state=="committed",
+                     "recovered promotion journal binding differs")
+                committed_attempts=[]
+                for attempt_id in complete_attempts:
+                    evaluation_metadata={policy:by_attempt[attempt_id][policy]["report"]["metadata"]
+                                         for policy in (previous_pid,candidate)}
+                    if json_sha({"incumbent":evaluation_metadata[previous_pid],
+                                 "candidate":evaluation_metadata[candidate]})==evaluation_digest:
+                        committed_attempts.append(attempt_id)
+                need(len(committed_attempts)==1,
+                     "recovered evaluation pair differs from promotion evaluation digest")
+            evaluation_pairs+=len(complete_attempts)
             for record in records:
                 need(set(record["scores"])=={task["id"] for task in heldout} and
                      record["report"]["n"]==args["eval_tasks"],"independent evaluation task coverage differs")

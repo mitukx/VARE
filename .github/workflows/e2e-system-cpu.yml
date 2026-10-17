@@ -60,8 +60,15 @@ jobs:
         env:
           VARE_E2E_MODEL_DIR: ${{ runner.temp }}/tiny-gpt2
         run: |
+          set +e
           python -m pytest tests/test_e2e_rl_continuation.py --basetemp="${RUNNER_TEMP}/v2-tests"
+          pytest_status=$?
           tar -cJf "${RUNNER_TEMP}/v2-tests.tar.xz" -C "${RUNNER_TEMP}/v2-tests" .
+          archive_status=$?
+          if [ "${pytest_status}" -ne 0 ]; then
+            exit "${pytest_status}"
+          fi
+          exit "${archive_status}"
       - name: Fetch pinned RVL and check actual multi-completion GRPO
         env:
           VARE_GRPO_MODEL_DIR: ${{ runner.temp }}/tinystories-1m

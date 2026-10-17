@@ -198,6 +198,16 @@ correctness campaign, not the Mac performance campaign. Validation logs and
 the independent audit result are under
 [results](../results/e2e-rl-continuation-v2/).
 
+The offline audit also binds a normal round's evaluation pair to the unique
+completed learner attempt and its retained `RoundResult`. A tensor audit of
+the same retained archive verified 504 candidate states. If a SIGKILL occurs
+after durable publication but before that result is written, it instead checks
+the pair against the promotion journal's persisted evaluation-metadata digest.
+A rehashed `attempt99` pair was accepted by the prior auditor and is now
+rejected; this correction re-audits the same 42-case archive and changes no
+protocol or model measurements. The focused falsification record is retained
+in [audit-review validation](../results/e2e-rl-continuation-v2-audit-review/validation.json).
+
 This is a toy neural LM and synthetic one-token workload. Replay is round-local;
 general durable replay-backlog/curriculum recovery is not tested. The supervisor
 assumes cooperative same-UID POSIX ownership. There is no power-loss, hostile-code,

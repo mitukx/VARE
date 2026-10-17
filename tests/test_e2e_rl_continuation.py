@@ -4,6 +4,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+import json
 
 import pytest
 
@@ -153,4 +154,50 @@ def test_rehashed_absent_independent_evaluation_is_rejected(audit_records,tmp_pa
         path.unlink()
     reseal_records(changed)
     with pytest.raises(ValueError,match="independent evaluation"):
+        auditor.audit(changed)
+
+
+def test_rehashed_evaluation_attempt_must_exist_in_optimizer_history(audit_records,tmp_path):
+    changed=tmp_path/"unlaunched-attempt"
+    shutil.copytree(audit_records,changed)
+    row=next(r for r in auditor.read(changed/"progress.json")
+             if r["mode"]=="minimal" and r["cutpoint"]=="none")
+    round_dir=changed/row["directory"]/"rounds/r0000"
+    for path in round_dir.glob("evaluation-*-attempt0.json"):
+        path.rename(path.with_name(path.stem.rsplit("-attempt",1)[0]+"-attempt99.json"))
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="optimizer attempt"):
+        auditor.audit(changed)
+
+
+def test_rehashed_evaluation_pair_must_match_committed_round_result(audit_records,tmp_path):
+    changed=tmp_path/"misbound-result"
+    shutil.copytree(audit_records,changed)
+    row=next(r for r in auditor.read(changed/"progress.json")
+             if r["mode"]=="minimal" and r["cutpoint"]=="none")
+    round_dir=changed/row["directory"]/"rounds/r0000"
+    path=round_dir/"evaluation-policy-0-attempt0.json"
+    record=auditor.read(path)
+    record["report"]["metadata"]["uncommitted_claim"]=True
+    path.write_text(json.dumps(record,sort_keys=True)+"\n")
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="committed round result"):
+        auditor.audit(changed)
+
+
+def test_rehashed_recovered_evaluation_pair_must_match_promotion_journal(audit_records,tmp_path):
+    changed=tmp_path/"misbound-recovery"
+    shutil.copytree(audit_records,changed)
+    row=next(r for r in auditor.read(changed/"progress.json")
+             if r["mode"]=="guarded" and r["cutpoint"]=="journal_committed")
+    case=changed/row["directory"]
+    commit=next(auditor.read(path) for path in sorted((case/"rounds").glob("r*/committed.json"))
+                if auditor.read(path).get("recovered_publication"))
+    round_dir=case/"rounds"/f"r{commit['completed_round']:04d}"
+    path=next(round_dir.glob(f"evaluation-{commit['candidate_id']}-attempt*.json"))
+    record=auditor.read(path)
+    record["report"]["metadata"]["uncommitted_claim"]=True
+    path.write_text(json.dumps(record,sort_keys=True)+"\n")
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="promotion evaluation digest"):
         auditor.audit(changed)
