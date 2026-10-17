@@ -1,0 +1,7 @@
+{
+  "baseline_revision": "a470fd059ebbe70f1b74132ce693c6c94f9dedaf",
+  "baseline": "All three independently resealed seed/mode/protocol relabel controls passed the old auditor (review4-before.jsonl).",
+  "fix": "Auditor pins the repository-frozen canonical v2 protocol digest; verifies condition against SQLite run identity/config and every raw task seed. New regressions reject all three resealed cases.",
+  "measurement": "No changes to runner, workload, core store/admission/worker source or frozen protocol. Runtime measurements at a470fd0 remain valid; all eight artifacts are re-audited by the corrected auditor.",
+  "targeted": "5 benchmark tests passed including resealed latency/protocol/seed/mode negatives."
+}

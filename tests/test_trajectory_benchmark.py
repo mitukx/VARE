@@ -45,6 +45,28 @@ def test_actual_synthetic_pipeline_and_resealed_missing_latency(tmp_path):
     (invalid_condition / "SHA256.json").write_text(json.dumps(hashes))
     rejected_condition = subprocess.run([sys.executable, "scripts/audit_trajectory_runtime.py", str(invalid_condition)], capture_output=True, text=True, timeout=30)
     assert rejected_condition.returncode != 0 and "condition differs from fixed protocol" in rejected_condition.stderr
+    for change in ("allowed_seed", "mode", "protocol"):
+        relabeled = tmp_path / ("relabeled-" + change)
+        shutil.copytree(output, relabeled, copy_function=os.link)
+        altered = {name: json.loads((relabeled / name).read_text()) for name in ("summary.json", "provenance.json", "protocol.json")}
+        if change == "mode":
+            altered["summary.json"]["mode"] = altered["provenance.json"]["condition"]["mode"] = "sync"
+        else:
+            seed = 75012 if change == "allowed_seed" else 73011
+            altered["summary.json"]["seed"] = altered["provenance.json"]["condition"]["seed"] = seed
+            if change == "protocol":
+                altered["protocol.json"]["seeds"].append(seed)
+                from vare.evidence import sha256_json
+                altered["provenance.json"]["protocol_sha256"] = sha256_json(altered["protocol.json"])
+        hashes = json.loads((relabeled / "SHA256.json").read_text())
+        for name, data in altered.items():
+            (relabeled / name).unlink()
+            (relabeled / name).write_text(json.dumps(data))
+            hashes[name] = hashlib.sha256((relabeled / name).read_bytes()).hexdigest()
+        (relabeled / "SHA256.json").unlink()
+        (relabeled / "SHA256.json").write_text(json.dumps(hashes))
+        rejected_label = subprocess.run([sys.executable, "scripts/audit_trajectory_runtime.py", str(relabeled)], capture_output=True, text=True, timeout=30)
+        assert rejected_label.returncode != 0 and ("frozen protocol" in rejected_label.stderr or "snapshot condition" in rejected_label.stderr)
     broken = tmp_path / "rehashed-missing-latency"
     shutil.copytree(output, broken, copy_function=os.link)
     samples = (broken / "latencies.jsonl").read_text().splitlines()

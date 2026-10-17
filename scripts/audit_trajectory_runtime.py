@@ -11,6 +11,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from vare.evidence import sha256_file, sha256_json
 from vare.trajectory_store import TrajectoryStore, audit_trajectory_store
 
+FROZEN_PROTOCOL_SHA256 = "bec97cf700145dc6f2cc024053666ad6bda0e2f1ebf69675d8f13964364810d7"
+
 
 def require(value, reason):
     if not value:
@@ -26,6 +28,7 @@ def audit(root):
     summary = json.loads((root / "summary.json").read_text())
     provenance = json.loads((root / "provenance.json").read_text())
     protocol = json.loads((root / "protocol.json").read_text())
+    require(sha256_json(protocol) == FROZEN_PROTOCOL_SHA256, "artifact differs from frozen protocol")
     require(provenance["protocol_sha256"] == sha256_json(protocol), "protocol mismatch")
     condition = provenance["condition"]
     require(protocol["schema"] == "vare.trajectory-runtime-systems.v2"
@@ -41,12 +44,18 @@ def audit(root):
     result = audit_trajectory_store(root / "snapshot.db")
     require(result == summary["audit"], "store audit differs from retained summary")
     store = TrajectoryStore(root / "snapshot.db")
+    config = store.config()
+    require(config["run_id"] == f"trajectory-{condition['seed']}-{condition['mode']}"
+            and config["max_inflight"] == protocol["max_inflight"]
+            and config["storage_bytes"] == protocol["storage_bytes"], "snapshot condition mismatch")
     count, steps, latencies, verification = 0, 0, [], []
     # Independent per-step truth checks; never call the producer/build_step.
     with (root / "latencies.jsonl").open() as records, store.connection() as db:
         for line in records:
             sample = json.loads(line)
             row = store.trajectory(sample["trajectory_id"])
+            spec = json.loads(row["task"])
+            require(spec["task"]["metadata"]["seed"] == condition["seed"], "snapshot condition task seed mismatch")
             require(row["state"] == "consumed" and row["head"] == sample["trace_sha256"], "latency row is not a consumed trajectory")
             cursor, total = 0, 0
             for step in store.iter_steps(row["id"]):
