@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Callable, Sequence
+import copy
+from collections.abc import Awaitable, Callable, Sequence
 from uuid import uuid4
 
 from .attestation import EvidenceTrustRoot
@@ -23,8 +24,12 @@ from .replay import PrioritizedReplay
 from .reward_evidence import validate_complete_rvl_reward_batch
 from .runtime import RuntimeCoordinator, coordinator_for
 from .telemetry import EventLog
-from .types import Attempt, Experience, PromotionDecision, RoundResult, Task, snapshot_verification
+from .types import Attempt, Experience, PromotionDecision, RoundResult, Task, Verification, snapshot_verification
 from .verifiers import VerifierEnsemble
+
+
+class _NoVerifiedExperienceReady(Exception):
+    """An owned ingestion poll found no eligible complete group."""
 
 
 class CapabilityLoop:
@@ -250,7 +255,7 @@ class CapabilityLoop:
             clear_deferred_cancellation_requests()
         return deferred_cancellations
 
-    async def run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None) -> RoundResult:
+    async def run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None, _verified_experiences: Sequence[Experience] | None = None, _delivery_complete: Callable[[RoundResult], Awaitable[None]] | None = None, _publication_reserve: Callable[[], Awaitable[None]] | None = None, _delivery_claim: Callable[[str], Awaitable[Sequence[Experience] | None]] | None = None, _delivery_pending: Callable[[str], bool] | None = None, _shift_reference_families: Sequence[str] | None = None) -> RoundResult:
         """Own the shared runtime before any hook; retain crash uncertainty."""
         async with self._round_lock:
             if self._discard_failure is not None:
@@ -275,11 +280,40 @@ class CapabilityLoop:
                 self.promotion_journal.acquire_round(owner_id)
             self._candidate_unresolved = False
             try:
-                result = await self._run_round(
-                    tasks, round_index=round_index, rollout_count=rollout_count
-                )
+                if _delivery_claim is not None:
+                    supplied = await _delivery_claim(owner_id)
+                    if supplied is None:
+                        raise _NoVerifiedExperienceReady()
+                    if (not supplied or len(supplied) > min(self.config.replay.capacity, self.config.replay_batch_size)
+                            or any(not isinstance(exp, Experience) or not isinstance(exp.attempt, Attempt) for exp in supplied)):
+                        raise ValueError("verified batch must fit the bounded replay capacity")
+                    _verified_experiences = copy.deepcopy(list(supplied))
+                    tasks = [exp.attempt.task for exp in _verified_experiences]
+                if _verified_experiences is None:
+                    result = await self._run_round(
+                        tasks, round_index=round_index, rollout_count=rollout_count
+                    )
+                else:
+                    result = await self._run_round(
+                        tasks, round_index=round_index, rollout_count=rollout_count,
+                        verified_experiences=_verified_experiences,
+                        publication_reserve=_publication_reserve,
+                        shift_reference_families=_shift_reference_families,
+                    )
+                    assert _delivery_complete is not None
+                    await _delivery_complete(result)
+            except _NoVerifiedExperienceReady:
+                self._release_runtime_round(owner_id)
+                raise
             except BaseException as exc:
-                if (self._candidate_unresolved or self._discard_failure is not None
+                delivery_unresolved = False
+                if _delivery_claim is not None:
+                    try:
+                        assert _delivery_pending is not None
+                        delivery_unresolved = _delivery_pending(owner_id)
+                    except BaseException:
+                        delivery_unresolved = True  # Cannot prove a clean claim failure.
+                if (delivery_unresolved or _verified_experiences is not None or self._candidate_unresolved or self._discard_failure is not None
                         or self._promotion_failure is not None):
                     self.runtime_coordinator.quarantine(exc)
                     # Leave the durable reservation intact, even if a commit
@@ -290,6 +324,65 @@ class CapabilityLoop:
             self._release_runtime_round(owner_id)
             self._candidate_unresolved = False
             return result
+
+    async def run_verified_round(self, claim_experiences: Callable[[str], Awaitable[Sequence[Experience] | None]], *, round_index: int, on_complete: Callable[[RoundResult], Awaitable[None]], reserve_publication: Callable[[], Awaitable[None]], delivery_pending: Callable[[str], bool], shift_reference_families: Sequence[str]) -> RoundResult | None:
+        """Consume bounded authenticated trajectories through the existing transaction.
+
+        Does not regenerate, regrade or rename the source groups. Candidate,
+        evaluation, promotion and recovery semantics are identical to run_round.
+        Caller owns durable ingestion acknowledgment and restart reconciliation,
+        and supplies the independent family distribution used for shift checks.
+        """
+        if not all(callable(fn) for fn in (claim_experiences, on_complete, reserve_publication, delivery_pending)):
+            raise ValueError("streamed delivery requires owned completion and publication boundaries")
+        if (not isinstance(shift_reference_families, Sequence)
+                or isinstance(shift_reference_families, (str, bytes))
+                or not shift_reference_families
+                or any(not isinstance(family, str) or not family.strip()
+                       for family in shift_reference_families)):
+            raise ValueError("streamed GRPO requires an independent task-family reference")
+        try:
+            return await self.run_round(
+                [], round_index=round_index, _delivery_claim=claim_experiences,
+                _delivery_complete=on_complete, _publication_reserve=reserve_publication,
+                _delivery_pending=delivery_pending,
+                _shift_reference_families=tuple(shift_reference_families),
+            )
+        except _NoVerifiedExperienceReady:
+            return None
+
+    def _verified_pairs(self, experiences: Sequence[Experience]):
+        if self.training_evidence_authorizer is None or not self.config.preserve_rollout_groups:
+            raise ValueError("streamed GRPO requires authentication and intact group replay")
+        seen: set[str] = set()
+        groups: dict[str, list[tuple[int, str, int, str, str]]] = {}
+        pairs: list[tuple[Attempt, Verification]] = []
+        for exp in experiences:
+            if not isinstance(exp, Experience) or not isinstance(exp.attempt, Attempt):
+                raise TypeError("verified ingestion requires Experience/Attempt")
+            attempt = exp.attempt
+            ident = attempt.metadata.get("trajectory_id")
+            group = attempt.metadata.get("vare_rollout_group")
+            size = attempt.metadata.get("vare_rollout_group_size")
+            if (not isinstance(ident, str) or not ident or ident in seen
+                    or not isinstance(group, str) or not group
+                    or type(size) is not int or size < 2
+                    or attempt.task.metadata.get("vare_rollout_group") != group
+                    or attempt.task.metadata.get("vare_rollout_group_size") != size):
+                raise ValueError("streamed member/group identity is invalid or duplicated")
+            seen.add(ident)
+            members = groups.setdefault(group, [])
+            members.append((size, attempt.policy_id, attempt.policy_version, attempt.task.id, attempt.task.prompt))
+            value = snapshot_verification(exp.verification)
+            authorized = self.training_evidence_authorizer(exp)
+            if not value.trusted or type(authorized) is not bool or not authorized:
+                raise ValueError("unauthenticated streamed trajectory")
+            pairs.append((attempt, value))
+        if any(len(members) != members[0][0] or len(set(members)) != 1 for members in groups.values()):
+            raise ValueError("streamed comparison group is incomplete or heterogeneous")
+        self.step += len(pairs)
+        self.events.emit("verified_experience_ingested", count=len(pairs), groups=len(groups))
+        return pairs
 
     def _release_runtime_round(self, owner_id: str) -> None:
         if self.promotion_journal is None:
@@ -305,8 +398,8 @@ class CapabilityLoop:
             self.runtime_coordinator.quarantine(exc)
             raise PromotionRecoveryRequired("runtime round completion requires recovery") from exc
 
-    async def _run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None) -> RoundResult:
-        source_tasks = list(tasks) + self._generated_tasks
+    async def _run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None, verified_experiences: Sequence[Experience] | None = None, publication_reserve: Callable[[], Awaitable[None]] | None = None, shift_reference_families: Sequence[str] | None = None) -> RoundResult:
+        source_tasks = list(tasks) + (self._generated_tasks if verified_experiences is None else [])
         if not source_tasks:
             raise ValueError("run_round requires tasks")
         incumbent_id, incumbent_version = self.hooks.active_policy()
@@ -318,91 +411,100 @@ class CapabilityLoop:
             )
         if self.safety_interlock is not None:
             self.safety_interlock.require("rollout", incumbent_id=incumbent_id)
-        self.shift.fit_reference(t.family for t in source_tasks)
-        target_rollouts = len(source_tasks) if rollout_count is None else rollout_count
-        if target_rollouts <= 0:
-            raise ValueError("rollout_count must be positive")
-        if self.config.samples_per_task <= 0:
-            raise ValueError("samples_per_task must be positive")
-        # A round index can be replayed by callers, so include a deterministic
-        # loop-local serial to keep rollout groups unique across run_round calls.
-        self._run_serial += 1
-        run_serial = self._run_serial
-        if self.config.samples_per_task == 1:
-            base_tasks = self.curriculum.choose(source_tasks, target_rollouts)
-            chosen = [
-                Task(
-                    id=t.id,
-                    prompt=t.prompt,
-                    family=t.family,
-                    metadata={
-                        **t.metadata,
-                        "vare_rollout_group": f"r{round_index}-run{run_serial}-g{i}",
-                        "vare_rollout_group_size": 1,
-                    },
-                )
-                for i, t in enumerate(base_tasks)
-            ]
+        if verified_experiences is None:
+            self.shift.fit_reference(t.family for t in source_tasks)
         else:
-            group_count = (target_rollouts + self.config.samples_per_task - 1) // self.config.samples_per_task
-            base_tasks = self.curriculum.choose(source_tasks, group_count)
-            chosen = []
-            for group_index, task in enumerate(base_tasks):
-                group_id = f"r{round_index}-run{run_serial}-g{group_index}"
-                for _ in range(self.config.samples_per_task):
-                    chosen.append(
-                        Task(
-                            id=task.id,
-                            prompt=task.prompt,
-                            family=task.family,
-                            metadata={
-                                **task.metadata,
-                                "vare_rollout_group": group_id,
-                                "vare_rollout_group_size": self.config.samples_per_task,
-                            },
-                        )
+            if shift_reference_families is None:
+                raise ValueError("streamed GRPO requires an independent task-family reference")
+            self.shift.fit_reference(shift_reference_families)
+        if verified_experiences is not None:
+            pairs = self._verified_pairs(verified_experiences)
+        else:
+            target_rollouts = len(source_tasks) if rollout_count is None else rollout_count
+            if target_rollouts <= 0:
+                raise ValueError("rollout_count must be positive")
+            if self.config.samples_per_task <= 0:
+                raise ValueError("samples_per_task must be positive")
+            # A round index can be replayed by callers, so include a deterministic
+            # loop-local serial to keep rollout groups unique across run_round calls.
+            self._run_serial += 1
+            run_serial = self._run_serial
+            if self.config.samples_per_task == 1:
+                base_tasks = self.curriculum.choose(source_tasks, target_rollouts)
+                chosen = [
+                    Task(
+                        id=t.id,
+                        prompt=t.prompt,
+                        family=t.family,
+                        metadata={
+                            **t.metadata,
+                            "vare_rollout_group": f"r{round_index}-run{run_serial}-g{i}",
+                            "vare_rollout_group_size": 1,
+                        },
                     )
-        sem = asyncio.Semaphore(self.config.rollout_concurrency)
-        # gather() normally propagates the first failure while other rollouts
-        # keep running. Never release the round lock with orphaned verifiers or
-        # generation hooks still using the transaction's policy state.
-        rollout_tasks = [
-            asyncio.create_task(self._one_rollout(sem, t, incumbent_id, incumbent_version))
-            for t in chosen
-        ]
-        group = asyncio.gather(*rollout_tasks)
-        try:
-            pairs = await asyncio.shield(group)
-        except BaseException:
-            cleanup = asyncio.create_task(self._cancel_and_drain_rollouts(rollout_tasks))
-            # Repeated caller cancellation must not abandon ongoing cleanup.
-            while not cleanup.done():
-                try:
-                    await asyncio.shield(cleanup)
-                except asyncio.CancelledError:
-                    continue
-            await cleanup
-            # Shield detaches the aggregate on caller cancellation. Consume its
-            # terminal exception after draining children, so it cannot become
-            # an unobserved _GatheringFuture failure.
+                    for i, t in enumerate(base_tasks)
+                ]
+            else:
+                group_count = (target_rollouts + self.config.samples_per_task - 1) // self.config.samples_per_task
+                base_tasks = self.curriculum.choose(source_tasks, group_count)
+                chosen = []
+                for group_index, task in enumerate(base_tasks):
+                    group_id = f"r{round_index}-run{run_serial}-g{group_index}"
+                    for _ in range(self.config.samples_per_task):
+                        chosen.append(
+                            Task(
+                                id=task.id,
+                                prompt=task.prompt,
+                                family=task.family,
+                                metadata={
+                                    **task.metadata,
+                                    "vare_rollout_group": group_id,
+                                    "vare_rollout_group_size": self.config.samples_per_task,
+                                },
+                            )
+                        )
+            sem = asyncio.Semaphore(self.config.rollout_concurrency)
+            # gather() normally propagates the first failure while other rollouts
+            # keep running. Never release the round lock with orphaned verifiers or
+            # generation hooks still using the transaction's policy state.
+            rollout_tasks = [
+                asyncio.create_task(self._one_rollout(sem, t, incumbent_id, incumbent_version))
+                for t in chosen
+            ]
+            group = asyncio.gather(*rollout_tasks)
             try:
-                await group
+                pairs = await asyncio.shield(group)
             except BaseException:
-                pass
-            raise
+                cleanup = asyncio.create_task(self._cancel_and_drain_rollouts(rollout_tasks))
+                # Repeated caller cancellation must not abandon ongoing cleanup.
+                while not cleanup.done():
+                    try:
+                        await asyncio.shield(cleanup)
+                    except asyncio.CancelledError:
+                        continue
+                await cleanup
+                # Shield detaches the aggregate on caller cancellation. Consume its
+                # terminal exception after draining children, so it cannot become
+                # an unobserved _GatheringFuture failure.
+                try:
+                    await group
+                except BaseException:
+                    pass
+                raise
 
         admitted: list[Experience] = []
         admitted_freshness: list[float] = []
         dropped = 0
+        batch_shift_score = self.shift.observe_batch(
+            attempt.task.family for attempt, _ in pairs
+        )
         for attempt, verification in pairs:
-            self.shift.observe(attempt.task.family)
-            shift_score = self.shift.score()
             lag = self.lag.assess(
                 rollout_policy_version=attempt.policy_version,
                 active_policy_version=incumbent_version,
                 reward_verifier_version=verification.verifier_version,
                 active_verifier_version=self.verifier.active_version,
-                shift_score=shift_score,
+                shift_score=batch_shift_score,
             )
             if not lag.admitted:
                 dropped += 1
@@ -512,6 +614,8 @@ class CapabilityLoop:
         )
         if screened_stale:
             self.events.emit("replay_experiences_screened", count=screened_stale)
+        if verified_experiences is not None and {exp.attempt.metadata.get("trajectory_id") for exp in train_batch} != {exp.attempt.metadata.get("trajectory_id") for exp in verified_experiences}:
+            raise RuntimeError("streamed batch was filtered or truncated before training")
         if not train_batch:
             candidate_id = incumbent_id
         else:
@@ -576,6 +680,11 @@ class CapabilityLoop:
                 )
             else:
                 decision = self.promotion.decide(incumbent_eval, candidate_eval)
+            if verified_experiences is not None:
+                assert self.training_evidence_authorizer is not None
+                if any(self.training_evidence_authorizer(exp) is not True for exp in train_batch):
+                    decision = PromotionDecision(False, ("streamed_training_evidence_changed",),
+                                                 decision.primary_gain, decision.worst_slice_regression)
             if decision.accepted and candidate_id != incumbent_id and self.promotion_journal is not None:
                 assert self.evidence_trust_root is not None
                 assert self.checkpoint_hasher is not None
@@ -636,6 +745,13 @@ class CapabilityLoop:
         deferred_cancellation_count = 0
         if candidate_id != incumbent_id and decision.accepted:
             transaction_id: str | None = None
+            if verified_experiences is not None:
+                assert publication_reserve is not None
+                try:
+                    await publication_reserve()
+                except BaseException:
+                    await self._discard_candidate(candidate_id, propagate_cancellation=False)
+                    raise
             if self.promotion_journal is not None:
                 assert self.checkpoint_hasher is not None
                 assert self.evidence_trust_root is not None

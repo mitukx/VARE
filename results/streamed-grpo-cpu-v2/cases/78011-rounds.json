@@ -1,0 +1,234 @@
+[
+  {
+    "result": {
+      "admitted_experiences": 4,
+      "candidate_eval": {
+        "cost": 0.008506135243806057,
+        "metadata": {
+          "per_task_scores": {
+            "stream-audit-78011-0": 1.0,
+            "stream-audit-78011-1": 1.0,
+            "stream-audit-78011-2": 1.0,
+            "stream-audit-78011-3": 1.0
+          },
+          "vare_checkpoint_sha256": "36131a30a9dcb3486d0def54d929a146914f2eb287cb279bd3fa5304d7a90b00",
+          "vare_evaluation_set_sha256": "7c826cc3efc64cd331cf4ba43318c74ee547ad3e033a6289d24086bdf8f71df3",
+          "vare_evidence_receipt": {
+            "mac_sha256": "c0bb3b5cae0cc1d79e64d2937bb705eb4248e9bc4df63489c753e348c45170bb",
+            "schema": "vare.promotion-evidence.checkpoint.v2"
+          },
+          "vare_promotion_nonce": "stream-78011-round-0"
+        },
+        "n": 4,
+        "policy_id": "policy-1",
+        "primary": 1.0,
+        "slices": {
+          "audit": 1.0
+        },
+        "verifier_disagreement": 0.0
+      },
+      "candidate_id": "policy-1",
+      "decision": {
+        "accepted": true,
+        "paired_gain": 0.0,
+        "paired_lcb": null,
+        "paired_n": 4,
+        "primary_gain": 0.0,
+        "reasons": [],
+        "worst_slice_regression": 0.0
+      },
+      "deferred_cancellation_count": 0,
+      "dropped_experiences": 0,
+      "failures": [],
+      "incumbent_eval": {
+        "cost": 0.00828374999400694,
+        "metadata": {
+          "per_task_scores": {
+            "stream-audit-78011-0": 1.0,
+            "stream-audit-78011-1": 1.0,
+            "stream-audit-78011-2": 1.0,
+            "stream-audit-78011-3": 1.0
+          },
+          "vare_checkpoint_sha256": "023b17c8db2cf9b49405cf251a215bfc0104309b224e6a37977ce266d7e740f1",
+          "vare_evaluation_set_sha256": "7c826cc3efc64cd331cf4ba43318c74ee547ad3e033a6289d24086bdf8f71df3",
+          "vare_evidence_receipt": {
+            "mac_sha256": "a646c27a361e6155f15856b640a9413ec23aa4ee79c7ac7c890c2dfc56d88b0a",
+            "schema": "vare.promotion-evidence.checkpoint.v2"
+          },
+          "vare_promotion_nonce": "stream-78011-round-0"
+        },
+        "n": 4,
+        "policy_id": "policy-0",
+        "primary": 1.0,
+        "slices": {
+          "audit": 1.0
+        },
+        "verifier_disagreement": 0.0
+      },
+      "incumbent_id": "policy-0",
+      "promoted_id": "policy-1",
+      "round_index": 0
+    },
+    "round": 0,
+    "wall_s": 1.3697617499856278
+  },
+  {
+    "result": {
+      "admitted_experiences": 4,
+      "candidate_eval": {
+        "cost": 0.008841635251883417,
+        "metadata": {
+          "per_task_scores": {
+            "stream-audit-78011-0": 1.0,
+            "stream-audit-78011-1": 1.0,
+            "stream-audit-78011-2": 1.0,
+            "stream-audit-78011-3": 1.0
+          },
+          "vare_checkpoint_sha256": "42ee9575a9f1d8749e1aabfbcc7f11eda62ba51adf33ba04841d11c6cc015e02",
+          "vare_evaluation_set_sha256": "7c826cc3efc64cd331cf4ba43318c74ee547ad3e033a6289d24086bdf8f71df3",
+          "vare_evidence_receipt": {
+            "mac_sha256": "8cf296da77948fd36a502b3ceb309c01c501eabe33e23e3f82661f25aabf5efd",
+            "schema": "vare.promotion-evidence.checkpoint.v2"
+          },
+          "vare_promotion_nonce": "stream-78011-round-1"
+        },
+        "n": 4,
+        "policy_id": "policy-2",
+        "primary": 1.0,
+        "slices": {
+          "audit": 1.0
+        },
+        "verifier_disagreement": 0.0
+      },
+      "candidate_id": "policy-2",
+      "decision": {
+        "accepted": false,
+        "paired_gain": 0.0,
+        "paired_lcb": null,
+        "paired_n": 4,
+        "primary_gain": 0.0,
+        "reasons": [
+          "insufficient_primary_gain"
+        ],
+        "worst_slice_regression": 0.0
+      },
+      "deferred_cancellation_count": 0,
+      "dropped_experiences": 0,
+      "failures": [],
+      "incumbent_eval": {
+        "cost": 0.00852679148374591,
+        "metadata": {
+          "per_task_scores": {
+            "stream-audit-78011-0": 1.0,
+            "stream-audit-78011-1": 1.0,
+            "stream-audit-78011-2": 1.0,
+            "stream-audit-78011-3": 1.0
+          },
+          "vare_checkpoint_sha256": "36131a30a9dcb3486d0def54d929a146914f2eb287cb279bd3fa5304d7a90b00",
+          "vare_evaluation_set_sha256": "7c826cc3efc64cd331cf4ba43318c74ee547ad3e033a6289d24086bdf8f71df3",
+          "vare_evidence_receipt": {
+            "mac_sha256": "bab42bc3262a1b615460fc2386c5772b07b8ab604cfe97b426b45ddc331d53b8",
+            "schema": "vare.promotion-evidence.checkpoint.v2"
+          },
+          "vare_promotion_nonce": "stream-78011-round-1"
+        },
+        "n": 4,
+        "policy_id": "policy-1",
+        "primary": 1.0,
+        "slices": {
+          "audit": 1.0
+        },
+        "verifier_disagreement": 0.0
+      },
+      "incumbent_id": "policy-1",
+      "promoted_id": "policy-1",
+      "round_index": 1
+    },
+    "round": 1,
+    "wall_s": 1.2606882919790223
+  },
+  {
+    "ack_interrupted": true,
+    "active": {
+      "checkpoint_sha256": "dc902477e906d03a2255113def6bca014e27d6979db904f47e5bf17431cb46fd",
+      "policy_id": "policy-3",
+      "version": 2
+    },
+    "recovery_s": 0.08440208400133997,
+    "round": 2,
+    "round_wall_s": 1.3884967910125852
+  },
+  {
+    "result": {
+      "admitted_experiences": 4,
+      "candidate_eval": {
+        "cost": 0.008655603989609517,
+        "metadata": {
+          "per_task_scores": {
+            "stream-audit-78011-0": 1.0,
+            "stream-audit-78011-1": 1.0,
+            "stream-audit-78011-2": 1.0,
+            "stream-audit-78011-3": 1.0
+          },
+          "vare_checkpoint_sha256": "56ac7fcecede6dd7abf86c8187ede7074ec907f65c25c1665f2e5ff3008447e1",
+          "vare_evaluation_set_sha256": "7c826cc3efc64cd331cf4ba43318c74ee547ad3e033a6289d24086bdf8f71df3",
+          "vare_evidence_receipt": {
+            "mac_sha256": "34d94dc040aa91ff06c6e2a3180835166181e3b67ac3661f421db67b4c26b1aa",
+            "schema": "vare.promotion-evidence.checkpoint.v2"
+          },
+          "vare_promotion_nonce": "stream-78011-round-3"
+        },
+        "n": 4,
+        "policy_id": "policy-4",
+        "primary": 1.0,
+        "slices": {
+          "audit": 1.0
+        },
+        "verifier_disagreement": 0.0
+      },
+      "candidate_id": "policy-4",
+      "decision": {
+        "accepted": true,
+        "paired_gain": 0.0,
+        "paired_lcb": null,
+        "paired_n": 4,
+        "primary_gain": 0.0,
+        "reasons": [],
+        "worst_slice_regression": 0.0
+      },
+      "deferred_cancellation_count": 0,
+      "dropped_experiences": 0,
+      "failures": [],
+      "incumbent_eval": {
+        "cost": 0.008909718511858955,
+        "metadata": {
+          "per_task_scores": {
+            "stream-audit-78011-0": 1.0,
+            "stream-audit-78011-1": 1.0,
+            "stream-audit-78011-2": 1.0,
+            "stream-audit-78011-3": 1.0
+          },
+          "vare_checkpoint_sha256": "dc902477e906d03a2255113def6bca014e27d6979db904f47e5bf17431cb46fd",
+          "vare_evaluation_set_sha256": "7c826cc3efc64cd331cf4ba43318c74ee547ad3e033a6289d24086bdf8f71df3",
+          "vare_evidence_receipt": {
+            "mac_sha256": "96e27583cfb31dc7afd61ce559590546584696325d587ce6472f34f94cee7616",
+            "schema": "vare.promotion-evidence.checkpoint.v2"
+          },
+          "vare_promotion_nonce": "stream-78011-round-3"
+        },
+        "n": 4,
+        "policy_id": "policy-3",
+        "primary": 1.0,
+        "slices": {
+          "audit": 1.0
+        },
+        "verifier_disagreement": 0.0
+      },
+      "incumbent_id": "policy-3",
+      "promoted_id": "policy-4",
+      "round_index": 3
+    },
+    "round": 3,
+    "wall_s": 1.3587172079714946
+  }
+]

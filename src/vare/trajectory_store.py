@@ -344,7 +344,7 @@ class TrajectoryStore:
         now = clock(now)
         with self.connection(True) as db:
             # Bound recovery work per claim; repeated calls drain a large expired queue.
-            timed_out = db.execute("SELECT id FROM trajectories WHERE expires<=? AND state NOT IN ('consumed','quarantined','cancelled') ORDER BY expires LIMIT 64", (now,)).fetchall()
+            timed_out = db.execute("SELECT id FROM trajectories WHERE expires<=? AND state NOT IN ('consumed','quarantined','cancelled','publishing') ORDER BY expires LIMIT 64", (now,)).fetchall()
             for trajectory in timed_out:
                 self._cancel(db, trajectory["id"], "lifetime_exceeded")
             expired = db.execute("SELECT * FROM work WHERE stage=? AND state='running' AND deadline<=? ORDER BY deadline LIMIT 64", (stage, now)).fetchall()
@@ -478,6 +478,9 @@ class TrajectoryStore:
             raise KeyError(trajectory_id)
         if row["state"] in {"consumed", "quarantined", "cancelled"}:
             return False
+        if row["state"] == "publishing":
+            self.event(db, "cancellation_deferred", trajectory_id, 0, {"reason": reason, "owner": "learner_publication"})
+            return False
         members = db.execute("SELECT id FROM trajectories WHERE group_id=? ORDER BY member", (row["group_id"],)).fetchall()
         for member in members:
             ident = member["id"]
@@ -548,6 +551,39 @@ def audit_trajectory_store(path):
                     or digest(encode(event)) != row["event_hash"]):
                 raise ValueError("event history hash mismatch")
             head, count = row["event_hash"], count + 1
+        pending_delivery = None
+        publication = None
+        verifier_epoch = None
+        batch_ids = set()
+        for row in db.execute("SELECT event FROM events WHERE json_extract(event,'$.kind') IN ('learner_batch_reserved','learner_batch_terminal','learner_batch_reconciled','learner_publication_reserved','learner_verifier_activated') ORDER BY sequence"):
+            event = json.loads(row[0])
+            details = event["details"]
+            if event["job_id"] != "stream-learner":
+                raise ValueError("invalid learner history owner")
+            if event["kind"] == "learner_verifier_activated":
+                if publication is not None:
+                    raise ValueError("verifier refreshed during owned publication")
+                verifier_epoch = details["identity"]
+            elif event["kind"] == "learner_publication_reserved":
+                if (publication is not None or pending_delivery is None
+                        or details["batch_id"] != pending_delivery["batch_id"]
+                        or details["groups"] != pending_delivery["groups"]
+                        or details["verifier_identity"] != verifier_epoch):
+                    raise ValueError("invalid source publication reservation")
+                publication = details
+            elif event["kind"] == "learner_batch_reserved":
+                if pending_delivery is not None or details["batch_id"] in batch_ids or not details["groups"]:
+                    raise ValueError("overlapping or duplicated learner delivery")
+                batch_ids.add(details["batch_id"])
+                pending_delivery = details
+            else:
+                if pending_delivery is None or details["batch_id"] != pending_delivery["batch_id"]:
+                    raise ValueError("learner acknowledgment lacks matching reservation")
+                pending_delivery = None
+                publication = None
+        epoch_row = db.execute("SELECT value FROM meta WHERE key='learner_verifier'").fetchone()
+        if (json.loads(epoch_row[0]) if epoch_row else None) != verifier_epoch:
+            raise ValueError("active verifier epoch/history mismatch")
         step_count = 0
         for row in db.execute("SELECT s.*,e.event FROM steps s JOIN events e ON e.sequence=s.event_sequence ORDER BY s.trajectory_id,s.step"):
             event = json.loads(row["event"])
@@ -559,7 +595,7 @@ def audit_trajectory_store(path):
             AgentStep(**{**payload, "policy": PolicyCheckpoint(**payload["policy"])})
             step_count += 1
         for row in db.execute("SELECT * FROM trajectories ORDER BY id"):
-            allowed_states = {"queued", "running", "complete", "verified", "consumed", "cancelled", "quarantined"}
+            allowed_states = {"queued", "running", "complete", "verified", "learning", "publishing", "consumed", "cancelled", "quarantined"}
             if row["state"] not in allowed_states:
                 raise ValueError("unknown trajectory state")
             spec = json.loads(row["task"])
@@ -581,13 +617,13 @@ def audit_trajectory_store(path):
                 expected, n = updated, n + 1
             if n != row["next_step"] or expected != row["head"] or n > row["expected_steps"]:
                 raise ValueError("trajectory cursor/chain mismatch")
-            if row["state"] in {"complete", "verified", "consumed"} and n != row["expected_steps"]:
+            if row["state"] in {"complete", "verified", "learning", "publishing", "consumed"} and n != row["expected_steps"]:
                 raise ValueError("terminal trajectory is incomplete")
             if completed and (len(completed) != 1 or completed[0]["details"] != {"head": row["head"], "steps": n}):
                 raise ValueError("completion/history mismatch")
-            if completed and row["state"] not in {"complete", "verified", "consumed", "cancelled", "quarantined"}:
+            if completed and row["state"] not in {"complete", "verified", "learning", "publishing", "consumed", "cancelled", "quarantined"}:
                 raise ValueError("completion history conflicts with row state")
-            if row["state"] in {"complete", "verified", "consumed"} and not completed:
+            if row["state"] in {"complete", "verified", "learning", "publishing", "consumed"} and not completed:
                 raise ValueError("missing completion event")
             if row["verification"] is not None:
                 verification = snapshot_verification(Verification(**json.loads(row["verification"])))
@@ -595,10 +631,19 @@ def audit_trajectory_store(path):
                     raise ValueError("verification chain binding mismatch")
                 if len(verified) != 1 or verified[0]["details"]["verification"] != asdict(verification):
                     raise ValueError("verification/history mismatch")
-            elif verified or row["state"] in {"verified", "consumed"}:
+            elif verified or row["state"] in {"verified", "learning", "publishing", "consumed"}:
                 raise ValueError("missing verified reward state")
-            if verified and row["state"] not in {"verified", "consumed", "cancelled", "quarantined"}:
+            if verified and row["state"] not in {"verified", "learning", "publishing", "consumed", "cancelled", "quarantined"}:
                 raise ValueError("verification history conflicts with row state")
+            owned = (pending_delivery is not None and pending_delivery["groups"].get(row["group_id"], {}).get(row["id"]) == row["head"])
+            if row["state"] in {"learning", "publishing"} and not owned:
+                raise ValueError("learning state lacks durable delivery ownership")
+            if row["state"] == "publishing" and publication is None:
+                raise ValueError("publishing state lacks source reservation")
+            if publication is not None and owned and row["state"] != "publishing":
+                raise ValueError("publication source was changed before acknowledgment")
+            if owned and row["state"] not in {"learning", "publishing", "cancelled", "quarantined"}:
+                raise ValueError("unresolved delivery state/history mismatch")
             terminal_history = [e for e in history if e["kind"] in {"trajectory_cancelled", "trajectory_quarantined", "consumer_acknowledged"}]
             group_history = [json.loads(event[0])["details"] for event in db.execute("SELECT event FROM events WHERE json_extract(event,'$.job_id')=? AND json_extract(event,'$.kind')='group_acknowledged'", (row["group_id"],))]
             terminal_history += [body for body in group_history if row["id"] in body["heads"]]

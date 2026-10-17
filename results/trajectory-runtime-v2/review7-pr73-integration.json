@@ -1,0 +1,48 @@
+{
+  "audit_state_compatibility": [
+    "learning",
+    "publishing"
+  ],
+  "base_before_merge": "c72f3c1d6993e2a8817938dcef053d90c2543618",
+  "full_suite": {
+    "collected": 1031,
+    "command": "python -m pytest -o addopts= --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py",
+    "exit_code": 0,
+    "failed": 0,
+    "passed": 1022,
+    "skipped": 9
+  },
+  "integrated_pr72_commit": "61431c42481acb6cb55a1edddf93b1f8a0555c98",
+  "offline_replay": {
+    "command_template": "python scripts/audit_streamed_grpo_cpu.py /tmp/vare-review7-stream/streamed-grpo-v3/<seed> --model-dir ../tinystories-1m --rvl-source ../rvl-grpo-current --expected-manifest /tmp/vare-review7-stream/expected/<seed>-files.json",
+    "expected_manifests": "Committed per-seed manifests from results/streamed-grpo-cpu-v3/cases; raw work directories came from the preserved release archive.",
+    "seeds": {
+      "80011": {
+        "pass": true,
+        "updates": 4
+      },
+      "80012": {
+        "pass": true,
+        "updates": 4
+      },
+      "80013": {
+        "pass": true,
+        "updates": 4
+      }
+    }
+  },
+  "protections": "Those GRPO in-flight states remain accepted only with durable delivery ownership; publishing additionally requires its publication reservation. Completion and verification histories must also remain consistent with row state.",
+  "sha256": {
+    "results/trajectory-runtime-v2/review7-pr73-full-tests.log": "192c081faf2b2d4df9fee9efc382d649c52e15a57935aa269fd75eedeb7b068f",
+    "results/trajectory-runtime-v2/review7-pr73-offline/80011.json": "5d39b09e22628b47a222de9ab4c6ffe05b3e0ee4025be336ede90d7b83f70ae8",
+    "results/trajectory-runtime-v2/review7-pr73-offline/80012.json": "db07f43e08ca9a6c794913be0bd226d053b6ff342b9d770039822f4409c61ca6",
+    "results/trajectory-runtime-v2/review7-pr73-offline/80013.json": "bb2d791a8f981365b2fb8beaa69935fc9762a0abde85077e528d5ca16baca13b",
+    "src/vare/trajectory_store.py": "67278b05c230203170248877e3cbaa2a1eb366915c22a76da64c2ccdf4c21b9c",
+    "tests/test_trajectory_learner.py": "196d493d0959fafbb460b9b1b537a7dd1569227bf97195fe5afa4891142ea5ab",
+    "tests/test_trajectory_store.py": "6f0a0ddf136352d72e41b2b226ff24a73c463f38c40d4ef78d303048fc5604f0"
+  },
+  "targeted_tests": {
+    "command": "python -m pytest -q tests/test_trajectory_store.py tests/test_trajectory_learner.py",
+    "passed": 50
+  }
+}

@@ -234,7 +234,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install ruff==0.15.12
-      - run: ruff check src tests minigrpo selfimprove scripts/run_minigrpo.py scripts/run_selfimprove.py scripts/run_flagship.py scripts/reproduce_grpo_audit_independent_reproduction_v2.py scripts/validate_grpo_e2e_cpu.py scripts/audit_grpo_e2e_cpu.py scripts/benchmark_trajectory_runtime.py scripts/audit_trajectory_runtime.py scripts/benchmark_verifier_refresh_controls.py
+      - run: ruff check src tests minigrpo selfimprove scripts/run_minigrpo.py scripts/run_selfimprove.py scripts/run_flagship.py scripts/reproduce_grpo_audit_independent_reproduction_v2.py scripts/validate_grpo_e2e_cpu.py scripts/audit_grpo_e2e_cpu.py scripts/benchmark_trajectory_runtime.py scripts/audit_trajectory_runtime.py scripts/validate_streamed_grpo_cpu.py scripts/audit_streamed_grpo_cpu.py scripts/benchmark_verifier_refresh_controls.py
   typecheck:
     runs-on: ubuntu-latest
     steps:

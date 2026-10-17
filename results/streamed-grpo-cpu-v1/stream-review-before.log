@@ -1,0 +1,530 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_____________ test_failed_rejected_ack_fences_even_ordinary_rounds _____________
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-298/test_failed_rejected_ack_fence0')
+
+    def test_failed_rejected_ack_fences_even_ordinary_rounds(tmp_path):
+        from dataclasses import replace
+        from vare.promotion import PromotionGate
+        store, adapter, loop, hooks = setup(tmp_path)
+        loop.promotion = PromotionGate(replace(loop.config.promotion,min_primary_gain=1.1),trust_root=hooks.signer)
+        def lost_ack(*args, **kwargs):
+            raise OSError("lost rejected ACK")
+        adapter._terminal = lost_ack
+        with pytest.raises(OSError,match="lost rejected ACK"):
+            asyncio.run(adapter.advance(loop,round_index=0))
+        assert hooks.active == "p0" and adapter.pending() is not None
+        calls = list(hooks.calls)
+        from vare.types import Task
+        with pytest.raises(PromotionRecoveryRequired):
+>           asyncio.run(loop.run_round([Task("new","new")],round_index=1))
+
+tests/test_trajectory_learner.py:193: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py:190: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/tmp7h8qnw4z/src/vare/engine.py:280: in run_round
+    result = await self._run_round(
+/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/tmp7h8qnw4z/src/vare/engine.py:448: in _run_round
+    await group
+/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/tmp7h8qnw4z/src/vare/engine.py:106: in _one_rollout
+    attempt = await self.hooks.rollout(task, policy_id, policy_version, step)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_trajectory_learner.IngestionHooks object at 0x1070d4550>
+args = (Task(id='new', prompt='new', family='default', metadata={'vare_rollout_group': 'r1-run1-g0', 'vare_rollout_group_size': 1}), 'p0', 0, 2)
+
+    async def rollout(self, *args):
+>       raise AssertionError("ingestion regenerated a stored trajectory")
+E       AssertionError: ingestion regenerated a stored trajectory
+
+tests/test_trajectory_learner.py:26: AssertionError
+________ test_source_publication_reservation_fences_cancel_and_refresh _________
+
+candidate = 'p1', kwargs = {'defer_caller_cancellation': True}
+
+    async def race(candidate, **kwargs):
+>       assert store.counts() == {"publishing":2}
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError
+
+tests/test_trajectory_learner.py:203: AssertionError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-298/test_source_publication_reserv0')
+
+    def test_source_publication_reservation_fences_cancel_and_refresh(tmp_path):
+        from vare.durable import FenceError
+        store, adapter, loop, hooks = setup(tmp_path)
+        publish = loop._publish_candidate
+        async def race(candidate, **kwargs):
+            assert store.counts() == {"publishing":2}
+            assert not store.cancel("t0")  # The earlier publication reservation owns this transition.
+            with pytest.raises(FenceError,match="publication owns verifier"):
+                adapter.activate_verifier(("v",1,"e"*64))
+            assert audit_trajectory_store(store.path)["pass"]
+            return await publish(candidate,**kwargs)
+        loop._publish_candidate = race
+>       result = asyncio.run(adapter.advance(loop,round_index=0))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_trajectory_learner.py:210: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py:190: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/tmp7h8qnw4z/src/vare/trajectory_learner.py:160: in advance
+    result = await loop.run_verified_round(batch, round_index=round_index)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/tmp7h8qnw4z/src/vare/engine.py:312: in run_verified_round
+    return await self.run_round(
+/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/tmp7h8qnw4z/src/vare/engine.py:284: in run_round
+    result = await self._run_round(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <vare.engine.CapabilityLoop object at 0x1072b1290>
+tasks = [Task(id='task', prompt='same terminal prompt', family='default', metadata={'learning_rule': 'terminal_action_on_polic...329d51da5b885ee04ed1dbb26', 'source_task_sha256': 'eabed86f113fe9dceb11a2195d2d6babb31187f8a124c6b1b87f2d14e66ddacf'})]
+
+    async def _run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None, verified_experiences: Sequence[Experience] | None = None) -> RoundResult:
+        source_tasks = list(tasks) + (self._generated_tasks if verified_experiences is None else [])
+        if not source_tasks:
+            raise ValueError("run_round requires tasks")
+        incumbent_id, incumbent_version = self.hooks.active_policy()
+        if self.promotion_journal is not None:
+            assert self.checkpoint_hasher is not None
+            self.promotion_journal.assert_clean(
+                policy_id=incumbent_id,
+                checkpoint_sha256=self.checkpoint_hasher(incumbent_id),
+            )
+        if self.safety_interlock is not None:
+            self.safety_interlock.require("rollout", incumbent_id=incumbent_id)
+        self.shift.fit_reference(t.family for t in source_tasks)
+        if verified_experiences is not None:
+            pairs = self._verified_pairs(verified_experiences)
+        else:
+            target_rollouts = len(source_tasks) if rollout_count is None else rollout_count
+            if target_rollouts <= 0:
+                raise ValueError("rollout_count must be positive")
+            if self.config.samples_per_task <= 0:
+                raise ValueError("samples_per_task must be positive")
+            # A round index can be replayed by callers, so include a deterministic
+            # loop-local serial to keep rollout groups unique across run_round calls.
+            self._run_serial += 1
+            run_serial = self._run_serial
+            if self.config.samples_per_task == 1:
+                base_tasks = self.curriculum.choose(source_tasks, target_rollouts)
+                chosen = [
+                    Task(
+                        id=t.id,
+                        prompt=t.prompt,
+                        family=t.family,
+                        metadata={
+                            **t.metadata,
+                            "vare_rollout_group": f"r{round_index}-run{run_serial}-g{i}",
+                            "vare_rollout_group_size": 1,
+                        },
+                    )
+                    for i, t in enumerate(base_tasks)
+                ]
+            else:
+                group_count = (target_rollouts + self.config.samples_per_task - 1) // self.config.samples_per_task
+                base_tasks = self.curriculum.choose(source_tasks, group_count)
+                chosen = []
+                for group_index, task in enumerate(base_tasks):
+                    group_id = f"r{round_index}-run{run_serial}-g{group_index}"
+                    for _ in range(self.config.samples_per_task):
+                        chosen.append(
+                            Task(
+                                id=task.id,
+                                prompt=task.prompt,
+                                family=task.family,
+                                metadata={
+                                    **task.metadata,
+                                    "vare_rollout_group": group_id,
+                                    "vare_rollout_group_size": self.config.samples_per_task,
+                                },
+                            )
+                        )
+            sem = asyncio.Semaphore(self.config.rollout_concurrency)
+            # gather() normally propagates the first failure while other rollouts
+            # keep running. Never release the round lock with orphaned verifiers or
+            # generation hooks still using the transaction's policy state.
+            rollout_tasks = [
+                asyncio.create_task(self._one_rollout(sem, t, incumbent_id, incumbent_version))
+                for t in chosen
+            ]
+            group = asyncio.gather(*rollout_tasks)
+            try:
+                pairs = await asyncio.shield(group)
+            except BaseException:
+                cleanup = asyncio.create_task(self._cancel_and_drain_rollouts(rollout_tasks))
+                # Repeated caller cancellation must not abandon ongoing cleanup.
+                while not cleanup.done():
+                    try:
+                        await asyncio.shield(cleanup)
+                    except asyncio.CancelledError:
+                        continue
+                await cleanup
+                # Shield detaches the aggregate on caller cancellation. Consume its
+                # terminal exception after draining children, so it cannot become
+                # an unobserved _GatheringFuture failure.
+                try:
+                    await group
+                except BaseException:
+                    pass
+                raise
+    
+        admitted: list[Experience] = []
+        admitted_freshness: list[float] = []
+        dropped = 0
+        for attempt, verification in pairs:
+            self.shift.observe(attempt.task.family)
+            shift_score = self.shift.score()
+            lag = self.lag.assess(
+                rollout_policy_version=attempt.policy_version,
+                active_policy_version=incumbent_version,
+                reward_verifier_version=verification.verifier_version,
+                active_verifier_version=self.verifier.active_version,
+                shift_score=shift_score,
+            )
+            if not lag.admitted:
+                dropped += 1
+                self.events.emit("experience_dropped", reasons=lag.reasons, task_id=attempt.task.id)
+                continue
+            exp = Experience(
+                attempt=attempt,
+                verification=verification,
+                policy_lag=lag.policy_lag,
+                verifier_lag=lag.verifier_lag,
+                shift_score=lag.shift_score,
+            )
+            admitted.append(exp)
+            admitted_freshness.append(lag.freshness)
+    
+        screened_stale = 0
+        freshness_assessor = make_experience_freshness_assessor(
+            self.lag,
+            active_policy_version=incumbent_version,
+            active_verifier_version=lambda: self.verifier.active_version,
+        )
+    
+        def current_freshness(exp: Experience) -> float | None:
+            nonlocal screened_stale
+            decision = freshness_assessor(exp)
+            if not decision.admitted:
+                screened_stale += 1
+                return None
+            return decision.freshness
+    
+        # Ineligible high-priority groups must not consume the capacity needed
+        # to insert a fresh group. Sampling alone only filters their outputs.
+        removed = self.replay.prune_current(
+            freshness_fn=current_freshness,
+            grouped=self.config.preserve_rollout_groups,
+        )
+        if removed:
+            self.events.emit("replay_experiences_pruned", count=removed)
+    
+        if self.config.preserve_rollout_groups:
+            admitted_groups: dict[str, list[tuple[Experience, float]]] = {}
+            for exp, freshness in zip(admitted, admitted_freshness, strict=True):
+                stored_group = exp.attempt.metadata.get("vare_rollout_group")
+                if stored_group is None:
+                    stored_group = exp.attempt.task.metadata.get("vare_rollout_group")
+                key = str(stored_group) if stored_group is not None else f"ungrouped:{id(exp)}"
+                admitted_groups.setdefault(key, []).append((exp, freshness))
+    
+            for group_id, members in admitted_groups.items():
+                first = members[0][0]
+                expected_size = first.attempt.metadata.get("vare_rollout_group_size")
+                if expected_size is None:
+                    expected_size = first.attempt.task.metadata.get(
+                        "vare_rollout_group_size"
+                    )
+                complete = (
+                    isinstance(expected_size, int)
+                    and not isinstance(expected_size, bool)
+                    and expected_size == len(members)
+                )
+                inserted = complete and self.replay.add_group(
+                    [exp for exp, _ in members],
+                    [freshness for _, freshness in members],
+                )
+                if not inserted:
+                    experiences = [exp for exp, _ in members]
+                    if not complete:
+                        reason = "incomplete_after_lag"
+                    elif not self.replay.group_has_homogeneous_provenance(experiences):
+                        reason = "heterogeneous_provenance"
+                    else:
+                        reason = "capacity_or_priority"
+                    self.events.emit(
+                        "replay_group_not_admitted",
+                        group_id=group_id,
+                        admitted_count=len(members),
+                        expected_size=expected_size,
+                        reason=reason,
+                    )
+        else:
+            for exp, freshness in zip(admitted, admitted_freshness, strict=True):
+                self.replay.add(exp, freshness)
+    
+        clusters = self.failures.mine(admitted)
+        self.curriculum.update(clusters)
+    
+        if self.verifier_refresh is not None:
+            refreshed = await self.verifier_refresh.maybe_refresh(clusters, admitted)
+            if refreshed:
+                self.events.emit("verifier_refreshed", active_version=self.verifier.active_version)
+    
+        if self.task_generator is not None and clusters:
+            generated = await self.task_generator.generate(
+                clusters,
+                admitted,
+                self.config.generated_tasks_per_round,
+            )
+            if generated:
+                self._generated_tasks.extend(generated)
+                self._generated_tasks = self._generated_tasks[-self.config.generated_task_buffer :]
+                self.events.emit("tasks_generated", count=len(generated))
+    
+        train_batch = self.replay.sample_current(
+            self.config.replay_batch_size,
+            freshness_fn=current_freshness,
+            grouped=self.config.preserve_rollout_groups,
+        )
+        if screened_stale:
+            self.events.emit("replay_experiences_screened", count=screened_stale)
+        if verified_experiences is not None and {exp.attempt.metadata.get("trajectory_id") for exp in train_batch} != {exp.attempt.metadata.get("trajectory_id") for exp in verified_experiences}:
+            raise RuntimeError("streamed batch was filtered or truncated before training")
+        if not train_batch:
+            candidate_id = incumbent_id
+        else:
+            # Authorization occurs at consumption time, after replay
+            # resampling and freshness checks. A failed group member denies
+            # the entire batch before any optimizer mutation.
+            if self.training_evidence_authorizer is not None:
+                try:
+                    validate_complete_rvl_reward_batch(train_batch)
+                    authorizations = [
+                        self.training_evidence_authorizer(exp) for exp in train_batch
+                    ]
+                except Exception as exc:
+                    self.events.emit("training_reward_evidence_denied", count=len(train_batch))
+                    raise RuntimeError("training_reward_evidence_unverifiable") from exc
+                if any(type(ok) is not bool or not ok for ok in authorizations):
+                    self.events.emit("training_reward_evidence_denied", count=len(train_batch))
+                    raise RuntimeError("unauthenticated_training_reward_evidence")
+            if self.safety_interlock is not None:
+                self.safety_interlock.require("train", incumbent_id=incumbent_id)
+            # A failing training hook may have mutated model/optimizer state
+            # without returning a candidate handle. Fence rather than guess.
+            self._candidate_unresolved = True
+            freshness_train = getattr(
+                self.hooks, "train_candidate_with_freshness", None
+            )
+            if callable(freshness_train):
+                candidate_id = await freshness_train(
+                    incumbent_id,
+                    train_batch,
+                    freshness_assessor,
+                )
+            else:
+                candidate_id = await self.hooks.train_candidate(incumbent_id, train_batch)
+    
+        evaluation_tasks: list[asyncio.Task] = []
+        evaluation_group: asyncio.Future | None = None
+        try:
+            # Check authority before scheduling any evaluation work. Recovery
+            # also owns asynchronous discard if this preflight check fails.
+            if self.safety_interlock is not None:
+                self.safety_interlock.require("evaluate", incumbent_id=incumbent_id)
+            evaluation_tasks = [
+                asyncio.create_task(self.hooks.evaluate(incumbent_id)),
+                asyncio.create_task(self.hooks.evaluate(candidate_id)),
+            ]
+            evaluation_group = asyncio.gather(*evaluation_tasks)
+            # Own the evaluation lifetime: caller cancellation must not cancel
+            # a hook repeatedly while it is unwinding its own resources.
+            incumbent_eval, candidate_eval = await asyncio.shield(evaluation_group)
+            if self.safety_interlock is not None:
+                self.safety_interlock.require("evaluate", incumbent_id=incumbent_id)
+            if (
+                incumbent_eval.policy_id != incumbent_id
+                or candidate_eval.policy_id != candidate_id
+            ):
+                decision = PromotionDecision(
+                    accepted=False,
+                    reasons=("evaluation_policy_mismatch",),
+                    primary_gain=0.0,
+                    worst_slice_regression=0.0,
+                )
+            else:
+                decision = self.promotion.decide(incumbent_eval, candidate_eval)
+            if verified_experiences is not None:
+                assert self.training_evidence_authorizer is not None
+                if any(self.training_evidence_authorizer(exp) is not True for exp in train_batch):
+                    decision = PromotionDecision(False, ("streamed_training_evidence_changed",),
+                                                 decision.primary_gain, decision.worst_slice_regression)
+            if decision.accepted and candidate_id != incumbent_id and self.promotion_journal is not None:
+                assert self.evidence_trust_root is not None
+                assert self.checkpoint_hasher is not None
+                expected_old = self.evidence_trust_root.checkpoint_digest(incumbent_eval)
+                expected_new = self.evidence_trust_root.checkpoint_digest(candidate_eval)
+                if (
+                    expected_old is None or expected_new is None
+                    or expected_old != self.checkpoint_hasher(incumbent_id)
+                    or expected_new != self.checkpoint_hasher(candidate_id)
+                ):
+                    decision = PromotionDecision(
+                        accepted=False,
+                        reasons=("checkpoint_attestation_mismatch",),
+                        primary_gain=decision.primary_gain,
+                        worst_slice_regression=decision.worst_slice_regression,
+                        paired_gain=decision.paired_gain,
+                        paired_lcb=decision.paired_lcb,
+                        paired_n=decision.paired_n,
+                    )
+            if candidate_id != incumbent_id and decision.accepted and self.safety_interlock is not None:
+                try:
+                    self.safety_interlock.require(
+                        "promote", incumbent_id=incumbent_id, candidate_id=candidate_id
+                    )
+                except SafetyInterlockDenied:
+                    decision = PromotionDecision(
+                        accepted=False,
+                        reasons=("safety_interlock_denied",),
+                        primary_gain=decision.primary_gain,
+                        worst_slice_regression=decision.worst_slice_regression,
+                        paired_gain=decision.paired_gain,
+                        paired_lcb=decision.paired_lcb,
+                        paired_n=decision.paired_n,
+                    )
+        except BaseException:
+            async def rollback_evaluation() -> None:
+                # gather propagates the first error without stopping siblings.
+                # Cancel each live evaluator once, then wait for all hook
+                # cleanup before deleting a snapshot it may still be using.
+                # A hook already cancelling may be inside asynchronous cleanup.
+                for task in evaluation_tasks:
+                    if not task.done() and not task.cancelling():
+                        task.cancel()
+                await asyncio.gather(*evaluation_tasks, return_exceptions=True)
+                if evaluation_group is not None and not evaluation_group.cancelled():
+                    evaluation_group.exception()  # Retrieve secondary/group errors.
+                if candidate_id != incumbent_id:
+                    await self._discard_candidate(candidate_id, propagate_cancellation=False)
+    
+            recovery = asyncio.create_task(rollback_evaluation())
+            while not recovery.done():
+                try:
+                    await asyncio.shield(recovery)
+                except asyncio.CancelledError:
+                    continue
+            recovery.result()
+            raise
+        deferred_cancellation_count = 0
+        if candidate_id != incumbent_id and decision.accepted:
+            transaction_id: str | None = None
+            if self.promotion_journal is not None:
+                assert self.checkpoint_hasher is not None
+                assert self.evidence_trust_root is not None
+                old_digest = self.evidence_trust_root.checkpoint_digest(incumbent_eval)
+                new_digest = self.evidence_trust_root.checkpoint_digest(candidate_eval)
+                assert old_digest is not None and new_digest is not None
+                transaction_id = self.evidence_trust_root.promotion_nonce
+                assert transaction_id is not None
+                try:
+                    # The check and durable prepare precede any live policy
+                    # mutation. A nonce can be consumed only once.
+                    if (self.checkpoint_hasher(incumbent_id) != old_digest
+                            or self.checkpoint_hasher(candidate_id) != new_digest):
+                        raise PromotionRecoveryRequired("checkpoint changed before prepare")
+                    self.promotion_journal.prepare(
+                        tx_id=transaction_id,
+                        incumbent_id=incumbent_id,
+                        incumbent_sha256=old_digest,
+                        candidate_id=candidate_id,
+                        candidate_sha256=new_digest,
+                        evaluation_sha256=sha256_json({
+                            "incumbent": incumbent_eval.metadata,
+                            "candidate": candidate_eval.metadata,
+                        }),
+                    )
+                except BaseException:
+                    await self._discard_candidate(candidate_id, propagate_cancellation=False)
+                    raise
+    
+            if self.decision_ledger is not None:
+                try:
+                    self.decision_ledger.append(
+                        "promotion_intent",
+                        {"round_index": round_index, "incumbent_id": incumbent_id,
+                         "candidate_id": candidate_id, "primary_gain": decision.primary_gain},
+                    )
+                except BaseException:
+                    # Promotion has not started. Restore the champion and, if
+                    # independently verified, mark this intent aborted.
+                    await self._discard_candidate(candidate_id, propagate_cancellation=False)
+                    if transaction_id is not None:
+                        assert self.promotion_journal is not None
+                        assert self.checkpoint_hasher is not None
+                        self.promotion_journal.reconcile(
+                            tx_id=transaction_id,
+                            observed_policy_id=self.hooks.active_policy()[0],
+                            observed_checkpoint_sha256=self.checkpoint_hasher(incumbent_id),
+                        )
+                    raise
+    
+            # Publication may mutate the runtime before raising or being
+            # cancelled. Never discard a possibly installed candidate or reuse
+            # this loop after an unverified publication, even without a journal.
+            try:
+                deferred_cancellation_count = await self._publish_candidate(
+                    candidate_id, defer_caller_cancellation=transaction_id is not None
+                )
+                if self.hooks.active_policy()[0] != candidate_id:
+                    raise PromotionRecoveryRequired(
+                        "post-promotion policy acknowledgment mismatch; manual recovery required"
+                    )
+                if transaction_id is not None:
+                    assert self.promotion_journal is not None
+                    assert self.checkpoint_hasher is not None
+                    assert self.evidence_trust_root is not None
+                    expected_new = self.evidence_trust_root.checkpoint_digest(candidate_eval)
+                    if self.checkpoint_hasher(candidate_id) != expected_new:
+                        raise PromotionRecoveryRequired(
+                            "post-promotion checkpoint mismatch; manual recovery required"
+                        )
+                    self.promotion_journal.commit(transaction_id)
+            except BaseException as exc:
+                self._promotion_failure = exc
+                if isinstance(exc, PromotionRecoveryRequired):
+                    raise
+                if isinstance(exc, asyncio.CancelledError) and transaction_id is None:
+                    raise  # Preserve normal caller cancellation semantics.
+>               raise PromotionRecoveryRequired(
+                    "promotion failed; verify the runtime and reconcile durable evidence"
+                ) from exc
+E               vare.promotion_journal.PromotionRecoveryRequired: promotion failed; verify the runtime and reconcile durable evidence
+
+/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/tmp7h8qnw4z/src/vare/engine.py:782: PromotionRecoveryRequired
+=========================== short test summary info ============================
+FAILED tests/test_trajectory_learner.py::test_failed_rejected_ack_fences_even_ordinary_rounds
+FAILED tests/test_trajectory_learner.py::test_source_publication_reservation_fences_cancel_and_refresh

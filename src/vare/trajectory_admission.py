@@ -74,6 +74,7 @@ def admit_terminal_grpo_group(
     store: TrajectoryStore, group_id: str, *, active_policy: PolicyCheckpoint,
     verifier_name: str, verifier_version: int, verifier_config_sha256: str,
     trust_root: TrajectoryRewardRoot,
+    required_state: str = "verified",
 ) -> TrajectoryAdmission:
     """At most 1024 bounded members. Recheck at the actual trainer boundary too.
 
@@ -81,13 +82,15 @@ def admit_terminal_grpo_group(
     tool/inference tokens are preserved but not implicitly assigned that reward.
     The task's algorithm declaration must explicitly opt into this attribution.
     """
+    if required_state not in {"verified", "learning"}:
+        raise ValueError("unsupported ingestion ownership state")
     rows = store.group(group_id)
     heads = {row["id"]: row["head"] for row in rows}
     reasons, experiences, policy_lags, verifier_lags = set(), [], [], []
     if (not rows or len(rows) != rows[0]["group_size"] or len(rows) < 2
             or [row["member"] for row in rows] != list(range(len(rows)))):
         return TrajectoryAdmission(group_id, False, ("incomplete_group",), heads, (), (), ())
-    if any(row["state"] != "verified" for row in rows):
+    if any(row["state"] != required_state for row in rows):
         return TrajectoryAdmission(group_id, False, ("unverified_group",), heads, (), (), ())
     if store.config()["run_id"] != trust_root.run_id:
         reasons.add("foreign_run")
