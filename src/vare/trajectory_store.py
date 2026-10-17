@@ -524,6 +524,22 @@ def audit_trajectory_store(path):
                     or digest(encode(event)) != row["event_hash"]):
                 raise ValueError("event history hash mismatch")
             head, count = row["event_hash"], count + 1
+        pending_delivery = None
+        batch_ids = set()
+        for row in db.execute("SELECT event FROM events WHERE json_extract(event,'$.kind') IN ('learner_batch_reserved','learner_batch_terminal','learner_batch_reconciled') ORDER BY sequence"):
+            event = json.loads(row[0])
+            details = event["details"]
+            if event["job_id"] != "stream-learner":
+                raise ValueError("invalid learner history owner")
+            if event["kind"] == "learner_batch_reserved":
+                if pending_delivery is not None or details["batch_id"] in batch_ids or not details["groups"]:
+                    raise ValueError("overlapping or duplicated learner delivery")
+                batch_ids.add(details["batch_id"])
+                pending_delivery = details
+            else:
+                if pending_delivery is None or details["batch_id"] != pending_delivery["batch_id"]:
+                    raise ValueError("learner acknowledgment lacks matching reservation")
+                pending_delivery = None
         step_count = 0
         for row in db.execute("SELECT s.*,e.event FROM steps s JOIN events e ON e.sequence=s.event_sequence ORDER BY s.trajectory_id,s.step"):
             event = json.loads(row["event"])
@@ -554,11 +570,11 @@ def audit_trajectory_store(path):
                 expected, n = updated, n + 1
             if n != row["next_step"] or expected != row["head"] or n > row["expected_steps"]:
                 raise ValueError("trajectory cursor/chain mismatch")
-            if row["state"] in {"complete", "verified", "consumed"} and n != row["expected_steps"]:
+            if row["state"] in {"complete", "verified", "learning", "consumed"} and n != row["expected_steps"]:
                 raise ValueError("terminal trajectory is incomplete")
             if completed and (len(completed) != 1 or completed[0]["details"] != {"head": row["head"], "steps": n}):
                 raise ValueError("completion/history mismatch")
-            if row["state"] in {"complete", "verified", "consumed"} and not completed:
+            if row["state"] in {"complete", "verified", "learning", "consumed"} and not completed:
                 raise ValueError("missing completion event")
             if row["verification"] is not None:
                 verification = snapshot_verification(Verification(**json.loads(row["verification"])))
@@ -566,8 +582,13 @@ def audit_trajectory_store(path):
                     raise ValueError("verification chain binding mismatch")
                 if len(verified) != 1 or verified[0]["details"]["verification"] != asdict(verification):
                     raise ValueError("verification/history mismatch")
-            elif verified or row["state"] in {"verified", "consumed"}:
+            elif verified or row["state"] in {"verified", "learning", "consumed"}:
                 raise ValueError("missing verified reward state")
+            owned = (pending_delivery is not None and pending_delivery["groups"].get(row["group_id"], {}).get(row["id"]) == row["head"])
+            if row["state"] == "learning" and not owned:
+                raise ValueError("learning state lacks durable delivery ownership")
+            if owned and row["state"] not in {"learning", "cancelled", "quarantined"}:
+                raise ValueError("unresolved delivery state/history mismatch")
             terminal_history = [e for e in history if e["kind"] in {"trajectory_cancelled", "trajectory_quarantined", "consumer_acknowledged"}]
             group_history = [json.loads(event[0])["details"] for event in db.execute("SELECT event FROM events WHERE json_extract(event,'$.job_id')=? AND json_extract(event,'$.kind')='group_acknowledged'", (row["group_id"],))]
             terminal_history += [body for body in group_history if row["id"] in body["heads"]]

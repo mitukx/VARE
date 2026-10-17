@@ -1,0 +1,194 @@
+"""Small durable-ingestion adapter to the existing CapabilityLoop transaction.
+
+The model, optimizer, evaluation, publication and restoration remain hook/
+PromotionJournal responsibilities. An unresolved delivery never expires into
+automatic retraining. Operator recovery first verifies backend state and
+reconciles the existing journal; this adapter only quarantines uncertain input.
+"""
+from __future__ import annotations
+
+from dataclasses import asdict
+import json
+from pathlib import Path
+from uuid import uuid4
+
+from .durable import FenceError
+from .evidence import sha256_file, sha256_json
+from .promotion_journal import PromotionRecoveryRequired
+from .trajectory_admission import admit_terminal_grpo_group
+from .trajectory_workers import owned_io
+
+
+class TrajectoryLearnerAdapter:
+    def __init__(self, store, *, trust_root, current_policy, current_verifier,
+                 max_groups=1, max_members=256):
+        if type(max_groups) is not int or not 1 <= max_groups <= 64:
+            raise ValueError("invalid bounded group batch")
+        if type(max_members) is not int or not 2 <= max_members <= 1024:
+            raise ValueError("invalid bounded member batch")
+        if store.config()["run_id"] != trust_root.run_id:
+            raise ValueError("foreign reward trust root")
+        self.store, self.root = store, trust_root
+        self.current_policy, self.current_verifier = current_policy, current_verifier
+        self.max_groups, self.max_members = max_groups, max_members
+
+    @staticmethod
+    def _pending(db):
+        row = db.execute("SELECT event FROM events WHERE json_extract(event,'$.job_id')='stream-learner' AND json_extract(event,'$.kind') IN ('learner_batch_reserved','learner_batch_terminal','learner_batch_reconciled') ORDER BY sequence DESC LIMIT 1").fetchone()
+        if row is None:
+            return None
+        event = json.loads(row[0])
+        return event["details"] if event["kind"] == "learner_batch_reserved" else None
+
+    def pending(self):
+        with self.store.connection() as db:
+            return self._pending(db)
+
+    def _admit(self, group_id, state="verified"):
+        name, version, config = self.current_verifier()
+        return admit_terminal_grpo_group(
+            self.store, group_id, active_policy=self.current_policy(),
+            verifier_name=name, verifier_version=version, verifier_config_sha256=config,
+            trust_root=self.root, required_state=state,
+        )
+
+    def authorizes(self, experience):
+        """Recheck signed trace, membership and current versions at use time."""
+        try:
+            ident = experience.attempt.metadata["trajectory_id"]
+            row = self.store.trajectory(ident)
+            delivery = self.pending()
+            if delivery is None or delivery["groups"].get(row["group_id"], {}).get(ident) != row["head"]:
+                return False
+            result = self._admit(row["group_id"], "learning")
+            if not result.admitted:
+                return False
+            expected = next(x for x in result.experiences if x.attempt.metadata["trajectory_id"] == ident)
+            return (asdict(expected.attempt) == asdict(experience.attempt)
+                    and asdict(expected.verification) == asdict(experience.verification))
+        except (ValueError, TypeError, KeyError, AttributeError, StopIteration):
+            return False
+
+    def _clean_runtime(self, loop):
+        if loop.promotion_journal is None:
+            raise ValueError("streamed learning requires the existing durable promotion journal")
+        loop.runtime_coordinator.assert_usable()
+        if loop.runtime_coordinator.lock.locked():
+            raise PromotionRecoveryRequired("streamed runtime has a live owner")
+        policy = self.current_policy()
+        if loop.hooks.active_policy() != (policy.policy_id, policy.version):
+            raise PromotionRecoveryRequired("streamed checkpoint and runtime identities differ")
+        status = loop.promotion_journal.status()
+        if status["round_owner_id"] is not None:
+            raise PromotionRecoveryRequired("reconcile the existing runtime owner first")
+        loop.promotion_journal.assert_clean(policy_id=policy.policy_id, checkpoint_sha256=policy.checkpoint_sha256)
+        return policy
+
+    def claim(self, loop, round_index):
+        policy = self._clean_runtime(loop)
+        if len(loop.replay):
+            raise ValueError("streamed learner must own an empty replay before each delivery")
+        if self.pending() is not None:
+            raise PromotionRecoveryRequired("unresolved streamed delivery; do not retrain automatically")
+        batch, groups = [], {}
+        for group_id in self.store.verified_groups(self.max_groups):
+            result = self._admit(group_id)
+            if not result.admitted:
+                self.store.close_group(group_id, result.heads, reason="quarantined",
+                                       decision={"reasons": list(result.reasons)})
+                continue
+            budget = min(self.max_members, loop.config.replay_batch_size, loop.config.replay.capacity)
+            if len(result.experiences) > budget:
+                raise ValueError("complete group exceeds configured learner batch; increase the explicit budget")
+            if len(batch) + len(result.experiences) > budget:
+                break
+            batch.extend(result.experiences)
+            groups[group_id] = result.heads
+        if not batch:
+            return None
+        reservation = {"batch_id": uuid4().hex, "round_index": round_index, "groups": groups,
+                       "incumbent": asdict(policy), "source_sha256": sha256_file(__file__),
+                       "engine_sha256": sha256_file(Path(__file__).with_name("engine.py"))}
+        with self.store.connection(True) as db:
+            if self._pending(db) is not None:
+                raise PromotionRecoveryRequired("another learner owns the delivery")
+            self.store._bounded(db, reservation)
+            for group_id, heads in groups.items():
+                self._require_group(db, group_id, heads, "verified")
+                db.execute("UPDATE trajectories SET state='learning' WHERE group_id=?", (group_id,))
+            self.store.event(db, "learner_batch_reserved", "stream-learner", 0, reservation)
+        return reservation, tuple(batch)
+
+    @staticmethod
+    def _require_group(db, group_id, heads, state):
+        rows = db.execute("SELECT id,head,state,group_size FROM trajectories WHERE group_id=?", (group_id,)).fetchall()
+        if (not rows or len(rows) != rows[0]["group_size"]
+                or {row["id"]: row["head"] for row in rows} != heads
+                or any(row["state"] != state for row in rows)):
+            raise FenceError("streamed delivery group changed")
+
+    def _terminal(self, reservation, outcome, *, reconcile=False):
+        state = "quarantined" if reconcile else "consumed"
+        with self.store.connection(True) as db:
+            if self._pending(db) != reservation:
+                raise PromotionRecoveryRequired("streamed delivery ownership changed")
+            for group_id, heads in reservation["groups"].items():
+                rows = db.execute("SELECT state FROM trajectories WHERE group_id=?", (group_id,)).fetchall()
+                if reconcile and rows and all(row[0] in {"cancelled", "quarantined"} for row in rows):
+                    continue  # Preserve previous cancellation/failure history.
+                self._require_group(db, group_id, heads, "learning")
+                db.execute("UPDATE trajectories SET state=?,reason=? WHERE group_id=?", (state, state, group_id))
+                self.store.event(db, "group_acknowledged", group_id, 0,
+                                 {"heads": heads, "state": state, "decision": outcome})
+            details = {"batch_id": reservation["batch_id"], "outcome": outcome}
+            self.store._bounded(db, details)
+            self.store.event(db, "learner_batch_reconciled" if reconcile else "learner_batch_terminal",
+                             "stream-learner", 0, details)
+
+    def _failure(self, reservation, exc):
+        with self.store.connection(True) as db:
+            self.store.event(db, "learner_batch_error", "stream-learner", 0,
+                             {"batch_id": reservation["batch_id"], "type": type(exc).__name__, "message": str(exc)[:512]})
+
+    async def advance(self, loop, *, round_index):
+        """One bounded delivery; workers/verifiers can continue independently."""
+        claimed = await owned_io(self.claim, loop, round_index)
+        if claimed is None:
+            return None
+        reservation, batch = claimed
+        try:
+            result = await loop.run_verified_round(batch, round_index=round_index)
+            policy = await owned_io(self._clean_runtime, loop)
+            await owned_io(self._terminal, reservation,
+                           {"round_result_sha256": sha256_json(asdict(result)),
+                            "candidate_id": result.candidate_id, "promoted_id": result.promoted_id,
+                            "accepted": result.decision.accepted, "checkpoint": asdict(policy),
+                            "optimizer_commit": "owned by backend; not inferred from ingestion acknowledgment"})
+            # Reuse existing whole-group pruning. Do not present consumed rows
+            # again after a rejected update leaves the policy version unchanged.
+            loop.replay.prune_current(freshness_fn=lambda _: None, grouped=True)
+            return result
+        except BaseException as exc:
+            await owned_io(self._failure, reservation, exc)
+            raise
+
+    def reconcile_after_backend_recovery(self, loop, *, observed_policy):
+        """Operator-only, after exact backend/optimizer/RNG recovery and journal reconciliation.
+
+        This never restores model state itself. A caller-supplied pointer alone
+        cannot establish backend recovery; the trusted backend owns that proof.
+        Uncertain input is quarantined, not automatically replayed.
+        """
+        actual = self._clean_runtime(loop)
+        if actual != observed_policy:
+            raise PromotionRecoveryRequired("observed backend checkpoint differs")
+        reservation = self.pending()
+        if reservation is None:
+            return False
+        if (reservation["source_sha256"] != sha256_file(__file__)
+                or reservation["engine_sha256"] != sha256_file(Path(__file__).with_name("engine.py"))):
+            raise PromotionRecoveryRequired("recover with the enrolled learner/engine source")
+        self._terminal(reservation, {"observed_checkpoint": asdict(actual),
+                                    "reason": "operator verified backend and existing journal; uncertain inputs quarantined"}, reconcile=True)
+        loop.replay.prune_current(freshness_fn=lambda _: None, grouped=True)
+        return True
