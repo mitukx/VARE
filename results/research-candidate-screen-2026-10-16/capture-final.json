@@ -1,0 +1,546 @@
+{
+  "capture_wall_s": 9.769953666982474,
+  "collector_sha256": "f7588f2bf3aaeae2886fd492c3fb380c2301b3ea5ae69644b5ccd047849345bc",
+  "datasets": [
+    {
+      "files": [
+        ".gitattributes",
+        "README.md",
+        "database/california_schools/california_schools_template.sqlite",
+        "database/card_games/card_games_template.sqlite",
+        "database/codebase_community/codebase_community_template.sqlite",
+        "database/debit_card_specializing/debit_card_specializing_template.sqlite",
+        "database/erolp/erolp_template.sqlite",
+        "database/esophageal/esophageal_template.sqlite",
+        "database/european_football_2/european_football_2_template.sqlite",
+        "database/financial/financial_template.sqlite",
+        "database/formula_1/formula_1_template.sqlite",
+        "database/global_atlas/global_atlas_template.sqlite",
+        "database/spotify/spotify_template.sqlite",
+        "database/student_club/student_club_template.sqlite",
+        "database/superhero/superhero_template.sqlite",
+        "database/thrombosis_prediction/thrombosis_prediction_template.sqlite",
+        "database/toxicology/toxicology_template.sqlite",
+        "sqlite-00000-of-00001.jsonl"
+      ],
+      "gated": false,
+      "id": "birdsql/bird-critic-1.0-sqlite",
+      "license": "cc-by-sa-4.0",
+      "revision": "af2b1c3e2f8b3480e5569212198761c770df06d0"
+    },
+    {
+      "files": [
+        ".gitattributes",
+        "README.md",
+        "data/train-00000-of-00001.parquet",
+        "data/v0.1.0-00000-of-00001.parquet",
+        "data/v0.1.0_hf-00000-of-00001.parquet",
+        "data/v0.1.1-00000-of-00001.parquet",
+        "data/v0.1.2-00000-of-00001.parquet",
+        "data/v0.1.3-00000-of-00001.parquet",
+        "data/v0.1.4-00000-of-00001.parquet"
+      ],
+      "gated": false,
+      "id": "bigcode/bigcodebench",
+      "license": "apache-2.0",
+      "revision": "b74c0d0bf70d2c0bc459be537895cca163007f1a"
+    },
+    {
+      "files": [
+        ".gitattributes",
+        "README.md",
+        "data/train-00000-of-00001.parquet"
+      ],
+      "gated": false,
+      "id": "allenai/IFBench_test",
+      "license": null,
+      "revision": "2e8a48de45ff3bf41242f927254ca81b59ca3ae2"
+    },
+    {
+      "files": [
+        ".gitattributes",
+        "FREEZE_BUNDLE.md",
+        "README.md",
+        "RELEASE_SQLR1.json",
+        "release_b22549ce.tar.zst"
+      ],
+      "gated": "manual",
+      "id": "thanhdath/CoRE-DB-SQL-R1",
+      "license": "cc-by-4.0",
+      "revision": "d7c1de45b9f38d6c86de3b9ed3dd1503b208ae68"
+    }
+  ],
+  "ledger": {
+    "AGENTS.md": {
+      "bytes": 14100,
+      "sha256": "ebb8b75f7ca3061df67bbcd1eda5161a1ce04b7e889eb49da9f8a17359a434a6"
+    },
+    "README.md": {
+      "bytes": 13727,
+      "sha256": "abe262966889c64a9353414e941acc401f01adc3cc1a71cf27953fef17de8c0c"
+    },
+    "docs/cpu-code-repair-feasibility-v1-report.md": {
+      "bytes": 4034,
+      "sha256": "e6c6e2ce72c5a9c824b14d0efbe2a6bc659fd49f3afe4e13e600a782ea47622b"
+    },
+    "docs/cpu-qwen-ticket-tool-feasibility-v1-report.md": {
+      "bytes": 5013,
+      "sha256": "55a17641f9f9030877626798a173ca3b0c04ad32bd1ec800dc37e5b5e8c28926"
+    },
+    "docs/current-gaps.md": {
+      "bytes": 117122,
+      "sha256": "315cb4d96eedbaa1fad8c63859a7bf6b61ecbff79d51c0afbd7c5b380bc17c3a"
+    },
+    "docs/experiments.md": {
+      "bytes": 53695,
+      "sha256": "6a582948670cf44229f86431bae7ced31fcf972a03db3331dfaa8d5be6113f7d"
+    },
+    "docs/next-study-decision-2026-10-09.md": {
+      "bytes": 112384,
+      "sha256": "d8794005a5c9cd4c1427faf1e33f1bf878f8715cdd39860902ead7645ae47cdc"
+    },
+    "docs/research-candidate-qualification-2026-10-15.md": {
+      "bytes": 19311,
+      "sha256": "4daa932ad55da92e203fb819bbc46b9aaa06e368dbe2e97447dc2e50c7076755"
+    },
+    "docs/roadmap.md": {
+      "bytes": 41722,
+      "sha256": "90bd33341058d00c06b282f78f8ed3f270faee680fea3157aec39efbc0cdcc7a"
+    },
+    "docs/stage0-research-gate-2026-10-11.md": {
+      "bytes": 9192,
+      "sha256": "4d4ea6a26115f8df8a76681a1c97fa5e7ef79258a0e4b60b28a72ce1757c8dcd"
+    }
+  },
+  "model_inference_calls": 0,
+  "models": [
+    {
+      "gated": false,
+      "id": "HuggingFaceTB/SmolLM3-3B",
+      "license": "apache-2.0",
+      "parameters": 3075098624,
+      "revision": "a07cc9a04f16550a088caea529712d1d335b0ac1"
+    },
+    {
+      "gated": false,
+      "id": "Qwen/Qwen3-0.6B",
+      "license": "apache-2.0",
+      "parameters": 751632384,
+      "revision": "c1899de289a04d12100db370d81485cdf75e47ca"
+    }
+  ],
+  "optimizer_calls": 0,
+  "papers": [
+    {
+      "id": "2609.18135v1",
+      "title": "DualSQL: Text-to-SQL with Multi-Agent Reinforcement Learning"
+    },
+    {
+      "id": "2603.01409v1",
+      "title": "MIST-RL: Mutation-based Incremental Suite Testing via Reinforcement Learning"
+    },
+    {
+      "id": "2609.03955v1",
+      "title": "Two-Stage Reinforcement Learning for Sound and Adversarial Test Generation in Code LLMs"
+    },
+    {
+      "id": "2605.02944v1",
+      "title": "Exploring Pass-Rate Reward in Reinforcement Learning for Code Generation"
+    },
+    {
+      "id": "2605.30478v1",
+      "title": "Improving Small Language Models for Code Generation with Reinforcement Learning from Verification Feedback"
+    },
+    {
+      "id": "2402.15833v1",
+      "title": "Prompt Perturbation Consistency Learning for Robust Language Models"
+    },
+    {
+      "id": "2609.34064v1",
+      "title": "Learning Perturbation Robust Policies for LLM Agents with Stable Optimization"
+    },
+    {
+      "id": "2507.02833v1",
+      "title": "Generalizing Verifiable Instruction Following"
+    }
+  ],
+  "public_record_scope": "Observed HTTP request metadata, response byte hashes, pinned revisions and parsed factual fields. Full third-party response/source bodies remain in the local capture, not this public ledger.",
+  "repositories": [
+    {
+      "commit_date": "2026-03-23T23:05:26Z",
+      "id": "bird-bench/BIRD-CRITIC-1",
+      "revision": "f408d6c9db9f16e75b44a1e23f22c04579d1f390"
+    },
+    {
+      "commit_date": "2025-10-15T08:47:33Z",
+      "id": "bigcode-project/bigcodebench",
+      "revision": "09dd993f46c3fbf3a799465bb96d524edcb0b199"
+    },
+    {
+      "commit_date": "2026-09-09T10:10:13Z",
+      "id": "allenai/IFBench",
+      "revision": "1c40f0c10d9b5c5c2f10a175a28007ebb64f7f4d"
+    },
+    {
+      "commit_date": "2026-07-18T06:44:19Z",
+      "id": "uiuc-kang-lab/ReViSQL",
+      "revision": "9fac371aa22019e9912dcbd6572e8fe8194d352a"
+    },
+    {
+      "commit_date": "2022-08-03T02:46:54Z",
+      "id": "taoyds/test-suite-sql-eval",
+      "revision": "e97acc546ecbee8fa27fa8dbf025ef61493a876c"
+    }
+  ],
+  "repository_revision": "467ff55dbf6accf0a59e1f0c7f5741ac53ce21de",
+  "requests": [
+    {
+      "local_response_file": "model-0.json",
+      "name": "model-0.json",
+      "response_bytes": 11015,
+      "response_sha256": "6f6903b2ff15037871aa735c7fef5dd9e8617f310098f6d88cc55c5564c71db2",
+      "retrieval_wall_s": 0.2353411249932833,
+      "started_utc": "2026-10-16T05:12:48.112024+00:00",
+      "status": 200,
+      "url": "https://huggingface.co/api/models/HuggingFaceTB/SmolLM3-3B"
+    },
+    {
+      "local_response_file": "model-0-config.json",
+      "name": "model-0-config.json",
+      "response_bytes": 1915,
+      "response_sha256": "c72b1031274ff4626e434d0019e88e95a767460135db9ee492eb80652b786af1",
+      "retrieval_wall_s": 0.25036791601451114,
+      "started_utc": "2026-10-16T05:12:48.348125+00:00",
+      "status": 200,
+      "url": "https://huggingface.co/HuggingFaceTB/SmolLM3-3B/resolve/a07cc9a04f16550a088caea529712d1d335b0ac1/config.json"
+    },
+    {
+      "local_response_file": "model-1.json",
+      "name": "model-1.json",
+      "response_bytes": 9040,
+      "response_sha256": "60a502ceabed260b011eb3a657727d803d645bcd098736000cb0ec90ed3925f2",
+      "retrieval_wall_s": 0.20828558300854638,
+      "started_utc": "2026-10-16T05:12:48.599427+00:00",
+      "status": 200,
+      "url": "https://huggingface.co/api/models/Qwen/Qwen3-0.6B"
+    },
+    {
+      "local_response_file": "model-1-config.json",
+      "name": "model-1-config.json",
+      "response_bytes": 726,
+      "response_sha256": "660db3b73d788119c04535e48cf9be5f55bc3100841a718637ae695b442f27dd",
+      "retrieval_wall_s": 0.33668079201015644,
+      "started_utc": "2026-10-16T05:12:48.808257+00:00",
+      "status": 200,
+      "url": "https://huggingface.co/Qwen/Qwen3-0.6B/resolve/c1899de289a04d12100db370d81485cdf75e47ca/config.json"
+    },
+    {
+      "local_response_file": "dataset-0.json",
+      "name": "dataset-0.json",
+      "response_bytes": 2464,
+      "response_sha256": "f61db6f275edca5ac7b2ecc813c0007df993950ae6fa4f507d4dfe5f2a9e1e97",
+      "retrieval_wall_s": 0.22356124999350868,
+      "started_utc": "2026-10-16T05:12:49.145595+00:00",
+      "status": 200,
+      "url": "https://huggingface.co/api/datasets/birdsql/bird-critic-1.0-sqlite"
+    },
+    {
+      "local_response_file": "dataset-1.json",
+      "name": "dataset-1.json",
+      "response_bytes": 2853,
+      "response_sha256": "bd5b30513b3919b25a8dc3932cba6ab7b50d0c91a9e8d59e710f1f1bbb68bca9",
+      "retrieval_wall_s": 0.23314150000805967,
+      "started_utc": "2026-10-16T05:12:49.370060+00:00",
+      "status": 200,
+      "url": "https://huggingface.co/api/datasets/bigcode/bigcodebench"
+    },
+    {
+      "local_response_file": "dataset-2.json",
+      "name": "dataset-2.json",
+      "response_bytes": 3202,
+      "response_sha256": "c716568b4718a854bf97b3abe971bc663144362b31cee92ba155e7cd16c038f7",
+      "retrieval_wall_s": 0.21723066698177718,
+      "started_utc": "2026-10-16T05:12:49.603953+00:00",
+      "status": 200,
+      "url": "https://huggingface.co/api/datasets/allenai/IFBench_test"
+    },
+    {
+      "local_response_file": "dataset-3.json",
+      "name": "dataset-3.json",
+      "response_bytes": 1360,
+      "response_sha256": "6eb3a72356a4e6ac9bfa9edd4f111de6f9e602c96868d7d12012f4dce07c4a4f",
+      "retrieval_wall_s": 0.302284083008999,
+      "started_utc": "2026-10-16T05:12:49.822307+00:00",
+      "status": 200,
+      "url": "https://huggingface.co/api/datasets/thanhdath/CoRE-DB-SQL-R1"
+    },
+    {
+      "local_response_file": "repository-0.json",
+      "name": "repository-0.json",
+      "response_bytes": 5981,
+      "response_sha256": "66d9bf3236fb978e57ee88638fefe235ff25906fbc150653923851f12d6bbc91",
+      "retrieval_wall_s": 0.2908242919947952,
+      "started_utc": "2026-10-16T05:12:50.125505+00:00",
+      "status": 200,
+      "url": "https://api.github.com/repos/bird-bench/BIRD-CRITIC-1/commits/main"
+    },
+    {
+      "local_response_file": "repository-0-tree.json",
+      "name": "repository-0-tree.json",
+      "response_bytes": 27007,
+      "response_sha256": "4984b5c23bb2a5c1a570d0ee6365be8eb81d921e90c096ece85c1922fc0f2d7c",
+      "retrieval_wall_s": 0.3213105409813579,
+      "started_utc": "2026-10-16T05:12:50.417081+00:00",
+      "status": 200,
+      "url": "https://api.github.com/repos/bird-bench/BIRD-CRITIC-1/git/trees/f408d6c9db9f16e75b44a1e23f22c04579d1f390?recursive=1"
+    },
+    {
+      "local_response_file": "repository-0-source-0.txt",
+      "name": "repository-0-source-0.txt",
+      "response_bytes": 16090,
+      "response_sha256": "77e1711745654c6be4e986399ba5859549ce60e5b60396fa72aa34c3b099c814",
+      "retrieval_wall_s": 0.25899229099741206,
+      "started_utc": "2026-10-16T05:12:50.739358+00:00",
+      "status": 200,
+      "url": "https://raw.githubusercontent.com/bird-bench/BIRD-CRITIC-1/f408d6c9db9f16e75b44a1e23f22c04579d1f390/evaluation/src/single_instance_eval_sqlite.py"
+    },
+    {
+      "local_response_file": "repository-0-source-1.txt",
+      "name": "repository-0-source-1.txt",
+      "response_bytes": 12458,
+      "response_sha256": "5e87953166155c12f539291b26b6281c1ef2b4b8f17445d729231344e5ed188d",
+      "retrieval_wall_s": 0.26070641598198563,
+      "started_utc": "2026-10-16T05:12:50.999406+00:00",
+      "status": 200,
+      "url": "https://raw.githubusercontent.com/bird-bench/BIRD-CRITIC-1/f408d6c9db9f16e75b44a1e23f22c04579d1f390/evaluation/src/sqlite_test_utils.py"
+    },
+    {
+      "local_response_file": "repository-0-source-2.txt",
+      "name": "repository-0-source-2.txt",
+      "response_bytes": 18080,
+      "response_sha256": "44144ea7e7f2f9242dd9bae1fa23773c6c7e31ac06e7f3771b32b066b466f46a",
+      "retrieval_wall_s": 0.44136716600041837,
+      "started_utc": "2026-10-16T05:12:51.261372+00:00",
+      "status": 200,
+      "url": "https://raw.githubusercontent.com/bird-bench/BIRD-CRITIC-1/f408d6c9db9f16e75b44a1e23f22c04579d1f390/evaluation/src/sqlite_utils.py"
+    },
+    {
+      "local_response_file": "repository-1.json",
+      "name": "repository-1.json",
+      "response_bytes": 5416,
+      "response_sha256": "c9e41224db320edc853834e1a315c56aabb0907b1f25a1b38e6fe4f734d4751b",
+      "retrieval_wall_s": 0.2834745000000112,
+      "started_utc": "2026-10-16T05:12:51.703873+00:00",
+      "status": 200,
+      "url": "https://api.github.com/repos/bigcode-project/bigcodebench/commits/main"
+    },
+    {
+      "local_response_file": "repository-1-tree.json",
+      "name": "repository-1-tree.json",
+      "response_bytes": 21257,
+      "response_sha256": "22084a0a14d3e57fd0fa79bf0fbbffc6aa77c239f0b67fe178d0b83e53944134",
+      "retrieval_wall_s": 0.26689137500943616,
+      "started_utc": "2026-10-16T05:12:51.988500+00:00",
+      "status": 200,
+      "url": "https://api.github.com/repos/bigcode-project/bigcodebench/git/trees/09dd993f46c3fbf3a799465bb96d524edcb0b199?recursive=1"
+    },
+    {
+      "local_response_file": "repository-1-source-0.txt",
+      "name": "repository-1-source-0.txt",
+      "response_bytes": 16994,
+      "response_sha256": "6f737ddbec85c8e24d995898bab528b8c28fc5090a488652c8af557ad85f0667",
+      "retrieval_wall_s": 0.244622582977172,
+      "started_utc": "2026-10-16T05:12:52.256519+00:00",
+      "status": 200,
+      "url": "https://raw.githubusercontent.com/bigcode-project/bigcodebench/09dd993f46c3fbf3a799465bb96d524edcb0b199/bigcodebench/evaluate.py"
+    },
+    {
+      "local_response_file": "repository-2.json",
+      "name": "repository-2.json",
+      "response_bytes": 22564,
+      "response_sha256": "801f6a23c3eb8cd4f059723043b7ab7120c9aef5bd8f90650fd39ae8e4e2c004",
+      "retrieval_wall_s": 0.3047660000156611,
+      "started_utc": "2026-10-16T05:12:52.502633+00:00",
+      "status": 200,
+      "url": "https://api.github.com/repos/allenai/IFBench/commits/main"
+    },
+    {
+      "local_response_file": "repository-2-tree.json",
+      "name": "repository-2-tree.json",
+      "response_bytes": 8769,
+      "response_sha256": "065b057972f5c34fd1b5fc818e0811b506c966960734db6b2dfdbd8a9f67d702",
+      "retrieval_wall_s": 0.2480529999884311,
+      "started_utc": "2026-10-16T05:12:52.808939+00:00",
+      "status": 200,
+      "url": "https://api.github.com/repos/allenai/IFBench/git/trees/1c40f0c10d9b5c5c2f10a175a28007ebb64f7f4d?recursive=1"
+    },
+    {
+      "local_response_file": "repository-2-source-0.txt",
+      "name": "repository-2-source-0.txt",
+      "response_bytes": 2745,
+      "response_sha256": "0842325428829a6fca8698c707d0822035292463894b57169c5056663d21bf75",
+      "retrieval_wall_s": 0.24228345800656825,
+      "started_utc": "2026-10-16T05:12:53.058475+00:00",
+      "status": 200,
+      "url": "https://raw.githubusercontent.com/allenai/IFBench/1c40f0c10d9b5c5c2f10a175a28007ebb64f7f4d/run_eval.py"
+    },
+    {
+      "local_response_file": "repository-3.json",
+      "name": "repository-3.json",
+      "response_bytes": 5647,
+      "response_sha256": "a214cdf3d0c8c796e1bd7a0e3911e3ebfea9f468db510ee356ae88daa3514c26",
+      "retrieval_wall_s": 0.27360629200120457,
+      "started_utc": "2026-10-16T05:12:53.302217+00:00",
+      "status": 200,
+      "url": "https://api.github.com/repos/uiuc-kang-lab/ReViSQL/commits/main"
+    },
+    {
+      "local_response_file": "repository-3-tree.json",
+      "name": "repository-3-tree.json",
+      "response_bytes": 93684,
+      "response_sha256": "4aef1b9aa6ca66897c66c3123c2e2074c009dc70b1f502e6a35bb74661c7d1f2",
+      "retrieval_wall_s": 0.2730606659897603,
+      "started_utc": "2026-10-16T05:12:53.577265+00:00",
+      "status": 200,
+      "url": "https://api.github.com/repos/uiuc-kang-lab/ReViSQL/git/trees/9fac371aa22019e9912dcbd6572e8fe8194d352a?recursive=1"
+    },
+    {
+      "local_response_file": "repository-3-source-0.txt",
+      "name": "repository-3-source-0.txt",
+      "response_bytes": 9584,
+      "response_sha256": "86ccefe6e5ed49f27295f6b3454a57bc5f3e648ad99d6cc651c53286c0e16fd6",
+      "retrieval_wall_s": 0.25732450000941753,
+      "started_utc": "2026-10-16T05:12:53.851041+00:00",
+      "status": 200,
+      "url": "https://raw.githubusercontent.com/uiuc-kang-lab/ReViSQL/9fac371aa22019e9912dcbd6572e8fe8194d352a/README.md"
+    },
+    {
+      "local_response_file": "repository-4.json",
+      "name": "repository-4.json",
+      "response_bytes": 16336,
+      "response_sha256": "802c39e7bbf87deee018ce603f628820f14933cbcce3a8f6cf89fd4d8773905b",
+      "retrieval_wall_s": 0.3616447080275975,
+      "started_utc": "2026-10-16T05:12:54.108897+00:00",
+      "status": 200,
+      "url": "https://api.github.com/repos/taoyds/test-suite-sql-eval/commits/master"
+    },
+    {
+      "local_response_file": "repository-4-tree.json",
+      "name": "repository-4-tree.json",
+      "response_bytes": 4887,
+      "response_sha256": "a0efa528ef4ada9a8e02e449ef1e9551b3edd8e8dc482416dc581e4c418e42f9",
+      "retrieval_wall_s": 0.26310358400223777,
+      "started_utc": "2026-10-16T05:12:54.471991+00:00",
+      "status": 200,
+      "url": "https://api.github.com/repos/taoyds/test-suite-sql-eval/git/trees/e97acc546ecbee8fa27fa8dbf025ef61493a876c?recursive=1"
+    },
+    {
+      "local_response_file": "repository-4-source-0.txt",
+      "name": "repository-4-source-0.txt",
+      "response_bytes": 9439,
+      "response_sha256": "6ab584a7ac58718d037a2f858920d919b9d76c29ff24da52882adf5f734d12ff",
+      "retrieval_wall_s": 0.37375183298718184,
+      "started_utc": "2026-10-16T05:12:54.736360+00:00",
+      "status": 200,
+      "url": "https://raw.githubusercontent.com/taoyds/test-suite-sql-eval/e97acc546ecbee8fa27fa8dbf025ef61493a876c/README.md"
+    },
+    {
+      "local_response_file": "repository-4-source-1.txt",
+      "name": "repository-4-source-1.txt",
+      "response_bytes": 33791,
+      "response_sha256": "7401e4014a8955376a7919c06903a7f0ab403c99e89f94204cd8f4c8e32ae779",
+      "retrieval_wall_s": 0.25458350000553764,
+      "started_utc": "2026-10-16T05:12:55.110644+00:00",
+      "status": 200,
+      "url": "https://raw.githubusercontent.com/taoyds/test-suite-sql-eval/e97acc546ecbee8fa27fa8dbf025ef61493a876c/evaluation.py"
+    },
+    {
+      "name": "paper-2609.18135v1",
+      "response_bytes": 42903,
+      "response_sha256": "ceb5fc31e97a8b43f1dad06ad0552acf79c262cfe7323000346836d3024901ec",
+      "retrieval_wall_s": 0.08331812499091029,
+      "started_utc": "2026-10-16T05:12:55.366167+00:00",
+      "status": 200,
+      "url": "https://arxiv.org/abs/2609.18135v1"
+    },
+    {
+      "name": "paper-2603.01409v1",
+      "response_bytes": 42149,
+      "response_sha256": "669906d9036a13c6122bff8864f97f5436d34fe3247c934b68ac5967e22dee56",
+      "retrieval_wall_s": 0.063205124984961,
+      "started_utc": "2026-10-16T05:12:55.653588+00:00",
+      "status": 200,
+      "url": "https://arxiv.org/abs/2603.01409v1"
+    },
+    {
+      "name": "paper-2609.03955v1",
+      "response_bytes": 41916,
+      "response_sha256": "e874d829a50f21a5bdaf46264dc70c9d6c70ce8b9f8f63a0d76bcb62111ecc39",
+      "retrieval_wall_s": 0.0728512089990545,
+      "started_utc": "2026-10-16T05:12:55.923630+00:00",
+      "status": 200,
+      "url": "https://arxiv.org/abs/2609.03955v1"
+    },
+    {
+      "name": "paper-2605.02944v1",
+      "response_bytes": 43139,
+      "response_sha256": "5ea8f865e8abc2d4ffaaee1a0febf30f64035da6b461c14acaf96079870c46d9",
+      "retrieval_wall_s": 0.0561220409872476,
+      "started_utc": "2026-10-16T05:12:56.202658+00:00",
+      "status": 200,
+      "url": "https://arxiv.org/abs/2605.02944v1"
+    },
+    {
+      "name": "paper-2605.30478v1",
+      "response_bytes": 42388,
+      "response_sha256": "6ceb0325834c0c94489dc58751f7c2c807769cae656db2e071dc8c99a4090be3",
+      "retrieval_wall_s": 0.07571591599844396,
+      "started_utc": "2026-10-16T05:12:56.463213+00:00",
+      "status": 200,
+      "url": "https://arxiv.org/abs/2605.30478v1"
+    },
+    {
+      "name": "paper-2402.15833v1",
+      "response_bytes": 42017,
+      "response_sha256": "64c507b0dcc1ff08794a43b301dfa6561d93412bc1c7e5affe14379acaaddd37",
+      "retrieval_wall_s": 0.051058083976386115,
+      "started_utc": "2026-10-16T05:12:56.745101+00:00",
+      "status": 200,
+      "url": "https://arxiv.org/abs/2402.15833v1"
+    },
+    {
+      "name": "paper-2609.34064v1",
+      "response_bytes": 41339,
+      "response_sha256": "517d7723e0445b55e54fa5dda4d376046a2f1dcefb6301db725b18d7e07118bd",
+      "retrieval_wall_s": 0.05965337497764267,
+      "started_utc": "2026-10-16T05:12:57.004468+00:00",
+      "status": 200,
+      "url": "https://arxiv.org/abs/2609.34064v1"
+    },
+    {
+      "name": "paper-2507.02833v1",
+      "response_bytes": 42745,
+      "response_sha256": "887a9750e55c89776fff7c5a2e1ed5f4d37691bad25144978372a99cd2a56401",
+      "retrieval_wall_s": 0.07050858400180005,
+      "started_utc": "2026-10-16T05:12:57.271505+00:00",
+      "status": 200,
+      "url": "https://arxiv.org/abs/2507.02833v1"
+    }
+  ],
+  "schema": "vare.research-qualification-metadata.v1",
+  "scope": "Metadata/source review only. No model inference, optimizer, dataset payload or grader execution.",
+  "started_utc": "2026-10-16T05:12:47.778681+00:00",
+  "task_payload_downloads": 0,
+  "tracked_metadata_occurrences": {
+    "BIRD-CRITIC": [],
+    "BigCodeBench": [],
+    "HuggingFaceTB/SmolLM3-3B": [],
+    "IFBench": [
+      "docs/next-study-decision-2026-10-09.md:93",
+      "docs/next-study-decision-2026-10-09.md:95",
+      "docs/next-study-decision-2026-10-09.md:99"
+    ],
+    "Qwen/Qwen3-0.6B": [],
+    "bird-critic-1.0-sqlite": []
+  }
+}
