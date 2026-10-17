@@ -169,7 +169,7 @@ def test_duplicate_or_partial_delivery_cannot_train(tmp_path):
     async def supply(owner):
         return [batch[0]]
     with pytest.raises(ValueError, match="incomplete"):
-        asyncio.run(loop.run_verified_round(supply, round_index=0,on_complete=unused,reserve_publication=unused))
+        asyncio.run(loop.run_verified_round(supply, round_index=0,on_complete=unused,reserve_publication=unused,delivery_pending=lambda _:True))
     assert "train" not in hooks.calls
 
 
@@ -251,3 +251,44 @@ def test_unowned_claim_cannot_change_source_state(tmp_path):
     with pytest.raises(PromotionRecoveryRequired,match="before delivery"):
         adapter.claim(loop,0)
     assert adapter.pending() is None and store.counts()=={"verified":2}
+
+
+def test_pre_reservation_budget_failure_releases_both_fences(tmp_path):
+    from dataclasses import replace
+    store, adapter, loop, hooks = setup(tmp_path)
+    loop.config = replace(loop.config,replay_batch_size=1)
+    with pytest.raises(ValueError,match="complete group exceeds"):
+        asyncio.run(adapter.advance(loop,round_index=0))
+    assert adapter.pending() is None and store.counts()=={"verified":2}
+    assert loop.runtime_coordinator.failure is None
+    assert loop.promotion_journal.status()["round_owner_id"] is None
+    loop.config = replace(loop.config,replay_batch_size=2)
+    assert asyncio.run(adapter.advance(loop,round_index=1)).decision.accepted
+
+
+def test_cancelled_idle_poll_releases_both_fences(tmp_path):
+    import threading
+    store, adapter, loop, hooks = setup(tmp_path)
+    store.cancel("t0")
+    original = adapter.claim
+    entered, release = threading.Event(), threading.Event()
+    def idle_claim(*args,**kwargs):
+        result = original(*args,**kwargs)
+        assert result is None
+        entered.set()
+        assert release.wait(2)
+        return result
+    adapter.claim = idle_claim
+    async def case():
+        task=asyncio.create_task(adapter.advance(loop,round_index=0))
+        try:
+            assert await asyncio.to_thread(entered.wait,2)
+            task.cancel()
+            release.set()
+            with pytest.raises(asyncio.CancelledError):
+                await task
+        finally:
+            release.set()
+        assert loop.runtime_coordinator.failure is None
+        assert loop.promotion_journal.status()["round_owner_id"] is None
+    asyncio.run(case())

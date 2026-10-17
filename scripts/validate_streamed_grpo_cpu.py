@@ -29,7 +29,7 @@ def independent_score(text):
 async def run(args):
     args.output.mkdir(parents=True, exist_ok=False)
     args.output_created = True
-    protocol = json.loads((ROOT / "benchmarks/streamed_grpo_cpu_v2/protocol.json").read_text())
+    protocol = json.loads((ROOT / "benchmarks/streamed_grpo_cpu_v3/protocol.json").read_text())
     write(args.output / "protocol.json", protocol)
     require(args.seed in protocol["seeds"] and sha(__file__) == protocol["runner_sha256"], "undeclared seed or runner")
     for name, digest in protocol["model_files"].items():

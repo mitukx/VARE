@@ -255,7 +255,7 @@ class CapabilityLoop:
             clear_deferred_cancellation_requests()
         return deferred_cancellations
 
-    async def run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None, _verified_experiences: Sequence[Experience] | None = None, _delivery_complete: Callable[[RoundResult], Awaitable[None]] | None = None, _publication_reserve: Callable[[], Awaitable[None]] | None = None, _delivery_claim: Callable[[str], Awaitable[Sequence[Experience] | None]] | None = None) -> RoundResult:
+    async def run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None, _verified_experiences: Sequence[Experience] | None = None, _delivery_complete: Callable[[RoundResult], Awaitable[None]] | None = None, _publication_reserve: Callable[[], Awaitable[None]] | None = None, _delivery_claim: Callable[[str], Awaitable[Sequence[Experience] | None]] | None = None, _delivery_pending: Callable[[str], bool] | None = None) -> RoundResult:
         """Own the shared runtime before any hook; retain crash uncertainty."""
         async with self._round_lock:
             if self._discard_failure is not None:
@@ -305,7 +305,14 @@ class CapabilityLoop:
                 self._release_runtime_round(owner_id)
                 raise
             except BaseException as exc:
-                if (_delivery_claim is not None or _verified_experiences is not None or self._candidate_unresolved or self._discard_failure is not None
+                delivery_unresolved = False
+                if _delivery_claim is not None:
+                    try:
+                        assert _delivery_pending is not None
+                        delivery_unresolved = _delivery_pending(owner_id)
+                    except BaseException:
+                        delivery_unresolved = True  # Cannot prove a clean claim failure.
+                if (delivery_unresolved or _verified_experiences is not None or self._candidate_unresolved or self._discard_failure is not None
                         or self._promotion_failure is not None):
                     self.runtime_coordinator.quarantine(exc)
                     # Leave the durable reservation intact, even if a commit
@@ -317,19 +324,20 @@ class CapabilityLoop:
             self._candidate_unresolved = False
             return result
 
-    async def run_verified_round(self, claim_experiences: Callable[[str], Awaitable[Sequence[Experience] | None]], *, round_index: int, on_complete: Callable[[RoundResult], Awaitable[None]], reserve_publication: Callable[[], Awaitable[None]]) -> RoundResult | None:
+    async def run_verified_round(self, claim_experiences: Callable[[str], Awaitable[Sequence[Experience] | None]], *, round_index: int, on_complete: Callable[[RoundResult], Awaitable[None]], reserve_publication: Callable[[], Awaitable[None]], delivery_pending: Callable[[str], bool]) -> RoundResult | None:
         """Consume bounded authenticated trajectories through the existing transaction.
 
         Does not regenerate, regrade or rename the source groups. Candidate,
         evaluation, promotion and recovery semantics are identical to run_round.
         Caller owns durable ingestion acknowledgment and restart reconciliation.
         """
-        if not callable(claim_experiences) or not callable(on_complete) or not callable(reserve_publication):
+        if not all(callable(fn) for fn in (claim_experiences, on_complete, reserve_publication, delivery_pending)):
             raise ValueError("streamed delivery requires owned completion and publication boundaries")
         try:
             return await self.run_round(
                 [], round_index=round_index, _delivery_claim=claim_experiences,
                 _delivery_complete=on_complete, _publication_reserve=reserve_publication,
+                _delivery_pending=delivery_pending,
             )
         except _NoVerifiedExperienceReady:
             return None

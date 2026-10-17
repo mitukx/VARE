@@ -229,8 +229,12 @@ class TrajectoryLearnerAdapter:
                 loop.replay.prune_current(freshness_fn=lambda _: None, grouped=True)
             async def reserve_publication():
                 await owned_io(self._reserve_publication, reservation)
+            def delivery_pending(owner_id):
+                pending = self.pending()
+                return pending is not None and pending["runtime_owner_id"] == owner_id
             result = await loop.run_verified_round(claim, round_index=round_index,
-                                                  on_complete=complete, reserve_publication=reserve_publication)
+                                                  on_complete=complete, reserve_publication=reserve_publication,
+                                                  delivery_pending=delivery_pending)
             return result
         except BaseException as exc:
             if reservation is not None:
