@@ -59,3 +59,16 @@ Traceback (most recent call last):
   File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 16, in need
     raise ValueError(message)
 ValueError: independent evaluation cohort provenance differs
+
+[baseline accepted] heldout-guarded-bytes: exit=0
+{"artifacts_hashed": 6522, "candidate_tensor_states_verified": 0, "cases": 42, "checkpoint_score_count_replayed": 0, "checkpoint_scores_replayed": false, "evaluation_pairs_verified": 507, "evaluation_reports_verified": 1014, "pass": true, "protocol_conformant": true}
+[corrected auditor] heldout-guarded-bytes: exit=1
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 394, in <module>
+    print(json.dumps(audit(args.directory,args.check_tensors,args.model_dir),sort_keys=True))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 275, in audit
+    need(record["report"]["metadata"].get("vare_evaluation_set_sha256") ==
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE-continuation-69/scripts/audit_e2e_rl_continuation.py", line 16, in need
+    raise ValueError(message)
+ValueError: guarded evaluation set digest differs from retained cohort

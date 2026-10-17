@@ -229,10 +229,13 @@ digest, rejects duplicate `(round, learner_attempt)` identities even when the
 duplicate's rollout and batch files are removed, and reconstructs each training
 and held-out task cohort from its recorded seed and round. Guarded evaluation
 reports must also attest the digest of that round's retained held-out task file.
-All four mutation controls (protocol, attempt identity, and both evaluation
-modes) were accepted by the preceding auditor and are rejected by the corrected
-one. These are audit-integrity corrections over the preserved campaign; they
-add no model, optimizer, or performance observations.
+All five mutation controls (protocol digest, duplicate attempt identity,
+evaluation task content in both modes, and guarded evaluation-byte attestation)
+were accepted by the preceding auditor and are rejected by the corrected one.
+The byte-attestation control preserves the task JSON values while changing only
+its serialization, isolating the report-digest check. These are audit-integrity
+corrections over the preserved campaign; they add no model, optimizer, or
+performance observations.
 
 This is a toy neural LM and synthetic one-token workload. Replay is round-local;
 general durable replay-backlog/curriculum recovery is not tested. The supervisor

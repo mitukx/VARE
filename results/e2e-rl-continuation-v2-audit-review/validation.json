@@ -31,7 +31,8 @@
     "continuation-audit-review-regression.log": "0fd7dcb144a6d2f194d8275c73559c59820c86cc14ab0173eb60576794cf2680",
     "continuation-audit-review-vacuous-model.log": "e648929534c6dd8fae82d95d3b6a3d1ef5393a2ef2590eb568137e58fe01cbdc",
     "diagnostic-checkpoints.tar.xz": "963a93d4ea1dff3cb6b39e8395f0f2f2a68783078960c4f4a959b590fae5505c",
-    "continuation-audit-review-provenance-controls.log": "704efbc2b269ca7ff7a28c077be6a6059a59989534b92cf4c668f075a065ba87"
+    "continuation-audit-review-provenance-controls.log": "c78dbd729caaa7fb3e854af2aba241e8563d0ff89cf54724282e7541288f6f2a",
+    "continuation-audit-review-final-regressions.log": "a90ff20dbf4ae0b15f223150aab19c7d72d91b8fcb4c216ec8e7d9e9446c7b3b"
   },
   "fixed_negative_cases": {
     "passed": 11
@@ -164,18 +165,21 @@
         "rehash_protocol_without_declared_digest_audit_passed": true,
         "duplicate_optimizer_attempt_with_orphan_evidence_removed_audit_passed": true,
         "mutated_heldout_minimal_audit_passed": true,
-        "mutated_heldout_guarded_audit_passed": true
+        "mutated_heldout_guarded_audit_passed": true,
+        "guarded_heldout_same_values_new_bytes_audit_passed": true
       },
       "fixed_controls": {
         "protocol_digest_conflict_rejected": "declared protocol snapshot digest differs",
         "duplicate_optimizer_attempt_rejected": "duplicate optimizer attempt identity",
         "mutated_heldout_minimal_rejected": "independent evaluation cohort provenance differs",
         "mutated_heldout_guarded_rejected": "independent evaluation cohort provenance differs",
-        "focused_regressions_passed": 4
+        "focused_regressions_passed": 5,
+        "guarded_heldout_attestation_digest_rejected": "guarded evaluation set digest differs from retained cohort",
+        "guarded_heldout_byte_binding_test": "One retained task list was reserialized with identical JSON values but different bytes; the guarded report digest was rejected."
       },
       "full_continuation_module": {
-        "collected": 35,
-        "passed": 26,
+        "collected": 36,
+        "passed": 27,
         "skipped": 9,
         "scope": "Retained raw campaign; actual-model fixtures skipped locally."
       },
@@ -196,8 +200,8 @@
   "scope": "Audit correction and actual toy-model system regressions; no new research or main performance campaign.",
   "sources": {
     ".github/workflows/e2e-system-cpu.yml": "60331af183398380e6ba61edc0533c6e9f1d5d33000945928caedb8679197c58",
-    "docs/e2e-rl-continuation-v2-report.md": "05b1898bd1a861f387c5735cef0db211bf2e5c3da5731c06b47964075253dd50",
+    "docs/e2e-rl-continuation-v2-report.md": "d9af1e642b8e96d3cb54914f1f15de144d0a425ba18c290e53a2c02a0c6e017e",
     "scripts/audit_e2e_rl_continuation.py": "6094701d28da1d53776b4c3392be6a6bdd74386dd90e72f0096d9f403a2fde03",
-    "tests/test_e2e_rl_continuation.py": "4d82adb3b64027d5da11e547112f7f0bc74da091342a53915137b95baf625364"
+    "tests/test_e2e_rl_continuation.py": "8f339def006634d4a01c4df3a5db831e501d792d7c87baab56a97c4eda842e54"
   }
 }

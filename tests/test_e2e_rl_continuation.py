@@ -334,3 +334,18 @@ def test_rehashed_independent_evaluation_cohort_must_match_seeded_tasks(
     reseal_records(changed)
     with pytest.raises(ValueError,match="independent evaluation cohort provenance"):
         auditor.audit(changed)
+
+
+def test_guarded_evaluation_attestation_must_match_retained_cohort_bytes(audit_records,tmp_path):
+    changed=tmp_path/"guarded-heldout-digest-mismatch"
+    shutil.copytree(audit_records,changed)
+    row=next(r for r in auditor.read(changed/"progress.json")
+             if r["mode"]=="guarded" and r["cutpoint"]=="none")
+    path=changed/row["directory"]/"rounds/r0000/evaluation_tasks.json"
+    tasks=auditor.read(path)
+    original_digest=auditor.sha(path)
+    path.write_text(json.dumps(tasks,indent=2,sort_keys=True)+"\n")
+    assert auditor.read(path)==tasks and auditor.sha(path)!=original_digest
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="guarded evaluation set digest"):
+        auditor.audit(changed)

@@ -1,0 +1,35 @@
+..sssssssss.........................                                     [100%]
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_e2e_rl_continuation.py::test_v2_task_namespaces_are_round_and_evaluation_disjoint
+PASSED tests/test_e2e_rl_continuation.py::test_restart_refuses_changed_learner_source_before_loading_model
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[incumbent-minimal]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[incumbent-guarded]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[candidate-minimal]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[candidate-guarded]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[both-minimal]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[both-guarded]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[split_attempt-minimal]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[split_attempt-guarded]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[duplicate_policy-minimal]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[duplicate_policy-guarded]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_absent_independent_evaluation_is_rejected
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_evaluation_attempt_must_exist_in_optimizer_history
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_missing_rollout_attempt_is_rejected
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_progress_seed_must_match_case_configuration
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_missing_batch_attempt_is_rejected
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_batch_signal_must_match_its_rollout
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_round_task_pool_must_match_rollouts
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_completed_round_total_must_match_commits
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_evaluation_pair_must_match_committed_round_result
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_recovered_evaluation_pair_must_match_promotion_journal
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_protocol_snapshot_must_match_declared_digest
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_duplicate_optimizer_attempt_identity_is_rejected
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_independent_evaluation_cohort_must_match_seeded_tasks[minimal]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_independent_evaluation_cohort_must_match_seeded_tasks[guarded]
+PASSED tests/test_e2e_rl_continuation.py::test_guarded_evaluation_attestation_must_match_retained_cohort_bytes
+SKIPPED [1] tests/test_e2e_rl_continuation.py:48: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [6] tests/test_e2e_rl_continuation.py:60: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:75: actual continuation cases require VARE_E2E_MODEL_DIR
+SKIPPED [1] tests/test_e2e_rl_continuation.py:101: actual continuation cases require VARE_E2E_MODEL_DIR
+27 passed, 9 skipped in 96.77s (0:01:36)
