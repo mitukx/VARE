@@ -19,8 +19,11 @@ def require(value, reason):
         raise ValueError(reason)
 
 
-def audit(root):
+def audit(root, *, expected_manifest=None):
     manifest = json.loads((root / "SHA256.json").read_text())
+    if expected_manifest is not None:
+        require(not Path(expected_manifest).resolve().is_relative_to(root.resolve()), "external artifact anchor must be outside the artifact")
+        require(manifest == json.loads(Path(expected_manifest).read_text()), "external artifact anchor mismatch")
     for name, expected in manifest.items():
         path = root / name
         require(not Path(name).is_absolute() and ".." not in Path(name).parts, "unsafe artifact path")
@@ -96,10 +99,15 @@ def audit(root):
             require(attempts == [(1, "lease_expired"), (2, "done")], "worker recovery lineage mismatch")
     return {"pass": True, "trajectories": count, "steps": steps, "files_verified": len(manifest),
             "events": result["events"], "effective_duplicates": result["effective_duplicates"],
-            "scope": "Rehashes saved bytes, streams step truth/state and verifies latency/throughput derivations. MAC admission was checked online; no signing key is published. No model optimizer or promotion audit."}
+            "headline_timing_anchored": expected_manifest is not None,
+            "scope": "Streams step truth/state and checks latency/rate arithmetic. An external trusted manifest anchors the measured timing denominator; without it wall_s remains self-reported. MAC admission was checked online; no signing key is published. No model optimizer or promotion audit."}
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path)
-    print(json.dumps(audit(parser.parse_args().output), indent=2))
+    anchor = parser.add_mutually_exclusive_group(required=True)
+    anchor.add_argument("--expected-manifest", type=Path, help="Trusted manifest outside the artifact, e.g. committed published measurement hashes")
+    anchor.add_argument("--unanchored-new-run", action="store_true", help="Check a new run's correctness; do not authenticate its headline timing")
+    args = parser.parse_args()
+    print(json.dumps(audit(args.output, expected_manifest=args.expected_manifest), indent=2))
