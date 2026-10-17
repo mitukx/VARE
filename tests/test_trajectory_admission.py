@@ -32,7 +32,13 @@ def group(tmp_path, fault=None):
             policy = P1 if fault == "mixed" and i == 1 else P0
             prompt = f"different-{member}" if fault == "prompt" else "same terminal prompt"
             generation = {"prompt_id": "task", "prompt": prompt, "response": "yes", "logprob": -.1, "token_count": 1, "latency_s": 0.,
-                          "metadata": {"prompt_token_ids": [0], "response_token_ids": [1], "response_token_logprobs": [-.1]}}
+                          "metadata": {"model": "fixture-model", "backend": "fixture", "sampling_temperature": 1.,
+                                       "logprob_distribution": "neutral_temperature_scaled_policy",
+                                       "prompt_token_ids": [0], "response_token_ids": [1], "response_token_logprobs": [-.1]}}
+            if fault in {"sampling_temperature", "logprob_distribution", "model"}:
+                generation["metadata"].pop(fault)
+            if fault == "prompt_tokens":
+                generation["metadata"]["prompt_token_ids"] = [member]
             if fault == "no_logprobs":
                 generation["metadata"]["response_token_logprobs"] = None
             if fault == "no_tokens":
@@ -161,3 +167,10 @@ def test_cancelled_partial_group_cannot_resurrect(tmp_path):
     spec = json.loads(store.trajectory("t0")["task"])
     with pytest.raises(ValueError, match="terminal"):
         store.submit("t1", Task(**spec["task"]), expected_steps=2, group_id="g", member=1, group_size=2, now=100)
+
+
+@pytest.mark.parametrize("fault", ["sampling_temperature", "logprob_distribution", "model", "prompt_tokens"])
+def test_terminal_behavior_identity_is_required(tmp_path, fault):
+    store, root = group(tmp_path, fault)
+    result = admit(store, root)
+    assert not result.admitted and not result.experiences

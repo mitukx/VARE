@@ -1,0 +1,1126 @@
+test (3.11)	UNKNOWN STEP	﻿2026-10-16T23:53:46.0298120Z Current runner version: '2.337.0'
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0323908Z ##[group]Runner Image Provisioner
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0324878Z Hosted Compute Agent
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0325535Z Version: 20261012.601
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0326174Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0327016Z Build Date: 2026-10-12T17:48:21Z
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0327710Z Worker ID: {88b07482-a2e0-4374-8212-342fe90f8437}
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0328389Z Region: westus2
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0329027Z Cloud: Azure
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0329572Z ##[endgroup]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0331654Z ##[group]Operating System
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0332363Z Ubuntu
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0332881Z 24.04.5
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0333498Z LTS
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0334017Z ##[endgroup]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0334597Z ##[group]Runner Image
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0335211Z Image: ubuntu-24.04
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0335769Z Version: 20261012.334.1
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0337099Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0338765Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0339761Z ##[endgroup]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0341347Z ##[group]GITHUB_TOKEN Permissions
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0343252Z Contents: read
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0343877Z Metadata: read
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0344579Z ##[endgroup]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0347011Z Secret source: Actions
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0348122Z Cache mode: write
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0348829Z Prepare workflow directory
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0696186Z Prepare all required actions
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.0746077Z Getting action download info
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.4186354Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.5155068Z Download action repository 'actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.5973136Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.8756254Z Complete job name: test (3.11)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.9820692Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.9821801Z with:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.9822233Z   repository: mitukx/VARE
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.9826018Z   token: ***
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.9826445Z   ssh-strict: true
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.9826872Z   ssh-user: git
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.9827309Z   persist-credentials: true
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.9827779Z   clean: true
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.9828213Z   sparse-checkout-cone-mode: true
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.9828730Z   fetch-depth: 1
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.9829148Z   fetch-tags: false
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.9829576Z   show-progress: true
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.9830013Z   lfs: false
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.9830616Z   submodules: false
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.9831062Z   set-safe-directory: true
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.9831567Z   allow-unsafe-pr-checkout: false
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:46.9832368Z ##[endgroup]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.0920692Z Syncing repository: mitukx/VARE
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.0923187Z ##[group]Getting Git version info
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.0924294Z Working directory is '/home/runner/work/VARE/VARE'
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.0925800Z [command]/usr/bin/git version
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1025691Z git version 2.55.0
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1071762Z ##[endgroup]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1091861Z Temporarily overriding HOME='/home/runner/work/_temp/e903665e-2083-4fda-9dac-4541ae011272' before making global git config changes
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1094049Z Adding repository directory to the temporary git global config as a safe directory
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1095750Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/VARE/VARE
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1169287Z Deleting the contents of '/home/runner/work/VARE/VARE'
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1175035Z ##[group]Initializing the repository
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1179819Z [command]/usr/bin/git init /home/runner/work/VARE/VARE
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1351320Z hint: Using 'master' as the name for the initial branch. This default branch name
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1353285Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1355150Z hint: to use in all of your new repositories, which will suppress this warning,
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1356669Z hint: call:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1357653Z hint:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1358790Z hint: 	git config --global init.defaultBranch <name>
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1360451Z hint:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1361827Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1363833Z hint: 'development'. The just-created branch can be renamed via this command:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1365490Z hint:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1366625Z hint: 	git branch -m <name>
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1367838Z hint:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1369076Z hint: Disable this message with "git config set advice.defaultBranchName false"
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1371354Z Initialized empty Git repository in /home/runner/work/VARE/VARE/.git/
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1382880Z [command]/usr/bin/git remote add origin https://github.com/mitukx/VARE
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1443764Z ##[endgroup]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1445607Z ##[group]Disabling automatic garbage collection
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1452598Z [command]/usr/bin/git config --local gc.auto 0
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1534293Z ##[endgroup]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1541677Z ##[group]Setting up auth
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1546901Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.1577869Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.2029890Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.2066173Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.2294517Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.2332725Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.2569431Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.2614380Z ##[endgroup]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.2615321Z ##[group]Fetching the repository
+test (3.11)	UNKNOWN STEP	2026-10-16T23:53:47.2625416Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +fdc57f121b5910e77b820fa790bf90108e111dda:refs/remotes/origin/codex/durable-agent-trajectories
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:05.1066807Z From https://github.com/mitukx/VARE
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:05.1068512Z  * [new ref]         fdc57f121b5910e77b820fa790bf90108e111dda -> origin/codex/durable-agent-trajectories
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:05.1075754Z ##[endgroup]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:05.1076816Z ##[group]Determining the checkout info
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:05.1079076Z ##[endgroup]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:05.1086093Z [command]/usr/bin/git sparse-checkout disable
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:05.1146880Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:05.1180700Z ##[group]Checking out the ref
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:05.1186126Z [command]/usr/bin/git checkout --progress --force -B codex/durable-agent-trajectories refs/remotes/origin/codex/durable-agent-trajectories
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:06.3825823Z Updating files:  12% (1036/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:06.4766308Z Updating files:  13% (1123/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:06.7279973Z Updating files:  14% (1209/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:06.9731689Z Updating files:  15% (1295/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.0879462Z Updating files:  16% (1381/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.1357261Z Updating files:  17% (1468/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.1715144Z Updating files:  17% (1522/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.1774761Z Updating files:  18% (1554/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.1817599Z Updating files:  19% (1640/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.1861967Z Updating files:  20% (1727/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.1907983Z Updating files:  21% (1813/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.1947230Z Updating files:  22% (1899/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.1994100Z Updating files:  23% (1986/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.2042631Z Updating files:  24% (2072/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.2092023Z Updating files:  25% (2158/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.2130005Z Updating files:  26% (2245/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.2177259Z Updating files:  27% (2331/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.2223920Z Updating files:  28% (2417/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.2268953Z Updating files:  29% (2503/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.2312456Z Updating files:  30% (2590/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.2354266Z Updating files:  31% (2676/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.2395929Z Updating files:  32% (2762/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.2439280Z Updating files:  33% (2849/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.2480866Z Updating files:  34% (2935/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.2522386Z Updating files:  35% (3021/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.2563958Z Updating files:  36% (3108/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.2606189Z Updating files:  37% (3194/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.2647054Z Updating files:  38% (3280/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.2690731Z Updating files:  39% (3367/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.2733004Z Updating files:  40% (3453/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.2774626Z Updating files:  41% (3539/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.2817080Z Updating files:  42% (3626/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.2858174Z Updating files:  43% (3712/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.2903982Z Updating files:  44% (3798/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.2952154Z Updating files:  45% (3884/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.2996857Z Updating files:  46% (3971/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3037065Z Updating files:  47% (4057/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3079398Z Updating files:  48% (4143/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3122718Z Updating files:  49% (4230/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3161241Z Updating files:  50% (4316/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3203229Z Updating files:  51% (4402/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3245783Z Updating files:  52% (4489/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3284049Z Updating files:  53% (4575/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3329777Z Updating files:  54% (4661/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3370019Z Updating files:  55% (4748/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3408580Z Updating files:  56% (4834/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3451342Z Updating files:  57% (4920/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3492734Z Updating files:  58% (5006/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3530946Z Updating files:  59% (5093/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3574191Z Updating files:  60% (5179/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3614645Z Updating files:  61% (5265/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3654249Z Updating files:  62% (5352/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3701683Z Updating files:  63% (5438/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3744163Z Updating files:  64% (5524/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3782122Z Updating files:  65% (5611/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3820034Z Updating files:  66% (5697/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3859519Z Updating files:  67% (5783/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3897842Z Updating files:  68% (5870/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3933796Z Updating files:  69% (5956/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.3976675Z Updating files:  70% (6042/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.4091465Z Updating files:  71% (6129/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.4187898Z Updating files:  72% (6215/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.4316406Z Updating files:  73% (6301/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.4404230Z Updating files:  74% (6387/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.4476829Z Updating files:  75% (6474/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.4526400Z Updating files:  76% (6560/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.4614424Z Updating files:  77% (6646/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.4653507Z Updating files:  78% (6733/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.4700604Z Updating files:  79% (6819/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.4740404Z Updating files:  80% (6905/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.4832738Z Updating files:  81% (6992/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.5060941Z Updating files:  82% (7078/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.5110900Z Updating files:  83% (7164/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.5152339Z Updating files:  84% (7251/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.5207911Z Updating files:  85% (7337/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.5254067Z Updating files:  86% (7423/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.5303423Z Updating files:  87% (7509/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.5346421Z Updating files:  88% (7596/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.5388013Z Updating files:  89% (7682/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.5425339Z Updating files:  90% (7768/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.5464356Z Updating files:  91% (7855/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.5509862Z Updating files:  92% (7941/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.5559980Z Updating files:  93% (8027/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.5617048Z Updating files:  94% (8114/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.5671924Z Updating files:  95% (8200/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.5727771Z Updating files:  96% (8286/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.5785346Z Updating files:  97% (8373/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.5836071Z Updating files:  98% (8459/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.5884999Z Updating files:  99% (8545/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.5885738Z Updating files: 100% (8631/8631)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.5886359Z Updating files: 100% (8631/8631), done.
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.6008414Z Switched to a new branch 'codex/durable-agent-trajectories'
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.6012295Z branch 'codex/durable-agent-trajectories' set up to track 'origin/codex/durable-agent-trajectories'.
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.6221394Z ##[endgroup]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.6274563Z [command]/usr/bin/git log -1 --format=%H
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.6304922Z fdc57f121b5910e77b820fa790bf90108e111dda
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.6586983Z ##[group]Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.6587403Z with:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.6587605Z   python-version: 3.11
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.6587843Z   check-latest: false
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.6590690Z   token: ***
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.6590921Z   update-environment: true
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.6591172Z   allow-prereleases: false
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.6591406Z   freethreaded: false
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.6591617Z ##[endgroup]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.7956024Z ##[group]Installed versions
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.8060587Z (node:2317) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.8061937Z (Use `node --trace-deprecation ...` to show where the warning was created)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.8062760Z Successfully set up CPython (3.11.17)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.8063595Z ##[endgroup]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.8306567Z ##[group]Run python -m pip install -e . pytest==8.4.2
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.8307297Z ^[[36;1mpython -m pip install -e . pytest==8.4.2^[[0m
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.8667796Z shell: /usr/bin/bash -e {0}
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.8668116Z env:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.8668433Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.8668974Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.8669472Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.8669909Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.8670598Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.8671058Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:07.8671430Z ##[endgroup]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:09.7537251Z Obtaining file:///home/runner/work/VARE/VARE
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:09.7554278Z   Installing build dependencies: started
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:10.6964665Z   Installing build dependencies: finished with status 'done'
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:10.6970617Z   Checking if build backend supports build_editable: started
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:11.0691140Z   Checking if build backend supports build_editable: finished with status 'done'
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:11.0698823Z   Getting requirements to build editable: started
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:11.3805094Z   Getting requirements to build editable: finished with status 'done'
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:11.3814478Z   Preparing editable metadata (pyproject.toml): started
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:11.5592022Z   Preparing editable metadata (pyproject.toml): finished with status 'done'
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:11.6501891Z Collecting pytest==8.4.2
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:11.7100014Z   Downloading pytest-8.4.2-py3-none-any.whl.metadata (7.7 kB)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:11.7274153Z Collecting iniconfig>=1 (from pytest==8.4.2)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:11.7364497Z   Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:11.7475437Z Collecting packaging>=20 (from pytest==8.4.2)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:11.7491153Z   Using cached packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:11.7633498Z Collecting pluggy<2,>=1.5 (from pytest==8.4.2)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:11.7709688Z   Downloading pluggy-1.7.0-py3-none-any.whl.metadata (5.0 kB)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:11.7937765Z Collecting pygments>=2.7.2 (from pytest==8.4.2)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:11.8018710Z   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:11.8149474Z Downloading pytest-8.4.2-py3-none-any.whl (365 kB)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:11.8510758Z Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:11.8602866Z Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:11.8634141Z Using cached packaging-26.3-py3-none-any.whl (129 kB)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:11.8708817Z Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:11.9149590Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 29.9 MB/s  0:00:00
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:11.9385796Z Building wheels for collected packages: vare-rl
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:11.9392858Z   Building editable for vare-rl (pyproject.toml): started
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:12.1391784Z   Building editable for vare-rl (pyproject.toml): finished with status 'done'
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:12.1397535Z   Created wheel for vare-rl: filename=vare_rl-0.4.0-0.editable-py3-none-any.whl size=9509 sha256=3aa6ce4c4e6fb4716408c0aab692de219cf5bf9dd9f876dcc628d6dc812b80b2
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:12.1399235Z   Stored in directory: /tmp/pip-ephem-wheel-cache-2qvnaaum/wheels/77/7d/67/e36d2d2070bf958346758da2e4f15903f27b18d4e06e639e40
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:12.1417893Z Successfully built vare-rl
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:12.1632538Z Installing collected packages: vare-rl, pygments, pluggy, packaging, iniconfig, pytest
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:15.2463214Z 
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:15.2473181Z Successfully installed iniconfig-2.3.1 packaging-26.3 pluggy-1.7.0 pygments-2.21.0 pytest-8.4.2 vare-rl-0.4.0
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:15.3155108Z ##[group]Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:15.3155941Z ^[[36;1mpython -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py^[[0m
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:15.3222606Z shell: /usr/bin/bash -e {0}
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:15.3222872Z env:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:15.3223145Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:15.3223601Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:15.3224050Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:15.3224440Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:15.3224841Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:15.3225277Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:15.3225776Z   VARE_TEST_DIAGNOSTICS_DIR: /home/runner/work/_temp/durable-test-diagnostics
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:15.3226178Z ##[endgroup]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:20.6271629Z .................sssssss................................................ [  7%]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:54:58.2514111Z ........................................................................ [ 14%]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:55:04.3198604Z ....ssssssss............................................................ [ 21%]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:55:13.1602815Z ........................................................................ [ 29%]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:55:24.0979354Z ........................................................................ [ 36%]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:55:30.0203226Z ...........s.....................ss......s.............................. [ 43%]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:55:31.3153927Z ........................ss.............................................. [ 51%]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:55:32.6043404Z ........................................................................ [ 58%]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:55:37.4707346Z ........................................................................ [ 65%]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:55:38.4052472Z ...............s........................................................ [ 72%]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:55:42.0242229Z ........................................................................ [ 80%]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:43.1993144Z ........................................................................ [ 87%]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:44.1258952Z ........................................................................ [ 94%]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0601869Z .........................F.........................                      [100%]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0602611Z =================================== FAILURES ===================================
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0603424Z _______ test_independent_stages_bounded_backlog_and_slow_step_heartbeats _______
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0603927Z 
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0604337Z tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-0/test_independent_stages_bounde0')
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0604863Z 
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0605230Z     def test_independent_stages_bounded_backlog_and_slow_step_heartbeats(tmp_path):
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0605854Z         async def scenario():
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0606488Z             store = TrajectoryStore.create(tmp_path / "state.db", run_id="async-test", max_inflight=4)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0607282Z             policy = PolicyCheckpoint("p0", 0, "a" * 64)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0607824Z             store.register_policy(policy)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0608331Z             store.register_verifier("v", 0, "b" * 64)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0608953Z             root = TrajectoryRewardRoot(b"x" * 32, "async-test", "c" * 64)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0609593Z             stop = asyncio.Event()
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0610009Z             pressure = 0
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0610578Z     
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0610937Z             async def step_fn(resumed, trajectory_id):
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0611530Z                 index = resumed["next_step"]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0612221Z                 await asyncio.sleep(.12 if trajectory_id == "g0-0" and index == 0 else .001)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0613653Z                 return AgentStep(index, f"e{index}", policy, {"kind": "inference"}, {}, {"index": index},
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0614912Z                                  {"prompt_id": "task", "prompt": "same", "response": "x", "logprob": -.1, "token_count": 1, "latency_s": 0.,
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0616220Z                                   "metadata": {"prompt_token_ids": [0], "response_token_ids": [1], "response_token_logprobs": [-.1]}})
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0617088Z     
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0617460Z             async def verify_fn(store, ident):
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0618044Z                 row = await owned_io(store.trajectory, ident)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0618714Z                 value = Verification(.5, True, 1., 0, "v", trusted=True,
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0619599Z                                      metadata={"verifier_config_sha256": "b" * 64, "trajectory_sha256": row["head"]})
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0620715Z                 return root.attest(ident, row["head"], value)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0621205Z     
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0621535Z             async def producer():
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0621961Z                 nonlocal pressure
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0622739Z                 for group in range(8):
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0625624Z                     for member in range(2):
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0626444Z                         while True:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0626832Z                             try:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0628107Z                                 await owned_io(store.submit, f"g{group}-{member}", Task("task", "x", metadata={"learning_rule": "terminal_action_on_policy_grpo_v1"}), expected_steps=2, group_id=f"g{group}", member=member, group_size=2)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0629845Z                                 break
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0630640Z                             except BackpressureError:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0631526Z                                 pressure += 1
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0632085Z                                 await asyncio.sleep(.005)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0632610Z     
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0632953Z             async def consumer():
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0633402Z                 done = 0
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0633807Z                 while done < 8:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0634366Z                     for ident in await owned_io(store.verified_groups):
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0635040Z                         result = await owned_io(admit_terminal_grpo_group, store, ident, active_policy=policy,
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0635872Z                                                 verifier_name="v", verifier_version=0, verifier_config_sha256="b" * 64, trust_root=root)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0636479Z                         if result.admitted:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0636900Z                             await owned_io(store.close_group, ident, result.heads)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0637336Z                             done += 1
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0637659Z                     await asyncio.sleep(.001)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0637972Z     
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0638535Z             workers = [asyncio.create_task(execute_trajectories(store, f"w{i}", step_fn, stop, lease_seconds=.09)) for i in range(2)]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0639522Z             workers.append(asyncio.create_task(verify_trajectories(store, "v", verify_fn, stop, lease_seconds=.09)))
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0640419Z             try:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0640689Z                 async with asyncio.timeout(15):
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0641092Z                     await asyncio.gather(producer(), consumer())
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0641471Z             finally:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0641715Z                 stop.set()
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0641966Z                 for worker in workers:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0642231Z                     worker.cancel()
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0642714Z                 await asyncio.gather(*workers, return_exceptions=True)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0643412Z             assert store.counts() == {"consumed": 16}
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0643978Z             assert pressure > 0
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0644459Z             with store.connection() as db:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0645516Z                 assert db.execute("SELECT count(*) FROM attempts WHERE generation>1").fetchone()[0] == 0
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0646988Z                 first_verified = db.execute("SELECT min(sequence) FROM events WHERE json_extract(event,'$.kind')='trajectory_verified'").fetchone()[0]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0648790Z                 last_complete = db.execute("SELECT max(sequence) FROM events WHERE json_extract(event,'$.kind')='trajectory_complete'").fetchone()[0]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0649698Z             assert first_verified < last_complete
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0649987Z     
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0650463Z >       asyncio.run(scenario())
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0650640Z 
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0650750Z tests/test_trajectory_workers.py:77: 
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0651083Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0651582Z /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/asyncio/runners.py:190: in run
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0652011Z     return runner.run(main)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0652243Z            ^^^^^^^^^^^^^^^^
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0652766Z /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/asyncio/runners.py:118: in run
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0653568Z     return self._loop.run_until_complete(task)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0653868Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0654356Z /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0654861Z     return future.result()
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0655089Z            ^^^^^^^^^^^^^^^
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0655476Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0655735Z 
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0655832Z     async def scenario():
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0656255Z         store = TrajectoryStore.create(tmp_path / "state.db", run_id="async-test", max_inflight=4)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0656943Z         policy = PolicyCheckpoint("p0", 0, "a" * 64)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0657258Z         store.register_policy(policy)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0657552Z         store.register_verifier("v", 0, "b" * 64)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0658046Z         root = TrajectoryRewardRoot(b"x" * 32, "async-test", "c" * 64)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0658743Z         stop = asyncio.Event()
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0659187Z         pressure = 0
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0659545Z     
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0659934Z         async def step_fn(resumed, trajectory_id):
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0660743Z             index = resumed["next_step"]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0661491Z             await asyncio.sleep(.12 if trajectory_id == "g0-0" and index == 0 else .001)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0662406Z             return AgentStep(index, f"e{index}", policy, {"kind": "inference"}, {}, {"index": index},
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0663069Z                              {"prompt_id": "task", "prompt": "same", "response": "x", "logprob": -.1, "token_count": 1, "latency_s": 0.,
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0663803Z                               "metadata": {"prompt_token_ids": [0], "response_token_ids": [1], "response_token_logprobs": [-.1]}})
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0664271Z     
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0664476Z         async def verify_fn(store, ident):
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0664794Z             row = await owned_io(store.trajectory, ident)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0665324Z             value = Verification(.5, True, 1., 0, "v", trusted=True,
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0666283Z                                  metadata={"verifier_config_sha256": "b" * 64, "trajectory_sha256": row["head"]})
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0666781Z             return root.attest(ident, row["head"], value)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0667068Z     
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0667254Z         async def producer():
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0667502Z             nonlocal pressure
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0667882Z             for group in range(8):
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0668144Z                 for member in range(2):
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0668410Z                     while True:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0668637Z                         try:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0669612Z                             await owned_io(store.submit, f"g{group}-{member}", Task("task", "x", metadata={"learning_rule": "terminal_action_on_policy_grpo_v1"}), expected_steps=2, group_id=f"g{group}", member=member, group_size=2)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0670873Z                             break
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0671155Z                         except BackpressureError:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0671465Z                             pressure += 1
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0671750Z                             await asyncio.sleep(.005)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0672020Z     
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0672202Z         async def consumer():
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0672429Z             done = 0
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0672634Z             while done < 8:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0672925Z                 for ident in await owned_io(store.verified_groups):
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0673435Z                     result = await owned_io(admit_terminal_grpo_group, store, ident, active_policy=policy,
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0674115Z                                             verifier_name="v", verifier_version=0, verifier_config_sha256="b" * 64, trust_root=root)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0674601Z                     if result.admitted:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0674947Z                         await owned_io(store.close_group, ident, result.heads)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0675300Z                         done += 1
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0675551Z                 await asyncio.sleep(.001)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0675801Z     
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0676258Z         workers = [asyncio.create_task(execute_trajectories(store, f"w{i}", step_fn, stop, lease_seconds=.09)) for i in range(2)]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0677032Z         workers.append(asyncio.create_task(verify_trajectories(store, "v", verify_fn, stop, lease_seconds=.09)))
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0677522Z         try:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0677729Z             async with asyncio.timeout(15):
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0678198Z                 await asyncio.gather(producer(), consumer())
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0678498Z         finally:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0678691Z             stop.set()
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0678987Z             for worker in workers:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0679481Z                 worker.cancel()
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0680297Z             await asyncio.gather(*workers, return_exceptions=True)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0681027Z         assert store.counts() == {"consumed": 16}
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0681583Z         assert pressure > 0
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0682029Z         with store.connection() as db:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0682823Z >           assert db.execute("SELECT count(*) FROM attempts WHERE generation>1").fetchone()[0] == 0
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0683615Z E           assert 1 == 0
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.0683868Z 
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.1249401Z tests/test_trajectory_workers.py:72: AssertionError
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.1250600Z =========================== short test summary info ============================
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.1252109Z FAILED tests/test_trajectory_workers.py::test_independent_stages_bounded_backlog_and_slow_step_heartbeats - assert 1 == 0
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.1252949Z 1 failed, 964 passed, 23 skipped in 151.29s (0:02:31)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.2271765Z ##[error]Process completed with exit code 1.
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.2388574Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.2389010Z with:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.2389230Z   name: durable-test-diagnostics-3.11
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.2389588Z   path: /home/runner/work/_temp/durable-test-diagnostics
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.2389931Z   if-no-files-found: ignore
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.2390483Z   compression-level: 6
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.2390710Z   overwrite: false
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.2390924Z   include-hidden-files: false
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.2391150Z env:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.2391402Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.2391828Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.2392266Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.2392643Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.2393024Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.2393438Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.2393763Z ##[endgroup]
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.4044745Z (node:4692) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.4045493Z (Use `node --trace-deprecation ...` to show where the warning was created)
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.4062748Z No files were found with the provided path: /home/runner/work/_temp/durable-test-diagnostics. No artifacts will be uploaded.
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.4508214Z Post job cleanup.
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.5338630Z [command]/usr/bin/git version
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.5391111Z git version 2.55.0
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.5423312Z Temporarily overriding HOME='/home/runner/work/_temp/e76d9290-f366-40ad-b3ef-1abb33f595e8' before making global git config changes
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.5425156Z Adding repository directory to the temporary git global config as a safe directory
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.5430037Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/VARE/VARE
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.5473524Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.5511584Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.5787324Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.5813098Z http.https://github.com/.extraheader
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.5824700Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.5859986Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.6147578Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.6187451Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.6628892Z Cleaning up orphan processes
+test (3.11)	UNKNOWN STEP	2026-10-16T23:56:47.7029853Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+test (3.12)	UNKNOWN STEP	﻿2026-10-16T23:53:45.2160429Z Current runner version: '2.337.0'
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2186500Z ##[group]Runner Image Provisioner
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2187458Z Hosted Compute Agent
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2188074Z Version: 20261012.601
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2188866Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2189628Z Build Date: 2026-10-12T17:48:21Z
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2190316Z Worker ID: {8346ecdb-505f-4098-a8fa-4d5e022c20c8}
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2191087Z Region: eastus2
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2191674Z Cloud: Azure
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2192415Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2193980Z ##[group]Operating System
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2194647Z Ubuntu
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2195239Z 24.04.5
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2195781Z LTS
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2196351Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2196965Z ##[group]Runner Image
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2197570Z Image: ubuntu-24.04
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2198174Z Version: 20261012.334.1
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2199544Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2201262Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2202653Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2203870Z ##[group]GITHUB_TOKEN Permissions
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2206472Z Contents: read
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2207181Z Metadata: read
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2207790Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2210033Z Secret source: Actions
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2211158Z Cache mode: write
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2212432Z Prepare workflow directory
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2549546Z Prepare all required actions
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.2598556Z Getting action download info
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.4946452Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.5937312Z Download action repository 'actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.6674229Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:45.9420229Z Complete job name: test (3.12)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.0373105Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.0374218Z with:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.0374670Z   repository: mitukx/VARE
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.0378653Z   token: ***
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.0379082Z   ssh-strict: true
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.0379516Z   ssh-user: git
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.0379952Z   persist-credentials: true
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.0380429Z   clean: true
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.0380872Z   sparse-checkout-cone-mode: true
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.0381390Z   fetch-depth: 1
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.0381810Z   fetch-tags: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.0382436Z   show-progress: true
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.0382876Z   lfs: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.0383273Z   submodules: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.0383721Z   set-safe-directory: true
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.0384232Z   allow-unsafe-pr-checkout: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.0385018Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1418873Z Syncing repository: mitukx/VARE
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1420602Z ##[group]Getting Git version info
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1421520Z Working directory is '/home/runner/work/VARE/VARE'
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1422862Z [command]/usr/bin/git version
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1471674Z git version 2.55.0
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1493030Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1510402Z Temporarily overriding HOME='/home/runner/work/_temp/0f65a734-9ad3-48cd-8e5d-11b4d78ccbb3' before making global git config changes
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1513023Z Adding repository directory to the temporary git global config as a safe directory
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1515687Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/VARE/VARE
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1567215Z Deleting the contents of '/home/runner/work/VARE/VARE'
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1573118Z ##[group]Initializing the repository
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1577333Z [command]/usr/bin/git init /home/runner/work/VARE/VARE
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1683718Z hint: Using 'master' as the name for the initial branch. This default branch name
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1685730Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1687647Z hint: to use in all of your new repositories, which will suppress this warning,
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1689204Z hint: call:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1691084Z hint:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1692604Z hint: 	git config --global init.defaultBranch <name>
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1693804Z hint:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1694901Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1696577Z hint: 'development'. The just-created branch can be renamed via this command:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1697833Z hint:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1698525Z hint: 	git branch -m <name>
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1699400Z hint:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1700558Z hint: Disable this message with "git config set advice.defaultBranchName false"
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1702830Z Initialized empty Git repository in /home/runner/work/VARE/VARE/.git/
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1705552Z [command]/usr/bin/git remote add origin https://github.com/mitukx/VARE
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1789778Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1791165Z ##[group]Disabling automatic garbage collection
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1793996Z [command]/usr/bin/git config --local gc.auto 0
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1837218Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1838485Z ##[group]Setting up auth
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1855865Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.1919534Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.2296261Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.2337904Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.2624843Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.2670045Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.2939260Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.2985542Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.2986794Z ##[group]Fetching the repository
+test (3.12)	UNKNOWN STEP	2026-10-16T23:53:46.3001263Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +fdc57f121b5910e77b820fa790bf90108e111dda:refs/remotes/origin/codex/durable-agent-trajectories
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:04.5958752Z From https://github.com/mitukx/VARE
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:04.5960405Z  * [new ref]         fdc57f121b5910e77b820fa790bf90108e111dda -> origin/codex/durable-agent-trajectories
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:04.5963635Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:04.5964295Z ##[group]Determining the checkout info
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:04.5965839Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:04.5973397Z [command]/usr/bin/git sparse-checkout disable
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:04.6029935Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:04.6062012Z ##[group]Checking out the ref
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:04.6066637Z [command]/usr/bin/git checkout --progress --force -B codex/durable-agent-trajectories refs/remotes/origin/codex/durable-agent-trajectories
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:05.8542501Z Updating files:  12% (1047/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:05.9487548Z Updating files:  13% (1123/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.2287572Z Updating files:  14% (1209/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.4731527Z Updating files:  15% (1295/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.5864839Z Updating files:  16% (1381/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.6230675Z Updating files:  17% (1468/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.6714456Z Updating files:  17% (1510/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.6779359Z Updating files:  18% (1554/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.6827733Z Updating files:  19% (1640/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.6873725Z Updating files:  20% (1727/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.6919682Z Updating files:  21% (1813/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.6957475Z Updating files:  22% (1899/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7019872Z Updating files:  23% (1986/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7082545Z Updating files:  24% (2072/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7124795Z Updating files:  25% (2158/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7163493Z Updating files:  26% (2245/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7209182Z Updating files:  27% (2331/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7254346Z Updating files:  28% (2417/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7296383Z Updating files:  29% (2503/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7338220Z Updating files:  30% (2590/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7377755Z Updating files:  31% (2676/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7418253Z Updating files:  32% (2762/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7459374Z Updating files:  33% (2849/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7499360Z Updating files:  34% (2935/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7540066Z Updating files:  35% (3021/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7580303Z Updating files:  36% (3108/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7622353Z Updating files:  37% (3194/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7665498Z Updating files:  38% (3280/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7705495Z Updating files:  39% (3367/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7750164Z Updating files:  40% (3453/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7791836Z Updating files:  41% (3539/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7832395Z Updating files:  42% (3626/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7871757Z Updating files:  43% (3712/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7911195Z Updating files:  44% (3798/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7952522Z Updating files:  45% (3884/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.7995547Z Updating files:  46% (3971/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8033897Z Updating files:  47% (4057/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8074477Z Updating files:  48% (4143/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8116270Z Updating files:  49% (4230/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8152813Z Updating files:  50% (4316/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8194038Z Updating files:  51% (4402/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8235616Z Updating files:  52% (4489/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8272438Z Updating files:  53% (4575/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8321494Z Updating files:  54% (4661/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8360692Z Updating files:  55% (4748/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8397619Z Updating files:  56% (4834/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8439906Z Updating files:  57% (4920/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8479429Z Updating files:  58% (5006/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8517243Z Updating files:  59% (5093/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8560036Z Updating files:  60% (5179/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8599547Z Updating files:  61% (5265/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8637370Z Updating files:  62% (5352/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8683362Z Updating files:  63% (5438/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8724290Z Updating files:  64% (5524/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8761189Z Updating files:  65% (5611/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8798191Z Updating files:  66% (5697/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8836500Z Updating files:  67% (5783/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8873822Z Updating files:  68% (5870/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8908683Z Updating files:  69% (5956/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.8950263Z Updating files:  70% (6042/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.9062702Z Updating files:  71% (6129/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.9158123Z Updating files:  72% (6215/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.9284573Z Updating files:  73% (6301/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.9393707Z Updating files:  74% (6387/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.9473500Z Updating files:  75% (6474/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.9521757Z Updating files:  76% (6560/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.9612865Z Updating files:  77% (6646/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.9651547Z Updating files:  78% (6733/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.9697860Z Updating files:  79% (6819/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.9736863Z Updating files:  80% (6905/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:06.9826762Z Updating files:  81% (6992/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.0050610Z Updating files:  82% (7078/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.0100518Z Updating files:  83% (7164/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.0150213Z Updating files:  84% (7251/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.0205646Z Updating files:  85% (7337/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.0251202Z Updating files:  86% (7423/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.0300112Z Updating files:  87% (7509/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.0342586Z Updating files:  88% (7596/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.0381906Z Updating files:  89% (7682/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.0418592Z Updating files:  90% (7768/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.0457490Z Updating files:  91% (7855/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.0499660Z Updating files:  92% (7941/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.0548991Z Updating files:  93% (8027/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.0605565Z Updating files:  94% (8114/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.0660323Z Updating files:  95% (8200/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.0717621Z Updating files:  96% (8286/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.0773110Z Updating files:  97% (8373/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.0824482Z Updating files:  98% (8459/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.0872799Z Updating files:  99% (8545/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.0873585Z Updating files: 100% (8631/8631)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.0874146Z Updating files: 100% (8631/8631), done.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.0994147Z Switched to a new branch 'codex/durable-agent-trajectories'
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.0998100Z branch 'codex/durable-agent-trajectories' set up to track 'origin/codex/durable-agent-trajectories'.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.1192335Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.1244729Z [command]/usr/bin/git log -1 --format=%H
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.1285876Z fdc57f121b5910e77b820fa790bf90108e111dda
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.1585093Z ##[group]Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.1585509Z with:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.1585712Z   python-version: 3.12
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.1585960Z   check-latest: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.1588535Z   token: ***
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.1588746Z   update-environment: true
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.1588990Z   allow-prereleases: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.1589221Z   freethreaded: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.1589432Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.2893440Z ##[group]Installed versions
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.2987343Z (node:2315) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.2988466Z (Use `node --trace-deprecation ...` to show where the warning was created)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.2989115Z Successfully set up CPython (3.12.15)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.2989956Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.3187551Z ##[group]Run python -m pip install -e . pytest==8.4.2
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.3188263Z ^[[36;1mpython -m pip install -e . pytest==8.4.2^[[0m
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.3559010Z shell: /usr/bin/bash -e {0}
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.3559299Z env:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.3559596Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.3560096Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.3560559Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.3560980Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.3561434Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.3561849Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:07.3562549Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:10.9601836Z Obtaining file:///home/runner/work/VARE/VARE
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:10.9619075Z   Installing build dependencies: started
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:12.1558526Z   Installing build dependencies: finished with status 'done'
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:12.1565352Z   Checking if build backend supports build_editable: started
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:13.6978649Z   Checking if build backend supports build_editable: finished with status 'done'
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:13.6986249Z   Getting requirements to build editable: started
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:14.4926783Z   Getting requirements to build editable: finished with status 'done'
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:14.4935353Z   Preparing editable metadata (pyproject.toml): started
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:14.9059349Z   Preparing editable metadata (pyproject.toml): finished with status 'done'
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:15.0407078Z Collecting pytest==8.4.2
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:15.0976029Z   Downloading pytest-8.4.2-py3-none-any.whl.metadata (7.7 kB)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:15.1242527Z Collecting iniconfig>=1 (from pytest==8.4.2)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:15.1316907Z   Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:15.1425994Z Collecting packaging>=20 (from pytest==8.4.2)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:15.1437912Z   Using cached packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:15.1715735Z Collecting pluggy<2,>=1.5 (from pytest==8.4.2)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:15.1785236Z   Downloading pluggy-1.7.0-py3-none-any.whl.metadata (5.0 kB)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:15.2116966Z Collecting pygments>=2.7.2 (from pytest==8.4.2)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:15.2191654Z   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:15.2328998Z Downloading pytest-8.4.2-py3-none-any.whl (365 kB)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:15.2686075Z Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:15.2776793Z Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:15.2805645Z Using cached packaging-26.3-py3-none-any.whl (129 kB)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:15.2874604Z Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:15.3313627Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 30.0 MB/s  0:00:00
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:15.3478646Z Building wheels for collected packages: vare-rl
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:15.3486527Z   Building editable for vare-rl (pyproject.toml): started
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:15.5746293Z   Building editable for vare-rl (pyproject.toml): finished with status 'done'
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:15.5751743Z   Created wheel for vare-rl: filename=vare_rl-0.4.0-0.editable-py3-none-any.whl size=9509 sha256=3d570210b1a5726604725cba521080c7cbafcfd831194bcb646197d5d1938620
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:15.5753753Z   Stored in directory: /tmp/pip-ephem-wheel-cache-6v8jeg65/wheels/d6/5a/a4/40472cdf5afbcfe051e501967576f8c91522e1261d3c77ef2f
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:15.5773999Z Successfully built vare-rl
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:15.5980094Z Installing collected packages: vare-rl, pygments, pluggy, packaging, iniconfig, pytest
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:16.7711357Z 
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:16.7724871Z Successfully installed iniconfig-2.3.1 packaging-26.3 pluggy-1.7.0 pygments-2.21.0 pytest-8.4.2 vare-rl-0.4.0
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:16.8452744Z ##[group]Run python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:16.8453580Z ^[[36;1mpython -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py^[[0m
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:16.8519384Z shell: /usr/bin/bash -e {0}
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:16.8519641Z env:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:16.8519904Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:16.8520348Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:16.8520804Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:16.8521183Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:16.8521568Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:16.8521982Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:16.8522787Z   VARE_TEST_DIAGNOSTICS_DIR: /home/runner/work/_temp/durable-test-diagnostics
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:16.8523177Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:54:23.4814568Z .................sssssss................................................ [  7%]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:55:08.2271079Z ........................................................................ [ 14%]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:55:14.9026009Z ....ssssssss............................................................ [ 21%]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:55:24.1913524Z ........................................................................ [ 29%]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:55:40.3813475Z ........................................................................ [ 36%]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:55:48.6516607Z ...........s.....................ss......s.............................. [ 43%]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:55:50.0078151Z ........................ss.............................................. [ 51%]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:55:51.2939103Z ........................................................................ [ 58%]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:55:56.3343200Z ........................................................................ [ 65%]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:55:57.2659457Z ...............s........................................................ [ 72%]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:01.0563351Z ........................................................................ [ 80%]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:53.0310780Z ........................................................................ [ 87%]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:54.0280428Z ........................................................................ [ 94%]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8923894Z .........................F.........................                      [100%]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8924855Z =================================== FAILURES ===================================
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8925785Z _______ test_independent_stages_bounded_backlog_and_slow_step_heartbeats _______
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8926458Z 
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8926990Z tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-0/test_independent_stages_bounde0')
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8927687Z 
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8928167Z     def test_independent_stages_bounded_backlog_and_slow_step_heartbeats(tmp_path):
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8929007Z         async def scenario():
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8929934Z             store = TrajectoryStore.create(tmp_path / "state.db", run_id="async-test", max_inflight=4)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8931090Z             policy = PolicyCheckpoint("p0", 0, "a" * 64)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8931813Z             store.register_policy(policy)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8932916Z             store.register_verifier("v", 0, "b" * 64)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8933783Z             root = TrajectoryRewardRoot(b"x" * 32, "async-test", "c" * 64)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8934483Z             stop = asyncio.Event()
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8934933Z             pressure = 0
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8935319Z     
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8935715Z             async def step_fn(resumed, trajectory_id):
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8936283Z                 index = resumed["next_step"]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8937007Z                 await asyncio.sleep(.12 if trajectory_id == "g0-0" and index == 0 else .001)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8938541Z                 return AgentStep(index, f"e{index}", policy, {"kind": "inference"}, {}, {"index": index},
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8939778Z                                  {"prompt_id": "task", "prompt": "same", "response": "x", "logprob": -.1, "token_count": 1, "latency_s": 0.,
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8940555Z                                   "metadata": {"prompt_token_ids": [0], "response_token_ids": [1], "response_token_logprobs": [-.1]}})
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8941061Z     
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8941277Z             async def verify_fn(store, ident):
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8941618Z                 row = await owned_io(store.trajectory, ident)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8942010Z                 value = Verification(.5, True, 1., 0, "v", trusted=True,
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8942843Z                                      metadata={"verifier_config_sha256": "b" * 64, "trajectory_sha256": row["head"]})
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8943366Z                 return root.attest(ident, row["head"], value)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8943673Z     
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8943877Z             async def producer():
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8944153Z                 nonlocal pressure
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8944415Z                 for group in range(8):
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8944708Z                     for member in range(2):
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8944983Z                         while True:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8945222Z                             try:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8946012Z                                 await owned_io(store.submit, f"g{group}-{member}", Task("task", "x", metadata={"learning_rule": "terminal_action_on_policy_grpo_v1"}), expected_steps=2, group_id=f"g{group}", member=member, group_size=2)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8946950Z                                 break
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8947226Z                             except BackpressureError:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8947735Z                                 pressure += 1
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8948037Z                                 await asyncio.sleep(.005)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8948304Z     
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8948488Z             async def consumer():
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8948724Z                 done = 0
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8948940Z                 while done < 8:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8949233Z                     for ident in await owned_io(store.verified_groups):
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8949742Z                         result = await owned_io(admit_terminal_grpo_group, store, ident, active_policy=policy,
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8950398Z                                                 verifier_name="v", verifier_version=0, verifier_config_sha256="b" * 64, trust_root=root)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8950896Z                         if result.admitted:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8951245Z                             await owned_io(store.close_group, ident, result.heads)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8951594Z                             done += 1
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8951864Z                     await asyncio.sleep(.001)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8952351Z     
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8952825Z             workers = [asyncio.create_task(execute_trajectories(store, f"w{i}", step_fn, stop, lease_seconds=.09)) for i in range(2)]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8953587Z             workers.append(asyncio.create_task(verify_trajectories(store, "v", verify_fn, stop, lease_seconds=.09)))
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8954080Z             try:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8954297Z                 async with asyncio.timeout(15):
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8954627Z                     await asyncio.gather(producer(), consumer())
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8954928Z             finally:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8955132Z                 stop.set()
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8955359Z                 for worker in workers:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8955613Z                     worker.cancel()
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8955925Z                 await asyncio.gather(*workers, return_exceptions=True)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8956285Z             assert store.counts() == {"consumed": 16}
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8956579Z             assert pressure > 0
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8956829Z             with store.connection() as db:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8957408Z                 assert db.execute("SELECT count(*) FROM attempts WHERE generation>1").fetchone()[0] == 0
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8958168Z                 first_verified = db.execute("SELECT min(sequence) FROM events WHERE json_extract(event,'$.kind')='trajectory_verified'").fetchone()[0]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8959075Z                 last_complete = db.execute("SELECT max(sequence) FROM events WHERE json_extract(event,'$.kind')='trajectory_complete'").fetchone()[0]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8959738Z             assert first_verified < last_complete
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8960023Z     
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8960213Z >       asyncio.run(scenario())
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8960366Z 
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8960475Z tests/test_trajectory_workers.py:77: 
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8960787Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8961259Z /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/asyncio/runners.py:195: in run
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8961671Z     return runner.run(main)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8961898Z            ^^^^^^^^^^^^^^^^
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8962501Z /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/asyncio/runners.py:118: in run
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8962934Z     return self._loop.run_until_complete(task)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8963216Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8963688Z /opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8964166Z     return future.result()
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8964386Z            ^^^^^^^^^^^^^^^
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8964997Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8965442Z 
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8965605Z     async def scenario():
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8966359Z         store = TrajectoryStore.create(tmp_path / "state.db", run_id="async-test", max_inflight=4)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8967194Z         policy = PolicyCheckpoint("p0", 0, "a" * 64)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8967509Z         store.register_policy(policy)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8967804Z         store.register_verifier("v", 0, "b" * 64)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8968164Z         root = TrajectoryRewardRoot(b"x" * 32, "async-test", "c" * 64)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8968513Z         stop = asyncio.Event()
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8968747Z         pressure = 0
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8968943Z     
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8969153Z         async def step_fn(resumed, trajectory_id):
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8969451Z             index = resumed["next_step"]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8969833Z             await asyncio.sleep(.12 if trajectory_id == "g0-0" and index == 0 else .001)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8970379Z             return AgentStep(index, f"e{index}", policy, {"kind": "inference"}, {}, {"index": index},
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8971024Z                              {"prompt_id": "task", "prompt": "same", "response": "x", "logprob": -.1, "token_count": 1, "latency_s": 0.,
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8971716Z                               "metadata": {"prompt_token_ids": [0], "response_token_ids": [1], "response_token_logprobs": [-.1]}})
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8972470Z     
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8972673Z         async def verify_fn(store, ident):
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8972981Z             row = await owned_io(store.trajectory, ident)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8973334Z             value = Verification(.5, True, 1., 0, "v", trusted=True,
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8973811Z                                  metadata={"verifier_config_sha256": "b" * 64, "trajectory_sha256": row["head"]})
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8974266Z             return root.attest(ident, row["head"], value)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8974545Z     
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8974727Z         async def producer():
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8974964Z             nonlocal pressure
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8975198Z             for group in range(8):
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8975450Z                 for member in range(2):
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8975715Z                     while True:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8975956Z                         try:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8976989Z                             await owned_io(store.submit, f"g{group}-{member}", Task("task", "x", metadata={"learning_rule": "terminal_action_on_policy_grpo_v1"}), expected_steps=2, group_id=f"g{group}", member=member, group_size=2)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8977799Z                             break
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8978064Z                         except BackpressureError:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8978350Z                             pressure += 1
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8978636Z                             await asyncio.sleep(.005)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8978900Z     
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8979081Z         async def consumer():
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8979301Z             done = 0
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8979503Z             while done < 8:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8979786Z                 for ident in await owned_io(store.verified_groups):
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8980278Z                     result = await owned_io(admit_terminal_grpo_group, store, ident, active_policy=policy,
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8980933Z                                             verifier_name="v", verifier_version=0, verifier_config_sha256="b" * 64, trust_root=root)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8981408Z                     if result.admitted:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8981742Z                         await owned_io(store.close_group, ident, result.heads)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8982299Z                         done += 1
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8982718Z                 await asyncio.sleep(.001)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8983125Z     
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8983570Z         workers = [asyncio.create_task(execute_trajectories(store, f"w{i}", step_fn, stop, lease_seconds=.09)) for i in range(2)]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8984321Z         workers.append(asyncio.create_task(verify_trajectories(store, "v", verify_fn, stop, lease_seconds=.09)))
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8984798Z         try:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8985010Z             async with asyncio.timeout(15):
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8985563Z                 await asyncio.gather(producer(), consumer())
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8985855Z         finally:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8986048Z             stop.set()
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8986268Z             for worker in workers:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8986516Z                 worker.cancel()
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8986811Z             await asyncio.gather(*workers, return_exceptions=True)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8987159Z         assert store.counts() == {"consumed": 16}
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8987441Z         assert pressure > 0
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8987680Z         with store.connection() as db:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8988113Z >           assert db.execute("SELECT count(*) FROM attempts WHERE generation>1").fetchone()[0] == 0
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8988549Z E           assert 1 == 0
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.8988687Z 
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.9553295Z tests/test_trajectory_workers.py:72: AssertionError
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.9554107Z =========================== short test summary info ============================
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.9555489Z FAILED tests/test_trajectory_workers.py::test_independent_stages_bounded_backlog_and_slow_step_heartbeats - assert 1 == 0
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:56.9556786Z 1 failed, 964 passed, 23 skipped in 159.46s (0:02:39)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.0669514Z ##[error]Process completed with exit code 1.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.0762476Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.0762895Z with:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.0763108Z   name: durable-test-diagnostics-3.12
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.0763445Z   path: /home/runner/work/_temp/durable-test-diagnostics
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.0763767Z   if-no-files-found: ignore
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.0763999Z   compression-level: 6
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.0764215Z   overwrite: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.0764430Z   include-hidden-files: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.0764663Z env:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.0764914Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.0765340Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.0765766Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.0766135Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.0766508Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.0766912Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.0767233Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.2385264Z (node:4577) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.2386001Z (Use `node --trace-deprecation ...` to show where the warning was created)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.2402432Z No files were found with the provided path: /home/runner/work/_temp/durable-test-diagnostics. No artifacts will be uploaded.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.2653591Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.2654012Z with:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.2654223Z   name: grader-owner-loss-replay
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.2654557Z   path: /home/runner/work/_temp/grader-owner-loss-replay
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.2654879Z   if-no-files-found: warn
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.2655107Z   compression-level: 6
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.2655321Z   overwrite: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.2655538Z   include-hidden-files: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.2655765Z env:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.2656004Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.2656421Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.2656843Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.2657218Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.2657650Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.2658069Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.2658391Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.4371354Z (node:4589) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.4373384Z (Use `node --trace-deprecation ...` to show where the warning was created)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.4405363Z ##[warning]No files were found with the provided path: /home/runner/work/_temp/grader-owner-loss-replay. No artifacts will be uploaded.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.4588817Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.4589225Z with:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.4589438Z   name: durable-runtime-source-replay
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.4589794Z   path: /home/runner/work/_temp/durable-runtime-source-replay
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.4590141Z   if-no-files-found: warn
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.4590370Z   compression-level: 6
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.4590584Z   overwrite: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.4590795Z   include-hidden-files: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.4591020Z env:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.4591269Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.4591686Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.4592439Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.4592835Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.4593224Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.4593626Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.4593952Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.6261146Z (node:4601) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.6262733Z (Use `node --trace-deprecation ...` to show where the warning was created)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.6281048Z ##[warning]No files were found with the provided path: /home/runner/work/_temp/durable-runtime-source-replay. No artifacts will be uploaded.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.6493794Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.6494463Z with:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.6494862Z   name: trajectory-capture-replay
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.6495386Z   path: /home/runner/work/_temp/trajectory-capture-replay
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.6495927Z   if-no-files-found: warn
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.6496299Z   compression-level: 6
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.6496647Z   overwrite: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.6496992Z   include-hidden-files: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.6497366Z env:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.6497765Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.6498469Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.6499215Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.6499849Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.6500489Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.6501164Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.6501705Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.8306133Z (node:4613) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.8307576Z (Use `node --trace-deprecation ...` to show where the warning was created)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.8325910Z ##[warning]No files were found with the provided path: /home/runner/work/_temp/trajectory-capture-replay. No artifacts will be uploaded.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.8551523Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.8552416Z with:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.8552741Z   name: checkpoint-io-replay
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.8553216Z   path: /home/runner/work/_temp/checkpoint-io-replay
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.8553733Z   if-no-files-found: warn
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.8554109Z   compression-level: 6
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.8554458Z   overwrite: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.8554805Z   include-hidden-files: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.8555186Z env:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.8555590Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.8556297Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.8557219Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.8557850Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.8558484Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.8559164Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:57.8559702Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.0416644Z (node:4625) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.0417374Z (Use `node --trace-deprecation ...` to show where the warning was created)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.0454044Z ##[warning]No files were found with the provided path: /home/runner/work/_temp/checkpoint-io-replay. No artifacts will be uploaded.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.0639331Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.0639749Z with:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.0639969Z   name: runtime-round-replay
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.0640263Z   path: /home/runner/work/_temp/runtime-round-replay
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.0640574Z   if-no-files-found: warn
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.0640800Z   compression-level: 6
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.0641009Z   overwrite: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.0641220Z   include-hidden-files: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.0641444Z env:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.0641686Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.0642411Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.0642854Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.0643226Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.0643600Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.0644005Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.0644323Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.2382279Z (node:4637) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.2383773Z (Use `node --trace-deprecation ...` to show where the warning was created)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.2408352Z ##[warning]No files were found with the provided path: /home/runner/work/_temp/runtime-round-replay. No artifacts will be uploaded.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.2681950Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.2682916Z with:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.2683282Z   name: promotion-publication-replay
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.2683883Z   path: /home/runner/work/_temp/promotion-publication-replay
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.2684479Z   if-no-files-found: warn
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.2684880Z   compression-level: 6
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.2685254Z   overwrite: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.2685624Z   include-hidden-files: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.2686026Z env:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.2686459Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.2687192Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.2687956Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.2688608Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.2689276Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.2690029Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.2690607Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.4414239Z (node:4649) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.4415568Z (Use `node --trace-deprecation ...` to show where the warning was created)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.4446015Z ##[warning]No files were found with the provided path: /home/runner/work/_temp/promotion-publication-replay. No artifacts will be uploaded.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.4648400Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.4649308Z with:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.4649650Z   name: promotion-cancellation-replay
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.4650230Z   path: /home/runner/work/_temp/promotion-cancellation-replay
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.4650803Z   if-no-files-found: warn
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.4651180Z   compression-level: 6
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.4651531Z   overwrite: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.4651879Z   include-hidden-files: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.4652446Z env:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.4652851Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.4653560Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.4654275Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.4654911Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.4655548Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.4656223Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.4656765Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.6364849Z (node:4661) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.6366188Z (Use `node --trace-deprecation ...` to show where the warning was created)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.6383441Z ##[warning]No files were found with the provided path: /home/runner/work/_temp/promotion-cancellation-replay. No artifacts will be uploaded.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.6601135Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.6601864Z with:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.6602417Z   name: candidate-discard-replay
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.6602936Z   path: /home/runner/work/_temp/candidate-discard-replay
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.6603472Z   if-no-files-found: warn
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.6603850Z   compression-level: 6
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.6604199Z   overwrite: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.6604551Z   include-hidden-files: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.6604929Z env:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.6605324Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.6606048Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.6606757Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.6607392Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.6608031Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.6608709Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.6609255Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.8343515Z (node:4673) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.8345098Z (Use `node --trace-deprecation ...` to show where the warning was created)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.8364646Z ##[warning]No files were found with the provided path: /home/runner/work/_temp/candidate-discard-replay. No artifacts will be uploaded.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.8649121Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.8649905Z with:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.8650277Z   name: engine-interlock-replay
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.8650821Z   path: /home/runner/work/_temp/engine-interlock-replay
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.8651427Z   if-no-files-found: warn
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.8651857Z   compression-level: 6
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.8652582Z   overwrite: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.8652980Z   include-hidden-files: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.8653417Z env:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.8653853Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.8654652Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.8655430Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.8656131Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.8656827Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.8657884Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:58.8658736Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.0401565Z (node:4685) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.0402566Z (Use `node --trace-deprecation ...` to show where the warning was created)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.0420760Z ##[warning]No files were found with the provided path: /home/runner/work/_temp/engine-interlock-replay. No artifacts will be uploaded.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.0614634Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.0615300Z with:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.0615629Z   name: engine-evaluation-replay
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.0616142Z   path: /home/runner/work/_temp/engine-evaluation-replay
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.0616681Z   if-no-files-found: warn
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.0617059Z   compression-level: 6
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.0617415Z   overwrite: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.0617767Z   include-hidden-files: false
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.0618147Z env:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.0618546Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.0619271Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.0619985Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.0620622Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.0621263Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.0621944Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.0622710Z ##[endgroup]
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.2449974Z (node:4698) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.2451204Z (Use `node --trace-deprecation ...` to show where the warning was created)
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.2468906Z ##[warning]No files were found with the provided path: /home/runner/work/_temp/engine-evaluation-replay. No artifacts will be uploaded.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.2736991Z Post job cleanup.
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.3644202Z [command]/usr/bin/git version
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.3687243Z git version 2.55.0
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.3757458Z Temporarily overriding HOME='/home/runner/work/_temp/5e82177f-5d51-4ad5-a5ba-b149252a9b13' before making global git config changes
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.3758967Z Adding repository directory to the temporary git global config as a safe directory
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.3762707Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/VARE/VARE
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.3802473Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.3841676Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.4116681Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.4141583Z http.https://github.com/.extraheader
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.4154960Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.4195957Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.4468940Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.4509899Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.4920603Z Cleaning up orphan processes
+test (3.12)	UNKNOWN STEP	2026-10-16T23:56:59.5201546Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

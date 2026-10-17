@@ -43,7 +43,8 @@ def audit(root):
                 require(step["index"] == cursor and step["observation"] == {"value": cursor + 1}, "synthetic observation differs from ground truth")
                 total += cursor + 1
                 require(step["state"] == {"sum": total} and step["generation"]["response"] == str(total), "incorrect resumable counter state")
-                require(step["generation"]["metadata"]["response_token_ids"] == [total] and step["generation"]["metadata"]["response_token_logprobs"] == [-.1], "synthetic behavior record mismatch")
+                require(step["generation"]["metadata"]["response_token_ids"] == [total] and step["generation"]["metadata"]["response_token_logprobs"] == [0.], "synthetic behavior record mismatch")
+                require(step["generation"]["prompt"] == f"Return the final counter {total}" and step["generation"]["metadata"]["prompt_token_ids"] == [0, total], "synthetic conditioning/state mismatch")
                 cursor += 1
             require(cursor == row["expected_steps"] == sample["steps"], "incorrect step coverage")
             value = json.loads(row["verification"])

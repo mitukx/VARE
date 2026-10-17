@@ -354,3 +354,11 @@ def test_retry_exhaustion_fences_the_whole_group(store):
     for lease in (one, two):
         with pytest.raises(FenceError):
             store.append_step(lease, step(), now=102)
+
+
+def test_quarantine_requires_matching_history(store):
+    submit(store)
+    with store.connection(True) as db:
+        db.execute("UPDATE trajectories SET state='quarantined',reason='invented'")
+    with pytest.raises(ValueError, match="terminal"):
+        audit_trajectory_store(store.path)

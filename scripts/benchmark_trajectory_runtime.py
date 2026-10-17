@@ -32,7 +32,7 @@ from vare.trajectory_workers import execute_trajectories, owned_io, verify_traje
 from vare.types import Task, Verification
 
 
-POLICY = PolicyCheckpoint("synthetic-policy-0", 0, sha256_json({"synthetic_policy": 0}))
+POLICY = PolicyCheckpoint("synthetic-policy-0", 0, sha256_json({"synthetic_policy": "deterministic-counter-v1", "source_sha256": sha256_file(__file__)}))
 VERIFIER = sha256_json({"synthetic_verifier": "sum-of-step-indices-v1"})
 RULE = "terminal_action_on_policy_grpo_v1"
 
@@ -49,10 +49,12 @@ def build_step(index, state, total, ident, delay=0.):
     action["synthetic_delay_s"] = delay
     return AgentStep(index, f"step-{index}", POLICY, action, {"value": index + 1}, {"sum": value},
                      {"prompt_id": f"task-{int(ident.split('-')[0][1:]):06d}",
-                      "prompt": "Return the final counter", "response": str(value),
-                      "logprob": -.1, "token_count": 1, "latency_s": 0.,
-                      "metadata": {"backend": "synthetic", "prompt_token_ids": [0],
-                                   "response_token_ids": [value], "response_token_logprobs": [-.1]}})
+                      "prompt": f"Return the final counter {value}", "response": str(value),
+                      "logprob": 0., "token_count": 1, "latency_s": 0.,
+                      "metadata": {"backend": "synthetic-counter", "model": "deterministic-counter-v1",
+                                   "sampling_temperature": 1., "logprob_distribution": "neutral_temperature_scaled_policy",
+                                   "prompt_token_ids": [0, value],
+                                   "response_token_ids": [value], "response_token_logprobs": [0.]}})
 
 
 def killed_worker(path, pipe):
@@ -268,7 +270,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--trajectories", type=int, default=10000)
-    parser.add_argument("--seed", type=int, default=73011)
+    parser.add_argument("--seed", type=int, default=75011)
     parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--mode", choices=("sync", "async"), default="async")
     parser.add_argument("--sigkill", action="store_true")
@@ -278,7 +280,7 @@ def main():
         if not 2 <= args.trajectories <= 50000 or args.trajectories % 2 or not 1 <= args.workers <= 64:
             raise ValueError("invalid bounded workload")
         repository = Path(__file__).resolve().parents[1]
-        protocol = json.loads((repository / "benchmarks/trajectory_runtime_v1/protocol.json").read_text())
+        protocol = json.loads((repository / "benchmarks/trajectory_runtime_v2/protocol.json").read_text())
         (args.output / "protocol.json").write_text(json.dumps(protocol, indent=2) + "\n")
         sources = {str(path.relative_to(repository)): sha256_file(path) for path in [Path(__file__), *[repository / "src/vare" / name for name in ("trajectory_store.py", "trajectory_workers.py", "trajectory_admission.py", "durable.py", "runner.py", "evidence.py", "types.py")]]}
         for name in sources:

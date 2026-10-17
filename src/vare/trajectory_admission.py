@@ -10,6 +10,7 @@ from dataclasses import asdict, dataclass, replace
 import hashlib
 import hmac
 import json
+import math
 
 from .evidence import canonical_json, sha256_json
 from .trajectory_store import PolicyCheckpoint, TrajectoryStore, identity, sha
@@ -127,6 +128,12 @@ def admit_terminal_grpo_group(
             continue
         if generation["prompt_id"] != task.id:
             reasons.add("terminal_task_mismatch")
+        behavior = generation["metadata"]
+        temperature = behavior.get("sampling_temperature")
+        if (type(temperature) not in (int, float) or not math.isfinite(temperature) or temperature <= 0
+                or behavior.get("logprob_distribution") != "neutral_temperature_scaled_policy"
+                or not isinstance(behavior.get("model"), str) or not behavior["model"]):
+            reasons.add("unknown_behavior_distribution")
         # Store both original task identity and the actual terminal model input.
         metadata = {**task.metadata, "vare_rollout_group": group_id,
                     "vare_rollout_group_size": len(rows), "trajectory_id": row["id"],
@@ -139,6 +146,14 @@ def admit_terminal_grpo_group(
     # Reject heterogeneous terminal prompts; one GRPO group means one model input.
     if len({exp.attempt.task.prompt for exp in experiences}) > 1:
         reasons.add("heterogeneous_group_prompt")
+    if len({tuple(exp.attempt.metadata["rvl_generation"]["metadata"]["prompt_token_ids"]) for exp in experiences}) > 1:
+        reasons.add("heterogeneous_group_prompt_tokens")
+    identities = set()
+    for exp in experiences:
+        behavior = exp.attempt.metadata["rvl_generation"]["metadata"]
+        identities.add(canonical_json({key: behavior.get(key) for key in ("backend", "model", "sampling_temperature", "logprob_distribution")}))
+    if len(identities) > 1:
+        reasons.add("heterogeneous_behavior_distribution")
     admitted = not reasons and len(experiences) == len(rows)
     return TrajectoryAdmission(group_id, admitted, tuple(sorted(reasons)), heads,
                                tuple(experiences) if admitted else (), tuple(policy_lags), tuple(verifier_lags))

@@ -536,7 +536,7 @@ def audit_trajectory_store(path):
             step_count += 1
         for row in db.execute("SELECT * FROM trajectories ORDER BY id"):
             spec = json.loads(row["task"])
-            history = [json.loads(e[0]) for e in db.execute("SELECT event FROM events WHERE json_extract(event,'$.job_id')=? AND json_extract(event,'$.kind') IN ('trajectory_enrolled','trajectory_complete','trajectory_verified','consumer_acknowledged','trajectory_cancelled') ORDER BY sequence", (row["id"],))]
+            history = [json.loads(e[0]) for e in db.execute("SELECT event FROM events WHERE json_extract(event,'$.job_id')=? AND json_extract(event,'$.kind') IN ('trajectory_enrolled','trajectory_complete','trajectory_verified','consumer_acknowledged','trajectory_cancelled','trajectory_quarantined') ORDER BY sequence", (row["id"],))]
             enrolled = [event for event in history if event["kind"] == "trajectory_enrolled"]
             completed = [event for event in history if event["kind"] == "trajectory_complete"]
             verified = [event for event in history if event["kind"] == "trajectory_verified"]
@@ -560,12 +560,24 @@ def audit_trajectory_store(path):
                 raise ValueError("completion/history mismatch")
             if row["state"] in {"complete", "verified", "consumed"} and not completed:
                 raise ValueError("missing completion event")
-            if row["state"] in {"verified", "consumed"}:
+            if row["verification"] is not None:
                 verification = snapshot_verification(Verification(**json.loads(row["verification"])))
                 if verification.metadata.get("trajectory_sha256") != row["head"]:
                     raise ValueError("verification chain binding mismatch")
                 if len(verified) != 1 or verified[0]["details"]["verification"] != asdict(verification):
                     raise ValueError("verification/history mismatch")
+            elif verified or row["state"] in {"verified", "consumed"}:
+                raise ValueError("missing verified reward state")
+            if row["state"] in {"cancelled", "quarantined"}:
+                transitions = [e for e in history if e["kind"] == f"trajectory_{row['state']}" and e["details"] == {"reason": row["reason"]}]
+                if row["state"] == "quarantined" and row["reason"] == "quarantined":
+                    transitions += [e for e in history if e["kind"] == "consumer_acknowledged" and e["details"] == {"head": row["head"], "state": "quarantined"}]
+                    for event in db.execute("SELECT event FROM events WHERE json_extract(event,'$.job_id')=? AND json_extract(event,'$.kind')='group_acknowledged'", (row["group_id"],)):
+                        body = json.loads(event[0])["details"]
+                        if body["state"] == "quarantined" and body["heads"].get(row["id"]) == row["head"]:
+                            transitions.append(body)
+                if len(transitions) != 1:
+                    raise ValueError("terminal state/reason lacks exactly one matching history transition")
             if row["state"] == "consumed":
                 acknowledged = any(e["kind"] == "consumer_acknowledged" and e["details"] == {"head": row["head"], "state": "consumed"} for e in history)
                 for event in db.execute("SELECT event FROM events WHERE json_extract(event,'$.job_id')=? AND json_extract(event,'$.kind')='group_acknowledged'", (row["group_id"],)):
