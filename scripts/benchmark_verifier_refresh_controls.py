@@ -15,11 +15,11 @@ import time
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from vare.evidence import sha256_file, sha256_json
-from vare.lag import DistributionShiftMonitor
-from vare.config import PromotionConfig
-from vare.promotion import PromotionGate
-from vare.types import EvaluationReport
+from vare.evidence import sha256_file, sha256_json  # noqa: E402
+from vare.lag import DistributionShiftMonitor  # noqa: E402
+from vare.config import PromotionConfig  # noqa: E402
+from vare.promotion import PromotionGate  # noqa: E402
+from vare.types import EvaluationReport  # noqa: E402
 
 
 def cohort(seed, scenario, phase, split, size, *, baseline=False):
