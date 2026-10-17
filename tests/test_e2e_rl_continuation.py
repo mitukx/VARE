@@ -196,6 +196,62 @@ def test_rehashed_progress_seed_must_match_case_configuration(audit_records,tmp_
         auditor.audit(changed)
 
 
+def test_rehashed_missing_batch_attempt_is_rejected(audit_records,tmp_path):
+    changed=tmp_path/"missing-batch-evidence"
+    shutil.copytree(audit_records,changed)
+    row=next(r for r in auditor.read(changed/"progress.json")
+             if r["mode"]=="minimal" and r["cutpoint"]=="none")
+    for path in (changed/row["directory"]/"rounds/r0000").glob("batch-attempt*.json"):
+        path.unlink()
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="batch evidence"):
+        auditor.audit(changed)
+
+
+def test_rehashed_batch_signal_must_match_its_rollout(audit_records,tmp_path):
+    changed=tmp_path/"misbound-batch-signal"
+    shutil.copytree(audit_records,changed)
+    row=next(r for r in auditor.read(changed/"progress.json")
+             if r["mode"]=="minimal" and r["cutpoint"]=="none")
+    path=changed/row["directory"]/"rounds/r0000/batch-attempt0.json"
+    batch=auditor.read(path)
+    batch["members"][0]["reward"]=1.0-batch["members"][0]["reward"]
+    bench.atomic_json(path,batch)
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="batch signal differs"):
+        auditor.audit(changed)
+
+
+def test_rehashed_round_task_pool_must_match_rollouts(audit_records,tmp_path):
+    changed=tmp_path/"swapped-training-task-pool"
+    shutil.copytree(audit_records,changed)
+    row=next(r for r in auditor.read(changed/"progress.json")
+             if r["mode"]=="minimal" and r["cutpoint"]=="none")
+    rounds=changed/row["directory"]/"rounds"
+    first,second=rounds/"r0000/training_tasks.json",rounds/"r0001/training_tasks.json"
+    first_tasks,second_tasks=auditor.read(first),auditor.read(second)
+    bench.atomic_json(first,second_tasks)
+    bench.atomic_json(second,first_tasks)
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="retained training task pool"):
+        auditor.audit(changed)
+
+
+def test_rehashed_completed_round_total_must_match_commits(audit_records,tmp_path):
+    changed=tmp_path/"false-completed-round-total"
+    shutil.copytree(audit_records,changed)
+    progress=auditor.read(changed/"progress.json")
+    for row in progress:
+        row["completed_rounds"]-=1
+    bench.atomic_json(changed/"progress.json",progress)
+    summary=auditor.read(changed/"summary.json")
+    summary["completed_rounds"]=sum(row["completed_rounds"] for row in progress)
+    bench.atomic_json(changed/"summary.json",summary)
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="completed round count"):
+        auditor.audit(changed)
+
+
 def test_rehashed_evaluation_pair_must_match_committed_round_result(audit_records,tmp_path):
     changed=tmp_path/"misbound-result"
     shutil.copytree(audit_records,changed)

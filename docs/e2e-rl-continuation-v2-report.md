@@ -214,6 +214,15 @@ configuration and directory identity. Removing all round rollout files or
 relabeling the retained seed while rehashing the archive passed the previous
 auditor; both falsification controls now fail closed.
 
+Each round's `training_tasks.json` is an adaptive-curriculum candidate pool;
+the existing loop samples from it with replacement. The audit therefore checks
+unique pool identities and requires every recorded rollout task's ID, family,
+and prompt to match that pool, while preserving the recorded rollout count.
+Each optimizer attempt must have one batch whose members match the same
+attempt's rollout steps, policy provenance, log probabilities, and rewards.
+Per-case and aggregate completed-round counts are derived from committed round
+records rather than progress summaries.
+
 This is a toy neural LM and synthetic one-token workload. Replay is round-local;
 general durable replay-backlog/curriculum recovery is not tested. The supervisor
 assumes cooperative same-UID POSIX ownership. There is no power-loss, hostile-code,

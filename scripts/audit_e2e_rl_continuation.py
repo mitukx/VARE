@@ -115,6 +115,8 @@ def audit(root, check_tensors=False, model_dir=None):
         need(row["protocol_conformant"]==config["protocol_conformant"]==locked,"case conformance differs")
         commits=[read(case/"rounds"/f"r{i:04d}"/"committed.json") for i in range(args["rounds"])]
         need([r["completed_round"] for r in commits]==list(range(args["rounds"])),"round gap or duplicate")
+        need(row["completed_rounds"]==row["rounds"]==len(commits),
+             "completed round count differs from committed records")
         need(commits[-1]["active_state_sha256"]==row["final_state_sha256"],"final state differs")
         round_records[row["directory"]]=commits
         if row["cutpoint"]=="none":
@@ -141,6 +143,9 @@ def audit(root, check_tensors=False, model_dir=None):
             round_dir=case/"rounds"/f"r{index:04d}"
             train,heldout=read(round_dir/"training_tasks.json"),read(round_dir/"evaluation_tasks.json")
             need(len(train)==args["tasks"] and len(heldout)==args["eval_tasks"],"task budget differs")
+            train_by_id={task["id"]:task for task in train}
+            need(len(train_by_id)==len(train) and len({task["prompt"] for task in train})==len(train),
+                 "training task pool contains duplicate identities")
             need(not ({r["prompt"] for r in train}&{r["prompt"] for r in heldout}),"optimization/evaluation overlap")
             raw,old_sha=checkpoint(case,previous_pid,row["mode"])
             state=torch.load(io.BytesIO(raw),map_location="cpu",weights_only=True) if check_tensors or model_dir else None
@@ -157,24 +162,58 @@ def audit(root, check_tensors=False, model_dir=None):
                 rollout_files[attempt_id]=file
             need(set(rollout_files)==attempts_by_round.get(index,set()),
                  "rollout evidence does not cover every optimizer attempt")
-            for file in rollout_files.values():
+            rollouts_by_attempt={}
+            for attempt_id,file in rollout_files.items():
                 rollouts=[json.loads(line) for line in file.read_text().splitlines()]
                 need(len(rollouts)==args["tasks"],"incomplete rollout attempt")
+                rollouts_by_step={}
                 for rollout in rollouts:
+                    task=rollout["task"]
+                    declared=train_by_id.get(task["id"])
+                    need(declared is not None and
+                         all(task.get(field)==declared.get(field) for field in ("id","family","prompt")),
+                         "rollout task does not match the retained training task pool")
+                    created_step=rollout["created_step"]
+                    need(type(created_step) is int and created_step not in rollouts_by_step,
+                         "rollout attempt has duplicate or invalid step identity")
+                    rollouts_by_step[created_step]=rollout
                     worker=rollout["metadata"]["worker"]
                     need(worker["loaded_checkpoint_sha256"]==old_sha and worker["loaded_step"]==previous_step,"stale worker served a new policy label")
                     need(rollout["policy_id"]==previous_pid and rollout["policy_version"]==previous_step,"policy provenance differs")
                     if state:
                         need(worker["loaded_model_sha256"]==incumbent_model,"worker tensor acknowledgment differs")
+                rollouts_by_attempt[attempt_id]=rollouts_by_step
             candidate=commit["candidate_id"]
             candidate_raw,candidate_sha=checkpoint(case,candidate,row["mode"])
             update=commit["update"]
             need(update["batch_size"]==args["tasks"] and update["parameters_before_sha256"]!=update["parameters_after_sha256"],"mock/no-op/wrong-budget update")
-            for path in round_dir.glob('batch-attempt*.json'):
+            batch_files={}
+            for path in round_dir.glob("batch-attempt*.json"):
+                suffix=path.stem.removeprefix("batch-attempt")
+                need(suffix.isdigit() and path.name==f"batch-attempt{int(suffix)}.json",
+                     "invalid batch attempt identity")
+                attempt_id=int(suffix)
+                need(attempt_id not in batch_files,"duplicate batch attempt identity")
+                batch_files[attempt_id]=path
+            need(set(batch_files)==attempts_by_round.get(index,set()),
+                 "batch evidence does not cover every optimizer attempt")
+            for attempt_id,path in batch_files.items():
                 batch=read(path)
                 need(batch["incumbent_id"]==previous_pid and batch["checkpoint_sha256"]==old_sha and batch["step"]==previous_step,"training batch incumbent differs")
                 need(len(batch["members"])==args["tasks"] and len({m["created_step"] for m in batch["members"]})==args["tasks"],"duplicate or incomplete optimizer batch")
                 need(all(m["policy_id"]==previous_pid and m["policy_version"]==previous_step and m["loaded_checkpoint_sha256"]==old_sha for m in batch["members"]),"stale evidence reached optimizer")
+                rollout_by_step=rollouts_by_attempt[attempt_id]
+                need({member["created_step"] for member in batch["members"]}==set(rollout_by_step),
+                     "optimizer batch members differ from the recorded rollout attempt")
+                for member in batch["members"]:
+                    rollout=rollout_by_step[member["created_step"]]
+                    worker=rollout["metadata"]["worker"]
+                    need(member["policy_id"]==rollout["policy_id"] and
+                         member["policy_version"]==rollout["policy_version"] and
+                         member["loaded_checkpoint_sha256"]==worker["loaded_checkpoint_sha256"] and
+                         member["logprob"]==rollout["logprob"] and
+                         member["reward"]==float(rollout["output"].strip()=="A"),
+                         "optimizer batch signal differs from its rollout and verification")
                 if state:
                     need(batch["model_sha256"]==incumbent_model,"training batch tensor hash differs")
             if state:
@@ -301,7 +340,9 @@ def audit(root, check_tensors=False, model_dir=None):
             def update(r):
                 return {k:v for k,v in r["update"].items() if k!="optimizer_steps"}
             need(update(observed)==update(expected),"next numerical optimizer update differs")
-    need(summary["cases"]==len(rows) and summary["completed_rounds"]==sum(r["completed_rounds"] for r in rows),"summary budget differs")
+    committed_rounds=sum(len(round_records[row["directory"]]) for row in rows)
+    need(summary["cases"]==len(rows) and summary["completed_rounds"]==committed_rounds,
+         "summary budget differs from committed records")
     need(summary["physical_optimizer_attempts"]==sum(r["physical_optimizer_attempts"] for r in rows),"summary attempts differ")
     for group in summary["normal"]:
         values=[r["tasks_s"] for r in rows if r["cutpoint"]=="none" and r["workers"]==group["workers"] and r["mode"]==group["mode"]]
