@@ -61,3 +61,16 @@ def test_retained_raw_truth_and_summary_accounting():
             missed = sum(row["independent_promote"] and not row["proxy_promote"] for row in selected)
             assert values["false_proxy_promotions"]==false
             assert values["missed_proxy_improvements"]==missed
+
+
+def test_changed_outcome_bearing_dependency_fails_before_experiment(tmp_path):
+    import hashlib
+    import pytest
+    path=tmp_path/"src/vare/lag.py"
+    path.parent.mkdir(parents=True)
+    path.write_text("frozen mechanics")
+    protocol={"mechanics_sha256":{"src/vare/lag.py":hashlib.sha256(path.read_bytes()).hexdigest()}}
+    fixture.validate_mechanics(protocol,tmp_path)
+    path.write_text("changed mechanics")
+    with pytest.raises(ValueError,match="frozen mechanics mismatch"):
+        fixture.validate_mechanics(protocol,tmp_path)

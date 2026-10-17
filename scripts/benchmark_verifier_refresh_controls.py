@@ -73,14 +73,25 @@ class RefreshControl:
         return [self.table.get((row["feature"],row["proxy"]),row["proxy"]) for row in rows]
 
 
+def validate_mechanics(protocol, root=ROOT):
+    for name, expected in protocol["mechanics_sha256"].items():
+        if sha256_file(root/name) != expected:
+            raise ValueError("frozen mechanics mismatch: " + name)
+
+
 def run(args):
     args.output.mkdir(parents=True,exist_ok=False)
     args.output_created = True
-    protocol_path = ROOT/'benchmarks/verifier_refresh_controls_v1/protocol.json'
+    protocol_path = ROOT/'benchmarks/verifier_refresh_controls_v2/protocol.json'
     protocol = json.loads(protocol_path.read_text())
     if args.seed not in protocol['seeds'] or args.scenario not in protocol['scenarios'] or sha256_file(__file__) != protocol['runner_sha256']:
         raise ValueError('condition outside fixed protocol')
+    validate_mechanics(protocol)
     (args.output/'protocol.json').write_bytes(protocol_path.read_bytes())
+    for name in protocol['mechanics_sha256']:
+        target=args.output/'source'/name
+        target.parent.mkdir(parents=True,exist_ok=True)
+        target.write_bytes((ROOT/name).read_bytes())
     (args.output/'runner.py').write_bytes(Path(__file__).read_bytes())
     (args.output/'lag.py').write_bytes((ROOT/'src/vare/lag.py').read_bytes())
     controls = {name:RefreshControl(name) for name in ('fixed','periodic','shift')}
@@ -127,7 +138,7 @@ def run(args):
              'scope':'Synthetic exogenous policy distribution shift, no model training; false/missed decisions are proxy-only counterfactuals. Independent gate decisions use separate audit labels.'}
     for name,data in [('curves.json',curves),('summary.json',summary)]:
         (args.output/name).write_text(json.dumps(data,indent=2)+'\n')
-    (args.output/'SHA256.json').write_text(json.dumps({p.name:sha256_file(p) for p in args.output.iterdir() if p.is_file()},indent=2)+'\n')
+    (args.output/'SHA256.json').write_text(json.dumps({str(p.relative_to(args.output)):sha256_file(p) for p in args.output.rglob('*') if p.is_file()},indent=2)+'\n')
     print(json.dumps(summary,indent=2))
 
 
