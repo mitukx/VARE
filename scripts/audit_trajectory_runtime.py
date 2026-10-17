@@ -46,8 +46,10 @@ def audit(root, *, expected_manifest=None):
         require(sha256_file(root / "source" / name) == expected, "source snapshot mismatch")
     result = audit_trajectory_store(root / "snapshot.db")
     require(result == summary["audit"], "store audit differs from retained summary")
-    store = TrajectoryStore(root / "snapshot.db")
+    store = TrajectoryStore(root / "snapshot.db", audit_only=True)
     config = store.config()
+    require(config["source_sha256"] == provenance["source_files"].get("src/vare/trajectory_store.py"),
+            "snapshot runtime source differs from archived source bytes")
     require(config["run_id"] == f"trajectory-{condition['seed']}-{condition['mode']}"
             and config["max_inflight"] == protocol["max_inflight"]
             and config["storage_bytes"] == protocol["storage_bytes"], "snapshot condition mismatch")

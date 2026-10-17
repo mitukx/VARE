@@ -1,0 +1,97 @@
+{
+  "auditor_sha256": "48e0cc682791405142cd7f0e62cfa2646be1879d93903d116bca2b62c510f847",
+  "cases": [
+    {
+      "case": "a-sync-75011",
+      "effective_duplicates": 0,
+      "events": 1456,
+      "files_verified": 13,
+      "headline_timing_anchored": true,
+      "pass": true,
+      "scope": "Streams step truth/state and checks latency/rate arithmetic. An external trusted manifest anchors the measured timing denominator; without it wall_s remains self-reported. MAC admission was checked online; no signing key is published. No model optimizer or promotion audit.",
+      "steps": 902,
+      "trajectories": 100
+    },
+    {
+      "case": "a-async-75011",
+      "effective_duplicates": 0,
+      "events": 1456,
+      "files_verified": 13,
+      "headline_timing_anchored": true,
+      "pass": true,
+      "scope": "Streams step truth/state and checks latency/rate arithmetic. An external trusted manifest anchors the measured timing denominator; without it wall_s remains self-reported. MAC admission was checked online; no signing key is published. No model optimizer or promotion audit.",
+      "steps": 902,
+      "trajectories": 100
+    },
+    {
+      "case": "b-sync-75011",
+      "effective_duplicates": 0,
+      "events": 127604,
+      "files_verified": 13,
+      "headline_timing_anchored": true,
+      "pass": true,
+      "scope": "Streams step truth/state and checks latency/rate arithmetic. An external trusted manifest anchors the measured timing denominator; without it wall_s remains self-reported. MAC admission was checked online; no signing key is published. No model optimizer or promotion audit.",
+      "steps": 72600,
+      "trajectories": 10000
+    },
+    {
+      "case": "b-sync-75012",
+      "effective_duplicates": 0,
+      "events": 129298,
+      "files_verified": 13,
+      "headline_timing_anchored": true,
+      "pass": true,
+      "scope": "Streams step truth/state and checks latency/rate arithmetic. An external trusted manifest anchors the measured timing denominator; without it wall_s remains self-reported. MAC admission was checked online; no signing key is published. No model optimizer or promotion audit.",
+      "steps": 74294,
+      "trajectories": 10000
+    },
+    {
+      "case": "b-sync-75013",
+      "effective_duplicates": 0,
+      "events": 129798,
+      "files_verified": 13,
+      "headline_timing_anchored": true,
+      "pass": true,
+      "scope": "Streams step truth/state and checks latency/rate arithmetic. An external trusted manifest anchors the measured timing denominator; without it wall_s remains self-reported. MAC admission was checked online; no signing key is published. No model optimizer or promotion audit.",
+      "steps": 74794,
+      "trajectories": 10000
+    },
+    {
+      "case": "b-async-75011",
+      "effective_duplicates": 0,
+      "events": 127604,
+      "files_verified": 13,
+      "headline_timing_anchored": true,
+      "pass": true,
+      "scope": "Streams step truth/state and checks latency/rate arithmetic. An external trusted manifest anchors the measured timing denominator; without it wall_s remains self-reported. MAC admission was checked online; no signing key is published. No model optimizer or promotion audit.",
+      "steps": 72600,
+      "trajectories": 10000
+    },
+    {
+      "case": "b-async-75012",
+      "effective_duplicates": 0,
+      "events": 129298,
+      "files_verified": 13,
+      "headline_timing_anchored": true,
+      "pass": true,
+      "scope": "Streams step truth/state and checks latency/rate arithmetic. An external trusted manifest anchors the measured timing denominator; without it wall_s remains self-reported. MAC admission was checked online; no signing key is published. No model optimizer or promotion audit.",
+      "steps": 74294,
+      "trajectories": 10000
+    },
+    {
+      "case": "b-async-75013",
+      "effective_duplicates": 0,
+      "events": 129798,
+      "files_verified": 13,
+      "headline_timing_anchored": true,
+      "pass": true,
+      "scope": "Streams step truth/state and checks latency/rate arithmetic. An external trusted manifest anchors the measured timing denominator; without it wall_s remains self-reported. MAC admission was checked online; no signing key is published. No model optimizer or promotion audit.",
+      "steps": 74794,
+      "trajectories": 10000
+    }
+  ],
+  "pass": true,
+  "scope": "Supplemental read-only re-audit of the eight already-measured Stage A/B artifacts after active-row lifecycle hardening. No trajectories were regenerated and no headline measurements changed.",
+  "source_revision": "db65198084125267ee8597c6bff6f40adfba2903",
+  "trajectory_store_sha256": "fb25363076c73a75a36080689678648b7d24455642386c4a1145ee27e39a794f"
+}

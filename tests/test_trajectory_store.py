@@ -371,3 +371,28 @@ def test_terminal_history_cannot_be_hidden_by_reverting_row(store):
         db.execute("UPDATE trajectories SET state='queued',reason=NULL")
     with pytest.raises(ValueError, match="terminal.*history"):
         audit_trajectory_store(store.path)
+
+
+def test_completion_history_cannot_be_hidden_by_reverting_row(store):
+    submit(store)
+    lease = store.claim("execute", "worker", now=100)
+    for index in range(2):
+        store.append_step(lease, step(index), now=100)
+    store.finish(lease, now=100)
+    with store.connection(write=True) as db:
+        db.execute("UPDATE trajectories SET state='queued'")
+    with pytest.raises(ValueError, match="completion.*active"):
+        audit_trajectory_store(store.path)
+
+
+def test_read_only_audit_accepts_pinned_older_runtime_snapshot(store):
+    with store.connection(write=True) as db:
+        config = json.loads(db.execute("SELECT value FROM meta WHERE key='config'").fetchone()[0])
+        config["source_sha256"] = "4b5b1e632f86e9c4ff24b0ece36930e2d49b130ad1a527e77b46349e73e05c81"
+        db.execute("UPDATE meta SET value=? WHERE key='config'", (json.dumps(config, sort_keys=True, separators=(",", ":")),))
+    with pytest.raises(RuntimeMismatchError, match="enrolled trajectory runtime source"):
+        store.counts()
+    assert audit_trajectory_store(store.path)["pass"]
+    audit_only = TrajectoryStore(store.path, audit_only=True)
+    with pytest.raises(RuntimeError, match="read-only"):
+        audit_only.cancel("t0")
