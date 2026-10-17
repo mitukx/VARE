@@ -1,0 +1,12 @@
+{
+  "failed_full_run": "stream-v3-merged-full-flaky-failure.log",
+  "failure": "tests/test_grader_guard.py::test_cancellation_drains_owned_launch_and_cleanup[cleanup]",
+  "final_full_run": "stream-v3-merged-full-final.log",
+  "final_full_run_log_sha256": "3bf18bb42298bd3885fefd40fecbfb088f8c682da8db9af88c72c9dcf2360b43",
+  "final_full_run_result": "1020 passed, 9 skipped",
+  "full_run_result": "1018 passed, 9 skipped, 1 failed",
+  "isolated_repeats": 5,
+  "isolated_repeats_passed": 5,
+  "note": "This is an existing grader subprocess cancellation test in src/vare/runner.py; the current PR does not modify runner.py. Retain the failed full-run log even if a later full run passes.",
+  "source_changed_for_failure": false
+}

@@ -22,6 +22,11 @@ def tensor_error(actual, expected):
     return error
 
 
+def verify_snapshot_source(config, source_files):
+    require(config.get('source_sha256') == source_files.get('src/vare/trajectory_store.py'),
+            "snapshot runtime source differs from archived source bytes")
+
+
 def audit(root, model_dir, rvl_source, expected_manifest):
     import torch
     require(not expected_manifest.resolve().is_relative_to(root.resolve()),"external manifest must be outside artifact")
@@ -48,7 +53,7 @@ def audit(root, model_dir, rvl_source, expected_manifest):
     sys.path.insert(0,str(rvl_source/'src'))
     from rvl_systems.hf_backend import HFLocalBackend
     from rvl_systems.hf_trainer import HFCausalLMGRPOTrainer,HFTTrainerConfig
-    from vare.trajectory_store import audit_trajectory_store
+    from vare.trajectory_store import TrajectoryStore,audit_trajectory_store
     torch.set_num_threads(1)
     backend=HFLocalBackend(str(model_dir),device='cpu',precision='fp32')
     model=backend.model
@@ -82,15 +87,23 @@ def audit(root, model_dir, rvl_source, expected_manifest):
         errors={'preclip_gradient':tensor_error(reconstructed,captured['vectors']),
                 'clipped_gradient':tensor_error(saved['actual_gradients'],ref['grads']),
                 'parameter':tensor_error(candidate['model'],ref['model'])}
-        require(abs(update['metrics']['loss']-ref['loss'])<2e-6,"loss mismatch")
-        require(torch.equal(before['cpu_rng'],candidate['cpu_rng']),"RNG mismatch")
+        loss_error=abs(update['metrics']['loss']-ref['loss'])
+        require(math.isfinite(loss_error) and loss_error<2e-6,"loss mismatch")
+        rng_equal=torch.equal(before['cpu_rng'],candidate['cpu_rng'])
+        require(rng_equal,"RNG mismatch")
         require(candidate['optimizer']['param_groups']==ref['optimizer']['param_groups'],"optimizer configuration mismatch")
         require(candidate['optimizer']['state'].keys()==ref['optimizer']['state'].keys(),"optimizer coverage mismatch")
-        for key,state in candidate['optimizer']['state'].items():
-            require(tensor_error(state,ref['optimizer']['state'][key])<2e-6,"optimizer state mismatch")
-        require(ref['max_behavior_alignment_error']<1e-4,"behavior alignment mismatch")
-        results.append({'candidate':update['candidate'],'errors':errors,'preclip_norm':norm})
+        optimizer_error=max(tensor_error(state,ref['optimizer']['state'][key])
+                            for key,state in candidate['optimizer']['state'].items())
+        require(optimizer_error<2e-6,"optimizer state mismatch")
+        behavior_error=ref['max_behavior_alignment_error']
+        require(behavior_error<1e-4,"behavior alignment mismatch")
+        errors.update(loss=loss_error,optimizer_state=optimizer_error)
+        results.append({'candidate':update['candidate'],'errors':errors,'preclip_norm':norm,
+                        'behavior_alignment_error':behavior_error,'rng_equal':rng_equal})
     require(audit_trajectory_store(root/'snapshot.db')==summary['audit'],"trajectory audit differs")
+    store=TrajectoryStore(root/'snapshot.db',audit_only=True)
+    verify_snapshot_source(store.config(),summary['source_files'])
     rounds=json.loads((root/'rounds.json').read_text())
     require(rounds[1]['result']['decision']['accepted'] is False,"forced rejection missing")
     require(rounds[2]['ack_interrupted'] and rounds[2]['active']['policy_id']==updates[3]['batch'][0]['attempt']['policy_id'],"recovered state not used for next update")
