@@ -1,0 +1,48 @@
+{
+  "pass": true,
+  "seed": 79012,
+  "scenario": "visible",
+  "metrics": {
+    "fixed": {
+      "errors": 547,
+      "audit_n": 3072,
+      "disagreements": 0,
+      "false_proxy_promotions": 4,
+      "missed_proxy_improvements": 0,
+      "proxy_promotions": 8,
+      "independent_promotions": 4,
+      "error_rate": 0.17805989583333334,
+      "refreshes": 0,
+      "calibration_labels": 0
+    },
+    "periodic": {
+      "errors": 0,
+      "audit_n": 3072,
+      "disagreements": 547,
+      "false_proxy_promotions": 0,
+      "missed_proxy_improvements": 0,
+      "proxy_promotions": 4,
+      "independent_promotions": 4,
+      "error_rate": 0.0,
+      "refreshes": 2,
+      "calibration_labels": 128
+    },
+    "shift": {
+      "errors": 0,
+      "audit_n": 3072,
+      "disagreements": 547,
+      "false_proxy_promotions": 0,
+      "missed_proxy_improvements": 0,
+      "proxy_promotions": 4,
+      "independent_promotions": 4,
+      "error_rate": 0.0,
+      "refreshes": 2,
+      "calibration_labels": 128
+    }
+  },
+  "wall_s": 0.06969425000716001,
+  "revision": "4e28b743bca36f5ed85283fba485682f02399db9",
+  "protocol_sha256": "0a9c02b94220921f850178d61f5ff0f65a3c5e652b5d0d15d442c43f8ff6d9df",
+  "source_sha256": "b2db36c1519d9058d600f33bcf68674567b106c9920119e98af44fcbf8daf6bb",
+  "scope": "Synthetic exogenous policy distribution shift, no model training; false/missed decisions are proxy-only counterfactuals. Independent gate decisions use separate audit labels."
+}

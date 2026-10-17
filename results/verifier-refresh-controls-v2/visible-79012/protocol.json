@@ -1,0 +1,57 @@
+{
+  "schema": "vare.verifier-refresh-controls.v2",
+  "hypothesis": "Existing task-family TV-triggered refresh can detect a visible family shift, but cannot detect exploitation within a constant family; periodic calibration is a falsification baseline.",
+  "scope": "Known-ground-truth synthetic exogenous policies; no LLM, optimizer, new refresh algorithm, capability gain or learned policy-verifier co-evolution claim.",
+  "cheaper_gate": "Two deterministic controls verify family-TV blindness and bounded calibration fitting first.",
+  "seeds": [
+    79011,
+    79012,
+    79013
+  ],
+  "scenarios": [
+    "visible",
+    "hidden"
+  ],
+  "strategies": [
+    "fixed",
+    "periodic",
+    "shift"
+  ],
+  "rounds": 12,
+  "training_observations_per_round": 256,
+  "calibration_pool_per_round": 64,
+  "independent_audit_per_policy_per_round": 256,
+  "refresh_budget": "At most two refreshes of64 labeled calibration rows. Equal maximum budget, not equal actual label spend; report spend per strategy.",
+  "fixed": "Never refresh.",
+  "periodic": "Refresh at rounds4 and8.",
+  "shift": "Use existing DistributionShiftMonitor(window256), initial reference familyA. Refresh when TV>.25, refit family reference on refresh.",
+  "verifier": "Default visible-test proxy; calibration fits transparent per(feature,proxy) majority truth table; no independent audit labels enter fitting/decisions.",
+  "policy_schedule": "Rounds0-3 ordinaryquality.7/attack0; rounds4-7 quality.72/attack.4; rounds8-11 quality.9/attack.15. Attack alwaysincorrect but proxypositive. Visible attackfamilyB; hidden attackfamilyA. Baselineordinaryquality.7 throughout.",
+  "independence": "Deterministic RNG namespaces per seed/scenario/round/split; untouched independent candidate/baseline label streams are never passed to refresh. Streams matched across strategies.",
+  "promotion": "Existing PromotionGate, min primary gain.03, n256. Report proxy-only counterfactual false promotions/missed improvements relative to the independent truth gate. This is not neural checkpoint publication.",
+  "metrics": [
+    "held-out verifier error",
+    "verifier disagreement",
+    "TV shift",
+    "refreshes",
+    "calibration labels",
+    "proxy-only false promotion",
+    "proxy-only missed improvement",
+    "wall time"
+  ],
+  "acceptance": "All declared cohorts emitted; budgets bounded; independent-label isolation; hidden shift must expose family-TV blind spot. No winning strategy required; retain null/negative results.",
+  "budget": "6 sequential CPU cases,60s each, no API/GPU/services.",
+  "abort": "First correctness/resource failure; preserve failed outputs; do not tune threshold or schedule after observation.",
+  "decision": "Keep existing refresh interface and report the observable blind spot. Do not introduce a new refresh algorithm from this fixture alone.",
+  "runner_sha256": "b2db36c1519d9058d600f33bcf68674567b106c9920119e98af44fcbf8daf6bb",
+  "mechanics_sha256": {
+    "src/vare/lag.py": "1a7185c0b17187c13e6369f3d10584eabe2ac697d5afbd8bfd867bef07c92a57",
+    "src/vare/config.py": "3ddcb32df475e9e1d2a1aa3689ba5955494a67971cad03aa5a88e045ba4b7051",
+    "src/vare/promotion.py": "73f2fcbd3358d1f9153a53012f49ebe41ca0d65f555ed6457c8b98ccc708474b",
+    "src/vare/attestation.py": "785e74d7d0cd6d41a73cf75cc65c093a0afb8d5082ad3f11dd828770616e93a3",
+    "src/vare/evidence.py": "a35d0f8c1cc7756c7d351b79ff061ff2374bf5ffe3c0433ed0181b0b85868d70",
+    "src/vare/types.py": "233e2b6176431140e7700cc668cfdbdc98cf3d8d4ab98de658efab7010ea82ca",
+    "src/vare/trajectory_promotion.py": "a881969b10ae0b6e4f5e62b0270493d0337406c5bc82d0eb5ac4069cee582072"
+  },
+  "supersedes": "V1 retained. Review exposed unpinned outcome-bearing imports during reproduction. V2 pins them before cohort generation; policy schedule, thresholds, budgets and decision rule are unchanged, with fresh seeds."
+}
