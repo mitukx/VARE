@@ -31,8 +31,9 @@ def test_retained_raw_truth_and_summary_accounting():
     import gzip
     import json
     from vare.evidence import sha256_file
-    root = Path("results/verifier-refresh-controls-v1")
-    for directory in sorted(root.glob("*-77*")):
+    roots = [Path("results/verifier-refresh-controls-v1"),Path("results/verifier-refresh-controls-v2")]
+    directories = [directory for root in roots for directory in sorted(root.glob("*-7*"))]
+    for directory in directories:
         summary = json.loads((directory/"summary.json").read_text())
         manifest = json.loads((directory/"SHA256.json").read_text())
         assert all(sha256_file(directory/name)==value for name,value in manifest.items())
