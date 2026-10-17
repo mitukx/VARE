@@ -208,6 +208,12 @@ rejected; this correction re-audits the same 42-case archive and changes no
 protocol or model measurements. The focused falsification record is retained
 in [audit-review validation](../results/e2e-rl-continuation-v2-audit-review/validation.json).
 
+The audit now also requires a rollout file for every recorded optimizer attempt
+and checks progress seed, worker count, and mode against each case's retained
+configuration and directory identity. Removing all round rollout files or
+relabeling the retained seed while rehashing the archive passed the previous
+auditor; both falsification controls now fail closed.
+
 This is a toy neural LM and synthetic one-token workload. Replay is round-local;
 general durable replay-backlog/curriculum recovery is not tested. The supervisor
 assumes cooperative same-UID POSIX ownership. There is no power-loss, hostile-code,

@@ -101,6 +101,16 @@ def audit(root, check_tensors=False, model_dir=None):
     for row in rows:
         case=root/row["directory"]
         config=read(case/"config.json")
+        need((row["seed"],row["workers"],row["mode"])==
+             (config["seed"],config["workers"],config["mode"]),
+             "progress case metadata differs from retained configuration")
+        if row["cutpoint"]=="none":
+            expected_directory=f"normal-w{row['workers']}-s{row['seed']}-{row['mode']}"
+        else:
+            need(row["cutpoint"] in protocol["cutpoints"] and row["mode"]=="guarded",
+                 "invalid fault case metadata")
+            expected_directory=f"kill-{row['cutpoint']}-s{row['seed']}-guarded"
+        need(row["directory"]==expected_directory,"case directory identity differs from progress metadata")
         need(row["protocol_id"]==config["protocol_id"]==expected_id,"case protocol identity differs")
         need(row["protocol_conformant"]==config["protocol_conformant"]==locked,"case conformance differs")
         commits=[read(case/"rounds"/f"r{i:04d}"/"committed.json") for i in range(args["rounds"])]
@@ -137,7 +147,17 @@ def audit(root, check_tensors=False, model_dir=None):
             if state:
                 need(state["step"]==previous_step,"incumbent Adam step differs")
                 incumbent_model=fingerprint(state["model"])
-            for file in round_dir.glob('rollouts-attempt*.jsonl'):
+            rollout_files={}
+            for file in round_dir.glob("rollouts-attempt*.jsonl"):
+                suffix=file.stem.removeprefix("rollouts-attempt")
+                need(suffix.isdigit() and file.name==f"rollouts-attempt{int(suffix)}.jsonl",
+                     "invalid rollout attempt identity")
+                attempt_id=int(suffix)
+                need(attempt_id not in rollout_files,"duplicate rollout attempt identity")
+                rollout_files[attempt_id]=file
+            need(set(rollout_files)==attempts_by_round.get(index,set()),
+                 "rollout evidence does not cover every optimizer attempt")
+            for file in rollout_files.values():
                 rollouts=[json.loads(line) for line in file.read_text().splitlines()]
                 need(len(rollouts)==args["tasks"],"incomplete rollout attempt")
                 for rollout in rollouts:

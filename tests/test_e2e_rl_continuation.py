@@ -170,6 +170,32 @@ def test_rehashed_evaluation_attempt_must_exist_in_optimizer_history(audit_recor
         auditor.audit(changed)
 
 
+def test_rehashed_missing_rollout_attempt_is_rejected(audit_records,tmp_path):
+    changed=tmp_path/"missing-rollout-evidence"
+    shutil.copytree(audit_records,changed)
+    row=next(r for r in auditor.read(changed/"progress.json")
+             if r["mode"]=="minimal" and r["cutpoint"]=="none")
+    for path in (changed/row["directory"]/"rounds").glob("r*/rollouts-attempt*.jsonl"):
+        path.unlink()
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="rollout evidence"):
+        auditor.audit(changed)
+
+
+def test_rehashed_progress_seed_must_match_case_configuration(audit_records,tmp_path):
+    changed=tmp_path/"forged-progress-seed"
+    shutil.copytree(audit_records,changed)
+    progress=auditor.read(changed/"progress.json")
+    original_seed=progress[0]["seed"]
+    for row in progress:
+        if row["seed"]==original_seed:
+            row["seed"]=original_seed+9999
+    bench.atomic_json(changed/"progress.json",progress)
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="retained configuration"):
+        auditor.audit(changed)
+
+
 def test_rehashed_evaluation_pair_must_match_committed_round_result(audit_records,tmp_path):
     changed=tmp_path/"misbound-result"
     shutil.copytree(audit_records,changed)
