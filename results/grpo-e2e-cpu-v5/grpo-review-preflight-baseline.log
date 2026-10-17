@@ -1,0 +1,84 @@
+FF.                                                                      [100%]
+=================================== FAILURES ===================================
+_____ test_preflight_failure_is_retained_without_model_dependencies[False] _____
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-273/test_preflight_failure_is_reta0')
+optimized = False
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    def test_preflight_failure_is_retained_without_model_dependencies(tmp_path, optimized):
+        output = tmp_path / "preflight-failure"
+        command = [sys.executable, *(["-O"] if optimized else []),
+                   "scripts/validate_grpo_e2e_cpu.py", "--model-dir", str(tmp_path/"missing-model"),
+                   "--rvl-source", str(tmp_path/"missing-rvl"), "--output", str(output)]
+        result = subprocess.run(command, capture_output=True, text=True, timeout=10)
+        assert result.returncode != 0
+>       failure = json.loads((output/"failure.json").read_text())
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_grpo_e2e_cpu.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/pathlib.py:1058: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-273/test_preflight_failure_is_reta0/preflight-failure/failure.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-273/test_preflight_failure_is_reta0/preflight-failure/failure.json'
+
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/pathlib.py:1044: FileNotFoundError
+_____ test_preflight_failure_is_retained_without_model_dependencies[True] ______
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-273/test_preflight_failure_is_reta1')
+optimized = True
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    def test_preflight_failure_is_retained_without_model_dependencies(tmp_path, optimized):
+        output = tmp_path / "preflight-failure"
+        command = [sys.executable, *(["-O"] if optimized else []),
+                   "scripts/validate_grpo_e2e_cpu.py", "--model-dir", str(tmp_path/"missing-model"),
+                   "--rvl-source", str(tmp_path/"missing-rvl"), "--output", str(output)]
+        result = subprocess.run(command, capture_output=True, text=True, timeout=10)
+        assert result.returncode != 0
+>       failure = json.loads((output/"failure.json").read_text())
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_grpo_e2e_cpu.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/pathlib.py:1058: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-273/test_preflight_failure_is_reta1/preflight-failure/failure.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-273/test_preflight_failure_is_reta1/preflight-failure/failure.json'
+
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/pathlib.py:1044: FileNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_grpo_e2e_cpu.py::test_preflight_failure_is_retained_without_model_dependencies[False]
+FAILED tests/test_grpo_e2e_cpu.py::test_preflight_failure_is_retained_without_model_dependencies[True]
+2 failed, 1 passed, 1 deselected in 0.37s

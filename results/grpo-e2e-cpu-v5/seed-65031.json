@@ -1,0 +1,233 @@
+{
+  "actual_optimizer_calls_including_fault_and_resume": 15,
+  "candidate_updates": 12,
+  "checkpoint_load_through_next_candidate_s": 0.04613112501101568,
+  "cpu_core_percent": 95.41315273830874,
+  "cpu_s": 8.125743,
+  "dependencies": [
+    "Jinja2==3.1.6",
+    "MarkupSafe==3.0.4",
+    "PyYAML==6.0.3",
+    "Pygments==2.21.0",
+    "certifi==2026.7.22",
+    "charset-normalizer==3.5.2",
+    "filelock==4.2.0",
+    "fsspec==2026.9.0",
+    "hf-xet==1.7.0",
+    "huggingface_hub==0.36.2",
+    "idna==3.20",
+    "iniconfig==2.3.1",
+    "mpmath==1.3.0",
+    "networkx==3.6.1",
+    "numpy==2.4.6",
+    "packaging==26.3",
+    "pluggy==1.7.0",
+    "psutil==7.1.0",
+    "pytest==8.4.2",
+    "regex==2026.9.29",
+    "requests==2.34.2",
+    "ruff==0.15.12",
+    "safetensors==0.8.0",
+    "sympy==1.14.0",
+    "tokenizers==0.22.2",
+    "torch==2.8.0",
+    "tqdm==4.70.1",
+    "transformers==4.56.2",
+    "typing_extensions==4.16.0",
+    "urllib3==2.8.0"
+  ],
+  "faults": [
+    {
+      "error": "rollout policy version differs from active policy version",
+      "fault": "rollout_policy_version",
+      "rejected": true,
+      "state_unchanged": true
+    },
+    {
+      "error": "RVL generation response differs from its verified experience",
+      "fault": "response_binding",
+      "rejected": true,
+      "state_unchanged": true
+    },
+    {
+      "error": "incomplete VARE rollout group 'fault': got 3, expected 4",
+      "fault": "partial_group",
+      "rejected": true,
+      "state_unchanged": true
+    },
+    {
+      "error": "VARE rollout group mixes prompt, policy, behavior, or evaluator provenance",
+      "fault": "mixed_policy",
+      "rejected": true,
+      "state_unchanged": true
+    },
+    {
+      "error": "stale_training_experience",
+      "fault": "stale",
+      "rejected": true,
+      "state_unchanged": true
+    },
+    {
+      "error": "response token ids/logprobs length mismatch",
+      "fault": "logprob_length",
+      "rejected": true,
+      "state_unchanged": true
+    },
+    {
+      "error": "old token log-probabilities contain non-finite values",
+      "fault": "nonfinite_logprob",
+      "rejected": true,
+      "state_unchanged": true
+    },
+    {
+      "error": "injected after actual optimizer",
+      "fault": "after_optimizer",
+      "rejected": true,
+      "state_unchanged": true
+    }
+  ],
+  "limitations": [
+    "Pretrained toy model, fresh synthetic diagnostic tasks; no capability gain or RSI.",
+    "Single shared CPU model under adapter lock; no separate rollout worker pool.",
+    "Reference/audit/save overhead included in headline throughput; timings are not production serving rates.",
+    "No process crash injection; #69 remains separate unmerged recovery evidence."
+  ],
+  "model": "roneneldan/TinyStories-1M",
+  "model_files_sha256": {
+    "config.json": "ff74c30d5ebb5ab1da0f2ea479adf7197c504b42b5522a858c334ab91ed4958c",
+    "merges.txt": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+    "pytorch_model.bin": "07f9609ea882b8163ff3b23d40e2b82cb715d409631beb15c84b164f3877dae7",
+    "special_tokens_map.json": "98412137ae43c77f8af52eb51b19c3536d3242cb55339167d841005fa94a23b7",
+    "tokenizer.json": "f6ed3d307010c244c22aeffbde05f419cf277c23e64cf98b673cac5449cfeff5",
+    "tokenizer_config.json": "3d76da0fd37493fbfcd3f0fa9757753d31f92e1779ebd9130809b45546a60261",
+    "vocab.json": "3ba3c3109ff33976c4bd966589c11ee14fcaa1f4c9e5e154c2ed7f99d80709e7"
+  },
+  "model_revision": "77f1b168e219585646439073245fe87e56b3023e",
+  "negative_controls": [
+    {
+      "control": "merge_same_prompt_groups",
+      "gradient_distance": 0.07095756381750107
+    },
+    {
+      "alignment_error": 0.4000215530395508,
+      "control": "misaligned_behavior_scores"
+    }
+  ],
+  "peak_rss_bytes": 645201920,
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "promotions": 9,
+  "protocol_conformant": true,
+  "protocol_sha256": "82c4b8c4c4f5db87393db2853d55723e579407993806a73dc12100800e42087a",
+  "python": "3.11.15 (main, Mar  3 2026, 00:52:57) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "rejections": 3,
+  "replay_pruning_rejection_rate": 0.8461538461538461,
+  "resume_next_update_exact": true,
+  "rounds": 12,
+  "rvl_revision": "e381c4b3b8c2ad8e5dc4c4b1a33b7922531c3e33",
+  "seed": 65031,
+  "source_sha256": {
+    "hf_backend.source.py": "a35179d2ff65b35d8079b0d48a933444cac440debd736d6dc6a7a53a27cfb960",
+    "hf_trainer.source.py": "3cc007b113dd992d14cf9bf7bed276fa9613f690dca0ad56532e52225e973faf",
+    "rvl_grpo.source.py": "d4d511a9cc71949205a25ca4dbb9b384cb38c9f430f590adafdfd0126cac1eb7",
+    "validate_grpo_e2e_cpu.source.py": "f9546aeb53c3d4404de450e534de4b7cddfc0e88d72c56608c01ea862b07b580"
+  },
+  "stages": {
+    "evaluation": {
+      "n": 24,
+      "p50_s": 0.11379095900338143,
+      "p95_s": 0.12881695904070511,
+      "total_s": 1.879793168103788
+    },
+    "freshness_prune": {
+      "n": 12,
+      "p50_s": 4.33750101365149e-05,
+      "p95_s": 8.212501415982842e-05,
+      "total_s": 0.0005466259317472577
+    },
+    "rollout": {
+      "n": 96,
+      "p50_s": 0.10412295901915058,
+      "p95_s": 0.14016770798480138,
+      "total_s": 9.10691374912858
+    },
+    "round": {
+      "n": 12,
+      "p50_s": 0.6573157910024747,
+      "p95_s": 0.9483368329820223,
+      "total_s": 8.137205830891617
+    },
+    "training": {
+      "n": 12,
+      "p50_s": 0.0669206670136191,
+      "p95_s": 0.0821954170241952,
+      "total_s": 0.8370133761782199
+    },
+    "validation": {
+      "n": 12,
+      "p50_s": 0.00021583301713690162,
+      "p95_s": 0.0002418330404907465,
+      "total_s": 0.0025852899998426437
+    },
+    "verification": {
+      "n": 96,
+      "p50_s": 3.2499665394425392e-06,
+      "p95_s": 7.209018804132938e-06,
+      "total_s": 0.00034120643977075815
+    }
+  },
+  "stale_replay_events": [
+    {
+      "count": 8,
+      "event": "replay_experiences_screened",
+      "ts": 1792175635.326046
+    },
+    {
+      "count": 8,
+      "event": "replay_experiences_screened",
+      "ts": 1792175635.973425
+    },
+    {
+      "count": 8,
+      "event": "replay_experiences_screened",
+      "ts": 1792175636.61779
+    },
+    {
+      "count": 16,
+      "event": "replay_experiences_screened",
+      "ts": 1792175637.9134212
+    },
+    {
+      "count": 8,
+      "event": "replay_experiences_screened",
+      "ts": 1792175638.662525
+    },
+    {
+      "count": 8,
+      "event": "replay_experiences_screened",
+      "ts": 1792175639.442341
+    },
+    {
+      "count": 16,
+      "event": "replay_experiences_screened",
+      "ts": 1792175640.85445
+    },
+    {
+      "count": 8,
+      "event": "replay_experiences_screened",
+      "ts": 1792175641.489512
+    },
+    {
+      "count": 8,
+      "event": "replay_experiences_screened",
+      "ts": 1792175642.208128
+    }
+  ],
+  "status": "PASS",
+  "throughput_tasks_s_including_audits": 11.272400152057035,
+  "throughput_tokens_s_including_audits": 33.81720045617111,
+  "torch": "2.8.0",
+  "trainable_parameters": 131200,
+  "transformers": "4.56.2",
+  "vare_revision": "eac97b22f42c4c9efa55939d50abba5def00a346",
+  "wall_s_with_reference_checkpoint_audits": 8.516376167011913
+}

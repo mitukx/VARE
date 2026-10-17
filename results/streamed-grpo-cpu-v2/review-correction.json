@@ -1,0 +1,6 @@
+{
+  "reviewed_revision": "2b33abfd6ba0faed03e0efc3cce1310090777f6c",
+  "reproducer": "Two regressions fail: source claim has neither runtime fence; an unowned caller can transition verified data to learning.",
+  "fix": "CapabilityLoop acquires its existing shared lock and PromotionJournal owner before invoking the bounded ingestion supplier. Claim validates the owner and records it. Idle polls release cleanly; interrupted supplier retains the owner.",
+  "gate": "14 source ownership tests pass; model v1 results retained, final v2 uses fresh seeds78011/78012/78013."
+}

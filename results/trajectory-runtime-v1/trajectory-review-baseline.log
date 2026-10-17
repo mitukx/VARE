@@ -1,0 +1,46 @@
+F.FF                                                                     [100%]
+=================================== FAILURES ===================================
+_______________ test_group_capacity_reserved_before_first_member _______________
+
+store = <vare.trajectory_store.TrajectoryStore object at 0x108843890>
+
+    def test_group_capacity_reserved_before_first_member(store):
+        task = Task("task", "group work")
+        store.submit("g0-0", task, expected_steps=2, group_id="g0", member=0, group_size=2, now=100)
+        # A competing producer cannot occupy the slot reserved for g0's sibling.
+>       with pytest.raises(BackpressureError):
+E       Failed: DID NOT RAISE <class 'vare.trajectory_store.BackpressureError'>
+
+tests/test_trajectory_store.py:299: Failed
+________________ test_grouped_member_acknowledgment_is_rejected ________________
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-285/test_grouped_member_acknowledg0')
+
+    def test_grouped_member_acknowledgment_is_rejected(tmp_path):
+        store, _ = group(tmp_path)
+>       with pytest.raises(FenceError):
+E       Failed: DID NOT RAISE <class 'vare.durable.FenceError'>
+
+tests/test_trajectory_admission.py:133: Failed
+_____________________ test_grouped_cancellation_is_atomic ______________________
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-285/test_grouped_cancellation_is_a0')
+
+    def test_grouped_cancellation_is_atomic(tmp_path):
+        store, _ = group(tmp_path)
+        assert store.cancel("t0") is True
+>       assert store.counts() == {"cancelled": 2}
+E       AssertionError: assert {'cancelled':...'verified': 1} == {'cancelled': 2}
+E         
+E         Differing items:
+E         {'cancelled': 1} != {'cancelled': 2}
+E         Left contains 1 more item:
+E         {'verified': 1}
+E         Use -v to get more diff
+
+tests/test_trajectory_admission.py:141: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_trajectory_store.py::test_group_capacity_reserved_before_first_member
+FAILED tests/test_trajectory_admission.py::test_grouped_member_acknowledgment_is_rejected
+FAILED tests/test_trajectory_admission.py::test_grouped_cancellation_is_atomic
+3 failed, 1 passed, 39 deselected in 0.35s

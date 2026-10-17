@@ -3,9 +3,9 @@ from collections import Counter
 
 import pytest
 
-from vare.config import EngineConfig, PromotionConfig, ReplayConfig
+from vare.config import EngineConfig, LagConfig, PromotionConfig, ReplayConfig
 from vare.engine import CapabilityLoop
-from vare.types import Attempt, EvaluationReport, Task, Verification
+from vare.types import Attempt, EvaluationReport, Experience, Task, Verification
 from vare.verifiers import VerifierEnsemble, VerifierMember
 
 
@@ -111,3 +111,33 @@ def test_engine_admits_groups_atomically_when_replay_capacity_is_not_divisible()
     assert hooks.train_group_counts is not None
     assert set(hooks.train_group_counts.values()) == {4}
     assert sum(hooks.train_group_counts.values()) == 4
+
+
+@pytest.mark.parametrize("old_version", [0, 1])
+def test_stale_high_priority_group_cannot_block_fresh_group_admission(old_version):
+    class CurrentHooks(Hooks):
+        def active_policy(self):
+            return "p1", 1
+
+    class LowSignalVerifier(Verifier):
+        async def verify(self, attempt):
+            return Verification(0.5, True, 1.0, 1, "v", trusted=True)
+
+    hooks = CurrentHooks()
+    loop = CapabilityLoop(hooks=hooks, verifier=VerifierEnsemble([VerifierMember(LowSignalVerifier())]),
+                          config=EngineConfig(samples_per_task=4, replay_batch_size=4, replay=ReplayConfig(capacity=4),
+                                              lag=LagConfig(max_policy_lag=0), promotion=PromotionConfig(min_eval_examples=1)))
+    old = []
+    task = Task("old", "x")
+    for step in range(4):
+        old.append(Experience(Attempt(task, "x", "p1", old_version, step,
+                                      metadata={"vare_rollout_group":"old", "vare_rollout_group_size":4}),
+                              Verification(0.0, False, 1.0, 1, "v", trusted=True), 0, 0, 0.0))
+    assert loop.replay.add_group(old, [1.0]*4)
+    asyncio.run(loop.run_round([Task("new", "x")], round_index=0, rollout_count=4))
+    assert hooks.train_group_counts is not None
+    assert sum(hooks.train_group_counts.values()) == 4
+    if old_version == 0:
+        assert "old" not in hooks.train_group_counts
+    else:
+        assert hooks.train_group_counts == {"old":4}  # Eligible priority policy is preserved.

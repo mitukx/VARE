@@ -1,0 +1,36 @@
+F.                                                                       [100%]
+=================================== FAILURES ===================================
+_____ test_stale_high_priority_group_cannot_block_fresh_group_admission[0] _____
+
+old_version = 0
+
+    @pytest.mark.parametrize("old_version", [0, 1])
+    def test_stale_high_priority_group_cannot_block_fresh_group_admission(old_version):
+        class CurrentHooks(Hooks):
+            def active_policy(self):
+                return "p1", 1
+    
+        class LowSignalVerifier(Verifier):
+            async def verify(self, attempt):
+                return Verification(0.5, True, 1.0, 1, "v", trusted=True)
+    
+        hooks = CurrentHooks()
+        loop = CapabilityLoop(hooks=hooks, verifier=VerifierEnsemble([VerifierMember(LowSignalVerifier())]),
+                              config=EngineConfig(samples_per_task=4, replay_batch_size=4, replay=ReplayConfig(capacity=4),
+                                                  lag=LagConfig(max_policy_lag=0), promotion=PromotionConfig(min_eval_examples=1)))
+        old = []
+        task = Task("old", "x")
+        for step in range(4):
+            old.append(Experience(Attempt(task, "x", "p1", old_version, step,
+                                          metadata={"vare_rollout_group":"old", "vare_rollout_group_size":4}),
+                                  Verification(0.0, False, 1.0, 1, "v", trusted=True), 0, 0, 0.0))
+        assert loop.replay.add_group(old, [1.0]*4)
+        asyncio.run(loop.run_round([Task("new", "x")], round_index=0, rollout_count=4))
+>       assert hooks.train_group_counts is not None
+E       assert None is not None
+E        +  where None = <test_grouped_replay.test_stale_high_priority_group_cannot_block_fresh_group_admission.<locals>.CurrentHooks object at 0x10aa9e0d0>.train_group_counts
+
+tests/test_grouped_replay.py:138: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_grouped_replay.py::test_stale_high_priority_group_cannot_block_fresh_group_admission[0]
+1 failed, 1 passed, 4 deselected in 0.07s

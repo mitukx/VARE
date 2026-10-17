@@ -263,6 +263,12 @@ class RVLGRPOHooks:
             raise ValueError("online rollouts must use the active policy")
         async with self._rollout_sem:
             async with self._model_lock:
+                # Publication can change the loaded policy while this request
+                # waits. Bind both identity and version at the use boundary.
+                if policy_id != self._active_id:
+                    raise ValueError("online rollouts must use the active policy")
+                if type(policy_version) is not int or policy_version != self._version:
+                    raise ValueError("rollout policy version differs from active policy version")
                 self._restore(policy_id)
                 rows = await self._generate(
                     task.id,
@@ -299,6 +305,8 @@ class RVLGRPOHooks:
         raw = exp.attempt.metadata.get("rvl_generation")
         if not isinstance(raw, dict):
             raise ValueError("experience lacks token-exact rvl_generation metadata")
+        if raw.get("response") != exp.attempt.output:
+            raise ValueError("RVL generation response differs from its verified experience")
         generation_metadata = raw.get("metadata")
         if not isinstance(generation_metadata, dict):
             raise ValueError("RVL generation lacks exact token metadata")

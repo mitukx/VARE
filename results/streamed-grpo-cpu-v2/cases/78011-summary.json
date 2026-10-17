@@ -1,0 +1,37 @@
+{
+  "audit": {
+    "completions": 16,
+    "database_sha256": "f14b9c374fa8dc6c067481bcddfcfcd94cbb0b8eed8939188bb7608f277119b8",
+    "effective_duplicates": 0,
+    "events": 133,
+    "ledger_head_sha256": "77cc9341d8c839a3c11120f3ef178f29724cbc78191205d7edda68883e73d93e",
+    "pass": true,
+    "steps": 32
+  },
+  "optimizer_calls": 4,
+  "parent_cpu_core_percent": 112.75130330686699,
+  "pass": true,
+  "peak_rss_bytes": 680230912,
+  "revision": "5a81dfe532edee93836e8984c007d4bfba4b43ac",
+  "rounds": 4,
+  "scope": "Real pretrained model updates on synthetic terminal rewards; independent checkpoint decoder; no semantic task success or capability claim. Lost ingestion ACK and exact state reload are same-process logical restart, not learner SIGKILL.",
+  "seed": 78011,
+  "source_files": {
+    "scripts/validate_grpo_e2e_cpu.py": "f9546aeb53c3d4404de450e534de4b7cddfc0e88d72c56608c01ea862b07b580",
+    "scripts/validate_streamed_grpo_cpu.py": "c3b6e71170b74d7c437ee1799a10b72d5dfe7a8c0f79efb803afb48e9156f653",
+    "src/vare/engine.py": "05431666dde3b32edfb0a42c6d1790e0dee463104aaf03cf63769333dfd09692",
+    "src/vare/integrations/rvl_grpo.py": "d4d511a9cc71949205a25ca4dbb9b384cb38c9f430f590adafdfd0126cac1eb7",
+    "src/vare/trajectory_admission.py": "db3a1fe2fd345ef99ee25338f2e43f65211ae83cfdabc68a308f332aa53b5e6c",
+    "src/vare/trajectory_learner.py": "e965b845f32dcdc26bd0e10f2841036917b22801cd7e44853b2d64287219f087",
+    "src/vare/trajectory_store.py": "e7ee76826b3aed19f1c381b95dbc9c5f17c0d78cecf58f1dcb5d60514fb08179",
+    "src/vare/trajectory_workers.py": "8b0cbd4693af3de3fbb0a894363c83961250c41e57743365249318d038427bde"
+  },
+  "torch": "2.8.0",
+  "trainable_parameters": 131200,
+  "trajectory_states": {
+    "consumed": 12,
+    "quarantined": 4
+  },
+  "transformers": "4.56.2",
+  "wall_s": 5.504652999981772
+}

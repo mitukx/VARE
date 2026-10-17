@@ -1,0 +1,18 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________ test_streamed_shift_uses_reference_independent_of_the_batch __________
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-344/test_streamed_shift_uses_refer0')
+
+    def test_streamed_shift_uses_reference_independent_of_the_batch(tmp_path):
+        store, adapter, loop, hooks = setup(tmp_path, max_groups=2,
+                                            reference_families=("default",))
+        add_signed_group(store, adapter.root, group_id="h", trajectory_prefix="u",
+                         family="unexpected", task_id="task-unexpected")
+    
+>       with pytest.raises(RuntimeError, match="streamed batch was filtered or truncated"):
+E       Failed: DID NOT RAISE <class 'RuntimeError'>
+
+tests/test_trajectory_learner.py:139: Failed
+=========================== short test summary info ============================
+FAILED tests/test_trajectory_learner.py::test_streamed_shift_uses_reference_independent_of_the_batch

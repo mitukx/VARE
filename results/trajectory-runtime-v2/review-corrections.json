@@ -1,0 +1,16 @@
+{
+  "baseline_source_revision": "fdc57f121b5910e77b820fa790bf90108e111dda",
+  "review_comments": [
+    4300374768,
+    4300374772,
+    4300374777
+  ],
+  "baseline_regression_failures": 5,
+  "corrected_targeted_tests": 55,
+  "previous_campaign": "60,000 v1 trajectories and their source/raw measurements retained; not the final protected-admission headline campaign",
+  "ci_failure": "90ms no-expiry assertion failed although the pipeline recovered and consumed all work. Use an observed heartbeat plus terminal-attempt/coverage invariants with a realistic deadline; deterministic expiry/fencing tests remain.",
+  "fixed_source_sha256": {
+    "src/vare/trajectory_store.py": "2aade7416ffa8f09ca08bb0d46652ebedff74b40645d129cf0ff6adbc5939152",
+    "src/vare/trajectory_admission.py": "d2f90300359adb4945f5778ba330cd2bab79a7a29ea7708eea939a286cef2ab9"
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "pass": true,
+  "kind": "synthetic-control-plane-eligibility-only",
+  "mode": "async",
+  "seed": 75013,
+  "workers": 8,
+  "verifiers": 2,
+  "trajectories": 10000,
+  "steps": 74794,
+  "wall_s": 189.67620991700096,
+  "trajectories_per_s": 52.721424602356976,
+  "steps_per_s": 394.32462317086873,
+  "timed_events": 129796,
+  "events_per_s": 684.3030027687525,
+  "e2e_latency_s": {
+    "p50": 38.2576789855957,
+    "p95": 46.44506216049194,
+    "p99": 47.15918707847595
+  },
+  "verification_latency_s": {
+    "p50": 0.0012911250232718885,
+    "p95": 0.0027579579618759453,
+    "p99": 0.004604541987646371
+  },
+  "parent_peak_rss_bytes": 39354368,
+  "parent_cpu_core_percent": 120.55992688807076,
+  "observations": {
+    "backpressure_retries": 4962,
+    "max_backlog": 2048,
+    "peak_storage_bytes": 220003968,
+    "duplicate_ack_rejections": 40,
+    "completed": 10000,
+    "consumer_idle_s": 65.8680016558501
+  },
+  "worker_stats": [
+    {
+      "claims": 1290,
+      "owned_work_s": 172.2796327371616,
+      "idle_s": 0.22314504097448662
+    },
+    {
+      "claims": 1207,
+      "owned_work_s": 172.91372410813347,
+      "idle_s": 0.010150167043320835
+    },
+    {
+      "claims": 1308,
+      "owned_work_s": 169.1679226763663,
+      "idle_s": 0.22296279208967462
+    },
+    {
+      "claims": 1225,
+      "owned_work_s": 171.91298165638,
+      "idle_s": 0.22860391990980133
+    },
+    {
+      "claims": 1183,
+      "owned_work_s": 172.8103494574898,
+      "idle_s": 0.2132518320577219
+    },
+    {
+      "claims": 1279,
+      "owned_work_s": 169.5687998025678,
+      "idle_s": 0.050676581042353064
+    },
+    {
+      "idle_s": 0.06599629402626306,
+      "claims": 1292,
+      "owned_work_s": 170.58728549309308
+    },
+    {
+      "idle_s": 0.14709504193160683,
+      "claims": 1216,
+      "owned_work_s": 171.26054761832347
+    },
+    {
+      "idle_s": 9.636673893313855,
+      "claims": 4890,
+      "owned_work_s": 79.83718324499205
+    },
+    {
+      "idle_s": 9.55558262282284,
+      "claims": 5110,
+      "owned_work_s": 81.12624569801847
+    }
+  ],
+  "recovery": {
+    "sigkill": true,
+    "exitcode": -9,
+    "old_lease": {
+      "trajectory_id": "g000000-0",
+      "stage": "execute",
+      "generation": 1,
+      "worker_id": "sigkill-worker"
+    },
+    "next_step_s": 0.11522462498396635,
+    "stale_worker_rejected": true
+  },
+  "audit": {
+    "pass": true,
+    "events": 129798,
+    "steps": 74794,
+    "completions": 10000,
+    "effective_duplicates": 0,
+    "ledger_head_sha256": "0169bfa5a9cde0efe2831c4583af915c2a849d8bc36afa1e50404454a4299a89",
+    "database_sha256": "cb3221d34d381248336dd615da08168a0d2807084ae979589cbef2eabfd4c39c"
+  },
+  "snapshot_sha256": "cb3221d34d381248336dd615da08168a0d2807084ae979589cbef2eabfd4c39c",
+  "latency_samples": 10000,
+  "real_optimizer_updates": 0,
+  "promotion_correctness": "not exercised",
+  "scope": "Real wall time, SQLite persistence and OS worker kill; synthetic inference/tool workload. Parent RSS excludes killed child. Consumer idle means polling sleep; worker idle excludes DB claim time. No optimizer or promotion claim."
+}

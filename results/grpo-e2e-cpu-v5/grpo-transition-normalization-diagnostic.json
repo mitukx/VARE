@@ -1,0 +1,26 @@
+{
+  "legacy": [
+    [
+      -3.4101510047912598,
+      -3.1979966163635254,
+      -4.640890121459961
+    ]
+  ],
+  "contiguous_last_axis": [
+    [
+      -3.410235643386841,
+      -3.1980721950531006,
+      -4.640974998474121
+    ]
+  ],
+  "float64_reference": [
+    [
+      -3.410270030123268,
+      -3.198141823217817,
+      -4.641014387272125
+    ]
+  ],
+  "legacy_max_error_to_float64": 0.00014520685429175728,
+  "last_axis_max_error_to_float64": 6.962816471656197e-05,
+  "source": "HFLocalBackend -> Transformers compute_transition_scores(normalize_logits=True), compared on the exact same captured score tensors"
+}

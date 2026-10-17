@@ -32,9 +32,21 @@ class DistributionShiftMonitor:
 
     def fit_reference(self, families: Iterable[str]) -> None:
         self._reference = Counter(families)
+        self._recent.clear()
 
     def observe(self, family: str) -> None:
         self._recent.append(family)
+
+    def observe_batch(self, families: Iterable[str]) -> float:
+        """Record and compare one complete rollout batch atomically.
+
+        Admission must not depend on member order within a GRPO batch. The
+        comparison therefore uses the full batch distribution, while the
+        bounded recent window remains available for rolling telemetry.
+        """
+        batch = tuple(families)
+        self._recent.extend(batch)
+        return self._tv(self._reference, Counter(batch))
 
     @staticmethod
     def _tv(a: Counter[str], b: Counter[str]) -> float:

@@ -1,0 +1,21 @@
+{
+  "scope": "System correctness; no learning claim",
+  "baseline_source_revision": "2cb5ef9b8950ef524da1d0f08c83b1c4d14d6827",
+  "independent_review_comments": [
+    4300335430,
+    4300335437,
+    4300335443
+  ],
+  "matched_review_cases": {
+    "baseline_failed": 3,
+    "baseline_control_passed": 1,
+    "corrected_passed": 4
+  },
+  "additional_ready_scan": {
+    "baseline_failed": 1,
+    "correction": "Select complete verified groups before applying the bounded LIMIT"
+  },
+  "fixed_store_sha256": "388eaf1725f0a46f5a34a36a158160adc1b7e456faf3768b768dd620295e682d",
+  "interrupted_scale_run": "Stage B v1 async-73011 aborted on review findings; KeyboardInterrupt/failure.json/live DB/source snapshot retained, no headline result",
+  "external_tool_control": "SIGKILL before step commit causes two external tool executions and one effective step; exactly-once external execution is not claimed"
+}

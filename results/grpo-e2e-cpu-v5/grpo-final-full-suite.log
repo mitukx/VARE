@@ -1,0 +1,1514 @@
+...........F.................................FFFFF...................... [  7%]
+........................................................................ [ 15%]
+....ssssssss............................................................ [ 22%]
+........................................................................ [ 30%]
+........................................................................ [ 38%]
+........................................................................ [ 45%]
+........................................................................ [ 53%]
+........................................................................ [ 61%]
+........................................................................ [ 68%]
+........................................................................ [ 76%]
+........................................................................ [ 83%]
+.................................FFFFFFFFFFFFFFFF....................... [ 91%]
+........................................................................ [ 99%]
+........                                                                 [100%]
+=================================== FAILURES ===================================
+_________________ test_check_script_passes_on_this_repository __________________
+
+    def test_check_script_passes_on_this_repository():
+        proc = subprocess.run(
+            ["python3", "scripts/check_tracked_blob_budget.py"],
+            cwd=REPO,
+            check=False,
+            capture_output=True,
+            text=True,
+            env={**os.environ, "PYTHONPATH": "src"},
+        )
+>       assert proc.returncode == 0, proc.stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE/scripts/check_tracked_blob_budget.py", line 49, in <module>
+E             raise SystemExit(main())
+E           File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE/scripts/check_tracked_blob_budget.py", line 36, in main
+E             tracked = list_tracked_blobs(repo)
+E           File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE/src/vare/blob_budget.py", line 129, in list_tracked_blobs
+E             return [(path, oid, sizes[oid]) for path, oid in zip(paths, oids, strict=True)]
+E         TypeError: zip() takes no keyword arguments
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['python3', 'scripts/check_tracked_blob_budget.py'], returncode=1, stdout='', stderr='Traceback ...path, oid, sizes[oid]) for path, oid in zip(paths, oids, strict=True)]\nTypeError: zip() takes no keyword arguments\n').returncode
+
+tests/test_blob_budget.py:81: AssertionError
+______ test_worker_fault_rolls_back_then_verified_restore_promotes[fifo] _______
+
+tmp_path = PosixPath('/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/grpo-final-full-suite/test_worker_fault_rolls_back_t0')
+fault = 'fifo'
+
+    @pytest.mark.skipif(os.name != "posix", reason="POSIX IO recovery experiment")
+    @pytest.mark.parametrize("fault", ["fifo", "oversized"])
+    def test_worker_fault_rolls_back_then_verified_restore_promotes(tmp_path, fault):
+        store, digests, snapshots, heldout, key_file, initial_trust = _setup(tmp_path)
+        # Fresh integration-only inputs, disjoint from optimization. This frozen
+        # linear classifier is a protocol control, never model capability evidence.
+        heldout.write_text(json.dumps({"schema_version": 1, "tasks": [
+            {"id": f"checkpoint-io-{i}", "x": x, "label": int(x >= 0.5), "family": "io-control"}
+            for i, x in enumerate([-7, -0.25, 0.1, 0.75, 4, 11])
+        ]}, sort_keys=True))
+        trust = replace(initial_trust, evaluation_set_sha256=hashlib.sha256(heldout.read_bytes()).hexdigest())
+        worker_outcomes = []
+    
+        class Hooks(FileBackedHooks):
+            async def evaluate(self, policy_id):
+                argv = [
+                    sys.executable, "-m", "vare.trusted_evaluation",
+                    "--checkpoint-store", str(store.root), "--policy-id", policy_id,
+                    "--heldout-set", str(heldout), "--heldout-sha256", trust.evaluation_set_sha256,
+                    "--key-file", str(key_file), "--protocol-sha256", trust.protocol_sha256,
+                    "--run-id", trust.run_id, "--promotion-nonce", trust.promotion_nonce,
+                ]
+                started = time.perf_counter()
+                worker = asyncio.create_task(asyncio.to_thread(
+                    subprocess.run, argv, capture_output=True, text=True, timeout=2, cwd=tmp_path,
+                ))
+                cancellation = None
+                # Cancelling to_thread alone abandons a live subprocess. Own its
+                # bounded completion even if a sibling evaluator fails first.
+                while not worker.done():
+                    try:
+                        await asyncio.shield(worker)
+                    except asyncio.CancelledError as exc:
+                        cancellation = exc
+                    except Exception:
+                        break
+                try:
+                    result = worker.result()
+                except subprocess.TimeoutExpired:
+                    worker_outcomes.append({"policy_id": policy_id, "timeout": True})
+                    raise RuntimeError("checkpoint evaluator exceeded external watchdog") from None
+                worker_outcomes.append({"policy_id": policy_id, "timeout": False,
+                                        "wall_s": time.perf_counter() - started,
+                                        "returncode": result.returncode,
+                                        "stdout": result.stdout, "stderr": result.stderr})
+                if cancellation is not None:
+                    raise cancellation
+                if result.returncode:
+                    raise RuntimeError("checkpoint evaluator rejected input")
+                report = EvaluationReport(**json.loads(result.stdout))
+                assert trust.verifies(report)
+                assert trust.checkpoint_digest(report) == digests[policy_id]
+                return report
+    
+            async def discard(self, candidate_id):
+                assert candidate_id == "p1"
+                self.discarded.append(candidate_id)
+                self.active = "p0"
+    
+        hooks = Hooks({})
+        hooks.discarded = []
+        journal = PromotionJournal(tmp_path / "journal.sqlite", initial_policy_id="p0",
+                                   initial_checkpoint_sha256=digests["p0"])
+        loop = CapabilityLoop(
+            hooks=hooks, verifier=AcceptVerifier(), evidence_trust_root=trust,
+            promotion_journal=journal, checkpoint_hasher=store.digest,
+            config=EngineConfig(replay_batch_size=1,
+                                promotion=PromotionConfig(min_eval_examples=6, min_primary_gain=0.01)),
+        )
+        obj = store.objects / digests["p1"]
+        obj.unlink()
+        if fault == "fifo":
+            os.mkfifo(obj)
+        else:
+            with obj.open("wb") as out:
+                out.truncate(512 * 1024)
+        task = Task("checkpoint-io-development", "exercise file-backed candidate recovery")
+    
+        async def scenario():
+            with pytest.raises(RuntimeError, match="checkpoint evaluator"):
+                await loop.run_round([task], round_index=0)
+            failed_status = journal.status()
+            assert hooks.active == "p0" and hooks.discarded == ["p1"]
+            assert hooks.promotions == [] and failed_status["round_owner_id"] is None
+            assert failed_status["pending_tx_id"] is None
+            journal.assert_clean(policy_id="p0", checkpoint_sha256=store.digest("p0"))
+            # Trusted operator restores the exact original bytes after the failed
+            # workers have exited. Registration re-verifies the immutable binding.
+            obj.unlink()
+            assert store.register_file("p1", snapshots["p1"]) == digests["p1"]
+            result = await loop.run_round([task], round_index=1)
+            assert result.decision.accepted and result.promoted_id == "p1"
+            assert hooks.promotions == ["p1"]
+            reopened = PromotionJournal(journal.path, initial_policy_id="p0",
+                                        initial_checkpoint_sha256=digests["p0"])
+            reopened.assert_clean(policy_id="p1", checkpoint_sha256=store.digest("p1"))
+            assert reopened.status()["round_owner_id"] is None
+            evidence_dir = os.environ.get("VARE_CHECKPOINT_IO_EVIDENCE_DIR")
+            if evidence_dir:
+                output = Path(evidence_dir)
+                output.mkdir(parents=True, exist_ok=True)
+                (output / f"recovery-{fault}.json").write_text(json.dumps({
+                    "fault": fault, "failed_round_status": failed_status,
+                    "reopened_status": reopened.status(), "round_result": asdict(result),
+                    "worker_outcomes": worker_outcomes,
+                    "heldout_sha256": trust.evaluation_set_sha256, "checkpoint_sha256": digests,
+                    "scope": "linear-classifier protocol control; no training or model-capability result",
+                }, indent=2) + "\n")
+    
+>       asyncio.run(scenario())
+
+tests/test_checkpoint_io_recovery.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py:190: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/test_checkpoint_io_recovery.py:113: in scenario
+    result = await loop.run_round([task], round_index=1)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/vare/engine.py:278: in run_round
+    result = await self._run_round(
+src/vare/engine.py:564: in _run_round
+    incumbent_eval, candidate_eval = await asyncio.shield(evaluation_group)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_checkpoint_io_recovery.test_worker_fault_rolls_back_then_verified_restore_promotes.<locals>.Hooks object at 0x11904e010>
+policy_id = 'p1'
+
+    async def evaluate(self, policy_id):
+        argv = [
+            sys.executable, "-m", "vare.trusted_evaluation",
+            "--checkpoint-store", str(store.root), "--policy-id", policy_id,
+            "--heldout-set", str(heldout), "--heldout-sha256", trust.evaluation_set_sha256,
+            "--key-file", str(key_file), "--protocol-sha256", trust.protocol_sha256,
+            "--run-id", trust.run_id, "--promotion-nonce", trust.promotion_nonce,
+        ]
+        started = time.perf_counter()
+        worker = asyncio.create_task(asyncio.to_thread(
+            subprocess.run, argv, capture_output=True, text=True, timeout=2, cwd=tmp_path,
+        ))
+        cancellation = None
+        # Cancelling to_thread alone abandons a live subprocess. Own its
+        # bounded completion even if a sibling evaluator fails first.
+        while not worker.done():
+            try:
+                await asyncio.shield(worker)
+            except asyncio.CancelledError as exc:
+                cancellation = exc
+            except Exception:
+                break
+        try:
+            result = worker.result()
+        except subprocess.TimeoutExpired:
+            worker_outcomes.append({"policy_id": policy_id, "timeout": True})
+            raise RuntimeError("checkpoint evaluator exceeded external watchdog") from None
+        worker_outcomes.append({"policy_id": policy_id, "timeout": False,
+                                "wall_s": time.perf_counter() - started,
+                                "returncode": result.returncode,
+                                "stdout": result.stdout, "stderr": result.stderr})
+        if cancellation is not None:
+            raise cancellation
+        if result.returncode:
+>           raise RuntimeError("checkpoint evaluator rejected input")
+E           RuntimeError: checkpoint evaluator rejected input
+
+tests/test_checkpoint_io_recovery.py:71: RuntimeError
+____ test_worker_fault_rolls_back_then_verified_restore_promotes[oversized] ____
+
+tmp_path = PosixPath('/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/grpo-final-full-suite/test_worker_fault_rolls_back_t1')
+fault = 'oversized'
+
+    @pytest.mark.skipif(os.name != "posix", reason="POSIX IO recovery experiment")
+    @pytest.mark.parametrize("fault", ["fifo", "oversized"])
+    def test_worker_fault_rolls_back_then_verified_restore_promotes(tmp_path, fault):
+        store, digests, snapshots, heldout, key_file, initial_trust = _setup(tmp_path)
+        # Fresh integration-only inputs, disjoint from optimization. This frozen
+        # linear classifier is a protocol control, never model capability evidence.
+        heldout.write_text(json.dumps({"schema_version": 1, "tasks": [
+            {"id": f"checkpoint-io-{i}", "x": x, "label": int(x >= 0.5), "family": "io-control"}
+            for i, x in enumerate([-7, -0.25, 0.1, 0.75, 4, 11])
+        ]}, sort_keys=True))
+        trust = replace(initial_trust, evaluation_set_sha256=hashlib.sha256(heldout.read_bytes()).hexdigest())
+        worker_outcomes = []
+    
+        class Hooks(FileBackedHooks):
+            async def evaluate(self, policy_id):
+                argv = [
+                    sys.executable, "-m", "vare.trusted_evaluation",
+                    "--checkpoint-store", str(store.root), "--policy-id", policy_id,
+                    "--heldout-set", str(heldout), "--heldout-sha256", trust.evaluation_set_sha256,
+                    "--key-file", str(key_file), "--protocol-sha256", trust.protocol_sha256,
+                    "--run-id", trust.run_id, "--promotion-nonce", trust.promotion_nonce,
+                ]
+                started = time.perf_counter()
+                worker = asyncio.create_task(asyncio.to_thread(
+                    subprocess.run, argv, capture_output=True, text=True, timeout=2, cwd=tmp_path,
+                ))
+                cancellation = None
+                # Cancelling to_thread alone abandons a live subprocess. Own its
+                # bounded completion even if a sibling evaluator fails first.
+                while not worker.done():
+                    try:
+                        await asyncio.shield(worker)
+                    except asyncio.CancelledError as exc:
+                        cancellation = exc
+                    except Exception:
+                        break
+                try:
+                    result = worker.result()
+                except subprocess.TimeoutExpired:
+                    worker_outcomes.append({"policy_id": policy_id, "timeout": True})
+                    raise RuntimeError("checkpoint evaluator exceeded external watchdog") from None
+                worker_outcomes.append({"policy_id": policy_id, "timeout": False,
+                                        "wall_s": time.perf_counter() - started,
+                                        "returncode": result.returncode,
+                                        "stdout": result.stdout, "stderr": result.stderr})
+                if cancellation is not None:
+                    raise cancellation
+                if result.returncode:
+                    raise RuntimeError("checkpoint evaluator rejected input")
+                report = EvaluationReport(**json.loads(result.stdout))
+                assert trust.verifies(report)
+                assert trust.checkpoint_digest(report) == digests[policy_id]
+                return report
+    
+            async def discard(self, candidate_id):
+                assert candidate_id == "p1"
+                self.discarded.append(candidate_id)
+                self.active = "p0"
+    
+        hooks = Hooks({})
+        hooks.discarded = []
+        journal = PromotionJournal(tmp_path / "journal.sqlite", initial_policy_id="p0",
+                                   initial_checkpoint_sha256=digests["p0"])
+        loop = CapabilityLoop(
+            hooks=hooks, verifier=AcceptVerifier(), evidence_trust_root=trust,
+            promotion_journal=journal, checkpoint_hasher=store.digest,
+            config=EngineConfig(replay_batch_size=1,
+                                promotion=PromotionConfig(min_eval_examples=6, min_primary_gain=0.01)),
+        )
+        obj = store.objects / digests["p1"]
+        obj.unlink()
+        if fault == "fifo":
+            os.mkfifo(obj)
+        else:
+            with obj.open("wb") as out:
+                out.truncate(512 * 1024)
+        task = Task("checkpoint-io-development", "exercise file-backed candidate recovery")
+    
+        async def scenario():
+            with pytest.raises(RuntimeError, match="checkpoint evaluator"):
+                await loop.run_round([task], round_index=0)
+            failed_status = journal.status()
+            assert hooks.active == "p0" and hooks.discarded == ["p1"]
+            assert hooks.promotions == [] and failed_status["round_owner_id"] is None
+            assert failed_status["pending_tx_id"] is None
+            journal.assert_clean(policy_id="p0", checkpoint_sha256=store.digest("p0"))
+            # Trusted operator restores the exact original bytes after the failed
+            # workers have exited. Registration re-verifies the immutable binding.
+            obj.unlink()
+            assert store.register_file("p1", snapshots["p1"]) == digests["p1"]
+            result = await loop.run_round([task], round_index=1)
+            assert result.decision.accepted and result.promoted_id == "p1"
+            assert hooks.promotions == ["p1"]
+            reopened = PromotionJournal(journal.path, initial_policy_id="p0",
+                                        initial_checkpoint_sha256=digests["p0"])
+            reopened.assert_clean(policy_id="p1", checkpoint_sha256=store.digest("p1"))
+            assert reopened.status()["round_owner_id"] is None
+            evidence_dir = os.environ.get("VARE_CHECKPOINT_IO_EVIDENCE_DIR")
+            if evidence_dir:
+                output = Path(evidence_dir)
+                output.mkdir(parents=True, exist_ok=True)
+                (output / f"recovery-{fault}.json").write_text(json.dumps({
+                    "fault": fault, "failed_round_status": failed_status,
+                    "reopened_status": reopened.status(), "round_result": asdict(result),
+                    "worker_outcomes": worker_outcomes,
+                    "heldout_sha256": trust.evaluation_set_sha256, "checkpoint_sha256": digests,
+                    "scope": "linear-classifier protocol control; no training or model-capability result",
+                }, indent=2) + "\n")
+    
+>       asyncio.run(scenario())
+
+tests/test_checkpoint_io_recovery.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py:190: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/test_checkpoint_io_recovery.py:113: in scenario
+    result = await loop.run_round([task], round_index=1)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/vare/engine.py:278: in run_round
+    result = await self._run_round(
+src/vare/engine.py:564: in _run_round
+    incumbent_eval, candidate_eval = await asyncio.shield(evaluation_group)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_checkpoint_io_recovery.test_worker_fault_rolls_back_then_verified_restore_promotes.<locals>.Hooks object at 0x1190c45d0>
+policy_id = 'p0'
+
+    async def evaluate(self, policy_id):
+        argv = [
+            sys.executable, "-m", "vare.trusted_evaluation",
+            "--checkpoint-store", str(store.root), "--policy-id", policy_id,
+            "--heldout-set", str(heldout), "--heldout-sha256", trust.evaluation_set_sha256,
+            "--key-file", str(key_file), "--protocol-sha256", trust.protocol_sha256,
+            "--run-id", trust.run_id, "--promotion-nonce", trust.promotion_nonce,
+        ]
+        started = time.perf_counter()
+        worker = asyncio.create_task(asyncio.to_thread(
+            subprocess.run, argv, capture_output=True, text=True, timeout=2, cwd=tmp_path,
+        ))
+        cancellation = None
+        # Cancelling to_thread alone abandons a live subprocess. Own its
+        # bounded completion even if a sibling evaluator fails first.
+        while not worker.done():
+            try:
+                await asyncio.shield(worker)
+            except asyncio.CancelledError as exc:
+                cancellation = exc
+            except Exception:
+                break
+        try:
+            result = worker.result()
+        except subprocess.TimeoutExpired:
+            worker_outcomes.append({"policy_id": policy_id, "timeout": True})
+            raise RuntimeError("checkpoint evaluator exceeded external watchdog") from None
+        worker_outcomes.append({"policy_id": policy_id, "timeout": False,
+                                "wall_s": time.perf_counter() - started,
+                                "returncode": result.returncode,
+                                "stdout": result.stdout, "stderr": result.stderr})
+        if cancellation is not None:
+            raise cancellation
+        if result.returncode:
+>           raise RuntimeError("checkpoint evaluator rejected input")
+E           RuntimeError: checkpoint evaluator rejected input
+
+tests/test_checkpoint_io_recovery.py:71: RuntimeError
+__________ test_fifo_is_rejected_without_waiting_for_writer[register] __________
+
+tmp_path = PosixPath('/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/grpo-final-full-suite/test_fifo_is_rejected_without_0')
+operation = 'register'
+
+    @pytest.mark.skipif(os.name != "posix", reason="POSIX FIFO fault")
+    @pytest.mark.parametrize("operation", ["register", "digest", "read"])
+    def test_fifo_is_rejected_without_waiting_for_writer(tmp_path, operation):
+        store, source, obj = registered(tmp_path)
+        target = source if operation == "register" else obj
+        target.unlink()
+        os.mkfifo(target)
+        code = """
+    import sys
+    from vare.checkpoint_artifacts import TrustedCheckpointStore, CheckpointIntegrityError
+    store = TrustedCheckpointStore(sys.argv[1])
+    print('ready', flush=True)
+    try:
+        if sys.argv[2] == 'register':
+            store.register_file('p1', sys.argv[3])
+        elif sys.argv[2] == 'digest':
+            store.digest('p0')
+        else:
+            store.read_verified('p0')
+    except CheckpointIntegrityError:
+        print('rejected', flush=True)
+    else:
+        raise AssertionError('FIFO was accepted')
+    """
+        # External timeout bounds the broken baseline too; no FIFO writer exists.
+        proc = subprocess.Popen(
+            [sys.executable, "-c", code, str(store.root), operation, str(source)],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+            cwd=tmp_path,
+        )
+        try:
+            stdout, stderr = proc.communicate(timeout=2)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            stdout, stderr = proc.communicate()
+            pytest.fail(f"checkpoint {operation} blocked on FIFO: {stdout} {stderr}")
+>       assert proc.returncode == 0, stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "<string>", line 3, in <module>
+E         ModuleNotFoundError: No module named 'vare'
+E         
+E       assert 1 == 0
+E        +  where 1 = <Popen: returncode: 1 args: ['/Users/user/Documents/Codex/2026-10-16/https-g...>.returncode
+
+tests/test_checkpoint_read_bounds.py:58: AssertionError
+___________ test_fifo_is_rejected_without_waiting_for_writer[digest] ___________
+
+tmp_path = PosixPath('/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/grpo-final-full-suite/test_fifo_is_rejected_without_1')
+operation = 'digest'
+
+    @pytest.mark.skipif(os.name != "posix", reason="POSIX FIFO fault")
+    @pytest.mark.parametrize("operation", ["register", "digest", "read"])
+    def test_fifo_is_rejected_without_waiting_for_writer(tmp_path, operation):
+        store, source, obj = registered(tmp_path)
+        target = source if operation == "register" else obj
+        target.unlink()
+        os.mkfifo(target)
+        code = """
+    import sys
+    from vare.checkpoint_artifacts import TrustedCheckpointStore, CheckpointIntegrityError
+    store = TrustedCheckpointStore(sys.argv[1])
+    print('ready', flush=True)
+    try:
+        if sys.argv[2] == 'register':
+            store.register_file('p1', sys.argv[3])
+        elif sys.argv[2] == 'digest':
+            store.digest('p0')
+        else:
+            store.read_verified('p0')
+    except CheckpointIntegrityError:
+        print('rejected', flush=True)
+    else:
+        raise AssertionError('FIFO was accepted')
+    """
+        # External timeout bounds the broken baseline too; no FIFO writer exists.
+        proc = subprocess.Popen(
+            [sys.executable, "-c", code, str(store.root), operation, str(source)],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+            cwd=tmp_path,
+        )
+        try:
+            stdout, stderr = proc.communicate(timeout=2)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            stdout, stderr = proc.communicate()
+            pytest.fail(f"checkpoint {operation} blocked on FIFO: {stdout} {stderr}")
+>       assert proc.returncode == 0, stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "<string>", line 3, in <module>
+E         ModuleNotFoundError: No module named 'vare'
+E         
+E       assert 1 == 0
+E        +  where 1 = <Popen: returncode: 1 args: ['/Users/user/Documents/Codex/2026-10-16/https-g...>.returncode
+
+tests/test_checkpoint_read_bounds.py:58: AssertionError
+____________ test_fifo_is_rejected_without_waiting_for_writer[read] ____________
+
+tmp_path = PosixPath('/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/grpo-final-full-suite/test_fifo_is_rejected_without_2')
+operation = 'read'
+
+    @pytest.mark.skipif(os.name != "posix", reason="POSIX FIFO fault")
+    @pytest.mark.parametrize("operation", ["register", "digest", "read"])
+    def test_fifo_is_rejected_without_waiting_for_writer(tmp_path, operation):
+        store, source, obj = registered(tmp_path)
+        target = source if operation == "register" else obj
+        target.unlink()
+        os.mkfifo(target)
+        code = """
+    import sys
+    from vare.checkpoint_artifacts import TrustedCheckpointStore, CheckpointIntegrityError
+    store = TrustedCheckpointStore(sys.argv[1])
+    print('ready', flush=True)
+    try:
+        if sys.argv[2] == 'register':
+            store.register_file('p1', sys.argv[3])
+        elif sys.argv[2] == 'digest':
+            store.digest('p0')
+        else:
+            store.read_verified('p0')
+    except CheckpointIntegrityError:
+        print('rejected', flush=True)
+    else:
+        raise AssertionError('FIFO was accepted')
+    """
+        # External timeout bounds the broken baseline too; no FIFO writer exists.
+        proc = subprocess.Popen(
+            [sys.executable, "-c", code, str(store.root), operation, str(source)],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+            cwd=tmp_path,
+        )
+        try:
+            stdout, stderr = proc.communicate(timeout=2)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            stdout, stderr = proc.communicate()
+            pytest.fail(f"checkpoint {operation} blocked on FIFO: {stdout} {stderr}")
+>       assert proc.returncode == 0, stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "<string>", line 3, in <module>
+E         ModuleNotFoundError: No module named 'vare'
+E         
+E       assert 1 == 0
+E        +  where 1 = <Popen: returncode: 1 args: ['/Users/user/Documents/Codex/2026-10-16/https-g...>.returncode
+
+tests/test_checkpoint_read_bounds.py:58: AssertionError
+___ test_auditor_rejects_reattested_but_ineligible_trajectory[status-False] ____
+
+tmp_path = PosixPath('/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/grpo-final-full-suite/test_auditor_rejects_reatteste0')
+optimized = False, fault = 'status'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts", "slice-coverage"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+            "slice-coverage": {},
+        }
+        changed.update(updates[fault])
+        if fault == "slice-coverage":
+            evidence[key]["slices"] = {"unexpected": 1.0}
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (1 != 0 and 'ValueError' in 'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n')
+E        +  where 1 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').returncode
+E        +  and   'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n' = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').stderr
+
+tests/test_trajectory_capture_audit.py:74: AssertionError
+____ test_auditor_rejects_reattested_but_ineligible_trajectory[status-True] ____
+
+tmp_path = PosixPath('/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/grpo-final-full-suite/test_auditor_rejects_reatteste1')
+optimized = True, fault = 'status'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts", "slice-coverage"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+            "slice-coverage": {},
+        }
+        changed.update(updates[fault])
+        if fault == "slice-coverage":
+            evidence[key]["slices"] = {"unexpected": 1.0}
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (1 != 0 and 'ValueError' in 'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n')
+E        +  where 1 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').returncode
+E        +  and   'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n' = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').stderr
+
+tests/test_trajectory_capture_audit.py:74: AssertionError
+___ test_auditor_rejects_reattested_but_ineligible_trajectory[policy-False] ____
+
+tmp_path = PosixPath('/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/grpo-final-full-suite/test_auditor_rejects_reatteste2')
+optimized = False, fault = 'policy'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts", "slice-coverage"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+            "slice-coverage": {},
+        }
+        changed.update(updates[fault])
+        if fault == "slice-coverage":
+            evidence[key]["slices"] = {"unexpected": 1.0}
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (1 != 0 and 'ValueError' in 'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n')
+E        +  where 1 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').returncode
+E        +  and   'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n' = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').stderr
+
+tests/test_trajectory_capture_audit.py:74: AssertionError
+____ test_auditor_rejects_reattested_but_ineligible_trajectory[policy-True] ____
+
+tmp_path = PosixPath('/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/grpo-final-full-suite/test_auditor_rejects_reatteste3')
+optimized = True, fault = 'policy'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts", "slice-coverage"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+            "slice-coverage": {},
+        }
+        changed.update(updates[fault])
+        if fault == "slice-coverage":
+            evidence[key]["slices"] = {"unexpected": 1.0}
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (1 != 0 and 'ValueError' in 'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n')
+E        +  where 1 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').returncode
+E        +  and   'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n' = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').stderr
+
+tests/test_trajectory_capture_audit.py:74: AssertionError
+_____ test_auditor_rejects_reattested_but_ineligible_trajectory[run-False] _____
+
+tmp_path = PosixPath('/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/grpo-final-full-suite/test_auditor_rejects_reatteste4')
+optimized = False, fault = 'run'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts", "slice-coverage"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+            "slice-coverage": {},
+        }
+        changed.update(updates[fault])
+        if fault == "slice-coverage":
+            evidence[key]["slices"] = {"unexpected": 1.0}
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (1 != 0 and 'ValueError' in 'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n')
+E        +  where 1 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').returncode
+E        +  and   'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n' = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').stderr
+
+tests/test_trajectory_capture_audit.py:74: AssertionError
+_____ test_auditor_rejects_reattested_but_ineligible_trajectory[run-True] ______
+
+tmp_path = PosixPath('/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/grpo-final-full-suite/test_auditor_rejects_reatteste5')
+optimized = True, fault = 'run'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts", "slice-coverage"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+            "slice-coverage": {},
+        }
+        changed.update(updates[fault])
+        if fault == "slice-coverage":
+            evidence[key]["slices"] = {"unexpected": 1.0}
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (1 != 0 and 'ValueError' in 'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n')
+E        +  where 1 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').returncode
+E        +  and   'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n' = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').stderr
+
+tests/test_trajectory_capture_audit.py:74: AssertionError
+___ test_auditor_rejects_reattested_but_ineligible_trajectory[schema-False] ____
+
+tmp_path = PosixPath('/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/grpo-final-full-suite/test_auditor_rejects_reatteste6')
+optimized = False, fault = 'schema'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts", "slice-coverage"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+            "slice-coverage": {},
+        }
+        changed.update(updates[fault])
+        if fault == "slice-coverage":
+            evidence[key]["slices"] = {"unexpected": 1.0}
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (1 != 0 and 'ValueError' in 'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n')
+E        +  where 1 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').returncode
+E        +  and   'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n' = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').stderr
+
+tests/test_trajectory_capture_audit.py:74: AssertionError
+____ test_auditor_rejects_reattested_but_ineligible_trajectory[schema-True] ____
+
+tmp_path = PosixPath('/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/grpo-final-full-suite/test_auditor_rejects_reatteste7')
+optimized = True, fault = 'schema'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts", "slice-coverage"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+            "slice-coverage": {},
+        }
+        changed.update(updates[fault])
+        if fault == "slice-coverage":
+            evidence[key]["slices"] = {"unexpected": 1.0}
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (1 != 0 and 'ValueError' in 'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n')
+E        +  where 1 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').returncode
+E        +  and   'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n' = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').stderr
+
+tests/test_trajectory_capture_audit.py:74: AssertionError
+__ test_auditor_rejects_reattested_but_ineligible_trajectory[coverage-False] ___
+
+tmp_path = PosixPath('/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/grpo-final-full-suite/test_auditor_rejects_reatteste8')
+optimized = False, fault = 'coverage'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts", "slice-coverage"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+            "slice-coverage": {},
+        }
+        changed.update(updates[fault])
+        if fault == "slice-coverage":
+            evidence[key]["slices"] = {"unexpected": 1.0}
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (1 != 0 and 'ValueError' in 'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n')
+E        +  where 1 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').returncode
+E        +  and   'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n' = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').stderr
+
+tests/test_trajectory_capture_audit.py:74: AssertionError
+___ test_auditor_rejects_reattested_but_ineligible_trajectory[coverage-True] ___
+
+tmp_path = PosixPath('/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/grpo-final-full-suite/test_auditor_rejects_reatteste9')
+optimized = True, fault = 'coverage'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts", "slice-coverage"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+            "slice-coverage": {},
+        }
+        changed.update(updates[fault])
+        if fault == "slice-coverage":
+            evidence[key]["slices"] = {"unexpected": 1.0}
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (1 != 0 and 'ValueError' in 'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n')
+E        +  where 1 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').returncode
+E        +  and   'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n' = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').stderr
+
+tests/test_trajectory_capture_audit.py:74: AssertionError
+_ test_auditor_rejects_reattested_but_ineligible_trajectory[violations-False] __
+
+tmp_path = PosixPath('/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/grpo-final-full-suite/test_auditor_rejects_reatteste10')
+optimized = False, fault = 'violations'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts", "slice-coverage"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+            "slice-coverage": {},
+        }
+        changed.update(updates[fault])
+        if fault == "slice-coverage":
+            evidence[key]["slices"] = {"unexpected": 1.0}
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (1 != 0 and 'ValueError' in 'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n')
+E        +  where 1 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').returncode
+E        +  and   'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n' = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').stderr
+
+tests/test_trajectory_capture_audit.py:74: AssertionError
+__ test_auditor_rejects_reattested_but_ineligible_trajectory[violations-True] __
+
+tmp_path = PosixPath('/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/grpo-final-full-suite/test_auditor_rejects_reatteste11')
+optimized = True, fault = 'violations'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts", "slice-coverage"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+            "slice-coverage": {},
+        }
+        changed.update(updates[fault])
+        if fault == "slice-coverage":
+            evidence[key]["slices"] = {"unexpected": 1.0}
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (1 != 0 and 'ValueError' in 'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n')
+E        +  where 1 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').returncode
+E        +  and   'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n' = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').stderr
+
+tests/test_trajectory_capture_audit.py:74: AssertionError
+_ test_auditor_rejects_reattested_but_ineligible_trajectory[boolean-counts-False] _
+
+tmp_path = PosixPath('/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/grpo-final-full-suite/test_auditor_rejects_reatteste12')
+optimized = False, fault = 'boolean-counts'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts", "slice-coverage"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+            "slice-coverage": {},
+        }
+        changed.update(updates[fault])
+        if fault == "slice-coverage":
+            evidence[key]["slices"] = {"unexpected": 1.0}
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (1 != 0 and 'ValueError' in 'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n')
+E        +  where 1 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').returncode
+E        +  and   'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n' = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').stderr
+
+tests/test_trajectory_capture_audit.py:74: AssertionError
+_ test_auditor_rejects_reattested_but_ineligible_trajectory[boolean-counts-True] _
+
+tmp_path = PosixPath('/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/grpo-final-full-suite/test_auditor_rejects_reatteste13')
+optimized = True, fault = 'boolean-counts'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts", "slice-coverage"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+            "slice-coverage": {},
+        }
+        changed.update(updates[fault])
+        if fault == "slice-coverage":
+            evidence[key]["slices"] = {"unexpected": 1.0}
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (1 != 0 and 'ValueError' in 'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n')
+E        +  where 1 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').returncode
+E        +  and   'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n' = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').stderr
+
+tests/test_trajectory_capture_audit.py:74: AssertionError
+_ test_auditor_rejects_reattested_but_ineligible_trajectory[slice-coverage-False] _
+
+tmp_path = PosixPath('/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/grpo-final-full-suite/test_auditor_rejects_reatteste14')
+optimized = False, fault = 'slice-coverage'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts", "slice-coverage"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+            "slice-coverage": {},
+        }
+        changed.update(updates[fault])
+        if fault == "slice-coverage":
+            evidence[key]["slices"] = {"unexpected": 1.0}
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (1 != 0 and 'ValueError' in 'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n')
+E        +  where 1 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').returncode
+E        +  and   'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n' = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').stderr
+
+tests/test_trajectory_capture_audit.py:74: AssertionError
+_ test_auditor_rejects_reattested_but_ineligible_trajectory[slice-coverage-True] _
+
+tmp_path = PosixPath('/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/grpo-final-full-suite/test_auditor_rejects_reatteste15')
+optimized = True, fault = 'slice-coverage'
+
+    @pytest.mark.parametrize("optimized", [False, True])
+    @pytest.mark.parametrize("fault", ["status", "policy", "run", "schema", "coverage", "violations", "boolean-counts", "slice-coverage"])
+    def test_auditor_rejects_reattested_but_ineligible_trajectory(tmp_path, optimized, fault):
+        from vare.attestation import EvidenceTrustRoot
+        from vare.config import PromotionConfig
+        from vare.promotion import PromotionGate
+        from vare.types import EvaluationReport
+    
+        repo = Path(__file__).resolve().parents[1]
+        root = tmp_path / "bundle"
+        shutil.copytree(repo / "results/trajectory-capture-boundary-v1/comparison-v2", root)
+        manifest_path = root / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        trust = EvidenceTrustRoot(key=b"capture-fixture-public-key-00000000", run_id="trajectory-capture-boundary-v1",
+            protocol_sha256=manifest["source_sha256"]["protocols/trajectory_capture_boundary_v1.lock.json"],
+            evaluator_sha256=manifest["source_sha256"]["tests/test_trajectory_capture_boundary.py"])
+        file = root / "candidate/command-promotion.json"
+        evidence = json.loads(file.read_text())
+        expected_policy = evidence["candidate_report"]["metadata"]["trajectory_safety"]["policy_sha256"]
+        key = "incumbent_report" if fault == "boolean-counts" else "candidate_report"
+        changed = evidence[key]["metadata"]["trajectory_safety"]
+        updates = {
+            "status": {"status": "violation"}, "policy": {"policy_sha256": "f" * 64},
+            "run": {"run_id": "different-capture-run"}, "schema": {"schema": "unknown.v999"},
+            "coverage": {"capture_complete": False}, "violations": {"violations": ["unauthorized_action"]},
+            "boolean-counts": {"event_count": False, "expected_event_count": False},
+            "slice-coverage": {},
+        }
+        changed.update(updates[fault])
+        if fault == "slice-coverage":
+            evidence[key]["slices"] = {"unexpected": 1.0}
+        # Re-sign with the public fixture key and update the outer artifact hash.
+        # Hash corruption and bad MACs cannot explain the expected rejection.
+        evidence[key]["metadata"].pop("vare_evidence_receipt")
+        report = trust.attest(EvaluationReport(**evidence[key]))
+        assert trust.verifies(report)
+        evidence[key] = asdict(report)
+        gate = PromotionGate(PromotionConfig(min_eval_examples=1, min_primary_gain=.01,
+                                            trajectory_policy_sha256=expected_policy), trust_root=trust)
+        assert not gate.decide(EvaluationReport(**evidence["incumbent_report"]),
+                               EvaluationReport(**evidence["candidate_report"])).accepted
+        file.write_text(json.dumps(evidence))
+        manifest["artifact_sha256"][str(file.relative_to(root))] = hashlib.sha256(file.read_bytes()).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+        script = repo / "scripts/audit_trajectory_capture_boundary_v1.py"
+        run = subprocess.run([sys.executable, *(["-O"] if optimized else []), str(script), str(root)],
+                             capture_output=True, text=True, timeout=5)
+>       assert run.returncode != 0 and "ValueError" in run.stderr, "auditor accepted a re-attested ineligible trajectory"
+E       AssertionError: auditor accepted a re-attested ineligible trajectory
+E       assert (1 != 0 and 'ValueError' in 'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n')
+E        +  where 1 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').returncode
+E        +  and   'Traceback (most recent call last):\n  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https...ine 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n' = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...ne 103, in audit\n    from vare.attestation import EvidenceTrustRoot\nModuleNotFoundError: No module named \'vare\'\n').stderr
+
+tests/test_trajectory_capture_audit.py:74: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_blob_budget.py::test_check_script_passes_on_this_repository
+FAILED tests/test_checkpoint_io_recovery.py::test_worker_fault_rolls_back_then_verified_restore_promotes[fifo]
+FAILED tests/test_checkpoint_io_recovery.py::test_worker_fault_rolls_back_then_verified_restore_promotes[oversized]
+FAILED tests/test_checkpoint_read_bounds.py::test_fifo_is_rejected_without_waiting_for_writer[register]
+FAILED tests/test_checkpoint_read_bounds.py::test_fifo_is_rejected_without_waiting_for_writer[digest]
+FAILED tests/test_checkpoint_read_bounds.py::test_fifo_is_rejected_without_waiting_for_writer[read]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[status-False]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[status-True]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[policy-False]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[policy-True]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[run-False]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[run-True]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[schema-False]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[schema-True]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[coverage-False]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[coverage-True]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[violations-False]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[violations-True]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[boolean-counts-False]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[boolean-counts-True]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[slice-coverage-False]
+FAILED tests/test_trajectory_capture_audit.py::test_auditor_rejects_reattested_but_ineligible_trajectory[slice-coverage-True]
+22 failed, 914 passed, 8 skipped in 140.36s (0:02:20)
