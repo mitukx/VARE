@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import copy
-from collections.abc import Callable, Sequence
+from collections.abc import Awaitable, Callable, Sequence
 from uuid import uuid4
 
 from .attestation import EvidenceTrustRoot
@@ -251,7 +251,7 @@ class CapabilityLoop:
             clear_deferred_cancellation_requests()
         return deferred_cancellations
 
-    async def run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None, _verified_experiences: Sequence[Experience] | None = None) -> RoundResult:
+    async def run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None, _verified_experiences: Sequence[Experience] | None = None, _delivery_complete: Callable[[RoundResult], Awaitable[None]] | None = None, _publication_reserve: Callable[[], Awaitable[None]] | None = None) -> RoundResult:
         """Own the shared runtime before any hook; retain crash uncertainty."""
         async with self._round_lock:
             if self._discard_failure is not None:
@@ -284,9 +284,12 @@ class CapabilityLoop:
                     result = await self._run_round(
                         tasks, round_index=round_index, rollout_count=rollout_count,
                         verified_experiences=_verified_experiences,
+                        publication_reserve=_publication_reserve,
                     )
+                    assert _delivery_complete is not None
+                    await _delivery_complete(result)
             except BaseException as exc:
-                if (self._candidate_unresolved or self._discard_failure is not None
+                if (_verified_experiences is not None or self._candidate_unresolved or self._discard_failure is not None
                         or self._promotion_failure is not None):
                     self.runtime_coordinator.quarantine(exc)
                     # Leave the durable reservation intact, even if a commit
@@ -298,7 +301,7 @@ class CapabilityLoop:
             self._candidate_unresolved = False
             return result
 
-    async def run_verified_round(self, experiences: Sequence[Experience], *, round_index: int) -> RoundResult:
+    async def run_verified_round(self, experiences: Sequence[Experience], *, round_index: int, on_complete: Callable[[RoundResult], Awaitable[None]], reserve_publication: Callable[[], Awaitable[None]]) -> RoundResult:
         """Consume bounded authenticated trajectories through the existing transaction.
 
         Does not regenerate, regrade or rename the source groups. Candidate,
@@ -308,10 +311,13 @@ class CapabilityLoop:
         if (not experiences or len(experiences) > min(self.config.replay.capacity, self.config.replay_batch_size)
                 or any(not isinstance(exp, Experience) or not isinstance(exp.attempt, Attempt) for exp in experiences)):
             raise ValueError("verified batch must fit the bounded replay capacity")
+        if not callable(on_complete) or not callable(reserve_publication):
+            raise ValueError("streamed delivery requires owned completion and publication boundaries")
         batch = copy.deepcopy(list(experiences))
         return await self.run_round(
             [exp.attempt.task for exp in batch], round_index=round_index,
             _verified_experiences=batch,
+            _delivery_complete=on_complete, _publication_reserve=reserve_publication,
         )
 
     def _verified_pairs(self, experiences: Sequence[Experience]):
@@ -361,7 +367,7 @@ class CapabilityLoop:
             self.runtime_coordinator.quarantine(exc)
             raise PromotionRecoveryRequired("runtime round completion requires recovery") from exc
 
-    async def _run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None, verified_experiences: Sequence[Experience] | None = None) -> RoundResult:
+    async def _run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None, verified_experiences: Sequence[Experience] | None = None, publication_reserve: Callable[[], Awaitable[None]] | None = None) -> RoundResult:
         source_tasks = list(tasks) + (self._generated_tasks if verified_experiences is None else [])
         if not source_tasks:
             raise ValueError("run_round requires tasks")
@@ -702,6 +708,13 @@ class CapabilityLoop:
         deferred_cancellation_count = 0
         if candidate_id != incumbent_id and decision.accepted:
             transaction_id: str | None = None
+            if verified_experiences is not None:
+                assert publication_reserve is not None
+                try:
+                    await publication_reserve()
+                except BaseException:
+                    await self._discard_candidate(candidate_id, propagate_cancellation=False)
+                    raise
             if self.promotion_journal is not None:
                 assert self.checkpoint_hasher is not None
                 assert self.evidence_trust_root is not None

@@ -1,0 +1,7 @@
+{
+  "baseline_revision": "766e8e755a9e8cf6ca5b7ac3f97b663ba57450f9",
+  "baseline": "Two new regressions fail on the reviewed old engine/adapter/store. An argument-name shim preserves the old current-verifier callback solely to execute the new tests against old code.",
+  "fix": "Keep shared/durable runtime ownership until ingestion ACK and replay removal; reserve source+durable verifier epoch atomically before publication. Cancellation during this reservation is recorded and returns false; refresh is fenced. Uncertain publication pins persist until existing backend/journal recovery and quarantine.",
+  "targeted": "14 passed; ruff and mypy pass; configured full suite running",
+  "local_collection_failure": "Initial full run used an incomplete sparse checkout and missing optional math dependencies; retained. Repeated after adding existing fixture directories and excluding the two optional math-grader files."
+}

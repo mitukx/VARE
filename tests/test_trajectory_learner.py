@@ -34,9 +34,10 @@ def setup(tmp_path, *, fault=None):
     store, root = group(tmp_path)
     hooks = IngestionHooks(fault=fault, signer=trust())
     hooks.digests["p0"] = P0.checkpoint_sha256
-    policy = lambda: PolicyCheckpoint(hooks.active, hooks.version, hooks.digests[hooks.active])
+    def policy():
+        return PolicyCheckpoint(hooks.active, hooks.version, hooks.digests[hooks.active])
     adapter = TrajectoryLearnerAdapter(store, trust_root=root, current_policy=policy,
-        current_verifier=lambda: ("v", 0, "b" * 64))
+        verifier_identity=("v", 0, "b" * 64))
     durable = PromotionJournal(tmp_path / "promotion.db", initial_policy_id="p0",
                               initial_checkpoint_sha256=P0.checkpoint_sha256)
     loop = CapabilityLoop(hooks=hooks, verifier=NoRolloutVerifier(), promotion_journal=durable,
@@ -106,13 +107,16 @@ def test_unacknowledged_success_never_retrains_and_preserves_outcome(tmp_path):
     with pytest.raises(OSError, match="ack failed"):
         asyncio.run(adapter.advance(loop, round_index=0))
     assert hooks.active == "p1" and adapter.pending() is not None
-    assert loop.promotion_journal.status()["round_owner_id"] is None
+    assert loop.promotion_journal.status()["round_owner_id"] is not None
     # A delivery still cannot be claimed even though the model transaction ended.
     loop.replay.prune_current(freshness_fn=lambda _: None, grouped=True)
     with pytest.raises(PromotionRecoveryRequired, match="unresolved"):
         adapter.claim(loop, 1)
     adapter._terminal = original
     current = adapter.current_policy()
+    status = loop.promotion_journal.status()
+    loop.promotion_journal.recover_round(owner_id=status["round_owner_id"], observed_policy_id=current.policy_id, observed_checkpoint_sha256=current.checkpoint_sha256)
+    loop.runtime_coordinator.recover()
     assert adapter.reconcile_after_backend_recovery(loop, observed_policy=current)
     assert store.counts() == {"quarantined": 2}
     assert hooks.calls.count("train") == 1 and audit_trajectory_store(store.path)["pass"]
@@ -120,7 +124,7 @@ def test_unacknowledged_success_never_retrains_and_preserves_outcome(tmp_path):
 
 def test_invalid_source_quarantined_before_any_optimizer_call(tmp_path):
     store, adapter, loop, hooks = setup(tmp_path)
-    adapter.current_verifier = lambda: ("v", 1, "e" * 64)
+    adapter.activate_verifier(("v", 1, "e" * 64))
     assert asyncio.run(adapter.advance(loop, round_index=0)) is None
     assert "train" not in hooks.calls and store.counts() == {"quarantined": 2}
     assert audit_trajectory_store(store.path)["pass"]
@@ -146,9 +150,10 @@ def test_reserved_state_requires_matching_audit_history(tmp_path):
 def test_duplicate_or_partial_delivery_cannot_train(tmp_path):
     _, adapter, loop, hooks = setup(tmp_path)
     _, batch = adapter.claim(loop, 0)
-    for broken in ([batch[0]], [batch[0], batch[0]]):
-        with pytest.raises(ValueError, match="incomplete|duplicated"):
-            asyncio.run(loop.run_verified_round(broken, round_index=0))
+    async def unused(*args):
+        raise AssertionError("invalid group reached transaction completion")
+    with pytest.raises(ValueError, match="incomplete"):
+        asyncio.run(loop.run_verified_round([batch[0]], round_index=0,on_complete=unused,reserve_publication=unused))
     assert "train" not in hooks.calls
 
 
@@ -164,5 +169,46 @@ def test_source_cancelled_during_evaluation_cannot_promote(tmp_path):
         asyncio.run(adapter.advance(loop, round_index=0))
     assert hooks.active == "p0" and "promote" not in hooks.calls and "discard" in hooks.calls
     assert adapter.pending() is not None and store.counts() == {"cancelled": 2}
+    status = loop.promotion_journal.status()
+    loop.promotion_journal.recover_round(owner_id=status["round_owner_id"],observed_policy_id=P0.policy_id,observed_checkpoint_sha256=P0.checkpoint_sha256)
+    loop.runtime_coordinator.recover()
     assert adapter.reconcile_after_backend_recovery(loop, observed_policy=P0)
     assert audit_trajectory_store(store.path)["pass"]
+
+
+def test_failed_rejected_ack_fences_even_ordinary_rounds(tmp_path):
+    from dataclasses import replace
+    from vare.promotion import PromotionGate
+    store, adapter, loop, hooks = setup(tmp_path)
+    loop.promotion = PromotionGate(replace(loop.config.promotion,min_primary_gain=1.1),trust_root=hooks.signer)
+    def lost_ack(*args, **kwargs):
+        raise OSError("lost rejected ACK")
+    adapter._terminal = lost_ack
+    with pytest.raises(OSError,match="lost rejected ACK"):
+        asyncio.run(adapter.advance(loop,round_index=0))
+    assert hooks.active == "p0" and adapter.pending() is not None
+    calls = list(hooks.calls)
+    from vare.types import Task
+    with pytest.raises(PromotionRecoveryRequired):
+        asyncio.run(loop.run_round([Task("new","new")],round_index=1))
+    assert hooks.calls == calls
+    assert store.counts() == {"learning":2}
+
+
+def test_source_publication_reservation_fences_cancel_and_refresh(tmp_path):
+    from vare.durable import FenceError
+    store, adapter, loop, hooks = setup(tmp_path)
+    publish = loop._publish_candidate
+    async def race(candidate, **kwargs):
+        assert store.counts() == {"publishing":2}
+        assert not store.cancel("t0")  # The earlier publication reservation owns this transition.
+        with pytest.raises(FenceError,match="publication owns verifier"):
+            adapter.activate_verifier(("v",1,"e"*64))
+        assert audit_trajectory_store(store.path)["pass"]
+        return await publish(candidate,**kwargs)
+    loop._publish_candidate = race
+    result = asyncio.run(adapter.advance(loop,round_index=0))
+    assert result.decision.accepted and hooks.active=="p1"
+    assert store.counts()=={"consumed":2} and audit_trajectory_store(store.path)["pass"]
+    with store.connection() as db:
+        assert db.execute("SELECT count(*) FROM events WHERE json_extract(event,'$.kind')='cancellation_deferred'").fetchone()[0]==1
