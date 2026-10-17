@@ -281,6 +281,10 @@ def main():
             raise ValueError("invalid bounded workload")
         repository = Path(__file__).resolve().parents[1]
         protocol = json.loads((repository / "benchmarks/trajectory_runtime_v2/protocol.json").read_text())
+        if (args.seed not in protocol["seeds"] or args.workers != protocol["workers"]
+                or args.mode not in protocol["modes"] or not args.sigkill
+                or args.trajectories not in {protocol["stage_a_trajectories"], protocol["stage_b_trajectories"], protocol["optional_stage_c_trajectories"]}):
+            raise ValueError("condition is outside the fixed trajectory-runtime v2 protocol")
         (args.output / "protocol.json").write_text(json.dumps(protocol, indent=2) + "\n")
         sources = {str(path.relative_to(repository)): sha256_file(path) for path in [Path(__file__), *[repository / "src/vare" / name for name in ("trajectory_store.py", "trajectory_workers.py", "trajectory_admission.py", "durable.py", "runner.py", "evidence.py", "types.py")]]}
         for name in sources:

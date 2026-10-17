@@ -568,6 +568,13 @@ def audit_trajectory_store(path):
                     raise ValueError("verification/history mismatch")
             elif verified or row["state"] in {"verified", "consumed"}:
                 raise ValueError("missing verified reward state")
+            terminal_history = [e for e in history if e["kind"] in {"trajectory_cancelled", "trajectory_quarantined", "consumer_acknowledged"}]
+            group_history = [json.loads(event[0])["details"] for event in db.execute("SELECT event FROM events WHERE json_extract(event,'$.job_id')=? AND json_extract(event,'$.kind')='group_acknowledged'", (row["group_id"],))]
+            terminal_history += [body for body in group_history if row["id"] in body["heads"]]
+            if terminal_history and row["state"] not in {"cancelled", "quarantined", "consumed"}:
+                raise ValueError("terminal transition/history reverted to active state")
+            if row["state"] in {"cancelled", "quarantined", "consumed"} and len(terminal_history) != 1:
+                raise ValueError("terminal state/history must have exactly one effective transition")
             if row["state"] in {"cancelled", "quarantined"}:
                 transitions = [e for e in history if e["kind"] == f"trajectory_{row['state']}" and e["details"] == {"reason": row["reason"]}]
                 if row["state"] == "quarantined" and row["reason"] == "quarantined":

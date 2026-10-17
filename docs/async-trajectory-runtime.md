@@ -34,10 +34,10 @@ Use Python 3.11+, no GPU or services:
 ```bash
 python -m pip install -e '.[dev]'
 python -m pytest tests/test_trajectory_store.py tests/test_trajectory_admission.py tests/test_trajectory_workers.py tests/test_trajectory_benchmark.py
-python scripts/benchmark_trajectory_runtime.py --trajectories 100 --mode async --seed 73011 --sigkill --output /tmp/vare-trajectory-screen-new
+python scripts/benchmark_trajectory_runtime.py --trajectories 100 --mode async --seed 75011 --sigkill --output /tmp/vare-trajectory-screen-new
 python scripts/audit_trajectory_runtime.py /tmp/vare-trajectory-screen-new
 ```
 
-The [fixed systems protocol](../benchmarks/trajectory_runtime_v1/protocol.json) defines matched sync/async modes, three seeds, Pareto step-count/duration tails, Stage A then Stage B, bounded storage/backlog, timing boundaries and abort conditions. New output directories are mandatory. Source snapshots, protocol, raw latency samples, a SQLite snapshot and hashes are retained per run. Prior observed research protocols/cohorts remain unchanged.
+The [fixed systems protocol](../benchmarks/trajectory_runtime_v2/protocol.json) defines matched sync/async modes, three seeds, Pareto step-count/duration tails, Stage A then Stage B, bounded storage/backlog, timing boundaries and abort conditions. New output directories are mandatory. Source snapshots, protocol, raw latency samples, a SQLite snapshot and hashes are retained per run. Prior observed research protocols/cohorts remain unchanged.
 
 For each declared seed, use fresh directories and run both modes with `--trajectories 10000`; audit each output. Do not infer real-model learning, promotion correctness, learner crash recovery or GPU throughput from this workload. Stage D is gated on a separate qualified task/evaluator; no new learning study is authorized by this systems benchmark.

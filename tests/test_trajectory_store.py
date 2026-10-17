@@ -362,3 +362,12 @@ def test_quarantine_requires_matching_history(store):
         db.execute("UPDATE trajectories SET state='quarantined',reason='invented'")
     with pytest.raises(ValueError, match="terminal"):
         audit_trajectory_store(store.path)
+
+
+def test_terminal_history_cannot_be_hidden_by_reverting_row(store):
+    submit(store)
+    store.cancel("t0")
+    with store.connection(write=True) as db:
+        db.execute("UPDATE trajectories SET state='queued',reason=NULL")
+    with pytest.raises(ValueError, match="terminal.*history"):
+        audit_trajectory_store(store.path)

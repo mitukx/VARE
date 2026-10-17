@@ -25,7 +25,17 @@ def audit(root):
         require(path.is_file() and sha256_file(path) == expected, f"artifact mismatch: {name}")
     summary = json.loads((root / "summary.json").read_text())
     provenance = json.loads((root / "provenance.json").read_text())
-    require(provenance["protocol_sha256"] == sha256_json(json.loads((root / "protocol.json").read_text())), "protocol mismatch")
+    protocol = json.loads((root / "protocol.json").read_text())
+    require(provenance["protocol_sha256"] == sha256_json(protocol), "protocol mismatch")
+    condition = provenance["condition"]
+    require(protocol["schema"] == "vare.trajectory-runtime-systems.v2"
+            and condition["seed"] in protocol["seeds"] and condition["workers"] == protocol["workers"]
+            and condition["trajectories"] in {protocol["stage_a_trajectories"], protocol["stage_b_trajectories"], protocol["optional_stage_c_trajectories"]}
+            and condition["mode"] in protocol["modes"] and condition["sigkill"] is True,
+            "condition differs from fixed protocol")
+    require(all(summary[key] == condition[key] for key in ("seed", "workers", "mode", "trajectories"))
+            and summary["verifiers"] == protocol["verifiers"] and summary["recovery"]["sigkill"] is True,
+            "summary/condition mismatch")
     for name, expected in provenance["source_files"].items():
         require(sha256_file(root / "source" / name) == expected, "source snapshot mismatch")
     result = audit_trajectory_store(root / "snapshot.db")
