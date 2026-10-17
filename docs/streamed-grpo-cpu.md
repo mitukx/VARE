@@ -1,12 +1,14 @@
 # Streamed real-model GRPO integration
 
-**PASS for the v3 systems protocol.** Three fresh seeds each completed four actual updates with the existing RVL GRPO optimizer. The path exercised durable multi-step rollouts, authenticated rewards, policy/verifier freshness, whole-group replay, independent checkpoint decoding, promotion/rejection, and recovery after a lost ingestion acknowledgment. This is a synthetic systems diagnostic; it establishes no semantic task success or model capability gain.
+**PASS for the retained v3 systems run.** Three seeds each completed four actual updates with the existing RVL GRPO optimizer. The path exercised durable multi-step rollouts, authenticated rewards, policy/verifier freshness, whole-group replay, independent checkpoint decoding, promotion/rejection, and recovery after a lost ingestion acknowledgment. This is a synthetic systems diagnostic; it establishes no semantic task success or model capability gain. The historical v3 run did not validate distribution-shift rejection: its shift reference was derived from the batch under review. Current streaming code requires an independent reference, covered by new positive and negative regression tests; the v3.1 real-model protocol below has not been run.
 
 The implementation reuses `CapabilityLoop`, `RVLGRPOHooks`, `PrioritizedReplay`, the existing `PromotionJournal`, evaluator, and checkpoint API. The new adapter only owns bounded delivery from verified durable groups into the existing learner transaction. A failed or uncertain delivery is quarantined after backend recovery; it is never silently retrained. PR #69's recovery path remains separate and does not demonstrate a GRPO learner process kill.
 
 ## Fixed workload and evidence
 
-Protocol v3 is frozen at [`benchmarks/streamed_grpo_cpu_v3/protocol.json`](../benchmarks/streamed_grpo_cpu_v3/protocol.json), SHA-256 `1976fce99a1eaf07648e06c478e44aef3d30e5fa2e5867b953b8a1b9d9b56c18`. It uses seeds 80011/80012/80013, the public `roneneldan/TinyStories-1M` revision `77f1b168e219585646439073245fe87e56b3023e`, RVL revision `e381c4b3b8c2ad8e5dc4c4b1a33b7922531c3e33` plus the portable backend patch from PR #71, CPU fp32, and one Torch thread on Apple M1 Pro / 32 GiB. The learner updates 131,200 position-embedding and final-layer-normalization parameters. Dependencies and model-file hashes are retained in the protocol and [environment record](../results/streamed-grpo-cpu-v3/environment.json).
+The retained v3 runs used [`benchmarks/streamed_grpo_cpu_v3/protocol.json`](../benchmarks/streamed_grpo_cpu_v3/protocol.json), SHA-256 `7954ac550a302335bf6c22e6ec009f24eb03d55063ce8441d137c8591d77a9d4`, recovered byte-for-byte from the raw artifact. Those runs use seeds 80011/80012/80013, the public `roneneldan/TinyStories-1M` revision `77f1b168e219585646439073245fe87e56b3023e`, RVL revision `e381c4b3b8c2ad8e5dc4c4b1a33b7922531c3e33` plus the portable backend patch from PR #71, CPU fp32, and one Torch thread on Apple M1 Pro / 32 GiB. The learner updates 131,200 position-embedding and final-layer-normalization parameters. Dependencies and model-file hashes are retained in the protocol and [environment record](../results/streamed-grpo-cpu-v3/environment.json).
+
+After review, the current runner was versioned separately as [`protocol-v3.1.json`](../benchmarks/streamed_grpo_cpu_v3/protocol-v3.1.json), SHA-256 `344a28a6e0b66eec362512fc43b9c42cf65bd9bf45bbb7578746326c96ecbfed`. It names the independent expected training family `train` and fresh seeds 82011/82012/82013. It has not been executed, so all measurements below remain v3 results. A prior tracked file at SHA-256 `1976fce…` was an unrun protocol version; it did not produce the retained runs.
 
 Each seed runs four rounds with four completions per group, two durable agent steps per trajectory, two execute workers, one verifier, backlog 16, and replay capacity 4. The first step records a deterministic lookup observation; the second invokes the real model for three generated tokens. Training reward is a signed text checksum. Independent greedy evaluation uses disjoint prompts and a different synthetic checksum. Both are correctness signals for this fixture, not task-quality graders.
 
@@ -45,7 +47,7 @@ The run used one process with asynchronous worker tasks and serialized model acc
 Use the Python 3.11/model/RVL setup and exact patch documented in the [GRPO CPU report](grpo-e2e-cpu-report.md). Set `OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 TOKENIZERS_PARALLELISM=false HF_HUB_OFFLINE=1` after fetching the pinned inputs. Outputs must be new directories.
 
 ```bash
-for seed in 80011 80012 80013; do
+for seed in 82011 82012 82013; do
   out="/tmp/vare-streamed-grpo-$seed"
   python scripts/validate_streamed_grpo_cpu.py \
     --seed "$seed" --output "$out" \
@@ -57,6 +59,6 @@ for seed in 80011 80012 80013; do
 done
 ```
 
-The copied manifest lets the offline auditor detect later file changes; for a fresh local run it is self-produced, not an independent timing anchor. Published v3 runs use the committed per-file anchors in [`results/streamed-grpo-cpu-v3/cases/`](../results/streamed-grpo-cpu-v3/cases/) and the public [raw-evidence release](https://github.com/mitukx/VARE/releases/tag/streamed-grpo-cpu-20261017). Run the offline auditor against those anchors to reproduce the reported numerical checks without regenerating data.
+The copied manifest lets the offline auditor detect later file changes; for a fresh v3.1 run it is self-produced, not an independent timing anchor. Published v3 runs use the committed per-file anchors in [`results/streamed-grpo-cpu-v3/cases/`](../results/streamed-grpo-cpu-v3/cases/) and the public [raw-evidence release](https://github.com/mitukx/VARE/releases/tag/streamed-grpo-cpu-20261017). Run the offline auditor against those anchors to reproduce the reported numerical checks without regenerating data. The auditor loads each historical VARE package from its hash-pinned source archive (`audit-source-2b33abf.tar.xz`, `audit-source-5a81dfe.tar.xz`, or [`audit-source-e4155f0.tar.xz`](../benchmarks/streamed_grpo_cpu_v3/audit-source-e4155f0.tar.xz)), so V1–V3 audits do not depend on old Git commits being present in the checkout.
 
 Next system bottleneck: actual learner-process SIGKILL around optimizer/checkpoint publication, followed by cold model/optimizer/RNG restore and a later GRPO update. It must reuse the existing recovery journal and remain separate from the still-NO-GO semantic task study.

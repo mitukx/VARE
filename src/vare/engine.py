@@ -255,7 +255,7 @@ class CapabilityLoop:
             clear_deferred_cancellation_requests()
         return deferred_cancellations
 
-    async def run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None, _verified_experiences: Sequence[Experience] | None = None, _delivery_complete: Callable[[RoundResult], Awaitable[None]] | None = None, _publication_reserve: Callable[[], Awaitable[None]] | None = None, _delivery_claim: Callable[[str], Awaitable[Sequence[Experience] | None]] | None = None, _delivery_pending: Callable[[str], bool] | None = None) -> RoundResult:
+    async def run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None, _verified_experiences: Sequence[Experience] | None = None, _delivery_complete: Callable[[RoundResult], Awaitable[None]] | None = None, _publication_reserve: Callable[[], Awaitable[None]] | None = None, _delivery_claim: Callable[[str], Awaitable[Sequence[Experience] | None]] | None = None, _delivery_pending: Callable[[str], bool] | None = None, _shift_reference_families: Sequence[str] | None = None) -> RoundResult:
         """Own the shared runtime before any hook; retain crash uncertainty."""
         async with self._round_lock:
             if self._discard_failure is not None:
@@ -298,6 +298,7 @@ class CapabilityLoop:
                         tasks, round_index=round_index, rollout_count=rollout_count,
                         verified_experiences=_verified_experiences,
                         publication_reserve=_publication_reserve,
+                        shift_reference_families=_shift_reference_families,
                     )
                     assert _delivery_complete is not None
                     await _delivery_complete(result)
@@ -324,20 +325,28 @@ class CapabilityLoop:
             self._candidate_unresolved = False
             return result
 
-    async def run_verified_round(self, claim_experiences: Callable[[str], Awaitable[Sequence[Experience] | None]], *, round_index: int, on_complete: Callable[[RoundResult], Awaitable[None]], reserve_publication: Callable[[], Awaitable[None]], delivery_pending: Callable[[str], bool]) -> RoundResult | None:
+    async def run_verified_round(self, claim_experiences: Callable[[str], Awaitable[Sequence[Experience] | None]], *, round_index: int, on_complete: Callable[[RoundResult], Awaitable[None]], reserve_publication: Callable[[], Awaitable[None]], delivery_pending: Callable[[str], bool], shift_reference_families: Sequence[str]) -> RoundResult | None:
         """Consume bounded authenticated trajectories through the existing transaction.
 
         Does not regenerate, regrade or rename the source groups. Candidate,
         evaluation, promotion and recovery semantics are identical to run_round.
-        Caller owns durable ingestion acknowledgment and restart reconciliation.
+        Caller owns durable ingestion acknowledgment and restart reconciliation,
+        and supplies the independent family distribution used for shift checks.
         """
         if not all(callable(fn) for fn in (claim_experiences, on_complete, reserve_publication, delivery_pending)):
             raise ValueError("streamed delivery requires owned completion and publication boundaries")
+        if (not isinstance(shift_reference_families, Sequence)
+                or isinstance(shift_reference_families, (str, bytes))
+                or not shift_reference_families
+                or any(not isinstance(family, str) or not family.strip()
+                       for family in shift_reference_families)):
+            raise ValueError("streamed GRPO requires an independent task-family reference")
         try:
             return await self.run_round(
                 [], round_index=round_index, _delivery_claim=claim_experiences,
                 _delivery_complete=on_complete, _publication_reserve=reserve_publication,
                 _delivery_pending=delivery_pending,
+                _shift_reference_families=tuple(shift_reference_families),
             )
         except _NoVerifiedExperienceReady:
             return None
@@ -389,7 +398,7 @@ class CapabilityLoop:
             self.runtime_coordinator.quarantine(exc)
             raise PromotionRecoveryRequired("runtime round completion requires recovery") from exc
 
-    async def _run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None, verified_experiences: Sequence[Experience] | None = None, publication_reserve: Callable[[], Awaitable[None]] | None = None) -> RoundResult:
+    async def _run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None, verified_experiences: Sequence[Experience] | None = None, publication_reserve: Callable[[], Awaitable[None]] | None = None, shift_reference_families: Sequence[str] | None = None) -> RoundResult:
         source_tasks = list(tasks) + (self._generated_tasks if verified_experiences is None else [])
         if not source_tasks:
             raise ValueError("run_round requires tasks")
@@ -402,7 +411,12 @@ class CapabilityLoop:
             )
         if self.safety_interlock is not None:
             self.safety_interlock.require("rollout", incumbent_id=incumbent_id)
-        self.shift.fit_reference(t.family for t in source_tasks)
+        if verified_experiences is None:
+            self.shift.fit_reference(t.family for t in source_tasks)
+        else:
+            if shift_reference_families is None:
+                raise ValueError("streamed GRPO requires an independent task-family reference")
+            self.shift.fit_reference(shift_reference_families)
         if verified_experiences is not None:
             pairs = self._verified_pairs(verified_experiences)
         else:

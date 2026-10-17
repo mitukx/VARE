@@ -31,14 +31,15 @@ class IngestionHooks(BoundaryHooks):
         return await super().train_candidate(incumbent_id, experiences)
 
 
-def setup(tmp_path, *, fault=None, max_groups=1):
+def setup(tmp_path, *, fault=None, max_groups=1, reference_families=("default",)):
     store, root = group(tmp_path)
     hooks = IngestionHooks(fault=fault, signer=trust())
     hooks.digests["p0"] = P0.checkpoint_sha256
     def policy():
         return PolicyCheckpoint(hooks.active, hooks.version, hooks.digests[hooks.active])
     adapter = TrajectoryLearnerAdapter(store, trust_root=root, current_policy=policy,
-        verifier_identity=("v", 0, "b" * 64), max_groups=max_groups)
+        verifier_identity=("v", 0, "b" * 64), reference_families=reference_families,
+        max_groups=max_groups)
     durable = PromotionJournal(tmp_path / "promotion.db", initial_policy_id="p0",
                               initial_checkpoint_sha256=P0.checkpoint_sha256)
     loop = CapabilityLoop(hooks=hooks, verifier=NoRolloutVerifier(), promotion_journal=durable,
@@ -115,7 +116,9 @@ def test_authenticated_delivery_uses_existing_transaction_and_ack(tmp_path):
 
 
 def test_multi_group_stream_assesses_shift_after_the_complete_batch(tmp_path):
-    store, adapter, loop, hooks = setup(tmp_path, max_groups=2)
+    store, adapter, loop, hooks = setup(
+        tmp_path, max_groups=2, reference_families=("default", "second"),
+    )
     add_signed_group(store, adapter.root, group_id="h", trajectory_prefix="u",
                      family="second", task_id="task-second")
 
@@ -125,6 +128,20 @@ def test_multi_group_stream_assesses_shift_after_the_complete_batch(tmp_path):
     assert len(hooks.batch) == 4
     assert {item.attempt.metadata["vare_rollout_group"] for item in hooks.batch} == {"g", "h"}
     assert store.counts() == {"consumed": 4}
+
+
+def test_streamed_shift_uses_reference_independent_of_the_batch(tmp_path):
+    store, adapter, loop, hooks = setup(tmp_path, max_groups=2,
+                                        reference_families=("default",))
+    add_signed_group(store, adapter.root, group_id="h", trajectory_prefix="u",
+                     family="unexpected", task_id="task-unexpected")
+
+    with pytest.raises(RuntimeError, match="streamed batch was filtered or truncated"):
+        asyncio.run(adapter.advance(loop, round_index=0))
+
+    assert "train" not in hooks.calls and hooks.active == "p0"
+    assert store.counts() == {"learning": 4}
+    assert adapter.pending() is not None and audit_trajectory_store(store.path)["pass"]
 
 
 def test_authentication_ignores_only_mutable_replay_selection_fields(tmp_path):
@@ -222,7 +239,10 @@ def test_duplicate_or_partial_delivery_cannot_train(tmp_path):
     async def supply(owner):
         return [batch[0]]
     with pytest.raises(ValueError, match="incomplete"):
-        asyncio.run(loop.run_verified_round(supply, round_index=0,on_complete=unused,reserve_publication=unused,delivery_pending=lambda _:True))
+        asyncio.run(loop.run_verified_round(
+            supply, round_index=0, on_complete=unused, reserve_publication=unused,
+            delivery_pending=lambda _:True, shift_reference_families=("default",),
+        ))
     assert "train" not in hooks.calls
 
 

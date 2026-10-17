@@ -4,9 +4,12 @@ The model, optimizer, evaluation, publication and restoration remain hook/
 PromotionJournal responsibilities. An unresolved delivery never expires into
 automatic retraining. Operator recovery first verifies backend state and
 reconciles the existing journal; this adapter only quarantines uncertain input.
+The caller supplies the expected task-family distribution; it is never inferred
+from the batch being admitted.
 """
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import asdict
 import json
 from pathlib import Path
@@ -22,15 +25,22 @@ from .trajectory_workers import owned_io
 
 class TrajectoryLearnerAdapter:
     def __init__(self, store, *, trust_root, current_policy, verifier_identity,
-                 max_groups=1, max_members=256):
+                 reference_families: Sequence[str], max_groups=1, max_members=256):
         if type(max_groups) is not int or not 1 <= max_groups <= 64:
             raise ValueError("invalid bounded group batch")
         if type(max_members) is not int or not 2 <= max_members <= 1024:
             raise ValueError("invalid bounded member batch")
+        if (not isinstance(reference_families, Sequence)
+                or isinstance(reference_families, (str, bytes))
+                or not reference_families
+                or any(not isinstance(family, str) or not family.strip()
+                       for family in reference_families)):
+            raise ValueError("streamed learner requires an independent task-family reference")
         if store.config()["run_id"] != trust_root.run_id:
             raise ValueError("foreign reward trust root")
         self.store, self.root = store, trust_root
         self.current_policy = current_policy
+        self.reference_families = tuple(reference_families)
         self.max_groups, self.max_members = max_groups, max_members
         with store.connection(True) as db:
             current = db.execute("SELECT value FROM meta WHERE key='learner_verifier'").fetchone()
@@ -234,7 +244,8 @@ class TrajectoryLearnerAdapter:
                 return pending is not None and pending["runtime_owner_id"] == owner_id
             result = await loop.run_verified_round(claim, round_index=round_index,
                                                   on_complete=complete, reserve_publication=reserve_publication,
-                                                  delivery_pending=delivery_pending)
+                                                  delivery_pending=delivery_pending,
+                                                  shift_reference_families=self.reference_families)
             return result
         except BaseException as exc:
             if reservation is not None:

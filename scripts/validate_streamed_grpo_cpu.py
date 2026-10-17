@@ -29,7 +29,7 @@ def independent_score(text):
 async def run(args):
     args.output.mkdir(parents=True, exist_ok=False)
     args.output_created = True
-    protocol = json.loads((ROOT / "benchmarks/streamed_grpo_cpu_v3/protocol.json").read_text())
+    protocol = json.loads((ROOT / "benchmarks/streamed_grpo_cpu_v3/protocol-v3.1.json").read_text())
     write(args.output / "protocol.json", protocol)
     require(args.seed in protocol["seeds"] and sha(__file__) == protocol["runner_sha256"], "undeclared seed or runner")
     for name, digest in protocol["model_files"].items():
@@ -95,7 +95,8 @@ async def run(args):
     root = TrajectoryRewardRoot(os.urandom(32), run_id, sha256_json(protocol))
     evaluation_key = os.urandom(32)
     adapter = TrajectoryLearnerAdapter(store, trust_root=root, current_policy=policy,
-        verifier_identity=("checksum", 0, verifier_sha), max_members=4)
+        verifier_identity=("checksum", 0, verifier_sha),
+        reference_families=protocol["shift_reference_families"], max_members=4)
     hooks.training_evidence_authorizer = adapter.authorizes
     hooks.require_authenticated_training = True
     journal = PromotionJournal(args.output / "promotion.db", initial_policy_id="policy-0", initial_checkpoint_sha256=policy().checkpoint_sha256)
@@ -242,7 +243,8 @@ async def run(args):
                     loop.runtime_coordinator.recover()
                     # A new ingestion owner, same trusted backend after exact restore.
                     adapter = TrajectoryLearnerAdapter(store, trust_root=root,current_policy=policy,
-                        verifier_identity=("checksum",0,verifier_sha),max_members=4)
+                        verifier_identity=("checksum",0,verifier_sha),
+                        reference_families=protocol["shift_reference_families"],max_members=4)
                     loop.training_evidence_authorizer = hooks.training_evidence_authorizer = adapter.authorizes
                     require(adapter.reconcile_after_backend_recovery(loop,observed_policy=policy()), "delivery not reconciled")
                     rounds.append({"round":round_index,"ack_interrupted":True,"active":asdict(policy()),"recovery_s":time.perf_counter()-recovery_start,"round_wall_s":time.perf_counter()-start})

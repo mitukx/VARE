@@ -1,0 +1,44 @@
+{
+  "schema": "vare.streamed-grpo-protocol-provenance.v1",
+  "raw_archive_sha256": "8d397b9ded3f86ac07d669e3a33c952c209456400e5360d651e994c4a9c7973c",
+  "raw_protocol_sha256_by_seed": {
+    "80011": "7954ac550a302335bf6c22e6ec009f24eb03d55063ce8441d137c8591d77a9d4",
+    "80012": "7954ac550a302335bf6c22e6ec009f24eb03d55063ce8441d137c8591d77a9d4",
+    "80013": "7954ac550a302335bf6c22e6ec009f24eb03d55063ce8441d137c8591d77a9d4"
+  },
+  "restored_v3_protocol_sha256": "7954ac550a302335bf6c22e6ec009f24eb03d55063ce8441d137c8591d77a9d4",
+  "previous_unrun_file_sha256": "1976fce99a1eaf07648e06c478e44aef3d30e5fa2e5867b953b8a1b9d9b56c18",
+  "versioned_next_protocol": {
+    "path": "benchmarks/streamed_grpo_cpu_v3/protocol-v3.1.json",
+    "sha256": "344a28a6e0b66eec362512fc43b9c42cf65bd9bf45bbb7578746326c96ecbfed",
+    "schema": "vare.streamed-grpo-systems.v3.1",
+    "executed": false
+  },
+  "historical_results_modified": false,
+  "source_bundles": [
+    {
+      "revision": "2b33abfd6ba0faed03e0efc3cce1310090777f6c",
+      "path": "benchmarks/streamed_grpo_cpu_v1/audit-source-2b33abf.tar.xz",
+      "sha256": "cbec0c4f08ce0366556548625972ad59dae502f99fd712b3ab8951d949806489",
+      "bytes": 115404,
+      "file_count": 66,
+      "used_by_offline_auditor": true
+    },
+    {
+      "revision": "5a81dfe532edee93836e8984c007d4bfba4b43ac",
+      "path": "benchmarks/streamed_grpo_cpu_v2/audit-source-5a81dfe.tar.xz",
+      "sha256": "daeacb66f13b37697996e3520d9c62ff79c100fc6a965ef2913a1436eae0ef71",
+      "bytes": 115648,
+      "file_count": 66,
+      "used_by_offline_auditor": true
+    },
+    {
+      "revision": "e4155f0d6d7b6781a6d0c3fdcf13a9e3ef1342b7",
+      "path": "benchmarks/streamed_grpo_cpu_v3/audit-source-e4155f0.tar.xz",
+      "sha256": "99d2dab3ca4ac206655accfd425641c0483e89183cbb144ee64601598ad30db2",
+      "bytes": 115776,
+      "file_count": 66,
+      "used_by_offline_auditor": true
+    }
+  ]
+}

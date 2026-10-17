@@ -4,7 +4,6 @@ import argparse
 import hashlib
 import importlib
 import importlib.util
-import io
 import json
 import math
 from pathlib import Path
@@ -19,6 +18,20 @@ from unittest.mock import patch
 from uuid import uuid4
 
 ROOT=Path(__file__).resolve().parents[1]
+PINNED_VARE_SOURCES={
+    "2b33abfd6ba0faed03e0efc3cce1310090777f6c":(
+        ROOT/'benchmarks/streamed_grpo_cpu_v1/audit-source-2b33abf.tar.xz',
+        "cbec0c4f08ce0366556548625972ad59dae502f99fd712b3ab8951d949806489",
+    ),
+    "5a81dfe532edee93836e8984c007d4bfba4b43ac":(
+        ROOT/'benchmarks/streamed_grpo_cpu_v2/audit-source-5a81dfe.tar.xz',
+        "daeacb66f13b37697996e3520d9c62ff79c100fc6a965ef2913a1436eae0ef71",
+    ),
+    "e4155f0d6d7b6781a6d0c3fdcf13a9e3ef1342b7":(
+        ROOT/'benchmarks/streamed_grpo_cpu_v3/audit-source-e4155f0.tar.xz',
+        "99d2dab3ca4ac206655accfd425641c0483e89183cbb144ee64601598ad30db2",
+    ),
+}
 
 
 def require(condition, message):
@@ -42,17 +55,29 @@ def load_reference_update(path):
     return module.reference_update
 
 
-def load_snapshot_store(revision, expected_source_sha256):
-    """Load the whole VARE package from the experiment's recorded Git tree."""
+def load_snapshot_store(revision, expected_source_sha256, source_archive=None):
+    """Load the whole VARE package from its hash-pinned source archive."""
     require(isinstance(revision,str) and re.fullmatch(r'[0-9a-f]{40}',revision),
             "invalid recorded VARE revision")
+    require(revision in PINNED_VARE_SOURCES,
+            "recorded VARE revision has no pinned source archive")
+    pinned_archive,archive_sha256=PINNED_VARE_SOURCES[revision]
+    source_archive=pinned_archive if source_archive is None else Path(source_archive)
+    require(digest(source_archive)==archive_sha256,
+            "pinned VARE source archive hash mismatch")
     temporary=tempfile.TemporaryDirectory(prefix='vare-streamed-audit-')
     package_name=f'_vare_snapshot_{uuid4().hex}'
     try:
-        archive=subprocess.check_output(
-            ['git','-C',str(ROOT),'archive','--format=tar','--',revision,'src/vare']
-        )
-        with tarfile.open(fileobj=io.BytesIO(archive),mode='r:') as snapshot:
+        with tarfile.open(source_archive,mode='r:xz') as snapshot:
+            members=snapshot.getmembers()
+            for member in members:
+                name=Path(member.name)
+                require(not name.is_absolute() and '..' not in name.parts
+                        and (name.parts==('src',) and member.isdir()
+                             or name.parts[:2]==('src','vare')),
+                        "unsafe pinned VARE source archive path")
+                require(member.isdir() or member.isfile(),
+                        "unsupported pinned VARE source archive entry")
             snapshot.extractall(temporary.name,filter='data')
         source=Path(temporary.name)/'src'/'vare'
         require(digest(source/'trajectory_store.py')==expected_source_sha256,
@@ -100,7 +125,12 @@ def audit(root, model_dir, rvl_source, expected_manifest):
         require(not Path(name).is_absolute() and '..' not in Path(name).parts,"unsafe artifact path")
         require(digest(root/name)==expected,"artifact bytes differ: "+name)
     protocol=json.loads((root/'protocol.json').read_text())
-    protocols={f'vare.streamed-grpo-systems.v{i}':ROOT/f'benchmarks/streamed_grpo_cpu_v{i}/protocol.json' for i in (1,2,3)}
+    protocols={
+        'vare.streamed-grpo-systems.v1':ROOT/'benchmarks/streamed_grpo_cpu_v1/protocol.json',
+        'vare.streamed-grpo-systems.v2':ROOT/'benchmarks/streamed_grpo_cpu_v2/protocol.json',
+        'vare.streamed-grpo-systems.v3':ROOT/'benchmarks/streamed_grpo_cpu_v3/protocol.json',
+        'vare.streamed-grpo-systems.v3.1':ROOT/'benchmarks/streamed_grpo_cpu_v3/protocol-v3.1.json',
+    }
     require(protocol.get('schema') in protocols,"unsupported protocol")
     require(protocol==json.loads(protocols[protocol['schema']].read_text()),"frozen protocol mismatch")
     summary=json.loads((root/'summary.json').read_text())
