@@ -1,0 +1,43 @@
+{
+  "pass": true,
+  "updates": 4,
+  "numerics": [
+    {
+      "candidate": "policy-1",
+      "errors": {
+        "preclip_gradient": 2.384185791015625e-07,
+        "clipped_gradient": 4.470348358154297e-08,
+        "parameter": 3.725290298461914e-09
+      },
+      "preclip_norm": 16.293067932128906
+    },
+    {
+      "candidate": "policy-2",
+      "errors": {
+        "preclip_gradient": 2.384185791015625e-07,
+        "clipped_gradient": 2.9802322387695312e-08,
+        "parameter": 0.0
+      },
+      "preclip_norm": 11.65786361694336
+    },
+    {
+      "candidate": "policy-3",
+      "errors": {
+        "preclip_gradient": 4.76837158203125e-07,
+        "clipped_gradient": 1.4901161193847656e-08,
+        "parameter": 2.3283064365386963e-10
+      },
+      "preclip_norm": 16.75389289855957
+    },
+    {
+      "candidate": "policy-4",
+      "errors": {
+        "preclip_gradient": 1.1920928955078125e-07,
+        "clipped_gradient": 1.4901161193847656e-08,
+        "parameter": 5.820766091346741e-11
+      },
+      "preclip_norm": 12.478836059570312
+    }
+  ],
+  "scope": "Externally anchored bytes and independent full-graph/preclip/Adam/RNG replay. Live checkpoint decoding and logical recovery are separately retained; no task-capability or learner-SIGKILL claim."
+}

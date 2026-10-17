@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE/scripts/audit_grpo_e2e_cpu.py", line 276, in <module>
+    print(json.dumps(audit(parser.parse_args().output), indent=2))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE/scripts/audit_grpo_e2e_cpu.py", line 62, in audit
+    require(
+  File "/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/VARE/scripts/audit_grpo_e2e_cpu.py", line 13, in require
+    raise ValueError(message)
+ValueError: missing candidate update

@@ -1,0 +1,47 @@
+{
+  "actual_optimizer_calls_including_fault_and_resume": 45,
+  "candidate_updates": 36,
+  "checkpoint_load_through_next_candidate_s": {
+    "mean": 0.04559297231025994,
+    "sample_sd": 0.0007867179744639253
+  },
+  "cpu_core_percent": {
+    "mean": 97.3182067442445,
+    "sample_sd": 1.683690817917858
+  },
+  "fault_controls": 24,
+  "files_rehashed": 129,
+  "independent_review": {
+    "baseline": "2 failed, 1 passed",
+    "finding": "P2 preflight failures lacked retained evidence",
+    "fix": "0efd7c6cba28b779045bdaa873495461245bdbd3",
+    "fixed": "3 passed",
+    "followup_limit": "Additional automatic review request hit account quota; no extra credits or paid API used.",
+    "reviewed_revision": "026a6f27982317b184030ce743915cf03f78a471",
+    "thread": "https://github.com/mitukx/VARE/pull/71#discussion_r4291785712"
+  },
+  "latency_samples_recomputed": 792,
+  "local_full_suite": {
+    "configured": "939 passed, 8 skipped in 136.71s; venv activated and absolute PYTHONPATH supplied",
+    "final_auditor_regression": "4 passed in 8.65s; includes rehashed missing-round control",
+    "initial": "22 failed, 914 passed, 8 skipped: unactivated python3 selected Python 3.9 and subprocesses lacked VARE import path; retained log"
+  },
+  "max_errors": {
+    "behavior_alignment_error": 3.0517578125e-05,
+    "gradient_error": 2.9802322387695312e-08,
+    "loss_error": 2.60770320892334e-08,
+    "optimizer_error": 3.725290298461914e-09,
+    "parameter_error": 2.9802322387695312e-08
+  },
+  "measured_source_revision": "eac97b22f42c4c9efa55939d50abba5def00a346",
+  "peak_rss_mib": 640.65625,
+  "primary": "v5 only; earlier successful/failed/invalidated records retained separately",
+  "throughput_tasks_s_including_audits": {
+    "mean": 11.929902710287713,
+    "sample_sd": 0.6055304529739874
+  },
+  "throughput_tokens_s_including_audits": {
+    "mean": 35.78970813086314,
+    "sample_sd": 1.8165913589219607
+  }
+}

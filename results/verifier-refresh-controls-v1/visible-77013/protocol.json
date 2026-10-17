@@ -1,0 +1,47 @@
+{
+  "schema": "vare.verifier-refresh-controls.v1",
+  "hypothesis": "Existing task-family TV-triggered refresh can detect a visible family shift, but cannot detect exploitation within a constant family; periodic calibration is a falsification baseline.",
+  "scope": "Known-ground-truth synthetic exogenous policies; no LLM, optimizer, new refresh algorithm, capability gain or learned policy-verifier co-evolution claim.",
+  "cheaper_gate": "Two deterministic controls verify family-TV blindness and bounded calibration fitting first.",
+  "seeds": [
+    77011,
+    77012,
+    77013
+  ],
+  "scenarios": [
+    "visible",
+    "hidden"
+  ],
+  "strategies": [
+    "fixed",
+    "periodic",
+    "shift"
+  ],
+  "rounds": 12,
+  "training_observations_per_round": 256,
+  "calibration_pool_per_round": 64,
+  "independent_audit_per_policy_per_round": 256,
+  "refresh_budget": "At most two refreshes of64 labeled calibration rows. Equal maximum budget, not equal actual label spend; report spend per strategy.",
+  "fixed": "Never refresh.",
+  "periodic": "Refresh at rounds4 and8.",
+  "shift": "Use existing DistributionShiftMonitor(window256), initial reference familyA. Refresh when TV>.25, refit family reference on refresh.",
+  "verifier": "Default visible-test proxy; calibration fits transparent per(feature,proxy) majority truth table; no independent audit labels enter fitting/decisions.",
+  "policy_schedule": "Rounds0-3 ordinaryquality.7/attack0; rounds4-7 quality.72/attack.4; rounds8-11 quality.9/attack.15. Attack alwaysincorrect but proxypositive. Visible attackfamilyB; hidden attackfamilyA. Baselineordinaryquality.7 throughout.",
+  "independence": "Deterministic RNG namespaces per seed/scenario/round/split; untouched independent candidate/baseline label streams are never passed to refresh. Streams matched across strategies.",
+  "promotion": "Existing PromotionGate, min primary gain.03, n256. Report proxy-only counterfactual false promotions/missed improvements relative to the independent truth gate. This is not neural checkpoint publication.",
+  "metrics": [
+    "held-out verifier error",
+    "verifier disagreement",
+    "TV shift",
+    "refreshes",
+    "calibration labels",
+    "proxy-only false promotion",
+    "proxy-only missed improvement",
+    "wall time"
+  ],
+  "acceptance": "All declared cohorts emitted; budgets bounded; independent-label isolation; hidden shift must expose family-TV blind spot. No winning strategy required; retain null/negative results.",
+  "budget": "6 sequential CPU cases,60s each, no API/GPU/services.",
+  "abort": "First correctness/resource failure; preserve failed outputs; do not tune threshold or schedule after observation.",
+  "decision": "Keep existing refresh interface and report the observable blind spot. Do not introduce a new refresh algorithm from this fixture alone.",
+  "runner_sha256": "1052f7e693b2d31ef4dcc457ea86f9289ffba363f0233a7c52d5da24e5e1e45c"
+}

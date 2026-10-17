@@ -1,0 +1,20 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________ test_completion_history_cannot_be_hidden_by_reverting_row ___________
+
+store = <vare.trajectory_store.TrajectoryStore object at 0x10a259290>
+
+    def test_completion_history_cannot_be_hidden_by_reverting_row(store):
+        submit(store)
+        lease = store.claim("execute", "worker", now=100)
+        for index in range(2):
+            store.append_step(lease, step(index), now=100)
+        store.finish(lease, now=100)
+        with store.connection(write=True) as db:
+            db.execute("UPDATE trajectories SET state='queued'")
+>       with pytest.raises(ValueError, match="completion.*active"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_trajectory_store.py:384: Failed
+=========================== short test summary info ============================
+FAILED tests/test_trajectory_store.py::test_completion_history_cannot_be_hidden_by_reverting_row

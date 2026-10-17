@@ -1,0 +1,6 @@
+{
+  "reviewed_revision": "fbd4726ab2ec432eeebd951814233629b478e78a",
+  "reproducer": "review5-before.json: 10x inflated throughput passes the unanchored old auditor after resealing.",
+  "fix": "Explicit audit modes: a trusted external manifest anchors published timing; unanchored new-run correctness audits label the timing denominator as self-reported. Published cases use manifests committed before this review. No missing monotonic timestamps are reconstructed.",
+  "scope": "Runner/core/protocol and actual measurements unchanged. Every published case passes the external-anchor audit; raw archives publicly downloaded and hash-verified."
+}

@@ -3,7 +3,18 @@ import math
 import pytest
 
 from vare.config import LagConfig
-from vare.lag import LagController
+from vare.lag import DistributionShiftMonitor, LagController
+
+
+def test_shift_monitor_scores_complete_batch_and_resets_reference_window():
+    monitor = DistributionShiftMonitor(window=4)
+    monitor.fit_reference(["a", "a", "b", "b"])
+    assert monitor.observe_batch(["a", "a", "b", "b"]) == 0.0
+    assert monitor.score() == 0.0
+
+    monitor.fit_reference(["a", "a", "b", "b"])
+    assert monitor.score() == 0.0
+    assert monitor.observe_batch(["a", "a", "a", "a"]) == 0.5
 
 
 def test_lag_controller_fails_closed():

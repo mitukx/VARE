@@ -3,11 +3,20 @@ on:
   pull_request:
     paths:
       - 'scripts/*e2e_rl_real_model.py'
-      - 'scripts/*e2e_rl_continuation.py'
       - 'tests/test_e2e_rl_real_model.py'
+      - 'scripts/*e2e_rl_continuation.py'
       - 'tests/test_e2e_rl_continuation.py'
-      - 'benchmarks/e2e_rl_real_model_v1/**'
       - 'benchmarks/e2e_rl_continuation_v2/**'
+      - 'scripts/validate_grpo_e2e_cpu.py'
+      - 'scripts/audit_grpo_e2e_cpu.py'
+      - 'tests/test_grpo_e2e_cpu.py'
+      - 'benchmarks/grpo_e2e_cpu_v1/**'
+      - 'benchmarks/grpo_e2e_cpu_v2/**'
+      - 'benchmarks/grpo_e2e_cpu_v3/**'
+      - 'benchmarks/grpo_e2e_cpu_v4/**'
+      - 'benchmarks/grpo_e2e_cpu_v5/**'
+      - 'patches/rvl-contiguous-transition-logprobs-v1.patch'
+      - 'benchmarks/e2e_rl_real_model_v1/**'
       - 'requirements/e2e-rl-real-model-v1.txt'
       - 'src/vare/**'
       - '.github/workflows/e2e-system-cpu.yml'
@@ -53,6 +62,21 @@ jobs:
         run: |
           python -m pytest tests/test_e2e_rl_continuation.py --basetemp="${RUNNER_TEMP}/v2-tests"
           tar -cJf "${RUNNER_TEMP}/v2-tests.tar.xz" -C "${RUNNER_TEMP}/v2-tests" .
+      - name: Fetch pinned RVL and check actual multi-completion GRPO
+        env:
+          VARE_GRPO_MODEL_DIR: ${{ runner.temp }}/tinystories-1m
+          VARE_E2E_RVL_DIR: ${{ runner.temp }}/rvl
+        run: |
+          git init "${VARE_E2E_RVL_DIR}"
+          git -C "${VARE_E2E_RVL_DIR}" fetch --depth 1 https://github.com/mitukx/Recursive-Verification-Lag.git e381c4b3b8c2ad8e5dc4c4b1a33b7922531c3e33
+          git -C "${VARE_E2E_RVL_DIR}" checkout --detach FETCH_HEAD
+          git -C "${VARE_E2E_RVL_DIR}" apply "${GITHUB_WORKSPACE}/patches/rvl-contiguous-transition-logprobs-v1.patch"
+          python - <<'PY'
+          import os
+          from huggingface_hub import snapshot_download
+          snapshot_download('roneneldan/TinyStories-1M', revision='77f1b168e219585646439073245fe87e56b3023e', local_dir=os.environ['VARE_GRPO_MODEL_DIR'], allow_patterns=['config.json','pytorch_model.bin','tokenizer.json','tokenizer_config.json','vocab.json','merges.txt','special_tokens_map.json'])
+          PY
+          python -m pytest tests/test_grpo_e2e_cpu.py --basetemp "${RUNNER_TEMP}/grpo-regression"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
@@ -60,3 +84,8 @@ jobs:
           path: |
             ${{ runner.temp }}/e2e-regression
             ${{ runner.temp }}/v2-tests.tar.xz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: actual-grpo-cpu-regression
+          path: ${{ runner.temp }}/grpo-regression

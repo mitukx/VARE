@@ -1,0 +1,127 @@
+FFFFFF                                                                   [100%]
+=================================== FAILURES ===================================
+_______ test_rvl_rollout_rejects_a_version_other_than_loaded_policy[-1] ________
+
+version = -1
+
+    @pytest.mark.parametrize("version", [-1, True, 1])
+    def test_rvl_rollout_rejects_a_version_other_than_loaded_policy(version):
+        hooks = _hooks("task-a", "prompt a")
+>       with pytest.raises(ValueError, match="policy.*version"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_rvl_grpo_rollout_task_binding.py:73: Failed
+______ test_rvl_rollout_rejects_a_version_other_than_loaded_policy[True] _______
+
+version = True
+
+    @pytest.mark.parametrize("version", [-1, True, 1])
+    def test_rvl_rollout_rejects_a_version_other_than_loaded_policy(version):
+        hooks = _hooks("task-a", "prompt a")
+>       with pytest.raises(ValueError, match="policy.*version"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_rvl_grpo_rollout_task_binding.py:73: Failed
+________ test_rvl_rollout_rejects_a_version_other_than_loaded_policy[1] ________
+
+version = 1
+
+    @pytest.mark.parametrize("version", [-1, True, 1])
+    def test_rvl_rollout_rejects_a_version_other_than_loaded_policy(version):
+        hooks = _hooks("task-a", "prompt a")
+>       with pytest.raises(ValueError, match="policy.*version"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_rvl_grpo_rollout_task_binding.py:73: Failed
+________ test_rvl_rollout_rechecks_policy_after_waiting_for_model_lock _________
+
+    def test_rvl_rollout_rechecks_policy_after_waiting_for_model_lock():
+        async def run():
+            hooks = _hooks("task-a", "prompt a")
+            await hooks._model_lock.acquire()
+            pending = asyncio.create_task(
+                hooks.rollout(Task("task-a", "prompt a"), "policy-0", 0, 1)
+            )
+            await asyncio.sleep(0)
+            # A different owner promoted while this request waited for the lock.
+            hooks._active_id = "policy-1"
+            hooks._version = 1
+            hooks._model_lock.release()
+            with pytest.raises(ValueError, match="active policy"):
+                await pending
+>       asyncio.run(run())
+
+tests/test_rvl_grpo_rollout_task_binding.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py:190: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+        hooks = _hooks("task-a", "prompt a")
+        await hooks._model_lock.acquire()
+        pending = asyncio.create_task(
+            hooks.rollout(Task("task-a", "prompt a"), "policy-0", 0, 1)
+        )
+        await asyncio.sleep(0)
+        # A different owner promoted while this request waited for the lock.
+        hooks._active_id = "policy-1"
+        hooks._version = 1
+        hooks._model_lock.release()
+>       with pytest.raises(ValueError, match="active policy"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_rvl_grpo_rollout_task_binding.py:89: Failed
+_ test_training_rejects_reward_response_different_from_token_generation[False] _
+
+grouped = False
+
+    @pytest.mark.parametrize("grouped", [False, True])
+    def test_training_rejects_reward_response_different_from_token_generation(grouped):
+        trainer = CapturingTrainer()
+        hooks = _hooks(trainer)
+        batch = [_experience("group", 0.0, "first"), _experience("group", 1.0, "second")]
+        if not grouped:
+            for exp in batch:
+                exp.attempt.metadata.pop("vare_rollout_group")
+                exp.attempt.metadata.pop("vare_rollout_group_size")
+        batch[0].attempt.output = "verified a different answer"
+        before = copy.deepcopy(trainer.snapshot_training_state())
+>       with pytest.raises(ValueError, match="response.*experience"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_rvl_grpo_group_boundary.py:150: Failed
+_ test_training_rejects_reward_response_different_from_token_generation[True] __
+
+grouped = True
+
+    @pytest.mark.parametrize("grouped", [False, True])
+    def test_training_rejects_reward_response_different_from_token_generation(grouped):
+        trainer = CapturingTrainer()
+        hooks = _hooks(trainer)
+        batch = [_experience("group", 0.0, "first"), _experience("group", 1.0, "second")]
+        if not grouped:
+            for exp in batch:
+                exp.attempt.metadata.pop("vare_rollout_group")
+                exp.attempt.metadata.pop("vare_rollout_group_size")
+        batch[0].attempt.output = "verified a different answer"
+        before = copy.deepcopy(trainer.snapshot_training_state())
+>       with pytest.raises(ValueError, match="response.*experience"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_rvl_grpo_group_boundary.py:150: Failed
+=========================== short test summary info ============================
+FAILED tests/test_rvl_grpo_rollout_task_binding.py::test_rvl_rollout_rejects_a_version_other_than_loaded_policy[-1]
+FAILED tests/test_rvl_grpo_rollout_task_binding.py::test_rvl_rollout_rejects_a_version_other_than_loaded_policy[True]
+FAILED tests/test_rvl_grpo_rollout_task_binding.py::test_rvl_rollout_rejects_a_version_other_than_loaded_policy[1]
+FAILED tests/test_rvl_grpo_rollout_task_binding.py::test_rvl_rollout_rechecks_policy_after_waiting_for_model_lock
+FAILED tests/test_rvl_grpo_group_boundary.py::test_training_rejects_reward_response_different_from_token_generation[False]
+FAILED tests/test_rvl_grpo_group_boundary.py::test_training_rejects_reward_response_different_from_token_generation[True]
+6 failed, 5 deselected in 0.14s

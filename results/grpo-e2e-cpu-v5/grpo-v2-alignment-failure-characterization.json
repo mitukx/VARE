@@ -1,0 +1,26 @@
+{
+  "completed_candidates": 1,
+  "generated_rounds": 2,
+  "worst": {
+    "step": 15,
+    "policy": "policy-1",
+    "old_logps": [
+      -1.2057567834854126,
+      -3.085775136947632,
+      -4.413602352142334
+    ],
+    "fp32_logps": [
+      -1.20576012134552,
+      -3.0857715606689453,
+      -4.4136247634887695
+    ],
+    "fp64_logps": [
+      -1.2057981277659424,
+      -3.085801537882295,
+      -4.413655061439467
+    ],
+    "fp32_vs_behavior_abs": 2.2411346435546875e-05,
+    "fp32_vs_fp64_abs": 3.8006420422398435e-05
+  },
+  "decision": "V2 abort honored; no full-campaign PASS. FP32 reduction discrepancy measured; do not relabel as token index corruption."
+}

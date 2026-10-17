@@ -1,0 +1,287 @@
+﻿2026-10-17T05:11:12.5914536Z Current runner version: '2.337.0'
+2026-10-17T05:11:12.5941019Z ##[group]Runner Image Provisioner
+2026-10-17T05:11:12.5941974Z Hosted Compute Agent
+2026-10-17T05:11:12.5942700Z Version: 20261012.601
+2026-10-17T05:11:12.5943366Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+2026-10-17T05:11:12.5944163Z Build Date: 2026-10-12T17:48:21Z
+2026-10-17T05:11:12.5945037Z Worker ID: {909fdc45-cdb6-4f41-bd74-da53c7175b2f}
+2026-10-17T05:11:12.5945788Z Region: westus
+2026-10-17T05:11:12.5946426Z Cloud: Azure
+2026-10-17T05:11:12.5947094Z ##[endgroup]
+2026-10-17T05:11:12.5949135Z ##[group]Operating System
+2026-10-17T05:11:12.5949881Z Ubuntu
+2026-10-17T05:11:12.5951039Z 24.04.5
+2026-10-17T05:11:12.5951776Z LTS
+2026-10-17T05:11:12.5952364Z ##[endgroup]
+2026-10-17T05:11:12.5952978Z ##[group]Runner Image
+2026-10-17T05:11:12.5953770Z Image: ubuntu-24.04
+2026-10-17T05:11:12.5954371Z Version: 20261012.334.1
+2026-10-17T05:11:12.5955762Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-17T05:11:12.5957376Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+2026-10-17T05:11:12.5958488Z ##[endgroup]
+2026-10-17T05:11:12.5959681Z ##[group]GITHUB_TOKEN Permissions
+2026-10-17T05:11:12.5962310Z Contents: read
+2026-10-17T05:11:12.5962996Z Metadata: read
+2026-10-17T05:11:12.5963848Z ##[endgroup]
+2026-10-17T05:11:12.5966155Z Secret source: Actions
+2026-10-17T05:11:12.5967263Z Cache mode: write
+2026-10-17T05:11:12.5968028Z Prepare workflow directory
+2026-10-17T05:11:12.6314131Z Prepare all required actions
+2026-10-17T05:11:12.6365112Z Getting action download info
+2026-10-17T05:11:13.0017299Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-17T05:11:13.1163096Z Download action repository 'actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-10-17T05:11:13.2985041Z Complete job name: lint
+2026-10-17T05:11:13.3778921Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-10-17T05:11:13.3780102Z with:
+2026-10-17T05:11:13.3780794Z   repository: mitukx/VARE
+2026-10-17T05:11:13.3784768Z   token: ***
+2026-10-17T05:11:13.3785226Z   ssh-strict: true
+2026-10-17T05:11:13.3785678Z   ssh-user: git
+2026-10-17T05:11:13.3786129Z   persist-credentials: true
+2026-10-17T05:11:13.3786620Z   clean: true
+2026-10-17T05:11:13.3787092Z   sparse-checkout-cone-mode: true
+2026-10-17T05:11:13.3787637Z   fetch-depth: 1
+2026-10-17T05:11:13.3788098Z   fetch-tags: false
+2026-10-17T05:11:13.3788564Z   show-progress: true
+2026-10-17T05:11:13.3789024Z   lfs: false
+2026-10-17T05:11:13.3789445Z   submodules: false
+2026-10-17T05:11:13.3789904Z   set-safe-directory: true
+2026-10-17T05:11:13.3790662Z   allow-unsafe-pr-checkout: false
+2026-10-17T05:11:13.3791609Z ##[endgroup]
+2026-10-17T05:11:13.4913554Z Syncing repository: mitukx/VARE
+2026-10-17T05:11:13.4916558Z ##[group]Getting Git version info
+2026-10-17T05:11:13.4917908Z Working directory is '/home/runner/work/VARE/VARE'
+2026-10-17T05:11:13.4919526Z [command]/usr/bin/git version
+2026-10-17T05:11:13.5026271Z git version 2.55.0
+2026-10-17T05:11:13.5049637Z ##[endgroup]
+2026-10-17T05:11:13.5067131Z Temporarily overriding HOME='/home/runner/work/_temp/48f9ac9b-9894-45d3-9c31-55286158ed0b' before making global git config changes
+2026-10-17T05:11:13.5069534Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-17T05:11:13.5074025Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/VARE/VARE
+2026-10-17T05:11:13.5136004Z Deleting the contents of '/home/runner/work/VARE/VARE'
+2026-10-17T05:11:13.5140718Z ##[group]Initializing the repository
+2026-10-17T05:11:13.5144845Z [command]/usr/bin/git init /home/runner/work/VARE/VARE
+2026-10-17T05:11:13.5303701Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-17T05:11:13.5305827Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-17T05:11:13.5307981Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-17T05:11:13.5309359Z hint: call:
+2026-10-17T05:11:13.5310224Z hint:
+2026-10-17T05:11:13.5311698Z hint: 	git config --global init.defaultBranch <name>
+2026-10-17T05:11:13.5312885Z hint:
+2026-10-17T05:11:13.5313972Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-17T05:11:13.5315638Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-17T05:11:13.5317009Z hint:
+2026-10-17T05:11:13.5317599Z hint: 	git branch -m <name>
+2026-10-17T05:11:13.5318243Z hint:
+2026-10-17T05:11:13.5319036Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-17T05:11:13.5320302Z Initialized empty Git repository in /home/runner/work/VARE/VARE/.git/
+2026-10-17T05:11:13.5323788Z [command]/usr/bin/git remote add origin https://github.com/mitukx/VARE
+2026-10-17T05:11:13.5387680Z ##[endgroup]
+2026-10-17T05:11:13.5388973Z ##[group]Disabling automatic garbage collection
+2026-10-17T05:11:13.5391570Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-17T05:11:13.5429026Z ##[endgroup]
+2026-10-17T05:11:13.5430763Z ##[group]Setting up auth
+2026-10-17T05:11:13.5437202Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-17T05:11:13.5477489Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-17T05:11:13.5912492Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-17T05:11:13.5951102Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-17T05:11:13.6181577Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-17T05:11:13.6221470Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-17T05:11:13.6461526Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-17T05:11:13.6511695Z ##[endgroup]
+2026-10-17T05:11:13.6512831Z ##[group]Fetching the repository
+2026-10-17T05:11:13.6526023Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +474e74b3aa7610dc95775b488d81268661f15e44:refs/remotes/pull/73/merge
+2026-10-17T05:12:05.7649948Z From https://github.com/mitukx/VARE
+2026-10-17T05:12:05.7651351Z  * [new ref]         474e74b3aa7610dc95775b488d81268661f15e44 -> pull/73/merge
+2026-10-17T05:12:05.7654450Z ##[endgroup]
+2026-10-17T05:12:05.7655000Z ##[group]Determining the checkout info
+2026-10-17T05:12:05.7671577Z ##[endgroup]
+2026-10-17T05:12:05.7673526Z [command]/usr/bin/git sparse-checkout disable
+2026-10-17T05:12:05.7725764Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-17T05:12:05.7763428Z ##[group]Checking out the ref
+2026-10-17T05:12:05.7767042Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/73/merge
+2026-10-17T05:12:06.8036983Z Updating files:  11% (1036/8645)
+2026-10-17T05:12:07.0517365Z Updating files:  12% (1038/8645)
+2026-10-17T05:12:07.1552265Z Updating files:  13% (1124/8645)
+2026-10-17T05:12:07.4059777Z Updating files:  14% (1211/8645)
+2026-10-17T05:12:07.6602517Z Updating files:  15% (1297/8645)
+2026-10-17T05:12:07.7759797Z Updating files:  16% (1384/8645)
+2026-10-17T05:12:07.7901178Z Updating files:  17% (1470/8645)
+2026-10-17T05:12:07.8580911Z Updating files:  17% (1493/8645)
+2026-10-17T05:12:07.8646704Z Updating files:  18% (1557/8645)
+2026-10-17T05:12:07.8688910Z Updating files:  19% (1643/8645)
+2026-10-17T05:12:07.8736954Z Updating files:  20% (1729/8645)
+2026-10-17T05:12:07.8790044Z Updating files:  21% (1816/8645)
+2026-10-17T05:12:07.8833884Z Updating files:  22% (1902/8645)
+2026-10-17T05:12:07.8878799Z Updating files:  23% (1989/8645)
+2026-10-17T05:12:07.8926923Z Updating files:  24% (2075/8645)
+2026-10-17T05:12:07.8967428Z Updating files:  25% (2162/8645)
+2026-10-17T05:12:07.9006116Z Updating files:  26% (2248/8645)
+2026-10-17T05:12:07.9052867Z Updating files:  27% (2335/8645)
+2026-10-17T05:12:07.9097909Z Updating files:  28% (2421/8645)
+2026-10-17T05:12:07.9140284Z Updating files:  29% (2508/8645)
+2026-10-17T05:12:07.9183548Z Updating files:  30% (2594/8645)
+2026-10-17T05:12:07.9224719Z Updating files:  31% (2680/8645)
+2026-10-17T05:12:07.9266227Z Updating files:  32% (2767/8645)
+2026-10-17T05:12:07.9308232Z Updating files:  33% (2853/8645)
+2026-10-17T05:12:07.9349376Z Updating files:  34% (2940/8645)
+2026-10-17T05:12:07.9390576Z Updating files:  35% (3026/8645)
+2026-10-17T05:12:07.9431912Z Updating files:  36% (3113/8645)
+2026-10-17T05:12:07.9474660Z Updating files:  37% (3199/8645)
+2026-10-17T05:12:07.9516075Z Updating files:  38% (3286/8645)
+2026-10-17T05:12:07.9563480Z Updating files:  39% (3372/8645)
+2026-10-17T05:12:07.9604230Z Updating files:  40% (3458/8645)
+2026-10-17T05:12:07.9644400Z Updating files:  41% (3545/8645)
+2026-10-17T05:12:07.9685567Z Updating files:  42% (3631/8645)
+2026-10-17T05:12:07.9728320Z Updating files:  43% (3718/8645)
+2026-10-17T05:12:07.9766940Z Updating files:  44% (3804/8645)
+2026-10-17T05:12:07.9807699Z Updating files:  45% (3891/8645)
+2026-10-17T05:12:07.9854412Z Updating files:  46% (3977/8645)
+2026-10-17T05:12:07.9893692Z Updating files:  47% (4064/8645)
+2026-10-17T05:12:07.9937705Z Updating files:  48% (4150/8645)
+2026-10-17T05:12:07.9979657Z Updating files:  49% (4237/8645)
+2026-10-17T05:12:08.0018909Z Updating files:  50% (4323/8645)
+2026-10-17T05:12:08.0063335Z Updating files:  51% (4409/8645)
+2026-10-17T05:12:08.0107574Z Updating files:  52% (4496/8645)
+2026-10-17T05:12:08.0147565Z Updating files:  53% (4582/8645)
+2026-10-17T05:12:08.0193572Z Updating files:  54% (4669/8645)
+2026-10-17T05:12:08.0235772Z Updating files:  55% (4755/8645)
+2026-10-17T05:12:08.0275838Z Updating files:  56% (4842/8645)
+2026-10-17T05:12:08.0319679Z Updating files:  57% (4928/8645)
+2026-10-17T05:12:08.0361057Z Updating files:  58% (5015/8645)
+2026-10-17T05:12:08.0400010Z Updating files:  59% (5101/8645)
+2026-10-17T05:12:08.0444230Z Updating files:  60% (5187/8645)
+2026-10-17T05:12:08.0485847Z Updating files:  61% (5274/8645)
+2026-10-17T05:12:08.0525004Z Updating files:  62% (5360/8645)
+2026-10-17T05:12:08.0572521Z Updating files:  63% (5447/8645)
+2026-10-17T05:12:08.0614068Z Updating files:  64% (5533/8645)
+2026-10-17T05:12:08.0653429Z Updating files:  65% (5620/8645)
+2026-10-17T05:12:08.0691874Z Updating files:  66% (5706/8645)
+2026-10-17T05:12:08.0730650Z Updating files:  67% (5793/8645)
+2026-10-17T05:12:08.0770821Z Updating files:  68% (5879/8645)
+2026-10-17T05:12:08.0807728Z Updating files:  69% (5966/8645)
+2026-10-17T05:12:08.0886768Z Updating files:  70% (6052/8645)
+2026-10-17T05:12:08.0966724Z Updating files:  71% (6138/8645)
+2026-10-17T05:12:08.1079168Z Updating files:  72% (6225/8645)
+2026-10-17T05:12:08.1212750Z Updating files:  73% (6311/8645)
+2026-10-17T05:12:08.1302850Z Updating files:  74% (6398/8645)
+2026-10-17T05:12:08.1350839Z Updating files:  75% (6484/8645)
+2026-10-17T05:12:08.1400976Z Updating files:  76% (6571/8645)
+2026-10-17T05:12:08.1488818Z Updating files:  77% (6657/8645)
+2026-10-17T05:12:08.1528950Z Updating files:  78% (6744/8645)
+2026-10-17T05:12:08.1576724Z Updating files:  79% (6830/8645)
+2026-10-17T05:12:08.1616749Z Updating files:  80% (6916/8645)
+2026-10-17T05:12:08.1735772Z Updating files:  81% (7003/8645)
+2026-10-17T05:12:08.1939991Z Updating files:  82% (7089/8645)
+2026-10-17T05:12:08.1992822Z Updating files:  83% (7176/8645)
+2026-10-17T05:12:08.2036000Z Updating files:  84% (7262/8645)
+2026-10-17T05:12:08.2092805Z Updating files:  85% (7349/8645)
+2026-10-17T05:12:08.2140729Z Updating files:  86% (7435/8645)
+2026-10-17T05:12:08.2191495Z Updating files:  87% (7522/8645)
+2026-10-17T05:12:08.2236662Z Updating files:  88% (7608/8645)
+2026-10-17T05:12:08.2277760Z Updating files:  89% (7695/8645)
+2026-10-17T05:12:08.2315789Z Updating files:  90% (7781/8645)
+2026-10-17T05:12:08.2356475Z Updating files:  91% (7867/8645)
+2026-10-17T05:12:08.2399278Z Updating files:  92% (7954/8645)
+2026-10-17T05:12:08.2451727Z Updating files:  93% (8040/8645)
+2026-10-17T05:12:08.2508978Z Updating files:  94% (8127/8645)
+2026-10-17T05:12:08.2562045Z Updating files:  95% (8213/8645)
+2026-10-17T05:12:08.2619917Z Updating files:  96% (8300/8645)
+2026-10-17T05:12:08.2678949Z Updating files:  97% (8386/8645)
+2026-10-17T05:12:08.2730893Z Updating files:  98% (8473/8645)
+2026-10-17T05:12:08.2780030Z Updating files:  99% (8559/8645)
+2026-10-17T05:12:08.2780402Z Updating files: 100% (8645/8645)
+2026-10-17T05:12:08.2781022Z Updating files: 100% (8645/8645), done.
+2026-10-17T05:12:08.2891581Z Note: switching to 'refs/remotes/pull/73/merge'.
+2026-10-17T05:12:08.2892143Z 
+2026-10-17T05:12:08.2892529Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-17T05:12:08.2893357Z changes and commit them, and you can discard any commits you make in this
+2026-10-17T05:12:08.2894663Z state without impacting any branches by switching back to a branch.
+2026-10-17T05:12:08.2895118Z 
+2026-10-17T05:12:08.2895419Z If you want to create a new branch to retain commits you create, you may
+2026-10-17T05:12:08.2896155Z do so (now or later) by using -c with the switch command. Example:
+2026-10-17T05:12:08.2896569Z 
+2026-10-17T05:12:08.2896742Z   git switch -c <new-branch-name>
+2026-10-17T05:12:08.2897024Z 
+2026-10-17T05:12:08.2897179Z Or undo this operation with:
+2026-10-17T05:12:08.2897433Z 
+2026-10-17T05:12:08.2897563Z   git switch -
+2026-10-17T05:12:08.2897756Z 
+2026-10-17T05:12:08.2898094Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-17T05:12:08.2898600Z 
+2026-10-17T05:12:08.2899477Z HEAD is now at 474e74b Merge 766e8e755a9e8cf6ca5b7ac3f97b663ba57450f9 into a470fd059ebbe70f1b74132ce693c6c94f9dedaf
+2026-10-17T05:12:08.3128043Z ##[endgroup]
+2026-10-17T05:12:08.3191959Z [command]/usr/bin/git log -1 --format=%H
+2026-10-17T05:12:08.3228482Z 474e74b3aa7610dc95775b488d81268661f15e44
+2026-10-17T05:12:08.3532871Z ##[group]Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+2026-10-17T05:12:08.3533303Z with:
+2026-10-17T05:12:08.3533515Z   python-version: 3.12
+2026-10-17T05:12:08.3533755Z   check-latest: false
+2026-10-17T05:12:08.3536418Z   token: ***
+2026-10-17T05:12:08.3536641Z   update-environment: true
+2026-10-17T05:12:08.3536893Z   allow-prereleases: false
+2026-10-17T05:12:08.3537120Z   freethreaded: false
+2026-10-17T05:12:08.3537330Z ##[endgroup]
+2026-10-17T05:12:08.4913602Z ##[group]Installed versions
+2026-10-17T05:12:08.5006496Z (node:2414) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-17T05:12:08.5007370Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-17T05:12:08.5008352Z Successfully set up CPython (3.12.15)
+2026-10-17T05:12:08.5009181Z ##[endgroup]
+2026-10-17T05:12:08.5192752Z ##[group]Run python -m pip install ruff==0.15.12
+2026-10-17T05:12:08.5193208Z [36;1mpython -m pip install ruff==0.15.12[0m
+2026-10-17T05:12:08.5551341Z shell: /usr/bin/bash -e {0}
+2026-10-17T05:12:08.5551702Z env:
+2026-10-17T05:12:08.5552064Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-17T05:12:08.5552646Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-17T05:12:08.5553212Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-17T05:12:08.5553713Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-17T05:12:08.5554223Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-17T05:12:08.5554738Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-17T05:12:08.5555164Z ##[endgroup]
+2026-10-17T05:12:10.2061376Z Collecting ruff==0.15.12
+2026-10-17T05:12:10.3001806Z   Downloading ruff-0.15.12-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (26 kB)
+2026-10-17T05:12:10.3345424Z Downloading ruff-0.15.12-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (11.3 MB)
+2026-10-17T05:12:10.5455899Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 11.3/11.3 MB 66.0 MB/s  0:00:00
+2026-10-17T05:12:10.6032133Z Installing collected packages: ruff
+2026-10-17T05:12:10.7246875Z Successfully installed ruff-0.15.12
+2026-10-17T05:12:10.7856383Z ##[group]Run ruff check src tests minigrpo selfimprove scripts/run_minigrpo.py scripts/run_selfimprove.py scripts/run_flagship.py scripts/reproduce_grpo_audit_independent_reproduction_v2.py scripts/validate_grpo_e2e_cpu.py scripts/audit_grpo_e2e_cpu.py scripts/benchmark_trajectory_runtime.py scripts/audit_trajectory_runtime.py
+2026-10-17T05:12:10.7858706Z [36;1mruff check src tests minigrpo selfimprove scripts/run_minigrpo.py scripts/run_selfimprove.py scripts/run_flagship.py scripts/reproduce_grpo_audit_independent_reproduction_v2.py scripts/validate_grpo_e2e_cpu.py scripts/audit_grpo_e2e_cpu.py scripts/benchmark_trajectory_runtime.py scripts/audit_trajectory_runtime.py[0m
+2026-10-17T05:12:10.7926699Z shell: /usr/bin/bash -e {0}
+2026-10-17T05:12:10.7926959Z env:
+2026-10-17T05:12:10.7927230Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-17T05:12:10.7927692Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-17T05:12:10.7928166Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-17T05:12:10.7928553Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-17T05:12:10.7928930Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-17T05:12:10.7929311Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-17T05:12:10.7929649Z ##[endgroup]
+2026-10-17T05:12:10.8384132Z E731 Do not assign a `lambda` expression, use a `def`
+2026-10-17T05:12:10.8384848Z   --> tests/test_trajectory_learner.py:37:5
+2026-10-17T05:12:10.8385242Z    |
+2026-10-17T05:12:10.8385598Z 35 |     hooks = IngestionHooks(fault=fault, signer=trust())
+2026-10-17T05:12:10.8386242Z 36 |     hooks.digests["p0"] = P0.checkpoint_sha256
+2026-10-17T05:12:10.8387095Z 37 |     policy = lambda: PolicyCheckpoint(hooks.active, hooks.version, hooks.digests[hooks.active])
+2026-10-17T05:12:10.8387669Z    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-17T05:12:10.8388187Z 38 |     adapter = TrajectoryLearnerAdapter(store, trust_root=root, current_policy=policy,
+2026-10-17T05:12:10.8388669Z 39 |         current_verifier=lambda: ("v", 0, "b" * 64))
+2026-10-17T05:12:10.8388968Z    |
+2026-10-17T05:12:10.8389189Z help: Rewrite `policy` as a `def`
+2026-10-17T05:12:10.8389368Z 
+2026-10-17T05:12:10.8389446Z Found 1 error.
+2026-10-17T05:12:10.8389830Z No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).
+2026-10-17T05:12:10.8412501Z ##[error]Process completed with exit code 1.
+2026-10-17T05:12:10.8572000Z Post job cleanup.
+2026-10-17T05:12:10.9425142Z [command]/usr/bin/git version
+2026-10-17T05:12:10.9471520Z git version 2.55.0
+2026-10-17T05:12:10.9516460Z Temporarily overriding HOME='/home/runner/work/_temp/680c8b40-e2d8-4f62-bf01-7560c3e73bcb' before making global git config changes
+2026-10-17T05:12:10.9517922Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-17T05:12:10.9523327Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/VARE/VARE
+2026-10-17T05:12:10.9565515Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-17T05:12:10.9603634Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-17T05:12:10.9886604Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-17T05:12:10.9913646Z http.https://github.com/.extraheader
+2026-10-17T05:12:10.9927246Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-17T05:12:10.9967469Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-17T05:12:11.0285279Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-17T05:12:11.0332323Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-17T05:12:11.0748301Z Cleaning up orphan processes
+2026-10-17T05:12:11.1107825Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
