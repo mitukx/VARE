@@ -41,3 +41,24 @@ python scripts/audit_trajectory_runtime.py /tmp/vare-trajectory-screen-new
 The [fixed systems protocol](../benchmarks/trajectory_runtime_v2/protocol.json) defines matched sync/async modes, three seeds, Pareto step-count/duration tails, Stage A then Stage B, bounded storage/backlog, timing boundaries and abort conditions. New output directories are mandatory. Source snapshots, protocol, raw latency samples, a SQLite snapshot and hashes are retained per run. Prior observed research protocols/cohorts remain unchanged.
 
 For each declared seed, use fresh directories and run both modes with `--trajectories 10000`; audit each output. Do not infer real-model learning, promotion correctness, learner crash recovery or GPU throughput from this workload. Stage D is gated on a separate qualified task/evaluator; no new learning study is authorized by this systems benchmark.
+
+## Measured CPU result
+
+Stage A: paired 100 trajectories. Stage B: six cases of 10,000 trajectories, seeds 75011/75012/75013, eight execute workers and two verifiers, source `a470fd0`. All eight cases passed actual worker SIGKILL/restart, live reward authentication/group admission, streamed persistence audit and independent counter/state checks. Stage B contains 443,376 committed steps in total; zero duplicated effective steps/completions, six stale worker commits rejected and 240 duplicate group acknowledgments rejected. Per-case [raw summaries, hashes and comparison CSV](../results/trajectory-runtime-v2/) are retained. Large SQLite snapshots and every earlier/failed campaign are in the [raw-evidence release](https://github.com/mitukx/VARE/releases/tag/trajectory-runtime-cpu-20261017).
+
+| Metric (three Stage B measurements) | Sync cohort baseline | Continuous async |
+| --- | --- | --- |
+| Trajectories/s, mean ± sample SD | 36.16 ± 2.68 | 54.53 ± 1.85 |
+| Steps/s, mean ± sample SD | 267.00 ± 15.55 | 402.96 ± 14.01 |
+| E2E p50 range, s | 0.107–0.121 | 33.89–38.26 |
+| E2E p95 range, s | 0.240–0.290 | 44.04–46.45 |
+| E2E p99 range, s | 0.363–0.450 | 45.07–47.40 |
+| Parent peak RSS range, MiB | 39.55–40.89 | 37.53–41.81 |
+| Maximum sampled backlog | 8 | 2048 |
+| Parent CPU, percent of one core (mean) | 121.03 | 121.89 |
+
+Async increased measured throughput while its larger admitted backlog substantially increased enqueue-to-consumer latency. Quantiles are per-run ranges, not pooled estimates. Peak sampled storage was 209.81 MiB. First observed post-kill step was 98.6–117.9 ms after SIGKILL, sampled at 20 ms intervals; this is not exact recovery completion latency. Parent RSS excludes the short-lived killed child. This interactive host had no pinned clock/thermal state; three observations quantify the recorded variation, not general hardware performance.
+
+Both modes retain identical correctness guards, so guard overhead relative to an unprotected system is **not measured**. No model inference tokens/s, optimizer throughput, neural promotion, learner SIGKILL or distributed-scale claim follows. Stage C (50K per case) was not run. Stage D semantic task/evaluator qualification remains NO-GO; diagnostic neural optimizer checks are separate.
+
+Independent reviews exposed group reservation/termination, behavior identity, prompt-token identity, terminal-state audit and artifact relabeling gaps. Failing reproducers, corrections and CI logs remain in the results directories. The final auditor anchors protocol identity outside artifact-local self-reported hashes and binds declared seed/mode to the raw database. Earlier v1 results remain historical evidence with the weaker admission contract, and are excluded from this table.

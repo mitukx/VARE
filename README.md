@@ -16,11 +16,14 @@ Long-running post-training experiments can silently invalidate their own conclus
 | Training-signal integrity | Policy/verifier version checks, current-freshness rescreening, group-complete replay, and a direct RVL trainer freshness guard. | [Lag](src/vare/lag.py), [replay](src/vare/replay.py), [direct-trainer report](docs/rvl-direct-trainer-freshness-v1-report.md) |
 | Evaluation and promotion | Independent held-out reports, optional paired confidence and attested trajectory constraints, candidate discard, and checkpoint-bound publication. | [Gate](src/vare/promotion.py), [attestation](src/vare/attestation.py), [integration evidence](docs/rvl-evaluation-promotion-e2e-v1-report.md) |
 | Ownership and recovery | Full-round same-runtime coordination and a single-host SQLite promotion journal; separate durable evaluation jobs use leases and generation fencing. | [Runtime](src/vare/runtime.py), [journal](src/vare/promotion_journal.py), [evaluation recovery](docs/recovery.md) |
+| Long-horizon execution | Incremental durable agent steps, bounded execute/verify queues, worker fencing, complete-group authenticated terminal admission. | [Runtime and measured limits](docs/async-trajectory-runtime.md) |
 | Reproducible experiments | Versioned protocols, bounded graders, hash-linked records, failure-oriented CPU reproductions, and retained negative outcomes. | [Runner](src/vare/runner.py), [protocols](protocols/), [evidence ledger](docs/evidence.md) |
 
 These are distinct contracts, not a claim that every component forms one deployed, fully autonomous training system. Repository-editing agents and task catalogs are available as [experimental environment integrations](docs/environment_factory.md); large-model training/serving remains external.
 
 ## Measured end-to-end system benchmark
+
+The [durable trajectory CPU comparison](docs/async-trajectory-runtime.md#measured-cpu-result) completed 10,000 synthetic multi-step trajectories per case across three seeds and two scheduling modes, with actual worker SIGKILL and zero duplicated effective commits. Continuous async measured 54.53 ± 1.85 trajectories/s versus 36.16 ± 2.68 for matched synchronous cohorts, with substantially longer queue latency. This measures a single-host control plane; its consumer acknowledges eligibility and performs no optimizer update.
 
 The [multi-completion GRPO CPU validation](docs/grpo-e2e-cpu-report.md) executes 12 rounds × 3 seeds through the existing RVL trainer on a pinned small pretrained model. It verifies real optimizer updates against an independent numerical reference and fixes policy/response provenance and stale-group admission defects. Its synthetic diagnostic evaluation and unmerged RVL dependency patch are explicit; it establishes no task-capability gain.
 
