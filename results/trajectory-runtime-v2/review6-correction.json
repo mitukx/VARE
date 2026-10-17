@@ -1,0 +1,15 @@
+{
+  "additional_guard": "Normal execution still requires exact runtime source. Read-only audits accept historical snapshots only after the artifact auditor binds their recorded runtime hash to the archived source bytes and external file manifest.",
+  "baseline_revision": "db65198084125267ee8597c6bff6f40adfba2903",
+  "baseline_test_exit": 1,
+  "finding": "Completed lifecycle history could be hidden by reverting a row to an active state.",
+  "fixed_source_sha256": "fb25363076c73a75a36080689678648b7d24455642386c4a1145ee27e39a794f",
+  "fixed_test_exit": 0,
+  "regression": "tests/test_trajectory_store.py::test_completion_history_cannot_be_hidden_by_reverting_row",
+  "result": "The pre-fix test failed because audit_trajectory_store accepted the completed row after it was reverted to queued; the corrected test passes. All 1000 local tests passed and 9 optional Math-500 tests were skipped.",
+  "test_logs": {
+    "review6-after.log": "423b1d0e014eb1eab96f4420f7b344c2615be505dd574b756ac884826ca74f2d",
+    "review6-before.log": "f519041136b65632594f5bb9e10af5e4d4c153eb843d033c658a9b7a50a29fd5",
+    "review6-full-tests.log": "c4e561b5b3b999f701b59dc473bf69f96811afded7b7e52bd0ce38d4c97e13e2"
+  }
+}

@@ -1,0 +1,20 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+____________ test_completion_history_rejects_unknown_current_state _____________
+tests/test_trajectory_store.py:396: in test_completion_history_rejects_unknown_current_state
+    with pytest.raises(ValueError, match="unknown trajectory state"):
+E   Failed: DID NOT RAISE <class 'ValueError'>
+_________ test_verification_history_cannot_be_hidden_by_reverting_row __________
+tests/test_trajectory_store.py:410: in test_verification_history_cannot_be_hidden_by_reverting_row
+    with pytest.raises(ValueError, match="verification history conflicts"):
+E   Failed: DID NOT RAISE <class 'ValueError'>
+__________ test_read_only_audit_accepts_pinned_older_runtime_snapshot __________
+tests/test_trajectory_store.py:426: in test_read_only_audit_accepts_pinned_older_runtime_snapshot
+    with pytest.raises(sqlite3.OperationalError, match="readonly|read-only"):
+E   Failed: DID NOT RAISE <class 'sqlite3.OperationalError'>
+=========================== short test summary info ============================
+FAILED tests/test_trajectory_store.py::test_completion_history_rejects_unknown_current_state
+FAILED tests/test_trajectory_store.py::test_verification_history_cannot_be_hidden_by_reverting_row
+FAILED tests/test_trajectory_store.py::test_read_only_audit_accepts_pinned_older_runtime_snapshot
+
+Expected baseline exit code: 1

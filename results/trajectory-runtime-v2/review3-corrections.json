@@ -1,0 +1,8 @@
+{
+  "reviewed_revision": "7a715715271c9b58d1d6c30056f386d3bc065617",
+  "reproducer": "review3-before.log",
+  "baseline": "5 regression failures: hidden terminal history; four undeclared protocol conditions accepted",
+  "fix": "Reject undeclared CLI conditions before DB creation; independently audit condition/summary; bind terminal transitions to materialized state in both directions. Rehashed bad-condition negative control rejects.",
+  "targeted": "60 passed; prior full suite 993 passed / 9 skipped; typecheck and lint pass",
+  "fixed_protocol": "benchmarks/trajectory_runtime_v2/protocol.json unchanged; no final v2 measurements read before fixes"
+}

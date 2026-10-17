@@ -1,0 +1,97 @@
+FFFFF                                                                    [100%]
+=================================== FAILURES ===================================
+___________ test_terminal_history_cannot_be_hidden_by_reverting_row ____________
+
+store = <vare.trajectory_store.TrajectoryStore object at 0x108c38f10>
+
+    def test_terminal_history_cannot_be_hidden_by_reverting_row(store):
+        submit(store)
+        store.cancel("t0")
+        with store.connection(write=True) as db:
+            db.execute("UPDATE trajectories SET state='queued',reason=NULL")
+>       with pytest.raises(ValueError, match="terminal.*history"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_trajectory_store.py:372: Failed
+_____ test_undeclared_protocol_condition_fails_before_execution[options0] ______
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-293/test_undeclared_protocol_condi0')
+options = ['--seed', '73011', '--sigkill']
+
+    @pytest.mark.parametrize("options", [
+        ["--seed", "73011", "--sigkill"],
+        ["--workers", "1", "--sigkill"],
+        ["--trajectories", "20", "--sigkill"],
+        [],
+    ])
+    def test_undeclared_protocol_condition_fails_before_execution(tmp_path, options):
+        output = tmp_path / "invalid"
+        run = subprocess.run([sys.executable, "scripts/benchmark_trajectory_runtime.py", "--trajectories", "100", "--output", str(output), *options], capture_output=True, text=True, timeout=10)
+>       assert run.returncode != 0
+E       assert 0 != 0
+E        +  where 0 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...sumer idle means polling sleep; worker idle excludes DB claim time. No optimizer or promotion claim."\n}\n', stderr='').returncode
+
+tests/test_trajectory_benchmark.py:20: AssertionError
+_____ test_undeclared_protocol_condition_fails_before_execution[options1] ______
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-293/test_undeclared_protocol_condi1')
+options = ['--workers', '1', '--sigkill']
+
+    @pytest.mark.parametrize("options", [
+        ["--seed", "73011", "--sigkill"],
+        ["--workers", "1", "--sigkill"],
+        ["--trajectories", "20", "--sigkill"],
+        [],
+    ])
+    def test_undeclared_protocol_condition_fails_before_execution(tmp_path, options):
+        output = tmp_path / "invalid"
+        run = subprocess.run([sys.executable, "scripts/benchmark_trajectory_runtime.py", "--trajectories", "100", "--output", str(output), *options], capture_output=True, text=True, timeout=10)
+>       assert run.returncode != 0
+E       assert 0 != 0
+E        +  where 0 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...sumer idle means polling sleep; worker idle excludes DB claim time. No optimizer or promotion claim."\n}\n', stderr='').returncode
+
+tests/test_trajectory_benchmark.py:20: AssertionError
+_____ test_undeclared_protocol_condition_fails_before_execution[options2] ______
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-293/test_undeclared_protocol_condi2')
+options = ['--trajectories', '20', '--sigkill']
+
+    @pytest.mark.parametrize("options", [
+        ["--seed", "73011", "--sigkill"],
+        ["--workers", "1", "--sigkill"],
+        ["--trajectories", "20", "--sigkill"],
+        [],
+    ])
+    def test_undeclared_protocol_condition_fails_before_execution(tmp_path, options):
+        output = tmp_path / "invalid"
+        run = subprocess.run([sys.executable, "scripts/benchmark_trajectory_runtime.py", "--trajectories", "100", "--output", str(output), *options], capture_output=True, text=True, timeout=10)
+>       assert run.returncode != 0
+E       assert 0 != 0
+E        +  where 0 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...sumer idle means polling sleep; worker idle excludes DB claim time. No optimizer or promotion claim."\n}\n', stderr='').returncode
+
+tests/test_trajectory_benchmark.py:20: AssertionError
+_____ test_undeclared_protocol_condition_fails_before_execution[options3] ______
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-293/test_undeclared_protocol_condi3')
+options = []
+
+    @pytest.mark.parametrize("options", [
+        ["--seed", "73011", "--sigkill"],
+        ["--workers", "1", "--sigkill"],
+        ["--trajectories", "20", "--sigkill"],
+        [],
+    ])
+    def test_undeclared_protocol_condition_fails_before_execution(tmp_path, options):
+        output = tmp_path / "invalid"
+        run = subprocess.run([sys.executable, "scripts/benchmark_trajectory_runtime.py", "--trajectories", "100", "--output", str(output), *options], capture_output=True, text=True, timeout=10)
+>       assert run.returncode != 0
+E       assert 0 != 0
+E        +  where 0 = CompletedProcess(args=['/Users/user/Documents/Codex/2026-10-16/https-github-com-mitukx-vare-https/work/venv/bin/python...sumer idle means polling sleep; worker idle excludes DB claim time. No optimizer or promotion claim."\n}\n', stderr='').returncode
+
+tests/test_trajectory_benchmark.py:20: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_trajectory_store.py::test_terminal_history_cannot_be_hidden_by_reverting_row
+FAILED tests/test_trajectory_benchmark.py::test_undeclared_protocol_condition_fails_before_execution[options0]
+FAILED tests/test_trajectory_benchmark.py::test_undeclared_protocol_condition_fails_before_execution[options1]
+FAILED tests/test_trajectory_benchmark.py::test_undeclared_protocol_condition_fails_before_execution[options2]
+FAILED tests/test_trajectory_benchmark.py::test_undeclared_protocol_condition_fails_before_execution[options3]
