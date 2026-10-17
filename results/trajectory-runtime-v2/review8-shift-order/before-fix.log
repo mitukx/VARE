@@ -1,0 +1,253 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______ test_multi_group_stream_assesses_shift_after_the_complete_batch ________
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-338/test_multi_group_stream_assess0')
+
+    def test_multi_group_stream_assesses_shift_after_the_complete_batch(tmp_path):
+        store, adapter, loop, hooks = setup(tmp_path, max_groups=2)
+        add_signed_group(store, adapter.root, group_id="h", trajectory_prefix="u",
+                         family="second", task_id="task-second")
+    
+>       result = asyncio.run(adapter.advance(loop, round_index=0))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_trajectory_learner.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py:190: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.11/3.11.15_4/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+src/vare/trajectory_learner.py:235: in advance
+    result = await loop.run_verified_round(claim, round_index=round_index,
+src/vare/engine.py:337: in run_verified_round
+    return await self.run_round(
+src/vare/engine.py:297: in run_round
+    result = await self._run_round(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <vare.engine.CapabilityLoop object at 0x10ab3bb50>
+tasks = [Task(id='task', prompt='same terminal prompt', family='default', metadata={'learning_rule': 'terminal_action_on_polic...f2b13b105266b1765201080a2', 'source_task_sha256': '2a752a4d81a4f9cb30ec6a47278c8cf060ff9defc3aff7569aff1ece0a396cbf'})]
+
+    async def _run_round(self, tasks: Sequence[Task], *, round_index: int, rollout_count: int | None = None, verified_experiences: Sequence[Experience] | None = None, publication_reserve: Callable[[], Awaitable[None]] | None = None) -> RoundResult:
+        source_tasks = list(tasks) + (self._generated_tasks if verified_experiences is None else [])
+        if not source_tasks:
+            raise ValueError("run_round requires tasks")
+        incumbent_id, incumbent_version = self.hooks.active_policy()
+        if self.promotion_journal is not None:
+            assert self.checkpoint_hasher is not None
+            self.promotion_journal.assert_clean(
+                policy_id=incumbent_id,
+                checkpoint_sha256=self.checkpoint_hasher(incumbent_id),
+            )
+        if self.safety_interlock is not None:
+            self.safety_interlock.require("rollout", incumbent_id=incumbent_id)
+        self.shift.fit_reference(t.family for t in source_tasks)
+        if verified_experiences is not None:
+            pairs = self._verified_pairs(verified_experiences)
+        else:
+            target_rollouts = len(source_tasks) if rollout_count is None else rollout_count
+            if target_rollouts <= 0:
+                raise ValueError("rollout_count must be positive")
+            if self.config.samples_per_task <= 0:
+                raise ValueError("samples_per_task must be positive")
+            # A round index can be replayed by callers, so include a deterministic
+            # loop-local serial to keep rollout groups unique across run_round calls.
+            self._run_serial += 1
+            run_serial = self._run_serial
+            if self.config.samples_per_task == 1:
+                base_tasks = self.curriculum.choose(source_tasks, target_rollouts)
+                chosen = [
+                    Task(
+                        id=t.id,
+                        prompt=t.prompt,
+                        family=t.family,
+                        metadata={
+                            **t.metadata,
+                            "vare_rollout_group": f"r{round_index}-run{run_serial}-g{i}",
+                            "vare_rollout_group_size": 1,
+                        },
+                    )
+                    for i, t in enumerate(base_tasks)
+                ]
+            else:
+                group_count = (target_rollouts + self.config.samples_per_task - 1) // self.config.samples_per_task
+                base_tasks = self.curriculum.choose(source_tasks, group_count)
+                chosen = []
+                for group_index, task in enumerate(base_tasks):
+                    group_id = f"r{round_index}-run{run_serial}-g{group_index}"
+                    for _ in range(self.config.samples_per_task):
+                        chosen.append(
+                            Task(
+                                id=task.id,
+                                prompt=task.prompt,
+                                family=task.family,
+                                metadata={
+                                    **task.metadata,
+                                    "vare_rollout_group": group_id,
+                                    "vare_rollout_group_size": self.config.samples_per_task,
+                                },
+                            )
+                        )
+            sem = asyncio.Semaphore(self.config.rollout_concurrency)
+            # gather() normally propagates the first failure while other rollouts
+            # keep running. Never release the round lock with orphaned verifiers or
+            # generation hooks still using the transaction's policy state.
+            rollout_tasks = [
+                asyncio.create_task(self._one_rollout(sem, t, incumbent_id, incumbent_version))
+                for t in chosen
+            ]
+            group = asyncio.gather(*rollout_tasks)
+            try:
+                pairs = await asyncio.shield(group)
+            except BaseException:
+                cleanup = asyncio.create_task(self._cancel_and_drain_rollouts(rollout_tasks))
+                # Repeated caller cancellation must not abandon ongoing cleanup.
+                while not cleanup.done():
+                    try:
+                        await asyncio.shield(cleanup)
+                    except asyncio.CancelledError:
+                        continue
+                await cleanup
+                # Shield detaches the aggregate on caller cancellation. Consume its
+                # terminal exception after draining children, so it cannot become
+                # an unobserved _GatheringFuture failure.
+                try:
+                    await group
+                except BaseException:
+                    pass
+                raise
+    
+        admitted: list[Experience] = []
+        admitted_freshness: list[float] = []
+        dropped = 0
+        for attempt, verification in pairs:
+            self.shift.observe(attempt.task.family)
+            shift_score = self.shift.score()
+            lag = self.lag.assess(
+                rollout_policy_version=attempt.policy_version,
+                active_policy_version=incumbent_version,
+                reward_verifier_version=verification.verifier_version,
+                active_verifier_version=self.verifier.active_version,
+                shift_score=shift_score,
+            )
+            if not lag.admitted:
+                dropped += 1
+                self.events.emit("experience_dropped", reasons=lag.reasons, task_id=attempt.task.id)
+                continue
+            exp = Experience(
+                attempt=attempt,
+                verification=verification,
+                policy_lag=lag.policy_lag,
+                verifier_lag=lag.verifier_lag,
+                shift_score=lag.shift_score,
+            )
+            admitted.append(exp)
+            admitted_freshness.append(lag.freshness)
+    
+        screened_stale = 0
+        freshness_assessor = make_experience_freshness_assessor(
+            self.lag,
+            active_policy_version=incumbent_version,
+            active_verifier_version=lambda: self.verifier.active_version,
+        )
+    
+        def current_freshness(exp: Experience) -> float | None:
+            nonlocal screened_stale
+            decision = freshness_assessor(exp)
+            if not decision.admitted:
+                screened_stale += 1
+                return None
+            return decision.freshness
+    
+        # Ineligible high-priority groups must not consume the capacity needed
+        # to insert a fresh group. Sampling alone only filters their outputs.
+        removed = self.replay.prune_current(
+            freshness_fn=current_freshness,
+            grouped=self.config.preserve_rollout_groups,
+        )
+        if removed:
+            self.events.emit("replay_experiences_pruned", count=removed)
+    
+        if self.config.preserve_rollout_groups:
+            admitted_groups: dict[str, list[tuple[Experience, float]]] = {}
+            for exp, freshness in zip(admitted, admitted_freshness, strict=True):
+                stored_group = exp.attempt.metadata.get("vare_rollout_group")
+                if stored_group is None:
+                    stored_group = exp.attempt.task.metadata.get("vare_rollout_group")
+                key = str(stored_group) if stored_group is not None else f"ungrouped:{id(exp)}"
+                admitted_groups.setdefault(key, []).append((exp, freshness))
+    
+            for group_id, members in admitted_groups.items():
+                first = members[0][0]
+                expected_size = first.attempt.metadata.get("vare_rollout_group_size")
+                if expected_size is None:
+                    expected_size = first.attempt.task.metadata.get(
+                        "vare_rollout_group_size"
+                    )
+                complete = (
+                    isinstance(expected_size, int)
+                    and not isinstance(expected_size, bool)
+                    and expected_size == len(members)
+                )
+                inserted = complete and self.replay.add_group(
+                    [exp for exp, _ in members],
+                    [freshness for _, freshness in members],
+                )
+                if not inserted:
+                    experiences = [exp for exp, _ in members]
+                    if not complete:
+                        reason = "incomplete_after_lag"
+                    elif not self.replay.group_has_homogeneous_provenance(experiences):
+                        reason = "heterogeneous_provenance"
+                    else:
+                        reason = "capacity_or_priority"
+                    self.events.emit(
+                        "replay_group_not_admitted",
+                        group_id=group_id,
+                        admitted_count=len(members),
+                        expected_size=expected_size,
+                        reason=reason,
+                    )
+        else:
+            for exp, freshness in zip(admitted, admitted_freshness, strict=True):
+                self.replay.add(exp, freshness)
+    
+        clusters = self.failures.mine(admitted)
+        self.curriculum.update(clusters)
+    
+        if self.verifier_refresh is not None:
+            refreshed = await self.verifier_refresh.maybe_refresh(clusters, admitted)
+            if refreshed:
+                self.events.emit("verifier_refreshed", active_version=self.verifier.active_version)
+    
+        if self.task_generator is not None and clusters:
+            generated = await self.task_generator.generate(
+                clusters,
+                admitted,
+                self.config.generated_tasks_per_round,
+            )
+            if generated:
+                self._generated_tasks.extend(generated)
+                self._generated_tasks = self._generated_tasks[-self.config.generated_task_buffer :]
+                self.events.emit("tasks_generated", count=len(generated))
+    
+        train_batch = self.replay.sample_current(
+            self.config.replay_batch_size,
+            freshness_fn=current_freshness,
+            grouped=self.config.preserve_rollout_groups,
+        )
+        if screened_stale:
+            self.events.emit("replay_experiences_screened", count=screened_stale)
+        if verified_experiences is not None and {exp.attempt.metadata.get("trajectory_id") for exp in train_batch} != {exp.attempt.metadata.get("trajectory_id") for exp in verified_experiences}:
+>           raise RuntimeError("streamed batch was filtered or truncated before training")
+E           RuntimeError: streamed batch was filtered or truncated before training
+
+src/vare/engine.py:603: RuntimeError
+=========================== short test summary info ============================
+FAILED tests/test_trajectory_learner.py::test_multi_group_stream_assesses_shift_after_the_complete_batch

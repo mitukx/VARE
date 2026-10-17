@@ -481,15 +481,16 @@ class CapabilityLoop:
         admitted: list[Experience] = []
         admitted_freshness: list[float] = []
         dropped = 0
+        batch_shift_score = self.shift.observe_batch(
+            attempt.task.family for attempt, _ in pairs
+        )
         for attempt, verification in pairs:
-            self.shift.observe(attempt.task.family)
-            shift_score = self.shift.score()
             lag = self.lag.assess(
                 rollout_policy_version=attempt.policy_version,
                 active_policy_version=incumbent_version,
                 reward_verifier_version=verification.verifier_version,
                 active_verifier_version=self.verifier.active_version,
-                shift_score=shift_score,
+                shift_score=batch_shift_score,
             )
             if not lag.admitted:
                 dropped += 1

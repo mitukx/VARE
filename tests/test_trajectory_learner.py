@@ -8,7 +8,8 @@ from vare.config import EngineConfig, PromotionConfig, ReplayConfig
 from vare.engine import CapabilityLoop
 from vare.promotion_journal import PromotionJournal, PromotionRecoveryRequired
 from vare.trajectory_learner import TrajectoryLearnerAdapter
-from vare.trajectory_store import PolicyCheckpoint, audit_trajectory_store
+from vare.trajectory_store import AgentStep, PolicyCheckpoint, audit_trajectory_store
+from vare.types import Task, Verification
 from test_checkpoint_bound_promotion import trust
 from test_trajectory_admission import group, P0
 from test_runtime_round_ownership import BoundaryHooks
@@ -30,22 +31,61 @@ class IngestionHooks(BoundaryHooks):
         return await super().train_candidate(incumbent_id, experiences)
 
 
-def setup(tmp_path, *, fault=None):
+def setup(tmp_path, *, fault=None, max_groups=1):
     store, root = group(tmp_path)
     hooks = IngestionHooks(fault=fault, signer=trust())
     hooks.digests["p0"] = P0.checkpoint_sha256
     def policy():
         return PolicyCheckpoint(hooks.active, hooks.version, hooks.digests[hooks.active])
     adapter = TrajectoryLearnerAdapter(store, trust_root=root, current_policy=policy,
-        verifier_identity=("v", 0, "b" * 64))
+        verifier_identity=("v", 0, "b" * 64), max_groups=max_groups)
     durable = PromotionJournal(tmp_path / "promotion.db", initial_policy_id="p0",
                               initial_checkpoint_sha256=P0.checkpoint_sha256)
     loop = CapabilityLoop(hooks=hooks, verifier=NoRolloutVerifier(), promotion_journal=durable,
         evidence_trust_root=hooks.signer, checkpoint_hasher=lambda pid: hooks.digests[pid],
         training_evidence_authorizer=adapter.authorizes, require_authenticated_training=True,
-        config=EngineConfig(replay_batch_size=2, replay=ReplayConfig(capacity=2),
+        config=EngineConfig(replay_batch_size=2 * max_groups,
+                            replay=ReplayConfig(capacity=2 * max_groups),
                             promotion=PromotionConfig(min_primary_gain=.1, min_eval_examples=1)))
     return store, adapter, loop, hooks
+
+
+def add_signed_group(store, root, *, group_id, trajectory_prefix, family, task_id):
+    task = Task(task_id, f"prompt for {task_id}", family,
+                {"learning_rule": "terminal_action_on_policy_grpo_v1"})
+    for member in range(2):
+        store.submit(f"{trajectory_prefix}{member}", task, expected_steps=2,
+                     group_id=group_id, member=member, group_size=2, now=100)
+    for member in range(2):
+        lease = store.claim("execute", "worker", now=100)
+        for index in range(2):
+            generation = {
+                "prompt_id": task_id, "prompt": task.prompt, "response": "yes",
+                "logprob": -.1, "token_count": 1, "latency_s": 0.,
+                "metadata": {
+                    "model": "fixture-model", "backend": "fixture",
+                    "sampling_temperature": 1.,
+                    "logprob_distribution": "neutral_temperature_scaled_policy",
+                    "prompt_token_ids": [0], "response_token_ids": [1],
+                    "response_token_logprobs": [-.1],
+                },
+            }
+            store.append_step(lease, AgentStep(
+                index, f"{trajectory_prefix}{member}-e{index}", P0,
+                {"kind": "inference"}, {}, {"cursor": index}, generation,
+            ), now=100)
+        store.finish(lease, now=100)
+    for _ in range(2):
+        lease = store.claim("verify", "verifier", now=100)
+        head = store.trajectory(lease.trajectory_id)["head"]
+        value = Verification(
+            .5, True, 1., 0, "v", trusted=True,
+            metadata={"verifier_config_sha256": "b" * 64,
+                      "trajectory_sha256": head},
+        )
+        store.record_verification(
+            lease, root.attest(lease.trajectory_id, head, value), now=100,
+        )
 
 
 
@@ -72,6 +112,19 @@ def test_authenticated_delivery_uses_existing_transaction_and_ack(tmp_path):
     assert len(loop.replay) == 0 and audit_trajectory_store(store.path)["pass"]
     assert asyncio.run(adapter.advance(loop, round_index=1)) is None
     assert hooks.calls.count("train") == 1
+
+
+def test_multi_group_stream_assesses_shift_after_the_complete_batch(tmp_path):
+    store, adapter, loop, hooks = setup(tmp_path, max_groups=2)
+    add_signed_group(store, adapter.root, group_id="h", trajectory_prefix="u",
+                     family="second", task_id="task-second")
+
+    result = asyncio.run(adapter.advance(loop, round_index=0))
+
+    assert result.decision.accepted and hooks.active == "p1"
+    assert len(hooks.batch) == 4
+    assert {item.attempt.metadata["vare_rollout_group"] for item in hooks.batch} == {"g", "h"}
+    assert store.counts() == {"consumed": 4}
 
 
 def test_authentication_ignores_only_mutable_replay_selection_fields(tmp_path):
