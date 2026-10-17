@@ -381,11 +381,38 @@ def test_completion_history_cannot_be_hidden_by_reverting_row(store):
     store.finish(lease, now=100)
     with store.connection(write=True) as db:
         db.execute("UPDATE trajectories SET state='queued'")
-    with pytest.raises(ValueError, match="completion.*active"):
+    with pytest.raises(ValueError, match="completion.*(active|row state)"):
+        audit_trajectory_store(store.path)
+
+
+def test_completion_history_rejects_unknown_current_state(store):
+    submit(store)
+    lease = store.claim("execute", "worker", now=100)
+    for index in range(2):
+        store.append_step(lease, step(index), now=100)
+    store.finish(lease, now=100)
+    with store.connection(write=True) as db:
+        db.execute("UPDATE trajectories SET state='bogus'")
+    with pytest.raises(ValueError, match="unknown trajectory state"):
+        audit_trajectory_store(store.path)
+
+
+def test_verification_history_cannot_be_hidden_by_reverting_row(store):
+    submit(store)
+    lease = store.claim("execute", "worker", now=100)
+    for index in range(2):
+        store.append_step(lease, step(index), now=100)
+    store.finish(lease, now=100)
+    verifier = store.claim("verify", "verifier", now=101)
+    verify(store, verifier)
+    with store.connection(write=True) as db:
+        db.execute("UPDATE trajectories SET state='complete'")
+    with pytest.raises(ValueError, match="verification history conflicts"):
         audit_trajectory_store(store.path)
 
 
 def test_read_only_audit_accepts_pinned_older_runtime_snapshot(store):
+    submit(store)
     with store.connection(write=True) as db:
         config = json.loads(db.execute("SELECT value FROM meta WHERE key='config'").fetchone()[0])
         config["source_sha256"] = "4b5b1e632f86e9c4ff24b0ece36930e2d49b130ad1a527e77b46349e73e05c81"
@@ -396,3 +423,8 @@ def test_read_only_audit_accepts_pinned_older_runtime_snapshot(store):
     audit_only = TrajectoryStore(store.path, audit_only=True)
     with pytest.raises(RuntimeError, match="read-only"):
         audit_only.cancel("t0")
+    with pytest.raises(sqlite3.OperationalError, match="readonly|read-only"):
+        with audit_only.connection() as db:
+            db.execute("UPDATE trajectories SET state='cancelled'")
+    with audit_only.connection() as db:
+        assert db.execute("SELECT state FROM trajectories WHERE id='t0'").fetchone()[0] == "queued"

@@ -1,0 +1,41 @@
+{
+  "base_commit": "f95b7c479ec0c7b62d35a046f0d6cf72f7b36069",
+  "baseline_reproduction": {
+    "command": "python -m pytest -q tests/test_trajectory_store.py -k 'unknown_current_state or verification_history_cannot_be_hidden or read_only_audit_accepts_pinned_older_runtime_snapshot' --tb=short",
+    "exit_code": 1,
+    "failed_regressions": 3
+  },
+  "changes": [
+    "Reject trajectory rows with states outside the runtime state enum.",
+    "Require completion history and current state to agree, and prevent verified history from reverting to complete.",
+    "Open audit-only SQLite connections with mode=ro and PRAGMA query_only=ON."
+  ],
+  "fixed_validation": {
+    "full": {
+      "collected": 1011,
+      "command": "python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py -q",
+      "count_source": "progress symbols in saved pytest output; exit code 0",
+      "exit_code": 0,
+      "failed": 0,
+      "passed": 1002,
+      "skipped": 9
+    },
+    "ruff": "passed",
+    "targeted": {
+      "command": "python -m pytest -q tests/test_trajectory_store.py",
+      "passed": 34
+    }
+  },
+  "review_findings": [
+    4302290772,
+    4302290774,
+    4302290777
+  ],
+  "sha256": {
+    "results/trajectory-runtime-v2/review7-before-fix.log": "503ac938b47e7c45393efdc55068fc2d156a49bc5a1e18591b7ea02cdf2d9de5",
+    "results/trajectory-runtime-v2/review7-full-tests.log": "795828de155968e186b063147d49ee9afe877e14d9ce2d450642961e436bf2e4",
+    "results/trajectory-runtime-v2/review7-targeted.log": "1e6b4fbe33d23cc880df779e2dd0330dd0359555faab7d7943e31674e2319fe8",
+    "src/vare/trajectory_store.py": "24dcc6272ba25384d07b015e4b981b6612ac009793f5f0bf987873c9e4611d17",
+    "tests/test_trajectory_store.py": "6f0a0ddf136352d72e41b2b226ff24a73c463f38c40d4ef78d303048fc5604f0"
+  }
+}

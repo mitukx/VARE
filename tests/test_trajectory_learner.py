@@ -209,6 +209,7 @@ def test_failed_rejected_ack_fences_even_ordinary_rounds(tmp_path):
         asyncio.run(loop.run_round([Task("new","new")],round_index=1))
     assert hooks.calls == calls
     assert store.counts() == {"learning":2}
+    assert audit_trajectory_store(store.path)["pass"]
 
 
 def test_source_publication_reservation_fences_cancel_and_refresh(tmp_path):
