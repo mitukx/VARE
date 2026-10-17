@@ -203,15 +203,33 @@ class TrajectoryStore:
         return cls(path)
 
     @contextmanager
+    def _read_only_connection(self):
+        db = sqlite3.connect(self.path.as_uri() + "?mode=ro", uri=True, timeout=5, isolation_level=None)
+        db.row_factory = sqlite3.Row
+        try:
+            db.execute("PRAGMA query_only=ON")
+            db.execute("BEGIN")
+            yield db
+            db.execute("COMMIT")
+        except BaseException:
+            if db.in_transaction:
+                db.execute("ROLLBACK")
+            raise
+        finally:
+            db.close()
+
+    @contextmanager
     def connection(self, write=False):
         if self._audit_only and write:
             raise RuntimeError("snapshot audit connections are read-only")
-        with self._database.connection(write) as db:
+        connection = self._read_only_connection() if self._audit_only else self._database.connection(write)
+        with connection as db:
             config = json.loads(db.execute("SELECT value FROM meta WHERE key='config'").fetchone()[0])
             if config["schema"] != 1 or (not self._audit_only and config["source_sha256"] != sha256_file(__file__)):
                 raise RuntimeMismatchError("resume with the enrolled trajectory runtime source")
-            db.execute("PRAGMA wal_autocheckpoint=64")
-            db.execute(f"PRAGMA max_page_count={config['storage_bytes'] // 4096}")
+            if not self._audit_only:
+                db.execute("PRAGMA wal_autocheckpoint=64")
+                db.execute(f"PRAGMA max_page_count={config['storage_bytes'] // 4096}")
             yield db
 
     def config(self):
@@ -541,6 +559,9 @@ def audit_trajectory_store(path):
             AgentStep(**{**payload, "policy": PolicyCheckpoint(**payload["policy"])})
             step_count += 1
         for row in db.execute("SELECT * FROM trajectories ORDER BY id"):
+            allowed_states = {"queued", "running", "complete", "verified", "consumed", "cancelled", "quarantined"}
+            if row["state"] not in allowed_states:
+                raise ValueError("unknown trajectory state")
             spec = json.loads(row["task"])
             history = [json.loads(e[0]) for e in db.execute("SELECT event FROM events WHERE json_extract(event,'$.job_id')=? AND json_extract(event,'$.kind') IN ('trajectory_enrolled','trajectory_complete','trajectory_verified','consumer_acknowledged','trajectory_cancelled','trajectory_quarantined') ORDER BY sequence", (row["id"],))]
             enrolled = [event for event in history if event["kind"] == "trajectory_enrolled"]
@@ -564,8 +585,8 @@ def audit_trajectory_store(path):
                 raise ValueError("terminal trajectory is incomplete")
             if completed and (len(completed) != 1 or completed[0]["details"] != {"head": row["head"], "steps": n}):
                 raise ValueError("completion/history mismatch")
-            if completed and row["state"] in {"queued", "running"}:
-                raise ValueError("completion history conflicts with active row state")
+            if completed and row["state"] not in {"complete", "verified", "consumed", "cancelled", "quarantined"}:
+                raise ValueError("completion history conflicts with row state")
             if row["state"] in {"complete", "verified", "consumed"} and not completed:
                 raise ValueError("missing completion event")
             if row["verification"] is not None:
@@ -576,6 +597,8 @@ def audit_trajectory_store(path):
                     raise ValueError("verification/history mismatch")
             elif verified or row["state"] in {"verified", "consumed"}:
                 raise ValueError("missing verified reward state")
+            if verified and row["state"] not in {"verified", "consumed", "cancelled", "quarantined"}:
+                raise ValueError("verification history conflicts with row state")
             terminal_history = [e for e in history if e["kind"] in {"trajectory_cancelled", "trajectory_quarantined", "consumer_acknowledged"}]
             group_history = [json.loads(event[0])["details"] for event in db.execute("SELECT event FROM events WHERE json_extract(event,'$.job_id')=? AND json_extract(event,'$.kind')='group_acknowledged'", (row["group_id"],))]
             terminal_history += [body for body in group_history if row["id"] in body["heads"]]
