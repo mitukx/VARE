@@ -16,6 +16,7 @@ import os
 from pathlib import Path
 import re
 import sqlite3
+import threading
 import time
 
 from .durable import FenceError, RuntimeMismatchError, Store
@@ -150,6 +151,7 @@ class TrajectoryStore:
         self._database = Store(path)
         self.path = self._database.path
         self._audit_only = audit_only
+        self._connection_lock = threading.RLock()
 
     @classmethod
     def create(cls, path, *, run_id, max_inflight=2048, record_bytes=65536,
@@ -223,14 +225,18 @@ class TrajectoryStore:
         if self._audit_only and write:
             raise RuntimeError("snapshot audit connections are read-only")
         connection = self._read_only_connection() if self._audit_only else self._database.connection(write)
-        with connection as db:
-            config = json.loads(db.execute("SELECT value FROM meta WHERE key='config'").fetchone()[0])
-            if config["schema"] != 1 or (not self._audit_only and config["source_sha256"] != sha256_file(__file__)):
-                raise RuntimeMismatchError("resume with the enrolled trajectory runtime source")
-            if not self._audit_only:
-                db.execute("PRAGMA wal_autocheckpoint=64")
-                db.execute(f"PRAGMA max_page_count={config['storage_bytes'] // 4096}")
-            yield db
+        # SQLite's local file locks are process-scoped on this platform. Keep
+        # connection lifetimes ordered across asyncio.to_thread callers so one
+        # connection closing cannot disturb another stage's active transaction.
+        with self._connection_lock:
+            with connection as db:
+                config = json.loads(db.execute("SELECT value FROM meta WHERE key='config'").fetchone()[0])
+                if config["schema"] != 1 or (not self._audit_only and config["source_sha256"] != sha256_file(__file__)):
+                    raise RuntimeMismatchError("resume with the enrolled trajectory runtime source")
+                if not self._audit_only:
+                    db.execute("PRAGMA wal_autocheckpoint=64")
+                    db.execute(f"PRAGMA max_page_count={config['storage_bytes'] // 4096}")
+                yield db
 
     def config(self):
         with self.connection() as db:
