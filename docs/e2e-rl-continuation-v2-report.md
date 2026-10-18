@@ -245,7 +245,7 @@ its serialization, isolating the report-digest check. These are audit-integrity
 corrections over the preserved campaign; they add no model, optimizer, or
 performance observations.
 
-The later review also closed five record-linkage gaps. Attempt identities must
+The later review also closed seven record-linkage gaps. Attempt identities must
 follow the configured kill-round schedule, every attempt that reached the
 promotion gate must retain its independent evaluation pair, and rollout
 log-probabilities must agree with worker values, RVL token records, and
@@ -254,6 +254,13 @@ indices; only recovered-publication rounds, whose learner was killed before it
 could close the span, lack a span and are excluded from normal throughput
 aggregation. CPU and peak RSS table values now derive from `resources.jsonl`,
 while redundant progress summaries are checked against those raw samples.
+Every post-promotion attempt must retain exactly one stale-replay screening
+event, while the canary record is matched back to its round-zero rollout; the
+normal summary must contain exactly one aggregate for each retained worker/mode
+pair. Rehashed controls that removed screening evidence, changed the canary
+output, or emptied all normal summary groups passed the previous auditor and
+are rejected by the current one. The independent canary control is retained
+alongside the full 47-test module run and final tensor audit.
 
 This is a toy neural LM and synthetic one-token workload. Replay is round-local;
 general durable replay-backlog/curriculum recovery is not tested. The supervisor

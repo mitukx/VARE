@@ -1,0 +1,5 @@
+Independent rehashed canary-identity control; pristine archive untouched.
+[baseline] exit=0
+{"artifacts_hashed": 6522, "candidate_tensor_states_verified": 0, "cases": 42, "checkpoint_score_count_replayed": 0, "checkpoint_scores_replayed": false, "evaluation_pairs_verified": 507, "evaluation_reports_verified": 1014, "pass": true, "protocol_conformant": true}
+[fixed] exit=1
+ValueError: stale replay canary differs from its authenticated round-zero rollout

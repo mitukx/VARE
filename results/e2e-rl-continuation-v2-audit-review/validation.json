@@ -37,7 +37,11 @@
     "continuation-audit-review-final-module.log": "a003b9872680d6509804fa7036ff47414dd6043a37e4c2601ae249294dc69a0c",
     "continuation-audit-review-final-provenance-wave.log": "56e11ece814270e8b25838cc6a1fcd6811b776d8154377c3c8db786658917e11",
     "continuation-audit-review-final-recovered-publication-regression.log": "6fae9338bb6fd97caba00cfa347c412d014ea0186fc729c9f9e33027960f567a",
-    "continuation-audit-review-final-retained-audit.log": "41ee8fc6a94d197aa2bcf6aeecdd15049303b26127959696d941d13c4c77a324"
+    "continuation-audit-review-final-retained-audit.log": "41ee8fc6a94d197aa2bcf6aeecdd15049303b26127959696d941d13c4c77a324",
+    "continuation-audit-review-latest-controls.log": "b4a1e1eb6b251136a24d60b3c03fac0292770e9a01f94a625e9f8a9f23cab96a",
+    "continuation-audit-review-latest-canary-control.log": "48ca76e35890f1cad5b793b56d7d52ca12054bbcc31f35074d226bd2492a8070",
+    "continuation-audit-review-latest-module.log": "f69edf61d6ca6efd58898a0469f78747c733ff3c9bd6510479578b4a44bbabd6",
+    "continuation-audit-review-latest-retained-audit.log": "41ee8fc6a94d197aa2bcf6aeecdd15049303b26127959696d941d13c4c77a324"
   },
   "fixed_negative_cases": {
     "passed": 11
@@ -249,14 +253,51 @@
       },
       "new_model_or_optimizer_runs": 0,
       "source_archive_sha256": "ade5ca917d8a0d3c53d8e13fd8984cc1392e70fe81ec7032bd5c95158959ff53"
+    },
+    "stale_replay_and_summary_completeness": {
+      "baseline_commit": "5a19af78ec7f4ec899f9f27facd214f11e6ae1ea",
+      "source_archive_sha256": "ade5ca917d8a0d3c53d8e13fd8984cc1392e70fe81ec7032bd5c95158959ff53",
+      "baseline_tamper_controls": {
+        "missing_stale_screening_event_audit_passed": true,
+        "misbound_stale_canary_audit_passed": true,
+        "empty_normal_summary_groups_audit_passed": true
+      },
+      "fixed_controls": {
+        "missing_stale_screening_event_rejected": true,
+        "misbound_stale_canary_rejected": true,
+        "empty_normal_summary_groups_rejected": true
+      },
+      "focused_regressions": {
+        "passed": 3,
+        "scope": "Screening-event retention, canary-to-authenticated-round-zero-rollout identity, and complete worker/mode summary coverage."
+      },
+      "full_continuation_module": {
+        "collected": 47,
+        "passed": 47,
+        "skipped": 0,
+        "elapsed_s": 296.51,
+        "scope": "Retained archive plus pinned local tiny-GPT2 fixture; actual optimizer updates, six SIGKILL recovery boundaries, post-restart updates and independent checkpoint evaluation ran on CPU."
+      },
+      "retained_campaign_reaudit": {
+        "artifacts_hashed": 6522,
+        "candidate_tensor_states_verified": 504,
+        "cases": 42,
+        "evaluation_pairs_verified": 507,
+        "evaluation_reports_verified": 1014,
+        "checkpoint_scores_replayed": false,
+        "pass": true,
+        "protocol_conformant": true,
+        "scope": "Standard-library record audit plus --check-tensors; no new evaluation or model/optimizer campaign."
+      },
+      "new_model_or_optimizer_campaign_runs": 0
     }
   },
   "scope": "Audit correction and actual toy-model system regressions; no new research or main performance campaign.",
   "sources": {
     ".github/workflows/e2e-system-cpu.yml": "60331af183398380e6ba61edc0533c6e9f1d5d33000945928caedb8679197c58",
-    "docs/e2e-rl-continuation-v2-report.md": "5c84962d9f4eba27f75427c9f8ef7f0c1a5fe68e4ee81b3609d626d9f07bb89a",
-    "scripts/audit_e2e_rl_continuation.py": "b84aea3928db39f2ff80aaad1131849bbc3e94a8216371cddc8d8a01fa43dc35",
-    "tests/test_e2e_rl_continuation.py": "9bb493112c9917a856b0b9c28016c9d19933f816ef96e4ddba92f576d5fe7952",
+    "docs/e2e-rl-continuation-v2-report.md": "3169a484cda4c9f4f6b841a2e97cc1826d281bb0de8ced72d1c6ac88fa6a100c",
+    "scripts/audit_e2e_rl_continuation.py": "a149753c904fca723f7e5336628532f62d3fda6136cc82915f2b63da104c3e47",
+    "tests/test_e2e_rl_continuation.py": "cb7f3162cfe83f9651e12d46187adb98030a6b5a49ab8036fea098089ccc2062",
     "results/e2e-rl-continuation-v2/derive_tables.py": "a56eb20e52f58ed952e2781d3f4a726cb6582dd077a6d0ea5ad5c23666cf1513",
     "results/e2e-rl-continuation-v2/comparison.csv": "3a99af257d6430d2daa68a68eb549a07342fcba57fe5b5a4fe6d165ea81c3a39",
     "results/e2e-rl-continuation-v2/derived-metrics.json": "1aa502793b4f9eeb61fb8b464c772f4493ca95cc37c06a4536c33c9c727d002c"

@@ -153,6 +153,12 @@ def audit(root, check_tensors=False, model_dir=None):
         round_records[row["directory"]]=commits
         if row["cutpoint"]=="none":
             references[(row["workers"],row["seed"],row["mode"])]=commits
+        canary=read(case/"canary.json")
+        canary_attempt=canary.get("attempt",{})
+        need(type(canary_attempt.get("created_step")) is int and
+             canary_attempt.get("policy_id")=="policy-0" and
+             type(canary_attempt.get("policy_version")) is int and canary_attempt["policy_version"]==0,
+             "stale replay canary identity is invalid")
         attempts=[json.loads(line) for line in (case/"optimizer_attempts.jsonl").read_text().splitlines()]
         expected_attempts=args["rounds"]+int(row["cutpoint"] in ("post_optimizer","candidate_saved","journal_prepared"))
         need(len(attempts)==row["physical_optimizer_attempts"]==expected_attempts,"physical attempt accounting differs")
@@ -278,6 +284,36 @@ def audit(root, check_tensors=False, model_dir=None):
                     if state:
                         need(worker["loaded_model_sha256"]==incumbent_model,"worker tensor acknowledgment differs")
                 rollouts_by_attempt[attempt_id]=rollouts_by_step
+            if index==0:
+                canary_rollout=rollouts_by_attempt.get(0,{}).get(canary_attempt["created_step"])
+                verification=canary.get("verification",{})
+                reward=float(canary_attempt.get("output","").strip()=="A")
+                need(canary_rollout==canary_attempt and verification.get("trusted") is True and
+                     verification.get("score")==reward and verification.get("passed")==bool(reward) and
+                     verification.get("verifier_name")=="return-A-fixture" and
+                     verification.get("verifier_version")==1 and
+                     verification.get("metadata",{}).get("rvl_ready_reward_snapshot")==reward,
+                     "stale replay canary differs from its authenticated round-zero rollout")
+            expected_stale_rejections=int(canary_attempt["policy_version"]<previous_step)
+            engine_files={}
+            screening_counts_by_attempt={}
+            for path in round_dir.glob("engine-attempt*.jsonl"):
+                suffix=path.stem.removeprefix("engine-attempt")
+                need(suffix.isdigit() and path.name==f"engine-attempt{int(suffix)}.jsonl",
+                     "invalid engine attempt identity")
+                attempt_id=int(suffix)
+                need(attempt_id not in engine_files,"duplicate engine attempt identity")
+                engine_files[attempt_id]=path
+                events=[json.loads(line) for line in path.read_text().splitlines()]
+                screened=[event for event in events if event.get("event")=="replay_experiences_screened"]
+                need(len(screened)==expected_stale_rejections and
+                     all(type(event.get("count")) is int and event["count"]==1 and
+                         type(event.get("ts")) in (int,float) and math.isfinite(event["ts"])
+                         for event in screened),
+                     "stale replay screening events do not prove canary rejection")
+                screening_counts_by_attempt[attempt_id]=sum(event["count"] for event in screened)
+            need(set(engine_files)==attempts_by_round.get(index,set()),
+                 "engine events do not cover every optimizer attempt")
             candidate=commit["candidate_id"]
             candidate_raw,candidate_sha=checkpoint(case,candidate,row["mode"])
             update=commit["update"]
@@ -324,7 +360,8 @@ def audit(root, check_tensors=False, model_dir=None):
             if state:
                 expected_state=candidate_state if commit["accepted"] else state
                 need(fingerprint(expected_state)==commit["active_state_sha256"],"active state differs after promotion/reject")
-            need(commit["stale_replay_rejected"]==int(previous_step>0),"stale replay canary was consumed")
+            need(commit["stale_replay_rejected"]==expected_stale_rejections,
+                 "committed stale replay count differs from stale-canary eligibility")
             expected_policies={previous_pid,candidate}
             records,by_attempt=[],{}
             for path in sorted(round_dir.glob('evaluation-*.json')):
@@ -371,6 +408,8 @@ def audit(root, check_tensors=False, model_dir=None):
                      completed_attempts[0] in attempts_by_round.get(index,set()),
                      "completed round has no unique optimizer attempt")
                 committed_attempt=completed_attempts[0]
+                need(commit["stale_replay_rejected"]==screening_counts_by_attempt[committed_attempt],
+                     "committed stale replay count differs from its screening event")
                 need(committed_attempt in complete_attempts and
                      by_attempt[committed_attempt][previous_pid]["report"]==result["incumbent_eval"] and
                      by_attempt[committed_attempt][candidate]["report"]==result["candidate_eval"],
@@ -401,6 +440,9 @@ def audit(root, check_tensors=False, model_dir=None):
                         committed_attempts.append(attempt_id)
                 need(len(committed_attempts)==1,
                      "recovered evaluation pair differs from promotion evaluation digest")
+                committed_attempt=committed_attempts[0]
+                need(commit["stale_replay_rejected"]==screening_counts_by_attempt[committed_attempt],
+                     "recovered stale replay count differs from its screening event")
             evaluation_pairs+=len(complete_attempts)
             for record in records:
                 need(set(record["scores"])=={task["id"] for task in heldout} and
@@ -449,11 +491,24 @@ def audit(root, check_tensors=False, model_dir=None):
     need(summary["cases"]==len(rows) and summary["completed_rounds"]==committed_rounds,
          "summary budget differs from committed records")
     need(summary["physical_optimizer_attempts"]==sum(r["physical_optimizer_attempts"] for r in rows),"summary attempts differ")
-    for group in summary["normal"]:
+    expected_normal_groups={(r["workers"],r["mode"]) for r in rows if r["cutpoint"]=="none"}
+    normal_groups=summary.get("normal")
+    need(isinstance(normal_groups,list) and
+         all(isinstance(group,dict) and type(group.get("workers")) is int and
+             group.get("mode") in ("minimal","guarded")
+             for group in normal_groups),
+         "normal summary groups are invalid")
+    actual_normal_groups=[(group["workers"],group["mode"]) for group in normal_groups]
+    need(len(actual_normal_groups)==len(expected_normal_groups) and
+         set(actual_normal_groups)==expected_normal_groups,
+         "normal summary groups do not cover every normal case aggregate")
+    for group in normal_groups:
         values=[r["tasks_s"] for r in rows if r["cutpoint"]=="none" and r["workers"]==group["workers"] and r["mode"]==group["mode"]]
         need(group["tasks_s_mean"]==statistics.fmean(values) and group["n"]==len(values),"mean differs")
         if len(values)>1:
             need(group["tasks_s_sd"]==statistics.stdev(values),"seed variance differs")
+        else:
+            need(group["tasks_s_sd"] is None,"single-case seed variance must be null")
     return {"pass":True,"cases":len(rows),"protocol_conformant":locked,"artifacts_hashed":len(sums),
             "candidate_tensor_states_verified":tensor_states,"evaluation_pairs_verified":evaluation_pairs,
             "evaluation_reports_verified":evaluation_reports,"checkpoint_score_count_replayed":replayed_scores,

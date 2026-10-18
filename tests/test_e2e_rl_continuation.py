@@ -377,7 +377,7 @@ def test_rehashed_round_trace_cannot_drop_a_timed_committed_round(audit_records,
     values=[r["tasks_s"] for r in progress if r["cutpoint"]=="none" and
             r["workers"]==row["workers"] and r["mode"]==row["mode"]]
     group["tasks_s_mean"]=statistics.fmean(values)
-    group["tasks_s_sd"]=statistics.stdev(values)
+    group["tasks_s_sd"]=statistics.stdev(values) if len(values)>1 else None
     bench.atomic_json(changed/"summary.json",summary)
     reseal_records(changed)
     with pytest.raises(ValueError,match="round trace spans do not cover"):
@@ -408,7 +408,7 @@ def test_normal_commit_cannot_claim_recovered_publication_to_skip_trace(audit_re
     values=[r["tasks_s"] for r in progress if r["cutpoint"]=="none" and
             r["workers"]==row["workers"] and r["mode"]==row["mode"]]
     group["tasks_s_mean"]=statistics.fmean(values)
-    group["tasks_s_sd"]=statistics.stdev(values)
+    group["tasks_s_sd"]=statistics.stdev(values) if len(values)>1 else None
     bench.atomic_json(changed/"summary.json",summary)
     reseal_records(changed)
     with pytest.raises(ValueError,match="recovered publication is outside"):
@@ -448,6 +448,45 @@ def test_rehashed_evaluations_cannot_disappear_after_gate_entry(audit_records,tm
         path.unlink()
     reseal_records(changed)
     with pytest.raises(ValueError,match="evaluation pairs do not cover every optimizer attempt"):
+        auditor.audit(changed)
+
+
+def test_rehashed_stale_replay_screening_event_cannot_disappear(audit_records,tmp_path):
+    changed=tmp_path/"missing-stale-replay-screening-event"
+    shutil.copytree(audit_records,changed)
+    row=next(r for r in auditor.read(changed/"progress.json")
+             if r["mode"]=="guarded" and r["cutpoint"]=="none")
+    path=changed/row["directory"]/"rounds/r0001/engine-attempt0.jsonl"
+    events=[json.loads(line) for line in path.read_text().splitlines()]
+    events=[event for event in events if event.get("event")!="replay_experiences_screened"]
+    path.write_text("".join(json.dumps(event,sort_keys=True)+"\n" for event in events))
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="stale replay screening events"):
+        auditor.audit(changed)
+
+
+def test_stale_replay_canary_must_match_round_zero_rollout(audit_records,tmp_path):
+    changed=tmp_path/"misbound-stale-replay-canary"
+    shutil.copytree(audit_records,changed)
+    row=next(r for r in auditor.read(changed/"progress.json")
+             if r["mode"]=="guarded" and r["cutpoint"]=="none")
+    path=changed/row["directory"]/"canary.json"
+    canary=auditor.read(path)
+    canary["attempt"]["output"]="forged"
+    bench.atomic_json(path,canary)
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="stale replay canary differs from its authenticated"):
+        auditor.audit(changed)
+
+
+def test_rehashed_normal_summary_cannot_omit_all_groups(audit_records,tmp_path):
+    changed=tmp_path/"missing-normal-summary-groups"
+    shutil.copytree(audit_records,changed)
+    summary=auditor.read(changed/"summary.json")
+    summary["normal"]=[]
+    bench.atomic_json(changed/"summary.json",summary)
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="normal summary groups do not cover"):
         auditor.audit(changed)
 
 
