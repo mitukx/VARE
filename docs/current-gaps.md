@@ -1,5 +1,15 @@
 # Current evidence gaps
 
+**Update 2026-10-18 — async worker SQLite serialization:** concurrent
+`asyncio.to_thread` DB access through one `TrajectoryStore` hung the existing
+independent-stage regression on pinned main in 3/3 repetitions. A per-instance
+connection-lifetime lock passes the same test in 3/3 repetitions (1.147–1.165
+s); focused trajectory tests pass. The complete local suite had one grader
+cleanup failure that passed in isolated reruns on both baseline and candidate.
+Separate store objects, multi-process access, and workload throughput remain
+unmeasured. See the [report](trajectory-worker-sqlite-serialization-v1-report.md)
+and [raw runs](../results/trajectory-worker-sqlite-serialization-v1/).
+
 **Update 2026-10-15 — durable executor source:** a resumed worker could use new
 code while exporting its enrollment-time executor snapshot. The source pin now
 rejects differing/incomplete declared executor bundles before claims, dispatch

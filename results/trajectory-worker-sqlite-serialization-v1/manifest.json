@@ -1,0 +1,99 @@
+{
+  "protocol_id": "vare-trajectory-worker-sqlite-serialization-v2",
+  "candidate_commit": "3f546253b7df26799ce65098f4c62f7d6132d263",
+  "baseline_commit": "40db644c7eae4d830dc721e1d8185665229cfbd6",
+  "inputs": {
+    "src/vare/trajectory_store.py": "5cedfc804c9833626168eed51c7e77da3f8d39d534e003839a348e126fd7d7be",
+    "tests/test_trajectory_workers.py": "19a4033508661f7dbece31065b60c4976adcf87c175688af0cefd54bd8758319",
+    "scripts/reproduce_trajectory_worker_sqlite.py": "11162417668302faf06b5fe6edd5a73e737e3066705cc62248f55b273b379c25",
+    "protocols/trajectory_worker_sqlite_serialization_v1.lock.json": "e425c5001efbd52cf526cbf353275fe57182c3d086b511a5e0c3bf26cc74c7a0",
+    "protocols/trajectory_worker_sqlite_serialization_v2.lock.json": "07845d508cb7f7b97ce717f13c260740edb73783ed729662387bb7420a6fa4be",
+    "docs/trajectory-worker-sqlite-serialization-v1-report.md": "ed41f1c4e83444d21e37d3693289985fe78a98909c8dcd294462bd780494f8ac"
+  },
+  "artifacts": {
+    "run-1/baseline/run-1.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-1/baseline/run-2.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-1/baseline/run-3.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-1/baseline/summary.json": {
+      "bytes": 1108,
+      "sha256": "c74dd9ba824f0631fb79da84c598ae5d484926f0851505985a58a8f94ce4ac4b"
+    },
+    "run-1/baseline-cancel-isolation.log": {
+      "bytes": 80,
+      "sha256": "423b1d0e014eb1eab96f4420f7b344c2615be505dd574b756ac884826ca74f2d"
+    },
+    "run-1/candidate/run-1.log": {
+      "bytes": 80,
+      "sha256": "423b1d0e014eb1eab96f4420f7b344c2615be505dd574b756ac884826ca74f2d"
+    },
+    "run-1/candidate/run-2.log": {
+      "bytes": 80,
+      "sha256": "423b1d0e014eb1eab96f4420f7b344c2615be505dd574b756ac884826ca74f2d"
+    },
+    "run-1/candidate/run-3.log": {
+      "bytes": 80,
+      "sha256": "423b1d0e014eb1eab96f4420f7b344c2615be505dd574b756ac884826ca74f2d"
+    },
+    "run-1/candidate/summary.json": {
+      "bytes": 1085,
+      "sha256": "05ed4bf2c94a39d90a41f8965a6e23bf68f7f0b3c1aebb4e8bbcfbb98d4753c3"
+    },
+    "run-1/candidate-cancel-isolation.log": {
+      "bytes": 80,
+      "sha256": "423b1d0e014eb1eab96f4420f7b344c2615be505dd574b756ac884826ca74f2d"
+    },
+    "run-1/full-suite.log": {
+      "bytes": 8032,
+      "sha256": "f7ad7ed4dae8be0db6b8a12c2e33bf398b8c8f9d3af9dbf2755a17da2d2c3fd2"
+    },
+    "run-1/grader-guard-repeat.log": {
+      "bytes": 80,
+      "sha256": "700bc0322b00f8e8db3ce495047983b54ab27ab59ed1fedac05f3aeba47dae24"
+    },
+    "run-1/targeted-tests.log": {
+      "bytes": 99,
+      "sha256": "f563efc7afeceb9f61ae0873691ba3316578a855e5b3d08d663b0c63e93c2598"
+    },
+    "run-2/baseline/run-1.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-2/baseline/run-2.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-2/baseline/run-3.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-2/baseline/summary.json": {
+      "bytes": 1108,
+      "sha256": "ca92503ddaa451d9c4e151e9b83826ba54b18877bc613f16db86186c630d69fb"
+    },
+    "run-2/candidate/run-1.log": {
+      "bytes": 80,
+      "sha256": "423b1d0e014eb1eab96f4420f7b344c2615be505dd574b756ac884826ca74f2d"
+    },
+    "run-2/candidate/run-2.log": {
+      "bytes": 80,
+      "sha256": "423b1d0e014eb1eab96f4420f7b344c2615be505dd574b756ac884826ca74f2d"
+    },
+    "run-2/candidate/run-3.log": {
+      "bytes": 80,
+      "sha256": "423b1d0e014eb1eab96f4420f7b344c2615be505dd574b756ac884826ca74f2d"
+    },
+    "run-2/candidate/summary.json": {
+      "bytes": 1085,
+      "sha256": "1c52a2b779e47b5bbdf24803a641c1033fa938f4f6fb69a98a9256db221ee3df"
+    }
+  }
+}

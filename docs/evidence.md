@@ -1,5 +1,17 @@
 # Calibration evidence
 
+## Async trajectory worker SQLite serialization — 2026-10-18
+
+On Apple M1 Pro / Python 3.12.12, the pinned-main independent-stage regression
+timed out in 3/3 runs at 15 seconds; a candidate per-instance SQLite
+connection-lifetime lock passed 3/3 runs in 1.147–1.165 seconds. The focused
+trajectory suites passed. The full local suite reported 1081 passed, 78
+skipped, and one grader-cleanup failure; that test and file passed in isolated
+reruns on baseline and candidate. These are bounded single-process runtime
+results, not throughput or learning claims. See the [report](trajectory-worker-sqlite-serialization-v1-report.md),
+[protocol](../protocols/trajectory_worker_sqlite_serialization_v2.lock.json),
+and [raw artifacts](../results/trajectory-worker-sqlite-serialization-v1/).
+
 ## End-to-end CPU RL system benchmark — 2026-10-16
 
 The locked twelve-seed comparison exercises rollout through promotion with a four-parameter simulated policy. VARE was 39.2% lower in throughput than the paired straight-line baseline on the measured M1 Pro fixture, while rejecting replay samples beyond the configured freshness bound. Fault runs also show candidate cleanup and concurrency serialization, and retain the unresolved interrupted-promotion state that requires external reconciliation. This is a systems-cost measurement, not a real-model task-success result. See the [protocol report](e2e-rl-system-benchmark-v1.md), [protocol lock](../protocols/e2e_rl_system_benchmark_v1.lock.json), and [raw run bundle](../results/e2e-rl-system-benchmark-v1/run-1/).

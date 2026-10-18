@@ -1,5 +1,14 @@
 # Roadmap
 
+## Same-process async worker SQLite contention — 2026-10-18
+
+The existing bounded-backlog worker test timed out on pinned main in all three
+M1 repetitions. A per-`TrajectoryStore` connection-lifetime lock made all
+three candidate repetitions pass and the focused trajectory suite pass. This
+closes a same-object, same-process storage hang, not multi-process coordination
+or a throughput claim. The full local suite retained one isolated-passing
+grader-cleanup failure; see the [report](trajectory-worker-sqlite-serialization-v1-report.md).
+
 ## Direct-trainer freshness boundary — 2026-10-15
 
 The [RVL trainer adapter](rvl-direct-trainer-freshness-v1-report.md) now
