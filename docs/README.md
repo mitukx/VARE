@@ -17,6 +17,7 @@
 | Does trajectory replay match dispatch policy and terminal tool lifetime? | [Capture boundary report](trajectory-capture-boundary-v1-report.md) |
 | Where are completed and failed experiments? | [Experiment index](experiments.md), [evidence ledger](evidence.md), [roadmap chronology](roadmap.md) |
 | What is not validated, and what would justify another study? | [Current gaps](current-gaps.md), [research qualification](research-candidate-qualification-2026-10-15.md), [agent charter](../AGENTS.md) |
+| Did a fresh model/task/method qualify for another learning comparison? | [2026-10-16 candidate screen](research-candidate-screen-2026-10-16.md): NO-GO before base inference; prior-art differences, unused metadata candidates and remaining grader/resource gates |
 | How are protocols, artifacts and large blobs preserved? | [Repository layout](repository-layout.md), [artifact retention](artifact-retention.md) |
 
 **Evidence policy:** A regression fixture validates a bounded implementation property; a model-feasibility test does not show learning; an optimizer smoke is not a held-out success result. No retained real-model policy update establishes independently confirmed held-out task-success improvement. Follow each report's pinned source, protocol, raw artifacts, and stated limits. Historical PR/CI status references are snapshots, not live state.

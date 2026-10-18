@@ -1,0 +1,70 @@
+{
+  "baseline": {
+    "failed": 14,
+    "interpretation": "All invalid cases under -O and PYTHONOPTIMIZE=1 falsely reported PASS.",
+    "passed": 10
+  },
+  "baseline_commit": "a83e304677731fd1034c70223a0b8f7c62647ac5",
+  "files": {
+    "baseline-pytest.log": "76d2a65b74c89efb0f6288bf121f82bdf75cb99031e719bff65a5b178012e329",
+    "fixed-pytest.log": "683f5027933c8f5edc38e22a3b57aa37d9138d1cafdafdd81847a2aca93e8bd8",
+    "retained-capture-audit.log": "f7c4c342671c8ee5ed44b22df004e236b6a63e9006ef90826e50f6acf2e71451",
+    "source-revision-baseline-pytest.log": "4616012acfc096b0e2ca99b33fcbfe9bb8a70560f09758c13ba581dd7bdc4e89",
+    "source-revision-fixed-pytest.log": "cf1adbf3cda358f26afec8ef85a38a30531a4bcf961a6b11171b3f82845f653c"
+  },
+  "fixed": {
+    "failed": 0,
+    "modes": [
+      "ordinary Python",
+      "python -O",
+      "PYTHONOPTIMIZE=1"
+    ],
+    "passed": 27
+  },
+  "reproduction": [
+    "git show a83e304677731fd1034c70223a0b8f7c62647ac5:reproducers/research_candidate_metadata_20261016.py > /tmp/vare-metadata-baseline.py",
+    "VARE_METADATA_COLLECTOR=/tmp/vare-metadata-baseline.py python -m pytest tests/test_research_candidate_metadata_verification.py",
+    "python -m pytest tests/test_research_candidate_metadata_verification.py",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -rA tests/test_research_candidate_metadata_verification.py"
+  ],
+  "research_decision": "Existing NO-GO, protocols and captured research records unchanged.",
+  "retained_capture_audit": {
+    "failed_fetches_retained": 0,
+    "files": 27,
+    "metadata_integrity": "PASS"
+  },
+  "scope": "Metadata verifier correctness; no model inference, training or new task data.",
+  "sources": {
+    "reproducers/research_candidate_metadata_20261016.py": "d8c4c7a4a89886f250c3f5e30f74b45b003a9f97f927e6e1659090b3036ff520",
+    "tests/test_research_candidate_metadata_verification.py": "5cf16138254f3943feeef2a3aea97e852be63e964398506cc9818d7f0e122aa0",
+    "docs/research-candidate-screen-2026-10-16.md": "96d645449566866189a65c91caa29ffd8ebca085a4574fed9e96ab73067fd879"
+  },
+  "source_revision_binding": {
+    "pinned_revision": "467ff55dbf6accf0a59e1f0c7f5741ac53ce21de",
+    "baseline_commit": "28e0bd7e446889fbe86c4584576b2bc6bfb9edfa",
+    "baseline": {
+      "resealed_wrong_revision_accepted": true,
+      "targeted_invalid_cases": 3,
+      "modes": [
+        "ordinary Python",
+        "python -O",
+        "PYTHONOPTIMIZE=1"
+      ],
+      "log": "source-revision-baseline-pytest.log"
+    },
+    "fixed": {
+      "passed_cases": 27,
+      "failed_cases": 0,
+      "modes": [
+        "ordinary Python",
+        "python -O",
+        "PYTHONOPTIMIZE=1"
+      ],
+      "model_inference_calls": 0,
+      "optimizer_calls": 0,
+      "task_payload_downloads": 0,
+      "log": "source-revision-fixed-pytest.log"
+    },
+    "fixed_commit": "05e5e849"
+  }
+}
