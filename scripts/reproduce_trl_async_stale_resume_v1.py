@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import importlib.metadata  # noqa: F401
 import json
 import os
 from pathlib import Path, PurePosixPath
@@ -20,8 +19,11 @@ LOCK_PATH = ROOT / "protocols/trl_async_stale_resume_v2.lock.json"
 LOCK_PATHS = {
     "trl-async-stale-resume-v1": ROOT / "protocols/trl_async_stale_resume_v1.lock.json",
     "trl-async-stale-resume-v2": LOCK_PATH,
+    "trl-async-stale-resume-v3": ROOT / "protocols/trl_async_stale_resume_v3.lock.json",
 }
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+REQUIREMENT_RE = re.compile(r"^([A-Za-z0-9_.-]+)==([A-Za-z0-9_.!+~-]+)$")
+TIMEOUT_MARKER = "VARE_RUNNER_TIMEOUT_SECONDS="
 LOG_PATTERNS = {
     "first_run_trained_rows": r"run 1 trained rows\s*:\s*(\d+)",
     "resumed_row": r"resumed at row\s*:\s*(\d+)",
@@ -78,6 +80,30 @@ def fail(message: str) -> None:
     raise ValueError(message)
 
 
+def normalize_distribution_name(name: str) -> str:
+    return re.sub(r"[-_.]+", "-", name).lower()
+
+
+def resolved_requirements(environment: dict[str, Any]) -> dict[str, str] | None:
+    relative = environment.get("resolved_requirements_lock")
+    if not relative:
+        return None
+    requirements: dict[str, str] = {}
+    for line_number, raw_line in enumerate((ROOT / relative).read_text(encoding="utf-8").splitlines(), 1):
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        match = REQUIREMENT_RE.fullmatch(line)
+        if not match:
+            fail(f"resolved requirements must be exact package pins: {relative}:{line_number}")
+        name, version = match.groups()
+        normalized = normalize_distribution_name(name)
+        if normalized in requirements:
+            fail(f"duplicate package in resolved requirements: {normalized}")
+        requirements[normalized] = version
+    return requirements
+
+
 def validate_local_inputs(lock: dict[str, Any]) -> None:
     sources = lock["source"]
     reproduction = lock["reproducer"]
@@ -98,6 +124,9 @@ def validate_local_inputs(lock: dict[str, Any]) -> None:
     stream_patch = reproduction.get("stream_position_patch")
     if stream_patch:
         files += ((stream_patch, reproduction["stream_position_patch_sha256"]),)
+    resolved_lock = environment.get("resolved_requirements_lock")
+    if resolved_lock:
+        files += ((resolved_lock, environment["resolved_requirements_lock_sha256"]),)
     for relative, expected in files:
         path = ROOT / relative
         if not path.is_file() or sha256_file(path) != expected:
@@ -122,32 +151,95 @@ def source_revision(source: Path) -> str:
     return result.stdout.strip()
 
 
-def runtime_environment(python: str, source: Path, expected: dict[str, str]) -> dict[str, Any]:
-    probe = (
-        "import importlib.metadata, json, sys; "
-        "names = " + repr(list(PACKAGE_NAMES.values())) + "; "
-        "versions = {name: importlib.metadata.version(name) for name in names}; "
-        "print(json.dumps({'python': '.'.join(map(str, sys.version_info[:3])), 'versions': versions}))"
-    )
+def runtime_environment(python: str, source: Path, expected: dict[str, Any]) -> dict[str, Any]:
+    resolved = resolved_requirements(expected)
+    if resolved is None:
+        names = list(PACKAGE_NAMES.values())
+        probe = (
+            "import importlib.metadata, json, sys; "
+            f"names = {names!r}; "
+            "versions = {name: importlib.metadata.version(name) for name in names}; "
+            "print(json.dumps({'python': '.'.join(map(str, sys.version_info[:3])), 'versions': versions}))"
+        )
+    else:
+        probe = (
+            "import importlib.metadata as metadata\n"
+            "import json, re, sys\n"
+            "normalize = lambda name: re.sub(r'[-_.]+', '-', name).lower()\n"
+            "versions = {}\n"
+            "duplicates = []\n"
+            "for distribution in metadata.distributions():\n"
+            "    name = normalize(distribution.metadata.get('Name', ''))\n"
+            "    if name in versions:\n"
+            "        duplicates.append(name)\n"
+            "    else:\n"
+            "        versions[name] = distribution.version\n"
+            "print(json.dumps({'python': '.'.join(map(str, sys.version_info[:3])), "
+            "'versions': versions, 'duplicate_names': duplicates}))"
+        )
     result = subprocess.run(
         [python, "-c", probe], cwd=source, check=True, capture_output=True, text=True
     )
     observed = json.loads(result.stdout)
     if observed["python"] != expected["python"]:
         fail(f"Python version mismatch: expected {expected['python']}, got {observed['python']}")
-    expected_versions = {PACKAGE_NAMES[key]: value for key, value in expected.items() if key in PACKAGE_NAMES}
+    expected_versions = resolved or {
+        PACKAGE_NAMES[key]: value for key, value in expected.items() if key in PACKAGE_NAMES
+    }
+    if observed.get("duplicate_names"):
+        fail(f"duplicate installed distribution names: {observed['duplicate_names']}")
     if observed["versions"] != expected_versions:
-        fail(f"dependency version mismatch: expected {expected_versions}, got {observed['versions']}")
+        changed = sorted(
+            name
+            for name in set(expected_versions) & set(observed["versions"])
+            if expected_versions[name] != observed["versions"][name]
+        )
+        fail(
+            "dependency version inventory mismatch: "
+            f"missing={sorted(set(expected_versions) - set(observed['versions']))}, "
+            f"unexpected={sorted(set(observed['versions']) - set(expected_versions))}, "
+            f"changed={changed}"
+        )
+    observed.pop("duplicate_names", None)
     return observed
 
 
-def expected_runtime_environment(expected: dict[str, str]) -> dict[str, Any]:
+def expected_runtime_environment(expected: dict[str, Any]) -> dict[str, Any]:
+    resolved = resolved_requirements(expected)
     return {
         "python": expected["python"],
-        "versions": {
-            PACKAGE_NAMES[key]: value for key, value in expected.items() if key in PACKAGE_NAMES
-        },
+        "versions": resolved
+        or {PACKAGE_NAMES[key]: value for key, value in expected.items() if key in PACKAGE_NAMES},
     }
+
+
+def run_pytest_arm(
+    command: list[str], source: Path, env: dict[str, str], timeout_seconds: int
+) -> tuple[str, int, bool]:
+    try:
+        result = subprocess.run(
+            command,
+            cwd=source,
+            env=env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            timeout=timeout_seconds,
+        )
+    except subprocess.TimeoutExpired as exc:
+        output = exc.stdout or ""
+        if isinstance(output, bytes):
+            output = output.decode("utf-8", errors="replace")
+        output += f"\n{TIMEOUT_MARKER}{timeout_seconds}\n"
+        return output, 124, True
+    return result.stdout, result.returncode, False
+
+
+def protocol_timeout_seconds(lock: dict[str, Any]) -> int:
+    timeout = lock["reproducer"].get("per_run_timeout_seconds")
+    if type(timeout) is not int or timeout <= 0:
+        fail("protocol has no valid locked per-run timeout; use trl-async-stale-resume-v3")
+    return timeout
 
 
 def download_gist(lock: dict[str, Any], gist_path: Path | None) -> bytes:
@@ -195,13 +287,14 @@ def prepare_runner(
     return script_path
 
 
-def parse_run_log(text: str) -> dict[str, int]:
+def parse_run_log(text: str, *, allow_incomplete: bool = False) -> dict[str, int]:
     parsed: dict[str, int] = {}
     for name, pattern in LOG_PATTERNS.items():
         match = re.search(pattern, text)
-        if not match:
+        if not match and not allow_incomplete:
             fail(f"reproduction output lacks {name}")
-        parsed[name] = int(match.group(1))
+        if match:
+            parsed[name] = int(match.group(1))
     return parsed
 
 
@@ -218,6 +311,8 @@ def parse_pytest_outcome(text: str) -> dict[str, int]:
 
 
 def run_acceptance(arm: str, observed: dict[str, int], exit_code: int, lock: dict[str, Any]) -> bool:
+    if not set(LOG_PATTERNS).issubset(observed):
+        return False
     stale_id = lock["reproducer"]["stale_group_id"]
     tail = lock["reproducer"]["tail_tolerance_groups"]
     if arm == "baseline":
@@ -341,15 +436,38 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
 
     for run in runs:
         raw_log = (bundle / run["log"]).read_text(encoding="utf-8")
-        pytest_outcome = parse_pytest_outcome(raw_log)
-        pytest_passed = (
-            pytest_outcome.get("passed", 0) > 0
-            and pytest_outcome.get("failed", 0) == 0
-            and pytest_outcome.get("error", pytest_outcome.get("errors", 0)) == 0
-        )
+        timed_out = run.get("timed_out", False)
+        if "per_run_timeout_seconds" in lock["reproducer"]:
+            timeout_seconds = lock["reproducer"]["per_run_timeout_seconds"]
+            if run.get("timeout_seconds") != timeout_seconds or type(timed_out) is not bool:
+                fail(f"timeout metadata does not match the locked protocol: {run['log']}")
+            marker = f"{TIMEOUT_MARKER}{timeout_seconds}"
+            if timed_out:
+                if run.get("exit_code") != 124 or marker not in raw_log:
+                    fail(f"timed-out arm is not recorded as a failed result: {run['log']}")
+            elif marker in raw_log:
+                fail(f"raw log contains an unrecorded timeout: {run['log']}")
+            if timed_out:
+                pytest_passed = False
+                parsed = parse_run_log(raw_log, allow_incomplete=True)
+            else:
+                pytest_outcome = parse_pytest_outcome(raw_log)
+                pytest_passed = (
+                    pytest_outcome.get("passed", 0) > 0
+                    and pytest_outcome.get("failed", 0) == 0
+                    and pytest_outcome.get("error", pytest_outcome.get("errors", 0)) == 0
+                )
+                parsed = parse_run_log(raw_log)
+        else:
+            pytest_outcome = parse_pytest_outcome(raw_log)
+            pytest_passed = (
+                pytest_outcome.get("passed", 0) > 0
+                and pytest_outcome.get("failed", 0) == 0
+                and pytest_outcome.get("error", pytest_outcome.get("errors", 0)) == 0
+            )
+            parsed = parse_run_log(raw_log)
         if type(run.get("exit_code")) is not int or (run["exit_code"] == 0) != pytest_passed:
             fail(f"recorded exit code contradicts raw pytest result: {run['log']}")
-        parsed = parse_run_log(raw_log)
         if parsed != run["observed"]:
             fail(f"summary/log mismatch: {run['log']}")
         accepted = run_acceptance(run["arm"], parsed, run["exit_code"], lock)
@@ -361,7 +479,9 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
 
 
 def reproduce(args: argparse.Namespace) -> int:
-    lock = read_json(LOCK_PATH)
+    protocol_path = LOCK_PATHS[args.protocol]
+    lock = read_json(protocol_path)
+    timeout_seconds = protocol_timeout_seconds(lock)
     validate_local_inputs(lock)
     base = args.baseline_source.expanduser().resolve()
     candidate = args.candidate_source.expanduser().resolve()
@@ -399,34 +519,33 @@ def reproduce(args: argparse.Namespace) -> int:
                     fail(f"{arm} source revision changed during reproduction")
                 log_rel = f"{arm}-{repetition}.log"
                 log_path = out / log_rel
-                result = subprocess.run(
+                output, exit_code, timed_out = run_pytest_arm(
                     [args.python, "-m", "pytest", str(scripts[arm]), "-q", "-s"],
-                    cwd=source_root,
-                    env=test_env,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.STDOUT,
-                    text=True,
+                    source_root,
+                    test_env,
+                    timeout_seconds,
                 )
                 if source_revision(source_root) != revisions[arm]:
                     fail(f"{arm} source checkout changed while running repetition {repetition}")
-                log_path.write_text(result.stdout, encoding="utf-8")
-                observed = parse_run_log(log_path.read_text(encoding="utf-8"))
-                accepted = run_acceptance(arm, observed, result.returncode, lock)
-                runs.append(
-                    {
-                        "arm": arm,
-                        "repetition": repetition,
-                        "exit_code": result.returncode,
-                        "log": log_rel,
-                        "observed": observed,
-                        "accepted": accepted,
-                    }
-                )
-                print(f"{arm}-{repetition}: exit={result.returncode}, accepted={accepted}, {observed}", flush=True)
+                log_path.write_text(output, encoding="utf-8")
+                observed = parse_run_log(output, allow_incomplete=timed_out)
+                accepted = run_acceptance(arm, observed, exit_code, lock)
+                run = {
+                    "arm": arm,
+                    "repetition": repetition,
+                    "exit_code": exit_code,
+                    "log": log_rel,
+                    "observed": observed,
+                    "accepted": accepted,
+                }
+                run["timed_out"] = timed_out
+                run["timeout_seconds"] = timeout_seconds
+                runs.append(run)
+                print(f"{arm}-{repetition}: exit={exit_code}, timed_out={timed_out}, accepted={accepted}, {observed}", flush=True)
 
     summary = {
         "protocol_id": lock["protocol_id"],
-        "protocol_sha256": sha256_file(LOCK_PATH),
+        "protocol_sha256": sha256_file(protocol_path),
         "runner_sha256": runner_sha,
         "python_executable": str(Path(args.python).resolve()),
         "environment": env,
@@ -453,6 +572,12 @@ def main() -> int:
     parser.add_argument("--python", default=sys.executable, help="Python executable with the pinned CPU dependencies")
     parser.add_argument("--gist-file", type=Path, help="use a local copy of the pinned public Gist instead of downloading it")
     parser.add_argument("--output", type=Path, required=True, help="new or empty directory for logs and manifest")
+    parser.add_argument(
+        "--protocol",
+        choices=sorted(LOCK_PATHS),
+        default="trl-async-stale-resume-v3",
+        help="frozen protocol to run (defaults to v3 with complete dependencies and per-arm timeout)",
+    )
     args = parser.parse_args()
     try:
         return reproduce(args)

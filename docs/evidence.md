@@ -24,6 +24,15 @@ source-level checkpoint correctness evidence only. See the
 [protocol](../protocols/trl_async_stale_resume_v2.lock.json), and
 [raw result](../results/trl-async-stale-resume-v2/run-1-epoch-aware-replay/).
 
+The review-hardened [v3 rerun](trl-async-stale-resume-v3-report.md) fixes
+transitive dependency drift and unbounded pytest hangs with a complete 56-package
+lock and a 600-second per-arm watchdog. It repeats 145 baseline stream
+positions versus one candidate in-flight tail position across three runs each;
+all six arms pass, and none times out. The raw bundle and current protocol are
+[here](../results/trl-async-stale-resume-v3/run-1-full-lock-timeout/) and
+[here](../protocols/trl_async_stale_resume_v3.lock.json). This remains stubbed
+source-level correctness evidence, not model-learning evidence.
+
 ## End-to-end CPU RL system benchmark — 2026-10-16
 
 The locked twelve-seed comparison exercises rollout through promotion with a four-parameter simulated policy. VARE was 39.2% lower in throughput than the paired straight-line baseline on the measured M1 Pro fixture, while rejecting replay samples beyond the configured freshness bound. Fault runs also show candidate cleanup and concurrency serialization, and retain the unresolved interrupted-promotion state that requires external reconciliation. This is a systems-cost measurement, not a real-model task-success result. See the [protocol report](e2e-rl-system-benchmark-v1.md), [protocol lock](../protocols/e2e_rl_system_benchmark_v1.lock.json), and [raw run bundle](../results/e2e-rl-system-benchmark-v1/run-1/).

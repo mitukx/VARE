@@ -64,6 +64,14 @@ the auditor fails closed for those v1 bundles instead of treating a
 self-reported runner hash as provenance. The v2 run-1 and run-2 runner sources
 are retained and hash-checked.
 
+The v2 environment lock names nine direct packages but does not pin every
+transitive distribution, and its protocol has no per-arm timeout. Those frozen
+records remain valid only under their original v2 audit contract; they are not
+retroactively certified against the stronger environment controls. The current
+runner therefore refuses new v1/v2 executions. Protocol v3 adds an exact
+56-distribution lock and a 600-second watchdog; its matched rerun is reported
+in [v3](trl-async-stale-resume-v3-report.md).
+
 After those changes, the same frozen v2 protocol was rerun against clean pinned
 TRL checkouts. Baseline repeated stream positions 144, 144, and 145; candidate
 repeated one in-flight-tail position in each of three runs. All six decisions
@@ -74,47 +82,15 @@ suite passes 16 tests, including resealed runner-hash and pytest-failure
 controls. This is automated review correction and CPU reproduction; no
 independent human review or upstream acceptance is claimed.
 
-## Reproduction
+## Historical reproduction
 
-The frozen protocol is [here](../protocols/trl_async_stale_resume_v2.lock.json).
-The original six raw logs, summary, and SHA-256 manifest are in
-[`run-1-epoch-aware-replay`](../results/trl-async-stale-resume-v2/run-1-epoch-aware-replay/).
-The post-review clean-source rerun and updated runner hash are in
-[`run-2-review-fixes`](../results/trl-async-stale-resume-v2/run-2-review-fixes/).
-Earlier strict-threshold and row-identity runs remain in the neighboring
-bundles, including the v1 false negative.
-
-Set up the pinned Python environment and detached TRL source checkouts once:
-
-```bash
-python3.12 -m venv /tmp/vare-trl-7274-py312
-/tmp/vare-trl-7274-py312/bin/python -m pip install -r requirements/trl-async-stale-resume-v1.txt
-git clone https://github.com/huggingface/trl.git /tmp/vare-trl-7274
-git -C /tmp/vare-trl-7274 fetch origin 6d6901c5e3963108076131ac4979d344566b13a2
-git -C /tmp/vare-trl-7274 worktree add --detach /tmp/vare-trl-base-7274 6d6901c5e3963108076131ac4979d344566b13a2
-git -C /tmp/vare-trl-7274 remote add vare https://github.com/mitukx/trl.git
-git -C /tmp/vare-trl-7274 fetch vare codex/async-stale-resume-cursor
-git -C /tmp/vare-trl-7274 worktree add --detach /tmp/vare-trl-candidate-7274 a85900829d86bcd45b7db0310725f28d3152289b
-```
-
-Then run from the VARE repository root:
-
-```bash
-python scripts/reproduce_trl_async_stale_resume_v1.py \
-  --python /tmp/vare-trl-7274-py312/bin/python \
-  --baseline-source /tmp/vare-trl-base-7274 \
-  --candidate-source /tmp/vare-trl-candidate-7274 \
-  --output /tmp/trl-async-stale-resume-v2
-python scripts/audit_trl_async_stale_resume_v1.py /tmp/trl-async-stale-resume-v2
-PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q tests/test_trl_async_stale_resume_evidence.py
-```
-
-The runner verifies the public reproduction's pinned hash, local patch and
-dependency hashes, source revisions, raw output manifest, and protocol-specific
-acceptance rules. V2 run-1 and run-2 audit as passing against retained runner
-sources. V1 raw bundles remain present, but the auditor rejects them because
-their original runner sources are unavailable; their old reported outcomes
-are not treated as fully verified evidence.
+The frozen [v2 protocol](../protocols/trl_async_stale_resume_v2.lock.json),
+original [bundle](../results/trl-async-stale-resume-v2/run-1-epoch-aware-replay/),
+and clean-source [review rerun](../results/trl-async-stale-resume-v2/run-2-review-fixes/)
+remain unchanged. Use the [v3 report](trl-async-stale-resume-v3-report.md) for
+the current clean-environment reproduction and command. V1 raw bundles also
+remain present; the auditor rejects them because their original runner sources
+were not retained.
 
 ## Limits and next step
 

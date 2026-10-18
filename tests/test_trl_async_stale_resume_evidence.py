@@ -1,17 +1,25 @@
 from __future__ import annotations
 
+import hashlib
 import json
+import os
 import shutil
 from pathlib import Path
 import subprocess
+import sys
 
 import pytest
 
 from scripts.reproduce_trl_async_stale_resume_v1 import (
     audit_bundle,
+    expected_runtime_environment,
     parse_run_log,
     parse_pytest_outcome,
+    protocol_timeout_seconds,
+    resolved_requirements,
+    run_pytest_arm,
     source_revision,
+    sha256_file,
     write_json,
     write_manifest,
 )
@@ -22,6 +30,7 @@ LOCKED_RUN = ROOT / "results/trl-async-stale-resume-v1/run-2-locked-repetitions"
 EPOCH_AWARE_RUN = ROOT / "results/trl-async-stale-resume-v2/run-1-epoch-aware-replay"
 V2_REVIEW_FIX_RUN = ROOT / "results/trl-async-stale-resume-v2/run-2-review-fixes"
 V1_FALSE_NEGATIVE = ROOT / "results/trl-async-stale-resume-v1/run-3-final-runner-replay"
+V3_PROTOCOL = ROOT / "protocols/trl_async_stale_resume_v3.lock.json"
 
 
 def test_reproduction_parser_extracts_stale_cursor_and_replay_count():
@@ -40,6 +49,87 @@ def test_pytest_outcome_parser_preserves_failed_and_passed_counts():
         "passed": 1,
         "warnings": 2,
     }
+
+
+def test_v3_lock_pins_transitive_dependencies_and_timeout():
+    lock = json.loads(V3_PROTOCOL.read_text(encoding="utf-8"))
+    requirements = resolved_requirements(lock["environment"])
+    assert requirements is not None
+    assert len(requirements) > 40
+    assert requirements["packaging"]
+    assert requirements["pluggy"]
+    assert requirements["numpy"]
+    assert lock["reproducer"]["per_run_timeout_seconds"] == 600
+    assert protocol_timeout_seconds(lock) == 600
+    v2_lock = json.loads((ROOT / "protocols/trl_async_stale_resume_v2.lock.json").read_text())
+    with pytest.raises(ValueError, match="no valid locked per-run timeout"):
+        protocol_timeout_seconds(v2_lock)
+
+
+def test_pytest_arm_timeout_preserves_partial_output_as_failed_result(tmp_path: Path):
+    output, exit_code, timed_out = run_pytest_arm(
+        [sys.executable, "-c", "import time; print('started', flush=True); time.sleep(10)"],
+        tmp_path,
+        dict(os.environ),
+        timeout_seconds=2,
+    )
+    assert timed_out is True
+    assert exit_code == 124
+    assert "started" in output
+    assert "VARE_RUNNER_TIMEOUT_SECONDS=2" in output
+
+
+def _convert_bundle_to_v3(copied: Path) -> dict:
+    shutil.copytree(EPOCH_AWARE_RUN, copied)
+    summary_path = copied / "summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    lock = json.loads(V3_PROTOCOL.read_text(encoding="utf-8"))
+    summary["protocol_id"] = lock["protocol_id"]
+    summary["protocol_sha256"] = sha256_file(V3_PROTOCOL)
+    summary["environment"] = expected_runtime_environment(lock["environment"])
+    runner_path = ROOT / "scripts/reproduce_trl_async_stale_resume_v1.py"
+    runner_bytes = runner_path.read_bytes()
+    (copied / "runner.py").write_bytes(runner_bytes)
+    summary["runner_sha256"] = hashlib.sha256(runner_bytes).hexdigest()
+    for run in summary["runs"]:
+        run["timed_out"] = False
+        run["timeout_seconds"] = lock["reproducer"]["per_run_timeout_seconds"]
+    write_json(summary_path, summary)
+    write_manifest(copied)
+    return summary
+
+
+def test_audit_rejects_resealed_v3_bundle_with_changed_transitive_dependency(tmp_path: Path):
+    copied = tmp_path / "run"
+    _convert_bundle_to_v3(copied)
+    summary_path = copied / "summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    summary["environment"]["versions"]["packaging"] = "0.0.0-tampered"
+    write_json(summary_path, summary)
+    write_manifest(copied)
+
+    with pytest.raises(ValueError, match="recorded runtime environment"):
+        audit_bundle(copied)
+
+
+def test_audit_retains_v3_timeout_as_nonpassing_arm(tmp_path: Path):
+    copied = tmp_path / "run"
+    summary = _convert_bundle_to_v3(copied)
+    summary_path = copied / "summary.json"
+    failed_run = next(run for run in summary["runs"] if run["arm"] == "candidate")
+    failed_run["exit_code"] = 124
+    failed_run["timed_out"] = True
+    failed_run["accepted"] = False
+    log_path = copied / failed_run["log"]
+    log_path.write_text(
+        log_path.read_text(encoding="utf-8") + "\nVARE_RUNNER_TIMEOUT_SECONDS=600\n",
+        encoding="utf-8",
+    )
+    summary["all_checks_passed"] = False
+    write_json(summary_path, summary)
+    write_manifest(copied)
+
+    assert audit_bundle(copied)["all_checks_passed"] is False
 
 
 def test_v2_review_fix_bundle_recomputes_from_hashed_logs_and_retained_runner():

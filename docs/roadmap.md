@@ -13,16 +13,20 @@ stores, multiprocess access, and throughput remain unmeasured. See the
 
 ## Async stale-drop checkpoint resume — 2026-10-18
 
-The [epoch-aware TRL issue #7274 reproduction](trl-async-stale-resume-v2-report.md)
-confirms that a stale-dropped group can pin resume progress while later groups
-have already trained. The candidate records dropped IDs for cursor progress
-while preserving trained counts. Three matched CPU replays show 144–148
-repeated baseline positions and one candidate in-flight tail position. Upstream
-PR #7786 was closed before code review; no upstream acceptance is claimed.
-Automated review found and corrected dirty source-checkout provenance and
-incomplete run-inventory auditing; a clean-source rerun passed all six locked
-decisions. The VARE research gate remains actual updates with independent
-held-out task success, not additional local variants of this cursor fix.
+The [epoch-aware TRL issue #7274 reproduction](trl-async-stale-resume-v3-report.md)
+confirms that a stale-dropped group can pin the resume cursor while later
+groups have already trained. The candidate records dropped IDs for cursor
+progress and preserves trained counts separately. Three matched CPU replays
+show 144–148 repeated stream positions on pinned main and one in-flight-tail
+position on the candidate. Upstream PR #7786 was closed before code review; no
+upstream integration is claimed. Automated review found and corrected dirty
+source-checkout provenance and incomplete run-inventory auditing; a clean
+source rerun passed all six locked decisions. A further v3 rerun pins the full
+56-package environment and bounds each pytest arm at 600 seconds; it again
+measures 145 baseline replays versus one candidate in-flight tail position in
+three paired runs. Generation and scoring remain stubbed. The VARE research
+gate remains a real-model update with independent held-out task success, not
+additional local variants of this cursor fix.
 
 ## Direct-trainer freshness boundary — 2026-10-15
 
