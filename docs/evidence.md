@@ -2,14 +2,15 @@
 
 ## Async trajectory worker SQLite serialization — 2026-10-18
 
-On Apple M1 Pro / Python 3.12.12, the pinned-main independent-stage regression
-timed out in 3/3 runs at 15 seconds; a candidate per-instance SQLite
-connection-lifetime lock passed 3/3 runs in 1.147–1.165 seconds. The focused
-trajectory suites passed. The full local suite reported 1081 passed, 78
-skipped, and one grader-cleanup failure; that test and file passed in isolated
-reruns on baseline and candidate. These are bounded single-process runtime
-results, not throughput or learning claims. See the [report](trajectory-worker-sqlite-serialization-v1-report.md),
-[protocol](../protocols/trajectory_worker_sqlite_serialization_v2.lock.json),
+On Apple M1 Pro / Python 3.12.12, a locked paused-reader test fails 3/3 before
+the paged iterator fix and passes 3/3 after it. The older independent-stage
+baseline result proved intermittent on repetition (2/3 timeouts), so that
+protocol is retained as a non-pass rather than a deterministic speed claim.
+The broad local suite passed 1084 tests with 78 skips; one earlier grader
+cleanup failure is retained. These are bounded single-process correctness
+results, not throughput or learning claims. See the
+[report](trajectory-worker-sqlite-serialization-v1-report.md),
+[v4 lock](../protocols/trajectory_worker_paused_reader_heartbeat_v4.lock.json),
 and [raw artifacts](../results/trajectory-worker-sqlite-serialization-v1/).
 
 ## End-to-end CPU RL system benchmark — 2026-10-16

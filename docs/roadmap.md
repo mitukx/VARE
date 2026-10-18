@@ -2,12 +2,14 @@
 
 ## Same-process async worker SQLite contention — 2026-10-18
 
-The existing bounded-backlog worker test timed out on pinned main in all three
-M1 repetitions. A per-`TrajectoryStore` connection-lifetime lock made all
-three candidate repetitions pass and the focused trajectory suite pass. This
-closes a same-object, same-process storage hang, not multi-process coordination
-or a throughput claim. The full local suite retained one isolated-passing
-grader-cleanup failure; see the [report](trajectory-worker-sqlite-serialization-v1-report.md).
+The same-store SQLite mutex addressed a reproduced connection race. Review
+then exposed heartbeat starvation when a consumer paused `iter_steps()`; the
+reader now fetches 16 rows and releases the connection before yielding. A
+locked regression failed 3/3 on pre-fix code and passed 3/3 on the fix. The
+older pipeline hang was intermittent on repetition and remains a non-pass.
+This closes only the tested same-object, same-process liveness case; separate
+stores, multiprocess access, and throughput remain unmeasured. See the
+[report](trajectory-worker-sqlite-serialization-v1-report.md).
 
 ## Direct-trainer freshness boundary — 2026-10-15
 
