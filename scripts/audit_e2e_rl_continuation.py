@@ -1,0 +1,469 @@
+"""Independent byte/tensor/continuity audit for the CPU v2 experiment."""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import io
+import json
+import math
+from pathlib import Path
+import random
+import sqlite3
+import statistics
+
+
+def need(ok, message):
+    if not ok:
+        raise ValueError(message)
+
+
+def read(path):
+    return json.loads(Path(path).read_text())
+
+
+def sha(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def json_sha(value):
+    raw=json.dumps(value,sort_keys=True,separators=(",",":"),allow_nan=False).encode("utf-8")
+    return hashlib.sha256(raw).hexdigest()
+
+
+def expected_tasks(seed, round_index, count, evaluation=False):
+    """Reconstruct the benchmark's deterministic cohort without trusting its artifacts."""
+    rng = random.Random(seed * 100000 + round_index * 100 + int(evaluation))
+    kind = "audit" if evaluation else "train"
+    return [{"family": "transport", "id": f"v2-{kind}-s{seed}-r{round_index}-i{i}",
+             "metadata": {},
+             "prompt": f"v2 {kind} {rng.getrandbits(64):016x}: return A. Answer:"}
+            for i in range(count)]
+
+
+def resource_sample_metrics(directory):
+    samples = [json.loads(line) for line in (Path(directory)/"resources.jsonl").read_text().splitlines()]
+    need(len(samples)>=2,"resource samples are incomplete")
+    times=[sample["time"] for sample in samples]
+    rss=[sample["rss_bytes"] for sample in samples]
+    cpu=[sample["cpu_delta_s"] for sample in samples]
+    need(all(type(value) in (int,float) and math.isfinite(value) for value in (*times,*cpu)) and
+         all(type(value) is int and value>=0 for value in rss) and
+         all(right>left for left,right in zip(times,times[1:])),
+         "resource samples contain invalid time, CPU, or RSS values")
+    window=times[-1]-times[0]
+    need(window>0 and all(value>=0 for value in cpu),"resource sample window is invalid")
+    return {"sample_count":len(samples),"sample_window_s":window,
+            "sampled_cpu_core_percent":100*sum(cpu)/window,
+            "sampled_tree_peak_rss_bytes":max(rss)}
+
+
+def fingerprint(value):
+    """Independent encoding oracle, including dtype/shape, Adam and RNG bytes."""
+    import torch
+    digest = hashlib.sha256()
+    def walk(item):
+        if isinstance(item, torch.Tensor):
+            digest.update(str((str(item.dtype),list(item.shape))).encode())
+            digest.update(item.detach().contiguous().numpy().tobytes())
+        elif isinstance(item, dict):
+            for key in sorted(item,key=str):
+                digest.update(str(key).encode())
+                walk(item[key])
+        elif isinstance(item,(tuple,list)):
+            for member in item:
+                walk(member)
+        else:
+            digest.update(repr(item).encode())
+    walk(value)
+    return digest.hexdigest()
+
+
+def checkpoint(case, policy_id, mode):
+    if mode == "minimal":
+        path = case / f"{policy_id}.pt"
+        return path.read_bytes(), sha(path)
+    uri = (case / "checkpoints/artifacts.sqlite").resolve().as_uri()+"?mode=ro"
+    # The checkpoint-store schema is inspected independently rather than
+    # trusting a supplied checkpoint digest or the benchmark's read helper.
+    with sqlite3.connect(uri,uri=True) as db:
+        row = db.execute("SELECT digest,size FROM artifacts WHERE policy_id=?",(policy_id,)).fetchone()
+    need(row is not None,"checkpoint missing")
+    raw = (case / "checkpoints/objects" / row[0]).read_bytes()
+    need(len(raw)==row[1] and hashlib.sha256(raw).hexdigest()==row[0],"checkpoint integrity mismatch")
+    return raw,row[0]
+
+
+def audit(root, check_tensors=False, model_dir=None):
+    root = Path(root)
+    sums = read(root / "SHA256SUMS.json")
+    actual={str(p.relative_to(root)) for p in root.rglob('*') if p.is_file() and p.name!="SHA256SUMS.json"}
+    need(actual==set(sums),"artifact inventory differs")
+    for name,digest in sums.items():
+        need(sha(root/name)==digest,f"changed artifact: {name}")
+    manifest,summary,rows=read(root/"manifest.json"),read(root/"summary.json"),read(root/"progress.json")
+    for name,digest in manifest["sources"].items():
+        need(sha(root/"sources"/name)==digest,"source snapshot differs")
+    protocol_path=root/"sources/benchmarks/e2e_rl_continuation_v2/protocol.json"
+    need(manifest.get("protocol_sha256")==sha(protocol_path),
+         "declared protocol snapshot digest differs")
+    protocol=read(protocol_path)
+    args=manifest["arguments"]
+    locked=(args["workers"]==protocol["workers"] and args["seeds"]==protocol["seeds"] and
+            args["rounds"]==protocol["rounds"] and args["tasks"]==protocol["rollouts"] and
+            args["eval_tasks"]==protocol["evaluation_tasks"] and not args["skip_faults"])
+    need(manifest["protocol_conformant"]==summary["protocol_conformant"]==locked,"reduced run claims locked protocol")
+    expected_id=protocol["schema"] if locked else protocol["schema"]+".diagnostic"
+    need(manifest["protocol_id"]==summary["protocol_id"]==expected_id,"protocol identity differs")
+    expected_cases={f"normal-w{w}-s{s}-{m}" for w in args["workers"] for s in args["seeds"] for m in ("minimal","guarded")}
+    if not args["skip_faults"]:
+        expected_cases.update(f"kill-{cut}-s{s}-guarded" for s in args["seeds"] for cut in protocol["cutpoints"])
+    need({r["directory"] for r in rows}==expected_cases and len(rows)==len(expected_cases),"campaign case budget differs")
+    if check_tensors or model_dir:
+        import torch
+        torch.set_num_threads(1)
+    if model_dir:
+        from transformers import AutoModelForCausalLM, AutoTokenizer
+        for name,digest in protocol["model_files"].items():
+            need(sha(Path(model_dir)/name)==digest,"model revision differs")
+        model=AutoModelForCausalLM.from_pretrained(model_dir,local_files_only=True).eval()
+        tokenizer=AutoTokenizer.from_pretrained(model_dir,local_files_only=True)
+        choices=[tokenizer.encode(" A")[0],tokenizer.encode(" B")[0]]
+    references,round_records={},{}
+    tensor_states=evaluation_pairs=evaluation_reports=replayed_scores=0
+    for row in rows:
+        case=root/row["directory"]
+        config=read(case/"config.json")
+        need((row["seed"],row["workers"],row["mode"])==
+             (config["seed"],config["workers"],config["mode"]),
+             "progress case metadata differs from retained configuration")
+        if row["cutpoint"]=="none":
+            expected_directory=f"normal-w{row['workers']}-s{row['seed']}-{row['mode']}"
+        else:
+            need(row["cutpoint"] in protocol["cutpoints"] and row["mode"]=="guarded",
+                 "invalid fault case metadata")
+            expected_directory=f"kill-{row['cutpoint']}-s{row['seed']}-guarded"
+        need(row["directory"]==expected_directory,"case directory identity differs from progress metadata")
+        need(row["protocol_id"]==config["protocol_id"]==expected_id,"case protocol identity differs")
+        need(row["protocol_conformant"]==config["protocol_conformant"]==locked,"case conformance differs")
+        commits=[read(case/"rounds"/f"r{i:04d}"/"committed.json") for i in range(args["rounds"])]
+        need([r["completed_round"] for r in commits]==list(range(args["rounds"])),"round gap or duplicate")
+        need(row["completed_rounds"]==row["rounds"]==len(commits),
+             "completed round count differs from committed records")
+        need(commits[-1]["active_state_sha256"]==row["final_state_sha256"],"final state differs")
+        round_records[row["directory"]]=commits
+        if row["cutpoint"]=="none":
+            references[(row["workers"],row["seed"],row["mode"])]=commits
+        attempts=[json.loads(line) for line in (case/"optimizer_attempts.jsonl").read_text().splitlines()]
+        expected_attempts=args["rounds"]+int(row["cutpoint"] in ("post_optimizer","candidate_saved","journal_prepared"))
+        need(len(attempts)==row["physical_optimizer_attempts"]==expected_attempts,"physical attempt accounting differs")
+        attempts_by_round={}
+        attempt_identities=set()
+        for attempt in attempts:
+            round_index=attempt.get("round_index")
+            need(type(round_index) is int and 0<=round_index<len(commits),
+                 "invalid optimizer attempt round identity")
+            learner_attempt=attempt.get("learner_attempt")
+            need(type(learner_attempt) is int and learner_attempt>=0,
+                 "invalid optimizer attempt identity")
+            identity=(round_index,learner_attempt)
+            need(identity not in attempt_identities,"duplicate optimizer attempt identity")
+            attempt_identities.add(identity)
+            committed=commits[round_index]
+            need(attempt["candidate_state_sha256"]==committed["candidate_state_sha256"] and
+                 attempt["candidate_model_sha256"]==committed["update"]["parameters_after_sha256"],
+                 "physical optimizer attempt differs from committed candidate")
+            attempts_by_round.setdefault(round_index,set()).add(learner_attempt)
+        kill_round=protocol["kill_round"]
+        prepublication_cutpoints=("post_optimizer","candidate_saved","journal_prepared")
+        for index in range(len(commits)):
+            if row["cutpoint"]=="none":
+                expected_attempt_ids={0}
+            elif row["cutpoint"] in prepublication_cutpoints:
+                expected_attempt_ids=({0} if index<kill_round else
+                                      {0,1} if index==kill_round else {1})
+            else:
+                expected_attempt_ids={0} if index<=kill_round else {1}
+            need(attempts_by_round.get(index,set())==expected_attempt_ids,
+                 "optimizer attempt identities do not match the kill-round schedule")
+        trace=[json.loads(line) for line in (case/"trace.jsonl").read_text().splitlines()]
+        spans=[r for r in trace if r["stage"]=="round"]
+        expected_timed_rounds=[i for i,commit in enumerate(commits)
+                               if not commit.get("recovered_publication")]
+        span_indices=[span.get("round_index") for span in spans]
+        need(sorted(span_indices)==expected_timed_rounds and len(set(span_indices))==len(spans),
+             "round trace spans do not cover each timed committed round exactly once")
+        for span in spans:
+            index=span["round_index"]
+            need(type(index) is int and type(span.get("learner_attempt")) is int and
+                 span["learner_attempt"]==max(attempts_by_round[index]) and
+                 type(span.get("duration_s")) in (int,float) and
+                 math.isfinite(span["duration_s"]) and span["duration_s"]>0,
+                 "round trace span identity or duration differs from committed round")
+        spans=[span["duration_s"] for span in spans]
+        need(row["round_wall_s"]==sum(spans),"round wall differs")
+        need(row["tasks_s"]==row["tokens_s"]==args["tasks"]*len(spans)/sum(spans),"throughput differs")
+        need(row["accepted_updates"]>=2,"no actual continuation")
+        measured_resources=resource_sample_metrics(case)
+        resources=row["resources"]
+        need(resources["sample_count"]==measured_resources["sample_count"] and
+             resources["sample_interval_s"]==0.02 and
+             resources["sampled_tree_peak_rss_bytes"]==measured_resources["sampled_tree_peak_rss_bytes"],
+             "resource sample count, interval, or peak RSS differs from retained samples")
+        need(math.isclose(resources["sampled_cpu_core_percent"],
+                           measured_resources["sampled_cpu_core_percent"],rel_tol=0.01,abs_tol=0.01),
+             "resource CPU summary differs from retained samples")
+        previous_pid,previous_step="policy-0",0
+        for index,commit in enumerate(commits):
+            round_dir=case/"rounds"/f"r{index:04d}"
+            train,heldout=read(round_dir/"training_tasks.json"),read(round_dir/"evaluation_tasks.json")
+            need(len(train)==args["tasks"] and len(heldout)==args["eval_tasks"],"task budget differs")
+            need(train==expected_tasks(row["seed"],index,args["tasks"]),
+                 "retained training task pool provenance differs")
+            need(heldout==expected_tasks(row["seed"],index,args["eval_tasks"],True),
+                 "independent evaluation cohort provenance differs")
+            train_by_id={task["id"]:task for task in train}
+            need(len(train_by_id)==len(train) and len({task["prompt"] for task in train})==len(train),
+                 "training task pool contains duplicate identities")
+            need(not ({r["prompt"] for r in train}&{r["prompt"] for r in heldout}),"optimization/evaluation overlap")
+            raw,old_sha=checkpoint(case,previous_pid,row["mode"])
+            state=torch.load(io.BytesIO(raw),map_location="cpu",weights_only=True) if check_tensors or model_dir else None
+            if state:
+                need(state["step"]==previous_step,"incumbent Adam step differs")
+                incumbent_model=fingerprint(state["model"])
+            rollout_files={}
+            for file in round_dir.glob("rollouts-attempt*.jsonl"):
+                suffix=file.stem.removeprefix("rollouts-attempt")
+                need(suffix.isdigit() and file.name==f"rollouts-attempt{int(suffix)}.jsonl",
+                     "invalid rollout attempt identity")
+                attempt_id=int(suffix)
+                need(attempt_id not in rollout_files,"duplicate rollout attempt identity")
+                rollout_files[attempt_id]=file
+            need(set(rollout_files)==attempts_by_round.get(index,set()),
+                 "rollout evidence does not cover every optimizer attempt")
+            rollouts_by_attempt={}
+            for attempt_id,file in rollout_files.items():
+                rollouts=[json.loads(line) for line in file.read_text().splitlines()]
+                need(len(rollouts)==args["tasks"],"incomplete rollout attempt")
+                rollouts_by_step={}
+                for rollout in rollouts:
+                    task=rollout["task"]
+                    declared=train_by_id.get(task["id"])
+                    need(declared is not None and
+                         all(task.get(field)==declared.get(field) for field in ("id","family","prompt")),
+                         "rollout task does not match the retained training task pool")
+                    created_step=rollout["created_step"]
+                    need(type(created_step) is int and created_step not in rollouts_by_step,
+                         "rollout attempt has duplicate or invalid step identity")
+                    rollouts_by_step[created_step]=rollout
+                    worker=rollout["metadata"]["worker"]
+                    generation=rollout["metadata"]["rvl_generation"]
+                    generation_metadata=generation["metadata"]
+                    token_logprobs=generation_metadata["response_token_logprobs"]
+                    need(rollout["logprob"]==worker["logprob"]==generation["logprob"] and
+                         token_logprobs and math.isclose(generation["logprob"],math.fsum(token_logprobs),
+                                                        rel_tol=0.0,abs_tol=1e-7),
+                         "rollout logprob differs from worker/RVL evidence")
+                    need(generation["prompt_id"]==task["id"] and generation["prompt"]==task["prompt"] and
+                         generation["response"]==rollout["output"] and
+                         generation_metadata["prompt_token_ids"]==worker["prompt_ids"] and
+                         generation_metadata["response_token_ids"]==[worker["token"]],
+                         "rollout tokens differ from worker/RVL generation evidence")
+                    semantic_generation=dict(generation)
+                    semantic_generation.pop("latency_s",None)
+                    need(rollout["metadata"].get("rvl_generation_behavior_sha256")==json_sha(semantic_generation) and
+                         rollout["metadata"].get("rvl_group_behavior_sha256")==json_sha([generation]),
+                         "rollout behavior digest differs from retained RVL generation")
+                    need(worker["loaded_checkpoint_sha256"]==old_sha and worker["loaded_step"]==previous_step,"stale worker served a new policy label")
+                    need(rollout["policy_id"]==previous_pid and rollout["policy_version"]==previous_step,"policy provenance differs")
+                    if state:
+                        need(worker["loaded_model_sha256"]==incumbent_model,"worker tensor acknowledgment differs")
+                rollouts_by_attempt[attempt_id]=rollouts_by_step
+            candidate=commit["candidate_id"]
+            candidate_raw,candidate_sha=checkpoint(case,candidate,row["mode"])
+            update=commit["update"]
+            need(update["batch_size"]==args["tasks"] and update["parameters_before_sha256"]!=update["parameters_after_sha256"],"mock/no-op/wrong-budget update")
+            batch_files={}
+            for path in round_dir.glob("batch-attempt*.json"):
+                suffix=path.stem.removeprefix("batch-attempt")
+                need(suffix.isdigit() and path.name==f"batch-attempt{int(suffix)}.json",
+                     "invalid batch attempt identity")
+                attempt_id=int(suffix)
+                need(attempt_id not in batch_files,"duplicate batch attempt identity")
+                batch_files[attempt_id]=path
+            need(set(batch_files)==attempts_by_round.get(index,set()),
+                 "batch evidence does not cover every optimizer attempt")
+            for attempt_id,path in batch_files.items():
+                batch=read(path)
+                need(batch["incumbent_id"]==previous_pid and batch["checkpoint_sha256"]==old_sha and batch["step"]==previous_step,"training batch incumbent differs")
+                need(len(batch["members"])==args["tasks"] and len({m["created_step"] for m in batch["members"]})==args["tasks"],"duplicate or incomplete optimizer batch")
+                need(all(m["policy_id"]==previous_pid and m["policy_version"]==previous_step and m["loaded_checkpoint_sha256"]==old_sha for m in batch["members"]),"stale evidence reached optimizer")
+                rollout_by_step=rollouts_by_attempt[attempt_id]
+                need({member["created_step"] for member in batch["members"]}==set(rollout_by_step),
+                     "optimizer batch members differ from the recorded rollout attempt")
+                for member in batch["members"]:
+                    rollout=rollout_by_step[member["created_step"]]
+                    worker=rollout["metadata"]["worker"]
+                    need(member["policy_id"]==rollout["policy_id"] and
+                         member["policy_version"]==rollout["policy_version"] and
+                         member["loaded_checkpoint_sha256"]==worker["loaded_checkpoint_sha256"] and
+                         member["logprob"]==rollout["logprob"] and
+                         member["reward"]==float(rollout["output"].strip()=="A"),
+                         "optimizer batch signal differs from its rollout and verification")
+                if state:
+                    need(batch["model_sha256"]==incumbent_model,"training batch tensor hash differs")
+            if state:
+                candidate_state=torch.load(io.BytesIO(candidate_raw),map_location="cpu",weights_only=True)
+                need(fingerprint(candidate_state)==commit["candidate_state_sha256"],"candidate model/Adam/RNG fingerprint differs")
+                need(candidate_state["step"]==previous_step+1,"candidate step not exactly next")
+                need(fingerprint(candidate_state["model"])==update["parameters_after_sha256"] and incumbent_model==update["parameters_before_sha256"],"update tensors do not match retained checkpoint")
+                need(fingerprint(candidate_state["optimizer"])==update["optimizer_state_sha256"],"Adam moments differ")
+                tensor_states+=1
+            expected_active=candidate if commit["accepted"] else previous_pid
+            expected_step=previous_step+int(commit["accepted"])
+            need(commit["active_policy"]==expected_active and commit["accepted_updates"]==expected_step,"double-applied or missing committed update")
+            if state:
+                expected_state=candidate_state if commit["accepted"] else state
+                need(fingerprint(expected_state)==commit["active_state_sha256"],"active state differs after promotion/reject")
+            need(commit["stale_replay_rejected"]==int(previous_step>0),"stale replay canary was consumed")
+            expected_policies={previous_pid,candidate}
+            records,by_attempt=[],{}
+            for path in sorted(round_dir.glob('evaluation-*.json')):
+                record=read(path)
+                policy_id=record["policy_id"]
+                _,separator,attempt=path.stem.rpartition('-attempt')
+                need(separator and attempt.isdigit() and policy_id in expected_policies and
+                     path.name==f"evaluation-{policy_id}-attempt{int(attempt)}.json" and
+                     record["report"]["policy_id"]==policy_id,"independent evaluation artifact identity differs")
+                need(int(attempt) in attempts_by_round.get(index,set()),
+                     "independent evaluation does not correspond to a physical optimizer attempt")
+                policy_records=by_attempt.setdefault(int(attempt),{})
+                need(policy_id not in policy_records,"duplicate evaluation policy in learner attempt")
+                need(record["scores"]==record["report"].get("metadata",{}).get("per_task_scores"),
+                     "evaluation scores differ from report metadata")
+                if row["mode"]=="guarded":
+                    need(record["report"]["metadata"].get("vare_evaluation_set_sha256") ==
+                         sha(round_dir/"evaluation_tasks.json"),
+                         "guarded evaluation set digest differs from retained cohort")
+                policy_records[policy_id]=record
+                records.append(record)
+            complete_attempts={attempt for attempt,policies in by_attempt.items() if set(policies)==expected_policies}
+            expected_evaluation_attempts=set(attempts_by_round[index])
+            if row["cutpoint"] in ("post_optimizer","candidate_saved") and index==kill_round:
+                expected_evaluation_attempts.discard(0)
+            need(set(by_attempt)==complete_attempts==expected_evaluation_attempts,
+                 "independent evaluation pairs do not cover every optimizer attempt that reached the gate")
+            result=commit.get("result")
+            if result is not None:
+                need(not commit.get("recovered_publication") and result["round_index"]==index and
+                     result["incumbent_id"]==previous_pid and result["candidate_id"]==candidate and
+                     result["decision"]["accepted"] is commit["accepted"],
+                     "committed round result identity differs")
+                completed_attempts=[]
+                for event_file in round_dir.glob("engine-attempt*.jsonl"):
+                    suffix=event_file.stem.removeprefix("engine-attempt")
+                    need(suffix.isdigit(),"invalid engine attempt identity")
+                    attempt_id=int(suffix)
+                    for line in event_file.read_text().splitlines():
+                        event=json.loads(line)
+                        if event.get("event")=="round_complete" and event.get("round_index")==index:
+                            completed_attempts.append(attempt_id)
+                need(len(completed_attempts)==1 and
+                     completed_attempts[0] in attempts_by_round.get(index,set()),
+                     "completed round has no unique optimizer attempt")
+                committed_attempt=completed_attempts[0]
+                need(committed_attempt in complete_attempts and
+                     by_attempt[committed_attempt][previous_pid]["report"]==result["incumbent_eval"] and
+                     by_attempt[committed_attempt][candidate]["report"]==result["candidate_eval"],
+                     "evaluation pair differs from committed round result")
+            else:
+                need(commit.get("recovered_publication") is True and row["mode"]=="guarded",
+                     "committed round result is missing")
+                need(row["cutpoint"] in ("pointer_published","journal_committed") and index==kill_round,
+                     "recovered publication is outside the configured SIGKILL publication boundary")
+                with sqlite3.connect((case/"promotion.sqlite").resolve().as_uri()+"?mode=ro",uri=True) as db:
+                    transactions=db.execute(
+                        "SELECT incumbent_id,incumbent_sha256,candidate_id,candidate_sha256,evaluation_sha256,state "
+                        "FROM transactions WHERE candidate_id=? AND candidate_sha256=?",
+                        (candidate,commit["active_checkpoint_sha256"]),
+                    ).fetchall()
+                need(len(transactions)==1,"recovered promotion transaction is missing or ambiguous")
+                incumbent_id,incumbent_sha,candidate_id,transaction_candidate_sha,evaluation_digest=transactions[0][:5]
+                transaction_state=transactions[0][5]
+                need(incumbent_id==previous_pid and incumbent_sha==old_sha and candidate_id==candidate and
+                     transaction_candidate_sha==candidate_sha and transaction_state=="committed",
+                     "recovered promotion journal binding differs")
+                committed_attempts=[]
+                for attempt_id in complete_attempts:
+                    evaluation_metadata={policy:by_attempt[attempt_id][policy]["report"]["metadata"]
+                                         for policy in (previous_pid,candidate)}
+                    if json_sha({"incumbent":evaluation_metadata[previous_pid],
+                                 "candidate":evaluation_metadata[candidate]})==evaluation_digest:
+                        committed_attempts.append(attempt_id)
+                need(len(committed_attempts)==1,
+                     "recovered evaluation pair differs from promotion evaluation digest")
+            evaluation_pairs+=len(complete_attempts)
+            for record in records:
+                need(set(record["scores"])=={task["id"] for task in heldout} and
+                     record["report"]["n"]==args["eval_tasks"],"independent evaluation task coverage differs")
+                need(len(record["scores"])==args["eval_tasks"] and statistics.fmean(record["scores"].values())==record["report"]["primary"],"independent evaluation arithmetic differs")
+                evaluated_raw,evaluated_sha=checkpoint(case,record["policy_id"],row["mode"])
+                need(record["checkpoint_sha256"]==evaluated_sha,"evaluation checkpoint differs")
+                evaluation_reports+=1
+                if model_dir:
+                    evaluated_state=torch.load(io.BytesIO(evaluated_raw),map_location="cpu",weights_only=True)
+                    model.load_state_dict(evaluated_state["model"])
+                    with torch.inference_mode():
+                        for task in heldout:
+                            score=float(model(torch.tensor([tokenizer.encode(task["prompt"])] )).logits[0,-1,choices].softmax(-1)[0])
+                            need(abs(score-record["scores"][task["id"]])<1e-7,"independent checkpoint score does not replay")
+                            replayed_scores+=1
+            previous_pid,previous_step=expected_active,expected_step
+        if row["mode"]=="guarded":
+            need(row["final_journal"]["pending_tx_id"] is None and row["final_journal"]["round_owner_id"] is None,"journal unresolved")
+            with sqlite3.connect((case/"promotion.sqlite").resolve().as_uri()+"?mode=ro",uri=True) as db:
+                active=db.execute("SELECT policy_id,checkpoint_sha256 FROM active").fetchone()
+                duplicate=db.execute("SELECT candidate_id FROM transactions WHERE state='committed' GROUP BY candidate_id HAVING COUNT(*)>1").fetchall()
+                pending=db.execute("SELECT COUNT(*) FROM transactions WHERE state='prepared'").fetchone()[0]
+                owners=db.execute("SELECT COUNT(*) FROM runtime_round").fetchone()[0]
+            need(not duplicate and pending==owners==0,"duplicate commit or unresolved durable owner")
+            need(active==(commits[-1]["active_policy"],commits[-1]["active_checkpoint_sha256"]),"actual journal pointer differs")
+        if row["cutpoint"]!="none":
+            killed,progress=read(case/"kill_record.json"),read(case/"post_restart_update.json")
+            need(killed["returncode"]==-9 and killed["old_descendants"] and killed["live_old_descendants"]==0,"learner/descendant SIGKILL not established")
+            need(row["recovery_to_next_update_s"]==progress["time"]-killed["killed_at"]>0,"recovery clock differs")
+            expected_round=protocol["kill_round"] if row["cutpoint"] in ("post_optimizer","candidate_saved","journal_prepared") else protocol["kill_round"]+1
+            need(progress["completed_round"]==expected_round,"recovery did not execute the next logical optimizer round")
+    for row in rows:
+        records=round_records[row["directory"]]
+        if row["cutpoint"]=="none":
+            other="minimal" if row["mode"]=="guarded" else "guarded"
+            reference=references[(row["workers"],row["seed"],other)]
+        else:
+            reference=references[(2,row["seed"],"guarded")]
+        for observed,expected in zip(records,reference,strict=True):
+            need(observed["active_state_sha256"]==expected["active_state_sha256"] and observed["candidate_state_sha256"]==expected["candidate_state_sha256"] and observed["accepted"]==expected["accepted"],"continuity reference mismatch")
+            def update(r):
+                return {k:v for k,v in r["update"].items() if k!="optimizer_steps"}
+            need(update(observed)==update(expected),"next numerical optimizer update differs")
+    committed_rounds=sum(len(round_records[row["directory"]]) for row in rows)
+    need(summary["cases"]==len(rows) and summary["completed_rounds"]==committed_rounds,
+         "summary budget differs from committed records")
+    need(summary["physical_optimizer_attempts"]==sum(r["physical_optimizer_attempts"] for r in rows),"summary attempts differ")
+    for group in summary["normal"]:
+        values=[r["tasks_s"] for r in rows if r["cutpoint"]=="none" and r["workers"]==group["workers"] and r["mode"]==group["mode"]]
+        need(group["tasks_s_mean"]==statistics.fmean(values) and group["n"]==len(values),"mean differs")
+        if len(values)>1:
+            need(group["tasks_s_sd"]==statistics.stdev(values),"seed variance differs")
+    return {"pass":True,"cases":len(rows),"protocol_conformant":locked,"artifacts_hashed":len(sums),
+            "candidate_tensor_states_verified":tensor_states,"evaluation_pairs_verified":evaluation_pairs,
+            "evaluation_reports_verified":evaluation_reports,"checkpoint_score_count_replayed":replayed_scores,
+            "checkpoint_scores_replayed":bool(replayed_scores) and replayed_scores==evaluation_reports*args["eval_tasks"]}
+
+
+if __name__=="__main__":
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("directory",type=Path)
+    parser.add_argument("--check-tensors",action="store_true")
+    parser.add_argument("--model-dir",type=Path)
+    args=parser.parse_args()
+    print(json.dumps(audit(args.directory,args.check_tensors,args.model_dir),sort_keys=True))

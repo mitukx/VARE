@@ -1,0 +1,66 @@
+{
+  "abort": "retain all failures and stop on any oracle violation, mismatch, unresolved journal, orphan worker, nonfinite loss, missing parameter change, resource ceiling or deadline",
+  "acceptance": [
+    "all worker acknowledgments match the actual active checkpoint hash, model tensor hash and step",
+    "every round executes actual changed-parameter AdamW and independent evaluation",
+    "each uninterrupted pair has exact equal numerical update records and active state",
+    "at least two accepted updates per normal trial",
+    "each stale canary is screened before training",
+    "all 18 SIGKILL cases retain zero live old descendants and resume an actual optimizer round",
+    "recovered round states, candidate updates, decisions and final model/Adam/RNG/step equal matched uninterrupted reference exactly",
+    "committed round indices are unique, contiguous and never doubled; aborted computation attempts remain recorded",
+    "all final journals clean and active checkpoint intact"
+  ],
+  "backend": "PyTorch CPU fp32, one intraop/inter-op thread per process, frozen tied token embeddings, other 2200 parameters trainable",
+  "cheaper_alternative": "v1 isolated updates and existing runtime/journal regressions cannot establish subsequent worker weight synchronization or post-recovery optimizer continuity.",
+  "claim_limits": "toy LM, one constrained output token, shared-UID cooperative owner, CPU process faults only; no learning quality, production throughput, hostile isolation, GPU or distributed claim",
+  "cutpoints": [
+    "post_optimizer",
+    "candidate_saved",
+    "journal_prepared",
+    "pointer_published",
+    "journal_committed",
+    "round_committed"
+  ],
+  "evaluation_tasks": 32,
+  "failure": "external supervisor SIGKILLs the actual learner, then terminates all ordinary descendants in its owned POSIX process group before restart. No process may remain executing.",
+  "hypothesis": "Updated workers serve the actual active checkpoint, and a SIGKILLed learner can resume the next AdamW update with state exactly equal to uninterrupted execution.",
+  "kill_round": 4,
+  "max_compute": "free M1 Pro/32GiB CPU only; 60 minute campaign deadline, 120 second process progress deadline, 12GiB sampled process-tree RSS ceiling",
+  "model": "sshleifer/tiny-gpt2",
+  "model_files": {
+    "config.json": "77a9e9830c3abeba929f5c61e0e97c398f98b4481ad75516c0be5bf038b340b0",
+    "merges.txt": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+    "pytorch_model.bin": "b706b24034032bdfe765ded5ab6403d201d295a995b790cb24c74becca5c04e6",
+    "special_tokens_map.json": "c0b3c279b6ecdb71996a86ffb4d4ab94dfdb5df95f00bac9515688faef2ff5dd",
+    "tokenizer_config.json": "5e04eb606e3a1583530a42e36c2a6b6615c86f34fe77e44d9ddeb43ff940931f",
+    "vocab.json": "03087853bc70c618b66e7c7a43e787d2db4c469416beac9a483e53dad1f72f27"
+  },
+  "modes": [
+    "minimal",
+    "guarded"
+  ],
+  "objective": "mean -(reward - 0.5) * conditional log_probability, one AdamW step, lr=0.001, weight_decay=0",
+  "primary": "normal round throughput includes worker checkpoint synchronization, rollout, verification, replay, AdamW, evaluation, promotion/reject and fsynced round cursor; startup reported separately. Recovery time starts at SIGKILL and ends at the first subsequent completed real optimizer round with a durable cursor.",
+  "promotion": "nondecreasing independent mean probability of the correct constrained token, min_gain=0, n=32; diagnostic systems acceptance only, no statistical capability decision",
+  "recovery": "verify actual checkpoint/model/Adam/RNG/step and journal; abort an uncommitted intent or roll forward an already published/committed round; resume next real update. Uncommitted work may be recomputed; committed updates may not be applied twice.",
+  "recovery_workers": 2,
+  "replay": "round-local VARE replay with a real base-policy canary after first promotion; both normal arms retain zero-lag checks, guarded additionally authenticates rewards and checkpoint-bound evaluations and journals publication. General replay-backlog recovery is outside scope.",
+  "revision": "5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be",
+  "rollouts": 32,
+  "rounds": 12,
+  "schema": "vare.e2e-rl-continuation.v2",
+  "scope": "single-host CPU systems validation on fresh synthetic tasks; no model-capability or research-gate claim",
+  "seeds": [
+    2701,
+    2702,
+    2703
+  ],
+  "task": "new v2 nonce namespaces for every seed and round, disjoint training/evaluation prompts; no v1 or retired dataset read",
+  "workers": [
+    1,
+    2,
+    4,
+    8
+  ]
+}

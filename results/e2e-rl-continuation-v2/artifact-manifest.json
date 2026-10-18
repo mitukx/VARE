@@ -1,0 +1,42 @@
+{
+  "audit": {
+    "artifacts_hashed": 6522,
+    "candidate_tensor_states_verified": 504,
+    "cases": 42,
+    "checkpoint_scores_replayed": true,
+    "pass": true,
+    "protocol_conformant": true
+  },
+  "diagnostics": "Preflight and two regression executions (10 then 11 tests passed); reduced budgets are diagnostic, excluded from performance aggregation. Deliberate tampered copies are retained as negative controls.",
+  "files": {
+    "continuation-v2-diagnostics.tar.xz": {
+      "archived_files": 3613,
+      "bytes": 1071016,
+      "members": [
+        "continuation-preflight-1",
+        "continuation-preflight-1.log",
+        "continuation-regression-tests",
+        "continuation-regressions.log",
+        "continuation-regression-tests-final",
+        "continuation-regressions-final.log"
+      ],
+      "sha256": "2cd7f113527ab4e8796b04c5723e759c35672cf6ccf30724c96e8a211754fcce",
+      "url": "https://github.com/mitukx/VARE/releases/download/e2e-rl-continuation-v2-20261016/continuation-v2-diagnostics.tar.xz"
+    },
+    "m1-continuation-v2.tar.xz": {
+      "archived_files": 6525,
+      "bytes": 5619004,
+      "members": [
+        "continuation-v2-main",
+        "continuation-v2-main.log",
+        "continuation-v2-audit.log"
+      ],
+      "sha256": "ade5ca917d8a0d3c53d8e13fd8984cc1392e70fe81ec7032bd5c95158959ff53",
+      "url": "https://github.com/mitukx/VARE/releases/download/e2e-rl-continuation-v2-20261016/m1-continuation-v2.tar.xz"
+    }
+  },
+  "measured_source_commit": "56ba2fefc69a8851f0457646b7031fe8bf2f2c80",
+  "protocol_sha256": "668b0c9c8ce3959fccc4eabe6926cc797e55262abfb4e91ad08b73dee4fdff34",
+  "release": "https://github.com/mitukx/VARE/releases/tag/e2e-rl-continuation-v2-20261016",
+  "retention": "Existing frozen protocols/results are unchanged. New archives exceed the 1 MiB Git budget and are stored as release assets."
+}

@@ -23,6 +23,19 @@ These are distinct contracts, not a claim that every component forms one deploye
 
 ## Measured end-to-end system benchmark
 
+The [continuous actual-model CPU benchmark](docs/e2e-rl-continuation-v2-report.md) runs **rollout → verification → freshness check → replay → actual AdamW update → independent checkpoint evaluation → promotion/rejection → checkpoint recovery**, followed by further actual updates. It uses a pinned public tiny GPT-2 checkpoint (102,714 parameters; 2,200 trainable) and fresh synthetic one-token tasks on Apple M1 Pro / 32 GiB. **42/42 cases passed: 504 logical rounds and 513 actual candidate optimizer attempts.** Eighteen learner SIGKILL/restarts reproduced uninterrupted model, Adam, RNG, step and subsequent updates exactly; nine uncommitted computations were repeated and no committed update was applied twice. Independent audit verified 6,522 files, 504 candidate tensor states and replayed checkpoint evaluation scores.
+
+Continuation benchmark tasks/s, mean ± sample SD over three seeds:
+
+| Rollout workers | Minimal controls | Guarded controls |
+| ---: | ---: | ---: |
+| 1 | 157.75 ± 18.39 | 145.57 ± 10.70 |
+| 2 | 193.57 ± 3.17 | 176.49 ± 3.55 |
+| 4 | 194.97 ± 9.44 | 170.63 ± 3.02 |
+| 8 | 195.33 ± 5.70 | 174.53 ± 4.13 |
+
+Guarded paired mean wall overhead was **8.80–14.22%**; peak sampled process-tree RSS was **3,785.34 MiB**. Recovery from learner SIGKILL through the next actual update averaged **6.48–7.04 s** across six cutpoints. This is toy-model systems validation on a synthetic workload; it makes no task-capability, production-throughput, or distributed-scaling claim. Replay is round-local. See the [report](docs/e2e-rl-continuation-v2-report.md), [protocol](benchmarks/e2e_rl_continuation_v2/protocol.json), and [retained evidence](https://github.com/mitukx/VARE/releases/tag/e2e-rl-continuation-v2-20261016).
+
 The [durable trajectory CPU comparison](docs/async-trajectory-runtime.md#measured-cpu-result) completed 10,000 synthetic multi-step trajectories per case across three seeds and two scheduling modes, with actual worker SIGKILL and zero duplicated effective commits. Continuous async measured 54.53 ± 1.85 trajectories/s versus 36.16 ± 2.68 for matched synchronous cohorts, with substantially longer queue latency. This measures a single-host control plane; its consumer acknowledges eligibility and performs no optimizer update.
 
 The [multi-completion GRPO CPU validation](docs/grpo-e2e-cpu-report.md) executes 12 rounds × 3 seeds through the existing RVL trainer on a pinned small pretrained model. It verifies real optimizer updates against an independent numerical reference and fixes policy/response provenance and stale-group admission defects. Its synthetic diagnostic evaluation and unmerged RVL dependency patch are explicit; it establishes no task-capability gain.
