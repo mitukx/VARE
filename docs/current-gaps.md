@@ -11,6 +11,17 @@ throughput remain unmeasured. See the
 [report](trajectory-worker-sqlite-serialization-v1-report.md) and
 [raw runs](../results/trajectory-worker-sqlite-serialization-v1/).
 
+**Update 2026-10-18 — TRL stale-drop resume cursor:** an epoch-aware, three-pair
+CPU replay against issue [#7274](https://github.com/huggingface/trl/issues/7274)
+shows 144–148 repeated absolute stream positions on pinned TRL main and one
+in-flight tail position on the candidate in each run. The candidate records
+stale drops as resolved for cursor progress while keeping trained counts
+separate. Upstream PR [#7786](https://github.com/huggingface/trl/pull/7786) was
+closed before review. The earlier row-identity run remains a retained non-pass.
+Generation and scoring are stubbed; this does not establish model task success.
+See the [v2 report](trl-async-stale-resume-v2-report.md), its [protocol](../protocols/trl_async_stale_resume_v2.lock.json),
+and [raw result](../results/trl-async-stale-resume-v2/run-1-epoch-aware-replay/).
+
 **Update 2026-10-15 — durable executor source:** a resumed worker could use new
 code while exporting its enrollment-time executor snapshot. The source pin now
 rejects differing/incomplete declared executor bundles before claims, dispatch

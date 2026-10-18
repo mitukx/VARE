@@ -11,6 +11,16 @@ This closes only the tested same-object, same-process liveness case; separate
 stores, multiprocess access, and throughput remain unmeasured. See the
 [report](trajectory-worker-sqlite-serialization-v1-report.md).
 
+## Async stale-drop checkpoint resume — 2026-10-18
+
+The [epoch-aware TRL issue #7274 reproduction](trl-async-stale-resume-v2-report.md)
+confirms that a stale-dropped group can pin resume progress while later groups
+have already trained. The candidate records dropped IDs for cursor progress
+while preserving trained counts. Three matched CPU replays show 144–148
+repeated baseline positions and one candidate in-flight tail position. Upstream
+PR #7786 was closed before review; no upstream acceptance is claimed. The VARE
+research gate remains actual updates with independent held-out task success.
+
 ## Direct-trainer freshness boundary — 2026-10-15
 
 The [RVL trainer adapter](rvl-direct-trainer-freshness-v1-report.md) now

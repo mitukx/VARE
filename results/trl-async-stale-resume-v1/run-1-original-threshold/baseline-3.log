@@ -1,0 +1,61 @@
+W1018 18:09:19.522000 75113 site-packages/torch/distributed/elastic/multiprocessing/redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+
+groups trained          : 147 (highest id 150)
+samples dropped stale   : 2
+group 2 reached trainer : True
+group 2 in _trained_groups : False
+discarded group ids     : [2]
+saved prompt_index      : 2
+.
+run 1 trained rows      : 147
+run 2 trained rows      : 149
+resumed at row          : 2
+rows trained TWICE      : 144 -> [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] ...
+rows new in run 2       : 5 -> [2, 147, 148, 149, 153]
+_groups_before_resume   : 2 (run 1 actually trained 147)
+F
+=================================== FAILURES ===================================
+______________ test_resume_retrains_prompts_that_already_trained _______________
+
+    def test_resume_retrains_prompts_that_already_trained():
+        first = run_rollouts(dataset_start_index=0, latency_for=one_slow_group, wait_for_group=SLOW_GROUP)
+        assert SLOW_GROUP in first["reached_trainer"]
+        assert SLOW_GROUP not in first["trained_groups"]
+    
+        with tempfile.TemporaryDirectory() as out_dir:
+            checkpoint_dir, state = save_checkpoint(first["trained_groups"], 0, out_dir)
+            start_index, groups_before_resume = resume_start_index(checkpoint_dir)
+    
+        assert start_index == state["prompt_index"] == SLOW_GROUP
+    
+        # Nothing is slow in the resumed run; the point is only which rows it walks over.
+        second = run_rollouts(dataset_start_index=start_index, latency_for=lambda _group_id: FAST_LATENCY)
+    
+        trained_twice = first["trained_rows"] & second["trained_rows"]
+        fresh = second["trained_rows"] - first["trained_rows"]
+    
+        print(f"\nrun 1 trained rows      : {len(first['trained_rows'])}")
+        print(f"run 2 trained rows      : {len(second['trained_rows'])}")
+        print(f"resumed at row          : {start_index}")
+        print(f"rows trained TWICE      : {len(trained_twice)} -> {sorted(trained_twice)[:12]} ...")
+        print(f"rows new in run 2       : {len(fresh)} -> {sorted(fresh)[:12]}")
+        print(f"_groups_before_resume   : {groups_before_resume} (run 1 actually trained {len(first['trained_groups'])})")
+    
+        # run 2 restarts at the discarded row, so nearly everything run 1 trained is generated again
+>       assert len(trained_twice) >= TARGET_GROUPS - 5
+E       assert 144 >= (150 - 5)
+E        +  where 144 = len({3, 4, 5, 6, 7, 8, ...})
+
+/tmp/test_resume_retrains_base.py:352: AssertionError
+=============================== warnings summary ===============================
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../../tmp/test_resume_retrains_base.py::test_resume_retrains_prompts_that_already_trained
+1 failed, 1 passed, 2 warnings in 8.53s
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute

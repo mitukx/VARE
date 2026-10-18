@@ -1,0 +1,109 @@
+--- async_grpo_resume_cursor_repro.py
++++ async_grpo_resume_cursor_repro.py
+@@ -220,6 +220,7 @@
+             raise RuntimeError("rollout thread died, see the traceback above")
+ 
+     metrics = defaultdict(list)
++    dropped_groups: set[int] = set()
+     queue_dataset = RolloutQueueDataset(
+         rollout_queue=recording,
+         model_version_fn=lambda: trainer_version["v"],
+@@ -228,6 +229,7 @@
+         metrics=metrics,
+         max_staleness=MAX_STALENESS,
+         poll_interval_s=0.05,
++        dropped_groups=dropped_groups,
+     )
+ 
+     trained_groups: set[int] = set()
+@@ -255,11 +257,12 @@
+         "reached_trainer": recording.seen,
+         "discarded_groups": recording.seen - trained_groups,
+         "dropped_samples": int(sum(metrics["sample/dropped_stale_total"])),
++        "dropped_groups": dropped_groups,
+         "highest_group": max(trained_groups),
+     }
+ 
+ 
+-def save_checkpoint(trained_groups, dataset_start_index, out_dir):
++def save_checkpoint(trained_groups, dataset_start_index, out_dir, dropped_groups=None):
+     """Call the real AsyncGRPOTrainer._save_checkpoint and hand back the rollout_state it wrote."""
+     trainer = AsyncGRPOTrainer.__new__(AsyncGRPOTrainer)  # __new__ skips __init__ (needs a GPU + model)
+     trainer.accelerator = MagicMock()
+@@ -268,6 +271,7 @@
+     trainer.rollout_worker = MagicMock(spec=AsyncRolloutWorker)
+     trainer.rollout_worker._loop_kwargs = {"dataset_start_index": dataset_start_index}
+     trainer._trained_groups = trained_groups
++    trainer._dropped_groups = dropped_groups or set()
+     trainer._groups_before_resume = 0
+     trainer.state = MagicMock()
+     trainer.state.global_step = 1
+@@ -288,6 +292,8 @@
+     trainer.accelerator = MagicMock()
+     trainer.accelerator.is_main_process = False  # skips the finally-block teardown
+     trainer._groups_before_resume = 0
++    trainer._trained_groups = set()
++    trainer._dropped_groups = set()
+     with patch.object(_BaseTrainer, "_inner_training_loop", return_value=None):
+         trainer._inner_training_loop(resume_from_checkpoint=checkpoint_dir)
+     return trainer.rollout_worker._loop_kwargs["dataset_start_index"], trainer._groups_before_resume
+@@ -317,11 +323,17 @@
+     assert run["highest_group"] >= TARGET_GROUPS
+ 
+     with tempfile.TemporaryDirectory() as out_dir:
+-        _checkpoint_dir, state = save_checkpoint(run["trained_groups"], 0, out_dir)
++        _checkpoint_dir, state = save_checkpoint(
++            run["trained_groups"], 0, out_dir, run["dropped_groups"]
++        )
+ 
+     print(f"saved prompt_index      : {state['prompt_index']}")
+-    # the cursor stops at the hole even though ~150 groups trained past it
+-    assert state["prompt_index"] == SLOW_GROUP
++    # the stale group is resolved; a still-unseen group remains the cursor boundary
++    resolved = run["trained_groups"] | run["dropped_groups"]
++    expected_cursor = min(group for group in range(500) if group not in resolved)
++    assert state["prompt_index"] == expected_cursor
++    assert state["prompt_index"] > SLOW_GROUP
++    assert state["groups_trained"] == len(run["trained_groups"])
+ 
+ 
+ def test_resume_retrains_prompts_that_already_trained():
+@@ -330,10 +342,13 @@
+     assert SLOW_GROUP not in first["trained_groups"]
+ 
+     with tempfile.TemporaryDirectory() as out_dir:
+-        checkpoint_dir, state = save_checkpoint(first["trained_groups"], 0, out_dir)
++        checkpoint_dir, state = save_checkpoint(
++            first["trained_groups"], 0, out_dir, first["dropped_groups"]
++        )
+         start_index, groups_before_resume = resume_start_index(checkpoint_dir)
+ 
+-    assert start_index == state["prompt_index"] == SLOW_GROUP
++    assert start_index == state["prompt_index"]
++    assert start_index > SLOW_GROUP
+ 
+     # Nothing is slow in the resumed run; the point is only which rows it walks over.
+     second = run_rollouts(dataset_start_index=start_index, latency_for=lambda _group_id: FAST_LATENCY)
+@@ -348,16 +363,15 @@
+     print(f"rows new in run 2       : {len(fresh)} -> {sorted(fresh)[:12]}")
+     print(f"_groups_before_resume   : {groups_before_resume} (run 1 actually trained {len(first['trained_groups'])})")
+ 
+-    # run 2 restarts at the discarded row, so nearly everything run 1 trained is generated again
+-    assert len(trained_twice) >= TARGET_GROUPS - 5
++    # The contiguous resolved cursor prevents the long suffix from being trained twice.
++    assert len(trained_twice) < 10
+     # every row run 1 trained between the resume point and where run 2 stopped comes back. The last
+     # few rows of either run are ragged, since groups finish out of order and both runs stop with
+     # work still in the pipeline, so the comparison leaves the tail out.
+     cutoff = max(second["trained_rows"]) - 10
+     replayed = {r for r in first["trained_rows"] if start_index <= r <= cutoff}
+     assert replayed <= second["trained_rows"]
+-    # the discarded row is what the replay actually buys
+-    assert SLOW_GROUP in fresh
+-    # and the epoch counter restarts from the pinned value rather than from what really trained
+-    assert groups_before_resume == SLOW_GROUP
+-    assert groups_before_resume < len(first["trained_groups"])
++    # A dropped prompt is resolved and is not replayed immediately on resume.
++    assert SLOW_GROUP not in fresh
++    # Epoch stopping counts actual trained groups, independently of the dataset cursor.
++    assert groups_before_resume == state["groups_trained"] == len(first["trained_groups"])

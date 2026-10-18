@@ -1,0 +1,504 @@
+From a85900829d86bcd45b7db0310725f28d3152289b Mon Sep 17 00:00:00 2001
+From: Kazuki Uesugi <251zs02152@student.zen.ac.jp>
+Date: Sun, 18 Oct 2026 18:03:39 +0900
+Subject: [PATCH] Fix async trainer resume cursors after stale drops
+
+---
+ .../test_async_distillation_trainer.py        |  18 +-
+ tests/experimental/test_async_grpo_trainer.py |  10 +-
+ tests/experimental/test_async_stale_resume.py | 247 ++++++++++++++++++
+ .../async_distillation_trainer.py             |  23 +-
+ .../async_grpo/async_grpo_trainer.py          |  22 +-
+ 5 files changed, 299 insertions(+), 21 deletions(-)
+ create mode 100644 tests/experimental/test_async_stale_resume.py
+
+diff --git a/tests/experimental/test_async_distillation_trainer.py b/tests/experimental/test_async_distillation_trainer.py
+index 45f2379..b26ed66 100644
+--- a/tests/experimental/test_async_distillation_trainer.py
++++ b/tests/experimental/test_async_distillation_trainer.py
+@@ -1125,22 +1125,26 @@ class TestRolloutStateCheckpoint(TrlTestCase):
+         return trainer
+ 
+     @pytest.mark.parametrize(
+-        ("trained_prompts", "dataset_start_index", "expected"),
++        ("trained_prompts", "dropped_prompts", "dataset_start_index", "expected"),
+         [
+-            ({0, 1, 2, 3, 4}, 10, 15),  # dataset_start_index(10) + first_untrained(5)
+-            # Prompt 2 was never trained (its rollout was dropped as stale), so the cursor stops there: it gets
+-            # re-generated on resume instead of being silently skipped.
+-            ({0, 1, 3, 4, 5}, 0, 2),
++            ({0, 1, 2, 3, 4}, set(), 10, 15),  # dataset_start_index(10) + first_untrained(5)
++            # Prompt 2 was intentionally dropped as stale; it is resolved for the rollout cursor.
++            ({0, 1, 3, 4, 5}, {2}, 0, 6),
+         ],
+     )
+-    def test_save_checkpoint_writes_rollout_state(self, trained_prompts, dataset_start_index, expected):
++    def test_save_checkpoint_writes_rollout_state(
++        self, trained_prompts, dropped_prompts, dataset_start_index, expected
++    ):
+         trainer = self._trainer_at_step_5(trained_prompts, dataset_start_index=dataset_start_index)
++        trainer._dropped_prompts = dropped_prompts
+ 
+         with patch.object(_BaseTrainer, "_save_checkpoint"):
+             trainer._save_checkpoint(trainer.model, None)
+ 
+         with open(os.path.join(self.tmp_dir, "checkpoint-5", "rollout_state.json")) as f:
+-            assert json.load(f)["prompt_index"] == expected
++            state = json.load(f)
++        assert state["prompt_index"] == expected
++        assert state["prompts_trained"] == len(trained_prompts)
+ 
+     def test_save_checkpoint_writes_rollout_state_before_the_hub_push(self):
+         # `super()._save_checkpoint` is what uploads the checkpoint folder under `hub_strategy="checkpoint"`, so the
+diff --git a/tests/experimental/test_async_grpo_trainer.py b/tests/experimental/test_async_grpo_trainer.py
+index 0dc6f60..f716884 100644
+--- a/tests/experimental/test_async_grpo_trainer.py
++++ b/tests/experimental/test_async_grpo_trainer.py
+@@ -640,16 +640,18 @@ class TestRolloutStateCheckpoint(TrlTestCase):
+ 
+         assert written_before_super == [True]
+ 
+-    def test_save_checkpoint_skips_holes_left_by_stale_drops(self):
+-        # Group 2 was never trained (all of its rollouts were dropped as stale), so the cursor stops there: those
+-        # prompts get re-generated on resume instead of being silently skipped.
++    def test_save_checkpoint_advances_past_stale_dropped_groups(self):
++        # Group 2 was intentionally dropped as stale, so it is resolved for the rollout cursor.
+         trainer = self._trainer_at_step_5({0, 1, 3, 4, 5}, dataset_start_index=0)
++        trainer._dropped_groups = {2}
+ 
+         with patch.object(_BaseTrainer, "_save_checkpoint"):
+             trainer._save_checkpoint(trainer.model, None)
+ 
+         with open(os.path.join(self.tmp_dir, "checkpoint-5", "rollout_state.json")) as f:
+-            assert json.load(f)["prompt_index"] == 2
++            state = json.load(f)
++        assert state["prompt_index"] == 6
++        assert state["groups_trained"] == 5
+ 
+     def test_inner_training_loop_sets_dataset_start_index_from_file(self):
+         checkpoint_dir = os.path.join(self.tmp_dir, "checkpoint-10")
+diff --git a/tests/experimental/test_async_stale_resume.py b/tests/experimental/test_async_stale_resume.py
+new file mode 100644
+index 0000000..be2963e
+--- /dev/null
++++ b/tests/experimental/test_async_stale_resume.py
+@@ -0,0 +1,247 @@
++# Copyright 2020-2026 The HuggingFace Team. All rights reserved.
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++import json
++import os
++import queue
++from collections import defaultdict
++from types import SimpleNamespace
++from unittest.mock import MagicMock, patch
++
++import pytest
++from accelerate.state import PartialState
++from datasets import Dataset
++
++from trl.experimental.async_distillation import AsyncDistillationTrainer
++from trl.experimental.async_distillation.async_distillation_trainer import (
++    RolloutQueueDataset as DistillationRolloutQueueDataset,
++)
++from trl.experimental.async_distillation.async_rollout_worker import AsyncRolloutWorker as DistillationRolloutWorker
++from trl.experimental.async_grpo import AsyncGRPOTrainer
++from trl.experimental.async_grpo.async_grpo_trainer import RolloutQueueDataset as GRPORolloutQueueDataset
++from trl.experimental.async_grpo.async_rollout_worker import AsyncRolloutWorker as GRPORolloutWorker
++from trl.trainer.base_trainer import _BaseTrainer
++
++
++PartialState()
++
++
++class _QueueDrained(Exception):
++    pass
++
++
++def _raise_queue_drained(_timeout):
++    raise _QueueDrained
++
++
++def _stale_dataset(dataset_cls, id_name, id_value, dropped):
++    dataset = dataset_cls.__new__(dataset_cls)
++    dataset.queue = queue.Queue()
++    dataset.queue.put(SimpleNamespace(**{id_name: id_value, "model_version": 0, "enqueued_at": None}))
++    dataset.model_version_fn = lambda: 5
++    dataset.check_health_fn = _raise_queue_drained
++    dataset.stale_after_s = 1.0
++    dataset.metrics = defaultdict(list)
++    dataset.wait_s = 0.0
++    dataset.max_staleness = 4
++    dataset.poll_interval_s = 0.0
++    dataset.report_to = []
++    dataset._trace_buf = []
++    dataset._traces_per_log = 8
++    dataset._trace_log_interval = 8
++    dataset._last_traced_version = -1
++    if id_name == "group_id":
++        dataset.dropped_groups = dropped
++    else:
++        dataset.dropped_prompts = dropped
++    with pytest.raises(_QueueDrained):
++        next(iter(dataset))
++    assert dataset.metrics["sample/dropped_stale_total"] == [1.0]
++
++
++@pytest.mark.parametrize(
++    ("dataset_cls", "id_name", "id_value"),
++    [
++        (GRPORolloutQueueDataset, "group_id", 7),
++        (DistillationRolloutQueueDataset, "prompt_id", 7),
++    ],
++)
++def test_stale_drop_is_recorded_as_resolved_prompt(dataset_cls, id_name, id_value):
++    dropped = set()
++    _stale_dataset(dataset_cls, id_name, id_value, dropped)
++    assert dropped == {id_value}
++
++
++def _save_checkpoint(trainer_cls, worker_cls, out_dir, trained, dropped, before_resume, dataset_start_index):
++    trainer = trainer_cls.__new__(trainer_cls)
++    trainer.accelerator = SimpleNamespace(is_main_process=True)
++    trainer.model_version = 4
++    trainer.rollout_worker = MagicMock(spec=worker_cls)
++    trainer.rollout_worker._loop_kwargs = {"dataset_start_index": dataset_start_index}
++    trainer.state = SimpleNamespace(global_step=7)
++    trainer._get_output_dir = lambda trial: out_dir
++    if trainer_cls is AsyncGRPOTrainer:
++        trainer._trained_groups = trained
++        trainer._dropped_groups = dropped
++        trainer._groups_before_resume = before_resume
++    else:
++        trainer._trained_prompts = trained
++        trainer._dropped_prompts = dropped
++        trainer._prompts_before_resume = before_resume
++    with patch.object(_BaseTrainer, "_save_checkpoint"):
++        trainer._save_checkpoint(MagicMock(), None)
++    checkpoint = os.path.join(out_dir, "checkpoint-7", "rollout_state.json")
++    with open(checkpoint, encoding="utf-8") as stream:
++        return json.load(stream)
++
++
++@pytest.mark.parametrize(
++    ("trainer_cls", "worker_cls"),
++    [
++        (AsyncGRPOTrainer, GRPORolloutWorker),
++        (AsyncDistillationTrainer, DistillationRolloutWorker),
++    ],
++)
++def test_checkpoint_cursor_skips_stale_hole_without_counting_it_as_trained(trainer_cls, worker_cls, tmp_path):
++    # Groups/prompts 0, 1, and 3–5 trained; 2 was stale-dropped. Resume starts at 6, while the epoch counter
++    # records only the five training signals (plus any count from an earlier resume).
++    state = _save_checkpoint(
++        trainer_cls,
++        worker_cls,
++        str(tmp_path),
++        trained={0, 1, 3, 4, 5},
++        dropped={2},
++        before_resume=10,
++        dataset_start_index=20,
++    )
++    assert state["prompt_index"] == 26
++    assert state["model_version"] == 4
++    count_key = "groups_trained" if trainer_cls is AsyncGRPOTrainer else "prompts_trained"
++    assert state[count_key] == 15
++
++
++def _resume(trainer_cls, worker_cls, checkpoint_dir):
++    trainer = trainer_cls.__new__(trainer_cls)
++    trainer.rollout_worker = MagicMock(spec=worker_cls)
++    trainer.rollout_worker._loop_kwargs = {}
++    trainer.train_dataset = Dataset.from_dict({"prompt": ["a"]})
++    trainer.accelerator = SimpleNamespace(is_main_process=False)
++    trainer.model_version = 0
++    if trainer_cls is AsyncGRPOTrainer:
++        trainer._groups_before_resume = 0
++        trainer._trained_groups = {99}
++        trainer._dropped_groups = {99}
++    else:
++        trainer._prompts_before_resume = 0
++        trainer._trained_prompts = {99}
++        trainer._dropped_prompts = {99}
++    with patch.object(_BaseTrainer, "_inner_training_loop", return_value=None):
++        trainer._inner_training_loop(resume_from_checkpoint=checkpoint_dir)
++    return trainer
++
++
++@pytest.mark.parametrize(
++    ("trainer_cls", "worker_cls", "count_key", "count_attr", "dropped_attr"),
++    [
++        (AsyncGRPOTrainer, GRPORolloutWorker, "groups_trained", "_groups_before_resume", "_dropped_groups"),
++        (
++            AsyncDistillationTrainer,
++            DistillationRolloutWorker,
++            "prompts_trained",
++            "_prompts_before_resume",
++            "_dropped_prompts",
++        ),
++    ],
++)
++def test_resume_restores_cursor_and_actual_training_count(
++    trainer_cls, worker_cls, count_key, count_attr, dropped_attr, tmp_path
++):
++    checkpoint_dir = tmp_path / "checkpoint-7"
++    checkpoint_dir.mkdir()
++    (checkpoint_dir / "rollout_state.json").write_text(
++        json.dumps({"prompt_index": 26, count_key: 15, "model_version": 4}), encoding="utf-8"
++    )
++    trainer = _resume(trainer_cls, worker_cls, str(checkpoint_dir))
++    assert trainer.rollout_worker._loop_kwargs["dataset_start_index"] == 26
++    assert getattr(trainer, count_attr) == 15
++    assert getattr(trainer, dropped_attr) == set()
++    if trainer_cls is AsyncGRPOTrainer:
++        assert trainer._trained_groups == set()
++    assert trainer.model_version == 4
++    trainer.rollout_worker.update_model_version.assert_called_once_with(4)
++
++
++def test_resume_uses_cursor_as_legacy_training_count(tmp_path):
++    checkpoint_dir = tmp_path / "checkpoint-legacy"
++    checkpoint_dir.mkdir()
++    (checkpoint_dir / "rollout_state.json").write_text(
++        json.dumps({"prompt_index": 26, "model_version": 4}), encoding="utf-8"
++    )
++    trainer = _resume(AsyncGRPOTrainer, GRPORolloutWorker, str(checkpoint_dir))
++    assert trainer.rollout_worker._loop_kwargs["dataset_start_index"] == 26
++    assert trainer._groups_before_resume == 26
++
++
++@pytest.mark.parametrize(
++    ("trainer_cls", "module_name", "dropped_attr", "dropped_kwarg"),
++    [
++        (
++            AsyncGRPOTrainer,
++            "trl.experimental.async_grpo.async_grpo_trainer",
++            "_dropped_groups",
++            "dropped_groups",
++        ),
++        (
++            AsyncDistillationTrainer,
++            "trl.experimental.async_distillation.async_distillation_trainer",
++            "_dropped_prompts",
++            "dropped_prompts",
++        ),
++    ],
++)
++def test_train_dataloader_shares_dropped_id_tracker(trainer_cls, module_name, dropped_attr, dropped_kwarg):
++    import importlib
++
++    module = importlib.import_module(module_name)
++    trainer = trainer_cls.__new__(trainer_cls)
++    trainer.accelerator = SimpleNamespace(num_processes=1, is_main_process=True, prepare=lambda value: value)
++    trainer.rollout_queue = object()
++    trainer.model_version = 0
++    trainer.rollout_worker = SimpleNamespace(check_health=lambda _timeout: None)
++    trainer.args = SimpleNamespace(
++        heartbeat_stale_after_s=1.0,
++        max_staleness=4,
++        report_to=[],
++        token_budget=0,
++        per_device_train_batch_size=1,
++    )
++    trainer._metrics = {"train": defaultdict(list)}
++    trainer.processing_class = SimpleNamespace(pad_token_id=0)
++    dropped = set()
++    setattr(trainer, dropped_attr, dropped)
++    if trainer_cls is AsyncGRPOTrainer:
++        trainer._trained_groups = set()
++    else:
++        trainer._trained_prompts = set()
++        trainer._teacher_ids = {"teacher"}
++        trainer._teacher_id_to_idx = {"teacher": 0}
++
++    with (
++        patch.object(module, "RolloutQueueDataset", return_value=object()) as queue_dataset,
++        patch.object(module, "FixedCountBatcher", return_value=object()),
++        patch.object(module, "DataLoader", return_value=object()),
++    ):
++        trainer.get_train_dataloader()
++
++    assert queue_dataset.call_args.kwargs[dropped_kwarg] is dropped
+diff --git a/trl/experimental/async_distillation/async_distillation_trainer.py b/trl/experimental/async_distillation/async_distillation_trainer.py
+index c337c95..5b7c356 100644
+--- a/trl/experimental/async_distillation/async_distillation_trainer.py
++++ b/trl/experimental/async_distillation/async_distillation_trainer.py
+@@ -606,6 +606,7 @@ class RolloutQueueDataset(torch.utils.data.IterableDataset):
+         max_staleness=3,
+         poll_interval_s=5.0,
+         report_to=None,
++        dropped_prompts: set[int] | None = None,
+     ):
+         self.queue = rollout_queue
+         self.model_version_fn = model_version_fn
+@@ -615,6 +616,7 @@ class RolloutQueueDataset(torch.utils.data.IterableDataset):
+         # `dispatch_batches=True`), which is also the only process where the queue wait is real, so its metrics need no
+         # communication at all — they are appended straight into the sink the trainer reduces in `log()`.
+         self.metrics = metrics
++        self.dropped_prompts = dropped_prompts if dropped_prompts is not None else set()
+         # Blocking-get time, accumulated here and flushed by `_log_step_metrics` at the optimizer-step boundary — the
+         # only place that knows when a step's worth of waiting is done.
+         self.wait_s = 0.0
+@@ -667,6 +669,7 @@ class RolloutQueueDataset(torch.utils.data.IterableDataset):
+             if staleness > self.max_staleness:
+                 logger.info(f"dropping stale sample (staleness={staleness}, max={self.max_staleness})")
+                 self.metrics["sample/dropped_stale_total"].append(1.0)
++                self.dropped_prompts.add(sample.prompt_id)
+                 continue  # drop stale, pull next
+ 
+             # Three different views of the same queue, and they must not be confused with each other:
+@@ -1330,6 +1333,7 @@ class AsyncDistillationTrainer(_BaseTrainer):
+         # prompts trained. Unlike AsyncGRPOTrainer there is no num_generations multiplier and no forking: each dataset
+         # row yields exactly one training sample, not a group of them.
+         self._trained_prompts: set[int] = set()
++        self._dropped_prompts: set[int] = set()
+         # Tracks restart to match `num_train_epochs`
+         self._prompts_before_resume = 0
+         self._epoch_stop_prompts: int | None = None
+@@ -1526,6 +1530,7 @@ class AsyncDistillationTrainer(_BaseTrainer):
+                 metrics=self._metrics["train"],
+                 max_staleness=self.args.max_staleness,
+                 report_to=self.args.report_to,
++                dropped_prompts=self._dropped_prompts,
+             )
+             # Kept so `_log_step_metrics` can flush the queue wait at the optimizer-step boundary, which is the only
+             # place that knows a step's worth of waiting is over.
+@@ -2031,12 +2036,17 @@ class AsyncDistillationTrainer(_BaseTrainer):
+             checkpoint_folder = f"{PREFIX_CHECKPOINT_DIR}-{self.state.global_step}"
+             checkpoint_dir = os.path.join(self._get_output_dir(trial=trial), checkpoint_folder)
+             os.makedirs(checkpoint_dir, exist_ok=True)
+-            trained = self._trained_prompts
+-            first_untrained = next(p for p in itertools.count() if p not in trained)
+-            prompt_index = self.rollout_worker._loop_kwargs["dataset_start_index"] + first_untrained
++            resolved = self._trained_prompts | self._dropped_prompts
++            first_unresolved = next(p for p in itertools.count() if p not in resolved)
++            prompt_index = self.rollout_worker._loop_kwargs["dataset_start_index"] + first_unresolved
++            prompts_trained = self._prompts_before_resume + len(self._trained_prompts)
+             # `model_version` rides along so adapter names keep counting across a resume: restarting at v1 would
+             # republish a different adapter under a name a still-running server already holds.
+-            rollout_state = {"prompt_index": prompt_index, "model_version": self.model_version}
++            rollout_state = {
++                "prompt_index": prompt_index,
++                "prompts_trained": prompts_trained,
++                "model_version": self.model_version,
++            }
+             with open(os.path.join(checkpoint_dir, "rollout_state.json"), "w", encoding="utf-8") as f:
+                 json.dump(rollout_state, f)
+         super()._save_checkpoint(model, trial)
+@@ -2048,6 +2058,7 @@ class AsyncDistillationTrainer(_BaseTrainer):
+         # cleared whatever the worker, since the collator fills them regardless and the worker's `prompt_id` restarts
+         # at 0, so leftovers from an earlier run would collide with this one's.
+         self._trained_prompts.clear()
++        self._dropped_prompts.clear()
+         if isinstance(self.rollout_worker, AsyncRolloutWorker):
+             self.rollout_worker._loop_kwargs["dataset_start_index"] = 0
+             self._prompts_before_resume = 0
+@@ -2066,7 +2077,9 @@ class AsyncDistillationTrainer(_BaseTrainer):
+                     with open(rollout_state_file, encoding="utf-8") as f:
+                         rollout_state = json.load(f)
+                     self.rollout_worker._loop_kwargs["dataset_start_index"] = rollout_state["prompt_index"]
+-                    self._prompts_before_resume = rollout_state["prompt_index"]
++                    self._prompts_before_resume = rollout_state.get(
++                        "prompts_trained", rollout_state["prompt_index"]
++                    )
+                     # Older checkpoints predate this field; resuming from one restarts numbering at v1, which is
+                     # only safe against a freshly started server.
+                     self.model_version = rollout_state.get("model_version", 0)
+diff --git a/trl/experimental/async_grpo/async_grpo_trainer.py b/trl/experimental/async_grpo/async_grpo_trainer.py
+index 300debd..b1195a7 100644
+--- a/trl/experimental/async_grpo/async_grpo_trainer.py
++++ b/trl/experimental/async_grpo/async_grpo_trainer.py
+@@ -311,6 +311,7 @@ class RolloutQueueDataset(torch.utils.data.IterableDataset):
+         max_staleness=3,
+         poll_interval_s=5.0,
+         report_to=None,
++        dropped_groups: set[int] | None = None,
+     ):
+         self.queue = rollout_queue
+         self.model_version_fn = model_version_fn
+@@ -320,6 +321,7 @@ class RolloutQueueDataset(torch.utils.data.IterableDataset):
+         # `dispatch_batches=True`), which is also the only process where the queue wait is real, so its metrics need no
+         # communication at all — they are appended straight into the sink the trainer reduces in `log()`.
+         self.metrics = metrics
++        self.dropped_groups = dropped_groups if dropped_groups is not None else set()
+         # Blocking-get time, accumulated here and flushed by `training_step` at the optimizer-step boundary — the only
+         # place that knows when a step's worth of waiting is done.
+         self.wait_s = 0.0
+@@ -369,6 +371,7 @@ class RolloutQueueDataset(torch.utils.data.IterableDataset):
+             if staleness > self.max_staleness:
+                 logger.info(f"dropping stale sample (staleness={staleness}, max={self.max_staleness})")
+                 self.metrics["sample/dropped_stale_total"].append(1.0)
++                self.dropped_groups.add(sample.group_id)
+                 continue  # drop stale, pull next
+ 
+             # Three different views of the same queue, and they must not be confused with each other:
+@@ -1244,6 +1247,7 @@ class AsyncGRPOTrainer(_BaseTrainer):
+         # Epoch handling: stop after num_train_epochs full passes over the PROMPT dataset, counted as distinct
+         # prompt-groups trained (fork-independent).
+         self._trained_groups: set[int] = set()
++        self._dropped_groups: set[int] = set()
+         # Tracks restart to match `num_train_epochs`
+         self._groups_before_resume = 0
+         self._epoch_stop_groups: int | None = None
+@@ -1429,6 +1433,7 @@ class AsyncGRPOTrainer(_BaseTrainer):
+                 metrics=self._metrics["train"],
+                 max_staleness=self.args.max_staleness,
+                 report_to=self.args.report_to,
++                dropped_groups=self._dropped_groups,
+             )
+             # Kept so `_log_step_metrics` can flush the queue wait at the optimizer-step boundary, which is the only
+             # place that knows a step's worth of waiting is over.
+@@ -1869,12 +1874,17 @@ class AsyncGRPOTrainer(_BaseTrainer):
+             checkpoint_folder = f"{PREFIX_CHECKPOINT_DIR}-{self.state.global_step}"
+             checkpoint_dir = os.path.join(self._get_output_dir(trial=trial), checkpoint_folder)
+             os.makedirs(checkpoint_dir, exist_ok=True)
+-            trained = self._trained_groups
+-            first_untrained = next(g for g in itertools.count() if g not in trained)
+-            prompt_index = self.rollout_worker._loop_kwargs["dataset_start_index"] + first_untrained
++            resolved = self._trained_groups | self._dropped_groups
++            first_unresolved = next(g for g in itertools.count() if g not in resolved)
++            prompt_index = self.rollout_worker._loop_kwargs["dataset_start_index"] + first_unresolved
++            groups_trained = self._groups_before_resume + len(self._trained_groups)
+             # `model_version` rides along so adapter names keep counting across a resume: restarting at v1 would
+             # republish a different adapter under a name a still-running server already holds.
+-            rollout_state = {"prompt_index": prompt_index, "model_version": self.model_version}
++            rollout_state = {
++                "prompt_index": prompt_index,
++                "groups_trained": groups_trained,
++                "model_version": self.model_version,
++            }
+             with open(os.path.join(checkpoint_dir, "rollout_state.json"), "w", encoding="utf-8") as f:
+                 json.dump(rollout_state, f)
+         super()._save_checkpoint(model, trial)
+@@ -1884,6 +1894,8 @@ class AsyncGRPOTrainer(_BaseTrainer):
+         # Skipped for IterableDataset since len() isn't available on streaming datasets.
+         # Always reset first so a stale value from a prior train() call is never carried over.
+         if isinstance(self.rollout_worker, AsyncRolloutWorker):
++            self._trained_groups.clear()
++            self._dropped_groups.clear()
+             self.rollout_worker._loop_kwargs["dataset_start_index"] = 0
+             self._groups_before_resume = 0
+             resume_from_checkpoint = kwargs.get("resume_from_checkpoint")
+@@ -1901,7 +1913,7 @@ class AsyncGRPOTrainer(_BaseTrainer):
+                     with open(rollout_state_file, encoding="utf-8") as f:
+                         rollout_state = json.load(f)
+                     self.rollout_worker._loop_kwargs["dataset_start_index"] = rollout_state["prompt_index"]
+-                    self._groups_before_resume = rollout_state["prompt_index"]
++                    self._groups_before_resume = rollout_state.get("groups_trained", rollout_state["prompt_index"])
+                     # Older checkpoints predate this field; resuming from one restarts numbering at v1, which is
+                     # only safe against a freshly started server.
+                     self.model_version = rollout_state.get("model_version", 0)
+-- 
+2.50.1 (Apple Git-155)
+

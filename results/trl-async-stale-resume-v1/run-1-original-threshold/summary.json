@@ -1,0 +1,125 @@
+{
+  "all_checks_passed": false,
+  "environment": {
+    "accelerate": "1.12.0",
+    "datasets": "5.1.0",
+    "device_used": "CPU",
+    "hardware": "Apple M1 Pro, 32 GiB RAM, macOS 27.0.1",
+    "huggingface_hub": "2.2.0",
+    "model_weights_loaded": false,
+    "paid_services_used": false,
+    "pyarrow": "26.0.0",
+    "pytest": "8.4.2",
+    "python": "3.12.12",
+    "requirements_lock": "requirements/trl-async-stale-resume-v1.txt",
+    "requirements_lock_sha256": "ab7ed167490be54dd6aa88908f08d134dc0dc2da7a415b9de996113c264507d2",
+    "safetensors": "0.8.0",
+    "tokenizers": "0.23.3",
+    "torch": "2.9.1",
+    "transformers": "5.20.1",
+    "vllm_used": false
+  },
+  "gist_source_sha256": "9341ffa8542a892d3c8c9783ddac45aa8fbf31a2bf7a28a2ce061d1f19adcc9b",
+  "measurement_label": "original public assertion; baseline threshold fixed at TARGET_GROUPS - 5",
+  "protocol_id": "trl-async-stale-resume-v1",
+  "protocol_sha256": "6a92a14a70efe74d5ad6203c9e2501934d7938ababe5b034003d2c645cdf2020",
+  "repetitions_per_arm": 3,
+  "run_count": 6,
+  "runner_sha256": null,
+  "runs": [
+    {
+      "accepted": true,
+      "arm": "baseline",
+      "exit_code": 0,
+      "log": "baseline-1.log",
+      "observed": {
+        "duplicated_rows": 145,
+        "first_run_trained_rows": 148,
+        "fresh_rows": 4,
+        "groups_before_resume": 2,
+        "resumed_row": 2,
+        "saved_prompt_index": 2
+      },
+      "repetition": 1
+    },
+    {
+      "accepted": false,
+      "arm": "baseline",
+      "exit_code": 1,
+      "log": "baseline-2.log",
+      "observed": {
+        "duplicated_rows": 144,
+        "first_run_trained_rows": 147,
+        "fresh_rows": 5,
+        "groups_before_resume": 2,
+        "resumed_row": 2,
+        "saved_prompt_index": 2
+      },
+      "repetition": 2
+    },
+    {
+      "accepted": false,
+      "arm": "baseline",
+      "exit_code": 1,
+      "log": "baseline-3.log",
+      "observed": {
+        "duplicated_rows": 144,
+        "first_run_trained_rows": 147,
+        "fresh_rows": 5,
+        "groups_before_resume": 2,
+        "resumed_row": 2,
+        "saved_prompt_index": 2
+      },
+      "repetition": 3
+    },
+    {
+      "accepted": true,
+      "arm": "candidate",
+      "exit_code": 0,
+      "log": "candidate-1.log",
+      "observed": {
+        "duplicated_rows": 1,
+        "first_run_trained_rows": 148,
+        "fresh_rows": 148,
+        "groups_before_resume": 148,
+        "resumed_row": 148,
+        "saved_prompt_index": 147
+      },
+      "repetition": 1
+    },
+    {
+      "accepted": true,
+      "arm": "candidate",
+      "exit_code": 0,
+      "log": "candidate-2.log",
+      "observed": {
+        "duplicated_rows": 1,
+        "first_run_trained_rows": 148,
+        "fresh_rows": 148,
+        "groups_before_resume": 148,
+        "resumed_row": 148,
+        "saved_prompt_index": 147
+      },
+      "repetition": 2
+    },
+    {
+      "accepted": true,
+      "arm": "candidate",
+      "exit_code": 0,
+      "log": "candidate-3.log",
+      "observed": {
+        "duplicated_rows": 1,
+        "first_run_trained_rows": 148,
+        "fresh_rows": 148,
+        "groups_before_resume": 148,
+        "resumed_row": 148,
+        "saved_prompt_index": 147
+      },
+      "repetition": 3
+    }
+  ],
+  "source_revisions": {
+    "baseline": "6d6901c5e3963108076131ac4979d344566b13a2",
+    "candidate": "a85900829d86bcd45b7db0310725f28d3152289b"
+  }
+}
