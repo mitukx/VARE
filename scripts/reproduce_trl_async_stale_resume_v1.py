@@ -30,6 +30,7 @@ LOG_PATTERNS = {
     "saved_prompt_index": r"saved prompt_index\s*:\s*(\d+)",
     "groups_before_resume": r"_groups_before_resume\s*:\s*(\d+)",
 }
+PYTEST_COUNT_PATTERN = re.compile(r"(\d+)\s+(passed|failed|errors?|skipped|xfailed|xpassed|warnings?)\b")
 PACKAGE_NAMES = {
     "torch": "torch",
     "transformers": "transformers",
@@ -41,6 +42,16 @@ PACKAGE_NAMES = {
     "safetensors": "safetensors",
     "pyarrow": "pyarrow",
 }
+RUNNER_SNAPSHOTS = {
+    "4450fcebb731178f448bd68d5650219e851c7db09f59c1f91be0632f37ad63c3": (
+        ROOT / "results/trl-async-stale-resume-runner-snapshots/"
+        "runner-4450fcebb731178f448bd68d5650219e851c7db09f59c1f91be0632f37ad63c3.py"
+    ),
+    "362907df0e07bcd0c6ab75d3f5390551cd0fcf054c38e0d2d1488c606faaeef4": (
+        ROOT / "results/trl-async-stale-resume-runner-snapshots/"
+        "runner-362907df0e07bcd0c6ab75d3f5390551cd0fcf054c38e0d2d1488c606faaeef4.py"
+    ),
+}
 
 
 def sha256_file(path: Path) -> str:
@@ -49,6 +60,10 @@ def sha256_file(path: Path) -> str:
         for block in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest()
+
+
+def sha256_bytes(content: bytes) -> str:
+    return hashlib.sha256(content).hexdigest()
 
 
 def read_json(path: Path) -> Any:
@@ -190,6 +205,18 @@ def parse_run_log(text: str) -> dict[str, int]:
     return parsed
 
 
+def parse_pytest_outcome(text: str) -> dict[str, int]:
+    for line in reversed(text.splitlines()):
+        if re.search(r"\bin\s+\d+(?:\.\d+)?s\s*$", line):
+            counts = {
+                name: int(count)
+                for count, name in PYTEST_COUNT_PATTERN.findall(line)
+            }
+            if counts:
+                return counts
+    fail("raw log lacks a pytest result summary")
+
+
 def run_acceptance(arm: str, observed: dict[str, int], exit_code: int, lock: dict[str, Any]) -> bool:
     stale_id = lock["reproducer"]["stale_group_id"]
     tail = lock["reproducer"]["tail_tolerance_groups"]
@@ -257,6 +284,15 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
         fail("protocol id mismatch")
     if summary.get("protocol_sha256") != sha256_file(lock_path):
         fail("protocol hash mismatch")
+    runner_sha = summary.get("runner_sha256")
+    if not isinstance(runner_sha, str) or not SHA256_RE.fullmatch(runner_sha):
+        fail("summary has no valid runner source hash")
+    bundled_runner = bundle / "runner.py"
+    runner_snapshot = bundled_runner if bundled_runner.is_file() else RUNNER_SNAPSHOTS.get(runner_sha)
+    if runner_snapshot is None or not runner_snapshot.is_file():
+        fail(f"runner source is not retained for hash: {runner_sha}")
+    if sha256_file(runner_snapshot) != runner_sha:
+        fail("retained runner source hash mismatch")
     validate_local_inputs(lock)
     if summary.get("environment") != expected_runtime_environment(lock["environment"]):
         fail("recorded runtime environment does not match the locked dependency versions")
@@ -304,7 +340,16 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
         )
 
     for run in runs:
-        parsed = parse_run_log((bundle / run["log"]).read_text(encoding="utf-8"))
+        raw_log = (bundle / run["log"]).read_text(encoding="utf-8")
+        pytest_outcome = parse_pytest_outcome(raw_log)
+        pytest_passed = (
+            pytest_outcome.get("passed", 0) > 0
+            and pytest_outcome.get("failed", 0) == 0
+            and pytest_outcome.get("error", pytest_outcome.get("errors", 0)) == 0
+        )
+        if type(run.get("exit_code")) is not int or (run["exit_code"] == 0) != pytest_passed:
+            fail(f"recorded exit code contradicts raw pytest result: {run['log']}")
+        parsed = parse_run_log(raw_log)
         if parsed != run["observed"]:
             fail(f"summary/log mismatch: {run['log']}")
         accepted = run_acceptance(run["arm"], parsed, run["exit_code"], lock)
@@ -324,6 +369,10 @@ def reproduce(args: argparse.Namespace) -> int:
     if out.exists() and any(out.iterdir()):
         fail(f"refusing to overwrite nonempty output directory: {out}")
     out.mkdir(parents=True, exist_ok=True)
+    runner_path = Path(__file__).resolve()
+    runner_bytes = runner_path.read_bytes()
+    runner_sha = sha256_bytes(runner_bytes)
+    (out / "runner.py").write_bytes(runner_bytes)
 
     expected_source = lock["source"]
     revisions = {"baseline": source_revision(base), "candidate": source_revision(candidate)}
@@ -378,7 +427,7 @@ def reproduce(args: argparse.Namespace) -> int:
     summary = {
         "protocol_id": lock["protocol_id"],
         "protocol_sha256": sha256_file(LOCK_PATH),
-        "runner_sha256": sha256_file(Path(__file__).resolve()),
+        "runner_sha256": runner_sha,
         "python_executable": str(Path(args.python).resolve()),
         "environment": env,
         "source_revisions": revisions,
@@ -388,6 +437,8 @@ def reproduce(args: argparse.Namespace) -> int:
         "runs": runs,
         "all_checks_passed": all(run["accepted"] for run in runs),
     }
+    if sha256_file(runner_path) != runner_sha:
+        fail("reproducer source changed during execution")
     write_json(out / "summary.json", summary)
     write_manifest(out)
     audited = audit_bundle(out)

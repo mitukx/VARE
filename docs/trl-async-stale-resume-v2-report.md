@@ -23,8 +23,10 @@ contains a candidate non-pass: its cursor started near the end of the finite
 dataset, and the test mistook row 2's valid next-epoch occurrence for a replay
 of the earlier dropped event. V2 tags each completion with the absolute stream
 position `dataset_start_index + local_group_id`, so later-epoch visits are
-distinct from reprocessing the same stream position. The v1 lock and its raw
-bundles remain unchanged and auditable.
+distinct from reprocessing the same stream position. The v1 lock and raw
+bundles remain unchanged. They are retained as historical records, but the
+current auditor refuses to certify them because their reported runner sources
+were not preserved.
 
 The reproduction executes production rollout scheduling, stale filtering,
 checkpoint serialization, and resume state loading. It stubs only model
@@ -50,17 +52,27 @@ six-run count without validating the actual arm/repetition inventory. The
 runner now rejects tracked or untracked source changes and rechecks source
 identity around each repetition. The auditor checks the locked source
 revisions, exact baseline/candidate repetition pairs, uniqueness, and matching
-log names. New regressions reject dirty tracked/untracked checkouts and
-resealed bundles with missing arms or duplicate runs.
+log names. Additional checks bind dependency versions and the public Gist hash
+to the lock, compare the recorded exit code with the pytest result in the raw
+log, and verify the runner source against a retained snapshot. New output
+bundles embed the exact runner source; snapshots for the two passing v2 runs
+are in `results/trl-async-stale-resume-runner-snapshots/`.
+
+The old v1 result summaries report runner hashes `b2c47...` and `8d497...`,
+but neither source version was retained. The raw results remain untouched;
+the auditor fails closed for those v1 bundles instead of treating a
+self-reported runner hash as provenance. The v2 run-1 and run-2 runner sources
+are retained and hash-checked.
 
 After those changes, the same frozen v2 protocol was rerun against clean pinned
 TRL checkouts. Baseline repeated stream positions 144, 144, and 145; candidate
 repeated one in-flight-tail position in each of three runs. All six decisions
 passed and the updated auditor accepted the bundle. See the additional
 [review-follow-up bundle](../results/trl-async-stale-resume-v2/run-2-review-fixes/).
-The original run remains retained unchanged. This is automated review
-correction and CPU reproduction; no independent human review or upstream
-acceptance is claimed.
+The original run remains retained unchanged. The updated evidence regression
+suite passes 16 tests, including resealed runner-hash and pytest-failure
+controls. This is automated review correction and CPU reproduction; no
+independent human review or upstream acceptance is claimed.
 
 ## Reproduction
 
@@ -99,8 +111,10 @@ PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q tests/test_trl_async_stale_
 
 The runner verifies the public reproduction's pinned hash, local patch and
 dependency hashes, source revisions, raw output manifest, and protocol-specific
-acceptance rules. `run-3-final-runner-replay` is expected to audit as an
-integrity-valid but non-passing v1 result; the v2 bundle audits as passing.
+acceptance rules. V2 run-1 and run-2 audit as passing against retained runner
+sources. V1 raw bundles remain present, but the auditor rejects them because
+their original runner sources are unavailable; their old reported outcomes
+are not treated as fully verified evidence.
 
 ## Limits and next step
 
