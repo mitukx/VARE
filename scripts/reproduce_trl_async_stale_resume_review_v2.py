@@ -14,7 +14,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL_PATH = ROOT / "protocols/trl_async_stale_resume_replay_suffix_v2.lock.json"
 sys.path.insert(0, str(ROOT))
-from scripts import reproduce_trl_async_stale_resume_v1 as stale_resume
+from scripts import reproduce_trl_async_stale_resume_v1 as stale_resume  # noqa: E402
 
 
 def sha256_bytes(value: bytes) -> str:
@@ -48,12 +48,12 @@ def fail(message: str) -> None:
     raise ValueError(message)
 
 
-def load_protocol() -> dict[str, Any]:
+def load_protocol(*, require_current_runner: bool = True) -> dict[str, Any]:
     protocol = read_json(PROTOCOL_PATH)
     runner = protocol["runner"]
     if runner["path"] != "scripts/reproduce_trl_async_stale_resume_review_v2.py":
         fail("protocol runner path mismatch")
-    if sha256_file(Path(__file__).resolve()) != runner["sha256"]:
+    if require_current_runner and sha256_file(Path(__file__).resolve()) != runner["sha256"]:
         fail("runner source does not match the frozen protocol")
     helper = ROOT / runner["helper"]
     if sha256_file(helper) != runner["helper_sha256"]:
@@ -187,7 +187,10 @@ def execute_stage(
 
 
 def audit_bundle(bundle: Path) -> dict[str, Any]:
-    protocol = load_protocol()
+    # The frozen protocol binds the retained execution runner in each bundle.
+    # This auditor may evolve to reject defects found in that old runner, while
+    # reproduction itself remains pinned to the original runner bytes.
+    protocol = load_protocol(require_current_runner=False)
     manifest_path = bundle / "manifest.json"
     manifest = read_json(manifest_path)
     entries = manifest.get("files")
@@ -273,6 +276,19 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
             fail(f"source diff identity mismatch: {name}")
         if record.get("diff_artifact_sha256") != sha256_file(bundle / record["diff_artifact"]):
             fail(f"source diff digest mismatch: {name}")
+        expected_patch_paths = [source["regression_test_patch"]]
+        if name != "baseline-failing-test":
+            expected_patch_paths.append(source["correction_patch"])
+        expected_diff_bytes = b"".join((ROOT / path).read_bytes() for path in expected_patch_paths)
+        recorded_diff_bytes = (bundle / record["diff_artifact"]).read_bytes()
+
+        def normalize_patch(value: bytes) -> bytes:
+            # `git diff --binary` abbreviates index object IDs according to the
+            # checkout's config. Patch hunks and paths remain byte-identical.
+            return b"\n".join(line for line in value.splitlines() if not line.startswith(b"index ")) + b"\n"
+
+        if normalize_patch(recorded_diff_bytes) != normalize_patch(expected_diff_bytes):
+            fail(f"source diff does not match the frozen patches: {name}")
         if read_json(bundle / f"{name}.json") != record:
             fail(f"retained stage metadata differs from the summary: {name}")
         log = (bundle / record["log"]).read_text(encoding="utf-8")
@@ -302,6 +318,15 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
                 fail(f"raw log provenance marker mismatch: {name}: {marker}")
         if record.get("pytest_outcome") != stale_resume.parse_pytest_outcome(log, allow_missing=record["exit_code"] != 0):
             fail(f"pytest outcome does not match raw log: {name}")
+        outcome = record["pytest_outcome"]
+        failures = sum(outcome.get(key, 0) for key in ("failed", "error", "errors"))
+        if name == "baseline-failing-test":
+            stage_passed = record["exit_code"] == 1 and outcome.get("failed") == 2 and failures == 2
+        else:
+            expected_passes = 2 if name == "corrected-targeted-test" else 11
+            stage_passed = record["exit_code"] == 0 and outcome.get("passed") == expected_passes and failures == 0
+        if not stage_passed:
+            fail(f"pytest outcome or exit code does not satisfy the locked stage: {name}")
 
     baseline, targeted, full = records
     accepted = (
@@ -431,8 +456,9 @@ def main() -> int:
     args = parser.parse_args()
     try:
         if args.audit:
-            print(json.dumps(audit_bundle(args.audit.expanduser().resolve()), indent=2))
-            return 0
+            audited = audit_bundle(args.audit.expanduser().resolve())
+            print(json.dumps(audited, indent=2))
+            return 0 if audited.get("all_checks_passed") is True else 1
         if args.source_repo is None or args.output is None:
             parser.error("--source-repo and --output are required unless --audit is supplied")
         return reproduce(args)

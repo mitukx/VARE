@@ -288,6 +288,71 @@ def test_replay_suffix_v2_audit_rejects_logs_without_source_provenance(tmp_path:
         replay_suffix_v2.audit_bundle(copied)
 
 
+def _reseal_replay_suffix_v2_stage(copied: Path, stage_name: str, mutate) -> dict:
+    summary_path = copied / "summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    record = next(run for run in summary["runs"] if run["name"] == stage_name)
+    log_path = copied / record["log"]
+    log = log_path.read_text(encoding="utf-8")
+    mutate(record, log_path, log)
+    record["raw_log_sha256"] = sha256_file(log_path)
+    write_json(copied / f"{stage_name}.json", record)
+    write_json(summary_path, summary)
+    stale_resume.write_manifest(copied)
+    return summary
+
+
+def test_replay_suffix_v2_audit_rejects_resealed_unrelated_source_diff(tmp_path: Path):
+    copied = tmp_path / "v2-run"
+    shutil.copytree(REPLAY_SUFFIX_V2_RUN, copied)
+
+    def replace_diff(record: dict, log_path: Path, log: str) -> None:
+        diff_path = copied / record["diff_artifact"]
+        diff_path.write_text("unrelated bytes presented as the correction\n", encoding="utf-8")
+        digest = sha256_file(diff_path)
+        log_path.write_text(
+            log.replace(record["diff_artifact_sha256"], digest), encoding="utf-8"
+        )
+        record["diff_sha256"] = digest
+        record["diff_artifact_sha256"] = digest
+
+    _reseal_replay_suffix_v2_stage(copied, "corrected-targeted-test", replace_diff)
+
+    with pytest.raises(ValueError, match="does not match the frozen patches"):
+        replay_suffix_v2.audit_bundle(copied)
+
+
+def test_replay_suffix_v2_audit_rejects_passing_summary_with_failures(tmp_path: Path):
+    copied = tmp_path / "v2-run"
+    shutil.copytree(REPLAY_SUFFIX_V2_RUN, copied)
+
+    def add_failure(record: dict, log_path: Path, log: str) -> None:
+        changed = False
+        lines = []
+        for line in log.splitlines():
+            if not changed and "2 passed" in line and " in " in line:
+                line = line.replace("2 passed", "1 failed, 2 passed", 1)
+                changed = True
+            lines.append(line)
+        assert changed
+        log_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        record["pytest_outcome"] = {"failed": 1, "passed": 2}
+
+    _reseal_replay_suffix_v2_stage(copied, "corrected-targeted-test", add_failure)
+
+    with pytest.raises(ValueError, match="does not satisfy the locked stage"):
+        replay_suffix_v2.audit_bundle(copied)
+
+
+def test_replay_suffix_v2_audit_cli_returns_nonzero_for_negative_decision(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+):
+    monkeypatch.setattr(replay_suffix_v2, "audit_bundle", lambda _: {"all_checks_passed": False})
+    monkeypatch.setattr(sys, "argv", ["reproduce_trl_async_stale_resume_review_v2.py", "--audit", str(tmp_path)])
+
+    assert replay_suffix_v2.main() == 1
+
+
 def test_v3_lock_pins_transitive_dependencies_and_timeout():
     lock = json.loads(V3_PROTOCOL.read_text(encoding="utf-8"))
     requirements = resolved_requirements(lock["environment"])
