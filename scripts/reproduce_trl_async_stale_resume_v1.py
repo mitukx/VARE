@@ -6,7 +6,6 @@ import argparse
 import hashlib
 import json
 import os
-import platform
 from pathlib import Path, PurePosixPath
 import re
 import subprocess
@@ -153,26 +152,27 @@ def source_revision(source: Path) -> str:
     return result.stdout.strip()
 
 
-def execution_platform() -> dict[str, Any]:
-    def sysctl_value(name: str) -> str | None:
-        if sys.platform != "darwin":
-            return None
-        result = subprocess.run(
-            ["sysctl", "-n", name], capture_output=True, text=True, check=False
-        )
-        return result.stdout.strip() if result.returncode == 0 else None
-
-    memory = sysctl_value("hw.memsize")
-    return {
-        "sys_platform": sys.platform,
-        "system": platform.system(),
-        "release": platform.release(),
-        "machine": platform.machine(),
-        "mac_ver": platform.mac_ver()[0],
-        "hardware_model": sysctl_value("hw.model"),
-        "processor": sysctl_value("machdep.cpu.brand_string"),
-        "memory_bytes": int(memory) if memory and memory.isdigit() else None,
-    }
+def execution_platform(python: str) -> dict[str, Any]:
+    probe = """import json, platform, subprocess, sys
+def sysctl_value(name):
+    if sys.platform != "darwin":
+        return None
+    result = subprocess.run(["sysctl", "-n", name], capture_output=True, text=True, check=False)
+    return result.stdout.strip() if result.returncode == 0 else None
+memory = sysctl_value("hw.memsize")
+print(json.dumps({
+    "sys_platform": sys.platform,
+    "system": platform.system(),
+    "release": platform.release(),
+    "machine": platform.machine(),
+    "mac_ver": platform.mac_ver()[0],
+    "hardware_model": sysctl_value("hw.model"),
+    "processor": sysctl_value("machdep.cpu.brand_string"),
+    "memory_bytes": int(memory) if memory and memory.isdigit() else None,
+}))
+"""
+    result = subprocess.run([python, "-c", probe], capture_output=True, text=True, check=True)
+    return json.loads(result.stdout)
 
 
 def runtime_environment(python: str, source: Path, expected: dict[str, Any]) -> dict[str, Any]:
@@ -226,7 +226,7 @@ def runtime_environment(python: str, source: Path, expected: dict[str, Any]) -> 
         )
     observed.pop("duplicate_names", None)
     if "execution_platform" in expected:
-        observed_platform = execution_platform()
+        observed_platform = execution_platform(python)
         if observed_platform != expected["execution_platform"]:
             fail(
                 "execution platform mismatch: "
@@ -344,15 +344,17 @@ def parse_run_log(text: str, *, allow_incomplete: bool = False) -> dict[str, int
 
 
 def parse_pytest_outcome(text: str) -> dict[str, int]:
-    for line in reversed(text.splitlines()):
+    summaries = []
+    for line in text.splitlines():
         if re.search(r"\bin\s+\d+(?:\.\d+)?s\s*$", line):
-            counts = {
-                name: int(count)
-                for count, name in PYTEST_COUNT_PATTERN.findall(line)
-            }
+            counts = {name: int(count) for count, name in PYTEST_COUNT_PATTERN.findall(line)}
             if counts:
-                return counts
-    fail("raw log lacks a pytest result summary")
+                summaries.append(counts)
+    if len(summaries) > 1:
+        fail("raw log contains multiple pytest result summaries")
+    if not summaries:
+        fail("raw log lacks a pytest result summary")
+    return summaries[0]
 
 
 def run_acceptance(arm: str, observed: dict[str, int], exit_code: int, lock: dict[str, Any]) -> bool:
@@ -416,6 +418,8 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
         fail(f"manifest inventory mismatch: missing={sorted(expected-actual)}, unlisted={sorted(actual-expected)}")
 
     summary = read_json(bundle / "summary.json")
+    if type(summary.get("all_checks_passed")) is not bool:
+        fail("overall decision must be a boolean")
     lock_path = LOCK_PATHS.get(summary.get("protocol_id"))
     if lock_path is None:
         fail(f"unknown protocol id: {summary.get('protocol_id')}")
@@ -461,6 +465,8 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
     for run in runs:
         if not isinstance(run, dict):
             fail("run inventory contains a non-object entry")
+        if type(run.get("accepted")) is not bool:
+            fail("run acceptance must be a boolean")
         arm = run.get("arm")
         repetition = run.get("repetition")
         if arm not in ("baseline", "candidate") or type(repetition) is not int:

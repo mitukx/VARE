@@ -7,11 +7,13 @@ import shutil
 from pathlib import Path
 import subprocess
 import sys
+from types import SimpleNamespace
 
 import pytest
 
 from scripts.reproduce_trl_async_stale_resume_v1 import (
     audit_bundle,
+    execution_platform,
     expected_runtime_environment,
     parse_run_log,
     parse_pytest_outcome,
@@ -52,6 +54,34 @@ def test_pytest_outcome_parser_preserves_failed_and_passed_counts():
         "passed": 1,
         "warnings": 2,
     }
+
+
+def test_pytest_outcome_parser_rejects_multiple_summaries():
+    with pytest.raises(ValueError, match="multiple pytest result summaries"):
+        parse_pytest_outcome("1 failed in 0.01s\n1 passed in 0.01s\n")
+
+
+def test_execution_platform_uses_the_selected_python(monkeypatch: pytest.MonkeyPatch):
+    expected = {
+        "sys_platform": "darwin",
+        "system": "Darwin",
+        "release": "27.0.0",
+        "machine": "x86_64",
+        "mac_ver": "27.0.1",
+        "hardware_model": "MacBookPro18,3",
+        "processor": "Apple M1 Pro",
+        "memory_bytes": 34359738368,
+    }
+    calls = []
+
+    def fake_run(command: list[str], **kwargs: object) -> SimpleNamespace:
+        calls.append(command)
+        return SimpleNamespace(stdout=json.dumps(expected))
+
+    monkeypatch.setattr("scripts.reproduce_trl_async_stale_resume_v1.subprocess.run", fake_run)
+
+    assert execution_platform("/selected/python") == expected
+    assert calls[0][:2] == ["/selected/python", "-c"]
 
 
 def test_v3_lock_pins_transitive_dependencies_and_timeout():
@@ -265,10 +295,31 @@ def test_audit_rejects_resealed_success_bundle_with_failure_in_raw_pytest_log(tm
     copied = tmp_path / "run"
     shutil.copytree(EPOCH_AWARE_RUN, copied)
     log = copied / "candidate-1.log"
-    log.write_text(log.read_text(encoding="utf-8") + "\n1 failed in 0.01s\n", encoding="utf-8")
+    log.write_text(
+        log.read_text(encoding="utf-8")
+        + "\n1 failed in 0.01s\n1 passed in 0.01s\n",
+        encoding="utf-8",
+    )
     write_manifest(copied)
 
-    with pytest.raises(ValueError, match="recorded exit code contradicts raw pytest result"):
+    with pytest.raises(ValueError, match="multiple pytest result summaries"):
+        audit_bundle(copied)
+
+
+@pytest.mark.parametrize("decision_field", ["accepted", "all_checks_passed"])
+def test_audit_rejects_integer_values_for_boolean_decisions(tmp_path: Path, decision_field: str):
+    copied = tmp_path / "run"
+    shutil.copytree(EPOCH_AWARE_RUN, copied)
+    summary_path = copied / "summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    if decision_field == "accepted":
+        summary["runs"][0][decision_field] = 1
+    else:
+        summary[decision_field] = 1
+    write_json(summary_path, summary)
+    write_manifest(copied)
+
+    with pytest.raises(ValueError, match="must be a boolean"):
         audit_bundle(copied)
 
 

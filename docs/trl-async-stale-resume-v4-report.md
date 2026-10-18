@@ -16,8 +16,8 @@ candidate advances its cursor past stale drops; two repetitions replay one
 in-flight tail position and one has no repeated position. All six decisions
 pass the locked acceptance rules. The run used Python 3.12.12, CPU, Apple M1
 Pro (MacBookPro18,3), 32 GiB, macOS 27.0.1 / Darwin release 27.0.0, and the
-locked 56-package inventory. `pip check` reported no broken requirements.
-The protocol rejects a different platform or package inventory. The raw
+locked 56-package inventory. The protocol rejects a different platform or
+package inventory. The raw
 bundle contains all six logs, the exact runner, summary, and manifest at
 [`run-1-platform-locked`](../results/trl-async-stale-resume-v4/run-1-platform-locked/).
 
