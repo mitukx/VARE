@@ -18,8 +18,8 @@ from typing import Any
 
 TASK_ID = "verl-fully-async-staleness-accounting-v1"
 SOURCE_PATH = "verl/experimental/fully_async_policy/fully_async_rollouter.py"
+GRADER_PATH = "benchmarks/historical/verl_async_staleness_v1/evaluator/grade.py"
 TASK_ROOT = Path(__file__).resolve().parents[1]
-REPOSITORY_ROOT = TASK_ROOT.parents[2]
 MAX_SOURCE_BYTES = 2_000_000
 MAX_RESULT_BYTES = 65_536
 
@@ -50,11 +50,11 @@ def verify_task_lock(task_root: Path) -> tuple[dict[str, Any], dict[str, Any]]:
     }
     if task.get("task_id") != TASK_ID or lock.get("task_id") != TASK_ID:
         raise ValueError("task id differs from the protocol lock")
-    if task.get("grader", {}).get("path") != str(grader_path.relative_to(REPOSITORY_ROOT)):
+    if task.get("grader", {}).get("path") != GRADER_PATH:
         raise ValueError("grader path differs from the locked task descriptor")
     for name, value in actual.items():
         if expected.get(name) != value:
-            raise ValueError(f"protocol lock mismatch for {name}")
+            raise ValueError(f"{name} does not match the locked protocol")
     source = task.get("source", {})
     if source.get("files") != [SOURCE_PATH] or source.get("candidate_paths") != [SOURCE_PATH]:
         raise ValueError("candidate source scope differs from the task")
@@ -81,6 +81,13 @@ def validate_workspace(workspace: Path, task: dict[str, Any]) -> str:
         raise ValueError("candidate workspace does not exist")
     if workspace == TASK_ROOT or workspace.is_relative_to(TASK_ROOT):
         raise ValueError("candidate workspace overlaps trusted task files")
+    source_path = workspace / SOURCE_PATH
+    if source_path.is_symlink() or not source_path.resolve().is_relative_to(workspace.resolve()):
+        raise ValueError("candidate source path escapes its workspace")
+    if not source_path.is_file():
+        raise FileNotFoundError(f"candidate checkout is missing source files: {SOURCE_PATH}")
+    if source_path.stat().st_size > MAX_SOURCE_BYTES:
+        raise ValueError("candidate source exceeds the source-size limit")
     revision = git_output(workspace, "rev-parse", "HEAD")
     allowed = {
         task["source"]["base_revision"],
@@ -95,11 +102,6 @@ def validate_workspace(workspace: Path, task: dict[str, Any]) -> str:
             path = path.split(" -> ", 1)[1]
         if path != SOURCE_PATH:
             raise ValueError("workspace changes a path outside the task scope")
-    source_path = workspace / SOURCE_PATH
-    if source_path.is_symlink() or not source_path.resolve().is_relative_to(workspace.resolve()):
-        raise ValueError("candidate source path escapes its workspace")
-    if not source_path.is_file() or source_path.stat().st_size > MAX_SOURCE_BYTES:
-        raise ValueError("candidate source is missing or exceeds the source-size limit")
     return revision
 
 
@@ -310,25 +312,36 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--workspace", type=Path, required=True)
     parser.add_argument("--task-root", type=Path, default=TASK_ROOT)
-    parser.add_argument("--json-out", type=Path, required=True)
+    parser.add_argument("--json-out", type=Path)
     parser.add_argument("--allow-fail", action="store_true")
     args = parser.parse_args()
     workspace = args.workspace.expanduser().resolve()
     task_root = args.task_root.expanduser().resolve()
-    result_path = args.json_out.expanduser().resolve()
-    if result_path.is_relative_to(workspace) or result_path.is_relative_to(task_root):
+    result_path = args.json_out.expanduser().resolve() if args.json_out is not None else None
+    if result_path is not None and (result_path.is_relative_to(workspace) or result_path.is_relative_to(task_root)):
         parser.error("result file must be outside the candidate workspace and locked task files")
     try:
         result = grade(workspace, task_root)
     except Exception as exc:
-        print(f"grader error: {type(exc).__name__}: {exc}", file=sys.stderr)
-        return 2
+        result = {
+            "schema_version": 1,
+            "task_id": TASK_ID,
+            "grader_error": type(exc).__name__,
+            "message": str(exc),
+        }
+        encoded = json.dumps(result, indent=2, sort_keys=True, allow_nan=False) + "\n"
+        if result_path is not None:
+            result_path.parent.mkdir(parents=True, exist_ok=True)
+            result_path.write_text(encoded, encoding="utf-8")
+        print(encoded, end="")
+        return 1
     encoded = json.dumps(result, indent=2, sort_keys=True, allow_nan=False) + "\n"
     if len(encoded.encode("utf-8")) > MAX_RESULT_BYTES:
         print("grader result exceeds the output limit", file=sys.stderr)
         return 2
-    result_path.parent.mkdir(parents=True, exist_ok=True)
-    result_path.write_text(encoded, encoding="utf-8")
+    if result_path is not None:
+        result_path.parent.mkdir(parents=True, exist_ok=True)
+        result_path.write_text(encoded, encoding="utf-8")
     print(encoded, end="")
     return 0 if result["passed"] or args.allow_fail else 1
 

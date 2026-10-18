@@ -1,0 +1,33 @@
+{
+  "acceptance": {
+    "rejects_changes_outside_candidate_paths": true,
+    "rejects_task_or_evaluator_tampering": true,
+    "requires_capacity_wait_reservation_order": true,
+    "requires_completed_task_reaping_independence": true,
+    "requires_consumed_queue_items_excluded": true,
+    "requires_cpu_only": true,
+    "requires_inflight_and_queued_samples_counted": true,
+    "requires_runtime_reset_staleness_cases": 3
+  },
+  "expected_calibration": {
+    "baseline_passed": false,
+    "calibration_passed": true
+  },
+  "locked_hashes": {
+    "evaluator_sha256": "73bbcaa5a61b0c0c04281f658694f57903a7ca42dfbffc77230876b4522a0cef",
+    "task_brief_sha256": "a3e81d1a9347284d657f569cc9eec7fe1bd2e1cfb0190a74c371cab4c8f9bfa1",
+    "task_json_sha256": "c4d3f0f05ffcddd516a940283cc6511673ea3a189baee3af23ff44ee343e8f22"
+  },
+  "protocol_id": "verl-fully-async-staleness-accounting-v1",
+  "schema_version": 1,
+  "source": {
+    "base_revision": "8ced5d2f4b148c2991217554e0c6f03028fa1470",
+    "base_tree": "ae931c4519a12582681f6dbed93dd332b95769ec",
+    "calibration_revision": "64812373be25c00b0da1833308d573d45570a364",
+    "calibration_tree": "35d90c9398807d738ba843fa9cd4e6c9d5f35fb5",
+    "candidate_paths": [
+      "verl/experimental/fully_async_policy/fully_async_rollouter.py"
+    ]
+  },
+  "task_id": "verl-fully-async-staleness-accounting-v1"
+}

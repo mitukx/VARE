@@ -4,6 +4,8 @@ from __future__ import annotations
 import hashlib
 import json
 import shutil
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -13,11 +15,29 @@ from scripts import calibrate_task
 
 ROOT = Path(__file__).resolve().parents[1]
 TASK_ROOT = ROOT / "benchmarks/historical/verl_async_staleness_v1"
-RESULT_ROOT = ROOT / "results/verl-fully-async-staleness-accounting-v1/cpu-calibration-v2"
+RESULT_ROOT = ROOT / "results/verl-fully-async-staleness-accounting-v1/cpu-calibration-v4"
 
 
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def test_evaluator_supports_repository_integrity_calibration_cli(tmp_path):
+    workspace = tmp_path / "empty-candidate"
+    workspace.mkdir()
+    evaluator = TASK_ROOT / "evaluator/grade.py"
+    completed = subprocess.run(
+        [sys.executable, str(evaluator), "--workspace", str(workspace), "--task-root", str(TASK_ROOT)],
+        capture_output=True,
+        check=False,
+        text=True,
+        timeout=5,
+    )
+
+    assert completed.returncode == 1
+    result = json.loads(completed.stdout)
+    assert result["grader_error"] == "FileNotFoundError"
+    assert "candidate checkout is missing source files" in result["message"]
 
 
 @pytest.mark.parametrize("relative_path", ["TASK.md", "task.json", "evaluator/grade.py"])
