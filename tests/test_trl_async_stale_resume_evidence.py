@@ -115,3 +115,22 @@ def test_audit_rejects_resealed_bundle_with_invalid_run_inventory(
 
     with pytest.raises(ValueError, match="duplicate run identity|run inventory mismatch"):
         audit_bundle(copied)
+
+
+@pytest.mark.parametrize("provenance_field", ["environment", "gist_source_sha256"])
+def test_audit_rejects_resealed_bundle_with_unlocked_execution_provenance(
+    tmp_path: Path, provenance_field: str
+):
+    copied = tmp_path / "run"
+    shutil.copytree(EPOCH_AWARE_RUN, copied)
+    summary_path = copied / "summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    if provenance_field == "environment":
+        summary["environment"]["versions"]["torch"] = "0.0.0-tampered"
+    else:
+        summary["gist_source_sha256"] = "0" * 64
+    write_json(summary_path, summary)
+    write_manifest(copied)
+
+    with pytest.raises(ValueError, match="recorded runtime environment|recorded Gist source hash"):
+        audit_bundle(copied)

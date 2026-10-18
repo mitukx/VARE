@@ -126,6 +126,15 @@ def runtime_environment(python: str, source: Path, expected: dict[str, str]) -> 
     return observed
 
 
+def expected_runtime_environment(expected: dict[str, str]) -> dict[str, Any]:
+    return {
+        "python": expected["python"],
+        "versions": {
+            PACKAGE_NAMES[key]: value for key, value in expected.items() if key in PACKAGE_NAMES
+        },
+    }
+
+
 def download_gist(lock: dict[str, Any], gist_path: Path | None) -> bytes:
     source = lock["reproducer"]
     if gist_path:
@@ -249,6 +258,10 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
     if summary.get("protocol_sha256") != sha256_file(lock_path):
         fail("protocol hash mismatch")
     validate_local_inputs(lock)
+    if summary.get("environment") != expected_runtime_environment(lock["environment"]):
+        fail("recorded runtime environment does not match the locked dependency versions")
+    if summary.get("gist_source_sha256") != lock["reproducer"]["public_source_sha256"]:
+        fail("recorded Gist source hash does not match the locked reproducer")
     expected_repetitions = lock["reproducer"]["repetitions_per_arm"]
     expected_count = expected_repetitions * 2
     expected_revisions = {
