@@ -11,7 +11,9 @@ from pathlib import Path
 import signal
 import subprocess
 import sys
+import tempfile
 import time
+from pathlib import PurePosixPath
 
 
 def sha256(path: Path) -> str:
@@ -32,34 +34,32 @@ def require_clean_checkout(checkout: Path) -> None:
         raise RuntimeError(f"source checkout is dirty: {checkout}: {status}")
 
 
-def run_one(checkout: Path, output: Path, timeout_s: float, index: int) -> dict:
+def run_one(checkout: Path, test_file: Path, test_node: str | None, output: Path, timeout_s: float, index: int) -> dict:
     require_clean_checkout(checkout)
-    command = [
-        sys.executable,
-        "-m",
-        "pytest",
-        "-q",
-        "tests/test_trajectory_workers.py::test_independent_stages_bounded_backlog_and_slow_step_heartbeats",
-    ]
     env = os.environ.copy()
     env["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] = "1"
     env["PYTHONPATH"] = str(checkout / "src")
     started = time.monotonic()
-    process = subprocess.Popen(
-        command,
-        cwd=checkout,
-        env=env,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        start_new_session=True,
-    )
-    timed_out = False
-    try:
-        raw, _ = process.communicate(timeout=timeout_s)
-    except subprocess.TimeoutExpired:
-        timed_out = True
-        os.killpg(process.pid, signal.SIGKILL)
-        raw, _ = process.communicate()
+    with tempfile.TemporaryDirectory(prefix="vare-worker-test-") as test_dir:
+        isolated_test = Path(test_dir) / test_file.name
+        isolated_test.write_bytes(test_file.read_bytes())
+        target = str(isolated_test) + (f"::{test_node}" if test_node else "")
+        command = [sys.executable, "-m", "pytest", "-q", "-o", "addopts=", target]
+        process = subprocess.Popen(
+            command,
+            cwd=checkout,
+            env=env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            start_new_session=True,
+        )
+        timed_out = False
+        try:
+            raw, _ = process.communicate(timeout=timeout_s)
+        except subprocess.TimeoutExpired:
+            timed_out = True
+            os.killpg(process.pid, signal.SIGKILL)
+            raw, _ = process.communicate()
     require_clean_checkout(checkout)
     elapsed_s = time.monotonic() - started
     log_path = output / f"run-{index}.log"
@@ -87,7 +87,21 @@ def main() -> int:
     protocol = json.loads(protocol_path.read_text())
     arm = protocol["arms"][args.arm]
     source_path = checkout / protocol["source_file"]
-    test_path = checkout / protocol["test_file"]
+    runner_root = Path(__file__).resolve().parents[1]
+    relative_test = PurePosixPath(protocol["test_file"])
+    if relative_test.is_absolute() or ".." in relative_test.parts or "\\" in protocol["test_file"]:
+        raise SystemExit("protocol test_file must be a safe repository-relative path")
+    test_path = runner_root.joinpath(*relative_test.parts).resolve()
+    if not test_path.is_relative_to(runner_root.resolve()) or not test_path.is_file():
+        raise SystemExit(f"locked test file is missing or escapes runner root: {test_path}")
+    selector = protocol.get("test_case", protocol["test_file"])
+    prefix = protocol["test_file"]
+    if selector == prefix:
+        test_node = None
+    elif isinstance(selector, str) and selector.startswith(prefix + "::"):
+        test_node = selector[len(prefix) + 2 :]
+    else:
+        raise SystemExit("protocol test_case must select a node from test_file")
     require_clean_checkout(checkout)
 
     actual = {
@@ -111,7 +125,7 @@ def main() -> int:
     output.mkdir(parents=True, exist_ok=True)
 
     runs = [
-        run_one(checkout, output, protocol["timeout_s"], i)
+        run_one(checkout, test_path, test_node, output, protocol["timeout_s"], i)
         for i in range(1, protocol["repetitions"] + 1)
     ]
     expected_status = arm["expected_status"]
