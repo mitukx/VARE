@@ -142,14 +142,24 @@ class _ResumeEvent:
 
 
 class _QueueClient:
-    def __init__(self, total_produced: int, queue_size: int):
+    def __init__(self, total_produced: int, queue_size: int, before_snapshot: Any = None):
         self.total_produced = total_produced
         self.queue_size = queue_size
+        self.before_snapshot = before_snapshot
+        self._snapshot_advanced = False
+
+    async def _advance_snapshot(self) -> None:
+        if self.before_snapshot is not None and not self._snapshot_advanced:
+            self._snapshot_advanced = True
+            publisher = asyncio.create_task(self.before_snapshot())
+            await publisher
 
     async def get_queue_size(self) -> int:
+        await self._advance_snapshot()
         return self.queue_size
 
     async def get_statistics(self) -> dict[str, int]:
+        await self._advance_snapshot()
         return {"total_produced": self.total_produced, "queue_size": self.queue_size}
 
 
@@ -163,7 +173,13 @@ class _Owner:
             *(_Task(done=True) for _ in range(case["done_tasks"])),
             *(_Task(done=False) for _ in range(case["inflight_tasks"])),
         }
-        self.message_queue_client = _QueueClient(case["total_produced"], case["queue_size"])
+        self._snapshot_publish_task = next(
+            (task for task in self.active_tasks if not task.done()), None
+        )
+        self.message_queue_client = _QueueClient(
+            case["total_produced"], case["queue_size"],
+            self._publish_one_during_snapshot if case.get("publish_during_snapshot") else None,
+        )
         self._total_dispatched_samples = case["total_dispatched"]
         self.step_start_time = time.time() - 2
         self.idle_start_time = 0
@@ -171,6 +187,14 @@ class _Owner:
         self._step_generated_samples = 0
         self._step_samples_history: deque[tuple[int, int]] = deque(maxlen=10)
         self._STEP_HISTORY_SIZE = 10
+
+    async def _publish_one_during_snapshot(self) -> None:
+        await asyncio.sleep(0)
+        if self._snapshot_publish_task is None:
+            raise AssertionError("interleaving fixture needs one in-flight task")
+        self._snapshot_publish_task._done = True
+        self.message_queue_client.total_produced += 1
+        self.message_queue_client.queue_size += 1
 
     def _compute_rollout_resource_utilization(self) -> float:
         return 0.0
@@ -213,6 +237,16 @@ def evaluate_reset(method: ast.AsyncFunctionDef) -> list[dict[str, Any]]:
             "queue_size": 6,
             "expected": 10,
         },
+        {
+            "case_id": "task-publishes-during-queue-snapshot",
+            "done_tasks": 44,
+            "inflight_tasks": 1,
+            "total_dispatched": 45,
+            "total_produced": 44,
+            "queue_size": 6,
+            "publish_during_snapshot": True,
+            "expected": 7,
+        },
     ]
     results = []
     for case in cases:
@@ -237,14 +271,44 @@ def evaluate_dispatch_order(method: ast.AsyncFunctionDef) -> dict[str, Any]:
         for node in ast.walk(method)
         if isinstance(node, ast.While)
         and isinstance(node.test, ast.Compare)
-        and "max_concurrent_samples" in ast.unparse(node.test)
+        and isinstance(node.test.left, ast.Call)
+        and isinstance(node.test.left.func, ast.Name)
+        and node.test.left.func.id == "len"
+        and len(node.test.left.args) == 1
+        and _self_attribute(node.test.left.args[0], "active_tasks")
+        and node.test.ops
+        and isinstance(node.test.ops[0], ast.GtE)
+        and node.test.comparators
+        and _self_attribute(node.test.comparators[0], "max_concurrent_samples")
     ]
-    increments = [
-        node
-        for node in ast.walk(method)
-        if isinstance(node, ast.AugAssign)
-        and isinstance(node.op, ast.Add)
-        and _self_attribute(node.target, "staleness_samples")
+
+    def is_one(expr: ast.expr) -> bool:
+        return isinstance(expr, ast.Constant) and type(expr.value) is int and expr.value == 1
+
+    def increments_self_attribute(node: ast.stmt, name: str) -> bool:
+        if isinstance(node, ast.AugAssign):
+            return _self_attribute(node.target, name) and isinstance(node.op, ast.Add) and is_one(node.value)
+        if isinstance(node, ast.Assign) and len(node.targets) == 1 and _self_attribute(node.targets[0], name):
+            value = node.value
+            return (
+                isinstance(value, ast.BinOp)
+                and isinstance(value.op, ast.Add)
+                and (
+                    (_self_attribute(value.left, name) and is_one(value.right))
+                    or (_self_attribute(value.right, name) and is_one(value.left))
+                )
+            )
+        return False
+
+    def writes_self_attribute(node: ast.stmt, name: str) -> bool:
+        if isinstance(node, ast.AugAssign):
+            return _self_attribute(node.target, name)
+        return isinstance(node, ast.Assign) and any(_self_attribute(target, name) for target in node.targets)
+
+    method_statements = [node for node in ast.walk(method) if isinstance(node, ast.stmt)]
+    staleness_writes = [node for node in method_statements if writes_self_attribute(node, "staleness_samples")]
+    dispatch_count_writes = [
+        node for node in method_statements if writes_self_attribute(node, "_total_dispatched_samples")
     ]
     creates = [
         node
@@ -265,18 +329,31 @@ def evaluate_dispatch_order(method: ast.AsyncFunctionDef) -> dict[str, Any]:
         if not is_self_lock:
             continue
         body_nodes = list(ast.walk(ast.Module(body=lock_block.body, type_ignores=[])))
-        has_increment = any(
-            node in increments for node in body_nodes
-        )
-        has_dispatch = any(node in creates for node in body_nodes)
+        block_staleness_writes = [node for node in body_nodes if writes_self_attribute(node, "staleness_samples")]
+        block_dispatch_count_writes = [
+            node for node in body_nodes if writes_self_attribute(node, "_total_dispatched_samples")
+        ]
+        block_creates = [node for node in body_nodes if node in creates]
         for capacity_wait in capacity_waits:
+            after_dispatch = max((node.end_lineno or node.lineno for node in block_creates), default=0)
             reservations.append(
-                lock_block.lineno > capacity_wait.lineno and has_increment and has_dispatch
+                len(capacity_waits) == 1
+                and len(creates) == 1
+                and len(staleness_writes) == 1
+                and len(dispatch_count_writes) == 1
+                and len(block_creates) == 1
+                and block_staleness_writes == staleness_writes
+                and block_dispatch_count_writes == dispatch_count_writes
+                and increments_self_attribute(staleness_writes[0], "staleness_samples")
+                and increments_self_attribute(dispatch_count_writes[0], "_total_dispatched_samples")
+                and lock_block.lineno > (capacity_wait.end_lineno or capacity_wait.lineno)
+                and staleness_writes[0].lineno > after_dispatch
+                and dispatch_count_writes[0].lineno > after_dispatch
             )
     return {
         "passed": bool(reservations) and any(reservations),
         "capacity_wait_line": min((node.lineno for node in capacity_waits), default=None),
-        "staleness_increment_count": len(increments),
+        "staleness_increment_count": len(staleness_writes),
         "locked_dispatch_reservation_blocks": sum(reservations),
     }
 

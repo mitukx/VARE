@@ -1,7 +1,9 @@
 """Integrity checks for the pinned public fully-async staleness task."""
 from __future__ import annotations
 
+import ast
 import hashlib
+import importlib.util
 import json
 import shutil
 import subprocess
@@ -15,7 +17,13 @@ from scripts import calibrate_task
 
 ROOT = Path(__file__).resolve().parents[1]
 TASK_ROOT = ROOT / "benchmarks/historical/verl_async_staleness_v1"
-RESULT_ROOT = ROOT / "results/verl-fully-async-staleness-accounting-v1/cpu-calibration-v4"
+RESULT_ROOT = ROOT / "results/verl-fully-async-staleness-accounting-v1/cpu-calibration-v5"
+_EVALUATOR_SPEC = importlib.util.spec_from_file_location(
+    "verl_async_staleness_grader", TASK_ROOT / "evaluator/grade.py"
+)
+assert _EVALUATOR_SPEC is not None and _EVALUATOR_SPEC.loader is not None
+_EVALUATOR = importlib.util.module_from_spec(_EVALUATOR_SPEC)
+_EVALUATOR_SPEC.loader.exec_module(_EVALUATOR)
 
 
 def _sha256(path: Path) -> str:
@@ -38,6 +46,35 @@ def test_evaluator_supports_repository_integrity_calibration_cli(tmp_path):
     result = json.loads(completed.stdout)
     assert result["grader_error"] == "FileNotFoundError"
     assert "candidate checkout is missing source files" in result["message"]
+
+
+def test_dispatch_order_accepts_assignment_increment_and_rejects_pre_wait_reservation():
+    good = ast.parse(
+        """
+async def _processor_worker(self):
+    while len(self.active_tasks) >= self.max_concurrent_samples:
+        await asyncio.sleep(0)
+    async with self.lock:
+        task = safe_create_task(self.process())
+        self.staleness_samples = self.staleness_samples + 1
+        self._total_dispatched_samples = self._total_dispatched_samples + 1
+"""
+    ).body[0]
+    bad = ast.parse(
+        """
+async def _processor_worker(self):
+    self.staleness_samples += 1
+    while len(self.active_tasks) >= self.max_concurrent_samples:
+        await asyncio.sleep(0)
+    async with self.lock:
+        task = safe_create_task(self.process())
+        self.staleness_samples += 0
+        self._total_dispatched_samples += 1
+"""
+    ).body[0]
+
+    assert _EVALUATOR.evaluate_dispatch_order(good)["passed"] is True
+    assert _EVALUATOR.evaluate_dispatch_order(bad)["passed"] is False
 
 
 @pytest.mark.parametrize("relative_path", ["TASK.md", "task.json", "evaluator/grade.py"])
@@ -63,6 +100,13 @@ def test_retained_source_calibration_is_hash_complete():
     assert summary["observed"] == {"baseline_passed": False, "calibration_passed": True}
     assert baseline["passed"] is False
     assert fixed["passed"] is True
+    assert baseline["metrics"]["reset_cases"] == 4
+    assert fixed["metrics"]["reset_cases"] == 4
+    interleaved_baseline = baseline["checks"]["reset_staleness"][-1]
+    interleaved_fixed = fixed["checks"]["reset_staleness"][-1]
+    assert interleaved_baseline["case_id"] == "task-publishes-during-queue-snapshot"
+    assert interleaved_baseline["passed"] is False
+    assert interleaved_fixed["passed"] is True
     assert baseline["workspace_revision"] == "8ced5d2f4b148c2991217554e0c6f03028fa1470"
     assert fixed["workspace_revision"] == "64812373be25c00b0da1833308d573d45570a364"
     assert all(
