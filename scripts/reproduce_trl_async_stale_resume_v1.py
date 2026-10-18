@@ -29,6 +29,7 @@ REQUIREMENT_RE = re.compile(r"^([A-Za-z0-9_.-]+)==([A-Za-z0-9_.!+~-]+)$")
 TIMEOUT_MARKER = "VARE_RUNNER_TIMEOUT_SECONDS="
 EXIT_CODE_MARKER = "VARE_RUNNER_EXIT_CODE="
 SOURCE_REVISION_PROVENANCE_CAPABILITY = "source-revision-provenance-v1"
+RUNNER_SOURCE_VALIDITY_CAPABILITY = "runner-source-validity-v1"
 LOG_PATTERNS = {
     "first_run_trained_rows": r"run 1 trained rows\s*:\s*(\d+)",
     "resumed_row": r"resumed at row\s*:\s*(\d+)",
@@ -163,6 +164,15 @@ def observed_source_revision(source: Path) -> str | None:
         return None
 
 
+def isolated_python_environment() -> dict[str, str]:
+    """Remove launcher overrides that could change imports in a pinned probe."""
+    env = dict(os.environ)
+    for name in ("PYTHONHOME", "PYTHONPATH", "PYTHONUSERBASE", "PYTHONEXECUTABLE"):
+        env.pop(name, None)
+    env["PYTHONNOUSERSITE"] = "1"
+    return env
+
+
 def execution_platform(python: str) -> dict[str, Any]:
     probe = """import json, platform, subprocess, sys
 def sysctl_value(name):
@@ -182,7 +192,13 @@ print(json.dumps({
     "memory_bytes": int(memory) if memory and memory.isdigit() else None,
 }))
 """
-    result = subprocess.run([python, "-c", probe], capture_output=True, text=True, check=True)
+    result = subprocess.run(
+        [python, "-I", "-c", probe],
+        env=isolated_python_environment(),
+        capture_output=True,
+        text=True,
+        check=True,
+    )
     return json.loads(result.stdout)
 
 
@@ -213,7 +229,12 @@ def runtime_environment(python: str, source: Path, expected: dict[str, Any]) -> 
             "'versions': versions, 'duplicate_names': duplicates}))"
         )
     result = subprocess.run(
-        [python, "-c", probe], cwd=source, check=True, capture_output=True, text=True
+        [python, "-I", "-c", probe],
+        cwd=source,
+        env=isolated_python_environment(),
+        check=True,
+        capture_output=True,
+        text=True,
     )
     observed = json.loads(result.stdout)
     if observed["python"] != expected["python"]:
@@ -276,6 +297,21 @@ def runner_requires_source_revision_provenance(runner_source: Path) -> bool:
     )
 
 
+def runner_requires_source_validity(runner_source: Path) -> bool:
+    tree = ast.parse(runner_source.read_text(encoding="utf-8"), filename=str(runner_source))
+    return any(
+        isinstance(node, ast.Assign)
+        and any(
+            isinstance(target, ast.Name)
+            and target.id == "RUNNER_SOURCE_VALIDITY_CAPABILITY"
+            for target in node.targets
+        )
+        and isinstance(node.value, ast.Constant)
+        and node.value.value == "runner-source-validity-v1"
+        for node in ast.walk(tree)
+    )
+
+
 def run_pytest_arm(
     command: list[str], source: Path, env: dict[str, str], timeout_seconds: int
 ) -> tuple[str, int, bool]:
@@ -315,10 +351,7 @@ def run_pytest_arm(
 
 def pytest_environment() -> dict[str, str]:
     """Remove inherited Python path overrides before running a locked test arm."""
-    env = dict(os.environ)
-    for name in ("PYTHONHOME", "PYTHONPATH", "PYTHONUSERBASE", "PYTHONEXECUTABLE"):
-        env.pop(name, None)
-    env["PYTHONNOUSERSITE"] = "1"
+    env = isolated_python_environment()
     env["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] = "1"
     env["TRL_EXPERIMENTAL_SILENCE"] = "1"
     return env
@@ -502,6 +535,12 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
     if sha256_file(runner_snapshot) != runner_sha:
         fail("retained runner source hash mismatch")
     requires_source_revision_provenance = runner_requires_source_revision_provenance(runner_snapshot)
+    requires_runner_source_validity = runner_requires_source_validity(runner_snapshot)
+    if requires_runner_source_validity and "runner_source_valid" not in summary:
+        fail("current runner source validity decision is missing from the summary")
+    runner_source_valid = summary.get("runner_source_valid", True)
+    if type(runner_source_valid) is not bool:
+        fail("runner source validity decision must be a boolean")
     validate_local_inputs(lock)
     if summary.get("environment") != expected_runtime_environment(lock["environment"]):
         fail("recorded runtime environment does not match the locked dependency versions")
@@ -624,7 +663,9 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
         )
         if accepted != run["accepted"]:
             fail(f"acceptance/log mismatch: {run['log']}")
-    if summary["all_checks_passed"] != all(run["accepted"] for run in summary["runs"]):
+    if summary["all_checks_passed"] != (
+        runner_source_valid and all(run["accepted"] for run in summary["runs"])
+    ):
         fail("overall decision does not match run decisions")
     return summary
 
@@ -729,21 +770,26 @@ def reproduce(args: argparse.Namespace) -> int:
                 runs.append(run)
                 print(f"{arm}-{repetition}: exit={exit_code}, timed_out={timed_out}, accepted={accepted}, {observed}", flush=True)
 
+    try:
+        runner_source_valid = sha256_file(runner_path) == runner_sha
+    except OSError:
+        runner_source_valid = False
     summary = {
         "protocol_id": lock["protocol_id"],
         "protocol_sha256": sha256_file(protocol_path),
         "runner_sha256": runner_sha,
-        "python_executable": str(Path(args.python).resolve()),
+        # Keep a venv's bin/python symlink intact: resolving it can select the
+        # base interpreter and make the evidence describe the wrong packages.
+        "python_executable": str(Path(args.python).expanduser().absolute()),
         "environment": env,
         "source_revisions": revisions,
+        "runner_source_valid": runner_source_valid,
         "gist_source_sha256": hashlib.sha256(gist_bytes).hexdigest(),
         "repetitions_per_arm": lock["reproducer"]["repetitions_per_arm"],
         "run_count": len(runs),
         "runs": runs,
-        "all_checks_passed": all(run["accepted"] for run in runs),
+        "all_checks_passed": runner_source_valid and all(run["accepted"] for run in runs),
     }
-    if sha256_file(runner_path) != runner_sha:
-        fail("reproducer source changed during execution")
     write_json(out / "summary.json", summary)
     write_manifest(out)
     audited = audit_bundle(out)

@@ -1,0 +1,19 @@
+{
+  "accepted_as_reproducible_evidence": false,
+  "authoritative_bundle": "results/trl-async-stale-resume-v6/review-p1-suffix-epoch-count-provenance-v2-final",
+  "completed_test_outcomes": [
+    {
+      "failed": 2
+    },
+    {
+      "passed": 2
+    },
+    {
+      "passed": 11
+    }
+  ],
+  "protocol_sha256": "b81bcaa2a51a170fee95cf69b0ccfbae527f4cf40a74efd2cb59a5ef482e7ae3",
+  "reason": "The run completed its three pytest stages, but the initial v2 auditor compared summary.environment to a nonexistent top-level baseline-failing-test field and rejected the bundle. A corrected runner produced the authoritative passing bundle.",
+  "runner_sha256": "02f2a7b04a667a6ee13a003c985d1efc190bff58d451c42d124df68e92e4847a",
+  "status": "REJECTED_AS_EVIDENCE"
+}

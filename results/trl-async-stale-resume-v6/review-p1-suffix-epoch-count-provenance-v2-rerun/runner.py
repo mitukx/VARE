@@ -1,0 +1,424 @@
+#!/usr/bin/env python3
+"""Reproduce the replay-suffix epoch-count regression with source provenance."""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+from typing import Any
+
+ROOT = Path(__file__).resolve().parents[1]
+PROTOCOL_PATH = ROOT / "protocols/trl_async_stale_resume_replay_suffix_v2.lock.json"
+sys.path.insert(0, str(ROOT))
+from scripts import reproduce_trl_async_stale_resume_v1 as stale_resume
+
+
+def sha256_bytes(value: bytes) -> str:
+    return hashlib.sha256(value).hexdigest()
+
+
+def sha256_file(path: Path) -> str:
+    return sha256_bytes(path.read_bytes())
+
+
+def read_json(path: Path) -> dict[str, Any]:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def write_json(path: Path, value: Any) -> None:
+    path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def git(repo: Path, *args: str, text: bool = True) -> str | bytes:
+    result = subprocess.run(
+        ["git", "-C", str(repo), *args],
+        check=True,
+        capture_output=True,
+        text=text,
+        timeout=30,
+    )
+    return result.stdout.strip() if text else result.stdout
+
+
+def fail(message: str) -> None:
+    raise ValueError(message)
+
+
+def load_protocol() -> dict[str, Any]:
+    protocol = read_json(PROTOCOL_PATH)
+    runner = protocol["runner"]
+    if runner["path"] != "scripts/reproduce_trl_async_stale_resume_review_v2.py":
+        fail("protocol runner path mismatch")
+    if sha256_file(Path(__file__).resolve()) != runner["sha256"]:
+        fail("runner source does not match the frozen protocol")
+    helper = ROOT / runner["helper"]
+    if sha256_file(helper) != runner["helper_sha256"]:
+        fail("shared stale-resume helper does not match the frozen protocol")
+    source = protocol["source"]
+    for key in ("original_candidate_patch", "regression_test_patch", "correction_patch"):
+        path = ROOT / source[key]
+        if sha256_file(path) != source[f"{key}_sha256"]:
+            fail(f"patch hash mismatch: {source[key]}")
+    environment = protocol["environment"]
+    lock = ROOT / environment["environment_lock"]
+    if sha256_file(lock) != environment["environment_lock_sha256"]:
+        fail("locked environment protocol hash mismatch")
+    return protocol
+
+
+def write_manifest(bundle: Path) -> dict[str, str]:
+    files = {
+        path.relative_to(bundle).as_posix(): sha256_file(path)
+        for path in sorted(bundle.rglob("*"))
+        if path.is_file() and path.name != "manifest.json"
+    }
+    write_json(bundle / "manifest.json", {"files": files})
+    return files
+
+
+def capture_state(repo: Path, expected_paths: list[str]) -> dict[str, Any]:
+    paths = sorted(str(git(repo, "diff", "--name-only", "HEAD")).splitlines())
+    if paths != sorted(expected_paths):
+        fail(f"candidate path inventory mismatch: expected={sorted(expected_paths)}, got={paths}")
+    git(repo, "add", "--", *paths)
+    tree = str(git(repo, "write-tree"))
+    diff = git(repo, "diff", "--binary", "HEAD", text=False)
+    if not isinstance(diff, bytes):
+        fail("git did not return a binary source diff")
+    return {
+        "revision": str(git(repo, "rev-parse", "HEAD")),
+        "base_tree": str(git(repo, "rev-parse", "HEAD^{tree}")),
+        "candidate_tree": tree,
+        "changed_paths": paths,
+        "diff": diff,
+        "diff_sha256": sha256_bytes(diff),
+        "test_file_sha256": sha256_file(repo / "tests/experimental/test_async_stale_resume.py"),
+    }
+
+
+def apply_patch(repo: Path, relative_patch: str) -> None:
+    patch = ROOT / relative_patch
+    subprocess.run(["git", "-C", str(repo), "apply", "--check", str(patch)], check=True)
+    subprocess.run(["git", "-C", str(repo), "apply", str(patch)], check=True)
+
+
+def execute_stage(
+    *,
+    protocol: dict[str, Any],
+    python: str,
+    repo: Path,
+    bundle: Path,
+    name: str,
+    args: list[str],
+    expected_paths: list[str],
+    source_patch_name: str,
+    runner_sha256: str,
+) -> dict[str, Any]:
+    state = capture_state(repo, expected_paths)
+    diff_path = bundle / source_patch_name
+    diff_path.write_bytes(state.pop("diff"))
+    state["diff_artifact"] = source_patch_name
+    state["diff_artifact_sha256"] = sha256_file(diff_path)
+    command = [python, "-m", "pytest", "-o", "addopts=", "-q", *args]
+    source = protocol["source"]
+    environment = stale_resume.runtime_environment(
+        python,
+        repo,
+        read_json(ROOT / protocol["environment"]["environment_lock"])["environment"],
+    )
+    header = [
+        f"VARE_REVIEW_STAGE={name}",
+        f"VARE_REVIEW_SOURCE_REVISION={state['revision']}",
+        f"VARE_REVIEW_BASE_TREE={state['base_tree']}",
+        f"VARE_REVIEW_CANDIDATE_TREE={state['candidate_tree']}",
+        f"VARE_REVIEW_DIFF_SHA256={state['diff_artifact_sha256']}",
+        f"VARE_REVIEW_TEST_SHA256={state['test_file_sha256']}",
+        f"VARE_REVIEW_PROTOCOL_SHA256={sha256_file(PROTOCOL_PATH)}",
+        f"VARE_REVIEW_RUNNER_SHA256={runner_sha256}",
+        f"VARE_REVIEW_TEST_PATCH_SHA256={source['regression_test_patch_sha256']}",
+        f"VARE_REVIEW_CORRECTION_PATCH_SHA256={source['correction_patch_sha256'] if name != 'baseline-failing-test' else 'not-applied'}",
+    ]
+    output, exit_code, timed_out = stale_resume.run_pytest_arm(
+        command,
+        repo,
+        stale_resume.pytest_environment(),
+        protocol["environment"]["timeout_seconds"],
+    )
+    after = capture_state(repo, expected_paths)
+    source_stable = (
+        after["candidate_tree"] == state["candidate_tree"]
+        and after["diff_sha256"] == state["diff_artifact_sha256"]
+    )
+    header.extend(
+        [
+            f"VARE_REVIEW_SOURCE_VALID={'true' if source_stable else 'false'}",
+            "",
+        ]
+    )
+    log_path = bundle / f"{name}.log"
+    log_path.write_text(
+        "\n".join(header)
+        + output.rstrip()
+        + f"\nVARE_REVIEW_EXIT_CODE={exit_code}\n"
+        + f"VARE_REVIEW_TIMED_OUT={'true' if timed_out else 'false'}\n"
+        + f"VARE_REVIEW_SOURCE_STABLE={'true' if source_stable else 'false'}\n",
+        encoding="utf-8",
+    )
+    record = {
+        "name": name,
+        **state,
+        "diff": None,
+        "command": command,
+        "environment": environment,
+        "exit_code": exit_code,
+        "timed_out": timed_out,
+        "source_stable": source_stable,
+        "log": log_path.name,
+        "raw_log_sha256": sha256_file(log_path),
+    }
+    record["pytest_outcome"] = stale_resume.parse_pytest_outcome(log_path.read_text(encoding="utf-8"), allow_missing=exit_code != 0)
+    record.pop("diff", None)
+    write_json(bundle / f"{name}.json", record)
+    return record
+
+
+def audit_bundle(bundle: Path) -> dict[str, Any]:
+    protocol = load_protocol()
+    manifest_path = bundle / "manifest.json"
+    manifest = read_json(manifest_path)
+    entries = manifest.get("files")
+    if not isinstance(entries, dict):
+        fail("manifest files must be a mapping")
+    actual = {
+        path.relative_to(bundle).as_posix()
+        for path in bundle.rglob("*")
+        if path.is_file() and path != manifest_path
+    }
+    if actual != set(entries):
+        fail("manifest inventory does not match the bundle")
+    for name, digest in entries.items():
+        path = bundle / name
+        if sha256_file(path) != digest:
+            fail(f"manifest hash mismatch: {name}")
+
+    summary = read_json(bundle / "summary.json")
+    if summary.get("protocol_id") != protocol["protocol_id"]:
+        fail("summary protocol id mismatch")
+    if summary.get("protocol_sha256") != sha256_file(PROTOCOL_PATH):
+        fail("summary protocol hash mismatch")
+    runner = bundle / "runner.py"
+    if sha256_file(runner) != summary.get("runner_sha256") or summary.get("runner_sha256") != protocol["runner"]["sha256"]:
+        fail("summary runner hash mismatch")
+    if summary.get("helper_sha256") != protocol["runner"]["helper_sha256"]:
+        fail("summary shared helper hash mismatch")
+    source = protocol["source"]
+    if summary.get("source_revision") != source["candidate_revision"] or summary.get("source_base_tree") != source["candidate_base_tree"]:
+        fail("summary candidate source identity mismatch")
+    if summary.get("environment") != summary.get("baseline-failing-test", {}).get("environment"):
+        fail("summary environment does not match the recorded test runtime")
+    if summary.get("source_runner_valid") is not True:
+        fail("runner source changed during the reproduction")
+    if summary.get("python_executable") != protocol["environment"]["python_executable"]:
+        fail("summary Python executable differs from the locked interpreter")
+    environment_lock = read_json(ROOT / protocol["environment"]["environment_lock"])
+    expected_environment = stale_resume.expected_runtime_environment(environment_lock["environment"])
+    if summary.get("environment") != expected_environment:
+        fail("summary runtime environment differs from the locked dependency/platform inventory")
+
+    records = summary.get("runs")
+    expected_names = ["baseline-failing-test", "corrected-targeted-test", "corrected-full-test-file"]
+    if not isinstance(records, list) or [record.get("name") for record in records] != expected_names:
+        fail("run inventory mismatch")
+    expected_path_sets = {
+        expected_names[0]: source["test_only_paths"],
+        expected_names[1]: source["corrected_paths"],
+        expected_names[2]: source["corrected_paths"],
+    }
+    for record in records:
+        name = record["name"]
+        if record.get("changed_paths") != expected_path_sets[name]:
+            fail(f"changed source paths mismatch: {name}")
+        if record.get("environment") != expected_environment:
+            fail(f"recorded runtime environment differs from the lock: {name}")
+        if record.get("revision") != source["candidate_revision"] or record.get("base_tree") != source["candidate_base_tree"]:
+            fail(f"candidate revision or base tree mismatch: {name}")
+        if not isinstance(record.get("candidate_tree"), str) or len(record["candidate_tree"]) != 40:
+            fail(f"candidate tree identity is missing or malformed: {name}")
+        if not record.get("source_stable") or record.get("timed_out"):
+            fail(f"source changed or test timed out: {name}")
+        if record.get("raw_log_sha256") != sha256_file(bundle / record["log"]):
+            fail(f"raw log digest mismatch: {name}")
+        if record.get("diff_artifact_sha256") != sha256_file(bundle / record["diff_artifact"]):
+            fail(f"source diff digest mismatch: {name}")
+        if read_json(bundle / f"{name}.json") != record:
+            fail(f"retained stage metadata differs from the summary: {name}")
+        log = (bundle / record["log"]).read_text(encoding="utf-8")
+        for marker, expected in (
+            ("VARE_REVIEW_STAGE", name),
+            ("VARE_REVIEW_SOURCE_REVISION", record["revision"]),
+            ("VARE_REVIEW_BASE_TREE", record["base_tree"]),
+            ("VARE_REVIEW_CANDIDATE_TREE", record["candidate_tree"]),
+            ("VARE_REVIEW_DIFF_SHA256", record["diff_artifact_sha256"]),
+            ("VARE_REVIEW_TEST_SHA256", record["test_file_sha256"]),
+            ("VARE_REVIEW_PROTOCOL_SHA256", summary["protocol_sha256"]),
+            ("VARE_REVIEW_RUNNER_SHA256", summary["runner_sha256"]),
+            ("VARE_REVIEW_TEST_PATCH_SHA256", source["regression_test_patch_sha256"]),
+            (
+                "VARE_REVIEW_CORRECTION_PATCH_SHA256",
+                source["correction_patch_sha256"] if name != "baseline-failing-test" else "not-applied",
+            ),
+            ("VARE_REVIEW_EXIT_CODE", str(record["exit_code"])),
+            (
+                "VARE_REVIEW_TIMED_OUT",
+                "true" if record["timed_out"] else "false",
+            ),
+            ("VARE_REVIEW_SOURCE_VALID", "true"),
+            ("VARE_REVIEW_SOURCE_STABLE", "true"),
+        ):
+            if log.count(f"{marker}={expected}") != 1:
+                fail(f"raw log provenance marker mismatch: {name}: {marker}")
+        if record.get("pytest_outcome") != stale_resume.parse_pytest_outcome(log, allow_missing=record["exit_code"] != 0):
+            fail(f"pytest outcome does not match raw log: {name}")
+
+    baseline, targeted, full = records
+    accepted = (
+        baseline["exit_code"] == 1
+        and baseline["pytest_outcome"].get("failed") == 2
+        and targeted["exit_code"] == 0
+        and targeted["pytest_outcome"].get("passed") == 2
+        and full["exit_code"] == 0
+        and full["pytest_outcome"].get("passed") == 11
+        and all(record["source_stable"] and not record["timed_out"] for record in records)
+    )
+    if summary.get("all_checks_passed") is not accepted:
+        fail("overall decision does not match the retained test evidence")
+    return summary
+
+
+def reproduce(args: argparse.Namespace) -> int:
+    protocol = load_protocol()
+    if args.python != protocol["environment"]["python_executable"]:
+        fail(f"use the locked interpreter path: {protocol['environment']['python_executable']}")
+    # Preserve the venv executable path; resolving its symlink would select
+    # the base Python and bypass the locked environment.
+    python = str(Path(args.python).expanduser().absolute())
+    source_repo = args.source_repo.expanduser().resolve()
+    output = args.output.expanduser().resolve()
+    if output.exists() and any(output.iterdir()):
+        fail(f"refusing to overwrite nonempty output directory: {output}")
+    output.mkdir(parents=True, exist_ok=True)
+    runner_path = Path(__file__).resolve()
+    runner_bytes = runner_path.read_bytes()
+    runner_sha = sha256_bytes(runner_bytes)
+    (output / "runner.py").write_bytes(runner_bytes)
+    helper_sha = sha256_file(ROOT / protocol["runner"]["helper"])
+    environment_lock = read_json(ROOT / protocol["environment"]["environment_lock"])
+    stale_resume.validate_local_inputs(environment_lock)
+    with tempfile.TemporaryDirectory(prefix="trl-stale-resume-review-v2-") as temp:
+        checkout = Path(temp) / "candidate"
+        subprocess.run(
+            ["git", "-C", str(source_repo), "worktree", "add", "--detach", str(checkout), protocol["source"]["candidate_revision"]],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        try:
+            revision = str(git(checkout, "rev-parse", "HEAD"))
+            base_tree = str(git(checkout, "rev-parse", "HEAD^{tree}"))
+            if revision != protocol["source"]["candidate_revision"] or base_tree != protocol["source"]["candidate_base_tree"]:
+                fail("materialized candidate does not match the locked source revision/tree")
+            if str(git(checkout, "status", "--porcelain", "--untracked-files=all")):
+                fail("materialized candidate is not clean before patching")
+            environment = stale_resume.runtime_environment(python, checkout, environment_lock["environment"])
+            apply_patch(checkout, protocol["source"]["regression_test_patch"])
+            first = execute_stage(
+                protocol=protocol,
+                python=python,
+                repo=checkout,
+                bundle=output,
+                name="baseline-failing-test",
+                args=["tests/experimental/test_async_stale_resume.py", "-k", "resume_cursor_does_not_count_replayed_suffix"],
+                expected_paths=protocol["source"]["test_only_paths"],
+                source_patch_name="baseline-source.patch",
+                runner_sha256=runner_sha,
+            )
+            apply_patch(checkout, protocol["source"]["correction_patch"])
+            second = execute_stage(
+                protocol=protocol,
+                python=python,
+                repo=checkout,
+                bundle=output,
+                name="corrected-targeted-test",
+                args=["tests/experimental/test_async_stale_resume.py", "-k", "resume_cursor_does_not_count_replayed_suffix"],
+                expected_paths=protocol["source"]["corrected_paths"],
+                source_patch_name="corrected-source.patch",
+                runner_sha256=runner_sha,
+            )
+            third = execute_stage(
+                protocol=protocol,
+                python=python,
+                repo=checkout,
+                bundle=output,
+                name="corrected-full-test-file",
+                args=["tests/experimental/test_async_stale_resume.py"],
+                expected_paths=protocol["source"]["corrected_paths"],
+                source_patch_name="corrected-source.patch",
+                runner_sha256=runner_sha,
+            )
+        finally:
+            subprocess.run(
+                ["git", "-C", str(source_repo), "worktree", "remove", "--force", str(checkout)],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        try:
+            source_runner_valid = sha256_file(runner_path) == runner_sha
+        except OSError:
+            source_runner_valid = False
+
+    summary = {
+        "protocol_id": protocol["protocol_id"],
+        "protocol_sha256": sha256_file(PROTOCOL_PATH),
+        "runner_sha256": runner_sha,
+        "helper_sha256": helper_sha,
+        "source_revision": revision,
+        "source_base_tree": base_tree,
+        "python_executable": python,
+        "environment": environment,
+        "source_runner_valid": source_runner_valid,
+        "runs": [first, second, third],
+        "all_checks_passed": source_runner_valid and first["exit_code"] == 1 and first["pytest_outcome"].get("failed") == 2 and second["exit_code"] == 0 and second["pytest_outcome"].get("passed") == 2 and third["exit_code"] == 0 and third["pytest_outcome"].get("passed") == 11 and all(run["source_stable"] and not run["timed_out"] for run in (first, second, third)),
+    }
+    write_json(output / "summary.json", summary)
+    write_manifest(output)
+    audited = audit_bundle(output)
+    print(json.dumps({"bundle": str(output), "all_checks_passed": audited["all_checks_passed"]}, indent=2))
+    return 0 if audited["all_checks_passed"] else 1
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--source-repo", type=Path, help="local TRL clone containing the locked candidate commit")
+    parser.add_argument("--python", default="/tmp/vare-trl-v4/bin/python", help="locked v4 Python 3.12 environment")
+    parser.add_argument("--output", type=Path, help="new output directory")
+    parser.add_argument("--audit", type=Path, help="audit an existing retained v2 bundle")
+    args = parser.parse_args()
+    try:
+        if args.audit:
+            print(json.dumps(audit_bundle(args.audit.expanduser().resolve()), indent=2))
+            return 0
+        if args.source_repo is None or args.output is None:
+            parser.error("--source-repo and --output are required unless --audit is supplied")
+        return reproduce(args)
+    except (OSError, subprocess.CalledProcessError, ValueError, json.JSONDecodeError) as exc:
+        print(f"reproduction failed: {exc}", file=sys.stderr)
+        return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.metadata
 import json
 import os
 import shutil
@@ -11,8 +12,10 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from scripts import reproduce_trl_async_stale_resume_review_v2 as replay_suffix_v2
 from scripts import reproduce_trl_async_stale_resume_v1 as stale_resume
 from scripts.reproduce_trl_async_stale_resume_v1 import (
+    PACKAGE_NAMES,
     audit_bundle,
     execution_platform,
     expected_runtime_environment,
@@ -23,6 +26,7 @@ from scripts.reproduce_trl_async_stale_resume_v1 import (
     resolved_requirements,
     run_pytest_arm,
     runner_requires_source_revision_provenance,
+    runtime_environment,
     sha256_file,
     source_revision,
     validate_new_run_protocol,
@@ -41,6 +45,7 @@ V4_PLATFORM_RUN = ROOT / "results/trl-async-stale-resume-v4/run-1-platform-locke
 V4_SANITIZED_RUN = ROOT / "results/trl-async-stale-resume-v4/run-2-python-env-sanitized"
 REPLAY_SUFFIX_PROTOCOL = ROOT / "protocols/trl_async_stale_resume_replay_suffix_v1.lock.json"
 REPLAY_SUFFIX_RUN = ROOT / "results/trl-async-stale-resume-v5/review-p1-suffix-epoch-count"
+REPLAY_SUFFIX_V2_RUN = ROOT / "results/trl-async-stale-resume-v6/review-p1-suffix-epoch-count-provenance-v2-final"
 
 
 def test_reproduction_parser_extracts_stale_cursor_and_replay_count():
@@ -114,7 +119,7 @@ def test_execution_platform_uses_the_selected_python(monkeypatch: pytest.MonkeyP
     monkeypatch.setattr("scripts.reproduce_trl_async_stale_resume_v1.subprocess.run", fake_run)
 
     assert execution_platform("/selected/python") == expected
-    assert calls[0][:2] == ["/selected/python", "-c"]
+    assert calls[0][:3] == ["/selected/python", "-I", "-c"]
 
 
 def test_pytest_environment_removes_inherited_python_path_overrides(monkeypatch: pytest.MonkeyPatch):
@@ -148,6 +153,39 @@ def test_pytest_arm_does_not_import_from_inherited_pythonpath(monkeypatch: pytes
     assert timed_out is False
     assert "untrusted PYTHONPATH module imported" not in output
     assert str(override) not in output
+
+
+def test_runtime_probes_ignore_pythonpath_and_user_site_hooks(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+):
+    marker = tmp_path / "sitecustomize-loaded"
+    hook = (
+        "import os\n"
+        "from pathlib import Path\n"
+        "Path(os.environ['VARE_SITE_CUSTOMIZE_MARKER']).write_text('loaded')\n"
+    )
+    pythonpath = tmp_path / "pythonpath"
+    user_site = tmp_path / "userbase" / "lib" / f"python{sys.version_info.major}.{sys.version_info.minor}" / "site-packages"
+    pythonpath.mkdir()
+    user_site.mkdir(parents=True)
+    (pythonpath / "sitecustomize.py").write_text(hook, encoding="utf-8")
+    (user_site / "sitecustomize.py").write_text(hook, encoding="utf-8")
+
+    versions = {name: importlib.metadata.version(dist) for name, dist in PACKAGE_NAMES.items()}
+    expected = {
+        "python": ".".join(map(str, sys.version_info[:3])),
+        **versions,
+        "execution_platform": execution_platform(sys.executable),
+        "device_used": "CPU",
+    }
+    monkeypatch.setenv("PYTHONPATH", str(pythonpath))
+    monkeypatch.setenv("PYTHONUSERBASE", str(tmp_path / "userbase"))
+    monkeypatch.setenv("VARE_SITE_CUSTOMIZE_MARKER", str(marker))
+
+    observed = runtime_environment(sys.executable, tmp_path, expected)
+
+    assert observed == expected_runtime_environment(expected)
+    assert not marker.exists()
 
 
 def test_replay_suffix_review_bundle_matches_its_protocol_and_raw_logs():
@@ -190,6 +228,48 @@ def test_sanitized_v4_rerun_audits_with_retained_runner():
     assert summary["run_count"] == 6
     assert '"PYTHONPATH"' in runner
     assert "PYTHONNOUSERSITE" in runner
+
+
+def test_replay_suffix_v2_bundle_binds_logs_to_source_and_protocol():
+    summary = replay_suffix_v2.audit_bundle(REPLAY_SUFFIX_V2_RUN)
+
+    assert summary["all_checks_passed"] is True
+    assert summary["source_revision"] == "a85900829d86bcd45b7db0310725f28d3152289b"
+    assert [run["pytest_outcome"] for run in summary["runs"]] == [
+        {"failed": 2},
+        {"passed": 2},
+        {"passed": 11},
+    ]
+
+
+def test_replay_suffix_v2_stage_metadata_binds_each_raw_log_digest():
+    summary = json.loads((REPLAY_SUFFIX_V2_RUN / "summary.json").read_text(encoding="utf-8"))
+
+    for run in summary["runs"]:
+        stage_record = json.loads((REPLAY_SUFFIX_V2_RUN / f"{run['name']}.json").read_text(encoding="utf-8"))
+        assert stage_record == run
+        assert stage_record["raw_log_sha256"] == sha256_file(REPLAY_SUFFIX_V2_RUN / run["log"])
+
+
+def test_replay_suffix_v2_audit_rejects_logs_without_source_provenance(tmp_path: Path):
+    copied = tmp_path / "v2-run"
+    shutil.copytree(REPLAY_SUFFIX_V2_RUN, copied)
+    summary_path = copied / "summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    record = summary["runs"][0]
+    log_path = copied / record["log"]
+    log = log_path.read_text(encoding="utf-8").replace(
+        f"VARE_REVIEW_SOURCE_REVISION={record['revision']}",
+        "VARE_REVIEW_SOURCE_REVISION=unverified",
+    )
+    log_path.write_text(log, encoding="utf-8")
+    record["raw_log_sha256"] = sha256_file(log_path)
+    write_json(copied / "baseline-failing-test.json", record)
+    write_json(summary_path, summary)
+    stale_resume.write_manifest(copied)
+
+    with pytest.raises(ValueError, match="raw log provenance marker mismatch"):
+        replay_suffix_v2.audit_bundle(copied)
 
 
 def test_v3_lock_pins_transitive_dependencies_and_timeout():
@@ -271,6 +351,7 @@ def _convert_bundle_to_v3(copied: Path) -> dict:
     runner_bytes = runner_path.read_bytes()
     (copied / "runner.py").write_bytes(runner_bytes)
     summary["runner_sha256"] = hashlib.sha256(runner_bytes).hexdigest()
+    summary["runner_source_valid"] = True
     for run in summary["runs"]:
         run["timed_out"] = False
         run["timeout_seconds"] = lock["reproducer"]["per_run_timeout_seconds"]
@@ -292,6 +373,7 @@ def _convert_v4_bundle_to_current_runner(copied: Path) -> dict:
     runner_bytes = runner_path.read_bytes()
     (copied / "runner.py").write_bytes(runner_bytes)
     summary["runner_sha256"] = hashlib.sha256(runner_bytes).hexdigest()
+    summary["runner_source_valid"] = True
     for run in summary["runs"]:
         run["source_revision_valid"] = True
         log_path = copied / run["log"]
@@ -353,6 +435,7 @@ def test_audit_rejects_resealed_v4_bundle_with_changed_execution_platform(tmp_pa
     runner_bytes = (ROOT / "scripts/reproduce_trl_async_stale_resume_v1.py").read_bytes()
     (copied / "runner.py").write_bytes(runner_bytes)
     summary["runner_sha256"] = hashlib.sha256(runner_bytes).hexdigest()
+    summary["runner_source_valid"] = True
     for run in summary["runs"]:
         run["timed_out"] = False
         run["timeout_seconds"] = lock["reproducer"]["per_run_timeout_seconds"]
@@ -413,6 +496,32 @@ def test_audit_seals_early_failed_arm_with_partial_measurements(tmp_path: Path):
     assert failed_run["observed"] == {"first_run_trained_rows": 144}
 
 
+def test_audit_retains_runner_source_change_as_a_nonpassing_bundle(tmp_path: Path):
+    copied = tmp_path / "run"
+    shutil.copytree(V4_SANITIZED_RUN, copied)
+    summary_path = copied / "summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    runner_path = copied / "runner.py"
+    runner_path.write_bytes((ROOT / "scripts/reproduce_trl_async_stale_resume_v1.py").read_bytes())
+    summary["runner_sha256"] = sha256_file(runner_path)
+    summary["runner_source_valid"] = False
+    summary["all_checks_passed"] = False
+    write_json(summary_path, summary)
+    write_manifest(copied)
+
+    audited = audit_bundle(copied)
+
+    assert audited["runner_source_valid"] is False
+    assert audited["all_checks_passed"] is False
+
+    summary.pop("runner_source_valid")
+    summary["all_checks_passed"] = True
+    write_json(summary_path, summary)
+    write_manifest(copied)
+    with pytest.raises(ValueError, match="runner source validity decision is missing"):
+        audit_bundle(copied)
+
+
 def test_reproducer_seals_all_arms_after_early_collection_failure(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ):
@@ -426,6 +535,8 @@ def test_reproducer_seals_all_arms_after_early_collection_failure(
     baseline.mkdir()
     candidate.mkdir()
     output = tmp_path / "bundle"
+    python_link = tmp_path / "python"
+    python_link.symlink_to(sys.executable)
     calls: dict[str, int] = {"baseline": 0, "candidate": 0}
 
     monkeypatch.setattr(stale_resume, "validate_new_run_protocol", lambda _: None)
@@ -481,12 +592,14 @@ def test_reproducer_seals_all_arms_after_early_collection_failure(
         manifest = json.loads((bundle / "manifest.json").read_text(encoding="utf-8"))
         failed = summary["runs"][0]
 
+        assert summary["python_executable"] == str(python_link.absolute())
         assert calls == {"baseline": 3, "candidate": 3}
         assert summary["run_count"] == 6
         assert failed["exit_code"] == 2
         assert failed["timed_out"] is False
         assert failed["accepted"] is False
         assert failed["observed"] == {"first_run_trained_rows": 144}
+        assert summary["runner_source_valid"] is False
         assert len(list(bundle.glob("*.log"))) == 6
         assert all(f"{arm}-{repetition}.log" in manifest["files"]
                    for arm in ("baseline", "candidate")
@@ -498,11 +611,18 @@ def test_reproducer_seals_all_arms_after_early_collection_failure(
     monkeypatch.setattr(stale_resume, "prepare_runner", prepare_runner)
     monkeypatch.setattr(stale_resume, "run_pytest_arm", run_arm)
     monkeypatch.setattr(stale_resume, "audit_bundle", audit_written_bundle)
+    original_sha256_file = stale_resume.sha256_file
+    runner_path = Path(stale_resume.__file__).resolve()
+    monkeypatch.setattr(
+        stale_resume,
+        "sha256_file",
+        lambda path: "0" * 64 if Path(path).resolve() == runner_path else original_sha256_file(path),
+    )
 
     result = stale_resume.reproduce(
         SimpleNamespace(
             protocol="trl-async-stale-resume-v4",
-            python=sys.executable,
+            python=str(python_link),
             baseline_source=baseline,
             candidate_source=candidate,
             output=output,
