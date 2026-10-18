@@ -1,0 +1,92 @@
+{
+  "calibration": {
+    "baseline_grade_sha256": "8be0790c8f2b5d7d141a24700d846f768c9d8e9d20bf4d826c8436ee7eac897b",
+    "baseline_metrics": {
+      "dispatch_reservation_order_passed": false,
+      "reset_cases": 3,
+      "reset_cases_passed": 0
+    },
+    "calibration_grade_sha256": "cd970065ef2c7776d026071966518b1eb935d058e37e5baf263b5df7e274fdfa",
+    "fixed_metrics": {
+      "dispatch_reservation_order_passed": true,
+      "reset_cases": 3,
+      "reset_cases_passed": 3
+    },
+    "observed": {
+      "baseline_passed": false,
+      "calibration_passed": true
+    },
+    "prepared_workspace_baseline_expected_exit_code": 1,
+    "prepared_workspace_baseline_grade_sha256": "8be0790c8f2b5d7d141a24700d846f768c9d8e9d20bf4d826c8436ee7eac897b",
+    "resources": {
+      "external_compute_usd": 0,
+      "gpu_hours": 0,
+      "model_weights_downloaded": false,
+      "paid_api_calls": 0,
+      "third_party_python_packages": 0
+    },
+    "runner_commands": [
+      "python scripts/prepare_task.py --workspace /tmp/vare-verl-staleness-candidate-v2 --task-root benchmarks/historical/verl_async_staleness_v1",
+      "python scripts/grade_task.py --workspace /tmp/vare-verl-staleness-candidate-v2 --task-root benchmarks/historical/verl_async_staleness_v1 --result /tmp/vare-verl-staleness-baseline-v2.json",
+      "python scripts/calibrate_task.py --task-root benchmarks/historical/verl_async_staleness_v1 --output results/verl-fully-async-staleness-accounting-v1/cpu-calibration-v2"
+    ],
+    "runtime": {
+      "created_at_utc": "2026-10-18T06:57:50.281662+00:00",
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "python": "3.12.12"
+    },
+    "status": "calibrated",
+    "summary_sha256": "ea64f88a882b3df6b3145ed13f7b65b2511027a04feb06bd2602f4f0a049414d"
+  },
+  "evidence_level": "E1 historical-source grader calibration; no model capability claim",
+  "limits": [
+    "The issue, reproduction, and calibration fix are public and contaminated for agent-discovery claims.",
+    "The calibration revision is a contributor-fork commit based on the issue-report revision; the graded production file at the current main pin is byte-identical to that base, and only that file is sparse checked out.",
+    "The grader executes only the extracted reset_staleness method with CPU fixtures and structurally checks dispatch-reservation order.",
+    "No Ray workers, model weights, optimizer updates, LLM calls, throughput, or distributed execution were measured.",
+    "This does not establish VARE capability improvement or general correctness of the upstream RL runtime."
+  ],
+  "protocol": {
+    "evaluator_sha256": "361aeb43055e28d77be092e746a2946b9d4051b0edadb347a5dff7a6fd0b7eac",
+    "protocol_lock_sha256": "c6870a86ae38506b4c760a3b6c186d269c6c89411d776cdea271923a916e3c66",
+    "task_brief_sha256": "a3e81d1a9347284d657f569cc9eec7fe1bd2e1cfb0190a74c371cab4c8f9bfa1",
+    "task_json_sha256": "c4d3f0f05ffcddd516a940283cc6511673ea3a189baee3af23ff44ee343e8f22"
+  },
+  "protocol_id": "verl-fully-async-staleness-accounting-v1",
+  "schema_version": 1,
+  "source": {
+    "base_revision": "8ced5d2f4b148c2991217554e0c6f03028fa1470",
+    "base_tree": "ae931c4519a12582681f6dbed93dd332b95769ec",
+    "calibration_file": {
+      "git_blob_oid": "d0972d6e393b2b818485131519af6995cbedd19a",
+      "sha256": "bad3b8deaa0d327b6644b3f2b8b6ab351b255483bee6096db5561c39eed1a1fd"
+    },
+    "calibration_revision": "64812373be25c00b0da1833308d573d45570a364",
+    "calibration_revision_is_not_descendant_of_current_main": true,
+    "calibration_revision_parent": "3efe38c759c14622fd1b2c9e3679f2d02f86bdac",
+    "calibration_tree": "35d90c9398807d738ba843fa9cd4e6c9d5f35fb5",
+    "candidate_patch_sha256": "f9f259137521ad2bda8242f93ad8dc8fa510df65cd8e9c804338537bc337e1fa",
+    "candidate_path": "verl/experimental/fully_async_policy/fully_async_rollouter.py",
+    "fetch_repository": "https://github.com/liruiluo/verl.git",
+    "license": "Apache-2.0",
+    "only_candidate_path_is_sparse_checked_out_and_graded": true
+  },
+  "task_id": "verl-fully-async-staleness-accounting-v1",
+  "upstream_status": {
+    "candidate_file_unchanged_since_issue_report": true,
+    "issue_report_file_blob": {
+      "git_blob_oid": "818dbd59ac0ac977b16d6377edc36bc31609419f",
+      "sha256": "b9b612f4161a177055b490382fc2d763f2ffb897e9860e333032ab3d88c74a7f"
+    },
+    "issue_report_revision": "3efe38c759c14622fd1b2c9e3679f2d02f86bdac",
+    "issue_state": "closed_not_planned",
+    "issue_updated_at": "2026-09-20T02:29:51Z",
+    "issue_url": "https://github.com/verl-project/verl/issues/7938",
+    "official_main_file_blob": {
+      "git_blob_oid": "818dbd59ac0ac977b16d6377edc36bc31609419f",
+      "sha256": "b9b612f4161a177055b490382fc2d763f2ffb897e9860e333032ab3d88c74a7f"
+    },
+    "official_main_revision": "8ced5d2f4b148c2991217554e0c6f03028fa1470",
+    "official_repository": "https://github.com/verl-project/verl"
+  }
+}
