@@ -1,0 +1,53 @@
+{
+  "protocol_id": "vare-trajectory-worker-sqlite-serialization-v3",
+  "status": "locked-before-v3-repetitions",
+  "purpose": "Repeat the same-process async worker regression at the corrected candidate and add an explicit paused-reader heartbeat negative control.",
+  "interpretation": "A confirmatory regression comparison after diagnostic runs v1/v2, not a preregistered research study.",
+  "baseline_commit": "40db644c7eae4d830dc721e1d8185665229cfbd6",
+  "candidate_commit": "e3a9e1908052ea14f6126386e303939393914fc4",
+  "source_file": "src/vare/trajectory_store.py",
+  "test_file": "tests/test_trajectory_workers.py",
+  "runner_file": "scripts/reproduce_trajectory_worker_sqlite.py",
+  "test_case": "tests/test_trajectory_workers.py::test_independent_stages_bounded_backlog_and_slow_step_heartbeats",
+  "test_sha256": "19a4033508661f7dbece31065b60c4976adcf87c175688af0cefd54bd8758319",
+  "runner_sha256": "f05aa640a025be1c6a72c2077a57da7625e5073957da88c1c74de9e7e2f2e9bf",
+  "timeout_s": 15,
+  "repetitions": 3,
+  "environment": {
+    "os": "macOS 27.0.1 arm64",
+    "cpu": "Apple M1 Pro",
+    "memory_bytes": 34359738368,
+    "python": "3.12.12",
+    "pytest_plugin_autoload": false,
+    "workers": "2 execute workers, 1 verifier; one producer and one consumer"
+  },
+  "arms": {
+    "baseline": {
+      "head": "40db644c7eae4d830dc721e1d8185665229cfbd6",
+      "source_sha256": "67278b05c230203170248877e3cbaa2a1eb366915c22a76da64c2ccdf4c21b9c",
+      "expected_status": "timeout"
+    },
+    "candidate": {
+      "head": "e3a9e1908052ea14f6126386e303939393914fc4",
+      "source_sha256": "90976a6b53715a2ed1df905e9374c26e01ee62994ff6231b624a9c7fd6422408",
+      "expected_status": 0
+    }
+  },
+  "secondary_heartbeat_regression": {
+    "test_file": "tests/test_trajectory_worker_lease_heartbeat.py",
+    "test_sha256": "129be51d67d9e23b002a075c78858f4524ef0185a839e522f256b2443ca6eaa7",
+    "pre_fix_commit": "3f546253b7df26799ce65098f4c62f7d6132d263",
+    "pre_fix_source_sha256": "5cedfc804c9833626168eed51c7e77da3f8d39d534e003839a348e126fd7d7be",
+    "pre_fix_expected": "fail because paused iter_steps holds the same-store lock",
+    "fixed_commit": "e3a9e1908052ea14f6126386e303939393914fc4",
+    "fixed_source_sha256": "90976a6b53715a2ed1df905e9374c26e01ee62994ff6231b624a9c7fd6422408",
+    "fixed_expected": "pass; heartbeat completes while consumer is paused",
+    "execution_note": "The test is copied into a clean pre-fix checkout for the negative control; it is run from the fixed checkout for the positive control."
+  },
+  "limits": [
+    "The primary timeout is right-censored and must not be described as a measured speedup.",
+    "One Apple M1 Pro host and one bounded-backlog test; no large-workload throughput, CPU, or memory claim.",
+    "The connection mutex coordinates only one TrajectoryStore instance in one process.",
+    "This is systems correctness evidence, not model learning or capability evidence."
+  ]
+}
