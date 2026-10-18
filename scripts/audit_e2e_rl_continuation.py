@@ -5,6 +5,7 @@ import argparse
 import hashlib
 import io
 import json
+import math
 from pathlib import Path
 import random
 import sqlite3
@@ -37,6 +38,23 @@ def expected_tasks(seed, round_index, count, evaluation=False):
              "metadata": {},
              "prompt": f"v2 {kind} {rng.getrandbits(64):016x}: return A. Answer:"}
             for i in range(count)]
+
+
+def resource_sample_metrics(directory):
+    samples = [json.loads(line) for line in (Path(directory)/"resources.jsonl").read_text().splitlines()]
+    need(len(samples)>=2,"resource samples are incomplete")
+    times=[sample["time"] for sample in samples]
+    rss=[sample["rss_bytes"] for sample in samples]
+    cpu=[sample["cpu_delta_s"] for sample in samples]
+    need(all(type(value) in (int,float) and math.isfinite(value) for value in (*times,*cpu)) and
+         all(type(value) is int and value>=0 for value in rss) and
+         all(right>left for left,right in zip(times,times[1:])),
+         "resource samples contain invalid time, CPU, or RSS values")
+    window=times[-1]-times[0]
+    need(window>0 and all(value>=0 for value in cpu),"resource sample window is invalid")
+    return {"sample_count":len(samples),"sample_window_s":window,
+            "sampled_cpu_core_percent":100*sum(cpu)/window,
+            "sampled_tree_peak_rss_bytes":max(rss)}
 
 
 def fingerprint(value):
@@ -155,11 +173,45 @@ def audit(root, check_tensors=False, model_dir=None):
                  attempt["candidate_model_sha256"]==committed["update"]["parameters_after_sha256"],
                  "physical optimizer attempt differs from committed candidate")
             attempts_by_round.setdefault(round_index,set()).add(learner_attempt)
+        kill_round=protocol["kill_round"]
+        prepublication_cutpoints=("post_optimizer","candidate_saved","journal_prepared")
+        for index in range(len(commits)):
+            if row["cutpoint"]=="none":
+                expected_attempt_ids={0}
+            elif row["cutpoint"] in prepublication_cutpoints:
+                expected_attempt_ids=({0} if index<kill_round else
+                                      {0,1} if index==kill_round else {1})
+            else:
+                expected_attempt_ids={0} if index<=kill_round else {1}
+            need(attempts_by_round.get(index,set())==expected_attempt_ids,
+                 "optimizer attempt identities do not match the kill-round schedule")
         trace=[json.loads(line) for line in (case/"trace.jsonl").read_text().splitlines()]
-        spans=[r["duration_s"] for r in trace if r["stage"]=="round"]
+        spans=[r for r in trace if r["stage"]=="round"]
+        expected_timed_rounds=[i for i,commit in enumerate(commits)
+                               if not commit.get("recovered_publication")]
+        span_indices=[span.get("round_index") for span in spans]
+        need(sorted(span_indices)==expected_timed_rounds and len(set(span_indices))==len(spans),
+             "round trace spans do not cover each timed committed round exactly once")
+        for span in spans:
+            index=span["round_index"]
+            need(type(index) is int and type(span.get("learner_attempt")) is int and
+                 span["learner_attempt"]==max(attempts_by_round[index]) and
+                 type(span.get("duration_s")) in (int,float) and
+                 math.isfinite(span["duration_s"]) and span["duration_s"]>0,
+                 "round trace span identity or duration differs from committed round")
+        spans=[span["duration_s"] for span in spans]
         need(row["round_wall_s"]==sum(spans),"round wall differs")
         need(row["tasks_s"]==row["tokens_s"]==args["tasks"]*len(spans)/sum(spans),"throughput differs")
         need(row["accepted_updates"]>=2,"no actual continuation")
+        measured_resources=resource_sample_metrics(case)
+        resources=row["resources"]
+        need(resources["sample_count"]==measured_resources["sample_count"] and
+             resources["sample_interval_s"]==0.02 and
+             resources["sampled_tree_peak_rss_bytes"]==measured_resources["sampled_tree_peak_rss_bytes"],
+             "resource sample count, interval, or peak RSS differs from retained samples")
+        need(math.isclose(resources["sampled_cpu_core_percent"],
+                           measured_resources["sampled_cpu_core_percent"],rel_tol=0.01,abs_tol=0.01),
+             "resource CPU summary differs from retained samples")
         previous_pid,previous_step="policy-0",0
         for index,commit in enumerate(commits):
             round_dir=case/"rounds"/f"r{index:04d}"
@@ -204,6 +256,23 @@ def audit(root, check_tensors=False, model_dir=None):
                          "rollout attempt has duplicate or invalid step identity")
                     rollouts_by_step[created_step]=rollout
                     worker=rollout["metadata"]["worker"]
+                    generation=rollout["metadata"]["rvl_generation"]
+                    generation_metadata=generation["metadata"]
+                    token_logprobs=generation_metadata["response_token_logprobs"]
+                    need(rollout["logprob"]==worker["logprob"]==generation["logprob"] and
+                         token_logprobs and math.isclose(generation["logprob"],math.fsum(token_logprobs),
+                                                        rel_tol=0.0,abs_tol=1e-7),
+                         "rollout logprob differs from worker/RVL evidence")
+                    need(generation["prompt_id"]==task["id"] and generation["prompt"]==task["prompt"] and
+                         generation["response"]==rollout["output"] and
+                         generation_metadata["prompt_token_ids"]==worker["prompt_ids"] and
+                         generation_metadata["response_token_ids"]==[worker["token"]],
+                         "rollout tokens differ from worker/RVL generation evidence")
+                    semantic_generation=dict(generation)
+                    semantic_generation.pop("latency_s",None)
+                    need(rollout["metadata"].get("rvl_generation_behavior_sha256")==json_sha(semantic_generation) and
+                         rollout["metadata"].get("rvl_group_behavior_sha256")==json_sha([generation]),
+                         "rollout behavior digest differs from retained RVL generation")
                     need(worker["loaded_checkpoint_sha256"]==old_sha and worker["loaded_step"]==previous_step,"stale worker served a new policy label")
                     need(rollout["policy_id"]==previous_pid and rollout["policy_version"]==previous_step,"policy provenance differs")
                     if state:
@@ -278,7 +347,11 @@ def audit(root, check_tensors=False, model_dir=None):
                 policy_records[policy_id]=record
                 records.append(record)
             complete_attempts={attempt for attempt,policies in by_attempt.items() if set(policies)==expected_policies}
-            need(complete_attempts,"incomplete independent evaluation pair")
+            expected_evaluation_attempts=set(attempts_by_round[index])
+            if row["cutpoint"] in ("post_optimizer","candidate_saved") and index==kill_round:
+                expected_evaluation_attempts.discard(0)
+            need(set(by_attempt)==complete_attempts==expected_evaluation_attempts,
+                 "independent evaluation pairs do not cover every optimizer attempt that reached the gate")
             result=commit.get("result")
             if result is not None:
                 need(not commit.get("recovered_publication") and result["round_index"]==index and
@@ -305,6 +378,8 @@ def audit(root, check_tensors=False, model_dir=None):
             else:
                 need(commit.get("recovered_publication") is True and row["mode"]=="guarded",
                      "committed round result is missing")
+                need(row["cutpoint"] in ("pointer_published","journal_committed") and index==kill_round,
+                     "recovered publication is outside the configured SIGKILL publication boundary")
                 with sqlite3.connect((case/"promotion.sqlite").resolve().as_uri()+"?mode=ro",uri=True) as db:
                     transactions=db.execute(
                         "SELECT incumbent_id,incumbent_sha256,candidate_id,candidate_sha256,evaluation_sha256,state "

@@ -1,0 +1,11 @@
+.......                                                                  [100%]
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_round_trace_cannot_drop_a_timed_committed_round
+PASSED tests/test_e2e_rl_continuation.py::test_rollout_logprob_must_match_worker_and_rvl_generation
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_evaluations_cannot_disappear_after_gate_entry
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_extra_optimizer_attempt_must_belong_to_killed_round
+PASSED tests/test_e2e_rl_continuation.py::test_resource_summaries_must_match_retained_samples[sampled_cpu_core_percent]
+PASSED tests/test_e2e_rl_continuation.py::test_resource_summaries_must_match_retained_samples[sampled_tree_peak_rss_bytes]
+PASSED tests/test_e2e_rl_continuation.py::test_derived_resource_metrics_are_read_from_samples
+7 passed, 36 deselected in 23.62s

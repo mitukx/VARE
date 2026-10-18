@@ -25,8 +25,22 @@ def csv_write(path, rows):
         writer.writerows(rows)
 
 
+def resource_metrics(case_dir):
+    samples = [json.loads(line) for line in (case_dir/'resources.jsonl').read_text().splitlines()]
+    if len(samples) < 2:
+        raise ValueError('resource samples are incomplete')
+    window = samples[-1]['time'] - samples[0]['time']
+    if window <= 0:
+        raise ValueError('resource sample window is invalid')
+    return {
+        'sampled_cpu_core_percent': 100*sum(row['cpu_delta_s'] for row in samples)/window,
+        'sampled_tree_peak_rss_bytes': max(row['rss_bytes'] for row in samples),
+    }
+
+
 def derive(root, output):
     rows = read(root / 'progress.json')
+    resources = {row['directory']: resource_metrics(root/row['directory']) for row in rows}
     normal = [r for r in rows if r['cutpoint'] == 'none']
     comparison, stages, recovery = [], [], []
     for workers in sorted({r['workers'] for r in normal}):
@@ -48,11 +62,11 @@ def derive(root, output):
                 'output_tokens_s': [r['tokens_s'] for r in group],
                 'round_ms': [1000*r['round_wall_s']/r['rounds'] for r in group],
                 'case_wall_s': [r['case_wall_s'] for r in group],
-                'sampled_cpu_core_percent': [r['resources']['sampled_cpu_core_percent'] for r in group],
+                'sampled_cpu_core_percent': [resources[r['directory']]['sampled_cpu_core_percent'] for r in group],
             }.items():
                 row[key+'_mean'] = stats.fmean(values)
                 row[key+'_sample_sd'] = stats.stdev(values)
-            row['sampled_peak_tree_rss_mib_max'] = max(r['resources']['sampled_tree_peak_rss_bytes'] for r in group)/2**20
+            row['sampled_peak_tree_rss_mib_max'] = max(resources[r['directory']]['sampled_tree_peak_rss_bytes'] for r in group)/2**20
             row['observed_service_concurrency_max'] = peak
             row['participating_worker_pids_per_case'] = '/'.join(str(len({r['worker_pid'] for r in case_trace
                                                                         if r['stage']=='rollout'})) for case_trace in per_case)
@@ -88,7 +102,7 @@ def derive(root, output):
     csv_write(output/'stage-latency.csv', stages)
     csv_write(output/'recovery.csv', recovery)
     aggregate = {'comparison':comparison, 'recovery':recovery,
-                 'campaign_sampled_peak_tree_rss_mib':max(r['resources']['sampled_tree_peak_rss_bytes'] for r in rows)/2**20,
+                 'campaign_sampled_peak_tree_rss_mib':max(resources[r['directory']]['sampled_tree_peak_rss_bytes'] for r in rows)/2**20,
                  'recovery_mean_s':stats.fmean(r['recovery_to_next_update_s'] for r in rows if r['cutpoint']!='none')}
     (output/'derived-metrics.json').write_text(json.dumps(aggregate, indent=2, sort_keys=True)+'\n')
     return aggregate

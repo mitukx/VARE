@@ -57,18 +57,26 @@ included a fresh recovery; the tables cannot establish a v1-to-v2 speedup.**
 
 | Workers | Minimal tasks/s | Guarded tasks/s = output tokens/s | Guarded round ms | Paired wall overhead | Guarded peak RSS MiB | CPU core % |
 |---:|---:|---:|---:|---:|---:|---:|
-| 1 | 157.75 ± 18.39 | 145.57 ± 10.70 | 220.64 ± 16.61 | +8.80 ± 15.48% | 1,442.25 | 146.83 |
-| 2 | 193.57 ± 3.17 | 176.49 ± 3.55 | 181.36 ± 3.61 | +9.70 ± 2.56% | 1,774.94 | 177.91 |
-| 4 | 194.97 ± 9.44 | 170.63 ± 3.02 | 187.58 ± 3.34 | +14.22 ± 3.63% | 2,447.33 | 230.80 |
-| 8 | 195.33 ± 5.70 | 174.53 ± 4.13 | 183.41 ± 4.28 | +11.91 ± 0.81% | 3,785.34 | 351.38 |
+| 1 | 157.75 ± 18.39 | 145.57 ± 10.70 | 220.64 ± 16.61 | +8.80 ± 15.48% | 1,442.25 | 147.07 |
+| 2 | 193.57 ± 3.17 | 176.49 ± 3.55 | 181.36 ± 3.61 | +9.70 ± 2.56% | 1,774.94 | 178.14 |
+| 4 | 194.97 ± 9.44 | 170.63 ± 3.02 | 187.58 ± 3.34 | +14.22 ± 3.63% | 2,447.33 | 231.25 |
+| 8 | 195.33 ± 5.70 | 174.53 ± 4.13 | 183.41 ± 4.28 | +11.91 ± 0.81% | 3,785.34 | 352.06 |
 
 Overhead is the mean of seed-paired guarded/minimal wall-time ratios minus one.
 The noisy one-worker pair does not establish a consistently positive cost.
 Actual maximum simultaneous worker service reached 1/2/4/8, with every configured
 worker PID participating in every case. The small workload establishes no
 throughput benefit beyond two workers. RSS is a 20 ms sampled process-tree sum,
-including shared pages per process; shorter peaks can be missed. CPU is sampled
-mean process CPU time over the full case, including startup; 100% means one core.
+including shared pages per process; shorter peaks can be missed. CPU in this
+table is recomputed from retained samples as total sampled process CPU divided by
+the timestamp span from first to last sample; it includes startup and 100% means
+one core. The progress summary's wider sampler-duration value is audited against
+this sample-derived value within 1%.
+
+Normal cases require exactly one `round` span for each committed round. A
+SIGKILL after durable publication can leave a committed recovered-publication
+round without a completed timing span; those fault cases are explicitly excluded
+from the warm-throughput comparison, and the auditor does not invent a duration.
 
 Guarded case wall time, including cold startup/shutdown, averaged
 10.10/9.54/10.09/10.75 s for 1/2/4/8 workers. The corresponding rollout pool
@@ -236,6 +244,16 @@ The byte-attestation control preserves the task JSON values while changing only
 its serialization, isolating the report-digest check. These are audit-integrity
 corrections over the preserved campaign; they add no model, optimizer, or
 performance observations.
+
+The later review also closed five record-linkage gaps. Attempt identities must
+follow the configured kill-round schedule, every attempt that reached the
+promotion gate must retain its independent evaluation pair, and rollout
+log-probabilities must agree with worker values, RVL token records, and
+recomputed behavior digests. Timed committed rounds are checked against trace
+indices; only recovered-publication rounds, whose learner was killed before it
+could close the span, lack a span and are excluded from normal throughput
+aggregation. CPU and peak RSS table values now derive from `resources.jsonl`,
+while redundant progress summaries are checked against those raw samples.
 
 This is a toy neural LM and synthetic one-token workload. Replay is round-local;
 general durable replay-backlog/curriculum recovery is not tested. The supervisor

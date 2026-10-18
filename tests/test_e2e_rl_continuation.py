@@ -2,14 +2,21 @@
 import os
 from pathlib import Path
 import shutil
+import statistics
 import subprocess
 import sys
 import json
+import importlib.util
 
 import pytest
 
 from scripts import benchmark_e2e_rl_continuation as bench
 from scripts import audit_e2e_rl_continuation as auditor
+
+_derive_spec=importlib.util.spec_from_file_location(
+    "continuation_derive_tables",bench.ROOT/"results/e2e-rl-continuation-v2/derive_tables.py")
+derive_tables=importlib.util.module_from_spec(_derive_spec)
+_derive_spec.loader.exec_module(derive_tables)
 
 
 def test_v2_task_namespaces_are_round_and_evaluation_disjoint():
@@ -349,3 +356,145 @@ def test_guarded_evaluation_attestation_must_match_retained_cohort_bytes(audit_r
     reseal_records(changed)
     with pytest.raises(ValueError,match="guarded evaluation set digest"):
         auditor.audit(changed)
+
+
+def test_rehashed_round_trace_cannot_drop_a_timed_committed_round(audit_records,tmp_path):
+    changed=tmp_path/"missing-round-trace-span"
+    shutil.copytree(audit_records,changed)
+    progress=auditor.read(changed/"progress.json")
+    row=next(r for r in progress if r["mode"]=="minimal" and r["cutpoint"]=="none")
+    case=changed/row["directory"]
+    trace_path=case/"trace.jsonl"
+    trace=[json.loads(line) for line in trace_path.read_text().splitlines()]
+    trace=[span for span in trace if not (span["stage"]=="round" and span["round_index"]==4)]
+    trace_path.write_text("".join(json.dumps(span,sort_keys=True)+"\n" for span in trace))
+    round_spans=[span["duration_s"] for span in trace if span["stage"]=="round"]
+    row["round_wall_s"]=sum(round_spans)
+    row["tasks_s"]=row["tokens_s"]=auditor.read(changed/"manifest.json")["arguments"]["tasks"]*len(round_spans)/sum(round_spans)
+    bench.atomic_json(changed/"progress.json",progress)
+    summary=auditor.read(changed/"summary.json")
+    group=next(g for g in summary["normal"] if g["workers"]==row["workers"] and g["mode"]==row["mode"])
+    values=[r["tasks_s"] for r in progress if r["cutpoint"]=="none" and
+            r["workers"]==row["workers"] and r["mode"]==row["mode"]]
+    group["tasks_s_mean"]=statistics.fmean(values)
+    group["tasks_s_sd"]=statistics.stdev(values)
+    bench.atomic_json(changed/"summary.json",summary)
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="round trace spans do not cover"):
+        auditor.audit(changed)
+
+
+def test_normal_commit_cannot_claim_recovered_publication_to_skip_trace(audit_records,tmp_path):
+    changed=tmp_path/"forged-recovered-publication"
+    shutil.copytree(audit_records,changed)
+    progress=auditor.read(changed/"progress.json")
+    row=next(r for r in progress if r["mode"]=="guarded" and r["cutpoint"]=="none")
+    case=changed/row["directory"]
+    commit_path=case/"rounds/r0004/committed.json"
+    commit=auditor.read(commit_path)
+    commit["recovered_publication"]=True
+    commit["result"]=None
+    bench.atomic_json(commit_path,commit)
+    trace_path=case/"trace.jsonl"
+    trace=[json.loads(line) for line in trace_path.read_text().splitlines()]
+    trace=[span for span in trace if not (span["stage"]=="round" and span["round_index"]==4)]
+    trace_path.write_text("".join(json.dumps(span,sort_keys=True)+"\n" for span in trace))
+    round_spans=[span["duration_s"] for span in trace if span["stage"]=="round"]
+    row["round_wall_s"]=sum(round_spans)
+    row["tasks_s"]=row["tokens_s"]=auditor.read(changed/"manifest.json")["arguments"]["tasks"]*len(round_spans)/sum(round_spans)
+    bench.atomic_json(changed/"progress.json",progress)
+    summary=auditor.read(changed/"summary.json")
+    group=next(g for g in summary["normal"] if g["workers"]==row["workers"] and g["mode"]==row["mode"])
+    values=[r["tasks_s"] for r in progress if r["cutpoint"]=="none" and
+            r["workers"]==row["workers"] and r["mode"]==row["mode"]]
+    group["tasks_s_mean"]=statistics.fmean(values)
+    group["tasks_s_sd"]=statistics.stdev(values)
+    bench.atomic_json(changed/"summary.json",summary)
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="recovered publication is outside"):
+        auditor.audit(changed)
+
+
+def test_rollout_logprob_must_match_worker_and_rvl_generation(audit_records,tmp_path):
+    changed=tmp_path/"misbound-behavior-logprob"
+    shutil.copytree(audit_records,changed)
+    row=next(r for r in auditor.read(changed/"progress.json")
+             if r["mode"]=="minimal" and r["cutpoint"]=="none")
+    round_dir=changed/row["directory"]/"rounds/r0000"
+    rollout_path=round_dir/"rollouts-attempt0.jsonl"
+    rollouts=[json.loads(line) for line in rollout_path.read_text().splitlines()]
+    changed_rollout=rollouts[0]
+    changed_rollout["logprob"]+=0.25
+    rollout_path.write_text("".join(json.dumps(item,sort_keys=True)+"\n" for item in rollouts))
+    batch_path=round_dir/"batch-attempt0.json"
+    batch=auditor.read(batch_path)
+    member=next(m for m in batch["members"] if m["created_step"]==changed_rollout["created_step"])
+    member["logprob"]=changed_rollout["logprob"]
+    bench.atomic_json(batch_path,batch)
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="rollout logprob differs from worker/RVL evidence"):
+        auditor.audit(changed)
+
+
+def test_rehashed_evaluations_cannot_disappear_after_gate_entry(audit_records,tmp_path):
+    changed=tmp_path/"missing-evaluation-pair-for-reached-gate"
+    shutil.copytree(audit_records,changed)
+    row=next(r for r in auditor.read(changed/"progress.json")
+             if r["cutpoint"]=="journal_prepared")
+    round_dir=changed/row["directory"]/"rounds/r0004"
+    files=list(round_dir.glob("evaluation-*-attempt0.json"))
+    assert len(files)==2
+    for path in files:
+        path.unlink()
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="evaluation pairs do not cover every optimizer attempt"):
+        auditor.audit(changed)
+
+
+def test_rehashed_extra_optimizer_attempt_must_belong_to_killed_round(audit_records,tmp_path):
+    changed=tmp_path/"optimizer-attempt-at-wrong-round"
+    shutil.copytree(audit_records,changed)
+    row=next(r for r in auditor.read(changed/"progress.json")
+             if r["cutpoint"]=="post_optimizer")
+    case=changed/row["directory"]
+    attempt_path=case/"optimizer_attempts.jsonl"
+    attempts=[json.loads(line) for line in attempt_path.read_text().splitlines()]
+    target=next(a for a in attempts if a["round_index"]==4 and a["learner_attempt"]==0)
+    source=next(a for a in attempts if a["round_index"]==3 and a["learner_attempt"]==0)
+    moved={**source,"learner_attempt":1}
+    attempts[attempts.index(target)]=moved
+    attempt_path.write_text("".join(json.dumps(a,sort_keys=True)+"\n" for a in attempts))
+    round3=case/"rounds/r0003"
+    rollout0=round3/"rollouts-attempt0.jsonl"
+    (round3/"rollouts-attempt1.jsonl").write_bytes(rollout0.read_bytes())
+    batch0=round3/"batch-attempt0.json"
+    bench.atomic_json(round3/"batch-attempt1.json",auditor.read(batch0))
+    (case/"rounds/r0004/rollouts-attempt0.jsonl").unlink()
+    (case/"rounds/r0004/batch-attempt0.json").unlink()
+    for evaluation in list(round3.glob("evaluation-*-attempt0.json")):
+        copied=auditor.read(evaluation)
+        bench.atomic_json(round3/evaluation.name.replace("-attempt0", "-attempt1"),copied)
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="optimizer attempt identities do not match the kill-round schedule"):
+        auditor.audit(changed)
+
+
+@pytest.mark.parametrize("field",["sampled_cpu_core_percent","sampled_tree_peak_rss_bytes"])
+def test_resource_summaries_must_match_retained_samples(audit_records,tmp_path,field):
+    changed=tmp_path/f"tampered-resource-summary-{field}"
+    shutil.copytree(audit_records,changed)
+    progress=auditor.read(changed/"progress.json")
+    progress[0]["resources"][field]+=10
+    bench.atomic_json(changed/"progress.json",progress)
+    reseal_records(changed)
+    expected="resource CPU summary" if field=="sampled_cpu_core_percent" else "peak RSS"
+    with pytest.raises(ValueError,match=expected):
+        auditor.audit(changed)
+
+
+def test_derived_resource_metrics_are_read_from_samples(tmp_path):
+    (tmp_path/"resources.jsonl").write_text(
+        '{"time":10.0,"rss_bytes":100,"cpu_delta_s":0.2}\n'
+        '{"time":11.0,"rss_bytes":200,"cpu_delta_s":0.8}\n')
+    assert derive_tables.resource_metrics(tmp_path)=={
+        "sampled_cpu_core_percent":100.0,"sampled_tree_peak_rss_bytes":200}
