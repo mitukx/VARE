@@ -45,7 +45,11 @@
     "continuation-audit-review-latest-final-controls.log": "6f4ac0a9979a053e2c2de486709e2695a1d0598b72b9e061e196a4c9b27f0408",
     "continuation-audit-review-latest-final-module.log": "985c68cb97eb2927f9db8c67c0ee3e2c40cadd2b6386a22b43f4a7642d93d02c",
     "continuation-audit-review-latest-final-retained-audit.log": "41ee8fc6a94d197aa2bcf6aeecdd15049303b26127959696d941d13c4c77a324",
-    "continuation-audit-review-latest-promotion-tests.log": "e3ad93e412039b48a0483ea821b4eca484e9c99e5e55f24c058fd07a0b1c1dd3"
+    "continuation-audit-review-latest-promotion-tests.log": "e3ad93e412039b48a0483ea821b4eca484e9c99e5e55f24c058fd07a0b1c1dd3",
+    "continuation-audit-review-final-source-inventory-wave.log": "028dd49c08f9ca3151612e7dd2db85e156b2c618b6b2899f2dfec4d2027564ae",
+    "continuation-audit-review-final-tensor-audit.log": "84008a3fb3bd14151c05edd3909f5dafdb58e8417fa4dd84fbdc6365e1589c07",
+    "continuation-audit-review-provenance-wave-assertion-order.log": "aebf5d4c473c4613185aa6e4e46370b43823b66959dc26fe41c320badf068857",
+    "continuation-audit-review-source-lag-descendant-baseline.json": "ffc5da4a2e84983ae9832c0e586c11363241fc3fd6124a90c2f9300985c9df0e"
   },
   "fixed_negative_cases": {
     "passed": 11
@@ -408,15 +412,74 @@
       "new_full_protocol_campaigns": 0,
       "new_diagnostic_model_regression_campaigns": 1,
       "controls_log": "continuation-audit-review-trace-stale-controls.log"
+    },
+    "source_inventory_policy_lag_and_descendant_provenance": {
+      "baseline_commit": "8b5845ba309ff4a177a88fe8ea88ed3eeec3a89d",
+      "baseline_tamper_controls": {
+        "missing_pinned_source_audit_passed": true,
+        "policy_lag_999_audit_passed": true,
+        "live_descendant_9_audit_passed": true
+      },
+      "baseline_tables": {
+        "policy_lag_max_after_forgery": 999,
+        "live_old_descendants_after_forgery": 9
+      },
+      "fixed_controls": {
+        "exact_pinned_source_inventory_and_case_bindings": true,
+        "trace_policy_lag_bound_to_active_and_rollout_versions": true,
+        "policy_lag_table_recomputed_from_rollouts": true,
+        "descendant_count_bound_to_kill_record_and_progress": true,
+        "rehashed_source_lag_descendant_attacks_rejected": true
+      },
+      "focused_tests": {
+        "collected": 4,
+        "passed": 4,
+        "exit_code": 0
+      },
+      "full_continuation_module": {
+        "collected": 59,
+        "passed": 59,
+        "failed": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "log": "continuation-audit-review-final-source-inventory-wave.log",
+        "scope": "Pinned tiny-GPT2 CPU continuation with actual optimizer updates, all six learner SIGKILL recovery boundaries, post-restart updates, independent checkpoint evaluation, and archive falsification controls."
+      },
+      "retained_campaign_reaudit": {
+        "cases": 42,
+        "artifacts_hashed": 6522,
+        "candidate_tensor_states_verified": 504,
+        "evaluation_pairs_verified": 507,
+        "evaluation_reports_verified": 1014,
+        "checkpoint_scores_replayed": 32448,
+        "pass": true,
+        "log": "continuation-audit-review-final-tensor-audit.log"
+      },
+      "tables_reproduced_byte_identically": {
+        "python": "3.12",
+        "files": [
+          "comparison.csv",
+          "stage-latency.csv",
+          "recovery.csv",
+          "derived-metrics.json"
+        ]
+      },
+      "baseline_reproduction_log": "continuation-audit-review-source-lag-descendant-baseline.json",
+      "initial_test_adjustment": {
+        "initial_exit_code": 1,
+        "reason": "The pre-existing protocol-digest falsification changed manifest.sources but not its mirrored source_sha256 field, so the new earlier exact-inventory check correctly failed first.",
+        "correction": "The test now reseals both mirrored source digest maps before asserting the protocol_sha256 rejection; the 4 focused tests and all 59 module tests pass."
+      },
+      "new_full_protocol_campaigns": 0
     }
   },
   "scope": "Audit correction and actual toy-model system regressions; no new research or main performance campaign.",
   "sources": {
     ".github/workflows/e2e-system-cpu.yml": "60331af183398380e6ba61edc0533c6e9f1d5d33000945928caedb8679197c58",
-    "docs/e2e-rl-continuation-v2-report.md": "9803a4f745ad9af25a35140f8dc54b19b12c6a8ea34e5e42f8d51c8061d29a4b",
-    "scripts/audit_e2e_rl_continuation.py": "cde9e938f53b78afb8f4de8e19a2ebe24177d9179eab2c6809d0f1f082022a33",
-    "tests/test_e2e_rl_continuation.py": "b9de4f0c8dac41342dc41b6809133c1f3c8ef7d021f5e26683e8435ecb3f3952",
-    "results/e2e-rl-continuation-v2/derive_tables.py": "98cbd68f48062df18208afc2cc76f04ea8eeca2fd3262647192c31fc7846d82b",
+    "docs/e2e-rl-continuation-v2-report.md": "5cdc070008ce165d6c0683672ebb8c992c45e8144714c55e52021a8c2f919785",
+    "scripts/audit_e2e_rl_continuation.py": "5e030d3203053b7e4a4823a35f355b83fd475e0cb35574cf9fe6a239b4a7f7a1",
+    "tests/test_e2e_rl_continuation.py": "dbe6912797065bc156234dc4a9a3f53cdfe7682cb7ea7652df4f447d6a2adfe4",
+    "results/e2e-rl-continuation-v2/derive_tables.py": "10d25343a28925199a8ac625b17f27476bc42392e5cbd2cc4ffa8c3aefff27a4",
     "results/e2e-rl-continuation-v2/comparison.csv": "3a99af257d6430d2daa68a68eb549a07342fcba57fe5b5a4fe6d165ea81c3a39",
     "results/e2e-rl-continuation-v2/derived-metrics.json": "1aa502793b4f9eeb61fb8b464c772f4493ca95cc37c06a4536c33c9c727d002c"
   }

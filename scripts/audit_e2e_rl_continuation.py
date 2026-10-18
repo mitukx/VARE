@@ -11,6 +11,24 @@ import random
 import sqlite3
 import statistics
 
+EXPECTED_SOURCES = frozenset({
+    "benchmarks/e2e_rl_continuation_v2/protocol.json",
+    "requirements/e2e-rl-real-model-v1.txt",
+    "scripts/audit_e2e_rl_continuation.py",
+    "scripts/benchmark_e2e_rl_continuation.py",
+    "scripts/benchmark_e2e_rl_real_model.py",
+    "src/vare/attestation.py",
+    "src/vare/checkpoint_artifacts.py",
+    "src/vare/engine.py",
+    "src/vare/lag.py",
+    "src/vare/promotion.py",
+    "src/vare/promotion_journal.py",
+    "src/vare/replay.py",
+    "src/vare/reward_evidence.py",
+    "src/vare/runtime.py",
+    "tests/test_e2e_rl_continuation.py",
+})
+
 
 def need(ok, message):
     if not ok:
@@ -106,6 +124,9 @@ def audit(root, check_tensors=False, model_dir=None):
     for name,digest in sums.items():
         need(sha(root/name)==digest,f"changed artifact: {name}")
     manifest,summary,rows=read(root/"manifest.json"),read(root/"summary.json"),read(root/"progress.json")
+    need(set(manifest.get("sources",{}))==EXPECTED_SOURCES and
+         manifest.get("source_sha256")==manifest.get("sources"),
+         "pinned source inventory differs")
     for name,digest in manifest["sources"].items():
         need(sha(root/"sources"/name)==digest,"source snapshot differs")
     protocol_path=root/"sources/benchmarks/e2e_rl_continuation_v2/protocol.json"
@@ -138,6 +159,8 @@ def audit(root, check_tensors=False, model_dir=None):
     for row in rows:
         case=root/row["directory"]
         config=read(case/"config.json")
+        need(config.get("source_sha256")==manifest["sources"],
+             "case source inventory differs from the pinned source set")
         need((row["seed"],row["workers"],row["mode"])==
              (config["seed"],config["workers"],config["mode"]),
              "progress case metadata differs from retained configuration")
@@ -366,6 +389,10 @@ def audit(root, check_tensors=False, model_dir=None):
                          type(service_s) in (int,float) and math.isfinite(service_s) and service_s>=0 and
                          span["start"]<=service_start<=service_end<=span["end"],
                          "rollout service interval is outside its trace span")
+                expected_policy_lag=max(0,previous_step-rollouts[0]["policy_version"])
+                need(all(type(span.get("policy_lag")) is int and
+                         span["policy_lag"]==expected_policy_lag for span in rollout_spans),
+                     "rollout trace policy lag differs from rollout provenance")
                 verified=trace_stages.get(("rollout_verified",index,attempt_id),[])
                 need(sorted(span.get("loaded_checkpoint_sha256") for span in verified)==
                      sorted(worker["loaded_checkpoint_sha256"] for worker in worker_rows),
@@ -593,6 +620,8 @@ def audit(root, check_tensors=False, model_dir=None):
                  type(killed_at) in (int,float) and math.isfinite(killed_at) and killed_at>=marker_time,
                  "cutpoint marker was not observed before the learner was killed")
             need(killed["returncode"]==-9 and killed["old_descendants"] and killed["live_old_descendants"]==0,"learner/descendant SIGKILL not established")
+            need(row.get("live_old_descendants")==killed["live_old_descendants"],
+                 "progress live descendant count differs from kill record")
             killed_attempts=[attempt for attempt in attempts if attempt["round_index"]==protocol["kill_round"] and attempt["learner_attempt"]==0]
             need(len(killed_attempts)==1 and
                  marker.get("volatile_model_sha256")==killed_attempts[0]["candidate_model_sha256"],

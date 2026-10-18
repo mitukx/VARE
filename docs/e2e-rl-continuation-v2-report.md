@@ -295,6 +295,17 @@ derivation now emits an undefined sample SD as null without changing the
 three-seed campaign values. Detailed controls and run logs are retained in
 [review evidence](../results/e2e-rl-continuation-v2-audit-review/validation.json).
 
+The next independent review found that the manifest could omit pinned source
+snapshots, trace policy lag was not reconciled with rollout versions, and the
+recovery table trusted a progress-row descendant count. The auditor now fixes
+the exact source inventory and binds each case to it, checks trace lag against
+the active and rollout policy versions, and reconciles descendant counts with
+the retained SIGKILL record. Rehashed omissions and forged lag/count controls
+are rejected; all 59 continuation tests pass with the actual tiny-GPT2 campaign,
+and the retained audit replays 504 candidate tensor states and 32,448 scores
+across 42 cases. The four published tables remain byte-identical when regenerated
+with Python 3.12.
+
 This is a toy neural LM and synthetic one-token workload. Replay is round-local;
 general durable replay-backlog/curriculum recovery is not tested. The supervisor
 assumes cooperative same-UID POSIX ownership. There is no power-loss, hostile-code,

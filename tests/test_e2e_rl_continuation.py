@@ -301,10 +301,29 @@ def test_rehashed_protocol_snapshot_must_match_declared_digest(audit_records,tmp
     bench.atomic_json(protocol_path,protocol)
     manifest=auditor.read(changed/"manifest.json")
     source_name="benchmarks/e2e_rl_continuation_v2/protocol.json"
-    manifest["sources"][source_name]=auditor.sha(protocol_path)
+    manifest["sources"][source_name]=manifest["source_sha256"][source_name]=auditor.sha(protocol_path)
     bench.atomic_json(changed/"manifest.json",manifest)
     reseal_records(changed)
     with pytest.raises(ValueError,match="declared protocol snapshot digest"):
+        auditor.audit(changed)
+
+
+def test_rehashed_missing_pinned_source_is_rejected(audit_records,tmp_path):
+    changed=tmp_path/"missing-pinned-source"
+    shutil.copytree(audit_records,changed)
+    source="src/vare/engine.py"
+    manifest=auditor.read(changed/"manifest.json")
+    del manifest["sources"][source]
+    del manifest["source_sha256"][source]
+    bench.atomic_json(changed/"manifest.json",manifest)
+    for row in auditor.read(changed/"progress.json"):
+        config_path=changed/row["directory"]/"config.json"
+        config=auditor.read(config_path)
+        del config["source_sha256"][source]
+        bench.atomic_json(config_path,config)
+    (changed/"sources"/source).unlink()
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="pinned source inventory differs"):
         auditor.audit(changed)
 
 
@@ -656,4 +675,36 @@ def test_stale_rejection_table_uses_committed_round_evidence(audit_records,tmp_p
                  normal["workers"]==row["workers"] and normal["mode"]=="guarded")
     assert table_row["stale_canary_rejected"]==expected
     with pytest.raises(ValueError,match="progress stale-replay total"):
+        auditor.audit(changed)
+
+
+def test_rehashed_policy_lag_trace_must_match_rollout_provenance(audit_records,tmp_path):
+    changed=tmp_path/"forged-policy-lag"
+    shutil.copytree(audit_records,changed)
+    row=next(r for r in auditor.read(changed/"progress.json")
+             if r["cutpoint"]=="none" and r["mode"]=="guarded")
+    trace_path=changed/row["directory"]/"trace.jsonl"
+    trace=[json.loads(line) for line in trace_path.read_text().splitlines()]
+    span=next(item for item in trace if item["stage"]=="rollout" and item["round_index"]==0)
+    span["policy_lag"]=999
+    trace_path.write_text("".join(json.dumps(item,sort_keys=True)+"\n" for item in trace))
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="rollout trace policy lag differs from rollout provenance"):
+        auditor.audit(changed)
+    with pytest.raises(ValueError,match="rollout trace policy lag differs from rollout provenance"):
+        derive_tables.derive(changed,tmp_path/"derived")
+
+
+def test_rehashed_live_descendant_total_comes_from_kill_record(audit_records,tmp_path):
+    changed=tmp_path/"forged-live-descendants"
+    shutil.copytree(audit_records,changed)
+    progress=auditor.read(changed/"progress.json")
+    row=next(item for item in progress if item["cutpoint"]=="post_optimizer")
+    row["live_old_descendants"]=9
+    bench.atomic_json(changed/"progress.json",progress)
+    reseal_records(changed)
+    derived=derive_tables.derive(changed,tmp_path/"derived")
+    recovery=next(item for item in derived["recovery"] if item["cutpoint"]=="post_optimizer")
+    assert recovery["live_old_descendants"]==0
+    with pytest.raises(ValueError,match="progress live descendant count differs from kill record"):
         auditor.audit(changed)

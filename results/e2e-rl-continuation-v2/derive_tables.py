@@ -97,8 +97,25 @@ def validated_normal_trace(root, row):
     if {(attempt['round_index'], attempt['learner_attempt']) for attempt in attempts} != {
             (index, 0) for index in range(rounds)}:
         raise ValueError('normal trace optimizer attempts are incomplete')
-    canary = read(case/'canary.json')['attempt']
     commits = [read(case/'rounds'/f'r{index:04d}'/'committed.json') for index in range(rounds)]
+    policy_lags = []
+    for index in range(rounds):
+        active_version = commits[index-1]['accepted_updates'] if index else 0
+        round_rollouts = [json.loads(line) for line in
+                          (case/'rounds'/f'r{index:04d}'/'rollouts-attempt0.jsonl').read_text().splitlines()]
+        expected_lags = []
+        for rollout in round_rollouts:
+            version = rollout.get('policy_version')
+            if type(version) is not int or version < 0:
+                raise ValueError('rollout policy version is invalid')
+            expected_lags.append(max(0, active_version-version))
+        trace_lags = [span.get('policy_lag') for span in trace
+                      if span['stage'] == 'rollout' and span['round_index'] == index]
+        if (len(expected_lags) != tasks or any(type(lag) is not int or lag < 0 for lag in trace_lags) or
+                sorted(trace_lags) != sorted(expected_lags)):
+            raise ValueError('rollout trace policy lag differs from rollout provenance')
+        policy_lags.extend(expected_lags)
+    canary = read(case/'canary.json')['attempt']
     for index in range(rounds):
         stale_canary = int(index > 0 and canary['policy_version'] < commits[index-1]['accepted_updates'])
         for stage, expected in (
@@ -123,7 +140,7 @@ def validated_normal_trace(root, row):
     for stage in ('rollback', 'checkpoint_recovery'):
         if sum(count for (name, _, _), count in counts.items() if name == stage):
             raise ValueError(f'unexpected {stage} span in a normal case')
-    return trace
+    return trace, max(policy_lags)
 
 
 def derive(root, output):
@@ -139,7 +156,8 @@ def derive(root, output):
     for workers in sorted({r['workers'] for r in normal}):
         for mode in ('minimal', 'guarded'):
             group = [r for r in normal if r['workers'] == workers and r['mode'] == mode]
-            per_case = [validated_normal_trace(root, row) for row in group]
+            validated = [validated_normal_trace(root, row) for row in group]
+            per_case = [case_trace for case_trace, _ in validated]
             trace = [span for case_trace in per_case for span in case_trace]
             rollouts = [r for r in trace if r['stage'] == 'rollout']
             events = sorted([(r['service_start'], 1) for r in rollouts]
@@ -162,7 +180,7 @@ def derive(root, output):
             row['observed_service_concurrency_max'] = peak
             row['participating_worker_pids_per_case'] = '/'.join(str(len({r['worker_pid'] for r in case_trace
                                                                         if r['stage']=='rollout'})) for case_trace in per_case)
-            row['normal_policy_lag_max'] = max(r['policy_lag'] for r in rollouts)
+            row['normal_policy_lag_max'] = max(policy_lag for _, policy_lag in validated)
             rejected = sum(sum(read(root/r['directory']/'rounds'/f'r{i:04d}'/'committed.json')
                                    ['stale_replay_rejected'] for i in range(r['rounds'])) for r in group)
             row['stale_canary_rejected'] = rejected
@@ -190,7 +208,8 @@ def derive(root, output):
                          'logical_rounds':sum(r['completed_rounds'] for r in group),
                          'exact_reference_cases':sum(exact_recovery_match(
                              root, r, recovery_references[r['seed']]) for r in group),
-                         'live_old_descendants':sum(r['live_old_descendants'] for r in group)})
+                         'live_old_descendants':sum(read(root/r['directory']/'kill_record.json')
+                                                    ['live_old_descendants'] for r in group)})
     output.mkdir(parents=True, exist_ok=True)
     csv_write(output/'comparison.csv', comparison)
     csv_write(output/'stage-latency.csv', stages)
