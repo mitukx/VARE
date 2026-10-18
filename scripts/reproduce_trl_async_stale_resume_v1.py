@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import json
 import os
@@ -27,6 +28,7 @@ SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 REQUIREMENT_RE = re.compile(r"^([A-Za-z0-9_.-]+)==([A-Za-z0-9_.!+~-]+)$")
 TIMEOUT_MARKER = "VARE_RUNNER_TIMEOUT_SECONDS="
 EXIT_CODE_MARKER = "VARE_RUNNER_EXIT_CODE="
+SOURCE_REVISION_PROVENANCE_CAPABILITY = "source-revision-provenance-v1"
 LOG_PATTERNS = {
     "first_run_trained_rows": r"run 1 trained rows\s*:\s*(\d+)",
     "resumed_row": r"resumed at row\s*:\s*(\d+)",
@@ -259,6 +261,21 @@ def expected_runtime_environment(expected: dict[str, Any]) -> dict[str, Any]:
     return runtime
 
 
+def runner_requires_source_revision_provenance(runner_source: Path) -> bool:
+    tree = ast.parse(runner_source.read_text(encoding="utf-8"), filename=str(runner_source))
+    return any(
+        isinstance(node, ast.Assign)
+        and any(
+            isinstance(target, ast.Name)
+            and target.id == "SOURCE_REVISION_PROVENANCE_CAPABILITY"
+            for target in node.targets
+        )
+        and isinstance(node.value, ast.Constant)
+        and node.value.value == "source-revision-provenance-v1"
+        for node in ast.walk(tree)
+    )
+
+
 def run_pytest_arm(
     command: list[str], source: Path, env: dict[str, str], timeout_seconds: int
 ) -> tuple[str, int, bool]:
@@ -472,7 +489,7 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
         fail(f"runner source is not retained for hash: {runner_sha}")
     if sha256_file(runner_snapshot) != runner_sha:
         fail("retained runner source hash mismatch")
-    requires_source_revision_provenance = runner_sha == sha256_file(Path(__file__).resolve())
+    requires_source_revision_provenance = runner_requires_source_revision_provenance(runner_snapshot)
     validate_local_inputs(lock)
     if summary.get("environment") != expected_runtime_environment(lock["environment"]):
         fail("recorded runtime environment does not match the locked dependency versions")

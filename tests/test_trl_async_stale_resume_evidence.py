@@ -19,6 +19,7 @@ from scripts.reproduce_trl_async_stale_resume_v1 import (
     parse_run_log,
     parse_pytest_outcome,
     protocol_timeout_seconds,
+    runner_requires_source_revision_provenance,
     resolved_requirements,
     run_pytest_arm,
     source_revision,
@@ -205,6 +206,25 @@ def _convert_bundle_to_v3(copied: Path) -> dict:
     return summary
 
 
+def _convert_v4_bundle_to_current_runner(copied: Path) -> dict:
+    shutil.copytree(V4_PLATFORM_RUN, copied)
+    summary_path = copied / "summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    runner_path = ROOT / "scripts/reproduce_trl_async_stale_resume_v1.py"
+    runner_bytes = runner_path.read_bytes()
+    (copied / "runner.py").write_bytes(runner_bytes)
+    summary["runner_sha256"] = hashlib.sha256(runner_bytes).hexdigest()
+    for run in summary["runs"]:
+        run["source_revision_valid"] = True
+        log_path = copied / run["log"]
+        with log_path.open("a", encoding="utf-8") as stream:
+            stream.write(f"VARE_RUNNER_SOURCE_REVISION={summary['source_revisions'][run['arm']]}\n")
+            stream.write("VARE_RUNNER_SOURCE_REVISION_VALID=true\n")
+    write_json(summary_path, summary)
+    write_manifest(copied)
+    return summary
+
+
 def test_audit_rejects_resealed_v3_bundle_with_changed_transitive_dependency(tmp_path: Path):
     copied = tmp_path / "run"
     _convert_bundle_to_v3(copied)
@@ -215,6 +235,31 @@ def test_audit_rejects_resealed_v3_bundle_with_changed_transitive_dependency(tmp
     write_manifest(copied)
 
     with pytest.raises(ValueError, match="recorded runtime environment"):
+        audit_bundle(copied)
+
+
+def test_current_retained_runner_requires_source_provenance_after_manifest_reseal(tmp_path: Path):
+    copied = tmp_path / "run"
+    summary = _convert_v4_bundle_to_current_runner(copied)
+    assert runner_requires_source_revision_provenance(copied / "runner.py") is True
+
+    for run in summary["runs"]:
+        run.pop("source_revision_valid")
+        log_path = copied / run["log"]
+        log_path.write_text(
+            "\n".join(
+                line
+                for line in log_path.read_text(encoding="utf-8").splitlines()
+                if not line.startswith("VARE_RUNNER_SOURCE_REVISION=")
+                and not line.startswith("VARE_RUNNER_SOURCE_REVISION_VALID=")
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+    write_json(copied / "summary.json", summary)
+    write_manifest(copied)
+
+    with pytest.raises(ValueError, match="current runner source revision provenance is incomplete"):
         audit_bundle(copied)
 
 
