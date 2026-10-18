@@ -14,7 +14,6 @@ import sys
 import time
 from collections import deque
 from pathlib import Path
-from types import MethodType
 from typing import Any
 
 
@@ -134,6 +133,39 @@ def _find_methods(
     return reset, processor, methods
 
 
+def evaluate_dispatch_counter_initialization(method: ast.FunctionDef | None) -> dict[str, Any]:
+    if method is None or method.name != "__init__":
+        return {"passed": False, "initialization_count": 0, "initialized_to_zero": False}
+
+    def writes_counter(node: ast.stmt) -> bool:
+        if isinstance(node, ast.Assign):
+            targets = node.targets
+        elif isinstance(node, (ast.AnnAssign, ast.AugAssign)):
+            targets = [node.target]
+        else:
+            return False
+        return any(_self_attribute(target, "_total_dispatched_samples") for target in targets)
+
+    writes = [node for node in ast.walk(method) if isinstance(node, ast.stmt) and writes_counter(node)]
+    direct_writes = [node for node in method.body if writes_counter(node)]
+    initialized_to_zero = False
+    if len(writes) == len(direct_writes) == 1:
+        write = writes[0]
+        if isinstance(write, ast.Assign) and len(write.targets) == 1:
+            value = write.value
+        elif isinstance(write, ast.AnnAssign):
+            value = write.value
+        else:
+            value = None
+        initialized_to_zero = isinstance(value, ast.Constant) and type(value.value) is int and value.value == 0
+
+    return {
+        "passed": initialized_to_zero,
+        "initialization_count": len(writes),
+        "initialized_to_zero": initialized_to_zero,
+    }
+
+
 class _Task:
     def __init__(self, done: bool):
         self._done = done
@@ -148,11 +180,20 @@ class _ResumeEvent:
 
 
 class _QueueClient:
-    def __init__(self, total_produced: int, queue_size: int, before_snapshot: Any = None):
+    def __init__(
+        self,
+        total_produced: int,
+        queue_size: int,
+        before_snapshot: Any = None,
+        between_reads: Any = None,
+    ):
         self.total_produced = total_produced
         self.queue_size = queue_size
         self.before_snapshot = before_snapshot
+        self.between_reads = between_reads
         self._snapshot_advanced = False
+        self._between_reads_advanced = False
+        self._read_count = 0
 
     async def _advance_snapshot(self) -> None:
         if self.before_snapshot is not None and not self._snapshot_advanced:
@@ -162,11 +203,22 @@ class _QueueClient:
 
     async def get_queue_size(self) -> int:
         await self._advance_snapshot()
-        return self.queue_size
+        queue_size = self.queue_size
+        await self._advance_between_reads()
+        return queue_size
 
     async def get_statistics(self) -> dict[str, int]:
         await self._advance_snapshot()
-        return {"total_produced": self.total_produced, "queue_size": self.queue_size}
+        statistics = {"total_produced": self.total_produced, "queue_size": self.queue_size}
+        await self._advance_between_reads()
+        return statistics
+
+    async def _advance_between_reads(self) -> None:
+        self._read_count += 1
+        if self.between_reads is not None and self._read_count == 1 and not self._between_reads_advanced:
+            self._between_reads_advanced = True
+            publisher = asyncio.create_task(self.between_reads())
+            await publisher
 
 
 class _Owner:
@@ -184,7 +236,12 @@ class _Owner:
         )
         self.message_queue_client = _QueueClient(
             case["total_produced"], case["queue_size"],
-            self._publish_one_during_snapshot if case.get("publish_during_snapshot") else None,
+            before_snapshot=(
+                self._publish_one_during_snapshot if case.get("publish_during_snapshot") else None
+            ),
+            between_reads=(
+                self._publish_one_during_snapshot if case.get("publish_between_reads") else None
+            ),
         )
         self._total_dispatched_samples = case["total_dispatched"]
         self.step_start_time = time.time() - 2
@@ -206,14 +263,14 @@ class _Owner:
         return 0.0
 
 
-def _called_self_methods(method: ast.FunctionDef | ast.AsyncFunctionDef) -> set[str]:
+def _called_owner_methods(method: ast.FunctionDef | ast.AsyncFunctionDef) -> set[str]:
     return {
         node.func.attr
         for node in ast.walk(method)
         if isinstance(node, ast.Call)
         and isinstance(node.func, ast.Attribute)
         and isinstance(node.func.value, ast.Name)
-        and node.func.value.id == "self"
+        and node.func.value.id in {"self", "cls"}
     }
 
 
@@ -225,7 +282,7 @@ def _reachable_reset_helpers(
     pending = [method]
     while pending:
         current = pending.pop()
-        for name in _called_self_methods(current):
+        for name in _called_owner_methods(current):
             helper = class_methods.get(name)
             if helper is not None and name != method.name and name not in helpers:
                 helpers[name] = helper
@@ -239,7 +296,9 @@ def _compile_reset_methods(
 ) -> dict[str, Any]:
     methods = [copy.deepcopy(method), *(copy.deepcopy(helper) for helper in helpers)]
     for candidate_method in methods:
-        candidate_method.decorator_list = []
+        for decorator in candidate_method.decorator_list:
+            if not isinstance(decorator, ast.Name) or decorator.id not in {"staticmethod", "classmethod"}:
+                raise ValueError("reset methods support only staticmethod or classmethod helper decorators")
         candidate_method.returns = None
         for argument in (
             *candidate_method.args.posonlyargs,
@@ -267,7 +326,9 @@ def _compile_reset_methods(
             "min": min,
             "print": print,
             "range": range,
+            "classmethod": classmethod,
             "set": set,
+            "staticmethod": staticmethod,
             "sum": sum,
             "tuple": tuple,
             "zip": zip,
@@ -283,7 +344,6 @@ def evaluate_reset(
 ) -> list[dict[str, Any]]:
     helpers = _reachable_reset_helpers(method, class_methods)
     namespace = _compile_reset_methods(method, helpers)
-    reset = namespace[method.name]
     cases = [
         {
             "case_id": "completed-workers-with-unconsumed-tail",
@@ -322,14 +382,39 @@ def evaluate_reset(
             "publish_during_snapshot": True,
             "expected": 7,
         },
+        {
+            "case_id": "publication-between-separate-queue-reads",
+            "done_tasks": 44,
+            "inflight_tasks": 1,
+            "total_dispatched": 45,
+            "total_produced": 44,
+            "queue_size": 6,
+            "publish_between_reads": True,
+            "expected": 7,
+        },
+        {
+            "case_id": "consumed-control-record-without-dispatch",
+            "done_tasks": 0,
+            "inflight_tasks": 0,
+            "total_dispatched": 0,
+            "total_produced": 1,
+            "queue_size": 0,
+            "expected": 0,
+        },
     ]
+    candidate_methods = {
+        method.name: namespace[method.name],
+        **{
+            helper.name: namespace[helper.name]
+            for helper in helpers
+            if helper.name not in {"_compute_rollout_resource_utilization", "_publish_one_during_snapshot"}
+        },
+    }
+    candidate_owner_type = type("_CandidateResetOwner", (_Owner,), candidate_methods)
     results = []
     for case in cases:
-        owner = _Owner(case)
-        for helper in helpers:
-            if not hasattr(owner, helper.name):
-                setattr(owner, helper.name, MethodType(namespace[helper.name], owner))
-        metrics = asyncio.run(asyncio.wait_for(reset(owner), timeout=2.0))
+        owner = candidate_owner_type(case)
+        metrics = asyncio.run(asyncio.wait_for(owner.reset_staleness(), timeout=2.0))
         observed = owner.staleness_samples
         results.append(
             {
@@ -480,20 +565,28 @@ def grade(workspace: Path, task_root: Path) -> dict[str, Any]:
     source_text = source_path.read_text(encoding="utf-8")
     tree = ast.parse(source_text, filename=SOURCE_PATH)
     reset, processor, class_methods = _find_methods(tree)
+    counter_initialization = evaluate_dispatch_counter_initialization(class_methods.get("__init__"))
     runtime_cases = evaluate_reset(reset, class_methods)
     dispatch_order = evaluate_dispatch_order(processor)
-    passed = all(case["passed"] and case["returned_metrics"] for case in runtime_cases) and dispatch_order[
-        "passed"
-    ]
+    passed = (
+        all(case["passed"] and case["returned_metrics"] for case in runtime_cases)
+        and counter_initialization["passed"]
+        and dispatch_order["passed"]
+    )
     return {
         "schema_version": 1,
         "task_id": TASK_ID,
         "workspace_revision": revision,
         "passed": passed,
-        "checks": {"reset_staleness": runtime_cases, "dispatch_reservation_order": dispatch_order},
+        "checks": {
+            "reset_staleness": runtime_cases,
+            "dispatch_counter_initialization": counter_initialization,
+            "dispatch_reservation_order": dispatch_order,
+        },
         "metrics": {
             "reset_cases": len(runtime_cases),
             "reset_cases_passed": sum(case["passed"] for case in runtime_cases),
+            "dispatch_counter_initialization_passed": counter_initialization["passed"],
             "dispatch_reservation_order_passed": dispatch_order["passed"],
         },
         "runtime": {"python": platform.python_version(), "cpu_only": True},

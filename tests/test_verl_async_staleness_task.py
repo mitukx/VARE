@@ -79,7 +79,7 @@ async def _processor_worker(self):
     assert _EVALUATOR.evaluate_dispatch_order(bad)["passed"] is False
 
 
-def test_reset_evaluator_binds_transitively_referenced_class_helpers():
+def test_reset_evaluator_binds_transitive_class_and_static_helpers():
     candidate = ast.parse(
         """
 class FullyAsyncRollouter:
@@ -90,11 +90,16 @@ class FullyAsyncRollouter:
 
     async def _remaining_samples(self):
         stats = await self.message_queue_client.get_statistics()
-        return self._outstanding_from_snapshot(stats)
+        return self._outstanding_from_snapshot(stats, self._total_dispatched_samples)
 
-    def _outstanding_from_snapshot(self, stats):
+    @classmethod
+    def _outstanding_from_snapshot(cls, stats, dispatched):
         removed = stats["total_produced"] - stats["queue_size"]
-        return max(0, self._total_dispatched_samples - removed)
+        return cls._nonnegative_outstanding_count(dispatched, removed)
+
+    @staticmethod
+    def _nonnegative_outstanding_count(dispatched, removed):
+        return max(0, dispatched - removed)
 
     async def _processor_worker(self):
         return None
@@ -104,8 +109,72 @@ class FullyAsyncRollouter:
 
     results = _EVALUATOR.evaluate_reset(reset, class_methods)
 
-    assert [result["passed"] for result in results] == [True] * 4
+    assert [result["passed"] for result in results] == [True] * 6
     assert all(result["returned_metrics"] for result in results)
+
+
+def test_reset_evaluator_rejects_separate_queue_reads_during_publication():
+    candidate = ast.parse(
+        """
+class FullyAsyncRollouter:
+    async def reset_staleness(self):
+        async with self.lock:
+            stats = await self.message_queue_client.get_statistics()
+            queue_size = await self.message_queue_client.get_queue_size()
+            removed = stats["total_produced"] - queue_size
+            self.staleness_samples = max(0, self._total_dispatched_samples - removed)
+            return {}
+
+    async def _processor_worker(self):
+        return None
+"""
+    )
+    reset, _processor, class_methods = _EVALUATOR._find_methods(candidate)
+
+    results = _EVALUATOR.evaluate_reset(reset, class_methods)
+    by_case = {result["case_id"]: result for result in results}
+
+    assert by_case["publication-between-separate-queue-reads"]["observed"] == 8
+    assert by_case["publication-between-separate-queue-reads"]["passed"] is False
+
+
+def test_reset_evaluator_rejects_negative_count_from_control_record():
+    candidate = ast.parse(
+        """
+class FullyAsyncRollouter:
+    async def reset_staleness(self):
+        async with self.lock:
+            stats = await self.message_queue_client.get_statistics()
+            removed = stats["total_produced"] - stats["queue_size"]
+            self.staleness_samples = self._total_dispatched_samples - removed
+            return {}
+
+    async def _processor_worker(self):
+        return None
+"""
+    )
+    reset, _processor, class_methods = _EVALUATOR._find_methods(candidate)
+
+    results = _EVALUATOR.evaluate_reset(reset, class_methods)
+    control_record = results[-1]
+
+    assert control_record["case_id"] == "consumed-control-record-without-dispatch"
+    assert control_record["observed"] == -1
+    assert control_record["passed"] is False
+
+
+def test_dispatch_counter_must_be_initialized_once_in_constructor():
+    valid = ast.parse(
+        "def __init__(self):\n    self._total_dispatched_samples = 0\n"
+    ).body[0]
+    missing = ast.parse("def __init__(self):\n    self.other = 0\n").body[0]
+    conditional = ast.parse(
+        "def __init__(self):\n    if ready:\n        self._total_dispatched_samples = 0\n"
+    ).body[0]
+
+    assert _EVALUATOR.evaluate_dispatch_counter_initialization(valid)["passed"] is True
+    assert _EVALUATOR.evaluate_dispatch_counter_initialization(missing)["passed"] is False
+    assert _EVALUATOR.evaluate_dispatch_counter_initialization(conditional)["passed"] is False
 
 
 @pytest.mark.parametrize("relative_path", ["TASK.md", "task.json", "evaluator/grade.py"])
@@ -122,11 +191,14 @@ def test_calibration_lock_rejects_task_or_evaluator_tampering(tmp_path, relative
 
 
 @pytest.mark.parametrize(
-    ("version", "protocol_id"),
-    [("cpu-calibration-v6", "verl-fully-async-staleness-accounting-v1"),
-     ("cpu-calibration-v7", "verl-fully-async-staleness-accounting-v2")],
+    ("version", "protocol_id", "reset_case_count"),
+    [
+        ("cpu-calibration-v6", "verl-fully-async-staleness-accounting-v1", 4),
+        ("cpu-calibration-v7", "verl-fully-async-staleness-accounting-v2", 4),
+        ("cpu-calibration-v8", "verl-fully-async-staleness-accounting-v3", 6),
+    ],
 )
-def test_source_calibration_is_hash_complete(version, protocol_id):
+def test_source_calibration_is_hash_complete(version, protocol_id, reset_case_count):
     evidence = RESULT_ROOT / version
     summary = json.loads((evidence / "summary.json").read_text(encoding="utf-8"))
     baseline = json.loads((evidence / "baseline.grade.json").read_text(encoding="utf-8"))
@@ -138,13 +210,20 @@ def test_source_calibration_is_hash_complete(version, protocol_id):
     assert summary["observed"] == {"baseline_passed": False, "calibration_passed": True}
     assert baseline["passed"] is False
     assert fixed["passed"] is True
-    assert baseline["metrics"]["reset_cases"] == 4
-    assert fixed["metrics"]["reset_cases"] == 4
-    interleaved_baseline = baseline["checks"]["reset_staleness"][-1]
-    interleaved_fixed = fixed["checks"]["reset_staleness"][-1]
+    assert baseline["metrics"]["reset_cases"] == reset_case_count
+    assert fixed["metrics"]["reset_cases"] == reset_case_count
+    interleaved_baseline = baseline["checks"]["reset_staleness"][3]
+    interleaved_fixed = fixed["checks"]["reset_staleness"][3]
     assert interleaved_baseline["case_id"] == "task-publishes-during-queue-snapshot"
     assert interleaved_baseline["passed"] is False
     assert interleaved_fixed["passed"] is True
+    if reset_case_count == 6:
+        assert baseline["checks"]["dispatch_counter_initialization"]["passed"] is False
+        assert fixed["checks"]["dispatch_counter_initialization"]["passed"] is True
+        assert baseline["checks"]["reset_staleness"][4]["passed"] is False
+        assert baseline["checks"]["reset_staleness"][5]["observed"] == 0
+        assert fixed["checks"]["reset_staleness"][4]["passed"] is True
+        assert fixed["checks"]["reset_staleness"][5]["passed"] is True
     assert baseline["workspace_revision"] == "8ced5d2f4b148c2991217554e0c6f03028fa1470"
     assert fixed["workspace_revision"] == "64812373be25c00b0da1833308d573d45570a364"
     assert all(

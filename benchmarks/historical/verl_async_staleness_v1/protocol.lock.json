@@ -2,12 +2,15 @@
   "acceptance": {
     "rejects_changes_outside_candidate_paths": true,
     "rejects_task_or_evaluator_tampering": true,
+    "requires_atomic_queue_snapshot_behavior": true,
     "requires_capacity_wait_reservation_order": true,
     "requires_completed_task_reaping_independence": true,
     "requires_consumed_queue_items_excluded": true,
     "requires_cpu_only": true,
+    "requires_dispatch_counter_initialized_in_init": true,
     "requires_inflight_and_queued_samples_counted": true,
-    "requires_runtime_reset_staleness_cases": 4,
+    "requires_runtime_reset_staleness_cases": 6,
+    "supports_staticmethod_reset_helpers": true,
     "supports_transitive_same_class_reset_helpers": true
   },
   "expected_calibration": {
@@ -15,11 +18,11 @@
     "calibration_passed": true
   },
   "locked_hashes": {
-    "evaluator_sha256": "d219caaeb8f9cf1cbebde79387815e32d94f60f0b7d5f93dc801ffb5a2d743f7",
-    "task_brief_sha256": "4fed60bcf9d3c1d98d49bf9e2aafd4bd6812be79f1852562b2b3caeaacc00567",
-    "task_json_sha256": "ad875158b0eae92e278362582361e51cd5c094f5d2ff97ab93a236db5e5d1436"
+    "evaluator_sha256": "82c59dd215e54800779c87415d4487d172c62fa2964cb9d4038de677ce3d6f39",
+    "task_brief_sha256": "dd522f27077c54627f026f90c091d4571f2937ecd937bac98792c67794c32bf6",
+    "task_json_sha256": "7df1581c1964faaab7c938f3f25ed10450acf837a2e06b794b260f51f06029de"
   },
-  "protocol_id": "verl-fully-async-staleness-accounting-v2",
+  "protocol_id": "verl-fully-async-staleness-accounting-v3",
   "schema_version": 1,
   "source": {
     "base_revision": "8ced5d2f4b148c2991217554e0c6f03028fa1470",
