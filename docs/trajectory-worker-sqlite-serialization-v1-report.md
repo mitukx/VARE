@@ -41,7 +41,7 @@ heartbeat starvation is fixed for the tested same-store path.
 | --- | --- | --- |
 | Paused-reader heartbeat, v4 | 3/3 fail; 0.822–0.929 s | 3/3 pass; 0.247–0.280 s |
 | Existing async pipeline test, v3 | 2/3 timeout, 1/3 pass | 3/3 pass; 1.198–1.376 s |
-| Targeted trajectory tests | — | 66 passed in 9.71 s |
+| Targeted trajectory tests | — | 67 passed in 9.58 s |
 | Broad local suite, excluding the two standalone Math500 grader modules | — | 1084 passed, 78 skipped in 166.01 s |
 
 An earlier broad suite run had one grader-cleanup failure; its isolated test

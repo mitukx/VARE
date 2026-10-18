@@ -260,6 +260,18 @@ def test_mixed_policy_steps_are_recorded_without_relabeling(store):
     assert audit_trajectory_store(store.path)["pass"]
 
 
+def test_iter_steps_reads_beyond_one_bounded_page(store):
+    store.submit("paged", Task("task", "count"), expected_steps=20,
+                 group_id="paged", member=0, group_size=1, now=100)
+    lease = store.claim("execute", "worker", now=100)
+    for index in range(20):
+        store.append_step(lease, step(index), now=100)
+
+    observed = [item["action"]["operation_id"] for item in store.iter_steps("paged")]
+
+    assert observed == [f"op-{index}" for index in range(20)]
+
+
 def test_tampering_and_runtime_change_are_rejected(store, tmp_path):
     submit(store)
     lease = store.claim("execute", "worker", now=100)
