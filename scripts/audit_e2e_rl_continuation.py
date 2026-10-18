@@ -30,6 +30,11 @@ def json_sha(value):
     return hashlib.sha256(raw).hexdigest()
 
 
+def promotion_expected(incumbent, candidate):
+    """The retained v2 protocol promotes on a nondecreasing independent mean."""
+    return candidate["primary"]>=incumbent["primary"]
+
+
 def expected_tasks(seed, round_index, count, evaluation=False):
     """Reconstruct the benchmark's deterministic cohort without trusting its artifacts."""
     rng = random.Random(seed * 100000 + round_index * 100 + int(evaluation))
@@ -443,6 +448,21 @@ def audit(root, check_tensors=False, model_dir=None):
                 committed_attempt=committed_attempts[0]
                 need(commit["stale_replay_rejected"]==screening_counts_by_attempt[committed_attempt],
                      "recovered stale replay count differs from its screening event")
+                incumbent_report=by_attempt[committed_attempt][previous_pid]["report"]
+                candidate_report=by_attempt[committed_attempt][candidate]["report"]
+                expected_accepted=promotion_expected(incumbent_report,candidate_report)
+                need(commit["accepted"] is expected_accepted,
+                     "recovered promotion decision differs from its independent evaluation pair")
+            if result is not None:
+                incumbent_report=by_attempt[committed_attempt][previous_pid]["report"]
+                candidate_report=by_attempt[committed_attempt][candidate]["report"]
+                expected_accepted=promotion_expected(incumbent_report,candidate_report)
+                decision=result["decision"]
+                need(commit["accepted"] is expected_accepted and
+                     decision["accepted"] is expected_accepted and
+                     result["promoted_id"]==(candidate if expected_accepted else previous_pid) and
+                     decision["primary_gain"]==candidate_report["primary"]-incumbent_report["primary"],
+                     "promotion decision differs from its independent evaluation pair")
             evaluation_pairs+=len(complete_attempts)
             for record in records:
                 need(set(record["scores"])=={task["id"] for task in heldout} and
@@ -471,7 +491,29 @@ def audit(root, check_tensors=False, model_dir=None):
             need(active==(commits[-1]["active_policy"],commits[-1]["active_checkpoint_sha256"]),"actual journal pointer differs")
         if row["cutpoint"]!="none":
             killed,progress=read(case/"kill_record.json"),read(case/"post_restart_update.json")
+            marker=read(case/"cutpoint.json")
+            marker_time=marker.get("time")
+            killed_at=killed.get("killed_at")
+            need(marker.get("cutpoint")==row["cutpoint"]==killed.get("cutpoint") and
+                 marker.get("round_index")==protocol["kill_round"],
+                 "cutpoint marker differs from the configured recovery case")
+            need(type(marker.get("pid")) is int and marker["pid"]==killed.get("learner_pid") and
+                 type(marker.get("pgid")) is int and marker["pgid"]==marker["pid"],
+                 "cutpoint marker differs from the killed learner process")
+            need(type(marker_time) in (int,float) and math.isfinite(marker_time) and
+                 type(killed_at) in (int,float) and math.isfinite(killed_at) and killed_at>=marker_time,
+                 "cutpoint marker was not observed before the learner was killed")
             need(killed["returncode"]==-9 and killed["old_descendants"] and killed["live_old_descendants"]==0,"learner/descendant SIGKILL not established")
+            killed_attempts=[attempt for attempt in attempts if attempt["round_index"]==protocol["kill_round"] and attempt["learner_attempt"]==0]
+            need(len(killed_attempts)==1 and
+                 marker.get("volatile_model_sha256")==killed_attempts[0]["candidate_model_sha256"],
+                 "cutpoint marker does not identify the killed optimizer state")
+            if row["cutpoint"] in prepublication_cutpoints:
+                expected_marker_policy=commits[protocol["kill_round"]-1]["active_policy"]
+            else:
+                expected_marker_policy=commits[protocol["kill_round"]]["active_policy"]
+            need(marker.get("active_policy")==expected_marker_policy,
+                 "cutpoint marker active policy differs from the recovery boundary")
             need(row["recovery_to_next_update_s"]==progress["time"]-killed["killed_at"]>0,"recovery clock differs")
             expected_round=protocol["kill_round"] if row["cutpoint"] in ("post_optimizer","candidate_saved","journal_prepared") else protocol["kill_round"]+1
             need(progress["completed_round"]==expected_round,"recovery did not execute the next logical optimizer round")
@@ -487,6 +529,9 @@ def audit(root, check_tensors=False, model_dir=None):
             def update(r):
                 return {k:v for k,v in r["update"].items() if k!="optimizer_steps"}
             need(update(observed)==update(expected),"next numerical optimizer update differs")
+        if row["cutpoint"]!="none":
+            need(row.get("exact_reference_match") is True,
+                 "recovery exact-reference flag differs from retained round comparisons")
     committed_rounds=sum(len(round_records[row["directory"]]) for row in rows)
     need(summary["cases"]==len(rows) and summary["completed_rounds"]==committed_rounds,
          "summary budget differs from committed records")

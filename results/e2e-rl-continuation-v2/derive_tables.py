@@ -38,10 +38,31 @@ def resource_metrics(case_dir):
     }
 
 
+def exact_recovery_match(root, row, reference):
+    observed = [read(root/row['directory']/'rounds'/f'r{i:04d}'/'committed.json')
+                for i in range(row['rounds'])]
+    if len(observed) != len(reference):
+        return False
+    for actual, expected in zip(observed, reference, strict=True):
+        actual_update = {k: v for k, v in actual['update'].items() if k != 'optimizer_steps'}
+        expected_update = {k: v for k, v in expected['update'].items() if k != 'optimizer_steps'}
+        if (actual['active_state_sha256'] != expected['active_state_sha256']
+                or actual['candidate_state_sha256'] != expected['candidate_state_sha256']
+                or actual['accepted'] != expected['accepted']
+                or actual_update != expected_update):
+            return False
+    return True
+
+
 def derive(root, output):
     rows = read(root / 'progress.json')
     resources = {row['directory']: resource_metrics(root/row['directory']) for row in rows}
     normal = [r for r in rows if r['cutpoint'] == 'none']
+    recovery_references = {
+        row['seed']: [read(root/row['directory']/'rounds'/f'r{i:04d}'/'committed.json')
+                      for i in range(row['rounds'])]
+        for row in normal if row['workers'] == 2 and row['mode'] == 'guarded'
+    }
     comparison, stages, recovery = [], [], []
     for workers in sorted({r['workers'] for r in normal}):
         for mode in ('minimal', 'guarded'):
@@ -95,7 +116,8 @@ def derive(root, output):
                          'min_s':min(values), 'max_s':max(values),
                          'physical_optimizer_attempts':sum(r['physical_optimizer_attempts'] for r in group),
                          'logical_rounds':sum(r['completed_rounds'] for r in group),
-                         'exact_reference_cases':sum(r['exact_reference_match'] for r in group),
+                         'exact_reference_cases':sum(exact_recovery_match(
+                             root, r, recovery_references[r['seed']]) for r in group),
                          'live_old_descendants':sum(r['live_old_descendants'] for r in group)})
     output.mkdir(parents=True, exist_ok=True)
     csv_write(output/'comparison.csv', comparison)

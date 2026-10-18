@@ -1,0 +1,67 @@
+.....................................................                    [100%]
+==================================== PASSES ====================================
+________ test_real_worker_stale_weights_fail_then_updated_weights_pass _________
+----------------------------- Captured stderr call -----------------------------
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+=========================== short test summary info ============================
+PASSED tests/test_e2e_rl_continuation.py::test_v2_task_namespaces_are_round_and_evaluation_disjoint
+PASSED tests/test_e2e_rl_continuation.py::test_restart_refuses_changed_learner_source_before_loading_model
+PASSED tests/test_e2e_rl_continuation.py::test_actual_checkpoint_state_and_scores_replay
+PASSED tests/test_e2e_rl_continuation.py::test_actual_learner_sigkill_resumes_without_double_committed_update[post_optimizer]
+PASSED tests/test_e2e_rl_continuation.py::test_actual_learner_sigkill_resumes_without_double_committed_update[candidate_saved]
+PASSED tests/test_e2e_rl_continuation.py::test_actual_learner_sigkill_resumes_without_double_committed_update[journal_prepared]
+PASSED tests/test_e2e_rl_continuation.py::test_actual_learner_sigkill_resumes_without_double_committed_update[pointer_published]
+PASSED tests/test_e2e_rl_continuation.py::test_actual_learner_sigkill_resumes_without_double_committed_update[journal_committed]
+PASSED tests/test_e2e_rl_continuation.py::test_actual_learner_sigkill_resumes_without_double_committed_update[round_committed]
+PASSED tests/test_e2e_rl_continuation.py::test_real_worker_stale_weights_fail_then_updated_weights_pass
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_false_attempt_count_is_rejected
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[incumbent-minimal]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[incumbent-guarded]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[candidate-minimal]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[candidate-guarded]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[both-minimal]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[both-guarded]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[split_attempt-minimal]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[split_attempt-guarded]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[duplicate_policy-minimal]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_incomplete_independent_evaluation_is_rejected[duplicate_policy-guarded]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_absent_independent_evaluation_is_rejected
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_evaluation_attempt_must_exist_in_optimizer_history
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_missing_rollout_attempt_is_rejected
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_progress_seed_must_match_case_configuration
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_missing_batch_attempt_is_rejected
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_batch_signal_must_match_its_rollout
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_round_task_pool_must_match_rollouts
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_completed_round_total_must_match_commits
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_evaluation_pair_must_match_committed_round_result
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_recovered_evaluation_pair_must_match_promotion_journal
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_protocol_snapshot_must_match_declared_digest
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_duplicate_optimizer_attempt_identity_is_rejected
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_independent_evaluation_cohort_must_match_seeded_tasks[minimal]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_independent_evaluation_cohort_must_match_seeded_tasks[guarded]
+PASSED tests/test_e2e_rl_continuation.py::test_guarded_evaluation_attestation_must_match_retained_cohort_bytes
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_round_trace_cannot_drop_a_timed_committed_round
+PASSED tests/test_e2e_rl_continuation.py::test_normal_commit_cannot_claim_recovered_publication_to_skip_trace
+PASSED tests/test_e2e_rl_continuation.py::test_rollout_logprob_must_match_worker_and_rvl_generation
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_evaluations_cannot_disappear_after_gate_entry
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_stale_replay_screening_event_cannot_disappear
+PASSED tests/test_e2e_rl_continuation.py::test_stale_replay_canary_must_match_round_zero_rollout
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_normal_summary_cannot_omit_all_groups
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_extra_optimizer_attempt_must_belong_to_killed_round
+PASSED tests/test_e2e_rl_continuation.py::test_resource_summaries_must_match_retained_samples[sampled_cpu_core_percent]
+PASSED tests/test_e2e_rl_continuation.py::test_resource_summaries_must_match_retained_samples[sampled_tree_peak_rss_bytes]
+PASSED tests/test_e2e_rl_continuation.py::test_derived_resource_metrics_are_read_from_samples
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_promotion_must_match_independent_evaluation_pair
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_promoted_policy_must_match_the_gate_decision
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_cutpoint_must_match_the_killed_process[marker_cutpoint]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_cutpoint_must_match_the_killed_process[kill_record_cutpoint]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_cutpoint_must_match_the_killed_process[marker_pid]
+PASSED tests/test_e2e_rl_continuation.py::test_rehashed_exact_recovery_summary_is_derived_from_round_comparisons
+53 passed in 334.37s (0:05:34)

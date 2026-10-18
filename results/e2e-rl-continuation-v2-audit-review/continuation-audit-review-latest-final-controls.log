@@ -1,0 +1,11 @@
+Independent reviewer controls against pre-fix commit 3c25b743; all archives resealed from pristine raw evidence.
+[promotion_recomputed] baseline_exit=0; fixed_exit=1
+baseline: {"artifacts_hashed": 6522, "candidate_tensor_states_verified": 0, "cases": 42, "checkpoint_score_count_replayed": 0, "checkpoint_scores_replayed": false, "evaluation_pairs_verified": 507, "evaluation_reports_verified": 1014, "pass": true, "protocol_conformant": true}
+fixed: ValueError: promotion decision differs from its independent evaluation pair
+[cutpoint_identity] baseline_exit=0; fixed_exit=1
+baseline: {"artifacts_hashed": 6522, "candidate_tensor_states_verified": 0, "cases": 42, "checkpoint_score_count_replayed": 0, "checkpoint_scores_replayed": false, "evaluation_pairs_verified": 507, "evaluation_reports_verified": 1014, "pass": true, "protocol_conformant": true}
+fixed: ValueError: cutpoint marker differs from the configured recovery case
+[exact_recovery_count] baseline_exit=0; fixed_exit=1
+baseline: {"artifacts_hashed": 6522, "candidate_tensor_states_verified": 0, "cases": 42, "checkpoint_score_count_replayed": 0, "checkpoint_scores_replayed": false, "evaluation_pairs_verified": 507, "evaluation_reports_verified": 1014, "pass": true, "protocol_conformant": true}
+fixed: ValueError: recovery exact-reference flag differs from retained round comparisons
+baseline_table_exact=2/3; fixed_table_exact=3/3

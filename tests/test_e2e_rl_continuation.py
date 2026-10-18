@@ -537,3 +537,79 @@ def test_derived_resource_metrics_are_read_from_samples(tmp_path):
         '{"time":11.0,"rss_bytes":200,"cpu_delta_s":0.8}\n')
     assert derive_tables.resource_metrics(tmp_path)=={
         "sampled_cpu_core_percent":100.0,"sampled_tree_peak_rss_bytes":200}
+
+
+def test_rehashed_promotion_must_match_independent_evaluation_pair(audit_records,tmp_path):
+    changed=tmp_path/"promotion-disagrees-with-evaluation"
+    shutil.copytree(audit_records,changed)
+    row=next(r for r in auditor.read(changed/"progress.json")
+             if r["mode"]=="guarded" and r["cutpoint"]=="none")
+    round_dir=changed/row["directory"]/"rounds/r0000"
+    commit_path=round_dir/"committed.json"
+    commit=auditor.read(commit_path)
+    evaluation_path=round_dir/f"evaluation-{commit['candidate_id']}-attempt0.json"
+    evaluation=auditor.read(evaluation_path)
+    scores={task_id:0.0 for task_id in evaluation["scores"]}
+    evaluation["scores"]=scores
+    evaluation["report"]["primary"]=0.0
+    evaluation["report"]["metadata"]["per_task_scores"]=scores
+    commit["result"]["candidate_eval"]=evaluation["report"]
+    bench.atomic_json(evaluation_path,evaluation)
+    bench.atomic_json(commit_path,commit)
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="promotion decision differs from its independent evaluation pair"):
+        auditor.audit(changed)
+
+
+def test_rehashed_promoted_policy_must_match_the_gate_decision(audit_records,tmp_path):
+    changed=tmp_path/"promoted-policy-disagrees-with-gate"
+    shutil.copytree(audit_records,changed)
+    row=next(r for r in auditor.read(changed/"progress.json")
+             if r["mode"]=="guarded" and r["cutpoint"]=="none")
+    commit_path=changed/row["directory"]/"rounds/r0000/committed.json"
+    commit=auditor.read(commit_path)
+    commit["result"]["promoted_id"]="policy-0"
+    bench.atomic_json(commit_path,commit)
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="promotion decision differs from its independent evaluation pair"):
+        auditor.audit(changed)
+
+
+@pytest.mark.parametrize("corruption",["marker_cutpoint","kill_record_cutpoint","marker_pid"])
+def test_rehashed_cutpoint_must_match_the_killed_process(audit_records,tmp_path,corruption):
+    changed=tmp_path/f"misbound-cutpoint-{corruption}"
+    shutil.copytree(audit_records,changed)
+    row=next(r for r in auditor.read(changed/"progress.json")
+             if r["cutpoint"]=="post_optimizer")
+    case=changed/row["directory"]
+    marker_path=case/"cutpoint.json"
+    killed_path=case/"kill_record.json"
+    marker=auditor.read(marker_path)
+    killed=auditor.read(killed_path)
+    if corruption=="marker_cutpoint":
+        marker["cutpoint"]="candidate_saved"
+        bench.atomic_json(marker_path,marker)
+    elif corruption=="kill_record_cutpoint":
+        killed["cutpoint"]="candidate_saved"
+        bench.atomic_json(killed_path,killed)
+    else:
+        marker["pid"]+=1
+        bench.atomic_json(marker_path,marker)
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="cutpoint marker differs"):
+        auditor.audit(changed)
+
+
+def test_rehashed_exact_recovery_summary_is_derived_from_round_comparisons(audit_records,tmp_path):
+    changed=tmp_path/"forged-exact-recovery-flag"
+    shutil.copytree(audit_records,changed)
+    progress=auditor.read(changed/"progress.json")
+    row=next(r for r in progress if r["cutpoint"]=="post_optimizer")
+    row["exact_reference_match"]=False
+    bench.atomic_json(changed/"progress.json",progress)
+    reseal_records(changed)
+    derived=derive_tables.derive(changed,tmp_path/"derived")
+    recovery=next(r for r in derived["recovery"] if r["cutpoint"]=="post_optimizer")
+    assert recovery["exact_reference_cases"]==recovery["n"]
+    with pytest.raises(ValueError,match="recovery exact-reference flag differs"):
+        auditor.audit(changed)

@@ -260,7 +260,21 @@ normal summary must contain exactly one aggregate for each retained worker/mode
 pair. Rehashed controls that removed screening evidence, changed the canary
 output, or emptied all normal summary groups passed the previous auditor and
 are rejected by the current one. The independent canary control is retained
-alongside the full 47-test module run and final tensor audit.
+alongside the full actual-model module run and final tensor audit.
+
+A further independent review found that a rehashed accepted promotion could
+disagree with its retained evaluation pair, SIGKILL cutpoint markers were
+not linked to the killed process, and recovery table counts trusted a
+mutable progress flag. The audit now recomputes the v2 nondecreasing-mean
+promotion decision from the selected independent pair, binds each cutpoint
+marker to the configured round, cutpoint, learner PID/PGID, kill time,
+optimizer state and boundary policy, and requires the exact-recovery flag
+to agree with committed-round comparisons. Table recovery counts now
+derive from those comparisons directly. The three resealed controls were
+accepted by the prior auditor and are rejected by the corrected one; the
+old table reported 2/3 exact cases for a forged flag while the corrected
+table reports the measured 3/3. The full 53-test actual-model module passes, and the raw campaign tables
+remain byte-identical to the retained results.
 
 This is a toy neural LM and synthetic one-token workload. Replay is round-local;
 general durable replay-backlog/curriculum recovery is not tested. The supervisor
