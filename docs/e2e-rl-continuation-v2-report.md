@@ -276,6 +276,25 @@ old table reported 2/3 exact cases for a forged flag while the corrected
 table reports the measured 3/3. The full 53-test actual-model module passes, and the raw campaign tables
 remain byte-identical to the retained results.
 
+The next review found that round timing accepted a forged duration, non-round
+stage rows could disappear before latency aggregation, and the stale-rejection
+total trusted a mutable progress field. Every trace span now requires finite
+ordered timestamps and `duration_s == end - start`; rollout, verification,
+freshness, replay, training, evaluation, promotion and checkpoint-save coverage
+is checked against attempt and retained execution evidence, and rollout and
+evaluation identities are bound to their worker/evaluation records. Normal-case
+table generation validates stage coverage before publishing quantiles. Stale
+rejection totals are summed from committed rounds and checked against progress.
+Against the same rehashed attacks, the b44 auditor accepted the altered trace
+and stale total; its table changed verification coverage from 1,152 to 1,151
+and stale rejections from 33 to 34. The corrected audit and table generator
+reject the timing/coverage attacks and keep the committed stale total at 33.
+All four regenerated campaign tables remain byte-identical. The 56-test
+actual-model module and 17 focused falsification tests pass; one-seed diagnostic
+derivation now emits an undefined sample SD as null without changing the
+three-seed campaign values. Detailed controls and run logs are retained in
+[review evidence](../results/e2e-rl-continuation-v2-audit-review/validation.json).
+
 This is a toy neural LM and synthetic one-token workload. Replay is round-local;
 general durable replay-backlog/curriculum recovery is not tested. The supervisor
 assumes cooperative same-UID POSIX ownership. There is no power-loss, hostile-code,

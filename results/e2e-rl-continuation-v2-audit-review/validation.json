@@ -344,15 +344,79 @@
       },
       "new_full_protocol_campaigns": 0,
       "new_diagnostic_model_regression_campaigns": 1
+    },
+    "trace_metrics_and_stale_aggregate_integrity": {
+      "baseline_commit": "b44cc537b77196517cdff646b82f037b192dfb58",
+      "source_archive_sha256": "ade5ca917d8a0d3c53d8e13fd8984cc1392e70fe81ec7032bd5c95158959ff53",
+      "extracted_raw_checksum_manifest_sha256": "e3dc70f3c9839b2ccaf5b716525279dc2022c8f127eca16d6daeb36ad80c9d2b",
+      "baseline_tamper_controls": {
+        "non_round_training_duration_changed_and_verification_span_removed_audit_passed": true,
+        "progress_stale_rejection_total_incremented_audit_passed": true,
+        "stage_table_verification_observations_before_after": [
+          1152,
+          1151
+        ],
+        "stage_table_training_p50_ms_before_after": [
+          76.71172899426892,
+          76.83302050281782
+        ],
+        "stale_total_old_table_vs_committed_evidence": [
+          34,
+          33
+        ]
+      },
+      "fixed_controls": {
+        "all_trace_spans_have_finite_ordered_timestamps_and_exact_duration": true,
+        "rollout_verification_freshness_replay_training_evaluation_promotion_and_checkpoint_save_coverage_checked": true,
+        "rollout_and_evaluation_trace_identities_bound_to_retained_evidence": true,
+        "latency_table_derivation_validates_normal_trace_coverage": true,
+        "stale_total_derived_from_committed_rounds_and_progress_reconciled": true,
+        "rehashed_trace_and_stale_aggregate_attacks_rejected": true
+      },
+      "focused_regressions": {
+        "passed": 17,
+        "log": "continuation-audit-review-trace-stale-focused.log",
+        "scope": "Prior evaluation-artifact rejection controls, trace duration and stage deletion, stale progress aggregate, and exact recovery table derivation."
+      },
+      "full_continuation_module": {
+        "collected": 56,
+        "passed": 56,
+        "skipped": 0,
+        "exit_code": 0,
+        "log": "continuation-audit-review-trace-stale-module.log",
+        "scope": "Pinned tiny-GPT2 CPU run with actual optimizer updates, six SIGKILL recovery boundaries, post-restart updates, independent checkpoint evaluation, and re-sealed archive falsification."
+      },
+      "retained_campaign_reaudit": {
+        "cases": 42,
+        "artifacts_hashed": 6522,
+        "evaluation_pairs_verified": 507,
+        "evaluation_reports_verified": 1014,
+        "pass": true,
+        "protocol_conformant": true,
+        "log": "continuation-audit-review-trace-stale-retained-audit.log"
+      },
+      "derived_tables_byte_identical": [
+        "comparison.csv",
+        "stage-latency.csv",
+        "recovery.csv",
+        "derived-metrics.json"
+      ],
+      "single_seed_diagnostic_derivation": {
+        "pass": true,
+        "sample_sd": null
+      },
+      "new_full_protocol_campaigns": 0,
+      "new_diagnostic_model_regression_campaigns": 1,
+      "controls_log": "continuation-audit-review-trace-stale-controls.log"
     }
   },
   "scope": "Audit correction and actual toy-model system regressions; no new research or main performance campaign.",
   "sources": {
     ".github/workflows/e2e-system-cpu.yml": "60331af183398380e6ba61edc0533c6e9f1d5d33000945928caedb8679197c58",
-    "docs/e2e-rl-continuation-v2-report.md": "c791a26447a8e43691fa8695c9096265440a578a63bb576ec969865f077eb5f4",
-    "scripts/audit_e2e_rl_continuation.py": "d0cc1dd7959ee901272e60ba19c4aa78b72f11105f27f33fc68c6e592cbe847d",
-    "tests/test_e2e_rl_continuation.py": "c34d549061334dddfc78bcce13707362e57fc3470e4236c1ef03c03522b655e7",
-    "results/e2e-rl-continuation-v2/derive_tables.py": "fcf10588d9d0d96c53d810f19fa497249cbe43c4ccc043f893569508a87f4639",
+    "docs/e2e-rl-continuation-v2-report.md": "9803a4f745ad9af25a35140f8dc54b19b12c6a8ea34e5e42f8d51c8061d29a4b",
+    "scripts/audit_e2e_rl_continuation.py": "cde9e938f53b78afb8f4de8e19a2ebe24177d9179eab2c6809d0f1f082022a33",
+    "tests/test_e2e_rl_continuation.py": "b9de4f0c8dac41342dc41b6809133c1f3c8ef7d021f5e26683e8435ecb3f3952",
+    "results/e2e-rl-continuation-v2/derive_tables.py": "98cbd68f48062df18208afc2cc76f04ea8eeca2fd3262647192c31fc7846d82b",
     "results/e2e-rl-continuation-v2/comparison.csv": "3a99af257d6430d2daa68a68eb549a07342fcba57fe5b5a4fe6d165ea81c3a39",
     "results/e2e-rl-continuation-v2/derived-metrics.json": "1aa502793b4f9eeb61fb8b464c772f4493ca95cc37c06a4536c33c9c727d002c"
   }

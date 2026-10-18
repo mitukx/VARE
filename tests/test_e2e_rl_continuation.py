@@ -613,3 +613,47 @@ def test_rehashed_exact_recovery_summary_is_derived_from_round_comparisons(audit
     assert recovery["exact_reference_cases"]==recovery["n"]
     with pytest.raises(ValueError,match="recovery exact-reference flag differs"):
         auditor.audit(changed)
+
+
+@pytest.mark.parametrize("corruption",["duration","missing_verification"])
+def test_rehashed_non_round_trace_cannot_change_published_latency(audit_records,tmp_path,corruption):
+    changed=tmp_path/f"trace-{corruption}"
+    shutil.copytree(audit_records,changed)
+    progress=auditor.read(changed/"progress.json")
+    row=next(r for r in progress if r["cutpoint"]=="none" and r["mode"]=="guarded")
+    case=changed/row["directory"]
+    trace_path=case/"trace.jsonl"
+    trace=[json.loads(line) for line in trace_path.read_text().splitlines()]
+    if corruption=="duration":
+        span=next(span for span in trace if span["stage"]=="training" and span["round_index"]==0)
+        span["duration_s"]+=0.01
+    else:
+        trace.remove(next(span for span in trace if span["stage"]=="verification" and span["round_index"]==0))
+    trace_path.write_text("".join(json.dumps(span,sort_keys=True)+"\n" for span in trace))
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="trace span timestamps|verification trace coverage"):
+        auditor.audit(changed)
+    with pytest.raises(ValueError,match="trace span timestamps|verification trace coverage"):
+        derive_tables.derive(changed,tmp_path/"derived")
+
+
+def test_stale_rejection_table_uses_committed_round_evidence(audit_records,tmp_path):
+    changed=tmp_path/"forged-stale-total"
+    shutil.copytree(audit_records,changed)
+    progress=auditor.read(changed/"progress.json")
+    row=next(r for r in progress if r["cutpoint"]=="none" and r["mode"]=="guarded")
+    committed=sum(auditor.read(changed/row["directory"]/"rounds"/f"r{i:04d}"/"committed.json")
+                  ["stale_replay_rejected"] for i in range(row["rounds"]))
+    row["stale_replay_rejected"]=committed+1
+    bench.atomic_json(changed/"progress.json",progress)
+    reseal_records(changed)
+    derived=derive_tables.derive(changed,tmp_path/"derived")
+    table_row=next(item for item in derived["comparison"]
+                   if item["workers"]==row["workers"] and item["mode"]=="guarded")
+    expected=sum(sum(auditor.read(changed/normal["directory"]/"rounds"/f"r{i:04d}"/"committed.json")
+                     ["stale_replay_rejected"] for i in range(normal["rounds"]))
+                 for normal in progress if normal["cutpoint"]=="none" and
+                 normal["workers"]==row["workers"] and normal["mode"]=="guarded")
+    assert table_row["stale_canary_rejected"]==expected
+    with pytest.raises(ValueError,match="progress stale-replay total"):
+        auditor.audit(changed)

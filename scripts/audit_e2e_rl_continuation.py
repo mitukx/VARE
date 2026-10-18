@@ -152,6 +152,8 @@ def audit(root, check_tensors=False, model_dir=None):
         need(row["protocol_conformant"]==config["protocol_conformant"]==locked,"case conformance differs")
         commits=[read(case/"rounds"/f"r{i:04d}"/"committed.json") for i in range(args["rounds"])]
         need([r["completed_round"] for r in commits]==list(range(args["rounds"])),"round gap or duplicate")
+        need(row.get("stale_replay_rejected")==sum(commit["stale_replay_rejected"] for commit in commits),
+             "progress stale-replay total differs from committed rounds")
         need(row["completed_rounds"]==row["rounds"]==len(commits),
              "completed round count differs from committed records")
         need(commits[-1]["active_state_sha256"]==row["final_state_sha256"],"final state differs")
@@ -197,6 +199,27 @@ def audit(root, check_tensors=False, model_dir=None):
             need(attempts_by_round.get(index,set())==expected_attempt_ids,
                  "optimizer attempt identities do not match the kill-round schedule")
         trace=[json.loads(line) for line in (case/"trace.jsonl").read_text().splitlines()]
+        trace_stages={}
+        known_stages={"checkpoint_hash","checkpoint_save","checkpoint_recovery","evaluation",
+                      "freshness","promotion","replay","rollback","rollout",
+                      "rollout_verified","round","training","verification"}
+        for span in trace:
+            stage=span.get("stage")
+            round_index=span.get("round_index")
+            learner_attempt=span.get("learner_attempt")
+            start,end,duration=(span.get(key) for key in ("start","end","duration_s"))
+            need(stage in known_stages,"unknown trace stage")
+            need(type(round_index) is int and -1<=round_index<len(commits) and
+                 type(learner_attempt) is int and learner_attempt>=0 and
+                 type(start) in (int,float) and math.isfinite(start) and
+                 type(end) in (int,float) and math.isfinite(end) and end>=start and
+                 type(duration) in (int,float) and math.isfinite(duration) and
+                 duration==end-start,
+                 "trace span timestamps or duration are invalid")
+            if round_index>=0:
+                need(learner_attempt in attempts_by_round.get(round_index,set()),
+                     "trace span references an unknown learner attempt")
+            trace_stages.setdefault((stage,round_index,learner_attempt),[]).append(span)
         spans=[r for r in trace if r["stage"]=="round"]
         expected_timed_rounds=[i for i,commit in enumerate(commits)
                                if not commit.get("recovered_publication")]
@@ -213,6 +236,44 @@ def audit(root, check_tensors=False, model_dir=None):
         spans=[span["duration_s"] for span in spans]
         need(row["round_wall_s"]==sum(spans),"round wall differs")
         need(row["tasks_s"]==row["tokens_s"]==args["tasks"]*len(spans)/sum(spans),"throughput differs")
+        for round_index,attempt_ids in attempts_by_round.items():
+            for attempt_id in attempt_ids:
+                def stage_count(stage):
+                    return len(trace_stages.get((stage,round_index,attempt_id),[]))
+                expected_batch_size=args["tasks"]
+                for stage in ("rollout","rollout_verified","verification"):
+                    need(stage_count(stage)==expected_batch_size,
+                         f"{stage} trace coverage differs from rollout batch")
+                canary_stale=int(round_index>0 and canary_attempt["policy_version"]<
+                                 commits[round_index-1]["accepted_updates"])
+                expected_freshness=2*expected_batch_size+(expected_batch_size if row["mode"]=="guarded" else 0)+canary_stale
+                need(stage_count("freshness")==expected_freshness,
+                     "freshness trace coverage differs from executed admission checks")
+                need(stage_count("replay")==1,
+                     "replay latency span does not cover each learner attempt")
+                interrupted_train=(row["cutpoint"] in ("post_optimizer","candidate_saved") and
+                                   round_index==kill_round and attempt_id==0)
+                need(stage_count("training")==int(not interrupted_train),
+                     "training trace coverage differs from the optimizer cutpoint")
+                interrupted_promotion=(row["cutpoint"] in ("journal_prepared","pointer_published") and
+                                       round_index==kill_round and attempt_id==0)
+                need(stage_count("promotion")==int(not interrupted_promotion and not interrupted_train),
+                     "promotion trace coverage differs from the publication cutpoint")
+                expected_evaluations=0 if interrupted_train else 2
+                evaluation_spans=trace_stages.get(("evaluation",round_index,attempt_id),[])
+                need(len(evaluation_spans)==expected_evaluations,
+                     "evaluation trace coverage differs from retained evaluation pairs")
+                interrupted_before_save=(row["cutpoint"]=="post_optimizer" and
+                                         round_index==kill_round and attempt_id==0)
+                need(stage_count("checkpoint_save")==int(not interrupted_before_save),
+                     "checkpoint-save trace coverage differs from optimizer cutpoint")
+        need(len(trace_stages.get(("checkpoint_save",-1,0),[]))==1 and
+             not trace_stages.get(("checkpoint_save",-1,1)),
+             "initial checkpoint-save trace coverage differs")
+        need(sum(len(v) for (stage,_,_),v in trace_stages.items() if stage=="checkpoint_save")==
+             1+sum(len(ids) for ids in attempts_by_round.values())-
+             int(row["cutpoint"]=="post_optimizer"),
+             "checkpoint-save trace total differs from saved candidates")
         need(row["accepted_updates"]>=2,"no actual continuation")
         measured_resources=resource_sample_metrics(case)
         resources=row["resources"]
@@ -289,6 +350,30 @@ def audit(root, check_tensors=False, model_dir=None):
                     if state:
                         need(worker["loaded_model_sha256"]==incumbent_model,"worker tensor acknowledgment differs")
                 rollouts_by_attempt[attempt_id]=rollouts_by_step
+                worker_rows=[rollout["metadata"]["worker"] for rollout in rollouts]
+                rollout_spans=trace_stages.get(("rollout",index,attempt_id),[])
+                projected_workers=[{key:span.get(key) for key in worker_rows[0]}
+                                   for span in rollout_spans]
+                def canonical(value):
+                    return json.dumps(value,sort_keys=True,separators=(",",":"))
+                need(sorted(map(canonical,projected_workers))==sorted(map(canonical,worker_rows)),
+                     "rollout latency spans differ from retained worker results")
+                for span in rollout_spans:
+                    service_start,service_end,service_s=(span.get(key) for key in
+                                                         ("service_start","service_end","service_s"))
+                    need(type(service_start) in (int,float) and math.isfinite(service_start) and
+                         type(service_end) in (int,float) and math.isfinite(service_end) and
+                         type(service_s) in (int,float) and math.isfinite(service_s) and service_s>=0 and
+                         span["start"]<=service_start<=service_end<=span["end"],
+                         "rollout service interval is outside its trace span")
+                verified=trace_stages.get(("rollout_verified",index,attempt_id),[])
+                need(sorted(span.get("loaded_checkpoint_sha256") for span in verified)==
+                     sorted(worker["loaded_checkpoint_sha256"] for worker in worker_rows),
+                     "verified rollout spans differ from worker checkpoint acknowledgments")
+                verification_steps=trace_stages.get(("verification",index,attempt_id),[])
+                need(sorted(span.get("step") for span in verification_steps)==
+                     sorted(rollout["created_step"] for rollout in rollouts),
+                     "verification spans differ from rollout attempt identities")
             if index==0:
                 canary_rollout=rollouts_by_attempt.get(0,{}).get(canary_attempt["created_step"])
                 verification=canary.get("verification",{})
@@ -394,6 +479,10 @@ def audit(root, check_tensors=False, model_dir=None):
                 expected_evaluation_attempts.discard(0)
             need(set(by_attempt)==complete_attempts==expected_evaluation_attempts,
                  "independent evaluation pairs do not cover every optimizer attempt that reached the gate")
+            for attempt_id in complete_attempts:
+                evaluation_spans=trace_stages.get(("evaluation",index,attempt_id),[])
+                need(sorted(span.get("policy_id") for span in evaluation_spans)==sorted(expected_policies),
+                     "evaluation trace identities differ from retained checkpoint evaluations")
             result=commit.get("result")
             if result is not None:
                 need(not commit.get("recovered_publication") and result["round_index"]==index and

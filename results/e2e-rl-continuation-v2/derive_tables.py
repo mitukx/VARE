@@ -2,8 +2,10 @@
 import argparse
 import csv
 import json
+import math
 from pathlib import Path
 import statistics as stats
+from collections import Counter
 
 
 def read(path):
@@ -16,6 +18,11 @@ def quantile(values, probability):
     lo = int(position)
     hi = min(lo + 1, len(values) - 1)
     return values[lo] + (values[hi] - values[lo]) * (position - lo)
+
+
+def sample_sd(values):
+    """A sample with one observation has no defined sample standard deviation."""
+    return stats.stdev(values) if len(values) >= 2 else None
 
 
 def csv_write(path, rows):
@@ -54,6 +61,71 @@ def exact_recovery_match(root, row, reference):
     return True
 
 
+def validated_normal_trace(root, row):
+    """Check latency evidence and required stage coverage before publishing tables."""
+    case = root / row['directory']
+    trace = [json.loads(line) for line in (case/'trace.jsonl').read_text().splitlines()]
+    tasks = read(case/'config.json')['tasks']
+    rounds = row['rounds']
+    known = {'checkpoint_hash', 'checkpoint_save', 'checkpoint_recovery', 'evaluation',
+             'freshness', 'promotion', 'replay', 'rollback', 'rollout',
+             'rollout_verified', 'round', 'training', 'verification'}
+    counts = Counter()
+    for span in trace:
+        stage = span.get('stage')
+        round_index = span.get('round_index')
+        learner_attempt = span.get('learner_attempt')
+        start, end, duration = (span.get(key) for key in ('start', 'end', 'duration_s'))
+        if (stage not in known or type(round_index) is not int or
+                not -1 <= round_index < rounds or type(learner_attempt) is not int or
+                learner_attempt != 0 or type(start) not in (int, float) or
+                not math.isfinite(start) or type(end) not in (int, float) or
+                not math.isfinite(end) or end < start or type(duration) not in (int, float) or
+                not math.isfinite(duration) or duration != end-start):
+            raise ValueError('trace span timestamps or identity are invalid')
+        if round_index == -1 and stage not in ('checkpoint_hash', 'checkpoint_save'):
+            raise ValueError('unexpected setup-stage trace span')
+        counts[(stage, round_index, learner_attempt)] += 1
+        if stage == 'rollout':
+            service_start, service_end = span.get('service_start'), span.get('service_end')
+            if (type(service_start) not in (int, float) or not math.isfinite(service_start) or
+                    type(service_end) not in (int, float) or not math.isfinite(service_end) or
+                    not span['start'] <= service_start <= service_end <= span['end']):
+                raise ValueError('rollout service interval is outside its trace span')
+
+    attempts = [json.loads(line) for line in (case/'optimizer_attempts.jsonl').read_text().splitlines()]
+    if {(attempt['round_index'], attempt['learner_attempt']) for attempt in attempts} != {
+            (index, 0) for index in range(rounds)}:
+        raise ValueError('normal trace optimizer attempts are incomplete')
+    canary = read(case/'canary.json')['attempt']
+    commits = [read(case/'rounds'/f'r{index:04d}'/'committed.json') for index in range(rounds)]
+    for index in range(rounds):
+        stale_canary = int(index > 0 and canary['policy_version'] < commits[index-1]['accepted_updates'])
+        for stage, expected in (
+                ('rollout', tasks), ('rollout_verified', tasks), ('verification', tasks),
+                ('freshness', 2*tasks + (tasks if row['mode'] == 'guarded' else 0) + stale_canary),
+                ('replay', 1), ('training', 1), ('evaluation', 2), ('promotion', 1), ('round', 1),
+                ('checkpoint_save', 1)):
+            if counts[(stage, index, 0)] != expected:
+                raise ValueError(f'{stage} trace coverage differs from retained round evidence')
+        evaluation_ids = {path.stem.removeprefix('evaluation-').removesuffix('-attempt0')
+                          for path in (case/'rounds'/f'r{index:04d}').glob('evaluation-*-attempt0.json')}
+        traced_ids = [span.get('policy_id') for span in trace
+                      if span['stage'] == 'evaluation' and span['round_index'] == index]
+        if len(evaluation_ids) != 2 or sorted(traced_ids) != sorted(evaluation_ids):
+            raise ValueError('evaluation trace identities differ from retained evaluations')
+    if counts[('checkpoint_save', -1, 0)] != 1:
+        raise ValueError('initial checkpoint-save trace coverage differs')
+    expected_hashes = (2 + 4*rounds if row['mode'] == 'minimal'
+                       else 3 + 11*rounds + int(rounds > 0))
+    if sum(count for (stage, _, _), count in counts.items() if stage == 'checkpoint_hash') != expected_hashes:
+        raise ValueError('checkpoint-hash trace coverage differs from audited operations')
+    for stage in ('rollback', 'checkpoint_recovery'):
+        if sum(count for (name, _, _), count in counts.items() if name == stage):
+            raise ValueError(f'unexpected {stage} span in a normal case')
+    return trace
+
+
 def derive(root, output):
     rows = read(root / 'progress.json')
     resources = {row['directory']: resource_metrics(root/row['directory']) for row in rows}
@@ -67,8 +139,7 @@ def derive(root, output):
     for workers in sorted({r['workers'] for r in normal}):
         for mode in ('minimal', 'guarded'):
             group = [r for r in normal if r['workers'] == workers and r['mode'] == mode]
-            per_case = [[json.loads(line) for line in (root / row['directory'] / 'trace.jsonl').read_text().splitlines()]
-                        for row in group]
+            per_case = [validated_normal_trace(root, row) for row in group]
             trace = [span for case_trace in per_case for span in case_trace]
             rollouts = [r for r in trace if r['stage'] == 'rollout']
             events = sorted([(r['service_start'], 1) for r in rollouts]
@@ -86,13 +157,14 @@ def derive(root, output):
                 'sampled_cpu_core_percent': [resources[r['directory']]['sampled_cpu_core_percent'] for r in group],
             }.items():
                 row[key+'_mean'] = stats.fmean(values)
-                row[key+'_sample_sd'] = stats.stdev(values)
+                row[key+'_sample_sd'] = sample_sd(values)
             row['sampled_peak_tree_rss_mib_max'] = max(resources[r['directory']]['sampled_tree_peak_rss_bytes'] for r in group)/2**20
             row['observed_service_concurrency_max'] = peak
             row['participating_worker_pids_per_case'] = '/'.join(str(len({r['worker_pid'] for r in case_trace
                                                                         if r['stage']=='rollout'})) for case_trace in per_case)
             row['normal_policy_lag_max'] = max(r['policy_lag'] for r in rollouts)
-            rejected = sum(r['stale_replay_rejected'] for r in group)
+            rejected = sum(sum(read(root/r['directory']/'rounds'/f'r{i:04d}'/'committed.json')
+                                   ['stale_replay_rejected'] for i in range(r['rounds'])) for r in group)
             row['stale_canary_rejected'] = rejected
             row['replay_candidates'] = len(rollouts)+rejected
             row['replay_rejection_rate'] = rejected / row['replay_candidates']
@@ -102,7 +174,7 @@ def derive(root, output):
             paired = [next(r for r in normal if r['workers']==workers and r['seed']==g['seed'] and r['mode']=='minimal') for g in group]
             overhead = [100*(g['round_wall_s']/b['round_wall_s']-1) for g, b in zip(group, paired, strict=True)]
             row['paired_wall_overhead_percent_mean'] = stats.fmean(overhead)
-            row['paired_wall_overhead_percent_sample_sd'] = stats.stdev(overhead)
+            row['paired_wall_overhead_percent_sample_sd'] = sample_sd(overhead)
             comparison.append(row)
             for stage in sorted({r['stage'] for r in trace if r.get('round_index', -1) >= 0}):
                 values = [r['duration_s'] for r in trace if r['stage']==stage and r.get('round_index', -1)>=0]
@@ -112,7 +184,7 @@ def derive(root, output):
     for cut in read(root/'sources/benchmarks/e2e_rl_continuation_v2/protocol.json')['cutpoints']:
         group = [r for r in rows if r['cutpoint']==cut]
         values = [r['recovery_to_next_update_s'] for r in group]
-        recovery.append({'cutpoint':cut, 'n':len(group), 'mean_s':stats.fmean(values), 'sample_sd_s':stats.stdev(values),
+        recovery.append({'cutpoint':cut, 'n':len(group), 'mean_s':stats.fmean(values), 'sample_sd_s':sample_sd(values),
                          'min_s':min(values), 'max_s':max(values),
                          'physical_optimizer_attempts':sum(r['physical_optimizer_attempts'] for r in group),
                          'logical_rounds':sum(r['completed_rounds'] for r in group),
