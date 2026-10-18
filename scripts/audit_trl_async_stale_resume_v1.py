@@ -32,7 +32,7 @@ def main() -> int:
             indent=2,
         )
     )
-    return 0
+    return 0 if summary["all_checks_passed"] else 1
 
 
 if __name__ == "__main__":

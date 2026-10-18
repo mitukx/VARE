@@ -4,8 +4,9 @@ The v3 rerun preserves the epoch-aware comparison while closing two evidence
 runner gaps found in review: its clean Python 3.12.12 environment pins all 56
 installed distributions, and every pytest arm has a protocol-locked 600-second
 timeout. A timeout keeps partial output and is always a failed arm. The frozen
-v1 and v2 protocols and result bundles remain unchanged; the current runner
-requires v3 for new executions because earlier protocols lack these controls.
+v1–v3 protocols and result bundles remain unchanged as historical evidence;
+the current runner requires v4 for new executions because earlier protocols do
+not bind the execution platform.
 
 | Arm | Repeated stream positions | Exit 0 | Timed out |
 | --- | --- | ---: | ---: |

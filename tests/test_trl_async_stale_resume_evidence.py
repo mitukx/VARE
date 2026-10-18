@@ -165,6 +165,35 @@ def test_audit_retains_v3_timeout_as_nonpassing_arm(tmp_path: Path):
     assert audit_bundle(copied)["all_checks_passed"] is False
 
 
+def test_audit_cli_returns_nonzero_for_valid_nonpassing_bundle(tmp_path: Path):
+    copied = tmp_path / "run"
+    summary = _convert_bundle_to_v3(copied)
+    summary_path = copied / "summary.json"
+    failed_run = next(run for run in summary["runs"] if run["arm"] == "candidate")
+    failed_run["exit_code"] = 124
+    failed_run["timed_out"] = True
+    failed_run["accepted"] = False
+    log_path = copied / failed_run["log"]
+    log_path.write_text(
+        log_path.read_text(encoding="utf-8") + "\nVARE_RUNNER_TIMEOUT_SECONDS=600\n",
+        encoding="utf-8",
+    )
+    summary["all_checks_passed"] = False
+    write_json(summary_path, summary)
+    write_manifest(copied)
+
+    result = subprocess.run(
+        [sys.executable, "scripts/audit_trl_async_stale_resume_v1.py", str(copied)],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 1
+    assert json.loads(result.stdout)["all_checks_passed"] is False
+
+
 def test_v2_review_fix_bundle_recomputes_from_hashed_logs_and_retained_runner():
     summary = audit_bundle(V2_REVIEW_FIX_RUN)
     assert summary["run_count"] == 6
