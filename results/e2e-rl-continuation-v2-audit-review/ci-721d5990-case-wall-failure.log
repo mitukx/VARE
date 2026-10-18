@@ -1,0 +1,69 @@
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	﻿2026-10-18T06:36:46.3324653Z ##[group]Run set +e
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:36:46.3324925Z ^[[36;1mset +e^[[0m
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:36:46.3325331Z ^[[36;1mpython -m pytest tests/test_e2e_rl_continuation.py --basetemp="${RUNNER_TEMP}/v2-tests"^[[0m
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:36:46.3325815Z ^[[36;1mpytest_status=$?^[[0m
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:36:46.3326184Z ^[[36;1mtar -cJf "${RUNNER_TEMP}/v2-tests.tar.xz" -C "${RUNNER_TEMP}/v2-tests" .^[[0m
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:36:46.3326587Z ^[[36;1marchive_status=$?^[[0m
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:36:46.3326853Z ^[[36;1mif [ "${pytest_status}" -ne 0 ]; then^[[0m
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:36:46.3327154Z ^[[36;1m  exit "${pytest_status}"^[[0m
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:36:46.3327398Z ^[[36;1mfi^[[0m
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:36:46.3327595Z ^[[36;1mexit "${archive_status}"^[[0m
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:36:46.3391453Z shell: /usr/bin/bash -e {0}
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:36:46.3391854Z env:
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:36:46.3392051Z   OMP_NUM_THREADS: 1
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:36:46.3392270Z   MKL_NUM_THREADS: 1
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:36:46.3392485Z   TOKENIZERS_PARALLELISM: false
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:36:46.3392737Z   PYTHONHASHSEED: 0
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:36:46.3393014Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.17/x64
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:36:46.3393492Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib/pkgconfig
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:36:46.3393928Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:36:46.3394310Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:36:46.3394693Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.17/x64
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:36:46.3395075Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.17/x64/lib
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:36:46.3395449Z   VARE_E2E_MODEL_DIR: /home/runner/work/_temp/tiny-gpt2
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:36:46.3395747Z ##[endgroup]
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:50.3116827Z .............................................................F.......... [ 93%]
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4144423Z .....                                                                    [100%]
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4146861Z =================================== FAILURES ===================================
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4147765Z _________ test_derived_comparison_ignores_resealed_case_wall_summaries _________
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4148348Z 
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4148801Z audit_records = PosixPath('/home/runner/work/_temp/v2-tests/continuation0/run')
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4150198Z tmp_path = PosixPath('/home/runner/work/_temp/v2-tests/test_derived_comparison_ignore0')
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4150924Z 
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4151463Z     def test_derived_comparison_ignores_resealed_case_wall_summaries(audit_records,tmp_path):
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4152654Z         changed=tmp_path/"mutable-case-wall"
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4153254Z         shutil.copytree(audit_records,changed)
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4153749Z         rows=auditor.read(changed/"progress.json")
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4154386Z         row=next(item for item in rows if item["cutpoint"]=="none")
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4154965Z         row["case_wall_s"]+=1000
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4155459Z         bench.atomic_json(changed/"progress.json",rows)
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4156140Z         case_summary=auditor.read(changed/row["directory"]/"summary.json")
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4156768Z         case_summary["case_wall_s"]+=1000
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4157388Z         bench.atomic_json(changed/row["directory"]/"summary.json",case_summary)
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4158152Z         timing_path=changed/row["directory"]/"case_timing.json"
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4158709Z         if timing_path.exists():
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4159137Z             timing=auditor.read(timing_path)
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4159591Z             timing["end_monotonic_s"]+=1000
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4160045Z             bench.atomic_json(timing_path,timing)
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4160486Z         reseal_records(changed)
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4160865Z >       assert auditor.audit(changed)["pass"]
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4161278Z                ^^^^^^^^^^^^^^^^^^^^^^
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4161524Z 
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4161685Z tests/test_e2e_rl_continuation.py:709: 
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4162412Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4162962Z scripts/audit_e2e_rl_continuation.py:355: in audit
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4163985Z     need(case_summary.get("case_wall_s")==elapsed and row.get("case_wall_s")==elapsed,
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4164685Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4165039Z 
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4165349Z ok = False, message = 'case wall summary differs from retained timing endpoints'
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4165797Z 
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4165937Z     def need(ok, message):
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4166265Z         if not ok:
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4166577Z >           raise ValueError(message)
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4167112Z E           ValueError: case wall summary differs from retained timing endpoints
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4167545Z 
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4167745Z scripts/audit_e2e_rl_continuation.py:196: ValueError
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4168294Z =========================== short test summary info ============================
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4169511Z FAILED tests/test_e2e_rl_continuation.py::test_derived_comparison_ignores_resealed_case_wall_summaries - ValueError: case wall summary differs from retained timing endpoints
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:39:52.4170620Z 1 failed, 76 passed in 185.53s (0:03:05)
+actual-optimizer-and-recovery	Verify continuous updates and actual learner SIGKILL recovery	2026-10-18T06:42:24.0313206Z ##[error]Process completed with exit code 1.

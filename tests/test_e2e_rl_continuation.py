@@ -695,16 +695,21 @@ def test_derived_comparison_ignores_resealed_case_wall_summaries(audit_records,t
     shutil.copytree(audit_records,changed)
     rows=auditor.read(changed/"progress.json")
     row=next(item for item in rows if item["cutpoint"]=="none")
-    row["case_wall_s"]+=1000
-    bench.atomic_json(changed/"progress.json",rows)
     case_summary=auditor.read(changed/row["directory"]/"summary.json")
-    case_summary["case_wall_s"]+=1000
-    bench.atomic_json(changed/row["directory"]/"summary.json",case_summary)
     timing_path=changed/row["directory"]/"case_timing.json"
     if timing_path.exists():
         timing=auditor.read(timing_path)
         timing["end_monotonic_s"]+=1000
         bench.atomic_json(timing_path,timing)
+        # Derive the published value from the mutated endpoints. Adding 1000 to
+        # the old duration can differ by a few ulps from (end + 1000) - start.
+        case_wall_s=timing["end_monotonic_s"]-timing["start_monotonic_s"]
+    else:
+        case_wall_s=row["case_wall_s"]+1000
+    row["case_wall_s"]=case_wall_s
+    case_summary["case_wall_s"]=case_wall_s
+    bench.atomic_json(changed/"progress.json",rows)
+    bench.atomic_json(changed/row["directory"]/"summary.json",case_summary)
     reseal_records(changed)
     assert auditor.audit(changed)["pass"]
     original_output=tmp_path/"original-derived"
