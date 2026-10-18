@@ -26,23 +26,15 @@ are stubbed; no model weights, optimizer, task-success evaluation, throughput,
 or upstream acceptance are demonstrated. TRL PR [#7786](https://github.com/huggingface/trl/pull/7786)
 was closed before maintainer code review.
 
-Reproduce from the VARE root on Python 3.12.12:
+V3 is retained as historical evidence. The current runner rejects new v3 runs
+because that frozen protocol does not bind the execution platform. To repeat
+the comparison under the supported protocol, follow the
+[v4 reproduction instructions](trl-async-stale-resume-v4-report.md); v4 uses
+the same pinned TRL revisions and full dependency lock while adding a platform
+check. Audit the retained v3 result with:
 
 ```bash
-python3.12 -m venv /tmp/vare-trl-v3
-/tmp/vare-trl-v3/bin/python -m pip install -r requirements/trl-async-stale-resume-v3.txt
-git clone https://github.com/huggingface/trl.git /tmp/vare-trl-v3-source
-git -C /tmp/vare-trl-v3-source worktree add --detach /tmp/vare-trl-v3-base 6d6901c5e3963108076131ac4979d344566b13a2
-git -C /tmp/vare-trl-v3-source remote add vare https://github.com/mitukx/trl.git
-git -C /tmp/vare-trl-v3-source fetch vare codex/async-stale-resume-cursor
-git -C /tmp/vare-trl-v3-source worktree add --detach /tmp/vare-trl-v3-candidate a85900829d86bcd45b7db0310725f28d3152289b
-python scripts/reproduce_trl_async_stale_resume_v1.py \
-  --protocol trl-async-stale-resume-v3 \
-  --python /tmp/vare-trl-v3/bin/python \
-  --baseline-source /tmp/vare-trl-v3-base \
-  --candidate-source /tmp/vare-trl-v3-candidate \
-  --output /tmp/trl-async-stale-resume-v3
-python scripts/audit_trl_async_stale_resume_v1.py /tmp/trl-async-stale-resume-v3
+python scripts/audit_trl_async_stale_resume_v1.py results/trl-async-stale-resume-v3/run-1-full-lock-timeout
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -o addopts= -q tests/test_trl_async_stale_resume_evidence.py
 ```
 
