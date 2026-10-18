@@ -11,6 +11,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from scripts import reproduce_trl_async_stale_resume_v1 as stale_resume
 from scripts.reproduce_trl_async_stale_resume_v1 import (
     audit_bundle,
     execution_platform,
@@ -410,6 +411,106 @@ def test_audit_seals_early_failed_arm_with_partial_measurements(tmp_path: Path):
 
     assert audited["all_checks_passed"] is False
     assert failed_run["observed"] == {"first_run_trained_rows": 144}
+
+
+def test_reproducer_seals_all_arms_after_early_collection_failure(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+):
+    lock = json.loads(V4_PROTOCOL.read_text(encoding="utf-8"))
+    revisions = {
+        "baseline": lock["source"]["baseline_revision"],
+        "candidate": lock["source"]["candidate_revision"],
+    }
+    baseline = tmp_path / "baseline"
+    candidate = tmp_path / "candidate"
+    baseline.mkdir()
+    candidate.mkdir()
+    output = tmp_path / "bundle"
+    calls: dict[str, int] = {"baseline": 0, "candidate": 0}
+
+    monkeypatch.setattr(stale_resume, "validate_new_run_protocol", lambda _: None)
+    monkeypatch.setattr(stale_resume, "validate_local_inputs", lambda _: None)
+    monkeypatch.setattr(stale_resume, "protocol_timeout_seconds", lambda _: 600)
+    monkeypatch.setattr(stale_resume, "source_revision", lambda source: revisions[Path(source).name])
+    monkeypatch.setattr(
+        stale_resume, "observed_source_revision", lambda source: revisions[Path(source).name]
+    )
+    monkeypatch.setattr(
+        stale_resume,
+        "runtime_environment",
+        lambda _python, _base, expected: expected_runtime_environment(expected),
+    )
+    monkeypatch.setattr(stale_resume, "download_gist", lambda _lock, _path: b"locked source")
+
+    def prepare_runner(_gist: bytes, temp_root: Path, arm: str, _lock: dict[str, object]) -> Path:
+        path = temp_root / f"{arm}.py"
+        path.write_text("# synthetic test arm\n", encoding="utf-8")
+        return path
+
+    def run_arm(
+        _command: list[str], source: Path, _env: dict[str, str], _timeout: int
+    ) -> tuple[str, int, bool]:
+        arm = source.name
+        calls[arm] += 1
+        if sum(calls.values()) == 1:
+            return (
+                (
+                    "ERROR collecting test_repro.py\n"
+                    "run 1 trained rows: 144\n"
+                    "1 error in 0.01s"
+                ),
+                2,
+                False,
+            )
+        log = V4_SANITIZED_RUN / f"{arm}-{calls[arm]}.log"
+        output_text = "\n".join(
+            line
+            for line in log.read_text(encoding="utf-8").splitlines()
+            if not line.startswith(
+                (
+                    "VARE_RUNNER_EXIT_CODE=",
+                    "VARE_RUNNER_SOURCE_REVISION=",
+                    "VARE_RUNNER_SOURCE_REVISION_VALID=",
+                )
+            )
+        )
+        return output_text + "\n", 0, False
+
+    def audit_written_bundle(bundle: Path) -> dict[str, object]:
+        summary = json.loads((bundle / "summary.json").read_text(encoding="utf-8"))
+        manifest = json.loads((bundle / "manifest.json").read_text(encoding="utf-8"))
+        failed = summary["runs"][0]
+
+        assert calls == {"baseline": 3, "candidate": 3}
+        assert summary["run_count"] == 6
+        assert failed["exit_code"] == 2
+        assert failed["timed_out"] is False
+        assert failed["accepted"] is False
+        assert failed["observed"] == {"first_run_trained_rows": 144}
+        assert len(list(bundle.glob("*.log"))) == 6
+        assert all(f"{arm}-{repetition}.log" in manifest["files"]
+                   for arm in ("baseline", "candidate")
+                   for repetition in range(1, 4))
+        assert manifest["files"]["baseline-1.log"] == sha256_file(bundle / "baseline-1.log")
+        assert summary["all_checks_passed"] is False
+        return summary
+
+    monkeypatch.setattr(stale_resume, "prepare_runner", prepare_runner)
+    monkeypatch.setattr(stale_resume, "run_pytest_arm", run_arm)
+    monkeypatch.setattr(stale_resume, "audit_bundle", audit_written_bundle)
+
+    result = stale_resume.reproduce(
+        SimpleNamespace(
+            protocol="trl-async-stale-resume-v4",
+            python=sys.executable,
+            baseline_source=baseline,
+            candidate_source=candidate,
+            output=output,
+            gist_file=None,
+        )
+    )
+
+    assert result == 1
 
 
 def test_audit_rejects_promotion_after_source_checkout_changes_during_arm(tmp_path: Path):
