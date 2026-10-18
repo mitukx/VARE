@@ -35,6 +35,17 @@ times out. The [v4 report](trl-async-stale-resume-v4-report.md),
 retain the result. This remains stubbed source-level correctness evidence, not
 model-learning evidence.
 
+Review later exposed a separate epoch-count defect in the unmerged candidate:
+when the cursor rewinds to an unresolved ID below completed IDs, the saved
+count included the completed suffix that would be replayed. The pinned
+candidate failed both GRPO and distillation cases; the retained follow-up
+correction passed 2/2 focused cases and the 11-test stale-resume file. This
+deterministic source-level check is separate from the v4 experiment and does
+not establish optimizer or task-success behavior. See the
+[review regression report](trl-async-stale-resume-review-regression-v1-report.md),
+[protocol](../protocols/trl_async_stale_resume_replay_suffix_v1.lock.json), and
+[raw logs](../results/trl-async-stale-resume-v5/review-p1-suffix-epoch-count/).
+
 ## End-to-end CPU RL system benchmark — 2026-10-16
 
 The locked twelve-seed comparison exercises rollout through promotion with a four-parameter simulated policy. VARE was 39.2% lower in throughput than the paired straight-line baseline on the measured M1 Pro fixture, while rejecting replay samples beyond the configured freshness bound. Fault runs also show candidate cleanup and concurrency serialization, and retain the unresolved interrupted-promotion state that requires external reconciliation. This is a systems-cost measurement, not a real-model task-success result. See the [protocol report](e2e-rl-system-benchmark-v1.md), [protocol lock](../protocols/e2e_rl_system_benchmark_v1.lock.json), and [raw run bundle](../results/e2e-rl-system-benchmark-v1/run-1/).

@@ -21,6 +21,14 @@ package inventory. The raw
 bundle contains all six logs, the exact runner, summary, and manifest at
 [`run-1-platform-locked`](../results/trl-async-stale-resume-v4/run-1-platform-locked/).
 
+A runner-hardening rerun clears inherited `PYTHONHOME`, `PYTHONPATH`,
+`PYTHONUSERBASE`, and `PYTHONEXECUTABLE` before each pytest arm and disables the
+user site directory. On the same locked platform and dependency inventory, all
+six decisions passed again without timeout; baseline duplicate counts were
+145, 145, and 147, and candidate counts were 1, 1, and 1. The retained runner
+and raw logs are in
+[`run-2-python-env-sanitized`](../results/trl-async-stale-resume-v4/run-2-python-env-sanitized/).
+
 This is source-level checkpoint/resume evidence. The reproduction uses the
 production rollout scheduling, stale filtering, checkpoint-save, and resume
 paths, while stubbing generation and scoring. It does not load model weights,
@@ -44,8 +52,8 @@ git -C /tmp/vare-trl-v4-source worktree add --detach /tmp/vare-trl-v4-candidate 
   --baseline-source /tmp/vare-trl-v4-base \
   --candidate-source /tmp/vare-trl-v4-candidate \
   --output /tmp/trl-async-stale-resume-v4
-python scripts/audit_trl_async_stale_resume_v1.py /tmp/trl-async-stale-resume-v4
-PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -o addopts= -q tests/test_trl_async_stale_resume_evidence.py
+/tmp/vare-trl-v4/bin/python scripts/audit_trl_async_stale_resume_v1.py /tmp/trl-async-stale-resume-v4
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 /tmp/vare-trl-v4/bin/python -m pytest -o addopts= -q tests/test_trl_async_stale_resume_evidence.py
 ```
 
 The [v4 protocol](../protocols/trl_async_stale_resume_v4.lock.json) binds the

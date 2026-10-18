@@ -25,7 +25,12 @@ for the measured OS/hardware/device. V4 passed all six decisions with 144
 baseline repeats each and candidate counts 1, 1, and 0. Generation and scoring
 remain stubbed. The VARE research gate remains a real-model update with
 independent held-out task success, not additional local variants of this cursor
-fix. See the [v4 report](trl-async-stale-resume-v4-report.md).
+fix. Review found a distinct replayed-suffix epoch-count defect in both GRPO and
+distillation: the pinned candidate failed 2/2 new cases; its supplementary
+correction passed those cases and the 11-test stale-resume file. The correction
+is not upstream-accepted and does not upgrade the v4 cursor result into a full
+training result. See the [v4 report](trl-async-stale-resume-v4-report.md) and
+[review regression](trl-async-stale-resume-review-regression-v1-report.md).
 
 ## Direct-trainer freshness boundary — 2026-10-15
 

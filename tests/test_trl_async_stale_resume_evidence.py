@@ -4,31 +4,30 @@ import hashlib
 import json
 import os
 import shutil
-from pathlib import Path
 import subprocess
 import sys
 import time
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-
 from scripts.reproduce_trl_async_stale_resume_v1 import (
     audit_bundle,
     execution_platform,
     expected_runtime_environment,
-    parse_run_log,
     parse_pytest_outcome,
+    parse_run_log,
     protocol_timeout_seconds,
-    runner_requires_source_revision_provenance,
+    pytest_environment,
     resolved_requirements,
     run_pytest_arm,
-    source_revision,
+    runner_requires_source_revision_provenance,
     sha256_file,
+    source_revision,
     validate_new_run_protocol,
     write_json,
     write_manifest,
 )
-
 
 ROOT = Path(__file__).resolve().parents[1]
 LOCKED_RUN = ROOT / "results/trl-async-stale-resume-v1/run-2-locked-repetitions"
@@ -38,6 +37,9 @@ V1_FALSE_NEGATIVE = ROOT / "results/trl-async-stale-resume-v1/run-3-final-runner
 V3_PROTOCOL = ROOT / "protocols/trl_async_stale_resume_v3.lock.json"
 V4_PROTOCOL = ROOT / "protocols/trl_async_stale_resume_v4.lock.json"
 V4_PLATFORM_RUN = ROOT / "results/trl-async-stale-resume-v4/run-1-platform-locked"
+V4_SANITIZED_RUN = ROOT / "results/trl-async-stale-resume-v4/run-2-python-env-sanitized"
+REPLAY_SUFFIX_PROTOCOL = ROOT / "protocols/trl_async_stale_resume_replay_suffix_v1.lock.json"
+REPLAY_SUFFIX_RUN = ROOT / "results/trl-async-stale-resume-v5/review-p1-suffix-epoch-count"
 
 
 def test_reproduction_parser_extracts_stale_cursor_and_replay_count():
@@ -112,6 +114,81 @@ def test_execution_platform_uses_the_selected_python(monkeypatch: pytest.MonkeyP
 
     assert execution_platform("/selected/python") == expected
     assert calls[0][:2] == ["/selected/python", "-c"]
+
+
+def test_pytest_environment_removes_inherited_python_path_overrides(monkeypatch: pytest.MonkeyPatch):
+    names = ("PYTHONHOME", "PYTHONPATH", "PYTHONUSERBASE", "PYTHONEXECUTABLE")
+    for name in names:
+        monkeypatch.setenv(name, "/untrusted/python-path")
+
+    env = pytest_environment()
+
+    assert all(name not in env for name in names)
+    assert env["PYTHONNOUSERSITE"] == "1"
+    assert env["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] == "1"
+    assert env["TRL_EXPERIMENTAL_SILENCE"] == "1"
+
+
+def test_pytest_arm_does_not_import_from_inherited_pythonpath(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+    override = tmp_path / "override"
+    override.mkdir()
+    (override / "json.py").write_text("raise RuntimeError('untrusted PYTHONPATH module imported')\n")
+    monkeypatch.setenv("PYTHONPATH", str(override))
+    env = pytest_environment()
+
+    output, exit_code, timed_out = run_pytest_arm(
+        [sys.executable, "-c", "import json; print(json.__file__)"],
+        tmp_path,
+        env,
+        timeout_seconds=5,
+    )
+
+    assert exit_code == 0
+    assert timed_out is False
+    assert "untrusted PYTHONPATH module imported" not in output
+    assert str(override) not in output
+
+
+def test_replay_suffix_review_bundle_matches_its_protocol_and_raw_logs():
+    protocol = json.loads(REPLAY_SUFFIX_PROTOCOL.read_text(encoding="utf-8"))
+    summary = json.loads((REPLAY_SUFFIX_RUN / "summary.json").read_text(encoding="utf-8"))
+    manifest = json.loads((REPLAY_SUFFIX_RUN / "manifest.json").read_text(encoding="utf-8"))
+    patches = protocol["source"]
+
+    assert protocol["protocol_id"] == "trl-async-stale-resume-replay-suffix-v1"
+    assert summary["protocol_id"] == protocol["protocol_id"]
+    assert summary["protocol_sha256"] == sha256_file(REPLAY_SUFFIX_PROTOCOL)
+    assert sha256_file(ROOT / patches["original_candidate_patch"]) == patches["original_candidate_patch_sha256"]
+    assert sha256_file(ROOT / patches["regression_test_patch"]) == patches["regression_test_patch_sha256"]
+    assert sha256_file(ROOT / patches["correction_patch"]) == patches["correction_patch_sha256"]
+    assert patches["candidate_base_revision"] == "a85900829d86bcd45b7db0310725f28d3152289b"
+
+    for run in ("baseline-failing-test.log", "corrected-targeted-test.log", "corrected-full-test-file.log", "summary.json"):
+        path = REPLAY_SUFFIX_RUN / run
+        assert manifest["files"][run] == sha256_file(path)
+
+    baseline = parse_pytest_outcome((REPLAY_SUFFIX_RUN / "baseline-failing-test.log").read_text())
+    targeted = parse_pytest_outcome((REPLAY_SUFFIX_RUN / "corrected-targeted-test.log").read_text())
+    full = parse_pytest_outcome((REPLAY_SUFFIX_RUN / "corrected-full-test-file.log").read_text())
+    assert summary["baseline"]["raw_log_sha256"] == sha256_file(REPLAY_SUFFIX_RUN / "baseline-failing-test.log")
+    assert summary["corrected_targeted"]["raw_log_sha256"] == sha256_file(REPLAY_SUFFIX_RUN / "corrected-targeted-test.log")
+    assert summary["corrected_full_file"]["raw_log_sha256"] == sha256_file(REPLAY_SUFFIX_RUN / "corrected-full-test-file.log")
+    assert summary["baseline"]["exit_code"] == 1
+    assert baseline["failed"] == 2
+    assert summary["corrected_targeted"]["exit_code"] == 0
+    assert targeted["passed"] == 2
+    assert summary["corrected_full_file"]["exit_code"] == 0
+    assert full["passed"] == 11
+
+
+def test_sanitized_v4_rerun_audits_with_retained_runner():
+    summary = audit_bundle(V4_SANITIZED_RUN)
+    runner = (V4_SANITIZED_RUN / "runner.py").read_text(encoding="utf-8")
+
+    assert summary["all_checks_passed"] is True
+    assert summary["run_count"] == 6
+    assert '"PYTHONPATH"' in runner
+    assert "PYTHONNOUSERSITE" in runner
 
 
 def test_v3_lock_pins_transitive_dependencies_and_timeout():

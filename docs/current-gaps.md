@@ -35,6 +35,13 @@ counts of 1, 1, and 0; all six arms pass without timeouts. It still stubs
 generation/scoring and provides no task-success evidence; see the
 [v4 report](trl-async-stale-resume-v4-report.md) and
 [bundle](../results/trl-async-stale-resume-v4/run-1-platform-locked/).
+Review of the candidate patch then found that an unresolved in-flight hole
+below trained suffix groups can overcount replayed GRPO/distillation groups in
+the saved epoch counter. The pinned candidate fails this new two-case
+regression; a supplementary patch passes both cases and all 11 stale-resume
+tests. It is not an upstream-accepted fix and does not rewrite the earlier
+frozen protocol runs; see the [review regression](trl-async-stale-resume-review-regression-v1-report.md)
+and [raw logs](../results/trl-async-stale-resume-v5/review-p1-suffix-epoch-count/).
 
 **Update 2026-10-15 — durable executor source:** a resumed worker could use new
 code while exporting its enrollment-time executor snapshot. The source pin now

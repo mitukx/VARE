@@ -7,14 +7,14 @@ import ast
 import hashlib
 import json
 import os
-from pathlib import Path, PurePosixPath
 import re
 import signal
 import subprocess
 import sys
 import tempfile
-from typing import Any
 import urllib.request
+from pathlib import Path, PurePosixPath
+from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 LOCK_PATH = ROOT / "protocols/trl_async_stale_resume_v2.lock.json"
@@ -313,6 +313,17 @@ def run_pytest_arm(
     return output, process.returncode, False
 
 
+def pytest_environment() -> dict[str, str]:
+    """Remove inherited Python path overrides before running a locked test arm."""
+    env = dict(os.environ)
+    for name in ("PYTHONHOME", "PYTHONPATH", "PYTHONUSERBASE", "PYTHONEXECUTABLE"):
+        env.pop(name, None)
+    env["PYTHONNOUSERSITE"] = "1"
+    env["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] = "1"
+    env["TRL_EXPERIMENTAL_SILENCE"] = "1"
+    return env
+
+
 def protocol_timeout_seconds(lock: dict[str, Any]) -> int:
     timeout = lock["reproducer"].get("per_run_timeout_seconds")
     if type(timeout) is not int or timeout <= 0:
@@ -344,6 +355,7 @@ def download_gist(lock: dict[str, Any], gist_path: Path | None) -> bytes:
 def apply_patch(script_dir: Path, patch_path: Path) -> None:
     result = subprocess.run(
         ["patch", "-p0"],
+        check=False,
         cwd=script_dir,
         input=patch_path.read_text(encoding="utf-8"),
         capture_output=True,
@@ -643,9 +655,7 @@ def reproduce(args: argparse.Namespace) -> int:
     env = runtime_environment(args.python, base, lock["environment"])
     gist_bytes = download_gist(lock, args.gist_file)
     runs: list[dict[str, Any]] = []
-    test_env = dict(os.environ)
-    test_env["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] = "1"
-    test_env["TRL_EXPERIMENTAL_SILENCE"] = "1"
+    test_env = pytest_environment()
 
     with tempfile.TemporaryDirectory(prefix="trl-async-stale-resume-") as temp_name:
         temp_root = Path(temp_name)
