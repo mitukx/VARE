@@ -61,6 +61,12 @@ def test_pytest_outcome_parser_rejects_multiple_summaries():
         parse_pytest_outcome("1 failed in 0.01s\n1 passed in 0.01s\n")
 
 
+def test_pytest_outcome_parser_allows_missing_summary_only_for_failed_arm():
+    assert parse_pytest_outcome("ERROR collecting test_example.py\n", allow_missing=True) == {}
+    with pytest.raises(ValueError, match="lacks a pytest result summary"):
+        parse_pytest_outcome("ERROR collecting test_example.py\n")
+
+
 def test_execution_platform_uses_the_selected_python(monkeypatch: pytest.MonkeyPatch):
     expected = {
         "sys_platform": "darwin",
@@ -193,6 +199,32 @@ def test_audit_retains_v3_timeout_as_nonpassing_arm(tmp_path: Path):
     write_manifest(copied)
 
     assert audit_bundle(copied)["all_checks_passed"] is False
+
+
+def test_audit_seals_early_failed_arm_with_partial_measurements(tmp_path: Path):
+    copied = tmp_path / "run"
+    summary = _convert_bundle_to_v3(copied)
+    summary_path = copied / "summary.json"
+    failed_run = next(run for run in summary["runs"] if run["arm"] == "candidate")
+    failed_run["exit_code"] = 2
+    failed_run["timed_out"] = False
+    failed_run["accepted"] = False
+    failed_run["observed"] = {"first_run_trained_rows": 144}
+    (copied / failed_run["log"]).write_text(
+        "ERROR collecting test_repro.py\n"
+        "run 1 trained rows: 144\n"
+        "1 error in 0.01s\n"
+        "VARE_RUNNER_EXIT_CODE=2\n",
+        encoding="utf-8",
+    )
+    summary["all_checks_passed"] = False
+    write_json(summary_path, summary)
+    write_manifest(copied)
+
+    audited = audit_bundle(copied)
+
+    assert audited["all_checks_passed"] is False
+    assert failed_run["observed"] == {"first_run_trained_rows": 144}
 
 
 def test_audit_cli_returns_nonzero_for_valid_nonpassing_bundle(tmp_path: Path):

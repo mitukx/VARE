@@ -25,6 +25,7 @@ LOCK_PATHS = {
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 REQUIREMENT_RE = re.compile(r"^([A-Za-z0-9_.-]+)==([A-Za-z0-9_.!+~-]+)$")
 TIMEOUT_MARKER = "VARE_RUNNER_TIMEOUT_SECONDS="
+EXIT_CODE_MARKER = "VARE_RUNNER_EXIT_CODE="
 LOG_PATTERNS = {
     "first_run_trained_rows": r"run 1 trained rows\s*:\s*(\d+)",
     "resumed_row": r"resumed at row\s*:\s*(\d+)",
@@ -343,7 +344,7 @@ def parse_run_log(text: str, *, allow_incomplete: bool = False) -> dict[str, int
     return parsed
 
 
-def parse_pytest_outcome(text: str) -> dict[str, int]:
+def parse_pytest_outcome(text: str, *, allow_missing: bool = False) -> dict[str, int]:
     summaries = []
     for line in text.splitlines():
         if re.search(r"\bin\s+\d+(?:\.\d+)?s\s*$", line):
@@ -353,6 +354,8 @@ def parse_pytest_outcome(text: str) -> dict[str, int]:
     if len(summaries) > 1:
         fail("raw log contains multiple pytest result summaries")
     if not summaries:
+        if allow_missing:
+            return {}
         fail("raw log lacks a pytest result summary")
     return summaries[0]
 
@@ -487,6 +490,14 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
 
     for run in runs:
         raw_log = (bundle / run["log"]).read_text(encoding="utf-8")
+        exit_code = run.get("exit_code")
+        if type(exit_code) is not int:
+            fail(f"recorded exit code is not an integer: {run['log']}")
+        exit_code_markers = re.findall(rf"(?m)^{re.escape(EXIT_CODE_MARKER)}(\d+)\s*$", raw_log)
+        if exit_code_markers and (
+            len(exit_code_markers) != 1 or int(exit_code_markers[0]) != exit_code
+        ):
+            fail(f"raw log exit code marker contradicts recorded result: {run['log']}")
         timed_out = run.get("timed_out", False)
         if "per_run_timeout_seconds" in lock["reproducer"]:
             timeout_seconds = lock["reproducer"]["per_run_timeout_seconds"]
@@ -502,22 +513,22 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
                 pytest_passed = False
                 parsed = parse_run_log(raw_log, allow_incomplete=True)
             else:
-                pytest_outcome = parse_pytest_outcome(raw_log)
+                pytest_outcome = parse_pytest_outcome(raw_log, allow_missing=exit_code != 0)
                 pytest_passed = (
                     pytest_outcome.get("passed", 0) > 0
                     and pytest_outcome.get("failed", 0) == 0
                     and pytest_outcome.get("error", pytest_outcome.get("errors", 0)) == 0
                 )
-                parsed = parse_run_log(raw_log)
+                parsed = parse_run_log(raw_log, allow_incomplete=exit_code != 0)
         else:
-            pytest_outcome = parse_pytest_outcome(raw_log)
+            pytest_outcome = parse_pytest_outcome(raw_log, allow_missing=exit_code != 0)
             pytest_passed = (
                 pytest_outcome.get("passed", 0) > 0
                 and pytest_outcome.get("failed", 0) == 0
                 and pytest_outcome.get("error", pytest_outcome.get("errors", 0)) == 0
             )
-            parsed = parse_run_log(raw_log)
-        if type(run.get("exit_code")) is not int or (run["exit_code"] == 0) != pytest_passed:
+            parsed = parse_run_log(raw_log, allow_incomplete=exit_code != 0)
+        if (exit_code == 0) != pytest_passed:
             fail(f"recorded exit code contradicts raw pytest result: {run['log']}")
         if parsed != run["observed"]:
             fail(f"summary/log mismatch: {run['log']}")
@@ -577,10 +588,11 @@ def reproduce(args: argparse.Namespace) -> int:
                     test_env,
                     timeout_seconds,
                 )
+                output = f"{output.rstrip()}\n{EXIT_CODE_MARKER}{exit_code}\n"
                 if source_revision(source_root) != revisions[arm]:
                     fail(f"{arm} source checkout changed while running repetition {repetition}")
                 log_path.write_text(output, encoding="utf-8")
-                observed = parse_run_log(output, allow_incomplete=timed_out)
+                observed = parse_run_log(output, allow_incomplete=timed_out or exit_code != 0)
                 accepted = run_acceptance(arm, observed, exit_code, lock)
                 run = {
                     "arm": arm,
