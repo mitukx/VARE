@@ -374,6 +374,34 @@ def test_fresh_conformant_campaign_accepts_its_complete_source_inventory():
     auditor.validate_source_inventory(manifest,auditor.EXPECTED_SOURCES,True)
 
 
+def test_source_hashes_from_commit_use_raw_git_blobs_with_export_subst(tmp_path,monkeypatch):
+    import hashlib
+    import io
+    import tarfile
+
+    repo=tmp_path/"export-subst"
+    repo.mkdir()
+    subprocess.run(["git","init","-q",str(repo)],check=True)
+    subprocess.run(["git","-C",str(repo),"config","user.name","VARE test"],check=True)
+    subprocess.run(["git","-C",str(repo),"config","user.email","vare-test@example.invalid"],check=True)
+    source=b'commit = "$Format:%H$"\n'
+    (repo/".gitattributes").write_text("source.py export-subst\n")
+    (repo/"source.py").write_bytes(source)
+    subprocess.run(["git","-C",str(repo),"add",".gitattributes","source.py"],check=True)
+    subprocess.run(["git","-C",str(repo),"commit","-qm","fixture"],check=True)
+    commit=subprocess.check_output(["git","-C",str(repo),"rev-parse","HEAD"],text=True).strip()
+    monkeypatch.setattr(auditor,"REPOSITORY_ROOT",repo)
+
+    actual=auditor.source_hashes_from_commit(commit,{"source.py"})["source.py"]
+    assert actual==hashlib.sha256(source).hexdigest()
+    archived=subprocess.run(["git","-C",str(repo),"archive","--format=tar",commit,"--","source.py"],
+                            check=True,capture_output=True)
+    with tarfile.open(fileobj=io.BytesIO(archived.stdout),mode="r:") as archive:
+        expanded=archive.extractfile("source.py").read()
+    assert expanded!=source
+    assert actual!=hashlib.sha256(expanded).hexdigest()
+
+
 def test_new_source_inventory_requires_a_full_base_commit():
     manifest={"base_commit":"not-a-commit",
               "sources":{name:"0"*64 for name in auditor.EXPECTED_SOURCES}}

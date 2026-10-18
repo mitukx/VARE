@@ -6,12 +6,12 @@ import hashlib
 import io
 import json
 import math
+import os
 from pathlib import Path
 import random
 import sqlite3
 import statistics
 import subprocess
-import tarfile
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 
@@ -144,23 +144,50 @@ def validate_source_inventory(manifest, source_names, locked):
 
 def source_hashes_from_commit(commit, source_names):
     """Hash the named Git blobs at a commit without extracting untrusted paths."""
+    git_env={**os.environ,"GIT_NO_REPLACE_OBJECTS":"1"}
     try:
-        result=subprocess.run(
-            ["git","-C",str(REPOSITORY_ROOT),"archive","--format=tar",commit,"--",
-             *sorted(source_names)],
-            check=True,capture_output=True,
+        tree=subprocess.run(
+            ["git","-C",str(REPOSITORY_ROOT),"ls-tree","-r","-z","--full-tree",
+             commit,"--",*sorted(source_names)],
+            check=True,capture_output=True,env=git_env,
+        )
+        entries={}
+        for record in tree.stdout.split(b"\0"):
+            if not record:
+                continue
+            metadata,path=record.split(b"\t",1)
+            mode,object_type,oid=metadata.decode("ascii").split()
+            name=os.fsdecode(path)
+            need(object_type=="blob" and mode in {"100644","100755"},
+                 "pinned source is not a regular Git blob")
+            need(name not in entries,"Git tree returned a duplicate source path")
+            entries[name]=oid
+        need(set(entries)==source_names,
+             "source inventory differs from recorded base commit")
+        blobs=subprocess.run(
+            ["git","-C",str(REPOSITORY_ROOT),"cat-file","--batch"],
+            input="".join(f"{oid}\n" for oid in entries.values()).encode("ascii"),
+            check=True,capture_output=True,env=git_env,
         )
     except (OSError,subprocess.CalledProcessError) as exc:
         raise ValueError("campaign base commit is unavailable for source verification") from exc
-    with tarfile.open(fileobj=io.BytesIO(result.stdout),mode="r:") as archive:
-        committed_sources={}
-        for member in archive.getmembers():
-            if member.isfile():
-                stream=archive.extractfile(member)
-                need(stream is not None,"committed source could not be read")
-                committed_sources[member.name]=hashlib.sha256(stream.read()).hexdigest()
-    need(set(committed_sources)==source_names,
-         "source inventory differs from recorded base commit")
+    committed_sources={}
+    output=blobs.stdout
+    offset=0
+    for name,expected_oid in entries.items():
+        header_end=output.find(b"\n",offset)
+        need(header_end>=0,"Git blob response header is incomplete")
+        response_oid,object_type,size_text=output[offset:header_end].decode("ascii").split()
+        need(response_oid==expected_oid and object_type=="blob",
+             "Git blob response does not match the source tree")
+        size=int(size_text)
+        data_start=header_end+1
+        data_end=data_start+size
+        need(data_end<len(output) and output[data_end:data_end+1]==b"\n",
+             "Git blob response body is incomplete")
+        committed_sources[name]=hashlib.sha256(output[data_start:data_end]).hexdigest()
+        offset=data_end+1
+    need(offset==len(output),"Git blob response contains unexpected data")
     return committed_sources
 
 
