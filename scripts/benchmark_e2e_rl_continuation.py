@@ -409,8 +409,12 @@ def learner(config_path, attempt, cutpoint):
     opt.step()
     del warm, tokenizer, opt
     torch.manual_seed(config["seed"])
+    rollout_pool_started = time.perf_counter()
     pool, pool_start = base.pool_start(config["model_dir"], config["workers"])
+    rollout_pool_ready = time.perf_counter()
+    evaluation_pool_started = time.perf_counter()
     evaluation, eval_start = base.pool_start(config["model_dir"], 2)
+    evaluation_pool_ready = time.perf_counter()
     try:
         trace = RoundTrace(directory / "trace.jsonl", attempt)
         hooks = ContinuationHooks(config["model_dir"], directory, pool, evaluation, config, attempt, trace, cutpoint)
@@ -424,8 +428,14 @@ def learner(config_path, attempt, cutpoint):
                 hooks.pause("journal_committed")
             journal.commit = committing
         cursor = recover_runtime(hooks, journal)
-        atomic_json(directory / f"setup-attempt{attempt}.json", {"rollout_pool_start_s": pool_start,
-                                                                "evaluation_pool_start_s": eval_start})
+        atomic_json(directory / f"setup-attempt{attempt}.json", {
+            "rollout_pool_start_s": pool_start,
+            "rollout_pool_started_monotonic_s": rollout_pool_started,
+            "rollout_pool_ready_monotonic_s": rollout_pool_ready,
+            "evaluation_pool_start_s": eval_start,
+            "evaluation_pool_started_monotonic_s": evaluation_pool_started,
+            "evaluation_pool_ready_monotonic_s": evaluation_pool_ready,
+        })
         asyncio.run(learner_rounds(hooks, journal, config, cursor))
     finally:
         pool.shutdown(wait=True, cancel_futures=True)
@@ -572,7 +582,9 @@ def main():
     sources = [Path(__file__), Path(base.__file__), PROTOCOL, ROOT/"requirements/e2e-rl-real-model-v1.txt",
                ROOT/"scripts/audit_e2e_rl_continuation.py", ROOT/"tests/test_e2e_rl_continuation.py",
                *[ROOT/"src/vare"/name for name in ("engine.py","lag.py","replay.py","promotion.py","attestation.py",
-                                                "reward_evidence.py","runtime.py","checkpoint_artifacts.py","promotion_journal.py")]]
+                                                "reward_evidence.py","runtime.py","checkpoint_artifacts.py","promotion_journal.py",
+                                                "config.py","evidence.py","telemetry.py","types.py")],
+               ROOT/"src/vare/integrations/rvl.py"]
     template["source_sha256"] = {str(p.relative_to(ROOT)):base.file_sha(p) for p in sources}
     for source in sources:
         target = args.output/"sources"/source.relative_to(ROOT)

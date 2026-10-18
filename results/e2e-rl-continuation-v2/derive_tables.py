@@ -191,9 +191,6 @@ def derive(root, output):
             row['stale_canary_rejected'] = rejected
             row['replay_candidates'] = len(rollouts)+rejected
             row['replay_rejection_rate'] = rejected / row['replay_candidates']
-            setup = [read(root/g['directory']/'setup-attempt0.json') for g in group]
-            row['rollout_pool_start_s_mean'] = stats.fmean(s['rollout_pool_start_s'] for s in setup)
-            row['evaluation_pool_start_s_mean'] = stats.fmean(s['evaluation_pool_start_s'] for s in setup)
             paired = [next(r for r in normal if r['workers']==workers and r['seed']==g['seed'] and r['mode']=='minimal') for g in group]
             overhead = [100*(g['round_wall_s']/b['round_wall_s']-1) for g, b in zip(group, paired, strict=True)]
             row['paired_wall_overhead_percent_mean'] = stats.fmean(overhead)

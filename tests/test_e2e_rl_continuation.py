@@ -65,6 +65,25 @@ def test_actual_checkpoint_state_and_scores_replay(campaign):
     assert auditor.read(root/"summary.json")["protocol_id"].endswith(".diagnostic")
 
 
+def test_campaign_snapshots_every_direct_runtime_dependency(campaign,tmp_path):
+    root,_=campaign
+    manifest=auditor.read(root/"manifest.json")
+    direct_dependencies={"src/vare/config.py","src/vare/evidence.py",
+                         "src/vare/integrations/rvl.py","src/vare/telemetry.py",
+                         "src/vare/types.py"}
+    assert direct_dependencies <= set(manifest["sources"])
+    assert direct_dependencies <= set(manifest["source_sha256"])
+    assert direct_dependencies <= set(auditor.EXPECTED_SOURCES)
+    changed=tmp_path/"changed-runtime-dependency"
+    shutil.copytree(root,changed)
+    source="src/vare/config.py"
+    path=changed/"sources"/source
+    path.write_bytes(path.read_bytes()+b"\n# changed after campaign\n")
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="source snapshot differs"):
+        auditor.audit(changed)
+
+
 @pytest.mark.parametrize("cut",["post_optimizer","candidate_saved","journal_prepared",
                                  "pointer_published","journal_committed","round_committed"])
 def test_actual_learner_sigkill_resumes_without_double_committed_update(campaign,cut):
@@ -373,6 +392,31 @@ def test_locked_commit_must_match_independent_revision_pin(audit_records,tmp_pat
         auditor.audit(changed)
 
 
+def test_missing_final_durable_cursor_is_rejected(audit_records,tmp_path):
+    changed=tmp_path/"missing-final-cursor"
+    shutil.copytree(audit_records,changed)
+    row=next(item for item in auditor.read(changed/"progress.json") if item["cutpoint"]=="none")
+    (changed/row["directory"]/"cursor.json").unlink()
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="final durable cursor is missing"):
+        auditor.audit(changed)
+
+
+@pytest.mark.parametrize("field",["completed_round","active_policy","active_checkpoint_sha256",
+                                   "active_state_sha256","accepted_updates"])
+def test_final_durable_cursor_must_match_final_commit(audit_records,tmp_path,field):
+    changed=tmp_path/f"forged-final-cursor-{field}"
+    shutil.copytree(audit_records,changed)
+    row=next(item for item in auditor.read(changed/"progress.json") if item["cutpoint"]=="none")
+    cursor_path=changed/row["directory"]/"cursor.json"
+    cursor=auditor.read(cursor_path)
+    cursor[field]=cursor[field]+1 if type(cursor[field]) is int else "forged"
+    bench.atomic_json(cursor_path,cursor)
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="final durable cursor differs"):
+        auditor.audit(changed)
+
+
 def test_rehashed_duplicate_optimizer_attempt_identity_is_rejected(audit_records,tmp_path):
     changed=tmp_path/"duplicate-optimizer-attempt"
     shutil.copytree(audit_records,changed)
@@ -658,6 +702,44 @@ def test_case_timing_endpoints_must_match_published_case_wall(campaign,tmp_path)
     reseal_records(changed)
     with pytest.raises(ValueError,match="case wall summary differs"):
         auditor.audit(changed)
+
+
+def test_setup_startup_summary_must_match_retained_endpoints(campaign,tmp_path):
+    root,_=campaign
+    changed=tmp_path/"forged-startup-summary"
+    shutil.copytree(root,changed)
+    setup_path=changed/"normal-w2-s3901-guarded"/"setup-attempt0.json"
+    setup=auditor.read(setup_path)
+    assert "rollout_pool_started_monotonic_s" in setup
+    assert "rollout_pool_ready_monotonic_s" in setup
+    setup["rollout_pool_start_s"]=999.0
+    bench.atomic_json(setup_path,setup)
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="pool startup summary differs from retained timing endpoints"):
+        auditor.audit(changed)
+
+
+def test_derived_table_omits_unverified_legacy_pool_startups(audit_records,tmp_path):
+    changed=tmp_path/"mutable-legacy-pool-startup"
+    shutil.copytree(audit_records,changed)
+    row=next(item for item in auditor.read(changed/"progress.json") if item["cutpoint"]=="none")
+    setup_path=changed/row["directory"]/"setup-attempt0.json"
+    setup=auditor.read(setup_path)
+    setup["rollout_pool_start_s"]=999.0
+    setup["evaluation_pool_start_s"]=999.0
+    bench.atomic_json(setup_path,setup)
+    reseal_records(changed)
+    original_output=tmp_path/"original-derived"
+    changed_output=tmp_path/"changed-derived"
+    derive_tables.derive(audit_records,original_output)
+    derive_tables.derive(changed,changed_output)
+    with (original_output/"comparison.csv").open() as handle:
+        original_rows=list(csv.DictReader(handle))
+    with (changed_output/"comparison.csv").open() as handle:
+        changed_rows=list(csv.DictReader(handle))
+    assert original_rows==changed_rows
+    assert "rollout_pool_start_s_mean" not in original_rows[0]
+    assert "evaluation_pool_start_s_mean" not in original_rows[0]
 
 
 def test_rehashed_promotion_must_match_independent_evaluation_pair(audit_records,tmp_path):

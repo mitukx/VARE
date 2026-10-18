@@ -11,7 +11,7 @@ import random
 import sqlite3
 import statistics
 
-EXPECTED_SOURCES = frozenset({
+LEGACY_EXPECTED_SOURCES = frozenset({
     "benchmarks/e2e_rl_continuation_v2/protocol.json",
     "requirements/e2e-rl-real-model-v1.txt",
     "scripts/audit_e2e_rl_continuation.py",
@@ -27,6 +27,13 @@ EXPECTED_SOURCES = frozenset({
     "src/vare/reward_evidence.py",
     "src/vare/runtime.py",
     "tests/test_e2e_rl_continuation.py",
+})
+EXPECTED_SOURCES = LEGACY_EXPECTED_SOURCES | frozenset({
+    "src/vare/config.py",
+    "src/vare/evidence.py",
+    "src/vare/integrations/rvl.py",
+    "src/vare/telemetry.py",
+    "src/vare/types.py",
 })
 
 # The frozen v2 campaign is tied to the commit and source tree that produced it.
@@ -146,7 +153,8 @@ def audit(root, check_tensors=False, model_dir=None):
     for name,digest in sums.items():
         need(sha(root/name)==digest,f"changed artifact: {name}")
     manifest,summary,rows=read(root/"manifest.json"),read(root/"summary.json"),read(root/"progress.json")
-    need(set(manifest.get("sources",{}))==EXPECTED_SOURCES and
+    source_names=set(manifest.get("sources",{}))
+    need(source_names in (LEGACY_EXPECTED_SOURCES,EXPECTED_SOURCES) and
          manifest.get("source_sha256")==manifest.get("sources"),
          "pinned source inventory differs")
     for name,digest in manifest["sources"].items():
@@ -159,6 +167,8 @@ def audit(root, check_tensors=False, model_dir=None):
     locked=(args["workers"]==protocol["workers"] and args["seeds"]==protocol["seeds"] and
             args["rounds"]==protocol["rounds"] and args["tasks"]==protocol["rollouts"] and
             args["eval_tasks"]==protocol["evaluation_tasks"] and not args["skip_faults"])
+    need(source_names==EXPECTED_SOURCES or (locked and source_names==LEGACY_EXPECTED_SOURCES),
+         "pinned source inventory differs")
     if locked:
         need(manifest.get("base_commit")==PINNED_LOCKED_BASE_COMMIT,
              "locked campaign commit differs from the independently pinned revision")
@@ -203,8 +213,10 @@ def audit(root, check_tensors=False, model_dir=None):
         need(row.get("case_wall_s")==case_summary.get("case_wall_s"),
              "progress case wall differs from retained case summary")
         timing_path=case/"case_timing.json"
+        case_timing=None
         if timing_path.exists():
             timing=read(timing_path)
+            case_timing=timing
             start,end=timing.get("start_monotonic_s"),timing.get("end_monotonic_s")
             need(type(start) in (int,float) and math.isfinite(start) and
                  type(end) in (int,float) and math.isfinite(end) and end>start,
@@ -222,6 +234,18 @@ def audit(root, check_tensors=False, model_dir=None):
         need(row["protocol_conformant"]==config["protocol_conformant"]==locked,"case conformance differs")
         commits=[read(case/"rounds"/f"r{i:04d}"/"committed.json") for i in range(args["rounds"])]
         need([r["completed_round"] for r in commits]==list(range(args["rounds"])),"round gap or duplicate")
+        cursor_path=case/"cursor.json"
+        need(cursor_path.is_file(),"final durable cursor is missing")
+        cursor=read(cursor_path)
+        final_commit=commits[-1]
+        need(type(cursor.get("completed_round")) is int and
+             cursor["completed_round"]==final_commit["completed_round"] and
+             cursor.get("active_policy")==final_commit["active_policy"] and
+             cursor.get("active_checkpoint_sha256")==final_commit["active_checkpoint_sha256"] and
+             cursor.get("active_state_sha256")==final_commit["active_state_sha256"] and
+             type(cursor.get("accepted_updates")) is int and
+             cursor["accepted_updates"]==final_commit["accepted_updates"],
+             "final durable cursor differs from the final committed round")
         need(row.get("stale_replay_rejected")==sum(commit["stale_replay_rejected"] for commit in commits),
              "progress stale-replay total differs from committed rounds")
         need(row["completed_rounds"]==row["rounds"]==len(commits),
@@ -268,6 +292,30 @@ def audit(root, check_tensors=False, model_dir=None):
                 expected_attempt_ids={0} if index<=kill_round else {1}
             need(attempts_by_round.get(index,set())==expected_attempt_ids,
                  "optimizer attempt identities do not match the kill-round schedule")
+        expected_setup_attempts={attempt for identities in attempts_by_round.values() for attempt in identities}
+        setup_paths=list(case.glob("setup-attempt*.json"))
+        setup_ids={int(path.stem.removeprefix("setup-attempt")) for path in setup_paths}
+        need(setup_ids==expected_setup_attempts,"setup attempts differ from learner process attempts")
+        for setup_path in setup_paths:
+            setup=read(setup_path)
+            endpoint_pairs=(
+                ("rollout_pool_start_s","rollout_pool_started_monotonic_s","rollout_pool_ready_monotonic_s"),
+                ("evaluation_pool_start_s","evaluation_pool_started_monotonic_s","evaluation_pool_ready_monotonic_s"),
+            )
+            for duration_key,start_key,end_key in endpoint_pairs:
+                if start_key not in setup or end_key not in setup:
+                    need(locked and manifest.get("base_commit")==PINNED_LOCKED_BASE_COMMIT,
+                         "pool startup timing endpoints are missing outside the pinned legacy campaign")
+                    continue
+                duration,start,end=(setup.get(key) for key in (duration_key,start_key,end_key))
+                need(type(duration) in (int,float) and math.isfinite(duration) and duration>=0 and
+                     type(start) in (int,float) and math.isfinite(start) and
+                     type(end) in (int,float) and math.isfinite(end) and end>start and
+                     math.isclose(duration,end-start,rel_tol=0,abs_tol=0.01),
+                     "pool startup summary differs from retained timing endpoints")
+                need(case_timing is not None and
+                     case_timing["start_monotonic_s"]<=start<end<=case_timing["end_monotonic_s"],
+                     "pool startup endpoints fall outside retained case timing")
         trace=[json.loads(line) for line in (case/"trace.jsonl").read_text().splitlines()]
         trace_stages={}
         known_stages={"checkpoint_hash","checkpoint_save","checkpoint_recovery","evaluation",

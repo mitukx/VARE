@@ -80,11 +80,10 @@ from the warm-throughput comparison, and the auditor does not invent a duration.
 
 The measured first-to-last resource-sample window for guarded cases averaged
 10.074/9.523/9.714/10.720 s for 1/2/4/8 workers. It excludes time before the
-first and after the last sample, so it is not full case wall time. The corresponding rollout pool
-startup means were 2.04/2.10/2.24/2.88 s; evaluation pool means were
-2.11/2.07/2.26/2.18 s. The complete campaign, including cold starts and faults,
-took **540.84 s** before final artifact hashing. Warm round time totaled 52.97 s
-across the 24 normal cases. Setup therefore materially changes short-run cost.
+first and after the last sample, so it is not full case wall time. The complete
+campaign, including cold starts and faults, took **540.84 s** before final
+artifact hashing. Warm round time totaled 52.97 s across the 24 normal cases.
+Setup therefore materially changes short-run cost.
 
 Guarded four-worker stage latency, pooled over three seeds:
 
@@ -315,7 +314,22 @@ The historical campaign predates those endpoint records, so the comparison
 table no longer publishes its mutable `case_wall_s` summary. It reports the
 measured first-to-last `resources.jsonl` sample window instead. That interval
 excludes setup before the first sample and teardown after the last sample; it
-must not be read as complete end-to-end case duration.
+must not be read as complete end-to-end case duration. The historical
+`setup-attempt*.json` records retain pool startup durations without endpoints,
+so the table omits those startup means. New runs retain monotonic start/ready
+endpoints, and the auditor checks each duration against them and the enclosing
+case interval.
+
+The auditor also requires each case's final durable cursor to match the last
+committed round, active policy, checkpoint/state digests and accepted-update
+count. A re-sealed archive with the cursor removed passed the previous auditor;
+the corrected auditor rejects it.
+
+Review also found that the historical source inventory omitted five direct
+runtime imports (`config.py`, `evidence.py`, `integrations/rvl.py`,
+`telemetry.py`, and `types.py`). The frozen archive remains unchanged and is
+accepted only with its exact legacy commit/source pin. New campaigns snapshot
+and verify these modules; a resealed change to a retained dependency is rejected.
 
 This is a toy neural LM and synthetic one-token workload. Replay is round-local;
 general durable replay-backlog/curriculum recovery is not tested. The supervisor
