@@ -1,5 +1,16 @@
 # Current evidence gaps
 
+**Update 2026-10-18 — async worker SQLite serialization:** a per-store lock
+fixes the reproduced same-process connection race, and paged `iter_steps()`
+releases the lock before yielding so lease heartbeats remain live. The locked
+paused-reader regression fails 3/3 before the paging fix and passes 3/3 after
+it. A separate baseline pipeline reproduction was intermittent (2/3 timeouts),
+so it remains a disclosed non-pass. The broad local suite passed 1084 tests
+(78 skipped); separate store objects, multi-process access, and workload
+throughput remain unmeasured. See the
+[report](trajectory-worker-sqlite-serialization-v1-report.md) and
+[raw runs](../results/trajectory-worker-sqlite-serialization-v1/).
+
 **Update 2026-10-15 — durable executor source:** a resumed worker could use new
 code while exporting its enrollment-time executor snapshot. The source pin now
 rejects differing/incomplete declared executor bundles before claims, dispatch

@@ -1,5 +1,18 @@
 # Calibration evidence
 
+## Async trajectory worker SQLite serialization — 2026-10-18
+
+On Apple M1 Pro / Python 3.12.12, a locked paused-reader test fails 3/3 before
+the paged iterator fix and passes 3/3 after it. The older independent-stage
+baseline result proved intermittent on repetition (2/3 timeouts), so that
+protocol is retained as a non-pass rather than a deterministic speed claim.
+The broad local suite passed 1084 tests with 78 skips; one earlier grader
+cleanup failure is retained. These are bounded single-process correctness
+results, not throughput or learning claims. See the
+[report](trajectory-worker-sqlite-serialization-v1-report.md),
+[v4 lock](../protocols/trajectory_worker_paused_reader_heartbeat_v4.lock.json),
+and [raw artifacts](../results/trajectory-worker-sqlite-serialization-v1/).
+
 ## End-to-end CPU RL system benchmark — 2026-10-16
 
 The locked twelve-seed comparison exercises rollout through promotion with a four-parameter simulated policy. VARE was 39.2% lower in throughput than the paired straight-line baseline on the measured M1 Pro fixture, while rejecting replay samples beyond the configured freshness bound. Fault runs also show candidate cleanup and concurrency serialization, and retain the unresolved interrupted-promotion state that requires external reconciliation. This is a systems-cost measurement, not a real-model task-success result. See the [protocol report](e2e-rl-system-benchmark-v1.md), [protocol lock](../protocols/e2e_rl_system_benchmark_v1.lock.json), and [raw run bundle](../results/e2e-rl-system-benchmark-v1/run-1/).

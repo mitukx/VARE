@@ -1,0 +1,41 @@
+{
+  "protocol_id": "vare-trajectory-worker-sqlite-serialization-v2",
+  "status": "locked-before-commit-pinned-confirmatory-repetitions",
+  "question": "Does serializing the lifetime of TrajectoryStore SQLite connections eliminate the reproduced same-process async worker hang?",
+  "baseline_commit": "40db644c7eae4d830dc721e1d8185665229cfbd6",
+  "source_file": "src/vare/trajectory_store.py",
+  "test_file": "tests/test_trajectory_workers.py",
+  "runner_file": "scripts/reproduce_trajectory_worker_sqlite.py",
+  "test_case": "tests/test_trajectory_workers.py::test_independent_stages_bounded_backlog_and_slow_step_heartbeats",
+  "test_sha256": "19a4033508661f7dbece31065b60c4976adcf87c175688af0cefd54bd8758319",
+  "runner_sha256": "11162417668302faf06b5fe6edd5a73e737e3066705cc62248f55b273b379c25",
+  "timeout_s": 15,
+  "repetitions": 3,
+  "environment": {
+    "os": "macOS 27.0.1 arm64",
+    "cpu": "Apple M1 Pro",
+    "memory_bytes": 34359738368,
+    "python": "3.12.12",
+    "pytest_plugin_autoload": false,
+    "workers": "2 execute workers, 1 verifier; one producer and one consumer"
+  },
+  "arms": {
+    "baseline": {
+      "head": "40db644c7eae4d830dc721e1d8185665229cfbd6",
+      "source_sha256": "67278b05c230203170248877e3cbaa2a1eb366915c22a76da64c2ccdf4c21b9c",
+      "expected_status": "timeout"
+    },
+    "candidate": {
+      "head": "3f546253b7df26799ce65098f4c62f7d6132d263",
+      "source_sha256": "5cedfc804c9833626168eed51c7e77da3f8d39d534e003839a348e126fd7d7be",
+      "expected_status": 0
+    }
+  },
+  "interpretation_limits": [
+    "The diagnostic issue was observed before this lock; the lock freezes the commit-pinned confirmation procedure, not a preregistered research hypothesis.",
+    "One existing bounded-backlog regression is tested on one Apple M1 Pro host.",
+    "A timeout indicates the test process did not finish within the external 15 second wall limit.",
+    "The candidate lock serializes connections per TrajectoryStore instance; it does not cover multiple instances or multiple processes.",
+    "No throughput or production workload claim is made."
+  ]
+}

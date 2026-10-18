@@ -1,0 +1,73 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______ test_paused_step_iterator_does_not_hold_store_lock_from_heartbeat _______
+
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-500/test_paused_step_iterator_does0')
+
+    def test_paused_step_iterator_does_not_hold_store_lock_from_heartbeat(tmp_path):
+        store = TrajectoryStore.create(tmp_path / "state.db", run_id="heartbeat-read-test")
+        policy = PolicyCheckpoint("p0", 0, "a" * 64)
+        store.register_policy(policy)
+        store.submit("t0", Task("task", "steps"), expected_steps=2, group_id="g0", member=0, group_size=1)
+        lease = store.claim("execute", "worker", lease_seconds=2)
+        for index in range(2):
+            store.append_step(
+                lease,
+                AgentStep(
+                    index,
+                    f"e{index}",
+                    policy,
+                    {"kind": "tool", "operation_id": f"op{index}", "semantics": "at_least_once"},
+                    {"index": index},
+                    {"index": index},
+                ),
+            )
+    
+        iterator = store.iter_steps("t0")
+        assert next(iterator)["index"] == 0
+    
+        async def renew_while_paused():
+            heartbeat = asyncio.create_task(asyncio.to_thread(store.heartbeat, lease, lease_seconds=2))
+            completed = True
+            try:
+                await asyncio.wait_for(asyncio.shield(heartbeat), timeout=0.5)
+            except asyncio.TimeoutError:
+                completed = False
+            finally:
+                iterator.close()
+                await heartbeat
+            assert completed, "paused step iteration blocked the worker lease heartbeat"
+    
+>       asyncio.run(renew_while_paused())
+
+/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-worker-test-bolrcgl9/test_trajectory_worker_lease_heartbeat.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def renew_while_paused():
+        heartbeat = asyncio.create_task(asyncio.to_thread(store.heartbeat, lease, lease_seconds=2))
+        completed = True
+        try:
+            await asyncio.wait_for(asyncio.shield(heartbeat), timeout=0.5)
+        except asyncio.TimeoutError:
+            completed = False
+        finally:
+            iterator.close()
+            await heartbeat
+>       assert completed, "paused step iteration blocked the worker lease heartbeat"
+E       AssertionError: paused step iteration blocked the worker lease heartbeat
+E       assert False
+
+/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-worker-test-bolrcgl9/test_trajectory_worker_lease_heartbeat.py:39: AssertionError
+=========================== short test summary info ============================
+FAILED ../../../var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-worker-test-bolrcgl9/test_trajectory_worker_lease_heartbeat.py::test_paused_step_iterator_does_not_hold_store_lock_from_heartbeat
+1 failed in 0.67s
