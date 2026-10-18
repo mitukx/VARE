@@ -279,6 +279,14 @@ def protocol_timeout_seconds(lock: dict[str, Any]) -> int:
     return timeout
 
 
+def validate_new_run_protocol(lock: dict[str, Any]) -> None:
+    environment = lock.get("environment", {})
+    if not isinstance(environment.get("execution_platform"), dict) or not environment.get(
+        "device_used"
+    ):
+        fail("new runs require a protocol lock with execution-platform fields (v4 or newer)")
+
+
 def download_gist(lock: dict[str, Any], gist_path: Path | None) -> bytes:
     source = lock["reproducer"]
     if gist_path:
@@ -518,6 +526,7 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
 def reproduce(args: argparse.Namespace) -> int:
     protocol_path = LOCK_PATHS[args.protocol]
     lock = read_json(protocol_path)
+    validate_new_run_protocol(lock)
     timeout_seconds = protocol_timeout_seconds(lock)
     validate_local_inputs(lock)
     base = args.baseline_source.expanduser().resolve()
@@ -612,8 +621,8 @@ def main() -> int:
     parser.add_argument(
         "--protocol",
         choices=sorted(LOCK_PATHS),
-        default="trl-async-stale-resume-v3",
-        help="frozen protocol to run (defaults to v3 with complete dependencies and per-arm timeout)",
+        default="trl-async-stale-resume-v4",
+        help="frozen protocol to run (new runs require platform-bound v4 or newer)",
     )
     args = parser.parse_args()
     try:

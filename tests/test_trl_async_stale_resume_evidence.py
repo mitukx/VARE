@@ -20,6 +20,7 @@ from scripts.reproduce_trl_async_stale_resume_v1 import (
     run_pytest_arm,
     source_revision,
     sha256_file,
+    validate_new_run_protocol,
     write_json,
     write_manifest,
 )
@@ -66,6 +67,13 @@ def test_v3_lock_pins_transitive_dependencies_and_timeout():
     v2_lock = json.loads((ROOT / "protocols/trl_async_stale_resume_v2.lock.json").read_text())
     with pytest.raises(ValueError, match="no valid locked per-run timeout"):
         protocol_timeout_seconds(v2_lock)
+
+
+def test_new_reproductions_require_a_platform_bound_protocol():
+    v3_lock = json.loads(V3_PROTOCOL.read_text(encoding="utf-8"))
+    with pytest.raises(ValueError, match="execution-platform fields"):
+        validate_new_run_protocol(v3_lock)
+    validate_new_run_protocol(json.loads(V4_PROTOCOL.read_text(encoding="utf-8")))
 
 
 def test_pytest_arm_timeout_preserves_partial_output_as_failed_result(tmp_path: Path):

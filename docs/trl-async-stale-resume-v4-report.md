@@ -50,4 +50,6 @@ PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -o addopts= -q tests/test_trl_
 
 The [v4 protocol](../protocols/trl_async_stale_resume_v4.lock.json) binds the
 platform and points to the already frozen full dependency lock. V4 records no
-model-learning or capability result.
+model-learning or capability result. The runner defaults to v4 and rejects
+new reproductions under v1-v3; those versions remain available for historical
+bundle audits only.
