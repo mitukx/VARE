@@ -15,7 +15,6 @@ import pytest
 from scripts import reproduce_trl_async_stale_resume_review_v2 as replay_suffix_v2
 from scripts import reproduce_trl_async_stale_resume_v1 as stale_resume
 from scripts.reproduce_trl_async_stale_resume_v1 import (
-    PACKAGE_NAMES,
     audit_bundle,
     execution_platform,
     expected_runtime_environment,
@@ -171,7 +170,9 @@ def test_runtime_probes_ignore_pythonpath_and_user_site_hooks(
     (pythonpath / "sitecustomize.py").write_text(hook, encoding="utf-8")
     (user_site / "sitecustomize.py").write_text(hook, encoding="utf-8")
 
-    versions = {name: importlib.metadata.version(dist) for name, dist in PACKAGE_NAMES.items()}
+    package_names = {"pytest": "pytest"}
+    monkeypatch.setattr(stale_resume, "PACKAGE_NAMES", package_names)
+    versions = {name: importlib.metadata.version(dist) for name, dist in package_names.items()}
     expected = {
         "python": ".".join(map(str, sys.version_info[:3])),
         **versions,
