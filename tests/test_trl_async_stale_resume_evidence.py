@@ -48,6 +48,28 @@ def test_reproduction_parser_extracts_stale_cursor_and_replay_count():
     assert observed["duplicated_rows"] == 144
 
 
+@pytest.mark.parametrize(
+    "contradictory_measurement, field",
+    [("saved prompt_index: 2", "saved_prompt_index"), ("rows trained TWICE: 999", "duplicated_rows")],
+)
+def test_audit_rejects_resealed_bundle_with_duplicate_measurement(
+    tmp_path: Path, contradictory_measurement: str, field: str
+):
+    copied = tmp_path / "run"
+    shutil.copytree(V4_PLATFORM_RUN, copied)
+    summary = json.loads((copied / "summary.json").read_text(encoding="utf-8"))
+    candidate_run = next(run for run in summary["runs"] if run["arm"] == "candidate")
+    log = copied / candidate_run["log"]
+    log.write_text(
+        log.read_text(encoding="utf-8") + f"\n{contradictory_measurement}\n",
+        encoding="utf-8",
+    )
+    write_manifest(copied)
+
+    with pytest.raises(ValueError, match=f"repeats {field}"):
+        audit_bundle(copied)
+
+
 def test_pytest_outcome_parser_preserves_failed_and_passed_counts():
     assert parse_pytest_outcome("1 failed, 1 passed, 2 warnings in 8.32s") == {
         "failed": 1,

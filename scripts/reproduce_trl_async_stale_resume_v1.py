@@ -336,11 +336,13 @@ def prepare_runner(
 def parse_run_log(text: str, *, allow_incomplete: bool = False) -> dict[str, int]:
     parsed: dict[str, int] = {}
     for name, pattern in LOG_PATTERNS.items():
-        match = re.search(pattern, text)
-        if not match and not allow_incomplete:
+        matches = re.findall(pattern, text)
+        if len(matches) > 1:
+            fail(f"reproduction output repeats {name}")
+        if not matches and not allow_incomplete:
             fail(f"reproduction output lacks {name}")
-        if match:
-            parsed[name] = int(match.group(1))
+        if matches:
+            parsed[name] = int(matches[0])
     return parsed
 
 
