@@ -26,7 +26,14 @@ def git(checkout: Path, *args: str) -> str:
     return subprocess.check_output(["git", *args], cwd=checkout, text=True).strip()
 
 
+def require_clean_checkout(checkout: Path) -> None:
+    status = git(checkout, "status", "--porcelain=v1", "--untracked-files=all")
+    if status:
+        raise RuntimeError(f"source checkout is dirty: {checkout}: {status}")
+
+
 def run_one(checkout: Path, output: Path, timeout_s: float, index: int) -> dict:
+    require_clean_checkout(checkout)
     command = [
         sys.executable,
         "-m",
@@ -53,6 +60,7 @@ def run_one(checkout: Path, output: Path, timeout_s: float, index: int) -> dict:
         timed_out = True
         os.killpg(process.pid, signal.SIGKILL)
         raw, _ = process.communicate()
+    require_clean_checkout(checkout)
     elapsed_s = time.monotonic() - started
     log_path = output / f"run-{index}.log"
     log_path.write_bytes(raw)
@@ -80,18 +88,21 @@ def main() -> int:
     arm = protocol["arms"][args.arm]
     source_path = checkout / protocol["source_file"]
     test_path = checkout / protocol["test_file"]
+    require_clean_checkout(checkout)
 
     actual = {
         "head": git(checkout, "rev-parse", "HEAD"),
         "source_sha256": sha256(source_path),
         "test_sha256": sha256(test_path),
         "runner_sha256": sha256(Path(__file__).resolve()),
+        "working_tree_clean": True,
     }
     expected = {
         "head": arm["head"],
         "source_sha256": arm["source_sha256"],
         "test_sha256": protocol["test_sha256"],
         "runner_sha256": protocol["runner_sha256"],
+        "working_tree_clean": True,
     }
     if actual != expected:
         raise SystemExit(f"source identity mismatch: expected={expected}, actual={actual}")

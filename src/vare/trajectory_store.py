@@ -25,6 +25,9 @@ from .runner import digest, encode
 from .types import Task, Verification, snapshot_verification
 
 
+_STEP_READ_PAGE_SIZE = 16
+
+
 def identity(value):
     if not isinstance(value, str) or re.fullmatch(r"[A-Za-z0-9_.:-]{1,160}", value) is None:
         raise ValueError("invalid bounded identity")
@@ -420,11 +423,23 @@ class TrajectoryStore:
             return dict(row)
 
     def iter_steps(self, trajectory_id, *, after=-1) -> Iterator[dict]:
-        # A cursor holds at most one bounded event, never the whole trajectory.
-        with self.connection() as db:
-            rows = db.execute("SELECT e.event FROM steps s JOIN events e ON e.sequence=s.event_sequence WHERE s.trajectory_id=? AND s.step>? ORDER BY s.step", (trajectory_id, after))
+        # Read a bounded page, then release the connection before yielding to
+        # caller-controlled iteration so a paused consumer cannot block worker
+        # lease heartbeats on this store.
+        last_step = after
+        while True:
+            with self.connection() as db:
+                rows = db.execute(
+                    "SELECT s.step,e.event FROM steps s JOIN events e "
+                    "ON e.sequence=s.event_sequence WHERE s.trajectory_id=? "
+                    "AND s.step>? ORDER BY s.step LIMIT ?",
+                    (trajectory_id, last_step, _STEP_READ_PAGE_SIZE),
+                ).fetchall()
+            if not rows:
+                return
             for row in rows:
-                yield json.loads(row[0])["details"]["step"]
+                last_step = row["step"]
+                yield json.loads(row["event"])["details"]["step"]
 
     def resume_state(self, trajectory_id):
         row = self.trajectory(trajectory_id)
