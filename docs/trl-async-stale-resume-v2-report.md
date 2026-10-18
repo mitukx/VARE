@@ -42,11 +42,33 @@ was auto-closed by the first-contributor process check before code review and
 was not merged. Issue [#7274](https://github.com/huggingface/trl/issues/7274)
 remains open and unassigned; this report does not claim upstream acceptance.
 
+## Review hardening
+
+Automated review found that the original runner pinned `git HEAD` without
+requiring clean TRL source checkouts, and the auditor trusted the summary's
+six-run count without validating the actual arm/repetition inventory. The
+runner now rejects tracked or untracked source changes and rechecks source
+identity around each repetition. The auditor checks the locked source
+revisions, exact baseline/candidate repetition pairs, uniqueness, and matching
+log names. New regressions reject dirty tracked/untracked checkouts and
+resealed bundles with missing arms or duplicate runs.
+
+After those changes, the same frozen v2 protocol was rerun against clean pinned
+TRL checkouts. Baseline repeated stream positions 144, 144, and 145; candidate
+repeated one in-flight-tail position in each of three runs. All six decisions
+passed and the updated auditor accepted the bundle. See the additional
+[review-follow-up bundle](../results/trl-async-stale-resume-v2/run-2-review-fixes/).
+The original run remains retained unchanged. This is automated review
+correction and CPU reproduction; no independent human review or upstream
+acceptance is claimed.
+
 ## Reproduction
 
 The frozen protocol is [here](../protocols/trl_async_stale_resume_v2.lock.json).
-The six raw logs, summary, and SHA-256 manifest are in
+The original six raw logs, summary, and SHA-256 manifest are in
 [`run-1-epoch-aware-replay`](../results/trl-async-stale-resume-v2/run-1-epoch-aware-replay/).
+The post-review clean-source rerun and updated runner hash are in
+[`run-2-review-fixes`](../results/trl-async-stale-resume-v2/run-2-review-fixes/).
 Earlier strict-threshold and row-identity runs remain in the neighboring
 bundles, including the v1 false negative.
 

@@ -1,11 +1,19 @@
 from __future__ import annotations
 
+import json
 import shutil
 from pathlib import Path
+import subprocess
 
 import pytest
 
-from scripts.reproduce_trl_async_stale_resume_v1 import audit_bundle, parse_run_log
+from scripts.reproduce_trl_async_stale_resume_v1 import (
+    audit_bundle,
+    parse_run_log,
+    source_revision,
+    write_json,
+    write_manifest,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -56,4 +64,54 @@ def test_locked_run_bundle_rejects_changed_raw_log(tmp_path: Path):
     log = copied / "baseline-1.log"
     log.write_text(log.read_text(encoding="utf-8") + "tampered\n", encoding="utf-8")
     with pytest.raises(ValueError, match="hash mismatch"):
+        audit_bundle(copied)
+
+
+@pytest.mark.parametrize("dirty_kind", ["tracked", "untracked"])
+def test_reproduction_rejects_dirty_source_checkout(tmp_path: Path, dirty_kind: str):
+    checkout = tmp_path / "source"
+    checkout.mkdir()
+    subprocess.run(["git", "init", "--quiet", str(checkout)], check=True)
+    subprocess.run(["git", "-C", str(checkout), "config", "user.name", "Evidence Test"], check=True)
+    subprocess.run(
+        ["git", "-C", str(checkout), "config", "user.email", "evidence@example.invalid"], check=True
+    )
+    tracked = checkout / "tracked.py"
+    tracked.write_text("value = 1\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(checkout), "add", "tracked.py"], check=True)
+    subprocess.run(["git", "-C", str(checkout), "commit", "--quiet", "-m", "base"], check=True)
+
+    if dirty_kind == "tracked":
+        tracked.write_text("value = 2\n", encoding="utf-8")
+    else:
+        (checkout / "rogue.py").write_text("value = 2\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="source checkout must be clean"):
+        source_revision(checkout)
+
+
+@pytest.mark.parametrize("inventory_error", ["missing_arm", "duplicate"])
+def test_audit_rejects_resealed_bundle_with_invalid_run_inventory(
+    tmp_path: Path, inventory_error: str
+):
+    copied = tmp_path / "run"
+    shutil.copytree(EPOCH_AWARE_RUN, copied)
+    summary_path = copied / "summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    candidates = [run for run in summary["runs"] if run["arm"] == "candidate"]
+    if inventory_error == "missing_arm":
+        summary["runs"] = candidates + [
+            {**candidates[0], "repetition": repetition, "log": f"candidate-{repetition}.log"}
+            for repetition in range(4, 7)
+        ]
+    else:
+        summary["runs"] = [candidates[0].copy() for _ in range(6)]
+    # Keep the self-reported six-run count and reseal every file to exercise
+    # arm/repetition validation rather than manifest integrity.
+    summary["run_count"] = 6
+    summary["all_checks_passed"] = True
+    write_json(summary_path, summary)
+    write_manifest(copied)
+
+    with pytest.raises(ValueError, match="duplicate run identity|run inventory mismatch"):
         audit_bundle(copied)

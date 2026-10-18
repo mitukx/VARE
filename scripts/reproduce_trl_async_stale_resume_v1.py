@@ -90,6 +90,14 @@ def validate_local_inputs(lock: dict[str, Any]) -> None:
 
 
 def source_revision(source: Path) -> str:
+    status = subprocess.run(
+        ["git", "-C", str(source), "status", "--porcelain=v1", "--untracked-files=all"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout
+    if status:
+        fail(f"source checkout must be clean before reproducing: {source}: {status.strip()}")
     result = subprocess.run(
         ["git", "-C", str(source), "rev-parse", "HEAD"],
         check=True,
@@ -241,9 +249,48 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
     if summary.get("protocol_sha256") != sha256_file(lock_path):
         fail("protocol hash mismatch")
     validate_local_inputs(lock)
-    if summary.get("run_count") != lock["reproducer"]["repetitions_per_arm"] * 2:
+    expected_repetitions = lock["reproducer"]["repetitions_per_arm"]
+    expected_count = expected_repetitions * 2
+    expected_revisions = {
+        "baseline": lock["source"]["baseline_revision"],
+        "candidate": lock["source"]["candidate_revision"],
+    }
+    if summary.get("source_revisions") != expected_revisions:
+        fail("source revisions do not match the locked baseline and candidate")
+    if summary.get("repetitions_per_arm") != expected_repetitions:
+        fail("repetitions per arm mismatch")
+    runs = summary.get("runs")
+    if not isinstance(runs, list) or summary.get("run_count") != expected_count or len(runs) != expected_count:
         fail("run count mismatch")
-    for run in summary["runs"]:
+
+    expected_runs = {
+        (arm, repetition)
+        for arm in ("baseline", "candidate")
+        for repetition in range(1, expected_repetitions + 1)
+    }
+    observed_runs: set[tuple[str, int]] = set()
+    for run in runs:
+        if not isinstance(run, dict):
+            fail("run inventory contains a non-object entry")
+        arm = run.get("arm")
+        repetition = run.get("repetition")
+        if arm not in ("baseline", "candidate") or type(repetition) is not int:
+            fail("run inventory contains an invalid arm or repetition")
+        run_id = (arm, repetition)
+        if run_id in observed_runs:
+            fail(f"duplicate run identity: {run_id}")
+        observed_runs.add(run_id)
+        expected_log = f"{arm}-{repetition}.log"
+        if run.get("log") != expected_log:
+            fail(f"run log does not match its identity: {run_id}")
+    if observed_runs != expected_runs:
+        fail(
+            "run inventory mismatch: "
+            f"missing={sorted(expected_runs - observed_runs)}, "
+            f"unexpected={sorted(observed_runs - expected_runs)}"
+        )
+
+    for run in runs:
         parsed = parse_run_log((bundle / run["log"]).read_text(encoding="utf-8"))
         if parsed != run["observed"]:
             fail(f"summary/log mismatch: {run['log']}")
@@ -286,6 +333,8 @@ def reproduce(args: argparse.Namespace) -> int:
         }
         for repetition in range(1, lock["reproducer"]["repetitions_per_arm"] + 1):
             for arm, source_root in (("baseline", base), ("candidate", candidate)):
+                if source_revision(source_root) != revisions[arm]:
+                    fail(f"{arm} source revision changed during reproduction")
                 log_rel = f"{arm}-{repetition}.log"
                 log_path = out / log_rel
                 result = subprocess.run(
@@ -296,6 +345,8 @@ def reproduce(args: argparse.Namespace) -> int:
                     stderr=subprocess.STDOUT,
                     text=True,
                 )
+                if source_revision(source_root) != revisions[arm]:
+                    fail(f"{arm} source checkout changed while running repetition {repetition}")
                 log_path.write_text(result.stdout, encoding="utf-8")
                 observed = parse_run_log(log_path.read_text(encoding="utf-8"))
                 accepted = run_acceptance(arm, observed, result.returncode, lock)

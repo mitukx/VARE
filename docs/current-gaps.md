@@ -21,6 +21,11 @@ closed before review. The earlier row-identity run remains a retained non-pass.
 Generation and scoring are stubbed; this does not establish model task success.
 See the [v2 report](trl-async-stale-resume-v2-report.md), its [protocol](../protocols/trl_async_stale_resume_v2.lock.json),
 and [raw result](../results/trl-async-stale-resume-v2/run-1-epoch-aware-replay/).
+Automated review then exposed dirty-checkout provenance and incomplete
+arm/repetition auditing; both are fixed. A clean-source rerun passed all six
+locked decisions, and new tests reject dirty trees plus resealed missing or
+duplicate run inventories. No human review or upstream acceptance is recorded;
+see the [follow-up bundle](../results/trl-async-stale-resume-v2/run-2-review-fixes/).
 
 **Update 2026-10-15 — durable executor source:** a resumed worker could use new
 code while exporting its enrollment-time executor snapshot. The source pin now
