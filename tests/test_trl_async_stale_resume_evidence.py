@@ -252,6 +252,21 @@ def test_replay_suffix_v2_stage_metadata_binds_each_raw_log_digest():
         assert stage_record["raw_log_sha256"] == sha256_file(REPLAY_SUFFIX_V2_RUN / run["log"])
 
 
+def test_frozen_v5_digest_mismatch_is_superseded_by_audited_v6_record():
+    old_record = json.loads((REPLAY_SUFFIX_RUN / "baseline-failing-test.json").read_text())
+    old_log = REPLAY_SUFFIX_RUN / "baseline-failing-test.log"
+    current_summary = replay_suffix_v2.audit_bundle(REPLAY_SUFFIX_V2_RUN)
+    current_baseline = next(
+        run for run in current_summary["runs"] if run["name"] == "baseline-failing-test"
+    )
+
+    assert old_record["raw_log_sha256"] != sha256_file(old_log)
+    assert current_summary["all_checks_passed"] is True
+    assert current_baseline["raw_log_sha256"] == sha256_file(
+        REPLAY_SUFFIX_V2_RUN / current_baseline["log"]
+    )
+
+
 def test_replay_suffix_v2_audit_rejects_logs_without_source_provenance(tmp_path: Path):
     copied = tmp_path / "v2-run"
     shutil.copytree(REPLAY_SUFFIX_V2_RUN, copied)

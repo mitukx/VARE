@@ -22,9 +22,11 @@ from protocol v4.
 The retained v2 bundle includes the runner and frozen protocol, exact source
 diffs, candidate revision/tree identities, test and patch hashes, stage JSON,
 raw logs, and a manifest. Its audit passes, and the regression suite checks
-that every stage JSON digest matches its raw log. The older v1 baseline JSON
-contains a digest that disagrees with its log; v1 is preserved unchanged and
-is not used for the v2 result.
+that every stage JSON digest matches its raw log. The earlier review bundle
+stored under `results/trl-async-stale-resume-v5/` has a baseline metadata
+digest that disagrees with its raw log. That frozen bundle is preserved
+unchanged and is not used for the v2 result; the v2 baseline stage record is
+bound to its matching raw log digest.
 
 An earlier run completed the same three test stages but was rejected because
 the initial v2 auditor compared the summary environment against a nonexistent
