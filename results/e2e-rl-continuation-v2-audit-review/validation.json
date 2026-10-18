@@ -49,7 +49,9 @@
     "continuation-audit-review-final-source-inventory-wave.log": "028dd49c08f9ca3151612e7dd2db85e156b2c618b6b2899f2dfec4d2027564ae",
     "continuation-audit-review-final-tensor-audit.log": "84008a3fb3bd14151c05edd3909f5dafdb58e8417fa4dd84fbdc6365e1589c07",
     "continuation-audit-review-provenance-wave-assertion-order.log": "aebf5d4c473c4613185aa6e4e46370b43823b66959dc26fe41c320badf068857",
-    "continuation-audit-review-source-lag-descendant-baseline.json": "ffc5da4a2e84983ae9832c0e586c11363241fc3fd6124a90c2f9300985c9df0e"
+    "continuation-audit-review-source-lag-descendant-baseline.json": "ffc5da4a2e84983ae9832c0e586c11363241fc3fd6124a90c2f9300985c9df0e",
+    "continuation-audit-review-after-final-findings-module.log": "6e88d7552c7d0f69ef9dd94f2f03455134c26c337f91efc46162eecf0ee3a909",
+    "source-commit-case-time-review.json": "66f22f33a4258f712743d4296ab746930dfbf490ead59f6e47f754e197a9de6a"
   },
   "fixed_negative_cases": {
     "passed": 11
@@ -476,11 +478,67 @@
   "scope": "Audit correction and actual toy-model system regressions; no new research or main performance campaign.",
   "sources": {
     ".github/workflows/e2e-system-cpu.yml": "60331af183398380e6ba61edc0533c6e9f1d5d33000945928caedb8679197c58",
-    "docs/e2e-rl-continuation-v2-report.md": "5cdc070008ce165d6c0683672ebb8c992c45e8144714c55e52021a8c2f919785",
-    "scripts/audit_e2e_rl_continuation.py": "5e030d3203053b7e4a4823a35f355b83fd475e0cb35574cf9fe6a239b4a7f7a1",
-    "tests/test_e2e_rl_continuation.py": "dbe6912797065bc156234dc4a9a3f53cdfe7682cb7ea7652df4f447d6a2adfe4",
-    "results/e2e-rl-continuation-v2/derive_tables.py": "10d25343a28925199a8ac625b17f27476bc42392e5cbd2cc4ffa8c3aefff27a4",
-    "results/e2e-rl-continuation-v2/comparison.csv": "3a99af257d6430d2daa68a68eb549a07342fcba57fe5b5a4fe6d165ea81c3a39",
-    "results/e2e-rl-continuation-v2/derived-metrics.json": "1aa502793b4f9eeb61fb8b464c772f4493ca95cc37c06a4536c33c9c727d002c"
+    "docs/e2e-rl-continuation-v2-report.md": "4a2132dd3b2837f2be3ff52916036501a2c65429ba09f3c4e72907cb38377bbc",
+    "scripts/audit_e2e_rl_continuation.py": "febbb259590c62b4b987fefcdd86d958927b458e7901f2abf2a0e0953fa5aa2c",
+    "tests/test_e2e_rl_continuation.py": "7a86e3c3f850dd8656576f7e350f47ca0711c823bb210c3e43d1896d676a27fc",
+    "results/e2e-rl-continuation-v2/derive_tables.py": "ff745d2924c000f530f4ad28b2d1dec891a7b3f5187a6cfe2efcdcecb7a4b555",
+    "results/e2e-rl-continuation-v2/comparison.csv": "17e11ee707d2f49dea693eced265846d13a5f1140d6f02ffff4a01c5e6a1b74a",
+    "results/e2e-rl-continuation-v2/derived-metrics.json": "523de894617903e8c08f4cb32ab6676268a7f0054f8ad146b868f04fe965d28f",
+    "scripts/benchmark_e2e_rl_continuation.py": "f1011b8125ab3944f538b57bf6157f2b8ab949f65479e1a749ded28a7691938b"
+  },
+  "latest_review_corrections": {
+    "source_commit_binding": {
+      "baseline_commit": "9b6e38700745b77fd31f2e9a1965749b60d645a6",
+      "baseline_resealed_source_attack": {
+        "accepted": true,
+        "cases": 42
+      },
+      "corrected_resealed_source_attack": {
+        "accepted": false,
+        "error": "locked campaign source snapshots differ from the independently pinned revision"
+      },
+      "fixed_commit": "56ba2fefc69a8851f0457646b7031fe8bf2f2c80",
+      "fixed_source_digest_count": 15
+    },
+    "case_timing_integrity": {
+      "baseline_progress_reseal_audit_accepted": true,
+      "baseline_case_wall_mean_delta_s": 333.3333333333333,
+      "corrected_progress_only_reseal_audit_accepted": false,
+      "corrected_rejection": "progress case wall differs from retained case summary",
+      "corrected_published_sample_window_delta_s": 0.0,
+      "consistent_progress_and_summary_reseal": {
+        "auditor_accepts": true,
+        "table_delta_s": 0.0
+      },
+      "historical_metric": "sampled_resource_window_s derived from first/last resources.jsonl monotonic timestamps; not full case duration",
+      "new_run_records": "case_timing.json start/end monotonic endpoints cross-checked against resource samples, case summary, and progress row",
+      "focused_tests_passed": 6,
+      "full_actual_model_module": {
+        "passed": 64,
+        "skipped": 0,
+        "model": "pinned tiny-GPT2 local snapshot",
+        "actual_optimizer_and_SIGKILL_recovery": true
+      },
+      "retained_campaign_reaudit": {
+        "pass": true,
+        "cases": 42,
+        "artifacts_hashed": 6522,
+        "candidate_tensor_states_verified": 504,
+        "evaluation_pairs_verified": 507,
+        "evaluation_reports_verified": 1014,
+        "checkpoint_score_count_replayed": 32448,
+        "checkpoint_scores_replayed": true
+      },
+      "derived_table_reproduction": {
+        "python": "3.12",
+        "tables": [
+          "comparison.csv",
+          "stage-latency.csv",
+          "recovery.csv",
+          "derived-metrics.json"
+        ],
+        "byte_identical": true
+      }
+    }
   }
 }

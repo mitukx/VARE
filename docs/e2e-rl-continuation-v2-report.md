@@ -62,7 +62,7 @@ included a fresh recovery; the tables cannot establish a v1-to-v2 speedup.**
 | 4 | 194.97 ± 9.44 | 170.63 ± 3.02 | 187.58 ± 3.34 | +14.22 ± 3.63% | 2,447.33 | 231.25 |
 | 8 | 195.33 ± 5.70 | 174.53 ± 4.13 | 183.41 ± 4.28 | +11.91 ± 0.81% | 3,785.34 | 352.06 |
 
-Overhead is the mean of seed-paired guarded/minimal wall-time ratios minus one.
+Overhead is the mean of seed-paired guarded/minimal whole-round wall-time ratios minus one.
 The noisy one-worker pair does not establish a consistently positive cost.
 Actual maximum simultaneous worker service reached 1/2/4/8, with every configured
 worker PID participating in every case. The small workload establishes no
@@ -78,8 +78,9 @@ SIGKILL after durable publication can leave a committed recovered-publication
 round without a completed timing span; those fault cases are explicitly excluded
 from the warm-throughput comparison, and the auditor does not invent a duration.
 
-Guarded case wall time, including cold startup/shutdown, averaged
-10.10/9.54/10.09/10.75 s for 1/2/4/8 workers. The corresponding rollout pool
+The measured first-to-last resource-sample window for guarded cases averaged
+10.074/9.523/9.714/10.720 s for 1/2/4/8 workers. It excludes time before the
+first and after the last sample, so it is not full case wall time. The corresponding rollout pool
 startup means were 2.04/2.10/2.24/2.88 s; evaluation pool means were
 2.11/2.07/2.26/2.18 s. The complete campaign, including cold starts and faults,
 took **540.84 s** before final artifact hashing. Warm round time totaled 52.97 s
@@ -305,6 +306,16 @@ are rejected; all 59 continuation tests pass with the actual tiny-GPT2 campaign,
 and the retained audit replays 504 candidate tensor states and 32,448 scores
 across 42 cases. The four published tables remain byte-identical when regenerated
 with Python 3.12.
+
+The frozen 42-case campaign is now bound to its recorded base commit and the
+independently pinned source digest set; resealing a replacement source snapshot
+does not change that identity. New runs also retain monotonic case start/end
+timestamps and the auditor checks those endpoints against the case summary.
+The historical campaign predates those endpoint records, so the comparison
+table no longer publishes its mutable `case_wall_s` summary. It reports the
+measured first-to-last `resources.jsonl` sample window instead. That interval
+excludes setup before the first sample and teardown after the last sample; it
+must not be read as complete end-to-end case duration.
 
 This is a toy neural LM and synthetic one-token workload. Replay is round-local;
 general durable replay-backlog/curriculum recovery is not tested. The supervisor

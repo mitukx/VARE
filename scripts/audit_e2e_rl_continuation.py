@@ -29,6 +29,27 @@ EXPECTED_SOURCES = frozenset({
     "tests/test_e2e_rl_continuation.py",
 })
 
+# The frozen v2 campaign is tied to the commit and source tree that produced it.
+# This independent pin prevents a re-sealed archive from choosing its own code.
+PINNED_LOCKED_BASE_COMMIT = "56ba2fefc69a8851f0457646b7031fe8bf2f2c80"
+PINNED_LOCKED_SOURCE_SHA256 = {
+    "benchmarks/e2e_rl_continuation_v2/protocol.json": "668b0c9c8ce3959fccc4eabe6926cc797e55262abfb4e91ad08b73dee4fdff34",
+    "requirements/e2e-rl-real-model-v1.txt": "690eda84362435cdbf8906f37f5f929866161e36a1b8308096a90d511677cfe8",
+    "scripts/audit_e2e_rl_continuation.py": "077cd96d26a8d899481f31dadf6ceac2bd1eef1d0a43bb9ebd4156ea37e701b1",
+    "scripts/benchmark_e2e_rl_continuation.py": "d9c7006dd208b541b95550d07c05e6527069cda0c7328190f81d44df64e15182",
+    "scripts/benchmark_e2e_rl_real_model.py": "669c6a892e41f95728f505d0c724f2570492c0d7cfeae80e29e9abbed414bae2",
+    "src/vare/attestation.py": "785e74d7d0cd6d41a73cf75cc65c093a0afb8d5082ad3f11dd828770616e93a3",
+    "src/vare/checkpoint_artifacts.py": "98f96cf1bde57011a7e787c0bf61820df6a89ae37f1c043e3dfa73288c052b5c",
+    "src/vare/engine.py": "bcd914e14de291073a6d4c93cc3c3fbac2874b810f108ec47debb8691ae25f66",
+    "src/vare/lag.py": "1a7185c0b17187c13e6369f3d10584eabe2ac697d5afbd8bfd867bef07c92a57",
+    "src/vare/promotion.py": "73f2fcbd3358d1f9153a53012f49ebe41ca0d65f555ed6457c8b98ccc708474b",
+    "src/vare/promotion_journal.py": "2e7b98951427aa63cff61ba948a3e4eb2e480b1378ed3c891e9df20225876ee7",
+    "src/vare/replay.py": "2ff8258d3fdb43d7b34180f1a1e11a4a5cbd0a795cec3dddb990f41aaecb0a93",
+    "src/vare/reward_evidence.py": "a5b5979b8f647a61d0d411acf032a60608fac2045a4d96299cec1e7471206292",
+    "src/vare/runtime.py": "d1df9c0680b4fb4fd602694ae79eb5937dc391f53596d05a56f521ce79ecebb5",
+    "tests/test_e2e_rl_continuation.py": "f56d8251f02e2c67b217321d51ae00c0b2fa60ec195baafebff46470c13f053e",
+}
+
 
 def need(ok, message):
     if not ok:
@@ -75,7 +96,8 @@ def resource_sample_metrics(directory):
          "resource samples contain invalid time, CPU, or RSS values")
     window=times[-1]-times[0]
     need(window>0 and all(value>=0 for value in cpu),"resource sample window is invalid")
-    return {"sample_count":len(samples),"sample_window_s":window,
+    return {"sample_count":len(samples),"sample_start_monotonic_s":times[0],
+            "sample_end_monotonic_s":times[-1],"sample_window_s":window,
             "sampled_cpu_core_percent":100*sum(cpu)/window,
             "sampled_tree_peak_rss_bytes":max(rss)}
 
@@ -137,6 +159,11 @@ def audit(root, check_tensors=False, model_dir=None):
     locked=(args["workers"]==protocol["workers"] and args["seeds"]==protocol["seeds"] and
             args["rounds"]==protocol["rounds"] and args["tasks"]==protocol["rollouts"] and
             args["eval_tasks"]==protocol["evaluation_tasks"] and not args["skip_faults"])
+    if locked:
+        need(manifest.get("base_commit")==PINNED_LOCKED_BASE_COMMIT,
+             "locked campaign commit differs from the independently pinned revision")
+        need(manifest["sources"]==PINNED_LOCKED_SOURCE_SHA256,
+             "locked campaign source snapshots differ from the independently pinned revision")
     need(manifest["protocol_conformant"]==summary["protocol_conformant"]==locked,"reduced run claims locked protocol")
     expected_id=protocol["schema"] if locked else protocol["schema"]+".diagnostic"
     need(manifest["protocol_id"]==summary["protocol_id"]==expected_id,"protocol identity differs")
@@ -158,6 +185,7 @@ def audit(root, check_tensors=False, model_dir=None):
     tensor_states=evaluation_pairs=evaluation_reports=replayed_scores=0
     for row in rows:
         case=root/row["directory"]
+        measured_resources=resource_sample_metrics(case)
         config=read(case/"config.json")
         need(config.get("source_sha256")==manifest["sources"],
              "case source inventory differs from the pinned source set")
@@ -171,6 +199,25 @@ def audit(root, check_tensors=False, model_dir=None):
                  "invalid fault case metadata")
             expected_directory=f"kill-{row['cutpoint']}-s{row['seed']}-guarded"
         need(row["directory"]==expected_directory,"case directory identity differs from progress metadata")
+        case_summary=read(case/"summary.json")
+        need(row.get("case_wall_s")==case_summary.get("case_wall_s"),
+             "progress case wall differs from retained case summary")
+        timing_path=case/"case_timing.json"
+        if timing_path.exists():
+            timing=read(timing_path)
+            start,end=timing.get("start_monotonic_s"),timing.get("end_monotonic_s")
+            need(type(start) in (int,float) and math.isfinite(start) and
+                 type(end) in (int,float) and math.isfinite(end) and end>start,
+                 "case timing endpoints are invalid")
+            need(start<=measured_resources["sample_start_monotonic_s"]<
+                 measured_resources["sample_end_monotonic_s"]<=end,
+                 "resource sample timestamps fall outside retained case timing endpoints")
+            elapsed=end-start
+            need(case_summary.get("case_wall_s")==elapsed and row.get("case_wall_s")==elapsed,
+                 "case wall summary differs from retained timing endpoints")
+        else:
+            need(locked and manifest.get("base_commit")==PINNED_LOCKED_BASE_COMMIT,
+                 "case timing endpoints are missing outside the pinned legacy campaign")
         need(row["protocol_id"]==config["protocol_id"]==expected_id,"case protocol identity differs")
         need(row["protocol_conformant"]==config["protocol_conformant"]==locked,"case conformance differs")
         commits=[read(case/"rounds"/f"r{i:04d}"/"committed.json") for i in range(args["rounds"])]
@@ -298,7 +345,6 @@ def audit(root, check_tensors=False, model_dir=None):
              int(row["cutpoint"]=="post_optimizer"),
              "checkpoint-save trace total differs from saved candidates")
         need(row["accepted_updates"]>=2,"no actual continuation")
-        measured_resources=resource_sample_metrics(case)
         resources=row["resources"]
         need(resources["sample_count"]==measured_resources["sample_count"] and
              resources["sample_interval_s"]==0.02 and

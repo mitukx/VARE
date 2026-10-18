@@ -1,0 +1,26 @@
+{
+  "baseline_commit": "9b6e38700745b77fd31f2e9a1965749b60d645a6",
+  "case_wall_reseal_attack": {
+    "baseline_audit_accepted": true,
+    "baseline_table_delta_s": 333.3333333333333,
+    "baseline_table_field": "case_wall_s_mean",
+    "consistent_progress_and_summary_reseal": {
+      "auditor_accepts": true,
+      "table_delta_s": 0.0
+    },
+    "corrected_audit_accepted": false,
+    "corrected_audit_error": "progress case wall differs from retained case summary",
+    "corrected_table_delta_s": 0.0,
+    "corrected_table_field": "sampled_resource_window_s_mean"
+  },
+  "source_reseal_attack": {
+    "baseline": {
+      "accepted": true,
+      "cases": 42
+    },
+    "corrected": {
+      "accepted": false,
+      "error": "locked campaign source snapshots differ from the independently pinned revision"
+    }
+  }
+}

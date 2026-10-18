@@ -1,5 +1,6 @@
 """Actual CPU weight-sync and full learner SIGKILL/restart falsifiers."""
 import os
+import csv
 from pathlib import Path
 import shutil
 import statistics
@@ -327,6 +328,37 @@ def test_rehashed_missing_pinned_source_is_rejected(audit_records,tmp_path):
         auditor.audit(changed)
 
 
+def test_locked_source_snapshot_must_match_independent_commit_pin(audit_records,tmp_path):
+    changed=tmp_path/"rewritten-locked-source"
+    shutil.copytree(audit_records,changed)
+    source="src/vare/engine.py"
+    source_path=changed/"sources"/source
+    source_path.write_bytes(source_path.read_bytes()+b"\n# resealed replacement\n")
+    digest=auditor.sha(source_path)
+    manifest=auditor.read(changed/"manifest.json")
+    manifest["sources"][source]=manifest["source_sha256"][source]=digest
+    bench.atomic_json(changed/"manifest.json",manifest)
+    for row in auditor.read(changed/"progress.json"):
+        config_path=changed/row["directory"]/"config.json"
+        config=auditor.read(config_path)
+        config["source_sha256"][source]=digest
+        bench.atomic_json(config_path,config)
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="independently pinned revision"):
+        auditor.audit(changed)
+
+
+def test_locked_commit_must_match_independent_revision_pin(audit_records,tmp_path):
+    changed=tmp_path/"rewritten-locked-commit"
+    shutil.copytree(audit_records,changed)
+    manifest=auditor.read(changed/"manifest.json")
+    manifest["base_commit"]="f"*40
+    bench.atomic_json(changed/"manifest.json",manifest)
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="independently pinned revision"):
+        auditor.audit(changed)
+
+
 def test_rehashed_duplicate_optimizer_attempt_identity_is_rejected(audit_records,tmp_path):
     changed=tmp_path/"duplicate-optimizer-attempt"
     shutil.copytree(audit_records,changed)
@@ -555,7 +587,58 @@ def test_derived_resource_metrics_are_read_from_samples(tmp_path):
         '{"time":10.0,"rss_bytes":100,"cpu_delta_s":0.2}\n'
         '{"time":11.0,"rss_bytes":200,"cpu_delta_s":0.8}\n')
     assert derive_tables.resource_metrics(tmp_path)=={
+        "sampled_resource_window_s":1.0,
         "sampled_cpu_core_percent":100.0,"sampled_tree_peak_rss_bytes":200}
+
+
+def test_derived_comparison_ignores_resealed_case_wall_summaries(audit_records,tmp_path):
+    changed=tmp_path/"mutable-case-wall"
+    shutil.copytree(audit_records,changed)
+    rows=auditor.read(changed/"progress.json")
+    row=next(item for item in rows if item["cutpoint"]=="none")
+    row["case_wall_s"]+=1000
+    bench.atomic_json(changed/"progress.json",rows)
+    case_summary=auditor.read(changed/row["directory"]/"summary.json")
+    case_summary["case_wall_s"]+=1000
+    bench.atomic_json(changed/row["directory"]/"summary.json",case_summary)
+    reseal_records(changed)
+    assert auditor.audit(changed)["pass"]
+    original_output=tmp_path/"original-derived"
+    changed_output=tmp_path/"changed-derived"
+    derive_tables.derive(audit_records,original_output)
+    derive_tables.derive(changed,changed_output)
+    with (original_output/"comparison.csv").open() as handle:
+        original_rows=list(csv.DictReader(handle))
+    with (changed_output/"comparison.csv").open() as handle:
+        changed_rows=list(csv.DictReader(handle))
+    assert original_rows==changed_rows
+    assert "case_wall_s_mean" not in original_rows[0]
+    assert "sampled_resource_window_s_mean" in original_rows[0]
+
+
+def test_progress_case_wall_must_match_retained_case_summary(audit_records,tmp_path):
+    changed=tmp_path/"progress-case-wall-mismatch"
+    shutil.copytree(audit_records,changed)
+    rows=auditor.read(changed/"progress.json")
+    rows[0]["case_wall_s"]+=1
+    bench.atomic_json(changed/"progress.json",rows)
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="progress case wall differs"):
+        auditor.audit(changed)
+
+
+def test_case_timing_endpoints_must_match_published_case_wall(campaign,tmp_path):
+    root,_=campaign
+    changed=tmp_path/"tampered-case-endpoint"
+    shutil.copytree(root,changed)
+    row=auditor.read(changed/"progress.json")[0]
+    timing_path=changed/row["directory"]/"case_timing.json"
+    timing=auditor.read(timing_path)
+    timing["end_monotonic_s"]+=10
+    bench.atomic_json(timing_path,timing)
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="case wall summary differs"):
+        auditor.audit(changed)
 
 
 def test_rehashed_promotion_must_match_independent_evaluation_pair(audit_records,tmp_path):

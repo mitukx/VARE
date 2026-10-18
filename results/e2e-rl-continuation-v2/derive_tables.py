@@ -36,10 +36,15 @@ def resource_metrics(case_dir):
     samples = [json.loads(line) for line in (case_dir/'resources.jsonl').read_text().splitlines()]
     if len(samples) < 2:
         raise ValueError('resource samples are incomplete')
-    window = samples[-1]['time'] - samples[0]['time']
+    times = [row['time'] for row in samples]
+    if (any(type(value) not in (int, float) or not math.isfinite(value) for value in times)
+            or any(right <= left for left, right in zip(times, times[1:]))):
+        raise ValueError('resource sample timestamps are invalid')
+    window = times[-1] - times[0]
     if window <= 0:
         raise ValueError('resource sample window is invalid')
     return {
+        'sampled_resource_window_s': window,
         'sampled_cpu_core_percent': 100*sum(row['cpu_delta_s'] for row in samples)/window,
         'sampled_tree_peak_rss_bytes': max(row['rss_bytes'] for row in samples),
     }
@@ -171,7 +176,7 @@ def derive(root, output):
                 'tasks_s': [r['tasks_s'] for r in group],
                 'output_tokens_s': [r['tokens_s'] for r in group],
                 'round_ms': [1000*r['round_wall_s']/r['rounds'] for r in group],
-                'case_wall_s': [r['case_wall_s'] for r in group],
+                'sampled_resource_window_s': [resources[r['directory']]['sampled_resource_window_s'] for r in group],
                 'sampled_cpu_core_percent': [resources[r['directory']]['sampled_cpu_core_percent'] for r in group],
             }.items():
                 row[key+'_mean'] = stats.fmean(values)

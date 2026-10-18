@@ -509,12 +509,18 @@ def run_case(directory, config, cutpoint="none"):
     trace = [json.loads(line) for line in (directory / "trace.jsonl").read_text().splitlines()]
     round_times = [r["duration_s"] for r in trace if r["stage"] == "round"]
     attempts = [json.loads(line) for line in (directory / "optimizer_attempts.jsonl").read_text().splitlines()]
+    case_end = time.perf_counter()
+    case_wall_s = case_end-case_start
+    atomic_json(directory / "case_timing.json", {
+        "start_monotonic_s": case_start,
+        "end_monotonic_s": case_end,
+    })
     summary = {"protocol_id": config["protocol_id"], "protocol_conformant": config["protocol_conformant"],
                "seed": config["seed"], "workers": config["workers"], "mode": config["mode"], "cutpoint": cutpoint,
                "rounds": config["rounds"], "completed_rounds": len(rounds), "physical_optimizer_attempts": len(attempts),
                "accepted_updates": done["cursor"]["accepted_updates"], "final_state_sha256": done["final_state_sha256"],
                "final_journal": done["journal"], "resources": resources.metrics(), "stages": base.stage_metrics(trace),
-               "case_wall_s": time.perf_counter()-case_start, "round_wall_s": sum(round_times),
+               "case_wall_s": case_wall_s, "round_wall_s": sum(round_times),
                "round_latency_p50_s": base.percentile(round_times, .5), "round_latency_p95_s": base.percentile(round_times,.95),
                "stale_replay_rejected": sum(r.get("stale_replay_rejected",0) for r in rounds),
                "tasks_s": config["tasks"] * len(round_times)/sum(round_times),
