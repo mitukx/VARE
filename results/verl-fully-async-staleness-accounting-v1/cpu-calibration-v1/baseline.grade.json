@@ -1,0 +1,46 @@
+{
+  "checks": {
+    "dispatch_reservation_order": {
+      "capacity_wait_line": 970,
+      "locked_dispatch_reservation_blocks": 0,
+      "passed": false,
+      "staleness_increment_count": 1
+    },
+    "reset_staleness": [
+      {
+        "case_id": "completed-workers-with-unconsumed-tail",
+        "expected": 7,
+        "observed": 52,
+        "passed": false,
+        "returned_metrics": true
+      },
+      {
+        "case_id": "completed-workers-after-full-consumption",
+        "expected": 0,
+        "observed": 38,
+        "passed": false,
+        "returned_metrics": true
+      },
+      {
+        "case_id": "completed-workers-plus-live-and-queued-work",
+        "expected": 10,
+        "observed": 13,
+        "passed": false,
+        "returned_metrics": true
+      }
+    ]
+  },
+  "metrics": {
+    "dispatch_reservation_order_passed": false,
+    "reset_cases": 3,
+    "reset_cases_passed": 0
+  },
+  "passed": false,
+  "runtime": {
+    "cpu_only": true,
+    "python": "3.12.12"
+  },
+  "schema_version": 1,
+  "task_id": "verl-fully-async-staleness-accounting-v1",
+  "workspace_revision": "3efe38c759c14622fd1b2c9e3679f2d02f86bdac"
+}

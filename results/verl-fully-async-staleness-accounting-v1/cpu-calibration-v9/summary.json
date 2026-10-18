@@ -1,0 +1,38 @@
+{
+  "baseline_metrics": {
+    "dispatch_counter_initialization_passed": false,
+    "dispatch_reservation_order_passed": false,
+    "reset_cases": 6,
+    "reset_cases_passed": 1
+  },
+  "claim_limit": "This run calibrates one deterministic CPU grader on a real historical source change; it measures no agent, model learning, or capability gain.",
+  "fixed_metrics": {
+    "dispatch_counter_initialization_passed": true,
+    "dispatch_reservation_order_passed": true,
+    "reset_cases": 6,
+    "reset_cases_passed": 6
+  },
+  "fixed_revision": "64812373be25c00b0da1833308d573d45570a364",
+  "observed": {
+    "baseline_passed": false,
+    "calibration_passed": true
+  },
+  "pre_fix_revision": "8ced5d2f4b148c2991217554e0c6f03028fa1470",
+  "protocol_id": "verl-fully-async-staleness-accounting-v4",
+  "protocol_lock_sha256": "795e6471de098e53e6db9e8f8009243b48676b98d938dc326d55262c15ce6e10",
+  "resources": {
+    "external_compute_usd": 0,
+    "gpu_hours": 0,
+    "model_weights_downloaded": false,
+    "paid_api_calls": 0,
+    "third_party_python_packages": 0
+  },
+  "runtime": {
+    "created_at_utc": "2026-10-18T08:43:17.943790+00:00",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12"
+  },
+  "schema_version": 1,
+  "status": "calibrated",
+  "task_id": "verl-fully-async-staleness-accounting-v1"
+}
