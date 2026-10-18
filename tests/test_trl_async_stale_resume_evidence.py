@@ -31,6 +31,8 @@ EPOCH_AWARE_RUN = ROOT / "results/trl-async-stale-resume-v2/run-1-epoch-aware-re
 V2_REVIEW_FIX_RUN = ROOT / "results/trl-async-stale-resume-v2/run-2-review-fixes"
 V1_FALSE_NEGATIVE = ROOT / "results/trl-async-stale-resume-v1/run-3-final-runner-replay"
 V3_PROTOCOL = ROOT / "protocols/trl_async_stale_resume_v3.lock.json"
+V4_PROTOCOL = ROOT / "protocols/trl_async_stale_resume_v4.lock.json"
+V4_PLATFORM_RUN = ROOT / "results/trl-async-stale-resume-v4/run-1-platform-locked"
 
 
 def test_reproduction_parser_extracts_stale_cursor_and_replay_count():
@@ -112,6 +114,29 @@ def test_audit_rejects_resealed_v3_bundle_with_changed_transitive_dependency(tmp
         audit_bundle(copied)
 
 
+def test_audit_rejects_resealed_v4_bundle_with_changed_execution_platform(tmp_path: Path):
+    copied = tmp_path / "run"
+    shutil.copytree(EPOCH_AWARE_RUN, copied)
+    summary_path = copied / "summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    lock = json.loads(V4_PROTOCOL.read_text(encoding="utf-8"))
+    summary["protocol_id"] = lock["protocol_id"]
+    summary["protocol_sha256"] = sha256_file(V4_PROTOCOL)
+    summary["environment"] = expected_runtime_environment(lock["environment"])
+    runner_bytes = (ROOT / "scripts/reproduce_trl_async_stale_resume_v1.py").read_bytes()
+    (copied / "runner.py").write_bytes(runner_bytes)
+    summary["runner_sha256"] = hashlib.sha256(runner_bytes).hexdigest()
+    for run in summary["runs"]:
+        run["timed_out"] = False
+        run["timeout_seconds"] = lock["reproducer"]["per_run_timeout_seconds"]
+    summary["environment"]["execution_platform"]["machine"] = "x86_64"
+    write_json(summary_path, summary)
+    write_manifest(copied)
+
+    with pytest.raises(ValueError, match="recorded runtime environment"):
+        audit_bundle(copied)
+
+
 def test_audit_retains_v3_timeout_as_nonpassing_arm(tmp_path: Path):
     copied = tmp_path / "run"
     summary = _convert_bundle_to_v3(copied)
@@ -136,6 +161,14 @@ def test_v2_review_fix_bundle_recomputes_from_hashed_logs_and_retained_runner():
     summary = audit_bundle(V2_REVIEW_FIX_RUN)
     assert summary["run_count"] == 6
     assert summary["all_checks_passed"] is True
+
+
+def test_v4_bundle_binds_and_audits_the_execution_platform():
+    summary = audit_bundle(V4_PLATFORM_RUN)
+    lock = json.loads(V4_PROTOCOL.read_text(encoding="utf-8"))
+    assert summary["all_checks_passed"] is True
+    assert summary["environment"]["execution_platform"] == lock["environment"]["execution_platform"]
+    assert summary["environment"]["device_used"] == "CPU"
 
 
 def test_epoch_aware_bundle_distinguishes_next_epoch_from_replayed_position():

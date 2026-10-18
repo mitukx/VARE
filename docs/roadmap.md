@@ -16,17 +16,16 @@ stores, multiprocess access, and throughput remain unmeasured. See the
 The [epoch-aware TRL issue #7274 reproduction](trl-async-stale-resume-v3-report.md)
 confirms that a stale-dropped group can pin the resume cursor while later
 groups have already trained. The candidate records dropped IDs for cursor
-progress and preserves trained counts separately. Three matched CPU replays
-show 144–148 repeated stream positions on pinned main and one in-flight-tail
-position on the candidate. Upstream PR #7786 was closed before code review; no
-upstream integration is claimed. Automated review found and corrected dirty
-source-checkout provenance and incomplete run-inventory auditing; a clean
-source rerun passed all six locked decisions. A further v3 rerun pins the full
-56-package environment and bounds each pytest arm at 600 seconds; it again
-measures 145 baseline replays versus one candidate in-flight tail position in
-three paired runs. Generation and scoring remain stubbed. The VARE research
-gate remains a real-model update with independent held-out task success, not
-additional local variants of this cursor fix.
+progress and preserves trained counts separately. Matched CPU replays show
+144–148 repeated stream positions on pinned main and 0–1 candidate in-flight
+tail positions. Upstream PR #7786 was closed before code review; no upstream
+integration is claimed. Automated review drove clean-source and exact-run
+auditing, a complete 56-package lock, a 600-second arm timeout, and a v4 lock
+for the measured OS/hardware/device. V4 passed all six decisions with 144
+baseline repeats each and candidate counts 1, 1, and 0. Generation and scoring
+remain stubbed. The VARE research gate remains a real-model update with
+independent held-out task success, not additional local variants of this cursor
+fix. See the [v4 report](trl-async-stale-resume-v4-report.md).
 
 ## Direct-trainer freshness boundary — 2026-10-15
 

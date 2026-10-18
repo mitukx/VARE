@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 import os
+import platform
 from pathlib import Path, PurePosixPath
 import re
 import subprocess
@@ -20,6 +21,7 @@ LOCK_PATHS = {
     "trl-async-stale-resume-v1": ROOT / "protocols/trl_async_stale_resume_v1.lock.json",
     "trl-async-stale-resume-v2": LOCK_PATH,
     "trl-async-stale-resume-v3": ROOT / "protocols/trl_async_stale_resume_v3.lock.json",
+    "trl-async-stale-resume-v4": ROOT / "protocols/trl_async_stale_resume_v4.lock.json",
 }
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 REQUIREMENT_RE = re.compile(r"^([A-Za-z0-9_.-]+)==([A-Za-z0-9_.!+~-]+)$")
@@ -151,6 +153,28 @@ def source_revision(source: Path) -> str:
     return result.stdout.strip()
 
 
+def execution_platform() -> dict[str, Any]:
+    def sysctl_value(name: str) -> str | None:
+        if sys.platform != "darwin":
+            return None
+        result = subprocess.run(
+            ["sysctl", "-n", name], capture_output=True, text=True, check=False
+        )
+        return result.stdout.strip() if result.returncode == 0 else None
+
+    memory = sysctl_value("hw.memsize")
+    return {
+        "sys_platform": sys.platform,
+        "system": platform.system(),
+        "release": platform.release(),
+        "machine": platform.machine(),
+        "mac_ver": platform.mac_ver()[0],
+        "hardware_model": sysctl_value("hw.model"),
+        "processor": sysctl_value("machdep.cpu.brand_string"),
+        "memory_bytes": int(memory) if memory and memory.isdigit() else None,
+    }
+
+
 def runtime_environment(python: str, source: Path, expected: dict[str, Any]) -> dict[str, Any]:
     resolved = resolved_requirements(expected)
     if resolved is None:
@@ -201,16 +225,29 @@ def runtime_environment(python: str, source: Path, expected: dict[str, Any]) -> 
             f"changed={changed}"
         )
     observed.pop("duplicate_names", None)
+    if "execution_platform" in expected:
+        observed_platform = execution_platform()
+        if observed_platform != expected["execution_platform"]:
+            fail(
+                "execution platform mismatch: "
+                f"expected {expected['execution_platform']}, got {observed_platform}"
+            )
+        observed["execution_platform"] = observed_platform
+        observed["device_used"] = expected["device_used"]
     return observed
 
 
 def expected_runtime_environment(expected: dict[str, Any]) -> dict[str, Any]:
     resolved = resolved_requirements(expected)
-    return {
+    runtime = {
         "python": expected["python"],
         "versions": resolved
         or {PACKAGE_NAMES[key]: value for key, value in expected.items() if key in PACKAGE_NAMES},
     }
+    if "execution_platform" in expected:
+        runtime["execution_platform"] = expected["execution_platform"]
+        runtime["device_used"] = expected["device_used"]
+    return runtime
 
 
 def run_pytest_arm(

@@ -28,11 +28,13 @@ duplicate run inventories. No human review or upstream acceptance is recorded;
 see the [follow-up bundle](../results/trl-async-stale-resume-v2/run-2-review-fixes/).
 The latest review also found that v2 did not lock transitive dependencies or
 bound a hung pytest arm. Both remain frozen as historical protocol/evidence;
-v3 adds a full 56-distribution lock and a 600-second watchdog, then repeats the
-three-pair comparison (145 baseline positions versus one candidate tail
-position; no timeouts). It still stubs generation/scoring and provides no task
-success evidence; see the [v3 report](trl-async-stale-resume-v3-report.md) and
-[bundle](../results/trl-async-stale-resume-v3/run-1-full-lock-timeout/).
+v3 adds a full 56-distribution lock and a 600-second watchdog. A further v4
+rerun binds the OS release, architecture, Mac model, processor, memory, and CPU
+device, then measures 144 baseline repeated positions per run versus candidate
+counts of 1, 1, and 0; all six arms pass without timeouts. It still stubs
+generation/scoring and provides no task-success evidence; see the
+[v4 report](trl-async-stale-resume-v4-report.md) and
+[bundle](../results/trl-async-stale-resume-v4/run-1-platform-locked/).
 
 **Update 2026-10-15 — durable executor source:** a resumed worker could use new
 code while exporting its enrollment-time executor snapshot. The source pin now

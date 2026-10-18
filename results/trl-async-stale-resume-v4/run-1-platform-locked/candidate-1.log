@@ -1,0 +1,17 @@
+W1019 06:28:00.239000 8826 /private/tmp/vare-trl-v4/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+
+groups trained          : 147 (highest id 150)
+samples dropped stale   : 2
+group 2 reached trainer : True
+group 2 in _trained_groups : False
+discarded group ids     : [2]
+saved prompt_index      : 147
+.
+run 1 trained rows      : 147
+run 2 trained rows      : 149
+resumed at row          : 147
+rows trained TWICE      : 1 -> [150] ...
+rows new in run 2       : 148 -> [147, 148, 149, 151, 152, 153, 154, 155, 156, 157, 158, 159]
+_groups_before_resume   : 147 (run 1 actually trained 147)
+.
+2 passed in 6.45s

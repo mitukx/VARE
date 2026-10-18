@@ -26,12 +26,14 @@ source-level checkpoint correctness evidence only. See the
 
 The review-hardened [v3 rerun](trl-async-stale-resume-v3-report.md) fixes
 transitive dependency drift and unbounded pytest hangs with a complete 56-package
-lock and a 600-second per-arm watchdog. It repeats 145 baseline stream
-positions versus one candidate in-flight tail position across three runs each;
-all six arms pass, and none times out. The raw bundle and current protocol are
-[here](../results/trl-async-stale-resume-v3/run-1-full-lock-timeout/) and
-[here](../protocols/trl_async_stale_resume_v3.lock.json). This remains stubbed
-source-level correctness evidence, not model-learning evidence.
+lock and a 600-second per-arm watchdog. V4 also locks the measured OS, hardware,
+architecture, memory, and CPU device. Its three baseline runs repeat 144
+positions each; candidate runs repeat 1, 1, and 0. All six arms pass and none
+times out. The [v4 report](trl-async-stale-resume-v4-report.md),
+[protocol](../protocols/trl_async_stale_resume_v4.lock.json), and
+[raw bundle](../results/trl-async-stale-resume-v4/run-1-platform-locked/)
+retain the result. This remains stubbed source-level correctness evidence, not
+model-learning evidence.
 
 ## End-to-end CPU RL system benchmark — 2026-10-16
 
