@@ -17,7 +17,7 @@ from scripts import calibrate_task
 
 ROOT = Path(__file__).resolve().parents[1]
 TASK_ROOT = ROOT / "benchmarks/historical/verl_async_staleness_v1"
-RESULT_ROOT = ROOT / "results/verl-fully-async-staleness-accounting-v1/cpu-calibration-v6"
+RESULT_ROOT = ROOT / "results/verl-fully-async-staleness-accounting-v1"
 _EVALUATOR_SPEC = importlib.util.spec_from_file_location(
     "verl_async_staleness_grader", TASK_ROOT / "evaluator/grade.py"
 )
@@ -79,6 +79,35 @@ async def _processor_worker(self):
     assert _EVALUATOR.evaluate_dispatch_order(bad)["passed"] is False
 
 
+def test_reset_evaluator_binds_transitively_referenced_class_helpers():
+    candidate = ast.parse(
+        """
+class FullyAsyncRollouter:
+    async def reset_staleness(self):
+        async with self.lock:
+            self.staleness_samples = await self._remaining_samples()
+            return {}
+
+    async def _remaining_samples(self):
+        stats = await self.message_queue_client.get_statistics()
+        return self._outstanding_from_snapshot(stats)
+
+    def _outstanding_from_snapshot(self, stats):
+        removed = stats["total_produced"] - stats["queue_size"]
+        return max(0, self._total_dispatched_samples - removed)
+
+    async def _processor_worker(self):
+        return None
+"""
+    )
+    reset, _processor, class_methods = _EVALUATOR._find_methods(candidate)
+
+    results = _EVALUATOR.evaluate_reset(reset, class_methods)
+
+    assert [result["passed"] for result in results] == [True] * 4
+    assert all(result["returned_metrics"] for result in results)
+
+
 @pytest.mark.parametrize("relative_path", ["TASK.md", "task.json", "evaluator/grade.py"])
 def test_calibration_lock_rejects_task_or_evaluator_tampering(tmp_path, relative_path):
     copied = tmp_path / "task"
@@ -92,13 +121,20 @@ def test_calibration_lock_rejects_task_or_evaluator_tampering(tmp_path, relative
         calibrate_task.verify_lock(task, lock, copied, copied / "evaluator/grade.py")
 
 
-def test_retained_source_calibration_is_hash_complete():
-    summary = json.loads((RESULT_ROOT / "summary.json").read_text(encoding="utf-8"))
-    baseline = json.loads((RESULT_ROOT / "baseline.grade.json").read_text(encoding="utf-8"))
-    fixed = json.loads((RESULT_ROOT / "calibration.grade.json").read_text(encoding="utf-8"))
-    manifest = json.loads((RESULT_ROOT / "manifest.json").read_text(encoding="utf-8"))
+@pytest.mark.parametrize(
+    ("version", "protocol_id"),
+    [("cpu-calibration-v6", "verl-fully-async-staleness-accounting-v1"),
+     ("cpu-calibration-v7", "verl-fully-async-staleness-accounting-v2")],
+)
+def test_source_calibration_is_hash_complete(version, protocol_id):
+    evidence = RESULT_ROOT / version
+    summary = json.loads((evidence / "summary.json").read_text(encoding="utf-8"))
+    baseline = json.loads((evidence / "baseline.grade.json").read_text(encoding="utf-8"))
+    fixed = json.loads((evidence / "calibration.grade.json").read_text(encoding="utf-8"))
+    manifest = json.loads((evidence / "manifest.json").read_text(encoding="utf-8"))
 
     assert summary["status"] == "calibrated"
+    assert summary["protocol_id"] == protocol_id
     assert summary["observed"] == {"baseline_passed": False, "calibration_passed": True}
     assert baseline["passed"] is False
     assert fixed["passed"] is True
@@ -112,6 +148,6 @@ def test_retained_source_calibration_is_hash_complete():
     assert baseline["workspace_revision"] == "8ced5d2f4b148c2991217554e0c6f03028fa1470"
     assert fixed["workspace_revision"] == "64812373be25c00b0da1833308d573d45570a364"
     assert all(
-        _sha256(RESULT_ROOT / relative_path) == expected
+        _sha256(evidence / relative_path) == expected
         for relative_path, expected in manifest["files"].items()
     )

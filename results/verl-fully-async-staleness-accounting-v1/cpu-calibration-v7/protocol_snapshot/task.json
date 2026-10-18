@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "task_id": "verl-fully-async-staleness-accounting-v1",
+  "title": "Keep fully async rollout staleness tied to outstanding samples",
+  "source": {
+    "repository": "https://github.com/liruiluo/verl.git",
+    "base_revision": "8ced5d2f4b148c2991217554e0c6f03028fa1470",
+    "base_tree": "ae931c4519a12582681f6dbed93dd332b95769ec",
+    "calibration_revision": "64812373be25c00b0da1833308d573d45570a364",
+    "calibration_tree": "35d90c9398807d738ba843fa9cd4e6c9d5f35fb5",
+    "repo_license": "Apache-2.0",
+    "license_file": "LICENSE",
+    "files": [
+      "verl/experimental/fully_async_policy/fully_async_rollouter.py"
+    ],
+    "candidate_paths": [
+      "verl/experimental/fully_async_policy/fully_async_rollouter.py"
+    ],
+    "candidate_syntax_scope": "FullyAsyncRollouter.reset_staleness and its same-class helpers, plus dispatch accounting in FullyAsyncRollouter._processor_worker"
+  },
+  "references": [
+    "https://github.com/verl-project/verl/issues/7938",
+    "https://github.com/liruiluo/verl/commit/64812373be25c00b0da1833308d573d45570a364"
+  ],
+  "grader": {
+    "path": "benchmarks/historical/verl_async_staleness_v1/evaluator/grade.py",
+    "protocol_lock": "benchmarks/historical/verl_async_staleness_v1/protocol.lock.json",
+    "protocol_version": 2
+  },
+  "budget": {
+    "max_wall_seconds": 30,
+    "accelerator_hours": 0,
+    "paid_api_calls": 0,
+    "external_compute_usd": 0
+  },
+  "claim_limit": "Public issue and fix are known. A passing calibration establishes CPU evaluator behavior for one pinned source defect only; it is not model-training, agent-discovery, capability, throughput, or distributed-scale evidence."
+}

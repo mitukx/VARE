@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import ast
 import asyncio
+import copy
 import hashlib
 import json
 import platform
@@ -13,6 +14,7 @@ import sys
 import time
 from collections import deque
 from pathlib import Path
+from types import MethodType
 from typing import Any
 
 
@@ -114,18 +116,22 @@ def _self_attribute(node: ast.AST, name: str) -> bool:
     )
 
 
-def _find_methods(tree: ast.Module) -> tuple[ast.AsyncFunctionDef, ast.AsyncFunctionDef]:
+def _find_methods(
+    tree: ast.Module,
+) -> tuple[ast.AsyncFunctionDef, ast.AsyncFunctionDef, dict[str, ast.FunctionDef | ast.AsyncFunctionDef]]:
     classes = [node for node in tree.body if isinstance(node, ast.ClassDef) and node.name == "FullyAsyncRollouter"]
     if len(classes) != 1:
         raise ValueError("FullyAsyncRollouter class is missing or ambiguous")
     methods = {
         node.name: node
         for node in classes[0].body
-        if isinstance(node, ast.AsyncFunctionDef)
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
     }
-    if "reset_staleness" not in methods or "_processor_worker" not in methods:
+    reset = methods.get("reset_staleness")
+    processor = methods.get("_processor_worker")
+    if not isinstance(reset, ast.AsyncFunctionDef) or not isinstance(processor, ast.AsyncFunctionDef):
         raise ValueError("required async rollout methods are missing")
-    return methods["reset_staleness"], methods["_processor_worker"]
+    return reset, processor, methods
 
 
 class _Task:
@@ -200,15 +206,84 @@ class _Owner:
         return 0.0
 
 
-def evaluate_reset(method: ast.AsyncFunctionDef) -> list[dict[str, Any]]:
-    function = ast.fix_missing_locations(ast.Module(body=[method], type_ignores=[]))
+def _called_self_methods(method: ast.FunctionDef | ast.AsyncFunctionDef) -> set[str]:
+    return {
+        node.func.attr
+        for node in ast.walk(method)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Attribute)
+        and isinstance(node.func.value, ast.Name)
+        and node.func.value.id == "self"
+    }
+
+
+def _reachable_reset_helpers(
+    method: ast.AsyncFunctionDef,
+    class_methods: dict[str, ast.FunctionDef | ast.AsyncFunctionDef],
+) -> list[ast.FunctionDef | ast.AsyncFunctionDef]:
+    helpers: dict[str, ast.FunctionDef | ast.AsyncFunctionDef] = {}
+    pending = [method]
+    while pending:
+        current = pending.pop()
+        for name in _called_self_methods(current):
+            helper = class_methods.get(name)
+            if helper is not None and name != method.name and name not in helpers:
+                helpers[name] = helper
+                pending.append(helper)
+    return list(helpers.values())
+
+
+def _compile_reset_methods(
+    method: ast.AsyncFunctionDef,
+    helpers: list[ast.FunctionDef | ast.AsyncFunctionDef],
+) -> dict[str, Any]:
+    methods = [copy.deepcopy(method), *(copy.deepcopy(helper) for helper in helpers)]
+    for candidate_method in methods:
+        candidate_method.decorator_list = []
+        candidate_method.returns = None
+        for argument in (
+            *candidate_method.args.posonlyargs,
+            *candidate_method.args.args,
+            *candidate_method.args.kwonlyargs,
+        ):
+            argument.annotation = None
+        if candidate_method.args.vararg is not None:
+            candidate_method.args.vararg.annotation = None
+        if candidate_method.args.kwarg is not None:
+            candidate_method.args.kwarg.annotation = None
+    program = ast.fix_missing_locations(ast.Module(body=methods, type_ignores=[]))
     namespace: dict[str, Any] = {
         "asyncio": asyncio,
         "time": time,
-        "__builtins__": {"len": len, "max": max, "list": list, "print": print},
+        "__builtins__": {
+            "all": all,
+            "any": any,
+            "dict": dict,
+            "enumerate": enumerate,
+            "int": int,
+            "len": len,
+            "list": list,
+            "max": max,
+            "min": min,
+            "print": print,
+            "range": range,
+            "set": set,
+            "sum": sum,
+            "tuple": tuple,
+            "zip": zip,
+        },
     }
-    exec(compile(function, "<candidate-reset-staleness>", "exec"), namespace)
-    reset = namespace["reset_staleness"]
+    exec(compile(program, "<candidate-reset-staleness>", "exec"), namespace)
+    return namespace
+
+
+def evaluate_reset(
+    method: ast.AsyncFunctionDef,
+    class_methods: dict[str, ast.FunctionDef | ast.AsyncFunctionDef],
+) -> list[dict[str, Any]]:
+    helpers = _reachable_reset_helpers(method, class_methods)
+    namespace = _compile_reset_methods(method, helpers)
+    reset = namespace[method.name]
     cases = [
         {
             "case_id": "completed-workers-with-unconsumed-tail",
@@ -251,6 +326,9 @@ def evaluate_reset(method: ast.AsyncFunctionDef) -> list[dict[str, Any]]:
     results = []
     for case in cases:
         owner = _Owner(case)
+        for helper in helpers:
+            if not hasattr(owner, helper.name):
+                setattr(owner, helper.name, MethodType(namespace[helper.name], owner))
         metrics = asyncio.run(asyncio.wait_for(reset(owner), timeout=2.0))
         observed = owner.staleness_samples
         results.append(
@@ -401,8 +479,8 @@ def grade(workspace: Path, task_root: Path) -> dict[str, Any]:
     source_path = workspace / SOURCE_PATH
     source_text = source_path.read_text(encoding="utf-8")
     tree = ast.parse(source_text, filename=SOURCE_PATH)
-    reset, processor = _find_methods(tree)
-    runtime_cases = evaluate_reset(reset)
+    reset, processor, class_methods = _find_methods(tree)
+    runtime_cases = evaluate_reset(reset, class_methods)
     dispatch_order = evaluate_dispatch_order(processor)
     passed = all(case["passed"] and case["returned_metrics"] for case in runtime_cases) and dispatch_order[
         "passed"
