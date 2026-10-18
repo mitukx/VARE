@@ -8,6 +8,7 @@ import json
 import os
 from pathlib import Path, PurePosixPath
 import re
+import signal
 import subprocess
 import sys
 import tempfile
@@ -153,6 +154,13 @@ def source_revision(source: Path) -> str:
     return result.stdout.strip()
 
 
+def observed_source_revision(source: Path) -> str | None:
+    try:
+        return source_revision(source)
+    except (OSError, subprocess.CalledProcessError, ValueError):
+        return None
+
+
 def execution_platform(python: str) -> dict[str, Any]:
     probe = """import json, platform, subprocess, sys
 def sysctl_value(name):
@@ -254,23 +262,38 @@ def expected_runtime_environment(expected: dict[str, Any]) -> dict[str, Any]:
 def run_pytest_arm(
     command: list[str], source: Path, env: dict[str, str], timeout_seconds: int
 ) -> tuple[str, int, bool]:
+    process = subprocess.Popen(
+        command,
+        cwd=source,
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        start_new_session=os.name == "posix",
+    )
     try:
-        result = subprocess.run(
-            command,
-            cwd=source,
-            env=env,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            timeout=timeout_seconds,
-        )
-    except subprocess.TimeoutExpired as exc:
-        output = exc.stdout or ""
-        if isinstance(output, bytes):
-            output = output.decode("utf-8", errors="replace")
+        output, _ = process.communicate(timeout=timeout_seconds)
+    except subprocess.TimeoutExpired:
+        if os.name == "posix":
+            try:
+                os.killpg(process.pid, signal.SIGTERM)
+            except ProcessLookupError:
+                pass
+            try:
+                output, _ = process.communicate(timeout=1)
+            except subprocess.TimeoutExpired:
+                pass
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            output, _ = process.communicate()
+        else:
+            process.kill()
+            output, _ = process.communicate()
         output += f"\n{TIMEOUT_MARKER}{timeout_seconds}\n"
         return output, 124, True
-    return result.stdout, result.returncode, False
+    return output, process.returncode, False
 
 
 def protocol_timeout_seconds(lock: dict[str, Any]) -> int:
@@ -362,8 +385,15 @@ def parse_pytest_outcome(text: str, *, allow_missing: bool = False) -> dict[str,
     return summaries[0]
 
 
-def run_acceptance(arm: str, observed: dict[str, int], exit_code: int, lock: dict[str, Any]) -> bool:
-    if not set(LOG_PATTERNS).issubset(observed):
+def run_acceptance(
+    arm: str,
+    observed: dict[str, int],
+    exit_code: int,
+    lock: dict[str, Any],
+    *,
+    source_revision_valid: bool = True,
+) -> bool:
+    if not source_revision_valid or not set(LOG_PATTERNS).issubset(observed):
         return False
     stale_id = lock["reproducer"]["stale_group_id"]
     tail = lock["reproducer"]["tail_tolerance_groups"]
@@ -442,6 +472,7 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
         fail(f"runner source is not retained for hash: {runner_sha}")
     if sha256_file(runner_snapshot) != runner_sha:
         fail("retained runner source hash mismatch")
+    requires_source_revision_provenance = runner_sha == sha256_file(Path(__file__).resolve())
     validate_local_inputs(lock)
     if summary.get("environment") != expected_runtime_environment(lock["environment"]):
         fail("recorded runtime environment does not match the locked dependency versions")
@@ -500,6 +531,27 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
             len(exit_code_markers) != 1 or int(exit_code_markers[0]) != exit_code
         ):
             fail(f"raw log exit code marker contradicts recorded result: {run['log']}")
+        source_revision_valid = run.get("source_revision_valid", True)
+        if type(source_revision_valid) is not bool:
+            fail(f"source revision decision must be a boolean: {run['log']}")
+        source_valid_markers = re.findall(r"(?m)^VARE_RUNNER_SOURCE_REVISION_VALID=(true|false)\s*$", raw_log)
+        source_revision_markers = re.findall(r"(?m)^VARE_RUNNER_SOURCE_REVISION=(\S+)\s*$", raw_log)
+        if requires_source_revision_provenance and (
+            "source_revision_valid" not in run
+            or len(source_valid_markers) != 1
+            or len(source_revision_markers) != 1
+        ):
+            fail(f"current runner source revision provenance is incomplete: {run['log']}")
+        if source_valid_markers and (
+            len(source_valid_markers) != 1
+            or (source_valid_markers[0] == "true") != source_revision_valid
+        ):
+            fail(f"raw source revision decision contradicts summary: {run['log']}")
+        if source_revision_markers and (
+            len(source_revision_markers) != 1
+            or (source_revision_valid and source_revision_markers[0] != expected_revisions[run["arm"]])
+        ):
+            fail(f"raw source revision does not match the locked source: {run['log']}")
         timed_out = run.get("timed_out", False)
         if "per_run_timeout_seconds" in lock["reproducer"]:
             timeout_seconds = lock["reproducer"]["per_run_timeout_seconds"]
@@ -534,7 +586,13 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
             fail(f"recorded exit code contradicts raw pytest result: {run['log']}")
         if parsed != run["observed"]:
             fail(f"summary/log mismatch: {run['log']}")
-        accepted = run_acceptance(run["arm"], parsed, run["exit_code"], lock)
+        accepted = run_acceptance(
+            run["arm"],
+            parsed,
+            exit_code,
+            lock,
+            source_revision_valid=source_revision_valid,
+        )
         if accepted != run["accepted"]:
             fail(f"acceptance/log mismatch: {run['log']}")
     if summary["all_checks_passed"] != all(run["accepted"] for run in summary["runs"]):
@@ -580,10 +638,32 @@ def reproduce(args: argparse.Namespace) -> int:
         }
         for repetition in range(1, lock["reproducer"]["repetitions_per_arm"] + 1):
             for arm, source_root in (("baseline", base), ("candidate", candidate)):
-                if source_revision(source_root) != revisions[arm]:
-                    fail(f"{arm} source revision changed during reproduction")
                 log_rel = f"{arm}-{repetition}.log"
                 log_path = out / log_rel
+                current_revision = observed_source_revision(source_root)
+                if current_revision != revisions[arm]:
+                    output = (
+                        f"{arm}-{repetition} skipped: source revision changed before execution\n"
+                        f"{EXIT_CODE_MARKER}125\n"
+                        f"VARE_RUNNER_SOURCE_REVISION={current_revision or 'unavailable'}\n"
+                        "VARE_RUNNER_SOURCE_REVISION_VALID=false\n"
+                    )
+                    log_path.write_text(output, encoding="utf-8")
+                    runs.append(
+                        {
+                            "arm": arm,
+                            "repetition": repetition,
+                            "exit_code": 125,
+                            "log": log_rel,
+                            "observed": {},
+                            "accepted": False,
+                            "timed_out": False,
+                            "timeout_seconds": timeout_seconds,
+                            "source_revision_valid": False,
+                        }
+                    )
+                    print(f"{arm}-{repetition}: skipped, source revision changed", flush=True)
+                    continue
                 output, exit_code, timed_out = run_pytest_arm(
                     [args.python, "-m", "pytest", str(scripts[arm]), "-q", "-s"],
                     source_root,
@@ -591,11 +671,23 @@ def reproduce(args: argparse.Namespace) -> int:
                     timeout_seconds,
                 )
                 output = f"{output.rstrip()}\n{EXIT_CODE_MARKER}{exit_code}\n"
-                if source_revision(source_root) != revisions[arm]:
-                    fail(f"{arm} source checkout changed while running repetition {repetition}")
                 log_path.write_text(output, encoding="utf-8")
+                current_revision = observed_source_revision(source_root)
+                source_revision_valid = current_revision == revisions[arm]
+                with log_path.open("a", encoding="utf-8") as stream:
+                    stream.write(f"VARE_RUNNER_SOURCE_REVISION={current_revision or 'unavailable'}\n")
+                    stream.write(
+                        "VARE_RUNNER_SOURCE_REVISION_VALID="
+                        f"{'true' if source_revision_valid else 'false'}\n"
+                    )
                 observed = parse_run_log(output, allow_incomplete=timed_out or exit_code != 0)
-                accepted = run_acceptance(arm, observed, exit_code, lock)
+                accepted = run_acceptance(
+                    arm,
+                    observed,
+                    exit_code,
+                    lock,
+                    source_revision_valid=source_revision_valid,
+                )
                 run = {
                     "arm": arm,
                     "repetition": repetition,
@@ -603,6 +695,7 @@ def reproduce(args: argparse.Namespace) -> int:
                     "log": log_rel,
                     "observed": observed,
                     "accepted": accepted,
+                    "source_revision_valid": source_revision_valid,
                 }
                 run["timed_out"] = timed_out
                 run["timeout_seconds"] = timeout_seconds

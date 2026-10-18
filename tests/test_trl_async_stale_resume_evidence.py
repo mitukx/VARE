@@ -7,6 +7,7 @@ import shutil
 from pathlib import Path
 import subprocess
 import sys
+import time
 from types import SimpleNamespace
 
 import pytest
@@ -147,6 +148,34 @@ def test_pytest_arm_timeout_preserves_partial_output_as_failed_result(tmp_path: 
     assert "VARE_RUNNER_TIMEOUT_SECONDS=2" in output
 
 
+def test_pytest_arm_timeout_kills_descendant_processes(tmp_path: Path):
+    marker = tmp_path / "child-survived"
+    child_code = (
+        "import signal,time; from pathlib import Path; "
+        "signal.signal(signal.SIGTERM, signal.SIG_IGN); "
+        f"time.sleep(0.3); Path({str(marker)!r}).touch()"
+    )
+    parent_code = (
+        "import subprocess,sys,time; "
+        f"subprocess.Popen([sys.executable, '-c', {child_code!r}], "
+        "stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); "
+        "print('spawned', flush=True); time.sleep(5)"
+    )
+
+    output, exit_code, timed_out = run_pytest_arm(
+        [sys.executable, "-c", parent_code],
+        tmp_path,
+        dict(os.environ),
+        timeout_seconds=0.1,
+    )
+    time.sleep(0.4)
+
+    assert timed_out is True
+    assert exit_code == 124
+    assert "spawned" in output
+    assert not marker.exists()
+
+
 def _convert_bundle_to_v3(copied: Path) -> dict:
     shutil.copytree(EPOCH_AWARE_RUN, copied)
     summary_path = copied / "summary.json"
@@ -155,6 +184,10 @@ def _convert_bundle_to_v3(copied: Path) -> dict:
     summary["protocol_id"] = lock["protocol_id"]
     summary["protocol_sha256"] = sha256_file(V3_PROTOCOL)
     summary["environment"] = expected_runtime_environment(lock["environment"])
+    expected_revisions = {
+        "baseline": lock["source"]["baseline_revision"],
+        "candidate": lock["source"]["candidate_revision"],
+    }
     runner_path = ROOT / "scripts/reproduce_trl_async_stale_resume_v1.py"
     runner_bytes = runner_path.read_bytes()
     (copied / "runner.py").write_bytes(runner_bytes)
@@ -162,6 +195,11 @@ def _convert_bundle_to_v3(copied: Path) -> dict:
     for run in summary["runs"]:
         run["timed_out"] = False
         run["timeout_seconds"] = lock["reproducer"]["per_run_timeout_seconds"]
+        run["source_revision_valid"] = True
+        log_path = copied / run["log"]
+        with log_path.open("a", encoding="utf-8") as stream:
+            stream.write(f"VARE_RUNNER_SOURCE_REVISION={expected_revisions[run['arm']]}\n")
+            stream.write("VARE_RUNNER_SOURCE_REVISION_VALID=true\n")
     write_json(summary_path, summary)
     write_manifest(copied)
     return summary
@@ -232,11 +270,14 @@ def test_audit_seals_early_failed_arm_with_partial_measurements(tmp_path: Path):
     failed_run["timed_out"] = False
     failed_run["accepted"] = False
     failed_run["observed"] = {"first_run_trained_rows": 144}
+    failed_run["source_revision_valid"] = True
     (copied / failed_run["log"]).write_text(
         "ERROR collecting test_repro.py\n"
         "run 1 trained rows: 144\n"
         "1 error in 0.01s\n"
-        "VARE_RUNNER_EXIT_CODE=2\n",
+        "VARE_RUNNER_EXIT_CODE=2\n"
+        f"VARE_RUNNER_SOURCE_REVISION={summary['source_revisions']['candidate']}\n"
+        "VARE_RUNNER_SOURCE_REVISION_VALID=true\n",
         encoding="utf-8",
     )
     summary["all_checks_passed"] = False
@@ -247,6 +288,33 @@ def test_audit_seals_early_failed_arm_with_partial_measurements(tmp_path: Path):
 
     assert audited["all_checks_passed"] is False
     assert failed_run["observed"] == {"first_run_trained_rows": 144}
+
+
+def test_audit_rejects_promotion_after_source_checkout_changes_during_arm(tmp_path: Path):
+    copied = tmp_path / "run"
+    summary = _convert_bundle_to_v3(copied)
+    summary_path = copied / "summary.json"
+    changed_run = summary["runs"][0]
+    changed_run["source_revision_valid"] = False
+    changed_run["accepted"] = False
+    summary["all_checks_passed"] = False
+    log_path = copied / changed_run["log"]
+    raw_log = [
+        line
+        for line in log_path.read_text(encoding="utf-8").splitlines()
+        if not line.startswith("VARE_RUNNER_SOURCE_REVISION=")
+        and not line.startswith("VARE_RUNNER_SOURCE_REVISION_VALID=")
+    ]
+    log_path.write_text("\n".join(raw_log) + "\n", encoding="utf-8")
+    with log_path.open("a", encoding="utf-8") as stream:
+        stream.write("VARE_RUNNER_SOURCE_REVISION=unavailable\n")
+        stream.write("VARE_RUNNER_SOURCE_REVISION_VALID=false\n")
+    write_json(summary_path, summary)
+    write_manifest(copied)
+
+    audited = audit_bundle(copied)
+
+    assert audited["all_checks_passed"] is False
 
 
 def test_audit_cli_returns_nonzero_for_valid_nonpassing_bundle(tmp_path: Path):
