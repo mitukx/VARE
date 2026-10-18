@@ -51,7 +51,9 @@
     "continuation-audit-review-provenance-wave-assertion-order.log": "aebf5d4c473c4613185aa6e4e46370b43823b66959dc26fe41c320badf068857",
     "continuation-audit-review-source-lag-descendant-baseline.json": "ffc5da4a2e84983ae9832c0e586c11363241fc3fd6124a90c2f9300985c9df0e",
     "continuation-audit-review-after-final-findings-module.log": "6e88d7552c7d0f69ef9dd94f2f03455134c26c337f91efc46162eecf0ee3a909",
-    "source-commit-case-time-review.json": "66f22f33a4258f712743d4296ab746930dfbf490ead59f6e47f754e197a9de6a"
+    "source-commit-case-time-review.json": "66f22f33a4258f712743d4296ab746930dfbf490ead59f6e47f754e197a9de6a",
+    "continuation-audit-review-diagnostic-focused.log": "700bc0322b00f8e8db3ce495047983b54ab27ab59ed1fedac05f3aeba47dae24",
+    "continuation-audit-review-final-diagnostic-module.log": "6e88d7552c7d0f69ef9dd94f2f03455134c26c337f91efc46162eecf0ee3a909"
   },
   "fixed_negative_cases": {
     "passed": 11
@@ -480,7 +482,7 @@
     ".github/workflows/e2e-system-cpu.yml": "60331af183398380e6ba61edc0533c6e9f1d5d33000945928caedb8679197c58",
     "docs/e2e-rl-continuation-v2-report.md": "4a2132dd3b2837f2be3ff52916036501a2c65429ba09f3c4e72907cb38377bbc",
     "scripts/audit_e2e_rl_continuation.py": "febbb259590c62b4b987fefcdd86d958927b458e7901f2abf2a0e0953fa5aa2c",
-    "tests/test_e2e_rl_continuation.py": "7a86e3c3f850dd8656576f7e350f47ca0711c823bb210c3e43d1896d676a27fc",
+    "tests/test_e2e_rl_continuation.py": "84aa03191f89cc9454ae706c4df03c725856599a33db3bca4260a4c4c4d2817b",
     "results/e2e-rl-continuation-v2/derive_tables.py": "ff745d2924c000f530f4ad28b2d1dec891a7b3f5187a6cfe2efcdcecb7a4b555",
     "results/e2e-rl-continuation-v2/comparison.csv": "17e11ee707d2f49dea693eced265846d13a5f1140d6f02ffff4a01c5e6a1b74a",
     "results/e2e-rl-continuation-v2/derived-metrics.json": "523de894617903e8c08f4cb32ab6676268a7f0054f8ad146b868f04fe965d28f",
@@ -517,6 +519,7 @@
         "passed": 64,
         "skipped": 0,
         "model": "pinned tiny-GPT2 local snapshot",
+        "raw_campaign_mode": "new diagnostic campaign; no frozen archive environment variable",
         "actual_optimizer_and_SIGKILL_recovery": true
       },
       "retained_campaign_reaudit": {
@@ -538,6 +541,13 @@
           "derived-metrics.json"
         ],
         "byte_identical": true
+      },
+      "negative_controls": {
+        "resealed_source_snapshot_rejected": true,
+        "wrong_locked_commit_rejected": true,
+        "progress_summary_wall_mismatch_rejected": true,
+        "case_timing_endpoint_tamper_rejected": true,
+        "consistent_wall_summary_reseal_does_not_change_published_metric": true
       }
     }
   }
