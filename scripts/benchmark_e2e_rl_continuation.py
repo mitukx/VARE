@@ -121,6 +121,7 @@ class RoundTrace(base.Trace):
 
     def record(self, stage, start, **extra):
         super().record(stage, start, round_index=self.round_index, learner_attempt=self.attempt, **extra)
+        return self.rows[-1]
 
 
 class ContinuationHooks(base.ModelHooks):
@@ -377,13 +378,14 @@ async def learner_rounds(hooks, journal, config, cursor):
         atomic_json(hooks.round_dir / "committed.json", committed)
         cursor = cursor_for(hooks, index)
         atomic_json(root / "cursor.json", cursor)
-        hooks.trace.record("round", start, cpu_s=time.process_time()-cpu)
+        round_span = hooks.trace.record("round", start, cpu_s=time.process_time()-cpu)
         hooks.pause("round_committed")
         if hooks.attempt:
             progress = root / "post_restart_update.json"
             if not progress.exists():
                 atomic_json(progress, {"completed_round": index, "state_sha256": hooks.state_digest(),
-                                       "candidate_state_sha256": hooks.candidate_state_digest, "time": time.perf_counter()})
+                                       "candidate_state_sha256": hooks.candidate_state_digest,
+                                       "time": round_span["end"]})
         print(json.dumps({"round": index, "attempt": hooks.attempt, "active": hooks.active, "step": hooks.active_step}), flush=True)
     base.require(hooks.active_step >= 2, "fewer than two real promotions; continuation not demonstrated")
     if journal:

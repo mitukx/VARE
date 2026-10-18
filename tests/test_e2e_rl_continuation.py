@@ -417,6 +417,23 @@ def test_final_durable_cursor_must_match_final_commit(audit_records,tmp_path,fie
         auditor.audit(changed)
 
 
+def test_recovery_latency_must_match_resumed_round_trace(audit_records,tmp_path):
+    changed=tmp_path/"forged-recovery-endpoint"
+    shutil.copytree(audit_records,changed)
+    rows=auditor.read(changed/"progress.json")
+    row=next(item for item in rows if item["cutpoint"]=="post_optimizer")
+    case=changed/row["directory"]
+    progress_path=case/"post_restart_update.json"
+    progress=auditor.read(progress_path)
+    progress["time"]+=60.0
+    row["recovery_to_next_update_s"]+=60.0
+    bench.atomic_json(progress_path,progress)
+    bench.atomic_json(changed/"progress.json",rows)
+    reseal_records(changed)
+    with pytest.raises(ValueError,match="recovery endpoint"):
+        auditor.audit(changed)
+
+
 def test_rehashed_duplicate_optimizer_attempt_identity_is_rejected(audit_records,tmp_path):
     changed=tmp_path/"duplicate-optimizer-attempt"
     shutil.copytree(audit_records,changed)

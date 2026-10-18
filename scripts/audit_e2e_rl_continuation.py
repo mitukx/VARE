@@ -726,9 +726,20 @@ def audit(root, check_tensors=False, model_dir=None):
                 expected_marker_policy=commits[protocol["kill_round"]]["active_policy"]
             need(marker.get("active_policy")==expected_marker_policy,
                  "cutpoint marker active policy differs from the recovery boundary")
-            need(row["recovery_to_next_update_s"]==progress["time"]-killed["killed_at"]>0,"recovery clock differs")
             expected_round=protocol["kill_round"] if row["cutpoint"] in ("post_optimizer","candidate_saved","journal_prepared") else protocol["kill_round"]+1
             need(progress["completed_round"]==expected_round,"recovery did not execute the next logical optimizer round")
+            resumed_spans=trace_stages.get(("round",expected_round,1),[])
+            need(len(resumed_spans)==1,"recovery endpoint lacks one resumed-round trace")
+            resumed_end=resumed_spans[0]["end"]
+            if source_names==EXPECTED_SOURCES:
+                need(progress.get("time")==resumed_end,
+                     "recovery endpoint differs from resumed-round trace")
+            else:
+                next_spans=trace_stages.get(("round",expected_round+1,1),[])
+                need(len(next_spans)==1 and resumed_end<=progress.get("time")<=next_spans[0]["start"],
+                     "legacy recovery endpoint falls outside the resumed-round trace interval")
+            need(row["recovery_to_next_update_s"]==progress["time"]-killed["killed_at"]>0,
+                 "recovery clock differs")
     for row in rows:
         records=round_records[row["directory"]]
         if row["cutpoint"]=="none":

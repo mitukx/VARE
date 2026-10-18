@@ -59,7 +59,11 @@
     "continuation-audit-review-latest-cursor-setup-controls.log": "fe9dca0451129aaabdd76ea13e310b61a52091a146a1f9fe5b72b851eb33547f",
     "source-cursor-setup-runtime-dependency-baseline.json": "711c6d3988c0db62cd0c675844ba112da03317bfa499de4e2acfd85d062f8c29",
     "continuation-audit-review-final-derived-table-reproduction.log": "f412903a5a8477db9bfbb7bd542842286d82568e8321d4290073a54436d36c54",
-    "continuation-audit-review-final-static-checks.log": "fc68d142d1b0e08f69e6898c2d150ef2294872476b3cbf25bc54342d1c2a6046"
+    "continuation-audit-review-final-static-checks.log": "fc68d142d1b0e08f69e6898c2d150ef2294872476b3cbf25bc54342d1c2a6046",
+    "recovery-endpoint-baseline.json": "affe0607dd5438430164ea882100ff5fb827ad9e491ad36750e45cb1e4e4f0be",
+    "continuation-audit-review-final-recovery-endpoint-controls.log": "423b1d0e014eb1eab96f4420f7b344c2615be505dd574b756ac884826ca74f2d",
+    "continuation-audit-review-final-recovery-endpoint-model.log": "99db33d5c94c6f7da021687c7391181685cc33299c5435b1c861e2db3be3ec87",
+    "continuation-audit-review-final-recovery-endpoint-frozen-audit.log": "84008a3fb3bd14151c05edd3909f5dafdb58e8417fa4dd84fbdc6365e1589c07"
   },
   "fixed_negative_cases": {
     "passed": 11
@@ -486,13 +490,13 @@
   "scope": "Audit correction and actual toy-model system regressions; no new research or main performance campaign.",
   "sources": {
     ".github/workflows/e2e-system-cpu.yml": "60331af183398380e6ba61edc0533c6e9f1d5d33000945928caedb8679197c58",
-    "docs/e2e-rl-continuation-v2-report.md": "a8bc761f38fb82d8079d26febabfcbe3fd219d6da44ba9db458041d91b262746",
-    "scripts/audit_e2e_rl_continuation.py": "1e17e26d78807d2beadd218894ae98a689e345c5e2cfcd8226bda87c43fa0238",
-    "tests/test_e2e_rl_continuation.py": "7f2c91eb674aa0b13faca716182e3d1e480bab6e3e7d80379105df73d6bd31d6",
+    "docs/e2e-rl-continuation-v2-report.md": "617828d27de4993303df23fd93c3b9fb1a5d74dbbb4b41f8f29b523e5f501278",
+    "scripts/audit_e2e_rl_continuation.py": "f156ac798fe95c18f42e9f83583a1b86dfcc51a63d12b4ac1825def8e78942a8",
+    "tests/test_e2e_rl_continuation.py": "651a66258647375ecee6370d64e10d2c383b7c51426404f9d2d4d09bb0de39be",
     "results/e2e-rl-continuation-v2/derive_tables.py": "836955a9be3ecfb3cfa3a5fcc9abd7c1a8018fe80fef878ca42721738eea9db6",
     "results/e2e-rl-continuation-v2/comparison.csv": "322a604bd6312e7876e417bf2248e37885b7c7268cef5f562f85a8fde8f69d33",
     "results/e2e-rl-continuation-v2/derived-metrics.json": "574355c6098ec4ab2ce56b9ce0a5c5d631f1eb5d1085eb39f7d858d410c13d32",
-    "scripts/benchmark_e2e_rl_continuation.py": "9a7c68a9c28c8e7c4130663ed4c78c16751450d8b4cd3c88badff299b1aff4ec"
+    "scripts/benchmark_e2e_rl_continuation.py": "8924cfa3f596b8a4c0c8509b48ceede21a4089ece8b9c6dbefbac937c1becfb9"
   },
   "latest_review_corrections": {
     "source_commit_binding": {
@@ -627,7 +631,35 @@
         "log": "continuation-audit-review-final-derived-table-reproduction.log"
       },
       "focused_cursor_setup_controls_passed": 14,
-      "static_checks_log": "continuation-audit-review-final-static-checks.log"
+      "static_checks_log": "continuation-audit-review-final-static-checks.log",
+      "full_module_before_recovery_endpoint_fix": {
+        "commit": "6d9e3e1595c1dc97c3a1a00ef530c593507f662a",
+        "passed": 73,
+        "failed": 0,
+        "skipped": 0,
+        "log": "continuation-audit-review-final-source-module.log"
+      },
+      "post_recovery_endpoint_fix": {
+        "targeted_tests_passed": 2,
+        "targeted_tests_failed": 0,
+        "targeted_log": "continuation-audit-review-final-recovery-endpoint-model.log",
+        "tamper_control_log": "continuation-audit-review-final-recovery-endpoint-controls.log",
+        "frozen_campaign_audit_log": "continuation-audit-review-final-recovery-endpoint-frozen-audit.log",
+        "frozen_campaign_tensor_audit_passed": true,
+        "static_checks_log": "continuation-audit-review-final-static-checks.log"
+      }
+    },
+    "recovery_latency_integrity": {
+      "baseline_commit": "6d9e3e1595c1dc97c3a1a00ef530c593507f662a",
+      "resealed_timestamp_delta_s": 60,
+      "baseline_audit_accepted": true,
+      "baseline_cutpoint_mean_delta_s": 60.0,
+      "baseline_aggregate_mean_delta_s": 10.0,
+      "corrected_result": "recovery endpoint differs from resumed-round trace",
+      "new_campaign_endpoint": "post_restart_update.time equals the resumed round trace end",
+      "legacy_campaign_endpoint": "bounded between resumed round end and next round start",
+      "regression_cases_after_fix": 2,
+      "evidence": "recovery-endpoint-baseline.json"
     }
   }
 }

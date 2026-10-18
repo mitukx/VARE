@@ -325,6 +325,11 @@ committed round, active policy, checkpoint/state digests and accepted-update
 count. A re-sealed archive with the cursor removed passed the previous auditor;
 the corrected auditor rejects it.
 
+Recovery latency is anchored to the resumed round's trace end for new runs.
+The historical locked run's endpoint is bounded between that trace end and the
+next round's trace start, preserving its evidence while rejecting resealed
+latency edits.
+
 Review also found that the historical source inventory omitted five direct
 runtime imports (`config.py`, `evidence.py`, `integrations/rvl.py`,
 `telemetry.py`, and `types.py`). The frozen archive remains unchanged and is
