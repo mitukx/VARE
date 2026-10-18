@@ -65,18 +65,17 @@ def test_actual_checkpoint_state_and_scores_replay(campaign):
     assert auditor.read(root/"summary.json")["protocol_id"].endswith(".diagnostic")
 
 
-def test_campaign_snapshots_every_direct_runtime_dependency(campaign,tmp_path):
+def test_campaign_snapshots_the_full_runtime_package(campaign,tmp_path):
     root,_=campaign
     manifest=auditor.read(root/"manifest.json")
-    direct_dependencies={"src/vare/config.py","src/vare/evidence.py",
-                         "src/vare/integrations/rvl.py","src/vare/telemetry.py",
-                         "src/vare/types.py"}
-    assert direct_dependencies <= set(manifest["sources"])
-    assert direct_dependencies <= set(manifest["source_sha256"])
-    assert direct_dependencies <= set(auditor.EXPECTED_SOURCES)
+    runtime_sources={str(path.relative_to(bench.ROOT)) for path in (bench.ROOT/"src/vare").rglob("*.py")}
+    assert len(runtime_sources)==66
+    assert runtime_sources <= set(manifest["sources"])
+    assert runtime_sources <= set(manifest["source_sha256"])
+    assert runtime_sources <= auditor.EXPECTED_SOURCES
     changed=tmp_path/"changed-runtime-dependency"
     shutil.copytree(root,changed)
-    source="src/vare/config.py"
+    source="src/vare/curriculum.py"
     path=changed/"sources"/source
     path.write_bytes(path.read_bytes()+b"\n# changed after campaign\n")
     reseal_records(changed)
@@ -149,17 +148,6 @@ def audit_records(request):
 def reseal_records(root):
     bench.atomic_json(root/"SHA256SUMS.json",{str(p.relative_to(root)):auditor.sha(p)
                       for p in root.rglob('*') if p.is_file() and p.name!="SHA256SUMS.json"})
-
-
-def mark_manifest_as_locked_campaign(root,manifest):
-    protocol=auditor.read(root/"sources/benchmarks/e2e_rl_continuation_v2/protocol.json")
-    args=manifest["arguments"]
-    args["workers"]=protocol["workers"]
-    args["seeds"]=protocol["seeds"]
-    args["rounds"]=protocol["rounds"]
-    args["tasks"]=protocol["rollouts"]
-    args["eval_tasks"]=protocol["evaluation_tasks"]
-    args["skip_faults"]=False
 
 
 @pytest.mark.parametrize("mode",["minimal","guarded"])
@@ -358,38 +346,29 @@ def test_rehashed_missing_pinned_source_is_rejected(audit_records,tmp_path):
         auditor.audit(changed)
 
 
-def test_locked_source_snapshot_must_match_independent_commit_pin(audit_records,tmp_path):
-    changed=tmp_path/"rewritten-locked-source"
-    shutil.copytree(audit_records,changed)
-    source="src/vare/engine.py"
-    source_path=changed/"sources"/source
-    source_path.write_bytes(source_path.read_bytes()+b"\n# resealed replacement\n")
-    digest=auditor.sha(source_path)
-    manifest=auditor.read(changed/"manifest.json")
-    mark_manifest_as_locked_campaign(changed,manifest)
-    manifest["base_commit"]=auditor.PINNED_LOCKED_BASE_COMMIT
-    manifest["sources"][source]=manifest["source_sha256"][source]=digest
-    bench.atomic_json(changed/"manifest.json",manifest)
-    for row in auditor.read(changed/"progress.json"):
-        config_path=changed/row["directory"]/"config.json"
-        config=auditor.read(config_path)
-        config["source_sha256"][source]=digest
-        bench.atomic_json(config_path,config)
-    reseal_records(changed)
+def test_frozen_source_inventory_requires_exact_commit_and_digests():
+    manifest={"base_commit":auditor.PINNED_LOCKED_BASE_COMMIT,
+              "sources":dict(auditor.PINNED_LOCKED_SOURCE_SHA256)}
+    auditor.validate_source_inventory(manifest,auditor.LEGACY_EXPECTED_SOURCES,True)
+    wrong_commit={**manifest,"base_commit":"f"*40}
     with pytest.raises(ValueError,match="independently pinned revision"):
-        auditor.audit(changed)
+        auditor.validate_source_inventory(wrong_commit,auditor.LEGACY_EXPECTED_SOURCES,True)
+    wrong_sources={**manifest,"sources":{**manifest["sources"],"src/vare/engine.py":"0"*64}}
+    with pytest.raises(ValueError,match="independently pinned revision"):
+        auditor.validate_source_inventory(wrong_sources,auditor.LEGACY_EXPECTED_SOURCES,True)
 
 
-def test_locked_commit_must_match_independent_revision_pin(audit_records,tmp_path):
-    changed=tmp_path/"rewritten-locked-commit"
-    shutil.copytree(audit_records,changed)
-    manifest=auditor.read(changed/"manifest.json")
-    mark_manifest_as_locked_campaign(changed,manifest)
-    manifest["base_commit"]="f"*40
-    bench.atomic_json(changed/"manifest.json",manifest)
-    reseal_records(changed)
-    with pytest.raises(ValueError,match="independently pinned revision"):
-        auditor.audit(changed)
+def test_fresh_conformant_campaign_accepts_its_complete_source_inventory():
+    manifest={"base_commit":"a"*40,
+              "sources":{name:"0"*64 for name in auditor.EXPECTED_SOURCES}}
+    auditor.validate_source_inventory(manifest,auditor.EXPECTED_SOURCES,True)
+
+
+def test_new_source_inventory_requires_a_full_base_commit():
+    manifest={"base_commit":"not-a-commit",
+              "sources":{name:"0"*64 for name in auditor.EXPECTED_SOURCES}}
+    with pytest.raises(ValueError,match="base commit is not a full SHA"):
+        auditor.validate_source_inventory(manifest,auditor.EXPECTED_SOURCES,True)
 
 
 def test_missing_final_durable_cursor_is_rejected(audit_records,tmp_path):

@@ -583,10 +583,7 @@ def main():
                 "protocol_conformant": conformant}
     sources = [Path(__file__), Path(base.__file__), PROTOCOL, ROOT/"requirements/e2e-rl-real-model-v1.txt",
                ROOT/"scripts/audit_e2e_rl_continuation.py", ROOT/"tests/test_e2e_rl_continuation.py",
-               *[ROOT/"src/vare"/name for name in ("engine.py","lag.py","replay.py","promotion.py","attestation.py",
-                                                "reward_evidence.py","runtime.py","checkpoint_artifacts.py","promotion_journal.py",
-                                                "config.py","evidence.py","telemetry.py","types.py")],
-               ROOT/"src/vare/integrations/rvl.py"]
+               *sorted((ROOT/"src/vare").rglob("*.py"))]
     template["source_sha256"] = {str(p.relative_to(ROOT)):base.file_sha(p) for p in sources}
     for source in sources:
         target = args.output/"sources"/source.relative_to(ROOT)

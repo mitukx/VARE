@@ -330,11 +330,14 @@ The historical locked run's endpoint is bounded between that trace end and the
 next round's trace start, preserving its evidence while rejecting resealed
 latency edits.
 
-Review also found that the historical source inventory omitted five direct
-runtime imports (`config.py`, `evidence.py`, `integrations/rvl.py`,
-`telemetry.py`, and `types.py`). The frozen archive remains unchanged and is
-accepted only with its exact legacy commit/source pin. New campaigns snapshot
-and verify these modules; a resealed change to a retained dependency is rejected.
+Review also found that the source inventory omitted transitive runtime imports.
+New campaigns now snapshot every Python module under `src/vare/`, including
+curriculum, failure and interface modules, and reject a resealed dependency
+change. The historical archive remains unchanged under its exact legacy
+commit/source pin. The source-inventory gate accepts a fresh full-budget
+manifest with the expanded inventory and a recorded full commit SHA. The
+historical 42-case campaign was re-audited; a second full-budget campaign was
+not rerun.
 
 This is a toy neural LM and synthetic one-token workload. Replay is round-local;
 general durable replay-backlog/curriculum recovery is not tested. The supervisor

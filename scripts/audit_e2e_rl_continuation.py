@@ -28,13 +28,75 @@ LEGACY_EXPECTED_SOURCES = frozenset({
     "src/vare/runtime.py",
     "tests/test_e2e_rl_continuation.py",
 })
-EXPECTED_SOURCES = LEGACY_EXPECTED_SOURCES | frozenset({
+RUNTIME_PACKAGE_SOURCES = frozenset({
+    "src/vare/__init__.py",
+    "src/vare/__main__.py",
+    "src/vare/_grader_guard.py",
+    "src/vare/_public.py",
+    "src/vare/answer_scoring.py",
+    "src/vare/attestation.py",
+    "src/vare/blob_budget.py",
+    "src/vare/checkpoint_artifacts.py",
+    "src/vare/cli.py",
     "src/vare/config.py",
+    "src/vare/container_isolation.py",
+    "src/vare/controls.py",
+    "src/vare/curriculum.py",
+    "src/vare/demo.py",
+    "src/vare/durable.py",
+    "src/vare/engine.py",
+    "src/vare/entrypoint.py",
+    "src/vare/environments/__init__.py",
+    "src/vare/environments/campaign.py",
+    "src/vare/environments/catalog.py",
+    "src/vare/environments/factory.py",
+    "src/vare/environments/runner.py",
+    "src/vare/environments/spec.py",
+    "src/vare/environments/verifier.py",
+    "src/vare/eval_stats.py",
     "src/vare/evidence.py",
+    "src/vare/failure.py",
+    "src/vare/failure_triage.py",
+    "src/vare/format_vs_correctness.py",
+    "src/vare/format_vs_correctness_seeded_summary_v3.py",
+    "src/vare/format_vs_correctness_v2.py",
+    "src/vare/heldout_exact_integer.py",
+    "src/vare/integer_seed_split.py",
+    "src/vare/integrations/__init__.py",
+    "src/vare/integrations/chat_completions.py",
     "src/vare/integrations/rvl.py",
+    "src/vare/integrations/rvl_grpo.py",
+    "src/vare/integrations/rvl_trajectory.py",
+    "src/vare/interfaces.py",
+    "src/vare/isolated_hooks.py",
+    "src/vare/lag.py",
+    "src/vare/lifecycle.py",
+    "src/vare/meta_improvement.py",
+    "src/vare/promotion.py",
+    "src/vare/promotion_journal.py",
+    "src/vare/protocol.py",
+    "src/vare/replay.py",
+    "src/vare/reward_evidence.py",
+    "src/vare/runner.py",
+    "src/vare/runtime.py",
+    "src/vare/safety.py",
+    "src/vare/sandboxed_repository.py",
     "src/vare/telemetry.py",
+    "src/vare/trajectory_admission.py",
+    "src/vare/trajectory_dispatch.py",
+    "src/vare/trajectory_learner.py",
+    "src/vare/trajectory_promotion.py",
+    "src/vare/trajectory_provenance.py",
+    "src/vare/trajectory_reference.py",
+    "src/vare/trajectory_safety.py",
+    "src/vare/trajectory_store.py",
+    "src/vare/trajectory_workers.py",
+    "src/vare/trusted_evaluation.py",
     "src/vare/types.py",
+    "src/vare/update_cost_smoke.py",
+    "src/vare/verifiers.py",
 })
+EXPECTED_SOURCES = LEGACY_EXPECTED_SOURCES | RUNTIME_PACKAGE_SOURCES
 
 # The frozen v2 campaign is tied to the commit and source tree that produced it.
 # This independent pin prevents a re-sealed archive from choosing its own code.
@@ -56,6 +118,21 @@ PINNED_LOCKED_SOURCE_SHA256 = {
     "src/vare/runtime.py": "d1df9c0680b4fb4fd602694ae79eb5937dc391f53596d05a56f521ce79ecebb5",
     "tests/test_e2e_rl_continuation.py": "f56d8251f02e2c67b217321d51ae00c0b2fa60ec195baafebff46470c13f053e",
 }
+
+
+def validate_source_inventory(manifest, source_names, locked):
+    """Keep the frozen archive pinned while accepting fully snapshotted reruns."""
+    if source_names == LEGACY_EXPECTED_SOURCES:
+        need(locked and manifest.get("base_commit")==PINNED_LOCKED_BASE_COMMIT,
+             "locked campaign commit differs from the independently pinned revision")
+        need(manifest.get("sources")==PINNED_LOCKED_SOURCE_SHA256,
+             "locked campaign source snapshots differ from the independently pinned revision")
+        return
+    need(source_names==EXPECTED_SOURCES,"pinned source inventory differs")
+    commit=manifest.get("base_commit")
+    need(type(commit) is str and len(commit)==40 and
+         all(char in "0123456789abcdef" for char in commit),
+         "campaign base commit is not a full SHA")
 
 
 def need(ok, message):
@@ -167,13 +244,7 @@ def audit(root, check_tensors=False, model_dir=None):
     locked=(args["workers"]==protocol["workers"] and args["seeds"]==protocol["seeds"] and
             args["rounds"]==protocol["rounds"] and args["tasks"]==protocol["rollouts"] and
             args["eval_tasks"]==protocol["evaluation_tasks"] and not args["skip_faults"])
-    need(source_names==EXPECTED_SOURCES or (locked and source_names==LEGACY_EXPECTED_SOURCES),
-         "pinned source inventory differs")
-    if locked:
-        need(manifest.get("base_commit")==PINNED_LOCKED_BASE_COMMIT,
-             "locked campaign commit differs from the independently pinned revision")
-        need(manifest["sources"]==PINNED_LOCKED_SOURCE_SHA256,
-             "locked campaign source snapshots differ from the independently pinned revision")
+    validate_source_inventory(manifest,source_names,locked)
     need(manifest["protocol_conformant"]==summary["protocol_conformant"]==locked,"reduced run claims locked protocol")
     expected_id=protocol["schema"] if locked else protocol["schema"]+".diagnostic"
     need(manifest["protocol_id"]==summary["protocol_id"]==expected_id,"protocol identity differs")
