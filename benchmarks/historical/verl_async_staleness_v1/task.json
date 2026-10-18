@@ -16,7 +16,7 @@
     "candidate_paths": [
       "verl/experimental/fully_async_policy/fully_async_rollouter.py"
     ],
-    "candidate_syntax_scope": "FullyAsyncRollouter.__init__ dispatch-counter initialization, reset_staleness and its same-class helpers, plus dispatch accounting in FullyAsyncRollouter._processor_worker"
+    "candidate_syntax_scope": "FullyAsyncRollouter.__init__ dispatch-counter initialization, reset_staleness and its same-class helpers, plus reachable dispatch accounting in FullyAsyncRollouter._processor_worker"
   },
   "references": [
     "https://github.com/verl-project/verl/issues/7938",
@@ -25,7 +25,7 @@
   "grader": {
     "path": "benchmarks/historical/verl_async_staleness_v1/evaluator/grade.py",
     "protocol_lock": "benchmarks/historical/verl_async_staleness_v1/protocol.lock.json",
-    "protocol_version": 3
+    "protocol_version": 4
   },
   "budget": {
     "max_wall_seconds": 30,

@@ -414,15 +414,21 @@ def evaluate_reset(
     results = []
     for case in cases:
         owner = candidate_owner_type(case)
+        dispatched_before = owner._total_dispatched_samples
         metrics = asyncio.run(asyncio.wait_for(owner.reset_staleness(), timeout=2.0))
         observed = owner.staleness_samples
+        dispatched_after = owner._total_dispatched_samples
+        counter_preserved = dispatched_after == dispatched_before
         results.append(
             {
                 "case_id": case["case_id"],
                 "expected": case["expected"],
                 "observed": observed,
-                "passed": observed == case["expected"],
+                "passed": observed == case["expected"] and counter_preserved,
                 "returned_metrics": isinstance(metrics, dict),
+                "dispatch_counter_before": dispatched_before,
+                "dispatch_counter_after": dispatched_after,
+                "dispatch_counter_preserved": counter_preserved,
             }
         )
     return results
@@ -486,6 +492,7 @@ def evaluate_dispatch_order(method: ast.AsyncFunctionDef) -> dict[str, Any]:
         and node.func.id == "safe_create_task"
     ]
     reservations = []
+    control_transfer_nodes = (ast.Return, ast.Raise, ast.Break, ast.Continue)
     for lock_block in [node for node in ast.walk(method) if isinstance(node, ast.AsyncWith)]:
         is_self_lock = any(
             isinstance(item.context_expr, ast.Attribute)
@@ -530,6 +537,16 @@ def evaluate_dispatch_order(method: ast.AsyncFunctionDef) -> dict[str, Any]:
             dispatch_count_index = lock_block.body.index(direct_dispatch_count_writes[0]) if len(
                 direct_dispatch_count_writes
             ) == 1 else -1
+            update_end_index = max(staleness_index, dispatch_count_index)
+            no_exit_before_both_updates = (
+                direct_create_index >= 0
+                and update_end_index > direct_create_index
+                and not any(
+                    isinstance(child, control_transfer_nodes)
+                    for statement in lock_block.body[direct_create_index + 1 : update_end_index]
+                    for child in ast.walk(statement)
+                )
+            )
             reservations.append(
                 len(capacity_waits) == 1
                 and len(creates) == 1
@@ -549,6 +566,7 @@ def evaluate_dispatch_order(method: ast.AsyncFunctionDef) -> dict[str, Any]:
                 and direct_create_index >= 0
                 and staleness_index > direct_create_index
                 and dispatch_count_index > direct_create_index
+                and no_exit_before_both_updates
             )
     return {
         "passed": bool(reservations) and any(reservations),

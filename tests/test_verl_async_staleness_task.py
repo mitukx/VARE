@@ -79,6 +79,25 @@ async def _processor_worker(self):
     assert _EVALUATOR.evaluate_dispatch_order(bad)["passed"] is False
 
 
+def test_dispatch_order_rejects_unreachable_accounting_updates():
+    for transfer in ("return None", "raise RuntimeError('stop')", "break"):
+        worker = ast.parse(
+            f"""
+async def _processor_worker(self):
+    while True:
+        while len(self.active_tasks) >= self.max_concurrent_samples:
+            await asyncio.sleep(0)
+        async with self.lock:
+            task = safe_create_task(self.process())
+            {transfer}
+            self.staleness_samples += 1
+            self._total_dispatched_samples += 1
+"""
+        ).body[0]
+
+        assert _EVALUATOR.evaluate_dispatch_order(worker)["passed"] is False
+
+
 def test_reset_evaluator_binds_transitive_class_and_static_helpers():
     candidate = ast.parse(
         """
@@ -163,6 +182,33 @@ class FullyAsyncRollouter:
     assert control_record["passed"] is False
 
 
+def test_reset_evaluator_rejects_lifetime_counter_reset():
+    candidate = ast.parse(
+        """
+class FullyAsyncRollouter:
+    async def reset_staleness(self):
+        async with self.lock:
+            stats = await self.message_queue_client.get_statistics()
+            removed = stats["total_produced"] - stats["queue_size"]
+            self.staleness_samples = max(0, self._total_dispatched_samples - removed)
+            self._total_dispatched_samples = 0
+            return {}
+
+    async def _processor_worker(self):
+        return None
+"""
+    )
+    reset, _processor, class_methods = _EVALUATOR._find_methods(candidate)
+
+    results = _EVALUATOR.evaluate_reset(reset, class_methods)
+
+    assert results[0]["observed"] == results[0]["expected"]
+    assert results[0]["dispatch_counter_before"] == 45
+    assert results[0]["dispatch_counter_after"] == 0
+    assert results[0]["dispatch_counter_preserved"] is False
+    assert results[0]["passed"] is False
+
+
 def test_dispatch_counter_must_be_initialized_once_in_constructor():
     valid = ast.parse(
         "def __init__(self):\n    self._total_dispatched_samples = 0\n"
@@ -196,6 +242,7 @@ def test_calibration_lock_rejects_task_or_evaluator_tampering(tmp_path, relative
         ("cpu-calibration-v6", "verl-fully-async-staleness-accounting-v1", 4),
         ("cpu-calibration-v7", "verl-fully-async-staleness-accounting-v2", 4),
         ("cpu-calibration-v8", "verl-fully-async-staleness-accounting-v3", 6),
+        ("cpu-calibration-v9", "verl-fully-async-staleness-accounting-v4", 6),
     ],
 )
 def test_source_calibration_is_hash_complete(version, protocol_id, reset_case_count):
@@ -224,6 +271,8 @@ def test_source_calibration_is_hash_complete(version, protocol_id, reset_case_co
         assert baseline["checks"]["reset_staleness"][5]["observed"] == 0
         assert fixed["checks"]["reset_staleness"][4]["passed"] is True
         assert fixed["checks"]["reset_staleness"][5]["passed"] is True
+        if protocol_id.endswith("-v4"):
+            assert all(case["dispatch_counter_preserved"] for case in fixed["checks"]["reset_staleness"])
     assert baseline["workspace_revision"] == "8ced5d2f4b148c2991217554e0c6f03028fa1470"
     assert fixed["workspace_revision"] == "64812373be25c00b0da1833308d573d45570a364"
     assert all(
