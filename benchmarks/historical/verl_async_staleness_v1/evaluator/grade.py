@@ -310,6 +310,11 @@ def evaluate_dispatch_order(method: ast.AsyncFunctionDef) -> dict[str, Any]:
     dispatch_count_writes = [
         node for node in method_statements if writes_self_attribute(node, "_total_dispatched_samples")
     ]
+    parents = {
+        child: parent
+        for parent in ast.walk(method)
+        for child in ast.iter_child_nodes(parent)
+    }
     creates = [
         node
         for node in ast.walk(method)
@@ -334,8 +339,34 @@ def evaluate_dispatch_order(method: ast.AsyncFunctionDef) -> dict[str, Any]:
             node for node in body_nodes if writes_self_attribute(node, "_total_dispatched_samples")
         ]
         block_creates = [node for node in body_nodes if node in creates]
+        direct_staleness_writes = [
+            node for node in lock_block.body if writes_self_attribute(node, "staleness_samples")
+        ]
+        direct_dispatch_count_writes = [
+            node for node in lock_block.body if writes_self_attribute(node, "_total_dispatched_samples")
+        ]
+        direct_create_statements = [
+            statement
+            for statement in lock_block.body
+            if any(node in creates for node in ast.walk(statement))
+        ]
         for capacity_wait in capacity_waits:
-            after_dispatch = max((node.end_lineno or node.lineno for node in block_creates), default=0)
+            enclosing_loop = parents.get(capacity_wait)
+            capacity_index = enclosing_loop.body.index(capacity_wait) if (
+                isinstance(enclosing_loop, ast.While) and capacity_wait in enclosing_loop.body
+            ) else -1
+            dispatch_index = enclosing_loop.body.index(lock_block) if (
+                isinstance(enclosing_loop, ast.While) and lock_block in enclosing_loop.body
+            ) else -1
+            direct_create_index = lock_block.body.index(direct_create_statements[0]) if len(
+                direct_create_statements
+            ) == 1 else -1
+            staleness_index = lock_block.body.index(direct_staleness_writes[0]) if len(
+                direct_staleness_writes
+            ) == 1 else -1
+            dispatch_count_index = lock_block.body.index(direct_dispatch_count_writes[0]) if len(
+                direct_dispatch_count_writes
+            ) == 1 else -1
             reservations.append(
                 len(capacity_waits) == 1
                 and len(creates) == 1
@@ -344,11 +375,17 @@ def evaluate_dispatch_order(method: ast.AsyncFunctionDef) -> dict[str, Any]:
                 and len(block_creates) == 1
                 and block_staleness_writes == staleness_writes
                 and block_dispatch_count_writes == dispatch_count_writes
+                and direct_staleness_writes == staleness_writes
+                and direct_dispatch_count_writes == dispatch_count_writes
                 and increments_self_attribute(staleness_writes[0], "staleness_samples")
                 and increments_self_attribute(dispatch_count_writes[0], "_total_dispatched_samples")
-                and lock_block.lineno > (capacity_wait.end_lineno or capacity_wait.lineno)
-                and staleness_writes[0].lineno > after_dispatch
-                and dispatch_count_writes[0].lineno > after_dispatch
+                and enclosing_loop is parents.get(lock_block)
+                and isinstance(enclosing_loop, ast.While)
+                and capacity_index >= 0
+                and dispatch_index > capacity_index
+                and direct_create_index >= 0
+                and staleness_index > direct_create_index
+                and dispatch_count_index > direct_create_index
             )
     return {
         "passed": bool(reservations) and any(reservations),

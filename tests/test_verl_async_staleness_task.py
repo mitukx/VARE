@@ -17,7 +17,7 @@ from scripts import calibrate_task
 
 ROOT = Path(__file__).resolve().parents[1]
 TASK_ROOT = ROOT / "benchmarks/historical/verl_async_staleness_v1"
-RESULT_ROOT = ROOT / "results/verl-fully-async-staleness-accounting-v1/cpu-calibration-v5"
+RESULT_ROOT = ROOT / "results/verl-fully-async-staleness-accounting-v1/cpu-calibration-v6"
 _EVALUATOR_SPEC = importlib.util.spec_from_file_location(
     "verl_async_staleness_grader", TASK_ROOT / "evaluator/grade.py"
 )
@@ -52,24 +52,26 @@ def test_dispatch_order_accepts_assignment_increment_and_rejects_pre_wait_reserv
     good = ast.parse(
         """
 async def _processor_worker(self):
-    while len(self.active_tasks) >= self.max_concurrent_samples:
-        await asyncio.sleep(0)
-    async with self.lock:
-        task = safe_create_task(self.process())
-        self.staleness_samples = self.staleness_samples + 1
-        self._total_dispatched_samples = self._total_dispatched_samples + 1
+    while True:
+        while len(self.active_tasks) >= self.max_concurrent_samples:
+            await asyncio.sleep(0)
+        async with self.lock:
+            task = safe_create_task(self.process())
+            self.staleness_samples = self.staleness_samples + 1
+            self._total_dispatched_samples = self._total_dispatched_samples + 1
 """
     ).body[0]
     bad = ast.parse(
         """
 async def _processor_worker(self):
-    self.staleness_samples += 1
-    while len(self.active_tasks) >= self.max_concurrent_samples:
-        await asyncio.sleep(0)
-    async with self.lock:
-        task = safe_create_task(self.process())
-        self.staleness_samples += 0
-        self._total_dispatched_samples += 1
+    while True:
+        self.staleness_samples += 1
+        while len(self.active_tasks) >= self.max_concurrent_samples:
+            await asyncio.sleep(0)
+        async with self.lock:
+            task = safe_create_task(self.process())
+            self.staleness_samples += 0
+            self._total_dispatched_samples += 1
 """
     ).body[0]
 
