@@ -78,8 +78,17 @@ def test_campaign_snapshots_the_full_runtime_package(campaign,tmp_path):
     source="src/vare/curriculum.py"
     path=changed/"sources"/source
     path.write_bytes(path.read_bytes()+b"\n# changed after campaign\n")
+    manifest=auditor.read(changed/"manifest.json")
+    digest=auditor.sha(path)
+    manifest["sources"][source]=manifest["source_sha256"][source]=digest
+    bench.atomic_json(changed/"manifest.json",manifest)
+    for row in auditor.read(changed/"progress.json"):
+        config_path=changed/row["directory"]/"config.json"
+        config=auditor.read(config_path)
+        config["source_sha256"][source]=digest
+        bench.atomic_json(config_path,config)
     reseal_records(changed)
-    with pytest.raises(ValueError,match="source snapshot differs"):
+    with pytest.raises(ValueError,match="source snapshot differs from recorded base commit"):
         auditor.audit(changed)
 
 
@@ -359,8 +368,9 @@ def test_frozen_source_inventory_requires_exact_commit_and_digests():
 
 
 def test_fresh_conformant_campaign_accepts_its_complete_source_inventory():
-    manifest={"base_commit":"a"*40,
-              "sources":{name:"0"*64 for name in auditor.EXPECTED_SOURCES}}
+    commit=bench.subprocess.check_output(["git","rev-parse","HEAD"],cwd=bench.ROOT,text=True).strip()
+    source_hashes=auditor.source_hashes_from_commit(commit,auditor.EXPECTED_SOURCES)
+    manifest={"base_commit":commit,"sources":source_hashes}
     auditor.validate_source_inventory(manifest,auditor.EXPECTED_SOURCES,True)
 
 
@@ -368,6 +378,13 @@ def test_new_source_inventory_requires_a_full_base_commit():
     manifest={"base_commit":"not-a-commit",
               "sources":{name:"0"*64 for name in auditor.EXPECTED_SOURCES}}
     with pytest.raises(ValueError,match="base commit is not a full SHA"):
+        auditor.validate_source_inventory(manifest,auditor.EXPECTED_SOURCES,True)
+
+
+def test_new_source_inventory_requires_a_locally_verifiable_commit():
+    manifest={"base_commit":"f"*40,
+              "sources":{name:"0"*64 for name in auditor.EXPECTED_SOURCES}}
+    with pytest.raises(ValueError,match="base commit is unavailable"):
         auditor.validate_source_inventory(manifest,auditor.EXPECTED_SOURCES,True)
 
 

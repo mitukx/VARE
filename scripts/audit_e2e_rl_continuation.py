@@ -10,6 +10,10 @@ from pathlib import Path
 import random
 import sqlite3
 import statistics
+import subprocess
+import tarfile
+
+REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 
 LEGACY_EXPECTED_SOURCES = frozenset({
     "benchmarks/e2e_rl_continuation_v2/protocol.json",
@@ -133,6 +137,31 @@ def validate_source_inventory(manifest, source_names, locked):
     need(type(commit) is str and len(commit)==40 and
          all(char in "0123456789abcdef" for char in commit),
          "campaign base commit is not a full SHA")
+    committed_sources=source_hashes_from_commit(commit,source_names)
+    need(manifest.get("sources")==committed_sources,
+         "source snapshot differs from recorded base commit")
+
+
+def source_hashes_from_commit(commit, source_names):
+    """Hash the named Git blobs at a commit without extracting untrusted paths."""
+    try:
+        result=subprocess.run(
+            ["git","-C",str(REPOSITORY_ROOT),"archive","--format=tar",commit,"--",
+             *sorted(source_names)],
+            check=True,capture_output=True,
+        )
+    except (OSError,subprocess.CalledProcessError) as exc:
+        raise ValueError("campaign base commit is unavailable for source verification") from exc
+    with tarfile.open(fileobj=io.BytesIO(result.stdout),mode="r:") as archive:
+        committed_sources={}
+        for member in archive.getmembers():
+            if member.isfile():
+                stream=archive.extractfile(member)
+                need(stream is not None,"committed source could not be read")
+                committed_sources[member.name]=hashlib.sha256(stream.read()).hexdigest()
+    need(set(committed_sources)==source_names,
+         "source inventory differs from recorded base commit")
+    return committed_sources
 
 
 def need(ok, message):

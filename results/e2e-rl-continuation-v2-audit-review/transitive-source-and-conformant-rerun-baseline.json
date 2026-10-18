@@ -15,5 +15,16 @@
     "historical_commit": "56ba2fefc69a8851f0457646b7031fe8bf2f2c80",
     "impact": "a newly generated full-budget campaign at a new commit failed audit after completion"
   },
+  "expanded_inventory_commit_binding": {
+    "baseline_failure_mode": "the new inventory checked only that base_commit looked like a SHA, so coordinated resealing could substitute source bytes",
+    "corrected_rule": "every expanded-inventory source digest must equal the Git blob at manifest.base_commit",
+    "regression_mutates_and_reseals": [
+      "sources/src/vare/curriculum.py",
+      "manifest.sources",
+      "manifest.source_sha256",
+      "each case config source_sha256",
+      "SHA256SUMS.json"
+    ]
+  },
   "frozen_archive_modified": false
 }
