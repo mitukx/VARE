@@ -26,24 +26,13 @@ The pinned public issue reproduction runs the production rollout scheduling, sta
 
 The candidate reduced repeated rows from 145 to 1 in this fixture. The single repeated row is an asynchronous in-flight tail; this experiment does not establish exactly-once execution. The first exploratory set is also retained: its unmodified public assertion required at least 145 repeated rows, so two baseline repetitions that observed 144 rows exited nonzero even though each saved and resumed at group 2. The follow-up lock uses the same ten-row tail allowance already used by the reproduction's overlap check. These earlier failures are kept in [`run-1-original-threshold`](../results/trl-async-stale-resume-v1/run-1-original-threshold/), separate from the locked six-run bundle.
 
-The candidate's focused upstream tests passed: 9/9 tests in `test_async_stale_resume.py`. VARE's evidence parser and tamper-detection tests pass as well. The VARE runner downloads the pinned issue Gist, verifies its SHA-256, applies the retained source deltas, checks both TRL revisions and dependency versions, runs all six reproductions, and writes raw logs plus a hashed manifest. Re-run it with:
-
-```bash
-python -m venv --system-site-packages /tmp/vare-trl-env
-/tmp/vare-trl-env/bin/python -m pip install -r requirements/trl-async-stale-resume-v1.txt
-git clone https://github.com/huggingface/trl.git /tmp/trl-source
-git -C /tmp/trl-source fetch origin 6d6901c5e3963108076131ac4979d344566b13a2
-git -C /tmp/trl-source worktree add --detach /tmp/trl-base 6d6901c5e3963108076131ac4979d344566b13a2
-git -C /tmp/trl-source remote add vare https://github.com/mitukx/trl.git
-git -C /tmp/trl-source fetch vare codex/async-stale-resume-cursor
-git -C /tmp/trl-source worktree add --detach /tmp/trl-candidate a85900829d86bcd45b7db0310725f28d3152289b
-python scripts/reproduce_trl_async_stale_resume_v1.py \
-  --python /tmp/vare-trl-env/bin/python \
-  --baseline-source /tmp/trl-base \
-  --candidate-source /tmp/trl-candidate \
-  --output /tmp/trl-async-stale-resume-replay
-python scripts/audit_trl_async_stale_resume_v1.py /tmp/trl-async-stale-resume-replay
-```
+The v1 protocol and these results are historical. The current runner rejects
+new v1 runs because the frozen lock does not bind the full dependency set,
+timeout, or execution platform. The old command is intentionally not presented
+as runnable. To repeat this comparison with the supported runner, follow the
+[v4 reproduction instructions](trl-async-stale-resume-v4-report.md). V1 raw
+bundles whose runner source was not retained remain unauditable; the current
+auditor fails closed for them.
 
 The repository-native patch and regression tests are retained in the upstream patch file. The issue reproduction and API adaptations are pinned and hash-checked; no full copy of the reporter's Gist is stored.
 
