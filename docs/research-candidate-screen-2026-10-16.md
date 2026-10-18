@@ -134,6 +134,12 @@ byte-identical. The [decision record](../results/research-candidate-screen-2026-
 uses `null` for unmeasured model quantities. Hash/inventory verification, a
 deliberate modified-byte negative control, Ruff and blob-budget checks passed.
 No model regression suite was needed because no model/runtime/trainer changed.
+Review follow-up found that a re-sealed capture could change
+`repository_revision` and still pass verification. The verifier now binds this
+field to the pinned source revision. The re-sealed wrong-revision control failed
+in ordinary Python, `python -O`, and `PYTHONOPTIMIZE=1`; the corrected 27-case
+integrity suite passes. Baseline and corrected logs are retained under
+`results/research-candidate-metadata-review-v1/`.
 Frozen prior protocols and results are unchanged. This bounded search does not
 establish novelty absence globally, independent external review, task-success
 improvement, or new training-system capability.

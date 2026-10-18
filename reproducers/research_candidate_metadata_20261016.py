@@ -136,6 +136,8 @@ def verify(output):
         if digest((output/name).read_bytes()) != expected:
             raise ValueError(f'metadata artifact checksum differs: {name}')
     manifest = json.loads((output/'capture.json').read_text())
+    if manifest.get('repository_revision') != REVISION:
+        raise ValueError('capture repository revision differs from the pinned source revision')
     if not manifest['model_inference_calls']==manifest['optimizer_calls']==manifest['task_payload_downloads']==0:
         raise ValueError('capture is not metadata-only')
     for record in manifest['requests']:
