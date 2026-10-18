@@ -1,0 +1,32 @@
+{
+  "actual_model_regressions": {
+    "elapsed_s": 104.27,
+    "log": "validation/continuation-regressions-final.log",
+    "passed": 11
+  },
+  "downloaded_release_archive_audit": {
+    "artifacts_hashed": 6522,
+    "candidate_tensor_states_verified": 0,
+    "cases": 42,
+    "checkpoint_scores_replayed": false,
+    "pass": true,
+    "protocol_conformant": true
+  },
+  "downloaded_release_checks": {
+    "both_archive_sha256_sizes_and_regular_file_counts": "PASS",
+    "exact_table_regeneration": "PASS"
+  },
+  "frozen_prior_results_protocols_and_production_sources": "UNCHANGED",
+  "github_ci": "See the pull request checks for the final commit; these records describe local validation.",
+  "main_audit": {
+    "artifacts_hashed": 6522,
+    "candidate_tensor_states_verified": 504,
+    "cases": 42,
+    "checkpoint_scores_replayed": true,
+    "pass": true,
+    "protocol_conformant": true
+  },
+  "relative_markdown_targets": "PASS",
+  "ruff": "PASS",
+  "tracked_blob_budget": "tracked blob budget ok: 235 allowlisted blobs >= 1048576 bytes"
+}

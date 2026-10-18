@@ -1,0 +1,8 @@
+Independent review controls against pre-fix audit commit 5a19af78.
+Changed artifacts were atomically replaced; pristine archive remains untouched.
+[missing-stale-screening-event] baseline exit=0; fixed exit=1
+baseline: {"artifacts_hashed": 6522, "candidate_tensor_states_verified": 0, "cases": 42, "checkpoint_score_count_replayed": 0, "checkpoint_scores_replayed": false, "evaluation_pairs_verified": 507, "evaluation_reports_verified": 1014, "pass": true, "protocol_conformant": true}
+fixed: ValueError: stale replay screening events do not prove canary rejection
+[empty-normal-summary-groups] baseline exit=0; fixed exit=1
+baseline: {"artifacts_hashed": 6522, "candidate_tensor_states_verified": 0, "cases": 42, "checkpoint_score_count_replayed": 0, "checkpoint_scores_replayed": false, "evaluation_pairs_verified": 507, "evaluation_reports_verified": 1014, "pass": true, "protocol_conformant": true}
+fixed: ValueError: normal summary groups do not cover every normal case aggregate

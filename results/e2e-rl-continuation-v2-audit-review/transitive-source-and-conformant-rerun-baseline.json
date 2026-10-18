@@ -1,0 +1,30 @@
+{
+  "baseline_commit": "c4bfb47462e1ee041de9620d62394000a5f58a75",
+  "transitive_source_inventory": {
+    "baseline_entries": 20,
+    "runtime_package_python_files": 66,
+    "omitted_runtime_modules": [
+      "src/vare/curriculum.py",
+      "src/vare/failure.py",
+      "src/vare/interfaces.py"
+    ],
+    "failure_mode": "a transitive runtime module could change rollout or task behavior without appearing in the recorded source map"
+  },
+  "conformant_rerun_gate": {
+    "failure_mode": "the locked-campaign branch required every conformant run to use the historical frozen campaign commit and source digests",
+    "historical_commit": "56ba2fefc69a8851f0457646b7031fe8bf2f2c80",
+    "impact": "a newly generated full-budget campaign at a new commit failed audit after completion"
+  },
+  "expanded_inventory_commit_binding": {
+    "baseline_failure_mode": "the new inventory checked only that base_commit looked like a SHA, so coordinated resealing could substitute source bytes",
+    "corrected_rule": "every expanded-inventory source digest must equal the Git blob at manifest.base_commit",
+    "regression_mutates_and_reseals": [
+      "sources/src/vare/curriculum.py",
+      "manifest.sources",
+      "manifest.source_sha256",
+      "each case config source_sha256",
+      "SHA256SUMS.json"
+    ]
+  },
+  "frozen_archive_modified": false
+}

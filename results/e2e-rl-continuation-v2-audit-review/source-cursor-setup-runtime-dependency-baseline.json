@@ -1,0 +1,34 @@
+{
+  "baseline_commit": "20d5aeffae2608d94df34c0dc546a7202a88603e",
+  "durable_cursor": {
+    "baseline_resealed_missing_cursor_audit_passed": true,
+    "corrected_result": "final durable cursor is missing"
+  },
+  "evidence_note": "The frozen historical archive remains byte-for-byte untouched. Its old source inventory is accepted only under the exact pinned base commit; diagnostic campaigns now require and retain the five missing direct imports.",
+  "source_inventory": {
+    "campaign_sources": 15,
+    "corrected_direct_module_count": 5,
+    "frozen_campaign_audit_passed": true,
+    "missing_direct_runtime_modules": [
+      "src/vare/config.py",
+      "src/vare/evidence.py",
+      "src/vare/integrations/rvl.py",
+      "src/vare/telemetry.py",
+      "src/vare/types.py"
+    ],
+    "new_diagnostic_campaign": {
+      "direct_dependencies_present": true,
+      "mutated_source_result": "source snapshot differs"
+    }
+  },
+  "startup_metric": {
+    "baseline_resealed_mutation_audit_passed": true,
+    "corrected_derived_tables_equal_after_unverifiable_field_mutation": true,
+    "corrected_legacy_audit_result": "accepted",
+    "corrected_table_contains_startup_mean": false,
+    "mutated_rollout_pool_start_s": 999.0,
+    "previous_forged_mean_s": 334.3620502503375,
+    "previous_mean_delta_s": 332.20151280567126,
+    "previous_mean_s": 2.160537444666261
+  }
+}

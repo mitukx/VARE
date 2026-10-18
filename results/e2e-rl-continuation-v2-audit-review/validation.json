@@ -1,0 +1,746 @@
+{
+  "actual_model_regressions": {
+    "elapsed_s": 117.03,
+    "passed": 22
+  },
+  "baseline_commit": "507f1191cfbaf720d9e4d3df4930a75d1f2d480c",
+  "baseline_negative_cases": {
+    "failed": 11,
+    "interpretation": "Rehashed missing, mismatched or cross-attempt independent evaluation evidence was accepted."
+  },
+  "baseline_without_any_round_evaluation_files": {
+    "artifacts_hashed": 654,
+    "candidate_tensor_states_verified": 48,
+    "cases": 8,
+    "checkpoint_scores_replayed": true,
+    "pass": true,
+    "protocol_conformant": false
+  },
+  "corrected_missing_all_with_model_dir": "REJECTED before any evaluation score can be reported as replayed",
+  "diagnostic_archive": {
+    "bytes": 643872,
+    "files": 753,
+    "name": "diagnostic-checkpoints.tar.xz",
+    "sha256": "963a93d4ea1dff3cb6b39e8395f0f2f2a68783078960c4f4a959b590fae5505c"
+  },
+  "files": {
+    "continuation-audit-review-baseline.log": "c49cc8a0b07ba66f68f1ed3a989aa082ec1d679853abcf08dd2bef76045414d7",
+    "continuation-audit-review-fixed.log": "27f7c52d925e0bdb816d1abf29ad3a7d38ecf410af87c1de12deb887a255b839",
+    "continuation-audit-review-main.log": "84008a3fb3bd14151c05edd3909f5dafdb58e8417fa4dd84fbdc6365e1589c07",
+    "continuation-audit-review-missing-fixed.log": "7063597321b8dc97eb20a692277a4e4cb024ccce842cb288a6b9695ba63c1431",
+    "continuation-audit-review-regression.log": "0fd7dcb144a6d2f194d8275c73559c59820c86cc14ab0173eb60576794cf2680",
+    "continuation-audit-review-vacuous-model.log": "e648929534c6dd8fae82d95d3b6a3d1ef5393a2ef2590eb568137e58fe01cbdc",
+    "diagnostic-checkpoints.tar.xz": "963a93d4ea1dff3cb6b39e8395f0f2f2a68783078960c4f4a959b590fae5505c",
+    "continuation-audit-review-provenance-controls.log": "c78dbd729caaa7fb3e854af2aba241e8563d0ff89cf54724282e7541288f6f2a",
+    "continuation-audit-review-final-regressions.log": "a90ff20dbf4ae0b15f223150aab19c7d72d91b8fcb4c216ec8e7d9e9446c7b3b",
+    "continuation-audit-review-final-controls.log": "7c4aa6395be1184bcfb2afaf96257b70eddf5fe74dd8e6a3e1c12e5413254392",
+    "continuation-audit-review-final-module.log": "a003b9872680d6509804fa7036ff47414dd6043a37e4c2601ae249294dc69a0c",
+    "continuation-audit-review-final-provenance-wave.log": "56e11ece814270e8b25838cc6a1fcd6811b776d8154377c3c8db786658917e11",
+    "continuation-audit-review-final-recovered-publication-regression.log": "6fae9338bb6fd97caba00cfa347c412d014ea0186fc729c9f9e33027960f567a",
+    "continuation-audit-review-final-retained-audit.log": "41ee8fc6a94d197aa2bcf6aeecdd15049303b26127959696d941d13c4c77a324",
+    "continuation-audit-review-latest-controls.log": "b4a1e1eb6b251136a24d60b3c03fac0292770e9a01f94a625e9f8a9f23cab96a",
+    "continuation-audit-review-latest-canary-control.log": "48ca76e35890f1cad5b793b56d7d52ca12054bbcc31f35074d226bd2492a8070",
+    "continuation-audit-review-latest-module.log": "f69edf61d6ca6efd58898a0469f78747c733ff3c9bd6510479578b4a44bbabd6",
+    "continuation-audit-review-latest-retained-audit.log": "41ee8fc6a94d197aa2bcf6aeecdd15049303b26127959696d941d13c4c77a324",
+    "continuation-audit-review-latest-final-controls.log": "6f4ac0a9979a053e2c2de486709e2695a1d0598b72b9e061e196a4c9b27f0408",
+    "continuation-audit-review-latest-final-module.log": "985c68cb97eb2927f9db8c67c0ee3e2c40cadd2b6386a22b43f4a7642d93d02c",
+    "continuation-audit-review-latest-final-retained-audit.log": "41ee8fc6a94d197aa2bcf6aeecdd15049303b26127959696d941d13c4c77a324",
+    "continuation-audit-review-latest-promotion-tests.log": "e3ad93e412039b48a0483ea821b4eca484e9c99e5e55f24c058fd07a0b1c1dd3",
+    "continuation-audit-review-final-source-inventory-wave.log": "028dd49c08f9ca3151612e7dd2db85e156b2c618b6b2899f2dfec4d2027564ae",
+    "continuation-audit-review-final-tensor-audit.log": "84008a3fb3bd14151c05edd3909f5dafdb58e8417fa4dd84fbdc6365e1589c07",
+    "continuation-audit-review-provenance-wave-assertion-order.log": "aebf5d4c473c4613185aa6e4e46370b43823b66959dc26fe41c320badf068857",
+    "continuation-audit-review-source-lag-descendant-baseline.json": "ffc5da4a2e84983ae9832c0e586c11363241fc3fd6124a90c2f9300985c9df0e",
+    "continuation-audit-review-after-final-findings-module.log": "6e88d7552c7d0f69ef9dd94f2f03455134c26c337f91efc46162eecf0ee3a909",
+    "source-commit-case-time-review.json": "66f22f33a4258f712743d4296ab746930dfbf490ead59f6e47f754e197a9de6a",
+    "continuation-audit-review-diagnostic-focused.log": "700bc0322b00f8e8db3ce495047983b54ab27ab59ed1fedac05f3aeba47dae24",
+    "continuation-audit-review-final-diagnostic-module.log": "6e88d7552c7d0f69ef9dd94f2f03455134c26c337f91efc46162eecf0ee3a909",
+    "continuation-audit-review-final-source-module.log": "19da9087d92935b2064df20f632357e22786ce3e50fd7075c1f2ef56c47433ca",
+    "continuation-audit-review-frozen-cursor-setup-source-audit.log": "84008a3fb3bd14151c05edd3909f5dafdb58e8417fa4dd84fbdc6365e1589c07",
+    "continuation-audit-review-latest-cursor-setup-controls.log": "fe9dca0451129aaabdd76ea13e310b61a52091a146a1f9fe5b72b851eb33547f",
+    "source-cursor-setup-runtime-dependency-baseline.json": "711c6d3988c0db62cd0c675844ba112da03317bfa499de4e2acfd85d062f8c29",
+    "continuation-audit-review-final-derived-table-reproduction.log": "f412903a5a8477db9bfbb7bd542842286d82568e8321d4290073a54436d36c54",
+    "continuation-audit-review-final-static-checks.log": "fc68d142d1b0e08f69e6898c2d150ef2294872476b3cbf25bc54342d1c2a6046",
+    "recovery-endpoint-baseline.json": "affe0607dd5438430164ea882100ff5fb827ad9e491ad36750e45cb1e4e4f0be",
+    "continuation-audit-review-final-recovery-endpoint-controls.log": "423b1d0e014eb1eab96f4420f7b344c2615be505dd574b756ac884826ca74f2d",
+    "continuation-audit-review-final-recovery-endpoint-model.log": "99db33d5c94c6f7da021687c7391181685cc33299c5435b1c861e2db3be3ec87",
+    "continuation-audit-review-final-recovery-endpoint-frozen-audit.log": "84008a3fb3bd14151c05edd3909f5dafdb58e8417fa4dd84fbdc6365e1589c07",
+    "continuation-audit-review-final-transitive-source-tests.log": "c4b808d34f4db00b333696dec1f3a43a2887d8bfe0cb7af07a3cb98ff43a7830",
+    "continuation-audit-review-final-transitive-frozen-audit.log": "84008a3fb3bd14151c05edd3909f5dafdb58e8417fa4dd84fbdc6365e1589c07",
+    "continuation-audit-review-final-full-package-module.log": "ddc3d9f1cf00f769a1ed8e6e5d487701daf649ab1ed0cf685fdfe072a3be7d8b",
+    "continuation-audit-review-final-transitive-source-static-checks.log": "0ea86aea7b57c29bd90d5b22cbfa035d5205da18a729d9c9286fce292e4650c5",
+    "transitive-source-and-conformant-rerun-baseline.json": "3a097f02521bb3271276a1b38ce2ad5a7bee5e20f5207b812af3600467f992a6",
+    "continuation-audit-review-final-git-tree-module.log": "09efabbe841d5a8f293aba74741670e19f3bd0993cd9cbbc9f6011f34f0a683e",
+    "continuation-audit-review-final-git-tree-frozen-audit.log": "84008a3fb3bd14151c05edd3909f5dafdb58e8417fa4dd84fbdc6365e1589c07",
+    "source-git-tree-unit-tests.log": "c4b808d34f4db00b333696dec1f3a43a2887d8bfe0cb7af07a3cb98ff43a7830",
+    "continuation-audit-review-export-subst-focused.log": "96b271bd83500ab15e7bce8c3002ec01264ab88885699b52458ff1fd19d4950c",
+    "continuation-audit-review-export-subst-module.log": "0673895d0dbdd6398e682815aae9d8a750a9b90dbb69a9497dd8476b3cee1dd9"
+  },
+  "fixed_negative_cases": {
+    "passed": 11
+  },
+  "frozen_evidence": "Original protocols, main results and release archives unchanged. Current auditor independently replays the preserved data.",
+  "reproduction": [
+    "VARE_E2E_MODEL_DIR=/path/to/pinned/tiny-gpt2 python -m pytest tests/test_e2e_rl_continuation.py --basetemp=/tmp/vare-audit-regression-new",
+    "python scripts/audit_e2e_rl_continuation.py /path/to/retained/continuation-v2-main --model-dir /path/to/pinned/tiny-gpt2"
+  ],
+  "retained_main_reaudit": {
+    "artifacts_hashed": 6522,
+    "candidate_tensor_states_verified": 504,
+    "cases": 42,
+    "checkpoint_score_count_replayed": 32448,
+    "checkpoint_scores_replayed": true,
+    "evaluation_pairs_verified": 507,
+    "evaluation_reports_verified": 1014,
+    "pass": true,
+    "protocol_conformant": true
+  },
+  "review_corrections": {
+    "evaluation_attempt_binding": {
+      "baseline": {
+        "audit_pass": true,
+        "exit_code": 0
+      },
+      "baseline_commit": "f8c7731b61a3e2c3d3f5ac2eb2245e7e41b92f5a",
+      "fixed": {
+        "exit_code": 1,
+        "outcome": "rejected",
+        "reason": "evaluation does not correspond to a physical optimizer attempt"
+      },
+      "focused_tests": {
+        "committed_result_binding": true,
+        "passed": 3,
+        "recovered_journal_binding": true,
+        "tampered_attempt": true
+      },
+      "full_continuation_module_without_model": {
+        "passed": 16,
+        "scope": "Uses retained raw campaign archive; actual-model fixtures skipped.",
+        "skipped": 9
+      },
+      "new_model_or_optimizer_runs": 0,
+      "recovered_publication_binding": "Evaluation metadata is compared with the digest committed in the SQLite promotion transaction when a process dies after pointer publication before RoundResult is written.",
+      "retained_campaign_reaudit": {
+        "artifacts_hashed": 6522,
+        "candidate_tensor_states_verified": 504,
+        "cases": 42,
+        "checkpoint_scores_replayed": false,
+        "evaluation_pairs_verified": 507,
+        "evaluation_reports_verified": 1014,
+        "pass": true,
+        "protocol_conformant": true
+      },
+      "source_archive_sha256": "ade5ca917d8a0d3c53d8e13fd8984cc1392e70fe81ec7032bd5c95158959ff53",
+      "tamper": "Renamed both round-0 evaluation records from attempt0 to unlaunched attempt99 and regenerated SHA256SUMS.json."
+    },
+    "failure_artifact_preservation": {
+      "archive_created": true,
+      "failure_record_archived": true,
+      "scope": "Local bash -e/pipefail control simulating pytest failure; GitHub failure path itself was not injected.",
+      "simulated_pytest_exit_code": 1,
+      "workflow_step_exit_code": 1
+    }
+  },
+  "additional_review_corrections": {
+    "case_metadata_and_rollout_binding": {
+      "baseline_tamper_controls": {
+        "missing_rollout_evidence_audit_passed": true,
+        "relabelled_seed_audit_passed": true
+      },
+      "fixed_controls": {
+        "missing_rollout_evidence_rejected": true,
+        "relabelled_seed_rejected": true,
+        "focused_tests_passed": 2
+      },
+      "full_continuation_module": {
+        "passed": 18,
+        "scope": "Retained archive used; actual-model fixtures skipped locally.",
+        "skipped": 9
+      },
+      "retained_campaign_reaudit": {
+        "artifacts_hashed": 6522,
+        "candidate_tensor_states_verified": 504,
+        "cases": 42,
+        "evaluation_pairs_verified": 507,
+        "evaluation_reports_verified": 1014,
+        "pass": true,
+        "protocol_conformant": true
+      },
+      "source_archive_sha256": "ade5ca917d8a0d3c53d8e13fd8984cc1392e70fe81ec7032bd5c95158959ff53"
+    },
+    "batch_task_and_round_binding": {
+      "baseline_tamper_controls": {
+        "missing_batch_audit_passed": true,
+        "rehashed_batch_reward_mismatch_audit_passed": true,
+        "swapped_round_task_pool_audit_passed": true,
+        "rehashed_completed_round_total_audit_passed": true
+      },
+      "fixed_controls": {
+        "missing_batch_rejected": true,
+        "batch_reward_mismatch_rejected": true,
+        "swapped_round_task_pool_rejected": true,
+        "completed_round_total_mismatch_rejected": true,
+        "focused_tests_passed": 4
+      },
+      "full_continuation_module": {
+        "passed": 22,
+        "scope": "Retained archive used; actual-model fixtures skipped locally.",
+        "skipped": 9
+      },
+      "retained_campaign_audit": {
+        "artifacts_hashed": 6522,
+        "batch_attempt_files_bound": 513,
+        "candidate_tensor_states_verified": 504,
+        "cases": 42,
+        "committed_rounds": 504,
+        "optimizer_attempts": 513,
+        "rollout_attempt_files_bound": 513,
+        "rollout_records_bound": 16416,
+        "pass": true,
+        "protocol_conformant": true
+      },
+      "source_archive_sha256": "ade5ca917d8a0d3c53d8e13fd8984cc1392e70fe81ec7032bd5c95158959ff53",
+      "task_sampling": "AdaptiveCurriculum samples with replacement; each rollout is checked against the unique retained candidate task pool, not a one-to-one pool permutation."
+    },
+    "protocol_attempt_and_cohort_binding": {
+      "baseline_tamper_controls": {
+        "rehash_protocol_without_declared_digest_audit_passed": true,
+        "duplicate_optimizer_attempt_with_orphan_evidence_removed_audit_passed": true,
+        "mutated_heldout_minimal_audit_passed": true,
+        "mutated_heldout_guarded_audit_passed": true,
+        "guarded_heldout_same_values_new_bytes_audit_passed": true
+      },
+      "fixed_controls": {
+        "protocol_digest_conflict_rejected": "declared protocol snapshot digest differs",
+        "duplicate_optimizer_attempt_rejected": "duplicate optimizer attempt identity",
+        "mutated_heldout_minimal_rejected": "independent evaluation cohort provenance differs",
+        "mutated_heldout_guarded_rejected": "independent evaluation cohort provenance differs",
+        "focused_regressions_passed": 5,
+        "guarded_heldout_attestation_digest_rejected": "guarded evaluation set digest differs from retained cohort",
+        "guarded_heldout_byte_binding_test": "One retained task list was reserialized with identical JSON values but different bytes; the guarded report digest was rejected."
+      },
+      "full_continuation_module": {
+        "collected": 36,
+        "passed": 27,
+        "skipped": 9,
+        "scope": "Retained raw campaign; actual-model fixtures skipped locally."
+      },
+      "retained_campaign_audit": {
+        "artifacts_hashed": 6522,
+        "candidate_tensor_states_verified": 504,
+        "cases": 42,
+        "evaluation_pairs_verified": 507,
+        "evaluation_reports_verified": 1014,
+        "pass": true,
+        "protocol_conformant": true
+      },
+      "source_archive_sha256": "ade5ca917d8a0d3c53d8e13fd8984cc1392e70fe81ec7032bd5c95158959ff53",
+      "new_model_or_optimizer_runs": 0,
+      "task_generation": "The independent auditor reconstructs seeded train and held-out task records; guarded evaluator attestations are checked against each round-local held-out file."
+    },
+    "asynchronous_record_linkage_and_raw_resources": {
+      "baseline_commit": "135b8fcca7c5aee97dc2efeea29c12b556bae5cf",
+      "baseline_tamper_controls": {
+        "dropped_timed_round_span_audit_passed": true,
+        "mismatched_rollout_worker_rvl_logprob_audit_passed": true,
+        "deleted_gate_evaluation_pair_audit_passed": true,
+        "optimizer_attempt_moved_off_killed_round_audit_passed": true,
+        "forged_resource_summary_audit_passed": true
+      },
+      "fixed_controls": {
+        "timed_round_span_gap_rejected": true,
+        "normal_round_forged_as_recovered_publication_rejected": true,
+        "rollout_worker_rvl_logprob_mismatch_rejected": true,
+        "missing_gate_evaluation_pair_rejected": true,
+        "optimizer_attempt_schedule_mismatch_rejected": true,
+        "resource_summary_mismatch_rejected": true,
+        "raw_sample_resource_derivation_verified": true,
+        "prior_auditor_accepts_all_five_review_attacks_current_auditor_rejects_all_five": true
+      },
+      "focused_regressions": {
+        "passed": 8,
+        "scope": "Trace-span omission, forged recovery exemption, behavior-logprob linkage, reached-gate evaluation pairs, kill-round attempt schedule, resource summary integrity and raw sample derivation."
+      },
+      "full_continuation_module": {
+        "collected": 44,
+        "passed": 35,
+        "skipped": 9,
+        "elapsed_s": 115.78,
+        "scope": "Preserved raw campaign used; actual-model fixtures skipped locally because VARE_E2E_MODEL_DIR is not configured."
+      },
+      "retained_campaign_reaudit": {
+        "artifacts_hashed": 6522,
+        "candidate_tensor_states_verified": 504,
+        "cases": 42,
+        "evaluation_pairs_verified": 507,
+        "evaluation_reports_verified": 1014,
+        "checkpoint_scores_replayed": false,
+        "pass": true,
+        "protocol_conformant": true,
+        "scope": "Latest local audit used --check-tensors without an external model directory; prior recorded score replay remains unchanged."
+      },
+      "raw_resource_derivation": {
+        "source": "resources.jsonl",
+        "comparison_and_aggregate_outputs_byte_match_rederived_outputs": true,
+        "raw_archive_sha256": "ade5ca917d8a0d3c53d8e13fd8984cc1392e70fe81ec7032bd5c95158959ff53"
+      },
+      "new_model_or_optimizer_runs": 0,
+      "source_archive_sha256": "ade5ca917d8a0d3c53d8e13fd8984cc1392e70fe81ec7032bd5c95158959ff53"
+    },
+    "stale_replay_and_summary_completeness": {
+      "baseline_commit": "5a19af78ec7f4ec899f9f27facd214f11e6ae1ea",
+      "source_archive_sha256": "ade5ca917d8a0d3c53d8e13fd8984cc1392e70fe81ec7032bd5c95158959ff53",
+      "baseline_tamper_controls": {
+        "missing_stale_screening_event_audit_passed": true,
+        "misbound_stale_canary_audit_passed": true,
+        "empty_normal_summary_groups_audit_passed": true
+      },
+      "fixed_controls": {
+        "missing_stale_screening_event_rejected": true,
+        "misbound_stale_canary_rejected": true,
+        "empty_normal_summary_groups_rejected": true
+      },
+      "focused_regressions": {
+        "passed": 3,
+        "scope": "Screening-event retention, canary-to-authenticated-round-zero-rollout identity, and complete worker/mode summary coverage."
+      },
+      "full_continuation_module": {
+        "collected": 47,
+        "passed": 47,
+        "skipped": 0,
+        "elapsed_s": 296.51,
+        "scope": "Retained archive plus pinned local tiny-GPT2 fixture; actual optimizer updates, six SIGKILL recovery boundaries, post-restart updates and independent checkpoint evaluation ran on CPU."
+      },
+      "retained_campaign_reaudit": {
+        "artifacts_hashed": 6522,
+        "candidate_tensor_states_verified": 504,
+        "cases": 42,
+        "evaluation_pairs_verified": 507,
+        "evaluation_reports_verified": 1014,
+        "checkpoint_scores_replayed": false,
+        "pass": true,
+        "protocol_conformant": true,
+        "scope": "Standard-library record audit plus --check-tensors; no new evaluation or model/optimizer campaign."
+      },
+      "new_model_or_optimizer_campaign_runs": 0
+    },
+    "promotion_cutpoint_and_recovery_derived_tables": {
+      "baseline_commit": "3c25b74352f32820a1e792f0c7ab78fb050bab0d",
+      "source_archive_sha256": "ade5ca917d8a0d3c53d8e13fd8984cc1392e70fe81ec7032bd5c95158959ff53",
+      "baseline_tamper_controls": {
+        "promotion_contradicting_rehashed_evaluation_pair_audit_passed": true,
+        "misbound_rehashed_cutpoint_marker_audit_passed": true,
+        "forged_exact_reference_match_progress_flag_audit_passed": true
+      },
+      "fixed_controls": {
+        "promotion_decision_recomputed_from_selected_independent_pair": true,
+        "cutpoint_marker_bound_to_protocol_round_process_and_optimizer_state": true,
+        "exact_reference_match_bound_to_round_comparisons": true,
+        "recovery_table_count_derived_from_round_comparisons": true
+      },
+      "focused_regressions": {
+        "passed": 6,
+        "scope": "Promotion metrics and promoted ID, cutpoint/kill-record identity, and raw exact-recovery count derivation."
+      },
+      "full_continuation_module": {
+        "collected": 53,
+        "passed": 53,
+        "skipped": 0,
+        "elapsed_s": 334.37,
+        "scope": "Pinned tiny-GPT2 local CPU run with actual optimizer updates, six SIGKILL recovery boundaries, post-restart updates and independent checkpoint evaluation, plus retained-archive falsification tests."
+      },
+      "retained_campaign_reaudit": {
+        "artifacts_hashed": 6522,
+        "candidate_tensor_states_verified": 504,
+        "cases": 42,
+        "evaluation_pairs_verified": 507,
+        "evaluation_reports_verified": 1014,
+        "checkpoint_scores_replayed": false,
+        "pass": true,
+        "protocol_conformant": true,
+        "scope": "Record and tensor audit of the preserved raw campaign; no full protocol campaign or historical evaluation rerun."
+      },
+      "derived_tables_byte_comparison": {
+        "matched": true,
+        "files": [
+          "comparison.csv",
+          "stage-latency.csv",
+          "recovery.csv",
+          "derived-metrics.json"
+        ],
+        "baseline_forged_exact_cases": "2/3",
+        "corrected_raw_comparison_cases": "3/3"
+      },
+      "new_full_protocol_campaigns": 0,
+      "new_diagnostic_model_regression_campaigns": 1
+    },
+    "trace_metrics_and_stale_aggregate_integrity": {
+      "baseline_commit": "b44cc537b77196517cdff646b82f037b192dfb58",
+      "source_archive_sha256": "ade5ca917d8a0d3c53d8e13fd8984cc1392e70fe81ec7032bd5c95158959ff53",
+      "extracted_raw_checksum_manifest_sha256": "e3dc70f3c9839b2ccaf5b716525279dc2022c8f127eca16d6daeb36ad80c9d2b",
+      "baseline_tamper_controls": {
+        "non_round_training_duration_changed_and_verification_span_removed_audit_passed": true,
+        "progress_stale_rejection_total_incremented_audit_passed": true,
+        "stage_table_verification_observations_before_after": [
+          1152,
+          1151
+        ],
+        "stage_table_training_p50_ms_before_after": [
+          76.71172899426892,
+          76.83302050281782
+        ],
+        "stale_total_old_table_vs_committed_evidence": [
+          34,
+          33
+        ]
+      },
+      "fixed_controls": {
+        "all_trace_spans_have_finite_ordered_timestamps_and_exact_duration": true,
+        "rollout_verification_freshness_replay_training_evaluation_promotion_and_checkpoint_save_coverage_checked": true,
+        "rollout_and_evaluation_trace_identities_bound_to_retained_evidence": true,
+        "latency_table_derivation_validates_normal_trace_coverage": true,
+        "stale_total_derived_from_committed_rounds_and_progress_reconciled": true,
+        "rehashed_trace_and_stale_aggregate_attacks_rejected": true
+      },
+      "focused_regressions": {
+        "passed": 17,
+        "log": "continuation-audit-review-trace-stale-focused.log",
+        "scope": "Prior evaluation-artifact rejection controls, trace duration and stage deletion, stale progress aggregate, and exact recovery table derivation."
+      },
+      "full_continuation_module": {
+        "collected": 56,
+        "passed": 56,
+        "skipped": 0,
+        "exit_code": 0,
+        "log": "continuation-audit-review-trace-stale-module.log",
+        "scope": "Pinned tiny-GPT2 CPU run with actual optimizer updates, six SIGKILL recovery boundaries, post-restart updates, independent checkpoint evaluation, and re-sealed archive falsification."
+      },
+      "retained_campaign_reaudit": {
+        "cases": 42,
+        "artifacts_hashed": 6522,
+        "evaluation_pairs_verified": 507,
+        "evaluation_reports_verified": 1014,
+        "pass": true,
+        "protocol_conformant": true,
+        "log": "continuation-audit-review-trace-stale-retained-audit.log"
+      },
+      "derived_tables_byte_identical": [
+        "comparison.csv",
+        "stage-latency.csv",
+        "recovery.csv",
+        "derived-metrics.json"
+      ],
+      "single_seed_diagnostic_derivation": {
+        "pass": true,
+        "sample_sd": null
+      },
+      "new_full_protocol_campaigns": 0,
+      "new_diagnostic_model_regression_campaigns": 1,
+      "controls_log": "continuation-audit-review-trace-stale-controls.log"
+    },
+    "source_inventory_policy_lag_and_descendant_provenance": {
+      "baseline_commit": "8b5845ba309ff4a177a88fe8ea88ed3eeec3a89d",
+      "baseline_tamper_controls": {
+        "missing_pinned_source_audit_passed": true,
+        "policy_lag_999_audit_passed": true,
+        "live_descendant_9_audit_passed": true
+      },
+      "baseline_tables": {
+        "policy_lag_max_after_forgery": 999,
+        "live_old_descendants_after_forgery": 9
+      },
+      "fixed_controls": {
+        "exact_pinned_source_inventory_and_case_bindings": true,
+        "trace_policy_lag_bound_to_active_and_rollout_versions": true,
+        "policy_lag_table_recomputed_from_rollouts": true,
+        "descendant_count_bound_to_kill_record_and_progress": true,
+        "rehashed_source_lag_descendant_attacks_rejected": true
+      },
+      "focused_tests": {
+        "collected": 4,
+        "passed": 4,
+        "exit_code": 0
+      },
+      "full_continuation_module": {
+        "collected": 59,
+        "passed": 59,
+        "failed": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "log": "continuation-audit-review-final-source-inventory-wave.log",
+        "scope": "Pinned tiny-GPT2 CPU continuation with actual optimizer updates, all six learner SIGKILL recovery boundaries, post-restart updates, independent checkpoint evaluation, and archive falsification controls."
+      },
+      "retained_campaign_reaudit": {
+        "cases": 42,
+        "artifacts_hashed": 6522,
+        "candidate_tensor_states_verified": 504,
+        "evaluation_pairs_verified": 507,
+        "evaluation_reports_verified": 1014,
+        "checkpoint_scores_replayed": 32448,
+        "pass": true,
+        "log": "continuation-audit-review-final-tensor-audit.log"
+      },
+      "tables_reproduced_byte_identically": {
+        "python": "3.12",
+        "files": [
+          "comparison.csv",
+          "stage-latency.csv",
+          "recovery.csv",
+          "derived-metrics.json"
+        ]
+      },
+      "baseline_reproduction_log": "continuation-audit-review-source-lag-descendant-baseline.json",
+      "initial_test_adjustment": {
+        "initial_exit_code": 1,
+        "reason": "The pre-existing protocol-digest falsification changed manifest.sources but not its mirrored source_sha256 field, so the new earlier exact-inventory check correctly failed first.",
+        "correction": "The test now reseals both mirrored source digest maps before asserting the protocol_sha256 rejection; the 4 focused tests and all 59 module tests pass."
+      },
+      "new_full_protocol_campaigns": 0
+    }
+  },
+  "scope": "Audit correction and actual toy-model system regressions; no new research or main performance campaign.",
+  "sources": {
+    ".github/workflows/e2e-system-cpu.yml": "60331af183398380e6ba61edc0533c6e9f1d5d33000945928caedb8679197c58",
+    "docs/e2e-rl-continuation-v2-report.md": "effe8e94368cdaec54e611da2029bf231c45874dac8ea8c9fe997bd3fba4cda9",
+    "scripts/audit_e2e_rl_continuation.py": "d822bf707143009f0470a1165ba410a1bb34b1cefd0107fde664d812451df72c",
+    "tests/test_e2e_rl_continuation.py": "dd3af80a8409c6cfebe68a8914336191978affb3983dc137a0561ab690addd57",
+    "results/e2e-rl-continuation-v2/derive_tables.py": "836955a9be3ecfb3cfa3a5fcc9abd7c1a8018fe80fef878ca42721738eea9db6",
+    "results/e2e-rl-continuation-v2/comparison.csv": "322a604bd6312e7876e417bf2248e37885b7c7268cef5f562f85a8fde8f69d33",
+    "results/e2e-rl-continuation-v2/derived-metrics.json": "574355c6098ec4ab2ce56b9ce0a5c5d631f1eb5d1085eb39f7d858d410c13d32",
+    "scripts/benchmark_e2e_rl_continuation.py": "efd55c037c87c851db486169d8fd3f4179d8fe69e8b86cf18258ad84f1e62ccc"
+  },
+  "latest_review_corrections": {
+    "source_commit_binding": {
+      "baseline_commit": "9b6e38700745b77fd31f2e9a1965749b60d645a6",
+      "baseline_resealed_source_attack": {
+        "accepted": true,
+        "cases": 42
+      },
+      "corrected_resealed_source_attack": {
+        "accepted": false,
+        "error": "locked campaign source snapshots differ from the independently pinned revision"
+      },
+      "fixed_commit": "56ba2fefc69a8851f0457646b7031fe8bf2f2c80",
+      "fixed_source_digest_count": 15
+    },
+    "case_timing_integrity": {
+      "baseline_progress_reseal_audit_accepted": true,
+      "baseline_case_wall_mean_delta_s": 333.3333333333333,
+      "corrected_progress_only_reseal_audit_accepted": false,
+      "corrected_rejection": "progress case wall differs from retained case summary",
+      "corrected_published_sample_window_delta_s": 0.0,
+      "consistent_progress_and_summary_reseal": {
+        "auditor_accepts": true,
+        "table_delta_s": 0.0
+      },
+      "historical_metric": "sampled_resource_window_s derived from first/last resources.jsonl monotonic timestamps; not full case duration",
+      "new_run_records": "case_timing.json start/end monotonic endpoints cross-checked against resource samples, case summary, and progress row",
+      "focused_tests_passed": 6,
+      "full_actual_model_module": {
+        "passed": 64,
+        "skipped": 0,
+        "model": "pinned tiny-GPT2 local snapshot",
+        "raw_campaign_mode": "new diagnostic campaign; no frozen archive environment variable",
+        "actual_optimizer_and_SIGKILL_recovery": true
+      },
+      "retained_campaign_reaudit": {
+        "pass": true,
+        "cases": 42,
+        "artifacts_hashed": 6522,
+        "candidate_tensor_states_verified": 504,
+        "evaluation_pairs_verified": 507,
+        "evaluation_reports_verified": 1014,
+        "checkpoint_score_count_replayed": 32448,
+        "checkpoint_scores_replayed": true
+      },
+      "derived_table_reproduction": {
+        "python": "3.12",
+        "tables": [
+          "comparison.csv",
+          "stage-latency.csv",
+          "recovery.csv",
+          "derived-metrics.json"
+        ],
+        "byte_identical": true
+      },
+      "negative_controls": {
+        "resealed_source_snapshot_rejected": true,
+        "wrong_locked_commit_rejected": true,
+        "progress_summary_wall_mismatch_rejected": true,
+        "case_timing_endpoint_tamper_rejected": true,
+        "consistent_wall_summary_reseal_does_not_change_published_metric": true
+      }
+    },
+    "durable_cursor_integrity": {
+      "baseline_commit": "20d5aeffae2608d94df34c0dc546a7202a88603e",
+      "resealed_missing_cursor_baseline_accepted": true,
+      "corrected_result": "final durable cursor is missing",
+      "cursor_fields_bound_to_final_commit": [
+        "completed_round",
+        "active_policy",
+        "active_checkpoint_sha256",
+        "active_state_sha256",
+        "accepted_updates"
+      ],
+      "new_regression_cases": 6,
+      "evidence": "source-cursor-setup-runtime-dependency-baseline.json"
+    },
+    "startup_metric_integrity": {
+      "resealed_mutation_baseline_accepted": true,
+      "baseline_rollout_pool_start_s_mean_delta": 332.20151280567126,
+      "corrected_historical_startup_means_published": false,
+      "historical_setup_records_have_endpoint_evidence": false,
+      "new_runs_retain_endpoints_and_audit_against_case_timing": true,
+      "mutated_historical_table_outputs_byte_identical": true,
+      "evidence": "source-cursor-setup-runtime-dependency-baseline.json"
+    },
+    "source_import_provenance": {
+      "baseline_direct_dependencies_missing": [
+        "src/vare/config.py",
+        "src/vare/evidence.py",
+        "src/vare/integrations/rvl.py",
+        "src/vare/telemetry.py",
+        "src/vare/types.py"
+      ],
+      "new_diagnostic_campaign_includes_all_five": true,
+      "resealed_dependency_mutation_rejected": true,
+      "frozen_campaign_modified": false,
+      "legacy_inventory_accepted_only_for_pinned_base_commit": true,
+      "evidence": "source-cursor-setup-runtime-dependency-baseline.json",
+      "new_expected_source_count": 20
+    },
+    "final_validation": {
+      "actual_model_module": {
+        "passed": 76,
+        "failed": 0,
+        "skipped": 0,
+        "model": "locally pinned tiny-GPT2 snapshot",
+        "diagnostic_campaign_with_actual_optimizer_and_SIGKILL_recovery": true,
+        "source_snapshots_checked_against_clean_commit": true,
+        "log": "continuation-audit-review-final-git-tree-module.log"
+      },
+      "actual_model_module_log": "continuation-audit-review-final-git-tree-module.log",
+      "frozen_campaign_tensor_audit": {
+        "pass": true,
+        "protocol_conformant": true,
+        "cases": 42,
+        "artifacts_hashed": 6522,
+        "candidate_tensor_states_verified": 504,
+        "evaluation_pairs_verified": 507,
+        "evaluation_reports_verified": 1014,
+        "checkpoint_scores_replayed": true,
+        "checkpoint_score_count_replayed": 32448
+      },
+      "frozen_audit_log": "continuation-audit-review-final-git-tree-frozen-audit.log",
+      "derived_table_reproduction": {
+        "python": "3.12",
+        "byte_identical": true,
+        "tables": [
+          "comparison.csv",
+          "stage-latency.csv",
+          "recovery.csv",
+          "derived-metrics.json"
+        ],
+        "log": "continuation-audit-review-final-derived-table-reproduction.log"
+      },
+      "focused_cursor_setup_controls_passed": 14,
+      "static_checks_log": "continuation-audit-review-final-transitive-source-static-checks.log",
+      "full_module_before_recovery_endpoint_fix": {
+        "commit": "6d9e3e1595c1dc97c3a1a00ef530c593507f662a",
+        "passed": 73,
+        "failed": 0,
+        "skipped": 0,
+        "log": "continuation-audit-review-final-source-module.log"
+      },
+      "post_recovery_endpoint_fix": {
+        "targeted_tests_passed": 2,
+        "targeted_tests_failed": 0,
+        "targeted_log": "continuation-audit-review-final-recovery-endpoint-model.log",
+        "tamper_control_log": "continuation-audit-review-final-recovery-endpoint-controls.log",
+        "frozen_campaign_audit_log": "continuation-audit-review-final-recovery-endpoint-frozen-audit.log",
+        "frozen_campaign_tensor_audit_passed": true,
+        "static_checks_log": "continuation-audit-review-final-static-checks.log"
+      },
+      "full_module_after_transitive_source_fix": {
+        "passed": 75,
+        "failed": 0,
+        "skipped": 0,
+        "log": "continuation-audit-review-final-full-package-module.log"
+      },
+      "targeted_transitive_source_tests": {
+        "passed": 4,
+        "failed": 0,
+        "log": "continuation-audit-review-final-transitive-source-tests.log"
+      },
+      "static_checks": {
+        "ruff": "passed",
+        "git_diff_check": "passed",
+        "source_inventory": "66 of 66 package modules; 72 total expected sources",
+        "git_tree_binding": "enabled"
+      },
+      "source_git_tree_unit_tests": {
+        "passed": 4,
+        "failed": 0,
+        "log": "source-git-tree-unit-tests.log"
+      }
+    },
+    "recovery_latency_integrity": {
+      "baseline_commit": "6d9e3e1595c1dc97c3a1a00ef530c593507f662a",
+      "resealed_timestamp_delta_s": 60,
+      "baseline_audit_accepted": true,
+      "baseline_cutpoint_mean_delta_s": 60.0,
+      "baseline_aggregate_mean_delta_s": 10.0,
+      "corrected_result": "recovery endpoint differs from resumed-round trace",
+      "new_campaign_endpoint": "post_restart_update.time equals the resumed round trace end",
+      "legacy_campaign_endpoint": "bounded between resumed round end and next round start",
+      "regression_cases_after_fix": 2,
+      "evidence": "recovery-endpoint-baseline.json"
+    },
+    "transitive_source_provenance": {
+      "baseline_expected_source_count": 20,
+      "runtime_package_source_count": 66,
+      "new_expected_source_count": 72,
+      "curriculum_mutation_rejected": true,
+      "fresh_actual_model_campaign_snapshots_full_package": true,
+      "frozen_campaign_modified": false,
+      "evidence": "transitive-source-and-conformant-rerun-baseline.json",
+      "regression_log": "continuation-audit-review-final-git-tree-module.log",
+      "campaign_and_case_source_maps_resealed_in_negative_control": true,
+      "recorded_git_tree_mismatch_rejected": true
+    },
+    "conformant_source_gate": {
+      "historical_archive_requires_exact_commit_and_digests": true,
+      "fresh_complete_inventory_with_full_sha_accepted": true,
+      "malformed_commit_rejected": true,
+      "fresh_42_case_conformant_campaign_rerun": false,
+      "limitation": "The historical 42-case archive was re-audited; a second hour-scale 42-case campaign was not run.",
+      "evidence": "source-git-tree-unit-tests.log",
+      "source_snapshot_compared_with_recorded_git_tree": true,
+      "unknown_valid_format_sha_rejected": true,
+      "unit_tests_passed": 4
+    },
+    "commit_tree_source_binding": {
+      "baseline_failure_mode": "expanded-inventory digests were self-reported and could be jointly resealed while retaining an unrelated base SHA",
+      "corrected_rule": "all 72 expanded-inventory source snapshots must byte-match the Git tree at manifest.base_commit",
+      "resealed_curriculum_substitution_rejected": true,
+      "historical_legacy_archive_uses_independent_frozen_pin": true,
+      "fresh_42_case_conformant_campaign_rerun": false,
+      "evidence": "continuation-audit-review-final-git-tree-module.log"
+    },
+    "git_blob_hashing": {
+      "finding": "git archive applies export-subst, so it can hash transformed bytes instead of the committed blob.",
+      "fixed_implementation": "Resolve paths with git ls-tree and hash raw object bodies from git cat-file --batch with replace refs disabled.",
+      "negative_control": "The regression fixture confirms git archive expands $Format:%H$ and yields different bytes from the committed source blob.",
+      "focused_test": {
+        "passed": 1,
+        "log": "continuation-audit-review-export-subst-focused.log"
+      },
+      "full_module_without_model": {
+        "passed": 8,
+        "skipped": 69,
+        "reason": "VARE_E2E_MODEL_DIR is unset; model-dependent tests are delegated to the actual-model CI job.",
+        "log": "continuation-audit-review-export-subst-module.log"
+      },
+      "static_checks": "Ruff and git diff --check passed."
+    }
+  }
+}

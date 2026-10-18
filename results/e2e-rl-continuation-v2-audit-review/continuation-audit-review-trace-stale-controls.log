@@ -1,0 +1,9 @@
+Independent review controls against b44cc537; existing v2 raw archive was copied and re-sealed after each mutation.
+
+Trace attack: changed a non-round training duration without changing clock endpoints and removed one verification span. The b44 auditor accepted the re-sealed archive. Its stage table changed guarded worker-2 verification observations from 1152 to 1151 and training p50 from 76.71172899426892 ms to 76.83302050281782 ms. The current auditor and table derivation reject the trace attack.
+
+Stale-total attack: increased one guarded worker-2 progress total by one while preserving committed rounds and screening events. The b44 auditor accepted it and the old table reported 34 stale rejections. Current table derivation recomputes 33 from committed rounds, and the current auditor rejects the progress mismatch.
+
+Pristine archive: 42 protocol-conformant cases, 6522 artifacts hashed, 507 evaluation pairs, 1014 reports. The current derived comparison.csv, stage-latency.csv, recovery.csv and derived-metrics.json are each byte-identical to retained outputs.
+
+Focused current falsification run: 17 passed. Full current actual-model continuation module: 56 passed, process exit 0, CPU pinned tiny-GPT2; includes real optimizer updates, six SIGKILL boundaries and post-restart updates.
