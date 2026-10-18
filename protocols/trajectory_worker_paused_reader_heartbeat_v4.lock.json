@@ -1,0 +1,43 @@
+{
+  "protocol_id": "vare-trajectory-worker-paused-reader-heartbeat-v4",
+  "status": "locked-before-v4-repetitions",
+  "question": "Does the bounded-page iter_steps fix prevent a paused trajectory reader from blocking lease renewal on the same store?",
+  "classification": "Deterministic systems regression test, not model-learning or capability evidence.",
+  "baseline_commit": "3f546253b7df26799ce65098f4c62f7d6132d263",
+  "candidate_commit": "e3a9e1908052ea14f6126386e303939393914fc4",
+  "source_file": "src/vare/trajectory_store.py",
+  "test_file": "tests/test_trajectory_worker_lease_heartbeat.py",
+  "runner_file": "scripts/reproduce_trajectory_worker_sqlite.py",
+  "test_case": "tests/test_trajectory_worker_lease_heartbeat.py::test_paused_step_iterator_does_not_hold_store_lock_from_heartbeat",
+  "test_sha256": "129be51d67d9e23b002a075c78858f4524ef0185a839e522f256b2443ca6eaa7",
+  "runner_sha256": "1a8e551a1f856cce148305bef7b64b1c9c641a784857b58ab72838818698a63a",
+  "timeout_s": 10,
+  "repetitions": 3,
+  "environment": {
+    "os": "macOS 27.0.1 arm64",
+    "cpu": "Apple M1 Pro",
+    "memory_bytes": 34359738368,
+    "python": "3.12.12",
+    "pytest_plugin_autoload": false,
+    "lease_seconds": 2,
+    "heartbeat_completion_limit_s": 0.5
+  },
+  "arms": {
+    "baseline": {
+      "head": "3f546253b7df26799ce65098f4c62f7d6132d263",
+      "source_sha256": "5cedfc804c9833626168eed51c7e77da3f8d39d534e003839a348e126fd7d7be",
+      "expected_status": 1
+    },
+    "candidate": {
+      "head": "e3a9e1908052ea14f6126386e303939393914fc4",
+      "source_sha256": "90976a6b53715a2ed1df905e9374c26e01ee62994ff6231b624a9c7fd6422408",
+      "expected_status": 0
+    }
+  },
+  "interpretation_limits": [
+    "The pre-fix mutex plus generator-held connection is the negative control; it is expected to fail the heartbeat deadline.",
+    "The candidate reads at most 16 steps per page and releases the SQLite connection before yielding to a consumer.",
+    "The runner copies the exact hashed test to an isolated temporary directory so both source checkouts remain clean.",
+    "Three repetitions of one bounded test on one Apple M1 Pro host do not establish throughput, multi-process safety, or production-scale performance."
+  ]
+}
