@@ -41,10 +41,12 @@ count included the completed suffix that would be replayed. The pinned
 candidate failed both GRPO and distillation cases; the retained follow-up
 correction passed 2/2 focused cases and the 11-test stale-resume file. This
 deterministic source-level check is separate from the v4 experiment and does
-not establish optimizer or task-success behavior. See the
-[review regression report](trl-async-stale-resume-review-regression-v1-report.md),
-[protocol](../protocols/trl_async_stale_resume_replay_suffix_v1.lock.json), and
-[raw logs](../results/trl-async-stale-resume-v5/review-p1-suffix-epoch-count/).
+not establish optimizer or task-success behavior. The accepted audit is the
+v2 protocol and v6 bundle; the earlier v5 bundle is retained as superseded
+historical evidence. See the
+[review regression report](trl-async-stale-resume-review-regression-v2-report.md),
+[protocol](../protocols/trl_async_stale_resume_replay_suffix_v2.lock.json), and
+[audited raw bundle](../results/trl-async-stale-resume-v6/review-p1-suffix-epoch-count-provenance-v2-final/).
 
 ## End-to-end CPU RL system benchmark — 2026-10-16
 

@@ -40,8 +40,11 @@ below trained suffix groups can overcount replayed GRPO/distillation groups in
 the saved epoch counter. The pinned candidate fails this new two-case
 regression; a supplementary patch passes both cases and all 11 stale-resume
 tests. It is not an upstream-accepted fix and does not rewrite the earlier
-frozen protocol runs; see the [review regression](trl-async-stale-resume-review-regression-v1-report.md)
-and [raw logs](../results/trl-async-stale-resume-v5/review-p1-suffix-epoch-count/).
+frozen protocol runs; the accepted follow-up audit is v2 with the v6 final
+bundle. The v5 raw logs remain historical and superseded; see the
+[review regression](trl-async-stale-resume-review-regression-v2-report.md),
+[protocol](../protocols/trl_async_stale_resume_replay_suffix_v2.lock.json),
+and [audited raw bundle](../results/trl-async-stale-resume-v6/review-p1-suffix-epoch-count-provenance-v2-final/).
 
 **Update 2026-10-15 — durable executor source:** a resumed worker could use new
 code while exporting its enrollment-time executor snapshot. The source pin now

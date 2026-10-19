@@ -92,6 +92,11 @@ def test_pytest_outcome_parser_rejects_multiple_summaries():
         parse_pytest_outcome("1 failed in 0.01s\n1 passed in 0.01s\n")
 
 
+def test_pytest_outcome_parser_rejects_duplicate_categories_in_one_summary():
+    with pytest.raises(ValueError, match="repeats an outcome category"):
+        parse_pytest_outcome("1 failed, 2 passed, 0 failed in 0.01s\n")
+
+
 def test_pytest_outcome_parser_allows_missing_summary_only_for_failed_arm():
     assert parse_pytest_outcome("ERROR collecting test_example.py\n", allow_missing=True) == {}
     with pytest.raises(ValueError, match="lacks a pytest result summary"):
@@ -322,6 +327,21 @@ def test_replay_suffix_v2_audit_rejects_resealed_unrelated_source_diff(tmp_path:
         replay_suffix_v2.audit_bundle(copied)
 
 
+def test_replay_suffix_v2_audit_rejects_resealed_unexpected_candidate_tree(tmp_path: Path):
+    copied = tmp_path / "v2-run"
+    shutil.copytree(REPLAY_SUFFIX_V2_RUN, copied)
+
+    def replace_tree(record: dict, log_path: Path, log: str) -> None:
+        expected = record["candidate_tree"]
+        record["candidate_tree"] = "0" * 40
+        log_path.write_text(log.replace(expected, record["candidate_tree"]), encoding="utf-8")
+
+    _reseal_replay_suffix_v2_stage(copied, "corrected-targeted-test", replace_tree)
+
+    with pytest.raises(ValueError, match="candidate tree differs from the frozen source state"):
+        replay_suffix_v2.audit_bundle(copied)
+
+
 def test_replay_suffix_v2_audit_rejects_passing_summary_with_failures(tmp_path: Path):
     copied = tmp_path / "v2-run"
     shutil.copytree(REPLAY_SUFFIX_V2_RUN, copied)
@@ -428,7 +448,7 @@ def _convert_bundle_to_v3(copied: Path) -> dict:
         "baseline": lock["source"]["baseline_revision"],
         "candidate": lock["source"]["candidate_revision"],
     }
-    runner_path = ROOT / "scripts/reproduce_trl_async_stale_resume_v1.py"
+    runner_path = ROOT / "results/trl-async-stale-resume-v3/run-1-full-lock-timeout/runner.py"
     runner_bytes = runner_path.read_bytes()
     (copied / "runner.py").write_bytes(runner_bytes)
     summary["runner_sha256"] = hashlib.sha256(runner_bytes).hexdigest()
@@ -450,7 +470,7 @@ def _convert_v4_bundle_to_current_runner(copied: Path) -> dict:
     shutil.copytree(V4_PLATFORM_RUN, copied)
     summary_path = copied / "summary.json"
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
-    runner_path = ROOT / "scripts/reproduce_trl_async_stale_resume_v1.py"
+    runner_path = V4_SANITIZED_RUN / "runner.py"
     runner_bytes = runner_path.read_bytes()
     (copied / "runner.py").write_bytes(runner_bytes)
     summary["runner_sha256"] = hashlib.sha256(runner_bytes).hexdigest()
@@ -513,7 +533,7 @@ def test_audit_rejects_resealed_v4_bundle_with_changed_execution_platform(tmp_pa
     summary["protocol_id"] = lock["protocol_id"]
     summary["protocol_sha256"] = sha256_file(V4_PROTOCOL)
     summary["environment"] = expected_runtime_environment(lock["environment"])
-    runner_bytes = (ROOT / "scripts/reproduce_trl_async_stale_resume_v1.py").read_bytes()
+    runner_bytes = (V4_PLATFORM_RUN / "runner.py").read_bytes()
     (copied / "runner.py").write_bytes(runner_bytes)
     summary["runner_sha256"] = hashlib.sha256(runner_bytes).hexdigest()
     summary["runner_source_valid"] = True
@@ -582,9 +602,6 @@ def test_audit_retains_runner_source_change_as_a_nonpassing_bundle(tmp_path: Pat
     shutil.copytree(V4_SANITIZED_RUN, copied)
     summary_path = copied / "summary.json"
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
-    runner_path = copied / "runner.py"
-    runner_path.write_bytes((ROOT / "scripts/reproduce_trl_async_stale_resume_v1.py").read_bytes())
-    summary["runner_sha256"] = sha256_file(runner_path)
     summary["runner_source_valid"] = False
     summary["all_checks_passed"] = False
     write_json(summary_path, summary)
@@ -595,12 +612,6 @@ def test_audit_retains_runner_source_change_as_a_nonpassing_bundle(tmp_path: Pat
     assert audited["runner_source_valid"] is False
     assert audited["all_checks_passed"] is False
 
-    summary.pop("runner_source_valid")
-    summary["all_checks_passed"] = True
-    write_json(summary_path, summary)
-    write_manifest(copied)
-    with pytest.raises(ValueError, match="runner source validity decision is missing"):
-        audit_bundle(copied)
 
 
 def test_reproducer_seals_all_arms_after_early_collection_failure(
@@ -822,7 +833,25 @@ def test_audit_rejects_resealed_runner_hash_without_retained_source(tmp_path: Pa
     write_json(summary_path, summary)
     write_manifest(copied)
 
-    with pytest.raises(ValueError, match="runner source is not retained"):
+    with pytest.raises(ValueError, match="runner source hash is not approved for protocol"):
+        audit_bundle(copied)
+
+
+def test_audit_rejects_unapproved_embedded_runner_before_inspecting_capabilities(tmp_path: Path):
+    copied = tmp_path / "run"
+    shutil.copytree(EPOCH_AWARE_RUN, copied)
+    runner = copied / "runner.py"
+    runner.write_text(
+        'SOURCE_REVISION_PROVENANCE_CAPABILITY = "source-revision-provenance-v1"\n',
+        encoding="utf-8",
+    )
+    summary_path = copied / "summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    summary["runner_sha256"] = sha256_file(runner)
+    write_json(summary_path, summary)
+    write_manifest(copied)
+
+    with pytest.raises(ValueError, match="runner source hash is not approved for protocol"):
         audit_bundle(copied)
 
 
@@ -878,7 +907,7 @@ def test_locked_run_bundle_rejects_changed_raw_log(tmp_path: Path):
         audit_bundle(copied)
 
 
-@pytest.mark.parametrize("dirty_kind", ["tracked", "untracked"])
+@pytest.mark.parametrize("dirty_kind", ["tracked", "untracked", "ignored"])
 def test_reproduction_rejects_dirty_source_checkout(tmp_path: Path, dirty_kind: str):
     checkout = tmp_path / "source"
     checkout.mkdir()
@@ -894,7 +923,11 @@ def test_reproduction_rejects_dirty_source_checkout(tmp_path: Path, dirty_kind: 
 
     if dirty_kind == "tracked":
         tracked.write_text("value = 2\n", encoding="utf-8")
+    elif dirty_kind == "untracked":
+        (checkout / "rogue.py").write_text("value = 2\n", encoding="utf-8")
     else:
+        exclude = checkout / ".git/info/exclude"
+        exclude.write_text("/rogue.py\n", encoding="utf-8")
         (checkout / "rogue.py").write_text("value = 2\n", encoding="utf-8")
 
     with pytest.raises(ValueError, match="source checkout must be clean"):

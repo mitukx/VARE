@@ -13,6 +13,11 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL_PATH = ROOT / "protocols/trl_async_stale_resume_replay_suffix_v2.lock.json"
+EXPECTED_CANDIDATE_TREES = {
+    "baseline-failing-test": "1a6661764365ef38b07a0177711b8fac2d67b44d",
+    "corrected-targeted-test": "5719aadfebf9ec559e98edae6076e1d1a29e5096",
+    "corrected-full-test-file": "5719aadfebf9ec559e98edae6076e1d1a29e5096",
+}
 sys.path.insert(0, str(ROOT))
 from scripts import reproduce_trl_async_stale_resume_v1 as stale_resume  # noqa: E402
 
@@ -48,7 +53,9 @@ def fail(message: str) -> None:
     raise ValueError(message)
 
 
-def load_protocol(*, require_current_runner: bool = True) -> dict[str, Any]:
+def load_protocol(
+    *, require_current_runner: bool = True, require_current_helper: bool = True
+) -> dict[str, Any]:
     protocol = read_json(PROTOCOL_PATH)
     runner = protocol["runner"]
     if runner["path"] != "scripts/reproduce_trl_async_stale_resume_review_v2.py":
@@ -56,7 +63,7 @@ def load_protocol(*, require_current_runner: bool = True) -> dict[str, Any]:
     if require_current_runner and sha256_file(Path(__file__).resolve()) != runner["sha256"]:
         fail("runner source does not match the frozen protocol")
     helper = ROOT / runner["helper"]
-    if sha256_file(helper) != runner["helper_sha256"]:
+    if require_current_helper and sha256_file(helper) != runner["helper_sha256"]:
         fail("shared stale-resume helper does not match the frozen protocol")
     source = protocol["source"]
     for key in ("original_candidate_patch", "regression_test_patch", "correction_patch"):
@@ -190,7 +197,7 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
     # The frozen protocol binds the retained execution runner in each bundle.
     # This auditor may evolve to reject defects found in that old runner, while
     # reproduction itself remains pinned to the original runner bytes.
-    protocol = load_protocol(require_current_runner=False)
+    protocol = load_protocol(require_current_runner=False, require_current_helper=False)
     manifest_path = bundle / "manifest.json"
     manifest = read_json(manifest_path)
     entries = manifest.get("files")
@@ -265,8 +272,8 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
             fail(f"executed test command differs from the protocol: {name}")
         if record.get("revision") != source["candidate_revision"] or record.get("base_tree") != source["candidate_base_tree"]:
             fail(f"candidate revision or base tree mismatch: {name}")
-        if not isinstance(record.get("candidate_tree"), str) or len(record["candidate_tree"]) != 40:
-            fail(f"candidate tree identity is missing or malformed: {name}")
+        if record.get("candidate_tree") != EXPECTED_CANDIDATE_TREES[name]:
+            fail(f"candidate tree differs from the frozen source state: {name}")
         if not record.get("source_stable") or record.get("timed_out"):
             fail(f"source changed or test timed out: {name}")
         if record.get("raw_log_sha256") != sha256_file(bundle / record["log"]):

@@ -29,8 +29,11 @@ fix. Review found a distinct replayed-suffix epoch-count defect in both GRPO and
 distillation: the pinned candidate failed 2/2 new cases; its supplementary
 correction passed those cases and the 11-test stale-resume file. The correction
 is not upstream-accepted and does not upgrade the v4 cursor result into a full
-training result. See the [v4 report](trl-async-stale-resume-v4-report.md) and
-[review regression](trl-async-stale-resume-review-regression-v1-report.md).
+training result. The evidence audit was subsequently hardened under the v2
+protocol and v6 bundle; v5 remains superseded historical evidence. See the
+[v4 report](trl-async-stale-resume-v4-report.md), [review regression](trl-async-stale-resume-review-regression-v2-report.md),
+[protocol](../protocols/trl_async_stale_resume_replay_suffix_v2.lock.json), and
+[audited bundle](../results/trl-async-stale-resume-v6/review-p1-suffix-epoch-count-provenance-v2-final/).
 
 ## Direct-trainer freshness boundary — 2026-10-15
 

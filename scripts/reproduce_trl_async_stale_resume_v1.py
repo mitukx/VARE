@@ -60,6 +60,23 @@ RUNNER_SNAPSHOTS = {
         "runner-362907df0e07bcd0c6ab75d3f5390551cd0fcf054c38e0d2d1488c606faaeef4.py"
     ),
 }
+APPROVED_RUNNERS_BY_PROTOCOL = {
+    "trl-async-stale-resume-v1": {
+        "b2c47bb61086a0218269d967795c894c98734d9911ea1990fc50f8b64c8a8208",
+        "8d497a575d0ae7a7d4a0409ace61897afd4c7868907c0303bda3e04d8459b8e4",
+    },
+    "trl-async-stale-resume-v2": {
+        "4450fcebb731178f448bd68d5650219e851c7db09f59c1f91be0632f37ad63c3",
+        "362907df0e07bcd0c6ab75d3f5390551cd0fcf054c38e0d2d1488c606faaeef4",
+    },
+    "trl-async-stale-resume-v3": {
+        "09c2ff7b95cb741ad0fa5c14984b74985e9617ae07a2e2d0aa9cb424cdea5eaa",
+    },
+    "trl-async-stale-resume-v4": {
+        "cdf25462a9d8f2b7e335840f547134eaa66ecb6cf06feca500876097d7af750f",
+        "909e9ad32a78a80982ba6867c605c2e294110c7f76548f5708ac3cf5eeb39e33",
+    },
+}
 
 
 def sha256_file(path: Path) -> str:
@@ -141,7 +158,15 @@ def validate_local_inputs(lock: dict[str, Any]) -> None:
 
 def source_revision(source: Path) -> str:
     status = subprocess.run(
-        ["git", "-C", str(source), "status", "--porcelain=v1", "--untracked-files=all"],
+        [
+            "git",
+            "-C",
+            str(source),
+            "status",
+            "--porcelain=v1",
+            "--untracked-files=all",
+            "--ignored=matching",
+        ],
         check=True,
         capture_output=True,
         text=True,
@@ -435,9 +460,20 @@ def parse_pytest_outcome(text: str, *, allow_missing: bool = False) -> dict[str,
     summaries = []
     for line in text.splitlines():
         if re.search(r"\bin\s+\d+(?:\.\d+)?s\s*$", line):
-            counts = {name: int(count) for count, name in PYTEST_COUNT_PATTERN.findall(line)}
-            if counts:
-                summaries.append(counts)
+            raw_counts = PYTEST_COUNT_PATTERN.findall(line)
+            categories = [
+                "error" if category in {"error", "errors"} else category
+                for _, category in raw_counts
+            ]
+            if len(categories) != len(set(categories)):
+                fail("pytest result summary repeats an outcome category")
+            if raw_counts:
+                summaries.append(
+                    {
+                        raw_category: int(count)
+                        for count, raw_category in raw_counts
+                    }
+                )
     if len(summaries) > 1:
         fail("raw log contains multiple pytest result summaries")
     if not summaries:
@@ -528,6 +564,9 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
     runner_sha = summary.get("runner_sha256")
     if not isinstance(runner_sha, str) or not SHA256_RE.fullmatch(runner_sha):
         fail("summary has no valid runner source hash")
+    approved_runners = APPROVED_RUNNERS_BY_PROTOCOL.get(summary["protocol_id"])
+    if approved_runners is None or runner_sha not in approved_runners:
+        fail(f"runner source hash is not approved for protocol: {summary['protocol_id']}")
     bundled_runner = bundle / "runner.py"
     runner_snapshot = bundled_runner if bundled_runner.is_file() else RUNNER_SNAPSHOTS.get(runner_sha)
     if runner_snapshot is None or not runner_snapshot.is_file():
