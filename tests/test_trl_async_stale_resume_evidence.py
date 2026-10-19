@@ -43,6 +43,8 @@ V4_PROTOCOL = ROOT / "protocols/trl_async_stale_resume_v4.lock.json"
 V4_PLATFORM_RUN = ROOT / "results/trl-async-stale-resume-v4/run-1-platform-locked"
 V4_SANITIZED_RUN = ROOT / "results/trl-async-stale-resume-v4/run-2-python-env-sanitized"
 REPLAY_SUFFIX_PROTOCOL = ROOT / "protocols/trl_async_stale_resume_replay_suffix_v1.lock.json"
+REPLAY_SUFFIX_V3_PROTOCOL = ROOT / "protocols/trl_async_stale_resume_replay_suffix_v3.lock.json"
+REPLAY_SUFFIX_V4_PROTOCOL = ROOT / "protocols/trl_async_stale_resume_replay_suffix_v4.lock.json"
 REPLAY_SUFFIX_RUN = ROOT / "results/trl-async-stale-resume-v5/review-p1-suffix-epoch-count"
 REPLAY_SUFFIX_V2_RUN = ROOT / "results/trl-async-stale-resume-v6/review-p1-suffix-epoch-count-provenance-v2-final"
 
@@ -282,6 +284,123 @@ def test_replay_suffix_v2_stage_metadata_binds_each_raw_log_digest():
         assert stage_record["raw_log_sha256"] == sha256_file(REPLAY_SUFFIX_V2_RUN / run["log"])
 
 
+def test_replay_suffix_v3_protocol_pins_the_hardened_source_state_runner():
+    protocol = json.loads(REPLAY_SUFFIX_V3_PROTOCOL.read_text(encoding="utf-8"))
+
+    assert protocol["protocol_id"] == "trl-async-stale-resume-replay-suffix-v3"
+    assert protocol["protocol_parent"] == "trl-async-stale-resume-replay-suffix-v2"
+    assert protocol["runner"]["sha256"] == "c22e9d186d087eb05b54351e204b7bf26873da5a2d3bd6a11d9f7dd2e636a17d"
+    assert protocol["reproduction"]["pytest_flags"] == ["-p", "no:cacheprovider"]
+    assert replay_suffix_v2.load_protocol(
+        REPLAY_SUFFIX_V3_PROTOCOL,
+        require_current_runner=False,
+        require_current_helper=False,
+    )["protocol_id"] == protocol["protocol_id"]
+
+
+def test_replay_suffix_v4_protocol_pins_parseable_raw_log_boundaries():
+    protocol = json.loads(REPLAY_SUFFIX_V4_PROTOCOL.read_text(encoding="utf-8"))
+
+    assert protocol["protocol_id"] == "trl-async-stale-resume-replay-suffix-v4"
+    assert protocol["protocol_parent"] == "trl-async-stale-resume-replay-suffix-v3"
+    assert protocol["runner"]["sha256"] == sha256_file(
+        ROOT / protocol["runner"]["path"]
+    )
+    assert replay_suffix_v2.load_protocol(REPLAY_SUFFIX_V4_PROTOCOL)["protocol_id"] == protocol[
+        "protocol_id"
+    ]
+
+
+def _make_replay_suffix_stage_repo(root: Path) -> tuple[Path, Path, Path]:
+    repo = root / "candidate"
+    repo.mkdir()
+    subprocess.run(["git", "init", "--quiet", str(repo)], check=True)
+    subprocess.run(["git", "-C", str(repo), "config", "user.name", "Evidence Test"], check=True)
+    subprocess.run(
+        ["git", "-C", str(repo), "config", "user.email", "evidence@example.invalid"],
+        check=True,
+    )
+    test_file = repo / "tests/experimental/test_async_stale_resume.py"
+    test_file.parent.mkdir(parents=True)
+    test_file.write_text("def test_fixture():\n    assert True\n", encoding="utf-8")
+    rogue = repo / "rogue.py"
+    rogue.write_text("value = 1\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(repo), "add", "."], check=True)
+    subprocess.run(["git", "-C", str(repo), "commit", "--quiet", "-m", "base"], check=True)
+    test_file.write_text("def test_fixture():\n    assert False\n", encoding="utf-8")
+    return repo, test_file, rogue
+
+
+def test_replay_suffix_capture_rejects_ignored_source_files(tmp_path: Path):
+    repo, test_file, _ = _make_replay_suffix_stage_repo(tmp_path)
+    exclude = repo / ".git/info/exclude"
+    exclude.write_text("/ignored_plugin.py\n", encoding="utf-8")
+    (repo / "ignored_plugin.py").write_text("pytest_plugin = True\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="unexpected_status=.*!! ignored_plugin.py"):
+        replay_suffix_v2.capture_state(repo, [test_file.relative_to(repo).as_posix()])
+
+
+def test_replay_suffix_stage_retains_test_output_when_source_capture_fails(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+):
+    repo, test_file, _ = _make_replay_suffix_stage_repo(tmp_path)
+    bundle = tmp_path / "bundle"
+    bundle.mkdir()
+    protocol = replay_suffix_v2.read_json(replay_suffix_v2.PROTOCOL_PATH)
+    expected = [test_file.relative_to(repo).as_posix()]
+    real_capture_state = replay_suffix_v2.capture_state
+    capture_calls = 0
+
+    monkeypatch.setattr(
+        replay_suffix_v2.stale_resume,
+        "runtime_environment",
+        lambda *_: {"python": "locked"},
+    )
+
+    def fail_post_test_capture(candidate: Path, paths: list[str], *, allow_unexpected: bool = False):
+        nonlocal capture_calls
+        capture_calls += 1
+        if capture_calls == 2:
+            raise ValueError("post-test tracked source inventory changed")
+        return real_capture_state(candidate, paths, allow_unexpected=allow_unexpected)
+
+    monkeypatch.setattr(replay_suffix_v2, "capture_state", fail_post_test_capture)
+    monkeypatch.setattr(
+        replay_suffix_v2.stale_resume,
+        "run_pytest_arm",
+        lambda *_: ("retained pytest output sentinel\n1 failed in 0.01s", 1, False),
+    )
+
+    record = replay_suffix_v2.execute_stage(
+        protocol=protocol,
+        python=sys.executable,
+        repo=repo,
+        bundle=bundle,
+        name="baseline-failing-test",
+        args=["tests/experimental/test_async_stale_resume.py"],
+        expected_paths=expected,
+        source_patch_name="baseline-source.patch",
+        runner_sha256="a" * 64,
+    )
+    log = (bundle / record["log"]).read_text(encoding="utf-8")
+    write_manifest(bundle)
+
+    assert capture_calls == 2
+    assert record["source_stable"] is False
+    assert record["source_validation_error"] == "ValueError: post-test tracked source inventory changed"
+    assert "retained pytest output sentinel" in log
+    assert "VARE_REVIEW_EXIT_CODE=1" in log
+    assert "VARE_REVIEW_SOURCE_STABLE=false" in log
+    markers = replay_suffix_v2.parse_provenance_markers(log)
+    assert markers["VARE_REVIEW_CORRECTION_PATCH_SHA256"] == "not-applied"
+    assert "not-appliedretained pytest output sentinel" not in log
+    assert (bundle / "baseline-failing-test.json").is_file()
+    manifest = replay_suffix_v2.read_json(bundle / "manifest.json")["files"]
+    assert manifest["baseline-failing-test.log"] == sha256_file(bundle / "baseline-failing-test.log")
+
+
 def test_frozen_v5_digest_mismatch_is_superseded_by_audited_v6_record():
     old_record = json.loads((REPLAY_SUFFIX_RUN / "baseline-failing-test.json").read_text())
     old_log = REPLAY_SUFFIX_RUN / "baseline-failing-test.log"
@@ -422,7 +541,7 @@ def test_replay_suffix_v2_audit_rejects_passing_summary_with_failures(tmp_path: 
 def test_replay_suffix_v2_audit_cli_returns_nonzero_for_negative_decision(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ):
-    monkeypatch.setattr(replay_suffix_v2, "audit_bundle", lambda _: {"all_checks_passed": False})
+    monkeypatch.setattr(replay_suffix_v2, "audit_bundle", lambda *args: {"all_checks_passed": False})
     monkeypatch.setattr(sys, "argv", ["reproduce_trl_async_stale_resume_review_v2.py", "--audit", str(tmp_path)])
 
     assert replay_suffix_v2.main() == 1

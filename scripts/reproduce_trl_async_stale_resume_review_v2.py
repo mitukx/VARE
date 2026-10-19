@@ -14,6 +14,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL_PATH = ROOT / "protocols/trl_async_stale_resume_replay_suffix_v2.lock.json"
+PROTOCOL_V3_PATH = ROOT / "protocols/trl_async_stale_resume_replay_suffix_v3.lock.json"
 EXPECTED_CANDIDATE_TREES = {
     "baseline-failing-test": "1a6661764365ef38b07a0177711b8fac2d67b44d",
     "corrected-targeted-test": "5719aadfebf9ec559e98edae6076e1d1a29e5096",
@@ -70,9 +71,12 @@ def parse_provenance_markers(log: str) -> dict[str, str]:
 
 
 def load_protocol(
-    *, require_current_runner: bool = True, require_current_helper: bool = True
+    protocol_path: Path = PROTOCOL_PATH,
+    *,
+    require_current_runner: bool = True,
+    require_current_helper: bool = True,
 ) -> dict[str, Any]:
-    protocol = read_json(PROTOCOL_PATH)
+    protocol = read_json(protocol_path)
     runner = protocol["runner"]
     if runner["path"] != "scripts/reproduce_trl_async_stale_resume_review_v2.py":
         fail("protocol runner path mismatch")
@@ -103,11 +107,44 @@ def write_manifest(bundle: Path) -> dict[str, str]:
     return files
 
 
-def capture_state(repo: Path, expected_paths: list[str]) -> dict[str, Any]:
+def capture_state(
+    repo: Path,
+    expected_paths: list[str],
+    *,
+    allow_unexpected: bool = False,
+) -> dict[str, Any]:
     paths = sorted(str(git(repo, "diff", "--name-only", "HEAD")).splitlines())
-    if paths != sorted(expected_paths):
-        fail(f"candidate path inventory mismatch: expected={sorted(expected_paths)}, got={paths}")
-    git(repo, "add", "--", *paths)
+    status = subprocess.run(
+        [
+            "git",
+            "-C",
+            str(repo),
+            "status",
+            "--porcelain",
+            "--untracked-files=all",
+            "--ignored=matching",
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    ).stdout
+    status_entries = status.splitlines()
+    unexpected_status = [
+        entry
+        for entry in status_entries
+        if entry[3:] not in expected_paths or entry[:2] in {"??", "!!"}
+    ]
+    if not allow_unexpected and (
+        paths != sorted(expected_paths) or unexpected_status
+    ):
+        fail(
+            "candidate path inventory mismatch: "
+            f"expected={sorted(expected_paths)}, got={paths}, "
+            f"unexpected_status={unexpected_status}"
+        )
+    if paths:
+        git(repo, "add", "--", *paths)
     tree = str(git(repo, "write-tree"))
     diff = git(repo, "diff", "--binary", "HEAD", text=False)
     if not isinstance(diff, bytes):
@@ -117,6 +154,7 @@ def capture_state(repo: Path, expected_paths: list[str]) -> dict[str, Any]:
         "base_tree": str(git(repo, "rev-parse", "HEAD^{tree}")),
         "candidate_tree": tree,
         "changed_paths": paths,
+        "unexpected_status": unexpected_status,
         "diff": diff,
         "diff_sha256": sha256_bytes(diff),
         "test_file_sha256": sha256_file(repo / "tests/experimental/test_async_stale_resume.py"),
@@ -140,13 +178,19 @@ def execute_stage(
     expected_paths: list[str],
     source_patch_name: str,
     runner_sha256: str,
+    protocol_path: Path = PROTOCOL_PATH,
 ) -> dict[str, Any]:
     state = capture_state(repo, expected_paths)
     diff_path = bundle / source_patch_name
     diff_path.write_bytes(state.pop("diff"))
     state["diff_artifact"] = source_patch_name
     state["diff_artifact_sha256"] = sha256_file(diff_path)
-    command = [python, "-m", "pytest", "-o", "addopts=", "-q", *args]
+    pytest_flags = (
+        protocol.get("reproduction", {}).get("pytest_flags", [])
+        if protocol.get("schema_version", 1) >= 3
+        else []
+    )
+    command = [python, "-m", "pytest", "-o", "addopts=", "-q", *pytest_flags, *args]
     source = protocol["source"]
     environment = stale_resume.runtime_environment(
         python,
@@ -160,37 +204,45 @@ def execute_stage(
         f"VARE_REVIEW_CANDIDATE_TREE={state['candidate_tree']}",
         f"VARE_REVIEW_DIFF_SHA256={state['diff_artifact_sha256']}",
         f"VARE_REVIEW_TEST_SHA256={state['test_file_sha256']}",
-        f"VARE_REVIEW_PROTOCOL_SHA256={sha256_file(PROTOCOL_PATH)}",
+        f"VARE_REVIEW_PROTOCOL_SHA256={sha256_file(protocol_path)}",
         f"VARE_REVIEW_RUNNER_SHA256={runner_sha256}",
         f"VARE_REVIEW_TEST_PATCH_SHA256={source['regression_test_patch_sha256']}",
         f"VARE_REVIEW_CORRECTION_PATCH_SHA256={source['correction_patch_sha256'] if name != 'baseline-failing-test' else 'not-applied'}",
     ]
+    test_environment = stale_resume.pytest_environment()
+    if protocol.get("schema_version", 1) >= 3:
+        test_environment["PYTHONDONTWRITEBYTECODE"] = "1"
     output, exit_code, timed_out = stale_resume.run_pytest_arm(
         command,
         repo,
-        stale_resume.pytest_environment(),
+        test_environment,
         protocol["environment"]["timeout_seconds"],
-    )
-    after = capture_state(repo, expected_paths)
-    source_stable = (
-        after["candidate_tree"] == state["candidate_tree"]
-        and after["diff_sha256"] == state["diff_artifact_sha256"]
-    )
-    header.extend(
-        [
-            f"VARE_REVIEW_SOURCE_VALID={'true' if source_stable else 'false'}",
-            "",
-        ]
     )
     log_path = bundle / f"{name}.log"
     log_path.write_text(
         "\n".join(header)
+        + "\n"
         + output.rstrip()
         + f"\nVARE_REVIEW_EXIT_CODE={exit_code}\n"
-        + f"VARE_REVIEW_TIMED_OUT={'true' if timed_out else 'false'}\n"
-        + f"VARE_REVIEW_SOURCE_STABLE={'true' if source_stable else 'false'}\n",
+        + f"VARE_REVIEW_TIMED_OUT={'true' if timed_out else 'false'}\n",
         encoding="utf-8",
     )
+    after: dict[str, Any] | None = None
+    source_validation_error: str | None = None
+    try:
+        after = capture_state(repo, expected_paths, allow_unexpected=True)
+    except Exception as exc:
+        source_validation_error = f"{type(exc).__name__}: {exc}"
+    source_stable = (
+        after is not None
+        and not after["unexpected_status"]
+        and after["changed_paths"] == sorted(expected_paths)
+        and after["candidate_tree"] == state["candidate_tree"]
+        and after["diff_sha256"] == state["diff_artifact_sha256"]
+    )
+    with log_path.open("a", encoding="utf-8") as stream:
+        stream.write(f"VARE_REVIEW_SOURCE_VALID={'true' if source_stable else 'false'}\n")
+        stream.write(f"VARE_REVIEW_SOURCE_STABLE={'true' if source_stable else 'false'}\n")
     record = {
         "name": name,
         **state,
@@ -200,6 +252,11 @@ def execute_stage(
         "exit_code": exit_code,
         "timed_out": timed_out,
         "source_stable": source_stable,
+        "source_validation_error": source_validation_error,
+        "post_test_changed_paths": after["changed_paths"] if after else None,
+        "post_test_unexpected_status": after["unexpected_status"] if after else None,
+        "post_test_candidate_tree": after["candidate_tree"] if after else None,
+        "post_test_diff_sha256": after["diff_sha256"] if after else None,
         "log": log_path.name,
         "raw_log_sha256": sha256_file(log_path),
     }
@@ -209,11 +266,18 @@ def execute_stage(
     return record
 
 
-def audit_bundle(bundle: Path) -> dict[str, Any]:
+def audit_bundle(
+    bundle: Path,
+    protocol_path: Path = PROTOCOL_PATH,
+) -> dict[str, Any]:
     # The frozen protocol binds the retained execution runner in each bundle.
     # This auditor may evolve to reject defects found in that old runner, while
     # reproduction itself remains pinned to the original runner bytes.
-    protocol = load_protocol(require_current_runner=False, require_current_helper=False)
+    protocol = load_protocol(
+        protocol_path,
+        require_current_runner=False,
+        require_current_helper=False,
+    )
     manifest_path = bundle / "manifest.json"
     manifest = read_json(manifest_path)
     entries = manifest.get("files")
@@ -235,7 +299,7 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
     if summary.get("protocol_id") != protocol["protocol_id"]:
         fail("summary protocol id mismatch")
     protocol_snapshot = bundle / "protocol.json"
-    if sha256_file(protocol_snapshot) != sha256_file(PROTOCOL_PATH):
+    if sha256_file(protocol_snapshot) != sha256_file(protocol_path):
         fail("retained protocol does not match the frozen protocol")
     if summary.get("protocol_sha256") != sha256_file(protocol_snapshot):
         fail("summary protocol hash mismatch")
@@ -280,12 +344,23 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
             "-o",
             "addopts=",
             "-q",
-            "tests/experimental/test_async_stale_resume.py",
         ]
+        if protocol.get("schema_version", 1) >= 3:
+            expected_command.extend(protocol["reproduction"]["pytest_flags"])
+        expected_command.append("tests/experimental/test_async_stale_resume.py")
         if name != "corrected-full-test-file":
             expected_command += ["-k", "resume_cursor_does_not_count_replayed_suffix"]
         if record.get("command") != expected_command:
             fail(f"executed test command differs from the protocol: {name}")
+        if protocol.get("schema_version", 1) >= 3:
+            if (
+                record.get("source_validation_error") is not None
+                or record.get("post_test_changed_paths") != expected_path_sets[name]
+                or record.get("post_test_unexpected_status") != []
+                or record.get("post_test_candidate_tree") != record.get("candidate_tree")
+                or record.get("post_test_diff_sha256") != record.get("diff_sha256")
+            ):
+                fail(f"post-test source validation metadata is not clean: {name}")
         if record.get("revision") != source["candidate_revision"] or record.get("base_tree") != source["candidate_base_tree"]:
             fail(f"candidate revision or base tree mismatch: {name}")
         if record.get("candidate_tree") != EXPECTED_CANDIDATE_TREES[name]:
@@ -361,11 +436,14 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
     )
     if summary.get("all_checks_passed") is not accepted:
         fail("overall decision does not match the retained test evidence")
+    if protocol.get("schema_version", 1) >= 3 and summary.get("status") != "complete":
+        fail("complete v3 bundle has an unexpected status")
     return summary
 
 
 def reproduce(args: argparse.Namespace) -> int:
-    protocol = load_protocol()
+    protocol_path = args.protocol.expanduser().resolve() if args.protocol else PROTOCOL_PATH
+    protocol = load_protocol(protocol_path)
     if args.python != protocol["environment"]["python_executable"]:
         fail(f"use the locked interpreter path: {protocol['environment']['python_executable']}")
     # Preserve the venv executable path; resolving its symlink would select
@@ -380,7 +458,7 @@ def reproduce(args: argparse.Namespace) -> int:
     runner_bytes = runner_path.read_bytes()
     runner_sha = sha256_bytes(runner_bytes)
     (output / "runner.py").write_bytes(runner_bytes)
-    protocol_bytes = PROTOCOL_PATH.read_bytes()
+    protocol_bytes = protocol_path.read_bytes()
     (output / "protocol.json").write_bytes(protocol_bytes)
     helper_sha = sha256_file(ROOT / protocol["runner"]["helper"])
     environment_lock = read_json(ROOT / protocol["environment"]["environment_lock"])
@@ -394,15 +472,23 @@ def reproduce(args: argparse.Namespace) -> int:
             text=True,
         )
         try:
+            if str(
+                git(
+                    checkout,
+                    "status",
+                    "--porcelain",
+                    "--untracked-files=all",
+                    "--ignored=matching",
+                )
+            ):
+                fail("materialized candidate is not clean before recording its revision")
             revision = str(git(checkout, "rev-parse", "HEAD"))
             base_tree = str(git(checkout, "rev-parse", "HEAD^{tree}"))
             if revision != protocol["source"]["candidate_revision"] or base_tree != protocol["source"]["candidate_base_tree"]:
                 fail("materialized candidate does not match the locked source revision/tree")
-            if str(git(checkout, "status", "--porcelain", "--untracked-files=all")):
-                fail("materialized candidate is not clean before patching")
             environment = stale_resume.runtime_environment(python, checkout, environment_lock["environment"])
             apply_patch(checkout, protocol["source"]["regression_test_patch"])
-            first = execute_stage(
+            runs = [execute_stage(
                 protocol=protocol,
                 python=python,
                 repo=checkout,
@@ -412,30 +498,35 @@ def reproduce(args: argparse.Namespace) -> int:
                 expected_paths=protocol["source"]["test_only_paths"],
                 source_patch_name="baseline-source.patch",
                 runner_sha256=runner_sha,
-            )
-            apply_patch(checkout, protocol["source"]["correction_patch"])
-            second = execute_stage(
-                protocol=protocol,
-                python=python,
-                repo=checkout,
-                bundle=output,
-                name="corrected-targeted-test",
-                args=["tests/experimental/test_async_stale_resume.py", "-k", "resume_cursor_does_not_count_replayed_suffix"],
-                expected_paths=protocol["source"]["corrected_paths"],
-                source_patch_name="corrected-source.patch",
-                runner_sha256=runner_sha,
-            )
-            third = execute_stage(
-                protocol=protocol,
-                python=python,
-                repo=checkout,
-                bundle=output,
-                name="corrected-full-test-file",
-                args=["tests/experimental/test_async_stale_resume.py"],
-                expected_paths=protocol["source"]["corrected_paths"],
-                source_patch_name="corrected-source.patch",
-                runner_sha256=runner_sha,
-            )
+                protocol_path=protocol_path,
+            )]
+            if runs[-1]["source_stable"]:
+                apply_patch(checkout, protocol["source"]["correction_patch"])
+                runs.append(execute_stage(
+                    protocol=protocol,
+                    python=python,
+                    repo=checkout,
+                    bundle=output,
+                    name="corrected-targeted-test",
+                    args=["tests/experimental/test_async_stale_resume.py", "-k", "resume_cursor_does_not_count_replayed_suffix"],
+                    expected_paths=protocol["source"]["corrected_paths"],
+                    source_patch_name="corrected-source.patch",
+                    runner_sha256=runner_sha,
+                    protocol_path=protocol_path,
+                ))
+            if len(runs) == 2 and runs[-1]["source_stable"]:
+                runs.append(execute_stage(
+                    protocol=protocol,
+                    python=python,
+                    repo=checkout,
+                    bundle=output,
+                    name="corrected-full-test-file",
+                    args=["tests/experimental/test_async_stale_resume.py"],
+                    expected_paths=protocol["source"]["corrected_paths"],
+                    source_patch_name="corrected-source.patch",
+                    runner_sha256=runner_sha,
+                    protocol_path=protocol_path,
+                ))
         finally:
             subprocess.run(
                 ["git", "-C", str(source_repo), "worktree", "remove", "--force", str(checkout)],
@@ -450,7 +541,7 @@ def reproduce(args: argparse.Namespace) -> int:
 
     summary = {
         "protocol_id": protocol["protocol_id"],
-        "protocol_sha256": sha256_file(PROTOCOL_PATH),
+        "protocol_sha256": sha256_file(protocol_path),
         "runner_sha256": runner_sha,
         "helper_sha256": helper_sha,
         "source_revision": revision,
@@ -458,12 +549,31 @@ def reproduce(args: argparse.Namespace) -> int:
         "python_executable": python,
         "environment": environment,
         "source_runner_valid": source_runner_valid,
-        "runs": [first, second, third],
-        "all_checks_passed": source_runner_valid and first["exit_code"] == 1 and first["pytest_outcome"].get("failed") == 2 and second["exit_code"] == 0 and second["pytest_outcome"].get("passed") == 2 and third["exit_code"] == 0 and third["pytest_outcome"].get("passed") == 11 and all(run["source_stable"] and not run["timed_out"] for run in (first, second, third)),
+        "runs": runs,
+        "skipped_stages": [
+            name
+            for name in ("baseline-failing-test", "corrected-targeted-test", "corrected-full-test-file")
+            if name not in {run["name"] for run in runs}
+        ],
+        "status": "complete" if len(runs) == 3 else "aborted_source_validation",
+        "all_checks_passed": (
+            source_runner_valid
+            and len(runs) == 3
+            and runs[0]["exit_code"] == 1
+            and runs[0]["pytest_outcome"].get("failed") == 2
+            and runs[1]["exit_code"] == 0
+            and runs[1]["pytest_outcome"].get("passed") == 2
+            and runs[2]["exit_code"] == 0
+            and runs[2]["pytest_outcome"].get("passed") == 11
+            and all(run["source_stable"] and not run["timed_out"] for run in runs)
+        ),
     }
     write_json(output / "summary.json", summary)
     write_manifest(output)
-    audited = audit_bundle(output)
+    if len(runs) != 3:
+        print(json.dumps({"bundle": str(output), "all_checks_passed": False, "status": summary["status"]}, indent=2))
+        return 1
+    audited = audit_bundle(output, protocol_path)
     print(json.dumps({"bundle": str(output), "all_checks_passed": audited["all_checks_passed"]}, indent=2))
     return 0 if audited["all_checks_passed"] else 1
 
@@ -472,12 +582,14 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-repo", type=Path, help="local TRL clone containing the locked candidate commit")
     parser.add_argument("--python", default="/tmp/vare-trl-v4/bin/python", help="locked v4 Python 3.12 environment")
+    parser.add_argument("--protocol", type=Path, help="explicit frozen protocol (use the v3 lock for the hardened runner)")
     parser.add_argument("--output", type=Path, help="new output directory")
     parser.add_argument("--audit", type=Path, help="audit an existing retained v2 bundle")
     args = parser.parse_args()
     try:
         if args.audit:
-            audited = audit_bundle(args.audit.expanduser().resolve())
+            protocol_path = args.protocol.expanduser().resolve() if args.protocol else PROTOCOL_PATH
+            audited = audit_bundle(args.audit.expanduser().resolve(), protocol_path)
             print(json.dumps(audited, indent=2))
             return 0 if audited.get("all_checks_passed") is True else 1
         if args.source_repo is None or args.output is None:

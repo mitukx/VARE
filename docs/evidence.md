@@ -47,6 +47,15 @@ historical evidence. See the
 [review regression report](trl-async-stale-resume-review-regression-v2-report.md),
 [protocol](../protocols/trl_async_stale_resume_replay_suffix_v2.lock.json), and
 [audited raw bundle](../results/trl-async-stale-resume-v6/review-p1-suffix-epoch-count-provenance-v2-final/).
+The next independent review found two evidence-runner gaps: ignored files were
+not rejected before capture, and a post-test validation error could lose raw
+pytest output. V4 of the review protocol rejects ignored/untracked source
+contamination, retains output before validation, and passes bundle audit. It
+also records an earlier v3 harness failure caused by a missing log separator.
+This is source-level checkpoint accounting evidence only. See the
+[hardening report](trl-async-stale-resume-review-regression-v3-report.md),
+[v4 protocol](../protocols/trl_async_stale_resume_replay_suffix_v4.lock.json),
+and [accepted raw bundle](../results/trl-async-stale-resume-v7/review-replay-suffix-v4/).
 
 ## End-to-end CPU RL system benchmark — 2026-10-16
 
