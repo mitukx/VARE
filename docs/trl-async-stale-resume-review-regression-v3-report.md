@@ -40,14 +40,14 @@ has not been accepted upstream.
 Prepare `/tmp/vare-trl-v4/bin/python` as described in the
 [stale-resume v4 report](trl-async-stale-resume-v4-report.md). The frozen v4
 runner at `da2ab53926f94d77b7d26c5368d5ab5e5d04674e` generates the bundle; the
-v6 hardened checkout audits it and runs the regression suite:
+strict auditor checkout audits it and runs the regression suite:
 
 ```bash
 set -euo pipefail
 git clone https://github.com/mitukx/VARE.git /tmp/vare-v3-source
 git -C /tmp/vare-v3-source fetch origin codex/trl-async-stale-resume-cursor
 git -C /tmp/vare-v3-source worktree add --detach /tmp/vare-v3-runner da2ab53926f94d77b7d26c5368d5ab5e5d04674e
-git -C /tmp/vare-v3-source worktree add --detach /tmp/vare-v3-hardened 1a96abb20efc05679312eb794b21c3ec0c67ddd2
+git -C /tmp/vare-v3-source worktree add --detach /tmp/vare-v3-hardened 557dffd25e45f43b98c09b2740ae6a1239f0dff6
 git clone https://github.com/huggingface/trl.git /tmp/vare-trl-review-source
 git -C /tmp/vare-trl-review-source remote add vare https://github.com/mitukx/trl.git
 git -C /tmp/vare-trl-review-source fetch vare codex/async-stale-resume-cursor
@@ -59,8 +59,8 @@ cd /tmp/vare-v3-runner
   --output /tmp/vare-replay-suffix-v4-fresh \
   --python /tmp/vare-trl-v4/bin/python
 cd /tmp/vare-v3-hardened
-/tmp/vare-trl-v4/bin/python scripts/reproduce_trl_async_stale_resume_review_v2.py \
-  --audit /tmp/vare-replay-suffix-v4-fresh \
+/tmp/vare-trl-v4/bin/python scripts/audit_trl_async_stale_resume_review_v2.py \
+  /tmp/vare-replay-suffix-v4-fresh \
   --protocol protocols/trl_async_stale_resume_replay_suffix_v4.lock.json
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 /tmp/vare-trl-v4/bin/python -m pytest -q \
   tests/test_trl_async_stale_resume_evidence.py

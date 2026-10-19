@@ -74,11 +74,12 @@ def test_stale_resume_reproduction_docs_audit_from_hardened_checkout():
 
     assert "set -e" in replay_suffix_doc
     assert "b456452257a5490d61ff5da92fd818dba38e672e" in replay_suffix_doc
-    assert "1a96abb20efc05679312eb794b21c3ec0c67ddd2" in replay_suffix_doc
+    assert "557dffd25e45f43b98c09b2740ae6a1239f0dff6" in replay_suffix_doc
     assert replay_suffix_doc.index("cd /tmp/vare-review-v2-runner") < (
         replay_suffix_doc.index("cd /tmp/vare-review-v2-hardened")
     )
-    assert "--audit /tmp/vare-replay-suffix-v2-fresh" in replay_suffix_doc
+    assert "scripts/audit_trl_async_stale_resume_review_v2.py" in replay_suffix_doc
+    assert "--audit /tmp/vare-replay-suffix-v2-fresh" not in replay_suffix_doc
 
     assert "set -e" in v4_doc
     assert "54ff88c368d98c66111489d7b23046df62112d59" in v4_doc
@@ -90,10 +91,12 @@ def test_stale_resume_reproduction_docs_audit_from_hardened_checkout():
 
     assert "set -euo pipefail" in v3_doc
     assert "da2ab53926f94d77b7d26c5368d5ab5e5d04674e" in v3_doc
-    assert "1a96abb20efc05679312eb794b21c3ec0c67ddd2" in v3_doc
+    assert "557dffd25e45f43b98c09b2740ae6a1239f0dff6" in v3_doc
     assert v3_doc.index("cd /tmp/vare-v3-runner") < v3_doc.index(
         "cd /tmp/vare-v3-hardened"
     )
+    assert "scripts/audit_trl_async_stale_resume_review_v2.py" in v3_doc
+    assert "--audit /tmp/vare-replay-suffix-v4-fresh" not in v3_doc
 
     assert "f06d3d5108bc1af89a05c8b08c72fa3585f9b0df" in v5_doc
     assert v5_doc.index("cd /tmp/vare-v5-runner") < v5_doc.index(
