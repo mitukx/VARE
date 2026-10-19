@@ -1,24 +1,55 @@
 # Documentation
 
-**First read:** [project summary and verified results](../README.md) → [architecture](architecture.md) → [engineering evidence](engineering-depth.md). This index is curated; the historical experiment and evidence ledgers deliberately preserve older records and dated decisions.
+Start with the [project summary](../README.md), then use the paths below to inspect architecture, implementation, experiments, and evidence. Historical reports and negative results remain available in the experiment and evidence indexes.
 
-| Reader question | Reference |
+## New readers
+
+| Question | Start here |
 | --- | --- |
-| What problem does VARE solve, and what has actually been demonstrated? | [README](../README.md), [reviewer guide](reviewer-guide.md) |
-| How do training, orchestration, evaluation and recovery fit together? | [Architecture and ownership](architecture.md), [engineering deep dive](engineering-depth.md) |
-| What can I run now? | [Quick start](../README.md#quick-start), [reproduction scripts](../scripts/README.md), [CLI](execution.md) |
-| How are repositories and source paths organized? | [Repository layout](repository-layout.md) |
-| How are faults detected, candidates discarded and uncertain state recovered? | [Whole-round runtime](runtime-round-ownership-v1.md), [evaluation lifetime](engine-evaluation-lifecycle-v1-report.md), [publication](promotion-publication-recovery-v1.md), [durable jobs](recovery.md) |
-| What stops graders when their worker is killed during evaluation? | [Owner-loss containment, resume and cost](grader-owner-loss-v1-report.md) |
-| Do updated rollout workers and a SIGKILLed learner resume actual optimizer updates correctly? | [Continuous actual-model benchmark](e2e-rl-continuation-v2-report.md), [retained artifact audit](../README.md#audit-the-retained-model-benchmark) |
-| What measured corruption, forged evidence, worker crash and cancellation faults? | [Preserved v1 actual-model CPU benchmark](e2e-rl-real-model-v1-report.md); different timing boundary and baseline from v2 |
-| What does the earlier simulated policy measure? | [Four-parameter control-loop benchmark](e2e-rl-system-benchmark-v1.md); a separate workload and baseline |
-| Can a resumed evaluator silently use different executor source? | [Durable source pinning and restoration](durable-runtime-source-v1-report.md) |
-| How do actual trainer and trajectory boundaries work? | [RVL integration](rvl-evaluation-promotion-e2e-v1-report.md), [direct trainer freshness](rvl-direct-trainer-freshness-v1-report.md), [trajectory reference](trajectory-reference-v1.md), [trajectory safety](trajectory-aware-safety-v1.md) |
-| Does trajectory replay match dispatch policy and terminal tool lifetime? | [Capture boundary report](trajectory-capture-boundary-v1-report.md) |
-| Where are completed and failed experiments? | [Experiment index](experiments.md), [evidence ledger](evidence.md), [roadmap chronology](roadmap.md) |
-| What is not validated, and what would justify another study? | [Current gaps](current-gaps.md), [research qualification](research-candidate-qualification-2026-10-15.md), [agent charter](../AGENTS.md) |
-| Did a fresh model/task/method qualify for another learning comparison? | [2026-10-16 candidate screen](research-candidate-screen-2026-10-16.md): NO-GO before base inference; prior-art differences, unused metadata candidates and remaining grader/resource gates |
-| How are protocols, artifacts and large blobs preserved? | [Repository layout](repository-layout.md), [artifact retention](artifact-retention.md) |
+| What does VARE implement, and what has been demonstrated? | [README and selected results](../README.md#key-results) · [research scope and limitations](../README.md#research-scope-and-limitations) |
+| How does the control plane fit together? | [Architecture and ownership](architecture.md) |
+| How can I run a lightweight CPU check? | [Quick start](../README.md#quick-start) · [reproduction scripts](../scripts/README.md) |
 
-**Evidence policy:** A regression fixture validates a bounded implementation property; a model-feasibility test does not show learning; an optimizer smoke is not a held-out success result. No retained real-model policy update establishes independently confirmed held-out task-success improvement. Follow each report's pinned source, protocol, raw artifacts, and stated limits. Historical PR/CI status references are snapshots, not live state.
+## Systems engineers
+
+| Topic | Implementation and evidence |
+| --- | --- |
+| Round ownership, evaluation cleanup, promotion, and recovery | [Engineering design](engineering-depth.md) · [whole-round recovery](runtime-round-ownership-v1.md) · [publication recovery](promotion-publication-recovery-v1.md) |
+| Durable evaluation workers and leases | [Recovery contract](recovery.md) · [owner-loss report](grader-owner-loss-v1-report.md) |
+| Async trajectory execution | [Runtime and measured tradeoffs](async-trajectory-runtime.md) · [trajectory capture boundary](trajectory-capture-boundary-v1-report.md) |
+| Checkpoint and artifact limits | [Checkpoint read bounds](checkpoint-read-bounds-v1-report.md) · [artifact retention](artifact-retention.md) |
+
+## RL researchers
+
+| Topic | Evidence |
+| --- | --- |
+| Selected system and training-integrity results | [Benchmark guide](benchmarks.md) |
+| Actual optimizer continuation and learner recovery | [Continuous CPU report](e2e-rl-continuation-v2-report.md) · [protocol](../benchmarks/e2e_rl_continuation_v2/protocol.json) |
+| Group integrity and GRPO numerical reference | [GRPO report](grpo-e2e-cpu-report.md) · [protocol](../benchmarks/grpo_e2e_cpu_v5/protocol.json) |
+| Independent evaluation and candidate promotion | [Architecture](architecture.md) · [RVL evaluation/promotion integration](rvl-evaluation-promotion-e2e-v1-report.md) |
+| Research outcomes and candidate admission | [Experiment index](experiments.md) · [current gaps](current-gaps.md) |
+
+## Agent researchers
+
+| Topic | Evidence |
+| --- | --- |
+| Repository task execution, workspace binding, graders, and process ownership | [Agent evaluation guide](agent-evaluation.md) · [environment factory](environment_factory.md) |
+| Workspace-bound evidence collector and its controls | [V2 report](verified_coding_agent_baseline_v2.md) · [v1 report](verified_coding_agent_baseline_v1.md) |
+| Agent tasks and evaluation assets | [Historical benchmark tasks](../benchmarks/historical/) · [task preparation and script index](../scripts/README.md) |
+
+Current agent evidence is limited to implementation and deterministic integration controls. No newly calibrated live-agent success cohort or model-capability result is established; the agent guide describes trust assumptions and unvalidated gates.
+
+## Reproduction and auditing
+
+| Need | Reference |
+| --- | --- |
+| Find a runnable reproduction or artifact auditor | [Script index](../scripts/README.md) · [selected benchmark commands](benchmarks.md) |
+| Check protocols, raw outputs, and retained artifacts | [Protocol directory](../protocols/) · [evidence ledger](evidence.md) · [artifact retention](artifact-retention.md) |
+| Review preserved negative, inconclusive, and superseded findings | [Experiment index](experiments.md) · [roadmap chronology](roadmap.md) |
+| Find code-to-test-to-evidence links for design decisions | [Engineering deep dive](engineering-depth.md) |
+
+## Historical reports
+
+Detailed reports remain in `docs/` and are intentionally not all listed in the primary paths above. The [experiment index](experiments.md) and [evidence ledger](evidence.md) retain older studies, negative outcomes, corrections, and superseded records. Follow each report's own protocol, source revision, raw evidence, and limitations; PR and CI status statements inside old reports are historical snapshots.
+
+**Evidence policy:** a deterministic regression validates a bounded implementation property; optimizer correctness does not show task improvement; and synthetic throughput is not production inference throughput. No retained real-model update demonstrates independently confirmed held-out task-success improvement.
