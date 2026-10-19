@@ -183,19 +183,31 @@ def test_evaluator_response_must_have_valid_signature(tmp_path):
 def _fake_docker(tmp_path: Path, behavior: str) -> tuple[str, Path]:
     binary = tmp_path / "fake-docker"
     audit = tmp_path / "cleanup.txt"
+    remove_script = (
+        "    count = int(audit.read_text()) if audit.exists() else 0\n"
+        "    audit.write_text(str(count + 1))\n"
+        "    if count == 0:\n"
+        "        print('Error response from daemon: removal of container is already in progress', file=sys.stderr)\n"
+        "    else:\n"
+        "        print('No such container', file=sys.stderr)\n"
+        "    raise SystemExit(1)\n"
+        if behavior == "cleanup-race" else
+        "    audit.write_text('removed')\n"
+        "    print('No such container', file=sys.stderr)\n"
+        "    raise SystemExit(1)\n"
+    )
+    run_script = (
+        "    time.sleep(10)\n" if behavior == "timeout" else
+        "    print('x'*20000)\n" if behavior == "overflow" else
+        "    print('ok')\n"
+    )
     script = (
         "#!" + sys.executable + "\n"
         "import sys,time\n"
         "from pathlib import Path\n"
         f"audit = Path({str(audit)!r})\n"
-        "if sys.argv[1] == 'rm':\n"
-        "    audit.write_text('removed')\n"
-        "    print('No such container', file=sys.stderr)\n"
-        "    raise SystemExit(1)\n"
-        "if sys.argv[1] == 'run':\n"
-        + (("    time.sleep(10)\n") if behavior == "timeout" else
-           ("    print('x'*20000)\n") if behavior == "overflow" else
-           ("    print('ok')\n"))
+        "if sys.argv[1] == 'rm':\n" + remove_script +
+        "if sys.argv[1] == 'run':\n" + run_script
     )
     binary.write_text(script, encoding="utf-8")
     binary.chmod(0o755)
@@ -248,6 +260,22 @@ def test_controller_cancellation_also_requests_forced_cleanup(tmp_path):
 
     asyncio.run(scenario())
     assert audit.read_text(encoding="utf-8") == "removed"
+
+
+def test_supervisor_retries_docker_auto_remove_race(tmp_path):
+    binary, audit = _fake_docker(tmp_path, "cleanup-race")
+    root = tmp_path / "workspaces"
+    work = root / "trial"
+    work.mkdir(parents=True)
+    runner = DockerIsolationRunner(docker_binary=binary)
+    result = asyncio.run(runner.run_candidate(
+        IsolationLimits(IMAGE),
+        allowed_workspace_root=root,
+        workspace=work,
+        command=("echo", "hello"),
+    ))
+    assert result.stdout.strip() == "ok"
+    assert audit.read_text(encoding="utf-8") == "2"
 
 
 def test_isolated_hooks_never_call_learner_for_promotion_evidence(tmp_path):

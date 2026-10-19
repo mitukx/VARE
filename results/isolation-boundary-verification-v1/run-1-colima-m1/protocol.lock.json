@@ -1,0 +1,54 @@
+{
+  "protocol_id": "repository-isolation-boundary-v1",
+  "source_main_revision": "cd319b61c4c2987814d2ce4ca7a8d180963bff0f",
+  "implementation_files": {
+    "scripts/verify_docker_isolation_boundary_v1.py": "a0155979340815faa1b0de71042c119710f2b10f0dcbd602eb6926959e84be9a",
+    "src/vare/container_isolation.py": "4cda0ac0a9282108ce5a1a76781756f1b54d93375a8831f274dee63d45b121e9",
+    "src/vare/sandboxed_repository.py": "963ee68f61cfbfa38d885371053993d9524d112daddf5a153e5dfbd7bb84547c",
+    "src/vare/environments/runner.py": "fd1c5a58582eb96c16c00a8cb021c1654b70de982e94e231c9f45867b0345b5d",
+    "src/vare/environments/spec.py": "99f4bd2f6889bcab295b3adda74bd6fadd665c66b5308cabc443dd393715344e"
+  },
+  "runtime": {
+    "docker_context": "colima",
+    "container_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "container_network": "none",
+    "root_filesystem_read_only": true,
+    "capabilities_dropped": "ALL",
+    "no_new_privileges": true,
+    "uid": 65534,
+    "gid": 65534,
+    "memory_mb": 256,
+    "cpus": 0.5,
+    "pids_limit": 12,
+    "container_timeout_seconds": 15,
+    "max_output_bytes": 16000
+  },
+  "replicates": 3,
+  "probes": {
+    "candidate_mount": "one writable synthetic workspace only",
+    "host_canary": "synthetic file placed in the shared host path but outside candidate bind mount; read and write attempts must fail",
+    "network": "socket connect to RFC 5737 TEST-NET-3 address 203.0.113.1:65000 must fail and container must have no default route",
+    "process_limit": "spawn workers until EAGAIN at configured pids limit; all spawned workers are killed before probe exit",
+    "resource_limits": "observe cgroup memory.max, cpu.max and pids.max plus live docker inspect values",
+    "lifecycle": [
+      "normal completion",
+      "wall-time timeout while a child sleeps",
+      "controller cancellation while a child sleeps",
+      "stdout overflow"
+    ],
+    "grader_visibility": "use DockerRepositoryEvaluator's exact mount/limit builder with only the worker entrypoint replaced by a harmless read of a random synthetic canary under /grader; visibility is a confidentiality FAIL"
+  },
+  "acceptance": {
+    "host_containment_and_container_limits": "PASS only when all three candidate probes deny host-canary access and egress and observed effective limits match the lock",
+    "lifecycle_cleanup": "PASS only when normal, timeout, cancellation, and output-overflow runs leave no newly created managed container",
+    "grader_confidentiality": "FAIL if any of three synthetic canaries is visible to code in the grader container namespace",
+    "live_candidate_execution": "must remain BLOCKED regardless of A-C because grader confidentiality and hostile-kernel escape are not proven"
+  },
+  "stop_conditions": [
+    "refuse to run unless the named Colima VM reports macOS Virtualization.Framework, Docker runtime, and seccomp enabled",
+    "use only synthetic canaries and a digest-pinned preloaded public Python image; never mount operator secrets or held-out data",
+    "abort if the output directory already exists or the pinned image digest is unavailable locally",
+    "do not execute a model, agent, repository issue patch, or real task grader"
+  ],
+  "claim_limit": "E0 runtime-boundary observations only; not a security certification, candidate escape guarantee, trusted hidden grader, agent capability, or model-learning result"
+}

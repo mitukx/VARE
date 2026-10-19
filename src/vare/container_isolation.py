@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 import re
 import secrets
+import time
 from typing import Sequence
 
 from .attestation import EvidenceTrustRoot
@@ -272,19 +273,35 @@ class DockerIsolationRunner:
 
     async def _force_remove(self, name: str) -> None:
         env = self._client_env
-        proc = await asyncio.create_subprocess_exec(
-            self.docker_binary, "rm", "-f", name,
-            stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
-            env=env,
-        )
-        try:
-            _out, err = await asyncio.wait_for(proc.communicate(), timeout=10.0)
-        except asyncio.TimeoutError as exc:
-            proc.kill()
-            await proc.wait()
-            raise IsolationError("Docker forced cleanup timed out") from exc
-        if proc.returncode != 0 and b"No such container" not in err and b"No such object" not in err:
-            raise IsolationError("Docker daemon did not confirm forced cleanup")
+        deadline = time.monotonic() + 10.0
+        while True:
+            proc = await asyncio.create_subprocess_exec(
+                self.docker_binary, "rm", "-f", name,
+                stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
+                env=env,
+            )
+            remaining = deadline - time.monotonic()
+            try:
+                _out, err = await asyncio.wait_for(
+                    proc.communicate(), timeout=max(0.01, min(2.0, remaining))
+                )
+            except asyncio.TimeoutError as exc:
+                proc.kill()
+                await proc.wait()
+                raise IsolationError("Docker forced cleanup timed out") from exc
+            if proc.returncode == 0 or b"No such container" in err or b"No such object" in err:
+                return
+            # With `docker run --rm`, automatic removal can race the supervisor's
+            # forced removal after timeout or output overflow. Docker reports
+            # this transient state while the daemon is already removing it.
+            if b"removal of container" in err.lower() and b"already in progress" in err.lower():
+                if time.monotonic() < deadline:
+                    await asyncio.sleep(min(0.05, max(0.0, deadline - time.monotonic())))
+                    continue
+            raise IsolationError(
+                "Docker daemon did not confirm forced cleanup: "
+                + err.decode("utf-8", errors="replace")[:500]
+            )
 
     async def run_candidate(
         self, limits: IsolationLimits, *, allowed_workspace_root: Path,
