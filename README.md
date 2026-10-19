@@ -1,159 +1,160 @@
 # VARE
+### Auditable Asynchronous RL & Agent Evaluation Infrastructure
 
-**VARE is a CPU-first control plane for auditable post-training experiments.** It coordinates rollout evidence, policy/verifier freshness, candidate updates, independent evaluation, promotion, and recovery. Model execution and optimizer internals are supplied through hooks; [Recursive-Verification-Lag (RVL)](https://github.com/mitukx/Recursive-Verification-Lag) is an integration backend, not a bundled distributed trainer.
+VARE is a CPU-first research control plane for reliable post-training and long-horizon agent experiments. It coordinates rollout evidence, freshness checks, group-aware replay, candidate evaluation, promotion decisions, and recovery through explicit interfaces.
 
-**Evidence boundary:** No retained real-model policy update demonstrates an independently confirmed improvement in held-out task success. Passing control-plane tests, increasing training reward, an initial model-feasibility gate, and successfully saving an optimizer update do **not** establish such an improvement.
+Its engineering focus is keeping asynchronous work trustworthy: detecting stale policy or verifier information, preserving training-signal and replay integrity, binding evaluation to a candidate checkpoint, recovering from worker or learner interruption, and retaining auditable agent trajectories. Model serving, optimizer implementations, and task-specific evaluators are supplied through external backends and hooks.
 
-## Problem
+VARE provides distinct control-plane components and experimental integrations. The repository does not establish that every path operates together as one deployed system, or that a model update improves independent task performance.
 
-Long-running post-training experiments can silently invalidate their own conclusions: rollouts become stale relative to a changing policy or verifier; group-relative rewards lose their group identity; evaluations continue after a candidate is discarded; or a crash leaves an ambiguous active checkpoint. A higher proxy reward is not evidence of a better policy. VARE makes these boundaries explicit so experiments can reject unsound updates and preserve auditable failures rather than treating execution success as research success.
+## Key results
 
-## Control-plane contracts
-
-| Boundary | Implemented mechanism | Inspect |
+| Result | Workload and comparison | Limit and evidence |
 | --- | --- | --- |
-| Experiment control | `CapabilityLoop` orchestrates bounded rollouts, verification, replay, candidate training, evaluation, and decisions via `LoopHooks`. | [Engine](src/vare/engine.py), [hook contract](src/vare/interfaces.py) |
-| Training-signal integrity | Policy/verifier version checks, current-freshness rescreening, group-complete replay, and a direct RVL trainer freshness guard. | [Lag](src/vare/lag.py), [replay](src/vare/replay.py), [direct-trainer report](docs/rvl-direct-trainer-freshness-v1-report.md) |
-| Evaluation and promotion | Independent held-out reports, optional paired confidence and attested trajectory constraints, candidate discard, and checkpoint-bound publication. | [Gate](src/vare/promotion.py), [attestation](src/vare/attestation.py), [integration evidence](docs/rvl-evaluation-promotion-e2e-v1-report.md) |
-| Ownership and recovery | Full-round same-runtime coordination and a single-host SQLite promotion journal; separate durable evaluation jobs use leases and generation fencing. | [Runtime](src/vare/runtime.py), [journal](src/vare/promotion_journal.py), [evaluation recovery](docs/recovery.md) |
-| Long-horizon execution | Incremental durable agent steps, bounded execute/verify queues, worker fencing, complete-group authenticated terminal admission. | [Runtime and measured limits](docs/async-trajectory-runtime.md) |
-| Reproducible experiments | Versioned protocols, bounded graders, hash-linked records, failure-oriented CPU reproductions, and retained negative outcomes. | [Runner](src/vare/runner.py), [protocols](protocols/), [evidence ledger](docs/evidence.md) |
+| **504 logical rounds; 513 actual candidate optimizer attempts; 18/18 learner SIGKILL recoveries matched uninterrupted state and subsequent updates.** | Continuous CPU control-loop benchmark on Apple M1 Pro / 32 GiB, with a pinned 102,714-parameter GPT-2 checkpoint and fresh synthetic one-token tasks. Guarded throughput was 145.57–176.49 tasks/s across three seeds and 2–8 rollout workers. | Toy-model systems validation, not capability or production inference throughput. Nine uncommitted optimizer computations were repeated after interruption; none of the committed updates was applied twice. [Report](docs/e2e-rl-continuation-v2-report.md) · [protocol](benchmarks/e2e_rl_continuation_v2/protocol.json) |
+| **54.53 ± 1.85 vs 36.16 ± 2.68 trajectories/s** | Durable asynchronous execution versus matched synchronous cohorts; 10,000 synthetic multi-step trajectories per case, three seeds, single-host CPU, actual worker SIGKILL. | Async raised throughput but increased queue-inclusive p95 latency to 44.04–46.45 s from 0.240–0.290 s. The consumer acknowledged eligibility; no optimizer update or model inference was measured. [Report and raw evidence](docs/async-trajectory-runtime.md#measured-cpu-result) · [protocol](benchmarks/trajectory_runtime_v2/protocol.json) |
+| **36 real GRPO candidate updates numerically replayed** | Three CPU seeds on TinyStories-1M; the independent reference compared loss, pre-clip/clipped gradients, Adam state, and parameters. | Synthetic rewards and diagnostic evaluation; an integration patch to the external trainer was applied for the experiment. This verifies update arithmetic and rollback controls, not task success or capability gain. [Report](docs/grpo-e2e-cpu-report.md) · [protocol](benchmarks/grpo_e2e_cpu_v5/protocol.json) |
+| **Coding-agent evidence is source and workspace bound** | V2 deterministic controls check that agent records, grader records, Git diffs, and workspace source agree; subprocess lifetime is owned across cancellation and timeout. | E0 integration controls only: no fresh live agent run, newly calibrated task cohort, or independently measured coding success is reported. [Agent evaluation guide](docs/agent-evaluation.md) · [v2 report](docs/verified_coding_agent_baseline_v2.md) |
 
-These are distinct contracts, not a claim that every component forms one deployed, fully autonomous training system. Repository-editing agents and task catalogs are available as [experimental environment integrations](docs/environment_factory.md); large-model training/serving remains external.
-
-## Measured end-to-end system benchmark
-
-The [continuous actual-model CPU benchmark](docs/e2e-rl-continuation-v2-report.md) runs **rollout → verification → freshness check → replay → actual AdamW update → independent checkpoint evaluation → promotion/rejection → checkpoint recovery**, followed by further actual updates. It uses a pinned public tiny GPT-2 checkpoint (102,714 parameters; 2,200 trainable) and fresh synthetic one-token tasks on Apple M1 Pro / 32 GiB. **42/42 cases passed: 504 logical rounds and 513 actual candidate optimizer attempts.** Eighteen learner SIGKILL/restarts reproduced uninterrupted model, Adam, RNG, step and subsequent updates exactly; nine uncommitted computations were repeated and no committed update was applied twice. Independent audit verified 6,522 files, 504 candidate tensor states and replayed checkpoint evaluation scores.
-
-Continuation benchmark tasks/s, mean ± sample SD over three seeds:
-
-| Rollout workers | Minimal controls | Guarded controls |
-| ---: | ---: | ---: |
-| 1 | 157.75 ± 18.39 | 145.57 ± 10.70 |
-| 2 | 193.57 ± 3.17 | 176.49 ± 3.55 |
-| 4 | 194.97 ± 9.44 | 170.63 ± 3.02 |
-| 8 | 195.33 ± 5.70 | 174.53 ± 4.13 |
-
-Guarded paired mean wall overhead was **8.80–14.22%**; peak sampled process-tree RSS was **3,785.34 MiB**. Recovery from learner SIGKILL through the next actual update averaged **6.48–7.04 s** across six cutpoints. This is toy-model systems validation on a synthetic workload; it makes no task-capability, production-throughput, or distributed-scaling claim. Replay is round-local. See the [report](docs/e2e-rl-continuation-v2-report.md), [protocol](benchmarks/e2e_rl_continuation_v2/protocol.json), and [retained evidence](https://github.com/mitukx/VARE/releases/tag/e2e-rl-continuation-v2-20261016).
-
-The [durable trajectory CPU comparison](docs/async-trajectory-runtime.md#measured-cpu-result) completed 10,000 synthetic multi-step trajectories per case across three seeds and two scheduling modes, with actual worker SIGKILL and zero duplicated effective commits. Continuous async measured 54.53 ± 1.85 trajectories/s versus 36.16 ± 2.68 for matched synchronous cohorts, with substantially longer queue latency. This measures a single-host control plane; its consumer acknowledges eligibility and performs no optimizer update.
-
-The [multi-completion GRPO CPU validation](docs/grpo-e2e-cpu-report.md) executes 12 rounds × 3 seeds through the existing RVL trainer on a pinned small pretrained model. It verifies real optimizer updates against an independent numerical reference and fixes policy/response provenance and stale-group admission defects. Its synthetic diagnostic evaluation and unmerged RVL dependency patch are explicit; it establishes no task-capability gain.
-
-The [streamed GRPO integration](docs/streamed-grpo-cpu.md) feeds complete verified durable groups into those existing learner transactions. Three fresh seeds each completed four real updates; an independent replay matched loss, gradients, Adam state and parameters, and lost-ACK recovery was followed by another update. This was a logical same-process recovery under synthetic rewards, not learner SIGKILL or evidence of capability gain.
-
-The [actual-model CPU benchmark](docs/e2e-rl-real-model-v1-report.md) runs **rollout → verification → freshness check → replay → actual AdamW update → independent checkpoint evaluation → promotion/rejection → checkpoint recovery**. It uses a pinned public tiny GPT-2 checkpoint (102,714 parameters; 2,200 trainable) and fresh synthetic one-token tasks on Apple M1 Pro / 32 GiB. The campaign completed 78/78 declared case oracles, including 63 actual optimizer steps; an offline audit verified 1,025 artifacts and replayed checkpoint evaluation scores.
-
-End-to-end tasks/s, mean ± sample SD over three seeds:
-
-| Rollout workers | Minimal controls | Guarded controls |
-| ---: | ---: | ---: |
-| 1 | 128.97 ± 5.78 | 123.72 ± 2.57 |
-| 2 | 147.45 ± 2.07 | 125.28 ± 0.47 |
-| 4 | 145.17 ± 0.75 | 134.01 ± 0.19 |
-| 8 | 144.82 ± 0.79 | 133.95 ± 4.73 |
-
-Both modes use the same engine, tasks, evaluation budget and numerical updates. The comparison measures the cost of optional reward authentication, strict freshness, checkpoint-bound evaluation and durable promotion. Timing includes decision and fresh checkpoint recovery; setup and warmup are excluded. Each rollout generates one constrained token, so output tokens/s equals tasks/s.
-
-Guarded mean wall overhead was **4.13–17.68%**; peak 20 ms sampled process-tree RSS was **3,602.52 MiB**. Guarded mode blocked all 15 injected invalid-data/evidence cases that the minimal arm admitted. Mean guarded recovery was 2.042 s after worker loss, 0.118 s after evaluation cancellation and 0.095 s after publisher loss; the report defines each timing boundary.
-
-This is **single-round systems validation on a toy neural model and synthetic workload**. Greedy task success did not improve. Long-running worker weight synchronization, the next optimizer step after recovery, production LLM throughput and GPU/distributed scaling were not measured. The [earlier four-parameter simulation](docs/e2e-rl-system-benchmark-v1.md) is separate evidence with a different workload and baseline; see its [review corrections](docs/e2e-rl-system-benchmark-v1-errata.md).
-
-Inspect the [report and stage latencies](docs/e2e-rl-real-model-v1-report.md), [protocol](benchmarks/e2e_rl_real_model_v1/protocol.json), [comparison CSV](results/e2e-rl-real-model-v1/comparison.csv), [raw checkpoint/telemetry archive](results/e2e-rl-real-model-v1/m1-cpu.tar.xz), and [CPU regression workflow](.github/workflows/e2e-system-cpu.yml).
-
-The [matched synthetic verifier-refresh controls](docs/verifier-refresh-controls.md) expose a negative result: task-family TV-triggered refresh misses within-family proxy exploitation. Independent verifier error and counterfactual proxy-only promotion decisions are retained across three seeds; no model is trained in this experiment.
-
-## Quick start
-
-From the repository root, use an activated **Python 3.11+ virtual environment**:
-
-```bash
-python -m pip install -e '.[dev]'
-python -m vare --help
-python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py
-PYTHONPATH=src python scripts/check_tracked_blob_budget.py
-python scripts/reproduce_runtime_round_ownership_v1.py --output /tmp/vare-round-review-new
-```
-
-Use a **new** output directory. The last command needs Git access to its pinned baseline; it replays CPU correctness cases, **not model learning**. The two excluded mathematical grader tests require a [separate optional lock](requirements/math500-grader-test.lock.txt). Other model, platform-specific, and accelerator reproductions have separate requirements. See the [script index](scripts/README.md), [CLI contracts](docs/execution.md), and [recovery procedure](docs/runtime-round-ownership-v1.md#operator-recovery).
-
-### Audit the retained model benchmark
-
-This verifies the saved bytes, metrics and fault outcomes without downloading a model or starting training:
-
-```bash
-mkdir /tmp/vare-retained-new
-tar -xJf results/e2e-rl-real-model-v1/m1-cpu.tar.xz -C /tmp/vare-retained-new
-python scripts/audit_e2e_rl_real_model.py /tmp/vare-retained-new/m1-cpu
-```
-
-To also replay checkpoint scores, supply the pinned model snapshot with `--model-dir`; see the [model setup and audit instructions](docs/e2e-rl-real-model-v1-report.md#research-boundary-and-reproduction).
-
-### Run a new model benchmark
-
-Use the isolated Python 3.11 environment and locked optional dependencies in the [reproduction instructions](docs/e2e-rl-real-model-v1-report.md#research-boundary-and-reproduction), then run:
-
-```bash
-export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 TOKENIZERS_PARALLELISM=false PYTHONHASHSEED=0
-python scripts/benchmark_e2e_rl_real_model.py --output /tmp/vare-real-e2e-new
-python scripts/audit_e2e_rl_real_model.py /tmp/vare-real-e2e-new
-```
-
-The runner checks the pinned model-file hashes and refuses to overwrite existing output. The [synthetic comparison](docs/e2e-rl-system-benchmark-v1.md#reproduction) uses the separate `benchmarks.e2e_rl_system.runner` entry point and needs no model dependencies.
+These results describe different workloads and evidence levels. They are not evidence of held-out model improvement. For protocols, baselines, reproduction commands, and further limitations, see the [benchmark guide](docs/benchmarks.md).
 
 ## Architecture
 
+The diagram shows the implemented control-plane contract and its external dependencies. It is not one measured end-to-end deployment: durable trajectory workers, model-training hooks, and historical agent evaluation are separate paths.
+
 ```mermaid
 flowchart LR
-  A[Tasks / optional curriculum] --> B[CapabilityLoop]
-  B --> C[Rollouts via LoopHooks]
-  C --> D[Verifier + freshness checks]
-  D --> E[Group-aware replay]
-  E --> F[Backend candidate update]
-  F --> G[Independent held-out evaluation]
-  G --> H{Promotion gate}
-  H -->|accept + acknowledge| I[Active policy]
-  H -->|reject / failure| J[Discard or recovery fence]
-  I --> B
-  H --> K[Journal + evidence]
-  J --> K
+  subgraph EXT[External systems and task definitions]
+    T[Tasks and environments]
+    B[Model-serving and optimizer backends]
+    G[Task-specific graders]
+  end
+  subgraph VARE[VARE control-plane components]
+    R[Rollout and agent-execution contracts]
+    V[Verification and freshness checks]
+    Q[Group-aware replay]
+    C[Candidate training orchestration]
+    E[Independent checkpoint evaluation]
+    P{Promotion decision}
+    J[Checkpoint, evidence, and recovery records]
+  end
+  T --> R --> V --> Q --> C
+  B <--> R
+  B <--> C
+  C --> E --> P
+  G --> E
+  P -->|promote| J
+  P -->|reject or uncertain| J
+  J -. restored state .-> C
 ```
 
-The diagram describes the **control-loop contract**, not measured end-to-end autonomous improvement. RVL hooks can supply the model/GRPO backend; the standalone [bounded evaluation runner](docs/execution.md) and [durable worker store](docs/recovery.md) are separate execution paths, not implicit stages of this loop. See [architecture and component ownership](docs/architecture.md) and [engineering deep dive](docs/engineering-depth.md).
+`CapabilityLoop` and `LoopHooks` define the training-control interface. Model execution and optimizer state remain the hook/backend's responsibility; the [Recursive-Verification-Lag trainer](https://github.com/mitukx/Recursive-Verification-Lag) is an optional external integration, not a bundled distributed trainer. The durable multi-step trajectory runtime, promotion journal, bounded evaluator, and coding-agent environment have separate ownership and recovery contracts. See [architecture and ownership](docs/architecture.md) and the [engineering design guide](docs/engineering-depth.md).
 
-## Other retained evidence
+## Core components
 
-These additional observations have their own workloads and evidence boundaries. Follow each report for protocol versions, comparison controls, raw artifacts, and restrictions.
+Each path below links its problem, implementation, checks, retained evidence, and limits.
 
-| Evidence class | Observation | Interpretation |
+### Asynchronous RL and trajectory execution
+
+- Durable multi-step trajectories, bounded execute/verify queues, leases, worker fencing, and freshness-aware admission: [runtime](src/vare/trajectory_workers.py), [store](src/vare/trajectory_store.py), [admission](src/vare/trajectory_admission.py), [tests](tests/test_trajectory_workers.py).
+- Read the [trajectory benchmark](docs/async-trajectory-runtime.md) for throughput versus queue-latency tradeoffs and the boundaries of its synthetic single-host measurement.
+
+### Training and replay integrity
+
+- Preserve whole rollout groups and their policy/verifier provenance; recheck mutable freshness at use time: [replay](src/vare/replay.py), [lag checks](src/vare/lag.py), [RVL adapter](src/vare/integrations/rvl_grpo.py), [tests](tests/test_replay_group_freshness.py).
+- Candidate optimizer and model state are supplied by hooks. The [GRPO report](docs/grpo-e2e-cpu-report.md) shows numerical reference checks and clearly separates its experimental dependency patch from merged VARE code.
+
+### Evaluation and promotion
+
+- Evaluate incumbent and candidate independently, bind reports to checkpoint identity, and promote, reject, or quarantine uncertain publication: [promotion gate](src/vare/promotion.py), [journal](src/vare/promotion_journal.py), [tests](tests/test_promotion_publication_recovery.py).
+- Evaluation and publication cleanup must finish before candidate discard: [engine](src/vare/engine.py), [lifecycle tests](tests/test_engine_evaluation_lifecycle.py), [recovery guide](docs/recovery.md).
+
+### Coding-agent evaluation
+
+- Run repository tasks through bounded agent processes and evaluator-owned commands; bind workspace source and final diff to collected evidence: [environment campaign](src/vare/environments/campaign.py), [workspace verifier](scripts/verify_agent_workspace.py), [evidence collector](scripts/record_coding_agent_baseline.py), [tests](tests/test_command_agent_ownership.py).
+- The [agent evaluation guide](docs/agent-evaluation.md) explains source binding, subprocess ownership, grader boundaries, and the current evidence status.
+
+### Reproducibility and fault tolerance
+
+- Versioned experiment protocols, retained artifacts, bounded graders, and failure-oriented checks: [protocols](protocols/), [reproduction scripts](scripts/README.md), [evidence ledger](docs/evidence.md).
+- Recovery correctness is scoped to declared ownership and trusted state. At-least-once evaluation may repeat external side effects; fencing and commit identity constrain effective publication but do not reverse those effects. See [durable jobs](docs/recovery.md) and [operator recovery](docs/runtime-round-ownership-v1.md#operator-recovery).
+
+## Engineering tradeoffs
+
+- **Throughput and latency:** continuous asynchronous execution can complete more trajectories per second while keeping them queued much longer. Report both rates and queue-inclusive latency; the [trajectory benchmark](docs/async-trajectory-runtime.md#measured-cpu-result) shows this tradeoff on its synthetic single-host workload.
+- **Freshness and utilization:** strict use-time policy/verifier checks prevent stale replay from reaching training, but rejected data can reduce usable batches and worker utilization. See [freshness admission](src/vare/lag.py) and [group replay](src/vare/replay.py).
+- **Durability and synchronization:** persisting trajectory steps and promotion state improves audit and restart behavior, while database transactions, locks, and artifact checks add IO and coordination cost. The existing measurements are workload-specific; they do not quantify a universal overhead.
+- **At-least-once execution and effective commit:** a worker or grader may repeat after uncertain completion. Leases and generation fencing prevent a superseded result from taking effect under the tested store contract; they cannot undo an external API call, file write, or other side effect that already happened.
+- **Independent evaluation and proxy reward:** a separate held-out evaluator can detect proxy-only gains, but requires its own task budget and a trusted boundary distinct from optimization rewards. Reusing the same proxy for both roles does not establish independent task improvement.
+- **Recovery and external state:** journals can record and fence declared transitions. Operators still need to verify external weights, workers, evaluator processes, and checkpoint bytes before clearing an uncertainty fence; local transactional state cannot make those systems atomic.
+
+## Quick start
+
+Requirements: Python 3.11 or newer. The core package has no runtime dependencies; the development extra installs pytest.
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -e '.[dev]'
+python -m vare --help
+```
+
+Run focused CPU correctness checks:
+
+```bash
+python -m pytest tests/test_lag.py tests/test_replay_group_freshness.py
+```
+
+For a minimal environment-harness example, start with the [environment smoke instructions](docs/environment_factory.md#smoke-run). It runs a synthetic harness fixture, not an agent capability benchmark. The [script index](scripts/README.md) describes other commands and their optional model, platform, or accelerator dependencies.
+
+Run that local fixture directly from the checkout with a new output directory:
+
+```bash
+PYTHONPATH=src python -m vare.cli env-smoke --output-dir /tmp/vare-env-smoke-new
+```
+
+The smoke command checks the evaluator against its fixture baseline and oracle patch. It does not start a model, change the repository, or measure coding-agent success.
+
+The default repository suite excludes two tests that require the optional Math-500 lock:
+
+```bash
+python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py
+```
+
+For CPU model experiments, use the pinned setup and fresh output paths in the [continuous benchmark report](docs/e2e-rl-continuation-v2-report.md#evidence-and-reproduction) and [GRPO report](docs/grpo-e2e-cpu-report.md#reproduce). These download model snapshots and install optional dependencies; they are not part of the lightweight quick start. To audit retained benchmark artifacts without model downloads or training, follow the corresponding report instructions.
+
+## Benchmarks
+
+| Experiment | Result type | Main evidence |
 | --- | --- | --- |
-| CPU runtime correctness | [Whole-round ownership](docs/runtime-round-ownership-v1.md): 8/8 targeted fault cases failed on pinned main; the correction passed all 10 cases, including two controls. | Single-host cooperative hooks and SQLite reservations; no distributed atomicity. |
-| CPU checkpoint IO | [Bounded reads](docs/checkpoint-read-bounds-v1-report.md): 7 pinned-main fault failures; 15 corrected IO/recovery cases passed. Five 32 MiB replacement-read pairs reduced peak traced allocation from 67,114,578 to 4,398 bytes before rejection. | Input bounds and resource-failure handling in tested fixtures; not training speed. |
-| CPU evaluation lifetime | [Evaluation cleanup](docs/engine-evaluation-lifecycle-v1-report.md): 12/13 baseline regressions failed; 13/13 corrected cases passed. | Evaluator tasks terminate before candidate discard under tested cancellation schedules. |
-| Real-model feasibility, not improvement | [Exact-integer base gates](docs/heldout-exact-integer-base-gate-v2.md): Qwen2.5-3B-Instruct 4-bit scored 29/64 strict pass@4; the [one-update smoke](docs/heldout-exact-integer-update-cost-smoke-v1.md) demonstrated save/reload and update cost, not a held-out gain. | A model can enter an experiment without proving an update works. |
-| Negative model comparison | [OpenBookQA](docs/openbookqa-qwen25-grpo-sft-confirmation-v1-report.md): Qwen2.5-0.5B base 45.31%, matched SFT 33.33%, GRPO 0/128 on each of three seeds under the frozen parser. | This specific pairing failed; no general verdict about GRPO. |
-| Retrospective record audit | [Format versus correctness](docs/format-comparison-record-v1-report.md): correctness-RL minus format-SFT +0.46875 points, 95% interval [-0.078125, +1.015625]. | Interval includes zero; original execution provenance is incomplete. No new model run. |
-| Synthetic control-loop benchmark | [Four-parameter policy report](docs/e2e-rl-system-benchmark-v1.md): VARE measured 182 versus 300 rollouts/s (−39.2%) across 12 paired seeds; it rejected stale updates and fenced interrupted publication. | Control-plane fixture with a separate baseline; interrupted publication required external reconciliation. No neural-model update. |
+| Continuous CPU post-training control loop | Toy real neural model; synthetic tasks; actual optimizer and learner restart | [Report](docs/e2e-rl-continuation-v2-report.md) · [protocol](benchmarks/e2e_rl_continuation_v2/protocol.json) |
+| Durable asynchronous trajectories | Synthetic single-host control-plane throughput and latency | [Report](docs/async-trajectory-runtime.md) · [protocol](benchmarks/trajectory_runtime_v2/protocol.json) |
+| Multi-completion GRPO | Real optimizer arithmetic on a small pretrained model; synthetic diagnostics | [Report](docs/grpo-e2e-cpu-report.md) · [protocol](benchmarks/grpo_e2e_cpu_v5/protocol.json) |
+| Actual-model fault benchmark v1 | Toy neural model; different single-round workload and baseline than continuation v2 | [Report](docs/e2e-rl-real-model-v1-report.md) · [protocol](benchmarks/e2e_rl_real_model_v1/protocol.json) |
+| Verifier refresh controls | Synthetic visible/within-family shift; negative result retained | [Report](docs/verifier-refresh-controls.md) |
 
-Full model-study decisions and failed runs remain in the [experiment index](docs/experiments.md). The [evidence ledger](docs/evidence.md) preserves finer-grained controls and raw pointers; summaries are not substitutes for their original records.
+This table is a selected index, not a complete results summary. The [benchmark guide](docs/benchmarks.md) provides detailed workload descriptions, baselines, commands, raw-result pointers, and caveats. Historical negative and superseded records remain in the [experiment index](docs/experiments.md) and [evidence ledger](docs/evidence.md).
 
-## Repository structure and navigation
+## Research scope and limitations
 
-| Start with | Continue to |
+**Implemented:** orchestration contracts, freshness and provenance checks, group-aware replay, checkpoint-bound promotion decisions, durable worker/evaluation records, and repository-agent evidence tooling.
+
+**Validated systems behavior:** selected CPU tests and retained experiments exercise bounded fault, replay-integrity, recovery, and numerical-consistency properties under their declared protocols. Passing a fixture establishes only the tested property and trust assumptions.
+
+**Measured model outcomes:** CPU runs used small real neural models with synthetic task or reward criteria. They demonstrate optimizer execution, state recovery, or diagnostic consistency. No retained real-model policy update demonstrates an independently confirmed held-out task-success improvement.
+
+**Unvalidated objectives:** capability improvement on independent held-out tasks, autonomous recursive capability gain, production inference throughput, GPU or distributed scaling, and production-scale reliability have not been demonstrated. Evaluation consistency does not prove task correctness; numerical replay does not constitute human independent review.
+
+For open technical gaps and the evidence gates for future studies, see [current gaps](docs/current-gaps.md). Frozen protocols, negative results, and retained evidence should be interpreted at their stated source and measurement boundary.
+
+## Documentation
+
+| Reader | Start here |
 | --- | --- |
-| [Architecture](docs/architecture.md) | Ownership, control flow, optional integrations, and failure boundaries |
-| [Actual-model system benchmark](docs/e2e-rl-real-model-v1-report.md) | Matched comparisons, latency/resource measurements, fault recovery, raw artifacts and reproduction |
-| [Engineering deep dive](docs/engineering-depth.md) | Design decisions, tests, reproduced faults, correctness and performance tradeoffs |
-| [Experiments](docs/experiments.md) and [evidence](docs/evidence.md) | Model outcomes, historical studies, negative results, protocol locks, and raw records |
-| [Limitations / next admission gate](docs/current-gaps.md) | Unresolved research and engineering gaps; [qualification record](docs/research-candidate-qualification-2026-10-15.md) |
-| [Documentation index](docs/README.md) and [layout](docs/repository-layout.md) | Curated entry points to `src/vare/`, `tests/`, `scripts/`, `protocols/`, and `results/` |
+| New readers | [Architecture](docs/architecture.md) · [quick start](#quick-start) |
+| Systems engineers | [Engineering design and tradeoffs](docs/engineering-depth.md) · [recovery](docs/recovery.md) |
+| RL researchers | [Benchmarks](docs/benchmarks.md) · [experiments](docs/experiments.md) · [evidence ledger](docs/evidence.md) |
+| Agent researchers | [Agent evaluation](docs/agent-evaluation.md) · [task environment](docs/environment_factory.md) |
+| Reproduction and auditing | [Reproduction index](scripts/README.md) · [artifact retention](docs/artifact-retention.md) · [documentation index](docs/README.md) |
 
-## Limitations
-
-- No independent held-out task-success gain after a retained real-model update; no validated recursive improvement or autonomous research-capability gain.
-- CPU/single-host fixture results do not prove distributed/GPU behavior, operational incident frequency, or throughput improvements.
-- SQLite journals and hashes support recovery/consistency **only within trusted ownership and correctly verified external state**. They do not make checkpoint publication atomic with an optimizer or provide a hostile-code sandbox.
-- Agent workspaces, subprocess execution, and trajectory records require separate isolation and trust roots for adversarial inputs. Optional lifecycle hooks do not constitute a deployed self-improving fleet.
-- Existing observed protocols, consumed confirmation cohorts, and negative results remain frozen. New studies require novel hypotheses, independent task/model qualification, matched controls, and untouched confirmation data.
-
-See [current gaps](docs/current-gaps.md), [trajectory safety scope](docs/trajectory-aware-safety-v1.md), and [artifact retention](docs/artifact-retention.md). The 235 previously tracked blobs at least 1 MiB remain frozen; new large artifacts belong outside Git with manifest hashes. [Apache-2.0 license](LICENSE).
+**License:** [Apache-2.0](LICENSE).
