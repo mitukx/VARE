@@ -60,10 +60,13 @@ def test_stale_resume_reproduction_docs_audit_from_hardened_checkout():
     v4_doc = (ROOT / "docs/trl-async-stale-resume-v4-report.md").read_text(
         encoding="utf-8"
     )
+    v3_doc = (ROOT / "docs/trl-async-stale-resume-review-regression-v3-report.md").read_text(
+        encoding="utf-8"
+    )
 
     assert "set -e" in replay_suffix_doc
     assert "b456452257a5490d61ff5da92fd818dba38e672e" in replay_suffix_doc
-    assert "f06d3d5108bc1af89a05c8b08c72fa3585f9b0df" in replay_suffix_doc
+    assert "1a96abb20efc05679312eb794b21c3ec0c67ddd2" in replay_suffix_doc
     assert replay_suffix_doc.index("cd /tmp/vare-review-v2-runner") < (
         replay_suffix_doc.index("cd /tmp/vare-review-v2-hardened")
     )
@@ -71,11 +74,18 @@ def test_stale_resume_reproduction_docs_audit_from_hardened_checkout():
 
     assert "set -e" in v4_doc
     assert "54ff88c368d98c66111489d7b23046df62112d59" in v4_doc
-    assert "f06d3d5108bc1af89a05c8b08c72fa3585f9b0df" in v4_doc
+    assert "1a96abb20efc05679312eb794b21c3ec0c67ddd2" in v4_doc
     assert v4_doc.index("cd /tmp/vare-v4-runner") < v4_doc.index(
         "cd /tmp/vare-v4-hardened"
     )
     assert "scripts/audit_trl_async_stale_resume_v1.py" in v4_doc
+
+    assert "set -euo pipefail" in v3_doc
+    assert "da2ab53926f94d77b7d26c5368d5ab5e5d04674e" in v3_doc
+    assert "1a96abb20efc05679312eb794b21c3ec0c67ddd2" in v3_doc
+    assert v3_doc.index("cd /tmp/vare-v3-runner") < v3_doc.index(
+        "cd /tmp/vare-v3-hardened"
+    )
 
 
 def test_reproduction_parser_extracts_stale_cursor_and_replay_count():

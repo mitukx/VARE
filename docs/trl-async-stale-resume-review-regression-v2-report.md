@@ -52,7 +52,7 @@ set -e
 git clone https://github.com/mitukx/VARE.git /tmp/vare-review-v2-source
 git -C /tmp/vare-review-v2-source fetch origin codex/trl-async-stale-resume-cursor
 git -C /tmp/vare-review-v2-source worktree add --detach /tmp/vare-review-v2-runner b456452257a5490d61ff5da92fd818dba38e672e
-git -C /tmp/vare-review-v2-source worktree add --detach /tmp/vare-review-v2-hardened f001a387b0472481c87d3d9372ddcc9c66035663
+git -C /tmp/vare-review-v2-source worktree add --detach /tmp/vare-review-v2-hardened 1a96abb20efc05679312eb794b21c3ec0c67ddd2
 git clone https://github.com/huggingface/trl.git /tmp/vare-trl-review-source
 git -C /tmp/vare-trl-review-source remote add vare https://github.com/mitukx/trl.git
 git -C /tmp/vare-trl-review-source fetch vare codex/async-stale-resume-cursor
@@ -69,7 +69,9 @@ cd /tmp/vare-review-v2-hardened
 
 The pinned v2 runner is used only to generate the bundle. The bundle audit and
 evidence tests run from the hardened checkout, which rejects contradictory
-raw markers and returns a failing status for an invalid audit.
+raw markers, validates source diffs and stage integrity, and returns a failing
+status for an invalid audit. Do not run the audit from the frozen runner
+checkout.
 
 The authoritative result bundle is
 [`review-p1-suffix-epoch-count-provenance-v2-final`](../results/trl-async-stale-resume-v6/review-p1-suffix-epoch-count-provenance-v2-final/).

@@ -38,18 +38,30 @@ has not been accepted upstream.
 ## Reproduction
 
 Prepare `/tmp/vare-trl-v4/bin/python` as described in the
-[stale-resume v4 report](trl-async-stale-resume-v4-report.md), then run from a
-clean VARE checkout:
+[stale-resume v4 report](trl-async-stale-resume-v4-report.md). The frozen v4
+runner at `da2ab53926f94d77b7d26c5368d5ab5e5d04674e` generates the bundle; the
+v6 hardened checkout audits it and runs the regression suite:
 
 ```bash
+set -euo pipefail
+git clone https://github.com/mitukx/VARE.git /tmp/vare-v3-source
+git -C /tmp/vare-v3-source fetch origin codex/trl-async-stale-resume-cursor
+git -C /tmp/vare-v3-source worktree add --detach /tmp/vare-v3-runner da2ab53926f94d77b7d26c5368d5ab5e5d04674e
+git -C /tmp/vare-v3-source worktree add --detach /tmp/vare-v3-hardened 1a96abb20efc05679312eb794b21c3ec0c67ddd2
 git clone https://github.com/huggingface/trl.git /tmp/vare-trl-review-source
+git -C /tmp/vare-trl-review-source remote add vare https://github.com/mitukx/trl.git
+git -C /tmp/vare-trl-review-source fetch vare codex/async-stale-resume-cursor
 git -C /tmp/vare-trl-review-source checkout --detach a85900829d86bcd45b7db0310725f28d3152289b
-python scripts/reproduce_trl_async_stale_resume_review_v2.py \
+cd /tmp/vare-v3-runner
+/tmp/vare-trl-v4/bin/python scripts/reproduce_trl_async_stale_resume_review_v2.py \
   --source-repo /tmp/vare-trl-review-source \
   --protocol protocols/trl_async_stale_resume_replay_suffix_v4.lock.json \
   --output /tmp/vare-replay-suffix-v4-fresh \
   --python /tmp/vare-trl-v4/bin/python
-python scripts/reproduce_trl_async_stale_resume_review_v2.py \
+cd /tmp/vare-v3-hardened
+/tmp/vare-trl-v4/bin/python scripts/reproduce_trl_async_stale_resume_review_v2.py \
   --audit /tmp/vare-replay-suffix-v4-fresh \
   --protocol protocols/trl_async_stale_resume_replay_suffix_v4.lock.json
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 /tmp/vare-trl-v4/bin/python -m pytest -q \
+  tests/test_trl_async_stale_resume_evidence.py
 ```

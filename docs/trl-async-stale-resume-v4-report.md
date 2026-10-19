@@ -48,7 +48,7 @@ set -e
 git clone https://github.com/mitukx/VARE.git /tmp/vare-v4-source
 git -C /tmp/vare-v4-source fetch origin codex/trl-async-stale-resume-cursor
 git -C /tmp/vare-v4-source worktree add --detach /tmp/vare-v4-runner 54ff88c368d98c66111489d7b23046df62112d59
-git -C /tmp/vare-v4-source worktree add --detach /tmp/vare-v4-hardened f001a387b0472481c87d3d9372ddcc9c66035663
+git -C /tmp/vare-v4-source worktree add --detach /tmp/vare-v4-hardened 1a96abb20efc05679312eb794b21c3ec0c67ddd2
 cd /tmp/vare-v4-runner
 python3.12 -m venv /tmp/vare-trl-v4
 /tmp/vare-trl-v4/bin/python -m pip install -r requirements/trl-async-stale-resume-v3.txt
