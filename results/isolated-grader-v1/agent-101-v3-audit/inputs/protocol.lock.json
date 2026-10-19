@@ -1,0 +1,31 @@
+{
+  "acceptance": {
+    "max_abs_logprob_error": 1e-10,
+    "neutral_no_repeat_ngram_size": 0,
+    "neutral_repetition_penalty": 1.0,
+    "neutral_suppress_tokens": null,
+    "neutral_top_k": 0,
+    "neutral_top_p": 1.0,
+    "neutral_typical_p": 1.0,
+    "requires_eval_state_restoration": true,
+    "requires_invalid_temp_fail_closed": true,
+    "requires_model_state_restore_on_errors": true,
+    "requires_no_repeat_ngram_neutral": true,
+    "requires_suppress_tokens_neutral": true,
+    "requires_trainer_runtime_probability_parity": true,
+    "requires_typical_p_neutral": true,
+    "rollout_conditions": 6
+  },
+  "expected_calibration": {
+    "baseline_passed": false,
+    "calibration_passed": true
+  },
+  "locked_hashes": {
+    "evaluator_sha256": "6c1011e29513c539bda3383ac823695cdb067385b6ddd904c31d5c6223df14e1",
+    "task_brief_sha256": "f73ef8ee1736e205fe1996450cfc18a87e0161994ba266e57ae8c95387d09f78",
+    "task_json_sha256": "fea3e4cf77a101300a827920491a14d52cf07ea2e2cee23f3f5b21421bec3a69"
+  },
+  "protocol_id": "rvl-hf-behavior-policy-parity-protocol-v4",
+  "schema_version": 1,
+  "task_id": "rvl-hf-behavior-policy-parity-v1"
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "protocol_id": "isolated-historical-grader-v1",
+  "task_id": "rvl-hf-behavior-policy-parity-v1",
+  "task_revision": "e788f113ad6b246a361cd50a52eaf2867f2a66f8",
+  "image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+  "runtime_context": "colima",
+  "security": {
+    "network": "none",
+    "root_filesystem_read_only": true,
+    "candidate_workspace_read_only": true,
+    "task_and_evaluator_read_only": true,
+    "host_credentials_passed": false,
+    "docker_socket_mounted": false,
+    "user": "65532:65532",
+    "capabilities_dropped": "ALL",
+    "no_new_privileges": true,
+    "pids_limit": 64,
+    "cpu_limit": 1,
+    "memory_limit_bytes": 536870912,
+    "tmpfs_bytes": 33554432,
+    "wall_seconds": 90
+  },
+  "claim_limit": "Contains candidate-code execution from host files, credentials, network, and resources; the historical task is reused integration evidence and does not establish new generalization."
+}
