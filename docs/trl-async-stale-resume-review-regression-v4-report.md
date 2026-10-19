@@ -32,19 +32,31 @@ upstream-accepted.
 ## Reproduction
 
 Prepare the Python 3.12.12 environment in the
-[stale-resume v4 report](trl-async-stale-resume-v4-report.md), then run from a
-clean VARE checkout:
+[stale-resume v4 report](trl-async-stale-resume-v4-report.md), then run from
+the hardened VARE checkout containing this report. Generation uses the frozen
+runner revision required by the v5 protocol; auditing uses the current
+checkout:
 
 ```bash
+set -euo pipefail
+VARE_HARDENED_CHECKOUT="$PWD"
+git clone https://github.com/mitukx/VARE.git /tmp/vare-v5-runner
+git -C /tmp/vare-v5-runner checkout --detach f06d3d5108bc1af89a05c8b08c72fa3585f9b0df
 git clone https://github.com/huggingface/trl.git /tmp/vare-trl-review-source
 git -C /tmp/vare-trl-review-source checkout --detach a85900829d86bcd45b7db0310725f28d3152289b
-python scripts/reproduce_trl_async_stale_resume_review_v2.py \
-  --source-repo /tmp/vare-trl-review-source \
-  --protocol protocols/trl_async_stale_resume_replay_suffix_v5.lock.json \
-  --output /tmp/vare-replay-suffix-v5-fresh \
-  --python /tmp/vare-trl-v4/bin/python
-python scripts/reproduce_trl_async_stale_resume_review_v2.py \
+
+(
+  cd /tmp/vare-v5-runner
+  /tmp/vare-trl-v4/bin/python scripts/reproduce_trl_async_stale_resume_review_v2.py \
+    --source-repo /tmp/vare-trl-review-source \
+    --protocol protocols/trl_async_stale_resume_replay_suffix_v5.lock.json \
+    --output /tmp/vare-replay-suffix-v5-fresh \
+    --python /tmp/vare-trl-v4/bin/python
+)
+
+/tmp/vare-trl-v4/bin/python "$VARE_HARDENED_CHECKOUT/scripts/reproduce_trl_async_stale_resume_review_v2.py" \
   --audit /tmp/vare-replay-suffix-v5-fresh \
-  --protocol protocols/trl_async_stale_resume_replay_suffix_v5.lock.json
+  --protocol "$VARE_HARDENED_CHECKOUT/protocols/trl_async_stale_resume_replay_suffix_v5.lock.json"
+cd "$VARE_HARDENED_CHECKOUT"
 /tmp/vare-trl-v4/bin/python -m pytest -q tests/test_trl_async_stale_resume_evidence.py
 ```

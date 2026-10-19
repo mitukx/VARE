@@ -63,6 +63,9 @@ def test_stale_resume_reproduction_docs_audit_from_hardened_checkout():
     v3_doc = (ROOT / "docs/trl-async-stale-resume-review-regression-v3-report.md").read_text(
         encoding="utf-8"
     )
+    v5_doc = (ROOT / "docs/trl-async-stale-resume-review-regression-v4-report.md").read_text(
+        encoding="utf-8"
+    )
 
     assert "set -e" in replay_suffix_doc
     assert "b456452257a5490d61ff5da92fd818dba38e672e" in replay_suffix_doc
@@ -86,6 +89,12 @@ def test_stale_resume_reproduction_docs_audit_from_hardened_checkout():
     assert v3_doc.index("cd /tmp/vare-v3-runner") < v3_doc.index(
         "cd /tmp/vare-v3-hardened"
     )
+
+    assert "f06d3d5108bc1af89a05c8b08c72fa3585f9b0df" in v5_doc
+    assert v5_doc.index("cd /tmp/vare-v5-runner") < v5_doc.index(
+        "scripts/reproduce_trl_async_stale_resume_review_v2.py"
+    )
+    assert '"$VARE_HARDENED_CHECKOUT/scripts/reproduce_trl_async_stale_resume_review_v2.py"' in v5_doc
 
 
 def test_reproduction_parser_extracts_stale_cursor_and_replay_count():
@@ -118,6 +127,40 @@ def test_audit_rejects_resealed_bundle_with_duplicate_measurement(
 
     with pytest.raises(ValueError, match=f"repeats {field}"):
         audit_bundle(copied)
+
+
+@pytest.mark.parametrize(
+    ("filename", "duplicate_prefix"),
+    [
+        ("summary.json", '{"all_checks_passed": false,'),
+        ("manifest.json", '{"files": {},'),
+    ],
+)
+def test_v1_auditor_cli_rejects_duplicate_json_keys(
+    tmp_path: Path, filename: str, duplicate_prefix: str
+):
+    copied = tmp_path / "run"
+    shutil.copytree(V4_PLATFORM_RUN, copied)
+    if filename == "manifest.json":
+        write_manifest(copied)
+
+    path = copied / filename
+    path.write_text(
+        path.read_text(encoding="utf-8").replace("{", duplicate_prefix, 1),
+        encoding="utf-8",
+    )
+    if filename == "summary.json":
+        write_manifest(copied)
+
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "scripts/audit_trl_async_stale_resume_v1.py"), str(copied)],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 1
+    assert "duplicate JSON object key" in result.stderr
 
 
 def test_pytest_outcome_parser_preserves_failed_and_passed_counts():

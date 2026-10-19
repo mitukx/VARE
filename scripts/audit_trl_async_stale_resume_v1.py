@@ -10,7 +10,36 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from scripts.reproduce_trl_async_stale_resume_v1 import audit_bundle  # noqa: E402
+from scripts import reproduce_trl_async_stale_resume_v1 as stale_resume  # noqa: E402
+
+
+def _reject_duplicate_keys(pairs: list[tuple[str, object]]) -> dict[str, object]:
+    result: dict[str, object] = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"duplicate JSON object key: {key}")
+        result[key] = value
+    return result
+
+
+def _read_strict_json(path: Path) -> object:
+    return json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_reject_duplicate_keys)
+
+
+def audit_bundle(bundle: Path) -> dict[str, object]:
+    """Reject ambiguous JSON before the frozen v1/v4 auditor reads evidence."""
+    _read_strict_json(bundle / "manifest.json")
+    summary = _read_strict_json(bundle / "summary.json")
+    if isinstance(summary, dict):
+        protocol_id = summary.get("protocol_id")
+        lock_path = (
+            stale_resume.LOCK_PATHS.get(protocol_id)
+            if isinstance(protocol_id, str)
+            else None
+        )
+        if lock_path is not None:
+            _read_strict_json(lock_path)
+    return stale_resume.audit_bundle(bundle)
 
 
 def main() -> int:
