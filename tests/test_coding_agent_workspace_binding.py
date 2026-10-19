@@ -10,7 +10,7 @@ import sys
 
 import pytest
 
-from test_record_coding_agent_baseline import fixture, dump, run, digest
+from test_record_coding_agent_baseline import fixture, dump, digest
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / 'scripts/record_coding_agent_baseline.py'
