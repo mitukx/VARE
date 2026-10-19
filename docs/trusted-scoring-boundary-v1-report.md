@@ -82,7 +82,9 @@ synthetic correct/incorrect controls. It does not establish general sandbox
 security, solve a repository-level RL/LLM engineering task, test hidden
 repository suites, measure a model, or qualify VARE live candidate execution.
 The existing `DockerRepositoryEvaluator` still runs candidate code in the same
-container namespace as repository tests and task data; it remains ineligible
-for confidential held-out tasks. Live untrusted repository execution remains
-**BLOCKED** pending a materially stronger trusted execution and scoring
-boundary.
+container namespace as repository tests and task data. A follow-up guard now
+disables it by default and requires both an explicit operator opt-in and task
+metadata declaring the grader public. That metadata is an operator assertion,
+not technical proof; the evaluator remains ineligible for confidential held-out
+tasks. Live untrusted repository execution remains **BLOCKED** pending a
+materially stronger trusted execution and scoring boundary.

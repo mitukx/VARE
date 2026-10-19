@@ -9,8 +9,13 @@ for untrusted candidate code.
 This change supplies `DockerRepositoryEvaluator`, an isolated backend for the
 same catalog/evaluation contract. The **paired-container CLI mode refuses to
 launch unless both the agent image and the repository evaluator image are
-configured**. Legacy `env-campaign` and `env-verify` still exist for
-trusted local development; they are explicitly not hostile-code safe.
+configured and the operator passes `--allow-public-grader-visible-execution`.
+The task specification must also declare `metadata.grader_visibility` as
+`public`. These are explicit operator assertions: this mode still exposes its
+task/grader namespace to candidate code and must never be used for confidential
+or held-out grader data. Omit either assertion and evaluation fails before a
+container starts. Legacy host `env-verify` and non-container `env-campaign`
+remain for trusted local development only.
 
 ## Execution flow
 
@@ -45,6 +50,7 @@ vare env-campaign \
   --agent-argv-json '["python","/app/agent.py","{prompt}","{workspace}","{step}"]' \
   --isolated-agent-image 'local/agent@sha256:<actual-image-digest>' \
   --isolated-evaluator-image 'local/repository-grader@sha256:<actual-image-digest>' \
+  --allow-public-grader-visible-execution \
   --agent-timeout-s 60 \
   --isolated-evaluator-timeout-s 120
 ```
@@ -54,6 +60,11 @@ interpreter, `git`, and any *frozen* grader dependencies. The held-out task pack
 must be readable by the configured UID; the candidate checkpoint must be
 readable by that UID. No image is pulled at runtime, and the Docker socket
 must not be made available inside either role.
+
+For this legacy evaluator, `metadata.grader_visibility: public` and the CLI
+flag above permit candidate-visible task data only. They do not prove the
+metadata is truthful; the operator must inspect the task pack. Do not use this
+path for untrusted code when grader data is confidential.
 
 `/scratch` is an ephemeral 256 MiB tmpfs (in addition to `/tmp`).
 Large repositories and tests that need more space fail closed by default;

@@ -109,6 +109,8 @@ def _decode(raw_text: str, *, task_id: str, spec_digest: str,
 class DockerRepositoryEvaluator:
     """Operator-controlled backend for CatalogEnvironmentVerifier.
 
+    Candidate code shares this container namespace with grader files. Evaluation
+    is disabled unless the operator opts in and the task is explicitly public.
     Do not pass task/candidate-controlled images, evaluator paths, or Docker
     credentials to this constructor.
     """
@@ -118,10 +120,14 @@ class DockerRepositoryEvaluator:
         runner: DockerIsolationRunner,
         limits: IsolationLimits,
         allowed_workspace_root: Path,
+        allow_public_grader_visible_execution: bool = False,
     ) -> None:
+        if type(allow_public_grader_visible_execution) is not bool:
+            raise ValueError("public grader-visible execution opt-in must be boolean")
         self.runner = runner
         self.limits = limits
         self.allowed_workspace_root = allowed_workspace_root
+        self.allow_public_grader_visible_execution = allow_public_grader_visible_execution
 
     def _argv(self, *, spec_path: Path, workspace: Path, spec_digest: str,
               policy_id: str, policy_version: int,
@@ -169,6 +175,15 @@ class DockerRepositoryEvaluator:
         spec_digest: str, policy_id: str, policy_version: int,
         baseline_metrics: Mapping[str, float] | None = None,
     ) -> EnvironmentResult:
+        if not self.allow_public_grader_visible_execution:
+            raise IsolationError(
+                "candidate-visible repository grading requires explicit public-task opt-in"
+            )
+        spec = EngineeringTaskSpec.load(spec_path)
+        if spec.metadata.get("grader_visibility") != "public":
+            raise IsolationError(
+                "candidate-visible repository grading requires task metadata grader_visibility=public"
+            )
         name = "vare-repo-" + secrets.token_hex(12)
         argv = self._argv(
             spec_path=spec_path, workspace=workspace,
@@ -180,7 +195,7 @@ class DockerRepositoryEvaluator:
         if result.returncode != 0:
             raise IsolationError("isolated repository evaluator failed closed")
         # A malformed result must NEVER be converted to a positive score.
-        return _decode(result.stdout, task_id=EngineeringTaskSpec.load(spec_path).id,
+        return _decode(result.stdout, task_id=spec.id,
                        spec_digest=spec_digest, policy_id=policy_id,
                        policy_version=policy_version)
 
