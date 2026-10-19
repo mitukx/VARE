@@ -42,6 +42,8 @@ def _validate_bundle_log_references(bundle: Path) -> Path:
         if record.get("log") != f"{name}.log":
             raise ValueError(f"stage log path must match its retained filename: {name}")
         stage_record = replay_suffix_v2.read_json(bundle / f"{name}.json")
+        if not isinstance(stage_record, dict) or type(stage_record.get("exit_code")) is not int:
+            raise ValueError(f"stage exit code must be an integer: {name}")
         for retained_record in (record, stage_record):
             outcome = (
                 retained_record.get("pytest_outcome")

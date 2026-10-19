@@ -736,6 +736,22 @@ def test_replay_suffix_v2_audit_rejects_non_integer_counts_in_stage_record(
         strict_replay_suffix_auditor.audit_bundle(copied)
 
 
+def test_replay_suffix_v2_audit_rejects_non_integer_exit_code_in_stage_record(
+    tmp_path: Path,
+):
+    copied = tmp_path / "v2-run"
+    shutil.copytree(REPLAY_SUFFIX_V2_RUN, copied)
+    stage_path = copied / "corrected-targeted-test.json"
+    stage = json.loads(stage_path.read_text(encoding="utf-8"))
+    stage["exit_code"] = False
+    write_json(stage_path, stage)
+    write_manifest(copied)
+
+    assert replay_suffix_v2.audit_bundle(copied)["all_checks_passed"] is True
+    with pytest.raises(ValueError, match="stage exit code must be an integer"):
+        strict_replay_suffix_auditor.audit_bundle(copied)
+
+
 def test_legacy_audit_rejects_boolean_observation_counts(tmp_path: Path):
     copied = tmp_path / "v4-run"
     shutil.copytree(V4_PLATFORM_RUN, copied)
