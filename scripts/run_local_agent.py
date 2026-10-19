@@ -75,6 +75,8 @@ def main() -> int:
     workspace = args.workspace.resolve()
     task_root = args.task_root.resolve()
     result_path = args.output.resolve()
+    if result_path.exists():
+        parser.error(f'refusing to overwrite existing agent record: {result_path}')
     task = json.loads((task_root / 'task.json').read_text())
     allowed = set(task['source']['files'])
     missing = sorted(name for name in allowed if not (workspace / name).is_file())
@@ -287,7 +289,11 @@ def main() -> int:
         'claim_limit': 'One small cached model on one historical task; not frontier-agent performance or novel fix discovery.',
     }
     result_path.parent.mkdir(parents=True, exist_ok=True)
-    result_path.write_text(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True) + '\n')
+    try:
+        with result_path.open('x', encoding='utf-8') as stream:
+            stream.write(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True) + '\n')
+    except FileExistsError:
+        parser.error(f'refusing to overwrite existing agent record: {result_path}')
     print(json.dumps({key: result[key] for key in ['task_id', 'seed', 'stop_reason', 'elapsed_seconds', 'new_tokens', 'tool_turns', 'candidate_diff_sha256']}, indent=2))
     return 0
 

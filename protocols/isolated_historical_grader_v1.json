@@ -3,6 +3,13 @@
   "protocol_id": "isolated-historical-grader-v1",
   "task_id": "rvl-hf-behavior-policy-parity-v1",
   "task_revision": "e788f113ad6b246a361cd50a52eaf2867f2a66f8",
+  "grader_path": "evaluator/grade.py",
+  "task_inputs_sha256": {
+    "TASK.md": "f73ef8ee1736e205fe1996450cfc18a87e0161994ba266e57ae8c95387d09f78",
+    "task.json": "fea3e4cf77a101300a827920491a14d52cf07ea2e2cee23f3f5b21421bec3a69",
+    "protocol.lock.json": "4996eed5c81863904f4596a6a1e914120bc36c8e5c4cdc0981c3811ec67df8f2",
+    "evaluator/grade.py": "6c1011e29513c539bda3383ac823695cdb067385b6ddd904c31d5c6223df14e1"
+  },
   "image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
   "runtime_context": "colima",
   "security": {
@@ -21,5 +28,5 @@
     "tmpfs_bytes": 33554432,
     "wall_seconds": 90
   },
-  "claim_limit": "Contains candidate-code execution from host files, credentials, network, and resources; the historical task is reused integration evidence and does not establish new generalization."
+  "claim_limit": "Contains candidate-code execution from host files, credentials, network, and resources; the existing evaluator imports candidate code in-process and is not tamper-resistant. This historical task is reused integration evidence and does not establish new generalization."
 }
