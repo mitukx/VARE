@@ -10,7 +10,7 @@ started. This is a correctness gap, independent of model quality.
 
 ## Implementation
 
-`run_owned_command` reuses VARE's existing `_grader_guard.py` ownership
+`_run_owned_command` (in `src/vare/environments/campaign.py`) reuses VARE's existing `_grader_guard.py` ownership
 process, with its dedicated process group and parent-pipe EOF signal. The
 existing command adapter keeps its argument placeholder and environment
 allowlist semantics. Child output is drained concurrently, total output is
