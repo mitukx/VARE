@@ -1,0 +1,73 @@
+{
+  "protocol_id": "trl-async-stale-resume-v1",
+  "frozen_at": "2026-10-18",
+  "question": "Does a stale-dropped AsyncGRPO group pin the saved rollout cursor and cause successfully trained later groups to be replayed after checkpoint resume?",
+  "source": {
+    "repository": "https://github.com/huggingface/trl",
+    "baseline_revision": "6d6901c5e3963108076131ac4979d344566b13a2",
+    "candidate_revision": "a85900829d86bcd45b7db0310725f28d3152289b",
+    "issue": "https://github.com/huggingface/trl/issues/7274",
+    "candidate_pull_request": "https://github.com/huggingface/trl/pull/7786",
+    "candidate_pull_request_state_at_freeze": "closed by first-contributor process check; no code review or merge",
+    "fix_patch": "contributions/trl-async-stale-resume-v1/upstream-fix.patch",
+    "fix_patch_sha256": "3b13144936203c8a85b9b665bed6f149a0b8ef3f30a2e75fcf15317acfa3fd36"
+  },
+  "reproducer": {
+    "public_source": "https://gist.githubusercontent.com/cm8908/8038d9aaff636a61574242952a940868/raw/40984daab9238b464849182a31dd2f405374cf43/async_grpo_resume_cursor_repro.py",
+    "public_source_revision": "6bd903df277e4da663a3f8d0e383861cf2f93c83",
+    "public_source_sha256": "9341ffa8542a892d3c8c9783ddac45aa8fbf31a2bf7a28a2ce061d1f19adcc9b",
+    "current_api_patch": "contributions/trl-async-stale-resume-v1/gist-current-api.patch",
+    "current_api_patch_sha256": "76e79b02bcb185c09158fdaf1bfaa4e29eb5414b3182eb920ec471300276ee18",
+    "baseline_tail_tolerance_patch": "contributions/trl-async-stale-resume-v1/gist-baseline-tail-tolerance.patch",
+    "baseline_tail_tolerance_patch_sha256": "1235513f912ced03fd7aa182eabf8b9cc5e4ebcd9baae2156a3623ce01cf9bec",
+    "candidate_adaptation_patch": "contributions/trl-async-stale-resume-v1/gist-candidate-adaptation.patch",
+    "candidate_adaptation_patch_sha256": "4c5a1c783021b5671adb44126e77ed0662bf3275d7de6ee156e1fe1f3b604a62",
+    "repetitions_per_arm": 3,
+    "tail_tolerance_groups": 10,
+    "stale_group_id": 2,
+    "max_staleness": 4,
+    "target_groups": 150,
+    "patched_coroutines": ["_generate_one", "_score_group"]
+  },
+  "environment": {
+    "python": "3.12.12",
+    "torch": "2.9.1",
+    "transformers": "5.20.1",
+    "datasets": "5.1.0",
+    "accelerate": "1.12.0",
+    "pytest": "8.4.2",
+    "tokenizers": "0.23.3",
+    "huggingface_hub": "2.2.0",
+    "safetensors": "0.8.0",
+    "pyarrow": "26.0.0",
+    "requirements_lock": "requirements/trl-async-stale-resume-v1.txt",
+    "requirements_lock_sha256": "ab7ed167490be54dd6aa88908f08d134dc0dc2da7a415b9de996113c264507d2",
+    "hardware": "Apple M1 Pro, 32 GiB RAM, macOS 27.0.1",
+    "device_used": "CPU",
+    "model_weights_loaded": false,
+    "vllm_used": false,
+    "paid_services_used": false
+  },
+  "acceptance": {
+    "baseline": {
+      "all_runs_exit_zero": true,
+      "saved_prompt_index_equals_stale_group_id": true,
+      "resume_row_equals_stale_group_id": true,
+      "duplicated_rows_at_least_first_run_rows_minus_tail_tolerance": true
+    },
+    "candidate": {
+      "all_runs_exit_zero": true,
+      "saved_prompt_index_greater_than_stale_group_id": true,
+      "resume_row_greater_than_stale_group_id": true,
+      "groups_before_resume_equals_actual_first_run_trained_rows": true,
+      "duplicated_rows_below_tail_tolerance": true
+    }
+  },
+  "claim_limits": [
+    "The reproducer executes production rollout scheduling, stale filtering, checkpoint save and resume paths, but stubs generation and scoring.",
+    "It does not execute a model forward pass, optimizer update, vLLM, GPU, or independent task evaluation.",
+    "A duplicate row at the asynchronous in-flight tail is tolerated; this does not establish exactly-once rollout execution.",
+    "This is source-level checkpoint correctness evidence, not a model-quality, capability, or throughput result.",
+    "The upstream change remains unmerged and was closed by the repository's first-contributor process check before code review."
+  ]
+}

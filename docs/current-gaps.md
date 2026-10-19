@@ -11,6 +11,41 @@ throughput remain unmeasured. See the
 [report](trajectory-worker-sqlite-serialization-v1-report.md) and
 [raw runs](../results/trajectory-worker-sqlite-serialization-v1/).
 
+**Update 2026-10-18 — TRL stale-drop resume cursor:** an epoch-aware, three-pair
+CPU replay against issue [#7274](https://github.com/huggingface/trl/issues/7274)
+shows 144–148 repeated absolute stream positions on pinned TRL main and one
+in-flight tail position on the candidate in each run. The candidate records
+stale drops as resolved for cursor progress while keeping trained counts
+separate. Upstream PR [#7786](https://github.com/huggingface/trl/pull/7786) was
+closed before review. The earlier row-identity run remains a retained non-pass.
+Generation and scoring are stubbed; this does not establish model task success.
+See the [v2 report](trl-async-stale-resume-v2-report.md), its [protocol](../protocols/trl_async_stale_resume_v2.lock.json),
+and [raw result](../results/trl-async-stale-resume-v2/run-1-epoch-aware-replay/).
+Automated review then exposed dirty-checkout provenance and incomplete
+arm/repetition auditing; both are fixed. A clean-source rerun passed all six
+locked decisions, and new tests reject dirty trees plus resealed missing or
+duplicate run inventories. No human review or upstream acceptance is recorded;
+see the [follow-up bundle](../results/trl-async-stale-resume-v2/run-2-review-fixes/).
+The latest review also found that v2 did not lock transitive dependencies or
+bound a hung pytest arm. Both remain frozen as historical protocol/evidence;
+v3 adds a full 56-distribution lock and a 600-second watchdog. A further v4
+rerun binds the OS release, architecture, Mac model, processor, memory, and CPU
+device, then measures 144 baseline repeated positions per run versus candidate
+counts of 1, 1, and 0; all six arms pass without timeouts. It still stubs
+generation/scoring and provides no task-success evidence; see the
+[v4 report](trl-async-stale-resume-v4-report.md) and
+[bundle](../results/trl-async-stale-resume-v4/run-1-platform-locked/).
+Review of the candidate patch then found that an unresolved in-flight hole
+below trained suffix groups can overcount replayed GRPO/distillation groups in
+the saved epoch counter. The pinned candidate fails this new two-case
+regression; a supplementary patch passes both cases and all 11 stale-resume
+tests. It is not an upstream-accepted fix and does not rewrite the earlier
+frozen protocol runs; the accepted follow-up audit is v2 with the v6 final
+bundle. The v5 raw logs remain historical and superseded; see the
+[review regression](trl-async-stale-resume-review-regression-v2-report.md),
+[protocol](../protocols/trl_async_stale_resume_replay_suffix_v2.lock.json),
+and [audited raw bundle](../results/trl-async-stale-resume-v6/review-p1-suffix-epoch-count-provenance-v2-final/).
+
 **Update 2026-10-15 — durable executor source:** a resumed worker could use new
 code while exporting its enrollment-time executor snapshot. The source pin now
 rejects differing/incomplete declared executor bundles before claims, dispatch

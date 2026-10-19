@@ -1,0 +1,20 @@
+--- async_grpo_resume_cursor_repro.py
++++ async_grpo_resume_cursor_repro.py
+@@ -165,7 +165,7 @@
+                         advantage=0.0,
+                         model_version=group.model_version,  # verbatim from the real _score_group
+                         group_id=group.group_id,  # verbatim from the real _score_group
+-                        metrics={"reward": 1.0, "reward_std": 0.0, "row_id": float(row_id)},
++                        metrics={"reward": 1.0, "reward_std": 0.0, "row_id": float(row_id), "stream_index": float(dataset_start_index + group.group_id)},
+                     )
+                 )
+         return samples
+@@ -239,7 +239,7 @@
+ 
+     for sample in queue_dataset:
+         trained_groups.add(sample["group_id"])
+-        trained_rows.add(int(sample["metrics"]["row_id"]))
++        trained_rows.add(int(sample["metrics"]["stream_index"]))
+         consumed += 1
+         if consumed % SAMPLES_PER_STEP == 0:
+             sync_weight()  # one optimizer step plus its weight sync

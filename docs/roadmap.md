@@ -11,6 +11,30 @@ This closes only the tested same-object, same-process liveness case; separate
 stores, multiprocess access, and throughput remain unmeasured. See the
 [report](trajectory-worker-sqlite-serialization-v1-report.md).
 
+## Async stale-drop checkpoint resume — 2026-10-18
+
+The [epoch-aware TRL issue #7274 reproduction](trl-async-stale-resume-v3-report.md)
+confirms that a stale-dropped group can pin the resume cursor while later
+groups have already trained. The candidate records dropped IDs for cursor
+progress and preserves trained counts separately. Matched CPU replays show
+144–148 repeated stream positions on pinned main and 0–1 candidate in-flight
+tail positions. Upstream PR #7786 was closed before code review; no upstream
+integration is claimed. Automated review drove clean-source and exact-run
+auditing, a complete 56-package lock, a 600-second arm timeout, and a v4 lock
+for the measured OS/hardware/device. V4 passed all six decisions with 144
+baseline repeats each and candidate counts 1, 1, and 0. Generation and scoring
+remain stubbed. The VARE research gate remains a real-model update with
+independent held-out task success, not additional local variants of this cursor
+fix. Review found a distinct replayed-suffix epoch-count defect in both GRPO and
+distillation: the pinned candidate failed 2/2 new cases; its supplementary
+correction passed those cases and the 11-test stale-resume file. The correction
+is not upstream-accepted and does not upgrade the v4 cursor result into a full
+training result. The evidence audit was subsequently hardened under the v2
+protocol and v6 bundle; v5 remains superseded historical evidence. See the
+[v4 report](trl-async-stale-resume-v4-report.md), [review regression](trl-async-stale-resume-review-regression-v2-report.md),
+[protocol](../protocols/trl_async_stale_resume_replay_suffix_v2.lock.json), and
+[audited bundle](../results/trl-async-stale-resume-v6/review-p1-suffix-epoch-count-provenance-v2-final/).
+
 ## Direct-trainer freshness boundary — 2026-10-15
 
 The [RVL trainer adapter](rvl-direct-trainer-freshness-v1-report.md) now

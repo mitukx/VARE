@@ -1,0 +1,26 @@
+W1018 18:09:29.198000 75117 site-packages/torch/distributed/elastic/multiprocessing/redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+
+groups trained          : 147 (highest id 150)
+samples dropped stale   : 2
+group 2 reached trainer : True
+group 2 in _trained_groups : False
+discarded group ids     : [2]
+saved prompt_index      : 147
+.
+run 1 trained rows      : 148
+run 2 trained rows      : 149
+resumed at row          : 148
+rows trained TWICE      : 1 -> [151] ...
+rows new in run 2       : 148 -> [148, 149, 150, 152, 153, 154, 155, 156, 157, 158, 159, 160]
+_groups_before_resume   : 148 (run 1 actually trained 148)
+.
+=============================== warnings summary ===============================
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+2 passed, 2 warnings in 8.51s
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute

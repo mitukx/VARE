@@ -1,0 +1,43 @@
+{
+  "baseline": {
+    "exit_code": 1,
+    "pytest_outcome": {
+      "failed": 2,
+      "passed": 0
+    },
+    "raw_log": "baseline-failing-test.log",
+    "raw_log_sha256": "e636808c839ea9c5c5e1bcbd890621b3c598f049bff6335b6f83f98ef92a3bf8"
+  },
+  "candidate_base_revision": "a85900829d86bcd45b7db0310725f28d3152289b",
+  "candidate_changed_paths": [
+    "tests/experimental/test_async_stale_resume.py",
+    "trl/experimental/async_distillation/async_distillation_trainer.py",
+    "trl/experimental/async_grpo/async_grpo_trainer.py"
+  ],
+  "corrected_full_file": {
+    "exit_code": 0,
+    "pytest_outcome": {
+      "failed": 0,
+      "passed": 11
+    },
+    "raw_log": "corrected-full-test-file.log",
+    "raw_log_sha256": "65da32f4c4e300db0116fc6b641e59bd66f054bc5a525852c51920c7bdbe08a4"
+  },
+  "corrected_targeted": {
+    "exit_code": 0,
+    "pytest_outcome": {
+      "failed": 0,
+      "passed": 2
+    },
+    "raw_log": "corrected-targeted-test.log",
+    "raw_log_sha256": "f93c40e4f7a67e5ff0241489a5eec90b039129903410a36e864c5cff11cbc0d6"
+  },
+  "correction_patch_sha256": "2af00ed4dba55fbdfe84af61e885a33833ddee04321da6c5e889de63d9dedc4a",
+  "limitations": [
+    "Deterministic CPU source-level checkpoint metadata regression only; it does not execute real rollouts, an optimizer, model updates, independent task evaluation, task success, or upstream-accepted code."
+  ],
+  "protocol_id": "trl-async-stale-resume-replay-suffix-v1",
+  "protocol_sha256": "51aec35c16be613fe0940758ca7af52c3500c137aaaefbc81fa4c1e3b1613f5f",
+  "regression_test_patch_sha256": "6db1717e6aebdc69a35b659e128c123450c49530611afe47202cd7ca6ae88f0e",
+  "timestamp_utc": "2026-10-18T22:33:28.392961+00:00"
+}

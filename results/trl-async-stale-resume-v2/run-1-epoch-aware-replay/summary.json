@@ -1,0 +1,120 @@
+{
+  "all_checks_passed": true,
+  "environment": {
+    "python": "3.12.12",
+    "versions": {
+      "accelerate": "1.12.0",
+      "datasets": "5.1.0",
+      "huggingface-hub": "2.2.0",
+      "pyarrow": "26.0.0",
+      "pytest": "8.4.2",
+      "safetensors": "0.8.0",
+      "tokenizers": "0.23.3",
+      "torch": "2.9.1",
+      "transformers": "5.20.1"
+    }
+  },
+  "gist_source_sha256": "9341ffa8542a892d3c8c9783ddac45aa8fbf31a2bf7a28a2ce061d1f19adcc9b",
+  "protocol_id": "trl-async-stale-resume-v2",
+  "protocol_sha256": "9f7600aa7b26316e4b6480a2295c4c30fd7273997075bf876ebc470acc92712d",
+  "python_executable": "/opt/homebrew/Caskroom/miniforge/base/bin/python3.12",
+  "repetitions_per_arm": 3,
+  "run_count": 6,
+  "runner_sha256": "4450fcebb731178f448bd68d5650219e851c7db09f59c1f91be0632f37ad63c3",
+  "runs": [
+    {
+      "accepted": true,
+      "arm": "baseline",
+      "exit_code": 0,
+      "log": "baseline-1.log",
+      "observed": {
+        "duplicated_rows": 144,
+        "first_run_trained_rows": 147,
+        "fresh_rows": 5,
+        "groups_before_resume": 2,
+        "resumed_row": 2,
+        "saved_prompt_index": 2
+      },
+      "repetition": 1
+    },
+    {
+      "accepted": true,
+      "arm": "candidate",
+      "exit_code": 0,
+      "log": "candidate-1.log",
+      "observed": {
+        "duplicated_rows": 1,
+        "first_run_trained_rows": 148,
+        "fresh_rows": 148,
+        "groups_before_resume": 148,
+        "resumed_row": 148,
+        "saved_prompt_index": 147
+      },
+      "repetition": 1
+    },
+    {
+      "accepted": true,
+      "arm": "baseline",
+      "exit_code": 0,
+      "log": "baseline-2.log",
+      "observed": {
+        "duplicated_rows": 145,
+        "first_run_trained_rows": 148,
+        "fresh_rows": 4,
+        "groups_before_resume": 2,
+        "resumed_row": 2,
+        "saved_prompt_index": 2
+      },
+      "repetition": 2
+    },
+    {
+      "accepted": true,
+      "arm": "candidate",
+      "exit_code": 0,
+      "log": "candidate-2.log",
+      "observed": {
+        "duplicated_rows": 1,
+        "first_run_trained_rows": 148,
+        "fresh_rows": 148,
+        "groups_before_resume": 148,
+        "resumed_row": 148,
+        "saved_prompt_index": 147
+      },
+      "repetition": 2
+    },
+    {
+      "accepted": true,
+      "arm": "baseline",
+      "exit_code": 0,
+      "log": "baseline-3.log",
+      "observed": {
+        "duplicated_rows": 148,
+        "first_run_trained_rows": 150,
+        "fresh_rows": 1,
+        "groups_before_resume": 2,
+        "resumed_row": 2,
+        "saved_prompt_index": 2
+      },
+      "repetition": 3
+    },
+    {
+      "accepted": true,
+      "arm": "candidate",
+      "exit_code": 0,
+      "log": "candidate-3.log",
+      "observed": {
+        "duplicated_rows": 1,
+        "first_run_trained_rows": 147,
+        "fresh_rows": 148,
+        "groups_before_resume": 147,
+        "resumed_row": 147,
+        "saved_prompt_index": 151
+      },
+      "repetition": 3
+    }
+  ],
+  "source_revisions": {
+    "baseline": "6d6901c5e3963108076131ac4979d344566b13a2",
+    "candidate": "a85900829d86bcd45b7db0310725f28d3152289b"
+  }
+}

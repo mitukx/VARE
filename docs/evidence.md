@@ -13,6 +13,65 @@ results, not throughput or learning claims. See the
 [v4 lock](../protocols/trajectory_worker_paused_reader_heartbeat_v4.lock.json),
 and [raw artifacts](../results/trajectory-worker-sqlite-serialization-v1/).
 
+## TRL async stale-drop resume cursor — 2026-10-18
+
+The epoch-aware comparison counts absolute prompt-stream positions, so a fixed
+dataset row appearing in a later epoch is not counted as replay. The v2 CPU
+runs show 144, 145, and 148 repeated baseline positions and one candidate
+in-flight tail position per run. Generation and scoring are stubbed, so this is
+source-level checkpoint correctness evidence only. See the
+[v2 report](trl-async-stale-resume-v2-report.md),
+[protocol](../protocols/trl_async_stale_resume_v2.lock.json), and
+[raw result](../results/trl-async-stale-resume-v2/run-1-epoch-aware-replay/).
+
+The review-hardened [v3 rerun](trl-async-stale-resume-v3-report.md) fixes
+transitive dependency drift and unbounded pytest hangs with a complete 56-package
+lock and a 600-second per-arm watchdog. V4 also locks the measured OS, hardware,
+architecture, memory, and CPU device. Its three baseline runs repeat 144
+positions each; candidate runs repeat 1, 1, and 0. All six arms pass and none
+times out. The [v4 report](trl-async-stale-resume-v4-report.md),
+[protocol](../protocols/trl_async_stale_resume_v4.lock.json), and
+[raw bundle](../results/trl-async-stale-resume-v4/run-1-platform-locked/)
+retain the result. This remains stubbed source-level correctness evidence, not
+model-learning evidence.
+
+Review later exposed a separate epoch-count defect in the unmerged candidate:
+when the cursor rewinds to an unresolved ID below completed IDs, the saved
+count included the completed suffix that would be replayed. The pinned
+candidate failed both GRPO and distillation cases; the retained follow-up
+correction passed 2/2 focused cases and the 11-test stale-resume file. This
+deterministic source-level check is separate from the v4 experiment and does
+not establish optimizer or task-success behavior. The accepted audit is the
+v2 protocol and v6 bundle; the earlier v5 bundle is retained as superseded
+historical evidence. See the
+[review regression report](trl-async-stale-resume-review-regression-v2-report.md),
+[protocol](../protocols/trl_async_stale_resume_replay_suffix_v2.lock.json), and
+[audited raw bundle](../results/trl-async-stale-resume-v6/review-p1-suffix-epoch-count-provenance-v2-final/).
+The next independent review found two evidence-runner gaps: ignored files were
+not rejected before capture, and a post-test validation error could lose raw
+pytest output. V4 of the review protocol rejects ignored/untracked source
+contamination, retains output before validation, and passes bundle audit. It
+also records an earlier v3 harness failure caused by a missing log separator.
+This is source-level checkpoint accounting evidence only. See the
+[hardening report](trl-async-stale-resume-review-regression-v3-report.md),
+[v4 protocol](../protocols/trl_async_stale_resume_replay_suffix_v4.lock.json),
+and [accepted raw bundle](../results/trl-async-stale-resume-v7/review-replay-suffix-v4/).
+Another review reproduced two audit bypasses: resealed integer `source_stable`
+flags and bundle artifacts symlinked to identical bytes outside the bundle.
+The v5 auditor rejects both; its source-level rerun passes the 2-failure,
+2-pass, and 11-pass stage oracles. See the
+[audit-hardening report](trl-async-stale-resume-review-regression-v4-report.md),
+[v5 protocol](../protocols/trl_async_stale_resume_replay_suffix_v5.lock.json),
+and [accepted raw bundle](../results/trl-async-stale-resume-v7/review-replay-suffix-v5/).
+The next review found that duplicate JSON keys could make a resealed summary
+or stage record ambiguous under the default decoder. The v6 auditor rejects
+those keys; the frozen auditor accepts the two negative controls, while the
+current auditor rejects them. A fresh locked run again records 2 expected
+baseline failures, 2 targeted passes, and 11 full-file passes. See the
+[v6 hardening report](trl-async-stale-resume-review-regression-v5-report.md),
+[v6 protocol](../protocols/trl_async_stale_resume_replay_suffix_v6.lock.json),
+and [raw bundle](../results/trl-async-stale-resume-v7/review-replay-suffix-v6/).
+
 ## End-to-end CPU RL system benchmark — 2026-10-16
 
 The locked twelve-seed comparison exercises rollout through promotion with a four-parameter simulated policy. VARE was 39.2% lower in throughput than the paired straight-line baseline on the measured M1 Pro fixture, while rejecting replay samples beyond the configured freshness bound. Fault runs also show candidate cleanup and concurrency serialization, and retain the unresolved interrupted-promotion state that requires external reconciliation. This is a systems-cost measurement, not a real-model task-success result. See the [protocol report](e2e-rl-system-benchmark-v1.md), [protocol lock](../protocols/e2e_rl_system_benchmark_v1.lock.json), and [raw run bundle](../results/e2e-rl-system-benchmark-v1/run-1/).

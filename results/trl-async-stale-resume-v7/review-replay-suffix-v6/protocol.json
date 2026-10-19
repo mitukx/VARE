@@ -1,0 +1,75 @@
+{
+  "acceptance": {
+    "all_source_states_are_stable": true,
+    "baseline_failing_test": {
+      "exit_code": 1,
+      "failures": 2
+    },
+    "corrected_full_test_file": {
+      "exit_code": 0,
+      "passes": 11
+    },
+    "corrected_targeted_test": {
+      "exit_code": 0,
+      "passes": 2
+    }
+  },
+  "claim_limit": "Deterministic CPU source-level checkpoint metadata regression only; it does not execute real rollouts, an optimizer, model updates, independent task evaluation, task success, or upstream-accepted code.",
+  "environment": {
+    "device": "CPU",
+    "environment_lock": "protocols/trl_async_stale_resume_v4.lock.json",
+    "environment_lock_sha256": "df39814159e9c7fec96e976bc0b419e2a0788a7356af8b3be7abc30a1f6ec666",
+    "python_executable": "/tmp/vare-trl-v4/bin/python",
+    "timeout_seconds": 600
+  },
+  "frozen_at": "2026-10-19",
+  "protocol_id": "trl-async-stale-resume-replay-suffix-v6",
+  "protocol_parent": "trl-async-stale-resume-replay-suffix-v5",
+  "question": "Does the pinned TRL async stale-resume candidate count replayed suffix groups, and does the bundle auditor reject malformed or ambiguous integrity evidence?",
+  "reproduction": {
+    "pytest_flags": [
+      "-p",
+      "no:cacheprovider"
+    ],
+    "source_provenance": "Each stage retains the exact source diff, base revision/tree, candidate tree, test file hash, protocol and runner hashes, patch hashes, raw log and raw-log digest. Before execution, the runner rejects tracked, untracked, and ignored contamination. It disables generated pytest/bytecode caches; raw output is written before post-test source validation, and any contaminated stage is sealed as a non-pass bundle. Each provenance marker is separated from raw pytest output by a newline so the auditor can parse the exact marker value. The auditor requires exact boolean stage-integrity fields, rejects symbolic links anywhere in the bundle, validates normalized relative manifest paths, and proves every resolved entry remains inside the bundle. JSON objects in manifests, summaries, and stage records reject duplicate keys instead of relying on last-key-wins decoding.",
+    "stages": [
+      "apply only the frozen regression test to the pinned candidate and record the expected two assertion failures",
+      "apply the frozen correction patch and record the two targeted passing cases",
+      "run the complete stale-resume test file and record all eleven passing cases",
+      "reject untracked and ignored files before persisting the candidate source revision",
+      "disable pytest cache and Python bytecode writes during the tests",
+      "persist each raw test output before source-state validation and seal an aborted stage with a non-pass manifest",
+      "separate provenance markers from pytest output so raw logs remain machine-auditable",
+      "reject resealed non-boolean stage flags and symlinked artifact escapes during bundle audit",
+      "reject resealed summaries and stage records with duplicate JSON object keys",
+      "reject manifest paths that are symlinks or resolve outside the retained bundle"
+    ]
+  },
+  "runner": {
+    "helper": "scripts/reproduce_trl_async_stale_resume_v1.py",
+    "helper_sha256": "f3db82379b7bc5e917698533bae91bbc05e44f0493b96cb37a9568d4c1cbed48",
+    "path": "scripts/reproduce_trl_async_stale_resume_review_v2.py",
+    "sha256": "8d6038fd7fa66ac6890d472bedcae08c92ff1d24d5eb2d7a96df2634febee0e2"
+  },
+  "schema_version": 3,
+  "source": {
+    "candidate_base_tree": "89a2a08842cad1e064a9e8b1355ec28ab3e01795",
+    "candidate_pull_request": "https://github.com/huggingface/trl/pull/7786",
+    "candidate_revision": "a85900829d86bcd45b7db0310725f28d3152289b",
+    "corrected_paths": [
+      "tests/experimental/test_async_stale_resume.py",
+      "trl/experimental/async_distillation/async_distillation_trainer.py",
+      "trl/experimental/async_grpo/async_grpo_trainer.py"
+    ],
+    "correction_patch": "contributions/trl-async-stale-resume-v1/review-replay-suffix/replay-suffix-epoch-count-fix.patch",
+    "correction_patch_sha256": "2af00ed4dba55fbdfe84af61e885a33833ddee04321da6c5e889de63d9dedc4a",
+    "original_candidate_patch": "contributions/trl-async-stale-resume-v1/upstream-fix.patch",
+    "original_candidate_patch_sha256": "3b13144936203c8a85b9b665bed6f149a0b8ef3f30a2e75fcf15317acfa3fd36",
+    "regression_test_patch": "contributions/trl-async-stale-resume-v1/review-replay-suffix/replay-suffix-regression-test.patch",
+    "regression_test_patch_sha256": "6db1717e6aebdc69a35b659e128c123450c49530611afe47202cd7ca6ae88f0e",
+    "repository": "https://github.com/huggingface/trl",
+    "test_only_paths": [
+      "tests/experimental/test_async_stale_resume.py"
+    ]
+  }
+}

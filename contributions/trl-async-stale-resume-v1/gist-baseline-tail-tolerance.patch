@@ -1,0 +1,11 @@
+--- async_grpo_resume_cursor_repro.py
++++ async_grpo_resume_cursor_repro.py
+@@ -349,7 +349,7 @@
+     print(f"_groups_before_resume   : {groups_before_resume} (run 1 actually trained {len(first['trained_groups'])})")
+ 
+     # run 2 restarts at the discarded row, so nearly everything run 1 trained is generated again
+-    assert len(trained_twice) >= TARGET_GROUPS - 5
++    assert len(trained_twice) >= len(first["trained_rows"]) - 10
+     # every row run 1 trained between the resume point and where run 2 stopped comes back. The last
+     # few rows of either run are ragged, since groups finish out of order and both runs stop with
+     # work still in the pipeline, so the comparison leaves the tail out.
