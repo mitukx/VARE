@@ -38,7 +38,9 @@ A command vector may name the interpreter as `{python}` or as the program token 
 
 `benchmarks/smoke/stable_logsumexp` is intentionally synthetic. It exists only to test the harness: the broken baseline fails, an oracle patch passes, evaluator tampering fails closed, and the candidate diff is retained. It is **not** evidence of coding-agent capability.
 
-The next evidence level is a task pack made from real repository histories with evaluator-owned regression tests. Only after that should model comparisons or RL claims be reported.
+`benchmarks/mlsys_coding_v1` is an authored pack of small numeric, data-loading, scheduling, and training-loop utilities. Hidden checks use `cwd_base=evaluator`, so they are not copied into the candidate workspace. Performance tasks retain seven timing samples and their sample standard deviations in the grade command's stdout. The known fixes pass and the baselines fail the pre-registered rule. This is fixture calibration, not a historical upstream commit and not a model result. See the [pack report](mlsys-coding-tasks-v1.md).
+
+The next evidence level for repository history remains a task pack made from immutable upstream revisions with evaluator-owned regression tests. Only after isolation clearance and a frozen no-update measurement should model comparisons or RL claims be reported.
 
 ## Smoke run
 

@@ -1,5 +1,14 @@
 # Experimental program
 
+## MLSys coding pack v1 — task-fixture calibration, 2026-10-19
+
+Nine authored single-file utilities are frozen with a 5-train/4-held-out split.
+Hidden checks sit outside the candidate workspace. Two performance tasks keep
+seven wall-clock samples and the sample standard deviation; the pre-registered
+conservative-speedup threshold is 2. Unpatched fixtures fail and the known
+fixes pass. No model was run. The no-update/SFT/GRPO comparison config refuses
+to start. See the [report](mlsys-coding-tasks-v1.md).
+
 ## Retained v2 comparison — retrospective audit, 2026-10-13
 
 The complete pre-existing five-arm record has correctness-RL minus SFT +0.46875

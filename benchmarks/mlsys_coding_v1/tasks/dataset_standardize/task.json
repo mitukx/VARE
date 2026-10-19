@@ -1,0 +1,47 @@
+{
+  "correctness_weight": 1.0,
+  "family": "data-standardization",
+  "id": "mlsys-v1-dataset-standardize",
+  "limits": {
+    "cpu_time_s": 120,
+    "max_output_bytes": 200000,
+    "memory_mb": 2048,
+    "wall_time_s": 120
+  },
+  "metadata": {
+    "authored_executable_defect": true,
+    "editable_files": [
+      "dataset_standardize.py",
+      "test_public.py"
+    ],
+    "evidence_note": "Authored single-file utility with an executable defect. Not an upstream historical commit and not a model-capability result.",
+    "grader_interface": "EngineeringTaskSpec",
+    "grader_visibility": "hidden",
+    "historical_upstream_commit": false,
+    "pack": "mlsys-coding-v1",
+    "reward_kind": "hidden-correctness-and-repeated-timing",
+    "split": "heldout"
+  },
+  "metrics": [],
+  "prompt": "Edit dataset_standardize.py so standardized_rows matches the contract in its module docstring and does not rescan the whole dataset once per row. test_public.py is a smoke check and is not the grader. Do not special-case one input list.",
+  "protected_paths": [],
+  "source": {
+    "base_revision": null,
+    "clone_url": null,
+    "local_path": "subject"
+  },
+  "tests": [
+    {
+      "argv": [
+        "python",
+        "grade.py",
+        "{workspace}"
+      ],
+      "cwd": "evaluator",
+      "cwd_base": "evaluator",
+      "env": {},
+      "name": "hidden-grade"
+    }
+  ],
+  "title": "Standardize a dataset with one pass over the rows"
+}

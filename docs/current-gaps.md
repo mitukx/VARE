@@ -1,5 +1,19 @@
 # Current evidence gaps
 
+**Update 2026-10-19 — authored MLSys coding pack:** nine single-file
+utilities are frozen under `benchmarks/mlsys_coding_v1`, with a 5/4
+train/held-out split and a manifest hash recorded before any policy
+rollout. Hidden correctness checks sit outside the candidate workspace.
+Two performance tasks report seven wall-clock repeats and the sample
+standard deviation; success requires a conservative speedup of at least 2.
+On this host the unpatched performance tasks scored about 0.999 and 0.957,
+and the known fixes scored about 233 and 669. Those floats are descriptive.
+No model rollout was run: the open isolated repository grader still
+executes candidate code in the same namespace as grader files, and these
+tasks set `grader_visibility` to `hidden`. The no-update versus SFT versus
+GRPO config is recorded and its runner exits 3. See the
+[report](mlsys-coding-tasks-v1.md).
+
 **Update 2026-10-18 — async worker SQLite serialization:** a per-store lock
 fixes the reproduced same-process connection race, and paged `iter_steps()`
 releases the lock before yielding so lease heartbeats remain live. The locked
