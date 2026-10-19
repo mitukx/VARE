@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "protocol_id": "verified-coding-agent-baseline-v2",
+  "status": "premeasurement; v1 retained unchanged; stronger workspace binding, integration control only",
+  "task": {
+    "task_id": "rvl-hf-behavior-policy-parity-v1",
+    "repository": "https://github.com/mitukx/Recursive-Verification-Lag.git",
+    "base_revision": "e788f113ad6b246a361cd50a52eaf2867f2a66f8",
+    "grader_path": "benchmarks/historical/rvl_behavior_policy_parity/evaluator/grade.py",
+    "lock_path": "benchmarks/historical/rvl_behavior_policy_parity/protocol.lock.json",
+    "task_protocol_id": "rvl-hf-behavior-policy-parity-protocol-v4",
+    "hashes": {
+      "task.json": "fea3e4cf77a101300a827920491a14d52cf07ea2e2cee23f3f5b21421bec3a69",
+      "TASK.md": "f73ef8ee1736e205fe1996450cfc18a87e0161994ba266e57ae8c95387d09f78",
+      "protocol.lock.json": "4996eed5c81863904f4596a6a1e914120bc36c8e5c4cdc0981c3811ec67df8f2",
+      "grader.py": "6c1011e29513c539bda3383ac823695cdb067385b6ddd904c31d5c6223df14e1"
+    }
+  },
+  "model": {
+    "repository": "Qwen/Qwen2.5-0.5B-Instruct",
+    "snapshot": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "file_hashes": {
+      "config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+      "model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe"
+    },
+    "inference": {
+      "temperature": 0.2,
+      "top_p": 0.95,
+      "top_k": 20,
+      "do_sample": true
+    },
+    "device": "cpu",
+    "offline": true
+  },
+  "seeds": [
+    101,
+    102,
+    103
+  ],
+  "budgets": {
+    "max_turns": 30,
+    "max_new_tokens_per_turn": 256,
+    "max_total_new_tokens": 7680,
+    "wall_seconds": 900,
+    "cpu_threads": 4,
+    "gpu_hours": 0,
+    "paid_api_usd": 0
+  },
+  "interaction": {
+    "allowed_tools": [
+      "list_files",
+      "read_file",
+      "search_text",
+      "apply_patch",
+      "check_syntax",
+      "finish"
+    ],
+    "workspace": "fresh pinned sparse checkout; agent cannot see independent grader",
+    "stopping": "finish, step budget, token budget, or soft wall budget",
+    "repetitions": "one fresh workspace per seed; keep every outcome and failure",
+    "primary_metric": "independently graded task success",
+    "secondary_metrics": [
+      "tool errors",
+      "nonempty edit",
+      "wall seconds",
+      "generated tokens"
+    ],
+    "cost": "report observed cost only"
+  },
+  "failure_classes": [
+    "invalid_evidence",
+    "no_source_change",
+    "incomplete_agent",
+    "independent_grader_reject"
+  ],
+  "grading": {
+    "external_only": true,
+    "requires_isolated_candidate_execution": true,
+    "missing_or_modified_grader_is_failure": true,
+    "missing_or_tampered_hash_is_failure": true,
+    "no_op_cannot_pass": true,
+    "exploratory_debugging_excluded": true,
+    "requires_verified_workspace_digest": true
+  },
+  "scope": "E0 evidence-integrity verification on a previously consumed E1 historical task; this protocol has no measured agent results",
+  "no_measurement_performed_on_protocol_creation": true,
+  "vare_base_revision": "23cba21423e961a1f49547b16b6c7858d9bf0ba6",
+  "workspace_verification": {
+    "required": true,
+    "head_must_equal_base": true,
+    "no_staged_or_untracked_changes": true,
+    "allowlisted_files_only": true,
+    "compare_source_blobs_and_final_diff": true,
+    "execution": "read-only; never execute candidate code"
+  }
+}
