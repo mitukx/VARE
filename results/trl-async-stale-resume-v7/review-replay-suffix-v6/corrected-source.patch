@@ -1,0 +1,59 @@
+diff --git a/tests/experimental/test_async_stale_resume.py b/tests/experimental/test_async_stale_resume.py
+index be2963e3..41899d89 100644
+--- a/tests/experimental/test_async_stale_resume.py
++++ b/tests/experimental/test_async_stale_resume.py
+@@ -245,3 +245,24 @@ def test_train_dataloader_shares_dropped_id_tracker(trainer_cls, module_name, dr
+         trainer.get_train_dataloader()
+ 
+     assert queue_dataset.call_args.kwargs[dropped_kwarg] is dropped
++
++
++@pytest.mark.parametrize(
++    ("trainer_cls", "worker_cls", "count_key"),
++    [
++        (AsyncGRPOTrainer, GRPORolloutWorker, "groups_trained"),
++        (AsyncDistillationTrainer, DistillationRolloutWorker, "prompts_trained"),
++    ],
++)
++def test_resume_cursor_does_not_count_replayed_suffix(trainer_cls, worker_cls, count_key, tmp_path):
++    state = _save_checkpoint(
++        trainer_cls,
++        worker_cls,
++        str(tmp_path),
++        trained={0, 1, 3, 4, 5},
++        dropped=set(),
++        before_resume=0,
++        dataset_start_index=0,
++    )
++    assert state["prompt_index"] == 2
++    assert state[count_key] == 2
+diff --git a/trl/experimental/async_distillation/async_distillation_trainer.py b/trl/experimental/async_distillation/async_distillation_trainer.py
+index 5b7c356e..94f64f37 100644
+--- a/trl/experimental/async_distillation/async_distillation_trainer.py
++++ b/trl/experimental/async_distillation/async_distillation_trainer.py
+@@ -2039,7 +2039,9 @@ class AsyncDistillationTrainer(_BaseTrainer):
+             resolved = self._trained_prompts | self._dropped_prompts
+             first_unresolved = next(p for p in itertools.count() if p not in resolved)
+             prompt_index = self.rollout_worker._loop_kwargs["dataset_start_index"] + first_unresolved
+-            prompts_trained = self._prompts_before_resume + len(self._trained_prompts)
++            prompts_trained = self._prompts_before_resume + sum(
++                prompt_id < first_unresolved for prompt_id in self._trained_prompts
++            )
+             # `model_version` rides along so adapter names keep counting across a resume: restarting at v1 would
+             # republish a different adapter under a name a still-running server already holds.
+             rollout_state = {
+diff --git a/trl/experimental/async_grpo/async_grpo_trainer.py b/trl/experimental/async_grpo/async_grpo_trainer.py
+index b1195a7f..a2d4992f 100644
+--- a/trl/experimental/async_grpo/async_grpo_trainer.py
++++ b/trl/experimental/async_grpo/async_grpo_trainer.py
+@@ -1877,7 +1877,9 @@ class AsyncGRPOTrainer(_BaseTrainer):
+             resolved = self._trained_groups | self._dropped_groups
+             first_unresolved = next(g for g in itertools.count() if g not in resolved)
+             prompt_index = self.rollout_worker._loop_kwargs["dataset_start_index"] + first_unresolved
+-            groups_trained = self._groups_before_resume + len(self._trained_groups)
++            groups_trained = self._groups_before_resume + sum(
++                group_id < first_unresolved for group_id in self._trained_groups
++            )
+             # `model_version` rides along so adapter names keep counting across a resume: restarting at v1 would
+             # republish a different adapter under a name a still-running server already holds.
+             rollout_state = {

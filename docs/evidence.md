@@ -63,6 +63,14 @@ The v5 auditor rejects both; its source-level rerun passes the 2-failure,
 [audit-hardening report](trl-async-stale-resume-review-regression-v4-report.md),
 [v5 protocol](../protocols/trl_async_stale_resume_replay_suffix_v5.lock.json),
 and [accepted raw bundle](../results/trl-async-stale-resume-v7/review-replay-suffix-v5/).
+The next review found that duplicate JSON keys could make a resealed summary
+or stage record ambiguous under the default decoder. The v6 auditor rejects
+those keys; the frozen auditor accepts the two negative controls, while the
+current auditor rejects them. A fresh locked run again records 2 expected
+baseline failures, 2 targeted passes, and 11 full-file passes. See the
+[v6 hardening report](trl-async-stale-resume-review-regression-v5-report.md),
+[v6 protocol](../protocols/trl_async_stale_resume_replay_suffix_v6.lock.json),
+and [raw bundle](../results/trl-async-stale-resume-v7/review-replay-suffix-v6/).
 
 ## End-to-end CPU RL system benchmark — 2026-10-16
 

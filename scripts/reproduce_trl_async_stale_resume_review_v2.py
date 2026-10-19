@@ -33,8 +33,19 @@ def sha256_file(path: Path) -> str:
     return sha256_bytes(path.read_bytes())
 
 
+def _reject_duplicate_json_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    decoded: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in decoded:
+            fail(f"duplicate JSON object key: {key!r}")
+        decoded[key] = value
+    return decoded
+
+
 def read_json(path: Path) -> dict[str, Any]:
-    return json.loads(path.read_text(encoding="utf-8"))
+    return json.loads(
+        path.read_text(encoding="utf-8"), object_pairs_hook=_reject_duplicate_json_keys
+    )
 
 
 def write_json(path: Path, value: Any) -> None:

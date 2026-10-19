@@ -47,6 +47,7 @@ REPLAY_SUFFIX_PROTOCOL = ROOT / "protocols/trl_async_stale_resume_replay_suffix_
 REPLAY_SUFFIX_V3_PROTOCOL = ROOT / "protocols/trl_async_stale_resume_replay_suffix_v3.lock.json"
 REPLAY_SUFFIX_V4_PROTOCOL = ROOT / "protocols/trl_async_stale_resume_replay_suffix_v4.lock.json"
 REPLAY_SUFFIX_V5_PROTOCOL = ROOT / "protocols/trl_async_stale_resume_replay_suffix_v5.lock.json"
+REPLAY_SUFFIX_V6_PROTOCOL = ROOT / "protocols/trl_async_stale_resume_replay_suffix_v6.lock.json"
 REPLAY_SUFFIX_V4_RUN = ROOT / "results/trl-async-stale-resume-v7/review-replay-suffix-v4"
 REPLAY_SUFFIX_RUN = ROOT / "results/trl-async-stale-resume-v5/review-p1-suffix-epoch-count"
 REPLAY_SUFFIX_V2_RUN = ROOT / "results/trl-async-stale-resume-v6/review-p1-suffix-epoch-count-provenance-v2-final"
@@ -62,7 +63,7 @@ def test_stale_resume_reproduction_docs_audit_from_hardened_checkout():
 
     assert "set -e" in replay_suffix_doc
     assert "b456452257a5490d61ff5da92fd818dba38e672e" in replay_suffix_doc
-    assert "f001a387b0472481c87d3d9372ddcc9c66035663" in replay_suffix_doc
+    assert "f06d3d5108bc1af89a05c8b08c72fa3585f9b0df" in replay_suffix_doc
     assert replay_suffix_doc.index("cd /tmp/vare-review-v2-runner") < (
         replay_suffix_doc.index("cd /tmp/vare-review-v2-hardened")
     )
@@ -70,7 +71,7 @@ def test_stale_resume_reproduction_docs_audit_from_hardened_checkout():
 
     assert "set -e" in v4_doc
     assert "54ff88c368d98c66111489d7b23046df62112d59" in v4_doc
-    assert "f001a387b0472481c87d3d9372ddcc9c66035663" in v4_doc
+    assert "f06d3d5108bc1af89a05c8b08c72fa3585f9b0df" in v4_doc
     assert v4_doc.index("cd /tmp/vare-v4-runner") < v4_doc.index(
         "cd /tmp/vare-v4-hardened"
     )
@@ -319,10 +320,23 @@ def test_replay_suffix_v5_protocol_pins_strict_bundle_auditing():
 
     assert protocol["protocol_id"] == "trl-async-stale-resume-replay-suffix-v5"
     assert protocol["protocol_parent"] == "trl-async-stale-resume-replay-suffix-v4"
+    assert protocol["runner"]["sha256"] == "dab2fca1998aff729aabd70350404583727e5e7d8148208fe722991ade75bdcf"
+    assert replay_suffix_v2.load_protocol(
+        REPLAY_SUFFIX_V5_PROTOCOL,
+        require_current_runner=False,
+        require_current_helper=False,
+    )["protocol_id"] == protocol["protocol_id"]
+
+
+def test_replay_suffix_v6_protocol_pins_duplicate_key_rejection():
+    protocol = json.loads(REPLAY_SUFFIX_V6_PROTOCOL.read_text(encoding="utf-8"))
+
+    assert protocol["protocol_id"] == "trl-async-stale-resume-replay-suffix-v6"
+    assert protocol["protocol_parent"] == "trl-async-stale-resume-replay-suffix-v5"
     assert protocol["runner"]["sha256"] == sha256_file(
         ROOT / protocol["runner"]["path"]
     )
-    assert replay_suffix_v2.load_protocol(REPLAY_SUFFIX_V5_PROTOCOL)["protocol_id"] == protocol[
+    assert replay_suffix_v2.load_protocol(REPLAY_SUFFIX_V6_PROTOCOL)["protocol_id"] == protocol[
         "protocol_id"
     ]
 
@@ -331,6 +345,53 @@ def test_replay_suffix_v4_bundle_passes_the_hardened_auditor():
     summary = replay_suffix_v2.audit_bundle(REPLAY_SUFFIX_V4_RUN, REPLAY_SUFFIX_V4_PROTOCOL)
 
     assert summary["all_checks_passed"] is True
+
+
+@pytest.mark.parametrize(
+    ("filename", "marker", "duplicate"),
+    [
+        (
+            "summary.json",
+            '"all_checks_passed": true,',
+            '"all_checks_passed": false,\n  "all_checks_passed": true,',
+        ),
+        (
+            "baseline-failing-test.json",
+            '"source_stable": true,',
+            '"source_stable": false,\n  "source_stable": true,',
+        ),
+    ],
+)
+def test_replay_suffix_audit_rejects_duplicate_json_keys(
+    tmp_path: Path,
+    filename: str,
+    marker: str,
+    duplicate: str,
+):
+    bundle = tmp_path / "bundle"
+    shutil.copytree(REPLAY_SUFFIX_V4_RUN, bundle)
+    path = bundle / filename
+    raw = path.read_text(encoding="utf-8")
+    assert marker in raw
+    path.write_text(raw.replace(marker, duplicate, 1), encoding="utf-8")
+    replay_suffix_v2.write_manifest(bundle)
+
+    frozen_runner = REPLAY_SUFFIX_V4_RUN / "runner.py"
+    runner_copy = tmp_path / f"frozen_v4_{filename.replace('.', '_')}_auditor.py"
+    shutil.copyfile(frozen_runner, runner_copy)
+    spec = importlib.util.spec_from_file_location(
+        f"frozen_v4_{filename.replace('.', '_')}_auditor", runner_copy
+    )
+    assert spec is not None and spec.loader is not None
+    old_auditor = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(old_auditor)
+    old_auditor.ROOT = ROOT
+    assert old_auditor.audit_bundle(bundle, REPLAY_SUFFIX_V4_PROTOCOL)[
+        "all_checks_passed"
+    ] is True
+
+    with pytest.raises(ValueError, match="duplicate JSON object key"):
+        replay_suffix_v2.audit_bundle(bundle, REPLAY_SUFFIX_V4_PROTOCOL)
 
 
 @pytest.mark.parametrize(("field", "invalid_value"), [("source_stable", 1), ("timed_out", 0)])
