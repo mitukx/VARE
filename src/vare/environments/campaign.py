@@ -14,6 +14,7 @@ from typing import Sequence
 from ..evidence import sha256_json
 from .catalog import CatalogEnvironmentVerifier, RepositoryEvaluatorBackend, TaskCatalog, WorkspaceAgent, WorkspaceAgentRollout
 from .runner import resolve_launch_argv
+from .owned_command import run_owned_command
 
 
 @dataclass(frozen=True, slots=True)
@@ -65,25 +66,15 @@ class CommandWorkspaceAgent:
             raise ValueError("environment_allowlist must contain valid variable names")
         child_env = {key: os.environ[key] for key in self.environment_allowlist if key in os.environ}
 
-        def execute() -> subprocess.CompletedProcess[str]:
-            return subprocess.run(
-                argv,
-                cwd=workspace,
-                env=child_env,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                timeout=self.timeout_s,
-                check=False,
-            )
-
-        proc = await asyncio.to_thread(execute)
+        code, stdout, stderr = await run_owned_command(
+            argv, cwd=workspace, env=child_env, timeout_s=self.timeout_s,
+        )
         return json.dumps(
             {
                 "argv": argv,
-                "returncode": proc.returncode,
-                "stdout": proc.stdout[-100_000:],
-                "stderr": proc.stderr[-100_000:],
+                "returncode": code,
+                "stdout": stdout,
+                "stderr": stderr,
             },
             sort_keys=True,
         )
