@@ -49,19 +49,42 @@ def _probe_docker() -> dict[str, Any]:
     if executable is None:
         return {"cli_available": False, "daemon_available": False}
     try:
-        result = subprocess.run(
-            [executable, "info", "--format", "{{.ServerVersion}}"],
+        contexts = subprocess.run(
+            [executable, "context", "ls", "--format", "{{.Name}}"],
             check=False,
             capture_output=True,
             text=True,
             timeout=5,
         )
     except subprocess.TimeoutExpired:
-        return {"cli_available": True, "daemon_available": False, "probe": "timeout"}
+        return {"cli_available": True, "daemon_available": False, "probe": "context_list_timeout"}
+    names = contexts.stdout.splitlines() if contexts.returncode == 0 else ["default"]
+    probes = []
+    for name in dict.fromkeys(names):
+        if not name:
+            continue
+        try:
+            result = subprocess.run(
+                [executable, "--context", name, "info", "--format", "{{.ServerVersion}}"],
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=5,
+            )
+        except subprocess.TimeoutExpired:
+            probes.append({"context": name, "daemon_available": False, "probe": "timeout"})
+            continue
+        probes.append({
+            "context": name,
+            "daemon_available": result.returncode == 0 and bool(result.stdout.strip()),
+            "server_version": result.stdout.strip() if result.returncode == 0 else None,
+        })
+    available = next((probe for probe in probes if probe["daemon_available"]), None)
     return {
         "cli_available": True,
-        "daemon_available": result.returncode == 0 and bool(result.stdout.strip()),
-        "server_version": result.stdout.strip() if result.returncode == 0 else None,
+        "daemon_available": available is not None,
+        "contexts": probes,
+        "working_context": available["context"] if available else None,
     }
 
 

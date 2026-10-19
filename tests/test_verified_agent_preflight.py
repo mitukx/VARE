@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts import preflight_verified_agent_baseline as preflight
 from scripts.preflight_verified_agent_baseline import collect_preflight, write_report
 
 
@@ -72,3 +73,27 @@ def test_historical_task_inputs_match_the_retained_v2_lock() -> None:
 
     assert report["inputs"]["task_inputs_match_protocol"] is True
     assert "the historical task inputs do not match the v2 protocol snapshot" not in report["blockers"]
+
+
+def test_docker_probe_finds_a_running_nondefault_context(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(preflight.shutil, "which", lambda _name: "/usr/bin/docker")
+
+    def fake_run(command: list[str], **_kwargs: object) -> object:
+        if command[1:3] == ["context", "ls"]:
+            return type("Result", (), {"returncode": 0, "stdout": "default\ncolima\n"})()
+        context = command[2]
+        if context == "default":
+            return type("Result", (), {"returncode": 1, "stdout": ""})()
+        return type("Result", (), {"returncode": 0, "stdout": "29.5.2\n"})()
+
+    monkeypatch.setattr(preflight.subprocess, "run", fake_run)
+
+    assert preflight._probe_docker() == {
+        "cli_available": True,
+        "daemon_available": True,
+        "contexts": [
+            {"context": "default", "daemon_available": False, "server_version": None},
+            {"context": "colima", "daemon_available": True, "server_version": "29.5.2"},
+        ],
+        "working_context": "colima",
+    }

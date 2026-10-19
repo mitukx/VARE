@@ -4,9 +4,9 @@
 
 ## Why the smoke test did not run
 
-The pinned Qwen2.5-0.5B-Instruct snapshot is locally cached and its protocol-pinned `config.json` and `model.safetensors` hashes match. The checked historical task inputs also match the retained v2 hashes. Python 3.12, `torch` 2.9.1, and `transformers` 4.57.3 are available. The Docker CLI is installed, but its daemon is not running. More importantly, VARE does not yet provide a reviewed launcher that contains untrusted candidate execution while keeping the trusted evaluator and host credentials outside that execution boundary. Starting the model and then grading on the host would violate the repository's executable-evaluation invariant.
+The pinned Qwen2.5-0.5B-Instruct snapshot is locally cached and its protocol-pinned `config.json` and `model.safetensors` hashes match. The checked historical task inputs also match the retained v2 hashes. Python 3.12, `torch` 2.9.1, and `transformers` 4.57.3 are available. The Docker CLI's default context has no daemon, but the `colima` context is running Docker 29.5.2. The preflight now checks every configured Docker context. VARE still does not provide a reviewed launcher that contains untrusted candidate execution while keeping host credentials and other files outside that execution boundary. Running the grader on the host would violate the repository's executable-evaluation invariant.
 
-The final recorded environment result is [`results/verified-coding-agent-baseline-v3/preflight.json`](../results/verified-coding-agent-baseline-v3/preflight.json). The earlier initial preflight record is retained as `preflight-initial.json`. Both record zero model loads, zero agent starts, zero grader starts, zero candidate-code executions, and no task outcome. The process exit code `3` means the preflight was blocked; it is not a grader failure or agent failure.
+The latest environment result is [`results/verified-coding-agent-baseline-v3/preflight.json`](../results/verified-coding-agent-baseline-v3/preflight.json). Earlier preflight records are retained with their original default-context observations. The latest record shows zero model loads, zero agent starts, zero grader starts, zero candidate-code executions, and no task outcome. The process exit code `3` means the preflight was blocked; it is not a grader failure or agent failure.
 
 ## Reproduction
 
@@ -23,7 +23,7 @@ The preflight is read-only except for creating its new evidence file. It will no
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q tests/test_verified_agent_preflight.py
 ```
 
-On the recorded machine this completed with **4 passed** under Python 3.12.12.
+On the recorded machine this completed with **5 passed** under Python 3.12.12.
 
 ## Scope and next gate
 
