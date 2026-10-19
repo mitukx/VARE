@@ -13,6 +13,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from scripts import audit_trl_async_stale_resume_review_v2 as strict_replay_suffix_auditor
 from scripts import reproduce_trl_async_stale_resume_review_v2 as replay_suffix_v2
 from scripts import reproduce_trl_async_stale_resume_v1 as stale_resume
 from scripts.reproduce_trl_async_stale_resume_v1 import (
@@ -321,7 +322,7 @@ def test_sanitized_v4_rerun_audits_with_retained_runner():
 
 
 def test_replay_suffix_v2_bundle_binds_logs_to_source_and_protocol():
-    summary = replay_suffix_v2.audit_bundle(REPLAY_SUFFIX_V2_RUN)
+    summary = strict_replay_suffix_auditor.audit_bundle(REPLAY_SUFFIX_V2_RUN)
 
     assert summary["all_checks_passed"] is True
     assert summary["source_revision"] == "a85900829d86bcd45b7db0310725f28d3152289b"
@@ -395,7 +396,7 @@ def test_replay_suffix_v6_protocol_pins_duplicate_key_rejection():
 
 
 def test_replay_suffix_v4_bundle_passes_the_hardened_auditor():
-    summary = replay_suffix_v2.audit_bundle(REPLAY_SUFFIX_V4_RUN, REPLAY_SUFFIX_V4_PROTOCOL)
+    summary = strict_replay_suffix_auditor.audit_bundle(REPLAY_SUFFIX_V4_RUN, REPLAY_SUFFIX_V4_PROTOCOL)
 
     assert summary["all_checks_passed"] is True
 
@@ -444,7 +445,7 @@ def test_replay_suffix_audit_rejects_duplicate_json_keys(
     ] is True
 
     with pytest.raises(ValueError, match="duplicate JSON object key"):
-        replay_suffix_v2.audit_bundle(bundle, REPLAY_SUFFIX_V4_PROTOCOL)
+        strict_replay_suffix_auditor.audit_bundle(bundle, REPLAY_SUFFIX_V4_PROTOCOL)
 
 
 @pytest.mark.parametrize(("field", "invalid_value"), [("source_stable", 1), ("timed_out", 0)])
@@ -463,7 +464,7 @@ def test_replay_suffix_audit_rejects_non_boolean_stage_integrity_fields(
     replay_suffix_v2.write_manifest(bundle)
 
     with pytest.raises(ValueError, match="stage integrity fields must be booleans"):
-        replay_suffix_v2.audit_bundle(bundle, REPLAY_SUFFIX_V4_PROTOCOL)
+        strict_replay_suffix_auditor.audit_bundle(bundle, REPLAY_SUFFIX_V4_PROTOCOL)
 
 
 def test_replay_suffix_audit_rejects_manifest_artifacts_symlinked_outside_bundle(
@@ -478,7 +479,7 @@ def test_replay_suffix_audit_rejects_manifest_artifacts_symlinked_outside_bundle
     patch.symlink_to(external_patch)
 
     with pytest.raises(ValueError, match="bundle contains a symbolic link"):
-        replay_suffix_v2.audit_bundle(bundle, REPLAY_SUFFIX_V4_PROTOCOL)
+        strict_replay_suffix_auditor.audit_bundle(bundle, REPLAY_SUFFIX_V4_PROTOCOL)
 
 
 def test_replay_suffix_v4_audit_bypasses_are_reproduced_before_the_v5_guard(
@@ -504,7 +505,7 @@ def test_replay_suffix_v4_audit_bypasses_are_reproduced_before_the_v5_guard(
     old_auditor.write_manifest(boolean_bundle)
     assert old_auditor.audit_bundle(boolean_bundle, REPLAY_SUFFIX_V4_PROTOCOL)["all_checks_passed"] is True
     with pytest.raises(ValueError, match="stage integrity fields must be booleans"):
-        replay_suffix_v2.audit_bundle(boolean_bundle, REPLAY_SUFFIX_V4_PROTOCOL)
+        strict_replay_suffix_auditor.audit_bundle(boolean_bundle, REPLAY_SUFFIX_V4_PROTOCOL)
 
     symlink_bundle = tmp_path / "symlink-bypass"
     shutil.copytree(REPLAY_SUFFIX_V4_RUN, symlink_bundle)
@@ -516,7 +517,7 @@ def test_replay_suffix_v4_audit_bypasses_are_reproduced_before_the_v5_guard(
     old_auditor.write_manifest(symlink_bundle)
     assert old_auditor.audit_bundle(symlink_bundle, REPLAY_SUFFIX_V4_PROTOCOL)["all_checks_passed"] is True
     with pytest.raises(ValueError, match="bundle contains a symbolic link"):
-        replay_suffix_v2.audit_bundle(symlink_bundle, REPLAY_SUFFIX_V4_PROTOCOL)
+        strict_replay_suffix_auditor.audit_bundle(symlink_bundle, REPLAY_SUFFIX_V4_PROTOCOL)
 
 
 def _make_replay_suffix_stage_repo(root: Path) -> tuple[Path, Path, Path]:
@@ -612,7 +613,7 @@ def test_replay_suffix_stage_retains_test_output_when_source_capture_fails(
 def test_frozen_v5_digest_mismatch_is_superseded_by_audited_v6_record():
     old_record = json.loads((REPLAY_SUFFIX_RUN / "baseline-failing-test.json").read_text())
     old_log = REPLAY_SUFFIX_RUN / "baseline-failing-test.log"
-    current_summary = replay_suffix_v2.audit_bundle(REPLAY_SUFFIX_V2_RUN)
+    current_summary = strict_replay_suffix_auditor.audit_bundle(REPLAY_SUFFIX_V2_RUN)
     current_baseline = next(
         run for run in current_summary["runs"] if run["name"] == "baseline-failing-test"
     )
@@ -642,7 +643,7 @@ def test_replay_suffix_v2_audit_rejects_logs_without_source_provenance(tmp_path:
     stale_resume.write_manifest(copied)
 
     with pytest.raises(ValueError, match="raw log provenance markers mismatch"):
-        replay_suffix_v2.audit_bundle(copied)
+        strict_replay_suffix_auditor.audit_bundle(copied)
 
 
 def _reseal_replay_suffix_v2_stage(copied: Path, stage_name: str, mutate) -> dict:
@@ -657,6 +658,43 @@ def _reseal_replay_suffix_v2_stage(copied: Path, stage_name: str, mutate) -> dic
     write_json(summary_path, summary)
     stale_resume.write_manifest(copied)
     return summary
+
+
+@pytest.mark.parametrize(
+    ("baseline_code", "corrected_code"),
+    [(True, False), (1.0, 0.0)],
+)
+def test_replay_suffix_v2_audit_rejects_resealed_non_integer_exit_codes(
+    tmp_path: Path, baseline_code: int | float | bool, corrected_code: int | float | bool
+):
+    copied = tmp_path / "v2-run"
+    shutil.copytree(REPLAY_SUFFIX_V2_RUN, copied)
+    forged_codes = {
+        "baseline-failing-test": baseline_code,
+        "corrected-targeted-test": corrected_code,
+        "corrected-full-test-file": corrected_code,
+    }
+    summary_path = copied / "summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+
+    for record in summary["runs"]:
+        log_path = copied / record["log"]
+        old_code = record["exit_code"]
+        new_code = forged_codes[record["name"]]
+        log = log_path.read_text(encoding="utf-8").replace(
+            f"VARE_REVIEW_EXIT_CODE={old_code}",
+            f"VARE_REVIEW_EXIT_CODE={new_code}",
+        )
+        log_path.write_text(log, encoding="utf-8")
+        record["exit_code"] = new_code
+        record["raw_log_sha256"] = sha256_file(log_path)
+        write_json(copied / f"{record['name']}.json", record)
+
+    write_json(summary_path, summary)
+    write_manifest(copied)
+
+    with pytest.raises(ValueError, match="stage exit code must be an integer"):
+        strict_replay_suffix_auditor.audit_bundle(copied)
 
 
 def test_replay_suffix_v2_audit_rejects_resealed_unrelated_source_diff(tmp_path: Path):
@@ -676,7 +714,7 @@ def test_replay_suffix_v2_audit_rejects_resealed_unrelated_source_diff(tmp_path:
     _reseal_replay_suffix_v2_stage(copied, "corrected-targeted-test", replace_diff)
 
     with pytest.raises(ValueError, match="does not match the frozen patches"):
-        replay_suffix_v2.audit_bundle(copied)
+        strict_replay_suffix_auditor.audit_bundle(copied)
 
 
 def test_replay_suffix_v2_audit_rejects_resealed_unexpected_candidate_tree(tmp_path: Path):
@@ -691,7 +729,7 @@ def test_replay_suffix_v2_audit_rejects_resealed_unexpected_candidate_tree(tmp_p
     _reseal_replay_suffix_v2_stage(copied, "corrected-targeted-test", replace_tree)
 
     with pytest.raises(ValueError, match="candidate tree differs from the frozen source state"):
-        replay_suffix_v2.audit_bundle(copied)
+        strict_replay_suffix_auditor.audit_bundle(copied)
 
 
 @pytest.mark.parametrize(
@@ -721,7 +759,7 @@ def test_replay_suffix_v2_audit_rejects_resealed_contradictory_provenance_marker
     _reseal_replay_suffix_v2_stage(copied, "corrected-targeted-test", inject_conflicting_marker)
 
     with pytest.raises(ValueError, match=message):
-        replay_suffix_v2.audit_bundle(copied)
+        strict_replay_suffix_auditor.audit_bundle(copied)
 
 
 def test_replay_suffix_v2_audit_rejects_passing_summary_with_failures(tmp_path: Path):
@@ -743,16 +781,24 @@ def test_replay_suffix_v2_audit_rejects_passing_summary_with_failures(tmp_path: 
     _reseal_replay_suffix_v2_stage(copied, "corrected-targeted-test", add_failure)
 
     with pytest.raises(ValueError, match="does not satisfy the locked stage"):
-        replay_suffix_v2.audit_bundle(copied)
+        strict_replay_suffix_auditor.audit_bundle(copied)
 
 
 def test_replay_suffix_v2_audit_cli_returns_nonzero_for_negative_decision(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ):
-    monkeypatch.setattr(replay_suffix_v2, "audit_bundle", lambda *args: {"all_checks_passed": False})
-    monkeypatch.setattr(sys, "argv", ["reproduce_trl_async_stale_resume_review_v2.py", "--audit", str(tmp_path)])
+    monkeypatch.setattr(
+        strict_replay_suffix_auditor,
+        "audit_bundle",
+        lambda *args: {"all_checks_passed": False},
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["audit_trl_async_stale_resume_review_v2.py", str(tmp_path)],
+    )
 
-    assert replay_suffix_v2.main() == 1
+    assert strict_replay_suffix_auditor.main() == 1
 
 
 def test_v3_lock_pins_transitive_dependencies_and_timeout():
