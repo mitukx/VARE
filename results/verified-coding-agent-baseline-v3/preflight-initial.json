@@ -1,0 +1,45 @@
+{
+  "attempt": {
+    "agent_started": false,
+    "candidate_code_executed": false,
+    "grader_started": false,
+    "model_loaded": false
+  },
+  "blockers": [
+    "Docker daemon is unavailable",
+    "VARE has no reviewed isolated evaluator launcher for this task"
+  ],
+  "claim_limit": "Preflight only; no model or coding-agent outcome was measured.",
+  "environment": {
+    "docker": {
+      "cli_available": true,
+      "daemon_available": false,
+      "server_version": null
+    },
+    "isolation_adapter": "unavailable",
+    "model_files_sha256": {
+      "config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+      "model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe"
+    },
+    "model_snapshot_matches_protocol": true,
+    "packages": {
+      "torch": "2.9.1",
+      "transformers": "4.57.3"
+    },
+    "python": "3.12.12",
+    "python_minimum_met": true
+  },
+  "inputs": {
+    "model_repository": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_snapshot": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "task_id": "rvl-hf-behavior-policy-parity-v1",
+    "task_protocol_id": "verified-coding-agent-baseline-v2",
+    "task_revision": "e788f113ad6b246a361cd50a52eaf2867f2a66f8"
+  },
+  "measurements": null,
+  "protocol_id": "verified-coding-agent-baseline-v3-preflight",
+  "recorded_at_utc": "2026-10-19T07:35:29+00:00",
+  "schema_version": 1,
+  "stage": "trusted_execution_preflight",
+  "status": "BLOCKED"
+}
