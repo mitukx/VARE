@@ -111,7 +111,8 @@ async def run_owned_command(
                         os.killpg(proc.pid, signal.SIGKILL)
                     except ProcessLookupError:
                         pass
-                    proc.kill() if proc.returncode is None else None
+                    if proc.returncode is None:
+                        proc.kill()
                     for task in pumps:
                         task.cancel()
                     if status_task is not None:
