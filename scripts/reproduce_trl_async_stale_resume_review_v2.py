@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -51,6 +52,21 @@ def git(repo: Path, *args: str, text: bool = True) -> str | bytes:
 
 def fail(message: str) -> None:
     raise ValueError(message)
+
+
+def parse_provenance_markers(log: str) -> dict[str, str]:
+    markers: dict[str, str] = {}
+    for line in log.splitlines():
+        if "VARE_REVIEW_" not in line:
+            continue
+        match = re.fullmatch(r"(VARE_REVIEW_[A-Z0-9_]+)=(.*)", line)
+        if match is None:
+            fail(f"malformed raw provenance marker: {line}")
+        key, value = match.groups()
+        if key in markers:
+            fail(f"raw provenance marker is repeated: {key}")
+        markers[key] = value
+    return markers
 
 
 def load_protocol(
@@ -299,30 +315,28 @@ def audit_bundle(bundle: Path) -> dict[str, Any]:
         if read_json(bundle / f"{name}.json") != record:
             fail(f"retained stage metadata differs from the summary: {name}")
         log = (bundle / record["log"]).read_text(encoding="utf-8")
-        for marker, expected in (
-            ("VARE_REVIEW_STAGE", name),
-            ("VARE_REVIEW_SOURCE_REVISION", record["revision"]),
-            ("VARE_REVIEW_BASE_TREE", record["base_tree"]),
-            ("VARE_REVIEW_CANDIDATE_TREE", record["candidate_tree"]),
-            ("VARE_REVIEW_DIFF_SHA256", record["diff_artifact_sha256"]),
-            ("VARE_REVIEW_TEST_SHA256", record["test_file_sha256"]),
-            ("VARE_REVIEW_PROTOCOL_SHA256", summary["protocol_sha256"]),
-            ("VARE_REVIEW_RUNNER_SHA256", summary["runner_sha256"]),
-            ("VARE_REVIEW_TEST_PATCH_SHA256", source["regression_test_patch_sha256"]),
-            (
-                "VARE_REVIEW_CORRECTION_PATCH_SHA256",
-                source["correction_patch_sha256"] if name != "baseline-failing-test" else "not-applied",
+        expected_markers = {
+            "VARE_REVIEW_STAGE": name,
+            "VARE_REVIEW_SOURCE_REVISION": record["revision"],
+            "VARE_REVIEW_BASE_TREE": record["base_tree"],
+            "VARE_REVIEW_CANDIDATE_TREE": record["candidate_tree"],
+            "VARE_REVIEW_DIFF_SHA256": record["diff_artifact_sha256"],
+            "VARE_REVIEW_TEST_SHA256": record["test_file_sha256"],
+            "VARE_REVIEW_PROTOCOL_SHA256": summary["protocol_sha256"],
+            "VARE_REVIEW_RUNNER_SHA256": summary["runner_sha256"],
+            "VARE_REVIEW_TEST_PATCH_SHA256": source["regression_test_patch_sha256"],
+            "VARE_REVIEW_CORRECTION_PATCH_SHA256": (
+                source["correction_patch_sha256"]
+                if name != "baseline-failing-test"
+                else "not-applied"
             ),
-            ("VARE_REVIEW_EXIT_CODE", str(record["exit_code"])),
-            (
-                "VARE_REVIEW_TIMED_OUT",
-                "true" if record["timed_out"] else "false",
-            ),
-            ("VARE_REVIEW_SOURCE_VALID", "true"),
-            ("VARE_REVIEW_SOURCE_STABLE", "true"),
-        ):
-            if log.count(f"{marker}={expected}") != 1:
-                fail(f"raw log provenance marker mismatch: {name}: {marker}")
+            "VARE_REVIEW_EXIT_CODE": str(record["exit_code"]),
+            "VARE_REVIEW_TIMED_OUT": "true" if record["timed_out"] else "false",
+            "VARE_REVIEW_SOURCE_VALID": "true",
+            "VARE_REVIEW_SOURCE_STABLE": "true",
+        }
+        if parse_provenance_markers(log) != expected_markers:
+            fail(f"raw log provenance markers mismatch: {name}")
         if record.get("pytest_outcome") != stale_resume.parse_pytest_outcome(log, allow_missing=record["exit_code"] != 0):
             fail(f"pytest outcome does not match raw log: {name}")
         outcome = record["pytest_outcome"]

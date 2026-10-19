@@ -42,19 +42,25 @@ has not been accepted upstream.
 ## Reproduction
 
 Prepare `/tmp/vare-trl-v4/bin/python` using the environment recipe in the
-[v4 report](trl-async-stale-resume-v4-report.md). Then fetch the pinned TRL
-candidate and run from a clean VARE checkout:
+[v4 report](trl-async-stale-resume-v4-report.md). This protocol pins its
+runner and helper to VARE commit `b456452257a5490d61ff5da92fd818dba38e672e`;
+use that retained source revision for a fresh reproduction so the recorded
+runner hashes match the frozen protocol:
 
 ```bash
+git clone https://github.com/mitukx/VARE.git /tmp/vare-review-v2-source
+git -C /tmp/vare-review-v2-source fetch origin codex/trl-async-stale-resume-cursor
+git -C /tmp/vare-review-v2-source worktree add --detach /tmp/vare-review-v2-runner b456452257a5490d61ff5da92fd818dba38e672e
 git clone https://github.com/huggingface/trl.git /tmp/vare-trl-review-source
 git -C /tmp/vare-trl-review-source remote add vare https://github.com/mitukx/trl.git
 git -C /tmp/vare-trl-review-source fetch vare codex/async-stale-resume-cursor
 git -C /tmp/vare-trl-review-source checkout --detach a85900829d86bcd45b7db0310725f28d3152289b
+cd /tmp/vare-review-v2-runner
 /tmp/vare-trl-v4/bin/python scripts/reproduce_trl_async_stale_resume_review_v2.py \
   --source-repo /tmp/vare-trl-review-source \
-  --output results/trl-async-stale-resume-v6/review-p1-suffix-epoch-count-provenance-v2
+  --output /tmp/vare-replay-suffix-v2-fresh
 /tmp/vare-trl-v4/bin/python scripts/reproduce_trl_async_stale_resume_review_v2.py \
-  --audit results/trl-async-stale-resume-v6/review-p1-suffix-epoch-count-provenance-v2
+  --audit /tmp/vare-replay-suffix-v2-fresh
 /tmp/vare-trl-v4/bin/python -m pytest -q tests/test_trl_async_stale_resume_evidence.py
 ```
 

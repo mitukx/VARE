@@ -36,9 +36,18 @@ perform an optimizer update, measure task success or throughput, or establish
 an upstream-accepted fix. TRL PR [#7786](https://github.com/huggingface/trl/pull/7786)
 was closed before maintainer code review.
 
-Reproduce from a clean VARE checkout on the locked M1 Pro / macOS environment:
+The v4 protocol's original runner is retained at VARE commit
+`54ff88c368d98c66111489d7b23046df62112d59`. A fresh reproduction must use
+that revision; the current reproducer has since changed and is not approved by
+the frozen v4 protocol. Fetch the PR branch to make this historical commit
+available, then run the locked commands from its checkout on the M1 Pro /
+macOS environment:
 
 ```bash
+git clone https://github.com/mitukx/VARE.git /tmp/vare-v4-source
+git -C /tmp/vare-v4-source fetch origin codex/trl-async-stale-resume-cursor
+git -C /tmp/vare-v4-source worktree add --detach /tmp/vare-v4-runner 54ff88c368d98c66111489d7b23046df62112d59
+cd /tmp/vare-v4-runner
 python3.12 -m venv /tmp/vare-trl-v4
 /tmp/vare-trl-v4/bin/python -m pip install -r requirements/trl-async-stale-resume-v3.txt
 git clone https://github.com/huggingface/trl.git /tmp/vare-trl-v4-source

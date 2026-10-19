@@ -289,7 +289,7 @@ def test_replay_suffix_v2_audit_rejects_logs_without_source_provenance(tmp_path:
     write_json(summary_path, summary)
     stale_resume.write_manifest(copied)
 
-    with pytest.raises(ValueError, match="raw log provenance marker mismatch"):
+    with pytest.raises(ValueError, match="raw log provenance markers mismatch"):
         replay_suffix_v2.audit_bundle(copied)
 
 
@@ -339,6 +339,36 @@ def test_replay_suffix_v2_audit_rejects_resealed_unexpected_candidate_tree(tmp_p
     _reseal_replay_suffix_v2_stage(copied, "corrected-targeted-test", replace_tree)
 
     with pytest.raises(ValueError, match="candidate tree differs from the frozen source state"):
+        replay_suffix_v2.audit_bundle(copied)
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        ("suffix-tree-value", "raw log provenance markers mismatch"),
+        ("duplicate-key", "raw provenance marker is repeated"),
+        ("indented-marker", "malformed raw provenance marker"),
+    ],
+)
+def test_replay_suffix_v2_audit_rejects_resealed_contradictory_provenance_markers(
+    tmp_path: Path, mutation: str, message: str
+):
+    copied = tmp_path / "v2-run"
+    shutil.copytree(REPLAY_SUFFIX_V2_RUN, copied)
+
+    def inject_conflicting_marker(record: dict, log_path: Path, log: str) -> None:
+        if mutation == "suffix-tree-value":
+            marker = f"VARE_REVIEW_CANDIDATE_TREE={record['candidate_tree']}"
+            log = log.replace(marker, marker + "000", 1)
+        elif mutation == "duplicate-key":
+            log += "\nVARE_REVIEW_SOURCE_VALID=false\n"
+        else:
+            log += "\n VARE_REVIEW_SOURCE_VALID=false\n"
+        log_path.write_text(log, encoding="utf-8")
+
+    _reseal_replay_suffix_v2_stage(copied, "corrected-targeted-test", inject_conflicting_marker)
+
+    with pytest.raises(ValueError, match=message):
         replay_suffix_v2.audit_bundle(copied)
 
 
