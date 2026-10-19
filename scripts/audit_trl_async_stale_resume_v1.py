@@ -28,7 +28,10 @@ def _read_strict_json(path: Path) -> object:
 
 def audit_bundle(bundle: Path) -> dict[str, object]:
     """Reject ambiguous JSON before the frozen v1/v4 auditor reads evidence."""
-    _read_strict_json(bundle / "manifest.json")
+    manifest = bundle / "manifest.json"
+    if manifest.is_symlink() or not manifest.is_file():
+        raise ValueError("manifest must be a regular file inside the evidence bundle")
+    _read_strict_json(manifest)
     summary = _read_strict_json(bundle / "summary.json")
     if isinstance(summary, dict):
         runs = summary.get("runs")

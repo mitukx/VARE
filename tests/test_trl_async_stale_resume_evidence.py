@@ -102,7 +102,8 @@ def test_stale_resume_reproduction_docs_audit_from_hardened_checkout():
     assert v5_doc.index("cd /tmp/vare-v5-runner") < v5_doc.index(
         "scripts/reproduce_trl_async_stale_resume_review_v2.py"
     )
-    assert '"$VARE_HARDENED_CHECKOUT/scripts/reproduce_trl_async_stale_resume_review_v2.py"' in v5_doc
+    assert '"$VARE_HARDENED_CHECKOUT/scripts/audit_trl_async_stale_resume_review_v2.py"' in v5_doc
+    assert "--audit /tmp/vare-replay-suffix-v5-fresh" not in v5_doc
 
     assert "scripts/audit_trl_async_stale_resume_review_v2.py" in v6_doc
     assert "--audit /tmp/vare-replay-suffix-v6-fresh" not in v6_doc
@@ -753,6 +754,34 @@ def test_replay_suffix_v2_audit_rejects_non_integer_exit_code_in_stage_record(
     assert replay_suffix_v2.audit_bundle(copied)["all_checks_passed"] is True
     with pytest.raises(ValueError, match="stage exit code must be an integer"):
         strict_replay_suffix_auditor.audit_bundle(copied)
+
+
+def test_legacy_strict_audit_rejects_resealed_external_manifest_symlink(tmp_path: Path):
+    bundle = tmp_path / "v4-run"
+    shutil.copytree(V4_PLATFORM_RUN, bundle)
+    write_manifest(bundle)
+
+    # A regular manifest is valid before attempting the externally linked variant.
+    assert strict_legacy_auditor.audit_bundle(bundle)["all_checks_passed"] is True
+    manifest = bundle / "manifest.json"
+    external_manifest = tmp_path / "external-manifest.json"
+    manifest.rename(external_manifest)
+    manifest.symlink_to(external_manifest)
+
+    # The historical auditor follows the symlink even with freshly resealed hashes.
+    assert stale_resume.audit_bundle(bundle)["all_checks_passed"] is True
+    with pytest.raises(ValueError, match="manifest must be a regular file"):
+        strict_legacy_auditor.audit_bundle(bundle)
+
+    cli = subprocess.run(
+        [sys.executable, "scripts/audit_trl_async_stale_resume_v1.py", str(bundle)],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert cli.returncode == 1
+    assert "manifest must be a regular file" in cli.stderr
 
 
 def test_legacy_audit_rejects_boolean_observation_counts(tmp_path: Path):

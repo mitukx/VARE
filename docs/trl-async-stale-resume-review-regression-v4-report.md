@@ -54,8 +54,8 @@ git -C /tmp/vare-trl-review-source checkout --detach a85900829d86bcd45b7db031072
     --python /tmp/vare-trl-v4/bin/python
 )
 
-/tmp/vare-trl-v4/bin/python "$VARE_HARDENED_CHECKOUT/scripts/reproduce_trl_async_stale_resume_review_v2.py" \
-  --audit /tmp/vare-replay-suffix-v5-fresh \
+/tmp/vare-trl-v4/bin/python "$VARE_HARDENED_CHECKOUT/scripts/audit_trl_async_stale_resume_review_v2.py" \
+  /tmp/vare-replay-suffix-v5-fresh \
   --protocol "$VARE_HARDENED_CHECKOUT/protocols/trl_async_stale_resume_replay_suffix_v5.lock.json"
 cd "$VARE_HARDENED_CHECKOUT"
 /tmp/vare-trl-v4/bin/python -m pytest -q tests/test_trl_async_stale_resume_evidence.py
