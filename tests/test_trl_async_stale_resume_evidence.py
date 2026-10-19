@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import importlib.metadata
 import json
 import os
@@ -45,6 +46,8 @@ V4_SANITIZED_RUN = ROOT / "results/trl-async-stale-resume-v4/run-2-python-env-sa
 REPLAY_SUFFIX_PROTOCOL = ROOT / "protocols/trl_async_stale_resume_replay_suffix_v1.lock.json"
 REPLAY_SUFFIX_V3_PROTOCOL = ROOT / "protocols/trl_async_stale_resume_replay_suffix_v3.lock.json"
 REPLAY_SUFFIX_V4_PROTOCOL = ROOT / "protocols/trl_async_stale_resume_replay_suffix_v4.lock.json"
+REPLAY_SUFFIX_V5_PROTOCOL = ROOT / "protocols/trl_async_stale_resume_replay_suffix_v5.lock.json"
+REPLAY_SUFFIX_V4_RUN = ROOT / "results/trl-async-stale-resume-v7/review-replay-suffix-v4"
 REPLAY_SUFFIX_RUN = ROOT / "results/trl-async-stale-resume-v5/review-p1-suffix-epoch-count"
 REPLAY_SUFFIX_V2_RUN = ROOT / "results/trl-async-stale-resume-v6/review-p1-suffix-epoch-count-provenance-v2-final"
 
@@ -303,12 +306,103 @@ def test_replay_suffix_v4_protocol_pins_parseable_raw_log_boundaries():
 
     assert protocol["protocol_id"] == "trl-async-stale-resume-replay-suffix-v4"
     assert protocol["protocol_parent"] == "trl-async-stale-resume-replay-suffix-v3"
+    assert protocol["runner"]["sha256"] == "62a71701fa1b10f4966ffb10a602248ba25f123e645e83a929b3f7008645a917"
+    assert replay_suffix_v2.load_protocol(
+        REPLAY_SUFFIX_V4_PROTOCOL,
+        require_current_runner=False,
+        require_current_helper=False,
+    )["protocol_id"] == protocol["protocol_id"]
+
+
+def test_replay_suffix_v5_protocol_pins_strict_bundle_auditing():
+    protocol = json.loads(REPLAY_SUFFIX_V5_PROTOCOL.read_text(encoding="utf-8"))
+
+    assert protocol["protocol_id"] == "trl-async-stale-resume-replay-suffix-v5"
+    assert protocol["protocol_parent"] == "trl-async-stale-resume-replay-suffix-v4"
     assert protocol["runner"]["sha256"] == sha256_file(
         ROOT / protocol["runner"]["path"]
     )
-    assert replay_suffix_v2.load_protocol(REPLAY_SUFFIX_V4_PROTOCOL)["protocol_id"] == protocol[
+    assert replay_suffix_v2.load_protocol(REPLAY_SUFFIX_V5_PROTOCOL)["protocol_id"] == protocol[
         "protocol_id"
     ]
+
+
+def test_replay_suffix_v4_bundle_passes_the_hardened_auditor():
+    summary = replay_suffix_v2.audit_bundle(REPLAY_SUFFIX_V4_RUN, REPLAY_SUFFIX_V4_PROTOCOL)
+
+    assert summary["all_checks_passed"] is True
+
+
+@pytest.mark.parametrize(("field", "invalid_value"), [("source_stable", 1), ("timed_out", 0)])
+def test_replay_suffix_audit_rejects_non_boolean_stage_integrity_fields(
+    tmp_path: Path,
+    field: str,
+    invalid_value: int,
+):
+    bundle = tmp_path / "bundle"
+    shutil.copytree(REPLAY_SUFFIX_V4_RUN, bundle)
+    summary = replay_suffix_v2.read_json(bundle / "summary.json")
+    record = summary["runs"][0]
+    record[field] = invalid_value
+    replay_suffix_v2.write_json(bundle / f"{record['name']}.json", record)
+    replay_suffix_v2.write_json(bundle / "summary.json", summary)
+    replay_suffix_v2.write_manifest(bundle)
+
+    with pytest.raises(ValueError, match="stage integrity fields must be booleans"):
+        replay_suffix_v2.audit_bundle(bundle, REPLAY_SUFFIX_V4_PROTOCOL)
+
+
+def test_replay_suffix_audit_rejects_manifest_artifacts_symlinked_outside_bundle(
+    tmp_path: Path,
+):
+    bundle = tmp_path / "bundle"
+    shutil.copytree(REPLAY_SUFFIX_V4_RUN, bundle)
+    patch = bundle / "baseline-source.patch"
+    external_patch = tmp_path / "external-baseline-source.patch"
+    shutil.copyfile(patch, external_patch)
+    patch.unlink()
+    patch.symlink_to(external_patch)
+
+    with pytest.raises(ValueError, match="bundle contains a symbolic link"):
+        replay_suffix_v2.audit_bundle(bundle, REPLAY_SUFFIX_V4_PROTOCOL)
+
+
+def test_replay_suffix_v4_audit_bypasses_are_reproduced_before_the_v5_guard(
+    tmp_path: Path,
+):
+    frozen_runner = REPLAY_SUFFIX_V4_RUN / "runner.py"
+    assert sha256_file(frozen_runner) == "62a71701fa1b10f4966ffb10a602248ba25f123e645e83a929b3f7008645a917"
+    runner_copy = tmp_path / "frozen_v4_runner.py"
+    shutil.copyfile(frozen_runner, runner_copy)
+    spec = importlib.util.spec_from_file_location("frozen_replay_suffix_v4_auditor", runner_copy)
+    assert spec is not None and spec.loader is not None
+    old_auditor = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(old_auditor)
+    old_auditor.ROOT = ROOT
+
+    boolean_bundle = tmp_path / "boolean-bypass"
+    shutil.copytree(REPLAY_SUFFIX_V4_RUN, boolean_bundle)
+    boolean_summary = old_auditor.read_json(boolean_bundle / "summary.json")
+    for record in boolean_summary["runs"]:
+        record["source_stable"] = 1
+        old_auditor.write_json(boolean_bundle / f"{record['name']}.json", record)
+    old_auditor.write_json(boolean_bundle / "summary.json", boolean_summary)
+    old_auditor.write_manifest(boolean_bundle)
+    assert old_auditor.audit_bundle(boolean_bundle, REPLAY_SUFFIX_V4_PROTOCOL)["all_checks_passed"] is True
+    with pytest.raises(ValueError, match="stage integrity fields must be booleans"):
+        replay_suffix_v2.audit_bundle(boolean_bundle, REPLAY_SUFFIX_V4_PROTOCOL)
+
+    symlink_bundle = tmp_path / "symlink-bypass"
+    shutil.copytree(REPLAY_SUFFIX_V4_RUN, symlink_bundle)
+    patch = symlink_bundle / "baseline-source.patch"
+    external_patch = tmp_path / "external-baseline-source.patch"
+    shutil.copyfile(patch, external_patch)
+    patch.unlink()
+    patch.symlink_to(external_patch)
+    old_auditor.write_manifest(symlink_bundle)
+    assert old_auditor.audit_bundle(symlink_bundle, REPLAY_SUFFIX_V4_PROTOCOL)["all_checks_passed"] is True
+    with pytest.raises(ValueError, match="bundle contains a symbolic link"):
+        replay_suffix_v2.audit_bundle(symlink_bundle, REPLAY_SUFFIX_V4_PROTOCOL)
 
 
 def _make_replay_suffix_stage_repo(root: Path) -> tuple[Path, Path, Path]:

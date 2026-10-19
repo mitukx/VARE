@@ -56,6 +56,13 @@ This is source-level checkpoint accounting evidence only. See the
 [hardening report](trl-async-stale-resume-review-regression-v3-report.md),
 [v4 protocol](../protocols/trl_async_stale_resume_replay_suffix_v4.lock.json),
 and [accepted raw bundle](../results/trl-async-stale-resume-v7/review-replay-suffix-v4/).
+Another review reproduced two audit bypasses: resealed integer `source_stable`
+flags and bundle artifacts symlinked to identical bytes outside the bundle.
+The v5 auditor rejects both; its source-level rerun passes the 2-failure,
+2-pass, and 11-pass stage oracles. See the
+[audit-hardening report](trl-async-stale-resume-review-regression-v4-report.md),
+[v5 protocol](../protocols/trl_async_stale_resume_replay_suffix_v5.lock.json),
+and [accepted raw bundle](../results/trl-async-stale-resume-v7/review-replay-suffix-v5/).
 
 ## End-to-end CPU RL system benchmark — 2026-10-16
 

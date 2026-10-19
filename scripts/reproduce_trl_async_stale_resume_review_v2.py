@@ -5,11 +5,12 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
 import tempfile
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -278,7 +279,13 @@ def audit_bundle(
         require_current_runner=False,
         require_current_helper=False,
     )
+    bundle = bundle.resolve(strict=True)
     manifest_path = bundle / "manifest.json"
+    for directory, dirnames, filenames in os.walk(bundle, topdown=True, followlinks=False):
+        for name in (*dirnames, *filenames):
+            path = Path(directory) / name
+            if path.is_symlink():
+                fail(f"bundle contains a symbolic link: {path.relative_to(bundle).as_posix()}")
     manifest = read_json(manifest_path)
     entries = manifest.get("files")
     if not isinstance(entries, dict):
@@ -291,7 +298,23 @@ def audit_bundle(
     if actual != set(entries):
         fail("manifest inventory does not match the bundle")
     for name, digest in entries.items():
-        path = bundle / name
+        if not isinstance(name, str) or "\\" in name:
+            fail("manifest paths must be normalized relative POSIX paths")
+        relative = PurePosixPath(name)
+        if (
+            not name
+            or relative.is_absolute()
+            or relative.as_posix() != name
+            or any(part in {"", ".", ".."} for part in relative.parts)
+        ):
+            fail(f"manifest path is not a normalized relative path: {name!r}")
+        path = bundle.joinpath(*relative.parts)
+        try:
+            path.resolve(strict=True).relative_to(bundle)
+        except (OSError, ValueError) as exc:
+            fail(f"manifest entry resolves outside the bundle or is missing: {name}: {exc}")
+        if not path.is_file():
+            fail(f"manifest entry is not a regular file: {name}")
         if sha256_file(path) != digest:
             fail(f"manifest hash mismatch: {name}")
 
@@ -365,7 +388,9 @@ def audit_bundle(
             fail(f"candidate revision or base tree mismatch: {name}")
         if record.get("candidate_tree") != EXPECTED_CANDIDATE_TREES[name]:
             fail(f"candidate tree differs from the frozen source state: {name}")
-        if not record.get("source_stable") or record.get("timed_out"):
+        if type(record.get("source_stable")) is not bool or type(record.get("timed_out")) is not bool:
+            fail(f"stage integrity fields must be booleans: {name}")
+        if not record["source_stable"] or record["timed_out"]:
             fail(f"source changed or test timed out: {name}")
         if record.get("raw_log_sha256") != sha256_file(bundle / record["log"]):
             fail(f"raw log digest mismatch: {name}")
