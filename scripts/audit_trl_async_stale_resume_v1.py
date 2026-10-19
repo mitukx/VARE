@@ -31,6 +31,19 @@ def audit_bundle(bundle: Path) -> dict[str, object]:
     _read_strict_json(bundle / "manifest.json")
     summary = _read_strict_json(bundle / "summary.json")
     if isinstance(summary, dict):
+        runs = summary.get("runs")
+        if isinstance(runs, list):
+            for run in runs:
+                if not isinstance(run, dict):
+                    continue
+                observed = run.get("observed")
+                if not isinstance(observed, dict) or any(
+                    type(count) is not int or count < 0
+                    for count in observed.values()
+                ):
+                    raise ValueError(
+                        f"observed counts must be nonnegative integers: {run.get('log', 'unknown')}"
+                    )
         protocol_id = summary.get("protocol_id")
         lock_path = (
             stale_resume.LOCK_PATHS.get(protocol_id)

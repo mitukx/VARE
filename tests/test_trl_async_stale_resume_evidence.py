@@ -13,6 +13,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from scripts import audit_trl_async_stale_resume_v1 as strict_legacy_auditor
 from scripts import audit_trl_async_stale_resume_review_v2 as strict_replay_suffix_auditor
 from scripts import reproduce_trl_async_stale_resume_review_v2 as replay_suffix_v2
 from scripts import reproduce_trl_async_stale_resume_v1 as stale_resume
@@ -701,6 +702,38 @@ def test_replay_suffix_v2_audit_rejects_resealed_non_integer_exit_codes(
 
     with pytest.raises(ValueError, match="stage exit code must be an integer"):
         strict_replay_suffix_auditor.audit_bundle(copied)
+
+
+def test_replay_suffix_v2_audit_rejects_non_integer_pytest_counts(tmp_path: Path):
+    copied = tmp_path / "v2-run"
+    shutil.copytree(REPLAY_SUFFIX_V2_RUN, copied)
+    summary_path = copied / "summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    record = next(run for run in summary["runs"] if run["name"] == "corrected-targeted-test")
+    record["pytest_outcome"]["passed"] = 2.0
+    write_json(copied / f"{record['name']}.json", record)
+    write_json(summary_path, summary)
+    write_manifest(copied)
+
+    assert replay_suffix_v2.audit_bundle(copied)["all_checks_passed"] is True
+    with pytest.raises(ValueError, match="pytest outcome counts must be nonnegative integers"):
+        strict_replay_suffix_auditor.audit_bundle(copied)
+
+
+def test_legacy_audit_rejects_boolean_observation_counts(tmp_path: Path):
+    copied = tmp_path / "v4-run"
+    shutil.copytree(V4_PLATFORM_RUN, copied)
+    summary_path = copied / "summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    candidate = next(run for run in summary["runs"] if run["arm"] == "candidate")
+    assert candidate["observed"]["duplicated_rows"] == 1
+    candidate["observed"]["duplicated_rows"] = True
+    write_json(summary_path, summary)
+    write_manifest(copied)
+
+    assert stale_resume.audit_bundle(copied)["all_checks_passed"] is True
+    with pytest.raises(ValueError, match="observed counts must be nonnegative integers"):
+        strict_legacy_auditor.audit_bundle(copied)
 
 
 @pytest.mark.parametrize("log_reference", ["absolute", "parent-relative"])
