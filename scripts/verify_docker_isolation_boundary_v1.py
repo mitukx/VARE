@@ -23,14 +23,7 @@ from vare.container_isolation import (
     IsolationError,
     IsolationLimits,
 )
-from vare.environments.spec import (
-    CommandSpec,
-    EngineeringTaskSpec,
-    RepositorySource,
-    ResourceLimits,
-)
-from vare.evidence import sha256_json
-from vare.sandboxed_repository import DockerRepositoryEvaluator
+from vare.separated_grading import CANARY_PROBE_SOURCE, build_confidentiality_probe_argv
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -279,52 +272,37 @@ async def _grader_probe(
     *,
     image: str,
 ) -> dict[str, Any]:
-    spec = EngineeringTaskSpec(
-        id="synthetic-grader-visibility-v1",
-        title="Synthetic grader namespace visibility probe",
-        prompt="Read the synthetic canary from the grader namespace.",
-        family="isolation-probe",
-        source=RepositorySource(local_path="."),
-        tests=(CommandSpec(("true",), name="unused-control"),),
-        limits=ResourceLimits(wall_time_s=3, cpu_time_s=2, memory_mb=64),
-        metadata={"purpose": "synthetic isolation probe only"},
+    """Read the historical canary path from the candidate sandbox only.
+
+    The canary file stays on the operator side. The candidate argv is the
+    separated workspace mount, so ``/grader/synthetic-hidden-canary.txt`` is
+    not present in that container. The canary value is not passed in argv.
+    """
+    if canary and canary in CANARY_PROBE_SOURCE:
+        raise RuntimeError("probe source must not embed the canary value")
+    grader_resolved = grader_root.resolve()
+    workspace_resolved = workspace.resolve()
+    if (grader_resolved == workspace_resolved or grader_resolved in workspace_resolved.parents
+            or workspace_resolved in grader_resolved.parents):
+        raise RuntimeError("canary directory overlaps the candidate workspace")
+    limits = _limits(image=image)
+    name = "vare-agent-" + secrets.token_hex(12)
+    argv = build_confidentiality_probe_argv(
+        runner, limits, name=name, allowed_workspace_root=workspace_root, workspace=workspace,
     )
-    spec_path = grader_root / "task.json"
-    spec.write(spec_path)
-    backend = DockerRepositoryEvaluator(
-        runner=runner,
-        limits=_limits(image=image),
-        allowed_workspace_root=workspace_root,
-    )
-    argv = backend._argv(
-        spec_path=spec_path,
-        workspace=workspace,
-        spec_digest=sha256_json(spec.to_dict()),
-        policy_id="synthetic-probe",
-        policy_version=1,
-        baseline_metrics=None,
-        name="vare-repo-" + secrets.token_hex(12),
-    )
-    image_index = argv.index(image)
-    probe = (
-        "from pathlib import Path; p=Path('/grader/synthetic-hidden-canary.txt'); "
-        "print(p.read_text() if p.is_file() else 'CANARY_NOT_VISIBLE')"
-    )
-    # Keep the real evaluator argv's pinned image, mounts and container flags;
-    # replace only its worker entrypoint with this harmless synthetic probe.
-    probe_argv = [*argv[:image_index + 1], "python", "-c", probe]
-    result = await runner.execute(probe_argv, _limits(image=image))
+    if canary and canary in "\n".join(argv):
+        raise RuntimeError("canary value leaked into the candidate argv")
+    result = await runner.execute(argv, limits)
+    mounts = [argv[index + 1] for index, arg in enumerate(argv[:-1]) if arg == "--mount"]
     return {
         "returncode": result.returncode,
         "canary_visible": result.stdout.strip() == canary,
         "stdout": result.stdout,
         "stdout_sha256": _sha256(result.stdout.encode()),
-        "mount_flags": [argv[i + 1] for i, arg in enumerate(argv[:-1]) if arg == "--mount"],
+        "mount_flags": mounts,
         "network_mode_none": "--network=none" in argv,
         "readonly_rootfs": "--read-only" in argv,
-        "readonly_mounts": all(item.endswith(",readonly") for item in [
-            argv[i + 1] for i, arg in enumerate(argv[:-1]) if arg == "--mount"
-        ]),
+        "readonly_mounts": all(item.endswith(",readonly") for item in mounts),
     }
 
 

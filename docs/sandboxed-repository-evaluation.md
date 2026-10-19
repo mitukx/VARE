@@ -101,6 +101,21 @@ a security penetration-test result or a real-model performance result.
 An abrupt **host or daemon crash** can still strand containers; a persistent
 external inventory/watchdog is future work.
 
+## Candidate and grader separation
+
+`SeparatedCandidateGrader` mounts only `/workspace` into the candidate
+container. After that container exits, the host copies a snapshot. JSON cases
+still use `TrustedJSONScorer.evaluate` with no signature change. Hidden
+repository commands, including an `EngineeringTaskSpec` from the MLSys pack,
+run in a second container that mounts the snapshot read-only and the staged
+evaluator at `/grader`. The agent task root for that pack is `task.json`
+only, and train/held-out selection refuses held-out ids.
+
+A hidden test that imports candidate code still executes inside the grader
+container, so that imported code can read `/grader/evaluator` during scoring.
+The candidate container and the agent task root do not receive those files.
+`DockerRepositoryEvaluator` remains limited to tasks marked public.
+
 ## Limited trusted JSON-I/O scoring boundary
 
 `DockerRepositoryEvaluator` remains unsuitable for confidential held-out tests:

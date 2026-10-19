@@ -14,6 +14,55 @@ def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def _mount_target(flag: str) -> str:
+    if ",target=" not in flag:
+        return ""
+    return flag.split(",target=", 1)[1].split(",", 1)[0]
+
+
+def classify_grader_confidentiality(probes: list[dict[str, Any]]) -> str:
+    """Recompute the canary decision from raw probe observations.
+
+    A visible canary is a failure. Zero reads count as a pass only when every
+    replicate used a single ``/workspace`` mount and no network. A probe that
+    still mounts another target stays unproven even if the file happened to
+    be missing.
+    """
+    if not isinstance(probes, list) or not probes:
+        return "NOT_DEMONSTRATED"
+    reads = 0
+    for item in probes:
+        if not isinstance(item, dict) or type(item.get("canary_visible")) is not bool:
+            return "NOT_DEMONSTRATED"
+        if item["canary_visible"]:
+            reads += 1
+    if reads:
+        return "FAIL_SYNTHETIC_CANARY_VISIBLE"
+    if len(probes) != 3:
+        return "NOT_DEMONSTRATED"
+    for item in probes:
+        mounts = item.get("mount_flags")
+        if item.get("returncode") != 0 or item.get("network_mode_none") is not True:
+            return "NOT_DEMONSTRATED"
+        if not isinstance(mounts, list) or len(mounts) != 1:
+            return "NOT_DEMONSTRATED"
+        if _mount_target(mounts[0]) != "/workspace":
+            return "NOT_DEMONSTRATED"
+    return "PASS_CANDIDATE_CANARY_UNREADABLE"
+
+
+def overall_decision(
+    *, canary_reads: int, confidentiality: str, other_gates_pass: bool,
+) -> str:
+    if canary_reads:
+        return "FAIL_CONFIDENTIALITY_BOUNDARY"
+    if confidentiality == "PASS_CANDIDATE_CANARY_UNREADABLE" and other_gates_pass:
+        return "PASS_E0_CANDIDATE_CANARY_UNREADABLE"
+    if confidentiality == "PASS_CANDIDATE_CANARY_UNREADABLE":
+        return "PASS_CANARY_ONLY_OTHER_GATES_INCOMPLETE"
+    return "BLOCKED"
+
+
 def audit(root: Path) -> dict[str, Any]:
     observations_path = root / "observations.json"
     observations_bytes = observations_path.read_bytes()
@@ -88,8 +137,10 @@ def audit(root: Path) -> dict[str, Any]:
     }
     grader_probes = observations["grader_probe"]
     canary_reads = sum(bool(item["canary_visible"]) for item in grader_probes)
-    grader_confidentiality = (
-        "FAIL_SYNTHETIC_CANARY_VISIBLE" if canary_reads else "NOT_DEMONSTRATED"
+    grader_confidentiality = classify_grader_confidentiality(grader_probes)
+    other_gates_pass = bool(
+        candidate_checks and all(candidate_checks) and active_configuration_ok
+        and all(lifecycle_results.values())
     )
 
     return {
@@ -104,7 +155,11 @@ def audit(root: Path) -> dict[str, Any]:
         "grader_probe_repetitions": len(grader_probes),
         "grader_confidentiality": grader_confidentiality,
         "live_candidate_execution_eligible": False,
-        "overall": "FAIL_CONFIDENTIALITY_BOUNDARY" if canary_reads else "BLOCKED",
+        "overall": overall_decision(
+            canary_reads=canary_reads,
+            confidentiality=grader_confidentiality,
+            other_gates_pass=other_gates_pass,
+        ),
     }
 
 

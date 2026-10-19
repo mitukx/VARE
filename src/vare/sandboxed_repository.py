@@ -4,6 +4,8 @@ This moves *executable* repository tests off the controller host and into a
 separately administered container/VM. Candidate source is read-only in the
 container and copied to private scratch before tests. It does not conceal
 grader source files from hostile code running in the same grader container.
+Confidential runs mount this worker only after the candidate container has
+exited; see ``vare.separated_grading``.
 """
 from __future__ import annotations
 
@@ -112,7 +114,9 @@ class DockerRepositoryEvaluator:
     Candidate code shares this container namespace with grader files. Evaluation
     is disabled unless the operator opts in and the task is explicitly public.
     Do not pass task/candidate-controlled images, evaluator paths, or Docker
-    credentials to this constructor.
+    credentials to this constructor. Confidential hidden tests use
+    ``vare.separated_grading.SeparatedCandidateGrader``, which does not mount
+    the grader directory into the candidate container.
     """
 
     def __init__(

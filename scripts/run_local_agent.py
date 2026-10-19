@@ -10,9 +10,14 @@ import platform
 import re
 import resource
 import subprocess
+import sys
 import time
 from pathlib import Path
 from typing import Any
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+from vare.agent_task_contract import load_agent_task
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -57,6 +62,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument('--workspace', type=Path, required=True)
     parser.add_argument('--model-path', type=Path, required=True, help='Local model snapshot directory; no network download is attempted')
+    parser.add_argument('--model-repository', default=MODEL_REPOSITORY)
     parser.add_argument('--task-root', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--instruction', required=True,
@@ -67,6 +73,9 @@ def main() -> int:
     parser.add_argument('--max-new-tokens-per-turn', type=int, default=256)
     parser.add_argument('--max-total-new-tokens', type=int, default=3072)
     parser.add_argument('--wall-seconds', type=int, default=900)
+    parser.add_argument('--temperature', type=float, default=0.2)
+    parser.add_argument('--do-sample', action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument('--require-split', choices=('train', 'heldout'))
     args = parser.parse_args()
 
     model_dir = args.model_path.resolve()
@@ -77,8 +86,10 @@ def main() -> int:
     result_path = args.output.resolve()
     if result_path.exists():
         parser.error(f'refusing to overwrite existing agent record: {result_path}')
-    task = json.loads((task_root / 'task.json').read_text())
-    allowed = set(task['source']['files'])
+    contract = load_agent_task(task_root)
+    if args.require_split is not None and contract.split != args.require_split:
+        parser.error(f'task split {contract.split!r} does not match required split {args.require_split}')
+    allowed = set(contract.allowed_files)
     missing = sorted(name for name in allowed if not (workspace / name).is_file())
     if missing:
         parser.error(f'workspace missing allowed source files: {missing}')
@@ -96,7 +107,7 @@ def main() -> int:
     if not all(parameter.device.type == 'cpu' for parameter in model.parameters()):
         raise RuntimeError('model parameter escaped CPU')
 
-    task_text = (task_root / 'TASK.md').read_text(encoding='utf-8')
+    task_text = contract.prompt_text
     system = (
         'You are an offline code repair agent. Solve only the task below. The workspace contains only the task source files. '
         'Read the source path named in the user instruction, then use tools to inspect and edit. Use apply_patch for small source diffs; never rewrite a whole file. '
@@ -136,7 +147,8 @@ def main() -> int:
         with torch.inference_mode():
             output = model.generate(
                 input_ids=encoded['input_ids'], attention_mask=encoded['attention_mask'],
-                do_sample=True, temperature=0.2, top_p=0.95, top_k=20,
+                do_sample=args.do_sample,
+                **({} if not args.do_sample else {'temperature': args.temperature, 'top_p': 0.95, 'top_k': 20}),
                 max_new_tokens=limit, pad_token_id=tokenizer.eos_token_id,
             )
         new_ids = output[0][encoded['input_ids'].shape[1]:]
@@ -255,19 +267,15 @@ def main() -> int:
 
     elapsed = time.perf_counter() - start
     after = digest_tree(workspace, sorted(allowed))
-    diff = run_git(workspace, 'diff', '--binary', task['source']['base_revision'], '--', *sorted(allowed))
+    diff = run_git(workspace, 'diff', '--binary', contract.diff_revision, '--', *sorted(allowed))
     result = {
-        'schema_version': 1, 'task_id': task['task_id'], 'seed': args.seed,
-        'task_revisions': {'base': task['source']['base_revision'],
-                           'calibration': task['source']['calibration_revision']},
-        'task_input_hashes': {
-            'TASK.md': sha256(task_root / 'TASK.md'),
-            'task.json': sha256(task_root / 'task.json'),
-            'protocol.lock.json': sha256(task_root / 'protocol.lock.json'),
-            'grader.py': sha256(task_root / 'evaluator/grade.py'),
-        },
+        'schema_version': 1, 'task_id': contract.task_id, 'task_schema': contract.schema,
+        'seed': args.seed,
+        'task_revisions': {'base': contract.base_revision,
+                           'calibration': contract.calibration_revision},
+        'task_input_hashes': contract.input_hashes,
         'initial_messages': initial_messages,
-        'model_repository': MODEL_REPOSITORY, 'model_snapshot': model_dir.name,
+        'model_repository': args.model_repository, 'model_snapshot': model_dir.name,
         'model_files': {path.name: sha256(path) for path in sorted(model_dir.iterdir()) if path.is_file()},
         'runtime': {'python': platform.python_version(), 'torch': torch.__version__,
                     'transformers': __import__('transformers').__version__,
@@ -275,7 +283,8 @@ def main() -> int:
                     'cuda_available': torch.cuda.is_available(), 'mps_available_unused': torch.backends.mps.is_available()},
         'budgets': {'max_turns': args.max_turns, 'max_new_tokens_per_turn': args.max_new_tokens_per_turn,
                     'max_total_new_tokens': args.max_total_new_tokens, 'wall_seconds': args.wall_seconds,
-                    'max_no_tool_retries': args.max_no_tool_retries},
+                    'max_no_tool_retries': args.max_no_tool_retries,
+                    'temperature': args.temperature, 'do_sample': args.do_sample},
         'stop_reason': stop_reason, 'agent_summary': final_summary,
         'elapsed_seconds': round(elapsed, 3), 'new_tokens': token_total,
         'max_rss_bytes': resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
