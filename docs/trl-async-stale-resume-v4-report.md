@@ -44,9 +44,11 @@ available, then run the locked commands from its checkout on the M1 Pro /
 macOS environment:
 
 ```bash
+set -e
 git clone https://github.com/mitukx/VARE.git /tmp/vare-v4-source
 git -C /tmp/vare-v4-source fetch origin codex/trl-async-stale-resume-cursor
 git -C /tmp/vare-v4-source worktree add --detach /tmp/vare-v4-runner 54ff88c368d98c66111489d7b23046df62112d59
+git -C /tmp/vare-v4-source worktree add --detach /tmp/vare-v4-hardened f001a387b0472481c87d3d9372ddcc9c66035663
 cd /tmp/vare-v4-runner
 python3.12 -m venv /tmp/vare-trl-v4
 /tmp/vare-trl-v4/bin/python -m pip install -r requirements/trl-async-stale-resume-v3.txt
@@ -60,10 +62,15 @@ git -C /tmp/vare-trl-v4-source worktree add --detach /tmp/vare-trl-v4-candidate 
   --python /tmp/vare-trl-v4/bin/python \
   --baseline-source /tmp/vare-trl-v4-base \
   --candidate-source /tmp/vare-trl-v4-candidate \
-  --output /tmp/trl-async-stale-resume-v4
-/tmp/vare-trl-v4/bin/python scripts/audit_trl_async_stale_resume_v1.py /tmp/trl-async-stale-resume-v4
+  --output /tmp/trl-async-stale-resume-v4-fresh
+cd /tmp/vare-v4-hardened
+/tmp/vare-trl-v4/bin/python scripts/audit_trl_async_stale_resume_v1.py /tmp/trl-async-stale-resume-v4-fresh
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 /tmp/vare-trl-v4/bin/python -m pytest -o addopts= -q tests/test_trl_async_stale_resume_evidence.py
 ```
+
+The frozen v4 runner generates the evidence, then the hardened checkout audits
+it and runs the regression suite. `set -e` keeps any nonzero reproduction or
+audit status from being masked by a later successful command.
 
 The [v4 protocol](../protocols/trl_async_stale_resume_v4.lock.json) binds the
 platform and points to the already frozen full dependency lock. V4 records no

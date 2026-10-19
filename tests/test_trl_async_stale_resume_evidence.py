@@ -47,6 +47,31 @@ REPLAY_SUFFIX_RUN = ROOT / "results/trl-async-stale-resume-v5/review-p1-suffix-e
 REPLAY_SUFFIX_V2_RUN = ROOT / "results/trl-async-stale-resume-v6/review-p1-suffix-epoch-count-provenance-v2-final"
 
 
+def test_stale_resume_reproduction_docs_audit_from_hardened_checkout():
+    replay_suffix_doc = (
+        ROOT / "docs/trl-async-stale-resume-review-regression-v2-report.md"
+    ).read_text(encoding="utf-8")
+    v4_doc = (ROOT / "docs/trl-async-stale-resume-v4-report.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "set -e" in replay_suffix_doc
+    assert "b456452257a5490d61ff5da92fd818dba38e672e" in replay_suffix_doc
+    assert "f001a387b0472481c87d3d9372ddcc9c66035663" in replay_suffix_doc
+    assert replay_suffix_doc.index("cd /tmp/vare-review-v2-runner") < (
+        replay_suffix_doc.index("cd /tmp/vare-review-v2-hardened")
+    )
+    assert "--audit /tmp/vare-replay-suffix-v2-fresh" in replay_suffix_doc
+
+    assert "set -e" in v4_doc
+    assert "54ff88c368d98c66111489d7b23046df62112d59" in v4_doc
+    assert "f001a387b0472481c87d3d9372ddcc9c66035663" in v4_doc
+    assert v4_doc.index("cd /tmp/vare-v4-runner") < v4_doc.index(
+        "cd /tmp/vare-v4-hardened"
+    )
+    assert "scripts/audit_trl_async_stale_resume_v1.py" in v4_doc
+
+
 def test_reproduction_parser_extracts_stale_cursor_and_replay_count():
     text = (ROOT / "results/trl-async-stale-resume-v1/run-1-original-threshold/baseline-2.log").read_text(
         encoding="utf-8"
