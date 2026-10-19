@@ -17,8 +17,11 @@ only a readonly workspace mount. The runner and protocol are pinned in
 | Managed containers remaining after run | 0 |
 | Overall audited decision | `PASS_E0_LIMITED_JSON_IO_BOUNDARY` |
 
-The measured per-container wall times were 0.262s and 0.228s for the positive
-cases, and 0.183s for the forged-score control. The canary was generated from
+The measured per-container wall times were 0.296s and 0.279s for the positive
+cases, and 0.189s for the forged-score control. Raw stdout bytes are hashed
+before lossy UTF-8 decoding, so distinct invalid byte streams remain distinct
+in the evidence even when they decode to the same replacement character. The
+canary was generated from
 256 random bits for this run; only its SHA-256 is retained, and its plaintext
 was deleted after the probe. The report does not treat these
 synthetic timings as task throughput. The environment was Python 3.12.12,
@@ -59,7 +62,7 @@ before launching a container because the runner had not added the repository's
 passing run, and both attempts remain available for review.
 
 Evidence for the passing run is retained in
-[`run-5-colima-m1`](../results/trusted-scoring-boundary-v1/run-5-colima-m1/):
+[`run-6-colima-m1`](../results/trusted-scoring-boundary-v1/run-6-colima-m1/):
 the raw observations, lock copy, manifest, and independently recomputed audit.
 The manifest and auditor verify source and script hashes. The audited result is
 same-host reproduction, not external human review.
@@ -68,9 +71,9 @@ same-host reproduction, not external human review.
 runner's explicit checks that locked runtime pins, limits, and acceptance
 criteria match the executable configuration. `run-3-colima-m1/` used a
 fixed, publicly visible canary; run 4 superseded it using an ephemeral canary.
-Run 5 also removes the canary if the probe fails, so use it as the current
-protocol-valid measurement. The earlier import-path startup failure is
-retained in run 1.
+Run 5 also removes the canary if the probe fails. Run 6 additionally hashes raw
+stdout before decoding, so use it as the current protocol-valid measurement.
+The earlier import-path startup failure is retained in run 1.
 
 ## Limits
 

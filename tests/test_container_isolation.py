@@ -200,6 +200,7 @@ def test_evaluator_response_must_have_valid_signature(tmp_path):
 
 
 def _fake_docker(tmp_path: Path, behavior: str) -> tuple[str, Path]:
+    tmp_path.mkdir(parents=True, exist_ok=True)
     binary = tmp_path / "fake-docker"
     audit = tmp_path / "cleanup.txt"
     remove_script = (
@@ -218,6 +219,8 @@ def _fake_docker(tmp_path: Path, behavior: str) -> tuple[str, Path]:
     run_script = (
         "    time.sleep(10)\n" if behavior == "timeout" else
         "    print('x'*20000)\n" if behavior == "overflow" else
+        "    sys.stdout.buffer.write(bytes([255]))\n" if behavior == "invalid-utf8-ff" else
+        "    sys.stdout.buffer.write(bytes([254]))\n" if behavior == "invalid-utf8-fe" else
         "    print(sys.stdin.buffer.readline().decode().rstrip('\\n'))\n" if behavior == "stdin" else
         "    print('ok')\n"
     )
@@ -232,6 +235,23 @@ def _fake_docker(tmp_path: Path, behavior: str) -> tuple[str, Path]:
     binary.write_text(script, encoding="utf-8")
     binary.chmod(0o755)
     return str(binary), audit
+
+
+def test_supervisor_hashes_raw_stdout_before_utf8_replacement(tmp_path):
+    root = tmp_path / "workspaces"
+    work = root / "trial"
+    work.mkdir(parents=True)
+    results = []
+    for behavior in ("invalid-utf8-ff", "invalid-utf8-fe"):
+        binary, _ = _fake_docker(tmp_path / behavior, behavior)
+        results.append(asyncio.run(DockerIsolationRunner(docker_binary=binary).run_candidate(
+            IsolationLimits(IMAGE), allowed_workspace_root=root,
+            workspace=work, command=("python", "-c", "pass"),
+        )))
+    assert results[0].stdout == results[1].stdout == "\ufffd"
+    assert results[0].stdout_sha256 == hashlib.sha256(b"\xff").hexdigest()
+    assert results[1].stdout_sha256 == hashlib.sha256(b"\xfe").hexdigest()
+    assert results[0].stdout_sha256 != results[1].stdout_sha256
 
 
 @pytest.mark.parametrize("behavior", ("ok", "timeout", "overflow"))

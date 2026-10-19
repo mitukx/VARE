@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import asyncio
 from dataclasses import dataclass
+import hashlib
 import json
 import math
 import os
@@ -90,6 +91,7 @@ class IsolationResult:
     returncode: int
     stdout: str
     stderr: str
+    stdout_sha256: str | None = None
 
 
 class DockerIsolationRunner:
@@ -272,6 +274,7 @@ class DockerIsolationRunner:
                 int(proc.returncode if proc.returncode is not None else 125),
                 kept["stdout"].decode("utf-8", errors="replace"),
                 kept["stderr"].decode("utf-8", errors="replace"),
+                hashlib.sha256(kept["stdout"]).hexdigest(),
             )
         finally:
             if not feeder.done():

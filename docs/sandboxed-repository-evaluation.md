@@ -132,8 +132,10 @@ startup failure caused by the source tree not being on `sys.path`. The first
 passing smoke at `run-2-colima-m1/` was superseded when runtime/limit pins were
 made executable checks; `run-3-colima-m1/` was then superseded to use a random
 canary and omit its plaintext from the evidence bundle; `run-4-colima-m1/` was
-superseded after adding cleanup for failed probes. The current successful
-same-host smoke is `run-5-colima-m1/`; its independently recomputed decision is
+superseded after adding cleanup for failed probes; `run-5-colima-m1/` was
+superseded after preserving raw stdout digests before UTF-8 decoding. The
+current successful same-host smoke is `run-6-colima-m1/`; its independently
+recomputed decision is
 `PASS_E0_LIMITED_JSON_IO_BOUNDARY`. The two positive cases passed, the
 forged-score response scored 0/1, the synthetic canary was unreadable, and no
 managed containers remained. This records a software boundary check only. It

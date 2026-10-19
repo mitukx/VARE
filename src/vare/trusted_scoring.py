@@ -164,7 +164,9 @@ class TrustedJSONScorer:
                 ) for skipped in cases[case_index + 1:])
                 break
             elapsed = time.perf_counter() - started
-            response = run.stdout.encode("utf-8")
+            response_sha256 = run.stdout_sha256 or hashlib.sha256(
+                run.stdout.encode("utf-8")
+            ).hexdigest()
             failure: str | None = None
             passed = False
             if run.returncode != 0:
@@ -186,7 +188,7 @@ class TrustedJSONScorer:
                 passed=passed,
                 returncode=run.returncode,
                 wall_s=elapsed,
-                response_sha256=hashlib.sha256(response).hexdigest(),
+                response_sha256=response_sha256,
                 failure=failure,
                 cleanup_confirmed=True,
             ))

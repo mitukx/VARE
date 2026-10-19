@@ -1,4 +1,5 @@
 import asyncio
+import hashlib
 import pytest
 
 from vare.container_isolation import IsolationError, IsolationLimits, IsolationResult
@@ -88,6 +89,31 @@ def test_ambiguous_duplicate_json_keys_are_rejected(tmp_path):
     ))
     assert report.passed is False
     assert report.cases[0].failure == "invalid_json_response"
+
+
+def test_scoring_evidence_uses_runner_raw_stdout_digest(tmp_path):
+    workspace_root = tmp_path / "workspaces"
+    workspace = workspace_root / "one"
+    workspace.mkdir(parents=True)
+    raw_digest = hashlib.sha256(b"\xff").hexdigest()
+
+    class InvalidUtf8Runner:
+        async def run_candidate_io(self, *args, **kwargs):
+            return IsolationResult(0, "\ufffd", "", raw_digest)
+
+    scorer = TrustedJSONScorer(
+        runner=InvalidUtf8Runner(),
+        limits=IsolationLimits("local/test@sha256:" + "a" * 64),
+        allowed_workspace_root=workspace_root,
+    )
+    report = asyncio.run(scorer.evaluate(
+        task_id="json-double-v1", policy_id="candidate-a",
+        policy_version=0, workspace=workspace,
+        command=("python", "/workspace/solve.py"),
+        cases=(JSONIOCase("case-a", {"n": 2}, {"value": 4}),),
+    ))
+    assert report.cases[0].failure == "invalid_json_response"
+    assert report.cases[0].response_sha256 == raw_digest
 
 
 def test_json_scoring_rejects_nonfinite_case_values_and_duplicate_case_ids(tmp_path):
