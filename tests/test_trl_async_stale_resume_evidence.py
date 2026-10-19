@@ -67,6 +67,9 @@ def test_stale_resume_reproduction_docs_audit_from_hardened_checkout():
     v5_doc = (ROOT / "docs/trl-async-stale-resume-review-regression-v4-report.md").read_text(
         encoding="utf-8"
     )
+    v6_doc = (ROOT / "docs/trl-async-stale-resume-review-regression-v5-report.md").read_text(
+        encoding="utf-8"
+    )
 
     assert "set -e" in replay_suffix_doc
     assert "b456452257a5490d61ff5da92fd818dba38e672e" in replay_suffix_doc
@@ -96,6 +99,9 @@ def test_stale_resume_reproduction_docs_audit_from_hardened_checkout():
         "scripts/reproduce_trl_async_stale_resume_review_v2.py"
     )
     assert '"$VARE_HARDENED_CHECKOUT/scripts/reproduce_trl_async_stale_resume_review_v2.py"' in v5_doc
+
+    assert "scripts/audit_trl_async_stale_resume_review_v2.py" in v6_doc
+    assert "--audit /tmp/vare-replay-suffix-v6-fresh" not in v6_doc
 
 
 def test_reproduction_parser_extracts_stale_cursor_and_replay_count():
@@ -695,6 +701,53 @@ def test_replay_suffix_v2_audit_rejects_resealed_non_integer_exit_codes(
 
     with pytest.raises(ValueError, match="stage exit code must be an integer"):
         strict_replay_suffix_auditor.audit_bundle(copied)
+
+
+@pytest.mark.parametrize("log_reference", ["absolute", "parent-relative"])
+def test_replay_suffix_v2_audit_rejects_logs_outside_bundle(
+    tmp_path: Path, log_reference: str
+):
+    copied = tmp_path / "v2-run"
+    shutil.copytree(REPLAY_SUFFIX_V2_RUN, copied)
+    external_log = tmp_path / "external.log"
+    shutil.copy2(copied / "baseline-failing-test.log", external_log)
+    reference = (
+        str(external_log)
+        if log_reference == "absolute"
+        else "../external.log"
+    )
+    summary_path = copied / "summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    record = summary["runs"][0]
+    record["log"] = reference
+    write_json(copied / f"{record['name']}.json", record)
+    write_json(summary_path, summary)
+    write_manifest(copied)
+
+    assert replay_suffix_v2.audit_bundle(copied)["all_checks_passed"] is True
+    with pytest.raises(ValueError, match="stage log path must match its retained filename"):
+        strict_replay_suffix_auditor.audit_bundle(copied)
+
+
+def test_replay_suffix_audit_cli_runs_as_a_script_without_pythonpath():
+    environment = os.environ.copy()
+    environment.pop("PYTHONPATH", None)
+    environment["PYTHONNOUSERSITE"] = "1"
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "scripts/audit_trl_async_stale_resume_review_v2.py"),
+            "--help",
+        ],
+        cwd=ROOT,
+        env=environment,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert "retained replay-suffix evidence directory" in result.stdout
 
 
 def test_replay_suffix_v2_audit_rejects_resealed_unrelated_source_diff(tmp_path: Path):
