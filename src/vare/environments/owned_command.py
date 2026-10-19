@@ -7,6 +7,7 @@ containment: an agent may escape its group or access same-UID host resources.
 from __future__ import annotations
 
 import asyncio
+from collections.abc import Awaitable
 import os
 from pathlib import Path
 import signal
@@ -98,7 +99,7 @@ async def run_owned_command(
             proc.stdin.close()  # EOF kills ordinary descendants, including after cancellation.
 
             async def finish() -> None:
-                pending = [proc.wait(), *pumps]
+                pending: list[Awaitable[object]] = [proc.wait(), *pumps]
                 if status_task is not None:
                     pending.append(status_task)
                 try:
