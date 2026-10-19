@@ -82,7 +82,7 @@ def test_stale_resume_reproduction_docs_audit_from_hardened_checkout():
 
     assert "set -e" in v4_doc
     assert "54ff88c368d98c66111489d7b23046df62112d59" in v4_doc
-    assert "1a96abb20efc05679312eb794b21c3ec0c67ddd2" in v4_doc
+    assert "557dffd25e45f43b98c09b2740ae6a1239f0dff6" in v4_doc
     assert v4_doc.index("cd /tmp/vare-v4-runner") < v4_doc.index(
         "cd /tmp/vare-v4-hardened"
     )
