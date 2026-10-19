@@ -1,0 +1,96 @@
+{
+  "claim_limit": "Synthetic JSON-I/O scorer boundary only; no real repository task, confidential held-out data, model capability, or general sandbox certification.",
+  "environment": {
+    "colima": {
+      "arch": "aarch64",
+      "containerd_socket": "unix:///Users/user/.colima/default/containerd.sock",
+      "cpu": 4,
+      "disk": 64424509440,
+      "display_name": "colima",
+      "docker_socket": "unix:///Users/user/.colima/default/docker.sock",
+      "driver": "macOS Virtualization.Framework",
+      "kubernetes": false,
+      "memory": 8589934592,
+      "mount_type": "virtiofs",
+      "runtime": "docker"
+    },
+    "docker_client_server": "29.9.1/29.5.2",
+    "docker_context": "colima",
+    "docker_security_options": [
+      "name=apparmor",
+      "name=seccomp,profile=builtin",
+      "name=cgroupns"
+    ],
+    "image_id": "sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "image_reference": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]"
+  },
+  "limits": {
+    "cases_negative": 1,
+    "cases_positive": 2,
+    "cpus": 0.5,
+    "max_input_bytes": 64000,
+    "max_output_bytes": 4096,
+    "memory_mb": 256,
+    "pids_limit": 12,
+    "timeout_s": 15
+  },
+  "probe": {
+    "canary_probe": {
+      "candidate_can_read_canary": false,
+      "candidate_canary_sha256": null,
+      "response": {
+        "grader_canary_sha256": null,
+        "value": 4
+      },
+      "returncode": 0
+    },
+    "candidate_launch_mounts": [
+      "type=bind,source=/Users/user/Documents/Codex/2026-10-19/vare-xai-mts-internship-readiness-verified/work/VARE-main/results/trusted-scoring-boundary-v1/run-5-colima-m1/candidate-root/workspace,target=/workspace,readonly"
+    ],
+    "forged_score_control": {
+      "case_results": [
+        {
+          "case_id": "square-2",
+          "failure": "wrong_json_response",
+          "passed": false,
+          "response_sha256": "4b12192a2e2b004f441d0e0a7a696400680d527782495b1640d085fb50542df0",
+          "returncode": 0,
+          "wall_s": 0.18299574998673052
+        }
+      ],
+      "passed": false,
+      "score": 0.0
+    },
+    "managed_container_names_after": [],
+    "managed_container_names_before": [],
+    "no_new_candidate_containers": true,
+    "operator_canary_sha256": "ae4991ac005629ee2c77cc29a91ad91d3e6be3ce931a4074852ee997e6b92eec",
+    "positive_control": {
+      "case_results": [
+        {
+          "case_id": "square-2",
+          "failure": null,
+          "passed": true,
+          "response_sha256": "a3197bcda427abd182d6189ea9742db65b38c3483bf5019900bc8b5691d6c9ac",
+          "returncode": 0,
+          "wall_s": 0.2623967499821447
+        },
+        {
+          "case_id": "square-7",
+          "failure": null,
+          "passed": true,
+          "response_sha256": "3c45b9a34e346d735aa919f8d3228d8aebb1822ff68e4ad8ba7dc0ad8f3a633b",
+          "returncode": 0,
+          "wall_s": 0.22794950002571568
+        }
+      ],
+      "case_set_sha256": "43ced652d7d21eca08f3d47e17f84601400a1fd473db41b8d94574c1cdbfeab2",
+      "passed": true,
+      "score": 1.0
+    },
+    "schema_version": 1
+  },
+  "protocol_id": "trusted-scoring-boundary-v1"
+}

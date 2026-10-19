@@ -90,6 +90,57 @@ a security penetration-test result or a real-model performance result.
 An abrupt **host or daemon crash** can still strand containers; a persistent
 external inventory/watchdog is future work.
 
+## Limited trusted JSON-I/O scoring boundary
+
+`DockerRepositoryEvaluator` remains unsuitable for confidential held-out tests:
+it runs candidate code in the same container namespace as the repository tests
+and task data. Do not use it for an untrusted candidate or claim hidden-test
+integrity. A separate, narrower path is available through
+`vare.trusted_scoring.TrustedJSONScorer` for tasks that can be expressed as
+bounded JSON requests and exact JSON responses. The operator supplies the fixed
+candidate command and holds the expected responses; each request runs in a new
+container with only the candidate workspace mounted readonly. The scorer sends
+the request over bounded stdin and compares the response itself. Candidate
+claims such as `{"passed": true}` have no scoring meaning. Candidate output,
+including invalid or failing output, is summarized by a digest in the report.
+
+This is a limited interface boundary, not general sandbox certification. It
+does not run repository test suites, prevent inference from public requests, or
+establish model coding ability. Docker/Colima, its kernel boundary, operator
+command, and host remain trusted. Live untrusted repository execution stays
+blocked. The E0 synthetic protocol below checks only that this narrow path
+cannot read an operator-side canary through a mounted path and rejects a
+forged score response.
+
+Reproduce the frozen synthetic probe and audit its evidence with:
+
+```bash
+python scripts/verify_trusted_scoring_boundary_v1.py \
+  --output results/trusted-scoring-boundary-v1/run-N-colima-m1
+python scripts/audit_trusted_scoring_boundary_v1.py \
+  results/trusted-scoring-boundary-v1/run-N-colima-m1
+```
+
+The runner refuses to overwrite an existing evidence directory and verifies
+the source/script hashes in the protocol lock before it starts. A passing E0
+result does not authorize `DockerRepositoryEvaluator` for hidden repository
+tests or change the live-execution NO-GO status.
+
+The first attempted run is retained at
+`results/trusted-scoring-boundary-v1/run-1-colima-m1/`; it records a runner
+startup failure caused by the source tree not being on `sys.path`. The first
+passing smoke at `run-2-colima-m1/` was superseded when runtime/limit pins were
+made executable checks; `run-3-colima-m1/` was then superseded to use a random
+canary and omit its plaintext from the evidence bundle; `run-4-colima-m1/` was
+superseded after adding cleanup for failed probes. The current successful
+same-host smoke is `run-5-colima-m1/`; its independently recomputed decision is
+`PASS_E0_LIMITED_JSON_IO_BOUNDARY`. The two positive cases passed, the
+forged-score response scored 0/1, the synthetic canary was unreadable, and no
+managed containers remained. This records a software boundary check only. It
+does not show an agent solving an engineering task.
+See [the run report](trusted-scoring-boundary-v1-report.md) and its locked
+[protocol](../protocols/trusted_scoring_boundary_v1.lock.json).
+
 ## Test contract
 
 ```bash

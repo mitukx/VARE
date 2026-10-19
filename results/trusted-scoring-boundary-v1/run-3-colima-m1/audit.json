@@ -1,0 +1,14 @@
+{
+  "checks": {
+    "candidate_containers_cleaned": true,
+    "candidate_mount_only_readonly_workspace": true,
+    "forged_score_control_rejected": true,
+    "known_good_control_passes": true,
+    "manifest_ok": true,
+    "synthetic_grader_canary_unreadable": true
+  },
+  "claim_limit": "This synthetic test supports only the bounded JSON-I/O mode and does not prove a general repository grader or sandbox security certification.",
+  "live_untrusted_repository_tests_eligible": false,
+  "overall": "PASS_E0_LIMITED_JSON_IO_BOUNDARY",
+  "protocol_id": "trusted-scoring-boundary-v1"
+}

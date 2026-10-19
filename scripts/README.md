@@ -25,6 +25,7 @@ Run commands from the repository root. Choose a fresh output directory for compa
 | Can retained scheduler/recovery records be reconstructed? | `python scripts/audit_scheduler.py results/cpu-scheduler-v1`; `python scripts/audit_recovery.py results/cpu-recovery-v1` |
 | Which historical grader can run on this platform? | [Reviewer guide](../docs/reviewer-guide.md), [CLI](../docs/execution.md); urllib3 calibration requires macOS |
 | Which model study may run next? | [Current gaps](../docs/current-gaps.md), [experiment index](../docs/experiments.md), [agent charter](../AGENTS.md); existing consumed cohorts are not new confirmation data |
+| Does the narrow JSON-I/O scorer keep its synthetic oracle outside the candidate container? | `python scripts/verify_trusted_scoring_boundary_v1.py --output results/trusted-scoring-boundary-v1/run-N`; then `python scripts/audit_trusted_scoring_boundary_v1.py results/trusted-scoring-boundary-v1/run-N` / [scope and limitations](../docs/sandboxed-repository-evaluation.md#limited-trusted-json-io-scoring-boundary). This does not qualify repository test execution. |
 
 For the mathematical checker tests, install `requirements/math500-grader-test.lock.txt` and run their two test files separately. GPU notebooks, model-download scripts, and historical exploratory runs are not part of the default quick start. The optional runtime/trainer locks in `requirements/` document their own setup.
 

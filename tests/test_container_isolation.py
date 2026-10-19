@@ -85,6 +85,25 @@ def test_agent_only_mounts_its_workspace_with_no_network_or_privileges(tmp_path)
         )
 
 
+def test_candidate_json_io_mounts_only_readonly_workspace_and_is_interactive(tmp_path):
+    root = tmp_path / "workspaces"
+    ws = root / "trial"
+    ws.mkdir(parents=True)
+    grader = tmp_path / "private-grader"
+    grader.mkdir()
+    argv = DockerIsolationRunner().candidate_argv(
+        IsolationLimits(IMAGE), name="vare-agent-" + "a" * 24,
+        allowed_workspace_root=root, workspace=ws,
+        command=("python", "/workspace/solve.py"),
+        readonly_workspace=True, interactive=True,
+    )
+    mounts = [argv[i + 1] for i, flag in enumerate(argv[:-1]) if flag == "--mount"]
+    assert mounts == [f"type=bind,source={ws},target=/workspace,readonly"]
+    assert "--interactive" in argv
+    assert "/grader" not in " ".join(argv)
+    assert str(grader) not in " ".join(argv)
+
+
 def test_evaluator_only_sees_read_only_trusted_inputs(tmp_path):
     root = tmp_path / "checkpoints"
     root.mkdir()
@@ -199,6 +218,7 @@ def _fake_docker(tmp_path: Path, behavior: str) -> tuple[str, Path]:
     run_script = (
         "    time.sleep(10)\n" if behavior == "timeout" else
         "    print('x'*20000)\n" if behavior == "overflow" else
+        "    print(sys.stdin.buffer.readline().decode().rstrip('\\n'))\n" if behavior == "stdin" else
         "    print('ok')\n"
     )
     script = (
@@ -276,6 +296,35 @@ def test_supervisor_retries_docker_auto_remove_race(tmp_path):
     ))
     assert result.stdout.strip() == "ok"
     assert audit.read_text(encoding="utf-8") == "2"
+
+
+def test_candidate_json_io_delivers_bounded_stdin_and_cleans_up(tmp_path):
+    binary, audit = _fake_docker(tmp_path, "stdin")
+    root = tmp_path / "workspaces"
+    work = root / "trial"
+    work.mkdir(parents=True)
+    runner = DockerIsolationRunner(docker_binary=binary)
+    result = asyncio.run(runner.run_candidate_io(
+        IsolationLimits(IMAGE),
+        allowed_workspace_root=root,
+        workspace=work,
+        command=("python", "/workspace/solve.py"),
+        stdin_data=b'{"request":2}\n',
+    ))
+    assert result.stdout.strip() == '{"request":2}'
+    assert audit.read_text(encoding="utf-8") == "removed"
+
+
+def test_candidate_json_io_rejects_oversized_or_noninteractive_input(tmp_path):
+    binary, _ = _fake_docker(tmp_path, "stdin")
+    runner = DockerIsolationRunner(docker_binary=binary)
+    limits = IsolationLimits(IMAGE)
+    name = "vare-agent-" + "a" * 24
+    with pytest.raises(IsolationError, match="bounded bytes"):
+        asyncio.run(runner.execute(
+            ["docker", "run", "--name", name, "image"], limits,
+            stdin_data=b"x" * 64_001,
+        ))
 
 
 def test_isolated_hooks_never_call_learner_for_promotion_evidence(tmp_path):
