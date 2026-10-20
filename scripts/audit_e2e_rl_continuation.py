@@ -81,6 +81,7 @@ RUNTIME_PACKAGE_SOURCES = frozenset({
     "src/vare/meta_improvement.py",
     "src/vare/mlsys_coding_actions.py",
     "src/vare/mlsys_coding_comparison.py",
+    "src/vare/mlsys_repo_task.py",
     "src/vare/promotion.py",
     "src/vare/promotion_journal.py",
     "src/vare/protocol.py",
