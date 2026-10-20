@@ -23,7 +23,7 @@ The collector's hashes establish byte consistency within the declared trust assu
 
 ## Current evidence status
 
-The latest [workspace-bound v2 report](verified_coding_agent_baseline_v2.md) is **E0 deterministic integration evidence**. It retains regression controls for missing workspaces, altered source, forged hash fields, staged/untracked paths, symlinks, wrong HEAD, undeclared tools, and valid negative grades. The v2 protocol is premeasurement and does not retroactively change v1 records.
+The latest [workspace-bound v2 report](verified_coding_agent_baseline_v2.md) is **E0 deterministic integration evidence**. It retains regression controls for missing workspaces, altered source, forged hash fields, staged/untracked paths, symlinks, wrong HEAD, undeclared tools, and valid negative grades. The v2 protocol is premeasurement and does not retroactively change v1 records. A later live CPU run of Qwen2.5-Coder-14B-Instruct on the MLSys pack is recorded separately in [mlsys-coding-agent-e2e-v1-report.md](mlsys-coding-agent-e2e-v1-report.md): 2 of 5 consumed development tasks and 1 of 4 untouched held-out tasks passed. That count is not a success rate and does not replace the v2 controls.
 
 No fresh live coding-agent execution, newly calibrated real-repository task cohort, independently graded task-success measurement, or agent-training outcome is reported by this implementation. A task integration or a passing synthetic regression harness is not evidence of model capability. The earlier [environment-factory overview](environment_factory.md) and [v1 report](verified_coding_agent_baseline_v1.md) retain their original scope and history.
 

@@ -1,0 +1,60 @@
+{
+  "code_sha256": "1b920078727bac4641eb8bf4dbe1b9ab29e4f37cdf36898e8e6aa4b29f621cea",
+  "git_rev": "fb7fc40b487e083e41a82c703b0e308bb4d7b338",
+  "memory": {
+    "MemAvailable": 6203621376,
+    "SwapFree": 24862822400,
+    "SwapTotal": 25769799680,
+    "VmHWM": 15438798848,
+    "VmRSS": 15344877568,
+    "VmSwap": 35160064
+  },
+  "model_repository": "Qwen/Qwen2.5-Coder-14B-Instruct-GGUF",
+  "model_revision": "d0a692ef765eefbf2fabb130b3cb2e8917e3d225",
+  "model_sha256": "c1e659736d89ac1065fb495330fb824d94001974a4bfa78e7270e43476a8d940",
+  "protocol_id": "mlsys-coding-agent-e2e-heldout-v1",
+  "tasks": [
+    {
+      "baseline_stdev_s": null,
+      "candidate_stdev_s": null,
+      "conservative_speedup": null,
+      "reason": "correctness",
+      "reward": 0.0,
+      "success": false,
+      "task_id": "mlsys-v1-aging-scheduler",
+      "verified_task_success": false
+    },
+    {
+      "baseline_stdev_s": null,
+      "candidate_stdev_s": null,
+      "conservative_speedup": null,
+      "reason": "correctness",
+      "reward": 1.0,
+      "success": true,
+      "task_id": "mlsys-v1-causal-attention",
+      "verified_task_success": true
+    },
+    {
+      "baseline_stdev_s": null,
+      "candidate_stdev_s": null,
+      "conservative_speedup": null,
+      "reason": "correctness",
+      "reward": 0.0,
+      "success": false,
+      "task_id": "mlsys-v1-dataset-standardize",
+      "verified_task_success": false
+    },
+    {
+      "baseline_stdev_s": null,
+      "candidate_stdev_s": null,
+      "conservative_speedup": null,
+      "reason": "correctness",
+      "reward": 0.0,
+      "success": false,
+      "task_id": "mlsys-v1-global-grad-clip",
+      "verified_task_success": false
+    }
+  ],
+  "tasks_completed": 4,
+  "verified_passes": 1
+}

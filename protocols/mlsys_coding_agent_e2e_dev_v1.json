@@ -1,0 +1,50 @@
+{
+  "protocol_id": "mlsys-coding-agent-e2e-dev-v1",
+  "kind": "development",
+  "status": "frozen_before_measurement",
+  "claim_boundary": "Development split only. These five tasks were already attempted under the broken 0.5B harness. A pass is feasibility of this harness and model on that consumed split, not held-out generalization. Temperature 0 and top_k 1 make another seed the same trajectory, so this protocol does not repeat seeds. A 30-task cohort, a 4B comparison, MLX weights, and extra fault injections are not part of this protocol.",
+  "pack": {
+    "root": "benchmarks/mlsys_coding_v1",
+    "manifest_sha256": "18c5999f823f9a550a561a913023b87f1fc7bf5a86f481d319e4778212d97499",
+    "split": "train"
+  },
+  "tasks": [
+    "mlsys-v1-grad-accum-tail",
+    "mlsys-v1-paired-shuffle-loader",
+    "mlsys-v1-range-sums",
+    "mlsys-v1-row-log-softmax",
+    "mlsys-v1-warmup-cosine"
+  ],
+  "model": {
+    "repository": "Qwen/Qwen2.5-Coder-14B-Instruct-GGUF",
+    "revision": "d0a692ef765eefbf2fabb130b3cb2e8917e3d225",
+    "filename": "qwen2.5-coder-14b-instruct-q4_k_m.gguf",
+    "quantization": "Q4_K_M",
+    "license": "Apache-2.0",
+    "sha256": "c1e659736d89ac1065fb495330fb824d94001974a4bfa78e7270e43476a8d940",
+    "bytes": 8988110272,
+    "runner": "llama-cpp-python==0.3.16",
+    "device": "cpu",
+    "n_ctx": 4096,
+    "n_threads": 4,
+    "n_batch": 128,
+    "n_gpu_layers": 0,
+    "temperature": 0.0,
+    "top_k": 1,
+    "close_think": false,
+    "selection_rule": "Use this 14B Q4_K_M snapshot. A 32B Q4_K_M file is 19851335872 bytes. On this host a 12 GiB resident allocation fit and a 14 GiB allocation spilled about 2 GiB into the 24 GiB swap file, so 32B weights would be re-read from disk on each token. 14B Q4_K_M is the largest Apache-2.0 coder GGUF whose weights fit in that resident set. Do not switch models after a development task has been generated."
+  },
+  "seed": 101,
+  "arm": "vare",
+  "budgets": {
+    "max_turns": 12,
+    "max_new_tokens_per_turn": 256,
+    "max_total_new_tokens": 3072,
+    "max_no_tool_retries": 2,
+    "wall_seconds_per_task": 2400,
+    "wall_seconds_reason": "A non-pack probe on this host produced 35 tokens in 15.7 seconds after the model was resident, about 2.2 tokens/s. Twelve turns at the 256-token cap can exceed 1200 seconds."
+  },
+  "success": "reward.decide success is true, the diff is non-empty, and the transcript contains an applied replace_text, write_file, or apply_patch.",
+  "heldout": "not authorized by this protocol",
+  "fault_injection": "not part of this protocol"
+}

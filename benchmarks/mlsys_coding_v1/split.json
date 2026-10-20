@@ -1,0 +1,17 @@
+{
+  "heldout": [
+    "mlsys-v1-aging-scheduler",
+    "mlsys-v1-causal-attention",
+    "mlsys-v1-dataset-standardize",
+    "mlsys-v1-global-grad-clip"
+  ],
+  "pack_id": "mlsys-coding-v1",
+  "rule": "Hand partition fixed before any policy rollout. Each held-out task is a different defect from every train task, not a resized copy of a train task. Do not move a task after observing an agent or update result.",
+  "train": [
+    "mlsys-v1-grad-accum-tail",
+    "mlsys-v1-paired-shuffle-loader",
+    "mlsys-v1-range-sums",
+    "mlsys-v1-row-log-softmax",
+    "mlsys-v1-warmup-cosine"
+  ]
+}
