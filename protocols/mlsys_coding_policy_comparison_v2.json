@@ -1,0 +1,223 @@
+{
+  "action_formats": {
+    "accepted": ["json_tool_call", "fenced_file", "unified_diff"],
+    "fenced_file": "One fenced code block containing the whole replacement file.",
+    "format_failure": "Any sample that is none of the three accepted formats. Counted by format_failure_rate and not folded into the correctness reward.",
+    "json_tool_call": "A <tool_call>{...}</tool_call> object, as in scripts/run_local_agent.py, or one JSON object whose name is apply_patch.",
+    "unified_diff": "A unified diff, fenced or bare, with a diff --git line or ---, +++, and @@ headers."
+  },
+  "authorization": {
+    "required_clearance_file": "protocols/mlsys_coding_isolation_clearance_v1.json",
+    "required_clearance_fields": {
+      "hidden_tests_unreadable_from_candidate_namespace": true,
+      "pack_manifest_sha256": "6c029dfc30895ddaeea39ddf14d79390b750894a6914658ea8d9ef8768f348af"
+    },
+    "status": "not_authorized"
+  },
+  "base_pack": {
+    "manifest_sha256": "6c029dfc30895ddaeea39ddf14d79390b750894a6914658ea8d9ef8768f348af",
+    "pack_id": "mlsys-coding-v1",
+    "previous_manifest_sha256": "18c5999f823f9a550a561a913023b87f1fc7bf5a86f481d319e4778212d97499",
+    "previous_manifest_pin": "PR #85 scripts/run_separated_coding_eval.py pinned the previous hash at commit c8c0488980425e6d316abc21dfc136f16c7e265b. The v1 decision rule, seeds, reward constants, and split membership are unchanged. The hash changed because task metadata now carries task_type and the graders call the harness adapter. #85 will not match this pack until that pin is updated."
+  },
+  "budgets": {
+    "evaluation_identical_across_arms": {
+      "decoding": {
+        "max_new_tokens_per_turn": 256,
+        "max_total_new_tokens": 2048,
+        "max_turns": 8,
+        "temperature": 1.0
+      },
+      "device": "CPU only",
+      "heldout_membership_frozen": false,
+      "max_peak_rss_bytes": 8589934592,
+      "max_wall_seconds_per_attempt": 600,
+      "network": "disabled",
+      "no_update_samples_per_task": 32,
+      "paid_api": false,
+      "samples_per_task_per_training_seed": 32,
+      "seeds": [101, 211, 307],
+      "split": "heldout_not_yet_frozen",
+      "target_heldout_tasks": "15-20, chosen only after the 20-30 task expansion"
+    },
+    "training_gate_generation": {
+      "must_pass_before_heldout_test": true,
+      "samples_per_train_task": 8,
+      "split": "train",
+      "temperature": 1.0
+    },
+    "training_matched_between_sft_and_grpo": {
+      "gradient_updates": 20,
+      "max_peak_rss_bytes": 8589934592,
+      "max_train_tokens": 20000,
+      "max_wall_seconds": 7200,
+      "split": "train"
+    }
+  },
+  "changes_from_v1": [
+    "mlsys-v1-causal-attention is excluded from any future held-out set. It and train row_log_softmax are the same stable-softmax repair, and the prompts both call out large finite values. The v1 split file is unchanged. The three utilities under benchmarks/mlsys_coding_v2 are unassigned pool candidates. They are not a held-out set.",
+    "Held-out membership is not frozen. The target is 15-20 tasks drawn from a 20-30 task pool (step 3). The current v1 held-out pool has 4 tasks. Membership will be frozen by hash before any training.",
+    "The primary test is a task-level one-sided paired t-test at alpha 0.05 for GRPO versus no-update and for SFT versus no-update, with a Holm correction across those two contrasts. A task-clustered bootstrap confidence interval is secondary and is not an acceptance gate. v1 required every seed difference to be positive.",
+    "The training screen is pass@8 at temperature 1 on the train split, and it comes before the held-out test. The power model is invalid near 0% success. format_failure_rate is a separate metric.",
+    "Accepted model actions are a JSON tool call, a fenced whole file, or a unified diff."
+  ],
+  "claim_boundary": "Draft for review. It does not authorize a model run, it does not edit the v1 decision rule, held-out membership is not frozen, and held-out evaluation was not run.",
+  "cost_sketch": {
+    "eval_generation_seconds_formula": "attempts * 2048 / 12.29",
+    "eval_generation_seconds_no_update_at_20_tasks_k_32": 106649.3083807974,
+    "eval_generation_seconds_trained_arm_at_15_tasks": 239960.94385679415,
+    "eval_generation_seconds_trained_arm_at_20_tasks": 319947.9251423922,
+    "eval_wall_cap_seconds_trained_arm_at_20_tasks": 1152000,
+    "no_update_attempts_at_20_tasks": 640,
+    "note": "The 12.29 tokens/s figure is the retained CPU code-repair feasibility rate on a different task that scored 0/32. It is not a measurement of this pack. Trained-arm attempts are tasks times 3 seeds times k=32. No-update attempts are tasks times k=32 once, matching the power script. These sketches describe the unfrozen target. They were not run. In the power table, raising k from 8 to 32 moves the single-test minimum detectable effect more than adding the next block of tasks (10 tasks at k=32 is 8.5 points; 20 tasks at k=8 is 12 points). The retained OpenBookQA 0.5B CPU training peak was 11924.6 MiB, above the 8 GiB cap.",
+    "train_gate_generation_seconds_at_40_samples": 6665.581773799838,
+    "train_generation_seconds_at_20000_tokens": 1627.339300244101,
+    "train_wall_cap_seconds": 7200,
+    "trained_arm_attempts_at_20_tasks": 1920
+  },
+  "draft_pack": {
+    "manifest_sha256": "9d00b2bdac637c7259939dfedc32c8a19cad88a5cb5fd2609e44a0831ee55fc0",
+    "pack_id": "mlsys-coding-v2",
+    "path": "benchmarks/mlsys_coding_v2"
+  },
+  "harness_interface": {
+    "fallback": "benchmarks/mlsys_coding_v1/candidate_call.py is a temporary shim. Grades record harness_id temporary_shim_candidate_call, replaced_by the symbol below, and nonce_enforced false.",
+    "proposed_symbol": "vare.separated_candidate_harness.grade_function",
+    "request_fields": [
+      "entrypoint module:function",
+      "input_generator returning fresh (args, kwargs) on every call",
+      "reference implementation owned by the parent",
+      "checker owned by the parent",
+      "task_type, which must equal metadata.task_type in the trusted task.json"
+    ],
+    "source": "PR #85's description, as checked for this draft, does not name this function. The symbol is a proposal so the two pulls can be reconciled. The adapter in benchmarks/mlsys_coding_v1/harness_adapter.py is the caller."
+  },
+  "heldout_evaluation_run": false,
+  "metrics": {
+    "acceptance": "For each pre-specified primary contrast, form the per-task difference of mean protocol success and run a one-sided paired t-test. Apply Holm step-down across the two contrasts at family-wise alpha 0.05. A contrast is accepted only when Holm rejects its p-value. The task-clustered bootstrap interval is reported and does not accept or reject.",
+    "alpha": 0.05,
+    "alpha_sidedness": "one-sided",
+    "holm": "Two contrasts. Order the one-sided p-values. The smaller must be at most 0.025. The larger is tested at 0.05 only if the smaller was rejected.",
+    "per_task_statistic": "No-update success rate from k samples on that task, minus the mean of the per-seed trained success rates. Each training seed contributes k samples. Success is the frozen 0/1 gate, not the shaped reward. k is 32 in the design target.",
+    "primary_contrasts": [
+      "grpo minus no_update",
+      "sft minus no_update"
+    ],
+    "primary_statistic": "One-sided paired t-test on the per-task mean differences. GRPO is the RL arm.",
+    "secondary": [
+      "task-clustered bootstrap percentile interval for the mean per-task difference, report only",
+      "sft minus grpo, descriptive only",
+      "mean shaped protocol reward on the held-out tasks",
+      "format_failure_rate on the train screen and on the held-out attempts"
+    ]
+  },
+  "power": {
+    "analysis_assumption": "Task logits are normal with mean -0.85 and scale 1.5, so the simulated held-out mean success is about 35%. Each training seed adds a shared logit effect plus N(0, 0.3^2) jitter. Rates are binomial proportions. This is not a measured agent success rate. The model is invalid near 0% success because of a floor effect.",
+    "baseline_mean_success": "35.4%",
+    "floor_effect": "The percentage-point minimum detectable effects are computed around a 35% mean. They do not apply when success is near 0. That is why the pass@8 train gate has to pass before this held-out test is interpretable.",
+    "generator": "benchmarks/mlsys_coding_v2/power.py",
+    "holm_adjusted_mde": "not recomputed. The table is one one-sided test at alpha 0.05. Holm across the two primary contrasts is more conservative: the smaller p-value must be at most 0.025.",
+    "minimum_detectable_effect_at_80_percent_power": [
+      {"heldout_tasks": 10, "k": 8, "mde_logit": 0.9, "mde_percentage_points": 15.5, "seeds": 3, "type_i": 0.051},
+      {"heldout_tasks": 10, "k": 32, "mde_logit": 0.5, "mde_percentage_points": 8.5, "seeds": 3, "type_i": 0.058},
+      {"heldout_tasks": 15, "k": 8, "mde_logit": 0.7, "mde_percentage_points": 12.0, "seeds": 3, "type_i": 0.049},
+      {"heldout_tasks": 15, "k": 32, "mde_logit": 0.5, "mde_percentage_points": 8.5, "seeds": 3, "type_i": 0.051},
+      {"heldout_tasks": 20, "k": 8, "mde_logit": 0.7, "mde_percentage_points": 12.0, "seeds": 3, "type_i": 0.057},
+      {"heldout_tasks": 20, "k": 32, "mde_logit": 0.4, "mde_percentage_points": 6.8, "seeds": 3, "type_i": 0.051},
+      {"heldout_tasks": 30, "k": 8, "mde_logit": 0.5, "mde_percentage_points": 8.5, "seeds": 3, "type_i": 0.054},
+      {"heldout_tasks": 30, "k": 32, "mde_logit": 0.4, "mde_percentage_points": 6.8, "seeds": 3, "type_i": 0.041}
+    ],
+    "parameters": {
+      "alpha": 0.05,
+      "critical_values_by_df": {"9": 1.833, "14": 1.761, "19": 1.729, "29": 1.699},
+      "k_definition": "Binomial draws per task for the no-update rate, and binomial draws per task per training seed for the trained rate. The tested trained rate averages the seed rates. k is not a total across seeds.",
+      "logit_grid": "0.0, 0.1, ..., 2.0",
+      "mu": -0.85,
+      "percentage_point_draws": 200000,
+      "rng": "numpy Generator seed 0, consumed in script order",
+      "sd_seed": 0.3,
+      "search_reps": 1000,
+      "seeds": 3,
+      "tau": 1.5,
+      "test": "one-sided paired t on per-task differences",
+      "type_i_reps": 2000,
+      "type_i_sd_seed": 0.0
+    },
+    "recommendation": "After the pool reaches 20-30 tasks, freeze 15-20 held-out tasks and use k=32 with 3 training seeds. The single-test target minimum detectable effect is about 8 percentage points (15 tasks at k=32 is 8.5; 20 tasks at k=32 is 6.8). Raising k moves that effect more than adding tasks.",
+    "retired_task_cluster_screen": {
+      "note": "An earlier draft treated a task-cluster bootstrap percentile as the only acceptance clause, with 6 tasks and 8 seeds. That clause is not the decision rule. The numbers are kept so the screen is not dropped.",
+      "minimum_detectable_absolute_lift_at_baseline_0_05": 0.19,
+      "power_at_that_lift": 0.80175,
+      "minimum_detectable_absolute_lift_at_baseline_0_5": 0.26,
+      "power_at_baseline_0_5": 0.805
+    },
+    "script": "benchmarks/mlsys_coding_v2/power.py",
+    "v1_at_baseline_0_5": {
+      "absolute_lift_for_power_0_80": 0.491,
+      "baseline_success_probability": 0.5,
+      "definition": "Exact P(Bin(4, arm) > Bin(4, 0.5))^3. The v1 acceptance rule is that all three seed differences are strictly positive. Under that rule the seed-bootstrap 2.5 percentile is positive whenever the rule accepts, so the bootstrap adds no rejection. This is an analysis assumption, not a measured agent rate.",
+      "power_at_0.490": 0.7976967053858953,
+      "power_at_0.491": 0.8003159964602649,
+      "seeds": 3,
+      "tasks": 4
+    },
+    "v1_detects_realistic_effect": false,
+    "v1_exact": {
+      "greedy_temperature_0_power_at_realistic_effect": 0.6798049781249997,
+      "greedy_temperature_0_type_i_at_p_0.05": 0.15349620175781248,
+      "greedy_temperature_0_type_i_at_p_0.30": 0.34857164999999984,
+      "independent_seed_power_at_0.00_to_0.25": 0.31944364309310913,
+      "independent_seed_power_at_0.00_to_0.50": 0.823974609375,
+      "independent_seed_power_at_0.05_to_0.15": 0.06805276771349801,
+      "independent_seed_power_at_realistic_effect": 0.314161543235987,
+      "independent_seed_type_i_at_p_0.05": 0.0036165368962474656,
+      "independent_seed_type_i_at_p_0.30": 0.042352220653812146
+    }
+  },
+  "protocol_id": "mlsys-coding-policy-comparison-v2",
+  "reason": "v1 stays in place and is not re-run. Held-out causal_attention and train row_log_softmax are the same stable-softmax repair; the train prompt says large positive and large negative rows, and the held-out prompt says finite behavior on large scores. With 4 held-out tasks, 3 seeds, and the rule that every seed improves, exact power at a baseline pass probability of 0.5 reaches 0.80 only at an absolute lift of 0.491. Under temperature 0 those three seeds are one greedy draw: the independent-seed reading has power 0.314 on a +0.25 lift from 0.05, and the greedy reading has power 0.680. The draft decision rule is a task-level paired t-test with Holm across GRPO versus no-update and SFT versus no-update. A task-clustered bootstrap interval is secondary. The power script puts the single-test 80% minimum detectable effect near 8 percentage points for 15-20 tasks at 32 samples, around a 35% mean success rate. That calculation does not apply near 0% success, so the pass@8 train gate comes first. The current held-out pool has 4 tasks, so the 15-20 task set waits on the 20-30 task expansion and is not frozen here.",
+  "review_state": "draft_for_review",
+  "runner": {
+    "implemented": false,
+    "note": "Draft only. scripts/run_mlsys_coding_policy_comparison_v1.py still refuses an authorized comparison. The synthetic train-split dry-run is not a v2 evaluation and does not open held-out tasks."
+  },
+  "split": {
+    "current_v1_heldout_pool_size": 4,
+    "depends_on": "20-30 task expansion (step 3). Select 15-20 held-out tasks from that pool. Do not treat the three draft utilities as the held-out set.",
+    "excluded_from_future_heldout": [
+      "mlsys-v1-causal-attention"
+    ],
+    "heldout": null,
+    "heldout_manifest_sha256": null,
+    "heldout_membership_frozen": false,
+    "heldout_will_be_frozen_by_hash_before_training": true,
+    "path": "benchmarks/mlsys_coding_v2/split.json",
+    "pool_candidates_unassigned": [
+      "mlsys-v1-aging-scheduler",
+      "mlsys-v1-dataset-standardize",
+      "mlsys-v1-global-grad-clip",
+      "mlsys-v2-ema-bias",
+      "mlsys-v2-gqa-repeat",
+      "mlsys-v2-label-smooth"
+    ],
+    "train": [
+      "mlsys-v1-grad-accum-tail",
+      "mlsys-v1-paired-shuffle-loader",
+      "mlsys-v1-range-sums",
+      "mlsys-v1-row-log-softmax",
+      "mlsys-v1-warmup-cosine"
+    ]
+  },
+  "status": "draft",
+  "v1_kept_intact": "benchmarks/mlsys_coding_v1/split.json still lists mlsys-v1-causal-attention as held-out. v1's acceptance rule is not edited. The v1 manifest hash changed only because the graders now take parent clocks and fresh inputs per timing draw, and metadata.task_type was added.",
+  "training_gate": {
+    "context": "Qwen2.5-0.5B-Instruct was reported at 0/5 greedy on the five train tasks because every attempt failed the tool-call format. This draft records that report as the reason to change the screen. It does not re-run the screen and it is not a new measurement.",
+    "format_failure_rate": "Fraction of samples that classify as format_failure. Recorded on its own. A format failure is not a correct sample.",
+    "open_review_point": "The gate requires at least two train tasks with a correct sample and, separately, nonzero reward variance inside at least one group of eight. Eight correct samples on a task have variance 0, so a saturated group does not by itself open the gate. A reviewer may want a hit alone to count.",
+    "prerequisite_for_heldout_power": "The paired-t power model is invalid near 0% success. The pass@8 gate has to pass before a held-out comparison under that model is interpretable.",
+    "rule": "pass@8 at temperature 1: at least 2 of 5 train tasks have at least one correct sample, and at least one group of 8 has nonzero within-group reward variance.",
+    "samples_per_task": 8,
+    "split": "train",
+    "temperature": 1.0
+  }
+}

@@ -1,4 +1,5 @@
 """Reference implementation used only by harness calibration."""
+
 from __future__ import annotations
 
 import math
@@ -9,7 +10,11 @@ def _validate(scores):
         raise ValueError("scores must be a non-empty square matrix")
     for row in scores:
         for value in row:
-            if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value):
+            if (
+                not isinstance(value, (int, float))
+                or isinstance(value, bool)
+                or not math.isfinite(value)
+            ):
                 raise ValueError("scores must be finite")
 
 

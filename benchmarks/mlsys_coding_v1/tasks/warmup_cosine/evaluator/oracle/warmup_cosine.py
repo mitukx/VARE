@@ -1,4 +1,5 @@
 """Reference implementation used only by harness calibration."""
+
 from __future__ import annotations
 
 import math
@@ -12,10 +13,14 @@ def _validate(step, total_steps, warmup_steps, base_lr, min_lr):
     if type(step) is not int or not 0 <= step < total_steps:
         raise ValueError("step out of range")
     if (
-        isinstance(base_lr, bool) or isinstance(min_lr, bool)
-        or not isinstance(base_lr, (int, float)) or not isinstance(min_lr, (int, float))
-        or not math.isfinite(base_lr) or not math.isfinite(min_lr)
-        or min_lr < 0 or base_lr < min_lr
+        isinstance(base_lr, bool)
+        or isinstance(min_lr, bool)
+        or not isinstance(base_lr, (int, float))
+        or not isinstance(min_lr, (int, float))
+        or not math.isfinite(base_lr)
+        or not math.isfinite(min_lr)
+        or min_lr < 0
+        or base_lr < min_lr
     ):
         raise ValueError("learning rates must be finite and ordered")
 

@@ -1,4 +1,5 @@
 """Smoke check. This file is not the grader."""
+
 from range_sums import range_sums
 
 

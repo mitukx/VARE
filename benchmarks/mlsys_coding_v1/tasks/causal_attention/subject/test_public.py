@@ -1,4 +1,5 @@
 """Smoke check. This file is not the grader."""
+
 from causal_attention import causal_attention_weights
 
 

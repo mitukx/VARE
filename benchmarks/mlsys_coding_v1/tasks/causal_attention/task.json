@@ -20,7 +20,8 @@
     "historical_upstream_commit": false,
     "pack": "mlsys-coding-v1",
     "reward_kind": "hidden-correctness",
-    "split": "heldout"
+    "split": "heldout",
+    "task_type": "correctness"
   },
   "metrics": [],
   "prompt": "Edit causal_attention.py so causal_attention_weights matches the contract in its module docstring, including the allowed positions and finite behavior on large scores. test_public.py is a smoke check and is not the grader.",

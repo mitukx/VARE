@@ -20,7 +20,8 @@
     "historical_upstream_commit": false,
     "pack": "mlsys-coding-v1",
     "reward_kind": "hidden-correctness",
-    "split": "train"
+    "split": "train",
+    "task_type": "correctness"
   },
   "metrics": [],
   "prompt": "Edit warmup_cosine.py so learning_rate matches the contract in its module docstring at every step, including warmup boundaries and the last step. test_public.py is a smoke check and is not the grader.",

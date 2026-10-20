@@ -20,7 +20,8 @@
     "historical_upstream_commit": false,
     "pack": "mlsys-coding-v1",
     "reward_kind": "hidden-correctness",
-    "split": "train"
+    "split": "train",
+    "task_type": "correctness"
   },
   "metrics": [],
   "prompt": "Edit grad_accum.py so average_microbatch_grads matches the contract in its module docstring, including a window shorter than accumulation_steps. test_public.py is a smoke check and is not the grader.",

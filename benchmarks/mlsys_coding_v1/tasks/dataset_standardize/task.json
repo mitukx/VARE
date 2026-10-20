@@ -20,7 +20,8 @@
     "historical_upstream_commit": false,
     "pack": "mlsys-coding-v1",
     "reward_kind": "hidden-correctness-and-repeated-timing",
-    "split": "heldout"
+    "split": "heldout",
+    "task_type": "performance"
   },
   "metrics": [],
   "prompt": "Edit dataset_standardize.py so standardized_rows matches the contract in its module docstring and does not rescan the whole dataset once per row. test_public.py is a smoke check and is not the grader. Do not special-case one input list.",

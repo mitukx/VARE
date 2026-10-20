@@ -16,6 +16,7 @@ waiting job with the greatest effective priority
 ``id``. The chosen job starts at ``t`` and finishes at ``t + service``.
 Invalid jobs raise ``ValueError``.
 """
+
 from __future__ import annotations
 
 

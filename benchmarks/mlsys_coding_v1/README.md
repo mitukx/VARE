@@ -18,8 +18,13 @@ Each task directory contains:
 public repository-grader opt-in refuses any spec that is not explicitly
 `public`, so these tasks do not run through that candidate-visible path.
 
+`metadata.task_type` is `correctness` or `performance` and is read from
+`task.json`. Graders call `harness_adapter.py`. That module proposes
+`vare.separated_candidate_harness.grade_function` and, until the symbol
+exists, uses the temporary shim `candidate_call.py`.
+
 Performance tasks (`range_sums`, `dataset_standardize`) print one JSON object
-on grader stdout. The object records seven wall-clock samples for a frozen
+on grader stdout. The object records seven parent-timed samples for a frozen
 slow reference and for the candidate, plus the sample standard deviations.
 The retained stdout is part of the existing command-result schema. The
 protocol reward recomputes

@@ -13,6 +13,7 @@ the input order is preserved.
 ``batch_size`` is omitted when ``drop_last`` is true and yielded otherwise.
 Unequal input lengths or a non-positive batch size raise ``ValueError``.
 """
+
 from __future__ import annotations
 
 import random
@@ -21,7 +22,11 @@ import random
 def iter_batches(features, labels, batch_size, seed, shuffle, drop_last):
     if len(features) != len(labels):
         raise ValueError("features and labels must have the same length")
-    if not isinstance(batch_size, int) or isinstance(batch_size, bool) or batch_size <= 0:
+    if (
+        not isinstance(batch_size, int)
+        or isinstance(batch_size, bool)
+        or batch_size <= 0
+    ):
         raise ValueError("batch_size must be a positive integer")
     order = list(range(len(features)))
     if shuffle:

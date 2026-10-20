@@ -1,9 +1,19 @@
-"""Hidden causal-mask checks."""
+"""Hidden causal-mask checks.
+
+The candidate runs through the harness adapter. Pass or fail is decided here.
+"""
+
 from __future__ import annotations
 
 import math
 import sys
 from pathlib import Path
+
+_PACK = Path(__file__).resolve().parents[3]
+if str(_PACK) not in sys.path:
+    sys.path.insert(0, str(_PACK))
+
+from harness_adapter import HarnessRequest, run_harness
 
 
 def _softmax(values):
@@ -13,7 +23,9 @@ def _softmax(values):
     return [value / normalizer for value in exponentials]
 
 
-def _expected(scores):
+def _reference(scores):
+    if not scores or any(len(row) != len(scores) for row in scores):
+        raise ValueError("scores must be square")
     weights = []
     for row_index, row in enumerate(scores):
         allowed = _softmax(row[: row_index + 1])
@@ -21,7 +33,18 @@ def _expected(scores):
     return weights
 
 
-def _assert_close(actual, expected):
+def _generator(index: int):
+    cases = (
+        ([[0.0]],),
+        ([[1000.0]],),
+        ([[0.0, 5.0], [0.0, 40.0]],),
+        ([[1.0, 2.0, 3.0], [0.0, 0.0, 0.0], [-2.0, 1.0, 4.0]],),
+        ([[1.0, 2.0]],),
+    )
+    return (cases[index], {})
+
+
+def _checker(actual, expected, _positional, _keywords, _args, _kwargs):
     if len(actual) != len(expected):
         raise AssertionError("shape changed")
     for actual_row, expected_row in zip(actual, expected):
@@ -35,24 +58,21 @@ def _assert_close(actual, expected):
 
 
 def main() -> None:
-    workspace = Path(sys.argv[1]).resolve()
-    sys.path.insert(0, str(workspace))
-    from causal_attention import causal_attention_weights
-
-    cases = [
-        [[0.0]],
-        [[1000.0]],
-        [[0.0, 5.0], [0.0, 40.0]],
-        [[1.0, 2.0, 3.0], [0.0, 0.0, 0.0], [-2.0, 1.0, 4.0]],
-    ]
-    for scores in cases:
-        _assert_close(causal_attention_weights(scores), _expected(scores))
-    try:
-        causal_attention_weights([[1.0, 2.0]])
-    except ValueError:
-        pass
-    else:
-        raise AssertionError("non-square scores must fail")
+    report = run_harness(
+        HarnessRequest(
+            workspace=Path(sys.argv[1]).resolve(),
+            entrypoint="causal_attention:causal_attention_weights",
+            task_type="correctness",
+            trusted_task_path=Path(__file__).resolve().parents[1] / "task.json",
+            input_generator=_generator,
+            reference=_reference,
+            checker=_checker,
+            repeats=5,
+            timeout_s=10,
+        )
+    )
+    if not report.passed:
+        raise SystemExit(report.error or "hidden checks failed")
 
 
 if __name__ == "__main__":

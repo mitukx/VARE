@@ -20,7 +20,8 @@
     "historical_upstream_commit": false,
     "pack": "mlsys-coding-v1",
     "reward_kind": "hidden-correctness",
-    "split": "train"
+    "split": "train",
+    "task_type": "correctness"
   },
   "metrics": [],
   "prompt": "Edit row_log_softmax.py so row_log_softmax matches the contract in its module docstring for every finite input, including large positive and large negative rows. test_public.py is a smoke check and is not the grader. Do not hard-code individual returned rows.",

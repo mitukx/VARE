@@ -1,20 +1,23 @@
-"""Hidden correctness plus repeated-timing grade for range sums.
+"""Parent-owned grade for range sums.
 
-The process exits 0 only when the hidden checks pass and the noise-aware
-speedup against the reference scan reaches the pre-registered threshold.
-Stdout is one JSON object. Candidate prints are discarded.
+Samples and the speedup decision come from the harness adapter. This process
+prints one JSON object. It exits 0 only when the parent-computed speedup
+reaches the threshold. The child's exit code is not that decision.
 """
+
 from __future__ import annotations
 
-import contextlib
 import json
-import os
 import random
 import sys
-import time
 from pathlib import Path
 
+_PACK = Path(__file__).resolve().parents[3]
+if str(_PACK) not in sys.path:
+    sys.path.insert(0, str(_PACK))
+
 import timing
+from harness_adapter import HarnessRequest, run_harness
 
 WORKLOAD_N = 5000
 WORKLOAD_Q = 5000
@@ -24,6 +27,12 @@ WORKLOAD_SEED = 20261019
 def _reference(values, queries):
     totals = []
     for left, right in queries:
+        if (
+            type(left) is not int
+            or type(right) is not int
+            or not 0 <= left <= right <= len(values)
+        ):
+            raise ValueError("query out of range")
         total = 0
         for index in range(left, right):
             total += values[index]
@@ -31,8 +40,9 @@ def _reference(values, queries):
     return totals
 
 
-def _workload():
-    generator = random.Random(WORKLOAD_SEED)
+def _workload(draw: int):
+    """New values on every draw. A cache of one input cannot cover the repeats."""
+    generator = random.Random(WORKLOAD_SEED + draw * 1_000_003)
     values = [generator.randint(-5, 5) for _ in range(WORKLOAD_N)]
     queries = []
     for _ in range(WORKLOAD_Q):
@@ -44,34 +54,21 @@ def _workload():
     return values, queries
 
 
-def _check_small(candidate) -> None:
-    values = [1, -2, 4, 8]
-    queries = [(0, 2), (2, 2), (1, 4), (0, 4)]
-    if candidate(values, queries) != [ -1, 0, 10, 11]:
-        raise AssertionError("small range sums diverged")
-    snapshot = values[:]
-    if candidate(values, queries) != _reference(values, queries) or values != snapshot:
-        raise AssertionError("result or input changed")
-    try:
-        candidate([1, 2], [(0, 3)])
-    except ValueError:
-        return
-    raise AssertionError("out-of-range query must fail")
+def _generator(index: int):
+    if index == 0:
+        values = [1, -2, 4, 8]
+        queries = [(0, 2), (2, 2), (1, 4), (0, 4)]
+        return ((values, queries), {})
+    if index == 1:
+        return (([1, 2], [(0, 3)]), {})
+    return (_workload(index), {})
 
 
-def _time_call(function, values, queries, expected, sink):
-    with contextlib.redirect_stdout(sink), contextlib.redirect_stderr(sink):
-        function(values, queries)
-    samples = []
-    for _ in range(timing.REPEATS):
-        with contextlib.redirect_stdout(sink), contextlib.redirect_stderr(sink):
-            started = time.perf_counter()
-            actual = function(values, queries)
-            elapsed = time.perf_counter() - started
-        if actual != expected:
-            raise AssertionError("timed result diverged from the reference scan")
-        samples.append(elapsed)
-    return samples
+def _checker(actual, expected, positional, _keywords, args, _kwargs):
+    if actual != expected:
+        raise AssertionError("range sums diverged")
+    if positional[0] != list(args[0]):
+        raise AssertionError("input changed")
 
 
 def main() -> int:
@@ -82,30 +79,43 @@ def main() -> int:
         "workload": {"n": WORKLOAD_N, "q": WORKLOAD_Q, "seed": WORKLOAD_SEED},
     }
     try:
-        workspace = Path(sys.argv[1]).resolve()
-        sys.path.insert(0, str(workspace))
-        from range_sums import range_sums
-
-        _check_small(range_sums)
-        values, queries = _workload()
-        expected = _reference(values, queries)
-        report["correctness_pass"] = True
-        with open(os.devnull, "w", encoding="utf-8") as sink:
-            baseline_samples = _time_call(_reference, values, queries, expected, sink)
-            candidate_samples = _time_call(range_sums, values, queries, expected, sink)
-        speedup, baseline_stats, candidate_stats = timing.conservative_speedup(
-            baseline_samples, candidate_samples,
+        outcome = run_harness(
+            HarnessRequest(
+                workspace=Path(sys.argv[1]).resolve(),
+                entrypoint="range_sums:range_sums",
+                task_type="performance",
+                trusted_task_path=Path(__file__).resolve().parents[1] / "task.json",
+                input_generator=_generator,
+                reference=_reference,
+                checker=_checker,
+                repeats=2,
+                timing_repeats=timing.REPEATS,
+                timeout_s=60,
+            )
         )
-        report.update({
-            "baseline_samples_s": baseline_samples,
-            "candidate_samples_s": candidate_samples,
-            "baseline": baseline_stats,
-            "candidate": candidate_stats,
-            "conservative_speedup": speedup,
-            "threshold": timing.THRESHOLD,
-            "improvement_pass": speedup >= timing.THRESHOLD,
-        })
-    except Exception as exc:  # noqa: BLE001 - candidate failures must still emit JSON
+        report["harness_id"] = outcome.harness_id
+        report["nonce_enforced"] = outcome.nonce_enforced
+        report["replaced_by"] = outcome.replaced_by
+        if not outcome.passed:
+            report["error"] = outcome.error or "parent checks failed"
+            print(json.dumps(report, sort_keys=True))
+            return 1
+        speedup, baseline_stats, candidate_stats = timing.conservative_speedup(
+            outcome.baseline_samples_s, outcome.candidate_samples_s
+        )
+        report.update(
+            {
+                "baseline_samples_s": outcome.baseline_samples_s,
+                "candidate_samples_s": outcome.candidate_samples_s,
+                "baseline": baseline_stats,
+                "candidate": candidate_stats,
+                "conservative_speedup": speedup,
+                "correctness_pass": True,
+                "threshold": timing.THRESHOLD,
+                "improvement_pass": speedup >= timing.THRESHOLD,
+            }
+        )
+    except Exception as exc:  # noqa: BLE001 - a failed grade still emits JSON
         report["error"] = f"{type(exc).__name__}: {exc}"[:500]
         print(json.dumps(report, sort_keys=True))
         return 1

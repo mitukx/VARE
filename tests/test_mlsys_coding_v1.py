@@ -3,6 +3,7 @@
 The checks execute this repository's baseline and oracle fixtures through
 the in-process evaluator. They do not load a model or claim agent success.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -35,7 +36,9 @@ def _load(path: Path, name: str):
 
 
 reward = _load(PACK / "reward.py", "mlsys_coding_v1_reward")
-hasher = _load(ROOT / "scripts" / "hash_mlsys_coding_pack_v1.py", "hash_mlsys_coding_pack_v1")
+hasher = _load(
+    ROOT / "scripts" / "hash_mlsys_coding_pack_v1.py", "hash_mlsys_coding_pack_v1"
+)
 
 
 def _task_dirs() -> list[Path]:
@@ -54,7 +57,9 @@ def test_reward_recomputes_speedup_and_fails_closed():
         "integrity_ok": True,
         "passed": True,
         "correctness": 1.0,
-        "tests": [{"returncode": 0, "timed_out": False, "output_limited": False, "stdout": ""}],
+        "tests": [
+            {"returncode": 0, "timed_out": False, "output_limited": False, "stdout": ""}
+        ],
     }
     assert reward.decide(passed)["success"] is True
     assert reward.decide(passed)["reward"] == 1.0
@@ -62,17 +67,21 @@ def test_reward_recomputes_speedup_and_fails_closed():
     slow = dict(passed)
     slow["passed"] = False
     slow["correctness"] = 0.0
-    slow["tests"] = [{
-        "returncode": 1,
-        "timed_out": False,
-        "output_limited": False,
-        "stdout": json.dumps({
-            "measurement": reward.MEASUREMENT,
-            "correctness_pass": True,
-            "baseline_samples_s": identical,
-            "candidate_samples_s": identical,
-        }),
-    }]
+    slow["tests"] = [
+        {
+            "returncode": 1,
+            "timed_out": False,
+            "output_limited": False,
+            "stdout": json.dumps(
+                {
+                    "measurement": reward.MEASUREMENT,
+                    "correctness_pass": True,
+                    "baseline_samples_s": identical,
+                    "candidate_samples_s": identical,
+                }
+            ),
+        }
+    ]
     slow_decision = reward.decide(slow)
     assert slow_decision["success"] is False
     assert slow_decision["reason"] == "performance_below_threshold"
@@ -80,17 +89,21 @@ def test_reward_recomputes_speedup_and_fails_closed():
     assert slow_decision["baseline_stdev_s"] is not None
 
     inconsistent = dict(passed)
-    inconsistent["tests"] = [{
-        "returncode": 1,
-        "timed_out": False,
-        "output_limited": False,
-        "stdout": json.dumps({
-            "measurement": reward.MEASUREMENT,
-            "correctness_pass": True,
-            "baseline_samples_s": [0.40] * 7,
-            "candidate_samples_s": [0.05] * 7,
-        }),
-    }]
+    inconsistent["tests"] = [
+        {
+            "returncode": 1,
+            "timed_out": False,
+            "output_limited": False,
+            "stdout": json.dumps(
+                {
+                    "measurement": reward.MEASUREMENT,
+                    "correctness_pass": True,
+                    "baseline_samples_s": [0.40] * 7,
+                    "candidate_samples_s": [0.05] * 7,
+                }
+            ),
+        }
+    ]
     inconsistent["passed"] = False
     denied = reward.decide(inconsistent)
     assert denied["success"] is False
@@ -137,7 +150,10 @@ def test_pack_hash_split_and_protocol_agree():
 
 def test_policy_comparison_refuses_without_running():
     completed = subprocess.run(
-        [sys.executable, str(ROOT / "scripts" / "run_mlsys_coding_policy_comparison_v1.py")],
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "run_mlsys_coding_policy_comparison_v1.py"),
+        ],
         check=False,
         capture_output=True,
         text=True,
@@ -155,9 +171,12 @@ def test_hidden_grade_rejects_baseline_and_accepts_oracle(task_dir: Path):
     assert spec.source.local_path == "subject"
     assert spec.metadata["grader_visibility"] == "hidden"
     assert spec.metadata["pack"] == "mlsys-coding-v1"
+    assert spec.metadata["task_type"] in {"correctness", "performance"}
     assert spec.tests[0].cwd_base == "evaluator"
     assert "evaluator/" not in spec.prompt
-    performance = spec.metadata["reward_kind"] == "hidden-correctness-and-repeated-timing"
+    performance = (
+        spec.metadata["reward_kind"] == "hidden-correctness-and-repeated-timing"
+    )
     if performance:
         assert spec.tests[0].argv[1] == "grade.py"
     else:
@@ -181,9 +200,14 @@ def test_hidden_grade_rejects_baseline_and_accepts_oracle(task_dir: Path):
             if use_oracle:
                 oracle_files = list((task_dir / "evaluator" / "oracle").glob("*.py"))
                 assert len(oracle_files) == 1
-                assert oracle_files[0].read_bytes() != (workspace.path / oracle_files[0].name).read_bytes()
+                assert (
+                    oracle_files[0].read_bytes()
+                    != (workspace.path / oracle_files[0].name).read_bytes()
+                )
                 shutil.copy(oracle_files[0], workspace.path / oracle_files[0].name)
-            result = ExecutableEvaluator(spec, evaluator_root=task_dir).evaluate(workspace.path)
+            result = ExecutableEvaluator(spec, evaluator_root=task_dir).evaluate(
+                workspace.path
+            )
         decision = reward.decide(result.to_dict())
         assert decision["success"] is result.passed
         outcomes[label] = (result, decision)
@@ -194,7 +218,14 @@ def test_hidden_grade_rejects_baseline_and_accepts_oracle(task_dir: Path):
     assert baseline_decision["success"] is False
     assert oracle_result.passed is True
     assert oracle_decision["success"] is True
-    assert oracle_decision["reward"] == 1.0
+    assert oracle_decision["reward"] == pytest.approx(
+        min(
+            1.0,
+            (oracle_decision["conservative_speedup"] or 1.0) / reward.REWARD_SATURATION,
+        )
+        if performance
+        else 1.0
+    )
     if performance:
         assert baseline_decision["conservative_speedup"] < reward.SUCCESS_THRESHOLD
         assert baseline_decision["baseline_stdev_s"] is not None
@@ -204,6 +235,49 @@ def test_hidden_grade_rejects_baseline_and_accepts_oracle(task_dir: Path):
         payload = json.loads(oracle_result.tests[0].stdout)
         assert len(payload["baseline_samples_s"]) == reward.REPEATS
         assert len(payload["candidate_samples_s"]) == reward.REPEATS
+        slow = json.loads(baseline_result.tests[0].stdout)
+        assert slow["correctness_pass"] is True
+        assert slow["improvement_pass"] is False
+        assert baseline_result.tests[0].returncode != 0
     else:
         assert baseline_decision["reward"] == 0.0
         assert oracle_decision["conservative_speedup"] is None
+
+
+def test_graders_call_the_harness_adapter():
+    for path in PACK.rglob("evaluator/*.py"):
+        if path.parent.name != "evaluator":
+            continue
+        text = path.read_text(encoding="utf-8")
+        assert "CandidateSession" not in text
+        if path.name in {"grade.py", "test_hidden.py"}:
+            assert "run_harness" in text
+            assert "task_type=" in text
+    for grade in (PACK / "tasks").glob("*/evaluator/grade.py"):
+        text = grade.read_text(encoding="utf-8")
+        assert "import range_sums" not in text
+        assert "import dataset_standardize" not in text
+        assert "from range_sums" not in text
+        assert "from dataset_standardize" not in text
+
+
+@pytest.mark.parametrize("task_name", ["range_sums", "dataset_standardize"])
+def test_correct_but_not_faster_fails_the_two_x_gate(task_name: str):
+    """A correct slow implementation must not pass because the process exits 0."""
+    task_dir = TASKS / task_name
+    spec = EngineeringTaskSpec.load(task_dir / "task.json")
+    assert spec.metadata["task_type"] == "performance"
+    with Workspace(spec) as workspace:
+        result = ExecutableEvaluator(spec, evaluator_root=task_dir).evaluate(
+            workspace.path
+        )
+    decision = reward.decide(result.to_dict())
+    payload = json.loads(result.tests[0].stdout)
+    assert payload["correctness_pass"] is True
+    assert payload["improvement_pass"] is False
+    assert payload["measurement"] == reward.MEASUREMENT
+    assert result.tests[0].returncode != 0
+    assert decision["success"] is False
+    assert decision["reason"] == "performance_below_threshold"
+    assert decision["conservative_speedup"] < reward.SUCCESS_THRESHOLD
+    assert 0.0 < decision["reward"] < 0.5

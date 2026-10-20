@@ -20,7 +20,8 @@
     "historical_upstream_commit": false,
     "pack": "mlsys-coding-v1",
     "reward_kind": "hidden-correctness",
-    "split": "heldout"
+    "split": "heldout",
+    "task_type": "correctness"
   },
   "metrics": [],
   "prompt": "Edit global_grad_clip.py so clip_by_global_norm matches the contract in its module docstring. test_public.py is a smoke check and is not the grader.",

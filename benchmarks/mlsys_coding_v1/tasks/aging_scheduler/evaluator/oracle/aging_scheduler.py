@@ -1,4 +1,5 @@
 """Reference implementation used only by harness calibration."""
+
 from __future__ import annotations
 
 
@@ -34,6 +35,8 @@ def schedule(jobs):
             key=lambda job: (-(job["priority"] + (clock - job["release"])), job["id"]),
         )
         remaining.remove(chosen)
-        result.append({"id": chosen["id"], "start": clock, "finish": clock + chosen["service"]})
+        result.append(
+            {"id": chosen["id"], "start": clock, "finish": clock + chosen["service"]}
+        )
         clock += chosen["service"]
     return result

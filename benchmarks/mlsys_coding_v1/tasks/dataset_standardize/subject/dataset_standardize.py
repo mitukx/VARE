@@ -9,6 +9,7 @@ If ``var == 0``, return ``n`` zeros. Otherwise return
 The result depends on the whole list. An empty list or a non-finite
 entry raises ``ValueError``. The input is not mutated.
 """
+
 from __future__ import annotations
 
 import math
@@ -26,7 +27,11 @@ def standardized_rows(rows):
         raise ValueError("rows must be non-empty")
     values = []
     for value in rows:
-        if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value):
+        if (
+            not isinstance(value, (int, float))
+            or isinstance(value, bool)
+            or not math.isfinite(value)
+        ):
             raise ValueError("rows must be finite")
         values.append(float(value))
     standardized = []

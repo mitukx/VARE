@@ -1,16 +1,24 @@
-"""Hidden correctness plus repeated-timing grade for dataset standardization."""
+"""Parent-owned grade for dataset standardization.
+
+The slow per-row rescan is the paired timing baseline. Speedup is computed
+from parent clocks. This process exits 0 only when that speedup reaches the
+threshold.
+"""
+
 from __future__ import annotations
 
-import contextlib
 import json
 import math
-import os
 import random
 import sys
-import time
 from pathlib import Path
 
+_PACK = Path(__file__).resolve().parents[3]
+if str(_PACK) not in sys.path:
+    sys.path.insert(0, str(_PACK))
+
 import timing
+from harness_adapter import HarnessRequest, run_harness
 
 WORKLOAD_N = 2000
 WORKLOAD_SEED = 20261019
@@ -18,6 +26,8 @@ WORKLOAD_SEED = 20261019
 
 def _reference(rows):
     """Slow scan used as the paired timing baseline. One pass per row."""
+    if not rows:
+        raise ValueError("rows must be non-empty")
     count = len(rows)
 
     def mean_and_variance():
@@ -43,29 +53,22 @@ def _close(actual, expected):
             raise AssertionError("standardized values diverged")
 
 
-def _check_small(candidate) -> None:
-    _close(candidate([1.0, 2.0, 3.0]), _reference([1.0, 2.0, 3.0]))
-    if candidate([5.0, 5.0, 5.0]) != [0.0, 0.0, 0.0]:
-        raise AssertionError("zero variance must return zeros")
-    try:
-        candidate([])
-    except ValueError:
-        return
-    raise AssertionError("empty input must fail")
+def _generator(index: int):
+    if index == 0:
+        return (([1.0, 2.0, 3.0],), {})
+    if index == 1:
+        return (([5.0, 5.0, 5.0],), {})
+    if index == 2:
+        return (([],), {})
+    generator = random.Random(WORKLOAD_SEED + index * 1_000_003)
+    rows = [generator.uniform(-1.0, 1.0) for _ in range(WORKLOAD_N)]
+    return ((rows,), {})
 
 
-def _time_call(function, rows, expected, sink):
-    with contextlib.redirect_stdout(sink), contextlib.redirect_stderr(sink):
-        function(rows)
-    samples = []
-    for _ in range(timing.REPEATS):
-        with contextlib.redirect_stdout(sink), contextlib.redirect_stderr(sink):
-            started = time.perf_counter()
-            actual = function(rows)
-            elapsed = time.perf_counter() - started
-        _close(actual, expected)
-        samples.append(elapsed)
-    return samples
+def _checker(actual, expected, positional, _keywords, args, _kwargs):
+    _close(actual, expected)
+    if positional[0] != list(args[0]):
+        raise AssertionError("input changed")
 
 
 def main() -> int:
@@ -76,31 +79,43 @@ def main() -> int:
         "workload": {"n": WORKLOAD_N, "seed": WORKLOAD_SEED},
     }
     try:
-        workspace = Path(sys.argv[1]).resolve()
-        sys.path.insert(0, str(workspace))
-        from dataset_standardize import standardized_rows
-
-        _check_small(standardized_rows)
-        generator = random.Random(WORKLOAD_SEED)
-        rows = [generator.uniform(-1.0, 1.0) for _ in range(WORKLOAD_N)]
-        expected = _reference(rows)
-        report["correctness_pass"] = True
-        with open(os.devnull, "w", encoding="utf-8") as sink:
-            baseline_samples = _time_call(_reference, rows, expected, sink)
-            candidate_samples = _time_call(standardized_rows, rows, expected, sink)
-        speedup, baseline_stats, candidate_stats = timing.conservative_speedup(
-            baseline_samples, candidate_samples,
+        outcome = run_harness(
+            HarnessRequest(
+                workspace=Path(sys.argv[1]).resolve(),
+                entrypoint="dataset_standardize:standardized_rows",
+                task_type="performance",
+                trusted_task_path=Path(__file__).resolve().parents[1] / "task.json",
+                input_generator=_generator,
+                reference=_reference,
+                checker=_checker,
+                repeats=3,
+                timing_repeats=timing.REPEATS,
+                timeout_s=60,
+            )
         )
-        report.update({
-            "baseline_samples_s": baseline_samples,
-            "candidate_samples_s": candidate_samples,
-            "baseline": baseline_stats,
-            "candidate": candidate_stats,
-            "conservative_speedup": speedup,
-            "threshold": timing.THRESHOLD,
-            "improvement_pass": speedup >= timing.THRESHOLD,
-        })
-    except Exception as exc:  # noqa: BLE001 - candidate failures must still emit JSON
+        report["harness_id"] = outcome.harness_id
+        report["nonce_enforced"] = outcome.nonce_enforced
+        report["replaced_by"] = outcome.replaced_by
+        if not outcome.passed:
+            report["error"] = outcome.error or "parent checks failed"
+            print(json.dumps(report, sort_keys=True))
+            return 1
+        speedup, baseline_stats, candidate_stats = timing.conservative_speedup(
+            outcome.baseline_samples_s, outcome.candidate_samples_s
+        )
+        report.update(
+            {
+                "baseline_samples_s": outcome.baseline_samples_s,
+                "candidate_samples_s": outcome.candidate_samples_s,
+                "baseline": baseline_stats,
+                "candidate": candidate_stats,
+                "conservative_speedup": speedup,
+                "correctness_pass": True,
+                "threshold": timing.THRESHOLD,
+                "improvement_pass": speedup >= timing.THRESHOLD,
+            }
+        )
+    except Exception as exc:  # noqa: BLE001 - a failed grade still emits JSON
         report["error"] = f"{type(exc).__name__}: {exc}"[:500]
         print(json.dumps(report, sort_keys=True))
         return 1

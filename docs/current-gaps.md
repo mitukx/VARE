@@ -1,5 +1,7 @@
 # Current evidence gaps
 
+**Update 2026-10-20 — MLSys graders call a harness adapter; comparison v2 is a draft:** the v1 graders no longer import the candidate in-process. They call `harness_adapter.py`, which proposes `vare.separated_candidate_harness.grade_function` for PR #85 and falls back to a marked temporary shim. Trusted `metadata.task_type` is `correctness` or `performance`. A correct slow range-sum and a correct slow standardizer still fail the 2× gate. A 20-trial repeat of each reference-speed implementation had 0/40 false passes (one-sided 95% upper bound 0.072). An import-time clock patch and an identity/value cache also failed the gate. The default comparison command still exits 3. Real model patches stay refused because the live canary is readable. v1's 4×3 temperature-0 rule reaches 80% power at a 0.5 baseline only around a 0.491 absolute lift. Draft v2 is not run and does not freeze held-out membership. Its primary test is a task-level paired t-test with Holm across GRPO versus no-update and SFT versus no-update. The recorded single-test target, after a 20-30 task expansion, is 15-20 held-out tasks at 32 samples, about 8 percentage points, and that model is invalid near 0% success. See the [report](mlsys-coding-tasks-v1.md).
+
 **Update 2026-10-19 — authored MLSys coding pack:** nine single-file
 utilities are frozen under `benchmarks/mlsys_coding_v1`, with a 5/4
 train/held-out split and a manifest hash recorded before any policy
@@ -7,12 +9,13 @@ rollout. Hidden correctness checks sit outside the candidate workspace.
 Two performance tasks report seven wall-clock repeats and the sample
 standard deviation; success requires a conservative speedup of at least 2.
 On this host the unpatched performance tasks scored about 0.999 and 0.957,
-and the known fixes scored about 233 and 669. Those floats are descriptive.
-No model rollout was run: the open isolated repository grader still
-executes candidate code in the same namespace as grader files, and these
-tasks set `grader_visibility` to `hidden`. The no-update versus SFT versus
-GRPO config is recorded and its runner exits 3. See the
-[report](mlsys-coding-tasks-v1.md).
+and the known fixes scored about 233 and 669, under the earlier in-process
+grader. Those floats are descriptive and were superseded for the current
+parent-timed path by the 2026-10-20 update. No model rollout was run: the
+open isolated repository grader still executes candidate code in the same
+namespace as grader files, and these tasks set `grader_visibility` to
+`hidden`. The no-update versus SFT versus GRPO config is recorded and its
+default command exits 3. See the [report](mlsys-coding-tasks-v1.md).
 
 **Update 2026-10-18 — async worker SQLite serialization:** a per-store lock
 fixes the reproduced same-process connection race, and paged `iter_steps()`

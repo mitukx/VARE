@@ -20,7 +20,8 @@
     "historical_upstream_commit": false,
     "pack": "mlsys-coding-v1",
     "reward_kind": "hidden-correctness-and-repeated-timing",
-    "split": "train"
+    "split": "train",
+    "task_type": "performance"
   },
   "metrics": [],
   "prompt": "Edit range_sums.py so range_sums still returns exact integer sums for every valid query, and so repeated queries over a long value list do less work than scanning each interval from scratch. test_public.py is a smoke check and is not the grader. Do not special-case one input list.",

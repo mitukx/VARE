@@ -1,4 +1,5 @@
 """Smoke check. This file is not the grader."""
+
 import math
 
 from row_log_softmax import row_log_softmax

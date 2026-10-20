@@ -1,4 +1,5 @@
 """Smoke check. This file is not the grader."""
+
 from global_grad_clip import clip_by_global_norm
 
 

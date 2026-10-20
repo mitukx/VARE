@@ -10,6 +10,7 @@ columns ``j > i``. Each row sums to 1. Large finite scores must not
 overflow. A non-square matrix, an empty matrix, or a non-finite score
 raises ``ValueError``.
 """
+
 from __future__ import annotations
 
 import math
@@ -20,7 +21,11 @@ def _validate(scores):
         raise ValueError("scores must be a non-empty square matrix")
     for row in scores:
         for value in row:
-            if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value):
+            if (
+                not isinstance(value, (int, float))
+                or isinstance(value, bool)
+                or not math.isfinite(value)
+            ):
                 raise ValueError("scores must be finite")
 
 

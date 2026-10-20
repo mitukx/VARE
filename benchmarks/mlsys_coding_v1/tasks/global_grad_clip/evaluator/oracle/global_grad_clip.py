@@ -1,4 +1,5 @@
 """Reference implementation used only by harness calibration."""
+
 from __future__ import annotations
 
 import math
@@ -13,7 +14,11 @@ def _entries(grads):
     values = []
     for row in grads:
         for value in row:
-            if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value):
+            if (
+                not isinstance(value, (int, float))
+                or isinstance(value, bool)
+                or not math.isfinite(value)
+            ):
                 raise ValueError("gradient entries must be finite")
             values.append(float(value))
     return values
@@ -21,8 +26,10 @@ def _entries(grads):
 
 def clip_by_global_norm(grads, max_norm):
     if (
-        isinstance(max_norm, bool) or not isinstance(max_norm, (int, float))
-        or not math.isfinite(max_norm) or max_norm <= 0
+        isinstance(max_norm, bool)
+        or not isinstance(max_norm, (int, float))
+        or not math.isfinite(max_norm)
+        or max_norm <= 0
     ):
         raise ValueError("max_norm must be finite and positive")
     values = _entries(grads)

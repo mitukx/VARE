@@ -4,6 +4,7 @@ The repository grader mounts one task directory. Keeping this file at the
 pack root gives the protocol one canonical copy; each performance task has
 a byte-identical ``evaluator/timing.py``.
 """
+
 from __future__ import annotations
 
 import math
@@ -29,7 +30,9 @@ def summarize(samples: list[float]) -> dict[str, float]:
     }
 
 
-def conservative_speedup(baseline: list[float], candidate: list[float]) -> tuple[float, dict[str, float], dict[str, float]]:
+def conservative_speedup(
+    baseline: list[float], candidate: list[float]
+) -> tuple[float, dict[str, float], dict[str, float]]:
     baseline_stats = summarize(baseline)
     candidate_stats = summarize(candidate)
     low = baseline_stats["ci95_low_s"]

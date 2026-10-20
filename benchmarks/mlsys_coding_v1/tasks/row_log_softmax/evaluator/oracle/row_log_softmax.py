@@ -1,4 +1,5 @@
 """Reference implementation used only by harness calibration."""
+
 from __future__ import annotations
 
 import math

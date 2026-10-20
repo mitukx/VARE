@@ -10,6 +10,7 @@ finite input, including rows whose entries are large and positive or large
 and negative. An empty argument, an empty row, or a non-finite entry raises
 ``ValueError``. Inputs are not mutated.
 """
+
 from __future__ import annotations
 
 import math

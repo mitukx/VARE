@@ -1,12 +1,24 @@
-"""Hidden boundary checks for the warmup-cosine schedule."""
+"""Hidden boundary checks for the warmup-cosine schedule.
+
+The candidate runs through the harness adapter. Pass or fail is decided here.
+"""
+
 from __future__ import annotations
 
 import math
 import sys
 from pathlib import Path
 
+_PACK = Path(__file__).resolve().parents[3]
+if str(_PACK) not in sys.path:
+    sys.path.insert(0, str(_PACK))
 
-def _expected(step, total_steps, warmup_steps, base_lr, min_lr):
+from harness_adapter import HarnessRequest, run_harness
+
+
+def _reference(step, *, total_steps, warmup_steps, base_lr, min_lr):
+    if step < 0:
+        raise ValueError("step out of range")
     if step < warmup_steps:
         return base_lr * (step + 1) / float(warmup_steps)
     span = total_steps - warmup_steps
@@ -16,31 +28,49 @@ def _expected(step, total_steps, warmup_steps, base_lr, min_lr):
     return min_lr + 0.5 * (base_lr - min_lr) * (1.0 + math.cos(math.pi * progress))
 
 
-def main() -> None:
-    workspace = Path(sys.argv[1]).resolve()
-    sys.path.insert(0, str(workspace))
-    from warmup_cosine import learning_rate
-
-    total_steps = 10
-    warmup_steps = 4
-    base_lr = 0.2
-    min_lr = 0.02
-    for step in range(total_steps):
-        actual = learning_rate(
-            step, total_steps=total_steps, warmup_steps=warmup_steps, base_lr=base_lr, min_lr=min_lr,
+def _generator(index: int):
+    if index < 10:
+        return (
+            (index,),
+            {
+                "total_steps": 10,
+                "warmup_steps": 4,
+                "base_lr": 0.2,
+                "min_lr": 0.02,
+            },
         )
-        expected = _expected(step, total_steps, warmup_steps, base_lr, min_lr)
-        if not math.isfinite(actual) or abs(actual - expected) > 1e-12:
-            raise AssertionError(f"step {step}: {actual} != {expected}")
-    only = learning_rate(4, total_steps=5, warmup_steps=4, base_lr=base_lr, min_lr=min_lr)
-    if abs(only - min_lr) > 1e-12:
-        raise AssertionError("single cosine step must be min_lr")
-    try:
-        learning_rate(-1, total_steps=4, warmup_steps=1, base_lr=0.1, min_lr=0.0)
-    except ValueError:
-        pass
-    else:
-        raise AssertionError("negative step must fail")
+    if index == 10:
+        return (
+            (4,),
+            {"total_steps": 5, "warmup_steps": 4, "base_lr": 0.2, "min_lr": 0.02},
+        )
+    return (
+        (-1,),
+        {"total_steps": 4, "warmup_steps": 1, "base_lr": 0.1, "min_lr": 0.0},
+    )
+
+
+def _checker(actual, expected, _positional, _keywords, _args, _kwargs):
+    if not math.isfinite(actual) or abs(actual - expected) > 1e-12:
+        raise AssertionError(f"{actual} != {expected}")
+
+
+def main() -> None:
+    report = run_harness(
+        HarnessRequest(
+            workspace=Path(sys.argv[1]).resolve(),
+            entrypoint="warmup_cosine:learning_rate",
+            task_type="correctness",
+            trusted_task_path=Path(__file__).resolve().parents[1] / "task.json",
+            input_generator=_generator,
+            reference=_reference,
+            checker=_checker,
+            repeats=12,
+            timeout_s=10,
+        )
+    )
+    if not report.passed:
+        raise SystemExit(report.error or "hidden checks failed")
 
 
 if __name__ == "__main__":
