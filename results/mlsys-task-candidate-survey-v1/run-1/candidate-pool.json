@@ -1,0 +1,1398 @@
+{
+  "candidate_count_captured": 57,
+  "candidate_count_requested": 57,
+  "candidates": [
+    {
+      "additions": 3,
+      "base_sha": "e8ae373133be1eff2254c5dd71fcd628445cb4a4",
+      "changed_file_count": 1,
+      "changed_paths": [
+        "src/transformers/trainer.py"
+      ],
+      "created_at": "2026-01-12T06:59:45Z",
+      "deletions": 6,
+      "head_sha": "754498fdba69caee9ffc6b844caa92fb9518908b",
+      "merge_commit_sha": "77146cc9088ec8fc1dd476b40b1c6cdb0792afe3",
+      "merged": true,
+      "merged_at": "2026-01-14T15:04:28Z",
+      "number": 43226,
+      "repository": "huggingface/transformers",
+      "state": "closed",
+      "test_paths": [],
+      "title": "fix crash in when running FSDP2+TP",
+      "url": "https://github.com/huggingface/transformers/pull/43226"
+    },
+    {
+      "additions": 2,
+      "base_sha": "81fe4f167d85b544e93046c4f77eba5752100ab7",
+      "changed_file_count": 1,
+      "changed_paths": [
+        "src/transformers/trainer.py"
+      ],
+      "created_at": "2026-05-07T07:28:52Z",
+      "deletions": 0,
+      "head_sha": "b732085c2a120732b0dee54658c3788b0cd9c6f5",
+      "merge_commit_sha": "e3e822300497c60b241a8563540252393d1f5054",
+      "merged": true,
+      "merged_at": "2026-07-09T14:46:48Z",
+      "number": 45818,
+      "repository": "huggingface/transformers",
+      "state": "closed",
+      "test_paths": [],
+      "title": "trainer: clear MPS graph cache via torch_empty_cache_steps",
+      "url": "https://github.com/huggingface/transformers/pull/45818"
+    },
+    {
+      "additions": 60,
+      "base_sha": "381032b7e0a8896ae48f90dbe83eae3bf7630953",
+      "changed_file_count": 2,
+      "changed_paths": [
+        "src/transformers/tokenization_utils_base.py",
+        "tests/trainer/test_data_collator.py"
+      ],
+      "created_at": "2026-05-08T19:21:10Z",
+      "deletions": 0,
+      "head_sha": "915829ba9131c0511c999b215b939fd83ff7e1a6",
+      "merge_commit_sha": "909ece888ed4b55402dc8acbb9c13ddf8ff977b5",
+      "merged": true,
+      "merged_at": "2026-05-12T12:50:42Z",
+      "number": 45852,
+      "repository": "huggingface/transformers",
+      "state": "closed",
+      "test_paths": [
+        "tests/trainer/test_data_collator.py"
+      ],
+      "title": "Fix slow Trainer path with 4D attention mask",
+      "url": "https://github.com/huggingface/transformers/pull/45852"
+    },
+    {
+      "additions": 730,
+      "base_sha": "e37b269a34105a9f1f0dd164ccedf35322cc8bae",
+      "changed_file_count": 7,
+      "changed_paths": [
+        "docs/source/en/trainer_recipes.md",
+        "src/transformers/trainer.py",
+        "src/transformers/trainer_pt_utils.py",
+        "src/transformers/training_args.py",
+        "tests/trainer/distributed/scripts/train.py",
+        "tests/trainer/distributed/test_trainer_distributed_ddp.py",
+        "tests/trainer/test_trainer_data.py"
+      ],
+      "created_at": "2026-07-15T09:02:42Z",
+      "deletions": 14,
+      "head_sha": "01e8566f998c5b11cc782e87cb91199faf74786b",
+      "merge_commit_sha": "4c0dafa1e4a51fdd0a7f38110410b5942d25df82",
+      "merged": true,
+      "merged_at": "2026-09-01T12:55:40Z",
+      "number": 47340,
+      "repository": "huggingface/transformers",
+      "state": "closed",
+      "test_paths": [
+        "tests/trainer/distributed/scripts/train.py",
+        "tests/trainer/distributed/test_trainer_distributed_ddp.py",
+        "tests/trainer/test_trainer_data.py"
+      ],
+      "title": "Batch Rebalance Data Sampler",
+      "url": "https://github.com/huggingface/transformers/pull/47340"
+    },
+    {
+      "additions": 18,
+      "base_sha": "e453228ef83ce0d756f7621ef8607220ebf5da6a",
+      "changed_file_count": 2,
+      "changed_paths": [
+        "tests/models/pi0/test_modeling_pi0.py",
+        "tests/models/table_transformer/test_modeling_table_transformer.py"
+      ],
+      "created_at": "2026-08-21T19:11:25Z",
+      "deletions": 6,
+      "head_sha": "e654d9db6b16c77d3ce0a75b9b541eea5a1f5397",
+      "merge_commit_sha": "d56c55bf564ddb176759eb6ec199442682564916",
+      "merged": true,
+      "merged_at": "2026-08-21T21:11:08Z",
+      "number": 48198,
+      "repository": "huggingface/transformers",
+      "state": "closed",
+      "test_paths": [
+        "tests/models/pi0/test_modeling_pi0.py",
+        "tests/models/table_transformer/test_modeling_table_transformer.py"
+      ],
+      "title": "[TableTransformer, PI0] Fix stale expected values and OOM in integration tests",
+      "url": "https://github.com/huggingface/transformers/pull/48198"
+    },
+    {
+      "additions": 83,
+      "base_sha": "0a959de1d2dd0c981f1f732dbd0fc31192bbfa66",
+      "changed_file_count": 5,
+      "changed_paths": [
+        "src/transformers/distributed/mixin.py",
+        "src/transformers/distributed/tensor_parallel.py",
+        "src/transformers/integrations/moe.py",
+        "src/transformers/trainer.py",
+        "src/transformers/trainer_optimizer.py"
+      ],
+      "created_at": "2026-08-22T01:07:36Z",
+      "deletions": 4,
+      "head_sha": "96769d9972449eb4874553aa7cb3cb968e02f1b7",
+      "merge_commit_sha": "2ca0705f7d4098dd6ae9401a058003d226675722",
+      "merged": true,
+      "merged_at": "2026-09-08T17:36:36Z",
+      "number": 48205,
+      "repository": "huggingface/transformers",
+      "state": "closed",
+      "test_paths": [],
+      "title": "Fix expert-parallel training: NaN gradients and missing gradient contributions",
+      "url": "https://github.com/huggingface/transformers/pull/48205"
+    },
+    {
+      "additions": 68,
+      "base_sha": "6ec0f83563f56335d4227354614459a01d76ba0d",
+      "changed_file_count": 2,
+      "changed_paths": [
+        "src/transformers/trainer.py",
+        "tests/trainer/test_trainer_checkpointing.py"
+      ],
+      "created_at": "2026-08-25T21:43:42Z",
+      "deletions": 0,
+      "head_sha": "9e3dbb21df883c82e9e8dd73155df7ff66900d0d",
+      "merge_commit_sha": "36deb0b53ed0863f4b4dfdea23dcaec7f3df3701",
+      "merged": true,
+      "merged_at": "2026-08-26T18:12:45Z",
+      "number": 48319,
+      "repository": "huggingface/transformers",
+      "state": "closed",
+      "test_paths": [
+        "tests/trainer/test_trainer_checkpointing.py"
+      ],
+      "title": "Ignore a stale best checkpoint recorded in a resumed trainer state",
+      "url": "https://github.com/huggingface/transformers/pull/48319"
+    },
+    {
+      "additions": 111,
+      "base_sha": "899f55f8e41654a106a414e93a6f5fd8f3b8bf37",
+      "changed_file_count": 5,
+      "changed_paths": [
+        "docs/source/en/grad_checkpointing.md",
+        "src/transformers/modeling_utils.py",
+        "src/transformers/trainer.py",
+        "src/transformers/training_args.py",
+        "tests/utils/test_modeling_utils.py"
+      ],
+      "created_at": "2026-09-01T03:27:56Z",
+      "deletions": 7,
+      "head_sha": "d93254729e32613f8d302fe75bb595f574b029a4",
+      "merge_commit_sha": "69a7fb1aca7f2e7487294846be5859ebb6db9462",
+      "merged": true,
+      "merged_at": "2026-09-01T04:27:27Z",
+      "number": 48444,
+      "repository": "huggingface/transformers",
+      "state": "closed",
+      "test_paths": [
+        "tests/utils/test_modeling_utils.py"
+      ],
+      "title": "Add offload to gradient checkpointing",
+      "url": "https://github.com/huggingface/transformers/pull/48444"
+    },
+    {
+      "additions": 69,
+      "base_sha": "415e6d2f596ef2bd44fdee4261799200a7fc02bf",
+      "changed_file_count": 15,
+      "changed_paths": [
+        "src/transformers/models/d_fine/modeling_d_fine.py",
+        "src/transformers/models/deimv2/modeling_deimv2.py",
+        "src/transformers/models/pp_doclayout_v2/modeling_pp_doclayout_v2.py",
+        "src/transformers/models/pp_doclayout_v3/modeling_pp_doclayout_v3.py",
+        "src/transformers/models/rt_detr/modeling_rt_detr.py",
+        "src/transformers/models/rt_detr/modular_rt_detr.py",
+        "src/transformers/models/rt_detr_v2/modeling_rt_detr_v2.py",
+        "src/transformers/models/sew_d/modeling_sew_d.py",
+        "tests/models/d_fine/test_modeling_d_fine.py",
+        "tests/models/deimv2/test_modeling_deimv2.py",
+        "tests/models/pp_doclayout_v2/test_modeling_pp_doclayout_v2.py",
+        "tests/models/pp_doclayout_v3/test_modeling_pp_doclayout_v3.py",
+        "tests/models/rt_detr/test_modeling_rt_detr.py",
+        "tests/models/rt_detr_v2/test_modeling_rt_detr_v2.py",
+        "tests/models/sew_d/test_modeling_sew_d.py"
+      ],
+      "created_at": "2026-09-12T12:48:12Z",
+      "deletions": 22,
+      "head_sha": "a246ea192ad1c9f4d465298c8703417fbed57f73",
+      "merge_commit_sha": "56c5e8768a956e395e3ccc3346ee91fafbc380d8",
+      "merged": true,
+      "merged_at": "2026-09-14T06:10:31Z",
+      "number": 48744,
+      "repository": "huggingface/transformers",
+      "state": "closed",
+      "test_paths": [
+        "tests/models/d_fine/test_modeling_d_fine.py",
+        "tests/models/deimv2/test_modeling_deimv2.py",
+        "tests/models/pp_doclayout_v2/test_modeling_pp_doclayout_v2.py",
+        "tests/models/pp_doclayout_v3/test_modeling_pp_doclayout_v3.py",
+        "tests/models/rt_detr/test_modeling_rt_detr.py",
+        "tests/models/rt_detr_v2/test_modeling_rt_detr_v2.py",
+        "tests/models/sew_d/test_modeling_sew_d.py"
+      ],
+      "title": "Fix silently random-initializing `RTDetrModel`/`SEWDForCTC` loads (wrong `base_model_prefix`)",
+      "url": "https://github.com/huggingface/transformers/pull/48744"
+    },
+    {
+      "additions": 30,
+      "base_sha": "07338b6c74a578868368e6e549dea83414e4b8cb",
+      "changed_file_count": 2,
+      "changed_paths": [
+        "src/transformers/models/auto/tokenization_auto.py",
+        "tests/models/qwen3_5/test_tokenization_qwen3_5.py"
+      ],
+      "created_at": "2026-09-25T17:40:36Z",
+      "deletions": 1,
+      "head_sha": "462bf5a50f6434e9610513b34537a892967ccd84",
+      "merge_commit_sha": "a4fe1d5bde6fd245899d9b0486d2dc25b76f90c7",
+      "merged": true,
+      "merged_at": "2026-09-28T12:35:11Z",
+      "number": 49116,
+      "repository": "huggingface/transformers",
+      "state": "closed",
+      "test_paths": [
+        "tests/models/qwen3_5/test_tokenization_qwen3_5.py"
+      ],
+      "title": "qwen3 models map to wrong tokenizer class on the hub",
+      "url": "https://github.com/huggingface/transformers/pull/49116"
+    },
+    {
+      "additions": 4,
+      "base_sha": "27166ea03f12c940f23176a904ab1d2ff1a3dcbb",
+      "changed_file_count": 1,
+      "changed_paths": [
+        "src/transformers/trainer.py"
+      ],
+      "created_at": "2026-09-26T08:37:48Z",
+      "deletions": 1,
+      "head_sha": "b441fdcd62b0d32903a1941b8996eaff75cff5ec",
+      "merge_commit_sha": "90a491d684706cdfb0e1fe62c0246c3553689ea3",
+      "merged": true,
+      "merged_at": "2026-09-29T16:10:35Z",
+      "number": 49123,
+      "repository": "huggingface/transformers",
+      "state": "closed",
+      "test_paths": [],
+      "title": "Fix Trainer checkpoint resume crashing on CPU with multiple processes",
+      "url": "https://github.com/huggingface/transformers/pull/49123"
+    },
+    {
+      "additions": 22,
+      "base_sha": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+      "changed_file_count": 3,
+      "changed_paths": [
+        "src/transformers/models/gemma3n/modeling_gemma3n.py",
+        "src/transformers/models/gemma3n/modular_gemma3n.py",
+        "tests/models/gemma3n/test_modeling_gemma3n.py"
+      ],
+      "created_at": "2026-09-28T03:03:55Z",
+      "deletions": 2,
+      "head_sha": "35b8b112b46b5adc3296abf142e15874ee5d4971",
+      "merge_commit_sha": "f35aeb9308836547b0eaed8b4cd334da16e2af10",
+      "merged": true,
+      "merged_at": "2026-10-08T11:52:46Z",
+      "number": 49147,
+      "repository": "huggingface/transformers",
+      "state": "closed",
+      "test_paths": [
+        "tests/models/gemma3n/test_modeling_gemma3n.py"
+      ],
+      "title": "This PR fixes Gemma3n fp16 loading when missing weights need to be in\u2026",
+      "url": "https://github.com/huggingface/transformers/pull/49147"
+    },
+    {
+      "additions": 27,
+      "base_sha": "dbac24c0f04a39d68cc24d2fa2abecf196713ae2",
+      "changed_file_count": 2,
+      "changed_paths": [
+        "src/transformers/trainer.py",
+        "tests/trainer/test_trainer_checkpointing.py"
+      ],
+      "created_at": "2026-09-30T13:21:41Z",
+      "deletions": 13,
+      "head_sha": "f009db88b925e924cf1b662be8be29e6e7604c4c",
+      "merge_commit_sha": "7fb5bcd1d4b8a5c225a2c33429b2e9e023dd61ae",
+      "merged": true,
+      "merged_at": "2026-10-01T12:33:36Z",
+      "number": 49208,
+      "repository": "huggingface/transformers",
+      "state": "closed",
+      "test_paths": [
+        "tests/trainer/test_trainer_checkpointing.py"
+      ],
+      "title": "correct final metrics due to resuming from checkpoint",
+      "url": "https://github.com/huggingface/transformers/pull/49208"
+    },
+    {
+      "additions": 34,
+      "base_sha": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+      "changed_file_count": 2,
+      "changed_paths": [
+        "src/transformers/fusion_mapping.py",
+        "tests/utils/test_fusion_mapping.py"
+      ],
+      "created_at": "2026-10-08T07:55:17Z",
+      "deletions": 1,
+      "head_sha": "527725cace0b038a0ac8ab738e921f118bb2668a",
+      "merge_commit_sha": "01269bc99768ad45f8aeaeb701e1315371e25239",
+      "merged": true,
+      "merged_at": "2026-10-19T11:04:44Z",
+      "number": 49412,
+      "repository": "huggingface/transformers",
+      "state": "closed",
+      "test_paths": [
+        "tests/utils/test_fusion_mapping.py"
+      ],
+      "title": "Fix ValueError when loading a fusion-enabled checkpoint twice",
+      "url": "https://github.com/huggingface/transformers/pull/49412"
+    },
+    {
+      "additions": 158,
+      "base_sha": "55c3cc9f03cd4fbf2d27d382dcc8fcc544631f8e",
+      "changed_file_count": 3,
+      "changed_paths": [
+        "src/transformers/trainer.py",
+        "tests/trainer/distributed/scripts/peft_save_distributed_config.py",
+        "tests/trainer/distributed/test_trainer_distributed_transformers.py"
+      ],
+      "created_at": "2026-10-11T13:51:03Z",
+      "deletions": 5,
+      "head_sha": "929ef7718c255d2fed6826148a7e9dbeb7e14124",
+      "merge_commit_sha": "f0705f991a71f05dad9569336b181119f5546f93",
+      "merged": true,
+      "merged_at": "2026-10-14T22:24:42Z",
+      "number": 49500,
+      "repository": "huggingface/transformers",
+      "state": "closed",
+      "test_paths": [
+        "tests/trainer/distributed/scripts/peft_save_distributed_config.py",
+        "tests/trainer/distributed/test_trainer_distributed_transformers.py"
+      ],
+      "title": "Save the PEFT adapter of a load-time sharded model from its own parameters",
+      "url": "https://github.com/huggingface/transformers/pull/49500"
+    },
+    {
+      "additions": 6,
+      "base_sha": "3c18bfa00faad6ebd7770c0daf9e559ee5c0a6d6",
+      "changed_file_count": 1,
+      "changed_paths": [
+        "trl/kernels/logprob_entropy.py"
+      ],
+      "created_at": "2026-10-14T10:47:57Z",
+      "deletions": 8,
+      "head_sha": "9c8a2355e50ec9ef279dcccb7b66db66a230c3f8",
+      "merge_commit_sha": "9d76f2f8c0421fcf8a4a72113a9e226ce796e592",
+      "merged": true,
+      "merged_at": "2026-10-15T15:26:22Z",
+      "number": 7719,
+      "repository": "huggingface/trl",
+      "state": "closed",
+      "test_paths": [],
+      "title": "Fix `torch.compile(fullgraph=True)` of `selective_log_softmax_and_entropy` on torch 2.6",
+      "url": "https://github.com/huggingface/trl/pull/7719"
+    },
+    {
+      "additions": 12,
+      "base_sha": "cdfe756f3ea9d47c2a6c59d6ebb529986cad8a4e",
+      "changed_file_count": 1,
+      "changed_paths": [
+        "tests/conftest.py"
+      ],
+      "created_at": "2026-10-14T16:04:59Z",
+      "deletions": 0,
+      "head_sha": "1f8f58e43eab14874afee8af8dd0276de6bcd667",
+      "merge_commit_sha": "6dfb4d56d585163a2e8efcb9c42708c430ee41aa",
+      "merged": true,
+      "merged_at": "2026-10-15T13:52:47Z",
+      "number": 7723,
+      "repository": "huggingface/trl",
+      "state": "closed",
+      "test_paths": [
+        "tests/conftest.py"
+      ],
+      "title": "Restore the distributed env vars that vLLM colocate tests leave behind",
+      "url": "https://github.com/huggingface/trl/pull/7723"
+    },
+    {
+      "additions": 149,
+      "base_sha": "7e465a58170e92140627ebf26a6966e5e80b6dc1",
+      "changed_file_count": 8,
+      "changed_paths": [
+        "tests/test_cli_utils.py",
+        "trl/trainer/distillation_config.py",
+        "trl/trainer/dpo_config.py",
+        "trl/trainer/grpo_config.py",
+        "trl/trainer/kto_config.py",
+        "trl/trainer/reward_config.py",
+        "trl/trainer/rloo_config.py",
+        "trl/trainer/sft_config.py"
+      ],
+      "created_at": "2026-10-14T16:18:01Z",
+      "deletions": 36,
+      "head_sha": "93c6e25e6ad611beb5b9c83c8d18c437c675a932",
+      "merge_commit_sha": "b54122a7fae6a61d973717088336294b152c2973",
+      "merged": true,
+      "merged_at": "2026-10-14T20:18:33Z",
+      "number": 7724,
+      "repository": "huggingface/trl",
+      "state": "closed",
+      "test_paths": [
+        "tests/test_cli_utils.py"
+      ],
+      "title": "Default `pad_to_multiple_of` to `\"auto\"`: pad to a multiple of 128 on Neuron",
+      "url": "https://github.com/huggingface/trl/pull/7724"
+    },
+    {
+      "additions": 5,
+      "base_sha": "815bc57380a0c8089ef809766d68f8459dc7ecd9",
+      "changed_file_count": 1,
+      "changed_paths": [
+        "trl/kernels/chunked_logprob.py"
+      ],
+      "created_at": "2026-10-14T19:40:47Z",
+      "deletions": 1,
+      "head_sha": "62eb0938ec0e1fe25e2c1e148e8625a3e5ba8e56",
+      "merge_commit_sha": "69337aea27f35e85f8ebd1d520bb317f0b633c50",
+      "merged": true,
+      "merged_at": "2026-10-14T20:10:21Z",
+      "number": 7731,
+      "repository": "huggingface/trl",
+      "state": "closed",
+      "test_paths": [],
+      "title": "Read `is_triton_available` once in the fused LM head kernels so Dynamo does not warn",
+      "url": "https://github.com/huggingface/trl/pull/7731"
+    },
+    {
+      "additions": 4,
+      "base_sha": "c5e6335f636be4f2c3dbae64df8adba0976d72dd",
+      "changed_file_count": 1,
+      "changed_paths": [
+        "trl/models/activation_offloading.py"
+      ],
+      "created_at": "2026-10-15T10:04:45Z",
+      "deletions": 1,
+      "head_sha": "67eec3ebb4abfb304028afe60958edce854924c4",
+      "merge_commit_sha": "f952015d450534ca61ba346e14d5949e26dbb26a",
+      "merged": true,
+      "merged_at": "2026-10-15T10:38:44Z",
+      "number": 7748,
+      "repository": "huggingface/trl",
+      "state": "closed",
+      "test_paths": [],
+      "title": "Fix activation offloading on torch < 2.4",
+      "url": "https://github.com/huggingface/trl/pull/7748"
+    },
+    {
+      "additions": 13,
+      "base_sha": "adbc51d7c637c14116bdba06726b276cd06f4851",
+      "changed_file_count": 1,
+      "changed_paths": [
+        "tests/test_sft_trainer.py"
+      ],
+      "created_at": "2026-10-16T09:41:15Z",
+      "deletions": 3,
+      "head_sha": "b9ef450040fe8e866984ce3475851674e44c73df",
+      "merge_commit_sha": "c2b88592630cb5304a587287e35f5f151da20521",
+      "merged": true,
+      "merged_at": "2026-10-19T11:30:14Z",
+      "number": 7768,
+      "repository": "huggingface/trl",
+      "state": "closed",
+      "test_paths": [
+        "tests/test_sft_trainer.py"
+      ],
+      "title": "Test that LoRA on an MoE model also trains its dense and shared expert layers",
+      "url": "https://github.com/huggingface/trl/pull/7768"
+    },
+    {
+      "additions": 40,
+      "base_sha": "43f5eaae97a342ab34216c79ee981ccc77f3d66f",
+      "changed_file_count": 2,
+      "changed_paths": [
+        "mlx/primitives.cpp",
+        "python/tests/test_conv.py"
+      ],
+      "created_at": "2026-10-09T00:09:23Z",
+      "deletions": 3,
+      "head_sha": "95c98c6e9c839a00f255aa6bd46ad977ca15b90b",
+      "merge_commit_sha": "0ab821b1f56885509e004c04f33902c765db0318",
+      "merged": true,
+      "merged_at": "2026-10-10T01:12:41Z",
+      "number": 4662,
+      "repository": "ml-explore/mlx",
+      "state": "closed",
+      "test_paths": [
+        "python/tests/test_conv.py"
+      ],
+      "title": "Fix conv input gradient shape with uneven or large padding",
+      "url": "https://github.com/ml-explore/mlx/pull/4662"
+    },
+    {
+      "additions": 4,
+      "base_sha": "0ab821b1f56885509e004c04f33902c765db0318",
+      "changed_file_count": 1,
+      "changed_paths": [
+        "mlx/fast.cpp"
+      ],
+      "created_at": "2026-10-09T00:13:50Z",
+      "deletions": 3,
+      "head_sha": "5ce4ec9d49043d9320a32e970abd6a07ff836e12",
+      "merge_commit_sha": "0fdcdc0e23a2aa422672315b205c3aa8d8effe4e",
+      "merged": true,
+      "merged_at": "2026-10-10T05:55:48Z",
+      "number": 4663,
+      "repository": "ml-explore/mlx",
+      "state": "closed",
+      "test_paths": [],
+      "title": "Fix missing stream in layer_norm and sdpa fallbacks",
+      "url": "https://github.com/ml-explore/mlx/pull/4663"
+    },
+    {
+      "additions": 75,
+      "base_sha": "0ab821b1f56885509e004c04f33902c765db0318",
+      "changed_file_count": 2,
+      "changed_paths": [
+        "mlx/backend/cpu/conv.cpp",
+        "python/tests/test_conv.py"
+      ],
+      "created_at": "2026-10-09T05:04:25Z",
+      "deletions": 15,
+      "head_sha": "8d074586904a9e892bf6c4f3ae64eb49a0ba8721",
+      "merge_commit_sha": "af9a592408354cb6a93234796eac332097abe29d",
+      "merged": true,
+      "merged_at": "2026-10-10T05:56:11Z",
+      "number": 4668,
+      "repository": "ml-explore/mlx",
+      "state": "closed",
+      "test_paths": [
+        "python/tests/test_conv.py"
+      ],
+      "title": "Fix direct CPU conv writing past output",
+      "url": "https://github.com/ml-explore/mlx/pull/4668"
+    },
+    {
+      "additions": 47,
+      "base_sha": "c7bf1ca5f242c4ddf0f488803bfca91235cff38f",
+      "changed_file_count": 7,
+      "changed_paths": [
+        "mlx/backend/metal/conv.cpp",
+        "mlx/backend/metal/kernels/conv.metal",
+        "mlx/backend/metal/kernels/steel/conv/kernels/steel_conv_general.h",
+        "mlx/backend/metal/kernels/steel/conv/loaders/loader_channel_l.h",
+        "mlx/backend/metal/kernels/steel/conv/loaders/loader_channel_n.h",
+        "mlx/backend/metal/kernels/steel/conv/loaders/loader_general.h",
+        "python/tests/test_conv.py"
+      ],
+      "created_at": "2026-10-10T14:41:38Z",
+      "deletions": 24,
+      "head_sha": "d8f41d906a1369d7621364aa159b6df4ee1f8b03",
+      "merge_commit_sha": "8295d5e54f62046416ad4bbf03193e173dea04a5",
+      "merged": true,
+      "merged_at": "2026-10-12T05:52:15Z",
+      "number": 4672,
+      "repository": "ml-explore/mlx",
+      "state": "closed",
+      "test_paths": [
+        "python/tests/test_conv.py"
+      ],
+      "title": "fix metal conv bounds checks and integer overflows",
+      "url": "https://github.com/ml-explore/mlx/pull/4672"
+    },
+    {
+      "additions": 34,
+      "base_sha": "06eb7483f03bca49a80e596f4089d02a507a2cf9",
+      "changed_file_count": 2,
+      "changed_paths": [
+        "mlx/backend/metal/quantized.cpp",
+        "python/tests/test_quantized.py"
+      ],
+      "created_at": "2026-10-10T15:20:57Z",
+      "deletions": 2,
+      "head_sha": "35fb011f4e691e7ed29fa01a63e3121c6ba7ce4a",
+      "merge_commit_sha": "0512aa6f3f7265ff5508aec864ee1149bc557c20",
+      "merged": true,
+      "merged_at": "2026-10-12T02:02:47Z",
+      "number": 4673,
+      "repository": "ml-explore/mlx",
+      "state": "closed",
+      "test_paths": [
+        "python/tests/test_quantized.py"
+      ],
+      "title": "fix batched row count mismatch in metal qvm_split_k",
+      "url": "https://github.com/ml-explore/mlx/pull/4673"
+    },
+    {
+      "additions": 25,
+      "base_sha": "0512aa6f3f7265ff5508aec864ee1149bc557c20",
+      "changed_file_count": 2,
+      "changed_paths": [
+        "python/src/ops.cpp",
+        "python/tests/test_ops.py"
+      ],
+      "created_at": "2026-10-11T03:27:20Z",
+      "deletions": 8,
+      "head_sha": "3a1a350d397d6f91d47f092401f51a92825e919b",
+      "merge_commit_sha": "388f227f466ef600243bcfce64181ad0d675c476",
+      "merged": true,
+      "merged_at": "2026-10-12T06:44:28Z",
+      "number": 4679,
+      "repository": "ml-explore/mlx",
+      "state": "closed",
+      "test_paths": [
+        "python/tests/test_ops.py"
+      ],
+      "title": "python: Make arctan2/radians/degrees support scalar inputs",
+      "url": "https://github.com/ml-explore/mlx/pull/4679"
+    },
+    {
+      "additions": 1,
+      "base_sha": "243bdf09c0cccbb85ca6a686dab3cc0102cf1f7e",
+      "changed_file_count": 1,
+      "changed_paths": [
+        "mlx/ops.cpp"
+      ],
+      "created_at": "2026-10-13T14:55:54Z",
+      "deletions": 1,
+      "head_sha": "10374c298d0953d4c0fb8799b9cab6561291f9e0",
+      "merge_commit_sha": "bebd6422f8db88d56e6220520a35bcd146f823f8",
+      "merged": true,
+      "merged_at": "2026-10-14T09:30:51Z",
+      "number": 4687,
+      "repository": "ml-explore/mlx",
+      "state": "closed",
+      "test_paths": [],
+      "title": "Fix missing stream in gather matmul indices cast",
+      "url": "https://github.com/ml-explore/mlx/pull/4687"
+    },
+    {
+      "additions": 15,
+      "base_sha": "bebd6422f8db88d56e6220520a35bcd146f823f8",
+      "changed_file_count": 3,
+      "changed_paths": [
+        "mlx/backend/metal/device.cpp",
+        "mlx/backend/metal/device.h",
+        "mlx/backend/metal/fence.cpp"
+      ],
+      "created_at": "2026-10-13T22:51:46Z",
+      "deletions": 2,
+      "head_sha": "84f1edbf3c12c31fa01e883d9727067b944147c3",
+      "merge_commit_sha": "36969c094354086e15d2a327a9c50feb20b9cf11",
+      "merged": true,
+      "merged_at": "2026-10-14T20:07:04Z",
+      "number": 4689,
+      "repository": "ml-explore/mlx",
+      "state": "closed",
+      "test_paths": [],
+      "title": "[BUG] Metal fence deadlock",
+      "url": "https://github.com/ml-explore/mlx/pull/4689"
+    },
+    {
+      "additions": 7,
+      "base_sha": "36969c094354086e15d2a327a9c50feb20b9cf11",
+      "changed_file_count": 1,
+      "changed_paths": [
+        "mlx/backend/metal/scaled_dot_product_attention.cpp"
+      ],
+      "created_at": "2026-10-15T18:26:06Z",
+      "deletions": 3,
+      "head_sha": "ff74639d9e55f284747392a9cf213b4c74d8306c",
+      "merge_commit_sha": "c60afdd5b57fd0e82d10aa0ec36970ecfff7213f",
+      "merged": true,
+      "merged_at": "2026-10-19T00:00:11Z",
+      "number": 4708,
+      "repository": "ml-explore/mlx",
+      "state": "closed",
+      "test_paths": [],
+      "title": "[Metal] Fix SDPA f16/f32 d512 max threadgroup for M1/M2 generation",
+      "url": "https://github.com/ml-explore/mlx/pull/4708"
+    },
+    {
+      "additions": 41,
+      "base_sha": "c60afdd5b57fd0e82d10aa0ec36970ecfff7213f",
+      "changed_file_count": 7,
+      "changed_paths": [
+        ".github/workflows/build_and_test.yml",
+        ".github/workflows/release.yml",
+        "mlx/backend/metal/kernels/scaled_dot_product_attention.metal",
+        "mlx/backend/metal/scaled_dot_product_attention.cpp",
+        "python/tests/test_fast_sdpa.py",
+        "python/tests/test_losses.py",
+        "python/tests/xp-tests/xfail.txt"
+      ],
+      "created_at": "2026-10-17T14:43:30Z",
+      "deletions": 31,
+      "head_sha": "a1a274b227c0418b8174668efc37b2f03eb53703",
+      "merge_commit_sha": "0390bd835d8675c949b78b2429409c93a483f255",
+      "merged": true,
+      "merged_at": "2026-10-19T03:42:04Z",
+      "number": 4719,
+      "repository": "ml-explore/mlx",
+      "state": "closed",
+      "test_paths": [
+        ".github/workflows/build_and_test.yml",
+        "python/tests/test_fast_sdpa.py",
+        "python/tests/test_losses.py",
+        "python/tests/xp-tests/xfail.txt"
+      ],
+      "title": "Add float16 head_dim 256 TK=1 SDPA vector kernel for M1/M2",
+      "url": "https://github.com/ml-explore/mlx/pull/4719"
+    },
+    {
+      "additions": 68,
+      "base_sha": "f93902c420b5e98099c2b23bc6fbb99076a3342d",
+      "changed_file_count": 9,
+      "changed_paths": [
+        "mlx/array.h",
+        "mlx/backend/common/common.cpp",
+        "mlx/backend/cpu/primitives.cpp",
+        "mlx/backend/gpu/primitives.cpp",
+        "mlx/ops.cpp",
+        "mlx/primitives.h",
+        "tests/array_tests.cpp",
+        "tests/autograd_tests.cpp",
+        "tests/ops_tests.cpp"
+      ],
+      "created_at": "2026-10-18T06:06:52Z",
+      "deletions": 23,
+      "head_sha": "92e1de97ec416fbf63c1ca00d76bf26ebebbb5cb",
+      "merge_commit_sha": "f41bec734ac9fc96723ab7d4e64e385796f15561",
+      "merged": true,
+      "merged_at": "2026-10-19T06:26:35Z",
+      "number": 4721,
+      "repository": "ml-explore/mlx",
+      "state": "closed",
+      "test_paths": [
+        "tests/array_tests.cpp",
+        "tests/autograd_tests.cpp",
+        "tests/ops_tests.cpp"
+      ],
+      "title": "Fix unaligned scalar reads and oversized contiguous buffer views",
+      "url": "https://github.com/ml-explore/mlx/pull/4721"
+    },
+    {
+      "additions": 425,
+      "base_sha": "d8c4667ddb2f3a6f59aa3ab66676d5119fe2f220",
+      "changed_file_count": 4,
+      "changed_paths": [
+        "mlx_lm/models/switch_layers.py",
+        "mlx_lm/quant/dwq.py",
+        "mlx_lm/quant/dynamic_quant.py",
+        "mlx_lm/tuner/losses.py"
+      ],
+      "created_at": "2025-07-08T06:00:39Z",
+      "deletions": 28,
+      "head_sha": "29b74d0f953eb2bba0d77bad7709be702a58977d",
+      "merge_commit_sha": "b1cfe43f490ce6374774f284c8fdca0216f2a7c0",
+      "merged": true,
+      "merged_at": "2025-07-08T17:55:25Z",
+      "number": 280,
+      "repository": "ml-explore/mlx-lm",
+      "state": "closed",
+      "test_paths": [],
+      "title": "KL loss and memory improvements for DWQ and dynamic quant",
+      "url": "https://github.com/ml-explore/mlx-lm/pull/280"
+    },
+    {
+      "additions": 4,
+      "base_sha": "7f7c7b929a0cd476340c62454600e6c0a87b483b",
+      "changed_file_count": 1,
+      "changed_paths": [
+        "mlx_lm/models/switch_layers.py"
+      ],
+      "created_at": "2025-07-09T19:06:57Z",
+      "deletions": 2,
+      "head_sha": "32398385bed09edd246ce1ff77c362c50f5a32e0",
+      "merge_commit_sha": "93cd9e86a424ccf5f75411df7f1510d7a15fe117",
+      "merged": true,
+      "merged_at": "2025-07-09T19:42:35Z",
+      "number": 288,
+      "repository": "ml-explore/mlx-lm",
+      "state": "closed",
+      "test_paths": [],
+      "title": "Fix MoE fine tuning",
+      "url": "https://github.com/ml-explore/mlx-lm/pull/288"
+    },
+    {
+      "additions": 46,
+      "base_sha": "0c0b72221f659f1e8b6f10bd01952dfc646c2b29",
+      "changed_file_count": 4,
+      "changed_paths": [
+        "mlx_lm/LORA.md",
+        "mlx_lm/examples/lora_config.yaml",
+        "mlx_lm/lora.py",
+        "mlx_lm/tuner/trainer.py"
+      ],
+      "created_at": "2025-09-29T03:31:00Z",
+      "deletions": 14,
+      "head_sha": "ab2fe30e5255a0ad0e9d0a305a9a3232c54575af",
+      "merge_commit_sha": "c3b4a158511a97e5a06e8cd71df5c1eea75faf98",
+      "merged": true,
+      "merged_at": "2025-10-13T18:27:15Z",
+      "number": 511,
+      "repository": "ml-explore/mlx-lm",
+      "state": "closed",
+      "test_paths": [],
+      "title": "Added gradient accumulation to training loop",
+      "url": "https://github.com/ml-explore/mlx-lm/pull/511"
+    },
+    {
+      "additions": 38,
+      "base_sha": "ab157c2d18284c69c9746756fcd5302d3c1e4bae",
+      "changed_file_count": 4,
+      "changed_paths": [
+        "mlx_lm/lora.py",
+        "mlx_lm/server.py",
+        "mlx_lm/tuner/trainer.py",
+        "mlx_lm/utils.py"
+      ],
+      "created_at": "2026-03-12T00:38:09Z",
+      "deletions": 16,
+      "head_sha": "dbd2447750f556575ca78ab38e518a7ba76edb6d",
+      "merge_commit_sha": "480934402db07054048d1d4ef640b6bb185cdb8f",
+      "merged": true,
+      "merged_at": "2026-03-14T01:19:53Z",
+      "number": 986,
+      "repository": "ml-explore/mlx-lm",
+      "state": "closed",
+      "test_paths": [],
+      "title": "Clear cache trainer memory",
+      "url": "https://github.com/ml-explore/mlx-lm/pull/986"
+    },
+    {
+      "additions": 3,
+      "base_sha": "304a254d88f68f6f63b41e4782b24bff4148d7a7",
+      "changed_file_count": 1,
+      "changed_paths": [
+        "mlx_lm/models/deepseek_v32.py"
+      ],
+      "created_at": "2026-07-02T10:23:24Z",
+      "deletions": 3,
+      "head_sha": "993246a14a16cf93a1543624f740412d09a6bd12",
+      "merge_commit_sha": "889da35df0bb9e56e3b7b1b80d4703c80a60be2e",
+      "merged": true,
+      "merged_at": "2026-09-09T15:11:21Z",
+      "number": 1452,
+      "repository": "ml-explore/mlx-lm",
+      "state": "closed",
+      "test_paths": [],
+      "title": "Fix DSA indexer LoRA-training crash: stop gradients through sparse-attention top-k indices",
+      "url": "https://github.com/ml-explore/mlx-lm/pull/1452"
+    },
+    {
+      "additions": 39,
+      "base_sha": "96830a6f4c2a0e2dea59505707460840cfb30bba",
+      "changed_file_count": 2,
+      "changed_paths": [
+        "mlx_lm/models/qwen3_moe.py",
+        "tests/test_tuner_trainer.py"
+      ],
+      "created_at": "2026-08-26T07:53:26Z",
+      "deletions": 0,
+      "head_sha": "2d613f07df92f72790f34c21b8066429d27299b8",
+      "merge_commit_sha": "1f9883c91ab726c6a44fc0249adbfea283ca0b33",
+      "merged": true,
+      "merged_at": "2026-08-28T09:48:05Z",
+      "number": 1787,
+      "repository": "ml-explore/mlx-lm",
+      "state": "closed",
+      "test_paths": [
+        "tests/test_tuner_trainer.py"
+      ],
+      "title": "Stop gradients through Qwen3 MoE expert-routing indices",
+      "url": "https://github.com/ml-explore/mlx-lm/pull/1787"
+    },
+    {
+      "additions": 88,
+      "base_sha": "77c33b14373ac70d7abd6f82af15962852adadbb",
+      "changed_file_count": 4,
+      "changed_paths": [
+        "mlx_lm/models/granitemoe.py",
+        "mlx_lm/models/granitemoehybrid.py",
+        "mlx_lm/models/lfm2_moe.py",
+        "tests/test_tuner_trainer.py"
+      ],
+      "created_at": "2026-08-27T18:45:20Z",
+      "deletions": 6,
+      "head_sha": "4b0678660779f7230d445368819a2224efab0f0e",
+      "merge_commit_sha": "acb0240394dfc17ffd6db77a3ccecbdbde522ef9",
+      "merged": true,
+      "merged_at": "2026-09-01T08:13:43Z",
+      "number": 1795,
+      "repository": "ml-explore/mlx-lm",
+      "state": "closed",
+      "test_paths": [
+        "tests/test_tuner_trainer.py"
+      ],
+      "title": "Stop gradients through MoE routing indices in granitemoe, granitemoehybrid, lfm2_moe",
+      "url": "https://github.com/ml-explore/mlx-lm/pull/1795"
+    },
+    {
+      "additions": 1,
+      "base_sha": "d081513cd0a0eaa141f3ce8f2cad73bb8b70e1a3",
+      "changed_file_count": 1,
+      "changed_paths": [
+        "mlx_lm/models/gpt_oss.py"
+      ],
+      "created_at": "2026-09-04T12:34:02Z",
+      "deletions": 1,
+      "head_sha": "87d289365fb9ae6a5d5b75e4de492b021cc29252",
+      "merge_commit_sha": "416f7446a7dad950f330619fd8cab5aa41e5a024",
+      "merged": true,
+      "merged_at": "2026-09-04T18:44:59Z",
+      "number": 1843,
+      "repository": "ml-explore/mlx-lm",
+      "state": "closed",
+      "test_paths": [],
+      "title": "gpt_oss: stop_gradient on top-k indices so LoRA backward works (fixes #1814)",
+      "url": "https://github.com/ml-explore/mlx-lm/pull/1843"
+    },
+    {
+      "additions": 107,
+      "base_sha": "ee19be43625b9385f979de6133938f683aba6e8e",
+      "changed_file_count": 26,
+      "changed_paths": [
+        "mlx_lm/models/Klear.py",
+        "mlx_lm/models/afmoe.py",
+        "mlx_lm/models/bailing_moe.py",
+        "mlx_lm/models/bailing_moe_linear.py",
+        "mlx_lm/models/bailing_moe_v3.py",
+        "mlx_lm/models/deepseek_v2.py",
+        "mlx_lm/models/deepseek_v3.py",
+        "mlx_lm/models/deepseek_v32.py",
+        "mlx_lm/models/dots1.py",
+        "mlx_lm/models/exaone_moe.py",
+        "mlx_lm/models/gemma4_text.py",
+        "mlx_lm/models/glm4_moe.py",
+        "mlx_lm/models/glm4_moe_lite.py",
+        "mlx_lm/models/kimi_k3.py",
+        "mlx_lm/models/kimi_linear.py",
+        "mlx_lm/models/laguna.py",
+        "mlx_lm/models/llama4.py",
+        "mlx_lm/models/longcat_flash.py",
+        "mlx_lm/models/mellum.py",
+        "mlx_lm/models/mimo_v2_flash.py",
+        "mlx_lm/models/minimax.py",
+        "mlx_lm/models/nemotron_h.py",
+        "mlx_lm/models/qwen3_next.py",
+        "mlx_lm/models/step3p5.py",
+        "mlx_lm/models/switch_layers.py",
+        "tests/test_tuner_trainer.py"
+      ],
+      "created_at": "2026-09-07T15:20:28Z",
+      "deletions": 8,
+      "head_sha": "ff6d927da5331ebdc0587d65cce195bab9571df5",
+      "merge_commit_sha": "a51b9093292cb2a98a6a618d264ddc8948166e6c",
+      "merged": true,
+      "merged_at": "2026-09-09T23:46:14Z",
+      "number": 1856,
+      "repository": "ml-explore/mlx-lm",
+      "state": "closed",
+      "test_paths": [
+        "tests/test_tuner_trainer.py"
+      ],
+      "title": "Fix gradients through routing indices",
+      "url": "https://github.com/ml-explore/mlx-lm/pull/1856"
+    },
+    {
+      "additions": 64,
+      "base_sha": "28e9ccd9cb52d1d4a6f674b7914bae2de49d9aad",
+      "changed_file_count": 2,
+      "changed_paths": [
+        "mlx_lm/models/qwen3.py",
+        "tests/test_models.py"
+      ],
+      "created_at": "2026-09-17T02:37:13Z",
+      "deletions": 1,
+      "head_sha": "243f932b78ee9a42499abf06a60fa9673d5536cc",
+      "merge_commit_sha": "29040de9246bb7dd85bef9d8bcd4761a004d2efe",
+      "merged": true,
+      "merged_at": "2026-09-18T13:46:20Z",
+      "number": 1898,
+      "repository": "ml-explore/mlx-lm",
+      "state": "closed",
+      "test_paths": [
+        "tests/test_models.py"
+      ],
+      "title": "fix(qwen3): support rope_parameters config",
+      "url": "https://github.com/ml-explore/mlx-lm/pull/1898"
+    },
+    {
+      "additions": 36,
+      "base_sha": "9d1e356e7cc6549e7d1697adabe2ea01ff8e062c",
+      "changed_file_count": 2,
+      "changed_paths": [
+        "mlx_lm/evaluate.py",
+        "tests/test_evaluate.py"
+      ],
+      "created_at": "2026-09-19T15:14:53Z",
+      "deletions": 1,
+      "head_sha": "5f4f76601e0911640126400477112cbddfac2b74",
+      "merge_commit_sha": "c69d1288440a0dc4e6401fc417098b07598dccd5",
+      "merged": true,
+      "merged_at": "2026-09-21T10:40:32Z",
+      "number": 1902,
+      "repository": "ml-explore/mlx-lm",
+      "state": "closed",
+      "test_paths": [
+        "tests/test_evaluate.py"
+      ],
+      "title": "Fix lm-eval continuation scoring after partial context truncation",
+      "url": "https://github.com/ml-explore/mlx-lm/pull/1902"
+    },
+    {
+      "additions": 31,
+      "base_sha": "2af5f7ce8620115bf37fbbddf9817f083118df59",
+      "changed_file_count": 2,
+      "changed_paths": [
+        "mlx_lm/server.py",
+        "tests/test_server.py"
+      ],
+      "created_at": "2026-09-20T10:40:24Z",
+      "deletions": 1,
+      "head_sha": "bd7d678e491d27f26c31c4f8d45b50b50665257c",
+      "merge_commit_sha": "caed1943d38ecb58f6e466a72bed98310c9d45a5",
+      "merged": true,
+      "merged_at": "2026-10-01T13:39:20Z",
+      "number": 1904,
+      "repository": "ml-explore/mlx-lm",
+      "state": "closed",
+      "test_paths": [
+        "tests/test_server.py"
+      ],
+      "title": "Fix incorrect assumption when parsing tool_calls[].function.arguments",
+      "url": "https://github.com/ml-explore/mlx-lm/pull/1904"
+    },
+    {
+      "additions": 31,
+      "base_sha": "bacd9e8e1f3a5be7dd64bae3a9ad8d74471ccc3a",
+      "changed_file_count": 2,
+      "changed_paths": [
+        "mlx_lm/tool_parsers/qwen3_coder.py",
+        "tests/test_tool_parsing.py"
+      ],
+      "created_at": "2026-09-21T16:37:45Z",
+      "deletions": 1,
+      "head_sha": "c14ed3c58f945705a6ea1dfd0c8c59799f5cb22a",
+      "merge_commit_sha": "a537041adc86d73cfae4cc1375b2c8851c652c60",
+      "merged": true,
+      "merged_at": "2026-10-06T13:57:14Z",
+      "number": 1910,
+      "repository": "ml-explore/mlx-lm",
+      "state": "closed",
+      "test_paths": [
+        "tests/test_tool_parsing.py"
+      ],
+      "title": "Fix Qwen3 Coder argument parsing when the top-level type is missing",
+      "url": "https://github.com/ml-explore/mlx-lm/pull/1910"
+    },
+    {
+      "additions": 27,
+      "base_sha": "47e43a4526d42a6dcee758f07eb04b78a8439ecb",
+      "changed_file_count": 2,
+      "changed_paths": [
+        "mlx_lm/sample_utils.py",
+        "tests/test_sample_utils.py"
+      ],
+      "created_at": "2026-09-22T07:15:45Z",
+      "deletions": 14,
+      "head_sha": "9e02bfd1a5d9ef939a19f5bac4fb667044688825",
+      "merge_commit_sha": "87b7b583a697537aa68f47130b40884700b5f55f",
+      "merged": true,
+      "merged_at": "2026-09-24T14:29:58Z",
+      "number": 1912,
+      "repository": "ml-explore/mlx-lm",
+      "state": "closed",
+      "test_paths": [
+        "tests/test_sample_utils.py"
+      ],
+      "title": "Keep the most likely token when top_p is small enough to mask everything",
+      "url": "https://github.com/ml-explore/mlx-lm/pull/1912"
+    },
+    {
+      "additions": 54,
+      "base_sha": "05b7aed425453057c511ec0d5ec9732c325b3444",
+      "changed_file_count": 2,
+      "changed_paths": [
+        "mlx_lm/models/granitemoehybrid.py",
+        "tests/test_models.py"
+      ],
+      "created_at": "2026-09-24T07:06:46Z",
+      "deletions": 1,
+      "head_sha": "e113779e5d1943a2e94f81d47d3a50014167b48e",
+      "merge_commit_sha": "9d8abd94d63a9b3c72e7e9b146e43af1005368fa",
+      "merged": true,
+      "merged_at": "2026-10-08T08:52:45Z",
+      "number": 1921,
+      "repository": "ml-explore/mlx-lm",
+      "state": "closed",
+      "test_paths": [
+        "tests/test_models.py"
+      ],
+      "title": "Fix GraniteMoeHybrid padded batch logprobs (#1908)",
+      "url": "https://github.com/ml-explore/mlx-lm/pull/1921"
+    },
+    {
+      "additions": 81,
+      "base_sha": "a9bd8af5c02118882af735cef60705d2efce9fd0",
+      "changed_file_count": 3,
+      "changed_paths": [
+        "mlx_lm/models/minicpm3.py",
+        "mlx_lm/models/phixtral.py",
+        "tests/test_models.py"
+      ],
+      "created_at": "2026-09-26T20:08:08Z",
+      "deletions": 4,
+      "head_sha": "a1e69fd7f1cb1eb95233c84cb10eb252c210c000",
+      "merge_commit_sha": "2af5f7ce8620115bf37fbbddf9817f083118df59",
+      "merged": true,
+      "merged_at": "2026-10-01T13:15:37Z",
+      "number": 1925,
+      "repository": "ml-explore/mlx-lm",
+      "state": "closed",
+      "test_paths": [
+        "tests/test_models.py"
+      ],
+      "title": "Honour the left-padding mask in MiniCPM3 and Phixtral batches",
+      "url": "https://github.com/ml-explore/mlx-lm/pull/1925"
+    },
+    {
+      "additions": 38,
+      "base_sha": "87b7b583a697537aa68f47130b40884700b5f55f",
+      "changed_file_count": 2,
+      "changed_paths": [
+        "mlx_lm/models/falcon_h1.py",
+        "tests/test_models.py"
+      ],
+      "created_at": "2026-09-27T01:43:06Z",
+      "deletions": 1,
+      "head_sha": "ebba55f5176fe451b94f04212e975f052a6d96e0",
+      "merge_commit_sha": "3051e26bc72b8ab426af17d14c5599447eb306a5",
+      "merged": true,
+      "merged_at": "2026-09-28T15:30:31Z",
+      "number": 1926,
+      "repository": "ml-explore/mlx-lm",
+      "state": "closed",
+      "test_paths": [
+        "tests/test_models.py"
+      ],
+      "title": "Fix Falcon-H1 cache initialization and zero gradients",
+      "url": "https://github.com/ml-explore/mlx-lm/pull/1926"
+    },
+    {
+      "additions": 42,
+      "base_sha": "94cdcae13b266c337bcaca09b97b9c5a9c0e2cde",
+      "changed_file_count": 3,
+      "changed_paths": [
+        "mlx_lm/models/minimax_m3_vl.py",
+        "mlx_lm/models/mistral4.py",
+        "tests/test_tuner_trainer.py"
+      ],
+      "created_at": "2026-09-28T23:15:58Z",
+      "deletions": 0,
+      "head_sha": "143f29863d033af3d4f3c545af23208818ea2570",
+      "merge_commit_sha": "a9bd8af5c02118882af735cef60705d2efce9fd0",
+      "merged": true,
+      "merged_at": "2026-09-30T08:59:37Z",
+      "number": 1930,
+      "repository": "ml-explore/mlx-lm",
+      "state": "closed",
+      "test_paths": [
+        "tests/test_tuner_trainer.py"
+      ],
+      "title": "Fix gradients through Mistral4 and MiniMax indices",
+      "url": "https://github.com/ml-explore/mlx-lm/pull/1930"
+    },
+    {
+      "additions": 14,
+      "base_sha": "5cfec4cb39deba54210b3ff4d86f2337c7bc10b5",
+      "changed_file_count": 2,
+      "changed_paths": [
+        "mlx_lm/server.py",
+        "tests/test_server.py"
+      ],
+      "created_at": "2026-09-30T17:13:31Z",
+      "deletions": 3,
+      "head_sha": "9940ace9431c00bc20c8d38ff60b5a7589c1ef89",
+      "merge_commit_sha": "bacd9e8e1f3a5be7dd64bae3a9ad8d74471ccc3a",
+      "merged": true,
+      "merged_at": "2026-10-06T12:48:00Z",
+      "number": 1935,
+      "repository": "ml-explore/mlx-lm",
+      "state": "closed",
+      "test_paths": [
+        "tests/test_server.py"
+      ],
+      "title": "Fix: max_tokens: 0 -> Server accepts max_tokens: 0, generator then rejects it",
+      "url": "https://github.com/ml-explore/mlx-lm/pull/1935"
+    },
+    {
+      "additions": 7,
+      "base_sha": "caed1943d38ecb58f6e466a72bed98310c9d45a5",
+      "changed_file_count": 2,
+      "changed_paths": [
+        "mlx_lm/models/phi3small.py",
+        "tests/test_models.py"
+      ],
+      "created_at": "2026-10-01T14:28:21Z",
+      "deletions": 2,
+      "head_sha": "e2e43bc1a82c3bbbbf3000098470205febca97c8",
+      "merge_commit_sha": "011f2f6e2f4ff91e99b3fed3a7f51d3a42a6335c",
+      "merged": true,
+      "merged_at": "2026-10-02T08:27:33Z",
+      "number": 1938,
+      "repository": "ml-explore/mlx-lm",
+      "state": "closed",
+      "test_paths": [
+        "tests/test_models.py"
+      ],
+      "title": "Fix incorrect masking axis in phi3small",
+      "url": "https://github.com/ml-explore/mlx-lm/pull/1938"
+    },
+    {
+      "additions": 1144,
+      "base_sha": "934eda2e56c81484583dc3bc0328e6dba76683eb",
+      "changed_file_count": 24,
+      "changed_paths": [
+        "doc/source/train/api/api.rst",
+        "python/ray/train/__init__.py",
+        "python/ray/train/v2/BUILD.bazel",
+        "python/ray/train/v2/_internal/callbacks/state_manager.py",
+        "python/ray/train/v2/_internal/constants.py",
+        "python/ray/train/v2/_internal/execution/controller/controller.py",
+        "python/ray/train/v2/_internal/execution/controller/state.py",
+        "python/ray/train/v2/_internal/execution/failure_handling/default.py",
+        "python/ray/train/v2/_internal/execution/preemption.py",
+        "python/ray/train/v2/_internal/execution/train_fn_utils.py",
+        "python/ray/train/v2/_internal/execution/worker_group/poll.py",
+        "python/ray/train/v2/_internal/execution/worker_group/worker.py",
+        "python/ray/train/v2/_internal/util.py",
+        "python/ray/train/v2/api/config.py",
+        "python/ray/train/v2/api/exceptions.py",
+        "python/ray/train/v2/api/preemption.py",
+        "python/ray/train/v2/api/train_fn_utils.py",
+        "python/ray/train/v2/tests/test_controller.py",
+        "python/ray/train/v2/tests/test_failure_policy.py",
+        "python/ray/train/v2/tests/test_preemption_fault_tolerance.py",
+        "python/ray/train/v2/tests/test_preemption_watcher.py",
+        "python/ray/train/v2/tests/test_worker.py",
+        "python/ray/train/v2/tests/test_worker_group_poll_status.py",
+        "python/ray/train/v2/tests/util.py"
+      ],
+      "created_at": "2026-06-25T23:06:22Z",
+      "deletions": 48,
+      "head_sha": "30dbee2bdebdb6c79bbe3313cdcb4e24a7d02f1b",
+      "merge_commit_sha": "27b0e6a7b88324eab5214a0bc65a839bfbb2dc85",
+      "merged": true,
+      "merged_at": "2026-07-24T17:26:04Z",
+      "number": 64360,
+      "repository": "ray-project/ray",
+      "state": "closed",
+      "test_paths": [
+        "python/ray/train/v2/tests/test_controller.py",
+        "python/ray/train/v2/tests/test_failure_policy.py",
+        "python/ray/train/v2/tests/test_preemption_fault_tolerance.py",
+        "python/ray/train/v2/tests/test_preemption_watcher.py",
+        "python/ray/train/v2/tests/test_worker.py",
+        "python/ray/train/v2/tests/test_worker_group_poll_status.py",
+        "python/ray/train/v2/tests/util.py"
+      ],
+      "title": "[train][Preemption handling 3/n] Add public preemption API and controller PreemptingState",
+      "url": "https://github.com/ray-project/ray/pull/64360"
+    },
+    {
+      "additions": 66,
+      "base_sha": "017e9f4448b700e85ee16023287b025693c72b9e",
+      "changed_file_count": 2,
+      "changed_paths": [
+        "tests/kernels/test_mhc_kernels.py",
+        "vllm/models/deepseek_v4/nvidia/model.py"
+      ],
+      "created_at": "2026-08-17T13:50:19Z",
+      "deletions": 1,
+      "head_sha": "e1060155aca74e7f666f010011dec9947324b487",
+      "merge_commit_sha": "d5f5de7a7db4e13ea9f94ce8662b55b6b5e97d02",
+      "merged": true,
+      "merged_at": "2026-08-18T02:55:38Z",
+      "number": 52626,
+      "repository": "vllm-project/vllm",
+      "state": "closed",
+      "test_paths": [
+        "tests/kernels/test_mhc_kernels.py"
+      ],
+      "title": "[Bugfix] Fix DeepSeek V4 mHC broadcast buffer for weight sync",
+      "url": "https://github.com/vllm-project/vllm/pull/52626"
+    },
+    {
+      "additions": 8,
+      "base_sha": "f2e2936f91a794513af74d009286c69e3fb2592b",
+      "changed_file_count": 1,
+      "changed_paths": [
+        "vllm/model_executor/models/blip2.py"
+      ],
+      "created_at": "2026-09-04T04:36:22Z",
+      "deletions": 8,
+      "head_sha": "37e2771841383a5b757b7e05db24bfe425ddb1f1",
+      "merge_commit_sha": "a1541f5742a29864a80087af313ad460066a1524",
+      "merged": true,
+      "merged_at": "2026-09-06T07:04:19Z",
+      "number": 55285,
+      "repository": "vllm-project/vllm",
+      "state": "closed",
+      "test_paths": [],
+      "title": "[Perf] Use SDPA for BLIP-2 Q-Former attention",
+      "url": "https://github.com/vllm-project/vllm/pull/55285"
+    },
+    {
+      "additions": 93,
+      "base_sha": "49e0427ca5183a56ccb112e5be1300feb2873ca9",
+      "changed_file_count": 2,
+      "changed_paths": [
+        "tests/v1/kv_connector/unit/test_hidden_states_connector.py",
+        "vllm/distributed/kv_transfer/kv_connector/v1/example_hidden_states_connector.py"
+      ],
+      "created_at": "2026-09-14T14:07:23Z",
+      "deletions": 9,
+      "head_sha": "7af3ada9afcd41bdf4cfd6e8f6055b2022fbea89",
+      "merge_commit_sha": "6aab78f4777c945b02123af330ff351f72785c0f",
+      "merged": true,
+      "merged_at": "2026-09-18T21:53:03Z",
+      "number": 56841,
+      "repository": "vllm-project/vllm",
+      "state": "closed",
+      "test_paths": [
+        "tests/v1/kv_connector/unit/test_hidden_states_connector.py"
+      ],
+      "title": "[Bugfix][KVConnector] Make ExampleHiddenStatesConnector abort-safe",
+      "url": "https://github.com/vllm-project/vllm/pull/56841"
+    },
+    {
+      "additions": 87,
+      "base_sha": "bfa7e5b7afe40ebe48288801a2baf5c1135cd881",
+      "changed_file_count": 2,
+      "changed_paths": [
+        "tests/distributed/test_shm_broadcast.py",
+        "vllm/distributed/device_communicators/shm_broadcast.py"
+      ],
+      "created_at": "2026-10-10T13:23:04Z",
+      "deletions": 33,
+      "head_sha": "976a45ced62b3c1aef711ee36aad28c44b30a1f6",
+      "merge_commit_sha": "74f4404f58c0fb16821b34c16343486eeaf164a5",
+      "merged": true,
+      "merged_at": "2026-10-12T05:44:13Z",
+      "number": 61000,
+      "repository": "vllm-project/vllm",
+      "state": "closed",
+      "test_paths": [
+        "tests/distributed/test_shm_broadcast.py"
+      ],
+      "title": "[Bugfix][Distributed] Own SHM out-of-band buffers before releasing read slots",
+      "url": "https://github.com/vllm-project/vllm/pull/61000"
+    }
+  ],
+  "captured_at_utc": "2026-10-20T10:08:07.544013+00:00",
+  "failures": [],
+  "schema_version": 1,
+  "search_date": "2026-10-20",
+  "source": "GitHub REST pull request and changed-file metadata"
+}
