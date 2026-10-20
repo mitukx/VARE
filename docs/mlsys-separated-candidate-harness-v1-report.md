@@ -16,7 +16,8 @@ frozen checker rejects a malformed empty result, the isolated grader rejects
 the same candidate, and the frozen oracle control passes. This verifies the
 adapter path without claiming a checker defect or new task result. The final
 raw outputs, source hashes, runtime metadata, and inventory manifest are
-retained in [`results/mlsys-separated-candidate-harness-v1/run-10/`](../results/mlsys-separated-candidate-harness-v1/run-10/).
+retained in [`results/mlsys-separated-candidate-harness-v1/run-11/`](../results/mlsys-separated-candidate-harness-v1/run-11/).
+Run-10 remains an immutable earlier calibration bundle.
 
 This is **not** a model update, agent rollout, new task evaluation, or held-out
 capability result. Consumed task graders and oracle fixtures are used only to
@@ -52,17 +53,20 @@ Reproduce the calibration on Apple Silicon with Docker available:
 ```bash
 DOCKER_CONTEXT=colima PYTHONPATH=src python \
   scripts/verify_mlsys_separated_candidate_harness_v2.py \
-  --output /tmp/vare-separated-harness-replay/run-1
+  --output /tmp/vare-separated-harness-replay/run-12
 PYTHONPATH=src python scripts/audit_mlsys_separated_candidate_harness_v2.py \
-  /tmp/vare-separated-harness-replay/run-1
+  /tmp/vare-separated-harness-replay/run-12
 ```
 
 The output directory must not already exist. Choose a fresh path for repeated
-runs; the committed run-10 bundle remains immutable. The verifier runs the
+runs; the committed run-11 bundle remains immutable. The verifier runs the
 negative and oracle controls in Docker and records its runtime version and elapsed time.
-The auditor checks every artifact hash, relevant source hash, claim label, and
-source commit identifier. Source hashes bind the inspected files directly,
-including when the PR's commit history is later squashed.
+The auditor checks every artifact hash, relevant current-source hash, claim
+label, and the recorded Git commit object. It hashes each source blob at that
+commit and requires the result to match the recorded source hashes, so a
+mistyped or unrelated commit cannot pass provenance checks. When reproducing a
+bundle, make its recorded source commit available in the local Git object
+database.
 
 The regression suite exercises the isolated adapter for the three tasks whose
 frozen correctness semantics fit the existing JSON-call protocol: causal
