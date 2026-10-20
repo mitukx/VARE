@@ -4,9 +4,10 @@
 Apple-Silicon feasibility work completed real MLX inference, a ten-step LoRA
 update, independent coding-agent rollouts, and a bounded trajectory-recovery
 comparison. It did not measure held-out task success before and after an
-update. The frozen readiness audit finds zero eligible fresh held-out tasks;
-this is an execution-readiness result, not evidence that an update cannot
-improve task success.
+update. The frozen readiness audit finds at most 14 unique definitions against
+a 15-task minimum, so the inventory itself fails the gate. Its locked prior-use
+classification marks 0 tasks eligible; this is an execution-readiness result,
+not evidence that an update cannot improve task success.
 
 ## Frozen decision rule and task inventory
 
@@ -14,21 +15,32 @@ The readiness lock is
 [`mlsys_actual_model_update_no_go_v1.lock.json`](../protocols/mlsys_actual_model_update_no_go_v1.lock.json).
 It requires at least 15 unique, independently graded held-out task definitions
 before training or final evaluation, after excluding tasks already used by PR
-#84 through #90. The inventory pins each pack commit, manifest, split, task ID,
-task JSON hash, and exclusion reason.
+#84 through #90. The inventory pins each source pack commit, embedded VARE
+revision, manifest, split, task ID, task JSON hash, and exclusion reason. The
+v3 source pack is a separate Git repository at
+`14291c1f86b8015dba1414a5690ac044573ae365`; the identical VARE mirror is pinned
+at `228d2ffff38046f1d3e0ecbf7f658d31c6b48834`.
 
 The audit covers 19 task entries across packs v1–v3, representing 14 unique
-task definitions after deduplicating v3 references to v1 tasks. All nine v1
+task definitions after deduplicating v3 references to v1 tasks. Even if every
+definition were unused, the inventory could not meet the 15-task minimum. All nine v1
 tasks and all three v2 tasks are from PR #84 or #86 and are excluded by the
 no-reuse rule. The five v3 train tasks reuse v1 task definitions. The two new
 v3 tasks, EMA bias correction and label smoothing, were both used in the PR #90
 matched exploratory cohort. The remaining GQA candidate is unassigned and its
 mutation condition is not represented in the separated-call schema. Therefore
-the eligible final held-out count is **0/15**.
+the frozen exclusion classification is **0/15 eligible**. The audit does not
+reconstruct prior-use claims from raw rollout manifests; those exclusions are
+locked protocol assertions. This limitation does not affect the NO-GO because
+the independently counted inventory ceiling is already 14, below 15.
 
-The read-only audit checks the three pack commits, manifest and split hashes,
-task-file inventory, IDs, task types, split membership, provenance fields, and
-task JSON hashes. It does not load a model or open hidden grader files.
+The read-only audit checks the VARE source revisions and their ancestry, source
+pack commit identifiers in the lock, manifest and split hashes, task-file
+inventory, IDs, task types, split membership, provenance fields, task JSON
+hashes, and every subject/evaluator file hash listed in each manifest. The v3
+source-repository history is preserved in the downloadable Git bundle below.
+The audit reads grader files only to hash their bytes; it does not expose their
+contents to a model, load a model, or execute candidate code.
 
 ```bash
 python scripts/audit_mlsys_update_readiness_v1.py \
@@ -36,9 +48,24 @@ python scripts/audit_mlsys_update_readiness_v1.py \
   --output results/mlsys-actual-model-update-readiness-v1/audit.json
 ```
 
-The retained audit reports 19 task entries, 14 unique definitions, zero
-eligible tasks, and `NO_GO`; all source and inventory checks pass. A separate
-test edits a copied task definition and verifies that the hash audit fails.
+The retained audit reports 19 task entries, 14 unique definitions, a 14-task
+maximum inventory ceiling, zero tasks eligible under the frozen exclusions,
+and `NO_GO`; source and inventory checks pass. Separate tests edit a copied task
+definition and a hidden grader file and verify that the hash audit fails.
+
+To verify the original v3 source commit and manifest independently, download
+`mlsys-coding-v3-source.bundle` and its `.sha256` sidecar from the [evidence
+release](https://github.com/mitukx/VARE/releases/tag/vare-apple-silicon-update-v1-evidence).
+The bundle SHA-256 is
+`43be704829c547342171017d8a2610181a9d40726c7c920bae054d68d309155e`.
+
+```bash
+shasum -a 256 -c mlsys-coding-v3-source.bundle.sha256
+git clone --bare mlsys-coding-v3-source.bundle /tmp/mlsys-coding-v3-source.git
+git -C /tmp/mlsys-coding-v3-source.git rev-parse refs/heads/main
+git -C /tmp/mlsys-coding-v3-source.git show \
+  refs/heads/main:manifest.json | shasum -a 256
+```
 
 ## Feasibility measurements retained before the NO-GO
 

@@ -5,8 +5,9 @@
 M1 Pro feasibility measurements recorded Metal and CPU decoding, a ten-step
 0.5B MLX LoRA update, small Qwen agent rollouts, and a bounded tool-recovery
 comparison. No held-out success comparison followed the update. A frozen audit
-of the available v1–v3 task packs finds 0/15 eligible fresh held-out tasks after
-excluding PR #84–#89 data and the two consumed PR #90 exploratory tasks. See
+of the available v1–v3 task packs finds 14 unique definitions, below the 15-task
+minimum even before exclusions. The frozen prior-use record classifies 0/15 as
+eligible; the audit does not reconstruct prior use from raw rollout manifests. See
 the [readiness report](mlsys-actual-model-update-no-go-v1-report.md),
 [lock](../protocols/mlsys_actual_model_update_no_go_v1.lock.json), and
 [audit](../results/mlsys-actual-model-update-readiness-v1/audit.json). This
