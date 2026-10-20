@@ -32,7 +32,9 @@ def _validate(label, num_classes, epsilon):
 
 def smooth_targets(label, num_classes, epsilon):
     _validate(label, num_classes, epsilon)
-    share = float(epsilon) / num_classes
-    target = [share] * num_classes
-    target[label] = (1.0 - float(epsilon)) + share
+    if num_classes == 1:
+        return [1.0]
+    off = float(epsilon) / (num_classes - 1)
+    target = [off] * num_classes
+    target[label] = 1.0 - float(epsilon)
     return target
