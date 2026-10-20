@@ -93,9 +93,10 @@ def audit(root: Path) -> dict:
     actual = {
         path.relative_to(root).as_posix()
         for path in root.rglob("*")
-        if path.is_file() and path.name not in {"audit.json", "evidence-manifest.json"}
+        if path.is_file()
+        and path.relative_to(root).as_posix() not in {"audit.json", "evidence-manifest.json"}
     }
-    if actual != {"run-1/candidate-pool.json", "screen-1/screen.json"}:
+    if actual != frozen_paths:
         raise ValueError("frozen evidence inventory differs; keep reruns outside this bundle")
     result = {
         "schema_version": 1,
