@@ -91,8 +91,11 @@ git -C /tmp/mlsys-coding-v3-source.git show \
   Qwen3 at 1/2 verified tasks and 7B Qwen2.5-Coder at 0/2. The 4B task that
   passed used 516 generated tokens and 27.4 s. The different model families,
   two tasks, and one greedy sample per task do not support a model-size ranking
-  or broad success estimate. The earlier 4B development cohort recorded 2/5
-  after a disclosed post-run grader correction; it is not confirmation data.
+  or broad success estimate. The earlier 4B development report states 2/5 after
+  a post-run grader correction, but its raw run archive is unavailable for audit
+  and the frozen protocol's 10-attempt metric conflicts with its five-task,
+  one-seed configuration. Treat that score as unverified author-reported history,
+  not evidence of improvement. See the [protocol deviation audit](4b-mlx-coding-agent-pilot-v6-audit.md).
 - **Recovery:** three repetitions per arm and condition on one already exposed
   development task. After worker SIGKILL between a successful public-test tool
   operation and the next committed step, restart-from-zero used four tool
@@ -101,6 +104,16 @@ git -C /tmp/mlsys-coding-v3-source.git show \
   0.664 s for restart and 3.772 s for VARE, because the three-second lease
   expiry dominated. This is a narrow replay-versus-latency tradeoff, not a
   broad reliability gain.
+
+## Requested measurements not collected
+
+The short inference benchmark reports decode tokens per second only; prompt
+prefill throughput and continuous GPU utilization were not measured. Metal
+device selection was verified and peak MLX allocation/RSS were recorded. The
+LoRA adapter is 1,469,313 bytes, but optimizer-state checkpoint recovery time
+was not measured. The 13.71-second update duration covers the ten-step run as a
+whole, not isolated per-step latency. The recovery experiment measures agent
+trajectory continuation, not model-checkpoint recovery.
 
 ## Evidence bundle and reproduction
 

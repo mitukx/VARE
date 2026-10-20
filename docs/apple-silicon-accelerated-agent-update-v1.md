@@ -4,7 +4,7 @@
 
 ## Questions and prior evidence
 
-The motivating question was whether VARE's existing coding-agent evidence path and durable trajectory store can be exercised with local MLX/Metal inference and whether an actual small-model adapter update fits this machine. PR #89's Qwen3 4B pilot recorded 2/5 only after a posthoc grader correction; the original inference evidence remains separate. PR #90's exploratory matched cohort recorded 4B 1/2 and 7B 0/2, but it has only two tasks, greedy single samples, and different model families. Those tasks are consumed and are not reused as fresh confirmation here. The 14B CPU cohort from PR #88 is also consumed.
+The motivating question was whether VARE's existing coding-agent evidence path and durable trajectory store can be exercised with local MLX/Metal inference and whether an actual small-model adapter update fits this machine. PR #89's Qwen3 4B report states 2/5 after a posthoc grader correction, but its raw archive is unavailable for audit and its frozen protocol specifies 10 attempts while configuring five tasks and one seed. Treat that score as unverified author-reported history; see the [protocol deviation audit](4b-mlx-coding-agent-pilot-v6-audit.md). PR #90's exploratory matched cohort recorded 4B 1/2 and 7B 0/2, but it has only two tasks, greedy single samples, and different model families. Those tasks are consumed and are not reused as fresh confirmation here. The 14B CPU cohort from PR #88 is also consumed.
 
 The hypotheses frozen before the new runs were:
 

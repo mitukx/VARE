@@ -1,5 +1,7 @@
 # 4B MLX MLSys Coding Agent Pilot — 2026-10-20
 
+> **Evidence status:** The original PR #89 report states a 2/5 result, but the PR stack does not contain the pilot's raw trajectories, candidate snapshots, grader outputs, or hash manifest, and the cited local evidence directory was not present during the independent audit. The 2/5 figures below are therefore historical author-reported values, not independently reproducible evidence. This report does not use them to support model capability or policy-improvement claims. See the [protocol deviation and evidence audit](4b-mlx-coding-agent-pilot-v6-audit.md).
+
 ## 目的と仮説
 
 M1 Pro上の4B級ローカルモデルが、凍結したMLSys開発タスクを調査し、コードを変更し、公開テストを通し、VAREの隔離graderで独立確認できるかを調べた。今回の仮説は「少なくとも1つの非自明な開発タスクで、モデル自身が有効な変更を作り、独立graderを通過する」である。VAREの比較実験や学習効果は今回の仮説に含まない。
@@ -11,9 +13,9 @@ M1 Pro上の4B級ローカルモデルが、凍結したMLSys開発タスクを�
 - データ: PR #84の固定task pack commit `27955442317cf9b7beef3583b4f1a5f2662e0390`。train/development 5タスク、seed 101、temperature 0、最大12 turns、各turn最大768 tokens。4 held-outタスクは開かず、実行しなかった。
 - grader: agent終了後のsource-only snapshotを、候補から隔離したVARE graderが評価。PR #84 evaluatorのSHA-256を記録。grader adapterの初期版で2つの実装問題が見つかったため、同一の保存済みcandidateを修正済みgraderで再評価した。モデル推論は再実行していない。
 
-## 結果
+## 当時の報告値（未検証）
 
-- **独立grader合格: 2/5タスク (40%)**。gradient accumulation tailとwarmup cosineが全hidden correctness casesに合格し、公開テストも通過した。事前に定めたStage Aの「少なくとも1つの非自明な成功」ゲートを満たした。Wilson 95%区間は約11.8%–76.9%だが、5個の開発タスクでの記述値であり、一般化性能推定には使えない。
+- **原報告は独立grader合格を2/5タスク (40%) としているが、raw trajectoryとgrader出力を監査できないため、結果は検証されていない。** gradient accumulation tailとwarmup cosineが合格したという記述、Wilson区間、およびStage Aゲート達成の記述は、再現可能な結果として扱わない。
 - paired shuffle loader: モデルはtool callsを試したがソースを変更できず、retry上限で終了。
 - row log-softmax: patchと公開テストは通過したが、独立graderの極端値ケースで失敗。
 - range sums: patchは正しい出力を返したが、performance graderの2x昇格基準を満たさなかった。7組の測定でbaseline平均0.340秒、候補平均0.985秒、baseline/candidate比0.345x。よって「性能改善」としては不合格で、今回の実測は候補が遅い。
@@ -28,6 +30,6 @@ M1 Pro上の4B級ローカルモデルが、凍結したMLSys開発タスクを�
 
 ## 限界と結論
 
-この結果は、4Bモデルが小規模なMLSys修正を自律的に作り、VAREのsource snapshotと独立graderで2件の成功を検証できることを示す。5タスク・1 seedの開発pilotであり、held-out一般化、VARE対基本agentの優位性、障害復旧効果、長時間実験の成功、RL/SFT/GRPOの効果は示していない。性能タスクでは有効な変更が遅くなる負の結果も記録した。
+現在監査可能な材料だけでは、4B agentのgrader成功率を確定できない。protocolの試行数定義と実行設定にも逸脱があるため、このpilotからモデル能力、held-out一般化、VARE対基本agentの優位性、障害復旧効果、長時間実験の成功、RL/SFT/GRPOの効果を主張しない。性能タスクで候補が遅かったという原報告も、保存されたraw測定値がないため未検証である。
 
 次段階は、追加の独立タスクとtrain/dev/held-out分割をgraderを実行する前に固定し、同一予算のbasic-agent/VARE armsとfault-injection条件を別protocolで事前登録してから実行すること。現在のheld-out 4タスクを本pilot後の調整に使わない。

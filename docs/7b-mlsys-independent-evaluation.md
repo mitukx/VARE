@@ -40,7 +40,7 @@ No Basic-vs-VARE execution, worker SIGKILL, interrupted trajectory write, delaye
 
 ## Historical pilot context
 
-PR #89's 4B pilot reported 2/5 only after a post-run grader correction; its original inference result and the corrected posthoc evaluation are distinct. PR #88's 14B held-out cohort was already consumed and is not treated as fresh. The older PR #84 task pack is used only for development feasibility and is not the confirmation cohort here.
+PR #89's 4B pilot report states 2/5 after a post-run grader correction, but the raw archive is unavailable for audit and its frozen protocol denominator (10 attempts) conflicts with the configured five tasks and one seed. Treat the score as unverified author-reported history; see the [protocol deviation audit](4b-mlx-coding-agent-pilot-v6-audit.md). PR #88's 14B held-out cohort was already consumed and is not treated as fresh. The older PR #84 task pack is used only for development feasibility and is not the confirmation cohort here.
 
 ## Reproduction
 
