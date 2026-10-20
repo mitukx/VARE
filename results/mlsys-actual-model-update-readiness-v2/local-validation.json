@@ -1,0 +1,33 @@
+{
+  "validation_date": "2026-10-20",
+  "host": "macOS 27.0.1 arm64, Apple M1 Pro 32 GiB, Colima Docker Linux arm64",
+  "attempts": [
+    {
+      "command": "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py",
+      "status": "interrupted_local_environment_blocker",
+      "elapsed_seconds": 664.34,
+      "collection_progress_percent_at_interrupt": 34,
+      "reported": {"passed": 454, "skipped": 78, "failed": 13},
+      "details": "Tests invoking python3 resolved to host /usr/bin/python3 3.9.6, below the repository's supported Python version. Docker-backed isolated-candidate cases also used pytest temporary directories under /private/var/folders, which are not shared into the Colima VM. The run was interrupted after sustained lack of progress; this is not a complete-suite result."
+    },
+    {
+      "command": "PATH=/opt/homebrew/Caskroom/miniforge/base/bin:$PATH PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 DOCKER_CONTEXT=colima python3 -m pytest tests/test_blob_budget.py::test_check_script_passes_on_this_repository tests/test_isolated_candidate.py",
+      "status": "environment_boundary_reproduced",
+      "elapsed_seconds": 10.69,
+      "reported": {"passed": 17, "failed": 17},
+      "details": "The Python version issue was corrected. Remaining failures were isolated-candidate Docker cases; a direct bind-mount probe confirmed Colima reports the host pytest temporary source path does not exist in the Linux VM."
+    },
+    {
+      "command": "PATH=/opt/homebrew/Caskroom/miniforge/base/bin:$PATH PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest tests/test_mlsys_update_readiness_v1.py",
+      "status": "passed",
+      "elapsed_seconds": 0.49,
+      "reported": {"passed": 3, "failed": 0}
+    },
+    {
+      "command": "DOCKER_CONTEXT=colima docker run --rm --pull=never --network=none --read-only --user 65534:65534 --mount type=bind,source=<pytest-temp>,target=/subject,readonly <pinned-amd64-python-image> python -c ...",
+      "status": "blocker_reproduced",
+      "details": "Docker daemon rejected the pytest temporary source path under /private/var/folders as absent in the Colima VM."
+    }
+  ],
+  "merge_gate": "Linux pull-request CI must pass; the local full suite did not complete."
+}
