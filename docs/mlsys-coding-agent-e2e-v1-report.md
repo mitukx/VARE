@@ -28,7 +28,7 @@ Pack manifest SHA-256 `18c5999f823f9a550a561a913023b87f1fc7bf5a86f481d319e477821
 
 The non-pack probe emitted a single JSON tool call without `<tool_call>` tags. The parser now accepts one bare tool JSON object and still rejects a JSON object that has trailing prose. A second probe then applied `replace_text` and changed `VALUE = 0` to `VALUE = 1` in `/tmp/vare-format-probe`. That file is not a pack task.
 
-Hidden checks stay on the host. The candidate module runs in a user, mount, and network namespace with a chroot. The evaluator `oracle/` directory is not mounted there. Grading copies the candidate workspace, and the evidence tree hash was unchanged after every grade in this run (`integrity_ok` true). This is a process and mount boundary, not a claim that the namespace contains a kernel exploit.
+Hidden checks stay on the host. The candidate module runs in a user, mount, and network namespace with a chroot. The evaluator `oracle/` directory is not mounted there. Grading copies the candidate workspace, and the evidence tree hash was unchanged after every grade in this run (`integrity_ok` true). This is a process and mount boundary, not a claim that the namespace contains a kernel exploit. GitHub-hosted runners reject `unshare` uid_map writes, so the tests that need that namespace skip there. The measured grades in this report were produced on a host where the namespace call succeeded.
 
 ## Development split
 

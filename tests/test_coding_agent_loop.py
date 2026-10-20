@@ -5,8 +5,10 @@ known-fix control, not a model result.
 """
 from __future__ import annotations
 
+import functools
 import hashlib
 from pathlib import Path
+import subprocess
 
 import pytest
 
@@ -26,6 +28,21 @@ from vare.environments.runner import Workspace
 from vare.environments.spec import EngineeringTaskSpec
 from vare.trajectory_store import PolicyCheckpoint, TrajectoryStore
 from vare.types import Task
+
+@functools.lru_cache(maxsize=1)
+def _user_namespace_ok() -> bool:
+    proc = subprocess.run(
+        ["unshare", "--user", "--map-root-user", "--mount", "--net", "true"],
+        capture_output=True,
+        check=False,
+    )
+    return proc.returncode == 0
+
+
+requires_user_namespace = pytest.mark.skipif(
+    not _user_namespace_ok(),
+    reason="this host does not permit unshare user namespaces",
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 TASK_DIR = ROOT / "benchmarks" / "mlsys_coding_v1" / "tasks" / "grad_accum_tail"
@@ -80,6 +97,7 @@ def _run(tools, outputs, **kwargs):
     )
 
 
+@requires_user_namespace
 def test_jailed_rpc_preserves_tuples():
     root = Path("/tmp/vare-tuple-subject")
     if root.exists():
@@ -139,7 +157,7 @@ def test_parser_accepts_recorded_json_and_qwen_xml():
     assert xml == [{"name": "read_file", "arguments": {"path": "grad_accum.py"}}]
 
 
-def test_malformed_patch_continues_and_exact_replace_passes_hidden_grade():
+def test_malformed_patch_continues_with_exact_replace():
     spec, workspace, tools = _open_task()
     try:
         result = _run(tools, [MALFORMED, FIX, FINISH])
@@ -147,6 +165,15 @@ def test_malformed_patch_continues_and_exact_replace_passes_hidden_grade():
         assert result.transcript[0]["tool_calls"][0]["result"]["error"] == "patch is not a unified diff"
         assert "replace_text" in result.transcript[0]["tool_calls"][0]["result"]["hint"]
         assert "short window was scaled" not in system_prompt(spec.prompt)
+    finally:
+        workspace.close()
+
+
+@requires_user_namespace
+def test_exact_replace_passes_hidden_grade():
+    _spec, workspace, tools = _open_task()
+    try:
+        _run(tools, [MALFORMED, FIX, FINISH])
         grade = grade_separated(task_dir=TASK_DIR, workspace=workspace.path, timeout_s=30)
         assert grade["passed"] is True
         assert grade["provenance"]["oracle_mounted"] is False
@@ -154,6 +181,7 @@ def test_malformed_patch_continues_and_exact_replace_passes_hidden_grade():
         workspace.close()
 
 
+@requires_user_namespace
 def test_unpatched_subject_fails_separated_grade_and_oracle_bytes_pass():
     _spec, workspace, _tools = _open_task()
     try:
@@ -167,6 +195,7 @@ def test_unpatched_subject_fails_separated_grade_and_oracle_bytes_pass():
         workspace.close()
 
 
+@requires_user_namespace
 def test_candidate_jail_cannot_read_host_canary_or_open_a_socket():
     secret = Path("/tmp/vare-canary-secret")
     secret.write_text("CANARY-VALUE-do-not-leak", encoding="utf-8")
