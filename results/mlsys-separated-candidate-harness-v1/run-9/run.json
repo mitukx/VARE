@@ -1,0 +1,136 @@
+{
+  "adapter_source_sha256": "d300e7ecd2f32451f75a78a04303c95736a3810bc8fbd4932831eff815237bd6",
+  "auditor_source_sha256": "35d8b3359e894327910e2c4fd0bf190e721b43983835f13af542d0eb235693be",
+  "classification": "harness calibration on a previously consumed task; not model or held-out evidence",
+  "container_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+  "controls": {
+    "frozen_checker_rejects_empty_result": true,
+    "isolated_grader_accepts_oracle_control": true,
+    "isolated_grader_rejection_reason": "correctness_failed",
+    "isolated_grader_rejects_empty_result": true
+  },
+  "docker_server": "29.5.2",
+  "elapsed_s": 0.7627562079578638,
+  "frozen_harness_adapter_sha256": "5e4979d8306e4e9e7140a276f891e86879be0ba74130c4019fd86f9db80dbeca",
+  "harness_source_sha256": "f2d95d28f26b3bc460f9e6db54979d3a3c30c3e22747966d67045ebc8cd8a4ec",
+  "hidden_evaluator_sha256": "85a83aaf67a3ac872c045b5eb90f486206fc00bdf36c88cd655cc5a1e6bd9890",
+  "host": {
+    "machine": "arm64",
+    "system": "macOS-27.0.1-arm64-arm-64bit"
+  },
+  "isolated_grader_source_sha256": "2c8630ce4132feb8dee8e95c6cf0ddb6e43986f53c7f0438c502ae3e23790f9b",
+  "oracle_sha256": "173bd032af988d016e1cea8484417d45408b651ad8b77c492382bb65d1f046ca",
+  "pack_manifest_sha256": "2c67d85a6806b3bbcbc63676f64fc955c5c7b3c9c4127a5a3caade1541efb4ab",
+  "protocol_id": "mlsys-separated-candidate-harness-v2",
+  "protocol_sha256": "fdcc54fa2e531055085b516e619dc3c27176e5fe346daf4f4d92e42876a382d7",
+  "raw": {
+    "empty_result": {
+      "baseline_samples_s": [],
+      "candidate_samples_s": [
+        0.001104041002690792,
+        0.0005873749032616615,
+        0.0006329999305307865,
+        0.0006535830907523632,
+        0.0006703749531880021
+      ],
+      "error": "correctness_failed",
+      "grade_evidence": {
+        "cases": [
+          {
+            "case_id": "mlsys-v1-causal-attention-grader-0",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.001104041002690792
+          },
+          {
+            "case_id": "mlsys-v1-causal-attention-grader-1",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.0005873749032616615
+          },
+          {
+            "case_id": "mlsys-v1-causal-attention-grader-2",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.0006329999305307865
+          },
+          {
+            "case_id": "mlsys-v1-causal-attention-grader-3",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.0006535830907523632
+          },
+          {
+            "case_id": "mlsys-v1-causal-attention-grader-4",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.0006703749531880021
+          }
+        ],
+        "passed": false,
+        "task_kind": "correctness"
+      },
+      "nonce": "31313131313131313131313131313131",
+      "nonce_enforced": true,
+      "passed": false,
+      "task_id": "mlsys-v1-causal-attention"
+    },
+    "oracle_control": {
+      "baseline_samples_s": [],
+      "candidate_samples_s": [
+        0.0007029579719528556,
+        0.0005317500326782465,
+        0.0006031659431755543,
+        0.0006144159706309438,
+        0.0005696250591427088
+      ],
+      "error": null,
+      "grade_evidence": {
+        "cases": [
+          {
+            "case_id": "mlsys-v1-causal-attention-grader-0",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.0007029579719528556
+          },
+          {
+            "case_id": "mlsys-v1-causal-attention-grader-1",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.0005317500326782465
+          },
+          {
+            "case_id": "mlsys-v1-causal-attention-grader-2",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.0006031659431755543
+          },
+          {
+            "case_id": "mlsys-v1-causal-attention-grader-3",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.0006144159706309438
+          },
+          {
+            "case_id": "mlsys-v1-causal-attention-grader-4",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.0005696250591427088
+          }
+        ],
+        "passed": true,
+        "task_kind": "correctness"
+      },
+      "nonce": "42424242424242424242424242424242",
+      "nonce_enforced": true,
+      "passed": true,
+      "task_id": "mlsys-v1-causal-attention"
+    }
+  },
+  "separated_grader_source_sha256": "61aec51de076b10960dbd6616edcc2b7d3eef638dda55be55031d7fa9cddb9f4",
+  "source_commit": "144e57d373cc63e7abf40be48b78ad8e3d29eb95",
+  "task_descriptor_sha256": "021b234547e6ab00fbacac5c80bdcecdf4b91de2f6328e508f181d297fb27d1e",
+  "task_id": "mlsys-v1-causal-attention",
+  "task_type": "correctness",
+  "verifier_source_sha256": "a28f4df6bcca9d1d652a5436f553dd79f37e8f69b1e29478fe1638e689b46c3d"
+}
