@@ -16,7 +16,7 @@ frozen checker rejects a malformed empty result, the isolated grader rejects
 the same candidate, and the frozen oracle control passes. This verifies the
 adapter path without claiming a checker defect or new task result. The final
 raw outputs, source hashes, runtime metadata, and inventory manifest are
-retained in [`results/mlsys-separated-candidate-harness-v1/run-7/`](../results/mlsys-separated-candidate-harness-v1/run-7/).
+retained in [`results/mlsys-separated-candidate-harness-v1/run-8/`](../results/mlsys-separated-candidate-harness-v1/run-8/).
 
 This is **not** a model update, agent rollout, new task evaluation, or held-out
 capability result. Consumed task graders and oracle fixtures are used only to
@@ -29,14 +29,19 @@ need non-finite values or Python return types that JSON loses, and performance
 checkers require additional parent-side behavior. Direct frozen fixture
 materialization for several unsupported tasks remains available to existing
 calibration tests; it does not make those tasks routable through the isolated
-grader. The isolated-call worker now uses explicit import-start and ready
-markers, so candidate import and function execution each receive the frozen
-per-phase timeout. A regression with a 0.25-second import and 0.25-second
-function under a 0.4-second per-phase limit passes; a single combined
-0.4-second deadline would incorrectly reject it. Container startup retains a
-separate bounded grace. The shared task runner remains unchanged, preserving
-source inventories pinned by continuation evidence. V3 copies of shared v1
-task IDs are routed using their canonical descriptor path.
+grader. Routed correctness cases now share one isolated candidate process, so
+module-level state persists across the ordered hidden cases. A counter-state
+regression passes the expected `1, 2` sequence and rejects `1, 1`. Explicit
+import-start and ready markers give import and each function call their own
+timeout window; a 0.25-second import plus a 0.25-second function under a
+0.4-second per-phase limit passes, while a single combined deadline would
+reject it. Frozen ValueError-prefix behavior is preserved, and causal-attention
+uses the frozen checker's numeric bool behavior. v3 task limits are retained:
+the EMA task receives 20 seconds. The shared task runner remains unchanged,
+preserving source inventories pinned by continuation evidence. The v3 warmup
+copy is resolved through its verified v1 adapter path; label smoothing and
+row-log-softmax remain non-routable because the JSON call format cannot retain
+their return-type/non-finite input semantics.
 
 ## Verification
 
@@ -51,7 +56,7 @@ PYTHONPATH=src python scripts/audit_mlsys_separated_candidate_harness_v1.py \
 ```
 
 The output directory must not already exist. Choose a fresh path for repeated
-runs; the committed run-7 bundle remains immutable. The verifier runs the
+runs; the committed run-8 bundle remains immutable. The verifier runs the
 negative and oracle controls in Docker and records its runtime version and elapsed time.
 The auditor checks every artifact hash, relevant source hash, claim label, and
 source commit identity.
