@@ -80,14 +80,17 @@ Reproduce the metadata snapshot and coarse screen with:
 
 ```bash
 python scripts/collect_mlsys_task_candidate_pool_v1.py \
-  --output results/mlsys-task-candidate-survey-v1/new-run
+  --output /tmp/vare-mlsys-task-survey-rerun-1/new-run
 python scripts/screen_mlsys_task_candidate_pool_v1.py \
-  results/mlsys-task-candidate-survey-v1/new-run/candidate-pool.json \
-  --output results/mlsys-task-candidate-survey-v1/new-screen
+  /tmp/vare-mlsys-task-survey-rerun-1/new-run/candidate-pool.json \
+  --output /tmp/vare-mlsys-task-survey-rerun-1/new-screen
 python scripts/audit_mlsys_task_candidate_pool_v1.py \
   results/mlsys-task-candidate-survey-v1
 ```
 
-The collection script refuses to overwrite an existing output directory.
-Reruns are new metadata snapshots and are not interchangeable with this frozen
-survey evidence.
+The collection script refuses to overwrite an existing output directory and
+returns nonzero if any candidate could not be captured. Keep reruns outside
+the frozen evidence root: the root manifest covers only the audited run-1 and
+screen-1 artifacts, and the auditor rejects extra payload files in that root.
+Reruns are new metadata snapshots and are not interchangeable with this
+frozen survey evidence.

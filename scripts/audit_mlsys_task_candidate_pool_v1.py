@@ -39,6 +39,20 @@ def verify_bundle(bundle: Path, data_name: str) -> dict:
 
 
 def audit(root: Path) -> dict:
+    root_manifest = json.loads((root / "evidence-manifest.json").read_text(encoding="utf-8"))
+    root_files = root_manifest.get("files")
+    frozen_paths = {
+        "run-1/candidate-pool.json",
+        "run-1/evidence-manifest.json",
+        "screen-1/screen.json",
+        "screen-1/evidence-manifest.json",
+    }
+    if type(root_files) is not dict or set(root_files) != frozen_paths:
+        raise ValueError("root manifest does not contain exactly the frozen run-1/screen-1 artifacts")
+    for relative, expected in root_files.items():
+        path = root / relative
+        if path.stat().st_size != expected.get("bytes") or sha256_file(path) != expected.get("sha256"):
+            raise ValueError(f"root evidence manifest mismatch: {relative}")
     protocol = json.loads(PROTOCOL.read_text(encoding="utf-8"))
     pool = verify_bundle(root / "run-1", "candidate-pool.json")
     screen = verify_bundle(root / "screen-1", "screen.json")
@@ -76,6 +90,13 @@ def audit(root: Path) -> dict:
         raise ValueError("protocol screen hash mismatch")
     if protocol["task_gate"]["fully_qualified_tasks"] != 0 or protocol["task_gate"]["training_authorized"] is not False:
         raise ValueError("protocol does not preserve the task qualification NO-GO")
+    actual = {
+        path.relative_to(root).as_posix()
+        for path in root.rglob("*")
+        if path.is_file() and path.name not in {"audit.json", "evidence-manifest.json"}
+    }
+    if actual != {"run-1/candidate-pool.json", "screen-1/screen.json"}:
+        raise ValueError("frozen evidence inventory differs; keep reruns outside this bundle")
     result = {
         "schema_version": 1,
         "audit_passed": True,
@@ -93,10 +114,9 @@ def audit(root: Path) -> dict:
     audit_path = root / "audit.json"
     audit_path.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     files = {}
-    for path in sorted(root.rglob("*")):
-        if path.is_file() and path.name not in {"audit.json", "evidence-manifest.json"}:
-            relative = path.relative_to(root).as_posix()
-            files[relative] = {"bytes": path.stat().st_size, "sha256": sha256_file(path)}
+    for relative in sorted(frozen_paths):
+        path = root / relative
+        files[relative] = {"bytes": path.stat().st_size, "sha256": sha256_file(path)}
     (root / "evidence-manifest.json").write_text(
         json.dumps({"schema_version": 1, "files": files}, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",

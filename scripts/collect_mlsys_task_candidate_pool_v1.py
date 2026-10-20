@@ -48,10 +48,30 @@ def collect_one(repo: str, number: int) -> dict:
     pr = gh_json(f"repos/{repo}/pulls/{number}")
     if not isinstance(pr, dict):
         raise TypeError(f"invalid PR payload: {repo}#{number}")
+    base, head = pr.get("base"), pr.get("head")
+    if (
+        pr.get("state") != "closed"
+        or pr.get("merged") is not True
+        or not isinstance(pr.get("html_url"), str)
+        or not isinstance(pr.get("title"), str)
+        or not isinstance(pr.get("merge_commit_sha"), str)
+        or not isinstance(pr.get("merged_at"), str)
+        or not isinstance(base, dict)
+        or not isinstance(base.get("sha"), str)
+        or not isinstance(head, dict)
+        or not isinstance(head.get("sha"), str)
+        or type(pr.get("changed_files")) is not int
+        or type(pr.get("additions")) is not int
+        or type(pr.get("deletions")) is not int
+    ):
+        raise ValueError(f"incomplete or malformed merged PR metadata: {repo}#{number}")
     files = gh_json(f"repos/{repo}/pulls/{number}/files?per_page=100")
-    if not isinstance(files, list):
+    if not isinstance(files, list) or any(
+        not isinstance(item, dict) or not isinstance(item.get("filename"), str)
+        for item in files
+    ):
         raise TypeError(f"invalid file payload: {repo}#{number}")
-    paths = [item.get("filename") for item in files if isinstance(item, dict)]
+    paths = [item["filename"] for item in files]
     return {
         "repository": repo,
         "number": number,
@@ -133,8 +153,9 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    print(json.dumps(collect(args.output), sort_keys=True))
-    return 0
+    result = collect(args.output)
+    print(json.dumps(result, sort_keys=True))
+    return 0 if not result["failures"] and result["candidate_count_captured"] == result["candidate_count_requested"] else 1
 
 
 if __name__ == "__main__":
