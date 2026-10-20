@@ -108,14 +108,8 @@ for path in request.get("tuple_paths", []):
     index = path[0]
     if path[1] == "*":
         args[index] = [tuple(row) for row in args[index]]
-before = _dumps({"args": args, "kwargs": request["kwargs"]}, sort_keys=True, separators=(",", ":"), allow_nan=False)
 try:
     value = function(*args, **request["kwargs"])
-    if request.get("reject_input_mutation") and before != _dumps(
-        {"args": args, "kwargs": request["kwargs"]},
-        sort_keys=True, separators=(",", ":"), allow_nan=False,
-    ):
-        raise ValueError("input mutation is not allowed")
     payload = _dumps({"value": value}, sort_keys=True, separators=(",", ":"), allow_nan=False)
 except Exception as exc:
     payload = _dumps({"exception": type(exc).__name__}, sort_keys=True, separators=(",", ":"))
@@ -146,7 +140,6 @@ class FunctionCall:
     kwargs: dict[str, Any] | None = None
     expected_exception: str | None = None
     tuple_paths: tuple[tuple[Any, ...], ...] = ()
-    reject_input_mutation: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -574,7 +567,6 @@ def _invoke(
     image: str,
     runner: DockerIsolationRunner,
     tuple_paths: Sequence[Sequence[Any]] = (),
-    reject_input_mutation: bool = False,
 ) -> tuple[Any | None, float | None, str | None]:
     """Return ``(value, parent_wall_s, failure)``."""
     nonce = secrets.token_hex(32)
@@ -590,7 +582,6 @@ def _invoke(
         "args": list(args),
         "kwargs": dict(kwargs),
         "tuple_paths": [list(path) for path in tuple_paths],
-        "reject_input_mutation": reject_input_mutation,
         "timeout_s": timeout_s,
     }
     proc = subprocess.Popen(
@@ -734,7 +725,6 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
         request = {
             "args": spec["args"], "kwargs": spec["kwargs"],
             "tuple_paths": spec.get("tuple_paths", []),
-            "reject_input_mutation": spec.get("reject_input_mutation", False),
         }
         child.stdin.write((_canonical(request) + "\n").encode("utf-8"))
         child.stdin.flush()
@@ -816,7 +806,6 @@ def _one_call(
     image: str,
     runner: DockerIsolationRunner,
     tuple_paths: Sequence[Sequence[Any]] = (),
-    reject_input_mutation: bool = False,
 ) -> tuple[Any | None, float | None, str | None]:
     module, function, args, kwargs = _prepare_call(module, function, args, kwargs)
     _limits(image, timeout_s)
@@ -825,10 +814,7 @@ def _one_call(
         raise CandidateHarnessError("subject module is missing")
     with tempfile.TemporaryDirectory(prefix="vare-call-") as folder:
         staged = _stage_subject(source, Path(folder))
-        return _invoke(
-            staged, module, function, args, kwargs, timeout_s, image, runner,
-            tuple_paths, reject_input_mutation,
-        )
+        return _invoke(staged, module, function, args, kwargs, timeout_s, image, runner, tuple_paths)
 
 
 def grade_calls(
@@ -861,7 +847,6 @@ def grade_calls(
         value, wall, failure = _one_call(
             subject, call.module, call.function, call.args, call.kwargs or {},
             timeout_s, image, active, call.tuple_paths,
-            call.reject_input_mutation,
         )
         if failure is None:
             if call.expected_exception is not None:
@@ -928,7 +913,6 @@ def paired_timing(
     atol: float = 0.0,
     runner: DockerIsolationRunner | None = None,
     tuple_paths: Sequence[Sequence[Any]] = (),
-    reject_input_mutation: bool = False,
 ) -> TimingReport:
     """Time baseline and candidate containers with the parent clock.
 
@@ -991,7 +975,6 @@ def paired_timing(
                 measured[role] = _one_call(
                     root, checked_module, checked_function, args, kwargs,
                     timeout_s, image, active, tuple_paths,
-                    reject_input_mutation,
                 )
                 if measured[role][2] is not None and failure is None:
                     failure = measured[role][2]

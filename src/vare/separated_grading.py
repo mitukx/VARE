@@ -626,7 +626,6 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
                     list(row.get("args", [])), row["expected"], dict(row.get("kwargs", {})),
                     expected_exception=row.get("expected_exception"),
                     tuple_paths=tuple(tuple(path) for path in tuple_paths),
-                    reject_input_mutation=bool(spec.get("reject_input_mutation", False)),
                 )
                 for index, row in enumerate(rows)
             ]
@@ -665,7 +664,6 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
                 list(row.get("args", [])), row["expected"], dict(row.get("kwargs", {})),
                 expected_exception=row.get("expected_exception"),
                 tuple_paths=tuple(tuple(path) for path in tuple_paths),
-                reject_input_mutation=bool(spec.get("reject_input_mutation", False)),
             )
             for index, row in enumerate(correctness_rows)
         ]
@@ -700,7 +698,6 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
                 repeats=repeats, seed=seed, task_kind="performance", image=image,
                 timeout_s=timeout_s, rtol=rtol, atol=atol,
                 tuple_paths=tuple_paths,
-                reject_input_mutation=bool(spec.get("reject_input_mutation", False)),
             )
         metric = spec.get("performance_metric")
         if type(metric) is not dict or metric.get("name") != "paired_ratio_student_t_lower":

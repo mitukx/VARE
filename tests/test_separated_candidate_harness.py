@@ -8,8 +8,6 @@ import shutil
 import sys
 
 import pytest
-
-from vare.isolated_candidate import FunctionCall, grade_calls
 from vare.separated_candidate_harness import (
     PROTOCOL_PATH,
     SeparatedHarnessError,
@@ -168,25 +166,13 @@ def test_malformed_workspace_fails_closed(tmp_path: Path) -> None:
         grade_function(payload)
 
 
-def test_isolated_call_can_reject_candidate_input_mutation(tmp_path: Path) -> None:
-    subject = tmp_path / "subject"
-    subject.mkdir()
-    (subject / "mutator.py").write_text(
-        "def run(values):\n    values.append(3)\n    return [1, 2]\n",
-        encoding="utf-8",
-    )
-    report = grade_calls(
-        subject,
-        [FunctionCall(
-            "mutation", "mutator", "run", [[1, 2]], [1, 2],
-            reject_input_mutation=True,
-        )],
-        task_kind="correctness",
-        image="python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
-        timeout_s=10,
-    )
-    assert report.passed is False
-    assert report.cases[0].failure == "wrong_output"
+def test_dataset_standardization_fails_closed_without_mutation_observation(tmp_path: Path) -> None:
+    from vare.separated_candidate_harness import PACK_ROOTS, _task_adapter
+
+    dataset_task = PACK_ROOTS["mlsys-v1-"] / "tasks/dataset_standardize/task.json"
+    assert dataset_task.is_file()
+    with pytest.raises(SeparatedHarnessError, match="no isolated call materializer"):
+        _task_adapter("mlsys-v1-dataset-standardize")
 
 
 @pytest.mark.parametrize(

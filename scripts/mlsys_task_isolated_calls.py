@@ -18,7 +18,6 @@ from typing import Any
 TASKS = {
     "mlsys-v1-aging-scheduler": ("test_hidden.py", "aging_scheduler", "schedule", 4, "correctness"),
     "mlsys-v1-causal-attention": ("test_hidden.py", "causal_attention", "causal_attention_weights", 5, "correctness"),
-    "mlsys-v1-dataset-standardize": ("grade.py", "dataset_standardize", "standardized_rows", 10, "performance"),
     "mlsys-v1-grad-accum-tail": ("test_hidden.py", "grad_accum", "average_microbatch_grads", 3, "correctness"),
     "mlsys-v1-paired-shuffle-loader": ("test_hidden.py", "paired_loader", "iter_batches", 6, "correctness"),
     "mlsys-v1-row-log-softmax": ("test_hidden.py", "row_log_softmax", "row_log_softmax", 4, "correctness"),
@@ -81,10 +80,6 @@ def materialize_isolated_calls(task_id: str, task_dir: Path) -> tuple[dict, dict
         # Index 0 is a correctness check, index 1 is an invalid-boundary check;
         # the seven later workload draws are the frozen performance sample.
         indices = range(2, count)
-    elif task_id == "mlsys-v1-dataset-standardize":
-        # Indices 0..2 are correctness/edge cases. The final seven are timing
-        # draws, matching the frozen pack's paired timing protocol.
-        indices = range(3, count)
     cases = []
     skipped = []
     for index in indices:
@@ -144,8 +139,6 @@ def materialize_isolated_calls(task_id: str, task_dir: Path) -> tuple[dict, dict
         # JSON has no tuple type. Restore the public Python API's query-pair
         # tuples inside the isolated grader before calling candidate/oracle.
         spec["tuple_paths"] = [[1, "*"]]
-    if task_id == "mlsys-v1-dataset-standardize":
-        spec["reject_input_mutation"] = True
     if task_kind == "correctness":
         spec["calls"] = cases
     else:
@@ -154,13 +147,10 @@ def materialize_isolated_calls(task_id: str, task_dir: Path) -> tuple[dict, dict
         # isolated grader imports the baseline through the public task API.
         # Keep the oracle body unchanged and expose it under that API name.
         source = source.replace("def _reference(", f"def {function_name}(", 1)
-        if task_id == "mlsys-v1-dataset-standardize":
-            source = "import math\n" + source
         if f"def {function_name}(" not in source:
             raise ValueError(f"frozen evaluator reference has an unexpected definition: {task_id}")
         correctness_cases = []
-        correctness_indices = range(3) if task_id == "mlsys-v1-dataset-standardize" else range(2)
-        for index in correctness_indices:
+        for index in range(2):
             args, kwargs = generator(index)
             try:
                 expected = reference(*args, **kwargs)

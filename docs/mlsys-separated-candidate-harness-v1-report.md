@@ -16,13 +16,17 @@ calibration. Its frozen nested-`zip` checker accepts an empty result. A
 reproducible negative control confirms this behavior; the isolated grader
 rejects the same candidate, and the frozen oracle passes. Raw outputs, source
 hashes, runtime metadata, and an inventory manifest are retained in
-[`results/mlsys-separated-candidate-harness-v1/run-1/`](../results/mlsys-separated-candidate-harness-v1/run-1/).
+[`results/mlsys-separated-candidate-harness-v1/run-2/`](../results/mlsys-separated-candidate-harness-v1/run-2/).
 
 This is **not** a model update, agent rollout, new task evaluation, or held-out
 capability result. Consumed v1 task graders and oracle fixtures are used only
 to check that the isolated adapter can preserve their grading semantics. The
-dataset-standardization timing adapter additionally checks candidate input
-immutability inside the isolated call process.
+dataset-standardization task is intentionally unsupported and fails closed:
+the existing isolated call protocol cannot report whether candidate code
+mutated its arguments. Adding a mutation-reporting field to the shared worker
+would invalidate source inventories pinned by existing continuation evidence,
+so this integration does not change that worker. Do not use the adapter's
+temporary host shim for that task.
 
 ## Verification
 
@@ -31,9 +35,9 @@ Reproduce the calibration on Apple Silicon with Docker available:
 ```bash
 DOCKER_CONTEXT=colima PYTHONPATH=src python \
   scripts/verify_mlsys_separated_candidate_harness_v1.py \
-  --output results/mlsys-separated-candidate-harness-v1/run-1
+  --output results/mlsys-separated-candidate-harness-v1/run-2
 PYTHONPATH=src python scripts/audit_mlsys_separated_candidate_harness_v1.py \
-  results/mlsys-separated-candidate-harness-v1/run-1
+  results/mlsys-separated-candidate-harness-v1/run-2
 ```
 
 The output directory must not already exist. The verifier runs the negative
@@ -41,6 +45,7 @@ and oracle controls in Docker and records its runtime version and elapsed time.
 The auditor checks every artifact hash, relevant source hash, claim label, and
 source commit identity.
 
-The regression suite also exercises the frozen v1 benchmark's baseline and
-oracle fixtures through the new adapter. No claim is made about an LLM, policy
+The regression suite exercises the isolated adapter for v1 tasks with supported
+call semantics and v3 oracle controls; it explicitly checks that
+dataset-standardization fails closed. No claim is made about an LLM, policy
 optimization, held-out task success, or training cost.
