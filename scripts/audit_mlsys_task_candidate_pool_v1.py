@@ -19,7 +19,14 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _reject_symlinks(root: Path) -> None:
+    for path in root.rglob("*"):
+        if path.is_symlink():
+            raise ValueError(f"{root}: symlink in frozen evidence inventory")
+
+
 def verify_bundle(bundle: Path, data_name: str) -> dict:
+    _reject_symlinks(bundle)
     manifest = json.loads((bundle / "evidence-manifest.json").read_text(encoding="utf-8"))
     files = manifest.get("files")
     if type(files) is not dict or data_name not in files:
@@ -39,6 +46,7 @@ def verify_bundle(bundle: Path, data_name: str) -> dict:
 
 
 def audit(root: Path) -> dict:
+    _reject_symlinks(root)
     root_manifest = json.loads((root / "evidence-manifest.json").read_text(encoding="utf-8"))
     root_files = root_manifest.get("files")
     frozen_paths = {

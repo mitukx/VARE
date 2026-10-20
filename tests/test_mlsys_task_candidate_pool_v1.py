@@ -37,6 +37,28 @@ def test_candidate_pool_audit_rejects_nested_audit_named_rerun_file(tmp_path: Pa
         module.audit(bundle)
 
 
+@pytest.mark.parametrize("entry_kind", ["dangling_file", "directory"])
+def test_candidate_pool_audit_rejects_unmanifested_symlinks(
+    tmp_path: Path, entry_kind: str,
+) -> None:
+    module = _load_script(
+        f"audit_mlsys_task_candidate_pool_v1_symlink_{entry_kind}",
+        ROOT / "scripts/audit_mlsys_task_candidate_pool_v1.py",
+    )
+    bundle = tmp_path / "frozen-evidence"
+    shutil.copytree(EVIDENCE, bundle)
+    if entry_kind == "dangling_file":
+        (bundle / "run-1/unmanifested.json").symlink_to(tmp_path / "missing.json")
+    else:
+        target = tmp_path / "rerun"
+        target.mkdir()
+        (target / "payload.json").write_text("{}\n", encoding="utf-8")
+        (bundle / "run-2").symlink_to(target, target_is_directory=True)
+
+    with pytest.raises(ValueError, match="symlink in frozen evidence inventory"):
+        module.audit(bundle)
+
+
 def test_candidate_pool_audit_does_not_rewrite_protocol_commitment(tmp_path: Path) -> None:
     module = _load_script(
         "audit_mlsys_task_candidate_pool_v1_manifest_test",
