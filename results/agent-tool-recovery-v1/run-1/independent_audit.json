@@ -1,0 +1,340 @@
+{
+  "aggregate": {
+    "control:basic_restart": {
+      "duplicate_tool_executions": [
+        0,
+        0,
+        0
+      ],
+      "n": 3,
+      "recovery_seconds_median": 0.0,
+      "tool_executions": [
+        2,
+        2,
+        2
+      ],
+      "verified_tasks": 3,
+      "wall_seconds_median": 0.446613
+    },
+    "control:vare_durable_resume": {
+      "duplicate_tool_executions": [
+        0,
+        0,
+        0
+      ],
+      "n": 3,
+      "recovery_seconds_median": 0.0,
+      "tool_executions": [
+        2,
+        2,
+        2
+      ],
+      "verified_tasks": 3,
+      "wall_seconds_median": 0.45868
+    },
+    "fault:basic_restart": {
+      "duplicate_tool_executions": [
+        2,
+        2,
+        2
+      ],
+      "n": 3,
+      "recovery_seconds_median": 0.26331,
+      "tool_executions": [
+        4,
+        4,
+        4
+      ],
+      "verified_tasks": 3,
+      "wall_seconds_median": 0.663853
+    },
+    "fault:vare_durable_resume": {
+      "duplicate_tool_executions": [
+        1,
+        1,
+        1
+      ],
+      "n": 3,
+      "recovery_seconds_median": 3.349556,
+      "tool_executions": [
+        3,
+        3,
+        3
+      ],
+      "verified_tasks": 3,
+      "wall_seconds_median": 3.77154
+    }
+  },
+  "checks": [
+    {
+      "all_tool_results_successful": true,
+      "duplicate_count_recomputed": true,
+      "final_source_hash_matches": true,
+      "grader_recheck": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "public_grader_recheck_passed": true,
+      "raw_row_matches_summary": true,
+      "run_id": "basic_restart-control-1",
+      "tool_count_recomputed": true,
+      "trajectory_audit": null,
+      "vare_store_audit_consistent": true,
+      "worker_exit_matches_injection": true
+    },
+    {
+      "all_tool_results_successful": true,
+      "duplicate_count_recomputed": true,
+      "final_source_hash_matches": true,
+      "grader_recheck": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "public_grader_recheck_passed": true,
+      "raw_row_matches_summary": true,
+      "run_id": "basic_restart-control-2",
+      "tool_count_recomputed": true,
+      "trajectory_audit": null,
+      "vare_store_audit_consistent": true,
+      "worker_exit_matches_injection": true
+    },
+    {
+      "all_tool_results_successful": true,
+      "duplicate_count_recomputed": true,
+      "final_source_hash_matches": true,
+      "grader_recheck": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "public_grader_recheck_passed": true,
+      "raw_row_matches_summary": true,
+      "run_id": "basic_restart-control-3",
+      "tool_count_recomputed": true,
+      "trajectory_audit": null,
+      "vare_store_audit_consistent": true,
+      "worker_exit_matches_injection": true
+    },
+    {
+      "all_tool_results_successful": true,
+      "duplicate_count_recomputed": true,
+      "final_source_hash_matches": true,
+      "grader_recheck": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "public_grader_recheck_passed": true,
+      "raw_row_matches_summary": true,
+      "run_id": "vare_durable_resume-control-1",
+      "tool_count_recomputed": true,
+      "trajectory_audit": {
+        "completions": 1,
+        "database_sha256": "6f84c82bdad41527b7c4760226449a0c22ab4328cfaec98158b6708c982f0fba",
+        "effective_duplicates": 0,
+        "events": 7,
+        "ledger_head_sha256": "cf899627401bdc0c86832d49992a7ef59d0676c162b968e6f1a9995acef3e706",
+        "pass": true,
+        "steps": 2
+      },
+      "vare_store_audit_consistent": true,
+      "worker_exit_matches_injection": true
+    },
+    {
+      "all_tool_results_successful": true,
+      "duplicate_count_recomputed": true,
+      "final_source_hash_matches": true,
+      "grader_recheck": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "public_grader_recheck_passed": true,
+      "raw_row_matches_summary": true,
+      "run_id": "vare_durable_resume-control-2",
+      "tool_count_recomputed": true,
+      "trajectory_audit": {
+        "completions": 1,
+        "database_sha256": "19a198b8baedc378d7889e9f9b785df06db9139c58f35d30cf30e413ab81a9ef",
+        "effective_duplicates": 0,
+        "events": 7,
+        "ledger_head_sha256": "61cced5c2b165d2dab75a2228e8a98892e261da8c262491ba6a9659bd824566c",
+        "pass": true,
+        "steps": 2
+      },
+      "vare_store_audit_consistent": true,
+      "worker_exit_matches_injection": true
+    },
+    {
+      "all_tool_results_successful": true,
+      "duplicate_count_recomputed": true,
+      "final_source_hash_matches": true,
+      "grader_recheck": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "public_grader_recheck_passed": true,
+      "raw_row_matches_summary": true,
+      "run_id": "vare_durable_resume-control-3",
+      "tool_count_recomputed": true,
+      "trajectory_audit": {
+        "completions": 1,
+        "database_sha256": "9fbe088a0961dc837caf8cd48bda8587dcdd9c9b5f69997cc2d9b7aeb86914f9",
+        "effective_duplicates": 0,
+        "events": 7,
+        "ledger_head_sha256": "26250378740772ce0bc479b138c9439725d338ead6dbc76adb698e14643e725a",
+        "pass": true,
+        "steps": 2
+      },
+      "vare_store_audit_consistent": true,
+      "worker_exit_matches_injection": true
+    },
+    {
+      "all_tool_results_successful": true,
+      "duplicate_count_recomputed": true,
+      "final_source_hash_matches": true,
+      "grader_recheck": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "public_grader_recheck_passed": true,
+      "raw_row_matches_summary": true,
+      "run_id": "basic_restart-fault-1",
+      "tool_count_recomputed": true,
+      "trajectory_audit": null,
+      "vare_store_audit_consistent": true,
+      "worker_exit_matches_injection": true
+    },
+    {
+      "all_tool_results_successful": true,
+      "duplicate_count_recomputed": true,
+      "final_source_hash_matches": true,
+      "grader_recheck": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "public_grader_recheck_passed": true,
+      "raw_row_matches_summary": true,
+      "run_id": "basic_restart-fault-2",
+      "tool_count_recomputed": true,
+      "trajectory_audit": null,
+      "vare_store_audit_consistent": true,
+      "worker_exit_matches_injection": true
+    },
+    {
+      "all_tool_results_successful": true,
+      "duplicate_count_recomputed": true,
+      "final_source_hash_matches": true,
+      "grader_recheck": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "public_grader_recheck_passed": true,
+      "raw_row_matches_summary": true,
+      "run_id": "basic_restart-fault-3",
+      "tool_count_recomputed": true,
+      "trajectory_audit": null,
+      "vare_store_audit_consistent": true,
+      "worker_exit_matches_injection": true
+    },
+    {
+      "all_tool_results_successful": true,
+      "duplicate_count_recomputed": true,
+      "final_source_hash_matches": true,
+      "grader_recheck": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "public_grader_recheck_passed": true,
+      "raw_row_matches_summary": true,
+      "run_id": "vare_durable_resume-fault-1",
+      "tool_count_recomputed": true,
+      "trajectory_audit": {
+        "completions": 1,
+        "database_sha256": "e6e90e361876b446811d3d08c6a83fa656a27227493843609bc000dcfa8bcdb2",
+        "effective_duplicates": 0,
+        "events": 9,
+        "ledger_head_sha256": "dcae94a8f76cde4995afbf6bfdcc94a5851eef8799c3096393b241432b9b29c5",
+        "pass": true,
+        "steps": 2
+      },
+      "vare_store_audit_consistent": true,
+      "worker_exit_matches_injection": true
+    },
+    {
+      "all_tool_results_successful": true,
+      "duplicate_count_recomputed": true,
+      "final_source_hash_matches": true,
+      "grader_recheck": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "public_grader_recheck_passed": true,
+      "raw_row_matches_summary": true,
+      "run_id": "vare_durable_resume-fault-2",
+      "tool_count_recomputed": true,
+      "trajectory_audit": {
+        "completions": 1,
+        "database_sha256": "3f420bdee4a425f0b3fc6c6c60e619e8a94a8377cb24d7a438a25ac445e0edd2",
+        "effective_duplicates": 0,
+        "events": 9,
+        "ledger_head_sha256": "d60ee44d6a02aedeeae7e75e3ee13bc57f7f7c186a90a977e122b8798a4b33aa",
+        "pass": true,
+        "steps": 2
+      },
+      "vare_store_audit_consistent": true,
+      "worker_exit_matches_injection": true
+    },
+    {
+      "all_tool_results_successful": true,
+      "duplicate_count_recomputed": true,
+      "final_source_hash_matches": true,
+      "grader_recheck": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "public_grader_recheck_passed": true,
+      "raw_row_matches_summary": true,
+      "run_id": "vare_durable_resume-fault-3",
+      "tool_count_recomputed": true,
+      "trajectory_audit": {
+        "completions": 1,
+        "database_sha256": "b0e32cd27d09c31e66514ac86daabd3b872bfdce08f6b6133b69a247aad453cc",
+        "effective_duplicates": 0,
+        "events": 9,
+        "ledger_head_sha256": "5aa203a3f2012284d6a36681de474ddff81e52282993ff26b8c9b24164d36c62",
+        "pass": true,
+        "steps": 2
+      },
+      "vare_store_audit_consistent": true,
+      "worker_exit_matches_injection": true
+    }
+  ],
+  "claim_limit": "Deterministic two-tool recovery systems smoke using an already exposed development task. This does not measure model capability or generalize to hostile tools.",
+  "protocol_id": "coding-agent-tool-recovery-vare-vs-restart-v1",
+  "protocol_sha256": "233515e33ab8870476221124059aa34957d27c6d0686d03b43566d59fb4ff54e",
+  "raw_runs_sha256": "2ac19193fed6305ba992e0ef8d3f7b03f43d4a4c999617aed9c267549a8e5d48",
+  "raw_summary_sha256": "6277c95f0df3a02099d18b06183aa4a1b4c4148fbb47c702e8d1aceec546db90",
+  "status": "PASS_AUDITED_SYSTEM_SMOKE"
+}

@@ -1,0 +1,43 @@
+{
+  "arms": [
+    "basic_restart",
+    "vare_durable_resume"
+  ],
+  "conditions": [
+    "no_fault",
+    "sigkill_after_second_tool_success_before_step_commit"
+  ],
+  "fault_timing": "After the isolated public-test tool returns success and its operation ledger is fsynced, before the matching VARE AgentStep can be appended. On restart, basic replays from step zero; VARE resumes from its last committed step.",
+  "hardware": "Apple MacBook Pro M1 Pro, 32 GiB; control process local; candidate public tests isolated in Colima Docker.",
+  "primary_metrics": [
+    "public_test_pass_after_recovery",
+    "tool_execution_count",
+    "duplicate_operation_count",
+    "durable_steps",
+    "wall_seconds_to_final_public_validation",
+    "recovery_seconds"
+  ],
+  "protocol_id": "coding-agent-tool-recovery-vare-vs-restart-v1",
+  "repeats": 3,
+  "reproduction": "DOCKER_CONTEXT=colima PYTHONPATH=src python3.12 scripts/run_agent_tool_recovery_v1.py --output results/agent-tool-recovery-v1/run-1",
+  "resource_limits": {
+    "candidate_cpus": 1,
+    "candidate_memory_mb": 512,
+    "candidate_network": "none",
+    "worker_lease_seconds": 3
+  },
+  "schema_version": 1,
+  "scope": "Deterministic two-tool recovery systems smoke using an already exposed development task. This does not measure model capability or generalize to hostile tools.",
+  "status": "frozen_before_measurement",
+  "stop_rule": "Abort before the first trial if the pinned ARM64 container image is missing, E0 candidate isolation canary fails, source/test hashes drift, free swap is below 512 MiB, or disk free is below 15 GiB. Preserve crashes and partial evidence.",
+  "success_rule": "All 12 runs end with the public test passing. Under fault injection, VARE commits step zero before the crash, resumes at step one, and performs fewer tool operations than restart-from-scratch. No claim is made about delayed hidden graders, optimizer recovery, or real model inference interruption.",
+  "task": {
+    "image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "pack": "mlsys-coding-v1",
+    "public_test_sha256": "ec6cab71528519023b9fa3254040f332dbe81e7eeb5825e741ec4b722e0f34ce",
+    "source_sha256": "8fbc5c8b3ef5a3f4852f15db10f346f26d27a7b579de5a35a8cfaec5ff85138d",
+    "split": "train",
+    "task_id": "mlsys-v1-grad-accum-tail"
+  },
+  "tool_contract": "write_file is deterministic/idempotent; public_test is read-only. Operation IDs are recorded in the outer evidence ledger. The durable store guarantees resumable step cursor and hash-chain integrity, not external exactly-once execution."
+}

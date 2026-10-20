@@ -30,10 +30,6 @@ from vare.isolated_candidate import (
 IMAGE = "python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1"
 CANARY = "vare-hidden-canary-85"
 OWNED = "grader-owned-token"
-HIDDEN = Path("/grader/evaluator/test_hidden.py")
-OWNED_PATH = Path("/grader/evaluator/owned.txt")
-
-
 def _subject(tmp_path: Path, module: str, source: str) -> Path:
     root = tmp_path / module
     root.mkdir(parents=True)
@@ -48,13 +44,14 @@ def _grade(subject: Path, call: FunctionCall, *, timeout_s: float = 30):
 
 
 @pytest.fixture(scope="module")
-def grader_files() -> dict[str, Path]:
-    HIDDEN.parent.mkdir(parents=True, exist_ok=True)
-    HIDDEN.write_text(f"CANARY = {CANARY!r}\n", encoding="utf-8")
-    OWNED_PATH.write_text(OWNED, encoding="utf-8")
-    yield {"hidden": HIDDEN, "owned": OWNED_PATH}
-    HIDDEN.write_text(f"CANARY = {CANARY!r}\n", encoding="utf-8")
-    OWNED_PATH.write_text(OWNED, encoding="utf-8")
+def grader_files(tmp_path_factory) -> dict[str, Path]:
+    evaluator = tmp_path_factory.mktemp("separate-grader") / "evaluator"
+    evaluator.mkdir()
+    hidden = evaluator / "test_hidden.py"
+    owned = evaluator / "owned.txt"
+    hidden.write_text(f"CANARY = {CANARY!r}\n", encoding="utf-8")
+    owned.write_text(OWNED, encoding="utf-8")
+    return {"hidden": hidden, "owned": owned}
 
 
 def test_student_t_matches_pack_constant() -> None:
@@ -195,11 +192,12 @@ def test_patched_json_dumps_cannot_spoof_the_return_value(tmp_path: Path) -> Non
 
 
 def test_candidate_cannot_read_grader_or_hidden_tests(tmp_path: Path, grader_files: dict[str, Path]) -> None:
+    hidden_path = repr(str(grader_files["hidden"]))
     subject = _subject(
         tmp_path, "solve",
         "def attack():\n"
         "    try:\n"
-        "        return open('/grader/evaluator/test_hidden.py', encoding='utf-8').read()\n"
+        "        return open(" + hidden_path + ", encoding='utf-8').read()\n"
         "    except OSError:\n"
         "        return 'blocked'\n",
     )
@@ -211,11 +209,12 @@ def test_candidate_cannot_read_grader_or_hidden_tests(tmp_path: Path, grader_fil
 
 def test_candidate_cannot_write_grader_paths(tmp_path: Path, grader_files: dict[str, Path]) -> None:
     before = grader_files["owned"].read_text(encoding="utf-8")
+    owned_path = repr(str(grader_files["owned"]))
     subject = _subject(
         tmp_path, "solve",
         "def attack():\n"
         "    try:\n"
-        "        handle = open('/grader/evaluator/owned.txt', 'w', encoding='utf-8')\n"
+        "        handle = open(" + owned_path + ", 'w', encoding='utf-8')\n"
         "        handle.write('pwned')\n"
         "        handle.close()\n"
         "        return 'wrote'\n"

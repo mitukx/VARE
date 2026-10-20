@@ -722,6 +722,7 @@ def test_pack_adapter_checks_manifest_and_strips_hidden_files(tmp_path):
         "train": ["fixture-add"],
     }, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     (pack / "reward.py").write_text("def decide(result):\n    return {'success': False, 'reward': 0.0}\n", encoding="utf-8")
+    (pack / "manifest.json").write_text(json.dumps({"pack_id": "mlsys-coding-v1"}), encoding="utf-8")
     (pack / "manifest.json").write_text(module.rebuild_manifest_text(pack), encoding="utf-8")
     head = _commit_pack(repo)
     protocol = {"pack": {

@@ -1,0 +1,366 @@
+{
+  "claim_limit": "Deterministic two-tool recovery systems smoke using an already exposed development task. This does not measure model capability or generalize to hostile tools.",
+  "host": {
+    "machine": "arm64",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12"
+  },
+  "isolation_canary": {
+    "container_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "grader_path_unmounted": true,
+    "network_disabled": true,
+    "passed": true
+  },
+  "protocol_id": "coding-agent-tool-recovery-vare-vs-restart-v1",
+  "protocol_sha256": "233515e33ab8870476221124059aa34957d27c6d0686d03b43566d59fb4ff54e",
+  "resources": {
+    "disk_free_end_bytes": 227400970240,
+    "disk_free_start_bytes": 227397500928,
+    "swap_end": {
+      "free_bytes": 1740699074,
+      "used_bytes": 7922977341
+    },
+    "swap_start": {
+      "free_bytes": 1740699074,
+      "used_bytes": 7922977341
+    }
+  },
+  "runs": [
+    {
+      "arm": "basic_restart",
+      "duplicate_operation_count": 0,
+      "durable_steps": 0,
+      "fault": false,
+      "operation_counts": {
+        "basic_restart-control-1:public-test": 1,
+        "basic_restart-control-1:write-file": 1
+      },
+      "public_test_pass_after_recovery": true,
+      "recovery_seconds": 0.0,
+      "repeat": 1,
+      "run_id": "basic_restart-control-1",
+      "tool_execution_count": 2,
+      "tool_operations_sha256": "e4f47016e77f4d3472ed6cec71968a3b2e634146fa09c79a5e74b750662f5be1",
+      "trajectory_audit": null,
+      "wall_to_final_validation_seconds": 0.458255,
+      "worker_exit_codes": [
+        0
+      ],
+      "worker_wall_seconds": 0.285798,
+      "workspace_source_sha256": "cc52fceb24b0dd35a6471eef2062ba2ccb0d7241e93d887acb595f25b1c3746e"
+    },
+    {
+      "arm": "basic_restart",
+      "duplicate_operation_count": 0,
+      "durable_steps": 0,
+      "fault": false,
+      "operation_counts": {
+        "basic_restart-control-2:public-test": 1,
+        "basic_restart-control-2:write-file": 1
+      },
+      "public_test_pass_after_recovery": true,
+      "recovery_seconds": 0.0,
+      "repeat": 2,
+      "run_id": "basic_restart-control-2",
+      "tool_execution_count": 2,
+      "tool_operations_sha256": "b95de9521ac78b96b90dbc035499de6633c42405875fb69c168d4702abfef87a",
+      "trajectory_audit": null,
+      "wall_to_final_validation_seconds": 0.446613,
+      "worker_exit_codes": [
+        0
+      ],
+      "worker_wall_seconds": 0.276747,
+      "workspace_source_sha256": "cc52fceb24b0dd35a6471eef2062ba2ccb0d7241e93d887acb595f25b1c3746e"
+    },
+    {
+      "arm": "basic_restart",
+      "duplicate_operation_count": 0,
+      "durable_steps": 0,
+      "fault": false,
+      "operation_counts": {
+        "basic_restart-control-3:public-test": 1,
+        "basic_restart-control-3:write-file": 1
+      },
+      "public_test_pass_after_recovery": true,
+      "recovery_seconds": 0.0,
+      "repeat": 3,
+      "run_id": "basic_restart-control-3",
+      "tool_execution_count": 2,
+      "tool_operations_sha256": "1529b0831e4803bde29b1941fad1dd63afa04ac8c310e195ba8b3398c3db8562",
+      "trajectory_audit": null,
+      "wall_to_final_validation_seconds": 0.423766,
+      "worker_exit_codes": [
+        0
+      ],
+      "worker_wall_seconds": 0.263674,
+      "workspace_source_sha256": "cc52fceb24b0dd35a6471eef2062ba2ccb0d7241e93d887acb595f25b1c3746e"
+    },
+    {
+      "arm": "vare_durable_resume",
+      "duplicate_operation_count": 0,
+      "durable_steps": 2,
+      "fault": false,
+      "operation_counts": {
+        "vare_durable_resume-control-1:public-test": 1,
+        "vare_durable_resume-control-1:write-file": 1
+      },
+      "public_test_pass_after_recovery": true,
+      "recovery_seconds": 0.0,
+      "repeat": 1,
+      "run_id": "vare_durable_resume-control-1",
+      "tool_execution_count": 2,
+      "tool_operations_sha256": "3f01d9424751c36a83d77b00d0286fccb9b47bac88e7e7e417bc8e088db192a1",
+      "trajectory_audit": {
+        "completions": 1,
+        "database_sha256": "6f84c82bdad41527b7c4760226449a0c22ab4328cfaec98158b6708c982f0fba",
+        "effective_duplicates": 0,
+        "events": 7,
+        "ledger_head_sha256": "cf899627401bdc0c86832d49992a7ef59d0676c162b968e6f1a9995acef3e706",
+        "pass": true,
+        "steps": 2
+      },
+      "wall_to_final_validation_seconds": 0.459386,
+      "worker_exit_codes": [
+        0
+      ],
+      "worker_wall_seconds": 0.306113,
+      "workspace_source_sha256": "cc52fceb24b0dd35a6471eef2062ba2ccb0d7241e93d887acb595f25b1c3746e"
+    },
+    {
+      "arm": "vare_durable_resume",
+      "duplicate_operation_count": 0,
+      "durable_steps": 2,
+      "fault": false,
+      "operation_counts": {
+        "vare_durable_resume-control-2:public-test": 1,
+        "vare_durable_resume-control-2:write-file": 1
+      },
+      "public_test_pass_after_recovery": true,
+      "recovery_seconds": 0.0,
+      "repeat": 2,
+      "run_id": "vare_durable_resume-control-2",
+      "tool_execution_count": 2,
+      "tool_operations_sha256": "aa087e74f0911980b0c1478d67f72e7089acbb624104425f690582288e1e1852",
+      "trajectory_audit": {
+        "completions": 1,
+        "database_sha256": "19a198b8baedc378d7889e9f9b785df06db9139c58f35d30cf30e413ab81a9ef",
+        "effective_duplicates": 0,
+        "events": 7,
+        "ledger_head_sha256": "61cced5c2b165d2dab75a2228e8a98892e261da8c262491ba6a9659bd824566c",
+        "pass": true,
+        "steps": 2
+      },
+      "wall_to_final_validation_seconds": 0.45868,
+      "worker_exit_codes": [
+        0
+      ],
+      "worker_wall_seconds": 0.275309,
+      "workspace_source_sha256": "cc52fceb24b0dd35a6471eef2062ba2ccb0d7241e93d887acb595f25b1c3746e"
+    },
+    {
+      "arm": "vare_durable_resume",
+      "duplicate_operation_count": 0,
+      "durable_steps": 2,
+      "fault": false,
+      "operation_counts": {
+        "vare_durable_resume-control-3:public-test": 1,
+        "vare_durable_resume-control-3:write-file": 1
+      },
+      "public_test_pass_after_recovery": true,
+      "recovery_seconds": 0.0,
+      "repeat": 3,
+      "run_id": "vare_durable_resume-control-3",
+      "tool_execution_count": 2,
+      "tool_operations_sha256": "8f75bc6660e80a22e872411143166cdb36a2259b9ee1fa91aa0bdfdd88178a26",
+      "trajectory_audit": {
+        "completions": 1,
+        "database_sha256": "9fbe088a0961dc837caf8cd48bda8587dcdd9c9b5f69997cc2d9b7aeb86914f9",
+        "effective_duplicates": 0,
+        "events": 7,
+        "ledger_head_sha256": "26250378740772ce0bc479b138c9439725d338ead6dbc76adb698e14643e725a",
+        "pass": true,
+        "steps": 2
+      },
+      "wall_to_final_validation_seconds": 0.415936,
+      "worker_exit_codes": [
+        0
+      ],
+      "worker_wall_seconds": 0.267847,
+      "workspace_source_sha256": "cc52fceb24b0dd35a6471eef2062ba2ccb0d7241e93d887acb595f25b1c3746e"
+    },
+    {
+      "arm": "basic_restart",
+      "duplicate_operation_count": 2,
+      "durable_steps": 0,
+      "fault": true,
+      "operation_counts": {
+        "basic_restart-fault-1:public-test": 2,
+        "basic_restart-fault-1:write-file": 2
+      },
+      "public_test_pass_after_recovery": true,
+      "recovery_seconds": 0.255277,
+      "repeat": 1,
+      "run_id": "basic_restart-fault-1",
+      "tool_execution_count": 4,
+      "tool_operations_sha256": "e942b37cefdd48e95782b3c02d29934d0d24644f34124c279a7dec7ab9b82a5d",
+      "trajectory_audit": null,
+      "wall_to_final_validation_seconds": 0.647924,
+      "worker_exit_codes": [
+        -9,
+        0
+      ],
+      "worker_wall_seconds": 0.507701,
+      "workspace_source_sha256": "cc52fceb24b0dd35a6471eef2062ba2ccb0d7241e93d887acb595f25b1c3746e"
+    },
+    {
+      "arm": "basic_restart",
+      "duplicate_operation_count": 2,
+      "durable_steps": 0,
+      "fault": true,
+      "operation_counts": {
+        "basic_restart-fault-2:public-test": 2,
+        "basic_restart-fault-2:write-file": 2
+      },
+      "public_test_pass_after_recovery": true,
+      "recovery_seconds": 0.264819,
+      "repeat": 2,
+      "run_id": "basic_restart-fault-2",
+      "tool_execution_count": 4,
+      "tool_operations_sha256": "88f2d20ec6c01492f0c394da952a9c75a59f85c3e6543d1417b606ec60aa2100",
+      "trajectory_audit": null,
+      "wall_to_final_validation_seconds": 0.663853,
+      "worker_exit_codes": [
+        -9,
+        0
+      ],
+      "worker_wall_seconds": 0.507429,
+      "workspace_source_sha256": "cc52fceb24b0dd35a6471eef2062ba2ccb0d7241e93d887acb595f25b1c3746e"
+    },
+    {
+      "arm": "basic_restart",
+      "duplicate_operation_count": 2,
+      "durable_steps": 0,
+      "fault": true,
+      "operation_counts": {
+        "basic_restart-fault-3:public-test": 2,
+        "basic_restart-fault-3:write-file": 2
+      },
+      "public_test_pass_after_recovery": true,
+      "recovery_seconds": 0.26331,
+      "repeat": 3,
+      "run_id": "basic_restart-fault-3",
+      "tool_execution_count": 4,
+      "tool_operations_sha256": "e88dc9030fe9e528882f64450329e81221bc918e49593f0d7425baa45801d791",
+      "trajectory_audit": null,
+      "wall_to_final_validation_seconds": 0.68441,
+      "worker_exit_codes": [
+        -9,
+        0
+      ],
+      "worker_wall_seconds": 0.520815,
+      "workspace_source_sha256": "cc52fceb24b0dd35a6471eef2062ba2ccb0d7241e93d887acb595f25b1c3746e"
+    },
+    {
+      "arm": "vare_durable_resume",
+      "duplicate_operation_count": 1,
+      "durable_steps": 2,
+      "fault": true,
+      "operation_counts": {
+        "vare_durable_resume-fault-1:public-test": 2,
+        "vare_durable_resume-fault-1:write-file": 1
+      },
+      "public_test_pass_after_recovery": true,
+      "recovery_seconds": 3.349556,
+      "repeat": 1,
+      "run_id": "vare_durable_resume-fault-1",
+      "tool_execution_count": 3,
+      "tool_operations_sha256": "118f5f5892c2d26ca085861fee1c6c384a8928c7e881584a95b35c1f406de74f",
+      "trajectory_audit": {
+        "completions": 1,
+        "database_sha256": "e6e90e361876b446811d3d08c6a83fa656a27227493843609bc000dcfa8bcdb2",
+        "effective_duplicates": 0,
+        "events": 9,
+        "ledger_head_sha256": "dcae94a8f76cde4995afbf6bfdcc94a5851eef8799c3096393b241432b9b29c5",
+        "pass": true,
+        "steps": 2
+      },
+      "wall_to_final_validation_seconds": 3.76453,
+      "worker_exit_codes": [
+        -9,
+        0
+      ],
+      "worker_wall_seconds": 0.546837,
+      "workspace_source_sha256": "cc52fceb24b0dd35a6471eef2062ba2ccb0d7241e93d887acb595f25b1c3746e"
+    },
+    {
+      "arm": "vare_durable_resume",
+      "duplicate_operation_count": 1,
+      "durable_steps": 2,
+      "fault": true,
+      "operation_counts": {
+        "vare_durable_resume-fault-2:public-test": 2,
+        "vare_durable_resume-fault-2:write-file": 1
+      },
+      "public_test_pass_after_recovery": true,
+      "recovery_seconds": 3.366109,
+      "repeat": 2,
+      "run_id": "vare_durable_resume-fault-2",
+      "tool_execution_count": 3,
+      "tool_operations_sha256": "478ec52eb1a6b86992e510e1a1803ae7c1e81a54cbe7497072cd39edb1571c86",
+      "trajectory_audit": {
+        "completions": 1,
+        "database_sha256": "3f420bdee4a425f0b3fc6c6c60e619e8a94a8377cb24d7a438a25ac445e0edd2",
+        "effective_duplicates": 0,
+        "events": 9,
+        "ledger_head_sha256": "d60ee44d6a02aedeeae7e75e3ee13bc57f7f7c186a90a977e122b8798a4b33aa",
+        "pass": true,
+        "steps": 2
+      },
+      "wall_to_final_validation_seconds": 3.797211,
+      "worker_exit_codes": [
+        -9,
+        0
+      ],
+      "worker_wall_seconds": 0.582383,
+      "workspace_source_sha256": "cc52fceb24b0dd35a6471eef2062ba2ccb0d7241e93d887acb595f25b1c3746e"
+    },
+    {
+      "arm": "vare_durable_resume",
+      "duplicate_operation_count": 1,
+      "durable_steps": 2,
+      "fault": true,
+      "operation_counts": {
+        "vare_durable_resume-fault-3:public-test": 2,
+        "vare_durable_resume-fault-3:write-file": 1
+      },
+      "public_test_pass_after_recovery": true,
+      "recovery_seconds": 3.336203,
+      "repeat": 3,
+      "run_id": "vare_durable_resume-fault-3",
+      "tool_execution_count": 3,
+      "tool_operations_sha256": "22c0ade11d9b7cb1091c86a7935921701c7e38c715febc9047f24f12d86114aa",
+      "trajectory_audit": {
+        "completions": 1,
+        "database_sha256": "b0e32cd27d09c31e66514ac86daabd3b872bfdce08f6b6133b69a247aad453cc",
+        "effective_duplicates": 0,
+        "events": 9,
+        "ledger_head_sha256": "5aa203a3f2012284d6a36681de474ddff81e52282993ff26b8c9b24164d36c62",
+        "pass": true,
+        "steps": 2
+      },
+      "wall_to_final_validation_seconds": 3.77154,
+      "worker_exit_codes": [
+        -9,
+        0
+      ],
+      "worker_wall_seconds": 0.555867,
+      "workspace_source_sha256": "cc52fceb24b0dd35a6471eef2062ba2ccb0d7241e93d887acb595f25b1c3746e"
+    }
+  ],
+  "source_commit": "b2cc71c6bd9985bc0fe3e36557a63d18c72dbf7b",
+  "status": "PASS_SYSTEM_SMOKE",
+  "task_hashes": {
+    "public_test": "ec6cab71528519023b9fa3254040f332dbe81e7eeb5825e741ec4b722e0f34ce",
+    "source": "8fbc5c8b3ef5a3f4852f15db10f346f26d27a7b579de5a35a8cfaec5ff85138d"
+  }
+}
