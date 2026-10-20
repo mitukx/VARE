@@ -1,5 +1,7 @@
 # Current evidence gaps
 
+**Update 2026-10-20 — MLSys coding pack graders:** nine authored tasks are under `benchmarks/mlsys_coding_v1`. Hidden checks stay outside the candidate workspace. Performance grades use parent clocks, fresh inputs, trusted `metadata.task_type`, and one paired-ratio helper. A prefixed measurement scores 0. Draft comparison v2 states a task-level paired t-test with Holm and does not freeze held-out membership. This pack does not grade a model patch.
+
 **Update 2026-10-18 — async worker SQLite serialization:** a per-store lock
 fixes the reproduced same-process connection race, and paged `iter_steps()`
 releases the lock before yielding so lease heartbeats remain live. The locked

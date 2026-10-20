@@ -1,0 +1,82 @@
+{
+  "arms": {
+    "grpo": {
+      "data": "On-policy samples from the train split only. Held-out tasks and held-out evaluator files are excluded from the update.",
+      "gradient_updates": 20,
+      "group_size": 4,
+      "max_train_tokens": 20000,
+      "reward": "reward.decide(result).reward recomputed from retained grade stdout. Do not optimize grader.score: on performance tasks that score is 0 whenever the speedup threshold fails, including when hidden correctness passed."
+    },
+    "no_update": {
+      "data": "none",
+      "gradient_updates": 0,
+      "role": "Frozen weights. Same held-out evaluation budget as the learning arms. Training compute is not matched by dummy updates."
+    },
+    "sft": {
+      "data": "Behavior cloning on the frozen oracle patches for the train split only, one pass. This is an oracle-patch control, not a claim that the model discovered the fixes. Held-out oracle files are not training data.",
+      "gradient_updates": 20,
+      "max_train_tokens": 20000
+    }
+  },
+  "authorization": {
+    "required_clearance_file": "protocols/mlsys_coding_isolation_clearance_v1.json",
+    "required_clearance_fields": {
+      "hidden_tests_unreadable_from_candidate_namespace": true,
+      "pack_manifest_sha256": "2c67d85a6806b3bbcbc63676f64fc955c5c7b3c9c4127a5a3caade1541efb4ab"
+    },
+    "status": "not_authorized"
+  },
+  "budgets": {
+    "evaluation_identical_across_arms": {
+      "decoding": {
+        "max_new_tokens_per_turn": 256,
+        "max_total_new_tokens": 2048,
+        "max_turns": 8,
+        "temperature": 0
+      },
+      "device": "CPU only",
+      "max_peak_rss_bytes": 8589934592,
+      "max_wall_seconds_per_attempt": 600,
+      "network": "disabled",
+      "paid_api": false,
+      "samples_per_seed_per_task": 1,
+      "seeds": [101, 211, 307],
+      "split": "heldout"
+    },
+    "training_matched_between_sft_and_grpo": {
+      "gradient_updates": 20,
+      "max_peak_rss_bytes": 8589934592,
+      "max_train_tokens": 20000,
+      "max_wall_seconds": 7200,
+      "split": "train"
+    }
+  },
+  "claim_boundary": "Prepared comparison config. It does not contain a trainer and does not authorize execution. A point estimate from three seeds is not a positive result unless the acceptance rule below holds.",
+  "eval_protocol_id": "mlsys-coding-agent-eval-v1",
+  "metrics": {
+    "acceptance": "For each of the two primary contrasts, all three seeds have a strictly positive paired difference and the 2.5 percentile of the 10000-resample seed bootstrap of the mean paired difference is greater than 0. Report both contrasts. A point estimate alone is not acceptance.",
+    "bootstrap": {
+      "percentiles": [2.5, 97.5],
+      "resamples": 10000,
+      "seed": 20261019,
+      "unit": "seed"
+    },
+    "per_seed_statistic": "Unweighted mean of protocol success (1 or 0) across the four frozen held-out tasks.",
+    "primary_contrasts": [
+      "sft minus no_update",
+      "grpo minus no_update"
+    ],
+    "secondary": [
+      "sft minus grpo, descriptive only",
+      "mean shaped protocol reward on the held-out split",
+      "per-task success counts"
+    ]
+  },
+  "protocol_id": "mlsys-coding-policy-comparison-v1",
+  "runner": {
+    "implemented": false,
+    "note": "scripts/run_mlsys_coding_policy_comparison_v1.py refuses before any model, container, or update."
+  },
+  "stopping_rule": "Do not start without isolation clearance for this manifest hash. Do not add tasks, edit the split, or change the speedup threshold, repeat count, or reward cap after any arm records a score. Stop an arm that exceeds its wall or RSS cap and retain the failure.",
+  "task_pack_manifest_sha256": "2c67d85a6806b3bbcbc63676f64fc955c5c7b3c9c4127a5a3caade1541efb4ab"
+}
