@@ -314,4 +314,3 @@ def add_trusted_adapter(workspace: Path) -> None:
 
 def prepare_workspace(source_root: Path, patch_path: Path, workspace: Path) -> dict[str, Any]:
     return apply_candidate_patch(source_root, patch_path, workspace)
-

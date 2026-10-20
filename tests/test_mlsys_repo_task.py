@@ -86,4 +86,3 @@ def test_pinned_source_target_symlink_fails_closed(tmp_path: Path, monkeypatch):
     monkeypatch.setattr(repo_task.subprocess, "run", fake_run)
     with pytest.raises(RepositoryTaskError, match="symlink"):
         repo_task.verify_baseline(root)
-
