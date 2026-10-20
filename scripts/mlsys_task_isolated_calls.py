@@ -143,6 +143,7 @@ def materialize_isolated_calls(task_id: str, task_dir: Path) -> tuple[dict, dict
         ),
         "memory_mb": int(json.loads((Path(task_dir) / "task.json").read_text())["limits"]["memory_mb"]),
         "preserve_session": task_kind == "correctness",
+        "discard_candidate_stdout": task_id in ROUTABLE_TASKS,
     }
     if task_id in {"mlsys-v1-causal-attention", "mlsys-v1-warmup-cosine"}:
         spec["bool_as_number"] = True
@@ -161,13 +162,12 @@ def materialize_isolated_calls(task_id: str, task_dir: Path) -> tuple[dict, dict
         correctness_cases = []
         for index in range(2):
             args, kwargs = generator(index)
+            expected_exception: str | None = None
             try:
                 expected = reference(*args, **kwargs)
             except ValueError:
                 expected = None
                 expected_exception = "ValueError"
-            else:
-                expected_exception = None
             correctness_cases.append({
                 "case_id": f"{task_id}-grader-correctness-{index}",
                 "args": _json_value(list(args)),

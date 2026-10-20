@@ -563,6 +563,11 @@ def _load_isolated_calls(path: Path) -> dict[str, Any]:
     if type(memory_mb) is not int or not 32 <= memory_mb <= 65536:
         raise IsolationError("isolated call spec memory_mb is invalid")
     payload["memory_mb"] = memory_mb
+    discard_candidate_stdout = payload.get("discard_candidate_stdout", False)
+    if type(discard_candidate_stdout) is not bool:
+        raise IsolationError("isolated call spec discard_candidate_stdout is invalid")
+    if discard_candidate_stdout and payload["task_kind"] != "correctness":
+        raise IsolationError("candidate stdout suppression is supported only for correctness calls")
     return payload
 
 
@@ -646,6 +651,7 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
                 preserve_session=spec.get("preserve_session") is True,
                 bool_as_number=spec.get("bool_as_number") is True,
                 memory_mb=memory_mb,
+                discard_candidate_stdout=spec.get("discard_candidate_stdout") is True,
             )
             passed = report.passed
             return {
@@ -688,6 +694,7 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
             preserve_session=spec.get("preserve_session") is True,
             bool_as_number=spec.get("bool_as_number") is True,
             memory_mb=memory_mb,
+            discard_candidate_stdout=spec.get("discard_candidate_stdout") is True,
         )
         if not correctness.passed:
             return {

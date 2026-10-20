@@ -101,9 +101,10 @@ _write = os.write
 _read = sys.stdin.buffer.readline
 header = _loads(_read())
 sys.path.insert(0, "/subject")
-_candidate_stdout = open(os.devnull, "w", encoding="utf-8")
-sys.stdout = _candidate_stdout
-sys.__stdout__ = _candidate_stdout
+if header.get("discard_candidate_stdout") is True:
+    _candidate_stdout = open(os.devnull, "w", encoding="utf-8")
+    sys.stdout = _candidate_stdout
+    sys.__stdout__ = _candidate_stdout
 _write(1, b"IMPORTING\n")
 module = __import__(header["module"])
 function = getattr(module, header["function"])
@@ -602,6 +603,7 @@ def _invoke(
     runner: DockerIsolationRunner,
     tuple_paths: Sequence[Sequence[Any]] = (),
     memory_mb: int = 512,
+    discard_candidate_stdout: bool = False,
 ) -> tuple[Any | None, float | None, str | None]:
     """Return ``(value, parent_wall_s, failure)``."""
     nonce = secrets.token_hex(32)
@@ -619,6 +621,7 @@ def _invoke(
         "tuple_paths": [list(path) for path in tuple_paths],
         "timeout_s": timeout_s,
         "memory_mb": memory_mb,
+        "discard_candidate_stdout": discard_candidate_stdout,
     }
     proc = subprocess.Popen(
         [sys.executable, "-B", "-m", "vare.isolated_candidate", "--worker"],
@@ -675,6 +678,7 @@ def _invoke_session(
     image: str,
     runner: DockerIsolationRunner,
     memory_mb: int = 512,
+    discard_candidate_stdout: bool = False,
 ) -> list[tuple[Any | None, float | None, str | None]]:
     """Run an ordered case group in one isolated candidate process."""
     if not calls:
@@ -686,6 +690,7 @@ def _invoke_session(
         "function": function, "subject": str(staged), "image": image,
         "timeout_s": timeout_s, "session": True, "call_count": len(calls),
         "memory_mb": memory_mb,
+        "discard_candidate_stdout": discard_candidate_stdout,
     }
     proc = subprocess.Popen(
         [sys.executable, "-B", "-m", "vare.isolated_candidate", "--worker"],
@@ -821,6 +826,7 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
         header = {
             "module": spec["module"], "function": spec["function"],
             "session": spec.get("session") is True,
+            "discard_candidate_stdout": spec.get("discard_candidate_stdout") is True,
         }
         child.stdin.write((_canonical(header) + "\n").encode("utf-8"))
         child.stdin.flush()
@@ -958,6 +964,7 @@ def _one_call(
     runner: DockerIsolationRunner,
     tuple_paths: Sequence[Sequence[Any]] = (),
     memory_mb: int = 512,
+    discard_candidate_stdout: bool = False,
 ) -> tuple[Any | None, float | None, str | None]:
     module, function, args, kwargs = _prepare_call(module, function, args, kwargs)
     _limits(image, timeout_s, memory_mb)
@@ -968,7 +975,7 @@ def _one_call(
         staged = _stage_subject(source, Path(folder))
         return _invoke(
             staged, module, function, args, kwargs, timeout_s, image, runner,
-            tuple_paths, memory_mb,
+            tuple_paths, memory_mb, discard_candidate_stdout,
         )
 
 
@@ -985,6 +992,7 @@ def grade_calls(
     preserve_session: bool = False,
     bool_as_number: bool = False,
     memory_mb: int = 512,
+    discard_candidate_stdout: bool = False,
 ) -> CallReport:
     """Compare each child return value with the parent-owned expected value.
 
@@ -1015,14 +1023,14 @@ def grade_calls(
             invoked = _invoke_session(
                 staged, first.module, first.function,
                 [(item[2], item[3], call.tuple_paths) for item, call in zip(prepared, calls, strict=True)],
-                timeout_s, image, active, memory_mb,
+                timeout_s, image, active, memory_mb, discard_candidate_stdout,
             )
     else:
         invoked = [
             _one_call(
                 subject, call.module, call.function, call.args, call.kwargs or {},
                 timeout_s, image, active, call.tuple_paths,
-                memory_mb,
+                memory_mb, discard_candidate_stdout,
             )
             for call in calls
         ]

@@ -152,6 +152,7 @@ def test_candidate_stdout_does_not_corrupt_isolated_result_protocol(tmp_path: Pa
                 "module": "causal_attention",
                 "function": "causal_attention_weights",
                 "session": False,
+                "discard_candidate_stdout": True,
             }) + "\n" + json.dumps(request) + "\n"
         ).encode("utf-8"),
         capture_output=True,
