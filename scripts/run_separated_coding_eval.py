@@ -633,7 +633,7 @@ def rebuild_manifest_text(pack_dir: Path) -> str:
     """Match scripts/hash_mlsys_coding_pack_v1.py without importing that branch."""
     files = []
     for path in sorted(item for item in pack_dir.rglob("*") if item.is_file()):
-        if path.name == "manifest.json" or "__pycache__" in path.parts:
+        if path.name == "manifest.json" or ".git" in path.parts or "__pycache__" in path.parts:
             continue
         files.append({
             "bytes": path.stat().st_size,

@@ -1,10 +1,11 @@
 import json
+import hashlib
 from pathlib import Path
 
 import pytest
 
 from scripts.mlsys_task_isolated_calls import materialize_isolated_calls
-from scripts.run_separated_coding_eval import select_train_tasks
+from scripts.run_separated_coding_eval import rebuild_manifest_text, select_train_tasks
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -34,6 +35,25 @@ def test_heldout_selector_exposes_only_frozen_ids(tmp_path):
         assert not (task["task_root"] / "evaluator").exists()
         assert not (task["task_root"] / "subject").exists()
         assert (task["task_root"] / "task.json").is_file()
+
+
+def test_pack_manifest_rebuild_ignores_git_metadata(tmp_path):
+    pack = tmp_path / "pack"
+    (pack / ".git").mkdir(parents=True)
+    (pack / ".git" / "config").write_text("[core]\n")
+    (pack / "README.md").write_text("frozen task pack\n")
+    (pack / "manifest.json").write_text('{"pack_id":"fixture-pack"}\n')
+
+    expected = {
+        "files": [{
+            "bytes": len(b"frozen task pack\n"),
+            "path": "README.md",
+            "sha256": hashlib.sha256(b"frozen task pack\n").hexdigest(),
+        }],
+        "pack_id": "fixture-pack",
+    }
+
+    assert rebuild_manifest_text(pack) == json.dumps(expected, indent=2, sort_keys=True) + "\n"
 
 
 @pytest.mark.parametrize(
