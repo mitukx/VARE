@@ -1,0 +1,70 @@
+{
+  "code_sha256": "160b81f0afdaf8e78eaaec51989fd13d660e087ede4bcbc70b04b6854e8a1449",
+  "git_rev": "fb7fc40b487e083e41a82c703b0e308bb4d7b338",
+  "memory": {
+    "MemAvailable": 6243307520,
+    "SwapFree": 25347317760,
+    "SwapTotal": 25769799680,
+    "VmHWM": 15412781056,
+    "VmRSS": 15361429504,
+    "VmSwap": 0
+  },
+  "model_repository": "Qwen/Qwen2.5-Coder-14B-Instruct-GGUF",
+  "model_revision": "d0a692ef765eefbf2fabb130b3cb2e8917e3d225",
+  "model_sha256": "c1e659736d89ac1065fb495330fb824d94001974a4bfa78e7270e43476a8d940",
+  "protocol_id": "mlsys-coding-agent-e2e-dev-v1",
+  "tasks": [
+    {
+      "baseline_stdev_s": null,
+      "candidate_stdev_s": null,
+      "conservative_speedup": null,
+      "reason": "correctness",
+      "reward": 1.0,
+      "success": true,
+      "task_id": "mlsys-v1-grad-accum-tail",
+      "verified_task_success": true
+    },
+    {
+      "baseline_stdev_s": null,
+      "candidate_stdev_s": null,
+      "conservative_speedup": null,
+      "reason": "correctness",
+      "reward": 1.0,
+      "success": true,
+      "task_id": "mlsys-v1-paired-shuffle-loader",
+      "verified_task_success": true
+    },
+    {
+      "baseline_stdev_s": null,
+      "candidate_stdev_s": null,
+      "conservative_speedup": null,
+      "reason": "correctness",
+      "reward": 0.0,
+      "success": false,
+      "task_id": "mlsys-v1-range-sums",
+      "verified_task_success": false
+    },
+    {
+      "baseline_stdev_s": null,
+      "candidate_stdev_s": null,
+      "conservative_speedup": null,
+      "reason": "correctness",
+      "reward": 0.0,
+      "success": false,
+      "task_id": "mlsys-v1-row-log-softmax",
+      "verified_task_success": false
+    },
+    {
+      "baseline_stdev_s": null,
+      "candidate_stdev_s": null,
+      "conservative_speedup": null,
+      "reason": "correctness",
+      "reward": 0.0,
+      "success": false,
+      "task_id": "mlsys-v1-warmup-cosine",
+      "verified_task_success": false
+    }
+  ],
+  "tasks_completed": 5,
+  "verified_passes": 2
+}

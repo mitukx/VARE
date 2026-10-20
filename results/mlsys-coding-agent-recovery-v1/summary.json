@@ -1,0 +1,40 @@
+{
+  "code_sha256": "54bdad76088c5ad924e0e0043588bd67b792932e6d9a9de1a3cbd4cbf8210394",
+  "git_rev": "fb7fc40b487e083e41a82c703b0e308bb4d7b338",
+  "memory": {
+    "MemAvailable": 15972413440,
+    "SwapFree": 25298432000,
+    "SwapTotal": 25769799680,
+    "VmHWM": 29450240,
+    "VmRSS": 15966208,
+    "VmSwap": 9093120
+  },
+  "model_repository": "Qwen/Qwen2.5-Coder-14B-Instruct-GGUF",
+  "model_revision": "d0a692ef765eefbf2fabb130b3cb2e8917e3d225",
+  "model_sha256": "c1e659736d89ac1065fb495330fb824d94001974a4bfa78e7270e43476a8d940",
+  "protocol_id": "mlsys-coding-agent-recovery-v1",
+  "tasks": [
+    {
+      "arm": "baseline",
+      "elapsed_seconds": 169.408,
+      "lost_tool_executions": 0,
+      "new_tokens": 353,
+      "reason": "correctness",
+      "restart_wait_seconds": 0.0,
+      "task_id": "mlsys-v1-grad-accum-tail",
+      "verified_task_success": true
+    },
+    {
+      "arm": "vare",
+      "elapsed_seconds": 188.658,
+      "lost_tool_executions": 0,
+      "new_tokens": 349,
+      "reason": "correctness",
+      "restart_wait_seconds": 2.0,
+      "task_id": "mlsys-v1-grad-accum-tail",
+      "verified_task_success": true
+    }
+  ],
+  "tasks_completed": 2,
+  "verified_passes": 2
+}

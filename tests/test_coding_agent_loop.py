@@ -108,6 +108,19 @@ PROBE_BARE = (
 )
 
 
+def test_recovery_protocol_loads_without_a_pack_block():
+    import importlib.util
+
+    path = ROOT / "scripts" / "run_mlsys_coding_agent_e2e.py"
+    spec = importlib.util.spec_from_file_location("mlsys_e2e_runner", path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(module)
+    protocol = module._load_protocol(ROOT / "protocols" / "mlsys_coding_agent_recovery_v1.json")
+    assert protocol["kind"] == "recovery"
+    assert protocol["task"] == "mlsys-v1-grad-accum-tail"
+
+
 def test_parser_accepts_bare_tool_json_from_the_format_probe():
     calls = parse_tool_calls(PROBE_BARE)
     assert calls == [{

@@ -1,0 +1,34 @@
+{
+  "correctness": 1.0,
+  "integrity_failures": [],
+  "integrity_ok": true,
+  "metrics": [],
+  "passed": true,
+  "provenance": {
+    "candidate_mounts": [
+      "workspace",
+      "driver"
+    ],
+    "grader": "separated-candidate-worker",
+    "oracle_mounted": false
+  },
+  "score": 1.0,
+  "task_id": "mlsys-v1-paired-shuffle-loader",
+  "tests": [
+    {
+      "argv": [
+        "python",
+        "test_hidden.py",
+        "{workspace}"
+      ],
+      "name": "hidden-correctness",
+      "output_limited": false,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "",
+      "timed_out": false,
+      "wall_s": 0.060374
+    }
+  ],
+  "workspace_diff": ""
+}

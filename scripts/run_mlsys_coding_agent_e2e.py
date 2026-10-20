@@ -62,13 +62,14 @@ def _git_rev() -> str:
 
 def _load_protocol(path: Path) -> dict:
     protocol = json.loads(path.read_text(encoding="utf-8"))
-    manifest = ROOT / protocol.get("pack", {}).get("root", "benchmarks/mlsys_coding_v1") / "manifest.json"
-    if manifest.is_file():
-        actual = hashlib.sha256(manifest.read_bytes()).hexdigest()
-        expected = protocol["pack"]["manifest_sha256"]
-        if actual != expected:
-            raise SystemExit(f"pack manifest hash {actual} does not match protocol {expected}")
-    model_sha = protocol["model"]["sha256"]
+    pack = protocol.get("pack")
+    if pack:
+        manifest = ROOT / pack.get("root", "benchmarks/mlsys_coding_v1") / "manifest.json"
+        if manifest.is_file():
+            actual = hashlib.sha256(manifest.read_bytes()).hexdigest()
+            expected = pack["manifest_sha256"]
+            if actual != expected:
+                raise SystemExit(f"pack manifest hash {actual} does not match protocol {expected}")
     return protocol
 
 
