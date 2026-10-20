@@ -29,7 +29,7 @@ no-reuse rule. The five v3 train tasks reuse v1 task definitions. The two new
 v3 tasks, EMA bias correction and label smoothing, were both used in the PR #90
 matched exploratory cohort. The remaining GQA candidate is unassigned and its
 mutation condition is not represented in the separated-call schema. Therefore
-the frozen exclusion classification is **0/15 eligible**. The audit does not
+the frozen exclusion classification is **zero eligible tasks; 15 are required**. The audit does not
 reconstruct prior-use claims from raw rollout manifests; those exclusions are
 locked protocol assertions. This limitation does not affect the NO-GO because
 the independently counted inventory ceiling is already 14, below 15.

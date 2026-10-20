@@ -4,8 +4,8 @@
 read-only inventory of the v1–v3 MLSys packs checks all 19 task entries and
 finds 14 unique definitions, below the 15-task minimum; even before exclusions,
 the inventory ceiling fails the gate. The frozen prior-use record classifies
-0/15 as eligible after excluding PR #84–#89 tasks and the two consumed PR #90
-exploratory tasks. The audit does not reconstruct prior use from raw rollout
+zero as eligible after excluding PR #84–#89 tasks and the two consumed PR #90
+exploratory tasks; 15 are required. The audit does not reconstruct prior use from raw rollout
 manifests. The M1 Pro update was a ten-step one-example LoRA feasibility smoke
 only; no no-update/SFT/GRPO held-out success comparison was run. This is a
 data-readiness NO-GO, not evidence that policy updates cannot improve. Reproduce with
