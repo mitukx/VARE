@@ -686,11 +686,13 @@ def paired_timing(
         pairs.append(TimingPair(
             "-".join(order), baseline[1], candidate[1], difference, ratio, values_match, failure,
         ))
+    mean: float | None = None
+    low: float | None = None
+    high: float | None = None
+    crit: float | None = None
+    df: int | None = None
     if output_pass and len(differences) == repeats:
         mean, low, high, crit, df = paired_difference_ci(differences)
-    else:
-        mean = low = high = crit = None
-        df = None
     return TimingReport(
         task_kind, output_pass, repeats, seed, tuple(pairs), mean, low, high, crit, df,
     )

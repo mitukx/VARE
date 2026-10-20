@@ -316,6 +316,7 @@ def test_clock_and_id_cache_do_not_inflate_parent_speed(tmp_path: Path) -> None:
         "import time\n"
         "time.perf_counter = lambda: 0.0\n"
         "time.monotonic = lambda: 0.0\n"
+        "time.process_time = lambda: 0.0\n"
         + loop,
     )
     cached = _subject(
@@ -350,6 +351,55 @@ def test_clock_and_id_cache_do_not_inflate_parent_speed(tmp_path: Path) -> None:
         ratios = [pair.ratio for pair in report.pairs]
         assert all(ratio is not None and 0.05 < ratio < 20 for ratio in ratios)
         assert "1000.0" not in json.dumps(report.to_dict())
+
+
+def test_atexit_at_import_cannot_spoof_a_pass(tmp_path: Path) -> None:
+    subject = _subject(
+        tmp_path, "solve",
+        "import atexit\n"
+        "import sys\n"
+        "def _cheat():\n"
+        "    sys.stdout.write('{\"value\": 5}\\n')\n"
+        "    sys.stdout.write('{\"speedup\": 1000.0}\\n')\n"
+        "    sys.stdout.flush()\n"
+        "atexit.register(_cheat)\n"
+        "def add(a, b):\n"
+        "    return a - b\n",
+    )
+    report = _grade(subject, FunctionCall("sum", "solve", "add", [2, 3], 5))
+    assert report.passed is False
+    assert "1000.0" not in json.dumps(report.to_dict())
+
+
+def test_fake_speedup_on_stderr_is_not_a_pass(tmp_path: Path) -> None:
+    subject = _subject(
+        tmp_path, "solve",
+        "import sys\n"
+        "sys.stderr.write('{\"speedup\": 1000.0}\\n')\n"
+        "sys.stderr.flush()\n"
+        "def add(a, b):\n"
+        "    return a - b\n",
+    )
+    report = _grade(subject, FunctionCall("sum", "solve", "add", [2, 3], 5))
+    assert report.passed is False
+    assert report.cases[0].failure == "wrong_output"
+    assert "1000.0" not in json.dumps(report.to_dict())
+
+
+def test_candidate_network_is_closed(tmp_path: Path) -> None:
+    subject = _subject(
+        tmp_path, "solve",
+        "import socket\n"
+        "def probe():\n"
+        "    try:\n"
+        "        socket.create_connection(('203.0.113.1', 65000), timeout=0.5)\n"
+        "        return 'open'\n"
+        "    except OSError:\n"
+        "        return 'closed'\n",
+    )
+    report = _grade(subject, FunctionCall("net", "solve", "probe", [], "open"))
+    assert report.passed is False
+    assert report.cases[0].failure == "wrong_output"
 
 
 def test_candidate_uid_is_unprivileged(tmp_path: Path) -> None:

@@ -22,6 +22,9 @@ import subprocess
 import sys
 import time
 
+from vare.agent_edit_format import (
+    classify_outcome, inference_arms, pass_at_k, per_task_reward_variance,
+)
 from vare.agent_task_contract import assert_train_only, load_agent_task
 from vare.container_isolation import DockerIsolationRunner, IsolationError, IsolationLimits
 from vare.environments.spec import EngineeringTaskSpec
@@ -420,6 +423,7 @@ def ensure_model(repository: str, revision: str, file_hashes: dict[str, str] | N
 def run_agent(
     protocol: dict, *, model_path: Path, repository: str, seed: int,
     workspace: Path, task_root: Path, output: Path, instruction: str,
+    arm: dict,
 ) -> dict:
     budgets = protocol["budgets"]
     env = os.environ.copy()
@@ -429,6 +433,8 @@ def run_agent(
         "CUDA_VISIBLE_DEVICES": "",
         "OMP_NUM_THREADS": str(budgets["cpu_threads"]),
     })
+    top_p = 0.95 if arm.get("top_p") is None else arm["top_p"]
+    top_k = 20 if arm.get("top_k") is None else arm["top_k"]
     command = [
         sys.executable, str(ROOT / "scripts/run_local_agent.py"),
         "--workspace", str(workspace),
@@ -438,8 +444,11 @@ def run_agent(
         "--output", str(output),
         "--instruction", instruction,
         "--seed", str(seed),
-        "--temperature", str(protocol["inference"]["temperature"]),
-        "--no-do-sample" if not protocol["inference"]["do_sample"] else "--do-sample",
+        "--temperature", str(arm["temperature"]),
+        "--top-p", str(top_p),
+        "--top-k", str(top_k),
+        "--edit-format", str(arm["edit_format"]),
+        "--no-do-sample" if not arm["do_sample"] else "--do-sample",
         "--require-split", "train",
         "--max-turns", str(budgets["max_turns"]),
         "--max-new-tokens-per-turn", str(budgets["max_new_tokens_per_turn"]),
@@ -447,19 +456,70 @@ def run_agent(
         "--wall-seconds", str(budgets["wall_seconds"]),
     ]
     started = time.perf_counter()
-    completed = subprocess.run(
-        command, env=env, text=True, capture_output=True,
-        timeout=budgets["wall_seconds"] + 120, check=False,
-    )
+    try:
+        completed = subprocess.run(
+            command, env=env, text=True, capture_output=True,
+            timeout=budgets["wall_seconds"] + 120, check=False,
+        )
+    except subprocess.TimeoutExpired as exc:
+        stdout = exc.stdout if isinstance(exc.stdout, str) else ""
+        stderr = exc.stderr if isinstance(exc.stderr, str) else ""
+        return {
+            "returncode": None,
+            "wall_s": time.perf_counter() - started,
+            "stdout_tail": stdout[-2000:],
+            "stderr_tail": stderr[-2000:],
+            "timed_out": True,
+        }
     record = {
         "returncode": completed.returncode,
         "wall_s": time.perf_counter() - started,
         "stdout_tail": completed.stdout[-2000:],
         "stderr_tail": completed.stderr[-2000:],
+        "timed_out": False,
     }
     if output.is_file():
         record["agent"] = json.loads(output.read_text(encoding="utf-8"))
     return record
+
+
+def _outcome_for(agent: dict, *, task_passed: bool, timed_out: bool, source_changed: bool) -> str:
+    return classify_outcome(
+        task_passed=task_passed,
+        stop_reason=None if not isinstance(agent.get("stop_reason"), str) else agent.get("stop_reason"),
+        source_changed=source_changed,
+        edit_attempted=bool(agent.get("edit_attempted")),
+        edit_applied=bool(agent.get("edit_applied")),
+        format_parse_failure=agent.get("format_parse_failure") if isinstance(agent.get("format_parse_failure"), str) else None,
+        timed_out=timed_out,
+    )
+
+
+def attach_outcome(row: dict, agent: dict, *, task_passed: bool, timed_out: bool) -> None:
+    source_changed = bool(row.get("source_changed"))
+    row["edit_format"] = agent.get("edit_format")
+    row["edit_attempted"] = bool(agent.get("edit_attempted"))
+    row["edit_applied"] = bool(agent.get("edit_applied"))
+    row["format_parse_failure"] = agent.get("format_parse_failure")
+    row["outcome"] = _outcome_for(
+        agent, task_passed=task_passed, timed_out=timed_out, source_changed=source_changed,
+    )
+
+
+def _arm_summary(arm: dict, rows: list[dict]) -> dict:
+    summary = summarize_tasks(rows)
+    summary.update({
+        "arm": arm["name"],
+        "edit_format": arm["edit_format"],
+        "temperature": arm["temperature"],
+        "do_sample": arm["do_sample"],
+        "top_p": arm["top_p"],
+        "top_k": arm["top_k"],
+        "seeds": arm["seeds"],
+        "per_task_reward_variance": per_task_reward_variance(rows),
+        "pass_at_k": pass_at_k(rows),
+    })
+    return summary
 
 
 def summarize_tasks(rows: list[dict]) -> dict:
@@ -474,7 +534,7 @@ def summarize_tasks(rows: list[dict]) -> dict:
         "pass_rate": passed / total,
         "wilson95_low": low,
         "wilson95_high": high,
-        "interval": "Wilson 95% on the pre-registered train tasks for one seed",
+        "interval": "Wilson 95% on the pre-registered train tasks for the samples in this arm",
     }
 
 
@@ -808,7 +868,7 @@ async def run_unpatched(image: str, tasks: list[dict], decide, out: Path) -> tup
 
 async def run_model_task(
     protocol: dict, *, out: Path, model_path: Path, repository: str, seed: int,
-    task: dict, image: str, decide,
+    task: dict, image: str, decide, arm: dict,
 ) -> dict:
     task_out = out / task["task_id"]
     workspace_root = task_out / "workspaces"
@@ -821,7 +881,7 @@ async def run_model_task(
     agent_record = run_agent(
         protocol, model_path=model_path, repository=repository, seed=seed,
         workspace=workspace, task_root=task["task_root"], output=agent_path,
-        instruction=task["prompt"],
+        instruction=task["prompt"], arm=arm,
     )
     row = {
         "task_id": task["task_id"],
@@ -835,7 +895,13 @@ async def run_model_task(
     }
     agent = agent_record.get("agent")
     if agent is None:
-        row.update({"task_passed": False, "diagnosis": "agent_record_missing"})
+        row.update({
+            "task_passed": False,
+            "diagnosis": "agent_record_missing",
+            "edit_format": arm["edit_format"],
+            "format_parse_failure": None,
+            "outcome": "timeout" if agent_record.get("timed_out") else "no_tool_call",
+        })
         return row
     row["stop_reason"] = agent.get("stop_reason")
     row["new_tokens"] = agent.get("new_tokens")
@@ -849,11 +915,16 @@ async def run_model_task(
             task=task, policy_id=f"seed-{seed}", decide=decide,
         )
     except IsolationError as exc:
+        message = str(exc)
         row.update({
             "task_passed": False,
             "diagnosis": "grader_failed_closed",
-            "grader_error": str(exc),
+            "grader_error": message,
         })
+        attach_outcome(
+            row, agent, task_passed=False,
+            timed_out=bool(agent_record.get("timed_out")) or "wall-time" in message,
+        )
         return row
     if "grade" in graded:
         stored = dict(graded["grade"])
@@ -862,6 +933,11 @@ async def run_model_task(
     row["reward"] = graded["decision"]["reward"]
     row["reward_reason"] = graded["decision"]["reason"]
     row["diagnosis"] = diagnose(agent, graded["decision"])
+    test_timed_out = graded.get("test_timed_out") is True
+    attach_outcome(
+        row, agent, task_passed=row["task_passed"] is True,
+        timed_out=bool(agent_record.get("timed_out")) or test_timed_out,
+    )
     if "grader_error" in graded:
         row["grader_error"] = graded["grader_error"]
     return row
@@ -932,48 +1008,67 @@ async def async_main(args: argparse.Namespace) -> int:
 
     primary = protocol["models"]["primary"]
     model_path = ensure_model(primary["repository"], primary["revision"], primary["file_hashes"])
-    rows = []
-    for seed in primary["seeds"]:
-        for task in tasks:
-            rows.append(await run_model_task(
-                protocol, out=out / "primary" / f"seed-{seed}",
-                model_path=model_path, repository=primary["repository"], seed=seed,
-                task=task, image=image, decide=decide,
-            ))
-            _write_json(out / "primary-tasks.json", {"rows": rows})
-    primary_summary = summarize_tasks(rows)
-    secondary = maybe_secondary(protocol, rows)
-    if secondary.get("coder_0_5b") == "eligible":
-        coder = protocol["models"]["secondary_if_feasible"]
-        coder_path = ensure_model(coder["repository"], coder["revision"], None)
-        coder_rows = []
-        for seed in coder["seeds"]:
+    arms = inference_arms(protocol)
+    arm_reports = []
+    rows: list[dict] = []
+    primary_summary: dict | None = None
+    for arm in arms:
+        arm_rows = []
+        for seed in arm["seeds"]:
             for task in tasks:
-                coder_rows.append(await run_model_task(
-                    protocol, out=out / "coder-0.5b" / f"seed-{seed}",
-                    model_path=coder_path, repository=coder["repository"], seed=seed,
-                    task=task, image=image, decide=decide,
+                arm_rows.append(await run_model_task(
+                    protocol, out=out / arm["name"] / f"seed-{seed}",
+                    model_path=model_path, repository=primary["repository"], seed=seed,
+                    task=task, image=image, decide=decide, arm=arm,
                 ))
-        secondary["summary"] = summarize_tasks(coder_rows)
-        secondary["rows"] = coder_rows
-    available = mem_available_bytes()
-    secondary["mem_available_before_coder_1_5b"] = available
-    if available < 8 * 1024 ** 3:
-        secondary["coder_1_5b"] = "skipped_insufficient_memory"
+                _write_json(out / f"{arm['name']}-tasks.json", {"rows": arm_rows})
+        arm_summary = _arm_summary(arm, arm_rows)
+        arm_reports.append({"name": arm["name"], "summary": arm_summary, "rows": arm_rows})
+        if primary_summary is None:
+            rows = arm_rows
+            primary_summary = arm_summary
+    assert primary_summary is not None
+    if len(arms) == 1 and arms[0]["name"] == "primary":
+        _write_json(out / "primary-tasks.json", {"rows": rows})
+    if "secondary_if_feasible" not in protocol["models"]:
+        secondary = {"status": "not_in_protocol"}
     else:
-        large = protocol["models"]["not_run_unless"]
-        large_path = ensure_model(large["repository"], large["revision"], None)
-        large_rows = []
-        for seed in large["seeds"]:
-            for task in tasks:
-                large_rows.append(await run_model_task(
-                    protocol, out=out / "coder-1.5b" / f"seed-{seed}",
-                    model_path=large_path, repository=large["repository"], seed=seed,
-                    task=task, image=image, decide=decide,
-                ))
-        secondary["coder_1_5b"] = "ran"
-        secondary["coder_1_5b_summary"] = summarize_tasks(large_rows)
-        secondary["coder_1_5b_rows"] = large_rows
+        secondary = maybe_secondary(protocol, rows)
+        if secondary.get("coder_0_5b") == "eligible":
+            coder = protocol["models"]["secondary_if_feasible"]
+            coder_path = ensure_model(coder["repository"], coder["revision"], None)
+            coder_arm = dict(arms[0])
+            coder_arm["name"] = "coder-0.5b"
+            coder_rows = []
+            for seed in coder["seeds"]:
+                for task in tasks:
+                    coder_rows.append(await run_model_task(
+                        protocol, out=out / "coder-0.5b" / f"seed-{seed}",
+                        model_path=coder_path, repository=coder["repository"], seed=seed,
+                        task=task, image=image, decide=decide, arm=coder_arm,
+                    ))
+            secondary["summary"] = _arm_summary(coder_arm, coder_rows)
+            secondary["rows"] = coder_rows
+        available = mem_available_bytes()
+        secondary["mem_available_before_coder_1_5b"] = available
+        if available < 8 * 1024 ** 3:
+            secondary["coder_1_5b"] = "skipped_insufficient_memory"
+        else:
+            large = protocol["models"]["not_run_unless"]
+            large_path = ensure_model(large["repository"], large["revision"], None)
+            large_arm = dict(arms[0])
+            large_arm["name"] = "coder-1.5b"
+            large_rows = []
+            for seed in large["seeds"]:
+                for task in tasks:
+                    large_rows.append(await run_model_task(
+                        protocol, out=out / "coder-1.5b" / f"seed-{seed}",
+                        model_path=large_path, repository=large["repository"], seed=seed,
+                        task=task, image=image, decide=decide, arm=large_arm,
+                    ))
+            secondary["coder_1_5b"] = "ran"
+            secondary["coder_1_5b_summary"] = _arm_summary(large_arm, large_rows)
+            secondary["coder_1_5b_rows"] = large_rows
     summary = {
         "protocol_id": protocol["protocol_id"],
         "evidence_levels": {
@@ -986,6 +1081,7 @@ async def async_main(args: argparse.Namespace) -> int:
         "model_started": True,
         "primary": primary_summary,
         "primary_rows": rows,
+        "arms": [{"name": item["name"], "summary": item["summary"]} for item in arm_reports],
         "secondary": secondary,
         "canary_visible": harness["canary_visible"],
         "canary_replicates": harness["canary_replicates"],

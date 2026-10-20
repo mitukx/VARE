@@ -827,6 +827,38 @@ def test_protocol_command_uses_the_pinned_pack_and_colima_image():
     assert protocol["execution"]["accepted_container_images"]["colima_aarch64"] in accepted
 
 
+def test_v2_protocol_loads_without_heldout_or_secondary_models():
+    module = _load_eval_module()
+    protocol = module.load_protocol(ROOT / "protocols/separated_coding_eval_cpu_v2.lock.json")
+    arms = module.inference_arms(protocol)
+    assert [arm["name"] for arm in arms] == ["greedy", "sample_pass8"]
+    assert {arm["edit_format"] for arm in arms} == {"unified_diff"}
+    assert "secondary_if_feasible" not in protocol["models"]
+    assert set(protocol["pack"]["train"]).isdisjoint(set(protocol["pack"]["heldout_not_used"]))
+    rows = [
+        {"task_id": "mlsys-v1-range-sums", "reward": 0.0, "task_passed": False},
+        {"task_id": "mlsys-v1-range-sums", "reward": 1.0, "task_passed": True},
+    ]
+    summary = module._arm_summary(arms[1], rows)
+    assert summary["per_task_reward_variance"]["mlsys-v1-range-sums"]["sample_variance"] == 0.5
+    assert summary["pass_at_k"]["tasks_with_any_success"] == 1
+    recorded = {"source_changed": False}
+    module.attach_outcome(
+        recorded,
+        {
+            "stop_reason": "malformed_edit",
+            "edit_attempted": True,
+            "edit_applied": False,
+            "format_parse_failure": "malformed_diff",
+            "edit_format": "unified_diff",
+        },
+        task_passed=False,
+        timed_out=False,
+    )
+    assert recorded["outcome"] == "malformed_edit"
+    assert recorded["format_parse_failure"] == "malformed_diff"
+
+
 def test_historical_task_contract_still_loads(tmp_path):
     root = tmp_path / "historical"
     (root / "evaluator").mkdir(parents=True)
