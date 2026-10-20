@@ -25,7 +25,9 @@ The collector's hashes establish byte consistency within the declared trust assu
 
 The latest [workspace-bound v2 report](verified_coding_agent_baseline_v2.md) is **E0 deterministic integration evidence**. It retains regression controls for missing workspaces, altered source, forged hash fields, staged/untracked paths, symlinks, wrong HEAD, undeclared tools, and valid negative grades. The v2 protocol is premeasurement and does not retroactively change v1 records.
 
-No fresh live coding-agent execution, newly calibrated real-repository task cohort, independently graded task-success measurement, or agent-training outcome is reported by this implementation. A task integration or a passing synthetic regression harness is not evidence of model capability. The earlier [environment-factory overview](environment_factory.md) and [v1 report](verified_coding_agent_baseline_v1.md) retain their original scope and history.
+No fresh live coding-agent execution, independently graded model task-success measurement, or agent-training outcome is reported. A task integration or a passing synthetic regression harness is not evidence of model capability. The earlier [environment-factory overview](environment_factory.md) and [v1 report](verified_coding_agent_baseline_v1.md) retain their original scope and history.
+
+The [MLSys coding pack v1](mlsys-coding-tasks-v1.md) is a separate authored task set. Its hidden checks live outside the candidate workspace and use the existing `EngineeringTaskSpec` interface. Baseline fixtures fail the pre-registered rule and the known fixes pass. That calibration does not execute a model. Graders call a harness adapter; the shared child harness is proposed for the isolated-grader work and is not reimplemented here. The no-update, SFT, and GRPO comparison still refuses real patches until hidden-test confidentiality is cleared. A synthetic train-only dry-run is not a capability result. Draft comparison v2 was not run on held-out.
 
 ## Reproduction
 
