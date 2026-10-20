@@ -26,6 +26,7 @@ Run commands from the repository root. Choose a fresh output directory for compa
 | Which historical grader can run on this platform? | [Reviewer guide](../docs/reviewer-guide.md), [CLI](../docs/execution.md); urllib3 calibration requires macOS |
 | Which model study may run next? | [Current gaps](../docs/current-gaps.md), [experiment index](../docs/experiments.md), [agent charter](../AGENTS.md); existing consumed cohorts are not new confirmation data |
 | Does the authored MLSys coding pack still match its frozen manifest? | `python scripts/hash_mlsys_coding_pack_v1.py --check` |
+| Is the MLSys policy comparison allowed to run? | `python scripts/run_mlsys_coding_policy_comparison_v1.py` exits 3 until isolation clearance. `--synthetic-train-dry-run` is a labeled train-split stand-in, not a capability result. |
 
 For the mathematical checker tests, install `requirements/math500-grader-test.lock.txt` and run their two test files separately. GPU notebooks, model-download scripts, and historical exploratory runs are not part of the default quick start. The optional runtime/trainer locks in `requirements/` document their own setup.
 
