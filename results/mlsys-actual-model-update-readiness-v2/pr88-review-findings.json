@@ -1,0 +1,27 @@
+{
+  "repository": "mitukx/VARE",
+  "pull_request": 88,
+  "head_sha": "ae6e469769127d042623f31dd8cc8247b1babba6",
+  "mergeable": false,
+  "mergeable_state": "dirty",
+  "unresolved_findings": [
+    {
+      "comment_id": 4321198051,
+      "priority": "P1",
+      "path": "benchmarks/mlsys_coding_v1/tasks/global_grad_clip/evaluator/test_hidden.py",
+      "summary": "Nested zip comparisons do not reject truncated output dimensions."
+    },
+    {
+      "comment_id": 4321198062,
+      "priority": "P1",
+      "path": "scripts/run_mlsys_coding_agent_e2e.py",
+      "summary": "PR head checks the frozen manifest digest but not every listed pack file."
+    },
+    {
+      "comment_id": 4321198066,
+      "priority": "P2",
+      "path": "src/vare/coding_agent_loop.py",
+      "summary": "Candidate worker does not enforce the task-declared memory and CPU-time limits."
+    }
+  ]
+}

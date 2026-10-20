@@ -1,0 +1,34 @@
+{
+  "protocol_id": "mlsys-actual-model-update-readiness-no-go-v2",
+  "schema_version": 1,
+  "status": "frozen_after_v1_inventory_no_go_before_new_model_rollout",
+  "source": {
+    "repository": "mitukx/VARE",
+    "branch": "main",
+    "commit": "312f499af5842faf5872ea554916e4d18e0b92cb",
+    "tree": "80fa635de98791ac927a2e47cd2c591dd840f217",
+    "paths_bound_to_tree": [
+      "benchmarks/mlsys_coding_v1",
+      "benchmarks/mlsys_coding_v2",
+      "benchmarks/mlsys_coding_v3",
+      "protocols/mlsys_actual_model_update_no_go_v1.lock.json",
+      "scripts/audit_mlsys_update_readiness_v1.py"
+    ]
+  },
+  "inventory_protocol": "protocols/mlsys_actual_model_update_no_go_v1.lock.json",
+  "readiness_gate": {
+    "minimum_unique_eligible_heldout_tasks": 15,
+    "training_or_new_agent_rollouts_if_gate_fails": false
+  },
+  "decision": {
+    "status": "NO_GO",
+    "eligible_unique_heldout_tasks": 0,
+    "unique_task_definitions": 14,
+    "claim_boundary": "Readiness only. Does not show that SFT or GRPO cannot improve coding-task success."
+  },
+  "microbenchmark_replay": {
+    "protocol": "protocols/mlx_backend_microbenchmark_v1.lock.json",
+    "classification": "consumed_prompt_rerun_protocol_violation_not_new_evidence",
+    "used_for_readiness_decision": false
+  }
+}

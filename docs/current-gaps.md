@@ -8,10 +8,17 @@ zero as eligible after excluding PR #84–#89 tasks and the two consumed PR #90
 exploratory tasks; 15 are required. The audit does not reconstruct prior use from raw rollout
 manifests. The M1 Pro update was a ten-step one-example LoRA feasibility smoke
 only; no no-update/SFT/GRPO held-out success comparison was run. This is a
-data-readiness NO-GO, not evidence that policy updates cannot improve. Reproduce with
-`python scripts/audit_mlsys_update_readiness_v1.py`; see the [report](mlsys-actual-model-update-no-go-v1-report.md),
+data-readiness NO-GO, not evidence that policy updates cannot improve.
+Reproduce the current-main-bound audit with
+`python scripts/audit_mlsys_update_readiness_v2.py --output results/mlsys-actual-model-update-readiness-v2/audit-v2.json`;
+see the [original report](mlsys-actual-model-update-no-go-v1-report.md),
 [lock](../protocols/mlsys_actual_model_update_no_go_v1.lock.json), and
 [audit](../results/mlsys-actual-model-update-readiness-v1/audit.json).
+The source-bound current-main PR audit is recorded in the [v2 readiness
+report](mlsys-actual-model-update-readiness-v2-report.md) and its [hashed
+evidence bundle](../results/mlsys-actual-model-update-readiness-v2/). The same
+bundle discloses a repeated, already-consumed MLX benchmark prompt; that rerun
+is excluded from new evidence.
 
 **Update 2026-10-20 — MLSys graders call a harness adapter; comparison v2 is a draft:** the v1 graders no longer import the candidate in-process. They call `harness_adapter.py`, which proposes `vare.separated_candidate_harness.grade_function` for PR #85 and falls back to a marked temporary shim. Trusted `metadata.task_type` is `correctness` or `performance`. Timing pairs are interleaved and the 2× gate uses the lower Student-t bound of the paired ratios. The parent rejects a reused input object or value. A performance task with prefixed measurement output scores 0. A correct slow range-sum and a correct slow standardizer still fail the 2× gate, including an identity cache on both tasks and an import-time print. The v1 all-seeds-plus-bootstrap acceptance text is unchanged; draft v2 does not use that vacuous conjunction. The default comparison command still exits 3. Real model patches stay refused because the live canary is readable. v1's 4×3 temperature-0 rule reaches 80% power at a 0.5 baseline only around a 0.491 absolute lift. Draft v2 is not run and does not freeze held-out membership. Its primary test is a task-level paired t-test with Holm across GRPO versus no-update and SFT versus no-update. The recorded single-test target, after a 20-30 task expansion, is 15-20 held-out tasks at 32 samples, about 8 percentage points, and that model is invalid near 0% success. See the [report](mlsys-coding-tasks-v1.md).
 

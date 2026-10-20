@@ -1,0 +1,19 @@
+{
+  "repository": "mitukx/VARE",
+  "pull_request": 93,
+  "reviewed_commit": "6a5ca91771f6b62978373d213b95ea5727a1f5c8",
+  "findings": [
+    {
+      "comment_id": 4323228279,
+      "priority": "P1",
+      "status": "addressed_in_follow_up_commit_pending_independent_rerun",
+      "summary": "The pinned microbenchmark prompt/output was already consumed; the repeated result is now explicitly a protocol violation and excluded as new evidence."
+    },
+    {
+      "comment_id": 4323228285,
+      "priority": "P2",
+      "status": "addressed_in_follow_up_commit_pending_independent_rerun",
+      "summary": "Added a v2 lock and auditor that pin the exact VARE main commit/tree and check all source paths against that revision before inventory auditing."
+    }
+  ]
+}
