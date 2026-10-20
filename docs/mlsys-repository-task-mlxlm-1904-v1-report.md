@@ -4,7 +4,7 @@
 
 ## Hypothesis and frozen scope
 
-The task is `mlxlm-1904-tool-arguments` from the frozen Train split in MLSys task deep-qualification v1. The hypothesis was that a clean export of the pinned upstream baseline would fail the dict-valued argument case, while the exact upstream fix would pass it and preserve JSON-string behavior. The [v2 protocol](../benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v2.json) preserves the first frozen implementation. The [v3 protocol](../benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v3.json) locks the cleaned patch format and source hashes before run 5. Neither changes the frozen source split or its evidence.
+The task is `mlxlm-1904-tool-arguments` from the frozen Train split in MLSys task deep-qualification v1. The hypothesis was that a clean export of the pinned upstream baseline would fail the dict-valued argument case, while the exact upstream fix would pass it and preserve JSON-string behavior. The [v2 protocol](../benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v2.json) preserves the first frozen implementation. The [v3 protocol](../benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v3.json) preserves the run-5 attempt, which caught a patch-application mismatch before grading. The [v4 protocol](../benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v4.json) locks the zero-context patch and execution flags before run 6. None changes the frozen source split or its evidence.
 
 The original upstream selector, `test_handle_chat_completions_with_dict_tool_arguments`, starts the HTTP/model-serving fixture and loads MLX. The isolated adapter supports only the directly relevant `process_message_content` behavior: already-decoded object arguments are accepted, while string arguments are still decoded to the same object. It does **not** claim exact equivalence to that full HTTP test. The task prompt and report disclose this limitation.
 
@@ -46,7 +46,7 @@ python3 scripts/red_team_mlxlm_1904.py \
   --output results/mlsys-repo-eval-v1/new-run/red-team.json
 ```
 
-Run 1 preserves the initial Colima failure from using a temporary path outside the VM's shared mounts. Run 2 is a successful preliminary replay. Run 3 added a source-swap check. Run 4 is the protocol-v2 replay and red-team suite. Run 5 is the cleaned protocol-v3 replay against the committed implementation. No old record was overwritten. The raw JSON, source patch, protocol snapshots, task, grader adapter and SHA-256 manifest are retained under `results/mlsys-repo-eval-v1/`.
+Run 1 preserves the initial Colima failure from using a temporary path outside the VM's shared mounts. Run 2 is a successful preliminary replay. Run 3 added a source-swap check. Run 4 is the protocol-v2 replay and red-team suite. Run 5 preserves a failed patch-application attempt and its completed red-team suite. Run 6 is the protocol-v4 calibration and red-team replay against the committed implementation. No old record was overwritten. The raw JSON, source patch, protocol snapshots, task, grader adapter and SHA-256 manifest are retained under `results/mlsys-repo-eval-v1/`.
 
 ## Limits and next gate
 

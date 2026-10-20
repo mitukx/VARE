@@ -9,8 +9,8 @@ dict case and its JSON-string control. Eight focused callee security probes
 passed; path/traversal/symlink and source-swap checks failed closed. This does
 not claim equivalence to the full upstream HTTP test or any model-generated
 success. See the [report](mlsys-repository-task-mlxlm-1904-v1-report.md),
-[protocol](../benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v3.json),
-and [raw records](../results/mlsys-repo-eval-v1/run-5/).
+[protocol](../benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v4.json),
+and [raw records](../results/mlsys-repo-eval-v1/run-6/).
 
 ## Actual-model MLSys update readiness — NO-GO, 2026-10-20
 

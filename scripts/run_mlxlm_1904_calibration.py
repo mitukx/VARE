@@ -46,7 +46,7 @@ def main() -> int:
     patch = Path(__file__).resolve().parents[1] / (
         "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/known_fix.patch"
     )
-    protocol = patch.parent / "protocol-v3.json"
+    protocol = patch.parent / "protocol-v4.json"
     task = patch.parent / "task.md"
     started = time.monotonic()
     implementation_commit = subprocess.run(

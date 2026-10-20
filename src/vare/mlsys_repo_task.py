@@ -186,7 +186,7 @@ def apply_candidate_patch(source_root: Path, patch_path: Path, workspace: Path) 
     try:
         subprocess.run(["git", "init", "-q"], cwd=workspace, check=True, timeout=10)
         subprocess.run(
-            ["git", "apply", "--check", str(patch_path.resolve())],
+            ["git", "apply", "--unidiff-zero", "--check", str(patch_path.resolve())],
             cwd=workspace, check=True, capture_output=True, text=True, timeout=10,
         )
     except subprocess.CalledProcessError as exc:
@@ -201,7 +201,7 @@ def apply_candidate_patch(source_root: Path, patch_path: Path, workspace: Path) 
         raise RepositoryTaskError("candidate target became a symlink or disappeared")
     try:
         subprocess.run(
-            ["git", "apply", str(patch_path.resolve())],
+            ["git", "apply", "--unidiff-zero", str(patch_path.resolve())],
             cwd=workspace, check=True, capture_output=True, text=True, timeout=10,
         )
     except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
