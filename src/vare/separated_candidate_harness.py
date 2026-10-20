@@ -22,7 +22,7 @@ from .separated_grading import grade_isolated_subject
 
 
 ROOT = Path(__file__).resolve().parents[2]
-PROTOCOL_PATH = ROOT / "protocols/mlsys_separated_candidate_harness_v1.json"
+PROTOCOL_PATH = ROOT / "protocols/mlsys_separated_candidate_harness_v2.json"
 PACK_ROOTS = {
     "mlsys-v1-": ROOT / "benchmarks/mlsys_coding_v1",
     "mlsys-v3-": ROOT / "benchmarks/mlsys_coding_v3",
@@ -47,7 +47,7 @@ def _load_protocol() -> dict[str, Any]:
         protocol = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         raise SeparatedHarnessError("isolated harness protocol is unavailable") from exc
-    if protocol.get("protocol_id") != "mlsys-separated-candidate-harness-v1":
+    if protocol.get("protocol_id") != "mlsys-separated-candidate-harness-v2":
         raise SeparatedHarnessError("isolated harness protocol identity mismatch")
     return protocol
 
@@ -144,7 +144,9 @@ def _resolve_image(protocol: dict[str, Any]) -> str:
 def _verify_runtime_limits(protocol: dict[str, Any], image: str) -> None:
     """Keep this adapter's locked limits equal to the existing runner defaults."""
     expected = protocol["resource_limits"]
-    actual = IsolationLimits(image=image, max_output_bytes=_MAX_LINE)
+    actual = IsolationLimits(
+        image=image, memory_mb=2048, max_output_bytes=_MAX_LINE,
+    )
     if (
         actual.memory_mb != expected.get("memory_mb")
         or actual.cpus != expected.get("cpus")
@@ -188,6 +190,9 @@ def grade_function(request: dict[str, Any]) -> dict[str, Any]:
         raise SeparatedHarnessError("entrypoint differs from the trusted task adapter")
 
     protocol = _load_protocol()
+    task_memory_mb = task.get("limits", {}).get("memory_mb")
+    if task_memory_mb != protocol["resource_limits"].get("memory_mb"):
+        raise SeparatedHarnessError("task and harness memory limits differ")
     pack_root = task_dir.parents[1]
     _verify_pack(pack_root, protocol)
     image = _resolve_image(protocol)

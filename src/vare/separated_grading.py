@@ -559,6 +559,9 @@ def _load_isolated_calls(path: Path) -> dict[str, Any]:
     payload["rtol"] = _finite_number(payload.get("rtol", 0.0), "rtol", allow_zero=True)
     payload["atol"] = _finite_number(payload.get("atol", 0.0), "atol", allow_zero=True)
     payload["timeout_s"] = _finite_number(payload.get("timeout_s", 30), "timeout_s", allow_zero=False)
+    memory_mb = payload.get("memory_mb", 512)
+    if type(memory_mb) is not int or not 32 <= memory_mb <= 65536:
+        raise IsolationError("isolated call spec memory_mb is invalid")
     return payload
 
 
@@ -619,6 +622,7 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
     rtol = float(spec["rtol"])
     atol = float(spec["atol"])
     timeout_s = float(spec["timeout_s"])
+    memory_mb = int(spec["memory_mb"])
     tuple_paths = spec.get("tuple_paths", [])
     if type(tuple_paths) is not list or any(type(path) is not list for path in tuple_paths):
         raise IsolationError("isolated tuple paths are invalid")
@@ -640,6 +644,7 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
                 timeout_s=timeout_s, rtol=rtol, atol=atol,
                 preserve_session=spec.get("preserve_session") is True,
                 bool_as_number=spec.get("bool_as_number") is True,
+                memory_mb=memory_mb,
             )
             passed = report.passed
             return {
@@ -681,6 +686,7 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
             timeout_s=timeout_s, rtol=rtol, atol=atol,
             preserve_session=spec.get("preserve_session") is True,
             bool_as_number=spec.get("bool_as_number") is True,
+            memory_mb=memory_mb,
         )
         if not correctness.passed:
             return {

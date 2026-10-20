@@ -141,6 +141,7 @@ def materialize_isolated_calls(task_id: str, task_dir: Path) -> tuple[dict, dict
             else 20 if task_id.startswith("mlsys-v3-")
             else 10
         ),
+        "memory_mb": int(json.loads((Path(task_dir) / "task.json").read_text())["limits"]["memory_mb"]),
         "preserve_session": task_kind == "correctness",
     }
     if task_id in {"mlsys-v1-causal-attention", "mlsys-v1-warmup-cosine"}:

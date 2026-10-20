@@ -508,7 +508,7 @@ def _json_copy(value: Any) -> Any:
     return json.loads(_canonical(value))
 
 
-def _limits(image: str, timeout_s: float) -> IsolationLimits:
+def _limits(image: str, timeout_s: float, memory_mb: int = 512) -> IsolationLimits:
     if (
         not isinstance(timeout_s, (int, float))
         or isinstance(timeout_s, bool)
@@ -517,7 +517,10 @@ def _limits(image: str, timeout_s: float) -> IsolationLimits:
     ):
         raise CandidateHarnessError("timeout must be positive and at most 3600 seconds")
     try:
-        return IsolationLimits(image=image, timeout_s=float(timeout_s), max_output_bytes=_MAX_LINE)
+        return IsolationLimits(
+            image=image, timeout_s=float(timeout_s), memory_mb=memory_mb,
+            max_output_bytes=_MAX_LINE,
+        )
     except (TypeError, ValueError) as exc:
         raise CandidateHarnessError("isolation image must be pinned by sha256 digest") from exc
 
@@ -595,6 +598,7 @@ def _invoke(
     image: str,
     runner: DockerIsolationRunner,
     tuple_paths: Sequence[Sequence[Any]] = (),
+    memory_mb: int = 512,
 ) -> tuple[Any | None, float | None, str | None]:
     """Return ``(value, parent_wall_s, failure)``."""
     nonce = secrets.token_hex(32)
@@ -611,6 +615,7 @@ def _invoke(
         "kwargs": dict(kwargs),
         "tuple_paths": [list(path) for path in tuple_paths],
         "timeout_s": timeout_s,
+        "memory_mb": memory_mb,
     }
     proc = subprocess.Popen(
         [sys.executable, "-B", "-m", "vare.isolated_candidate", "--worker"],
@@ -666,6 +671,7 @@ def _invoke_session(
     timeout_s: float,
     image: str,
     runner: DockerIsolationRunner,
+    memory_mb: int = 512,
 ) -> list[tuple[Any | None, float | None, str | None]]:
     """Run an ordered case group in one isolated candidate process."""
     if not calls:
@@ -676,6 +682,7 @@ def _invoke_session(
         "nonce": nonce, "container": name, "module": module,
         "function": function, "subject": str(staged), "image": image,
         "timeout_s": timeout_s, "session": True, "call_count": len(calls),
+        "memory_mb": memory_mb,
     }
     proc = subprocess.Popen(
         [sys.executable, "-B", "-m", "vare.isolated_candidate", "--worker"],
@@ -782,7 +789,7 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
     timeout_s = float(spec["timeout_s"])
     deadline = time.monotonic() + timeout_s + _STARTUP_GRACE_S
     runner = DockerIsolationRunner()
-    limits = _limits(str(spec["image"]), timeout_s)
+    limits = _limits(str(spec["image"]), timeout_s, int(spec.get("memory_mb", 512)))
     try:
         argv = runner.isolated_subject_argv(
             limits,
@@ -947,15 +954,19 @@ def _one_call(
     image: str,
     runner: DockerIsolationRunner,
     tuple_paths: Sequence[Sequence[Any]] = (),
+    memory_mb: int = 512,
 ) -> tuple[Any | None, float | None, str | None]:
     module, function, args, kwargs = _prepare_call(module, function, args, kwargs)
-    _limits(image, timeout_s)
+    _limits(image, timeout_s, memory_mb)
     source = Path(subject)
     if not (source / f"{module}.py").is_file():
         raise CandidateHarnessError("subject module is missing")
     with tempfile.TemporaryDirectory(prefix="vare-call-") as folder:
         staged = _stage_subject(source, Path(folder))
-        return _invoke(staged, module, function, args, kwargs, timeout_s, image, runner, tuple_paths)
+        return _invoke(
+            staged, module, function, args, kwargs, timeout_s, image, runner,
+            tuple_paths, memory_mb,
+        )
 
 
 def grade_calls(
@@ -970,6 +981,7 @@ def grade_calls(
     runner: DockerIsolationRunner | None = None,
     preserve_session: bool = False,
     bool_as_number: bool = False,
+    memory_mb: int = 512,
 ) -> CallReport:
     """Compare each child return value with the parent-owned expected value.
 
@@ -983,6 +995,7 @@ def grade_calls(
         raise CandidateHarnessError("task_kind must be correctness for grade_calls")
     if not calls:
         raise CandidateHarnessError("at least one call is required")
+    _limits(image, timeout_s, memory_mb)
     rel, abs_tol = _tolerance(rtol, atol)
     active = runner or DockerIsolationRunner()
     results: list[CaseResult] = []
@@ -999,13 +1012,14 @@ def grade_calls(
             invoked = _invoke_session(
                 staged, first.module, first.function,
                 [(item[2], item[3], call.tuple_paths) for item, call in zip(prepared, calls, strict=True)],
-                timeout_s, image, active,
+                timeout_s, image, active, memory_mb,
             )
     else:
         invoked = [
             _one_call(
                 subject, call.module, call.function, call.args, call.kwargs or {},
                 timeout_s, image, active, call.tuple_paths,
+                memory_mb,
             )
             for call in calls
         ]
