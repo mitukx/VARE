@@ -90,6 +90,7 @@ RUNTIME_PACKAGE_SOURCES = frozenset({
     "src/vare/runtime.py",
     "src/vare/safety.py",
     "src/vare/sandboxed_repository.py",
+    "src/vare/separated_candidate_harness.py",
     "src/vare/separated_grading.py",
     "src/vare/telemetry.py",
     "src/vare/trajectory_admission.py",
@@ -114,6 +115,7 @@ PREVIOUS_EXPECTED_SOURCES = LEGACY_EXPECTED_SOURCES | (RUNTIME_PACKAGE_SOURCES -
     "src/vare/mlsys_coding_actions.py",
     "src/vare/mlsys_coding_comparison.py",
     "src/vare/separated_grading.py",
+    "src/vare/separated_candidate_harness.py",
 }))
 EXPECTED_SOURCES = LEGACY_EXPECTED_SOURCES | RUNTIME_PACKAGE_SOURCES
 

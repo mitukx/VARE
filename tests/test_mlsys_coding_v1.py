@@ -299,22 +299,15 @@ def test_graders_call_the_harness_adapter():
 
 
 @pytest.mark.parametrize("task_name", ["range_sums", "dataset_standardize"])
-def test_correct_but_not_faster_fails_the_two_x_gate(task_name: str):
-    """A correct slow implementation must not pass because the process exits 0."""
+def test_performance_tasks_without_mutation_reporting_fail_closed(task_name: str):
+    """Do not weaken frozen input-mutation checks to route performance tasks."""
+    from vare.separated_candidate_harness import (
+        SeparatedHarnessError,
+        _task_adapter,
+    )
+
     task_dir = TASKS / task_name
     spec = EngineeringTaskSpec.load(task_dir / "task.json")
     assert spec.metadata["task_type"] == "performance"
-    with Workspace(spec) as workspace:
-        result = ExecutableEvaluator(spec, evaluator_root=task_dir).evaluate(
-            workspace.path
-        )
-    decision = reward.decide(result.to_dict(), task_type="performance")
-    payload = json.loads(result.tests[0].stdout)
-    assert payload["correctness_pass"] is True
-    assert payload["improvement_pass"] is False
-    assert payload["measurement"] == reward.MEASUREMENT
-    assert result.tests[0].returncode != 0
-    assert decision["success"] is False
-    assert decision["reason"] == "performance_below_threshold"
-    assert decision["conservative_speedup"] < reward.SUCCESS_THRESHOLD
-    assert 0.0 < decision["reward"] < 0.5
+    with pytest.raises(SeparatedHarnessError, match="no isolated call materializer"):
+        _task_adapter(spec.id, task_dir / "task.json")
