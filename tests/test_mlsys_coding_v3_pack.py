@@ -1,6 +1,7 @@
 import json
 import hashlib
 from pathlib import Path
+import subprocess
 
 import pytest
 
@@ -112,6 +113,34 @@ def test_nested_audit_named_files_are_inventory_payloads(tmp_path):
     assert evidence_paths(run) == {
         "candidate/audit.json", "candidate/evidence_manifest.json",
     }
+
+
+def test_v2_source_commit_provenance_checks_commit_blobs(tmp_path):
+    from scripts.audit_mlsys_separated_candidate_harness_v2 import (
+        source_commit_matches_files,
+    )
+
+    repo = tmp_path / "source"
+    repo.mkdir()
+    subprocess.run(["git", "init", str(repo)], check=True, capture_output=True)
+    subprocess.run(["git", "-C", str(repo), "config", "user.name", "Test"], check=True)
+    subprocess.run(
+        ["git", "-C", str(repo), "config", "user.email", "test@example.invalid"], check=True,
+    )
+    source = repo / "src" / "module.py"
+    source.parent.mkdir()
+    source.write_text("VALUE = 1\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(repo), "add", "src/module.py"], check=True)
+    subprocess.run(["git", "-C", str(repo), "commit", "-m", "source"], check=True, capture_output=True)
+    commit = subprocess.run(
+        ["git", "-C", str(repo), "rev-parse", "HEAD"],
+        check=True, capture_output=True, text=True,
+    ).stdout.strip()
+    digest = hashlib.sha256(source.read_bytes()).hexdigest()
+
+    assert source_commit_matches_files(repo, commit, {"src/module.py": digest})
+    assert not source_commit_matches_files(repo, commit, {"src/module.py": "0" * 64})
+    assert not source_commit_matches_files(repo, "f" * 40, {"src/module.py": digest})
 
 
 def test_label_smoothing_materializes_but_is_not_routed_without_type_fidelity():

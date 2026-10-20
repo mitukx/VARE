@@ -43,7 +43,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from verify_docker_isolation_boundary_v1 import _grader_probe  # noqa: E402
 from mlsys_task_isolated_calls import (  # noqa: E402
-    IsolatedTaskAdapterMissing, materialize_isolated_calls,
+    IsolatedTaskAdapterMissing, ROUTABLE_TASKS, materialize_isolated_calls,
 )
 
 
@@ -809,6 +809,11 @@ async def grade_repository_workspace(
     """
     if not callable(decide):
         raise IsolationError("pack reward.decide is missing")
+    task_id = task["task_id"]
+    if task_id.startswith("mlsys-") and task_id not in ROUTABLE_TASKS:
+        result = harness_required_record()
+        result["grader_error"] = f"task has no isolated route: {task_id}"
+        return result
     calls_path = Path(task["task_dir"]) / "evaluator" / "isolated_calls.json"
     if not calls_path.is_file():
         stage_root.mkdir(parents=True, exist_ok=True)

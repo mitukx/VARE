@@ -7,6 +7,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -26,6 +27,28 @@ def evidence_paths(run_dir: Path) -> set[str]:
         if path.is_file()
         and path.relative_to(run_dir).as_posix() not in {"evidence_manifest.json", "audit.json"}
     }
+
+
+def source_commit_matches_files(
+    repo_root: Path, source_commit: str, source_hashes: dict[str, str],
+) -> bool:
+    """Verify the recorded commit object and every source blob it names."""
+    if re.fullmatch(r"[0-9a-f]{40}", source_commit) is None:
+        return False
+    present = subprocess.run(
+        ["git", "-C", str(repo_root), "cat-file", "-e", f"{source_commit}^{{commit}}"],
+        check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+    )
+    if present.returncode != 0:
+        return False
+    for relative, expected_hash in source_hashes.items():
+        blob = subprocess.run(
+            ["git", "-C", str(repo_root), "show", f"{source_commit}:{relative}"],
+            check=False, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+        )
+        if blob.returncode != 0 or hashlib.sha256(blob.stdout).hexdigest() != expected_hash:
+            return False
+    return True
 
 
 def audit(run_dir: Path) -> dict:
@@ -95,12 +118,15 @@ def audit(run_dir: Path) -> dict:
         "isolated_grader_source_sha256": "src/vare/isolated_candidate.py",
         "separated_grader_source_sha256": "src/vare/separated_grading.py",
     }
-    for field, relative in source_paths.items():
-        if sha256_file(ROOT / relative) != record.get(field):
+    if "runner_source_sha256" in record:
+        source_paths["runner_source_sha256"] = "scripts/run_separated_coding_eval.py"
+    source_hashes = {relative: record.get(field) for field, relative in source_paths.items()}
+    for relative, expected_hash in source_hashes.items():
+        if sha256_file(ROOT / relative) != expected_hash:
             raise ValueError(f"current source hash differs from run provenance: {relative}")
     source_commit = record.get("source_commit")
-    if type(source_commit) is not str or re.fullmatch(r"[0-9a-f]{40}", source_commit) is None:
-        raise ValueError("recorded source commit identity is malformed")
+    if type(source_commit) is not str or not source_commit_matches_files(ROOT, source_commit, source_hashes):
+        raise ValueError("recorded source commit is missing or its source blobs differ from provenance")
     return {
         "schema_version": 1,
         "files_verified": len(files),
