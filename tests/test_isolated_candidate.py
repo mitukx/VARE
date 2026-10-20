@@ -340,7 +340,7 @@ def test_clock_and_id_cache_do_not_inflate_parent_speed(tmp_path: Path) -> None:
     expected = sum(range(1_000_000))
 
     def make_case(_index: int) -> tuple[list[int], dict[str, object], int]:
-        return ([1_000_000], {}), expected
+        return ([1_000_000], {}, expected)
 
     clock = paired_timing(
         patched, baseline, module="work", function="work", make_case=make_case,
@@ -555,7 +555,7 @@ def test_hardcoded_answer_fails_when_each_repetition_differs(tmp_path: Path) -> 
     def make_case(_index: int) -> tuple[list[int], dict[str, object], int]:
         value = rng.randrange(1_000_000, 9_000_000)
         drawn.append(value)
-        return ([value], {}), value * 3 + 1
+        return ([value], {}, value * 3 + 1)
 
     candidate = _subject(
         tmp_path / "candidate", "work",
