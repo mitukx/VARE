@@ -575,6 +575,11 @@ def _call_rows(payload: dict[str, Any], key: str) -> list[dict[str, Any]]:
             type(expected_exception) is not str or not expected_exception.isidentifier()
         ):
             raise IsolationError("isolated call expected_exception is invalid")
+        expected_prefix = row.get("expected_exception_prefix")
+        if expected_prefix is not None and (
+            type(expected_prefix) is not str or not expected_prefix.isidentifier()
+        ):
+            raise IsolationError("isolated call expected_exception_prefix is invalid")
         args = row.get("args", [])
         kwargs = row.get("kwargs", {})
         if type(args) is not list or type(kwargs) is not dict:
@@ -625,6 +630,7 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
                     str(row.get("case_id", index)), module, function,
                     list(row.get("args", [])), row["expected"], dict(row.get("kwargs", {})),
                     expected_exception=row.get("expected_exception"),
+                    expected_exception_prefix=row.get("expected_exception_prefix"),
                     tuple_paths=tuple(tuple(path) for path in tuple_paths),
                 )
                 for index, row in enumerate(rows)
@@ -632,6 +638,8 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
             report = grade_calls(
                 subject, calls, task_kind="correctness", image=image,
                 timeout_s=timeout_s, rtol=rtol, atol=atol,
+                preserve_session=spec.get("preserve_session") is True,
+                bool_as_number=spec.get("bool_as_number") is True,
             )
             passed = report.passed
             return {
@@ -663,6 +671,7 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
                 str(row.get("case_id", index)), module, function,
                 list(row.get("args", [])), row["expected"], dict(row.get("kwargs", {})),
                 expected_exception=row.get("expected_exception"),
+                expected_exception_prefix=row.get("expected_exception_prefix"),
                 tuple_paths=tuple(tuple(path) for path in tuple_paths),
             )
             for index, row in enumerate(correctness_rows)
@@ -670,6 +679,8 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
         correctness = grade_calls(
             subject, correctness_calls, task_kind="correctness", image=image,
             timeout_s=timeout_s, rtol=rtol, atol=atol,
+            preserve_session=spec.get("preserve_session") is True,
+            bool_as_number=spec.get("bool_as_number") is True,
         )
         if not correctness.passed:
             return {

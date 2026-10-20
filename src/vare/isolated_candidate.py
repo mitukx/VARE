@@ -105,21 +105,35 @@ _write(1, b"IMPORTING\n")
 module = __import__(header["module"])
 function = getattr(module, header["function"])
 _write(1, b"READY\n")
-request = _loads(_read())
-args = request["args"]
-for path in request.get("tuple_paths", []):
-    index = path[0]
-    if path[1] == "*":
-        args[index] = [tuple(row) for row in args[index]]
-try:
-    value = function(*args, **request["kwargs"])
-    payload = _dumps({"value": value}, sort_keys=True, separators=(",", ":"), allow_nan=False)
-except Exception as exc:
-    payload = _dumps({"exception": type(exc).__name__}, sort_keys=True, separators=(",", ":"))
-except BaseException:
-    os._exit(2)
-_write(1, payload.encode("utf-8") + b"\n")
-os._exit(0)
+_exit = os._exit
+_Exception = Exception
+_BaseException = BaseException
+_encode = str.encode
+def _one(request):
+    args = request["args"]
+    for path in request.get("tuple_paths", []):
+        index = path[0]
+        if path[1] == "*":
+            args[index] = [tuple(row) for row in args[index]]
+    try:
+        value = function(*args, **request["kwargs"])
+        return {"value": value}
+    except _Exception as exc:
+        return {"exception": type(exc).__name__}
+    except _BaseException:
+        _exit(2)
+if header.get("session") is True:
+    while True:
+        request = _loads(_read())
+        if request == {"close": True}:
+            break
+        payload = _dumps(_one(request), sort_keys=True, separators=(",", ":"), allow_nan=False)
+        _write(1, _encode(payload, "utf-8") + b"\n")
+else:
+    request = _loads(_read())
+    payload = _dumps(_one(request), sort_keys=True, separators=(",", ":"), allow_nan=False)
+    _write(1, _encode(payload, "utf-8") + b"\n")
+_exit(0)
 """
 
 
@@ -142,6 +156,7 @@ class FunctionCall:
     expected: Any
     kwargs: dict[str, Any] | None = None
     expected_exception: str | None = None
+    expected_exception_prefix: str | None = None
     tuple_paths: tuple[tuple[Any, ...], ...] = ()
 
 
@@ -332,10 +347,17 @@ def _tolerance(rtol: float, atol: float) -> tuple[float, float]:
     return float(rtol), float(atol)
 
 
-def values_close(actual: Any, expected: Any, *, rtol: float, atol: float) -> bool:
+def values_close(
+    actual: Any, expected: Any, *, rtol: float, atol: float,
+    bool_as_number: bool = False,
+) -> bool:
     """Compare JSON values. Numbers use ``math.isclose``; other values are exact."""
-    if type(actual) is bool or type(expected) is bool:
+    if (type(actual) is bool or type(expected) is bool) and not bool_as_number:
         return type(actual) is type(expected) and actual == expected
+    if type(actual) is bool:
+        actual = int(actual)
+    if type(expected) is bool:
+        expected = int(expected)
     if isinstance(actual, (int, float)) and isinstance(expected, (int, float)):
         actual_f = float(actual)
         expected_f = float(expected)
@@ -346,14 +368,17 @@ def values_close(actual: Any, expected: Any, *, rtol: float, atol: float) -> boo
         return type(actual) is str and type(expected) is str and actual == expected
     if type(actual) is list and type(expected) is list:
         return len(actual) == len(expected) and all(
-            values_close(left, right, rtol=rtol, atol=atol)
+            values_close(left, right, rtol=rtol, atol=atol, bool_as_number=bool_as_number)
             for left, right in zip(actual, expected, strict=True)
         )
     if type(actual) is dict and type(expected) is dict:
         if set(actual) != set(expected):
             return False
         return all(
-            values_close(actual[key], expected[key], rtol=rtol, atol=atol) for key in actual
+            values_close(
+                actual[key], expected[key], rtol=rtol, atol=atol,
+                bool_as_number=bool_as_number,
+            ) for key in actual
         )
     return False
 
@@ -633,6 +658,72 @@ def _invoke(
         _kill(proc)
 
 
+def _invoke_session(
+    staged: Path,
+    module: str,
+    function: str,
+    calls: Sequence[tuple[Sequence[Any], Mapping[str, Any], Sequence[Sequence[Any]]]],
+    timeout_s: float,
+    image: str,
+    runner: DockerIsolationRunner,
+) -> list[tuple[Any | None, float | None, str | None]]:
+    """Run an ordered case group in one isolated candidate process."""
+    if not calls:
+        return []
+    nonce = secrets.token_hex(32)
+    name = "vare-call-" + secrets.token_hex(12)
+    spec = {
+        "nonce": nonce, "container": name, "module": module,
+        "function": function, "subject": str(staged), "image": image,
+        "timeout_s": timeout_s, "session": True, "call_count": len(calls),
+    }
+    proc = subprocess.Popen(
+        [sys.executable, "-B", "-m", "vare.isolated_candidate", "--worker"],
+        stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+        start_new_session=True, env=_src_env(),
+    )
+    assert proc.stdin is not None and proc.stdout is not None
+    reader = _Lines(proc.stdout)
+    results: list[tuple[Any | None, float | None, str | None]] = []
+    try:
+        proc.stdin.write((_canonical(spec) + "\n").encode("utf-8"))
+        proc.stdin.flush()
+        ready = reader.readline(time.monotonic() + timeout_s + _STARTUP_GRACE_S)
+        if ready != f"VARE_IMPORTING {nonce} 1".encode("ascii"):
+            return [(None, None, "malformed_result")] * len(calls)
+        ready = reader.readline(time.monotonic() + timeout_s)
+        startup_s = _ready_startup(ready, nonce)
+        if startup_s is None or reader.has_pending():
+            return [(None, None, "malformed_result")] * len(calls)
+        proc.stdin.write(b"GO\n")
+        proc.stdin.flush()
+        for args, kwargs, tuple_paths in calls:
+            request = {
+                "args": list(args), "kwargs": dict(kwargs),
+                "tuple_paths": [list(path) for path in tuple_paths],
+            }
+            started = time.perf_counter()
+            proc.stdin.write((_canonical(request) + "\n").encode("utf-8"))
+            proc.stdin.flush()
+            line = reader.readline(time.monotonic() + timeout_s)
+            elapsed = time.perf_counter() - started
+            value, failure = _parse_result(line, nonce)
+            results.append((value, elapsed, failure))
+            if failure is not None:
+                results.extend([(None, None, "missing_result")] * (len(calls) - len(results)))
+                break
+        return results
+    except (_OutputLimit, TimeoutError, EOFError, BrokenPipeError):
+        results.extend([(None, None, "missing_result")] * (len(calls) - len(results)))
+        return results
+    finally:
+        try:
+            runner.force_remove_sync(name)
+        except IsolationError:
+            pass
+        _kill(proc)
+
+
 _STARTUP = re.compile(r"[0-9]+(?:\.[0-9]+)?\Z")
 
 
@@ -717,7 +808,10 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
     assert child.stdin is not None and child.stdout is not None
     reader = _Lines(child.stdout)
     try:
-        header = {"module": spec["module"], "function": spec["function"]}
+        header = {
+            "module": spec["module"], "function": spec["function"],
+            "session": spec.get("session") is True,
+        }
         child.stdin.write((_canonical(header) + "\n").encode("utf-8"))
         child.stdin.flush()
         importing = reader.readline(deadline)
@@ -734,6 +828,35 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
         go = parent.readline(time.monotonic() + _STARTUP_GRACE_S)
         if go != b"GO":
             _emit_fail(nonce, "missing_result")
+            return 0
+        if spec.get("session") is True:
+            count = int(spec.get("call_count", 0))
+            if count <= 0 or count > 100_000:
+                _emit_fail(nonce, "malformed_result")
+                return 0
+            for _index in range(count):
+                raw_request = parent.readline(time.monotonic() + _STARTUP_GRACE_S)
+                try:
+                    request = json.loads(raw_request.decode("utf-8"))
+                    child.stdin.write((_canonical(request) + "\n").encode("utf-8"))
+                    child.stdin.flush()
+                    raw = reader.readline(time.monotonic() + timeout_s)
+                    payload = json.loads(raw.decode("utf-8"))
+                except (UnicodeError, json.JSONDecodeError, TimeoutError, EOFError):
+                    _emit_fail(nonce, "missing_result")
+                    return 0
+                valid_value = type(payload) is dict and set(payload) == {"value"}
+                valid_exception = (
+                    type(payload) is dict and set(payload) == {"exception"}
+                    and type(payload["exception"]) is str
+                    and payload["exception"].isidentifier()
+                )
+                if not valid_value and not valid_exception or reader.has_pending():
+                    _emit_fail(nonce, "malformed_result")
+                    return 0
+                _emit(nonce, "VARE_RESULT", _canonical(payload))
+            child.stdin.write(b'{"close":true}\n')
+            child.stdin.flush()
             return 0
         request = {
             "args": spec["args"], "kwargs": spec["kwargs"],
@@ -845,6 +968,8 @@ def grade_calls(
     rtol: float = 0.0,
     atol: float = 0.0,
     runner: DockerIsolationRunner | None = None,
+    preserve_session: bool = False,
+    bool_as_number: bool = False,
 ) -> CallReport:
     """Compare each child return value with the parent-owned expected value.
 
@@ -861,19 +986,45 @@ def grade_calls(
     rel, abs_tol = _tolerance(rtol, atol)
     active = runner or DockerIsolationRunner()
     results: list[CaseResult] = []
-    for call in calls:
-        value, wall, failure = _one_call(
-            subject, call.module, call.function, call.args, call.kwargs or {},
-            timeout_s, image, active, call.tuple_paths,
-        )
+    if preserve_session:
+        first = calls[0]
+        if any(call.module != first.module or call.function != first.function for call in calls):
+            raise CandidateHarnessError("session calls must use one module and function")
+        prepared = [
+            _prepare_call(call.module, call.function, call.args, call.kwargs or {})
+            for call in calls
+        ]
+        with tempfile.TemporaryDirectory(prefix="vare-call-session-") as folder:
+            staged = _stage_subject(Path(subject), Path(folder))
+            invoked = _invoke_session(
+                staged, first.module, first.function,
+                [(item[2], item[3], call.tuple_paths) for item, call in zip(prepared, calls, strict=True)],
+                timeout_s, image, active,
+            )
+    else:
+        invoked = [
+            _one_call(
+                subject, call.module, call.function, call.args, call.kwargs or {},
+                timeout_s, image, active, call.tuple_paths,
+            )
+            for call in calls
+        ]
+    for call, (value, wall, failure) in zip(calls, invoked, strict=True):
         if failure is None:
             if call.expected_exception is not None:
                 matched = (
                     isinstance(value, CandidateException)
-                    and value.type_name == call.expected_exception
+                    and (
+                        value.type_name.startswith(call.expected_exception_prefix)
+                        if call.expected_exception_prefix is not None
+                        else value.type_name == call.expected_exception
+                    )
                 )
             else:
-                matched = values_close(value, call.expected, rtol=rel, atol=abs_tol)
+                matched = values_close(
+                    value, call.expected, rtol=rel, atol=abs_tol,
+                    bool_as_number=bool_as_number,
+                )
             if not matched:
                 failure = "wrong_output"
             passed = failure is None

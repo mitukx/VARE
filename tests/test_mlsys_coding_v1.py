@@ -311,3 +311,12 @@ def test_performance_tasks_without_mutation_reporting_fail_closed(task_name: str
     assert spec.metadata["task_type"] == "performance"
     with pytest.raises(SeparatedHarnessError, match="no isolated call materializer"):
         _task_adapter(spec.id, task_dir / "task.json")
+
+
+def test_row_log_softmax_fails_closed_instead_of_dropping_non_json_case():
+    from vare.separated_candidate_harness import SeparatedHarnessError, _task_adapter
+
+    task_dir = TASKS / "row_log_softmax"
+    spec = EngineeringTaskSpec.load(task_dir / "task.json")
+    with pytest.raises(SeparatedHarnessError, match="no isolated call materializer"):
+        _task_adapter(spec.id, task_dir / "task.json")

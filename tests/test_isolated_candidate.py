@@ -64,6 +64,11 @@ def test_student_t_matches_pack_constant() -> None:
     assert df == 2
 
 
+def test_numeric_checker_can_match_frozen_bool_as_number_semantics() -> None:
+    assert values_close(True, 1.0, rtol=0, atol=0, bool_as_number=True)
+    assert not values_close(True, 1.0, rtol=0, atol=0)
+
+
 def test_task_kind_comes_from_the_caller(tmp_path: Path) -> None:
     subject = _subject(tmp_path, "add", "def add(a, b):\n    return a + b\n")
     call = FunctionCall("case", "add", "add", [2, 3], 5)
@@ -122,6 +127,62 @@ def test_import_and_call_receive_separate_timeout_windows(tmp_path: Path) -> Non
     call = FunctionCall("slow-case", "slow", "slow", [], 7)
 
     report = _grade(subject, call, timeout_s=0.4)
+
+    assert report.passed is True
+
+
+def test_grade_session_keeps_candidate_module_state_across_cases(tmp_path: Path) -> None:
+    subject = _subject(
+        tmp_path, "counter",
+        "count = 0\ndef next_value():\n    global count\n    count += 1\n    return count\n",
+    )
+    calls = [
+        FunctionCall("first", "counter", "next_value", [], 1),
+        FunctionCall("second", "counter", "next_value", [], 2),
+    ]
+
+    report = grade_calls(
+        subject, calls, task_kind="correctness", image=IMAGE,
+        preserve_session=True, timeout_s=5,
+    )
+
+    assert report.passed is True
+
+
+def test_grade_session_rejects_stateful_candidate_mismatch(tmp_path: Path) -> None:
+    subject = _subject(
+        tmp_path, "counter",
+        "count = 0\ndef next_value():\n    global count\n    count += 1\n    return count\n",
+    )
+    calls = [
+        FunctionCall("first", "counter", "next_value", [], 1),
+        FunctionCall("second", "counter", "next_value", [], 1),
+    ]
+
+    report = grade_calls(
+        subject, calls, task_kind="correctness", image=IMAGE,
+        preserve_session=True, timeout_s=5,
+    )
+
+    assert report.passed is False
+    assert [case.passed for case in report.cases] == [True, False]
+
+
+def test_expected_exception_prefix_matches_frozen_adapter_contract(tmp_path: Path) -> None:
+    subject = _subject(
+        tmp_path, "custom_error",
+        "class ValueErrorSentinel(Exception):\n    pass\n"
+        "def fail():\n    raise ValueErrorSentinel()\n",
+    )
+
+    report = grade_calls(
+        subject,
+        [FunctionCall(
+            "invalid", "custom_error", "fail", [], None,
+            expected_exception="ValueError", expected_exception_prefix="ValueError",
+        )],
+        task_kind="correctness", image=IMAGE, timeout_s=5,
+    )
 
     assert report.passed is True
 

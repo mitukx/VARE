@@ -71,5 +71,28 @@ def test_v3_hidden_cases_materialize_without_running_candidate(task_id, function
     assert calls["task_id"] == task_id
     assert calls["function"] == function
     assert len(calls["calls"]) == case_count
+    if task_id == "mlsys-v3-ema-bias":
+        assert calls["timeout_s"] == 20
     assert provenance["case_count"] == case_count
     assert "expected" in calls["calls"][0]
+
+
+def test_v3_warmup_copy_materializes_with_its_shared_v1_adapter():
+    task_dir = PACK / "tasks" / "warmup_cosine"
+
+    calls, provenance = materialize_isolated_calls("mlsys-v1-warmup-cosine", task_dir)
+
+    assert calls["task_id"] == "mlsys-v1-warmup-cosine"
+    assert calls["function"] == "learning_rate"
+    assert len(calls["calls"]) == 12
+    assert calls["timeout_s"] == 10
+    assert provenance["case_count"] == 12
+
+
+def test_label_smoothing_materializes_but_is_not_routed_without_type_fidelity():
+    from vare.separated_candidate_harness import SeparatedHarnessError, _task_adapter
+
+    task_dir = PACK / "tasks" / "mlsys-v3-label-smooth"
+    materialize_isolated_calls("mlsys-v3-label-smooth", task_dir)
+    with pytest.raises(SeparatedHarnessError, match="no isolated call materializer"):
+        _task_adapter("mlsys-v3-label-smooth", task_dir / "task.json")

@@ -111,6 +111,7 @@ def materialize_isolated_calls(task_id: str, task_dir: Path) -> tuple[dict, dict
                 "kwargs": kwargs_json,
                 "expected": None,
                 "expected_exception": "ValueError",
+                "expected_exception_prefix": "ValueError",
             }
             cases.append(row)
             continue
@@ -135,8 +136,15 @@ def materialize_isolated_calls(task_id: str, task_dir: Path) -> tuple[dict, dict
         "function": function_name,
         "rtol": 0.0,
         "atol": 1e-9 if task_id == "mlsys-v1-causal-attention" else 1e-12,
-        "timeout_s": 60 if task_id == "mlsys-v1-range-sums" else 10,
+        "timeout_s": (
+            60 if task_id == "mlsys-v1-range-sums"
+            else 20 if task_id.startswith("mlsys-v3-")
+            else 10
+        ),
+        "preserve_session": task_kind == "correctness",
     }
+    if task_id in {"mlsys-v1-causal-attention", "mlsys-v1-warmup-cosine"}:
+        spec["bool_as_number"] = True
     if task_id == "mlsys-v1-range-sums":
         spec["tuple_paths"] = [[1, "*"]]
     if task_kind == "correctness":
@@ -164,7 +172,10 @@ def materialize_isolated_calls(task_id: str, task_dir: Path) -> tuple[dict, dict
                 "args": _json_value(list(args)),
                 "kwargs": _json_value(kwargs),
                 "expected": _json_value(expected),
-                **({"expected_exception": expected_exception} if expected_exception else {}),
+                **({
+                    "expected_exception": expected_exception,
+                    "expected_exception_prefix": "ValueError",
+                } if expected_exception else {}),
             })
         spec.update({
             "cases": cases,
