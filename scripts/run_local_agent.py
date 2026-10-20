@@ -519,7 +519,15 @@ def main() -> int:
                             entry['automatic_public_test'] = public_test_result
                             result = {**result, 'automatic_public_test': public_test_result}
                 elif name == 'run_public_tests':
-                    public_test_result = run_public_tests(workspace, args.public_test_image, public_test_hash)
+                    if args.public_test_image and public_test_hash:
+                        public_test_result = run_public_tests(
+                            workspace, args.public_test_image, public_test_hash,
+                        )
+                    else:
+                        public_test_result = {
+                            'passed': False,
+                            'error': 'public test image is not configured',
+                        }
                     result = public_test_result
                 elif name == 'check_syntax':
                     raw_path = arguments.get('path', '')

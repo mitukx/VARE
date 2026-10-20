@@ -1,5 +1,9 @@
 from scripts.run_local_agent import normalize_tool_call_format, refresh_public_tests_after_edit
-from scripts.run_separated_coding_eval import _attempted_task_run_count, verified_task_success
+from scripts.run_separated_coding_eval import (
+    _attempted_task_run_count,
+    _planned_task_run_count,
+    verified_task_success,
+)
 
 
 def test_normalizes_a_fenced_qwen_json_tool_call_without_changing_raw_text():
@@ -85,3 +89,17 @@ def test_attempted_task_run_count_includes_every_arm_and_secondary_model():
     ]
     secondary = {"rows": [{}], "coder_1_5b_rows": [{}, {}]}
     assert _attempted_task_run_count(arm_reports, secondary) == 7
+
+
+def test_planned_task_run_count_matches_admitted_secondary_models():
+    protocol = {"models": {
+        "secondary_if_feasible": {"seeds": [201]},
+        "not_run_unless": {"seeds": [301, 302]},
+    }}
+    arms = [{"seeds": [101, 102]}]
+    assert _planned_task_run_count(
+        protocol, arms, 3, {"coder_0_5b": "eligible", "coder_1_5b": "ran"},
+    ) == 15
+    assert _planned_task_run_count(
+        protocol, arms, 3, {"coder_0_5b": "skipped", "coder_1_5b": "skipped"},
+    ) == 6

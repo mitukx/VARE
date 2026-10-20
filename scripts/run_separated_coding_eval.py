@@ -23,6 +23,7 @@ import subprocess
 import sys
 import tempfile
 import time
+from typing import Any
 
 from vare.agent_edit_format import (
     classify_outcome, inference_arms, pass_at_k, per_task_reward_variance,
@@ -911,6 +912,23 @@ def _attempted_task_run_count(arm_reports: list[dict], secondary: dict) -> int:
     return count
 
 
+def _planned_task_run_count(
+    protocol: dict, arms: list[dict], task_count: int, secondary: dict,
+) -> int:
+    """Count planned task rows for every primary and admitted secondary model arm."""
+    count = 0
+    for arm in arms:
+        seeds = arm.get("seeds")
+        if not isinstance(seeds, list):
+            raise ValueError("inference arm seeds are missing")
+        count += len(seeds) * task_count
+    if secondary.get("coder_0_5b") == "eligible":
+        count += len(protocol["models"]["secondary_if_feasible"]["seeds"]) * task_count
+    if secondary.get("coder_1_5b") == "ran":
+        count += len(protocol["models"]["not_run_unless"]["seeds"]) * task_count
+    return count
+
+
 async def run_unpatched(image: str, tasks: list[dict], decide, out: Path) -> tuple[list[dict], str | None]:
     rows = []
     for task in tasks:
@@ -1143,7 +1161,10 @@ async def async_main(args: argparse.Namespace) -> int:
     resource_abort: str | None = None
     for arm in arms:
         arm_rows = []
-        for seed in arm["seeds"]:
+        arm_seeds = arm.get("seeds")
+        if not isinstance(arm_seeds, list):
+            raise ValueError("inference arm seeds are missing")
+        for seed in arm_seeds:
             for task in tasks:
                 task_row = await run_model_task(
                     protocol, out=out / arm["name"] / f"seed-{seed}",
@@ -1167,6 +1188,7 @@ async def async_main(args: argparse.Namespace) -> int:
     assert primary_summary is not None
     if len(arms) == 1 and arms[0]["name"] == "primary":
         _write_json(out / "primary-tasks.json", {"rows": rows})
+    secondary: dict[str, Any]
     if "secondary_if_feasible" not in protocol["models"]:
         secondary = {"status": "not_in_protocol"}
     else:
@@ -1221,7 +1243,7 @@ async def async_main(args: argparse.Namespace) -> int:
         "model_started": True,
         "resource_abort": resource_abort,
         "attempted_task_runs": _attempted_task_run_count(arm_reports, secondary),
-        "planned_task_runs": sum(len(arm["seeds"]) for arm in arms) * len(tasks),
+        "planned_task_runs": _planned_task_run_count(protocol, arms, len(tasks), secondary),
         "primary": primary_summary,
         "primary_rows": rows,
         "arms": [{"name": item["name"], "summary": item["summary"]} for item in arm_reports],
