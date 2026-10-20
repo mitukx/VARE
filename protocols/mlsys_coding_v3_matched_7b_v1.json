@@ -30,7 +30,7 @@
   "change_from_v4": "The v4 pilot preserved five failures, but model outputs used ChatML-wrapped JSON (for example <|im_start|> followed by a write_file object), which the bare-JSON normalizer did not recognize. V5 strips only the known ChatML boundary tokens and only accepts exact JSON name/arguments objects for allowlisted tools. Ordinary explanatory prose remains unmodified. V2-v4 remain immutable development failures; no held-out tasks were used.",
   "change_from_v5": "The v5 runs completed but the Qwen output appended a trailing ChatML <|im_start|> generation marker after otherwise complete JSON tool calls. Because strict whole-object parsing rejected that suffix, all five remained failed without candidate execution. V6 removes only known boundary tokens at either end before exact schema and allowlist checks. Trajectories v2-v5 are retained as harness-format failures; task/model/prompt/budget remain fixed.",
   "change_from_v6": "V6 produced two source changes; grad_accum_tail passed the independent hidden cases (3/3), but no public test was run because the model stopped after editing. The paired-loader, range-sums, and row-log-softmax outputs wrapped valid JSON in a closing Markdown fence and were not parsed. V7 accepts only strict allowlisted JSON surrounded by known Markdown/ChatML wrappers, automatically runs the immutable public test after each applied patch, and counts success only when source changed, public test passed, and hidden grader passed. V2-v6 evidence remains unchanged; development tasks only.",
-  "change_from_v7_dev": "New pack and heldout split; no dev-task or grader results used for prompt tuning. Same runner, tool schema, and matched budgets. This protocol freezes a two-task exploratory comparison.",
+  "change_from_v7_dev": "Frozen two-task matched cohort uses the v3 pack commit. No model inference was started under the earlier manifest-check failure; pack verification now excludes internal Git metadata while preserving file hashes.",
   "claim_limit": "Two authored exploratory tasks only; one deterministic greedy run per task. Architecture and model generation differ, so this is not a causal model-size-only comparison. No broad MLSys generalization or VARE reliability benefit is established.",
   "execution": {
     "accepted_container_images": {
@@ -220,7 +220,7 @@
     "benchmarks/separated_json_square_v1/fixture/solve.py": "12418c3be8264e28d007c62c2c0f657640ab4ca0c6196c79dc0221bb5eb97dfe",
     "benchmarks/separated_json_square_v1/task.json": "5039ab5b6e5f6201e5a518174db12d4840e3f3a46cf0ad8d230d628c345b2774"
   },
-  "runner_code_commit": "d47e8c369ae581ee2a39a7805b69525b8a294baf",
+  "runner_code_commit": "a58fc96d44ea3ec50c499b4ae8832e16a2d12a36",
   "schema_version": 1,
   "status": "frozen before fresh heldout model inference; exploratory matched comparison",
   "supersedes": null,
