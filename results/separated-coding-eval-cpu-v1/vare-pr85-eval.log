@@ -1,0 +1,34 @@
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files:  10%|█         | 1/10 [00:00<00:05,  1.51it/s]Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 15.07it/s]
+Traceback (most recent call last):
+  File "/Users/user/vare-eval/pr85/scripts/run_separated_coding_eval.py", line 941, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/Users/user/vare-eval/pr85/scripts/run_separated_coding_eval.py", line 937, in main
+    return asyncio.run(async_main(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/user/vare-eval/pr85/scripts/run_separated_coding_eval.py", line 871, in async_main
+    secondary = maybe_secondary(protocol, rows)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/user/vare-eval/pr85/scripts/run_separated_coding_eval.py", line 662, in maybe_secondary
+    available = mem_available_bytes()
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/user/vare-eval/pr85/scripts/run_separated_coding_eval.py", line 48, in mem_available_bytes
+    for line in Path("/proc/meminfo").read_text(encoding="utf-8").splitlines():
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/proc/meminfo'
+EXIT=1

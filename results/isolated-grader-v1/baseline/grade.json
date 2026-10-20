@@ -1,0 +1,72 @@
+{
+  "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "claim_limit": "Contains candidate-code execution from host files, credentials, network, and resources; the historical task is reused integration evidence and does not establish new generalization.",
+  "elapsed_seconds": 0.276,
+  "grader_exit_code": 126,
+  "grader_result": null,
+  "isolation": {
+    "candidate_code_executed_inside_container": true,
+    "candidate_workspace_read_only": true,
+    "capabilities_dropped": "ALL",
+    "cpu_limit": 1,
+    "docker_socket_mounted": false,
+    "host_credentials_passed": false,
+    "memory_limit_bytes": 536870912,
+    "mounts": [
+      "candidate:read-only",
+      "task-and-evaluator:read-only",
+      "harness:read-only"
+    ],
+    "network": "none",
+    "no_new_privileges": true,
+    "pids_limit": 64,
+    "root_filesystem_read_only": true,
+    "task_and_evaluator_read_only": true,
+    "tmpfs_bytes": 33554432,
+    "user": "65532:65532",
+    "wall_seconds": 90
+  },
+  "memory_limit_bytes": 536870912,
+  "peak_memory_bytes": null,
+  "protocol_id": "isolated-historical-grader-v1",
+  "recorded_at_utc": "2026-10-19T07:59:19+00:00",
+  "runtime": {
+    "context": "colima",
+    "docker_server_version": "29.5.2",
+    "image_digest": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "python": "3.12.12"
+  },
+  "schema_version": 1,
+  "source_hashes_after": {
+    "src/rvl_systems/backends.py": "26abeffd24ecef37093a179dc33506f0853018331c0002bd01010d016b31faca",
+    "src/rvl_systems/grpo.py": "a2ef6217385a206f5e6c0f43fb40e900ae3bf1b2066a1c8d1ab1878fd25d724d",
+    "src/rvl_systems/hf_backend.py": "8a3fe764508018a3e1237f9f131626ce7690b8e93b5a1e7b52fd52356133fce6",
+    "src/rvl_systems/hf_trainer.py": "95a0b36732c416f0d0bc8cbddc55ed11b3eb2ecc7d72654fd6a00d43adf772e7",
+    "src/rvl_systems/objectives.py": "e5c40d097bdd3adc9c1e356037bc9e07857bbdfbf5a8fc78e77284534f614c6b",
+    "src/rvl_systems/precision.py": "2acc6f4c6205c9009b0dc15159d8a285aa414940fe20bedfc30fd36473369b0f",
+    "src/rvl_systems/triton_grpo.py": "ed7ee082db036e1631c1f8eaacfb8691b102401c8342dcb9ed4dba5d26a22cf9",
+    "src/rvl_systems/types.py": "a3e9f06cc70972a7b5fd50b757ffff992d3a6156d1ffab5133e410471dcc5d7b"
+  },
+  "source_hashes_before": {
+    "src/rvl_systems/backends.py": "26abeffd24ecef37093a179dc33506f0853018331c0002bd01010d016b31faca",
+    "src/rvl_systems/grpo.py": "a2ef6217385a206f5e6c0f43fb40e900ae3bf1b2066a1c8d1ab1878fd25d724d",
+    "src/rvl_systems/hf_backend.py": "8a3fe764508018a3e1237f9f131626ce7690b8e93b5a1e7b52fd52356133fce6",
+    "src/rvl_systems/hf_trainer.py": "95a0b36732c416f0d0bc8cbddc55ed11b3eb2ecc7d72654fd6a00d43adf772e7",
+    "src/rvl_systems/objectives.py": "e5c40d097bdd3adc9c1e356037bc9e07857bbdfbf5a8fc78e77284534f614c6b",
+    "src/rvl_systems/precision.py": "2acc6f4c6205c9009b0dc15159d8a285aa414940fe20bedfc30fd36473369b0f",
+    "src/rvl_systems/triton_grpo.py": "ed7ee082db036e1631c1f8eaacfb8691b102401c8342dcb9ed4dba5d26a22cf9",
+    "src/rvl_systems/types.py": "a3e9f06cc70972a7b5fd50b757ffff992d3a6156d1ffab5133e410471dcc5d7b"
+  },
+  "status": "invalid_evidence",
+  "stderr_sha256": "3b6803d809f9b26c7277061df891dc30c49762f45539da832e6ef911a359ab56",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "task_id": "rvl-hf-behavior-policy-parity-v1",
+  "task_inputs_sha256": {
+    "TASK.md": "f73ef8ee1736e205fe1996450cfc18a87e0161994ba266e57ae8c95387d09f78",
+    "grader.py": "6c1011e29513c539bda3383ac823695cdb067385b6ddd904c31d5c6223df14e1",
+    "protocol.lock.json": "4996eed5c81863904f4596a6a1e914120bc36c8e5c4cdc0981c3811ec67df8f2",
+    "task.json": "fea3e4cf77a101300a827920491a14d52cf07ea2e2cee23f3f5b21421bec3a69"
+  },
+  "workspace_revision": "e788f113ad6b246a361cd50a52eaf2867f2a66f8",
+  "workspace_stable_after_grade": true
+}

@@ -9,8 +9,13 @@ for untrusted candidate code.
 This change supplies `DockerRepositoryEvaluator`, an isolated backend for the
 same catalog/evaluation contract. The **paired-container CLI mode refuses to
 launch unless both the agent image and the repository evaluator image are
-configured**. Legacy `env-campaign` and `env-verify` still exist for
-trusted local development; they are explicitly not hostile-code safe.
+configured and the operator passes `--allow-public-grader-visible-execution`.
+The task specification must also declare `metadata.grader_visibility` as
+`public`. These are explicit operator assertions: this mode still exposes its
+task/grader namespace to candidate code and must never be used for confidential
+or held-out grader data. Omit either assertion and evaluation fails before a
+container starts. Legacy host `env-verify` and non-container `env-campaign`
+remain for trusted local development only.
 
 ## Execution flow
 
@@ -45,6 +50,7 @@ vare env-campaign \
   --agent-argv-json '["python","/app/agent.py","{prompt}","{workspace}","{step}"]' \
   --isolated-agent-image 'local/agent@sha256:<actual-image-digest>' \
   --isolated-evaluator-image 'local/repository-grader@sha256:<actual-image-digest>' \
+  --allow-public-grader-visible-execution \
   --agent-timeout-s 60 \
   --isolated-evaluator-timeout-s 120
 ```
@@ -54,6 +60,11 @@ interpreter, `git`, and any *frozen* grader dependencies. The held-out task pack
 must be readable by the configured UID; the candidate checkpoint must be
 readable by that UID. No image is pulled at runtime, and the Docker socket
 must not be made available inside either role.
+
+For this legacy evaluator, `metadata.grader_visibility: public` and the CLI
+flag above permit candidate-visible task data only. They do not prove the
+metadata is truthful; the operator must inspect the task pack. Do not use this
+path for untrusted code when grader data is confidential.
 
 `/scratch` is an ephemeral 256 MiB tmpfs (in addition to `/tmp`).
 Large repositories and tests that need more space fail closed by default;
@@ -89,6 +100,101 @@ provenance/schema validation. The result is E0 control-plane correctness, not
 a security penetration-test result or a real-model performance result.
 An abrupt **host or daemon crash** can still strand containers; a persistent
 external inventory/watchdog is future work.
+
+## Candidate and grader separation
+
+`SeparatedCandidateGrader` mounts only `/workspace` into the candidate
+container. After that container exits, the host copies a snapshot. JSON cases
+still use `TrustedJSONScorer.evaluate` with no signature change. Hidden
+repository commands, including an `EngineeringTaskSpec` from the MLSys pack,
+run in a second container that mounts the snapshot read-only and the staged
+evaluator at `/grader`. The agent task root for that pack is `task.json`
+only, and train/held-out selection refuses held-out ids.
+
+Hidden function calls go through `vare.isolated_candidate`. The trusted
+parent keeps expected outputs, hidden tests, and the clock. Each call is a
+new container using `DockerIsolationRunner` flags (`--network=none`,
+`--read-only`, dropped capabilities, uid 65534) and one readonly `/subject`
+mount. `/grader` is not mounted. Arguments are JSON on stdin after import.
+The nonce stays in the parent and is not sent into the container. A zero
+exit status is not a pass. End of file after the single value line is not
+extra output; further stdout bytes are a malformed result. Parent wall time
+starts at container creation, so subject import is inside the measured cost
+for both the baseline and the candidate. `paired_timing` takes
+`make_case(index) -> (args, kwargs, expected)` in the parent. Each repetition
+has its own expected value, drawn from a seed the candidate never sees.
+`output_pass` is true only when both sides return that repetition's value.
+Equal wrong returns, and a hardcoded answer for one known input, do not pass.
+`grade_calls` remains the check for any other correctness cases. Numeric
+answers use `math.isclose` with the task's `rtol` and `atol`. The primary
+speed samples still include container start. Each repetition also times an
+empty subject in the same shuffled order. `adjusted_ratio` subtracts that
+control and is secondary; import of the real subject stays in the adjusted
+cost. `two_x_speedup_decision` is the 2x gate. It reports
+`oracle_subject_ratio` and sets success only when `output_pass` is true and
+both unadjusted means are at least twice the mean empty-control time.
+`scripts/run_separated_coding_eval.py` calls this harness on the host. A task
+without `evaluator/isolated_calls.json` fails closed. A child exit status is
+not a pass. The MLSys pack graders are not edited here.
+
+`ExecutableEvaluator` still runs its commands in-process. A hidden test that
+imports candidate code on that path can read `/grader/evaluator` and the
+process clock. Do not use it for hidden tests or a performance gate.
+`DockerRepositoryEvaluator` remains limited to tasks marked public. The
+isolated container is a grading boundary, not a kernel-exploit claim.
+
+## Limited trusted JSON-I/O scoring boundary
+
+`DockerRepositoryEvaluator` remains unsuitable for confidential held-out tests:
+it runs candidate code in the same container namespace as the repository tests
+and task data. Do not use it for an untrusted candidate or claim hidden-test
+integrity. A separate, narrower path is available through
+`vare.trusted_scoring.TrustedJSONScorer` for tasks that can be expressed as
+bounded JSON requests and exact JSON responses. The operator supplies the fixed
+candidate command and holds the expected responses; each request runs in a new
+container with only the candidate workspace mounted readonly. The scorer sends
+the request over bounded stdin and compares the response itself. Candidate
+claims such as `{"passed": true}` have no scoring meaning. Candidate output,
+including invalid or failing output, is summarized by a digest in the report.
+
+This is a limited interface boundary, not general sandbox certification. It
+does not run repository test suites, prevent inference from public requests, or
+establish model coding ability. Docker/Colima, its kernel boundary, operator
+command, and host remain trusted. Live untrusted repository execution stays
+blocked. The E0 synthetic protocol below checks only that this narrow path
+cannot read an operator-side canary through a mounted path and rejects a
+forged score response.
+
+Reproduce the frozen synthetic probe and audit its evidence with:
+
+```bash
+python scripts/verify_trusted_scoring_boundary_v1.py \
+  --output results/trusted-scoring-boundary-v1/run-N-colima-m1
+python scripts/audit_trusted_scoring_boundary_v1.py \
+  results/trusted-scoring-boundary-v1/run-N-colima-m1
+```
+
+The runner refuses to overwrite an existing evidence directory and verifies
+the source/script hashes in the protocol lock before it starts. A passing E0
+result does not authorize `DockerRepositoryEvaluator` for hidden repository
+tests or change the live-execution NO-GO status.
+
+The first attempted run is retained at
+`results/trusted-scoring-boundary-v1/run-1-colima-m1/`; it records a runner
+startup failure caused by the source tree not being on `sys.path`. The first
+passing smoke at `run-2-colima-m1/` was superseded when runtime/limit pins were
+made executable checks; `run-3-colima-m1/` was then superseded to use a random
+canary and omit its plaintext from the evidence bundle; `run-4-colima-m1/` was
+superseded after adding cleanup for failed probes; `run-5-colima-m1/` was
+superseded after preserving raw stdout digests before UTF-8 decoding. The
+current successful same-host smoke is `run-6-colima-m1/`; its independently
+recomputed decision is
+`PASS_E0_LIMITED_JSON_IO_BOUNDARY`. The two positive cases passed, the
+forged-score response scored 0/1, the synthetic canary was unreadable, and no
+managed containers remained. This records a software boundary check only. It
+does not show an agent solving an engineering task.
+See [the run report](trusted-scoring-boundary-v1-report.md) and its locked
+[protocol](../protocols/trusted_scoring_boundary_v1.lock.json).
 
 ## Test contract
 

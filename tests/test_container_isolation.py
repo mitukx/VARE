@@ -85,6 +85,25 @@ def test_agent_only_mounts_its_workspace_with_no_network_or_privileges(tmp_path)
         )
 
 
+def test_candidate_json_io_mounts_only_readonly_workspace_and_is_interactive(tmp_path):
+    root = tmp_path / "workspaces"
+    ws = root / "trial"
+    ws.mkdir(parents=True)
+    grader = tmp_path / "private-grader"
+    grader.mkdir()
+    argv = DockerIsolationRunner().candidate_argv(
+        IsolationLimits(IMAGE), name="vare-agent-" + "a" * 24,
+        allowed_workspace_root=root, workspace=ws,
+        command=("python", "/workspace/solve.py"),
+        readonly_workspace=True, interactive=True,
+    )
+    mounts = [argv[i + 1] for i, flag in enumerate(argv[:-1]) if flag == "--mount"]
+    assert mounts == [f"type=bind,source={ws},target=/workspace,readonly"]
+    assert "--interactive" in argv
+    assert "/grader" not in " ".join(argv)
+    assert str(grader) not in " ".join(argv)
+
+
 def test_evaluator_only_sees_read_only_trusted_inputs(tmp_path):
     root = tmp_path / "checkpoints"
     root.mkdir()
@@ -181,25 +200,58 @@ def test_evaluator_response_must_have_valid_signature(tmp_path):
 
 
 def _fake_docker(tmp_path: Path, behavior: str) -> tuple[str, Path]:
+    tmp_path.mkdir(parents=True, exist_ok=True)
     binary = tmp_path / "fake-docker"
     audit = tmp_path / "cleanup.txt"
+    remove_script = (
+        "    count = int(audit.read_text()) if audit.exists() else 0\n"
+        "    audit.write_text(str(count + 1))\n"
+        "    if count == 0:\n"
+        "        print('Error response from daemon: removal of container is already in progress', file=sys.stderr)\n"
+        "    else:\n"
+        "        print('No such container', file=sys.stderr)\n"
+        "    raise SystemExit(1)\n"
+        if behavior == "cleanup-race" else
+        "    audit.write_text('removed')\n"
+        "    print('No such container', file=sys.stderr)\n"
+        "    raise SystemExit(1)\n"
+    )
+    run_script = (
+        "    time.sleep(10)\n" if behavior == "timeout" else
+        "    print('x'*20000)\n" if behavior == "overflow" else
+        "    sys.stdout.buffer.write(bytes([255]))\n" if behavior == "invalid-utf8-ff" else
+        "    sys.stdout.buffer.write(bytes([254]))\n" if behavior == "invalid-utf8-fe" else
+        "    print(sys.stdin.buffer.readline().decode().rstrip('\\n'))\n" if behavior == "stdin" else
+        "    print('ok')\n"
+    )
     script = (
         "#!" + sys.executable + "\n"
         "import sys,time\n"
         "from pathlib import Path\n"
         f"audit = Path({str(audit)!r})\n"
-        "if sys.argv[1] == 'rm':\n"
-        "    audit.write_text('removed')\n"
-        "    print('No such container', file=sys.stderr)\n"
-        "    raise SystemExit(1)\n"
-        "if sys.argv[1] == 'run':\n"
-        + (("    time.sleep(10)\n") if behavior == "timeout" else
-           ("    print('x'*20000)\n") if behavior == "overflow" else
-           ("    print('ok')\n"))
+        "if sys.argv[1] == 'rm':\n" + remove_script +
+        "if sys.argv[1] == 'run':\n" + run_script
     )
     binary.write_text(script, encoding="utf-8")
     binary.chmod(0o755)
     return str(binary), audit
+
+
+def test_supervisor_hashes_raw_stdout_before_utf8_replacement(tmp_path):
+    root = tmp_path / "workspaces"
+    work = root / "trial"
+    work.mkdir(parents=True)
+    results = []
+    for behavior in ("invalid-utf8-ff", "invalid-utf8-fe"):
+        binary, _ = _fake_docker(tmp_path / behavior, behavior)
+        results.append(asyncio.run(DockerIsolationRunner(docker_binary=binary).run_candidate(
+            IsolationLimits(IMAGE), allowed_workspace_root=root,
+            workspace=work, command=("python", "-c", "pass"),
+        )))
+    assert results[0].stdout == results[1].stdout == "\ufffd"
+    assert results[0].stdout_sha256 == hashlib.sha256(b"\xff").hexdigest()
+    assert results[1].stdout_sha256 == hashlib.sha256(b"\xfe").hexdigest()
+    assert results[0].stdout_sha256 != results[1].stdout_sha256
 
 
 @pytest.mark.parametrize("behavior", ("ok", "timeout", "overflow"))
@@ -248,6 +300,51 @@ def test_controller_cancellation_also_requests_forced_cleanup(tmp_path):
 
     asyncio.run(scenario())
     assert audit.read_text(encoding="utf-8") == "removed"
+
+
+def test_supervisor_retries_docker_auto_remove_race(tmp_path):
+    binary, audit = _fake_docker(tmp_path, "cleanup-race")
+    root = tmp_path / "workspaces"
+    work = root / "trial"
+    work.mkdir(parents=True)
+    runner = DockerIsolationRunner(docker_binary=binary)
+    result = asyncio.run(runner.run_candidate(
+        IsolationLimits(IMAGE),
+        allowed_workspace_root=root,
+        workspace=work,
+        command=("echo", "hello"),
+    ))
+    assert result.stdout.strip() == "ok"
+    assert audit.read_text(encoding="utf-8") == "2"
+
+
+def test_candidate_json_io_delivers_bounded_stdin_and_cleans_up(tmp_path):
+    binary, audit = _fake_docker(tmp_path, "stdin")
+    root = tmp_path / "workspaces"
+    work = root / "trial"
+    work.mkdir(parents=True)
+    runner = DockerIsolationRunner(docker_binary=binary)
+    result = asyncio.run(runner.run_candidate_io(
+        IsolationLimits(IMAGE),
+        allowed_workspace_root=root,
+        workspace=work,
+        command=("python", "/workspace/solve.py"),
+        stdin_data=b'{"request":2}\n',
+    ))
+    assert result.stdout.strip() == '{"request":2}'
+    assert audit.read_text(encoding="utf-8") == "removed"
+
+
+def test_candidate_json_io_rejects_oversized_or_noninteractive_input(tmp_path):
+    binary, _ = _fake_docker(tmp_path, "stdin")
+    runner = DockerIsolationRunner(docker_binary=binary)
+    limits = IsolationLimits(IMAGE)
+    name = "vare-agent-" + "a" * 24
+    with pytest.raises(IsolationError, match="bounded bytes"):
+        asyncio.run(runner.execute(
+            ["docker", "run", "--name", name, "image"], limits,
+            stdin_data=b"x" * 64_001,
+        ))
 
 
 def test_isolated_hooks_never_call_learner_for_promotion_evidence(tmp_path):

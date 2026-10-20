@@ -10,9 +10,15 @@ import platform
 import re
 import resource
 import subprocess
+import sys
 import time
 from pathlib import Path
 from typing import Any
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+from vare.agent_edit_format import ParseFailure, apply_parsed_edit, parse_submission, require_edit_format
+from vare.agent_task_contract import load_agent_task  # noqa: E402
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -26,7 +32,54 @@ TOOLS = [
     {'type': 'function', 'function': {'name': 'check_syntax', 'description': 'Parse one allowed Python file for syntax errors without executing it.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}}, 'required': ['path'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'finish', 'description': 'Finish the attempt when you believe the task is complete. The evaluator will judge the workspace.', 'parameters': {'type': 'object', 'properties': {'summary': {'type': 'string'}}, 'required': ['summary'], 'additionalProperties': False}}},
 ]
-TOOL_NAMES = {item['function']['name'] for item in TOOLS}
+WRITE_FILE_TOOL = {
+    'type': 'function',
+    'function': {
+        'name': 'write_file',
+        'description': 'Replace one allowlisted source file with its complete new UTF-8 text. Do not send a unified diff.',
+        'parameters': {
+            'type': 'object',
+            'properties': {
+                'path': {'type': 'string'},
+                'content': {'type': 'string'},
+            },
+            'required': ['path', 'content'],
+            'additionalProperties': False,
+        },
+    },
+}
+
+
+def tools_for(edit_format: str) -> list[dict[str, Any]]:
+    require_edit_format(edit_format)
+    if edit_format == 'unified_diff':
+        return list(TOOLS)
+    tools = []
+    for item in TOOLS:
+        if item['function']['name'] == 'apply_patch':
+            tools.append(WRITE_FILE_TOOL)
+        else:
+            tools.append(item)
+    return tools
+
+
+def attempt_configured_edit(workspace: Path, text: str, edit_format: str, allowed: set[str]) -> dict[str, Any]:
+    """Parse and apply one edit. A parse failure is not a task score."""
+    parsed = parse_submission(text, edit_format=edit_format)
+    if isinstance(parsed, ParseFailure):
+        reason = parsed.reason if parsed.reason != 'no_edit' else (
+            'malformed_diff' if edit_format == 'unified_diff' else 'malformed_file'
+        )
+        return {'applied': False, 'format_parse_failure': reason}
+    applied = apply_parsed_edit(workspace, parsed, allowed)
+    if not applied.applied:
+        return {
+            'applied': False,
+            'format_parse_failure': None,
+            'error': applied.error or 'edit was not applied',
+            'paths': list(applied.paths),
+        }
+    return {'applied': True, 'paths': list(applied.paths), 'format_parse_failure': None}
 
 
 def sha256(path: Path) -> str:
@@ -57,6 +110,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument('--workspace', type=Path, required=True)
     parser.add_argument('--model-path', type=Path, required=True, help='Local model snapshot directory; no network download is attempted')
+    parser.add_argument('--model-repository', default=MODEL_REPOSITORY)
     parser.add_argument('--task-root', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--instruction', required=True,
@@ -67,6 +121,12 @@ def main() -> int:
     parser.add_argument('--max-new-tokens-per-turn', type=int, default=256)
     parser.add_argument('--max-total-new-tokens', type=int, default=3072)
     parser.add_argument('--wall-seconds', type=int, default=900)
+    parser.add_argument('--temperature', type=float, default=0.2)
+    parser.add_argument('--top-p', type=float, default=0.95)
+    parser.add_argument('--top-k', type=int, default=20)
+    parser.add_argument('--do-sample', action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument('--edit-format', choices=('unified_diff', 'whole_file'), default='unified_diff')
+    parser.add_argument('--require-split', choices=('train', 'heldout'))
     args = parser.parse_args()
 
     model_dir = args.model_path.resolve()
@@ -75,8 +135,12 @@ def main() -> int:
     workspace = args.workspace.resolve()
     task_root = args.task_root.resolve()
     result_path = args.output.resolve()
-    task = json.loads((task_root / 'task.json').read_text())
-    allowed = set(task['source']['files'])
+    if result_path.exists():
+        parser.error(f'refusing to overwrite existing agent record: {result_path}')
+    contract = load_agent_task(task_root)
+    if args.require_split is not None and contract.split != args.require_split:
+        parser.error(f'task split {contract.split!r} does not match required split {args.require_split}')
+    allowed = set(contract.allowed_files)
     missing = sorted(name for name in allowed if not (workspace / name).is_file())
     if missing:
         parser.error(f'workspace missing allowed source files: {missing}')
@@ -94,11 +158,22 @@ def main() -> int:
     if not all(parameter.device.type == 'cpu' for parameter in model.parameters()):
         raise RuntimeError('model parameter escaped CPU')
 
-    task_text = (task_root / 'TASK.md').read_text(encoding='utf-8')
+    task_text = contract.prompt_text
+    tools = tools_for(args.edit_format)
+    tool_names = {item['function']['name'] for item in tools}
+    if args.edit_format == 'whole_file':
+        edit_sentence = (
+            'Read the source path named in the user instruction, then use tools to inspect and edit. '
+            'Use write_file to replace an allowlisted source file with its complete new text. Do not send a unified diff. '
+        )
+    else:
+        edit_sentence = (
+            'Read the source path named in the user instruction, then use tools to inspect and edit. Use apply_patch for small source diffs; never rewrite a whole file. '
+        )
     system = (
         'You are an offline code repair agent. Solve only the task below. The workspace contains only the task source files. '
-        'Read the source path named in the user instruction, then use tools to inspect and edit. Use apply_patch for small source diffs; never rewrite a whole file. '
-        'Do not invent paths. The workspace is already prepared; never ask for a workspace path, more information, or permission. '
+        + edit_sentence
+        + 'Do not invent paths. The workspace is already prepared; never ask for a workspace path, more information, or permission. '
         'The external grader is hidden. Do not describe a fix without applying it. Call finish only after changing a source file. '
         'You have a limited tool budget; each assistant turn before finish must call a tool. '
         'TASK:\n' + task_text.split('## Reproduce', 1)[0].rstrip()
@@ -114,7 +189,21 @@ def main() -> int:
     stop_reason = 'turn_budget_exhausted'
     final_summary = ''
     no_tool_retries = 0
+    edit_attempted = False
+    edit_applied = False
+    format_parse_failure = None
+    format_parse_failure_count = 0
     pattern = re.compile(r'<tool_call>\s*(\{.*?\})\s*</tool_call>', re.DOTALL)
+
+    def note_edit(edit_result: dict[str, Any]) -> None:
+        nonlocal edit_attempted, edit_applied, format_parse_failure, format_parse_failure_count
+        edit_attempted = True
+        failure = edit_result.get('format_parse_failure')
+        if failure:
+            format_parse_failure = failure
+            format_parse_failure_count += 1
+        if edit_result.get('applied') is True:
+            edit_applied = True
 
     for turn in range(args.max_turns):
         elapsed = time.perf_counter() - start
@@ -122,7 +211,7 @@ def main() -> int:
             stop_reason = 'wall_time_exhausted'
             break
         prompt = tokenizer.apply_chat_template(
-            messages, tools=TOOLS, tokenize=False, add_generation_prompt=True,
+            messages, tools=tools, tokenize=False, add_generation_prompt=True,
             enable_thinking=False,
         )
         encoded = tokenizer(prompt, return_tensors='pt')
@@ -134,7 +223,10 @@ def main() -> int:
         with torch.inference_mode():
             output = model.generate(
                 input_ids=encoded['input_ids'], attention_mask=encoded['attention_mask'],
-                do_sample=True, temperature=0.2, top_p=0.95, top_k=20,
+                do_sample=args.do_sample,
+                **({} if not args.do_sample else {
+                    'temperature': args.temperature, 'top_p': args.top_p, 'top_k': args.top_k,
+                }),
                 max_new_tokens=limit, pad_token_id=tokenizer.eos_token_id,
             )
         new_ids = output[0][encoded['input_ids'].shape[1]:]
@@ -143,6 +235,21 @@ def main() -> int:
         entry: dict[str, Any] = {'turn': turn + 1, 'model_output': raw, 'tool_calls': []}
         calls = list(pattern.finditer(raw))
         if not calls:
+            recovered = parse_submission(raw, edit_format=args.edit_format)
+            if not isinstance(recovered, ParseFailure) or recovered.reason != 'no_edit':
+                edit_result = attempt_configured_edit(workspace, raw, args.edit_format, allowed)
+                note_edit(edit_result)
+                entry['tool_calls'].append({'name': 'recovered_edit', 'result': edit_result})
+                messages.append({'role': 'assistant', 'content': raw})
+                messages.append({
+                    'role': 'tool', 'name': 'recovered_edit',
+                    'content': json.dumps(edit_result, ensure_ascii=False),
+                })
+                transcript.append(entry)
+                if edit_result.get('applied') is True:
+                    continue
+                stop_reason = 'malformed_edit'
+                break
             messages.append({'role': 'assistant', 'content': raw})
             transcript.append(entry)
             current_hashes = digest_tree(workspace, sorted(allowed))
@@ -161,7 +268,7 @@ def main() -> int:
                 call = json.loads(match.group(1))
                 name = call.get('name')
                 arguments = call.get('arguments', {})
-                if name not in TOOL_NAMES or not isinstance(arguments, dict):
+                if name not in tool_names or not isinstance(arguments, dict):
                     raise ValueError('unsupported tool call')
                 parsed_calls.append((match, name, arguments))
             except Exception as exc:
@@ -197,30 +304,21 @@ def main() -> int:
                                     matches.append({'path': path, 'line': line_no, 'text': line[:500]})
                         result = matches[:80]
                 elif name == 'apply_patch':
-                    patch_text = arguments.get('patch', '')
-                    paths = []
-                    for line in patch_text.splitlines():
-                        if line.startswith(('--- a/', '+++ b/')):
-                            candidate_path = line[6:]
-                            if candidate_path != '/dev/null':
-                                paths.append(candidate_path)
-                    forbidden_features = ('GIT binary patch', 'new file mode', 'deleted file mode',
-                                          'rename from ', 'rename to ', 'Subproject commit')
-                    if not paths or any(path not in allowed for path in paths) or len(set(paths)) != len(paths) // 2:
-                        result = {'error': 'patch paths must be existing allowlisted source files'}
-                    elif any(feature in patch_text for feature in forbidden_features):
-                        result = {'error': 'binary, create, delete, rename and submodule patches are disabled'}
-                    else:
-                        checked = subprocess.run(['git', 'apply', '--check', '--'], cwd=workspace,
-                                                 input=patch_text, text=True, capture_output=True)
-                        if checked.returncode != 0:
-                            result = {'error': 'patch failed validation', 'detail': checked.stderr[:1000]}
-                        else:
-                            applied = subprocess.run(['git', 'apply', '--'], cwd=workspace,
-                                                     input=patch_text, text=True, capture_output=True)
-                            result = {'applied': applied.returncode == 0,
-                                      'paths': sorted(set(paths)),
-                                      'error': applied.stderr[:1000] if applied.returncode else None}
+                    result = attempt_configured_edit(
+                        workspace, str(arguments.get('patch', '')), args.edit_format, allowed,
+                    )
+                    note_edit(result)
+                elif name == 'write_file':
+                    result = attempt_configured_edit(
+                        workspace,
+                        json.dumps({
+                            'path': arguments.get('path', ''),
+                            'content': arguments.get('content', ''),
+                        }),
+                        args.edit_format,
+                        allowed,
+                    )
+                    note_edit(result)
                 elif name == 'check_syntax':
                     raw_path = arguments.get('path', '')
                     path = resolve_allowed_path(raw_path, allowed)
@@ -253,27 +351,30 @@ def main() -> int:
 
     elapsed = time.perf_counter() - start
     after = digest_tree(workspace, sorted(allowed))
-    diff = run_git(workspace, 'diff', '--binary', task['source']['base_revision'], '--', *sorted(allowed))
+    diff = run_git(workspace, 'diff', '--binary', contract.diff_revision, '--', *sorted(allowed))
     result = {
-        'schema_version': 1, 'task_id': task['task_id'], 'seed': args.seed,
-        'task_revisions': {'base': task['source']['base_revision'],
-                           'calibration': task['source']['calibration_revision']},
-        'task_input_hashes': {
-            'TASK.md': sha256(task_root / 'TASK.md'),
-            'task.json': sha256(task_root / 'task.json'),
-            'protocol.lock.json': sha256(task_root / 'protocol.lock.json'),
-            'grader.py': sha256(task_root / 'evaluator/grade.py'),
-        },
+        'schema_version': 1, 'task_id': contract.task_id, 'task_schema': contract.schema,
+        'seed': args.seed,
+        'task_revisions': {'base': contract.base_revision,
+                           'calibration': contract.calibration_revision},
+        'task_input_hashes': contract.input_hashes,
         'initial_messages': initial_messages,
-        'model_repository': MODEL_REPOSITORY, 'model_snapshot': model_dir.name,
+        'model_repository': args.model_repository, 'model_snapshot': model_dir.name,
         'model_files': {path.name: sha256(path) for path in sorted(model_dir.iterdir()) if path.is_file()},
         'runtime': {'python': platform.python_version(), 'torch': torch.__version__,
                     'transformers': __import__('transformers').__version__,
                     'platform': platform.platform(), 'device': 'cpu', 'threads': torch.get_num_threads(),
                     'cuda_available': torch.cuda.is_available(), 'mps_available_unused': torch.backends.mps.is_available()},
-        'budgets': {'max_turns': args.max_turns, 'per_turn_tokens': args.max_new_tokens_per_turn,
-                    'total_new_tokens': args.max_total_new_tokens, 'wall_seconds': args.wall_seconds,
-                    'max_no_tool_retries': args.max_no_tool_retries},
+        'budgets': {'max_turns': args.max_turns, 'max_new_tokens_per_turn': args.max_new_tokens_per_turn,
+                    'max_total_new_tokens': args.max_total_new_tokens, 'wall_seconds': args.wall_seconds,
+                    'max_no_tool_retries': args.max_no_tool_retries,
+                    'temperature': args.temperature, 'top_p': args.top_p, 'top_k': args.top_k,
+                    'do_sample': args.do_sample, 'edit_format': args.edit_format},
+        'edit_format': args.edit_format,
+        'edit_attempted': edit_attempted,
+        'edit_applied': edit_applied,
+        'format_parse_failure': format_parse_failure,
+        'format_parse_failure_count': format_parse_failure_count,
         'stop_reason': stop_reason, 'agent_summary': final_summary,
         'elapsed_seconds': round(elapsed, 3), 'new_tokens': token_total,
         'max_rss_bytes': resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
@@ -287,7 +388,11 @@ def main() -> int:
         'claim_limit': 'One small cached model on one historical task; not frontier-agent performance or novel fix discovery.',
     }
     result_path.parent.mkdir(parents=True, exist_ok=True)
-    result_path.write_text(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True) + '\n')
+    try:
+        with result_path.open('x', encoding='utf-8') as stream:
+            stream.write(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True) + '\n')
+    except FileExistsError:
+        parser.error(f'refusing to overwrite existing agent record: {result_path}')
     print(json.dumps({key: result[key] for key in ['task_id', 'seed', 'stop_reason', 'elapsed_seconds', 'new_tokens', 'tool_turns', 'candidate_diff_sha256']}, indent=2))
     return 0
 

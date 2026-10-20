@@ -28,6 +28,14 @@ def test_v2_task_namespaces_are_round_and_evaluation_disjoint():
     assert len({t.prompt for t in [*train,*future,*heldout]})==24
 
 
+def test_auditor_inventory_covers_the_runtime_package():
+    runtime_sources={str(path.relative_to(bench.ROOT))
+                     for path in (bench.ROOT/"src/vare").rglob("*.py")}
+    pinned_runtime_sources={path for path in auditor.RUNTIME_PACKAGE_SOURCES
+                            if path.startswith("src/vare/")}
+    assert runtime_sources==pinned_runtime_sources
+
+
 def test_restart_refuses_changed_learner_source_before_loading_model(tmp_path):
     config=tmp_path/"config.json"
     bench.atomic_json(config,{"source_sha256":{"scripts/benchmark_e2e_rl_continuation.py":"0"*64}})
@@ -69,7 +77,7 @@ def test_campaign_snapshots_the_full_runtime_package(campaign,tmp_path):
     root,_=campaign
     manifest=auditor.read(root/"manifest.json")
     runtime_sources={str(path.relative_to(bench.ROOT)) for path in (bench.ROOT/"src/vare").rglob("*.py")}
-    assert len(runtime_sources)==66
+    assert len(runtime_sources)==67
     assert runtime_sources <= set(manifest["sources"])
     assert runtime_sources <= set(manifest["source_sha256"])
     assert runtime_sources <= auditor.EXPECTED_SOURCES

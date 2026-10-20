@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "task_id": "separated-json-square-repair-v1",
+  "title": "Square the integer n from a JSON request",
+  "source": {
+    "repository": "local-separated-json-square-v1",
+    "base_revision": "filled-by-runner",
+    "calibration_revision": "none",
+    "files": ["solve.py"]
+  },
+  "grader": {
+    "path": "benchmarks/separated_json_square_v1/evaluator/grade.py",
+    "protocol_lock": "protocols/separated_coding_eval_cpu_v1.lock.json",
+    "protocol_version": 1
+  },
+  "budget": {
+    "max_wall_seconds": 300,
+    "accelerator_hours": 0,
+    "paid_api_calls": 0,
+    "external_compute_usd": 0
+  },
+  "claim_limit": "A passing candidate satisfies one JSON squaring contract. It is not a capability or learning result."
+}

@@ -1,0 +1,33 @@
+{
+  "correctness": 0.0,
+  "integrity_failures": [],
+  "integrity_ok": true,
+  "metrics": [],
+  "passed": false,
+  "provenance": {
+    "policy_id": "unpatched-mlsys-v1-range-sums",
+    "policy_version": 1,
+    "task_spec_path": "/grader/task.json",
+    "task_spec_sha256": "7c247ccae2820ad628d37db5792d553f19977c2ba45e0ad2c45778bcbcb57765",
+    "workspace": "/scratch/vare-eval-d3ugq9wg/workspace"
+  },
+  "score": 0.0,
+  "task_id": "mlsys-v1-range-sums",
+  "tests": [
+    {
+      "argv": [
+        "/usr/local/bin/python",
+        "grade.py",
+        "/scratch/vare-eval-d3ugq9wg/workspace"
+      ],
+      "name": "hidden-grade",
+      "output_limited": false,
+      "returncode": 1,
+      "stderr": "",
+      "stdout": "{\"baseline\": {\"ci95_high_s\": 0.23268312999764382, \"ci95_low_s\": 0.21502233000370483, \"mean_s\": 0.22385273000067432, \"stdev_s\": 0.009547970581074396}, \"baseline_samples_s\": [0.2180991470013396, 0.23982180400344077, 0.21861380700283917, 0.22057949100417318, 0.23537341099290643, 0.21671933600009652, 0.21776211399992462], \"candidate\": {\"ci95_high_s\": 0.22311854394670022, \"ci95_low_s\": 0.21891116319330628, \"mean_s\": 0.22101485357000325, \"stdev_s\": 0.0022746391822890503}, \"candidate_samples_s\": [0.22116244499920867, 0.21839806699426845, 0.2206262859981507, 0.22501547499996377, 0.2183894869958749, 0.22187256399774924, 0.2216396510048071], \"conservative_speedup\": 0.9637133973726116, \"correctness_pass\": true, \"improvement_pass\": false, \"measurement\": \"student_t_conservative_speedup\", \"threshold\": 2.0, \"workload\": {\"n\": 5000, \"q\": 5000, \"seed\": 20261019}}\n",
+      "timed_out": false,
+      "wall_s": 3.870395865997125
+    }
+  ],
+  "workspace_diff": ""
+}

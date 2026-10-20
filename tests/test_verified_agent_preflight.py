@@ -64,6 +64,28 @@ def test_preflight_checks_model_bytes_against_frozen_protocol(tmp_path: Path) ->
     assert "the pinned local model snapshot is missing or has mismatched files" in report["blockers"]
 
 
+def test_preflight_requires_exact_agent_runtime_versions(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        preflight,
+        "_package_version",
+        lambda name: {"torch": "2.9.0", "transformers": "4.57.3"}[name],
+    )
+
+    report = collect_preflight(
+        root=ROOT,
+        model_path=tmp_path / "missing-model",
+        docker_probe=lambda: {"cli_available": False, "daemon_available": False},
+    )
+
+    assert report["environment"]["agent_packages_match_protocol"] is False
+    assert report["environment"]["pinned_packages"] == {
+        "torch": "2.9.1", "transformers": "4.57.3",
+    }
+    assert "one or more agent runtime package versions do not match the pinned requirements" in report["blockers"]
+
+
 def test_historical_task_inputs_match_the_retained_v2_lock() -> None:
     report = collect_preflight(
         root=ROOT,

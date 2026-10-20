@@ -1,0 +1,233 @@
+{
+  "active_container": {
+    "cap_drop": [
+      "ALL"
+    ],
+    "configured_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "image_id": "sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "left_after_normal_exit": [],
+    "memory_bytes": 268435456,
+    "mounts": [
+      {
+        "destination": "/workspace",
+        "rw": true,
+        "type": "bind"
+      }
+    ],
+    "name": "vare-agent-302d79af76e1d7154f5ae397",
+    "nano_cpus": 500000000,
+    "network_mode": "none",
+    "pids_limit": 12,
+    "readonly_rootfs": true,
+    "returncode": 0,
+    "running_when_inspected": true,
+    "security_opt": [
+      "no-new-privileges:true"
+    ],
+    "user": "65534:65534"
+  },
+  "candidate_probe": [
+    {
+      "new_managed_containers_after": [],
+      "observation": {
+        "cap_eff": "0000000000000000",
+        "cpu_max": "50000 100000",
+        "default_route_present": false,
+        "docker_socket_present": false,
+        "host_canary_readable": false,
+        "host_canary_writable": false,
+        "memory_max": "268435456",
+        "network_reachable": false,
+        "no_new_privs": "1",
+        "pids_limit_enforced": true,
+        "pids_max": "12",
+        "rootfs_writable": false,
+        "spawned_children": 10,
+        "uid": 65534,
+        "workspace_writable": true
+      },
+      "replicate": 1,
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "b16f103d8e5a9ec72f4d99529533c47aa13ad54e34e94f898de4b95023e4ffbb"
+    },
+    {
+      "new_managed_containers_after": [],
+      "observation": {
+        "cap_eff": "0000000000000000",
+        "cpu_max": "50000 100000",
+        "default_route_present": false,
+        "docker_socket_present": false,
+        "host_canary_readable": false,
+        "host_canary_writable": false,
+        "memory_max": "268435456",
+        "network_reachable": false,
+        "no_new_privs": "1",
+        "pids_limit_enforced": true,
+        "pids_max": "12",
+        "rootfs_writable": false,
+        "spawned_children": 10,
+        "uid": 65534,
+        "workspace_writable": true
+      },
+      "replicate": 2,
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "b16f103d8e5a9ec72f4d99529533c47aa13ad54e34e94f898de4b95023e4ffbb"
+    },
+    {
+      "new_managed_containers_after": [],
+      "observation": {
+        "cap_eff": "0000000000000000",
+        "cpu_max": "50000 100000",
+        "default_route_present": false,
+        "docker_socket_present": false,
+        "host_canary_readable": false,
+        "host_canary_writable": false,
+        "memory_max": "268435456",
+        "network_reachable": false,
+        "no_new_privs": "1",
+        "pids_limit_enforced": true,
+        "pids_max": "12",
+        "rootfs_writable": false,
+        "spawned_children": 10,
+        "uid": 65534,
+        "workspace_writable": true
+      },
+      "replicate": 3,
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "b16f103d8e5a9ec72f4d99529533c47aa13ad54e34e94f898de4b95023e4ffbb"
+    }
+  ],
+  "environment": {
+    "colima": {
+      "arch": "aarch64",
+      "containerd_socket": "unix:///Users/user/.colima/default/containerd.sock",
+      "cpu": 4,
+      "disk": 64424509440,
+      "display_name": "colima",
+      "docker_socket": "unix:///Users/user/.colima/default/docker.sock",
+      "driver": "macOS Virtualization.Framework",
+      "kubernetes": false,
+      "memory": 8589934592,
+      "mount_type": "virtiofs",
+      "runtime": "docker"
+    },
+    "docker_context": "colima",
+    "docker_info": "[\"name=apparmor\",\"name=seccomp,profile=builtin\",\"name=cgroupns\"] linux aarch64 8308289536",
+    "docker_security_options": "[\"name=apparmor\",\"name=seccomp,profile=builtin\",\"name=cgroupns\"]",
+    "image_id": "sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "image_reference": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "image_repo_digests": [
+      "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258"
+    ],
+    "platform": "darwin",
+    "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]"
+  },
+  "grader_probe": [
+    {
+      "canary_visible": true,
+      "mount_flags": [
+        "type=bind,source=/Users/user/Documents/Codex/2026-10-19/vare-xai-mts-internship-readiness-verified/work/VARE-main/results/isolation-boundary-verification-v1/run-2-colima-m1/candidate-root/workspace,target=/candidate,readonly",
+        "type=bind,source=/Users/user/Documents/Codex/2026-10-19/vare-xai-mts-internship-readiness-verified/work/VARE-main/results/isolation-boundary-verification-v1/run-2-colima-m1/grader-root,target=/grader,readonly"
+      ],
+      "network_mode_none": true,
+      "readonly_mounts": true,
+      "readonly_rootfs": true,
+      "replicate": 1,
+      "returncode": 0,
+      "stdout": "vare-synthetic-grader-canary-e684d22f28081f6a625574d6898ec30d\n",
+      "stdout_sha256": "b00346d141dba9bf700d835b56c017fbddb4c01094b5f4bcdf7851e723089e8c"
+    },
+    {
+      "canary_visible": true,
+      "mount_flags": [
+        "type=bind,source=/Users/user/Documents/Codex/2026-10-19/vare-xai-mts-internship-readiness-verified/work/VARE-main/results/isolation-boundary-verification-v1/run-2-colima-m1/candidate-root/workspace,target=/candidate,readonly",
+        "type=bind,source=/Users/user/Documents/Codex/2026-10-19/vare-xai-mts-internship-readiness-verified/work/VARE-main/results/isolation-boundary-verification-v1/run-2-colima-m1/grader-root,target=/grader,readonly"
+      ],
+      "network_mode_none": true,
+      "readonly_mounts": true,
+      "readonly_rootfs": true,
+      "replicate": 2,
+      "returncode": 0,
+      "stdout": "vare-synthetic-grader-canary-52f0b243d72774b99455112ff6a1f61b\n",
+      "stdout_sha256": "4051e2e5e51c8984b1e64eb1c26118d8caa7069de6ce2d00ec89dc451f7a2df8"
+    },
+    {
+      "canary_visible": true,
+      "mount_flags": [
+        "type=bind,source=/Users/user/Documents/Codex/2026-10-19/vare-xai-mts-internship-readiness-verified/work/VARE-main/results/isolation-boundary-verification-v1/run-2-colima-m1/candidate-root/workspace,target=/candidate,readonly",
+        "type=bind,source=/Users/user/Documents/Codex/2026-10-19/vare-xai-mts-internship-readiness-verified/work/VARE-main/results/isolation-boundary-verification-v1/run-2-colima-m1/grader-root,target=/grader,readonly"
+      ],
+      "network_mode_none": true,
+      "readonly_mounts": true,
+      "readonly_rootfs": true,
+      "replicate": 3,
+      "returncode": 0,
+      "stdout": "vare-synthetic-grader-canary-d51f434996b96b3c082659e78252c6f8\n",
+      "stdout_sha256": "86f5d88e9ceb0b110159734c5e98d44e1437044a784abacdd6b48c765cf0dc03"
+    }
+  ],
+  "lifecycle": {
+    "cancellation": [
+      {
+        "cancelled": true,
+        "new_containers_after": [],
+        "replicate": 1
+      },
+      {
+        "cancelled": true,
+        "new_containers_after": [],
+        "replicate": 2
+      },
+      {
+        "cancelled": true,
+        "new_containers_after": [],
+        "replicate": 3
+      }
+    ],
+    "output_overflow": [
+      {
+        "error": "container exceeded output byte limit",
+        "new_containers_after": [],
+        "overflowed": true,
+        "replicate": 1
+      },
+      {
+        "error": "container exceeded output byte limit",
+        "new_containers_after": [],
+        "overflowed": true,
+        "replicate": 2
+      },
+      {
+        "error": "container exceeded output byte limit",
+        "new_containers_after": [],
+        "overflowed": true,
+        "replicate": 3
+      }
+    ],
+    "timeout": [
+      {
+        "error": "container exceeded wall-time limit",
+        "expected_timeout": true,
+        "new_containers_after": [],
+        "replicate": 1
+      },
+      {
+        "error": "container exceeded wall-time limit",
+        "expected_timeout": true,
+        "new_containers_after": [],
+        "replicate": 2
+      },
+      {
+        "error": "container exceeded wall-time limit",
+        "expected_timeout": true,
+        "new_containers_after": [],
+        "replicate": 3
+      }
+    ]
+  },
+  "schema_version": 1,
+  "status": "complete"
+}

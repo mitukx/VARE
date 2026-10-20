@@ -96,6 +96,7 @@ RUNTIME_PACKAGE_SOURCES = frozenset({
     "src/vare/trajectory_store.py",
     "src/vare/trajectory_workers.py",
     "src/vare/trusted_evaluation.py",
+    "src/vare/trusted_scoring.py",
     "src/vare/types.py",
     "src/vare/update_cost_smoke.py",
     "src/vare/verifiers.py",

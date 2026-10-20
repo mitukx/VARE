@@ -228,6 +228,12 @@ def _cmd_env_campaign(args: argparse.Namespace) -> int:
             "isolated campaigns require both --isolated-agent-image "
             "and --isolated-evaluator-image; no host evaluator fallback"
         )
+    if (args.isolated_evaluator_image
+            and not getattr(args, "allow_public_grader_visible_execution", False)):
+        raise ValueError(
+            "candidate-visible repository grading is disabled by default; "
+            "public task data must be explicitly opted in"
+        )
     from .environments.catalog import WorkspaceAgent
     agent: WorkspaceAgent
     isolated_evaluator = None
@@ -261,6 +267,7 @@ def _cmd_env_campaign(args: argparse.Namespace) -> int:
                 max_output_bytes=args.isolated_evaluator_output_bytes,
             ),
             allowed_workspace_root=(Path(args.run_root).resolve() / "workspaces"),
+            allow_public_grader_visible_execution=True,
         )
     runner = EnvironmentCampaignRunner(
         catalog,
@@ -353,7 +360,11 @@ def main() -> int:
     ec.add_argument("--isolated-agent-image", help="Docker image pinned as name@sha256:<digest>; opt in to isolated agent run")
     ec.add_argument("--isolated-memory-mb", type=int, default=512)
     ec.add_argument("--isolated-evaluator-image",
-                    help="Digest-pinned Docker image that runs repository tests off-host; requires isolated agent")
+                    help="Digest-pinned Docker image for public-task grading; candidate code shares its grader namespace")
+    ec.add_argument(
+        "--allow-public-grader-visible-execution", action="store_true",
+        help="Allow candidate code to execute in the repository grader namespace; task specs must declare grader_visibility=public",
+    )
     ec.add_argument("--isolated-evaluator-timeout-s", type=float, default=120.0)
     ec.add_argument("--isolated-evaluator-memory-mb", type=int, default=512)
     ec.add_argument("--isolated-evaluator-output-bytes", type=int, default=400_000)

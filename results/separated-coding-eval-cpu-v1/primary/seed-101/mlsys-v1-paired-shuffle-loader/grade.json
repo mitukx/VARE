@@ -1,0 +1,33 @@
+{
+  "correctness": 0.0,
+  "integrity_failures": [],
+  "integrity_ok": true,
+  "metrics": [],
+  "passed": false,
+  "provenance": {
+    "policy_id": "seed-101",
+    "policy_version": 1,
+    "task_spec_path": "/grader/task.json",
+    "task_spec_sha256": "9f4f34c600a57f8ef942dbbb52c3e1a31d4a9f5c8db428f176d4cae5b36dc904",
+    "workspace": "/scratch/vare-eval-d24te5cw/workspace"
+  },
+  "score": 0.0,
+  "task_id": "mlsys-v1-paired-shuffle-loader",
+  "tests": [
+    {
+      "argv": [
+        "/usr/local/bin/python",
+        "test_hidden.py",
+        "/scratch/vare-eval-d24te5cw/workspace"
+      ],
+      "name": "hidden-correctness",
+      "output_limited": false,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\n  File \"/grader/evaluator/test_hidden.py\", line 59, in <module>\n    main()\n  File \"/grader/evaluator/test_hidden.py\", line 43, in main\n    raise AssertionError(f\"case {(batch_size, seed, shuffle, drop_last)} diverged\")\nAssertionError: case (3, 7, True, False) diverged\n",
+      "stdout": "",
+      "timed_out": false,
+      "wall_s": 0.08200149399635848
+    }
+  ],
+  "workspace_diff": ""
+}
