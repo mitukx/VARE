@@ -54,6 +54,8 @@ _NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*\Z")
 # The MLSys repeated-range workload sends bounded 5k-value/5k-query inputs.
 _MAX_ARGS = 512_000
 _MAX_LINE = 512_000
+# Allow the isolated Docker worker to launch before candidate import timing.
+_STARTUP_GRACE_S = 10.0
 # Two-sided 95% Student-t critical values, df = repeats - 1.
 _T_975 = {
     1: 12.706204736432095,
@@ -99,6 +101,7 @@ _write = os.write
 _read = sys.stdin.buffer.readline
 header = _loads(_read())
 sys.path.insert(0, "/subject")
+_write(1, b"IMPORTING\n")
 module = __import__(header["module"])
 function = getattr(module, header["function"])
 _write(1, b"READY\n")
@@ -571,7 +574,7 @@ def _invoke(
     """Return ``(value, parent_wall_s, failure)``."""
     nonce = secrets.token_hex(32)
     name = "vare-call-" + secrets.token_hex(12)
-    deadline = time.monotonic() + timeout_s
+    deadline = time.monotonic() + timeout_s + _STARTUP_GRACE_S
     spec = {
         "nonce": nonce,
         "container": name,
@@ -598,6 +601,11 @@ def _invoke(
         proc.stdin.write((_canonical(spec) + "\n").encode("utf-8"))
         proc.stdin.flush()
         ready = reader.readline(deadline)
+        importing = ready == f"VARE_IMPORTING {nonce} 1".encode("ascii")
+        if not importing:
+            _value, failure = _parse_result(ready, nonce)
+            return None, None, failure or "malformed_result"
+        ready = reader.readline(time.monotonic() + timeout_s)
         startup_s = _ready_startup(ready, nonce)
         if startup_s is None:
             _value, failure = _parse_result(ready, nonce)
@@ -607,7 +615,7 @@ def _invoke(
         call_started = time.perf_counter()
         proc.stdin.write(b"GO\n")
         proc.stdin.flush()
-        result = reader.readline(deadline)
+        result = reader.readline(time.monotonic() + timeout_s)
         elapsed = startup_s + (time.perf_counter() - call_started)
         parsed, failure = _parse_result(result, nonce)
         if failure is not None:
@@ -681,7 +689,7 @@ def _container_command() -> list[str]:
 def _serve(spec: dict[str, Any], parent: _Lines) -> int:
     nonce = str(spec["nonce"])
     timeout_s = float(spec["timeout_s"])
-    deadline = time.monotonic() + timeout_s
+    deadline = time.monotonic() + timeout_s + _STARTUP_GRACE_S
     runner = DockerIsolationRunner()
     limits = _limits(str(spec["image"]), timeout_s)
     try:
@@ -712,13 +720,18 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
         header = {"module": spec["module"], "function": spec["function"]}
         child.stdin.write((_canonical(header) + "\n").encode("utf-8"))
         child.stdin.flush()
-        ready = reader.readline(deadline)
+        importing = reader.readline(deadline)
+        if importing != b"IMPORTING":
+            _emit_fail(nonce, "malformed_result")
+            return 0
+        _emit_importing(nonce)
+        ready = reader.readline(time.monotonic() + timeout_s)
         startup_s = time.perf_counter() - started
         if ready != b"READY" or reader.has_pending():
             _emit_fail(nonce, "malformed_result")
             return 0
         _emit_ready(nonce, startup_s)
-        go = parent.readline(deadline)
+        go = parent.readline(time.monotonic() + _STARTUP_GRACE_S)
         if go != b"GO":
             _emit_fail(nonce, "missing_result")
             return 0
@@ -728,7 +741,7 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
         }
         child.stdin.write((_canonical(request) + "\n").encode("utf-8"))
         child.stdin.flush()
-        raw = reader.readline(deadline)
+        raw = reader.readline(time.monotonic() + timeout_s)
         if reader.has_pending():
             _emit_fail(nonce, "malformed_result")
             return 0
@@ -769,6 +782,11 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
 
 def _emit_ready(nonce: str, startup_s: float) -> None:
     sys.stdout.write(f"VARE_READY {nonce} {startup_s:.9f}\n")
+    sys.stdout.flush()
+
+
+def _emit_importing(nonce: str) -> None:
+    sys.stdout.write(f"VARE_IMPORTING {nonce} 1\n")
     sys.stdout.flush()
 
 

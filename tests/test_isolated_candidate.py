@@ -112,6 +112,20 @@ def test_correct_oracle_passes_without_importing_it(tmp_path: Path) -> None:
     assert "solve" not in sys.modules
 
 
+def test_import_and_call_receive_separate_timeout_windows(tmp_path: Path) -> None:
+    subject = _subject(
+        tmp_path,
+        "slow",
+        "import time\ntime.sleep(0.25)\n"
+        "def slow():\n    time.sleep(0.25)\n    return 7\n",
+    )
+    call = FunctionCall("slow-case", "slow", "slow", [], 7)
+
+    report = _grade(subject, call, timeout_s=0.4)
+
+    assert report.passed is True
+
+
 def test_unpatched_wrong_result_fails(tmp_path: Path) -> None:
     subject = _subject(tmp_path, "solve", "def add(a, b):\n    return a - b\n")
     report = _grade(subject, FunctionCall("sum", "solve", "add", [2, 3], 5))
