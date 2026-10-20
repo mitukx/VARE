@@ -71,6 +71,8 @@ def collect_one(repo: str, number: int) -> dict:
         for item in files
     ):
         raise TypeError(f"invalid file payload: {repo}#{number}")
+    if len(files) != pr["changed_files"]:
+        raise ValueError(f"incomplete changed-file inventory: {repo}#{number}")
     paths = [item["filename"] for item in files]
     return {
         "repository": repo,
@@ -155,7 +157,11 @@ def main() -> int:
     args = parser.parse_args()
     result = collect(args.output)
     print(json.dumps(result, sort_keys=True))
-    return 0 if not result["failures"] and result["candidate_count_captured"] == result["candidate_count_requested"] else 1
+    complete = (
+        not result["failures"]
+        and result["candidate_count_captured"] == result["candidate_count_requested"]
+    )
+    return 0 if complete else 1
 
 
 if __name__ == "__main__":
