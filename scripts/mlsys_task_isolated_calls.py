@@ -16,10 +16,22 @@ from typing import Any
 
 
 TASKS = {
+    "mlsys-v1-aging-scheduler": ("test_hidden.py", "aging_scheduler", "schedule", 4, "correctness"),
     "mlsys-v1-causal-attention": ("test_hidden.py", "causal_attention", "causal_attention_weights", 5, "correctness"),
+    "mlsys-v1-grad-accum-tail": ("test_hidden.py", "grad_accum", "average_microbatch_grads", 3, "correctness"),
+    "mlsys-v1-global-grad-clip": ("test_hidden.py", "global_grad_clip", "clip_by_global_norm", 4, "correctness"),
+    "mlsys-v1-paired-shuffle-loader": ("test_hidden.py", "paired_loader", "iter_batches", 6, "correctness"),
     "mlsys-v1-warmup-cosine": ("test_hidden.py", "warmup_cosine", "learning_rate", 12, "correctness"),
+    "mlsys-v1-range-sums": ("grade.py", "range_sums", "range_sums", 9, "performance"),
     "mlsys-v3-ema-bias": ("test_hidden.py", "ema_bias", "bias_corrected_ema", 5, "correctness"),
+    "mlsys-v3-label-smooth": ("test_hidden.py", "label_smooth", "smooth_targets", 7, "correctness"),
 }
+
+ROUTABLE_TASKS = frozenset({
+    "mlsys-v1-causal-attention",
+    "mlsys-v1-warmup-cosine",
+    "mlsys-v3-ema-bias",
+})
 
 
 class IsolatedTaskAdapterMissing(ValueError):
@@ -64,7 +76,7 @@ def materialize_isolated_calls(task_id: str, task_dir: Path) -> tuple[dict, dict
     if not callable(generator) or not callable(reference):
         raise ValueError(f"frozen evaluator lacks generator/reference: {task_id}")
 
-    indices = range(count)
+    indices = range(2, count) if task_id == "mlsys-v1-range-sums" else range(count)
     cases = []
     skipped = []
     for index in indices:
@@ -118,8 +130,10 @@ def materialize_isolated_calls(task_id: str, task_dir: Path) -> tuple[dict, dict
         "function": function_name,
         "rtol": 0.0,
         "atol": 1e-9 if task_id == "mlsys-v1-causal-attention" else 1e-12,
-        "timeout_s": 20,
+        "timeout_s": 60 if task_id == "mlsys-v1-range-sums" else 20,
     }
+    if task_id == "mlsys-v1-range-sums":
+        spec["tuple_paths"] = [[1, "*"]]
     if task_kind == "correctness":
         spec["calls"] = cases
     else:

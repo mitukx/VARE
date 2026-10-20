@@ -113,11 +113,11 @@ def _task_adapter(task_id: str, task_path: Path) -> tuple[Path, str, str, str]:
     if str(scripts) not in sys.path:
         sys.path.insert(0, str(scripts))
     try:
-        from mlsys_task_isolated_calls import TASKS
+        from mlsys_task_isolated_calls import ROUTABLE_TASKS, TASKS
     except ImportError as exc:
         raise SeparatedHarnessError("trusted task call adapter is unavailable") from exc
     spec = TASKS.get(task_id)
-    if spec is None:
+    if task_id not in ROUTABLE_TASKS or spec is None:
         raise SeparatedHarnessError("task has no isolated call materializer")
     _grader_file, module, function, _count, task_kind = spec
     if task_id in {"mlsys-v3-ema-bias", "mlsys-v3-label-smooth"}:

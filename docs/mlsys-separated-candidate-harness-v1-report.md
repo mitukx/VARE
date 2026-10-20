@@ -20,13 +20,18 @@ retained in [`results/mlsys-separated-candidate-harness-v1/run-4/`](../results/m
 
 This is **not** a model update, agent rollout, new task evaluation, or held-out
 capability result. Consumed task graders and oracle fixtures are used only to
-check the isolated adapter boundary. Dataset-standardization, gradient
-accumulation, global-gradient clipping, and range-sums intentionally remain
-unsupported and fail closed: the existing isolated call protocol cannot
-report whether candidate code mutated its arguments, while their frozen
-checkers depend on that contract. The shared worker remains unchanged to
-preserve source inventories pinned by continuation evidence. V3 copies of
-shared v1 task IDs are routed using their canonical descriptor path.
+check the isolated adapter boundary. Dataset-standardization, aging scheduler,
+gradient accumulation, global-gradient clipping, paired shuffle, range-sums,
+row-log-softmax, and label-smoothing remain unsupported for isolated grading
+and fail closed. The existing JSON-call protocol cannot faithfully express
+all required evaluator contracts: some checkers inspect input mutation, some
+need non-finite values or Python return types that JSON loses, and performance
+checkers require additional parent-side behavior. Direct frozen fixture
+materialization for several unsupported tasks remains available to existing
+calibration tests; it does not make those tasks routable through the isolated
+grader. The shared worker remains unchanged to preserve source inventories
+pinned by continuation evidence. V3 copies of shared v1 task IDs are routed
+using their canonical descriptor path.
 
 ## Verification
 

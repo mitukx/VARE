@@ -205,10 +205,13 @@ def test_hidden_grade_rejects_baseline_and_accepts_oracle(task_dir: Path):
     else:
         assert spec.metrics == ()
     if spec.id in {
+        "mlsys-v1-aging-scheduler",
         "mlsys-v1-dataset-standardize",
         "mlsys-v1-grad-accum-tail",
         "mlsys-v1-global-grad-clip",
+        "mlsys-v1-paired-shuffle-loader",
         "mlsys-v1-range-sums",
+        "mlsys-v1-row-log-softmax",
     }:
         pytest.skip(
             "the isolated call protocol cannot report input mutation; adapter fails this task closed"
