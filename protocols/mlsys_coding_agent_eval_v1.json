@@ -1,0 +1,78 @@
+{
+  "claim_boundary": "This protocol freezes the task pack, split, metrics, and decision rule before any policy rollout. It does not authorize a model run. Calibration of the repository's own baseline and oracle fixtures is harness evidence, not agent capability.",
+  "compute_limits": {
+    "device": "CPU only",
+    "max_peak_rss_bytes": 8589934592,
+    "max_wall_seconds_per_attempt": 600,
+    "network": "disabled",
+    "paid_api": false
+  },
+  "grader_interface": {
+    "catalog_root": "benchmarks/mlsys_coding_v1/tasks",
+    "candidate_workspace": "EngineeringTaskSpec source.local_path subject/ only",
+    "evaluator_root": "task directory, with commands using cwd_base evaluator",
+    "result_schema": "EnvironmentResult.to_dict from ExecutableEvaluator",
+    "reward_module": "benchmarks/mlsys_coding_v1/reward.py",
+    "visibility": "metadata.grader_visibility is hidden. A repository grader that executes candidate code in the same namespace as evaluator/ is not an admissible grader for this pack."
+  },
+  "metrics": {
+    "acceptance_for_a_positive_agent_claim": "Not applicable in this revision: no agent is run. A later no-update report may claim only the recorded train-split outcomes under this rule, and only after isolation clearance. It must not claim held-out improvement.",
+    "correctness_success": "integrity_ok and the single hidden grade command exits 0.",
+    "decision_function": "benchmarks/mlsys_coding_v1/reward.py:decide",
+    "performance_reward": "When hidden correctness passes, reward = min(1, conservative_speedup / 4). The denominator 4 is twice the success threshold, a fixed cap.",
+    "performance_statistic": "Seven wall-clock repeats. Sample standard deviation uses the n-1 divisor. The 95% interval uses the two-sided Student-t critical value 2.446911851144167 at 6 degrees of freedom. conservative_speedup = baseline_ci95_low / candidate_ci95_high, where the baseline is the evaluator-held slow reference timed in the same process.",
+    "performance_success": "correctness_success and conservative_speedup >= 2.",
+    "primary": "protocol success from reward.decide, which requires the grade command's zero exit and, for performance tasks, the recomputed speedup threshold.",
+    "secondary": [
+      "shaped protocol reward",
+      "per-task conservative speedup",
+      "baseline and candidate sample standard deviations",
+      "grader score and integrity flag"
+    ]
+  },
+  "no_update_baseline": {
+    "measured": false,
+    "planned_decoding": {
+      "max_new_tokens_per_turn": 256,
+      "max_total_new_tokens": 2048,
+      "max_turns": 8,
+      "temperature": 0
+    },
+    "planned_seeds": [101],
+    "planned_split": "train",
+    "reasons_not_run": [
+      "The isolated repository grader still executes candidate code in the same container namespace as the task-spec mount, so hidden evaluator files are readable there.",
+      "These tasks set grader_visibility to hidden, which that public-grader opt-in refuses.",
+      "TrustedJSONScorer scores bounded JSON responses and does not grade a repository patch against these hidden checks.",
+      "The in-process ExecutableEvaluator is not a sandbox for model-generated code.",
+      "No model weights were loaded and no agent process was started."
+    ],
+    "status": "not_run"
+  },
+  "pack": {
+    "manifest_path": "benchmarks/mlsys_coding_v1/manifest.json",
+    "manifest_sha256": "18c5999f823f9a550a561a913023b87f1fc7bf5a86f481d319e4778212d97499",
+    "split_path": "benchmarks/mlsys_coding_v1/split.json"
+  },
+  "protocol_id": "mlsys-coding-agent-eval-v1",
+  "repeats": 7,
+  "reward_saturation": 4.0,
+  "split": {
+    "heldout": [
+      "mlsys-v1-aging-scheduler",
+      "mlsys-v1-causal-attention",
+      "mlsys-v1-dataset-standardize",
+      "mlsys-v1-global-grad-clip"
+    ],
+    "train": [
+      "mlsys-v1-grad-accum-tail",
+      "mlsys-v1-paired-shuffle-loader",
+      "mlsys-v1-range-sums",
+      "mlsys-v1-row-log-softmax",
+      "mlsys-v1-warmup-cosine"
+    ]
+  },
+  "status": "preregistered_not_executed",
+  "success_threshold": 2.0,
+  "t_crit_95_df6": 2.446911851144167
+}

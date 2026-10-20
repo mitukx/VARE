@@ -1,0 +1,48 @@
+{
+  "protocol_id": "mlsys-coding-agent-e2e-heldout-v1",
+  "kind": "heldout",
+  "status": "blocked_until_development_pass",
+  "claim_boundary": "One untouched run of the frozen held-out split. Do not edit the prompt, tools, budgets, or model after reading a held-out grade. Four tasks do not support a generalization rate.",
+  "requires_development_protocol": "mlsys-coding-agent-e2e-dev-v1",
+  "pack": {
+    "root": "benchmarks/mlsys_coding_v1",
+    "manifest_sha256": "18c5999f823f9a550a561a913023b87f1fc7bf5a86f481d319e4778212d97499",
+    "split": "heldout"
+  },
+  "tasks": [
+    "mlsys-v1-aging-scheduler",
+    "mlsys-v1-causal-attention",
+    "mlsys-v1-dataset-standardize",
+    "mlsys-v1-global-grad-clip"
+  ],
+  "model": {
+    "repository": "Qwen/Qwen2.5-Coder-14B-Instruct-GGUF",
+    "revision": "d0a692ef765eefbf2fabb130b3cb2e8917e3d225",
+    "filename": "qwen2.5-coder-14b-instruct-q4_k_m.gguf",
+    "quantization": "Q4_K_M",
+    "license": "Apache-2.0",
+    "sha256": "c1e659736d89ac1065fb495330fb824d94001974a4bfa78e7270e43476a8d940",
+    "bytes": 8988110272,
+    "runner": "llama-cpp-python==0.3.16",
+    "device": "cpu",
+    "n_ctx": 4096,
+    "n_threads": 4,
+    "n_batch": 128,
+    "n_gpu_layers": 0,
+    "temperature": 0.0,
+    "top_k": 1,
+    "close_think": false,
+    "selection_rule": "Same snapshot as mlsys-coding-agent-e2e-dev-v1. Do not switch models after a development task has been generated."
+  },
+  "seed": 101,
+  "arm": "vare",
+  "budgets": {
+    "max_turns": 12,
+    "max_new_tokens_per_turn": 256,
+    "max_total_new_tokens": 3072,
+    "max_no_tool_retries": 2,
+    "wall_seconds_per_task": 2400,
+    "wall_seconds_reason": "Same generation-speed basis as mlsys-coding-agent-e2e-dev-v1. Set before any held-out task is graded."
+  },
+  "success": "reward.decide success is true, the diff is non-empty, and the transcript contains an applied replace_text, write_file, or apply_patch."
+}

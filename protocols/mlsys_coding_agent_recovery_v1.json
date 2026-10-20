@@ -1,0 +1,51 @@
+{
+  "protocol_id": "mlsys-coding-agent-recovery-v1",
+  "kind": "recovery",
+  "status": "blocked_until_development_pass",
+  "claim_boundary": "Systems comparison on one predeclared development task. It does not estimate held-out coding accuracy. Temperature 0 makes extra seeds identical, so this protocol uses one seed.",
+  "requires_development_protocol": "mlsys-coding-agent-e2e-dev-v1",
+  "task": "mlsys-v1-grad-accum-tail",
+  "seed": 101,
+  "arms": ["baseline", "vare"],
+  "fault": {
+    "after_steps": 1,
+    "phase": "before_commit",
+    "once": true
+  },
+  "lease_seconds": 30,
+  "model": {
+    "repository": "Qwen/Qwen2.5-Coder-14B-Instruct-GGUF",
+    "revision": "d0a692ef765eefbf2fabb130b3cb2e8917e3d225",
+    "filename": "qwen2.5-coder-14b-instruct-q4_k_m.gguf",
+    "quantization": "Q4_K_M",
+    "license": "Apache-2.0",
+    "sha256": "c1e659736d89ac1065fb495330fb824d94001974a4bfa78e7270e43476a8d940",
+    "bytes": 8988110272,
+    "runner": "llama-cpp-python==0.3.16",
+    "device": "cpu",
+    "n_ctx": 4096,
+    "n_threads": 4,
+    "n_batch": 128,
+    "n_gpu_layers": 0,
+    "temperature": 0.0,
+    "top_k": 1,
+    "close_think": false,
+    "selection_rule": "Same snapshot as mlsys-coding-agent-e2e-dev-v1. Do not switch models after a development task has been generated."
+  },
+  "budgets": {
+    "max_turns": 12,
+    "max_new_tokens_per_turn": 256,
+    "max_total_new_tokens": 3072,
+    "max_no_tool_retries": 2,
+    "wall_seconds_per_task": 2400,
+    "wall_seconds_reason": "Same generation-speed basis as mlsys-coding-agent-e2e-dev-v1. Set before the recovery task is graded."
+  },
+  "primary_metrics": [
+    "verified_success",
+    "lost_tool_executions",
+    "repeated_tool_executions",
+    "restart_wait_seconds",
+    "new_tokens",
+    "elapsed_seconds"
+  ]
+}
