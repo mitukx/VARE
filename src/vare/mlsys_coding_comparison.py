@@ -142,7 +142,7 @@ def grpo_update(choices: Sequence[bool], rewards: Sequence[float]) -> dict[str, 
             raise TypeError("GRPO loss was not a float")
         return loss
 
-    step = finite_difference(loss_at)
+    step: dict[str, Any] = finite_difference(loss_at)
     step["advantages"] = advantages
     step["group_size"] = GROUP_SIZE
     step["objective"] = "minigrpo.sequence_loss"
@@ -160,7 +160,7 @@ def sft_update() -> dict[str, Any]:
     def loss_at(theta: float) -> float:
         return -bernoulli_logp(theta, True)
 
-    step = finite_difference(loss_at)
+    step: dict[str, Any] = finite_difference(loss_at)
     step["objective"] = "bernoulli_nll_oracle_patch"
     step["gradient_updates"] = 1
     return step
@@ -1124,7 +1124,8 @@ def power_analysis() -> dict[str, Any]:
     large_beat = probability_arm_beats_baseline(POWER_TASKS, 0.0, 0.50)
     quarter_beat = probability_arm_beats_baseline(POWER_TASKS, 0.0, 0.25)
     v1_independent = beat**3
-    chosen = None
+    chosen_seed_count: int | None = None
+    chosen_power: float | None = None
     for seeds in range(4, 81):
         power = monte_carlo_power(
             seeds=seeds,
@@ -1136,12 +1137,13 @@ def power_analysis() -> dict[str, Any]:
             rule="t_test",
         )
         if power >= 0.8:
-            chosen = {"seeds": seeds, "power": power}
+            chosen_seed_count = seeds
+            chosen_power = power
             break
-    if chosen is None:
+    if chosen_seed_count is None or chosen_power is None:
         raise RuntimeError("no seed count in 4..80 reached power 0.8")
     type_i_low = monte_carlo_power(
-        seeds=chosen["seeds"],
+        seeds=chosen_seed_count,
         baseline_p=REALISTIC_BASELINE_P,
         arm_p=REALISTIC_BASELINE_P,
         tasks=POWER_TASKS,
@@ -1150,7 +1152,7 @@ def power_analysis() -> dict[str, Any]:
         rule="t_test",
     )
     type_i_mid = monte_carlo_power(
-        seeds=chosen["seeds"],
+        seeds=chosen_seed_count,
         baseline_p=0.30,
         arm_p=0.30,
         tasks=POWER_TASKS,
@@ -1159,7 +1161,7 @@ def power_analysis() -> dict[str, Any]:
         rule="t_test",
     )
     smaller = monte_carlo_power(
-        seeds=chosen["seeds"],
+        seeds=chosen_seed_count,
         baseline_p=0.05,
         arm_p=0.15,
         tasks=POWER_TASKS,
@@ -1198,12 +1200,12 @@ def power_analysis() -> dict[str, Any]:
                 "is an earlier seed-level calculation and is not that rule. "
                 "The draft power table is benchmarks/mlsys_coding_v2/power.py."
             ),
-            "critical_value": student_t_critical(chosen["seeds"] - 1, 0.05),
+            "critical_value": student_t_critical(chosen_seed_count - 1, 0.05),
             "empirical_type_i_at_p_0.05": type_i_low,
             "empirical_type_i_at_p_0.30": type_i_mid,
             "power_at_0.05_to_0.15": smaller,
-            "power_at_realistic_effect": chosen["power"],
-            "seeds": chosen["seeds"],
+            "power_at_realistic_effect": chosen_power,
+            "seeds": chosen_seed_count,
             "temperature": 1.0,
         },
     }

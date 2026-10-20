@@ -3,7 +3,12 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from scripts.mlsys_task_isolated_calls import materialize_isolated_calls
+import pytest
+
+from scripts.mlsys_task_isolated_calls import (
+    IsolatedTaskAdapterMissing,
+    materialize_isolated_calls,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -28,3 +33,8 @@ def test_range_sums_baseline_uses_public_task_function_name():
     assert "def range_sums(" in spec["baseline_source"]
     assert "def _reference(" not in spec["baseline_source"]
     assert spec["tuple_paths"] == [[1, "*"]]
+
+
+def test_unknown_task_requires_an_isolated_adapter():
+    with pytest.raises(IsolatedTaskAdapterMissing, match="fixture-add"):
+        materialize_isolated_calls("fixture-add", ROOT)

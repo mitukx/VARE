@@ -18,7 +18,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from vare.agent_edit_format import ParseFailure, apply_parsed_edit, parse_submission, require_edit_format
+from vare.agent_edit_format import ParseFailure, apply_parsed_edit, parse_submission, require_edit_format  # noqa: E402
 from vare.agent_task_contract import load_agent_task  # noqa: E402
 
 MODEL_REPOSITORY = 'Qwen/Qwen2.5-0.5B-Instruct'
@@ -79,7 +79,6 @@ def generate_turn(backend: str, model: Any, tokenizer: Any, messages: list[dict[
         raise ValueError('context_budget_exhausted')
     limit = min(limit, args.max_context_tokens - prompt_tokens)
     if backend == 'mlx':
-        import mlx.core as mx
         from mlx_lm import generate
         from mlx_lm.sample_utils import make_sampler
 
@@ -195,6 +194,49 @@ def no_tool_retry_reminder(raw: str, *, edit_format: str, allowed_paths: list[st
         'Your previous response did not call a tool and no source file changed. Continue the task now. '
         'Call read_file on the exact path named in my first instruction. Do not ask a question.'
     )
+
+
+def normalize_tool_call_format(raw: str, tool_names: set[str]) -> tuple[str, bool]:
+    """Normalize strict JSON tool calls emitted with chat-only model wrappers.
+
+    Qwen2.5-Coder can serialize a requested function call as bare JSON, a
+    Markdown JSON block, or a JSON payload wrapped in ChatML tokens even when
+    the tokenizer template was given the tool schema. Keep the original model
+    output in the trajectory; this normalized copy is used only by the
+    existing strict tool-call parser.
+    """
+    if "<tool_call>" in raw:
+        return raw, False
+
+    def encode_if_tool_call(text: str) -> str | None:
+        try:
+            payload = json.loads(text)
+        except json.JSONDecodeError:
+            return None
+        if (not isinstance(payload, dict) or set(payload) != {"name", "arguments"}
+                or payload.get("name") not in tool_names
+                or not isinstance(payload.get("arguments"), dict)):
+            return None
+        return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+
+    candidate = raw.strip()
+    candidate = re.sub(r"^<\|im_start\|>\s*(?:assistant)?\s*", "", candidate)
+    if candidate.startswith("```json") or candidate.startswith("```"):
+        candidate = re.sub(r"^```(?:json)?\s*", "", candidate, flags=re.IGNORECASE)
+    try:
+        payload, end = json.JSONDecoder().raw_decode(candidate)
+    except json.JSONDecodeError:
+        return raw, False
+    suffix = candidate[end:]
+    allowed_suffix = re.fullmatch(
+        r"(?:\s|```|<\|im_start\|>|<\|im_end\|>|<\|endoftext\|>)*", suffix,
+    )
+    if allowed_suffix is None or not isinstance(payload, dict):
+        return raw, False
+    encoded = encode_if_tool_call(json.dumps(payload, ensure_ascii=False))
+    if encoded is None:
+        return raw, False
+    return f"<tool_call>{encoded}</tool_call>", True
 
 
 def main() -> int:
@@ -355,7 +397,10 @@ def main() -> int:
                                  'generated_tokens': generated_tokens,
                                  'prompt_tokens': prompt_tokens,
                                  'generation_seconds': round(generation_elapsed, 6)}
-        calls = list(pattern.finditer(raw))
+        parse_text, recovered_tool_format = normalize_tool_call_format(raw, tool_names)
+        if recovered_tool_format:
+            entry['tool_call_format_recovery'] = 'strict_qwen_json_normalization'
+        calls = list(pattern.finditer(parse_text))
         if not calls:
             recovered = parse_submission(raw, edit_format=args.edit_format)
             if not isinstance(recovered, ParseFailure) or recovered.reason != 'no_edit':
@@ -431,6 +476,12 @@ def main() -> int:
                         workspace, str(arguments.get('patch', '')), args.edit_format, editable,
                     )
                     note_edit(result)
+                    if result.get('applied') is True and args.public_test_image:
+                        public_test_result = run_public_tests(
+                            workspace, args.public_test_image, public_test_hash,
+                        )
+                        entry['automatic_public_test'] = public_test_result
+                        result = {**result, 'automatic_public_test': public_test_result}
                 elif name == 'write_file':
                     result = attempt_configured_edit(
                         workspace,
@@ -442,6 +493,12 @@ def main() -> int:
                         editable,
                     )
                     note_edit(result)
+                    if result.get('applied') is True and args.public_test_image:
+                        public_test_result = run_public_tests(
+                            workspace, args.public_test_image, public_test_hash,
+                        )
+                        entry['automatic_public_test'] = public_test_result
+                        result = {**result, 'automatic_public_test': public_test_result}
                 elif name == 'run_public_tests':
                     public_test_result = run_public_tests(workspace, args.public_test_image, public_test_hash)
                     result = public_test_result

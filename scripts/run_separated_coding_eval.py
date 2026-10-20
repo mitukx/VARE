@@ -27,7 +27,7 @@ import time
 from vare.agent_edit_format import (
     classify_outcome, inference_arms, pass_at_k, per_task_reward_variance,
 )
-from vare.agent_task_contract import assert_train_only, load_agent_task
+from vare.agent_task_contract import assert_split_member, load_agent_task
 from vare.container_isolation import DockerIsolationRunner, IsolationError, IsolationLimits
 from vare.environments.spec import EngineeringTaskSpec
 from vare.heldout_exact_integer import wilson_interval
@@ -41,7 +41,9 @@ from vare.trusted_scoring import JSONIOCase
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from verify_docker_isolation_boundary_v1 import _grader_probe  # noqa: E402
-from mlsys_task_isolated_calls import materialize_isolated_calls  # noqa: E402
+from mlsys_task_isolated_calls import (  # noqa: E402
+    IsolatedTaskAdapterMissing, materialize_isolated_calls,
+)
 
 
 def sha256_file(path: Path) -> str:
@@ -444,6 +446,18 @@ def diagnose(agent: dict, scoring: dict) -> str:
     return "edited_but_hidden_cases_failed"
 
 
+def verified_task_success(agent: dict, grade_decision: dict) -> bool:
+    """Require an applied source change, the frozen public test, and hidden grade."""
+    changed = agent.get("source_hashes_before") != agent.get("source_hashes_after")
+    public = agent.get("public_test_result")
+    return (
+        changed is True
+        and isinstance(public, dict)
+        and public.get("passed") is True
+        and grade_decision.get("success") is True
+    )
+
+
 def ensure_model(repository: str, revision: str, file_hashes: dict[str, str] | None) -> Path:
     from huggingface_hub import snapshot_download
     path = Path(snapshot_download(repository, revision=revision))
@@ -460,7 +474,7 @@ def ensure_model(repository: str, revision: str, file_hashes: dict[str, str] | N
 def run_agent(
     protocol: dict, *, model_path: Path, repository: str, seed: int,
     workspace: Path, task_root: Path, output: Path, instruction: str,
-    arm: dict,
+    arm: dict, task_split: str = "train",
 ) -> dict:
     budgets = protocol["budgets"]
     env = os.environ.copy()
@@ -488,7 +502,7 @@ def run_agent(
         "--top-k", str(top_k),
         "--edit-format", str(arm["edit_format"]),
         "--no-do-sample" if not arm["do_sample"] else "--do-sample",
-        "--require-split", "train",
+        "--require-split", task_split,
         "--max-turns", str(budgets["max_turns"]),
         "--max-new-tokens-per-turn", str(budgets["max_new_tokens_per_turn"]),
         "--max-total-new-tokens", str(budgets["max_total_new_tokens"]),
@@ -626,7 +640,11 @@ def rebuild_manifest_text(pack_dir: Path) -> str:
             "path": path.relative_to(pack_dir).as_posix(),
             "sha256": sha256_file(path),
         })
-    manifest = {"files": files, "pack_id": "mlsys-coding-v1"}
+    declared = json.loads((pack_dir / "manifest.json").read_text(encoding="utf-8"))
+    pack_id = declared.get("pack_id")
+    if not isinstance(pack_id, str) or not pack_id:
+        raise ValueError("pack manifest is missing pack_id")
+    manifest = {"files": files, "pack_id": pack_id}
     return json.dumps(manifest, indent=2, sort_keys=True) + "\n"
 
 
@@ -646,7 +664,8 @@ def _git_head(start: Path) -> str:
 def verify_pack(pack_root: Path, protocol: dict) -> Path:
     """Return the pack directory after the frozen commit and manifest match."""
     root = pack_root.expanduser().resolve()
-    nested = root / "benchmarks" / "mlsys_coding_v1" / "manifest.json"
+    pack_id = protocol["pack"].get("pack_id", "mlsys_coding_v1")
+    nested = root / "benchmarks" / pack_id / "manifest.json"
     if nested.is_file():
         pack_dir = nested.parent
     elif (root / "manifest.json").is_file():
@@ -682,12 +701,18 @@ def load_decide(pack_dir: Path):
 
 
 def select_train_tasks(pack_dir: Path, protocol: dict, task_root_dir: Path) -> list[dict]:
-    """Copy task.json only for train ids. Held-out tasks are not returned."""
+    """Copy only the protocol-selected split into candidate-visible task roots."""
     split = json.loads((pack_dir / "split.json").read_text(encoding="utf-8"))
     train = list(protocol["pack"]["train"])
-    heldout = list(protocol["pack"]["heldout_not_used"])
+    heldout = list(protocol["pack"].get(
+        "heldout", protocol["pack"].get("heldout_not_used", []),
+    ))
     if split.get("train") != train or split.get("heldout") != heldout:
         raise ValueError("pack split.json does not match the frozen protocol")
+    selected_split = protocol["pack"].get("evaluation_split", "train")
+    if selected_split not in {"train", "heldout"}:
+        raise ValueError("protocol evaluation_split must be train or heldout")
+    selected_ids = train if selected_split == "train" else heldout
     tasks_dir = pack_dir / "tasks"
     if not tasks_dir.is_dir():
         raise ValueError("pack tasks directory is missing")
@@ -708,7 +733,7 @@ def select_train_tasks(pack_dir: Path, protocol: dict, task_root_dir: Path) -> l
         raise ValueError(f"pack has task ids outside the frozen split: {extra}")
     task_root_dir.mkdir(parents=True)
     selected = []
-    for task_id in train:
+    for task_id in selected_ids:
         task_dir, spec = by_id[task_id]
         if spec.metadata.get("grader_visibility") != "hidden":
             raise ValueError(f"{task_id} is not a hidden-grader task")
@@ -718,11 +743,12 @@ def select_train_tasks(pack_dir: Path, protocol: dict, task_root_dir: Path) -> l
         destination.mkdir()
         (destination / "task.json").write_bytes((task_dir / "task.json").read_bytes())
         contract = load_agent_task(destination)
-        assert_train_only(contract, {"train": train, "heldout": heldout})
+        assert_split_member(contract, {"train": train, "heldout": heldout}, selected_split)
         if (destination / "evaluator").exists() or (destination / "subject").exists():
             raise ValueError("stripped task root contains hidden or subject files")
         selected.append({
             "task_id": task_id,
+            "split": selected_split,
             "task_dir": task_dir,
             "task_root": destination,
             "allowed_files": contract.allowed_files,
@@ -785,7 +811,12 @@ async def grade_repository_workspace(
     calls_path = Path(task["task_dir"]) / "evaluator" / "isolated_calls.json"
     if not calls_path.is_file():
         stage_root.mkdir(parents=True, exist_ok=True)
-        call_spec, provenance = materialize_isolated_calls(task["task_id"], task["task_dir"])
+        try:
+            call_spec, provenance = materialize_isolated_calls(task["task_id"], task["task_dir"])
+        except IsolatedTaskAdapterMissing as exc:
+            result = harness_required_record()
+            result["grader_error"] = str(exc)
+            return result
         calls_path = stage_root / "isolated_calls.json"
         calls_path.write_text(
             json.dumps(call_spec, indent=2, sort_keys=True, allow_nan=False) + "\n",
@@ -926,7 +957,7 @@ async def run_model_task(
     agent_record = run_agent(
         protocol, model_path=model_path, repository=repository, seed=seed,
         workspace=workspace, task_root=task["task_root"], output=agent_path,
-        instruction=task["prompt"], arm=arm,
+        instruction=task["prompt"], arm=arm, task_split=task.get("split", "train"),
     )
     row = {
         "task_id": task["task_id"],
@@ -976,10 +1007,18 @@ async def run_model_task(
     if "grade" in graded:
         stored = dict(graded["grade"])
         _write_json(task_out / "grade.json", stored)
-    row["task_passed"] = graded["decision"]["success"] is True
+    row["grader_passed"] = graded["decision"]["success"] is True
+    public_result = agent.get("public_test_result")
+    row["public_test_passed"] = (
+        isinstance(public_result, dict) and public_result.get("passed") is True
+    )
+    row["task_passed"] = verified_task_success(agent, graded["decision"])
     row["reward"] = graded["decision"]["reward"]
     row["reward_reason"] = graded["decision"]["reason"]
-    row["diagnosis"] = diagnose(agent, graded["decision"])
+    row["diagnosis"] = (
+        "public_test_failed" if row["grader_passed"] and not row["public_test_passed"]
+        else diagnose(agent, graded["decision"])
+    )
     test_timed_out = graded.get("test_timed_out") is True
     attach_outcome(
         row, agent, task_passed=row["task_passed"] is True,
@@ -1040,12 +1079,13 @@ async def async_main(args: argparse.Namespace) -> int:
     except ValueError as exc:
         _write_json(out / "summary.json", _stopped(protocol, str(exc)))
         raise SystemExit(str(exc)) from exc
-    heldout_roots = [
+    unevaluated_roots = [
         path.name for path in (out / "task-roots").iterdir()
-        if path.name in set(protocol["pack"]["heldout_not_used"])
+        if path.name not in set(protocol["pack"]["train"])
+        and path.name not in set(protocol["pack"].get("heldout", protocol["pack"].get("heldout_not_used", [])))
     ]
-    if heldout_roots:
-        raise SystemExit("held-out task root was created")
+    if unevaluated_roots:
+        raise SystemExit("task outside the frozen train/held-out membership was created")
     harness = await run_harness(protocol, out)
     _write_json(out / "harness.json", harness)
     if harness.get("environment_error"):
@@ -1162,7 +1202,8 @@ async def async_main(args: argparse.Namespace) -> int:
         "pack_commit": protocol["pack"]["git_commit"],
         "runner_source_commit": source_commit,
         "runner_source_dirty_at_start": source_dirty,
-        "train_task_ids": [task["task_id"] for task in tasks],
+        "evaluated_task_ids": [task["task_id"] for task in tasks],
+        "evaluated_split": protocol["pack"].get("evaluation_split", "train"),
         "model_started": True,
         "resource_abort": resource_abort,
         "attempted_task_runs": len(rows),

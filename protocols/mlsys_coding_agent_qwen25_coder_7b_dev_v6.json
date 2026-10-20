@@ -1,0 +1,207 @@
+{
+  "abort": [
+    "Do not start model inference unless the E0 harness matches its frozen canary and adversarial expectations, all unpatched train tasks fail, Colima is active, and resource preflight passes.",
+    "Do not execute a held-out task or inspect its task/grader files.",
+    "Do not edit test_public.py; it is protected from agent writes and run in the candidate container only.",
+    "Do not train, fine-tune, or change model snapshot, prompts, task set, decoding, seeds, or reward rule after the first attempt.",
+    "Do not start Stage B, a VARE policy comparison, or fault injection based on this pilot unless the Stage A gate is met and a separate protocol is frozen.",
+    "Retain timeout, crash, non-edit, public-test failure, and grader failure records."
+  ],
+  "budgets": {
+    "cpu_threads": 4,
+    "gpu_hours": 0,
+    "max_context_tokens": 4096,
+    "max_model_active_memory_bytes": 10737418240,
+    "max_new_tokens_per_turn": 768,
+    "max_total_new_tokens": 4096,
+    "max_turns": 12,
+    "paid_api_usd": 0,
+    "resource_preflight": {
+      "minimum_available_memory_bytes": 2147483648,
+      "minimum_disk_free_bytes": 16106127360,
+      "minimum_free_swap_bytes": 134217728,
+      "sample_interval_seconds": 1
+    },
+    "wall_seconds": 900
+  },
+  "change_from_v1": "The first harness-only invocation failed closed before model download because the host Docker CLI did not inherit the Colima context. No model inference occurred. V2 explicitly pins DOCKER_CONTEXT=colima and uses a new evidence directory.",
+  "change_from_v2": "The 7B model ran all five known development tasks, but emitted fenced JSON tool calls that the runner misclassified as recovered source edits, yielding 0/5 with no valid tool execution. The raw v2 outputs are preserved. V3 adds strict allowlisted Markdown-JSON tool-call normalization with regression tests; it does not change the model, task set, prompt, decoding, or budgets. This is a development feasibility rerun, not confirmation.",
+  "change_from_v3": "V3 correctly recovered the initial fenced list_files call, but the model emitted subsequent bare JSON tool calls. Those were left as no-tool responses, causing 0/5. The initial and v3 raw trajectories are retained. V4 strictly normalizes both fenced and bare JSON objects only when they have the exact name/arguments schema and name an allowlisted tool; regression tests cover both forms and reject unknown tools. No prompt, model, task, decoding, or budget changed.",
+  "change_from_v4": "The v4 pilot preserved five failures, but model outputs used ChatML-wrapped JSON (for example <|im_start|> followed by a write_file object), which the bare-JSON normalizer did not recognize. V5 strips only the known ChatML boundary tokens and only accepts exact JSON name/arguments objects for allowlisted tools. Ordinary explanatory prose remains unmodified. V2-v4 remain immutable development failures; no held-out tasks were used.",
+  "change_from_v5": "The v5 runs completed but the Qwen output appended a trailing ChatML <|im_start|> generation marker after otherwise complete JSON tool calls. Because strict whole-object parsing rejected that suffix, all five remained failed without candidate execution. V6 removes only known boundary tokens at either end before exact schema and allowlist checks. Trajectories v2-v5 are retained as harness-format failures; task/model/prompt/budget remain fixed.",
+  "claim_limit": "Known development feasibility only. Does not establish held-out generalization, a matched 4B-vs-7B comparison, VARE reliability benefit, broad MLSys capability, or model improvement through training.",
+  "execution": {
+    "accepted_container_images": {
+      "colima_aarch64": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+      "linux_amd64": "python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1"
+    },
+    "candidate_code_execution": "Pinned Python container with network disabled, read-only root, dropped capabilities, bounded memory/CPU/PIDs, and only the candidate workspace mounted. run_public_tests executes immutable test_public.py in this namespace.",
+    "container_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "environment_pins": {
+      "huggingface-hub": "2.2.0",
+      "mlx": "0.32.2",
+      "mlx-lm": "0.32.2",
+      "tokenizers": "0.23.3",
+      "transformers": "5.20.2"
+    },
+    "grader": "Existing PR #85 separated grader and PR #84 task reward.decide; candidate/evaluator isolation harness must pass its canary and adversarial E0 checks before any model load.",
+    "network": "none for candidate and grader containers; network permitted only for initial pinned model snapshot/dependency setup",
+    "policy_inference": "Host Apple Silicon process using pinned mlx-lm/MLX; model snapshot is pinned and downloaded before execution; one model instance at a time; agent subprocess is offline.",
+    "python": "3.12.12",
+    "scoring_command": [
+      "python",
+      "/workspace/solve.py"
+    ],
+    "solution_execution": "After the candidate container exits, the independent grader evaluates a fresh source-only snapshot in a separate container. Hidden tests and expected outputs stay outside the candidate namespace."
+  },
+  "frozen_before_model_execution": true,
+  "harness_expectations": {
+    "canary_replicates": 3,
+    "canary_visible_replicates": 0,
+    "evidence_level": "E0",
+    "forged_score_stdout_passes_none": true,
+    "grader_path_read_passes_none": true,
+    "known_bad_passing_case_ids": [
+      "square-0"
+    ],
+    "known_good_passes_all": true,
+    "network_must_fail": true,
+    "planted_workspace_oracle_passes_none": true
+  },
+  "hidden_cases": [
+    {
+      "case_id": "square-3",
+      "expected": {
+        "value": 9
+      },
+      "request": {
+        "n": 3
+      }
+    },
+    {
+      "case_id": "square-5",
+      "expected": {
+        "value": 25
+      },
+      "request": {
+        "n": 5
+      }
+    },
+    {
+      "case_id": "square-7",
+      "expected": {
+        "value": 49
+      },
+      "request": {
+        "n": 7
+      }
+    },
+    {
+      "case_id": "square-0",
+      "expected": {
+        "value": 0
+      },
+      "request": {
+        "n": 0
+      }
+    },
+    {
+      "case_id": "square-neg4",
+      "expected": {
+        "value": 16
+      },
+      "request": {
+        "n": -4
+      }
+    }
+  ],
+  "hypothesis": "Using the frozen local 7B MLX model and existing isolated VARE harness, the agent will apply source changes and achieve at least one independent grader pass among the five known development tasks.",
+  "inference": {
+    "arms": [
+      {
+        "do_sample": false,
+        "name": "primary",
+        "samples_per_task": 1,
+        "seeds": [
+          101
+        ],
+        "temperature": 0,
+        "top_k": null,
+        "top_p": null
+      }
+    ],
+    "edit_format": "whole_file",
+    "instruction": "task prompt, unchanged",
+    "parser": "Existing whole_file action parser in scripts/run_local_agent.py. Complete file replacement is capped at 768 generated tokens per turn; a truncated call triggers explicit feedback and a bounded retry. All outputs and tool results are retained."
+  },
+  "instruction": "Read solve.py now. It reads one JSON object from stdin with an integer field n and must print exactly one JSON object with field value equal to n squared. The current program is wrong. Apply a minimal patch to solve.py, then call finish. Example: n = 3 yields value 9.",
+  "local_measurement": {
+    "command": "DOCKER_CONTEXT=colima HF_HOME=work/hf-cache PYTHONPATH=src ../venv-mlx/bin/python scripts/run_separated_coding_eval.py --protocol protocols/mlsys_coding_agent_qwen25_coder_7b_dev_v6.json --pack-root ../VARE-pack-2795544 --output work/evidence/7b-dev-v6",
+    "host": "Apple M1 Pro / 32 GiB macOS arm64, local MLX, Colima Docker, no paid API",
+    "output_root": "work/evidence/7b-dev-v1",
+    "setup": "Reuse the existing local Python 3.12 MLX environment pinned in execution.environment_pins. HF_HOME is isolated under work/hf-cache. The pinned snapshot is already tokenizer-verified; full model weight hash is checked by the runner before inference.",
+    "status": "frozen; v2-v5 failures retained; v6 not yet run",
+    "stop_if": "E0 mismatch, baseline task unexpectedly passes, available memory <2 GiB, free swap <128 MiB, disk <15 GiB, OOM, or per-task time budget expires."
+  },
+  "models": {
+    "primary": {
+      "backend": "mlx",
+      "base_repository": "Qwen/Qwen2.5-Coder-7B-Instruct",
+      "base_revision": "c03e6d358207e414f1eca0bb1891e29f1db0e242",
+      "device": "Apple Metal through MLX",
+      "file_hashes": {
+        "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+        "config.json": "08762352ba9fded858f24bdd7b8d2fe61aabe7bce1dfdb663db242d574c3e678",
+        "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+        "model.safetensors": "56a3d94706833f753e6c6b47ea57af8ef638cd8cc1d74eca1142ba640b26060e",
+        "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+        "tokenizer.json": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf",
+        "tokenizer_config.json": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7",
+        "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+      },
+      "license": "Apache-2.0",
+      "quantization": {
+        "bits": 4,
+        "format": "MLX safetensors",
+        "group_size": 64
+      },
+      "repository": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+      "revision": "019cc73c45c770444708a6dd8690c66243cc5c80",
+      "split": "train",
+      "tokenizer": "model snapshot tokenizer.json; exact repo revision pinned"
+    }
+  },
+  "pack": {
+    "git_commit": "27955442317cf9b7beef3583b4f1a5f2662e0390",
+    "git_ref": "cursor/mlsys-coding-tasks-7d0a",
+    "heldout_not_used": [
+      "mlsys-v1-aging-scheduler",
+      "mlsys-v1-causal-attention",
+      "mlsys-v1-dataset-standardize",
+      "mlsys-v1-global-grad-clip"
+    ],
+    "manifest_sha256": "2c67d85a6806b3bbcbc63676f64fc955c5c7b3c9c4127a5a3caade1541efb4ab",
+    "note": "PR #84 v1 train/development set only. Reused to establish 7B feasibility; not fresh confirmation. PR #88/#89 historical runs on this cohort are not treated as matched comparison.",
+    "pull_request": 84,
+    "train": [
+      "mlsys-v1-grad-accum-tail",
+      "mlsys-v1-paired-shuffle-loader",
+      "mlsys-v1-range-sums",
+      "mlsys-v1-row-log-softmax",
+      "mlsys-v1-warmup-cosine"
+    ]
+  },
+  "primary_metric": "Verified development task passes: source changed, immutable public test passed, and independent hidden grader passed. No held-out or generalization claim.",
+  "protocol_id": "mlsys-coding-agent-qwen25-coder-7b-mlx-dev-v6",
+  "public_files": {
+    "benchmarks/separated_json_square_v1/TASK.md": "74f1ceb03b43546dffbeb375f9fb07a0d8941afe2b3a973886da670a8785ed96",
+    "benchmarks/separated_json_square_v1/evaluator/grade.py": "a50419340329d9814177b922e4adea7ffef5de005884bf0bd2209a8a180092a5",
+    "benchmarks/separated_json_square_v1/fixture/solve.py": "12418c3be8264e28d007c62c2c0f657640ab4ca0c6196c79dc0221bb5eb97dfe",
+    "benchmarks/separated_json_square_v1/task.json": "5039ab5b6e5f6201e5a518174db12d4840e3f3a46cf0ad8d230d628c345b2774"
+  },
+  "schema_version": 1,
+  "status": "frozen before 7B inference; development feasibility only",
+  "supersedes": "mlsys-coding-agent-qwen25-coder-7b-mlx-dev-v5",
+  "task_id": "mlsys-coding-v1-train-only",
+  "uncertainty": "Five previously exposed development tasks, one greedy run each. Descriptive feasibility pilot only; seeds do not create stochastic independent samples at temperature zero."
+}

@@ -38,6 +38,8 @@ RUNTIME_PACKAGE_SOURCES = frozenset({
     "src/vare/_grader_guard.py",
     "src/vare/_public.py",
     "src/vare/answer_scoring.py",
+    "src/vare/agent_edit_format.py",
+    "src/vare/agent_task_contract.py",
     "src/vare/attestation.py",
     "src/vare/blob_budget.py",
     "src/vare/checkpoint_artifacts.py",
@@ -72,10 +74,13 @@ RUNTIME_PACKAGE_SOURCES = frozenset({
     "src/vare/integrations/rvl_grpo.py",
     "src/vare/integrations/rvl_trajectory.py",
     "src/vare/interfaces.py",
+    "src/vare/isolated_candidate.py",
     "src/vare/isolated_hooks.py",
     "src/vare/lag.py",
     "src/vare/lifecycle.py",
     "src/vare/meta_improvement.py",
+    "src/vare/mlsys_coding_actions.py",
+    "src/vare/mlsys_coding_comparison.py",
     "src/vare/promotion.py",
     "src/vare/promotion_journal.py",
     "src/vare/protocol.py",
@@ -85,6 +90,7 @@ RUNTIME_PACKAGE_SOURCES = frozenset({
     "src/vare/runtime.py",
     "src/vare/safety.py",
     "src/vare/sandboxed_repository.py",
+    "src/vare/separated_grading.py",
     "src/vare/telemetry.py",
     "src/vare/trajectory_admission.py",
     "src/vare/trajectory_dispatch.py",
@@ -101,6 +107,14 @@ RUNTIME_PACKAGE_SOURCES = frozenset({
     "src/vare/update_cost_smoke.py",
     "src/vare/verifiers.py",
 })
+PREVIOUS_EXPECTED_SOURCES = LEGACY_EXPECTED_SOURCES | (RUNTIME_PACKAGE_SOURCES - frozenset({
+    "src/vare/agent_edit_format.py",
+    "src/vare/agent_task_contract.py",
+    "src/vare/isolated_candidate.py",
+    "src/vare/mlsys_coding_actions.py",
+    "src/vare/mlsys_coding_comparison.py",
+    "src/vare/separated_grading.py",
+}))
 EXPECTED_SOURCES = LEGACY_EXPECTED_SOURCES | RUNTIME_PACKAGE_SOURCES
 
 # The frozen v2 campaign is tied to the commit and source tree that produced it.
@@ -133,7 +147,8 @@ def validate_source_inventory(manifest, source_names, locked):
         need(manifest.get("sources")==PINNED_LOCKED_SOURCE_SHA256,
              "locked campaign source snapshots differ from the independently pinned revision")
         return
-    need(source_names==EXPECTED_SOURCES,"pinned source inventory differs")
+    need(source_names in (PREVIOUS_EXPECTED_SOURCES,EXPECTED_SOURCES),
+         "pinned source inventory differs")
     commit=manifest.get("base_commit")
     need(type(commit) is str and len(commit)==40 and
          all(char in "0123456789abcdef" for char in commit),
@@ -288,7 +303,7 @@ def audit(root, check_tensors=False, model_dir=None):
         need(sha(root/name)==digest,f"changed artifact: {name}")
     manifest,summary,rows=read(root/"manifest.json"),read(root/"summary.json"),read(root/"progress.json")
     source_names=set(manifest.get("sources",{}))
-    need(source_names in (LEGACY_EXPECTED_SOURCES,EXPECTED_SOURCES) and
+    need(source_names in (LEGACY_EXPECTED_SOURCES,PREVIOUS_EXPECTED_SOURCES,EXPECTED_SOURCES) and
          manifest.get("source_sha256")==manifest.get("sources"),
          "pinned source inventory differs")
     for name,digest in manifest["sources"].items():

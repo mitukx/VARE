@@ -45,12 +45,19 @@ class AgentTaskContract:
 
 def assert_train_only(contract: AgentTaskContract, split: dict) -> None:
     """Refuse held-out ids from a frozen pack split."""
+    assert_split_member(contract, split, "train")
+
+
+def assert_split_member(contract: AgentTaskContract, split: dict, split_name: str) -> None:
+    """Require a task to match one explicitly selected frozen split."""
+    if split_name not in {"train", "heldout"}:
+        raise ValueError("evaluation split must be train or heldout")
     heldout = set(split.get("heldout", []))
-    train = list(split.get("train", []))
-    if contract.task_id in heldout or contract.split == "heldout":
+    members = set(split.get(split_name, []))
+    if split_name == "train" and (contract.task_id in heldout or contract.split == "heldout"):
         raise ValueError("held-out task must not be executed")
-    if contract.split != "train" or contract.task_id not in train:
-        raise ValueError("task is outside the frozen train split")
+    if contract.split != split_name or contract.task_id not in members:
+        raise ValueError(f"task is outside the frozen {split_name} split")
 
 
 def load_agent_task(task_root: Path) -> AgentTaskContract:

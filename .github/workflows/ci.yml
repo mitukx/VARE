@@ -70,6 +70,8 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: python -m pip install -e . pytest==8.4.2
+      - name: Pull the pinned amd64 image for isolated candidate tests
+        run: docker pull python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1
       # The default suite intentionally stays free of optional symbolic-math
       # dependencies. The isolated grader job below owns those tests.
       - run: python -m pytest --ignore=tests/test_math500_grader_v1.py --ignore=tests/test_math500_grader_v2.py

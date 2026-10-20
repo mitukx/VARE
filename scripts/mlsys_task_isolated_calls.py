@@ -21,7 +21,13 @@ TASKS = {
     "mlsys-v1-row-log-softmax": ("test_hidden.py", "row_log_softmax", "row_log_softmax", 4, "correctness"),
     "mlsys-v1-warmup-cosine": ("test_hidden.py", "warmup_cosine", "learning_rate", 12, "correctness"),
     "mlsys-v1-range-sums": ("grade.py", "range_sums", "range_sums", 9, "performance"),
+    "mlsys-v3-ema-bias": ("test_hidden.py", "ema_bias", "bias_corrected_ema", 5, "correctness"),
+    "mlsys-v3-label-smooth": ("test_hidden.py", "label_smooth", "smooth_targets", 7, "correctness"),
 }
+
+
+class IsolatedTaskAdapterMissing(ValueError):
+    """No trusted operator-side adapter exists for this task id."""
 
 
 def sha256_file(path: Path) -> str:
@@ -52,7 +58,7 @@ def _json_value(value: Any) -> Any:
 def materialize_isolated_calls(task_id: str, task_dir: Path) -> tuple[dict, dict]:
     """Run the frozen reference generator, retaining only operator-side expectations."""
     if task_id not in TASKS:
-        raise ValueError(f"task has no isolated adapter: {task_id}")
+        raise IsolatedTaskAdapterMissing(f"task has no isolated adapter: {task_id}")
     grader_name, module_name, function_name, count, task_kind = TASKS[task_id]
     evaluator = Path(task_dir) / "evaluator" / grader_name
     pack_root = Path(task_dir).parents[1]

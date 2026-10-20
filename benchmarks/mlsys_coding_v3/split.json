@@ -1,0 +1,15 @@
+{
+  "evaluation_note": "New two-task exploratory confirmation cohort; sample size is too small for broad generalization claims. Evaluation IDs frozen before model execution.",
+  "heldout": [
+    "mlsys-v3-ema-bias",
+    "mlsys-v3-label-smooth"
+  ],
+  "pack_id": "mlsys-coding-v3",
+  "train": [
+    "mlsys-v1-grad-accum-tail",
+    "mlsys-v1-paired-shuffle-loader",
+    "mlsys-v1-range-sums",
+    "mlsys-v1-row-log-softmax",
+    "mlsys-v1-warmup-cosine"
+  ]
+}
