@@ -1,0 +1,54 @@
+{
+  "acceptance": {
+    "grader_confidentiality": "FAIL if any of three synthetic canaries is visible to code in the grader container namespace",
+    "host_containment_and_container_limits": "PASS only when all three candidate probes deny host-canary access and egress and observed effective limits match the lock",
+    "lifecycle_cleanup": "PASS only when normal, timeout, cancellation, and output-overflow runs leave no newly created managed container",
+    "live_candidate_execution": "must remain BLOCKED regardless of A-C because grader confidentiality and hostile-kernel escape are not proven"
+  },
+  "claim_limit": "E0 runtime-boundary observations only; not a security certification, candidate escape guarantee, trusted hidden grader, agent capability, or model-learning result",
+  "implementation_files": {
+    "scripts/verify_docker_isolation_boundary_v1.py": "69d02b3c01b9e727abb2fb025a1f3a4daedb3b24bbe922c9818c9ce7d2c3c0f7",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/environments/runner.py": "3d8b23a17656a00d49563155843db1e5a49e6fc8ba705c1c51056dae6f3c1ba1",
+    "src/vare/environments/spec.py": "99f4bd2f6889bcab295b3adda74bd6fadd665c66b5308cabc443dd393715344e",
+    "src/vare/sandboxed_repository.py": "dcbb0cce72ab92dd416950071012f44437a426c309e123e8b0ee440d8582cb48"
+  },
+  "probes": {
+    "candidate_mount": "one writable synthetic workspace only",
+    "grader_visibility": "use DockerRepositoryEvaluator's exact mount/limit builder with only the worker entrypoint replaced by a harmless read of a random synthetic canary under /grader; visibility is a confidentiality FAIL",
+    "host_canary": "synthetic file placed in the shared host path but outside candidate bind mount; read and write attempts must fail",
+    "lifecycle": [
+      "normal completion",
+      "wall-time timeout while a child sleeps",
+      "controller cancellation while a child sleeps",
+      "stdout overflow"
+    ],
+    "network": "socket connect to RFC 5737 TEST-NET-3 address 203.0.113.1:65000 must fail and container must have no default route",
+    "process_limit": "spawn workers until EAGAIN at configured pids limit; all spawned workers are killed before probe exit",
+    "resource_limits": "observe cgroup memory.max, cpu.max and pids.max plus live docker inspect values"
+  },
+  "protocol_id": "repository-isolation-boundary-v2-source-pinned",
+  "replicates": 3,
+  "runtime": {
+    "capabilities_dropped": "ALL",
+    "container_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "container_network": "none",
+    "container_timeout_seconds": 15,
+    "cpus": 0.5,
+    "docker_context": "colima",
+    "gid": 65534,
+    "max_output_bytes": 16000,
+    "memory_mb": 256,
+    "no_new_privileges": true,
+    "pids_limit": 12,
+    "root_filesystem_read_only": true,
+    "uid": 65534
+  },
+  "source_main_revision": "ea409f72144e50850d629fc57a7f5296442cbc3c",
+  "stop_conditions": [
+    "refuse to run unless the named Colima VM reports macOS Virtualization.Framework, Docker runtime, and seccomp enabled",
+    "use only synthetic canaries and a digest-pinned preloaded public Python image; never mount operator secrets or held-out data",
+    "abort if the output directory already exists or the pinned image digest is unavailable locally",
+    "do not execute a model, agent, repository issue patch, or real task grader"
+  ]
+}

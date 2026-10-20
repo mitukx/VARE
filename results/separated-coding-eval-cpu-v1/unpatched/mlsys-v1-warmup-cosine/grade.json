@@ -1,0 +1,33 @@
+{
+  "correctness": 0.0,
+  "integrity_failures": [],
+  "integrity_ok": true,
+  "metrics": [],
+  "passed": false,
+  "provenance": {
+    "policy_id": "unpatched-mlsys-v1-warmup-cosine",
+    "policy_version": 1,
+    "task_spec_path": "/grader/task.json",
+    "task_spec_sha256": "91df215f18aa2ef9fa4e44ef1ded739d680c568c0802e60bdc873f0f2a48fe7d",
+    "workspace": "/scratch/vare-eval-dfo3hnoi/workspace"
+  },
+  "score": 0.0,
+  "task_id": "mlsys-v1-warmup-cosine",
+  "tests": [
+    {
+      "argv": [
+        "/usr/local/bin/python",
+        "test_hidden.py",
+        "/scratch/vare-eval-dfo3hnoi/workspace"
+      ],
+      "name": "hidden-correctness",
+      "output_limited": false,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\n  File \"/grader/evaluator/test_hidden.py\", line 47, in <module>\n    main()\n  File \"/grader/evaluator/test_hidden.py\", line 34, in main\n    raise AssertionError(f\"step {step}: {actual} != {expected}\")\nAssertionError: step 0: 0.0 != 0.05\n",
+      "stdout": "",
+      "timed_out": false,
+      "wall_s": 0.07719827099936083
+    }
+  ],
+  "workspace_diff": ""
+}

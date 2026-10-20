@@ -1,0 +1,91 @@
+{
+  "checks": {
+    "adapter_files_present": true,
+    "adapter_has_nonzero_parameters": true,
+    "adapter_reload_and_generation": true,
+    "metal_selected": true,
+    "peak_mlx_below_limit": true,
+    "rss_below_limit": true,
+    "ten_steps_logged": false
+  },
+  "claim_limit": "One training example from the development split; no held-out capability evaluation or optimizer-state resume.",
+  "dataset_sha256": "f7561eac186e5cb087b826fea272c7d9516ed5a906448a275145405af5d1adac",
+  "host": {
+    "device": "Device(gpu, 0)",
+    "machine": "arm64",
+    "metal_available": true,
+    "mlx": "0.32.2",
+    "mlx_lm": "0.32.2",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12"
+  },
+  "model": {
+    "converted_files": {
+      "README.md": "748c964f9b7e5f2c3770ce013bbc0153be7c54311d9692c343b6188eefe77ac6",
+      "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "config.json": "40bb03c28a1a82255d4c3b0a857b058e2104a92199e969b32cb2ed0a96377353",
+      "generation_config.json": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6",
+      "model.safetensors": "ff72e8f73defcce9d2af7f0712d9d50f14320ac43d9b67fa074694b53294531d",
+      "model.safetensors.index.json": "bb1adb8f7a341e90908581e5a32299597bedd42000ed6c866bd1269878df8c40",
+      "tokenizer.json": "3fd169731d2cbde95e10bf356d66d5997fd885dd8dbb6fb4684da3f23b2585d8",
+      "tokenizer_config.json": "5aa5069e1b0c0d623ce38e0df387e506b843e5c4d612a36d2e79e46a400e6450"
+    },
+    "license": "Apache-2.0",
+    "quantization": "4-bit affine, group-size 64",
+    "repository": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "source_files": {
+      ".gitattributes": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361",
+      "LICENSE": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e",
+      "README.md": "b19c806a904db6dc878a0462e70b551f6b7ac78dfbb88c2eb966ca2b9109ae15",
+      "config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+      "generation_config.json": "e558847a8b4402616f1273797b015104dc266fe4b520056fca88823ba8f8ebe6",
+      "merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+      "model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+      "tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    }
+  },
+  "protocol_id": "mlx-lora-dev-trajectory-update-smoke-v1",
+  "reload_inference": {
+    "output": "To modify the `grad_accum.py` file to ensure that the `average_microbatch_grads` function returns the correct average microbatch gradients with a shorter window",
+    "output_tokens": 32,
+    "prompt_tokens": 565,
+    "seconds": 0.749,
+    "tokens_per_second": 42.75
+  },
+  "resources": {
+    "disk_free_end_bytes": 227394191360,
+    "disk_free_start_bytes": 227692920832,
+    "max_rss_bytes": 917962752,
+    "peak_mlx_bytes": 1801055168,
+    "swap_end": {
+      "free_bytes": 1740699074,
+      "used_bytes": 7922977341
+    },
+    "swap_start": {
+      "free_bytes": 1740699074,
+      "used_bytes": 7922977341
+    }
+  },
+  "source_commit": "b2cc71c6bd9985bc0fe3e36557a63d18c72dbf7b",
+  "status": "non_pass",
+  "training": {
+    "adapter_files": {
+      "0000010_adapters.safetensors": "faeb9d9bf2972bbb682b2dfaa3520408cbd8074e50f5fcd86dfa0f77c1084de7",
+      "adapter_config.json": "9aa2688cefcf904d3fa6c5732450b4198605cccfaac0aba4375a50d54978517d",
+      "adapters.safetensors": "faeb9d9bf2972bbb682b2dfaa3520408cbd8074e50f5fcd86dfa0f77c1084de7"
+    },
+    "adapter_nonzero_parameters": 366592,
+    "adapter_parameters": 366592,
+    "adapter_tensor_count": 28,
+    "batch_size": 1,
+    "configured_updates": 10,
+    "conversion_seconds": 2.094,
+    "learning_rate": 1e-05,
+    "objective": "SFT feasibility smoke",
+    "trainable_layers": 2,
+    "training_seconds": 13.707
+  }
+}

@@ -114,16 +114,17 @@ def collect_preflight(
         observed_files[name] = _sha256(file_path) if file_path.is_file() else None
     model_matches = observed_files == expected_files
 
-    versions = {name: _package_version(name) for name in protocol["preflight"]["required_packages"]}
+    expected_versions = protocol["preflight"]["required_packages"]
+    versions = {name: _package_version(name) for name in expected_versions}
     python_ok = sys.version_info >= (3, 11)
-    packages_ok = all(version is not None for version in versions.values())
+    packages_ok = versions == expected_versions
     docker = docker_probe()
 
     blockers: list[str] = []
     if not python_ok:
         blockers.append("Python 3.11 or newer is unavailable")
     if not packages_ok:
-        blockers.append("one or more pinned agent runtime packages are unavailable")
+        blockers.append("one or more agent runtime package versions do not match the pinned requirements")
     if not model_matches:
         blockers.append("the pinned local model snapshot is missing or has mismatched files")
     if not task_matches:
@@ -152,6 +153,8 @@ def collect_preflight(
             "python": platform.python_version(),
             "python_minimum_met": python_ok,
             "packages": versions,
+            "pinned_packages": expected_versions,
+            "agent_packages_match_protocol": packages_ok,
             "model_files_sha256": observed_files,
             "model_snapshot_matches_protocol": model_matches,
             "docker": docker,

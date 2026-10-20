@@ -1,0 +1,31 @@
+{
+  "base_pack_id": "mlsys-coding-v1",
+  "current_v1_heldout_pool_size": 4,
+  "depends_on": "20-30 task expansion (step 3). The 15-20 held-out tasks are chosen from that pool and are not listed here.",
+  "excluded_from_future_heldout": [
+    "mlsys-v1-causal-attention"
+  ],
+  "exclusion_reason": "Train row_log_softmax and v1 held-out causal_attention share the stable-softmax repair. The train prompt says large positive and large negative rows must stay finite. The held-out prompt says finite behavior on large scores. A later held-out win on causal_attention can be that train repair plus a mask. v1 split membership stays in benchmarks/mlsys_coding_v1/split.json. This draft excludes the task from a future held-out set. It does not edit v1 and it does not name a replacement held-out task.",
+  "heldout": null,
+  "heldout_manifest_sha256": null,
+  "heldout_membership_frozen": false,
+  "heldout_will_be_frozen_by_hash_before_training": true,
+  "pack_id": "mlsys-coding-v2",
+  "pool_candidates_unassigned": [
+    "mlsys-v1-aging-scheduler",
+    "mlsys-v1-dataset-standardize",
+    "mlsys-v1-global-grad-clip",
+    "mlsys-v2-ema-bias",
+    "mlsys-v2-gqa-repeat",
+    "mlsys-v2-label-smooth"
+  ],
+  "rule": "Draft only. Held-out membership is not frozen. It will be frozen by hash before any training, after the pool reaches 20-30 tasks and 15-20 of them are selected. Do not move a task after observing an agent or update result. The unassigned ids are pool candidates, not a held-out set.",
+  "status": "draft",
+  "train": [
+    "mlsys-v1-grad-accum-tail",
+    "mlsys-v1-paired-shuffle-loader",
+    "mlsys-v1-range-sums",
+    "mlsys-v1-row-log-softmax",
+    "mlsys-v1-warmup-cosine"
+  ]
+}

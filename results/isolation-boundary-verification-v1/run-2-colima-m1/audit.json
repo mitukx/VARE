@@ -1,0 +1,18 @@
+{
+  "active_container_configuration_pass": true,
+  "candidate_containment_pass": true,
+  "candidate_containment_passes": 3,
+  "candidate_probe_repetitions": 3,
+  "grader_canary_reads": 3,
+  "grader_confidentiality": "FAIL_SYNTHETIC_CANARY_VISIBLE",
+  "grader_probe_repetitions": 3,
+  "lifecycle": {
+    "cancellation": true,
+    "output_overflow": true,
+    "timeout": true
+  },
+  "live_candidate_execution_eligible": false,
+  "manifest_ok": true,
+  "overall": "FAIL_CONFIDENTIALITY_BOUNDARY",
+  "protocol_id": "repository-isolation-boundary-v2"
+}

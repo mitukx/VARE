@@ -28,6 +28,18 @@ def test_v2_task_namespaces_are_round_and_evaluation_disjoint():
     assert len({t.prompt for t in [*train,*future,*heldout]})==24
 
 
+def test_auditor_inventory_pins_the_runtime_sources_used_by_the_campaign():
+    runtime_sources={str(path.relative_to(bench.ROOT))
+                     for path in (bench.ROOT/"src/vare").rglob("*.py")}
+    pinned_runtime_sources={path for path in auditor.RUNTIME_PACKAGE_SOURCES
+                            if path.startswith("src/vare/")}
+    # The campaign source inventory is frozen to its original VARE revision.
+    # Later modules may be added without rewriting that retained evidence.
+    assert pinned_runtime_sources <= runtime_sources
+    assert "src/vare/engine.py" in pinned_runtime_sources
+    assert "src/vare/replay.py" in pinned_runtime_sources
+
+
 def test_restart_refuses_changed_learner_source_before_loading_model(tmp_path):
     config=tmp_path/"config.json"
     bench.atomic_json(config,{"source_sha256":{"scripts/benchmark_e2e_rl_continuation.py":"0"*64}})
@@ -69,7 +81,7 @@ def test_campaign_snapshots_the_full_runtime_package(campaign,tmp_path):
     root,_=campaign
     manifest=auditor.read(root/"manifest.json")
     runtime_sources={str(path.relative_to(bench.ROOT)) for path in (bench.ROOT/"src/vare").rglob("*.py")}
-    assert len(runtime_sources)==66
+    assert len(runtime_sources)==73
     assert runtime_sources <= set(manifest["sources"])
     assert runtime_sources <= set(manifest["source_sha256"])
     assert runtime_sources <= auditor.EXPECTED_SOURCES

@@ -1,0 +1,48 @@
+{
+  "correctness_weight": 1.0,
+  "family": "gradient-accumulation",
+  "id": "mlsys-v1-grad-accum-tail",
+  "limits": {
+    "cpu_time_s": 20,
+    "max_output_bytes": 200000,
+    "memory_mb": 2048,
+    "wall_time_s": 20
+  },
+  "metadata": {
+    "authored_executable_defect": true,
+    "editable_files": [
+      "grad_accum.py",
+      "test_public.py"
+    ],
+    "evidence_note": "Authored single-file utility with an executable defect. Not an upstream historical commit and not a model-capability result.",
+    "grader_interface": "EngineeringTaskSpec",
+    "grader_visibility": "hidden",
+    "historical_upstream_commit": false,
+    "pack": "mlsys-coding-v1",
+    "reward_kind": "hidden-correctness",
+    "split": "train",
+    "task_type": "correctness"
+  },
+  "metrics": [],
+  "prompt": "Edit grad_accum.py so average_microbatch_grads matches the contract in its module docstring, including a window shorter than accumulation_steps. test_public.py is a smoke check and is not the grader.",
+  "protected_paths": [],
+  "source": {
+    "base_revision": null,
+    "clone_url": null,
+    "local_path": "subject"
+  },
+  "tests": [
+    {
+      "argv": [
+        "python",
+        "test_hidden.py",
+        "{workspace}"
+      ],
+      "cwd": "evaluator",
+      "cwd_base": "evaluator",
+      "env": {},
+      "name": "hidden-correctness"
+    }
+  ],
+  "title": "Average only the microbatch gradients supplied in this call"
+}

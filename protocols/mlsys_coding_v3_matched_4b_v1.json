@@ -1,0 +1,244 @@
+{
+  "abort": [
+    "Do not start model inference unless the E0 harness matches its frozen canary and adversarial expectations, all unpatched train tasks fail, Colima is active, and resource preflight passes.",
+    "Do not execute a held-out task or inspect its task/grader files.",
+    "Do not edit test_public.py; it is protected from agent writes and run in the candidate container only.",
+    "Do not train, fine-tune, or change model snapshot, prompts, task set, decoding, seeds, or reward rule after the first attempt.",
+    "Do not start Stage B, a VARE policy comparison, or fault injection based on this pilot unless the Stage A gate is met and a separate protocol is frozen.",
+    "Retain timeout, crash, non-edit, public-test failure, and grader failure records."
+  ],
+  "budgets": {
+    "cpu_threads": 4,
+    "gpu_hours": 0,
+    "max_context_tokens": 4096,
+    "max_model_active_memory_bytes": 10737418240,
+    "max_new_tokens_per_turn": 768,
+    "max_total_new_tokens": 4096,
+    "max_turns": 12,
+    "paid_api_usd": 0,
+    "resource_preflight": {
+      "minimum_available_memory_bytes": 2147483648,
+      "minimum_disk_free_bytes": 16106127360,
+      "minimum_free_swap_bytes": 134217728,
+      "sample_interval_seconds": 1
+    },
+    "wall_seconds": 900
+  },
+  "change_from_v1": "The first harness-only invocation failed closed before model download because the host Docker CLI did not inherit the Colima context. No model inference occurred. V2 explicitly pins DOCKER_CONTEXT=colima and uses a new evidence directory.",
+  "change_from_v2": "The 7B model ran all five known development tasks, but emitted fenced JSON tool calls that the runner misclassified as recovered source edits, yielding 0/5 with no valid tool execution. The raw v2 outputs are preserved. V3 adds strict allowlisted Markdown-JSON tool-call normalization with regression tests; it does not change the model, task set, prompt, decoding, or budgets. This is a development feasibility rerun, not confirmation.",
+  "change_from_v3": "V3 correctly recovered the initial fenced list_files call, but the model emitted subsequent bare JSON tool calls. Those were left as no-tool responses, causing 0/5. The initial and v3 raw trajectories are retained. V4 strictly normalizes both fenced and bare JSON objects only when they have the exact name/arguments schema and name an allowlisted tool; regression tests cover both forms and reject unknown tools. No prompt, model, task, decoding, or budget changed.",
+  "change_from_v4": "The v4 pilot preserved five failures, but model outputs used ChatML-wrapped JSON (for example <|im_start|> followed by a write_file object), which the bare-JSON normalizer did not recognize. V5 strips only the known ChatML boundary tokens and only accepts exact JSON name/arguments objects for allowlisted tools. Ordinary explanatory prose remains unmodified. V2-v4 remain immutable development failures; no held-out tasks were used.",
+  "change_from_v5": "The v5 runs completed but the Qwen output appended a trailing ChatML <|im_start|> generation marker after otherwise complete JSON tool calls. Because strict whole-object parsing rejected that suffix, all five remained failed without candidate execution. V6 removes only known boundary tokens at either end before exact schema and allowlist checks. Trajectories v2-v5 are retained as harness-format failures; task/model/prompt/budget remain fixed.",
+  "change_from_v6": "V6 produced two source changes; grad_accum_tail passed the independent hidden cases (3/3), but no public test was run because the model stopped after editing. The paired-loader, range-sums, and row-log-softmax outputs wrapped valid JSON in a closing Markdown fence and were not parsed. V7 accepts only strict allowlisted JSON surrounded by known Markdown/ChatML wrappers, automatically runs the immutable public test after each applied patch, and counts success only when source changed, public test passed, and hidden grader passed. V2-v6 evidence remains unchanged; development tasks only.",
+  "change_from_v7_dev": "Two pre-inference attempts failed closed (pack metadata walker, then an accidentally corrected starter baseline). No model inference occurred. Frozen task pack commit now has an intentionally incorrect label-smoothing starter under a correct contract and independent grader, and baseline checks must fail before inference.",
+  "claim_limit": "Two authored exploratory tasks only; one deterministic greedy run per task. Architecture and model generation differ, so this is not a causal model-size-only comparison. No broad MLSys generalization or VARE reliability benefit is established.",
+  "execution": {
+    "accepted_container_images": {
+      "colima_aarch64": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+      "linux_amd64": "python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1"
+    },
+    "candidate_code_execution": "Pinned ARM64 Python container with network disabled, read-only root, dropped capabilities, bounded memory/CPU/PIDs, and only the candidate workspace mounted. Public smoke test runs in that namespace. Hidden grader evaluates a source-only snapshot in another isolated container.",
+    "container_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "environment_pins": {
+      "huggingface-hub": "2.2.0",
+      "mlx": "0.32.2",
+      "mlx-lm": "0.32.2",
+      "python": "3.12.12",
+      "tokenizers": "0.23.3",
+      "transformers": "5.20.2"
+    },
+    "grader": "Existing PR #85 separated grader and PR #84 task reward.decide; candidate/evaluator isolation harness must pass its canary and adversarial E0 checks before any model load.",
+    "network": "none for candidate and grader containers; network permitted only for initial pinned model snapshot/dependency setup",
+    "policy_inference": "One local Apple Metal MLX model instance; pinned snapshot; greedy decoding temperature 0; one run/task; agent subprocess offline. No paid API or cloud GPU.",
+    "python": "3.12.12",
+    "scoring_command": [
+      "python",
+      "/workspace/solve.py"
+    ],
+    "solution_execution": "After the candidate container exits, the independent grader evaluates a fresh source-only snapshot in a separate container. Hidden tests and expected outputs stay outside the candidate namespace."
+  },
+  "frozen_before_model_execution": true,
+  "harness_expectations": {
+    "canary_replicates": 3,
+    "canary_visible_replicates": 0,
+    "evidence_level": "E0",
+    "forged_score_stdout_passes_none": true,
+    "grader_path_read_passes_none": true,
+    "known_bad_passing_case_ids": [
+      "square-0"
+    ],
+    "known_good_passes_all": true,
+    "network_must_fail": true,
+    "planted_workspace_oracle_passes_none": true
+  },
+  "hidden_cases": [
+    {
+      "case_id": "square-3",
+      "expected": {
+        "value": 9
+      },
+      "request": {
+        "n": 3
+      }
+    },
+    {
+      "case_id": "square-5",
+      "expected": {
+        "value": 25
+      },
+      "request": {
+        "n": 5
+      }
+    },
+    {
+      "case_id": "square-7",
+      "expected": {
+        "value": 49
+      },
+      "request": {
+        "n": 7
+      }
+    },
+    {
+      "case_id": "square-0",
+      "expected": {
+        "value": 0
+      },
+      "request": {
+        "n": 0
+      }
+    },
+    {
+      "case_id": "square-neg4",
+      "expected": {
+        "value": 16
+      },
+      "request": {
+        "n": -4
+      }
+    }
+  ],
+  "hypothesis": "On the same two newly assigned heldout tasks and matched inference budget, compare independent verified success between the pinned 4B and 7B MLX coding models. Task count is exploratory and cannot support broad generalization.",
+  "inference": {
+    "arms": [
+      {
+        "do_sample": false,
+        "name": "primary",
+        "samples_per_task": 1,
+        "seeds": [
+          101
+        ],
+        "temperature": 0,
+        "top_k": null,
+        "top_p": null
+      }
+    ],
+    "edit_format": "whole_file",
+    "instruction": "task prompt, unchanged",
+    "parser": "Existing whole_file action parser in scripts/run_local_agent.py. Complete file replacement is capped at 768 generated tokens per turn; a truncated call triggers explicit feedback and a bounded retry. All outputs and tool results are retained."
+  },
+  "instruction": "Read solve.py now. It reads one JSON object from stdin with an integer field n and must print exactly one JSON object with field value equal to n squared. The current program is wrong. Apply a minimal patch to solve.py, then call finish. Example: n = 3 yields value 9.",
+  "local_measurement": {
+    "command": "DOCKER_CONTEXT=colima HF_HOME=work/hf-cache PYTHONPATH=src ../venv-mlx/bin/python scripts/run_separated_coding_eval.py --protocol protocols/mlsys_coding_v3_matched_4b_v1.json --pack-root ../VARE-pack-v3 --output work/evidence/v3-matched-4b-v1",
+    "host": "Apple M1 Pro / 32 GiB macOS arm64, local MLX and Colima Docker",
+    "output_root": "work/evidence/v3-matched-4b-v1",
+    "setup": "Reuse pinned local Python 3.12 MLX environment; model snapshot downloaded by exact revision into work/hf-cache before inference.",
+    "status": "frozen; not yet run",
+    "stop_if": "E0 mismatch, either unpatched task unexpectedly passes, memory available below 2 GiB, free swap below 128 MiB, disk below 15 GiB, OOM, or per-task budget expires"
+  },
+  "models": {
+    "primary": {
+      "backend": "mlx",
+      "base_repository": "Qwen/Qwen3-4B-Instruct-2507",
+      "base_revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+      "device": "Apple Metal through MLX",
+      "file_hashes": {
+        ".gitattributes": "34448b82c17d60fec9b65b1f093c115ddbaadc04beb1b0140b6bfed2e012a930",
+        "README.md": "7b17ce562d7ea121c86d2ffdf660eed3726ac5b52cacfa9f1de11a65969f5657",
+        "added_tokens.json": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680",
+        "chat_template.jinja": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541",
+        "config.json": "574349e5a343236546fda55e4744a76e181f534182d7dc60ff1bad7e7a502849",
+        "generation_config.json": "835fffe355c9438e7a25be099b3fccaa98350b83451f9fd2d99512e74f1ade48",
+        "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+        "model.safetensors": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f",
+        "model.safetensors.index.json": "388d811b8b7c2608dd04cce1bcb04a8bf715d19b42790894e6d3427ff429a777",
+        "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+        "tokenizer.json": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+        "tokenizer_config.json": "4397cc477eb6d79715ccd2000accd6b3531928f30029665832fa1b255f24d2b9",
+        "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+      },
+      "license": "Apache-2.0",
+      "quantization": {
+        "bits": 4,
+        "format": "MLX safetensors",
+        "group_size": 64
+      },
+      "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+      "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+      "split": "heldout",
+      "tokenizer": "exact pinned snapshot tokenizer files"
+    }
+  },
+  "pack": {
+    "evaluation_split": "heldout",
+    "git_commit": "14291c1f86b8015dba1414a5690ac044573ae365",
+    "git_ref": "main",
+    "heldout": [
+      "mlsys-v3-ema-bias",
+      "mlsys-v3-label-smooth"
+    ],
+    "manifest_sha256": "3fb5bdcf8b21e2d1a2768557855d732e35c377273073aa7d894e2910ce2852d2",
+    "note": "New two-task exploratory heldout cohort. Prior v2 label-smoothing specification/grader inconsistency was corrected before freezing this v3 pack. Candidate receives task.json only; grader/oracle remain operator-side.",
+    "pack_id": "mlsys-coding-v3",
+    "train": [
+      "mlsys-v1-grad-accum-tail",
+      "mlsys-v1-paired-shuffle-loader",
+      "mlsys-v1-range-sums",
+      "mlsys-v1-row-log-softmax",
+      "mlsys-v1-warmup-cosine"
+    ]
+  },
+  "pre_inference_gate_failures": [
+    {
+      "attempt": "v1",
+      "result": "failed closed before model download/inference because manifest rebuilding included repository metadata"
+    },
+    {
+      "attempt": "v2",
+      "result": "failed the unpatched-baseline gate before model download/inference because the label-smoothing starter was already correct; pack revised to restore its documented defect and retain a smoke test that detects the error"
+    }
+  ],
+  "primary_metric": "Independent verified task success among the two frozen heldout tasks. A success requires source change, public smoke test pass, and isolated hidden grader pass.",
+  "protocol_comparison": {
+    "interpretation_limit": "4B Qwen3-Instruct and 7B Qwen2.5-Coder differ in family, instruction/coding tuning, and scale.",
+    "matched_fields": [
+      "task pack commit",
+      "task IDs",
+      "temperature",
+      "sampling method",
+      "seed label (not a stochastic replicate)",
+      "context limit",
+      "per-turn and total token limits",
+      "tool-turn limit",
+      "wall limit",
+      "public tests",
+      "hidden grader",
+      "container image",
+      "runtime dependencies"
+    ],
+    "pair_id": "mlsys-coding-v3-matched-v1"
+  },
+  "protocol_id": "mlsys-coding-v3-matched-4b-mlx-v1",
+  "public_files": {
+    "benchmarks/separated_json_square_v1/TASK.md": "74f1ceb03b43546dffbeb375f9fb07a0d8941afe2b3a973886da670a8785ed96",
+    "benchmarks/separated_json_square_v1/evaluator/grade.py": "a50419340329d9814177b922e4adea7ffef5de005884bf0bd2209a8a180092a5",
+    "benchmarks/separated_json_square_v1/fixture/solve.py": "12418c3be8264e28d007c62c2c0f657640ab4ca0c6196c79dc0221bb5eb97dfe",
+    "benchmarks/separated_json_square_v1/task.json": "5039ab5b6e5f6201e5a518174db12d4840e3f3a46cf0ad8d230d628c345b2774"
+  },
+  "runner_code_commit": "a58fc96d44ea3ec50c499b4ae8832e16a2d12a36",
+  "schema_version": 1,
+  "status": "frozen before fresh heldout model inference; exploratory matched comparison",
+  "supersedes": null,
+  "task_id": "mlsys-coding-v3-heldout-4b",
+  "uncertainty": "n=2 task clusters per model; report exact counts and descriptive task-clustered uncertainty. Greedy runs are not stochastic replicates."
+}

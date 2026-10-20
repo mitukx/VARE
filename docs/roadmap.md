@@ -225,3 +225,7 @@ Persistent evaluation now has a frozen CPU recovery experiment: 24/24 fault case
 
 
 **Update 2026-10-14 — promotion publication acknowledgment:** a frozen CPU comparison against main `f4b8d11` shows ten failures for publication exceptions/cancellation, no-op/foreign-policy acknowledgment, and real SQLite completion faults, with both successful-publication controls passing. Runtime identity acknowledgment plus a same-loop recovery fence passes all twelve; 619 default-suite tests and 14 isolated mathematical-grader tests pass locally. Source hashes, first baseline, matched replay, and limits are in [the report](promotion-publication-recovery-v1.md) and [raw records](../results/promotion-publication-recovery-v1/). This is bounded publication correctness; it does not authorize a model-learning run.
+
+## Apple Silicon feasibility update — 2026-10-20
+
+The [Apple Silicon agent/update report](apple-silicon-accelerated-agent-update-v1.md) records a real Qwen3 4B MLX/Metal decode (55.67 tokens/s) matched to the MLX CPU backend (55.79 tokens/s), a ten-step Qwen2.5 0.5B QLoRA update with adapter reload, and a 12-run VARE tool-boundary recovery smoke. The tiny decode showed no GPU speed advantage. Recovery reduced tool executions by one after SIGKILL but lease expiry increased median completion time from 0.66 s to 3.77 s. These are feasibility/system measurements only. No new three-arm held-out agent comparison or post-training task-success study has been run; task-set and base-success gates remain open.

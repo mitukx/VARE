@@ -1,0 +1,123 @@
+{
+  "protocol_id": "separated-coding-eval-cpu-v1",
+  "schema_version": 1,
+  "frozen_before_model_execution": true,
+  "hypothesis": "Cached Qwen2.5-0.5B-Instruct, greedy, using the existing tool parser on the MLSys train split only, produces a subject edit that passes hidden correctness and, for performance tasks, conservative 95% CI speedup >= 2.",
+  "primary_metric": "train-task protocol success from the pack reward.decide, one greedy seed, held-out tasks excluded",
+  "uncertainty": "Wilson score interval at z=1.959963984540054 on the five train-task successes for the single pre-registered seed. The tasks are different items, so the interval is a summary of that fixed set, not a multi-seed replication.",
+  "task_id": "separated-json-square-repair-v1",
+  "public_files": {
+    "benchmarks/separated_json_square_v1/TASK.md": "74f1ceb03b43546dffbeb375f9fb07a0d8941afe2b3a973886da670a8785ed96",
+    "benchmarks/separated_json_square_v1/fixture/solve.py": "12418c3be8264e28d007c62c2c0f657640ab4ca0c6196c79dc0221bb5eb97dfe",
+    "benchmarks/separated_json_square_v1/evaluator/grade.py": "a50419340329d9814177b922e4adea7ffef5de005884bf0bd2209a8a180092a5",
+    "benchmarks/separated_json_square_v1/task.json": "5039ab5b6e5f6201e5a518174db12d4840e3f3a46cf0ad8d230d628c345b2774"
+  },
+  "instruction": "Read solve.py now. It reads one JSON object from stdin with an integer field n and must print exactly one JSON object with field value equal to n squared. The current program is wrong. Apply a minimal patch to solve.py, then call finish. Example: n = 3 yields value 9.",
+  "hidden_cases": [
+    {"case_id": "square-3", "request": {"n": 3}, "expected": {"value": 9}},
+    {"case_id": "square-5", "request": {"n": 5}, "expected": {"value": 25}},
+    {"case_id": "square-7", "request": {"n": 7}, "expected": {"value": 49}},
+    {"case_id": "square-0", "request": {"n": 0}, "expected": {"value": 0}},
+    {"case_id": "square-neg4", "request": {"n": -4}, "expected": {"value": 16}}
+  ],
+  "harness_expectations": {
+    "evidence_level": "E0",
+    "known_bad_passing_case_ids": ["square-0"],
+    "known_good_passes_all": true,
+    "forged_score_stdout_passes_none": true,
+    "planted_workspace_oracle_passes_none": true,
+    "grader_path_read_passes_none": true,
+    "canary_visible_replicates": 0,
+    "canary_replicates": 3,
+    "network_must_fail": true
+  },
+  "pack": {
+    "pull_request": 84,
+    "git_ref": "cursor/mlsys-coding-tasks-7d0a",
+    "git_commit": "c8c0488980425e6d316abc21dfc136f16c7e265b",
+    "manifest_sha256": "18c5999f823f9a550a561a913023b87f1fc7bf5a86f481d319e4778212d97499",
+    "train": [
+      "mlsys-v1-grad-accum-tail",
+      "mlsys-v1-paired-shuffle-loader",
+      "mlsys-v1-range-sums",
+      "mlsys-v1-row-log-softmax",
+      "mlsys-v1-warmup-cosine"
+    ],
+    "heldout_not_used": [
+      "mlsys-v1-aging-scheduler",
+      "mlsys-v1-causal-attention",
+      "mlsys-v1-dataset-standardize",
+      "mlsys-v1-global-grad-clip"
+    ],
+    "note": "Task files stay on that branch. This protocol does not vendor or edit them."
+  },
+  "models": {
+    "primary": {
+      "repository": "Qwen/Qwen2.5-0.5B-Instruct",
+      "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "file_hashes": {
+        "config.json": "18e18afcaccafade98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+        "model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe"
+      },
+      "seeds": [101],
+      "device": "cpu",
+      "split": "train"
+    },
+    "secondary_if_feasible": {
+      "repository": "Qwen/Qwen2.5-Coder-0.5B-Instruct",
+      "revision": "ea3f2471cf1b1f0db85067f1ef93848e38e88c25",
+      "seeds": [101],
+      "device": "cpu",
+      "split": "train",
+      "run_only_when": "primary median task wall time is at most 90 seconds and MemAvailable is at least 6 GiB after the primary model process has exited"
+    },
+    "not_run_unless": {
+      "repository": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+      "seeds": [101],
+      "run_only_when": "MemAvailable is at least 8 GiB after the previous model process has exited; otherwise record skipped_insufficient_memory and do not download or run it"
+    }
+  },
+  "budgets": {
+    "max_turns": 8,
+    "max_new_tokens_per_turn": 256,
+    "max_total_new_tokens": 2048,
+    "wall_seconds": 300,
+    "cpu_threads": 4,
+    "gpu_hours": 0,
+    "paid_api_usd": 0
+  },
+  "inference": {
+    "temperature": 0,
+    "do_sample": false,
+    "parser": "existing scripts/run_local_agent.py tool_call tags; do not change the parser after observing outputs",
+    "instruction": "the task prompt field, unchanged"
+  },
+  "execution": {
+    "policy_inference": "host CPU process; the pinned python image has no model runtime; the agent task root is task.json only and the workspace is subject files only",
+    "solution_execution": "after the agent and a candidate container exit, a separate grader container mounts the source snapshot plus the hidden evaluator and runs the task's existing hidden command",
+    "json_harness": "TrustedJSONScorer remains the E0 path for the synthetic square fixture and is not the MLSys reward",
+    "container_image": "python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1",
+    "accepted_container_images": {
+      "linux_amd64": "python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1",
+      "colima_aarch64": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258"
+    },
+    "image_note": "linux_amd64 is the digest used by unit tests on the machine that added this protocol. colima_aarch64 is the digest recorded in docs/isolation-boundary-verification-v1.md. The Mac command passes that Colima digest. Do not substitute a different digest after reading a model outcome.",
+    "network": "none",
+    "scoring_command": ["python", "/workspace/solve.py"]
+  },
+  "abort": [
+    "Do not start model tasks unless the E0 harness matches harness_expectations, including canary visible 0/3, and unpatched train tasks are not protocol successes.",
+    "Do not execute a held-out task id.",
+    "Do not change hidden cases, prompts, the parser, or the reward rule after reading a model outcome.",
+    "Do not rerun a task with a new prompt.",
+    "Skip the secondary and 1.5B models when their pre-registered resource conditions fail, and record the skip."
+  ],
+  "local_measurement": {
+    "status": "not executed by the change that added this protocol",
+    "host": "macOS with Colima Docker, Python 3.12, CPU, no GPU, no paid API",
+    "prerequisites": "Run from this branch's repository root. Start Colima. Confirm docker image inspect of python:3.12-slim reports the colima_aarch64 digest above. Install requirements-agent.txt for that Python. The first run may download only the pinned Hugging Face snapshots named in models.",
+    "command": "git fetch origin cursor/mlsys-coding-tasks-7d0a && git worktree add --detach /tmp/vare-mlsys-c8c0488 c8c0488980425e6d316abc21dfc136f16c7e265b && python3.12 scripts/run_separated_coding_eval.py --protocol protocols/separated_coding_eval_cpu_v1.lock.json --pack-root /tmp/vare-mlsys-c8c0488 --container-image python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258 --output results/separated-coding-eval-cpu-v1"
+  },
+  "claim_limit": "Train-split pass counts are one greedy seed of Qwen2.5-0.5B-Instruct on five authored tasks. They are not held-out improvement, a capability estimate, or a training result. The JSON square fixture is E0 only."
+}

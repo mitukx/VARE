@@ -1,0 +1,41 @@
+{
+  "acceptance": {
+    "all_managed_containers_cleaned": true,
+    "candidate_forged_score_rejected": true,
+    "candidate_mounts_exactly_readonly_workspace": true,
+    "live_untrusted_repository_tests_eligible": false,
+    "positive_control_passes_all_cases": true,
+    "synthetic_canary_readable": false
+  },
+  "auditor_script_sha256": "5e0c0bb8a44de56d82282e1c08d0febc1260e6f6ab429565d157586aabca5dbf",
+  "implementation_sha256": {
+    "src/vare/container_isolation.py": "4bd4a45dcd1f69088718555249c07b07b96c551f1a9bfaa6ede0130e43d85b0f",
+    "src/vare/trusted_scoring.py": "d599570f452e89b4ef220c0dcb41ae228015f682cecebdc3be248c36e67c4eb2",
+    "tests/test_container_isolation.py": "eb74589ef6e5c1de8e8d694683e7a695aeeef3c58f818c8b8015f492db280efd",
+    "tests/test_trusted_scoring.py": "aa7e30337d2b70621c23a1800ce6a169736b76a120a8eed748fcce18ecfef7a1"
+  },
+  "limits": {
+    "cases_negative": 1,
+    "cases_positive": 2,
+    "cpus": 0.5,
+    "max_input_bytes": 64000,
+    "max_output_bytes": 4096,
+    "memory_mb": 256,
+    "pids_limit": 12,
+    "timeout_s": 15
+  },
+  "protocol_id": "trusted-scoring-boundary-v1",
+  "protocol_version": 1,
+  "runner_script_sha256": "f2be27b706b7791e1392a7a446c5d0af1f75c072cd8271524c21725f7faa7bad",
+  "runtime": {
+    "colima_driver": "macOS Virtualization.Framework",
+    "container_runtime": "docker",
+    "docker_context": "colima",
+    "image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "network": "none",
+    "python": "3.12.12",
+    "seccomp_required": true
+  },
+  "scope": "synthetic bounded JSON request/response only; no candidate repository test suite",
+  "source_revision": "34a6634543dd95041f8708b9b35e9fcb3b0c5a9d"
+}

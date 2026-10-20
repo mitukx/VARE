@@ -1,5 +1,39 @@
 # Experimental program
 
+## Actual-model MLSys update readiness — NO-GO, 2026-10-20
+
+M1 Pro feasibility measurements recorded Metal and CPU decoding, a ten-step
+0.5B MLX LoRA update, small Qwen agent rollouts, and a bounded tool-recovery
+comparison. No held-out success comparison followed the update. A frozen audit
+of the available v1–v3 task packs finds 14 unique definitions, below the 15-task
+minimum even before exclusions. The frozen prior-use record classifies zero
+tasks as eligible; 15 are required; the audit does not reconstruct prior use from raw rollout manifests. See
+the [readiness report](mlsys-actual-model-update-no-go-v1-report.md),
+[lock](../protocols/mlsys_actual_model_update_no_go_v1.lock.json), and
+[audit](../results/mlsys-actual-model-update-readiness-v1/audit.json). This
+NO-GO does not test whether SFT or GRPO can improve task success.
+
+## MLSys coding pack — adapter and draft comparison v2, 2026-10-20
+
+Graders call a thin adapter and read `task_type` from trusted metadata. The
+shared child-process harness remains PR #85's; the local fallback is marked
+temporary. Correct-but-not-faster fixtures fail the 2× gate. The comparison
+command still refuses real grading. v1 does not have 80% power on a +0.25
+success lift. Draft v2 is unexecuted. Held-out membership is not frozen. The
+primary test is a task-level paired t-test with Holm, and the single-test
+target after a larger task pool is about 8 percentage points at 15-20 tasks
+and 32 samples. See the [report](mlsys-coding-tasks-v1.md).
+
+## MLSys coding pack v1 — task-fixture calibration, 2026-10-19
+
+Nine authored single-file utilities are frozen with a 5-train/4-held-out split.
+Hidden checks sit outside the candidate workspace. Two performance tasks keep
+seven wall-clock samples and the sample standard deviation; the pre-registered
+conservative-speedup threshold is 2. Unpatched fixtures fail and the known
+fixes pass. No model was run. The no-update/SFT/GRPO comparison config refuses
+to start. The in-process speedups in that calibration were later replaced by
+parent clocks; see the 2026-10-20 note. See the [report](mlsys-coding-tasks-v1.md).
+
 ## Retained v2 comparison — retrospective audit, 2026-10-13
 
 The complete pre-existing five-arm record has correctness-RL minus SFT +0.46875

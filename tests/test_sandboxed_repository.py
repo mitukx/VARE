@@ -50,6 +50,7 @@ def fixture(tmp_path):
         source=RepositorySource(local_path="."),
         tests=(CommandSpec(("true",), name="trusted-true"),),
         protected_paths=(ProtectedPath("important.txt", hashlib.sha256(b"unchanged").hexdigest()),),
+        metadata={"grader_visibility": "public"},
     )
     spec_path = root / "task.json"
     spec.write(spec_path)
@@ -227,6 +228,7 @@ def test_repository_backend_rejects_nonzero_worker_and_fake_signed_score(tmp_pat
     backend = DockerRepositoryEvaluator(
         runner=FakeRunner(), limits=IsolationLimits(IMAGE),
         allowed_workspace_root=candidate_root,
+        allow_public_grader_visible_execution=True,
     )
     with pytest.raises(IsolationError, match="failed closed"):
         asyncio.run(backend.evaluate(
@@ -247,3 +249,67 @@ def test_cli_disallows_agent_only_and_evaluator_only_container_modes(tmp_path):
         )
         with pytest.raises(ValueError, match="require both"):
             _cmd_env_campaign(args)
+
+
+def test_repository_evaluator_fails_closed_without_public_task_opt_in(tmp_path):
+    _root, candidate_root, workspace, spec_path, spec = fixture(tmp_path)
+
+    class NeverRunRunner:
+        called = False
+
+        async def execute(self, *args, **kwargs):
+            self.called = True
+            raise AssertionError("candidate evaluator must not launch")
+
+    runner = NeverRunRunner()
+    backend = DockerRepositoryEvaluator(
+        runner=runner, limits=IsolationLimits(IMAGE),
+        allowed_workspace_root=candidate_root,
+    )
+    with pytest.raises(IsolationError, match="explicit public-task opt-in"):
+        asyncio.run(backend.evaluate(
+            spec_path=spec_path, workspace=workspace,
+            spec_digest=sha256_json(spec.to_dict()),
+            policy_id="p0", policy_version=0,
+        ))
+    assert runner.called is False
+
+
+def test_repository_evaluator_rejects_nonpublic_task_even_after_opt_in(tmp_path):
+    _root, candidate_root, workspace, spec_path, spec = fixture(tmp_path)
+    spec.metadata["grader_visibility"] = "confidential"
+    spec.write(spec_path)
+
+    class NeverRunRunner:
+        called = False
+
+        async def execute(self, *args, **kwargs):
+            self.called = True
+            raise AssertionError("candidate evaluator must not launch")
+
+    runner = NeverRunRunner()
+    backend = DockerRepositoryEvaluator(
+        runner=runner, limits=IsolationLimits(IMAGE),
+        allowed_workspace_root=candidate_root,
+        allow_public_grader_visible_execution=True,
+    )
+    with pytest.raises(IsolationError, match="grader_visibility=public"):
+        asyncio.run(backend.evaluate(
+            spec_path=spec_path, workspace=workspace,
+            spec_digest=sha256_json(spec.to_dict()),
+            policy_id="p0", policy_version=0,
+        ))
+    assert runner.called is False
+
+
+def test_cli_requires_explicit_public_grader_opt_in(tmp_path):
+    from vare.cli import _cmd_env_campaign
+
+    root, _, _, _, _ = fixture(tmp_path)
+    args = argparse.Namespace(
+        catalog_root=str(root), agent_argv_json='["true"]',
+        isolated_agent_image=IMAGE, isolated_evaluator_image=IMAGE,
+        allow_public_grader_visible_execution=False,
+    )
+    with pytest.raises(ValueError, match="disabled by default"):
+        _cmd_env_campaign(args)

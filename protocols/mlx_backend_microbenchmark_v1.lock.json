@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlx-qwen3-4b-metal-vs-cpu-microbenchmark-v1",
+  "status": "frozen_before_measurement",
+  "purpose": "Measure short greedy decoding throughput for one exact 4-bit MLX model on the same M1 Pro using MLX GPU and CPU backends.",
+  "model": {
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "license": "Apache-2.0",
+    "quantization": "4-bit MLX safetensors, group size 64"
+  },
+  "software": {
+    "python": "3.12.12",
+    "mlx": "0.32.2",
+    "mlx-lm": "0.32.2"
+  },
+  "decoding": {
+    "prompt": "Explain how to implement gradient accumulation correctly when the last microbatch is smaller than the accumulation window. Give a concise answer.\n",
+    "temperature": 0,
+    "warmup_tokens": 8,
+    "max_new_tokens": 96,
+    "timed_repetitions_per_backend": 3,
+    "backend_order": ["metal", "cpu"]
+  },
+  "hardware_gate": {
+    "device": "Apple M1 Pro, 32 GiB unified memory",
+    "metal_required_for_gpu_arm": true,
+    "abort_if_swap_free_below_bytes": 536870912,
+    "abort_if_disk_free_below_bytes": 15000000000,
+    "abort_if_peak_mlx_bytes_above": 6000000000
+  },
+  "primary_metric": "Median generated tokens per second; descriptive local microbenchmark only.",
+  "interpretation_limit": "One short prompt, one model, three repeats per backend, no inference quality comparison or statistical claim."
+}

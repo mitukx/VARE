@@ -1,0 +1,349 @@
+{
+  "audited_source_commit": "46da14cd52777d99c0f2fd40c09d0513103d95e4",
+  "decision": {
+    "candidate_definitions_in_packs_including_duplicate_v3_references": 19,
+    "claim_boundary": "This is a readiness NO-GO only. It does not show that SFT or GRPO cannot improve task success. No final held-out update comparison or model-capability claim is made.",
+    "eligibility_reconciliation_limit": "Prior-use classifications are frozen protocol assertions; this audit does not derive task use from raw rollout manifests.",
+    "eligible_unique_heldout_tasks": 0,
+    "inventory_alone_fails_minimum": true,
+    "reason_codes": [
+      "NO_FRESH_TASKS_AFTER_EXCLUDING_PR84_PR89_TASKS_AND_PR90_CONSUMED_TASKS",
+      "NO_FROZEN_15_TASK_CONFIRMATION_SPLIT",
+      "NO_UPDATE_BASE_FEASIBILITY_GATE_FOR_THE_0_5B_TRAINING_PAIRING"
+    ],
+    "required_unique_heldout_tasks": 15,
+    "status": "NO_GO",
+    "unique_task_definitions_by_task_json_sha256": 14
+  },
+  "frozen_before_new_training_or_final_heldout_evaluation": true,
+  "future_study_design": {
+    "base_feasibility_gate": "On development tasks only, at least two distinct tasks must have a correct sample in pass@8 and at least one complete policy-generated GRPO group must have nonzero verified reward variance.",
+    "candidate_pool_max": 60,
+    "candidate_pool_min": 30,
+    "compute_budget": {
+      "abort_on_cpu_fallback_in_gpu_arm": true,
+      "abort_on_memory_pressure_or_swap_growth": true,
+      "external_gpu_hours": 0,
+      "maximum_agent_rollouts": 300,
+      "maximum_optimizer_updates_per_learning_arm": 30,
+      "maximum_wall_hours": 24,
+      "paid_api_usd": 0
+    },
+    "final_heldout_max": 20,
+    "final_heldout_min": 15,
+    "final_heldout_target": 20,
+    "grader_gate": "Candidate execution must not read hidden grader files, evaluator outputs, or expected values; candidate execution and hidden grading must use separate isolated namespaces.",
+    "heldout_samples_per_task_seed_min": 8,
+    "heldout_tasks_must_be_unused_by_pr84_through_pr90": true,
+    "model_pairing": "same pinned 0.5B-1.5B initial model and tokenizer across arms",
+    "promotion_gate": "Promote only after the frozen independent held-out evaluation clears the predeclared paired decision rule; otherwise restore the incumbent checkpoint exactly.",
+    "training_arms": [
+      "no_update",
+      "sft",
+      "verified_grpo"
+    ],
+    "training_seeds_min": 3,
+    "update_gate": "A real optimizer update must have finite nonzero gradients, nonconstant verified rewards, complete on-policy groups, use-time freshness checks, saved checkpoint identity, verified weight synchronization, and exact rollback after a rejected candidate."
+  },
+  "objective": "Test whether a real policy update improves independent MLSys coding task success over a matched no-update baseline.",
+  "observed_inventory": {
+    "packs": [
+      {
+        "inventory_note": "All task ids are from PR #84; train tasks also appeared in PR #88 development runs. Exclude the whole pack under the explicit no-reuse rule for PR #84-#89 tasks.",
+        "manifest_sha256": "2c67d85a6806b3bbcbc63676f64fc955c5c7b3c9c4127a5a3caade1541efb4ab",
+        "pack_commit": "27955442317cf9b7beef3583b4f1a5f2662e0390",
+        "pack_id": "mlsys_coding_v1",
+        "pack_root": "benchmarks/mlsys_coding_v1",
+        "split_sha256": "ee01a7820d93424578491767a8460f990b3c38b5801df7709359c0f84e3b0b84",
+        "tasks": [
+          {
+            "eligible_for_final_heldout": false,
+            "exclusion_reason": "excluded_by_requested_no_reuse_of_pr84_pr89_tasks",
+            "family": "scheduler",
+            "historical_upstream_commit": false,
+            "pack_commit": "27955442317cf9b7beef3583b4f1a5f2662e0390",
+            "source_commit": null,
+            "split_status": "heldout",
+            "task_id": "mlsys-v1-aging-scheduler",
+            "task_json_path": "benchmarks/mlsys_coding_v1/tasks/aging_scheduler/task.json",
+            "task_json_sha256": "306320a090ce4c39d28dce6dbf19d64580832e064d259912150a979fb6bb90b0",
+            "task_type": "correctness"
+          },
+          {
+            "eligible_for_final_heldout": false,
+            "exclusion_reason": "excluded_by_pr86_no_reuse_and_unsupported_isolated_call_mutation_schema",
+            "family": "attention",
+            "historical_upstream_commit": false,
+            "pack_commit": "27955442317cf9b7beef3583b4f1a5f2662e0390",
+            "source_commit": null,
+            "split_status": "heldout",
+            "task_id": "mlsys-v1-causal-attention",
+            "task_json_path": "benchmarks/mlsys_coding_v1/tasks/causal_attention/task.json",
+            "task_json_sha256": "021b234547e6ab00fbacac5c80bdcecdf4b91de2f6328e508f181d297fb27d1e",
+            "task_type": "correctness"
+          },
+          {
+            "eligible_for_final_heldout": false,
+            "exclusion_reason": "excluded_by_requested_no_reuse_of_pr84_pr89_tasks",
+            "family": "data-standardization",
+            "historical_upstream_commit": false,
+            "pack_commit": "27955442317cf9b7beef3583b4f1a5f2662e0390",
+            "source_commit": null,
+            "split_status": "heldout",
+            "task_id": "mlsys-v1-dataset-standardize",
+            "task_json_path": "benchmarks/mlsys_coding_v1/tasks/dataset_standardize/task.json",
+            "task_json_sha256": "dbbfc462378b1c1136d5071e3dcc56b4f5d1a866e1d6ac8ddee3109ec192c182",
+            "task_type": "performance"
+          },
+          {
+            "eligible_for_final_heldout": false,
+            "exclusion_reason": "excluded_by_requested_no_reuse_of_pr84_pr89_tasks",
+            "family": "gradient-clip",
+            "historical_upstream_commit": false,
+            "pack_commit": "27955442317cf9b7beef3583b4f1a5f2662e0390",
+            "source_commit": null,
+            "split_status": "heldout",
+            "task_id": "mlsys-v1-global-grad-clip",
+            "task_json_path": "benchmarks/mlsys_coding_v1/tasks/global_grad_clip/task.json",
+            "task_json_sha256": "c946b7706194ba3fc09e73b99f13fddb3032784a6d567f8b7b950755b44e708c",
+            "task_type": "correctness"
+          },
+          {
+            "eligible_for_final_heldout": false,
+            "exclusion_reason": "excluded_by_requested_no_reuse_of_pr84_pr89_tasks",
+            "family": "gradient-accumulation",
+            "historical_upstream_commit": false,
+            "pack_commit": "27955442317cf9b7beef3583b4f1a5f2662e0390",
+            "source_commit": null,
+            "split_status": "train",
+            "task_id": "mlsys-v1-grad-accum-tail",
+            "task_json_path": "benchmarks/mlsys_coding_v1/tasks/grad_accum_tail/task.json",
+            "task_json_sha256": "c0b50b2b8da6fabe6f29e6bcca38a183978a024750d111fedd0de93a66417fb3",
+            "task_type": "correctness"
+          },
+          {
+            "eligible_for_final_heldout": false,
+            "exclusion_reason": "excluded_by_requested_no_reuse_of_pr84_pr89_tasks",
+            "family": "data-loader",
+            "historical_upstream_commit": false,
+            "pack_commit": "27955442317cf9b7beef3583b4f1a5f2662e0390",
+            "source_commit": null,
+            "split_status": "train",
+            "task_id": "mlsys-v1-paired-shuffle-loader",
+            "task_json_path": "benchmarks/mlsys_coding_v1/tasks/paired_shuffle_loader/task.json",
+            "task_json_sha256": "6f75550c8b931a86443d9b1b45491a04a02f87976d51a57b07dd6f3f779b00ad",
+            "task_type": "correctness"
+          },
+          {
+            "eligible_for_final_heldout": false,
+            "exclusion_reason": "excluded_by_requested_no_reuse_of_pr84_pr89_tasks",
+            "family": "numeric-kernel",
+            "historical_upstream_commit": false,
+            "pack_commit": "27955442317cf9b7beef3583b4f1a5f2662e0390",
+            "source_commit": null,
+            "split_status": "train",
+            "task_id": "mlsys-v1-range-sums",
+            "task_json_path": "benchmarks/mlsys_coding_v1/tasks/range_sums/task.json",
+            "task_json_sha256": "0126029248a5fc102676a6e5e4cc3ea654de0b0da445b7ef764a2f7cc7e5b19d",
+            "task_type": "performance"
+          },
+          {
+            "eligible_for_final_heldout": false,
+            "exclusion_reason": "excluded_by_requested_no_reuse_of_pr84_pr89_tasks",
+            "family": "numerics",
+            "historical_upstream_commit": false,
+            "pack_commit": "27955442317cf9b7beef3583b4f1a5f2662e0390",
+            "source_commit": null,
+            "split_status": "train",
+            "task_id": "mlsys-v1-row-log-softmax",
+            "task_json_path": "benchmarks/mlsys_coding_v1/tasks/row_log_softmax/task.json",
+            "task_json_sha256": "1aa2ab84473e7599437dc3892f1df2938880dab510ee44f65cac42e2074a892e",
+            "task_type": "correctness"
+          },
+          {
+            "eligible_for_final_heldout": false,
+            "exclusion_reason": "excluded_by_requested_no_reuse_of_pr84_pr89_tasks",
+            "family": "training-schedule",
+            "historical_upstream_commit": false,
+            "pack_commit": "27955442317cf9b7beef3583b4f1a5f2662e0390",
+            "source_commit": null,
+            "split_status": "train",
+            "task_id": "mlsys-v1-warmup-cosine",
+            "task_json_path": "benchmarks/mlsys_coding_v1/tasks/warmup_cosine/task.json",
+            "task_json_sha256": "2600546c0236f43623387b18f777ad027fbe888728d3301d202bd2080edaf22b",
+            "task_type": "correctness"
+          }
+        ]
+      },
+      {
+        "inventory_note": "All task ids are from PR #86. EMA and label-smoothing tasks overlap the consumed v3 exploratory tasks; GQA is unassigned and unsupported by the current isolated-call schema. Exclude the whole pack under the explicit no-reuse rule for PR #84-#89 tasks.",
+        "manifest_sha256": "9d00b2bdac637c7259939dfedc32c8a19cad88a5cb5fd2609e44a0831ee55fc0",
+        "pack_commit": "68a7670780ecc64600d5ad464b82f6b6247aa952",
+        "pack_id": "mlsys_coding_v2",
+        "pack_root": "benchmarks/mlsys_coding_v2",
+        "split_sha256": "7a3bd7f368b6794dc1503b6154004d71d207f7ca8abeabf8689b628bf9e46b51",
+        "tasks": [
+          {
+            "eligible_for_final_heldout": false,
+            "exclusion_reason": "excluded_by_requested_no_reuse_of_pr84_pr89_tasks",
+            "family": "optimizer-state",
+            "historical_upstream_commit": false,
+            "pack_commit": "68a7670780ecc64600d5ad464b82f6b6247aa952",
+            "source_commit": null,
+            "split_status": "unassigned",
+            "task_id": "mlsys-v2-ema-bias",
+            "task_json_path": "benchmarks/mlsys_coding_v2/tasks/ema_bias/task.json",
+            "task_json_sha256": "eaf09482c4077bb587c7962f732502f9f19959783d6eb438cbdc4d30e6600a5f",
+            "task_type": "correctness"
+          },
+          {
+            "eligible_for_final_heldout": false,
+            "exclusion_reason": "excluded_by_pr86_no_reuse_and_unsupported_isolated_call_mutation_schema",
+            "family": "attention",
+            "historical_upstream_commit": false,
+            "pack_commit": "68a7670780ecc64600d5ad464b82f6b6247aa952",
+            "source_commit": null,
+            "split_status": "unassigned",
+            "task_id": "mlsys-v2-gqa-repeat",
+            "task_json_path": "benchmarks/mlsys_coding_v2/tasks/gqa_repeat/task.json",
+            "task_json_sha256": "fa8c8754d711886660be7ca0e18efc7cb610d452f30d27789369eecb63ff7fc8",
+            "task_type": "correctness"
+          },
+          {
+            "eligible_for_final_heldout": false,
+            "exclusion_reason": "excluded_by_requested_no_reuse_of_pr84_pr89_tasks",
+            "family": "classification-target",
+            "historical_upstream_commit": false,
+            "pack_commit": "68a7670780ecc64600d5ad464b82f6b6247aa952",
+            "source_commit": null,
+            "split_status": "unassigned",
+            "task_id": "mlsys-v2-label-smooth",
+            "task_json_path": "benchmarks/mlsys_coding_v2/tasks/label_smooth/task.json",
+            "task_json_sha256": "16efe0739ef040a4abbb7683f9a853caa91cfce7c4a52ddf0fee03d9a4630576",
+            "task_type": "correctness"
+          }
+        ]
+      },
+      {
+        "inventory_note": "Five task definitions reuse PR #84 development tasks; the two new task definitions were consumed by the PR #90 matched exploratory cohort. No task remains eligible for final held-out use.",
+        "manifest_sha256": "3fb5bdcf8b21e2d1a2768557855d732e35c377273073aa7d894e2910ce2852d2",
+        "pack_commit": "14291c1f86b8015dba1414a5690ac044573ae365",
+        "pack_id": "mlsys_coding_v3",
+        "pack_root": "benchmarks/mlsys_coding_v3",
+        "embedded_repo_commit": "228d2ffff38046f1d3e0ecbf7f658d31c6b48834",
+        "source_pack_bundle_sha256": "43be704829c547342171017d8a2610181a9d40726c7c920bae054d68d309155e",
+        "split_sha256": "3ebfec3bb44ae06f847e3658a7e4f8663db9ee09a57ba160f89f413834b9af10",
+        "tasks": [
+          {
+            "eligible_for_final_heldout": false,
+            "exclusion_reason": "excluded_by_requested_no_reuse_of_pr84_pr89_tasks",
+            "family": "gradient-accumulation",
+            "historical_upstream_commit": false,
+            "pack_commit": "14291c1f86b8015dba1414a5690ac044573ae365",
+            "source_commit": null,
+            "split_status": "train",
+            "task_id": "mlsys-v1-grad-accum-tail",
+            "task_json_path": "benchmarks/mlsys_coding_v3/tasks/grad_accum_tail/task.json",
+            "task_json_sha256": "c0b50b2b8da6fabe6f29e6bcca38a183978a024750d111fedd0de93a66417fb3",
+            "task_type": "correctness"
+          },
+          {
+            "eligible_for_final_heldout": false,
+            "exclusion_reason": "consumed_by_pr90_matched_exploratory_cohort",
+            "family": "optimizer-state",
+            "historical_upstream_commit": false,
+            "pack_commit": "14291c1f86b8015dba1414a5690ac044573ae365",
+            "source_commit": null,
+            "split_status": "heldout",
+            "task_id": "mlsys-v3-ema-bias",
+            "task_json_path": "benchmarks/mlsys_coding_v3/tasks/mlsys-v3-ema-bias/task.json",
+            "task_json_sha256": "9201cfddd3fb2f6bd137faad05f8cc48f28325eb94028a94cc3bfac69a6c7c0c",
+            "task_type": "correctness"
+          },
+          {
+            "eligible_for_final_heldout": false,
+            "exclusion_reason": "consumed_by_pr90_matched_exploratory_cohort",
+            "family": "classification-target",
+            "historical_upstream_commit": false,
+            "pack_commit": "14291c1f86b8015dba1414a5690ac044573ae365",
+            "source_commit": null,
+            "split_status": "heldout",
+            "task_id": "mlsys-v3-label-smooth",
+            "task_json_path": "benchmarks/mlsys_coding_v3/tasks/mlsys-v3-label-smooth/task.json",
+            "task_json_sha256": "4d875b4c860df8dedefcfd898ae5b36f25520da653ef36e4d1c5a9592fbf171e",
+            "task_type": "correctness"
+          },
+          {
+            "eligible_for_final_heldout": false,
+            "exclusion_reason": "excluded_by_requested_no_reuse_of_pr84_pr89_tasks",
+            "family": "data-loader",
+            "historical_upstream_commit": false,
+            "pack_commit": "14291c1f86b8015dba1414a5690ac044573ae365",
+            "source_commit": null,
+            "split_status": "train",
+            "task_id": "mlsys-v1-paired-shuffle-loader",
+            "task_json_path": "benchmarks/mlsys_coding_v3/tasks/paired_shuffle_loader/task.json",
+            "task_json_sha256": "6f75550c8b931a86443d9b1b45491a04a02f87976d51a57b07dd6f3f779b00ad",
+            "task_type": "correctness"
+          },
+          {
+            "eligible_for_final_heldout": false,
+            "exclusion_reason": "excluded_by_requested_no_reuse_of_pr84_pr89_tasks",
+            "family": "numeric-kernel",
+            "historical_upstream_commit": false,
+            "pack_commit": "14291c1f86b8015dba1414a5690ac044573ae365",
+            "source_commit": null,
+            "split_status": "train",
+            "task_id": "mlsys-v1-range-sums",
+            "task_json_path": "benchmarks/mlsys_coding_v3/tasks/range_sums/task.json",
+            "task_json_sha256": "0126029248a5fc102676a6e5e4cc3ea654de0b0da445b7ef764a2f7cc7e5b19d",
+            "task_type": "performance"
+          },
+          {
+            "eligible_for_final_heldout": false,
+            "exclusion_reason": "excluded_by_requested_no_reuse_of_pr84_pr89_tasks",
+            "family": "numerics",
+            "historical_upstream_commit": false,
+            "pack_commit": "14291c1f86b8015dba1414a5690ac044573ae365",
+            "source_commit": null,
+            "split_status": "train",
+            "task_id": "mlsys-v1-row-log-softmax",
+            "task_json_path": "benchmarks/mlsys_coding_v3/tasks/row_log_softmax/task.json",
+            "task_json_sha256": "1aa2ab84473e7599437dc3892f1df2938880dab510ee44f65cac42e2074a892e",
+            "task_type": "correctness"
+          },
+          {
+            "eligible_for_final_heldout": false,
+            "exclusion_reason": "excluded_by_requested_no_reuse_of_pr84_pr89_tasks",
+            "family": "training-schedule",
+            "historical_upstream_commit": false,
+            "pack_commit": "14291c1f86b8015dba1414a5690ac044573ae365",
+            "source_commit": null,
+            "split_status": "train",
+            "task_id": "mlsys-v1-warmup-cosine",
+            "task_json_path": "benchmarks/mlsys_coding_v3/tasks/warmup_cosine/task.json",
+            "task_json_sha256": "2600546c0236f43623387b18f777ad027fbe888728d3301d202bd2080edaf22b",
+            "task_type": "correctness"
+          }
+        ]
+      }
+    ],
+    "source_repositories": [
+      "mitukx/VARE"
+    ]
+  },
+  "primary_metric": "paired task-level held-out success difference after policy update versus no-update",
+  "protocol_id": "mlsys-actual-model-update-readiness-no-go-v1",
+  "readiness_gate": {
+    "must_exclude_consumed_or_user-prohibited_tasks": true,
+    "must_have_task_ids_source_revisions_independent_graders_frozen_protocol_and_hashes": true,
+    "required_unique_eligible_heldout_tasks": 15,
+    "run_final_heldout_if_gate_fails": false,
+    "run_training_if_gate_fails": false
+  },
+  "reproduction": {
+    "command": "python scripts/audit_mlsys_update_readiness_v1.py --protocol protocols/mlsys_actual_model_update_no_go_v1.lock.json --output results/mlsys-actual-model-update-readiness-v1/audit.json",
+    "scope": "Read-only pack manifest, split, and task-definition hash checks; does not load a model, execute candidate code, or inspect hidden graders."
+  },
+  "status": "frozen_readiness_audit"
+}

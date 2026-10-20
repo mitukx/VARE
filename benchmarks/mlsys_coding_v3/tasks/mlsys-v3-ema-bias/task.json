@@ -1,0 +1,48 @@
+{
+  "correctness_weight": 1.0,
+  "family": "optimizer-state",
+  "id": "mlsys-v3-ema-bias",
+  "limits": {
+    "cpu_time_s": 20,
+    "max_output_bytes": 200000,
+    "memory_mb": 2048,
+    "wall_time_s": 20
+  },
+  "metadata": {
+    "authored_executable_defect": true,
+    "editable_files": [
+      "ema_bias.py",
+      "test_public.py"
+    ],
+    "evidence_note": "Fresh exploratory held-out task authored in PR #86 unassigned pool; frozen in the new v3 pack before these 4B/7B runs. Authored utility task, not an upstream historical issue.",
+    "grader_interface": "EngineeringTaskSpec",
+    "grader_visibility": "hidden",
+    "historical_upstream_commit": false,
+    "pack": "mlsys-coding-v3",
+    "reward_kind": "hidden-correctness",
+    "split": "heldout",
+    "task_type": "correctness"
+  },
+  "metrics": [],
+  "prompt": "Edit ema_bias.py so bias_corrected_ema matches the contract in its module docstring, including the first step. test_public.py is a smoke check and is not the grader. Do not special-case one numeric input.",
+  "protected_paths": [],
+  "source": {
+    "base_revision": null,
+    "clone_url": null,
+    "local_path": "subject"
+  },
+  "tests": [
+    {
+      "argv": [
+        "python",
+        "test_hidden.py",
+        "{workspace}"
+      ],
+      "cwd": "evaluator",
+      "cwd_base": "evaluator",
+      "env": {},
+      "name": "hidden-correctness"
+    }
+  ],
+  "title": "Bias-correct an exponential moving average at the current step"
+}

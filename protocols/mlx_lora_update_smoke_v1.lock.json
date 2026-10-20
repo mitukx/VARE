@@ -1,0 +1,66 @@
+{
+  "data": {
+    "examples": 1,
+    "heldout_data_used": false,
+    "path": "benchmarks/dev_sft_update_smoke_v1/train.jsonl",
+    "sha256": "f7561eac186e5cb087b826fea272c7d9516ed5a906448a275145405af5d1adac",
+    "source_agent_evidence": "work/evidence/7b-dev-v7/primary/seed-101/mlsys-v1-grad-accum-tail/agent.json",
+    "source_agent_sha256": "1d723f68e779376f55a3f70c312c3c8e5e2430af7e85ce079eb02241547814da",
+    "source_code_sha256": "8fbc5c8b3ef5a3f4852f15db10f346f26d27a7b579de5a35a8cfaec5ff85138d",
+    "source_grader_passed": true,
+    "source_split": "mlsys-coding-v1 train",
+    "source_task_id": "mlsys-v1-grad-accum-tail",
+    "source_task_sha256": "c0b50b2b8da6fabe6f29e6bcca38a183978a024750d111fedd0de93a66417fb3"
+  },
+  "hardware": {
+    "abort_if_swap_free_below_bytes": 536870912,
+    "backend": "MLX Metal GPU",
+    "disk_free_min_bytes": 15000000000,
+    "host": "Apple MacBook Pro M1 Pro, 32 GiB unified memory",
+    "maximum_memory_bytes": 6000000000
+  },
+  "hypothesis": "A pinned 0.5B Qwen2.5 base can complete ten MLX QLoRA optimizer updates from one independently verified development trajectory, save a nonzero adapter, reload it, and reproduce deterministic inference without exceeding the resource gate.",
+  "model": {
+    "license": "Apache-2.0",
+    "quantization": "MLX 4-bit conversion, group size 64",
+    "repository": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "tokenizer": "same pinned HF snapshot, converted with MLX-LM"
+  },
+  "primary_metric": "10 completed optimizer updates, adapter differs from zero-init, checkpoint reload succeeds, deterministic output can be generated",
+  "protocol_id": "mlx-lora-dev-trajectory-update-smoke-v1",
+  "reproduction": "python scripts/run_mlx_lora_update_smoke_v1.py --model-snapshot /Users/user/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775 --output results/mlx-lora-update-smoke-v1/run-1",
+  "schema_version": 1,
+  "scope": "Optimizer/update/save/reload feasibility only. No heldout task-success, SFT benefit, policy improvement, or RL claim.",
+  "software": {
+    "mlx": "0.32.2",
+    "mlx-lm": "0.32.2",
+    "python": "3.12.12"
+  },
+  "status": "frozen_before_optimizer_update",
+  "stopping_rule": "Stop before model load if device is not Apple Metal, MLX versions or source hashes drift, swap or disk gate fails. Stop on OOM, nonfinite loss, or a resource limit. Preserve every partial output as a non-pass.",
+  "success_rule": [
+    "completed_updates == 10",
+    "adapter_nonzero is true",
+    "saved_adapter_reload succeeds",
+    "peak MLX allocated bytes < 6,000,000,000",
+    "process max RSS < 8,000,000,000",
+    "free swap at start >= 536,870,912",
+    "disk free at start >= 15,000,000,000"
+  ],
+  "training": {
+    "batch_size": 1,
+    "evaluations": "loss on source data only; not capability evaluation",
+    "gradient_checkpointing": true,
+    "learning_rate": 1e-05,
+    "lora_rank": 8,
+    "lora_scale": 20,
+    "mask_prompt": true,
+    "objective": "SFT causal language modeling",
+    "optimizer": "AdamW",
+    "seed": 101,
+    "sequence_length": 1024,
+    "trainable_layers": 2,
+    "updates": 10
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "adapter_sha256": "faeb9d9bf2972bbb682b2dfaa3520408cbd8074e50f5fcd86dfa0f77c1084de7",
+  "checks": {
+    "adapter_bytes_match_summary": true,
+    "adapter_reload_generated_tokens": true,
+    "learned_lora_b_weights_are_nonzero": true,
+    "losses_are_finite_and_decrease_on_training_example": true,
+    "metal_gpu_was_selected": true,
+    "protocol_and_data_pins_match": true,
+    "recorded_resource_limits_pass": true,
+    "ten_optimizer_steps_are_logged": true
+  },
+  "claim_limit": "One development example; training-loss fit and adapter reload do not measure held-out task success, SFT benefit, or RL improvement.",
+  "learned_lora_b_parameters": 202752,
+  "optimizer_step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "protocol_id": "mlx-lora-dev-trajectory-update-smoke-v1",
+  "raw_summary_sha256": "26c53b53c7a57e452db792fdd84668782236c78511625875f403afa57b9e3346",
+  "runner_original_status": "non_pass",
+  "runner_parser_defect": "The original runner searched for an 'Iter N: Train loss' format, but MLX-LM 0.32.2 emits a terminal progress table. This independent audit reads its numbered rows; raw summary and logs remain unchanged.",
+  "status": "PASS_UPDATE_FEASIBILITY_ONLY",
+  "training_log_sha256": "363a9e532d4c89ab9bfd68c852f34edcc2bb56254ce361591097dfa51f44545c",
+  "training_losses": [
+    1.281,
+    1.257,
+    1.206,
+    1.152,
+    1.097,
+    1.039,
+    0.982,
+    0.921,
+    0.866,
+    0.807
+  ]
+}

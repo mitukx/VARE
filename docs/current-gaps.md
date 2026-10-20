@@ -1,5 +1,35 @@
 # Current evidence gaps
 
+**Update 2026-10-20 — actual-model update readiness NO-GO:** a frozen
+read-only inventory of the v1–v3 MLSys packs checks all 19 task entries and
+finds 14 unique definitions, below the 15-task minimum; even before exclusions,
+the inventory ceiling fails the gate. The frozen prior-use record classifies
+zero as eligible after excluding PR #84–#89 tasks and the two consumed PR #90
+exploratory tasks; 15 are required. The audit does not reconstruct prior use from raw rollout
+manifests. The M1 Pro update was a ten-step one-example LoRA feasibility smoke
+only; no no-update/SFT/GRPO held-out success comparison was run. This is a
+data-readiness NO-GO, not evidence that policy updates cannot improve. Reproduce with
+`python scripts/audit_mlsys_update_readiness_v1.py`; see the [report](mlsys-actual-model-update-no-go-v1-report.md),
+[lock](../protocols/mlsys_actual_model_update_no_go_v1.lock.json), and
+[audit](../results/mlsys-actual-model-update-readiness-v1/audit.json).
+
+**Update 2026-10-20 — MLSys graders call a harness adapter; comparison v2 is a draft:** the v1 graders no longer import the candidate in-process. They call `harness_adapter.py`, which proposes `vare.separated_candidate_harness.grade_function` for PR #85 and falls back to a marked temporary shim. Trusted `metadata.task_type` is `correctness` or `performance`. Timing pairs are interleaved and the 2× gate uses the lower Student-t bound of the paired ratios. The parent rejects a reused input object or value. A performance task with prefixed measurement output scores 0. A correct slow range-sum and a correct slow standardizer still fail the 2× gate, including an identity cache on both tasks and an import-time print. The v1 all-seeds-plus-bootstrap acceptance text is unchanged; draft v2 does not use that vacuous conjunction. The default comparison command still exits 3. Real model patches stay refused because the live canary is readable. v1's 4×3 temperature-0 rule reaches 80% power at a 0.5 baseline only around a 0.491 absolute lift. Draft v2 is not run and does not freeze held-out membership. Its primary test is a task-level paired t-test with Holm across GRPO versus no-update and SFT versus no-update. The recorded single-test target, after a 20-30 task expansion, is 15-20 held-out tasks at 32 samples, about 8 percentage points, and that model is invalid near 0% success. See the [report](mlsys-coding-tasks-v1.md).
+
+**Update 2026-10-19 — authored MLSys coding pack:** nine single-file
+utilities are frozen under `benchmarks/mlsys_coding_v1`, with a 5/4
+train/held-out split and a manifest hash recorded before any policy
+rollout. Hidden correctness checks sit outside the candidate workspace.
+Two performance tasks report seven wall-clock repeats and the sample
+standard deviation; success requires a conservative speedup of at least 2.
+On this host the unpatched performance tasks scored about 0.999 and 0.957,
+and the known fixes scored about 233 and 669, under the earlier in-process
+grader. Those floats are descriptive and were superseded for the current
+parent-timed path by the 2026-10-20 update. No model rollout was run: the
+open isolated repository grader still executes candidate code in the same
+namespace as grader files, and these tasks set `grader_visibility` to
+`hidden`. The no-update versus SFT versus GRPO config is recorded and its
+default command exits 3. See the [report](mlsys-coding-tasks-v1.md).
+
 **Update 2026-10-18 — async worker SQLite serialization:** a per-store lock
 fixes the reproduced same-process connection race, and paged `iter_steps()`
 releases the lock before yielding so lease heartbeats remain live. The locked
@@ -443,3 +473,5 @@ The follow-up v6 protocol defined whole-group drop behavior and passed eight fin
 
 
 **Update 2026-10-14 — evaluation transaction integration:** existing PR #19 evaluator/inference lifetime corrections are integrated with signed-training, authorization and checkpoint-bound promotion controls. A frozen four-case pre/post revocation × discard-success/failure CPU comparison fails 4/4 on main `a0f6464` and passes 4/4 on the integrated candidate; three caller cancellations cannot interrupt asynchronous rollback before the round lock is released. Historical lifecycle replay is baseline 12 failures/13 cases versus 13 candidate passes; inference replay is candidate 14/14 with its historical failing controls preserved. This is in-process correctness evidence only. See [report](evaluation-transaction-integration-v1.md), [protocol](../protocols/engine_evaluation_interlock_integration_v1.lock.json), and [raw records](../results/engine-evaluation-interlock-integration-v1/). No model-learning protocol is reopened.
+
+**Update 2026-10-20 — Apple Silicon feasibility, not capability:** the [new report](apple-silicon-accelerated-agent-update-v1.md) records Qwen3 4B Metal and CPU decode at 55.67/55.79 tokens/s, a 10-step one-example 0.5B MLX LoRA smoke, and a small 12/12 audited recovery fixture. Metal did not improve short batch-one throughput. VARE avoided one tool replay after a committed step but was slower because the lease-expiry wait dominated. No new held-out MLSys cohort is available for the requested Basic/Search/VARE comparison, and no update has been evaluated on untouched task success. Keep the three-arm study and SFT/GRPO capability comparison at NO-GO until the task pool and base-success gates pass.

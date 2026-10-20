@@ -1,0 +1,32 @@
+{
+  "protocol_id": "mlsys-coding-agent-4b-mlx-posthoc-grader-v2",
+  "schema_version": 1,
+  "status": "posthoc descriptive rerun; not preregistered before model execution",
+  "model_inference": "none; uses the identical saved v6 agent records and source-only candidate snapshots",
+  "candidate_source": {
+    "model_protocol": "protocols/mlsys_coding_agent_4b_mlx_pilot_v6.json",
+    "evidence_run": "4b-mlx-pilot-v6-20261020-143000",
+    "task_pack_commit": "27955442317cf9b7beef3583b4f1a5f2662e0390",
+    "train_tasks_only": [
+      "mlsys-v1-grad-accum-tail",
+      "mlsys-v1-paired-shuffle-loader",
+      "mlsys-v1-range-sums",
+      "mlsys-v1-row-log-softmax",
+      "mlsys-v1-warmup-cosine"
+    ],
+    "heldout_tasks_opened_or_run": 0
+  },
+  "grader": {
+    "implementation": "VARE separated_grading.grade_isolated_subject and scripts/mlsys_task_isolated_calls.py",
+    "candidate_network": "disabled",
+    "candidate_mount": "read-only source-only snapshot",
+    "evaluator_source": "the exact evaluator files at the pinned task-pack commit; evaluator SHA-256 recorded per task",
+    "corrections_from_v1": [
+      "Expose frozen performance oracle under the public task function name.",
+      "Preserve range-sums tuple input semantics across JSON calls within the isolated candidate container."
+    ],
+    "selection_rule": "No changes to model output, candidate source, task membership, or success criteria. All five saved candidates are graded once with the corrected adapter.",
+    "range_sums_timing": "Seven paired measurements, frozen workload seed from the evaluator; success requires the existing VARE 2x rule and output agreement."
+  },
+  "claim_limit": "Five authored development tasks and one greedy seed; no held-out generalization, VARE-vs-basic-agent comparison, fault-injection, or training-effect claim. Range-sums correctness passed, but its speed gate failed."
+}
