@@ -562,6 +562,7 @@ def _load_isolated_calls(path: Path) -> dict[str, Any]:
     memory_mb = payload.get("memory_mb", 512)
     if type(memory_mb) is not int or not 32 <= memory_mb <= 65536:
         raise IsolationError("isolated call spec memory_mb is invalid")
+    payload["memory_mb"] = memory_mb
     return payload
 
 
