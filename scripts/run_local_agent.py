@@ -130,6 +130,16 @@ def run_public_tests(workspace: Path, image: str, expected_test_hash: str) -> di
             'isolation': 'docker-network-none-read-only-root-only-workspace-mount'}
 
 
+def refresh_public_tests_after_edit(
+    edit_result: dict[str, Any], workspace: Path, image: str | None,
+    expected_test_hash: str | None,
+) -> dict[str, Any] | None:
+    """Return a fresh smoke-test result after an applied source edit."""
+    if edit_result.get('applied') is not True or not image or not expected_test_hash:
+        return None
+    return run_public_tests(workspace, image, expected_test_hash)
+
+
 def attempt_configured_edit(workspace: Path, text: str, edit_format: str, allowed: set[str]) -> dict[str, Any]:
     """Parse and apply one edit. A parse failure is not a task score."""
     parsed = parse_submission(text, edit_format=edit_format)
@@ -406,6 +416,13 @@ def main() -> int:
             if not isinstance(recovered, ParseFailure) or recovered.reason != 'no_edit':
                 edit_result = attempt_configured_edit(workspace, raw, args.edit_format, editable)
                 note_edit(edit_result)
+                if edit_result.get('applied') is True:
+                    public_test_result = refresh_public_tests_after_edit(
+                        edit_result, workspace, args.public_test_image, public_test_hash,
+                    )
+                    if public_test_result is not None:
+                        entry['automatic_public_test'] = public_test_result
+                        edit_result = {**edit_result, 'automatic_public_test': public_test_result}
                 entry['tool_calls'].append({'name': 'recovered_edit', 'result': edit_result})
                 messages.append({'role': 'assistant', 'content': raw})
                 messages.append({
@@ -476,12 +493,13 @@ def main() -> int:
                         workspace, str(arguments.get('patch', '')), args.edit_format, editable,
                     )
                     note_edit(result)
-                    if result.get('applied') is True and args.public_test_image:
-                        public_test_result = run_public_tests(
-                            workspace, args.public_test_image, public_test_hash,
+                    if result.get('applied') is True:
+                        public_test_result = refresh_public_tests_after_edit(
+                            result, workspace, args.public_test_image, public_test_hash,
                         )
-                        entry['automatic_public_test'] = public_test_result
-                        result = {**result, 'automatic_public_test': public_test_result}
+                        if public_test_result is not None:
+                            entry['automatic_public_test'] = public_test_result
+                            result = {**result, 'automatic_public_test': public_test_result}
                 elif name == 'write_file':
                     result = attempt_configured_edit(
                         workspace,
@@ -493,12 +511,13 @@ def main() -> int:
                         editable,
                     )
                     note_edit(result)
-                    if result.get('applied') is True and args.public_test_image:
-                        public_test_result = run_public_tests(
-                            workspace, args.public_test_image, public_test_hash,
+                    if result.get('applied') is True:
+                        public_test_result = refresh_public_tests_after_edit(
+                            result, workspace, args.public_test_image, public_test_hash,
                         )
-                        entry['automatic_public_test'] = public_test_result
-                        result = {**result, 'automatic_public_test': public_test_result}
+                        if public_test_result is not None:
+                            entry['automatic_public_test'] = public_test_result
+                            result = {**result, 'automatic_public_test': public_test_result}
                 elif name == 'run_public_tests':
                     public_test_result = run_public_tests(workspace, args.public_test_image, public_test_hash)
                     result = public_test_result

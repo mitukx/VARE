@@ -14,6 +14,7 @@ import json
 import math
 import os
 import re
+import statistics
 import secrets
 import tempfile
 from collections.abc import Sequence
@@ -35,7 +36,6 @@ from .isolated_candidate import (
     FunctionCall,
     grade_calls,
     paired_timing,
-    two_x_speedup_decision,
 )
 from .trusted_scoring import (
     JSONIOCase,
@@ -583,6 +583,29 @@ def _call_rows(payload: dict[str, Any], key: str) -> list[dict[str, Any]]:
     return checked
 
 
+def _paired_ratio_lower_bound(
+    baselines: Sequence[float], candidates: Sequence[float], t_critical: float,
+) -> tuple[float, float]:
+    """Return the pack's lower 95% bound and mean paired speedup."""
+    if len(baselines) != len(candidates) or len(baselines) < 2:
+        raise IsolationError("performance metric requires paired timing samples")
+    ratios: list[float] = []
+    for baseline, candidate in zip(baselines, candidates, strict=True):
+        if (
+            isinstance(baseline, bool) or isinstance(candidate, bool)
+            or not isinstance(baseline, (int, float))
+            or not isinstance(candidate, (int, float))
+            or not math.isfinite(float(baseline))
+            or not math.isfinite(float(candidate))
+            or baseline < 0 or candidate <= 0
+        ):
+            raise IsolationError("performance timing samples are invalid")
+        ratios.append(float(baseline) / float(candidate))
+    mean = statistics.mean(ratios)
+    lower = mean - t_critical * statistics.stdev(ratios) / math.sqrt(len(ratios))
+    return lower, mean
+
+
 def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> dict[str, Any]:
     """Score one snapshot from the host. A child exit status is not a pass."""
     spec = _load_isolated_calls(calls_path)
@@ -648,9 +671,40 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
                 timeout_s=timeout_s, rtol=rtol, atol=atol,
                 tuple_paths=tuple_paths,
             )
-        decision = two_x_speedup_decision(timing)
-        decision["reward"] = 1.0 if decision["success"] else 0.0
-        decision["conservative_speedup"] = decision["oracle_subject_ratio"]
+        metric = spec.get("performance_metric")
+        if type(metric) is not dict or metric.get("name") != "paired_ratio_student_t_lower":
+            raise IsolationError("isolated performance metric is missing or unsupported")
+        try:
+            t_critical = _finite_number(metric.get("t_critical"), "t_critical", allow_zero=False)
+            threshold = _finite_number(metric.get("success_threshold"), "success_threshold", allow_zero=False)
+            saturation = _finite_number(metric.get("reward_saturation"), "reward_saturation", allow_zero=False)
+            if timing.repeats != repeats or len(timing.pairs) != repeats:
+                raise IsolationError("performance timing count does not match the frozen metric")
+            baselines = [pair.baseline_s for pair in timing.pairs]
+            candidates = [pair.candidate_s for pair in timing.pairs]
+            if any(value is None for value in (*baselines, *candidates)):
+                raise IsolationError("performance timing sample is missing")
+            conservative_speedup, mean_speedup = _paired_ratio_lower_bound(
+                baselines, candidates, t_critical,  # type: ignore[arg-type]
+            )
+        except (TypeError, ValueError) as exc:
+            if isinstance(exc, IsolationError):
+                raise
+            raise IsolationError("isolated performance metric is invalid") from exc
+        passed = timing.output_pass
+        reward = min(1.0, max(0.0, conservative_speedup / saturation)) if passed else 0.0
+        success = passed and conservative_speedup >= threshold
+        decision = {
+            "success": success,
+            "reward": reward,
+            "conservative_speedup": conservative_speedup,
+            "oracle_subject_ratio": mean_speedup,
+            "workload_sufficient": True,
+            "reason": (
+                "performance" if success else
+                "performance_below_threshold" if passed else "output_mismatch"
+            ),
+        }
         return {
             "decision": decision,
             "grade_passed": timing.output_pass,

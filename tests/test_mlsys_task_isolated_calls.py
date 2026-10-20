@@ -33,6 +33,13 @@ def test_range_sums_baseline_uses_public_task_function_name():
     assert "def range_sums(" in spec["baseline_source"]
     assert "def _reference(" not in spec["baseline_source"]
     assert spec["tuple_paths"] == [[1, "*"]]
+    assert spec["repeats"] == 7
+    assert spec["performance_metric"] == {
+        "name": "paired_ratio_student_t_lower",
+        "t_critical": 2.446911851144167,
+        "success_threshold": 2.0,
+        "reward_saturation": 4.0,
+    }
 
 
 def test_unknown_task_requires_an_isolated_adapter():

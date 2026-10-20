@@ -147,6 +147,12 @@ def materialize_isolated_calls(task_id: str, task_dir: Path) -> tuple[dict, dict
             "repeats": len(cases),
             "seed": int(module.WORKLOAD_SEED),
             "baseline_source": source,
+            "performance_metric": {
+                "name": "paired_ratio_student_t_lower",
+                "t_critical": float(module.timing.T_CRIT_95_DF6),
+                "success_threshold": float(module.timing.THRESHOLD),
+                "reward_saturation": 4.0,
+            },
         })
     provenance = {
         "task_id": task_id,

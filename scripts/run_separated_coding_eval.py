@@ -897,6 +897,20 @@ def _write_json(path: Path, payload: dict) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
+def _attempted_task_run_count(arm_reports: list[dict], secondary: dict) -> int:
+    """Count completed model-task rows across primary and eligible secondary arms."""
+    count = sum(
+        len(report.get("rows", []))
+        for report in arm_reports
+        if isinstance(report.get("rows", []), list)
+    )
+    for key in ("rows", "coder_1_5b_rows"):
+        rows = secondary.get(key)
+        if isinstance(rows, list):
+            count += len(rows)
+    return count
+
+
 async def run_unpatched(image: str, tasks: list[dict], decide, out: Path) -> tuple[list[dict], str | None]:
     rows = []
     for task in tasks:
@@ -1206,7 +1220,7 @@ async def async_main(args: argparse.Namespace) -> int:
         "evaluated_split": protocol["pack"].get("evaluation_split", "train"),
         "model_started": True,
         "resource_abort": resource_abort,
-        "attempted_task_runs": len(rows),
+        "attempted_task_runs": _attempted_task_run_count(arm_reports, secondary),
         "planned_task_runs": sum(len(arm["seeds"]) for arm in arms) * len(tasks),
         "primary": primary_summary,
         "primary_rows": rows,

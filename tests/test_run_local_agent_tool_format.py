@@ -1,5 +1,5 @@
-from scripts.run_local_agent import normalize_tool_call_format
-from scripts.run_separated_coding_eval import verified_task_success
+from scripts.run_local_agent import normalize_tool_call_format, refresh_public_tests_after_edit
+from scripts.run_separated_coding_eval import _attempted_task_run_count, verified_task_success
 
 
 def test_normalizes_a_fenced_qwen_json_tool_call_without_changing_raw_text():
@@ -59,3 +59,29 @@ def test_verified_success_requires_public_test_and_independent_hidden_grade():
     assert verified_task_success(agent, {"success": True}) is True
     assert verified_task_success({**agent, "public_test_result": None}, {"success": True}) is False
     assert verified_task_success(agent, {"success": False}) is False
+
+
+def test_applied_recovered_edit_requires_a_fresh_public_test(monkeypatch, tmp_path):
+    calls = []
+
+    def fail_fresh_test(workspace, image, test_hash):
+        calls.append((workspace, image, test_hash))
+        return {"passed": False, "returncode": 1}
+
+    monkeypatch.setattr("scripts.run_local_agent.run_public_tests", fail_fresh_test)
+    stale_result = {"passed": True, "returncode": 0}
+    refreshed = refresh_public_tests_after_edit(
+        {"applied": True}, tmp_path, "pinned-image", "test-hash",
+    )
+    assert refreshed == {"passed": False, "returncode": 1}
+    assert refreshed is not stale_result
+    assert calls == [(tmp_path, "pinned-image", "test-hash")]
+
+
+def test_attempted_task_run_count_includes_every_arm_and_secondary_model():
+    arm_reports = [
+        {"name": "greedy", "rows": [{}, {}]},
+        {"name": "sampled", "rows": [{}, {}]},
+    ]
+    secondary = {"rows": [{}], "coder_1_5b_rows": [{}, {}]}
+    assert _attempted_task_run_count(arm_reports, secondary) == 7
