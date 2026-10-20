@@ -43,8 +43,8 @@ def audit(run_dir: Path) -> dict:
         ):
             raise ValueError(f"evidence file hash mismatch: {name}")
     controls = record.get("controls", {})
-    if controls.get("frozen_nested_zip_checker_accepts_empty_result") is not True:
-        raise ValueError("baseline vulnerability reproducer did not hold")
+    if controls.get("frozen_checker_rejects_empty_result") is not True:
+        raise ValueError("frozen checker did not reject the malformed empty result")
     if controls.get("isolated_grader_rejects_empty_result") is not True:
         raise ValueError("isolated grader did not reject the empty result")
     if controls.get("isolated_grader_accepts_oracle_control") is not True:
@@ -55,9 +55,9 @@ def audit(run_dir: Path) -> dict:
         raise ValueError("result claim classification is missing or invalid")
     source_paths = {
         "protocol_sha256": "protocols/mlsys_separated_candidate_harness_v1.json",
-        "task_descriptor_sha256": "benchmarks/mlsys_coding_v1/tasks/global_grad_clip/task.json",
-        "hidden_evaluator_sha256": "benchmarks/mlsys_coding_v1/tasks/global_grad_clip/evaluator/test_hidden.py",
-        "oracle_sha256": "benchmarks/mlsys_coding_v1/tasks/global_grad_clip/evaluator/oracle/global_grad_clip.py",
+        "task_descriptor_sha256": "benchmarks/mlsys_coding_v1/tasks/row_log_softmax/task.json",
+        "hidden_evaluator_sha256": "benchmarks/mlsys_coding_v1/tasks/row_log_softmax/evaluator/test_hidden.py",
+        "oracle_sha256": "benchmarks/mlsys_coding_v1/tasks/row_log_softmax/evaluator/oracle/row_log_softmax.py",
         "pack_manifest_sha256": "benchmarks/mlsys_coding_v1/manifest.json",
         "frozen_harness_adapter_sha256": "benchmarks/mlsys_coding_v1/harness_adapter.py",
         "adapter_source_sha256": "scripts/mlsys_task_isolated_calls.py",
@@ -84,8 +84,8 @@ def audit(run_dir: Path) -> dict:
         "schema_version": 1,
         "files_verified": len(files),
         "task_id": record.get("task_id"),
-        "baseline_empty_shape_accepted": True,
-        "isolated_empty_shape_rejected": True,
+        "frozen_checker_rejected_empty_result": True,
+        "isolated_grader_rejected_empty_result": True,
         "oracle_control_passed": True,
         "model_capability_claim": False,
         "audit_passed": True,

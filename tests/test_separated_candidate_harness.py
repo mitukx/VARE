@@ -16,15 +16,15 @@ from vare.separated_candidate_harness import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-TASK_DIR = ROOT / "benchmarks/mlsys_coding_v1/tasks/global_grad_clip"
-TASK_ID = "mlsys-v1-global-grad-clip"
-ENTRYPOINT = "global_grad_clip:clip_by_global_norm"
+TASK_DIR = ROOT / "benchmarks/mlsys_coding_v1/tasks/row_log_softmax"
+TASK_ID = "mlsys-v1-row-log-softmax"
+ENTRYPOINT = "row_log_softmax:row_log_softmax"
 
 
 def _subject(root: Path, source: str) -> Path:
     subject = root / "subject"
     subject.mkdir(parents=True)
-    (subject / "global_grad_clip.py").write_text(source, encoding="utf-8")
+    (subject / "row_log_softmax.py").write_text(source, encoding="utf-8")
     return subject
 
 
@@ -60,21 +60,20 @@ def test_frozen_task_adapter_uses_isolated_shape_aware_grader(tmp_path: Path) ->
     )
     args, kwargs = evaluator._generator(0)
     expected = evaluator._reference(*args, **kwargs)
-    # Baseline reproducer: the frozen nested zip checker accepts an empty
-    # result without comparing either the outer or inner shape.
-    evaluator._checker([], expected, list(args), {}, args, kwargs)
+    with pytest.raises(AssertionError):
+        evaluator._checker([], expected, list(args), {}, args, kwargs)
 
     request = module.HarnessRequest(
         workspace=_subject(
             tmp_path,
-            "def clip_by_global_norm(grads, max_norm):\n    return []\n",
+            "def row_log_softmax(rows):\n    return []\n",
         ),
         entrypoint=ENTRYPOINT,
         task_type="correctness",
         trusted_task_path=TASK_DIR / "task.json",
-        input_generator=lambda _index: ((), {}),
-        reference=lambda: None,
-        checker=lambda *_args: None,
+        input_generator=evaluator._generator,
+        reference=evaluator._reference,
+        checker=evaluator._checker,
         repeats=4,
         timeout_s=20,
     )
@@ -89,20 +88,27 @@ def test_frozen_task_adapter_uses_isolated_shape_aware_grader(tmp_path: Path) ->
 
 def test_frozen_oracle_passes_through_the_same_isolated_adapter(tmp_path: Path) -> None:
     module = _pack_adapter()
+    scripts = ROOT / "scripts"
+    sys.path.insert(0, str(scripts))
+    from mlsys_task_isolated_calls import _load_evaluator
+
+    evaluator = _load_evaluator(
+        TASK_DIR / "evaluator/test_hidden.py", TASK_DIR.parents[1], TASK_ID,
+    )
     subject = tmp_path / "subject"
     subject.mkdir()
     shutil.copy(
-        TASK_DIR / "evaluator/oracle/global_grad_clip.py",
-        subject / "global_grad_clip.py",
+        TASK_DIR / "evaluator/oracle/row_log_softmax.py",
+        subject / "row_log_softmax.py",
     )
     request = module.HarnessRequest(
         workspace=subject,
         entrypoint=ENTRYPOINT,
         task_type="correctness",
         trusted_task_path=TASK_DIR / "task.json",
-        input_generator=lambda _index: ((), {}),
-        reference=lambda: None,
-        checker=lambda *_args: None,
+        input_generator=evaluator._generator,
+        reference=evaluator._reference,
+        checker=evaluator._checker,
         repeats=4,
         timeout_s=20,
     )
@@ -117,14 +123,14 @@ def test_frozen_oracle_passes_through_the_same_isolated_adapter(tmp_path: Path) 
 def test_task_descriptor_cannot_be_substituted(tmp_path: Path) -> None:
     forged = tmp_path / "task.json"
     forged.write_text(
-        '{"id":"mlsys-v1-global-grad-clip","metadata":{"task_type":"correctness"}}\n',
+        '{"id":"mlsys-v1-row-log-softmax","metadata":{"task_type":"correctness"}}\n',
         encoding="utf-8",
     )
-    subject = _subject(tmp_path, "def clip_by_global_norm(*args):\n    return []\n")
+    subject = _subject(tmp_path, "def row_log_softmax(*args):\n    return []\n")
     payload = _request(subject)
     payload["trusted_task_path"] = str(forged)
 
-    with pytest.raises(SeparatedHarnessError, match="canonical pack path"):
+    with pytest.raises(SeparatedHarnessError, match="supported MLSys pack"):
         grade_function(payload)
 
 
@@ -161,18 +167,40 @@ def test_malformed_workspace_fails_closed(tmp_path: Path) -> None:
     task_path = TASK_DIR / "task.json"
     payload = _request(tmp_path)
     payload["trusted_task_path"] = str(task_path)
-    payload["entrypoint"] = "global_grad_clip:other"
+    payload["entrypoint"] = "row_log_softmax:other"
     with pytest.raises(SeparatedHarnessError, match="entrypoint"):
         grade_function(payload)
 
 
-def test_dataset_standardization_fails_closed_without_mutation_observation(tmp_path: Path) -> None:
+@pytest.mark.parametrize(
+    "task_id,task_name",
+    [
+        ("mlsys-v1-grad-accum-tail", "grad_accum_tail"),
+        ("mlsys-v1-global-grad-clip", "global_grad_clip"),
+        ("mlsys-v1-range-sums", "range_sums"),
+        ("mlsys-v1-dataset-standardize", "dataset_standardize"),
+    ],
+)
+def test_mutation_sensitive_tasks_fail_closed(
+    task_id: str, task_name: str,
+) -> None:
     from vare.separated_candidate_harness import PACK_ROOTS, _task_adapter
 
-    dataset_task = PACK_ROOTS["mlsys-v1-"] / "tasks/dataset_standardize/task.json"
-    assert dataset_task.is_file()
+    pack = "mlsys-v1-" if task_id != "mlsys-v1-range-sums" else "mlsys-v1-"
+    task_path = PACK_ROOTS[pack] / "tasks" / task_name / "task.json"
+    assert task_path.is_file()
     with pytest.raises(SeparatedHarnessError, match="no isolated call materializer"):
-        _task_adapter("mlsys-v1-dataset-standardize")
+        _task_adapter(task_id, task_path)
+
+
+@pytest.mark.parametrize("task_name", ["row_log_softmax", "warmup_cosine", "paired_shuffle_loader"])
+def test_v3_copies_of_v1_tasks_route_from_canonical_path(task_name: str) -> None:
+    from vare.separated_candidate_harness import PACK_ROOTS, _task_adapter
+
+    task_path = PACK_ROOTS["mlsys-v3-"] / "tasks" / task_name / "task.json"
+    task_id = json.loads(task_path.read_text(encoding="utf-8"))["id"]
+    task_dir, _module, _function, _kind = _task_adapter(task_id, task_path)
+    assert task_dir == task_path.parent
 
 
 @pytest.mark.parametrize(

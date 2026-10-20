@@ -22,14 +22,15 @@ is excluded from new evidence.
 
 **Update 2026-10-20 — separated Docker grader integration:** the proposed
 frozen-pack adapter is implemented on the isolated VARE candidate runner for
-the supported v1/v3 coding task IDs. A consumed-task negative control confirms
-that the frozen global-gradient checker accepts an empty result while the
-isolated grader rejects it; the known oracle passes. The pack manifest and
-adapter/runtime sources are hash-locked and audited. This only closes an
-adapter boundary gap; the readiness NO-GO above remains in force, and no model
-rollout, optimizer update, or held-out success evidence was produced. See the
-[harness report](mlsys-separated-candidate-harness-v1-report.md) and [raw
-evidence](../results/mlsys-separated-candidate-harness-v1/run-1/).
+the supported v1/v3 coding task IDs. A consumed row-log-softmax calibration
+confirms both frozen checker and isolated grader reject a malformed empty
+result, and the known oracle passes. Four tasks whose checker contract
+requires observing candidate input mutation fail closed; the shared worker is
+unchanged. Pack manifests and adapter/runtime sources are hash-locked and
+audited. This only closes an adapter boundary gap; the readiness NO-GO above
+remains in force, and no model rollout, optimizer update, or held-out success
+evidence was produced. See the [harness report](mlsys-separated-candidate-harness-v1-report.md)
+and [final raw evidence](../results/mlsys-separated-candidate-harness-v1/run-3/).
 
 **Update 2026-10-20 — MLSys graders call a harness adapter; comparison v2 is a draft:** the v1 graders no longer import the candidate in-process. They call `harness_adapter.py`, which proposes `vare.separated_candidate_harness.grade_function` for PR #85 and falls back to a marked temporary shim. Trusted `metadata.task_type` is `correctness` or `performance`. Timing pairs are interleaved and the 2× gate uses the lower Student-t bound of the paired ratios. The parent rejects a reused input object or value. A performance task with prefixed measurement output scores 0. A correct slow range-sum and a correct slow standardizer still fail the 2× gate, including an identity cache on both tasks and an import-time print. The v1 all-seeds-plus-bootstrap acceptance text is unchanged; draft v2 does not use that vacuous conjunction. The default comparison command still exits 3. Real model patches stay refused because the live canary is readable. v1's 4×3 temperature-0 rule reaches 80% power at a 0.5 baseline only around a 0.491 absolute lift. Draft v2 is not run and does not freeze held-out membership. Its primary test is a task-level paired t-test with Holm across GRPO versus no-update and SFT versus no-update. The recorded single-test target, after a 20-30 task expansion, is 15-20 held-out tasks at 32 samples, about 8 percentage points, and that model is invalid near 0% success. See the [report](mlsys-coding-tasks-v1.md).
 

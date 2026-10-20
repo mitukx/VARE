@@ -96,12 +96,19 @@ def _verify_pack(pack_root: Path, protocol: dict[str, Any]) -> None:
             raise SeparatedHarnessError(f"task pack file hash mismatch: {name}")
 
 
-def _task_adapter(task_id: str) -> tuple[Path, str, str, str]:
-    pack_root = next(
-        (root for prefix, root in PACK_ROOTS.items() if task_id.startswith(prefix)), None,
-    )
-    if pack_root is None:
+def _task_adapter(task_id: str, task_path: Path) -> tuple[Path, str, str, str]:
+    match = None
+    for pack_root in PACK_ROOTS.values():
+        try:
+            relative = task_path.relative_to(pack_root / "tasks")
+        except ValueError:
+            continue
+        if len(relative.parts) == 2 and relative.name == "task.json":
+            match = (pack_root, task_path.parent)
+            break
+    if match is None:
         raise SeparatedHarnessError("task ID is not in a supported MLSys pack")
+    pack_root, task_dir = match
     scripts = ROOT / "scripts"
     if str(scripts) not in sys.path:
         sys.path.insert(0, str(scripts))
@@ -116,8 +123,9 @@ def _task_adapter(task_id: str) -> tuple[Path, str, str, str]:
     if task_id in {"mlsys-v3-ema-bias", "mlsys-v3-label-smooth"}:
         task_name = task_id
     else:
-        task_name = task_id.removeprefix("mlsys-v1-").removeprefix("mlsys-v3-").replace("-", "_")
-    task_dir = pack_root / "tasks" / task_name
+        task_name = task_id.removeprefix("mlsys-v1-").replace("-", "_")
+    if task_dir.name != task_name:
+        raise SeparatedHarnessError("task ID does not match its canonical task path")
     if not (task_dir / "task.json").is_file():
         raise SeparatedHarnessError("trusted task descriptor is missing")
     return task_dir, module, function, task_kind
@@ -171,7 +179,7 @@ def grade_function(request: dict[str, Any]) -> dict[str, Any]:
     task_id = task.get("id") if type(task) is dict else None
     if type(task_id) is not str:
         raise SeparatedHarnessError("trusted task ID is missing")
-    task_dir, module, function, task_kind = _task_adapter(task_id)
+    task_dir, module, function, task_kind = _task_adapter(task_id, task_path)
     if task_path != (task_dir / "task.json").resolve():
         raise SeparatedHarnessError("task descriptor is outside its canonical pack path")
     if request.get("task_type") != task_kind or task.get("metadata", {}).get("task_type") != task_kind:

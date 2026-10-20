@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the consumed-task shape-mismatch harness controls through Docker."""
+"""Run consumed-task calibration controls through the isolated Docker grader."""
 from __future__ import annotations
 
 import argparse
@@ -21,9 +21,9 @@ from vare.separated_candidate_harness import (
 )
 
 
-TASK_DIR = ROOT / "benchmarks/mlsys_coding_v1/tasks/global_grad_clip"
-TASK_ID = "mlsys-v1-global-grad-clip"
-ENTRYPOINT = "global_grad_clip:clip_by_global_norm"
+TASK_DIR = ROOT / "benchmarks/mlsys_coding_v1/tasks/row_log_softmax"
+TASK_ID = "mlsys-v1-row-log-softmax"
+ENTRYPOINT = "row_log_softmax:row_log_softmax"
 ADAPTER_SCRIPT = ROOT / "scripts/mlsys_task_isolated_calls.py"
 
 
@@ -39,9 +39,9 @@ def write_json(path: Path, value: object) -> None:
     path.write_text(json.dumps(value, indent=2, sort_keys=True, allow_nan=False) + "\n")
 
 
-def baseline_accepts_empty_result() -> bool:
+def baseline_rejects_empty_result() -> bool:
     path = TASK_DIR / "evaluator/test_hidden.py"
-    spec = importlib.util.spec_from_file_location("frozen_global_grad_hidden", path)
+    spec = importlib.util.spec_from_file_location("frozen_row_log_softmax_hidden", path)
     if spec is None or spec.loader is None:
         raise RuntimeError("cannot load frozen hidden checker")
     module = importlib.util.module_from_spec(spec)
@@ -50,8 +50,11 @@ def baseline_accepts_empty_result() -> bool:
     spec.loader.exec_module(module)
     args, kwargs = module._generator(0)
     expected = module._reference(*args, **kwargs)
-    module._checker([], expected, list(args), {}, args, kwargs)
-    return True
+    try:
+        module._checker([], expected, list(args), {}, args, kwargs)
+    except AssertionError:
+        return True
+    return False
 
 
 def run(output: Path) -> int:
@@ -75,18 +78,18 @@ def run(output: Path) -> int:
 
     candidate_bad = output / "candidate-empty-result"
     candidate_bad.mkdir()
-    (candidate_bad / "global_grad_clip.py").write_text(
-        "def clip_by_global_norm(grads, max_norm):\n    return []\n", encoding="utf-8",
+    (candidate_bad / "row_log_softmax.py").write_text(
+        "def row_log_softmax(rows):\n    return []\n", encoding="utf-8",
     )
     candidate_good = output / "candidate-oracle-control"
     candidate_good.mkdir()
     shutil.copy(
-        TASK_DIR / "evaluator/oracle/global_grad_clip.py",
-        candidate_good / "global_grad_clip.py",
+        TASK_DIR / "evaluator/oracle/row_log_softmax.py",
+        candidate_good / "row_log_softmax.py",
     )
 
     started = time.monotonic()
-    baseline_pass = baseline_accepts_empty_result()
+    baseline_rejects = baseline_rejects_empty_result()
     bad = grade_function({
         "workspace": str(candidate_bad),
         "entrypoint": ENTRYPOINT,
@@ -121,7 +124,7 @@ def run(output: Path) -> int:
         "protocol_sha256": sha256_file(PROTOCOL_PATH),
         "task_descriptor_sha256": sha256_file(TASK_DIR / "task.json"),
         "hidden_evaluator_sha256": sha256_file(TASK_DIR / "evaluator/test_hidden.py"),
-        "oracle_sha256": sha256_file(TASK_DIR / "evaluator/oracle/global_grad_clip.py"),
+        "oracle_sha256": sha256_file(TASK_DIR / "evaluator/oracle/row_log_softmax.py"),
         "pack_manifest_sha256": sha256_file(TASK_DIR.parents[1] / "manifest.json"),
         "frozen_harness_adapter_sha256": sha256_file(ROOT / "benchmarks/mlsys_coding_v1/harness_adapter.py"),
         "adapter_source_sha256": sha256_file(ADAPTER_SCRIPT),
@@ -135,7 +138,7 @@ def run(output: Path) -> int:
         "docker_server": version.stdout.strip(),
         "elapsed_s": elapsed,
         "controls": {
-            "frozen_nested_zip_checker_accepts_empty_result": baseline_pass,
+            "frozen_checker_rejects_empty_result": baseline_rejects,
             "isolated_grader_rejects_empty_result": bad["passed"] is False,
             "isolated_grader_rejection_reason": bad["error"],
             "isolated_grader_accepts_oracle_control": good["passed"] is True,
@@ -160,7 +163,7 @@ def run(output: Path) -> int:
     write_json(output / "evidence_manifest.json", manifest)
     print(json.dumps({
         "output": str(output),
-        "baseline_accepts_empty": baseline_pass,
+        "frozen_checker_rejects_empty": baseline_rejects,
         "isolated_empty_passed": bad["passed"],
         "oracle_control_passed": good["passed"],
         "elapsed_s": elapsed,
