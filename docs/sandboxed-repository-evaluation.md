@@ -111,10 +111,19 @@ run in a second container that mounts the snapshot read-only and the staged
 evaluator at `/grader`. The agent task root for that pack is `task.json`
 only, and train/held-out selection refuses held-out ids.
 
-A hidden test that imports candidate code still executes inside the grader
-container, so that imported code can read `/grader/evaluator` during scoring.
-The candidate container and the agent task root do not receive those files.
-`DockerRepositoryEvaluator` remains limited to tasks marked public.
+Hidden function calls go through `vare.isolated_candidate`. The trusted
+parent keeps expected outputs, hidden tests, and the clock. Each call is a
+new container using `DockerIsolationRunner` flags (`--network=none`,
+`--read-only`, dropped capabilities, uid 65534) and one readonly `/subject`
+mount. `/grader` is not mounted. Arguments are JSON on stdin after import.
+The nonce stays in the parent and is not sent into the container. A zero
+exit status is not a pass.
+
+`ExecutableEvaluator` still runs its commands in-process. A hidden test that
+imports candidate code on that path can read `/grader/evaluator` and the
+process clock. Do not use it for hidden tests or a performance gate.
+`DockerRepositoryEvaluator` remains limited to tasks marked public. The
+isolated container is a grading boundary, not a kernel-exploit claim.
 
 ## Limited trusted JSON-I/O scoring boundary
 

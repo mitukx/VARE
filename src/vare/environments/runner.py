@@ -347,7 +347,12 @@ def _relative_gain(candidate: float, baseline: float, direction: str) -> float:
 
 
 class ExecutableEvaluator:
-    """Trusted, fail-closed evaluator for repository-editing environments."""
+    """Trusted, fail-closed evaluator for repository-editing environments.
+
+    Commands run in this process. Hidden tests and performance measurements
+    that execute candidate code must use ``vare.isolated_candidate`` instead.
+    An in-process import can read grader files and this process's clock.
+    """
 
     def __init__(self, spec: EngineeringTaskSpec, *, evaluator_root: str | Path | None = None) -> None:
         self.spec = spec

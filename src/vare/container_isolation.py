@@ -15,6 +15,7 @@ import os
 from pathlib import Path
 import re
 import secrets
+import subprocess
 import time
 from typing import Sequence
 
@@ -149,6 +150,34 @@ class DockerIsolationRunner:
             "--mount", mount,
             "--workdir=/workspace",
             limits.image, *command,
+        ]
+
+    def isolated_subject_argv(
+        self, limits: IsolationLimits, *, name: str, subject: Path, command: Sequence[str],
+    ) -> list[str]:
+        """Container for one candidate call.
+
+        The only bind mount is the staged subject, read-only, at ``/subject``.
+        The grader directory is not mounted. ``_common`` supplies the network,
+        capability, read-only, and uid 65534 boundaries.
+        """
+        if not re.fullmatch(r"vare-call-[0-9a-f]{24}", name):
+            raise IsolationError("invalid isolated call container identity")
+        if not command or not all(isinstance(item, str) and item for item in command):
+            raise ValueError("candidate command must be a nonempty string vector")
+        checked = _mount_source(subject, directory=True)
+        grader = Path("/grader")
+        if checked == grader or grader in checked.parents:
+            raise IsolationError("refusing to mount the grader tree into the candidate")
+        if (checked / "evaluator").is_dir():
+            raise IsolationError("isolated subject must not include an evaluator tree")
+        return [
+            *self._common(limits, name),
+            "--interactive",
+            "--mount", f"type=bind,source={checked},target=/subject,readonly",
+            "--workdir=/",
+            limits.image,
+            *command,
         ]
 
     def evaluator_argv(
@@ -341,6 +370,40 @@ class DockerIsolationRunner:
                 "Docker daemon did not confirm forced cleanup: "
                 + err.decode("utf-8", errors="replace")[:500]
             )
+
+    def force_remove_sync(self, name: str) -> None:
+        """Remove one managed container from synchronous call supervision."""
+        if not re.fullmatch(r"vare-[a-z]+-[0-9a-f]{24}", name):
+            raise IsolationError("invalid managed container identity")
+        env = self._client_env
+        deadline = time.monotonic() + 10.0
+        while True:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                raise IsolationError("Docker forced cleanup timed out")
+            try:
+                proc = subprocess.run(
+                    [self.docker_binary, "rm", "-f", name],
+                    capture_output=True,
+                    env=env,
+                    timeout=max(0.01, min(2.0, remaining)),
+                    check=False,
+                )
+            except subprocess.TimeoutExpired as exc:
+                raise IsolationError("Docker forced cleanup timed out") from exc
+            err = proc.stderr or b""
+            if proc.returncode == 0 or b"No such container" in err or b"No such object" in err:
+                return
+            if b"removal of container" in err.lower() and b"already in progress" in err.lower():
+                if time.monotonic() < deadline:
+                    time.sleep(min(0.05, max(0.0, deadline - time.monotonic())))
+                    continue
+            if time.monotonic() >= deadline:
+                raise IsolationError(
+                    "Docker daemon did not confirm forced cleanup: "
+                    + err.decode("utf-8", errors="replace")[:500]
+                )
+            time.sleep(0.05)
 
     async def run_candidate(
         self, limits: IsolationLimits, *, allowed_workspace_root: Path,
