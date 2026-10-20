@@ -30,7 +30,7 @@
   "change_from_v4": "The v4 pilot preserved five failures, but model outputs used ChatML-wrapped JSON (for example <|im_start|> followed by a write_file object), which the bare-JSON normalizer did not recognize. V5 strips only the known ChatML boundary tokens and only accepts exact JSON name/arguments objects for allowlisted tools. Ordinary explanatory prose remains unmodified. V2-v4 remain immutable development failures; no held-out tasks were used.",
   "change_from_v5": "The v5 runs completed but the Qwen output appended a trailing ChatML <|im_start|> generation marker after otherwise complete JSON tool calls. Because strict whole-object parsing rejected that suffix, all five remained failed without candidate execution. V6 removes only known boundary tokens at either end before exact schema and allowlist checks. Trajectories v2-v5 are retained as harness-format failures; task/model/prompt/budget remain fixed.",
   "change_from_v6": "V6 produced two source changes; grad_accum_tail passed the independent hidden cases (3/3), but no public test was run because the model stopped after editing. The paired-loader, range-sums, and row-log-softmax outputs wrapped valid JSON in a closing Markdown fence and were not parsed. V7 accepts only strict allowlisted JSON surrounded by known Markdown/ChatML wrappers, automatically runs the immutable public test after each applied patch, and counts success only when source changed, public test passed, and hidden grader passed. V2-v6 evidence remains unchanged; development tasks only.",
-  "change_from_v7_dev": "Frozen two-task matched cohort uses the v3 pack commit. No model inference was started under the earlier manifest-check failure; pack verification now excludes internal Git metadata while preserving file hashes.",
+  "change_from_v7_dev": "Two pre-inference attempts failed closed (pack metadata walker, then an accidentally corrected starter baseline). No model inference occurred. Frozen task pack commit now has an intentionally incorrect label-smoothing starter under a correct contract and independent grader, and baseline checks must fail before inference.",
   "claim_limit": "Two authored exploratory tasks only; one deterministic greedy run per task. Architecture and model generation differ, so this is not a causal model-size-only comparison. No broad MLSys generalization or VARE reliability benefit is established.",
   "execution": {
     "accepted_container_images": {
@@ -181,13 +181,13 @@
   },
   "pack": {
     "evaluation_split": "heldout",
-    "git_commit": "a79491fe9b85fc69d6a9c3e017c260f31ac391ff",
+    "git_commit": "14291c1f86b8015dba1414a5690ac044573ae365",
     "git_ref": "main",
     "heldout": [
       "mlsys-v3-ema-bias",
       "mlsys-v3-label-smooth"
     ],
-    "manifest_sha256": "d460d1156f7392528ab5daa4bb96b1b511f1c23614d5e4b02dbfca76aca9bcc7",
+    "manifest_sha256": "3fb5bdcf8b21e2d1a2768557855d732e35c377273073aa7d894e2910ce2852d2",
     "note": "New two-task exploratory heldout cohort. Prior v2 label-smoothing specification/grader inconsistency was corrected before freezing this v3 pack. Candidate receives task.json only; grader/oracle remain operator-side.",
     "pack_id": "mlsys-coding-v3",
     "train": [
@@ -198,6 +198,16 @@
       "mlsys-v1-warmup-cosine"
     ]
   },
+  "pre_inference_gate_failures": [
+    {
+      "attempt": "v1",
+      "result": "failed closed before model download/inference because manifest rebuilding included repository metadata"
+    },
+    {
+      "attempt": "v2",
+      "result": "failed the unpatched-baseline gate before model download/inference because the label-smoothing starter was already correct; pack revised to restore its documented defect and retain a smoke test that detects the error"
+    }
+  ],
   "primary_metric": "Independent verified task success among the two frozen heldout tasks. A success requires source change, public smoke test pass, and isolated hidden grader pass.",
   "protocol_comparison": {
     "interpretation_limit": "4B Qwen3-Instruct and 7B Qwen2.5-Coder differ in family, instruction/coding tuning, and scale.",
