@@ -7,6 +7,7 @@ import json
 import os
 import subprocess
 import sys
+from types import SimpleNamespace
 from pathlib import Path
 
 import pytest
@@ -963,6 +964,10 @@ def test_isolated_performance_reward_uses_frozen_paired_ratio_confidence_bound(
         "performance", True, 7, 20261019, pairs, None, None, None, None, None,
         workload_sufficient=True,
     )
+    monkeypatch.setattr(
+        separated_grading, "grade_calls",
+        lambda *args, **kwargs: SimpleNamespace(passed=True, to_dict=lambda: {"passed": True}),
+    )
     monkeypatch.setattr(separated_grading, "paired_timing", lambda *args, **kwargs: timing)
     subject = tmp_path / "subject"
     subject.mkdir()
@@ -977,6 +982,13 @@ def test_isolated_performance_reward_uses_frozen_paired_ratio_confidence_bound(
         "atol": 0.0,
         "timeout_s": 60,
         "cases": rows,
+        "correctness_calls": [
+            {"case_id": "valid", "args": [[], []], "kwargs": {}, "expected": []},
+            {
+                "case_id": "invalid", "args": [[], []], "kwargs": {},
+                "expected": None, "expected_exception": "ValueError",
+            },
+        ],
         "repeats": 7,
         "seed": 20261019,
         "baseline_source": "def range_sums(values, queries): return []\n",
@@ -996,6 +1008,55 @@ def test_isolated_performance_reward_uses_frozen_paired_ratio_confidence_bound(
     assert decision["success"] is False
     assert decision["reason"] == "performance_below_threshold"
     assert decision["reward"] == pytest.approx(decision["conservative_speedup"] / 4.0)
+
+
+def test_isolated_performance_scoring_stops_on_hidden_correctness_failure(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        separated_grading, "grade_calls",
+        lambda *args, **kwargs: SimpleNamespace(passed=False, to_dict=lambda: {"passed": False}),
+    )
+    monkeypatch.setattr(
+        separated_grading, "paired_timing",
+        lambda *args, **kwargs: pytest.fail("timing must not run before hidden correctness passes"),
+    )
+    subject = tmp_path / "subject"
+    subject.mkdir()
+    (subject / "range_sums.py").write_text("def range_sums(values, queries): return []\n")
+    calls_path = tmp_path / "isolated_calls.json"
+    calls_path.write_text(json.dumps({
+        "task_kind": "performance",
+        "module": "range_sums",
+        "function": "range_sums",
+        "rtol": 0.0,
+        "atol": 0.0,
+        "timeout_s": 60,
+        "cases": [{"case_id": str(i), "args": [[], []], "kwargs": {}, "expected": []}
+                  for i in range(7)],
+        "correctness_calls": [
+            {"case_id": "valid", "args": [[], []], "kwargs": {}, "expected": []},
+            {
+                "case_id": "invalid", "args": [[], []], "kwargs": {},
+                "expected": None, "expected_exception": "ValueError",
+            },
+        ],
+        "repeats": 7,
+        "seed": 20261019,
+        "baseline_source": "def range_sums(values, queries): return []\n",
+        "performance_metric": {
+            "name": "paired_ratio_student_t_lower",
+            "t_critical": 2.446911851144167,
+            "success_threshold": 2.0,
+            "reward_saturation": 4.0,
+        },
+    }))
+
+    graded = separated_grading.grade_isolated_subject(subject, calls_path, image=IMAGE)
+
+    assert graded["decision"]["success"] is False
+    assert graded["decision"]["reward"] == 0.0
+    assert graded["decision"]["reason"] == "correctness_failed"
 
 
 @pytest.mark.skipif(not _docker_ready(), reason="pinned python image is not available locally")

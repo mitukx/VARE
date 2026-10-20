@@ -657,6 +657,34 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
             raise IsolationError("isolated call spec seed is invalid")
         if type(source) is not str or not source or len(source.encode("utf-8")) > 100_000:
             raise IsolationError("isolated call spec baseline is invalid")
+        correctness_rows = _call_rows(spec, "correctness_calls")
+        correctness_calls = [
+            FunctionCall(
+                str(row.get("case_id", index)), module, function,
+                list(row.get("args", [])), row["expected"], dict(row.get("kwargs", {})),
+                expected_exception=row.get("expected_exception"),
+                tuple_paths=tuple(tuple(path) for path in tuple_paths),
+            )
+            for index, row in enumerate(correctness_rows)
+        ]
+        correctness = grade_calls(
+            subject, correctness_calls, task_kind="correctness", image=image,
+            timeout_s=timeout_s, rtol=rtol, atol=atol,
+        )
+        if not correctness.passed:
+            return {
+                "decision": {
+                    "success": False,
+                    "reward": 0.0,
+                    "conservative_speedup": None,
+                    "oracle_subject_ratio": None,
+                    "workload_sufficient": False,
+                    "reason": "correctness_failed",
+                },
+                "grade_passed": False,
+                "grade": {"correctness": correctness.to_dict()},
+                "test_timed_out": False,
+            }
         with tempfile.TemporaryDirectory(prefix="vare-oracle-") as folder:
             oracle = Path(folder)
             (oracle / f"{module}.py").write_text(source, encoding="utf-8")
@@ -708,7 +736,10 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
         return {
             "decision": decision,
             "grade_passed": timing.output_pass,
-            "grade": timing.to_dict(),
+            "grade": {
+                "correctness": correctness.to_dict(),
+                "performance": timing.to_dict(),
+            },
             "test_timed_out": False,
         }
     except CandidateHarnessError as exc:

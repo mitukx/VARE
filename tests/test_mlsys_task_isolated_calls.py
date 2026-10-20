@@ -34,6 +34,8 @@ def test_range_sums_baseline_uses_public_task_function_name():
     assert "def _reference(" not in spec["baseline_source"]
     assert spec["tuple_paths"] == [[1, "*"]]
     assert spec["repeats"] == 7
+    assert len(spec["correctness_calls"]) == 2
+    assert spec["correctness_calls"][1]["expected_exception"] == "ValueError"
     assert spec["performance_metric"] == {
         "name": "paired_ratio_student_t_lower",
         "t_critical": 2.446911851144167,

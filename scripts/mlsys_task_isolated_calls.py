@@ -142,8 +142,26 @@ def materialize_isolated_calls(task_id: str, task_dir: Path) -> tuple[dict, dict
         source = source.replace("def _reference(", f"def {function_name}(", 1)
         if f"def {function_name}(" not in source:
             raise ValueError(f"frozen evaluator reference has an unexpected definition: {task_id}")
+        correctness_cases = []
+        for index in range(2):
+            args, kwargs = generator(index)
+            try:
+                expected = reference(*args, **kwargs)
+            except ValueError:
+                expected = None
+                expected_exception = "ValueError"
+            else:
+                expected_exception = None
+            correctness_cases.append({
+                "case_id": f"{task_id}-grader-correctness-{index}",
+                "args": _json_value(list(args)),
+                "kwargs": _json_value(kwargs),
+                "expected": _json_value(expected),
+                **({"expected_exception": expected_exception} if expected_exception else {}),
+            })
         spec.update({
             "cases": cases,
+            "correctness_calls": correctness_cases,
             "repeats": len(cases),
             "seed": int(module.WORKLOAD_SEED),
             "baseline_source": source,
