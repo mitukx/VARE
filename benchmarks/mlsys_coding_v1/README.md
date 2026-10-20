@@ -24,18 +24,14 @@ public repository-grader opt-in refuses any spec that is not explicitly
 exists, uses the temporary shim `candidate_call.py`.
 
 Performance tasks (`range_sums`, `dataset_standardize`) print one JSON object
-on grader stdout. The object records seven parent-timed samples for a frozen
-slow reference and for the candidate, plus the sample standard deviations.
-The retained stdout is part of the existing command-result schema. The
-protocol reward recomputes
-
-```text
-conservative_speedup = baseline_ci95_low / candidate_ci95_high
-```
-
-with a Student-t 95% interval at 6 degrees of freedom. Success requires that
-ratio to be at least 2. The shaped reward is `min(1, speedup / 4)` when
-hidden correctness passed.
+on grader stdout. The object records seven interleaved parent-timed samples
+for a frozen slow reference and for the candidate. The paired-ratio statistic
+lives only in `evaluator_timing.py`. Task directories do not copy it. The
+protocol reward recomputes the lower Student-t 95% bound of the seven paired
+ratios `baseline_seconds / candidate_seconds` (critical value
+`2.446911851144167`, 6 degrees of freedom). Success requires that bound to be
+at least 2. The shaped reward is `min(1, speedup / 4)` when hidden
+correctness passed. A missing or prefixed measurement scores 0.
 
 ## Split
 

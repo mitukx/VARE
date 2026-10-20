@@ -10,15 +10,15 @@
     "required_clearance_file": "protocols/mlsys_coding_isolation_clearance_v1.json",
     "required_clearance_fields": {
       "hidden_tests_unreadable_from_candidate_namespace": true,
-      "pack_manifest_sha256": "6c029dfc30895ddaeea39ddf14d79390b750894a6914658ea8d9ef8768f348af"
+      "pack_manifest_sha256": "2c67d85a6806b3bbcbc63676f64fc955c5c7b3c9c4127a5a3caade1541efb4ab"
     },
     "status": "not_authorized"
   },
   "base_pack": {
-    "manifest_sha256": "6c029dfc30895ddaeea39ddf14d79390b750894a6914658ea8d9ef8768f348af",
+    "manifest_sha256": "2c67d85a6806b3bbcbc63676f64fc955c5c7b3c9c4127a5a3caade1541efb4ab",
     "pack_id": "mlsys-coding-v1",
     "previous_manifest_sha256": "18c5999f823f9a550a561a913023b87f1fc7bf5a86f481d319e4778212d97499",
-    "previous_manifest_pin": "PR #85 scripts/run_separated_coding_eval.py pinned the previous hash at commit c8c0488980425e6d316abc21dfc136f16c7e265b. The v1 decision rule, seeds, reward constants, and split membership are unchanged. The hash changed because task metadata now carries task_type and the graders call the harness adapter. #85 will not match this pack until that pin is updated."
+    "previous_manifest_pin": "PR #85 scripts/run_separated_coding_eval.py pinned the previous hash at commit c8c0488980425e6d316abc21dfc136f16c7e265b. The v1 decision rule, seeds, reward constants, and split membership are unchanged. The hash changed because task metadata now carries task_type, the graders call the harness adapter, and the paired-ratio statistic is only in evaluator_timing.py. #85 will not match this pack until that pin is updated."
   },
   "budgets": {
     "evaluation_identical_across_arms": {
@@ -62,6 +62,7 @@
     "Accepted model actions are a JSON tool call, a fenced whole file, or a unified diff."
   ],
   "claim_boundary": "Draft for review. It does not authorize a model run, it does not edit the v1 decision rule, held-out membership is not frozen, and held-out evaluation was not run.",
+  "v1_seed_bootstrap": "v1 still requires every seed difference to be strictly positive and the 2.5 percentile of a 10000-resample seed bootstrap to be positive. With four tasks each per-seed difference is a multiple of 0.25, so once every observed difference is positive every resample is positive and the percentile clause cannot reject. This draft does not keep that conjunction. Its primary test is the task-level paired t-test with Holm. The task-clustered bootstrap interval is secondary and is not an acceptance gate. The minimum detectable effect is the paired-t table in power.",
   "cost_sketch": {
     "eval_generation_seconds_formula": "attempts * 2048 / 12.29",
     "eval_generation_seconds_no_update_at_20_tasks_k_32": 106649.3083807974,
@@ -209,7 +210,7 @@
     ]
   },
   "status": "draft",
-  "v1_kept_intact": "benchmarks/mlsys_coding_v1/split.json still lists mlsys-v1-causal-attention as held-out. v1's acceptance rule is not edited. The v1 manifest hash changed only because the graders now take parent clocks and fresh inputs per timing draw, and metadata.task_type was added.",
+  "v1_kept_intact": "benchmarks/mlsys_coding_v1/split.json still lists mlsys-v1-causal-attention as held-out. v1's acceptance rule is not edited. The v1 manifest hash changed because the graders take parent clocks, reject reused inputs, and score interleaved paired ratios from evaluator_timing.py, and because metadata.task_type was added.",
   "training_gate": {
     "context": "Qwen2.5-0.5B-Instruct was reported at 0/5 greedy on the five train tasks because every attempt failed the tool-call format. This draft records that report as the reason to change the screen. It does not re-run the screen and it is not a new measurement.",
     "format_failure_rate": "Fraction of samples that classify as format_failure. Recorded on its own. A format failure is not a correct sample.",

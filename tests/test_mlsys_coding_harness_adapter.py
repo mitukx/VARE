@@ -129,3 +129,42 @@ def test_proposed_harness_is_preferred_and_must_enforce_the_nonce(
     monkeypatch.setattr(adapter, "resolve_proposed_harness", lambda: skipped_nonce)
     with pytest.raises(adapter.HarnessAdapterError, match="nonce"):
         adapter.run_harness(_request(tmp_path, adapter))
+
+
+def _accepts_a_list(request, adapter):
+    """The stock fixture function rejects a list, so the second draw never runs."""
+    (request.workspace / "widget.py").write_text(
+        "def add(value):\n    return len(value)\n",
+        encoding="utf-8",
+    )
+    request.reference = lambda value: len(value)
+
+    def checker(actual, expected, _positional, _keywords, _args, _kwargs):
+        if actual != expected:
+            raise AssertionError(actual)
+
+    request.checker = checker
+    return request
+
+
+def test_parent_rejects_a_reused_input_object(tmp_path: Path, adapter):
+    request = _accepts_a_list(_request(tmp_path, adapter, repeats=2), adapter)
+    shared = [1, 2, 3]
+
+    def reused(_index: int):
+        return ((shared,), {})
+
+    request.input_generator = reused
+    with pytest.raises(adapter.HarnessAdapterError, match="input object was reused"):
+        adapter.run_harness(request)
+
+
+def test_parent_rejects_a_reused_input_value(tmp_path: Path, adapter):
+    request = _accepts_a_list(_request(tmp_path, adapter, repeats=2), adapter)
+
+    def same_contents(_index: int):
+        return (([1, 2, 3],), {})
+
+    request.input_generator = same_contents
+    with pytest.raises(adapter.HarnessAdapterError, match="input value was reused"):
+        adapter.run_harness(request)

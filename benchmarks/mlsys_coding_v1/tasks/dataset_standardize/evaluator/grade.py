@@ -17,7 +17,7 @@ _PACK = Path(__file__).resolve().parents[3]
 if str(_PACK) not in sys.path:
     sys.path.insert(0, str(_PACK))
 
-import timing
+import evaluator_timing as timing
 from harness_adapter import HarnessRequest, run_harness
 
 WORKLOAD_N = 2000
@@ -73,7 +73,7 @@ def _checker(actual, expected, positional, _keywords, args, _kwargs):
 
 def main() -> int:
     report = {
-        "measurement": "student_t_conservative_speedup",
+        "measurement": "paired_ratio_student_t_lower",
         "correctness_pass": False,
         "improvement_pass": False,
         "workload": {"n": WORKLOAD_N, "seed": WORKLOAD_SEED},

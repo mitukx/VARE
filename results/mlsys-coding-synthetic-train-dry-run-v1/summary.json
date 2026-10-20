@@ -58,9 +58,9 @@
     "eval_generation_seconds_at_full_2048_token_cap": 1999.6745321399512,
     "eval_wall_cap_seconds_per_arm": 7200,
     "measured_synthetic_seconds": {
-      "grpo": 0.5010327620002499,
-      "no_update": 0.10115987499921175,
-      "sft": 0.027913189999708266
+      "grpo": 0.5481909999998607,
+      "no_update": 0.1184875880007894,
+      "sft": 0.03179520100093214
     },
     "no_update_training_seconds": 0.0,
     "note": "Generation time uses the retained 12.29 tokens/s from the CPU code-repair feasibility run, which solved 0/32 on a different task. It is not a measurement of this pack. A 0.5B full-parameter CPU update in the retained OpenBookQA comparison peaked at 11924.6 MiB, above this protocol's 8 GiB training cap. Inference RSS in the code-repair run was 3430170624 bytes.",
@@ -90,19 +90,19 @@
   },
   "heldout_tasks_read": [],
   "label": "synthetic_mock_policy_train_split_only",
-  "manifest_sha256": "6c029dfc30895ddaeea39ddf14d79390b750894a6914658ea8d9ef8768f348af",
-  "peak_rss_bytes": 30142464,
+  "manifest_sha256": "2c67d85a6806b3bbcbc63676f64fc955c5c7b3c9c4127a5a3caade1541efb4ab",
+  "peak_rss_bytes": 30322688,
   "performance_proxy": {
-    "baseline_stdev_s": 0.017474274949834657,
-    "candidate_stdev_s": 0.012248509199307159,
-    "conservative_speedup": 0.6827946789912035,
+    "baseline_stdev_s": 0.015603764428936334,
+    "candidate_stdev_s": 0.016129270258720168,
+    "conservative_speedup": 0.6424230934752841,
     "oracle_patch": false,
     "passed": false,
     "policy_class": "synthetic-mock-policy",
     "reason": "performance_below_threshold",
-    "reward": 0.17069866974780087,
+    "reward": 0.16060577336882104,
     "role": "train_split_cost_proxy_not_a_heldout_score",
-    "seconds": 4.182229929000641,
+    "seconds": 4.196792416001699,
     "success": false,
     "task_id": "mlsys-v1-range-sums"
   },
@@ -133,5 +133,5 @@
   },
   "split_sha256": "ee01a7820d93424578491767a8460f990b3c38b5801df7709359c0f84e3b0b84",
   "status": "synthetic_dry_run",
-  "wall_seconds": 4.841652543000237
+  "wall_seconds": 4.9204863119994116
 }

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import re
 import subprocess
 import sys
 from pathlib import Path
@@ -37,6 +36,12 @@ def test_v1_protocol_is_unchanged_and_refuses():
     assert protocol["protocol_id"] == "mlsys-coding-policy-comparison-v1"
     assert protocol["authorization"]["status"] == "not_authorized"
     assert protocol["runner"]["implemented"] is False
+    assert protocol["metrics"]["acceptance"] == (
+        "For each of the two primary contrasts, all three seeds have a strictly "
+        "positive paired difference and the 2.5 percentile of the 10000-resample "
+        "seed bootstrap of the mean paired difference is greater than 0. Report "
+        "both contrasts. A point estimate alone is not acceptance."
+    )
     assert protocol["task_pack_manifest_sha256"] == FROZEN_MANIFEST_SHA256
     assert protocol["budgets"]["evaluation_identical_across_arms"]["seeds"] == [
         101,
@@ -234,6 +239,9 @@ def test_power_records_match_the_closed_form():
     assert "about 8 percentage points" in proposal["power"]["recommendation"]
     assert student_t_sf(2.446911851144167, 6) == pytest.approx(0.025, abs=1e-9)
     assert proposal["training_gate"]["prerequisite_for_heldout_power"]
+    assert "cannot reject" in proposal["v1_seed_bootstrap"]
+    assert "does not keep that conjunction" in proposal["v1_seed_bootstrap"]
+    assert "all three seeds" not in proposal["metrics"]["acceptance"]
 
 
 def test_paired_t_and_holm_match_the_draft_rule():
@@ -245,41 +253,6 @@ def test_paired_t_and_holm_match_the_draft_rule():
     assert holm_rejects([0.03, 0.04]) == [False, False]
     assert holm_rejects([0.01, 0.06]) == [True, False]
     assert holm_rejects([0.06, 0.01]) == [False, True]
-
-
-def test_power_script_reproduces_the_recorded_table():
-    pytest.importorskip("numpy")
-    completed = subprocess.run(
-        [sys.executable, str(ROOT / "benchmarks" / "mlsys_coding_v2" / "power.py")],
-        check=False,
-        capture_output=True,
-        text=True,
-        timeout=60,
-    )
-    assert completed.returncode == 0, completed.stderr
-    proposal = json.loads(PROTOCOL_V2.read_text(encoding="utf-8"))
-    recorded = {
-        (row["heldout_tasks"], row["k"]): row
-        for row in proposal["power"]["minimum_detectable_effect_at_80_percent_power"]
-    }
-    assert "baseline mean success 35.4%" in completed.stdout
-    parsed = 0
-    for line in completed.stdout.splitlines():
-        if not line.startswith("heldout_tasks="):
-            continue
-        matched = re.fullmatch(
-            r"heldout_tasks=\s*(\d+)\s+k=\s*(\d+)\s+seeds=\s*(\d+)\s+"
-            r"MDE_logit=(\S+)\s+MDE_pp=([0-9.]+)\s+type1=([0-9.]+)",
-            line,
-        )
-        assert matched is not None, line
-        key = (int(matched.group(1)), int(matched.group(2)))
-        row = recorded[key]
-        assert float(matched.group(4)) == pytest.approx(row["mde_logit"])
-        assert float(matched.group(5)) == pytest.approx(row["mde_percentage_points"])
-        assert round(float(matched.group(6)), 3) == row["type_i"]
-        parsed += 1
-    assert parsed == len(recorded)
 
 
 def test_task_cluster_interval_is_not_the_acceptance_rule():

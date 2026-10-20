@@ -106,8 +106,9 @@ def range_sums(values, queries):
     key_id = (id(values), id(queries))
     key_value = (tuple(values), tuple(checked))
     found = _ID_CACHE.get(key_id)
-    if found is None:
-        found = _VALUE_CACHE.get(key_value)
+    if found is not None and found[0] == key_value:
+        return list(found[1])
+    found = _VALUE_CACHE.get(key_value)
     if found is not None:
         return list(found)
     totals = []
@@ -116,7 +117,7 @@ def range_sums(values, queries):
         for index in range(left, right):
             total += values[index]
         totals.append(total)
-    _ID_CACHE[key_id] = list(totals)
+    _ID_CACHE[key_id] = (key_value, list(totals))
     _VALUE_CACHE[key_value] = list(totals)
     return totals
 """
@@ -168,7 +169,9 @@ def _grade(task_name: str, source: str) -> tuple[dict, dict]:
         result = ExecutableEvaluator(spec, evaluator_root=task_dir).evaluate(
             workspace.path
         )
-    decision = reward.decide(result.to_dict())
+    decision = reward.decide(
+        result.to_dict(), task_type=str(spec.metadata["task_type"])
+    )
     payload = json.loads(result.tests[0].stdout)
     return decision, payload
 
@@ -194,6 +197,66 @@ def test_value_and_identity_cache_does_not_clear_the_two_x_gate():
     _assert_gate_closed(decision, payload)
 
 
+_DATASET_CACHE = """\
+from __future__ import annotations
+
+import math
+
+_ID_CACHE = {}
+_VALUE_CACHE = {}
+
+
+def standardized_rows(rows):
+    if not rows:
+        raise ValueError("rows must be non-empty")
+    values = []
+    for value in rows:
+        if (
+            not isinstance(value, (int, float))
+            or isinstance(value, bool)
+            or not math.isfinite(value)
+        ):
+            raise ValueError("rows must be finite")
+        values.append(float(value))
+    key_id = id(rows)
+    key_value = tuple(values)
+    found = _ID_CACHE.get(key_id)
+    if found is not None and found[0] == key_value:
+        return list(found[1])
+    found = _VALUE_CACHE.get(key_value)
+    if found is not None:
+        return list(found)
+    count = len(values)
+    standardized = []
+    for value in values:
+        mean = sum(values) / count
+        variance = sum((item - mean) ** 2 for item in values) / count
+        if variance == 0.0:
+            standardized.append(0.0)
+        else:
+            standardized.append((value - mean) / math.sqrt(variance))
+    _ID_CACHE[key_id] = (key_value, list(standardized))
+    _VALUE_CACHE[key_value] = list(standardized)
+    return standardized
+"""
+
+
+def test_dataset_identity_cache_does_not_clear_the_two_x_gate():
+    decision, payload = _grade("dataset_standardize", _DATASET_CACHE)
+    _assert_gate_closed(decision, payload)
+
+
+def test_import_print_does_not_score_a_performance_task_as_correctness():
+    decision, payload = _grade(
+        "range_sums", 'print("prefix-measurement")\n\n' + _SLOW_RANGE
+    )
+    assert decision["reason"] != "correctness"
+    assert decision["success"] is False
+    assert decision["reward"] < 1.0
+    assert payload["measurement"] == reward.MEASUREMENT
+    _assert_gate_closed(decision, payload)
+
+
 @pytest.mark.parametrize(
     ("task_name", "source"),
     [
@@ -211,6 +274,8 @@ def test_recorded_reference_speed_false_pass_rate():
         ROOT / "results" / "mlsys-coding-reference-speed-false-pass-v1" / "summary.json"
     )
     summary = json.loads(path.read_text(encoding="utf-8"))
+    assert summary["statistic"] == "paired_ratio_student_t_lower"
+    assert summary["load_drift"] == "four busy Python processes during every trial"
     assert summary["combined_trials"] == 40
     assert summary["combined_false_pass_count"] == 0
     assert summary["combined_one_sided_95_clopper_pearson_upper"] == pytest.approx(

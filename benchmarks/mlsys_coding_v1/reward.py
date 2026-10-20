@@ -5,59 +5,50 @@ correctness, and, for performance tasks, a noise-aware speedup threshold.
 This module recomputes that speedup from the grade command's retained
 stdout samples. It does not trust a boolean printed by the grade script.
 """
+
 from __future__ import annotations
 
+import importlib.util
 import json
 import math
+from pathlib import Path
 from typing import Any
 
-REPEATS = 7
+_TIMING_PATH = Path(__file__).resolve().with_name("evaluator_timing.py")
+_TIMING_SPEC = importlib.util.spec_from_file_location(
+    "mlsys_coding_v1_evaluator_timing", _TIMING_PATH
+)
+if _TIMING_SPEC is None or _TIMING_SPEC.loader is None:
+    raise ImportError(_TIMING_PATH)
+_timing = importlib.util.module_from_spec(_TIMING_SPEC)
+_TIMING_SPEC.loader.exec_module(_timing)
+
+REPEATS = _timing.REPEATS
 # Student-t two-sided 95% critical value at df = REPEATS - 1 = 6.
-T_CRIT_95_DF6 = 2.446911851144167
-SUCCESS_THRESHOLD = 2.0
+T_CRIT_95_DF6 = _timing.T_CRIT_95_DF6
+SUCCESS_THRESHOLD = _timing.THRESHOLD
 # Shaped reward reaches 1 at twice the success threshold.
 REWARD_SATURATION = 4.0
-MEASUREMENT = "student_t_conservative_speedup"
+MEASUREMENT = "paired_ratio_student_t_lower"
 
 
 def summarize(samples: list[float]) -> dict[str, float]:
     """Mean, sample standard deviation, and a two-sided 95% t interval."""
-    if len(samples) != REPEATS:
-        raise ValueError(f"expected {REPEATS} timing samples")
-    if any(
-        type(sample) is bool
-        or not isinstance(sample, (int, float))
-        or not math.isfinite(float(sample))
-        or float(sample) < 0
-        for sample in samples
-    ):
-        raise ValueError("timing samples must be finite and non-negative")
-    values = [float(sample) for sample in samples]
-    count = len(values)
-    mean = sum(values) / count
-    variance = sum((value - mean) ** 2 for value in values) / (count - 1)
-    stdev = math.sqrt(variance)
-    half = T_CRIT_95_DF6 * stdev / math.sqrt(count)
-    return {
-        "mean_s": mean,
-        "stdev_s": stdev,
-        "ci95_low_s": mean - half,
-        "ci95_high_s": mean + half,
-    }
+    return _timing.summarize(samples)
 
 
-def conservative_speedup(baseline_samples: list[float], candidate_samples: list[float]) -> float:
-    """Baseline lower 95% bound divided by the candidate upper 95% bound.
+def conservative_speedup(
+    baseline_samples: list[float], candidate_samples: list[float]
+) -> float:
+    """Lower 95% bound of the paired ratios ``baseline / candidate``.
 
-    A value above 1 means the candidate's pessimistic time beats the
-    reference implementation's optimistic time. The success threshold is
-    applied by the caller.
+    The ratio math lives in ``evaluator_timing.py``. Sample ``i`` is one
+    interleaved pair. A non-positive lower bound is returned as that bound.
     """
-    baseline = summarize(baseline_samples)
-    candidate = summarize(candidate_samples)
-    if baseline["ci95_low_s"] <= 0 or candidate["ci95_high_s"] <= 0:
-        raise ValueError("confidence bound must be positive")
-    return baseline["ci95_low_s"] / candidate["ci95_high_s"]
+    low, _baseline, _candidate = _timing.conservative_speedup(
+        baseline_samples, candidate_samples
+    )
+    return low
 
 
 def shaped_reward(speedup: float) -> float:
@@ -92,15 +83,17 @@ def _measurement(stdout: str) -> dict[str, Any] | None:
     return payload
 
 
-def decide(result: dict[str, Any]) -> dict[str, Any]:
+def decide(result: dict[str, Any], *, task_type: str) -> dict[str, Any]:
     """Map one ``EnvironmentResult.to_dict()`` record to the protocol reward.
 
-    Correctness tasks with a passing grade and no timing record score 1.
-    Performance tasks score ``min(1, speedup / 4)`` when hidden correctness
-    passed and the samples recompute cleanly, including when the speedup
-    stays below the success threshold. Success still requires the grade
-    command to have exited 0, which the grade script does only at or above
-    the threshold.
+    ``task_type`` comes from trusted task metadata. It is not inferred from
+    the grade stdout. A correctness task scores 1 only when the grade command
+    passed. A performance task scores ``min(1, speedup / 4)`` only when the
+    parent measurement JSON parses as one object and hidden correctness
+    passed. Prefixed, missing, or malformed measurement output scores 0.
+    The speedup is recomputed from the paired samples. A printed speedup
+    field is ignored. Success still requires the grade command to have
+    exited 0, which the grade script does only at or above the threshold.
     """
     decision = {
         "success": False,
@@ -110,6 +103,9 @@ def decide(result: dict[str, Any]) -> dict[str, Any]:
         "candidate_stdev_s": None,
         "reason": "unclassified",
     }
+    if task_type not in {"correctness", "performance"}:
+        decision["reason"] = "task_type"
+        return decision
     if result.get("integrity_ok") is not True:
         decision["reason"] = "integrity"
         return decision
@@ -119,22 +115,34 @@ def decide(result: dict[str, Any]) -> dict[str, Any]:
         return decision
     test = tests[0]
     command_passed = _command_passed(test)
-    measurement = _measurement(str(test.get("stdout", "")))
-    if measurement is None:
-        if command_passed and result.get("passed") is True and result.get("correctness") == 1.0:
+    if task_type == "correctness":
+        if (
+            command_passed
+            and result.get("passed") is True
+            and result.get("correctness") == 1.0
+        ):
             decision["success"] = True
             decision["reward"] = 1.0
-            decision["reason"] = "correctness"
-            return decision
         decision["reason"] = "correctness"
+        return decision
+    try:
+        measurement = _measurement(str(test.get("stdout", "")))
+    except ValueError:
+        measurement = None
+    if measurement is None:
+        decision["reason"] = "malformed_measurement"
         return decision
     if measurement.get("correctness_pass") is not True:
         decision["reason"] = "correctness"
         return decision
-    speedup = conservative_speedup(
-        list(measurement["baseline_samples_s"]),
-        list(measurement["candidate_samples_s"]),
-    )
+    try:
+        speedup = conservative_speedup(
+            list(measurement["baseline_samples_s"]),
+            list(measurement["candidate_samples_s"]),
+        )
+    except (KeyError, TypeError, ValueError):
+        decision["reason"] = "malformed_measurement"
+        return decision
     baseline_stats = summarize(list(measurement["baseline_samples_s"]))
     candidate_stats = summarize(list(measurement["candidate_samples_s"]))
     decision["conservative_speedup"] = speedup

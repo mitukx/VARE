@@ -1,6 +1,6 @@
 # MLSys coding pack v1
 
-**Evidence status: fixture calibration of an authored task pack.** No model was loaded. No agent process was started. The numbers below are properties of the frozen baseline and oracle files under the in-process evaluator. They are not coding-agent capability.
+**Evidence status: fixture calibration of an authored task pack.** No model was loaded. No agent process was started. The numbers below are properties of the frozen baseline and oracle files. The first table is an earlier in-process execution. Later rows use parent clocks. They are not coding-agent capability.
 
 ## Question
 
@@ -24,21 +24,15 @@ Can a coding-agent evaluation use a frozen train/held-out split of small MLSys u
 | held-out | `mlsys-v1-dataset-standardize` | data-standardization | correctness and repeated timing |
 | held-out | `mlsys-v1-causal-attention` | attention | hidden correctness |
 
-The partition is in `split.json`. It was fixed before any policy rollout. Held-out tasks are different defects, not resized copies of train tasks. The manifest SHA-256 is `6c029dfc30895ddaeea39ddf14d79390b750894a6914658ea8d9ef8768f348af`, stored in [`protocols/mlsys_coding_agent_eval_v1.json`](../protocols/mlsys_coding_agent_eval_v1.json).
+The partition is in `split.json`. It was fixed before any policy rollout. Held-out tasks are different defects, not resized copies of train tasks. The manifest SHA-256 is `2c67d85a6806b3bbcbc63676f64fc955c5c7b3c9c4127a5a3caade1541efb4ab`, stored in [`protocols/mlsys_coding_agent_eval_v1.json`](../protocols/mlsys_coding_agent_eval_v1.json).
 
-The previous manifest hash was `18c5999f823f9a550a561a913023b87f1fc7bf5a86f481d319e4778212d97499`. The decision rule, seeds, reward constants, and split membership did not change. The hash changed because each task's trusted `metadata.task_type` is now `correctness` or `performance`, and the graders call the harness adapter. PR #85 pinned the previous hash at commit `c8c0488980425e6d316abc21dfc136f16c7e265b`.
+The previous manifest hash was `18c5999f823f9a550a561a913023b87f1fc7bf5a86f481d319e4778212d97499`. The decision rule, seeds, reward constants, and split membership did not change. The hash changed because each task's trusted `metadata.task_type` is now `correctness` or `performance`, the graders call the harness adapter, and the paired-ratio statistic lives once in `evaluator_timing.py`. PR #85 pinned the previous hash at commit `c8c0488980425e6d316abc21dfc136f16c7e265b`.
 
 ## Reward
 
 Correctness tasks succeed when the single hidden command exits 0 and integrity holds. `reward.decide` reads the serialized return code, timeout flag, and output-limit flag. `CommandResult.passed` is a property and is not in the result schema.
 
-Performance tasks ask the harness adapter for seven interleaved parent clocks. The grade command prints one JSON object on stdout, which the existing command-result schema already retains. The child's exit code and stdout are not the score. The protocol recomputes
-
-```text
-conservative_speedup = baseline_ci95_low / candidate_ci95_high
-```
-
-using the sample standard deviation (divisor `n - 1`) and the Student-t 95% critical value `2.446911851144167` at 6 degrees of freedom. Success requires correctness and `conservative_speedup >= 2`. When correctness passed, the shaped reward is `min(1, speedup / 4)`. The cap at 4 is twice the success threshold. It was not fit to a model outcome.
+Performance tasks ask the harness adapter for seven interleaved parent clocks. Even indexes time the reference first and odd indexes time the candidate first. Each call gets a new input, and the parent rejects a reused object or a reused value. The grade command prints one JSON object on stdout, which the existing command-result schema already retains. The child's exit code and stdout are not the score. `task_type` comes from trusted metadata. A missing or prefixed measurement record scores 0; it is not treated as a correctness success. The protocol recomputes the lower end of a Student-t 95% interval on the paired ratios `baseline_seconds / candidate_seconds`, using the sample standard deviation (divisor `n - 1`) and the critical value `2.446911851144167` at 6 degrees of freedom. That lower bound is `conservative_speedup`. It is not `baseline_ci95_low / candidate_ci95_high`. Success requires correctness and `conservative_speedup >= 2`. When correctness passed, the shaped reward is `min(1, speedup / 4)`. The cap at 4 is twice the success threshold. It was not fit to a model outcome.
 
 The grade command exits 0 only when that speedup threshold is met, so `EnvironmentResult.passed` matches protocol success for these fixtures. The shaped reward is still the training target defined for a later GRPO arm: `grader.score` is 0 for a correct but slow patch, while the shaped reward stays positive.
 
@@ -64,9 +58,9 @@ After the graders moved to parent clocks around a child call, one host execution
 | `mlsys-v1-range-sums` | 0.775 | passed | 3.91 |
 | `mlsys-v1-dataset-standardize` | 0.967 | passed | 23.01 |
 
-The unpatched subjects are the correct slow algorithms. Both stayed under the threshold of 2, so a correct-but-not-faster implementation did not pass the gate. The range-sums oracle still cleared 2 and no longer reached the reward cap of 4, because the parent clock includes the child round trip. The dataset oracle still cleared the cap. These floats are descriptive. A later test run checks the pass/fail rule, not these magnitudes.
+The unpatched subjects are the correct slow algorithms. Both stayed under the threshold of 2 on that earlier unpaired estimator. The range-sums oracle cleared 2 and did not reach the reward cap of 4, because the parent clock includes the child round trip. The dataset oracle cleared the cap. Those floats are descriptive of that estimator.
 
-A later host execution, after each timing draw uses a fresh input, repeated an explicit copy of the slow reference 20 times per performance task. False passes of the 2× gate were 0/20 for range sums (conservative speedup min/median/max 0.508/0.665/0.708) and 0/20 for dataset standardization (0.688/0.860/0.950). The one-sided 95% Clopper-Pearson upper bound on 0/40 is 0.072. The same execution's oracles still cleared the gate: range sums 2.95, which is under the reward cap of 4, and dataset standardization 20.18. A correct range-sum that patches `time.perf_counter` and `time.monotonic` at import, and a correct range-sum that memoizes by object identity and by value, both failed the gate. Raw trials are in [`results/mlsys-coding-reference-speed-false-pass-v1/summary.json`](../results/mlsys-coding-reference-speed-false-pass-v1/summary.json).
+After the bound moved to interleaved paired ratios, one host execution recorded range-sums baseline 0.635 and oracle 3.29, and dataset-standardize baseline 0.860 and oracle 23.38. The same host then repeated an explicit copy of the slow reference 20 times per task while four busy Python processes ran. False passes were 0/20 for range sums (paired lower bound min/median/max 0.507/0.618/0.773) and 0/20 for dataset standardization (0.631/0.772/0.938). The one-sided 95% Clopper-Pearson upper bound on 0/40 is 0.072. A separate drift example, high load for seven calls then low load for seven, makes the old block ratio 2.20 while the interleaved paired lower bound is 0.75. A correct range-sum that patches both clocks at import, a range-sum that memoizes by identity and by value, the same cache on dataset standardization, and an import-time print all failed the gate. Raw trials are in [`results/mlsys-coding-reference-speed-false-pass-v1/summary.json`](../results/mlsys-coding-reference-speed-false-pass-v1/summary.json).
 
 Correctness baselines failed on the intended defects (overflow, detached labels, warmup off-by-one, short-window scaling, missing aging, L1 norm, and a causal mask that drops the diagonal).
 

@@ -1,7 +1,7 @@
 """Calibration for the authored MLSys coding pack.
 
 The checks execute this repository's baseline and oracle fixtures through
-the in-process evaluator. They do not load a model or claim agent success.
+the parent-timed grader. They do not load a model or claim agent success.
 """
 
 from __future__ import annotations
@@ -61,8 +61,34 @@ def test_reward_recomputes_speedup_and_fails_closed():
             {"returncode": 0, "timed_out": False, "output_limited": False, "stdout": ""}
         ],
     }
-    assert reward.decide(passed)["success"] is True
-    assert reward.decide(passed)["reward"] == 1.0
+    assert reward.decide(passed, task_type="correctness")["success"] is True
+    assert reward.decide(passed, task_type="correctness")["reward"] == 1.0
+    prefixed = dict(passed)
+    prefixed["tests"] = [
+        {
+            "returncode": 0,
+            "timed_out": False,
+            "output_limited": False,
+            "stdout": "not-a-measurement\n"
+            + json.dumps(
+                {
+                    "measurement": reward.MEASUREMENT,
+                    "correctness_pass": True,
+                    "baseline_samples_s": [0.40] * 7,
+                    "candidate_samples_s": [0.05] * 7,
+                    "speedup": 100000.0,
+                }
+            ),
+        }
+    ]
+    exploited = reward.decide(prefixed, task_type="performance")
+    assert exploited["success"] is False
+    assert exploited["reward"] == 0.0
+    assert exploited["reason"] == "malformed_measurement"
+    missing = reward.decide(passed, task_type="performance")
+    assert missing["success"] is False
+    assert missing["reward"] == 0.0
+    assert missing["reason"] == "malformed_measurement"
 
     slow = dict(passed)
     slow["passed"] = False
@@ -82,7 +108,7 @@ def test_reward_recomputes_speedup_and_fails_closed():
             ),
         }
     ]
-    slow_decision = reward.decide(slow)
+    slow_decision = reward.decide(slow, task_type="performance")
     assert slow_decision["success"] is False
     assert slow_decision["reason"] == "performance_below_threshold"
     assert 0.0 < slow_decision["reward"] < 0.5
@@ -105,14 +131,31 @@ def test_reward_recomputes_speedup_and_fails_closed():
         }
     ]
     inconsistent["passed"] = False
-    denied = reward.decide(inconsistent)
+    denied = reward.decide(inconsistent, task_type="performance")
     assert denied["success"] is False
     assert denied["reward"] == 0.0
     assert denied["reason"] == "threshold_met_but_grade_failed"
 
     broken = dict(passed)
     broken["integrity_ok"] = False
-    assert reward.decide(broken)["reason"] == "integrity"
+    assert reward.decide(broken, task_type="correctness")["reason"] == "integrity"
+
+
+def test_paired_ratios_reject_a_drift_that_the_block_estimator_accepts():
+    """Load is high for the first seven calls and low for the next seven.
+
+    Timing every baseline first, then every candidate, makes unchanged code
+    clear 2x because each block is internally tight. Alternating roles puts
+    most pairs on the same side of the step, so the paired lower bound does not.
+    """
+    high = [0.400, 0.401, 0.399, 0.402, 0.398, 0.400, 0.401]
+    low = [0.180, 0.181, 0.179, 0.182, 0.178, 0.180, 0.181]
+    block = reward.summarize(high)["ci95_low_s"] / reward.summarize(low)["ci95_high_s"]
+    assert block >= reward.SUCCESS_THRESHOLD
+    # Fourteen calls, baseline on even indexes and candidate on odd indexes.
+    slots = high + low
+    interleaved = reward.conservative_speedup(slots[0::2], slots[1::2])
+    assert interleaved < reward.SUCCESS_THRESHOLD
 
 
 def test_pack_hash_split_and_protocol_agree():
@@ -138,10 +181,7 @@ def test_pack_hash_split_and_protocol_agree():
     catalog = TaskCatalog.discover(TASKS)
     ids = {spec.id for spec in catalog.specs()}
     assert ids == set(split["train"]) | set(split["heldout"])
-    timing_bytes = (PACK / "evaluator_timing.py").read_bytes()
-    copies = list(PACK.rglob("evaluator/timing.py"))
-    assert len(copies) == 2
-    assert all(path.read_bytes() == timing_bytes for path in copies)
+    assert list(PACK.rglob("evaluator/timing.py")) == []
     timing = _load(PACK / "evaluator_timing.py", "mlsys_evaluator_timing")
     assert timing.REPEATS == reward.REPEATS
     assert timing.T_CRIT_95_DF6 == reward.T_CRIT_95_DF6
@@ -208,7 +248,9 @@ def test_hidden_grade_rejects_baseline_and_accepts_oracle(task_dir: Path):
             result = ExecutableEvaluator(spec, evaluator_root=task_dir).evaluate(
                 workspace.path
             )
-        decision = reward.decide(result.to_dict())
+        decision = reward.decide(
+            result.to_dict(), task_type=str(spec.metadata["task_type"])
+        )
         assert decision["success"] is result.passed
         outcomes[label] = (result, decision)
 
@@ -271,7 +313,7 @@ def test_correct_but_not_faster_fails_the_two_x_gate(task_name: str):
         result = ExecutableEvaluator(spec, evaluator_root=task_dir).evaluate(
             workspace.path
         )
-    decision = reward.decide(result.to_dict())
+    decision = reward.decide(result.to_dict(), task_type="performance")
     payload = json.loads(result.tests[0].stdout)
     assert payload["correctness_pass"] is True
     assert payload["improvement_pass"] is False

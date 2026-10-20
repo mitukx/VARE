@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -68,6 +69,41 @@ def test_draft_split_replaces_causal_attention_and_matches_the_protocol():
     assert protocol["base_pack"]["previous_manifest_sha256"] == (
         "18c5999f823f9a550a561a913023b87f1fc7bf5a86f481d319e4778212d97499"
     )
+
+
+def test_power_script_reproduces_the_recorded_table():
+    pytest.importorskip("numpy")
+    completed = subprocess.run(
+        [sys.executable, str(PACK / "power.py")],
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert completed.returncode == 0, completed.stderr
+    proposal = json.loads(PROTOCOL.read_text(encoding="utf-8"))
+    recorded = {
+        (row["heldout_tasks"], row["k"]): row
+        for row in proposal["power"]["minimum_detectable_effect_at_80_percent_power"]
+    }
+    assert "baseline mean success 35.4%" in completed.stdout
+    parsed = 0
+    for line in completed.stdout.splitlines():
+        if not line.startswith("heldout_tasks="):
+            continue
+        matched = re.fullmatch(
+            r"heldout_tasks=\s*(\d+)\s+k=\s*(\d+)\s+seeds=\s*(\d+)\s+"
+            r"MDE_logit=(\S+)\s+MDE_pp=([0-9.]+)\s+type1=([0-9.]+)",
+            line,
+        )
+        assert matched is not None, line
+        key = (int(matched.group(1)), int(matched.group(2)))
+        row = recorded[key]
+        assert float(matched.group(4)) == pytest.approx(row["mde_logit"])
+        assert float(matched.group(5)) == pytest.approx(row["mde_percentage_points"])
+        assert round(float(matched.group(6)), 3) == row["type_i"]
+        parsed += 1
+    assert parsed == len(recorded)
 
 
 @pytest.mark.parametrize("task_name", ["gqa_repeat", "label_smooth", "ema_bias"])

@@ -20,7 +20,7 @@
     "correctness_success": "integrity_ok and the single hidden grade command exits 0.",
     "decision_function": "benchmarks/mlsys_coding_v1/reward.py:decide",
     "performance_reward": "When hidden correctness passes, reward = min(1, conservative_speedup / 4). The denominator 4 is twice the success threshold, a fixed cap.",
-    "performance_statistic": "Seven wall-clock repeats. Sample standard deviation uses the n-1 divisor. The 95% interval uses the two-sided Student-t critical value 2.446911851144167 at 6 degrees of freedom. conservative_speedup = baseline_ci95_low / candidate_ci95_high, where the baseline is the evaluator-held slow reference timed in the same process.",
+    "performance_statistic": "Seven interleaved pairs. Even indexes time the reference first and odd indexes time the candidate first. Each call gets a fresh input, and the parent rejects a reused object or a reused value. conservative_speedup is the lower end of a two-sided Student-t 95% interval on the seven paired ratios baseline_seconds/candidate_seconds. The critical value is 2.446911851144167 at 6 degrees of freedom. Sample standard deviation uses the n-1 divisor. task_type comes from trusted metadata. A missing or prefixed measurement record fails closed and does not score as correctness.",
     "performance_success": "correctness_success and conservative_speedup >= 2.",
     "primary": "protocol success from reward.decide, which requires the grade command's zero exit and, for performance tasks, the recomputed speedup threshold.",
     "secondary": [
@@ -51,7 +51,7 @@
   },
   "pack": {
     "manifest_path": "benchmarks/mlsys_coding_v1/manifest.json",
-    "manifest_sha256": "6c029dfc30895ddaeea39ddf14d79390b750894a6914658ea8d9ef8768f348af",
+    "manifest_sha256": "2c67d85a6806b3bbcbc63676f64fc955c5c7b3c9c4127a5a3caade1541efb4ab",
     "split_path": "benchmarks/mlsys_coding_v1/split.json"
   },
   "protocol_id": "mlsys-coding-agent-eval-v1",

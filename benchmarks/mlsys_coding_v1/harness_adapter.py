@@ -178,6 +178,61 @@ def _validate(request: HarnessRequest) -> str:
     return nonce
 
 
+def _freeze(value: Any) -> Any:
+    if isinstance(value, bool) or value is None or isinstance(value, (str, int)):
+        return value
+    if isinstance(value, float):
+        return ("float", value.hex())
+    if isinstance(value, (list, tuple)):
+        return tuple(_freeze(item) for item in value)
+    if isinstance(value, dict):
+        return tuple(sorted((str(key), _freeze(item)) for key, item in value.items()))
+    raise HarnessAdapterError("input value is not a supported type")
+
+
+def _containers(value: Any):
+    if isinstance(value, (list, dict)):
+        yield value
+    if isinstance(value, dict):
+        children = value.values()
+    elif isinstance(value, (list, tuple)):
+        children = value
+    else:
+        return
+    for child in children:
+        yield from _containers(child)
+
+
+def guard_fresh_inputs(generator: InputGenerator) -> InputGenerator:
+    """Reject a reused input object or a reused input value.
+
+    The parent applies this before every baseline run and every candidate
+    run. A generator that hands back the warmup object, or a new object with
+    the same contents, fails the grade.
+    """
+    seen_ids: set[int] = set()
+    seen_values: set[Any] = set()
+    # Hold the containers. A bare id can be recycled after the previous
+    # input is no longer referenced, which would look like reuse.
+    held: list[Any] = []
+
+    def wrapped(index: int) -> tuple[tuple[Any, ...], dict[str, Any]]:
+        args, kwargs = generator(index)
+        for container in _containers((args, kwargs)):
+            identity = id(container)
+            if identity in seen_ids:
+                raise HarnessAdapterError("input object was reused")
+            seen_ids.add(identity)
+            held.append(container)
+        fingerprint = _freeze((args, kwargs))
+        if fingerprint in seen_values:
+            raise HarnessAdapterError("input value was reused")
+        seen_values.add(fingerprint)
+        return args, kwargs
+
+    return wrapped
+
+
 def _draw(
     request: HarnessRequest, index: int
 ) -> tuple[tuple[Any, ...], dict[str, Any]]:
@@ -369,6 +424,7 @@ def run_harness(request: HarnessRequest) -> HarnessReport:
     """Grade one candidate through #85's harness, or the marked temporary shim."""
     nonce = _validate(request)
     request.nonce = nonce
+    request.input_generator = guard_fresh_inputs(request.input_generator)
     proposed = resolve_proposed_harness()
     if proposed is not None:
         payload = {

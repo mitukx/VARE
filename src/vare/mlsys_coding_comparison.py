@@ -46,7 +46,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 PACK_DIR = REPO_ROOT / "benchmarks" / "mlsys_coding_v1"
 PROTOCOL_PATH = REPO_ROOT / "protocols" / "mlsys_coding_policy_comparison_v1.json"
 FROZEN_MANIFEST_SHA256 = (
-    "6c029dfc30895ddaeea39ddf14d79390b750894a6914658ea8d9ef8768f348af"
+    "2c67d85a6806b3bbcbc63676f64fc955c5c7b3c9c4127a5a3caade1541efb4ab"
 )
 SYNTHETIC_TASK_ID = "mlsys-v1-row-log-softmax"
 PERFORMANCE_PROXY_TASK_ID = "mlsys-v1-range-sums"
@@ -276,7 +276,9 @@ class FrozenPack:
             result = ExecutableEvaluator(spec, evaluator_root=directory).evaluate(
                 workspace.path
             )
-        decision = self.reward.decide(result.to_dict())
+        decision = self.reward.decide(
+            result.to_dict(), task_type=str(spec.metadata["task_type"])
+        )
         decision["oracle_patch"] = oracle_patch
         decision["task_id"] = task_id
         decision["policy_class"] = SYNTHETIC_MODEL
