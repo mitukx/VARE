@@ -17,7 +17,7 @@ PROTOCOL = ROOT / "protocols/mlx_lora_update_smoke_v1.lock.json"
 DATA = ROOT / "benchmarks/dev_sft_update_smoke_v1/train.jsonl"
 
 
-def audit(run: Path) -> dict[str, Any]:
+def audit(run: Path, adapter_checkpoint: Path | None = None) -> dict[str, Any]:
     protocol = json.loads(PROTOCOL.read_text(encoding="utf-8"))
     summary_path = run / "summary.json"
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
@@ -26,7 +26,7 @@ def audit(run: Path) -> dict[str, Any]:
     rows = re.findall(r"^\s*(\d+)\s+([-+0-9.eE]+)", plain, re.M)
     step_ids = completed_training_steps(log)
     losses = [float(value) for _, value in rows]
-    adapter = run / "adapter" / "adapters.safetensors"
+    adapter = adapter_checkpoint or (run / "adapter" / "adapters.safetensors")
     adapter_hash = sha256(adapter) if adapter.is_file() else None
     from safetensors.numpy import load_file
 
@@ -96,8 +96,12 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("run", type=Path)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--adapter-checkpoint", type=Path)
     args = parser.parse_args()
-    report = audit(args.run.resolve())
+    report = audit(
+        args.run.resolve(),
+        args.adapter_checkpoint.resolve() if args.adapter_checkpoint else None,
+    )
     target = args.output or args.run.parent / "independent_audit.json"
     target.write_text(
         json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8"
