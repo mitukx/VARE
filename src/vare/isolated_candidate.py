@@ -101,6 +101,9 @@ _write = os.write
 _read = sys.stdin.buffer.readline
 header = _loads(_read())
 sys.path.insert(0, "/subject")
+_candidate_stdout = open(os.devnull, "w", encoding="utf-8")
+sys.stdout = _candidate_stdout
+sys.__stdout__ = _candidate_stdout
 _write(1, b"IMPORTING\n")
 module = __import__(header["module"])
 function = getattr(module, header["function"])

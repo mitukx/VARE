@@ -120,6 +120,52 @@ def test_frozen_oracle_passes_through_the_same_isolated_adapter(tmp_path: Path) 
     assert report.harness_id == "vare.separated_candidate_harness.grade_function"
 
 
+def test_candidate_stdout_does_not_corrupt_isolated_result_protocol(tmp_path: Path) -> None:
+    import subprocess
+
+    from vare.isolated_candidate import _CALLEE
+
+    task_dir = ROOT / "benchmarks/mlsys_coding_v1/tasks/causal_attention"
+    source = (task_dir / "evaluator/oracle/causal_attention.py").read_text(encoding="utf-8")
+    source = source.replace(
+        "from __future__ import annotations\n",
+        "from __future__ import annotations\n\nprint('candidate import output')\n",
+        1,
+    )
+    source = source.replace(
+        "def causal_attention_weights(scores):\n",
+        "def causal_attention_weights(scores):\n    print('candidate call output')\n",
+        1,
+    )
+    subject = _subject(tmp_path, source)
+
+    callee = _CALLEE.replace('"/subject"', repr(str(subject)), 1)
+    request = {
+        "args": [[[0.0]]],
+        "kwargs": {},
+        "tuple_paths": [],
+    }
+    completed = subprocess.run(
+        [sys.executable, "-I", "-B", "-c", callee],
+        input=(
+            json.dumps({
+                "module": "causal_attention",
+                "function": "causal_attention_weights",
+                "session": False,
+            }) + "\n" + json.dumps(request) + "\n"
+        ).encode("utf-8"),
+        capture_output=True,
+        check=False,
+    )
+
+    assert completed.returncode == 0, completed.stderr.decode("utf-8", "replace")
+    assert completed.stdout.splitlines() == [
+        b"IMPORTING",
+        b"READY",
+        b'{"value":[[1.0]]}',
+    ]
+
+
 def test_task_descriptor_cannot_be_substituted(tmp_path: Path) -> None:
     forged = tmp_path / "task.json"
     forged.write_text(
