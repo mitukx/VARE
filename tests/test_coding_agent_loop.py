@@ -6,7 +6,6 @@ known-fix control, not a model result.
 from __future__ import annotations
 
 import hashlib
-import json
 from pathlib import Path
 
 import pytest

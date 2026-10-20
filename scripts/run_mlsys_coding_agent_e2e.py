@@ -12,7 +12,6 @@ import argparse
 import hashlib
 import importlib.util
 import json
-import os
 from pathlib import Path
 import subprocess
 import sys
@@ -74,9 +73,6 @@ def _load_protocol(path: Path) -> dict:
 
 
 def _task_dir(task_id: str) -> Path:
-    name = task_id.removeprefix("mlsys-v1-").replace("-", "_")
-    # Task ids use hyphens; directory names use the same words with underscores
-    # except where the pack already uses that form.
     mapping = {
         "mlsys-v1-grad-accum-tail": "grad_accum_tail",
         "mlsys-v1-paired-shuffle-loader": "paired_shuffle_loader",

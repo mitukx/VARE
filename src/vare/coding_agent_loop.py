@@ -27,7 +27,6 @@ import tempfile
 import textwrap
 import threading
 import time
-import traceback
 from typing import Any, Callable
 
 from .evidence import canonical_json, sha256_json
@@ -176,7 +175,7 @@ def _calls_from_json(payload: Any) -> list[dict[str, Any]]:
 
 
 def _calls_from_xml(body: str) -> list[dict[str, Any]]:
-    calls = []
+    calls: list[dict[str, Any]] = []
     cursor = 0
     token = "<function="
     while True:
@@ -512,16 +511,14 @@ def run_jail(
             "output_limited": limited,
         }
     except subprocess.TimeoutExpired as exc:
-        stdout = exc.stdout or b""
-        stderr = exc.stderr or b""
-        if isinstance(stdout, bytes):
-            stdout = stdout.decode("utf-8", "replace")
-        if isinstance(stderr, bytes):
-            stderr = stderr.decode("utf-8", "replace")
+        raw_stdout = exc.stdout or b""
+        raw_stderr = exc.stderr or b""
+        stdout_text = raw_stdout.decode("utf-8", "replace") if isinstance(raw_stdout, bytes) else raw_stdout
+        stderr_text = raw_stderr.decode("utf-8", "replace") if isinstance(raw_stderr, bytes) else raw_stderr
         return {
             "returncode": 124,
-            "stdout": stdout[:max_output],
-            "stderr": stderr[:max_output],
+            "stdout": stdout_text[:max_output],
+            "stderr": stderr_text[:max_output],
             "timed_out": True,
             "output_limited": False,
         }
