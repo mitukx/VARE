@@ -104,6 +104,20 @@ def run(output: Path) -> int:
         "trusted_task_path": str(TASK_DIR / "task.json"),
         "nonce": "42" * 16,
     })
+    bad_cases = bad.get("grade_evidence", {}).get("cases", [])
+    if (
+        bad.get("passed") is not False
+        or bad.get("error") != "correctness_failed"
+        or bad.get("nonce_enforced") is not True
+        or len(bad_cases) != 5
+        or any(
+            item.get("passed") is not False or item.get("failure") != "wrong_output"
+            for item in bad_cases
+        )
+    ):
+        raise SystemExit("empty-result control did not fail the expected frozen correctness cases")
+    if good.get("passed") is not True or good.get("nonce_enforced") is not True:
+        raise SystemExit("oracle control did not pass through the isolated grader")
     elapsed = time.monotonic() - started
     version = subprocess.run(
         ["docker", "version", "--format", "{{.Server.Version}}"],
@@ -139,7 +153,7 @@ def run(output: Path) -> int:
         "elapsed_s": elapsed,
         "controls": {
             "frozen_checker_rejects_empty_result": baseline_rejects,
-            "isolated_grader_rejects_empty_result": bad["passed"] is False,
+            "isolated_grader_rejects_empty_result": True,
             "isolated_grader_rejection_reason": bad["error"],
             "isolated_grader_accepts_oracle_control": good["passed"] is True,
         },

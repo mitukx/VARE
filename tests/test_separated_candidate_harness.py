@@ -222,6 +222,37 @@ def test_v3_copy_of_supported_warmup_task_routes_from_canonical_path() -> None:
     assert task_dir == task_path.parent
 
 
+def test_v3_warmup_oracle_runs_through_the_isolated_grader(tmp_path: Path) -> None:
+    task_dir = ROOT / "benchmarks/mlsys_coding_v3/tasks/warmup_cosine"
+    subject = tmp_path / "subject"
+    subject.mkdir()
+    shutil.copy(
+        task_dir / "evaluator/oracle/warmup_cosine.py",
+        subject / "warmup_cosine.py",
+    )
+    report = grade_function({
+        "workspace": str(subject),
+        "entrypoint": "warmup_cosine:learning_rate",
+        "task_type": "correctness",
+        "trusted_task_path": str(task_dir / "task.json"),
+        "nonce": "ef" * 16,
+    })
+    assert report["passed"] is True
+    assert report["nonce_enforced"] is True
+
+
+def test_supported_correctness_calls_preserve_frozen_timeout() -> None:
+    scripts = ROOT / "scripts"
+    if str(scripts) not in sys.path:
+        sys.path.insert(0, str(scripts))
+    from mlsys_task_isolated_calls import materialize_isolated_calls
+
+    calls, _provenance = materialize_isolated_calls(
+        TASK_ID, TASK_DIR,
+    )
+    assert calls["timeout_s"] == 10
+
+
 @pytest.mark.parametrize(
     ("task_id", "module", "function"),
     [

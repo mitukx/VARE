@@ -47,8 +47,29 @@ def audit(run_dir: Path) -> dict:
         raise ValueError("frozen checker did not reject the malformed empty result")
     if controls.get("isolated_grader_rejects_empty_result") is not True:
         raise ValueError("isolated grader did not reject the empty result")
+    if controls.get("isolated_grader_rejection_reason") != "correctness_failed":
+        raise ValueError("empty-result control was not rejected for incorrect output")
     if controls.get("isolated_grader_accepts_oracle_control") is not True:
         raise ValueError("known-good oracle control did not pass")
+    raw = record.get("raw", {})
+    bad = raw.get("empty_result", {})
+    bad_cases = bad.get("grade_evidence", {}).get("cases", [])
+    good = raw.get("oracle_control", {})
+    if (
+        bad.get("passed") is not False
+        or bad.get("error") != "correctness_failed"
+        or bad.get("nonce_enforced") is not True
+        or len(bad_cases) != 5
+        or any(
+            type(case) is not dict
+            or case.get("passed") is not False
+            or case.get("failure") != "wrong_output"
+            for case in bad_cases
+        )
+    ):
+        raise ValueError("raw empty-result evidence does not show five wrong-output rejections")
+    if good.get("passed") is not True or good.get("nonce_enforced") is not True:
+        raise ValueError("raw oracle evidence does not show an accepted isolated control")
     if record.get("classification") != (
         "harness calibration on a previously consumed task; not model or held-out evidence"
     ):

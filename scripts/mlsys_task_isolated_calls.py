@@ -47,7 +47,12 @@ def sha256_file(path: Path) -> str:
 
 
 def _load_evaluator(path: Path, pack_root: Path, task_id: str):
-    for candidate in (pack_root, path.parent):
+    candidates = [pack_root, path.parent]
+    if task_id == "mlsys-v1-warmup-cosine" and pack_root.name == "mlsys_coding_v3":
+        # The v3 copy freezes the same generic adapter import as v1, but does
+        # not duplicate that helper at the pack root.
+        candidates.append(pack_root.parent / "mlsys_coding_v1")
+    for candidate in candidates:
         if str(candidate) not in sys.path:
             sys.path.insert(0, str(candidate))
     name = "vare_frozen_grader_" + task_id.replace("-", "_")
@@ -130,7 +135,7 @@ def materialize_isolated_calls(task_id: str, task_dir: Path) -> tuple[dict, dict
         "function": function_name,
         "rtol": 0.0,
         "atol": 1e-9 if task_id == "mlsys-v1-causal-attention" else 1e-12,
-        "timeout_s": 60 if task_id == "mlsys-v1-range-sums" else 20,
+        "timeout_s": 60 if task_id == "mlsys-v1-range-sums" else 10,
     }
     if task_id == "mlsys-v1-range-sums":
         spec["tuple_paths"] = [[1, "*"]]

@@ -192,6 +192,10 @@ def grade_function(request: dict[str, Any]) -> dict[str, Any]:
     _verify_pack(pack_root, protocol)
     image = _resolve_image(protocol)
     _verify_runtime_limits(protocol, image)
+    if task_id == "mlsys-v1-warmup-cosine" and pack_root.name == "mlsys_coding_v3":
+        # The v3 frozen evaluator imports the generic harness helper from v1.
+        # Verify that helper's pack before making it importable.
+        _verify_pack(ROOT / "benchmarks/mlsys_coding_v1", protocol)
     try:
         from mlsys_task_isolated_calls import materialize_isolated_calls
         calls, _provenance = materialize_isolated_calls(task_id, task_dir)
