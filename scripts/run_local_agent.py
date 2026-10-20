@@ -174,6 +174,29 @@ def resolve_allowed_path(raw_path: str, allowed: set[str]) -> str | None:
     return matches[0] if len(matches) == 1 else None
 
 
+def no_tool_retry_reminder(raw: str, *, edit_format: str, allowed_paths: list[str],
+                           token_limit: int) -> str:
+    """Give the agent actionable feedback when a bounded response has no tool call."""
+    if '<tool_call>' in raw and '</tool_call>' not in raw:
+        path_list = ', '.join(allowed_paths)
+        if edit_format == 'whole_file':
+            return (
+                f'Your previous tool call was cut off at the {token_limit}-token response limit. '
+                'Do not reread the source. Emit one complete write_file tool call now, using the exact '
+                f'allowed path ({path_list}) and the complete updated source file. Keep it concise enough '
+                'to end with </tool_call>.'
+            )
+        return (
+            f'Your previous tool call was cut off at the {token_limit}-token response limit. '
+            'Do not reread the source or rewrite the whole file. Emit one complete apply_patch tool call '
+            f'with a minimal change and exact allowed paths ({path_list}); end it with </tool_call>.'
+        )
+    return (
+        'Your previous response did not call a tool and no source file changed. Continue the task now. '
+        'Call read_file on the exact path named in my first instruction. Do not ask a question.'
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument('--workspace', type=Path, required=True)
@@ -259,6 +282,7 @@ def main() -> int:
         edit_sentence = (
             'Read the source path named in the user instruction, then use tools to inspect and edit. '
             'Use write_file to replace an allowlisted source file with its complete new text. Do not send a unified diff. '
+            'Keep the replacement concise enough to fit within the per-turn output budget. '
         )
     else:
         edit_sentence = (
@@ -353,9 +377,10 @@ def main() -> int:
             current_hashes = digest_tree(workspace, sorted(allowed))
             if current_hashes == before and no_tool_retries < args.max_no_tool_retries:
                 no_tool_retries += 1
-                messages.append({'role': 'user', 'content':
-                    'Your previous response did not call a tool and no source file changed. Continue the task now. '
-                    'Call read_file on the exact path named in my first instruction. Do not ask a question.'})
+                messages.append({'role': 'user', 'content': no_tool_retry_reminder(
+                    raw, edit_format=args.edit_format, allowed_paths=sorted(editable),
+                    token_limit=limit,
+                )})
                 entry['automatic_reminder'] = no_tool_retries
                 continue
             stop_reason = 'no_tool_call_after_edit' if current_hashes != before else 'no_tool_call_retries_exhausted'

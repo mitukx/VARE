@@ -2,7 +2,7 @@
   "protocol_id": "mlsys-coding-agent-4b-mlx-pilot-v5",
   "schema_version": 1,
   "frozen_before_model_execution": true,
-  "status": "preregistered; not run",
+  "status": "partial pilot; 3 of 5 development tasks attempted; zero source changes or verified successes; stopped after truncation and malformed edits",
   "hypothesis": "The pinned local 4B MLX instruct model can use the existing isolated coding harness to make at least one task-source change that passes the independent hidden grader on the five frozen development tasks, while also passing each immutable public smoke test.",
   "primary_metric": "Number and fraction of the 10 task-seed attempts that have an applied source patch, pass the public smoke test, and pass the independent hidden grader. Development gate: at least one pass on a nontrivial task; no held-out claim.",
   "uncertainty": "Five authored training/development tasks with one greedy run each; descriptive pilot only. No sampling variance or population uncertainty estimate.",
