@@ -97,6 +97,39 @@ def mem_available_bytes() -> int:
     raise RuntimeError("available memory is not readable on this platform")
 
 
+def host_resource_snapshot() -> dict:
+    """Capture host memory, swap, and disk before model load and between runs."""
+    available = mem_available_bytes()
+    swap_text = subprocess.run(
+        ["sysctl", "vm.swapusage"], check=True, text=True, capture_output=True,
+    ).stdout
+    swap_match = re.search(r"free = ([0-9.]+)([KMG])", swap_text)
+    if swap_match is None:
+        raise RuntimeError("could not parse free swap from sysctl vm.swapusage")
+    scale = {"K": 1024, "M": 1024 ** 2, "G": 1024 ** 3}[swap_match.group(2)]
+    disk_free = shutil.disk_usage(ROOT).free
+    return {
+        "timestamp_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "available_memory_bytes": available,
+        "swap_free_bytes": int(float(swap_match.group(1)) * scale),
+        "disk_free_bytes": disk_free,
+    }
+
+
+def resource_preflight(protocol: dict) -> tuple[dict, list[str]]:
+    observed = host_resource_snapshot()
+    limits = protocol["budgets"]["resource_preflight"]
+    failures = []
+    for key, limit_key in (
+        ("available_memory_bytes", "minimum_available_memory_bytes"),
+        ("swap_free_bytes", "minimum_free_swap_bytes"),
+        ("disk_free_bytes", "minimum_disk_free_bytes"),
+    ):
+        if observed[key] < limits[limit_key]:
+            failures.append(f"{key} below {limit_key}")
+    return observed, failures
+
+
 def container_environment_error(returncodes: list[int], stderr: str = "") -> str | None:
     """Distinguish a Docker mount failure from an E0 expectation mismatch.
 
@@ -442,6 +475,8 @@ def run_agent(
         "--workspace", str(workspace),
         "--model-path", str(model_path),
         "--model-repository", repository,
+        "--backend", str(protocol["models"]["primary"].get("backend", "transformers_cpu")),
+        "--public-test-image", str(protocol["execution"]["container_image"]),
         "--task-root", str(task_root),
         "--output", str(output),
         "--instruction", instruction,
@@ -455,30 +490,52 @@ def run_agent(
         "--max-turns", str(budgets["max_turns"]),
         "--max-new-tokens-per-turn", str(budgets["max_new_tokens_per_turn"]),
         "--max-total-new-tokens", str(budgets["max_total_new_tokens"]),
+        "--max-context-tokens", str(budgets.get("max_context_tokens", 8192)),
         "--wall-seconds", str(budgets["wall_seconds"]),
     ]
     started = time.perf_counter()
+    samples: list[dict] = []
+    interval = max(1, int(budgets.get("resource_preflight", {}).get("sample_interval_seconds", 1)))
+    thresholds = budgets.get("resource_preflight", {})
+    proc = subprocess.Popen(command, env=env, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    timed_out = False
+    resource_limited = False
+    deadline = started + budgets["wall_seconds"] + 120
+    stdout = stderr = ""
     try:
-        completed = subprocess.run(
-            command, env=env, text=True, capture_output=True,
-            timeout=budgets["wall_seconds"] + 120, check=False,
-        )
-    except subprocess.TimeoutExpired as exc:
-        stdout = exc.stdout if isinstance(exc.stdout, str) else ""
-        stderr = exc.stderr if isinstance(exc.stderr, str) else ""
-        return {
-            "returncode": None,
-            "wall_s": time.perf_counter() - started,
-            "stdout_tail": stdout[-2000:],
-            "stderr_tail": stderr[-2000:],
-            "timed_out": True,
-        }
+        while proc.poll() is None:
+            remaining = deadline - time.perf_counter()
+            if remaining <= 0:
+                timed_out = True
+                proc.kill()
+                break
+            try:
+                stdout, stderr = proc.communicate(timeout=min(interval, remaining))
+            except subprocess.TimeoutExpired:
+                try:
+                    sample = host_resource_snapshot()
+                    samples.append(sample)
+                    if (sample["available_memory_bytes"] < thresholds.get("minimum_available_memory_bytes", 0)
+                            or sample["swap_free_bytes"] < thresholds.get("minimum_free_swap_bytes", 0)):
+                        resource_limited = True
+                        proc.kill()
+                        break
+                except Exception as exc:
+                    samples.append({"sampling_error": f"{type(exc).__name__}: {exc}"})
+        stdout, stderr = proc.communicate()
+    except Exception:
+        if proc.poll() is None:
+            proc.kill()
+        proc.communicate()
+        raise
     record = {
-        "returncode": completed.returncode,
+        "returncode": proc.returncode,
         "wall_s": time.perf_counter() - started,
-        "stdout_tail": completed.stdout[-2000:],
-        "stderr_tail": completed.stderr[-2000:],
-        "timed_out": False,
+        "stdout_tail": stdout[-2000:],
+        "stderr_tail": stderr[-2000:],
+        "timed_out": timed_out,
+        "resource_limited": resource_limited,
+        "host_resource_samples": samples,
     }
     if output.is_file():
         record["agent"] = json.loads(output.read_text(encoding="utf-8"))
@@ -865,6 +922,8 @@ async def run_model_task(
         "workspace_revision": revision,
         "agent_returncode": agent_record["returncode"],
         "agent_wall_s": agent_record["wall_s"],
+        "host_resource_samples": agent_record.get("host_resource_samples", []),
+        "resource_limited": agent_record.get("resource_limited", False),
         "stderr_tail": agent_record["stderr_tail"],
     }
     agent = agent_record.get("agent")
@@ -943,10 +1002,20 @@ async def async_main(args: argparse.Namespace) -> int:
     protocol["execution"]["container_image"] = image
     out.mkdir(parents=True)
     (out / "protocol.lock.json").write_bytes(protocol_path.read_bytes())
+    source_commit = subprocess.run(
+        ["git", "-C", str(ROOT), "rev-parse", "HEAD"], check=True,
+        text=True, capture_output=True,
+    ).stdout.strip()
+    source_dirty = bool(subprocess.run(
+        ["git", "-C", str(ROOT), "status", "--porcelain"], check=True,
+        text=True, capture_output=True,
+    ).stdout.strip())
     _write_json(out / "resolved.json", {
         "container_image": image,
         "pack_commit": protocol["pack"]["git_commit"],
         "pack_dir": str(pack_dir),
+        "runner_source_commit": source_commit,
+        "runner_source_dirty_at_start": source_dirty,
     })
     try:
         tasks = select_train_tasks(pack_dir, protocol, out / "task-roots")
@@ -980,27 +1049,49 @@ async def async_main(args: argparse.Namespace) -> int:
         print(unpatched_abort, file=sys.stderr)
         return 2
 
+    resources, resource_failures = resource_preflight(protocol)
+    _write_json(out / "resource-preflight.json", {
+        "passed": not resource_failures, "observed": resources,
+        "failures": resource_failures,
+    })
+    if resource_failures:
+        reason = "resource preflight failed: " + ", ".join(resource_failures)
+        _write_json(out / "summary.json", _stopped(protocol, reason, resources=resources))
+        print(reason, file=sys.stderr)
+        return 2
+
     primary = protocol["models"]["primary"]
-    model_path = ensure_model(primary["repository"], primary["revision"], primary["file_hashes"])
+    model_path = ensure_model(
+        primary["repository"], primary["revision"], primary.get("file_hashes"),
+    )
     arms = inference_arms(protocol)
     arm_reports = []
     rows: list[dict] = []
     primary_summary: dict | None = None
+    resource_abort: str | None = None
     for arm in arms:
         arm_rows = []
         for seed in arm["seeds"]:
             for task in tasks:
-                arm_rows.append(await run_model_task(
+                task_row = await run_model_task(
                     protocol, out=out / arm["name"] / f"seed-{seed}",
                     model_path=model_path, repository=primary["repository"], seed=seed,
                     task=task, image=image, decide=decide, arm=arm,
-                ))
+                )
+                arm_rows.append(task_row)
                 _write_json(out / f"{arm['name']}-tasks.json", {"rows": arm_rows})
+                if task_row.get("resource_limited") is True:
+                    resource_abort = "host resource floor reached; remaining model tasks were not started"
+                    break
+            if resource_abort:
+                break
         arm_summary = _arm_summary(arm, arm_rows)
         arm_reports.append({"name": arm["name"], "summary": arm_summary, "rows": arm_rows})
         if primary_summary is None:
             rows = arm_rows
             primary_summary = arm_summary
+        if resource_abort:
+            break
     assert primary_summary is not None
     if len(arms) == 1 and arms[0]["name"] == "primary":
         _write_json(out / "primary-tasks.json", {"rows": rows})
@@ -1051,8 +1142,13 @@ async def async_main(args: argparse.Namespace) -> int:
         },
         "container_image": image,
         "pack_commit": protocol["pack"]["git_commit"],
+        "runner_source_commit": source_commit,
+        "runner_source_dirty_at_start": source_dirty,
         "train_task_ids": [task["task_id"] for task in tasks],
         "model_started": True,
+        "resource_abort": resource_abort,
+        "attempted_task_runs": len(rows),
+        "planned_task_runs": sum(len(arm["seeds"]) for arm in arms) * len(tasks),
         "primary": primary_summary,
         "primary_rows": rows,
         "arms": [{"name": item["name"], "summary": item["summary"]} for item in arm_reports],

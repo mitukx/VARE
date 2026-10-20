@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Offline, CPU-only, bounded tool-use pilot for pinned VARE tasks."""
+"""Offline, bounded tool-use runner for pinned VARE coding tasks."""
 from __future__ import annotations
 
 import argparse
+import asyncio
 import hashlib
 import json
 import os
@@ -20,9 +21,6 @@ sys.path.insert(0, str(ROOT / "src"))
 from vare.agent_edit_format import ParseFailure, apply_parsed_edit, parse_submission, require_edit_format
 from vare.agent_task_contract import load_agent_task  # noqa: E402
 
-import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
-
 MODEL_REPOSITORY = 'Qwen/Qwen2.5-0.5B-Instruct'
 TOOLS = [
     {'type': 'function', 'function': {'name': 'list_files', 'description': 'List the exact source files available in this task workspace.', 'parameters': {'type': 'object', 'properties': {}, 'additionalProperties': False}}},
@@ -32,6 +30,14 @@ TOOLS = [
     {'type': 'function', 'function': {'name': 'check_syntax', 'description': 'Parse one allowed Python file for syntax errors without executing it.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}}, 'required': ['path'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'finish', 'description': 'Finish the attempt when you believe the task is complete. The evaluator will judge the workspace.', 'parameters': {'type': 'object', 'properties': {'summary': {'type': 'string'}}, 'required': ['summary'], 'additionalProperties': False}}},
 ]
+PUBLIC_TEST_TOOL = {
+    'type': 'function',
+    'function': {
+        'name': 'run_public_tests',
+        'description': 'Run the unchanged task-provided test_public.py inside the isolated, network-disabled candidate container. You cannot edit that test file.',
+        'parameters': {'type': 'object', 'properties': {}, 'additionalProperties': False},
+    },
+}
 WRITE_FILE_TOOL = {
     'type': 'function',
     'function': {
@@ -50,17 +56,79 @@ WRITE_FILE_TOOL = {
 }
 
 
-def tools_for(edit_format: str) -> list[dict[str, Any]]:
+def tools_for(edit_format: str, *, public_tests: bool = False) -> list[dict[str, Any]]:
     require_edit_format(edit_format)
     if edit_format == 'unified_diff':
-        return list(TOOLS)
-    tools = []
-    for item in TOOLS:
-        if item['function']['name'] == 'apply_patch':
-            tools.append(WRITE_FILE_TOOL)
-        else:
-            tools.append(item)
+        tools = list(TOOLS)
+    else:
+        tools = [WRITE_FILE_TOOL if item['function']['name'] == 'apply_patch' else item for item in TOOLS]
+    if public_tests:
+        tools.insert(-1, PUBLIC_TEST_TOOL)
     return tools
+
+
+def generate_turn(backend: str, model: Any, tokenizer: Any, messages: list[dict[str, Any]],
+                  tools: list[dict[str, Any]], *, limit: int, args: argparse.Namespace) -> tuple[str, int, int]:
+    """Generate one bounded assistant response using a locally loaded backend."""
+    prompt = tokenizer.apply_chat_template(
+        messages, tools=tools, tokenize=False, add_generation_prompt=True,
+        enable_thinking=False,
+    )
+    prompt_tokens = len(tokenizer.encode(prompt, add_special_tokens=False))
+    if prompt_tokens >= args.max_context_tokens:
+        raise ValueError('context_budget_exhausted')
+    limit = min(limit, args.max_context_tokens - prompt_tokens)
+    if backend == 'mlx':
+        import mlx.core as mx
+        from mlx_lm import generate
+        from mlx_lm.sample_utils import make_sampler
+
+        sampler = make_sampler(
+            temp=0.0 if not args.do_sample else args.temperature,
+            top_p=0.0 if not args.do_sample else args.top_p,
+            top_k=0 if not args.do_sample else args.top_k,
+        )
+        raw = generate(model, tokenizer, prompt=prompt, max_tokens=limit,
+                       sampler=sampler, verbose=False)
+        return raw, len(tokenizer.encode(raw, add_special_tokens=False)), prompt_tokens
+
+    import torch
+    encoded = tokenizer(prompt, return_tensors='pt')
+    with torch.inference_mode():
+        output = model.generate(
+            input_ids=encoded['input_ids'], attention_mask=encoded['attention_mask'],
+            do_sample=args.do_sample,
+            **({} if not args.do_sample else {
+                'temperature': args.temperature, 'top_p': args.top_p, 'top_k': args.top_k,
+            }),
+            max_new_tokens=limit, pad_token_id=tokenizer.eos_token_id,
+        )
+    new_ids = output[0][encoded['input_ids'].shape[1]:]
+    return tokenizer.decode(new_ids, skip_special_tokens=False), int(new_ids.shape[0]), prompt_tokens
+
+
+def run_public_tests(workspace: Path, image: str, expected_test_hash: str) -> dict[str, Any]:
+    """Run only the immutable public smoke file in VARE's candidate sandbox."""
+    test_file = workspace / 'test_public.py'
+    if not test_file.is_file() or sha256(test_file) != expected_test_hash:
+        return {'passed': False, 'error': 'public test file is missing or changed'}
+    from vare.container_isolation import DockerIsolationRunner, IsolationLimits
+
+    limits = IsolationLimits(image=image, timeout_s=45, memory_mb=512, cpus=1.0,
+                             pids_limit=32, max_output_bytes=20_000)
+    started = time.perf_counter()
+    try:
+        result = asyncio.run(DockerIsolationRunner().run_candidate(
+            limits, allowed_workspace_root=workspace.parent, workspace=workspace,
+            command=['python', '/workspace/test_public.py'],
+        ))
+    except Exception as exc:
+        return {'passed': False, 'error': f'{type(exc).__name__}: {exc}',
+                'elapsed_seconds': round(time.perf_counter() - started, 3)}
+    return {'passed': result.returncode == 0, 'returncode': result.returncode,
+            'stdout': result.stdout, 'stderr': result.stderr,
+            'elapsed_seconds': round(time.perf_counter() - started, 3),
+            'isolation': 'docker-network-none-read-only-root-only-workspace-mount'}
 
 
 def attempt_configured_edit(workspace: Path, text: str, edit_format: str, allowed: set[str]) -> dict[str, Any]:
@@ -111,6 +179,8 @@ def main() -> int:
     parser.add_argument('--workspace', type=Path, required=True)
     parser.add_argument('--model-path', type=Path, required=True, help='Local model snapshot directory; no network download is attempted')
     parser.add_argument('--model-repository', default=MODEL_REPOSITORY)
+    parser.add_argument('--backend', choices=('transformers_cpu', 'mlx'), default='transformers_cpu')
+    parser.add_argument('--public-test-image', help='Pinned Docker image for isolated execution of test_public.py')
     parser.add_argument('--task-root', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--instruction', required=True,
@@ -120,6 +190,7 @@ def main() -> int:
     parser.add_argument('--max-no-tool-retries', type=int, default=2)
     parser.add_argument('--max-new-tokens-per-turn', type=int, default=256)
     parser.add_argument('--max-total-new-tokens', type=int, default=3072)
+    parser.add_argument('--max-context-tokens', type=int, default=8192)
     parser.add_argument('--wall-seconds', type=int, default=900)
     parser.add_argument('--temperature', type=float, default=0.2)
     parser.add_argument('--top-p', type=float, default=0.95)
@@ -147,19 +218,42 @@ def main() -> int:
     if not os.environ.get('HF_HUB_OFFLINE') == '1' or not os.environ.get('TRANSFORMERS_OFFLINE') == '1':
         parser.error('HF_HUB_OFFLINE=1 and TRANSFORMERS_OFFLINE=1 are required')
 
-    torch.manual_seed(args.seed)
-    torch.use_deterministic_algorithms(True)
-    torch.set_num_threads(4)
     start = time.perf_counter()
-    model = AutoModelForCausalLM.from_pretrained(
-        model_dir, local_files_only=True, dtype=torch.float32,
-    ).to('cpu').eval()
-    tokenizer = AutoTokenizer.from_pretrained(model_dir, local_files_only=True)
-    if not all(parameter.device.type == 'cpu' for parameter in model.parameters()):
-        raise RuntimeError('model parameter escaped CPU')
+    if args.backend == 'mlx':
+        if platform.system() != 'Darwin' or platform.machine() != 'arm64':
+            parser.error('the MLX backend requires Apple Silicon macOS')
+        import mlx.core as mx
+        from mlx_lm import load
+        mx.random.seed(args.seed)
+        model, tokenizer = load(str(model_dir))
+        mlx_lm = __import__('mlx_lm')
+        runtime = {'python': platform.python_version(), 'mlx': getattr(__import__('mlx'), '__version__', 'unknown'),
+                   'mlx_lm': getattr(mlx_lm, '__version__', 'unknown'),
+                   'platform': platform.platform(), 'device': 'apple_metal', 'seed': args.seed}
+    else:
+        import torch
+        from transformers import AutoModelForCausalLM, AutoTokenizer
+        torch.manual_seed(args.seed)
+        torch.use_deterministic_algorithms(True)
+        torch.set_num_threads(4)
+        model = AutoModelForCausalLM.from_pretrained(
+            model_dir, local_files_only=True, dtype=torch.float32,
+        ).to('cpu').eval()
+        tokenizer = AutoTokenizer.from_pretrained(model_dir, local_files_only=True)
+        if not all(parameter.device.type == 'cpu' for parameter in model.parameters()):
+            raise RuntimeError('model parameter escaped CPU')
+        runtime = {'python': platform.python_version(), 'torch': torch.__version__,
+                   'transformers': __import__('transformers').__version__,
+                   'platform': platform.platform(), 'device': 'cpu', 'threads': torch.get_num_threads(),
+                   'cuda_available': torch.cuda.is_available(),
+                   'mps_available_unused': torch.backends.mps.is_available()}
 
     task_text = contract.prompt_text
-    tools = tools_for(args.edit_format)
+    test_files = {name for name in allowed if Path(name).name == 'test_public.py'}
+    editable = allowed - test_files
+    if args.public_test_image and len(test_files) != 1:
+        parser.error('isolated public-test execution requires exactly one test_public.py in the task')
+    tools = tools_for(args.edit_format, public_tests=bool(args.public_test_image))
     tool_names = {item['function']['name'] for item in tools}
     if args.edit_format == 'whole_file':
         edit_sentence = (
@@ -169,13 +263,17 @@ def main() -> int:
     else:
         edit_sentence = (
             'Read the source path named in the user instruction, then use tools to inspect and edit. Use apply_patch for small source diffs; never rewrite a whole file. '
+            'The patch must use exact headers --- a/<allowed source path> and +++ b/<allowed source path>; do not wrap it in a code fence. '
         )
     system = (
         'You are an offline code repair agent. Solve only the task below. The workspace contains only the task source files. '
         + edit_sentence
+        + 'Allowed source paths: ' + ', '.join(sorted(editable)) + '. First call list_files, then read the exact source path named in the task. '
         + 'Do not invent paths. The workspace is already prepared; never ask for a workspace path, more information, or permission. '
-        'The external grader is hidden. Do not describe a fix without applying it. Call finish only after changing a source file. '
-        'You have a limited tool budget; each assistant turn before finish must call a tool. '
+        + 'The external grader is hidden. Do not describe a fix without applying it. Call finish only after changing a source file. '
+        + ('After changing source, call run_public_tests; read its output and repair failures. The test file is immutable. '
+           'Call finish only after the public smoke test passes. ' if args.public_test_image else '')
+        + 'You have a limited tool budget; each assistant turn before finish must call a tool. '
         'TASK:\n' + task_text.split('## Reproduce', 1)[0].rstrip()
     )
     messages: list[dict[str, str]] = [
@@ -191,6 +289,8 @@ def main() -> int:
     no_tool_retries = 0
     edit_attempted = False
     edit_applied = False
+    public_test_hash = sha256(workspace / next(iter(test_files))) if test_files else None
+    public_test_result = None
     format_parse_failure = None
     format_parse_failure_count = 0
     pattern = re.compile(r'<tool_call>\s*(\{.*?\})\s*</tool_call>', re.DOTALL)
@@ -210,34 +310,32 @@ def main() -> int:
         if elapsed >= args.wall_seconds:
             stop_reason = 'wall_time_exhausted'
             break
-        prompt = tokenizer.apply_chat_template(
-            messages, tools=tools, tokenize=False, add_generation_prompt=True,
-            enable_thinking=False,
-        )
-        encoded = tokenizer(prompt, return_tensors='pt')
         remaining = args.max_total_new_tokens - token_total
         if remaining <= 0:
             stop_reason = 'token_budget_exhausted'
             break
         limit = min(args.max_new_tokens_per_turn, remaining)
-        with torch.inference_mode():
-            output = model.generate(
-                input_ids=encoded['input_ids'], attention_mask=encoded['attention_mask'],
-                do_sample=args.do_sample,
-                **({} if not args.do_sample else {
-                    'temperature': args.temperature, 'top_p': args.top_p, 'top_k': args.top_k,
-                }),
-                max_new_tokens=limit, pad_token_id=tokenizer.eos_token_id,
+        generation_start = time.perf_counter()
+        try:
+            raw, generated_tokens, prompt_tokens = generate_turn(
+                args.backend, model, tokenizer, messages, tools, limit=limit, args=args,
             )
-        new_ids = output[0][encoded['input_ids'].shape[1]:]
-        raw = tokenizer.decode(new_ids, skip_special_tokens=False)
-        token_total += int(new_ids.shape[0])
-        entry: dict[str, Any] = {'turn': turn + 1, 'model_output': raw, 'tool_calls': []}
+        except ValueError as exc:
+            if str(exc) != 'context_budget_exhausted':
+                raise
+            stop_reason = 'context_budget_exhausted'
+            break
+        generation_elapsed = time.perf_counter() - generation_start
+        token_total += generated_tokens
+        entry: dict[str, Any] = {'turn': turn + 1, 'model_output': raw, 'tool_calls': [],
+                                 'generated_tokens': generated_tokens,
+                                 'prompt_tokens': prompt_tokens,
+                                 'generation_seconds': round(generation_elapsed, 6)}
         calls = list(pattern.finditer(raw))
         if not calls:
             recovered = parse_submission(raw, edit_format=args.edit_format)
             if not isinstance(recovered, ParseFailure) or recovered.reason != 'no_edit':
-                edit_result = attempt_configured_edit(workspace, raw, args.edit_format, allowed)
+                edit_result = attempt_configured_edit(workspace, raw, args.edit_format, editable)
                 note_edit(edit_result)
                 entry['tool_calls'].append({'name': 'recovered_edit', 'result': edit_result})
                 messages.append({'role': 'assistant', 'content': raw})
@@ -305,7 +403,7 @@ def main() -> int:
                         result = matches[:80]
                 elif name == 'apply_patch':
                     result = attempt_configured_edit(
-                        workspace, str(arguments.get('patch', '')), args.edit_format, allowed,
+                        workspace, str(arguments.get('patch', '')), args.edit_format, editable,
                     )
                     note_edit(result)
                 elif name == 'write_file':
@@ -316,9 +414,12 @@ def main() -> int:
                             'content': arguments.get('content', ''),
                         }),
                         args.edit_format,
-                        allowed,
+                        editable,
                     )
                     note_edit(result)
+                elif name == 'run_public_tests':
+                    public_test_result = run_public_tests(workspace, args.public_test_image, public_test_hash)
+                    result = public_test_result
                 elif name == 'check_syntax':
                     raw_path = arguments.get('path', '')
                     path = resolve_allowed_path(raw_path, allowed)
@@ -334,6 +435,8 @@ def main() -> int:
                 else:
                     if digest_tree(workspace, sorted(allowed)) == before:
                         result = {'finished': False, 'error': 'source is unchanged; inspect and edit before finishing'}
+                    elif args.public_test_image and not (public_test_result or {}).get('passed'):
+                        result = {'finished': False, 'error': 'public tests have not passed; run them and repair failures'}
                     else:
                         final_summary = str(arguments.get('summary', ''))
                         result = {'finished': True}
@@ -352,6 +455,9 @@ def main() -> int:
     elapsed = time.perf_counter() - start
     after = digest_tree(workspace, sorted(allowed))
     diff = run_git(workspace, 'diff', '--binary', contract.diff_revision, '--', *sorted(allowed))
+    if args.backend == 'mlx':
+        runtime['mlx_active_memory_bytes'] = int(mx.metal.get_active_memory())
+        runtime['mlx_peak_memory_bytes'] = int(mx.metal.get_peak_memory())
     result = {
         'schema_version': 1, 'task_id': contract.task_id, 'task_schema': contract.schema,
         'seed': args.seed,
@@ -361,18 +467,17 @@ def main() -> int:
         'initial_messages': initial_messages,
         'model_repository': args.model_repository, 'model_snapshot': model_dir.name,
         'model_files': {path.name: sha256(path) for path in sorted(model_dir.iterdir()) if path.is_file()},
-        'runtime': {'python': platform.python_version(), 'torch': torch.__version__,
-                    'transformers': __import__('transformers').__version__,
-                    'platform': platform.platform(), 'device': 'cpu', 'threads': torch.get_num_threads(),
-                    'cuda_available': torch.cuda.is_available(), 'mps_available_unused': torch.backends.mps.is_available()},
+        'runtime': runtime,
         'budgets': {'max_turns': args.max_turns, 'max_new_tokens_per_turn': args.max_new_tokens_per_turn,
-                    'max_total_new_tokens': args.max_total_new_tokens, 'wall_seconds': args.wall_seconds,
+                    'max_total_new_tokens': args.max_total_new_tokens,
+                    'max_context_tokens': args.max_context_tokens, 'wall_seconds': args.wall_seconds,
                     'max_no_tool_retries': args.max_no_tool_retries,
                     'temperature': args.temperature, 'top_p': args.top_p, 'top_k': args.top_k,
                     'do_sample': args.do_sample, 'edit_format': args.edit_format},
         'edit_format': args.edit_format,
         'edit_attempted': edit_attempted,
         'edit_applied': edit_applied,
+        'public_test_result': public_test_result,
         'format_parse_failure': format_parse_failure,
         'format_parse_failure_count': format_parse_failure_count,
         'stop_reason': stop_reason, 'agent_summary': final_summary,

@@ -1,0 +1,184 @@
+{
+  "protocol_id": "mlsys-coding-agent-4b-mlx-pilot-v3",
+  "schema_version": 1,
+  "frozen_before_model_execution": true,
+  "status": "model execution attempted; resource guard stopped all five runs before a trajectory or grader decision",
+  "hypothesis": "The pinned local 4B MLX instruct model can use the existing isolated coding harness to make at least one task-source change that passes the independent hidden grader on the five frozen development tasks, while also passing each immutable public smoke test.",
+  "primary_metric": "Number and fraction of the 10 task-seed attempts that have an applied source patch, pass the public smoke test, and pass the independent hidden grader. Development gate: at least one pass on a nontrivial task; no held-out claim.",
+  "uncertainty": "Five authored training/development tasks with one greedy run each; descriptive pilot only. No sampling variance or population uncertainty estimate.",
+  "task_id": "mlsys-coding-v1-train-only",
+  "public_files": {
+    "benchmarks/separated_json_square_v1/TASK.md": "74f1ceb03b43546dffbeb375f9fb07a0d8941afe2b3a973886da670a8785ed96",
+    "benchmarks/separated_json_square_v1/fixture/solve.py": "12418c3be8264e28d007c62c2c0f657640ab4ca0c6196c79dc0221bb5eb97dfe",
+    "benchmarks/separated_json_square_v1/evaluator/grade.py": "a50419340329d9814177b922e4adea7ffef5de005884bf0bd2209a8a180092a5",
+    "benchmarks/separated_json_square_v1/task.json": "5039ab5b6e5f6201e5a518174db12d4840e3f3a46cf0ad8d230d628c345b2774"
+  },
+  "instruction": "Read solve.py now. It reads one JSON object from stdin with an integer field n and must print exactly one JSON object with field value equal to n squared. The current program is wrong. Apply a minimal patch to solve.py, then call finish. Example: n = 3 yields value 9.",
+  "hidden_cases": [
+    {
+      "case_id": "square-3",
+      "request": {
+        "n": 3
+      },
+      "expected": {
+        "value": 9
+      }
+    },
+    {
+      "case_id": "square-5",
+      "request": {
+        "n": 5
+      },
+      "expected": {
+        "value": 25
+      }
+    },
+    {
+      "case_id": "square-7",
+      "request": {
+        "n": 7
+      },
+      "expected": {
+        "value": 49
+      }
+    },
+    {
+      "case_id": "square-0",
+      "request": {
+        "n": 0
+      },
+      "expected": {
+        "value": 0
+      }
+    },
+    {
+      "case_id": "square-neg4",
+      "request": {
+        "n": -4
+      },
+      "expected": {
+        "value": 16
+      }
+    }
+  ],
+  "harness_expectations": {
+    "evidence_level": "E0",
+    "known_bad_passing_case_ids": [
+      "square-0"
+    ],
+    "known_good_passes_all": true,
+    "forged_score_stdout_passes_none": true,
+    "planted_workspace_oracle_passes_none": true,
+    "grader_path_read_passes_none": true,
+    "canary_visible_replicates": 0,
+    "canary_replicates": 3,
+    "network_must_fail": true
+  },
+  "pack": {
+    "pull_request": 84,
+    "git_ref": "cursor/mlsys-coding-tasks-7d0a",
+    "git_commit": "27955442317cf9b7beef3583b4f1a5f2662e0390",
+    "manifest_sha256": "2c67d85a6806b3bbcbc63676f64fc955c5c7b3c9c4127a5a3caade1541efb4ab",
+    "train": [
+      "mlsys-v1-grad-accum-tail",
+      "mlsys-v1-paired-shuffle-loader",
+      "mlsys-v1-range-sums",
+      "mlsys-v1-row-log-softmax",
+      "mlsys-v1-warmup-cosine"
+    ],
+    "heldout_not_used": [
+      "mlsys-v1-aging-scheduler",
+      "mlsys-v1-causal-attention",
+      "mlsys-v1-dataset-standardize",
+      "mlsys-v1-global-grad-clip"
+    ],
+    "note": "Exact PR #84 task-pack commit and manifest. Only the five frozen train tasks are eligible. Four v1 held-out tasks are not opened. The v2 pool is unassigned and excluded."
+  },
+  "models": {
+    "primary": {
+      "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+      "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+      "base_repository": "Qwen/Qwen3-4B-Instruct-2507",
+      "base_revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+      "license": "Apache-2.0",
+      "backend": "mlx",
+      "quantization": {
+        "bits": 4,
+        "group_size": 64,
+        "format": "MLX safetensors"
+      },
+      "device": "Apple Metal through MLX",
+      "split": "train"
+    }
+  },
+  "budgets": {
+    "max_turns": 12,
+    "max_new_tokens_per_turn": 192,
+    "max_total_new_tokens": 2048,
+    "max_context_tokens": 8192,
+    "wall_seconds": 900,
+    "cpu_threads": 4,
+    "gpu_hours": 0,
+    "paid_api_usd": 0,
+    "max_model_active_memory_bytes": 8589934592,
+    "resource_preflight": {
+      "minimum_available_memory_bytes": 2147483648,
+      "minimum_free_swap_bytes": 536870912,
+      "minimum_disk_free_bytes": 16106127360,
+      "sample_interval_seconds": 1
+    }
+  },
+  "inference": {
+    "edit_format": "whole_file",
+    "parser": "Existing tool-call parser in scripts/run_local_agent.py. Whole-file replacement avoids the malformed patch path observed in the earlier 0.5B run. Every assistant output, tool call, and result is retained.",
+    "instruction": "task prompt, unchanged",
+    "arms": [
+      {
+        "name": "primary",
+        "temperature": 0,
+        "do_sample": false,
+        "top_p": null,
+        "top_k": null,
+        "seeds": [
+          101
+        ],
+        "samples_per_task": 1
+      }
+    ]
+  },
+  "execution": {
+    "policy_inference": "Host Apple Silicon process using pinned mlx-lm/MLX; no network after the pinned local model snapshot is downloaded. One model instance at a time.",
+    "candidate_code_execution": "Pinned Python container with network disabled, read-only root, dropped capabilities, bounded memory/CPU/PIDs, and only the candidate workspace mounted. run_public_tests executes immutable test_public.py in this namespace.",
+    "solution_execution": "After the candidate container exits, the independent grader evaluates a fresh source-only snapshot in a separate container. Hidden tests and expected outputs stay outside the candidate namespace.",
+    "container_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "accepted_container_images": {
+      "linux_amd64": "python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1",
+      "colima_aarch64": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258"
+    },
+    "network": "none for candidate and grader containers; network permitted only for initial pinned model snapshot/dependency setup",
+    "scoring_command": [
+      "python",
+      "/workspace/solve.py"
+    ],
+    "grader": "Existing PR #85 separated grader and PR #84 task reward.decide; candidate/evaluator isolation harness must pass its canary and adversarial E0 checks before any model load."
+  },
+  "abort": [
+    "Do not start model inference unless the E0 harness matches its frozen canary and adversarial expectations, all unpatched train tasks fail, Colima is active, and resource preflight passes.",
+    "Do not execute a held-out task or inspect its task/grader files.",
+    "Do not edit test_public.py; it is protected from agent writes and run in the candidate container only.",
+    "Do not train, fine-tune, or change model snapshot, prompts, task set, decoding, seeds, or reward rule after the first attempt.",
+    "Do not start Stage B, a VARE policy comparison, or fault injection based on this pilot unless the Stage A gate is met and a separate protocol is frozen.",
+    "Retain timeout, crash, non-edit, public-test failure, and grader failure records."
+  ],
+  "local_measurement": {
+    "status": "preregistered; not run",
+    "host": "Apple M1 Pro / 32 GiB macOS arm64, local MLX, Colima Docker, no paid API",
+    "setup": "Install requirements/mlsys-agent-mlx.lock.txt in a dedicated Python 3.12 environment. Download only the exact model revision. Run the evidence runner from the VARE checkout under the Colima shared home path.",
+    "command": "DOCKER_HOST=unix://$HOME/.colima/default/docker.sock PYTHONPATH=src python scripts/run_separated_coding_eval.py --protocol protocols/mlsys_coding_agent_4b_mlx_pilot_v3.json --pack-root \"$HOME/vare-mlsys-pack-2795544\" --output \"$HOME/vare-evidence/4b-mlx-pilot/run-unique\"",
+    "stop_if": "E0/isolation mismatch, memory availability below 5 GiB, free swap below 512 MiB, disk below 15 GiB, Docker unavailable, process crash/OOM, or task timeout"
+  },
+  "claim_limit": "A train-split development pilot only. It cannot establish held-out generalization, broad MLSys coding ability, VARE system benefit, or post-training/RSI improvement. No model result is recorded until the independent grader completes.",
+  "supersedes": "mlsys-coding-agent-4b-mlx-pilot-v2",
+  "change_from_v1": "Corrected the synthetic E0 scoring command to execute /workspace/solve.py. V1 E0 evidence showed all known-good candidates exited 2 because it inherited an incompatible test_hidden.py command. No model inference occurred under v1.",
+  "change_from_v2": "The v2 harness and resource preflight passed, but the runner indexed optional model file hashes and raised KeyError before model download. The runner now treats file hashes as optional; the pinned model revision and run-time inventory hashes remain recorded. The available-memory stop floor is 2 GiB so model memory is allowed while retaining a host safety reserve."
+}
