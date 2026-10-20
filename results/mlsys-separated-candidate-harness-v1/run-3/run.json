@@ -1,0 +1,108 @@
+{
+  "adapter_source_sha256": "2ef6f08ddc14376969324cf7839a18c037e3464f60d2b565e0e8db72ef0a9546",
+  "auditor_source_sha256": "655dff0787b58b5e391c568011581699fd7b7dad00c4a59d881f6ae89cb63c6b",
+  "classification": "harness calibration on a previously consumed task; not model or held-out evidence",
+  "container_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+  "controls": {
+    "frozen_checker_rejects_empty_result": true,
+    "isolated_grader_accepts_oracle_control": true,
+    "isolated_grader_rejection_reason": "correctness_failed",
+    "isolated_grader_rejects_empty_result": true
+  },
+  "docker_server": "29.5.2",
+  "elapsed_s": 2.4063097500475124,
+  "frozen_harness_adapter_sha256": "5e4979d8306e4e9e7140a276f891e86879be0ba74130c4019fd86f9db80dbeca",
+  "harness_source_sha256": "f2fa66b62a72185f093dbbc940a47fccd858c0f7717c66dcaab9edec8945ddf9",
+  "hidden_evaluator_sha256": "965efd37d959a8d65f9cde3a97e24047f6b796af7181c5d8e1ce2daf25edba82",
+  "host": {
+    "machine": "arm64",
+    "system": "macOS-27.0.1-arm64-arm-64bit"
+  },
+  "isolated_grader_source_sha256": "a6a70f0a396fd82ceeef619778eaccda6ccec41eea8f547b3b1883d8ef9465d6",
+  "oracle_sha256": "95ade6d2daaef233099f943eaf660dfb5caa596cce7d79fc999f23e3ae0de250",
+  "pack_manifest_sha256": "2c67d85a6806b3bbcbc63676f64fc955c5c7b3c9c4127a5a3caade1541efb4ab",
+  "protocol_id": "mlsys-separated-candidate-harness-v1",
+  "protocol_sha256": "c7e42bd9a98c202cfa9af0b9492be8a07d0c1dce06c9302bfacaa0827fbadde5",
+  "raw": {
+    "empty_result": {
+      "baseline_samples_s": [],
+      "candidate_samples_s": [
+        0.2430539169312386,
+        0.14221412493927146,
+        0.32619337500582635
+      ],
+      "error": "correctness_failed",
+      "grade_evidence": {
+        "cases": [
+          {
+            "case_id": "mlsys-v1-row-log-softmax-grader-0",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.2430539169312386
+          },
+          {
+            "case_id": "mlsys-v1-row-log-softmax-grader-1",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.14221412493927146
+          },
+          {
+            "case_id": "mlsys-v1-row-log-softmax-grader-2",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.32619337500582635
+          }
+        ],
+        "passed": false,
+        "task_kind": "correctness"
+      },
+      "nonce": "31313131313131313131313131313131",
+      "nonce_enforced": true,
+      "passed": false,
+      "task_id": "mlsys-v1-row-log-softmax"
+    },
+    "oracle_control": {
+      "baseline_samples_s": [],
+      "candidate_samples_s": [
+        0.13877845900527072,
+        0.13377779090558736,
+        0.18786879192331118
+      ],
+      "error": null,
+      "grade_evidence": {
+        "cases": [
+          {
+            "case_id": "mlsys-v1-row-log-softmax-grader-0",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.13877845900527072
+          },
+          {
+            "case_id": "mlsys-v1-row-log-softmax-grader-1",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.13377779090558736
+          },
+          {
+            "case_id": "mlsys-v1-row-log-softmax-grader-2",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.18786879192331118
+          }
+        ],
+        "passed": true,
+        "task_kind": "correctness"
+      },
+      "nonce": "42424242424242424242424242424242",
+      "nonce_enforced": true,
+      "passed": true,
+      "task_id": "mlsys-v1-row-log-softmax"
+    }
+  },
+  "separated_grader_source_sha256": "8cf1df4b2f442855f6662c1dc5ea7a5cdd601341dc650eb004ba71b3d116cb8f",
+  "source_commit": "14499692ffe61c0061715e6db34b6d7ecca02aee",
+  "task_descriptor_sha256": "1aa2ab84473e7599437dc3892f1df2938880dab510ee44f65cac42e2074a892e",
+  "task_id": "mlsys-v1-row-log-softmax",
+  "task_type": "correctness",
+  "verifier_source_sha256": "ec25e1a0a0e5fad6b7f746afcf262bb4971a9dc0283cb30cd95ba4a3102fd9a2"
+}
