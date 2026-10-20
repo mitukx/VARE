@@ -10,8 +10,23 @@ that policy updates cannot improve task success.
 
 ## Repository and PR audit
 
-This audit was performed on current `main` at
-`312f499af5842faf5872ea554916e4d18e0b92cb` after fetching `origin/main`.
+The inventory audit is bound to VARE `main` commit
+`312f499af5842faf5872ea554916e4d18e0b92cb`, tree
+`80fa635de98791ac927a2e47cd2c591dd840f217`. The v2 lock pins this exact
+commit/tree and the v2 auditor verifies that the task packs, v1 inventory
+lock, and v1 auditor bytes in the working tree match that source commit before
+running the inventory audit. The nested v1 audit also records its separate
+embedded pack ancestry commit `46da14cd52777d99c0f2fd40c09d0513103d95e4`;
+that commit is not represented as the VARE main revision. The v2 audit
+reproduced `NO_GO`: 19 task entries, 14 unique definitions, maximum possible
+unique inventory 14, 0 eligible held-out definitions, and 15 required.
+Reproduce with:
+
+```bash
+python scripts/audit_mlsys_update_readiness_v2.py \
+  --output results/mlsys-actual-model-update-readiness-v2/audit-v2.json
+```
+
 Relevant PR state was read from GitHub on 2026-10-20:
 
 - #82, #84, and #89 are merged. #91 and #92 are merged readiness/report
@@ -31,7 +46,8 @@ Relevant PR state was read from GitHub on 2026-10-20:
   nested-`zip` shape omission, so that task remains excluded from any new
   evidence. The pack is frozen and was not edited in place.
 
-The readiness audit is reproducible with:
+The original v1 inventory audit is also retained for comparison and is
+reproducible with:
 
 ```bash
 python scripts/audit_mlsys_update_readiness_v1.py \
@@ -39,22 +55,22 @@ python scripts/audit_mlsys_update_readiness_v1.py \
   --output results/mlsys-actual-model-update-readiness-v2/audit.json
 ```
 
-It passed its integrity checks and returned `NO_GO`: 19 task entries, 14
-unique definitions, maximum possible unique inventory 14, 0 eligible held-out
-definitions, and 15 required. The frozen audit checks task/evaluator hashes,
-pack commit ancestry, manifest and split hashes, IDs, and prior-use
-classifications. Prior-use is a locked protocol assertion rather than a
+The v1 audit checks task/evaluator hashes, pack commit ancestry, manifest and
+split hashes, IDs, and prior-use classifications. Prior-use is a locked protocol assertion rather than a
 reconstruction from raw rollout manifests; the independent 14-definition
 inventory ceiling alone is sufficient for this NO-GO.
 
-## Fresh local Apple GPU preflight
+## Disclosed consumed-prompt replay
 
-To avoid relying only on the previous feasibility report, the pinned
-`mlx_backend_microbenchmark_v1` was rerun on this M1 Pro in a Python 3.12.12
-environment with `mlx==0.32.2` and `mlx-lm==0.32.2`. It loaded the pinned
-`mlx-community/Qwen3-4B-Instruct-2507-4bit` snapshot and confirmed Metal GPU
-selection (`Device(gpu, 0)`, Metal available). Three greedy 96-token decode
-repetitions produced identical output hashes on both backends:
+This audit inadvertently reran the frozen
+`mlx_backend_microbenchmark_v1` prompt. A post-run review found that the
+protocol and both backend output hashes are identical to the earlier retained
+run at `results/mlx-backend-microbenchmark-v1/run-1`. That violates the
+repository rule against rerunning consumed prompts. The repeated record is
+retained and explicitly classified as a protocol violation; **it is not new
+preflight evidence and is not used for the NO-GO decision**. The raw outputs,
+summary, and inner hashes remain available for transparent accounting. The
+duplicated observations were:
 
 | Measurement | Metal GPU | MLX CPU |
 | --- | ---: | ---: |
@@ -62,13 +78,10 @@ repetitions produced identical output hashes on both backends:
 | MLX peak allocation | 2.41 GB | not reported |
 | Process max RSS | 2.46 GiB | shared process measurement |
 
-The benchmark does not separately time prefill or sample utilization
-percentage, so neither is claimed. Metal backend selection and allocation
-provide evidence of GPU execution. Free swap was 806 MiB before and 695 MiB
-after the run, remaining above the frozen 512 MiB stop threshold; free disk
-remained about 203 GiB, above the 15 GB threshold. The small decode run did
-not show a Metal throughput advantage. Raw output, summary, pinned protocol,
-and the runner/evidence hashes are in
+The original run, not this replay, is the valid source for the existing
+feasibility claim in the v1 report. The benchmark does not separately time
+prefill or sample utilization percentage. Raw repeated output, summary, pinned
+protocol, and runner/evidence hashes are in
 [`results/mlsys-actual-model-update-readiness-v2/metal-cpu-benchmark`](../results/mlsys-actual-model-update-readiness-v2/metal-cpu-benchmark/).
 
 The earlier retained feasibility study remains the only actual update
@@ -81,8 +94,9 @@ agent rollouts were run in this v2 audit because the frozen task gate failed.
 
 ## Validation
 
-The readiness audit reran successfully, the evidence manifest hashes all
-retained files, and `tests/test_mlsys_update_readiness_v1.py` passed 3/3. A
+The source-bound v2 readiness audit passed. The combined readiness tests passed
+5/5 (v1: 3, v2 commit/tree binding: 2), and Ruff passed for the new auditor
+and its tests. A
 local CI-equivalent full pytest attempt used Python 3.12 with external pytest
 plugin auto-loading disabled. It was interrupted after 664 seconds at 34%
 progress: 454 passed, 78 skipped, and 13 failures had been reported. The
@@ -97,9 +111,8 @@ attempt record is in `results/mlsys-actual-model-update-readiness-v2/local-valid
 
 ## Decision boundary and next gate
 
-This rerun confirms that a pinned MLX/Metal inference environment is available
-and the short decode workload fits the predeclared resource gate. It does not
-repair the missing task cohort. Before another policy update, the next study
+The duplicate prompt replay is not used to make a new hardware claim. This
+audit does not repair the missing task cohort. Before another policy update, the next study
 must produce and review a versioned pool of 30–60 fresh task candidates, freeze
 15–20 untouched held-out tasks plus separate development and SFT data, and
 pass a development-only model-success gate. Historical PR #84–#90 tasks,
@@ -109,5 +122,6 @@ do not start SFT/GRPO training.
 
 The original NO-GO and its limitation remain in
 [`mlsys-actual-model-update-no-go-v1-report.md`](mlsys-actual-model-update-no-go-v1-report.md).
-This report adds a fresh current-main audit and GPU preflight; it does not
-replace or alter the frozen earlier protocol or result.
+This report adds a source-bound inventory audit and discloses the consumed-
+prompt replay; it does not replace or alter the frozen earlier protocol or
+result.

@@ -1,6 +1,11 @@
 {
   "audited_main_sha": "312f499af5842faf5872ea554916e4d18e0b92cb",
+  "audited_main_tree": "80fa635de98791ac927a2e47cd2c591dd840f217",
   "files": {
+    "audit-v2.json": {
+      "bytes": 2834,
+      "sha256": "3a4f11fee60ad66cf2df336242bdd456d8bd66567821d1957fad5a9fa48ea8fd"
+    },
     "audit.json": {
       "bytes": 2152,
       "sha256": "872588a6bfa05f53ceb53a526cd643ebd5e57bafc5355c1eaede29bc8c4fe4b7"
@@ -10,8 +15,8 @@
       "sha256": "cfdf2f3810761f792744b8e11f5e1be76bef58abcc9da795f925a52baa7c28a0"
     },
     "local-validation.json": {
-      "bytes": 2290,
-      "sha256": "9dd050192186503eaf3b56a28ed668c75e0d8028f64695ab524d31d79b4099bd"
+      "bytes": 2817,
+      "sha256": "e9d9771f36f9344ecca19617688932c00daba7481f8f55eff209be88483a2705"
     },
     "metal-cpu-benchmark/raw_outputs.json": {
       "bytes": 3107,
@@ -24,7 +29,16 @@
     "pr88-review-findings.json": {
       "bytes": 875,
       "sha256": "682c1494ce310fb46aaa9dd7b416713e6baa5e19a9d9c7960ad43517723d53c1"
+    },
+    "pr93-review-findings.json": {
+      "bytes": 763,
+      "sha256": "814576a5c28b8a699232fe27ba8e1e84ef8e895f0d9eb1a59c83ed3c4e062071"
     }
   },
-  "schema_version": 1
+  "schema_version": 1,
+  "source_files": {
+    "protocols/mlsys_actual_model_update_no_go_v2.lock.json": "f91744b7e813ccaaff3396a63c639a63b8c364c61a97b361093a7a5b1c991ce4",
+    "scripts/audit_mlsys_update_readiness_v2.py": "59c1ca3bf548f6f0b4ff40be7f48260df53f920bebc05f3818b168b0e4b0299a",
+    "tests/test_mlsys_update_readiness_v2.py": "3bc147650f271d0b7dd3ddbe699b70bc3563168734b68cb97d4424b3ba438a0b"
+  }
 }
