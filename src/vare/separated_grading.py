@@ -17,6 +17,7 @@ import re
 import statistics
 import secrets
 import tempfile
+import time
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -620,9 +621,15 @@ def _paired_ratio_lower_bound(
     return lower, mean
 
 
-def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> dict[str, Any]:
+def grade_isolated_subject(
+    subject: Path, calls_path: Path, *, image: str,
+    task_timeout_s: float | None = None,
+) -> dict[str, Any]:
     """Score one snapshot from the host. A child exit status is not a pass."""
     spec = _load_isolated_calls(calls_path)
+    task_deadline = (
+        None if task_timeout_s is None else time.monotonic() + task_timeout_s
+    )
     module = str(spec["module"])
     function = str(spec["function"])
     rtol = float(spec["rtol"])
@@ -652,6 +659,7 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
                 bool_as_number=spec.get("bool_as_number") is True,
                 memory_mb=memory_mb,
                 discard_candidate_stdout=spec.get("discard_candidate_stdout") is True,
+                task_deadline=task_deadline,
             )
             passed = report.passed
             return {
@@ -695,6 +703,7 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
             bool_as_number=spec.get("bool_as_number") is True,
             memory_mb=memory_mb,
             discard_candidate_stdout=spec.get("discard_candidate_stdout") is True,
+            task_deadline=task_deadline,
         )
         if not correctness.passed:
             return {

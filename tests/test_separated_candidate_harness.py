@@ -132,9 +132,12 @@ def test_candidate_stdout_does_not_corrupt_isolated_result_protocol(tmp_path: Pa
         "from __future__ import annotations\n\nprint('candidate import output')\n",
         1,
     )
+    source = source.replace("import math\n", "import math\nimport os\n", 1)
     source = source.replace(
         "def causal_attention_weights(scores):\n",
-        "def causal_attention_weights(scores):\n    print('candidate call output')\n",
+        "def causal_attention_weights(scores):\n"
+        "    print('candidate call output')\n"
+        "    os.write(1, b'candidate fd output')\n",
         1,
     )
     subject = _subject(tmp_path, source)
@@ -160,11 +163,35 @@ def test_candidate_stdout_does_not_corrupt_isolated_result_protocol(tmp_path: Pa
     )
 
     assert completed.returncode == 0, completed.stderr.decode("utf-8", "replace")
-    assert completed.stdout.splitlines() == [
+    assert completed.stdout == b""
+    assert completed.stderr.splitlines() == [
         b"IMPORTING",
         b"READY",
         b'{"value":[[1.0]]}',
     ]
+
+
+def test_isolated_grade_uses_trusted_task_wall_time_limit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import vare.separated_candidate_harness as harness
+
+    observed: dict[str, float | None] = {}
+
+    def grade(_workspace: Path, _calls_path: Path, *, image: str, task_timeout_s: float | None):
+        observed["timeout"] = task_timeout_s
+        return {
+            "decision": {"success": True, "reason": "correctness"},
+            "grade": {"cases": []},
+        }
+
+    monkeypatch.setattr(harness, "grade_isolated_subject", grade)
+    subject = _subject(tmp_path, "def causal_attention_weights(scores):\n    return []\n")
+
+    report = harness.grade_function(_request(subject))
+
+    assert observed["timeout"] == 20
+    assert report["task_id"] == TASK_ID
 
 
 def test_task_descriptor_cannot_be_substituted(tmp_path: Path) -> None:

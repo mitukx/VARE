@@ -101,14 +101,16 @@ _write = os.write
 _read = sys.stdin.buffer.readline
 header = _loads(_read())
 sys.path.insert(0, "/subject")
+_protocol_fd = 1
 if header.get("discard_candidate_stdout") is True:
-    _candidate_stdout = open(os.devnull, "w", encoding="utf-8")
-    sys.stdout = _candidate_stdout
-    sys.__stdout__ = _candidate_stdout
-_write(1, b"IMPORTING\n")
+    _protocol_fd = os.dup(2)
+    _devnull = os.open(os.devnull, os.O_WRONLY)
+    os.dup2(_devnull, 1)
+    os.dup2(_devnull, 2)
+_write(_protocol_fd, b"IMPORTING\n")
 module = __import__(header["module"])
 function = getattr(module, header["function"])
-_write(1, b"READY\n")
+_write(_protocol_fd, b"READY\n")
 _exit = os._exit
 _Exception = Exception
 _BaseException = BaseException
@@ -132,11 +134,11 @@ if header.get("session") is True:
         if request == {"close": True}:
             break
         payload = _dumps(_one(request), sort_keys=True, separators=(",", ":"), allow_nan=False)
-        _write(1, _encode(payload, "utf-8") + b"\n")
+        _write(_protocol_fd, _encode(payload, "utf-8") + b"\n")
 else:
     request = _loads(_read())
     payload = _dumps(_one(request), sort_keys=True, separators=(",", ":"), allow_nan=False)
-    _write(1, _encode(payload, "utf-8") + b"\n")
+    _write(_protocol_fd, _encode(payload, "utf-8") + b"\n")
 _exit(0)
 """
 
@@ -604,11 +606,16 @@ def _invoke(
     tuple_paths: Sequence[Sequence[Any]] = (),
     memory_mb: int = 512,
     discard_candidate_stdout: bool = False,
+    task_deadline: float | None = None,
 ) -> tuple[Any | None, float | None, str | None]:
     """Return ``(value, parent_wall_s, failure)``."""
     nonce = secrets.token_hex(32)
     name = "vare-call-" + secrets.token_hex(12)
+    if task_deadline is not None and time.monotonic() >= task_deadline:
+        return None, None, "missing_result"
     deadline = time.monotonic() + timeout_s + _STARTUP_GRACE_S
+    if task_deadline is not None:
+        deadline = min(deadline, task_deadline)
     spec = {
         "nonce": nonce,
         "container": name,
@@ -641,7 +648,7 @@ def _invoke(
         if not importing:
             _value, failure = _parse_result(ready, nonce)
             return None, None, failure or "malformed_result"
-        ready = reader.readline(time.monotonic() + timeout_s)
+        ready = reader.readline(min(deadline, time.monotonic() + timeout_s))
         startup_s = _ready_startup(ready, nonce)
         if startup_s is None:
             _value, failure = _parse_result(ready, nonce)
@@ -651,7 +658,7 @@ def _invoke(
         call_started = time.perf_counter()
         proc.stdin.write(b"GO\n")
         proc.stdin.flush()
-        result = reader.readline(time.monotonic() + timeout_s)
+        result = reader.readline(min(deadline, time.monotonic() + timeout_s))
         elapsed = startup_s + (time.perf_counter() - call_started)
         parsed, failure = _parse_result(result, nonce)
         if failure is not None:
@@ -679,12 +686,18 @@ def _invoke_session(
     runner: DockerIsolationRunner,
     memory_mb: int = 512,
     discard_candidate_stdout: bool = False,
+    task_deadline: float | None = None,
 ) -> list[tuple[Any | None, float | None, str | None]]:
     """Run an ordered case group in one isolated candidate process."""
     if not calls:
         return []
+    if task_deadline is not None and time.monotonic() >= task_deadline:
+        return [(None, None, "missing_result")] * len(calls)
     nonce = secrets.token_hex(32)
     name = "vare-call-" + secrets.token_hex(12)
+    deadline = time.monotonic() + timeout_s + _STARTUP_GRACE_S
+    if task_deadline is not None:
+        deadline = min(deadline, task_deadline)
     spec = {
         "nonce": nonce, "container": name, "module": module,
         "function": function, "subject": str(staged), "image": image,
@@ -703,16 +716,21 @@ def _invoke_session(
     try:
         proc.stdin.write((_canonical(spec) + "\n").encode("utf-8"))
         proc.stdin.flush()
-        ready = reader.readline(time.monotonic() + timeout_s + _STARTUP_GRACE_S)
+        ready = reader.readline(
+            min(deadline, time.monotonic() + timeout_s + _STARTUP_GRACE_S)
+        )
         if ready != f"VARE_IMPORTING {nonce} 1".encode("ascii"):
             return [(None, None, "malformed_result")] * len(calls)
-        ready = reader.readline(time.monotonic() + timeout_s)
+        ready = reader.readline(min(deadline, time.monotonic() + timeout_s))
         startup_s = _ready_startup(ready, nonce)
         if startup_s is None or reader.has_pending():
             return [(None, None, "malformed_result")] * len(calls)
         proc.stdin.write(b"GO\n")
         proc.stdin.flush()
         for args, kwargs, tuple_paths in calls:
+            if task_deadline is not None and time.monotonic() >= task_deadline:
+                results.extend([(None, None, "missing_result")] * (len(calls) - len(results)))
+                break
             request = {
                 "args": list(args), "kwargs": dict(kwargs),
                 "tuple_paths": [list(path) for path in tuple_paths],
@@ -720,7 +738,7 @@ def _invoke_session(
             started = time.perf_counter()
             proc.stdin.write((_canonical(request) + "\n").encode("utf-8"))
             proc.stdin.flush()
-            line = reader.readline(time.monotonic() + timeout_s)
+            line = reader.readline(min(deadline, time.monotonic() + timeout_s))
             elapsed = time.perf_counter() - started
             value, failure = _parse_result(line, nonce)
             results.append((value, elapsed, failure))
@@ -809,19 +827,21 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
         _emit_fail(nonce, "missing_result")
         return 0
     started = time.perf_counter()
+    discard_candidate_stdout = spec.get("discard_candidate_stdout") is True
     try:
         child = subprocess.Popen(
             argv,
             stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL if discard_candidate_stdout else subprocess.PIPE,
+            stderr=subprocess.PIPE if discard_candidate_stdout else subprocess.DEVNULL,
             env=runner._client_env,
         )
     except OSError:
         _emit_fail(nonce, "missing_result")
         return 0
-    assert child.stdin is not None and child.stdout is not None
-    reader = _Lines(child.stdout)
+    protocol_stream = child.stderr if discard_candidate_stdout else child.stdout
+    assert child.stdin is not None and protocol_stream is not None
+    reader = _Lines(protocol_stream)
     try:
         header = {
             "module": spec["module"], "function": spec["function"],
@@ -965,6 +985,7 @@ def _one_call(
     tuple_paths: Sequence[Sequence[Any]] = (),
     memory_mb: int = 512,
     discard_candidate_stdout: bool = False,
+    task_deadline: float | None = None,
 ) -> tuple[Any | None, float | None, str | None]:
     module, function, args, kwargs = _prepare_call(module, function, args, kwargs)
     _limits(image, timeout_s, memory_mb)
@@ -975,7 +996,7 @@ def _one_call(
         staged = _stage_subject(source, Path(folder))
         return _invoke(
             staged, module, function, args, kwargs, timeout_s, image, runner,
-            tuple_paths, memory_mb, discard_candidate_stdout,
+            tuple_paths, memory_mb, discard_candidate_stdout, task_deadline,
         )
 
 
@@ -993,6 +1014,7 @@ def grade_calls(
     bool_as_number: bool = False,
     memory_mb: int = 512,
     discard_candidate_stdout: bool = False,
+    task_deadline: float | None = None,
 ) -> CallReport:
     """Compare each child return value with the parent-owned expected value.
 
@@ -1023,14 +1045,14 @@ def grade_calls(
             invoked = _invoke_session(
                 staged, first.module, first.function,
                 [(item[2], item[3], call.tuple_paths) for item, call in zip(prepared, calls, strict=True)],
-                timeout_s, image, active, memory_mb, discard_candidate_stdout,
+                timeout_s, image, active, memory_mb, discard_candidate_stdout, task_deadline,
             )
     else:
         invoked = [
             _one_call(
                 subject, call.module, call.function, call.args, call.kwargs or {},
                 timeout_s, image, active, call.tuple_paths,
-                memory_mb, discard_candidate_stdout,
+                memory_mb, discard_candidate_stdout, task_deadline,
             )
             for call in calls
         ]

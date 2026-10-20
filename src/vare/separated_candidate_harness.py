@@ -190,9 +190,13 @@ def grade_function(request: dict[str, Any]) -> dict[str, Any]:
         raise SeparatedHarnessError("entrypoint differs from the trusted task adapter")
 
     protocol = _load_protocol()
-    task_memory_mb = task.get("limits", {}).get("memory_mb")
+    task_limits = task.get("limits", {})
+    task_memory_mb = task_limits.get("memory_mb")
     if task_memory_mb != protocol["resource_limits"].get("memory_mb"):
         raise SeparatedHarnessError("task and harness memory limits differ")
+    task_timeout_s = task_limits.get("wall_time_s")
+    if type(task_timeout_s) is not int or not 1 <= task_timeout_s <= 3600:
+        raise SeparatedHarnessError("trusted task wall-time limit is invalid")
     pack_root = task_dir.parents[1]
     _verify_pack(pack_root, protocol)
     image = _resolve_image(protocol)
@@ -213,7 +217,9 @@ def grade_function(request: dict[str, Any]) -> dict[str, Any]:
             json.dumps(calls, sort_keys=True, allow_nan=False) + "\n", encoding="utf-8",
         )
         try:
-            result = grade_isolated_subject(workspace, calls_path, image=image)
+            result = grade_isolated_subject(
+                workspace, calls_path, image=image, task_timeout_s=task_timeout_s,
+            )
         except Exception as exc:  # noqa: BLE001 - isolation failures are fail-closed
             return {
                 "passed": False,
