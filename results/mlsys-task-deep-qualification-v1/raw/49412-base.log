@@ -1,0 +1,58 @@
+
+tests/utils/test_fusion_mapping.py::FusionMappingTest::test_register_fusion_patches_is_idempotent FAILED [100%]tests/utils/test_fusion_mapping.py::FusionMappingTest::test_register_fusion_patches_is_idempotent [FAILED] 0.00s
+
+
+=================================== FAILURES ===================================
+_________ FusionMappingTest.test_register_fusion_patches_is_idempotent _________
+
+self = <tests.utils.test_fusion_mapping.FusionMappingTest testMethod=test_register_fusion_patches_is_idempotent>
+
+    def setUp(self):
+        self.patch_mapping_patcher = patch.object(monkey_patching, "_monkey_patch_mapping_cache", {})
+        self.patch_mapping_patcher.start()
+        self.discovery_cache_patcher = patch.object(fusion_mapping, "_FUSION_DISCOVERY_CACHE", {})
+        self.discovery_cache_patcher.start()
+        self.registered_sources_patcher = patch.object(fusion_mapping, "_REGISTERED_FUSION_SOURCE_PATTERNS", {})
+>       self.registered_sources_patcher.start()
+
+/tmp/vare-transformers-49412-base/tests/utils/test_fusion_mapping.py:113: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/unittest/mock.py:1624: in start
+    result = self.__enter__()
+             ^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/unittest/mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <unittest.mock._patch object at 0x16acec2c0>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'transformers.fusion_mapping' from '/tmp/vare-transformers-49412-base/src/transformers/fusion_mapping.py'> does not have the attribute '_REGISTERED_FUSION_SOURCE_PATTERNS'
+
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/unittest/mock.py:1437: AttributeError
+================== CI READ-ONLY CACHE FALLBACK: not triggered ==================
+=========================== short test summary info ============================
+FAILED tests/utils/test_fusion_mapping.py::FusionMappingTest::test_register_fusion_patches_is_idempotent
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+================== 1 failed, 4 deselected, 1 warning in 0.17s ==================
