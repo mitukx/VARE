@@ -1,0 +1,104 @@
+{
+  "arms": {
+    "baseline": {
+      "grade": {
+        "candidate_source_sha256": "57392576de114af80ede723976b9dd156dc234f856b9943b8b44b8b78bc27f79",
+        "cases": [
+          {
+            "case_id": "dict_arguments",
+            "failure": "missing_result",
+            "passed": false,
+            "wall_s": null
+          },
+          {
+            "case_id": "json_string_control",
+            "failure": "missing_result",
+            "passed": false,
+            "wall_s": null
+          }
+        ],
+        "grader_source_sha256": "fd3d3b74025b99c83f276ab102bb2f0c4205d1ea5237e670b8442c1e35a4b683",
+        "passed": false,
+        "task_id": "mlxlm-1904-tool-arguments"
+      },
+      "source_revision": "2af5f7ce8620115bf37fbbddf9817f083118df59",
+      "workspace": {
+        "baseline_commit": "2af5f7ce8620115bf37fbbddf9817f083118df59",
+        "candidate_patch_sha256": null,
+        "candidate_source_sha256": "57392576de114af80ede723976b9dd156dc234f856b9943b8b44b8b78bc27f79",
+        "changed_files": [],
+        "exported_python_file_count": 186,
+        "git_history_exported": false,
+        "task_id": "mlxlm-1904-tool-arguments",
+        "tests_exported": false
+      }
+    },
+    "fixed": {
+      "grade": {
+        "candidate_source_sha256": "361a790e0743e50e66cea6509e64be8b8b67c6612e2274331624cbd244b29ead",
+        "cases": [
+          {
+            "case_id": "dict_arguments",
+            "failure": "missing_result",
+            "passed": false,
+            "wall_s": null
+          },
+          {
+            "case_id": "json_string_control",
+            "failure": "missing_result",
+            "passed": false,
+            "wall_s": null
+          }
+        ],
+        "grader_source_sha256": "fd3d3b74025b99c83f276ab102bb2f0c4205d1ea5237e670b8442c1e35a4b683",
+        "passed": false,
+        "task_id": "mlxlm-1904-tool-arguments"
+      },
+      "source_revision": "caed1943d38ecb58f6e466a72bed98310c9d45a5",
+      "workspace": {
+        "baseline_commit": "2af5f7ce8620115bf37fbbddf9817f083118df59",
+        "candidate_patch_sha256": "e2a225fa0a21ccd3d402bd077eacf5ad607eb665ee9f6263d65f4dd41c5e92f5",
+        "candidate_source_sha256": "361a790e0743e50e66cea6509e64be8b8b67c6612e2274331624cbd244b29ead",
+        "changed_files": [
+          "mlx_lm/server.py"
+        ],
+        "exported_python_file_count": 186,
+        "git_history_exported": false,
+        "task_id": "mlxlm-1904-tool-arguments",
+        "tests_exported": false
+      }
+    }
+  },
+  "configured_memory_limit_bytes": 536870912,
+  "container_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+  "decision": {
+    "baseline_failed": true,
+    "calibration_passed": false,
+    "evidence_level": "E1 narrow historical function-contract calibration",
+    "known_fix_passed": false
+  },
+  "docker_context": "colima",
+  "elapsed_wall_s": 0.6352653750218451,
+  "experiment_id": "mlsys-repository-task-mlxlm-1904-calibration-v1",
+  "host": {
+    "machine": "arm64",
+    "system": "macOS-27.0.1-arm64-arm-64bit"
+  },
+  "limitations": [
+    "The original upstream test starts the HTTP/model-serving fixture; this isolated adapter grades only the pure message-normalization function contract.",
+    "This calibration uses a known fix, not an agent-generated patch or model rollout.",
+    "Docker memory is capped at the recorded limit; peak container memory was not measured."
+  ],
+  "patch_sha256": "e2a225fa0a21ccd3d402bd077eacf5ad607eb665ee9f6263d65f4dd41c5e92f5",
+  "peak_memory_bytes": null,
+  "protocol_sha256": "ee39c384b6248b02543c1d2c8709a8f22564760c00837143d8b071d39a68a602",
+  "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+  "resource_limits": {
+    "cpus": 1.0,
+    "memory_mb": 512,
+    "pids_limit": 64,
+    "timeout_s": 5
+  },
+  "schema_version": 1,
+  "task_sha256": "3855eae179864cddd35af9cb5b6e65812f414ceae7b5affc1a29b7e7d9c67699"
+}

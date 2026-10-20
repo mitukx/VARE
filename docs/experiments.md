@@ -1,5 +1,17 @@
 # Experimental program
 
+## MLX-LM #1904 repository-task isolation calibration — 2026-10-21
+
+The frozen Train task's narrow `process_message_content` contract passed a pinned
+baseline-versus-fix replay on Apple Silicon Colima. The baseline rejected
+dict-valued arguments while the exact upstream fixed source passed both the
+dict case and its JSON-string control. Eight focused callee security probes
+passed; path/traversal/symlink and source-swap checks failed closed. This does
+not claim equivalence to the full upstream HTTP test or any model-generated
+success. See the [report](mlsys-repository-task-mlxlm-1904-v1-report.md),
+[protocol](../benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v2.json),
+and [raw records](../results/mlsys-repo-eval-v1/run-4/).
+
 ## Actual-model MLSys update readiness — NO-GO, 2026-10-20
 
 M1 Pro feasibility measurements recorded Metal and CPU decoding, a ten-step

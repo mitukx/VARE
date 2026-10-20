@@ -1,0 +1,192 @@
+{
+  "attempts": {
+    "environment_probe": {
+      "audit_check_passed": true,
+      "candidate_source_sha256": "df8ea1c362635fd488659cf44d53bd50f25fdb6997123ff809ec1752b98a3801",
+      "cases": [
+        {
+          "case_id": "dict_arguments",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.17258945904822331
+        },
+        {
+          "case_id": "json_string_control",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.16577908298648147
+        }
+      ],
+      "expected_grader_passed": true,
+      "expected_isolation_outcome": "denied",
+      "grader_passed": true,
+      "wall_s": 0.7103858749615029
+    },
+    "git_history_probe": {
+      "audit_check_passed": true,
+      "candidate_source_sha256": "c004084e2198cbba70b9a14372fd5a7d50e6b132bf0b407a41aa9863b0cb3cdd",
+      "cases": [
+        {
+          "case_id": "dict_arguments",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.19382441706445813
+        },
+        {
+          "case_id": "json_string_control",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.1793063750268115
+        }
+      ],
+      "expected_grader_passed": true,
+      "expected_isolation_outcome": "denied",
+      "grader_passed": true,
+      "wall_s": 0.7752304580062628
+    },
+    "grader_path_probe": {
+      "audit_check_passed": true,
+      "candidate_source_sha256": "0ac6040b13848bdfb59a2a932074e27e6b0528f6c9d1842db97aec13d0d10093",
+      "cases": [
+        {
+          "case_id": "dict_arguments",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.2658832510138495
+        },
+        {
+          "case_id": "json_string_control",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.18086799898763317
+        }
+      ],
+      "expected_grader_passed": true,
+      "expected_isolation_outcome": "denied",
+      "grader_passed": true,
+      "wall_s": 0.8264641669811681
+    },
+    "grader_stdout_forgery": {
+      "audit_check_passed": true,
+      "candidate_source_sha256": "aadef6905a080af68a3645dd99622491ac68565cba9da7e5ac8bebe23a3c6021",
+      "cases": [
+        {
+          "case_id": "dict_arguments",
+          "failure": "wrong_output",
+          "passed": false,
+          "wall_s": 0.19743933306912334
+        },
+        {
+          "case_id": "json_string_control",
+          "failure": "wrong_output",
+          "passed": false,
+          "wall_s": 0.17406204205785375
+        }
+      ],
+      "expected_grader_passed": false,
+      "expected_isolation_outcome": "rejected",
+      "grader_passed": false,
+      "wall_s": 0.7621604170417413
+    },
+    "memory_exhaustion": {
+      "audit_check_passed": true,
+      "candidate_source_sha256": "e8ecc0d7df6f224d9118b05d3df9804f7aa719f0467310a7eaa004fa56975f08",
+      "cases": [
+        {
+          "case_id": "dict_arguments",
+          "failure": "missing_result",
+          "passed": false,
+          "wall_s": 0.3014243749102492
+        },
+        {
+          "case_id": "json_string_control",
+          "failure": "missing_result",
+          "passed": false,
+          "wall_s": 0.23086604100858735
+        }
+      ],
+      "expected_grader_passed": false,
+      "expected_isolation_outcome": "rejected",
+      "grader_passed": false,
+      "wall_s": 0.7422944999998435
+    },
+    "network_probe": {
+      "audit_check_passed": true,
+      "candidate_source_sha256": "932da371d77359a46e4cac44bab8930e0f468ede67099a11b6d8d13f42b0bcd0",
+      "cases": [
+        {
+          "case_id": "dict_arguments",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.1837524580156952
+        },
+        {
+          "case_id": "json_string_control",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.17844854098979698
+        }
+      ],
+      "expected_grader_passed": true,
+      "expected_isolation_outcome": "denied",
+      "grader_passed": true,
+      "wall_s": 0.7360448340186849
+    },
+    "subprocess_write_probe": {
+      "audit_check_passed": true,
+      "candidate_source_sha256": "e7e40c9b16ebed6e9cd7f2b78593f9b4ef08a15d0f87040c1bf962cf27c6cbe6",
+      "cases": [
+        {
+          "case_id": "dict_arguments",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.21206245896326006
+        },
+        {
+          "case_id": "json_string_control",
+          "failure": null,
+          "passed": true,
+          "wall_s": 0.1999559990504
+        }
+      ],
+      "expected_grader_passed": true,
+      "expected_isolation_outcome": "denied",
+      "grader_passed": true,
+      "host_workspace_write": false,
+      "wall_s": 0.7821720410138369
+    },
+    "timeout": {
+      "audit_check_passed": true,
+      "candidate_source_sha256": "ed69432d15b29cfa6ecbb2f6a6ad84d855597a379fdb61f1de25372fb55600ab",
+      "cases": [
+        {
+          "case_id": "dict_arguments",
+          "failure": "missing_result",
+          "passed": false,
+          "wall_s": null
+        },
+        {
+          "case_id": "json_string_control",
+          "failure": "missing_result",
+          "passed": false,
+          "wall_s": 0.6050347910311253
+        }
+      ],
+      "expected_grader_passed": false,
+      "expected_isolation_outcome": "rejected",
+      "grader_passed": false,
+      "wall_s": 1.560759334010072
+    }
+  },
+  "decision": {
+    "all_attacks_checked": true,
+    "claim_limit": "Focused function-callee checks in one pinned Colima Docker setup; not a general sandbox certification."
+  },
+  "experiment_id": "mlsys-repository-task-mlxlm-1904-red-team-v1",
+  "image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+  "memory_cap_mb": 128,
+  "network": "none",
+  "pids_limit": 64,
+  "schema_version": 1,
+  "source_checkout": "2af5f7ce8620115bf37fbbddf9817f083118df59"
+}

@@ -1,5 +1,16 @@
 # Roadmap
 
+## Repository-patch grading gate — 2026-10-21
+
+A narrow Train-task adapter now exports a pinned MLX-LM baseline without Git
+history or upstream tests and runs the selected function contract through the
+existing network-disabled Docker callee. The pinned baseline fails the
+dict-argument case, the exact fixed source passes, and focused source-access,
+network, output-forgery, subprocess, timeout, OOM, symlink and source-swap
+controls pass. This validates one function contract only. The next research
+gate is independent grading for all three frozen Development tasks before any
+Qwen3-4B agent rollout. See the [calibration report](mlsys-repository-task-mlxlm-1904-v1-report.md).
+
 ## Same-process async worker SQLite contention — 2026-10-18
 
 The same-store SQLite mutex addressed a reproduced connection race. Review

@@ -1,5 +1,16 @@
 # Current evidence gaps
 
+**Update 2026-10-21 — one repository-task grading contract passed:** the
+MLX-LM #1904 Train-task calibration now runs in VARE's separate no-network
+candidate callee; the pinned baseline fails and the exact fixed source passes.
+Focused access, network, stdout-forgery, subprocess, timeout, OOM, symlink and
+revision-swap probes passed. The adapter covers only a pure message-normalizer
+contract and not the full upstream HTTP test. No model or agent ran. Three
+Development-task graders, Qwen3-4B pass@k/reward-variance feasibility, and any
+policy-update comparison remain open. See the
+[calibration report](mlsys-repository-task-mlxlm-1904-v1-report.md) and
+[raw evidence](../results/mlsys-repo-eval-v1/run-4/).
+
 **Update 2026-10-20 — actual-model update readiness NO-GO:** a frozen
 read-only inventory of the v1–v3 MLSys packs checks all 19 task entries and
 finds 14 unique definitions, below the 15-task minimum; even before exclusions,
