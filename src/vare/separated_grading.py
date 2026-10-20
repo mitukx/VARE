@@ -570,6 +570,11 @@ def _call_rows(payload: dict[str, Any], key: str) -> list[dict[str, Any]]:
     for row in rows:
         if type(row) is not dict or "expected" not in row:
             raise IsolationError("isolated call spec case is invalid")
+        expected_exception = row.get("expected_exception")
+        if expected_exception is not None and (
+            type(expected_exception) is not str or not expected_exception.isidentifier()
+        ):
+            raise IsolationError("isolated call expected_exception is invalid")
         args = row.get("args", [])
         kwargs = row.get("kwargs", {})
         if type(args) is not list or type(kwargs) is not dict:
@@ -593,6 +598,7 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
                 FunctionCall(
                     str(row.get("case_id", index)), module, function,
                     list(row.get("args", [])), row["expected"], dict(row.get("kwargs", {})),
+                    expected_exception=row.get("expected_exception"),
                 )
                 for index, row in enumerate(rows)
             ]

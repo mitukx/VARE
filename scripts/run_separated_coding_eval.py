@@ -2,9 +2,9 @@
 """Run the frozen separated coding evaluation.
 
 The E0 harness grades a synthetic JSON fixture with TrustedJSONScorer.
-Train-split tasks are scored on the host with ``vare.isolated_candidate``.
-A child exit status is not a pass. A task without
-``evaluator/isolated_calls.json`` fails closed. The Mac command is
+Train-split tasks are scored with ``vare.isolated_candidate`` using either a
+task-owned isolated-call file or calls materialized operator-side from the
+frozen PR #84 evaluator. A child exit status is not a pass. The Mac command is
 ``local_measurement.command`` in the protocol.
 """
 from __future__ import annotations
@@ -21,6 +21,7 @@ import secrets
 import shutil
 import subprocess
 import sys
+import tempfile
 import time
 
 from vare.agent_edit_format import (
@@ -40,6 +41,7 @@ from vare.trusted_scoring import JSONIOCase
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from verify_docker_isolation_boundary_v1 import _grader_probe  # noqa: E402
+from mlsys_task_isolated_calls import materialize_isolated_calls  # noqa: E402
 
 
 def sha256_file(path: Path) -> str:
@@ -782,7 +784,17 @@ async def grade_repository_workspace(
         raise IsolationError("pack reward.decide is missing")
     calls_path = Path(task["task_dir"]) / "evaluator" / "isolated_calls.json"
     if not calls_path.is_file():
-        return harness_required_record()
+        stage_root.mkdir(parents=True, exist_ok=True)
+        call_spec, provenance = materialize_isolated_calls(task["task_id"], task["task_dir"])
+        calls_path = stage_root / "isolated_calls.json"
+        calls_path.write_text(
+            json.dumps(call_spec, indent=2, sort_keys=True, allow_nan=False) + "\n",
+            encoding="utf-8",
+        )
+        (stage_root / "grader-provenance.json").write_text(
+            json.dumps(provenance, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
     probe_limits = IsolationLimits(
         image, timeout_s=20, memory_mb=256, cpus=0.5, pids_limit=32, max_output_bytes=16_000,
     )
@@ -800,7 +812,9 @@ async def grade_repository_workspace(
     snapshot = grader.capture_snapshot(workspace, candidate_exited=True)
     grade_tree = source_only_snapshot(snapshot, task["allowed_files"], snapshot_root)
     try:
-        return grade_isolated_subject(grade_tree.path, calls_path, image=image)
+        grade = grade_isolated_subject(grade_tree.path, calls_path, image=image)
+        grade["isolated_call_spec_sha256"] = sha256_file(calls_path)
+        return grade
     except IsolationError as exc:
         reason = abort_reason_for_unpatched(
             task["task_id"], task["reward_kind"], decision=None, error=str(exc),
@@ -1001,6 +1015,10 @@ async def async_main(args: argparse.Namespace) -> int:
         raise SystemExit(str(exc)) from exc
     protocol["execution"]["container_image"] = image
     out.mkdir(parents=True)
+    grader_tmp = out / "grader-tmp"
+    grader_tmp.mkdir()
+    os.environ["TMPDIR"] = str(grader_tmp)
+    tempfile.tempdir = str(grader_tmp)
     (out / "protocol.lock.json").write_bytes(protocol_path.read_bytes())
     source_commit = subprocess.run(
         ["git", "-C", str(ROOT), "rev-parse", "HEAD"], check=True,

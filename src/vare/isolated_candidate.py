@@ -51,8 +51,9 @@ from typing import Any, Callable, Mapping, Sequence
 from .container_isolation import DockerIsolationRunner, IsolationError, IsolationLimits
 
 _NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*\Z")
-_MAX_ARGS = 64_000
-_MAX_LINE = 100_000
+# The MLSys repeated-range workload sends bounded 5k-value/5k-query inputs.
+_MAX_ARGS = 512_000
+_MAX_LINE = 512_000
 # Two-sided 95% Student-t critical values, df = repeats - 1.
 _T_975 = {
     1: 12.706204736432095,
@@ -105,6 +106,8 @@ request = _loads(_read())
 try:
     value = function(*request["args"], **request["kwargs"])
     payload = _dumps({"value": value}, sort_keys=True, separators=(",", ":"), allow_nan=False)
+except Exception as exc:
+    payload = _dumps({"exception": type(exc).__name__}, sort_keys=True, separators=(",", ":"))
 except BaseException:
     os._exit(2)
 _write(1, payload.encode("utf-8") + b"\n")
@@ -130,6 +133,14 @@ class FunctionCall:
     args: list[Any]
     expected: Any
     kwargs: dict[str, Any] | None = None
+    expected_exception: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class CandidateException:
+    """Exception type caught by the trusted isolated candidate worker."""
+
+    type_name: str
 
 
 @dataclass(frozen=True)
@@ -645,6 +656,11 @@ def _parse_result(line: bytes, nonce: str) -> tuple[Any | None, str | None]:
         payload = json.loads(parts[2].decode("utf-8"))
     except (UnicodeError, json.JSONDecodeError):
         return None, "malformed_result"
+    if type(payload) is dict and set(payload) == {"exception"}:
+        exception = payload["exception"]
+        if type(exception) is str and exception.isidentifier():
+            return CandidateException(exception), None
+        return None, "malformed_result"
     if type(payload) is not dict or set(payload) != {"value"}:
         return None, "malformed_result"
     return payload["value"], None
@@ -710,7 +726,13 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
         except (UnicodeError, json.JSONDecodeError):
             _emit_fail(nonce, "malformed_result")
             return 0
-        if type(payload) is not dict or set(payload) != {"value"}:
+        valid_value = type(payload) is dict and set(payload) == {"value"}
+        valid_exception = (
+            type(payload) is dict and set(payload) == {"exception"}
+            and type(payload["exception"]) is str
+            and payload["exception"].isidentifier()
+        )
+        if not valid_value and not valid_exception:
             _emit_fail(nonce, "malformed_result")
             return 0
         _emit(nonce, "VARE_RESULT", _canonical(payload))
@@ -815,7 +837,13 @@ def grade_calls(
             timeout_s, image, active,
         )
         if failure is None:
-            matched = values_close(value, call.expected, rtol=rel, atol=abs_tol)
+            if call.expected_exception is not None:
+                matched = (
+                    isinstance(value, CandidateException)
+                    and value.type_name == call.expected_exception
+                )
+            else:
+                matched = values_close(value, call.expected, rtol=rel, atol=abs_tol)
             if not matched:
                 failure = "wrong_output"
             passed = failure is None
