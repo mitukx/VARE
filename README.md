@@ -77,6 +77,8 @@ python scripts/reproduce_runtime_round_ownership_v1.py --output /tmp/vare-round-
 
 Use a **new** output directory. The last command needs Git access to its pinned baseline; it replays CPU correctness cases, **not model learning**. The two excluded mathematical grader tests require a [separate optional lock](requirements/math500-grader-test.lock.txt). Other model, platform-specific, and accelerator reproductions have separate requirements. See the [script index](scripts/README.md), [CLI contracts](docs/execution.md), and [recovery procedure](docs/runtime-round-ownership-v1.md#operator-recovery).
 
+The separated coding-agent command is `local_measurement.command` in [protocols/separated_coding_eval_cpu_v1.lock.json](protocols/separated_coding_eval_cpu_v1.lock.json). Colima bind-mounts `$HOME` by default, so the checkout, pack worktree, and `--output` must be under `$HOME`. A path under `/tmp` makes `docker run` exit 125. The retained Mac measurement is [results/separated-coding-eval-cpu-v1/](results/separated-coding-eval-cpu-v1/README.md): a negative baseline, not a capability result.
+
 ### Audit the retained model benchmark
 
 This verifies the saved bytes, metrics and fault outcomes without downloading a model or starting training:

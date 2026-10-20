@@ -114,10 +114,11 @@
     "Skip the secondary and 1.5B models when their pre-registered resource conditions fail, and record the skip."
   ],
   "local_measurement": {
-    "status": "not executed by the change that added this protocol",
+    "status": "measured; raw records are results/separated-coding-eval-cpu-v1/",
     "host": "macOS with Colima Docker, Python 3.12, CPU, no GPU, no paid API",
-    "prerequisites": "Run from this branch's repository root. Start Colima. Confirm docker image inspect of python:3.12-slim reports the colima_aarch64 digest above. Install requirements-agent.txt for that Python. The first run may download only the pinned Hugging Face snapshots named in models.",
-    "command": "git fetch origin cursor/mlsys-coding-tasks-7d0a && git worktree add --detach /tmp/vare-mlsys-c8c0488 c8c0488980425e6d316abc21dfc136f16c7e265b && python3.12 scripts/run_separated_coding_eval.py --protocol protocols/separated_coding_eval_cpu_v1.lock.json --pack-root /tmp/vare-mlsys-c8c0488 --container-image python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258 --output results/separated-coding-eval-cpu-v1"
+    "colima_mount": "Colima bind-mounts $HOME by default. Keep the git checkout, the pack worktree, and --output under $HOME. A path under /tmp makes docker run exit 125. The runner reports that as a container environment error, not an E0 expectation mismatch.",
+    "prerequisites": "Run from a checkout of this branch under $HOME. Start Colima. Confirm docker image inspect of python:3.12-slim reports the colima_aarch64 digest above. Install requirements-agent.txt for that Python. The first run may download only the pinned Hugging Face snapshots named in models.",
+    "command": "git fetch origin cursor/mlsys-coding-tasks-7d0a && git worktree add --detach \"$HOME/vare-mlsys-c8c0488\" c8c0488980425e6d316abc21dfc136f16c7e265b && python3.12 scripts/run_separated_coding_eval.py --protocol protocols/separated_coding_eval_cpu_v1.lock.json --pack-root \"$HOME/vare-mlsys-c8c0488\" --container-image python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258 --output results/separated-coding-eval-cpu-v1"
   },
   "claim_limit": "Train-split pass counts are one greedy seed of Qwen2.5-0.5B-Instruct on five authored tasks. They are not held-out improvement, a capability estimate, or a training result. The JSON square fixture is E0 only."
 }

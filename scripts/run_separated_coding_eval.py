@@ -15,6 +15,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import re
 import secrets
 import shutil
 import subprocess
@@ -44,11 +45,72 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def mem_available_bytes() -> int:
-    for line in Path("/proc/meminfo").read_text(encoding="utf-8").splitlines():
+def mem_available_from_meminfo(text: str) -> int:
+    """Linux MemAvailable, in bytes. The gate thresholds stay in GiB."""
+    for line in text.splitlines():
         if line.startswith("MemAvailable:"):
             return int(line.split()[1]) * 1024
     raise RuntimeError("MemAvailable is missing from /proc/meminfo")
+
+
+def mem_available_from_vm_stat(text: str) -> int:
+    """macOS available bytes from ``vm_stat``.
+
+    ``Pages free`` already includes speculative pages. Available memory is
+    free plus inactive, the same split used by the host memory statistic.
+    Page size comes from the ``vm_stat`` header.
+    """
+    match = re.search(r"page size of (\d+) bytes", text)
+    if match is None:
+        raise RuntimeError("vm_stat did not report a page size")
+    page_size = int(match.group(1))
+    pages: dict[str, int] = {}
+    for line in text.splitlines():
+        if ":" not in line:
+            continue
+        key, raw = line.split(":", 1)
+        token = raw.strip().rstrip(".").replace(",", "")
+        if token.isdigit():
+            pages[key.strip()] = int(token)
+    missing = [name for name in ("Pages free", "Pages inactive") if name not in pages]
+    if missing:
+        raise RuntimeError("vm_stat is missing " + ", ".join(missing))
+    return (pages["Pages free"] + pages["Pages inactive"]) * page_size
+
+
+def mem_available_bytes() -> int:
+    meminfo = Path("/proc/meminfo")
+    if meminfo.is_file():
+        return mem_available_from_meminfo(meminfo.read_text(encoding="utf-8"))
+    if sys.platform == "darwin":
+        completed = subprocess.run(
+            ["vm_stat"], check=False, text=True, capture_output=True,
+        )
+        if completed.returncode != 0:
+            raise RuntimeError("vm_stat failed")
+        return mem_available_from_vm_stat(completed.stdout)
+    raise RuntimeError("available memory is not readable on this platform")
+
+
+def container_environment_error(returncodes: list[int], stderr: str = "") -> str | None:
+    """Distinguish a Docker mount failure from an E0 expectation mismatch.
+
+    Colima bind-mounts ``$HOME`` by default. ``docker run`` exits 125 when the
+    workspace is outside that share, including under ``/tmp``.
+    """
+    markers = (
+        "mounts denied",
+        "error while creating mount",
+        "forbidden path outside",
+    )
+    lowered = stderr.lower()
+    if any(code == 125 for code in returncodes) or any(marker in lowered for marker in markers):
+        return (
+            "container environment error: Docker could not start the candidate container. "
+            "Colima bind-mounts $HOME by default; a checkout or output path under /tmp exits 125. "
+            "This is not an E0 expectation mismatch."
+        )
+    return None
 
 
 def load_protocol(path: Path) -> dict:
@@ -287,6 +349,13 @@ async def run_harness(protocol: dict, out: Path) -> dict:
         ],
     )
     bad_ids = [case["case_id"] for case in known_bad["cases"] if case["passed"]]
+    returncodes = [item["returncode"] for item in probes]
+    returncodes.append(network.returncode)
+    for check in (known_bad, known_good, forged, planted, grader_read):
+        for case in check["cases"]:
+            if type(case.get("returncode")) is int:
+                returncodes.append(case["returncode"])
+    environment_error = container_environment_error(returncodes, network.stderr)
     harness = {
         "evidence_level": "E0",
         "canary_visible": visible,
@@ -298,6 +367,7 @@ async def run_harness(protocol: dict, out: Path) -> dict:
         "planted_oracle_passed_cases": sum(case["passed"] for case in planted["cases"]),
         "grader_path_read_passed_cases": sum(case["passed"] for case in grader_read["cases"]),
         "network_stdout": network.stdout.strip(),
+        "environment_error": environment_error,
         "checks": {
             "known_bad": known_bad,
             "known_good": known_good,
@@ -306,7 +376,7 @@ async def run_harness(protocol: dict, out: Path) -> dict:
             "grader_path_read": grader_read,
         },
     }
-    harness["matches_protocol"] = bool(
+    harness["matches_protocol"] = environment_error is None and bool(
         visible == expectations["canary_visible_replicates"]
         and bad_ids == expectations["known_bad_passing_case_ids"]
         and known_good["passed"] is True
@@ -841,6 +911,10 @@ async def async_main(args: argparse.Namespace) -> int:
         raise SystemExit("held-out task root was created")
     harness = await run_harness(protocol, out)
     _write_json(out / "harness.json", harness)
+    if harness.get("environment_error"):
+        _write_json(out / "summary.json", _stopped(protocol, harness["environment_error"]))
+        print(harness["environment_error"], file=sys.stderr)
+        return 2
     if not harness["matches_protocol"]:
         _write_json(out / "summary.json", _stopped(
             protocol, "E0 harness did not match the frozen expectations",

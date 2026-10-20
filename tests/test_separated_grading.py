@@ -774,13 +774,49 @@ def test_unpatched_success_and_closed_grader_abort():
     )
 
 
+def test_memory_parsers_and_mount_failure_are_distinct_from_the_gates(monkeypatch):
+    module = _load_eval_module()
+    assert module.mem_available_from_meminfo("MemAvailable: 1048576 kB\n") == 1048576 * 1024
+    vm_stat = (
+        "Mach Virtual Memory Statistics: (page size of 16384 bytes)\n"
+        "Pages free:                               1000.\n"
+        "Pages inactive:                            500.\n"
+        "Pages speculative:                         100.\n"
+    )
+    assert module.mem_available_from_vm_stat(vm_stat) == (1000 + 500) * 16384
+    with pytest.raises(RuntimeError, match="Pages free"):
+        module.mem_available_from_vm_stat("Mach Virtual Memory Statistics: (page size of 4096 bytes)\n")
+    if Path("/proc/meminfo").is_file():
+        assert module.mem_available_bytes() == module.mem_available_from_meminfo(
+            Path("/proc/meminfo").read_text(encoding="utf-8"),
+        )
+    assert module.container_environment_error([0, 0]) is None
+    assert "not an E0 expectation mismatch" in module.container_environment_error([125])
+    assert module.container_environment_error([0], "mounts denied: /tmp/vare")
+    protocol = {"models": {
+        "secondary_if_feasible": {"revision": "coder"},
+        "not_run_unless": {"revision": "large"},
+    }}
+    rows = [{"agent_wall_s": 30}]
+    monkeypatch.setattr(module, "mem_available_bytes", lambda: 6 * 1024 ** 3 - 1)
+    assert module.maybe_secondary(protocol, rows)["coder_0_5b"] == "skipped_pre_registered_resource_condition"
+    monkeypatch.setattr(module, "mem_available_bytes", lambda: 6 * 1024 ** 3)
+    at_six = module.maybe_secondary(protocol, rows)
+    assert at_six["coder_0_5b"] == "eligible"
+    assert at_six["coder_1_5b"] == "skipped_insufficient_memory"
+    monkeypatch.setattr(module, "mem_available_bytes", lambda: 8 * 1024 ** 3)
+    assert module.maybe_secondary(protocol, rows)["coder_1_5b"] == "eligible"
+
+
 def test_protocol_command_uses_the_pinned_pack_and_colima_image():
     protocol = json.loads(PROTOCOL.read_text(encoding="utf-8"))
     command = protocol["local_measurement"]["command"]
     assert protocol["pack"]["git_commit"] in command
     assert protocol["execution"]["accepted_container_images"]["colima_aarch64"] in command
     assert "--pack-root" in command
-    assert protocol["local_measurement"]["status"].startswith("not executed")
+    assert "$HOME/vare-mlsys-c8c0488" in command
+    assert "/tmp" not in command
+    assert "results/separated-coding-eval-cpu-v1/" in protocol["local_measurement"]["status"]
     for task_id in protocol["pack"]["heldout_not_used"]:
         assert task_id not in command
     accepted = set(protocol["execution"]["accepted_container_images"].values())

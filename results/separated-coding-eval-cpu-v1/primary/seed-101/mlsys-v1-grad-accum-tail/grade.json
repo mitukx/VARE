@@ -1,0 +1,33 @@
+{
+  "correctness": 0.0,
+  "integrity_failures": [],
+  "integrity_ok": true,
+  "metrics": [],
+  "passed": false,
+  "provenance": {
+    "policy_id": "seed-101",
+    "policy_version": 1,
+    "task_spec_path": "/grader/task.json",
+    "task_spec_sha256": "93bca28ef057f3af7085b0e404f91c417aff078ce9ed3fe19ccbcb58684138c7",
+    "workspace": "/scratch/vare-eval-8z8mljk6/workspace"
+  },
+  "score": 0.0,
+  "task_id": "mlsys-v1-grad-accum-tail",
+  "tests": [
+    {
+      "argv": [
+        "/usr/local/bin/python",
+        "test_hidden.py",
+        "/scratch/vare-eval-8z8mljk6/workspace"
+      ],
+      "name": "hidden-correctness",
+      "output_limited": false,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\n  File \"/grader/evaluator/test_hidden.py\", line 39, in <module>\n    main()\n  File \"/grader/evaluator/test_hidden.py\", line 17, in main\n    raise AssertionError(f\"short window was scaled by the nominal step count: {averaged}\")\nAssertionError: short window was scaled by the nominal step count: [[0.5, -1.0], [1.5, 2.0]]\n",
+      "stdout": "",
+      "timed_out": false,
+      "wall_s": 0.08496645999548491
+    }
+  ],
+  "workspace_diff": ""
+}
