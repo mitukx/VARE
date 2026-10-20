@@ -120,10 +120,18 @@ The nonce stays in the parent and is not sent into the container. A zero
 exit status is not a pass. End of file after the single value line is not
 extra output; further stdout bytes are a malformed result. Parent wall time
 starts at container creation, so subject import is inside the measured cost
-for both the baseline and the candidate. `paired_timing` requires the
-parent-owned `expected` value and sets `output_pass` only when both sides
-return it. Equal wrong returns do not pass. `grade_calls` remains the check
-for any other correctness cases. The speed threshold stays with the caller.
+for both the baseline and the candidate. `paired_timing` takes
+`make_case(index) -> (args, kwargs, expected)` in the parent. Each repetition
+has its own expected value, drawn from a seed the candidate never sees.
+`output_pass` is true only when both sides return that repetition's value.
+Equal wrong returns, and a hardcoded answer for one known input, do not pass.
+`grade_calls` remains the check for any other correctness cases. The primary
+speed samples still include container start. Each repetition also times an
+empty subject in the same shuffled order. `adjusted_ratio` subtracts that
+control and is secondary; import of the real subject stays in the adjusted
+cost. A 2x rule on the unadjusted ratios needs a workload whose means are at
+least twice the empty-control mean, because container start compresses ratios
+toward 1. The speed threshold stays with the caller.
 
 `ExecutableEvaluator` still runs its commands in-process. A hidden test that
 imports candidate code on that path can read `/grader/evaluator` and the

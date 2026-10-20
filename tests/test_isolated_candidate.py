@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
+import random
 import subprocess
 import sys
 import time
@@ -16,6 +17,7 @@ from vare.isolated_candidate import (
     FunctionCall,
     _Lines,
     grade_calls,
+    overhead_adjusted,
     paired_difference_ci,
     paired_timing,
     student_t_975,
@@ -69,7 +71,7 @@ def test_task_kind_comes_from_the_caller(tmp_path: Path) -> None:
     with pytest.raises(CandidateHarnessError):
         paired_timing(
             subject, subject, module="add", function="add",
-            make_args=lambda _index: ([2, 3], {}), expected=5, repeats=2, seed=1,
+            make_case=lambda _index: ([2, 3], {}, 5), repeats=2, seed=1,
             task_kind="correctness", image=IMAGE,
         )
     with pytest.raises(CandidateHarnessError):
@@ -335,19 +337,18 @@ def test_clock_and_id_cache_do_not_inflate_parent_speed(tmp_path: Path) -> None:
         "    return total\n",
     )
 
-    def make_args(_index: int) -> tuple[list[int], dict[str, object]]:
-        return ([1_000_000], {})
-
     expected = sum(range(1_000_000))
+
+    def make_case(_index: int) -> tuple[list[int], dict[str, object], int]:
+        return ([1_000_000], {}), expected
+
     clock = paired_timing(
-        patched, baseline, module="work", function="work", make_args=make_args,
-        expected=expected, repeats=2, seed=20261019, task_kind="performance",
-        image=IMAGE, timeout_s=30,
+        patched, baseline, module="work", function="work", make_case=make_case,
+        repeats=2, seed=20261019, task_kind="performance", image=IMAGE, timeout_s=30,
     )
     cached_timing = paired_timing(
-        cached, baseline, module="work", function="work", make_args=make_args,
-        expected=expected, repeats=2, seed=20261019, task_kind="performance",
-        image=IMAGE, timeout_s=30,
+        cached, baseline, module="work", function="work", make_case=make_case,
+        repeats=2, seed=20261019, task_kind="performance", image=IMAGE, timeout_s=30,
     )
     for report in (clock, cached_timing):
         assert report.output_pass is True
@@ -488,7 +489,7 @@ def test_import_precompute_does_not_pass_a_two_x_gate(tmp_path: Path) -> None:
     expected = (limit - 1) * limit // 2
     report = paired_timing(
         candidate, baseline, module="work", function="work",
-        make_args=lambda _index: ([0], {}), expected=expected, repeats=2, seed=1,
+        make_case=lambda _index: ([0], {}, expected), repeats=2, seed=1,
         task_kind="performance", image=IMAGE, timeout_s=60,
     )
     assert report.output_pass is True
@@ -500,6 +501,15 @@ def test_import_precompute_does_not_pass_a_two_x_gate(tmp_path: Path) -> None:
     assert all(
         pair.baseline_s is not None and pair.baseline_s > 0.5 for pair in report.pairs
     )
+    assert report.mean_adjusted_ratio is not None
+    assert report.ci95_low_adjusted_ratio is not None
+    assert report.ci95_high_adjusted_ratio is not None
+    assert report.mean_adjusted_difference_s == pytest.approx(report.mean_difference_s)
+    for pair in report.pairs:
+        assert set(pair.order.split("-")) == {"baseline", "candidate", "overhead"}
+        assert pair.overhead_s is not None and 0 < pair.overhead_s < pair.candidate_s
+        assert pair.adjusted_ratio is not None and pair.adjusted_ratio < 2
+        assert pair.adjusted_difference_s == pytest.approx(pair.difference_s)
 
 
 def test_paired_timing_rejects_equal_wrong_returns(tmp_path: Path) -> None:
@@ -508,12 +518,65 @@ def test_paired_timing_rejects_equal_wrong_returns(tmp_path: Path) -> None:
     baseline = _subject(tmp_path / "baseline", "addmod", source)
     report = paired_timing(
         candidate, baseline, module="addmod", function="add",
-        make_args=lambda _index: ([2, 3], {}), expected=5, repeats=2, seed=1,
+        make_case=lambda _index: ([2, 3], {}, 5), repeats=2, seed=1,
         task_kind="performance", image=IMAGE,
     )
     assert report.output_pass is False
     assert report.mean_difference_s is None
     assert report.ci95_low_difference_s is None
     assert report.ci95_high_difference_s is None
+    assert [pair.failure for pair in report.pairs] == ["wrong_output", "wrong_output"]
+    assert [pair.values_match for pair in report.pairs] == [False, False]
+
+
+def test_overhead_adjustment_restores_a_call_ratio_hidden_by_startup() -> None:
+    raw_baseline = 1.40
+    raw_candidate = 1.20
+    overhead = 1.0
+    assert raw_baseline / raw_candidate < 2
+    adjusted_baseline, adjusted_candidate, difference, ratio = overhead_adjusted(
+        raw_baseline, raw_candidate, overhead,
+    )
+    assert adjusted_baseline == pytest.approx(0.40)
+    assert adjusted_candidate == pytest.approx(0.20)
+    assert difference == pytest.approx(raw_baseline - raw_candidate)
+    assert ratio == pytest.approx(2.0)
+    mean, low, high, _crit, df = paired_difference_ci([2.0, 2.0])
+    assert mean == 2.0
+    assert low == 2.0
+    assert high == 2.0
+    assert df == 1
+
+
+def test_hardcoded_answer_fails_when_each_repetition_differs(tmp_path: Path) -> None:
+    rng = random.Random(20261020)
+    drawn: list[int] = []
+
+    def make_case(_index: int) -> tuple[list[int], dict[str, object], int]:
+        value = rng.randrange(1_000_000, 9_000_000)
+        drawn.append(value)
+        return ([value], {}), value * 3 + 1
+
+    candidate = _subject(
+        tmp_path / "candidate", "work",
+        "ANS = {2000000: 6000001}\n"
+        "def work(n):\n"
+        "    return ANS.get(n, 0)\n",
+    )
+    baseline = _subject(
+        tmp_path / "baseline", "work",
+        "def work(n):\n"
+        "    return n * 3 + 1\n",
+    )
+    report = paired_timing(
+        candidate, baseline, module="work", function="work", make_case=make_case,
+        repeats=2, seed=7, task_kind="performance", image=IMAGE,
+    )
+    assert len(drawn) == 2
+    assert len(set(drawn)) == 2
+    assert 2000000 not in drawn
+    assert report.output_pass is False
+    assert report.mean_difference_s is None
+    assert report.mean_adjusted_ratio is None
     assert [pair.failure for pair in report.pairs] == ["wrong_output", "wrong_output"]
     assert [pair.values_match for pair in report.pairs] == [False, False]

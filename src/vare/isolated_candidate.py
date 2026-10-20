@@ -18,11 +18,13 @@ extra output; only further bytes are a malformed result.
 whether a task is a performance task. The measured cost starts when the
 container is created, so subject import is included, and ends when the value
 line is read. The same interval is used for the baseline and the candidate.
-Arguments are supplied only after import. Baseline and candidate calls in a
-pair share one freshly built argument list and run in a randomized order.
-The confidence interval is on the paired differences
-``baseline_seconds - candidate_seconds``. ``paired_timing`` checks both
-return values against a parent-owned expected value.
+Arguments are supplied only after import. Each repetition builds its own
+arguments and expected value in the parent, from a seed the candidate never
+sees. Baseline, candidate, and an empty-subject control share that case and
+run in a randomized order. The primary confidence interval is on the paired
+differences ``baseline_seconds - candidate_seconds``, which include container
+start and subject import. An overhead-adjusted ratio subtracts the empty
+control and is a secondary description; import stays in that cost.
 """
 from __future__ import annotations
 
@@ -166,6 +168,11 @@ class TimingPair:
     ratio: float | None
     values_match: bool
     failure: str | None
+    overhead_s: float | None = None
+    adjusted_baseline_s: float | None = None
+    adjusted_candidate_s: float | None = None
+    adjusted_difference_s: float | None = None
+    adjusted_ratio: float | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -176,6 +183,11 @@ class TimingPair:
             "ratio": self.ratio,
             "values_match": self.values_match,
             "failure": self.failure,
+            "overhead_s": self.overhead_s,
+            "adjusted_baseline_s": self.adjusted_baseline_s,
+            "adjusted_candidate_s": self.adjusted_candidate_s,
+            "adjusted_difference_s": self.adjusted_difference_s,
+            "adjusted_ratio": self.adjusted_ratio,
         }
 
 
@@ -183,8 +195,10 @@ class TimingPair:
 class TimingReport:
     """Parent clock and parent comparison.
 
-    ``output_pass`` means both sides returned the caller-supplied expected
-    value. It is not a speed gate.
+    ``output_pass`` means both sides returned that repetition's expected
+    value. It is not a speed gate. The unadjusted difference is the primary
+    timing result. Adjusted fields subtract an empty-subject control and are
+    secondary.
     """
 
     task_kind: str
@@ -197,6 +211,12 @@ class TimingReport:
     ci95_high_difference_s: float | None
     t_crit: float | None
     df: int | None
+    mean_adjusted_difference_s: float | None = None
+    ci95_low_adjusted_difference_s: float | None = None
+    ci95_high_adjusted_difference_s: float | None = None
+    mean_adjusted_ratio: float | None = None
+    ci95_low_adjusted_ratio: float | None = None
+    ci95_high_adjusted_ratio: float | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -210,6 +230,12 @@ class TimingReport:
             "ci95_high_difference_s": self.ci95_high_difference_s,
             "t_crit": self.t_crit,
             "df": self.df,
+            "mean_adjusted_difference_s": self.mean_adjusted_difference_s,
+            "ci95_low_adjusted_difference_s": self.ci95_low_adjusted_difference_s,
+            "ci95_high_adjusted_difference_s": self.ci95_high_adjusted_difference_s,
+            "mean_adjusted_ratio": self.mean_adjusted_ratio,
+            "ci95_low_adjusted_ratio": self.ci95_low_adjusted_ratio,
+            "ci95_high_adjusted_ratio": self.ci95_high_adjusted_ratio,
         }
 
 
@@ -267,8 +293,27 @@ def student_t_975(df: int) -> float:
         raise CandidateHarnessError("repeats must be from 2 through 30") from exc
 
 
+def overhead_adjusted(
+    baseline_s: float, candidate_s: float, overhead_s: float,
+) -> tuple[float, float, float, float | None]:
+    """Subtract an empty-subject control from both walls.
+
+    A control subtracted from both sides cancels in the difference and remains
+    in the ratio. Import work that the empty subject does not do stays in the
+    adjusted cost. The ratio is ``None`` when either adjusted time is not
+    positive. This is a secondary description, not a promotion gate.
+    """
+    adjusted_baseline = baseline_s - overhead_s
+    adjusted_candidate = candidate_s - overhead_s
+    difference = adjusted_baseline - adjusted_candidate
+    ratio = None
+    if adjusted_baseline > 0 and adjusted_candidate > 0:
+        ratio = adjusted_baseline / adjusted_candidate
+    return adjusted_baseline, adjusted_candidate, difference, ratio
+
+
 def paired_difference_ci(differences: Sequence[float]) -> tuple[float, float, float, float, int]:
-    """Mean and Student-t 95% interval of paired differences."""
+    """Mean and Student-t 95% interval of paired samples."""
     count = len(differences)
     if count < 2:
         raise CandidateHarnessError("paired interval needs at least two differences")
@@ -654,14 +699,45 @@ def grade_calls(
     return CallReport(task_kind, all(item.passed for item in results), tuple(results))
 
 
+def _case_for_repetition(
+    make_case: Callable[[int], tuple[Sequence[Any], Mapping[str, Any], Any]],
+    index: int,
+) -> tuple[Sequence[Any], Mapping[str, Any], str]:
+    produced = make_case(index)
+    if type(produced) is not tuple or len(produced) != 3:
+        raise CandidateHarnessError("make_case must return args, kwargs, and expected")
+    args, kwargs, expected = produced
+    if (
+        isinstance(args, (str, bytes))
+        or not isinstance(args, Sequence)
+        or isinstance(kwargs, (str, bytes))
+        or not isinstance(kwargs, Mapping)
+    ):
+        raise CandidateHarnessError("make_case args and kwargs must be a sequence and a mapping")
+    try:
+        expected_text = _canonical(expected)
+    except (TypeError, ValueError) as exc:
+        raise CandidateHarnessError("expected value must be JSON") from exc
+    return args, kwargs, expected_text
+
+
+def _overhead_subject(root: Path, module: str, function: str) -> Path:
+    destination = root / "overhead"
+    destination.mkdir()
+    (destination / f"{module}.py").write_text(
+        f"def {function}(*_args, **_kwargs):\n    return None\n",
+        encoding="utf-8",
+    )
+    return destination
+
+
 def paired_timing(
     candidate_subject: Path,
     baseline_subject: Path,
     *,
     module: str,
     function: str,
-    make_args: Callable[[int], tuple[Sequence[Any], Mapping[str, Any]]],
-    expected: Any,
+    make_case: Callable[[int], tuple[Sequence[Any], Mapping[str, Any], Any]],
     repeats: int,
     seed: int,
     task_kind: str,
@@ -671,16 +747,27 @@ def paired_timing(
 ) -> TimingReport:
     """Time baseline and candidate containers with the parent clock.
 
-    ``task_kind`` must be ``performance``. ``expected`` is the parent-owned
-    return value for every repetition. ``output_pass`` is true only when
-    both containers return that value. Two equal wrong returns do not pass,
-    and any failed repetition drops the confidence interval. Call
-    ``grade_calls`` as well when correctness spans more than this one value.
-    ``make_args`` runs in the parent once per repetition and its return value
-    is serialized before either child starts, so a later child cannot reuse
-    the earlier child's object identity. The speed threshold belongs to the
-    caller. ``pairs[].baseline_s`` and ``pairs[].candidate_s`` include
-    container start and subject import, then the call.
+    ``task_kind`` must be ``performance``. ``make_case(index)`` runs in the
+    parent and returns ``(args, kwargs, expected)`` for that repetition.
+    Draw the inputs there from a seed the candidate never receives, and use a
+    different expected value when the function's result depends on the input.
+    One fixed expected value lets a candidate hardcode that answer.
+    ``output_pass`` is true only when both containers return that
+    repetition's expected value. Two equal wrong returns do not pass, and any
+    failed repetition drops the confidence intervals. Call ``grade_calls`` as
+    well when correctness spans more than these repetitions.
+
+    ``pairs[].baseline_s`` and ``pairs[].candidate_s`` include container
+    start, subject import, and the call. ``pairs[].overhead_s`` is an empty
+    subject with the same arguments, run in the same shuffled order. Import
+    of the real subject is not in that control, so it remains in the
+    adjusted cost. ``adjusted_ratio`` removes the control from both walls.
+    A shared control cancels in the difference, which is why the adjusted
+    difference matches the unadjusted difference. Container start compresses
+    unadjusted ratios toward 1. Before applying a 2x rule to those ratios,
+    use a workload for which both unadjusted means are at least twice the
+    mean empty-control time. The adjusted ratio is secondary. Ignore it when
+    an adjusted time is not positive, and do not promote on it alone.
     """
     if task_kind != "performance":
         raise CandidateHarnessError("task_kind must be performance for paired_timing")
@@ -688,68 +775,111 @@ def paired_timing(
         raise CandidateHarnessError("repeats must be from 2 through 30")
     if not isinstance(seed, int) or isinstance(seed, bool):
         raise CandidateHarnessError("seed must be an integer")
-    try:
-        expected_text = _canonical(expected)
-    except (TypeError, ValueError) as exc:
-        raise CandidateHarnessError("expected value must be JSON") from exc
-    _check_name(module, "module")
-    _check_name(function, "function")
+    checked_module = _check_name(module, "module")
+    checked_function = _check_name(function, "function")
     _limits(image, timeout_s)
+    cases = [_case_for_repetition(make_case, index) for index in range(repeats)]
     active = runner or DockerIsolationRunner()
     order_rng = random.Random(seed)
+    roles = ("baseline", "candidate", "overhead")
     pairs: list[TimingPair] = []
     differences: list[float] = []
+    adjusted_differences: list[float] = []
+    adjusted_ratios: list[float] = []
     output_pass = True
-    for index in range(repeats):
-        args, kwargs = make_args(index)
-        order = ["baseline", "candidate"]
-        if order_rng.randrange(2):
-            order = ["candidate", "baseline"]
-        measured: dict[str, tuple[Any | None, float | None, str | None]] = {}
-        failure: str | None = None
-        for role in order:
-            root = baseline_subject if role == "baseline" else candidate_subject
-            measured[role] = _one_call(
-                root, module, function, args, kwargs, timeout_s, image, active,
-            )
-            if measured[role][2] is not None and failure is None:
-                failure = measured[role][2]
-        baseline = measured.get("baseline", (None, None, "missing_result"))
-        candidate = measured.get("candidate", (None, None, "missing_result"))
-        values_match = False
-        if failure is None:
-            try:
-                values_match = (
-                    _canonical(baseline[0]) == expected_text
-                    and _canonical(candidate[0]) == expected_text
+    with tempfile.TemporaryDirectory(prefix="vare-overhead-") as folder:
+        overhead_root = _overhead_subject(Path(folder), checked_module, checked_function)
+        for args, kwargs, expected_text in cases:
+            order = list(roles)
+            order_rng.shuffle(order)
+            measured: dict[str, tuple[Any | None, float | None, str | None]] = {}
+            failure: str | None = None
+            for role in order:
+                if role == "baseline":
+                    root = baseline_subject
+                elif role == "candidate":
+                    root = candidate_subject
+                else:
+                    root = overhead_root
+                measured[role] = _one_call(
+                    root, checked_module, checked_function, args, kwargs,
+                    timeout_s, image, active,
                 )
-            except (TypeError, ValueError):
-                values_match = False
-                failure = "malformed_result"
-            if not values_match and failure is None:
-                failure = "wrong_output"
-        if failure is not None:
-            output_pass = False
-        difference = None
-        ratio = None
-        if baseline[1] is not None and candidate[1] is not None:
-            difference = baseline[1] - candidate[1]
-            if candidate[1] > 0 and baseline[1] > 0:
-                ratio = baseline[1] / candidate[1]
-            if failure is None:
-                differences.append(difference)
-        pairs.append(TimingPair(
-            "-".join(order), baseline[1], candidate[1], difference, ratio, values_match, failure,
-        ))
+                if measured[role][2] is not None and failure is None:
+                    failure = measured[role][2]
+            baseline = measured.get("baseline", (None, None, "missing_result"))
+            candidate = measured.get("candidate", (None, None, "missing_result"))
+            overhead = measured.get("overhead", (None, None, "missing_result"))
+            values_match = False
+            if baseline[2] is None and candidate[2] is None:
+                try:
+                    values_match = (
+                        _canonical(baseline[0]) == expected_text
+                        and _canonical(candidate[0]) == expected_text
+                    )
+                except (TypeError, ValueError):
+                    values_match = False
+                    if failure is None:
+                        failure = "malformed_result"
+                if not values_match and failure is None:
+                    failure = "wrong_output"
+            if failure is not None:
+                output_pass = False
+            difference = None
+            ratio = None
+            adjusted: tuple[float, float, float, float | None] | None = None
+            if baseline[1] is not None and candidate[1] is not None:
+                difference = baseline[1] - candidate[1]
+                if candidate[1] > 0 and baseline[1] > 0:
+                    ratio = baseline[1] / candidate[1]
+                if failure is None:
+                    differences.append(difference)
+            if (
+                baseline[1] is not None
+                and candidate[1] is not None
+                and overhead[1] is not None
+            ):
+                adjusted = overhead_adjusted(baseline[1], candidate[1], overhead[1])
+                if failure is None:
+                    adjusted_differences.append(adjusted[2])
+                    if adjusted[3] is not None:
+                        adjusted_ratios.append(adjusted[3])
+            pairs.append(TimingPair(
+                "-".join(order),
+                baseline[1],
+                candidate[1],
+                difference,
+                ratio,
+                values_match,
+                failure,
+                overhead[1],
+                None if adjusted is None else adjusted[0],
+                None if adjusted is None else adjusted[1],
+                None if adjusted is None else adjusted[2],
+                None if adjusted is None else adjusted[3],
+            ))
     mean: float | None = None
     low: float | None = None
     high: float | None = None
     crit: float | None = None
     df: int | None = None
+    mean_adjusted: float | None = None
+    low_adjusted: float | None = None
+    high_adjusted: float | None = None
+    mean_ratio: float | None = None
+    low_ratio: float | None = None
+    high_ratio: float | None = None
     if output_pass and len(differences) == repeats:
         mean, low, high, crit, df = paired_difference_ci(differences)
+        if len(adjusted_differences) == repeats:
+            mean_adjusted, low_adjusted, high_adjusted, _crit, _df = paired_difference_ci(
+                adjusted_differences,
+            )
+        if len(adjusted_ratios) == repeats:
+            mean_ratio, low_ratio, high_ratio, _crit, _df = paired_difference_ci(adjusted_ratios)
     return TimingReport(
         task_kind, output_pass, repeats, seed, tuple(pairs), mean, low, high, crit, df,
+        mean_adjusted, low_adjusted, high_adjusted, mean_ratio, low_ratio, high_ratio,
     )
 
 
