@@ -35,13 +35,14 @@ Reproduce the calibration on Apple Silicon with Docker available:
 ```bash
 DOCKER_CONTEXT=colima PYTHONPATH=src python \
   scripts/verify_mlsys_separated_candidate_harness_v1.py \
-  --output results/mlsys-separated-candidate-harness-v1/run-3
+  --output /tmp/vare-separated-harness-replay/run-1
 PYTHONPATH=src python scripts/audit_mlsys_separated_candidate_harness_v1.py \
-  results/mlsys-separated-candidate-harness-v1/run-3
+  /tmp/vare-separated-harness-replay/run-1
 ```
 
-The output directory must not already exist. The verifier runs the negative
-and oracle controls in Docker and records its runtime version and elapsed time.
+The output directory must not already exist. Choose a fresh path for repeated
+runs; the committed run-3 bundle remains immutable. The verifier runs the
+negative and oracle controls in Docker and records its runtime version and elapsed time.
 The auditor checks every artifact hash, relevant source hash, claim label, and
 source commit identity.
 
