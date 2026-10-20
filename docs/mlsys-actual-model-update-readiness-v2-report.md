@@ -52,7 +52,7 @@ reproducible with:
 ```bash
 python scripts/audit_mlsys_update_readiness_v1.py \
   --protocol protocols/mlsys_actual_model_update_no_go_v1.lock.json \
-  --output results/mlsys-actual-model-update-readiness-v2/audit.json
+  --output results/mlsys-actual-model-update-readiness-v2/v1-inventory-audit.json
 ```
 
 The v1 audit checks task/evaluator hashes, pack commit ancestry, manifest and
