@@ -33,7 +33,7 @@ Start with the [project summary](../README.md), then use the paths below to insp
 
 | Topic | Evidence |
 | --- | --- |
-| Repository task execution, workspace binding, graders, and process ownership | [Agent evaluation guide](agent-evaluation.md) · [environment factory](environment_factory.md) · [MLSys coding pack v1](mlsys-coding-tasks-v1.md) |
+| Repository task execution, workspace binding, graders, and process ownership | [Agent evaluation guide](agent-evaluation.md) · [environment factory](environment_factory.md) |
 | Workspace-bound evidence collector and its controls | [V2 report](verified_coding_agent_baseline_v2.md) · [v1 report](verified_coding_agent_baseline_v1.md) |
 | Agent tasks and evaluation assets | [Historical benchmark tasks](../benchmarks/historical/) · [task preparation and script index](../scripts/README.md) |
 

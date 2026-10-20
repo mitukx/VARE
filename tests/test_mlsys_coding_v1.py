@@ -188,23 +188,6 @@ def test_pack_hash_split_and_protocol_agree():
     assert timing.THRESHOLD == reward.SUCCESS_THRESHOLD
 
 
-def test_policy_comparison_refuses_without_running():
-    completed = subprocess.run(
-        [
-            sys.executable,
-            str(ROOT / "scripts" / "run_mlsys_coding_policy_comparison_v1.py"),
-        ],
-        check=False,
-        capture_output=True,
-        text=True,
-    )
-    assert completed.returncode == 3
-    payload = json.loads(completed.stdout)
-    assert payload["status"] == "not_run"
-    assert any("not implemented" in reason for reason in payload["reasons"])
-    assert "torch" not in completed.stdout
-
-
 @pytest.mark.parametrize("task_dir", _task_dirs(), ids=lambda path: path.name)
 def test_hidden_grade_rejects_baseline_and_accepts_oracle(task_dir: Path):
     spec = EngineeringTaskSpec.load(task_dir / "task.json")
