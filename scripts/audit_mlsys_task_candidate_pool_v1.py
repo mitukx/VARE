@@ -54,6 +54,9 @@ def audit(root: Path) -> dict:
         if path.stat().st_size != expected.get("bytes") or sha256_file(path) != expected.get("sha256"):
             raise ValueError(f"root evidence manifest mismatch: {relative}")
     protocol = json.loads(PROTOCOL.read_text(encoding="utf-8"))
+    protocol_sha256 = sha256_file(PROTOCOL)
+    if root_manifest.get("protocol_sha256") != protocol_sha256:
+        raise ValueError("frozen protocol hash differs from the retained evidence manifest")
     pool = verify_bundle(root / "run-1", "candidate-pool.json")
     screen = verify_bundle(root / "screen-1", "screen.json")
     candidates = pool.get("candidates")
@@ -108,20 +111,12 @@ def audit(root: Path) -> dict:
         "final_split_frozen": False,
         "training_authorized": False,
         "decision": "NO_GO_PENDING_DEEP_TASK_QUALIFICATION",
-        "protocol_sha256": sha256_file(PROTOCOL),
+        "protocol_sha256": protocol_sha256,
         "candidate_pool_sha256": sha256_file(root / "run-1/candidate-pool.json"),
         "screen_sha256": sha256_file(root / "screen-1/screen.json"),
     }
     audit_path = root / "audit.json"
     audit_path.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    files = {}
-    for relative in sorted(frozen_paths):
-        path = root / relative
-        files[relative] = {"bytes": path.stat().st_size, "sha256": sha256_file(path)}
-    (root / "evidence-manifest.json").write_text(
-        json.dumps({"schema_version": 1, "files": files}, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
     return result
 
 

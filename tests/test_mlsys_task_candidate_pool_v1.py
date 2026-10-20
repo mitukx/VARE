@@ -37,6 +37,35 @@ def test_candidate_pool_audit_rejects_nested_audit_named_rerun_file(tmp_path: Pa
         module.audit(bundle)
 
 
+def test_candidate_pool_audit_does_not_rewrite_protocol_commitment(tmp_path: Path) -> None:
+    module = _load_script(
+        "audit_mlsys_task_candidate_pool_v1_manifest_test",
+        ROOT / "scripts/audit_mlsys_task_candidate_pool_v1.py",
+    )
+    bundle = tmp_path / "frozen-evidence"
+    shutil.copytree(EVIDENCE, bundle)
+    manifest = bundle / "evidence-manifest.json"
+    original = manifest.read_bytes()
+
+    assert module.audit(bundle)["audit_passed"] is True
+    assert manifest.read_bytes() == original
+
+
+def test_candidate_pool_audit_rejects_protocol_edit(tmp_path: Path, monkeypatch) -> None:
+    module = _load_script(
+        "audit_mlsys_task_candidate_pool_v1_protocol_test",
+        ROOT / "scripts/audit_mlsys_task_candidate_pool_v1.py",
+    )
+    bundle = tmp_path / "frozen-evidence"
+    shutil.copytree(EVIDENCE, bundle)
+    changed_protocol = tmp_path / "changed-protocol.json"
+    changed_protocol.write_bytes(module.PROTOCOL.read_bytes() + b"\n")
+    monkeypatch.setattr(module, "PROTOCOL", changed_protocol)
+
+    with pytest.raises(ValueError, match="frozen protocol hash differs"):
+        module.audit(bundle)
+
+
 def test_incomplete_candidate_collection_exits_nonzero_and_retains_failure(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
 ) -> None:
