@@ -12,9 +12,9 @@ import hashlib
 import json
 from pathlib import Path
 import time
-from typing import Any, Sequence
+from typing import Any, Protocol, Sequence
 
-from .container_isolation import DockerIsolationRunner, IsolationError, IsolationLimits
+from .container_isolation import IsolationError, IsolationLimits, IsolationResult
 from .evidence import sha256_json
 
 _MAX_CASE_JSON_BYTES = 63_999
@@ -80,6 +80,16 @@ class JSONIOEvaluationReport:
     cases: tuple[JSONIOCaseResult, ...]
 
 
+class CandidateIORunner(Protocol):
+    """Anything that can run one bounded candidate request."""
+
+    async def run_candidate_io(
+        self, limits: IsolationLimits, *, allowed_workspace_root: Path,
+        workspace: Path, command: Sequence[str], stdin_data: bytes,
+    ) -> IsolationResult:
+        """Run one request and return the isolated process result."""
+
+
 class TrustedJSONScorer:
     """Compare untrusted candidate outputs against operator-held JSON oracles.
 
@@ -89,7 +99,7 @@ class TrustedJSONScorer:
     """
 
     def __init__(
-        self, *, runner: DockerIsolationRunner, limits: IsolationLimits,
+        self, *, runner: CandidateIORunner, limits: IsolationLimits,
         allowed_workspace_root: Path,
     ) -> None:
         self.runner = runner

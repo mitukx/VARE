@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import time
 
 import pytest
 
@@ -13,6 +14,7 @@ from vare.container_isolation import DockerIsolationRunner, IsolationError, Isol
 from vare.isolated_candidate import (
     CandidateHarnessError,
     FunctionCall,
+    _Lines,
     grade_calls,
     paired_difference_ci,
     paired_timing,
@@ -67,7 +69,7 @@ def test_task_kind_comes_from_the_caller(tmp_path: Path) -> None:
     with pytest.raises(CandidateHarnessError):
         paired_timing(
             subject, subject, module="add", function="add",
-            make_args=lambda _index: ([2, 3], {}), repeats=2, seed=1,
+            make_args=lambda _index: ([2, 3], {}), expected=5, repeats=2, seed=1,
             task_kind="correctness", image=IMAGE,
         )
     with pytest.raises(CandidateHarnessError):
@@ -336,13 +338,16 @@ def test_clock_and_id_cache_do_not_inflate_parent_speed(tmp_path: Path) -> None:
     def make_args(_index: int) -> tuple[list[int], dict[str, object]]:
         return ([1_000_000], {})
 
+    expected = sum(range(1_000_000))
     clock = paired_timing(
         patched, baseline, module="work", function="work", make_args=make_args,
-        repeats=2, seed=20261019, task_kind="performance", image=IMAGE, timeout_s=30,
+        expected=expected, repeats=2, seed=20261019, task_kind="performance",
+        image=IMAGE, timeout_s=30,
     )
     cached_timing = paired_timing(
         cached, baseline, module="work", function="work", make_args=make_args,
-        repeats=2, seed=20261019, task_kind="performance", image=IMAGE, timeout_s=30,
+        expected=expected, repeats=2, seed=20261019, task_kind="performance",
+        image=IMAGE, timeout_s=30,
     )
     for report in (clock, cached_timing):
         assert report.output_pass is True
@@ -410,3 +415,105 @@ def test_candidate_uid_is_unprivileged(tmp_path: Path) -> None:
     report = _grade(subject, FunctionCall("uid", "solve", "uid", [], 65534))
     assert report.passed is True
     assert os.geteuid() != 65534
+
+
+def test_eof_after_value_line_is_not_pending() -> None:
+    read_fd, write_fd = os.pipe()
+    os.write(write_fd, b'{"value":5}\n')
+    os.close(write_fd)
+    reader = _Lines(os.fdopen(read_fd, "rb"))
+    try:
+        assert reader.readline(time.monotonic() + 2) == b'{"value":5}'
+        assert reader.has_pending() is False
+    finally:
+        reader.stream.close()
+
+
+def test_trailing_bytes_after_value_line_stay_pending() -> None:
+    read_fd, write_fd = os.pipe()
+    os.write(write_fd, b'{"value":5}\n{"speedup":1000}\n')
+    os.close(write_fd)
+    reader = _Lines(os.fdopen(read_fd, "rb"))
+    try:
+        assert reader.readline(time.monotonic() + 2) == b'{"value":5}'
+        assert reader.has_pending() is True
+    finally:
+        reader.stream.close()
+
+
+def test_trailing_stdout_after_a_value_line_fails(tmp_path: Path) -> None:
+    subject = _subject(
+        tmp_path, "solve",
+        "import sys\n"
+        "def add(a, b):\n"
+        "    sys.stdout.write('{\"value\": 5}\\ntrailing\\n')\n"
+        "    sys.stdout.flush()\n"
+        "    return a + b\n",
+    )
+    report = _grade(subject, FunctionCall("sum", "solve", "add", [2, 3], 5))
+    assert report.passed is False
+    assert report.cases[0].failure == "malformed_result"
+
+
+def test_repeated_honest_calls_have_no_eof_flake(tmp_path: Path) -> None:
+    subject = _subject(tmp_path, "solve", "def add(a, b):\n    return a + b\n")
+    calls = [
+        FunctionCall(f"add-{index}", "solve", "add", [2, 3], 5)
+        for index in range(40)
+    ]
+    report = grade_calls(
+        subject, calls, task_kind="correctness", image=IMAGE, timeout_s=30,
+    )
+    assert report.passed is True
+    assert [case.failure for case in report.cases] == [None] * 40
+
+
+def test_import_precompute_does_not_pass_a_two_x_gate(tmp_path: Path) -> None:
+    limit = 20_000_000
+    burn = (
+        "def _burn():\n"
+        "    total = 0\n"
+        "    for item in range(20_000_000):\n"
+        "        total += item\n"
+        "    return total\n"
+    )
+    candidate = _subject(
+        tmp_path / "candidate", "work",
+        burn + "TABLE = _burn()\ndef work(n):\n    return TABLE\n",
+    )
+    baseline = _subject(
+        tmp_path / "baseline", "work",
+        burn + "def work(n):\n    return _burn()\n",
+    )
+    expected = (limit - 1) * limit // 2
+    report = paired_timing(
+        candidate, baseline, module="work", function="work",
+        make_args=lambda _index: ([0], {}), expected=expected, repeats=2, seed=1,
+        task_kind="performance", image=IMAGE, timeout_s=60,
+    )
+    assert report.output_pass is True
+    ratios = [pair.ratio for pair in report.pairs]
+    assert all(ratio is not None and ratio < 2 for ratio in ratios)
+    assert all(
+        pair.candidate_s is not None and pair.candidate_s > 0.5 for pair in report.pairs
+    )
+    assert all(
+        pair.baseline_s is not None and pair.baseline_s > 0.5 for pair in report.pairs
+    )
+
+
+def test_paired_timing_rejects_equal_wrong_returns(tmp_path: Path) -> None:
+    source = "def add(a, b):\n    return 0\n"
+    candidate = _subject(tmp_path / "candidate", "addmod", source)
+    baseline = _subject(tmp_path / "baseline", "addmod", source)
+    report = paired_timing(
+        candidate, baseline, module="addmod", function="add",
+        make_args=lambda _index: ([2, 3], {}), expected=5, repeats=2, seed=1,
+        task_kind="performance", image=IMAGE,
+    )
+    assert report.output_pass is False
+    assert report.mean_difference_s is None
+    assert report.ci95_low_difference_s is None
+    assert report.ci95_high_difference_s is None
+    assert [pair.failure for pair in report.pairs] == ["wrong_output", "wrong_output"]
+    assert [pair.values_match for pair in report.pairs] == [False, False]

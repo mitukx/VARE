@@ -11,14 +11,18 @@ A trusted worker sits between the parent and the container. The parent and
 the worker exchange one nonce-framed result. The nonce is not sent into the
 container, so container stdout cannot forge a frame. A zero exit code without
 a single ``{"value": ...}`` line is a failure. The parent compares that value
-with the expected value it kept locally.
+with the expected value it kept locally. End of file after that line is not
+extra output; only further bytes are a malformed result.
 
 ``task_kind`` comes from trusted task metadata. Output shape does not decide
-whether a task is a performance task. Wall time is the parent's clock around
-the call, after the container has imported the subject and before it has the
-arguments. Baseline and candidate calls in a pair share one freshly built
-argument list and run in a randomized order. The confidence interval is on
-the paired differences ``baseline_seconds - candidate_seconds``.
+whether a task is a performance task. The measured cost starts when the
+container is created, so subject import is included, and ends when the value
+line is read. The same interval is used for the baseline and the candidate.
+Arguments are supplied only after import. Baseline and candidate calls in a
+pair share one freshly built argument list and run in a randomized order.
+The confidence interval is on the paired differences
+``baseline_seconds - candidate_seconds``. ``paired_timing`` checks both
+return values against a parent-owned expected value.
 """
 from __future__ import annotations
 
@@ -177,7 +181,11 @@ class TimingPair:
 
 @dataclass(frozen=True)
 class TimingReport:
-    """Parent clock and parent comparison. ``output_pass`` is not a speed gate."""
+    """Parent clock and parent comparison.
+
+    ``output_pass`` means both sides returned the caller-supplied expected
+    value. It is not a speed gate.
+    """
 
     task_kind: str
     output_pass: bool
@@ -232,10 +240,23 @@ class _Lines:
         return bytes(line)
 
     def has_pending(self) -> bool:
+        """True only when bytes remain after the line already consumed.
+
+        A closed pipe is readable. ``os.read`` then returns ``b""``. That EOF
+        is not extra output: an honest child that writes one line and exits
+        must not be scored ``malformed_result``.
+        """
         if self.pending:
             return True
-        ready, _, _ = select.select([self.stream.fileno()], [], [], 0)
-        return bool(ready)
+        fd = self.stream.fileno()
+        ready, _, _ = select.select([fd], [], [], 0)
+        if not ready:
+            return False
+        block = os.read(fd, 65536)
+        if not block:
+            return False
+        self.pending.extend(block)
+        return True
 
 
 def student_t_975(df: int) -> float:
@@ -387,16 +408,17 @@ def _invoke(
         proc.stdin.write((_canonical(spec) + "\n").encode("utf-8"))
         proc.stdin.flush()
         ready = reader.readline(deadline)
-        if not _frame_ok(ready, b"VARE_READY", nonce):
+        startup_s = _ready_startup(ready, nonce)
+        if startup_s is None:
             _value, failure = _parse_result(ready, nonce)
-            return None, None, failure or "missing_result"
+            return None, None, failure or "malformed_result"
         if reader.has_pending():
             return None, None, "malformed_result"
-        started = time.perf_counter()
+        call_started = time.perf_counter()
         proc.stdin.write(b"GO\n")
         proc.stdin.flush()
         result = reader.readline(deadline)
-        elapsed = time.perf_counter() - started
+        elapsed = startup_s + (time.perf_counter() - call_started)
         parsed, failure = _parse_result(result, nonce)
         if failure is not None:
             return None, elapsed, failure
@@ -413,9 +435,28 @@ def _invoke(
         _kill(proc)
 
 
-def _frame_ok(line: bytes, kind: bytes, nonce: str) -> bool:
-    parts = line.split(b" ", 2)
-    return len(parts) == 2 and parts[0] == kind and _same_token(parts[1], nonce)
+_STARTUP = re.compile(r"[0-9]+(?:\.[0-9]+)?\Z")
+
+
+def _ready_startup(line: bytes, nonce: str) -> float | None:
+    """Parse ``VARE_READY <nonce> <seconds>`` from the trusted worker.
+
+    The third field is the worker clock from container creation through
+    subject import. It is not taken from the candidate.
+    """
+    parts = line.split(b" ")
+    if len(parts) != 3 or parts[0] != b"VARE_READY" or not _same_token(parts[1], nonce):
+        return None
+    try:
+        text = parts[2].decode("ascii")
+    except UnicodeError:
+        return None
+    if _STARTUP.fullmatch(text) is None:
+        return None
+    value = float(text)
+    if not math.isfinite(value):
+        return None
+    return value
 
 
 def _parse_result(line: bytes, nonce: str) -> tuple[Any | None, str | None]:
@@ -458,6 +499,7 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
     except (IsolationError, CandidateHarnessError, OSError, ValueError):
         _emit_fail(nonce, "missing_result")
         return 0
+    started = time.perf_counter()
     try:
         child = subprocess.Popen(
             argv,
@@ -476,10 +518,11 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
         child.stdin.write((_canonical(header) + "\n").encode("utf-8"))
         child.stdin.flush()
         ready = reader.readline(deadline)
+        startup_s = time.perf_counter() - started
         if ready != b"READY" or reader.has_pending():
             _emit_fail(nonce, "malformed_result")
             return 0
-        _emit_ready(nonce)
+        _emit_ready(nonce, startup_s)
         go = parent.readline(deadline)
         if go != b"GO":
             _emit_fail(nonce, "missing_result")
@@ -520,8 +563,8 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
                 pass
 
 
-def _emit_ready(nonce: str) -> None:
-    sys.stdout.write(f"VARE_READY {nonce}\n")
+def _emit_ready(nonce: str, startup_s: float) -> None:
+    sys.stdout.write(f"VARE_READY {nonce} {startup_s:.9f}\n")
     sys.stdout.flush()
 
 
@@ -618,6 +661,7 @@ def paired_timing(
     module: str,
     function: str,
     make_args: Callable[[int], tuple[Sequence[Any], Mapping[str, Any]]],
+    expected: Any,
     repeats: int,
     seed: int,
     task_kind: str,
@@ -627,12 +671,16 @@ def paired_timing(
 ) -> TimingReport:
     """Time baseline and candidate containers with the parent clock.
 
-    ``task_kind`` must be ``performance``. ``make_args`` runs in the parent
-    once per repetition and its return value is serialized before either
-    child starts, so a later child cannot reuse the earlier child's object
-    identity. ``output_pass`` is only the return-value comparison. The speed
-    threshold belongs to the caller. Per-repetition parent times are
-    ``pairs[].baseline_s`` and ``pairs[].candidate_s``.
+    ``task_kind`` must be ``performance``. ``expected`` is the parent-owned
+    return value for every repetition. ``output_pass`` is true only when
+    both containers return that value. Two equal wrong returns do not pass,
+    and any failed repetition drops the confidence interval. Call
+    ``grade_calls`` as well when correctness spans more than this one value.
+    ``make_args`` runs in the parent once per repetition and its return value
+    is serialized before either child starts, so a later child cannot reuse
+    the earlier child's object identity. The speed threshold belongs to the
+    caller. ``pairs[].baseline_s`` and ``pairs[].candidate_s`` include
+    container start and subject import, then the call.
     """
     if task_kind != "performance":
         raise CandidateHarnessError("task_kind must be performance for paired_timing")
@@ -640,6 +688,10 @@ def paired_timing(
         raise CandidateHarnessError("repeats must be from 2 through 30")
     if not isinstance(seed, int) or isinstance(seed, bool):
         raise CandidateHarnessError("seed must be an integer")
+    try:
+        expected_text = _canonical(expected)
+    except (TypeError, ValueError) as exc:
+        raise CandidateHarnessError("expected value must be JSON") from exc
     _check_name(module, "module")
     _check_name(function, "function")
     _limits(image, timeout_s)
@@ -667,7 +719,10 @@ def paired_timing(
         values_match = False
         if failure is None:
             try:
-                values_match = _canonical(baseline[0]) == _canonical(candidate[0])
+                values_match = (
+                    _canonical(baseline[0]) == expected_text
+                    and _canonical(candidate[0]) == expected_text
+                )
             except (TypeError, ValueError):
                 values_match = False
                 failure = "malformed_result"

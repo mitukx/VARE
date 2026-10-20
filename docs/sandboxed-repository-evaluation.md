@@ -117,7 +117,13 @@ new container using `DockerIsolationRunner` flags (`--network=none`,
 `--read-only`, dropped capabilities, uid 65534) and one readonly `/subject`
 mount. `/grader` is not mounted. Arguments are JSON on stdin after import.
 The nonce stays in the parent and is not sent into the container. A zero
-exit status is not a pass.
+exit status is not a pass. End of file after the single value line is not
+extra output; further stdout bytes are a malformed result. Parent wall time
+starts at container creation, so subject import is inside the measured cost
+for both the baseline and the candidate. `paired_timing` requires the
+parent-owned `expected` value and sets `output_pass` only when both sides
+return it. Equal wrong returns do not pass. `grade_calls` remains the check
+for any other correctness cases. The speed threshold stays with the caller.
 
 `ExecutableEvaluator` still runs its commands in-process. A hidden test that
 imports candidate code on that path can read `/grader/evaluator` and the
