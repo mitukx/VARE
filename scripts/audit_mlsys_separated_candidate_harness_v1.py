@@ -55,9 +55,9 @@ def audit(run_dir: Path) -> dict:
         raise ValueError("result claim classification is missing or invalid")
     source_paths = {
         "protocol_sha256": "protocols/mlsys_separated_candidate_harness_v1.json",
-        "task_descriptor_sha256": "benchmarks/mlsys_coding_v1/tasks/row_log_softmax/task.json",
-        "hidden_evaluator_sha256": "benchmarks/mlsys_coding_v1/tasks/row_log_softmax/evaluator/test_hidden.py",
-        "oracle_sha256": "benchmarks/mlsys_coding_v1/tasks/row_log_softmax/evaluator/oracle/row_log_softmax.py",
+        "task_descriptor_sha256": "benchmarks/mlsys_coding_v1/tasks/causal_attention/task.json",
+        "hidden_evaluator_sha256": "benchmarks/mlsys_coding_v1/tasks/causal_attention/evaluator/test_hidden.py",
+        "oracle_sha256": "benchmarks/mlsys_coding_v1/tasks/causal_attention/evaluator/oracle/causal_attention.py",
         "pack_manifest_sha256": "benchmarks/mlsys_coding_v1/manifest.json",
         "frozen_harness_adapter_sha256": "benchmarks/mlsys_coding_v1/harness_adapter.py",
         "adapter_source_sha256": "scripts/mlsys_task_isolated_calls.py",

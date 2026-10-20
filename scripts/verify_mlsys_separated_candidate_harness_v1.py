@@ -21,9 +21,9 @@ from vare.separated_candidate_harness import (
 )
 
 
-TASK_DIR = ROOT / "benchmarks/mlsys_coding_v1/tasks/row_log_softmax"
-TASK_ID = "mlsys-v1-row-log-softmax"
-ENTRYPOINT = "row_log_softmax:row_log_softmax"
+TASK_DIR = ROOT / "benchmarks/mlsys_coding_v1/tasks/causal_attention"
+TASK_ID = "mlsys-v1-causal-attention"
+ENTRYPOINT = "causal_attention:causal_attention_weights"
 ADAPTER_SCRIPT = ROOT / "scripts/mlsys_task_isolated_calls.py"
 
 
@@ -41,7 +41,7 @@ def write_json(path: Path, value: object) -> None:
 
 def baseline_rejects_empty_result() -> bool:
     path = TASK_DIR / "evaluator/test_hidden.py"
-    spec = importlib.util.spec_from_file_location("frozen_row_log_softmax_hidden", path)
+    spec = importlib.util.spec_from_file_location("frozen_causal_attention_hidden", path)
     if spec is None or spec.loader is None:
         raise RuntimeError("cannot load frozen hidden checker")
     module = importlib.util.module_from_spec(spec)
@@ -78,14 +78,14 @@ def run(output: Path) -> int:
 
     candidate_bad = output / "candidate-empty-result"
     candidate_bad.mkdir()
-    (candidate_bad / "row_log_softmax.py").write_text(
-        "def row_log_softmax(rows):\n    return []\n", encoding="utf-8",
+    (candidate_bad / "causal_attention.py").write_text(
+        "def causal_attention_weights(scores):\n    return []\n", encoding="utf-8",
     )
     candidate_good = output / "candidate-oracle-control"
     candidate_good.mkdir()
     shutil.copy(
-        TASK_DIR / "evaluator/oracle/row_log_softmax.py",
-        candidate_good / "row_log_softmax.py",
+        TASK_DIR / "evaluator/oracle/causal_attention.py",
+        candidate_good / "causal_attention.py",
     )
 
     started = time.monotonic()
@@ -124,7 +124,7 @@ def run(output: Path) -> int:
         "protocol_sha256": sha256_file(PROTOCOL_PATH),
         "task_descriptor_sha256": sha256_file(TASK_DIR / "task.json"),
         "hidden_evaluator_sha256": sha256_file(TASK_DIR / "evaluator/test_hidden.py"),
-        "oracle_sha256": sha256_file(TASK_DIR / "evaluator/oracle/row_log_softmax.py"),
+        "oracle_sha256": sha256_file(TASK_DIR / "evaluator/oracle/causal_attention.py"),
         "pack_manifest_sha256": sha256_file(TASK_DIR.parents[1] / "manifest.json"),
         "frozen_harness_adapter_sha256": sha256_file(ROOT / "benchmarks/mlsys_coding_v1/harness_adapter.py"),
         "adapter_source_sha256": sha256_file(ADAPTER_SCRIPT),

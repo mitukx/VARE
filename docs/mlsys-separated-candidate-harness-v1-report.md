@@ -11,12 +11,12 @@ outputs remain in the parent process. Unknown task IDs and descriptor or pack
 integrity mismatches fail closed. The old host-process shim is no longer used
 when the proposed implementation is available.
 
-The consumed row-log-softmax task is used only as an adapter calibration. The
+The consumed causal-attention task is used only as an adapter calibration. The
 frozen checker rejects a malformed empty result, the isolated grader rejects
 the same candidate, and the frozen oracle control passes. This verifies the
 adapter path without claiming a checker defect or new task result. The final
 raw outputs, source hashes, runtime metadata, and inventory manifest are
-retained in [`results/mlsys-separated-candidate-harness-v1/run-3/`](../results/mlsys-separated-candidate-harness-v1/run-3/).
+retained in [`results/mlsys-separated-candidate-harness-v1/run-4/`](../results/mlsys-separated-candidate-harness-v1/run-4/).
 
 This is **not** a model update, agent rollout, new task evaluation, or held-out
 capability result. Consumed task graders and oracle fixtures are used only to
@@ -41,12 +41,14 @@ PYTHONPATH=src python scripts/audit_mlsys_separated_candidate_harness_v1.py \
 ```
 
 The output directory must not already exist. Choose a fresh path for repeated
-runs; the committed run-3 bundle remains immutable. The verifier runs the
+runs; the committed run-4 bundle remains immutable. The verifier runs the
 negative and oracle controls in Docker and records its runtime version and elapsed time.
 The auditor checks every artifact hash, relevant source hash, claim label, and
 source commit identity.
 
-The regression suite exercises the isolated adapter for v1 tasks with supported
-call semantics and v3 routing/oracle controls; it explicitly checks that all
-four mutation-sensitive tasks fail closed. No claim is made about an LLM, policy
+The regression suite exercises the isolated adapter for the three tasks whose
+frozen correctness semantics fit the existing JSON-call protocol: causal
+attention, warmup cosine, and v3 EMA bias. It checks that mutation-sensitive
+and type/non-JSON-sensitive tasks fail closed, and that a v3 warmup copy routes
+from its canonical path. No claim is made about an LLM, policy
 optimization, held-out task success, or training cost.
