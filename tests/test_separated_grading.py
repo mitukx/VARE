@@ -923,3 +923,78 @@ def test_local_agent_parses_engineering_task_without_loading_weights(tmp_path, m
         module.main()
     assert held_exit.value.code == 2
     assert "required split" in capsys.readouterr().err
+
+
+def test_missing_isolated_calls_is_not_an_exit_zero_pass(tmp_path: Path) -> None:
+    module = _load_eval_module()
+    task_dir = tmp_path / "task"
+    (task_dir / "evaluator").mkdir(parents=True)
+    result = asyncio.run(module.grade_repository_workspace(
+        image=DOCKER_IMAGE,
+        workspace_root=tmp_path,
+        workspace=tmp_path / "missing",
+        snapshot_root=tmp_path / "snapshots",
+        stage_root=tmp_path / "stage",
+        task={
+            "task_id": "fixture-add",
+            "task_dir": task_dir,
+            "allowed_files": ["add.py"],
+            "reward_kind": "hidden-correctness",
+        },
+        policy_id="unpatched-fixture-add",
+        decide=lambda _payload: {"success": True, "reward": 1.0, "reason": "correctness"},
+    ))
+    assert result["decision"]["success"] is False
+    assert result["decision"]["reason"] == "isolated_harness_required"
+
+
+@pytest.mark.skipif(not _docker_ready(), reason="pinned python image is not available locally")
+def test_repository_grade_uses_the_isolated_harness(tmp_path: Path) -> None:
+    module = _load_eval_module()
+    task_dir = tmp_path / "task"
+    evaluator = task_dir / "evaluator"
+    evaluator.mkdir(parents=True)
+    (evaluator / "isolated_calls.json").write_text(json.dumps({
+        "module": "add",
+        "function": "add",
+        "task_kind": "correctness",
+        "rtol": 0.0,
+        "atol": 0.0,
+        "calls": [{"case_id": "sum", "args": [2, 3], "expected": 5}],
+    }), encoding="utf-8")
+    root = tmp_path / "workspaces"
+    honest = root / "honest"
+    cheated = root / "cheated"
+    honest.mkdir(parents=True)
+    cheated.mkdir()
+    (honest / "add.py").write_text("def add(a, b):\n    return a + b\n", encoding="utf-8")
+    (cheated / "add.py").write_text(
+        "import os\nos._exit(0)\ndef add(a, b):\n    return a + b\n", encoding="utf-8",
+    )
+    for workspace in (honest, cheated):
+        workspace.chmod(0o755)
+        (workspace / "add.py").chmod(0o644)
+    task = {
+        "task_id": "fixture-add",
+        "task_dir": task_dir,
+        "allowed_files": ["add.py"],
+        "reward_kind": "hidden-correctness",
+    }
+
+    def always_pass(_payload: dict) -> dict:
+        return {"success": True, "reward": 1.0, "reason": "correctness"}
+
+    passed = asyncio.run(module.grade_repository_workspace(
+        image=DOCKER_IMAGE, workspace_root=root, workspace=honest,
+        snapshot_root=tmp_path / "snapshots", stage_root=tmp_path / "stage",
+        task=task, policy_id="honest", decide=always_pass,
+    ))
+    failed = asyncio.run(module.grade_repository_workspace(
+        image=DOCKER_IMAGE, workspace_root=root, workspace=cheated,
+        snapshot_root=tmp_path / "snapshots", stage_root=tmp_path / "stage",
+        task=task, policy_id="exit-zero", decide=always_pass,
+    ))
+    assert passed["decision"]["success"] is True
+    assert passed["decision"]["reason"] == "correctness"
+    assert failed["decision"]["success"] is False
+    assert failed["decision"]["reason"] == "correctness_failed"

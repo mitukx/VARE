@@ -125,13 +125,17 @@ for both the baseline and the candidate. `paired_timing` takes
 has its own expected value, drawn from a seed the candidate never sees.
 `output_pass` is true only when both sides return that repetition's value.
 Equal wrong returns, and a hardcoded answer for one known input, do not pass.
-`grade_calls` remains the check for any other correctness cases. The primary
+`grade_calls` remains the check for any other correctness cases. Numeric
+answers use `math.isclose` with the task's `rtol` and `atol`. The primary
 speed samples still include container start. Each repetition also times an
 empty subject in the same shuffled order. `adjusted_ratio` subtracts that
 control and is secondary; import of the real subject stays in the adjusted
-cost. A 2x rule on the unadjusted ratios needs a workload whose means are at
-least twice the empty-control mean, because container start compresses ratios
-toward 1. The speed threshold stays with the caller.
+cost. `two_x_speedup_decision` is the 2x gate. It reports
+`oracle_subject_ratio` and sets success only when `output_pass` is true and
+both unadjusted means are at least twice the mean empty-control time.
+`scripts/run_separated_coding_eval.py` calls this harness on the host. A task
+without `evaluator/isolated_calls.json` fails closed. A child exit status is
+not a pass. The MLSys pack graders are not edited here.
 
 `ExecutableEvaluator` still runs its commands in-process. A hidden test that
 imports candidate code on that path can read `/grader/evaluator` and the

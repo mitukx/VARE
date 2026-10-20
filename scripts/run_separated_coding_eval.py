@@ -2,9 +2,10 @@
 """Run the frozen separated coding evaluation.
 
 The E0 harness grades a synthetic JSON fixture with TrustedJSONScorer.
-Train-split tasks come from a pinned MLSys pack checkout. Hidden evaluator
-files are mounted only in a grader container after the candidate container
-exits. The Mac command is ``local_measurement.command`` in the protocol.
+Train-split tasks are scored on the host with ``vare.isolated_candidate``.
+A child exit status is not a pass. A task without
+``evaluator/isolated_calls.json`` fails closed. The Mac command is
+``local_measurement.command`` in the protocol.
 """
 from __future__ import annotations
 
@@ -30,7 +31,8 @@ from vare.container_isolation import DockerIsolationRunner, IsolationError, Isol
 from vare.environments.spec import EngineeringTaskSpec
 from vare.heldout_exact_integer import wilson_interval
 from vare.separated_grading import (
-    SeparatedCandidateGrader, source_only_snapshot, stage_hidden_grader,
+    SeparatedCandidateGrader, grade_isolated_subject, harness_required_record,
+    source_only_snapshot,
 )
 from vare.trusted_scoring import JSONIOCase
 
@@ -710,29 +712,20 @@ def prepare_subject_workspace(
     ).stdout.strip()
 
 
-def grade_limits_for(spec: EngineeringTaskSpec, image: str) -> IsolationLimits:
-    wall = float(spec.limits.wall_time_s)
-    memory = 2048 if spec.limits.memory_mb is None else min(2048, int(spec.limits.memory_mb))
-    return IsolationLimits(
-        image, timeout_s=min(180.0, wall + 15.0), memory_mb=memory,
-        cpus=1.0, pids_limit=64, max_output_bytes=min(200_000, int(spec.limits.max_output_bytes)),
-    )
-
-
-def _decision_record(decision: dict) -> dict:
-    return {
-        "success": decision.get("success") is True,
-        "reward": decision.get("reward"),
-        "conservative_speedup": decision.get("conservative_speedup"),
-        "reason": decision.get("reason"),
-    }
-
-
 async def grade_repository_workspace(
     *, image: str, workspace_root: Path, workspace: Path, snapshot_root: Path,
     stage_root: Path, task: dict, policy_id: str, decide,
 ) -> dict:
-    """Exit a closed candidate container, then grade the source snapshot."""
+    """Exit a closed candidate container, then grade the snapshot on the host.
+
+    ``decide`` is the pack reward. This path does not use it. A pass comes
+    only from ``grade_isolated_subject``. Exit status is not a pass.
+    """
+    if not callable(decide):
+        raise IsolationError("pack reward.decide is missing")
+    calls_path = Path(task["task_dir"]) / "evaluator" / "isolated_calls.json"
+    if not calls_path.is_file():
+        return harness_required_record()
     probe_limits = IsolationLimits(
         image, timeout_s=20, memory_mb=256, cpus=0.5, pids_limit=32, max_output_bytes=16_000,
     )
@@ -749,13 +742,8 @@ async def grade_repository_workspace(
         raise IsolationError("candidate container did not exit cleanly before the snapshot")
     snapshot = grader.capture_snapshot(workspace, candidate_exited=True)
     grade_tree = source_only_snapshot(snapshot, task["allowed_files"], snapshot_root)
-    stage = stage_hidden_grader(task["task_dir"], stage_root)
     try:
-        payload = await grader.grade_hidden_repository(
-            grade_tree, task_dir=task["task_dir"], grader_stage=stage,
-            vare_source=ROOT / "src", policy_id=policy_id, policy_version=1,
-            grade_limits=grade_limits_for(task["spec"], image),
-        )
+        return grade_isolated_subject(grade_tree.path, calls_path, image=image)
     except IsolationError as exc:
         reason = abort_reason_for_unpatched(
             task["task_id"], task["reward_kind"], decision=None, error=str(exc),
@@ -764,26 +752,12 @@ async def grade_repository_workspace(
             return {
                 "decision": {
                     "success": False, "reward": 0.0,
-                    "conservative_speedup": None, "reason": "grader_wall_time",
+                    "conservative_speedup": None, "oracle_subject_ratio": None,
+                    "workload_sufficient": False, "reason": "grader_wall_time",
                 },
                 "grader_error": str(exc),
             }
         raise
-    decision = decide(payload)
-    if not isinstance(decision, dict):
-        raise IsolationError("pack reward.decide did not return an object")
-    record = _decision_record(decision)
-    tests = payload.get("tests") if isinstance(payload.get("tests"), list) else []
-    first = tests[0] if tests else {}
-    return {
-        "decision": record,
-        "grade_passed": payload.get("passed"),
-        "grade_correctness": payload.get("correctness"),
-        "integrity_ok": payload.get("integrity_ok"),
-        "test_returncode": first.get("returncode") if isinstance(first, dict) else None,
-        "test_timed_out": first.get("timed_out") if isinstance(first, dict) else None,
-        "grade": payload,
-    }
 
 
 def maybe_secondary(protocol: dict, primary_rows: list[dict]) -> dict:

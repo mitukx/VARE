@@ -16,11 +16,15 @@ from vare.isolated_candidate import (
     CandidateHarnessError,
     FunctionCall,
     _Lines,
+    TimingPair,
+    TimingReport,
     grade_calls,
     overhead_adjusted,
     paired_difference_ci,
     paired_timing,
     student_t_975,
+    two_x_speedup_decision,
+    values_close,
 )
 
 IMAGE = "python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1"
@@ -510,6 +514,12 @@ def test_import_precompute_does_not_pass_a_two_x_gate(tmp_path: Path) -> None:
         assert pair.overhead_s is not None and 0 < pair.overhead_s < pair.candidate_s
         assert pair.adjusted_ratio is not None and pair.adjusted_ratio < 2
         assert pair.adjusted_difference_s == pytest.approx(pair.difference_s)
+    decision = two_x_speedup_decision(report)
+    assert decision["success"] is False
+    if report.workload_sufficient:
+        assert decision["reason"] == "below_threshold"
+    else:
+        assert decision["reason"] == "workload_below_empty_control"
 
 
 def test_paired_timing_rejects_equal_wrong_returns(tmp_path: Path) -> None:
@@ -580,3 +590,60 @@ def test_hardcoded_answer_fails_when_each_repetition_differs(tmp_path: Path) -> 
     assert report.mean_adjusted_ratio is None
     assert [pair.failure for pair in report.pairs] == ["wrong_output", "wrong_output"]
     assert [pair.values_match for pair in report.pairs] == [False, False]
+
+
+def test_float_tolerance_is_per_task_and_exact_by_default() -> None:
+    noisy = 0.1 + 0.2
+    assert values_close([noisy], [0.3], rtol=1e-6, atol=0.0) is True
+    assert values_close([noisy], [0.3], rtol=0.0, atol=0.0) is False
+    assert values_close(True, 1, rtol=1e-6, atol=1e-6) is False
+    assert values_close({"row": [noisy, 1]}, {"row": [0.3, 1]}, rtol=1e-5, atol=1e-8) is True
+
+
+def test_grade_calls_applies_task_float_tolerance(tmp_path: Path) -> None:
+    subject = _subject(tmp_path, "solve", "def score():\n    return 0.1 + 0.2\n")
+    exact = grade_calls(
+        subject, [FunctionCall("near", "solve", "score", [], 0.3)],
+        task_kind="correctness", image=IMAGE, rtol=0.0, atol=0.0,
+    )
+    close = grade_calls(
+        subject, [FunctionCall("near", "solve", "score", [], 0.3)],
+        task_kind="correctness", image=IMAGE, rtol=1e-6, atol=0.0,
+    )
+    assert exact.passed is False
+    assert exact.cases[0].failure == "wrong_output"
+    assert close.passed is True
+
+
+def _timing_pair(baseline: float, candidate: float, overhead: float) -> TimingPair:
+    return TimingPair(
+        "baseline-candidate-overhead", baseline, candidate, baseline - candidate,
+        baseline / candidate, True, None, overhead,
+    )
+
+
+def test_two_x_refuses_when_startup_dominates() -> None:
+    report = TimingReport(
+        "performance", True, 2, 1,
+        (_timing_pair(1.0, 0.2, 0.6), _timing_pair(1.0, 0.2, 0.6)),
+        0.8, 0.8, 0.8, student_t_975(1), 1,
+        workload_sufficient=True, oracle_subject_ratio=5.0,
+    )
+    decision = two_x_speedup_decision(report)
+    assert decision["success"] is False
+    assert decision["workload_sufficient"] is False
+    assert decision["reason"] == "workload_below_empty_control"
+    assert decision["oracle_subject_ratio"] == pytest.approx(5.0)
+
+
+def test_two_x_accepts_only_a_sufficient_workload() -> None:
+    report = TimingReport(
+        "performance", True, 2, 1,
+        (_timing_pair(4.0, 1.5, 0.4), _timing_pair(4.0, 1.5, 0.4)),
+        None, None, None, None, None,
+    )
+    decision = two_x_speedup_decision(report)
+    assert decision["success"] is True
+    assert decision["workload_sufficient"] is True
+    assert decision["reason"] == "performance"
+    assert decision["oracle_subject_ratio"] == pytest.approx(4.0 / 1.5)

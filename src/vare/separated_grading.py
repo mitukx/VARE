@@ -11,12 +11,15 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import os
 import re
 import secrets
+import tempfile
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 from .container_isolation import (
     DockerIsolationRunner,
@@ -27,6 +30,13 @@ from .container_isolation import (
 )
 from .environments.spec import EngineeringTaskSpec
 from .evidence import sha256_json
+from .isolated_candidate import (
+    CandidateHarnessError,
+    FunctionCall,
+    grade_calls,
+    paired_timing,
+    two_x_speedup_decision,
+)
 from .trusted_scoring import (
     JSONIOCase,
     JSONIOEvaluationReport,
@@ -504,6 +514,140 @@ def source_only_snapshot(
     return WorkspaceSnapshot(
         source=snapshot.path, path=destination, file_sha256=hashes, captured_after_exit=True,
     )
+
+
+def harness_required_record() -> dict[str, Any]:
+    """A repository task with no host-side harness spec is not a pass.
+
+    The pack reward's exit-0 rule is not consulted.
+    """
+    return {
+        "decision": {
+            "success": False,
+            "reward": 0.0,
+            "conservative_speedup": None,
+            "oracle_subject_ratio": None,
+            "workload_sufficient": False,
+            "reason": "isolated_harness_required",
+        },
+    }
+
+
+def _finite_number(value: Any, label: str, *, allow_zero: bool) -> float:
+    if (
+        isinstance(value, bool)
+        or not isinstance(value, (int, float))
+        or not math.isfinite(float(value))
+        or float(value) < 0
+        or (not allow_zero and float(value) == 0)
+    ):
+        raise IsolationError(f"isolated call spec {label} is invalid")
+    return float(value)
+
+
+def _load_isolated_calls(path: Path) -> dict[str, Any]:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise IsolationError("isolated call spec is unreadable") from exc
+    if type(payload) is not dict:
+        raise IsolationError("isolated call spec must be an object")
+    if payload.get("task_kind") not in {"correctness", "performance"}:
+        raise IsolationError("isolated call spec task_kind is invalid")
+    if not isinstance(payload.get("module"), str) or not isinstance(payload.get("function"), str):
+        raise IsolationError("isolated call spec names are invalid")
+    payload["rtol"] = _finite_number(payload.get("rtol", 0.0), "rtol", allow_zero=True)
+    payload["atol"] = _finite_number(payload.get("atol", 0.0), "atol", allow_zero=True)
+    payload["timeout_s"] = _finite_number(payload.get("timeout_s", 30), "timeout_s", allow_zero=False)
+    return payload
+
+
+def _call_rows(payload: dict[str, Any], key: str) -> list[dict[str, Any]]:
+    rows = payload.get(key)
+    if type(rows) is not list or not rows:
+        raise IsolationError("isolated call spec has no cases")
+    checked: list[dict[str, Any]] = []
+    for row in rows:
+        if type(row) is not dict or "expected" not in row:
+            raise IsolationError("isolated call spec case is invalid")
+        args = row.get("args", [])
+        kwargs = row.get("kwargs", {})
+        if type(args) is not list or type(kwargs) is not dict:
+            raise IsolationError("isolated call spec case is invalid")
+        checked.append(row)
+    return checked
+
+
+def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> dict[str, Any]:
+    """Score one snapshot from the host. A child exit status is not a pass."""
+    spec = _load_isolated_calls(calls_path)
+    module = str(spec["module"])
+    function = str(spec["function"])
+    rtol = float(spec["rtol"])
+    atol = float(spec["atol"])
+    timeout_s = float(spec["timeout_s"])
+    try:
+        if spec["task_kind"] == "correctness":
+            rows = _call_rows(spec, "calls")
+            calls = [
+                FunctionCall(
+                    str(row.get("case_id", index)), module, function,
+                    list(row.get("args", [])), row["expected"], dict(row.get("kwargs", {})),
+                )
+                for index, row in enumerate(rows)
+            ]
+            report = grade_calls(
+                subject, calls, task_kind="correctness", image=image,
+                timeout_s=timeout_s, rtol=rtol, atol=atol,
+            )
+            passed = report.passed
+            return {
+                "decision": {
+                    "success": passed,
+                    "reward": 1.0 if passed else 0.0,
+                    "conservative_speedup": None,
+                    "oracle_subject_ratio": None,
+                    "workload_sufficient": False,
+                    "reason": "correctness" if passed else "correctness_failed",
+                },
+                "grade_passed": passed,
+                "grade": report.to_dict(),
+                "test_timed_out": False,
+            }
+        rows = _call_rows(spec, "cases")
+        repeats = spec.get("repeats")
+        seed = spec.get("seed")
+        source = spec.get("baseline_source")
+        if type(repeats) is not int or isinstance(repeats, bool) or repeats != len(rows):
+            raise IsolationError("isolated call spec repeats do not match its cases")
+        if type(seed) is not int or isinstance(seed, bool):
+            raise IsolationError("isolated call spec seed is invalid")
+        if type(source) is not str or not source or len(source.encode("utf-8")) > 100_000:
+            raise IsolationError("isolated call spec baseline is invalid")
+        with tempfile.TemporaryDirectory(prefix="vare-oracle-") as folder:
+            oracle = Path(folder)
+            (oracle / f"{module}.py").write_text(source, encoding="utf-8")
+
+            def make_case(index: int) -> tuple[list[Any], dict[str, Any], Any]:
+                row = rows[index]
+                return list(row.get("args", [])), dict(row.get("kwargs", {})), row["expected"]
+
+            timing = paired_timing(
+                subject, oracle, module=module, function=function, make_case=make_case,
+                repeats=repeats, seed=seed, task_kind="performance", image=image,
+                timeout_s=timeout_s, rtol=rtol, atol=atol,
+            )
+        decision = two_x_speedup_decision(timing)
+        decision["reward"] = 1.0 if decision["success"] else 0.0
+        decision["conservative_speedup"] = decision["oracle_subject_ratio"]
+        return {
+            "decision": decision,
+            "grade_passed": timing.output_pass,
+            "grade": timing.to_dict(),
+            "test_timed_out": False,
+        }
+    except CandidateHarnessError as exc:
+        raise IsolationError(str(exc)) from exc
 
 
 def build_confidentiality_probe_argv(

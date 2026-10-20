@@ -25,6 +25,9 @@ run in a randomized order. The primary confidence interval is on the paired
 differences ``baseline_seconds - candidate_seconds``, which include container
 start and subject import. An overhead-adjusted ratio subtracts the empty
 control and is a secondary description; import stays in that cost.
+Numeric answers use ``math.isclose`` with the task's ``rtol`` and ``atol``.
+``two_x_speedup_decision`` is the 2x gate. It refuses when either unadjusted
+mean is below twice the empty-control mean.
 """
 from __future__ import annotations
 
@@ -217,6 +220,8 @@ class TimingReport:
     mean_adjusted_ratio: float | None = None
     ci95_low_adjusted_ratio: float | None = None
     ci95_high_adjusted_ratio: float | None = None
+    workload_sufficient: bool = False
+    oracle_subject_ratio: float | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -236,6 +241,8 @@ class TimingReport:
             "mean_adjusted_ratio": self.mean_adjusted_ratio,
             "ci95_low_adjusted_ratio": self.ci95_low_adjusted_ratio,
             "ci95_high_adjusted_ratio": self.ci95_high_adjusted_ratio,
+            "workload_sufficient": self.workload_sufficient,
+            "oracle_subject_ratio": self.oracle_subject_ratio,
         }
 
 
@@ -291,6 +298,125 @@ def student_t_975(df: int) -> float:
         return _T_975[df]
     except KeyError as exc:
         raise CandidateHarnessError("repeats must be from 2 through 30") from exc
+
+
+def _tolerance(rtol: float, atol: float) -> tuple[float, float]:
+    for label, value in (("rtol", rtol), ("atol", atol)):
+        if (
+            isinstance(value, bool)
+            or not isinstance(value, (int, float))
+            or not math.isfinite(float(value))
+            or float(value) < 0
+        ):
+            raise CandidateHarnessError(f"{label} must be a non-negative finite number")
+    return float(rtol), float(atol)
+
+
+def values_close(actual: Any, expected: Any, *, rtol: float, atol: float) -> bool:
+    """Compare JSON values. Numbers use ``math.isclose``; other values are exact."""
+    if type(actual) is bool or type(expected) is bool:
+        return type(actual) is type(expected) and actual == expected
+    if isinstance(actual, (int, float)) and isinstance(expected, (int, float)):
+        actual_f = float(actual)
+        expected_f = float(expected)
+        if not math.isfinite(actual_f) or not math.isfinite(expected_f):
+            return False
+        return math.isclose(actual_f, expected_f, rel_tol=rtol, abs_tol=atol)
+    if type(actual) is str or type(expected) is str:
+        return type(actual) is str and type(expected) is str and actual == expected
+    if type(actual) is list and type(expected) is list:
+        return len(actual) == len(expected) and all(
+            values_close(left, right, rtol=rtol, atol=atol)
+            for left, right in zip(actual, expected, strict=True)
+        )
+    if type(actual) is dict and type(expected) is dict:
+        if set(actual) != set(expected):
+            return False
+        return all(
+            values_close(actual[key], expected[key], rtol=rtol, atol=atol) for key in actual
+        )
+    return False
+
+
+def workload_covers_startup(
+    baseline_s: Sequence[float], candidate_s: Sequence[float], overhead_s: Sequence[float],
+) -> bool:
+    """True when both unadjusted means are at least twice the empty-control mean."""
+    count = len(baseline_s)
+    if count == 0 or len(candidate_s) != count or len(overhead_s) != count:
+        return False
+    if any(sample <= 0 for sample in overhead_s):
+        return False
+    floor = 2.0 * (sum(overhead_s) / count)
+    return (sum(baseline_s) / count) >= floor and (sum(candidate_s) / count) >= floor
+
+
+def oracle_subject_ratio_of(
+    baseline_s: Sequence[float], candidate_s: Sequence[float],
+) -> float | None:
+    """Mean oracle wall divided by mean subject wall. ``None`` if a subject sample is not positive."""
+    if not candidate_s or len(baseline_s) != len(candidate_s) or any(sample <= 0 for sample in candidate_s):
+        return None
+    return (sum(baseline_s) / len(baseline_s)) / (sum(candidate_s) / len(candidate_s))
+
+
+def two_x_speedup_decision(report: TimingReport, *, threshold: float = 2.0) -> dict[str, Any]:
+    """Apply a 2x rule only when the empty-control precondition holds.
+
+    The ratio is recomputed from the parent samples. A stored
+    ``workload_sufficient`` flag is not enough: samples below twice the
+    empty-control mean fail with ``workload_below_empty_control``.
+    """
+    if (
+        isinstance(threshold, bool)
+        or not isinstance(threshold, (int, float))
+        or not math.isfinite(float(threshold))
+        or float(threshold) <= 0
+    ):
+        raise CandidateHarnessError("speedup threshold must be a positive finite number")
+    baselines: list[float] = []
+    candidates: list[float] = []
+    overheads: list[float] = []
+    for pair in report.pairs:
+        if pair.baseline_s is None or pair.candidate_s is None or pair.overhead_s is None:
+            return {
+                "success": False,
+                "workload_sufficient": False,
+                "oracle_subject_ratio": None,
+                "reason": "missing_sample",
+            }
+        baselines.append(pair.baseline_s)
+        candidates.append(pair.candidate_s)
+        overheads.append(pair.overhead_s)
+    ratio = oracle_subject_ratio_of(baselines, candidates)
+    if not report.output_pass:
+        return {
+            "success": False,
+            "workload_sufficient": False,
+            "oracle_subject_ratio": ratio,
+            "reason": "output_mismatch",
+        }
+    sufficient = workload_covers_startup(baselines, candidates, overheads)
+    if not sufficient:
+        return {
+            "success": False,
+            "workload_sufficient": False,
+            "oracle_subject_ratio": ratio,
+            "reason": "workload_below_empty_control",
+        }
+    if ratio is None or ratio < float(threshold):
+        return {
+            "success": False,
+            "workload_sufficient": True,
+            "oracle_subject_ratio": ratio,
+            "reason": "below_threshold",
+        }
+    return {
+        "success": True,
+        "workload_sufficient": True,
+        "oracle_subject_ratio": ratio,
+        "reason": "performance",
+    }
 
 
 def overhead_adjusted(
@@ -664,19 +790,23 @@ def grade_calls(
     task_kind: str,
     image: str,
     timeout_s: float = 30,
+    rtol: float = 0.0,
+    atol: float = 0.0,
     runner: DockerIsolationRunner | None = None,
 ) -> CallReport:
     """Compare each child return value with the parent-owned expected value.
 
     ``task_kind`` must be ``correctness``. ``image`` is a digest-pinned
-    container image. Exit status is not a pass. Call this from the trusted
-    process that holds the hidden tests; the candidate container has no
-    grader mount.
+    container image. ``rtol`` and ``atol`` are the task's numeric tolerances
+    for ``math.isclose``. Exit status is not a pass. Call this from the
+    trusted process that holds the hidden tests; the candidate container has
+    no grader mount.
     """
     if task_kind != "correctness":
         raise CandidateHarnessError("task_kind must be correctness for grade_calls")
     if not calls:
         raise CandidateHarnessError("at least one call is required")
+    rel, abs_tol = _tolerance(rtol, atol)
     active = runner or DockerIsolationRunner()
     results: list[CaseResult] = []
     for call in calls:
@@ -685,12 +815,8 @@ def grade_calls(
             timeout_s, image, active,
         )
         if failure is None:
-            try:
-                matched = _canonical(value) == _canonical(call.expected)
-            except (TypeError, ValueError):
-                matched = False
-                failure = "malformed_result"
-            if failure is None and not matched:
+            matched = values_close(value, call.expected, rtol=rel, atol=abs_tol)
+            if not matched:
                 failure = "wrong_output"
             passed = failure is None
         else:
@@ -702,7 +828,7 @@ def grade_calls(
 def _case_for_repetition(
     make_case: Callable[[int], tuple[Sequence[Any], Mapping[str, Any], Any]],
     index: int,
-) -> tuple[Sequence[Any], Mapping[str, Any], str]:
+) -> tuple[Sequence[Any], Mapping[str, Any], Any]:
     produced = make_case(index)
     if type(produced) is not tuple or len(produced) != 3:
         raise CandidateHarnessError("make_case must return args, kwargs, and expected")
@@ -715,10 +841,10 @@ def _case_for_repetition(
     ):
         raise CandidateHarnessError("make_case args and kwargs must be a sequence and a mapping")
     try:
-        expected_text = _canonical(expected)
+        expected_value = _json_copy(expected)
     except (TypeError, ValueError) as exc:
         raise CandidateHarnessError("expected value must be JSON") from exc
-    return args, kwargs, expected_text
+    return args, kwargs, expected_value
 
 
 def _overhead_subject(root: Path, module: str, function: str) -> Path:
@@ -743,6 +869,8 @@ def paired_timing(
     task_kind: str,
     image: str,
     timeout_s: float = 30,
+    rtol: float = 0.0,
+    atol: float = 0.0,
     runner: DockerIsolationRunner | None = None,
 ) -> TimingReport:
     """Time baseline and candidate containers with the parent clock.
@@ -765,9 +893,10 @@ def paired_timing(
     A shared control cancels in the difference, which is why the adjusted
     difference matches the unadjusted difference. Container start compresses
     unadjusted ratios toward 1. Before applying a 2x rule to those ratios,
-    use a workload for which both unadjusted means are at least twice the
-    mean empty-control time. The adjusted ratio is secondary. Ignore it when
-    an adjusted time is not positive, and do not promote on it alone.
+    use ``two_x_speedup_decision``. It refuses unless both unadjusted means
+    are at least twice the mean empty-control time. The adjusted ratio is
+    secondary. Ignore it when an adjusted time is not positive, and do not
+    promote on it alone. ``rtol`` and ``atol`` are the task numeric tolerances.
     """
     if task_kind != "performance":
         raise CandidateHarnessError("task_kind must be performance for paired_timing")
@@ -777,6 +906,7 @@ def paired_timing(
         raise CandidateHarnessError("seed must be an integer")
     checked_module = _check_name(module, "module")
     checked_function = _check_name(function, "function")
+    rel, abs_tol = _tolerance(rtol, atol)
     _limits(image, timeout_s)
     cases = [_case_for_repetition(make_case, index) for index in range(repeats)]
     active = runner or DockerIsolationRunner()
@@ -789,7 +919,7 @@ def paired_timing(
     output_pass = True
     with tempfile.TemporaryDirectory(prefix="vare-overhead-") as folder:
         overhead_root = _overhead_subject(Path(folder), checked_module, checked_function)
-        for args, kwargs, expected_text in cases:
+        for args, kwargs, expected in cases:
             order = list(roles)
             order_rng.shuffle(order)
             measured: dict[str, tuple[Any | None, float | None, str | None]] = {}
@@ -812,15 +942,10 @@ def paired_timing(
             overhead = measured.get("overhead", (None, None, "missing_result"))
             values_match = False
             if baseline[2] is None and candidate[2] is None:
-                try:
-                    values_match = (
-                        _canonical(baseline[0]) == expected_text
-                        and _canonical(candidate[0]) == expected_text
-                    )
-                except (TypeError, ValueError):
-                    values_match = False
-                    if failure is None:
-                        failure = "malformed_result"
+                values_match = (
+                    values_close(baseline[0], expected, rtol=rel, atol=abs_tol)
+                    and values_close(candidate[0], expected, rtol=rel, atol=abs_tol)
+                )
                 if not values_match and failure is None:
                     failure = "wrong_output"
             if failure is not None:
@@ -877,9 +1002,24 @@ def paired_timing(
             )
         if len(adjusted_ratios) == repeats:
             mean_ratio, low_ratio, high_ratio, _crit, _df = paired_difference_ci(adjusted_ratios)
+    sample_baselines = [pair.baseline_s for pair in pairs]
+    sample_candidates = [pair.candidate_s for pair in pairs]
+    sample_overheads = [pair.overhead_s for pair in pairs]
+    sufficient = False
+    subject_ratio: float | None = None
+    if all(
+        isinstance(sample, float)
+        for sample in (*sample_baselines, *sample_candidates, *sample_overheads)
+    ):
+        baselines_f = [float(sample) for sample in sample_baselines if isinstance(sample, float)]
+        candidates_f = [float(sample) for sample in sample_candidates if isinstance(sample, float)]
+        overheads_f = [float(sample) for sample in sample_overheads if isinstance(sample, float)]
+        subject_ratio = oracle_subject_ratio_of(baselines_f, candidates_f)
+        sufficient = output_pass and workload_covers_startup(baselines_f, candidates_f, overheads_f)
     return TimingReport(
         task_kind, output_pass, repeats, seed, tuple(pairs), mean, low, high, crit, df,
         mean_adjusted, low_adjusted, high_adjusted, mean_ratio, low_ratio, high_ratio,
+        sufficient, subject_ratio,
     )
 
 
