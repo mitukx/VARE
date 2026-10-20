@@ -19,3 +19,12 @@ def test_grad_accum_hidden_cases_include_short_windows_and_value_error():
     assert spec["calls"][2]["expected_exception"] == "ValueError"
     assert provenance["evaluator_sha256"]
     assert provenance["skipped_invalid_generator_indices"] == []
+
+
+def test_range_sums_baseline_uses_public_task_function_name():
+    task_id = "mlsys-v1-range-sums"
+    task_dir = ROOT / "benchmarks/mlsys_coding_v1/tasks/range_sums"
+    spec, _ = materialize_isolated_calls(task_id, task_dir)
+    assert "def range_sums(" in spec["baseline_source"]
+    assert "def _reference(" not in spec["baseline_source"]
+    assert spec["tuple_paths"] == [[1, "*"]]

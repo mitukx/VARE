@@ -122,10 +122,20 @@ def materialize_isolated_calls(task_id: str, task_dir: Path) -> tuple[dict, dict
         "atol": 1e-9 if task_id == "mlsys-v1-row-log-softmax" else 1e-12,
         "timeout_s": 60 if task_id == "mlsys-v1-range-sums" else 20,
     }
+    if task_id == "mlsys-v1-range-sums":
+        # JSON has no tuple type. Restore the public Python API's query-pair
+        # tuples inside the isolated grader before calling candidate/oracle.
+        spec["tuple_paths"] = [[1, "*"]]
     if task_kind == "correctness":
         spec["calls"] = cases
     else:
         source = inspect.getsource(reference)
+        # Frozen evaluators call their oracle ``_reference`` while the
+        # isolated grader imports the baseline through the public task API.
+        # Keep the oracle body unchanged and expose it under that API name.
+        source = source.replace("def _reference(", f"def {function_name}(", 1)
+        if f"def {function_name}(" not in source:
+            raise ValueError(f"frozen evaluator reference has an unexpected definition: {task_id}")
         spec.update({
             "cases": cases,
             "repeats": len(cases),

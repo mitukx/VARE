@@ -103,8 +103,13 @@ module = __import__(header["module"])
 function = getattr(module, header["function"])
 _write(1, b"READY\n")
 request = _loads(_read())
+args = request["args"]
+for path in request.get("tuple_paths", []):
+    index = path[0]
+    if path[1] == "*":
+        args[index] = [tuple(row) for row in args[index]]
 try:
-    value = function(*request["args"], **request["kwargs"])
+    value = function(*args, **request["kwargs"])
     payload = _dumps({"value": value}, sort_keys=True, separators=(",", ":"), allow_nan=False)
 except Exception as exc:
     payload = _dumps({"exception": type(exc).__name__}, sort_keys=True, separators=(",", ":"))
@@ -134,6 +139,7 @@ class FunctionCall:
     expected: Any
     kwargs: dict[str, Any] | None = None
     expected_exception: str | None = None
+    tuple_paths: tuple[tuple[Any, ...], ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -560,6 +566,7 @@ def _invoke(
     timeout_s: float,
     image: str,
     runner: DockerIsolationRunner,
+    tuple_paths: Sequence[Sequence[Any]] = (),
 ) -> tuple[Any | None, float | None, str | None]:
     """Return ``(value, parent_wall_s, failure)``."""
     nonce = secrets.token_hex(32)
@@ -574,6 +581,7 @@ def _invoke(
         "image": image,
         "args": list(args),
         "kwargs": dict(kwargs),
+        "tuple_paths": [list(path) for path in tuple_paths],
         "timeout_s": timeout_s,
     }
     proc = subprocess.Popen(
@@ -714,7 +722,10 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
         if go != b"GO":
             _emit_fail(nonce, "missing_result")
             return 0
-        request = {"args": spec["args"], "kwargs": spec["kwargs"]}
+        request = {
+            "args": spec["args"], "kwargs": spec["kwargs"],
+            "tuple_paths": spec.get("tuple_paths", []),
+        }
         child.stdin.write((_canonical(request) + "\n").encode("utf-8"))
         child.stdin.flush()
         raw = reader.readline(deadline)
@@ -794,6 +805,7 @@ def _one_call(
     timeout_s: float,
     image: str,
     runner: DockerIsolationRunner,
+    tuple_paths: Sequence[Sequence[Any]] = (),
 ) -> tuple[Any | None, float | None, str | None]:
     module, function, args, kwargs = _prepare_call(module, function, args, kwargs)
     _limits(image, timeout_s)
@@ -802,7 +814,7 @@ def _one_call(
         raise CandidateHarnessError("subject module is missing")
     with tempfile.TemporaryDirectory(prefix="vare-call-") as folder:
         staged = _stage_subject(source, Path(folder))
-        return _invoke(staged, module, function, args, kwargs, timeout_s, image, runner)
+        return _invoke(staged, module, function, args, kwargs, timeout_s, image, runner, tuple_paths)
 
 
 def grade_calls(
@@ -834,7 +846,7 @@ def grade_calls(
     for call in calls:
         value, wall, failure = _one_call(
             subject, call.module, call.function, call.args, call.kwargs or {},
-            timeout_s, image, active,
+            timeout_s, image, active, call.tuple_paths,
         )
         if failure is None:
             if call.expected_exception is not None:
@@ -900,6 +912,7 @@ def paired_timing(
     rtol: float = 0.0,
     atol: float = 0.0,
     runner: DockerIsolationRunner | None = None,
+    tuple_paths: Sequence[Sequence[Any]] = (),
 ) -> TimingReport:
     """Time baseline and candidate containers with the parent clock.
 
@@ -961,7 +974,7 @@ def paired_timing(
                     root = overhead_root
                 measured[role] = _one_call(
                     root, checked_module, checked_function, args, kwargs,
-                    timeout_s, image, active,
+                    timeout_s, image, active, tuple_paths,
                 )
                 if measured[role][2] is not None and failure is None:
                     failure = measured[role][2]

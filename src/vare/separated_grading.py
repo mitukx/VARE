@@ -591,6 +591,9 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
     rtol = float(spec["rtol"])
     atol = float(spec["atol"])
     timeout_s = float(spec["timeout_s"])
+    tuple_paths = spec.get("tuple_paths", [])
+    if type(tuple_paths) is not list or any(type(path) is not list for path in tuple_paths):
+        raise IsolationError("isolated tuple paths are invalid")
     try:
         if spec["task_kind"] == "correctness":
             rows = _call_rows(spec, "calls")
@@ -599,6 +602,7 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
                     str(row.get("case_id", index)), module, function,
                     list(row.get("args", [])), row["expected"], dict(row.get("kwargs", {})),
                     expected_exception=row.get("expected_exception"),
+                    tuple_paths=tuple(tuple(path) for path in tuple_paths),
                 )
                 for index, row in enumerate(rows)
             ]
@@ -642,6 +646,7 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
                 subject, oracle, module=module, function=function, make_case=make_case,
                 repeats=repeats, seed=seed, task_kind="performance", image=image,
                 timeout_s=timeout_s, rtol=rtol, atol=atol,
+                tuple_paths=tuple_paths,
             )
         decision = two_x_speedup_decision(timing)
         decision["reward"] = 1.0 if decision["success"] else 0.0
