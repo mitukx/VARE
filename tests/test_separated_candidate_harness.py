@@ -123,13 +123,18 @@ def test_frozen_oracle_passes_through_the_same_isolated_adapter(tmp_path: Path) 
 def test_candidate_stdout_does_not_corrupt_isolated_result_protocol(tmp_path: Path) -> None:
     import subprocess
 
-    from vare.isolated_candidate import _CALLEE
+    from vare.isolated_candidate import _CALLEE, _CALLEE_BOOTSTRAP
 
     task_dir = ROOT / "benchmarks/mlsys_coding_v1/tasks/causal_attention"
     source = (task_dir / "evaluator/oracle/causal_attention.py").read_text(encoding="utf-8")
     source = source.replace(
         "from __future__ import annotations\n",
-        "from __future__ import annotations\n\nprint('candidate import output')\n",
+        "from __future__ import annotations\n\n"
+        "import sys\n"
+        "import os\n"
+        "print('candidate import output')\n"
+        "assert sys.stdin.read() == ''\n"
+        "assert os.read(0, 1) == b''\n",
         1,
     )
     source = source.replace("import math\n", "import math\nimport os\n", 1)
@@ -149,7 +154,7 @@ def test_candidate_stdout_does_not_corrupt_isolated_result_protocol(tmp_path: Pa
         "tuple_paths": [],
     }
     completed = subprocess.run(
-        [sys.executable, "-I", "-B", "-c", callee],
+        [sys.executable, "-I", "-B", "-c", _CALLEE_BOOTSTRAP, callee],
         input=(
             json.dumps({
                 "module": "causal_attention",

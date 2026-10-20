@@ -88,8 +88,13 @@ _T_975 = {
     28: 2.048407141795244,
     29: 2.045229642132703,
 }
-# Runs inside the candidate container. stdout is the only result channel.
-# Saved callables are bound before the subject import.
+# Runs inside the candidate container. Protocol input arrives on fd 3 and
+# candidate stdin remains attached to /dev/null. Saved callables are bound
+# before the subject import.
+_CALLEE_BOOTSTRAP = (
+    "import os, sys; os.dup2(0, 3); os.dup2(os.open(os.devnull, os.O_RDONLY), 0); "
+    "exec(compile(sys.argv[1], '<vare-isolated-callee>', 'exec'))"
+)
 _CALLEE = r"""
 import json
 import os
@@ -98,7 +103,8 @@ import sys
 _dumps = json.dumps
 _loads = json.loads
 _write = os.write
-_read = sys.stdin.buffer.readline
+_protocol_in = os.fdopen(3, "rb", buffering=0)
+_read = _protocol_in.readline
 header = _loads(_read())
 sys.path.insert(0, "/subject")
 _protocol_fd = 1
@@ -807,7 +813,7 @@ def _parse_result(line: bytes, nonce: str) -> tuple[Any | None, str | None]:
 
 
 def _container_command() -> list[str]:
-    return ["python", "-u", "-I", "-B", "-c", _CALLEE]
+    return ["python", "-u", "-I", "-B", "-c", _CALLEE_BOOTSTRAP, _CALLEE]
 
 
 def _serve(spec: dict[str, Any], parent: _Lines) -> int:
