@@ -6,6 +6,8 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import re
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -59,6 +61,8 @@ def audit(run_dir: Path) -> dict:
         "pack_manifest_sha256": "benchmarks/mlsys_coding_v1/manifest.json",
         "frozen_harness_adapter_sha256": "benchmarks/mlsys_coding_v1/harness_adapter.py",
         "adapter_source_sha256": "scripts/mlsys_task_isolated_calls.py",
+        "verifier_source_sha256": "scripts/verify_mlsys_separated_candidate_harness_v1.py",
+        "auditor_source_sha256": "scripts/audit_mlsys_separated_candidate_harness_v1.py",
         "harness_source_sha256": "src/vare/separated_candidate_harness.py",
         "isolated_grader_source_sha256": "src/vare/isolated_candidate.py",
         "separated_grader_source_sha256": "src/vare/separated_grading.py",
@@ -66,13 +70,16 @@ def audit(run_dir: Path) -> dict:
     for field, relative in source_paths.items():
         if sha256_file(ROOT / relative) != record.get(field):
             raise ValueError(f"current source hash differs from run provenance: {relative}")
-    import subprocess
-    current_commit = subprocess.run(
-        ["git", "-C", str(ROOT), "rev-parse", "HEAD"],
-        check=True, capture_output=True, text=True,
-    ).stdout.strip()
-    if record.get("source_commit") != current_commit:
-        raise ValueError("recorded source commit differs from the audited checkout")
+    source_commit = record.get("source_commit")
+    if (
+        type(source_commit) is not str
+        or re.fullmatch(r"[0-9a-f]{40}", source_commit) is None
+        or subprocess.run(
+            ["git", "-C", str(ROOT), "merge-base", "--is-ancestor", source_commit, "HEAD"],
+            check=False, capture_output=True, text=True,
+        ).returncode != 0
+    ):
+        raise ValueError("recorded source commit is not an ancestor of the audited checkout")
     return {
         "schema_version": 1,
         "files_verified": len(files),

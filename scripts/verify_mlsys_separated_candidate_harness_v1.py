@@ -125,6 +125,8 @@ def run(output: Path) -> int:
         "pack_manifest_sha256": sha256_file(TASK_DIR.parents[1] / "manifest.json"),
         "frozen_harness_adapter_sha256": sha256_file(ROOT / "benchmarks/mlsys_coding_v1/harness_adapter.py"),
         "adapter_source_sha256": sha256_file(ADAPTER_SCRIPT),
+        "verifier_source_sha256": sha256_file(Path(__file__).resolve()),
+        "auditor_source_sha256": sha256_file(ROOT / "scripts/audit_mlsys_separated_candidate_harness_v1.py"),
         "harness_source_sha256": sha256_file(ROOT / "src/vare/separated_candidate_harness.py"),
         "isolated_grader_source_sha256": sha256_file(ROOT / "src/vare/isolated_candidate.py"),
         "separated_grader_source_sha256": sha256_file(ROOT / "src/vare/separated_grading.py"),
