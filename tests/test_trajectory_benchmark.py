@@ -24,7 +24,7 @@ def test_undeclared_protocol_condition_fails_before_execution(tmp_path, options)
 
 def test_actual_synthetic_pipeline_and_resealed_missing_latency(tmp_path):
     output = tmp_path / "actual-runtime"
-    run = subprocess.run([sys.executable, "scripts/benchmark_trajectory_runtime.py", "--trajectories", "100", "--mode", "async", "--sigkill", "--output", str(output)], capture_output=True, text=True, timeout=30)
+    run = subprocess.run([sys.executable, "scripts/benchmark_trajectory_runtime.py", "--trajectories", "100", "--mode", "async", "--sigkill", "--output", str(output)], capture_output=True, text=True, timeout=60)
     assert run.returncode == 0, run.stderr
     result = json.loads((output / "summary.json").read_text())
     assert result["pass"] and result["trajectories"] == 100

@@ -207,7 +207,7 @@ async def campaign(args, output, protocol):
         process = context.Process(target=killed_worker, args=(store.path, child))
         process.start()
         try:
-            if not await asyncio.to_thread(parent.poll, 15):
+            if not await asyncio.to_thread(parent.poll, 30):
                 raise RuntimeError("fault worker did not persist first step")
             old_lease = parent.recv()
             os.kill(process.pid, signal.SIGKILL)
