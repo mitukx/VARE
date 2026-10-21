@@ -1,0 +1,108 @@
+{
+  "baseline": {
+    "candidate_source_sha256": "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2",
+    "cases": [
+      {
+        "case_id": "tiny-thresholds",
+        "failure": "wrong_output",
+        "passed": false,
+        "wall_s": 0.2586284579842612
+      },
+      {
+        "case_id": "random-low-precision",
+        "failure": "wrong_output",
+        "passed": false,
+        "wall_s": 0.14012670801473726
+      }
+    ],
+    "grader_adapter_sha256": "df5271803d79f18fe1696fa8b032e2cf92fb641e10d3dde7626544b993a6d44e",
+    "grader_source_sha256": "f10ac04f45a594610216117ddd74c2177dd9786cd61ed472a40b8a9bceb3085d",
+    "passed": false,
+    "task_id": "mlxlm-1912-top-p-min-token"
+  },
+  "baseline_commit": "47e43a4526d42a6dcee758f07eb04b78a8439ecb",
+  "baseline_export": {
+    "baseline_commit": "47e43a4526d42a6dcee758f07eb04b78a8439ecb",
+    "candidate_patch_sha256": null,
+    "candidate_source_sha256": "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2",
+    "changed_files": [],
+    "fixed_source_match": false,
+    "git_history_exported": false,
+    "task_description_sha256": "1073e527a5808176a4e6144a0d348e1bb5acbbc6fb790ec2e74bb58576c73bc3",
+    "task_id": "mlxlm-1912-top-p-min-token",
+    "tests_exported": false
+  },
+  "calibration_passed": true,
+  "candidate_image": "localhost:5000/vare/mlx-cpu-task@sha256:847edcf1b2b15d00914674e89931f9d38c4aa8a0f1d763cbb96c1359a0647388",
+  "created_at_utc": "2026-10-21T02:03:50.367620+00:00",
+  "fixed_commit": "87b7b583a697537aa68f47130b40884700b5f55f",
+  "fixed_export": {
+    "baseline_commit": "47e43a4526d42a6dcee758f07eb04b78a8439ecb",
+    "candidate_patch_sha256": "ad0a835b0fe3b22717df9960202f9b33e8efc410f9f25053c7e2fd17f0907bf3",
+    "candidate_source_sha256": "3aac92d804b6b91c82a4e2844697a8723de26f6af57e10013a482b967e739cfa",
+    "changed_files": [
+      "mlx_lm/sample_utils.py"
+    ],
+    "fixed_source_match": true,
+    "git_history_exported": false,
+    "task_description_sha256": "1073e527a5808176a4e6144a0d348e1bb5acbbc6fb790ec2e74bb58576c73bc3",
+    "task_id": "mlxlm-1912-top-p-min-token",
+    "tests_exported": false
+  },
+  "implementation_commit": "8e04d8e67183457d7ad35854c401c5c72625ee16",
+  "known_fix": {
+    "candidate_source_sha256": "3aac92d804b6b91c82a4e2844697a8723de26f6af57e10013a482b967e739cfa",
+    "cases": [
+      {
+        "case_id": "tiny-thresholds",
+        "failure": null,
+        "passed": true,
+        "wall_s": 0.12285504103904105
+      },
+      {
+        "case_id": "random-low-precision",
+        "failure": null,
+        "passed": true,
+        "wall_s": 0.12703408297562915
+      }
+    ],
+    "grader_adapter_sha256": "df5271803d79f18fe1696fa8b032e2cf92fb641e10d3dde7626544b993a6d44e",
+    "grader_source_sha256": "f10ac04f45a594610216117ddd74c2177dd9786cd61ed472a40b8a9bceb3085d",
+    "passed": true,
+    "task_id": "mlxlm-1912-top-p-min-token"
+  },
+  "limitations": [
+    "This is a one-task correctness calibration, not an agent rollout.",
+    "The supported contract is only the selected upstream test method.",
+    "This red-team suite covers namespace visibility, network, output forgery, subprocess writes, timeout, and OOM; it does not certify arbitrary Python repositories.",
+    "MLX execution is CPU-only in the pinned container; this says nothing about Metal behavior."
+  ],
+  "protocol_id": "mlxlm-1912-isolated-task-v1",
+  "red_team_suite": {
+    "attempts": {
+      "exhaust": {
+        "case_id": "exhaust",
+        "failure": "missing_result",
+        "passed": false,
+        "wall_s": 0.6747434579859333
+      },
+      "spin": {
+        "case_id": "spin",
+        "failure": "missing_result",
+        "passed": false,
+        "wall_s": null
+      },
+      "visibility_and_forgery": {
+        "case_id": "visibility",
+        "failure": null,
+        "passed": true,
+        "wall_s": 0.14820045793612302
+      }
+    },
+    "passed": true
+  },
+  "source_repository": "ml-explore/mlx-lm",
+  "source_swap_rejected": true,
+  "task_id": "mlxlm-1912-top-p-min-token",
+  "wall_seconds": 4.537696332903579
+}
