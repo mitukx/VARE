@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import json
+
 from scripts.run_local_agent import (
     candidate_visible_tool_result,
     no_tool_retry_reminder,
+    record_tool_call,
     should_stop_after_tool,
     tools_for,
 )
@@ -114,6 +117,43 @@ def test_opaque_read_feedback_uses_per_turn_cumulative_budget() -> None:
     assert len(outputs[0]['content']) == 5_000
     assert 'truncated' in outputs[1]['content']
     assert outputs[2]['content'] == ''
+
+
+def test_opaque_search_feedback_uses_same_cumulative_budget() -> None:
+    results = [
+        {'path': 'src/a.py', 'line': index, 'text': 'x' * 300}
+        for index in range(30)
+    ]
+    first = candidate_visible_tool_result(
+        'search_text', results, opaque_handles=True, max_read_chars=2_000,
+    )
+    used = len(json.dumps(first, ensure_ascii=False))
+    second = candidate_visible_tool_result(
+        'search_text', results, opaque_handles=True, max_read_chars=2_000 - used,
+    )
+    assert used <= 2_000
+    assert len(json.dumps(second, ensure_ascii=False)) <= 2_000 - used
+    assert len(first) < len(results)
+
+
+def test_manual_test_transcript_keeps_raw_result_when_feedback_is_summarized() -> None:
+    raw = {
+        'passed': False,
+        'returncode': 1,
+        'stdout': 'collected 4 tests',
+        'stderr': 'AssertionError: expected value',
+        'elapsed_seconds': 1.25,
+        'failure_signature': 'private-to-controller',
+    }
+    entry: dict[str, object] = {'tool_calls': []}
+    record_tool_call(entry, 'run_public_tests', {}, raw)
+    visible = candidate_visible_tool_result(
+        'run_public_tests',
+        {'passed': False, 'feedback': 'assertion failed', 'next_action': 'repair'},
+        opaque_handles=True,
+    )
+    assert visible == {'passed': False, 'feedback': 'assertion failed', 'next_action': 'repair'}
+    assert entry['tool_calls'][0]['result'] == raw
 
 
 def test_truncated_structured_retry_uses_active_opaque_handle_names() -> None:

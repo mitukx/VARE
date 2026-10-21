@@ -106,7 +106,7 @@ def tools_for(
 def candidate_visible_tool_result(
     name: str, result: dict[str, Any], *, opaque_handles: bool,
     max_read_chars: int = 6_000,
-) -> dict[str, Any]:
+) -> Any:
     """Keep exact provenance in the transcript while sending bounded feedback to the model."""
     if not opaque_handles:
         return result
@@ -132,13 +132,40 @@ def candidate_visible_tool_result(
         }
         content = result.get('content', '')
         if isinstance(content, str):
-            if len(content) > max_read_chars:
+            empty_size = len(json.dumps({**visible, 'content': ''}, ensure_ascii=False))
+            content_budget = max(0, max_read_chars - empty_size)
+            if len(content) > content_budget:
                 digest = hashlib.sha256(content.encode('utf-8')).hexdigest()
                 marker = f'\n... read output truncated; chars={len(content)} sha256={digest} ...\n'
-                keep = max(0, max_read_chars - len(marker))
-                content = content[:keep] + marker[:max_read_chars - keep]
+                keep = max(0, content_budget - len(marker))
+                content = content[:keep] + marker[:content_budget - keep]
             visible['content'] = content
         return visible
+
+    if name == 'search_text':
+        # The controller may return up to 30 long lines. Keep the model-facing
+        # payload within the same per-turn budget used by source reads.
+        matches: list[Any] = result if isinstance(result, list) else []
+        search_visible: list[dict[str, Any]] = []
+        for match in matches:
+            if not isinstance(match, dict):
+                continue
+            item = {key: match[key] for key in ('path', 'line', 'text') if key in match}
+            search_visible.append(item)
+            if len(json.dumps(search_visible, ensure_ascii=False)) > max_read_chars:
+                search_visible.pop()
+                break
+        if not search_visible and max_read_chars > 2:
+            return []
+        # If one match is too large, retain only a bounded excerpt. A subsequent
+        # search/read can retrieve more context on a later turn.
+        while search_visible and len(json.dumps(search_visible, ensure_ascii=False)) > max_read_chars:
+            text = search_visible[-1].get('text')
+            if isinstance(text, str) and text:
+                search_visible[-1]['text'] = text[: max(0, len(text) // 2)]
+            else:
+                search_visible.pop()
+        return search_visible
 
     if name in {'replace_text', 'insert_text'}:
         visible = {key: result[key] for key in ('applied', 'path', 'error') if key in result}
@@ -169,6 +196,15 @@ def candidate_visible_tool_result(
 def should_stop_after_tool(name: str, result: dict[str, Any]) -> bool:
     """A rejected finalization is feedback, not a terminal agent action."""
     return name == 'finish' and result.get('finished') is True
+
+
+def record_tool_call(
+    entry: dict[str, Any], name: str, arguments: dict[str, Any], raw_result: Any,
+) -> None:
+    """Retain the unabridged host result even when model feedback is summarized."""
+    entry.setdefault('tool_calls', []).append(
+        {'name': name, 'arguments': arguments, 'result': raw_result},
+    )
 
 
 def generate_turn(backend: str, model: Any, tokenizer: Any, messages: list[dict[str, Any]],
@@ -614,10 +650,11 @@ def main() -> int:
             ]})
         else:
             messages.append({'role': 'assistant', 'content': raw})
-        turn_read_chars = 0
-        turn_read_budget = 6_000
+        turn_output_chars = 0
+        turn_output_budget = 6_000
         for match, name, arguments in parsed_calls:
             try:
+                model_feedback_override: dict[str, Any] | None = None
                 if name == 'list_files':
                     result: Any = sorted(allowed)
                 elif name == 'read_file':
@@ -780,10 +817,11 @@ def main() -> int:
                             'passed': False,
                             'error': 'public test image is not configured',
                         }
-                    result = (
-                        edit_controller.record_public_test_result(public_test_result)
-                        if edit_controller is not None else public_test_result
-                    )
+                    if edit_controller is not None:
+                        model_feedback_override = edit_controller.record_public_test_result(
+                            public_test_result,
+                        )
+                    result = public_test_result
                 elif name == 'check_syntax':
                     raw_path = arguments.get('path', '')
                     path = resolve_allowed_path(raw_path, allowed)
@@ -819,17 +857,16 @@ def main() -> int:
                             final_summary = str(arguments.get('summary', ''))
                             result = {'finished': True}
                             stop_reason = 'agent_finished'
-                model_result = candidate_visible_tool_result(
+                model_result = model_feedback_override or candidate_visible_tool_result(
                     name, result,
                     opaque_handles=edit_controller is not None,
-                    max_read_chars=max(0, turn_read_budget - turn_read_chars),
+                    max_read_chars=max(0, turn_output_budget - turn_output_chars),
                 )
-                if name == 'read_file' and edit_controller is not None:
-                    model_content = model_result.get('content', '')
-                    if isinstance(model_content, str):
-                        turn_read_chars += len(model_content)
-                entry['tool_calls'].append({'name': name, 'arguments': arguments, 'result': result})
-                messages.append({'role': 'tool', 'name': name, 'content': json.dumps(model_result, ensure_ascii=False)})
+                model_payload = json.dumps(model_result, ensure_ascii=False)
+                if edit_controller is not None and name in {'read_file', 'search_text'}:
+                    turn_output_chars += len(model_payload)
+                record_tool_call(entry, name, arguments, result)
+                messages.append({'role': 'tool', 'name': name, 'content': model_payload})
                 if should_stop_after_tool(name, result):
                     break
             except Exception as exc:
