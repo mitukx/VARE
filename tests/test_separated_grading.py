@@ -924,8 +924,20 @@ def test_historical_task_pinned_workspace_checks_revision_and_source_hashes(tmp_
     contract = load_agent_task(task)
     assert verify_agent_workspace(workspace, contract) == {"solve.py": source_hash}
     (workspace / "solve.py").write_text("def solve():\n    return 2\n", encoding="utf-8")
-    with pytest.raises(ValueError, match="SHA-256"):
+    with pytest.raises(ValueError, match="clean"):
         verify_agent_workspace(workspace, contract)
+
+    # Git's ordinary status can hide modified bytes when these index flags are
+    # set. The preflight must reject the flags before the candidate runs.
+    (workspace / "solve.py").write_text("def solve():\n    return 1\n", encoding="utf-8")
+    for flag in ("--assume-unchanged", "--skip-worktree"):
+        subprocess.run(["git", "-C", str(workspace), "update-index", flag, "solve.py"], check=True)
+        (workspace / "solve.py").write_text("def solve():\n    return 9\n", encoding="utf-8")
+        with pytest.raises(ValueError, match="assume-unchanged or skip-worktree"):
+            verify_agent_workspace(workspace, contract)
+        subprocess.run(["git", "-C", str(workspace), "update-index", "--no-assume-unchanged", "solve.py"], check=True)
+        subprocess.run(["git", "-C", str(workspace), "update-index", "--no-skip-worktree", "solve.py"], check=True)
+        (workspace / "solve.py").write_text("def solve():\n    return 1\n", encoding="utf-8")
 
 
 def test_local_agent_parses_engineering_task_without_loading_weights(tmp_path, monkeypatch, capsys):

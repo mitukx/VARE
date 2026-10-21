@@ -81,6 +81,21 @@ def verify_agent_workspace(workspace: Path, contract: AgentTaskContract) -> dict
             raise ValueError("agent workspace is not a readable Git checkout") from exc
         if revision != contract.base_revision:
             raise ValueError("agent workspace is not at the pinned baseline revision")
+        try:
+            status = subprocess.run(
+                ["git", "-C", str(root), "status", "--porcelain", "--untracked-files=all"],
+                check=True, capture_output=True, text=True, timeout=10,
+            ).stdout
+            index_flags = subprocess.run(
+                ["git", "-C", str(root), "ls-files", "-v"],
+                check=True, capture_output=True, text=True, timeout=10,
+            ).stdout.splitlines()
+        except (OSError, subprocess.SubprocessError) as exc:
+            raise ValueError("agent workspace status could not be verified") from exc
+        if status.strip():
+            raise ValueError("agent workspace must be clean before candidate execution")
+        if any(line[:1] in {"h", "S"} for line in index_flags):
+            raise ValueError("agent workspace uses assume-unchanged or skip-worktree index flags")
     elif contract.base_revision and not contract.snapshot_sha256:
         raise ValueError("archive workspace requires a pinned full-snapshot SHA-256")
     actual: dict[str, str] = {}
@@ -94,6 +109,20 @@ def verify_agent_workspace(workspace: Path, contract: AgentTaskContract) -> dict
             raise ValueError("pinned source hash manifest must cover exactly the task allowlist")
         if actual != contract.source_hashes:
             raise ValueError("agent workspace source SHA-256 differs from the pinned baseline")
+    elif contract.base_revision and has_git:
+        # Historical tasks may predate file-level locks. Compare every file the
+        # agent can edit to the pinned Git blob instead of treating HEAD as proof
+        # that the worktree bytes are pristine.
+        for name in contract.allowed_files:
+            try:
+                pinned = subprocess.run(
+                    ["git", "-C", str(root), "show", f"{contract.base_revision}:{name}"],
+                    check=True, capture_output=True, timeout=10,
+                ).stdout
+            except (OSError, subprocess.SubprocessError) as exc:
+                raise ValueError(f"pinned baseline does not contain allowlisted file: {name}") from exc
+            if (root / name).read_bytes() != pinned:
+                raise ValueError("agent workspace source bytes differ from the pinned baseline")
     if contract.snapshot_sha256 and workspace_snapshot_sha256(root) != contract.snapshot_sha256:
         raise ValueError("agent workspace snapshot SHA-256 differs from the pinned baseline")
     return actual
