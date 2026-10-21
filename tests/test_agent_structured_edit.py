@@ -7,6 +7,7 @@ import pytest
 
 from vare.agent_structured_edit import (
     StructuredEditError,
+    StructuredEditController,
     apply_structured_edit,
     unified_diff,
     workspace_revision,
@@ -96,4 +97,185 @@ def test_symlink_target_is_rejected(tmp_path: Path) -> None:
     with pytest.raises(StructuredEditError, match="symlink"):
         apply_structured_edit(root, allowed, **_edit(root, allowed))
     assert outside.read_text(encoding="utf-8") == "secret\n"
+
+
+def test_controller_returns_short_region_and_opaque_revision_handles(tmp_path: Path) -> None:
+    root, allowed = _workspace(tmp_path)
+    controller = StructuredEditController(root, allowed)
+    read = controller.read_region("src/module.py", start_line=1, end_line=2)
+    assert read["content"] == "def value():\n    return 1\n"
+    assert read["workspace_revision"].startswith("rev-")
+    assert read["source_preimage"].startswith("src-")
+    assert len(read["workspace_revision"]) < 16
+    assert len(read["source_preimage"]) < 16
+
+    result = controller.apply_edit(
+        action="replace_text",
+        path="src/module.py",
+        workspace_revision_handle=read["workspace_revision"],
+        source_preimage_handle=read["source_preimage"],
+        old_text="return 1",
+        new_text="return 2",
+    )
+    assert result["applied"] is True
+    assert "expected_hash" not in result
+    assert "expected_revision" not in result
+
+
+def test_controller_rejects_stale_or_cross_file_handles(tmp_path: Path) -> None:
+    root, allowed = _workspace(tmp_path)
+    controller = StructuredEditController(root, allowed)
+    read = controller.read_region("src/module.py")
+    (root / "src/module.py").write_text("def value():\n    return 9\n", encoding="utf-8")
+    with pytest.raises(StructuredEditError, match="revision handle is stale"):
+        controller.apply_edit(
+            action="replace_text",
+            path="src/module.py",
+            workspace_revision_handle=read["workspace_revision"],
+            source_preimage_handle=read["source_preimage"],
+            old_text="return 1",
+            new_text="return 2",
+        )
+
+    (root / "src/other.py").write_text("value = 1\n", encoding="utf-8")
+    allowed.add("src/other.py")
+    cross_controller = StructuredEditController(root, allowed)
+    module = cross_controller.read_region("src/module.py")
+    other = cross_controller.read_region("src/other.py")
+    with pytest.raises(StructuredEditError, match="same source snapshot"):
+        cross_controller.apply_edit(
+            action="replace_text",
+            path="src/other.py",
+            workspace_revision_handle=module["workspace_revision"],
+            source_preimage_handle=other["source_preimage"],
+            old_text="return 9",
+            new_text="return 10",
+        )
+
+
+def test_controller_bounds_region_size_and_source_file_allowlist(tmp_path: Path) -> None:
+    root, allowed = _workspace(tmp_path)
+    controller = StructuredEditController(root, allowed, max_read_lines=1, max_read_chars=256)
+    read = controller.read_region("src/module.py", start_line=1, end_line=3)
+    assert read["content"] == "def value():\n"
+    with pytest.raises(StructuredEditError, match="allowlisted"):
+        controller.read_region("outside.py")
+    with pytest.raises(ValueError, match="controller bounds"):
+        StructuredEditController(root, allowed, max_read_lines=121)
+
+
+def test_controller_can_read_but_never_edit_public_test_file(tmp_path: Path) -> None:
+    root, editable = _workspace(tmp_path)
+    public_test = root / "test_public.py"
+    public_test.write_text("assert value() == 2\n", encoding="utf-8")
+    controller = StructuredEditController(
+        root, editable, readable_files=editable | {"test_public.py"},
+    )
+    read = controller.read_region("test_public.py")
+    assert read["content"] == "assert value() == 2\n"
+    assert read["read_only"] is True
+    assert "workspace_revision" not in read
+    with pytest.raises(StructuredEditError, match="unknown edit handle"):
+        controller.apply_edit(
+            action="replace_text",
+            path="test_public.py",
+            workspace_revision_handle="",
+            source_preimage_handle="",
+            old_text="2",
+            new_text="1",
+        )
+
+
+def test_controller_bounds_generated_edit_text(tmp_path: Path) -> None:
+    root, allowed = _workspace(tmp_path)
+    controller = StructuredEditController(root, allowed)
+    read = controller.read_region("src/module.py")
+    with pytest.raises(StructuredEditError, match="per-action character budget"):
+        controller.apply_edit(
+            action="replace_text",
+            path="src/module.py",
+            workspace_revision_handle=read["workspace_revision"],
+            source_preimage_handle=read["source_preimage"],
+            old_text="return 1",
+            new_text="2" * 8_001,
+        )
+
+
+def test_controller_repeated_public_failure_prompts_different_repair_and_bounds_output(tmp_path: Path) -> None:
+    root, allowed = _workspace(tmp_path)
+    controller = StructuredEditController(root, allowed, max_feedback_chars=128)
+    read = controller.read_region("src/module.py")
+    controller.apply_edit(
+        action="replace_text",
+        path="src/module.py",
+        workspace_revision_handle=read["workspace_revision"],
+        source_preimage_handle=read["source_preimage"],
+        old_text="return 1",
+        new_text="return 2",
+    )
+    first = controller.record_public_test_result({"passed": False, "stderr": "assertion failed"})
+    second = controller.record_public_test_result({"passed": False, "stderr": "assertion failed"})
+    assert first["repeated_unchanged_failure"] is False
+    assert second["repeated_unchanged_failure"] is True
+    assert second["next_action"] == "inspect the failing assertion and make a different targeted edit"
+    assert len(second["feedback"]) <= 128
+    assert len(second["failure_signature"]) == 64
+
+
+def test_finalization_requires_passed_public_tests_and_inspected_current_diff(tmp_path: Path) -> None:
+    root, allowed = _workspace(tmp_path)
+    controller = StructuredEditController(root, allowed)
+    read = controller.read_region("src/module.py")
+    controller.apply_edit(
+        action="replace_text",
+        path="src/module.py",
+        workspace_revision_handle=read["workspace_revision"],
+        source_preimage_handle=read["source_preimage"],
+        old_text="return 1",
+        new_text="return 2",
+    )
+    with pytest.raises(StructuredEditError, match="until public tests pass"):
+        controller.finalize_for_independent_grading()
+    controller.record_public_test_result({"passed": True})
+    with pytest.raises(StructuredEditError, match="inspect the current diff"):
+        controller.finalize_for_independent_grading()
+    controller.inspect_diff()
+    final = controller.finalize_for_independent_grading()
+    assert final["candidate_ready_for_independent_grading"] is True
+    assert final["verified_success"] is False
+
+
+def test_new_edit_invalidates_prior_public_pass_and_diff_inspection(tmp_path: Path) -> None:
+    root, allowed = _workspace(tmp_path)
+    controller = StructuredEditController(root, allowed)
+    first = controller.read_region("src/module.py")
+    controller.apply_edit(
+        action="replace_text",
+        path="src/module.py",
+        workspace_revision_handle=first["workspace_revision"],
+        source_preimage_handle=first["source_preimage"],
+        old_text="return 1",
+        new_text="return 2",
+    )
+    controller.record_public_test_result({"passed": True})
+    controller.inspect_diff()
+
+    current = controller.read_region("src/module.py")
+    controller.apply_edit(
+        action="replace_text",
+        path="src/module.py",
+        workspace_revision_handle=current["workspace_revision"],
+        source_preimage_handle=current["source_preimage"],
+        old_text="return 2",
+        new_text="return 3",
+    )
+    with pytest.raises(StructuredEditError, match="until public tests pass"):
+        controller.finalize_for_independent_grading()
+
+
+def test_public_test_feedback_requires_trusted_boolean_result(tmp_path: Path) -> None:
+    root, allowed = _workspace(tmp_path)
+    controller = StructuredEditController(root, allowed)
+    with pytest.raises(StructuredEditError, match="trusted test runner"):
+        controller.record_public_test_result({"passed": "true", "stderr": ""})
 

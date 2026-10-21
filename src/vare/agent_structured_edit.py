@@ -151,3 +151,193 @@ def unified_diff(root: Path, before: dict[str, bytes], allowed_files: set[str]) 
         current = _safe_path(root, name, allowed_files).read_text(encoding="utf-8").splitlines(keepends=True)
         chunks.extend(difflib.unified_diff(original, current, fromfile=f"a/{name}", tofile=f"b/{name}"))
     return "".join(chunks)
+
+
+class StructuredEditController:
+    """Keep model-facing edits short while retaining exact host-side hashes.
+
+    This controller deliberately handles only the bounded local repair loop:
+    short reads, opaque revision/preimage handles, trusted public-test feedback,
+    diff inspection, and a candidate-only finalization result. Hidden grading
+    remains a separate caller responsibility and is never inferred here.
+    """
+
+    def __init__(
+        self,
+        root: Path,
+        allowed_files: set[str],
+        *,
+        readable_files: set[str] | None = None,
+        max_read_lines: int = 120,
+        max_read_chars: int = 24_000,
+        max_feedback_chars: int = 2_000,
+    ) -> None:
+        if not 1 <= max_read_lines <= 120 or not 256 <= max_read_chars <= 24_000:
+            raise ValueError("structured read limits exceed the frozen controller bounds")
+        if not 128 <= max_feedback_chars <= 2_000:
+            raise ValueError("public feedback limit exceeds the frozen controller bound")
+        self.root = root
+        self.allowed_files = set(allowed_files)
+        self.readable_files = set(readable_files if readable_files is not None else allowed_files)
+        if not self.allowed_files.issubset(self.readable_files):
+            raise ValueError("editable files must also be readable")
+        self.max_read_lines = max_read_lines
+        self.max_read_chars = max_read_chars
+        self.max_feedback_chars = max_feedback_chars
+        self._counter = 0
+        self._handles: dict[str, tuple[str, str, str]] = {}
+        self._before = {
+            name: _safe_path(root, name, self.allowed_files).read_bytes()
+            for name in sorted(self.allowed_files)
+        }
+        self._latest_diff_hash = sha256_bytes(b"")
+        self._inspected_diff_hash: str | None = None
+        self._latest_test_passed: bool | None = None
+        self._failure_pairs: set[tuple[str, str]] = set()
+
+    def _issue(self, path: str, revision: str, source_hash: str) -> tuple[str, str]:
+        self._counter += 1
+        revision_handle = f"rev-{self._counter:04d}"
+        source_handle = f"src-{self._counter:04d}"
+        self._handles[revision_handle] = (path, revision, source_hash)
+        self._handles[source_handle] = (path, revision, source_hash)
+        return revision_handle, source_handle
+
+    def read_region(
+        self,
+        path: str,
+        *,
+        start_line: int = 1,
+        end_line: int | None = None,
+    ) -> dict[str, Any]:
+        """Read at most 120 lines / 24k characters and return opaque edit handles."""
+        source_path = _safe_path(self.root, path, self.readable_files)
+        if start_line < 1 or (end_line is not None and end_line < start_line):
+            raise StructuredEditError("source region line range is invalid")
+        lines = source_path.read_text(encoding="utf-8").splitlines(keepends=True)
+        last_line = min(
+            len(lines),
+            end_line if end_line is not None else start_line + self.max_read_lines - 1,
+            start_line + self.max_read_lines - 1,
+        )
+        if start_line > len(lines):
+            raise StructuredEditError("source region starts after end of file")
+        content = "".join(lines[start_line - 1:last_line])
+        if len(content) > self.max_read_chars:
+            content = content[:self.max_read_chars]
+        if path not in self.allowed_files:
+            return {
+                "path": path,
+                "start_line": start_line,
+                "end_line": last_line,
+                "content": content,
+                "read_only": True,
+            }
+        revision = workspace_revision(self.root, self.allowed_files)
+        source_hash = sha256_bytes(source_path.read_bytes())
+        revision_handle, source_handle = self._issue(path, revision, source_hash)
+        return {
+            "path": path,
+            "start_line": start_line,
+            "end_line": last_line,
+            "content": content,
+            "workspace_revision": revision_handle,
+            "source_preimage": source_handle,
+        }
+
+    def apply_edit(
+        self,
+        *,
+        action: str,
+        path: str,
+        workspace_revision_handle: str,
+        source_preimage_handle: str,
+        old_text: str,
+        new_text: str,
+        anchor: str = "",
+    ) -> dict[str, Any]:
+        """Resolve opaque handles and delegate to the exact-preimage atomic editor."""
+        if len(old_text) > 12_000 or len(new_text) > 8_000 or len(anchor) > 12_000:
+            raise StructuredEditError("structured edit text exceeds the per-action character budget")
+        revision_binding = self._handles.get(workspace_revision_handle)
+        source_binding = self._handles.get(source_preimage_handle)
+        if revision_binding is None or source_binding is None:
+            raise StructuredEditError("unknown edit handle; read the current source region")
+        if revision_binding != source_binding or revision_binding[0] != path:
+            raise StructuredEditError("edit handles do not refer to the same source snapshot")
+        handle_path, expected_revision, expected_hash = revision_binding
+        if workspace_revision(self.root, self.allowed_files) != expected_revision:
+            raise StructuredEditError("workspace revision handle is stale; reread the affected source region")
+        result = apply_structured_edit(
+            self.root,
+            self.allowed_files,
+            action=action,
+            path=handle_path,
+            expected_hash=expected_hash,
+            expected_revision=expected_revision,
+            old_text=old_text,
+            new_text=new_text,
+            anchor=anchor,
+        )
+        current_diff = unified_diff(self.root, self._before, self.allowed_files)
+        self._latest_diff_hash = sha256_bytes(current_diff.encode("utf-8"))
+        self._inspected_diff_hash = None
+        self._latest_test_passed = None
+        return result
+
+    def record_public_test_result(self, result: dict[str, Any]) -> dict[str, Any]:
+        """Bound trusted public-test feedback and flag repeated unchanged failures."""
+        passed = result.get("passed")
+        if not isinstance(passed, bool):
+            raise StructuredEditError("public-test result must come from the trusted test runner")
+        stderr = result.get("stderr", "")
+        stdout = result.get("stdout", "")
+        error = result.get("error", "")
+        if not isinstance(stderr, str) or not isinstance(stdout, str):
+            raise StructuredEditError("public-test output must be text")
+        if not isinstance(error, str):
+            raise StructuredEditError("public-test error must be text")
+        feedback_text = "\n".join(part for part in (stdout, stderr, error) if part)
+        bounded = feedback_text[-self.max_feedback_chars:]
+        signature = sha256_bytes(bounded.encode("utf-8")) if not passed else ""
+        pair = (self._latest_diff_hash, signature)
+        repeated = bool(not passed and signature and pair in self._failure_pairs)
+        if not passed and signature:
+            self._failure_pairs.add(pair)
+        self._latest_test_passed = passed
+        self._inspected_diff_hash = None
+        return {
+            "passed": passed,
+            "failure_signature": signature,
+            "repeated_unchanged_failure": repeated,
+            "feedback": bounded,
+            "next_action": (
+                "inspect the failing assertion and make a different targeted edit"
+                if repeated else "use the reported public assertion to plan the next repair"
+            ) if not passed else "inspect the final diff before submission",
+        }
+
+    def inspect_diff(self) -> dict[str, Any]:
+        """Return the current bounded diff and mark exactly this diff as inspected."""
+        diff = unified_diff(self.root, self._before, self.allowed_files)
+        digest = sha256_bytes(diff.encode("utf-8"))
+        self._latest_diff_hash = digest
+        self._inspected_diff_hash = digest
+        return {"diff": diff, "diff_sha256": digest, "changed": bool(diff)}
+
+    def finalize_for_independent_grading(self) -> dict[str, Any]:
+        """Return a candidate patch only after public tests and diff inspection."""
+        current = unified_diff(self.root, self._before, self.allowed_files)
+        digest = sha256_bytes(current.encode("utf-8"))
+        if self._latest_test_passed is not True:
+            raise StructuredEditError("candidate cannot be submitted until public tests pass")
+        if self._inspected_diff_hash != digest:
+            raise StructuredEditError("inspect the current diff after the last edit and test")
+        if not current:
+            raise StructuredEditError("candidate has no source changes to submit")
+        return {
+            "candidate_ready_for_independent_grading": True,
+            "verified_success": False,
+            "diff": current,
+            "diff_sha256": digest,
+        }
