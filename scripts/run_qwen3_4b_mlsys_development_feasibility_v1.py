@@ -351,9 +351,69 @@ def main() -> int:
         raise RuntimeError("available memory was below the frozen preflight floor")
     if memory_start.get("swap_free_bytes", 0) < protocol["limits"]["min_swap_free_bytes"]:
         raise RuntimeError("free swap was below the frozen preflight floor")
+    preflight_path = output / "preflight.json"
+    preflight: dict[str, Any] = {
+        "protocol_id": protocol["protocol_id"],
+        "created_at_utc": datetime.now(timezone.utc).isoformat(),
+        "model_id": MODEL_ID,
+        "model_revision": MODEL_REVISION,
+        "model_snapshot_files_sha256": model_files,
+        "memory_before_load": memory_start,
+        "status": "loading-model",
+    }
+    preflight_path.write_text(
+        json.dumps(preflight, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    (output / "SHA256SUMS.partial").write_text(
+        f"{sha256(preflight_path)}  preflight.json\n", encoding="utf-8"
+    )
     model_started = time.monotonic()
-    model, tokenizer = load(str(model_root), trust_remote_code=False)
+    try:
+        model, tokenizer = load(str(model_root), trust_remote_code=False)
+    except Exception as exc:
+        preflight.update(
+            {
+                "status": "model-load-failed",
+                "model_load_error": f"{type(exc).__name__}: {str(exc)[:500]}",
+                "memory_after_failure": _memory_snapshot(),
+            }
+        )
+        preflight_path.write_text(
+            json.dumps(preflight, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        (output / "SHA256SUMS.partial").write_text(
+            f"{sha256(preflight_path)}  preflight.json\n", encoding="utf-8"
+        )
+        return 1
     load_wall = time.monotonic() - model_started
+    memory_after_model_load = _memory_snapshot()
+    preflight.update(
+        {
+            "status": "ready-for-inference",
+            "model_load_wall_seconds": load_wall,
+            "memory_after_model_load": memory_after_model_load,
+        }
+    )
+    preflight_path.write_text(
+        json.dumps(preflight, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    if (
+        memory_after_model_load.get("available_bytes", 0)
+        < protocol["limits"]["min_available_memory_bytes"]
+        or memory_after_model_load.get("swap_free_bytes", 0)
+        < protocol["limits"]["min_swap_free_bytes"]
+    ):
+        preflight["status"] = "resource-stop-before-inference"
+        preflight_path.write_text(
+            json.dumps(preflight, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        (output / "SHA256SUMS.partial").write_text(
+            f"{sha256(preflight_path)}  preflight.json\n", encoding="utf-8"
+        )
+        return 1
+    (output / "SHA256SUMS.partial").write_text(
+        f"{sha256(preflight_path)}  preflight.json\n", encoding="utf-8"
+    )
     records: list[dict[str, Any]] = []
     run_started = time.monotonic()
 
@@ -452,6 +512,7 @@ def main() -> int:
         "default_device": str(mx.default_device()),
         "model_load_wall_seconds": load_wall,
         "memory_start": memory_start,
+        "memory_after_model_load": memory_after_model_load,
         "memory_end": _memory_snapshot(),
         "total_wall_seconds": time.monotonic() - run_started,
         "records": records,
@@ -474,7 +535,9 @@ def main() -> int:
     result_path = output / "feasibility.json"
     result_path.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     (output / "SHA256SUMS").write_text(
-        f"{sha256(result_path)}  feasibility.json\n{sha256(raw_records_path)}  raw-records.jsonl\n",
+        f"{sha256(result_path)}  feasibility.json\n"
+        f"{sha256(raw_records_path)}  raw-records.jsonl\n"
+        f"{sha256(preflight_path)}  preflight.json\n",
         encoding="utf-8",
     )
     print(json.dumps({"protocol_id": result["protocol_id"], "total_wall_seconds": result["total_wall_seconds"], "task_summary": result["task_summary"], "memory_end": result["memory_end"]}, indent=2, sort_keys=True))
