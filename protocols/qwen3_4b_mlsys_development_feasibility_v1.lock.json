@@ -3,7 +3,7 @@
     "chat_template": "pinned Qwen3 tokenizer template, apply_chat_template with enable_thinking=false",
     "edits": "one allowlisted source file; strict unified diff only",
     "hidden_grader_outputs_returned_to_model": false,
-    "inputs": "candidate task statement and full pinned baseline target file only",
+    "inputs": "task statement plus full pinned target source, except Transformers task receives the complete frozen pad() method excerpt (lines 2569-2739) to bound local context memory",
     "iterations_per_candidate": 1,
     "mode": "single-turn patch generation",
     "tool_feedback_or_repair": false
@@ -22,12 +22,13 @@
     "benchmarks/mlsys_repo_eval_v2/transformers_45852/protocol-v1.json": "f61cfb5e7e93c1b9827420eb636eaeb82b2174418c376dc21326a18fb9cf0745",
     "benchmarks/mlsys_repo_eval_v2/transformers_45852/requirements.txt": "1c4a93c82e47e7c35e5dd681281e7e07498bec609abb298f678f581b3b641054",
     "benchmarks/mlsys_repo_eval_v2/transformers_45852/task.md": "99ef996ed432136483fed21a5964a918f2f90f45dc6e5491ad5490e2138e395e",
-    "scripts/run_qwen3_4b_mlsys_development_feasibility_v1.py": "1555f9e442bd42f39c41965fade13767dff179566eb1fa1330d344728bac00d7",
+    "scripts/run_qwen3_4b_mlsys_development_feasibility_v1.py": "95fd111240c288a82ab40d3200e9ea2995cee5ae958953cabcb24c069ee234c8",
     "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
     "src/vare/isolated_candidate.py": "8c216aa1891538156030f76ae59a768832fefa83dbbcf3702c22176019b0aaee",
     "src/vare/mlxlm_1912_repo_task.py": "5a10440e0facfde59b5966635d075ca9db76d241dc17635425feba93c2a0544c",
     "src/vare/mlxlm_1971_repo_task.py": "abccc1d483262d17e9a76559e788a3d3738f9311428bbf69ff42af768a1e636a",
-    "src/vare/transformers_repo_task.py": "a8d7522a2ff30b98f18635d5041592342f9c76ab3dcf8a4604009b782f80eb9e"
+    "src/vare/transformers_repo_task.py": "a8d7522a2ff30b98f18635d5041592342f9c76ab3dcf8a4604009b782f80eb9e",
+    "tests/test_qwen3_4b_development_feasibility.py": "8f7866c306692ba8ba0798d9b415b3f92987163cab154e78a6d0cad553b544fc"
   },
   "limits": {
     "candidate_network": "disabled by frozen task graders",
@@ -78,18 +79,21 @@
   "prompts": {
     "mlxlm-1912-top-p-min-token": {
       "sha256": "137eccaa8e78800203aba6b63928c57137044173681127446c23de79ce977061",
+      "source_context": "full target file",
       "target_source_sha256": "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2",
       "token_count": 3337
     },
     "mlxlm-1971-mimo-value-scale": {
       "sha256": "45df68bae35c7b6dcddb5642a7c186d731a912ffa74e6954f1a2276c2cc9b2c3",
+      "source_context": "full target file",
       "target_source_sha256": "c110f8deed605277ae070359dd6d2ba0c700981101240c54bcd049e8d60e4847",
       "token_count": 3436
     },
     "transformers-45852-4d-mask": {
-      "sha256": "35f3fe324df84e613bdbc7602f6eed34d4b422240113acb2f88138be3b70e23c",
+      "sha256": "36aaddbe41a725bd5afc4434afe07b96c144ed6f1d3bf96f4c18f39a616f3693",
+      "source_context": "pad() lines 2569-2739",
       "target_source_sha256": "51a96b8d23e365014cfcd44049fda9a40a41e76ab5ba80a7b687138d3523f00a",
-      "token_count": 36211
+      "token_count": 2208
     }
   },
   "protocol_id": "vare.qwen3-4b-mlsys-development-patch-feasibility.v1",

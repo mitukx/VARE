@@ -11,6 +11,8 @@ import json
 import os
 from pathlib import Path
 import platform
+import re
+import resource
 import subprocess
 import sys
 import tempfile
@@ -187,11 +189,23 @@ def _prepare_source(spec: dict[str, Any], workspace: Path) -> dict[str, Any]:
 def _prompt(
     tokenizer: Any, task_id: str, description: str, source_path: Path, source_sha: str
 ) -> str:
-    source = source_path.read_text(encoding="utf-8")
+    full_source = source_path.read_text(encoding="utf-8")
+    if task_id == TASKS[0]:
+        # Keep the long-context Transformers prompt inside the measured local
+        # memory budget while retaining the complete frozen pad() method.
+        source = "\n".join(full_source.splitlines()[2568:2739])
+        source_label = (
+            f"lines 2569-2739 of {source_path.name}; "
+            f"full-file SHA-256 {source_sha}; excerpt SHA-256 "
+            f"{hashlib.sha256(source.encode()).hexdigest()}"
+        )
+    else:
+        source = full_source
+        source_label = f"{source_path.name}; SHA-256 {source_sha}"
     user_content = (
         f"Task ID: {task_id}\n\n"
         f"Task statement:\n{description}\n\n"
-        f"Pinned candidate-visible source ({source_path.name}; SHA-256 {source_sha}):\n"
+        f"Pinned candidate-visible source ({source_label}):\n"
         "===== BEGIN SOURCE FILE =====\n"
         f"{source}\n"
         "===== END SOURCE FILE =====\n"
@@ -250,8 +264,56 @@ def _memory_snapshot() -> dict[str, Any]:
         vm = psutil.virtual_memory()
         swap = psutil.swap_memory()
         return {"total_bytes": vm.total, "available_bytes": vm.available, "swap_used_bytes": swap.used, "swap_free_bytes": swap.free}
-    except Exception as exc:
-        return {"error": type(exc).__name__}
+    except ImportError:
+        if platform.system() != "Darwin":
+            return {"error": "memory probe unavailable"}
+        vm_stat = subprocess.run(
+            ["vm_stat"], check=True, capture_output=True, text=True, timeout=10
+        ).stdout
+        page_match = re.search(r"page size of (\d+) bytes", vm_stat)
+        if page_match is None:
+            return {"error": "vm_stat page size missing"}
+        page_size = int(page_match.group(1))
+        pages: dict[str, int] = {}
+        for line in vm_stat.splitlines():
+            match = re.match(r"Pages (free|inactive|speculative):\s+([\d.]+)", line)
+            if match:
+                pages[match.group(1)] = int(match.group(2).replace(".", ""))
+        if not all(key in pages for key in ("free", "inactive", "speculative")):
+            return {"error": "vm_stat availability fields missing"}
+        swap_text = subprocess.run(
+            ["sysctl", "vm.swapusage"],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=10,
+        ).stdout
+        swap_fields: dict[str, int] = {}
+        for match in re.finditer(r"(total|used|free) = ([\d.]+)([KMG])", swap_text):
+            power = {"K": 1, "M": 2, "G": 3}[match.group(3)]
+            swap_fields[match.group(1)] = int(float(match.group(2)) * (1024**power))
+        total_memory = int(
+            subprocess.run(
+                ["sysctl", "-n", "hw.memsize"],
+                check=True,
+                capture_output=True,
+                text=True,
+                timeout=10,
+            ).stdout.strip()
+        )
+        return {
+            "total_bytes": total_memory,
+            "available_bytes": (pages["free"] + pages["inactive"] + pages["speculative"])
+            * page_size,
+            "swap_used_bytes": swap_fields.get("used"),
+            "swap_free_bytes": swap_fields.get("free"),
+            "source": "vm_stat free+inactive+speculative and sysctl vm.swapusage",
+        }
+
+
+def _peak_rss_bytes() -> int:
+    value = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    return int(value if platform.system() == "Darwin" else value * 1024)
 
 
 def main() -> int:
@@ -270,7 +332,6 @@ def main() -> int:
     import mlx.core as mx
     from mlx_lm import load, stream_generate
     from mlx_lm.sample_utils import make_sampler
-    import psutil
 
     if not mx.metal.is_available() or str(mx.default_device()) != "Device(gpu, 0)":
         raise RuntimeError("MLX Metal GPU is not the default device")
@@ -293,7 +354,6 @@ def main() -> int:
     model_started = time.monotonic()
     model, tokenizer = load(str(model_root), trust_remote_code=False)
     load_wall = time.monotonic() - model_started
-    process = psutil.Process()
     records: list[dict[str, Any]] = []
     run_started = time.monotonic()
 
@@ -355,7 +415,7 @@ def main() -> int:
                     "prompt_tokens_per_second": getattr(last, "prompt_tps", None),
                     "decode_tokens_per_second": getattr(last, "generation_tps", None),
                     "mlx_peak_memory_gib": getattr(last, "peak_memory", None),
-                    "process_rss_bytes": process.memory_info().rss,
+                    "process_peak_rss_bytes": _peak_rss_bytes(),
                     "generation_wall_seconds": generation_wall,
                     "grading_wall_seconds": grading_wall,
                     "candidate_output_sha256": hashlib.sha256(raw.encode()).hexdigest(),
@@ -370,7 +430,7 @@ def main() -> int:
                 (output / "SHA256SUMS.partial").write_text(
                     f"{sha256(raw_records_path)}  raw-records.jsonl\n", encoding="utf-8"
                 )
-                if process.memory_info().rss > protocol["limits"]["max_process_rss_bytes"]:
+                if _peak_rss_bytes() > protocol["limits"]["max_process_rss_bytes"]:
                     raise RuntimeError("process RSS exceeded frozen stop limit")
                 if _memory_snapshot().get("available_bytes", 0) < protocol["limits"]["min_available_memory_bytes"]:
                     raise RuntimeError("available memory fell below frozen stop limit")
