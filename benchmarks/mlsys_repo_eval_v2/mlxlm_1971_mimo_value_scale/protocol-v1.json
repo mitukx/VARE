@@ -1,0 +1,66 @@
+{
+  "baseline_commit": "5f3c79d6bb1864a85d5343818192bd061b161e3a",
+  "baseline_source_sha256": "c110f8deed605277ae070359dd6d2ba0c700981101240c54bcd049e8d60e4847",
+  "candidate_prompt_sha256": "66000b7e1a23a8a15b501d11325e0752b7d70c11b4268cdb6b21754ecdc106c7",
+  "correctness_case": {
+    "input_tokens": [
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    ],
+    "seed": 0,
+    "synthetic_model_config": "case definition is hash-pinned in src/vare/mlxlm_1971_repo_task.py",
+    "value_scale": 0.5
+  },
+  "expected_output_sha256": "00c0450c89622ab93635d6f3ff3d95b016ab8e62a4f11a843b47c961262afd50",
+  "fixed_commit": "8fda5e976a2da412d9f8119361edefd405381cf9",
+  "fixed_source_sha256": "a07bbc7d454d61d321a4dbc87b9770b2df545835a50eb880605f11e9a313a512",
+  "grader_semantics": "Run the candidate model adapter in an isolated Docker candidate process and compare its two output tensors to host-held golden outputs from the pinned fixed implementation using rtol=1e-5, atol=1e-8. Candidate stdout is discarded.",
+  "implementation_sha256": {
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/Dockerfile": "423ec1fbe2e6e63cf9ff7906e42d0acdc371071511a1078c0b92f0662d5a4eb0",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/expected-output-v1.json": "00c0450c89622ab93635d6f3ff3d95b016ab8e62a4f11a843b47c961262afd50",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/grader_adapter.py": "fab26aa6b281719f4a2b0c2366f29a7f086ef602a9cc642d26074a132699c6c5",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/task.md": "66000b7e1a23a8a15b501d11325e0752b7d70c11b4268cdb6b21754ecdc106c7",
+    "scripts/run_mlxlm_1912_calibration.py": "f5c774a65ad8e422979cd3b4a36f20eb5568fb896ddfa7f0500be120409025dd",
+    "scripts/run_mlxlm_1971_calibration.py": "5a552b588bc07802f41f1e1e79befe98cae2e4ab6ceb9aa1aea3ccafca70fc02",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/isolated_candidate.py": "8c216aa1891538156030f76ae59a768832fefa83dbbcf3702c22176019b0aaee",
+    "src/vare/mlxlm_1912_repo_task.py": "5a10440e0facfde59b5966635d075ca9db76d241dc17635425feba93c2a0544c",
+    "src/vare/mlxlm_1971_repo_task.py": "abccc1d483262d17e9a76559e788a3d3738f9311428bbf69ff42af768a1e636a",
+    "tests/test_mlxlm_1971_repo_task.py": "7e6a642c59c2d7496d1dbcbab944920fbc0482d675cda5302f0f62e7ecdb429f"
+  },
+  "limitations": [
+    "This is one task-specific CPU calibration, not an agent rollout.",
+    "The model is randomly initialized and small; it is not a pretrained checkpoint.",
+    "The exact upstream test semantics are preserved as a golden-output equivalence relation; the candidate cannot read tests or expected outputs.",
+    "This does not certify Metal behavior or arbitrary Python repositories."
+  ],
+  "patch_contract": {
+    "allowlist": [
+      "mlx_lm/models/mimo_v2_flash.py"
+    ],
+    "format": "unified git diff",
+    "max_bytes": 256000,
+    "rejects": "symlinks, creations/deletions/renames, traversal, binary patches, extra paths"
+  },
+  "protocol_id": "vare.mlsys-repository-task.mlxlm-1971.v1",
+  "runtime": {
+    "candidate_uid": 65534,
+    "image": "localhost:5000/vare/mlx-mimo-cpu-mimo@sha256:799f8b9f34fe2caa8fc0c4d0889abac63384606bcf40db28524db3fba07a7cbe",
+    "memory_mb": 1536,
+    "mlx": "CPU-only, MLX_DISABLE_METAL=1",
+    "network": "none",
+    "pids_limit": 64,
+    "platform": "linux/arm64",
+    "timeout_seconds": 30
+  },
+  "source_repository": "ml-explore/mlx-lm",
+  "status": "calibration-only-frozen",
+  "target_path": "mlx_lm/models/mimo_v2_flash.py",
+  "task_id": "mlxlm-1971-mimo-value-scale"
+}
