@@ -1,0 +1,138 @@
+{
+  "arms": {
+    "baseline": {
+      "grade": {
+        "candidate_source_sha256": "57392576de114af80ede723976b9dd156dc234f856b9943b8b44b8b78bc27f79",
+        "cases": [
+          {
+            "case_id": "dict_arguments",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.22083933294394612
+          },
+          {
+            "case_id": "json_string_control",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.19397591594524682
+          }
+        ],
+        "grader_adapter_sha256": "5813b83f446362aca75cd10c10164d864f8d92f6e818df565d5abd4856fb482d",
+        "grader_source_sha256": "36fece55a0956d15b41b0801b00cd56df3ffd7d620ba00c4433e83d16192dbe8",
+        "passed": false,
+        "task_id": "mlxlm-1904-tool-arguments"
+      },
+      "source_revision": "2af5f7ce8620115bf37fbbddf9817f083118df59",
+      "workspace": {
+        "baseline_commit": "2af5f7ce8620115bf37fbbddf9817f083118df59",
+        "candidate_inventory_sha256": "73f6639d2807115a9694089d13b6df045cabc07e347e004f7e71c2984d142cf9",
+        "candidate_patch_sha256": null,
+        "candidate_source_sha256": "57392576de114af80ede723976b9dd156dc234f856b9943b8b44b8b78bc27f79",
+        "changed_files": [],
+        "exported_python_file_count": 186,
+        "git_history_exported": false,
+        "task_description_sha256": "3855eae179864cddd35af9cb5b6e65812f414ceae7b5affc1a29b7e7d9c67699",
+        "task_id": "mlxlm-1904-tool-arguments",
+        "tests_exported": false
+      }
+    },
+    "fixed": {
+      "grade": {
+        "candidate_source_sha256": "361a790e0743e50e66cea6509e64be8b8b67c6612e2274331624cbd244b29ead",
+        "cases": [
+          {
+            "case_id": "dict_arguments",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.21768633398510945
+          },
+          {
+            "case_id": "json_string_control",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.1968984169639541
+          }
+        ],
+        "grader_adapter_sha256": "5813b83f446362aca75cd10c10164d864f8d92f6e818df565d5abd4856fb482d",
+        "grader_source_sha256": "36fece55a0956d15b41b0801b00cd56df3ffd7d620ba00c4433e83d16192dbe8",
+        "passed": true,
+        "task_id": "mlxlm-1904-tool-arguments"
+      },
+      "matches_pinned_fixed_source": true,
+      "source_revision": "caed1943d38ecb58f6e466a72bed98310c9d45a5",
+      "workspace": {
+        "baseline_commit": "2af5f7ce8620115bf37fbbddf9817f083118df59",
+        "candidate_inventory_sha256": "f56b72ef5cfc46187165e457c7678323fbc6b2e9cb0817674ea6803272d96057",
+        "candidate_patch_sha256": "48cf825e9b9b3fe994dbfd3d69db6c596a7053f72a0dfe978d42295d2fb889d7",
+        "candidate_source_sha256": "361a790e0743e50e66cea6509e64be8b8b67c6612e2274331624cbd244b29ead",
+        "changed_files": [
+          "mlx_lm/server.py"
+        ],
+        "exported_python_file_count": 186,
+        "git_history_exported": false,
+        "task_id": "mlxlm-1904-tool-arguments",
+        "tests_exported": false
+      }
+    }
+  },
+  "configured_memory_limit_bytes": 536870912,
+  "container_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+  "decision": {
+    "baseline_failed": true,
+    "calibration_passed": true,
+    "evidence_level": "E1 narrow historical function-contract calibration",
+    "fixed_source_swap_rejected": true,
+    "known_fix_matches_pinned_revision": true,
+    "known_fix_passed": true
+  },
+  "docker_context": "colima",
+  "docker_server": "29.5.2/arm64",
+  "elapsed_wall_s": 10.340489124995656,
+  "experiment_id": "mlsys-repository-task-mlxlm-1904-calibration-v1",
+  "host": {
+    "machine": "arm64",
+    "system": "macOS-27.0.1-arm64-arm-64bit"
+  },
+  "implementation_commit": "7bd3ca06b4afbaf23c7c4b82d6c17186d2e877b7",
+  "implementation_worktree_clean_at_start": true,
+  "integrity_probes": {
+    "fixed_source_swap_rejected": true
+  },
+  "limitations": [
+    "The original upstream test starts the HTTP/model-serving fixture; this isolated adapter grades only the pure message-normalization function contract.",
+    "This calibration uses a known fix, not an agent-generated patch or model rollout.",
+    "Docker memory is capped at the recorded limit; peak container memory was not measured."
+  ],
+  "patch_sha256": "48cf825e9b9b3fe994dbfd3d69db6c596a7053f72a0dfe978d42295d2fb889d7",
+  "peak_memory_bytes": null,
+  "protocol_sha256": "12c5f59e3f899a8fd48be0b063043439a063f8472b1e4d71d59525dba97d23a5",
+  "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+  "red_team_command_exit_code": 0,
+  "red_team_error": null,
+  "red_team_evidence": {
+    "image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "probe_count": 8,
+    "sha256": "6e9d565e6a883a764815c3c1aa2abf5c15c9a7ef57659b6bb3dad9ae01cd9358",
+    "source_checkout": "2af5f7ce8620115bf37fbbddf9817f083118df59"
+  },
+  "red_team_verified": true,
+  "resource_limits": {
+    "cpus": 1.0,
+    "memory_mb": 512,
+    "pids_limit": 64,
+    "timeout_s": 5
+  },
+  "schema_version": 1,
+  "task_sha256": "3855eae179864cddd35af9cb5b6e65812f414ceae7b5affc1a29b7e7d9c67699",
+  "verified_implementation_sha256": {
+    "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/grader_adapter.py": "5813b83f446362aca75cd10c10164d864f8d92f6e818df565d5abd4856fb482d",
+    "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/known_fix.patch": "48cf825e9b9b3fe994dbfd3d69db6c596a7053f72a0dfe978d42295d2fb889d7",
+    "scripts/red_team_mlxlm_1904.py": "9443b39aeac132a2dc60b37523d89f6f2547f0d250de94614995bfd39f814bd1",
+    "scripts/run_mlxlm_1904_calibration.py": "c6c93ba92d8acd99fd278c1870bb38070494c688cd8051c4a25253b53f08897d",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/isolated_candidate.py": "8c216aa1891538156030f76ae59a768832fefa83dbbcf3702c22176019b0aaee",
+    "src/vare/mlsys_repo_task.py": "36fece55a0956d15b41b0801b00cd56df3ffd7d620ba00c4433e83d16192dbe8",
+    "tests/test_isolated_candidate.py": "edf95d140c7e3f34111307de0d180828fd9e678a5a09aa528e0f2b9fb41f0097",
+    "tests/test_mlsys_repo_task.py": "f9850043d2b6eedcaa0e4716730f48d22762e7675e93b6983a89b9abce6db325"
+  }
+}
