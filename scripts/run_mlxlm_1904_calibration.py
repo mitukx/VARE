@@ -27,8 +27,11 @@ from vare.mlsys_repo_task import (
     verify_protocol_implementation,
     verify_red_team_evidence,
     verify_protocol_image,
+    verify_no_index_flags,
+    CALIBRATION_INPUT_FILES,
     calibration_accepts,
     RepositoryTaskError,
+    verify_task_prompt,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -52,7 +55,7 @@ def main() -> int:
     patch = Path(__file__).resolve().parents[1] / (
         "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/known_fix.patch"
     )
-    protocol = patch.parent / "protocol-v7.json"
+    protocol = patch.parent / "protocol-v8.json"
     task = patch.parent / "task.md"
     started = time.monotonic()
     implementation_commit = subprocess.run(
@@ -75,14 +78,22 @@ def main() -> int:
         )
     output.parent.mkdir(parents=True, exist_ok=True)
     protocol_data = json.loads(protocol.read_text(encoding="utf-8"))
-    if protocol_data.get("protocol_id") != "mlsys-repository-task-mlxlm-1904-v7":
-        raise SystemExit("calibration requires the v7 protocol")
+    if protocol_data.get("protocol_id") != "mlsys-repository-task-mlxlm-1904-v8":
+        raise SystemExit("calibration requires the v8 protocol")
+    try:
+        verify_no_index_flags(ROOT, CALIBRATION_INPUT_FILES)
+    except RepositoryTaskError as exc:
+        raise SystemExit(str(exc)) from exc
     try:
         verify_protocol_image(protocol_data, args.image)
     except RepositoryTaskError as exc:
         raise SystemExit(str(exc)) from exc
     if protocol_data["source"]["baseline_server_sha256"] != BASELINE_SERVER_SHA256:
         raise SystemExit("protocol baseline source hash disagrees with the grader")
+    try:
+        verify_task_prompt(protocol_data, task)
+    except RepositoryTaskError as exc:
+        raise SystemExit(str(exc)) from exc
     try:
         verified_implementation = verify_protocol_implementation(protocol_data, ROOT)
     except RepositoryTaskError as exc:

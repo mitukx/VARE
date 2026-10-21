@@ -68,6 +68,12 @@ LOCKED_IMPLEMENTATION_FILES = frozenset(
         "tests/test_mlsys_repo_task.py",
     }
 )
+CALIBRATION_INPUT_FILES = LOCKED_IMPLEMENTATION_FILES | frozenset(
+    {
+        "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v8.json",
+        "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/task.md",
+    }
+)
 
 
 def sha256_file(path: Path) -> str:
@@ -172,6 +178,36 @@ def verify_protocol_implementation(
     return verified
 
 
+def verify_no_index_flags(repo_root: Path, relative_paths: set[str] | frozenset[str]) -> None:
+    """Reject Git index flags that make a dirty calibration input look clean."""
+    root = repo_root.resolve(strict=True)
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(root), "ls-files", "-v", "--", *sorted(relative_paths)],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise RepositoryTaskError("cannot inspect calibration input index flags") from exc
+    seen: set[str] = set()
+    for line in result.stdout.splitlines():
+        if len(line) < 3 or line[1] != " ":
+            raise RepositoryTaskError("cannot parse calibration input index flags")
+        tag, relative = line[0], line[2:]
+        seen.add(relative)
+        if tag == "S" or tag.islower():
+            raise RepositoryTaskError(
+                f"calibration input has a Git index flag (assume-unchanged or skip-worktree): {relative}"
+            )
+    missing = set(relative_paths) - seen
+    if missing:
+        raise RepositoryTaskError(
+            f"calibration input is not tracked: {sorted(missing)[0]}"
+        )
+
+
 def verify_protocol_image(protocol: dict[str, Any], image: str) -> None:
     """Require the runtime image to match the frozen calibration protocol."""
     runtime = protocol.get("runtime")
@@ -179,6 +215,17 @@ def verify_protocol_image(protocol: dict[str, Any], image: str) -> None:
         raise RepositoryTaskError(
             "requested image differs from the frozen protocol image"
         )
+
+
+def verify_task_prompt(protocol: dict[str, Any], task_path: Path) -> str:
+    """Bind the candidate-visible task statement to its frozen prompt hash."""
+    expected = protocol.get("task_contract", {}).get("prompt_sha256")
+    if not isinstance(expected, str) or len(expected) != 64:
+        raise RepositoryTaskError("protocol task prompt hash is missing or malformed")
+    actual = sha256_file(task_path)
+    if actual != expected:
+        raise RepositoryTaskError("task prompt hash disagrees with the frozen protocol")
+    return actual
 
 
 def calibration_accepts(

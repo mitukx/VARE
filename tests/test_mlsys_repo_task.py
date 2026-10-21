@@ -275,11 +275,63 @@ def test_protocol_implementation_lock_fails_closed_on_missing_entries(
         )
 
 
+@pytest.mark.parametrize("index_flag", ["--assume-unchanged", "--skip-worktree"])
+def test_calibration_inputs_reject_hidden_git_index_flags(
+    tmp_path: Path, index_flag: str
+):
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    subprocess.run(["git", "init", str(repo)], check=True, capture_output=True)
+    subprocess.run(
+        ["git", "-C", str(repo), "config", "user.email", "test@example.invalid"],
+        check=True,
+    )
+    subprocess.run(
+        ["git", "-C", str(repo), "config", "user.name", "Test"], check=True
+    )
+    source = repo / "locked.py"
+    source.write_text("pinned bytes\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(repo), "add", "locked.py"], check=True)
+    subprocess.run(
+        ["git", "-C", str(repo), "commit", "-m", "pin"],
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "-C", str(repo), "update-index", index_flag, "locked.py"],
+        check=True,
+    )
+    source.write_text("altered but status-hidden\n", encoding="utf-8")
+    status = subprocess.run(
+        ["git", "-C", str(repo), "status", "--porcelain"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout
+    assert status == ""
+    with pytest.raises(RepositoryTaskError, match="index flag"):
+        repo_task.verify_no_index_flags(repo, {"locked.py"})
+
+
 def test_protocol_image_must_match_frozen_runtime():
     protocol = {"runtime": {"image": "python@sha256:" + "a" * 64}}
     repo_task.verify_protocol_image(protocol, "python@sha256:" + "a" * 64)
     with pytest.raises(RepositoryTaskError, match="frozen protocol image"):
         repo_task.verify_protocol_image(protocol, "python@sha256:" + "b" * 64)
+
+
+def test_candidate_visible_task_prompt_must_match_frozen_protocol(tmp_path: Path):
+    path = tmp_path / "task.md"
+    path.write_text("frozen prompt\n", encoding="utf-8")
+    protocol = {
+        "task_contract": {"prompt_sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+    }
+    assert repo_task.verify_task_prompt(protocol, path) == protocol["task_contract"][
+        "prompt_sha256"
+    ]
+    path.write_text("changed prompt\n", encoding="utf-8")
+    with pytest.raises(RepositoryTaskError, match="prompt hash"):
+        repo_task.verify_task_prompt(protocol, path)
 
 
 def test_calibration_rejects_mutable_implementation_worktree():
