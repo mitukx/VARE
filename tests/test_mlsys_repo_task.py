@@ -280,3 +280,17 @@ def test_protocol_image_must_match_frozen_runtime():
     repo_task.verify_protocol_image(protocol, "python@sha256:" + "a" * 64)
     with pytest.raises(RepositoryTaskError, match="frozen protocol image"):
         repo_task.verify_protocol_image(protocol, "python@sha256:" + "b" * 64)
+
+
+def test_calibration_rejects_mutable_implementation_worktree():
+    gates = {
+        "baseline_failed": True,
+        "known_fix_passed": True,
+        "fixed_source_matches": True,
+        "source_swap_rejected": True,
+        "red_team_verified": True,
+    }
+    assert repo_task.calibration_accepts(**gates, implementation_worktree_clean=True)
+    assert not repo_task.calibration_accepts(
+        **gates, implementation_worktree_clean=False
+    )

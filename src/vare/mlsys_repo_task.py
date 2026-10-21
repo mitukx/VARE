@@ -181,6 +181,29 @@ def verify_protocol_image(protocol: dict[str, Any], image: str) -> None:
         )
 
 
+def calibration_accepts(
+    *,
+    baseline_failed: bool,
+    known_fix_passed: bool,
+    fixed_source_matches: bool,
+    source_swap_rejected: bool,
+    red_team_verified: bool,
+    implementation_worktree_clean: bool,
+) -> bool:
+    """Accept evidence only when every protocol gate is explicitly true."""
+    return all(
+        value is True
+        for value in (
+            baseline_failed,
+            known_fix_passed,
+            fixed_source_matches,
+            source_swap_rejected,
+            red_team_verified,
+            implementation_worktree_clean,
+        )
+    )
+
+
 def workspace_manifest_sha256(root: Path) -> str:
     entries = [
         {

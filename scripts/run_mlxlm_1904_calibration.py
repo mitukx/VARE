@@ -27,6 +27,7 @@ from vare.mlsys_repo_task import (
     verify_protocol_implementation,
     verify_red_team_evidence,
     verify_protocol_image,
+    calibration_accepts,
     RepositoryTaskError,
 )
 
@@ -51,7 +52,7 @@ def main() -> int:
     patch = Path(__file__).resolve().parents[1] / (
         "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/known_fix.patch"
     )
-    protocol = patch.parent / "protocol-v6.json"
+    protocol = patch.parent / "protocol-v7.json"
     task = patch.parent / "task.md"
     started = time.monotonic()
     implementation_commit = subprocess.run(
@@ -68,10 +69,14 @@ def main() -> int:
         text=True,
         timeout=10,
     ).stdout.strip()
+    if not implementation_worktree_clean:
+        raise SystemExit(
+            "calibration requires a clean tracked worktree containing the frozen protocol and evaluator bytes"
+        )
     output.parent.mkdir(parents=True, exist_ok=True)
     protocol_data = json.loads(protocol.read_text(encoding="utf-8"))
-    if protocol_data.get("protocol_id") != "mlsys-repository-task-mlxlm-1904-v6":
-        raise SystemExit("calibration requires the v6 protocol")
+    if protocol_data.get("protocol_id") != "mlsys-repository-task-mlxlm-1904-v7":
+        raise SystemExit("calibration requires the v7 protocol")
     try:
         verify_protocol_image(protocol_data, args.image)
     except RepositoryTaskError as exc:
@@ -232,12 +237,14 @@ def main() -> int:
                 "matches_pinned_fixed_source"
             ],
             "fixed_source_swap_rejected": fixed_swap_rejected,
-            "calibration_passed": (
-                arms["baseline"]["grade"]["passed"] is False
-                and arms["fixed"]["grade"]["passed"] is True
-                and arms["fixed"]["matches_pinned_fixed_source"] is True
-                and fixed_swap_rejected is True
-                and red_team_verified is True
+            "calibration_passed": calibration_accepts(
+                baseline_failed=arms["baseline"]["grade"]["passed"] is False,
+                known_fix_passed=arms["fixed"]["grade"]["passed"] is True,
+                fixed_source_matches=arms["fixed"]["matches_pinned_fixed_source"]
+                is True,
+                source_swap_rejected=fixed_swap_rejected is True,
+                red_team_verified=red_team_verified is True,
+                implementation_worktree_clean=implementation_worktree_clean is True,
             ),
             "evidence_level": "E1 narrow historical function-contract calibration",
         },
