@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import json
 import os
@@ -15,8 +16,8 @@ from typing import Any
 from vare.isolated_candidate import FunctionCall, grade_calls
 
 ROOT = Path(__file__).resolve().parents[1]
-PROTOCOL = ROOT / "experiments/coding_agent_phase_a_structured_v1/protocol-v6.json"
-PROTOCOL_LOCK = ROOT / "experiments/coding_agent_phase_a_structured_v1/protocol-v6.lock.json"
+PROTOCOL = ROOT / "experiments/coding_agent_phase_a_structured_v1/protocol-v7.json"
+PROTOCOL_LOCK = ROOT / "experiments/coding_agent_phase_a_structured_v1/protocol-v7.lock.json"
 TASKS: dict[str, tuple[str, str, str, dict[str, Any], dict[str, Any]]] = {
     "transformers-49116-tokenizer-routing-v2": (
         "transformers_49116_tokenizer_routing_v2",
@@ -173,6 +174,132 @@ def _scan_candidate(workspace: Path, manifest: dict[str, Any], target: str) -> t
     return actual_files, len(actual_files), len(actual_dirs)
 
 
+def _reject_post_definition_registry_mutations(source: bytes) -> None:
+    """Reject common post-definition writes to the protected tokenizer registries."""
+    try:
+        tree = ast.parse(source.decode("utf-8"), filename="tokenization_auto.py")
+    except (UnicodeDecodeError, SyntaxError) as exc:
+        raise ValueError("candidate tokenizer source is not valid UTF-8 Python") from exc
+
+    names = {"TOKENIZER_MAPPING_NAMES", "MODELS_WITH_INCORRECT_HUB_TOKENIZER_CLASS"}
+    definitions = {name: 0 for name in names}
+    aliases: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, ast.Name) and target.id in names:
+                    definitions[target.id] += 1
+                if (isinstance(target, ast.Name) and isinstance(node.value, ast.Name)
+                        and node.value.id in names | aliases):
+                    aliases.add(target.id)
+        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
+            if node.target.id in names:
+                definitions[node.target.id] += 1
+    if any(count != 1 for count in definitions.values()):
+        raise ValueError("candidate tokenizer source redefines a protected runtime registry")
+
+    protected = names | aliases
+    mutators = {"clear", "pop", "popitem", "setdefault", "update", "add", "discard", "remove"}
+    allowed_dynamic_registration: set[int] = set()
+    for node in tree.body:
+        if not (isinstance(node, ast.For) and isinstance(node.target, ast.Name)
+                and node.target.id == "model_type" and isinstance(node.iter, ast.Name)
+                and node.iter.id == "MODELS_WITH_INCORRECT_HUB_TOKENIZER_CLASS"):
+            continue
+        for statement in node.body:
+            if not isinstance(statement, ast.If) or not isinstance(statement.test, ast.Compare):
+                continue
+            test = statement.test
+            if not (isinstance(test.left, ast.Name) and test.left.id == "model_type"
+                    and len(test.ops) == 1 and isinstance(test.ops[0], ast.NotIn)
+                    and len(test.comparators) == 1 and isinstance(test.comparators[0], ast.Name)
+                    and test.comparators[0].id == "TOKENIZER_MAPPING_NAMES"):
+                continue
+            for candidate in statement.body:
+                if not isinstance(candidate, ast.Assign):
+                    continue
+                if any(
+                    isinstance(target, ast.Subscript)
+                    and isinstance(target.value, ast.Name)
+                    and target.value.id == "TOKENIZER_MAPPING_NAMES"
+                    and isinstance(target.slice, ast.Name)
+                    and target.slice.id == "model_type"
+                    for target in candidate.targets
+                ):
+                    allowed_dynamic_registration.add(id(candidate))
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            receiver = node.func.value
+            if (isinstance(receiver, ast.Name) and receiver.id in protected
+                    and node.func.attr in mutators):
+                raise ValueError("candidate tokenizer source mutates a protected runtime registry")
+        targets: list[ast.expr] = []
+        if isinstance(node, (ast.Assign, ast.Delete)):
+            targets = list(node.targets)
+        elif isinstance(node, (ast.AnnAssign, ast.AugAssign, ast.NamedExpr)):
+            targets = [node.target]
+        for target in targets:
+            for child in ast.walk(target):
+                if (isinstance(child, ast.Name) and child.id in protected
+                        and isinstance(target, ast.Subscript)
+                        and id(node) not in allowed_dynamic_registration):
+                    raise ValueError("candidate tokenizer source writes into a protected runtime registry")
+                if isinstance(child, ast.Name) and child.id in protected and isinstance(node, ast.Delete):
+                    raise ValueError("candidate tokenizer source deletes a protected runtime registry")
+
+
+def _decode_ast_dump(text: str) -> ast.AST:
+    """Decode the pinned, non-executable ast.dump representation."""
+    constructors = {
+        name: getattr(ast, name)
+        for name in ("IfExp", "Call", "Name", "Constant", "Load", "List", "Tuple", "Dict")
+    }
+    parsed = ast.parse(text, mode="eval").body
+
+    def decode(node: ast.AST) -> Any:
+        if isinstance(node, ast.Constant):
+            return node.value
+        if isinstance(node, (ast.List, ast.Tuple)):
+            values = [decode(item) for item in node.elts]
+            return values if isinstance(node, ast.List) else tuple(values)
+        if isinstance(node, ast.Dict):
+            if any(key is None for key in node.keys):
+                raise ValueError("pinned tokenizer registry AST contains dictionary unpacking")
+            return {
+                decode(key): decode(value)
+                for key, value in zip(node.keys, node.values, strict=True)
+                if key is not None
+            }
+        if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Name):
+            raise ValueError("pinned tokenizer registry AST uses an unsupported representation")
+        constructor = constructors.get(node.func.id)
+        if constructor is None or node.args:
+            raise ValueError("pinned tokenizer registry AST names an unsupported node")
+        fields = {keyword.arg: decode(keyword.value) for keyword in node.keywords if keyword.arg}
+        return constructor(**fields)
+
+    decoded = decode(parsed)
+    if not isinstance(decoded, ast.AST):
+        raise ValueError("pinned tokenizer registry entry is not an AST node")
+    return decoded
+
+
+def _resolve_registry_expression(node: ast.AST, features: dict[str, bool]) -> Any:
+    if isinstance(node, ast.Constant):
+        return node.value
+    if isinstance(node, ast.IfExp) and isinstance(node.test, ast.Call) and isinstance(node.test.func, ast.Name):
+        feature = {
+            "is_tokenizers_available": "tokenizers",
+            "is_sentencepiece_available": "sentencepiece",
+            "is_g2p_en_available": "g2p_en",
+            "is_mistral_common_available": "mistral_common",
+        }.get(node.test.func.id)
+        if feature is None or node.test.args or node.test.keywords or feature not in features:
+            raise ValueError("tokenizer registry contains an unpinned optional dependency condition")
+        return _resolve_registry_expression(node.body if features[feature] else node.orelse, features)
+    raise ValueError("pinned tokenizer registry expression has unsupported semantics")
+
+
 def _stage_verified_snapshot(subject: Path, manifest: dict[str, Any], files: dict[str, bytes]) -> None:
     """Rebuild the grader subject only from the already verified file bytes."""
     directories = manifest["directories"]
@@ -238,6 +365,7 @@ def grade(task_id: str, workspace: Path, image: str) -> dict[str, Any]:
         raise ValueError("candidate workspace root must not be a symlink")
     files, file_count, directory_count = _scan_candidate(workspace, manifest, target)
     if task_id == "transformers-49116-tokenizer-routing-v2":
+        _reject_post_definition_registry_mutations(files[target])
         expected_registry = lock.get("tokenizer_registry_expected")
         if not isinstance(expected_registry, dict):
             raise ValueError("frozen tokenizer registry expectation is missing")
@@ -256,6 +384,24 @@ def grade(task_id: str, workspace: Path, image: str) -> dict[str, Any]:
             json.dumps(
                 registry_expectation["all_override_types"], separators=(",", ":")
             ).encode("utf-8")
+        )
+        features = protocol.get("tokenizer_registry_features")
+        required_features = {"tokenizers", "sentencepiece", "g2p_en", "mistral_common"}
+        if not isinstance(features, dict) or set(features) != required_features:
+            raise ValueError("frozen tokenizer registry feature availability is missing")
+        if any(type(value) is not bool for value in features.values()):
+            raise ValueError("frozen tokenizer registry feature availability is malformed")
+        runtime_mapping = {
+            name: _resolve_registry_expression(_decode_ast_dump(expression), features)
+            for name, expression in registry_expectation["mapping"].items()
+        }
+        for name in registry_expectation["all_override_types"]:
+            runtime_mapping.setdefault(name, "TokenizersBackend" if features["tokenizers"] else None)
+        expected["runtime_registry_sha256"] = sha256_bytes(
+            json.dumps(runtime_mapping, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        )
+        expected["runtime_override_types_sha256"] = sha256_bytes(
+            json.dumps(sorted(registry_expectation["all_override_types"]), separators=(",", ":")).encode("utf-8")
         )
     task_root = ROOT / "benchmarks/mlsys_repo_eval_v4" / task_dir_name
     adapter = task_root / "grader_adapter.py"

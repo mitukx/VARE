@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import asyncio
+from dataclasses import replace
 import hashlib
 import importlib.util
 import json
@@ -923,9 +924,10 @@ def test_historical_task_pinned_workspace_checks_revision_and_source_hashes(tmp_
     }), encoding="utf-8")
     contract = load_agent_task(task)
     assert verify_agent_workspace(workspace, contract) == {"solve.py": source_hash}
+    legacy_contract = replace(contract, source_hashes={})
     (workspace / "solve.py").write_text("def solve():\n    return 2\n", encoding="utf-8")
     with pytest.raises(ValueError, match="clean"):
-        verify_agent_workspace(workspace, contract)
+        verify_agent_workspace(workspace, legacy_contract)
 
     # Git's ordinary status can hide modified bytes when these index flags are
     # set. The preflight must reject the flags before the candidate runs.
@@ -934,7 +936,7 @@ def test_historical_task_pinned_workspace_checks_revision_and_source_hashes(tmp_
         subprocess.run(["git", "-C", str(workspace), "update-index", flag, "solve.py"], check=True)
         (workspace / "solve.py").write_text("def solve():\n    return 9\n", encoding="utf-8")
         with pytest.raises(ValueError, match="assume-unchanged or skip-worktree"):
-            verify_agent_workspace(workspace, contract)
+            verify_agent_workspace(workspace, legacy_contract)
         subprocess.run(["git", "-C", str(workspace), "update-index", "--no-assume-unchanged", "solve.py"], check=True)
         subprocess.run(["git", "-C", str(workspace), "update-index", "--no-skip-worktree", "solve.py"], check=True)
         (workspace / "solve.py").write_text("def solve():\n    return 1\n", encoding="utf-8")

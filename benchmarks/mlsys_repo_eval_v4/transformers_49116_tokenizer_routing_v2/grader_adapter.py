@@ -51,4 +51,10 @@ def routes(request: dict[str, Any]) -> dict[str, Any]:
         "all_override_types_sha256": hashlib.sha256(
             json.dumps(override_types, separators=(",", ":")).encode("utf-8")
         ).hexdigest(),
+        "runtime_registry_sha256": hashlib.sha256(
+            json.dumps(dict(TOKENIZER_MAPPING_NAMES), sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest(),
+        "runtime_override_types_sha256": hashlib.sha256(
+            json.dumps(sorted(MODELS_WITH_INCORRECT_HUB_TOKENIZER_CLASS), separators=(",", ":")).encode("utf-8")
+        ).hexdigest(),
     }

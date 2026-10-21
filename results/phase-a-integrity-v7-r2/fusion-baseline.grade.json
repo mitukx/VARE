@@ -1,0 +1,28 @@
+{
+  "baseline_manifest_sha256": "fe9dc0745b8a74203912fc58eb179e13015b8b29a9888914622698920db236c5",
+  "candidate_directory_count": 548,
+  "candidate_file_count": 3059,
+  "candidate_git_history_present": false,
+  "candidate_target": "src/transformers/fusion_mapping.py",
+  "candidate_target_sha256": "9a05ab8ccc0ab4756526bcb76c05099a8ec3f1b634c617c620305d1a81cc2f0c",
+  "candidate_workspace_inventory_verified": true,
+  "cases": [
+    {
+      "case_id": "transformers-49412-fusion-registration-idempotence-v2",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 3.595981208013724
+    }
+  ],
+  "container_image_id": "sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "expected_held_by_parent": true,
+  "grader_implementation_sha256": "8777b40a93a91fbdd0e81bc0d9225cc53589b6b4fdacf1b668a108055ea45c3d",
+  "grader_mounted": false,
+  "grading_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "passed": false,
+  "protocol_id": "vare-coding-agent-phase-a-integrity-v7",
+  "protocol_sha256": "eee325a414af59bd5d5c27d00ecba5a77779d7098ac017626396db640e43e9d3",
+  "task_id": "transformers-49412-fusion-registration-idempotence-v2",
+  "task_kind": "correctness",
+  "trusted_adapter_sha256": "a3fcd796c770714419f8ab4b5a1de44b11782a9c865aa8f3a560ea154b887e75"
+}

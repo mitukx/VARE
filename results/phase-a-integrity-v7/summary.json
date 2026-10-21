@@ -1,0 +1,74 @@
+{
+  "fusion_baseline": {
+    "path": "results/phase-a-integrity-v7/fusion-baseline.grade.json",
+    "sha256": "b43c02545de12ab9d25465e78bfbcf4720877aa7e2fd58f8c234aa3aa6450058"
+  },
+  "fusion_known_fix": {
+    "path": "results/phase-a-integrity-v7/fusion-known-fix.grade.json",
+    "sha256": "4c74f77bc11b48283f5c535d52e4579cca5419f1ededa5dadccada4447d52932"
+  },
+  "grader": {
+    "path": "scripts/grade_transformers_phase_a_v1.py",
+    "sha256": "8572b17653c26de7b9bf8ae7e1289cdaf0b669b8cc420f5a825c1b60438f5882"
+  },
+  "grader_sha256": "8572b17653c26de7b9bf8ae7e1289cdaf0b669b8cc420f5a825c1b60438f5882",
+  "grading_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "mypy_output": {
+    "path": "results/phase-a-integrity-v7/mypy.stdout.txt",
+    "sha256": "f9b031e5c45aa702cd4fef028d465551cb20a2c4698e0913c7b00766b20ac4d8"
+  },
+  "phase_a_tests": {
+    "path": "tests/test_grade_transformers_phase_a.py",
+    "sha256": "6afa75729dbfe64adc7ae48a24053905b03d7c082a82ed2610e18698bbdb0add"
+  },
+  "protocol": {
+    "path": "experiments/coding_agent_phase_a_structured_v1/protocol-v7.json",
+    "sha256": "eee325a414af59bd5d5c27d00ecba5a77779d7098ac017626396db640e43e9d3"
+  },
+  "protocol_id": "vare-coding-agent-phase-a-integrity-v7",
+  "protocol_lock": {
+    "path": "experiments/coding_agent_phase_a_structured_v1/protocol-v7.lock.json",
+    "sha256": "d83b5d3827c6ec89bc259a587197206036405c5027b792777ee20bd777b42a86"
+  },
+  "protocol_sha256": "eee325a414af59bd5d5c27d00ecba5a77779d7098ac017626396db640e43e9d3",
+  "pytest_output": {
+    "path": "results/phase-a-integrity-v7/tests.stdout.txt",
+    "sha256": "85fe305fee87b7af27c11a5cba0ea6c8935fffb658bb931c330475e118e4edf8"
+  },
+  "report": {
+    "path": "experiments/coding_agent_phase_a_structured_v1/integrity-v7-report.md",
+    "sha256": "947373682d2548e5b9ffe0833ad8765940189f7c3f98f0fb848878eb8419c0d4"
+  },
+  "ruff_output": {
+    "path": "results/phase-a-integrity-v7/ruff.stdout.txt",
+    "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+  },
+  "superseded_iterations": [
+    "results/phase-a-integrity-v7-r1/",
+    "results/phase-a-integrity-v7-r2/"
+  ],
+  "tokenizer_adapter": {
+    "path": "benchmarks/mlsys_repo_eval_v4/transformers_49116_tokenizer_routing_v2/grader_adapter.py",
+    "sha256": "8bc2769384317e9c94a111238c84b204f62e23e972b5d4eb29cb7e1530c6e796"
+  },
+  "tokenizer_baseline": {
+    "path": "results/phase-a-integrity-v7/tokenizer-baseline.grade.json",
+    "sha256": "19365736c703d71f0fe225a2360f7cf31524b0b6670c256b8d6879d13d7ab0f6"
+  },
+  "tokenizer_known_fix": {
+    "path": "results/phase-a-integrity-v7/tokenizer-known-fix.grade.json",
+    "sha256": "f126ee0455c5c10466a0de18432e6bd757027b6ec14162869dd8f47e502ae4ab"
+  },
+  "tokenizer_runtime_red_team": {
+    "path": "results/phase-a-integrity-v7/tokenizer-runtime-mutation.red-team.grade.json",
+    "sha256": "20def18d8139f5605babbfb5390ac4f0394f8d66885557419ef5f4b59ffacec3"
+  },
+  "workspace_contract": {
+    "path": "src/vare/agent_task_contract.py",
+    "sha256": "985a2ea3d054b2ce0bf82c98677da15734ee335bd906617167382d6cdd800405"
+  },
+  "workspace_tests": {
+    "path": "tests/test_separated_grading.py",
+    "sha256": "df8214ac629ff8e5138a893c76c8537ea3f5eca8e6689f30654b33102bc7c92b"
+  }
+}
