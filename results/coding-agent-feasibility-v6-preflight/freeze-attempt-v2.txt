@@ -1,0 +1,9 @@
+Command:
+uv run --no-project --with-requirements requirements/mlsys-agent-mlx.lock.txt python scripts/freeze_coding_agent_dev_study_v1.py --model-snapshot /Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b
+
+Repository commit before attempt: 3500b035395c969489624a9f5238c5d3626841ff
+Exit code: 1
+Result:
+RuntimeError: resource preflight is below the frozen safe-start floor
+
+No protocol-v1.json or protocol-v1.lock.json was created. The separate final resource audit at resource-gate-no-go-v2.json measured 440,926,208 bytes free swap, below the 536,870,912-byte minimum. The 91.5 MiB shortfall prevented protocol freeze; no task inference was run.
