@@ -105,6 +105,7 @@ def tools_for(
 
 def candidate_visible_tool_result(
     name: str, result: dict[str, Any], *, opaque_handles: bool,
+    max_read_chars: int = 6_000,
 ) -> dict[str, Any]:
     """Keep exact provenance in the transcript while sending bounded feedback to the model."""
     if not opaque_handles:
@@ -119,6 +120,25 @@ def candidate_visible_tool_result(
             + f"\n... diff truncated for model context; chars={len(diff)} sha256={digest} ...\n"
             + diff[-2_900:]
         )
+
+    if name == 'read_file':
+        visible = {
+            key: result[key]
+            for key in (
+                'path', 'start_line', 'end_line', 'workspace_revision_handle',
+                'source_preimage_handle', 'read_only', 'error',
+            )
+            if key in result
+        }
+        content = result.get('content', '')
+        if isinstance(content, str):
+            if len(content) > max_read_chars:
+                digest = hashlib.sha256(content.encode('utf-8')).hexdigest()
+                marker = f'\n... read output truncated; chars={len(content)} sha256={digest} ...\n'
+                keep = max(0, max_read_chars - len(marker))
+                content = content[:keep] + marker[:max_read_chars - keep]
+            visible['content'] = content
+        return visible
 
     if name in {'replace_text', 'insert_text'}:
         visible = {key: result[key] for key in ('applied', 'path', 'error') if key in result}
@@ -271,7 +291,7 @@ def resolve_allowed_path(raw_path: str, allowed: set[str]) -> str | None:
 
 
 def no_tool_retry_reminder(raw: str, *, edit_format: str, allowed_paths: list[str],
-                           token_limit: int) -> str:
+                           token_limit: int, opaque_handles: bool = False) -> str:
     """Give the agent actionable feedback when a bounded response has no tool call."""
     if '<tool_call>' in raw and '</tool_call>' not in raw:
         path_list = ', '.join(allowed_paths)
@@ -283,10 +303,14 @@ def no_tool_retry_reminder(raw: str, *, edit_format: str, allowed_paths: list[st
                 'to end with </tool_call>.'
             )
         if edit_format == 'structured':
+            handles = (
+                'workspace_revision_handle and source_preimage_handle'
+                if opaque_handles else 'expected_hash and expected_revision'
+            )
             return (
                 f'Your previous response was cut off at the {token_limit}-token limit. Do not reread the whole file. '
                 'Emit one complete short JSON tool call now. Use read_file for a small line range, then one replace_text '
-                'or insert_text action with the exact expected_hash and expected_revision returned by read_file.'
+                f'or insert_text action with the exact {handles} returned by read_file.'
             )
         return (
             f'Your previous tool call was cut off at the {token_limit}-token response limit. '
@@ -566,7 +590,7 @@ def main() -> int:
                 no_tool_retries += 1
                 messages.append({'role': 'user', 'content': no_tool_retry_reminder(
                     raw, edit_format=args.edit_format, allowed_paths=sorted(editable),
-                    token_limit=limit,
+                    token_limit=limit, opaque_handles=edit_controller is not None,
                 )})
                 entry['automatic_reminder'] = no_tool_retries
                 continue
@@ -590,6 +614,8 @@ def main() -> int:
             ]})
         else:
             messages.append({'role': 'assistant', 'content': raw})
+        turn_read_chars = 0
+        turn_read_budget = 6_000
         for match, name, arguments in parsed_calls:
             try:
                 if name == 'list_files':
@@ -794,8 +820,14 @@ def main() -> int:
                             result = {'finished': True}
                             stop_reason = 'agent_finished'
                 model_result = candidate_visible_tool_result(
-                    name, result, opaque_handles=edit_controller is not None,
+                    name, result,
+                    opaque_handles=edit_controller is not None,
+                    max_read_chars=max(0, turn_read_budget - turn_read_chars),
                 )
+                if name == 'read_file' and edit_controller is not None:
+                    model_content = model_result.get('content', '')
+                    if isinstance(model_content, str):
+                        turn_read_chars += len(model_content)
                 entry['tool_calls'].append({'name': name, 'arguments': arguments, 'result': result})
                 messages.append({'role': 'tool', 'name': name, 'content': json.dumps(model_result, ensure_ascii=False)})
                 if should_stop_after_tool(name, result):

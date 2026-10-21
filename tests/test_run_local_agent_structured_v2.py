@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from scripts.run_local_agent import (
     candidate_visible_tool_result,
+    no_tool_retry_reminder,
     should_stop_after_tool,
     tools_for,
 )
@@ -88,3 +89,41 @@ def test_edit_tool_diff_feedback_is_bounded() -> None:
     visible = candidate_visible_tool_result('replace_text', raw, opaque_handles=True)
     assert len(visible['diff']) < 6_000
     assert 'diff truncated for model context' in visible['diff']
+
+
+def test_opaque_read_feedback_uses_per_turn_cumulative_budget() -> None:
+    used = 0
+    outputs = []
+    for content in ('a' * 5_000, 'b' * 5_000, 'c' * 5_000):
+        visible = candidate_visible_tool_result(
+            'read_file',
+            {
+                'path': 'src/a.py',
+                'content': content,
+                'workspace_revision_handle': 'rev-0001',
+                'source_preimage_handle': 'src-0001',
+                'private_sha256': 'must not reach model',
+            },
+            opaque_handles=True,
+            max_read_chars=max(0, 6_000 - used),
+        )
+        outputs.append(visible)
+        used += len(visible['content'])
+        assert 'private_sha256' not in visible
+    assert used <= 6_000
+    assert len(outputs[0]['content']) == 5_000
+    assert 'truncated' in outputs[1]['content']
+    assert outputs[2]['content'] == ''
+
+
+def test_truncated_structured_retry_uses_active_opaque_handle_names() -> None:
+    reminder = no_tool_retry_reminder(
+        '<tool_call>{"name":"replace_text"',
+        edit_format='structured',
+        allowed_paths=['src/a.py'],
+        token_limit=512,
+        opaque_handles=True,
+    )
+    assert 'workspace_revision_handle' in reminder
+    assert 'source_preimage_handle' in reminder
+    assert 'expected_hash' not in reminder
