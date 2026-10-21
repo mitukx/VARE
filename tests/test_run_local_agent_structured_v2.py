@@ -177,6 +177,32 @@ def test_shared_turn_payload_budget_caps_edit_and_diff_feedback() -> None:
     assert bounded_turn_payload({'passed': True}, 0) == ''
 
 
+def test_large_diff_keeps_head_and_tail_excerpt_inside_serialized_budget() -> None:
+    diff = ''.join(f'- removed line {index}\n' for index in range(8_000))
+    encoded = bounded_turn_payload({'diff': diff, 'changed': True}, 5_900)
+    visible = json.loads(encoded)
+    assert len(encoded) <= 5_900
+    assert visible['diff_truncated'] is True
+    assert visible['diff'].startswith('- removed line 0')
+    assert visible['diff'].rstrip().endswith(f'- removed line {7_999}')
+    assert visible['diff_sha256']
+
+
+def test_manual_public_test_feedback_omits_internal_failure_signature() -> None:
+    raw = {
+        'passed': False,
+        'feedback': 'assertion failed',
+        'next_action': 'inspect the relevant branch',
+        'failure_signature': 'private-to-controller',
+    }
+    visible = candidate_visible_tool_result('run_public_tests', raw, opaque_handles=True)
+    assert visible == {
+        'passed': False,
+        'feedback': 'assertion failed',
+        'next_action': 'inspect the relevant branch',
+    }
+
+
 def test_truncated_structured_retry_uses_active_opaque_handle_names() -> None:
     reminder = no_tool_retry_reminder(
         '<tool_call>{"name":"replace_text"',

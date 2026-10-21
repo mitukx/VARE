@@ -225,14 +225,35 @@ def bounded_turn_payload(model_result: Any, remaining_chars: int) -> str:
     payload = json.dumps(model_result, ensure_ascii=False)
     if len(payload) <= remaining_chars:
         return payload
+    if isinstance(model_result, dict) and isinstance(model_result.get('diff'), str):
+        diff = model_result['diff']
+        digest = hashlib.sha256(diff.encode('utf-8')).hexdigest()
+        summary_fields = {key: value for key, value in model_result.items() if key != 'diff'}
+        summary_fields.update({
+            'diff_truncated': True,
+            'diff_chars': len(diff),
+            'diff_sha256': digest,
+        })
+        empty_excerpt = json.dumps({**summary_fields, 'diff': ''}, ensure_ascii=False)
+        marker = f'\n... diff excerpt truncated; chars={len(diff)} sha256={digest} ...\n'
+        available = max(0, remaining_chars - len(empty_excerpt))
+        while available > 0:
+            keep = max(0, available - len(marker))
+            head = (keep + 1) // 2
+            tail = keep // 2
+            excerpt = diff[:head] + marker[:available - keep] + (diff[-tail:] if tail else '')
+            candidate = json.dumps({**summary_fields, 'diff': excerpt}, ensure_ascii=False)
+            if len(candidate) <= remaining_chars:
+                return candidate
+            available -= max(1, len(candidate) - remaining_chars)
     digest = hashlib.sha256(payload.encode('utf-8')).hexdigest()
-    summary = json.dumps({
+    truncation_summary = json.dumps({
         'feedback_truncated': True,
         'original_chars': len(payload),
         'sha256': digest,
     }, ensure_ascii=False)
-    if len(summary) <= remaining_chars:
-        return summary
+    if len(truncation_summary) <= remaining_chars:
+        return truncation_summary
     return ''
 
 
@@ -891,8 +912,9 @@ def main() -> int:
                             final_summary = str(arguments.get('summary', ''))
                             result = {'finished': True}
                             stop_reason = 'agent_finished'
-                model_result = model_feedback_override or candidate_visible_tool_result(
-                    name, result,
+                feedback_result = model_feedback_override or result
+                model_result = candidate_visible_tool_result(
+                    name, feedback_result,
                     opaque_handles=edit_controller is not None,
                     max_read_chars=max(0, turn_output_budget - turn_output_chars),
                 )
