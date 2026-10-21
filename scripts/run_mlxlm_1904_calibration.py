@@ -44,7 +44,6 @@ def main() -> int:
     if args.docker_context:
         os.environ["DOCKER_CONTEXT"] = args.docker_context
     output = args.output.resolve()
-    output.parent.mkdir(parents=True, exist_ok=True)
     if output.exists():
         raise SystemExit(f"refusing to overwrite {output}")
     patch = Path(__file__).resolve().parents[1] / (
@@ -67,6 +66,7 @@ def main() -> int:
         text=True,
         timeout=10,
     ).stdout.strip()
+    output.parent.mkdir(parents=True, exist_ok=True)
     protocol_data = json.loads(protocol.read_text(encoding="utf-8"))
     if protocol_data["source"]["baseline_server_sha256"] != BASELINE_SERVER_SHA256:
         raise SystemExit("protocol baseline source hash disagrees with the grader")
