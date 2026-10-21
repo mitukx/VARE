@@ -1,0 +1,556 @@
+{
+  "analysis_schema_version": 1,
+  "analysis_script_sha256": "bd1d18eb0cfbe756ede42be3687a8eed026806b73148db7e2009b8fefa660550",
+  "interpretation": {
+    "exit_125": "Docker CLI/daemon failed to create the bind mount; test code did not execute.",
+    "read_efficiency": "Repeated exact path/line-range reads are counted separately; distinct reads are not asserted to be semantically useful.",
+    "reward_validity": "Run-2's zero rewards are historical records. Public-test launch failures mean those invocations provide no assertion-based feedback and cannot be interpreted as test failures.",
+    "tool_output_measurement": "Raw serialized tool-result character count. Exact model-visible serialized payloads were not retained in run-2."
+  },
+  "rollout_count": 12,
+  "rollouts": [
+    {
+      "agent_json_sha256": "c50f77b5e2b2d11135a10abd07f92e094595d3024df6bf514d364e73b55f6448",
+      "distinct_source_regions_read": 3,
+      "edit_applied": false,
+      "edit_attempt_tool_position": null,
+      "edit_attempted": false,
+      "edit_outcomes": {},
+      "finish_calls": 0,
+      "format_parse_failure_count": 0,
+      "independent_grade_failure": "repeated_ngram_count_mismatch",
+      "independent_grade_passed": false,
+      "independent_grade_sha256": "a87e7eb0d3ddec4c6801fe6b73f1ed4812706cae111ea422594fd786b04cf81d",
+      "new_tokens": 1353,
+      "no_tool_retries": 2,
+      "prompt_tokens": 28075,
+      "public_test_invocations": [],
+      "raw_tool_output_chars": 10955,
+      "repeated_exact_source_reads": 0,
+      "rollout_id": "greedy-0",
+      "source_read_calls": 3,
+      "source_search_calls": 1,
+      "source_search_queries": [
+        "watermarking"
+      ],
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49315-watermark-repeat-v1",
+      "tool_call_counts": {
+        "list_files": 1,
+        "read_file": 3,
+        "search_text": 1
+      },
+      "tool_calls_before_first_edit": null,
+      "tool_turns": 8
+    },
+    {
+      "agent_json_sha256": "7c37cabd587f2c129b79caaea38b2b143487adb58a9fbd89478d9a056926ea7a",
+      "distinct_source_regions_read": 1,
+      "edit_applied": true,
+      "edit_attempt_tool_position": 5,
+      "edit_attempted": true,
+      "edit_outcomes": {
+        "applied": 1
+      },
+      "finish_calls": 2,
+      "format_parse_failure_count": 0,
+      "independent_grade_failure": "candidate_exception:KeyError",
+      "independent_grade_passed": false,
+      "independent_grade_sha256": "0cfb79b577898302a81c0760138cb114489fefd06824c4b48b401b69a1c66c3d",
+      "new_tokens": 1603,
+      "no_tool_retries": 1,
+      "prompt_tokens": 30890,
+      "public_test_invocations": [
+        {
+          "classification": null,
+          "error": null,
+          "returncode": 125,
+          "stderr": "docker: Error response from daemon: invalid mount config for type \"bind\": bind source path does not exist: /private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-transformers-49515-rope-setter-v1-cedk4_hk/workspace\n\nRun 'docker run --help' for more information\n"
+        },
+        {
+          "classification": null,
+          "error": null,
+          "returncode": 125,
+          "stderr": "docker: Error response from daemon: invalid mount config for type \"bind\": bind source path does not exist: /private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-transformers-49515-rope-setter-v1-cedk4_hk/workspace\n\nRun 'docker run --help' for more information\n"
+        }
+      ],
+      "raw_tool_output_chars": 7773,
+      "repeated_exact_source_reads": 1,
+      "rollout_id": "greedy-0",
+      "source_read_calls": 2,
+      "source_search_calls": 1,
+      "source_search_queries": [
+        "rope"
+      ],
+      "stop_reason": "no_tool_call_after_edit",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49515-rope-setter-v1",
+      "tool_call_counts": {
+        "finish": 2,
+        "list_files": 1,
+        "read_file": 2,
+        "replace_text": 1,
+        "run_public_tests": 1,
+        "search_text": 1
+      },
+      "tool_calls_before_first_edit": 4,
+      "tool_turns": 10
+    },
+    {
+      "agent_json_sha256": "eaee7428e971fc5bf5dad9cfbca233263ae39d9b9f54fd77dc38d0ecbdf9d8f3",
+      "distinct_source_regions_read": 1,
+      "edit_applied": false,
+      "edit_attempt_tool_position": null,
+      "edit_attempted": false,
+      "edit_outcomes": {},
+      "finish_calls": 0,
+      "format_parse_failure_count": 0,
+      "independent_grade_failure": "structured_output_type_or_value_mismatch",
+      "independent_grade_passed": false,
+      "independent_grade_sha256": "b73e41d188ce909b90fbe1bae47e50b9eb5f196998bdea979b8976a1fa357962",
+      "new_tokens": 950,
+      "no_tool_retries": 2,
+      "prompt_tokens": 20685,
+      "public_test_invocations": [
+        {
+          "classification": null,
+          "error": null,
+          "returncode": 125,
+          "stderr": "docker: Error response from daemon: invalid mount config for type \"bind\": bind source path does not exist: /private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-transformers-49731-generation-device-type-v1-g94pqi1y/workspace\n\nRun 'docker run --help' for more information\n"
+        }
+      ],
+      "raw_tool_output_chars": 3305,
+      "repeated_exact_source_reads": 0,
+      "rollout_id": "greedy-0",
+      "source_read_calls": 1,
+      "source_search_calls": 4,
+      "source_search_queries": [
+        "generation preparation",
+        "device transfer",
+        "recursive",
+        "tuple"
+      ],
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49731-generation-device-type-v1",
+      "tool_call_counts": {
+        "list_files": 1,
+        "read_file": 1,
+        "run_public_tests": 1,
+        "search_text": 4
+      },
+      "tool_calls_before_first_edit": null,
+      "tool_turns": 10
+    },
+    {
+      "agent_json_sha256": "5abdbc71270c4ea0e82a4b4c9105383db7bdfc7f884c260dce853ef78473567f",
+      "distinct_source_regions_read": 4,
+      "edit_applied": false,
+      "edit_attempt_tool_position": null,
+      "edit_attempted": false,
+      "edit_outcomes": {},
+      "finish_calls": 0,
+      "format_parse_failure_count": 0,
+      "independent_grade_failure": "janus_background_color_mismatch",
+      "independent_grade_passed": false,
+      "independent_grade_sha256": "6a3e4ffda4493f668bb256016aa7e9d9ff32934f6f15ed8faa22e159f26954ec",
+      "new_tokens": 1436,
+      "no_tool_retries": 2,
+      "prompt_tokens": 23390,
+      "public_test_invocations": [],
+      "raw_tool_output_chars": 5649,
+      "repeated_exact_source_reads": 0,
+      "rollout_id": "greedy-0",
+      "source_read_calls": 4,
+      "source_search_calls": 2,
+      "source_search_queries": [
+        "default_padding",
+        "padding"
+      ],
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49767-janus-background-v1",
+      "tool_call_counts": {
+        "list_files": 1,
+        "read_file": 4,
+        "search_text": 2
+      },
+      "tool_calls_before_first_edit": null,
+      "tool_turns": 10
+    },
+    {
+      "agent_json_sha256": "05aa28ef12fb46700372f36491c804a0716f101bb4ac28330079565472cffa82",
+      "distinct_source_regions_read": 1,
+      "edit_applied": false,
+      "edit_attempt_tool_position": null,
+      "edit_attempted": false,
+      "edit_outcomes": {},
+      "finish_calls": 0,
+      "format_parse_failure_count": 0,
+      "independent_grade_failure": "repeated_ngram_count_mismatch",
+      "independent_grade_passed": false,
+      "independent_grade_sha256": "e11672499e6283016ddc4753367a1e63fa46147b5ad6c9bfbaae1949603a0774",
+      "new_tokens": 1342,
+      "no_tool_retries": 2,
+      "prompt_tokens": 22629,
+      "public_test_invocations": [],
+      "raw_tool_output_chars": 7929,
+      "repeated_exact_source_reads": 1,
+      "rollout_id": "sampled-101",
+      "source_read_calls": 2,
+      "source_search_calls": 2,
+      "source_search_queries": [
+        "n-gram",
+        "watermark"
+      ],
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49315-watermark-repeat-v1",
+      "tool_call_counts": {
+        "list_files": 1,
+        "read_file": 2,
+        "search_text": 2
+      },
+      "tool_calls_before_first_edit": null,
+      "tool_turns": 8
+    },
+    {
+      "agent_json_sha256": "d3baad21cb737df05381bbe559c8c3c509f2383285e743ebfdfd7e62a6103015",
+      "distinct_source_regions_read": 5,
+      "edit_applied": false,
+      "edit_attempt_tool_position": null,
+      "edit_attempted": false,
+      "edit_outcomes": {},
+      "finish_calls": 0,
+      "format_parse_failure_count": 0,
+      "independent_grade_failure": "repeated_ngram_count_mismatch",
+      "independent_grade_passed": false,
+      "independent_grade_sha256": "236bb48e45c462baa74583fcca378c353f5e73a5ee91f443e65918ecb9b69ab0",
+      "new_tokens": 681,
+      "no_tool_retries": 1,
+      "prompt_tokens": 28210,
+      "public_test_invocations": [],
+      "raw_tool_output_chars": 15152,
+      "repeated_exact_source_reads": 0,
+      "rollout_id": "sampled-202",
+      "source_read_calls": 5,
+      "source_search_calls": 1,
+      "source_search_queries": [
+        "watermarking"
+      ],
+      "stop_reason": "context_budget_exhausted",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49315-watermark-repeat-v1",
+      "tool_call_counts": {
+        "list_files": 1,
+        "read_file": 5,
+        "search_text": 1
+      },
+      "tool_calls_before_first_edit": null,
+      "tool_turns": 8
+    },
+    {
+      "agent_json_sha256": "8e63ccf8d67e0b62ebc845af496a124ee9cf54b04729b65b9c4d16cbbf0f83b7",
+      "distinct_source_regions_read": 1,
+      "edit_applied": false,
+      "edit_attempt_tool_position": 4,
+      "edit_attempted": true,
+      "edit_outcomes": {
+        "unknown edit handle; read the current source region": 3
+      },
+      "finish_calls": 0,
+      "format_parse_failure_count": 0,
+      "independent_grade_failure": "candidate_exception:KeyError",
+      "independent_grade_passed": false,
+      "independent_grade_sha256": "1fe4ec40a08a066faab83d69ed2012f675941a7788ad78c976ee3503a86e79d7",
+      "new_tokens": 1257,
+      "no_tool_retries": 1,
+      "prompt_tokens": 42823,
+      "public_test_invocations": [
+        {
+          "classification": null,
+          "error": null,
+          "returncode": 125,
+          "stderr": "docker: Error response from daemon: invalid mount config for type \"bind\": bind source path does not exist: /private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-transformers-49515-rope-setter-v1-cedk4_hk/workspace\n\nRun 'docker run --help' for more information\n"
+        }
+      ],
+      "raw_tool_output_chars": 12782,
+      "repeated_exact_source_reads": 4,
+      "rollout_id": "sampled-101",
+      "source_read_calls": 5,
+      "source_search_calls": 1,
+      "source_search_queries": [
+        "rope"
+      ],
+      "stop_reason": "turn_budget_exhausted",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49515-rope-setter-v1",
+      "tool_call_counts": {
+        "list_files": 1,
+        "read_file": 5,
+        "replace_text": 3,
+        "run_public_tests": 1,
+        "search_text": 1
+      },
+      "tool_calls_before_first_edit": 3,
+      "tool_turns": 12
+    },
+    {
+      "agent_json_sha256": "fbcf6a289f9315a36bb5f5d8384bb19d6a5763a2502ee09be513a2bdf41b81cf",
+      "distinct_source_regions_read": 1,
+      "edit_applied": false,
+      "edit_attempt_tool_position": null,
+      "edit_attempted": false,
+      "edit_outcomes": {},
+      "finish_calls": 0,
+      "format_parse_failure_count": 0,
+      "independent_grade_failure": "candidate_exception:KeyError",
+      "independent_grade_passed": false,
+      "independent_grade_sha256": "e71e11d25fcccc65d8a0a9f17033e39433107681376131493f48c0fa49ff00e7",
+      "new_tokens": 1265,
+      "no_tool_retries": 2,
+      "prompt_tokens": 18190,
+      "public_test_invocations": [
+        {
+          "classification": null,
+          "error": null,
+          "returncode": 125,
+          "stderr": "docker: Error response from daemon: invalid mount config for type \"bind\": bind source path does not exist: /private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-transformers-49515-rope-setter-v1-cedk4_hk/workspace\n\nRun 'docker run --help' for more information\n"
+        }
+      ],
+      "raw_tool_output_chars": 4805,
+      "repeated_exact_source_reads": 0,
+      "rollout_id": "sampled-202",
+      "source_read_calls": 1,
+      "source_search_calls": 1,
+      "source_search_queries": [
+        "rope"
+      ],
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49515-rope-setter-v1",
+      "tool_call_counts": {
+        "list_files": 1,
+        "read_file": 1,
+        "run_public_tests": 1,
+        "search_text": 1
+      },
+      "tool_calls_before_first_edit": null,
+      "tool_turns": 7
+    },
+    {
+      "agent_json_sha256": "52f5acf0df722ced00b924a87a4993cb322acf55dc10d436d45f73ce72cfe2f0",
+      "distinct_source_regions_read": 2,
+      "edit_applied": false,
+      "edit_attempt_tool_position": null,
+      "edit_attempted": false,
+      "edit_outcomes": {},
+      "finish_calls": 1,
+      "format_parse_failure_count": 0,
+      "independent_grade_failure": "structured_output_type_or_value_mismatch",
+      "independent_grade_passed": false,
+      "independent_grade_sha256": "468e077f45e5b8e19e06be2e64222524087492c6bc22ab8efbbde64be3413158",
+      "new_tokens": 878,
+      "no_tool_retries": 0,
+      "prompt_tokens": 31674,
+      "public_test_invocations": [
+        {
+          "classification": null,
+          "error": null,
+          "returncode": 125,
+          "stderr": "docker: Error response from daemon: invalid mount config for type \"bind\": bind source path does not exist: /private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-transformers-49731-generation-device-type-v1-g94pqi1y/workspace\n\nRun 'docker run --help' for more information\n"
+        }
+      ],
+      "raw_tool_output_chars": 7326,
+      "repeated_exact_source_reads": 0,
+      "rollout_id": "sampled-101",
+      "source_read_calls": 2,
+      "source_search_calls": 7,
+      "source_search_queries": [
+        "generation preparation",
+        "device transfer",
+        "recursive",
+        "tensor",
+        "generation preparation",
+        "device transfer",
+        "recursive"
+      ],
+      "stop_reason": "turn_budget_exhausted",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49731-generation-device-type-v1",
+      "tool_call_counts": {
+        "finish": 1,
+        "list_files": 1,
+        "read_file": 2,
+        "run_public_tests": 1,
+        "search_text": 7
+      },
+      "tool_calls_before_first_edit": null,
+      "tool_turns": 12
+    },
+    {
+      "agent_json_sha256": "30ffed9385f8a646a1a104288ad775562a8bed235800dd55b211468c13c0c9bb",
+      "distinct_source_regions_read": 2,
+      "edit_applied": false,
+      "edit_attempt_tool_position": null,
+      "edit_attempted": false,
+      "edit_outcomes": {},
+      "finish_calls": 0,
+      "format_parse_failure_count": 0,
+      "independent_grade_failure": "structured_output_type_or_value_mismatch",
+      "independent_grade_passed": false,
+      "independent_grade_sha256": "84306c3f8bd8063e2c325660b80f38c0711b88c983a1bdc731572c628f15eefc",
+      "new_tokens": 1290,
+      "no_tool_retries": 2,
+      "prompt_tokens": 30040,
+      "public_test_invocations": [
+        {
+          "classification": null,
+          "error": null,
+          "returncode": 125,
+          "stderr": "docker: Error response from daemon: invalid mount config for type \"bind\": bind source path does not exist: /private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-transformers-49731-generation-device-type-v1-g94pqi1y/workspace\n\nRun 'docker run --help' for more information\n"
+        }
+      ],
+      "raw_tool_output_chars": 8162,
+      "repeated_exact_source_reads": 0,
+      "rollout_id": "sampled-202",
+      "source_read_calls": 2,
+      "source_search_calls": 4,
+      "source_search_queries": [
+        "generation preparation",
+        "device transfer",
+        "recursive",
+        "tensor"
+      ],
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49731-generation-device-type-v1",
+      "tool_call_counts": {
+        "list_files": 1,
+        "read_file": 2,
+        "run_public_tests": 1,
+        "search_text": 4
+      },
+      "tool_calls_before_first_edit": null,
+      "tool_turns": 11
+    },
+    {
+      "agent_json_sha256": "aacc4ce799ee01448e1600671b77268a5fb63695bb07efb9e5f98e72d80841d0",
+      "distinct_source_regions_read": 7,
+      "edit_applied": false,
+      "edit_attempt_tool_position": null,
+      "edit_attempted": false,
+      "edit_outcomes": {},
+      "finish_calls": 0,
+      "format_parse_failure_count": 0,
+      "independent_grade_failure": "janus_background_color_mismatch",
+      "independent_grade_passed": false,
+      "independent_grade_sha256": "06f248a5c42a852094fe11de635c01a01cdd1e86aa465331efe53991edb34c6e",
+      "new_tokens": 1197,
+      "no_tool_retries": 2,
+      "prompt_tokens": 33248,
+      "public_test_invocations": [],
+      "raw_tool_output_chars": 10879,
+      "repeated_exact_source_reads": 0,
+      "rollout_id": "sampled-101",
+      "source_read_calls": 7,
+      "source_search_calls": 2,
+      "source_search_queries": [
+        "default_padding",
+        "padding"
+      ],
+      "stop_reason": "turn_budget_exhausted",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49767-janus-background-v1",
+      "tool_call_counts": {
+        "list_files": 1,
+        "read_file": 7,
+        "search_text": 2
+      },
+      "tool_calls_before_first_edit": null,
+      "tool_turns": 12
+    },
+    {
+      "agent_json_sha256": "a306ac67a8a0b26dbbd3ac258e0a501606489120950e635f4856388ac968b088",
+      "distinct_source_regions_read": 3,
+      "edit_applied": false,
+      "edit_attempt_tool_position": 7,
+      "edit_attempted": true,
+      "edit_outcomes": {
+        "unknown edit handle; read the current source region": 2
+      },
+      "finish_calls": 0,
+      "format_parse_failure_count": 0,
+      "independent_grade_failure": "janus_background_color_mismatch",
+      "independent_grade_passed": false,
+      "independent_grade_sha256": "876da2a58165221c1b4f8a8266ff5b54e2411ac710c75e5f58435ab682c6d4c7",
+      "new_tokens": 1550,
+      "no_tool_retries": 2,
+      "prompt_tokens": 32015,
+      "public_test_invocations": [],
+      "raw_tool_output_chars": 7198,
+      "repeated_exact_source_reads": 2,
+      "rollout_id": "sampled-202",
+      "source_read_calls": 5,
+      "source_search_calls": 2,
+      "source_search_queries": [
+        "default_padding",
+        "padding"
+      ],
+      "stop_reason": "turn_budget_exhausted",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49767-janus-background-v1",
+      "tool_call_counts": {
+        "list_files": 1,
+        "read_file": 5,
+        "replace_text": 2,
+        "search_text": 2
+      },
+      "tool_calls_before_first_edit": 6,
+      "tool_turns": 12
+    }
+  ],
+  "source_run": "results/phase-a-v6/protocol-v1/run-2",
+  "source_run_manifest_sha256": "6c5c21f35d1796f01039bd89963d120f3283aae8f64eb52f9fad726302e225a2",
+  "source_sha256_manifest_verified": true,
+  "totals": {
+    "distinct_source_regions_read": 31,
+    "edit_outcomes": {
+      "applied": 1,
+      "unknown edit handle; read the current source region": 5
+    },
+    "finish_calls": 3,
+    "format_parse_failures": 0,
+    "generated_tokens": 14802,
+    "independent_verified_successes": 0,
+    "no_tool_retries": 19,
+    "prompt_plus_generated_tokens": 356671,
+    "prompt_tokens": 341869,
+    "public_test_assertions_executed": 0,
+    "public_test_exit_125": 7,
+    "public_test_invocations": 7,
+    "raw_tool_output_chars": 101915,
+    "repeated_exact_source_reads": 8,
+    "rollouts_with_applied_edit": 1,
+    "rollouts_with_edit_attempt": 3,
+    "source_read_calls": 39,
+    "source_search_calls": 28,
+    "stop_reasons": {
+      "context_budget_exhausted": 1,
+      "no_tool_call_after_edit": 1,
+      "no_tool_call_retries_exhausted": 6,
+      "turn_budget_exhausted": 4
+    },
+    "successful_finish_calls": 0,
+    "tool_calls_by_name": {
+      "finish": 3,
+      "list_files": 12,
+      "read_file": 39,
+      "replace_text": 6,
+      "run_public_tests": 6,
+      "search_text": 28
+    },
+    "tool_turns": 120
+  }
+}

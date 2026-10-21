@@ -5,7 +5,10 @@ import json
 from scripts.run_local_agent import (
     candidate_visible_tool_result,
     bounded_turn_payload,
+    classify_public_test_error,
+    classify_public_test_exit,
     no_tool_retry_reminder,
+    public_test_infrastructure_error,
     record_automatic_public_test,
     record_tool_call,
     should_stop_after_tool,
@@ -28,10 +31,12 @@ def test_opaque_structured_edit_schema_does_not_request_long_hashes() -> None:
     assert read['parameters']['required'] == ['path']
     assert 'workspace_revision_handle' in replace['parameters']['properties']
     assert 'source_preimage_handle' in replace['parameters']['properties']
+    assert 'workspace_revision_handle' not in replace['parameters']['required']
+    assert 'source_preimage_handle' not in replace['parameters']['required']
     assert 'expected_hash' not in replace['parameters']['properties']
     assert 'expected_revision' not in replace['parameters']['properties']
-    assert 'workspace_revision_handle' in insert['parameters']['required']
-    assert 'source_preimage_handle' in insert['parameters']['required']
+    assert 'workspace_revision_handle' not in insert['parameters']['required']
+    assert 'source_preimage_handle' not in insert['parameters']['required']
 
 
 def test_legacy_structured_schema_remains_available_without_opaque_mode() -> None:
@@ -71,6 +76,33 @@ def test_model_does_not_receive_internal_diff_or_test_hashes() -> None:
     visible_test = candidate_visible_tool_result('run_public_tests', public, opaque_handles=True)
     assert 'failure_signature' not in visible_test
     assert visible_test['feedback'] == 'failure'
+
+
+def test_public_test_exit_codes_separate_launch_failures_from_candidate_failures() -> None:
+    assert classify_public_test_exit(0) == 'passed'
+    assert classify_public_test_exit(1) == 'test_failure'
+    assert classify_public_test_exit(125) == 'container_launch_failure'
+    assert classify_public_test_exit(137) == 'container_resource_failure'
+    assert classify_public_test_error('IsolationError: container exceeded wall-time limit') == 'candidate_timeout'
+    assert public_test_infrastructure_error({'classification': 'container_launch_failure'})
+    assert not public_test_infrastructure_error({'classification': 'test_failure'})
+
+
+def test_public_test_feedback_reports_infrastructure_status_without_host_path() -> None:
+    visible = candidate_visible_tool_result(
+        'run_public_tests',
+        {
+            'passed': False,
+            'classification': 'container_launch_failure',
+            'feedback': 'Public test execution was unavailable; no test assertion ran.',
+            'next_action': 'stop this rollout; the evaluator must be repaired before grading',
+            'stderr': 'bind source path does not exist: /private/var/folders/secret',
+        },
+        opaque_handles=True,
+    )
+    assert visible['classification'] == 'container_launch_failure'
+    assert 'no test assertion ran' in visible['feedback']
+    assert 'secret' not in str(visible)
 
 
 def test_rejected_finalization_keeps_repair_loop_open() -> None:

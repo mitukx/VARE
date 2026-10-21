@@ -186,6 +186,7 @@ class StructuredEditController:
         self.max_feedback_chars = max_feedback_chars
         self._counter = 0
         self._handles: dict[str, tuple[str, str, str]] = {}
+        self._latest_handles_by_path: dict[str, tuple[str, str]] = {}
         self._before = {
             name: _safe_path(root, name, self.allowed_files).read_bytes()
             for name in sorted(self.allowed_files)
@@ -247,6 +248,7 @@ class StructuredEditController:
         revision = workspace_revision(self.root, self.allowed_files)
         source_hash = sha256_bytes(source_path.read_bytes())
         revision_handle, source_handle = self._issue(path, revision, source_hash)
+        self._latest_handles_by_path[path] = (revision_handle, source_handle)
         return {
             "path": path,
             "start_line": start_line,
@@ -263,8 +265,8 @@ class StructuredEditController:
         *,
         action: str,
         path: str,
-        workspace_revision_handle: str,
-        source_preimage_handle: str,
+        workspace_revision_handle: str = "",
+        source_preimage_handle: str = "",
         old_text: str,
         new_text: str,
         anchor: str = "",
@@ -272,6 +274,13 @@ class StructuredEditController:
         """Resolve opaque handles and delegate to the exact-preimage atomic editor."""
         if len(old_text) > 12_000 or len(new_text) > 8_000 or len(anchor) > 12_000:
             raise StructuredEditError("structured edit text exceeds the per-action character budget")
+        if not workspace_revision_handle and not source_preimage_handle:
+            latest = self._latest_handles_by_path.get(path)
+            if latest is None:
+                raise StructuredEditError("read the current source region before editing")
+            workspace_revision_handle, source_preimage_handle = latest
+        elif not workspace_revision_handle or not source_preimage_handle:
+            raise StructuredEditError("both edit handles must be supplied together")
         revision_binding = self._handles.get(workspace_revision_handle)
         source_binding = self._handles.get(source_preimage_handle)
         if revision_binding is None or source_binding is None:
@@ -316,6 +325,23 @@ class StructuredEditController:
         passed = result.get("passed")
         if not isinstance(passed, bool):
             raise StructuredEditError("public-test result must come from the trusted test runner")
+        classification = result.get("classification")
+        if classification in {
+            "container_launch_failure",
+            "runner_integrity_error",
+            "evaluator_unavailable",
+        }:
+            # Infrastructure failures are not model reward or assertion feedback.
+            # Leave finalization disabled and give the candidate a bounded status.
+            self._latest_test_passed = None
+            self._inspected_diff_hash = None
+            return {
+                "passed": False,
+                "classification": classification,
+                "repeated_unchanged_failure": False,
+                "feedback": "Public test execution was unavailable; no test assertion ran.",
+                "next_action": "stop this rollout; the evaluator must be repaired before grading",
+            }
         stderr = result.get("stderr", "")
         stdout = result.get("stdout", "")
         error = result.get("error", "")
@@ -334,6 +360,7 @@ class StructuredEditController:
         self._inspected_diff_hash = None
         return {
             "passed": passed,
+            "classification": classification,
             "failure_signature": signature,
             "repeated_unchanged_failure": repeated,
             "feedback": bounded,

@@ -58,6 +58,65 @@ def write_json(path: Path, value: Any) -> None:
     )
 
 
+def create_docker_shared_workspace(task_id: str, *, home: Path | None = None) -> Path:
+    """Create candidate files below Colima's shared home mount, not macOS /var/folders."""
+    if not task_id or any(char not in "abcdefghijklmnopqrstuvwxyz0123456789-" for char in task_id):
+        raise ValueError("unsafe task id for workspace directory")
+    home_root = Path.home() if home is None else home.resolve(strict=True)
+    root = home_root / ".cache" / "vare" / "candidate-workspaces"
+    root.mkdir(parents=True, exist_ok=True, mode=0o700)
+    if root.is_symlink() or root.resolve(strict=True) != root:
+        raise ValueError("Docker-shared candidate workspace root must be a real directory")
+    root.chmod(0o700)
+    parent = Path(tempfile.mkdtemp(prefix=f"{task_id}-", dir=root))
+    parent.chmod(0o700)
+    workspace = parent / "workspace"
+    # The container runs as uid 65534; the mounted tree must be traversable
+    # while remaining read-only to the container.
+    workspace.mkdir(mode=0o755)
+    if workspace.resolve(strict=True) != workspace:
+        raise ValueError("candidate workspace path is not canonical")
+    return workspace
+
+
+def classify_public_test_result(result: Any) -> str:
+    """Classify the public runner result without turning launch errors into reward."""
+    if not isinstance(result, dict):
+        return "evaluator_unavailable"
+    classification = result.get("classification")
+    if classification in {
+        "passed", "test_failure", "candidate_timeout", "candidate_output_limit",
+        "container_resource_failure", "container_launch_failure",
+        "runner_integrity_error", "evaluator_unavailable",
+    }:
+        return str(classification)
+    # Historical records predate the explicit class field. Exit 125 is Docker's
+    # launch-failure code; it means no test assertion ran.
+    code = result.get("returncode")
+    if code == 125:
+        return "container_launch_failure"
+    error = result.get("error")
+    if isinstance(error, str) and "container exceeded wall-time limit" in error:
+        return "candidate_timeout"
+    if isinstance(error, str) and "container exceeded output byte limit" in error:
+        return "candidate_output_limit"
+    if isinstance(error, str) and "public test file is missing or changed" in error:
+        return "runner_integrity_error"
+    if code == 0 and result.get("passed") is True:
+        return "passed"
+    if error:
+        return "evaluator_unavailable"
+    if isinstance(code, int):
+        return "container_resource_failure" if code in (137, 139) else "test_failure"
+    return "evaluator_unavailable"
+
+
+def is_unavailable_public_evaluator(result: Any) -> bool:
+    return classify_public_test_result(result) in {
+        "container_launch_failure", "runner_integrity_error", "evaluator_unavailable",
+    }
+
+
 def run_checked(
     command: list[str], *, cwd: Path, env: dict[str, str] | None = None
 ) -> str:
@@ -473,7 +532,7 @@ def main() -> int:
         )
         task_output = output / task_id
         task_output.mkdir()
-        workspace = Path(tempfile.mkdtemp(prefix=f"vare-{task_id}-")) / "workspace"
+        workspace = create_docker_shared_workspace(task_id)
         materialize_workspace(source_repo, task_id, workspace, manifest)
         contract = load_agent_task(task_dir)
         baseline_hashes = verify_agent_workspace(workspace, contract)
@@ -671,6 +730,23 @@ def main() -> int:
                 rollout_record["workspace_after_sha256"] = workspace_snapshot_hash(
                     workspace
                 )
+                public_test_status = classify_public_test_result(
+                    agent.get("public_test_result")
+                )
+                rollout_record["public_test_classification"] = public_test_status
+                if is_unavailable_public_evaluator(agent.get("public_test_result")):
+                    rollout_record.update(
+                        {
+                            "status": "public_test_infrastructure_error",
+                            "agent_stop_reason": agent.get("stop_reason"),
+                            "verified_reward": None,
+                            "grading_skipped_reason": public_test_status,
+                        }
+                    )
+                    run_manifest["rollouts"].append(rollout_record)
+                    run_manifest["stop_reason"] = "public_test_infrastructure_error"
+                    write_json(output / "run-manifest.partial.json", run_manifest)
+                    return 2
                 grade_path = rollout_dir / "independent-grade.json"
                 grade_cmd = [
                     sys.executable,
@@ -727,6 +803,7 @@ def main() -> int:
                             "candidate_diff_sha256"
                         ),
                         "public_test_passed": public_passed,
+                        "public_test_classification": public_test_status,
                         "independent_grader_passed": grading.get("passed") is True,
                         "candidate_target_sha256": grading.get(
                             "candidate_target_sha256"

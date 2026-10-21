@@ -84,11 +84,11 @@ def tools_for(
             if opaque_handles else {'expected_hash': {'type': 'string'}, 'expected_revision': {'type': 'string'}}
         )
         handle_required = (
-            ['workspace_revision_handle', 'source_preimage_handle']
+            []
             if opaque_handles else ['expected_hash', 'expected_revision']
         )
         edit_handle_description = (
-            'Supply workspace_revision_handle and source_preimage_handle from read_file; VARE resolves them to exact host-side hashes and rejects stale snapshots.'
+            'After read_file, VARE binds omitted handles to the latest read for this exact path. You may also supply both workspace_revision_handle and source_preimage_handle; VARE resolves them to exact host-side hashes and rejects stale snapshots.'
             if opaque_handles else
             'Supply expected_hash and expected_revision exactly as returned by read_file; stale snapshots are rejected.'
         )
@@ -113,7 +113,49 @@ def candidate_visible_tool_result(
     max_read_chars: int = 6_000,
 ) -> Any:
     """Keep exact provenance in the transcript while sending bounded feedback to the model."""
+    if name == 'run_public_tests':
+        classification = result.get('classification')
+        feedback = result.get('feedback')
+        if not isinstance(feedback, str):
+            if classification in {
+                'container_launch_failure', 'runner_integrity_error', 'evaluator_unavailable',
+            }:
+                feedback = 'Public test execution was unavailable; no test assertion ran.'
+            else:
+                feedback = '\n'.join(
+                    part for part in (result.get('stdout'), result.get('stderr'), result.get('error'))
+                    if isinstance(part, str) and part
+                )
+        feedback = feedback[-2_000:]
+        if not isinstance(result.get('next_action'), str):
+            next_action = (
+                'stop this rollout; the evaluator must be repaired before grading'
+                if classification in {
+                    'container_launch_failure', 'runner_integrity_error', 'evaluator_unavailable',
+                }
+                else 'use the public assertion output to plan a targeted repair'
+            )
+        else:
+            next_action = result['next_action']
+        return {
+            key: value
+            for key, value in (
+                ('passed', result.get('passed')),
+                ('classification', classification),
+                ('feedback', feedback),
+                ('next_action', next_action),
+            )
+            if value is not None
+        }
     if not opaque_handles:
+        automatic = result.get('automatic_public_test')
+        if isinstance(automatic, dict):
+            return {
+                **result,
+                'automatic_public_test': candidate_visible_tool_result(
+                    'run_public_tests', automatic, opaque_handles=False,
+                ),
+            }
         return result
     def bounded_diff(value: Any) -> str:
         diff = value if isinstance(value, str) else ""
@@ -199,7 +241,10 @@ def candidate_visible_tool_result(
         if isinstance(feedback, dict):
             visible['automatic_public_test'] = {
                 key: feedback[key]
-                for key in ('passed', 'repeated_unchanged_failure', 'feedback', 'next_action')
+                for key in (
+                    'passed', 'classification', 'repeated_unchanged_failure',
+                    'feedback', 'next_action',
+                )
                 if key in feedback
             }
         return visible
@@ -207,12 +252,6 @@ def candidate_visible_tool_result(
         return {
             'diff': bounded_diff(result.get('diff', '')),
             'changed': result.get('changed', False),
-        }
-    if name == 'run_public_tests':
-        return {
-            key: result[key]
-            for key in ('passed', 'repeated_unchanged_failure', 'feedback', 'next_action')
-            if key in result
         }
     return result
 
@@ -339,7 +378,11 @@ def run_public_tests(
     """Run only the immutable public smoke file in VARE's candidate sandbox."""
     test_file = workspace / 'test_public.py'
     if not test_file.is_file() or sha256(test_file) != expected_test_hash:
-        return {'passed': False, 'error': 'public test file is missing or changed'}
+        return {
+            'passed': False,
+            'classification': 'runner_integrity_error',
+            'error': 'public test file is missing or changed',
+        }
     from vare.container_isolation import DockerIsolationRunner, IsolationLimits
 
     limits = IsolationLimits(image=image, timeout_s=45, memory_mb=memory_mb, cpus=1.0,
@@ -352,12 +395,46 @@ def run_public_tests(
             readonly_workspace=True,
         ))
     except Exception as exc:
-        return {'passed': False, 'error': f'{type(exc).__name__}: {exc}',
+        error = f'{type(exc).__name__}: {exc}'
+        classification = classify_public_test_error(error)
+        return {'passed': False, 'classification': classification,
+                'error': error,
                 'elapsed_seconds': round(time.perf_counter() - started, 3)}
-    return {'passed': result.returncode == 0, 'returncode': result.returncode,
+    classification = classify_public_test_exit(result.returncode)
+    return {'passed': result.returncode == 0, 'classification': classification,
+            'returncode': result.returncode,
             'stdout': result.stdout, 'stderr': result.stderr,
             'elapsed_seconds': round(time.perf_counter() - started, 3),
             'isolation': 'docker-network-none-read-only-root-only-workspace-mount'}
+
+
+def classify_public_test_exit(returncode: int) -> str:
+    """Separate Docker launch/resource failures from test assertion results."""
+    if returncode == 0:
+        return 'passed'
+    if returncode == 125:
+        return 'container_launch_failure'
+    if returncode in (137, 139):
+        return 'container_resource_failure'
+    return 'test_failure'
+
+
+def classify_public_test_error(error: str) -> str:
+    """Classify trusted runner exceptions without exposing host paths as feedback."""
+    if 'container exceeded wall-time limit' in error:
+        return 'candidate_timeout'
+    if 'container exceeded output byte limit' in error:
+        return 'candidate_output_limit'
+    if 'public test file is missing or changed' in error:
+        return 'runner_integrity_error'
+    return 'evaluator_unavailable'
+
+
+def public_test_infrastructure_error(result: dict[str, Any] | None) -> bool:
+    """True when an outcome cannot safely be treated as a candidate test failure."""
+    return isinstance(result, dict) and result.get('classification') in {
+        'container_launch_failure', 'runner_integrity_error', 'evaluator_unavailable',
+    }
 
 
 def public_test_command() -> list[str]:
@@ -487,13 +564,13 @@ def no_tool_retry_reminder(raw: str, *, edit_format: str, allowed_paths: list[st
             )
         if edit_format == 'structured':
             handles = (
-                'workspace_revision_handle and source_preimage_handle'
+                'the latest host-managed snapshot for the path; workspace_revision_handle and source_preimage_handle are optional but must be supplied together if included'
                 if opaque_handles else 'expected_hash and expected_revision'
             )
             return (
                 f'Your previous response was cut off at the {token_limit}-token limit. Do not reread the whole file. '
                 'Emit one complete short JSON tool call now. Use read_file for a small line range, then one replace_text '
-                f'or insert_text action with the exact {handles} returned by read_file.'
+                f'or insert_text action bound to {handles}.'
             )
         return (
             f'Your previous tool call was cut off at the {token_limit}-token response limit. '
@@ -675,10 +752,11 @@ def main() -> int:
         if use_opaque_handles:
             edit_sentence = (
                 'Use short structured actions, never emit a unified diff or rewrite a whole file. Read bounded source regions. '
-                'For replace_text or insert_text, copy the short workspace_revision_handle and source_preimage_handle returned '
-                'by the latest read; do not invent or reproduce hashes. VARE creates the diff and resolves handles to exact '
+                'For replace_text or insert_text, read the target first. VARE binds omitted handles to the latest read for that '
+                'exact path; if you include handles, provide both short handles from the latest read. VARE resolves them to exact '
                 'host-side source hashes. After a failed public test, act on its failing assertion and make a different targeted '
-                'edit. Inspect the final diff after the last edit and test, then finish. '
+                'edit. If the result says no test assertion ran or identifies an evaluator/container failure, stop the rollout '
+                'instead of changing code based on that result. Inspect the final diff after the last edit and test, then finish. '
             )
         else:
             edit_sentence = (
@@ -1079,6 +1157,9 @@ def main() -> int:
                     turn_output_chars += len(model_payload)
                 record_tool_call(entry, name, arguments, result)
                 messages.append({'role': 'tool', 'name': name, 'content': model_payload})
+                if public_test_infrastructure_error(public_test_result):
+                    stop_reason = 'public_test_infrastructure_error'
+                    break
                 if should_stop_after_tool(name, result):
                     break
             except Exception as exc:
@@ -1090,7 +1171,7 @@ def main() -> int:
                     turn_output_chars += len(error_payload)
                 messages.append({'role': 'tool', 'name': 'invalid_tool_call', 'content': error_payload})
         transcript.append(entry)
-        if stop_reason == 'agent_finished':
+        if stop_reason in {'agent_finished', 'public_test_infrastructure_error'}:
             break
 
     elapsed = time.perf_counter() - start
