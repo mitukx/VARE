@@ -1,0 +1,169 @@
+{
+  "agent": {
+    "chat_template": "pinned Qwen3 tokenizer template, apply_chat_template with enable_thinking=false",
+    "edits": "one allowlisted source file; strict unified diff only",
+    "hidden_grader_outputs_returned_to_model": false,
+    "inputs": "candidate task statement and full pinned baseline target file only",
+    "iterations_per_candidate": 1,
+    "mode": "single-turn patch generation",
+    "tool_feedback_or_repair": false
+  },
+  "implementation_commit_parent": "a892e39b6baa746b63e4ab2133039b09b958be4a",
+  "implementation_sha256": {
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/grader_adapter.py": "f08007db5ec895f071624cd1de2e7afd3b60d0dffa809161f48a2baceb28d6e7",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v3.json": "8cce54bada162ae685150711928a3de153ea0935e572a607214472c95ed889c3",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/task.md": "1073e527a5808176a4e6144a0d348e1bb5acbbc6fb790ec2e74bb58576c73bc3",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/expected-output-v1.json": "00c0450c89622ab93635d6f3ff3d95b016ab8e62a4f11a843b47c961262afd50",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/grader_adapter.py": "fab26aa6b281719f4a2b0c2366f29a7f086ef602a9cc642d26074a132699c6c5",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v1.json": "6909c23aac234623bc7d509c3aa69609a05880d63f482fc2fda9cc553295797c",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/task.md": "66000b7e1a23a8a15b501d11325e0752b7d70c11b4268cdb6b21754ecdc106c7",
+    "benchmarks/mlsys_repo_eval_v2/transformers_45852/Dockerfile": "71200d584cff1d58e6abbf84d51491ff3a2ab8da3f3120370fac2083c8e31e31",
+    "benchmarks/mlsys_repo_eval_v2/transformers_45852/grader_adapter.py": "81623c93179a0d9f167acf3f5d0415b1744cc16c8134e6015f015dde3a0c590d",
+    "benchmarks/mlsys_repo_eval_v2/transformers_45852/protocol-v1.json": "f61cfb5e7e93c1b9827420eb636eaeb82b2174418c376dc21326a18fb9cf0745",
+    "benchmarks/mlsys_repo_eval_v2/transformers_45852/requirements.txt": "1c4a93c82e47e7c35e5dd681281e7e07498bec609abb298f678f581b3b641054",
+    "benchmarks/mlsys_repo_eval_v2/transformers_45852/task.md": "99ef996ed432136483fed21a5964a918f2f90f45dc6e5491ad5490e2138e395e",
+    "scripts/run_qwen3_4b_mlsys_development_feasibility_v1.py": "1555f9e442bd42f39c41965fade13767dff179566eb1fa1330d344728bac00d7",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/isolated_candidate.py": "8c216aa1891538156030f76ae59a768832fefa83dbbcf3702c22176019b0aaee",
+    "src/vare/mlxlm_1912_repo_task.py": "5a10440e0facfde59b5966635d075ca9db76d241dc17635425feba93c2a0544c",
+    "src/vare/mlxlm_1971_repo_task.py": "abccc1d483262d17e9a76559e788a3d3738f9311428bbf69ff42af768a1e636a",
+    "src/vare/transformers_repo_task.py": "a8d7522a2ff30b98f18635d5041592342f9c76ab3dcf8a4604009b782f80eb9e"
+  },
+  "limits": {
+    "candidate_network": "disabled by frozen task graders",
+    "docker_context": "colima",
+    "max_process_rss_bytes": 25769803776,
+    "max_total_wall_seconds": 1800,
+    "min_available_memory_bytes": 6442450944,
+    "min_swap_free_bytes": 536870912
+  },
+  "metrics": {
+    "pass_at_k": "any success among four sampled patches per task",
+    "primary": "verified task success per Development task",
+    "reward_variance": "population variance of four binary sampled success rewards per task",
+    "secondary": [
+      "patch-generation rate and patch SHA-256",
+      "format and patch-application failures",
+      "wrong output / grader timeout / resource failure",
+      "prompt/decode tokens per second",
+      "generation and grading wall time",
+      "peak MLX allocation and process RSS",
+      "host memory availability and swap at start/end"
+    ]
+  },
+  "model": {
+    "device": "MLX Metal GPU",
+    "immutable_revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "mlx": "0.32.4",
+    "mlx_lm": "0.32.2",
+    "repo_id": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "snapshot_files_sha256": {
+      ".gitattributes": "34448b82c17d60fec9b65b1f093c115ddbaadc04beb1b0140b6bfed2e012a930",
+      "README.md": "7b17ce562d7ea121c86d2ffdf660eed3726ac5b52cacfa9f1de11a65969f5657",
+      "added_tokens.json": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680",
+      "chat_template.jinja": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541",
+      "config.json": "574349e5a343236546fda55e4744a76e181f534182d7dc60ff1bad7e7a502849",
+      "generation_config.json": "835fffe355c9438e7a25be099b3fccaa98350b83451f9fd2d99512e74f1ade48",
+      "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "model.safetensors": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f",
+      "model.safetensors.index.json": "388d811b8b7c2608dd04cce1bcb04a8bf715d19b42790894e6d3427ff429a777",
+      "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "tokenizer.json": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "tokenizer_config.json": "4397cc477eb6d79715ccd2000accd6b3531928f30029665832fa1b255f24d2b9",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "snapshot_total_bytes": 2278972236,
+    "trust_remote_code": false
+  },
+  "prompts": {
+    "mlxlm-1912-top-p-min-token": {
+      "sha256": "137eccaa8e78800203aba6b63928c57137044173681127446c23de79ce977061",
+      "target_source_sha256": "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2",
+      "token_count": 3337
+    },
+    "mlxlm-1971-mimo-value-scale": {
+      "sha256": "45df68bae35c7b6dcddb5642a7c186d731a912ffa74e6954f1a2276c2cc9b2c3",
+      "target_source_sha256": "c110f8deed605277ae070359dd6d2ba0c700981101240c54bcd049e8d60e4847",
+      "token_count": 3436
+    },
+    "transformers-45852-4d-mask": {
+      "sha256": "35f3fe324df84e613bdbc7602f6eed34d4b422240113acb2f88138be3b70e23c",
+      "target_source_sha256": "51a96b8d23e365014cfcd44049fda9a40a41e76ab5ba80a7b687138d3523f00a",
+      "token_count": 36211
+    }
+  },
+  "protocol_id": "vare.qwen3-4b-mlsys-development-patch-feasibility.v1",
+  "sampling": {
+    "greedy_temperature": 0.0,
+    "greedy_trials_per_task": 1,
+    "max_new_tokens": 512,
+    "max_prompt_tokens": 50000,
+    "sampled_seeds": {
+      "mlxlm-1912-top-p-min-token": [
+        7411,
+        7412,
+        7413,
+        7414
+      ],
+      "mlxlm-1971-mimo-value-scale": [
+        7421,
+        7422,
+        7423,
+        7424
+      ],
+      "transformers-45852-4d-mask": [
+        7401,
+        7402,
+        7403,
+        7404
+      ]
+    },
+    "sampled_temperature": 0.7,
+    "sampled_top_p": 0.9,
+    "sampled_trials_per_task": 4,
+    "sampling_order": "one greedy followed by four samples per task; tasks in listed order"
+  },
+  "status": "frozen-before-inference",
+  "stop_and_decision_rules": [
+    "Stop without retries if a frozen resource limit is crossed; retain partial output and mark protocol incomplete.",
+    "Do not modify prompts, task set, sampling parameters, limits, or candidate source after the first model output.",
+    "Any completed run with zero sampled success on all three Development tasks is NO-GO for policy updates.",
+    "If all sampled reward groups are constant, GRPO is NO-GO even if greedy output succeeds.",
+    "No policy update, SFT, GRPO, or Held-out evaluation is part of this protocol."
+  ],
+  "task_ids": [
+    "transformers-45852-4d-mask",
+    "mlxlm-1912-top-p-min-token",
+    "mlxlm-1971-mimo-value-scale"
+  ],
+  "task_split": "Development only; no Train or Held-out examples are loaded",
+  "tasks": {
+    "mlxlm-1912-top-p-min-token": {
+      "baseline_commit": "47e43a4526d42a6dcee758f07eb04b78a8439ecb",
+      "baseline_source_sha256": "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2",
+      "candidate_path": "mlx_lm/sample_utils.py",
+      "fixed_commit": "87b7b583a697537aa68f47130b40884700b5f55f",
+      "grader_image": "localhost:5000/vare/mlx-cpu-task@sha256:847edcf1b2b15d00914674e89931f9d38c4aa8a0f1d763cbb96c1359a0647388",
+      "grader_protocol_sha256": "8cce54bada162ae685150711928a3de153ea0935e572a607214472c95ed889c3",
+      "repository": "ml-explore/mlx-lm"
+    },
+    "mlxlm-1971-mimo-value-scale": {
+      "baseline_commit": "5f3c79d6bb1864a85d5343818192bd061b161e3a",
+      "baseline_source_sha256": "c110f8deed605277ae070359dd6d2ba0c700981101240c54bcd049e8d60e4847",
+      "candidate_path": "mlx_lm/models/mimo_v2_flash.py",
+      "fixed_commit": "8fda5e976a2da412d9f8119361edefd405381cf9",
+      "grader_image": "localhost:5000/vare/mlx-mimo-cpu-mimo@sha256:799f8b9f34fe2caa8fc0c4d0889abac63384606bcf40db28524db3fba07a7cbe",
+      "grader_protocol_sha256": "6909c23aac234623bc7d509c3aa69609a05880d63f482fc2fda9cc553295797c",
+      "repository": "ml-explore/mlx-lm"
+    },
+    "transformers-45852-4d-mask": {
+      "baseline_commit": "381032b7e0a8896ae48f90dbe83eae3bf7630953",
+      "baseline_source_sha256": "51a96b8d23e365014cfcd44049fda9a40a41e76ab5ba80a7b687138d3523f00a",
+      "candidate_path": "src/transformers/tokenization_utils_base.py",
+      "fixed_commit": "909ece888ed4b55402dc8acbb9c13ddf8ff977b5",
+      "grader_image": "localhost:5000/vare/transformers-cpu@sha256:5461f5ec9d3022db72d49cf5bcd140c99521eba5b37747257b58a576d4e12e1f",
+      "grader_protocol_sha256": "f61cfb5e7e93c1b9827420eb636eaeb82b2174418c376dc21326a18fb9cf0745",
+      "repository": "huggingface/transformers"
+    }
+  }
+}
