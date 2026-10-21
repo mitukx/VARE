@@ -1,0 +1,37 @@
+{
+  "container_image_id": "sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "current_head_colima_calibration": {
+    "baseline": "test_failure",
+    "calibration_passed": true,
+    "known_fix": "passed",
+    "manifest_sha256": "1297fd8a6671fcf5c1848bf4aa8a37bf94cdb42f6edbe3093908de6a603ae07e",
+    "report_path": "colima-mount-calibration-v3/report.json",
+    "report_sha256": "fbe4dca9705ce866ae946eabd18796870fbdf7d78bf545425664251988fa10f3"
+  },
+  "grading_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "limitations": [
+    "The Colima baseline/fix control uses a synthetic behavior fixture and is not a model-generated repair.",
+    "Four v6 task calibration records are historical debug-only evidence; the consumed tasks are not fresh validation tasks.",
+    "GitHub CI and independent review for this commit are pending."
+  ],
+  "local_validation": {
+    "git_diff_check": "passed",
+    "mypy": "passed",
+    "ruff": "passed",
+    "targeted_pytest": "56 passed"
+  },
+  "model_inference_performed": false,
+  "review_findings_fixed": [
+    "P1: workspace allocator now returns an absent destination leaf; materializer creates it and assigns uid-65534-readable mode.",
+    "P1: a rollout with public_test_result=null is recorded as not_run and proceeds to independent grading instead of aborting the study."
+  ],
+  "schema_version": 2,
+  "source_commit": "91f16aebe29a5bd34018a4f60998021016dc9915",
+  "source_dirty_at_start": false,
+  "working_tree_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "workspace_materializer_regression": {
+    "details": "A clean pinned Git archive is materialized into the previously absent Colima-shared destination; pinned source and public-test hashes are verified.",
+    "result": "passed",
+    "test": "test_materializer_creates_allocated_workspace_destination"
+  }
+}

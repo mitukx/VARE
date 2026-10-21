@@ -58,3 +58,12 @@ DOCKER_CONTEXT=colima python scripts/calibrate_public_tests_v6_v2.py \
 After commit `e5e6d218a75903e10538411c5bc1cc330ad40ccf`, the Colima fixture was repeated as `colima-mount-calibration-v2/` on a clean tree; it records that commit and the final runner/controller hashes. The four-task baseline/fixed calibration was also repeated as `frozen-task-public-calibration-v2/`; all 8 outcomes again matched the expected fail/pass labels. Version 2 is the final-HEAD evidence; version 1 is retained as the initial diagnosis run.
 
 The Phase A v6 model result remains **NO-GO** (0/12 independent successes, no sampled reward variation); SFT/GRPO remain **NO-GO**. The execution fix and deterministic calibrations establish a corrected path, not new coding-agent capability. A fresh task cohort and protocol are still required before new model inference.
+
+
+## Final-head review corrections (2026-10-22)
+
+Independent review of PR #106 identified two P1 defects. The workspace allocator had created the materializer destination before `materialize_workspace()` (which correctly refuses an existing path); it now allocates only a private parent and returns an absent leaf, and the materializer creates that leaf with the read permissions required by the frozen container user. A regression test materializes a real temporary pinned Git archive and verifies source and public-test hashes.
+
+A rollout whose agent never invoked public tests has `public_test_result: null`; it is now classified as `not_run`, retained as an unsuccessful rollout, and still sent to the independent grader. Explicit launch, runner-integrity, and evaluator failures remain fail-closed.
+
+On final source commit `91f16aebe29a5bd34018a4f60998021016dc9915`, the Colima calibration v3 passed: the synthetic broken baseline returned `test_failure` (exit 1), and the known fix returned `passed` (exit 0), using the exact frozen image digest. This calibration did not perform model inference and is not a coding-agent success. The targeted local suite passed 56 tests; Ruff, mypy, and `git diff --check` passed. CI and a second review of the corrected head are pending. The original v6 rollouts and earlier calibration directories remain unchanged.
