@@ -1,5 +1,9 @@
 # Experimental program
 
+## MLX-LM #1971 isolated task calibration v1 (2026-10-21)
+
+The frozen Development task `mlxlm-1971-mimo-value-scale` passed one task-specific CPU Docker calibration: the pinned baseline failed the host-held golden-output comparison, the known fix passed, a fixed-source swap was rejected, and the shared red-team probes passed. This uses a synthetic randomly initialized small model and is not a Coding-Agent rollout or Metal/pretrained-model result. Qwen feasibility and SFT/GRPO remain NO-GO while the other Development tasks and held-out gates remain incomplete. See the [report](mlxlm-1971-isolated-task-v1-report.md), [protocol](../benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v1.json), and [raw evidence](../results/mlxlm-1971-isolated-v1/run-1/).
+
 ## MLX-LM #1904 repository-task isolation calibration — 2026-10-21
 
 The frozen Train task's narrow `process_message_content` contract passed a pinned

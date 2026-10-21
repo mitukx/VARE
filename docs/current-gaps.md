@@ -1,5 +1,7 @@
 # Current evidence gaps
 
+**Update 2026-10-21 — one additional Development task calibrated:** MLX-LM #1971 now has a frozen task-specific isolated grader with baseline-fail/known-fix-pass and passing red-team calibration. This does not establish agent or model capability: the input is a synthetic small model, the container is CPU-only, and no model-generated patch was evaluated. The other Development tasks still need safe independent calibration; do not start Qwen coding rollouts, SFT, or GRPO yet. The 9 frozen held-out tasks remain unopened and below the 15-task research target. See the [calibration report](mlxlm-1971-isolated-task-v1-report.md) and [evidence](../results/mlxlm-1971-isolated-v1/run-1/).
+
 **Update 2026-10-21 — one Development task calibrated in isolated Docker:**
 the MLX-LM #1912 top-p regression ran on its pinned baseline and known fix
 under protocol v3. The baseline failed the exact-output cohort and the known
