@@ -16,6 +16,7 @@ import time
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 from vare.mlxlm_1971_repo_task import (  # noqa: E402
     BASELINE_COMMIT,
