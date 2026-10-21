@@ -117,8 +117,28 @@ def test_opaque_read_feedback_uses_per_turn_cumulative_budget() -> None:
         assert 'private_sha256' not in visible
     assert used <= 6_000
     assert len(outputs[0]['content']) == 5_000
-    assert 'truncated' in outputs[1]['content']
+    assert outputs[1]['truncated'] is True
     assert outputs[2]['content'] == ''
+
+
+def test_truncated_opaque_read_reports_only_complete_lines_and_next_line() -> None:
+    content = ''.join(f'line-{index:03d}\n' for index in range(1, 121))
+    visible = candidate_visible_tool_result(
+        'read_file',
+        {
+            'path': 'src/a.py', 'start_line': 40, 'end_line': 159,
+            'content': content, 'workspace_revision_handle': 'rev-1',
+            'source_preimage_handle': 'src-1',
+        },
+        opaque_handles=True,
+        max_read_chars=240,
+    )
+    returned_lines = visible['content'].splitlines()
+    assert visible['truncated'] is True
+    assert returned_lines
+    assert visible['end_line'] == 39 + len(returned_lines)
+    assert visible['next_line'] == visible['end_line'] + 1
+    assert len(json.dumps(visible, ensure_ascii=False)) <= 240
 
 
 def test_opaque_search_feedback_uses_same_cumulative_budget() -> None:

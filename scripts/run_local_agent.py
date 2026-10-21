@@ -131,20 +131,39 @@ def candidate_visible_tool_result(
             key: result[key]
             for key in (
                 'path', 'start_line', 'end_line', 'workspace_revision_handle',
-                'source_preimage_handle', 'read_only', 'error',
+                'next_line', 'truncated', 'source_preimage_handle', 'read_only', 'error',
             )
             if key in result
         }
         content = result.get('content', '')
         if isinstance(content, str):
-            empty_size = len(json.dumps({**visible, 'content': ''}, ensure_ascii=False))
-            content_budget = max(0, max_read_chars - empty_size)
-            if len(content) > content_budget:
-                digest = hashlib.sha256(content.encode('utf-8')).hexdigest()
-                marker = f'\n... read output truncated; chars={len(content)} sha256={digest} ...\n'
-                keep = max(0, content_budget - len(marker))
-                content = content[:keep] + marker[:content_budget - keep]
-            visible['content'] = content
+            payload = {**visible, 'content': content}
+            if len(json.dumps(payload, ensure_ascii=False)) > max_read_chars:
+                start_line = visible.get('start_line')
+                if not isinstance(start_line, int) or isinstance(start_line, bool):
+                    start_line = 1
+                lines = content.splitlines(keepends=True)
+                prefix: list[str] = []
+                for line in lines:
+                    candidate = ''.join([*prefix, line])
+                    count = len(prefix) + 1
+                    candidate_visible = {
+                        **visible,
+                        'content': candidate,
+                        'end_line': start_line + count - 1,
+                        'next_line': start_line + count,
+                        'truncated': True,
+                    }
+                    if len(json.dumps(candidate_visible, ensure_ascii=False)) > max_read_chars:
+                        break
+                    prefix.append(line)
+                count = len(prefix)
+                visible['content'] = ''.join(prefix)
+                visible['end_line'] = start_line + count - 1
+                visible['next_line'] = start_line + count
+                visible['truncated'] = True
+            else:
+                visible['content'] = content
         return visible
 
     if name == 'search_text':
@@ -539,7 +558,10 @@ def main() -> int:
         parser.error('isolated public-test execution requires exactly one test_public.py in the task')
     use_opaque_handles = args.edit_format == 'structured' and bool(args.public_test_image)
     edit_controller = (
-        StructuredEditController(workspace, editable, readable_files=allowed)
+        StructuredEditController(
+            workspace, editable, readable_files=allowed,
+            max_read_lines=40, max_read_chars=8_000,
+        )
         if use_opaque_handles else None
     )
     tools = tools_for(
@@ -577,11 +599,14 @@ def main() -> int:
     system = (
         'You are an offline code repair agent. Solve only the task below. The workspace contains only the task source files. '
         + edit_sentence
-        + 'Allowed source paths: ' + ', '.join(sorted(editable)) + '. First call list_files, then read the exact source path named in the task. '
+        + 'Allowed source paths: ' + ', '.join(sorted(editable)) + '. First call list_files. Then search the allowed source for two or three distinctive terms from the issue before reading a narrow region around the relevant implementation. '
+        'Do not inspect a large file by reading sequential chunks. Use the search results to locate one likely function, inspect at most a short source region, and form a minimal edit plan before changing code. '
         + 'Do not invent paths. The workspace is already prepared; never ask for a workspace path, more information, or permission. '
         + 'The external grader is hidden. Do not describe a fix without applying it. Call finish only after changing a source file. '
         + ('After each source edit VARE automatically runs the immutable public smoke test and includes bounded failure feedback in the edit response. '
-           'Read the failing assertion, make a new targeted repair, inspect the final diff after the latest edit, and call finish only after the latest public test passes. ' if args.public_test_image else '')
+           'Use this loop: inspect, diagnose, plan a minimal change, edit, test, interpret the failure, and revise if needed. '
+           'When a public test fails, carry its failing assertion into your next action and search/read the implicated code or make a different targeted edit; never resubmit the same patch. '
+           'Inspect the final diff after the latest edit and call finish only after the latest public test passes. ' if args.public_test_image else '')
         + 'You have a limited tool budget; each assistant turn before finish must call a tool. '
         'TASK:\n' + task_text.split('## Reproduce', 1)[0].rstrip()
     )

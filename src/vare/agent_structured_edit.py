@@ -168,8 +168,8 @@ class StructuredEditController:
         allowed_files: set[str],
         *,
         readable_files: set[str] | None = None,
-        max_read_lines: int = 120,
-        max_read_chars: int = 24_000,
+        max_read_lines: int = 40,
+        max_read_chars: int = 8_000,
         max_feedback_chars: int = 2_000,
     ) -> None:
         if not 1 <= max_read_lines <= 120 or not 256 <= max_read_chars <= 24_000:
@@ -211,26 +211,36 @@ class StructuredEditController:
         start_line: int = 1,
         end_line: int | None = None,
     ) -> dict[str, Any]:
-        """Read at most 120 lines / 24k characters and return opaque edit handles."""
+        """Read a short source region and return opaque edit handles."""
         source_path = _safe_path(self.root, path, self.readable_files)
         if start_line < 1 or (end_line is not None and end_line < start_line):
             raise StructuredEditError("source region line range is invalid")
         lines = source_path.read_text(encoding="utf-8").splitlines(keepends=True)
-        last_line = min(
-            len(lines),
-            end_line if end_line is not None else start_line + self.max_read_lines - 1,
+        requested_end = min(len(lines), end_line if end_line is not None else len(lines))
+        requested_last = min(
+            requested_end,
             start_line + self.max_read_lines - 1,
         )
         if start_line > len(lines):
             raise StructuredEditError("source region starts after end of file")
-        content = "".join(lines[start_line - 1:last_line])
-        if len(content) > self.max_read_chars:
-            content = content[:self.max_read_chars]
+        selected: list[str] = []
+        chars = 0
+        for line in lines[start_line - 1:requested_last]:
+            if chars + len(line) > self.max_read_chars:
+                break
+            selected.append(line)
+            chars += len(line)
+        last_line = start_line + len(selected) - 1
+        content = "".join(selected)
+        truncated = last_line < requested_end
+        next_line = last_line + 1
         if path not in self.allowed_files:
             return {
                 "path": path,
                 "start_line": start_line,
                 "end_line": last_line,
+                "next_line": next_line,
+                "truncated": truncated,
                 "content": content,
                 "read_only": True,
             }
@@ -241,6 +251,8 @@ class StructuredEditController:
             "path": path,
             "start_line": start_line,
             "end_line": last_line,
+            "next_line": next_line,
+            "truncated": truncated,
             "content": content,
             "workspace_revision_handle": revision_handle,
             "source_preimage_handle": source_handle,
