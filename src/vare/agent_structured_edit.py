@@ -194,6 +194,7 @@ class StructuredEditController:
         self._inspected_diff_hash: str | None = None
         self._latest_test_passed: bool | None = None
         self._failure_pairs: set[tuple[str, str]] = set()
+        self._failed_noop_actions: set[str] = set()
 
     def _issue(self, path: str, revision: str, source_hash: str) -> tuple[str, str]:
         self._counter += 1
@@ -268,17 +269,30 @@ class StructuredEditController:
         handle_path, expected_revision, expected_hash = revision_binding
         if workspace_revision(self.root, self.allowed_files) != expected_revision:
             raise StructuredEditError("workspace revision handle is stale; reread the affected source region")
-        result = apply_structured_edit(
-            self.root,
-            self.allowed_files,
-            action=action,
-            path=handle_path,
-            expected_hash=expected_hash,
-            expected_revision=expected_revision,
-            old_text=old_text,
-            new_text=new_text,
-            anchor=anchor,
-        )
+        try:
+            result = apply_structured_edit(
+                self.root,
+                self.allowed_files,
+                action=action,
+                path=handle_path,
+                expected_hash=expected_hash,
+                expected_revision=expected_revision,
+                old_text=old_text,
+                new_text=new_text,
+                anchor=anchor,
+            )
+        except StructuredEditError as exc:
+            if str(exc) in {"edit would not change the file", "old_text must match exactly once"}:
+                signature = sha256_bytes(
+                    "\0".join((action, path, old_text, new_text, anchor)).encode("utf-8")
+                )
+                repeated = signature in self._failed_noop_actions
+                self._failed_noop_actions.add(signature)
+                if repeated:
+                    raise StructuredEditError(
+                        "repeated no-op edit; inspect the current source and choose a different targeted change"
+                    ) from exc
+            raise
         current_diff = unified_diff(self.root, self._before, self.allowed_files)
         self._latest_diff_hash = sha256_bytes(current_diff.encode("utf-8"))
         self._inspected_diff_hash = None

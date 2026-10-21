@@ -201,6 +201,24 @@ def test_controller_bounds_generated_edit_text(tmp_path: Path) -> None:
         )
 
 
+def test_controller_detects_repeated_identical_noop_edits(tmp_path: Path) -> None:
+    root, allowed = _workspace(tmp_path)
+    controller = StructuredEditController(root, allowed)
+    for attempt in range(2):
+        read = controller.read_region("src/module.py")
+        with pytest.raises(StructuredEditError) as error:
+            controller.apply_edit(
+                action="replace_text",
+                path="src/module.py",
+                workspace_revision_handle=read["workspace_revision"],
+                source_preimage_handle=read["source_preimage"],
+                old_text="return 1",
+                new_text="return 1",
+            )
+        if attempt == 1:
+            assert "repeated no-op" in str(error.value)
+
+
 def test_controller_repeated_public_failure_prompts_different_repair_and_bounds_output(tmp_path: Path) -> None:
     root, allowed = _workspace(tmp_path)
     controller = StructuredEditController(root, allowed, max_feedback_chars=128)
