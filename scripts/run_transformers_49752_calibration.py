@@ -259,8 +259,9 @@ def run_calibration(source_repo: Path, output: Path, image: str) -> dict[str, An
         and results["source_swap_rejected"] is True
         and red_team["passed"]
     )
-    results["status"] = "complete" if calibration_passed else "failed"
-    save_progress(results["status"])
+    terminal_status = "complete" if calibration_passed else "failed"
+    results["status"] = terminal_status
+    save_progress(terminal_status)
     record = {
         "protocol_id": protocol["protocol_id"], "task_id": TASK_ID,
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -282,8 +283,7 @@ def run_calibration(source_repo: Path, output: Path, image: str) -> dict[str, An
     }
     result_path = output / "calibration.json"
     result_path.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    results["status"] = "complete"
-    save_progress("complete")
+    save_progress(terminal_status)
     (output / "SHA256SUMS").write_text(
         f"{sha256_file(result_path)}  calibration.json\n"
         f"{sha256_file(output / 'progress.json')}  progress.json\n",

@@ -11,7 +11,7 @@ reward variance is zero. Two attempts hit per-turn output truncation; one
 produced a no-op and a corrupt diff. This task is consumed for development and
 is not confirmation data. No held-out task, SFT, or GRPO run occurred. See the
 [report](transformers-49752-qwen-tool-agent-feasibility-v1-report.md),
-[latest calibration protocol v10](../benchmarks/mlsys_repo_eval_v3/transformers_49752/protocol-v10.json),
+[latest calibration protocol v11](../benchmarks/mlsys_repo_eval_v3/transformers_49752/protocol-v11.json),
 [agent protocol](../benchmarks/mlsys_repo_eval_v3/transformers_49752/agent-protocol-v2.json),
 and [raw evidence](../results/transformers-49752-qwen-tool-feasibility-v1/).
 

@@ -12,7 +12,7 @@ per-turn output ceiling while forming tool calls, and one produced a no-op
 patch and a corrupt patch. No public test ran after a patch, no policy update
 ran, and reward variance was zero. This single task is now consumed and does
 not establish Phase A or any capability gain. See the [report](transformers-49752-qwen-tool-agent-feasibility-v1-report.md),
-[latest calibration protocol v10](../benchmarks/mlsys_repo_eval_v3/transformers_49752/protocol-v10.json),
+[latest calibration protocol v11](../benchmarks/mlsys_repo_eval_v3/transformers_49752/protocol-v11.json),
 [agent protocol](../benchmarks/mlsys_repo_eval_v3/transformers_49752/agent-protocol-v2.json),
 and [raw runs](../results/transformers-49752-qwen-tool-feasibility-v1/).
 

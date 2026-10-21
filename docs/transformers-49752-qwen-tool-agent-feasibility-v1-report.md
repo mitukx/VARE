@@ -68,7 +68,7 @@ no optimizer-cost estimate was measured.
 - [Agent-run calibration](../results/transformers-49752-isolated-v6/run-1/calibration.json)
 - [Post-run calibration](../results/transformers-49752-isolated-v7/run-1/calibration.json)
 - [Expanded subprocess red-team calibration](../results/transformers-49752-isolated-v8/run-1/calibration.json)
-- [Terminal-status calibration record](../results/transformers-49752-isolated-v10/run-1/calibration.json)
+- [Terminal-status calibration record](../results/transformers-49752-isolated-v11/run-1/calibration.json)
 
 After the agent run, protocol v7 was frozen after a lint cleanup and a
 Development-split error-message correction. Its separate calibration again
@@ -81,9 +81,10 @@ regressions. The updated calibration again passed baseline-fail, known-fix-pass,
 source-swap rejection, and the expanded red-team suite. The process can read
 only the candidate subject, with no Git history or grader source.
 The v8 record retained `status: running` in an aggregate field despite storing
-all terminal results. Protocol v10 corrects that evidence bookkeeping without
+all terminal results. Protocol v11 corrects that evidence bookkeeping without
 changing the grader semantics; its fresh baseline/fix/red-team calibration
-records a terminal `complete` or `failed` status.
+records a terminal `complete` or `failed` status consistently in result and
+progress evidence, including failed calibration paths.
 
 Run the protocol's agent command from the VARE repository with its pinned MLX
 environment, cached model snapshot, and `DOCKER_CONTEXT=colima`. The raw agent

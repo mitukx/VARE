@@ -26,7 +26,7 @@ TASK_DIR = ROOT / "benchmarks/mlsys_repo_eval_v3/transformers_49752"
 TASK_DESCRIPTION = TASK_DIR / "task.md"
 GRADER_ADAPTER = TASK_DIR / "candidate_probe.py"
 PUBLIC_TEST = TASK_DIR / "test_public.py"
-PROTOCOL = TASK_DIR / "protocol-v10.json"
+PROTOCOL = TASK_DIR / "protocol-v11.json"
 _DIFF_HEADER = re.compile(r"(?:a|b)/([A-Za-z0-9_./-]+)\Z")
 
 
