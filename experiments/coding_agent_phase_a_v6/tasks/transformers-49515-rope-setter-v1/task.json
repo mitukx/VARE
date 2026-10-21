@@ -11,6 +11,9 @@
     ],
     "family": "rotary-configuration-compatibility",
     "pack": "mlsys_repo_eval_v6",
+    "readonly_files": [
+      "test_public.py"
+    ],
     "split": "development",
     "task_type": "correctness"
   },
@@ -24,6 +27,9 @@
       "src/transformers/configuration_utils.py": "f1325adef714159a2c9cf6b1204ac71c65df4069259a849fd0c82c9c57092248"
     },
     "fixed_revision_sha256": "93d5be6b2f7b479ea5efa5a35989ef805365d6d9",
+    "readonly_file_sha256": {
+      "test_public.py": "824040be10623adb683d3a8c1268a907f5746e317e1520ec1c469cbb742d00d1"
+    },
     "repository": "huggingface/transformers",
     "snapshot_sha256": "aa6317d409ff3ce8990d08961904c3542d07c3e37787d0665638aa8769e2230d"
   },

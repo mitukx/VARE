@@ -974,6 +974,39 @@ def test_engineering_task_pins_archive_snapshot_and_editable_source_hash(tmp_pat
         verify_agent_workspace(workspace, contract)
 
 
+def test_engineering_task_pins_readonly_public_test_separately_from_edits(tmp_path):
+    workspace = tmp_path / "workspace"
+    target = workspace / "src/package/target.py"
+    target.parent.mkdir(parents=True)
+    target.write_text("VALUE = 1\n", encoding="utf-8")
+    public_test = workspace / "test_public.py"
+    public_test.write_text("def test_value():\n    assert True\n", encoding="utf-8")
+    target_hash = hashlib.sha256(target.read_bytes()).hexdigest()
+    public_hash = hashlib.sha256(public_test.read_bytes()).hexdigest()
+    task = tmp_path / "task-readonly-public"
+    task.mkdir()
+    (task / "task.json").write_text(json.dumps({
+        "task_id": "readonly-public-test",
+        "metadata": {
+            "split": "development", "editable_files": ["src/package/target.py"],
+            "readonly_files": ["test_public.py"],
+        },
+        "prompt": "Fix the source behavior.",
+        "source": {
+            "snapshot_sha256": workspace_snapshot_sha256(workspace),
+            "file_sha256": {"src/package/target.py": target_hash},
+            "readonly_file_sha256": {"test_public.py": public_hash},
+        },
+    }), encoding="utf-8")
+    contract = load_agent_task(task)
+    assert contract.allowed_files == ("src/package/target.py",)
+    assert contract.readonly_files == ("test_public.py",)
+    assert verify_agent_workspace(workspace, contract) == {"src/package/target.py": target_hash}
+    public_test.write_text("def test_value():\n    assert False\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="read-only task input SHA-256"):
+        verify_agent_workspace(workspace, contract)
+
+
 def test_local_agent_parses_engineering_task_without_loading_weights(tmp_path, monkeypatch, capsys):
     path = ROOT / "scripts/run_local_agent.py"
     spec = importlib.util.spec_from_file_location("run_local_agent_under_test", path)

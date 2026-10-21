@@ -11,6 +11,9 @@
     ],
     "family": "nested-output-device-transfer",
     "pack": "mlsys_repo_eval_v6",
+    "readonly_files": [
+      "test_public.py"
+    ],
     "split": "development",
     "task_type": "correctness"
   },
@@ -24,6 +27,9 @@
       "src/transformers/pytorch_utils.py": "cab95b73a9eada20f0192b89dc6b4544a7495cd958124fe8eab130d327c3e4d4"
     },
     "fixed_revision_sha256": "d806b8c84fea7247bc2a066254e72d4a72583430",
+    "readonly_file_sha256": {
+      "test_public.py": "34384c6ff809cf834eaf8489cecdf08d4b1bed029041f0f8dc2a16624a64135d"
+    },
     "repository": "huggingface/transformers",
     "snapshot_sha256": "13482318058ebdc6043d7332654621c365428709d2fa31d1ad7bd3840822a472"
   },

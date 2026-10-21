@@ -11,6 +11,9 @@
     ],
     "family": "image-preprocessing-configuration",
     "pack": "mlsys_repo_eval_v6",
+    "readonly_files": [
+      "test_public.py"
+    ],
     "split": "development",
     "task_type": "correctness"
   },
@@ -24,6 +27,9 @@
       "src/transformers/models/janus/image_processing_janus.py": "6cee8de8716b32825da9ea34d67f5806f1083d6cc7ddb0824c530ef4153d610d"
     },
     "fixed_revision_sha256": "a3c7fcf3608e2a045d8ae1df6947de8c4ae60b3f",
+    "readonly_file_sha256": {
+      "test_public.py": "00faa0abc0e8d9cce647376efe84c7b618fbc5bda5ec29c1a172c98b08cdc956"
+    },
     "repository": "huggingface/transformers",
     "snapshot_sha256": "a95f2b7716db0d655dd2331e27afffcbbdc08203af05919ddb191e8a9220c95a"
   },

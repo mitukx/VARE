@@ -33,12 +33,14 @@ class AgentTaskContract:
     task_id: str
     schema: str
     allowed_files: tuple[str, ...]
+    readonly_files: tuple[str, ...]
     prompt_text: str
     base_revision: str | None
     calibration_revision: str | None
     split: str | None
     input_hashes: dict[str, str]
     source_hashes: dict[str, str]
+    readonly_hashes: dict[str, str]
     snapshot_sha256: str | None
 
     @property
@@ -104,6 +106,14 @@ def verify_agent_workspace(workspace: Path, contract: AgentTaskContract) -> dict
         if path.is_symlink() or not path.is_file():
             raise ValueError(f"allowlisted task file is missing or unsafe: {name}")
         actual[name] = _sha256(path)
+    actual_readonly: dict[str, str] = {}
+    for name in contract.readonly_files:
+        path = root / name
+        if path.is_symlink() or not path.is_file():
+            raise ValueError(f"read-only task input is missing or unsafe: {name}")
+        actual_readonly[name] = _sha256(path)
+    if actual_readonly != contract.readonly_hashes:
+        raise ValueError("read-only task input SHA-256 differs from the pinned manifest")
     if contract.source_hashes:
         if set(contract.source_hashes) != set(contract.allowed_files):
             raise ValueError("pinned source hash manifest must cover exactly the task allowlist")
@@ -181,12 +191,14 @@ def load_agent_task(task_root: Path) -> AgentTaskContract:
             task_id=str(task["task_id"]),
             schema="historical",
             allowed_files=tuple(files),
+            readonly_files=(),
             prompt_text=brief.read_text(encoding="utf-8"),
             base_revision=source.get("base_revision"),
             calibration_revision=source.get("calibration_revision"),
             split=split,
             input_hashes=hashes,
             source_hashes=dict(source_hashes),
+            readonly_hashes={},
             snapshot_sha256=snapshot_sha256,
         )
     metadata = task.get("metadata")
@@ -218,6 +230,19 @@ def load_agent_task(task_root: Path) -> AgentTaskContract:
         raise ValueError("engineering task source.file_sha256 is malformed")
     if source_hashes and set(source_hashes) != set(files):
         raise ValueError("pinned source hash manifest must cover exactly the task allowlist")
+    readonly_hashes = source.get("readonly_file_sha256", {})
+    if not isinstance(readonly_hashes, dict) or any(
+        not isinstance(name, str) or name in files or len(name) == 0
+        or Path(name).is_absolute() or ".." in Path(name).parts
+        or not isinstance(digest, str) or len(digest) != 64
+        or any(char not in "0123456789abcdef" for char in digest)
+        for name, digest in readonly_hashes.items()
+    ):
+        raise ValueError("engineering task source.readonly_file_sha256 is malformed")
+    if set(metadata.get("readonly_files", [])) != set(readonly_hashes):
+        raise ValueError("read-only task file list must match its pinned hash manifest")
+    for name, digest in readonly_hashes.items():
+        hashes[f"readonly_file_sha256:{name}"] = digest
     snapshot_sha256 = source.get("snapshot_sha256")
     if snapshot_sha256 is not None and (
         not isinstance(snapshot_sha256, str) or len(snapshot_sha256) != 64
@@ -228,11 +253,13 @@ def load_agent_task(task_root: Path) -> AgentTaskContract:
         task_id=task_id,
         schema="engineering_task_spec",
         allowed_files=tuple(files),
+        readonly_files=tuple(sorted(readonly_hashes)),
         prompt_text=prompt_text,
         base_revision=source.get("base_revision"),
         calibration_revision=source.get("calibration_revision"),
         split=split,
         input_hashes=hashes,
         source_hashes=dict(source_hashes),
+        readonly_hashes=dict(readonly_hashes),
         snapshot_sha256=snapshot_sha256,
     )

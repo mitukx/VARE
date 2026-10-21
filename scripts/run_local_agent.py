@@ -288,6 +288,8 @@ def generate_turn(backend: str, model: Any, tokenizer: Any, messages: list[dict[
         raise ValueError('context_budget_exhausted')
     limit = min(limit, args.max_context_tokens - prompt_tokens)
     if backend == 'mlx':
+        import mlx.core as mx
+        mx.reset_peak_memory()
         from mlx_lm import stream_generate
         from mlx_lm.sample_utils import make_sampler
 
@@ -308,7 +310,7 @@ def generate_turn(backend: str, model: Any, tokenizer: Any, messages: list[dict[
         return raw, generated_tokens, prompt_tokens, {
             'prompt_tokens_per_second': getattr(last, 'prompt_tps', None),
             'decode_tokens_per_second': getattr(last, 'generation_tps', None),
-            'mlx_peak_memory_gib': getattr(last, 'peak_memory', None),
+            'mlx_peak_memory_bytes': int(mx.get_peak_memory()),
         }
 
     import torch
@@ -327,7 +329,7 @@ def generate_turn(backend: str, model: Any, tokenizer: Any, messages: list[dict[
     return tokenizer.decode(new_ids, skip_special_tokens=False), generated_tokens, prompt_tokens, {
         'prompt_tokens_per_second': None,
         'decode_tokens_per_second': None,
-        'mlx_peak_memory_gib': None,
+        'mlx_peak_memory_bytes': None,
     }
 
 
@@ -364,6 +366,58 @@ def public_test_command() -> list[str]:
         'python', '-c',
         "import runpy,sys;sys.path.insert(0,'/workspace/src');tests=runpy.run_path('/workspace/test_public.py');[fn() for name,fn in tests.items() if name.startswith('test_') and callable(fn)]",
     ]
+
+
+def mlx_host_resource_snapshot() -> dict[str, int]:
+    """Read available pages and swap from macOS without undeclared packages."""
+    vm_stat = subprocess.run(
+        ['vm_stat'], check=True, capture_output=True, text=True, timeout=10,
+    ).stdout
+    page_match = re.search(r'page size of (\d+) bytes', vm_stat)
+    if page_match is None:
+        return {}
+    pages = {
+        match.group(1): int(match.group(2).replace('.', ''))
+        for match in re.finditer(r'Pages (free|inactive|speculative):\s+([\d.]+)', vm_stat)
+    }
+    if not all(name in pages for name in ('free', 'inactive', 'speculative')):
+        return {}
+    swap_text = subprocess.run(
+        ['sysctl', 'vm.swapusage'], check=True, capture_output=True, text=True, timeout=10,
+    ).stdout
+    swap = {
+        match.group(1): int(float(match.group(2)) * 1024**{'K': 1, 'M': 2, 'G': 3}[match.group(3)])
+        for match in re.finditer(r'(used|free) = ([\d.]+)([KMG])', swap_text)
+    }
+    if set(swap) != {'used', 'free'}:
+        return {}
+    return {
+        'available_bytes': sum(pages.values()) * int(page_match.group(1)),
+        'swap_used_bytes': swap['used'],
+        'swap_free_bytes': swap['free'],
+    }
+
+
+def mlx_resource_stop_reason(
+    snapshot: dict[str, Any], *, minimum_available_bytes: int,
+    minimum_free_swap_bytes: int, maximum_swap_used_bytes: int,
+    peak_bytes: int | None = None, maximum_peak_bytes: int | None = None,
+) -> str | None:
+    """Return a fail-closed stop reason for the frozen MLX resource bounds."""
+    available = snapshot.get('available_bytes')
+    free_swap = snapshot.get('swap_free_bytes')
+    used_swap = snapshot.get('swap_used_bytes')
+    if not isinstance(available, int) or not isinstance(free_swap, int) or not isinstance(used_swap, int):
+        return 'resource_probe_unavailable'
+    if available < minimum_available_bytes:
+        return 'minimum_available_memory_breached'
+    if free_swap < minimum_free_swap_bytes:
+        return 'minimum_free_swap_breached'
+    if used_swap > maximum_swap_used_bytes:
+        return 'maximum_swap_used_breached'
+    if maximum_peak_bytes is not None and (peak_bytes is None or peak_bytes > maximum_peak_bytes):
+        return 'maximum_mlx_peak_memory_breached'
+    return None
 
 
 def refresh_public_tests_after_edit(
@@ -515,6 +569,12 @@ def main() -> int:
     parser.add_argument('--max-total-new-tokens', type=int, default=3072)
     parser.add_argument('--max-context-tokens', type=int, default=8192)
     parser.add_argument('--wall-seconds', type=int, default=900)
+    parser.add_argument('--study-deadline-epoch', type=float,
+                        help='Shared absolute Unix deadline for every rollout in a frozen study')
+    parser.add_argument('--minimum-available-memory-bytes', type=int, default=4 * 1024**3)
+    parser.add_argument('--minimum-free-swap-bytes', type=int, default=512 * 1024**2)
+    parser.add_argument('--maximum-swap-used-bytes', type=int, default=7 * 1024**3)
+    parser.add_argument('--maximum-mlx-peak-memory-bytes', type=int, default=16 * 1024**3)
     parser.add_argument('--temperature', type=float, default=0.2)
     parser.add_argument('--top-p', type=float, default=0.95)
     parser.add_argument('--top-k', type=int, default=20)
@@ -534,10 +594,19 @@ def main() -> int:
     contract = load_agent_task(task_root)
     if args.require_split is not None and contract.split != args.require_split:
         parser.error(f'task split {contract.split!r} does not match required split {args.require_split}')
-    allowed = set(contract.allowed_files)
+    editable = set(contract.allowed_files)
+    test_files = {name for name in contract.readonly_files if Path(name).name == 'test_public.py'}
+    allowed = editable | set(contract.readonly_files)
     missing = sorted(name for name in allowed if not (workspace / name).is_file())
     if missing:
         parser.error(f'workspace missing allowed source files: {missing}')
+    if args.public_test_image and len(test_files) != 1:
+        parser.error('isolated public-test execution requires exactly one read-only test_public.py in the task')
+    if args.backend == 'mlx' and args.require_split == 'development':
+        if not args.public_test_image:
+            parser.error('Development MLX runs require isolated public-test execution')
+        if args.study_deadline_epoch is None:
+            parser.error('Development MLX runs require the shared study deadline')
     try:
         verify_agent_workspace(workspace, contract)
     except ValueError as exc:
@@ -550,10 +619,20 @@ def main() -> int:
         from importlib.metadata import version
         if platform.system() != 'Darwin' or platform.machine() != 'arm64':
             parser.error('the MLX backend requires Apple Silicon macOS')
+        if args.study_deadline_epoch is not None and time.time() >= args.study_deadline_epoch:
+            parser.error('shared study deadline expired before model load')
         import mlx.core as mx
         from mlx_lm import load
         if not mx.metal.is_available() or str(mx.default_device()) != 'Device(gpu, 0)':
             parser.error('the MLX backend requires Metal GPU as the active default device')
+        resource_reason = mlx_resource_stop_reason(
+            mlx_host_resource_snapshot(),
+            minimum_available_bytes=args.minimum_available_memory_bytes,
+            minimum_free_swap_bytes=args.minimum_free_swap_bytes,
+            maximum_swap_used_bytes=args.maximum_swap_used_bytes,
+        )
+        if resource_reason is not None:
+            parser.error(f'MLX resource gate refused model load: {resource_reason}')
         mx.random.seed(args.seed)
         model, tokenizer = load(str(model_dir))
         runtime = {'python': platform.python_version(), 'mlx': version('mlx'),
@@ -578,10 +657,6 @@ def main() -> int:
                    'mps_available_unused': torch.backends.mps.is_available()}
 
     task_text = contract.prompt_text
-    test_files = {name for name in allowed if Path(name).name == 'test_public.py'}
-    editable = allowed - test_files
-    if args.public_test_image and len(test_files) != 1:
-        parser.error('isolated public-test execution requires exactly one test_public.py in the task')
     use_opaque_handles = args.edit_format == 'structured' and bool(args.public_test_image)
     edit_controller = (
         StructuredEditController(
@@ -668,9 +743,22 @@ def main() -> int:
 
     for turn in range(args.max_turns):
         elapsed = time.perf_counter() - start
+        if args.study_deadline_epoch is not None and time.time() >= args.study_deadline_epoch:
+            stop_reason = 'study_wall_budget_exhausted'
+            break
         if elapsed >= args.wall_seconds:
             stop_reason = 'wall_time_exhausted'
             break
+        if args.backend == 'mlx':
+            resource_reason = mlx_resource_stop_reason(
+                mlx_host_resource_snapshot(),
+                minimum_available_bytes=args.minimum_available_memory_bytes,
+                minimum_free_swap_bytes=args.minimum_free_swap_bytes,
+                maximum_swap_used_bytes=args.maximum_swap_used_bytes,
+            )
+            if resource_reason is not None:
+                stop_reason = resource_reason
+                break
         remaining = args.max_total_new_tokens - token_total
         if remaining <= 0:
             stop_reason = 'token_budget_exhausted'
@@ -693,6 +781,20 @@ def main() -> int:
                                  'prompt_tokens': prompt_tokens,
                                  **generation_metrics,
                                  'generation_seconds': round(generation_elapsed, 6)}
+        if args.backend == 'mlx':
+            resource_reason = mlx_resource_stop_reason(
+                mlx_host_resource_snapshot(),
+                minimum_available_bytes=args.minimum_available_memory_bytes,
+                minimum_free_swap_bytes=args.minimum_free_swap_bytes,
+                maximum_swap_used_bytes=args.maximum_swap_used_bytes,
+                peak_bytes=generation_metrics.get('mlx_peak_memory_bytes'),
+                maximum_peak_bytes=args.maximum_mlx_peak_memory_bytes,
+            )
+            if resource_reason is not None:
+                entry['resource_stop_reason'] = resource_reason
+                transcript.append(entry)
+                stop_reason = resource_reason
+                break
         parse_text, recovered_tool_format = normalize_tool_call_format(raw, tool_names)
         if recovered_tool_format:
             entry['tool_call_format_recovery'] = 'strict_qwen_json_normalization'
@@ -1001,7 +1103,7 @@ def main() -> int:
         recorded_workspace_revision = run_git(workspace, 'rev-parse', 'HEAD')
     if args.backend == 'mlx':
         runtime['mlx_active_memory_bytes'] = int(mx.metal.get_active_memory())
-        runtime['mlx_peak_memory_bytes'] = int(mx.metal.get_peak_memory())
+        runtime['mlx_peak_api_note'] = 'per-turn peak is recorded in each transcript entry; runner-wide RSS is max_rss_bytes'
     result = {
         'schema_version': 1, 'task_id': contract.task_id, 'task_schema': contract.schema,
         'seed': args.seed,
@@ -1015,6 +1117,11 @@ def main() -> int:
         'budgets': {'max_turns': args.max_turns, 'max_new_tokens_per_turn': args.max_new_tokens_per_turn,
                     'max_total_new_tokens': args.max_total_new_tokens,
                     'max_context_tokens': args.max_context_tokens, 'wall_seconds': args.wall_seconds,
+                    'study_deadline_epoch': args.study_deadline_epoch,
+                    'minimum_available_memory_bytes': args.minimum_available_memory_bytes,
+                    'minimum_free_swap_bytes': args.minimum_free_swap_bytes,
+                    'maximum_swap_used_bytes': args.maximum_swap_used_bytes,
+                    'maximum_mlx_peak_memory_bytes': args.maximum_mlx_peak_memory_bytes,
                     'max_no_tool_retries': args.max_no_tool_retries,
                     'temperature': args.temperature, 'top_p': args.top_p, 'top_k': args.top_k,
                     'do_sample': args.do_sample, 'edit_format': args.edit_format},
@@ -1034,7 +1141,9 @@ def main() -> int:
         'tool_turns': len(transcript), 'no_tool_retries': no_tool_retries, 'transcript': transcript,
         'offline_environment_required': True,
         'wall_budget_checked_between_generations': True,
-        'claim_limit': 'One small cached model on one historical task; not frontier-agent performance or novel fix discovery.',
+        'study_deadline_checked_between_generations': True,
+        'mlx_resource_limits_checked_before_load_before_each_turn_and_after_each_turn': True,
+        'claim_limit': 'Development feasibility only; not held-out generalization or policy improvement.',
     }
     result_path.parent.mkdir(parents=True, exist_ok=True)
     try:

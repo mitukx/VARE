@@ -35,6 +35,7 @@ def prepare() -> int:
                 "task_type": "correctness",
                 "family": frozen_task["metadata"]["family"],
                 "editable_files": [target],
+                "readonly_files": ["test_public.py"],
             },
             "prompt": frozen_task["prompt"],
             "source": {
@@ -43,6 +44,9 @@ def prepare() -> int:
                 "calibration_revision": frozen_task["source"]["fixed_revision"],
                 "snapshot_sha256": manifest["workspace_snapshot_sha256"],
                 "file_sha256": {target: manifest["files"][target]["sha256"]},
+                "readonly_file_sha256": {
+                    "test_public.py": sha256((source_root / "test_public.py").read_bytes())
+                },
                 "baseline_target_sha256": manifest["files"][target]["sha256"],
                 "fixed_revision_sha256": frozen_task["source"]["fixed_revision"],
             },
@@ -52,7 +56,14 @@ def prepare() -> int:
         output_dir.mkdir(parents=True, exist_ok=True)
         output_path = output_dir / "task.json"
         if output_path.exists():
-            raise FileExistsError(f"refusing to overwrite frozen agent task: {output_path}")
+            if (STUDY / "protocol-v1.json").exists() or (STUDY / "protocol-v1.lock.json").exists():
+                raise FileExistsError("refusing to change task descriptors after protocol freeze")
+            previous = json.loads(output_path.read_text(encoding="utf-8"))
+            expected_previous = json.loads(json.dumps(task))
+            expected_previous["metadata"].pop("readonly_files")
+            expected_previous["source"].pop("readonly_file_sha256")
+            if previous != expected_previous:
+                raise FileExistsError(f"existing task is not the expected unfrozen v1 descriptor: {output_path}")
         output_path.write_text(json.dumps(task, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(f"prepared {len(TASKS)} agent task descriptors under {STUDY / 'tasks'}")
     return len(TASKS)

@@ -158,6 +158,8 @@ def freeze(model_snapshot: Path) -> dict[str, Any]:
             "edit_format": "structured",
             "public_tests": "run immutable public test functions in the network-disabled candidate container after every applied edit",
             "hidden_grading": "host-side independent v6 grader in a separate execution boundary after each rollout",
+            "resource_enforcement": "run_local_agent checks available memory and swap before model load and each turn, enforces the per-turn MLX peak, and checks the shared absolute study deadline between generations",
+            "shared_deadline_argument": "--study-deadline-epoch; every rollout in this frozen study must receive the same start_epoch + maximum_total_wall_seconds deadline",
             "max_turns": 12,
             "max_new_tokens_per_turn": 384,
             "max_total_new_tokens": 2048,

@@ -11,6 +11,9 @@
     ],
     "family": "watermark-scoring",
     "pack": "mlsys_repo_eval_v6",
+    "readonly_files": [
+      "test_public.py"
+    ],
     "split": "development",
     "task_type": "correctness"
   },
@@ -24,6 +27,9 @@
       "src/transformers/generation/watermarking.py": "700338c8bf212b4b49f64909193b2bd4344fa2fabeae4d962bea12b1e94cefc1"
     },
     "fixed_revision_sha256": "ec56e0e1383198065dd3a838629323c9fe228cf4",
+    "readonly_file_sha256": {
+      "test_public.py": "64949c1fed7bbd2efb2f210f0f433c1c692ad794469b8e9c558a26cc7d207689"
+    },
     "repository": "huggingface/transformers",
     "snapshot_sha256": "35a74a2a4f835ca50864e34b6cf3ced259f47a755683b02c627ab305619df9d2"
   },

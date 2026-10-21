@@ -1,4 +1,6 @@
 from scripts.run_local_agent import (
+    generate_turn,
+    mlx_resource_stop_reason,
     normalize_tool_call_format,
     public_test_command,
     refresh_public_tests_after_edit,
@@ -81,6 +83,67 @@ def test_public_tests_add_archived_transformers_source_to_import_path():
     assert "sys.path.insert(0,'/workspace/src')" in command[2]
     assert "runpy.run_path('/workspace/test_public.py')" in command[2]
     assert "name.startswith('test_')" in command[2]
+
+
+def test_mlx_resource_budget_fails_closed_on_each_frozen_limit():
+    good = {
+        'available_bytes': 5 * 1024**3,
+        'swap_free_bytes': 700 * 1024**2,
+        'swap_used_bytes': 6 * 1024**3,
+    }
+    limits = {
+        'minimum_available_bytes': 4 * 1024**3,
+        'minimum_free_swap_bytes': 512 * 1024**2,
+        'maximum_swap_used_bytes': 7 * 1024**3,
+    }
+    assert mlx_resource_stop_reason(good, **limits) is None
+    assert mlx_resource_stop_reason({}, **limits) == 'resource_probe_unavailable'
+    assert mlx_resource_stop_reason({**good, 'swap_free_bytes': 100}, **limits) == 'minimum_free_swap_breached'
+    assert mlx_resource_stop_reason({**good, 'swap_used_bytes': 8 * 1024**3}, **limits) == 'maximum_swap_used_breached'
+    assert mlx_resource_stop_reason(good, **limits, peak_bytes=17 * 1024**3,
+                                    maximum_peak_bytes=16 * 1024**3) == 'maximum_mlx_peak_memory_breached'
+
+
+def test_mlx_turn_resets_peak_and_records_peak_in_bytes(monkeypatch):
+    import sys
+    import types
+    from argparse import Namespace
+    from types import SimpleNamespace
+
+    calls = []
+    mx = types.SimpleNamespace(
+        reset_peak_memory=lambda: calls.append('reset'),
+        get_peak_memory=lambda: calls.append('peak') or 123456,
+    )
+    mlx_package = types.ModuleType('mlx')
+    mlx_package.__path__ = []
+    mlx_package.core = mx
+    generated = SimpleNamespace(
+        text='answer', generation_tokens=2, prompt_tps=3.0, generation_tps=4.0,
+    )
+    mlx_lm = types.ModuleType('mlx_lm')
+    mlx_lm.stream_generate = lambda *args, **kwargs: iter([generated])
+    sample_utils = types.ModuleType('mlx_lm.sample_utils')
+    sample_utils.make_sampler = lambda **kwargs: 'sampler'
+    monkeypatch.setitem(sys.modules, 'mlx', mlx_package)
+    monkeypatch.setitem(sys.modules, 'mlx.core', mx)
+    monkeypatch.setitem(sys.modules, 'mlx_lm', mlx_lm)
+    monkeypatch.setitem(sys.modules, 'mlx_lm.sample_utils', sample_utils)
+
+    class FakeTokenizer:
+        def apply_chat_template(self, messages, **kwargs):
+            return 'prompt'
+
+        def encode(self, text, **kwargs):
+            return [1, 2, 3]
+
+    args = Namespace(
+        max_context_tokens=100, do_sample=False, temperature=0.0, top_p=1.0, top_k=0,
+    )
+    result = generate_turn('mlx', object(), FakeTokenizer(), [], [], limit=5, args=args)
+    assert result[0:3] == ('answer', 2, 3)
+    assert result[3]['mlx_peak_memory_bytes'] == 123456
+    assert calls == ['reset', 'peak']
 
 
 def test_verified_success_requires_public_test_and_independent_hidden_grade():
