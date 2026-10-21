@@ -71,16 +71,19 @@ def create_docker_shared_workspace(task_id: str, *, home: Path | None = None) ->
     parent = Path(tempfile.mkdtemp(prefix=f"{task_id}-", dir=root))
     parent.chmod(0o700)
     workspace = parent / "workspace"
-    # The container runs as uid 65534; the mounted tree must be traversable
-    # while remaining read-only to the container.
-    workspace.mkdir(mode=0o755)
-    if workspace.resolve(strict=True) != workspace:
-        raise ValueError("candidate workspace path is not canonical")
+    # materialize_workspace owns creation of the destination and rejects any
+    # pre-existing path. Keep this leaf absent until pinned files are written.
+    if workspace.exists() or workspace.is_symlink():
+        raise ValueError("candidate workspace destination must not already exist")
     return workspace
 
 
 def classify_public_test_result(result: Any) -> str:
     """Classify the public runner result without turning launch errors into reward."""
+    if result is None:
+        # The agent may exhaust its action budget before invoking the public
+        # evaluator. Preserve that as an ordinary unsuccessful rollout.
+        return "not_run"
     if not isinstance(result, dict):
         return "evaluator_unavailable"
     classification = result.get("classification")
@@ -234,7 +237,10 @@ def materialize_workspace(
         raise FileExistsError(f"refusing to reuse candidate workspace: {destination}")
     if destination.parent.exists() and destination.parent.is_symlink():
         raise ValueError("workspace parent must not be a symlink")
-    destination.mkdir(parents=True)
+    # The container runs as uid 65534; make the materialized tree traversable
+    # while keeping candidate writes constrained by the read-only mount.
+    destination.mkdir(parents=True, mode=0o755)
+    os.chmod(destination, 0o755)
     expected_files: dict[str, dict[str, Any]] = manifest["files"]
     expected_dirs: dict[str, int] = manifest["directories"]
     revision = manifest["source_revision"]

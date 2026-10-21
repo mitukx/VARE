@@ -75,6 +75,7 @@ def calibrate(output_dir: Path) -> dict[str, Any]:
     workspace = create_docker_shared_workspace("colima-public-mount-calibration")
     parent = workspace.parent
     try:
+        workspace.mkdir(mode=0o755)
         target = workspace / "src" / "module.py"
         target.parent.mkdir()
         test_file = workspace / "test_public.py"

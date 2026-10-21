@@ -1,6 +1,7 @@
 import importlib.util
 import json
 from pathlib import Path
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -56,8 +57,84 @@ class CodingAgentDevStudyRunnerTests(unittest.TestCase):
                 )
             )
             self.assertFalse(workspace.is_symlink())
-            self.assertEqual(workspace.resolve(), workspace)
+            self.assertFalse(workspace.exists())
             self.assertEqual(workspace.parent.stat().st_mode & 0o777, 0o700)
+
+    def test_materializer_creates_allocated_workspace_destination(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source_repo = root / "source"
+            source_repo.mkdir()
+            subprocess.run(
+                ["git", "init", str(source_repo)], check=True, capture_output=True
+            )
+            (source_repo / "src").mkdir()
+            (source_repo / "src" / "module.py").write_text("value = 1\n")
+            subprocess.run(
+                ["git", "-C", str(source_repo), "add", "src/module.py"],
+                check=True,
+            )
+            subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    str(source_repo),
+                    "-c",
+                    "user.name=Test",
+                    "-c",
+                    "user.email=test@example.invalid",
+                    "commit",
+                    "-m",
+                    "baseline",
+                ],
+                check=True,
+                capture_output=True,
+            )
+            revision = subprocess.run(
+                ["git", "-C", str(source_repo), "rev-parse", "HEAD"],
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+            task_pack = root / "tasks"
+            task_dir = task_pack / "task-123"
+            task_dir.mkdir(parents=True)
+            (task_dir / "test_public.py").write_text("def test_placeholder(): pass\n")
+            original_task_pack = runner.TASK_PACK
+            runner.TASK_PACK = task_pack
+            try:
+                with tempfile.TemporaryDirectory() as home_dir:
+                    destination = runner.create_docker_shared_workspace(
+                        "task-123", home=Path(home_dir),
+                    )
+                    runner.materialize_workspace(
+                        source_repo,
+                        "task-123",
+                        destination,
+                        {
+                            "source_revision": revision,
+                            "directories": {"src": 0o755},
+                            "files": {
+                                "src/module.py": {
+                                    "mode": 0o644,
+                                    "sha256": runner.sha256_file(
+                                        source_repo / "src/module.py"
+                                    ),
+                                },
+                                "test_public.py": {
+                                    "mode": 0o644,
+                                    "sha256": runner.sha256_file(task_dir / "test_public.py"),
+                                },
+                            },
+                        },
+                    )
+                    self.assertEqual(
+                        (destination / "src/module.py").read_text(), "value = 1\n"
+                    )
+                    self.assertTrue((destination / "test_public.py").is_file())
+                    self.assertEqual(destination.stat().st_mode & 0o777, 0o755)
+            finally:
+                runner.TASK_PACK = original_task_pack
 
     def test_candidate_workspace_root_rejects_symlinked_cache(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -84,6 +161,9 @@ class CodingAgentDevStudyRunnerTests(unittest.TestCase):
             }),
             "candidate_timeout",
         )
+        self.assertEqual(runner.classify_public_test_result(None), "not_run")
+        self.assertFalse(runner.is_unavailable_public_evaluator(None))
+        self.assertTrue(runner.is_unavailable_public_evaluator("malformed"))
         self.assertTrue(
             runner.is_unavailable_public_evaluator({"passed": False, "returncode": 125})
         )

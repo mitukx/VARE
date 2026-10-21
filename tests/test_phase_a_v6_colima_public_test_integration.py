@@ -44,6 +44,7 @@ def test_colima_public_runner_executes_baseline_failure_and_known_fix(monkeypatc
     monkeypatch.setenv("DOCKER_CONTEXT", "colima")
     workspace = create_docker_shared_workspace("public-test-colima-regression")
     try:
+        workspace.mkdir(mode=0o755)
         target = workspace / "src" / "module.py"
         target.parent.mkdir()
         test_file = workspace / "test_public.py"
