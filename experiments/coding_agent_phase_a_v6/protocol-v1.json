@@ -1,0 +1,189 @@
+{
+  "agent": {
+    "edit_format": "structured",
+    "hidden_grading": "host-side independent v6 grader in a separate execution boundary after each rollout",
+    "max_context_tokens": 6144,
+    "max_new_tokens_per_turn": 384,
+    "max_no_tool_retries": 2,
+    "max_total_new_tokens": 2048,
+    "max_turns": 12,
+    "public_test_memory_mb": 1900,
+    "public_tests": "run immutable public test functions in the network-disabled candidate container after every applied edit",
+    "resource_enforcement": "run_local_agent checks available memory and swap before model load and each turn, enforces the per-turn MLX peak, and checks the shared absolute study deadline between generations",
+    "shared_deadline_argument": "--study-deadline-epoch; every rollout in this frozen study must receive the same start_epoch + maximum_total_wall_seconds deadline",
+    "wall_seconds_per_rollout": 600
+  },
+  "decision_rule": {
+    "failure": "record no-go without changing tasks, prompts, model, seeds, or budgets",
+    "phase_a_go": "at least two distinct Development tasks have at least one model-generated independently verified success and sampled rewards are non-constant across at least one task",
+    "training_go": "false unless Phase A GO plus independent unused held-out qualification and validated real optimizer/checkpoint path are separately established"
+  },
+  "hardware": {
+    "cpu": "Apple M1 Pro",
+    "model": "MacBookPro18,3",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "unified_memory_bytes": 34359738368
+  },
+  "implementation_commit": "d8fc4a4f92d2156d9c7894fffd3c76ec9287c117",
+  "limitations": [
+    "Development-only feasibility evidence; no held-out result or capability-improvement claim.",
+    "All tasks are from Transformers; only bug families differ.",
+    "Upstream PR dates do not establish model training-data novelty.",
+    "No SFT, GRPO, or policy update is part of this protocol."
+  ],
+  "limits": {
+    "maximum_mlx_peak_bytes_per_turn": 17179869184,
+    "maximum_swap_used_bytes": 7516192768,
+    "maximum_total_wall_seconds": 7200,
+    "minimum_available_memory_bytes": 4294967296,
+    "minimum_free_swap_bytes": 536870912,
+    "stop_on_first_safety_limit": true
+  },
+  "model": {
+    "backend": "MLX/Metal",
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "snapshot_files_sha256": {
+      ".gitattributes": "34448b82c17d60fec9b65b1f093c115ddbaadc04beb1b0140b6bfed2e012a930",
+      "README.md": "7b17ce562d7ea121c86d2ffdf660eed3726ac5b52cacfa9f1de11a65969f5657",
+      "added_tokens.json": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680",
+      "chat_template.jinja": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541",
+      "config.json": "574349e5a343236546fda55e4744a76e181f534182d7dc60ff1bad7e7a502849",
+      "generation_config.json": "835fffe355c9438e7a25be099b3fccaa98350b83451f9fd2d99512e74f1ade48",
+      "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "model.safetensors": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f",
+      "model.safetensors.index.json": "388d811b8b7c2608dd04cce1bcb04a8bf715d19b42790894e6d3427ff429a777",
+      "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "tokenizer.json": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "tokenizer_config.json": "4397cc477eb6d79715ccd2000accd6b3531928f30029665832fa1b255f24d2b9",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "trust_remote_code": false
+  },
+  "primary_metrics": [
+    "distinct Development tasks with an agent-generated patch accepted by the independent grader",
+    "task-level pass@3 among one greedy and two sampled rollouts",
+    "reward variance within the two-sample group for each task"
+  ],
+  "protocol_id": "vare-qwen3-4b-coding-agent-development-v6-2026-10-21",
+  "resource_preflight": {
+    "available_memory_bytes": 8810938368,
+    "swap": {
+      "free_bytes": 877983170,
+      "total_bytes": 7516192768,
+      "used_bytes": 6638209597
+    }
+  },
+  "sampling": {
+    "greedy": {
+      "do_sample": false,
+      "seeds": [
+        0
+      ]
+    },
+    "rollouts_per_task": 3,
+    "sampled": {
+      "do_sample": true,
+      "seeds": [
+        101,
+        202
+      ],
+      "temperature": 0.3,
+      "top_k": 20,
+      "top_p": 0.9
+    },
+    "total_planned_rollouts": 12
+  },
+  "secondary_metrics": [
+    "valid tool-call rate",
+    "applied-edit rate",
+    "public-test pass rate",
+    "format failures",
+    "generation tokens",
+    "prompt/decode tokens per second",
+    "wall time",
+    "peak MLX memory",
+    "candidate grading time",
+    "cost per verified success"
+  ],
+  "software": {
+    "docker_context": "colima",
+    "grading_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+    "mlx": "0.32.2",
+    "mlx_lm": "0.32.2",
+    "python": "3.12.12"
+  },
+  "task_split": {
+    "development": [
+      "transformers-49315-watermark-repeat-v1",
+      "transformers-49515-rope-setter-v1",
+      "transformers-49731-generation-device-type-v1",
+      "transformers-49767-janus-background-v1"
+    ],
+    "heldout": [],
+    "heldout_access": "forbidden",
+    "train": []
+  },
+  "tasks": {
+    "transformers-49315-watermark-repeat-v1": {
+      "base_revision": "26c0a7fd940b7d14381a39de73f6fbaaa570cf4f",
+      "descriptor_path": "experiments/coding_agent_phase_a_v6/tasks/transformers-49315-watermark-repeat-v1/task.json",
+      "descriptor_sha256": "3a569af3a059f6d88ca2a7021d81f01f38371facb0947fa088163a7b87e34e9a",
+      "editable_files": [
+        "src/transformers/generation/watermarking.py"
+      ],
+      "family": "watermark-scoring",
+      "fixed_revision": "ec56e0e1383198065dd3a838629323c9fe228cf4",
+      "prompt_sha256": "b3c58e624ce314bb4b07c285fba09f77f045d3ecb3c3d7654bdae6dc466cf509",
+      "split": "development",
+      "target_sha256": "700338c8bf212b4b49f64909193b2bd4344fa2fabeae4d962bea12b1e94cefc1",
+      "task_id": "transformers-49315-watermark-repeat-v1",
+      "workspace_snapshot_sha256": "35a74a2a4f835ca50864e34b6cf3ced259f47a755683b02c627ab305619df9d2"
+    },
+    "transformers-49515-rope-setter-v1": {
+      "base_revision": "1573af48b1c5cd8bfb0cfba4dc1ecf6e882d0348",
+      "descriptor_path": "experiments/coding_agent_phase_a_v6/tasks/transformers-49515-rope-setter-v1/task.json",
+      "descriptor_sha256": "4634fc681a5ff6c0c4f09219fd9a1c0f43b5b08b87bb2014539eac099a8595a8",
+      "editable_files": [
+        "src/transformers/configuration_utils.py"
+      ],
+      "family": "rotary-configuration-compatibility",
+      "fixed_revision": "93d5be6b2f7b479ea5efa5a35989ef805365d6d9",
+      "prompt_sha256": "591557d95420d3e5fed76b8c3c4025c9f07eda4e2a23bf01dd177f19ffbbdf39",
+      "split": "development",
+      "target_sha256": "f1325adef714159a2c9cf6b1204ac71c65df4069259a849fd0c82c9c57092248",
+      "task_id": "transformers-49515-rope-setter-v1",
+      "workspace_snapshot_sha256": "aa6317d409ff3ce8990d08961904c3542d07c3e37787d0665638aa8769e2230d"
+    },
+    "transformers-49731-generation-device-type-v1": {
+      "base_revision": "01269bc99768ad45f8aeaeb701e1315371e25239",
+      "descriptor_path": "experiments/coding_agent_phase_a_v6/tasks/transformers-49731-generation-device-type-v1/task.json",
+      "descriptor_sha256": "26a5d1e4373464c104988960113b46b411b57c0e66bb886b4013014193dcaaa3",
+      "editable_files": [
+        "src/transformers/pytorch_utils.py"
+      ],
+      "family": "nested-output-device-transfer",
+      "fixed_revision": "d806b8c84fea7247bc2a066254e72d4a72583430",
+      "prompt_sha256": "67972b15bc77348633cbc645f3bb68aa54a60d9198dd45d93e99fefe6bafda41",
+      "split": "development",
+      "target_sha256": "cab95b73a9eada20f0192b89dc6b4544a7495cd958124fe8eab130d327c3e4d4",
+      "task_id": "transformers-49731-generation-device-type-v1",
+      "workspace_snapshot_sha256": "13482318058ebdc6043d7332654621c365428709d2fa31d1ad7bd3840822a472"
+    },
+    "transformers-49767-janus-background-v1": {
+      "base_revision": "849fa754e2dd24f5dd49d05f61ff40b1abc2fd36",
+      "descriptor_path": "experiments/coding_agent_phase_a_v6/tasks/transformers-49767-janus-background-v1/task.json",
+      "descriptor_sha256": "dfc5b35bb33f64e423a24fca2ffa6e3709c1100d7b73687a58b36cb333bb684c",
+      "editable_files": [
+        "src/transformers/models/janus/image_processing_janus.py"
+      ],
+      "family": "image-preprocessing-configuration",
+      "fixed_revision": "a3c7fcf3608e2a045d8ae1df6947de8c4ae60b3f",
+      "prompt_sha256": "a8654467c9bf78ac00e8c99f035f6485be3634b16ecabe7d925886fe4e14b6a1",
+      "split": "development",
+      "target_sha256": "6cee8de8716b32825da9ea34d67f5806f1083d6cc7ddb0824c530ef4153d610d",
+      "task_id": "transformers-49767-janus-background-v1",
+      "workspace_snapshot_sha256": "a95f2b7716db0d655dd2331e27afffcbbdc08203af05919ddb191e8a9220c95a"
+    }
+  }
+}
