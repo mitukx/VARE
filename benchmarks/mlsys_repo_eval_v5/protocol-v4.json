@@ -1,0 +1,58 @@
+{
+  "candidate_boundary": {
+    "candidate_source_validation": "exact full inventory and SHA-256; only target file may differ",
+    "editable_files_per_task": 1,
+    "git_history": false,
+    "grader_in_candidate_namespace": false,
+    "network": false,
+    "public_test_read_only": true
+  },
+  "container_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "license": "Apache-2.0",
+  "limitations": [
+    "All tasks come from one repository and may share broad Transformers architecture.",
+    "Phi3 LongRoPE and legacy RoPE configuration share the RoPE domain and are not independent families.",
+    "The model training-data cutoff and exact pretraining exposure are unknown; PR chronology is not a non-contamination proof.",
+    "This protocol qualifies graders and tasks; it does not establish model capability or policy improvement."
+  ],
+  "limits": {
+    "cpus": 1,
+    "memory_mb": 1900,
+    "pids": 32,
+    "timeout_s": 120
+  },
+  "protocol_id": "vare-transformers-fresh-development-cohort-v4",
+  "purpose": "Qualify three source-pinned Development tasks with isolated behavioral grading.",
+  "repository": "huggingface/transformers",
+  "split": "development",
+  "tasks": {
+    "transformers-49361-phi3-longrope-v1": {
+      "adapter_sha256": "544b4079b76e6e01630be51d03dd6a5e7672cc74dae969687fa0951e67651712",
+      "baseline_manifest_sha256": "d2690f2eeb99826610d610a34e46e3c625aa2fe14f7736ce8eada74ce81e129b",
+      "baseline_snapshot_sha256": "6014367508454c4cf25393db0998e0a1cde0fb60ca4dbf17aad01b278dc49920",
+      "directory": "transformers-49361-phi3-longrope-v1",
+      "family": "longrope-cache-boundary",
+      "fixed_revision": "4a2f93bbb5594bcccab9612b095de6f900822601",
+      "known_fix_application": "replace only target bytes in the pinned baseline snapshot",
+      "known_fix_target_sha256": "1eba63da80d0dbc577196e3d34d433a7752937bf59819044334404734e7edb47",
+      "public_test_sha256": "1c77ac3829a4f1e9dcbbb32acd5d5587f55c453a7599177381fa4dec9863ed9a",
+      "source_revision": "6d3802a45f50ce6f2262029926265629010b2217",
+      "target_path": "src/transformers/models/phi3/modeling_phi3.py",
+      "task_json_sha256": "e5708060a10d3b7baf8cf94dcc5773cf995a4a0b8ab9e7a6f598ca640c980ca2"
+    },
+    "transformers-49481-bloom-static-cache-v1": {
+      "adapter_sha256": "1575a9608f92cde8f51e2282ee7be073ba9572ed6fd30ca3aa52447a44798566",
+      "baseline_manifest_sha256": "6c17ba5f13e65c2d4c84c5c566592d9bd110b779ed1946f9068ebe04294567b3",
+      "baseline_snapshot_sha256": "c34e24681424f2ac42236be2866b9ac9ea514d10018a5741d37a7f87efebade2",
+      "directory": "transformers-49481-bloom-static-cache-v1",
+      "family": "generation-static-cache",
+      "fixed_revision": "bc4d8df2c4604727ea63414c7af48de7e6eb9c0b",
+      "known_fix_application": "replace only target bytes in the pinned baseline snapshot",
+      "known_fix_target_sha256": "9f945c3e8e60063cf249d2689bee4872c422a00620544adbeac3d27f7bcb8b42",
+      "public_test_sha256": "e63f37ab88d725630ad7028ed671b63c5616f433ab739ad65f2f901fd911e07a",
+      "source_revision": "536ecc007387a50e77603bb5d92100e9b07514cc",
+      "target_path": "src/transformers/models/bloom/modeling_bloom.py",
+      "task_json_sha256": "39ada2f87f317139b517b3f31bb3706a5f8f84dc4c2905f410f78a1800f0370a"
+    }
+  }
+}

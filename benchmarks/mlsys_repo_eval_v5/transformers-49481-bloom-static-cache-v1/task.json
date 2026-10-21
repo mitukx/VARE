@@ -1,0 +1,38 @@
+{
+  "grader": {
+    "adapter": "evaluator/adapter.py",
+    "visibility": "hidden"
+  },
+  "limits": {
+    "cpus": 1,
+    "memory_mb": 1900,
+    "pids": 32,
+    "wall_time_s": 120
+  },
+  "metadata": {
+    "family": "generation-static-cache",
+    "license": "Apache-2.0",
+    "pack": "mlsys_repo_eval_v5",
+    "split": "development",
+    "task_type": "correctness"
+  },
+  "prompt": "Generation with a static cache should work when callers omit an attention mask for an unpadded input. A small local BLOOM configuration currently fails on this path. Make the smallest compatible change so generation completes and preserves the input prefix and requested output length. Keep unrelated generation behavior unchanged.",
+  "schema": "historical",
+  "source": {
+    "base_revision": "536ecc007387a50e77603bb5d92100e9b07514cc",
+    "calibration_revision": "bc4d8df2c4604727ea63414c7af48de7e6eb9c0b",
+    "file_sha256": {
+      "src/transformers/models/bloom/modeling_bloom.py": "bf005d666e289dabfe70ce1941c918c80f9f61fbd573d63f9fa779a81b4df4ec",
+      "test_public.py": "e63f37ab88d725630ad7028ed671b63c5616f433ab739ad65f2f901fd911e07a"
+    },
+    "files": [
+      "src/transformers/models/bloom/modeling_bloom.py",
+      "test_public.py"
+    ],
+    "fixed_revision": "bc4d8df2c4604727ea63414c7af48de7e6eb9c0b",
+    "git_history_exported": false,
+    "repository": "huggingface/transformers",
+    "snapshot_sha256": "c34e24681424f2ac42236be2866b9ac9ea514d10018a5741d37a7f87efebade2"
+  },
+  "task_id": "transformers-49481-bloom-static-cache-v1"
+}

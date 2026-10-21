@@ -1,0 +1,38 @@
+{
+  "grader": {
+    "adapter": "evaluator/adapter.py",
+    "visibility": "hidden"
+  },
+  "limits": {
+    "cpus": 1,
+    "memory_mb": 1900,
+    "pids": 32,
+    "wall_time_s": 120
+  },
+  "metadata": {
+    "family": "longrope-cache-boundary",
+    "license": "Apache-2.0",
+    "pack": "mlsys_repo_eval_v5",
+    "split": "development",
+    "task_type": "correctness"
+  },
+  "prompt": "For a small Phi3 model using LongRoPE, cached generation should produce the same next-token logits as a full-prefix forward pass at every generated step, including when the configured sliding window is enabled. The current behavior diverges after crossing the original context boundary. Correct the cache behavior while preserving ordinary generation semantics.",
+  "schema": "historical",
+  "source": {
+    "base_revision": "6d3802a45f50ce6f2262029926265629010b2217",
+    "calibration_revision": "4a2f93bbb5594bcccab9612b095de6f900822601",
+    "file_sha256": {
+      "src/transformers/models/phi3/modeling_phi3.py": "abccc63ef9c4606f338a0a96cd21c6e178241f2c3143a3a370084555de128c7a",
+      "test_public.py": "1c77ac3829a4f1e9dcbbb32acd5d5587f55c453a7599177381fa4dec9863ed9a"
+    },
+    "files": [
+      "src/transformers/models/phi3/modeling_phi3.py",
+      "test_public.py"
+    ],
+    "fixed_revision": "4a2f93bbb5594bcccab9612b095de6f900822601",
+    "git_history_exported": false,
+    "repository": "huggingface/transformers",
+    "snapshot_sha256": "6014367508454c4cf25393db0998e0a1cde0fb60ca4dbf17aad01b278dc49920"
+  },
+  "task_id": "transformers-49361-phi3-longrope-v1"
+}

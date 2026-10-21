@@ -19,6 +19,7 @@ from vare.isolated_candidate import (
     TimingPair,
     TimingReport,
     _candidate_temporary_directory,
+    _limits,
     grade_calls,
     overhead_adjusted,
     paired_difference_ci,
@@ -117,6 +118,16 @@ def test_subject_container_does_not_mount_grader(tmp_path: Path) -> None:
             limits, name="vare-call-" + "cd" * 12, subject=nested,
             command=["python", "-c", "print(1)"],
         )
+
+
+def test_protocol_resource_limits_reach_isolation_limits() -> None:
+    limits = _limits(IMAGE, 120, 1900, cpus=1.0, pids_limit=32)
+    assert limits.cpus == 1.0
+    assert limits.pids_limit == 32
+    with pytest.raises(CandidateHarnessError):
+        _limits(IMAGE, 120, 1900, cpus=0, pids_limit=32)
+    with pytest.raises(CandidateHarnessError):
+        _limits(IMAGE, 120, 1900, cpus=1.0, pids_limit=0)
 
 
 def test_correct_oracle_passes_without_importing_it(tmp_path: Path) -> None:

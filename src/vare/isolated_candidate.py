@@ -520,7 +520,10 @@ def _json_copy(value: Any) -> Any:
     return json.loads(_canonical(value))
 
 
-def _limits(image: str, timeout_s: float, memory_mb: int = 512) -> IsolationLimits:
+def _limits(
+    image: str, timeout_s: float, memory_mb: int = 512, *,
+    cpus: float = 1.0, pids_limit: int = 64,
+) -> IsolationLimits:
     if (
         not isinstance(timeout_s, (int, float))
         or isinstance(timeout_s, bool)
@@ -531,6 +534,7 @@ def _limits(image: str, timeout_s: float, memory_mb: int = 512) -> IsolationLimi
     try:
         return IsolationLimits(
             image=image, timeout_s=float(timeout_s), memory_mb=memory_mb,
+            cpus=cpus, pids_limit=pids_limit,
             max_output_bytes=_MAX_LINE,
         )
     except (TypeError, ValueError) as exc:
@@ -623,6 +627,8 @@ def _invoke(
     memory_mb: int = 512,
     discard_candidate_stdout: bool = False,
     task_deadline: float | None = None,
+    cpus: float = 1.0,
+    pids_limit: int = 64,
 ) -> tuple[Any | None, float | None, str | None]:
     """Return ``(value, parent_wall_s, failure)``."""
     nonce = secrets.token_hex(32)
@@ -644,6 +650,8 @@ def _invoke(
         "tuple_paths": [list(path) for path in tuple_paths],
         "timeout_s": timeout_s,
         "memory_mb": memory_mb,
+        "cpus": cpus,
+        "pids_limit": pids_limit,
         "discard_candidate_stdout": discard_candidate_stdout,
     }
     proc = subprocess.Popen(
@@ -831,7 +839,11 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
     timeout_s = float(spec["timeout_s"])
     deadline = time.monotonic() + timeout_s + _STARTUP_GRACE_S
     runner = DockerIsolationRunner()
-    limits = _limits(str(spec["image"]), timeout_s, int(spec.get("memory_mb", 512)))
+    limits = _limits(
+        str(spec["image"]), timeout_s, int(spec.get("memory_mb", 512)),
+        cpus=float(spec.get("cpus", 1.0)),
+        pids_limit=int(spec.get("pids_limit", 64)),
+    )
     try:
         argv = runner.isolated_subject_argv(
             limits,
@@ -1002,9 +1014,11 @@ def _one_call(
     memory_mb: int = 512,
     discard_candidate_stdout: bool = False,
     task_deadline: float | None = None,
+    cpus: float = 1.0,
+    pids_limit: int = 64,
 ) -> tuple[Any | None, float | None, str | None]:
     module, function, args, kwargs = _prepare_call(module, function, args, kwargs)
-    _limits(image, timeout_s, memory_mb)
+    _limits(image, timeout_s, memory_mb, cpus=cpus, pids_limit=pids_limit)
     source = Path(subject)
     if not (source / f"{module}.py").is_file():
         raise CandidateHarnessError("subject module is missing")
@@ -1016,6 +1030,7 @@ def _one_call(
         return _invoke(
             staged, module, function, args, kwargs, timeout_s, image, runner,
             tuple_paths, memory_mb, discard_candidate_stdout, task_deadline,
+            cpus, pids_limit,
         )
 
 

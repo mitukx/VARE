@@ -1,0 +1,38 @@
+{
+  "grader": {
+    "adapter": "evaluator/adapter.py",
+    "visibility": "hidden"
+  },
+  "limits": {
+    "cpus": 1,
+    "memory_mb": 1900,
+    "pids": 32,
+    "wall_time_s": 120
+  },
+  "metadata": {
+    "family": "legacy-rope-configuration",
+    "license": "Apache-2.0",
+    "pack": "mlsys_repo_eval_v5",
+    "split": "development",
+    "task_type": "correctness"
+  },
+  "prompt": "Legacy RoPE configuration dictionaries remain accepted through the compatibility setter and should be normalized before rotary embeddings are initialized. A small Llama configuration assigned a legacy scaling dictionary currently fails during initialization. Preserve the legacy input form while making initialization succeed with the intended scaling type.",
+  "schema": "historical",
+  "source": {
+    "base_revision": "1573af48b1c5cd8bfb0cfba4dc1ecf6e882d0348",
+    "calibration_revision": "93d5be6b2f7b479ea5efa5a35989ef805365d6d9",
+    "file_sha256": {
+      "src/transformers/configuration_utils.py": "f1325adef714159a2c9cf6b1204ac71c65df4069259a849fd0c82c9c57092248",
+      "test_public.py": "e6c8db406ea6c5c903fc70227089eb3e444aa87f9bd30ea5007f5dc377a6daae"
+    },
+    "files": [
+      "src/transformers/configuration_utils.py",
+      "test_public.py"
+    ],
+    "fixed_revision": "93d5be6b2f7b479ea5efa5a35989ef805365d6d9",
+    "git_history_exported": false,
+    "repository": "huggingface/transformers",
+    "snapshot_sha256": "13094feefca64269c337a01398d96c72dd57af557c421c3a9c631e0c84768c76"
+  },
+  "task_id": "transformers-49515-rope-setter-v1"
+}

@@ -1,0 +1,29 @@
+{
+  "baseline_manifest_sha256": "d2690f2eeb99826610d610a34e46e3c625aa2fe14f7736ce8eada74ce81e129b",
+  "candidate_directory_count": 546,
+  "candidate_file_count": 3058,
+  "candidate_git_history_present": false,
+  "candidate_target": "src/transformers/models/phi3/modeling_phi3.py",
+  "candidate_target_sha256": "abccc63ef9c4606f338a0a96cd21c6e178241f2c3143a3a370084555de128c7a",
+  "candidate_workspace_inventory_verified": true,
+  "cases": [
+    {
+      "case_id": "transformers-49361-phi3-longrope-v1",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 3.717241750001188
+    }
+  ],
+  "container_image_id": "sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "expected_held_by_parent": true,
+  "grader_implementation_sha256": "ef3c3eb1a03017f93934cc77e95309506c33cb81ba35071f93f26125b2bc496f",
+  "grader_mounted": false,
+  "grading_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "passed": false,
+  "protocol_id": "vare-transformers-fresh-development-cohort-v4",
+  "protocol_sha256": "90b74ebdde348e62c20251e23a573e9ddecb6078c57134dabc55dfae731f002a",
+  "task_id": "transformers-49361-phi3-longrope-v1",
+  "task_json_sha256": "e5708060a10d3b7baf8cf94dcc5773cf995a4a0b8ab9e7a6f598ca640c980ca2",
+  "task_kind": "correctness",
+  "trusted_adapter_sha256": "544b4079b76e6e01630be51d03dd6a5e7672cc74dae969687fa0951e67651712"
+}
