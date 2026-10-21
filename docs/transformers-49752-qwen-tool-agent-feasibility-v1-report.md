@@ -68,7 +68,7 @@ no optimizer-cost estimate was measured.
 - [Agent-run calibration](../results/transformers-49752-isolated-v6/run-1/calibration.json)
 - [Post-run calibration](../results/transformers-49752-isolated-v7/run-1/calibration.json)
 - [Expanded subprocess red-team calibration](../results/transformers-49752-isolated-v8/run-1/calibration.json)
-- [Terminal-status calibration record](../results/transformers-49752-isolated-v11/run-1/calibration.json)
+- [Commit-bound terminal-status calibration record](../results/transformers-49752-isolated-v11/run-2/calibration.json)
 
 After the agent run, protocol v7 was frozen after a lint cleanup and a
 Development-split error-message correction. Its separate calibration again
