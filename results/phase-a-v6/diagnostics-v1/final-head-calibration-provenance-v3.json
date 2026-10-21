@@ -1,0 +1,45 @@
+{
+  "container_image_id": "sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "current_head_colima_calibration": {
+    "baseline": "test_failure",
+    "calibration_passed": true,
+    "known_fix": "passed",
+    "manifest_sha256": "e31bc3c7c2fdadd1eb23ef6ae279f7cf45cc9f5002e2b3cb93cc4fbd9de5e66f",
+    "report_path": "colima-mount-calibration-v4/report.json",
+    "report_sha256": "cb654ebd5788887122e4e8bae53514f1efdc16a9efd9da0f82fe97f378e21c10"
+  },
+  "docker_launch_failure_regression": {
+    "results": {
+      "125": "container_launch_failure",
+      "126": "container_launch_failure",
+      "127": "container_launch_failure"
+    },
+    "test": "test_public_test_exit_codes_separate_launch_failures_from_candidate_failures"
+  },
+  "grading_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "limitations": [
+    "The Colima baseline/fix control uses a synthetic behavior fixture and is not a model-generated repair.",
+    "The four consumed v6 tasks are debug-only and are not fresh validation tasks.",
+    "GitHub CI and independent review of the current head are pending."
+  ],
+  "local_validation": {
+    "git_diff_check": "passed",
+    "mypy": "passed",
+    "ruff": "passed",
+    "targeted_pytest": "56 passed"
+  },
+  "model_inference_performed": false,
+  "review_findings_fixed": [
+    "P1: the workspace allocator returns an absent leaf; the pinned materializer creates it and assigns uid-65534-readable mode.",
+    "P1: public_test_result=null is classified not_run, retained as unsuccessful, and independently graded rather than truncating the experiment.",
+    "P1: Docker exit codes 125/126/127 are evaluator launch failures; no candidate reward is assigned when public assertions may not have run."
+  ],
+  "schema_version": 3,
+  "source_commit": "8b958201a7f4d11188f75dbf686c47adea6b993b",
+  "source_dirty_at_start": false,
+  "working_tree_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "workspace_materializer_regression": {
+    "result": "passed",
+    "test": "test_materializer_creates_allocated_workspace_destination"
+  }
+}

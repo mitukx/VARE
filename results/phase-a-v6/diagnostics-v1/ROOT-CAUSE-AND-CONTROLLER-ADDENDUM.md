@@ -67,3 +67,10 @@ Independent review of PR #106 identified two P1 defects. The workspace allocator
 A rollout whose agent never invoked public tests has `public_test_result: null`; it is now classified as `not_run`, retained as an unsuccessful rollout, and still sent to the independent grader. Explicit launch, runner-integrity, and evaluator failures remain fail-closed.
 
 On final source commit `91f16aebe29a5bd34018a4f60998021016dc9915`, the Colima calibration v3 passed: the synthetic broken baseline returned `test_failure` (exit 1), and the known fix returned `passed` (exit 0), using the exact frozen image digest. This calibration did not perform model inference and is not a coding-agent success. The targeted local suite passed 56 tests; Ruff, mypy, and `git diff --check` passed. CI and a second review of the corrected head are pending. The original v6 rollouts and earlier calibration directories remain unchanged.
+
+
+## Docker command launch exit-code correction (2026-10-22)
+
+A follow-up independent review found that Docker exit codes 126 and 127 were classified as candidate test failures even though they can mean the fixed public-test command did not run. The public runner and historical-result classifier now treat 125, 126, and 127 as `container_launch_failure`; these outcomes stop the affected rollout and produce null verified reward. Regression coverage confirms all three codes fail closed.
+
+On clean source commit `8b958201a7f4d11188f75dbf686c47adea6b993b`, Colima calibration v4 again produced synthetic baseline `test_failure` / exit 1 and known-fix `passed` / exit 0 under the frozen image digest. The targeted local suite passed 56 tests; Ruff, mypy, and `git diff --check` passed. No model inference was performed. CI and independent review for this latest source commit are pending.
