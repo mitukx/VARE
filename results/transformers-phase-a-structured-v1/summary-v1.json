@@ -48,7 +48,8 @@
     "Fusion task grader does not separately test preserving rejection of a conflicting conversion mapping.",
     "Exact prefill/decode throughput was not isolated from agent rollout timings.",
     "Pretraining-data contamination for historical task fixes is unknown.",
-    "No update, checkpoint/reload comparison, long-horizon async run, or held-out evaluation was performed."
+    "No update, checkpoint/reload comparison, long-horizon async run, or held-out evaluation was performed.",
+    "Exact v2 and v3 runner source snapshots are not bundled; their locked runner hashes differ from the included final v4 runner, so those rounds are not source-replayable from this PR alone."
   ],
   "model": {
     "device": "Apple Metal GPU 0",

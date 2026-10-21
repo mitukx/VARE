@@ -36,6 +36,8 @@ Phase A is **NO-GO**: both Development task `pass@3` values are zero, all 18 rew
 
 The model's exposure to historical upstream fixes cannot be ruled out from repository chronology; these results do not claim pretraining novelty. The two-task cohort is too small to support broad coding-capability claims. No task was promoted to training data, and no SFT/GRPO, held-out, or capability-improvement claim is made.
 
+The v2 and v3 locks retain hashes for their superseded `scripts/run_local_agent.py` revisions, while this PR contains the final v4 runner source. The historical raw transcripts, task results, and lock hashes are preserved, but the exact v2/v3 runner source snapshots are not included here, so those rounds are not source-replayable from this PR alone. V4's locked implementation hashes match the included sources.
+
 ## Reproduction
 
 Re-run the pinned preflight and calibration/rollout commands recorded in the protocol locks and raw JSON records. The model snapshot must be locally cached; no paid API or external compute was used. The runtime image digest, task source revisions, target and public-test hashes, model file hashes, seeds, generation budgets, source diffs, and grader results are included in the lock/evidence files. Reproducing the historical model outputs requires the same MLX/MLX-LM versions and Apple Metal runtime; bitwise generation is not claimed across OS/runtime changes.
