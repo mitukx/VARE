@@ -4,7 +4,9 @@ import json
 
 from scripts.run_local_agent import (
     candidate_visible_tool_result,
+    bounded_turn_payload,
     no_tool_retry_reminder,
+    record_automatic_public_test,
     record_tool_call,
     should_stop_after_tool,
     tools_for,
@@ -156,6 +158,25 @@ def test_manual_test_transcript_keeps_raw_result_when_feedback_is_summarized() -
     assert entry['tool_calls'][0]['result'] == raw
 
 
+def test_automatic_public_test_history_retains_every_raw_result() -> None:
+    entry: dict[str, object] = {}
+    first = {'passed': False, 'returncode': 1, 'stdout': 'first', 'stderr': 'assertion one'}
+    second = {'passed': True, 'returncode': 0, 'stdout': 'second', 'stderr': ''}
+    record_automatic_public_test(entry, first)
+    record_automatic_public_test(entry, second)
+    assert entry['automatic_public_tests'] == [first, second]
+    assert entry['automatic_public_test'] == second
+
+
+def test_shared_turn_payload_budget_caps_edit_and_diff_feedback() -> None:
+    result = {'diff': 'x' * 7_000, 'applied': True}
+    visible = candidate_visible_tool_result('inspect_diff', result, opaque_handles=True)
+    payload = bounded_turn_payload(visible, 2_000)
+    assert len(payload) <= 2_000
+    assert len(bounded_turn_payload({'passed': False}, 2_000 - len(payload))) <= 2_000 - len(payload)
+    assert bounded_turn_payload({'passed': True}, 0) == ''
+
+
 def test_truncated_structured_retry_uses_active_opaque_handle_names() -> None:
     reminder = no_tool_retry_reminder(
         '<tool_call>{"name":"replace_text"',
@@ -167,3 +188,15 @@ def test_truncated_structured_retry_uses_active_opaque_handle_names() -> None:
     assert 'workspace_revision_handle' in reminder
     assert 'source_preimage_handle' in reminder
     assert 'expected_hash' not in reminder
+
+
+def test_edit_tool_descriptions_match_active_handle_schema() -> None:
+    opaque = {tool['function']['name']: tool['function']['description']
+              for tool in tools_for('structured', public_tests=True, opaque_handles=True)}
+    legacy = {tool['function']['name']: tool['function']['description']
+              for tool in tools_for('structured', public_tests=False, opaque_handles=False)}
+    for name in ('replace_text', 'insert_text'):
+        assert 'workspace_revision_handle' in opaque[name]
+        assert 'expected_hash' not in opaque[name]
+        assert 'expected_hash' in legacy[name]
+        assert 'workspace_revision_handle' not in legacy[name]
