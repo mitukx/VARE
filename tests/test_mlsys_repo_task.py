@@ -246,3 +246,30 @@ def test_red_team_evidence_missing_malformed_or_hash_tampered_fails_closed(
             image="python@sha256:example",
             expected_sha256="0" * 64,
         )
+
+
+def test_protocol_implementation_lock_requires_all_exact_file_hashes(tmp_path: Path):
+    locked = {}
+    for relative in repo_task.LOCKED_IMPLEMENTATION_FILES:
+        path = tmp_path / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(relative, encoding="utf-8")
+        locked[relative] = hashlib.sha256(relative.encode()).hexdigest()
+    protocol = {"implementation_sha256": locked}
+    assert repo_task.verify_protocol_implementation(protocol, tmp_path) == locked
+
+    altered = next(iter(repo_task.LOCKED_IMPLEMENTATION_FILES))
+    (tmp_path / altered).write_text("changed bytes", encoding="utf-8")
+    with pytest.raises(RepositoryTaskError, match="hash mismatch"):
+        repo_task.verify_protocol_implementation(protocol, tmp_path)
+
+
+def test_protocol_implementation_lock_fails_closed_on_missing_entries(
+    tmp_path: Path,
+):
+    locked = {relative: "0" * 64 for relative in repo_task.LOCKED_IMPLEMENTATION_FILES}
+    locked.pop(next(iter(repo_task.LOCKED_IMPLEMENTATION_FILES)))
+    with pytest.raises(RepositoryTaskError, match="incomplete"):
+        repo_task.verify_protocol_implementation(
+            {"implementation_sha256": locked}, tmp_path
+        )

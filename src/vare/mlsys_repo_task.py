@@ -56,6 +56,16 @@ RED_TEAM_PROBES = frozenset(
         "memory_exhaustion",
     }
 )
+LOCKED_IMPLEMENTATION_FILES = frozenset(
+    {
+        "src/vare/mlsys_repo_task.py",
+        "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/grader_adapter.py",
+        "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/known_fix.patch",
+        "scripts/run_mlxlm_1904_calibration.py",
+        "scripts/red_team_mlxlm_1904.py",
+        "tests/test_mlsys_repo_task.py",
+    }
+)
 
 
 def sha256_file(path: Path) -> str:
@@ -126,6 +136,38 @@ def verify_red_team_evidence(
         "source_checkout": report["source_checkout"],
         "image": report["image"],
     }
+
+
+def verify_protocol_implementation(
+    protocol: dict[str, Any],
+    repo_root: Path,
+) -> dict[str, str]:
+    """Require every protocol-locked evaluator artifact to match its exact bytes."""
+    locked = protocol.get("implementation_sha256")
+    if not isinstance(locked, dict) or set(locked) != LOCKED_IMPLEMENTATION_FILES:
+        raise RepositoryTaskError(
+            "protocol implementation lock is incomplete or unexpected"
+        )
+    root = repo_root.resolve(strict=True)
+    verified: dict[str, str] = {}
+    for relative, expected in locked.items():
+        path = Path(relative)
+        if path.is_absolute() or ".." in path.parts or not isinstance(expected, str):
+            raise RepositoryTaskError(
+                "protocol implementation lock contains an unsafe path"
+            )
+        source = root / path
+        if source.is_symlink() or not source.is_file():
+            raise RepositoryTaskError(
+                f"protocol-locked implementation file is unavailable: {relative}"
+            )
+        actual = sha256_file(source)
+        if actual != expected:
+            raise RepositoryTaskError(
+                f"protocol-locked implementation hash mismatch: {relative}"
+            )
+        verified[relative] = actual
+    return verified
 
 
 def workspace_manifest_sha256(root: Path) -> str:
