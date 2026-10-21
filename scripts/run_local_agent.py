@@ -109,8 +109,21 @@ def candidate_visible_tool_result(
     """Keep exact provenance in the transcript while sending bounded feedback to the model."""
     if not opaque_handles:
         return result
+    def bounded_diff(value: Any) -> str:
+        diff = value if isinstance(value, str) else ""
+        if len(diff) <= 6_000:
+            return diff
+        digest = hashlib.sha256(diff.encode("utf-8")).hexdigest()
+        return (
+            diff[:2_900]
+            + f"\n... diff truncated for model context; chars={len(diff)} sha256={digest} ...\n"
+            + diff[-2_900:]
+        )
+
     if name in {'replace_text', 'insert_text'}:
-        visible = {key: result[key] for key in ('applied', 'path', 'diff', 'error') if key in result}
+        visible = {key: result[key] for key in ('applied', 'path', 'error') if key in result}
+        if 'diff' in result:
+            visible['diff'] = bounded_diff(result['diff'])
         feedback = result.get('automatic_public_test')
         if isinstance(feedback, dict):
             visible['automatic_public_test'] = {
@@ -120,7 +133,10 @@ def candidate_visible_tool_result(
             }
         return visible
     if name == 'inspect_diff':
-        return {'diff': result.get('diff', ''), 'changed': result.get('changed', False)}
+        return {
+            'diff': bounded_diff(result.get('diff', '')),
+            'changed': result.get('changed', False),
+        }
     if name == 'run_public_tests':
         return {
             key: result[key]

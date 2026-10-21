@@ -104,16 +104,18 @@ def test_controller_returns_short_region_and_opaque_revision_handles(tmp_path: P
     controller = StructuredEditController(root, allowed)
     read = controller.read_region("src/module.py", start_line=1, end_line=2)
     assert read["content"] == "def value():\n    return 1\n"
-    assert read["workspace_revision"].startswith("rev-")
-    assert read["source_preimage"].startswith("src-")
-    assert len(read["workspace_revision"]) < 16
-    assert len(read["source_preimage"]) < 16
+    assert "workspace_revision" not in read
+    assert "source_preimage" not in read
+    assert read["workspace_revision_handle"].startswith("rev-")
+    assert read["source_preimage_handle"].startswith("src-")
+    assert len(read["workspace_revision_handle"]) < 16
+    assert len(read["source_preimage_handle"]) < 16
 
     result = controller.apply_edit(
         action="replace_text",
         path="src/module.py",
-        workspace_revision_handle=read["workspace_revision"],
-        source_preimage_handle=read["source_preimage"],
+        workspace_revision_handle=read["workspace_revision_handle"],
+        source_preimage_handle=read["source_preimage_handle"],
         old_text="return 1",
         new_text="return 2",
     )
@@ -131,8 +133,8 @@ def test_controller_rejects_stale_or_cross_file_handles(tmp_path: Path) -> None:
         controller.apply_edit(
             action="replace_text",
             path="src/module.py",
-            workspace_revision_handle=read["workspace_revision"],
-            source_preimage_handle=read["source_preimage"],
+            workspace_revision_handle=read["workspace_revision_handle"],
+            source_preimage_handle=read["source_preimage_handle"],
             old_text="return 1",
             new_text="return 2",
         )
@@ -146,8 +148,8 @@ def test_controller_rejects_stale_or_cross_file_handles(tmp_path: Path) -> None:
         cross_controller.apply_edit(
             action="replace_text",
             path="src/other.py",
-            workspace_revision_handle=module["workspace_revision"],
-            source_preimage_handle=other["source_preimage"],
+            workspace_revision_handle=module["workspace_revision_handle"],
+            source_preimage_handle=other["source_preimage_handle"],
             old_text="return 9",
             new_text="return 10",
         )
@@ -194,8 +196,8 @@ def test_controller_bounds_generated_edit_text(tmp_path: Path) -> None:
         controller.apply_edit(
             action="replace_text",
             path="src/module.py",
-            workspace_revision_handle=read["workspace_revision"],
-            source_preimage_handle=read["source_preimage"],
+            workspace_revision_handle=read["workspace_revision_handle"],
+            source_preimage_handle=read["source_preimage_handle"],
             old_text="return 1",
             new_text="2" * 8_001,
         )
@@ -210,8 +212,8 @@ def test_controller_detects_repeated_identical_noop_edits(tmp_path: Path) -> Non
             controller.apply_edit(
                 action="replace_text",
                 path="src/module.py",
-                workspace_revision_handle=read["workspace_revision"],
-                source_preimage_handle=read["source_preimage"],
+                workspace_revision_handle=read["workspace_revision_handle"],
+                source_preimage_handle=read["source_preimage_handle"],
                 old_text="return 1",
                 new_text="return 1",
             )
@@ -226,8 +228,8 @@ def test_controller_repeated_public_failure_prompts_different_repair_and_bounds_
     controller.apply_edit(
         action="replace_text",
         path="src/module.py",
-        workspace_revision_handle=read["workspace_revision"],
-        source_preimage_handle=read["source_preimage"],
+        workspace_revision_handle=read["workspace_revision_handle"],
+        source_preimage_handle=read["source_preimage_handle"],
         old_text="return 1",
         new_text="return 2",
     )
@@ -247,8 +249,8 @@ def test_finalization_requires_passed_public_tests_and_inspected_current_diff(tm
     controller.apply_edit(
         action="replace_text",
         path="src/module.py",
-        workspace_revision_handle=read["workspace_revision"],
-        source_preimage_handle=read["source_preimage"],
+        workspace_revision_handle=read["workspace_revision_handle"],
+        source_preimage_handle=read["source_preimage_handle"],
         old_text="return 1",
         new_text="return 2",
     )
@@ -270,8 +272,8 @@ def test_new_edit_invalidates_prior_public_pass_and_diff_inspection(tmp_path: Pa
     controller.apply_edit(
         action="replace_text",
         path="src/module.py",
-        workspace_revision_handle=first["workspace_revision"],
-        source_preimage_handle=first["source_preimage"],
+        workspace_revision_handle=first["workspace_revision_handle"],
+        source_preimage_handle=first["source_preimage_handle"],
         old_text="return 1",
         new_text="return 2",
     )
@@ -282,8 +284,8 @@ def test_new_edit_invalidates_prior_public_pass_and_diff_inspection(tmp_path: Pa
     controller.apply_edit(
         action="replace_text",
         path="src/module.py",
-        workspace_revision_handle=current["workspace_revision"],
-        source_preimage_handle=current["source_preimage"],
+        workspace_revision_handle=current["workspace_revision_handle"],
+        source_preimage_handle=current["source_preimage_handle"],
         old_text="return 2",
         new_text="return 3",
     )

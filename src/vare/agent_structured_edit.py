@@ -242,8 +242,8 @@ class StructuredEditController:
             "start_line": start_line,
             "end_line": last_line,
             "content": content,
-            "workspace_revision": revision_handle,
-            "source_preimage": source_handle,
+            "workspace_revision_handle": revision_handle,
+            "source_preimage_handle": source_handle,
         }
 
     def apply_edit(

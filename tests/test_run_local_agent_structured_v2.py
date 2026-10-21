@@ -71,3 +71,20 @@ def test_rejected_finalization_keeps_repair_loop_open() -> None:
     assert should_stop_after_tool('finish', {'finished': False, 'error': 'tests have not passed'}) is False
     assert should_stop_after_tool('finish', {'finished': True}) is True
     assert should_stop_after_tool('inspect_diff', {'finished': True}) is False
+
+
+def test_candidate_diff_feedback_is_bounded_but_transcript_keeps_full_diff() -> None:
+    diff = 'a' * 10_000
+    raw = {'diff': diff, 'changed': True, 'diff_sha256': 'full-digest'}
+    visible = candidate_visible_tool_result('inspect_diff', raw, opaque_handles=True)
+    assert len(visible['diff']) < 6_000
+    assert 'diff truncated for model context' in visible['diff']
+    assert 'chars=10000' in visible['diff']
+    assert raw['diff'] == diff
+
+
+def test_edit_tool_diff_feedback_is_bounded() -> None:
+    raw = {'applied': True, 'path': 'src/a.py', 'diff': 'b' * 10_000}
+    visible = candidate_visible_tool_result('replace_text', raw, opaque_handles=True)
+    assert len(visible['diff']) < 6_000
+    assert 'diff truncated for model context' in visible['diff']
