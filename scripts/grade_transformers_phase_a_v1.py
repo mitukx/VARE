@@ -15,9 +15,9 @@ from typing import Any
 from vare.isolated_candidate import FunctionCall, grade_calls
 
 ROOT = Path(__file__).resolve().parents[1]
-PROTOCOL = ROOT / "experiments/coding_agent_phase_a_structured_v1/protocol-v5.json"
-PROTOCOL_LOCK = ROOT / "experiments/coding_agent_phase_a_structured_v1/protocol-v5.lock.json"
-TASKS = {
+PROTOCOL = ROOT / "experiments/coding_agent_phase_a_structured_v1/protocol-v6.json"
+PROTOCOL_LOCK = ROOT / "experiments/coding_agent_phase_a_structured_v1/protocol-v6.lock.json"
+TASKS: dict[str, tuple[str, str, str, dict[str, Any], dict[str, Any]]] = {
     "transformers-49116-tokenizer-routing-v2": (
         "transformers_49116_tokenizer_routing_v2",
         "src/transformers/models/auto/tokenization_auto.py",
@@ -38,7 +38,12 @@ TASKS = {
         "src/transformers/fusion_mapping.py",
         "repeated_registration",
         {"model_type": "vare_hidden_fusion_probe"},
-        {"repeat_accepted": True, "mapping_unchanged": True},
+        {
+            "repeat_accepted": True,
+            "mapping_unchanged": True,
+            "conflict_rejected": True,
+            "mapping_unchanged_after_conflict": True,
+        },
     ),
 }
 
@@ -58,6 +63,13 @@ def _load_protocol() -> tuple[dict[str, Any], dict[str, Any], str]:
         raise ValueError("frozen Phase A protocol identity differs from its lock")
     if protocol.get("container_image") != lock.get("container_image"):
         raise ValueError("frozen Phase A grading image differs from its lock")
+    implementation_hash = lock.get("implementation_sha256", {}).get(
+        "scripts/grade_transformers_phase_a_v1.py"
+    )
+    if not isinstance(implementation_hash, str):
+        raise ValueError("frozen grader implementation hash is missing")
+    if sha256_bytes(Path(__file__).resolve().read_bytes()) != implementation_hash:
+        raise ValueError("running grader implementation differs from its frozen lock")
     return protocol, lock, protocol_sha
 
 
@@ -225,6 +237,26 @@ def grade(task_id: str, workspace: Path, image: str) -> dict[str, Any]:
     if Path(workspace).is_symlink():
         raise ValueError("candidate workspace root must not be a symlink")
     files, file_count, directory_count = _scan_candidate(workspace, manifest, target)
+    if task_id == "transformers-49116-tokenizer-routing-v2":
+        expected_registry = lock.get("tokenizer_registry_expected")
+        if not isinstance(expected_registry, dict):
+            raise ValueError("frozen tokenizer registry expectation is missing")
+        registry_path = ROOT / expected_registry["path"]
+        registry_bytes = registry_path.read_bytes()
+        registry_sha = sha256_bytes(registry_bytes)
+        if registry_sha != expected_registry.get("sha256"):
+            raise ValueError("pinned tokenizer registry expectation hash differs")
+        registry_expectation = json.loads(registry_bytes)
+        expected["registry_ast_sha256"] = sha256_bytes(
+            json.dumps(
+                registry_expectation["mapping"], sort_keys=True, separators=(",", ":")
+            ).encode("utf-8")
+        )
+        expected["all_override_types_sha256"] = sha256_bytes(
+            json.dumps(
+                registry_expectation["all_override_types"], separators=(",", ":")
+            ).encode("utf-8")
+        )
     task_root = ROOT / "benchmarks/mlsys_repo_eval_v4" / task_dir_name
     adapter = task_root / "grader_adapter.py"
     adapter_hash = sha256_bytes(adapter.read_bytes())
@@ -273,6 +305,9 @@ def grade(task_id: str, workspace: Path, image: str) -> dict[str, Any]:
             "trusted_adapter_sha256": adapter_hash,
             "protocol_id": protocol.get("protocol_id"),
             "protocol_sha256": protocol_sha,
+            "grader_implementation_sha256": lock["implementation_sha256"][
+                "scripts/grade_transformers_phase_a_v1.py"
+            ],
             "grading_image": frozen_image,
             "container_image_id": container_image_id,
         }

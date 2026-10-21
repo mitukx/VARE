@@ -52,6 +52,7 @@ def _fixture(model_type: str):
 
 
 def repeated_registration(request: dict[str, Any]) -> dict[str, Any]:
+    from transformers.core_model_loading import WeightRenaming
     import transformers.conversion_mapping as conversion_mapping
     import transformers.fusion_mapping as fusion_mapping
     import transformers.monkey_patching as monkey_patching
@@ -71,4 +72,37 @@ def repeated_registration(request: dict[str, Any]) -> dict[str, Any]:
         item.source_patterns
         for item in conversion_mapping.get_checkpoint_conversion_mapping(model_type)
     ]
-    return {"repeat_accepted": True, "mapping_unchanged": before == after}
+    def conversion_fingerprint() -> list[tuple[tuple[str, ...], tuple[str, ...]]]:
+        return [
+            (tuple(item.source_patterns), tuple(item.target_patterns))
+            for item in conversion_mapping.get_checkpoint_conversion_mapping(model_type)
+        ]
+
+    before_conflict = conversion_fingerprint()
+
+    class ConflictingSpec(fusion_mapping.PatchEmbeddingsFusionSpec):
+        def make_transforms(self, _config):
+            # Deliberately collide on the source pattern while requesting a
+            # different target. A no-op duplicate-registration implementation
+            # must not silently accept this incompatible transform.
+            return [
+                WeightRenaming(
+                    source_patterns=r"patch_embed\.proj\.weight$",
+                    target_patterns=r"patch_embed\.other_proj\.weight$",
+                )
+            ]
+
+    conflict_rejected = False
+    try:
+        fusion_mapping._register_module_fusion(
+            model_cls, config, "vare_hidden_conflict_probe", ConflictingSpec()
+        )
+    except ValueError:
+        conflict_rejected = True
+    after_conflict = conversion_fingerprint()
+    return {
+        "repeat_accepted": True,
+        "mapping_unchanged": before == after,
+        "conflict_rejected": conflict_rejected,
+        "mapping_unchanged_after_conflict": before_conflict == after_conflict,
+    }

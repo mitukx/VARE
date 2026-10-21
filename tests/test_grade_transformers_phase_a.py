@@ -51,13 +51,36 @@ def _candidate(tmp_path: Path) -> tuple[Path, dict[str, object]]:
 def test_frozen_protocol_and_complete_baseline_manifests_are_hash_pinned():
     protocol, lock, protocol_sha = grader._load_protocol()
     assert protocol_sha == lock["protocol_sha256"]
-    assert protocol["protocol_id"] == "vare-coding-agent-phase-a-integrity-v5"
+    assert protocol["protocol_id"] == "vare-coding-agent-phase-a-integrity-v6"
     assert grader._check_image(IMAGE, lock) == IMAGE
     for task_id in grader.TASKS:
         manifest, digest = grader._load_manifest(task_id, lock)
         assert digest == lock["baseline_manifests"][task_id]["sha256"]
         assert len(manifest["files"]) > 3000
         assert "test_public.py" in manifest["files"]
+
+
+def test_running_grader_must_match_the_frozen_implementation_hash(tmp_path: Path, monkeypatch):
+    protocol = {
+        "protocol_id": "vare-coding-agent-phase-a-integrity-v6",
+        "container_image": IMAGE,
+    }
+    protocol_path = tmp_path / "protocol.json"
+    protocol_path.write_text(__import__("json").dumps(protocol))
+    lock = {
+        "protocol_id": protocol["protocol_id"],
+        "container_image": IMAGE,
+        "protocol_sha256": _sha(protocol_path.read_bytes()),
+        "implementation_sha256": {
+            "scripts/grade_transformers_phase_a_v1.py": "0" * 64,
+        },
+    }
+    lock_path = tmp_path / "lock.json"
+    lock_path.write_text(__import__("json").dumps(lock))
+    monkeypatch.setattr(grader, "PROTOCOL", protocol_path)
+    monkeypatch.setattr(grader, "PROTOCOL_LOCK", lock_path)
+    with pytest.raises(ValueError, match="running grader implementation"):
+        grader._load_protocol()
 
 
 def test_one_target_change_is_captured_for_clean_staging(tmp_path: Path):
