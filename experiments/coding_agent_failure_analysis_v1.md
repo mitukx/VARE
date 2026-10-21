@@ -12,7 +12,7 @@ This diagnostic reads the raw outputs retained for PR #100, #101, and #102. Thes
 
 ## PR #102 raw trajectory classification
 
-Across the 18 trajectories, stop reasons were: 8 no-tool-call retries exhausted, 6 turn-budget exhausted, 3 no-tool-call after an edit, and 1 context-budget exhausted. Eleven stale-revision edit rejections were recorded; six attempts returned `edit would not change the file`. Eight runs executed public tests, all failing. These are overlapping events, not mutually exclusive counts. No trajectory made a premature verified-success claim; the final grader remained authoritative and rejected every candidate.
+Across the 18 trajectories, stop reasons were: 8 no-tool-call retries exhausted, 6 turn-budget exhausted, 3 no-tool-call after an edit, and 1 context-budget exhausted. Nine stale-revision edit rejections were recorded; six attempts returned `edit would not change the file`. Eight runs executed public tests, all failing. These are overlapping events, not mutually exclusive counts. No trajectory made a premature verified-success claim; the final grader remained authoritative and rejected every candidate.
 
 - **Format/parse:** PR #100's 15/15 format failures happened before application or grading.
 - **Inspection/localization:** the PR #102 early versions repeatedly read large sequential regions and then stopped without an edit (six such rollouts); the controller did not ensure a targeted symbol search before source reads.

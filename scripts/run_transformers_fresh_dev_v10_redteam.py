@@ -51,6 +51,27 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def workspace_sha256(root: Path) -> str:
+    digest = hashlib.sha256()
+    for path in sorted(root.rglob("*")):
+        relative = path.relative_to(root).as_posix()
+        if path.is_symlink():
+            raise ValueError(f"red-team source workspace contains a symlink: {relative}")
+        mode = path.stat().st_mode & 0o777
+        if path.is_dir():
+            kind, content = b"directory", b""
+        elif path.is_file():
+            kind, content = b"file", path.read_bytes()
+        else:
+            raise ValueError(f"red-team source workspace contains a special file: {relative}")
+        digest.update(relative.encode("utf-8"))
+        digest.update(b"\0" + kind + b"\0")
+        digest.update(f"{mode:o}".encode("ascii") + b"\0")
+        digest.update(hashlib.sha256(content).digest())
+        digest.update(b"\n")
+    return digest.hexdigest()
+
+
 def invoke(workspace: Path, output: Path) -> tuple[int, str]:
     result = subprocess.run(
         [sys.executable, str(GRADE), "--task-id", TASK, "--workspace", str(workspace),
@@ -68,12 +89,21 @@ def invoke(workspace: Path, output: Path) -> tuple[int, str]:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
+        "--workspace", type=Path, required=True,
+        help="known-fix workspace prepared from the frozen source revisions",
+    )
+    parser.add_argument(
         "--output", type=Path,
         default=ROOT / "results/transformers-fresh-dev-cohort-v1/run-13/redteam.json",
     )
     args = parser.parse_args()
-    source_workspace = Path.home() / ".cache/vare-new-task-qual/bloom/workspace-fix-v6"
+    source_workspace = args.workspace.expanduser().resolve(strict=True)
+    if not source_workspace.is_dir():
+        raise SystemExit("--workspace must name a directory")
+    source_workspace_sha256 = workspace_sha256(source_workspace)
     report_path = Path(os.path.abspath(os.fspath(args.output.expanduser())))
+    if report_path.is_relative_to(source_workspace):
+        raise SystemExit("refusing to write red-team evidence inside the candidate workspace")
     if report_path.exists():
         raise SystemExit("refusing to overwrite red-team evidence")
     report_path.parent.mkdir(parents=True, exist_ok=True)
@@ -126,6 +156,7 @@ def main() -> int:
     report = {
         "protocol_id": "vare-transformers-fresh-development-cohort-v10",
         "protocol_sha256": "12eea4272bb6c1e40a8dab1ebf8efee176ad83fffc5e151f5e77cdc14b6344e0",
+        "source_workspace_sha256": source_workspace_sha256,
         "grader_sha256": sha256(GRADE),
         "driver_sha256": sha256(Path(__file__).resolve()),
         "results": results,
