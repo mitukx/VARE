@@ -1,0 +1,78 @@
+{
+  "agent_edit_allowlist": [
+    "mlx_lm/sample_utils.py"
+  ],
+  "baseline_commit": "47e43a4526d42a6dcee758f07eb04b78a8439ecb",
+  "baseline_target_sha256": "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2",
+  "candidate_files": "pinned mlx_lm Python package only; no tests, Git history, license, or grader files",
+  "evaluation": {
+    "contract": "the selected upstream test method; tiny positive top_p retains the most likely token for all rows and dtypes",
+    "required_calibration": [
+      "pinned baseline fails",
+      "pinned known fix passes",
+      "fixed target hash matches",
+      "candidate cannot relabel the fixed checkout as the pinned baseline"
+    ],
+    "success": "both parent-owned correctness cases pass"
+  },
+  "fixed_commit": "87b7b583a697537aa68f47130b40884700b5f55f",
+  "fixed_target_sha256": "3aac92d804b6b91c82a4e2844697a8723de26f6af57e10013a482b967e739cfa",
+  "grader_test": "tests/test_sample_utils.py::TestSampleUtils.test_apply_top_p_keeps_top_token_at_tiny_thresholds",
+  "grader_test_sha256": "dbe871f37a2930ae6686ce67ffc0a641971ad11943a1e94833fa232c6938852",
+  "implementation_sha256": {
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/grader_adapter.py": "df5271803d79f18fe1696fa8b032e2cf92fb641e10d3dde7626544b993a6d44e",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/task.md": "1073e527a5808176a4e6144a0d348e1bb5acbbc6fb790ec2e74bb58576c73bc3",
+    "scripts/run_mlxlm_1912_calibration.py": "b7c60760eb9ca4d46f2880007c052b81c2e98efa113c2b071729d8f8734862e1",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/isolated_candidate.py": "8c216aa1891538156030f76ae59a768832fefa83dbbcf3702c22176019b0aaee",
+    "src/vare/mlxlm_1912_repo_task.py": "f10ac04f45a594610216117ddd74c2177dd9786cd61ed472a40b8a9bceb3085d",
+    "tests/test_mlxlm_1912_repo_task.py": "d3c636a989db90c487351eb1e5087650c78195c06b94e737ed26e9135f88195b"
+  },
+  "license": "MIT",
+  "license_sha256": "ccfab7ccb2ea306f71531c8a77bb55507606cd90768b1e32b8b52ab5b48cf01",
+  "limitations": [
+    "One development task only; no model/agent rollout.",
+    "This calibration does not certify hostile arbitrary Python patches or the complete requested red-team suite.",
+    "Linux ARM64 CPU MLX is not Apple Metal semantic-equivalence evidence.",
+    "The prompt is from a task the researcher has previously executed; it is not a fresh model exposure claim."
+  ],
+  "protocol_id": "mlxlm-1912-isolated-task-v1",
+  "qualification": {
+    "baseline_result": "fail",
+    "baseline_wall_seconds": 1.497,
+    "fixed_result": "pass",
+    "fixed_wall_seconds": 1.457,
+    "model_or_agent_seen_task": false,
+    "researcher_ran_pinned_regression": true
+  },
+  "qualification_source": "PR #95 results/mlsys-task-deep-qualification-v1/qualification.json",
+  "repository": "ml-explore/mlx-lm",
+  "runtime": {
+    "architecture": "linux/arm64",
+    "backend": "vare.isolated_candidate.grade_calls",
+    "candidate_cpus": 1,
+    "candidate_memory_mb": 1536,
+    "candidate_timeout_seconds": 30,
+    "candidate_uid": 65534,
+    "container_root": "read-only",
+    "grader_mount": "absent",
+    "image": "localhost:5000/vare/mlx-cpu-task@sha256:847edcf1b2b15d00914674e89931f9d38c4aa8a0f1d763cbb96c1359a0647388",
+    "metal_execution": false,
+    "network": "none",
+    "peak_memory_measured": false,
+    "red_team_probes": [
+      "grader path",
+      "Git history",
+      "environment secret",
+      "network",
+      "stdout forgery",
+      "subprocess source write",
+      "timeout",
+      "OOM",
+      "pinned fixed source swap"
+    ]
+  },
+  "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1912",
+  "split": "development",
+  "task_id": "mlxlm-1912-top-p-min-token"
+}
