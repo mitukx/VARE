@@ -1,0 +1,40 @@
+{
+  "checks": {
+    "available_memory_above_floor": true,
+    "free_swap_above_floor": false,
+    "mlx_metal_gpu_active": true,
+    "model_revision_pinned": true,
+    "model_weight_hash_pinned": true
+  },
+  "decision": "NO-GO",
+  "hardware": {
+    "available_memory_bytes": 9963814912,
+    "cpu": "Apple M1 Pro",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "swap": {
+      "free_bytes": 289868349,
+      "total_bytes": 7516192768,
+      "used_bytes": 7226324418
+    },
+    "unified_memory_bytes": 34359738368
+  },
+  "model": {
+    "model_safetensors_sha256": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f",
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "policy_updates": 0,
+  "rollouts_started": 0,
+  "runtime": {
+    "default_device": "Device(gpu, 0)",
+    "mlx": "0.32.2",
+    "mlx_lm": "0.32.2",
+    "python": "3.12.12"
+  },
+  "schema_version": 1,
+  "study": "vare-qwen3-4b-coding-agent-development-v6",
+  "thresholds": {
+    "minimum_available_memory_bytes": 4294967296,
+    "minimum_free_swap_bytes": 536870912
+  }
+}
