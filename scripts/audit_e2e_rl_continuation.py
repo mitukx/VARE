@@ -109,12 +109,13 @@ RUNTIME_PACKAGE_SOURCES = frozenset({
     "src/vare/trusted_scoring.py",
     "src/vare/types.py",
     "src/vare/transformers_repo_task.py",
+    "src/vare/transformers_49752_repo_task.py",
     "src/vare/update_cost_smoke.py",
     "src/vare/verifiers.py",
 })
-# This historical 80-file inventory is intentionally explicit. Do not derive
-# it from the current runtime inventory: new runtime files must not invalidate
-# the immediately preceding fully snapshotted campaign.
+# This current runtime inventory is intentionally explicit. Do not derive it
+# from the live tree: older retained campaign inventories remain separately
+# accepted without rewriting their source manifests.
 PREVIOUS_EXPECTED_SOURCES = frozenset({
     "benchmarks/e2e_rl_continuation_v2/protocol.json",
     "requirements/e2e-rl-real-model-v1.txt",
