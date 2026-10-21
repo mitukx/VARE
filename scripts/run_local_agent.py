@@ -277,8 +277,8 @@ def bounded_turn_payload(model_result: Any, remaining_chars: int) -> str:
 
 
 def generate_turn(backend: str, model: Any, tokenizer: Any, messages: list[dict[str, Any]],
-                  tools: list[dict[str, Any]], *, limit: int, args: argparse.Namespace) -> tuple[str, int, int]:
-    """Generate one bounded assistant response using a locally loaded backend."""
+                  tools: list[dict[str, Any]], *, limit: int, args: argparse.Namespace) -> tuple[str, int, int, dict[str, Any]]:
+    """Generate one bounded response and retain backend token-rate telemetry."""
     prompt = tokenizer.apply_chat_template(
         messages, tools=tools, tokenize=False, add_generation_prompt=True,
         enable_thinking=False,
@@ -288,7 +288,7 @@ def generate_turn(backend: str, model: Any, tokenizer: Any, messages: list[dict[
         raise ValueError('context_budget_exhausted')
     limit = min(limit, args.max_context_tokens - prompt_tokens)
     if backend == 'mlx':
-        from mlx_lm import generate
+        from mlx_lm import stream_generate
         from mlx_lm.sample_utils import make_sampler
 
         sampler = make_sampler(
@@ -296,9 +296,20 @@ def generate_turn(backend: str, model: Any, tokenizer: Any, messages: list[dict[
             top_p=0.0 if not args.do_sample else args.top_p,
             top_k=0 if not args.do_sample else args.top_k,
         )
-        raw = generate(model, tokenizer, prompt=prompt, max_tokens=limit,
-                       sampler=sampler, verbose=False)
-        return raw, len(tokenizer.encode(raw, add_special_tokens=False)), prompt_tokens
+        pieces: list[str] = []
+        last = None
+        for response in stream_generate(model, tokenizer, prompt, max_tokens=limit, sampler=sampler):
+            pieces.append(response.text)
+            last = response
+        raw = ''.join(pieces)
+        generated_tokens = getattr(last, 'generation_tokens', None)
+        if not isinstance(generated_tokens, int) or generated_tokens < 0:
+            generated_tokens = len(tokenizer.encode(raw, add_special_tokens=False))
+        return raw, generated_tokens, prompt_tokens, {
+            'prompt_tokens_per_second': getattr(last, 'prompt_tps', None),
+            'decode_tokens_per_second': getattr(last, 'generation_tps', None),
+            'mlx_peak_memory_gib': getattr(last, 'peak_memory', None),
+        }
 
     import torch
     encoded = tokenizer(prompt, return_tensors='pt')
@@ -312,7 +323,12 @@ def generate_turn(backend: str, model: Any, tokenizer: Any, messages: list[dict[
             max_new_tokens=limit, pad_token_id=tokenizer.eos_token_id,
         )
     new_ids = output[0][encoded['input_ids'].shape[1]:]
-    return tokenizer.decode(new_ids, skip_special_tokens=False), int(new_ids.shape[0]), prompt_tokens
+    generated_tokens = int(new_ids.shape[0])
+    return tokenizer.decode(new_ids, skip_special_tokens=False), generated_tokens, prompt_tokens, {
+        'prompt_tokens_per_second': None,
+        'decode_tokens_per_second': None,
+        'mlx_peak_memory_gib': None,
+    }
 
 
 def run_public_tests(
@@ -531,15 +547,17 @@ def main() -> int:
 
     start = time.perf_counter()
     if args.backend == 'mlx':
+        from importlib.metadata import version
         if platform.system() != 'Darwin' or platform.machine() != 'arm64':
             parser.error('the MLX backend requires Apple Silicon macOS')
         import mlx.core as mx
         from mlx_lm import load
+        if not mx.metal.is_available() or str(mx.default_device()) != 'Device(gpu, 0)':
+            parser.error('the MLX backend requires Metal GPU as the active default device')
         mx.random.seed(args.seed)
         model, tokenizer = load(str(model_dir))
-        mlx_lm = __import__('mlx_lm')
-        runtime = {'python': platform.python_version(), 'mlx': getattr(__import__('mlx'), '__version__', 'unknown'),
-                   'mlx_lm': getattr(mlx_lm, '__version__', 'unknown'),
+        runtime = {'python': platform.python_version(), 'mlx': version('mlx'),
+                   'mlx_lm': version('mlx-lm'),
                    'platform': platform.platform(), 'device': 'apple_metal', 'seed': args.seed}
     else:
         import torch
@@ -660,7 +678,7 @@ def main() -> int:
         limit = min(args.max_new_tokens_per_turn, remaining)
         generation_start = time.perf_counter()
         try:
-            raw, generated_tokens, prompt_tokens = generate_turn(
+            raw, generated_tokens, prompt_tokens, generation_metrics = generate_turn(
                 args.backend, model, tokenizer, messages, tools, limit=limit, args=args,
             )
         except ValueError as exc:
@@ -673,6 +691,7 @@ def main() -> int:
         entry: dict[str, Any] = {'turn': turn + 1, 'model_output': raw, 'tool_calls': [],
                                  'generated_tokens': generated_tokens,
                                  'prompt_tokens': prompt_tokens,
+                                 **generation_metrics,
                                  'generation_seconds': round(generation_elapsed, 6)}
         parse_text, recovered_tool_format = normalize_tool_call_format(raw, tool_names)
         if recovered_tool_format:

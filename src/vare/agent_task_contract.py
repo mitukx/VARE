@@ -209,6 +209,21 @@ def load_agent_task(task_root: Path) -> AgentTaskContract:
     split = metadata.get("split")
     if split is not None and split not in {"train", "development", "heldout"}:
         raise ValueError("task split must be train, development, or heldout")
+    source_hashes = source.get("file_sha256", {})
+    if not isinstance(source_hashes, dict) or any(
+        name not in files or not isinstance(digest, str) or len(digest) != 64
+        or any(char not in "0123456789abcdef" for char in digest)
+        for name, digest in source_hashes.items()
+    ):
+        raise ValueError("engineering task source.file_sha256 is malformed")
+    if source_hashes and set(source_hashes) != set(files):
+        raise ValueError("pinned source hash manifest must cover exactly the task allowlist")
+    snapshot_sha256 = source.get("snapshot_sha256")
+    if snapshot_sha256 is not None and (
+        not isinstance(snapshot_sha256, str) or len(snapshot_sha256) != 64
+        or any(char not in "0123456789abcdef" for char in snapshot_sha256)
+    ):
+        raise ValueError("engineering task snapshot_sha256 is malformed")
     return AgentTaskContract(
         task_id=task_id,
         schema="engineering_task_spec",
@@ -218,6 +233,6 @@ def load_agent_task(task_root: Path) -> AgentTaskContract:
         calibration_revision=source.get("calibration_revision"),
         split=split,
         input_hashes=hashes,
-        source_hashes={},
-        snapshot_sha256=None,
+        source_hashes=dict(source_hashes),
+        snapshot_sha256=snapshot_sha256,
     )
