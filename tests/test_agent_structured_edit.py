@@ -160,6 +160,9 @@ def test_controller_bounds_region_size_and_source_file_allowlist(tmp_path: Path)
     controller = StructuredEditController(root, allowed, max_read_lines=1, max_read_chars=256)
     read = controller.read_region("src/module.py", start_line=1, end_line=3)
     assert read["content"] == "def value():\n"
+    assert read["end_line"] == 1
+    assert read["next_line"] == 2
+    assert read["truncated"] is True
     with pytest.raises(StructuredEditError, match="allowlisted"):
         controller.read_region("outside.py")
     with pytest.raises(ValueError, match="controller bounds"):
