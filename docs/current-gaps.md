@@ -1,5 +1,17 @@
 # Current evidence gaps
 
+**Update 2026-10-21 — one Development task calibrated in isolated Docker:**
+the MLX-LM #1912 top-p regression ran on its pinned baseline and known fix
+under protocol v3. The baseline failed the exact-output cohort and the known
+fix passed 12/12 cases; all nine namespace, network, output, resource, and
+source-swap probes passed. Candidate source, task prompt, source revisions,
+runtime image, and evidence hashes are recorded. This is CPU-only calibration,
+not an Agent rollout. The other two Development tasks, Qwen3-4B feasibility,
+and any post-training comparison remain open. No Metal semantic-equivalence
+claim follows. See the [report](mlsys-repository-task-mlxlm-1912-v1-report.md),
+[protocol v3](../benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v3.json),
+and [raw evidence](../results/mlxlm-1912-isolated-v3/run-1/).
+
 **Update 2026-10-21 — one repository-task grading contract passed:** the
 MLX-LM #1904 Train-task calibration now runs in VARE's separate no-network
 candidate callee; the pinned baseline fails and the exact fixed source passes.

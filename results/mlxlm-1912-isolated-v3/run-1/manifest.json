@@ -1,0 +1,23 @@
+{
+  "baseline_commit": "47e43a4526d42a6dcee758f07eb04b78a8439ecb",
+  "baseline_source_sha256": "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2",
+  "calibration_passed": true,
+  "calibration_sha256": "ee8a6ac2726b691ef25f07758acc85b1b8f56a44f3f0d9e04ba9b9d935e70f6c",
+  "fixed_commit": "87b7b583a697537aa68f47130b40884700b5f55f",
+  "fixed_source_sha256": "3aac92d804b6b91c82a4e2844697a8723de26f6af57e10013a482b967e739cfa",
+  "implementation_commit": "e9d59ade60b1f7e764847f03bf8524ac9ab9f178",
+  "implementation_sha256": {
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/grader_adapter.py": "f08007db5ec895f071624cd1de2e7afd3b60d0dffa809161f48a2baceb28d6e7",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/task.md": "1073e527a5808176a4e6144a0d348e1bb5acbbc6fb790ec2e74bb58576c73bc3",
+    "scripts/run_mlxlm_1912_calibration.py": "f5c774a65ad8e422979cd3b4a36f20eb5568fb896ddfa7f0500be120409025dd",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/isolated_candidate.py": "8c216aa1891538156030f76ae59a768832fefa83dbbcf3702c22176019b0aaee",
+    "src/vare/mlxlm_1912_repo_task.py": "5a10440e0facfde59b5966635d075ca9db76d241dc17635425feba93c2a0544c",
+    "tests/test_mlxlm_1912_repo_task.py": "d3c636a989db90c487351eb1e5087650c78195c06b94e737ed26e9135f88195b"
+  },
+  "protocol_id": "mlxlm-1912-isolated-task-v3",
+  "protocol_sha256": "8cce54bada162ae685150711928a3de153ea0935e572a607214472c95ed889c3",
+  "red_team_sha256": "268bea47948f769538bdf24f129d27cce5304dcfe19e9569907cfccb167cc9be",
+  "runtime_image": "localhost:5000/vare/mlx-cpu-task@sha256:847edcf1b2b15d00914674e89931f9d38c4aa8a0f1d763cbb96c1359a0647388",
+  "task_prompt_sha256": "1073e527a5808176a4e6144a0d348e1bb5acbbc6fb790ec2e74bb58576c73bc3"
+}
