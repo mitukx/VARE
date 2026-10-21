@@ -96,7 +96,7 @@ def classify_public_test_result(result: Any) -> str:
     # Historical records predate the explicit class field. Exit 125 is Docker's
     # launch-failure code; it means no test assertion ran.
     code = result.get("returncode")
-    if code == 125:
+    if code in (125, 126, 127):
         return "container_launch_failure"
     error = result.get("error")
     if isinstance(error, str) and "container exceeded wall-time limit" in error:

@@ -82,6 +82,8 @@ def test_public_test_exit_codes_separate_launch_failures_from_candidate_failures
     assert classify_public_test_exit(0) == 'passed'
     assert classify_public_test_exit(1) == 'test_failure'
     assert classify_public_test_exit(125) == 'container_launch_failure'
+    assert classify_public_test_exit(126) == 'container_launch_failure'
+    assert classify_public_test_exit(127) == 'container_launch_failure'
     assert classify_public_test_exit(137) == 'container_resource_failure'
     assert classify_public_test_error('IsolationError: container exceeded wall-time limit') == 'candidate_timeout'
     assert public_test_infrastructure_error({'classification': 'container_launch_failure'})

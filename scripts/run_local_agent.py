@@ -412,7 +412,9 @@ def classify_public_test_exit(returncode: int) -> str:
     """Separate Docker launch/resource failures from test assertion results."""
     if returncode == 0:
         return 'passed'
-    if returncode == 125:
+    # Docker CLI exit codes 125-127 indicate daemon/command launch failures;
+    # none proves that the candidate's public assertions ran.
+    if returncode in (125, 126, 127):
         return 'container_launch_failure'
     if returncode in (137, 139):
         return 'container_resource_failure'

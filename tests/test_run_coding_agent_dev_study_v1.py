@@ -150,6 +150,13 @@ class CodingAgentDevStudyRunnerTests(unittest.TestCase):
             runner.classify_public_test_result({"passed": False, "returncode": 125}),
             "container_launch_failure",
         )
+        for returncode in (126, 127):
+            self.assertEqual(
+                runner.classify_public_test_result(
+                    {"passed": False, "returncode": returncode}
+                ),
+                "container_launch_failure",
+            )
         self.assertEqual(
             runner.classify_public_test_result({"passed": False, "returncode": 1}),
             "test_failure",
