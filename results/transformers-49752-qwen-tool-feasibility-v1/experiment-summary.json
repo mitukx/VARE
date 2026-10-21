@@ -1,0 +1,113 @@
+{
+  "additional_post_run_calibrations": [
+    {
+      "historical_status": "running despite terminal outcomes",
+      "protocol_id": "transformers-49752-stacked-video-v8",
+      "result_sha256": "4e44865d3d93b32481f482ceab2440577571713b5f96fa48ecc2dc4aadf99b79"
+    },
+    {
+      "protocol_id": "transformers-49752-stacked-video-v9",
+      "result_sha256": "0c674cbf23926034a85e6b7d324d9f8dc5450a6a090fe88d8a70ddf7c519849f",
+      "terminal_status": "complete"
+    }
+  ],
+  "attempt_results": [
+    {
+      "attempt": "greedy",
+      "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "edit_applied": false,
+      "edit_attempted": false,
+      "elapsed_seconds": 191.94,
+      "generated_tokens": 1637,
+      "independent_case_count": 2,
+      "independent_grader_sha256": "09f13e0aacedad5564eb8481cda2558975883356146133eec6875c94b256caa7",
+      "independent_passed": false,
+      "mlx_active_memory_bytes": 2264693768,
+      "mlx_peak_memory_bytes": 4220156992,
+      "peak_rss_bytes": 1833353216,
+      "public_test_result": null,
+      "raw_agent_sha256": "93d93060cd27d8d155af06921c06648b36da4931e7ec27a583057eb49ead4eed",
+      "seed": 20261023,
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "tokens_per_second": 8.529,
+      "tool_turns": 7
+    },
+    {
+      "attempt": "sample-1",
+      "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "edit_applied": false,
+      "edit_attempted": true,
+      "elapsed_seconds": 174.573,
+      "generated_tokens": 596,
+      "independent_case_count": 2,
+      "independent_grader_sha256": "07b125c0717dcc9ae436d8ed71d1ec6013a790e77671a6c11c68fadc1c66b276",
+      "independent_passed": false,
+      "mlx_active_memory_bytes": 2264693814,
+      "mlx_peak_memory_bytes": 4203215982,
+      "peak_rss_bytes": 2640887808,
+      "public_test_result": null,
+      "raw_agent_sha256": "03624ef98ac2db2d9e2a552305875871364d656c58965be002d6fc813fc108d0",
+      "seed": 20261024,
+      "stop_reason": "turn_budget_exhausted",
+      "tokens_per_second": 3.414,
+      "tool_turns": 8
+    },
+    {
+      "attempt": "sample-2",
+      "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "edit_applied": false,
+      "edit_attempted": false,
+      "elapsed_seconds": 182.402,
+      "generated_tokens": 1637,
+      "independent_case_count": 2,
+      "independent_grader_sha256": "2230810d7bf060117fe7eea798883fc7258a9a770226a94c8bcce1b83b89edbd",
+      "independent_passed": false,
+      "mlx_active_memory_bytes": 2264693814,
+      "mlx_peak_memory_bytes": 4220157038,
+      "peak_rss_bytes": 2640658432,
+      "public_test_result": null,
+      "raw_agent_sha256": "c83b990d38fc8bc5ec7730a51795895b49f2190b9517c0f21b29b3bb214bca5e",
+      "seed": 20261025,
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "tokens_per_second": 8.975,
+      "tool_turns": 7
+    }
+  ],
+  "attempts": 3,
+  "current_calibration": {
+    "passed": true,
+    "protocol_id": "transformers-49752-stacked-video-v10",
+    "protocol_sha256": "2a2b3307f6ad7dcac75499a4a76b9aeedb4c0e55198573c53422d88675234562",
+    "red_team_checks": 8,
+    "result_sha256": "d2a3ddda82f7b8dd73b4594cb6b342c61b1603d8629688e88cc9a53925a01d42",
+    "source_swap_rejected": true,
+    "terminal_status": "complete"
+  },
+  "grader_protocol_id": "transformers-49752-stacked-video-v6",
+  "grader_protocol_sha256": "dac51a13d16ce5896452507ffaffab832962db11e6e292bbcb9594b92a34f0cb",
+  "heldout_accessed": false,
+  "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+  "model_snapshot": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+  "post_run_calibration": {
+    "passed": true,
+    "protocol_id": "transformers-49752-stacked-video-v7",
+    "protocol_sha256": "00b2042aca74d9bd0d706f608c4a29a5f2b0ceffe3811d5601002988fb6ffafe",
+    "result_sha256": "acf6fa0c78a3f4091592a98d6d58c73baf623287c1f1df712b34cbfc590f17b2"
+  },
+  "primary_successes": 0,
+  "protocol_id": "transformers-49752-qwen-tool-agent-feasibility-v2",
+  "protocol_sha256": "c1b5626185c293a1404893be710c6738c16dc7b16f3bcd9659219a651d0efd1f",
+  "runtime": {
+    "device": "apple_metal",
+    "device_reported": "Device(gpu, 0)",
+    "mlx": "0.32.2",
+    "mlx_lm": "0.32.2",
+    "python": "3.11.15",
+    "unified_memory_bytes": 34359738368
+  },
+  "sampled_reward_variance": 0.0,
+  "sft_or_grpo_run": false,
+  "split": "development",
+  "success_rate": 0.0,
+  "task_id": "transformers-49752-stacked-frames"
+}

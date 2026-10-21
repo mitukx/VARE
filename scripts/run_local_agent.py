@@ -120,6 +120,7 @@ def run_public_tests(workspace: Path, image: str, expected_test_hash: str) -> di
         result = asyncio.run(DockerIsolationRunner().run_candidate(
             limits, allowed_workspace_root=workspace.parent, workspace=workspace,
             command=['python', '/workspace/test_public.py'],
+            readonly_workspace=True,
         ))
     except Exception as exc:
         return {'passed': False, 'error': f'{type(exc).__name__}: {exc}',
@@ -272,7 +273,7 @@ def main() -> int:
     parser.add_argument('--top-k', type=int, default=20)
     parser.add_argument('--do-sample', action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument('--edit-format', choices=('unified_diff', 'whole_file'), default='unified_diff')
-    parser.add_argument('--require-split', choices=('train', 'heldout'))
+    parser.add_argument('--require-split', choices=('train', 'development', 'heldout'))
     args = parser.parse_args()
 
     model_dir = args.model_path.resolve()

@@ -50,12 +50,14 @@ def assert_train_only(contract: AgentTaskContract, split: dict) -> None:
 
 def assert_split_member(contract: AgentTaskContract, split: dict, split_name: str) -> None:
     """Require a task to match one explicitly selected frozen split."""
-    if split_name not in {"train", "heldout"}:
-        raise ValueError("evaluation split must be train or heldout")
+    if split_name not in {"train", "development", "heldout"}:
+        raise ValueError("evaluation split must be train, development, or heldout")
     heldout = set(split.get("heldout", []))
     members = set(split.get(split_name, []))
     if split_name == "train" and (contract.task_id in heldout or contract.split == "heldout"):
         raise ValueError("held-out task must not be executed")
+    if split_name == "development" and contract.task_id in heldout:
+        raise ValueError("held-out task must not be executed as development")
     if contract.split != split_name or contract.task_id not in members:
         raise ValueError(f"task is outside the frozen {split_name} split")
 
@@ -110,8 +112,8 @@ def load_agent_task(task_root: Path) -> AgentTaskContract:
     if not isinstance(task_id, str) or not task_id:
         raise ValueError("task id is missing")
     split = metadata.get("split")
-    if split is not None and split not in {"train", "heldout"}:
-        raise ValueError("task split must be train or heldout")
+    if split is not None and split not in {"train", "development", "heldout"}:
+        raise ValueError("task split must be train, development, or heldout")
     return AgentTaskContract(
         task_id=task_id,
         schema="engineering_task_spec",

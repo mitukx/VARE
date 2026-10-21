@@ -1,0 +1,54 @@
+{
+  "baseline_commit": "6f2e80bdad560947903bb4bde8043ae95387069a",
+  "baseline_target_sha256": "c0479fc2f6a14e493f6be020f6685a7c3ebbc72891c8bdbfca66f3e24ed3d7ee",
+  "claim_limit": "This is one newly qualified Development task with an isolated regression grader. It does not establish an LLM rollout, Metal inference, or policy improvement.",
+  "evaluation": {
+    "cases": [
+      "stack-frames-seed-20261021",
+      "stack-frames-seed-20261022"
+    ],
+    "required_calibration": [
+      "pinned-baseline-fails",
+      "pinned-fix-passes",
+      "red-team-suite-passes"
+    ],
+    "success": "for each case, target-size and patch-count rows equal num_frames_per_video; eight visual units alternate the baseline main-frame grid with one shared composite grid"
+  },
+  "fixed_commit": "bc0e71ffef22474fc14fcaa4b399d824eebc0e50",
+  "fixed_target_sha256": "93297262c68d03a35d4b74cd6e30da71a83474c03fe07ab1cd3e3a0153e8277e",
+  "grader_test": "tests/models/minicpmv4_6/test_video_processing_minicpmv4_6.py::test_call_sample_frames_stacked_composites",
+  "grader_test_sha256": "d68b11650b26dba53f4a03a6dedd469d2554a26d2bb2f51190775367979b133b",
+  "implementation_sha256": {
+    "benchmarks/mlsys_repo_eval_v3/transformers_49752/Dockerfile": "71200d584cff1d58e6abbf84d51491ff3a2ab8da3f3120370fac2083c8e31e31",
+    "benchmarks/mlsys_repo_eval_v3/transformers_49752/grader_adapter.py": "39dc0f24c24cf5762e822af1f084dce441433f51b309193d029f0a42ef78d392",
+    "benchmarks/mlsys_repo_eval_v3/transformers_49752/requirements.txt": "0fab4323fb3e97cbe10834092b7a263ca6b9e074bade207a1d5891b26e2ccdd5",
+    "benchmarks/mlsys_repo_eval_v3/transformers_49752/task.json": "f47461b9e488a2929d69e2616f545b337c9642f623720bf6e5fc4527d634b1ae",
+    "benchmarks/mlsys_repo_eval_v3/transformers_49752/task.md": "ec2d64c6216554b2e299ccc80a2910b9854f8e777967b64df1cc548a4fcf22c7",
+    "benchmarks/mlsys_repo_eval_v3/transformers_49752/test_public.py": "d8280594abeb98a93b749bcba1c82c754ac92697cdbf4acf39107d9d93132b9f",
+    "scripts/run_transformers_49752_calibration.py": "c7bc98620b27a491f6d17c43bd49c82c530d3e069a66fb352a21438a6abce196",
+    "src/vare/attestation.py": "785e74d7d0cd6d41a73cf75cc65c093a0afb8d5082ad3f11dd828770616e93a3",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/isolated_candidate.py": "8c216aa1891538156030f76ae59a768832fefa83dbbcf3702c22176019b0aaee",
+    "src/vare/transformers_49752_repo_task.py": "2754f39702dcb417e1843d53b6ad65d941bf8c14900bc33c7d0b9156e9a58adb",
+    "src/vare/types.py": "233e2b6176431140e7700cc668cfdbdc98cf3d8d4ab98de658efab7010ea82ca"
+  },
+  "license": "Apache-2.0",
+  "license_sha256": "77fd4710def9ec3c0f6225800e0235f15a425abd4a8b03559127fcd782612049",
+  "protocol_id": "transformers-49752-stacked-video-units-v1",
+  "runtime": {
+    "candidate_container": "localhost:5000/vare/transformers-video@sha256:c3d53211582477d5612dcaa618a4b89e6765f5eb7a97ca7b2bfe84a9f8737eaf",
+    "cpus": 1.0,
+    "grader_mount": "absent",
+    "host_qualification": "Apple Silicon arm64 / M1 Pro, CPU PyTorch semantic replay",
+    "memory_mb": 1536,
+    "network": "none",
+    "peak_memory_measured": false,
+    "pids_limit": 64,
+    "timeout_seconds": 30
+  },
+  "source_pr": "https://github.com/huggingface/transformers/pull/49752",
+  "source_repository": "huggingface/transformers",
+  "split": "development-v2",
+  "target_path": "src/transformers/models/minicpmv4_6/video_processing_minicpmv4_6.py",
+  "task_id": "transformers-49752-stacked-frames"
+}

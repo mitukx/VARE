@@ -1,5 +1,20 @@
 # Current evidence gaps
 
+**Update 2026-10-21 — new Transformers task calibrated; iterative Qwen
+feasibility remains NO-GO:** a new Transformers #49752 Development task now
+has a source-hash-pinned, process-isolated grader; baseline fails 2/2,
+known fix passes 2/2, and the red-team suite passes. The public smoke also
+fails on baseline and passes on the exact fix in a read-only candidate
+container. Qwen3-4B MLX ran one greedy and two sampled tool-agent rollouts on
+this task; none applied a patch, all three received reward 0, and the sampled
+reward variance is zero. Two attempts hit per-turn output truncation; one
+produced a no-op and a corrupt diff. This task is consumed for development and
+is not confirmation data. No held-out task, SFT, or GRPO run occurred. See the
+[report](transformers-49752-qwen-tool-agent-feasibility-v1-report.md),
+[latest calibration protocol v10](../benchmarks/mlsys_repo_eval_v3/transformers_49752/protocol-v10.json),
+[agent protocol](../benchmarks/mlsys_repo_eval_v3/transformers_49752/agent-protocol-v2.json),
+and [raw evidence](../results/transformers-49752-qwen-tool-feasibility-v1/).
+
 **Update 2026-10-21 — all three frozen Development tasks have grader calibration; Qwen feasibility is a NO-GO:** safe baseline/fix calibration now exists for Transformers #45852 and MLX-LM #1912/#1971. The frozen Qwen3-4B run generated 15 single-turn responses, but all failed raw-diff format validation; greedy success and pass@4 were both zero for all three tasks, with zero sampled reward variance. No patch reached independent grading and no policy update ran. Do not reuse this model-exposed Development cohort as a fresh evaluation. The 9 frozen Held-out tasks remain unopened and below the 15-task target; train diversity and 4B optimizer/checkpoint evidence are still absent. See the [Qwen report](qwen3-4b-mlsys-development-feasibility-v1-report.md), [raw run](../results/qwen3-4b-mlsys-development-feasibility-v1/run-1/), and [independent audit](../results/qwen3-4b-mlsys-development-feasibility-v1/independent-audit.json).
 
 **Update 2026-10-21 — one additional Development task calibrated:** MLX-LM #1971 now has a frozen task-specific isolated grader with baseline-fail/known-fix-pass and passing red-team calibration. This does not establish agent or model capability: the input is a synthetic small model, the container is CPU-only, and no model-generated patch was evaluated. The other Development tasks still need safe independent calibration; do not start Qwen coding rollouts, SFT, or GRPO yet. The 9 frozen held-out tasks remain unopened and below the 15-task research target. See the [calibration report](mlxlm-1971-isolated-task-v1-report.md) and [evidence](../results/mlxlm-1971-isolated-v1/run-1/).

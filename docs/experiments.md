@@ -1,5 +1,21 @@
 # Experimental program
 
+## Transformers #49752 tool-agent feasibility v1 — 2026-10-21
+
+The new `transformers-49752-stacked-frames` Development task passed isolated
+baseline/fix calibration: baseline 0/2, pinned fix 2/2, all eight red-team
+checks passed, and the candidate-visible public smoke failed baseline/passed
+the exact fix in a read-only network-disabled container. Qwen3-4B-Instruct
+2507-4bit on MLX/Metal completed one greedy and two sampled iterative tool
+rollouts. All three left the baseline unchanged and scored 0; two hit the
+per-turn output ceiling while forming tool calls, and one produced a no-op
+patch and a corrupt patch. No public test ran after a patch, no policy update
+ran, and reward variance was zero. This single task is now consumed and does
+not establish Phase A or any capability gain. See the [report](transformers-49752-qwen-tool-agent-feasibility-v1-report.md),
+[latest calibration protocol v10](../benchmarks/mlsys_repo_eval_v3/transformers_49752/protocol-v10.json),
+[agent protocol](../benchmarks/mlsys_repo_eval_v3/transformers_49752/agent-protocol-v2.json),
+and [raw runs](../results/transformers-49752-qwen-tool-feasibility-v1/).
+
 ## Qwen3-4B MLSys Development patch feasibility v1 (2026-10-21)
 
 The frozen 15-rollout single-turn screen used Qwen3-4B-Instruct-2507-4bit on the three Development tasks only. Greedy success was 0/3 tasks, sampled pass@4 was 0/3, and sampled reward variance was zero for every task. All 15 outputs failed the frozen raw-diff format contract before hidden grading. Inference took 281.77 seconds after a 1.43-second model load; no policy update or Held-out evaluation ran. **SFT/GRPO remain NO-GO.** See the [report](qwen3-4b-mlsys-development-feasibility-v1-report.md), [frozen protocol](../protocols/qwen3_4b_mlsys_development_feasibility_v1.lock.json), [raw run](../results/qwen3-4b-mlsys-development-feasibility-v1/run-1/), and [independent audit](../results/qwen3-4b-mlsys-development-feasibility-v1/independent-audit.json).

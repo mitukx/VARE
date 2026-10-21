@@ -407,12 +407,13 @@ class DockerIsolationRunner:
 
     async def run_candidate(
         self, limits: IsolationLimits, *, allowed_workspace_root: Path,
-        workspace: Path, command: Sequence[str],
+        workspace: Path, command: Sequence[str], readonly_workspace: bool = False,
     ) -> IsolationResult:
         name = "vare-agent-" + secrets.token_hex(12)
         args = self.candidate_argv(
             limits, name=name, allowed_workspace_root=allowed_workspace_root,
             workspace=workspace, command=command,
+            readonly_workspace=readonly_workspace,
         )
         return await self.execute(args, limits)
 

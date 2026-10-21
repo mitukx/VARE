@@ -1,5 +1,18 @@
 # Roadmap
 
+## Current model gate — 2026-10-21
+
+A fresh Transformers #49752 task is now safe to grade and the candidate-visible
+public test is calibrated, but the Qwen3-4B iterative agent did not apply a
+patch in any of three preregistered rollouts. The failures were specific:
+repeated tool-call truncation under the 512-token response cap and invalid
+patches in the one rollout that reached patch application. This is a measured
+NO-GO for SFT/GRPO and for Phase A success; the task is consumed. Next, freeze
+a new agent protocol and qualify multiple fresh Development tasks before any
+new model feasibility screen. Do not open the nine Held-out tasks for agent
+development. See the [report](transformers-49752-qwen-tool-agent-feasibility-v1-report.md)
+and its [raw evidence](../results/transformers-49752-qwen-tool-feasibility-v1/).
+
 ## Repository-patch grading gate — 2026-10-21
 
 A narrow Train-task adapter now exports a pinned MLX-LM baseline without Git
