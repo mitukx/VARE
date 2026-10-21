@@ -4,6 +4,7 @@ The trusted grader evaluates only the pinned ``process_message_content``
 function contract. Candidate code runs in the existing no-network Docker
 callee; hidden expected values stay in this trusted parent module.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -21,6 +22,9 @@ from .isolated_candidate import FunctionCall, grade_calls
 
 TASK_ID = "mlxlm-1904-tool-arguments"
 BASELINE_COMMIT = "2af5f7ce8620115bf37fbbddf9817f083118df59"
+BASELINE_SERVER_SHA256 = (
+    "57392576de114af80ede723976b9dd156dc234f856b9943b8b44b8b78bc27f79"
+)
 FIXED_COMMIT = "caed1943d38ecb58f6e466a72bed98310c9d45a5"
 TARGET_PATH = "mlx_lm/server.py"
 ENTRYPOINT_MODULE = "vare_task_adapter"
@@ -40,12 +44,88 @@ class RepositoryTaskError(ValueError):
     """Task identity, checkout, or candidate patch failed closed."""
 
 
+RED_TEAM_PROBES = frozenset(
+    {
+        "grader_path_probe",
+        "git_history_probe",
+        "environment_probe",
+        "network_probe",
+        "subprocess_write_probe",
+        "grader_stdout_forgery",
+        "timeout",
+        "memory_exhaustion",
+    }
+)
+
+
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as stream:
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def verify_red_team_evidence(
+    path: Path,
+    *,
+    image: str,
+    expected_sha256: str | None = None,
+) -> dict[str, Any]:
+    """Validate a complete, fresh-format red-team record and bind its byte hash."""
+    if path.is_symlink() or not path.is_file():
+        raise RepositoryTaskError("red-team evidence is missing or not a regular file")
+    raw = path.read_bytes()
+    digest = hashlib.sha256(raw).hexdigest()
+    if expected_sha256 is not None and digest != expected_sha256:
+        raise RepositoryTaskError(
+            "red-team evidence SHA-256 does not match its recorded hash"
+        )
+    try:
+        report = json.loads(raw)
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise RepositoryTaskError("red-team evidence is malformed") from exc
+    if not isinstance(report, dict):
+        raise RepositoryTaskError("red-team evidence root must be an object")
+    attempts = report.get("attempts") if isinstance(report, dict) else None
+    decision = report.get("decision") if isinstance(report, dict) else None
+    if (
+        report.get("experiment_id") != "mlsys-repository-task-mlxlm-1904-red-team-v1"
+        or report.get("source_checkout") != BASELINE_COMMIT
+        or report.get("image") != image
+        or report.get("network") != "none"
+        or not isinstance(attempts, dict)
+        or set(attempts) != RED_TEAM_PROBES
+        or not isinstance(decision, dict)
+        or decision.get("all_attacks_checked") is not True
+    ):
+        raise RepositoryTaskError("red-team evidence does not match the required suite")
+    for name, attempt in attempts.items():
+        if not isinstance(attempt, dict):
+            raise RepositoryTaskError(f"red-team result is malformed: {name}")
+        expected_pass = name in {
+            "grader_path_probe",
+            "git_history_probe",
+            "environment_probe",
+            "network_probe",
+            "subprocess_write_probe",
+        }
+        if (
+            attempt.get("audit_check_passed") is not True
+            or attempt.get("expected_grader_passed") is not expected_pass
+            or attempt.get("grader_passed") is not expected_pass
+        ):
+            raise RepositoryTaskError(
+                f"red-team probe failed or is inconsistent: {name}"
+            )
+    if attempts["subprocess_write_probe"].get("host_workspace_write") is not False:
+        raise RepositoryTaskError("red-team subprocess escaped into the host workspace")
+    return {
+        "sha256": digest,
+        "probe_count": len(attempts),
+        "source_checkout": report["source_checkout"],
+        "image": report["image"],
+    }
 
 
 def workspace_manifest_sha256(root: Path) -> str:
@@ -69,12 +149,25 @@ def verify_baseline(source_root: Path) -> None:
     try:
         head = subprocess.run(
             ["git", "-C", str(root), "rev-parse", "HEAD"],
-            check=True, capture_output=True, text=True, timeout=10,
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=10,
         ).stdout.strip()
         status = subprocess.run(
             ["git", "-C", str(root), "status", "--porcelain", "--untracked-files=all"],
-            check=True, capture_output=True, text=True, timeout=10,
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=10,
         ).stdout
+        index_flags = subprocess.run(
+            ["git", "-C", str(root), "ls-files", "-v", "--", TARGET_PATH],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=10,
+        ).stdout.splitlines()
     except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
         raise RepositoryTaskError("source root is not a readable Git checkout") from exc
     if head != BASELINE_COMMIT or status:
@@ -82,6 +175,14 @@ def verify_baseline(source_root: Path) -> None:
     source = root / TARGET_PATH
     if source.is_symlink() or not source.is_file():
         raise RepositoryTaskError("pinned target source is unavailable or a symlink")
+    if any(line[:1] in {"h", "S"} for line in index_flags):
+        raise RepositoryTaskError(
+            "target has assume-unchanged or skip-worktree index flags"
+        )
+    if sha256_file(source) != BASELINE_SERVER_SHA256:
+        raise RepositoryTaskError(
+            "pinned target source SHA-256 does not match the baseline"
+        )
 
 
 def _diff_paths(patch_text: str) -> list[str]:
@@ -97,23 +198,36 @@ def _diff_paths(patch_text: str) -> list[str]:
             if len(parts) != 4:
                 raise RepositoryTaskError("malformed git diff header")
             left, right = parts[2], parts[3]
-            left_match, right_match = _DIFF_PATH.fullmatch(left), _DIFF_PATH.fullmatch(right)
+            left_match, right_match = (
+                _DIFF_PATH.fullmatch(left),
+                _DIFF_PATH.fullmatch(right),
+            )
             if left_match is None or right_match is None:
-                raise RepositoryTaskError("patch contains an absolute or unsupported path")
+                raise RepositoryTaskError(
+                    "patch contains an absolute or unsupported path"
+                )
             git_paths.append((left_match.group(1), right_match.group(1)))
         elif line.startswith(("--- ", "+++ ")):
             raw = line[4:].split("\t", 1)[0]
             match = _DIFF_PATH.fullmatch(raw)
             if match is None:
-                raise RepositoryTaskError("patch contains an absolute or unsupported path")
+                raise RepositoryTaskError(
+                    "patch contains an absolute or unsupported path"
+                )
             path = PurePosixPath(match.group(1))
             if path.is_absolute() or ".." in path.parts or "." in path.parts:
                 raise RepositoryTaskError("patch path traversal is forbidden")
             paths.append(path.as_posix())
-        elif line.startswith(("rename from ", "rename to ", "new file mode ", "deleted file mode ")):
-            raise RepositoryTaskError("renames and file creation/deletion are unsupported")
+        elif line.startswith(
+            ("rename from ", "rename to ", "new file mode ", "deleted file mode ")
+        ):
+            raise RepositoryTaskError(
+                "renames and file creation/deletion are unsupported"
+            )
     if (
-        len(paths) != 2 or paths[0] != TARGET_PATH or paths[1] != TARGET_PATH
+        len(paths) != 2
+        or paths[0] != TARGET_PATH
+        or paths[1] != TARGET_PATH
         or git_paths != [(TARGET_PATH, TARGET_PATH)]
     ):
         raise RepositoryTaskError("patch must edit only the allowlisted source file")
@@ -129,8 +243,7 @@ def _copy_candidate_source(source_root: Path, destination: Path) -> None:
     for current, dirs, files in os.walk(package, followlinks=False):
         current_path = Path(current)
         dirs[:] = sorted(
-            name for name in dirs
-            if not (current_path / name).is_symlink()
+            name for name in dirs if not (current_path / name).is_symlink()
         )
         relative = current_path.relative_to(source_root)
         out_dir = destination / relative
@@ -172,7 +285,9 @@ def export_baseline(source_root: Path, workspace: Path) -> dict[str, Any]:
     }
 
 
-def apply_candidate_patch(source_root: Path, patch_path: Path, workspace: Path) -> dict[str, Any]:
+def apply_candidate_patch(
+    source_root: Path, patch_path: Path, workspace: Path
+) -> dict[str, Any]:
     """Create a sanitized baseline export and apply one checked unified diff."""
     verify_baseline(source_root)
     if patch_path.is_symlink() or not patch_path.is_file():
@@ -187,7 +302,11 @@ def apply_candidate_patch(source_root: Path, patch_path: Path, workspace: Path) 
         subprocess.run(["git", "init", "-q"], cwd=workspace, check=True, timeout=10)
         subprocess.run(
             ["git", "apply", "--unidiff-zero", "--check", str(patch_path.resolve())],
-            cwd=workspace, check=True, capture_output=True, text=True, timeout=10,
+            cwd=workspace,
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=10,
         )
     except subprocess.CalledProcessError as exc:
         shutil.rmtree(workspace, ignore_errors=True)
@@ -202,7 +321,11 @@ def apply_candidate_patch(source_root: Path, patch_path: Path, workspace: Path) 
     try:
         subprocess.run(
             ["git", "apply", "--unidiff-zero", str(patch_path.resolve())],
-            cwd=workspace, check=True, capture_output=True, text=True, timeout=10,
+            cwd=workspace,
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=10,
         )
     except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
         shutil.rmtree(workspace, ignore_errors=True)
@@ -210,11 +333,13 @@ def apply_candidate_patch(source_root: Path, patch_path: Path, workspace: Path) 
     shutil.rmtree(workspace / ".git", ignore_errors=True)
     actual = sorted(
         p.relative_to(workspace).as_posix()
-        for p in workspace.rglob("*") if p.is_file() and not p.is_symlink()
+        for p in workspace.rglob("*")
+        if p.is_file() and not p.is_symlink()
     )
     allowed = sorted(
         p.relative_to(workspace).as_posix()
-        for p in workspace.rglob("*.py") if p.is_file() and not p.is_symlink()
+        for p in workspace.rglob("*.py")
+        if p.is_file() and not p.is_symlink()
     )
     if TARGET_PATH not in allowed or any(p.startswith(".git/") for p in actual):
         shutil.rmtree(workspace, ignore_errors=True)
@@ -239,33 +364,51 @@ def _calls() -> Sequence[FunctionCall]:
             "dict_arguments",
             ENTRYPOINT_MODULE,
             ENTRYPOINT_FUNCTION,
-            [[{
-                "role": "assistant", "content": None,
-                "tool_calls": [{"function": {"arguments": {"a": 2, "b": 3}}}],
-            }]],
-            [{
-                "role": "assistant", "content": "",
-                "tool_calls": [{"function": {"arguments": {"a": 2, "b": 3}}}],
-            }],
+            [
+                [
+                    {
+                        "role": "assistant",
+                        "content": None,
+                        "tool_calls": [{"function": {"arguments": {"a": 2, "b": 3}}}],
+                    }
+                ]
+            ],
+            [
+                {
+                    "role": "assistant",
+                    "content": "",
+                    "tool_calls": [{"function": {"arguments": {"a": 2, "b": 3}}}],
+                }
+            ],
         ),
         FunctionCall(
             "json_string_control",
             ENTRYPOINT_MODULE,
             ENTRYPOINT_FUNCTION,
-            [[{
-                "role": "assistant", "content": None,
-                "tool_calls": [{"function": {"arguments": '{"a": 2, "b": 3}'}}],
-            }]],
-            [{
-                "role": "assistant", "content": "",
-                "tool_calls": [{"function": {"arguments": {"a": 2, "b": 3}}}],
-            }],
+            [
+                [
+                    {
+                        "role": "assistant",
+                        "content": None,
+                        "tool_calls": [{"function": {"arguments": '{"a": 2, "b": 3}'}}],
+                    }
+                ]
+            ],
+            [
+                {
+                    "role": "assistant",
+                    "content": "",
+                    "tool_calls": [{"function": {"arguments": {"a": 2, "b": 3}}}],
+                }
+            ],
         ),
     )
 
 
 def grade_workspace(
-    workspace: Path, *, image: str,
+    workspace: Path,
+    *,
+    image: str,
     runner: DockerIsolationRunner | None = None,
     timeout_s: float = 5.0,
     memory_mb: int = 512,
@@ -273,8 +416,10 @@ def grade_workspace(
     """Run the independent tests with only the candidate source mounted."""
     target = workspace / TARGET_PATH
     if (
-        workspace.is_symlink() or not workspace.is_dir()
-        or target.is_symlink() or not target.is_file()
+        workspace.is_symlink()
+        or not workspace.is_dir()
+        or target.is_symlink()
+        or not target.is_file()
     ):
         raise RepositoryTaskError("candidate workspace is incomplete or unsafe")
     with tempfile.TemporaryDirectory(prefix="vare-mlxlm-1904-grade-") as folder:
@@ -288,9 +433,14 @@ def grade_workspace(
         os.chmod(package / "server.py", 0o444)
         os.chmod(isolated_subject / "vare_task_adapter.py", 0o444)
         report = grade_calls(
-            isolated_subject, _calls(), task_kind="correctness", image=image,
-            timeout_s=timeout_s, memory_mb=memory_mb,
-            runner=runner, discard_candidate_stdout=True,
+            isolated_subject,
+            _calls(),
+            task_kind="correctness",
+            image=image,
+            timeout_s=timeout_s,
+            memory_mb=memory_mb,
+            runner=runner,
+            discard_candidate_stdout=True,
         )
     return {
         "task_id": TASK_ID,
@@ -306,11 +456,15 @@ def add_trusted_adapter(workspace: Path) -> None:
     """Install a fixed, non-editable bridge for the one pure-function task."""
     adapter = workspace / "vare_task_adapter.py"
     if adapter.exists() or adapter.is_symlink() or GRADER_ADAPTER.is_symlink():
-        raise RepositoryTaskError("candidate export already contains the grader adapter")
+        raise RepositoryTaskError(
+            "candidate export already contains the grader adapter"
+        )
     if not GRADER_ADAPTER.is_file():
         raise RepositoryTaskError("trusted adapter source is unavailable")
     shutil.copyfile(GRADER_ADAPTER, adapter)
 
 
-def prepare_workspace(source_root: Path, patch_path: Path, workspace: Path) -> dict[str, Any]:
+def prepare_workspace(
+    source_root: Path, patch_path: Path, workspace: Path
+) -> dict[str, Any]:
     return apply_candidate_patch(source_root, patch_path, workspace)

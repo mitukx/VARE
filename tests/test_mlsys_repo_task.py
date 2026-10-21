@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import hashlib
+import json
 from pathlib import Path
+import subprocess
 
 import pytest
 
@@ -28,7 +31,10 @@ def test_patch_paths_are_confined_to_one_allowlisted_file():
         valid_diff("/tmp/escape.py"),
         valid_diff("mlx_lm/server.py") + valid_diff("mlx_lm/other.py"),
         valid_diff().replace("b/mlx_lm/server.py", "b/../../grader.py"),
-        valid_diff().replace("diff --git a/mlx_lm/server.py b/mlx_lm/server.py", "diff --git a/mlx_lm/server.py"),
+        valid_diff().replace(
+            "diff --git a/mlx_lm/server.py b/mlx_lm/server.py",
+            "diff --git a/mlx_lm/server.py",
+        ),
         valid_diff().replace("index 1234567..abcdef0 100644", "new file mode 100644"),
     ]
     for patch in attacks:
@@ -53,7 +59,9 @@ def test_trusted_adapter_uses_fixed_entrypoint_and_no_grader_cases(tmp_path: Pat
     assert "grader" not in source
 
 
-def test_patch_input_and_candidate_workspace_symlinks_fail_closed(tmp_path: Path, monkeypatch):
+def test_patch_input_and_candidate_workspace_symlinks_fail_closed(
+    tmp_path: Path, monkeypatch
+):
     root = tmp_path / "source"
     (root / "mlx_lm").mkdir(parents=True)
     (root / "mlx_lm/server.py").write_text("baseline")
@@ -80,9 +88,161 @@ def test_pinned_source_target_symlink_fails_closed(tmp_path: Path, monkeypatch):
     monkeypatch.setattr(repo_task, "BASELINE_COMMIT", "test-commit")
     from subprocess import CompletedProcess
 
-    calls = iter(("test-commit\n", ""))
+    calls = iter(("test-commit\n", "", ""))
+
     def fake_run(*_args, **_kwargs):
         return CompletedProcess([], 0, next(calls), "")
+
     monkeypatch.setattr(repo_task.subprocess, "run", fake_run)
     with pytest.raises(RepositoryTaskError, match="symlink"):
         repo_task.verify_baseline(root)
+
+
+def _git_baseline(tmp_path: Path, monkeypatch) -> Path:
+    root = tmp_path / "git-source"
+    target = root / repo_task.TARGET_PATH
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"pinned baseline bytes")
+    subprocess.run(["git", "init", "-q", str(root)], check=True)
+    subprocess.run(
+        ["git", "-C", str(root), "config", "user.email", "test@example.invalid"],
+        check=True,
+    )
+    subprocess.run(["git", "-C", str(root), "config", "user.name", "Test"], check=True)
+    subprocess.run(["git", "-C", str(root), "add", repo_task.TARGET_PATH], check=True)
+    subprocess.run(["git", "-C", str(root), "commit", "-qm", "baseline"], check=True)
+    commit = subprocess.run(
+        ["git", "-C", str(root), "rev-parse", "HEAD"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    monkeypatch.setattr(repo_task, "BASELINE_COMMIT", commit)
+    monkeypatch.setattr(
+        repo_task, "BASELINE_SERVER_SHA256", repo_task.sha256_file(target)
+    )
+    return root
+
+
+@pytest.mark.parametrize("index_flag", ["--assume-unchanged", "--skip-worktree"])
+def test_baseline_rejects_git_index_flags_even_when_source_is_unchanged(
+    tmp_path: Path,
+    monkeypatch,
+    index_flag: str,
+):
+    root = _git_baseline(tmp_path, monkeypatch)
+    subprocess.run(
+        ["git", "-C", str(root), "update-index", index_flag, repo_task.TARGET_PATH],
+        check=True,
+    )
+    # Git status is clean for both flags, so the index metadata itself must be rejected.
+    assert not subprocess.run(
+        ["git", "-C", str(root), "status", "--porcelain"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout
+    with pytest.raises(RepositoryTaskError, match="index flags"):
+        repo_task.verify_baseline(root)
+
+
+def test_baseline_rejects_target_hash_mismatch_even_when_git_status_is_clean(
+    tmp_path: Path,
+    monkeypatch,
+):
+    root = _git_baseline(tmp_path, monkeypatch)
+    monkeypatch.setattr(repo_task, "BASELINE_SERVER_SHA256", "0" * 64)
+    assert not subprocess.run(
+        ["git", "-C", str(root), "status", "--porcelain"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout
+    with pytest.raises(RepositoryTaskError, match="SHA-256"):
+        repo_task.verify_baseline(root)
+
+
+def _red_team_report() -> dict:
+    expected_pass = {
+        "grader_path_probe",
+        "git_history_probe",
+        "environment_probe",
+        "network_probe",
+        "subprocess_write_probe",
+    }
+    attempts = {
+        name: {
+            "audit_check_passed": True,
+            "expected_grader_passed": name in expected_pass,
+            "grader_passed": name in expected_pass,
+        }
+        for name in repo_task.RED_TEAM_PROBES
+    }
+    attempts["subprocess_write_probe"]["host_workspace_write"] = False
+    return {
+        "experiment_id": "mlsys-repository-task-mlxlm-1904-red-team-v1",
+        "source_checkout": repo_task.BASELINE_COMMIT,
+        "image": "python@sha256:example",
+        "network": "none",
+        "attempts": attempts,
+        "decision": {"all_attacks_checked": True},
+    }
+
+
+def test_red_team_evidence_requires_complete_consistent_suite_and_pinned_bytes(
+    tmp_path: Path,
+):
+    path = tmp_path / "red-team.json"
+    raw = json.dumps(_red_team_report(), sort_keys=True).encode()
+    path.write_bytes(raw)
+    verified = repo_task.verify_red_team_evidence(
+        path,
+        image="python@sha256:example",
+        expected_sha256=hashlib.sha256(raw).hexdigest(),
+    )
+    assert verified["probe_count"] == 8
+
+    for mutate, match in [
+        (lambda report: report["attempts"].pop("timeout"), "required suite"),
+        (
+            lambda report: report["attempts"]["timeout"].update(
+                audit_check_passed=False
+            ),
+            "failed or is inconsistent",
+        ),
+        (
+            lambda report: report["attempts"]["grader_path_probe"].update(
+                grader_passed=False
+            ),
+            "failed or is inconsistent",
+        ),
+        (
+            lambda report: report["attempts"]["subprocess_write_probe"].update(
+                host_workspace_write=True
+            ),
+            "escaped",
+        ),
+    ]:
+        report = _red_team_report()
+        mutate(report)
+        path.write_text(json.dumps(report), encoding="utf-8")
+        with pytest.raises(RepositoryTaskError, match=match):
+            repo_task.verify_red_team_evidence(path, image="python@sha256:example")
+
+
+def test_red_team_evidence_missing_malformed_or_hash_tampered_fails_closed(
+    tmp_path: Path,
+):
+    path = tmp_path / "red-team.json"
+    with pytest.raises(RepositoryTaskError, match="missing"):
+        repo_task.verify_red_team_evidence(path, image="python@sha256:example")
+    path.write_text("not-json", encoding="utf-8")
+    with pytest.raises(RepositoryTaskError, match="malformed"):
+        repo_task.verify_red_team_evidence(path, image="python@sha256:example")
+    path.write_text(json.dumps(_red_team_report()), encoding="utf-8")
+    with pytest.raises(RepositoryTaskError, match="SHA-256"):
+        repo_task.verify_red_team_evidence(
+            path,
+            image="python@sha256:example",
+            expected_sha256="0" * 64,
+        )
