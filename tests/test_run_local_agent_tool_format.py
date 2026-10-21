@@ -1,5 +1,6 @@
 from scripts.run_local_agent import (
     normalize_tool_call_format,
+    public_test_command,
     refresh_public_tests_after_edit,
     tools_for,
 )
@@ -72,6 +73,14 @@ def test_structured_mode_does_not_accept_free_form_patch_recovery():
     result = parse_submission("--- a/file.py\n+++ b/file.py\n", edit_format="structured")
     assert isinstance(result, ParseFailure)
     assert result.reason == "no_edit"
+
+
+def test_public_tests_add_archived_transformers_source_to_import_path():
+    command = public_test_command()
+    assert command[:2] == ["python", "-c"]
+    assert "sys.path.insert(0,'/workspace/src')" in command[2]
+    assert "runpy.run_path('/workspace/test_public.py')" in command[2]
+    assert "name.startswith('test_')" in command[2]
 
 
 def test_verified_success_requires_public_test_and_independent_hidden_grade():

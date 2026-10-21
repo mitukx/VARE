@@ -330,7 +330,7 @@ def run_public_tests(
     try:
         result = asyncio.run(DockerIsolationRunner().run_candidate(
             limits, allowed_workspace_root=workspace.parent, workspace=workspace,
-            command=['python', '/workspace/test_public.py'],
+            command=public_test_command(),
             readonly_workspace=True,
         ))
     except Exception as exc:
@@ -340,6 +340,14 @@ def run_public_tests(
             'stdout': result.stdout, 'stderr': result.stderr,
             'elapsed_seconds': round(time.perf_counter() - started, 3),
             'isolation': 'docker-network-none-read-only-root-only-workspace-mount'}
+
+
+def public_test_command() -> list[str]:
+    """Run task tests with the archived Transformers source tree importable."""
+    return [
+        'python', '-c',
+        "import runpy,sys;sys.path.insert(0,'/workspace/src');tests=runpy.run_path('/workspace/test_public.py');[fn() for name,fn in tests.items() if name.startswith('test_') and callable(fn)]",
+    ]
 
 
 def refresh_public_tests_after_edit(
