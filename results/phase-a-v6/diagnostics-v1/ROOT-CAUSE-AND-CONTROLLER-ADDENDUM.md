@@ -55,4 +55,6 @@ DOCKER_CONTEXT=colima python scripts/calibrate_public_tests_v6_v2.py \
 
 `colima-mount-calibration-v1/` records the exact image digest and image ID, implementation hashes, baseline and known-fix outputs, and its own SHA-256 manifest. `frozen-task-public-calibration-v1/` records all 8 baseline/fixed outcomes for the 4 already-consumed tasks and has a separate SHA-256 manifest. `run-2-trace-analysis.json` was generated only after verifying the immutable historical `SHA256SUMS`.
 
+After commit `e5e6d218a75903e10538411c5bc1cc330ad40ccf`, the Colima fixture was repeated as `colima-mount-calibration-v2/` on a clean tree; it records that commit and the final runner/controller hashes. The four-task baseline/fixed calibration was also repeated as `frozen-task-public-calibration-v2/`; all 8 outcomes again matched the expected fail/pass labels. Version 2 is the final-HEAD evidence; version 1 is retained as the initial diagnosis run.
+
 The Phase A v6 model result remains **NO-GO** (0/12 independent successes, no sampled reward variation); SFT/GRPO remain **NO-GO**. The execution fix and deterministic calibrations establish a corrected path, not new coding-agent capability. A fresh task cohort and protocol are still required before new model inference.

@@ -1,0 +1,49 @@
+{
+  "baseline_fail_known_fix_pass": [
+    {
+      "baseline_failed": true,
+      "known_fix_passed": true,
+      "task_id": "transformers-49315-watermark-repeat-v1"
+    },
+    {
+      "baseline_failed": true,
+      "known_fix_passed": true,
+      "task_id": "transformers-49515-rope-setter-v1"
+    },
+    {
+      "baseline_failed": true,
+      "known_fix_passed": true,
+      "task_id": "transformers-49731-generation-device-type-v1"
+    },
+    {
+      "baseline_failed": true,
+      "known_fix_passed": true,
+      "task_id": "transformers-49767-janus-background-v1"
+    }
+  ],
+  "container_image_id": "sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "final_head_mount_calibration_sha256": "95438ff15d48f67d7319e02989635fb4d4e9cb3fc5790c5681bb17bb5b2a52ea",
+  "grading_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "implementation_sha256": {
+    "scripts/calibrate_phase_a_v6_colima_mount_v1.py": "79e657ca3bcc3f35ae73df67e7fc0ace64f3c2111caf09f27b51ab0b7ef39c61",
+    "scripts/run_coding_agent_dev_study_v1.py": "18b5e507d124c464cd775511e99201c4913c3a347d2aab8467442e17677f3750",
+    "scripts/run_local_agent.py": "2dd673a0d100bb27987e9bc0cc832953527124063c42d4a1dbc79448ee2abc2c",
+    "src/vare/agent_structured_edit.py": "02b0df523b565b3e46c37592c21bc32729df39de219e199342582293b344aad6"
+  },
+  "model_inference_performed": false,
+  "pinned_task_calibration_manifest_sha256": "37e4b8a9be42a05a9d69e6b586b4ecedce6219b18dafaeff9e0af612f2315358",
+  "pinned_task_calibration_passed": true,
+  "pinned_task_calibration_protocol_id": "vare-transformers-fresh-development-v6-protocol-v2-2026-10-21",
+  "pinned_task_calibration_protocol_sha256": "46ce8ed88b073f2cadd8acf6718fd82137fcf0f367464230f77fd9788c4667f6",
+  "pinned_task_calibration_report_sha256": "f076cde8ff3e6845c14fea01e8585cb884df45175dae35499259ae04627fd86e",
+  "schema_version": 1,
+  "source_commit": "e5e6d218a75903e10538411c5bc1cc330ad40ccf",
+  "source_dirty_at_start": false,
+  "task_ids_debug_only": [
+    "transformers-49315-watermark-repeat-v1",
+    "transformers-49515-rope-setter-v1",
+    "transformers-49731-generation-device-type-v1",
+    "transformers-49767-janus-background-v1"
+  ],
+  "working_tree_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}
