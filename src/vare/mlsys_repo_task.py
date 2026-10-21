@@ -65,12 +65,13 @@ LOCKED_IMPLEMENTATION_FILES = frozenset(
         "scripts/red_team_mlxlm_1904.py",
         "src/vare/isolated_candidate.py",
         "src/vare/container_isolation.py",
+        "tests/test_isolated_candidate.py",
         "tests/test_mlsys_repo_task.py",
     }
 )
 CALIBRATION_INPUT_FILES = LOCKED_IMPLEMENTATION_FILES | frozenset(
     {
-        "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v8.json",
+        "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v9.json",
         "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/task.md",
     }
 )

@@ -555,6 +555,16 @@ def _stage_subject(subject: Path, root: Path) -> Path:
     return destination
 
 
+def _candidate_temporary_directory(prefix: str) -> tempfile.TemporaryDirectory[str]:
+    """Stage Docker bind mounts below a path shared with macOS Docker VMs."""
+    if sys.platform == "darwin":
+        root = Path.home() / ".cache" / "vare-isolated-candidate"
+        root.mkdir(parents=True, exist_ok=True, mode=0o700)
+        root = root.resolve(strict=True)
+        return tempfile.TemporaryDirectory(prefix=prefix, dir=root)
+    return tempfile.TemporaryDirectory(prefix=prefix)
+
+
 def _copy_tree(source: Path, destination: Path) -> None:
     destination.mkdir(mode=0o755)
     for entry in sorted(source.iterdir(), key=lambda item: item.name):
@@ -998,8 +1008,11 @@ def _one_call(
     source = Path(subject)
     if not (source / f"{module}.py").is_file():
         raise CandidateHarnessError("subject module is missing")
-    with tempfile.TemporaryDirectory(prefix="vare-call-") as folder:
-        staged = _stage_subject(source, Path(folder))
+    with _candidate_temporary_directory(prefix="vare-call-") as folder:
+        # macOS exposes TMPDIR through /var -> /private/var. Docker rejects
+        # bind mounts with a symlinked path, so canonicalize the host path
+        # before staging the candidate.
+        staged = _stage_subject(source, Path(folder).resolve(strict=True))
         return _invoke(
             staged, module, function, args, kwargs, timeout_s, image, runner,
             tuple_paths, memory_mb, discard_candidate_stdout, task_deadline,
@@ -1046,8 +1059,10 @@ def grade_calls(
             _prepare_call(call.module, call.function, call.args, call.kwargs or {})
             for call in calls
         ]
-        with tempfile.TemporaryDirectory(prefix="vare-call-session-") as folder:
-            staged = _stage_subject(Path(subject), Path(folder))
+        with _candidate_temporary_directory(prefix="vare-call-session-") as folder:
+            staged = _stage_subject(
+                Path(subject), Path(folder).resolve(strict=True)
+            )
             invoked = _invoke_session(
                 staged, first.module, first.function,
                 [(item[2], item[3], call.tuple_paths) for item, call in zip(prepared, calls, strict=True)],
