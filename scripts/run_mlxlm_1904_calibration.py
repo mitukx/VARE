@@ -26,6 +26,7 @@ from vare.mlsys_repo_task import (
     verify_baseline,
     verify_protocol_implementation,
     verify_red_team_evidence,
+    verify_protocol_image,
     RepositoryTaskError,
 )
 
@@ -50,7 +51,7 @@ def main() -> int:
     patch = Path(__file__).resolve().parents[1] / (
         "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/known_fix.patch"
     )
-    protocol = patch.parent / "protocol-v5.json"
+    protocol = patch.parent / "protocol-v6.json"
     task = patch.parent / "task.md"
     started = time.monotonic()
     implementation_commit = subprocess.run(
@@ -69,8 +70,12 @@ def main() -> int:
     ).stdout.strip()
     output.parent.mkdir(parents=True, exist_ok=True)
     protocol_data = json.loads(protocol.read_text(encoding="utf-8"))
-    if protocol_data.get("protocol_id") != "mlsys-repository-task-mlxlm-1904-v5":
-        raise SystemExit("calibration requires the v5 protocol")
+    if protocol_data.get("protocol_id") != "mlsys-repository-task-mlxlm-1904-v6":
+        raise SystemExit("calibration requires the v6 protocol")
+    try:
+        verify_protocol_image(protocol_data, args.image)
+    except RepositoryTaskError as exc:
+        raise SystemExit(str(exc)) from exc
     if protocol_data["source"]["baseline_server_sha256"] != BASELINE_SERVER_SHA256:
         raise SystemExit("protocol baseline source hash disagrees with the grader")
     try:

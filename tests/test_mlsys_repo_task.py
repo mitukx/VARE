@@ -273,3 +273,10 @@ def test_protocol_implementation_lock_fails_closed_on_missing_entries(
         repo_task.verify_protocol_implementation(
             {"implementation_sha256": locked}, tmp_path
         )
+
+
+def test_protocol_image_must_match_frozen_runtime():
+    protocol = {"runtime": {"image": "python@sha256:" + "a" * 64}}
+    repo_task.verify_protocol_image(protocol, "python@sha256:" + "a" * 64)
+    with pytest.raises(RepositoryTaskError, match="frozen protocol image"):
+        repo_task.verify_protocol_image(protocol, "python@sha256:" + "b" * 64)

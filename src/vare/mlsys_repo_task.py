@@ -63,6 +63,8 @@ LOCKED_IMPLEMENTATION_FILES = frozenset(
         "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/known_fix.patch",
         "scripts/run_mlxlm_1904_calibration.py",
         "scripts/red_team_mlxlm_1904.py",
+        "src/vare/isolated_candidate.py",
+        "src/vare/container_isolation.py",
         "tests/test_mlsys_repo_task.py",
     }
 )
@@ -168,6 +170,15 @@ def verify_protocol_implementation(
             )
         verified[relative] = actual
     return verified
+
+
+def verify_protocol_image(protocol: dict[str, Any], image: str) -> None:
+    """Require the runtime image to match the frozen calibration protocol."""
+    runtime = protocol.get("runtime")
+    if not isinstance(runtime, dict) or runtime.get("image") != image:
+        raise RepositoryTaskError(
+            "requested image differs from the frozen protocol image"
+        )
 
 
 def workspace_manifest_sha256(root: Path) -> str:
