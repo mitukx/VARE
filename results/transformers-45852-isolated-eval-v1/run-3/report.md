@@ -1,0 +1,11 @@
+# Transformers #45852 isolated task calibration run 3
+
+- Protocol: `transformers-45852-isolated-eval-v1`; frozen before this run. Implementation revision `e70d1c827ab161ac2d306efcbbb123cc1888955f`; tracked worktree clean at start.
+- Source revisions: baseline `381032b7e0a8896ae48f90dbe83eae3bf7630953`; known fix `909ece888ed4b55402dc8acbb9c13ddf8ff977b5`. The baseline target hash was `51a96b8d23e365014cfcd44049fda9a40a41e76ab5ba80a7b687138d3523f00a` and the fixed target hash was `5d7dfd5373e0a4b63ce0869f05f5559b01111e38bf68dd02b166ca551ec438b5`. The derived known-fix patch SHA-256 was `88a405a1f63a20c6d6cc916de546b5a29459734c1239c7476b3a7420c4f2d4b3`.
+- Result: baseline failed (Torch square mask and Torch asymmetric mask; NumPy square control passed). The known fix passed all three cases. This confirms the pinned narrow task semantics, not an agent-generated solution.
+- Isolation: candidate saw only the public `src/transformers` package and task text. No Git history, tests, grader files, or expected values were mounted. Candidate ran as UID 65534 in a read-only, network-disabled Linux ARM64 Docker container with a 1.5 GiB memory cap, 1 CPU, 64 process cap, and 30 s case timeout.
+- Red-team suite: passed 7/7 recorded checks: grader/Git/environment/network isolation, stdout forgery rejection, subprocess write denial, timeout, memory cap, diff traversal, hidden-test injection, and symlink rejection. Timeout and memory adversaries were terminated without a result; stdout forgery was rejected as wrong output.
+- Timing: each candidate case took 2.43–2.97 s; full baseline/fix plus red-team calibration took 46.82 s. Peak memory was not measured.
+- Two earlier attempts failed before candidate execution because a shared clone of the local partial Git clone lacked promisor objects. Both failures are retained under run-1 and run-2. The successful runner now fetches the exact revisions and sparse-checks out only the allowlisted package.
+- Limitations: Linux CPU test execution was selected because this task's upstream selected test uses Torch/NumPy CPU tensor semantics and does not depend on MLX/Metal. This is not evidence of MLX/Metal behavior, full upstream suite equivalence, an LLM coding-agent rollout, or policy improvement.
+- Calibration decision: PASS. Model feasibility remains unmeasured.
