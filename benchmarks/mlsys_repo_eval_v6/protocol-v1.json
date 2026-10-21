@@ -1,0 +1,83 @@
+{
+  "container_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "limitations": [
+    "This cohort is Development-only and is not an independent held-out benchmark.",
+    "All tasks are from Transformers; task-family diversity is within one upstream repository.",
+    "PR dates do not establish absence from any model training corpus.",
+    "The fixed image provides CPU execution; no Transformers task GPU performance claim is made."
+  ],
+  "limits": {
+    "cpus": 2,
+    "memory_mb": 1900,
+    "pids": 32,
+    "timeout_s": 120
+  },
+  "prompt_policy": "ordinary issue descriptions; no reference patches or hidden test values",
+  "protocol_id": "vare-transformers-fresh-development-v6-2026-10-21",
+  "seeds": {
+    "model_probe": 0,
+    "watermark": 0
+  },
+  "split": {
+    "development": [
+      "transformers-49315-watermark-repeat-v1",
+      "transformers-49515-rope-setter-v1",
+      "transformers-49731-generation-device-type-v1",
+      "transformers-49767-janus-background-v1"
+    ],
+    "held_out": [],
+    "train": []
+  },
+  "task_membership_frozen": true,
+  "task_pack": "mlsys_repo_eval_v6",
+  "tasks": {
+    "transformers-49315-watermark-repeat-v1": {
+      "directory": "transformers-49315-watermark-repeat-v1",
+      "fixed_revision": "ec56e0e1383198065dd3a838629323c9fe228cf4",
+      "source_revision": "26c0a7fd940b7d14381a39de73f6fbaaa570cf4f",
+      "target_path": "src/transformers/generation/watermarking.py",
+      "task_artifact_sha256": {
+        "baseline_manifest_sha256": "46c6c400758d27d9f5525947dd90db8946b339a7ef6cba8f7b88b42b241afce0",
+        "public_test_sha256": "64949c1fed7bbd2efb2f210f0f433c1c692ad794469b8e9c558a26cc7d207689",
+        "task_json_sha256": "b9711bf5dd6e886197e655728ff8c255c3869f9009007a443957f12d2e7c7048"
+      },
+      "worker_function": "watermark_repeated_ngrams"
+    },
+    "transformers-49515-rope-setter-v1": {
+      "directory": "transformers-49515-rope-setter-v1",
+      "fixed_revision": "93d5be6b2f7b479ea5efa5a35989ef805365d6d9",
+      "source_revision": "1573af48b1c5cd8bfb0cfba4dc1ecf6e882d0348",
+      "target_path": "src/transformers/configuration_utils.py",
+      "task_artifact_sha256": {
+        "baseline_manifest_sha256": "8f5aa433876a34480e91751c5ca36279a6d2520c52b035c0c016b765caa454b6",
+        "public_test_sha256": "824040be10623adb683d3a8c1268a907f5746e317e1520ec1c469cbb742d00d1",
+        "task_json_sha256": "27acf96eab277326008a46d48599c2a2b94207ea0a9be46c7d4d52aa64294057"
+      },
+      "worker_function": "rope_legacy_setter"
+    },
+    "transformers-49731-generation-device-type-v1": {
+      "directory": "transformers-49731-generation-device-type-v1",
+      "fixed_revision": "d806b8c84fea7247bc2a066254e72d4a72583430",
+      "source_revision": "01269bc99768ad45f8aeaeb701e1315371e25239",
+      "target_path": "src/transformers/pytorch_utils.py",
+      "task_artifact_sha256": {
+        "baseline_manifest_sha256": "ffc625b73056a120763993ab803da234924c5e2634d4ada31eea9c029fa7745c",
+        "public_test_sha256": "34384c6ff809cf834eaf8489cecdf08d4b1bed029041f0f8dc2a16624a64135d",
+        "task_json_sha256": "5b668257a48a9de32e8020ed37c1799bb6bc99f1e3d73530b7c631561daea3cd"
+      },
+      "worker_function": "move_to_device_preserves_output_type"
+    },
+    "transformers-49767-janus-background-v1": {
+      "directory": "transformers-49767-janus-background-v1",
+      "fixed_revision": "a3c7fcf3608e2a045d8ae1df6947de8c4ae60b3f",
+      "source_revision": "849fa754e2dd24f5dd49d05f61ff40b1abc2fd36",
+      "target_path": "src/transformers/models/janus/image_processing_janus.py",
+      "task_artifact_sha256": {
+        "baseline_manifest_sha256": "700f81a863c18752adffa730ee895b7727a6ea0792bed369a03e1998b4a309f3",
+        "public_test_sha256": "00faa0abc0e8d9cce647376efe84c7b618fbc5bda5ec29c1a172c98b08cdc956",
+        "task_json_sha256": "4254386f5ccc37e72285253874166e8916973e90e43ec567a80b165af3c3d3e0"
+      },
+      "worker_function": "janus_background_color"
+    }
+  }
+}
