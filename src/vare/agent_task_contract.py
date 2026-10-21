@@ -10,6 +10,7 @@ import hashlib
 import json
 from dataclasses import dataclass
 from pathlib import Path
+import subprocess
 
 
 def _sha256(path: Path) -> str:
@@ -37,6 +38,8 @@ class AgentTaskContract:
     calibration_revision: str | None
     split: str | None
     input_hashes: dict[str, str]
+    source_hashes: dict[str, str]
+    snapshot_sha256: str | None
 
     @property
     def diff_revision(self) -> str:
@@ -62,6 +65,52 @@ def assert_split_member(contract: AgentTaskContract, split: dict, split_name: st
         raise ValueError(f"task is outside the frozen {split_name} split")
 
 
+def verify_agent_workspace(workspace: Path, contract: AgentTaskContract) -> dict[str, str]:
+    """Verify a task checkout identity and any frozen per-file source hashes."""
+    root = Path(workspace)
+    if root.is_symlink() or not root.is_dir():
+        raise ValueError("agent workspace is missing or unsafe")
+    has_git = (root / ".git").exists()
+    if contract.base_revision and has_git:
+        try:
+            revision = subprocess.run(
+                ["git", "-C", str(root), "rev-parse", "HEAD"],
+                check=True, capture_output=True, text=True, timeout=10,
+            ).stdout.strip()
+        except (OSError, subprocess.SubprocessError) as exc:
+            raise ValueError("agent workspace is not a readable Git checkout") from exc
+        if revision != contract.base_revision:
+            raise ValueError("agent workspace is not at the pinned baseline revision")
+    elif contract.base_revision and not contract.snapshot_sha256:
+        raise ValueError("archive workspace requires a pinned full-snapshot SHA-256")
+    actual: dict[str, str] = {}
+    for name in contract.allowed_files:
+        path = root / name
+        if path.is_symlink() or not path.is_file():
+            raise ValueError(f"allowlisted task file is missing or unsafe: {name}")
+        actual[name] = _sha256(path)
+    if contract.source_hashes:
+        if set(contract.source_hashes) != set(contract.allowed_files):
+            raise ValueError("pinned source hash manifest must cover exactly the task allowlist")
+        if actual != contract.source_hashes:
+            raise ValueError("agent workspace source SHA-256 differs from the pinned baseline")
+    if contract.snapshot_sha256 and workspace_snapshot_sha256(root) != contract.snapshot_sha256:
+        raise ValueError("agent workspace snapshot SHA-256 differs from the pinned baseline")
+    return actual
+
+
+def workspace_snapshot_sha256(root: Path) -> str:
+    """Hash all regular workspace files without relying on Git history."""
+    entries: list[bytes] = []
+    for path in sorted(Path(root).rglob("*")):
+        if path.is_symlink():
+            raise ValueError("agent workspace snapshot contains a symlink")
+        if path.is_file():
+            name = path.relative_to(root).as_posix()
+            entries.extend((name.encode("utf-8"), b"\0", bytes.fromhex(_sha256(path)), b"\n"))
+    return hashlib.sha256(b"".join(entries)).hexdigest()
+
+
 def load_agent_task(task_root: Path) -> AgentTaskContract:
     root = Path(task_root)
     task_path = root / "task.json"
@@ -84,6 +133,21 @@ def load_agent_task(task_root: Path) -> AgentTaskContract:
         files = [_safe_relative(name) for name in source["files"]]
         if not files:
             raise ValueError("historical task has no source files")
+        source_hashes = source.get("file_sha256", {})
+        if not isinstance(source_hashes, dict) or any(
+            name not in files or not isinstance(digest, str) or len(digest) != 64
+            for name, digest in source_hashes.items()
+        ):
+            raise ValueError("historical task source.file_sha256 is malformed")
+        snapshot_sha256 = source.get("snapshot_sha256")
+        if snapshot_sha256 is not None and (
+            not isinstance(snapshot_sha256, str) or len(snapshot_sha256) != 64
+        ):
+            raise ValueError("historical task source.snapshot_sha256 is malformed")
+        metadata = task.get("metadata", {})
+        split = metadata.get("split") if isinstance(metadata, dict) else None
+        if split is not None and split not in {"train", "development", "heldout"}:
+            raise ValueError("task split must be train, development, or heldout")
         return AgentTaskContract(
             task_id=str(task["task_id"]),
             schema="historical",
@@ -91,8 +155,10 @@ def load_agent_task(task_root: Path) -> AgentTaskContract:
             prompt_text=brief.read_text(encoding="utf-8"),
             base_revision=source.get("base_revision"),
             calibration_revision=source.get("calibration_revision"),
-            split=None,
+            split=split,
             input_hashes=hashes,
+            source_hashes=dict(source_hashes),
+            snapshot_sha256=snapshot_sha256,
         )
     metadata = task.get("metadata")
     if not isinstance(metadata, dict) or "editable_files" not in metadata:
@@ -123,4 +189,6 @@ def load_agent_task(task_root: Path) -> AgentTaskContract:
         calibration_revision=source.get("calibration_revision"),
         split=split,
         input_hashes=hashes,
+        source_hashes={},
+        snapshot_sha256=None,
     )

@@ -1,0 +1,73 @@
+{
+  "protocol_id": "vare-coding-agent-phase-a-structured-v2",
+  "runs": [
+    {
+      "arm": "baseline",
+      "container_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+      "elapsed_seconds": 3.874,
+      "exit_code": 1,
+      "memory_mb": 1536,
+      "network": "none",
+      "passed": false,
+      "public_test_sha256": "db7b437ad523862fa45a6292c24d858cf993bf76b986fbfa1b8eadb11ac72451",
+      "read_only_workspace": true,
+      "source_revision": "07338b6c74a578868368e6e549dea83414e4b8cb",
+      "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 26, in <module>\n    main()\n  File \"/workspace/test_public.py\", line 22, in main\n    raise AssertionError({\"missing_override\": sorted(missing_override), \"wrong_mapping\": wrong_mapping})\nAssertionError: {'missing_override': ['qwen3_5_moe_text', 'qwen4_exp'], 'wrong_mapping': {'qwen3_5_moe_text': None}}\n",
+      "stdout": "",
+      "target_sha256": "831ae31ec8ab6dd6c5224ea42d0c508d515a8314005064eb594a715f835a6f61",
+      "task_id": "transformers-49116-tokenizer-routing-v2",
+      "timeout_seconds": 45
+    },
+    {
+      "arm": "known_fix",
+      "container_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+      "elapsed_seconds": 3.764,
+      "exit_code": 0,
+      "memory_mb": 1536,
+      "network": "none",
+      "passed": true,
+      "public_test_sha256": "db7b437ad523862fa45a6292c24d858cf993bf76b986fbfa1b8eadb11ac72451",
+      "read_only_workspace": true,
+      "source_revision": "07338b6c74a578868368e6e549dea83414e4b8cb",
+      "stderr": "",
+      "stdout": "",
+      "target_sha256": "89d301092f223af0c17fd813451dfd93f344282e51a151cf00604d7647036957",
+      "task_id": "transformers-49116-tokenizer-routing-v2",
+      "timeout_seconds": 45
+    },
+    {
+      "arm": "baseline",
+      "container_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+      "elapsed_seconds": 4.066,
+      "exit_code": 1,
+      "memory_mb": 1536,
+      "network": "none",
+      "passed": false,
+      "public_test_sha256": "e255203bdd94ac1a94cb516f7733f8405a7c3621423394f3ad26b058d90b2332",
+      "read_only_workspace": true,
+      "source_revision": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+      "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 81, in <module>\n    main()\n  File \"/workspace/test_public.py\", line 77, in main\n    raise AssertionError(details)\nAssertionError: Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 63, in test_repeat_registration\n    module.register_fusion_patches(\n  File \"/workspace/src/transformers/fusion_mapping.py\", line 270, in register_fusion_patches\n    _register_module_fusion(cls, config, fusion_name, _FUSION_REGISTRY[fusion_name])\n  File \"/workspace/src/transformers/fusion_mapping.py\", line 224, in _register_module_fusion\n    raise ValueError(\nValueError: Fusion patch_embeddings for model type vare_public_fusion_idempotence conflicts with an existing conversion mapping for source patterns ('patch_embed\\\\.proj\\\\.weight$',).\n\n",
+      "stdout": "",
+      "target_sha256": "9a05ab8ccc0ab4756526bcb76c05099a8ec3f1b634c617c620305d1a81cc2f0c",
+      "task_id": "transformers-49412-fusion-registration-idempotence-v2",
+      "timeout_seconds": 45
+    },
+    {
+      "arm": "known_fix",
+      "container_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+      "elapsed_seconds": 4.047,
+      "exit_code": 0,
+      "memory_mb": 1536,
+      "network": "none",
+      "passed": true,
+      "public_test_sha256": "e255203bdd94ac1a94cb516f7733f8405a7c3621423394f3ad26b058d90b2332",
+      "read_only_workspace": true,
+      "source_revision": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+      "stderr": "",
+      "stdout": "",
+      "target_sha256": "af053f2c2eaae2c744778df465002db73e99054dc059e82e394f43c1dca0b608",
+      "task_id": "transformers-49412-fusion-registration-idempotence-v2",
+      "timeout_seconds": 45
+    }
+  ]
+}

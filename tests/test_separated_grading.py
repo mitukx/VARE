@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import importlib.util
 import json
 import os
@@ -12,7 +13,7 @@ from pathlib import Path
 
 import pytest
 
-from vare.agent_task_contract import assert_train_only, load_agent_task
+from vare.agent_task_contract import assert_train_only, load_agent_task, verify_agent_workspace
 from vare.container_isolation import (
     DockerIsolationRunner,
     IsolationError,
@@ -897,6 +898,34 @@ def test_historical_task_contract_still_loads(tmp_path):
     assert contract.allowed_files == ("solve.py",)
     assert contract.prompt_text.startswith("Repair")
     assert "grader.py" in contract.input_hashes
+
+
+def test_historical_task_pinned_workspace_checks_revision_and_source_hashes(tmp_path):
+    workspace = tmp_path / "workspace"
+    workspace.mkdir()
+    (workspace / "solve.py").write_text("def solve():\n    return 1\n", encoding="utf-8")
+    subprocess.run(["git", "init", "-q"], cwd=workspace, check=True)
+    subprocess.run(["git", "add", "solve.py"], cwd=workspace, check=True)
+    subprocess.run(["git", "-c", "user.name=VARE", "-c", "user.email=vare@example.invalid",
+                    "commit", "-qm", "baseline"], cwd=workspace, check=True)
+    revision = subprocess.run(["git", "rev-parse", "HEAD"], cwd=workspace, check=True,
+                              capture_output=True, text=True).stdout.strip()
+    source_hash = hashlib.sha256((workspace / "solve.py").read_bytes()).hexdigest()
+    task = tmp_path / "task"
+    (task / "evaluator").mkdir(parents=True)
+    (task / "TASK.md").write_text("Repair solve.py\n", encoding="utf-8")
+    (task / "protocol.lock.json").write_text("{}\n", encoding="utf-8")
+    (task / "evaluator" / "grade.py").write_text("pass\n", encoding="utf-8")
+    (task / "task.json").write_text(json.dumps({
+        "task_id": "pinned-solve",
+        "source": {"files": ["solve.py"], "base_revision": revision,
+                   "file_sha256": {"solve.py": source_hash}},
+    }), encoding="utf-8")
+    contract = load_agent_task(task)
+    assert verify_agent_workspace(workspace, contract) == {"solve.py": source_hash}
+    (workspace / "solve.py").write_text("def solve():\n    return 2\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="SHA-256"):
+        verify_agent_workspace(workspace, contract)
 
 
 def test_local_agent_parses_engineering_task_without_loading_weights(tmp_path, monkeypatch, capsys):

@@ -1,4 +1,9 @@
-from scripts.run_local_agent import normalize_tool_call_format, refresh_public_tests_after_edit
+from scripts.run_local_agent import (
+    normalize_tool_call_format,
+    refresh_public_tests_after_edit,
+    tools_for,
+)
+from vare.agent_edit_format import ParseFailure, parse_submission
 from scripts.run_separated_coding_eval import (
     _attempted_task_run_count,
     _planned_task_run_count,
@@ -54,6 +59,21 @@ def test_preserves_native_tool_call_format():
     assert normalize_tool_call_format(raw, {"finish"}) == (raw, False)
 
 
+def test_structured_tools_use_short_hash_checked_edits_and_vare_diff():
+    names = {tool["function"]["name"] for tool in tools_for("structured", public_tests=True)}
+    assert {"read_file", "search_text", "replace_text", "insert_text", "run_public_tests", "inspect_diff", "finish"} <= names
+    assert "apply_patch" not in names
+    assert "write_file" not in names
+    read_file = next(tool for tool in tools_for("structured") if tool["function"]["name"] == "read_file")
+    assert read_file["function"]["parameters"]["properties"]["start_line"]["type"] == "integer"
+
+
+def test_structured_mode_does_not_accept_free_form_patch_recovery():
+    result = parse_submission("--- a/file.py\n+++ b/file.py\n", edit_format="structured")
+    assert isinstance(result, ParseFailure)
+    assert result.reason == "no_edit"
+
+
 def test_verified_success_requires_public_test_and_independent_hidden_grade():
     agent = {
         "source_hashes_before": {"x.py": "before"},
@@ -68,18 +88,18 @@ def test_verified_success_requires_public_test_and_independent_hidden_grade():
 def test_applied_recovered_edit_requires_a_fresh_public_test(monkeypatch, tmp_path):
     calls = []
 
-    def fail_fresh_test(workspace, image, test_hash):
-        calls.append((workspace, image, test_hash))
+    def fail_fresh_test(workspace, image, test_hash, memory_mb):
+        calls.append((workspace, image, test_hash, memory_mb))
         return {"passed": False, "returncode": 1}
 
     monkeypatch.setattr("scripts.run_local_agent.run_public_tests", fail_fresh_test)
     stale_result = {"passed": True, "returncode": 0}
     refreshed = refresh_public_tests_after_edit(
-        {"applied": True}, tmp_path, "pinned-image", "test-hash",
+        {"applied": True}, tmp_path, "pinned-image", "test-hash", 1536,
     )
     assert refreshed == {"passed": False, "returncode": 1}
     assert refreshed is not stale_result
-    assert calls == [(tmp_path, "pinned-image", "test-hash")]
+    assert calls == [(tmp_path, "pinned-image", "test-hash", 1536)]
 
 
 def test_attempted_task_run_count_includes_every_arm_and_secondary_model():

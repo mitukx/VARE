@@ -1,0 +1,39 @@
+{
+  "grader": {
+    "adapter": "benchmarks/mlsys_repo_eval_v4/transformers_49412_fusion_idempotence/grader_adapter.py",
+    "protocol_lock": "protocol.lock.json",
+    "visibility": "hidden"
+  },
+  "limits": {
+    "cpus": 1,
+    "memory_mb": 1536,
+    "pids": 32,
+    "wall_time_s": 45
+  },
+  "metadata": {
+    "license": "Apache-2.0",
+    "pack": "mlsys_repo_eval_v4",
+    "reward_kind": "hidden-correctness",
+    "split": "development",
+    "task_type": "correctness"
+  },
+  "prompt": "Make repeated registration of the same fusion conversion configuration idempotent while retaining rejection of incompatible conflicts. Keep the change in src/transformers/fusion_mapping.py. The pinned source and public smoke test are available locally. Do not use network access, model checkpoints, or Git history.",
+  "schema": "historical",
+  "source": {
+    "base_revision": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+    "file_sha256": {
+      "src/transformers/fusion_mapping.py": "9a05ab8ccc0ab4756526bcb76c05099a8ec3f1b634c617c620305d1a81cc2f0c",
+      "test_public.py": "e255203bdd94ac1a94cb516f7733f8405a7c3621423394f3ad26b058d90b2332"
+    },
+    "files": [
+      "src/transformers/fusion_mapping.py",
+      "test_public.py"
+    ],
+    "fixed_revision": "527725cace0b038a0ac8ab738e921f118bb2668a",
+    "git_history_exported": false,
+    "repository": "huggingface/transformers",
+    "snapshot_sha256": "bc8436187e5e8013ef85e3ded88367febd925c7e0709b8917a2032489683c475",
+    "source_revision": "cb33194ad6152bd9fad6305378d92db385dd7b32"
+  },
+  "task_id": "transformers-49412-fusion-registration-idempotence-v2"
+}

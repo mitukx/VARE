@@ -1,0 +1,39 @@
+{
+  "grader": {
+    "adapter": "benchmarks/mlsys_repo_eval_v4/transformers_49116_tokenizer_routing/grader_adapter.py",
+    "protocol_lock": "protocol.lock.json",
+    "visibility": "hidden"
+  },
+  "limits": {
+    "cpus": 1,
+    "memory_mb": 1536,
+    "pids": 32,
+    "wall_time_s": 45
+  },
+  "metadata": {
+    "license": "Apache-2.0",
+    "pack": "mlsys_repo_eval_v4",
+    "reward_kind": "hidden-correctness",
+    "split": "development",
+    "task_type": "correctness"
+  },
+  "prompt": "Fix automatic Qwen tokenizer routing for the affected Qwen3.5 text and MoE model configuration variants. Keep the change in src/transformers/models/auto/tokenization_auto.py and preserve routing for unrelated models. The pinned source and public smoke test are available locally. Do not use network access, model checkpoints, or Git history.",
+  "schema": "historical",
+  "source": {
+    "base_revision": "07338b6c74a578868368e6e549dea83414e4b8cb",
+    "file_sha256": {
+      "src/transformers/models/auto/tokenization_auto.py": "831ae31ec8ab6dd6c5224ea42d0c508d515a8314005064eb594a715f835a6f61",
+      "test_public.py": "db7b437ad523862fa45a6292c24d858cf993bf76b986fbfa1b8eadb11ac72451"
+    },
+    "files": [
+      "src/transformers/models/auto/tokenization_auto.py",
+      "test_public.py"
+    ],
+    "fixed_revision": "462bf5a50f6434e9610513b34537a892967ccd84",
+    "git_history_exported": false,
+    "repository": "huggingface/transformers",
+    "snapshot_sha256": "f04c92f68dca4ba2126481b65764d37dde449a174da483a334d73f77b1369896",
+    "source_revision": "07338b6c74a578868368e6e549dea83414e4b8cb"
+  },
+  "task_id": "transformers-49116-tokenizer-routing-v2"
+}

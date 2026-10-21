@@ -1,0 +1,200 @@
+{
+  "agent": {
+    "context_tokens_max": 8192,
+    "edit_format": "structured",
+    "editable_files": "exact target file per task only",
+    "max_no_tool_retries": 1,
+    "public_test": {
+      "cpus": 1,
+      "memory_mb": 1536,
+      "network": "none",
+      "pids_limit": 32,
+      "readonly_root": true,
+      "timeout_seconds": 45,
+      "workspace_readonly": true
+    },
+    "public_test_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+    "tokens_per_turn_max": 1536,
+    "tools": [
+      "list_files",
+      "read_file",
+      "search_text",
+      "replace_text",
+      "insert_text",
+      "inspect_diff",
+      "run_public_tests",
+      "finish"
+    ],
+    "total_generated_tokens_max": 6144,
+    "turns_max": 8,
+    "wall_seconds_per_rollout_max": 900
+  },
+  "analysis_rules": {
+    "SFT_GRPO": "not authorized by this protocol; all trials are Development feasibility only.",
+    "binary_reward": "1 only when source was changed, fresh public test passed, candidate diff affects only the allowlisted target, and parent-side hidden grade passed; otherwise 0.",
+    "pass_at_3": "1 if any of the three preregistered attempts for that task has reward 1, else 0.",
+    "reward_variance": "sample variance of the three binary rewards; GRPO readiness is not inferred from two Development groups.",
+    "v2_failure_interpretation": "Tool-call schema actions were selected, but calls were truncated at the fixed 512-token response ceiling; classify as format truncation, not semantic failure. V3 changes the ceiling and instruction in a new protocol."
+  },
+  "created_utc": "2026-10-21",
+  "go_criteria": {
+    "must_complete_all_six_rollouts_without_resource_stop": true,
+    "must_have_at_least_one_verified_success_on_each_task": true,
+    "must_have_nonconstant_binary_reward_in_at_least_one_task_group": true
+  },
+  "instructions": {
+    "transformers-49116-tokenizer-routing-v2": "Make a small additive change. Do not replace the whole tokenizer registry. Locate the Qwen tokenizer mapping rows and add only the missing model variants; update the affected Hub override set with a short structured edit. Then run the public smoke test and inspect the diff.",
+    "transformers-49412-fusion-registration-idempotence-v2": "Keep the change local to the repeated-registration handling in _register_module_fusion. Do not replace the function. Make the smallest structured edit that accepts an identical repeat while preserving rejection of a conflicting mapping, then run the public smoke test and inspect the diff."
+  },
+  "limitations": [
+    "Only two new Development tasks; this is not a held-out capability estimate.",
+    "Training-data contamination is unknown; do not claim these tasks are pretraining-unseen.",
+    "The public smoke tests are visible. Hidden expected values stay in the parent process.",
+    "No SFT, GRPO, or optimizer update is part of this experiment."
+  ],
+  "model": {
+    "backend": "MLX/Metal",
+    "mlx": "0.32.2",
+    "mlx_lm": "0.32.2",
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "snapshot_files": {
+      ".gitattributes": {
+        "bytes": 1570,
+        "sha256": "34448b82c17d60fec9b65b1f093c115ddbaadc04beb1b0140b6bfed2e012a930"
+      },
+      "README.md": {
+        "bytes": 969,
+        "sha256": "7b17ce562d7ea121c86d2ffdf660eed3726ac5b52cacfa9f1de11a65969f5657"
+      },
+      "added_tokens.json": {
+        "bytes": 707,
+        "sha256": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680"
+      },
+      "chat_template.jinja": {
+        "bytes": 4040,
+        "sha256": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541"
+      },
+      "config.json": {
+        "bytes": 938,
+        "sha256": "574349e5a343236546fda55e4744a76e181f534182d7dc60ff1bad7e7a502849"
+      },
+      "generation_config.json": {
+        "bytes": 238,
+        "sha256": "835fffe355c9438e7a25be099b3fccaa98350b83451f9fd2d99512e74f1ade48"
+      },
+      "merges.txt": {
+        "bytes": 1671853,
+        "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5"
+      },
+      "model.safetensors": {
+        "bytes": 2263022417,
+        "sha256": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f"
+      },
+      "model.safetensors.index.json": {
+        "bytes": 63964,
+        "sha256": "388d811b8b7c2608dd04cce1bcb04a8bf715d19b42790894e6d3427ff429a777"
+      },
+      "special_tokens_map.json": {
+        "bytes": 613,
+        "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+      },
+      "tokenizer.json": {
+        "bytes": 11422654,
+        "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+      },
+      "tokenizer_config.json": {
+        "bytes": 5440,
+        "sha256": "4397cc477eb6d79715ccd2000accd6b3531928f30029665832fa1b255f24d2b9"
+      },
+      "vocab.json": {
+        "bytes": 2776833,
+        "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+      }
+    }
+  },
+  "objective": "Measure whether a real local coding model can produce, apply, publicly smoke-test, and independently pass patches on two previously unused Transformers Development tasks using hash-checked structured edit actions.",
+  "primary_metrics": [
+    "per-task verified pass@3",
+    "greedy verified success",
+    "reward variance per three-rollout task group"
+  ],
+  "protocol_id": "vare-coding-agent-phase-a-structured-v3",
+  "revision_reason": "All six v2 rollouts read source successfully but generated oversized replace_text calls that were truncated at 512 tokens before the closing tool-call tag. V3 raises the per-turn ceiling and requires small local edits without replacing whole registry/function blocks; it keeps the same Development tasks, model, grader, and success criteria.",
+  "sampling": {
+    "greedy": {
+      "do_sample": false,
+      "temperature": 0.0,
+      "top_k": 0,
+      "top_p": 0.0
+    },
+    "rollouts_per_task": 3,
+    "sampled": {
+      "do_sample": true,
+      "temperature": 0.7,
+      "top_k": 20,
+      "top_p": 0.9
+    },
+    "trials": {
+      "transformers-49116-tokenizer-routing-v2": [
+        {
+          "arm": "greedy",
+          "seed": 301
+        },
+        {
+          "arm": "sampled",
+          "seed": 302
+        },
+        {
+          "arm": "sampled",
+          "seed": 303
+        }
+      ],
+      "transformers-49412-fusion-registration-idempotence-v2": [
+        {
+          "arm": "greedy",
+          "seed": 401
+        },
+        {
+          "arm": "sampled",
+          "seed": 402
+        },
+        {
+          "arm": "sampled",
+          "seed": 403
+        }
+      ]
+    }
+  },
+  "scope": {
+    "development_only": true,
+    "heldout_access": false,
+    "reused_task_ids": [],
+    "tasks": [
+      "transformers-49116-tokenizer-routing-v2",
+      "transformers-49412-fusion-registration-idempotence-v2"
+    ],
+    "training_updates": false
+  },
+  "secondary_metrics": [
+    "distinct patch hashes",
+    "tool/format failure rate",
+    "public-test success",
+    "hidden-grader success",
+    "new tokens",
+    "generation and end-to-end wall time",
+    "prefill/decode rates when available",
+    "MLX peak memory",
+    "process peak RSS",
+    "Docker grade wall time"
+  ],
+  "stop_rules": {
+    "per_rollout_wall_seconds": 600,
+    "stop_if_docker_task_oom_or_timeout": true,
+    "stop_if_swap_used_mb_above": 6963,
+    "stop_if_system_memory_pressure_free_percent_below": 20,
+    "stop_if_task_contract_hash_fails": true,
+    "total_wall_seconds": 3600
+  },
+  "supersedes": "vare-coding-agent-phase-a-structured-v2"
+}
