@@ -1,0 +1,23 @@
+{
+  "baseline_manifest_sha256": {
+    "transformers-49361-phi3-longrope-v1": "d2690f2eeb99826610d610a34e46e3c625aa2fe14f7736ce8eada74ce81e129b",
+    "transformers-49481-bloom-static-cache-v1": "6c17ba5f13e65c2d4c84c5c566592d9bd110b779ed1946f9068ebe04294567b3"
+  },
+  "environment_lock_sha256": "6d910b13800049a0214045cbab313238cf28a38db63257b321b98c9cae2eeb6e",
+  "implementation_sha256": {
+    "scripts/grade_transformers_fresh_dev_v4.py": "e933d1f74063d7372c8e2ed17084e910ce21f46a90b7c87bf937c86dcdfb1b2b",
+    "scripts/run_local_agent.py": "c8ec753a9d0cbdd4ef9a2b82d22936dedd9449a8d25bb39420906554aaa2bbab",
+    "scripts/transformers_fresh_dev_worker_v1.py": "fc21f3ed8b8b6f3f9ed114f4c0dbea6924a12931fe0762d8547a226075d2fb58",
+    "src/vare/agent_structured_edit.py": "8eca9a5c32980537293c7543fb2f25efd149fe65c665bc4b36e05dc84147d9bb",
+    "src/vare/agent_task_contract.py": "985a2ea3d054b2ce0bf82c98677da15734ee335bd906617167382d6cdd800405",
+    "src/vare/container_isolation.py": "6d963821333f8de603bb4743ea52cb203c549695a5df9bbff9fa829b50ea8c42",
+    "src/vare/isolated_candidate.py": "8c216aa1891538156030f76ae59a768832fefa83dbbcf3702c22176019b0aaee"
+  },
+  "parent_grader_protocol_sha256": "5a143f945afca9fe15c0eb0af250e0c8010331fd21500baee720f47c7faf807b",
+  "protocol_id": "vare-transformers-real-model-coding-agent-feasibility-v2",
+  "protocol_sha256": "39d90ac9cac60812aa011eb7c9a69a6b1be8a754285d5d4e315e684756a4c371",
+  "task_json_sha256": {
+    "transformers-49361-phi3-longrope-v1": "e5708060a10d3b7baf8cf94dcc5773cf995a4a0b8ab9e7a6f598ca640c980ca2",
+    "transformers-49481-bloom-static-cache-v1": "39ada2f87f317139b517b3f31bb3706a5f8f84dc4c2905f410f78a1800f0370a"
+  }
+}

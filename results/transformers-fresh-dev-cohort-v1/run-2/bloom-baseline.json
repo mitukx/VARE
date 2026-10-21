@@ -1,0 +1,29 @@
+{
+  "baseline_manifest_sha256": "6c17ba5f13e65c2d4c84c5c566592d9bd110b779ed1946f9068ebe04294567b3",
+  "candidate_directory_count": 548,
+  "candidate_file_count": 3071,
+  "candidate_git_history_present": false,
+  "candidate_target": "src/transformers/models/bloom/modeling_bloom.py",
+  "candidate_target_sha256": "bf005d666e289dabfe70ce1941c918c80f9f61fbd573d63f9fa779a81b4df4ec",
+  "candidate_workspace_inventory_verified": true,
+  "cases": [
+    {
+      "case_id": "transformers-49481-bloom-static-cache-v1",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 4.552542167023176
+    }
+  ],
+  "container_image_id": "sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "expected_held_by_parent": true,
+  "grader_implementation_sha256": "22d7ed6ef911d8a6c36b6fdeb594612d52729a6e490823a70d33046df991bdb9",
+  "grader_mounted": false,
+  "grading_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "passed": false,
+  "protocol_id": "vare-transformers-fresh-development-cohort-v2",
+  "protocol_sha256": "de1566aefb97cd35c3803b38f08cfbc00f7c92e97cdf8684f3ff64ded0c30e87",
+  "task_id": "transformers-49481-bloom-static-cache-v1",
+  "task_json_sha256": "39ada2f87f317139b517b3f31bb3706a5f8f84dc4c2905f410f78a1800f0370a",
+  "task_kind": "correctness",
+  "trusted_adapter_sha256": "1575a9608f92cde8f51e2282ee7be073ba9572ed6fd30ca3aa52447a44798566"
+}

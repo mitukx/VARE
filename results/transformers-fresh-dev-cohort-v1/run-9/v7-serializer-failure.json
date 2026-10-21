@@ -1,0 +1,7 @@
+{
+  "protocol_id": "vare-transformers-fresh-development-cohort-v7",
+  "protocol_sha256": "ecfc94715196ed0188d4f230f820b996eb6b774971abd2df4babfd70a401c255",
+  "status": "container-result-not-serialized",
+  "failure": "TypeError: Object of type CandidateException is not JSON serializable",
+  "fix": "sanitize CandidateException as an exception-type-only observation in protocol v8"
+}

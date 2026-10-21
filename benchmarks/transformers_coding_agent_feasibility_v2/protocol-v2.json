@@ -1,0 +1,173 @@
+{
+  "conditions": {
+    "agent": {
+      "edit_format": "structured",
+      "max_context_tokens": 8192,
+      "max_new_tokens_per_turn": 768,
+      "max_no_tool_retries": 1,
+      "max_total_new_tokens": 3072,
+      "max_turns": 6,
+      "network": "none for candidate and public-test containers",
+      "public_test_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+      "public_test_memory_mb": 1900,
+      "wall_seconds": 360
+    },
+    "order": [
+      "transformers-49481-bloom-static-cache-v1/greedy",
+      "transformers-49361-phi3-longrope-v1/greedy",
+      "transformers-49481-bloom-static-cache-v1/sample-1",
+      "transformers-49361-phi3-longrope-v1/sample-1",
+      "transformers-49481-bloom-static-cache-v1/sample-2",
+      "transformers-49361-phi3-longrope-v1/sample-2",
+      "transformers-49481-bloom-static-cache-v1/sample-3",
+      "transformers-49361-phi3-longrope-v1/sample-3"
+    ],
+    "per_task": [
+      {
+        "count": 1,
+        "do_sample": false,
+        "label": "greedy",
+        "seed": 2101,
+        "temperature": 0.0
+      },
+      {
+        "count": 3,
+        "do_sample": true,
+        "label": "sampled",
+        "seeds": [
+          2102,
+          2103,
+          2104
+        ],
+        "temperature": 0.7,
+        "top_k": 40,
+        "top_p": 0.9
+      }
+    ]
+  },
+  "grader": {
+    "candidate_does_not_get": "grader implementation, evaluator, hidden assertions, expected outputs, Git history, held-out tasks",
+    "candidate_gets": "task prompt, source allowlist, and public test only",
+    "implementation": "scripts/grade_transformers_fresh_dev_v4.py",
+    "protocol": "benchmarks/mlsys_repo_eval_v5/protocol-v9.json"
+  },
+  "limitations": [
+    "Two tasks from one repository, with two bug families; estimates are descriptive only.",
+    "The tasks are public upstream issues and may overlap model pretraining data.",
+    "This is a base-policy agent feasibility comparison, not a policy-update experiment."
+  ],
+  "model": {
+    "backend": "mlx_metal",
+    "file_manifest_sha256": "ef8165394501a08dd81a2f6838081ed4fba49a05a98b1fbd68de18d4cdeba3ee",
+    "files": {
+      ".gitattributes": {
+        "sha256": "34448b82c17d60fec9b65b1f093c115ddbaadc04beb1b0140b6bfed2e012a930",
+        "size_bytes": 1570
+      },
+      "README.md": {
+        "sha256": "7b17ce562d7ea121c86d2ffdf660eed3726ac5b52cacfa9f1de11a65969f5657",
+        "size_bytes": 969
+      },
+      "added_tokens.json": {
+        "sha256": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680",
+        "size_bytes": 707
+      },
+      "chat_template.jinja": {
+        "sha256": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541",
+        "size_bytes": 4040
+      },
+      "config.json": {
+        "sha256": "574349e5a343236546fda55e4744a76e181f534182d7dc60ff1bad7e7a502849",
+        "size_bytes": 938
+      },
+      "generation_config.json": {
+        "sha256": "835fffe355c9438e7a25be099b3fccaa98350b83451f9fd2d99512e74f1ade48",
+        "size_bytes": 238
+      },
+      "merges.txt": {
+        "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+        "size_bytes": 1671853
+      },
+      "model.safetensors": {
+        "sha256": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f",
+        "size_bytes": 2263022417
+      },
+      "model.safetensors.index.json": {
+        "sha256": "388d811b8b7c2608dd04cce1bcb04a8bf715d19b42790894e6d3427ff429a777",
+        "size_bytes": 63964
+      },
+      "special_tokens_map.json": {
+        "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+        "size_bytes": 613
+      },
+      "tokenizer.json": {
+        "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+        "size_bytes": 11422654
+      },
+      "tokenizer_config.json": {
+        "sha256": "4397cc477eb6d79715ccd2000accd6b3531928f30029665832fa1b255f24d2b9",
+        "size_bytes": 5440
+      },
+      "vocab.json": {
+        "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+        "size_bytes": 2776833
+      }
+    },
+    "mlx": "0.32.4",
+    "mlx_lm": "0.32.2",
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "snapshot_revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+  },
+  "primary_metrics": [
+    "independent_verified_success_per_rollout",
+    "task_level_pass_at_4",
+    "greedy_verified_success",
+    "per_task_binary_reward_variance"
+  ],
+  "protocol_id": "vare-transformers-real-model-coding-agent-feasibility-v2",
+  "secondary_metrics": [
+    "tool_call_validity",
+    "edit_applied",
+    "public_test_pass",
+    "total_generated_tokens",
+    "wall_clock_seconds",
+    "tokens_per_second",
+    "peak_mlx_memory",
+    "host_max_rss",
+    "failure_category",
+    "cost_per_verified_success"
+  ],
+  "source_head_at_freeze": "1d35433",
+  "split": "development_only",
+  "stopping_rules": [
+    "Stop an individual rollout at the first configured turn, token, wall-time, or memory failure.",
+    "Stop the study immediately if baseline source hashes, frozen grading image, or model file hashes fail validation.",
+    "Do not change task membership, prompt, model revision, sampling, or budgets after the first inference.",
+    "This two-task Development pilot cannot establish broad ability improvement or held-out generalization.",
+    "Do not start SFT or GRPO under this protocol; reward variance here is feasibility evidence only."
+  ],
+  "tasks": {
+    "transformers-49361-phi3-longrope-v1": {
+      "baseline_manifest_sha256": "d2690f2eeb99826610d610a34e46e3c625aa2fe14f7736ce8eada74ce81e129b",
+      "directory": "transformers-49361-phi3-longrope-v1",
+      "fixed_revision": "4a2f93bbb5594bcccab9612b095de6f900822601",
+      "prompt": "For a small Phi3 model using LongRoPE, cached generation should produce the same next-token logits as a full-prefix forward pass at every generated step, including when the configured sliding window is enabled. The current behavior diverges after crossing the original context boundary. Correct the cache behavior while preserving ordinary generation semantics.",
+      "prompt_sha256": "c17f5829d3ef6193181c771beb3484f64c026181c56ee152ecde45d69678d312",
+      "source_revision": "6d3802a45f50ce6f2262029926265629010b2217",
+      "target_path": "src/transformers/models/phi3/modeling_phi3.py",
+      "task_json_sha256": "e5708060a10d3b7baf8cf94dcc5773cf995a4a0b8ab9e7a6f598ca640c980ca2",
+      "task_lock_sha256": "9b8ebf3ba2b131bed423554e0471e1aa04ee1b28199ab778c26c7230b5a89850"
+    },
+    "transformers-49481-bloom-static-cache-v1": {
+      "baseline_manifest_sha256": "6c17ba5f13e65c2d4c84c5c566592d9bd110b779ed1946f9068ebe04294567b3",
+      "directory": "transformers-49481-bloom-static-cache-v1",
+      "fixed_revision": "bc4d8df2c4604727ea63414c7af48de7e6eb9c0b",
+      "prompt": "Generation with a static cache should work when callers omit an attention mask for an unpadded input. A small local BLOOM configuration currently fails on this path. Make the smallest compatible change so generation completes and preserves the input prefix and requested output length. Keep unrelated generation behavior unchanged.",
+      "prompt_sha256": "50c98778836afa34916cde304f7dc58ffca6e75875c8014fe40b825b92d89ba4",
+      "source_revision": "536ecc007387a50e77603bb5d92100e9b07514cc",
+      "target_path": "src/transformers/models/bloom/modeling_bloom.py",
+      "task_json_sha256": "39ada2f87f317139b517b3f31bb3706a5f8f84dc4c2905f410f78a1800f0370a",
+      "task_lock_sha256": "82981217f5e2ec82a6b84c09df266f50afab802a0003096edd397648955afb06"
+    }
+  }
+}

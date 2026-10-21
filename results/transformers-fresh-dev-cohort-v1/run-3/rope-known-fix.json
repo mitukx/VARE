@@ -1,0 +1,29 @@
+{
+  "baseline_manifest_sha256": "c583603e3e551cec8133682a5dfd2e071691ac0af27df1e27aeb1eed00eb7bf0",
+  "candidate_directory_count": 553,
+  "candidate_file_count": 3105,
+  "candidate_git_history_present": false,
+  "candidate_target": "src/transformers/configuration_utils.py",
+  "candidate_target_sha256": "693387f72e0f204e70451cce7504bca78543a0d24de47871f9e7e0aab62c3c21",
+  "candidate_workspace_inventory_verified": true,
+  "cases": [
+    {
+      "case_id": "transformers-49515-rope-setter-v1",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 3.4970454170439096
+    }
+  ],
+  "container_image_id": "sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "expected_held_by_parent": true,
+  "grader_implementation_sha256": "277b5fbd36021310ce3244425d70c093844f74a7a783c3ea05de9853f1f73a9a",
+  "grader_mounted": false,
+  "grading_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "passed": false,
+  "protocol_id": "vare-transformers-fresh-development-cohort-v3",
+  "protocol_sha256": "5b3730eefaaad48a1bf68d5a023400565c436b829ebdf6ac6a2ba713d68282d4",
+  "task_id": "transformers-49515-rope-setter-v1",
+  "task_json_sha256": "f17e2d2077dccaeaa7575b9144c620f3e8d3864b895354bd2eec71b9a3d80957",
+  "task_kind": "correctness",
+  "trusted_adapter_sha256": "ff46e1c3ca02cd9262a89899418d66544f84aff1391009e1b63116e7eb5dd628"
+}

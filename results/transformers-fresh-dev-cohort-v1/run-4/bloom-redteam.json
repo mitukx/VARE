@@ -1,0 +1,49 @@
+{
+  "all_rejected": true,
+  "attacks": [
+    {
+      "attack": "startup_hook",
+      "baseline_manifest_sha256": "6c17ba5f13e65c2d4c84c5c566592d9bd110b779ed1946f9068ebe04294567b3",
+      "protocol_id": "vare-transformers-fresh-development-cohort-v4",
+      "protocol_sha256": "90b74ebdde348e62c20251e23a573e9ddecb6078c57134dabc55dfae731f002a",
+      "reason": "candidate workspace contains an unpinned file: sitecustomize.py",
+      "rejected_before_candidate_execution": true
+    },
+    {
+      "attack": "altered_imported_module",
+      "baseline_manifest_sha256": "6c17ba5f13e65c2d4c84c5c566592d9bd110b779ed1946f9068ebe04294567b3",
+      "protocol_id": "vare-transformers-fresh-development-cohort-v4",
+      "protocol_sha256": "90b74ebdde348e62c20251e23a573e9ddecb6078c57134dabc55dfae731f002a",
+      "reason": "candidate changed a protected baseline file: src/transformers/cache_utils.py",
+      "rejected_before_candidate_execution": true
+    },
+    {
+      "attack": "symlink_target",
+      "baseline_manifest_sha256": "6c17ba5f13e65c2d4c84c5c566592d9bd110b779ed1946f9068ebe04294567b3",
+      "protocol_id": "vare-transformers-fresh-development-cohort-v4",
+      "protocol_sha256": "90b74ebdde348e62c20251e23a573e9ddecb6078c57134dabc55dfae731f002a",
+      "reason": "candidate workspace contains a symlink: src/transformers/models/bloom/modeling_bloom.py",
+      "rejected_before_candidate_execution": true
+    },
+    {
+      "attack": "modified_public_test",
+      "baseline_manifest_sha256": "6c17ba5f13e65c2d4c84c5c566592d9bd110b779ed1946f9068ebe04294567b3",
+      "protocol_id": "vare-transformers-fresh-development-cohort-v4",
+      "protocol_sha256": "90b74ebdde348e62c20251e23a573e9ddecb6078c57134dabc55dfae731f002a",
+      "reason": "candidate changed a protected baseline file: test_public.py",
+      "rejected_before_candidate_execution": true
+    },
+    {
+      "attack": "forged_grading_evidence",
+      "baseline_manifest_sha256": "6c17ba5f13e65c2d4c84c5c566592d9bd110b779ed1946f9068ebe04294567b3",
+      "protocol_id": "vare-transformers-fresh-development-cohort-v4",
+      "protocol_sha256": "90b74ebdde348e62c20251e23a573e9ddecb6078c57134dabc55dfae731f002a",
+      "reason": "candidate workspace contains an unpinned file: grade.json",
+      "rejected_before_candidate_execution": true
+    }
+  ],
+  "baseline_target_sha256": "bf005d666e289dabfe70ce1941c918c80f9f61fbd573d63f9fa779a81b4df4ec",
+  "protocol_id": "vare-transformers-fresh-development-cohort-v4",
+  "protocol_sha256": "90b74ebdde348e62c20251e23a573e9ddecb6078c57134dabc55dfae731f002a",
+  "task_id": "transformers-49481-bloom-static-cache-v1"
+}

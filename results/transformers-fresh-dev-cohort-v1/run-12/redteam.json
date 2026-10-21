@@ -1,0 +1,66 @@
+{
+  "all_passed": true,
+  "driver_sha256": "3cca4ce42003e3e910ae3de6abf218e510afb91351c19d3a09995b1566122957",
+  "grader_sha256": "e933d1f74063d7372c8e2ed17084e910ce21f46a90b7c87bf937c86dcdfb1b2b",
+  "protocol_id": "vare-transformers-fresh-development-cohort-v9",
+  "protocol_sha256": "5a143f945afca9fe15c0eb0af250e0c8010331fd21500baee720f47c7faf807b",
+  "results": [
+    {
+      "attack": "candidate_import_probe_and_forged_stdout",
+      "boundary_assertions": [
+        "no /grader mount",
+        "no public test or evaluator in /subject",
+        "no legacy adapter or git history",
+        "no secret-like environment variable names",
+        "outbound network blocked",
+        "candidate workspace read-only",
+        "candidate stdout cannot forge host result"
+      ],
+      "candidate_target_sha256": "4df880d6f98a8049e26c155f59ba355b17114e93eca75da836d941a249b97586",
+      "failure": null,
+      "grader_observation": {
+        "output_ids": [
+          [
+            1,
+            2,
+            3,
+            3,
+            3,
+            3
+          ]
+        ],
+        "output_shape": [
+          1,
+          6
+        ]
+      },
+      "grader_passed": true,
+      "returncode": 0,
+      "transcript": "{\"baseline_manifest_sha256\": \"6c17ba5f13e65c2d4c84c5c566592d9bd110b779ed1946f9068ebe04294567b3\", \"candidate_directory_count\": 548, \"candidate_expected_output_access\": false, \"candidate_file_count\": 3071, \"candidate_observation\": {\"output_ids\": [[1, 2, 3, 3, 3, 3]]}, \"candidate_target_sha256\": \"4df880d6f98a8049e26c155f59ba355b17114e93eca75da836d941a249b97586\", \"candidate_workspace_inventory_verified\": true, \"container_image_id\": \"sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b\", \"elapsed_seconds\": 3.870386500015746, \"failure\": null, \"grader_files_in_candidate_subject\": false, \"grader_implementation_sha256\": \"e933d1f74063d7372c8e2ed17084e910ce21f46a90b7c87bf937c86dcdfb1b2b\", \"grading_image\": \"vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b\", \"passed\": true, \"protocol_id\": \"vare-transformers-fresh-development-cohort-v9\", \"protocol_sha256\": \"5a143f945afca9fe15c0eb0af250e0c8010331fd21500baee720f47c7faf807b\", \"task_id\": \"transformers-49481-bloom-static-cache-v1\", \"task_id_revision\": \"536ecc007387a50e77603bb5d92100e9b07514cc\", \"task_json_sha256\": \"39ada2f87f317139b517b3f31bb3706a5f8f84dc4c2905f410f78a1800f0370a\", \"verified\": {\"output_ids\": [[1, 2, 3, 3, 3, 3]], \"output_shape\": [1, 6]}, \"worker_sha256\": \"fc21f3ed8b8b6f3f9ed114f4c0dbea6924a12931fe0762d8547a226075d2fb58\"}\n"
+    },
+    {
+      "attack": "sitecustomize.py",
+      "rejected_before_candidate_execution": true,
+      "returncode": 1,
+      "transcript": "Traceback (most recent call last):\n  File \"/private/tmp/vare-pr104/scripts/grade_transformers_fresh_dev_v4.py\", line 280, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/private/tmp/vare-pr104/scripts/grade_transformers_fresh_dev_v4.py\", line 272, in main\n    result = grade(args.task_id, workspace, args.image)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/vare-pr104/scripts/grade_transformers_fresh_dev_v4.py\", line 213, in grade\n    files, file_count, directory_count = _scan_candidate(workspace, manifest, spec[\"target_path\"])\n                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/vare-pr104/scripts/grade_transformers_phase_a_v1.py\", line 151, in _scan_candidate\n    raise ValueError(f\"candidate workspace contains an unpinned file: {rel}\")\nValueError: candidate workspace contains an unpinned file: sitecustomize.py\n"
+    },
+    {
+      "attack": "modified_imported_cache_utils",
+      "rejected_before_candidate_execution": true,
+      "returncode": 1,
+      "transcript": "Traceback (most recent call last):\n  File \"/private/tmp/vare-pr104/scripts/grade_transformers_fresh_dev_v4.py\", line 280, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/private/tmp/vare-pr104/scripts/grade_transformers_fresh_dev_v4.py\", line 272, in main\n    result = grade(args.task_id, workspace, args.image)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/vare-pr104/scripts/grade_transformers_fresh_dev_v4.py\", line 213, in grade\n    files, file_count, directory_count = _scan_candidate(workspace, manifest, spec[\"target_path\"])\n                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/vare-pr104/scripts/grade_transformers_phase_a_v1.py\", line 158, in _scan_candidate\n    raise ValueError(f\"candidate changed a protected baseline file: {rel}\")\nValueError: candidate changed a protected baseline file: src/transformers/cache_utils.py\n"
+    },
+    {
+      "attack": "malicious_symlink",
+      "rejected_before_candidate_execution": true,
+      "returncode": 1,
+      "transcript": "Traceback (most recent call last):\n  File \"/private/tmp/vare-pr104/scripts/grade_transformers_fresh_dev_v4.py\", line 280, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/private/tmp/vare-pr104/scripts/grade_transformers_fresh_dev_v4.py\", line 272, in main\n    result = grade(args.task_id, workspace, args.image)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/vare-pr104/scripts/grade_transformers_fresh_dev_v4.py\", line 213, in grade\n    files, file_count, directory_count = _scan_candidate(workspace, manifest, spec[\"target_path\"])\n                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/vare-pr104/scripts/grade_transformers_phase_a_v1.py\", line 144, in _scan_candidate\n    raise ValueError(f\"candidate workspace contains a symlink: {rel}\")\nValueError: candidate workspace contains a symlink: evil.py\n"
+    },
+    {
+      "attack": "forged_grade_file",
+      "rejected_before_candidate_execution": true,
+      "returncode": 1,
+      "transcript": "Traceback (most recent call last):\n  File \"/private/tmp/vare-pr104/scripts/grade_transformers_fresh_dev_v4.py\", line 280, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/private/tmp/vare-pr104/scripts/grade_transformers_fresh_dev_v4.py\", line 272, in main\n    result = grade(args.task_id, workspace, args.image)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/vare-pr104/scripts/grade_transformers_fresh_dev_v4.py\", line 213, in grade\n    files, file_count, directory_count = _scan_candidate(workspace, manifest, spec[\"target_path\"])\n                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/tmp/vare-pr104/scripts/grade_transformers_phase_a_v1.py\", line 151, in _scan_candidate\n    raise ValueError(f\"candidate workspace contains an unpinned file: {rel}\")\nValueError: candidate workspace contains an unpinned file: grade.json\n"
+    }
+  ]
+}
