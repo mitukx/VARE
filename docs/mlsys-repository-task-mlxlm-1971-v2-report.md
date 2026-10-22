@@ -22,10 +22,10 @@ The v1 grader's single `value_scale=0.5` case can accept a constant-scale implem
 DOCKER_CONTEXT=colima python scripts/run_mlxlm_1971_calibration_v2.py \
   --source-repo /tmp/vare-mlx-lm-full-v4 \
   --image 'localhost:5000/vare/mlx-mimo-cpu-mimo@sha256:799f8b9f34fe2caa8fc0c4d0889abac63384606bcf40db28524db3fba07a7cbe' \
-  --output results/mlxlm-1971-isolated-v2/run-1
+  --output /tmp/mlxlm-1971-v2-run
 ```
 
-The source mirror contained both exact Git commits. The runner checked its implementation lock and clean worktree before it executed.
+First check out the exact locked implementation revision `4c0ae92128f1bea4098a18e130294f562c95c6ff`; later grader changes intentionally make this historical v2 implementation lock fail closed. The source mirror contained both exact upstream Git commits. The runner checked its implementation lock and clean worktree before it executed. The fresh output path preserves the retained run-1 evidence.
 
 ## Results
 

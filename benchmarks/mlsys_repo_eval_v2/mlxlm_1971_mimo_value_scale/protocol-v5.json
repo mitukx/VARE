@@ -1,0 +1,70 @@
+{
+  "baseline_commit": "5f3c79d6bb1864a85d5343818192bd061b161e3a",
+  "baseline_source_sha256": "c110f8deed605277ae070359dd6d2ba0c700981101240c54bcd049e8d60e4847",
+  "case_inputs": "Each case uses the v1 pinned synthetic ModelArgs, seed, and token sequence, with only value_scale varied.",
+  "evaluation": {
+    "calibration_gates": [
+      "pinned baseline has wrong_output on every value-scale case",
+      "pinned known fix passes every value-scale case",
+      "constant-0.5 mutant has wrong_output at 0.25 and 0.8 and passes at 0.5",
+      "scale-after-cache mutant has wrong_output on every value-scale case",
+      "pinned source swap is rejected",
+      "red-team controls pass"
+    ],
+    "required_cases": 3,
+    "success": "Calibration is successful only for the exact per-case semantic decisions above; crash, timeout, import failure, malformed output, and infrastructure errors never count as negative-control success."
+  },
+  "expected_output_sha256": "9f56a4f0c59b9f581e1077fedd86e29a3b4e01a0f6a03e17715191214eecfdec",
+  "fixed_commit": "8fda5e976a2da412d9f8119361edefd405381cf9",
+  "fixed_source_sha256": "a07bbc7d454d61d321a4dbc87b9770b2df545835a50eb880605f11e9a313a512",
+  "grader_semantics": "For each scale, parent-held expected tensors from the pinned fixed source are compared to candidate full-forward outputs, one-token incremental output traces, and complete KV cache state. Expected arrays are never mounted in the candidate container.",
+  "implementation_sha256": {
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/Dockerfile": "423ec1fbe2e6e63cf9ff7906e42d0acdc371071511a1078c0b92f0662d5a4eb0",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/expected-output-v2.json": "9f56a4f0c59b9f581e1077fedd86e29a3b4e01a0f6a03e17715191214eecfdec",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/grader_adapter_v2.py": "c9b85ab3511759eaac57bc95b551d04c4bd688fefca337e53bb74269b5608fe4",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/task.md": "66000b7e1a23a8a15b501d11325e0752b7d70c11b4268cdb6b21754ecdc106c7",
+    "scripts/generate_mlxlm_1971_v2_goldens.py": "c70787d8a3ee575b27060158b16d53423b677952343d33cf3c2b4495c38558c7",
+    "scripts/run_mlxlm_1971_calibration_v5.py": "b26b91ee2b9416c9d22f34742128ae84eaec7750af6e093404b353732968865f",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/isolated_candidate.py": "8d0fbef1bb44c788dc983a814c2178c7c5a2e716fbfcc0f912f64885fe8fdccf",
+    "src/vare/mlxlm_1971_repo_task.py": "a947b424183529d5415eb8ebca3454bc74e2ab06e86ca4ff73bb9af955a9d049",
+    "src/vare/mlxlm_1971_repo_task_v4.py": "0b6447cd2105eab16267f550bdc19274702b59533a05b27d68b67a6900a27e82",
+    "tests/test_mlxlm_1971_calibration_v5.py": "86087e1f33c526a114eacfe7df01ccfc8ad211dba381eebb94b9465bbe70b51a",
+    "tests/test_mlxlm_1971_repo_task_v4.py": "2141ce2c80e9a500a864b10772a13a0deb653eb4b6c7a241285903b150ec351a"
+  },
+  "limitations": [
+    "One random small-model Development-task calibration; no Coding-Agent rollout or model capability claim.",
+    "CPU-only container; no Metal validation.",
+    "Only the selected upstream function/model contract is tested."
+  ],
+  "protocol_id": "vare.mlsys-repository-task.mlxlm-1971.v5",
+  "protocol_parent": "vare.mlsys-repository-task.mlxlm-1971.v4",
+  "protocol_parent_sha256": "ddf00153d3cf08ee3ab6dcf978b03e4ed70ece0fd764dd32d1d44044bc022e61",
+  "repository": "ml-explore/mlx-lm",
+  "runtime": {
+    "candidate_cpus": 1,
+    "candidate_uid": 65534,
+    "image": "localhost:5000/vare/mlx-mimo-cpu-mimo@sha256:799f8b9f34fe2caa8fc0c4d0889abac63384606bcf40db28524db3fba07a7cbe",
+    "memory_mb": 1536,
+    "mlx": "CPU-only, MLX_DISABLE_METAL=1",
+    "network": "none",
+    "pids_limit": 64,
+    "platform": "linux/arm64",
+    "timeout_seconds": 30
+  },
+  "split": "development",
+  "status": "prospective-calibration-only",
+  "target_path": "mlx_lm/models/mimo_v2_flash.py",
+  "task_id": "mlxlm-1971-mimo-value-scale",
+  "task_prompt_sha256": "66000b7e1a23a8a15b501d11325e0752b7d70c11b4268cdb6b21754ecdc106c7",
+  "v1_preservation": {
+    "expected_output_sha256": "00c0450c89622ab93635d6f3ff3d95b016ab8e62a4f11a843b47c961262afd50",
+    "historical_results": "unchanged",
+    "protocol_sha256": "6909c23aac234623bc7d509c3aa69609a05880d63f482fc2fda9cc553295797c"
+  },
+  "value_scales": [
+    0.25,
+    0.5,
+    0.8
+  ]
+}

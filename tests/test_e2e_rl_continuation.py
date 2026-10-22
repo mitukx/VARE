@@ -81,7 +81,7 @@ def test_campaign_snapshots_the_full_runtime_package(campaign,tmp_path):
     root,_=campaign
     manifest=auditor.read(root/"manifest.json")
     runtime_sources={str(path.relative_to(bench.ROOT)) for path in (bench.ROOT/"src/vare").rglob("*.py")}
-    assert len(runtime_sources)==78
+    assert len(runtime_sources)==81
     assert runtime_sources <= set(manifest["sources"])
     assert runtime_sources <= set(manifest["source_sha256"])
     assert runtime_sources <= auditor.EXPECTED_SOURCES
