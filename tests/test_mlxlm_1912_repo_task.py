@@ -58,7 +58,6 @@ def test_baseline_source_symlink_is_rejected(tmp_path: Path, monkeypatch):
         verify_baseline(root)
 
 def test_prospective_v4_fixtures_defeat_constant_index_zero(monkeypatch, tmp_path: Path):
-    import json
     import vare.mlxlm_1912_repo_task as repo_task
 
     source = tmp_path / "workspace"
