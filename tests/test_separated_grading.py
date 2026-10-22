@@ -952,6 +952,31 @@ def test_missing_isolated_calls_is_not_an_exit_zero_pass(tmp_path: Path) -> None
     assert result["decision"]["reason"] == "isolated_harness_required"
 
 
+def test_nonroutable_mlsys_task_cannot_bypass_adapter_allowlist(tmp_path: Path) -> None:
+    module = _load_eval_module()
+    task_dir = tmp_path / "task"
+    (task_dir / "evaluator").mkdir(parents=True)
+    (task_dir / "evaluator" / "isolated_calls.json").write_text("{}\n", encoding="utf-8")
+    result = asyncio.run(module.grade_repository_workspace(
+        image=DOCKER_IMAGE,
+        workspace_root=tmp_path,
+        workspace=tmp_path / "missing",
+        snapshot_root=tmp_path / "snapshots",
+        stage_root=tmp_path / "stage",
+        task={
+            "task_id": "mlsys-v1-global-grad-clip",
+            "task_dir": task_dir,
+            "allowed_files": ["global_grad_clip.py"],
+            "reward_kind": "hidden-correctness",
+        },
+        policy_id="unroutable-global-grad-clip",
+        decide=lambda _payload: {"success": True, "reward": 1.0, "reason": "correctness"},
+    ))
+    assert result["decision"]["success"] is False
+    assert result["decision"]["reason"] == "isolated_harness_required"
+    assert "no isolated route" in result["grader_error"]
+
+
 def test_isolated_performance_reward_uses_frozen_paired_ratio_confidence_bound(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
 ) -> None:

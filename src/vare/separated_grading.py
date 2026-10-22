@@ -17,6 +17,7 @@ import re
 import statistics
 import secrets
 import tempfile
+import time
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -559,6 +560,15 @@ def _load_isolated_calls(path: Path) -> dict[str, Any]:
     payload["rtol"] = _finite_number(payload.get("rtol", 0.0), "rtol", allow_zero=True)
     payload["atol"] = _finite_number(payload.get("atol", 0.0), "atol", allow_zero=True)
     payload["timeout_s"] = _finite_number(payload.get("timeout_s", 30), "timeout_s", allow_zero=False)
+    memory_mb = payload.get("memory_mb", 512)
+    if type(memory_mb) is not int or not 32 <= memory_mb <= 65536:
+        raise IsolationError("isolated call spec memory_mb is invalid")
+    payload["memory_mb"] = memory_mb
+    discard_candidate_stdout = payload.get("discard_candidate_stdout", False)
+    if type(discard_candidate_stdout) is not bool:
+        raise IsolationError("isolated call spec discard_candidate_stdout is invalid")
+    if discard_candidate_stdout and payload["task_kind"] != "correctness":
+        raise IsolationError("candidate stdout suppression is supported only for correctness calls")
     return payload
 
 
@@ -575,6 +585,11 @@ def _call_rows(payload: dict[str, Any], key: str) -> list[dict[str, Any]]:
             type(expected_exception) is not str or not expected_exception.isidentifier()
         ):
             raise IsolationError("isolated call expected_exception is invalid")
+        expected_prefix = row.get("expected_exception_prefix")
+        if expected_prefix is not None and (
+            type(expected_prefix) is not str or not expected_prefix.isidentifier()
+        ):
+            raise IsolationError("isolated call expected_exception_prefix is invalid")
         args = row.get("args", [])
         kwargs = row.get("kwargs", {})
         if type(args) is not list or type(kwargs) is not dict:
@@ -606,14 +621,21 @@ def _paired_ratio_lower_bound(
     return lower, mean
 
 
-def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> dict[str, Any]:
+def grade_isolated_subject(
+    subject: Path, calls_path: Path, *, image: str,
+    task_timeout_s: float | None = None,
+) -> dict[str, Any]:
     """Score one snapshot from the host. A child exit status is not a pass."""
     spec = _load_isolated_calls(calls_path)
+    task_deadline = (
+        None if task_timeout_s is None else time.monotonic() + task_timeout_s
+    )
     module = str(spec["module"])
     function = str(spec["function"])
     rtol = float(spec["rtol"])
     atol = float(spec["atol"])
     timeout_s = float(spec["timeout_s"])
+    memory_mb = int(spec["memory_mb"])
     tuple_paths = spec.get("tuple_paths", [])
     if type(tuple_paths) is not list or any(type(path) is not list for path in tuple_paths):
         raise IsolationError("isolated tuple paths are invalid")
@@ -625,6 +647,7 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
                     str(row.get("case_id", index)), module, function,
                     list(row.get("args", [])), row["expected"], dict(row.get("kwargs", {})),
                     expected_exception=row.get("expected_exception"),
+                    expected_exception_prefix=row.get("expected_exception_prefix"),
                     tuple_paths=tuple(tuple(path) for path in tuple_paths),
                 )
                 for index, row in enumerate(rows)
@@ -632,6 +655,11 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
             report = grade_calls(
                 subject, calls, task_kind="correctness", image=image,
                 timeout_s=timeout_s, rtol=rtol, atol=atol,
+                preserve_session=spec.get("preserve_session") is True,
+                bool_as_number=spec.get("bool_as_number") is True,
+                memory_mb=memory_mb,
+                discard_candidate_stdout=spec.get("discard_candidate_stdout") is True,
+                task_deadline=task_deadline,
             )
             passed = report.passed
             return {
@@ -663,6 +691,7 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
                 str(row.get("case_id", index)), module, function,
                 list(row.get("args", [])), row["expected"], dict(row.get("kwargs", {})),
                 expected_exception=row.get("expected_exception"),
+                expected_exception_prefix=row.get("expected_exception_prefix"),
                 tuple_paths=tuple(tuple(path) for path in tuple_paths),
             )
             for index, row in enumerate(correctness_rows)
@@ -670,6 +699,11 @@ def grade_isolated_subject(subject: Path, calls_path: Path, *, image: str) -> di
         correctness = grade_calls(
             subject, correctness_calls, task_kind="correctness", image=image,
             timeout_s=timeout_s, rtol=rtol, atol=atol,
+            preserve_session=spec.get("preserve_session") is True,
+            bool_as_number=spec.get("bool_as_number") is True,
+            memory_mb=memory_mb,
+            discard_candidate_stdout=spec.get("discard_candidate_stdout") is True,
+            task_deadline=task_deadline,
         )
         if not correctness.passed:
             return {

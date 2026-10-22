@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-separated-candidate-harness-v1",
+  "claim_limit": "Harness-boundary verification only; consumed task outcomes are not new evaluation evidence.",
+  "supported_packs": {
+    "benchmarks/mlsys_coding_v1": {
+      "manifest_sha256": "2c67d85a6806b3bbcbc63676f64fc955c5c7b3c9c4127a5a3caade1541efb4ab"
+    },
+    "benchmarks/mlsys_coding_v3": {
+      "manifest_sha256": "3fb5bdcf8b21e2d1a2768557855d732e35c377273073aa7d894e2910ce2852d2"
+    }
+  },
+  "container_images": {
+    "linux_x86_64": "python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1",
+    "darwin_arm64": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258"
+  },
+  "resource_limits": {
+    "memory_mb": 512,
+    "cpus": 1.0,
+    "pids_limit": 64,
+    "max_output_bytes": 512000,
+    "network": "none",
+    "read_only_root": true,
+    "unprivileged_uid": 65534
+  },
+  "grading": {
+    "adapter_symbol": "vare.separated_candidate_harness.grade_function",
+    "expected_outputs_stay_in_parent": true,
+    "candidate_mounts_grader": false,
+    "unsupported_tasks_fail_closed": true
+  }
+}

@@ -48,7 +48,9 @@ PROTOCOL_PATH = REPO_ROOT / "protocols" / "mlsys_coding_policy_comparison_v1.jso
 FROZEN_MANIFEST_SHA256 = (
     "2c67d85a6806b3bbcbc63676f64fc955c5c7b3c9c4127a5a3caade1541efb4ab"
 )
-SYNTHETIC_TASK_ID = "mlsys-v1-row-log-softmax"
+# Keep the synthetic dry-run on a task whose finite JSON call contract is
+# representable by the current isolated worker. This is not a held-out task.
+SYNTHETIC_TASK_ID = "mlsys-v1-warmup-cosine"
 PERFORMANCE_PROXY_TASK_ID = "mlsys-v1-range-sums"
 GROUP_SIZE = 4
 UPDATE_LR = 0.05

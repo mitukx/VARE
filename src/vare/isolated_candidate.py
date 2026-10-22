@@ -54,6 +54,8 @@ _NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*\Z")
 # The MLSys repeated-range workload sends bounded 5k-value/5k-query inputs.
 _MAX_ARGS = 512_000
 _MAX_LINE = 512_000
+# Allow the isolated Docker worker to launch before candidate import timing.
+_STARTUP_GRACE_S = 10.0
 # Two-sided 95% Student-t critical values, df = repeats - 1.
 _T_975 = {
     1: 12.706204736432095,
@@ -86,8 +88,13 @@ _T_975 = {
     28: 2.048407141795244,
     29: 2.045229642132703,
 }
-# Runs inside the candidate container. stdout is the only result channel.
-# Saved callables are bound before the subject import.
+# Runs inside the candidate container. Protocol input arrives on fd 3 and
+# candidate stdin remains attached to /dev/null. Saved callables are bound
+# before the subject import.
+_CALLEE_BOOTSTRAP = (
+    "import os, sys; os.dup2(0, 3); os.dup2(os.open(os.devnull, os.O_RDONLY), 0); "
+    "exec(compile(sys.argv[1], '<vare-isolated-callee>', 'exec'))"
+)
 _CALLEE = r"""
 import json
 import os
@@ -96,27 +103,49 @@ import sys
 _dumps = json.dumps
 _loads = json.loads
 _write = os.write
-_read = sys.stdin.buffer.readline
+_protocol_in = os.fdopen(3, "rb", buffering=0)
+_read = _protocol_in.readline
 header = _loads(_read())
 sys.path.insert(0, "/subject")
+_protocol_fd = 1
+if header.get("discard_candidate_stdout") is True:
+    _protocol_fd = os.dup(2)
+    _devnull = os.open(os.devnull, os.O_WRONLY)
+    os.dup2(_devnull, 1)
+    os.dup2(_devnull, 2)
+_write(_protocol_fd, b"IMPORTING\n")
 module = __import__(header["module"])
 function = getattr(module, header["function"])
-_write(1, b"READY\n")
-request = _loads(_read())
-args = request["args"]
-for path in request.get("tuple_paths", []):
-    index = path[0]
-    if path[1] == "*":
-        args[index] = [tuple(row) for row in args[index]]
-try:
-    value = function(*args, **request["kwargs"])
-    payload = _dumps({"value": value}, sort_keys=True, separators=(",", ":"), allow_nan=False)
-except Exception as exc:
-    payload = _dumps({"exception": type(exc).__name__}, sort_keys=True, separators=(",", ":"))
-except BaseException:
-    os._exit(2)
-_write(1, payload.encode("utf-8") + b"\n")
-os._exit(0)
+_write(_protocol_fd, b"READY\n")
+_exit = os._exit
+_Exception = Exception
+_BaseException = BaseException
+_encode = str.encode
+def _one(request):
+    args = request["args"]
+    for path in request.get("tuple_paths", []):
+        index = path[0]
+        if path[1] == "*":
+            args[index] = [tuple(row) for row in args[index]]
+    try:
+        value = function(*args, **request["kwargs"])
+        return {"value": value}
+    except _Exception as exc:
+        return {"exception": type(exc).__name__}
+    except _BaseException:
+        _exit(2)
+if header.get("session") is True:
+    while True:
+        request = _loads(_read())
+        if request == {"close": True}:
+            break
+        payload = _dumps(_one(request), sort_keys=True, separators=(",", ":"), allow_nan=False)
+        _write(_protocol_fd, _encode(payload, "utf-8") + b"\n")
+else:
+    request = _loads(_read())
+    payload = _dumps(_one(request), sort_keys=True, separators=(",", ":"), allow_nan=False)
+    _write(_protocol_fd, _encode(payload, "utf-8") + b"\n")
+_exit(0)
 """
 
 
@@ -139,6 +168,7 @@ class FunctionCall:
     expected: Any
     kwargs: dict[str, Any] | None = None
     expected_exception: str | None = None
+    expected_exception_prefix: str | None = None
     tuple_paths: tuple[tuple[Any, ...], ...] = ()
 
 
@@ -329,10 +359,17 @@ def _tolerance(rtol: float, atol: float) -> tuple[float, float]:
     return float(rtol), float(atol)
 
 
-def values_close(actual: Any, expected: Any, *, rtol: float, atol: float) -> bool:
+def values_close(
+    actual: Any, expected: Any, *, rtol: float, atol: float,
+    bool_as_number: bool = False,
+) -> bool:
     """Compare JSON values. Numbers use ``math.isclose``; other values are exact."""
-    if type(actual) is bool or type(expected) is bool:
+    if (type(actual) is bool or type(expected) is bool) and not bool_as_number:
         return type(actual) is type(expected) and actual == expected
+    if type(actual) is bool:
+        actual = int(actual)
+    if type(expected) is bool:
+        expected = int(expected)
     if isinstance(actual, (int, float)) and isinstance(expected, (int, float)):
         actual_f = float(actual)
         expected_f = float(expected)
@@ -343,14 +380,17 @@ def values_close(actual: Any, expected: Any, *, rtol: float, atol: float) -> boo
         return type(actual) is str and type(expected) is str and actual == expected
     if type(actual) is list and type(expected) is list:
         return len(actual) == len(expected) and all(
-            values_close(left, right, rtol=rtol, atol=atol)
+            values_close(left, right, rtol=rtol, atol=atol, bool_as_number=bool_as_number)
             for left, right in zip(actual, expected, strict=True)
         )
     if type(actual) is dict and type(expected) is dict:
         if set(actual) != set(expected):
             return False
         return all(
-            values_close(actual[key], expected[key], rtol=rtol, atol=atol) for key in actual
+            values_close(
+                actual[key], expected[key], rtol=rtol, atol=atol,
+                bool_as_number=bool_as_number,
+            ) for key in actual
         )
     return False
 
@@ -480,7 +520,7 @@ def _json_copy(value: Any) -> Any:
     return json.loads(_canonical(value))
 
 
-def _limits(image: str, timeout_s: float) -> IsolationLimits:
+def _limits(image: str, timeout_s: float, memory_mb: int = 512) -> IsolationLimits:
     if (
         not isinstance(timeout_s, (int, float))
         or isinstance(timeout_s, bool)
@@ -489,7 +529,10 @@ def _limits(image: str, timeout_s: float) -> IsolationLimits:
     ):
         raise CandidateHarnessError("timeout must be positive and at most 3600 seconds")
     try:
-        return IsolationLimits(image=image, timeout_s=float(timeout_s), max_output_bytes=_MAX_LINE)
+        return IsolationLimits(
+            image=image, timeout_s=float(timeout_s), memory_mb=memory_mb,
+            max_output_bytes=_MAX_LINE,
+        )
     except (TypeError, ValueError) as exc:
         raise CandidateHarnessError("isolation image must be pinned by sha256 digest") from exc
 
@@ -497,7 +540,15 @@ def _limits(image: str, timeout_s: float) -> IsolationLimits:
 def _stage_subject(subject: Path, root: Path) -> Path:
     if not subject.is_dir() or subject.is_symlink():
         raise CandidateHarnessError("subject must be a real directory")
-    resolved = subject.resolve()
+    if not root.is_dir() or root.is_symlink():
+        raise CandidateHarnessError("staging root must be a real directory")
+    try:
+        resolved = subject.resolve(strict=True)
+        staging = root.resolve(strict=True)
+    except (OSError, RuntimeError) as exc:
+        raise CandidateHarnessError("subject and staging paths must resolve safely") from exc
+    if resolved == staging or resolved in staging.parents or staging in resolved.parents:
+        raise CandidateHarnessError("subject and staging paths must not overlap")
     grader = Path("/grader")
     if resolved == grader or grader in resolved.parents:
         raise CandidateHarnessError("subject must not be the grader tree")
@@ -510,6 +561,26 @@ def _stage_subject(subject: Path, root: Path) -> Path:
         for name in filenames:
             os.chmod(Path(dirpath) / name, 0o644)
     return destination
+
+
+def _candidate_temporary_directory(prefix: str) -> tempfile.TemporaryDirectory[str]:
+    """Stage Docker bind mounts below a host path shared with Colima on macOS."""
+    if sys.platform == "darwin":
+        home = Path.home().resolve(strict=True)
+        cache = home / ".cache"
+        cache.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if cache.is_symlink() or not cache.is_dir():
+            raise CandidateHarnessError("host cache must be a real directory")
+        root = cache / "vare-isolated-candidate"
+        root.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if root.is_symlink() or not root.is_dir():
+            raise CandidateHarnessError("candidate staging root must be a real directory")
+        root.chmod(0o700)
+        root = root.resolve(strict=True)
+        if root != cache / "vare-isolated-candidate":
+            raise CandidateHarnessError("candidate staging root escaped the host cache")
+        return tempfile.TemporaryDirectory(prefix=prefix, dir=root)
+    return tempfile.TemporaryDirectory(prefix=prefix)
 
 
 def _copy_tree(source: Path, destination: Path) -> None:
@@ -567,11 +638,18 @@ def _invoke(
     image: str,
     runner: DockerIsolationRunner,
     tuple_paths: Sequence[Sequence[Any]] = (),
+    memory_mb: int = 512,
+    discard_candidate_stdout: bool = False,
+    task_deadline: float | None = None,
 ) -> tuple[Any | None, float | None, str | None]:
     """Return ``(value, parent_wall_s, failure)``."""
     nonce = secrets.token_hex(32)
     name = "vare-call-" + secrets.token_hex(12)
-    deadline = time.monotonic() + timeout_s
+    if task_deadline is not None and time.monotonic() >= task_deadline:
+        return None, None, "missing_result"
+    deadline = time.monotonic() + timeout_s + _STARTUP_GRACE_S
+    if task_deadline is not None:
+        deadline = min(deadline, task_deadline)
     spec = {
         "nonce": nonce,
         "container": name,
@@ -583,6 +661,8 @@ def _invoke(
         "kwargs": dict(kwargs),
         "tuple_paths": [list(path) for path in tuple_paths],
         "timeout_s": timeout_s,
+        "memory_mb": memory_mb,
+        "discard_candidate_stdout": discard_candidate_stdout,
     }
     proc = subprocess.Popen(
         [sys.executable, "-B", "-m", "vare.isolated_candidate", "--worker"],
@@ -598,6 +678,11 @@ def _invoke(
         proc.stdin.write((_canonical(spec) + "\n").encode("utf-8"))
         proc.stdin.flush()
         ready = reader.readline(deadline)
+        importing = ready == f"VARE_IMPORTING {nonce} 1".encode("ascii")
+        if not importing:
+            _value, failure = _parse_result(ready, nonce)
+            return None, None, failure or "malformed_result"
+        ready = reader.readline(min(deadline, time.monotonic() + timeout_s))
         startup_s = _ready_startup(ready, nonce)
         if startup_s is None:
             _value, failure = _parse_result(ready, nonce)
@@ -607,7 +692,7 @@ def _invoke(
         call_started = time.perf_counter()
         proc.stdin.write(b"GO\n")
         proc.stdin.flush()
-        result = reader.readline(deadline)
+        result = reader.readline(min(deadline, time.monotonic() + timeout_s))
         elapsed = startup_s + (time.perf_counter() - call_started)
         parsed, failure = _parse_result(result, nonce)
         if failure is not None:
@@ -617,6 +702,87 @@ def _invoke(
         return None, None, "malformed_result"
     except (TimeoutError, EOFError, BrokenPipeError):
         return None, None, "missing_result"
+    finally:
+        try:
+            runner.force_remove_sync(name)
+        except IsolationError:
+            pass
+        _kill(proc)
+
+
+def _invoke_session(
+    staged: Path,
+    module: str,
+    function: str,
+    calls: Sequence[tuple[Sequence[Any], Mapping[str, Any], Sequence[Sequence[Any]]]],
+    timeout_s: float,
+    image: str,
+    runner: DockerIsolationRunner,
+    memory_mb: int = 512,
+    discard_candidate_stdout: bool = False,
+    task_deadline: float | None = None,
+) -> list[tuple[Any | None, float | None, str | None]]:
+    """Run an ordered case group in one isolated candidate process."""
+    if not calls:
+        return []
+    if task_deadline is not None and time.monotonic() >= task_deadline:
+        return [(None, None, "missing_result")] * len(calls)
+    nonce = secrets.token_hex(32)
+    name = "vare-call-" + secrets.token_hex(12)
+    deadline = time.monotonic() + timeout_s + _STARTUP_GRACE_S
+    if task_deadline is not None:
+        deadline = min(deadline, task_deadline)
+    spec = {
+        "nonce": nonce, "container": name, "module": module,
+        "function": function, "subject": str(staged), "image": image,
+        "timeout_s": timeout_s, "session": True, "call_count": len(calls),
+        "memory_mb": memory_mb,
+        "discard_candidate_stdout": discard_candidate_stdout,
+    }
+    proc = subprocess.Popen(
+        [sys.executable, "-B", "-m", "vare.isolated_candidate", "--worker"],
+        stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+        start_new_session=True, env=_src_env(),
+    )
+    assert proc.stdin is not None and proc.stdout is not None
+    reader = _Lines(proc.stdout)
+    results: list[tuple[Any | None, float | None, str | None]] = []
+    try:
+        proc.stdin.write((_canonical(spec) + "\n").encode("utf-8"))
+        proc.stdin.flush()
+        ready = reader.readline(
+            min(deadline, time.monotonic() + timeout_s + _STARTUP_GRACE_S)
+        )
+        if ready != f"VARE_IMPORTING {nonce} 1".encode("ascii"):
+            return [(None, None, "malformed_result")] * len(calls)
+        ready = reader.readline(min(deadline, time.monotonic() + timeout_s))
+        startup_s = _ready_startup(ready, nonce)
+        if startup_s is None or reader.has_pending():
+            return [(None, None, "malformed_result")] * len(calls)
+        proc.stdin.write(b"GO\n")
+        proc.stdin.flush()
+        for args, kwargs, tuple_paths in calls:
+            if task_deadline is not None and time.monotonic() >= task_deadline:
+                results.extend([(None, None, "missing_result")] * (len(calls) - len(results)))
+                break
+            request = {
+                "args": list(args), "kwargs": dict(kwargs),
+                "tuple_paths": [list(path) for path in tuple_paths],
+            }
+            started = time.perf_counter()
+            proc.stdin.write((_canonical(request) + "\n").encode("utf-8"))
+            proc.stdin.flush()
+            line = reader.readline(min(deadline, time.monotonic() + timeout_s))
+            elapsed = time.perf_counter() - started
+            value, failure = _parse_result(line, nonce)
+            results.append((value, elapsed, failure))
+            if failure is not None:
+                results.extend([(None, None, "missing_result")] * (len(calls) - len(results)))
+                break
+        return results
+    except (_OutputLimit, TimeoutError, EOFError, BrokenPipeError):
+        results.extend([(None, None, "missing_result")] * (len(calls) - len(results)))
+        return results
     finally:
         try:
             runner.force_remove_sync(name)
@@ -675,15 +841,15 @@ def _parse_result(line: bytes, nonce: str) -> tuple[Any | None, str | None]:
 
 
 def _container_command() -> list[str]:
-    return ["python", "-u", "-I", "-B", "-c", _CALLEE]
+    return ["python", "-u", "-I", "-B", "-c", _CALLEE_BOOTSTRAP, _CALLEE]
 
 
 def _serve(spec: dict[str, Any], parent: _Lines) -> int:
     nonce = str(spec["nonce"])
     timeout_s = float(spec["timeout_s"])
-    deadline = time.monotonic() + timeout_s
+    deadline = time.monotonic() + timeout_s + _STARTUP_GRACE_S
     runner = DockerIsolationRunner()
-    limits = _limits(str(spec["image"]), timeout_s)
+    limits = _limits(str(spec["image"]), timeout_s, int(spec.get("memory_mb", 512)))
     try:
         argv = runner.isolated_subject_argv(
             limits,
@@ -695,32 +861,72 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
         _emit_fail(nonce, "missing_result")
         return 0
     started = time.perf_counter()
+    discard_candidate_stdout = spec.get("discard_candidate_stdout") is True
     try:
         child = subprocess.Popen(
             argv,
             stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL if discard_candidate_stdout else subprocess.PIPE,
+            stderr=subprocess.PIPE if discard_candidate_stdout else subprocess.DEVNULL,
             env=runner._client_env,
         )
     except OSError:
         _emit_fail(nonce, "missing_result")
         return 0
-    assert child.stdin is not None and child.stdout is not None
-    reader = _Lines(child.stdout)
+    protocol_stream = child.stderr if discard_candidate_stdout else child.stdout
+    assert child.stdin is not None and protocol_stream is not None
+    reader = _Lines(protocol_stream)
     try:
-        header = {"module": spec["module"], "function": spec["function"]}
+        header = {
+            "module": spec["module"], "function": spec["function"],
+            "session": spec.get("session") is True,
+            "discard_candidate_stdout": spec.get("discard_candidate_stdout") is True,
+        }
         child.stdin.write((_canonical(header) + "\n").encode("utf-8"))
         child.stdin.flush()
-        ready = reader.readline(deadline)
+        importing = reader.readline(deadline)
+        if importing != b"IMPORTING":
+            _emit_fail(nonce, "malformed_result")
+            return 0
+        _emit_importing(nonce)
+        ready = reader.readline(time.monotonic() + timeout_s)
         startup_s = time.perf_counter() - started
         if ready != b"READY" or reader.has_pending():
             _emit_fail(nonce, "malformed_result")
             return 0
         _emit_ready(nonce, startup_s)
-        go = parent.readline(deadline)
+        go = parent.readline(time.monotonic() + _STARTUP_GRACE_S)
         if go != b"GO":
             _emit_fail(nonce, "missing_result")
+            return 0
+        if spec.get("session") is True:
+            count = int(spec.get("call_count", 0))
+            if count <= 0 or count > 100_000:
+                _emit_fail(nonce, "malformed_result")
+                return 0
+            for _index in range(count):
+                raw_request = parent.readline(time.monotonic() + _STARTUP_GRACE_S)
+                try:
+                    request = json.loads(raw_request.decode("utf-8"))
+                    child.stdin.write((_canonical(request) + "\n").encode("utf-8"))
+                    child.stdin.flush()
+                    raw = reader.readline(time.monotonic() + timeout_s)
+                    payload = json.loads(raw.decode("utf-8"))
+                except (UnicodeError, json.JSONDecodeError, TimeoutError, EOFError):
+                    _emit_fail(nonce, "missing_result")
+                    return 0
+                valid_value = type(payload) is dict and set(payload) == {"value"}
+                valid_exception = (
+                    type(payload) is dict and set(payload) == {"exception"}
+                    and type(payload["exception"]) is str
+                    and payload["exception"].isidentifier()
+                )
+                if not valid_value and not valid_exception or reader.has_pending():
+                    _emit_fail(nonce, "malformed_result")
+                    return 0
+                _emit(nonce, "VARE_RESULT", _canonical(payload))
+            child.stdin.write(b'{"close":true}\n')
+            child.stdin.flush()
             return 0
         request = {
             "args": spec["args"], "kwargs": spec["kwargs"],
@@ -728,7 +934,7 @@ def _serve(spec: dict[str, Any], parent: _Lines) -> int:
         }
         child.stdin.write((_canonical(request) + "\n").encode("utf-8"))
         child.stdin.flush()
-        raw = reader.readline(deadline)
+        raw = reader.readline(time.monotonic() + timeout_s)
         if reader.has_pending():
             _emit_fail(nonce, "malformed_result")
             return 0
@@ -772,6 +978,11 @@ def _emit_ready(nonce: str, startup_s: float) -> None:
     sys.stdout.flush()
 
 
+def _emit_importing(nonce: str) -> None:
+    sys.stdout.write(f"VARE_IMPORTING {nonce} 1\n")
+    sys.stdout.flush()
+
+
 def _emit_fail(nonce: str, reason: str) -> None:
     _emit(nonce, "VARE_FAIL", reason)
 
@@ -806,15 +1017,21 @@ def _one_call(
     image: str,
     runner: DockerIsolationRunner,
     tuple_paths: Sequence[Sequence[Any]] = (),
+    memory_mb: int = 512,
+    discard_candidate_stdout: bool = False,
+    task_deadline: float | None = None,
 ) -> tuple[Any | None, float | None, str | None]:
     module, function, args, kwargs = _prepare_call(module, function, args, kwargs)
-    _limits(image, timeout_s)
+    _limits(image, timeout_s, memory_mb)
     source = Path(subject)
     if not (source / f"{module}.py").is_file():
         raise CandidateHarnessError("subject module is missing")
-    with tempfile.TemporaryDirectory(prefix="vare-call-") as folder:
+    with _candidate_temporary_directory(prefix="vare-call-") as folder:
         staged = _stage_subject(source, Path(folder))
-        return _invoke(staged, module, function, args, kwargs, timeout_s, image, runner, tuple_paths)
+        return _invoke(
+            staged, module, function, args, kwargs, timeout_s, image, runner,
+            tuple_paths, memory_mb, discard_candidate_stdout, task_deadline,
+        )
 
 
 def grade_calls(
@@ -827,6 +1044,11 @@ def grade_calls(
     rtol: float = 0.0,
     atol: float = 0.0,
     runner: DockerIsolationRunner | None = None,
+    preserve_session: bool = False,
+    bool_as_number: bool = False,
+    memory_mb: int = 512,
+    discard_candidate_stdout: bool = False,
+    task_deadline: float | None = None,
 ) -> CallReport:
     """Compare each child return value with the parent-owned expected value.
 
@@ -840,22 +1062,50 @@ def grade_calls(
         raise CandidateHarnessError("task_kind must be correctness for grade_calls")
     if not calls:
         raise CandidateHarnessError("at least one call is required")
+    _limits(image, timeout_s, memory_mb)
     rel, abs_tol = _tolerance(rtol, atol)
     active = runner or DockerIsolationRunner()
     results: list[CaseResult] = []
-    for call in calls:
-        value, wall, failure = _one_call(
-            subject, call.module, call.function, call.args, call.kwargs or {},
-            timeout_s, image, active, call.tuple_paths,
-        )
+    if preserve_session:
+        first = calls[0]
+        if any(call.module != first.module or call.function != first.function for call in calls):
+            raise CandidateHarnessError("session calls must use one module and function")
+        prepared = [
+            _prepare_call(call.module, call.function, call.args, call.kwargs or {})
+            for call in calls
+        ]
+        with _candidate_temporary_directory(prefix="vare-call-session-") as folder:
+            staged = _stage_subject(Path(subject), Path(folder))
+            invoked = _invoke_session(
+                staged, first.module, first.function,
+                [(item[2], item[3], call.tuple_paths) for item, call in zip(prepared, calls, strict=True)],
+                timeout_s, image, active, memory_mb, discard_candidate_stdout, task_deadline,
+            )
+    else:
+        invoked = [
+            _one_call(
+                subject, call.module, call.function, call.args, call.kwargs or {},
+                timeout_s, image, active, call.tuple_paths,
+                memory_mb, discard_candidate_stdout, task_deadline,
+            )
+            for call in calls
+        ]
+    for call, (value, wall, failure) in zip(calls, invoked, strict=True):
         if failure is None:
             if call.expected_exception is not None:
                 matched = (
                     isinstance(value, CandidateException)
-                    and value.type_name == call.expected_exception
+                    and (
+                        value.type_name.startswith(call.expected_exception_prefix)
+                        if call.expected_exception_prefix is not None
+                        else value.type_name == call.expected_exception
+                    )
                 )
             else:
-                matched = values_close(value, call.expected, rtol=rel, atol=abs_tol)
+                matched = values_close(
+                    value, call.expected, rtol=rel, atol=abs_tol,
+                    bool_as_number=bool_as_number,
+                )
             if not matched:
                 failure = "wrong_output"
             passed = failure is None

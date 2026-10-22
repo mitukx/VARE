@@ -1,0 +1,122 @@
+{
+  "adapter_source_sha256": "e8ae331f23ae3445e95ee4b8337ab4c98a92212b9070bf71dbace1e55d90deba",
+  "auditor_source_sha256": "081162bb79a23d9516a7d23e29cdc03e767ed595f3779f842daa07d02cb9e13d",
+  "classification": "harness calibration on a previously consumed task; not model or held-out evidence",
+  "container_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+  "controls": {
+    "frozen_nested_zip_checker_accepts_empty_result": true,
+    "isolated_grader_accepts_oracle_control": true,
+    "isolated_grader_rejection_reason": "correctness_failed",
+    "isolated_grader_rejects_empty_result": true
+  },
+  "docker_server": "29.5.2",
+  "elapsed_s": 2.4767803750000894,
+  "frozen_harness_adapter_sha256": "5e4979d8306e4e9e7140a276f891e86879be0ba74130c4019fd86f9db80dbeca",
+  "harness_source_sha256": "e746f7969c2d46419983100c6c693ae33197ccdb91f4c9895baafe141f0cb9ca",
+  "hidden_evaluator_sha256": "d39ec2e50d4b4921a5719998cfea4c104e3f586b1c5b6156f46f4421a64e4d58",
+  "host": {
+    "machine": "arm64",
+    "system": "macOS-27.0.1-arm64-arm-64bit"
+  },
+  "isolated_grader_source_sha256": "88b717380eef3f9b27f4b75020ebb38ac6c5e5f8872d14b15b218ef691808358",
+  "oracle_sha256": "07e7b90040e21cd04c31df7bf591d02897015bbfb2308713816e16d01f9a37fa",
+  "pack_manifest_sha256": "2c67d85a6806b3bbcbc63676f64fc955c5c7b3c9c4127a5a3caade1541efb4ab",
+  "protocol_id": "mlsys-separated-candidate-harness-v1",
+  "protocol_sha256": "c7e42bd9a98c202cfa9af0b9492be8a07d0c1dce06c9302bfacaa0827fbadde5",
+  "raw": {
+    "empty_result": {
+      "baseline_samples_s": [],
+      "candidate_samples_s": [
+        0.14022079105437862,
+        0.12791237491972746,
+        0.13036745808202027,
+        0.13261712399310188
+      ],
+      "error": "correctness_failed",
+      "grade_evidence": {
+        "cases": [
+          {
+            "case_id": "mlsys-v1-global-grad-clip-grader-0",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.14022079105437862
+          },
+          {
+            "case_id": "mlsys-v1-global-grad-clip-grader-1",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.12791237491972746
+          },
+          {
+            "case_id": "mlsys-v1-global-grad-clip-grader-2",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.13036745808202027
+          },
+          {
+            "case_id": "mlsys-v1-global-grad-clip-grader-3",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.13261712399310188
+          }
+        ],
+        "passed": false,
+        "task_kind": "correctness"
+      },
+      "nonce": "31313131313131313131313131313131",
+      "nonce_enforced": true,
+      "passed": false,
+      "task_id": "mlsys-v1-global-grad-clip"
+    },
+    "oracle_control": {
+      "baseline_samples_s": [],
+      "candidate_samples_s": [
+        0.134828124978289,
+        0.1318450419468241,
+        0.13258033407835346,
+        0.14038391699976904
+      ],
+      "error": null,
+      "grade_evidence": {
+        "cases": [
+          {
+            "case_id": "mlsys-v1-global-grad-clip-grader-0",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.134828124978289
+          },
+          {
+            "case_id": "mlsys-v1-global-grad-clip-grader-1",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.1318450419468241
+          },
+          {
+            "case_id": "mlsys-v1-global-grad-clip-grader-2",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.13258033407835346
+          },
+          {
+            "case_id": "mlsys-v1-global-grad-clip-grader-3",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.14038391699976904
+          }
+        ],
+        "passed": true,
+        "task_kind": "correctness"
+      },
+      "nonce": "42424242424242424242424242424242",
+      "nonce_enforced": true,
+      "passed": true,
+      "task_id": "mlsys-v1-global-grad-clip"
+    }
+  },
+  "separated_grader_source_sha256": "9f5cb29b82263f77f9af2ac19d8090c4ec6fabaa70b1b7c1b0aa9a4f497de240",
+  "source_commit": "1ee7583cf293a32a50a0f9955bb93d4638b2d735",
+  "task_descriptor_sha256": "c946b7706194ba3fc09e73b99f13fddb3032784a6d567f8b7b950755b44e708c",
+  "task_id": "mlsys-v1-global-grad-clip",
+  "task_type": "correctness",
+  "verifier_source_sha256": "24ec1bfaae378344f274ccac3cfd6f3c3b9b13ded1421f8b6e49fb6718f19626"
+}

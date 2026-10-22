@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pytest
 
-from vare.environments.runner import ExecutableEvaluator, Workspace
+from vare.environments.runner import Workspace
 from vare.environments.spec import EngineeringTaskSpec
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -108,29 +108,26 @@ def test_power_script_reproduces_the_recorded_table():
 
 @pytest.mark.parametrize("task_name", ["gqa_repeat", "label_smooth", "ema_bias"])
 def test_draft_fixture_calibration_is_not_a_heldout_policy_result(task_name: str):
+    from vare.separated_candidate_harness import SeparatedHarnessError, grade_function
+
+    entrypoints = {
+        "gqa_repeat": "gqa_repeat:repeat_kv_heads",
+        "label_smooth": "label_smooth:smooth_targets",
+        "ema_bias": "ema_bias:bias_corrected_ema",
+    }
     task_dir = PACK / "tasks" / task_name
     spec = EngineeringTaskSpec.load(task_dir / "task.json")
     assert spec.metadata["task_type"] == "correctness"
     assert spec.metadata["split"] == "unassigned"
     assert spec.metadata["grader_visibility"] == "hidden"
-    outcomes = {}
-    for label, use_oracle in (("baseline", False), ("oracle", True)):
-        with Workspace(spec) as workspace:
-            names = {path.name for path in workspace.path.rglob("*") if path.is_file()}
-            assert "test_hidden.py" not in names
-            public = subprocess.run(
-                [sys.executable, "test_public.py"],
-                cwd=workspace.path,
-                check=False,
-                capture_output=True,
-                text=True,
-            )
-            assert public.returncode == 0, public.stderr
-            if use_oracle:
-                oracle = next((task_dir / "evaluator" / "oracle").glob("*.py"))
-                shutil.copy(oracle, workspace.path / oracle.name)
-            result = ExecutableEvaluator(spec, evaluator_root=task_dir).evaluate(
-                workspace.path
-            )
-        outcomes[label] = result.passed
-    assert outcomes == {"baseline": False, "oracle": True}
+    with Workspace(spec) as workspace:
+        oracle = next((task_dir / "evaluator" / "oracle").glob("*.py"))
+        shutil.copy(oracle, workspace.path / oracle.name)
+        with pytest.raises(SeparatedHarnessError, match="supported MLSys pack"):
+            grade_function({
+                "workspace": str(workspace.path),
+                "entrypoint": entrypoints[task_name],
+                "task_type": "correctness",
+                "trusted_task_path": str(task_dir / "task.json"),
+                "nonce": "de" * 16,
+            })

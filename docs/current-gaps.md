@@ -30,6 +30,31 @@ evidence bundle](../results/mlsys-actual-model-update-readiness-v2/). The same
 bundle discloses a repeated, already-consumed MLX benchmark prompt; that rerun
 is excluded from new evidence.
 
+**Update 2026-10-20 — separated Docker grader integration:** the proposed
+frozen-pack adapter is implemented on the isolated VARE candidate runner for
+three task IDs with compatible JSON-call semantics. A consumed causal-attention calibration
+confirms both frozen checker and isolated grader reject a malformed empty
+result, and the known oracle passes. Tasks whose frozen graders require input
+mutation checks, list/tuple type distinctions, or non-JSON inputs fail closed;
+the shared task runner is unchanged. A routed correctness task now runs all
+hidden calls in one isolated candidate process, preserving module state; the
+regression rejects a candidate that returns a wrong value only on its second
+call. Import and each function call have separate timeout windows; the v3 EMA
+adapter retains its frozen 20-second limit. The v2 protocol matches the
+frozen 2 GiB candidate memory cap. Frozen numeric-bool and ValueError-prefix
+semantics are preserved for compatible tasks. The v2 evidence auditor checks
+nested artifact names and source hashes without depending on unsquashed
+commit ancestry. A second review found that the repository-grader entry point
+could bypass the task adapter's route allowlist; it now rejects every
+non-routable MLSys task before reading even a pre-generated call file. The
+latest run-11 bundle also verifies that its recorded Git commit exists and
+that each locked source blob matches that commit. Pack manifests and
+adapter/runtime sources are hash-locked and audited. This only closes adapter boundary gaps;
+the readiness NO-GO above remains in force, and no model rollout, optimizer
+update, or held-out success evidence was produced. See the
+[harness report](mlsys-separated-candidate-harness-v1-report.md) and
+[latest raw evidence](../results/mlsys-separated-candidate-harness-v1/run-11/).
+
 **Update 2026-10-20 — MLSys graders call a harness adapter; comparison v2 is a draft:** the v1 graders no longer import the candidate in-process. They call `harness_adapter.py`, which proposes `vare.separated_candidate_harness.grade_function` for PR #85 and falls back to a marked temporary shim. Trusted `metadata.task_type` is `correctness` or `performance`. Timing pairs are interleaved and the 2× gate uses the lower Student-t bound of the paired ratios. The parent rejects a reused input object or value. A performance task with prefixed measurement output scores 0. A correct slow range-sum and a correct slow standardizer still fail the 2× gate, including an identity cache on both tasks and an import-time print. The v1 all-seeds-plus-bootstrap acceptance text is unchanged; draft v2 does not use that vacuous conjunction. The default comparison command still exits 3. Real model patches stay refused because the live canary is readable. v1's 4×3 temperature-0 rule reaches 80% power at a 0.5 baseline only around a 0.491 absolute lift. Draft v2 is not run and does not freeze held-out membership. Its primary test is a task-level paired t-test with Holm across GRPO versus no-update and SFT versus no-update. The recorded single-test target, after a 20-30 task expansion, is 15-20 held-out tasks at 32 samples, about 8 percentage points, and that model is invalid near 0% success. See the [report](mlsys-coding-tasks-v1.md).
 
 **Update 2026-10-19 — authored MLSys coding pack:** nine single-file

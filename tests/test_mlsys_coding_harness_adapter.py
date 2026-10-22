@@ -8,6 +8,8 @@ from pathlib import Path
 
 import pytest
 
+from vare.separated_candidate_harness import SeparatedHarnessError
+
 PACK = Path(__file__).resolve().parents[1] / "benchmarks" / "mlsys_coding_v1"
 
 
@@ -62,13 +64,9 @@ def _request(
     )
 
 
-def test_shim_is_marked_temporary_and_checks_in_the_parent(tmp_path: Path, adapter):
-    report = adapter.run_harness(_request(tmp_path, adapter, repeats=2))
-    assert report.passed is True
-    assert report.harness_id == "temporary_shim_candidate_call"
-    assert report.replaced_by == "vare.separated_candidate_harness.grade_function"
-    assert report.nonce_enforced is False
-    assert report.nonce
+def test_unsupported_task_fails_closed_instead_of_using_the_host_shim(tmp_path: Path, adapter):
+    with pytest.raises(SeparatedHarnessError, match="trusted task ID is missing"):
+        adapter.run_harness(_request(tmp_path, adapter, repeats=2))
 
 
 def test_task_type_must_match_trusted_metadata(tmp_path: Path, adapter):
@@ -131,40 +129,23 @@ def test_proposed_harness_is_preferred_and_must_enforce_the_nonce(
         adapter.run_harness(_request(tmp_path, adapter))
 
 
-def _accepts_a_list(request, adapter):
-    """The stock fixture function rejects a list, so the second draw never runs."""
-    (request.workspace / "widget.py").write_text(
-        "def add(value):\n    return len(value)\n",
-        encoding="utf-8",
-    )
-    request.reference = lambda value: len(value)
-
-    def checker(actual, expected, _positional, _keywords, _args, _kwargs):
-        if actual != expected:
-            raise AssertionError(actual)
-
-    request.checker = checker
-    return request
-
-
 def test_parent_rejects_a_reused_input_object(tmp_path: Path, adapter):
-    request = _accepts_a_list(_request(tmp_path, adapter, repeats=2), adapter)
     shared = [1, 2, 3]
 
     def reused(_index: int):
         return ((shared,), {})
 
-    request.input_generator = reused
+    guarded = adapter.guard_fresh_inputs(reused)
+    guarded(0)
     with pytest.raises(adapter.HarnessAdapterError, match="input object was reused"):
-        adapter.run_harness(request)
+        guarded(1)
 
 
 def test_parent_rejects_a_reused_input_value(tmp_path: Path, adapter):
-    request = _accepts_a_list(_request(tmp_path, adapter, repeats=2), adapter)
-
     def same_contents(_index: int):
         return (([1, 2, 3],), {})
 
-    request.input_generator = same_contents
+    guarded = adapter.guard_fresh_inputs(same_contents)
+    guarded(0)
     with pytest.raises(adapter.HarnessAdapterError, match="input value was reused"):
-        adapter.run_harness(request)
+        guarded(1)

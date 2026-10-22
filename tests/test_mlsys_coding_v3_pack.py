@@ -1,6 +1,7 @@
 import json
 import hashlib
 from pathlib import Path
+import subprocess
 
 import pytest
 
@@ -71,5 +72,81 @@ def test_v3_hidden_cases_materialize_without_running_candidate(task_id, function
     assert calls["task_id"] == task_id
     assert calls["function"] == function
     assert len(calls["calls"]) == case_count
+    if task_id == "mlsys-v3-ema-bias":
+        assert calls["timeout_s"] == 20
+        assert calls["memory_mb"] == 2048
     assert provenance["case_count"] == case_count
     assert "expected" in calls["calls"][0]
+
+
+def test_v3_warmup_copy_materializes_with_its_shared_v1_adapter():
+    import os
+    import subprocess
+    import sys
+
+    task_dir = PACK / "tasks" / "warmup_cosine"
+    env = dict(os.environ, PYTHONPATH=str(ROOT / "src"))
+    command = (
+        "from pathlib import Path; "
+        "from scripts.mlsys_task_isolated_calls import materialize_isolated_calls; "
+        f"calls, provenance = materialize_isolated_calls('mlsys-v1-warmup-cosine', Path({str(task_dir)!r})); "
+        "assert len(calls['calls']) == 12; assert provenance['case_count'] == 12"
+    )
+    process = subprocess.run(
+        [sys.executable, "-c", command], cwd=ROOT, env=env,
+        capture_output=True, text=True, check=False,
+    )
+
+    assert process.returncode == 0, process.stderr
+
+
+def test_nested_audit_named_files_are_inventory_payloads(tmp_path):
+    from scripts.audit_mlsys_separated_candidate_harness_v2 import evidence_paths
+
+    run = tmp_path / "run"
+    (run / "candidate").mkdir(parents=True)
+    (run / "audit.json").write_text("root bookkeeping")
+    (run / "evidence_manifest.json").write_text("root bookkeeping")
+    (run / "candidate" / "audit.json").write_text("candidate artifact")
+    (run / "candidate" / "evidence_manifest.json").write_text("candidate artifact")
+
+    assert evidence_paths(run) == {
+        "candidate/audit.json", "candidate/evidence_manifest.json",
+    }
+
+
+def test_v2_source_commit_provenance_checks_commit_blobs(tmp_path):
+    from scripts.audit_mlsys_separated_candidate_harness_v2 import (
+        source_commit_matches_files,
+    )
+
+    repo = tmp_path / "source"
+    repo.mkdir()
+    subprocess.run(["git", "init", str(repo)], check=True, capture_output=True)
+    subprocess.run(["git", "-C", str(repo), "config", "user.name", "Test"], check=True)
+    subprocess.run(
+        ["git", "-C", str(repo), "config", "user.email", "test@example.invalid"], check=True,
+    )
+    source = repo / "src" / "module.py"
+    source.parent.mkdir()
+    source.write_text("VALUE = 1\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(repo), "add", "src/module.py"], check=True)
+    subprocess.run(["git", "-C", str(repo), "commit", "-m", "source"], check=True, capture_output=True)
+    commit = subprocess.run(
+        ["git", "-C", str(repo), "rev-parse", "HEAD"],
+        check=True, capture_output=True, text=True,
+    ).stdout.strip()
+    digest = hashlib.sha256(source.read_bytes()).hexdigest()
+
+    assert source_commit_matches_files(repo, commit, {"src/module.py": digest})
+    assert not source_commit_matches_files(repo, commit, {"src/module.py": "0" * 64})
+    assert not source_commit_matches_files(repo, "f" * 40, {"src/module.py": digest})
+
+
+def test_label_smoothing_materializes_but_is_not_routed_without_type_fidelity():
+    from vare.separated_candidate_harness import SeparatedHarnessError, _task_adapter
+
+    task_dir = PACK / "tasks" / "mlsys-v3-label-smooth"
+    materialize_isolated_calls("mlsys-v3-label-smooth", task_dir)
+    with pytest.raises(SeparatedHarnessError, match="no isolated call materializer"):
+        _task_adapter("mlsys-v3-label-smooth", task_dir / "task.json")
