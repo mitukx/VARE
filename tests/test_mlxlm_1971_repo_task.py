@@ -46,5 +46,5 @@ def test_candidate_workspace_rejects_symlinked_target(tmp_path: Path):
     outside = tmp_path / "outside.py"
     outside.write_text("pass\n")
     target.symlink_to(outside)
-    with pytest.raises(MlxLm1971TaskError, match="unsafe"):
+    with pytest.raises(MlxLm1971TaskError, match="symlink"):
         grade_workspace(workspace)

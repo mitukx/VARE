@@ -69,10 +69,9 @@ def test_source_verification_checks_committed_bytes_and_all_index_flags(tmp_path
         task.verify_pinned_source_tree(root)
 
 
-def test_v6_protocol_binds_manifest_and_exact_implementation():
-    protocol = task.verify_protocol_v7()
-    assert protocol["protocol_id"] == "vare.mlsys-repository-task.mlxlm-1971.v7"
-    assert protocol["source_file_count"] == 201
+def test_frozen_v7_protocol_rejects_changed_public_dispatcher():
+    with pytest.raises(ValueError, match="implementation hash mismatch"):
+        task.verify_protocol_v7()
 
 
 def test_source_verification_rejects_untracked_ignored_python_module(tmp_path, monkeypatch):

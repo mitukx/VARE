@@ -167,6 +167,13 @@ def _copy_package(source_root: Path, destination: Path) -> None:
 
 
 def export_candidate(source_root: Path, workspace: Path, patch_path: Path | None = None) -> dict[str, Any]:
+    """Export from the fully inventoried v9 baseline implementation."""
+    from .mlxlm_1971_repo_task_v9 import export_candidate_v9
+
+    return export_candidate_v9(source_root, workspace, patch_path)
+
+
+def _export_candidate_v1(source_root: Path, workspace: Path, patch_path: Path | None = None) -> dict[str, Any]:
     verify_baseline(source_root)
     if workspace.exists() or workspace.is_symlink():
         raise MlxLm1971TaskError("candidate workspace already exists")
@@ -239,7 +246,7 @@ def grade_workspace_v1(workspace: Path, *, image: str = IMAGE) -> dict[str, Any]
 
 
 def grade_workspace(workspace: Path, *, image: str = IMAGE) -> dict[str, Any]:
-    """Grade using the current cache-aware, scale-diverse protocol."""
-    from .mlxlm_1971_repo_task_v4 import grade_workspace_v4
+    """Grade under the current inventory-enforcing v9 protocol."""
+    from .mlxlm_1971_repo_task_v9 import grade_workspace_v9
 
-    return grade_workspace_v4(workspace, image=image)
+    return grade_workspace_v9(workspace, image=image)
