@@ -555,6 +555,26 @@ def _stage_subject(subject: Path, root: Path) -> Path:
     return destination
 
 
+def _candidate_temporary_directory(prefix: str) -> tempfile.TemporaryDirectory[str]:
+    """Stage Docker bind mounts below a host path shared with Colima on macOS."""
+    if sys.platform == "darwin":
+        home = Path.home().resolve(strict=True)
+        cache = home / ".cache"
+        cache.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if cache.is_symlink() or not cache.is_dir():
+            raise CandidateHarnessError("host cache must be a real directory")
+        root = cache / "vare-isolated-candidate"
+        root.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if root.is_symlink() or not root.is_dir():
+            raise CandidateHarnessError("candidate staging root must be a real directory")
+        root.chmod(0o700)
+        root = root.resolve(strict=True)
+        if root != cache / "vare-isolated-candidate":
+            raise CandidateHarnessError("candidate staging root escaped the host cache")
+        return tempfile.TemporaryDirectory(prefix=prefix, dir=root)
+    return tempfile.TemporaryDirectory(prefix=prefix)
+
+
 def _copy_tree(source: Path, destination: Path) -> None:
     destination.mkdir(mode=0o755)
     for entry in sorted(source.iterdir(), key=lambda item: item.name):
@@ -998,7 +1018,7 @@ def _one_call(
     source = Path(subject)
     if not (source / f"{module}.py").is_file():
         raise CandidateHarnessError("subject module is missing")
-    with tempfile.TemporaryDirectory(prefix="vare-call-") as folder:
+    with _candidate_temporary_directory(prefix="vare-call-") as folder:
         staged = _stage_subject(source, Path(folder))
         return _invoke(
             staged, module, function, args, kwargs, timeout_s, image, runner,
@@ -1046,7 +1066,7 @@ def grade_calls(
             _prepare_call(call.module, call.function, call.args, call.kwargs or {})
             for call in calls
         ]
-        with tempfile.TemporaryDirectory(prefix="vare-call-session-") as folder:
+        with _candidate_temporary_directory(prefix="vare-call-session-") as folder:
             staged = _stage_subject(Path(subject), Path(folder))
             invoked = _invoke_session(
                 staged, first.module, first.function,

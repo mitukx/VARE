@@ -26,6 +26,7 @@ from vare.isolated_candidate import (
     two_x_speedup_decision,
     values_close,
 )
+from vare import isolated_candidate
 
 IMAGE = "python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1"
 CANARY = "vare-hidden-canary-85"
@@ -115,6 +116,48 @@ def test_correct_oracle_passes_without_importing_it(tmp_path: Path) -> None:
     assert report.passed is True
     assert report.cases[0].failure is None
     assert "solve" not in sys.modules
+
+
+@pytest.mark.skipif(sys.platform != "darwin", reason="Colima staging path is macOS-specific")
+def test_single_call_stages_candidate_below_host_cache(tmp_path: Path, monkeypatch) -> None:
+    subject = _subject(tmp_path, "solve", "def add(a, b):\n    return a + b\n")
+    staged_paths: list[Path] = []
+
+    def capture(staged: Path, *_args, **_kwargs):
+        staged_paths.append(staged)
+        return 5, 0.0, None
+
+    monkeypatch.setattr(isolated_candidate, "_invoke", capture)
+    report = _grade(subject, FunctionCall("sum", "solve", "add", [2, 3], 5))
+
+    assert report.passed is True
+    assert len(staged_paths) == 1
+    assert staged_paths[0].is_relative_to(
+        Path.home() / ".cache" / "vare-isolated-candidate"
+    )
+
+
+@pytest.mark.skipif(sys.platform != "darwin", reason="Colima staging path is macOS-specific")
+def test_session_stages_candidate_below_host_cache(tmp_path: Path, monkeypatch) -> None:
+    subject = _subject(tmp_path, "counter", "def next_value():\n    return 1\n")
+    staged_paths: list[Path] = []
+
+    def capture(staged: Path, *_args, **_kwargs):
+        staged_paths.append(staged)
+        return [(1, 0.0, None)]
+
+    monkeypatch.setattr(isolated_candidate, "_invoke_session", capture)
+    report = grade_calls(
+        subject,
+        [FunctionCall("first", "counter", "next_value", [], 1)],
+        task_kind="correctness", image=IMAGE, preserve_session=True,
+    )
+
+    assert report.passed is True
+    assert len(staged_paths) == 1
+    assert staged_paths[0].is_relative_to(
+        Path.home() / ".cache" / "vare-isolated-candidate"
+    )
 
 
 def test_import_and_call_receive_separate_timeout_windows(tmp_path: Path) -> None:
