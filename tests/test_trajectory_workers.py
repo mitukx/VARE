@@ -105,3 +105,61 @@ def test_cancelled_io_is_terminal_before_returning():
             await task
         assert finished.is_set()
     asyncio.run(scenario())
+
+
+def test_step_callback_receives_updated_durable_head_and_state(tmp_path):
+    """Every step observes the same hash chain as a crash-resumed worker."""
+    async def scenario():
+        store = TrajectoryStore.create(
+            tmp_path / "committed-head.db", run_id="durable-head",
+            max_inflight=2,
+        )
+        policy = PolicyCheckpoint("p0", 0, "a" * 64)
+        store.register_policy(policy)
+        store.submit(
+            "trajectory", Task("task", "next-action"), expected_steps=3,
+            group_id="trajectory", member=0, group_size=1,
+        )
+        seen = []
+        stop = asyncio.Event()
+
+        async def step_fn(resumed, trajectory_id):
+            persisted = await owned_io(store.resume_state, trajectory_id)
+            assert resumed["next_step"] == persisted["next_step"]
+            assert resumed["head"] == persisted["head"]
+            assert resumed["state"] == persisted["state"]
+            index = resumed["next_step"]
+            seen.append((index, resumed["head"], resumed["state"]))
+            return AgentStep(
+                index, f"step-{index}", policy,
+                {"kind": "tool", "operation_id": f"op-{index}",
+                 "semantics": "at_least_once"},
+                {"value": index}, {"done": index + 1},
+            )
+
+        worker = asyncio.create_task(
+            execute_trajectories(
+                store, "worker", step_fn, stop,
+                lease_seconds=30, poll_seconds=0.001,
+            )
+        )
+        try:
+            async with asyncio.timeout(15):
+                while store.trajectory("trajectory")["state"] != "complete":
+                    await asyncio.sleep(0.001)
+        finally:
+            stop.set()
+            await asyncio.wait_for(worker, timeout=5)
+
+        assert len(seen) == 3
+        assert [index for index, _, _ in seen] == [0, 1, 2]
+        assert len({head for _, head, _ in seen}) == 3
+        assert [state for _, _, state in seen] == [
+            {}, {"done": 1}, {"done": 2},
+        ]
+        final_state = store.resume_state("trajectory")
+        assert final_state["next_step"] == 3
+        assert final_state["state"] == {"done": 3}
+        assert final_state["head"] not in {head for _, head, _ in seen}
+
+    asyncio.run(scenario())
