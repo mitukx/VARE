@@ -21,7 +21,7 @@ The v2 calibration was valid for its pinned implementation commit, but PR #98 in
 DOCKER_CONTEXT=colima python scripts/run_mlxlm_1971_calibration_v3.py \
   --source-repo /tmp/vare-mlx-lm-full-v4 \
   --image 'localhost:5000/vare/mlx-mimo-cpu-mimo@sha256:799f8b9f34fe2caa8fc0c4d0889abac63384606bcf40db28524db3fba07a7cbe' \
-  --output results/mlxlm-1971-isolated-v3/run-1
+  --output /tmp/mlxlm-1971-v3-run
 ```
 
 The runner verified a clean implementation worktree, the v3 protocol lock, all locked source files, exact upstream commits, and the source bytes before execution.
@@ -39,7 +39,7 @@ The runner verified a clean implementation worktree, the v3 protocol lock, all l
 | Network, stdout result forgery, subprocess write probes | Blocked |
 | Timeout and memory exhaustion probes | Terminated and rejected |
 
-Overall v3 calibration: **PASS**. Full per-case data is retained in `results/mlxlm-1971-isolated-v3/run-1/calibration.json` (SHA-256 `96296955784a975dbd07f3eaaf9f9d8b41e893296d8b05cd4d4dbe51a3aeca54`, recorded in adjacent `SHA256SUMS`).
+Overall v3 calibration: **PASS**. Full per-case data is retained in `/tmp/mlxlm-1971-v3-run/calibration.json` (SHA-256 `96296955784a975dbd07f3eaaf9f9d8b41e893296d8b05cd4d4dbe51a3aeca54`, recorded in adjacent `SHA256SUMS`).
 
 ## Validation and preservation
 

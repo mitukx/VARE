@@ -200,7 +200,7 @@ def export_candidate(source_root: Path, workspace: Path, patch_path: Path | None
     }
 
 
-def grade_workspace(workspace: Path, *, image: str = IMAGE) -> dict[str, Any]:
+def grade_workspace_v1(workspace: Path, *, image: str = IMAGE) -> dict[str, Any]:
     target = workspace / TARGET_PATH
     if workspace.is_symlink() or not workspace.is_dir() or target.is_symlink() or not target.is_file():
         raise MlxLm1971TaskError("candidate workspace is incomplete or unsafe")
@@ -236,3 +236,10 @@ def grade_workspace(workspace: Path, *, image: str = IMAGE) -> dict[str, Any]:
         "grader_adapter_sha256": sha256_file(GRADER_ADAPTER),
         "expected_output_sha256": sha256_file(EXPECTED_OUTPUT),
     }
+
+
+def grade_workspace(workspace: Path, *, image: str = IMAGE) -> dict[str, Any]:
+    """Grade using the current cache-aware, scale-diverse protocol."""
+    from .mlxlm_1971_repo_task_v4 import grade_workspace_v4
+
+    return grade_workspace_v4(workspace, image=image)
