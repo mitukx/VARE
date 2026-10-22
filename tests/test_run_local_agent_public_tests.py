@@ -35,7 +35,10 @@ IMAGE = (
         (127, "exec: \"python\": executable file not found in $PATH", "container_launch_failure"),
         (137, "", "container_resource_failure"),
         (1, "Traceback (most recent call last):\n  File \"/workspace/src/value.py\", line 1\nModuleNotFoundError: No module named 'missing_dep'", "test_execution_error"),
+        (1, "Traceback (most recent call last):\n  File \"/workspace/src/value.py\", line 1, in value\n  File \"<string>\", line 1, in <module>\nModuleNotFoundError: No module named 'missing_dep'", "test_execution_error"),
+        (1, "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 1, in <module>\n  File \"/workspace/src/value.py\", line 2, in <module>\n  File \"<string>\", line 1, in <module>\nModuleNotFoundError: No module named 'missing_dep'", "test_execution_error"),
         (1, "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 1\nModuleNotFoundError: No module named 'grader_dep'", "evaluator_unavailable"),
+        (1, "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 1, in <module>\n  File \"<string>\", line 1, in <module>\nModuleNotFoundError: No module named 'grader_dep'", "evaluator_unavailable"),
     ],
 )
 def test_public_test_exit_classification(
