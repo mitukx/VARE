@@ -1,0 +1,65 @@
+{
+  "implementation_commit": "722f126e499f5f73bb8fa41bdde9c1208efc99fc",
+  "implementation_sha256": {
+    "scripts/audit_coding_agent_dev_resource_gate_v1.py": "e5c4e0e716bfa40d1baab6d4c021333a124fd1bbe05d965459388e9e746b5f58",
+    "scripts/grade_hf_coding_dev_v1.py": "0fc3e7902bb94cda6df6032f19eb225d77f3e4c8c0004a697c836aa3afa6c9f3",
+    "scripts/grade_transformers_phase_a_v1.py": "8572b17653c26de7b9bf8ae7e1289cdaf0b669b8cc420f5a825c1b60438f5882",
+    "scripts/prepare_hf_coding_dev_v1.py": "77ca8dd473a711cccc4afb0bdcfd63eebd901099f000399c1618ae6f44689b41",
+    "scripts/run_local_agent.py": "a8f3950cd8dda535eb62b054ed84713181796e8f7c961ca500b130e8f53140ee",
+    "src/vare/agent_structured_edit.py": "02b0df523b565b3e46c37592c21bc32729df39de219e199342582293b344aad6",
+    "src/vare/agent_task_contract.py": "9d61b5fe4e45e815f54cc85daf6b517a8e1eaefa9274e63578777fd2058c57b6",
+    "src/vare/container_isolation.py": "6d963821333f8de603bb4743ea52cb203c549695a5df9bbff9fa829b50ea8c42",
+    "src/vare/isolated_candidate.py": "37e5e00ab8a58616325cc8b3c40a3e0e39519c9c3aa61e70bfcabd696b0b7c8b"
+  },
+  "model_snapshot_files_sha256": {
+    ".gitattributes": "34448b82c17d60fec9b65b1f093c115ddbaadc04beb1b0140b6bfed2e012a930",
+    "README.md": "7b17ce562d7ea121c86d2ffdf660eed3726ac5b52cacfa9f1de11a65969f5657",
+    "added_tokens.json": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680",
+    "chat_template.jinja": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541",
+    "config.json": "574349e5a343236546fda55e4744a76e181f534182d7dc60ff1bad7e7a502849",
+    "generation_config.json": "835fffe355c9438e7a25be099b3fccaa98350b83451f9fd2d99512e74f1ade48",
+    "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+    "model.safetensors": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f",
+    "model.safetensors.index.json": "388d811b8b7c2608dd04cce1bcb04a8bf715d19b42790894e6d3427ff429a777",
+    "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+    "tokenizer.json": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+    "tokenizer_config.json": "4397cc477eb6d79715ccd2000accd6b3531928f30029665832fa1b255f24d2b9",
+    "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+  },
+  "protocol_id": "vare-qwen3-4b-hf-coding-development-inference-v1-2026-10-22",
+  "protocol_sha256": "03147165d73d75568506b52ec59c5701db084bf60a01d2ea5d52af969d2fe1bd",
+  "public_test_sha256": {
+    "accelerate-4296-skip-first-batches-v1": "3068c15512fd11d47c452c6838469c1182ec00b01c8bdcc12db258eeafae7f15",
+    "accelerate-4307-tuple-padding-v1": "7c366e003c4379838a5096ed61bc219f118f93ad63309f82e298a9ddd51a5937",
+    "accelerate-4354-multi-cpu-barrier-v1": "573a874b1de59a91c6347d55d3f3c2c36e489f9b186cf14eaf267bba2b57ee12",
+    "trl-6625-entropy-gradient-v1": "b3abc721eda0e0e745a26f73b51df60a695499c5bda1ab50f98f98e0b813f175"
+  },
+  "screen_lock_sha256": "8db3d8c5ce6c1ce0d97e96debbb56b9e3adcdfa578117712d7edfc19ad20f659",
+  "screen_protocol_sha256": "bbba41169f5cf0055ebf9c497f39c28ea5a5927d4e6c217f822fbcfc127cf393",
+  "source_manifest_sha256": {
+    "accelerate-4296-skip-first-batches-v1": "05f620e48eda4757bc4bd179a0ab0154df66f193bc81397e82ce76ef9d015ff2",
+    "accelerate-4307-tuple-padding-v1": "80c75f66585b9c8907027a4b9f4910724c97bcbb60aa237c97a8ce2d6e6d8a7d",
+    "accelerate-4354-multi-cpu-barrier-v1": "d4c1c312fa7658226ad044e2e943677b7da6bf8ab56cca10dd79475c6f6e8b31",
+    "trl-6625-entropy-gradient-v1": "c795398e98573d1d5e0b2480da7f6c11cb28d709b5e8d62d181416669580dfd7"
+  },
+  "source_task_sha256": {
+    "accelerate-4296-skip-first-batches-v1": "515e45fc3fa52503eabdd215febcdbf67dd2cc89828eba7fbce865c9edd4952a",
+    "accelerate-4307-tuple-padding-v1": "b4f72ef6851d4cfd05562d66e7f85f81123a1b42465d5cf49059d18909c3a30a",
+    "accelerate-4354-multi-cpu-barrier-v1": "39bdbb072cb9d224e1a2c9ffc72d162a1616e42b2e3ad05007ac4e7a4beb1fd0",
+    "trl-6625-entropy-gradient-v1": "5ecf5aae592fa0df6e14c2411944246f9b14856cc80c1fee98d2cffee37fb3e3"
+  },
+  "task_api_sha256": {
+    "accelerate-4296-skip-first-batches-v1": "411bfffa6116ce00c1664a3b892569f878fc070c423cfa6fedbc2cf6f7734f44",
+    "accelerate-4307-tuple-padding-v1": "672d6d2e291502c85f585a46f7ddb02ae254495b484dc00c0f0225762634109d",
+    "accelerate-4354-multi-cpu-barrier-v1": "1b2a651d310a8f9c77947321ead7bf6fc4a9caf134ca0dd3ec7766cfe4f555f2",
+    "trl-6625-entropy-gradient-v1": "59c8bed8a61aa6b50c8e773e9e6eb49afc3d776e441833d0ac0e4299b13f10ad"
+  },
+  "task_descriptors_sha256": {
+    "accelerate-4296-skip-first-batches-v1": "8622a776a03c42a31c703905bf5c7c8a45a1ea0cf74070c1a126a7da3c2d6e0a",
+    "accelerate-4307-tuple-padding-v1": "2f79bc2ede0e76dcca1d05d8619bf6bf7cec764db4e6b50e68b6bff29a8c3498",
+    "accelerate-4354-multi-cpu-barrier-v1": "9f7a2ece38110c5714e5f77eecc7ae76e4d7b82a7e23074786949e1e6ca05737",
+    "trl-6625-entropy-gradient-v1": "b2660fb9f7807e3f0cf2330340e66b42c27dce0aef582e80b6e5690a2e0fd4d9"
+  },
+  "v6_lock_sha256": "724accce95c3816f543845f59a281cf3763f34b936185071776f9870d15d3ce7",
+  "v6_protocol_sha256": "77ea73f6bd2faf9e8394f6cf285859a1b8dc9f76975a3a33e2791d1c90e4ab94"
+}

@@ -1,0 +1,28 @@
+{
+  "metadata": {
+    "editable_files": [
+      "src/trl/trainer/utils.py"
+    ],
+    "family": "chunked-autograd-entropy-gradient",
+    "pack": "hf_coding_dev_inference_v1",
+    "readonly_files": [
+      "test_public.py"
+    ],
+    "split": "development",
+    "task_type": "correctness"
+  },
+  "prompt": "The chunked log-probability autograd function also returns entropy. Backpropagating through entropy alone should match a full-matrix reference, but currently drops part of the gradient. Restore correct gradient propagation while retaining chunked computation and existing log-probability behavior.",
+  "schema": "vare-agent-task-v1",
+  "source": {
+    "base_revision": "67dfbe211a07a8dd6ebc1a5af5b75152e10add8e",
+    "file_sha256": {
+      "src/trl/trainer/utils.py": "fa7cc011c825cba9bca97620fd73a58b17ead55411c3ce5646a51035f168bbb8"
+    },
+    "readonly_file_sha256": {
+      "test_public.py": "b3abc721eda0e0e745a26f73b51df60a695499c5bda1ab50f98f98e0b813f175"
+    },
+    "repository": "huggingface/trl",
+    "snapshot_sha256": "1af0118dfb950070c1bdd1db64f67b9516045581f7c1195b4cf504bd98345085"
+  },
+  "task_id": "trl-6625-entropy-gradient-v1"
+}
