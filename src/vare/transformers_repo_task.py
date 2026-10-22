@@ -28,8 +28,29 @@ _DIFF_PATH = re.compile(r"(?:a|b)/([A-Za-z0-9_./-]+)\Z")
 
 ROOT = Path(__file__).resolve().parents[2]
 TASK_DIR = ROOT / "benchmarks/mlsys_repo_eval_v2/transformers_45852"
+PROTOCOL_PATH = TASK_DIR / "protocol-v2.json"
+PROTOCOL_LOCK_PATH = TASK_DIR / "protocol-v2.lock.json"
 TASK_DESCRIPTION = TASK_DIR / "task.md"
 GRADER_ADAPTER = TASK_DIR / "grader_adapter.py"
+FROZEN_TIMEOUT_S = 30.0
+FROZEN_MEMORY_MB = 1536
+
+# This inventory is checked for every grade, not just calibration. Keep it in
+# sync with the prospective protocol lock; v1 remains an immutable historical
+# record of the original grader implementation.
+IMPLEMENTATION_FILES = (
+    "benchmarks/mlsys_repo_eval_v2/transformers_45852/Dockerfile",
+    "benchmarks/mlsys_repo_eval_v2/transformers_45852/grader_adapter.py",
+    "benchmarks/mlsys_repo_eval_v2/transformers_45852/requirements.txt",
+    "benchmarks/mlsys_repo_eval_v2/transformers_45852/task.md",
+    "scripts/run_transformers_45852_calibration.py",
+    "src/vare/attestation.py",
+    "src/vare/container_isolation.py",
+    "src/vare/isolated_candidate.py",
+    "src/vare/transformers_repo_task.py",
+    "src/vare/types.py",
+    "tests/test_transformers_repo_task.py",
+)
 
 
 class TransformersTaskError(ValueError):
@@ -55,6 +76,43 @@ def sha256_inventory(root: Path) -> str:
             )
     payload = json.dumps(entries, sort_keys=True, separators=(",", ":")).encode()
     return hashlib.sha256(payload).hexdigest()
+
+
+def verify_protocol() -> dict[str, Any]:
+    """Verify protocol bytes and every locked evaluator implementation file."""
+    try:
+        protocol_bytes = PROTOCOL_PATH.read_bytes()
+        lock = json.loads(PROTOCOL_LOCK_PATH.read_text(encoding="utf-8"))
+        protocol = json.loads(protocol_bytes)
+    except (OSError, json.JSONDecodeError) as exc:
+        raise TransformersTaskError("prospective protocol or lock is unavailable") from exc
+    protocol_digest = hashlib.sha256(protocol_bytes).hexdigest()
+    if (
+        lock.get("protocol_id") != "transformers-45852-isolated-eval-v2"
+        or lock.get("protocol_sha256") != protocol_digest
+        or protocol.get("protocol_id") != lock.get("protocol_id")
+    ):
+        raise TransformersTaskError("protocol hash or identity does not match lock")
+    locked = lock.get("implementation_sha256")
+    declared = protocol.get("implementation_sha256")
+    if not isinstance(locked, dict) or locked != declared:
+        raise TransformersTaskError("protocol implementation manifest differs from lock")
+    expected_names = set(IMPLEMENTATION_FILES)
+    if set(locked) != expected_names:
+        raise TransformersTaskError("protocol implementation manifest inventory differs")
+    try:
+        actual = {name: sha256_file(ROOT / name) for name in IMPLEMENTATION_FILES}
+    except OSError as exc:
+        raise TransformersTaskError("locked implementation file is unavailable") from exc
+    if actual != locked:
+        raise TransformersTaskError("protocol implementation hash mismatch")
+    if (
+        protocol.get("baseline_commit") != BASELINE_COMMIT
+        or protocol.get("fixed_commit") != FIXED_COMMIT
+        or protocol.get("task_id") != TASK_ID
+    ):
+        raise TransformersTaskError("protocol task/source identity differs from grader")
+    return protocol
 
 
 def verify_baseline(source_root: Path) -> None:
@@ -233,6 +291,18 @@ def apply_patch(source_root: Path, patch_path: Path, workspace: Path) -> dict[st
 def _cases() -> list[FunctionCall]:
     return [
         FunctionCall(
+            "ordinary_variable_length_padded_batch",
+            ADAPTER_MODULE,
+            ENTRYPOINT,
+            [{"case_type": "ordinary_2d", "sequences": [[1, 2, 1], [4, 2]]}],
+            {
+                "input_ids": [[1, 2, 1], [4, 2, 3]],
+                "attention_mask": [[1, 1, 1], [1, 1, 0]],
+                "shape": [2, 3],
+                "pad_token_id": 3,
+            },
+        ),
+        FunctionCall(
             "torch_square_4d_mask",
             ADAPTER_MODULE,
             ENTRYPOINT,
@@ -271,6 +341,44 @@ def _cases() -> list[FunctionCall]:
                 "values": [[[[0.0] * 9 for _ in range(4)]] for _ in range(2)],
             },
         ),
+        FunctionCall(
+            "torch_nonuniform_4d_mask",
+            ADAPTER_MODULE,
+            ENTRYPOINT,
+            [{"input_kind": "torch", "q_len": 3, "kv_len": 4,
+              "values": [[[(i * 7 + j * 3) % 11 for j in range(4)] for i in range(3)],
+                         [[(i * 5 + j * 2 + 1) % 13 for j in range(4)] for i in range(3)]]}],
+            {
+                "shape": [2, 1, 3, 4],
+                "dtype": "torch.float32",
+                "values": [[[
+                    [float((i * 7 + j * 3) % 11) for j in range(4)]
+                    for i in range(3)
+                ]], [[
+                    [float((i * 5 + j * 2 + 1) % 13) for j in range(4)]
+                    for i in range(3)
+                ]]],
+            },
+        ),
+        FunctionCall(
+            "numpy_nonuniform_4d_mask",
+            ADAPTER_MODULE,
+            ENTRYPOINT,
+            [{"input_kind": "numpy", "q_len": 3, "kv_len": 4,
+              "values": [[[(i * 3 + j * 5 + 2) % 17 for j in range(4)] for i in range(3)],
+                         [[(i * 11 + j * 4 + 3) % 19 for j in range(4)] for i in range(3)]]}],
+            {
+                "shape": [2, 1, 3, 4],
+                "dtype": "torch.float32",
+                "values": [[[
+                    [float((i * 3 + j * 5 + 2) % 17) for j in range(4)]
+                    for i in range(3)
+                ]], [[
+                    [float((i * 11 + j * 4 + 3) % 19) for j in range(4)]
+                    for i in range(3)
+                ]]],
+            },
+        ),
     ]
 
 
@@ -279,11 +387,13 @@ def grade_workspace(
     *,
     image: str,
     baseline_files: dict[str, str] | None = None,
-    timeout_s: float = 30.0,
-    memory_mb: int = 1536,
+    timeout_s: float = FROZEN_TIMEOUT_S,
+    memory_mb: int = FROZEN_MEMORY_MB,
 ) -> dict[str, Any]:
     """Grade candidate behavior in the existing isolated-callee boundary."""
-    protocol = json.loads((TASK_DIR / "protocol-v1.json").read_text(encoding="utf-8"))
+    protocol = verify_protocol()
+    if timeout_s != FROZEN_TIMEOUT_S or memory_mb != FROZEN_MEMORY_MB:
+        raise TransformersTaskError("grading limits differ from frozen protocol v2")
     if image != protocol["image"]:
         raise TransformersTaskError("candidate image differs from frozen task protocol")
     if workspace.is_symlink() or not workspace.is_dir():
@@ -350,7 +460,7 @@ def grade_workspace(
         "grader_adapter_sha256": sha256_file(GRADER_ADAPTER),
         "grader_source_sha256": sha256_file(Path(__file__).resolve()),
         "task_statement_sha256": sha256_file(TASK_DESCRIPTION),
-        "protocol_sha256": sha256_file(TASK_DIR / "protocol-v1.json"),
+        "protocol_sha256": sha256_file(PROTOCOL_PATH),
         "candidate_image": image,
         "network": "none",
         "grader_files_mounted_to_candidate": False,
