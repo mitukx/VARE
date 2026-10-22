@@ -1,0 +1,84 @@
+{
+  "agent_edit_allowlist": [
+    "mlx_lm/sample_utils.py"
+  ],
+  "baseline_commit": "47e43a4526d42a6dcee758f07eb04b78a8439ecb",
+  "baseline_target_sha256": "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2",
+  "candidate_files": "pinned mlx_lm Python package only; no tests, Git history, license, task statement, or grader adapter in the agent workspace. The runtime adapter receives cases but contains no expected values.",
+  "evaluation": {
+    "cases": [
+      "three tiny positive thresholds over a one-row probability-mass fixture",
+      "two-row, 4096-value dominant-token fixture in float32, float16, and bfloat16 at three thresholds"
+    ],
+    "required_calibration": [
+      "pinned baseline fails",
+      "pinned known fix passes",
+      "fixed target hash matches",
+      "candidate cannot relabel fixed checkout as baseline",
+      "red-team suite passes"
+    ],
+    "success": "all parent-owned exact kept-index and retained-value expectations match"
+  },
+  "fixed_commit": "87b7b583a697537aa68f47130b40884700b5f55f",
+  "fixed_target_sha256": "3aac92d804b6b91c82a4e2844697a8723de26f6af57e10013a482b967e739cfa",
+  "grader_test": "tests/test_sample_utils.py::TestSampleUtils.test_apply_top_p_keeps_top_token_at_tiny_thresholds",
+  "grader_test_sha256": "dbe871f37a2930ae6686ce67ffc0a641971ad11943a1e94833fa232c6938852",
+  "grading_boundary": "Candidate code receives only invocation arguments and returns observed output; expected output arrays and exact pass/fail decisions are held by the trusted parent grader. The candidate container has no grader mount.",
+  "implementation_sha256": {
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/grader_adapter.py": "f08007db5ec895f071624cd1de2e7afd3b60d0dffa809161f48a2baceb28d6e7",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/task.md": "1073e527a5808176a4e6144a0d348e1bb5acbbc6fb790ec2e74bb58576c73bc3",
+    "scripts/run_mlxlm_1912_calibration.py": "85307dbae094edf530fac592e85910aa6d1cfd93e7cc1756549a14ef92db4468",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/isolated_candidate.py": "8c216aa1891538156030f76ae59a768832fefa83dbbcf3702c22176019b0aaee",
+    "src/vare/mlxlm_1912_repo_task.py": "5a10440e0facfde59b5966635d075ca9db76d241dc17635425feba93c2a0544c",
+    "tests/test_mlxlm_1912_repo_task.py": "d3c636a989db90c487351eb1e5087650c78195c06b94e737ed26e9135f88195b"
+  },
+  "license": "MIT",
+  "license_sha256": "ccfab7ccb2ea306f71531c8a77bb55507606cd90768b1e32b8b52ab5b48cf01",
+  "limitations": [
+    "One development task only; no model/agent rollout.",
+    "The supported contract is a narrow parent-owned subset matching the frozen upstream test assertions; it is not the complete upstream test suite.",
+    "This calibration does not certify arbitrary Python repositories.",
+    "MLX execution is CPU-only in the pinned container; this says nothing about Metal behavior."
+  ],
+  "protocol_id": "mlxlm-1912-isolated-task-v2",
+  "qualification": {
+    "baseline_result": "fail",
+    "baseline_wall_seconds": 1.497,
+    "fixed_result": "pass",
+    "fixed_wall_seconds": 1.457,
+    "model_or_agent_seen_task": false,
+    "researcher_ran_pinned_regression": true
+  },
+  "qualification_source": "PR #95 results/mlsys-task-deep-qualification-v1/qualification.json",
+  "repository": "ml-explore/mlx-lm",
+  "runtime": {
+    "architecture": "linux/arm64",
+    "backend": "vare.isolated_candidate.grade_calls",
+    "candidate_cpus": 1,
+    "candidate_memory_mb": 1536,
+    "candidate_mount": "source-only read-only at /subject; runtime bridge contains no test expectations",
+    "candidate_timeout_seconds": 30,
+    "candidate_uid": 65534,
+    "container_root": "read-only",
+    "grader_mount": "absent",
+    "image": "localhost:5000/vare/mlx-cpu-task@sha256:847edcf1b2b15d00914674e89931f9d38c4aa8a0f1d763cbb96c1359a0647388",
+    "metal_execution": false,
+    "network": "none",
+    "peak_memory_measured": false,
+    "red_team_probes": [
+      "grader path",
+      "Git history",
+      "environment secret",
+      "network",
+      "stdout forgery",
+      "subprocess source write",
+      "timeout",
+      "OOM",
+      "pinned fixed source swap"
+    ]
+  },
+  "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1912",
+  "split": "development",
+  "task_id": "mlxlm-1912-top-p-min-token"
+}
