@@ -1,5 +1,9 @@
 # Experimental program
 
+## Phase A v6 Colima public-test execution v5
+
+The historical 12-rollout analysis found six public-test attempts that exited 125 with Colima's bind-source-missing daemon error; these were infrastructure launch failures and are not model/test failures. A prospective v5 calibration shows a live macOS system-temp directory cannot be bind-mounted in the current Colima setup, while an owned `~/.cache/vare-public-test-staging` directory can. Exact-inventory workspace staging under the pinned image then gives baseline assertion failure and known-fix pass. The same calibration checks bounded result classification and a deterministic implicit opaque-handle edit. It loaded no model and does not demonstrate agent success or policy improvement. Prior v1–v4 protocols and results remain unchanged. See the [report](phase-a-v6-public-test-execution-v5-report.md), [v5 protocol](../experiments/coding_agent_phase_a_v6/public-test-execution-v5.json), [lock](../experiments/coding_agent_phase_a_v6/public-test-execution-v5.lock.json), and [raw run](../results/phase-a-v6/public-test-execution-v5/run-1/).
+
 ## Transformers #49752 tool-agent feasibility v1 — 2026-10-21
 
 The new `transformers-49752-stacked-frames` Development task passed isolated

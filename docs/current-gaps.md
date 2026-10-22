@@ -1,5 +1,7 @@
 # Current evidence gaps
 
+**Update 2026-10-22 — Phase A v6 public-test infrastructure root cause reproduced; fresh model study remains NO-GO:** all six serialized historical exit-125 public-test results match Colima's bind-source launch diagnostic, not test timeouts or candidate failures. Under the pinned ARM64 image, a live macOS system-temp path fails to bind, while a private home-cache path succeeds. Protocol v5 calibrates owned-cache staging, exact workspace inventory, infrastructure-aware result classification, baseline assertion failure, and known-fix pass. A deterministic controller regression also verifies host-managed latest-read handles; this is not an LLM success. Retrospective analysis of all 12 consumed rollouts found 94 tool calls, six public-test bind failures, five missing-handle edit rejections, one applied edit, and zero independent successes. No new inference or training ran. See the [v5 report](phase-a-v6-public-test-execution-v5-report.md), [protocol and lock](../experiments/coding_agent_phase_a_v6/public-test-execution-v5.json), and [raw calibration](../results/phase-a-v6/public-test-execution-v5/run-1/).
+
 **Update 2026-10-21 — new Transformers task calibrated; iterative Qwen
 feasibility remains NO-GO:** a new Transformers #49752 Development task now
 has a source-hash-pinned, process-isolated grader; baseline fails 2/2,

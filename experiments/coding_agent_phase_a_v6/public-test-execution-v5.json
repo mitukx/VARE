@@ -1,0 +1,99 @@
+{
+  "acceptance": {
+    "broken_baseline": {
+      "gradeable": true,
+      "passed": false,
+      "status": "assertion_failure"
+    },
+    "candidate_exit_code_125": {
+      "gradeable": true,
+      "status": "test_execution_error"
+    },
+    "candidate_file_allowlist": {
+      "exact_files": [
+        "src/value.py",
+        "test_public.py"
+      ],
+      "symlinks": "rejected before Docker invocation",
+      "unexpected_files": "rejected before Docker invocation"
+    },
+    "container_launch_failure": {
+      "gradeable": false,
+      "passed": null,
+      "status": "container_launch_error"
+    },
+    "implicit_opaque_handles": {
+      "changed_workspace": "rejected by revision and source preimage checks",
+      "edit_text": "must appear exactly once in latest read region",
+      "missing_handles": "resolve from latest host-issued read for this path"
+    },
+    "known_fix": {
+      "gradeable": true,
+      "passed": true,
+      "status": "passed"
+    },
+    "system_temp_direct_mount": {
+      "gradeable": false,
+      "returncode": 125,
+      "stderr_contains": "bind source path does not exist"
+    },
+    "timeout": {
+      "gradeable": false,
+      "passed": null,
+      "status": "container_timeout"
+    },
+    "user_cache_direct_mount": {
+      "returncode": 0,
+      "stdout": "vare-colima-bind-probe\\n"
+    }
+  },
+  "candidate_runtime": {
+    "cpus": 1.0,
+    "max_output_bytes": 20000,
+    "memory_mb": 512,
+    "network": "none",
+    "pids_limit": 32,
+    "root_filesystem": "read-only",
+    "timeout_seconds": 45,
+    "workspace_mount": "read-only"
+  },
+  "candidate_workspace_files": [
+    "src/value.py",
+    "test_public.py"
+  ],
+  "hypothesis": "An otherwise valid candidate workspace located under macOS system temporary storage can be copied byte-for-byte to a private user-owned home-cache directory that Colima can bind-mount; the public test runner will distinguish a daemon launch failure from an executed assertion failure.",
+  "image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "image_id": "sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "limitations": [
+    "Synthetic one-file fixture only.",
+    "Does not validate model behavior, fresh task success, hidden grading, or policy improvement.",
+    "The frozen Phase A v6 protocol-v1 implementation lock is intentionally unchanged and will fail closed against modified runner bytes.",
+    "The direct bind-source comparison is specific to the current macOS/Colima mount configuration.",
+    "The allowlist check is exercised against a synthetic two-file workspace; the live agent passes its frozen task contract allowlist into this runner.",
+    "The controller handle-resilience check is a deterministic synthetic regression, not an LLM rollout or evidence of model repair."
+  ],
+  "platform": "macOS host with Colima Docker context",
+  "protocol_id": "vare.coding-agent.public-test-execution.colima.v5",
+  "protocol_parent": {
+    "protocol_id": "vare.coding-agent.public-test-execution.colima.v4",
+    "protocol_sha256": "c0c8c7f15389ad1f29353319324f62432d6839409af4d15ad6ec0113c5fee70e"
+  },
+  "public_test": "from value import value\n\ndef test_value():\n    assert value() == 42\n",
+  "public_test_sha256": "ba40fafe9aee4464e0c6a54dfc624478d732b1bf7f976bf30cff8ab7fa250d89",
+  "reproduction": "DOCKER_CONTEXT=colima PYTHONPATH=src python scripts/calibrate_public_test_execution_v5.py --output results/phase-a-v6/public-test-execution-v5/run-1",
+  "required_environment": {
+    "DOCKER_CONTEXT": "colima",
+    "inference": false,
+    "model_weights_loaded": false,
+    "optimizer_updates": 0
+  },
+  "source_variant_sha256": {
+    "broken_baseline": "89bec526a8809599d1d4ba869fbe6703df3484df64ed19e716b24e2ad341995a",
+    "known_fix": "2f8974f06364c943a202b6a6971a24e891683fa2dc6233ad2a5c478dce8fd0b3"
+  },
+  "source_variants": {
+    "broken_baseline": "def value():\n    return 41\n",
+    "known_fix": "def value():\n    return 42\n"
+  },
+  "status": "frozen-calibration-only"
+}

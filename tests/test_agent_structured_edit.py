@@ -180,7 +180,7 @@ def test_controller_can_read_but_never_edit_public_test_file(tmp_path: Path) -> 
     assert read["content"] == "assert value() == 2\n"
     assert read["read_only"] is True
     assert "workspace_revision" not in read
-    with pytest.raises(StructuredEditError, match="unknown edit handle"):
+    with pytest.raises(StructuredEditError, match="editable source region"):
         controller.apply_edit(
             action="replace_text",
             path="test_public.py",
@@ -222,6 +222,54 @@ def test_controller_detects_repeated_identical_noop_edits(tmp_path: Path) -> Non
             )
         if attempt == 1:
             assert "repeated no-op" in str(error.value)
+
+
+def test_controller_resolves_omitted_opaque_handles_from_latest_exact_read(tmp_path: Path) -> None:
+    root, allowed = _workspace(tmp_path)
+    controller = StructuredEditController(root, allowed)
+    controller.read_region("src/module.py", start_line=1, end_line=2)
+    result = controller.apply_edit(
+        action="replace_text",
+        path="src/module.py",
+        workspace_revision_handle="",
+        source_preimage_handle="",
+        old_text="return 1",
+        new_text="return 2",
+    )
+    assert result["applied"] is True
+    assert result["edit_revision_source"] == "implicit_latest_source_read"
+    assert (root / "src/module.py").read_text(encoding="utf-8").endswith("return 2\n")
+
+
+def test_implicit_handles_require_latest_read_and_exact_read_region(tmp_path: Path) -> None:
+    root, allowed = _workspace(tmp_path)
+    controller = StructuredEditController(root, allowed)
+    with pytest.raises(StructuredEditError, match="read the affected editable source region"):
+        controller.apply_edit(
+            action="replace_text", path="src/module.py",
+            workspace_revision_handle="", source_preimage_handle="",
+            old_text="return 1", new_text="return 2",
+        )
+    controller.read_region("src/module.py", start_line=1, end_line=1)
+    with pytest.raises(StructuredEditError, match="latest source region"):
+        controller.apply_edit(
+            action="replace_text", path="src/module.py",
+            workspace_revision_handle="", source_preimage_handle="",
+            old_text="return 1", new_text="return 2",
+        )
+
+
+def test_implicit_latest_read_still_rejects_changed_workspace_revision(tmp_path: Path) -> None:
+    root, allowed = _workspace(tmp_path)
+    controller = StructuredEditController(root, allowed)
+    controller.read_region("src/module.py")
+    (root / "src/module.py").write_text("def value():\n    return 3\n", encoding="utf-8")
+    with pytest.raises(StructuredEditError, match="workspace revision handle is stale"):
+        controller.apply_edit(
+            action="replace_text", path="src/module.py",
+            workspace_revision_handle="", source_preimage_handle="",
+            old_text="return 1", new_text="return 2",
+        )
 
 
 def test_controller_repeated_public_failure_prompts_different_repair_and_bounds_output(tmp_path: Path) -> None:
