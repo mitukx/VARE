@@ -1,0 +1,8 @@
+{
+  "classification": "source-materialization infrastructure failure before candidate execution",
+  "command": "DOCKER_CONTEXT=colima python scripts/run_mlxlm_1912_calibration.py --source-repo /Users/user/.cache/vare/source-mirrors/mlx-lm --image localhost:5000/vare/mlx-cpu-task@sha256:847edcf1b2b15d00914674e89931f9d38c4aa8a0f1d763cbb96c1359a0647388 --output results/mlxlm-1912-isolated-v4/run-1",
+  "error": "git worktree add could not materialize the pinned baseline because historical source blobs were missing from the local mirror; no candidate was graded.",
+  "protocol_id": "mlxlm-1912-isolated-task-v4",
+  "remediation": "Use a fresh full upstream clone containing the exact locked baseline and fixed revisions; rerun as run-2.",
+  "status": "NOT_RUN"
+}
