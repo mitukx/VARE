@@ -1,0 +1,17 @@
+{
+  "arm": "base",
+  "classification": "test_failure",
+  "docker_context": "colima",
+  "elapsed_seconds": 1.283,
+  "image": "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+  "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+  "passed": false,
+  "public_test_sha256": "7c366e003c4379838a5096ed61bc219f118f93ad63309f82e298a9ddd51a5937",
+  "returncode": 1,
+  "runner": "scripts/run_local_agent.py:run_public_tests",
+  "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/workspace/test_public.py\", line 7, in test_tuple_padding\n    with state.split_between_processes(values, apply_padding=True) as result:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/contextlib.py\", line 137, in __enter__\n    return next(self.gen)\n           ^^^^^^^^^^^^^^\n  File \"/workspace/src/accelerate/state.py\", line 511, in split_between_processes\n    yield _split_values(inputs, start_index, end_index)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/src/accelerate/state.py\", line 490, in _split_values\n    result += [inputs[-1]] * (num_samples_per_process + (1 if num_extras > 0 else 0) - len(result))\nTypeError: can only concatenate tuple (not \"list\") to tuple\n",
+  "stdout": "",
+  "task_id": "accelerate-4307-tuple-padding-v1",
+  "workspace": "/Users/user/.cache/vare/candidate-workspaces/candidate-screen-v3/accelerate-4307-base",
+  "workspace_snapshot_sha256": "77e94ff6d08005dfd69a290cac6ef8cb58d664b4c8ec5f02a9503686d3aeac2d"
+}

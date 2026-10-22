@@ -1,0 +1,16 @@
+{
+  "arm": "base",
+  "classification": "test_failure",
+  "docker_context": "colima",
+  "elapsed_seconds": 1.26,
+  "image": "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+  "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+  "passed": false,
+  "public_test_sha256": "573a874b1de59a91c6347d55d3f3c2c36e489f9b186cf14eaf267bba2b57ee12",
+  "returncode": 1,
+  "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/workspace/test_public.py\", line 15, in test_multi_cpu_barrier\n    assert calls == [((),{})], calls\n           ^^^^^^^^^^^^^^^^^^\nAssertionError: [((), {'device_ids': [0]})]\n",
+  "stdout": "",
+  "task_id": "accelerate-4354-multi-cpu-barrier-v1",
+  "workspace": "/Users/user/.cache/vare/candidate-workspaces/candidate-screen-v2/accelerate-4354-base",
+  "workspace_snapshot_sha256": "a72ac862a6416ba9f40bcf87680899da0444356de23b935161d8351ac911b27f"
+}

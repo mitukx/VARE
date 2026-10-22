@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "/private/tmp/vare-fresh-candidates/scripts/grade_transformers_phase_a_v1.py", line 329, in _inspect_frozen_image
+    result = subprocess.run(
+             ^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['docker', 'image', 'inspect', 'vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97', '--format', '{{json .RepoDigests}} {{.Id}}']' returned non-zero exit status 1.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/vare-fresh-candidates/scripts/grade_hf_coding_dev_v1.py", line 257, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/private/tmp/vare-fresh-candidates/scripts/grade_hf_coding_dev_v1.py", line 249, in main
+    result = grade(args.task_id, workspace)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/vare-fresh-candidates/scripts/grade_hf_coding_dev_v1.py", line 192, in grade
+    image_id = _inspect_frozen_image(IMAGE)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/vare-fresh-candidates/scripts/grade_transformers_phase_a_v1.py", line 337, in _inspect_frozen_image
+    raise ValueError("frozen grading image is unavailable or cannot be inspected") from exc
+ValueError: frozen grading image is unavailable or cannot be inspected

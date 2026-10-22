@@ -1,0 +1,51 @@
+{
+  "family": "dataloader-configuration-preservation",
+  "grader": {
+    "required_boundary": "Candidate package runs in a separate network-disabled container. The task API shim contains no assertions, test cases, or expected values. Hidden call cases and expected outputs remain in the trusted parent process.",
+    "status": "parent_owned_expected_value_comparison_calibrated"
+  },
+  "limitations": [
+    "Development-only candidate; not eligible as a held-out task.",
+    "Task source is public upstream history and model-training exposure is unknown.",
+    "Accelerate tasks share one repository; two target the same source module but different methods.",
+    "The split_between_processes case simulates PartialState rank metadata; it does not launch distributed workers.",
+    "The MULTI_CPU barrier case mocks torch.distributed.barrier and does not prove multi-process rendezvous behavior.",
+    "This record is a source/test qualification screen only; no agent rollout or policy update is included."
+  ],
+  "prompt": "When training resumes from a skipped batch prefix, both sharded and dispatched loaders must preserve their configured iteration semantics and loader options. The current result silently changes configuration. Make the smallest compatible correction and preserve the remaining loader behavior.",
+  "runtime": {
+    "candidate_image": "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+    "platform": "linux/arm64",
+    "python": "3.12.15",
+    "requirements_lock": "../runtime/requirements.lock.txt",
+    "requirements_lock_sha256": "d0469067d5becf4750e35bb9691cb387a12e7fda855bb1271acd53688cb22734",
+    "torch": "2.9.1+cpu"
+  },
+  "schema_version": 1,
+  "source": {
+    "base_revision": "b795b4838eb33bde60eb398649c4ab006874e3e9",
+    "baseline_target_sha256": "ccfff9430db37abbaf09e025aef54066df102ba8cd693a3d8cd7780de661a59d",
+    "file_mode": 420,
+    "known_fix_revision": "d426829721cf4e77e1a05e832dee26d7386f7e33",
+    "known_fix_target_sha256": "a921dc668edb91c665d41b941ba03c98da6f35f0768a29775d4a9908e31281c5",
+    "license": "Apache-2.0",
+    "license_file_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "merged_at": "2026-09-29T13:43:42Z",
+    "repository": "huggingface/accelerate",
+    "target_path": "src/accelerate/data_loader.py",
+    "training_data_exposure": "unknown; public merged fix may appear in pretraining; merge date is not proof of non-exposure",
+    "upstream_fix_pr": "https://github.com/huggingface/accelerate/pull/4296",
+    "upstream_target_path": "src/accelerate/data_loader.py"
+  },
+  "split": "development_candidate",
+  "status": "candidate_screen_only_not_frozen_for_model_inference",
+  "task_id": "accelerate-4296-skip-first-batches-v1",
+  "workspace": {
+    "baseline_manifest": "baseline-source-manifest-v1.json",
+    "baseline_snapshot_sha256": "5986a53653919ede951df9def77146b3c26d4d819e187f16b2834fc46d81a58f",
+    "only_editable_file": "src/accelerate/data_loader.py",
+    "package_path": "src/accelerate",
+    "public_test_path": "test_public.py",
+    "public_test_sha256": "3068c15512fd11d47c452c6838469c1182ec00b01c8bdcc12db258eeafae7f15"
+  }
+}

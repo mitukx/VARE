@@ -1,0 +1,51 @@
+{
+  "family": "distributed-input-sharding",
+  "grader": {
+    "required_boundary": "Candidate package runs in a separate network-disabled container. The task API shim contains no assertions, test cases, or expected values. Hidden call cases and expected outputs remain in the trusted parent process.",
+    "status": "parent_owned_expected_value_comparison_calibrated"
+  },
+  "limitations": [
+    "Development-only candidate; not eligible as a held-out task.",
+    "Task source is public upstream history and model-training exposure is unknown.",
+    "Accelerate tasks share one repository; two target the same source module but different methods.",
+    "The split_between_processes case simulates PartialState rank metadata; it does not launch distributed workers.",
+    "The MULTI_CPU barrier case mocks torch.distributed.barrier and does not prove multi-process rendezvous behavior.",
+    "This record is a source/test qualification screen only; no agent rollout or policy update is included."
+  ],
+  "prompt": "Splitting tuple inputs across process ranks with padding enabled should preserve the tuple container and return the final rank\u2019s padded slice. The current code raises on an uneven split. Correct this behavior while leaving list and tensor inputs unchanged.",
+  "runtime": {
+    "candidate_image": "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+    "platform": "linux/arm64",
+    "python": "3.12.15",
+    "requirements_lock": "../runtime/requirements.lock.txt",
+    "requirements_lock_sha256": "d0469067d5becf4750e35bb9691cb387a12e7fda855bb1271acd53688cb22734",
+    "torch": "2.9.1+cpu"
+  },
+  "schema_version": 1,
+  "source": {
+    "base_revision": "e203e1ddf33388e22f4a7985ff3103717c0f9181",
+    "baseline_target_sha256": "8af1fe9a518f46bc771076abe3572cdd32bded2ff6fdc0021643c01212d4f5a9",
+    "file_mode": 420,
+    "known_fix_revision": "2c2c1fb003d0775b0f865a6226ce76a2886f435b",
+    "known_fix_target_sha256": "31faeac47ffb6858d83c9d66c5ccba542dacb4944080ca11bc76789b34142c6f",
+    "license": "Apache-2.0",
+    "license_file_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "merged_at": "2026-09-25T16:09:32Z",
+    "repository": "huggingface/accelerate",
+    "target_path": "src/accelerate/state.py",
+    "training_data_exposure": "unknown; public merged fix may appear in pretraining; merge date is not proof of non-exposure",
+    "upstream_fix_pr": "https://github.com/huggingface/accelerate/pull/4307",
+    "upstream_target_path": "src/accelerate/state.py"
+  },
+  "split": "development_candidate",
+  "status": "candidate_screen_only_not_frozen_for_model_inference",
+  "task_id": "accelerate-4307-tuple-padding-v1",
+  "workspace": {
+    "baseline_manifest": "baseline-source-manifest-v1.json",
+    "baseline_snapshot_sha256": "77e94ff6d08005dfd69a290cac6ef8cb58d664b4c8ec5f02a9503686d3aeac2d",
+    "only_editable_file": "src/accelerate/state.py",
+    "package_path": "src/accelerate",
+    "public_test_path": "test_public.py",
+    "public_test_sha256": "7c366e003c4379838a5096ed61bc219f118f93ad63309f82e298a9ddd51a5937"
+  }
+}

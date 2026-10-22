@@ -1,0 +1,51 @@
+{
+  "family": "chunked-autograd-entropy-gradient",
+  "grader": {
+    "required_boundary": "Candidate package runs in a separate network-disabled container. The task API shim contains no assertions, test cases, or expected values. Hidden call cases and expected outputs remain in the trusted parent process.",
+    "status": "parent_owned_expected_value_comparison_calibrated"
+  },
+  "limitations": [
+    "Development-only candidate; not eligible as a held-out task.",
+    "Task source is public upstream history and model-training exposure is unknown.",
+    "Accelerate tasks share one repository; two target the same source module but different methods.",
+    "The split_between_processes case simulates PartialState rank metadata; it does not launch distributed workers.",
+    "The MULTI_CPU barrier case mocks torch.distributed.barrier and does not prove multi-process rendezvous behavior.",
+    "This record is a source/test qualification screen only; no agent rollout or policy update is included."
+  ],
+  "prompt": "The chunked log-probability autograd function also returns entropy. Backpropagating through entropy alone should match a full-matrix reference, but currently drops part of the gradient. Restore correct gradient propagation while retaining chunked computation and existing log-probability behavior.",
+  "runtime": {
+    "candidate_image": "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+    "platform": "linux/arm64",
+    "python": "3.12.15",
+    "requirements_lock": "../runtime/requirements.lock.txt",
+    "requirements_lock_sha256": "d0469067d5becf4750e35bb9691cb387a12e7fda855bb1271acd53688cb22734",
+    "torch": "2.9.1+cpu"
+  },
+  "schema_version": 1,
+  "source": {
+    "base_revision": "67dfbe211a07a8dd6ebc1a5af5b75152e10add8e",
+    "baseline_target_sha256": "fa7cc011c825cba9bca97620fd73a58b17ead55411c3ce5646a51035f168bbb8",
+    "file_mode": 420,
+    "known_fix_revision": "2f4af95cc1c3e4d0b779ed4826d0f634a6470beb",
+    "known_fix_target_sha256": "de95c17795999b28463a2e989d0ab6fe451326c897132eb7f2dbee64f78f1a61",
+    "license": "Apache-2.0",
+    "license_file_sha256": "1bf614b1fdc40fbd344aa58d00d17d5fd0d252ea333a05be018a38959c8b2998",
+    "merged_at": "2026-08-27T14:27:17Z",
+    "repository": "huggingface/trl",
+    "target_path": "src/trl/trainer/utils.py",
+    "training_data_exposure": "unknown; public merged fix may appear in pretraining; merge date is not proof of non-exposure",
+    "upstream_fix_pr": "https://github.com/huggingface/trl/pull/6625",
+    "upstream_target_path": "trl/trainer/utils.py"
+  },
+  "split": "development_candidate",
+  "status": "candidate_screen_only_not_frozen_for_model_inference",
+  "task_id": "trl-6625-entropy-gradient-v1",
+  "workspace": {
+    "baseline_manifest": "baseline-source-manifest-v1.json",
+    "baseline_snapshot_sha256": "1af0118dfb950070c1bdd1db64f67b9516045581f7c1195b4cf504bd98345085",
+    "only_editable_file": "src/trl/trainer/utils.py",
+    "package_path": "src/trl",
+    "public_test_path": "test_public.py",
+    "public_test_sha256": "b3abc721eda0e0e745a26f73b51df60a695499c5bda1ab50f98f98e0b813f175"
+  }
+}
