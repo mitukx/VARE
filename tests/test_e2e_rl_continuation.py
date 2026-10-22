@@ -379,6 +379,26 @@ def test_frozen_source_inventory_requires_exact_commit_and_digests():
         auditor.validate_source_inventory(wrong_sources,auditor.LEGACY_EXPECTED_SOURCES,True)
 
 
+def test_immediately_previous_source_inventory_remains_accepted(tmp_path,monkeypatch):
+    repo=tmp_path/"previous-inventory"
+    repo.mkdir()
+    subprocess.run(["git","init","-q",str(repo)],check=True)
+    subprocess.run(["git","-C",str(repo),"config","user.name","VARE test"],check=True)
+    subprocess.run(["git","-C",str(repo),"config","user.email","vare-test@example.invalid"],check=True)
+    for name in auditor.PREVIOUS_EXPECTED_SOURCES:
+        source=repo/name
+        source.parent.mkdir(parents=True,exist_ok=True)
+        source.write_text(f"pinned fixture: {name}\n")
+    subprocess.run(["git","-C",str(repo),"add","."],check=True)
+    subprocess.run(["git","-C",str(repo),"commit","-qm","previous complete inventory"],check=True)
+    commit=subprocess.check_output(["git","-C",str(repo),"rev-parse","HEAD"],text=True).strip()
+    monkeypatch.setattr(auditor,"REPOSITORY_ROOT",repo)
+    manifest={"base_commit":commit,
+              "sources":auditor.source_hashes_from_commit(commit,auditor.PREVIOUS_EXPECTED_SOURCES)}
+
+    auditor.validate_source_inventory(manifest,auditor.PREVIOUS_EXPECTED_SOURCES,True)
+
+
 def test_fresh_conformant_campaign_accepts_its_complete_source_inventory():
     commit=bench.subprocess.check_output(["git","rev-parse","HEAD"],cwd=bench.ROOT,text=True).strip()
     source_hashes=auditor.source_hashes_from_commit(commit,auditor.EXPECTED_SOURCES)

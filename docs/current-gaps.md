@@ -1,17 +1,5 @@
 # Current evidence gaps
 
-**Update 2026-10-21 — one Development task calibrated in isolated Docker:**
-the MLX-LM #1912 top-p regression ran on its pinned baseline and known fix
-under protocol v3. The baseline failed the exact-output cohort and the known
-fix passed 12/12 cases; all nine namespace, network, output, resource, and
-source-swap probes passed. Candidate source, task prompt, source revisions,
-runtime image, and evidence hashes are recorded. This is CPU-only calibration,
-not an Agent rollout. The other two Development tasks, Qwen3-4B feasibility,
-and any post-training comparison remain open. No Metal semantic-equivalence
-claim follows. See the [report](mlsys-repository-task-mlxlm-1912-v1-report.md),
-[protocol v3](../benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v3.json),
-and [raw evidence](../results/mlxlm-1912-isolated-v3/run-1/).
-
 **Update 2026-10-21 — one repository-task grading contract passed:** the
 MLX-LM #1904 Train-task calibration now runs in VARE's separate no-network
 candidate callee; the pinned baseline fails and the exact fixed source passes.
@@ -22,6 +10,16 @@ Development-task graders, Qwen3-4B pass@k/reward-variance feasibility, and any
 policy-update comparison remain open. See the
 [calibration report](mlsys-repository-task-mlxlm-1904-v1-report.md) and
 [raw evidence](../results/mlsys-repo-eval-v1/run-4/).
+
+**Update 2026-10-20 — upstream task-candidate survey:** a frozen metadata
+survey captured 57 merged coding/MLSys pull requests from six OSS repositories.
+The coarse screen leaves 24 for manual review; it does not verify task
+independence, run the upstream tests on M1, prove model freshness, or establish
+hidden grading. Zero candidates are fully qualified and the held-out split
+remains unfrozen, so training is still NO-GO. This is a data-readiness result,
+not a negative policy-learning result. See the [survey report](mlsys-task-candidate-survey-v1-report.md),
+[protocol](../protocols/mlsys_task_candidate_survey_v1.json), and [audited
+evidence](../results/mlsys-task-candidate-survey-v1/).
 
 **Update 2026-10-20 — actual-model update readiness NO-GO:** a frozen
 read-only inventory of the v1–v3 MLSys packs checks all 19 task entries and

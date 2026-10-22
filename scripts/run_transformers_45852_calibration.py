@@ -9,6 +9,7 @@ import difflib
 import hashlib
 import json
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -30,24 +31,12 @@ from vare.transformers_repo_task import (  # noqa: E402
     _validate_diff,
     TransformersTaskError,
     verify_baseline,
+    verify_protocol,
 )
 from vare.isolated_candidate import FunctionCall, grade_calls  # noqa: E402
 
 TASK_DIR = ROOT / "benchmarks/mlsys_repo_eval_v2/transformers_45852"
-PROTOCOL = TASK_DIR / "protocol-v1.json"
-LOCKED = [
-    "src/vare/transformers_repo_task.py",
-    "src/vare/isolated_candidate.py",
-    "src/vare/container_isolation.py",
-    "src/vare/attestation.py",
-    "src/vare/types.py",
-    "scripts/run_transformers_45852_calibration.py",
-    "benchmarks/mlsys_repo_eval_v2/transformers_45852/grader_adapter.py",
-    "benchmarks/mlsys_repo_eval_v2/transformers_45852/task.md",
-    "benchmarks/mlsys_repo_eval_v2/transformers_45852/Dockerfile",
-    "benchmarks/mlsys_repo_eval_v2/transformers_45852/requirements.txt",
-    "tests/test_transformers_repo_task.py",
-]
+PROTOCOL = TASK_DIR / "protocol-v3.json"
 
 
 def sha256(path: Path) -> str:
@@ -56,21 +45,6 @@ def sha256(path: Path) -> str:
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
-
-
-def verify_protocol() -> dict[str, Any]:
-    protocol = json.loads(PROTOCOL.read_text(encoding="utf-8"))
-    expected = protocol.get("implementation_sha256")
-    actual = {name: sha256(ROOT / name) for name in LOCKED}
-    if not expected or expected != actual:
-        raise RuntimeError("protocol implementation hash lock is absent or mismatched")
-    if (
-        protocol["task_id"] != TASK_ID
-        or protocol["baseline_commit"] != BASELINE_COMMIT
-        or protocol["fixed_commit"] != FIXED_COMMIT
-    ):
-        raise RuntimeError("protocol task identity does not match implementation")
-    return protocol
 
 
 def main() -> int:
@@ -148,6 +122,9 @@ def main() -> int:
             raise RuntimeError(
                 "candidate-applied fix does not match pinned fixed source"
             )
+        mutation_checks = run_mutation_checks(
+            temp_root, fixed_workspace, fixed_export["baseline_files"], args.image
+        )
         red_team = run_red_team(temp_root, args.image)
     calibration_passed = (
         cases["baseline"]["passed"] is False and cases["known_fix"]["passed"] is True
@@ -170,7 +147,10 @@ def main() -> int:
         "calibration_passed": False,
         "wall_s": time.monotonic() - started,
     }
-    result["calibration_passed"] = calibration_passed and red_team["passed"]
+    result["mutation_checks"] = mutation_checks
+    result["calibration_passed"] = (
+        calibration_passed and red_team["passed"] and mutation_checks["passed"]
+    )
     result_path = output / "calibration.json"
     result_path.write_text(
         json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8"
@@ -180,6 +160,64 @@ def main() -> int:
     )
     print(json.dumps(result, indent=2, sort_keys=True))
     return 0 if result["calibration_passed"] else 1
+
+
+def run_mutation_checks(
+    temp_root: Path,
+    known_fix_workspace: Path,
+    baseline_files: dict[str, str],
+    image: str,
+) -> dict[str, Any]:
+    """Prove the parent-owned cases reject shortcuts to the pinned fix."""
+    source_path = known_fix_workspace / TARGET_PATH
+    source = source_path.read_text(encoding="utf-8")
+    replacements = {
+        "constant-mask-output": (
+            "torch.stack(preserved_attention_mask)",
+            "torch.stack([torch.full_like(mask, 1) for mask in preserved_attention_mask])",
+        ),
+        "mean-mask-output": (
+            "torch.stack(preserved_attention_mask)",
+            "torch.stack([torch.full_like(mask, mask.mean()) for mask in preserved_attention_mask])",
+        ),
+        "constant-numpy-mask-output": (
+            "np.stack(preserved_attention_mask)",
+            "np.stack([np.full_like(mask, 1) for mask in preserved_attention_mask])",
+        ),
+        "mean-numpy-mask-output": (
+            "np.stack(preserved_attention_mask)",
+            "np.stack([np.full_like(mask, mask.mean()) for mask in preserved_attention_mask])",
+        ),
+        "corrupt-padded-input-ids": (
+            "return BatchEncoding(batch_outputs, tensor_type=return_tensors)",
+            'batch_outputs["input_ids"] = [[0] * len(row) for row in batch_outputs["input_ids"]]\n'
+            "        return BatchEncoding(batch_outputs, tensor_type=return_tensors)",
+        ),
+        "corrupt-padded-attention-mask": (
+            "return BatchEncoding(batch_outputs, tensor_type=return_tensors)",
+            'batch_outputs["attention_mask"] = [[1] * len(row) for row in batch_outputs["attention_mask"]]\n'
+            "        return BatchEncoding(batch_outputs, tensor_type=return_tensors)",
+        ),
+    }
+    rejected: dict[str, bool] = {}
+    for name, (old, new) in replacements.items():
+        if old not in source:
+            rejected[name] = False
+            continue
+        mutant = temp_root / f"mutant-{name}"
+        shutil.copytree(known_fix_workspace, mutant)
+        mutant_source = mutant / TARGET_PATH
+        mutant_source.write_text(source.replace(old, new, 1), encoding="utf-8")
+        try:
+            report = grade_workspace(
+                mutant,
+                image=image,
+                baseline_files=baseline_files,
+            )
+            rejected[name] = not report["passed"]
+        except (TransformersTaskError, OSError):
+            rejected[name] = True
+    return {"executed": True, "passed": bool(rejected) and all(rejected.values()), "rejected": rejected}
 
 
 def prepare_sparse_checkout(source_repo: Path, destination: Path) -> None:

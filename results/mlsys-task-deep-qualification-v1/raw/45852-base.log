@@ -1,0 +1,242 @@
+
+tests/trainer/test_data_collator.py::TestDataCollatorWithPadding::test_4d_attention_mask_asymmetric_kv FAILED [ 50%]tests/trainer/test_data_collator.py::TestDataCollatorWithPadding::test_4d_attention_mask_asymmetric_kv [FAILED] 0.00s
+
+
+=================================== FAILURES ===================================
+_______ TestDataCollatorWithPadding.test_4d_attention_mask_asymmetric_kv _______
+
+self = {'input_ids': tensor([[0, 1, 2, 3],
+        [0, 1, 2, 3]]), 'attention_mask': [tensor([[[0., 0., 0., 0., 0., 0., 0., 0... 0., 0., 0., 0., 0.],
+         [0., 0., 0., 0., 0., 0., 0., 0., 0.],
+         [0., 0., 0., 0., 0., 0., 0., 0., 0.]]])]}
+tensor_type = <TensorType.PYTORCH: 'pt'>, prepend_batch_axis = False
+
+    def convert_to_tensors(self, tensor_type: str | TensorType | None = None, prepend_batch_axis: bool = False):
+        """
+        Convert the inner content to tensors.
+    
+        Args:
+            tensor_type (`str` or [`~utils.TensorType`], *optional*):
+                The type of tensors to use. If `str`, should be one of the values of the enum [`~utils.TensorType`]. If
+                `None`, no modification is done.
+            prepend_batch_axis (`int`, *optional*, defaults to `False`):
+                Whether or not to add the batch dimension during the conversion.
+        """
+        if tensor_type is None:
+            return self
+    
+        # Convert to TensorType
+        if not isinstance(tensor_type, TensorType):
+            tensor_type = TensorType(tensor_type)
+    
+        if tensor_type == TensorType.PYTORCH:
+            if not is_torch_available():
+                raise ImportError("Unable to convert output to PyTorch tensors format, PyTorch is not installed.")
+            import torch
+    
+            def as_tensor(value, dtype=None):
+                if isinstance(value, list) and len(value) > 0 and isinstance(value[0], np.ndarray):
+                    return torch.from_numpy(np.array(value))
+                if len(flatten(value)) == 0 and dtype is None:
+                    dtype = torch.int64
+                return torch.tensor(value, dtype=dtype)
+    
+            is_tensor = torch.is_tensor
+    
+        elif tensor_type == TensorType.MLX:
+            if not is_mlx_available():
+                raise ImportError("Unable to convert output to MLX tensors format, MLX is not installed.")
+            import mlx.core as mx
+    
+            def as_tensor(value, dtype=None):
+                if len(flatten(value)) == 0 and dtype is None:
+                    dtype = mx.int32
+                return mx.array(value, dtype=dtype)
+    
+            def is_tensor(obj):
+                return isinstance(obj, mx.array)
+        else:
+    
+            def as_tensor(value, dtype=None):
+                if (
+                    isinstance(value, (list, tuple))
+                    and len(value) > 0
+                    and isinstance(value[0], (list, tuple, np.ndarray))
+                ):
+                    value_lens = [len(val) for val in value]
+                    if len(set(value_lens)) > 1 and dtype is None:
+                        # we have a ragged list so handle explicitly
+                        value = as_tensor([np.asarray(val) for val in value], dtype=object)
+                if len(flatten(value)) == 0 and dtype is None:
+                    dtype = np.int64
+                return np.asarray(value, dtype=dtype)
+    
+            is_tensor = is_numpy_array
+    
+        # Do the tensor conversion in batch
+        for key, value in self.items():
+            try:
+                if prepend_batch_axis:
+                    value = [value]
+    
+                if not is_tensor(value):
+>                   tensor = as_tensor(value)
+                             ^^^^^^^^^^^^^^^^
+
+/tmp/vare-transformers-45852-base/src/transformers/tokenization_utils_base.py:742: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = [tensor([[[0., 0., 0., 0., 0., 0., 0., 0., 0.],
+         [0., 0., 0., 0., 0., 0., 0., 0., 0.],
+         [0., 0., 0., 0..., 0., 0., 0., 0., 0.],
+         [0., 0., 0., 0., 0., 0., 0., 0., 0.],
+         [0., 0., 0., 0., 0., 0., 0., 0., 0.]]])]
+dtype = None
+
+    def as_tensor(value, dtype=None):
+        if isinstance(value, list) and len(value) > 0 and isinstance(value[0], np.ndarray):
+            return torch.from_numpy(np.array(value))
+        if len(flatten(value)) == 0 and dtype is None:
+            dtype = torch.int64
+>       return torch.tensor(value, dtype=dtype)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: only one element tensors can be converted to Python scalars
+
+/tmp/vare-transformers-45852-base/src/transformers/tokenization_utils_base.py:701: ValueError
+
+The above exception was the direct cause of the following exception:
+
+self = <tests.trainer.test_data_collator.TestDataCollatorWithPadding testMethod=test_4d_attention_mask_asymmetric_kv>
+
+    def test_4d_attention_mask_asymmetric_kv(self):
+        """A 4D mask with `kv_len != q_len` (e.g. KV-cache style) is preserved."""
+        tokenizer = BertTokenizer(self.vocab_file)
+        q_len, kv_len, batch_size = 4, 9, 2
+        features = [
+            {
+                "input_ids": list(range(q_len)),
+                "attention_mask": torch.zeros((1, q_len, kv_len), dtype=torch.float32),
+            }
+            for _ in range(batch_size)
+        ]
+>       batch = DataCollatorWithPadding(tokenizer)(features)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/vare-transformers-45852-base/tests/trainer/test_data_collator.py:306: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/vare-transformers-45852-base/src/transformers/data/data_collator.py:225: in __call__
+    batch = pad_without_fast_tokenizer_warning(
+/tmp/vare-transformers-45852-base/src/transformers/data/data_collator.py:63: in pad_without_fast_tokenizer_warning
+    padded = tokenizer.pad(*pad_args, **pad_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/vare-transformers-45852-base/src/transformers/tokenization_utils_base.py:2738: in pad
+    return BatchEncoding(batch_outputs, tensor_type=return_tensors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/vare-transformers-45852-base/src/transformers/tokenization_utils_base.py:242: in __init__
+    self.convert_to_tensors(tensor_type=tensor_type, prepend_batch_axis=prepend_batch_axis)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = {'input_ids': tensor([[0, 1, 2, 3],
+        [0, 1, 2, 3]]), 'attention_mask': [tensor([[[0., 0., 0., 0., 0., 0., 0., 0... 0., 0., 0., 0., 0.],
+         [0., 0., 0., 0., 0., 0., 0., 0., 0.],
+         [0., 0., 0., 0., 0., 0., 0., 0., 0.]]])]}
+tensor_type = <TensorType.PYTORCH: 'pt'>, prepend_batch_axis = False
+
+    def convert_to_tensors(self, tensor_type: str | TensorType | None = None, prepend_batch_axis: bool = False):
+        """
+        Convert the inner content to tensors.
+    
+        Args:
+            tensor_type (`str` or [`~utils.TensorType`], *optional*):
+                The type of tensors to use. If `str`, should be one of the values of the enum [`~utils.TensorType`]. If
+                `None`, no modification is done.
+            prepend_batch_axis (`int`, *optional*, defaults to `False`):
+                Whether or not to add the batch dimension during the conversion.
+        """
+        if tensor_type is None:
+            return self
+    
+        # Convert to TensorType
+        if not isinstance(tensor_type, TensorType):
+            tensor_type = TensorType(tensor_type)
+    
+        if tensor_type == TensorType.PYTORCH:
+            if not is_torch_available():
+                raise ImportError("Unable to convert output to PyTorch tensors format, PyTorch is not installed.")
+            import torch
+    
+            def as_tensor(value, dtype=None):
+                if isinstance(value, list) and len(value) > 0 and isinstance(value[0], np.ndarray):
+                    return torch.from_numpy(np.array(value))
+                if len(flatten(value)) == 0 and dtype is None:
+                    dtype = torch.int64
+                return torch.tensor(value, dtype=dtype)
+    
+            is_tensor = torch.is_tensor
+    
+        elif tensor_type == TensorType.MLX:
+            if not is_mlx_available():
+                raise ImportError("Unable to convert output to MLX tensors format, MLX is not installed.")
+            import mlx.core as mx
+    
+            def as_tensor(value, dtype=None):
+                if len(flatten(value)) == 0 and dtype is None:
+                    dtype = mx.int32
+                return mx.array(value, dtype=dtype)
+    
+            def is_tensor(obj):
+                return isinstance(obj, mx.array)
+        else:
+    
+            def as_tensor(value, dtype=None):
+                if (
+                    isinstance(value, (list, tuple))
+                    and len(value) > 0
+                    and isinstance(value[0], (list, tuple, np.ndarray))
+                ):
+                    value_lens = [len(val) for val in value]
+                    if len(set(value_lens)) > 1 and dtype is None:
+                        # we have a ragged list so handle explicitly
+                        value = as_tensor([np.asarray(val) for val in value], dtype=object)
+                if len(flatten(value)) == 0 and dtype is None:
+                    dtype = np.int64
+                return np.asarray(value, dtype=dtype)
+    
+            is_tensor = is_numpy_array
+    
+        # Do the tensor conversion in batch
+        for key, value in self.items():
+            try:
+                if prepend_batch_axis:
+                    value = [value]
+    
+                if not is_tensor(value):
+                    tensor = as_tensor(value)
+    
+                    # Removing this for now in favor of controlling the shape with `prepend_batch_axis`
+                    # # at-least2d
+                    # if tensor.ndim > 2:
+                    #     tensor = tensor.squeeze(0)
+                    # elif tensor.ndim < 2:
+                    #     tensor = tensor[None, :]
+    
+                    self[key] = tensor
+            except Exception as e:
+                if key == "overflowing_tokens":
+                    raise ValueError(
+                        "Unable to create tensor returning overflowing tokens of different lengths. "
+                        "Please see if a fast version of this tokenizer is available to have this feature available."
+                    ) from e
+>               raise ValueError(
+                    "Unable to create tensor, you should probably activate truncation and/or padding with"
+                    " 'padding=True' 'truncation=True' to have batched tensors with the same length. Perhaps your"
+                    f" features (`{key}` in this case) have excessive nesting (inputs type `list` where type `int` is"
+                    " expected)."
+                ) from e
+E               ValueError: Unable to create tensor, you should probably activate truncation and/or padding with 'padding=True' 'truncation=True' to have batched tensors with the same length. Perhaps your features (`attention_mask` in this case) have excessive nesting (inputs type `list` where type `int` is expected).
+
+/tmp/vare-transformers-45852-base/src/transformers/tokenization_utils_base.py:758: ValueError
+=========================== short test summary info ============================
+FAILED tests/trainer/test_data_collator.py::TestDataCollatorWithPadding::test_4d_attention_mask_asymmetric_kv
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+================= 1 failed, 75 deselected, 2 warnings in 0.18s =================
