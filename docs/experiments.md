@@ -1,3 +1,7 @@
+
+## MLX-LM #1971 isolated task calibration v8 (2026-10-23)
+
+The v7 prospective run failed closed: its post-cache mutant also changed the no-cache rotary-position branch, so all full-forward cases failed and the run did not satisfy the cache-specific semantic gate. V8 preserves the failed v7 raw record and corrects only the mutant construction under a new protocol/lock. On the pinned Colima CPU image, v8 passed baseline FAIL, exact-fix PASS, constant-scale rejection, cache-only mutant rejection (all full-forward cases pass and all cached cases fail as `wrong_output`), source-swap rejection, and red-team controls. This remains synthetic grader calibration only. See the [v8 report](mlsys-repository-task-mlxlm-1971-v8-report.md), [protocol](../benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v8.json), [v7 failure](../results/mlxlm-1971-isolated-v7/run-1/), and [v8 raw evidence](../results/mlxlm-1971-isolated-v8/run-1/).
 # Experimental program
 
 ## MLX-LM #1971 isolated task calibration v5
