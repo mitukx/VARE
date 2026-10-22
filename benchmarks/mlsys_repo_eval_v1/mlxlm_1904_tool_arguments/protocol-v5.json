@@ -1,0 +1,71 @@
+{
+  "calibration_rule": {
+    "baseline_must_fail": true,
+    "fixed_source_checkout_swap_must_be_rejected": true,
+    "known_fix_source_sha_must_match_pinned_revision": true,
+    "known_fixed_revision_must_pass": true,
+    "security_probe_suite_must_complete": true,
+    "task_use": "train-task harness calibration only; no model rollout, development score, SFT, or GRPO"
+  },
+  "implementation_sha256": {
+    "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/grader_adapter.py": "5813b83f446362aca75cd10c10164d864f8d92f6e818df565d5abd4856fb482d",
+    "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/known_fix.patch": "48cf825e9b9b3fe994dbfd3d69db6c596a7053f72a0dfe978d42295d2fb889d7",
+    "scripts/red_team_mlxlm_1904.py": "9443b39aeac132a2dc60b37523d89f6f2547f0d250de94614995bfd39f814bd1",
+    "scripts/run_mlxlm_1904_calibration.py": "be32c6d10da611306d23176f0aefcd4eeb1461d1eb6d2250d483b9ac99f42755",
+    "src/vare/mlsys_repo_task.py": "fc5e145774aa8e326cd1e9c5a5d56daab650a57cc77046f79e187dc78d689846",
+    "tests/test_mlsys_repo_task.py": "516e87f2f85545b05a80a80459f5865f0a5d49fad1ad222e2b8181a991f5bafd"
+  },
+  "protocol_id": "mlsys-repository-task-mlxlm-1904-v5",
+  "protocol_status": "locked_before_run10",
+  "runtime": {
+    "backend": "vare.isolated_candidate.grade_calls",
+    "candidate_mount": "source-only read-only at /subject",
+    "container_root": "read-only",
+    "cpus": 1.0,
+    "docker_server": "29.5.2/arm64",
+    "expected_values_sent_to_candidate": false,
+    "grader_mount": "absent",
+    "host": "macOS arm64 with Colima Docker VM",
+    "image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "max_output_bytes": 512000,
+    "memory_mb": 512,
+    "network": "none",
+    "peak_memory_measured": false,
+    "pids_limit": 64,
+    "timeout_s": 5,
+    "uid": 65534
+  },
+  "schema_version": 2,
+  "source": {
+    "baseline_commit": "2af5f7ce8620115bf37fbbddf9817f083118df59",
+    "baseline_server_sha256": "57392576de114af80ede723976b9dd156dc234f856b9943b8b44b8b78bc27f79",
+    "fixed_commit": "caed1943d38ecb58f6e466a72bed98310c9d45a5",
+    "fixed_server_sha256": "361a790e0743e50e66cea6509e64be8b8b67c6612e2274331624cbd244b29ead",
+    "license": "MIT",
+    "qualification_id": "mlsys-task-deep-qualification-v1",
+    "qualification_sha256": "2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d",
+    "repository": "https://github.com/ml-explore/mlx-lm",
+    "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1904",
+    "target_path": "mlx_lm/server.py"
+  },
+  "split": "train",
+  "task_contract": {
+    "allowed_edit_paths": [
+      "mlx_lm/server.py"
+    ],
+    "limitations": [
+      "does not execute the original HTTP/model-serving fixture",
+      "does not claim full equivalence to the upstream selected test",
+      "does not establish model or policy improvement"
+    ],
+    "prompt_sha256": "3855eae179864cddd35af9cb5b6e65812f414ceae7b5affc1a29b7e7d9c67699",
+    "supported_semantics": [
+      "already-decoded object arguments are accepted without JSON decoding",
+      "JSON-string arguments continue to decode to their original object"
+    ],
+    "upstream_test_path": "tests/test_server.py",
+    "upstream_test_selector": "dict_tool_arguments",
+    "upstream_test_sha256": "9ea16a116e111601f3d011800caedfb437a97b38b1238a09e4cd58370b39edb6"
+  },
+  "task_id": "mlxlm-1904-tool-arguments"
+}

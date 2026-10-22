@@ -1,0 +1,8 @@
+diff --git a/mlx_lm/server.py b/mlx_lm/server.py
+index 9462d6e..0a200df 100644
+--- a/mlx_lm/server.py
++++ b/mlx_lm/server.py
+@@ -153 +153,2 @@ def process_message_content(messages):
+-                        func["arguments"] = json.loads(args)
++                        if isinstance(args, str):
++                            func["arguments"] = json.loads(args)

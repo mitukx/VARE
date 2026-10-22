@@ -1,0 +1,11 @@
+{
+  "failure_class": "container_bind_source_unavailable",
+  "observed_runner_result": "missing_result",
+  "diagnostic": {
+    "command": "docker run ... --mount type=bind,source=$TEMP_DIR,target=/subject,readonly ...",
+    "docker_stderr": "docker: Error response from daemon: invalid mount config for type \"bind\": bind source path does not exist: $TEMP_DIR",
+    "cause": "Colima did not expose the worktree's temporary-directory root to its Docker VM.",
+    "remediation_for_run_8": "Set TMPDIR to a host directory shared with Colima so transient candidate workspaces resolve inside the Docker VM."
+  },
+  "scope": "Post-run environment diagnosis; does not alter run-7 outputs or decision."
+}

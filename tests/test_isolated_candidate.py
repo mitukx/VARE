@@ -19,6 +19,7 @@ from vare.isolated_candidate import (
     _Lines,
     TimingPair,
     TimingReport,
+    _candidate_temporary_directory,
     grade_calls,
     overhead_adjusted,
     paired_difference_ci,
@@ -31,6 +32,15 @@ from vare.isolated_candidate import (
 from vare import isolated_candidate
 
 IMAGE = "python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1"
+
+
+def test_macos_candidate_temp_path_is_canonical_and_home_shared(monkeypatch, tmp_path):
+    monkeypatch.setattr(sys, "platform", "darwin")
+    monkeypatch.setattr(Path, "home", lambda: tmp_path)
+    with _candidate_temporary_directory("candidate-test-") as folder:
+        resolved = Path(folder).resolve(strict=True)
+        assert resolved == Path(folder)
+        assert resolved.parent == tmp_path / ".cache" / "vare-isolated-candidate"
 CANARY = "vare-hidden-canary-85"
 OWNED = "grader-owned-token"
 def _subject(tmp_path: Path, module: str, source: str) -> Path:

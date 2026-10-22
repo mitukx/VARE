@@ -1,5 +1,17 @@
 # Experimental program
 
+## MLX-LM #1904 repository-task isolation calibration — 2026-10-21
+
+The frozen Train task's narrow `process_message_content` contract passed a pinned
+baseline-versus-fix replay on Apple Silicon Colima. The baseline rejected
+dict-valued arguments while the exact upstream fixed source passed both the
+dict case and its JSON-string control. Eight focused callee security probes
+passed; path/traversal/symlink and source-swap checks failed closed. This does
+not claim equivalence to the full upstream HTTP test or any model-generated
+success. See the [report](mlsys-repository-task-mlxlm-1904-v1-report.md),
+[protocol](../benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v4.json),
+and [raw records](../results/mlsys-repo-eval-v1/run-6/).
+
 ## Actual-model MLSys update readiness — NO-GO, 2026-10-20
 
 M1 Pro feasibility measurements recorded Metal and CPU decoding, a ten-step
@@ -277,3 +289,9 @@ A feature is not evidence. Headline claims are allowed only when corresponding r
 
 
 **Update 2026-10-14 — evaluation transaction integration:** existing PR #19 evaluator/inference lifetime corrections are integrated with signed-training, authorization and checkpoint-bound promotion controls. A frozen four-case pre/post revocation × discard-success/failure CPU comparison fails 4/4 on main `a0f6464` and passes 4/4 on the integrated candidate; three caller cancellations cannot interrupt asynchronous rollback before the round lock is released. Historical lifecycle replay is baseline 12 failures/13 cases versus 13 candidate passes; inference replay is candidate 14/14 with its historical failing controls preserved. This is in-process correctness evidence only. See [report](evaluation-transaction-integration-v1.md), [protocol](../protocols/engine_evaluation_interlock_integration_v1.lock.json), and [raw records](../results/engine-evaluation-interlock-integration-v1/). No model-learning protocol is reopened.
+
+**Update 2026-10-21 — MLX-LM #1904 calibration v6:** independent review found that v5 omitted the candidate-call and Docker-isolation implementations from its hash lock and allowed a non-protocol image override. Protocol v6 locks both runtime modules and rejects image digests other than the pinned runtime. Run 11 verifies all eight locked artifacts, records baseline fail / known-fix pass, source-swap rejection, and all eight red-team probes passing on the same Colima ARM64 image. This remains narrow known-fix E1 calibration evidence; it does not establish agent performance or model improvement. Run 9 is historically preserved but invalid as v4 implementation-lock evidence; run 10 is the valid v5 calibration. See [run 11](../results/mlsys-repo-eval-v1/run-11/report.md), [protocol v6](../benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v6.json), and the [raw bundle](../results/mlsys-repo-eval-v1/run-11/).
+
+**Update 2026-10-21 — MLX-LM #1904 calibration v7:** review also required the evaluator/protocol bytes to be frozen in a clean tracked worktree before any grading. Protocol v7 makes this a fail-closed precondition and the acceptance predicate, with a regression test for dirty-worktree rejection. Run 12 started from clean implementation commit `e6690c6035bb19637c9d999119afe5642cadf6ad`, verified all eight implementation hashes and the exact runtime image, then passed baseline/fix/source-swap calibration and all eight security probes. It remains narrow E1 evidence. See [run 12](../results/mlsys-repo-eval-v1/run-12/report.md), [protocol v7](../benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v7.json), and the [raw bundle](../results/mlsys-repo-eval-v1/run-12/).
+
+**Update 2026-10-21 — MLX-LM #1904 calibration v9:** review added fail-closed checks for hidden Git index flags on the protocol and every locked input, and for the candidate-visible task prompt hash. The previous-run source inventory is now explicit so adding runtime modules does not rewrite historical acceptance. Run 13 is retained as an environment failure: the system temp path was outside Colima's shared mounts, so neither candidate arm executed and calibration did not pass. Protocol v9 canonicalizes candidate staging below the operator home cache on macOS and locks the staging implementation and regression test. Run 14 on clean commit `7bd3ca06b4afbaf23c7c4b82d6c17186d2e877b7` verified nine locked artifacts, task prompt hash, clean worktree, and the exact image; baseline failed the regression while the pinned fix passed both cases, a fixed-source swap was rejected, and all eight red-team probes passed. Elapsed wall time was `10.34` s; peak memory was not measured. This remains narrow E1 known-fix calibration evidence, not an Agent rollout or model-improvement result. See [run 13](../results/mlsys-repo-eval-v1/run-13/report.md), [run 14](../results/mlsys-repo-eval-v1/run-14/report.md), [protocol v9](../benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v9.json), and both [raw bundles](../results/mlsys-repo-eval-v1/run-14/).
