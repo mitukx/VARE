@@ -427,6 +427,8 @@ def generate_turn(backend: str, model: Any, tokenizer: Any, messages: list[dict[
 def run_public_tests(
     workspace: Path, image: str, expected_test_hash: str, memory_mb: int = 512,
     *, expected_workspace_files: set[str],
+    expected_file_hashes: dict[str, str] | None = None,
+    allowed_modified_files: set[str] | None = None,
 ) -> dict[str, Any]:
     """Run only the immutable public smoke file in VARE's candidate sandbox."""
     if not expected_workspace_files or 'test_public.py' not in expected_workspace_files:
@@ -458,6 +460,32 @@ def run_public_tests(
                 'gradeable': False,
                 'error': 'public test evaluator unavailable',
             }
+        if expected_file_hashes is not None:
+            modified = allowed_modified_files or set()
+            if set(expected_file_hashes) != expected_workspace_files or not modified.issubset(expected_workspace_files):
+                return {
+                    'passed': None,
+                    'classification': 'runner_integrity_error',
+                    'gradeable': False,
+                    'error': 'public test evaluator unavailable',
+                }
+            if any(
+                name not in modified and before[name][1] != digest
+                for name, digest in expected_file_hashes.items()
+            ):
+                return {
+                    'passed': None,
+                    'classification': 'runner_integrity_error',
+                    'gradeable': False,
+                    'error': 'public test evaluator unavailable',
+                }
+            if 'test_public.py' in modified:
+                return {
+                    'passed': None,
+                    'classification': 'runner_integrity_error',
+                    'gradeable': False,
+                    'error': 'public test evaluator unavailable',
+                }
         with PublicTestWorkspaceStaging(workspace) as staged:
             if set(_workspace_file_manifest(staged)) != expected_workspace_files:
                 return {
@@ -675,6 +703,8 @@ def refresh_public_tests_after_edit(
     edit_result: dict[str, Any], workspace: Path, image: str | None,
     expected_test_hash: str | None, memory_mb: int = 512,
     *, expected_workspace_files: set[str],
+    expected_file_hashes: dict[str, str] | None = None,
+    allowed_modified_files: set[str] | None = None,
 ) -> dict[str, Any] | None:
     """Return a fresh smoke-test result after an applied source edit."""
     if edit_result.get('applied') is not True or not image or not expected_test_hash:
@@ -682,6 +712,8 @@ def refresh_public_tests_after_edit(
     return run_public_tests(
         workspace, image, expected_test_hash, memory_mb,
         expected_workspace_files=expected_workspace_files,
+        expected_file_hashes=expected_file_hashes,
+        allowed_modified_files=allowed_modified_files,
     )
 
 
@@ -866,6 +898,13 @@ def main() -> int:
         verify_agent_workspace(workspace, contract)
     except ValueError as exc:
         parser.error(str(exc))
+    public_test_workspace_manifest = (
+        _workspace_file_manifest(workspace) if test_files else {}
+    )
+    public_test_workspace_files = set(public_test_workspace_manifest)
+    public_test_workspace_hashes = {
+        name: digest for name, (_size, digest) in public_test_workspace_manifest.items()
+    }
     if not os.environ.get('HF_HUB_OFFLINE') == '1' or not os.environ.get('TRANSFORMERS_OFFLINE') == '1':
         parser.error('HF_HUB_OFFLINE=1 and TRANSFORMERS_OFFLINE=1 are required')
 
@@ -1062,7 +1101,10 @@ def main() -> int:
                 if edit_result.get('applied') is True:
                     public_test_result = refresh_public_tests_after_edit(
                         edit_result, workspace, args.public_test_image, public_test_hash,
-                        args.public_test_memory_mb, expected_workspace_files=allowed,
+                        args.public_test_memory_mb,
+                        expected_workspace_files=public_test_workspace_files,
+                        expected_file_hashes=public_test_workspace_hashes,
+                        allowed_modified_files=editable,
                     )
                     if public_test_result is not None:
                         record_automatic_public_test(entry, public_test_result)
@@ -1228,7 +1270,9 @@ def main() -> int:
                                     args.public_test_image,
                                     public_test_hash,
                                     args.public_test_memory_mb,
-                                    expected_workspace_files=allowed,
+                                    expected_workspace_files=public_test_workspace_files,
+                                    expected_file_hashes=public_test_workspace_hashes,
+                                    allowed_modified_files=editable,
                                 )
                                 if public_test_result is not None:
                                     record_automatic_public_test(entry, public_test_result)
@@ -1259,7 +1303,10 @@ def main() -> int:
                     if result.get('applied') is True:
                         public_test_result = refresh_public_tests_after_edit(
                             result, workspace, args.public_test_image, public_test_hash,
-                            args.public_test_memory_mb, expected_workspace_files=allowed,
+                            args.public_test_memory_mb,
+                            expected_workspace_files=public_test_workspace_files,
+                            expected_file_hashes=public_test_workspace_hashes,
+                            allowed_modified_files=editable,
                         )
                         if public_test_result is not None:
                             record_automatic_public_test(entry, public_test_result)
@@ -1278,7 +1325,10 @@ def main() -> int:
                     if result.get('applied') is True:
                         public_test_result = refresh_public_tests_after_edit(
                             result, workspace, args.public_test_image, public_test_hash,
-                            args.public_test_memory_mb, expected_workspace_files=allowed,
+                            args.public_test_memory_mb,
+                            expected_workspace_files=public_test_workspace_files,
+                            expected_file_hashes=public_test_workspace_hashes,
+                            allowed_modified_files=editable,
                         )
                         if public_test_result is not None:
                             record_automatic_public_test(entry, public_test_result)
@@ -1287,7 +1337,10 @@ def main() -> int:
                     if args.public_test_image and public_test_hash:
                         public_test_result = run_public_tests(
                             workspace, args.public_test_image, public_test_hash,
-                            args.public_test_memory_mb, expected_workspace_files=allowed,
+                            args.public_test_memory_mb,
+                            expected_workspace_files=public_test_workspace_files,
+                            expected_file_hashes=public_test_workspace_hashes,
+                            allowed_modified_files=editable,
                         )
                     else:
                         public_test_result = {
