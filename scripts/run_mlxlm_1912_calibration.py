@@ -31,7 +31,7 @@ from vare.mlxlm_1912_repo_task import (  # noqa: E402
 )
 from vare.isolated_candidate import FunctionCall, grade_calls  # noqa: E402
 
-PROTOCOL = ROOT / "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v3.json"
+PROTOCOL = ROOT / "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v4.json"
 LOCKED = [
     "src/vare/mlxlm_1912_repo_task.py",
     "src/vare/isolated_candidate.py",
@@ -53,7 +53,7 @@ def verify_protocol() -> dict[str, Any]:
     if protocol.get("implementation_sha256") != actual:
         raise RuntimeError("protocol implementation hash lock is absent or mismatched")
     locked_inputs = set(LOCKED) | {
-        "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v3.json",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v4.json",
         "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/task.md",
     }
     flags = subprocess.run(

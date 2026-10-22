@@ -244,6 +244,22 @@ def grade_workspace(
                         },
                     )
                 )
+        # Prospective v4 adversarial fixtures: an index-0/zero-valued
+        # constant-output implementation must fail, even at tiny top-p.
+        calls.extend([
+            FunctionCall(
+                "shifted_maximum_nonzero_values", "vare_task_adapter", "run",
+                [{"logits": [[-9.0, -0.625, -12.0], [-7.0, -11.0, -1.25]],
+                  "top_p": 1e-8}],
+                {"kept_indices": [[1], [2]],
+                 "kept_values": [[-0.625], [-1.25]]},
+            ),
+            FunctionCall(
+                "leading_maximum_nonzero_value", "vare_task_adapter", "run",
+                [{"logits": [[-0.75, -14.0, -17.0]], "top_p": 1e-6}],
+                {"kept_indices": [[0]], "kept_values": [[-0.75]]},
+            ),
+        ])
         report = grade_calls(
             subject.parent,
             calls,
