@@ -1,0 +1,26 @@
+F
+=================================== FAILURES ===================================
+_____ TestSampleUtils.test_apply_top_p_keeps_top_token_at_tiny_thresholds ______
+
+self = <test_sample_utils.TestSampleUtils testMethod=test_apply_top_p_keeps_top_token_at_tiny_thresholds>
+
+    def test_apply_top_p_keeps_top_token_at_tiny_thresholds(self):
+        probs = mx.array([0.9, 0.0, 0.0, 0.1])[None]
+        logits = mx.log(probs)
+        for top_p in (1e-8, 1e-6, 1e-4):
+            actual_probs = mx.softmax(apply_top_p(logits, top_p).squeeze())
+>           self.assertEqual(actual_probs.tolist(), [1.0, 0.0, 0.0, 0.0])
+E           AssertionError: Lists differ: [nan, nan, nan, nan] != [1.0, 0.0, 0.0, 0.0]
+E           
+E           First differing element 0:
+E           nan
+E           1.0
+E           
+E           - [nan, nan, nan, nan]
+E           + [1.0, 0.0, 0.0, 0.0]
+
+/tmp/vare-mlx-lm-1912-base/tests/test_sample_utils.py:66: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_sample_utils.py::TestSampleUtils::test_apply_top_p_keeps_top_token_at_tiny_thresholds
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 9 deselected in 1.23s

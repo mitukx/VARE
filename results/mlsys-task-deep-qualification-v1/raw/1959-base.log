@@ -1,0 +1,51 @@
+F
+=================================== FAILURES ===================================
+_____________ TestModels.test_ernie4_5_moe_correction_bias_routing _____________
+
+self = <test_models.TestModels testMethod=test_ernie4_5_moe_correction_bias_routing>
+
+    def test_ernie4_5_moe_correction_bias_routing(self):
+        model = self.ernie4_5_moe_model()
+        moe = model.layers[1].mlp
+    
+        # With x = ones, the logit of expert e is the sum of its gate row.
+        logits = mx.array([2.0, 1.0, 0.99, -3.0])
+        bias = mx.array([0.0, 0.0, 0.05, 0.0])
+        weights = dict(tree_flatten(model.parameters()))
+        weights["model.layers.1.mlp.gate.weight"] = mx.broadcast_to(
+            logits[:, None] / 8, (4, 8)
+        )
+        weights["model.layers.1.mlp.moe_statics.e_score_correction_bias"] = bias[
+            None
+        ].astype(mx.bfloat16)
+        model.load_weights(list(model.sanitize(weights).items()), strict=True)
+>       self.assertEqual(moe.e_score_correction_bias.dtype, mx.bfloat16)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_models.py:1015: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Ernie4_5_MoeMLP(
+  (gate): Linear(input_dims=8, output_dims=4, bias=False)
+  (switch_mlp): SwitchGLU(
+    (gate_proj):...
+    (up_proj): SwitchLinear()
+    (down_proj): SwitchLinear()
+    (activation): SwiGLU()
+  )
+  (gate_act): Softmax()
+)
+key = 'e_score_correction_bias'
+
+    def __getattr__(self, key: str):
+        if (value := self.get(key, None)) is not None:
+            return value
+        else:
+>           super(Module, self).__getattribute__(key)
+E           AttributeError: 'Ernie4_5_MoeMLP' object has no attribute 'e_score_correction_bias'
+
+/tmp/vare-mlx-lm-env/lib/python3.12/site-packages/mlx/nn/layers/base.py:103: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_models.py::TestModels::test_ernie4_5_moe_correction_bias_routing
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 116 deselected in 1.31s

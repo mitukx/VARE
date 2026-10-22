@@ -1,0 +1,99 @@
+.
+=================================== FAILURES ===================================
+_ TestMLXLM.test_loglikelihood_scores_only_continuation_after_context_truncation (max_tokens=3) _
+
+self = <test_evaluate.TestMLXLM testMethod=test_loglikelihood_scores_only_continuation_after_context_truncation>
+
+    def test_loglikelihood_scores_only_continuation_after_context_truncation(self):
+        def mock_score_fn(inputs, cache=None):
+            targets = inputs[:, 1:]
+            return (
+                -targets.astype(mx.float32),
+                None,
+                mx.ones(targets.shape, dtype=mx.bool_),
+            )
+    
+        request = MagicMock(args=("context", " continuation"))
+    
+        for max_tokens, prefix in ((4, [1, 2, 3]), (3, [2, 3]), (2, [3])):
+            with self.subTest(max_tokens=max_tokens):
+                self.mlx_lm._max_tokens = max_tokens
+                self.mlx_lm._tokenize = MagicMock(
+                    side_effect=[
+                        [[1, 2, 3]],  # Context tokens.
+                        [[1, 2, 3, 4, 5]],  # Context + continuation tokens.
+                    ]
+                )
+                self.mlx_lm._process_prompt = MagicMock(
+                    return_value=(-mx.arange(6, dtype=mx.float32)[None, :], [])
+                )
+                self.mlx_lm._score_fn = MagicMock(side_effect=mock_score_fn)
+    
+                result = self.mlx_lm.loglikelihood([request])
+    
+                self.mlx_lm._process_prompt.assert_called_once_with(prefix)
+                self.mlx_lm._score_fn.assert_called_once()
+                inputs = self.mlx_lm._score_fn.call_args[0][0]
+>               self.assertEqual(inputs.tolist(), [[4, 5]])
+E               AssertionError: Lists differ: [[3, 4, 5]] != [[4, 5]]
+E               
+E               First differing element 0:
+E               [3, 4, 5]
+E               [4, 5]
+E               
+E               - [[3, 4, 5]]
+E               ?   ---
+E               
+E               + [[4, 5]]
+
+/tmp/vare-mlx-lm-1902-base/tests/test_evaluate.py:137: AssertionError
+_ TestMLXLM.test_loglikelihood_scores_only_continuation_after_context_truncation (max_tokens=2) _
+
+self = <test_evaluate.TestMLXLM testMethod=test_loglikelihood_scores_only_continuation_after_context_truncation>
+
+    def test_loglikelihood_scores_only_continuation_after_context_truncation(self):
+        def mock_score_fn(inputs, cache=None):
+            targets = inputs[:, 1:]
+            return (
+                -targets.astype(mx.float32),
+                None,
+                mx.ones(targets.shape, dtype=mx.bool_),
+            )
+    
+        request = MagicMock(args=("context", " continuation"))
+    
+        for max_tokens, prefix in ((4, [1, 2, 3]), (3, [2, 3]), (2, [3])):
+            with self.subTest(max_tokens=max_tokens):
+                self.mlx_lm._max_tokens = max_tokens
+                self.mlx_lm._tokenize = MagicMock(
+                    side_effect=[
+                        [[1, 2, 3]],  # Context tokens.
+                        [[1, 2, 3, 4, 5]],  # Context + continuation tokens.
+                    ]
+                )
+                self.mlx_lm._process_prompt = MagicMock(
+                    return_value=(-mx.arange(6, dtype=mx.float32)[None, :], [])
+                )
+                self.mlx_lm._score_fn = MagicMock(side_effect=mock_score_fn)
+    
+                result = self.mlx_lm.loglikelihood([request])
+    
+                self.mlx_lm._process_prompt.assert_called_once_with(prefix)
+                self.mlx_lm._score_fn.assert_called_once()
+                inputs = self.mlx_lm._score_fn.call_args[0][0]
+>               self.assertEqual(inputs.tolist(), [[4, 5]])
+E               AssertionError: Lists differ: [[2, 3, 4, 5]] != [[4, 5]]
+E               
+E               First differing element 0:
+E               [2, 3, 4, 5]
+E               [4, 5]
+E               
+E               - [[2, 3, 4, 5]]
+E               + [[4, 5]]
+
+/tmp/vare-mlx-lm-1902-base/tests/test_evaluate.py:137: AssertionError
+=========================== short test summary info ============================
+SUBFAILED(max_tokens=3) tests/test_evaluate.py::TestMLXLM::test_loglikelihood_scores_only_continuation_after_context_truncation
+SUBFAILED(max_tokens=2) tests/test_evaluate.py::TestMLXLM::test_loglikelihood_scores_only_continuation_after_context_truncation
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 2 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+2 failed, 1 passed, 7 deselected, 1 subtests passed in 1.40s

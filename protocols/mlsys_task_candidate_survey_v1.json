@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "survey_id": "mlsys-task-candidate-survey-v1",
+  "captured_at": "2026-10-20",
+  "purpose": "Discover 30-60 new upstream MLSys/coding task candidates before any new model rollout; this is not a task split or evaluation protocol.",
+  "model_freshness_reference": {
+    "base_model": "Qwen/Qwen3-4B-Instruct-2507",
+    "mlx_model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "mlx_revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "training_completion_cutoff_proxy": "2025-08-09",
+    "proxy_source": "https://huggingface.co/Qwen/Qwen3-4B-Instruct-2507/discussions/6/files",
+    "limitation": "The model's exact training-data cutoff is unknown. Merge dates after the public training-completion proxy do not prove the model has no relevant knowledge; each shortlisted task needs a blinded freshness probe before evaluation."
+  },
+  "host_reference": {
+    "machine": "MacBookPro18,3",
+    "chip": "Apple M1 Pro",
+    "unified_memory_gib": 32,
+    "accelerator": "Apple Metal",
+    "paid_api_or_external_gpu": false
+  },
+  "repositories": {
+    "huggingface/transformers": {"spdx_license_at_capture": "Apache-2.0"},
+    "huggingface/trl": {"spdx_license_at_capture": "Apache-2.0"},
+    "ml-explore/mlx": {"spdx_license_at_capture": "MIT"},
+    "ml-explore/mlx-lm": {"spdx_license_at_capture": "MIT"},
+    "vllm-project/vllm": {"spdx_license_at_capture": "Apache-2.0"},
+    "ray-project/ray": {"spdx_license_at_capture": "Apache-2.0"}
+  },
+  "discovery": {
+    "api": "GitHub REST pull requests and pull-request changed-file metadata",
+    "candidates_requested": 57,
+    "candidates_captured": 57,
+    "all_merged": true,
+    "api_failures": 0,
+    "pool_sha256": "9ed19be64cfc1c7e0ae5551af87e6b9f0d91676e80ba34fc7d1aad7869fde63c",
+    "coarse_screen": {
+      "screen_id": "mlsys-task-candidate-coarse-screen-v1",
+      "screen_sha256": "1307e98b5fbd73826ed031a3042848895b9a3c1617db215cbbed9ee54e2edf86",
+      "provisional_count": 24,
+      "excluded_count": 33,
+      "meaning": "provisional for manual qualification only; not independently graded, reproduced, freshness-qualified, or held out"
+    }
+  },
+  "task_gate": {
+    "minimum_final_independent_heldout_tasks": 15,
+    "fully_qualified_tasks": 0,
+    "development_and_heldout_split_frozen": false,
+    "training_authorized": false,
+    "decision": "NO_GO_PENDING_DEEP_TASK_QUALIFICATION"
+  },
+  "candidate_list_source": "scripts/collect_mlsys_task_candidate_pool_v1.py",
+  "coarse_screen_source": "scripts/screen_mlsys_task_candidate_pool_v1.py",
+  "limitations": [
+    "Titles and presence of a test path are metadata triage, not independent test execution.",
+    "Task-family deduplication, complete changed-file pagination, model freshness, source/test licensing, task extraction, sandbox isolation, and M1 reproduction remain open.",
+    "The public upstream PR solution must not be included in agent-visible task material; evaluation must disable network and keep graders separate."
+  ]
+}
