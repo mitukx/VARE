@@ -1,18 +1,6 @@
 # Current evidence gaps
 
-**Update 2026-10-21 — one additional Development task calibrated:** MLX-LM #1971 now has a frozen task-specific isolated grader with baseline-fail/known-fix-pass and passing red-team calibration. This does not establish agent or model capability: the input is a synthetic small model, the container is CPU-only, and no model-generated patch was evaluated. The other Development tasks still need safe independent calibration; do not start Qwen coding rollouts, SFT, or GRPO yet. The 9 frozen held-out tasks remain unopened and below the 15-task research target. See the [calibration report](mlxlm-1971-isolated-task-v1-report.md) and [evidence](../results/mlxlm-1971-isolated-v1/run-1/).
-
-**Update 2026-10-21 — one Development task calibrated in isolated Docker:**
-the MLX-LM #1912 top-p regression ran on its pinned baseline and known fix
-under protocol v3. The baseline failed the exact-output cohort and the known
-fix passed 12/12 cases; all nine namespace, network, output, resource, and
-source-swap probes passed. Candidate source, task prompt, source revisions,
-runtime image, and evidence hashes are recorded. This is CPU-only calibration,
-not an Agent rollout. The other two Development tasks, Qwen3-4B feasibility,
-and any post-training comparison remain open. No Metal semantic-equivalence
-claim follows. See the [report](mlsys-repository-task-mlxlm-1912-v1-report.md),
-[protocol v3](../benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v3.json),
-and [raw evidence](../results/mlxlm-1912-isolated-v3/run-1/).
+**Update 2026-10-22 — MLX-LM #1971 grader v2 calibration:** prospective protocol v2 varies `value_scale` across 0.25, 0.5, and 0.8 and checks full-forward output, incremental output, and KV-cache state. On the pinned CPU-only Colima image, the broken baseline failed all three cases; the known fix passed all three; a constant-0.5 mutant and a post-cache scaling mutant were rejected. The source-swap and red-team controls passed. This is narrow grader calibration, not an agent repair, Metal validation, or model-capability result. See the [v2 report](mlsys-repository-task-mlxlm-1971-v2-report.md), [protocol](../benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v2.json), and [raw evidence](../results/mlxlm-1971-isolated-v2/run-1/).
 
 **Update 2026-10-21 — one repository-task grading contract passed:** the
 MLX-LM #1904 Train-task calibration now runs in VARE's separate no-network
@@ -24,6 +12,16 @@ Development-task graders, Qwen3-4B pass@k/reward-variance feasibility, and any
 policy-update comparison remain open. See the
 [calibration report](mlsys-repository-task-mlxlm-1904-v1-report.md) and
 [raw evidence](../results/mlsys-repo-eval-v1/run-4/).
+
+**Update 2026-10-20 — upstream task-candidate survey:** a frozen metadata
+survey captured 57 merged coding/MLSys pull requests from six OSS repositories.
+The coarse screen leaves 24 for manual review; it does not verify task
+independence, run the upstream tests on M1, prove model freshness, or establish
+hidden grading. Zero candidates are fully qualified and the held-out split
+remains unfrozen, so training is still NO-GO. This is a data-readiness result,
+not a negative policy-learning result. See the [survey report](mlsys-task-candidate-survey-v1-report.md),
+[protocol](../protocols/mlsys_task_candidate_survey_v1.json), and [audited
+evidence](../results/mlsys-task-candidate-survey-v1/).
 
 **Update 2026-10-20 — actual-model update readiness NO-GO:** a frozen
 read-only inventory of the v1–v3 MLSys packs checks all 19 task entries and

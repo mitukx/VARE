@@ -19,6 +19,8 @@ VARE provides distinct control-plane components and experimental integrations. T
 
 These results describe different workloads and evidence levels. They are not evidence of held-out model improvement. For protocols, baselines, reproduction commands, and further limitations, see the [benchmark guide](docs/benchmarks.md).
 
+**Next independently verifiable milestone:** [Coding RL readiness, integration blockers and preregistered E2E study plan](docs/coding-rl-readiness-and-e2e-plan.md). This is a forward-looking proposal and does not represent an executed model-learning experiment.
+
 ## Architecture
 
 The diagram shows the implemented control-plane contract and its external dependencies. It is not one measured end-to-end deployment: durable trajectory workers, model-training hooks, and historical agent evaluation are separate paths.

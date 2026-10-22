@@ -387,7 +387,7 @@ class TrajectoryStore:
             row = self._owned(db, lease, clock(now))
             self._retry(db, row, "worker_failed")
 
-    def append_step(self, lease, step: AgentStep, *, now=None):
+    def append_step(self, lease, step: AgentStep, *, now=None, return_head=False):
         if lease.stage != "execute" or not isinstance(step, AgentStep):
             raise ValueError("execution lease and AgentStep required")
         payload = asdict(step)
@@ -413,7 +413,9 @@ class TrajectoryStore:
             sequence = db.execute("SELECT max(sequence) FROM events").fetchone()[0]
             db.execute("INSERT INTO steps VALUES(?,?,?,?,?)", (lease.trajectory_id, step.index, step.event_id, sequence, payload_hash))
             db.execute("UPDATE trajectories SET next_step=next_step+1,head=? WHERE id=?", (head, lease.trajectory_id))
-            return True
+            # Default callers retain the bool result; the worker may request
+            # the committed head without a second database transaction.
+            return head if return_head else True
 
     def trajectory(self, trajectory_id):
         with self.connection() as db:
