@@ -16,7 +16,7 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def analyze_rollout(path: Path) -> dict[str, Any]:
+def analyze_rollout(path: Path, run_dir: Path) -> dict[str, Any]:
     record = json.loads(path.read_text(encoding="utf-8"))
     grade_path = path.parent / "independent-grade.json"
     grade = json.loads(grade_path.read_text(encoding="utf-8"))
@@ -57,7 +57,10 @@ def analyze_rollout(path: Path) -> dict[str, Any]:
     return {
         "task_id": record.get("task_id"),
         "seed": record.get("seed"),
-        "trace_path": path.as_posix(),
+        # Keep reports portable across checkouts. The raw bytes are identified
+        # independently by trace_sha256, so an absolute host path adds no
+        # provenance and makes the report hash machine-dependent.
+        "trace_path": path.relative_to(run_dir).as_posix(),
         "trace_sha256": sha256(path),
         "turns": record.get("tool_turns"),
         "tokens": record.get("new_tokens"),
@@ -169,7 +172,7 @@ def main() -> int:
     manifest_path = run_dir / "run-manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     rollouts = sorted(run_dir.glob("transformers-*/**/agent.json"))
-    rows = [analyze_rollout(path) for path in rollouts]
+    rows = [analyze_rollout(path, run_dir) for path in rollouts]
     report: dict[str, Any] = {
         "protocol_id": json.loads(protocol_path.read_text(encoding="utf-8"))["protocol_id"],
         "protocol_sha256": sha256(protocol_path),
