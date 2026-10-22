@@ -28,8 +28,8 @@ _DIFF_PATH = re.compile(r"(?:a|b)/([A-Za-z0-9_./-]+)\Z")
 
 ROOT = Path(__file__).resolve().parents[2]
 TASK_DIR = ROOT / "benchmarks/mlsys_repo_eval_v2/transformers_45852"
-PROTOCOL_PATH = TASK_DIR / "protocol-v2.json"
-PROTOCOL_LOCK_PATH = TASK_DIR / "protocol-v2.lock.json"
+PROTOCOL_PATH = TASK_DIR / "protocol-v3.json"
+PROTOCOL_LOCK_PATH = TASK_DIR / "protocol-v3.lock.json"
 TASK_DESCRIPTION = TASK_DIR / "task.md"
 GRADER_ADAPTER = TASK_DIR / "grader_adapter.py"
 FROZEN_TIMEOUT_S = 30.0
@@ -88,7 +88,7 @@ def verify_protocol() -> dict[str, Any]:
         raise TransformersTaskError("prospective protocol or lock is unavailable") from exc
     protocol_digest = hashlib.sha256(protocol_bytes).hexdigest()
     if (
-        lock.get("protocol_id") != "transformers-45852-isolated-eval-v2"
+        lock.get("protocol_id") != "transformers-45852-isolated-eval-v3"
         or lock.get("protocol_sha256") != protocol_digest
         or protocol.get("protocol_id") != lock.get("protocol_id")
     ):

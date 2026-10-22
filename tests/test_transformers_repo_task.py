@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import subprocess
 
 import pytest
 
@@ -169,6 +170,37 @@ def test_nonuniform_cases_distinguish_constant_and_mean_shortcuts() -> None:
         assert any(len(set(row)) > 1 for batch in actual for sample in batch for row in sample)
         flattened = [value for batch in actual for sample in batch for row in sample for value in row]
         assert len(set(flattened)) > 2
+
+
+def test_verify_baseline_rejects_pinned_source_hash_mismatch(
+    tmp_path: Path, monkeypatch
+) -> None:
+    from vare.transformers_repo_task import verify_baseline
+
+    source = tmp_path / "source"
+    target = source / TARGET_PATH
+    target.parent.mkdir(parents=True)
+    target.write_text("different source bytes\n", encoding="utf-8")
+    subprocess.run(["git", "init", "-q", str(source)], check=True)
+    subprocess.run(
+        ["git", "-C", str(source), "config", "user.email", "vare-test@example.invalid"],
+        check=True,
+    )
+    subprocess.run(
+        ["git", "-C", str(source), "config", "user.name", "VARE test"],
+        check=True,
+    )
+    subprocess.run(["git", "-C", str(source), "add", TARGET_PATH], check=True)
+    subprocess.run(["git", "-C", str(source), "commit", "-qm", "fixture"], check=True)
+    head = subprocess.run(
+        ["git", "-C", str(source), "rev-parse", "HEAD"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    monkeypatch.setattr(task_module, "BASELINE_COMMIT", head)
+    with pytest.raises(TransformersTaskError, match="target source SHA-256"):
+        verify_baseline(source)
 
 
 def test_inventory_rejects_symlink(tmp_path: Path) -> None:

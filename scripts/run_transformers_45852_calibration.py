@@ -36,7 +36,7 @@ from vare.transformers_repo_task import (  # noqa: E402
 from vare.isolated_candidate import FunctionCall, grade_calls  # noqa: E402
 
 TASK_DIR = ROOT / "benchmarks/mlsys_repo_eval_v2/transformers_45852"
-PROTOCOL = TASK_DIR / "protocol-v2.json"
+PROTOCOL = TASK_DIR / "protocol-v3.json"
 
 
 def sha256(path: Path) -> str:
