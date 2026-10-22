@@ -286,8 +286,14 @@ def classify_public_test_exit(returncode: int, stderr: str = '') -> str:
 def classify_module_not_found(stderr: str) -> str:
     """Attribute missing imports to candidate source or the pinned evaluator."""
     frames = re.findall(r'File [\"\']([^\"\']+)[\"\']', stderr)
-    last_frame = frames[-1] if frames else ''
-    if last_frame.startswith('/workspace/') and last_frame != '/workspace/test_public.py':
+    # Candidate code may use exec()/compile(), adding a virtual final frame
+    # such as ``<string>`` after the real candidate frame. Attribute by any
+    # workspace source frame, while allowing evaluator frames to coexist in
+    # the same traceback.
+    if any(
+        frame.startswith('/workspace/') and frame != '/workspace/test_public.py'
+        for frame in frames
+    ):
         return 'test_execution_error'
     return 'evaluator_unavailable'
 

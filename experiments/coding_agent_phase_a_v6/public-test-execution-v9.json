@@ -1,0 +1,131 @@
+{
+  "acceptance": {
+    "broken_baseline": {
+      "classification": "assertion_failure",
+      "gradeable": true,
+      "passed": false
+    },
+    "candidate_exit_code_125": {
+      "classification": "container_launch_failure",
+      "gradeable": false,
+      "passed": null
+    },
+    "candidate_file_allowlist": {
+      "exact_files": [
+        "src/value.py",
+        "test_public.py"
+      ],
+      "symlinks": "rejected before Docker invocation",
+      "unexpected_files": "rejected before Docker invocation"
+    },
+    "candidate_missing_dependency": {
+      "classification": "test_execution_error",
+      "gradeable": true,
+      "passed": false,
+      "rule": "any non-evaluator /workspace source frame, including when a later frame is virtual"
+    },
+    "candidate_timeout": {
+      "classification": "candidate_timeout",
+      "gradeable": true,
+      "passed": false
+    },
+    "container_launch_failure": {
+      "classification": "container_launch_failure",
+      "gradeable": false,
+      "passed": null,
+      "rollout": "actual runner integration regression confirms direct and automatic post-edit evaluator failures stop remaining tool execution"
+    },
+    "evaluator_missing_dependency": {
+      "classification": "evaluator_unavailable",
+      "gradeable": false,
+      "passed": null,
+      "rule": "evaluator-only traceback with no candidate source frame remains ungradeable"
+    },
+    "full_workspace_inventory": {
+      "baseline_bytes": "required for all non-editable files",
+      "candidate_changes": "limited to task editable files",
+      "exact_file_inventory": "required",
+      "unexpected_dependency_change": {
+        "classification": "runner_integrity_error",
+        "gradeable": false,
+        "passed": null
+      }
+    },
+    "implicit_opaque_handles": {
+      "changed_workspace": "rejected by revision and source preimage checks",
+      "edit_text": "must appear exactly once in latest read region",
+      "missing_handles": "resolve from latest host-issued read for this path"
+    },
+    "known_fix": {
+      "classification": "passed",
+      "gradeable": true,
+      "passed": true
+    },
+    "raw_infrastructure_exception": {
+      "candidate_feedback": "redacted bounded evaluator unavailable message",
+      "retained_in_host_record": true
+    },
+    "system_temp_direct_mount": {
+      "gradeable": false,
+      "returncode": 125,
+      "stderr_contains": "bind source path does not exist"
+    },
+    "timeout": {
+      "classification": "candidate_timeout",
+      "gradeable": true,
+      "passed": false
+    },
+    "user_cache_direct_mount": {
+      "returncode": 0,
+      "stdout": "vare-colima-bind-probe\\n"
+    }
+  },
+  "candidate_runtime": {
+    "cpus": 1.0,
+    "max_output_bytes": 20000,
+    "memory_mb": 512,
+    "network": "none",
+    "pids_limit": 32,
+    "root_filesystem": "read-only",
+    "timeout_seconds": 45,
+    "workspace_mount": "read-only"
+  },
+  "candidate_workspace_files": [
+    "src/value.py",
+    "test_public.py"
+  ],
+  "hypothesis": "Missing dependencies raised by candidate code remain candidate failures even when exec/compile adds virtual traceback frames, while evaluator-only failures abort the actual rollout loop without producing reward.",
+  "image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "image_id": "sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "limitations": [
+    "Synthetic fixture calibration only; not a repository task or model rollout.",
+    "Runtime abort behavior is verified by a test driving the real runner loop with mocked inference and evaluator, not inferred from a classification predicate.",
+    "PR #107 HF Development candidates have prior model exposure and are not fresh evidence.",
+    "Protocol v8 and earlier protocols and raw evidence remain immutable."
+  ],
+  "platform": "macOS host with Colima Docker context",
+  "protocol_id": "vare.coding-agent.public-test-execution.colima.v9",
+  "protocol_parent": {
+    "protocol_id": "vare.coding-agent.public-test-execution.colima.v8",
+    "protocol_sha256": "7136f58e6bae2519eb0bf7ad90101e180d4c3ebf505eca36ffd4976e98bd08cd"
+  },
+  "protocol_version": 9,
+  "public_test": "from value import value\n\ndef test_value():\n    assert value() == 42\n",
+  "public_test_sha256": "ba40fafe9aee4464e0c6a54dfc624478d732b1bf7f976bf30cff8ab7fa250d89",
+  "reproduction": "DOCKER_CONTEXT=colima PYTHONPATH=src python scripts/calibrate_public_test_execution_v9.py --output results/phase-a-v6/public-test-execution-v9/run-1",
+  "required_environment": {
+    "DOCKER_CONTEXT": "colima",
+    "inference": false,
+    "model_weights_loaded": false,
+    "optimizer_updates": 0
+  },
+  "source_variant_sha256": {
+    "broken_baseline": "89bec526a8809599d1d4ba869fbe6703df3484df64ed19e716b24e2ad341995a",
+    "known_fix": "2f8974f06364c943a202b6a6971a24e891683fa2dc6233ad2a5c478dce8fd0b3"
+  },
+  "source_variants": {
+    "broken_baseline": "def value():\n    return 41\n",
+    "known_fix": "def value():\n    return 42\n"
+  },
+  "status": "frozen-calibration-only"
+}
