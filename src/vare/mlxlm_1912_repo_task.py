@@ -191,9 +191,68 @@ def export_candidate(
     }
 
 
+
+def verify_protocol_v4() -> dict[str, Any]:
+    """Reject protocol and implementation drift before candidate grading."""
+    import json
+
+    root = Path(__file__).resolve().parents[2]
+    task_dir = root / "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p"
+    protocol_path = task_dir / "protocol-v4.json"
+    lock_path = task_dir / "protocol-v4.lock.json"
+    try:
+        protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
+        lock = json.loads(lock_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, ValueError) as exc:
+        raise MlxLm1912TaskError("v4 protocol or lock is unavailable") from exc
+    identifier = "mlxlm-1912-isolated-task-v4"
+    if (
+        protocol.get("protocol_id") != identifier
+        or lock.get("protocol_id") != identifier
+        or lock.get("protocol_sha256") != sha256_file(protocol_path)
+    ):
+        raise MlxLm1912TaskError("v4 protocol lock mismatch")
+    expected_files = {
+        "src/vare/container_isolation.py",
+        "src/vare/isolated_candidate.py",
+        "src/vare/mlxlm_1912_repo_task.py",
+        "scripts/run_mlxlm_1912_calibration.py",
+        "tests/test_mlxlm_1912_repo_task.py",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/grader_adapter.py",
+        "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/task.md",
+    }
+    hashes = protocol.get("implementation_sha256")
+    if (
+        not isinstance(hashes, dict)
+        or set(hashes) != expected_files
+        or hashes != lock.get("implementation_sha256")
+    ):
+        raise MlxLm1912TaskError("v4 implementation lock inventory mismatch")
+    try:
+        actual = {name: sha256_file(root / name) for name in expected_files}
+    except OSError as exc:
+        raise MlxLm1912TaskError("v4 locked implementation file unavailable") from exc
+    if actual != hashes:
+        raise MlxLm1912TaskError("v4 implementation hash mismatch")
+    if (
+        protocol.get("task_id") != TASK_ID
+        or protocol.get("baseline_commit") != BASELINE_COMMIT
+        or protocol.get("fixed_commit") != FIXED_COMMIT
+        or protocol.get("baseline_target_sha256") != BASELINE_SOURCE_SHA256
+        or protocol.get("fixed_target_sha256") != FIXED_SOURCE_SHA256
+        or protocol.get("task_prompt_sha256") != sha256_file(TASK_DESCRIPTION)
+    ):
+        raise MlxLm1912TaskError("v4 task or source provenance mismatch")
+    return protocol
+
 def grade_workspace(
     workspace: Path, *, image: str, timeout_s: float = 30, memory_mb: int = 1536
 ) -> dict[str, Any]:
+    protocol = verify_protocol_v4()
+    if image != protocol["runtime"]["image"]:
+        raise MlxLm1912TaskError("image differs from frozen v4 protocol")
+    if timeout_s != 30 or memory_mb != 1536:
+        raise MlxLm1912TaskError("limits differ from frozen v4 protocol")
     target = workspace / TARGET_PATH
     if (
         workspace.is_symlink()
