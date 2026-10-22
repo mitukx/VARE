@@ -1,0 +1,1710 @@
+{
+  "all_prerequisites_passed": true,
+  "blocked_reason": null,
+  "checks": [
+    {
+      "actual_sha256": "adb43ca4b2a37bea55eb43899d5b64b80492bf8c4050edcefd7a09d8ef2d19b8",
+      "expected_sha256": "adb43ca4b2a37bea55eb43899d5b64b80492bf8c4050edcefd7a09d8ef2d19b8",
+      "name": "inference_protocol_lock",
+      "passed": true
+    },
+    {
+      "actual_sha256": "03147165d73d75568506b52ec59c5701db084bf60a01d2ea5d52af969d2fe1bd",
+      "expected_sha256": "03147165d73d75568506b52ec59c5701db084bf60a01d2ea5d52af969d2fe1bd",
+      "name": "preserved_v1_protocol",
+      "passed": true
+    },
+    {
+      "actual_sha256": "898a13bf57c48acdc53cdfe2534f81079dde7f80eebb30852c0baf3affc766ce",
+      "expected_sha256": "898a13bf57c48acdc53cdfe2534f81079dde7f80eebb30852c0baf3affc766ce",
+      "name": "preserved_v1_lock",
+      "passed": true
+    },
+    {
+      "name": "v2_protocol_identity",
+      "passed": true
+    },
+    {
+      "name": "v1_provenance_in_v2_lock",
+      "passed": true
+    },
+    {
+      "actual_sha256": "e06ea1a310bdc3ebcd4f836fadc43f1e55cc029f41b0b49fe5b9119a41196718",
+      "expected_sha256": "e06ea1a310bdc3ebcd4f836fadc43f1e55cc029f41b0b49fe5b9119a41196718",
+      "name": "locked_implementation:requirements/hf-coding-dev-v1-host-grader.txt",
+      "passed": true
+    },
+    {
+      "actual_sha256": "e5c4e0e716bfa40d1baab6d4c021333a124fd1bbe05d965459388e9e746b5f58",
+      "expected_sha256": "e5c4e0e716bfa40d1baab6d4c021333a124fd1bbe05d965459388e9e746b5f58",
+      "name": "locked_implementation:scripts/audit_coding_agent_dev_resource_gate_v1.py",
+      "passed": true
+    },
+    {
+      "actual_sha256": "3083585e7cf877af1dfc3138dad6c79d3440b8897aab9ca210852dc67918eadf",
+      "expected_sha256": "3083585e7cf877af1dfc3138dad6c79d3440b8897aab9ca210852dc67918eadf",
+      "name": "locked_implementation:scripts/dry_run_hf_coding_dev_v2_dual_python.py",
+      "passed": true
+    },
+    {
+      "actual_sha256": "0fc3e7902bb94cda6df6032f19eb225d77f3e4c8c0004a697c836aa3afa6c9f3",
+      "expected_sha256": "0fc3e7902bb94cda6df6032f19eb225d77f3e4c8c0004a697c836aa3afa6c9f3",
+      "name": "locked_implementation:scripts/grade_hf_coding_dev_v1.py",
+      "passed": true
+    },
+    {
+      "actual_sha256": "8572b17653c26de7b9bf8ae7e1289cdaf0b669b8cc420f5a825c1b60438f5882",
+      "expected_sha256": "8572b17653c26de7b9bf8ae7e1289cdaf0b669b8cc420f5a825c1b60438f5882",
+      "name": "locked_implementation:scripts/grade_transformers_phase_a_v1.py",
+      "passed": true
+    },
+    {
+      "actual_sha256": "507da5902a57a4414f543e118cb042fd1167c67f15c2cbc47d0b839451b7f63b",
+      "expected_sha256": "507da5902a57a4414f543e118cb042fd1167c67f15c2cbc47d0b839451b7f63b",
+      "name": "locked_implementation:scripts/preflight_hf_coding_dev_v1_host_grader.py",
+      "passed": true
+    },
+    {
+      "actual_sha256": "77ca8dd473a711cccc4afb0bdcfd63eebd901099f000399c1618ae6f44689b41",
+      "expected_sha256": "77ca8dd473a711cccc4afb0bdcfd63eebd901099f000399c1618ae6f44689b41",
+      "name": "locked_implementation:scripts/prepare_hf_coding_dev_v1.py",
+      "passed": true
+    },
+    {
+      "actual_sha256": "a8f3950cd8dda535eb62b054ed84713181796e8f7c961ca500b130e8f53140ee",
+      "expected_sha256": "a8f3950cd8dda535eb62b054ed84713181796e8f7c961ca500b130e8f53140ee",
+      "name": "locked_implementation:scripts/run_local_agent.py",
+      "passed": true
+    },
+    {
+      "actual_sha256": "02b0df523b565b3e46c37592c21bc32729df39de219e199342582293b344aad6",
+      "expected_sha256": "02b0df523b565b3e46c37592c21bc32729df39de219e199342582293b344aad6",
+      "name": "locked_implementation:src/vare/agent_structured_edit.py",
+      "passed": true
+    },
+    {
+      "actual_sha256": "9d61b5fe4e45e815f54cc85daf6b517a8e1eaefa9274e63578777fd2058c57b6",
+      "expected_sha256": "9d61b5fe4e45e815f54cc85daf6b517a8e1eaefa9274e63578777fd2058c57b6",
+      "name": "locked_implementation:src/vare/agent_task_contract.py",
+      "passed": true
+    },
+    {
+      "actual_sha256": "6d963821333f8de603bb4743ea52cb203c549695a5df9bbff9fa829b50ea8c42",
+      "expected_sha256": "6d963821333f8de603bb4743ea52cb203c549695a5df9bbff9fa829b50ea8c42",
+      "name": "locked_implementation:src/vare/container_isolation.py",
+      "passed": true
+    },
+    {
+      "actual_sha256": "37e5e00ab8a58616325cc8b3c40a3e0e39519c9c3aa61e70bfcabd696b0b7c8b",
+      "expected_sha256": "37e5e00ab8a58616325cc8b3c40a3e0e39519c9c3aa61e70bfcabd696b0b7c8b",
+      "name": "locked_implementation:src/vare/isolated_candidate.py",
+      "passed": true
+    },
+    {
+      "actual_sha256": "24d4b67040d92878bcbe05d217853d5ab113e0c39d6746975ccc5e15a8a08230",
+      "expected_sha256": "24d4b67040d92878bcbe05d217853d5ab113e0c39d6746975ccc5e15a8a08230",
+      "name": "locked_implementation:tests/test_hf_coding_dev_v2_dual_python_dry_run.py",
+      "passed": true
+    },
+    {
+      "actual_sha256": "8622a776a03c42a31c703905bf5c7c8a45a1ea0cf74070c1a126a7da3c2d6e0a",
+      "expected_sha256": "8622a776a03c42a31c703905bf5c7c8a45a1ea0cf74070c1a126a7da3c2d6e0a",
+      "name": "accelerate-4296-skip-first-batches-v1:descriptor",
+      "passed": true
+    },
+    {
+      "actual_sha256": "05f620e48eda4757bc4bd179a0ab0154df66f193bc81397e82ce76ef9d015ff2",
+      "expected_sha256": "05f620e48eda4757bc4bd179a0ab0154df66f193bc81397e82ce76ef9d015ff2",
+      "name": "accelerate-4296-skip-first-batches-v1:manifest",
+      "passed": true
+    },
+    {
+      "actual_sha256": "3068c15512fd11d47c452c6838469c1182ec00b01c8bdcc12db258eeafae7f15",
+      "expected_sha256": "3068c15512fd11d47c452c6838469c1182ec00b01c8bdcc12db258eeafae7f15",
+      "name": "accelerate-4296-skip-first-batches-v1:public_tests",
+      "passed": true
+    },
+    {
+      "actual_sha256": "411bfffa6116ce00c1664a3b892569f878fc070c423cfa6fedbc2cf6f7734f44",
+      "expected_sha256": "411bfffa6116ce00c1664a3b892569f878fc070c423cfa6fedbc2cf6f7734f44",
+      "name": "accelerate-4296-skip-first-batches-v1:task_api",
+      "passed": true
+    },
+    {
+      "actual_sha256": "2f79bc2ede0e76dcca1d05d8619bf6bf7cec764db4e6b50e68b6bff29a8c3498",
+      "expected_sha256": "2f79bc2ede0e76dcca1d05d8619bf6bf7cec764db4e6b50e68b6bff29a8c3498",
+      "name": "accelerate-4307-tuple-padding-v1:descriptor",
+      "passed": true
+    },
+    {
+      "actual_sha256": "80c75f66585b9c8907027a4b9f4910724c97bcbb60aa237c97a8ce2d6e6d8a7d",
+      "expected_sha256": "80c75f66585b9c8907027a4b9f4910724c97bcbb60aa237c97a8ce2d6e6d8a7d",
+      "name": "accelerate-4307-tuple-padding-v1:manifest",
+      "passed": true
+    },
+    {
+      "actual_sha256": "7c366e003c4379838a5096ed61bc219f118f93ad63309f82e298a9ddd51a5937",
+      "expected_sha256": "7c366e003c4379838a5096ed61bc219f118f93ad63309f82e298a9ddd51a5937",
+      "name": "accelerate-4307-tuple-padding-v1:public_tests",
+      "passed": true
+    },
+    {
+      "actual_sha256": "672d6d2e291502c85f585a46f7ddb02ae254495b484dc00c0f0225762634109d",
+      "expected_sha256": "672d6d2e291502c85f585a46f7ddb02ae254495b484dc00c0f0225762634109d",
+      "name": "accelerate-4307-tuple-padding-v1:task_api",
+      "passed": true
+    },
+    {
+      "actual_sha256": "9f7a2ece38110c5714e5f77eecc7ae76e4d7b82a7e23074786949e1e6ca05737",
+      "expected_sha256": "9f7a2ece38110c5714e5f77eecc7ae76e4d7b82a7e23074786949e1e6ca05737",
+      "name": "accelerate-4354-multi-cpu-barrier-v1:descriptor",
+      "passed": true
+    },
+    {
+      "actual_sha256": "d4c1c312fa7658226ad044e2e943677b7da6bf8ab56cca10dd79475c6f6e8b31",
+      "expected_sha256": "d4c1c312fa7658226ad044e2e943677b7da6bf8ab56cca10dd79475c6f6e8b31",
+      "name": "accelerate-4354-multi-cpu-barrier-v1:manifest",
+      "passed": true
+    },
+    {
+      "actual_sha256": "573a874b1de59a91c6347d55d3f3c2c36e489f9b186cf14eaf267bba2b57ee12",
+      "expected_sha256": "573a874b1de59a91c6347d55d3f3c2c36e489f9b186cf14eaf267bba2b57ee12",
+      "name": "accelerate-4354-multi-cpu-barrier-v1:public_tests",
+      "passed": true
+    },
+    {
+      "actual_sha256": "1b2a651d310a8f9c77947321ead7bf6fc4a9caf134ca0dd3ec7766cfe4f555f2",
+      "expected_sha256": "1b2a651d310a8f9c77947321ead7bf6fc4a9caf134ca0dd3ec7766cfe4f555f2",
+      "name": "accelerate-4354-multi-cpu-barrier-v1:task_api",
+      "passed": true
+    },
+    {
+      "actual_sha256": "b2660fb9f7807e3f0cf2330340e66b42c27dce0aef582e80b6e5690a2e0fd4d9",
+      "expected_sha256": "b2660fb9f7807e3f0cf2330340e66b42c27dce0aef582e80b6e5690a2e0fd4d9",
+      "name": "trl-6625-entropy-gradient-v1:descriptor",
+      "passed": true
+    },
+    {
+      "actual_sha256": "c795398e98573d1d5e0b2480da7f6c11cb28d709b5e8d62d181416669580dfd7",
+      "expected_sha256": "c795398e98573d1d5e0b2480da7f6c11cb28d709b5e8d62d181416669580dfd7",
+      "name": "trl-6625-entropy-gradient-v1:manifest",
+      "passed": true
+    },
+    {
+      "actual_sha256": "b3abc721eda0e0e745a26f73b51df60a695499c5bda1ab50f98f98e0b813f175",
+      "expected_sha256": "b3abc721eda0e0e745a26f73b51df60a695499c5bda1ab50f98f98e0b813f175",
+      "name": "trl-6625-entropy-gradient-v1:public_tests",
+      "passed": true
+    },
+    {
+      "actual_sha256": "59c8bed8a61aa6b50c8e773e9e6eb49afc3d776e441833d0ac0e4299b13f10ad",
+      "expected_sha256": "59c8bed8a61aa6b50c8e773e9e6eb49afc3d776e441833d0ac0e4299b13f10ad",
+      "name": "trl-6625-entropy-gradient-v1:task_api",
+      "passed": true
+    },
+    {
+      "interpreter": "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "name": "host_grader_preflight",
+      "passed": true,
+      "result": {
+        "cuda_available": false,
+        "decision": "GO",
+        "expected_grader_sha256": "0fc3e7902bb94cda6df6032f19eb225d77f3e4c8c0004a697c836aa3afa6c9f3",
+        "grader_hash_matches_frozen_v1": true,
+        "grader_sha256": "0fc3e7902bb94cda6df6032f19eb225d77f3e4c8c0004a697c836aa3afa6c9f3",
+        "oracle_cases_computed": 3,
+        "purpose": "host-side independent grader dependency check; no model weights loaded and no inference",
+        "python": "3.12.12",
+        "python_executable": "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+        "schema_version": 1,
+        "task_id": "trl-6625-entropy-gradient-v1",
+        "torch": "2.9.1",
+        "torch_device": "cpu",
+        "torch_path": "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/torch/__init__.py"
+      },
+      "returncode": 0
+    },
+    {
+      "interpreter": "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+      "name": "mlx_inference_runtime",
+      "passed": true,
+      "result": {
+        "device": "Device(gpu, 0)",
+        "executable": "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+        "metal": true,
+        "mlx": "0.32.2",
+        "mlx_lm": "0.32.2",
+        "python": "3.12.12"
+      }
+    },
+    {
+      "interpreter": "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "name": "grader_python_runtime",
+      "passed": true,
+      "result": {
+        "cuda_available": false,
+        "decision": "GO",
+        "expected_grader_sha256": "0fc3e7902bb94cda6df6032f19eb225d77f3e4c8c0004a697c836aa3afa6c9f3",
+        "grader_hash_matches_frozen_v1": true,
+        "grader_sha256": "0fc3e7902bb94cda6df6032f19eb225d77f3e4c8c0004a697c836aa3afa6c9f3",
+        "oracle_cases_computed": 3,
+        "purpose": "host-side independent grader dependency check; no model weights loaded and no inference",
+        "python": "3.12.12",
+        "python_executable": "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+        "schema_version": 1,
+        "task_id": "trl-6625-entropy-gradient-v1",
+        "torch": "2.9.1",
+        "torch_device": "cpu",
+        "torch_path": "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/torch/__init__.py"
+      }
+    },
+    {
+      "interpreter": "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+      "name": "mlx_resource_and_model_hash_preflight",
+      "passed": true,
+      "result": {
+        "checks": {
+          "available_memory_above_floor": true,
+          "free_swap_above_floor": true,
+          "mlx_metal_gpu_active": true,
+          "model_revision_pinned": true,
+          "model_weight_hash_pinned": true
+        },
+        "decision": "GO",
+        "hardware": {
+          "available_memory_bytes": 10237181952,
+          "cpu": "Apple M1 Pro",
+          "platform": "macOS-27.0.1-arm64-arm-64bit",
+          "swap": {
+            "free_bytes": 1570043330,
+            "total_bytes": 6442450944,
+            "used_bytes": 4872407613
+          },
+          "unified_memory_bytes": 34359738368
+        },
+        "model": {
+          "model_safetensors_sha256": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f",
+          "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+          "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+        },
+        "policy_updates": 0,
+        "rollouts_started": 0,
+        "runtime": {
+          "default_device": "Device(gpu, 0)",
+          "mlx": "0.32.2",
+          "mlx_lm": "0.32.2",
+          "python": "3.12.12"
+        },
+        "schema_version": 1,
+        "study": "vare-qwen3-4b-coding-agent-development-v6",
+        "thresholds": {
+          "minimum_available_memory_bytes": 4294967296,
+          "minimum_free_swap_bytes": 536870912
+        }
+      },
+      "returncode": 0,
+      "stderr": "",
+      "weights_loaded": false
+    },
+    {
+      "name": "colima_running",
+      "passed": true,
+      "returncode": 0,
+      "stderr": "time=\"2026-10-22T12:30:19+09:00\" level=info msg=\"colima is running using macOS Virtualization.Framework\"\ntime=\"2026-10-22T12:30:19+09:00\" level=info msg=\"arch: aarch64\"\ntime=\"2026-10-22T12:30:19+09:00\" level=info msg=\"runtime: docker\"\ntime=\"2026-10-22T12:30:19+09:00\" level=info msg=\"mountType: virtiofs\"\ntime=\"2026-10-22T12:30:19+09:00\" level=info msg=\"docker socket: unix:///Users/user/.colima/default/docker.sock\"\ntime=\"2026-10-22T12:30:19+09:00\" level=info msg=\"containerd socket: unix:///Users/user/.colima/default/containerd.sock\"",
+      "stdout": ""
+    },
+    {
+      "name": "docker_context_colima",
+      "passed": true,
+      "returncode": 0,
+      "stdout": "colima"
+    },
+    {
+      "expected": "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+      "name": "pinned_grader_image",
+      "passed": true,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "linux|arm64|[\"vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97\"]"
+    },
+    {
+      "commit": "b795b4838eb33bde60eb398649c4ab006874e3e9",
+      "mirror": "/Users/user/.cache/vare/source-mirrors/accelerate",
+      "name": "source_mirror:accelerate-4296-skip-first-batches-v1",
+      "passed": true,
+      "returncode": 0
+    },
+    {
+      "commit": "e203e1ddf33388e22f4a7985ff3103717c0f9181",
+      "mirror": "/Users/user/.cache/vare/source-mirrors/accelerate",
+      "name": "source_mirror:accelerate-4307-tuple-padding-v1",
+      "passed": true,
+      "returncode": 0
+    },
+    {
+      "commit": "421af8bee5bda705d3c763f491b7a794f471818e",
+      "mirror": "/Users/user/.cache/vare/source-mirrors/accelerate",
+      "name": "source_mirror:accelerate-4354-multi-cpu-barrier-v1",
+      "passed": true,
+      "returncode": 0
+    },
+    {
+      "commit": "67dfbe211a07a8dd6ebc1a5af5b75152e10add8e",
+      "mirror": "/Users/user/.cache/vare/source-mirrors/trl",
+      "name": "source_mirror:trl-6625-entropy-gradient-v1",
+      "passed": true,
+      "returncode": 0
+    },
+    {
+      "name": "pinned_model_snapshot_present_without_loading",
+      "passed": true,
+      "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+      "weight_bytes": 2263022417,
+      "weights_loaded": false
+    },
+    {
+      "agent_python": "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+      "grader_python": "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "name": "protocol_explicit_dual_python",
+      "passed": true
+    }
+  ],
+  "decision": "READY",
+  "environment_prerequisites_passed": true,
+  "future_dual_python_plan": [
+    {
+      "agent": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/run_local_agent.py",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4296-skip-first-batches-v1/sampled-303",
+          "--model-path",
+          "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+          "--model-repository",
+          "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+          "--backend",
+          "mlx",
+          "--public-test-image",
+          "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+          "--public-test-memory-mb",
+          "1900",
+          "--task-root",
+          "experiments/hf_coding_dev_inference_v1/tasks/accelerate-4296-skip-first-batches-v1",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/accelerate-4296-skip-first-batches-v1/sampled-303/agent.json",
+          "--instruction",
+          "Please implement the requested repository change using the available tools. Run the public tests, inspect the final diff, and finish when the repair is ready.",
+          "--seed",
+          "303",
+          "--edit-format",
+          "structured",
+          "--max-turns",
+          "12",
+          "--max-no-tool-retries",
+          "2",
+          "--max-new-tokens-per-turn",
+          "384",
+          "--max-total-new-tokens",
+          "2048",
+          "--max-context-tokens",
+          "6144",
+          "--wall-seconds",
+          "600",
+          "--study-deadline-epoch",
+          "{SHARED_DEADLINE_EPOCH}",
+          "--minimum-available-memory-bytes",
+          "4294967296",
+          "--minimum-free-swap-bytes",
+          "536870912",
+          "--maximum-swap-used-bytes",
+          "7516192768",
+          "--maximum-mlx-peak-memory-bytes",
+          "17179869184",
+          "--temperature",
+          "0.3",
+          "--top-p",
+          "0.9",
+          "--top-k",
+          "20",
+          "--require-split",
+          "development",
+          "--do-sample"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "HF_HUB_OFFLINE": "1",
+          "PYTHONPATH": "src",
+          "TRANSFORMERS_OFFLINE": "1"
+        },
+        "interpreter": "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python"
+      },
+      "grader": {
+        "argv": [
+          "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+          "scripts/grade_hf_coding_dev_v1.py",
+          "--task-id",
+          "accelerate-4296-skip-first-batches-v1",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4296-skip-first-batches-v1/sampled-303",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/accelerate-4296-skip-first-batches-v1/sampled-303/grader.json"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        },
+        "interpreter": "/opt/homebrew/Caskroom/miniforge/base/bin/python"
+      },
+      "prepare": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/prepare_hf_coding_dev_v1.py",
+          "--task-id",
+          "accelerate-4296-skip-first-batches-v1",
+          "--arm",
+          "baseline",
+          "--repository",
+          "{SOURCE_REPOSITORY}",
+          "--output",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4296-skip-first-batches-v1/sampled-303"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        }
+      },
+      "rollout": "sampled-303",
+      "seed": 303,
+      "task_id": "accelerate-4296-skip-first-batches-v1"
+    },
+    {
+      "agent": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/run_local_agent.py",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4296-skip-first-batches-v1/sampled-404",
+          "--model-path",
+          "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+          "--model-repository",
+          "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+          "--backend",
+          "mlx",
+          "--public-test-image",
+          "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+          "--public-test-memory-mb",
+          "1900",
+          "--task-root",
+          "experiments/hf_coding_dev_inference_v1/tasks/accelerate-4296-skip-first-batches-v1",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/accelerate-4296-skip-first-batches-v1/sampled-404/agent.json",
+          "--instruction",
+          "Please implement the requested repository change using the available tools. Run the public tests, inspect the final diff, and finish when the repair is ready.",
+          "--seed",
+          "404",
+          "--edit-format",
+          "structured",
+          "--max-turns",
+          "12",
+          "--max-no-tool-retries",
+          "2",
+          "--max-new-tokens-per-turn",
+          "384",
+          "--max-total-new-tokens",
+          "2048",
+          "--max-context-tokens",
+          "6144",
+          "--wall-seconds",
+          "600",
+          "--study-deadline-epoch",
+          "{SHARED_DEADLINE_EPOCH}",
+          "--minimum-available-memory-bytes",
+          "4294967296",
+          "--minimum-free-swap-bytes",
+          "536870912",
+          "--maximum-swap-used-bytes",
+          "7516192768",
+          "--maximum-mlx-peak-memory-bytes",
+          "17179869184",
+          "--temperature",
+          "0.3",
+          "--top-p",
+          "0.9",
+          "--top-k",
+          "20",
+          "--require-split",
+          "development",
+          "--do-sample"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "HF_HUB_OFFLINE": "1",
+          "PYTHONPATH": "src",
+          "TRANSFORMERS_OFFLINE": "1"
+        },
+        "interpreter": "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python"
+      },
+      "grader": {
+        "argv": [
+          "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+          "scripts/grade_hf_coding_dev_v1.py",
+          "--task-id",
+          "accelerate-4296-skip-first-batches-v1",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4296-skip-first-batches-v1/sampled-404",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/accelerate-4296-skip-first-batches-v1/sampled-404/grader.json"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        },
+        "interpreter": "/opt/homebrew/Caskroom/miniforge/base/bin/python"
+      },
+      "prepare": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/prepare_hf_coding_dev_v1.py",
+          "--task-id",
+          "accelerate-4296-skip-first-batches-v1",
+          "--arm",
+          "baseline",
+          "--repository",
+          "{SOURCE_REPOSITORY}",
+          "--output",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4296-skip-first-batches-v1/sampled-404"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        }
+      },
+      "rollout": "sampled-404",
+      "seed": 404,
+      "task_id": "accelerate-4296-skip-first-batches-v1"
+    },
+    {
+      "agent": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/run_local_agent.py",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4296-skip-first-batches-v1/sampled-505",
+          "--model-path",
+          "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+          "--model-repository",
+          "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+          "--backend",
+          "mlx",
+          "--public-test-image",
+          "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+          "--public-test-memory-mb",
+          "1900",
+          "--task-root",
+          "experiments/hf_coding_dev_inference_v1/tasks/accelerate-4296-skip-first-batches-v1",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/accelerate-4296-skip-first-batches-v1/sampled-505/agent.json",
+          "--instruction",
+          "Please implement the requested repository change using the available tools. Run the public tests, inspect the final diff, and finish when the repair is ready.",
+          "--seed",
+          "505",
+          "--edit-format",
+          "structured",
+          "--max-turns",
+          "12",
+          "--max-no-tool-retries",
+          "2",
+          "--max-new-tokens-per-turn",
+          "384",
+          "--max-total-new-tokens",
+          "2048",
+          "--max-context-tokens",
+          "6144",
+          "--wall-seconds",
+          "600",
+          "--study-deadline-epoch",
+          "{SHARED_DEADLINE_EPOCH}",
+          "--minimum-available-memory-bytes",
+          "4294967296",
+          "--minimum-free-swap-bytes",
+          "536870912",
+          "--maximum-swap-used-bytes",
+          "7516192768",
+          "--maximum-mlx-peak-memory-bytes",
+          "17179869184",
+          "--temperature",
+          "0.3",
+          "--top-p",
+          "0.9",
+          "--top-k",
+          "20",
+          "--require-split",
+          "development",
+          "--do-sample"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "HF_HUB_OFFLINE": "1",
+          "PYTHONPATH": "src",
+          "TRANSFORMERS_OFFLINE": "1"
+        },
+        "interpreter": "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python"
+      },
+      "grader": {
+        "argv": [
+          "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+          "scripts/grade_hf_coding_dev_v1.py",
+          "--task-id",
+          "accelerate-4296-skip-first-batches-v1",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4296-skip-first-batches-v1/sampled-505",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/accelerate-4296-skip-first-batches-v1/sampled-505/grader.json"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        },
+        "interpreter": "/opt/homebrew/Caskroom/miniforge/base/bin/python"
+      },
+      "prepare": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/prepare_hf_coding_dev_v1.py",
+          "--task-id",
+          "accelerate-4296-skip-first-batches-v1",
+          "--arm",
+          "baseline",
+          "--repository",
+          "{SOURCE_REPOSITORY}",
+          "--output",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4296-skip-first-batches-v1/sampled-505"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        }
+      },
+      "rollout": "sampled-505",
+      "seed": 505,
+      "task_id": "accelerate-4296-skip-first-batches-v1"
+    },
+    {
+      "agent": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/run_local_agent.py",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4307-tuple-padding-v1/sampled-303",
+          "--model-path",
+          "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+          "--model-repository",
+          "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+          "--backend",
+          "mlx",
+          "--public-test-image",
+          "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+          "--public-test-memory-mb",
+          "1900",
+          "--task-root",
+          "experiments/hf_coding_dev_inference_v1/tasks/accelerate-4307-tuple-padding-v1",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/accelerate-4307-tuple-padding-v1/sampled-303/agent.json",
+          "--instruction",
+          "Please implement the requested repository change using the available tools. Run the public tests, inspect the final diff, and finish when the repair is ready.",
+          "--seed",
+          "303",
+          "--edit-format",
+          "structured",
+          "--max-turns",
+          "12",
+          "--max-no-tool-retries",
+          "2",
+          "--max-new-tokens-per-turn",
+          "384",
+          "--max-total-new-tokens",
+          "2048",
+          "--max-context-tokens",
+          "6144",
+          "--wall-seconds",
+          "600",
+          "--study-deadline-epoch",
+          "{SHARED_DEADLINE_EPOCH}",
+          "--minimum-available-memory-bytes",
+          "4294967296",
+          "--minimum-free-swap-bytes",
+          "536870912",
+          "--maximum-swap-used-bytes",
+          "7516192768",
+          "--maximum-mlx-peak-memory-bytes",
+          "17179869184",
+          "--temperature",
+          "0.3",
+          "--top-p",
+          "0.9",
+          "--top-k",
+          "20",
+          "--require-split",
+          "development",
+          "--do-sample"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "HF_HUB_OFFLINE": "1",
+          "PYTHONPATH": "src",
+          "TRANSFORMERS_OFFLINE": "1"
+        },
+        "interpreter": "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python"
+      },
+      "grader": {
+        "argv": [
+          "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+          "scripts/grade_hf_coding_dev_v1.py",
+          "--task-id",
+          "accelerate-4307-tuple-padding-v1",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4307-tuple-padding-v1/sampled-303",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/accelerate-4307-tuple-padding-v1/sampled-303/grader.json"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        },
+        "interpreter": "/opt/homebrew/Caskroom/miniforge/base/bin/python"
+      },
+      "prepare": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/prepare_hf_coding_dev_v1.py",
+          "--task-id",
+          "accelerate-4307-tuple-padding-v1",
+          "--arm",
+          "baseline",
+          "--repository",
+          "{SOURCE_REPOSITORY}",
+          "--output",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4307-tuple-padding-v1/sampled-303"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        }
+      },
+      "rollout": "sampled-303",
+      "seed": 303,
+      "task_id": "accelerate-4307-tuple-padding-v1"
+    },
+    {
+      "agent": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/run_local_agent.py",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4307-tuple-padding-v1/sampled-404",
+          "--model-path",
+          "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+          "--model-repository",
+          "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+          "--backend",
+          "mlx",
+          "--public-test-image",
+          "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+          "--public-test-memory-mb",
+          "1900",
+          "--task-root",
+          "experiments/hf_coding_dev_inference_v1/tasks/accelerate-4307-tuple-padding-v1",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/accelerate-4307-tuple-padding-v1/sampled-404/agent.json",
+          "--instruction",
+          "Please implement the requested repository change using the available tools. Run the public tests, inspect the final diff, and finish when the repair is ready.",
+          "--seed",
+          "404",
+          "--edit-format",
+          "structured",
+          "--max-turns",
+          "12",
+          "--max-no-tool-retries",
+          "2",
+          "--max-new-tokens-per-turn",
+          "384",
+          "--max-total-new-tokens",
+          "2048",
+          "--max-context-tokens",
+          "6144",
+          "--wall-seconds",
+          "600",
+          "--study-deadline-epoch",
+          "{SHARED_DEADLINE_EPOCH}",
+          "--minimum-available-memory-bytes",
+          "4294967296",
+          "--minimum-free-swap-bytes",
+          "536870912",
+          "--maximum-swap-used-bytes",
+          "7516192768",
+          "--maximum-mlx-peak-memory-bytes",
+          "17179869184",
+          "--temperature",
+          "0.3",
+          "--top-p",
+          "0.9",
+          "--top-k",
+          "20",
+          "--require-split",
+          "development",
+          "--do-sample"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "HF_HUB_OFFLINE": "1",
+          "PYTHONPATH": "src",
+          "TRANSFORMERS_OFFLINE": "1"
+        },
+        "interpreter": "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python"
+      },
+      "grader": {
+        "argv": [
+          "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+          "scripts/grade_hf_coding_dev_v1.py",
+          "--task-id",
+          "accelerate-4307-tuple-padding-v1",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4307-tuple-padding-v1/sampled-404",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/accelerate-4307-tuple-padding-v1/sampled-404/grader.json"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        },
+        "interpreter": "/opt/homebrew/Caskroom/miniforge/base/bin/python"
+      },
+      "prepare": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/prepare_hf_coding_dev_v1.py",
+          "--task-id",
+          "accelerate-4307-tuple-padding-v1",
+          "--arm",
+          "baseline",
+          "--repository",
+          "{SOURCE_REPOSITORY}",
+          "--output",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4307-tuple-padding-v1/sampled-404"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        }
+      },
+      "rollout": "sampled-404",
+      "seed": 404,
+      "task_id": "accelerate-4307-tuple-padding-v1"
+    },
+    {
+      "agent": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/run_local_agent.py",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4307-tuple-padding-v1/sampled-505",
+          "--model-path",
+          "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+          "--model-repository",
+          "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+          "--backend",
+          "mlx",
+          "--public-test-image",
+          "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+          "--public-test-memory-mb",
+          "1900",
+          "--task-root",
+          "experiments/hf_coding_dev_inference_v1/tasks/accelerate-4307-tuple-padding-v1",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/accelerate-4307-tuple-padding-v1/sampled-505/agent.json",
+          "--instruction",
+          "Please implement the requested repository change using the available tools. Run the public tests, inspect the final diff, and finish when the repair is ready.",
+          "--seed",
+          "505",
+          "--edit-format",
+          "structured",
+          "--max-turns",
+          "12",
+          "--max-no-tool-retries",
+          "2",
+          "--max-new-tokens-per-turn",
+          "384",
+          "--max-total-new-tokens",
+          "2048",
+          "--max-context-tokens",
+          "6144",
+          "--wall-seconds",
+          "600",
+          "--study-deadline-epoch",
+          "{SHARED_DEADLINE_EPOCH}",
+          "--minimum-available-memory-bytes",
+          "4294967296",
+          "--minimum-free-swap-bytes",
+          "536870912",
+          "--maximum-swap-used-bytes",
+          "7516192768",
+          "--maximum-mlx-peak-memory-bytes",
+          "17179869184",
+          "--temperature",
+          "0.3",
+          "--top-p",
+          "0.9",
+          "--top-k",
+          "20",
+          "--require-split",
+          "development",
+          "--do-sample"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "HF_HUB_OFFLINE": "1",
+          "PYTHONPATH": "src",
+          "TRANSFORMERS_OFFLINE": "1"
+        },
+        "interpreter": "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python"
+      },
+      "grader": {
+        "argv": [
+          "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+          "scripts/grade_hf_coding_dev_v1.py",
+          "--task-id",
+          "accelerate-4307-tuple-padding-v1",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4307-tuple-padding-v1/sampled-505",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/accelerate-4307-tuple-padding-v1/sampled-505/grader.json"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        },
+        "interpreter": "/opt/homebrew/Caskroom/miniforge/base/bin/python"
+      },
+      "prepare": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/prepare_hf_coding_dev_v1.py",
+          "--task-id",
+          "accelerate-4307-tuple-padding-v1",
+          "--arm",
+          "baseline",
+          "--repository",
+          "{SOURCE_REPOSITORY}",
+          "--output",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4307-tuple-padding-v1/sampled-505"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        }
+      },
+      "rollout": "sampled-505",
+      "seed": 505,
+      "task_id": "accelerate-4307-tuple-padding-v1"
+    },
+    {
+      "agent": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/run_local_agent.py",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4354-multi-cpu-barrier-v1/sampled-303",
+          "--model-path",
+          "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+          "--model-repository",
+          "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+          "--backend",
+          "mlx",
+          "--public-test-image",
+          "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+          "--public-test-memory-mb",
+          "1900",
+          "--task-root",
+          "experiments/hf_coding_dev_inference_v1/tasks/accelerate-4354-multi-cpu-barrier-v1",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/accelerate-4354-multi-cpu-barrier-v1/sampled-303/agent.json",
+          "--instruction",
+          "Please implement the requested repository change using the available tools. Run the public tests, inspect the final diff, and finish when the repair is ready.",
+          "--seed",
+          "303",
+          "--edit-format",
+          "structured",
+          "--max-turns",
+          "12",
+          "--max-no-tool-retries",
+          "2",
+          "--max-new-tokens-per-turn",
+          "384",
+          "--max-total-new-tokens",
+          "2048",
+          "--max-context-tokens",
+          "6144",
+          "--wall-seconds",
+          "600",
+          "--study-deadline-epoch",
+          "{SHARED_DEADLINE_EPOCH}",
+          "--minimum-available-memory-bytes",
+          "4294967296",
+          "--minimum-free-swap-bytes",
+          "536870912",
+          "--maximum-swap-used-bytes",
+          "7516192768",
+          "--maximum-mlx-peak-memory-bytes",
+          "17179869184",
+          "--temperature",
+          "0.3",
+          "--top-p",
+          "0.9",
+          "--top-k",
+          "20",
+          "--require-split",
+          "development",
+          "--do-sample"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "HF_HUB_OFFLINE": "1",
+          "PYTHONPATH": "src",
+          "TRANSFORMERS_OFFLINE": "1"
+        },
+        "interpreter": "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python"
+      },
+      "grader": {
+        "argv": [
+          "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+          "scripts/grade_hf_coding_dev_v1.py",
+          "--task-id",
+          "accelerate-4354-multi-cpu-barrier-v1",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4354-multi-cpu-barrier-v1/sampled-303",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/accelerate-4354-multi-cpu-barrier-v1/sampled-303/grader.json"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        },
+        "interpreter": "/opt/homebrew/Caskroom/miniforge/base/bin/python"
+      },
+      "prepare": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/prepare_hf_coding_dev_v1.py",
+          "--task-id",
+          "accelerate-4354-multi-cpu-barrier-v1",
+          "--arm",
+          "baseline",
+          "--repository",
+          "{SOURCE_REPOSITORY}",
+          "--output",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4354-multi-cpu-barrier-v1/sampled-303"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        }
+      },
+      "rollout": "sampled-303",
+      "seed": 303,
+      "task_id": "accelerate-4354-multi-cpu-barrier-v1"
+    },
+    {
+      "agent": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/run_local_agent.py",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4354-multi-cpu-barrier-v1/sampled-404",
+          "--model-path",
+          "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+          "--model-repository",
+          "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+          "--backend",
+          "mlx",
+          "--public-test-image",
+          "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+          "--public-test-memory-mb",
+          "1900",
+          "--task-root",
+          "experiments/hf_coding_dev_inference_v1/tasks/accelerate-4354-multi-cpu-barrier-v1",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/accelerate-4354-multi-cpu-barrier-v1/sampled-404/agent.json",
+          "--instruction",
+          "Please implement the requested repository change using the available tools. Run the public tests, inspect the final diff, and finish when the repair is ready.",
+          "--seed",
+          "404",
+          "--edit-format",
+          "structured",
+          "--max-turns",
+          "12",
+          "--max-no-tool-retries",
+          "2",
+          "--max-new-tokens-per-turn",
+          "384",
+          "--max-total-new-tokens",
+          "2048",
+          "--max-context-tokens",
+          "6144",
+          "--wall-seconds",
+          "600",
+          "--study-deadline-epoch",
+          "{SHARED_DEADLINE_EPOCH}",
+          "--minimum-available-memory-bytes",
+          "4294967296",
+          "--minimum-free-swap-bytes",
+          "536870912",
+          "--maximum-swap-used-bytes",
+          "7516192768",
+          "--maximum-mlx-peak-memory-bytes",
+          "17179869184",
+          "--temperature",
+          "0.3",
+          "--top-p",
+          "0.9",
+          "--top-k",
+          "20",
+          "--require-split",
+          "development",
+          "--do-sample"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "HF_HUB_OFFLINE": "1",
+          "PYTHONPATH": "src",
+          "TRANSFORMERS_OFFLINE": "1"
+        },
+        "interpreter": "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python"
+      },
+      "grader": {
+        "argv": [
+          "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+          "scripts/grade_hf_coding_dev_v1.py",
+          "--task-id",
+          "accelerate-4354-multi-cpu-barrier-v1",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4354-multi-cpu-barrier-v1/sampled-404",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/accelerate-4354-multi-cpu-barrier-v1/sampled-404/grader.json"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        },
+        "interpreter": "/opt/homebrew/Caskroom/miniforge/base/bin/python"
+      },
+      "prepare": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/prepare_hf_coding_dev_v1.py",
+          "--task-id",
+          "accelerate-4354-multi-cpu-barrier-v1",
+          "--arm",
+          "baseline",
+          "--repository",
+          "{SOURCE_REPOSITORY}",
+          "--output",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4354-multi-cpu-barrier-v1/sampled-404"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        }
+      },
+      "rollout": "sampled-404",
+      "seed": 404,
+      "task_id": "accelerate-4354-multi-cpu-barrier-v1"
+    },
+    {
+      "agent": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/run_local_agent.py",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4354-multi-cpu-barrier-v1/sampled-505",
+          "--model-path",
+          "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+          "--model-repository",
+          "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+          "--backend",
+          "mlx",
+          "--public-test-image",
+          "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+          "--public-test-memory-mb",
+          "1900",
+          "--task-root",
+          "experiments/hf_coding_dev_inference_v1/tasks/accelerate-4354-multi-cpu-barrier-v1",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/accelerate-4354-multi-cpu-barrier-v1/sampled-505/agent.json",
+          "--instruction",
+          "Please implement the requested repository change using the available tools. Run the public tests, inspect the final diff, and finish when the repair is ready.",
+          "--seed",
+          "505",
+          "--edit-format",
+          "structured",
+          "--max-turns",
+          "12",
+          "--max-no-tool-retries",
+          "2",
+          "--max-new-tokens-per-turn",
+          "384",
+          "--max-total-new-tokens",
+          "2048",
+          "--max-context-tokens",
+          "6144",
+          "--wall-seconds",
+          "600",
+          "--study-deadline-epoch",
+          "{SHARED_DEADLINE_EPOCH}",
+          "--minimum-available-memory-bytes",
+          "4294967296",
+          "--minimum-free-swap-bytes",
+          "536870912",
+          "--maximum-swap-used-bytes",
+          "7516192768",
+          "--maximum-mlx-peak-memory-bytes",
+          "17179869184",
+          "--temperature",
+          "0.3",
+          "--top-p",
+          "0.9",
+          "--top-k",
+          "20",
+          "--require-split",
+          "development",
+          "--do-sample"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "HF_HUB_OFFLINE": "1",
+          "PYTHONPATH": "src",
+          "TRANSFORMERS_OFFLINE": "1"
+        },
+        "interpreter": "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python"
+      },
+      "grader": {
+        "argv": [
+          "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+          "scripts/grade_hf_coding_dev_v1.py",
+          "--task-id",
+          "accelerate-4354-multi-cpu-barrier-v1",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4354-multi-cpu-barrier-v1/sampled-505",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/accelerate-4354-multi-cpu-barrier-v1/sampled-505/grader.json"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        },
+        "interpreter": "/opt/homebrew/Caskroom/miniforge/base/bin/python"
+      },
+      "prepare": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/prepare_hf_coding_dev_v1.py",
+          "--task-id",
+          "accelerate-4354-multi-cpu-barrier-v1",
+          "--arm",
+          "baseline",
+          "--repository",
+          "{SOURCE_REPOSITORY}",
+          "--output",
+          "{NEW_WORKSPACE_ROOT}/accelerate-4354-multi-cpu-barrier-v1/sampled-505"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        }
+      },
+      "rollout": "sampled-505",
+      "seed": 505,
+      "task_id": "accelerate-4354-multi-cpu-barrier-v1"
+    },
+    {
+      "agent": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/run_local_agent.py",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/trl-6625-entropy-gradient-v1/sampled-303",
+          "--model-path",
+          "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+          "--model-repository",
+          "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+          "--backend",
+          "mlx",
+          "--public-test-image",
+          "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+          "--public-test-memory-mb",
+          "1900",
+          "--task-root",
+          "experiments/hf_coding_dev_inference_v1/tasks/trl-6625-entropy-gradient-v1",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/trl-6625-entropy-gradient-v1/sampled-303/agent.json",
+          "--instruction",
+          "Please implement the requested repository change using the available tools. Run the public tests, inspect the final diff, and finish when the repair is ready.",
+          "--seed",
+          "303",
+          "--edit-format",
+          "structured",
+          "--max-turns",
+          "12",
+          "--max-no-tool-retries",
+          "2",
+          "--max-new-tokens-per-turn",
+          "384",
+          "--max-total-new-tokens",
+          "2048",
+          "--max-context-tokens",
+          "6144",
+          "--wall-seconds",
+          "600",
+          "--study-deadline-epoch",
+          "{SHARED_DEADLINE_EPOCH}",
+          "--minimum-available-memory-bytes",
+          "4294967296",
+          "--minimum-free-swap-bytes",
+          "536870912",
+          "--maximum-swap-used-bytes",
+          "7516192768",
+          "--maximum-mlx-peak-memory-bytes",
+          "17179869184",
+          "--temperature",
+          "0.3",
+          "--top-p",
+          "0.9",
+          "--top-k",
+          "20",
+          "--require-split",
+          "development",
+          "--do-sample"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "HF_HUB_OFFLINE": "1",
+          "PYTHONPATH": "src",
+          "TRANSFORMERS_OFFLINE": "1"
+        },
+        "interpreter": "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python"
+      },
+      "grader": {
+        "argv": [
+          "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+          "scripts/grade_hf_coding_dev_v1.py",
+          "--task-id",
+          "trl-6625-entropy-gradient-v1",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/trl-6625-entropy-gradient-v1/sampled-303",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/trl-6625-entropy-gradient-v1/sampled-303/grader.json"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        },
+        "interpreter": "/opt/homebrew/Caskroom/miniforge/base/bin/python"
+      },
+      "prepare": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/prepare_hf_coding_dev_v1.py",
+          "--task-id",
+          "trl-6625-entropy-gradient-v1",
+          "--arm",
+          "baseline",
+          "--repository",
+          "{SOURCE_REPOSITORY}",
+          "--output",
+          "{NEW_WORKSPACE_ROOT}/trl-6625-entropy-gradient-v1/sampled-303"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        }
+      },
+      "rollout": "sampled-303",
+      "seed": 303,
+      "task_id": "trl-6625-entropy-gradient-v1"
+    },
+    {
+      "agent": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/run_local_agent.py",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/trl-6625-entropy-gradient-v1/sampled-404",
+          "--model-path",
+          "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+          "--model-repository",
+          "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+          "--backend",
+          "mlx",
+          "--public-test-image",
+          "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+          "--public-test-memory-mb",
+          "1900",
+          "--task-root",
+          "experiments/hf_coding_dev_inference_v1/tasks/trl-6625-entropy-gradient-v1",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/trl-6625-entropy-gradient-v1/sampled-404/agent.json",
+          "--instruction",
+          "Please implement the requested repository change using the available tools. Run the public tests, inspect the final diff, and finish when the repair is ready.",
+          "--seed",
+          "404",
+          "--edit-format",
+          "structured",
+          "--max-turns",
+          "12",
+          "--max-no-tool-retries",
+          "2",
+          "--max-new-tokens-per-turn",
+          "384",
+          "--max-total-new-tokens",
+          "2048",
+          "--max-context-tokens",
+          "6144",
+          "--wall-seconds",
+          "600",
+          "--study-deadline-epoch",
+          "{SHARED_DEADLINE_EPOCH}",
+          "--minimum-available-memory-bytes",
+          "4294967296",
+          "--minimum-free-swap-bytes",
+          "536870912",
+          "--maximum-swap-used-bytes",
+          "7516192768",
+          "--maximum-mlx-peak-memory-bytes",
+          "17179869184",
+          "--temperature",
+          "0.3",
+          "--top-p",
+          "0.9",
+          "--top-k",
+          "20",
+          "--require-split",
+          "development",
+          "--do-sample"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "HF_HUB_OFFLINE": "1",
+          "PYTHONPATH": "src",
+          "TRANSFORMERS_OFFLINE": "1"
+        },
+        "interpreter": "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python"
+      },
+      "grader": {
+        "argv": [
+          "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+          "scripts/grade_hf_coding_dev_v1.py",
+          "--task-id",
+          "trl-6625-entropy-gradient-v1",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/trl-6625-entropy-gradient-v1/sampled-404",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/trl-6625-entropy-gradient-v1/sampled-404/grader.json"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        },
+        "interpreter": "/opt/homebrew/Caskroom/miniforge/base/bin/python"
+      },
+      "prepare": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/prepare_hf_coding_dev_v1.py",
+          "--task-id",
+          "trl-6625-entropy-gradient-v1",
+          "--arm",
+          "baseline",
+          "--repository",
+          "{SOURCE_REPOSITORY}",
+          "--output",
+          "{NEW_WORKSPACE_ROOT}/trl-6625-entropy-gradient-v1/sampled-404"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        }
+      },
+      "rollout": "sampled-404",
+      "seed": 404,
+      "task_id": "trl-6625-entropy-gradient-v1"
+    },
+    {
+      "agent": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/run_local_agent.py",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/trl-6625-entropy-gradient-v1/sampled-505",
+          "--model-path",
+          "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+          "--model-repository",
+          "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+          "--backend",
+          "mlx",
+          "--public-test-image",
+          "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+          "--public-test-memory-mb",
+          "1900",
+          "--task-root",
+          "experiments/hf_coding_dev_inference_v1/tasks/trl-6625-entropy-gradient-v1",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/trl-6625-entropy-gradient-v1/sampled-505/agent.json",
+          "--instruction",
+          "Please implement the requested repository change using the available tools. Run the public tests, inspect the final diff, and finish when the repair is ready.",
+          "--seed",
+          "505",
+          "--edit-format",
+          "structured",
+          "--max-turns",
+          "12",
+          "--max-no-tool-retries",
+          "2",
+          "--max-new-tokens-per-turn",
+          "384",
+          "--max-total-new-tokens",
+          "2048",
+          "--max-context-tokens",
+          "6144",
+          "--wall-seconds",
+          "600",
+          "--study-deadline-epoch",
+          "{SHARED_DEADLINE_EPOCH}",
+          "--minimum-available-memory-bytes",
+          "4294967296",
+          "--minimum-free-swap-bytes",
+          "536870912",
+          "--maximum-swap-used-bytes",
+          "7516192768",
+          "--maximum-mlx-peak-memory-bytes",
+          "17179869184",
+          "--temperature",
+          "0.3",
+          "--top-p",
+          "0.9",
+          "--top-k",
+          "20",
+          "--require-split",
+          "development",
+          "--do-sample"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "HF_HUB_OFFLINE": "1",
+          "PYTHONPATH": "src",
+          "TRANSFORMERS_OFFLINE": "1"
+        },
+        "interpreter": "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python"
+      },
+      "grader": {
+        "argv": [
+          "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+          "scripts/grade_hf_coding_dev_v1.py",
+          "--task-id",
+          "trl-6625-entropy-gradient-v1",
+          "--workspace",
+          "{NEW_WORKSPACE_ROOT}/trl-6625-entropy-gradient-v1/sampled-505",
+          "--output",
+          "{NEW_EVIDENCE_ROOT}/trl-6625-entropy-gradient-v1/sampled-505/grader.json"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        },
+        "interpreter": "/opt/homebrew/Caskroom/miniforge/base/bin/python"
+      },
+      "prepare": {
+        "argv": [
+          "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+          "scripts/prepare_hf_coding_dev_v1.py",
+          "--task-id",
+          "trl-6625-entropy-gradient-v1",
+          "--arm",
+          "baseline",
+          "--repository",
+          "{SOURCE_REPOSITORY}",
+          "--output",
+          "{NEW_WORKSPACE_ROOT}/trl-6625-entropy-gradient-v1/sampled-505"
+        ],
+        "env": {
+          "DOCKER_CONTEXT": "colima",
+          "PYTHONPATH": "src"
+        }
+      },
+      "rollout": "sampled-505",
+      "seed": 505,
+      "task_id": "trl-6625-entropy-gradient-v1"
+    }
+  ],
+  "inference_authorized": false,
+  "model_weights_loaded": false,
+  "protocol_id": "vare-qwen3-4b-hf-coding-development-inference-v2-2026-10-22",
+  "protocol_lock_sha256": "1076511ff91a483f7e113c0446c8a9820785bfaf67de123a4b78c4e9a56773b7",
+  "protocol_note": "This is a dry-run only. The four tasks were exposed to the model under protocol v1 and any v2 rerun is not fresh-task evidence. Do not resume or repair the protocol-invalid v1 study.",
+  "protocol_sha256": "adb43ca4b2a37bea55eb43899d5b64b80492bf8c4050edcefd7a09d8ef2d19b8",
+  "resource_preflight": {
+    "checks": {
+      "available_memory_above_floor": true,
+      "free_swap_above_floor": true,
+      "mlx_metal_gpu_active": true,
+      "model_revision_pinned": true,
+      "model_weight_hash_pinned": true
+    },
+    "decision": "GO",
+    "hardware": {
+      "available_memory_bytes": 10237181952,
+      "cpu": "Apple M1 Pro",
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "swap": {
+        "free_bytes": 1570043330,
+        "total_bytes": 6442450944,
+        "used_bytes": 4872407613
+      },
+      "unified_memory_bytes": 34359738368
+    },
+    "model": {
+      "model_safetensors_sha256": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f",
+      "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+      "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+    },
+    "policy_updates": 0,
+    "rollouts_started": 0,
+    "runtime": {
+      "default_device": "Device(gpu, 0)",
+      "mlx": "0.32.2",
+      "mlx_lm": "0.32.2",
+      "python": "3.12.12"
+    },
+    "schema_version": 1,
+    "study": "vare-qwen3-4b-coding-agent-development-v6",
+    "thresholds": {
+      "minimum_available_memory_bytes": 4294967296,
+      "minimum_free_swap_bytes": 536870912
+    }
+  },
+  "schema_version": 1,
+  "task_exposure": {
+    "classification": "Previously model-exposed Development tasks. Any v2 rerun is repeat-cohort feasibility evidence and must not be reported as fresh-task evidence.",
+    "historical_status": "protocol-invalid/incomplete due to host grader interpreter dependency mismatch; retain all v1 records unchanged.",
+    "source_lock_sha256": "898a13bf57c48acdc53cdfe2534f81079dde7f80eebb30852c0baf3affc766ce",
+    "source_protocol_id": "vare-qwen3-4b-hf-coding-development-inference-v1-2026-10-22",
+    "source_protocol_sha256": "03147165d73d75568506b52ec59c5701db084bf60a01d2ea5d52af969d2fe1bd",
+    "status": "previously_model_exposed",
+    "task_ids": [
+      "accelerate-4296-skip-first-batches-v1",
+      "accelerate-4307-tuple-padding-v1",
+      "accelerate-4354-multi-cpu-barrier-v1",
+      "trl-6625-entropy-gradient-v1"
+    ]
+  },
+  "training_started": false
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "protocol_id": "vare-qwen3-4b-hf-coding-development-inference-v2-2026-10-22",
+  "decision": "READY",
+  "all_prerequisites_passed": true,
+  "check_count": 47,
+  "failed_checks": [],
+  "task_exposure": {
+    "classification": "Previously model-exposed Development tasks. Any v2 rerun is repeat-cohort feasibility evidence and must not be reported as fresh-task evidence.",
+    "historical_status": "protocol-invalid/incomplete due to host grader interpreter dependency mismatch; retain all v1 records unchanged.",
+    "source_lock_sha256": "898a13bf57c48acdc53cdfe2534f81079dde7f80eebb30852c0baf3affc766ce",
+    "source_protocol_id": "vare-qwen3-4b-hf-coding-development-inference-v1-2026-10-22",
+    "source_protocol_sha256": "03147165d73d75568506b52ec59c5701db084bf60a01d2ea5d52af969d2fe1bd",
+    "status": "previously_model_exposed",
+    "task_ids": [
+      "accelerate-4296-skip-first-batches-v1",
+      "accelerate-4307-tuple-padding-v1",
+      "accelerate-4354-multi-cpu-barrier-v1",
+      "trl-6625-entropy-gradient-v1"
+    ]
+  },
+  "planned_rollouts": 12,
+  "rollout_seeds": [
+    303,
+    404,
+    505
+  ],
+  "model_weights_loaded": false,
+  "inference_started": false,
+  "training_started": false,
+  "protocol_sha256": "adb43ca4b2a37bea55eb43899d5b64b80492bf8c4050edcefd7a09d8ef2d19b8",
+  "protocol_lock_sha256": "1076511ff91a483f7e113c0446c8a9820785bfaf67de123a4b78c4e9a56773b7",
+  "environment": {
+    "mlx_python": "/Users/user/.cache/uv/archive-v0/xUAS2gRzA5ZEPhE5/bin/python",
+    "mlx": "0.32.2",
+    "mlx_lm": "0.32.2",
+    "metal": true,
+    "grader_python": "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+    "torch": "2.9.1",
+    "resource": {
+      "available_memory_bytes": 10237181952,
+      "cpu": "Apple M1 Pro",
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "swap": {
+        "free_bytes": 1570043330,
+        "total_bytes": 6442450944,
+        "used_bytes": 4872407613
+      },
+      "unified_memory_bytes": 34359738368
+    }
+  }
+}
