@@ -124,6 +124,56 @@ def _git_baseline(tmp_path: Path, monkeypatch) -> Path:
     return root
 
 
+def test_fixed_source_hash_is_independent_of_git_replace_refs(tmp_path: Path):
+    repo = tmp_path / "fixed-source"
+    target = repo / "mlx_lm/server.py"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"pinned fixed source\n")
+    subprocess.run(["git", "init", "-q", str(repo)], check=True)
+    subprocess.run(
+        ["git", "-C", str(repo), "config", "user.email", "test@example.invalid"],
+        check=True,
+    )
+    subprocess.run(["git", "-C", str(repo), "config", "user.name", "Test"], check=True)
+    subprocess.run(["git", "-C", str(repo), "add", "mlx_lm/server.py"], check=True)
+    subprocess.run(["git", "-C", str(repo), "commit", "-qm", "pinned fix"], check=True)
+    fixed_commit = subprocess.run(
+        ["git", "-C", str(repo), "rev-parse", "HEAD"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    pinned_bytes = target.read_bytes()
+    expected_sha256 = hashlib.sha256(pinned_bytes).hexdigest()
+
+    target.write_bytes(b"attacker replacement source\n")
+    subprocess.run(["git", "-C", str(repo), "add", "mlx_lm/server.py"], check=True)
+    subprocess.run(["git", "-C", str(repo), "commit", "-qm", "replacement"], check=True)
+    replacement = subprocess.run(
+        ["git", "-C", str(repo), "rev-parse", "HEAD"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    subprocess.run(
+        ["git", "-C", str(repo), "replace", fixed_commit, replacement], check=True
+    )
+
+    replaced = subprocess.run(
+        ["git", "-C", str(repo), "show", f"{fixed_commit}:mlx_lm/server.py"],
+        check=True,
+        capture_output=True,
+    ).stdout
+    assert replaced != pinned_bytes
+    assert repo_task.read_pinned_source(
+        repo, fixed_commit, "mlx_lm/server.py", expected_sha256
+    ) == pinned_bytes
+    with pytest.raises(RepositoryTaskError, match="SHA-256 mismatch"):
+        repo_task.read_pinned_source(
+            repo, fixed_commit, "mlx_lm/server.py", hashlib.sha256(replaced).hexdigest()
+        )
+
+
 @pytest.mark.parametrize("index_flag", ["--assume-unchanged", "--skip-worktree"])
 def test_baseline_rejects_git_index_flags_even_when_source_is_unchanged(
     tmp_path: Path,

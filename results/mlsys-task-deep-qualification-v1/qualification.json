@@ -1,0 +1,628 @@
+{
+  "excluded_or_collapsed": [
+    {
+      "reason": "added regression passes on the pre-fix source; test does not detect bug",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1787"
+    },
+    {
+      "reason": "retained; #1930 is same MoE routing-index gradient family",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1795"
+    },
+    {
+      "reason": "collapsed with #1904; same tool-call argument parser family",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1910"
+    },
+    {
+      "reason": "excluded as overlapping left-padding/batched model semantics with #1921",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1925"
+    },
+    {
+      "reason": "collapsed with #1795; same MoE routing-index gradient family",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1930"
+    },
+    {
+      "reason": "regression detected, but excluded from independent count as overlapping MoE routing family with #1795",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1959"
+    },
+    {
+      "reason": "PhiMoE routing family overlaps #1795 and PR bundle also contains #1938 Phi3Small ancestry",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1939"
+    },
+    {
+      "reason": "unfixed source also passes new test without memory instrumentation",
+      "source_pr": "https://github.com/ml-explore/mlx/pull/4668"
+    },
+    {
+      "reason": "requires very large remote checkpoints (9B through 2.4T); not a local M1 task",
+      "source_pr": "https://github.com/huggingface/transformers/pull/49116"
+    },
+    {
+      "reason": "target regression test is skipped at baseline and fixed revisions",
+      "source_pr": "https://github.com/huggingface/transformers/pull/49147"
+    },
+    {
+      "reason": "target LoRA/MoE test is skipped at baseline and fixed revisions",
+      "source_pr": "https://github.com/huggingface/trl/pull/7768"
+    },
+    {
+      "reason": "requires distributed multi-GPU sharded adapter save",
+      "source_pr": "https://github.com/huggingface/transformers/pull/49500"
+    },
+    {
+      "reason": "CUDA/vendor-specific kernel and weight sync unavailable on Apple M1",
+      "source_pr": "https://github.com/vllm-project/vllm/pull/52626"
+    },
+    {
+      "reason": "Linux/vLLM connector stack not represented by local Apple GPU runtime",
+      "source_pr": "https://github.com/vllm-project/vllm/pull/56841"
+    }
+  ],
+  "execution_gate": {
+    "independent_grader_pack_separated": false,
+    "safe_repo_level_candidate_runtime_available": false,
+    "supported_by_current_vare_harness": "only JSON-compatible frozen function-task contracts; not these upstream repository tests",
+    "training_go": "NO-GO until an isolated repo-task grader is wired and audited"
+  },
+  "limitations": [
+    "This is a source-screened task split, not a completed held-out evaluation protocol.",
+    "The original regression tests are public upstream files; their hashes pin them but do not make them secret.",
+    "Repo-level candidates were qualified by patched-base/fixed-source regression replay; no model or agent saw the tasks.",
+    "The VARE isolated harness currently cannot grade arbitrary repository edits under the required boundary."
+  ],
+  "model_rollouts_started": false,
+  "pretraining_cutoff_proxy": "2025-08-09",
+  "primary_metric": "heldout task success after policy update vs no-update baseline",
+  "qualification_id": "mlsys-task-deep-qualification-v1",
+  "schema_version": 1,
+  "source_screen": "mlsys-task-candidate-survey-v1",
+  "split_counts": {
+    "development": 3,
+    "heldout": 9,
+    "train": 3
+  },
+  "split_status": "frozen_candidate_source_split_only",
+  "task_count": 15,
+  "tasks": [
+    {
+      "baseline_result": "fail",
+      "baseline_revision": "381032b7e0a8896ae48f90dbe83eae3bf7630953",
+      "baseline_wall_seconds": 5.198,
+      "environment_lock": "requirements-transformers-env.lock.txt",
+      "exposure": {
+        "model_or_agent_seen_task": false,
+        "researcher_ran_pinned_regression": true,
+        "training_or_dev_used": false
+      },
+      "fixed_result": "pass",
+      "fixed_revision": "909ece888ed4b55402dc8acbb9c13ddf8ff977b5",
+      "fixed_wall_seconds": 4.962,
+      "grader_file_sha256": "700e4bb0f7f268bd0a3d71cc816e2975627243bf50db8fa36e3f1fd42fd5771f",
+      "grader_path": "tests/trainer/test_data_collator.py",
+      "grader_revision": "909ece888ed4b55402dc8acbb9c13ddf8ff977b5",
+      "grader_selector": "4d_attention_mask",
+      "license_file_path": "LICENSE",
+      "license_file_sha256": "77fd4710def9ec3c0f6225800e0235f15a425abd4a8b03559127fcd782612049",
+      "qualification": "source-level-qualified; task execution and separated grading not yet enabled",
+      "raw_log_sha256": {
+        "raw/45852-base.log": "37e701c9442b76a14f8fb96d029115c40c547f3e432c4182300708b0ef57216e",
+        "raw/45852-merge.log": "36a1e5bcc6e33433953796cc1658b02961d1e85fd5486f9b405ad2ee5551cb07"
+      },
+      "raw_logs": [
+        "raw/45852-base.log",
+        "raw/45852-merge.log"
+      ],
+      "repository": "huggingface/transformers",
+      "repository_license_spdx": "Apache-2.0",
+      "reproduction_command": "python -m pytest -q tests/trainer/test_data_collator.py -k \"4d_attention_mask\" --disable-warnings --maxfail=1",
+      "source_pr": "https://github.com/huggingface/transformers/pull/45852",
+      "split": "development",
+      "task_family": "4d_masked_batch_collation",
+      "task_id": "transformers-45852-4d-mask"
+    },
+    {
+      "baseline_result": "fail",
+      "baseline_revision": "6ec0f83563f56335d4227354614459a01d76ba0d",
+      "baseline_wall_seconds": 5.831,
+      "environment_lock": "requirements-transformers-env.lock.txt",
+      "exposure": {
+        "model_or_agent_seen_task": false,
+        "researcher_ran_pinned_regression": true,
+        "training_or_dev_used": false
+      },
+      "fixed_result": "pass",
+      "fixed_revision": "36deb0b53ed0863f4b4dfdea23dcaec7f3df3701",
+      "fixed_wall_seconds": 5.923,
+      "grader_file_sha256": "f5e0338c53ceebf54ec88bda9d3686c0fd64c2169f9286ab28122bba711d6f8a",
+      "grader_path": "tests/trainer/test_trainer_checkpointing.py",
+      "grader_revision": "36deb0b53ed0863f4b4dfdea23dcaec7f3df3701",
+      "grader_selector": "stale_best_model_checkpoint",
+      "license_file_path": "LICENSE",
+      "license_file_sha256": "77fd4710def9ec3c0f6225800e0235f15a425abd4a8b03559127fcd782612049",
+      "qualification": "source-level-qualified; task execution and separated grading not yet enabled",
+      "raw_log_sha256": {
+        "raw/48319-base.log": "722ebdf48b4fb9eacf787f5b4fa3fb711725ac6b0f3d429b07dc50a2e7da7fad",
+        "raw/48319-merge.log": "46e553cd97e8632d74f7daa1d8c769a96c6e8f682ffee80e942172b0c53ab65a"
+      },
+      "raw_logs": [
+        "raw/48319-base.log",
+        "raw/48319-merge.log"
+      ],
+      "repository": "huggingface/transformers",
+      "repository_license_spdx": "Apache-2.0",
+      "reproduction_command": "python -m pytest -q tests/trainer/test_trainer_checkpointing.py -k \"stale_best_model_checkpoint\" --disable-warnings --maxfail=1",
+      "source_pr": "https://github.com/huggingface/transformers/pull/48319",
+      "split": "heldout",
+      "task_family": "stale_best_checkpoint_recovery",
+      "task_id": "transformers-48319-stale-best-checkpoint"
+    },
+    {
+      "baseline_result": "fail",
+      "baseline_revision": "dbac24c0f04a39d68cc24d2fa2abecf196713ae2",
+      "baseline_wall_seconds": 6.442,
+      "environment_lock": "requirements-transformers-env.lock.txt",
+      "exposure": {
+        "model_or_agent_seen_task": false,
+        "researcher_ran_pinned_regression": true,
+        "training_or_dev_used": false
+      },
+      "fixed_result": "pass",
+      "fixed_revision": "7fb5bcd1d4b8a5c225a2c33429b2e9e023dd61ae",
+      "fixed_wall_seconds": 6.435,
+      "grader_file_sha256": "85990d7e985525797ac7ed14881e8319e9dddbee5dfeefe00fab9bb89f1e84b2",
+      "grader_path": "tests/trainer/test_trainer_checkpointing.py",
+      "grader_revision": "7fb5bcd1d4b8a5c225a2c33429b2e9e023dd61ae",
+      "grader_selector": "resume_training_with_checkpoint",
+      "license_file_path": "LICENSE",
+      "license_file_sha256": "77fd4710def9ec3c0f6225800e0235f15a425abd4a8b03559127fcd782612049",
+      "qualification": "source-level-qualified; task execution and separated grading not yet enabled",
+      "raw_log_sha256": {
+        "raw/49208-base.log": "b3f55ba4d59eb8b9b5a0a0ea4e45261689e1eb732fd9df93f0b4cb5bc189b79f",
+        "raw/49208-merge.log": "ac55343de363edc2ee6cb14cb326ebdef185fcdb5d24d6a8c47f6d51c189d8f1"
+      },
+      "raw_logs": [
+        "raw/49208-base.log",
+        "raw/49208-merge.log"
+      ],
+      "repository": "huggingface/transformers",
+      "repository_license_spdx": "Apache-2.0",
+      "reproduction_command": "python -m pytest -q tests/trainer/test_trainer_checkpointing.py -k \"resume_training_with_checkpoint\" --disable-warnings --maxfail=1",
+      "source_pr": "https://github.com/huggingface/transformers/pull/49208",
+      "split": "heldout",
+      "task_family": "resume_training_metrics",
+      "task_id": "transformers-49208-resume-metrics"
+    },
+    {
+      "baseline_result": "fail",
+      "baseline_revision": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+      "baseline_wall_seconds": 4.837,
+      "environment_lock": "requirements-transformers-env.lock.txt",
+      "exposure": {
+        "model_or_agent_seen_task": false,
+        "researcher_ran_pinned_regression": true,
+        "training_or_dev_used": false
+      },
+      "fixed_result": "pass",
+      "fixed_revision": "01269bc99768ad45f8aeaeb701e1315371e25239",
+      "fixed_wall_seconds": 5.244,
+      "grader_file_sha256": "4397de0e1d1adab12af420f8a12f54ddcead4bc996471d998d8be3ce356c6f4f",
+      "grader_path": "tests/utils/test_fusion_mapping.py",
+      "grader_revision": "01269bc99768ad45f8aeaeb701e1315371e25239",
+      "grader_selector": "register_fusion_patches_is_idempotent",
+      "license_file_path": "LICENSE",
+      "license_file_sha256": "77fd4710def9ec3c0f6225800e0235f15a425abd4a8b03559127fcd782612049",
+      "qualification": "source-level-qualified; task execution and separated grading not yet enabled",
+      "raw_log_sha256": {
+        "raw/49412-base.log": "46741f3785570aa2f1567ab24b27e198a2712834af8384324b657d399c2cc887",
+        "raw/49412-merge.log": "96c4803ba273cca08b4988eea1cda32baa46e666068804e17cfec2535a9f2f23"
+      },
+      "raw_logs": [
+        "raw/49412-base.log",
+        "raw/49412-merge.log"
+      ],
+      "repository": "huggingface/transformers",
+      "repository_license_spdx": "Apache-2.0",
+      "reproduction_command": "python -m pytest -q tests/utils/test_fusion_mapping.py -k \"register_fusion_patches_is_idempotent\" --disable-warnings --maxfail=1",
+      "source_pr": "https://github.com/huggingface/transformers/pull/49412",
+      "split": "heldout",
+      "task_family": "fusion_registration_idempotence",
+      "task_id": "transformers-49412-fusion-idempotence"
+    },
+    {
+      "baseline_result": "fail",
+      "baseline_revision": "43f5eaae97a342ab34216c79ee981ccc77f3d66f",
+      "baseline_wall_seconds": 0.319,
+      "environment_lock": "requirements-mlx-core-cpu-env.lock.txt",
+      "exposure": {
+        "model_or_agent_seen_task": false,
+        "researcher_ran_pinned_regression": true,
+        "training_or_dev_used": false
+      },
+      "fixed_result": "pass",
+      "fixed_revision": "0ab821b1f56885509e004c04f33902c765db0318",
+      "fixed_wall_seconds": 0.215,
+      "grader_file_sha256": "2a3f9f38d3ac4585047cdc246c93cc6d91d2ecc1d6f5044910d3995118c54d90",
+      "grader_path": "python/tests/test_conv.py",
+      "grader_revision": "0ab821b1f56885509e004c04f33902c765db0318",
+      "grader_selector": "padding_input_grad",
+      "license_file_path": "LICENSE",
+      "license_file_sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+      "qualification": "source-level-qualified; task execution and separated grading not yet enabled",
+      "raw_log_sha256": {
+        "raw/mlx-4662-base.log": "fffb2bdaa64a4b61990e3acabf1d2b1334ce394b24571daaba5c40aacb146d98",
+        "raw/mlx-4662-merge.log": "c345e9082988c919f20d04526470b1a836519647c36bc09fc2fb601fd5192496"
+      },
+      "raw_logs": [
+        "raw/mlx-4662-base.log",
+        "raw/mlx-4662-merge.log"
+      ],
+      "repository": "ml-explore/mlx",
+      "repository_license_spdx": "MIT",
+      "reproduction_command": "python -m pytest -q python/tests/test_conv.py -k \"padding_input_grad\" --disable-warnings --maxfail=1",
+      "source_pr": "https://github.com/ml-explore/mlx/pull/4662",
+      "split": "train",
+      "task_family": "convolution_input_gradient_shape",
+      "task_id": "mlx-4662-padding-input-gradient"
+    },
+    {
+      "baseline_result": "fail",
+      "baseline_revision": "77c33b14373ac70d7abd6f82af15962852adadbb",
+      "baseline_wall_seconds": 1.56,
+      "environment_lock": "requirements-mlx-lm-env.lock.txt",
+      "exposure": {
+        "model_or_agent_seen_task": false,
+        "researcher_ran_pinned_regression": true,
+        "training_or_dev_used": false
+      },
+      "fixed_result": "pass",
+      "fixed_revision": "acb0240394dfc17ffd6db77a3ccecbdbde522ef9",
+      "fixed_wall_seconds": 1.527,
+      "grader_file_sha256": "92c8954f802681b8ddecc4874f3cc60f2379e568580b6b4e959846c99e8c6f17",
+      "grader_path": "tests/test_tuner_trainer.py",
+      "grader_revision": "acb0240394dfc17ffd6db77a3ccecbdbde522ef9",
+      "grader_selector": "granitemoe_backward or granitemoehybrid_backward or lfm2_moe_backward",
+      "license_file_path": "LICENSE",
+      "license_file_sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+      "qualification": "source-level-qualified; task execution and separated grading not yet enabled",
+      "raw_log_sha256": {
+        "raw/mlx-lm-1795-base.log": "a984ab395fc6790faf383ad242fab4ae771782b52484bd0ea2dc7b55d2e586b0",
+        "raw/mlx-lm-1795-merge.log": "8ad4dcb4876d61d88ff2be5c2326e4334c6749689a39e8e7ae1b089affdfc411"
+      },
+      "raw_logs": [
+        "raw/mlx-lm-1795-base.log",
+        "raw/mlx-lm-1795-merge.log"
+      ],
+      "repository": "ml-explore/mlx-lm",
+      "repository_license_spdx": "MIT",
+      "reproduction_command": "python -m pytest -q tests/test_tuner_trainer.py -k \"granitemoe_backward or granitemoehybrid_backward or lfm2_moe_backward\" --disable-warnings --maxfail=1",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1795",
+      "split": "train",
+      "task_family": "moe_router_gradient_indices",
+      "task_id": "mlxlm-1795-moe-routing-gradient"
+    },
+    {
+      "baseline_result": "fail",
+      "baseline_revision": "9d1e356e7cc6549e7d1697adabe2ea01ff8e062c",
+      "baseline_wall_seconds": 1.709,
+      "environment_lock": "requirements-mlx-lm-env.lock.txt",
+      "exposure": {
+        "model_or_agent_seen_task": false,
+        "researcher_ran_pinned_regression": true,
+        "training_or_dev_used": false
+      },
+      "fixed_result": "pass",
+      "fixed_revision": "c69d1288440a0dc4e6401fc417098b07598dccd5",
+      "fixed_wall_seconds": 1.656,
+      "grader_file_sha256": "53de59f08389fae188b83eeee901e163458d03ab76ce2fe9fe53b26405670dd0",
+      "grader_path": "tests/test_evaluate.py",
+      "grader_revision": "c69d1288440a0dc4e6401fc417098b07598dccd5",
+      "grader_selector": "scores_only_continuation_after_context_truncation",
+      "license_file_path": "LICENSE",
+      "license_file_sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+      "qualification": "source-level-qualified; task execution and separated grading not yet enabled",
+      "raw_log_sha256": {
+        "raw/mlx-lm-1902-base.log": "97d55f3c6aa41f1b52f32b06cafbf14ade661a71dd2e91066df134b3c8a805be",
+        "raw/mlx-lm-1902-merge.log": "292119a546bd17eb2d02153c9f95ab99c0945bab6d46b66476c4da57ff2d9a7e"
+      },
+      "raw_logs": [
+        "raw/mlx-lm-1902-base.log",
+        "raw/mlx-lm-1902-merge.log"
+      ],
+      "repository": "ml-explore/mlx-lm",
+      "repository_license_spdx": "MIT",
+      "reproduction_command": "python -m pytest -q tests/test_evaluate.py -k \"scores_only_continuation_after_context_truncation\" --disable-warnings --maxfail=1",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1902",
+      "split": "heldout",
+      "task_family": "continuation_loglikelihood_after_truncation",
+      "task_id": "mlxlm-1902-continuation-score-truncation"
+    },
+    {
+      "baseline_result": "fail",
+      "baseline_revision": "2af5f7ce8620115bf37fbbddf9817f083118df59",
+      "baseline_wall_seconds": 2.997,
+      "environment_lock": "requirements-mlx-lm-env.lock.txt",
+      "exposure": {
+        "model_or_agent_seen_task": false,
+        "researcher_ran_pinned_regression": true,
+        "training_or_dev_used": false
+      },
+      "fixed_result": "pass",
+      "fixed_revision": "caed1943d38ecb58f6e466a72bed98310c9d45a5",
+      "fixed_wall_seconds": 3.094,
+      "grader_file_sha256": "9ea16a116e111601f3d011800caedfb437a97b38b1238a09e4cd58370b39edb6",
+      "grader_path": "tests/test_server.py",
+      "grader_revision": "caed1943d38ecb58f6e466a72bed98310c9d45a5",
+      "grader_selector": "dict_tool_arguments",
+      "license_file_path": "LICENSE",
+      "license_file_sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+      "qualification": "source-level-qualified; task execution and separated grading not yet enabled",
+      "raw_log_sha256": {
+        "raw/mlx-lm-1904-base.log": "efcfb6d4d512cca304a23d4216ff7966600d2177afdce0cb27af349638806f50",
+        "raw/mlx-lm-1904-merge.log": "1dff30345b6bd4f60f32a65aa20e58666ae8afc3640fa70e6b5af917254eed0e"
+      },
+      "raw_logs": [
+        "raw/mlx-lm-1904-base.log",
+        "raw/mlx-lm-1904-merge.log"
+      ],
+      "repository": "ml-explore/mlx-lm",
+      "repository_license_spdx": "MIT",
+      "reproduction_command": "python -m pytest -q tests/test_server.py -k \"dict_tool_arguments\" --disable-warnings --maxfail=1",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1904",
+      "split": "train",
+      "task_family": "tool_call_dict_arguments",
+      "task_id": "mlxlm-1904-tool-arguments"
+    },
+    {
+      "baseline_result": "fail",
+      "baseline_revision": "47e43a4526d42a6dcee758f07eb04b78a8439ecb",
+      "baseline_wall_seconds": 1.497,
+      "environment_lock": "requirements-mlx-lm-env.lock.txt",
+      "exposure": {
+        "model_or_agent_seen_task": false,
+        "researcher_ran_pinned_regression": true,
+        "training_or_dev_used": false
+      },
+      "fixed_result": "pass",
+      "fixed_revision": "87b7b583a697537aa68f47130b40884700b5f55f",
+      "fixed_wall_seconds": 1.457,
+      "grader_file_sha256": "dbe871f37a2930eae6686ce67ffc0a641971ad11943a1e94833fa232c6938852",
+      "grader_path": "tests/test_sample_utils.py",
+      "grader_revision": "87b7b583a697537aa68f47130b40884700b5f55f",
+      "grader_selector": "tiny_thresholds",
+      "license_file_path": "LICENSE",
+      "license_file_sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+      "qualification": "source-level-qualified; task execution and separated grading not yet enabled",
+      "raw_log_sha256": {
+        "raw/mlx-lm-1912-base.log": "247fec9a1ebf3455ba1829b132ed05c138ea6837a6e4ec6181632a61002ba191",
+        "raw/mlx-lm-1912-merge.log": "b6884cfb214100e0efac8ececa027a47f0aaed9aea157589334d0b9f246e50a9"
+      },
+      "raw_logs": [
+        "raw/mlx-lm-1912-base.log",
+        "raw/mlx-lm-1912-merge.log"
+      ],
+      "repository": "ml-explore/mlx-lm",
+      "repository_license_spdx": "MIT",
+      "reproduction_command": "python -m pytest -q tests/test_sample_utils.py -k \"tiny_thresholds\" --disable-warnings --maxfail=1",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1912",
+      "split": "development",
+      "task_family": "top_p_retains_most_likely_token",
+      "task_id": "mlxlm-1912-top-p-min-token"
+    },
+    {
+      "baseline_result": "fail",
+      "baseline_revision": "05b7aed425453057c511ec0d5ec9732c325b3444",
+      "baseline_wall_seconds": 1.562,
+      "environment_lock": "requirements-mlx-lm-env.lock.txt",
+      "exposure": {
+        "model_or_agent_seen_task": false,
+        "researcher_ran_pinned_regression": true,
+        "training_or_dev_used": false
+      },
+      "fixed_result": "pass",
+      "fixed_revision": "9d8abd94d63a9b3c72e7e9b146e43af1005368fa",
+      "fixed_wall_seconds": 1.502,
+      "grader_file_sha256": "5e172da806e5934365d2c91656f472cbc4aceeb36b8d607f6d495219cbd25f33",
+      "grader_path": "tests/test_models.py",
+      "grader_revision": "9d8abd94d63a9b3c72e7e9b146e43af1005368fa",
+      "grader_selector": "granitemoehybrid_padded_batch",
+      "license_file_path": "LICENSE",
+      "license_file_sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+      "qualification": "source-level-qualified; task execution and separated grading not yet enabled",
+      "raw_log_sha256": {
+        "raw/mlx-lm-1921-base.log": "7cf925d20a3784e4e027e7a7e60e7610e3a3a786f325ee24cfc6b9b0eb123367",
+        "raw/mlx-lm-1921-merge.log": "419ab903b698318e456f43ff3b52032e51789435bca01f1300443072139fc7fe"
+      },
+      "raw_logs": [
+        "raw/mlx-lm-1921-base.log",
+        "raw/mlx-lm-1921-merge.log"
+      ],
+      "repository": "ml-explore/mlx-lm",
+      "repository_license_spdx": "MIT",
+      "reproduction_command": "python -m pytest -q tests/test_models.py -k \"granitemoehybrid_padded_batch\" --disable-warnings --maxfail=1",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1921",
+      "split": "heldout",
+      "task_family": "padded_batch_logprob_consistency",
+      "task_id": "mlxlm-1921-padded-logprobs"
+    },
+    {
+      "baseline_result": "fail",
+      "baseline_revision": "87b7b583a697537aa68f47130b40884700b5f55f",
+      "baseline_wall_seconds": 1.575,
+      "environment_lock": "requirements-mlx-lm-env.lock.txt",
+      "exposure": {
+        "model_or_agent_seen_task": false,
+        "researcher_ran_pinned_regression": true,
+        "training_or_dev_used": false
+      },
+      "fixed_result": "pass",
+      "fixed_revision": "3051e26bc72b8ab426af17d14c5599447eb306a5",
+      "fixed_wall_seconds": 1.49,
+      "grader_file_sha256": "f7c9a3eafca6ba9fcfc9c281177ebb15a93a6e1f4d0a31c70264e10ae5d0362d",
+      "grader_path": "tests/test_models.py",
+      "grader_revision": "3051e26bc72b8ab426af17d14c5599447eb306a5",
+      "grader_selector": "falcon_h1_without_cache",
+      "license_file_path": "LICENSE",
+      "license_file_sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+      "qualification": "source-level-qualified; task execution and separated grading not yet enabled",
+      "raw_log_sha256": {
+        "raw/mlx-lm-1926-base.log": "cbd45dbbe2833fdeb9e901593ed5dfa9826194b1d133b1e3013707521d742101",
+        "raw/mlx-lm-1926-merge.log": "cabb75409224bfc4ad5a1741055e6cdb67b825131842fd844bc14f12a3ad6f64"
+      },
+      "raw_logs": [
+        "raw/mlx-lm-1926-base.log",
+        "raw/mlx-lm-1926-merge.log"
+      ],
+      "repository": "ml-explore/mlx-lm",
+      "repository_license_spdx": "MIT",
+      "reproduction_command": "python -m pytest -q tests/test_models.py -k \"falcon_h1_without_cache\" --disable-warnings --maxfail=1",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1926",
+      "split": "heldout",
+      "task_family": "falcon_h1_cache_and_gradient",
+      "task_id": "mlxlm-1926-falcon-cache-gradient"
+    },
+    {
+      "baseline_result": "fail",
+      "baseline_revision": "5cfec4cb39deba54210b3ff4d86f2337c7bc10b5",
+      "baseline_wall_seconds": 3.857,
+      "environment_lock": "requirements-mlx-lm-env.lock.txt",
+      "exposure": {
+        "model_or_agent_seen_task": false,
+        "researcher_ran_pinned_regression": true,
+        "training_or_dev_used": false
+      },
+      "fixed_result": "pass",
+      "fixed_revision": "bacd9e8e1f3a5be7dd64bae3a9ad8d74471ccc3a",
+      "fixed_wall_seconds": 2.979,
+      "grader_file_sha256": "e3458049c03ae4e4caa8c3545ddc392f858ec9cf402274d6c33f08526ee9189f",
+      "grader_path": "tests/test_server.py",
+      "grader_revision": "bacd9e8e1f3a5be7dd64bae3a9ad8d74471ccc3a",
+      "grader_selector": "max_tokens_zero_is_rejected",
+      "license_file_path": "LICENSE",
+      "license_file_sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+      "qualification": "source-level-qualified; task execution and separated grading not yet enabled",
+      "raw_log_sha256": {
+        "raw/mlx-lm-1935-base.log": "17b51b324488ffdaf20de27361f981564465fa8becf9cce3ea07b39407c5fda9",
+        "raw/mlx-lm-1935-merge.log": "d1c255793138b6543d82c2ca52750a07b79bd5696980d6ced3a7863e0fa9c02e"
+      },
+      "raw_logs": [
+        "raw/mlx-lm-1935-base.log",
+        "raw/mlx-lm-1935-merge.log"
+      ],
+      "repository": "ml-explore/mlx-lm",
+      "repository_license_spdx": "MIT",
+      "reproduction_command": "python -m pytest -q tests/test_server.py -k \"max_tokens_zero_is_rejected\" --disable-warnings --maxfail=1",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1935",
+      "split": "heldout",
+      "task_family": "server_zero_max_tokens_contract",
+      "task_id": "mlxlm-1935-zero-max-tokens"
+    },
+    {
+      "baseline_result": "fail",
+      "baseline_revision": "caed1943d38ecb58f6e466a72bed98310c9d45a5",
+      "baseline_wall_seconds": 1.784,
+      "environment_lock": "requirements-mlx-lm-env.lock.txt",
+      "exposure": {
+        "model_or_agent_seen_task": false,
+        "researcher_ran_pinned_regression": true,
+        "training_or_dev_used": false
+      },
+      "fixed_result": "pass",
+      "fixed_revision": "011f2f6e2f4ff91e99b3fed3a7f51d3a42a6335c",
+      "fixed_wall_seconds": 1.583,
+      "grader_file_sha256": "6203007cf38c93eae653ecd902737166e9099a6f51ba5947a8397e0b73a97b7f",
+      "grader_path": "tests/test_models.py",
+      "grader_revision": "011f2f6e2f4ff91e99b3fed3a7f51d3a42a6335c",
+      "grader_selector": "test_phi3small",
+      "license_file_path": "LICENSE",
+      "license_file_sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+      "qualification": "source-level-qualified; task execution and separated grading not yet enabled",
+      "raw_log_sha256": {
+        "raw/mlx-lm-1938-base.log": "b78c720fb03bc55c1416a20f08115193006178007e38e0483840a42f8fccf7f4",
+        "raw/mlx-lm-1938-merge.log": "3c877763ad1b5de7918cb255fcaa98ebc3fe1058921dfa04ab8982e6600fd45b"
+      },
+      "raw_logs": [
+        "raw/mlx-lm-1938-base.log",
+        "raw/mlx-lm-1938-merge.log"
+      ],
+      "repository": "ml-explore/mlx-lm",
+      "repository_license_spdx": "MIT",
+      "reproduction_command": "python -m pytest -q tests/test_models.py -k \"test_phi3small\" --disable-warnings --maxfail=1",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1938",
+      "split": "heldout",
+      "task_family": "phi3small_vocab_mask_axis",
+      "task_id": "mlxlm-1938-phi3small-logits-mask"
+    },
+    {
+      "baseline_result": "fail",
+      "baseline_revision": "5f3c79d6bb1864a85d5343818192bd061b161e3a",
+      "baseline_wall_seconds": 1.604,
+      "environment_lock": "requirements-mlx-lm-env.lock.txt",
+      "exposure": {
+        "model_or_agent_seen_task": false,
+        "researcher_ran_pinned_regression": true,
+        "training_or_dev_used": false
+      },
+      "fixed_result": "pass",
+      "fixed_revision": "8fda5e976a2da412d9f8119361edefd405381cf9",
+      "fixed_wall_seconds": 1.477,
+      "grader_file_sha256": "f09420df6030eb348e13b18b6e6d5972530447bab810b90d2c893c2dc3766fba",
+      "grader_path": "tests/test_models.py",
+      "grader_revision": "8fda5e976a2da412d9f8119361edefd405381cf9",
+      "grader_selector": "mimo_v2_flash_attention_value_scale",
+      "license_file_path": "LICENSE",
+      "license_file_sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+      "qualification": "source-level-qualified; task execution and separated grading not yet enabled",
+      "raw_log_sha256": {
+        "raw/mlx-lm-1971-base.log": "eeca8086f36fce270491d15ed08bb49a7c7a829451d10cd4d2b6d48ced772147",
+        "raw/mlx-lm-1971-merge.log": "8e12213a2e89468dab077b19e3b3f989ef8957f796a93dd4a33919e9db9fddc8"
+      },
+      "raw_logs": [
+        "raw/mlx-lm-1971-base.log",
+        "raw/mlx-lm-1971-merge.log"
+      ],
+      "repository": "ml-explore/mlx-lm",
+      "repository_license_spdx": "MIT",
+      "reproduction_command": "python -m pytest -q tests/test_models.py -k \"mimo_v2_flash_attention_value_scale\" --disable-warnings --maxfail=1",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1971",
+      "split": "development",
+      "task_family": "mimo_attention_value_scale",
+      "task_id": "mlxlm-1971-mimo-value-scale"
+    },
+    {
+      "baseline_result": "fail",
+      "baseline_revision": "8fda5e976a2da412d9f8119361edefd405381cf9",
+      "baseline_wall_seconds": 1.532,
+      "environment_lock": "requirements-mlx-lm-env.lock.txt",
+      "exposure": {
+        "model_or_agent_seen_task": false,
+        "researcher_ran_pinned_regression": true,
+        "training_or_dev_used": false
+      },
+      "fixed_result": "pass",
+      "fixed_revision": "1e511c1f72a93f47e3c6d73254f1b5da2ae92d2d",
+      "fixed_wall_seconds": 1.463,
+      "grader_file_sha256": "f6259e68a49fc4570d078a2066e507872c068362dd06d760fb0c514d0402a74a",
+      "grader_path": "tests/test_models.py",
+      "grader_revision": "1e511c1f72a93f47e3c6d73254f1b5da2ae92d2d",
+      "grader_selector": "ssm_right_pad",
+      "license_file_path": "LICENSE",
+      "license_file_sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+      "qualification": "source-level-qualified; task execution and separated grading not yet enabled",
+      "raw_log_sha256": {
+        "raw/mlx-lm-1979-base.log": "716cf353556e326f350f7586e345c676479d681f334272a373c4fa92649042ce",
+        "raw/mlx-lm-1979-merge.log": "572c425add371732e4246c36fa356b021148e3453a97c7a2b43002c4b63b37bc"
+      },
+      "raw_logs": [
+        "raw/mlx-lm-1979-base.log",
+        "raw/mlx-lm-1979-merge.log"
+      ],
+      "repository": "ml-explore/mlx-lm",
+      "repository_license_spdx": "MIT",
+      "reproduction_command": "python -m pytest -q tests/test_models.py -k \"ssm_right_pad\" --disable-warnings --maxfail=1",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1979",
+      "split": "heldout",
+      "task_family": "ssm_padding_mask_state_equivalence",
+      "task_id": "mlxlm-1979-ssm-padding-mask"
+    }
+  ],
+  "training_started": false
+}

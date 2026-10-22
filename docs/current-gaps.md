@@ -11,6 +11,16 @@ policy-update comparison remain open. See the
 [calibration report](mlsys-repository-task-mlxlm-1904-v1-report.md) and
 [raw evidence](../results/mlsys-repo-eval-v1/run-4/).
 
+**Update 2026-10-20 — upstream task-candidate survey:** a frozen metadata
+survey captured 57 merged coding/MLSys pull requests from six OSS repositories.
+The coarse screen leaves 24 for manual review; it does not verify task
+independence, run the upstream tests on M1, prove model freshness, or establish
+hidden grading. Zero candidates are fully qualified and the held-out split
+remains unfrozen, so training is still NO-GO. This is a data-readiness result,
+not a negative policy-learning result. See the [survey report](mlsys-task-candidate-survey-v1-report.md),
+[protocol](../protocols/mlsys_task_candidate_survey_v1.json), and [audited
+evidence](../results/mlsys-task-candidate-survey-v1/).
+
 **Update 2026-10-20 — actual-model update readiness NO-GO:** a frozen
 read-only inventory of the v1–v3 MLSys packs checks all 19 task entries and
 finds 14 unique definitions, below the 15-task minimum; even before exclusions,
