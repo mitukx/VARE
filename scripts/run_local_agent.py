@@ -279,8 +279,17 @@ def classify_public_test_exit(returncode: int, stderr: str = '') -> str:
         return 'container_resource_failure'
     lowered = stderr.lower()
     if 'modulenotfounderror' in lowered or 'no module named' in lowered:
-        return 'evaluator_unavailable'
+        return classify_module_not_found(stderr)
     return 'test_failure'
+
+
+def classify_module_not_found(stderr: str) -> str:
+    """Attribute missing imports to candidate source or the pinned evaluator."""
+    frames = re.findall(r'File [\"\']([^\"\']+)[\"\']', stderr)
+    last_frame = frames[-1] if frames else ''
+    if last_frame.startswith('/workspace/') and last_frame != '/workspace/test_public.py':
+        return 'test_execution_error'
+    return 'evaluator_unavailable'
 
 
 def classify_public_test_error(error: str) -> str:
@@ -309,6 +318,14 @@ def public_test_infrastructure_error(result: dict[str, Any] | None) -> bool:
     return isinstance(result, dict) and result.get('classification') in {
         'container_launch_failure', 'runner_integrity_error', 'evaluator_unavailable',
     }
+
+
+def tool_public_test_infrastructure_error(name: str, result: dict[str, Any]) -> bool:
+    """Find infrastructure failures from direct or automatic post-edit tests."""
+    if name == 'run_public_tests':
+        return public_test_infrastructure_error(result)
+    automatic = result.get('automatic_public_test')
+    return public_test_infrastructure_error(automatic if isinstance(automatic, dict) else None)
 
 
 def bounded_turn_payload(model_result: Any, remaining_chars: int) -> str:
@@ -469,7 +486,7 @@ def run_public_tests(
             'passed': False if gradeable else None,
             'classification': classification,
             'gradeable': gradeable,
-            'error': 'public test evaluator unavailable',
+            'error': message,
             'elapsed_seconds': round(time.perf_counter() - started, 3),
         }
     classification = classify_public_test_exit(result.returncode, result.stderr)
@@ -503,7 +520,7 @@ def classify_public_test_returncode(returncode: int, stderr: str = '') -> str:
     if returncode in {137, 143}:
         return 'container_resource_failure'
     if 'modulenotfounderror' in lowered or 'no module named' in lowered:
-        return 'evaluator_unavailable'
+        return classify_module_not_found(stderr)
     if returncode == 1 and ('assertionerror' in lowered or 'assert ' in lowered):
         return 'assertion_failure'
     return 'test_execution_error'
@@ -1334,6 +1351,9 @@ def main() -> int:
                 messages.append({'role': 'tool', 'name': name, 'content': model_payload})
                 if should_stop_after_tool(name, result):
                     break
+                if tool_public_test_infrastructure_error(name, result):
+                    stop_reason = 'public_test_infrastructure_error'
+                    break
             except Exception as exc:
                 entry['tool_calls'].append({'error': f'{type(exc).__name__}: {exc}', 'raw_call': match.group(1)})
                 error_payload = json.dumps({'error': str(exc)}, ensure_ascii=False)
@@ -1344,6 +1364,8 @@ def main() -> int:
                 messages.append({'role': 'tool', 'name': 'invalid_tool_call', 'content': error_payload})
         transcript.append(entry)
         if stop_reason == 'agent_finished':
+            break
+        if stop_reason == 'public_test_infrastructure_error':
             break
 
     elapsed = time.perf_counter() - start
