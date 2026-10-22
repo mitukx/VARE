@@ -540,7 +540,15 @@ def _limits(image: str, timeout_s: float, memory_mb: int = 512) -> IsolationLimi
 def _stage_subject(subject: Path, root: Path) -> Path:
     if not subject.is_dir() or subject.is_symlink():
         raise CandidateHarnessError("subject must be a real directory")
-    resolved = subject.resolve()
+    if not root.is_dir() or root.is_symlink():
+        raise CandidateHarnessError("staging root must be a real directory")
+    try:
+        resolved = subject.resolve(strict=True)
+        staging = root.resolve(strict=True)
+    except (OSError, RuntimeError) as exc:
+        raise CandidateHarnessError("subject and staging paths must resolve safely") from exc
+    if resolved == staging or resolved in staging.parents or staging in resolved.parents:
+        raise CandidateHarnessError("subject and staging paths must not overlap")
     grader = Path("/grader")
     if resolved == grader or grader in resolved.parents:
         raise CandidateHarnessError("subject must not be the grader tree")
@@ -556,11 +564,21 @@ def _stage_subject(subject: Path, root: Path) -> Path:
 
 
 def _candidate_temporary_directory(prefix: str) -> tempfile.TemporaryDirectory[str]:
-    """Stage Docker bind mounts below a path shared with macOS Docker VMs."""
+    """Stage Docker bind mounts below a host path shared with Colima on macOS."""
     if sys.platform == "darwin":
-        root = Path.home() / ".cache" / "vare-isolated-candidate"
+        home = Path.home().resolve(strict=True)
+        cache = home / ".cache"
+        cache.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if cache.is_symlink() or not cache.is_dir():
+            raise CandidateHarnessError("host cache must be a real directory")
+        root = cache / "vare-isolated-candidate"
         root.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if root.is_symlink() or not root.is_dir():
+            raise CandidateHarnessError("candidate staging root must be a real directory")
+        root.chmod(0o700)
         root = root.resolve(strict=True)
+        if root != cache / "vare-isolated-candidate":
+            raise CandidateHarnessError("candidate staging root escaped the host cache")
         return tempfile.TemporaryDirectory(prefix=prefix, dir=root)
     return tempfile.TemporaryDirectory(prefix=prefix)
 
@@ -1009,10 +1027,7 @@ def _one_call(
     if not (source / f"{module}.py").is_file():
         raise CandidateHarnessError("subject module is missing")
     with _candidate_temporary_directory(prefix="vare-call-") as folder:
-        # macOS exposes TMPDIR through /var -> /private/var. Docker rejects
-        # bind mounts with a symlinked path, so canonicalize the host path
-        # before staging the candidate.
-        staged = _stage_subject(source, Path(folder).resolve(strict=True))
+        staged = _stage_subject(source, Path(folder))
         return _invoke(
             staged, module, function, args, kwargs, timeout_s, image, runner,
             tuple_paths, memory_mb, discard_candidate_stdout, task_deadline,
@@ -1060,9 +1075,7 @@ def grade_calls(
             for call in calls
         ]
         with _candidate_temporary_directory(prefix="vare-call-session-") as folder:
-            staged = _stage_subject(
-                Path(subject), Path(folder).resolve(strict=True)
-            )
+            staged = _stage_subject(Path(subject), Path(folder))
             invoked = _invoke_session(
                 staged, first.module, first.function,
                 [(item[2], item[3], call.tuple_paths) for item, call in zip(prepared, calls, strict=True)],

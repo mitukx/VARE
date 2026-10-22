@@ -1,0 +1,46 @@
+F
+=================================== FAILURES ===================================
+_______ TestServer.test_handle_chat_completions_with_dict_tool_arguments _______
+
+self = <test_server.TestServer testMethod=test_handle_chat_completions_with_dict_tool_arguments>
+
+    def test_handle_chat_completions_with_dict_tool_arguments(self):
+        url = f"http://localhost:{self.port}/v1/chat/completions"
+        chat_post_data = {
+            "model": "chat_model",
+            "max_tokens": 10,
+            "messages": [
+                {"role": "user", "content": "what is 2+3?"},
+                {
+                    "role": "assistant",
+                    "content": None,
+                    "tool_calls": [
+                        {
+                            "type": "function",
+                            "id": "123",
+                            "function": {
+                                "name": "add",
+                                "arguments": {"a": 2, "b": 3},
+                            },
+                        }
+                    ],
+                },
+                {"role": "tool", "content": "5", "tool_call_id": "123"},
+            ],
+        }
+        response = requests.post(url, json=chat_post_data)
+        response_body = response.text
+>       self.assertIn("id", response_body)
+E       AssertionError: 'id' not found in '{"error": "the JSON object must be str, bytes or bytearray, not dict"}'
+
+/tmp/vare-mlx-lm-1904-base/tests/test_server.py:385: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+
+Fetching 9 files:   0%|          | 0/9 [00:00<?, ?it/s]
+Fetching 9 files: 100%|██████████| 9/9 [00:00<00:00, 2219.99it/s]
+----------------------------- Captured stderr call -----------------------------
+127.0.0.1 - - [21/Oct/2026 06:02:45] "POST /v1/chat/completions HTTP/1.1" 404 -
+=========================== short test summary info ============================
+FAILED tests/test_server.py::TestServer::test_handle_chat_completions_with_dict_tool_arguments
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 34 deselected in 2.69s
