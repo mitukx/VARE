@@ -37,6 +37,7 @@ Two distinct estimands:
 ### Gate A — data eligibility (hard NO-GO if missing)
 
 - Inventory unique upstream tasks with immutable repository, baseline and fixed commit SHAs, test target hash, license, allowed edit scope and verifier.
+- Work from the [24-entry frozen-metadata manual qualification queue](mlsys-candidate-manual-qualification-queue.md); its entries are **not** automatically eligible tasks.
 - Exclude any task or paraphrased variants previously shown to either model or agent, including prior exploratory failures; log exposures **before** assigning train/dev/held-out.
 - Freeze disjoint train/dev/held-out membership, prompt hashes and any public-test visibility, including explicit treatment of development tasks already exposed by previous studies.
 - Apply the existing [readiness protocol](../protocols/mlsys_actual_model_update_no_go_v1.lock.json) and its minimum eligible-task gate. If it fails, **do not report a training comparison**; continue task qualification and document NO-GO.
