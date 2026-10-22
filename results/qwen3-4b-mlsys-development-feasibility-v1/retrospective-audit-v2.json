@@ -1,0 +1,237 @@
+{
+  "audit_passed": true,
+  "classification_counts": {
+    "format_failure": 13,
+    "patch_application_failure": 2
+  },
+  "classification_protocol": "vare.qwen3-patch-output-contract.retrospective-v2",
+  "classified_records": [
+    {
+      "candidate_output_sha256": "ce218545e0299b5b188f8fea3ac66c2b1ba7b168dbd93cc15f082b79aec808a2",
+      "detail": null,
+      "historical_failure_label": "format_failure",
+      "kind": "greedy",
+      "retrospective_category": "format_failure",
+      "seed": 0,
+      "task_id": "transformers-45852-4d-mask"
+    },
+    {
+      "candidate_output_sha256": "c2896b7d5312f6f5eab1507930d70fa4b5de13aa12d8ac3920cf1803d5c5aa65",
+      "detail": null,
+      "historical_failure_label": "format_failure",
+      "kind": "sampled",
+      "retrospective_category": "format_failure",
+      "seed": 7401,
+      "task_id": "transformers-45852-4d-mask"
+    },
+    {
+      "candidate_output_sha256": "eb46deec46f9dd111e93c4802ef8316b40751c0952e816a6aad5b716e9677d2e",
+      "detail": null,
+      "historical_failure_label": "format_failure",
+      "kind": "sampled",
+      "retrospective_category": "format_failure",
+      "seed": 7404,
+      "task_id": "transformers-45852-4d-mask"
+    },
+    {
+      "candidate_output_sha256": "b9ff66b7fd9dbd9c0047a3a1572e859175fdb6d527d3d6f430fc297f03da96d8",
+      "detail": null,
+      "historical_failure_label": "format_failure",
+      "kind": "greedy",
+      "retrospective_category": "format_failure",
+      "seed": 0,
+      "task_id": "mlxlm-1912-top-p-min-token"
+    },
+    {
+      "candidate_output_sha256": "96831260bbfe054ddf7ce6e0fda243a3906fc7a6dce2b8ff54d728bc9329f424",
+      "detail": null,
+      "historical_failure_label": "format_failure",
+      "kind": "sampled",
+      "retrospective_category": "format_failure",
+      "seed": 7411,
+      "task_id": "mlxlm-1912-top-p-min-token"
+    },
+    {
+      "candidate_output_sha256": "7fd254b541e94220a78f0af20241f266ae3cf4bcf3901a1df1eb3fc554ed7084",
+      "detail": null,
+      "historical_failure_label": "format_failure",
+      "kind": "sampled",
+      "retrospective_category": "format_failure",
+      "seed": 7412,
+      "task_id": "mlxlm-1912-top-p-min-token"
+    },
+    {
+      "candidate_output_sha256": "db7d50390a72389a34060c44188e2f1e15ca55df92661707f22ccace8ec64c29",
+      "detail": null,
+      "historical_failure_label": "format_failure",
+      "kind": "sampled",
+      "retrospective_category": "format_failure",
+      "seed": 7413,
+      "task_id": "mlxlm-1912-top-p-min-token"
+    },
+    {
+      "candidate_output_sha256": "765d8843c0cba7b00367054bb3d3b2fa6be63b9fe740a35165b7653ce64c4adb",
+      "detail": null,
+      "historical_failure_label": "format_failure",
+      "kind": "sampled",
+      "retrospective_category": "format_failure",
+      "seed": 7414,
+      "task_id": "mlxlm-1912-top-p-min-token"
+    },
+    {
+      "candidate_output_sha256": "afc3ed9784c7be5f3c8a3a6851c8c02b147230361441ad0f39c2405a492e065c",
+      "detail": null,
+      "historical_failure_label": "format_failure",
+      "kind": "greedy",
+      "retrospective_category": "format_failure",
+      "seed": 0,
+      "task_id": "mlxlm-1971-mimo-value-scale"
+    },
+    {
+      "candidate_output_sha256": "13a993398daac8fa0f84369debdb455d76eb26e55b8e4b4ee175e5f0dfa576af",
+      "detail": null,
+      "historical_failure_label": "format_failure",
+      "kind": "sampled",
+      "retrospective_category": "format_failure",
+      "seed": 7421,
+      "task_id": "mlxlm-1971-mimo-value-scale"
+    },
+    {
+      "candidate_output_sha256": "798c3eb68e1eef7874e5c14d8c9d3fad2faf47516d16b2bc05621e8bf28ad096",
+      "detail": null,
+      "historical_failure_label": "format_failure",
+      "kind": "sampled",
+      "retrospective_category": "format_failure",
+      "seed": 7422,
+      "task_id": "mlxlm-1971-mimo-value-scale"
+    },
+    {
+      "candidate_output_sha256": "5811c60406ab153f258e410fc34985b109ce30e53399629da62aaa7af760e31a",
+      "detail": null,
+      "historical_failure_label": "format_failure",
+      "kind": "sampled",
+      "retrospective_category": "format_failure",
+      "seed": 7423,
+      "task_id": "mlxlm-1971-mimo-value-scale"
+    },
+    {
+      "candidate_output_sha256": "666d6cb1c8f93c82d1a5448631cb9e668901e57e4e33a7c40fccd570d1bf69e4",
+      "detail": null,
+      "historical_failure_label": "format_failure",
+      "kind": "sampled",
+      "retrospective_category": "format_failure",
+      "seed": 7424,
+      "task_id": "mlxlm-1971-mimo-value-scale"
+    },
+    {
+      "candidate_output_sha256": "f048d12c319cd73df4fc190fc97faecb12ed8b5ff0ad12c7e52a479cf69805d5",
+      "detail": "candidate patch did not apply cleanly",
+      "historical_failure_label": "format_failure",
+      "kind": "sampled",
+      "retrospective_category": "patch_application_failure",
+      "seed": 7402,
+      "task_id": "transformers-45852-4d-mask"
+    },
+    {
+      "candidate_output_sha256": "9703664ccb2ba4cecf8bc9d617c43f1b446c56d9005b1ea23676be552630814a",
+      "detail": "candidate patch did not apply cleanly",
+      "historical_failure_label": "format_failure",
+      "kind": "sampled",
+      "retrospective_category": "patch_application_failure",
+      "seed": 7403,
+      "task_id": "transformers-45852-4d-mask"
+    }
+  ],
+  "historical_records_modified": false,
+  "limitations": [
+    "Classification is derived from retained runner phase detail; original labels and raw records are untouched.",
+    "No model inference, patch reapplication, or grader rerun was performed.",
+    "The two apply-phase failures never reached the independent grader and are not semantic failures."
+  ],
+  "protocol_id": "vare.qwen3-4b-mlsys-development-patch-feasibility.v1",
+  "rollouts": 15,
+  "run_manifest_sha256": "1472761c354d9dcf934e840eecd5d635a775d66145fdfad48da472d4b3692691",
+  "source_audit": {
+    "audit_passed": true,
+    "checksums_verified": [
+      "feasibility.json",
+      "preflight.json",
+      "raw-records.jsonl"
+    ],
+    "implementation_commit": "368668e0e4d0afa6c7c5140839cb00c889df5556",
+    "model_revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "protocol_sha256": "a44710d75819c4c1f503481530c17c78039c6b6a484c2443a6167f5b1311f48e",
+    "rollouts": 15,
+    "task_summary": {
+      "mlxlm-1912-top-p-min-token": {
+        "failures": {
+          "format_failure": 5,
+          "wrong_patch": 0
+        },
+        "greedy_success": false,
+        "pass_at_k": false,
+        "reward_variance": 0.0,
+        "sample_successes": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "unique_sample_output_hashes": 4
+      },
+      "mlxlm-1971-mimo-value-scale": {
+        "failures": {
+          "format_failure": 5,
+          "wrong_patch": 0
+        },
+        "greedy_success": false,
+        "pass_at_k": false,
+        "reward_variance": 0.0,
+        "sample_successes": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "unique_sample_output_hashes": 4
+      },
+      "transformers-45852-4d-mask": {
+        "failures": {
+          "format_failure": 5,
+          "wrong_patch": 0
+        },
+        "greedy_success": false,
+        "pass_at_k": false,
+        "reward_variance": 0.0,
+        "sample_successes": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "unique_sample_output_hashes": 4
+      }
+    }
+  },
+  "task_summary": {
+    "mlxlm-1912-top-p-min-token": {
+      "format_failures": 5,
+      "patch_application_failures": 0,
+      "rollouts": 5,
+      "verified_successes": 0
+    },
+    "mlxlm-1971-mimo-value-scale": {
+      "format_failures": 5,
+      "patch_application_failures": 0,
+      "rollouts": 5,
+      "verified_successes": 0
+    },
+    "transformers-45852-4d-mask": {
+      "format_failures": 3,
+      "patch_application_failures": 2,
+      "rollouts": 5,
+      "verified_successes": 0
+    }
+  },
+  "verified_successes": 0
+}
