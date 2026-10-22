@@ -1,0 +1,101 @@
+{
+  "baseline_commit": "381032b7e0a8896ae48f90dbe83eae3bf7630953",
+  "baseline_target_sha256": "51a96b8d23e365014cfcd44049fda9a40a41e76ab5ba80a7b687138d3523f00a",
+  "candidate_edit_allowlist": [
+    "src/transformers/tokenization_utils_base.py"
+  ],
+  "candidate_files": "pinned src/transformers package and task statement only; no .git or tests",
+  "evaluation": {
+    "cases": [
+      "torch-square-4d-mask",
+      "numpy-square-4d-mask",
+      "torch-asymmetric-q-kv-mask"
+    ],
+    "required_calibration": [
+      "pinned-baseline-fails",
+      "known-fix-passes",
+      "red-team-suite-passes"
+    ],
+    "success": "all three parent-owned expected outputs match exactly"
+  },
+  "fixed_commit": "909ece888ed4b55402dc8acbb9c13ddf8ff977b5",
+  "fixed_target_sha256": "5d7dfd5373e0a4b63ce0869f05f5559b01111e38bf68dd02b166ca551ec438b5",
+  "grader_test": "tests/trainer/test_data_collator.py::4d_attention_mask",
+  "grader_test_sha256": "700e4bb0f7f268bd0a3d71cc816e2975627243bf50db8fa36e3f1fd42fd5771f",
+  "grading_boundary": "candidate code runs in isolated no-network Docker child; grader expectations remain in trusted parent; grader adapter is candidate-visible workload only",
+  "image": "localhost:5000/vare/transformers-cpu@sha256:5461f5ec9d3022db72d49cf5bcd140c99521eba5b37747257b58a576d4e12e1f",
+  "implementation_sha256": {
+    "benchmarks/mlsys_repo_eval_v2/transformers_45852/Dockerfile": "71200d584cff1d58e6abbf84d51491ff3a2ab8da3f3120370fac2083c8e31e31",
+    "benchmarks/mlsys_repo_eval_v2/transformers_45852/grader_adapter.py": "81623c93179a0d9f167acf3f5d0415b1744cc16c8134e6015f015dde3a0c590d",
+    "benchmarks/mlsys_repo_eval_v2/transformers_45852/requirements.txt": "1c4a93c82e47e7c35e5dd681281e7e07498bec609abb298f678f581b3b641054",
+    "benchmarks/mlsys_repo_eval_v2/transformers_45852/task.md": "99ef996ed432136483fed21a5964a918f2f90f45dc6e5491ad5490e2138e395e",
+    "scripts/run_transformers_45852_calibration.py": "ed81cf4ab99418312180e9973e57ad8947482a3a0b1d726b0c22f86b52775c8c",
+    "src/vare/attestation.py": "785e74d7d0cd6d41a73cf75cc65c093a0afb8d5082ad3f11dd828770616e93a3",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/isolated_candidate.py": "83d63f0fe1408ee6d68669f4bc269d6c9e33c7dd58dc051b83f90343b9fa4bbb",
+    "src/vare/transformers_repo_task.py": "a8d7522a2ff30b98f18635d5041592342f9c76ab3dcf8a4604009b782f80eb9e",
+    "src/vare/types.py": "233e2b6176431140e7700cc668cfdbdc98cf3d8d4ab98de658efab7010ea82ca",
+    "tests/test_transformers_repo_task.py": "f9bc3ee1b6a979bf43b68b5e59dfa6f3ad9a73b4ec0b586b75e31e4fffb88d66"
+  },
+  "license": "Apache-2.0",
+  "license_sha256": "77fd4710def9ec3c0f6225800e0235f15a425abd4a8b03559127fcd782612049",
+  "limits": {
+    "memory_mb": 1536,
+    "network": "none",
+    "timeout_seconds": 30
+  },
+  "protocol_id": "transformers-45852-isolated-eval-v1",
+  "qualification": {
+    "frozen_split": "development",
+    "frozen_task_id": "transformers-45852-4d-mask",
+    "repository": "mitukx/VARE",
+    "source_pr": 95
+  },
+  "red_team_suite": [
+    "no grader files or hidden tests visible",
+    "no Git history visible",
+    "grader secret environment absent",
+    "network unreachable",
+    "candidate stdout success-frame forgery rejected",
+    "subprocess source write denied",
+    "timeout enforced",
+    "memory limit enforced",
+    "unified-diff path traversal rejected",
+    "injected hidden tests rejected",
+    "symlinks rejected",
+    "pinned baseline/fixed source hashes verified"
+  ],
+  "runtime": {
+    "backend": "vare.isolated_candidate.grade_calls",
+    "candidate_mount": "source-only read-only at /subject",
+    "candidate_uid": 65534,
+    "container_root": "read-only",
+    "cpus": 1.0,
+    "docker_server": "29.5.2/arm64",
+    "expected_values_sent_to_candidate": false,
+    "grader_mount": "absent",
+    "host": "Apple Silicon arm64 with Colima ARM64 Docker VM",
+    "network": "none",
+    "peak_memory_measured": false,
+    "pids_limit": 64,
+    "red_team_probe_count": 7,
+    "source_checkout": "pinned commits fetched by SHA; sparse checkout only for allowlisted src/transformers package"
+  },
+  "source_pr": "https://github.com/huggingface/transformers/pull/45852",
+  "source_repository": "huggingface/transformers",
+  "task_contract": {
+    "agent_edit_allowlist": [
+      "src/transformers/tokenization_utils_base.py"
+    ],
+    "limitations": [
+      "narrow upstream selected behavior; not full Transformers suite",
+      "known-fix calibration is not an agent rollout or capability result"
+    ],
+    "success": "all three trusted parent-owned expected values match exactly",
+    "supported_semantics": [
+      "batched four-dimensional attention mask shape, dtype, and values for torch and NumPy inputs",
+      "ordinary public tokenizer/collator API path"
+    ]
+  },
+  "task_id": "transformers-45852-4d-mask"
+}
