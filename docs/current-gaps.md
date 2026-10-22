@@ -1,5 +1,7 @@
 # Current evidence gaps
 
+**Update 2026-10-22 — MLX-LM #1971 grader v3 recalibration after main integration:** PR #98 integration brought the current Colima staging implementation into the grader source identity, so v2 remains immutable historical evidence and is superseded for current-source grading. Prospective v3 binds the integrated source hash and repeats the baseline, exact-fix, constant-scale, post-cache-scale, source-swap, and red-team controls. All pass their expected decisions on the pinned CPU-only image. This remains grader calibration only, with no LLM rollout or Metal/capability evidence. See the [v3 report](mlsys-repository-task-mlxlm-1971-v3-report.md) and [raw evidence](../results/mlxlm-1971-isolated-v3/run-1/).
+
 **Update 2026-10-22 — MLX-LM #1971 grader v2 calibration:** prospective protocol v2 varies `value_scale` across 0.25, 0.5, and 0.8 and checks full-forward output, incremental output, and KV-cache state. On the pinned CPU-only Colima image, the broken baseline failed all three cases; the known fix passed all three; a constant-0.5 mutant and a post-cache scaling mutant were rejected. Source-swap and red-team controls passed. This is narrow grader calibration, not an agent repair, Metal validation, or model-capability result. See the [v2 report](mlsys-repository-task-mlxlm-1971-v2-report.md), [protocol](../benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v2.json), and [raw evidence](../results/mlxlm-1971-isolated-v2/run-1/).
 
 **Update 2026-10-21 — one repository-task grading contract passed:** the
