@@ -87,7 +87,7 @@ async def execute_trajectories(
             async with asyncio.timeout(step_timeout):
                 step = await step_fn(resumed, lease.trajectory_id)
             await owned_io(store.append_step, lease, step)
-            resumed = {**resumed, "next_step": resumed["next_step"] + 1, "state": step.state}
+            # Read the committed cursor and hash chain, not a locally guessed\n            # next step. A duplicate append or a restart must yield the same\n            # inputs to the next action.\n            resumed = await owned_io(store.resume_state, lease.trajectory_id)
         await owned_io(store.finish, lease)
 
     await _worker(store, "execute", worker_id, execute, stop,
