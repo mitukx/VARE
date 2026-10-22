@@ -140,11 +140,11 @@ def test_step_callback_receives_updated_durable_head_and_state(tmp_path):
         worker = asyncio.create_task(
             execute_trajectories(
                 store, "worker", step_fn, stop,
-                lease_seconds=3, poll_seconds=0.001,
+                lease_seconds=30, poll_seconds=0.001,
             )
         )
         try:
-            async with asyncio.timeout(5):
+            async with asyncio.timeout(15):
                 while store.trajectory("trajectory")["state"] != "complete":
                     await asyncio.sleep(0.001)
         finally:

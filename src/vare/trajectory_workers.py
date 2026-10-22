@@ -86,8 +86,19 @@ async def execute_trajectories(
         while resumed["next_step"] < resumed["spec"]["expected_steps"]:
             async with asyncio.timeout(step_timeout):
                 step = await step_fn(resumed, lease.trajectory_id)
-            await owned_io(store.append_step, lease, step)
-            # Read the committed cursor and hash chain, not a locally guessed\n            # next step. A duplicate append or a restart must yield the same\n            # inputs to the next action.\n            resumed = await owned_io(store.resume_state, lease.trajectory_id)
+            committed_head = await owned_io(
+                store.append_step, lease, step, return_head=True
+            )
+            if committed_head is False:
+                # An idempotent duplicate may follow an interrupted worker.
+                resumed = await owned_io(store.resume_state, lease.trajectory_id)
+            else:
+                resumed = {
+                    **resumed,
+                    "next_step": step.index + 1,
+                    "state": step.state,
+                    "head": committed_head,
+                }
         await owned_io(store.finish, lease)
 
     await _worker(store, "execute", worker_id, execute, stop,
