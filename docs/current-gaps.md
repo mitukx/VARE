@@ -1,3 +1,5 @@
+**Historical calibration erratum (2026-10-23):** V4 treated any non-pass as mutant rejection, and the retained v5 cache-mutant run also failed full-forward cases. Those records remain unchanged but do not independently establish a cache-specific failure; v8 is the first run with full-forward pass and cached `wrong_output` for the post-cache mutant. See the [v8 report](mlsys-repository-task-mlxlm-1971-v8-report.md).
+
 **Update 2026-10-23 — MLX-LM #1971 v8 calibration:** v7 failed closed because its cache mutant also broke the no-cache rotary path; the raw failure remains preserved. V8 keeps that mutant under a new protocol and requires full-forward pass plus cached `wrong_output`. The pinned CPU/Colima run passed baseline/fix and all exact semantic, source-swap, and red-team gates. This is grader calibration only, not Coding-Agent success or model improvement. See the [v8 report](mlsys-repository-task-mlxlm-1971-v8-report.md), [raw v7 failure](../results/mlxlm-1971-isolated-v7/run-1/), and [v8 evidence](../results/mlxlm-1971-isolated-v8/run-1/).
 
 # Current evidence gaps

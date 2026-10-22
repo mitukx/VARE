@@ -20,6 +20,9 @@ The v8 cache mutant moves value scaling after cache insertion while preserving t
 
 Calibration passed in 16.46 seconds. Baseline failed all 6 full-forward and cached cases as `wrong_output`; the exact known fix passed all 6. The constant-0.5 mutant passed only the two scale-0.5 cases and failed the scale-0.25 and scale-0.8 cases. The post-cache mutant passed all three no-cache full-forward cases and failed all three cached cases as `wrong_output`. The independent source-swap check and all red-team controls passed.
 
+
+Historical calibration caveat: the retained v5 cache-mutant run also failed the full-forward cases, so it cannot be cited as isolated evidence for cached execution. V4's acceptance predicate treated any non-pass as a rejected mutant, including execution failures. Neither historical protocol/result is changed; v8's exact full-pass/cached-wrong-output pattern is the first calibration here that isolates the cache-specific defect.
+
 The v7 run remains preserved at [v7 run 1](../results/mlxlm-1971-isolated-v7/run-1/). It failed its calibration gate because its mutant generator also altered the no-cache rotary-position branch, making full-forward cases fail; it is not counted as cache-specific evidence.
 
 ## Reproduction
