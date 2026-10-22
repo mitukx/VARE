@@ -28,10 +28,15 @@ def test_opaque_structured_edit_schema_does_not_request_long_hashes() -> None:
     assert read['parameters']['required'] == ['path']
     assert 'workspace_revision_handle' in replace['parameters']['properties']
     assert 'source_preimage_handle' in replace['parameters']['properties']
+    assert 'workspace_revision_handle' not in replace['parameters']['required']
+    assert 'source_preimage_handle' not in replace['parameters']['required']
     assert 'expected_hash' not in replace['parameters']['properties']
     assert 'expected_revision' not in replace['parameters']['properties']
-    assert 'workspace_revision_handle' in insert['parameters']['required']
-    assert 'source_preimage_handle' in insert['parameters']['required']
+    assert 'workspace_revision_handle' in insert['parameters']['properties']
+    assert 'source_preimage_handle' in insert['parameters']['properties']
+    assert 'workspace_revision_handle' not in insert['parameters']['required']
+    assert 'source_preimage_handle' not in insert['parameters']['required']
+    assert 'latest read_file snapshot' in replace['description']
 
 
 def test_legacy_structured_schema_remains_available_without_opaque_mode() -> None:
@@ -242,7 +247,9 @@ def test_edit_tool_descriptions_match_active_handle_schema() -> None:
     legacy = {tool['function']['name']: tool['function']['description']
               for tool in tools_for('structured', public_tests=False, opaque_handles=False)}
     for name in ('replace_text', 'insert_text'):
-        assert 'workspace_revision_handle' in opaque[name]
+        assert 'opaque handles' in opaque[name]
+        assert 'latest read_file snapshot' in opaque[name]
+        assert 'omitted' in opaque[name]
         assert 'expected_hash' not in opaque[name]
         assert 'expected_hash' in legacy[name]
         assert 'workspace_revision_handle' not in legacy[name]

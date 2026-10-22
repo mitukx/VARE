@@ -21,11 +21,18 @@ runner = load_script("run_coding_agent_dev_study_v1.py")
 
 
 class CodingAgentDevStudyRunnerTests(unittest.TestCase):
-    def test_frozen_protocol_and_implementation_hashes_validate(self):
-        protocol, lock, protocol_bytes, lock_bytes = runner.load_frozen()
+    def test_frozen_protocol_is_intact_but_rejects_the_changed_runner(self):
+        protocol_bytes = runner.PROTOCOL_PATH.read_bytes()
+        lock_bytes = runner.LOCK_PATH.read_bytes()
+        protocol = json.loads(protocol_bytes)
+        lock = json.loads(lock_bytes)
         self.assertEqual(protocol["protocol_id"], lock["protocol_id"])
         self.assertEqual(runner.sha256_bytes(protocol_bytes), lock["protocol_sha256"])
         self.assertTrue(lock_bytes)
+        # v1 remains immutable. The prospective v5 public-test runner changes a
+        # locked source, so the old study must fail closed rather than adopt it.
+        with self.assertRaisesRegex(ValueError, "locked implementation changed"):
+            runner.load_frozen()
 
     def test_run_records_exact_runner_source_used_for_inference(self):
         run_dir = ROOT / "results/phase-a-v6/protocol-v1/run-2"
