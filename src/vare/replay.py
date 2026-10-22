@@ -35,22 +35,31 @@ class PrioritizedReplay:
 
     @staticmethod
     def group_has_homogeneous_provenance(experiences: Sequence[Experience]) -> bool:
+        """Keep groups checkpoint- and verifier-consistent, not just version-matched.
+
+        Legacy observations may omit optional digests. A partially populated
+        group is inconsistent; fully absent digests remain a legacy-only case.
+        """
         if not experiences:
             return False
-        first = experiences[0]
-        provenance = (
-            first.attempt.policy_id,
-            first.attempt.policy_version,
-            first.verification.verifier_version,
-        )
-        return all(
-            (
-                exp.attempt.policy_id,
-                exp.attempt.policy_version,
-                exp.verification.verifier_version,
-            ) == provenance
-            for exp in experiences[1:]
-        )
+
+        def identity(exp: Experience) -> tuple[object, ...]:
+            attempt = exp.attempt
+            verification = exp.verification
+            checkpoint = attempt.metadata.get("policy_checkpoint_sha256")
+            if checkpoint is None:
+                checkpoint = attempt.task.metadata.get("policy_checkpoint_sha256")
+            return (
+                attempt.policy_id,
+                attempt.policy_version,
+                checkpoint,
+                verification.verifier_name,
+                verification.verifier_version,
+                verification.metadata.get("verifier_config_sha256"),
+            )
+
+        first = identity(experiences[0])
+        return all(identity(exp) == first for exp in experiences[1:])
 
     @staticmethod
     def _group_is_complete(items: list[_HeapItem]) -> bool:
