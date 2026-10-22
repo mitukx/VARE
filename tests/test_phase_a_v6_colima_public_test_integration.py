@@ -59,13 +59,20 @@ def test_colima_public_runner_executes_baseline_failure_and_known_fix(monkeypatc
         target.write_text("def answer():\n    return 0\n", encoding="utf-8")
         test_hash = hashlib.sha256(test_file.read_bytes()).hexdigest()
 
-        baseline = run_public_tests(workspace, IMAGE, test_hash, memory_mb=512)
-        assert baseline["classification"] == "test_failure"
+        allowlist = {"src/module.py", "test_public.py"}
+        baseline = run_public_tests(
+            workspace, IMAGE, test_hash, memory_mb=512,
+            expected_workspace_files=allowlist,
+        )
+        assert baseline["classification"] == "assertion_failure"
         assert baseline["returncode"] == 1
         assert baseline["passed"] is False
 
         target.write_text("def answer():\n    return 42\n", encoding="utf-8")
-        fixed = run_public_tests(workspace, IMAGE, test_hash, memory_mb=512)
+        fixed = run_public_tests(
+            workspace, IMAGE, test_hash, memory_mb=512,
+            expected_workspace_files=allowlist,
+        )
         assert fixed["classification"] == "passed"
         assert fixed["returncode"] == 0
         assert fixed["passed"] is True

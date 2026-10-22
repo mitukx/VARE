@@ -186,7 +186,7 @@ class StructuredEditController:
         self.max_feedback_chars = max_feedback_chars
         self._counter = 0
         self._handles: dict[str, tuple[str, str, str]] = {}
-        self._latest_handles_by_path: dict[str, tuple[str, str]] = {}
+        self._latest_region_by_path: dict[str, tuple[str, str, str]] = {}
         self._before = {
             name: _safe_path(root, name, self.allowed_files).read_bytes()
             for name in sorted(self.allowed_files)
@@ -248,7 +248,7 @@ class StructuredEditController:
         revision = workspace_revision(self.root, self.allowed_files)
         source_hash = sha256_bytes(source_path.read_bytes())
         revision_handle, source_handle = self._issue(path, revision, source_hash)
-        self._latest_handles_by_path[path] = (revision_handle, source_handle)
+        self._latest_region_by_path[path] = (revision_handle, source_handle, content)
         return {
             "path": path,
             "start_line": start_line,
@@ -274,13 +274,20 @@ class StructuredEditController:
         """Resolve opaque handles and delegate to the exact-preimage atomic editor."""
         if len(old_text) > 12_000 or len(new_text) > 8_000 or len(anchor) > 12_000:
             raise StructuredEditError("structured edit text exceeds the per-action character budget")
+        implicit_handles = False
+        if bool(workspace_revision_handle) != bool(source_preimage_handle):
+            raise StructuredEditError("both edit handles must be supplied together")
         if not workspace_revision_handle and not source_preimage_handle:
-            latest = self._latest_handles_by_path.get(path)
+            latest = self._latest_region_by_path.get(path)
             if latest is None:
                 raise StructuredEditError("read the current source region before editing")
-            workspace_revision_handle, source_preimage_handle = latest
-        elif not workspace_revision_handle or not source_preimage_handle:
-            raise StructuredEditError("both edit handles must be supplied together")
+            workspace_revision_handle, source_preimage_handle, region = latest
+            required_text = anchor if action == "insert_text" else old_text
+            if not required_text or region.count(required_text) != 1:
+                raise StructuredEditError(
+                    "edit anchor must match exactly once in the latest source region"
+                )
+            implicit_handles = True
         revision_binding = self._handles.get(workspace_revision_handle)
         source_binding = self._handles.get(source_preimage_handle)
         if revision_binding is None or source_binding is None:
@@ -318,30 +325,46 @@ class StructuredEditController:
         self._latest_diff_hash = sha256_bytes(current_diff.encode("utf-8"))
         self._inspected_diff_hash = None
         self._latest_test_passed = None
+        self._latest_region_by_path.pop(path, None)
+        result["edit_revision_source"] = (
+            "implicit_latest_source_read" if implicit_handles else "explicit_opaque_handles"
+        )
         return result
 
     def record_public_test_result(self, result: dict[str, Any]) -> dict[str, Any]:
         """Bound trusted public-test feedback and flag repeated unchanged failures."""
         passed = result.get("passed")
-        if not isinstance(passed, bool):
-            raise StructuredEditError("public-test result must come from the trusted test runner")
         classification = result.get("classification")
-        if classification in {
-            "container_launch_failure",
-            "runner_integrity_error",
-            "evaluator_unavailable",
-        }:
-            # Infrastructure failures are not model reward or assertion feedback.
-            # Leave finalization disabled and give the candidate a bounded status.
+        infrastructure_classes = {
+            "container_launch_failure", "runner_integrity_error", "evaluator_unavailable",
+        }
+        if classification in infrastructure_classes:
+            if passed is not None or result.get("gradeable") is True:
+                raise StructuredEditError(
+                    "unavailable public-test result cannot be marked gradeable"
+                )
             self._latest_test_passed = None
             self._inspected_diff_hash = None
             return {
-                "passed": False,
+                "passed": None,
                 "classification": classification,
                 "repeated_unchanged_failure": False,
                 "feedback": "Public test execution was unavailable; no test assertion ran.",
-                "next_action": "stop this rollout; the evaluator must be repaired before grading",
+                "next_action": (
+                    "stop this rollout; the evaluator must be repaired before grading"
+                ),
             }
+        if not isinstance(passed, bool):
+            raise StructuredEditError("public-test result must come from the trusted test runner")
+        if classification is not None and (
+            classification not in {
+                "passed", "assertion_failure", "test_execution_error",
+                "candidate_timeout", "candidate_output_limit", "container_resource_failure",
+            }
+            or (passed and classification != "passed")
+            or (not passed and classification == "passed")
+        ):
+            raise StructuredEditError("public-test status and pass result disagree")
         stderr = result.get("stderr", "")
         stdout = result.get("stdout", "")
         error = result.get("error", "")

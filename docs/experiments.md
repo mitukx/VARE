@@ -1,5 +1,13 @@
 # Experimental program
 
+## Phase A v6 Colima public-test execution v6
+
+The v6 integration keeps #106's fail-closed rollout abort and adopts #113's exact candidate-file inventory and byte checks, private cache staging visible to Colima, symlink/special-file rejection, and host-managed latest-read edit handles. The public runner and controller now share one classification field: candidate assertion/timeout results can be scored, while launch, integrity, and evaluator-unavailable results carry `passed: null`, are redacted from model feedback, and stop the rollout. A new Colima run verified the unshared macOS temp bind failure, owned-cache bind success, baseline assertion failure, exact known-fix pass, and exit/dependency classification contract. This remains a synthetic evaluator calibration, not a model rollout or fresh task success; v1–v5 protocols and evidence were preserved. The separated-grader suite's prior 8 local failures came from sparse-checkout lock fixtures absent on disk; the unchanged tracked lock blobs restored locally and the suite then passed 29 tests with 4 environment skips. See [v6 protocol](../experiments/coding_agent_phase_a_v6/public-test-execution-v6.json), [lock](../experiments/coding_agent_phase_a_v6/public-test-execution-v6.lock.json), and [raw run](../results/phase-a-v6/public-test-execution-v6/run-3/).
+
+## Phase A v6 Colima public-test execution v5
+
+The historical 12-rollout analysis found six public-test attempts that exited 125 with Colima's bind-source-missing daemon error; these were infrastructure launch failures and are not model/test failures. A prospective v5 calibration shows a live macOS system-temp directory cannot be bind-mounted in the current Colima setup, while an owned `~/.cache/vare-public-test-staging` directory can. Exact-inventory workspace staging under the pinned image then gives baseline assertion failure and known-fix pass. The same calibration checks bounded result classification and a deterministic implicit opaque-handle edit. It loaded no model and does not demonstrate agent success or policy improvement. Prior v1–v4 protocols and results remain unchanged. See the [report](phase-a-v6-public-test-execution-v5-report.md), [v5 protocol](../experiments/coding_agent_phase_a_v6/public-test-execution-v5.json), [lock](../experiments/coding_agent_phase_a_v6/public-test-execution-v5.lock.json), and [raw run](../results/phase-a-v6/public-test-execution-v5/run-1/).
+
 ## Transformers #49752 tool-agent feasibility v1 — 2026-10-21
 
 The new `transformers-49752-stacked-frames` Development task passed isolated
