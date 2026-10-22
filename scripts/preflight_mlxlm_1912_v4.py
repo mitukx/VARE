@@ -110,18 +110,39 @@ def run_adversarial_probe(source_repo: Path, output: Path, image: str) -> bool:
             target.write_text(original[:start] + mutant + original[end:], encoding="utf-8")
             report = grade_workspace(workspace, image=image)
             observed = report["cases"]
-            failed = [
-                item["case_id"] for item in observed if item["passed"] is False
-            ]
-            protected = "shifted_maximum_nonzero_values" in failed
+            by_id = {item["case_id"]: item for item in observed}
+            wrong_controls = {
+                "shifted_maximum_nonzero_values",
+                "leading_maximum_nonzero_value",
+            }
+            wrong_by_value = (
+                all(
+                    by_id.get(name, {}).get("failure") == "wrong_output"
+                    for name in wrong_controls
+                )
+                and len(by_id) == len(observed) == 14
+            )
+            unchanged_controls_pass = all(
+                item["passed"] is True and item.get("failure") is None
+                for name, item in by_id.items() if name not in wrong_controls
+            )
+            rejected = (
+                report["passed"] is False
+                and wrong_by_value
+                and unchanged_controls_pass
+            )
             result = {
                 "schema_version": 1,
                 "protocol_id": "mlxlm-1912-isolated-task-v4",
                 "probe": "hardcoded-index-0-zero-value",
                 "candidate_source_sha256": sha256_file(target),
                 "grader_passed": report["passed"],
-                "failed_case_ids": failed,
-                "adversarial_rejected": report["passed"] is False and protected,
+                "case_outcomes": [
+                    {"case_id": item["case_id"], "passed": item["passed"],
+                     "failure": item.get("failure")}
+                    for item in observed
+                ],
+                "adversarial_rejected": rejected,
                 "qualification": "live-candidate-negative-control-only",
             }
             path = output / "adversarial-negative-control.json"

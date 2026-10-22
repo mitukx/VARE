@@ -117,7 +117,17 @@ def test_negative_control_requires_shifted_maximum_to_fail(
         preflight, "grade_workspace",
         lambda _workspace, *, image: {
             "passed": False,
-            "cases": [{"case_id": "shifted_maximum_nonzero_values", "passed": False}],
+            "cases": [
+                *[
+                    {"case_id": f"existing-control-{index}", "passed": True,
+                     "failure": None}
+                    for index in range(12)
+                ],
+                {"case_id": "shifted_maximum_nonzero_values",
+                 "passed": False, "failure": "wrong_output"},
+                {"case_id": "leading_maximum_nonzero_value",
+                 "passed": False, "failure": "wrong_output"},
+            ],
         },
     )
     output = tmp_path / "evidence"
