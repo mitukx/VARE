@@ -1,0 +1,79 @@
+{
+  "calibration_passed": true,
+  "candidate_network": "none",
+  "candidate_workspace_mount": "read-only",
+  "created_at_utc": "2026-10-22T21:53:19Z",
+  "direct_mount_probes": {
+    "system_temp": {
+      "passed": false,
+      "returncode": 125,
+      "source_class": "macOS-system-temp",
+      "stderr": "docker: Error response from daemon: invalid mount config for type \"bind\": bind source path does not exist: /private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-colima-bind-source-i8qdl5_c\n\nRun 'docker run --help' for more information\n",
+      "stdout": ""
+    },
+    "user_cache": {
+      "passed": true,
+      "returncode": 0,
+      "source_class": "user-cache",
+      "stderr": "",
+      "stdout": "vare-colima-bind-probe\n"
+    }
+  },
+  "docker_context": "colima",
+  "image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "image_id": "sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "implementation_sha256": {
+    "scripts/calibrate_public_test_execution_v4.py": "2c3021d88362eedda5897377229680f026d18aa10968342c23731e0b5825b10b",
+    "scripts/run_local_agent.py": "ef9815054cf2ed4184af116d8c70134e3585dd315439b7d0d936bb55381426d6",
+    "src/vare/agent_structured_edit.py": "00fccc89ba763013f7d1d7499f6626a76c8bc796c9bdd3157212ffeed6fb85e4",
+    "src/vare/container_isolation.py": "6d963821333f8de603bb4743ea52cb203c549695a5df9bbff9fa829b50ea8c42",
+    "tests/test_agent_structured_edit.py": "5a836a480f45f0bb6ff8fb6fcf41ae4881bcfc2aee47d6f6a2b9674c361df052",
+    "tests/test_run_local_agent_handles.py": "bbd7c1108785a5c6d53da5e6be44bc19f16f9b729e112e6f0bd8ce1819af65d4",
+    "tests/test_run_local_agent_public_tests.py": "23289462761e0dac30effc6d7aed0c16e830e477e26c7c6639d080780cbc61ae"
+  },
+  "implicit_handle_calibration": {
+    "applied": true,
+    "edit_revision_source": "implicit_latest_source_read",
+    "source_sha256": "d3fe37235936f63ebabd6ba2bb8d3cf67404555d856dc63b0611fe9b6231ec13"
+  },
+  "limitations": [
+    "Synthetic one-file harness fixture; not a repository task or model rollout.",
+    "Validates the host-to-Colima mount and test-result classification path only."
+  ],
+  "model_loaded": false,
+  "optimizer_updates": 0,
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "protocol_id": "vare.coding-agent.public-test-execution.colima.v4",
+  "protocol_sha256": "c0c8c7f15389ad1f29353319324f62432d6839409af4d15ad6ec0113c5fee70e",
+  "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+  "results": {
+    "broken_baseline": {
+      "elapsed_seconds": 0.172,
+      "gradeable": true,
+      "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+      "passed": false,
+      "public_test_sha256": "ba40fafe9aee4464e0c6a54dfc624478d732b1bf7f976bf30cff8ab7fa250d89",
+      "returncode": 1,
+      "source_sha256": "89bec526a8809599d1d4ba869fbe6703df3484df64ed19e716b24e2ad341995a",
+      "status": "assertion_failure",
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/workspace/test_public.py\", line 4, in test_value\n    assert value() == 42\n           ^^^^^^^^^^^^^\nAssertionError\n",
+      "stdout": "",
+      "workspace_staging": "owned-cache-bind-mount"
+    },
+    "known_fix": {
+      "elapsed_seconds": 0.161,
+      "gradeable": true,
+      "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+      "passed": true,
+      "public_test_sha256": "ba40fafe9aee4464e0c6a54dfc624478d732b1bf7f976bf30cff8ab7fa250d89",
+      "returncode": 0,
+      "source_sha256": "2f8974f06364c943a202b6a6971a24e891683fa2dc6233ad2a5c478dce8fd0b3",
+      "status": "passed",
+      "stderr": "",
+      "stdout": "",
+      "workspace_staging": "owned-cache-bind-mount"
+    }
+  },
+  "source_workspace_class": "macOS-system-temp-outside-home-cache",
+  "wall_seconds": 0.533
+}

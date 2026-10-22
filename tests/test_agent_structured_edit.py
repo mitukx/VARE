@@ -315,15 +315,18 @@ def test_controller_does_not_turn_container_launch_failure_into_test_feedback(tm
     )
 
     feedback = controller.record_public_test_result({
-        "passed": False,
+        "passed": None,
         "classification": "container_launch_failure",
-        "stderr": "bind source path does not exist: /private/var/folders/secret",
+        "gradeable": False,
+        "error": "bind source path does not exist: /private/var/folders/secret",
     })
 
     assert feedback["classification"] == "container_launch_failure"
     assert "no test assertion ran" in feedback["feedback"]
     assert "secret" not in feedback["feedback"]
     assert feedback["next_action"].startswith("stop this rollout")
+    assert feedback["passed"] is None
+    assert "secret" not in feedback["feedback"]
     with pytest.raises(StructuredEditError, match="until public tests pass"):
         controller.finalize_for_independent_grading()
 

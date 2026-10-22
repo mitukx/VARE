@@ -105,6 +105,24 @@ def test_public_test_feedback_reports_infrastructure_status_without_host_path() 
     assert visible['classification'] == 'container_launch_failure'
     assert 'no test assertion ran' in visible['feedback']
     assert 'secret' not in str(visible)
+    assert public_test_infrastructure_error({'classification': 'evaluator_unavailable'})
+    assert public_test_infrastructure_error({'classification': 'runner_integrity_error'})
+    assert not public_test_infrastructure_error({'classification': 'candidate_timeout'})
+
+
+def test_legacy_public_test_feedback_redacts_infrastructure_details_too() -> None:
+    visible = candidate_visible_tool_result(
+        'run_public_tests',
+        {
+            'passed': None,
+            'classification': 'evaluator_unavailable',
+            'stderr': 'host path /Users/private/secret/grader.py',
+        },
+        opaque_handles=False,
+    )
+    assert visible['passed'] is None
+    assert visible['classification'] == 'evaluator_unavailable'
+    assert 'secret' not in str(visible)
 
 
 def test_rejected_finalization_keeps_repair_loop_open() -> None:
@@ -276,7 +294,8 @@ def test_edit_tool_descriptions_match_active_handle_schema() -> None:
     legacy = {tool['function']['name']: tool['function']['description']
               for tool in tools_for('structured', public_tests=False, opaque_handles=False)}
     for name in ('replace_text', 'insert_text'):
-        assert 'workspace_revision_handle' in opaque[name]
+        assert 'handles are omitted' in opaque[name]
+        assert 'same read_file result' in opaque[name]
         assert 'expected_hash' not in opaque[name]
         assert 'expected_hash' in legacy[name]
         assert 'workspace_revision_handle' not in legacy[name]
