@@ -76,6 +76,7 @@ class PrioritizedReplay:
             return False
 
         declared_sizes = set()
+        size_claims = 0
         for item in items:
             attempt = item.experience.attempt
             size = attempt.metadata.get("vare_rollout_group_size")
@@ -85,12 +86,15 @@ class PrioritizedReplay:
                 continue
             if isinstance(size, bool) or not isinstance(size, int) or size <= 0:
                 return False
+            size_claims += 1
             declared_sizes.add(size)
         if len(declared_sizes) > 1:
             return False
         if not declared_sizes:
             return True
-        return len(items) == next(iter(declared_sizes))
+        # A single declared-size row cannot attest a group whose siblings
+        # omit that invariant. Only fully legacy or fully declared groups pass.
+        return size_claims == len(items) and len(items) == next(iter(declared_sizes))
 
     def add(self, exp: Experience, freshness: float) -> None:
         exp.priority = self._priority(exp, freshness)
@@ -368,10 +372,15 @@ class PrioritizedReplay:
             chosen = self._rng.choices(range(len(items)), weights=weights, k=n)
             order = sorted(set(chosen), key=lambda i: weights[i], reverse=True)
             out = [items[i].experience for i in order]
+            seen = {id(exp) for exp in out}
             if len(out) < n:
                 for i in sorted(range(len(items)), key=lambda i: weights[i], reverse=True):
-                    if items[i].experience not in out:
-                        out.append(items[i].experience)
+                    exp = items[i].experience
+                    # Distinct mutable experience records can have equal field
+                    # values; sampling identity must not collapse those rows.
+                    if id(exp) not in seen:
+                        out.append(exp)
+                        seen.add(id(exp))
                         if len(out) == n:
                             break
             return out

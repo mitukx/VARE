@@ -1,4 +1,5 @@
 from collections import Counter
+from copy import deepcopy
 
 from vare.config import ReplayConfig
 from vare.replay import PrioritizedReplay
@@ -186,3 +187,31 @@ def test_atomic_group_accepts_identical_checkpoint_and_verifier_provenance():
     assert len(replay.sample_current(
         4, freshness_fn=lambda _: 1.0, grouped=True
     )) == 4
+
+
+def test_legacy_group_cannot_hide_a_partially_missing_size_claim():
+    group = _group("partial-size", 0)
+    del group[-1].attempt.metadata["vare_rollout_group_size"]
+    replay = PrioritizedReplay(ReplayConfig(capacity=8), seed=0)
+    for exp in group:
+        replay.add(exp, freshness=1.0)
+    assert replay.sample_grouped(4) == []
+    assert replay.sample_current(
+        4, freshness_fn=lambda _: 1.0, grouped=True
+    ) == []
+
+
+def test_ungrouped_current_sampling_deduplicates_by_record_identity(monkeypatch):
+    template = _experience(0, "identical", group_size=3)
+    replay = PrioritizedReplay(ReplayConfig(capacity=8), seed=0)
+    for _ in range(3):
+        replay.add(deepcopy(template), freshness=1.0)
+    monkeypatch.setattr(
+        replay._rng, "choices", lambda _items, weights, k: [0] * k
+    )
+    selected = replay.sample_current(
+        2, freshness_fn=lambda _: 1.0, grouped=False
+    )
+    assert len(selected) == 2
+    assert len({id(exp) for exp in selected}) == 2
+    assert selected[0] == selected[1]
