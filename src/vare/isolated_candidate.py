@@ -540,7 +540,15 @@ def _limits(image: str, timeout_s: float, memory_mb: int = 512) -> IsolationLimi
 def _stage_subject(subject: Path, root: Path) -> Path:
     if not subject.is_dir() or subject.is_symlink():
         raise CandidateHarnessError("subject must be a real directory")
-    resolved = subject.resolve()
+    if not root.is_dir() or root.is_symlink():
+        raise CandidateHarnessError("staging root must be a real directory")
+    try:
+        resolved = subject.resolve(strict=True)
+        staging = root.resolve(strict=True)
+    except (OSError, RuntimeError) as exc:
+        raise CandidateHarnessError("subject and staging paths must resolve safely") from exc
+    if resolved == staging or resolved in staging.parents or staging in resolved.parents:
+        raise CandidateHarnessError("subject and staging paths must not overlap")
     grader = Path("/grader")
     if resolved == grader or grader in resolved.parents:
         raise CandidateHarnessError("subject must not be the grader tree")

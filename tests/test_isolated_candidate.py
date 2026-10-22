@@ -7,6 +7,7 @@ from pathlib import Path
 import random
 import subprocess
 import sys
+import tempfile
 import time
 
 import pytest
@@ -23,6 +24,7 @@ from vare.isolated_candidate import (
     paired_difference_ci,
     paired_timing,
     student_t_975,
+    _stage_subject,
     two_x_speedup_decision,
     values_close,
 )
@@ -158,6 +160,113 @@ def test_session_stages_candidate_below_host_cache(tmp_path: Path, monkeypatch) 
     assert staged_paths[0].is_relative_to(
         Path.home() / ".cache" / "vare-isolated-candidate"
     )
+
+
+@pytest.mark.parametrize("same_path", [True, False], ids=["equal", "subject-ancestor"])
+def test_stage_subject_rejects_overlapping_paths_before_copy(
+    tmp_path: Path, monkeypatch, same_path: bool,
+) -> None:
+    subject = tmp_path / "subject"
+    subject.mkdir()
+    root = subject if same_path else subject / ".cache" / "vare-isolated-candidate"
+    root.mkdir(parents=True, exist_ok=True)
+    copied = False
+
+    def record_copy(*_args, **_kwargs) -> None:
+        nonlocal copied
+        copied = True
+
+    monkeypatch.setattr(isolated_candidate, "_copy_tree", record_copy)
+    with pytest.raises(CandidateHarnessError, match="must not overlap"):
+        _stage_subject(subject, root)
+
+    assert copied is False
+
+
+def test_stage_subject_accepts_ordinary_nonoverlapping_paths(tmp_path: Path) -> None:
+    subject = _subject(tmp_path, "ordinary", "VALUE = 3\n")
+    root = tmp_path / "separate-staging-root"
+    root.mkdir()
+
+    staged = _stage_subject(subject, root)
+
+    assert (staged / "ordinary.py").read_text(encoding="utf-8") == "VALUE = 3\n"
+    assert (staged / "ordinary.py").stat().st_mode & 0o777 == 0o644
+
+
+@pytest.mark.skipif(sys.platform != "darwin", reason="Colima staging path is macOS-specific")
+@pytest.mark.parametrize("preserve_session", [False, True], ids=["single-call", "session"])
+def test_grading_rejects_staging_inside_subject_before_copy(
+    tmp_path: Path, monkeypatch, preserve_session: bool,
+) -> None:
+    subject = _subject(tmp_path, "solve", "def add(a, b):\n    return a + b\n")
+    copied = False
+
+    def stage_inside_subject(prefix: str) -> tempfile.TemporaryDirectory[str]:
+        return tempfile.TemporaryDirectory(prefix=prefix, dir=subject)
+
+    def record_copy(*_args, **_kwargs) -> None:
+        nonlocal copied
+        copied = True
+
+    monkeypatch.setattr(isolated_candidate, "_candidate_temporary_directory", stage_inside_subject)
+    monkeypatch.setattr(isolated_candidate, "_copy_tree", record_copy)
+    with pytest.raises(CandidateHarnessError, match="must not overlap"):
+        grade_calls(
+            subject, [FunctionCall("sum", "solve", "add", [2, 3], 5)],
+            task_kind="correctness", image=IMAGE, preserve_session=preserve_session,
+        )
+
+    assert copied is False
+    assert sorted(path.name for path in subject.iterdir()) == ["solve.py"]
+
+
+def test_stage_subject_resolves_symlinked_parent_before_overlap_check(tmp_path: Path) -> None:
+    real_parent = tmp_path / "real"
+    real_parent.mkdir()
+    subject = _subject(real_parent, "aliased", "VALUE = 1\n")
+    alias = tmp_path / "alias"
+    alias.symlink_to(real_parent, target_is_directory=True)
+    staging = subject / ".cache" / "stage"
+    staging.mkdir(parents=True)
+
+    with pytest.raises(CandidateHarnessError, match="must not overlap"):
+        _stage_subject(alias / "aliased", staging)
+
+
+def test_stage_subject_rejects_symlinked_staging_root(tmp_path: Path) -> None:
+    subject = _subject(tmp_path, "plain", "VALUE = 1\n")
+    real_root = tmp_path / "real-staging"
+    real_root.mkdir()
+    staging_link = tmp_path / "staging-link"
+    staging_link.symlink_to(real_root, target_is_directory=True)
+
+    with pytest.raises(CandidateHarnessError, match="staging root must be a real directory"):
+        _stage_subject(subject, staging_link)
+
+
+def test_stage_subject_fails_closed_on_resolution_error(tmp_path: Path, monkeypatch) -> None:
+    subject = _subject(tmp_path, "plain", "VALUE = 1\n")
+    root = tmp_path / "staging"
+    root.mkdir()
+    copied = False
+    original_resolve = Path.resolve
+
+    def fail_root_resolution(path: Path, *args, **kwargs) -> Path:
+        if path == root:
+            raise OSError("simulated path resolution failure")
+        return original_resolve(path, *args, **kwargs)
+
+    def record_copy(*_args, **_kwargs) -> None:
+        nonlocal copied
+        copied = True
+
+    monkeypatch.setattr(Path, "resolve", fail_root_resolution)
+    monkeypatch.setattr(isolated_candidate, "_copy_tree", record_copy)
+    with pytest.raises(CandidateHarnessError, match="must resolve safely"):
+        _stage_subject(subject, root)
+
+    assert copied is False
 
 
 def test_import_and_call_receive_separate_timeout_windows(tmp_path: Path) -> None:
