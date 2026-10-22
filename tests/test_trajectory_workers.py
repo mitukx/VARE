@@ -135,15 +135,6 @@ def test_step_callback_receives_updated_durable_head_and_state(tmp_path):
                 {"kind": "tool", "operation_id": f"op-{index}",
                  "semantics": "at_least_once"},
                 {"value": index}, {"done": index + 1},
-                {
-                    "prompt_id": "task",
-                    "prompt": "next-action",
-                    "response": str(index),
-                    "logprob": -0.1,
-                    "token_count": 1,
-                    "latency_s": 0.0,
-                    "metadata": {},
-                },
             )
 
         worker = asyncio.create_task(
