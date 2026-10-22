@@ -160,8 +160,14 @@ def test_verified_success_requires_public_test_and_independent_hidden_grade():
 def test_applied_recovered_edit_requires_a_fresh_public_test(monkeypatch, tmp_path):
     calls = []
 
-    def fail_fresh_test(workspace, image, test_hash, memory_mb, *, expected_workspace_files):
-        calls.append((workspace, image, test_hash, memory_mb, expected_workspace_files))
+    def fail_fresh_test(
+        workspace, image, test_hash, memory_mb, *, expected_workspace_files,
+        expected_file_hashes=None, allowed_modified_files=None,
+    ):
+        calls.append((
+            workspace, image, test_hash, memory_mb, expected_workspace_files,
+            expected_file_hashes, allowed_modified_files,
+        ))
         return {"passed": False, "returncode": 1}
 
     monkeypatch.setattr("scripts.run_local_agent.run_public_tests", fail_fresh_test)
@@ -174,7 +180,7 @@ def test_applied_recovered_edit_requires_a_fresh_public_test(monkeypatch, tmp_pa
     assert refreshed is not stale_result
     assert calls == [(
         tmp_path, "pinned-image", "test-hash", 1536,
-        {"src/module.py", "test_public.py"},
+        {"src/module.py", "test_public.py"}, None, None,
     )]
 
 
