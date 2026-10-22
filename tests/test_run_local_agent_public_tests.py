@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import importlib
+import json
 import os
 from pathlib import Path
 import shutil
@@ -33,7 +34,8 @@ IMAGE = (
         (126, "exec: /usr/local/bin/python: permission denied", "container_launch_failure"),
         (127, "exec: \"python\": executable file not found in $PATH", "container_launch_failure"),
         (137, "", "container_resource_failure"),
-        (1, "ModuleNotFoundError: No module named 'numpy'", "evaluator_unavailable"),
+        (1, "Traceback (most recent call last):\n  File \"/workspace/src/value.py\", line 1\nModuleNotFoundError: No module named 'missing_dep'", "test_execution_error"),
+        (1, "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 1\nModuleNotFoundError: No module named 'grader_dep'", "evaluator_unavailable"),
     ],
 )
 def test_public_test_exit_classification(
@@ -131,6 +133,84 @@ def test_public_test_timeout_is_not_a_candidate_failure(
     assert result["passed"] is False
     assert result["gradeable"] is True
     assert not list(staging_root.iterdir())
+
+
+def test_raw_staging_exception_is_retained_but_redacted_from_model(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    workspace = _workspace(tmp_path, 42)
+    expected = hashlib.sha256((workspace / "test_public.py").read_bytes()).hexdigest()
+
+    class BrokenStaging:
+        def __init__(self, _workspace):
+            pass
+
+        def __enter__(self):
+            raise PermissionError("private staging path denied")
+
+        def __exit__(self, *_args):
+            return None
+
+    monkeypatch.setattr(agent, "PublicTestWorkspaceStaging", BrokenStaging)
+    result = agent.run_public_tests(
+        workspace, IMAGE, expected,
+        expected_workspace_files={"src/value.py", "test_public.py"},
+    )
+
+    assert result["classification"] == "evaluator_unavailable"
+    assert result["passed"] is None
+    assert result["error"] == "PermissionError: private staging path denied"
+    visible = agent.candidate_visible_tool_result("run_public_tests", result, opaque_handles=True)
+    assert "private staging path denied" not in json.dumps(visible)
+    assert "/" not in visible.get("feedback", "")
+
+
+@pytest.mark.parametrize(
+    ("stderr", "classification", "passed", "gradeable"),
+    [
+        (
+            'Traceback (most recent call last):\n  File "/workspace/src/value.py", line 1\n'
+            "ModuleNotFoundError: No module named 'candidate_dep'",
+            "test_execution_error", False, True,
+        ),
+        (
+            'Traceback (most recent call last):\n  File "/workspace/test_public.py", line 1\n'
+            "ModuleNotFoundError: No module named 'grader_dep'",
+            "evaluator_unavailable", None, False,
+        ),
+    ],
+)
+def test_missing_import_is_attributed_by_traceback_origin(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, stderr: str,
+    classification: str, passed: bool | None, gradeable: bool,
+) -> None:
+    workspace = _workspace(tmp_path, 41)
+    expected = hashlib.sha256((workspace / "test_public.py").read_bytes()).hexdigest()
+    staging_root = tmp_path / "owned-cache"
+    staging_root.mkdir(mode=0o700)
+    staging_root.chmod(0o700)
+    monkeypatch.setattr(agent, "_public_test_staging_root", lambda: staging_root)
+
+    async def missing_import(self, *_args, **_kwargs):
+        return IsolationResult(1, "", stderr)
+
+    monkeypatch.setattr(
+        "vare.container_isolation.DockerIsolationRunner.run_candidate", missing_import,
+    )
+    result = agent.run_public_tests(
+        workspace, IMAGE, expected,
+        expected_workspace_files={"src/value.py", "test_public.py"},
+    )
+    assert result["classification"] == classification
+    assert result["passed"] is passed
+    assert result["gradeable"] is gradeable
+
+    if classification == "evaluator_unavailable":
+        visible = agent.candidate_visible_tool_result(
+            "run_public_tests", result, opaque_handles=True,
+        )
+        assert "grader_dep" not in json.dumps(visible)
+        assert "/workspace" not in json.dumps(visible)
 
 
 def _colima_image_ready() -> bool:

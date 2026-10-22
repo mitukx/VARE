@@ -12,6 +12,7 @@ from scripts.run_local_agent import (
     record_automatic_public_test,
     record_tool_call,
     should_stop_after_tool,
+    tool_public_test_infrastructure_error,
     tools_for,
 )
 
@@ -88,6 +89,23 @@ def test_public_test_exit_codes_separate_launch_failures_from_candidate_failures
     assert classify_public_test_error('IsolationError: container exceeded wall-time limit') == 'candidate_timeout'
     assert public_test_infrastructure_error({'classification': 'container_launch_failure'})
     assert not public_test_infrastructure_error({'classification': 'test_failure'})
+
+
+def test_direct_and_automatic_public_test_infrastructure_errors_abort_tool_loop() -> None:
+    assert tool_public_test_infrastructure_error(
+        'run_public_tests', {'classification': 'container_launch_failure'},
+    )
+    assert tool_public_test_infrastructure_error(
+        'replace_text', {'applied': True, 'automatic_public_test': {
+            'classification': 'evaluator_unavailable',
+        }},
+    )
+    assert not tool_public_test_infrastructure_error(
+        'replace_text', {'applied': True, 'automatic_public_test': {
+            'classification': 'assertion_failure', 'passed': False,
+        }},
+    )
+    assert not tool_public_test_infrastructure_error('read_file', {'content': 'source'})
 
 
 def test_public_test_feedback_reports_infrastructure_status_without_host_path() -> None:
