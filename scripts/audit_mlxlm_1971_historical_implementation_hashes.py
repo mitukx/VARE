@@ -119,6 +119,7 @@ def main() -> int:
         capture_output=True,
         text=True,
         timeout=10,
+        env=GIT_ENV,
     ).stdout.strip()
     payload = json.dumps(report, indent=2, sort_keys=True) + "\n"
     if args.output:
