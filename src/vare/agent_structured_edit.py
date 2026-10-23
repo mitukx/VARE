@@ -7,6 +7,7 @@ import os
 from pathlib import Path, PurePosixPath
 import tempfile
 from typing import Any
+import unicodedata
 
 
 class StructuredEditError(ValueError):
@@ -42,6 +43,15 @@ def _unique_start(source: str, text: str, label: str) -> int:
     return start
 
 
+def _git_metadata_component(part: str) -> bool:
+    # Keep emitted patches portable across Git's NTFS/HFS metadata guards.
+    # Format characters can be ignored by HFS; NTFS also recognizes short names,
+    # trailing dots/spaces and alternate data stream syntax.
+    visible = "".join(character for character in part if unicodedata.category(character) != "Cf")
+    basename = visible.split(":", 1)[0].rstrip(" .").casefold()
+    return basename in {".git", "git~1"}
+
+
 def workspace_revision(root: Path, allowed_files: set[str]) -> str:
     """Hash the current bytes of all allowlisted files in stable path order."""
     entries: list[bytes] = []
@@ -61,7 +71,7 @@ def _safe_path(root: Path, name: str, allowed_files: set[str]) -> Path:
         or parsed.is_absolute()
         or ".." in parsed.parts
         or "." in parsed.parts
-        or any(part.casefold() == ".git" for part in parsed.parts)
+        or any(_git_metadata_component(part) for part in parsed.parts)
         or "\\" in name
         or any(ord(character) < 32 or ord(character) == 127 for character in name)
     ):

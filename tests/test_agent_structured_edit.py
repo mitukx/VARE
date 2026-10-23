@@ -264,7 +264,11 @@ def test_overlapping_text_matches_are_rejected_without_mutation(tmp_path: Path, 
     assert list(tmp_path.iterdir()) == [target]
 
 
-@pytest.mark.parametrize("name", [".git/config", "dir/.git/config", "dir/.GiT/config"])
+@pytest.mark.parametrize("name", [
+    ".git/config", "dir/.git/config", "dir/.GiT/config", ".git./config",
+    "dir/.git /config", "git~1/config", ".git::$INDEX_ALLOCATION/config",
+    "dir/.g\u200cit/config", "dir/GIT~1. /config",
+])
 def test_git_metadata_components_are_rejected_before_mutation(tmp_path: Path, name: str) -> None:
     target = tmp_path / name
     target.parent.mkdir(parents=True)
