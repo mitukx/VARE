@@ -12,7 +12,25 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 TASK_ROOT = "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale"
-GIT_ENV = {**os.environ, "GIT_NO_REPLACE_OBJECTS": "1"}
+def _git_environment() -> dict[str, str]:
+    """Remove caller-controlled Git routing and disable executable config."""
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env.update(
+        {
+            "GIT_NO_REPLACE_OBJECTS": "1",
+            "GIT_CONFIG_NOSYSTEM": "1",
+            "GIT_CONFIG_GLOBAL": os.devnull,
+            "GIT_CONFIG_COUNT": "2",
+            "GIT_CONFIG_KEY_0": "core.hooksPath",
+            "GIT_CONFIG_VALUE_0": os.devnull,
+            "GIT_CONFIG_KEY_1": "core.fsmonitor",
+            "GIT_CONFIG_VALUE_1": "false",
+        }
+    )
+    return env
+
+
+GIT_ENV = _git_environment()
 SOURCE_COMMITS = {
     4: "23f71a0c6923f6e677ed8abc0d4ed186ae047e89",
     5: "9f0993ac2c71a44bcfbabd2a1399fc12e5d6d777",

@@ -110,6 +110,33 @@ def test_v9_attestation_rejects_source_symlink(
         preflight.attest_current_v9(root)
 
 
+def test_v9_attestation_disables_repository_fsmonitor(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root, _ = _frozen_fixture(tmp_path, monkeypatch)
+    marker = tmp_path / "fsmonitor-ran"
+    monitor = tmp_path / "fsmonitor-hook"
+    monitor.write_text(
+        "#!/bin/sh\n"
+        f"printf 'token\\n'\n: > {str(marker)!r}\n",
+        encoding="utf-8",
+    )
+    monitor.chmod(0o755)
+    _git(root, "config", "core.fsmonitor", str(monitor))
+
+    # Prove this Git/config combination executes the hostile hook without the
+    # attestation's sanitized environment.
+    _git(root, "status", "--porcelain=v1")
+    assert marker.exists()
+    marker.unlink()
+
+    monkeypatch.setenv("GIT_CONFIG_COUNT", "1")
+    monkeypatch.setenv("GIT_CONFIG_KEY_0", "core.fsmonitor")
+    monkeypatch.setenv("GIT_CONFIG_VALUE_0", str(monitor))
+    preflight.attest_current_v9(root)
+    assert not marker.exists()
+
+
 def test_attested_grade_entrypoint_checks_source_before_dispatch(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
