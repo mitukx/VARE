@@ -17,6 +17,24 @@ def sha256_bytes(content: bytes) -> str:
     return hashlib.sha256(content).hexdigest()
 
 
+def _source_lines(source: str) -> list[str]:
+    # Git counts LF-delimited lines; str.splitlines also splits source characters
+    # such as bare CR and Unicode line separators, producing invalid hunk counts.
+    parts = source.split("\n")
+    return [part + "\n" for part in parts[:-1]] + ([parts[-1]] if parts[-1] else [])
+
+
+def _file_diff(name: str, before: str, after: str) -> str:
+    lines = difflib.unified_diff(
+        _source_lines(before), _source_lines(after),
+        fromfile=f"a/{name}", tofile=f"b/{name}",
+    )
+    return "".join(
+        line if line.endswith("\n") else line + "\n\\ No newline at end of file\n"
+        for line in lines
+    )
+
+
 def workspace_revision(root: Path, allowed_files: set[str]) -> str:
     """Hash the current bytes of all allowlisted files in stable path order."""
     entries: list[bytes] = []
@@ -38,7 +56,7 @@ def _safe_path(root: Path, name: str, allowed_files: set[str]) -> Path:
         or "\\" in name
     ):
         raise StructuredEditError("path is not an exact allowlisted file")
-    if root.is_symlink():
+    if any(component.is_symlink() for component in (root.absolute(), *root.absolute().parents)):
         raise StructuredEditError("symlinked workspace roots are not allowed")
     target = root.joinpath(*parsed.parts)
     current = root
@@ -130,11 +148,7 @@ def apply_structured_edit(
     after_hash = sha256_bytes(after_bytes)
     if after_hash == before_hash:
         raise StructuredEditError("edit would not change the file")
-    diff = "".join(difflib.unified_diff(
-        old_source.splitlines(keepends=True),
-        after_bytes.decode("utf-8").splitlines(keepends=True),
-        fromfile=f"a/{path}", tofile=f"b/{path}",
-    ))
+    diff = _file_diff(path, old_source, after_bytes.decode("utf-8"))
     return {
         "applied": True,
         "path": path,
@@ -151,7 +165,7 @@ def unified_diff(root: Path, before: dict[str, bytes], allowed_files: set[str]) 
     """Build a deterministic diff between initial source snapshots and workspace."""
     chunks: list[str] = []
     for name in sorted(allowed_files):
-        original = before[name].decode("utf-8").splitlines(keepends=True)
-        current = _safe_path(root, name, allowed_files).read_text(encoding="utf-8").splitlines(keepends=True)
-        chunks.extend(difflib.unified_diff(original, current, fromfile=f"a/{name}", tofile=f"b/{name}"))
+        original = before[name].decode("utf-8")
+        current = _safe_path(root, name, allowed_files).read_bytes().decode("utf-8")
+        chunks.append(_file_diff(name, original, current))
     return "".join(chunks)

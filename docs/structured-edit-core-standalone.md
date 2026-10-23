@@ -17,7 +17,11 @@ file and `os.replace`, and emits a deterministic unified diff with hashes.
 The tests cover stale hashes, no-op replacements, duplicate search strings,
 path traversal, symlinked roots, symlinked components, and multiply linked
 (hardlink-aliased) source files, which could otherwise disclose content from
-outside the intended candidate workspace.
+outside the intended candidate workspace. The root check includes every
+ancestor component, so an alias above the workspace is rejected before reads.
+Generated diffs preserve CRLF bytes and include Git's missing-newline markers;
+regressions replay both per-edit and snapshot diffs with `git apply` and compare
+the exact resulting bytes, including bare CR and Unicode line separators.
 
 **Known gaps:** this module is not a fully concurrent or adversarial filesystem
 transaction: path checks and replacement occur at different times, and the

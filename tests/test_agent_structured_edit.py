@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 from pathlib import Path
+import subprocess
 
 import pytest
 
@@ -139,3 +140,58 @@ def test_hardlinked_allowlisted_file_cannot_expose_external_content(
             old_text="private_value", new_text="changed",
         )
     assert external.read_text(encoding="utf-8") == "private_value = 42\n"
+
+
+@pytest.mark.parametrize("ending", [b"\n", b"\r\n", b""])
+@pytest.mark.parametrize("embedded", [b"", b"\r", "\u2028".encode()])
+def test_generated_diffs_replay_exact_source_bytes(
+    tmp_path: Path, ending: bytes, embedded: bytes,
+) -> None:
+    root, allowed = _workspace(tmp_path)
+    path = root / "src/module.py"
+    original = b"# " + embedded + (ending or b"\n") + b"def value():" + (ending or b"\n") + b"    return 1" + ending
+    path.write_bytes(original)
+    before = {"src/module.py": original}
+    assert unified_diff(root, before, allowed) == ""
+    result = apply_structured_edit(root, allowed, **_edit(root, allowed))
+    expected = original.replace(b"return 1", b"return 2")
+    assert path.read_bytes() == expected
+    snapshot_diff = unified_diff(root, before, allowed)
+    assert snapshot_diff == result["diff"]
+    assert result["diff_sha256"] == hashlib.sha256(snapshot_diff.encode()).hexdigest()
+    for patch in (result["diff"], snapshot_diff):
+        path.write_bytes(original)
+        subprocess.run(
+            ["git", "apply", "--check", "-"], cwd=root,
+            input=patch.encode(), capture_output=True, check=True, timeout=10,
+        )
+        subprocess.run(
+            ["git", "apply", "-"], cwd=root,
+            input=patch.encode(), capture_output=True, check=True, timeout=10,
+        )
+        assert path.read_bytes() == expected
+
+
+def test_symlink_in_workspace_ancestor_is_rejected(tmp_path: Path) -> None:
+    actual = tmp_path / "actual"
+    actual.mkdir()
+    workspace = actual / "workspace"
+    workspace.mkdir()
+    root, allowed = _workspace(workspace)
+    alias = tmp_path / "alias"
+    alias.symlink_to(actual, target_is_directory=True)
+    aliased_root = alias / "workspace"
+    assert not aliased_root.is_symlink()
+    original = (root / "src/module.py").read_bytes()
+    with pytest.raises(StructuredEditError, match="symlinked workspace"):
+        workspace_revision(aliased_root, allowed)
+    with pytest.raises(StructuredEditError, match="symlinked workspace"):
+        unified_diff(aliased_root, {"src/module.py": original}, allowed)
+    with pytest.raises(StructuredEditError, match="symlinked workspace"):
+        apply_structured_edit(
+            aliased_root, allowed, action="replace_text", path="src/module.py",
+            expected_hash=hashlib.sha256(original).hexdigest(),
+            expected_revision=workspace_revision(root, allowed),
+            old_text="return 1", new_text="return 2",
+        )
+    assert (root / "src/module.py").read_bytes() == original
