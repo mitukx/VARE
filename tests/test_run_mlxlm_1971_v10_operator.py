@@ -135,9 +135,7 @@ def test_v10_forged_result_is_rejected_and_worktree_removed(
 def test_v10_lock_has_independent_digest_anchor(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    from hashlib import sha256
-
-    assert sha256(v10.LOCK.read_bytes()).hexdigest() == v10.LOCK_SHA256
+    assert hashlib.sha256(v10.LOCK.read_bytes()).hexdigest() == v10.LOCK_SHA256
     original = json.loads(v10.LOCK.read_text(encoding="utf-8"))
     original["adversarial_extra_field"] = "does not change protocol_sha256"
     changed = tmp_path / "protocol-v10.lock.json"
