@@ -1,0 +1,20 @@
+{
+  "allowed_actions": [
+    "export",
+    "grade"
+  ],
+  "base_operator_path": "scripts/run_mlxlm_1971_v11_operator.py",
+  "base_operator_sha256": "604986569eee4ebe33d24c5009292786501d5956fb5024050a814c14659f98de",
+  "base_protocol_sha256": "b9643c163161ff7332446f3b3a729e3551f2ecc6a1a329038465ae60982181b6",
+  "baseline_commit": "5f3c79d6bb1864a85d5343818192bd061b161e3a",
+  "candidate_controlled_filters_executed": false,
+  "candidate_controlled_hooks_executed": false,
+  "claim_limit": "The source-level regression shows that a fetched pinned commit can be materialized from fresh bare metadata without executing the input repository local smudge filter or upload-pack hook. It does not certify the v9 grader, candidate isolation, task eligibility, or model capability.",
+  "hidden_evaluation_output_to_candidate": false,
+  "no_model_inference_or_candidate_grading_during_source_boundary_test": true,
+  "protocol_id": "vare.mlsys-repository-task.mlxlm-1971.v12.operator",
+  "source_repository_checked_out_directly": false,
+  "source_snapshot_method": "fresh-depth-one-bare-fetch-no-checkout",
+  "status": "PROSPECTIVE_OPERATOR_INTERFACE_NOT_EXECUTED",
+  "supersedes_protocol_id": "vare.mlsys-repository-task.mlxlm-1971.v11.operator"
+}
