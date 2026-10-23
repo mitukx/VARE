@@ -54,6 +54,7 @@ def _safe_path(root: Path, name: str, allowed_files: set[str]) -> Path:
         or ".." in parsed.parts
         or "." in parsed.parts
         or "\\" in name
+        or any(ord(character) < 32 or ord(character) == 127 for character in name)
     ):
         raise StructuredEditError("path is not an exact allowlisted file")
     if any(component.is_symlink() for component in (root.absolute(), *root.absolute().parents)):

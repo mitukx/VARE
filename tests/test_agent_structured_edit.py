@@ -195,3 +195,21 @@ def test_symlink_in_workspace_ancestor_is_rejected(tmp_path: Path) -> None:
             old_text="return 1", new_text="return 2",
         )
     assert (root / "src/module.py").read_bytes() == original
+
+
+@pytest.mark.parametrize("character", ["\t", "\n", "\r", "\x1b", "\x7f"])
+def test_control_characters_in_allowlisted_paths_are_rejected_before_edit(
+    tmp_path: Path, character: str,
+) -> None:
+    name = f"source{character}.py"
+    target = tmp_path / name
+    original = b"return 1\n"
+    target.write_bytes(original)
+    with pytest.raises(StructuredEditError, match="allowlisted"):
+        apply_structured_edit(
+            tmp_path, {name}, action="replace_text", path=name,
+            expected_hash=hashlib.sha256(original).hexdigest(),
+            expected_revision="0" * 64, old_text="return 1", new_text="return 2",
+        )
+    assert target.read_bytes() == original
+    assert sorted(tmp_path.iterdir()) == [target]

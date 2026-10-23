@@ -22,6 +22,8 @@ ancestor component, so an alias above the workspace is rejected before reads.
 Generated diffs preserve CRLF bytes and include Git's missing-newline markers;
 regressions replay both per-edit and snapshot diffs with `git apply` and compare
 the exact resulting bytes, including bare CR and Unicode line separators.
+Allowlisted paths containing ASCII control characters are rejected before
+reading or editing; those characters would make raw diff headers ambiguous.
 
 **Known gaps:** this module is not a fully concurrent or adversarial filesystem
 transaction: path checks and replacement occur at different times, and the
