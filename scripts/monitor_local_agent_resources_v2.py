@@ -55,7 +55,11 @@ def main() -> int:
     output.mkdir(parents=True, exist_ok=False)
     env = os.environ.copy()
     env.update({"HF_HUB_OFFLINE": "1", "TRANSFORMERS_OFFLINE": "1",
-                "HF_HUB_DISABLE_TELEMETRY": "1", "DOCKER_CONTEXT": "colima"})
+                "HF_HUB_DISABLE_TELEMETRY": "1", "DOCKER_CONTEXT": "colima",
+                "GIT_NO_REPLACE_OBJECTS": "1", "GIT_CONFIG_NOSYSTEM": "1",
+                "GIT_CONFIG_GLOBAL": os.devnull, "GIT_OPTIONAL_LOCKS": "0",
+                "GIT_CONFIG_COUNT": "1", "GIT_CONFIG_KEY_0": "core.hooksPath",
+                "GIT_CONFIG_VALUE_0": "/dev/null"})
     started = time.monotonic()
     observations: list[dict[str, Any]] = []
     reason: str | None = None

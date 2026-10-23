@@ -225,6 +225,12 @@ def verify(protocol_path: Path, model_path: Path, python_exe: Path,
             raise ValueError(f"upstream source bytes differ at {commit}")
     task_workspace = ROOT / TASK_REL / "workspace"
     verify_git_store(task_workspace)
+    git_config = task_workspace / ".git/config"
+    if git_config.is_symlink() or sha256(git_config) != lock["task"]["workspace_git_config_sha256"]:
+        raise ValueError("candidate workspace Git configuration identity mismatch")
+    hooks = task_workspace / ".git/hooks"
+    if any(path.name != "README.sample" and not path.name.endswith(".sample") for path in hooks.iterdir()):
+        raise ValueError("candidate workspace contains a non-sample Git hook")
     if git(task_workspace, "rev-parse", "HEAD").stdout.strip() != lock["task"]["vare_workspace_base_commit"]:
         raise ValueError("candidate task workspace baseline mismatch")
     if git(task_workspace, "status", "--porcelain").stdout:
