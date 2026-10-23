@@ -15,7 +15,9 @@ hashes of the source preimage and complete workspace revision. It supports
 one occurrence of `replace_text` or `insert_text`, writes via a temporary
 file and `os.replace`, and emits a deterministic unified diff with hashes.
 The tests cover stale hashes, no-op replacements, duplicate search strings,
-path traversal and symlink rejection.
+path traversal, symlinked roots, symlinked components, and multiply linked
+(hardlink-aliased) source files, which could otherwise disclose content from
+outside the intended candidate workspace.
 
 **Known gaps:** this module is not a fully concurrent or adversarial filesystem
 transaction: path checks and replacement occur at different times, and the
