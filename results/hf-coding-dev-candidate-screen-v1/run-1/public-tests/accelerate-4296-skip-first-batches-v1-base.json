@@ -1,0 +1,16 @@
+{
+  "arm": "base",
+  "classification": "test_failure",
+  "docker_context": "colima",
+  "elapsed_seconds": 1.305,
+  "image": "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+  "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+  "passed": false,
+  "public_test_sha256": "3068c15512fd11d47c452c6838469c1182ec00b01c8bdcc12db258eeafae7f15",
+  "returncode": 1,
+  "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/workspace/test_public.py\", line 6, in test_preserve_configuration\n    assert result._drop_last is True\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+  "stdout": "",
+  "task_id": "accelerate-4296-skip-first-batches-v1",
+  "workspace": "/Users/user/.cache/vare/candidate-workspaces/candidate-screen-v2/accelerate-4296-base",
+  "workspace_snapshot_sha256": "5986a53653919ede951df9def77146b3c26d4d819e187f16b2834fc46d81a58f"
+}

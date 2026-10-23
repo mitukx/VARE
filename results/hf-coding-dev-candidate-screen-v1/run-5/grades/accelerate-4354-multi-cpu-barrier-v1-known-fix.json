@@ -1,0 +1,37 @@
+{
+  "baseline_manifest_sha256": "d4c1c312fa7658226ad044e2e943677b7da6bf8ab56cca10dd79475c6f6e8b31",
+  "candidate_directory_count": 9,
+  "candidate_file_count": 85,
+  "candidate_inventory_verified": true,
+  "candidate_source_sha256": "14d65301ff1d90fb84bebac4ff3e93fa54e53ebfe0b07101b873e3fa90cf668b",
+  "candidate_target": "src/accelerate/state.py",
+  "cases": [
+    {
+      "case_id": "multi-cpu-barrier-0",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.9660698329606939
+    },
+    {
+      "case_id": "multi-cpu-barrier-1",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.9878321249768318
+    }
+  ],
+  "container_image_id": "sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+  "expected_values_held_by_parent": true,
+  "grader_code_mounted": false,
+  "grader_sha256": "0fc3e7902bb94cda6df6032f19eb225d77f3e4c8c0004a697c836aa3afa6c9f3",
+  "grading_image": "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+  "passed": true,
+  "protocol_id": "vare-hf-coding-dev-candidate-screen-v1-2026-10-22",
+  "protocol_sha256": "bbba41169f5cf0055ebf9c497f39c28ea5a5927d4e6c217f822fbcfc127cf393",
+  "public_tests_mounted": false,
+  "source_repository": "huggingface/accelerate",
+  "source_revision": "421af8bee5bda705d3c763f491b7a794f471818e",
+  "task_api_sha256": "1b2a651d310a8f9c77947321ead7bf6fc4a9caf134ca0dd3ec7766cfe4f555f2",
+  "task_id": "accelerate-4354-multi-cpu-barrier-v1",
+  "task_json_sha256": "39bdbb072cb9d224e1a2c9ffc72d162a1616e42b2e3ad05007ac4e7a4beb1fd0",
+  "task_kind": "correctness"
+}

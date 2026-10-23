@@ -1,0 +1,104 @@
+{
+  "baseline_fail_count": 4,
+  "docker_context": "colima",
+  "host_platform": "macOS-27.0.1-arm64-arm-64bit",
+  "image": "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+  "infrastructure_error_count": 0,
+  "known_fix_pass_count": 4,
+  "protocol_id": "vare-hf-coding-dev-candidate-screen-v1-2026-10-22",
+  "protocol_lock_sha256": "8db3d8c5ce6c1ce0d97e96debbb56b9e3adcdfa578117712d7edfc19ad20f659",
+  "protocol_sha256": "bbba41169f5cf0055ebf9c497f39c28ea5a5927d4e6c217f822fbcfc127cf393",
+  "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+  "records": [
+    {
+      "arm": "base",
+      "classification": "test_failure",
+      "elapsed_seconds": 1.207,
+      "evidence": "accelerate-4296-skip-first-batches-v1-base.json",
+      "evidence_sha256": "185704741b15e60a8d45c91ed44f41f8a36e3320b2529dccd1417df60fdba1aa",
+      "passed": false,
+      "returncode": 1,
+      "task_id": "accelerate-4296-skip-first-batches-v1",
+      "workspace_snapshot_sha256": "5986a53653919ede951df9def77146b3c26d4d819e187f16b2834fc46d81a58f"
+    },
+    {
+      "arm": "fix",
+      "classification": "passed",
+      "elapsed_seconds": 1.3,
+      "evidence": "accelerate-4296-skip-first-batches-v1-fix.json",
+      "evidence_sha256": "d04230b39a4ae7623b782ba88fb48f7de43e1813fca0954ecd130ff34252de11",
+      "passed": true,
+      "returncode": 0,
+      "task_id": "accelerate-4296-skip-first-batches-v1",
+      "workspace_snapshot_sha256": "8662eea5f79bf24d2e1b74868e87accee4866872265758daca92dbc349f770bd"
+    },
+    {
+      "arm": "base",
+      "classification": "test_failure",
+      "elapsed_seconds": 1.283,
+      "evidence": "accelerate-4307-tuple-padding-v1-base.json",
+      "evidence_sha256": "111f14f578e773aff962e592eee5b30d6defc988e5b0b552b98e2bf93b15b28f",
+      "passed": false,
+      "returncode": 1,
+      "task_id": "accelerate-4307-tuple-padding-v1",
+      "workspace_snapshot_sha256": "77e94ff6d08005dfd69a290cac6ef8cb58d664b4c8ec5f02a9503686d3aeac2d"
+    },
+    {
+      "arm": "fix",
+      "classification": "passed",
+      "elapsed_seconds": 1.198,
+      "evidence": "accelerate-4307-tuple-padding-v1-fix.json",
+      "evidence_sha256": "cec6a5f4e08dcac4d8dad86f1988e57706bad243e048641c9b04fdaeb6888f5f",
+      "passed": true,
+      "returncode": 0,
+      "task_id": "accelerate-4307-tuple-padding-v1",
+      "workspace_snapshot_sha256": "ec4d6f63a398b15e575c70b64eaacd00c0f85aaf9d994ce7908bf020d9b36556"
+    },
+    {
+      "arm": "base",
+      "classification": "test_failure",
+      "elapsed_seconds": 1.202,
+      "evidence": "accelerate-4354-multi-cpu-barrier-v1-base.json",
+      "evidence_sha256": "47fb5f0a8b080486b8a97485d9ba341493d2144dd32fa6057c1971816865acc4",
+      "passed": false,
+      "returncode": 1,
+      "task_id": "accelerate-4354-multi-cpu-barrier-v1",
+      "workspace_snapshot_sha256": "a72ac862a6416ba9f40bcf87680899da0444356de23b935161d8351ac911b27f"
+    },
+    {
+      "arm": "fix",
+      "classification": "passed",
+      "elapsed_seconds": 1.231,
+      "evidence": "accelerate-4354-multi-cpu-barrier-v1-fix.json",
+      "evidence_sha256": "018636d40a87f0b00c9d803044b5dc982d2c9e3d6f92370c18899fa3ec412b20",
+      "passed": true,
+      "returncode": 0,
+      "task_id": "accelerate-4354-multi-cpu-barrier-v1",
+      "workspace_snapshot_sha256": "72f8c8563aea28db39e4c35bb875b6eead7979ca4a15baa8b9ecf114843c69da"
+    },
+    {
+      "arm": "base",
+      "classification": "test_failure",
+      "elapsed_seconds": 3.043,
+      "evidence": "trl-6625-entropy-gradient-v1-base.json",
+      "evidence_sha256": "b1ec1ea4ae9781d60a29e490d47a96c445e61cf2860afd7f25d1be7f52d1ebcf",
+      "passed": false,
+      "returncode": 1,
+      "task_id": "trl-6625-entropy-gradient-v1",
+      "workspace_snapshot_sha256": "1af0118dfb950070c1bdd1db64f67b9516045581f7c1195b4cf504bd98345085"
+    },
+    {
+      "arm": "fix",
+      "classification": "passed",
+      "elapsed_seconds": 2.986,
+      "evidence": "trl-6625-entropy-gradient-v1-fix.json",
+      "evidence_sha256": "ffcd03fe36d0a7a5a0e15c284423b2dc4c4c9b5f3a0d87868d1f770f18529fc7",
+      "passed": true,
+      "returncode": 0,
+      "task_id": "trl-6625-entropy-gradient-v1",
+      "workspace_snapshot_sha256": "1f9ca9793c5f96e817fae756659853ef60e4620107b5ed30ef7db00f064575e1"
+    }
+  ],
+  "run_recorded_utc": "2026-10-22T00:18:37Z",
+  "runner": "scripts/run_local_agent.py:run_public_tests"
+}

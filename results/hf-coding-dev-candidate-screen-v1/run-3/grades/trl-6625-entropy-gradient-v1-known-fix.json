@@ -1,0 +1,43 @@
+{
+  "baseline_manifest_sha256": "c795398e98573d1d5e0b2480da7f6c11cb28d709b5e8d62d181416669580dfd7",
+  "candidate_directory_count": 42,
+  "candidate_file_count": 231,
+  "candidate_inventory_verified": true,
+  "candidate_source_sha256": "de95c17795999b28463a2e989d0ab6fe451326c897132eb7f2dbee64f78f1a61",
+  "candidate_target": "src/trl/trainer/utils.py",
+  "cases": [
+    {
+      "case_id": "entropy-gradient-0",
+      "failure": null,
+      "passed": true,
+      "wall_s": 2.485486165978223
+    },
+    {
+      "case_id": "entropy-gradient-1",
+      "failure": null,
+      "passed": true,
+      "wall_s": 2.448953625008762
+    },
+    {
+      "case_id": "entropy-gradient-2",
+      "failure": null,
+      "passed": true,
+      "wall_s": 2.477976791950193
+    }
+  ],
+  "container_image_id": "sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+  "expected_values_held_by_parent": true,
+  "grader_code_mounted": false,
+  "grader_sha256": "495e3ed3305a13e2d9979e7e3ce77aec792e49aed71a6a12e2dd024547cbe554",
+  "grading_image": "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+  "passed": true,
+  "protocol_id": "vare-hf-coding-dev-candidate-screen-v1-2026-10-22",
+  "protocol_sha256": "bbba41169f5cf0055ebf9c497f39c28ea5a5927d4e6c217f822fbcfc127cf393",
+  "public_tests_mounted": false,
+  "source_repository": "huggingface/trl",
+  "source_revision": "67dfbe211a07a8dd6ebc1a5af5b75152e10add8e",
+  "task_api_sha256": "59c8bed8a61aa6b50c8e773e9e6eb49afc3d776e441833d0ac0e4299b13f10ad",
+  "task_id": "trl-6625-entropy-gradient-v1",
+  "task_json_sha256": "5ecf5aae592fa0df6e14c2411944246f9b14856cc80c1fee98d2cffee37fb3e3",
+  "task_kind": "correctness"
+}

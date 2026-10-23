@@ -1,0 +1,146 @@
+[
+  {
+    "arm": "baseline",
+    "command": [
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "scripts/grade_hf_coding_dev_v1.py",
+      "--task-id",
+      "accelerate-4296-skip-first-batches-v1",
+      "--workspace",
+      "/Users/user/.cache/vare/candidate-workspaces/candidate-screen-v2/accelerate-4296-base",
+      "--output",
+      "/tmp/vare-fresh-candidates/results/hf-coding-dev-candidate-screen-v1/run-1/grades/accelerate-4296-skip-first-batches-v1-baseline.json"
+    ],
+    "elapsed_seconds": 4.101,
+    "result_file": "accelerate-4296-skip-first-batches-v1-baseline.json",
+    "returncode": 1,
+    "tail": "-v1-2026-10-22\", \"protocol_sha256\": \"bbba41169f5cf0055ebf9c497f39c28ea5a5927d4e6c217f822fbcfc127cf393\", \"public_tests_mounted\": false, \"source_repository\": \"huggingface/accelerate\", \"source_revision\": \"b795b4838eb33bde60eb398649c4ab006874e3e9\", \"task_api_sha256\": \"411bfffa6116ce00c1664a3b892569f878fc070c423cfa6fedbc2cf6f7734f44\", \"task_id\": \"accelerate-4296-skip-first-batches-v1\", \"task_json_sha256\": \"515e45fc3fa52503eabdd215febcdbf67dd2cc89828eba7fbce865c9edd4952a\", \"task_kind\": \"correctness\"}\n",
+    "task_id": "accelerate-4296-skip-first-batches-v1"
+  },
+  {
+    "arm": "known-fix",
+    "command": [
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "scripts/grade_hf_coding_dev_v1.py",
+      "--task-id",
+      "accelerate-4296-skip-first-batches-v1",
+      "--workspace",
+      "/Users/user/.cache/vare/candidate-workspaces/candidate-screen-v2/accelerate-4296-fix",
+      "--output",
+      "/tmp/vare-fresh-candidates/results/hf-coding-dev-candidate-screen-v1/run-1/grades/accelerate-4296-skip-first-batches-v1-known-fix.json"
+    ],
+    "elapsed_seconds": 3.86,
+    "result_file": "accelerate-4296-skip-first-batches-v1-known-fix.json",
+    "returncode": 0,
+    "tail": "-v1-2026-10-22\", \"protocol_sha256\": \"bbba41169f5cf0055ebf9c497f39c28ea5a5927d4e6c217f822fbcfc127cf393\", \"public_tests_mounted\": false, \"source_repository\": \"huggingface/accelerate\", \"source_revision\": \"b795b4838eb33bde60eb398649c4ab006874e3e9\", \"task_api_sha256\": \"411bfffa6116ce00c1664a3b892569f878fc070c423cfa6fedbc2cf6f7734f44\", \"task_id\": \"accelerate-4296-skip-first-batches-v1\", \"task_json_sha256\": \"515e45fc3fa52503eabdd215febcdbf67dd2cc89828eba7fbce865c9edd4952a\", \"task_kind\": \"correctness\"}\n",
+    "task_id": "accelerate-4296-skip-first-batches-v1"
+  },
+  {
+    "arm": "baseline",
+    "command": [
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "scripts/grade_hf_coding_dev_v1.py",
+      "--task-id",
+      "accelerate-4307-tuple-padding-v1",
+      "--workspace",
+      "/Users/user/.cache/vare/candidate-workspaces/candidate-screen-v2/accelerate-4307-base",
+      "--output",
+      "/tmp/vare-fresh-candidates/results/hf-coding-dev-candidate-screen-v1/run-1/grades/accelerate-4307-tuple-padding-v1-baseline.json"
+    ],
+    "elapsed_seconds": 3.853,
+    "result_file": "accelerate-4307-tuple-padding-v1-baseline.json",
+    "returncode": 1,
+    "tail": "creen-v1-2026-10-22\", \"protocol_sha256\": \"bbba41169f5cf0055ebf9c497f39c28ea5a5927d4e6c217f822fbcfc127cf393\", \"public_tests_mounted\": false, \"source_repository\": \"huggingface/accelerate\", \"source_revision\": \"e203e1ddf33388e22f4a7985ff3103717c0f9181\", \"task_api_sha256\": \"672d6d2e291502c85f585a46f7ddb02ae254495b484dc00c0f0225762634109d\", \"task_id\": \"accelerate-4307-tuple-padding-v1\", \"task_json_sha256\": \"b4f72ef6851d4cfd05562d66e7f85f81123a1b42465d5cf49059d18909c3a30a\", \"task_kind\": \"correctness\"}\n",
+    "task_id": "accelerate-4307-tuple-padding-v1"
+  },
+  {
+    "arm": "known-fix",
+    "command": [
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "scripts/grade_hf_coding_dev_v1.py",
+      "--task-id",
+      "accelerate-4307-tuple-padding-v1",
+      "--workspace",
+      "/Users/user/.cache/vare/candidate-workspaces/candidate-screen-v2/accelerate-4307-fix",
+      "--output",
+      "/tmp/vare-fresh-candidates/results/hf-coding-dev-candidate-screen-v1/run-1/grades/accelerate-4307-tuple-padding-v1-known-fix.json"
+    ],
+    "elapsed_seconds": 3.859,
+    "result_file": "accelerate-4307-tuple-padding-v1-known-fix.json",
+    "returncode": 0,
+    "tail": "creen-v1-2026-10-22\", \"protocol_sha256\": \"bbba41169f5cf0055ebf9c497f39c28ea5a5927d4e6c217f822fbcfc127cf393\", \"public_tests_mounted\": false, \"source_repository\": \"huggingface/accelerate\", \"source_revision\": \"e203e1ddf33388e22f4a7985ff3103717c0f9181\", \"task_api_sha256\": \"672d6d2e291502c85f585a46f7ddb02ae254495b484dc00c0f0225762634109d\", \"task_id\": \"accelerate-4307-tuple-padding-v1\", \"task_json_sha256\": \"b4f72ef6851d4cfd05562d66e7f85f81123a1b42465d5cf49059d18909c3a30a\", \"task_kind\": \"correctness\"}\n",
+    "task_id": "accelerate-4307-tuple-padding-v1"
+  },
+  {
+    "arm": "baseline",
+    "command": [
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "scripts/grade_hf_coding_dev_v1.py",
+      "--task-id",
+      "accelerate-4354-multi-cpu-barrier-v1",
+      "--workspace",
+      "/Users/user/.cache/vare/candidate-workspaces/candidate-screen-v2/accelerate-4354-base",
+      "--output",
+      "/tmp/vare-fresh-candidates/results/hf-coding-dev-candidate-screen-v1/run-1/grades/accelerate-4354-multi-cpu-barrier-v1-baseline.json"
+    ],
+    "elapsed_seconds": 2.692,
+    "result_file": "accelerate-4354-multi-cpu-barrier-v1-baseline.json",
+    "returncode": 1,
+    "tail": "n-v1-2026-10-22\", \"protocol_sha256\": \"bbba41169f5cf0055ebf9c497f39c28ea5a5927d4e6c217f822fbcfc127cf393\", \"public_tests_mounted\": false, \"source_repository\": \"huggingface/accelerate\", \"source_revision\": \"421af8bee5bda705d3c763f491b7a794f471818e\", \"task_api_sha256\": \"1b2a651d310a8f9c77947321ead7bf6fc4a9caf134ca0dd3ec7766cfe4f555f2\", \"task_id\": \"accelerate-4354-multi-cpu-barrier-v1\", \"task_json_sha256\": \"39bdbb072cb9d224e1a2c9ffc72d162a1616e42b2e3ad05007ac4e7a4beb1fd0\", \"task_kind\": \"correctness\"}\n",
+    "task_id": "accelerate-4354-multi-cpu-barrier-v1"
+  },
+  {
+    "arm": "known-fix",
+    "command": [
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "scripts/grade_hf_coding_dev_v1.py",
+      "--task-id",
+      "accelerate-4354-multi-cpu-barrier-v1",
+      "--workspace",
+      "/Users/user/.cache/vare/candidate-workspaces/candidate-screen-v2/accelerate-4354-fix",
+      "--output",
+      "/tmp/vare-fresh-candidates/results/hf-coding-dev-candidate-screen-v1/run-1/grades/accelerate-4354-multi-cpu-barrier-v1-known-fix.json"
+    ],
+    "elapsed_seconds": 2.495,
+    "result_file": "accelerate-4354-multi-cpu-barrier-v1-known-fix.json",
+    "returncode": 0,
+    "tail": "n-v1-2026-10-22\", \"protocol_sha256\": \"bbba41169f5cf0055ebf9c497f39c28ea5a5927d4e6c217f822fbcfc127cf393\", \"public_tests_mounted\": false, \"source_repository\": \"huggingface/accelerate\", \"source_revision\": \"421af8bee5bda705d3c763f491b7a794f471818e\", \"task_api_sha256\": \"1b2a651d310a8f9c77947321ead7bf6fc4a9caf134ca0dd3ec7766cfe4f555f2\", \"task_id\": \"accelerate-4354-multi-cpu-barrier-v1\", \"task_json_sha256\": \"39bdbb072cb9d224e1a2c9ffc72d162a1616e42b2e3ad05007ac4e7a4beb1fd0\", \"task_kind\": \"correctness\"}\n",
+    "task_id": "accelerate-4354-multi-cpu-barrier-v1"
+  },
+  {
+    "arm": "baseline",
+    "command": [
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "scripts/grade_hf_coding_dev_v1.py",
+      "--task-id",
+      "trl-6625-entropy-gradient-v1",
+      "--workspace",
+      "/Users/user/.cache/vare/candidate-workspaces/candidate-screen-v2/trl-6625-base",
+      "--output",
+      "/tmp/vare-fresh-candidates/results/hf-coding-dev-candidate-screen-v1/run-1/grades/trl-6625-entropy-gradient-v1-baseline.json"
+    ],
+    "elapsed_seconds": 10.685,
+    "result_file": "trl-6625-entropy-gradient-v1-baseline.json",
+    "returncode": 1,
+    "tail": "candidate-screen-v1-2026-10-22\", \"protocol_sha256\": \"bbba41169f5cf0055ebf9c497f39c28ea5a5927d4e6c217f822fbcfc127cf393\", \"public_tests_mounted\": false, \"source_repository\": \"huggingface/trl\", \"source_revision\": \"67dfbe211a07a8dd6ebc1a5af5b75152e10add8e\", \"task_api_sha256\": \"59c8bed8a61aa6b50c8e773e9e6eb49afc3d776e441833d0ac0e4299b13f10ad\", \"task_id\": \"trl-6625-entropy-gradient-v1\", \"task_json_sha256\": \"5ecf5aae592fa0df6e14c2411944246f9b14856cc80c1fee98d2cffee37fb3e3\", \"task_kind\": \"correctness\"}\n",
+    "task_id": "trl-6625-entropy-gradient-v1"
+  },
+  {
+    "arm": "known-fix",
+    "command": [
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "scripts/grade_hf_coding_dev_v1.py",
+      "--task-id",
+      "trl-6625-entropy-gradient-v1",
+      "--workspace",
+      "/Users/user/.cache/vare/candidate-workspaces/candidate-screen-v2/trl-6625-fix",
+      "--output",
+      "/tmp/vare-fresh-candidates/results/hf-coding-dev-candidate-screen-v1/run-1/grades/trl-6625-entropy-gradient-v1-known-fix.json"
+    ],
+    "elapsed_seconds": 9.607,
+    "result_file": "trl-6625-entropy-gradient-v1-known-fix.json",
+    "returncode": 0,
+    "tail": "candidate-screen-v1-2026-10-22\", \"protocol_sha256\": \"bbba41169f5cf0055ebf9c497f39c28ea5a5927d4e6c217f822fbcfc127cf393\", \"public_tests_mounted\": false, \"source_repository\": \"huggingface/trl\", \"source_revision\": \"67dfbe211a07a8dd6ebc1a5af5b75152e10add8e\", \"task_api_sha256\": \"59c8bed8a61aa6b50c8e773e9e6eb49afc3d776e441833d0ac0e4299b13f10ad\", \"task_id\": \"trl-6625-entropy-gradient-v1\", \"task_json_sha256\": \"5ecf5aae592fa0df6e14c2411944246f9b14856cc80c1fee98d2cffee37fb3e3\", \"task_kind\": \"correctness\"}\n",
+    "task_id": "trl-6625-entropy-gradient-v1"
+  }
+]

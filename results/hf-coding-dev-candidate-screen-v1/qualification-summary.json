@@ -1,0 +1,103 @@
+{
+  "baseline_tasks_failed_all_cases": 4,
+  "case_count_baseline": 11,
+  "case_count_known_fix": 11,
+  "grader_implementation_sha256": "0fc3e7902bb94cda6df6032f19eb225d77f3e4c8c0004a697c836aa3afa6c9f3",
+  "grader_run": "run-5/grades",
+  "known_fix_tasks_passed_all_cases": 4,
+  "model_inference_authorized": false,
+  "protocol_id": "vare-hf-coding-dev-candidate-screen-v1-2026-10-22",
+  "protocol_lock_sha256": "8db3d8c5ce6c1ce0d97e96debbb56b9e3adcdfa578117712d7edfc19ad20f659",
+  "public_baseline_fail_count": 4,
+  "public_infrastructure_error_count": 0,
+  "public_known_fix_pass_count": 4,
+  "public_test_run": "run-2/public-tests",
+  "qualification_status": "all_calibration_gates_passed",
+  "task_count": 4,
+  "tasks": [
+    {
+      "baseline_cases_passed": 0,
+      "baseline_cases_total": 3,
+      "baseline_failure_categories": [
+        "wrong_output"
+      ],
+      "baseline_manifest_sha256": "05f620e48eda4757bc4bd179a0ab0154df66f193bc81397e82ce76ef9d015ff2",
+      "baseline_passed": false,
+      "baseline_target_sha256": "ccfff9430db37abbaf09e025aef54066df102ba8cd693a3d8cd7780de661a59d",
+      "grader_sha256": "0fc3e7902bb94cda6df6032f19eb225d77f3e4c8c0004a697c836aa3afa6c9f3",
+      "image_id": "sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+      "known_fix_cases_passed": 3,
+      "known_fix_cases_total": 3,
+      "known_fix_passed": true,
+      "known_fix_target_sha256": "a921dc668edb91c665d41b941ba03c98da6f35f0768a29775d4a9908e31281c5",
+      "protocol_sha256": "bbba41169f5cf0055ebf9c497f39c28ea5a5927d4e6c217f822fbcfc127cf393",
+      "source_repository": "huggingface/accelerate",
+      "source_revision": "b795b4838eb33bde60eb398649c4ab006874e3e9",
+      "target_path": "src/accelerate/data_loader.py",
+      "task_id": "accelerate-4296-skip-first-batches-v1"
+    },
+    {
+      "baseline_cases_passed": 0,
+      "baseline_cases_total": 3,
+      "baseline_failure_categories": [
+        "wrong_output"
+      ],
+      "baseline_manifest_sha256": "80c75f66585b9c8907027a4b9f4910724c97bcbb60aa237c97a8ce2d6e6d8a7d",
+      "baseline_passed": false,
+      "baseline_target_sha256": "8af1fe9a518f46bc771076abe3572cdd32bded2ff6fdc0021643c01212d4f5a9",
+      "grader_sha256": "0fc3e7902bb94cda6df6032f19eb225d77f3e4c8c0004a697c836aa3afa6c9f3",
+      "image_id": "sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+      "known_fix_cases_passed": 3,
+      "known_fix_cases_total": 3,
+      "known_fix_passed": true,
+      "known_fix_target_sha256": "31faeac47ffb6858d83c9d66c5ccba542dacb4944080ca11bc76789b34142c6f",
+      "protocol_sha256": "bbba41169f5cf0055ebf9c497f39c28ea5a5927d4e6c217f822fbcfc127cf393",
+      "source_repository": "huggingface/accelerate",
+      "source_revision": "e203e1ddf33388e22f4a7985ff3103717c0f9181",
+      "target_path": "src/accelerate/state.py",
+      "task_id": "accelerate-4307-tuple-padding-v1"
+    },
+    {
+      "baseline_cases_passed": 0,
+      "baseline_cases_total": 2,
+      "baseline_failure_categories": [
+        "wrong_output"
+      ],
+      "baseline_manifest_sha256": "d4c1c312fa7658226ad044e2e943677b7da6bf8ab56cca10dd79475c6f6e8b31",
+      "baseline_passed": false,
+      "baseline_target_sha256": "31faeac47ffb6858d83c9d66c5ccba542dacb4944080ca11bc76789b34142c6f",
+      "grader_sha256": "0fc3e7902bb94cda6df6032f19eb225d77f3e4c8c0004a697c836aa3afa6c9f3",
+      "image_id": "sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+      "known_fix_cases_passed": 2,
+      "known_fix_cases_total": 2,
+      "known_fix_passed": true,
+      "known_fix_target_sha256": "14d65301ff1d90fb84bebac4ff3e93fa54e53ebfe0b07101b873e3fa90cf668b",
+      "protocol_sha256": "bbba41169f5cf0055ebf9c497f39c28ea5a5927d4e6c217f822fbcfc127cf393",
+      "source_repository": "huggingface/accelerate",
+      "source_revision": "421af8bee5bda705d3c763f491b7a794f471818e",
+      "target_path": "src/accelerate/state.py",
+      "task_id": "accelerate-4354-multi-cpu-barrier-v1"
+    },
+    {
+      "baseline_cases_passed": 0,
+      "baseline_cases_total": 3,
+      "baseline_failure_categories": [
+        "wrong_output"
+      ],
+      "baseline_manifest_sha256": "c795398e98573d1d5e0b2480da7f6c11cb28d709b5e8d62d181416669580dfd7",
+      "baseline_passed": false,
+      "baseline_target_sha256": "fa7cc011c825cba9bca97620fd73a58b17ead55411c3ce5646a51035f168bbb8",
+      "grader_sha256": "0fc3e7902bb94cda6df6032f19eb225d77f3e4c8c0004a697c836aa3afa6c9f3",
+      "image_id": "sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+      "known_fix_cases_passed": 3,
+      "known_fix_cases_total": 3,
+      "known_fix_passed": true,
+      "known_fix_target_sha256": "de95c17795999b28463a2e989d0ab6fe451326c897132eb7f2dbee64f78f1a61",
+      "protocol_sha256": "bbba41169f5cf0055ebf9c497f39c28ea5a5927d4e6c217f822fbcfc127cf393",
+      "source_repository": "huggingface/trl",
+      "source_revision": "67dfbe211a07a8dd6ebc1a5af5b75152e10add8e",
+      "target_path": "src/trl/trainer/utils.py",
+      "task_id": "trl-6625-entropy-gradient-v1"
+    }
+  ]
+}

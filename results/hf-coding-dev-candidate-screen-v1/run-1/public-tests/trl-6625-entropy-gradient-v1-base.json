@@ -1,0 +1,16 @@
+{
+  "arm": "base",
+  "classification": "test_failure",
+  "docker_context": "colima",
+  "elapsed_seconds": 3.034,
+  "image": "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+  "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+  "passed": false,
+  "public_test_sha256": "b3abc721eda0e0e745a26f73b51df60a695499c5bda1ab50f98f98e0b813f175",
+  "returncode": 1,
+  "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/workspace/test_public.py\", line 22, in test_entropy_gradient\n    torch.testing.assert_close(actual_h,hidden.grad,atol=1e-4,rtol=1e-4)\n  File \"/usr/local/lib/python3.12/site-packages/torch/testing/_comparison.py\", line 1589, in assert_close\n    raise error_metas[0].to_error(msg)\nAssertionError: Tensor-likes are not close!\n\nMismatched elements: 2045 / 2048 (99.9%)\nGreatest absolute difference: 2.031752109527588 at index (16, 14) (up to 0.0001 allowed)\nGreatest relative difference: 1.0 at index (0, 0) (up to 0.0001 allowed)\n",
+  "stdout": "",
+  "task_id": "trl-6625-entropy-gradient-v1",
+  "workspace": "/Users/user/.cache/vare/candidate-workspaces/candidate-screen-v2/trl-6625-base",
+  "workspace_snapshot_sha256": "1af0118dfb950070c1bdd1db64f67b9516045581f7c1195b4cf504bd98345085"
+}

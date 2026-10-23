@@ -1,0 +1,51 @@
+{
+  "family": "cpu-distributed-barrier-device-selection",
+  "grader": {
+    "required_boundary": "Candidate package runs in a separate network-disabled container. The task API shim contains no assertions, test cases, or expected values. Hidden call cases and expected outputs remain in the trusted parent process.",
+    "status": "parent_owned_expected_value_comparison_calibrated"
+  },
+  "limitations": [
+    "Development-only candidate; not eligible as a held-out task.",
+    "Task source is public upstream history and model-training exposure is unknown.",
+    "Accelerate tasks share one repository; two target the same source module but different methods.",
+    "The split_between_processes case simulates PartialState rank metadata; it does not launch distributed workers.",
+    "The MULTI_CPU barrier case mocks torch.distributed.barrier and does not prove multi-process rendezvous behavior.",
+    "This record is a source/test qualification screen only; no agent rollout or policy update is included."
+  ],
+  "prompt": "A CPU process group must synchronize on CPU even when the host also has an accelerator. The current wait path supplies accelerator device identifiers to a CPU barrier and fails on such machines. Correct the CPU barrier call without changing accelerator-backed process groups.",
+  "runtime": {
+    "candidate_image": "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+    "platform": "linux/arm64",
+    "python": "3.12.15",
+    "requirements_lock": "../runtime/requirements.lock.txt",
+    "requirements_lock_sha256": "d0469067d5becf4750e35bb9691cb387a12e7fda855bb1271acd53688cb22734",
+    "torch": "2.9.1+cpu"
+  },
+  "schema_version": 1,
+  "source": {
+    "base_revision": "421af8bee5bda705d3c763f491b7a794f471818e",
+    "baseline_target_sha256": "31faeac47ffb6858d83c9d66c5ccba542dacb4944080ca11bc76789b34142c6f",
+    "file_mode": 420,
+    "known_fix_revision": "d9590601fb522fd2c4c83a7b621902ace8ac8f80",
+    "known_fix_target_sha256": "14d65301ff1d90fb84bebac4ff3e93fa54e53ebfe0b07101b873e3fa90cf668b",
+    "license": "Apache-2.0",
+    "license_file_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "merged_at": "2026-10-01T13:09:09Z",
+    "repository": "huggingface/accelerate",
+    "target_path": "src/accelerate/state.py",
+    "training_data_exposure": "unknown; public merged fix may appear in pretraining; merge date is not proof of non-exposure",
+    "upstream_fix_pr": "https://github.com/huggingface/accelerate/pull/4354",
+    "upstream_target_path": "src/accelerate/state.py"
+  },
+  "split": "development_candidate",
+  "status": "candidate_screen_only_not_frozen_for_model_inference",
+  "task_id": "accelerate-4354-multi-cpu-barrier-v1",
+  "workspace": {
+    "baseline_manifest": "baseline-source-manifest-v1.json",
+    "baseline_snapshot_sha256": "a72ac862a6416ba9f40bcf87680899da0444356de23b935161d8351ac911b27f",
+    "only_editable_file": "src/accelerate/state.py",
+    "package_path": "src/accelerate",
+    "public_test_path": "test_public.py",
+    "public_test_sha256": "573a874b1de59a91c6347d55d3f3c2c36e489f9b186cf14eaf267bba2b57ee12"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "metadata": {
+    "editable_files": [
+      "src/accelerate/state.py"
+    ],
+    "family": "cpu-distributed-barrier-device-selection",
+    "pack": "hf_coding_dev_inference_v1",
+    "readonly_files": [
+      "test_public.py"
+    ],
+    "split": "development",
+    "task_type": "correctness"
+  },
+  "prompt": "A CPU process group must synchronize on CPU even when the host also has an accelerator. The current wait path supplies accelerator device identifiers to a CPU barrier and fails on such machines. Correct the CPU barrier call without changing accelerator-backed process groups.",
+  "schema": "vare-agent-task-v1",
+  "source": {
+    "base_revision": "421af8bee5bda705d3c763f491b7a794f471818e",
+    "file_sha256": {
+      "src/accelerate/state.py": "31faeac47ffb6858d83c9d66c5ccba542dacb4944080ca11bc76789b34142c6f"
+    },
+    "readonly_file_sha256": {
+      "test_public.py": "573a874b1de59a91c6347d55d3f3c2c36e489f9b186cf14eaf267bba2b57ee12"
+    },
+    "repository": "huggingface/accelerate",
+    "snapshot_sha256": "a72ac862a6416ba9f40bcf87680899da0444356de23b935161d8351ac911b27f"
+  },
+  "task_id": "accelerate-4354-multi-cpu-barrier-v1"
+}

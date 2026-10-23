@@ -1,0 +1,24 @@
+{
+  "decision": "NO-GO: frozen maximum swap-used threshold breached before model load",
+  "frozen_thresholds": {
+    "maximum_swap_used_bytes": 7516192768,
+    "minimum_available_bytes": 4294967296,
+    "minimum_free_swap_bytes": 536870912
+  },
+  "hardware_memory_bytes": 34359738368,
+  "host": "macOS-27.0.1-arm64-arm-64bit",
+  "memory_pressure_raw": "The system has 34359738368 (2097152 pages with a page size of 16384).\n\nStats: \nPages free: 140355 \nPages purgeable: 699 \nPages purged: 50104656 \n\nSwap I/O:\nSwapins: 9363862 \nSwapouts: 11208369 \n\nPage Q counts:\nPages active: 488479 \nPages inactive: 487283 \nPages speculative: 637 \nPages throttled: 0 \nPages wired down: 184011 \n\nCompressor Stats:\nPages used by compressor: 744230 \nPages decompressed: 568900157 \nPages compressed: 649103871 \n\nFile I/O:\nPageins: 136060963 \nPageouts: 42722 \n\nSystem-wide memory free percentage: 54%\n",
+  "mlx_environment_raw": "0.32.4\n0.32.2\nDevice(gpu, 0)\nTrue\n",
+  "model_inference_started": false,
+  "model_loaded": false,
+  "optimizer_updates": 0,
+  "recorded_utc": "2026-10-22T00:10:29Z",
+  "resource_probe": {
+    "available_bytes": 10293723136,
+    "swap_free_bytes": 897381826,
+    "swap_used_bytes": 7692552765
+  },
+  "stop_reason": "maximum_swap_used_breached",
+  "swapusage_raw": "vm.swapusage: total = 8192.00M  used = 7336.19M  free = 855.81M  (encrypted)\n",
+  "vm_stat_raw": "Mach Virtual Memory Statistics: (page size of 16384 bytes)\nPages free:                                   140351.\nPages active:                                 488486.\nPages inactive:                               487280.\nPages speculative:                               637.\nPages throttled:                                   0.\nPages wired down:                             184011.\nPages purgeable:                                 699.\n\"Translation faults\":                     5181936793.\nPages copy-on-write:                       198209382.\nPages zero filled:                        3889535692.\nPages reactivated:                         526568627.\nPages purged:                               50104656.\nFile-backed pages:                            379052.\nAnonymous pages:                              597351.\nPages stored in compressor:                  1309307.\nPages occupied by compressor:                 744230.\nDecompressions:                            568900158.\nCompressions:                              649103871.\nPageins:                                   136060964.\nPageouts:                                      42722.\nSwapins:                                     9363862.\nSwapouts:                                   11208369.\n"
+}

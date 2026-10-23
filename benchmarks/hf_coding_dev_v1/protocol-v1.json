@@ -1,0 +1,114 @@
+{
+  "candidate_image": "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+  "grader_boundary": {
+    "candidate_inventory": "exact pinned file and directory inventory; only declared task target may differ",
+    "candidate_namespace": "verified source package and task API request shim in a network-disabled candidate container",
+    "grader_code_mounted": false,
+    "hidden_cases_and_expected_values": "trusted parent only",
+    "hidden_tests_mounted": false,
+    "public_tests_mounted_for_hidden_grade": false
+  },
+  "limitations": [
+    "These public upstream fixes may be present in model pretraining; training-data exposure is unknown.",
+    "Three tasks come from Accelerate, including two changes in state.py; cross-repository independence is limited to Accelerate and TRL.",
+    "The tuple-split case simulates PartialState rank metadata; it does not launch distributed workers.",
+    "The MULTI_CPU barrier case mocks torch.distributed.barrier and does not prove multi-process rendezvous behavior.",
+    "This screen cannot be used as final held-out evaluation. A separate preregistered Development inference protocol is required."
+  ],
+  "limits": {
+    "case_timeout_s": 60,
+    "cpus": 1,
+    "memory_mb": 1900,
+    "pids": 64
+  },
+  "model_inference_authorized": false,
+  "protocol_id": "vare-hf-coding-dev-candidate-screen-v1-2026-10-22",
+  "purpose": "Pinned source/task calibration and isolated parent-owned grader feasibility only. This screen includes no model inference, training, or held-out evaluation.",
+  "qualification_gate": {
+    "agent_rollouts": "not part of this protocol",
+    "policy_updates": "not authorized",
+    "required": "baseline fails every case group, known fix passes every case group, candidate inventory tampering is rejected before grade_calls, and infrastructure errors cannot be scored as model failures"
+  },
+  "runtime": {
+    "accelerate": "1.12.0",
+    "architecture": "linux/arm64",
+    "base_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+    "datasets": "4.4.2",
+    "dockerfile": "runtime/Dockerfile",
+    "dockerfile_sha256": "db4c866d7649679afa5bcd7c4898ce0e6ce5165fb6997cf707c7ca2155a66bbe",
+    "network": "disabled at candidate run time",
+    "pytest": "8.4.2",
+    "python": "3.12.15",
+    "requirements_direct": "runtime/requirements-direct.txt",
+    "requirements_direct_sha256": "9a52de8f1504570dd90f58e1cc2d7354f1a94739f11470e38ead929917e7d98e",
+    "requirements_lock": "runtime/requirements.lock.txt",
+    "requirements_lock_sha256": "d0469067d5becf4750e35bb9691cb387a12e7fda855bb1271acd53688cb22734",
+    "torch": "2.9.1+cpu",
+    "transformers": "4.57.3"
+  },
+  "status": "qualification_screen_only",
+  "task_ids": [
+    "accelerate-4296-skip-first-batches-v1",
+    "accelerate-4307-tuple-padding-v1",
+    "accelerate-4354-multi-cpu-barrier-v1",
+    "trl-6625-entropy-gradient-v1"
+  ],
+  "tasks": {
+    "accelerate-4296-skip-first-batches-v1": {
+      "atol": 0.0,
+      "baseline_manifest_sha256": "05f620e48eda4757bc4bd179a0ab0154df66f193bc81397e82ce76ef9d015ff2",
+      "baseline_revision": "b795b4838eb33bde60eb398649c4ab006874e3e9",
+      "baseline_snapshot_sha256": "5986a53653919ede951df9def77146b3c26d4d819e187f16b2834fc46d81a58f",
+      "directory": "accelerate-4296-skip-first-batches-v1",
+      "family": "dataloader-configuration-preservation",
+      "fixed_revision": "d426829721cf4e77e1a05e832dee26d7386f7e33",
+      "public_test_sha256": "3068c15512fd11d47c452c6838469c1182ec00b01c8bdcc12db258eeafae7f15",
+      "rtol": 0.0,
+      "target_path": "src/accelerate/data_loader.py",
+      "task_api_sha256": "411bfffa6116ce00c1664a3b892569f878fc070c423cfa6fedbc2cf6f7734f44",
+      "task_json_sha256": "515e45fc3fa52503eabdd215febcdbf67dd2cc89828eba7fbce865c9edd4952a"
+    },
+    "accelerate-4307-tuple-padding-v1": {
+      "atol": 0.0,
+      "baseline_manifest_sha256": "80c75f66585b9c8907027a4b9f4910724c97bcbb60aa237c97a8ce2d6e6d8a7d",
+      "baseline_revision": "e203e1ddf33388e22f4a7985ff3103717c0f9181",
+      "baseline_snapshot_sha256": "77e94ff6d08005dfd69a290cac6ef8cb58d664b4c8ec5f02a9503686d3aeac2d",
+      "directory": "accelerate-4307-tuple-padding-v1",
+      "family": "distributed-input-sharding",
+      "fixed_revision": "2c2c1fb003d0775b0f865a6226ce76a2886f435b",
+      "public_test_sha256": "7c366e003c4379838a5096ed61bc219f118f93ad63309f82e298a9ddd51a5937",
+      "rtol": 0.0,
+      "target_path": "src/accelerate/state.py",
+      "task_api_sha256": "672d6d2e291502c85f585a46f7ddb02ae254495b484dc00c0f0225762634109d",
+      "task_json_sha256": "b4f72ef6851d4cfd05562d66e7f85f81123a1b42465d5cf49059d18909c3a30a"
+    },
+    "accelerate-4354-multi-cpu-barrier-v1": {
+      "atol": 0.0,
+      "baseline_manifest_sha256": "d4c1c312fa7658226ad044e2e943677b7da6bf8ab56cca10dd79475c6f6e8b31",
+      "baseline_revision": "421af8bee5bda705d3c763f491b7a794f471818e",
+      "baseline_snapshot_sha256": "a72ac862a6416ba9f40bcf87680899da0444356de23b935161d8351ac911b27f",
+      "directory": "accelerate-4354-multi-cpu-barrier-v1",
+      "family": "cpu-distributed-barrier-device-selection",
+      "fixed_revision": "d9590601fb522fd2c4c83a7b621902ace8ac8f80",
+      "public_test_sha256": "573a874b1de59a91c6347d55d3f3c2c36e489f9b186cf14eaf267bba2b57ee12",
+      "rtol": 0.0,
+      "target_path": "src/accelerate/state.py",
+      "task_api_sha256": "1b2a651d310a8f9c77947321ead7bf6fc4a9caf134ca0dd3ec7766cfe4f555f2",
+      "task_json_sha256": "39bdbb072cb9d224e1a2c9ffc72d162a1616e42b2e3ad05007ac4e7a4beb1fd0"
+    },
+    "trl-6625-entropy-gradient-v1": {
+      "atol": 0.0001,
+      "baseline_manifest_sha256": "c795398e98573d1d5e0b2480da7f6c11cb28d709b5e8d62d181416669580dfd7",
+      "baseline_revision": "67dfbe211a07a8dd6ebc1a5af5b75152e10add8e",
+      "baseline_snapshot_sha256": "1af0118dfb950070c1bdd1db64f67b9516045581f7c1195b4cf504bd98345085",
+      "directory": "trl-6625-entropy-gradient-v1",
+      "family": "chunked-autograd-entropy-gradient",
+      "fixed_revision": "2f4af95cc1c3e4d0b779ed4826d0f634a6470beb",
+      "public_test_sha256": "b3abc721eda0e0e745a26f73b51df60a695499c5bda1ab50f98f98e0b813f175",
+      "rtol": 0.0001,
+      "target_path": "src/trl/trainer/utils.py",
+      "task_api_sha256": "59c8bed8a61aa6b50c8e773e9e6eb49afc3d776e441833d0ac0e4299b13f10ad",
+      "task_json_sha256": "5ecf5aae592fa0df6e14c2411944246f9b14856cc80c1fee98d2cffee37fb3e3"
+    }
+  }
+}

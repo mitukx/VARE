@@ -1,0 +1,28 @@
+{
+  "metadata": {
+    "editable_files": [
+      "src/accelerate/data_loader.py"
+    ],
+    "family": "dataloader-configuration-preservation",
+    "pack": "hf_coding_dev_inference_v1",
+    "readonly_files": [
+      "test_public.py"
+    ],
+    "split": "development",
+    "task_type": "correctness"
+  },
+  "prompt": "When training resumes from a skipped batch prefix, both sharded and dispatched loaders must preserve their configured iteration semantics and loader options. The current result silently changes configuration. Make the smallest compatible correction and preserve the remaining loader behavior.",
+  "schema": "vare-agent-task-v1",
+  "source": {
+    "base_revision": "b795b4838eb33bde60eb398649c4ab006874e3e9",
+    "file_sha256": {
+      "src/accelerate/data_loader.py": "ccfff9430db37abbaf09e025aef54066df102ba8cd693a3d8cd7780de661a59d"
+    },
+    "readonly_file_sha256": {
+      "test_public.py": "3068c15512fd11d47c452c6838469c1182ec00b01c8bdcc12db258eeafae7f15"
+    },
+    "repository": "huggingface/accelerate",
+    "snapshot_sha256": "5986a53653919ede951df9def77146b3c26d4d819e187f16b2834fc46d81a58f"
+  },
+  "task_id": "accelerate-4296-skip-first-batches-v1"
+}

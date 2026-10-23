@@ -1,0 +1,43 @@
+{
+  "baseline_manifest_sha256": "80c75f66585b9c8907027a4b9f4910724c97bcbb60aa237c97a8ce2d6e6d8a7d",
+  "candidate_directory_count": 9,
+  "candidate_file_count": 85,
+  "candidate_inventory_verified": true,
+  "candidate_source_sha256": "31faeac47ffb6858d83c9d66c5ccba542dacb4944080ca11bc76789b34142c6f",
+  "candidate_target": "src/accelerate/state.py",
+  "cases": [
+    {
+      "case_id": "tuple-padding-0",
+      "failure": null,
+      "passed": true,
+      "wall_s": 1.0811402080013113
+    },
+    {
+      "case_id": "tuple-padding-1",
+      "failure": null,
+      "passed": true,
+      "wall_s": 1.026518709013082
+    },
+    {
+      "case_id": "tuple-padding-2",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.9810067079342423
+    }
+  ],
+  "container_image_id": "sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+  "expected_values_held_by_parent": true,
+  "grader_code_mounted": false,
+  "grader_sha256": "978093010f3bdf5eed830da8ac9261660bd076d13179a11c79da421166d038a3",
+  "grading_image": "vare/hf-coding-dev-arm64@sha256:0363cbea4db3e3739f09eaa6d402ed2328d1bf768bfead190af9ee706e663d97",
+  "passed": true,
+  "protocol_id": "vare-hf-coding-dev-candidate-screen-v1-2026-10-22",
+  "protocol_sha256": "bbba41169f5cf0055ebf9c497f39c28ea5a5927d4e6c217f822fbcfc127cf393",
+  "public_tests_mounted": false,
+  "source_repository": "huggingface/accelerate",
+  "source_revision": "e203e1ddf33388e22f4a7985ff3103717c0f9181",
+  "task_api_sha256": "672d6d2e291502c85f585a46f7ddb02ae254495b484dc00c0f0225762634109d",
+  "task_id": "accelerate-4307-tuple-padding-v1",
+  "task_json_sha256": "b4f72ef6851d4cfd05562d66e7f85f81123a1b42465d5cf49059d18909c3a30a",
+  "task_kind": "correctness"
+}
