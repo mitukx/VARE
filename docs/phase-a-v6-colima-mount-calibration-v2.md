@@ -8,4 +8,4 @@ A second append-only calibration is retained under [`run-2`](../results/phase-a-
 
 A third append-only calibration is stored under [`run-3`](../results/phase-a-v6-colima-mount-calibration-v2/run-3/). It ran against corrected controller source commit `683d8b7c6bcfa959879b3dac47e772bde26986e2` with a clean tree, and records `assertion_failure` for the broken fixture and `passed` for the known fix.
 
-A fourth append-only calibration records the subsequent fail-closed handling for malformed/unknown classification values. It ran from clean source commit `bb7e5c694b41b933af3ec7055f02838f45309fd6`; baseline and known-fix outcomes remained `assertion_failure` and `passed` respectively.
+A fourth append-only calibration ran from clean source commit `bb7e5c694b41b933af3ec7055f02838f45309fd6`. It repeated the Colima baseline/known-fix fixture checks, yielding `assertion_failure` and `passed`, respectively. **This run did not exercise malformed or unknown classification values.** Fail-closed classification behavior is covered by separate controller unit tests and is not claimed as a result of this calibration.
