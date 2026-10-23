@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import errno
 from pathlib import Path
 import shlex
 import subprocess
@@ -267,6 +268,49 @@ def test_calibration_reserves_output_before_launch_and_rejects_writable_parent(
     with pytest.raises(ValueError, match="operator-owned private parent"):
         calibration.run_frozen_calibration(source, unsafe / "output")
     assert not (unsafe / "output").exists()
+
+
+def test_cross_device_publication_failure_retains_raw_records(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+) -> None:
+    source = tmp_path / "source"
+    source.mkdir()
+    output = tmp_path / "reserved"
+    staged: list[Path] = []
+    real_rename = calibration.os.rename
+
+    def fail_publication_with_exdev(src, dst, *args, **kwargs):
+        if dst == "records" and kwargs.get("dst_dir_fd") is not None:
+            raise OSError(errno.EXDEV, "simulated cross-filesystem publication")
+        return real_rename(src, dst, *args, **kwargs)
+
+    def fake_run(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        if command[:2] == [sys.executable, "-I"]:
+            destination = Path(command[command.index("--output") + 1])
+            staged.append(destination)
+            assert destination.parent.parent == output.parent
+            assert destination.parent.parent.stat().st_dev == output.parent.stat().st_dev
+            destination.mkdir()
+            (destination / "failure.json").write_text(
+                '{"status":"retained_failure"}', encoding="utf-8"
+            )
+            return subprocess.CompletedProcess(command, 1)
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(calibration.os, "rename", fail_publication_with_exdev)
+    monkeypatch.setattr(calibration.subprocess, "run", fake_run)
+    monkeypatch.setattr(calibration, "attest_current_v9", lambda _: {
+        "frozen_source_commit": calibration.PINNED_V9_COMMIT,
+        "current_source_matches_pinned_git": True,
+    })
+    with pytest.raises(OSError, match="raw calibration records retained for recovery"):
+        calibration.run_frozen_calibration(source, output)
+
+    assert len(staged) == 1
+    assert (staged[0] / "failure.json").read_text(encoding="utf-8") == (
+        '{"status":"retained_failure"}'
+    )
+    assert not (output / "records").exists()
 
 
 def test_output_swap_during_child_cannot_write_through_symlink(

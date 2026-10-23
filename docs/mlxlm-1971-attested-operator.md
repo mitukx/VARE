@@ -41,6 +41,13 @@ child records and reserved directories remain in place and cannot be reused.
 The operator must control the ancestor namespace and same-UID processes;
 this is not containment against another process with the operator's privileges.
 
+The child's raw records are staged in a fresh mode-`0700` directory under the
+reserved output's parent, so staging and publication share a filesystem.
+If descriptor-relative publication still fails, the raised error names the
+staging path and the records remain there for recovery instead of being removed
+with the temporary Git worktree. A regression injects `EXDEV` at publication
+and confirms the raw failure record remains available. No calibration was run.
+
 Export, grade and calibration paths are checked before canonicalization so
 symlink identity cannot be erased. Export reads a bounded regular patch once
 with `O_NOFOLLOW` and passes a read-only private snapshot to the pinned child;

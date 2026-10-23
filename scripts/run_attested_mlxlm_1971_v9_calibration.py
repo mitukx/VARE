@@ -133,7 +133,14 @@ def _publish_records(staged: Path, output_fd: int) -> None:
         return
     if not stat.S_ISDIR(info.st_mode):
         raise ValueError("staged calibration records are not a directory")
-    os.rename(staged, "records", dst_dir_fd=output_fd)
+    try:
+        os.rename(staged, "records", dst_dir_fd=output_fd)
+    except OSError as exc:
+        raise OSError(
+            exc.errno,
+            f"raw calibration records retained for recovery at {staged}: {exc}",
+            str(staged),
+        ) from exc
 
 
 def run_frozen_calibration(source_repo: Path, output: Path) -> int:
@@ -148,7 +155,8 @@ def run_frozen_calibration(source_repo: Path, output: Path) -> int:
     try:
         with tempfile.TemporaryDirectory(prefix="vare-attested-mlxlm1971-v9-") as temp:
             worktree = Path(temp) / "frozen-v9"
-            staged_records = Path(temp) / "records"
+            staged_records: Path | None = None
+            staging_root: Path | None = None
             subprocess.run(
                 [
                     "git", "-C", str(ROOT), "worktree", "add", "--detach",
@@ -164,6 +172,12 @@ def run_frozen_calibration(source_repo: Path, output: Path) -> int:
                 ):
                     raise ValueError("historical v9 source failed immutable attestation")
                 _verify_output_identity(output_fd, parent_fd, output_name, output_identity)
+                staging_root = Path(
+                    tempfile.mkdtemp(
+                        prefix=f".{output_name}.records-", dir=output.parent
+                    )
+                )
+                staged_records = staging_root / "records"
                 command = [
                     sys.executable,
                     "-I",
@@ -178,8 +192,13 @@ def run_frozen_calibration(source_repo: Path, output: Path) -> int:
                 return result.returncode
             finally:
                 try:
-                    _publish_records(staged_records, output_fd)
-                    _verify_output_identity(output_fd, parent_fd, output_name, output_identity)
+                    if staged_records is not None and staging_root is not None:
+                        _publish_records(staged_records, output_fd)
+                        if not staged_records.exists():
+                            staging_root.rmdir()
+                        _verify_output_identity(
+                            output_fd, parent_fd, output_name, output_identity
+                        )
                 finally:
                     subprocess.run(
                         ["git", "-C", str(ROOT), "worktree", "remove", "--force", str(worktree)],
