@@ -1,0 +1,164 @@
+{
+  "agent_attempts_started": 2,
+  "agent_records": 2,
+  "arms": [
+    {
+      "agent_metrics": {
+        "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "edit_applied": false,
+        "edit_attempted": false,
+        "elapsed_seconds": 2.933,
+        "format_parse_failure_count": 0,
+        "max_rss_bytes": 954826752,
+        "new_tokens": 130,
+        "public_test_result": null,
+        "runtime": {
+          "device": "apple_metal",
+          "mlx": "unknown",
+          "mlx_active_memory_bytes": 724690824,
+          "mlx_lm": "0.32.2",
+          "mlx_peak_memory_bytes": 1438383268,
+          "platform": "macOS-27.0.1-arm64-arm-64bit",
+          "python": "3.12.12",
+          "seed": 31
+        },
+        "stop_reason": "no_tool_call_retries_exhausted",
+        "tool_turns": 6
+      },
+      "arm": "greedy",
+      "candidate_source_sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+      "grader_elapsed_seconds": 3.23,
+      "grader_error": null,
+      "grader_status": "FAIL",
+      "monitor": {
+        "abort_reason": null,
+        "elapsed_seconds": 6.115,
+        "max_agent_rss_mib": 907.469,
+        "max_wall_seconds": 600,
+        "observations": [
+          {
+            "agent_rss_mib": 11.031,
+            "elapsed_seconds": 0.025,
+            "memory_free_percent": 66,
+            "swap_used_mib": 3806.5
+          },
+          {
+            "agent_rss_mib": 904.594,
+            "elapsed_seconds": 2.056,
+            "memory_free_percent": 60,
+            "swap_used_mib": 3806.5
+          },
+          {
+            "agent_rss_mib": 907.469,
+            "elapsed_seconds": 4.084,
+            "memory_free_percent": 60,
+            "swap_used_mib": 3806.5
+          }
+        ],
+        "process_started": true,
+        "resource_after": {
+          "memory_free_percent": 65,
+          "swap_used_mib": 3806.5
+        },
+        "resource_before": {
+          "memory_free_percent": 66,
+          "swap_used_mib": 3806.5
+        },
+        "returncode": 0,
+        "status": "COMPLETED",
+        "swap_abort_threshold_mib": 3902.5,
+        "telemetry_error": null
+      },
+      "seed": 31,
+      "started_at_utc": "2026-10-23T19:40:18+00:00",
+      "status": "COMPLETED"
+    },
+    {
+      "agent_metrics": {
+        "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "edit_applied": false,
+        "edit_attempted": false,
+        "elapsed_seconds": 1.897,
+        "format_parse_failure_count": 0,
+        "max_rss_bytes": 935116800,
+        "new_tokens": 78,
+        "public_test_result": null,
+        "runtime": {
+          "device": "apple_metal",
+          "mlx": "unknown",
+          "mlx_active_memory_bytes": 724690870,
+          "mlx_lm": "0.32.2",
+          "mlx_peak_memory_bytes": 1438399710,
+          "platform": "macOS-27.0.1-arm64-arm-64bit",
+          "python": "3.12.12",
+          "seed": 37
+        },
+        "stop_reason": "no_tool_call_retries_exhausted",
+        "tool_turns": 4
+      },
+      "arm": "sampled",
+      "candidate_source_sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+      "grader_elapsed_seconds": 2.919,
+      "grader_error": null,
+      "grader_status": "FAIL",
+      "monitor": {
+        "abort_reason": null,
+        "elapsed_seconds": 4.064,
+        "max_agent_rss_mib": 886.188,
+        "max_wall_seconds": 600,
+        "observations": [
+          {
+            "agent_rss_mib": 10.703,
+            "elapsed_seconds": 0.025,
+            "memory_free_percent": 65,
+            "swap_used_mib": 3806.5
+          },
+          {
+            "agent_rss_mib": 886.188,
+            "elapsed_seconds": 2.044,
+            "memory_free_percent": 59,
+            "swap_used_mib": 3806.5
+          }
+        ],
+        "process_started": true,
+        "resource_after": {
+          "memory_free_percent": 65,
+          "swap_used_mib": 3806.5
+        },
+        "resource_before": {
+          "memory_free_percent": 65,
+          "swap_used_mib": 3806.5
+        },
+        "returncode": 0,
+        "status": "COMPLETED",
+        "swap_abort_threshold_mib": 3902.5,
+        "telemetry_error": null
+      },
+      "seed": 37,
+      "started_at_utc": "2026-10-23T19:40:28+00:00",
+      "status": "COMPLETED"
+    }
+  ],
+  "attempt_denominator": 2,
+  "attempt_successes": 0,
+  "binary_reward_mean": 0.0,
+  "binary_reward_population_variance": 0.0,
+  "claim_limit": "Two matched attempts on one Development task; not held-out success or learning evidence.",
+  "failure_taxonomy_by_stop_reason": {
+    "no_tool_call_retries_exhausted": 2
+  },
+  "format_parse_failures": 0,
+  "generated_tokens": 208,
+  "model_loaded_attempts": 2,
+  "optimizer_steps": 0,
+  "protocol_id": "mlsys-repo-task-mlx-lm-1910-smollm2-tool-call-prompt-v2",
+  "public_test_invocations": 0,
+  "public_test_passes": 0,
+  "schema_version": 1,
+  "status": "COMPLETED",
+  "tool_call_count": 4,
+  "total_wall_seconds": 18.647,
+  "unique_development_task_denominator": 1,
+  "unique_development_task_successes": 0,
+  "valid_edit_attempts": 0
+}
