@@ -7,3 +7,5 @@ This validates the synthetic candidate execution path and Colima bind mount only
 A second append-only calibration is retained under [`run-2`](../results/phase-a-v6-colima-mount-calibration-v2/run-2/). It ran after the final #106 stack update at source commit `9cb1cb0705ec61fe00d5da8c0950fe1eb29acec3`, with a clean tree. It reproduced the same baseline rejection and known-fix acceptance.
 
 A third append-only calibration is stored under [`run-3`](../results/phase-a-v6-colima-mount-calibration-v2/run-3/). It ran against corrected controller source commit `683d8b7c6bcfa959879b3dac47e772bde26986e2` with a clean tree, and records `assertion_failure` for the broken fixture and `passed` for the known fix.
+
+A fourth append-only calibration records the subsequent fail-closed handling for malformed/unknown classification values. It ran from clean source commit `bb7e5c694b41b933af3ec7055f02838f45309fd6`; baseline and known-fix outcomes remained `assertion_failure` and `passed` respectively.
