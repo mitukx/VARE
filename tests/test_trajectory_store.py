@@ -440,3 +440,14 @@ def test_read_only_audit_accepts_pinned_older_runtime_snapshot(store):
             db.execute("UPDATE trajectories SET state='cancelled'")
     with audit_only.connection() as db:
         assert db.execute("SELECT state FROM trajectories WHERE id='t0'").fetchone()[0] == "queued"
+
+
+def test_append_step_can_return_committed_head_without_changing_default_api(store):
+    submit(store)
+    lease = store.claim("execute", "worker", now=100)
+    original = store.resume_state("t0")["head"]
+    committed = store.append_step(lease, step(), now=100, return_head=True)
+    assert type(committed) is str and committed != original
+    assert committed == store.resume_state("t0")["head"]
+    assert store.append_step(lease, step(), now=100, return_head=True) is False
+    assert store.append_step(lease, step(1), now=100) is True

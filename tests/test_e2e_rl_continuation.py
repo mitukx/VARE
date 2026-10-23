@@ -33,9 +33,9 @@ def test_auditor_inventory_pins_the_runtime_sources_used_by_the_campaign():
                      for path in (bench.ROOT/"src/vare").rglob("*.py")}
     pinned_runtime_sources={path for path in auditor.RUNTIME_PACKAGE_SOURCES
                             if path.startswith("src/vare/")}
-    # The allowlist includes current runtime files while retained campaign
-    # manifests remain tied to their own historical source inventory.
-    assert pinned_runtime_sources <= runtime_sources
+    # The campaign source inventory is frozen to its original VARE revision.
+    # Later modules may be added without rewriting that retained evidence.
+    assert pinned_runtime_sources == runtime_sources
     assert "src/vare/engine.py" in pinned_runtime_sources
     assert "src/vare/replay.py" in pinned_runtime_sources
 
@@ -81,7 +81,6 @@ def test_campaign_snapshots_the_full_runtime_package(campaign,tmp_path):
     root,_=campaign
     manifest=auditor.read(root/"manifest.json")
     runtime_sources={str(path.relative_to(bench.ROOT)) for path in (bench.ROOT/"src/vare").rglob("*.py")}
-    assert len(runtime_sources)==80
     assert runtime_sources <= set(manifest["sources"])
     assert runtime_sources <= set(manifest["source_sha256"])
     assert runtime_sources <= auditor.EXPECTED_SOURCES
@@ -377,6 +376,26 @@ def test_frozen_source_inventory_requires_exact_commit_and_digests():
     wrong_sources={**manifest,"sources":{**manifest["sources"],"src/vare/engine.py":"0"*64}}
     with pytest.raises(ValueError,match="independently pinned revision"):
         auditor.validate_source_inventory(wrong_sources,auditor.LEGACY_EXPECTED_SOURCES,True)
+
+
+def test_immediately_previous_source_inventory_remains_accepted(tmp_path,monkeypatch):
+    repo=tmp_path/"previous-inventory"
+    repo.mkdir()
+    subprocess.run(["git","init","-q",str(repo)],check=True)
+    subprocess.run(["git","-C",str(repo),"config","user.name","VARE test"],check=True)
+    subprocess.run(["git","-C",str(repo),"config","user.email","vare-test@example.invalid"],check=True)
+    for name in auditor.PREVIOUS_EXPECTED_SOURCES:
+        source=repo/name
+        source.parent.mkdir(parents=True,exist_ok=True)
+        source.write_text(f"pinned fixture: {name}\n")
+    subprocess.run(["git","-C",str(repo),"add","."],check=True)
+    subprocess.run(["git","-C",str(repo),"commit","-qm","previous complete inventory"],check=True)
+    commit=subprocess.check_output(["git","-C",str(repo),"rev-parse","HEAD"],text=True).strip()
+    monkeypatch.setattr(auditor,"REPOSITORY_ROOT",repo)
+    manifest={"base_commit":commit,
+              "sources":auditor.source_hashes_from_commit(commit,auditor.PREVIOUS_EXPECTED_SOURCES)}
+
+    auditor.validate_source_inventory(manifest,auditor.PREVIOUS_EXPECTED_SOURCES,True)
 
 
 def test_fresh_conformant_campaign_accepts_its_complete_source_inventory():

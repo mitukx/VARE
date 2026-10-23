@@ -35,22 +35,31 @@ class PrioritizedReplay:
 
     @staticmethod
     def group_has_homogeneous_provenance(experiences: Sequence[Experience]) -> bool:
+        """Keep groups checkpoint- and verifier-consistent, not just version-matched.
+
+        Legacy observations may omit optional digests. A partially populated
+        group is inconsistent; fully absent digests remain a legacy-only case.
+        """
         if not experiences:
             return False
-        first = experiences[0]
-        provenance = (
-            first.attempt.policy_id,
-            first.attempt.policy_version,
-            first.verification.verifier_version,
-        )
-        return all(
-            (
-                exp.attempt.policy_id,
-                exp.attempt.policy_version,
-                exp.verification.verifier_version,
-            ) == provenance
-            for exp in experiences[1:]
-        )
+
+        def identity(exp: Experience) -> tuple[object, ...]:
+            attempt = exp.attempt
+            verification = exp.verification
+            checkpoint = attempt.metadata.get("policy_checkpoint_sha256")
+            if checkpoint is None:
+                checkpoint = attempt.task.metadata.get("policy_checkpoint_sha256")
+            return (
+                attempt.policy_id,
+                attempt.policy_version,
+                checkpoint,
+                verification.verifier_name,
+                verification.verifier_version,
+                verification.metadata.get("verifier_config_sha256"),
+            )
+
+        first = identity(experiences[0])
+        return all(identity(exp) == first for exp in experiences[1:])
 
     @staticmethod
     def _group_is_complete(items: list[_HeapItem]) -> bool:
@@ -67,6 +76,7 @@ class PrioritizedReplay:
             return False
 
         declared_sizes = set()
+        size_claims = 0
         for item in items:
             attempt = item.experience.attempt
             size = attempt.metadata.get("vare_rollout_group_size")
@@ -76,12 +86,15 @@ class PrioritizedReplay:
                 continue
             if isinstance(size, bool) or not isinstance(size, int) or size <= 0:
                 return False
+            size_claims += 1
             declared_sizes.add(size)
         if len(declared_sizes) > 1:
             return False
         if not declared_sizes:
             return True
-        return len(items) == next(iter(declared_sizes))
+        # A single declared-size row cannot attest a group whose siblings
+        # omit that invariant. Only fully legacy or fully declared groups pass.
+        return size_claims == len(items) and len(items) == next(iter(declared_sizes))
 
     def add(self, exp: Experience, freshness: float) -> None:
         exp.priority = self._priority(exp, freshness)
@@ -359,10 +372,15 @@ class PrioritizedReplay:
             chosen = self._rng.choices(range(len(items)), weights=weights, k=n)
             order = sorted(set(chosen), key=lambda i: weights[i], reverse=True)
             out = [items[i].experience for i in order]
+            seen = {id(exp) for exp in out}
             if len(out) < n:
                 for i in sorted(range(len(items)), key=lambda i: weights[i], reverse=True):
-                    if items[i].experience not in out:
-                        out.append(items[i].experience)
+                    exp = items[i].experience
+                    # Distinct mutable experience records can have equal field
+                    # values; sampling identity must not collapse those rows.
+                    if id(exp) not in seen:
+                        out.append(exp)
+                        seen.add(id(exp))
                         if len(out) == n:
                             break
             return out

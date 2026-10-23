@@ -1,0 +1,520 @@
+
+tests/trainer/test_trainer_checkpointing.py::TrainerResumeTrainingTest::test_resume_training_with_checkpoint FAILED [100%]tests/trainer/test_trainer_checkpointing.py::TrainerResumeTrainingTest::test_resume_training_with_checkpoint [FAILED] 0.89s
+
+
+=================================== FAILURES ===================================
+________ TrainerResumeTrainingTest.test_resume_training_with_checkpoint ________
+
+self = <tests.trainer.test_trainer_checkpointing.TrainerResumeTrainingTest testMethod=test_resume_training_with_checkpoint>
+
+    @require_torch_up_to_2_accelerators
+    def test_resume_training_with_checkpoint(self):
+        # This test will fail for more than 2 GPUs since the batch size will get bigger and with the number of
+        # save_steps, the checkpoint will resume training at epoch 2 or more (so the data seen by the model
+        # won't be the same since the training dataloader is shuffled).
+    
+        def check_train_metrics(metrics, step_losses):
+            # `train_loss` and throughput must only cover the steps run in this `train()` call
+            self.assertAlmostEqual(metrics["train_loss"], sum(step_losses) / len(step_losses), places=3)
+            self.assertEqual(round(metrics["train_steps_per_second"] * metrics["train_runtime"]), len(step_losses))
+    
+        with tempfile.TemporaryDirectory() as tmpdir:
+            kwargs = {
+                "output_dir": tmpdir,
+                "train_len": 128,
+                "save_steps": 5,
+                "learning_rate": 0.1,
+                "logging_steps": 1,
+            }
+            trainer = get_regression_trainer(**kwargs)
+            metrics = trainer.train().metrics
+            (a, b) = trainer.model.a.item(), trainer.model.b.item()
+            state = dataclasses.asdict(trainer.state)
+            step_losses = {log["step"]: log["loss"] for log in trainer.state.log_history if "loss" in log}
+            check_train_metrics(metrics, list(step_losses.values()))
+    
+            checkpoint = os.path.join(tmpdir, "checkpoint-5")
+            self.convert_to_sharded_checkpoint(checkpoint)
+    
+            # Reinitialize trainer
+            trainer = get_regression_trainer(**kwargs)
+    
+            metrics1 = trainer.train(resume_from_checkpoint=checkpoint).metrics
+            (a1, b1) = trainer.model.a.item(), trainer.model.b.item()
+            state1 = dataclasses.asdict(trainer.state)
+            self.assertEqual(a, a1)
+            self.assertEqual(b, b1)
+            self.check_trainer_state_are_the_same(state, state1)
+            # The resumed run only trained the steps after the checkpoint, with the same losses as the full run
+>           check_train_metrics(metrics1, [loss for step, loss in step_losses.items() if step > 5])
+
+/tmp/vare-transformers-49208-base/tests/trainer/test_trainer_checkpointing.py:498: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/vare-transformers-49208-base/tests/trainer/test_trainer_checkpointing.py:467: in check_train_metrics
+    self.assertAlmostEqual(metrics["train_loss"], sum(step_losses) / len(step_losses), places=3)
+E   AssertionError: 2.1432352513074875 != 2.3924486526223117 within 3 places (0.24921340131482417 difference)
+----------------------------- Captured stdout call -----------------------------
+{'loss': '10.85', 'grad_norm': '6.027', 'learning_rate': '0.1', 'epoch': '0.0625'}
+{'loss': '6.678', 'grad_norm': '4.503', 'learning_rate': '0.09792', 'epoch': '0.125'}
+{'loss': '9.185', 'grad_norm': '5.661', 'learning_rate': '0.09583', 'epoch': '0.1875'}
+{'loss': '8.004', 'grad_norm': '5.062', 'learning_rate': '0.09375', 'epoch': '0.25'}
+{'loss': '9.946', 'grad_norm': '6.473', 'learning_rate': '0.09167', 'epoch': '0.3125'}
+{'loss': '10.25', 'grad_norm': '7.147', 'learning_rate': '0.08958', 'epoch': '0.375'}
+{'loss': '9.316', 'grad_norm': '6.476', 'learning_rate': '0.0875', 'epoch': '0.4375'}
+{'loss': '9.942', 'grad_norm': '7.73', 'learning_rate': '0.08542', 'epoch': '0.5'}
+{'loss': '7.297', 'grad_norm': '5.618', 'learning_rate': '0.08333', 'epoch': '0.5625'}
+{'loss': '5.299', 'grad_norm': '4.275', 'learning_rate': '0.08125', 'epoch': '0.625'}
+{'loss': '3.134', 'grad_norm': '3.526', 'learning_rate': '0.07917', 'epoch': '0.6875'}
+{'loss': '5.236', 'grad_norm': '4.518', 'learning_rate': '0.07708', 'epoch': '0.75'}
+{'loss': '4.902', 'grad_norm': '4.387', 'learning_rate': '0.075', 'epoch': '0.8125'}
+{'loss': '6.322', 'grad_norm': '6.081', 'learning_rate': '0.07292', 'epoch': '0.875'}
+{'loss': '2.75', 'grad_norm': '2.845', 'learning_rate': '0.07083', 'epoch': '0.9375'}
+{'loss': '2.375', 'grad_norm': '2.793', 'learning_rate': '0.06875', 'epoch': '1'}
+{'loss': '2.303', 'grad_norm': '2.841', 'learning_rate': '0.06667', 'epoch': '1.062'}
+{'loss': '2.846', 'grad_norm': '3.072', 'learning_rate': '0.06458', 'epoch': '1.125'}
+{'loss': '1.976', 'grad_norm': '2.518', 'learning_rate': '0.0625', 'epoch': '1.188'}
+{'loss': '2.489', 'grad_norm': '3.028', 'learning_rate': '0.06042', 'epoch': '1.25'}
+{'loss': '3.08', 'grad_norm': '3.935', 'learning_rate': '0.05833', 'epoch': '1.312'}
+{'loss': '1.472', 'grad_norm': '2.341', 'learning_rate': '0.05625', 'epoch': '1.375'}
+{'loss': '1.889', 'grad_norm': '2.686', 'learning_rate': '0.05417', 'epoch': '1.438'}
+{'loss': '2.175', 'grad_norm': '3.238', 'learning_rate': '0.05208', 'epoch': '1.5'}
+{'loss': '2.091', 'grad_norm': '3.288', 'learning_rate': '0.05', 'epoch': '1.562'}
+{'loss': '2.489', 'grad_norm': '4.379', 'learning_rate': '0.04792', 'epoch': '1.625'}
+{'loss': '0.9399', 'grad_norm': '1.811', 'learning_rate': '0.04583', 'epoch': '1.688'}
+{'loss': '1.195', 'grad_norm': '2.167', 'learning_rate': '0.04375', 'epoch': '1.75'}
+{'loss': '0.7959', 'grad_norm': '1.754', 'learning_rate': '0.04167', 'epoch': '1.812'}
+{'loss': '0.7649', 'grad_norm': '1.575', 'learning_rate': '0.03958', 'epoch': '1.875'}
+{'loss': '0.8159', 'grad_norm': '1.725', 'learning_rate': '0.0375', 'epoch': '1.938'}
+{'loss': '0.9683', 'grad_norm': '2.008', 'learning_rate': '0.03542', 'epoch': '2'}
+{'loss': '0.8109', 'grad_norm': '1.788', 'learning_rate': '0.03333', 'epoch': '2.062'}
+{'loss': '0.6925', 'grad_norm': '1.58', 'learning_rate': '0.03125', 'epoch': '2.125'}
+{'loss': '0.574', 'grad_norm': '1.463', 'learning_rate': '0.02917', 'epoch': '2.188'}
+{'loss': '0.773', 'grad_norm': '1.863', 'learning_rate': '0.02708', 'epoch': '2.25'}
+{'loss': '0.561', 'grad_norm': '1.467', 'learning_rate': '0.025', 'epoch': '2.312'}
+{'loss': '0.6264', 'grad_norm': '1.589', 'learning_rate': '0.02292', 'epoch': '2.375'}
+{'loss': '0.4075', 'grad_norm': '1.261', 'learning_rate': '0.02083', 'epoch': '2.438'}
+{'loss': '0.3357', 'grad_norm': '1.141', 'learning_rate': '0.01875', 'epoch': '2.5'}
+{'loss': '0.5136', 'grad_norm': '1.764', 'learning_rate': '0.01667', 'epoch': '2.562'}
+{'loss': '0.3026', 'grad_norm': '1.057', 'learning_rate': '0.01458', 'epoch': '2.625'}
+{'loss': '0.4137', 'grad_norm': '1.295', 'learning_rate': '0.0125', 'epoch': '2.688'}
+{'loss': '0.301', 'grad_norm': '1.044', 'learning_rate': '0.01042', 'epoch': '2.75'}
+{'loss': '0.3686', 'grad_norm': '1.186', 'learning_rate': '0.008333', 'epoch': '2.812'}
+{'loss': '0.2761', 'grad_norm': '1.018', 'learning_rate': '0.00625', 'epoch': '2.875'}
+{'loss': '0.5024', 'grad_norm': '1.5', 'learning_rate': '0.004167', 'epoch': '2.938'}
+{'loss': '0.2985', 'grad_norm': '1', 'learning_rate': '0.002083', 'epoch': '3'}
+{'train_runtime': '0.3447', 'train_samples_per_second': '1114', 'train_steps_per_second': '139.2', 'train_loss': '3.074', 'epoch': '3'}
+{'loss': '10.25', 'grad_norm': '7.147', 'learning_rate': '0.08958', 'epoch': '0.375'}
+{'loss': '9.316', 'grad_norm': '6.476', 'learning_rate': '0.0875', 'epoch': '0.4375'}
+{'loss': '9.942', 'grad_norm': '7.73', 'learning_rate': '0.08542', 'epoch': '0.5'}
+{'loss': '7.297', 'grad_norm': '5.618', 'learning_rate': '0.08333', 'epoch': '0.5625'}
+{'loss': '5.299', 'grad_norm': '4.275', 'learning_rate': '0.08125', 'epoch': '0.625'}
+{'loss': '3.134', 'grad_norm': '3.526', 'learning_rate': '0.07917', 'epoch': '0.6875'}
+{'loss': '5.236', 'grad_norm': '4.518', 'learning_rate': '0.07708', 'epoch': '0.75'}
+{'loss': '4.902', 'grad_norm': '4.387', 'learning_rate': '0.075', 'epoch': '0.8125'}
+{'loss': '6.322', 'grad_norm': '6.081', 'learning_rate': '0.07292', 'epoch': '0.875'}
+{'loss': '2.75', 'grad_norm': '2.845', 'learning_rate': '0.07083', 'epoch': '0.9375'}
+{'loss': '2.375', 'grad_norm': '2.793', 'learning_rate': '0.06875', 'epoch': '1'}
+{'loss': '2.303', 'grad_norm': '2.841', 'learning_rate': '0.06667', 'epoch': '1.062'}
+{'loss': '2.846', 'grad_norm': '3.072', 'learning_rate': '0.06458', 'epoch': '1.125'}
+{'loss': '1.976', 'grad_norm': '2.518', 'learning_rate': '0.0625', 'epoch': '1.188'}
+{'loss': '2.489', 'grad_norm': '3.028', 'learning_rate': '0.06042', 'epoch': '1.25'}
+{'loss': '3.08', 'grad_norm': '3.935', 'learning_rate': '0.05833', 'epoch': '1.312'}
+{'loss': '1.472', 'grad_norm': '2.341', 'learning_rate': '0.05625', 'epoch': '1.375'}
+{'loss': '1.889', 'grad_norm': '2.686', 'learning_rate': '0.05417', 'epoch': '1.438'}
+{'loss': '2.175', 'grad_norm': '3.238', 'learning_rate': '0.05208', 'epoch': '1.5'}
+{'loss': '2.091', 'grad_norm': '3.288', 'learning_rate': '0.05', 'epoch': '1.562'}
+{'loss': '2.489', 'grad_norm': '4.379', 'learning_rate': '0.04792', 'epoch': '1.625'}
+{'loss': '0.9399', 'grad_norm': '1.811', 'learning_rate': '0.04583', 'epoch': '1.688'}
+{'loss': '1.195', 'grad_norm': '2.167', 'learning_rate': '0.04375', 'epoch': '1.75'}
+{'loss': '0.7959', 'grad_norm': '1.754', 'learning_rate': '0.04167', 'epoch': '1.812'}
+{'loss': '0.7649', 'grad_norm': '1.575', 'learning_rate': '0.03958', 'epoch': '1.875'}
+{'loss': '0.8159', 'grad_norm': '1.725', 'learning_rate': '0.0375', 'epoch': '1.938'}
+{'loss': '0.9683', 'grad_norm': '2.008', 'learning_rate': '0.03542', 'epoch': '2'}
+{'loss': '0.8109', 'grad_norm': '1.788', 'learning_rate': '0.03333', 'epoch': '2.062'}
+{'loss': '0.6925', 'grad_norm': '1.58', 'learning_rate': '0.03125', 'epoch': '2.125'}
+{'loss': '0.574', 'grad_norm': '1.463', 'learning_rate': '0.02917', 'epoch': '2.188'}
+{'loss': '0.773', 'grad_norm': '1.863', 'learning_rate': '0.02708', 'epoch': '2.25'}
+{'loss': '0.561', 'grad_norm': '1.467', 'learning_rate': '0.025', 'epoch': '2.312'}
+{'loss': '0.6264', 'grad_norm': '1.589', 'learning_rate': '0.02292', 'epoch': '2.375'}
+{'loss': '0.4075', 'grad_norm': '1.261', 'learning_rate': '0.02083', 'epoch': '2.438'}
+{'loss': '0.3357', 'grad_norm': '1.141', 'learning_rate': '0.01875', 'epoch': '2.5'}
+{'loss': '0.5136', 'grad_norm': '1.764', 'learning_rate': '0.01667', 'epoch': '2.562'}
+{'loss': '0.3026', 'grad_norm': '1.057', 'learning_rate': '0.01458', 'epoch': '2.625'}
+{'loss': '0.4137', 'grad_norm': '1.295', 'learning_rate': '0.0125', 'epoch': '2.688'}
+{'loss': '0.301', 'grad_norm': '1.044', 'learning_rate': '0.01042', 'epoch': '2.75'}
+{'loss': '0.3686', 'grad_norm': '1.186', 'learning_rate': '0.008333', 'epoch': '2.812'}
+{'loss': '0.2761', 'grad_norm': '1.018', 'learning_rate': '0.00625', 'epoch': '2.875'}
+{'loss': '0.5024', 'grad_norm': '1.5', 'learning_rate': '0.004167', 'epoch': '2.938'}
+{'loss': '0.2985', 'grad_norm': '1', 'learning_rate': '0.002083', 'epoch': '3'}
+{'train_runtime': '0.1984', 'train_samples_per_second': '1936', 'train_steps_per_second': '242', 'train_loss': '2.143', 'epoch': '3'}
+----------------------------- Captured stderr call -----------------------------
+
+  0%|          | 0/48 [00:00<?, ?it/s]
+  2%|▏         | 1/48 [00:00<00:04,  9.40it/s]
+                                              
+
+  2%|▏         | 1/48 [00:00<00:04,  9.40it/s]
+                                              
+
+  4%|▍         | 2/48 [00:00<00:04,  9.40it/s]
+                                              
+
+  6%|▋         | 3/48 [00:00<00:04,  9.40it/s]
+                                              
+
+  8%|▊         | 4/48 [00:00<00:04,  9.40it/s]
+                                              
+
+ 10%|█         | 5/48 [00:00<00:04,  9.40it/s]
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][A
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 655.26it/s]
+
+                                              
+
+ 12%|█▎        | 6/48 [00:00<00:04,  9.40it/s]
+                                              
+
+ 15%|█▍        | 7/48 [00:00<00:04,  9.40it/s]
+                                              
+
+ 17%|█▋        | 8/48 [00:00<00:04,  9.40it/s]
+                                              
+
+ 19%|█▉        | 9/48 [00:00<00:04,  9.40it/s]
+                                              
+
+ 21%|██        | 10/48 [00:00<00:04,  9.40it/s]
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][A
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 1099.14it/s]
+
+                                               
+
+ 23%|██▎       | 11/48 [00:00<00:03,  9.40it/s]
+                                               
+
+ 25%|██▌       | 12/48 [00:00<00:03,  9.40it/s]
+                                               
+
+ 27%|██▋       | 13/48 [00:00<00:03,  9.40it/s]
+                                               
+
+ 29%|██▉       | 14/48 [00:00<00:03,  9.40it/s]
+                                               
+
+ 31%|███▏      | 15/48 [00:00<00:03,  9.40it/s]
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][A
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 1140.07it/s]
+
+                                               
+
+ 33%|███▎      | 16/48 [00:00<00:03,  9.40it/s]
+                                               
+
+ 35%|███▌      | 17/48 [00:00<00:03,  9.40it/s]
+                                               
+
+ 38%|███▊      | 18/48 [00:00<00:03,  9.40it/s]
+                                               
+
+ 40%|███▉      | 19/48 [00:00<00:03,  9.40it/s]
+                                               
+
+ 42%|████▏     | 20/48 [00:00<00:02,  9.40it/s]
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][A
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 1024.75it/s]
+
+                                               
+
+ 44%|████▍     | 21/48 [00:00<00:02,  9.40it/s]
+ 46%|████▌     | 22/48 [00:00<00:00, 124.19it/s]
+                                                
+
+ 46%|████▌     | 22/48 [00:00<00:00, 124.19it/s]
+                                                
+
+ 48%|████▊     | 23/48 [00:00<00:00, 124.19it/s]
+                                                
+
+ 50%|█████     | 24/48 [00:00<00:00, 124.19it/s]
+                                                
+
+ 52%|█████▏    | 25/48 [00:00<00:00, 124.19it/s]
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][A
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 1085.76it/s]
+
+                                                
+
+ 54%|█████▍    | 26/48 [00:00<00:00, 124.19it/s]
+                                                
+
+ 56%|█████▋    | 27/48 [00:00<00:00, 124.19it/s]
+                                                
+
+ 58%|█████▊    | 28/48 [00:00<00:00, 124.19it/s]
+                                                
+
+ 60%|██████    | 29/48 [00:00<00:00, 124.19it/s]
+                                                
+
+ 62%|██████▎   | 30/48 [00:00<00:00, 124.19it/s]
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][A
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 649.68it/s]
+
+                                                
+
+ 65%|██████▍   | 31/48 [00:00<00:00, 124.19it/s]
+                                                
+
+ 67%|██████▋   | 32/48 [00:00<00:00, 124.19it/s]
+                                                
+
+ 69%|██████▉   | 33/48 [00:00<00:00, 124.19it/s]
+                                                
+
+ 71%|███████   | 34/48 [00:00<00:00, 124.19it/s]
+                                                
+
+ 73%|███████▎  | 35/48 [00:00<00:00, 124.19it/s]
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][A
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 1203.19it/s]
+
+                                                
+
+ 75%|███████▌  | 36/48 [00:00<00:00, 124.19it/s]
+                                                
+
+ 77%|███████▋  | 37/48 [00:00<00:00, 124.19it/s]
+                                                
+
+ 79%|███████▉  | 38/48 [00:00<00:00, 124.19it/s]
+                                                
+
+ 81%|████████▏ | 39/48 [00:00<00:00, 124.19it/s]
+                                                
+
+ 83%|████████▎ | 40/48 [00:00<00:00, 124.19it/s]
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][A
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 1054.38it/s]
+
+                                                
+
+ 85%|████████▌ | 41/48 [00:00<00:00, 124.19it/s]
+                                                
+
+ 88%|████████▊ | 42/48 [00:00<00:00, 124.19it/s]
+                                                
+
+ 90%|████████▉ | 43/48 [00:00<00:00, 124.19it/s]
+                                                
+
+ 92%|█████████▏| 44/48 [00:00<00:00, 124.19it/s]
+ 94%|█████████▍| 45/48 [00:00<00:00, 171.17it/s]
+                                                
+
+ 94%|█████████▍| 45/48 [00:00<00:00, 171.17it/s]
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][A
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 739.08it/s]
+
+                                                
+
+ 96%|█████████▌| 46/48 [00:00<00:00, 171.17it/s]
+                                                
+
+ 98%|█████████▊| 47/48 [00:00<00:00, 171.17it/s]
+                                                
+
+100%|██████████| 48/48 [00:00<00:00, 171.17it/s]
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][A
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 872.54it/s]
+
+                                                
+
+100%|██████████| 48/48 [00:00<00:00, 171.17it/s]
+100%|██████████| 48/48 [00:00<00:00, 144.41it/s]
+
+  0%|          | 0/48 [00:00<?, ?it/s]
+                                      
+
+ 12%|█▎        | 6/48 [00:00<00:00, 908.68it/s]
+                                               
+
+ 15%|█▍        | 7/48 [00:00<00:00, 688.96it/s]
+                                               
+
+ 17%|█▋        | 8/48 [00:00<00:00, 580.30it/s]
+                                               
+
+ 19%|█▉        | 9/48 [00:00<00:00, 513.25it/s]
+                                               
+
+ 21%|██        | 10/48 [00:00<00:00, 477.23it/s]
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][A
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 980.44it/s]
+
+                                                
+
+ 23%|██▎       | 11/48 [00:00<00:00, 368.11it/s]
+                                                
+
+ 25%|██▌       | 12/48 [00:00<00:00, 361.07it/s]
+                                                
+
+ 27%|██▋       | 13/48 [00:00<00:00, 358.81it/s]
+                                                
+
+ 29%|██▉       | 14/48 [00:00<00:00, 354.49it/s]
+                                                
+
+ 31%|███▏      | 15/48 [00:00<00:00, 352.19it/s]
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][A
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 995.80it/s]
+
+                                                
+
+ 33%|███▎      | 16/48 [00:00<00:00, 309.93it/s]
+                                                
+
+ 35%|███▌      | 17/48 [00:00<00:00, 309.91it/s]
+                                                
+
+ 38%|███▊      | 18/48 [00:00<00:00, 310.61it/s]
+                                                
+
+ 40%|███▉      | 19/48 [00:00<00:00, 312.18it/s]
+                                                
+
+ 42%|████▏     | 20/48 [00:00<00:00, 312.07it/s]
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][A
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 1151.96it/s]
+
+                                                
+
+ 44%|████▍     | 21/48 [00:00<00:00, 283.86it/s]
+                                                
+
+ 46%|████▌     | 22/48 [00:00<00:00, 283.31it/s]
+                                                
+
+ 48%|████▊     | 23/48 [00:00<00:00, 282.19it/s]
+                                                
+
+ 50%|█████     | 24/48 [00:00<00:00, 282.07it/s]
+                                                
+
+ 52%|█████▏    | 25/48 [00:00<00:00, 282.65it/s]
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][A
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 874.18it/s]
+
+                                                
+
+ 54%|█████▍    | 26/48 [00:00<00:00, 264.89it/s]
+ 56%|█████▋    | 27/48 [00:00<00:00, 268.70it/s]
+                                                
+
+ 56%|█████▋    | 27/48 [00:00<00:00, 268.70it/s]
+                                                
+
+ 58%|█████▊    | 28/48 [00:00<00:00, 268.70it/s]
+                                                
+
+ 60%|██████    | 29/48 [00:00<00:00, 268.70it/s]
+                                                
+
+ 62%|██████▎   | 30/48 [00:00<00:00, 268.70it/s]
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][A
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 868.03it/s]
+
+                                                
+
+ 65%|██████▍   | 31/48 [00:00<00:00, 268.70it/s]
+                                                
+
+ 67%|██████▋   | 32/48 [00:00<00:00, 268.70it/s]
+                                                
+
+ 69%|██████▉   | 33/48 [00:00<00:00, 268.70it/s]
+                                                
+
+ 71%|███████   | 34/48 [00:00<00:00, 268.70it/s]
+                                                
+
+ 73%|███████▎  | 35/48 [00:00<00:00, 268.70it/s]
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][A
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 1078.50it/s]
+
+                                                
+
+ 75%|███████▌  | 36/48 [00:00<00:00, 268.70it/s]
+                                                
+
+ 77%|███████▋  | 37/48 [00:00<00:00, 268.70it/s]
+                                                
+
+ 79%|███████▉  | 38/48 [00:00<00:00, 268.70it/s]
+                                                
+
+ 81%|████████▏ | 39/48 [00:00<00:00, 268.70it/s]
+                                                
+
+ 83%|████████▎ | 40/48 [00:00<00:00, 268.70it/s]
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][A
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 822.90it/s]
+
+                                                
+
+ 85%|████████▌ | 41/48 [00:00<00:00, 268.70it/s]
+                                                
+
+ 88%|████████▊ | 42/48 [00:00<00:00, 268.70it/s]
+                                                
+
+ 90%|████████▉ | 43/48 [00:00<00:00, 268.70it/s]
+                                                
+
+ 92%|█████████▏| 44/48 [00:00<00:00, 268.70it/s]
+                                                
+
+ 94%|█████████▍| 45/48 [00:00<00:00, 268.70it/s]
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][A
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 1010.92it/s]
+
+                                                
+
+ 96%|█████████▌| 46/48 [00:00<00:00, 268.70it/s]
+                                                
+
+ 98%|█████████▊| 47/48 [00:00<00:00, 268.70it/s]
+                                                
+
+100%|██████████| 48/48 [00:00<00:00, 268.70it/s]
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][A
+Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 980.44it/s]
+
+                                                
+
+100%|██████████| 48/48 [00:00<00:00, 268.70it/s]
+100%|██████████| 48/48 [00:00<00:00, 242.15it/s]
+================== CI READ-ONLY CACHE FALLBACK: not triggered ==================
+=========================== short test summary info ============================
+FAILED tests/trainer/test_trainer_checkpointing.py::TrainerResumeTrainingTest::test_resume_training_with_checkpoint
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+================= 1 failed, 56 deselected, 7 warnings in 1.46s =================

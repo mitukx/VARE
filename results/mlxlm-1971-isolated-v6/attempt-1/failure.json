@@ -1,0 +1,12 @@
+{
+  "attempt_id": "v6-attempt-1",
+  "calibration_result": "not-produced",
+  "created_at_utc": "2026-10-22T21:08:00Z",
+  "exception": "CandidateHarnessError: session calls must use one module and function",
+  "exit_status": 1,
+  "failure_stage": "baseline grading before a calibration result was produced",
+  "implementation_commit": "8ba408b44c65741ace78db5b3998e37beab4260e",
+  "protocol_id": "vare.mlsys-repository-task.mlxlm-1971.v6",
+  "protocol_sha256": "37170393a46062e46a717e12b8d84f1e33c9e17f4d0203d53101be56f864155d",
+  "reproduction_command": "DOCKER_CONTEXT=colima python scripts/run_mlxlm_1971_calibration_v6.py --source-repo /tmp/vare-mlx-lm-full-v4 --image localhost:5000/vare/mlx-mimo-cpu-mimo@sha256:799f8b9f34fe2caa8fc0c4d0889abac63384606bcf40db28524db3fba07a7cbe --output /tmp/mlxlm-1971-v6-run"
+}

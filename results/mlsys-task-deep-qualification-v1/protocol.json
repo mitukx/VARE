@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "protocol_id": "mlsys-task-deep-qualification-v1",
+  "purpose": "Pin a screened pool of source-derived MLSys/Coding tasks and an untouched-from-model train/development/held-out allocation.",
+  "protocol_status": "source_split_frozen; execution_protocol_not_ready",
+  "frozen_at_utc": "2026-10-20T21:08:40Z",
+  "source_manifest": "qualification.json",
+  "source_manifest_sha256": "2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d",
+  "counts": {
+    "train": 3,
+    "development": 3,
+    "heldout": 9,
+    "total": 15
+  },
+  "split": {
+    "train": [
+      "mlx-4662-padding-input-gradient",
+      "mlxlm-1795-moe-routing-gradient",
+      "mlxlm-1904-tool-arguments"
+    ],
+    "development": [
+      "transformers-45852-4d-mask",
+      "mlxlm-1912-top-p-min-token",
+      "mlxlm-1971-mimo-value-scale"
+    ],
+    "heldout": [
+      "transformers-48319-stale-best-checkpoint",
+      "transformers-49208-resume-metrics",
+      "transformers-49412-fusion-idempotence",
+      "mlxlm-1902-continuation-score-truncation",
+      "mlxlm-1921-padded-logprobs",
+      "mlxlm-1926-falcon-cache-gradient",
+      "mlxlm-1935-zero-max-tokens",
+      "mlxlm-1938-phi3small-logits-mask",
+      "mlxlm-1979-ssm-padding-mask"
+    ]
+  },
+  "primary_metric": "held-out task success after policy update versus the same frozen initial policy without update",
+  "model_access": {
+    "no_update_baseline_started": false,
+    "sft_started": false,
+    "grpo_started": false,
+    "agent_rollouts_started": false,
+    "heldout_seen_by_model_or_agent": false
+  },
+  "grader_and_runtime_gate": {
+    "grader_source_commit_and_sha256_pinned": true,
+    "grader_is_separated_from_candidate_workspace": false,
+    "candidate_repo_edits_run_in_vare_isolated_boundary": false,
+    "network_disabled_and_resource_limited_execution_verified": false,
+    "training_go": false
+  },
+  "stop_reason": "The current VARE separated-candidate path preserves frozen JSON function-task contracts. It does not yet safely run arbitrary repository patches against separate upstream pytest graders. No task rollout or model update is permitted until that narrow repo-task grading path is implemented and audited.",
+  "integrity_rules": [
+    "Do not change split membership after any development rollout or training begins.",
+    "Do not expose grader files or source-patch references in agent-visible task prompts.",
+    "Do not run model or agent prompts against held-out tasks before final evaluation.",
+    "Do not call source-level regression replay an agent task rollout or capability result.",
+    "If fewer than 15 source-level candidates remain after independent grader/runtime qualification, expand the source pool and re-freeze before training."
+  ]
+}

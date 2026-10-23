@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reproduce the pinned MLX-LM #1904 baseline/fix grader calibration."""
+"""Reproduce the pinned MLX-LM #1904 v10 baseline/fix calibration."""
 
 from __future__ import annotations
 
@@ -32,6 +32,7 @@ from vare.mlsys_repo_task import (
     calibration_accepts,
     RepositoryTaskError,
     verify_task_prompt,
+    read_pinned_source,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -55,7 +56,7 @@ def main() -> int:
     patch = Path(__file__).resolve().parents[1] / (
         "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/known_fix.patch"
     )
-    protocol = patch.parent / "protocol-v9.json"
+    protocol = patch.parent / "protocol-v10.json"
     task = patch.parent / "task.md"
     started = time.monotonic()
     implementation_commit = subprocess.run(
@@ -78,8 +79,8 @@ def main() -> int:
         )
     output.parent.mkdir(parents=True, exist_ok=True)
     protocol_data = json.loads(protocol.read_text(encoding="utf-8"))
-    if protocol_data.get("protocol_id") != "mlsys-repository-task-mlxlm-1904-v9":
-        raise SystemExit("calibration requires the v9 protocol")
+    if protocol_data.get("protocol_id") != "mlsys-repository-task-mlxlm-1904-v10":
+        raise SystemExit("calibration requires the v10 protocol")
     try:
         verify_no_index_flags(ROOT, CALIBRATION_INPUT_FILES)
     except RepositoryTaskError as exc:
@@ -90,6 +91,8 @@ def main() -> int:
         raise SystemExit(str(exc)) from exc
     if protocol_data["source"]["baseline_server_sha256"] != BASELINE_SERVER_SHA256:
         raise SystemExit("protocol baseline source hash disagrees with the grader")
+    if protocol_data["source"].get("fixed_commit") != FIXED_COMMIT:
+        raise SystemExit("protocol fixed source revision disagrees with the grader")
     try:
         verify_task_prompt(protocol_data, task)
     except RepositoryTaskError as exc:
@@ -187,22 +190,16 @@ def main() -> int:
             "workspace": prepare_workspace(args.source_root, patch, fixed_workspace),
             "grade": grade_workspace(fixed_workspace, image=args.image),
         }
-        expected_fixed_source = subprocess.run(
-            [
-                "git",
-                "-C",
-                str(args.source_root),
-                "show",
-                f"{FIXED_COMMIT}:mlx_lm/server.py",
-            ],
-            check=True,
-            capture_output=True,
-            timeout=10,
-        ).stdout
-        expected_fixed_sha256 = hashlib.sha256(expected_fixed_source).hexdigest()
+        expected_fixed_sha256 = protocol_data["source"].get("fixed_server_sha256")
+        expected_fixed_source = read_pinned_source(
+            args.source_root,
+            FIXED_COMMIT,
+            "mlx_lm/server.py",
+            expected_fixed_sha256,
+        )
         arms["fixed"]["matches_pinned_fixed_source"] = (
             arms["fixed"]["workspace"]["candidate_source_sha256"]
-            == expected_fixed_sha256
+            == hashlib.sha256(expected_fixed_source).hexdigest()
         )
     elapsed = time.monotonic() - started
     docker_version = subprocess.run(
@@ -214,7 +211,7 @@ def main() -> int:
     ).stdout.strip()
     result = {
         "schema_version": 1,
-        "experiment_id": "mlsys-repository-task-mlxlm-1904-calibration-v1",
+        "experiment_id": "mlsys-repository-task-mlxlm-1904-calibration-v2",
         "implementation_commit": implementation_commit,
         "implementation_worktree_clean_at_start": implementation_worktree_clean,
         "protocol_sha256": sha256_file(protocol),

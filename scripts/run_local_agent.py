@@ -144,11 +144,16 @@ def run_public_tests(
                              pids_limit=32, max_output_bytes=20_000)
     started = time.perf_counter()
     try:
-        result = asyncio.run(DockerIsolationRunner().run_candidate(
-            limits, allowed_workspace_root=workspace.parent, workspace=workspace,
+        import secrets
+
+        runner = DockerIsolationRunner()
+        argv = runner.candidate_argv(
+            limits, name="vare-agent-" + secrets.token_hex(12),
+            allowed_workspace_root=workspace.parent, workspace=workspace,
             command=['python', '/workspace/test_public.py'],
             readonly_workspace=True,
-        ))
+        )
+        result = asyncio.run(runner.execute(argv, limits))
     except Exception as exc:
         return {'passed': False, 'error': f'{type(exc).__name__}: {exc}',
                 'elapsed_seconds': round(time.perf_counter() - started, 3)}
