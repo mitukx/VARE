@@ -315,7 +315,7 @@ def main() -> int:
             preflight = observe()
             limits = lock["resources"]
             disk_free_gib = round(shutil.disk_usage(ROOT).free / (1024 ** 3), 3)
-            if (preflight["swap_used_mib"] > limits["max_start_swap_mib"]
+            if (preflight["swap_used_mib"] >= limits["max_start_swap_mib"]
                     or preflight["memory_free_percent"] < limits["min_start_free_memory_percent"]
                     or disk_free_gib < limits["min_disk_free_gib"]):
                 raise ValueError("locked resource preflight failed")
@@ -342,7 +342,7 @@ def main() -> int:
         preflight = observe()
         limits = lock["resources"]
         disk_free_gib = round(shutil.disk_usage(ROOT).free / (1024 ** 3), 3)
-        if (preflight["swap_used_mib"] > limits["max_start_swap_mib"]
+        if (preflight["swap_used_mib"] >= limits["max_start_swap_mib"]
                 or preflight["memory_free_percent"] < limits["min_start_free_memory_percent"]
                 or disk_free_gib < limits["min_disk_free_gib"]):
             raise ValueError("locked resource preflight failed")
