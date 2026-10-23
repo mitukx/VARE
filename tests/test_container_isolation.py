@@ -104,25 +104,20 @@ def test_candidate_json_io_mounts_only_readonly_workspace_and_is_interactive(tmp
     assert str(grader) not in " ".join(argv)
 
 
-def test_run_candidate_can_mount_public_test_workspace_readonly(tmp_path):
+def test_readonly_public_test_argv_without_modifying_frozen_runner(tmp_path):
     root = tmp_path / "workspaces"
     ws = root / "trial"
     ws.mkdir(parents=True)
     runner = DockerIsolationRunner()
-    observed = {}
-
-    async def capture(argv, limits, *, stdin_data=None):
-        observed["argv"] = argv
-        return IsolationResult(0, "", "")
-
-    runner.execute = capture
-    asyncio.run(runner.run_candidate(
-        IsolationLimits(IMAGE), allowed_workspace_root=root, workspace=ws,
-        command=("python", "/workspace/test_public.py"), readonly_workspace=True,
-    ))
+    argv = runner.candidate_argv(
+        IsolationLimits(IMAGE), name="vare-agent-" + "a" * 24,
+        allowed_workspace_root=root, workspace=ws,
+        command=("python", "/workspace/test_public.py"),
+        readonly_workspace=True,
+    )
     mounts = [
-        observed["argv"][index + 1]
-        for index, flag in enumerate(observed["argv"][:-1]) if flag == "--mount"
+        argv[index + 1]
+        for index, flag in enumerate(argv[:-1]) if flag == "--mount"
     ]
     assert mounts == [f"type=bind,source={ws},target=/workspace,readonly"]
 
