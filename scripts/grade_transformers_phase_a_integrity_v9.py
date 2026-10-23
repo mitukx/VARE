@@ -24,6 +24,8 @@ TASK_ADAPTER = (
 )
 PHASE_A_GRADER = "scripts/grade_transformers_phase_a_v1.py"
 RUNNER = "scripts/grade_transformers_phase_a_integrity_v9.py"
+PARENT_COMPARATOR = "src/vare/isolated_candidate.py"
+PARENT_ISOLATION = "src/vare/container_isolation.py"
 TIMEOUT_S = 45
 MEMORY_MB = 1536
 
@@ -84,7 +86,13 @@ def _load_protocol() -> tuple[dict[str, Any], dict[str, Any], str]:
         raise ValueError("v9 tokenizer integrity grading image differs from its lock")
 
     implementation_hashes = lock.get("implementation_sha256")
-    expected_paths = {PHASE_A_GRADER, RUNNER, TASK_ADAPTER}
+    if protocol.get("parent_comparison_dependencies") != [
+        PARENT_COMPARATOR, PARENT_ISOLATION,
+    ]:
+        raise ValueError("v9 parent comparison dependency inventory is malformed")
+    expected_paths = {
+        PHASE_A_GRADER, RUNNER, TASK_ADAPTER, PARENT_COMPARATOR, PARENT_ISOLATION,
+    }
     if not isinstance(implementation_hashes, dict) or set(implementation_hashes) != expected_paths:
         raise ValueError("v9 tokenizer integrity implementation inventory is malformed")
     for relative_path, expected_sha in implementation_hashes.items():

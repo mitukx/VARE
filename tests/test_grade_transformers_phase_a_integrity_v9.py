@@ -79,6 +79,8 @@ def test_v9_protocol_and_implementation_identities_are_locked():
     expected_paths = {
         "scripts/grade_transformers_phase_a_v1.py",
         "scripts/grade_transformers_phase_a_integrity_v9.py",
+        "src/vare/isolated_candidate.py",
+        "src/vare/container_isolation.py",
         "benchmarks/mlsys_repo_eval_v4/"
         "transformers_49116_tokenizer_routing_v2_grader_v9/grader_adapter.py",
     }
