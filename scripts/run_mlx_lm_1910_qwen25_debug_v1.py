@@ -177,10 +177,19 @@ def verify(protocol_path: Path, model_path: Path, python_exe: Path,
     manifest = json.loads(model_manifest_path.read_text(encoding="utf-8"))
     if manifest.get("revision") != lock["model"]["revision"] or manifest.get("repository") != lock["model"]["repository"]:
         raise ValueError("model repository or revision does not match manifest")
+    cache_root = model_path.parent.parent.resolve(strict=True)
+    blob_roots = ((cache_root / "blobs").resolve(strict=True),
+                  (cache_root.parent / "blobs").resolve(strict=True))
     for name, identity in manifest["files"].items():
         item = model_path / name
-        if (item.is_symlink() or not item.is_file() or item.stat().st_size != identity["bytes"]
-                or sha256(item) != identity["sha256"]):
+        if item.is_symlink():
+            content_path = item.resolve(strict=True)
+            if not any(content_path.is_relative_to(blob_root) for blob_root in blob_roots):
+                raise ValueError(f"model snapshot symlink escapes its Hugging Face blob store: {name}")
+        else:
+            content_path = item
+        if (not content_path.is_file() or content_path.stat().st_size != identity["bytes"]
+                or sha256(content_path) != identity["sha256"]):
             raise ValueError(f"model checkpoint file identity mismatch: {name}")
 
     python_exe = python_exe.absolute()
