@@ -114,6 +114,8 @@ def test_v2_launcher_fails_before_model_load_on_consumed_cohort(monkeypatch, tmp
     monkeypatch.setattr(sys, "argv", ["runner", "--output", str(output)])
     from scripts.run_qwen3_4b_mlsys_development_feasibility_v2 import main
 
-    with pytest.raises(RuntimeError, match="every task in this cohort was exposed"):
+    # The frozen v2 source lock predates the integrated v9 grading code.
+    # Refuse the stale implementation instead of resealing a consumed cohort.
+    with pytest.raises(RuntimeError, match="v2 implementation source hash mismatch"):
         main()
     assert not output.exists()
