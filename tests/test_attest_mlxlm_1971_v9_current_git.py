@@ -108,3 +108,55 @@ def test_v9_attestation_rejects_source_symlink(
     (root / "impl.py").symlink_to(external)
     with pytest.raises(ValueError, match="not a regular file"):
         preflight.attest_current_v9(root)
+
+
+def test_attested_grade_entrypoint_checks_source_before_dispatch(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from vare import mlxlm_1971_repo_task as public
+
+    seen: list[str] = []
+
+    def verify(root: Path) -> dict[str, object]:
+        seen.append("verify")
+        return {"current_source_matches_pinned_git": True}
+
+    def grade(workspace: Path) -> dict[str, object]:
+        seen.append("grade")
+        return {"passed": False}
+
+    monkeypatch.setattr(preflight, "attest_current_v9", verify)
+    monkeypatch.setattr(public, "grade_workspace", grade)
+    assert preflight.grade_workspace_attested_v9(tmp_path) == {"passed": False}
+    assert seen == ["verify", "grade"]
+
+    def refuse(root: Path) -> dict[str, object]:
+        raise ValueError("modified source")
+
+    monkeypatch.setattr(preflight, "attest_current_v9", refuse)
+    with pytest.raises(ValueError, match="modified source"):
+        preflight.grade_workspace_attested_v9(tmp_path)
+    assert seen == ["verify", "grade"]
+
+
+def test_attested_export_entrypoint_checks_source_before_dispatch(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from vare import mlxlm_1971_repo_task as public
+
+    seen: list[str] = []
+
+    def verify(root: Path) -> dict[str, object]:
+        seen.append("verify")
+        return {"current_source_matches_pinned_git": True}
+
+    def export(source: Path, target: Path, patch: Path | None) -> dict[str, object]:
+        seen.append("export")
+        return {"changed_files": []}
+
+    monkeypatch.setattr(preflight, "attest_current_v9", verify)
+    monkeypatch.setattr(public, "export_candidate", export)
+    assert preflight.export_candidate_attested_v9(tmp_path, tmp_path / "new") == {
+        "changed_files": []
+    }
+    assert seen == ["verify", "export"]
