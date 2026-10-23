@@ -1,0 +1,39 @@
+[
+  {
+    "argv": [
+      "git",
+      "init",
+      "--bare",
+      "--quiet",
+      "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-c",
+      "core.hooksPath=/dev/null",
+      "-c",
+      "core.fsmonitor=false",
+      "-C",
+      "results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git",
+      "fetch",
+      "--depth=1",
+      "--no-tags",
+      "--no-recurse-submodules",
+      "https://github.com/ml-explore/mlx-lm.git",
+      "5f3c79d6bb1864a85d5343818192bd061b161e3a"
+    ],
+    "returncode": 0,
+    "stderr": "From https://github.com/ml-explore/mlx-lm\n * branch            5f3c79d6bb1864a85d5343818192bd061b161e3a -> FETCH_HEAD\n",
+    "stdout": ""
+  },
+  {
+    "elapsed_seconds": 0.94,
+    "peak_observed_process_tree_rss_bytes": 22609920,
+    "source_mirror_regular_file_bytes": 616718
+  }
+]
