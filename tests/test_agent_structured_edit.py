@@ -213,3 +213,36 @@ def test_control_characters_in_allowlisted_paths_are_rejected_before_edit(
         )
     assert target.read_bytes() == original
     assert sorted(tmp_path.iterdir()) == [target]
+
+
+@pytest.mark.parametrize("name", ["./src/module.py", "src/./module.py", "src//module.py", "src/module.py/"])
+def test_noncanonical_allowlist_entries_are_rejected(tmp_path: Path, name: str) -> None:
+    root, _ = _workspace(tmp_path)
+    target = root / "src/module.py"
+    before = target.read_bytes()
+    with pytest.raises(StructuredEditError, match="allowlisted"):
+        apply_structured_edit(
+            root, {name}, action="replace_text", path=name,
+            expected_hash=hashlib.sha256(before).hexdigest(),
+            expected_revision="0" * 64, old_text="return 1", new_text="return 2",
+        )
+    assert target.read_bytes() == before
+
+
+@pytest.mark.parametrize("name", ["space name.py", "unicode-\u00fc.py", 'quote"name.py', "colon:name.py"])
+def test_canonical_unusual_filenames_generate_applicable_diffs(tmp_path: Path, name: str) -> None:
+    original = b"return 1\n"
+    target = tmp_path / name
+    target.write_bytes(original)
+    result = apply_structured_edit(
+        tmp_path, {name}, action="replace_text", path=name,
+        expected_hash=hashlib.sha256(original).hexdigest(),
+        expected_revision=workspace_revision(tmp_path, {name}),
+        old_text="return 1", new_text="return 2",
+    )
+    target.write_bytes(original)
+    subprocess.run(
+        ["git", "apply", "-"], cwd=tmp_path,
+        input=result["diff"].encode(), capture_output=True, check=True, timeout=10,
+    )
+    assert target.read_bytes() == b"return 2\n"

@@ -50,6 +50,7 @@ def _safe_path(root: Path, name: str, allowed_files: set[str]) -> Path:
     if (
         name not in allowed_files
         or not name
+        or name != parsed.as_posix()
         or parsed.is_absolute()
         or ".." in parsed.parts
         or "." in parsed.parts
