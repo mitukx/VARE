@@ -1,0 +1,973 @@
+{
+  "created_for": "mlsys-repo-task-mlx-lm-1910-agent-v7",
+  "file_count": 193,
+  "files": [
+    {
+      "path": ".gitignore",
+      "sha256": "c59416bac1f46596286bda92138ea312fec55e4c078eb85fdbd971f618fb8060",
+      "size_bytes": 276
+    },
+    {
+      "path": "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/TASK.md",
+      "sha256": "38446f2db20c6fc9fde97ce3ae703da96a5e827c7f732810d24616015ab3a621",
+      "size_bytes": 251
+    },
+    {
+      "path": "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/task.json",
+      "sha256": "cb3528ed43b42a43ddcd5d2993fe09439328ff79e96268908f6a716aadab6f32",
+      "size_bytes": 735
+    },
+    {
+      "path": "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/qwen3_coder.py",
+      "sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+      "size_bytes": 4155
+    },
+    {
+      "path": "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/test_public.py",
+      "sha256": "d41bd79d8936db5f48f74805fdad8636ac54e64dbafe704ecdf86973178d8875",
+      "size_bytes": 809
+    },
+    {
+      "path": "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_qwen3_coder/Dockerfile",
+      "sha256": "c55a5d7ab1b0dcb19720f6d949e49148a800fda03aded42500a6186b2099d717",
+      "size_bytes": 254
+    },
+    {
+      "path": "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_qwen3_coder/grader.in",
+      "sha256": "bf4dc0555928a3facf67b3370001388d4b65e69a071c339f8b201310bde4486a",
+      "size_bytes": 14
+    },
+    {
+      "path": "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_qwen3_coder/grader.lock.txt",
+      "sha256": "d90116b59a763c00a9d317798a9d0fdac900777a16df5ef391d45cb3ef0d5aff",
+      "size_bytes": 1371
+    },
+    {
+      "path": "protocols/mlsys_repo_task_mlx_lm_1910_v1.lock.json",
+      "sha256": "63b03258d213f8728e852c6bd50a70b36f0ce7f43531bd1333eb982fba6deaba",
+      "size_bytes": 6143
+    },
+    {
+      "path": "protocols/mlsys_repo_task_mlx_lm_1910_v1.sha256",
+      "sha256": "3e25284227fcdbf37114d838fe3587702d4e947d4c3fca5c1bd38f090a1095b5",
+      "size_bytes": 107
+    },
+    {
+      "path": "protocols/mlsys_repo_task_mlx_lm_1910_v2.lock.json",
+      "sha256": "ddd23a921caf2d31a44a9de8694aed4ee507c026b203b8b7b997ebb47185a48f",
+      "size_bytes": 6864
+    },
+    {
+      "path": "protocols/mlsys_repo_task_mlx_lm_1910_v2.sha256",
+      "sha256": "e61ad1764ce499d1f652d6ff7a115b5a54a31d8c5ef9c7cb357e646d9ee729e5",
+      "size_bytes": 107
+    },
+    {
+      "path": "protocols/mlsys_repo_task_mlx_lm_1910_v3.lock.json",
+      "sha256": "61e470605281990075a386566fc60f5b6dbe15a3a65346a76de76bb3ce7845d6",
+      "size_bytes": 7676
+    },
+    {
+      "path": "protocols/mlsys_repo_task_mlx_lm_1910_v3.sha256",
+      "sha256": "ced4e9548817ef50881fd6aaca831260b480e0b0d920a9b18e49f0295c55fcca",
+      "size_bytes": 107
+    },
+    {
+      "path": "protocols/mlsys_repo_task_mlx_lm_1910_v4.lock.json",
+      "sha256": "651167b48ff999669162190f55a8d4c11903c09e6061d7d3a309823ae522601f",
+      "size_bytes": 7922
+    },
+    {
+      "path": "protocols/mlsys_repo_task_mlx_lm_1910_v4.sha256",
+      "sha256": "4172608f3fd2f6d25b61388abd428ddb3f76233a218fe8b6f8920761f828e925",
+      "size_bytes": 107
+    },
+    {
+      "path": "protocols/mlsys_repo_task_mlx_lm_1910_v5.lock.json",
+      "sha256": "9b00cf6cfc4d247f5f2c6498f2f7f1a7b285f96fe6e3e44633f82d43cc771dff",
+      "size_bytes": 9330
+    },
+    {
+      "path": "protocols/mlsys_repo_task_mlx_lm_1910_v5.sha256",
+      "sha256": "1d1cc17cdb1052190b93cab68e25dcbcc2380b90aa4fda310bb3577f018ad30e",
+      "size_bytes": 107
+    },
+    {
+      "path": "protocols/mlsys_repo_task_mlx_lm_1910_v6.lock.json",
+      "sha256": "4ffd4a9d2f72f04eabac10b37c50653b7b4c4850764ce96bb85120102a0d31f6",
+      "size_bytes": 9639
+    },
+    {
+      "path": "protocols/mlsys_repo_task_mlx_lm_1910_v6.sha256",
+      "sha256": "623c8f881163eb7937a9c7e3a4d8721136356e378771b30f348e234048933756",
+      "size_bytes": 107
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v1/calibration-attempt-1.json",
+      "sha256": "b1844f9d200403c5886b5692ba8e205b381e98ddd10839cfb37163d6dc0513ac",
+      "size_bytes": 549
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v1/mlx-agent-requirements.lock.txt",
+      "sha256": "f33435efacb0fbe0d02b6978493d6ad7b18084023c5e9a9d13c7a07d917308b1",
+      "size_bytes": 564
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v1/model-manifest.json",
+      "sha256": "0f87cd7d4245d981cf64644697f72418c13ce848592f921f01861fa121da2e06",
+      "size_bytes": 2115
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v1/protocol.lock.json",
+      "sha256": "98c9f2502013af73c62eb97b96452690e3fafc7bc8abf48b6990443e13eba6ca",
+      "size_bytes": 8728
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v1/protocol.sha256",
+      "sha256": "5eff71e27db507b7fdc32dacf990843ea8281b5f5a22fd3186e3c021d4755c59",
+      "size_bytes": 85
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v2/calibration-attempt-2.json",
+      "sha256": "c5bfc3472bff5564cebc206d949c5e6a96f05081371b9c298414c19138ee142b",
+      "size_bytes": 597
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v2/grader-calibration/baseline/grade.json",
+      "sha256": "7a9fd6632326304ed4c54f6aee6b3aecd5b5e45ec5bd0230f04b909e634ebb97",
+      "size_bytes": 758
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v2/grader-calibration/baseline/raw/oracle.json",
+      "sha256": "7893be9d861498a109ae64226b1fc5c8ec5ae3b7d2c049e9c25d50079ad6f6f9",
+      "size_bytes": 248
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v2/grader-calibration/baseline/raw/upstream-test.log",
+      "sha256": "7893be9d861498a109ae64226b1fc5c8ec5ae3b7d2c049e9c25d50079ad6f6f9",
+      "size_bytes": 248
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v2/grader-calibration/calibration.json",
+      "sha256": "8ae5f813921c9b43dfe19da863331f041a78c9b66f33f72bbad38a7004088688",
+      "size_bytes": 1623
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v2/grader-calibration/known_fix/grade.json",
+      "sha256": "ebb4eabc8a3660b0d2d9260dea6c150e8dd4f68796fc75ed94a819add57e1564",
+      "size_bytes": 758
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v2/grader-calibration/known_fix/raw/oracle.json",
+      "sha256": "ceb1797216b2627d902c578fbf20eedcb2a8fb3be1e08495636bdd597dbbffa3",
+      "size_bytes": 248
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v2/grader-calibration/known_fix/raw/upstream-test.log",
+      "sha256": "ceb1797216b2627d902c578fbf20eedcb2a8fb3be1e08495636bdd597dbbffa3",
+      "size_bytes": 248
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v2/grader-calibration/mutant_object_only/grade.json",
+      "sha256": "89f176998d59a35373253435a68715e2e4ba27906d6a4b51b8bad7f2f0cd6389",
+      "size_bytes": 758
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v2/grader-calibration/mutant_object_only/raw/oracle.json",
+      "sha256": "e158966faf375f117127640956319a2743575da14ef4d7dce83f927477a791b5",
+      "size_bytes": 248
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v2/grader-calibration/mutant_object_only/raw/upstream-test.log",
+      "sha256": "e158966faf375f117127640956319a2743575da14ef4d7dce83f927477a791b5",
+      "size_bytes": 248
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v2/grader-calibration/mutant_parse_any_json_scalar/grade.json",
+      "sha256": "e67dedc1787a226be8ccee2fbf77a3e56f547705e62f6bcfc985120bd1d2fee8",
+      "size_bytes": 759
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v2/grader-calibration/mutant_parse_any_json_scalar/raw/oracle.json",
+      "sha256": "ecfdd06c2fd55cd9198708251479eeb270bc06c1b22994262ffc20684cb30f93",
+      "size_bytes": 248
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v2/grader-calibration/mutant_parse_any_json_scalar/raw/upstream-test.log",
+      "sha256": "ecfdd06c2fd55cd9198708251479eeb270bc06c1b22994262ffc20684cb30f93",
+      "size_bytes": 248
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v2/grader-calibration/mutant_restore_default_string/grade.json",
+      "sha256": "8dde82855527b2ec2f4c4583c5dcf38c69c592c59ceaf346aa132e970b4e76b9",
+      "size_bytes": 759
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v2/grader-calibration/mutant_restore_default_string/raw/oracle.json",
+      "sha256": "b8ee849f769caa1a119af961d5d8db6975f2547ed9a9d675082c3ce7ebb66b9e",
+      "size_bytes": 248
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v2/grader-calibration/mutant_restore_default_string/raw/upstream-test.log",
+      "sha256": "b8ee849f769caa1a119af961d5d8db6975f2547ed9a9d675082c3ce7ebb66b9e",
+      "size_bytes": 248
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v2/protocol.lock.json",
+      "sha256": "69ebe695f46875a33dbac4f0ee0b59fb92824f1ac98f5668dd64c3444697f6f4",
+      "size_bytes": 9170
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v2/protocol.sha256",
+      "sha256": "985286048796c2765aae88c666843b06aa10255ce7fcf0c448aa41b420beaff7",
+      "size_bytes": 85
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/baseline/grade.json",
+      "sha256": "5b973239f89c6bc701fd4c2c6d190caac7ccfabd8363ce192d9693a517eeb45d",
+      "size_bytes": 2349
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/baseline/raw/oracle.json",
+      "sha256": "47aac63eda97debc6f67c0f58cc3b3dd78c9dcc8f50950802da6c90d82b9165b",
+      "size_bytes": 309
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/baseline/raw/upstream-test.log",
+      "sha256": "c07d132045d6b79d20f5325919ba347ec450c200f0cccd07c98e7f7cdd9f6a49",
+      "size_bytes": 1940
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/calibration.json",
+      "sha256": "847a7226fdfdd816ca80dd9cf08bc658b464b1460542ae9e26f970120228d93c",
+      "size_bytes": 1640
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/known_fix/grade.json",
+      "sha256": "e1756c43b967353379aa5f3a572b8e6e266687c0c24402b78acb5b7bff939676",
+      "size_bytes": 2485
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/known_fix/raw/oracle.json",
+      "sha256": "111e59ecd9c652551320c9b3356312cd6f7885a521bd838625d3034c73d1c4ef",
+      "size_bytes": 293
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/known_fix/raw/upstream-test.log",
+      "sha256": "51ca48c3d43a26089aa977abf1532d4a790e7102dee7ca070883647aa4346f35",
+      "size_bytes": 113
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/mutant_object_only/grade.json",
+      "sha256": "f4587f845bca43716f39ea47ef3089aa7f5a9014c44a4569edfa254d1dd7caa2",
+      "size_bytes": 2416
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/mutant_object_only/raw/oracle.json",
+      "sha256": "5d41ba74b55356086e048e89538001311460036a69cc7725a9287e32463b3ab5",
+      "size_bytes": 299
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/mutant_object_only/raw/upstream-test.log",
+      "sha256": "973519a3f12f4fda70bcd5727832cfc559e90e937c4d25fdde9accd1bec3c592",
+      "size_bytes": 1909
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/mutant_parse_any_json_scalar/grade.json",
+      "sha256": "0c9783be1779cb1e209ee874c329c2423362b3042aaa07f50dd4189a14e92641",
+      "size_bytes": 2646
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/mutant_parse_any_json_scalar/raw/oracle.json",
+      "sha256": "bc83d31607d0ea6ec8e9eec8d74d189b751c4471402077fefc0d37f85e211966",
+      "size_bytes": 447
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/mutant_parse_any_json_scalar/raw/upstream-test.log",
+      "sha256": "87757931e953aae7c48ff0a76eda9e5761ca4fb9d44cb8179dc0b17b2cc79b4a",
+      "size_bytes": 3288
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/mutant_restore_default_string/grade.json",
+      "sha256": "7362ad4e54f85f7ffd607c09acc8a581c9df6424aeef14a81b14bd9bf513fb7d",
+      "size_bytes": 2350
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/mutant_restore_default_string/raw/oracle.json",
+      "sha256": "47aac63eda97debc6f67c0f58cc3b3dd78c9dcc8f50950802da6c90d82b9165b",
+      "size_bytes": 309
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/mutant_restore_default_string/raw/upstream-test.log",
+      "sha256": "ac1d59a055c799863a92fa85750233a0b8a77c6496adecde3d0aef3774bd9164",
+      "size_bytes": 1940
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v3/protocol.lock.json",
+      "sha256": "c41bafe582f38efe1aefb10f085aed71623d90d1f5ea86b2e8cdf577b9dfac10",
+      "size_bytes": 9652
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v3/protocol.sha256",
+      "sha256": "37f5fcd7f4835a28a5feb37c901aeddb773c546990152fd630a47010b0dac026",
+      "size_bytes": 85
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v4/protocol.lock.json",
+      "sha256": "255f2b99f5c3207e607503657105be06b22b62f10ee89adc9f4bf29cf5a48e14",
+      "size_bytes": 10445
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v4/protocol.sha256",
+      "sha256": "e9165bc85e472f65897521baeb218ee8a91ed214e18d18d94474034972e36674",
+      "size_bytes": 85
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v5/launcher-attempt-1.json",
+      "sha256": "c38c7ef97984767412bc3df3bbc25a479099c20ed6eebe32b0631952a02eb9ed",
+      "size_bytes": 463
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v5/protocol.lock.json",
+      "sha256": "ddcd0e52d65becf51858d9d7c2b7e982079d2e04b735a084bbb384dd6b2ff527",
+      "size_bytes": 11057
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v5/protocol.sha256",
+      "sha256": "0fec7849d96fc8eb9c8692ffd731a2984629cf2f4733a4a52a889eb0501d7398",
+      "size_bytes": 85
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v5/run-1/greedy/workspace/qwen3_coder.py",
+      "sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+      "size_bytes": 4155
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v5/run-1/greedy/workspace/test_public.py",
+      "sha256": "d41bd79d8936db5f48f74805fdad8636ac54e64dbafe704ecdf86973178d8875",
+      "size_bytes": 809
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v6/preflight-attempt-1.json",
+      "sha256": "c4b99671b5b68fc70da69b8a6905e8891b3c18202c891ab5a522a3c5b14e037d",
+      "size_bytes": 661
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v6/preflight-attempt-2.json",
+      "sha256": "d3e421c95f73476ad5bc601490d80484e4880a35d6af7a784c50999d7d54fc49",
+      "size_bytes": 504
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v6/protocol.lock.json",
+      "sha256": "eec5ab63b1c97a31daafafe804b7af9c2fa9a6dcbb70fa71995bd53ab22d3ffc",
+      "size_bytes": 11405
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v6/protocol.sha256",
+      "sha256": "a1e565b6bf7ffe18c9e5e11b34c1297209e9d33acfccfb560059b20f2ec5ec94",
+      "size_bytes": 85
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/protocol.lock.json",
+      "sha256": "cffc2839ba342b3f8c60189215450c3e6a5d06a1389fa0582f4d5de670bdebf4",
+      "size_bytes": 11595
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/protocol.sha256",
+      "sha256": "5d42436e83786740649eb1c69438ca5856aea0d5fcdeb200b9a84027ad5ae6be",
+      "size_bytes": 85
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/report.md",
+      "sha256": "3925edadbe7eeda695c1accac36267fa08ecdbf6e70993f6d2b0a3a66e0c9f25",
+      "size_bytes": 4215
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/run-1/greedy/attempt-summary.json",
+      "sha256": "50d572a31c6a3c77f2990a42cc061b9cf525bec8caef051b3c634844066f3e45",
+      "size_bytes": 3180
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/run-1/greedy/grader-launcher.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/run-1/greedy/grader-launcher.stdout.txt",
+      "sha256": "00203998e40691df0583d4e0409e05a11fe451f6a047796027a5e09b6dd2f327",
+      "size_bytes": 45
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/run-1/greedy/independent-grade/grade.json",
+      "sha256": "6d429a053a0753ea67445a00c72d8b29728205fd258e51ac78c70654343af404",
+      "size_bytes": 2349
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/run-1/greedy/independent-grade/raw/oracle.json",
+      "sha256": "47aac63eda97debc6f67c0f58cc3b3dd78c9dcc8f50950802da6c90d82b9165b",
+      "size_bytes": 309
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/run-1/greedy/independent-grade/raw/upstream-test.log",
+      "sha256": "05190bbec5838a77b72e56b7abe185a68bf41693f3b369897dae0b5d7dd0dc4d",
+      "size_bytes": 1940
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/run-1/greedy/launcher.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/run-1/greedy/launcher.stdout.txt",
+      "sha256": "02aaa1bc1904f3dd419dc35f5a564bb5f7267fc10ae24b61186953831cd002fc",
+      "size_bytes": 116
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/run-1/greedy/process/resource-monitor.json",
+      "sha256": "4a7249a58bccf4edd61a6bda6f82b7e68f28c52bf59483cb93965653d41940d9",
+      "size_bytes": 2555
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/run-1/greedy/process/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/run-1/greedy/process/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/run-1/greedy/workspace/qwen3_coder.py",
+      "sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+      "size_bytes": 4155
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/run-1/greedy/workspace/test_public.py",
+      "sha256": "d41bd79d8936db5f48f74805fdad8636ac54e64dbafe704ecdf86973178d8875",
+      "size_bytes": 809
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/run-1/interpretation.json",
+      "sha256": "17d615dcbdaf266ac641ab0cf8c503da949817331814a1bc479169d56ddf6b1b",
+      "size_bytes": 2286
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/run-1/summary.json",
+      "sha256": "7df4534bc38b86fb8e053a16114f9967c91d62b24cc6a2c9a424c1a0671cfe08",
+      "size_bytes": 4159
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/task-license-provenance.json",
+      "sha256": "1e144ec66d29516deadce41704ab23ad7c03c38401f4bdf139905cee93461f62",
+      "size_bytes": 1166
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v1/postflight-memory-pressure.txt",
+      "sha256": "b38d08498b74222921714838c44627c3cae3364aa380a0c31d9203158f5f0be3",
+      "size_bytes": 524
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v1/postflight-swap-after.txt",
+      "sha256": "d852804c8b998a9bbf947b4167a2603e67cd06eef5ec5c53e2d51cedb06f1141",
+      "size_bytes": 63
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v1/preflight-swap-before.txt",
+      "sha256": "d852804c8b998a9bbf947b4167a2603e67cd06eef5ec5c53e2d51cedb06f1141",
+      "size_bytes": 63
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v1/run-1/SHA256SUMS",
+      "sha256": "a99d139bf07f41ad1c8ac3c505582f05eb0d95821bb4e4fa3947477788f8f3bb",
+      "size_bytes": 169
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v1/run-1/attempt.json",
+      "sha256": "4425e838bf9536b9fc9f5c98c7d97cfd37fe9f90600c83542ee1f079f0096189",
+      "size_bytes": 383
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v1/run-1/raw/harness-startup.log",
+      "sha256": "6e78b963b4ce5c3e248d20dc9a336ed6630c2d4ef6cc412b9be2b17b1189dd05",
+      "size_bytes": 595
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v2/host-resource-usage.txt",
+      "sha256": "7e11e5411f7fb6d15a0aab2d7ca1e7951b024cc53dff156870b168badaf744fc",
+      "size_bytes": 1618
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v2/memory-after.txt",
+      "sha256": "96c690e5006a68fa8d6cdcf88c4ff9ab0a33c5d9f67371406bfc1f262e0b08a4",
+      "size_bytes": 528
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v2/memory-before.txt",
+      "sha256": "bf791d3301e71f4f3f88b7d5e1bee53e6f2451a50647b6af08ec73beca39e263",
+      "size_bytes": 528
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v2/run-1/SHA256SUMS",
+      "sha256": "73b5e4118eaea43e69809f2d4b5e4b936f6250b9b6b9d394233cf5ecf19e4f14",
+      "size_bytes": 263
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v2/run-1/attempt.json",
+      "sha256": "4626904df4822c53ba4fea68e9e70818e6b67941da1addb08c2c2eade15bd12a",
+      "size_bytes": 485
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v2/run-1/raw-host-resource-usage.txt",
+      "sha256": "7e11e5411f7fb6d15a0aab2d7ca1e7951b024cc53dff156870b168badaf744fc",
+      "size_bytes": 1618
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v2/swap-after.txt",
+      "sha256": "b218c56378c22248f8a6eb4dfecd3662d1ba1e2530ed2b1e01484424a2b1bb22",
+      "size_bytes": 77
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v2/swap-before.txt",
+      "sha256": "b218c56378c22248f8a6eb4dfecd3662d1ba1e2530ed2b1e01484424a2b1bb22",
+      "size_bytes": 77
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v3/host-resource-usage.txt",
+      "sha256": "23f23a2b241ecb9b164360cc13e1fa973c483718895432c85188873c97451999",
+      "size_bytes": 1375
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v3/memory-after.txt",
+      "sha256": "c105211e0a2ca5fb60bfebcbcdea4dd7dcfa3882096089b7ceb4446f931fbd8e",
+      "size_bytes": 529
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v3/memory-before.txt",
+      "sha256": "81a8a4157560b71e82ac081a5bdc6d57c79fab0eab9d66968f476a2ff1b9a73c",
+      "size_bytes": 528
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v3/run-1/SHA256SUMS",
+      "sha256": "3130c002fe6545e87c687d8cb47a52ca953898c76d9a1424a5311a43ca355674",
+      "size_bytes": 263
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v3/run-1/attempt.json",
+      "sha256": "e36ade43986236a3d0817e6e4477d3c0ba3c8324bf5ac97baeeb7eeba8183281",
+      "size_bytes": 499
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v3/run-1/raw-host-resource-usage.txt",
+      "sha256": "23f23a2b241ecb9b164360cc13e1fa973c483718895432c85188873c97451999",
+      "size_bytes": 1375
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v3/swap-after.txt",
+      "sha256": "b218c56378c22248f8a6eb4dfecd3662d1ba1e2530ed2b1e01484424a2b1bb22",
+      "size_bytes": 77
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v3/swap-before.txt",
+      "sha256": "b218c56378c22248f8a6eb4dfecd3662d1ba1e2530ed2b1e01484424a2b1bb22",
+      "size_bytes": 77
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v4/host-resource-usage.txt",
+      "sha256": "085e03f1541dee5a4301c8535a9ae448f706593e4959e2696af0031041e7c1cd",
+      "size_bytes": 777
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v4/image-build.log",
+      "sha256": "9276b7e1c544cd28879a92c7a8c3ba373780b0c00565ed10e2ec620ab609712e",
+      "size_bytes": 2072
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v4/image-identity.txt",
+      "sha256": "3002bf86ab4aad62fd940c64d47f69a7a7bf9aca4cdbd7e31fc84c97a2bedbf8",
+      "size_bytes": 171
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v4/memory-after.txt",
+      "sha256": "18d0008cac8fefd18245a6329095cef1478ec764e7734a6dc7cc41977817c1ac",
+      "size_bytes": 529
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v4/memory-before.txt",
+      "sha256": "4afd63d936be68012d7fcf9248b756348466685c6f05846519a4631d8b71111f",
+      "size_bytes": 530
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v4/run-1/qualification.json",
+      "sha256": "f4f16c4f2267c8f9c83e93e71a492ec057714f858ba8baf7822aafeb994bc698",
+      "size_bytes": 3888
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v4/run-1/raw/baseline-oracle.json",
+      "sha256": "108dbf096f2474ddefff74ad843ce29ab2f51ac5e1fde5277e8f6a3247316f5a",
+      "size_bytes": 227
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v4/run-1/raw/baseline-upstream-test.log",
+      "sha256": "0201f5e0bf02b532b6ed52c553c89ce595011ebb6c26aca63f26bd12732d21d0",
+      "size_bytes": 46
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v4/run-1/raw/known_fix-oracle.json",
+      "sha256": "108dbf096f2474ddefff74ad843ce29ab2f51ac5e1fde5277e8f6a3247316f5a",
+      "size_bytes": 227
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v4/run-1/raw/known_fix-upstream-test.log",
+      "sha256": "0201f5e0bf02b532b6ed52c553c89ce595011ebb6c26aca63f26bd12732d21d0",
+      "size_bytes": 46
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v4/run-1/raw/mutant_object_only-oracle.json",
+      "sha256": "108dbf096f2474ddefff74ad843ce29ab2f51ac5e1fde5277e8f6a3247316f5a",
+      "size_bytes": 227
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v4/run-1/raw/mutant_object_only-upstream-test.log",
+      "sha256": "0201f5e0bf02b532b6ed52c553c89ce595011ebb6c26aca63f26bd12732d21d0",
+      "size_bytes": 46
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v4/run-1/raw/mutant_object_only.patch",
+      "sha256": "bdf8324f5d71473b472e372556cbdfe8c20ed91a1612e3ed8cc7466185c5c8f3",
+      "size_bytes": 627
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v4/run-1/raw/mutant_parse_any_json_scalar-oracle.json",
+      "sha256": "108dbf096f2474ddefff74ad843ce29ab2f51ac5e1fde5277e8f6a3247316f5a",
+      "size_bytes": 227
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v4/run-1/raw/mutant_parse_any_json_scalar-upstream-test.log",
+      "sha256": "0201f5e0bf02b532b6ed52c553c89ce595011ebb6c26aca63f26bd12732d21d0",
+      "size_bytes": 46
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v4/run-1/raw/mutant_parse_any_json_scalar.patch",
+      "sha256": "071ca9c1a6b4359fef254166a0a0370368011547d3d7c5348ecb8962a79db1cc",
+      "size_bytes": 719
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v4/run-1/raw/mutant_restore_default_string-oracle.json",
+      "sha256": "108dbf096f2474ddefff74ad843ce29ab2f51ac5e1fde5277e8f6a3247316f5a",
+      "size_bytes": 227
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v4/run-1/raw/mutant_restore_default_string-upstream-test.log",
+      "sha256": "0201f5e0bf02b532b6ed52c553c89ce595011ebb6c26aca63f26bd12732d21d0",
+      "size_bytes": 46
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v4/run-1/raw/mutant_restore_default_string.patch",
+      "sha256": "94dd9fac93d9235014e94a2b3209f542fa04094bbaa8d2a51a6e0cb8db1dc4d6",
+      "size_bytes": 711
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v4/run-1/source-export-manifest.json",
+      "sha256": "7782daa4e677f0c70d00d9121cea9bdcaaf7371fac0381ca35eea3ef5e8d91dd",
+      "size_bytes": 233
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v4/swap-after.txt",
+      "sha256": "b218c56378c22248f8a6eb4dfecd3662d1ba1e2530ed2b1e01484424a2b1bb22",
+      "size_bytes": 77
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v4/swap-before.txt",
+      "sha256": "b218c56378c22248f8a6eb4dfecd3662d1ba1e2530ed2b1e01484424a2b1bb22",
+      "size_bytes": 77
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v5/host-resource-usage.txt",
+      "sha256": "a2313f25aa6f8503c137803bc1b129b6b2bba225ffc57659d90b2fa8290b72a3",
+      "size_bytes": 777
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v5/image-build.log",
+      "sha256": "d570065de7acc4a7eddad5fe4a8f64662d9ecbb1ba67e97d9e8fd89012fec52f",
+      "size_bytes": 2019
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v5/image-identity.txt",
+      "sha256": "cec112e6bede220b2797e4e1003ea9c0673b8b3b30fea6b5b50c1b0c2cebf600",
+      "size_bytes": 171
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v5/memory-after.txt",
+      "sha256": "6a45450dccf75103bf3663d6280f41f7bbfa881b03dc981a686202abe1dc797b",
+      "size_bytes": 526
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v5/memory-before.txt",
+      "sha256": "67112dd7fd06f957eb2a912ec6d76bc42f08a238c64150a5c07a9d5628f94c37",
+      "size_bytes": 526
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v5/run-1/qualification.json",
+      "sha256": "de2932ba21a63de0af1a05931d8dec03f3540ddb9f7ef178872005966039f481",
+      "size_bytes": 3879
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v5/run-1/raw/baseline-oracle.json",
+      "sha256": "396871ea2b7191585ae532feffffd65f156a8ae85a56b769f60f678dcfae5719",
+      "size_bytes": 746
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v5/run-1/raw/baseline-upstream-test.log",
+      "sha256": "fada0ab203a1cc0e1ad98e4089832c6d07a13a8125f292dedf5ed03a3cae6fbb",
+      "size_bytes": 1940
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v5/run-1/raw/known_fix-oracle.json",
+      "sha256": "396871ea2b7191585ae532feffffd65f156a8ae85a56b769f60f678dcfae5719",
+      "size_bytes": 746
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v5/run-1/raw/known_fix-upstream-test.log",
+      "sha256": "846a22b8ba6ed5b6cf8f00d92f0a7ad58c0e7fffcc06cea6702e34a7f424e133",
+      "size_bytes": 113
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v5/run-1/raw/mutant_object_only-oracle.json",
+      "sha256": "396871ea2b7191585ae532feffffd65f156a8ae85a56b769f60f678dcfae5719",
+      "size_bytes": 746
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v5/run-1/raw/mutant_object_only-upstream-test.log",
+      "sha256": "cb32e408b87e0fabe8387b5f86a965620d21469b38a233c9a31432109dcf05ae",
+      "size_bytes": 1909
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v5/run-1/raw/mutant_object_only.patch",
+      "sha256": "507a1131dc6292d91b9862fc4d4dffceedc75c1bb18d78d686f7fb5d3fcb687a",
+      "size_bytes": 627
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v5/run-1/raw/mutant_parse_any_json_scalar-oracle.json",
+      "sha256": "396871ea2b7191585ae532feffffd65f156a8ae85a56b769f60f678dcfae5719",
+      "size_bytes": 746
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v5/run-1/raw/mutant_parse_any_json_scalar-upstream-test.log",
+      "sha256": "5b94ba39252a385a1c26efe091622899c3dab7b9b0e6e0952a35d29e8651f6cb",
+      "size_bytes": 3288
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v5/run-1/raw/mutant_parse_any_json_scalar.patch",
+      "sha256": "943868c7060e6f5416c92d0257f2f4c0c2d8b9c623457444cc4db0177add5c07",
+      "size_bytes": 719
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v5/run-1/raw/mutant_restore_default_string-oracle.json",
+      "sha256": "396871ea2b7191585ae532feffffd65f156a8ae85a56b769f60f678dcfae5719",
+      "size_bytes": 746
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v5/run-1/raw/mutant_restore_default_string-upstream-test.log",
+      "sha256": "0667a207372eec638f0051921f665dec1f484a3c41eb2daafed15ba4a4fceeee",
+      "size_bytes": 1940
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v5/run-1/raw/mutant_restore_default_string.patch",
+      "sha256": "273d09c0aaa4d7c98e0e34e00c78a0e0aea096efc42125267f8082e4a9e2994e",
+      "size_bytes": 711
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v5/run-1/source-export-manifest.json",
+      "sha256": "eb5ce73b276442951966606a2384f0ae8a98bb4d095b380cbcb209e0a7ffa89d",
+      "size_bytes": 566
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v5/swap-after.txt",
+      "sha256": "64e5448718b26a937accc061b4ed53768cbfa7f5a691cbad3706ba3e09a07b70",
+      "size_bytes": 77
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v5/swap-before.txt",
+      "sha256": "64e5448718b26a937accc061b4ed53768cbfa7f5a691cbad3706ba3e09a07b70",
+      "size_bytes": 77
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v6/post-memory-pressure.txt",
+      "sha256": "78e159d20a8ad9908ed2d179f69d28508556fbc42853c0e5f6a90a18428a2120",
+      "size_bytes": 526
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v6/post-swap.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v6/post-vm-stat.txt",
+      "sha256": "35ec65d41d5bb9b87e5464ccc2ee1db2fe5a7cf1f133205513e43f8bdcb540c9",
+      "size_bytes": 1247
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v6/pre-memory-pressure.txt",
+      "sha256": "20434331270926949a1260be657b243933eb619f2f289ca7b0c2d0f6bae764e3",
+      "size_bytes": 529
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v6/pre-swap.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v6/pre-vm-stat.txt",
+      "sha256": "676c5c77b5225cebf56b7d058ad82572ba1d3d7b24dee92a603dd69ae0cb66ff",
+      "size_bytes": 1247
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v6/run-1/qualification.json",
+      "sha256": "c8a9a83557b472b1af3275be9125a4d3b5b74b1ca43a2c69c83ed76a1f8986db",
+      "size_bytes": 12386
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v6/run-1/raw/baseline-oracle.json",
+      "sha256": "47aac63eda97debc6f67c0f58cc3b3dd78c9dcc8f50950802da6c90d82b9165b",
+      "size_bytes": 309
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v6/run-1/raw/baseline-upstream-test.log",
+      "sha256": "43fc32f270df7ece255c2562d764a83f881d0caebe0da870bbc81082dede0bdc",
+      "size_bytes": 1940
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v6/run-1/raw/known_fix-oracle.json",
+      "sha256": "111e59ecd9c652551320c9b3356312cd6f7885a521bd838625d3034c73d1c4ef",
+      "size_bytes": 293
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v6/run-1/raw/known_fix-upstream-test.log",
+      "sha256": "aca18fc1fce2498b581fd6132f1078848af1867fc3504a9875865adfc342f95c",
+      "size_bytes": 113
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v6/run-1/raw/mutant_object_only-oracle.json",
+      "sha256": "5d41ba74b55356086e048e89538001311460036a69cc7725a9287e32463b3ab5",
+      "size_bytes": 299
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v6/run-1/raw/mutant_object_only-upstream-test.log",
+      "sha256": "155bd92239e4677c2774e587592ca383e3e98e583a6756896a025597086db5c2",
+      "size_bytes": 1909
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v6/run-1/raw/mutant_object_only.patch",
+      "sha256": "5e1a6b06bb5f7d917b20c98220ee9f034d4765e32671532abfc3272e049f6cb4",
+      "size_bytes": 627
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v6/run-1/raw/mutant_parse_any_json_scalar-oracle.json",
+      "sha256": "bc83d31607d0ea6ec8e9eec8d74d189b751c4471402077fefc0d37f85e211966",
+      "size_bytes": 447
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v6/run-1/raw/mutant_parse_any_json_scalar-upstream-test.log",
+      "sha256": "f1fd15d1966300e5ded1c636f66b3b86ed0c4b53eaa653d8cc2c491f8ae6b648",
+      "size_bytes": 3288
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v6/run-1/raw/mutant_parse_any_json_scalar.patch",
+      "sha256": "2bf36c5f5276347af8dc37504bd9b74632a5ae6b50dc4a7ace7e95f25be068a2",
+      "size_bytes": 719
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v6/run-1/raw/mutant_restore_default_string-oracle.json",
+      "sha256": "47aac63eda97debc6f67c0f58cc3b3dd78c9dcc8f50950802da6c90d82b9165b",
+      "size_bytes": 309
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v6/run-1/raw/mutant_restore_default_string-upstream-test.log",
+      "sha256": "10e206525b9a4c5359cb5a9c40e0be750b86761112d2da355c15f0da1fcac955",
+      "size_bytes": 1940
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v6/run-1/raw/mutant_restore_default_string.patch",
+      "sha256": "b431948d0901b997bb88c20c3585134809b179517d5601aa63994491db91573d",
+      "size_bytes": 711
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v6/run-1/source-export-manifest.json",
+      "sha256": "eb5ce73b276442951966606a2384f0ae8a98bb4d095b380cbcb209e0a7ffa89d",
+      "size_bytes": 566
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v6/runner.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-v6/runner.time",
+      "sha256": "f6beee50972c85895ce4ce77df6ef777d195311b12236b28077781352d70ed85",
+      "size_bytes": 777
+    },
+    {
+      "path": "scripts/calibrate_mlx_lm_1910_candidate_grader_v1.py",
+      "sha256": "334a7ef4a71d056c245293fc90c6b77409474d3905dcc507f6ae3d4fabce98d7",
+      "size_bytes": 4426
+    },
+    {
+      "path": "scripts/grade_mlx_lm_1910_candidate_v1.py",
+      "sha256": "51485925eb54301cf4a6d901b3ed3b4840cba67d1b412a26a636b6ddc32e6789",
+      "size_bytes": 5729
+    },
+    {
+      "path": "scripts/monitor_local_agent_resources_v1.py",
+      "sha256": "8b5296c527fba160cd79819f65ffb390cc2bedb4879554bb2e52f0f50f107fdd",
+      "size_bytes": 4189
+    },
+    {
+      "path": "scripts/prepare_mlx_lm_1910_agent_task_v1.py",
+      "sha256": "ee2d6a59c7a97488c095438d554ab6b64ffbecf8b1f283e15b7ab872406f8595",
+      "size_bytes": 1914
+    },
+    {
+      "path": "scripts/qualify_mlx_lm_1910_v1.py",
+      "sha256": "d0e0ad34ca37085b3955eea299e3ee5ba751e431fad15b0d06a53adde3a3bec9",
+      "size_bytes": 11428
+    },
+    {
+      "path": "scripts/qualify_mlx_lm_1910_v2.py",
+      "sha256": "446229a235c18875ffb17a1eb70987bb28597821e799870b6ed6eb3b1bdb19d2",
+      "size_bytes": 12518
+    },
+    {
+      "path": "scripts/qualify_mlx_lm_1910_v3.py",
+      "sha256": "795057c31d6fad332fe97d8d124f5da48e9be61bdd54ab9ff18c7f01e9910eca",
+      "size_bytes": 14213
+    },
+    {
+      "path": "scripts/qualify_mlx_lm_1910_v4.py",
+      "sha256": "12815ea5fa10751ff2f6ad8b8f718a1d8c22de7f00546ec3001990177225db4c",
+      "size_bytes": 14211
+    },
+    {
+      "path": "scripts/qualify_mlx_lm_1910_v5.py",
+      "sha256": "b64ef8b91f7da1082ab150975ce951034784d0548e89a911836d53602609fb29",
+      "size_bytes": 14930
+    },
+    {
+      "path": "scripts/qualify_mlx_lm_1910_v6.py",
+      "sha256": "8cb4318dec38c8a1e882686ba777600fbb0fcae8126853bd713465e954063384",
+      "size_bytes": 14936
+    },
+    {
+      "path": "scripts/run_local_agent.py",
+      "sha256": "f4d8f52710083fe037c8166a74b7ca6fe7424b06db337f5bb3d8314e6967faf6",
+      "size_bytes": 33412
+    },
+    {
+      "path": "scripts/run_mlx_lm_1910_feasibility_v1.py",
+      "sha256": "2c577219d42902da5b76090f9f60a417c41e030771f4e4ca8f133c00aa4fc23a",
+      "size_bytes": 12280
+    }
+  ],
+  "schema_version": 1,
+  "self_excluded": true
+}

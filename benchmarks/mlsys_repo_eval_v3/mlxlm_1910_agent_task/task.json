@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "task_id": "mlx-lm-1910-development-feasibility-v1",
+  "prompt": "Fix Qwen3 Coder argument parsing when a parameter schema has no top-level type. Preserve existing behavior for typed parameters and keep malformed input from crashing parsing.",
+  "source": {
+    "upstream_repository": "https://github.com/ml-explore/mlx-lm",
+    "upstream_base_commit": "bacd9e8e1f3a5be7dd64bae3a9ad8d74471ccc3a",
+    "upstream_fixed_commit": "a537041adc86d73cfae4cc1375b2c8851c652c60",
+    "base_revision": "d151a804ca04296e758e77503bc552515f723399"
+  },
+  "metadata": {
+    "editable_files": [
+      "qwen3_coder.py",
+      "test_public.py"
+    ],
+    "split": null,
+    "exposure_classification": "development_only"
+  }
+}

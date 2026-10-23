@@ -1,0 +1,50 @@
+{
+  "claim_limit": "Single Development task; this calibration does not validate held-out generalization.",
+  "expected": {
+    "baseline": "FAIL",
+    "known_fix": "PASS",
+    "mutant_object_only": "FAIL",
+    "mutant_parse_any_json_scalar": "FAIL",
+    "mutant_restore_default_string": "FAIL"
+  },
+  "protocol_id": "mlsys-repo-task-mlx-lm-1910-candidate-grader-v1",
+  "records": [
+    {
+      "arm": "baseline",
+      "grader_status": "FAIL",
+      "oracle_passed": false,
+      "source_sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+      "upstream_test_returncode": 125
+    },
+    {
+      "arm": "known_fix",
+      "grader_status": "FAIL",
+      "oracle_passed": false,
+      "source_sha256": "d1029aae22ed475e9d7c09d29c37e74dca8df52b0fb046f000f2e3f9b83a6583",
+      "upstream_test_returncode": 125
+    },
+    {
+      "arm": "mutant_restore_default_string",
+      "grader_status": "FAIL",
+      "oracle_passed": false,
+      "source_sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+      "upstream_test_returncode": 125
+    },
+    {
+      "arm": "mutant_parse_any_json_scalar",
+      "grader_status": "FAIL",
+      "oracle_passed": false,
+      "source_sha256": "67d38295ff97a018970ce672b5099ad5fb204d18cffc21787bc04ef059efe154",
+      "upstream_test_returncode": 125
+    },
+    {
+      "arm": "mutant_object_only",
+      "grader_status": "FAIL",
+      "oracle_passed": false,
+      "source_sha256": "503167d96d328ae9653c5196c3a67efbd6c4e90a59a6a30a42c7158e7b1edf56",
+      "upstream_test_returncode": 125
+    }
+  ],
+  "schema_version": 1,
+  "status": "NO_GO"
+}

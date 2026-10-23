@@ -1,0 +1,101 @@
+{
+  "candidate": {
+    "candidate_sha256": "503167d96d328ae9653c5196c3a67efbd6c4e90a59a6a30a42c7158e7b1edf56",
+    "oracle": {
+      "cases": [
+        {
+          "actual": {
+            "ok": true,
+            "value": {
+              "kind": "new",
+              "nested": {
+                "n": 2
+              }
+            }
+          },
+          "case_id": "object",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "[\"a\",{\"n\":2}]"
+          },
+          "case_id": "array",
+          "passed": false
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "plain text"
+          },
+          "case_id": "plain_string",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "[\"unfinished\""
+          },
+          "case_id": "malformed_json",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "123"
+          },
+          "case_id": "number_scalar",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "\"quoted\""
+          },
+          "case_id": "quoted_scalar",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": null
+          },
+          "case_id": "null_literal",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "true"
+          },
+          "case_id": "boolean_scalar",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": ""
+          },
+          "case_id": "empty_string",
+          "passed": true
+        }
+      ],
+      "output_sha256": "5d41ba74b55356086e048e89538001311460036a69cc7725a9287e32463b3ab5",
+      "parse_error": null,
+      "passed": false,
+      "returncode": 0,
+      "wall_seconds": 1.01
+    },
+    "upstream_test": {
+      "output_sha256": "973519a3f12f4fda70bcd5727832cfc559e90e937c4d25fdde9accd1bec3c592",
+      "returncode": 1,
+      "wall_seconds": 1.481
+    }
+  },
+  "claim_limit": "Development-task semantic calibration only; no held-out capability claim.",
+  "elapsed_seconds": 2.507,
+  "protocol_id": "mlsys-repo-task-mlx-lm-1910-candidate-grader-v1",
+  "schema_version": 1,
+  "status": "FAIL"
+}

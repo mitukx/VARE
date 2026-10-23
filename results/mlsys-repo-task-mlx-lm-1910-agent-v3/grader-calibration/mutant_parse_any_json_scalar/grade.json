@@ -1,0 +1,106 @@
+{
+  "candidate": {
+    "candidate_sha256": "67d38295ff97a018970ce672b5099ad5fb204d18cffc21787bc04ef059efe154",
+    "oracle": {
+      "cases": [
+        {
+          "actual": {
+            "ok": true,
+            "value": {
+              "kind": "new",
+              "nested": {
+                "n": 2
+              }
+            }
+          },
+          "case_id": "object",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": [
+              "a",
+              {
+                "n": 2
+              }
+            ]
+          },
+          "case_id": "array",
+          "passed": true
+        },
+        {
+          "actual": {
+            "error": "JSONDecodeError: Expecting value: line 1 column 1 (char 0)",
+            "ok": false
+          },
+          "case_id": "plain_string",
+          "passed": false
+        },
+        {
+          "actual": {
+            "error": "JSONDecodeError: Expecting ',' delimiter: line 1 column 14 (char 13)",
+            "ok": false
+          },
+          "case_id": "malformed_json",
+          "passed": false
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": 123
+          },
+          "case_id": "number_scalar",
+          "passed": false
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "quoted"
+          },
+          "case_id": "quoted_scalar",
+          "passed": false
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": null
+          },
+          "case_id": "null_literal",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": true
+          },
+          "case_id": "boolean_scalar",
+          "passed": false
+        },
+        {
+          "actual": {
+            "error": "JSONDecodeError: Expecting value: line 1 column 1 (char 0)",
+            "ok": false
+          },
+          "case_id": "empty_string",
+          "passed": false
+        }
+      ],
+      "output_sha256": "bc83d31607d0ea6ec8e9eec8d74d189b751c4471402077fefc0d37f85e211966",
+      "parse_error": null,
+      "passed": false,
+      "returncode": 0,
+      "wall_seconds": 1.002
+    },
+    "upstream_test": {
+      "output_sha256": "87757931e953aae7c48ff0a76eda9e5761ca4fb9d44cb8179dc0b17b2cc79b4a",
+      "returncode": 1,
+      "wall_seconds": 1.511
+    }
+  },
+  "claim_limit": "Development-task semantic calibration only; no held-out capability claim.",
+  "elapsed_seconds": 2.528,
+  "protocol_id": "mlsys-repo-task-mlx-lm-1910-candidate-grader-v1",
+  "schema_version": 1,
+  "status": "FAIL"
+}

@@ -1,0 +1,15 @@
+--- results/mlsys-repo-task-mlx-lm-1910-v4/run-1/vare-mlx1910-8ku1x651/fixed/mlx_lm/tool_parsers/qwen3_coder.py	2026-10-23 19:03:43
++++ results/mlsys-repo-task-mlx-lm-1910-v4/run-1/vare-mlx1910-8ku1x651/mutant_restore_default_string/mlx_lm/tool_parsers/qwen3_coder.py	2026-10-23 19:03:43
+@@ -45,11 +45,7 @@
+     if "type" in param:
+         param_type = str(param["type"]).strip().lower()
+     else:
+-        try:
+-            value = json.loads(param_value)
+-        except json.JSONDecodeError:
+-            return param_value
+-        return value if isinstance(value, (dict, list)) else param_value
++        param_type = "string"
+     if param_type in _string_types:
+         return param_value
+     elif (

@@ -1,0 +1,12 @@
+{
+  "attempt_id": "grader-calibration-setup-2",
+  "candidate_code_executed": false,
+  "classification": "container_infrastructure",
+  "error": "Docker daemon rejected host temp path /private/var/folders/... as an unsupported bind source for Colima. All five arm calls returned 125 before candidate execution.",
+  "evidence": "results/mlsys-repo-task-mlx-lm-1910-agent-v2/grader-calibration/*/raw/*.log",
+  "model_loaded": false,
+  "preserve_note": "The complete raw Docker output and per-arm NO_GO are preserved.",
+  "stage": "docker_bind_mount",
+  "status": "FAILED",
+  "tests_executed": false
+}
