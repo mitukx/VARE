@@ -147,6 +147,43 @@ def _snapshot_source_repository(
     return destination
 
 
+def _materialize_source_worktree(
+    snapshot_repository: Path, destination: Path, commit: str
+) -> Path:
+    """Populate a worktree from isolated metadata without running source hooks."""
+    if destination.exists() or destination.is_symlink():
+        raise ValueError("source worktree destination already exists")
+    subprocess.run(
+        v11._git_command(
+            snapshot_repository,
+            "worktree",
+            "add",
+            "--detach",
+            "--no-checkout",
+            str(destination),
+            commit,
+        ),
+        env=v11.GIT_ENV,
+        capture_output=True,
+        check=True,
+        text=True,
+        timeout=60,
+    )
+    subprocess.run(
+        v11._git_command(destination, "read-tree", "-mu", commit),
+        env=v11.GIT_ENV,
+        capture_output=True,
+        check=True,
+        text=True,
+        timeout=120,
+    )
+    if _git(destination, "rev-parse", "HEAD") != commit:
+        raise ValueError("isolated source worktree is not at the pinned commit")
+    if _git(destination, "rev-parse", "--is-inside-work-tree") != "true":
+        raise ValueError("isolated source snapshot did not produce a worktree")
+    return destination
+
+
 def run_v12_operation(
     action: str,
     workspace: Path,
@@ -180,8 +217,11 @@ def run_v12_operation(
         snapshot = _snapshot_source_repository(
             source_repository, Path(temp) / "source-objects.git", baseline_commit
         )
+        source_worktree = _materialize_source_worktree(
+            snapshot, Path(temp) / "source-worktree", baseline_commit
+        )
         report = v11.run_v11_operation(
-            "export", workspace, source_repo=snapshot, patch_path=patch_path
+            "export", workspace, source_repo=source_worktree, patch_path=patch_path
         )
         return {
             **report,

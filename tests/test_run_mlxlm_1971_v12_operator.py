@@ -84,16 +84,8 @@ def test_v12_snapshots_untrusted_git_without_running_filters_or_uploadpack_hooks
     isolated = v12._snapshot_source_repository(
         source, tmp_path / "source-snapshot.git", commit
     )
-    safe_checkout = tmp_path / "safe-checkout"
-    subprocess.run(
-        v11._git_command(
-            isolated, "worktree", "add", "--detach", str(safe_checkout), commit
-        ),
-        env=v11.GIT_ENV,
-        capture_output=True,
-        check=True,
-        text=True,
-        timeout=30,
+    safe_checkout = v12._materialize_source_worktree(
+        isolated, tmp_path / "safe-checkout", commit
     )
     assert (safe_checkout / relative).read_bytes() == expected
     assert filter_marker.read_text(encoding="utf-8") == "x"
@@ -119,43 +111,50 @@ def test_v12_protocol_pins_v11_dependencies_without_running_candidate_code() -> 
     )
 
 
-def test_v12_export_passes_only_the_source_snapshot_to_v11(
+def test_v12_export_passes_populated_isolated_worktree_to_v11(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     source = tmp_path / "untrusted-source"
-    snapshot = tmp_path / "isolated-source.git"
     source.mkdir()
+    _git(source, "init", "-q")
+    _git(source, "config", "user.name", "VARE regression")
+    _git(source, "config", "user.email", "vare-test@example.invalid")
+    relative = Path("mlx_lm/models/mimo_v2_flash.py")
+    source_file = source / relative
+    source_file.parent.mkdir(parents=True)
+    expected = b"value = 'pinned source'\n"
+    source_file.write_bytes(expected)
+    _git(source, "add", relative.as_posix())
+    _git(source, "commit", "-qm", "pinned baseline fixture")
+    commit = _git(source, "rev-parse", "HEAD")
     observed: dict[str, object] = {}
+    monkeypatch.setattr(v12, "BASELINE_COMMIT", commit)
     monkeypatch.setattr(
         v12, "verify_v12_protocol", lambda: {"protocol_id": v12.PROTOCOL_ID}
     )
     monkeypatch.setattr(
-        v11, "_trusted_v9_protocol", lambda: {"baseline_commit": v12.BASELINE_COMMIT}
+        v11, "_trusted_v9_protocol", lambda: {"baseline_commit": commit}
     )
-
-    def make_snapshot(source_repository: Path, destination: Path, commit: str) -> Path:
-        observed["snapshot_args"] = (source_repository, destination, commit)
-        return snapshot
 
     def run_v11(action: str, workspace: Path, **kwargs: object) -> dict[str, object]:
         observed["v11_args"] = (action, workspace, kwargs)
+        source_repo = kwargs["source_repo"]
+        assert isinstance(source_repo, Path)
+        assert _git(source_repo, "rev-parse", "HEAD") == commit
+        assert _git(source_repo, "rev-parse", "--is-inside-work-tree") == "true"
+        assert (source_repo / relative).read_bytes() == expected
         return {"task_id": "mlxlm-1971-mimo-value-scale"}
 
-    monkeypatch.setattr(v12, "_snapshot_source_repository", make_snapshot)
     monkeypatch.setattr(v11, "run_v11_operation", run_v11)
     report = v12.run_v12_operation(
         "export", tmp_path / "workspace", source_repository=source
     )
-    assert observed["snapshot_args"] == (
-        source,
-        observed["snapshot_args"][1],
-        v12.BASELINE_COMMIT,
-    )
-    assert observed["v11_args"] == (
-        "export",
-        tmp_path / "workspace",
-        {"source_repo": snapshot, "patch_path": None},
-    )
+    args = observed["v11_args"]
+    assert isinstance(args, tuple)
+    assert args[:2] == ("export", tmp_path / "workspace")
+    assert args[2]["patch_path"] is None
+    assert args[2]["source_repo"] != source
+    assert args[2]["source_repo"].name == "source-worktree"
     assert report == {
         "task_id": "mlxlm-1971-mimo-value-scale",
         "operator_protocol_id": v12.PROTOCOL_ID,
