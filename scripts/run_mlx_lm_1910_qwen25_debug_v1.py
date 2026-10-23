@@ -64,6 +64,16 @@ def is_ancestor(repo: Path, commit: str) -> bool:
     ).returncode == 0
 
 
+def verify_git_store(repo: Path) -> None:
+    if git(repo, "for-each-ref", "--format=%(refname)", "refs/replace").stdout.strip():
+        raise ValueError("Git replacement refs are present")
+    alternates = repo / ".git/objects/info/alternates"
+    if alternates.exists() or alternates.is_symlink():
+        raise ValueError("Git object alternates are not permitted")
+    if any(path.is_symlink() for path in repo.rglob("*")):
+        raise ValueError("symlinks are not permitted in task or upstream Git source trees")
+
+
 def verify(protocol_path: Path, model_path: Path, python_exe: Path,
            git_source: Path, *, check_resources: bool) -> tuple[dict[str, Any], dict[str, Any]]:
     if protocol_path.is_symlink():
@@ -93,6 +103,10 @@ def verify(protocol_path: Path, model_path: Path, python_exe: Path,
         source = ROOT / relative
         if source.is_symlink() or not source.is_file() or sha256(source) != expected:
             raise ValueError(f"locked evidence identity mismatch: {relative}")
+    prompt_spec_path = ROOT / lock["agent"]["prompt_spec_path"]
+    if prompt_spec_path.is_symlink() or sha256(prompt_spec_path) != lock["agent"]["prompt_spec_sha256"]:
+        raise ValueError("frozen prompt and tool-schema artifact identity mismatch")
+    prompt_spec = json.loads(prompt_spec_path.read_text(encoding="utf-8"))
 
     # Every locked repository file must be in the committed tree as frozen.
     for relative, expected in {**lock["code_sha256"], **lock["task"]["bundle_sha256"],
@@ -143,6 +157,14 @@ def verify(protocol_path: Path, model_path: Path, python_exe: Path,
             or runtime_actual["machine"] != runtime_expected["machine"]
             or runtime_actual["packages"] != runtime_expected["packages"]):
         raise ValueError("runtime package versions or architecture differ from the frozen inventory")
+    tool_probe = subprocess.run(
+        [str(python_exe), "-c",
+         "import json,sys; sys.path.insert(0,sys.argv[1]); from run_local_agent import tools_for; print(json.dumps(tools_for(sys.argv[2],public_tests=True),ensure_ascii=False,sort_keys=True,separators=(',',':'))) ",
+         str(ROOT / "scripts"), lock["agent"]["edit_format"]],
+        capture_output=True, text=True, check=False, timeout=30,
+    )
+    if tool_probe.returncode or hashlib.sha256(tool_probe.stdout.strip().encode()).hexdigest() != prompt_spec["tool_schema_sha256"]:
+        raise ValueError("runtime tool schema differs from the frozen prompt artifact")
     freeze_path = ROOT / runtime_expected["inventory_path"]
     if freeze_path.is_symlink() or sha256(freeze_path) != runtime_expected["inventory_sha256"]:
         raise ValueError("runtime inventory identity mismatch")
@@ -152,6 +174,7 @@ def verify(protocol_path: Path, model_path: Path, python_exe: Path,
     git_source = git_source.resolve(strict=True)
     if not git_source.is_dir():
         raise ValueError("pinned upstream source is not a real directory")
+    verify_git_store(git_source)
     if git(git_source, "rev-parse", BASE).stdout.strip() != BASE:
         raise ValueError("upstream baseline commit identity mismatch")
     if git(git_source, "rev-parse", FIXED).stdout.strip() != FIXED:
@@ -164,6 +187,7 @@ def verify(protocol_path: Path, model_path: Path, python_exe: Path,
         if hashlib.sha256(target).hexdigest() != target_hash:
             raise ValueError(f"upstream source bytes differ at {commit}")
     task_workspace = ROOT / TASK_REL / "workspace"
+    verify_git_store(task_workspace)
     if git(task_workspace, "rev-parse", "HEAD").stdout.strip() != lock["task"]["vare_workspace_base_commit"]:
         raise ValueError("candidate task workspace baseline mismatch")
     if git(task_workspace, "status", "--porcelain").stdout:
@@ -274,6 +298,7 @@ def main() -> int:
         print(json.dumps({"status": "PREFLIGHT_PASS", "checks_passed": True,
                           "protocol_id": lock["protocol_id"], **preflight}, sort_keys=True))
         return 0
+    prompt_spec = json.loads((ROOT / lock["agent"]["prompt_spec_path"]).read_text(encoding="utf-8"))
 
     try:
         output = validate_output_path(args.output, ROOT / lock["resources"]["output_relative"])
@@ -345,8 +370,13 @@ def main() -> int:
         expected_public = lock["task"]["bundle_sha256"][f"{TASK_REL}/workspace/test_public.py"]
         grade_record = None
         grade_error = None
+        agent_path = attempt / "agent.json"
+        agent_record = json.loads(agent_path.read_text(encoding="utf-8")) if agent_path.is_file() else None
         if public_hash != expected_public or source_hash is None:
             grade_error = "candidate workspace integrity check failed"
+            abort_all = True
+        elif agent_record is None or agent_record.get("initial_messages") != prompt_spec["messages"]:
+            grade_error = "agent initial messages differ from the frozen prompt"
             abort_all = True
         else:
             grade_output = attempt / "independent-grade"
@@ -364,9 +394,6 @@ def main() -> int:
             else:
                 grade_error = f"grader emitted no grade.json (return code {graded.returncode})"
                 abort_all = True
-        agent_record = None
-        if (attempt / "agent.json").is_file():
-            agent_record = json.loads((attempt / "agent.json").read_text(encoding="utf-8"))
         entry = {"arm": arm["arm"], "status": monitor_result["status"], "seed": arm["seed"],
                  "started_at_utc": arm_started, "monitor": monitor_result,
                  "resource_before": resources_before, "resource_after": resources_after,
