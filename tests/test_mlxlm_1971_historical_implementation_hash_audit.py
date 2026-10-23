@@ -4,6 +4,8 @@ import hashlib
 import json
 import subprocess
 from pathlib import Path
+import sys
+from types import SimpleNamespace
 
 import pytest
 
@@ -107,3 +109,35 @@ def test_git_replace_cannot_redirect_historical_blob_reads(tmp_path: Path) -> No
 
     with pytest.raises(ValueError, match="frozen protocol differs from Git source"):
         audit_frozen_pair(root, protocol_path, lock_path, trusted)
+
+
+def test_append_only_cli_refuses_existing_or_symlink_destination(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from scripts import audit_mlxlm_1971_historical_implementation_hashes as audit
+
+    monkeypatch.setattr(
+        audit, "audit_all",
+        lambda root: {"schema_version": 1, "versions": [], "implementation_files_verified": 0},
+    )
+    monkeypatch.setattr(
+        audit.subprocess, "run",
+        lambda *args, **kwargs: SimpleNamespace(stdout="test-commit\\n"),
+    )
+    sentinel = tmp_path / "original.json"
+    sentinel.write_text("original evidence\\n", encoding="utf-8")
+    output = tmp_path / "audit.json"
+    output.symlink_to(sentinel)
+    monkeypatch.setattr(sys, "argv", ["audit", "--output", str(output)])
+
+    with pytest.raises(FileExistsError, match="refusing to overwrite audit evidence"):
+        audit.main()
+    assert sentinel.read_text(encoding="utf-8") == "original evidence\\n"
+
+    output.unlink()
+    assert audit.main() == 0
+    written = output.read_text(encoding="utf-8")
+    assert '"schema_version": 1' in written
+    with pytest.raises(FileExistsError, match="refusing to overwrite audit evidence"):
+        audit.main()
+    assert output.read_text(encoding="utf-8") == written
