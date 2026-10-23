@@ -1,4 +1,9 @@
-from scripts.run_local_agent import normalize_tool_call_format, refresh_public_tests_after_edit
+from scripts.run_local_agent import (
+    normalize_tool_call_format,
+    parse_tool_call_blocks,
+    refresh_public_tests_after_edit,
+    tools_for,
+)
 from scripts.run_separated_coding_eval import (
     _attempted_task_run_count,
     _planned_task_run_count,
@@ -52,6 +57,58 @@ def test_does_not_promote_unknown_or_malformed_fenced_json_to_tool_calls():
 def test_preserves_native_tool_call_format():
     raw = '<tool_call>{"name":"finish","arguments":{"summary":"done"}}</tool_call>'
     assert normalize_tool_call_format(raw, {"finish"}) == (raw, False)
+
+
+def test_recovers_exact_duplicate_qwen_wrapper_and_parses_nested_arguments():
+    raw = '<tool_call>\n{{"name": "read_file", "arguments": {"path": "/mlx_lm/sample_utils.py"}}\n}}\n</tool_call>'
+    tools = tools_for("unified_diff")
+    names = {item["function"]["name"] for item in tools}
+
+    normalized, recovered = normalize_tool_call_format(raw, names)
+    blocks, parsed, failures = parse_tool_call_blocks(normalized, tools)
+
+    assert recovered is True
+    assert len(blocks) == 1
+    assert failures == []
+    assert [(name, arguments) for _, name, arguments in parsed] == [
+        ("read_file", {"path": "/mlx_lm/sample_utils.py"}),
+    ]
+
+
+def test_parses_nested_json_in_native_tool_call_blocks():
+    raw = '<tool_call>{"name":"read_file","arguments":{"path":"src/module.py"}}</tool_call>'
+    blocks, parsed, failures = parse_tool_call_blocks(raw, tools_for("unified_diff"))
+    assert len(blocks) == 1
+    assert [(name, arguments) for _, name, arguments in parsed] == [
+        ("read_file", {"path": "src/module.py"}),
+    ]
+    assert failures == []
+
+
+def test_does_not_recover_malformed_patch_or_unbalanced_suffix():
+    tools = tools_for("unified_diff")
+    names = {item["function"]["name"] for item in tools}
+    malformed_patch = (
+        '<tool_call>\n{{"name": "apply_patch", "arguments": '
+        '{"patch": "diff --git a/x.py b/x.py\\n" +\n"+++ b/x.py\\n"}}\n}}'
+        '</tool_call>'
+    )
+    ambiguous = '<tool_call>{{"name":"list_files","arguments":{}}} extra }}</tool_call>'
+
+    assert normalize_tool_call_format(malformed_patch, names) == (malformed_patch, False)
+    assert normalize_tool_call_format(ambiguous, names) == (ambiguous, False)
+
+
+def test_rejects_tool_arguments_outside_the_declared_schema():
+    tools = tools_for("unified_diff", public_tests=True)
+    blocks, parsed, failures = parse_tool_call_blocks(
+        '<tool_call>{"name":"run_public_tests","arguments":{"timeout":600}}</tool_call>',
+        tools,
+    )
+    assert len(blocks) == 1
+    assert parsed == []
+    assert len(failures) == 1
+    assert "declared schema" in failures[0][1]
 
 
 def test_verified_success_requires_public_test_and_independent_hidden_grade():

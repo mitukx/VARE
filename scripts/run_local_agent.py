@@ -216,7 +216,34 @@ def normalize_tool_call_format(raw: str, tool_names: set[str]) -> tuple[str, boo
     existing strict tool-call parser.
     """
     if "<tool_call>" in raw:
-        return raw, False
+        # Some Qwen2.5 generations wrap an otherwise valid tool payload in an
+        # extra opening brace and two extra closing braces. Recover only that
+        # exact framing error; malformed arguments or mixed content in a block
+        # remain untouched for the strict parser to reject.
+        block_pattern = re.compile(r'<tool_call>(.*?)</tool_call>', re.DOTALL)
+        recovered_any = False
+
+        def recover_duplicate_wrapper(match: re.Match[str]) -> str:
+            nonlocal recovered_any
+            content = match.group(1).strip()
+            if not content.startswith('{{'):
+                return match.group(0)
+            try:
+                payload, end = json.JSONDecoder().raw_decode(content[1:])
+            except json.JSONDecodeError:
+                return match.group(0)
+            if re.fullmatch(r'\s+\}\}', content[1:][end:]) is None:
+                return match.group(0)
+            if (not isinstance(payload, dict) or set(payload) != {'name', 'arguments'}
+                    or payload.get('name') not in tool_names
+                    or not isinstance(payload.get('arguments'), dict)):
+                return match.group(0)
+            recovered_any = True
+            encoded = json.dumps(payload, ensure_ascii=False, separators=(',', ':'))
+            return f'<tool_call>{encoded}</tool_call>'
+
+        normalized = block_pattern.sub(recover_duplicate_wrapper, raw)
+        return normalized, recovered_any
 
     def encode_if_tool_call(text: str) -> str | None:
         try:
@@ -247,6 +274,51 @@ def normalize_tool_call_format(raw: str, tool_names: set[str]) -> tuple[str, boo
     if encoded is None:
         return raw, False
     return f"<tool_call>{encoded}</tool_call>", True
+
+
+def parse_tool_call_payload(raw_call: str, tools: list[dict[str, Any]]) -> tuple[str, dict[str, Any]]:
+    """Parse one complete JSON tool payload and enforce its declared schema."""
+    call = json.loads(raw_call)
+    if not isinstance(call, dict) or set(call) != {'name', 'arguments'}:
+        raise ValueError('tool payload must contain exactly name and arguments')
+    name = call['name']
+    arguments = call['arguments']
+    if not isinstance(name, str) or not isinstance(arguments, dict):
+        raise ValueError('tool name and arguments have invalid types')
+    specification = next(
+        (tool['function'] for tool in tools if tool['function']['name'] == name), None,
+    )
+    if specification is None:
+        raise ValueError('unsupported tool call')
+    parameters = specification['parameters']
+    properties = parameters['properties']
+    required = set(parameters.get('required', []))
+    if not required <= set(arguments) or set(arguments) - set(properties):
+        raise ValueError('tool arguments do not match the declared schema')
+    for key, value in arguments.items():
+        expected_type = properties[key].get('type')
+        if expected_type == 'string' and not isinstance(value, str):
+            raise ValueError(f'tool argument {key!r} must be a string')
+        if expected_type == 'object' and not isinstance(value, dict):
+            raise ValueError(f'tool argument {key!r} must be an object')
+    return name, arguments
+
+
+def parse_tool_call_blocks(
+    text: str, tools: list[dict[str, Any]],
+) -> tuple[list[re.Match[str]], list[tuple[re.Match[str], str, dict[str, Any]]],
+           list[tuple[re.Match[str], str]]]:
+    """Parse complete tool-call blocks without truncating nested JSON objects."""
+    blocks = list(re.finditer(r'<tool_call>\s*(.*?)\s*</tool_call>', text, re.DOTALL))
+    parsed: list[tuple[re.Match[str], str, dict[str, Any]]] = []
+    failures: list[tuple[re.Match[str], str]] = []
+    for block in blocks:
+        try:
+            name, arguments = parse_tool_call_payload(block.group(1), tools)
+            parsed.append((block, name, arguments))
+        except Exception as exc:
+            failures.append((block, f'{type(exc).__name__}: {exc}'))
+    return blocks, parsed, failures
 
 
 def main() -> int:
@@ -369,8 +441,6 @@ def main() -> int:
     public_test_result = None
     format_parse_failure = None
     format_parse_failure_count = 0
-    pattern = re.compile(r'<tool_call>\s*(\{.*?\})\s*</tool_call>', re.DOTALL)
-
     def note_edit(edit_result: dict[str, Any]) -> None:
         nonlocal edit_attempted, edit_applied, format_parse_failure, format_parse_failure_count
         edit_attempted = True
@@ -409,8 +479,8 @@ def main() -> int:
                                  'generation_seconds': round(generation_elapsed, 6)}
         parse_text, recovered_tool_format = normalize_tool_call_format(raw, tool_names)
         if recovered_tool_format:
-            entry['tool_call_format_recovery'] = 'strict_qwen_json_normalization'
-        calls = list(pattern.finditer(parse_text))
+            entry['tool_call_format_recovery'] = 'strict_allowlisted_json_recovery'
+        calls, parsed_calls, call_errors = parse_tool_call_blocks(parse_text, tools)
         if not calls:
             recovered = parse_submission(raw, edit_format=args.edit_format)
             if not isinstance(recovered, ParseFailure) or recovered.reason != 'no_edit':
@@ -447,17 +517,8 @@ def main() -> int:
                 continue
             stop_reason = 'no_tool_call_after_edit' if current_hashes != before else 'no_tool_call_retries_exhausted'
             break
-        parsed_calls = []
-        for match in calls:
-            try:
-                call = json.loads(match.group(1))
-                name = call.get('name')
-                arguments = call.get('arguments', {})
-                if name not in tool_names or not isinstance(arguments, dict):
-                    raise ValueError('unsupported tool call')
-                parsed_calls.append((match, name, arguments))
-            except Exception as exc:
-                entry['tool_calls'].append({'error': f'{type(exc).__name__}: {exc}', 'raw_call': match.group(1)})
+        for match, error in call_errors:
+            entry['tool_calls'].append({'error': error, 'raw_call': match.group(1)})
         if parsed_calls:
             messages.append({'role': 'assistant', 'tool_calls': [
                 {'type': 'function', 'function': {'name': name, 'arguments': arguments}}

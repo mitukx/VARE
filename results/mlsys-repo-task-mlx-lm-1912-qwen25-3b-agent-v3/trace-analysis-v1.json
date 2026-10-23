@@ -1,0 +1,46 @@
+{
+  "analysis_id": "vare.qwen25-3b-agent-v3.retrospective-tool-format-v1",
+  "analysis_implementation": {
+    "analyzer_sha256": "f3701139cf07e311eb6a5afb9a3f72c1b4e2e07728f9b2b26808dd307175341e",
+    "runner_sha256": "6c31cbfc54de9e6554f9348674e0061f63ccf798a62f4af3d7da259043b8b340"
+  },
+  "arms": {
+    "greedy": {
+      "complete_tool_call_blocks": 6,
+      "format_recovered_blocks": 4,
+      "generated_tokens": 2048,
+      "raw_trace_sha256": "9034024a8b3408f1e38a36c2fc1dda699472f9490dfc73b7b6290b0ad1218457",
+      "raw_turns": 6,
+      "rejected_blocks_by_error": {
+        "JSONDecodeError": 2,
+        "ValueError": 1
+      },
+      "schema_valid_calls": {
+        "read_file": 1,
+        "search_text": 2
+      },
+      "turns_with_format_recovery": 1
+    },
+    "sampled": {
+      "complete_tool_call_blocks": 1,
+      "format_recovered_blocks": 0,
+      "generated_tokens": 1580,
+      "raw_trace_sha256": "efa4f590ca78c6eab17818e68d5fa8953b94eb082daa981d46c8e4a1cbd781b9",
+      "raw_turns": 4,
+      "rejected_blocks_by_error": {
+        "JSONDecodeError": 1
+      },
+      "schema_valid_calls": {},
+      "turns_with_format_recovery": 0
+    }
+  },
+  "claim_limit": "Retrospective controller-format analysis only. The three accepted calls were source-inspection tools; no patch call was recovered, and the original 0/2 independent grading result is unchanged.",
+  "frozen_run": {
+    "manifest_sha256": "031cf92a36adcd7fcd50f53210095e08dd2139c296b6b0c335c9a133e965f43e",
+    "protocol_id": "vare.real-coding-agent-feasibility.mlxlm-1912-qwen25-3b-v3",
+    "protocol_sha256": "ce83fb4d65ec760013299367d1704d3849b9a7ead5ce5866318f01e786add73c"
+  },
+  "method": "Offline normalization and schema parsing of retained raw turns; no inference, tool execution, edit, or grading.",
+  "schema_version": 1,
+  "status": "COMPLETED"
+}
