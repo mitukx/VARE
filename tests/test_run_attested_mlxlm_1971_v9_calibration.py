@@ -45,7 +45,9 @@ def test_frozen_wrapper_disables_git_replacements_and_stages_pinned_commit(
     assert add[-1] == calibration.PINNED_V9_COMMIT
     assert invoke[0:2] == [sys.executable, "-I"]
     assert invoke[invoke.index("--source-repo") + 1] == str(source)
-    assert invoke[invoke.index("--output") + 1] == str(output / "records")
+    staged_output = Path(invoke[invoke.index("--output") + 1])
+    assert staged_output.name == "records"
+    assert staged_output != output / "records"
     assert output.is_dir()
     assert output.stat().st_mode & 0o777 == 0o700
     assert remove[3:6] == ["worktree", "remove", "--force"]
@@ -243,7 +245,7 @@ def test_calibration_reserves_output_before_launch_and_rejects_writable_parent(
             with pytest.raises(FileExistsError):
                 output.symlink_to(redirected, target_is_directory=True)
             destination = Path(command[command.index("--output") + 1])
-            assert destination == output / "records"
+            assert destination != output / "records"
             destination.mkdir()
             (destination / "failure.json").write_text('{"status":"fixture_failure"}')
             return subprocess.CompletedProcess(command, 1)
@@ -265,6 +267,39 @@ def test_calibration_reserves_output_before_launch_and_rejects_writable_parent(
     with pytest.raises(ValueError, match="operator-owned private parent"):
         calibration.run_frozen_calibration(source, unsafe / "output")
     assert not (unsafe / "output").exists()
+
+
+def test_output_swap_during_child_cannot_write_through_symlink(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+) -> None:
+    source = tmp_path / "source"
+    source.mkdir()
+    output = tmp_path / "reserved"
+    detached = tmp_path / "detached-original"
+    redirected = tmp_path / "external-target"
+    redirected.mkdir()
+
+    def fake_run(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        if command[:2] == [sys.executable, "-I"]:
+            stage = Path(command[command.index("--output") + 1])
+            output.rename(detached)
+            output.symlink_to(redirected, target_is_directory=True)
+            stage.mkdir(parents=True)
+            (stage / "failure.json").write_text('{"status":"retained_failure"}')
+            return subprocess.CompletedProcess(command, 1)
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(calibration.subprocess, "run", fake_run)
+    monkeypatch.setattr(calibration, "attest_current_v9", lambda _: {
+        "frozen_source_commit": calibration.PINNED_V9_COMMIT,
+        "current_source_matches_pinned_git": True,
+    })
+    with pytest.raises(ValueError):
+        calibration.run_frozen_calibration(source, output)
+
+    assert output.is_symlink()
+    assert not (redirected / "records").exists()
+    assert (detached / "records/failure.json").read_text() == '{"status":"retained_failure"}'
 
 
 def test_pinned_export_uses_one_private_patch_snapshot(

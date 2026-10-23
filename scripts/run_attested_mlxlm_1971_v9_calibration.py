@@ -52,72 +52,142 @@ def _operator_path(path: Path) -> Path:
     return path
 
 
-def _reserve_output(output: Path) -> tuple[Path, tuple[int, int]]:
-    output = _operator_path(output)
-    parent = output.parent.stat()
-    if parent.st_uid != os.getuid() or parent.st_mode & 0o022:
-        raise ValueError("calibration output requires an operator-owned private parent")
+def _open_directory_nofollow(path: Path) -> int:
+    """Open a directory by walking every component without following links."""
+    path = Path(os.path.abspath(path))
+    flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_NOFOLLOW", 0)
+    current = os.open(path.anchor, flags)
     try:
-        output.mkdir(mode=0o700)
+        for component in path.parts[1:]:
+            if component in {"", ".", ".."}:
+                raise ValueError("operator path has a non-canonical component")
+            next_fd = os.open(component, flags, dir_fd=current)
+            os.close(current)
+            current = next_fd
+        if not stat.S_ISDIR(os.fstat(current).st_mode):
+            raise ValueError("operator path parent is not a directory")
+        return current
+    except BaseException:
+        os.close(current)
+        raise
+
+
+def _reserve_output(output: Path) -> tuple[Path, int, int, str, tuple[int, int]]:
+    output = Path(os.path.abspath(output))
+    if output.name in {"", ".", ".."}:
+        raise ValueError("calibration output must name a new directory")
+    parent_fd = _open_directory_nofollow(output.parent)
+    parent = os.fstat(parent_fd)
+    if parent.st_uid != os.getuid() or parent.st_mode & 0o022:
+        os.close(parent_fd)
+        raise ValueError("calibration output requires an operator-owned private parent")
+    output_fd = -1
+    try:
+        os.mkdir(output.name, mode=0o700, dir_fd=parent_fd)
+        output_fd = os.open(
+            output.name,
+            os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_NOFOLLOW", 0),
+            dir_fd=parent_fd,
+        )
+        info = os.fstat(output_fd)
+        named = os.stat(output.name, dir_fd=parent_fd, follow_symlinks=False)
+        if (
+            not stat.S_ISDIR(info.st_mode)
+            or not stat.S_ISDIR(named.st_mode)
+            or (info.st_dev, info.st_ino) != (named.st_dev, named.st_ino)
+        ):
+            raise ValueError("reserved calibration output changed during open")
     except FileExistsError as exc:
+        os.close(parent_fd)
         raise FileExistsError(f"refusing existing calibration output: {output}") from exc
-    info = output.lstat()
-    return output, (info.st_dev, info.st_ino)
+    except BaseException:
+        if output_fd >= 0:
+            os.close(output_fd)
+        os.close(parent_fd)
+        raise
+    return output, parent_fd, output_fd, output.name, (info.st_dev, info.st_ino)
 
 
-def _verify_output_identity(output: Path, identity: tuple[int, int]) -> None:
-    _operator_path(output)
-    info = output.lstat()
-    if not stat.S_ISDIR(info.st_mode) or (info.st_dev, info.st_ino) != identity:
+def _verify_output_identity(
+    output_fd: int, parent_fd: int, name: str, identity: tuple[int, int]
+) -> None:
+    info = os.fstat(output_fd)
+    try:
+        named = os.stat(name, dir_fd=parent_fd, follow_symlinks=False)
+    except FileNotFoundError as exc:
+        raise ValueError("reserved calibration output identity changed") from exc
+    if (
+        not stat.S_ISDIR(info.st_mode)
+        or not stat.S_ISDIR(named.st_mode)
+        or (info.st_dev, info.st_ino) != identity
+        or (named.st_dev, named.st_ino) != identity
+    ):
         raise ValueError("reserved calibration output identity changed")
+
+
+def _publish_records(staged: Path, output_fd: int) -> None:
+    """Publish into the reserved directory descriptor, never a re-resolved path."""
+    try:
+        info = staged.lstat()
+    except FileNotFoundError:
+        return
+    if not stat.S_ISDIR(info.st_mode):
+        raise ValueError("staged calibration records are not a directory")
+    os.rename(staged, "records", dst_dir_fd=output_fd)
 
 
 def run_frozen_calibration(source_repo: Path, output: Path) -> int:
     """Run only source whose committed bytes match the independent v9 anchor."""
-    if output.exists() or output.is_symlink():
-        raise FileExistsError(f"refusing existing calibration output: {output}")
     source_repo = _operator_path(source_repo)
     if not source_repo.is_dir():
         raise ValueError("source repo must be a directory")
     if SOURCE_COMMITS[9] != PINNED_V9_COMMIT:
         raise ValueError("historical v9 source anchor changed")
-    output, output_identity = _reserve_output(output)
+    output, parent_fd, output_fd, output_name, output_identity = _reserve_output(output)
     env = _git_environment()
-    with tempfile.TemporaryDirectory(prefix="vare-attested-mlxlm1971-v9-") as temp:
-        worktree = Path(temp) / "frozen-v9"
-        subprocess.run(
-            [
-                "git", "-C", str(ROOT), "worktree", "add", "--detach",
-                str(worktree), PINNED_V9_COMMIT,
-            ],
-            check=True, capture_output=True, env=env, timeout=120,
-        )
-        try:
-            report = attest_current_v9(worktree)
-            if (
-                report.get("frozen_source_commit") != PINNED_V9_COMMIT
-                or report.get("current_source_matches_pinned_git") is not True
-            ):
-                raise ValueError("historical v9 checkout failed immutable attestation")
-            _verify_output_identity(output, output_identity)
-            command = [
-                sys.executable,
-                "-I",
-                str(worktree / "scripts/run_mlxlm_1971_calibration_v9.py"),
-                "--source-repo", str(source_repo),
-                "--output", str(output / "records"),
-            ]
-            result = subprocess.run(
-                command, cwd=worktree, env=env,
-                check=False, timeout=1800,
-            )
-            _verify_output_identity(output, output_identity)
-            return result.returncode
-        finally:
+    try:
+        with tempfile.TemporaryDirectory(prefix="vare-attested-mlxlm1971-v9-") as temp:
+            worktree = Path(temp) / "frozen-v9"
+            staged_records = Path(temp) / "records"
             subprocess.run(
-                ["git", "-C", str(ROOT), "worktree", "remove", "--force", str(worktree)],
+                [
+                    "git", "-C", str(ROOT), "worktree", "add", "--detach",
+                    str(worktree), PINNED_V9_COMMIT,
+                ],
                 check=True, capture_output=True, env=env, timeout=120,
             )
+            try:
+                report = attest_current_v9(worktree)
+                if (
+                    report.get("frozen_source_commit") != PINNED_V9_COMMIT
+                    or report.get("current_source_matches_pinned_git") is not True
+                ):
+                    raise ValueError("historical v9 source failed immutable attestation")
+                _verify_output_identity(output_fd, parent_fd, output_name, output_identity)
+                command = [
+                    sys.executable,
+                    "-I",
+                    str(worktree / "scripts/run_mlxlm_1971_calibration_v9.py"),
+                    "--source-repo", str(source_repo),
+                    "--output", str(staged_records),
+                ]
+                result = subprocess.run(
+                    command, cwd=worktree, env=env,
+                    check=False, timeout=1800,
+                )
+                return result.returncode
+            finally:
+                try:
+                    _publish_records(staged_records, output_fd)
+                    _verify_output_identity(output_fd, parent_fd, output_name, output_identity)
+                finally:
+                    subprocess.run(
+                        ["git", "-C", str(ROOT), "worktree", "remove", "--force", str(worktree)],
+                        check=True, capture_output=True, env=env, timeout=120,
+                    )
+    finally:
+        os.close(output_fd)
+        os.close(parent_fd)
 
 
 
