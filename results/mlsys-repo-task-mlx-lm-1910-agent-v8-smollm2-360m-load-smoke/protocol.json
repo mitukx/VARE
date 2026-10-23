@@ -1,0 +1,124 @@
+{
+  "created_at_utc": "2026-10-23T19:02:33.386422+00:00",
+  "host": {
+    "architecture": "arm64",
+    "chip": "Apple M1 Pro",
+    "macos": "27.0.1",
+    "model_name": "MacBook Pro",
+    "python_version": [
+      3,
+      12,
+      12
+    ],
+    "unified_memory": "32 GB"
+  },
+  "hypothesis": "The cached 360M-parameter MLX instruction model can complete offline initialization within strict local memory, swap, and time caps; this would establish a resource-feasibility option only, not coding capability.",
+  "model": {
+    "architecture": [
+      "LlamaForCausalLM"
+    ],
+    "base_model": "HuggingFaceTB/SmolLM2-360M-Instruct",
+    "cache_directory": "models--mlx-community--SmolLM2-360M-Instruct",
+    "file_manifest_sha256": "155787fb371d6ec404e31f94560b038d29b38547ec3a3f77f055334aba0d08b4",
+    "files": {
+      ".gitattributes": {
+        "bytes": 1519,
+        "sha256": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361"
+      },
+      "README.md": {
+        "bytes": 939,
+        "sha256": "d9852365dbda76f822b05eba2852b6ffdbd3aee4f9fae780685a73fdab14eca6"
+      },
+      "config.json": {
+        "bytes": 929,
+        "sha256": "a71ddb550723840c35375ca1fbcabf0ae6e9803ccb9c3685a788601d0afa1880"
+      },
+      "merges.txt": {
+        "bytes": 466391,
+        "sha256": "0b54e8aa4e53d5383e2e4bc635a56b43f9647f7b13832d5d9ecd8f82dac4f510"
+      },
+      "model.safetensors": {
+        "bytes": 723674815,
+        "sha256": "343dc673f7c45f829ff2a725ff9cf4151209ac52fae921dd5467e3e1b1a2fd22"
+      },
+      "model.safetensors.index.json": {
+        "bytes": 20711,
+        "sha256": "9fafd51579dfad4a40600c60fc292f0f2ad06aebdbfc9789a57f563e90fc45ba"
+      },
+      "special_tokens_map.json": {
+        "bytes": 655,
+        "sha256": "2b7379f3ae813529281a5c602bc5a11c1d4e0a99107aaa597fe936c1e813ca52"
+      },
+      "tokenizer.json": {
+        "bytes": 3522656,
+        "sha256": "7d27c493c729a66ecefc837280b05d948b1ed50d130eebdbf911b1b36cf38ed7"
+      },
+      "tokenizer_config.json": {
+        "bytes": 3764,
+        "sha256": "a27f638bd2831f5c3dea654a75838930f2b11fbe550c4d4e1d5d7bd07157b2ee"
+      },
+      "vocab.json": {
+        "bytes": 800662,
+        "sha256": "82b84012e3add4d01d12ba14442026e49b8cbbaead1f79ecf3d919784f82dc79"
+      }
+    },
+    "license": "Apache-2.0",
+    "license_source": "cached model README front matter",
+    "license_source_sha256": "d9852365dbda76f822b05eba2852b6ffdbd3aee4f9fae780685a73fdab14eca6",
+    "parameter_scale": "360M",
+    "repository": "mlx-community/SmolLM2-360M-Instruct",
+    "revision": "5d5e6fee5beb5d4d4d85e2203ef23e1230a9aac7",
+    "snapshot_bytes": 728493041
+  },
+  "primary_outcome": "One model load completes within 90 seconds without generation and all runtime resource limits remain satisfied.",
+  "procedure": {
+    "generation": false,
+    "load_operation": "mlx_lm.load(local_snapshot_path)",
+    "network_access": "disabled by HF_HUB_OFFLINE and TRANSFORMERS_OFFLINE",
+    "offline": true,
+    "optimizer_updates": 0,
+    "retry_policy": "no retry after any run outcome",
+    "runs": 1,
+    "training": false
+  },
+  "protocol_id": "vare.local-mlx-model-load-smoke.v1",
+  "reproduction_command": "HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 /path/to/mlx-smoke-venv/bin/python scripts/smoke_local_mlx_model_load_v1.py",
+  "resource_budget": {
+    "max_absolute_swap_mib": 4096,
+    "max_child_rss_mib": 3072,
+    "max_start_swap_mib": 4100,
+    "max_swap_growth_mib": 96,
+    "max_wall_seconds": 90,
+    "min_runtime_free_memory_percent": 35,
+    "min_start_free_memory_percent": 40,
+    "poll_interval_seconds": 0.25
+  },
+  "runner": {
+    "path": "scripts/smoke_local_mlx_model_load_v1.py",
+    "sha256": "ff75b06ef4527b35c8ec1c5d5743a2dded0d86b69db1d0ad4b20c72d19c813f4"
+  },
+  "runtime": {
+    "default_mlx_device": "Device(gpu, 0)",
+    "model_conversion_tool_version_from_card": "mlx-lm 0.19.2",
+    "packages": {
+      "huggingface-hub": "2.3.0",
+      "mlx": "0.32.4",
+      "mlx-lm": "0.32.2",
+      "mlx-metal": "0.32.4",
+      "numpy": "2.5.4",
+      "safetensors": "0.8.0",
+      "tokenizers": "0.23.3",
+      "transformers": "5.20.2"
+    }
+  },
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_RUN",
+  "stopping_rule": "Stop at the first successful model load, resource threshold breach, 90-second timeout, or runtime error. Do not retry this protocol.",
+  "task_context": {
+    "eligibility_credit": false,
+    "exposure": "DEVELOPMENT_ONLY",
+    "prompt_or_patch_supplied": false,
+    "task_id_for_follow_up_only": "mlxlm-1971-mimo-value-scale",
+    "task_or_grader_loaded": false
+  }
+}
