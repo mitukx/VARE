@@ -1,0 +1,20 @@
+F
+=================================== FAILURES ===================================
+____________________________ TestModels.test_phimoe ____________________________
+
+self = <test_models.TestModels testMethod=test_phimoe>
+
+    def test_phimoe(self):
+        from mlx_lm.models import phimoe
+    
+        # Near ties share the weight, other picks get 1.
+        gates = mx.array([[3.0, 1.0, 0.0, -1.0], [3.0, 2.99, 0.0, -1.0]])
+>       inds, scores = phimoe.sparsemixer(gates, top_k=2, jitter_eps=0.01)
+                       ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'mlx_lm.models.phimoe' has no attribute 'sparsemixer'
+
+tests/test_models.py:2582: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_models.py::TestModels::test_phimoe - AttributeError: module...
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 108 deselected in 1.23s

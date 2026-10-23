@@ -1,0 +1,103 @@
+{
+  "candidate_image": "localhost:5000/vare/mlx-cpu-task@sha256:847edcf1b2b15d00914674e89931f9d38c4aa8a0f1d763cbb96c1359a0647388",
+  "candidate_source_sha256": "b18fb0550ec8854e2362bf15c89b35bd6bb6736abf3c8dbe47538a90641628d2",
+  "classification": "supplemental adversarial control; does not alter v4 primary calibration",
+  "expected_disposition": "reject",
+  "grade": {
+    "candidate_source_sha256": "b18fb0550ec8854e2362bf15c89b35bd6bb6736abf3c8dbe47538a90641628d2",
+    "cases": [
+      {
+        "case_id": "tiny-threshold-1e-08",
+        "failure": null,
+        "passed": true,
+        "wall_s": 0.016471957904286683
+      },
+      {
+        "case_id": "tiny-threshold-1e-06",
+        "failure": null,
+        "passed": true,
+        "wall_s": 0.0010169170564040542
+      },
+      {
+        "case_id": "tiny-threshold-0.0001",
+        "failure": null,
+        "passed": true,
+        "wall_s": 0.0011186249321326613
+      },
+      {
+        "case_id": "float32-threshold-1e-08",
+        "failure": null,
+        "passed": true,
+        "wall_s": 0.025481916964054108
+      },
+      {
+        "case_id": "float32-threshold-0.0001",
+        "failure": null,
+        "passed": true,
+        "wall_s": 0.02641250006854534
+      },
+      {
+        "case_id": "float32-threshold-0.001",
+        "failure": null,
+        "passed": true,
+        "wall_s": 0.027766458922997117
+      },
+      {
+        "case_id": "float16-threshold-1e-08",
+        "failure": null,
+        "passed": true,
+        "wall_s": 0.02596283401362598
+      },
+      {
+        "case_id": "float16-threshold-0.0001",
+        "failure": null,
+        "passed": true,
+        "wall_s": 0.02598616690374911
+      },
+      {
+        "case_id": "float16-threshold-0.001",
+        "failure": null,
+        "passed": true,
+        "wall_s": 0.02729241701308638
+      },
+      {
+        "case_id": "bfloat16-threshold-1e-08",
+        "failure": null,
+        "passed": true,
+        "wall_s": 0.02671829191967845
+      },
+      {
+        "case_id": "bfloat16-threshold-0.0001",
+        "failure": null,
+        "passed": true,
+        "wall_s": 0.026025582919828594
+      },
+      {
+        "case_id": "bfloat16-threshold-0.001",
+        "failure": null,
+        "passed": true,
+        "wall_s": 0.025930749950930476
+      },
+      {
+        "case_id": "shifted_maximum_nonzero_values",
+        "failure": "wrong_output",
+        "passed": false,
+        "wall_s": 0.0016243749996647239
+      },
+      {
+        "case_id": "leading_maximum_nonzero_value",
+        "failure": "wrong_output",
+        "passed": false,
+        "wall_s": 0.0020830410066992044
+      }
+    ],
+    "grader_adapter_sha256": "f08007db5ec895f071624cd1de2e7afd3b60d0dffa809161f48a2baceb28d6e7",
+    "grader_source_sha256": "ba48fee74cb7faab53860be5e2bc052947d083aa2fcd4bfd87dd2c32870ef747",
+    "passed": false,
+    "task_id": "mlxlm-1912-top-p-min-token"
+  },
+  "mutant_name": "constant_index_zero_zero_logit",
+  "mutant_sha256": "b18fb0550ec8854e2362bf15c89b35bd6bb6736abf3c8dbe47538a90641628d2",
+  "protocol_id": "mlxlm-1912-isolated-task-v4",
+  "rejected": true
+}

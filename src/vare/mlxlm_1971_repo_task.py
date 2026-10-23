@@ -167,6 +167,13 @@ def _copy_package(source_root: Path, destination: Path) -> None:
 
 
 def export_candidate(source_root: Path, workspace: Path, patch_path: Path | None = None) -> dict[str, Any]:
+    """Export from the fully inventoried v9 baseline implementation."""
+    from .mlxlm_1971_repo_task_v9 import export_candidate_v9
+
+    return export_candidate_v9(source_root, workspace, patch_path)
+
+
+def _export_candidate_v1(source_root: Path, workspace: Path, patch_path: Path | None = None) -> dict[str, Any]:
     verify_baseline(source_root)
     if workspace.exists() or workspace.is_symlink():
         raise MlxLm1971TaskError("candidate workspace already exists")
@@ -200,7 +207,7 @@ def export_candidate(source_root: Path, workspace: Path, patch_path: Path | None
     }
 
 
-def grade_workspace(workspace: Path, *, image: str = IMAGE) -> dict[str, Any]:
+def grade_workspace_v1(workspace: Path, *, image: str = IMAGE) -> dict[str, Any]:
     target = workspace / TARGET_PATH
     if workspace.is_symlink() or not workspace.is_dir() or target.is_symlink() or not target.is_file():
         raise MlxLm1971TaskError("candidate workspace is incomplete or unsafe")
@@ -236,3 +243,10 @@ def grade_workspace(workspace: Path, *, image: str = IMAGE) -> dict[str, Any]:
         "grader_adapter_sha256": sha256_file(GRADER_ADAPTER),
         "expected_output_sha256": sha256_file(EXPECTED_OUTPUT),
     }
+
+
+def grade_workspace(workspace: Path, *, image: str = IMAGE) -> dict[str, Any]:
+    """Grade under the current inventory-enforcing v9 protocol."""
+    from .mlxlm_1971_repo_task_v9 import grade_workspace_v9
+
+    return grade_workspace_v9(workspace, image=image)

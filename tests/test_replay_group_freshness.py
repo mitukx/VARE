@@ -1,4 +1,5 @@
 from collections import Counter
+from copy import deepcopy
 
 from vare.config import ReplayConfig
 from vare.replay import PrioritizedReplay
@@ -136,3 +137,81 @@ def test_atomic_group_rejects_capacity_smaller_than_group():
 
     assert not _add_group(replay, "too-large", 0, 1.0)
     assert len(replay) == 0
+
+
+def test_atomic_group_rejects_mixed_checkpoint_or_verifier_provenance():
+    """Same policy/version is not sufficient for a homogeneous update group."""
+    for mutation in (
+        lambda exp: exp.attempt.metadata.__setitem__(
+            "policy_checkpoint_sha256", "b" * 64
+        ),
+        lambda exp: setattr(exp.verification, "verifier_name", "other"),
+        lambda exp: exp.verification.metadata.__setitem__(
+            "verifier_config_sha256", "b" * 64
+        ),
+    ):
+        group = _group("provenance", 0)
+        for item in group:
+            item.attempt.metadata["policy_checkpoint_sha256"] = "a" * 64
+            item.verification.metadata["verifier_config_sha256"] = "a" * 64
+        mutation(group[-1])
+
+        replay = PrioritizedReplay(ReplayConfig(capacity=16), seed=0)
+        assert not replay.add_group(group, [1.0] * 4)
+        assert len(replay) == 0
+
+        # Legacy per-item insertion must never surface the invalid group.
+        for exp in group:
+            replay.add(exp, freshness=1.0)
+        assert replay.sample_grouped(4) == []
+        assert replay.sample_current(
+            4, freshness_fn=lambda _: 1.0, grouped=True
+        ) == []
+
+
+def test_atomic_group_rejects_partially_missing_checkpoint_provenance():
+    group = _group("partial-provenance", 0)
+    for item in group[:3]:
+        item.attempt.metadata["policy_checkpoint_sha256"] = "a" * 64
+    replay = PrioritizedReplay(ReplayConfig(capacity=16), seed=0)
+    assert not replay.add_group(group, [1.0] * 4)
+
+
+def test_atomic_group_accepts_identical_checkpoint_and_verifier_provenance():
+    group = _group("consistent", 0)
+    for item in group:
+        item.attempt.metadata["policy_checkpoint_sha256"] = "a" * 64
+        item.verification.metadata["verifier_config_sha256"] = "b" * 64
+    replay = PrioritizedReplay(ReplayConfig(capacity=16), seed=0)
+    assert replay.add_group(group, [1.0] * 4)
+    assert len(replay.sample_current(
+        4, freshness_fn=lambda _: 1.0, grouped=True
+    )) == 4
+
+
+def test_legacy_group_cannot_hide_a_partially_missing_size_claim():
+    group = _group("partial-size", 0)
+    del group[-1].attempt.metadata["vare_rollout_group_size"]
+    replay = PrioritizedReplay(ReplayConfig(capacity=8), seed=0)
+    for exp in group:
+        replay.add(exp, freshness=1.0)
+    assert replay.sample_grouped(4) == []
+    assert replay.sample_current(
+        4, freshness_fn=lambda _: 1.0, grouped=True
+    ) == []
+
+
+def test_ungrouped_current_sampling_deduplicates_by_record_identity(monkeypatch):
+    template = _experience(0, "identical", group_size=3)
+    replay = PrioritizedReplay(ReplayConfig(capacity=8), seed=0)
+    for _ in range(3):
+        replay.add(deepcopy(template), freshness=1.0)
+    monkeypatch.setattr(
+        replay._rng, "choices", lambda _items, weights, k: [0] * k
+    )
+    selected = replay.sample_current(
+        2, freshness_fn=lambda _: 1.0, grouped=False
+    )
+    assert len(selected) == 2
+    assert len({id(exp) for exp in selected}) == 2
+    assert selected[0] == selected[1]

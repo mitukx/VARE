@@ -59,7 +59,11 @@ def build_step(index, state, total, ident, delay=0.):
 
 def killed_worker(path, pipe):
     store = TrajectoryStore(path)
-    lease = store.claim("execute", "sigkill-worker", lease_seconds=.1)
+    # A 100 ms lease can expire during process scheduling on loaded CI hosts,
+    # before this intentional SIGKILL fixture persists its first step.
+    # Leave adequate time for the first durable commit; recovery must still
+    # reject the killed worker generation after its lease expires.
+    lease = store.claim("execute", "sigkill-worker", lease_seconds=2.0)
     resumed = store.resume_state(lease.trajectory_id)
     store.append_step(lease, build_step(0, {}, resumed["spec"]["expected_steps"], lease.trajectory_id))
     pipe.send(asdict(lease))

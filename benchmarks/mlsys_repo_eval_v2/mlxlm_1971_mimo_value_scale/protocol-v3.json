@@ -1,0 +1,69 @@
+{
+  "baseline_commit": "5f3c79d6bb1864a85d5343818192bd061b161e3a",
+  "baseline_source_sha256": "c110f8deed605277ae070359dd6d2ba0c700981101240c54bcd049e8d60e4847",
+  "case_inputs": "Each case uses the v1 pinned synthetic ModelArgs, seed, and token sequence, with only value_scale varied.",
+  "evaluation": {
+    "calibration_gates": [
+      "pinned baseline fails",
+      "pinned known fix passes",
+      "constant-0.5 scale mutant fails",
+      "scale-after-cache mutant fails",
+      "pinned source swap is rejected",
+      "red-team controls pass"
+    ],
+    "required_cases": 3,
+    "success": "all exact model-output and cache-state expectations match under rtol=1e-5, atol=1e-8"
+  },
+  "expected_output_sha256": "9f56a4f0c59b9f581e1077fedd86e29a3b4e01a0f6a03e17715191214eecfdec",
+  "fixed_commit": "8fda5e976a2da412d9f8119361edefd405381cf9",
+  "fixed_source_sha256": "a07bbc7d454d61d321a4dbc87b9770b2df545835a50eb880605f11e9a313a512",
+  "grader_semantics": "For each scale, parent-held expected tensors from the pinned fixed source are compared to candidate full-forward outputs, one-token incremental output traces, and complete KV cache state. Expected arrays are never mounted in the candidate container.",
+  "implementation_sha256": {
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/Dockerfile": "423ec1fbe2e6e63cf9ff7906e42d0acdc371071511a1078c0b92f0662d5a4eb0",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/expected-output-v2.json": "9f56a4f0c59b9f581e1077fedd86e29a3b4e01a0f6a03e17715191214eecfdec",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/grader_adapter_v2.py": "c9b85ab3511759eaac57bc95b551d04c4bd688fefca337e53bb74269b5608fe4",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/task.md": "66000b7e1a23a8a15b501d11325e0752b7d70c11b4268cdb6b21754ecdc106c7",
+    "scripts/generate_mlxlm_1971_v2_goldens.py": "c70787d8a3ee575b27060158b16d53423b677952343d33cf3c2b4495c38558c7",
+    "scripts/run_mlxlm_1971_calibration_v3.py": "3acd1063724e0dd76766e5d3ecedff602e47dfc8462af69f8e3f4f0efb01dd4f",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/isolated_candidate.py": "8d0fbef1bb44c788dc983a814c2178c7c5a2e716fbfcc0f912f64885fe8fdccf",
+    "src/vare/mlxlm_1971_repo_task.py": "abccc1d483262d17e9a76559e788a3d3738f9311428bbf69ff42af768a1e636a",
+    "src/vare/mlxlm_1971_repo_task_v3.py": "b571e389e8c3afe816416b5b127f9320ffa40c562286304a81e3d6e465265c8b",
+    "tests/test_mlxlm_1971_repo_task_v3.py": "566567a39d9da1af9462b30dff1c8aa362badf47f46d8bbb662e030251c91530"
+  },
+  "limitations": [
+    "One random small-model Development-task calibration; no Coding-Agent rollout or model capability claim.",
+    "CPU-only container; no Metal validation.",
+    "Only the selected upstream function/model contract is tested."
+  ],
+  "protocol_id": "vare.mlsys-repository-task.mlxlm-1971.v3",
+  "protocol_parent": "vare.mlsys-repository-task.mlxlm-1971.v2",
+  "protocol_parent_sha256": "86852e5991244d7a0716faae24b45a22fc14933315e6b84ab3a92e904590db6b",
+  "repository": "ml-explore/mlx-lm",
+  "runtime": {
+    "candidate_cpus": 1,
+    "candidate_uid": 65534,
+    "image": "localhost:5000/vare/mlx-mimo-cpu-mimo@sha256:799f8b9f34fe2caa8fc0c4d0889abac63384606bcf40db28524db3fba07a7cbe",
+    "memory_mb": 1536,
+    "mlx": "CPU-only, MLX_DISABLE_METAL=1",
+    "network": "none",
+    "pids_limit": 64,
+    "platform": "linux/arm64",
+    "timeout_seconds": 30
+  },
+  "split": "development",
+  "status": "prospective-calibration-only",
+  "target_path": "mlx_lm/models/mimo_v2_flash.py",
+  "task_id": "mlxlm-1971-mimo-value-scale",
+  "task_prompt_sha256": "66000b7e1a23a8a15b501d11325e0752b7d70c11b4268cdb6b21754ecdc106c7",
+  "v1_preservation": {
+    "expected_output_sha256": "00c0450c89622ab93635d6f3ff3d95b016ab8e62a4f11a843b47c961262afd50",
+    "historical_results": "unchanged",
+    "protocol_sha256": "6909c23aac234623bc7d509c3aa69609a05880d63f482fc2fda9cc553295797c"
+  },
+  "value_scales": [
+    0.25,
+    0.5,
+    0.8
+  ]
+}
