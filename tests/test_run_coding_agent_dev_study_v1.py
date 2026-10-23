@@ -190,6 +190,8 @@ class CodingAgentDevStudyRunnerTests(unittest.TestCase):
             {"passed": False, "gradeable": False, "classification": "assertion_failure"},
             {"passed": False, "gradeable": True, "classification": "passed"},
             {"passed": False, "gradeable": True, "classification": "container_launch_failure"},
+            {"passed": True, "gradeable": True, "classification": "unrecognized"},
+            {"passed": True, "gradeable": True, "classification": []},
         ):
             self.assertEqual(
                 runner.classify_public_test_result(malformed), "runner_integrity_error"

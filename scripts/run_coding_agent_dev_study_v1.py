@@ -86,7 +86,6 @@ def classify_public_test_result(result: Any) -> str:
         return "not_run"
     if not isinstance(result, dict):
         return "evaluator_unavailable"
-    classification = result.get("classification")
     explicit_contract = {
         "passed": (True, True),
         "assertion_failure": (False, True),
@@ -99,7 +98,10 @@ def classify_public_test_result(result: Any) -> str:
         "runner_integrity_error": (None, False),
         "evaluator_unavailable": (None, False),
     }
-    if classification in explicit_contract:
+    if "classification" in result:
+        classification = result.get("classification")
+        if not isinstance(classification, str) or classification not in explicit_contract:
+            return "runner_integrity_error"
         expected_passed, expected_gradeable = explicit_contract[classification]
         if (
             result.get("passed") is not expected_passed
