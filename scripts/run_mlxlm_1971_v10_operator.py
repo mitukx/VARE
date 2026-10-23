@@ -84,6 +84,28 @@ def _git_command(repository: Path, *args: str) -> list[str]:
     ]
 
 
+def _materialize_sparse_operator_checkout(checkout: Path) -> None:
+    """Materialize only trusted imports without invoking checkout hooks."""
+    subprocess.run(
+        _git_command(checkout, "sparse-checkout", "init", "--cone"),
+        env=GIT_ENV, check=True, capture_output=True, timeout=120,
+    )
+    subprocess.run(
+        _git_command(
+            checkout, "sparse-checkout", "set", "scripts", "src/vare",
+            "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale",
+        ),
+        env=GIT_ENV, check=True, capture_output=True, timeout=120,
+    )
+    # read-tree materializes only the selected sparse paths and does not run
+    # post-checkout hooks. The explicit no-checkout add above avoids running a
+    # hook before the trusted files and import tree can be checked.
+    subprocess.run(
+        _git_command(checkout, "read-tree", "-mu", "HEAD"),
+        env=GIT_ENV, check=True, capture_output=True, timeout=120,
+    )
+
+
 def _trusted_v9_protocol() -> dict[str, Any]:
     raw = _git_bytes(V9_COMMIT, V9_PROTOCOL_PATH)
     if hashlib.sha256(raw).hexdigest() != V9_PROTOCOL_SHA256:
@@ -160,7 +182,9 @@ def _snapshot_patch(source: Path, destination: Path) -> Path:
     parent_fd, name = _open_parent_without_symlinks(absolute)
     try:
         descriptor = os.open(
-            name, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0), dir_fd=parent_fd
+            name,
+            os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0),
+            dir_fd=parent_fd,
         )
     except OSError as exc:
         os.close(parent_fd)
@@ -408,11 +432,17 @@ def run_v10_operation(
             request["patch_path"] = str(snapshot)
             expected_patch_sha256 = hashlib.sha256(snapshot.read_bytes()).hexdigest()
         checkout = private / "trusted-operator"
-        subprocess.run(
-            _git_command(ROOT, "worktree", "add", "--detach", str(checkout), OPERATOR_COMMIT),
-            env=GIT_ENV, check=True, capture_output=True, timeout=120,
-        )
+        checkout_created = False
         try:
+            subprocess.run(
+                _git_command(
+                    ROOT, "worktree", "add", "--detach", "--no-checkout",
+                    str(checkout), OPERATOR_COMMIT,
+                ),
+                env=GIT_ENV, check=True, capture_output=True, timeout=120,
+            )
+            checkout_created = True
+            _materialize_sparse_operator_checkout(checkout)
             _verify_clean_checkout(checkout)
             for relative in PINNED_OPERATOR_SOURCES:
                 source_file = checkout / relative
@@ -443,10 +473,11 @@ def run_v10_operation(
             )
             return report
         finally:
-            subprocess.run(
-                _git_command(ROOT, "worktree", "remove", "--force", str(checkout)),
-                env=GIT_ENV, check=True, capture_output=True, timeout=120,
-            )
+            if checkout_created:
+                subprocess.run(
+                    _git_command(ROOT, "worktree", "remove", "--force", str(checkout)),
+                    env=GIT_ENV, check=True, capture_output=True, timeout=120,
+                )
 
 
 def main() -> int:

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 import stat
 import subprocess
@@ -157,11 +158,12 @@ def test_v10_dispatch_uses_pinned_source_and_disables_replace_refs(
         source_repo=source if action == "export" else None,
     )
     assert result == _valid_child_report(action)
-    assert len(operations) == 4
+    assert len(operations) == 7
     assert operations[0][-1] == v10.OPERATOR_COMMIT
-    assert "status" in operations[1]
-    assert operations[2][:3] == [sys.executable, "-I", "-c"]
-    assert "remove" in operations[3]
+    assert "--no-checkout" in operations[0]
+    assert "status" in operations[4]
+    assert operations[5][:3] == [sys.executable, "-I", "-c"]
+    assert "remove" in operations[6]
 
 
 def test_v10_forged_result_is_rejected_and_worktree_removed(
@@ -190,13 +192,22 @@ def test_v10_forged_result_is_rejected_and_worktree_removed(
     monkeypatch.setattr(v10.subprocess, "run", fake_run)
     with pytest.raises(RuntimeError, match="one JSON object"):
         v10.run_v10_operation("grade", tmp_path / "workspace")
-    assert len(calls) == 4
+    assert len(calls) == 7
     assert "remove" in calls[-1]
 
 
 @pytest.mark.parametrize("action", ["grade", "export"])
+@pytest.mark.parametrize(
+    "incomplete_report",
+    [
+        {"passed": False},
+        {"passed": True},
+        {"task_id": "mlxlm-1971-mimo-value-scale", "passed": True},
+    ],
+)
 def test_v10_rejects_incomplete_action_specific_evidence(
-    action: str, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+    action: str, incomplete_report: dict[str, object],
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     calls: list[list[str]] = []
     source = tmp_path / "upstream"
@@ -213,7 +224,9 @@ def test_v10_rejects_incomplete_action_specific_evidence(
         if command[:1] == ["git"] and "status" in command:
             return subprocess.CompletedProcess(command, 0, stdout="")
         if command[:3] == [sys.executable, "-I", "-c"]:
-            return subprocess.CompletedProcess(command, 0, stdout='{"passed": false}')
+            return subprocess.CompletedProcess(
+                command, 0, stdout=json.dumps(incomplete_report)
+            )
         return subprocess.CompletedProcess(command, 0)
 
     monkeypatch.setattr(v10, "verify_v10_protocol", lambda: {})
@@ -224,7 +237,7 @@ def test_v10_rejects_incomplete_action_specific_evidence(
             action, tmp_path / "workspace",
             source_repo=source if action == "export" else None,
         )
-    assert len(calls) == 4
+    assert len(calls) == 7
     assert "remove" in calls[-1]
 
 
@@ -281,7 +294,7 @@ def test_v10_hook_created_import_package_is_rejected_before_child(
     monkeypatch.setattr(v10.subprocess, "run", fake_run)
     with pytest.raises(ValueError, match="unexpected files"):
         v10.run_v10_operation("grade", tmp_path / "workspace")
-    assert len(calls) == 3
+    assert len(calls) == 6
     assert "remove" in calls[-1]
 
 
@@ -342,6 +355,26 @@ def test_v10_patch_snapshot_is_private_and_stable(tmp_path: Path) -> None:
     patch.write_bytes(b"replaced patch")
     assert snapshot.read_bytes() == b"original patch"
     assert stat.S_IMODE(snapshot.stat().st_mode) == 0o400
+
+
+def test_v10_patch_fifo_is_rejected_without_blocking(tmp_path: Path) -> None:
+    if not hasattr(os, "mkfifo"):
+        pytest.skip("FIFO creation is unavailable on this platform")
+    fifo = tmp_path / "candidate.patch"
+    os.mkfifo(fifo)
+    snapshot = tmp_path / "snapshot.patch"
+    code = (
+        "from pathlib import Path; import sys; "
+        "from scripts.run_mlxlm_1971_v10_operator import _snapshot_patch; "
+        "_snapshot_patch(Path(sys.argv[1]), Path(sys.argv[2]))"
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", code, str(fifo), str(snapshot)],
+        cwd=v10.ROOT, capture_output=True, text=True, timeout=2,
+    )
+    assert result.returncode != 0
+    assert "regular file" in result.stderr
+    assert not snapshot.exists()
 
 
 @pytest.mark.parametrize("field", ["source_repo", "patch_path"])
@@ -419,5 +452,5 @@ def test_v10_rejects_mutated_import_dependency_before_launch(
     monkeypatch.setattr(v10.subprocess, "run", fake_run)
     with pytest.raises(ValueError, match="untrusted operator source|differs from pinned Git"):
         v10.run_v10_operation("grade", tmp_path / "candidate")
-    assert len(commands) == 3
+    assert len(commands) == 6
     assert "remove" in commands[-1]

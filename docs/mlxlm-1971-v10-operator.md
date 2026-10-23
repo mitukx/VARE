@@ -34,14 +34,17 @@ runtime location. Keep hidden grader results entirely operator-side.
 
 The operator strips inherited `GIT_*` variables, disables system/global Git
 configuration, and overrides local hook and filesystem-monitor settings for
-each Git call. After checkout it rejects tracked, untracked, or ignored files
-before Python starts, so checkout hooks cannot add importable code. Export
-rejects symlink path components and snapshots patch bytes through no-follow
-directory/file descriptors into a private read-only file. Before returning a
-child result, the parent requires the complete action-specific evidence schema,
-the pinned task/protocol/grader identities, the exact six grade case IDs, and
-an aggregate result consistent with those cases. Export patch identity must
-match the private snapshot hash.
+each Git call. It adds the detached worktree with `--no-checkout`, selects only
+the `scripts`, `src/vare` and pinned task directories, then materializes those
+paths with `read-tree`; this avoids invoking `post-checkout` before trusted
+source checks. It rejects tracked, untracked, or ignored files in the selected
+checkout before Python starts. Export rejects symlink path components and
+snapshots patch bytes through no-follow, nonblocking directory/file descriptors
+into a private read-only file, rejecting FIFOs and other non-regular inputs.
+Before returning a child result, the parent requires the complete
+action-specific evidence schema, the pinned task/protocol/grader identities,
+the exact six grade case IDs, and an aggregate result consistent with those
+cases. Export patch identity must match the private snapshot hash.
 
 **Non-claims and limitations:**
 - No model, Docker grader, new calibration, SFT, GRPO or held-out comparison
