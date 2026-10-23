@@ -22,10 +22,16 @@ TASK = ROOT / "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale"
 PROTOCOL = TASK / "protocol-v10.json"
 LOCK = TASK / "protocol-v10.lock.json"
 PROTOCOL_SHA256 = "bc65db13f1a0d1d5dea571cc9ea632b25bb9d0d60b96361b5183656481976dc3"
+LOCK_SHA256 = "09c69a6b87d1265a37772fb5d53bb77c873b02ad45496f343c6968c0442df1f0"
 OPERATOR_COMMIT = "45fd0da592955205e6518c12e9e9b315797541e2"
 V9_COMMIT = "3f12eefd71d1d2213b37e3a174b446cb5155e979"
 V9_PROTOCOL_SHA256 = "aa8fec4c3a3fbba119b83009c7f3c164b762758a5c1593faf3a78f3464678fb2"
 SOURCE_PATH = "scripts/run_attested_mlxlm_1971_v9_calibration.py"
+PINNED_OPERATOR_SOURCES = (
+    SOURCE_PATH,
+    "scripts/attest_mlxlm_1971_v9_current_git.py",
+    "scripts/audit_mlxlm_1971_historical_implementation_hashes.py",
+)
 V9_PROTOCOL_PATH = (
     "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v9.json"
 )
@@ -71,8 +77,11 @@ def verify_v10_protocol() -> dict[str, Any]:
     source = PROTOCOL.read_bytes()
     if hashlib.sha256(source).hexdigest() != PROTOCOL_SHA256:
         raise ValueError("v10 protocol differs from independently pinned bytes")
+    lock_bytes = LOCK.read_bytes()
+    if hashlib.sha256(lock_bytes).hexdigest() != LOCK_SHA256:
+        raise ValueError("v10 lock differs from independently pinned bytes")
     protocol = json.loads(source)
-    lock = json.loads(LOCK.read_bytes())
+    lock = json.loads(lock_bytes)
     if (
         lock.get("protocol_id") != protocol.get("protocol_id")
         or lock.get("protocol_sha256") != PROTOCOL_SHA256
@@ -93,8 +102,9 @@ def verify_v10_protocol() -> dict[str, Any]:
     historical = _git_bytes(V9_COMMIT, V9_PROTOCOL_PATH)
     if hashlib.sha256(historical).hexdigest() != V9_PROTOCOL_SHA256:
         raise ValueError("pinned v9 Git protocol digest mismatch")
-    if not _git_bytes(OPERATOR_COMMIT, SOURCE_PATH):
-        raise ValueError("pinned v10 operator source missing from Git")
+    for relative in PINNED_OPERATOR_SOURCES:
+        if not _git_bytes(OPERATOR_COMMIT, relative):
+            raise ValueError(f"pinned v10 operator source missing from Git: {relative}")
     return protocol
 
 
@@ -131,10 +141,14 @@ def run_v10_operation(
             env=GIT_ENV, check=True, capture_output=True, timeout=120,
         )
         try:
-            if (checkout / SOURCE_PATH).read_bytes() != _git_bytes(
-                OPERATOR_COMMIT, SOURCE_PATH
-            ):
-                raise ValueError("operator worktree differs from pinned Git bytes")
+            for relative in PINNED_OPERATOR_SOURCES:
+                source_file = checkout / relative
+                if source_file.is_symlink() or not source_file.is_file():
+                    raise ValueError(f"untrusted operator source path: {relative}")
+                if source_file.read_bytes() != _git_bytes(OPERATOR_COMMIT, relative):
+                    raise ValueError(
+                        f"operator worktree differs from pinned Git bytes: {relative}"
+                    )
             result = subprocess.run(
                 [sys.executable, "-I", "-c", _PINNED_CHILD],
                 cwd=checkout, env=GIT_ENV,
