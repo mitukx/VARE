@@ -140,6 +140,13 @@ def verify(protocol_path: Path, model_path: Path, python_exe: Path,
             raise ValueError(f"locked evidence identity mismatch: {relative}")
     for manifest_record in lock["provenance"]["historical_manifests"]:
         verify_historical_manifest(manifest_record)
+    prior_model_run = ROOT / lock["prior_exposures"]["qwen25_previous_run_path"]
+    prior_model_audit = subprocess.run(
+        [sys.executable, str(ROOT / "scripts/verify_coding_agent_evidence_manifest_v1.py"),
+         str(prior_model_run)], capture_output=True, text=True, check=False, timeout=60,
+    )
+    if prior_model_audit.returncode or "status=COMPLETED" not in prior_model_audit.stdout:
+        raise ValueError("prior Qwen2.5 run evidence manifest did not verify")
     prompt_spec_path = ROOT / lock["agent"]["prompt_spec_path"]
     if prompt_spec_path.is_symlink() or sha256(prompt_spec_path) != lock["agent"]["prompt_spec_sha256"]:
         raise ValueError("frozen prompt and tool-schema artifact identity mismatch")
