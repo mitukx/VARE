@@ -1,0 +1,91 @@
+{
+  "acceptance": {
+    "baseline": "must fail the independently held parent oracle as wrong_output",
+    "failure_policy": "timeout, infrastructure failure, malformed output, or provenance mismatch is not a pass and blocks task calibration",
+    "fingerprint_mutation": "must fail the parent oracle even when candidate mutates hashlib.sha256 and json.dumps after adapter import",
+    "known_fix": "must pass every independent parent oracle case",
+    "null_registry_values": "all ten expected null runtime routes must compare equal to the exact known-fix output; a null-to-non-null change must fail the parent oracle"
+  },
+  "comparisons": "Baseline, fixed revision, and one adversarial fingerprint-mutation source are the full calibration matrix; no agent generation, training, or held-out evaluation. The locked known-fix comparison also exercises the ten null-valued runtime routes.",
+  "container_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "created_utc": "2026-10-23T22:25:12Z",
+  "exposure_classification": "retrospective-development-consumed",
+  "heldout_access": "none",
+  "hypothesis": "A recursive parent-side comparison that accepts matching nulls will allow the exact pinned tokenizer registry, including its ten unavailable optional routes, to pass while still rejecting changed registry values.",
+  "limits": {
+    "candidate_memory_mb": 1536,
+    "candidate_wall_seconds": 45,
+    "cpu_count": 1,
+    "max_calibration_calls": 3,
+    "max_calibration_wall_seconds": 600,
+    "maximum_swap_growth_bytes": 536870912,
+    "minimum_free_swap_bytes": 2147483648,
+    "minimum_host_available_memory_bytes": 4294967296,
+    "model_inference_seconds": 0,
+    "optimizer_steps": 0,
+    "paid_compute_usd": 0
+  },
+  "model_inference": "not run",
+  "policy_updates": "not run",
+  "protocol_id": "vare-coding-agent-phase-a-integrity-v9",
+  "red_team_suite": [
+    "candidate changes a tokenizer route and monkeypatches process-global hashlib.sha256 to return the pre-mutation digest",
+    "candidate changes a tokenizer route and monkeypatches process-global json.dumps",
+    "pinned baseline source",
+    "pinned exact known-fix source",
+    "the exact known-fix output retains all ten null-valued runtime routes; a candidate changing a null route to a non-null value must fail"
+  ],
+  "schema_version": 1,
+  "scope": "Prospective null-safe evaluator-integrity follow-up for the previously exposed Transformers tokenizer-routing Development task. No fresh-task eligibility or model-capability claim.",
+  "stopping_rule": "Before any candidate grading, require at least 4 GiB host-available memory and 2 GiB free swap; abort if swap grows by over 512 MiB, any call exceeds 45 seconds/1536 MiB, any provenance check fails, or total grading exceeds 10 minutes. Keep this Development-only task consumed.",
+  "tasks": {
+    "transformers-49116-tokenizer-routing-v2": {
+      "baseline_manifest": "benchmarks/mlsys_repo_eval_v4/transformers_49116_tokenizer_routing_v2/baseline-source-manifest-v1.json",
+      "baseline_manifest_sha256": "22ca3634e6c217f8aba9062e77e9cf7208ffe526e3005b27b625df382dfd6340",
+      "candidate_visible_files": [
+        "test_public.py",
+        "src/transformers/models/auto/tokenization_auto.py"
+      ],
+      "expected_routes": {
+        "override_types": [
+          "qwen3_5_moe_text",
+          "qwen4_exp"
+        ],
+        "routes": {
+          "llama": "<unregistered>",
+          "qwen3": "Qwen2Tokenizer",
+          "qwen3_5_moe_text": "Qwen3_5Tokenizer",
+          "qwen4_exp": "Qwen3_5Tokenizer"
+        }
+      },
+      "exposure_classification": "retrospective-development-consumed",
+      "grader_adapter_path": "benchmarks/mlsys_repo_eval_v4/transformers_49116_tokenizer_routing_v2_grader_v9/grader_adapter.py",
+      "grader_adapter_sha256": "0876441adc89ea8d64ee64af278a06ebaf5db80e85057065b3e90bb5a851577b",
+      "model_types": [
+        "qwen3_5_moe_text",
+        "qwen4_exp",
+        "llama",
+        "qwen3"
+      ],
+      "source_provenance": {
+        "baseline_revision": "07338b6c74a578868368e6e549dea83414e4b8cb",
+        "baseline_target_sha256": "831ae31ec8ab6dd6c5224ea42d0c508d515a8314005064eb594a715f835a6f61",
+        "known_fix_revision": "462bf5a50f6434e9610513b34537a892967ccd84",
+        "known_fix_target_sha256": "89d301092f223af0c17fd813451dfd93f344282e51a151cf00604d7647036957",
+        "license": "Apache-2.0",
+        "provenance_source": "existing frozen v7 task metadata and retained calibration report",
+        "repository": "huggingface/transformers"
+      },
+      "source_revision": "07338b6c74a578868368e6e549dea83414e4b8cb",
+      "target_path": "src/transformers/models/auto/tokenization_auto.py",
+      "upstream_fixed_revision": "462bf5a50f6434e9610513b34537a892967ccd84",
+      "workspace_snapshot_sha256": "f04c92f68dca4ba2126481b65764d37dde449a174da483a334d73f77b1369896"
+    }
+  },
+  "tokenizer_registry_features": {
+    "g2p_en": false,
+    "mistral_common": false,
+    "sentencepiece": false,
+    "tokenizers": true
+  }
+}
