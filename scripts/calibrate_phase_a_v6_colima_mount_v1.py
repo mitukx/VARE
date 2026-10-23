@@ -99,7 +99,7 @@ def calibrate(output_dir: Path) -> dict[str, Any]:
         )
         report = {
             "schema_version": 1,
-            "calibration_id": "vare-phase-a-v6-colima-shared-mount-v1",
+            "calibration_id": "vare-phase-a-v6-colima-shared-mount-v2",
             "purpose": "Docker workspace mount and public-test execution path only; no model inference",
             "source_commit": subprocess.run(
                 ["git", "rev-parse", "HEAD"], cwd=ROOT, check=True,
