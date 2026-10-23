@@ -49,14 +49,13 @@ def verify(protocol_path: Path, model_path: Path, python_exe: Path,
     )
     if ancestor.returncode:
         raise ValueError("implementation commit is not an ancestor of this checkout")
-    dirty = subprocess.run(["git", "-C", str(ROOT), "status", "--porcelain"],
-                           capture_output=True, text=True, check=True).stdout
-    if dirty:
-        raise ValueError("working tree must be clean before the frozen run")
-
     for relative, expected in lock["code_sha256"].items():
         if sha256(ROOT / relative) != expected:
             raise ValueError(f"locked code SHA-256 mismatch: {relative}")
+    if (lock["grader"]["grader_sha256"] != lock["code_sha256"]["scripts/grade_mlx_lm_1910_candidate_v1.py"]
+            or lock["grader"]["calibration_runner_sha256"]
+            != lock["code_sha256"]["scripts/calibrate_mlx_lm_1910_candidate_grader_v1.py"]):
+        raise ValueError("grader protocol does not attest the calibrated grader sources")
     for relative, expected in lock["task"]["bundle_sha256"].items():
         if sha256(ROOT / relative) != expected:
             raise ValueError(f"locked task SHA-256 mismatch: {relative}")
@@ -64,6 +63,9 @@ def verify(protocol_path: Path, model_path: Path, python_exe: Path,
     calibration_path = ROOT / lock["grader"]["calibration_path"]
     if sha256(calibration_path) != lock["grader"]["calibration_sha256"]:
         raise ValueError("grader calibration evidence SHA-256 mismatch")
+    for relative, expected_hash in lock["grader"]["calibration_files_sha256"].items():
+        if sha256(ROOT / relative) != expected_hash:
+            raise ValueError(f"grader calibration raw evidence mismatch: {relative}")
     calibration = json.loads(calibration_path.read_text(encoding="utf-8"))
     if calibration.get("status") != "CALIBRATION_PASS_DEVELOPMENT_ONLY":
         raise ValueError("grader calibration is not passing")
@@ -77,11 +79,29 @@ def verify(protocol_path: Path, model_path: Path, python_exe: Path,
     prior_protocol = ROOT / lock["model"]["resource_smoke_protocol_path"]
     if sha256(prior_protocol) != lock["model"]["resource_smoke_protocol_sha256"]:
         raise ValueError("prior load-smoke protocol identity mismatch")
+    prior_protocol_sidecar = prior_protocol.with_name("protocol.sha256")
+    if sha256(prior_protocol) != prior_protocol_sidecar.read_text(encoding="utf-8").split()[0]:
+        raise ValueError("prior load-smoke protocol sidecar mismatch")
     prior = json.loads(prior_protocol.read_text(encoding="utf-8"))
     if prior.get("protocol_id") != "vare.local-mlx-model-load-smoke.v3":
         raise ValueError("model has no matching completed load smoke")
     if lock["model"]["snapshot_revision"] != prior["model"]["revision"]:
         raise ValueError("model revision differs from the completed load smoke")
+    smoke_result_path = ROOT / lock["model"]["resource_smoke_result_path"]
+    if sha256(smoke_result_path) != lock["model"]["resource_smoke_result_sha256"]:
+        raise ValueError("completed load-smoke result identity mismatch")
+    smoke_result = json.loads(smoke_result_path.read_text(encoding="utf-8"))
+    if (smoke_result.get("status") != "COMPLETED" or smoke_result.get("generated_tokens") != 0
+            or smoke_result.get("optimizer_steps") != 0 or not smoke_result.get("load_result", {}).get("loaded")):
+        raise ValueError("referenced model-load smoke is not a zero-generation resource pass")
+    smoke_manifest_path = ROOT / lock["model"]["resource_smoke_manifest_path"]
+    if sha256(smoke_manifest_path) != lock["model"]["resource_smoke_manifest_sha256"]:
+        raise ValueError("completed load-smoke evidence manifest identity mismatch")
+    smoke_manifest = json.loads(smoke_manifest_path.read_text(encoding="utf-8"))
+    for relative, identity in smoke_manifest["raw_files"].items():
+        path = ROOT / relative
+        if not path.is_file() or path.stat().st_size != identity["bytes"] or sha256(path) != identity["sha256"]:
+            raise ValueError(f"completed load-smoke raw evidence mismatch: {relative}")
     model_path = model_path.resolve(strict=True)
     if model_path.name != lock["model"]["snapshot_revision"]:
         raise ValueError("local model snapshot revision mismatch")
@@ -108,6 +128,17 @@ def verify(protocol_path: Path, model_path: Path, python_exe: Path,
     )
     if docker_image.returncode or docker_image.stdout.strip() != lock["runtime"]["public_test_image"]:
         raise ValueError("public-test container image identity mismatch")
+    docker_info = subprocess.run(
+        ["docker", "--context", "colima", "info", "--format", "{{.MemTotal}} {{.NCPU}}"],
+        capture_output=True, text=True, check=False,
+    )
+    try:
+        docker_memory, docker_cpus = map(int, docker_info.stdout.split())
+    except (ValueError, TypeError):
+        raise ValueError("Colima memory/CPU preflight is unavailable") from None
+    if (docker_info.returncode or docker_memory > lock["resources"]["max_colima_memory_bytes"]
+            or docker_cpus > lock["resources"]["max_colima_cpus"]):
+        raise ValueError("Colima runtime exceeds frozen CPU or memory cap")
     if not git_source.is_dir() or git_source.is_symlink():
         raise ValueError("pinned upstream Git source must be a real directory")
     git_env = {"PATH": os.environ.get("PATH", "/usr/bin:/bin"), "HOME": "/tmp",
@@ -255,6 +286,38 @@ def main() -> int:
     args = parser.parse_args()
     if args.repo_root.resolve(strict=True) != ROOT:
         parser.error("repo root must be the checkout containing this runner")
+    if args.check_only:
+        dirty = subprocess.run(["git", "-C", str(ROOT), "status", "--porcelain"],
+                               capture_output=True, text=True, check=True).stdout
+        if dirty:
+            parser.error("working tree must be clean before the frozen run")
+        try:
+            lock = verify(args.protocol.resolve(strict=True), args.model_path,
+                          args.python, args.git_source)
+            preflight = observe()
+            limits = lock["resources"]
+            disk_free_gib = round(shutil.disk_usage(ROOT).free / (1024 ** 3), 3)
+            if (preflight["swap_used_mib"] > limits["max_start_swap_mib"]
+                    or preflight["memory_free_percent"] < limits["min_start_free_memory_percent"]
+                    or disk_free_gib < limits["min_disk_free_gib"]):
+                raise ValueError("locked resource preflight failed")
+        except Exception as exc:
+            parser.error(f"preflight failed: {type(exc).__name__}: {exc}")
+        print(json.dumps({"status": "READY_NO_INFERENCE", "protocol_id": lock["protocol_id"],
+                          "resources": {**preflight, "disk_free_gib": disk_free_gib},
+                          "model_loaded": False}))
+        return 0
+    if args.output is None:
+        parser.error("--output is required unless --check-only is set")
+    output = args.output.absolute()
+    dirty = subprocess.run(["git", "-C", str(ROOT), "status", "--porcelain"],
+                           capture_output=True, text=True, check=True).stdout
+    if dirty:
+        parser.error("working tree must be clean before the frozen run")
+    output.mkdir(mode=0o700, parents=True, exist_ok=False)
+    experiment_started = time.monotonic()
+    (output / "protocol.json").write_bytes(args.protocol.read_bytes())
+    (output / "protocol.sha256").write_text(sha256(args.protocol) + "\n")
     try:
         lock = verify(args.protocol.resolve(strict=True), args.model_path,
                       args.python, args.git_source)
@@ -266,19 +329,25 @@ def main() -> int:
                 or disk_free_gib < limits["min_disk_free_gib"]):
             raise ValueError("locked resource preflight failed")
     except Exception as exc:
-        parser.error(f"preflight failed: {type(exc).__name__}: {exc}")
-    if args.check_only:
-        print(json.dumps({"status": "READY_NO_INFERENCE", "protocol_id": lock["protocol_id"],
-                          "resources": {**preflight, "disk_free_gib": disk_free_gib},
-                          "model_loaded": False}))
-        return 0
-    if args.output is None:
-        parser.error("--output is required unless --check-only is set")
-    output = args.output.absolute()
-    output.mkdir(mode=0o700, parents=True, exist_ok=False)
-    experiment_started = time.monotonic()
-    (output / "protocol.json").write_bytes(args.protocol.read_bytes())
-    (output / "protocol.sha256").write_text(sha256(args.protocol) + "\n")
+        error = f"{type(exc).__name__}: {exc}"
+        resource_abort = "resource" in str(exc).lower() or "memory" in str(exc).lower() or "swap" in str(exc).lower()
+        preflight_result = {"status": "ABORTED_RESOURCE" if resource_abort else "BLOCKED",
+                            "reason": error, "model_loaded": False, "inference_started": False}
+        (output / "run-preflight.json").write_text(
+            json.dumps(preflight_result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        (output / "summary.json").write_text(
+            json.dumps(preflight_result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        manifest = {path.relative_to(output).as_posix(): sha256(path)
+                    for path in sorted(output.rglob("*")) if path.is_file()}
+        (output / "evidence-manifest.json").write_text(
+            json.dumps({"schema_version": 1, "files": manifest}, indent=2, sort_keys=True) + "\n")
+        (output / "evidence-manifest.sha256").write_text(sha256(output / "evidence-manifest.json") + "\n")
+        print(json.dumps(preflight_result))
+        return 3
+    (output / "preflight.json").write_text(
+        json.dumps({"status": "PASSED", "resources": {**preflight, "disk_free_gib": disk_free_gib},
+                    "model_loaded": False, "inference_started": False}, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8")
     task_root = ROOT / TASK_REL
     arms: list[dict[str, Any]] = []
     abort_pair = False
