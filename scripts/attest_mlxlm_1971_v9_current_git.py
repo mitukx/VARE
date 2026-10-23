@@ -75,6 +75,26 @@ def attest_current_v9(root: Path) -> dict[str, Any]:
     }
 
 
+def export_candidate_attested_v9(
+    source_root: Path, workspace: Path, patch_path: Path | None = None
+) -> dict[str, Any]:
+    """Call the historical public exporter only after immutable source attestation."""
+    attest_current_v9(Path(__file__).resolve().parents[1])
+    from vare.mlxlm_1971_repo_task import export_candidate
+
+    return export_candidate(source_root, workspace, patch_path)
+
+
+def grade_workspace_attested_v9(
+    workspace: Path,
+) -> dict[str, Any]:
+    """Call the historical public grader only after immutable source attestation."""
+    attest_current_v9(Path(__file__).resolve().parents[1])
+    from vare.mlxlm_1971_repo_task import grade_workspace
+
+    return grade_workspace(workspace)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
