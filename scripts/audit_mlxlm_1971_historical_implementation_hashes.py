@@ -123,10 +123,16 @@ def main() -> int:
     ).stdout.strip()
     payload = json.dumps(report, indent=2, sort_keys=True) + "\n"
     if args.output:
-        if args.output.exists() or args.output.is_symlink():
-            raise FileExistsError(f"refusing to overwrite audit evidence: {args.output}")
         args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(payload, encoding="utf-8")
+        try:
+            # Exclusive creation prevents TOCTOU replacement of retained evidence,
+            # including a symlink introduced after a preflight existence check.
+            with args.output.open("x", encoding="utf-8") as stream:
+                stream.write(payload)
+        except FileExistsError as exc:
+            raise FileExistsError(
+                f"refusing to overwrite audit evidence: {args.output}"
+            ) from exc
     print(payload, end="")
     return 0
 
