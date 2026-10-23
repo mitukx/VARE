@@ -58,6 +58,96 @@ def write_json(path: Path, value: Any) -> None:
     )
 
 
+def create_docker_shared_workspace(task_id: str, *, home: Path | None = None) -> Path:
+    """Create candidate files below Colima's shared home mount, not macOS /var/folders."""
+    if not task_id or any(char not in "abcdefghijklmnopqrstuvwxyz0123456789-" for char in task_id):
+        raise ValueError("unsafe task id for workspace directory")
+    home_root = Path.home() if home is None else home.resolve(strict=True)
+    root = home_root / ".cache" / "vare" / "candidate-workspaces"
+    root.mkdir(parents=True, exist_ok=True, mode=0o700)
+    if root.is_symlink() or root.resolve(strict=True) != root:
+        raise ValueError("Docker-shared candidate workspace root must be a real directory")
+    root.chmod(0o700)
+    parent = Path(tempfile.mkdtemp(prefix=f"{task_id}-", dir=root))
+    parent.chmod(0o700)
+    workspace = parent / "workspace"
+    # materialize_workspace owns creation of the destination and rejects any
+    # pre-existing path. Keep this leaf absent until pinned files are written.
+    if workspace.exists() or workspace.is_symlink():
+        raise ValueError("candidate workspace destination must not already exist")
+    return workspace
+
+
+def classify_public_test_result(result: Any) -> str:
+    """Classify the public runner result without turning launch errors into reward."""
+    if result is None:
+        # The agent may exhaust its action budget before invoking the public
+        # evaluator. Preserve that as an ordinary unsuccessful rollout.
+        return "not_run"
+    if not isinstance(result, dict):
+        return "evaluator_unavailable"
+    explicit_contract = {
+        "passed": (True, True),
+        "assertion_failure": (False, True),
+        "test_execution_error": (False, True),
+        "test_failure": (False, True),
+        "candidate_timeout": (False, True),
+        "candidate_output_limit": (False, True),
+        "container_resource_failure": (False, True),
+        "container_launch_failure": (None, False),
+        "runner_integrity_error": (None, False),
+        "evaluator_unavailable": (None, False),
+    }
+    if "classification" in result:
+        classification = result.get("classification")
+        if not isinstance(classification, str) or classification not in explicit_contract:
+            return "runner_integrity_error"
+        expected_passed, expected_gradeable = explicit_contract[classification]
+        if (
+            result.get("passed") is not expected_passed
+            or result.get("gradeable") is not expected_gradeable
+        ):
+            return "runner_integrity_error"
+        # A claimed pass must also agree with the process outcome.
+        if classification == "passed" and (
+            ("returncode" in result and result["returncode"] != 0)
+            or result.get("error")
+        ):
+            return "runner_integrity_error"
+        return classification
+    # Historical records predate the explicit class field. Exit 125 is Docker's
+    # launch-failure code; it means no test assertion ran.
+    code = result.get("returncode")
+    # Legacy records have no explicit class. Reject contradictory pass
+    # claims before classifying nonzero exits as ordinary test failures.
+    if result.get("passed") is True and (
+        code != 0 or result.get("error") or result.get("gradeable") is False
+    ):
+        return "runner_integrity_error"
+    if code in (125, 126, 127):
+        return "container_launch_failure"
+    error = result.get("error")
+    if isinstance(error, str) and "container exceeded wall-time limit" in error:
+        return "candidate_timeout"
+    if isinstance(error, str) and "container exceeded output byte limit" in error:
+        return "candidate_output_limit"
+    if isinstance(error, str) and "public test file is missing or changed" in error:
+        return "runner_integrity_error"
+    if code == 0 and result.get("passed") is True:
+        return "passed"
+    if error:
+        return "evaluator_unavailable"
+    if isinstance(code, int):
+        return "container_resource_failure" if code in (137, 139) else "test_failure"
+    return "evaluator_unavailable"
+
+
+def is_unavailable_public_evaluator(result: Any) -> bool:
+    return classify_public_test_result(result) in {
+        "container_launch_failure", "runner_integrity_error", "evaluator_unavailable",
+    }
+
+
 def run_checked(
     command: list[str], *, cwd: Path, env: dict[str, str] | None = None
 ) -> str:
@@ -175,7 +265,10 @@ def materialize_workspace(
         raise FileExistsError(f"refusing to reuse candidate workspace: {destination}")
     if destination.parent.exists() and destination.parent.is_symlink():
         raise ValueError("workspace parent must not be a symlink")
-    destination.mkdir(parents=True)
+    # The container runs as uid 65534; make the materialized tree traversable
+    # while keeping candidate writes constrained by the read-only mount.
+    destination.mkdir(parents=True, mode=0o755)
+    os.chmod(destination, 0o755)
     expected_files: dict[str, dict[str, Any]] = manifest["files"]
     expected_dirs: dict[str, int] = manifest["directories"]
     revision = manifest["source_revision"]
@@ -473,7 +566,7 @@ def main() -> int:
         )
         task_output = output / task_id
         task_output.mkdir()
-        workspace = Path(tempfile.mkdtemp(prefix=f"vare-{task_id}-")) / "workspace"
+        workspace = create_docker_shared_workspace(task_id)
         materialize_workspace(source_repo, task_id, workspace, manifest)
         contract = load_agent_task(task_dir)
         baseline_hashes = verify_agent_workspace(workspace, contract)
@@ -671,6 +764,23 @@ def main() -> int:
                 rollout_record["workspace_after_sha256"] = workspace_snapshot_hash(
                     workspace
                 )
+                public_test_status = classify_public_test_result(
+                    agent.get("public_test_result")
+                )
+                rollout_record["public_test_classification"] = public_test_status
+                if is_unavailable_public_evaluator(agent.get("public_test_result")):
+                    rollout_record.update(
+                        {
+                            "status": "public_test_infrastructure_error",
+                            "agent_stop_reason": agent.get("stop_reason"),
+                            "verified_reward": None,
+                            "grading_skipped_reason": public_test_status,
+                        }
+                    )
+                    run_manifest["rollouts"].append(rollout_record)
+                    run_manifest["stop_reason"] = "public_test_infrastructure_error"
+                    write_json(output / "run-manifest.partial.json", run_manifest)
+                    return 2
                 grade_path = rollout_dir / "independent-grade.json"
                 grade_cmd = [
                     sys.executable,
@@ -706,10 +816,8 @@ def main() -> int:
                     write_json(output / "run-manifest.partial.json", run_manifest)
                     return 2
                 grading = json.loads(grade_path.read_text(encoding="utf-8"))
-                public_passed = (
-                    isinstance(agent.get("public_test_result"), dict)
-                    and agent["public_test_result"].get("passed") is True
-                )
+                # Never award reward from unvalidated candidate-supplied flags.
+                public_passed = public_test_status == "passed"
                 changed = agent.get("source_hashes_before") != agent.get(
                     "source_hashes_after"
                 )
@@ -727,6 +835,7 @@ def main() -> int:
                             "candidate_diff_sha256"
                         ),
                         "public_test_passed": public_passed,
+                        "public_test_classification": public_test_status,
                         "independent_grader_passed": grading.get("passed") is True,
                         "candidate_target_sha256": grading.get(
                             "candidate_target_sha256"

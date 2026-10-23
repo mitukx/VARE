@@ -1,0 +1,92 @@
+{
+  "calibration_passed": true,
+  "candidate_network": "none",
+  "candidate_workspace_mount": "read-only",
+  "created_at_utc": "2026-10-22T22:27:41Z",
+  "direct_mount_probes": {
+    "system_temp": {
+      "passed": false,
+      "returncode": 125,
+      "source_class": "macOS-system-temp",
+      "stderr": "docker: Error response from daemon: invalid mount config for type \"bind\": bind source path does not exist: /private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-colima-bind-source-m40qf6fc\n\nRun 'docker run --help' for more information\n",
+      "stdout": ""
+    },
+    "user_cache": {
+      "passed": true,
+      "returncode": 0,
+      "source_class": "user-cache",
+      "stderr": "",
+      "stdout": "vare-colima-bind-probe\n"
+    }
+  },
+  "docker_context": "colima",
+  "failure_classification_contract": {
+    "candidate_timeout": "candidate_timeout",
+    "exit_125": "container_launch_failure",
+    "exit_126": "container_launch_failure",
+    "exit_127": "container_launch_failure",
+    "missing_dependency": "evaluator_unavailable"
+  },
+  "git_commit": "2f158b9ec9db06357cfdc5fc0f3cd430ffbc3bf2",
+  "git_worktree_clean_before_run": true,
+  "image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "image_id": "sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "implementation_sha256": {
+    "scripts/calibrate_public_test_execution_v6.py": "39e1a9ff70297f8d5a7354121a664aa68f9b243e75141a8b887db481cb9f9ab5",
+    "scripts/run_local_agent.py": "b2c715dce026c4a291f2efd052cb8a67a4445d55e9cfae4967d03532c5e2f9db",
+    "src/vare/agent_structured_edit.py": "2ad05b8aabd559e67113b539ccb9a0d70bd1a54b64beca3700136b03f3301246",
+    "src/vare/container_isolation.py": "6d963821333f8de603bb4743ea52cb203c549695a5df9bbff9fa829b50ea8c42",
+    "tests/test_agent_structured_edit.py": "fa5122950e4fab0656cdd570fd13b9a902f7e15c8e19d0d0ab297605831e2a99",
+    "tests/test_phase_a_v6_colima_public_test_integration.py": "00144da6dd33ca5746c6df7bb2e8ef95c991e2f85e70fb3e465f1f5cfcd324dd",
+    "tests/test_run_coding_agent_dev_study_v1.py": "d3d61c7ab8de796f3b3c67af0f4d50e039435079853149c5785144c5b31e5bf2",
+    "tests/test_run_local_agent_handles.py": "bbd7c1108785a5c6d53da5e6be44bc19f16f9b729e112e6f0bd8ce1819af65d4",
+    "tests/test_run_local_agent_public_tests.py": "e74f746b70acc71fde3ff0a99c80901422ab18bcf88734c642861230beea1f1e",
+    "tests/test_run_local_agent_structured_v2.py": "f9fcb42b114fc685a972796f76024dcd3a257937cf5e47d35f7bd27bf3a1cbcb",
+    "tests/test_run_local_agent_tool_format.py": "bdeb6045360baf525e5f1ea0203b8c095fd340381dcd59757f2ace20fef082a0"
+  },
+  "implicit_handle_calibration": {
+    "applied": true,
+    "edit_revision_source": "implicit_latest_source_read",
+    "source_sha256": "d3fe37235936f63ebabd6ba2bb8d3cf67404555d856dc63b0611fe9b6231ec13"
+  },
+  "limitations": [
+    "Synthetic one-file harness fixture; not a repository task or model rollout.",
+    "Validates the host-to-Colima mount and test-result classification path only."
+  ],
+  "model_loaded": false,
+  "optimizer_updates": 0,
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "protocol_id": "vare.coding-agent.public-test-execution.colima.v6",
+  "protocol_sha256": "2fb3e14ef4fecbc0fd15c9db9de5143fc464de52181241dafb2cd225248c5375",
+  "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+  "results": {
+    "broken_baseline": {
+      "classification": "assertion_failure",
+      "elapsed_seconds": 0.155,
+      "gradeable": true,
+      "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+      "passed": false,
+      "public_test_sha256": "ba40fafe9aee4464e0c6a54dfc624478d732b1bf7f976bf30cff8ab7fa250d89",
+      "returncode": 1,
+      "source_sha256": "89bec526a8809599d1d4ba869fbe6703df3484df64ed19e716b24e2ad341995a",
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/workspace/test_public.py\", line 4, in test_value\n    assert value() == 42\n           ^^^^^^^^^^^^^\nAssertionError\n",
+      "stdout": "",
+      "workspace_staging": "owned-cache-bind-mount"
+    },
+    "known_fix": {
+      "classification": "passed",
+      "elapsed_seconds": 0.163,
+      "gradeable": true,
+      "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+      "passed": true,
+      "public_test_sha256": "ba40fafe9aee4464e0c6a54dfc624478d732b1bf7f976bf30cff8ab7fa250d89",
+      "returncode": 0,
+      "source_sha256": "2f8974f06364c943a202b6a6971a24e891683fa2dc6233ad2a5c478dce8fd0b3",
+      "stderr": "",
+      "stdout": "",
+      "workspace_staging": "owned-cache-bind-mount"
+    }
+  },
+  "source_workspace_class": "macOS-system-temp-outside-home-cache",
+  "wall_seconds": 0.59
+}

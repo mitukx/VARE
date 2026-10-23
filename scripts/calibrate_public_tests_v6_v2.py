@@ -45,6 +45,16 @@ def calibrate(repository: Path, output_dir: Path) -> dict[str, Any]:
     lock = json.loads(lock_bytes)
     protocol = json.loads(protocol_bytes)
     protocol_hash = sha256(protocol_bytes)
+    runtime_source_hashes = {
+        "scripts/calibrate_public_tests_v6_v2.py": sha256(Path(__file__).read_bytes()),
+        "scripts/prepare_transformers_dev_cohort_v2.py": sha256(
+            (ROOT / "scripts/prepare_transformers_dev_cohort_v2.py").read_bytes()
+        ),
+        "scripts/run_local_agent.py": sha256((ROOT / "scripts/run_local_agent.py").read_bytes()),
+        "src/vare/container_isolation.py": sha256(
+            (ROOT / "src/vare/container_isolation.py").read_bytes()
+        ),
+    }
     if protocol_hash != lock.get("protocol_sha256") or protocol.get("protocol_id") != lock.get("protocol_id"):
         raise ValueError("frozen v6 protocol/lock provenance failed")
     if protocol.get("container_image") != IMAGE:
@@ -79,13 +89,27 @@ def calibrate(repository: Path, output_dir: Path) -> dict[str, Any]:
                 (workspace / "test_public.py").write_bytes(test_bytes)
                 if kind == "baseline" and tree_sha256(workspace) != manifest["workspace_snapshot_sha256"]:
                     raise ValueError(f"baseline workspace hash mismatch for {task_id}")
+                expected_workspace_files = set(manifest["files"])
+                expected_file_hashes = {
+                    path: file_record["sha256"]
+                    for path, file_record in manifest["files"].items()
+                }
                 result = run_public_tests(
-                    workspace, IMAGE, sha256(test_bytes), memory_mb=int(task["limits"]["memory_mb"]),
+                    workspace,
+                    IMAGE,
+                    sha256(test_bytes),
+                    memory_mb=int(task["limits"]["memory_mb"]),
+                    expected_workspace_files=expected_workspace_files,
+                    expected_file_hashes=expected_file_hashes,
+                    allowed_modified_files={spec["target"]} if kind == "known-fix" else set(),
                 )
+                expected_classification = "assertion_failure" if kind == "baseline" else "passed"
                 record = {
                     "task_id": task_id,
                     "kind": kind,
                     "passed": result.get("passed") is True,
+                    "classification": result.get("classification"),
+                    "gradeable": result.get("gradeable"),
                     "returncode": result.get("returncode"),
                     "elapsed_seconds": result.get("elapsed_seconds"),
                     "stdout": result.get("stdout", ""),
@@ -105,10 +129,12 @@ def calibrate(repository: Path, output_dir: Path) -> dict[str, Any]:
                     ),
                     "modified_paths_from_baseline": [] if kind == "baseline" else [spec["target"]],
                     "expected_pass": kind == "known-fix",
+                    "expected_classification": expected_classification,
                     "protocol_id": protocol["protocol_id"],
                     "protocol_sha256": protocol_hash,
                     "protocol_lock_sha256": sha256(lock_bytes),
                     "calibration_script_sha256": sha256(Path(__file__).read_bytes()),
+                    "runtime_source_sha256": runtime_source_hashes,
                     "grading_image": IMAGE,
                     "container_image_id": image_id,
                     "limits": {
@@ -130,7 +156,12 @@ def calibrate(repository: Path, output_dir: Path) -> dict[str, Any]:
         "grading_image": IMAGE,
         "container_image_id": image_id,
         "results": records,
-        "calibration_passed": all(item["passed"] == item["expected_pass"] for item in records),
+        "calibration_passed": all(
+            item["passed"] == item["expected_pass"]
+            and item["classification"] == item["expected_classification"]
+            and item["gradeable"] is True
+            for item in records
+        ),
         "limitations": [
             "Public calibration establishes only public regression behavior, not hidden grader correctness.",
             "Known-fix calibration is not a model-generated success.",

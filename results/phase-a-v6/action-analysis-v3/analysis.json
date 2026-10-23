@@ -1,0 +1,656 @@
+{
+  "aggregate": {
+    "applied_edit_calls": 1,
+    "edit_calls": 6,
+    "exact_duplicate_read_outputs": 8,
+    "exact_duplicate_search_results": 3,
+    "generated_tokens": 14802,
+    "independent_verified_successes": 0,
+    "no_tool_retries": 19,
+    "prompt_tokens_summed_over_turns": 341869,
+    "public_test_docker_bind_failures": 6,
+    "public_test_events": 7,
+    "public_test_returncodes": {
+      "125": 6,
+      "None": 1
+    },
+    "rejected_edit_calls": 5,
+    "rollouts_with_any_edit": 3,
+    "rollouts_without_edit": 9,
+    "search_calls": 28,
+    "searches_with_hits": 12,
+    "source_reads": 39,
+    "stop_reasons": {
+      "context_budget_exhausted": 1,
+      "no_tool_call_after_edit": 1,
+      "no_tool_call_retries_exhausted": 6,
+      "turn_budget_exhausted": 4
+    },
+    "tool_call_total": 94,
+    "tool_calls": {
+      "finish": 3,
+      "list_files": 12,
+      "read_file": 39,
+      "replace_text": 6,
+      "run_public_tests": 6,
+      "search_text": 28
+    },
+    "tool_calls_before_first_edit_by_rollout": {
+      "transformers-49315-watermark-repeat-v1/greedy-0": null,
+      "transformers-49315-watermark-repeat-v1/sampled-101": null,
+      "transformers-49315-watermark-repeat-v1/sampled-202": null,
+      "transformers-49515-rope-setter-v1/greedy-0": 4,
+      "transformers-49515-rope-setter-v1/sampled-101": 3,
+      "transformers-49515-rope-setter-v1/sampled-202": null,
+      "transformers-49731-generation-device-type-v1/greedy-0": null,
+      "transformers-49731-generation-device-type-v1/sampled-101": null,
+      "transformers-49731-generation-device-type-v1/sampled-202": null,
+      "transformers-49767-janus-background-v1/greedy-0": null,
+      "transformers-49767-janus-background-v1/sampled-101": null,
+      "transformers-49767-janus-background-v1/sampled-202": 6
+    },
+    "tool_result_json_characters": 101915,
+    "turn_total": 120,
+    "unique_read_outputs": 31
+  },
+  "analysis_id": "vare.phase-a-v6.action-analysis.v1",
+  "created_at_utc": "2026-10-22T21:50:57Z",
+  "definitions": {
+    "exact_duplicate_read_outputs": "Repeated read_file calls with identical arguments and identical result bytes.",
+    "prompt_tokens_summed_over_turns": "Sum of recorded prompt_tokens per generation; not deduplicated unique context tokens.",
+    "public_test_events": "Manual run_public_tests calls plus automatic public-test records attached to edit outcomes; not duplicate top-level latest-state fields.",
+    "returncode_125_classification": "Historical infrastructure failure only when stderr contains the recorded Docker daemon bind-source diagnostic."
+  },
+  "raw_bundle_verified": true,
+  "rollout_count": 12,
+  "rollouts": [
+    {
+      "agent_record_sha256": "c50f77b5e2b2d11135a10abd07f92e094595d3024df6bf514d364e73b55f6448",
+      "applied_edit_calls": 0,
+      "edit_calls": 0,
+      "edit_results": [],
+      "exact_duplicate_read_outputs": 0,
+      "exact_duplicate_search_results": 0,
+      "finish_calls": 0,
+      "first_edit_turn": null,
+      "generated_tokens": 1353,
+      "independent_grader": {
+        "failure": "repeated_ngram_count_mismatch",
+        "passed": false,
+        "status": null
+      },
+      "max_context_tokens": 6144,
+      "no_tool_retries": 2,
+      "prompt_tokens_summed_over_turns": 28075,
+      "public_test_events": [],
+      "read_calls": 3,
+      "read_calls_before_first_edit": 3,
+      "read_content_chars": 5206,
+      "rejected_edit_calls": 0,
+      "rollout_id": "greedy-0",
+      "search_calls": 1,
+      "searches_with_hits": 1,
+      "seed": 0,
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49315-watermark-repeat-v1",
+      "tool_calls_before_first_edit": null,
+      "tool_calls_by_name": {
+        "list_files": 1,
+        "read_file": 3,
+        "search_text": 1
+      },
+      "tool_result_json_characters": 10955,
+      "turns": 8,
+      "unique_read_outputs": 3
+    },
+    {
+      "agent_record_sha256": "05aa28ef12fb46700372f36491c804a0716f101bb4ac28330079565472cffa82",
+      "applied_edit_calls": 0,
+      "edit_calls": 0,
+      "edit_results": [],
+      "exact_duplicate_read_outputs": 1,
+      "exact_duplicate_search_results": 0,
+      "finish_calls": 0,
+      "first_edit_turn": null,
+      "generated_tokens": 1342,
+      "independent_grader": {
+        "failure": "repeated_ngram_count_mismatch",
+        "passed": false,
+        "status": null
+      },
+      "max_context_tokens": 6144,
+      "no_tool_retries": 2,
+      "prompt_tokens_summed_over_turns": 22629,
+      "public_test_events": [],
+      "read_calls": 2,
+      "read_calls_before_first_edit": 2,
+      "read_content_chars": 2502,
+      "rejected_edit_calls": 0,
+      "rollout_id": "sampled-101",
+      "search_calls": 2,
+      "searches_with_hits": 1,
+      "seed": 101,
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49315-watermark-repeat-v1",
+      "tool_calls_before_first_edit": null,
+      "tool_calls_by_name": {
+        "list_files": 1,
+        "read_file": 2,
+        "search_text": 2
+      },
+      "tool_result_json_characters": 7929,
+      "turns": 8,
+      "unique_read_outputs": 1
+    },
+    {
+      "agent_record_sha256": "d3baad21cb737df05381bbe559c8c3c509f2383285e743ebfdfd7e62a6103015",
+      "applied_edit_calls": 0,
+      "edit_calls": 0,
+      "edit_results": [],
+      "exact_duplicate_read_outputs": 0,
+      "exact_duplicate_search_results": 0,
+      "finish_calls": 0,
+      "first_edit_turn": null,
+      "generated_tokens": 681,
+      "independent_grader": {
+        "failure": "repeated_ngram_count_mismatch",
+        "passed": false,
+        "status": null
+      },
+      "max_context_tokens": 6144,
+      "no_tool_retries": 1,
+      "prompt_tokens_summed_over_turns": 28210,
+      "public_test_events": [],
+      "read_calls": 5,
+      "read_calls_before_first_edit": 5,
+      "read_content_chars": 8862,
+      "rejected_edit_calls": 0,
+      "rollout_id": "sampled-202",
+      "search_calls": 1,
+      "searches_with_hits": 1,
+      "seed": 202,
+      "stop_reason": "context_budget_exhausted",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49315-watermark-repeat-v1",
+      "tool_calls_before_first_edit": null,
+      "tool_calls_by_name": {
+        "list_files": 1,
+        "read_file": 5,
+        "search_text": 1
+      },
+      "tool_result_json_characters": 15152,
+      "turns": 8,
+      "unique_read_outputs": 5
+    },
+    {
+      "agent_record_sha256": "7c37cabd587f2c129b79caaea38b2b143487adb58a9fbd89478d9a056926ea7a",
+      "applied_edit_calls": 1,
+      "edit_calls": 1,
+      "edit_results": [
+        {
+          "applied": true,
+          "error": null,
+          "tool": "replace_text",
+          "turn": 6
+        }
+      ],
+      "exact_duplicate_read_outputs": 1,
+      "exact_duplicate_search_results": 0,
+      "finish_calls": 2,
+      "first_edit_turn": 6,
+      "generated_tokens": 1603,
+      "independent_grader": {
+        "failure": "candidate_exception:KeyError",
+        "passed": false,
+        "status": null
+      },
+      "max_context_tokens": 6144,
+      "no_tool_retries": 1,
+      "prompt_tokens_summed_over_turns": 30890,
+      "public_test_events": [
+        {
+          "kind": "automatic",
+          "legacy_infrastructure_classification": null,
+          "passed": false,
+          "returncode": null,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "kind": "manual",
+          "legacy_infrastructure_classification": "docker_bind_mount_launch_failure",
+          "passed": false,
+          "returncode": 125,
+          "stderr_sha256": "eee4e9acb0fd4d18ff25b1462207edae79f69031e14406023e25e2341d3feae9"
+        }
+      ],
+      "read_calls": 2,
+      "read_calls_before_first_edit": 2,
+      "read_content_chars": 1420,
+      "rejected_edit_calls": 0,
+      "rollout_id": "greedy-0",
+      "search_calls": 1,
+      "searches_with_hits": 1,
+      "seed": 0,
+      "stop_reason": "no_tool_call_after_edit",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49515-rope-setter-v1",
+      "tool_calls_before_first_edit": 4,
+      "tool_calls_by_name": {
+        "finish": 2,
+        "list_files": 1,
+        "read_file": 2,
+        "replace_text": 1,
+        "run_public_tests": 1,
+        "search_text": 1
+      },
+      "tool_result_json_characters": 7773,
+      "turns": 10,
+      "unique_read_outputs": 1
+    },
+    {
+      "agent_record_sha256": "8e63ccf8d67e0b62ebc845af496a124ee9cf54b04729b65b9c4d16cbbf0f83b7",
+      "applied_edit_calls": 0,
+      "edit_calls": 3,
+      "edit_results": [
+        {
+          "applied": false,
+          "error": "unknown edit handle; read the current source region",
+          "tool": "replace_text",
+          "turn": 4
+        },
+        {
+          "applied": false,
+          "error": "unknown edit handle; read the current source region",
+          "tool": "replace_text",
+          "turn": 6
+        },
+        {
+          "applied": false,
+          "error": "unknown edit handle; read the current source region",
+          "tool": "replace_text",
+          "turn": 8
+        }
+      ],
+      "exact_duplicate_read_outputs": 4,
+      "exact_duplicate_search_results": 0,
+      "finish_calls": 0,
+      "first_edit_turn": 4,
+      "generated_tokens": 1257,
+      "independent_grader": {
+        "failure": "candidate_exception:KeyError",
+        "passed": false,
+        "status": null
+      },
+      "max_context_tokens": 6144,
+      "no_tool_retries": 1,
+      "prompt_tokens_summed_over_turns": 42823,
+      "public_test_events": [
+        {
+          "kind": "manual",
+          "legacy_infrastructure_classification": "docker_bind_mount_launch_failure",
+          "passed": false,
+          "returncode": 125,
+          "stderr_sha256": "eee4e9acb0fd4d18ff25b1462207edae79f69031e14406023e25e2341d3feae9"
+        }
+      ],
+      "read_calls": 5,
+      "read_calls_before_first_edit": 1,
+      "read_content_chars": 7355,
+      "rejected_edit_calls": 3,
+      "rollout_id": "sampled-101",
+      "search_calls": 1,
+      "searches_with_hits": 1,
+      "seed": 101,
+      "stop_reason": "turn_budget_exhausted",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49515-rope-setter-v1",
+      "tool_calls_before_first_edit": 3,
+      "tool_calls_by_name": {
+        "list_files": 1,
+        "read_file": 5,
+        "replace_text": 3,
+        "run_public_tests": 1,
+        "search_text": 1
+      },
+      "tool_result_json_characters": 12782,
+      "turns": 12,
+      "unique_read_outputs": 1
+    },
+    {
+      "agent_record_sha256": "fbcf6a289f9315a36bb5f5d8384bb19d6a5763a2502ee09be513a2bdf41b81cf",
+      "applied_edit_calls": 0,
+      "edit_calls": 0,
+      "edit_results": [],
+      "exact_duplicate_read_outputs": 0,
+      "exact_duplicate_search_results": 0,
+      "finish_calls": 0,
+      "first_edit_turn": null,
+      "generated_tokens": 1265,
+      "independent_grader": {
+        "failure": "candidate_exception:KeyError",
+        "passed": false,
+        "status": null
+      },
+      "max_context_tokens": 6144,
+      "no_tool_retries": 2,
+      "prompt_tokens_summed_over_turns": 18190,
+      "public_test_events": [
+        {
+          "kind": "manual",
+          "legacy_infrastructure_classification": "docker_bind_mount_launch_failure",
+          "passed": false,
+          "returncode": 125,
+          "stderr_sha256": "eee4e9acb0fd4d18ff25b1462207edae79f69031e14406023e25e2341d3feae9"
+        }
+      ],
+      "read_calls": 1,
+      "read_calls_before_first_edit": 1,
+      "read_content_chars": 710,
+      "rejected_edit_calls": 0,
+      "rollout_id": "sampled-202",
+      "search_calls": 1,
+      "searches_with_hits": 1,
+      "seed": 202,
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49515-rope-setter-v1",
+      "tool_calls_before_first_edit": null,
+      "tool_calls_by_name": {
+        "list_files": 1,
+        "read_file": 1,
+        "run_public_tests": 1,
+        "search_text": 1
+      },
+      "tool_result_json_characters": 4805,
+      "turns": 7,
+      "unique_read_outputs": 1
+    },
+    {
+      "agent_record_sha256": "eaee7428e971fc5bf5dad9cfbca233263ae39d9b9f54fd77dc38d0ecbdf9d8f3",
+      "applied_edit_calls": 0,
+      "edit_calls": 0,
+      "edit_results": [],
+      "exact_duplicate_read_outputs": 0,
+      "exact_duplicate_search_results": 0,
+      "finish_calls": 0,
+      "first_edit_turn": null,
+      "generated_tokens": 950,
+      "independent_grader": {
+        "failure": "structured_output_type_or_value_mismatch",
+        "passed": false,
+        "status": null
+      },
+      "max_context_tokens": 6144,
+      "no_tool_retries": 2,
+      "prompt_tokens_summed_over_turns": 20685,
+      "public_test_events": [
+        {
+          "kind": "manual",
+          "legacy_infrastructure_classification": "docker_bind_mount_launch_failure",
+          "passed": false,
+          "returncode": 125,
+          "stderr_sha256": "ad3f9e27c94646a3ac9957bbcba6f7c7e6f90cf386339af55ed14bbf715f2245"
+        }
+      ],
+      "read_calls": 1,
+      "read_calls_before_first_edit": 1,
+      "read_content_chars": 1037,
+      "rejected_edit_calls": 0,
+      "rollout_id": "greedy-0",
+      "search_calls": 4,
+      "searches_with_hits": 1,
+      "seed": 0,
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49731-generation-device-type-v1",
+      "tool_calls_before_first_edit": null,
+      "tool_calls_by_name": {
+        "list_files": 1,
+        "read_file": 1,
+        "run_public_tests": 1,
+        "search_text": 4
+      },
+      "tool_result_json_characters": 3305,
+      "turns": 10,
+      "unique_read_outputs": 1
+    },
+    {
+      "agent_record_sha256": "52f5acf0df722ced00b924a87a4993cb322acf55dc10d436d45f73ce72cfe2f0",
+      "applied_edit_calls": 0,
+      "edit_calls": 0,
+      "edit_results": [],
+      "exact_duplicate_read_outputs": 0,
+      "exact_duplicate_search_results": 3,
+      "finish_calls": 1,
+      "first_edit_turn": null,
+      "generated_tokens": 878,
+      "independent_grader": {
+        "failure": "structured_output_type_or_value_mismatch",
+        "passed": false,
+        "status": null
+      },
+      "max_context_tokens": 6144,
+      "no_tool_retries": 0,
+      "prompt_tokens_summed_over_turns": 31674,
+      "public_test_events": [
+        {
+          "kind": "manual",
+          "legacy_infrastructure_classification": "docker_bind_mount_launch_failure",
+          "passed": false,
+          "returncode": 125,
+          "stderr_sha256": "ad3f9e27c94646a3ac9957bbcba6f7c7e6f90cf386339af55ed14bbf715f2245"
+        }
+      ],
+      "read_calls": 2,
+      "read_calls_before_first_edit": 2,
+      "read_content_chars": 1886,
+      "rejected_edit_calls": 0,
+      "rollout_id": "sampled-101",
+      "search_calls": 7,
+      "searches_with_hits": 1,
+      "seed": 101,
+      "stop_reason": "turn_budget_exhausted",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49731-generation-device-type-v1",
+      "tool_calls_before_first_edit": null,
+      "tool_calls_by_name": {
+        "finish": 1,
+        "list_files": 1,
+        "read_file": 2,
+        "run_public_tests": 1,
+        "search_text": 7
+      },
+      "tool_result_json_characters": 7326,
+      "turns": 12,
+      "unique_read_outputs": 2
+    },
+    {
+      "agent_record_sha256": "30ffed9385f8a646a1a104288ad775562a8bed235800dd55b211468c13c0c9bb",
+      "applied_edit_calls": 0,
+      "edit_calls": 0,
+      "edit_results": [],
+      "exact_duplicate_read_outputs": 0,
+      "exact_duplicate_search_results": 0,
+      "finish_calls": 0,
+      "first_edit_turn": null,
+      "generated_tokens": 1290,
+      "independent_grader": {
+        "failure": "structured_output_type_or_value_mismatch",
+        "passed": false,
+        "status": null
+      },
+      "max_context_tokens": 6144,
+      "no_tool_retries": 2,
+      "prompt_tokens_summed_over_turns": 30040,
+      "public_test_events": [
+        {
+          "kind": "manual",
+          "legacy_infrastructure_classification": "docker_bind_mount_launch_failure",
+          "passed": false,
+          "returncode": 125,
+          "stderr_sha256": "ad3f9e27c94646a3ac9957bbcba6f7c7e6f90cf386339af55ed14bbf715f2245"
+        }
+      ],
+      "read_calls": 2,
+      "read_calls_before_first_edit": 2,
+      "read_content_chars": 2780,
+      "rejected_edit_calls": 0,
+      "rollout_id": "sampled-202",
+      "search_calls": 4,
+      "searches_with_hits": 1,
+      "seed": 202,
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49731-generation-device-type-v1",
+      "tool_calls_before_first_edit": null,
+      "tool_calls_by_name": {
+        "list_files": 1,
+        "read_file": 2,
+        "run_public_tests": 1,
+        "search_text": 4
+      },
+      "tool_result_json_characters": 8162,
+      "turns": 11,
+      "unique_read_outputs": 2
+    },
+    {
+      "agent_record_sha256": "5abdbc71270c4ea0e82a4b4c9105383db7bdfc7f884c260dce853ef78473567f",
+      "applied_edit_calls": 0,
+      "edit_calls": 0,
+      "edit_results": [],
+      "exact_duplicate_read_outputs": 0,
+      "exact_duplicate_search_results": 0,
+      "finish_calls": 0,
+      "first_edit_turn": null,
+      "generated_tokens": 1436,
+      "independent_grader": {
+        "failure": "janus_background_color_mismatch",
+        "passed": false,
+        "status": null
+      },
+      "max_context_tokens": 6144,
+      "no_tool_retries": 2,
+      "prompt_tokens_summed_over_turns": 23390,
+      "public_test_events": [],
+      "read_calls": 4,
+      "read_calls_before_first_edit": 4,
+      "read_content_chars": 4304,
+      "rejected_edit_calls": 0,
+      "rollout_id": "greedy-0",
+      "search_calls": 2,
+      "searches_with_hits": 1,
+      "seed": 0,
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49767-janus-background-v1",
+      "tool_calls_before_first_edit": null,
+      "tool_calls_by_name": {
+        "list_files": 1,
+        "read_file": 4,
+        "search_text": 2
+      },
+      "tool_result_json_characters": 5649,
+      "turns": 10,
+      "unique_read_outputs": 4
+    },
+    {
+      "agent_record_sha256": "aacc4ce799ee01448e1600671b77268a5fb63695bb07efb9e5f98e72d80841d0",
+      "applied_edit_calls": 0,
+      "edit_calls": 0,
+      "edit_results": [],
+      "exact_duplicate_read_outputs": 0,
+      "exact_duplicate_search_results": 0,
+      "finish_calls": 0,
+      "first_edit_turn": null,
+      "generated_tokens": 1197,
+      "independent_grader": {
+        "failure": "janus_background_color_mismatch",
+        "passed": false,
+        "status": null
+      },
+      "max_context_tokens": 6144,
+      "no_tool_retries": 2,
+      "prompt_tokens_summed_over_turns": 33248,
+      "public_test_events": [],
+      "read_calls": 7,
+      "read_calls_before_first_edit": 7,
+      "read_content_chars": 8684,
+      "rejected_edit_calls": 0,
+      "rollout_id": "sampled-101",
+      "search_calls": 2,
+      "searches_with_hits": 1,
+      "seed": 101,
+      "stop_reason": "turn_budget_exhausted",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49767-janus-background-v1",
+      "tool_calls_before_first_edit": null,
+      "tool_calls_by_name": {
+        "list_files": 1,
+        "read_file": 7,
+        "search_text": 2
+      },
+      "tool_result_json_characters": 10879,
+      "turns": 12,
+      "unique_read_outputs": 7
+    },
+    {
+      "agent_record_sha256": "a306ac67a8a0b26dbbd3ac258e0a501606489120950e635f4856388ac968b088",
+      "applied_edit_calls": 0,
+      "edit_calls": 2,
+      "edit_results": [
+        {
+          "applied": false,
+          "error": "unknown edit handle; read the current source region",
+          "tool": "replace_text",
+          "turn": 8
+        },
+        {
+          "applied": false,
+          "error": "unknown edit handle; read the current source region",
+          "tool": "replace_text",
+          "turn": 10
+        }
+      ],
+      "exact_duplicate_read_outputs": 2,
+      "exact_duplicate_search_results": 0,
+      "finish_calls": 0,
+      "first_edit_turn": 8,
+      "generated_tokens": 1550,
+      "independent_grader": {
+        "failure": "janus_background_color_mismatch",
+        "passed": false,
+        "status": null
+      },
+      "max_context_tokens": 6144,
+      "no_tool_retries": 2,
+      "prompt_tokens_summed_over_turns": 32015,
+      "public_test_events": [],
+      "read_calls": 5,
+      "read_calls_before_first_edit": 3,
+      "read_content_chars": 5409,
+      "rejected_edit_calls": 2,
+      "rollout_id": "sampled-202",
+      "search_calls": 2,
+      "searches_with_hits": 1,
+      "seed": 202,
+      "stop_reason": "turn_budget_exhausted",
+      "successful_finish_calls": 0,
+      "task_id": "transformers-49767-janus-background-v1",
+      "tool_calls_before_first_edit": 6,
+      "tool_calls_by_name": {
+        "list_files": 1,
+        "read_file": 5,
+        "replace_text": 2,
+        "search_text": 2
+      },
+      "tool_result_json_characters": 7198,
+      "turns": 12,
+      "unique_read_outputs": 3
+    }
+  ],
+  "source_raw_file_count": 132,
+  "source_run_manifest_sha256": "6c5c21f35d1796f01039bd89963d120f3283aae8f64eb52f9fad726302e225a2",
+  "source_sha256sums_sha256": "ca48da70fa1ed354232aa6d32d62834a0376cc3d6d9c9beaeb42cc68a5ef0103"
+}

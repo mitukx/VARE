@@ -10,8 +10,11 @@ import os
 import platform
 import re
 import resource
+import shutil
+import stat
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 from typing import Any, cast
@@ -83,12 +86,9 @@ def tools_for(
             {'workspace_revision_handle': {'type': 'string'}, 'source_preimage_handle': {'type': 'string'}}
             if opaque_handles else {'expected_hash': {'type': 'string'}, 'expected_revision': {'type': 'string'}}
         )
-        handle_required = (
-            ['workspace_revision_handle', 'source_preimage_handle']
-            if opaque_handles else ['expected_hash', 'expected_revision']
-        )
+        handle_required = [] if opaque_handles else ['expected_hash', 'expected_revision']
         edit_handle_description = (
-            'Supply workspace_revision_handle and source_preimage_handle from read_file; VARE resolves them to exact host-side hashes and rejects stale snapshots.'
+            'VARE uses the latest read_file snapshot for this path when handles are omitted and verifies exact host-side hashes. If supplied, both opaque handles must come from the same read_file result.'
             if opaque_handles else
             'Supply expected_hash and expected_revision exactly as returned by read_file; stale snapshots are rejected.'
         )
@@ -113,8 +113,41 @@ def candidate_visible_tool_result(
     max_read_chars: int = 6_000,
 ) -> Any:
     """Keep exact provenance in the transcript while sending bounded feedback to the model."""
+    def public_test_feedback(raw: dict[str, Any]) -> dict[str, Any]:
+        classification = raw.get('classification')
+        if classification in {
+            'container_launch_failure', 'runner_integrity_error', 'evaluator_unavailable',
+        }:
+            return {
+                'passed': None,
+                'classification': classification,
+                'feedback': 'Public test execution was unavailable; no test assertion ran.',
+                'next_action': 'stop this rollout; the evaluator must be repaired before grading',
+            }
+        feedback = raw.get('feedback')
+        if not isinstance(feedback, str):
+            parts = [raw.get(key) for key in ('stdout', 'stderr', 'error')]
+            feedback = '\n'.join(part for part in parts if isinstance(part, str) and part)
+        visible = {
+            'passed': raw.get('passed'),
+            'feedback': feedback[-2_000:],
+            'next_action': raw.get('next_action') or (
+                'inspect the failing public assertion and make a targeted repair'
+                if raw.get('passed') is False else 'inspect the final diff before submission'
+            ),
+        }
+        if classification is not None:
+            visible['classification'] = classification
+        return visible
+
+    if name == 'run_public_tests':
+        return public_test_feedback(result)
     if not opaque_handles:
-        return result
+        visible = dict(result)
+        automatic = visible.get('automatic_public_test')
+        if isinstance(automatic, dict):
+            visible['automatic_public_test'] = public_test_feedback(automatic)
+        return visible
     def bounded_diff(value: Any) -> str:
         diff = value if isinstance(value, str) else ""
         if len(diff) <= 6_000:
@@ -197,11 +230,7 @@ def candidate_visible_tool_result(
             visible['diff'] = bounded_diff(result['diff'])
         feedback = result.get('automatic_public_test')
         if isinstance(feedback, dict):
-            visible['automatic_public_test'] = {
-                key: feedback[key]
-                for key in ('passed', 'repeated_unchanged_failure', 'feedback', 'next_action')
-                if key in feedback
-            }
+            visible['automatic_public_test'] = public_test_feedback(feedback)
         return visible
     if name == 'inspect_diff':
         return {
@@ -211,7 +240,10 @@ def candidate_visible_tool_result(
     if name == 'run_public_tests':
         return {
             key: result[key]
-            for key in ('passed', 'repeated_unchanged_failure', 'feedback', 'next_action')
+            for key in (
+                'passed', 'classification', 'repeated_unchanged_failure',
+                'feedback', 'next_action',
+            )
             if key in result
         }
     return result
@@ -235,6 +267,71 @@ def record_automatic_public_test(entry: dict[str, Any], result: dict[str, Any]) 
     """Retain each raw post-edit test outcome, including earlier failures."""
     entry.setdefault('automatic_public_tests', []).append(result)
     entry['automatic_public_test'] = result
+
+
+def classify_public_test_exit(returncode: int, stderr: str = '') -> str:
+    """Classify Docker exit codes without attributing launch failures to code."""
+    if returncode == 0:
+        return 'passed'
+    if returncode in {125, 126, 127}:
+        return 'container_launch_failure'
+    if returncode in {137, 139, 143}:
+        return 'container_resource_failure'
+    lowered = stderr.lower()
+    if 'modulenotfounderror' in lowered or 'no module named' in lowered:
+        return classify_module_not_found(stderr)
+    return 'test_failure'
+
+
+def classify_module_not_found(stderr: str) -> str:
+    """Attribute missing imports to candidate source or the pinned evaluator."""
+    frames = re.findall(r'File [\"\']([^\"\']+)[\"\']', stderr)
+    # Candidate code may use exec()/compile(), adding a virtual final frame
+    # such as ``<string>`` after the real candidate frame. Attribute by any
+    # workspace source frame, while allowing evaluator frames to coexist in
+    # the same traceback.
+    if any(
+        frame.startswith('/workspace/') and frame != '/workspace/test_public.py'
+        for frame in frames
+    ):
+        return 'test_execution_error'
+    return 'evaluator_unavailable'
+
+
+def classify_public_test_error(error: str) -> str:
+    """Map trusted runner errors to bounded, non-reward infrastructure classes."""
+    lowered = error.lower()
+    if 'container exceeded wall-time limit' in lowered:
+        return 'candidate_timeout'
+    if 'container exceeded output byte limit' in lowered:
+        return 'candidate_output_limit'
+    if any(marker in lowered for marker in (
+        'public test file is missing or changed',
+        'candidate workspace inventory differs',
+        'staged candidate inventory differs',
+        'staged public test differs',
+        'candidate workspace must',
+        'candidate workspace contains',
+    )):
+        return 'runner_integrity_error'
+    if 'docker could not be started' in lowered or 'could not be started; fail closed' in lowered:
+        return 'container_launch_failure'
+    return 'evaluator_unavailable'
+
+
+def public_test_infrastructure_error(result: dict[str, Any] | None) -> bool:
+    """True when public-test execution cannot safely produce candidate reward."""
+    return isinstance(result, dict) and result.get('classification') in {
+        'container_launch_failure', 'runner_integrity_error', 'evaluator_unavailable',
+    }
+
+
+def tool_public_test_infrastructure_error(name: str, result: dict[str, Any]) -> bool:
+    """Find infrastructure failures from direct or automatic post-edit tests."""
+    if name == 'run_public_tests':
+        return public_test_infrastructure_error(result)
+    automatic = result.get('automatic_public_test')
+    return public_test_infrastructure_error(automatic if isinstance(automatic, dict) else None)
 
 
 def bounded_turn_payload(model_result: Any, remaining_chars: int) -> str:
@@ -335,29 +432,217 @@ def generate_turn(backend: str, model: Any, tokenizer: Any, messages: list[dict[
 
 def run_public_tests(
     workspace: Path, image: str, expected_test_hash: str, memory_mb: int = 512,
+    *, expected_workspace_files: set[str],
+    expected_file_hashes: dict[str, str] | None = None,
+    allowed_modified_files: set[str] | None = None,
 ) -> dict[str, Any]:
     """Run only the immutable public smoke file in VARE's candidate sandbox."""
+    if not expected_workspace_files or 'test_public.py' not in expected_workspace_files:
+        return {
+            'passed': None,
+            'classification': 'runner_integrity_error',
+            'gradeable': False,
+            'error': 'public test evaluator unavailable',
+        }
     test_file = workspace / 'test_public.py'
     if not test_file.is_file() or sha256(test_file) != expected_test_hash:
-        return {'passed': False, 'error': 'public test file is missing or changed'}
+        return {
+            'passed': None,
+            'classification': 'runner_integrity_error',
+            'gradeable': False,
+            'error': 'public test evaluator unavailable',
+        }
     from vare.container_isolation import DockerIsolationRunner, IsolationLimits
 
     limits = IsolationLimits(image=image, timeout_s=45, memory_mb=memory_mb, cpus=1.0,
                              pids_limit=32, max_output_bytes=20_000)
     started = time.perf_counter()
     try:
-        result = asyncio.run(DockerIsolationRunner().run_candidate(
-            limits, allowed_workspace_root=workspace.parent, workspace=workspace,
-            command=public_test_command(),
-            readonly_workspace=True,
-        ))
+        before = _workspace_file_manifest(workspace.resolve(strict=True))
+        if set(before) != expected_workspace_files:
+            return {
+                'passed': None,
+                'classification': 'runner_integrity_error',
+                'gradeable': False,
+                'error': 'public test evaluator unavailable',
+            }
+        if expected_file_hashes is not None:
+            modified = allowed_modified_files or set()
+            if set(expected_file_hashes) != expected_workspace_files or not modified.issubset(expected_workspace_files):
+                return {
+                    'passed': None,
+                    'classification': 'runner_integrity_error',
+                    'gradeable': False,
+                    'error': 'public test evaluator unavailable',
+                }
+            if any(
+                name not in modified and before[name][1] != digest
+                for name, digest in expected_file_hashes.items()
+            ):
+                return {
+                    'passed': None,
+                    'classification': 'runner_integrity_error',
+                    'gradeable': False,
+                    'error': 'public test evaluator unavailable',
+                }
+            if 'test_public.py' in modified:
+                return {
+                    'passed': None,
+                    'classification': 'runner_integrity_error',
+                    'gradeable': False,
+                    'error': 'public test evaluator unavailable',
+                }
+        with PublicTestWorkspaceStaging(workspace) as staged:
+            if set(_workspace_file_manifest(staged)) != expected_workspace_files:
+                return {
+                    'passed': None,
+                    'classification': 'runner_integrity_error',
+                    'gradeable': False,
+                    'error': 'public test evaluator unavailable',
+                }
+            if sha256(staged / 'test_public.py') != expected_test_hash:
+                return {
+                    'passed': None,
+                    'classification': 'runner_integrity_error',
+                    'gradeable': False,
+                    'error': 'public test evaluator unavailable',
+                }
+            result = asyncio.run(DockerIsolationRunner().run_candidate(
+                limits, allowed_workspace_root=staged.parent, workspace=staged,
+                command=public_test_command(),
+                readonly_workspace=True,
+            ))
     except Exception as exc:
-        return {'passed': False, 'error': f'{type(exc).__name__}: {exc}',
-                'elapsed_seconds': round(time.perf_counter() - started, 3)}
-    return {'passed': result.returncode == 0, 'returncode': result.returncode,
+        message = f'{type(exc).__name__}: {exc}'
+        classification = classify_public_test_error(message)
+        gradeable = classification in {'candidate_timeout', 'candidate_output_limit'}
+        return {
+            'passed': False if gradeable else None,
+            'classification': classification,
+            'gradeable': gradeable,
+            'error': message,
+            'elapsed_seconds': round(time.perf_counter() - started, 3),
+        }
+    classification = classify_public_test_exit(result.returncode, result.stderr)
+    if classification == 'test_failure' and result.returncode == 1 and (
+        'assertionerror' in result.stderr.lower() or 'assert ' in result.stderr.lower()
+    ):
+        classification = 'assertion_failure'
+    elif classification == 'test_failure':
+        classification = 'test_execution_error'
+    gradeable = classification in {
+        'passed', 'assertion_failure', 'test_execution_error', 'container_resource_failure',
+    }
+    passed = classification == 'passed'
+    return {'passed': passed if gradeable else None, 'classification': classification,
+            'gradeable': gradeable, 'returncode': result.returncode,
             'stdout': result.stdout, 'stderr': result.stderr,
             'elapsed_seconds': round(time.perf_counter() - started, 3),
-            'isolation': 'docker-network-none-read-only-root-only-workspace-mount'}
+            'isolation': 'docker-network-none-read-only-root-only-workspace-mount',
+            'workspace_staging': 'owned-cache-bind-mount'}
+
+
+def classify_public_test_returncode(returncode: int, stderr: str = '') -> str:
+    """Separate Docker/daemon launch failures from candidate test outcomes."""
+    if type(returncode) is not int:
+        raise TypeError('container return code must be an integer')
+    lowered = stderr.lower()
+    if returncode in {125, 126, 127}:
+        return 'container_launch_failure'
+    if returncode == 0:
+        return 'passed'
+    if returncode in {137, 143}:
+        return 'container_resource_failure'
+    if 'modulenotfounderror' in lowered or 'no module named' in lowered:
+        return classify_module_not_found(stderr)
+    if returncode == 1 and ('assertionerror' in lowered or 'assert ' in lowered):
+        return 'assertion_failure'
+    return 'test_execution_error'
+
+
+def _workspace_file_manifest(root: Path) -> dict[str, tuple[int, str]]:
+    """Hash a regular-file workspace and reject links or special files."""
+    if root.is_symlink() or not root.is_dir():
+        raise ValueError('candidate workspace must be a real directory')
+    manifest: dict[str, tuple[int, str]] = {}
+    for path in sorted(root.rglob('*')):
+        mode = path.lstat().st_mode
+        if stat.S_ISLNK(mode):
+            raise ValueError('candidate workspace must not contain symlinks')
+        if stat.S_ISDIR(mode):
+            continue
+        if not stat.S_ISREG(mode):
+            raise ValueError('candidate workspace contains a special file')
+        manifest[path.relative_to(root).as_posix()] = (
+            stat.S_IMODE(mode), sha256(path),
+        )
+    return manifest
+
+
+def _public_test_staging_root() -> Path:
+    """Return a private, host-owned path known to be bind-mountable by Colima."""
+    home = Path.home().resolve(strict=True)
+    cache = home / '.cache'
+    if cache.is_symlink():
+        raise ValueError('user cache directory must not be a symlink')
+    cache.mkdir(mode=0o700, exist_ok=True)
+    cache_info = cache.lstat()
+    if not stat.S_ISDIR(cache_info.st_mode) or cache_info.st_uid != os.getuid():
+        raise ValueError('user cache directory must be owned by the current user')
+
+    staging = cache / 'vare-public-test-staging'
+    try:
+        staging.mkdir(mode=0o700)
+    except FileExistsError:
+        pass
+    info = staging.lstat()
+    if (
+        not stat.S_ISDIR(info.st_mode)
+        or stat.S_ISLNK(info.st_mode)
+        or info.st_uid != os.getuid()
+        or stat.S_IMODE(info.st_mode) != 0o700
+    ):
+        raise ValueError('public-test staging root must be a private user-owned directory')
+    resolved = staging.resolve(strict=True)
+    if resolved != staging:
+        raise ValueError('public-test staging path must be canonical')
+    return resolved
+
+
+class PublicTestWorkspaceStaging:
+    """Context manager that copies an exact candidate snapshot to Colima-shared storage."""
+
+    def __init__(self, workspace: Path) -> None:
+        self.workspace = workspace
+        self._temporary: tempfile.TemporaryDirectory[str] | None = None
+        self.staged: Path | None = None
+
+    def __enter__(self) -> Path:
+        if self.workspace.is_symlink():
+            raise ValueError('candidate workspace must not be a symlink')
+        source = self.workspace.resolve(strict=True)
+        before = _workspace_file_manifest(source)
+        staging_root = _public_test_staging_root()
+        self._temporary = tempfile.TemporaryDirectory(
+            prefix='vare-public-tests-', dir=staging_root,
+        )
+        target = Path(self._temporary.name) / 'workspace'
+        try:
+            shutil.copytree(source, target, copy_function=shutil.copy2)
+            copied = _workspace_file_manifest(target)
+            if copied != before:
+                raise ValueError('staged candidate workspace differs from source snapshot')
+        except BaseException:
+            self._temporary.cleanup()
+            self._temporary = None
+            raise
+        self.staged = target.resolve(strict=True)
+        return self.staged
+
+    def __exit__(self, exc_type: Any, exc: Any, traceback: Any) -> None:
+        if self._temporary is not None:
+            self._temporary.cleanup()
+            self._temporary = None
 
 
 def public_test_command() -> list[str]:
@@ -423,11 +708,19 @@ def mlx_resource_stop_reason(
 def refresh_public_tests_after_edit(
     edit_result: dict[str, Any], workspace: Path, image: str | None,
     expected_test_hash: str | None, memory_mb: int = 512,
+    *, expected_workspace_files: set[str],
+    expected_file_hashes: dict[str, str] | None = None,
+    allowed_modified_files: set[str] | None = None,
 ) -> dict[str, Any] | None:
     """Return a fresh smoke-test result after an applied source edit."""
     if edit_result.get('applied') is not True or not image or not expected_test_hash:
         return None
-    return run_public_tests(workspace, image, expected_test_hash, memory_mb)
+    return run_public_tests(
+        workspace, image, expected_test_hash, memory_mb,
+        expected_workspace_files=expected_workspace_files,
+        expected_file_hashes=expected_file_hashes,
+        allowed_modified_files=allowed_modified_files,
+    )
 
 
 def attempt_configured_edit(workspace: Path, text: str, edit_format: str, allowed: set[str]) -> dict[str, Any]:
@@ -611,6 +904,13 @@ def main() -> int:
         verify_agent_workspace(workspace, contract)
     except ValueError as exc:
         parser.error(str(exc))
+    public_test_workspace_manifest = (
+        _workspace_file_manifest(workspace) if test_files else {}
+    )
+    public_test_workspace_files = set(public_test_workspace_manifest)
+    public_test_workspace_hashes = {
+        name: digest for name, (_size, digest) in public_test_workspace_manifest.items()
+    }
     if not os.environ.get('HF_HUB_OFFLINE') == '1' or not os.environ.get('TRANSFORMERS_OFFLINE') == '1':
         parser.error('HF_HUB_OFFLINE=1 and TRANSFORMERS_OFFLINE=1 are required')
 
@@ -675,8 +975,8 @@ def main() -> int:
         if use_opaque_handles:
             edit_sentence = (
                 'Use short structured actions, never emit a unified diff or rewrite a whole file. Read bounded source regions. '
-                'For replace_text or insert_text, copy the short workspace_revision_handle and source_preimage_handle returned '
-                'by the latest read; do not invent or reproduce hashes. VARE creates the diff and resolves handles to exact '
+                'For replace_text or insert_text, either omit revision handles to use the latest host-verified read of that path, '
+                'or copy both opaque handles from that read. VARE creates the diff and resolves handles to exact '
                 'host-side source hashes. After a failed public test, act on its failing assertion and make a different targeted '
                 'edit. Inspect the final diff after the last edit and test, then finish. '
             )
@@ -808,14 +1108,26 @@ def main() -> int:
                     public_test_result = refresh_public_tests_after_edit(
                         edit_result, workspace, args.public_test_image, public_test_hash,
                         args.public_test_memory_mb,
+                        expected_workspace_files=public_test_workspace_files,
+                        expected_file_hashes=public_test_workspace_hashes,
+                        allowed_modified_files=editable,
                     )
                     if public_test_result is not None:
                         record_automatic_public_test(entry, public_test_result)
-                        edit_result = {**edit_result, 'automatic_public_test': public_test_result}
+                        model_test_result = (
+                            edit_controller.record_public_test_result(public_test_result)
+                            if edit_controller is not None else public_test_result
+                        )
+                        edit_result = {**edit_result, 'automatic_public_test': model_test_result}
                 entry['tool_calls'].append({'name': 'recovered_edit', 'result': edit_result})
                 messages.append({'role': 'assistant', 'content': raw})
                 recovered_feedback = (
-                    bounded_turn_payload(edit_result, 6_000)
+                    bounded_turn_payload(
+                        candidate_visible_tool_result(
+                            'replace_text', edit_result, opaque_handles=True,
+                        ),
+                        6_000,
+                    )
                     if edit_controller is not None
                     else json.dumps(edit_result, ensure_ascii=False)
                 )
@@ -824,6 +1136,9 @@ def main() -> int:
                     'content': recovered_feedback,
                 })
                 transcript.append(entry)
+                if public_test_infrastructure_error(public_test_result):
+                    stop_reason = 'public_test_infrastructure_error'
+                    break
                 if edit_result.get('applied') is True:
                     continue
                 stop_reason = 'malformed_edit'
@@ -961,6 +1276,9 @@ def main() -> int:
                                     args.public_test_image,
                                     public_test_hash,
                                     args.public_test_memory_mb,
+                                    expected_workspace_files=public_test_workspace_files,
+                                    expected_file_hashes=public_test_workspace_hashes,
+                                    allowed_modified_files=editable,
                                 )
                                 if public_test_result is not None:
                                     record_automatic_public_test(entry, public_test_result)
@@ -992,6 +1310,9 @@ def main() -> int:
                         public_test_result = refresh_public_tests_after_edit(
                             result, workspace, args.public_test_image, public_test_hash,
                             args.public_test_memory_mb,
+                            expected_workspace_files=public_test_workspace_files,
+                            expected_file_hashes=public_test_workspace_hashes,
+                            allowed_modified_files=editable,
                         )
                         if public_test_result is not None:
                             record_automatic_public_test(entry, public_test_result)
@@ -1011,6 +1332,9 @@ def main() -> int:
                         public_test_result = refresh_public_tests_after_edit(
                             result, workspace, args.public_test_image, public_test_hash,
                             args.public_test_memory_mb,
+                            expected_workspace_files=public_test_workspace_files,
+                            expected_file_hashes=public_test_workspace_hashes,
+                            allowed_modified_files=editable,
                         )
                         if public_test_result is not None:
                             record_automatic_public_test(entry, public_test_result)
@@ -1020,11 +1344,16 @@ def main() -> int:
                         public_test_result = run_public_tests(
                             workspace, args.public_test_image, public_test_hash,
                             args.public_test_memory_mb,
+                            expected_workspace_files=public_test_workspace_files,
+                            expected_file_hashes=public_test_workspace_hashes,
+                            allowed_modified_files=editable,
                         )
                     else:
                         public_test_result = {
-                            'passed': False,
-                            'error': 'public test image is not configured',
+                            'passed': None,
+                            'classification': 'evaluator_unavailable',
+                            'gradeable': False,
+                            'error': 'public test evaluator unavailable',
                         }
                     if edit_controller is not None:
                         model_feedback_override = edit_controller.record_public_test_result(
@@ -1081,6 +1410,9 @@ def main() -> int:
                 messages.append({'role': 'tool', 'name': name, 'content': model_payload})
                 if should_stop_after_tool(name, result):
                     break
+                if tool_public_test_infrastructure_error(name, result):
+                    stop_reason = 'public_test_infrastructure_error'
+                    break
             except Exception as exc:
                 entry['tool_calls'].append({'error': f'{type(exc).__name__}: {exc}', 'raw_call': match.group(1)})
                 error_payload = json.dumps({'error': str(exc)}, ensure_ascii=False)
@@ -1091,6 +1423,8 @@ def main() -> int:
                 messages.append({'role': 'tool', 'name': 'invalid_tool_call', 'content': error_payload})
         transcript.append(entry)
         if stop_reason == 'agent_finished':
+            break
+        if stop_reason == 'public_test_infrastructure_error':
             break
 
     elapsed = time.perf_counter() - start

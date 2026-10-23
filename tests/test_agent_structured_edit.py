@@ -138,7 +138,6 @@ def test_controller_rejects_stale_or_cross_file_handles(tmp_path: Path) -> None:
             old_text="return 1",
             new_text="return 2",
         )
-
     (root / "src/other.py").write_text("value = 1\n", encoding="utf-8")
     allowed.add("src/other.py")
     cross_controller = StructuredEditController(root, allowed)
@@ -152,6 +151,63 @@ def test_controller_rejects_stale_or_cross_file_handles(tmp_path: Path) -> None:
             source_preimage_handle=other["source_preimage_handle"],
             old_text="return 9",
             new_text="return 10",
+        )
+
+
+def test_controller_binds_omitted_handles_to_the_latest_read_for_that_path(tmp_path: Path) -> None:
+    root, allowed = _workspace(tmp_path)
+    controller = StructuredEditController(root, allowed)
+    controller.read_region("src/module.py", start_line=1, end_line=2)
+    # A second source read refreshes the host-managed handle for this path.
+    controller.read_region("src/module.py", start_line=1, end_line=2)
+
+    result = controller.apply_edit(
+        action="replace_text",
+        path="src/module.py",
+        old_text="return 1",
+        new_text="return 2",
+    )
+
+    assert result["applied"] is True
+    assert "return 2" in (root / "src/module.py").read_text(encoding="utf-8")
+
+
+def test_controller_rejects_partial_or_unbound_implicit_handles(tmp_path: Path) -> None:
+    root, allowed = _workspace(tmp_path)
+    controller = StructuredEditController(root, allowed)
+    with pytest.raises(StructuredEditError, match="before editing"):
+        controller.apply_edit(
+            action="replace_text",
+            path="src/module.py",
+            old_text="return 1",
+            new_text="return 2",
+        )
+    controller.read_region("src/module.py")
+    with pytest.raises(StructuredEditError, match="both edit handles"):
+        controller.apply_edit(
+            action="replace_text",
+            path="src/module.py",
+            workspace_revision_handle="rev-0001",
+            old_text="return 1",
+            new_text="return 2",
+        )
+
+
+def test_implicit_handles_still_reject_stale_workspace_revisions(tmp_path: Path) -> None:
+    root, allowed = _workspace(tmp_path)
+    other = root / "src/other.py"
+    other.write_text("value = 1\n", encoding="utf-8")
+    allowed.add("src/other.py")
+    controller = StructuredEditController(root, allowed)
+    controller.read_region("src/module.py")
+    other.write_text("value = 2\n", encoding="utf-8")
+
+    with pytest.raises(StructuredEditError, match="revision handle is stale"):
+        controller.apply_edit(
+            action="replace_text",
+            path="src/module.py",
+            old_text="return 1",
+            new_text="return 2",
         )
 
 
@@ -180,7 +236,7 @@ def test_controller_can_read_but_never_edit_public_test_file(tmp_path: Path) -> 
     assert read["content"] == "assert value() == 2\n"
     assert read["read_only"] is True
     assert "workspace_revision" not in read
-    with pytest.raises(StructuredEditError, match="unknown edit handle"):
+    with pytest.raises(StructuredEditError, match="read the current source region"):
         controller.apply_edit(
             action="replace_text",
             path="test_public.py",
@@ -243,6 +299,36 @@ def test_controller_repeated_public_failure_prompts_different_repair_and_bounds_
     assert second["next_action"] == "inspect the failing assertion and make a different targeted edit"
     assert len(second["feedback"]) <= 128
     assert len(second["failure_signature"]) == 64
+
+
+def test_controller_does_not_turn_container_launch_failure_into_test_feedback(tmp_path: Path) -> None:
+    root, allowed = _workspace(tmp_path)
+    controller = StructuredEditController(root, allowed)
+    read = controller.read_region("src/module.py")
+    controller.apply_edit(
+        action="replace_text",
+        path="src/module.py",
+        workspace_revision_handle=read["workspace_revision_handle"],
+        source_preimage_handle=read["source_preimage_handle"],
+        old_text="return 1",
+        new_text="return 2",
+    )
+
+    feedback = controller.record_public_test_result({
+        "passed": None,
+        "classification": "container_launch_failure",
+        "gradeable": False,
+        "error": "bind source path does not exist: /private/var/folders/secret",
+    })
+
+    assert feedback["classification"] == "container_launch_failure"
+    assert "no test assertion ran" in feedback["feedback"]
+    assert "secret" not in feedback["feedback"]
+    assert feedback["next_action"].startswith("stop this rollout")
+    assert feedback["passed"] is None
+    assert "secret" not in feedback["feedback"]
+    with pytest.raises(StructuredEditError, match="until public tests pass"):
+        controller.finalize_for_independent_grading()
 
 
 def test_finalization_requires_passed_public_tests_and_inspected_current_diff(tmp_path: Path) -> None:

@@ -1,0 +1,37 @@
+{
+  "baseline_manifest_sha256": "46c6c400758d27d9f5525947dd90db8946b339a7ef6cba8f7b88b42b241afce0",
+  "baseline_workspace_sha256": "35a74a2a4f835ca50864e34b6cf3ced259f47a755683b02c627ab305619df9d2",
+  "calibration_script_sha256": "949db966dcc9a8a14861590deef2dad210f47eab0c8372fbbfe848e35658eb46",
+  "candidate_target_sha256": "2a28ed34411937f923c83aa4512f8c9e6e4c5f17ce3d89901e505cab123dfc5b",
+  "candidate_workspace_sha256": "41643b0f78c4a73db409252cac62ee3d5b720d1f6ea2f4613bd7a8726aaa11d6",
+  "container_image_id": "sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "elapsed_seconds": 4.978,
+  "expected_pass": true,
+  "failure": null,
+  "grading_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "hidden_grader_mounted": false,
+  "kind": "known-fix",
+  "limits": {
+    "cpus": 1.0,
+    "memory_mb": 1900,
+    "network": "none",
+    "pids": 32,
+    "timeout_seconds": 45,
+    "workspace_mount": "read-only"
+  },
+  "modified_paths_from_baseline": [
+    "src/transformers/generation/watermarking.py"
+  ],
+  "passed": true,
+  "protocol_id": "vare-transformers-fresh-development-v6-protocol-v2-2026-10-21",
+  "protocol_lock_sha256": "b0d857cd8589685cac98d74ae00bc84c684000b5e28fb4888a8a4641d2487ce5",
+  "protocol_sha256": "46ce8ed88b073f2cadd8acf6718fd82137fcf0f367464230f77fd9788c4667f6",
+  "public_test_sha256": "64949c1fed7bbd2efb2f210f0f433c1c692ad794469b8e9c558a26cc7d207689",
+  "returncode": 0,
+  "source_revision": "ec56e0e1383198065dd3a838629323c9fe228cf4",
+  "stderr": "",
+  "stdout": "",
+  "task_id": "transformers-49315-watermark-repeat-v1",
+  "task_json_sha256": "b9711bf5dd6e886197e655728ff8c255c3869f9009007a443957f12d2e7c7048",
+  "workspace_derivation": "git archive at pinned baseline with only the target bytes overlaid from the pinned fix revision"
+}

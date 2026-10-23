@@ -7,8 +7,10 @@ import hashlib
 import importlib.util
 import json
 import os
+import shutil
 import subprocess
 import sys
+import tempfile
 from types import SimpleNamespace
 from pathlib import Path
 
@@ -445,9 +447,25 @@ def _docker_ready() -> bool:
     return completed.returncode == 0
 
 
+@pytest.fixture
+def docker_visible_tmp_path(tmp_path: Path):
+    """Use a home-cache workspace when Colima cannot mount macOS system temp."""
+    if os.environ.get("DOCKER_CONTEXT") != "colima":
+        yield tmp_path
+        return
+    parent = Path.home() / ".cache" / "vare-separated-grader-tests"
+    parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    root = Path(tempfile.mkdtemp(prefix="case-", dir=parent))
+    try:
+        yield root
+    finally:
+        shutil.rmtree(root, ignore_errors=True)
+
+
 @pytest.mark.skipif(not _docker_ready(), reason="pinned python image is not available locally")
-def test_docker_probe_reads_canary_zero_of_three(tmp_path):
+def test_docker_probe_reads_canary_zero_of_three(docker_visible_tmp_path: Path):
     module = _load_probe_module()
+    tmp_path = docker_visible_tmp_path
     root = tmp_path / "candidate-root"
     workspace = root / "workspace"
     grader_root = tmp_path / "grader-root"
@@ -469,7 +487,8 @@ def test_docker_probe_reads_canary_zero_of_three(tmp_path):
 
 
 @pytest.mark.skipif(not _docker_ready(), reason="pinned python image is not available locally")
-def test_docker_network_is_closed_and_forged_score_fails(tmp_path):
+def test_docker_network_is_closed_and_forged_score_fails(docker_visible_tmp_path: Path):
+    tmp_path = docker_visible_tmp_path
     root = tmp_path / "workspaces"
     workspace = root / "trial"
     snapshots = tmp_path / "snapshots"
@@ -632,7 +651,10 @@ def test_repository_grader_argv_is_not_a_candidate_sandbox(tmp_path):
 
 
 @pytest.mark.skipif(not _docker_ready(), reason="pinned python image is not available locally")
-def test_docker_hidden_repository_grade_sees_canary_only_after_exit(tmp_path):
+def test_docker_hidden_repository_grade_sees_canary_only_after_exit(
+    docker_visible_tmp_path: Path,
+):
+    tmp_path = docker_visible_tmp_path
     task = _engineering_fixture(tmp_path)
     root = tmp_path / "workspaces"
     workspace = root / "trial"
@@ -662,9 +684,11 @@ def test_docker_hidden_repository_grade_sees_canary_only_after_exit(tmp_path):
     snapshot = grader.capture_snapshot(workspace, candidate_exited=True)
     grade_tree = source_only_snapshot(snapshot, ["add.py"], tmp_path / "grade-snapshots")
     stage = stage_hidden_grader(task, tmp_path / "grader-stage")
+    vare_source = tmp_path / "vare-src"
+    shutil.copytree(ROOT / "src", vare_source)
     broken = asyncio.run(grader.grade_hidden_repository(
         grade_tree, task_dir=task, grader_stage=stage,
-        vare_source=ROOT / "src", policy_id="broken", policy_version=1,
+        vare_source=vare_source, policy_id="broken", policy_version=1,
     ))
     assert broken["passed"] is False
     (workspace / "add.py").write_text("def add(left, right):\n    return left + right\n", encoding="utf-8")
@@ -672,7 +696,7 @@ def test_docker_hidden_repository_grade_sees_canary_only_after_exit(tmp_path):
     fixed_tree = source_only_snapshot(fixed_snapshot, ["add.py"], tmp_path / "grade-snapshots")
     passed = asyncio.run(grader.grade_hidden_repository(
         fixed_tree, task_dir=task, grader_stage=stage,
-        vare_source=ROOT / "src", policy_id="fixed", policy_version=1,
+        vare_source=vare_source, policy_id="fixed", policy_version=1,
     ))
     assert passed["passed"] is True
     assert passed["task_id"] == "fixture-add"
@@ -1212,7 +1236,10 @@ def test_isolated_performance_scoring_stops_on_hidden_correctness_failure(
 
 
 @pytest.mark.skipif(not _docker_ready(), reason="pinned python image is not available locally")
-def test_repository_grade_uses_the_isolated_harness(tmp_path: Path) -> None:
+def test_repository_grade_uses_the_isolated_harness(
+    docker_visible_tmp_path: Path,
+) -> None:
+    tmp_path = docker_visible_tmp_path
     module = _load_eval_module()
     task_dir = tmp_path / "task"
     evaluator = task_dir / "evaluator"

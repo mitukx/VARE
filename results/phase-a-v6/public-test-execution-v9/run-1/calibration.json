@@ -1,0 +1,73 @@
+{
+  "calibration_passed": true,
+  "created_at_utc": "2026-10-22T23:04:31Z",
+  "docker_context": "colima",
+  "git_commit": "a6da55b4a1ae6c289b926568b39f36342706e179",
+  "git_worktree_clean_before_run": true,
+  "image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "image_id": "sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "implementation_sha256": {
+    "scripts/calibrate_public_test_execution_v9.py": "8bac6a95cf7fb3a0d4606cfef2cbd908a07f15a71fdcd06a8a66228e379570b1",
+    "scripts/run_local_agent.py": "000f61095d19d3665521d13be544d352afccd34844882ebe74a9e34f34ac7b10",
+    "src/vare/agent_structured_edit.py": "2ad05b8aabd559e67113b539ccb9a0d70bd1a54b64beca3700136b03f3301246",
+    "src/vare/container_isolation.py": "6d963821333f8de603bb4743ea52cb203c549695a5df9bbff9fa829b50ea8c42",
+    "tests/test_run_local_agent_public_tests.py": "421f3c8f5a1742f8ac612eebef3a8f90390a8bba15e03dfa33a05057ce1cc27c",
+    "tests/test_run_local_agent_structured_v2.py": "5b504e822ba8448fefbe6798e34388ee6852b0a2d932a38fb4edd52c5b4842d8"
+  },
+  "limitations": [
+    "Synthetic fixture calibration, not a repository task or model rollout.",
+    "Runtime-abort claim is verified by the runner-loop regression test, not inferred from a classifier predicate.",
+    "HF Development candidates in PR #107 were previously model-exposed and are not fresh evidence."
+  ],
+  "missing_dependency_classification": {
+    "candidate_frame_after_evaluator_import_frame": "test_execution_error",
+    "candidate_virtual_final_frame": "test_execution_error",
+    "evaluator_only_virtual_final_frame": "evaluator_unavailable"
+  },
+  "model_loaded": false,
+  "optimizer_updates": 0,
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "protocol_id": "vare.coding-agent.public-test-execution.colima.v9",
+  "protocol_sha256": "cd23b733a62734ff671748b48322ac7305f9acd1ab298d9aeab702313e31531c",
+  "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+  "results": {
+    "broken_baseline": {
+      "classification": "assertion_failure",
+      "elapsed_seconds": 0.154,
+      "gradeable": true,
+      "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+      "passed": false,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/workspace/test_public.py\", line 4, in test_value\n    assert value() == 42\n           ^^^^^^^^^^^^^\nAssertionError\n",
+      "stdout": "",
+      "workspace_staging": "owned-cache-bind-mount"
+    },
+    "known_fix": {
+      "classification": "passed",
+      "elapsed_seconds": 0.13,
+      "gradeable": true,
+      "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+      "passed": true,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "",
+      "workspace_staging": "owned-cache-bind-mount"
+    }
+  },
+  "runtime_abort_regression": {
+    "command": [
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_run_local_agent_structured_v2.py",
+      "-k",
+      "test_real_runner_loop_stops_after_evaluator_failure"
+    ],
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "..                                                                       [100%]\n"
+  },
+  "wall_seconds": 0.604
+}

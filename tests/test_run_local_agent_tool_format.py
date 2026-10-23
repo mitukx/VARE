@@ -160,18 +160,28 @@ def test_verified_success_requires_public_test_and_independent_hidden_grade():
 def test_applied_recovered_edit_requires_a_fresh_public_test(monkeypatch, tmp_path):
     calls = []
 
-    def fail_fresh_test(workspace, image, test_hash, memory_mb):
-        calls.append((workspace, image, test_hash, memory_mb))
+    def fail_fresh_test(
+        workspace, image, test_hash, memory_mb, *, expected_workspace_files,
+        expected_file_hashes=None, allowed_modified_files=None,
+    ):
+        calls.append((
+            workspace, image, test_hash, memory_mb, expected_workspace_files,
+            expected_file_hashes, allowed_modified_files,
+        ))
         return {"passed": False, "returncode": 1}
 
     monkeypatch.setattr("scripts.run_local_agent.run_public_tests", fail_fresh_test)
     stale_result = {"passed": True, "returncode": 0}
     refreshed = refresh_public_tests_after_edit(
         {"applied": True}, tmp_path, "pinned-image", "test-hash", 1536,
+        expected_workspace_files={"src/module.py", "test_public.py"},
     )
     assert refreshed == {"passed": False, "returncode": 1}
     assert refreshed is not stale_result
-    assert calls == [(tmp_path, "pinned-image", "test-hash", 1536)]
+    assert calls == [(
+        tmp_path, "pinned-image", "test-hash", 1536,
+        {"src/module.py", "test_public.py"}, None, None,
+    )]
 
 
 def test_attempted_task_run_count_includes_every_arm_and_secondary_model():

@@ -1,0 +1,5 @@
+# Phase A v6 protocol-v2 public calibration
+
+Two append-only Colima runs in [`public-calibration-run-1`](../results/phase-a-v6/protocol-v2/public-calibration-run-1/) and [`public-calibration-run-2`](../results/phase-a-v6/protocol-v2/public-calibration-run-2/) exercise the four frozen task baselines and exact known fixes through the current isolated public-test runner. Each run contains eight container results. All four baselines were classified `assertion_failure`; all four known fixes were `passed`. Every result was gradeable, and the inspected runtime image ID matched the protocol's pinned digest.
+
+Run 2 additionally binds the calibration to SHA-256 hashes for the calibration runner, source extraction helper, public-test runner, and container-isolation implementation. The per-run manifests verify each raw result and report. This is public test calibration only; it is not an agent rollout, hidden-grader result, or model success. The v6 inference outcomes and frozen protocols are unchanged.

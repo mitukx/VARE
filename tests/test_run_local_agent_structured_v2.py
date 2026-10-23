@@ -1,14 +1,25 @@
 from __future__ import annotations
 
+import hashlib
+import importlib
 import json
+from pathlib import Path
+import sys
+import types
+
+import pytest
 
 from scripts.run_local_agent import (
     candidate_visible_tool_result,
     bounded_turn_payload,
+    classify_public_test_error,
+    classify_public_test_exit,
     no_tool_retry_reminder,
+    public_test_infrastructure_error,
     record_automatic_public_test,
     record_tool_call,
     should_stop_after_tool,
+    tool_public_test_infrastructure_error,
     tools_for,
 )
 
@@ -28,10 +39,12 @@ def test_opaque_structured_edit_schema_does_not_request_long_hashes() -> None:
     assert read['parameters']['required'] == ['path']
     assert 'workspace_revision_handle' in replace['parameters']['properties']
     assert 'source_preimage_handle' in replace['parameters']['properties']
+    assert 'workspace_revision_handle' not in replace['parameters']['required']
+    assert 'source_preimage_handle' not in replace['parameters']['required']
     assert 'expected_hash' not in replace['parameters']['properties']
     assert 'expected_revision' not in replace['parameters']['properties']
-    assert 'workspace_revision_handle' in insert['parameters']['required']
-    assert 'source_preimage_handle' in insert['parameters']['required']
+    assert 'workspace_revision_handle' not in insert['parameters']['required']
+    assert 'source_preimage_handle' not in insert['parameters']['required']
 
 
 def test_legacy_structured_schema_remains_available_without_opaque_mode() -> None:
@@ -71,6 +84,181 @@ def test_model_does_not_receive_internal_diff_or_test_hashes() -> None:
     visible_test = candidate_visible_tool_result('run_public_tests', public, opaque_handles=True)
     assert 'failure_signature' not in visible_test
     assert visible_test['feedback'] == 'failure'
+
+
+def test_public_test_exit_codes_separate_launch_failures_from_candidate_failures() -> None:
+    assert classify_public_test_exit(0) == 'passed'
+    assert classify_public_test_exit(1) == 'test_failure'
+    assert classify_public_test_exit(125) == 'container_launch_failure'
+    assert classify_public_test_exit(126) == 'container_launch_failure'
+    assert classify_public_test_exit(127) == 'container_launch_failure'
+    assert classify_public_test_exit(137) == 'container_resource_failure'
+    assert classify_public_test_error('IsolationError: container exceeded wall-time limit') == 'candidate_timeout'
+    assert public_test_infrastructure_error({'classification': 'container_launch_failure'})
+    assert not public_test_infrastructure_error({'classification': 'test_failure'})
+
+
+def test_direct_and_automatic_public_test_infrastructure_errors_abort_tool_loop() -> None:
+    assert tool_public_test_infrastructure_error(
+        'run_public_tests', {'classification': 'container_launch_failure'},
+    )
+    assert tool_public_test_infrastructure_error(
+        'replace_text', {'applied': True, 'automatic_public_test': {
+            'classification': 'evaluator_unavailable',
+        }},
+    )
+    assert not tool_public_test_infrastructure_error(
+        'replace_text', {'applied': True, 'automatic_public_test': {
+            'classification': 'assertion_failure', 'passed': False,
+        }},
+    )
+    assert not tool_public_test_infrastructure_error('read_file', {'content': 'source'})
+
+
+@pytest.mark.parametrize("automatic", [False, True], ids=["direct", "post-edit"])
+def test_real_runner_loop_stops_after_evaluator_failure(
+    tmp_path: Path, monkeypatch, automatic: bool,
+) -> None:
+    runner = importlib.import_module("scripts.run_local_agent")
+    workspace = tmp_path / "workspace"
+    (workspace / "src").mkdir(parents=True)
+    source = b"def value():\n    return 0\n"
+    public = b"def test_value():\n    assert True\n"
+    (workspace / "src/value.py").write_bytes(source)
+    (workspace / "test_public.py").write_bytes(public)
+    task = tmp_path / "task"
+    task.mkdir()
+    (task / "task.json").write_text(json.dumps({
+        "task_id": "runner-abort-regression",
+        "prompt": "Run the public check.",
+        "source": {
+            "file_sha256": {"src/value.py": hashlib.sha256(source).hexdigest()},
+            "readonly_file_sha256": {
+                "test_public.py": hashlib.sha256(public).hexdigest(),
+            },
+        },
+        "metadata": {
+            "editable_files": ["src/value.py"],
+            "readonly_files": ["test_public.py"],
+        },
+    }), encoding="utf-8")
+    model_dir = tmp_path / "model"
+    model_dir.mkdir()
+    output = tmp_path / "agent.json"
+
+    class Model:
+        def to(self, _device):
+            return self
+
+        def eval(self):
+            return self
+
+        def parameters(self):
+            return []
+
+    class Tokenizer:
+        eos_token_id = 0
+
+    torch = types.ModuleType("torch")
+    torch.__version__ = "test"
+    torch.float32 = "float32"
+    torch.manual_seed = lambda _seed: None
+    torch.use_deterministic_algorithms = lambda _enabled: None
+    torch.set_num_threads = lambda _threads: None
+    torch.get_num_threads = lambda: 1
+    torch.cuda = types.SimpleNamespace(is_available=lambda: False)
+    torch.backends = types.SimpleNamespace(mps=types.SimpleNamespace(is_available=lambda: False))
+    transformers = types.ModuleType("transformers")
+    transformers.__version__ = "test"
+    transformers.AutoModelForCausalLM = types.SimpleNamespace(
+        from_pretrained=lambda *_args, **_kwargs: Model(),
+    )
+    transformers.AutoTokenizer = types.SimpleNamespace(
+        from_pretrained=lambda *_args, **_kwargs: Tokenizer(),
+    )
+    monkeypatch.setitem(sys.modules, "torch", torch)
+    monkeypatch.setitem(sys.modules, "transformers", transformers)
+    monkeypatch.setenv("HF_HUB_OFFLINE", "1")
+    monkeypatch.setenv("TRANSFORMERS_OFFLINE", "1")
+    monkeypatch.setattr(sys, "argv", [
+        "run_local_agent.py", "--workspace", str(workspace), "--model-path", str(model_dir),
+        "--task-root", str(task), "--output", str(output), "--instruction", "Run tests.",
+        "--seed", "1", "--backend", "transformers_cpu", "--edit-format", "structured",
+        "--public-test-image", "pinned:test", "--max-turns", "2",
+    ])
+    calls = []
+
+    def generate(*_args, **_kwargs):
+        calls.append("generate")
+        first_call = (
+            '<tool_call>{"name":"replace_text","arguments":{"path":"src/value.py",'
+            '"old_text":"return 0","new_text":"return 1"}}</tool_call>'
+            if automatic else
+            '<tool_call>{"name":"run_public_tests","arguments":{}}</tool_call>'
+        )
+        return (
+            first_call +
+            '<tool_call>{"name":"list_files","arguments":{}}</tool_call>',
+            1, 1, {},
+        )
+
+    monkeypatch.setattr(runner, "generate_turn", generate)
+    if automatic:
+        def apply_edit(self, **_kwargs):
+            (workspace / "src/value.py").write_bytes(
+                b"def value():\n    return 1\n",
+            )
+            return {"applied": True, "path": "src/value.py"}
+
+        monkeypatch.setattr(
+            "vare.agent_structured_edit.StructuredEditController.apply_edit", apply_edit,
+        )
+    monkeypatch.setattr(runner, "run_public_tests", lambda *_args, **_kwargs: {
+        "passed": None, "classification": "evaluator_unavailable", "gradeable": False,
+    })
+
+    assert runner.main() == 0
+    record = json.loads(output.read_text(encoding="utf-8"))
+    assert calls == ["generate"]
+    assert record["stop_reason"] == "public_test_infrastructure_error"
+    assert [call["name"] for call in record["transcript"][0]["tool_calls"]] == [
+        "replace_text" if automatic else "run_public_tests",
+    ]
+
+
+def test_public_test_feedback_reports_infrastructure_status_without_host_path() -> None:
+    visible = candidate_visible_tool_result(
+        'run_public_tests',
+        {
+            'passed': False,
+            'classification': 'container_launch_failure',
+            'feedback': 'Public test execution was unavailable; no test assertion ran.',
+            'next_action': 'stop this rollout; the evaluator must be repaired before grading',
+            'stderr': 'bind source path does not exist: /private/var/folders/secret',
+        },
+        opaque_handles=True,
+    )
+    assert visible['classification'] == 'container_launch_failure'
+    assert 'no test assertion ran' in visible['feedback']
+    assert 'secret' not in str(visible)
+    assert public_test_infrastructure_error({'classification': 'evaluator_unavailable'})
+    assert public_test_infrastructure_error({'classification': 'runner_integrity_error'})
+    assert not public_test_infrastructure_error({'classification': 'candidate_timeout'})
+
+
+def test_legacy_public_test_feedback_redacts_infrastructure_details_too() -> None:
+    visible = candidate_visible_tool_result(
+        'run_public_tests',
+        {
+            'passed': None,
+            'classification': 'evaluator_unavailable',
+            'stderr': 'host path /Users/private/secret/grader.py',
+        },
+        opaque_handles=False,
+    )
+    assert visible['passed'] is None
+    assert visible['classification'] == 'evaluator_unavailable'
+    assert 'secret' not in str(visible)
 
 
 def test_rejected_finalization_keeps_repair_loop_open() -> None:
@@ -242,7 +430,8 @@ def test_edit_tool_descriptions_match_active_handle_schema() -> None:
     legacy = {tool['function']['name']: tool['function']['description']
               for tool in tools_for('structured', public_tests=False, opaque_handles=False)}
     for name in ('replace_text', 'insert_text'):
-        assert 'workspace_revision_handle' in opaque[name]
+        assert 'handles are omitted' in opaque[name]
+        assert 'same read_file result' in opaque[name]
         assert 'expected_hash' not in opaque[name]
         assert 'expected_hash' in legacy[name]
         assert 'workspace_revision_handle' not in legacy[name]
