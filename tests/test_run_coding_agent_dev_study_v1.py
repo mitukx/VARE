@@ -164,6 +164,28 @@ class CodingAgentDevStudyRunnerTests(unittest.TestCase):
         self.assertEqual(
             runner.classify_public_test_result({
                 "passed": False,
+                "returncode": 1,
+                "classification": "assertion_failure",
+            }),
+            "assertion_failure",
+        )
+        self.assertEqual(
+            runner.classify_public_test_result({
+                "passed": False,
+                "returncode": 1,
+                "classification": "test_execution_error",
+            }),
+            "test_execution_error",
+        )
+        self.assertFalse(runner.is_unavailable_public_evaluator({
+            "passed": False, "classification": "assertion_failure",
+        }))
+        self.assertFalse(runner.is_unavailable_public_evaluator({
+            "passed": False, "classification": "test_execution_error",
+        }))
+        self.assertEqual(
+            runner.classify_public_test_result({
+                "passed": False,
                 "error": "IsolationError: container exceeded wall-time limit",
             }),
             "candidate_timeout",
