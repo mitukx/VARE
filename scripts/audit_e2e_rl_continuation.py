@@ -89,6 +89,7 @@ RUNTIME_PACKAGE_SOURCES = frozenset({
     "src/vare/mlxlm_1971_repo_task_v4.py",
     "src/vare/mlxlm_1971_repo_task_v6.py",
     "src/vare/mlxlm_1971_repo_task_v7.py",
+    "src/vare/mlxlm_1971_repo_task_v9.py",
     "src/vare/promotion.py",
     "src/vare/promotion_journal.py",
     "src/vare/protocol.py",

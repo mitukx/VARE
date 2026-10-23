@@ -1,3 +1,7 @@
+## MLX-LM #1971 isolated task calibration v9 (2026-10-23)
+
+V9 binds the public `export_candidate` and `grade_workspace` entrypoints, verifies all 20 transitive evaluator/input files including hidden Git index flags, and records a new Colima CPU calibration. Baseline failed all six cases; exact fix passed all six; the constant-scale mutant passed only the two scale-0.5 cases; the post-cache mutant passed all full-forward cases and failed all cached cases as `wrong_output`. Source-swap and red-team controls passed. V7 and v8 evidence remain historical and unchanged. This is grader calibration only, not a Coding-Agent rollout or policy-improvement result. See the [v9 report](mlsys-repository-task-mlxlm-1971-v9-report.md), [protocol](../benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v9.json), and [raw evidence](../results/mlxlm-1971-isolated-v9/run-1/).
+
 
 ## MLX-LM #1971 isolated task calibration v8 (2026-10-23)
 
