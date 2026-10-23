@@ -88,7 +88,8 @@ def classify_public_test_result(result: Any) -> str:
         return "evaluator_unavailable"
     classification = result.get("classification")
     if classification in {
-        "passed", "test_failure", "candidate_timeout", "candidate_output_limit",
+        "passed", "assertion_failure", "test_execution_error", "test_failure",
+        "candidate_timeout", "candidate_output_limit",
         "container_resource_failure", "container_launch_failure",
         "runner_integrity_error", "evaluator_unavailable",
     }:
