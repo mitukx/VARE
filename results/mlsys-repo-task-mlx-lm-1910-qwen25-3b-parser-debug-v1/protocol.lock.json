@@ -45,7 +45,7 @@
     "scripts/monitor_local_agent_resources_v2.py": "6bb8f76bb6e2c5a88e2b333a769e7fede458bf3d9a18fdbbd181195b801d41e0",
     "scripts/qualify_mlx_lm_1910_v6.py": "8cb4318dec38c8a1e882686ba777600fbb0fcae8126853bd713465e954063384",
     "scripts/run_local_agent.py": "6c31cbfc54de9e6554f9348674e0061f63ccf798a62f4af3d7da259043b8b340",
-    "scripts/run_mlx_lm_1910_qwen25_debug_v1.py": "831fc899a13e8d5805bb297f089e4ec726f12d1c9fe09140132eefcb8bafe256",
+    "scripts/run_mlx_lm_1910_qwen25_debug_v1.py": "833c3a4f5e64c164e688fd5d578dda95f2125e1f2abac1f556dda7924ec7e8d6",
     "scripts/verify_coding_agent_evidence_manifest_v1.py": "572e2350b8eb963a6471f24ff3b6f401502210cb34525b4644aba1c85b1fac14",
     "src/vare/agent_edit_format.py": "00922614bdced3ed490502e33f07fe16164298e2916631016170a689b491cce4",
     "src/vare/agent_task_contract.py": "f3cb85f1960dcaf175345bb45a6f23a08bda7a8805d37db9caf217ac5c86f3fd",
@@ -94,7 +94,7 @@
   "hypothesis": "On a previously exposed Development task, Qwen2.5-3B with the strict structured tool-call parser may complete the full inspect-edit-public-test-revise-finish loop in at least one of two bounded attempts. The diagnostic measures controller feasibility after a parser correction; it is not fresh-task capability evidence or a learning comparison.",
   "implementation": {
     "base_main_commit": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
-    "code_commit": "30c76d859f581ad3d737e7c514897224ce69934b"
+    "code_commit": "5ba535cc3030937d9dfc0cb0d49da340d1c05965"
   },
   "matching": "Both attempts use identical model/checkpoint, baseline workspace, prompt/messages, tool schema, public tests, independent grader, context/turn/token/wall limits and grader budget. Only sampling mode and seed differ. Two attempts on one task are not independent task samples.",
   "model": {
@@ -115,9 +115,10 @@
     },
     "repository": "mlx-community/Qwen2.5-3B-Instruct-4bit",
     "revision": "4f83f8f146fdf28b512a06562b671d7af4fab457",
+    "snapshot_symlink_policy": "A snapshot file symlink is accepted only when its resolved target is within the local Hugging Face model-cache blobs directory or the hub-level blobs directory; target size and SHA-256 must match the pinned manifest.",
     "weights_not_redistributed": true
   },
-  "preflight_revision_note": "Revision 2 failed closed before any model load because the prior exposure verifier path was stored under a different lock key than the runner expected. This revision places the same locked run path under prior_exposures.qwen25_previous_run_path; experiment parameters and acceptance rules are unchanged.",
+  "preflight_revision_note": "Revision 3 failed closed before any model load because the cached checkpoint symlinks resolve to the Hugging Face hub-level blob directory. Revision 4 permits symlink targets only inside the repository-local or hub-level blob stores and still verifies each target size and SHA-256.",
   "preflight_validation_attempts": [
     {
       "archived_lock_path": "results/mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1/protocol-v1-unrun-attempt-1.lock.json",
@@ -137,6 +138,16 @@
       "protocol_sha256": "b87b89c2097d2ba75df3306bca9b32f3958e2423c44c168ea7c1703d3ffb99f2",
       "record_path": "results/mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1/preflight-validation-attempt-2.json",
       "record_sha256": "267eafb8f65e3f0bb213bd3820e122c95117b9d2a5307754cb9d7c3111a5eb6b",
+      "status": "FAILED_BEFORE_MODEL_LOAD"
+    },
+    {
+      "archived_lock_path": "results/mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1/protocol-v3-unrun-attempt-3.lock.json",
+      "archived_sidecar_path": "results/mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1/protocol-v3-unrun-attempt-3.sha256",
+      "failure_classification": "model_snapshot_symlink_policy_too_narrow",
+      "protocol_revision": 3,
+      "protocol_sha256": "e3842dd5e7c7530cac84d9398f4033aa6338986a94b22b58f9082505a46c9d24",
+      "record_path": "results/mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1/preflight-validation-attempt-3.json",
+      "record_sha256": "e104a66b05208fc18879455a1366e78f091aa3f0e35af89e2548bc7c4c92c055",
       "status": "FAILED_BEFORE_MODEL_LOAD"
     }
   ],
@@ -191,7 +202,7 @@
     "script_sha256": "572e2350b8eb963a6471f24ff3b6f401502210cb34525b4644aba1c85b1fac14"
   },
   "protocol_id": "mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1",
-  "protocol_revision": 3,
+  "protocol_revision": 4,
   "provenance": {
     "files_sha256": {
       "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/bundle-manifest.json": "0e680b614febb2a730d09f6056a3fcdf56cd9079acba4e4dd9b6e9ad504b7538",
@@ -269,10 +280,13 @@
       "results/mlsys-repo-task-mlx-lm-1910-agent-v9-smollm2-360m/run-1/summary.json": "ac4faf8a6fe476fff60e3f6241d39281de9409e2f2da526af59d90c7588019ce",
       "results/mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1/preflight-validation-attempt-1.json": "88d24937d7b33f3ecba292bd4639fe927b0f01983c1f98b0c5fa7134b5d138c0",
       "results/mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1/preflight-validation-attempt-2.json": "267eafb8f65e3f0bb213bd3820e122c95117b9d2a5307754cb9d7c3111a5eb6b",
+      "results/mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1/preflight-validation-attempt-3.json": "e104a66b05208fc18879455a1366e78f091aa3f0e35af89e2548bc7c4c92c055",
       "results/mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1/protocol-v1-unrun-attempt-1.lock.json": "ceba1d50ce254ec3e5e54a6945d60ca71e9faac8e049e328f33d44b97a5ebcc0",
       "results/mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1/protocol-v1-unrun-attempt-1.sha256": "d7bb5d5657271e1d120bd92dd539051541a46f9f62d71b4de111f1ce6facbd8d",
       "results/mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1/protocol-v2-unrun-attempt-2.lock.json": "b87b89c2097d2ba75df3306bca9b32f3958e2423c44c168ea7c1703d3ffb99f2",
       "results/mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1/protocol-v2-unrun-attempt-2.sha256": "6cb1a106ba47d02338d1b281d2bd519a69c53c56b1257de9f0e58950e5e1718e",
+      "results/mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1/protocol-v3-unrun-attempt-3.lock.json": "e3842dd5e7c7530cac84d9398f4033aa6338986a94b22b58f9082505a46c9d24",
+      "results/mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1/protocol-v3-unrun-attempt-3.sha256": "249568e980541b9d8f88565a60453489389ac6cc3bca2da03c27f132521996fd",
       "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-agent-v3/protocol.json": "ce83fb4d65ec760013299367d1704d3849b9a7ead5ce5866318f01e786add73c",
       "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-agent-v3/protocol.sha256": "d854fa17e96e0e4394f6022716510140758bca94f912b2509c50ae44c6cc116e",
       "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-agent-v3/run-1/evidence-manifest.json": "031cf92a36adcd7fcd50f53210095e08dd2139c296b6b0c335c9a133e965f43e",
@@ -417,7 +431,7 @@
     "No training, SFT, GRPO, optimizer update, or held-out evaluation is authorized by this protocol."
   ],
   "stopping_rule": "Two attempts maximum. One resource abort stops the remaining arm. No retry, prompt revision, or threshold change within this protocol. Maximum 4096 generated tokens, 360 agent seconds, 360 grader seconds, and 900 seconds invocation wall by component limits.",
-  "supersedes_unrun_protocol_sha256": "b87b89c2097d2ba75df3306bca9b32f3958e2423c44c168ea7c1703d3ffb99f2",
+  "supersedes_unrun_protocol_sha256": "e3842dd5e7c7530cac84d9398f4033aa6338986a94b22b58f9082505a46c9d24",
   "task": {
     "base_commit": "bacd9e8e1f3a5be7dd64bae3a9ad8d74471ccc3a",
     "base_source_sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
