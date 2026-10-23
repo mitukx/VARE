@@ -1,0 +1,62 @@
+{
+  "baseline": {
+    "result": {
+      "classification": "assertion_failure",
+      "elapsed_seconds": 0.196,
+      "gradeable": true,
+      "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+      "passed": false,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/workspace/test_public.py\", line 5, in test_repaired_behavior\n    assert namespace['answer']() == 42\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "stdout": "",
+      "workspace_staging": "owned-cache-bind-mount"
+    },
+    "source": "def answer():\n    return 0\n",
+    "target_sha256": "5e7c6287257979441f2066c84b1875a918f8d7c6f66ac0499710c137bb698648"
+  },
+  "calibration_id": "vare-phase-a-v6-colima-shared-mount-v2",
+  "calibration_passed": true,
+  "container_image_id": "sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "docker_context": "colima",
+  "docker_server_os": "Ubuntu 24.04.4 LTS",
+  "grading_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "implementation_sha256": {
+    "scripts/calibrate_phase_a_v6_colima_mount_v1.py": "32be587c6b946427fdd5571b2629b01b7a6eabfebe805f2eb919da5e71efde7e",
+    "scripts/run_coding_agent_dev_study_v1.py": "f49bfa0d6fbe0d639048b6c39c738511345301e72833e3cf023b4c49b5a702ab",
+    "scripts/run_local_agent.py": "000f61095d19d3665521d13be544d352afccd34844882ebe74a9e34f34ac7b10",
+    "src/vare/agent_structured_edit.py": "2ad05b8aabd559e67113b539ccb9a0d70bd1a54b64beca3700136b03f3301246"
+  },
+  "known_fix": {
+    "result": {
+      "classification": "passed",
+      "elapsed_seconds": 0.167,
+      "gradeable": true,
+      "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+      "passed": true,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "",
+      "workspace_staging": "owned-cache-bind-mount"
+    },
+    "source": "def answer():\n    return 42\n",
+    "target_sha256": "aecc013c518523ca22b7e3780f87002f5cae13fabc369f2f59a1faf7058f8c76"
+  },
+  "limitations": [
+    "Synthetic behavior fixture proves runtime path only; it is not an OSS task or model success.",
+    "Task-specific public calibration remains separately required before a new model protocol."
+  ],
+  "model_inference_performed": false,
+  "purpose": "Docker workspace mount and public-test execution path only; no model inference",
+  "schema_version": 1,
+  "source_commit": "683d8b7c6bcfa959879b3dac47e772bde26986e2",
+  "source_dirty_at_start": false,
+  "test_public_sha256": "6436f3fc6259dd574af849dde3c1daf523e9bbfc16712ee865c7d044458ea199",
+  "working_tree_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "workspace_location_class": "~/.cache/vare/candidate-workspaces/<private-task-dir>/workspace",
+  "workspace_permissions": {
+    "mount_readonly": true,
+    "mounted_workspace_mode": "0755 for uid 65534 read access",
+    "network": "none",
+    "task_directory_mode": "0700"
+  }
+}
