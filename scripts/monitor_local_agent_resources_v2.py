@@ -25,6 +25,19 @@ def process_rss_mib(pid: int) -> float:
     return int(raw) / 1024.0
 
 
+def display_command(command: list[str], env: dict[str, str]) -> list[str]:
+    replacements = ((env.get("VARE_AGENT_REDACT_MODEL", ""), "$MODEL_SNAPSHOT"),
+                    (env.get("VARE_AGENT_REDACT_PYTHON", ""), "$MLX_PYTHON"),
+                    (env.get("VARE_AGENT_REDACT_ROOT", ""), "$VARE_REPO_ROOT"))
+    result = []
+    for item in command:
+        for value, replacement in replacements:
+            if value:
+                item = item.replace(value, replacement)
+        result.append(item)
+    return result
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
@@ -87,7 +100,10 @@ def main() -> int:
                 except ProcessLookupError:
                     pass
                 process.wait()
-    result = {"schema_version": 1, "command": command, "returncode": process.returncode,
+    result = {"schema_version": 1, "command": display_command(command, env),
+              "command_paths_redacted": True,
+              "reproduction_note": "Resolve the command path tokens using protocol.lock.json and the reproduction command.",
+              "returncode": process.returncode,
               "status": "ABORTED_RESOURCE" if reason else "COMPLETED" if process.returncode == 0 else "FAILED",
               "abort_reason": reason, "telemetry_failure": failure,
               "max_wall_seconds": args.max_seconds, "swap_abort_mib": args.swap_abort_mib,

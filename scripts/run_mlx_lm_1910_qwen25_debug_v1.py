@@ -388,7 +388,12 @@ def main() -> int:
                    "--rss-abort-mib", str(lock["resources"]["max_agent_rss_mib"]),
                    "--poll-interval-seconds", str(lock["resources"]["monitor_interval_seconds"]),
                    "--", *command]
-        proc = subprocess.run(monitor, cwd=ROOT, capture_output=True, text=True, check=False)
+        monitor_env = {**os.environ,
+                       "VARE_AGENT_REDACT_ROOT": str(ROOT),
+                       "VARE_AGENT_REDACT_MODEL": str(args.model_path.resolve(strict=True)),
+                       "VARE_AGENT_REDACT_PYTHON": str(args.python.absolute())}
+        proc = subprocess.run(monitor, cwd=ROOT, capture_output=True, text=True,
+                              check=False, env=monitor_env)
         (attempt / "monitor-launcher.stdout.txt").write_text(proc.stdout, encoding="utf-8")
         (attempt / "monitor-launcher.stderr.txt").write_text(proc.stderr, encoding="utf-8")
         monitor_path = attempt / "process/resource-monitor.json"
