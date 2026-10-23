@@ -87,13 +87,26 @@ def classify_public_test_result(result: Any) -> str:
     if not isinstance(result, dict):
         return "evaluator_unavailable"
     classification = result.get("classification")
-    if classification in {
-        "passed", "assertion_failure", "test_execution_error", "test_failure",
-        "candidate_timeout", "candidate_output_limit",
-        "container_resource_failure", "container_launch_failure",
-        "runner_integrity_error", "evaluator_unavailable",
-    }:
-        return str(classification)
+    explicit_contract = {
+        "passed": (True, True),
+        "assertion_failure": (False, True),
+        "test_execution_error": (False, True),
+        "test_failure": (False, True),
+        "candidate_timeout": (False, True),
+        "candidate_output_limit": (False, True),
+        "container_resource_failure": (False, True),
+        "container_launch_failure": (None, False),
+        "runner_integrity_error": (None, False),
+        "evaluator_unavailable": (None, False),
+    }
+    if classification in explicit_contract:
+        expected_passed, expected_gradeable = explicit_contract[classification]
+        if (
+            result.get("passed") is not expected_passed
+            or result.get("gradeable") is not expected_gradeable
+        ):
+            return "runner_integrity_error"
+        return classification
     # Historical records predate the explicit class field. Exit 125 is Docker's
     # launch-failure code; it means no test assertion ran.
     code = result.get("returncode")

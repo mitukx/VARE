@@ -164,6 +164,7 @@ class CodingAgentDevStudyRunnerTests(unittest.TestCase):
         self.assertEqual(
             runner.classify_public_test_result({
                 "passed": False,
+                "gradeable": True,
                 "returncode": 1,
                 "classification": "assertion_failure",
             }),
@@ -172,17 +173,34 @@ class CodingAgentDevStudyRunnerTests(unittest.TestCase):
         self.assertEqual(
             runner.classify_public_test_result({
                 "passed": False,
+                "gradeable": True,
                 "returncode": 1,
                 "classification": "test_execution_error",
             }),
             "test_execution_error",
         )
         self.assertFalse(runner.is_unavailable_public_evaluator({
-            "passed": False, "classification": "assertion_failure",
+            "passed": False, "gradeable": True, "classification": "assertion_failure",
         }))
         self.assertFalse(runner.is_unavailable_public_evaluator({
-            "passed": False, "classification": "test_execution_error",
+            "passed": False, "gradeable": True, "classification": "test_execution_error",
         }))
+        for malformed in (
+            {"passed": True, "gradeable": False, "classification": "assertion_failure"},
+            {"passed": False, "gradeable": False, "classification": "assertion_failure"},
+            {"passed": False, "gradeable": True, "classification": "passed"},
+            {"passed": False, "gradeable": True, "classification": "container_launch_failure"},
+        ):
+            self.assertEqual(
+                runner.classify_public_test_result(malformed), "runner_integrity_error"
+            )
+            self.assertTrue(runner.is_unavailable_public_evaluator(malformed))
+        self.assertEqual(
+            runner.classify_public_test_result({
+                "passed": True, "gradeable": True, "classification": "passed",
+            }),
+            "passed",
+        )
         self.assertEqual(
             runner.classify_public_test_result({
                 "passed": False,
