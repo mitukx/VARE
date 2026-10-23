@@ -28,14 +28,15 @@ def _frozen_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Pa
     _git(root, "init", "-q")
     _git(root, "config", "user.email", "test@example.invalid")
     _git(root, "config", "user.name", "test")
+    (root / "protocols").mkdir()
     (root / "impl.py").write_text("trusted code\n", encoding="utf-8")
     source_hash = hashlib.sha256((root / "impl.py").read_bytes()).hexdigest()
-    (root / "protocol.json").write_text(
+    (root / "protocols/protocol-v9.json").write_text(
         json.dumps({"protocol_id": "v9-test", "implementation_sha256": {"impl.py": source_hash}}),
         encoding="utf-8",
     )
-    protocol_bytes = (root / "protocol.json").read_bytes()
-    (root / "protocol.lock.json").write_text(
+    protocol_bytes = (root / "protocols/protocol-v9.json").read_bytes()
+    (root / "protocols/protocol-v9.lock.json").write_text(
         json.dumps({
             "protocol_id": "v9-test",
             "protocol_sha256": hashlib.sha256(protocol_bytes).hexdigest(),
@@ -47,7 +48,7 @@ def _frozen_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Pa
     _git(root, "commit", "-qm", "freeze")
     pinned = _git(root, "rev-parse", "HEAD")
     monkeypatch.setitem(preflight.SOURCE_COMMITS, 9, pinned)
-    monkeypatch.setattr(preflight, "TASK_ROOT", ".")
+    monkeypatch.setattr(preflight, "TASK_ROOT", "protocols")
     return root, pinned
 
 
@@ -71,8 +72,8 @@ def test_v9_attestation_rejects_coherent_worktree_and_commit_tampering(
         "protocol_id": "v9-test",
         "implementation_sha256": {"impl.py": changed_hash},
     }).encode()
-    (root / "protocol.json").write_bytes(protocol_bytes)
-    (root / "protocol.lock.json").write_text(
+    (root / "protocols/protocol-v9.json").write_bytes(protocol_bytes)
+    (root / "protocols/protocol-v9.lock.json").write_text(
         json.dumps({
             "protocol_id": "v9-test",
             "protocol_sha256": hashlib.sha256(protocol_bytes).hexdigest(),
