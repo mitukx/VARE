@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import shlex
 import subprocess
 import sys
 
@@ -44,7 +45,11 @@ def test_frozen_wrapper_disables_git_replacements_and_stages_pinned_commit(
     assert add[-1] == calibration.PINNED_V9_COMMIT
     assert invoke[0:2] == [sys.executable, "-I"]
     assert invoke[invoke.index("--source-repo") + 1] == str(source)
-    assert invoke[invoke.index("--output") + 1] == str(output)
+    staged_output = Path(invoke[invoke.index("--output") + 1])
+    assert staged_output.name == "records"
+    assert staged_output != output / "records"
+    assert output.is_dir()
+    assert output.stat().st_mode & 0o777 == 0o700
     assert remove[3:6] == ["worktree", "remove", "--force"]
 
 
@@ -201,3 +206,188 @@ def test_pinned_v9_task_rejects_invalid_action_before_worktree(
         calibration.run_pinned_v9_task(
             "grade", tmp_path / "candidate", source_repo=tmp_path
         )
+
+
+@pytest.mark.parametrize("argument", ["source", "patch", "workspace"])
+def test_pinned_export_rejects_symlinks_before_dispatch(
+    argument: str, monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+) -> None:
+    source = tmp_path / "source"
+    source.mkdir()
+    patch = tmp_path / "fix.patch"
+    patch.write_bytes(b"trusted patch bytes")
+    workspace = tmp_path / "candidate"
+    alias = tmp_path / "alias"
+    alias.symlink_to({"source": source, "patch": patch, "workspace": workspace}[argument])
+    monkeypatch.setattr(
+        calibration.subprocess, "run",
+        lambda *a, **k: pytest.fail("invalid paths must fail before Git"),
+    )
+    with pytest.raises(ValueError, match="symlink"):
+        calibration.run_pinned_v9_task(
+            "export", alias if argument == "workspace" else workspace,
+            source_repo=alias if argument == "source" else source,
+            patch_path=alias if argument == "patch" else patch,
+        )
+
+
+def test_calibration_reserves_output_before_launch_and_rejects_writable_parent(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+) -> None:
+    source = tmp_path / "source"
+    source.mkdir()
+    output = tmp_path / "reserved"
+    redirected = tmp_path / "redirected"
+
+    def fake_run(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        if command[:2] == [sys.executable, "-I"]:
+            assert output.is_dir() and not output.is_symlink()
+            with pytest.raises(FileExistsError):
+                output.symlink_to(redirected, target_is_directory=True)
+            destination = Path(command[command.index("--output") + 1])
+            assert destination != output / "records"
+            destination.mkdir()
+            (destination / "failure.json").write_text('{"status":"fixture_failure"}')
+            return subprocess.CompletedProcess(command, 1)
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(calibration.subprocess, "run", fake_run)
+    monkeypatch.setattr(calibration, "attest_current_v9", lambda _: {
+        "frozen_source_commit": calibration.PINNED_V9_COMMIT,
+        "current_source_matches_pinned_git": True,
+    })
+    assert calibration.run_frozen_calibration(source, output) == 1
+    assert (output / "records/failure.json").is_file()
+    assert not redirected.exists()
+    with pytest.raises(FileExistsError):
+        calibration.run_frozen_calibration(source, output)
+    unsafe = tmp_path / "shared"
+    unsafe.mkdir(mode=0o777)
+    unsafe.chmod(0o777)
+    with pytest.raises(ValueError, match="operator-owned private parent"):
+        calibration.run_frozen_calibration(source, unsafe / "output")
+    assert not (unsafe / "output").exists()
+
+
+def test_output_swap_during_child_cannot_write_through_symlink(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+) -> None:
+    source = tmp_path / "source"
+    source.mkdir()
+    output = tmp_path / "reserved"
+    detached = tmp_path / "detached-original"
+    redirected = tmp_path / "external-target"
+    redirected.mkdir()
+
+    def fake_run(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        if command[:2] == [sys.executable, "-I"]:
+            stage = Path(command[command.index("--output") + 1])
+            output.rename(detached)
+            output.symlink_to(redirected, target_is_directory=True)
+            stage.mkdir(parents=True)
+            (stage / "failure.json").write_text('{"status":"retained_failure"}')
+            return subprocess.CompletedProcess(command, 1)
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(calibration.subprocess, "run", fake_run)
+    monkeypatch.setattr(calibration, "attest_current_v9", lambda _: {
+        "frozen_source_commit": calibration.PINNED_V9_COMMIT,
+        "current_source_matches_pinned_git": True,
+    })
+    with pytest.raises(ValueError):
+        calibration.run_frozen_calibration(source, output)
+
+    assert output.is_symlink()
+    assert not (redirected / "records").exists()
+    assert (detached / "records/failure.json").read_text() == '{"status":"retained_failure"}'
+
+
+def test_pinned_export_uses_one_private_patch_snapshot(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+) -> None:
+    source = tmp_path / "source"
+    source.mkdir()
+    patch = tmp_path / "fix.patch"
+    original = b"exact original patch\n"
+    patch.write_bytes(original)
+
+    def fake_run(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        if command[:3] == [sys.executable, "-I", "-c"]:
+            request = calibration.json.loads(kwargs["input"])
+            snapshot = Path(request["patch_path"])
+            assert snapshot != patch
+            patch.write_bytes(b"replaced original patch\n")
+            assert snapshot.read_bytes() == original
+            return subprocess.CompletedProcess(command, 0, stdout='{"passed": false}')
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(calibration.subprocess, "run", fake_run)
+    monkeypatch.setattr(calibration, "attest_current_v9", lambda _: {
+        "frozen_source_commit": calibration.PINNED_V9_COMMIT,
+        "current_source_matches_pinned_git": True,
+    })
+    calibration.run_pinned_v9_task("export", tmp_path / "candidate", source_repo=source, patch_path=patch)
+
+
+def test_operator_disables_real_configured_checkout_hook_and_ambient_git_routes(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    real_run = subprocess.run
+
+    def git(*arguments: str) -> str:
+        return real_run(
+            ["git", "-C", str(repo), *arguments], check=True,
+            text=True, capture_output=True, timeout=10,
+        ).stdout.strip()
+
+    git("init", "-q")
+    git("config", "user.name", "VARE test")
+    git("config", "user.email", "vare-test@example.invalid")
+    (repo / "trusted.txt").write_text("trusted\n")
+    git("add", ".")
+    git("commit", "-qm", "fixture")
+    revision = git("rev-parse", "HEAD")
+    hooks = tmp_path / "hooks"
+    hooks.mkdir()
+    marker = tmp_path / "hook-executed"
+    hook = hooks / "post-checkout"
+    hook.write_text(f"#!/bin/sh\ntouch {shlex.quote(str(marker))}\n")
+    hook.chmod(0o755)
+    git("config", "core.hooksPath", str(hooks))
+    # Establish that this Git and fixture actually execute the configured hook.
+    positive = tmp_path / "positive-control"
+    git("worktree", "add", "--detach", str(positive), revision)
+    assert marker.exists()
+    git("worktree", "remove", "--force", str(positive))
+    marker.unlink()
+
+    monkeypatch.setattr(calibration, "ROOT", repo)
+    monkeypatch.setattr(calibration, "PINNED_V9_COMMIT", revision)
+    monkeypatch.setitem(calibration.SOURCE_COMMITS, 9, revision)
+    monkeypatch.setenv("GIT_DIR", str(tmp_path / "wrong-repository"))
+    monkeypatch.setenv("GIT_CONFIG_COUNT", "1")
+    monkeypatch.setenv("GIT_CONFIG_KEY_0", "core.hooksPath")
+    monkeypatch.setenv("GIT_CONFIG_VALUE_0", str(hooks))
+    monkeypatch.setenv("GIT_NO_REPLACE_OBJECTS", "0")
+    monkeypatch.setattr(calibration, "attest_current_v9", lambda _: {
+        "frozen_source_commit": revision,
+        "current_source_matches_pinned_git": True,
+    })
+
+    def run(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        env = kwargs["env"]
+        assert "GIT_DIR" not in env
+        assert env["GIT_CONFIG_KEY_0"] == "core.hooksPath"
+        assert env["GIT_CONFIG_VALUE_0"] == calibration.os.devnull
+        assert env["GIT_CONFIG_KEY_1"] == "core.fsmonitor"
+        assert env["GIT_CONFIG_VALUE_1"] == "false"
+        if command[:2] == [sys.executable, "-I"]:
+            assert not marker.exists()
+            return subprocess.CompletedProcess(command, 0)
+        return real_run(command, **kwargs)
+
+    monkeypatch.setattr(calibration.subprocess, "run", run)
+    assert calibration.run_frozen_calibration(repo, tmp_path / "new-output") == 0
+    assert not marker.exists()
