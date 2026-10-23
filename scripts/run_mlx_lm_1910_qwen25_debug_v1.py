@@ -74,6 +74,41 @@ def verify_git_store(repo: Path) -> None:
         raise ValueError("symlinks are not permitted in task or upstream Git source trees")
 
 
+def verify_historical_manifest(record: dict[str, Any]) -> None:
+    relative = record["path"]
+    manifest_path = ROOT / relative
+    if manifest_path.is_symlink() or not manifest_path.is_file() or sha256(manifest_path) != record["sha256"]:
+        raise ValueError(f"historical evidence manifest identity mismatch: {relative}")
+    sidecar_path = ROOT / record["sidecar_path"]
+    if (sidecar_path.is_symlink() or not sidecar_path.is_file()
+            or sha256(sidecar_path) != record["sidecar_sha256"]
+            or sidecar_path.read_text(encoding="ascii").split()[0] != record["sha256"]):
+        raise ValueError(f"historical evidence manifest sidecar mismatch: {record['sidecar_path']}")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    files = manifest.get("files")
+    if isinstance(files, list):
+        entries = {item["path"]: item["sha256"] for item in files}
+        base = ROOT
+    elif isinstance(files, dict):
+        entries = files
+        base = manifest_path.parent
+    else:
+        raise ValueError(f"unsupported historical evidence manifest: {relative}")
+    overrides = record.get("historical_file_overrides", {})
+    for name, expected in entries.items():
+        item = base / name
+        actual = not item.is_symlink() and item.is_file() and sha256(item) == expected
+        if actual:
+            continue
+        override = overrides.get(name)
+        if not override or override.get("sha256") != expected:
+            raise ValueError(f"raw historical evidence does not match {relative}: {name}")
+        committed = git(ROOT, "show", f"{override['commit']}:{name}", check=False)
+        if (committed.returncode or hashlib.sha256(committed.stdout.encode()).hexdigest() != expected
+                or not is_ancestor(ROOT, override["commit"])):
+            raise ValueError(f"historical source override cannot be verified: {name}")
+
+
 def verify(protocol_path: Path, model_path: Path, python_exe: Path,
            git_source: Path, *, check_resources: bool) -> tuple[dict[str, Any], dict[str, Any]]:
     if protocol_path.is_symlink():
@@ -103,6 +138,8 @@ def verify(protocol_path: Path, model_path: Path, python_exe: Path,
         source = ROOT / relative
         if source.is_symlink() or not source.is_file() or sha256(source) != expected:
             raise ValueError(f"locked evidence identity mismatch: {relative}")
+    for manifest_record in lock["provenance"]["historical_manifests"]:
+        verify_historical_manifest(manifest_record)
     prompt_spec_path = ROOT / lock["agent"]["prompt_spec_path"]
     if prompt_spec_path.is_symlink() or sha256(prompt_spec_path) != lock["agent"]["prompt_spec_sha256"]:
         raise ValueError("frozen prompt and tool-schema artifact identity mismatch")
