@@ -61,6 +61,7 @@ def _safe_path(root: Path, name: str, allowed_files: set[str]) -> Path:
         or parsed.is_absolute()
         or ".." in parsed.parts
         or "." in parsed.parts
+        or any(part.casefold() == ".git" for part in parsed.parts)
         or "\\" in name
         or any(ord(character) < 32 or ord(character) == 127 for character in name)
     ):

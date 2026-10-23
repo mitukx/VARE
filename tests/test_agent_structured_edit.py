@@ -262,3 +262,18 @@ def test_overlapping_text_matches_are_rejected_without_mutation(tmp_path: Path, 
         )
     assert target.read_bytes() == b"aaa"
     assert list(tmp_path.iterdir()) == [target]
+
+
+@pytest.mark.parametrize("name", [".git/config", "dir/.git/config", "dir/.GiT/config"])
+def test_git_metadata_components_are_rejected_before_mutation(tmp_path: Path, name: str) -> None:
+    target = tmp_path / name
+    target.parent.mkdir(parents=True)
+    original = b"value=1\n"
+    target.write_bytes(original)
+    with pytest.raises(StructuredEditError, match="allowlisted"):
+        apply_structured_edit(
+            tmp_path, {name}, action="replace_text", path=name,
+            expected_hash=hashlib.sha256(original).hexdigest(),
+            expected_revision="0" * 64, old_text="value=1", new_text="value=2",
+        )
+    assert target.read_bytes() == original
