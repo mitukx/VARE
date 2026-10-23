@@ -27,6 +27,10 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def sha256_bytes(value: bytes) -> str:
+    return hashlib.sha256(value).hexdigest()
+
+
 def observe() -> dict[str, Any]:
     sys.path.insert(0, str(ROOT / "scripts"))
     import monitor_local_agent_resources_v1 as monitor
@@ -149,6 +153,62 @@ def verify(protocol_path: Path, model_path: Path, python_exe: Path,
         if (not file_path.is_file() or file_path.stat().st_size != identity["bytes"]
                 or sha256(file_path) != identity["sha256"]):
             raise ValueError(f"model checkpoint file mismatch: {name}")
+
+    sys.path.insert(0, str(ROOT / "src"))
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from mlx_lm.utils import load_tokenizer
+    from run_local_agent import tools_for
+    from vare.agent_task_contract import load_agent_task
+    from vare.flat_tool_chat import flatten_tool_messages
+
+    tools = tools_for(lock["agent"]["edit_format"], public_tests=True)
+    tool_bytes = json.dumps(tools, sort_keys=True, ensure_ascii=False,
+                            separators=(",", ":")).encode("utf-8")
+    if (sha256_bytes(tool_bytes) != lock["agent"]["tool_interface_sha256"]
+            or tools != lock["agent"]["tool_schemas"]):
+        raise ValueError("runtime tool interface differs from the frozen protocol")
+    contract = load_agent_task(ROOT / TASK_REL)
+    editable = sorted(set(contract.allowed_files) - {
+        name for name in contract.allowed_files if Path(name).name == "test_public.py"
+    })
+    if lock["agent"]["edit_format"] == "whole_file":
+        edit_sentence = (
+            "Read the source path named in the user instruction, then use tools to inspect and edit. "
+            "Use write_file to replace an allowlisted source file with its complete new text. Do not send a unified diff. "
+            "Keep the replacement concise enough to fit within the per-turn output budget. "
+        )
+    else:
+        edit_sentence = (
+            "Read the source path named in the user instruction, then use tools to inspect and edit. Use apply_patch for small source diffs; never rewrite a whole file. "
+            "The patch must use exact headers --- a/<allowed source path> and +++ b/<allowed source path>; do not wrap it in a code fence. "
+        )
+    system_prompt = (
+        "You are an offline code repair agent. Solve only the task below. The workspace contains only the task source files. "
+        + edit_sentence
+        + "Allowed source paths: " + ", ".join(sorted(editable)) + ". First call list_files, then read the exact source path named in the task. "
+        + "Do not invent paths. The workspace is already prepared; never ask for a workspace path, more information, or permission. "
+        + "The external grader is hidden. Do not describe a fix without applying it. Call finish only after changing a source file. "
+        + "After changing source, call run_public_tests; read its output and repair failures. The test file is immutable. "
+        + "Call finish only after the public smoke test passes. "
+        + "You have a limited tool budget; each assistant turn before finish must call a tool. "
+        + "TASK:\n" + contract.prompt_text.split("## Reproduce", 1)[0].rstrip()
+    )
+    if system_prompt != lock["agent"]["system_prompt"]:
+        raise ValueError("runtime system prompt differs from the frozen prompt")
+    messages = flatten_tool_messages([
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": lock["agent"]["instruction"]},
+    ], tools)
+    tokenizer = load_tokenizer(str(model_path))
+    rendered_prompt = tokenizer.apply_chat_template(
+        messages, tokenize=False, add_generation_prompt=True,
+    )
+    rendered_hash = hashlib.sha256(rendered_prompt.encode("utf-8")).hexdigest()
+    rendered_tokens = len(tokenizer.encode(rendered_prompt, add_special_tokens=False))
+    if (rendered_hash != lock["agent"]["rendered_initial_prompt_sha256"]
+            or rendered_tokens != lock["agent"]["rendered_initial_prompt_tokens"]
+            or rendered_tokens >= lock["agent"]["max_context_tokens"]):
+        raise ValueError("rendered initial prompt differs from the frozen tokenizer output")
 
     runtime_lock = ROOT / lock["runtime"]["freeze_path"]
     if sha256(runtime_lock) != lock["runtime"]["freeze_sha256"]:
@@ -311,6 +371,7 @@ def run_monitored(command: list[str], output: Path, limits: dict[str, Any]) -> d
 
 
 def main() -> int:
+    os.environ.update({"HF_HUB_OFFLINE": "1", "TRANSFORMERS_OFFLINE": "1"})
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo-root", type=Path, required=True)
     parser.add_argument("--protocol", type=Path, required=True)
