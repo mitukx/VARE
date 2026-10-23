@@ -1,0 +1,49 @@
+{
+  "candidate_calibration": {
+    "attempted_candidate_calls": 0,
+    "baseline": "NOT_RUN",
+    "fingerprint_mutation": "NOT_RUN",
+    "independently_verified_successes": null,
+    "known_fix": "NOT_RUN",
+    "reward_variance": null
+  },
+  "engineering_verification": {
+    "diff_check": "PASSED",
+    "mypy": "PASSED",
+    "pytest_failed": 0,
+    "pytest_passed": 39,
+    "ruff": "PASSED"
+  },
+  "evidence_files": {
+    "diff-check.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mypy.stdout.txt": "f9b031e5c45aa702cd4fef028d465551cb20a2c4698e0913c7b00766b20ac4d8",
+    "preflight.json": "65ab0a15be7e1e54f53e4d1f17e9eaf9fd1473aa0fadd57a199d97e4adc283c7",
+    "ruff.stdout.txt": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "tests.stdout.txt": "951141fb1f3db48c6b061b5bd27d93e35f76319ecb7cc1c15134330ef466219b"
+  },
+  "exposure_classification": "retrospective-development-consumed",
+  "implementation_sha256": {
+    "benchmarks/mlsys_repo_eval_v4/transformers_49116_tokenizer_routing_v2_grader_v8/grader_adapter.py": "0876441adc89ea8d64ee64af278a06ebaf5db80e85057065b3e90bb5a851577b",
+    "scripts/grade_transformers_phase_a_integrity_v8.py": "010e09eacfee72eef37e1817c40e621a782000d63e0e517b98b02b4b1b830b25",
+    "scripts/grade_transformers_phase_a_v1.py": "8572b17653c26de7b9bf8ae7e1289cdaf0b669b8cc420f5a825c1b60438f5882"
+  },
+  "lock_sha256": "1dae2062092a4c11cd04aa640747f75ef9430cb853a1cb023d119dc3e48a036b",
+  "model": {
+    "generated_tokens": 0,
+    "loaded": false,
+    "optimizer_steps_committed": 0,
+    "status": "NOT_RUN"
+  },
+  "preflight_file_sha256": "65ab0a15be7e1e54f53e4d1f17e9eaf9fd1473aa0fadd57a199d97e4adc283c7",
+  "preflight_status": "ABORTED_RESOURCE",
+  "protocol_id": "vare-coding-agent-phase-a-integrity-v8",
+  "protocol_sha256": "24e5c48db38b2134f36b0d04c81078c49a055fe53e778722d2b8d113e49c4ab7",
+  "recorded_utc": "2026-10-23T22:15:24Z",
+  "schema_version": 1,
+  "scope": "Prospective v8 grader-integrity source regression and preflight only; no candidate calibration outcomes.",
+  "status": "ABORTED_RESOURCE",
+  "task_id": "transformers-49116-tokenizer-routing-v2",
+  "test_sha256": {
+    "tests/test_grade_transformers_phase_a_integrity_v8.py": "a928ec4efc2387243ae8c1d09b57f1051d39ce4d17f5551f91fe049d7808614a"
+  }
+}
