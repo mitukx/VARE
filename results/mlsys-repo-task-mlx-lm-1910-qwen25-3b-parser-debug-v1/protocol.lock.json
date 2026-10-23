@@ -117,6 +117,19 @@
     "revision": "4f83f8f146fdf28b512a06562b671d7af4fab457",
     "weights_not_redistributed": true
   },
+  "preflight_revision_note": "Revision 1 failed closed before any model load because the historical v7 evidence manifest includes the pre-parser-fix run_local_agent.py blob. This revision adds an explicit Git-history override for that one source entry; the historical raw evidence and v7 manifest remain unchanged.",
+  "preflight_validation_attempts": [
+    {
+      "archived_lock_path": "results/mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1/protocol-v1-unrun-attempt-1.lock.json",
+      "archived_sidecar_path": "results/mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1/protocol-v1-unrun-attempt-1.sha256",
+      "failure_classification": "protocol_evidence_manifest_override_missing",
+      "protocol_revision": 1,
+      "protocol_sha256": "ceba1d50ce254ec3e5e54a6945d60ca71e9faac8e049e328f33d44b97a5ebcc0",
+      "record_path": "results/mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1/preflight-validation-attempt-1.json",
+      "record_sha256": "88d24937d7b33f3ecba292bd4639fe927b0f01983c1f98b0c5fa7134b5d138c0",
+      "status": "FAILED_BEFORE_MODEL_LOAD"
+    }
+  ],
   "primary_metric": "Independently graded PASS attempts out of two matched attempts on this single Development task; also report unique task success (0/1 or 1/1).",
   "prior_exposures": {
     "classification": "Task #1910 has prior model exposure; all new outputs remain retrospective debugging only.",
@@ -167,6 +180,7 @@
     "script_sha256": "572e2350b8eb963a6471f24ff3b6f401502210cb34525b4644aba1c85b1fac14"
   },
   "protocol_id": "mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1",
+  "protocol_revision": 2,
   "provenance": {
     "files_sha256": {
       "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/bundle-manifest.json": "0e680b614febb2a730d09f6056a3fcdf56cd9079acba4e4dd9b6e9ad504b7538",
@@ -242,6 +256,9 @@
       "results/mlsys-repo-task-mlx-lm-1910-agent-v9-smollm2-360m/run-1/protocol.sha256": "54cfa49f3a47db8bb27feca58dc53f92982d871a65883ce00a9bf2f701488225",
       "results/mlsys-repo-task-mlx-lm-1910-agent-v9-smollm2-360m/run-1/sampled/agent.json": "b37d26457a18bde79aa286132f535fa4cb05c10cb8a80ffecb08b8f1f3824a9d",
       "results/mlsys-repo-task-mlx-lm-1910-agent-v9-smollm2-360m/run-1/summary.json": "ac4faf8a6fe476fff60e3f6241d39281de9409e2f2da526af59d90c7588019ce",
+      "results/mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1/preflight-validation-attempt-1.json": "88d24937d7b33f3ecba292bd4639fe927b0f01983c1f98b0c5fa7134b5d138c0",
+      "results/mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1/protocol-v1-unrun-attempt-1.lock.json": "ceba1d50ce254ec3e5e54a6945d60ca71e9faac8e049e328f33d44b97a5ebcc0",
+      "results/mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1/protocol-v1-unrun-attempt-1.sha256": "d7bb5d5657271e1d120bd92dd539051541a46f9f62d71b4de111f1ce6facbd8d",
       "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-agent-v3/protocol.json": "ce83fb4d65ec760013299367d1704d3849b9a7ead5ce5866318f01e786add73c",
       "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-agent-v3/protocol.sha256": "d854fa17e96e0e4394f6022716510140758bca94f912b2509c50ae44c6cc116e",
       "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-agent-v3/run-1/evidence-manifest.json": "031cf92a36adcd7fcd50f53210095e08dd2139c296b6b0c335c9a133e965f43e",
@@ -264,6 +281,12 @@
     },
     "historical_manifests": [
       {
+        "historical_file_overrides": {
+          "scripts/run_local_agent.py": {
+            "commit": "b36ef5be52ee1b9b224d83e0d59ff2fdad29cb28",
+            "sha256": "f4d8f52710083fe037c8166a74b7ca6fe7424b06db337f5bb3d8314e6967faf6"
+          }
+        },
         "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/evidence-manifest.json",
         "scope": "repository",
         "sha256": "e41e04604c3ff59f6171041bbaa9a1031ec701a227d4dbdaa42747c666e71213",
@@ -380,6 +403,7 @@
     "No training, SFT, GRPO, optimizer update, or held-out evaluation is authorized by this protocol."
   ],
   "stopping_rule": "Two attempts maximum. One resource abort stops the remaining arm. No retry, prompt revision, or threshold change within this protocol. Maximum 4096 generated tokens, 360 agent seconds, 360 grader seconds, and 900 seconds invocation wall by component limits.",
+  "supersedes_unrun_protocol_sha256": "ceba1d50ce254ec3e5e54a6945d60ca71e9faac8e049e328f33d44b97a5ebcc0",
   "task": {
     "base_commit": "bacd9e8e1f3a5be7dd64bae3a9ad8d74471ccc3a",
     "base_source_sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
