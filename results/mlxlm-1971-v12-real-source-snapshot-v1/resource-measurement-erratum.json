@@ -1,0 +1,11 @@
+{
+  "effect_on_outcome": "The primary source-integrity result remains valid. Network-byte budget compliance is unverified; do not cite this run as measuring wire bytes. The fetch was limited to one pinned depth-one commit, had a 180-second timeout, incurred no paid cost, and completed in 3.92 seconds.",
+  "experiment_id": "mlxlm-1971-v12-real-source-snapshot-v1",
+  "historical_evidence_modified": false,
+  "kind": "append-only-resource-measurement-limitation",
+  "limitation": "The protocol named a 512 MiB maximum for downloaded and temporary object bytes. The run enforced the cap against temporary on-disk object/worktree bytes but did not instrument Git transport bytes on the wire. The 3,813,389-byte measurement is temporary filesystem occupancy only.",
+  "original_experiment_sha256": "a7e9a98b3d5eb0825cf712cfa6129375ce7f9516605701f642ca390c3eb357f6",
+  "original_manifest_sha256": "02552ca72d383a6bb52e1e3ef0b22eb3f231319d2ee4a91da78ec054c6ce076b",
+  "protocol_id": "mlxlm-1971-v12-real-source-snapshot-v1",
+  "schema_version": 1
+}
