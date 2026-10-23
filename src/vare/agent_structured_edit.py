@@ -35,6 +35,13 @@ def _file_diff(name: str, before: str, after: str) -> str:
     )
 
 
+def _unique_start(source: str, text: str, label: str) -> int:
+    start = source.find(text)
+    if start < 0 or source.find(text, start + 1) >= 0:
+        raise StructuredEditError(f"{label} must match exactly once")
+    return start
+
+
 def workspace_revision(root: Path, allowed_files: set[str]) -> str:
     """Hash the current bytes of all allowlisted files in stable path order."""
     entries: list[bytes] = []
@@ -128,17 +135,12 @@ def apply_structured_edit(
         if action == "replace_text":
             if not old_text:
                 raise StructuredEditError("old_text must not be empty")
-            count = old_source.count(old_text)
-            if count != 1:
-                raise StructuredEditError("old_text must match exactly once")
+            _unique_start(old_source, old_text, "old_text")
             new_source_text = old_source.replace(old_text, new_text, 1)
         elif action == "insert_text":
             if not anchor:
                 raise StructuredEditError("anchor must not be empty")
-            count = old_source.count(anchor)
-            if count != 1:
-                raise StructuredEditError("anchor must match exactly once")
-            end = old_source.index(anchor) + len(anchor)
+            end = _unique_start(old_source, anchor, "anchor") + len(anchor)
             new_source_text = old_source[:end] + new_text + old_source[end:]
         else:
             raise StructuredEditError("unsupported structured edit action")

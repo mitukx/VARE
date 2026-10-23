@@ -142,7 +142,7 @@ def test_hardlinked_allowlisted_file_cannot_expose_external_content(
     assert external.read_text(encoding="utf-8") == "private_value = 42\n"
 
 
-@pytest.mark.parametrize("ending", [b"\n", b"\r\n", b""])
+@pytest.mark.parametrize("ending", [b"\n", b"\r\n", b"\r", b""])
 @pytest.mark.parametrize("embedded", [b"", b"\r", "\u2028".encode()])
 def test_generated_diffs_replay_exact_source_bytes(
     tmp_path: Path, ending: bytes, embedded: bytes,
@@ -246,3 +246,19 @@ def test_canonical_unusual_filenames_generate_applicable_diffs(tmp_path: Path, n
         input=result["diff"].encode(), capture_output=True, check=True, timeout=10,
     )
     assert target.read_bytes() == b"return 2\n"
+
+
+@pytest.mark.parametrize("action", ["replace_text", "insert_text"])
+def test_overlapping_text_matches_are_rejected_without_mutation(tmp_path: Path, action: str) -> None:
+    target = tmp_path / "source.py"
+    target.write_bytes(b"aaa")
+    allowed = {"source.py"}
+    with pytest.raises(StructuredEditError, match="match exactly once"):
+        apply_structured_edit(
+            tmp_path, allowed, action=action, path="source.py",
+            expected_hash=hashlib.sha256(b"aaa").hexdigest(),
+            expected_revision=workspace_revision(tmp_path, allowed),
+            old_text="aa", anchor="aa", new_text="X",
+        )
+    assert target.read_bytes() == b"aaa"
+    assert list(tmp_path.iterdir()) == [target]

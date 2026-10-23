@@ -26,6 +26,8 @@ Allowlisted paths containing ASCII control characters are rejected before
 reading or editing; those characters would make raw diff headers ambiguous.
 Paths must also equal their canonical POSIX representation; dot components,
 repeated separators and trailing separators are rejected before mutation.
+Text and anchor uniqueness includes overlapping occurrences (`aa` in `aaa`),
+which are rejected rather than silently choosing the first offset.
 
 **Known gaps:** this module is not a fully concurrent or adversarial filesystem
 transaction: path checks and replacement occur at different times, and the
