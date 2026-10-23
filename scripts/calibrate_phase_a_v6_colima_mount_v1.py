@@ -44,7 +44,13 @@ def sha256_file(path: Path) -> str:
 def _run_fixture(workspace: Path, source: str, test_hash: str) -> dict[str, Any]:
     target = workspace / "src" / "module.py"
     target.write_text(source, encoding="utf-8")
-    result = run_public_tests(workspace, IMAGE, test_hash, memory_mb=512)
+    result = run_public_tests(
+        workspace,
+        IMAGE,
+        test_hash,
+        memory_mb=512,
+        expected_workspace_files={"src/module.py", "test_public.py"},
+    )
     return {
         "target_sha256": sha256_file(target),
         "source": source,
@@ -84,7 +90,7 @@ def calibrate(output_dir: Path) -> dict[str, Any]:
         baseline = _run_fixture(workspace, "def answer():\n    return 0\n", test_hash)
         fixed = _run_fixture(workspace, "def answer():\n    return 42\n", test_hash)
         passed = (
-            baseline["result"].get("classification") == "test_failure"
+            baseline["result"].get("classification") == "assertion_failure"
             and baseline["result"].get("returncode") == 1
             and baseline["result"].get("passed") is False
             and fixed["result"].get("classification") == "passed"
