@@ -77,9 +77,10 @@ def test_v10_dispatch_uses_pinned_source_and_disables_replace_refs(
             assert kwargs["check"] is True
             if "add" in command:
                 checkout = Path(command[-2])
-                checked = checkout / v10.SOURCE_PATH
-                checked.parent.mkdir(parents=True)
-                checked.write_bytes(b"trusted historical operator")
+                for relative in v10.PINNED_OPERATOR_SOURCES:
+                    checked = checkout / relative
+                    checked.parent.mkdir(parents=True, exist_ok=True)
+                    checked.write_bytes(b"trusted historical operator")
         if command[:3] == [sys.executable, "-I", "-c"]:
             request = json.loads(kwargs["input"])
             assert request["action"] == action
@@ -112,9 +113,10 @@ def test_v10_forged_result_is_rejected_and_worktree_removed(
         calls.append(command)
         if "add" in command:
             checkout = Path(command[-2])
-            source = checkout / v10.SOURCE_PATH
-            source.parent.mkdir(parents=True)
-            source.write_bytes(b"trusted historical operator")
+            for relative in v10.PINNED_OPERATOR_SOURCES:
+                source = checkout / relative
+                source.parent.mkdir(parents=True, exist_ok=True)
+                source.write_bytes(b"trusted historical operator")
         if command[:3] == [sys.executable, "-I", "-c"]:
             return subprocess.CompletedProcess(
                 command, 0, stdout='{"passed": true}\\n{"passed": false}'
@@ -128,3 +130,58 @@ def test_v10_forged_result_is_rejected_and_worktree_removed(
         v10.run_v10_operation("grade", tmp_path / "workspace")
     assert len(calls) == 3
     assert "remove" in calls[-1]
+
+
+def test_v10_lock_has_independent_digest_anchor(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    from hashlib import sha256
+
+    assert sha256(v10.LOCK.read_bytes()).hexdigest() == v10.LOCK_SHA256
+    original = json.loads(v10.LOCK.read_text(encoding="utf-8"))
+    original["adversarial_extra_field"] = "does not change protocol_sha256"
+    changed = tmp_path / "protocol-v10.lock.json"
+    changed.write_text(json.dumps(original), encoding="utf-8")
+    monkeypatch.setattr(v10, "LOCK", changed)
+    monkeypatch.setattr(
+        v10, "_git_bytes",
+        lambda *args: pytest.fail("lock tampering must fail before Git"),
+    )
+    with pytest.raises(ValueError, match="v10 lock differs"):
+        v10.verify_v10_protocol()
+
+
+@pytest.mark.parametrize("tampering", ["modified", "symlink"])
+def test_v10_rejects_mutated_import_dependency_before_launch(
+    tampering: str, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    commands: list[list[str]] = []
+    stale = tmp_path / "malicious.py"
+    stale.write_text("dangerous code", encoding="utf-8")
+    dependency = v10.PINNED_OPERATOR_SOURCES[1]
+
+    def fake_run(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        commands.append(command)
+        if "worktree" in command and "add" in command:
+            checkout = Path(command[-2])
+            for relative in v10.PINNED_OPERATOR_SOURCES:
+                source = checkout / relative
+                source.parent.mkdir(parents=True, exist_ok=True)
+                if relative == dependency and tampering == "symlink":
+                    source.symlink_to(stale)
+                else:
+                    data = b"modified module" if (
+                        relative == dependency and tampering == "modified"
+                    ) else b"trusted historical operator"
+                    source.write_bytes(data)
+        if command[:3] == [sys.executable, "-I", "-c"]:
+            pytest.fail("must not launch an untrusted Python dependency")
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(v10, "verify_v10_protocol", lambda: {})
+    monkeypatch.setattr(v10, "_git_bytes", lambda *_: b"trusted historical operator")
+    monkeypatch.setattr(v10.subprocess, "run", fake_run)
+    with pytest.raises(ValueError, match="untrusted operator source|differs from pinned Git"):
+        v10.run_v10_operation("grade", tmp_path / "candidate")
+    assert len(commands) == 2
+    assert "remove" in commands[-1]
