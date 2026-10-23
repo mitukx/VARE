@@ -5,12 +5,14 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path, PurePosixPath
 import subprocess
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 TASK_ROOT = "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale"
+GIT_ENV = {**os.environ, "GIT_NO_REPLACE_OBJECTS": "1"}
 SOURCE_COMMITS = {
     4: "23f71a0c6923f6e677ed8abc0d4ed186ae047e89",
     5: "9f0993ac2c71a44bcfbabd2a1399fc12e5d6d777",
@@ -27,6 +29,7 @@ def _git_bytes(root: Path, commit: str, relative: str) -> bytes:
         raise ValueError(f"unsafe Git path: {relative}")
     return subprocess.run(
         ["git", "-C", str(root), "show", f"{commit}:{relative}"],
+        env=GIT_ENV,
         check=True,
         capture_output=True,
         timeout=20,
@@ -39,6 +42,7 @@ def audit_frozen_pair(
     """Check protocol, lock and every declared implementation against Git blobs."""
     subprocess.run(
         ["git", "-C", str(root), "cat-file", "-e", f"{source_commit}^{{commit}}"],
+        env=GIT_ENV,
         check=True,
         capture_output=True,
         timeout=10,
