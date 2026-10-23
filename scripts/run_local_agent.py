@@ -362,6 +362,38 @@ def read_file_range(path: Path, display_path: str, start_line: int = 1,
     }
 
 
+def build_initial_messages(task_text: str, allowed_editable_files: list[str],
+                           edit_format: str, public_tests: bool,
+                           instruction: str) -> list[dict[str, str]]:
+    """Build the exact frozen system/user messages used by a coding attempt."""
+    if edit_format == 'whole_file':
+        edit_sentence = (
+            'Read the source path named in the user instruction, then use tools to inspect and edit. '
+            'Use write_file to replace an allowlisted source file with its complete new text. Do not send a unified diff. '
+            'Keep the replacement concise enough to fit within the per-turn output budget. '
+        )
+    elif edit_format == 'unified_diff':
+        edit_sentence = (
+            'Read the source path named in the user instruction, then use tools to inspect and edit. Use apply_patch for small source diffs; never rewrite a whole file. '
+            'The patch must use exact headers --- a/<allowed source path> and +++ b/<allowed source path>; do not wrap it in a code fence. '
+        )
+    else:
+        raise ValueError(f'unsupported edit format: {edit_format}')
+    system = (
+        'You are an offline code repair agent. Solve only the task below. The workspace contains only the task source files. '
+        + edit_sentence
+        + 'Allowed source paths: ' + ', '.join(sorted(allowed_editable_files)) + '. First call list_files. Then search for the relevant symbol and read its source with an exact path and a bounded line range. '
+        + 'Do not invent paths. The workspace is already prepared; never ask for a workspace path, more information, or permission. '
+        + 'The external grader is hidden. Do not describe a fix without applying it. Call finish only after changing a source file. '
+        + ('After changing source, call run_public_tests; read its output and repair failures. The test file is immutable. '
+           'Call finish only after the public smoke test passes. ' if public_tests else '')
+        + 'For large files, use search_text to find the relevant symbol and read_file with start_line and end_line; each read is limited to 80 lines. '
+        + 'You have a limited tool budget; each assistant turn before finish must call a tool. '
+        'TASK:\n' + task_text.split('## Reproduce', 1)[0].rstrip()
+    )
+    return [{'role': 'system', 'content': system}, {'role': 'user', 'content': instruction}]
+
+
 def parse_tool_call_blocks(
     text: str, tools: list[dict[str, Any]],
 ) -> tuple[list[re.Match[str]], list[tuple[re.Match[str], str, dict[str, Any]]],
@@ -460,33 +492,9 @@ def main() -> int:
         parser.error('isolated public-test execution requires exactly one test_public.py in the task')
     tools = tools_for(args.edit_format, public_tests=bool(args.public_test_image))
     tool_names = {item['function']['name'] for item in tools}
-    if args.edit_format == 'whole_file':
-        edit_sentence = (
-            'Read the source path named in the user instruction, then use tools to inspect and edit. '
-            'Use write_file to replace an allowlisted source file with its complete new text. Do not send a unified diff. '
-            'Keep the replacement concise enough to fit within the per-turn output budget. '
-        )
-    else:
-        edit_sentence = (
-            'Read the source path named in the user instruction, then use tools to inspect and edit. Use apply_patch for small source diffs; never rewrite a whole file. '
-            'The patch must use exact headers --- a/<allowed source path> and +++ b/<allowed source path>; do not wrap it in a code fence. '
-        )
-    system = (
-        'You are an offline code repair agent. Solve only the task below. The workspace contains only the task source files. '
-        + edit_sentence
-        + 'Allowed source paths: ' + ', '.join(sorted(editable)) + '. First call list_files. Then search for the relevant symbol and read its source with an exact path and a bounded line range. '
-        + 'Do not invent paths. The workspace is already prepared; never ask for a workspace path, more information, or permission. '
-        + 'The external grader is hidden. Do not describe a fix without applying it. Call finish only after changing a source file. '
-        + ('After changing source, call run_public_tests; read its output and repair failures. The test file is immutable. '
-           'Call finish only after the public smoke test passes. ' if args.public_test_image else '')
-        + 'For large files, use search_text to find the relevant symbol and read_file with start_line and end_line; each read is limited to 80 lines. '
-        + 'You have a limited tool budget; each assistant turn before finish must call a tool. '
-        'TASK:\n' + task_text.split('## Reproduce', 1)[0].rstrip()
+    messages = build_initial_messages(
+        task_text, sorted(editable), args.edit_format, bool(args.public_test_image), args.instruction,
     )
-    messages: list[dict[str, str]] = [
-        {'role': 'system', 'content': system},
-        {'role': 'user', 'content': args.instruction},
-    ]
     initial_messages = [dict(message) for message in messages]
     transcript: list[dict[str, Any]] = []
     before = digest_tree(workspace, sorted(allowed))

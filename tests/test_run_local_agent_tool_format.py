@@ -1,4 +1,5 @@
 from scripts.run_local_agent import (
+    build_initial_messages,
     normalize_tool_call_format,
     parse_tool_call_blocks,
     read_file_range,
@@ -11,6 +12,30 @@ from scripts.run_separated_coding_eval import (
     _planned_task_run_count,
     verified_task_success,
 )
+
+
+def test_initial_messages_are_deterministic_and_include_only_public_task_material():
+    task_text = "# Repair\nPreserve public behavior.\n\n## Reproduce\nprivate grader notes"
+    messages = build_initial_messages(
+        task_text,
+        ["src/transformers/tokenization_utils_base.py"],
+        "unified_diff",
+        True,
+        "Inspect and repair the named source file.",
+    )
+
+    assert messages == build_initial_messages(
+        task_text,
+        ["src/transformers/tokenization_utils_base.py"],
+        "unified_diff",
+        True,
+        "Inspect and repair the named source file.",
+    )
+    assert len(messages) == 2
+    assert "src/transformers/tokenization_utils_base.py" in messages[0]["content"]
+    assert "run_public_tests" in messages[0]["content"]
+    assert "private grader notes" not in messages[0]["content"]
+    assert messages[1]["content"] == "Inspect and repair the named source file."
 
 
 def test_normalizes_a_fenced_qwen_json_tool_call_without_changing_raw_text():
