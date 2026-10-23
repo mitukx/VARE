@@ -67,6 +67,10 @@ def verify(protocol_path: Path, model_path: Path, python_exe: Path,
     prior_exposure_path = ROOT / lock["task"]["prior_exposure_manifest_path"]
     if sha256(prior_exposure_path) != lock["task"]["prior_exposure_manifest_sha256"]:
         raise ValueError("prior Development exposure manifest identity mismatch")
+    prior_exposure_sidecar = prior_exposure_path.with_name("evidence-manifest.sha256")
+    if (sha256(prior_exposure_sidecar) != lock["task"]["prior_exposure_manifest_sidecar_sha256"]
+            or prior_exposure_sidecar.read_text(encoding="utf-8").split()[0] != sha256(prior_exposure_path)):
+        raise ValueError("prior Development exposure manifest sidecar mismatch")
     prior_exposure = json.loads(prior_exposure_path.read_text(encoding="utf-8"))
     for item in prior_exposure["files"]:
         path = ROOT / item["path"]
