@@ -3,7 +3,11 @@
 from __future__ import annotations
 
 import json
+import hashlib
 from pathlib import Path
+import subprocess
+
+import pytest
 
 from scripts.run_mlxlm_1971_calibration_v5 import (
     _has_semantic_decisions,
@@ -11,11 +15,35 @@ from scripts.run_mlxlm_1971_calibration_v5 import (
 )
 
 
-def test_v5_protocol_binds_v4_parent_and_implementation():
-    protocol = verify_protocol_v5()
+def test_v5_protocol_preserves_historical_lock_and_fails_closed_on_runtime_drift():
+    root = Path(__file__).resolve().parents[1]
+    task_root = root / "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale"
+    protocol = json.loads((task_root / "protocol-v5.json").read_text())
+    lock = json.loads((task_root / "protocol-v5.lock.json").read_text())
     assert protocol["protocol_id"] == "vare.mlsys-repository-task.mlxlm-1971.v5"
     assert protocol["protocol_parent"] == "vare.mlsys-repository-task.mlxlm-1971.v4"
     assert protocol["value_scales"] == [0.25, 0.5, 0.8]
+    assert (
+        hashlib.sha256((task_root / "protocol-v5.json").read_bytes()).hexdigest()
+        == lock["protocol_sha256"]
+    )
+    assert protocol["implementation_sha256"] == lock["implementation_sha256"]
+    historical_revision = "9f0993ac2c71a44bcfbabd2a1399fc12e5d6d777"
+    for path, expected in protocol["implementation_sha256"].items():
+        if path not in {
+            "src/vare/mlxlm_1971_repo_task.py",
+            "tests/test_mlxlm_1971_repo_task_v4.py",
+        }:
+            continue
+        historical = subprocess.run(
+            ["git", "-C", str(root), "show", f"{historical_revision}:{path}"],
+            check=True,
+            capture_output=True,
+            timeout=10,
+        ).stdout
+        assert hashlib.sha256(historical).hexdigest() == expected
+    with pytest.raises(ValueError, match="v5 implementation hash mismatch"):
+        verify_protocol_v5()
 
 
 def test_v5_semantic_gate_accepts_only_expected_case_outcomes():

@@ -57,7 +57,9 @@ def _make_source_repo(tmp_path: Path, monkeypatch) -> Path:
     return root
 
 
-def test_source_verification_checks_committed_bytes_and_all_index_flags(tmp_path, monkeypatch):
+def test_source_verification_checks_committed_bytes_and_all_index_flags(
+    tmp_path, monkeypatch
+):
     root = _make_source_repo(tmp_path, monkeypatch)
     assert len(task.verify_pinned_source_tree(root)) == 3
 
@@ -65,17 +67,48 @@ def test_source_verification_checks_committed_bytes_and_all_index_flags(tmp_path
     _git(root, "update-index", "--skip-worktree", "mlx_lm/models/attention.py")
     dependency.write_text("def attention(): return 2\n", encoding="utf-8")
     assert not _git(root, "status", "--porcelain", "--untracked-files=all")
-    with pytest.raises(ValueError, match="hidden index flag: mlx_lm/models/attention.py"):
+    with pytest.raises(
+        ValueError, match="hidden index flag: mlx_lm/models/attention.py"
+    ):
         task.verify_pinned_source_tree(root)
 
 
 def test_v6_protocol_binds_manifest_and_exact_implementation():
-    protocol = task.verify_protocol_v6()
+    root = Path(__file__).resolve().parents[1]
+    protocol_path = (
+        root
+        / "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v6.json"
+    )
+    lock_path = protocol_path.with_name("protocol-v6.lock.json")
+    protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
+    lock = json.loads(lock_path.read_text(encoding="utf-8"))
     assert protocol["protocol_id"] == "vare.mlsys-repository-task.mlxlm-1971.v6"
     assert protocol["source_file_count"] == 201
+    assert _sha(protocol_path.read_bytes()) == lock["protocol_sha256"]
+    assert protocol["implementation_sha256"] == lock["implementation_sha256"]
+    historical = subprocess.run(
+        [
+            "git",
+            "-C",
+            str(root),
+            "show",
+            "9f0993ac2c71a44bcfbabd2a1399fc12e5d6d777:src/vare/mlxlm_1971_repo_task.py",
+        ],
+        check=True,
+        capture_output=True,
+        timeout=10,
+    ).stdout
+    assert (
+        _sha(historical)
+        == protocol["implementation_sha256"]["src/vare/mlxlm_1971_repo_task.py"]
+    )
+    with pytest.raises(ValueError, match="v6 implementation hash mismatch"):
+        task.verify_protocol_v6()
 
 
-def test_source_verification_rejects_untracked_ignored_python_module(tmp_path, monkeypatch):
+def test_source_verification_rejects_untracked_ignored_python_module(
+    tmp_path, monkeypatch
+):
     root = _make_source_repo(tmp_path, monkeypatch)
     with (root / ".git/info/exclude").open("a", encoding="utf-8") as stream:
         stream.write("/mlx_lm/models/injected.py\n")
@@ -96,7 +129,9 @@ def _candidate(tmp_path: Path) -> tuple[Path, dict[str, str]]:
     package = workspace / "mlx_lm/models"
     package.mkdir(parents=True)
     (workspace / "mlx_lm/models/mimo_v2_flash.py").write_bytes(b"candidate target\n")
-    (workspace / "mlx_lm/models/attention.py").write_bytes(b"def attention(): return 1\n")
+    (workspace / "mlx_lm/models/attention.py").write_bytes(
+        b"def attention(): return 1\n"
+    )
     return workspace, manifest
 
 
