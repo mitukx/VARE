@@ -319,10 +319,12 @@ def main() -> int:
                    "--top-p", str(arm["top_p"]), "--top-k", str(arm["top_k"]),
                    "--edit-format", lock["agent"]["edit_format"],
                    "--do-sample" if arm["do_sample"] else "--no-do-sample"]
-        monitor = [str(args.python.absolute()), str(ROOT / "scripts/monitor_local_agent_resources_v1.py"),
+        monitor = [str(args.python.absolute()), str(ROOT / "scripts/monitor_local_agent_resources_v2.py"),
                    "--output", str(attempt / "process"), "--max-seconds", str(wall),
                    "--swap-abort-mib", str(swap_limit),
                    "--memory-free-abort-percent", str(lock["resources"]["abort_free_memory_percent"]),
+                   "--rss-abort-mib", str(lock["resources"]["max_agent_rss_mib"]),
+                   "--poll-interval-seconds", str(lock["resources"]["monitor_interval_seconds"]),
                    "--", *command]
         proc = subprocess.run(monitor, cwd=ROOT, capture_output=True, text=True, check=False)
         (attempt / "monitor-launcher.stdout.txt").write_text(proc.stdout, encoding="utf-8")
