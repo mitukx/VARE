@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 RUN = ROOT / "results/phase-a-v6/protocol-v1/run-2"
-CORRECTION = RUN / "public-test-classification-correction-v2/classification.json"
+CORRECTION = RUN / "public-test-classification-correction-v3/classification.json"
 
 
 def test_correction_accounts_for_every_serialized_public_test_invocation() -> None:
@@ -67,3 +67,13 @@ def test_correction_manifest_and_frozen_run_manifest_verify() -> None:
     for line in run_sums:
         digest, rel = line.split("  ", 1)
         assert hashlib.sha256((RUN / rel).read_bytes()).hexdigest() == digest
+    correction = json.loads(CORRECTION.read_text())
+    assert correction["source_run_manifest_sha256"] == hashlib.sha256(
+        (RUN / "run-manifest.json").read_bytes()
+    ).hexdigest()
+    assert correction["source_run_checksums_sha256"] == hashlib.sha256(
+        (RUN / "SHA256SUMS").read_bytes()
+    ).hexdigest()
+    assert correction["source_report_sha256"] == hashlib.sha256(
+        (RUN / "REPORT.md").read_bytes()
+    ).hexdigest()
