@@ -97,3 +97,45 @@ def test_symlink_target_is_rejected(tmp_path: Path) -> None:
         apply_structured_edit(root, allowed, **_edit(root, allowed))
     assert outside.read_text(encoding="utf-8") == "secret\n"
 
+
+
+
+def test_symlinked_workspace_root_rejected_before_source_read(tmp_path: Path) -> None:
+    original_root = tmp_path / "actual"
+    original_root.mkdir()
+    root, allowed = _workspace(original_root)
+    alias = tmp_path / "alias"
+    alias.symlink_to(root, target_is_directory=True)
+
+    with pytest.raises(StructuredEditError, match="symlinked workspace roots"):
+        workspace_revision(alias, allowed)
+    with pytest.raises(StructuredEditError, match="symlinked workspace roots"):
+        apply_structured_edit(
+            alias, allowed, action="replace_text", path="src/module.py",
+            expected_hash="0" * 64, expected_revision="0" * 64,
+            old_text="return 1", new_text="return 2",
+        )
+    assert (root / "src/module.py").read_text(encoding="utf-8").endswith("return 1\n")
+
+
+def test_hardlinked_allowlisted_file_cannot_expose_external_content(
+    tmp_path: Path,
+) -> None:
+    real_root = tmp_path / "candidate"
+    real_root.mkdir()
+    root, allowed = _workspace(real_root)
+    external = tmp_path / "private.py"
+    external.write_text("private_value = 42\n", encoding="utf-8")
+    target = root / "src/module.py"
+    target.unlink()
+    target.hardlink_to(external)
+
+    with pytest.raises(StructuredEditError, match="hard-linked"):
+        workspace_revision(root, allowed)
+    with pytest.raises(StructuredEditError, match="hard-linked"):
+        apply_structured_edit(
+            root, allowed, action="replace_text", path="src/module.py",
+            expected_hash="0" * 64, expected_revision="0" * 64,
+            old_text="private_value", new_text="changed",
+        )
+    assert external.read_text(encoding="utf-8") == "private_value = 42\n"
