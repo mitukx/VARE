@@ -10,8 +10,10 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
+import stat
 import subprocess
 import sys
 import tempfile
@@ -35,7 +37,12 @@ PINNED_OPERATOR_SOURCES = (
 V9_PROTOCOL_PATH = (
     "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/protocol-v9.json"
 )
-GIT_ENV = {**os.environ, "GIT_NO_REPLACE_OBJECTS": "1"}
+GIT_ENV = {
+    **{key: value for key, value in os.environ.items() if not key.startswith("GIT_")},
+    "GIT_NO_REPLACE_OBJECTS": "1",
+    "GIT_CONFIG_NOSYSTEM": "1",
+    "GIT_CONFIG_GLOBAL": os.devnull,
+}
 
 _PINNED_CHILD = """
 import json
@@ -63,10 +70,265 @@ print(json.dumps(report, sort_keys=True))
 
 def _git_bytes(revision: str, relative: str) -> bytes:
     result = subprocess.run(
-        ["git", "-C", str(ROOT), "show", f"{revision}:{relative}"],
+        _git_command(ROOT, "show", f"{revision}:{relative}"),
         env=GIT_ENV, capture_output=True, check=True, timeout=30,
     )
     return result.stdout
+
+
+def _git_command(repository: Path, *args: str) -> list[str]:
+    """Run Git with hooks and ambient configuration disabled."""
+    return [
+        "git", "-c", f"core.hooksPath={os.devnull}",
+        "-c", "core.fsmonitor=false", "-C", str(repository), *args,
+    ]
+
+
+def _trusted_v9_protocol() -> dict[str, Any]:
+    raw = _git_bytes(V9_COMMIT, V9_PROTOCOL_PATH)
+    if hashlib.sha256(raw).hexdigest() != V9_PROTOCOL_SHA256:
+        raise ValueError("pinned v9 Git protocol digest mismatch")
+    try:
+        protocol = json.loads(raw)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("pinned v9 Git protocol is malformed") from exc
+    if not isinstance(protocol, dict):
+        raise ValueError("pinned v9 Git protocol is not an object")
+    return protocol
+
+
+def _reject_symlink_components(path: Path) -> Path:
+    """Return an absolute path only after checking every existing component."""
+    absolute = Path(os.path.abspath(os.fspath(path)))
+    current = Path(absolute.anchor)
+    for component in absolute.parts[1:]:
+        current /= component
+        try:
+            mode = current.lstat().st_mode
+        except FileNotFoundError:
+            continue
+        if stat.S_ISLNK(mode):
+            raise ValueError(f"symlink path component is forbidden: {current}")
+    return absolute
+
+
+def _open_parent_without_symlinks(path: Path) -> tuple[int, str]:
+    """Open a path's parent through directory descriptors with O_NOFOLLOW."""
+    absolute = Path(os.path.abspath(os.fspath(path)))
+    if not absolute.name:
+        raise ValueError("path must name a child of a directory")
+    directory_flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0)
+    nofollow = getattr(os, "O_NOFOLLOW", 0)
+    descriptor = os.open(absolute.anchor, directory_flags)
+    try:
+        for component in absolute.parts[1:-1]:
+            next_descriptor = os.open(
+                component, directory_flags | nofollow, dir_fd=descriptor
+            )
+            os.close(descriptor)
+            descriptor = next_descriptor
+        return descriptor, absolute.name
+    except BaseException:
+        os.close(descriptor)
+        raise
+
+
+def _require_real_directory(path: Path) -> Path:
+    absolute = _reject_symlink_components(path)
+    parent_fd, name = _open_parent_without_symlinks(absolute)
+    try:
+        descriptor = os.open(
+            name,
+            os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_NOFOLLOW", 0),
+            dir_fd=parent_fd,
+        )
+        try:
+            if not stat.S_ISDIR(os.fstat(descriptor).st_mode):
+                raise ValueError("source repository must be a real directory")
+        finally:
+            os.close(descriptor)
+    except OSError as exc:
+        raise ValueError("source repository must be a real directory without symlinks") from exc
+    finally:
+        os.close(parent_fd)
+    return absolute
+
+
+def _snapshot_patch(source: Path, destination: Path) -> Path:
+    """Copy one stable, no-follow patch into the private operator directory."""
+    absolute = _reject_symlink_components(source)
+    parent_fd, name = _open_parent_without_symlinks(absolute)
+    try:
+        descriptor = os.open(
+            name, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0), dir_fd=parent_fd
+        )
+    except OSError as exc:
+        os.close(parent_fd)
+        raise ValueError("patch must be a readable regular file without symlinks") from exc
+    os.close(parent_fd)
+    try:
+        before = os.fstat(descriptor)
+        if not stat.S_ISREG(before.st_mode) or before.st_size > 256_000:
+            raise ValueError("patch must be a regular file no larger than 256000 bytes")
+        chunks: list[bytes] = []
+        total = 0
+        while True:
+            chunk = os.read(descriptor, min(64 * 1024, 256_001 - total))
+            if not chunk:
+                break
+            chunks.append(chunk)
+            total += len(chunk)
+            if total > 256_000:
+                raise ValueError("patch must be a regular file no larger than 256000 bytes")
+        after = os.fstat(descriptor)
+        identity_before = (
+            before.st_dev, before.st_ino, before.st_size,
+            before.st_mtime_ns, before.st_ctime_ns,
+        )
+        identity_after = (
+            after.st_dev, after.st_ino, after.st_size,
+            after.st_mtime_ns, after.st_ctime_ns,
+        )
+        data = b"".join(chunks)
+        if identity_before != identity_after or len(data) != before.st_size:
+            raise ValueError("patch changed while being snapshotted")
+    finally:
+        os.close(descriptor)
+
+    out_flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+    out_fd = os.open(destination, out_flags, 0o600)
+    try:
+        with os.fdopen(out_fd, "wb", closefd=True) as output:
+            output.write(data)
+            output.flush()
+            os.fsync(output.fileno())
+        os.chmod(destination, 0o400)
+    except BaseException:
+        destination.unlink(missing_ok=True)
+        raise
+    return destination
+
+
+def _require_sha256(value: object) -> bool:
+    return (
+        isinstance(value, str)
+        and len(value) == 64
+        and all(character in "0123456789abcdef" for character in value)
+    )
+
+
+def _validate_child_report(
+    action: str,
+    report: dict[str, Any],
+    protocol_v9: dict[str, Any],
+    expected_patch_sha256: str | None = None,
+) -> None:
+    """Require the exact v9 evidence envelope before returning child output."""
+    if action == "grade":
+        fields = {
+            "task_id", "protocol_id", "passed", "cases",
+            "candidate_source_sha256", "candidate_manifest_sha256",
+            "grader_source_sha256", "grader_adapter_sha256",
+            "expected_output_sha256",
+        }
+        if set(report) != fields:
+            raise RuntimeError("pinned child did not return complete grade evidence")
+        if (
+            report["task_id"] != protocol_v9.get("task_id")
+            or report["protocol_id"] != protocol_v9.get("protocol_id")
+            or type(report["passed"]) is not bool
+            or not _require_sha256(report["candidate_source_sha256"])
+            or report["candidate_manifest_sha256"]
+            != protocol_v9.get("source_manifest_sha256")
+            or report["grader_source_sha256"]
+            != protocol_v9.get("implementation_sha256", {}).get(
+                "src/vare/mlxlm_1971_repo_task_v9.py"
+            )
+            or report["grader_adapter_sha256"]
+            != protocol_v9.get("implementation_sha256", {}).get(
+                "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale/grader_adapter_v4.py"
+            )
+            or report["expected_output_sha256"]
+            != protocol_v9.get("expected_output_sha256")
+        ):
+            raise RuntimeError("pinned child grade identity differs from v9 evidence")
+        expected_cases = [
+            f"value-scale-{scale:g}-{phase}"
+            for scale in protocol_v9.get("value_scales", [])
+            for phase in ("full", "cached")
+        ]
+        cases = report["cases"]
+        if not isinstance(cases, list) or [
+            case.get("case_id") if isinstance(case, dict) else None
+            for case in cases
+        ] != expected_cases:
+            raise RuntimeError("pinned child grade case inventory is incomplete")
+        for case in cases:
+            if (
+                set(case) != {"case_id", "passed", "failure", "wall_s"}
+                or type(case["passed"]) is not bool
+                or (
+                    case["failure"] is not None
+                    and (not isinstance(case["failure"], str) or not case["failure"])
+                )
+                or (case["passed"] and case["failure"] is not None)
+                or (not case["passed"] and case["failure"] is None)
+            ):
+                raise RuntimeError("pinned child grade case is malformed")
+            wall_s = case["wall_s"]
+            if wall_s is not None and (
+                isinstance(wall_s, bool)
+                or not isinstance(wall_s, (int, float))
+                or not math.isfinite(wall_s)
+                or wall_s < 0
+            ):
+                raise RuntimeError("pinned child grade timing is malformed")
+        if report["passed"] is not all(case["passed"] for case in cases):
+            raise RuntimeError("pinned child aggregate grade disagrees with cases")
+        return
+
+    if action == "export":
+        fields = {
+            "task_id", "baseline_commit", "candidate_patch_sha256",
+            "candidate_source_sha256", "fixed_source_match", "changed_files",
+            "baseline_python_manifest_sha256", "git_history_exported",
+            "tests_exported", "license_exported", "task_prompt_sha256",
+        }
+        if set(report) != fields:
+            raise RuntimeError("pinned child did not return complete export evidence")
+        patch_digest = report["candidate_patch_sha256"]
+        changed_files = report["changed_files"]
+        if (
+            report["task_id"] != protocol_v9.get("task_id")
+            or report["baseline_commit"] != protocol_v9.get("baseline_commit")
+            or patch_digest != expected_patch_sha256
+            or (patch_digest is not None and not _require_sha256(patch_digest))
+            or not _require_sha256(report["candidate_source_sha256"])
+            or type(report["fixed_source_match"]) is not bool
+            or changed_files != ([] if patch_digest is None else [protocol_v9.get("target_path")])
+            or report["baseline_python_manifest_sha256"]
+            != protocol_v9.get("source_manifest_sha256")
+            or report["git_history_exported"] is not False
+            or report["tests_exported"] is not False
+            or report["license_exported"] is not False
+            or report["task_prompt_sha256"] != protocol_v9.get("task_prompt_sha256")
+        ):
+            raise RuntimeError("pinned child export identity or provenance is invalid")
+        return
+
+    raise RuntimeError("cannot validate evidence for unsupported v10 action")
+
+
+def _verify_clean_checkout(checkout: Path) -> None:
+    result = subprocess.run(
+        _git_command(
+            checkout, "status", "--porcelain=v1", "--untracked-files=all",
+            "--ignored=traditional",
+        ),
+        env=GIT_ENV, capture_output=True, check=True, text=True, timeout=30,
+    )
+    if result.stdout:
+        raise ValueError("pinned operator worktree contains unexpected files or changes")
 
 
 def verify_v10_protocol() -> dict[str, Any]:
@@ -99,9 +361,7 @@ def verify_v10_protocol() -> dict[str, Any]:
         or protocol.get("requires_nested_v9_source_attestation") is not True
     ):
         raise ValueError("v10 operator protocol identity mismatch")
-    historical = _git_bytes(V9_COMMIT, V9_PROTOCOL_PATH)
-    if hashlib.sha256(historical).hexdigest() != V9_PROTOCOL_SHA256:
-        raise ValueError("pinned v9 Git protocol digest mismatch")
+    _trusted_v9_protocol()
     for relative in PINNED_OPERATOR_SOURCES:
         if not _git_bytes(OPERATOR_COMMIT, relative):
             raise ValueError(f"pinned v10 operator source missing from Git: {relative}")
@@ -122,25 +382,38 @@ def run_v10_operation(
         raise ValueError("grade cannot receive export-only arguments")
     if action == "export" and source_repo is None:
         raise ValueError("export requires source repository")
-    if workspace.is_symlink():
+    workspace = _reject_symlink_components(workspace)
+    if workspace.exists() and workspace.is_symlink():
         raise ValueError("refusing symlinked candidate workspace")
+    if action == "export":
+        assert source_repo is not None
+        source_repo = _require_real_directory(source_repo)
+        if patch_path is not None:
+            patch_path = _reject_symlink_components(patch_path)
+            if not patch_path.is_file():
+                raise ValueError("patch must be a regular file")
     verify_v10_protocol()
+    protocol_v9 = _trusted_v9_protocol()
     request: dict[str, str] = {
-        "action": action, "workspace": str(workspace.absolute()),
+        "action": action, "workspace": str(workspace),
     }
     if source_repo is not None:
-        request["source_repo"] = str(source_repo.resolve(strict=True))
-    if patch_path is not None:
-        request["patch_path"] = str(patch_path.resolve(strict=True))
+        request["source_repo"] = str(source_repo)
 
+    expected_patch_sha256: str | None = None
     with tempfile.TemporaryDirectory(prefix="vare-v10-operator-") as temporary:
-        checkout = Path(temporary) / "trusted-operator"
+        private = Path(temporary)
+        if patch_path is not None:
+            snapshot = _snapshot_patch(patch_path, private / "candidate.patch")
+            request["patch_path"] = str(snapshot)
+            expected_patch_sha256 = hashlib.sha256(snapshot.read_bytes()).hexdigest()
+        checkout = private / "trusted-operator"
         subprocess.run(
-            ["git", "-C", str(ROOT), "worktree", "add", "--detach",
-             str(checkout), OPERATOR_COMMIT],
+            _git_command(ROOT, "worktree", "add", "--detach", str(checkout), OPERATOR_COMMIT),
             env=GIT_ENV, check=True, capture_output=True, timeout=120,
         )
         try:
+            _verify_clean_checkout(checkout)
             for relative in PINNED_OPERATOR_SOURCES:
                 source_file = checkout / relative
                 if source_file.is_symlink() or not source_file.is_file():
@@ -165,11 +438,13 @@ def run_v10_operation(
                 raise RuntimeError("v10 operator did not return one JSON object") from exc
             if not isinstance(report, dict):
                 raise RuntimeError("v10 operator returned non-object evidence")
+            _validate_child_report(
+                action, report, protocol_v9, expected_patch_sha256
+            )
             return report
         finally:
             subprocess.run(
-                ["git", "-C", str(ROOT), "worktree", "remove", "--force",
-                 str(checkout)],
+                _git_command(ROOT, "worktree", "remove", "--force", str(checkout)),
                 env=GIT_ENV, check=True, capture_output=True, timeout=120,
             )
 
