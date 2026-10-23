@@ -3,8 +3,8 @@ from __future__ import annotations
 import hashlib
 import json
 import subprocess
-from pathlib import Path
 import sys
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
