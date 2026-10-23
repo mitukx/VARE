@@ -8,10 +8,12 @@ The v10 operator contract lives in `protocol-v10.json` and the separate
 SHA-256 lock `protocol-v10.lock.json`. Its protocol bytes are also anchored
 by an independent constant in `scripts/run_mlxlm_1971_v10_operator.py`.
 
-The v10 CLI accepts only `grade` or `export`. It verifies the operator
-protocol against the independent SHA-256 and checks the historical v9
-protocol's bytes against pinned Git objects with Git replacement refs
-disabled. It creates an ephemeral detached worktree at the known
+The v10 CLI accepts only `grade` or `export`. It verifies both the operator
+protocol and its separate lock against independent SHA-256 constants, and
+checks the historical v9 protocol's bytes against pinned Git objects with Git
+replacement refs disabled. It also verifies the full three-module Python
+operator import chain against that Git source, rather than trusting only the
+entrypoint file. It creates an ephemeral detached worktree at the known
 operator source commit `45fd0da592955205e6518c12e9e9b315797541e2`,
 verifies the implementation file against its Git blob, and invokes the
 operator in a separate isolated Python process. That pinned operator in
