@@ -28,6 +28,23 @@ from scripts.attest_mlxlm_1971_v9_current_git import (  # noqa: E402
 PINNED_V9_COMMIT = "3f12eefd71d1d2213b37e3a174b446cb5155e979"
 
 
+def _git_environment() -> dict[str, str]:
+    # Command-scope config is inherited by the historical child's Git calls.
+    # Discard ambient Git routing/config overrides before setting our own.
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env.update({
+        "GIT_NO_REPLACE_OBJECTS": "1",
+        "GIT_CONFIG_NOSYSTEM": "1",
+        "GIT_CONFIG_GLOBAL": os.devnull,
+        "GIT_CONFIG_COUNT": "2",
+        "GIT_CONFIG_KEY_0": "core.hooksPath",
+        "GIT_CONFIG_VALUE_0": os.devnull,
+        "GIT_CONFIG_KEY_1": "core.fsmonitor",
+        "GIT_CONFIG_VALUE_1": "false",
+    })
+    return env
+
+
 def _operator_path(path: Path) -> Path:
     path = path.absolute()
     if any(component.is_symlink() for component in (path, *path.parents)):
@@ -65,7 +82,7 @@ def run_frozen_calibration(source_repo: Path, output: Path) -> int:
     if SOURCE_COMMITS[9] != PINNED_V9_COMMIT:
         raise ValueError("historical v9 source anchor changed")
     output, output_identity = _reserve_output(output)
-    env = {**os.environ, "GIT_NO_REPLACE_OBJECTS": "1"}
+    env = _git_environment()
     with tempfile.TemporaryDirectory(prefix="vare-attested-mlxlm1971-v9-") as temp:
         worktree = Path(temp) / "frozen-v9"
         subprocess.run(
@@ -162,7 +179,7 @@ def run_pinned_v9_task(
     if patch_path is not None:
         patch_path = _operator_path(patch_path)
 
-    env = {**os.environ, "GIT_NO_REPLACE_OBJECTS": "1"}
+    env = _git_environment()
     with tempfile.TemporaryDirectory(prefix="vare-attested-mlxlm1971-task-") as temp:
         if patch_path is not None:
             flags = os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK

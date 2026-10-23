@@ -52,4 +52,13 @@ child evidence schemas. The separate v10 bootstrap remains pinned to the
 older `45fd0da` operator commit and does not inherit this change automatically.
 Do not update its frozen protocol/lock in place to hide that dependency.
 
+All launched worktree and historical-child operations now discard inherited
+`GIT_*` overrides, disable system/global Git configuration, and set inherited
+command-scope overrides for `core.hooksPath` (disabled) and `core.fsmonitor`
+(`false`). An isolated real-Git fixture first demonstrates its configured
+post-checkout hook executing, then verifies that the operator never executes
+that hook, even with injected ambient repository/configuration routing. This
+is a hook/routing regression, not a complete audit of every local Git filter
+or a substitute for the trusted bootstrap and operator-owned repository.
+
 **Unresolved:** this does not replace the direct public `vare.mlxlm_1971_repo_task.grade_workspace` or `export_candidate` API and does not create a separately frozen v10 grader protocol. Those legacy entrypoints must not be relied on for a new provenance-sensitive study. A prospective v10 API and independent review remain required; this operator wrapper is a narrowly scoped mitigation for the calibration path.

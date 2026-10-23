@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import shlex
 import subprocess
 import sys
 
@@ -291,3 +292,67 @@ def test_pinned_export_uses_one_private_patch_snapshot(
         "current_source_matches_pinned_git": True,
     })
     calibration.run_pinned_v9_task("export", tmp_path / "candidate", source_repo=source, patch_path=patch)
+
+
+def test_operator_disables_real_configured_checkout_hook_and_ambient_git_routes(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    real_run = subprocess.run
+
+    def git(*arguments: str) -> str:
+        return real_run(
+            ["git", "-C", str(repo), *arguments], check=True,
+            text=True, capture_output=True, timeout=10,
+        ).stdout.strip()
+
+    git("init", "-q")
+    git("config", "user.name", "VARE test")
+    git("config", "user.email", "vare-test@example.invalid")
+    (repo / "trusted.txt").write_text("trusted\n")
+    git("add", ".")
+    git("commit", "-qm", "fixture")
+    revision = git("rev-parse", "HEAD")
+    hooks = tmp_path / "hooks"
+    hooks.mkdir()
+    marker = tmp_path / "hook-executed"
+    hook = hooks / "post-checkout"
+    hook.write_text(f"#!/bin/sh\ntouch {shlex.quote(str(marker))}\n")
+    hook.chmod(0o755)
+    git("config", "core.hooksPath", str(hooks))
+    # Establish that this Git and fixture actually execute the configured hook.
+    positive = tmp_path / "positive-control"
+    git("worktree", "add", "--detach", str(positive), revision)
+    assert marker.exists()
+    git("worktree", "remove", "--force", str(positive))
+    marker.unlink()
+
+    monkeypatch.setattr(calibration, "ROOT", repo)
+    monkeypatch.setattr(calibration, "PINNED_V9_COMMIT", revision)
+    monkeypatch.setitem(calibration.SOURCE_COMMITS, 9, revision)
+    monkeypatch.setenv("GIT_DIR", str(tmp_path / "wrong-repository"))
+    monkeypatch.setenv("GIT_CONFIG_COUNT", "1")
+    monkeypatch.setenv("GIT_CONFIG_KEY_0", "core.hooksPath")
+    monkeypatch.setenv("GIT_CONFIG_VALUE_0", str(hooks))
+    monkeypatch.setenv("GIT_NO_REPLACE_OBJECTS", "0")
+    monkeypatch.setattr(calibration, "attest_current_v9", lambda _: {
+        "frozen_source_commit": revision,
+        "current_source_matches_pinned_git": True,
+    })
+
+    def run(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        env = kwargs["env"]
+        assert "GIT_DIR" not in env
+        assert env["GIT_CONFIG_KEY_0"] == "core.hooksPath"
+        assert env["GIT_CONFIG_VALUE_0"] == calibration.os.devnull
+        assert env["GIT_CONFIG_KEY_1"] == "core.fsmonitor"
+        assert env["GIT_CONFIG_VALUE_1"] == "false"
+        if command[:2] == [sys.executable, "-I"]:
+            assert not marker.exists()
+            return subprocess.CompletedProcess(command, 0)
+        return real_run(command, **kwargs)
+
+    monkeypatch.setattr(calibration.subprocess, "run", run)
+    assert calibration.run_frozen_calibration(repo, tmp_path / "new-output") == 0
+    assert not marker.exists()
