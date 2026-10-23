@@ -102,3 +102,102 @@ def test_frozen_wrapper_rejects_changed_source_anchor(
     )
     with pytest.raises(ValueError, match="historical v9 source anchor changed"):
         calibration.run_frozen_calibration(source, tmp_path / "new-evidence")
+
+
+@pytest.mark.parametrize("action", ["grade", "export"])
+def test_pinned_v9_task_dispatch_isolated_and_attested(
+    action: str, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    source = tmp_path / "source"
+    source.mkdir()
+    calls: list[tuple[list[str], dict[str, object]]] = []
+
+    def fake_run(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        calls.append((command, kwargs))
+        assert kwargs["env"]["GIT_NO_REPLACE_OBJECTS"] == "1"
+        if command[:3] == [sys.executable, "-I", "-c"]:
+            request = calibration.json.loads(kwargs["input"])
+            assert request["action"] == action
+            assert request["workspace"] == str((tmp_path / "candidate").absolute())
+            assert "src" in command[3] and "export_candidate" in command[3]
+            if action == "export":
+                assert request["source_repo"] == str(source)
+            else:
+                assert "source_repo" not in request
+            return subprocess.CompletedProcess(command, 0, stdout='{"passed": false}')
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(calibration.subprocess, "run", fake_run)
+    monkeypatch.setattr(
+        calibration, "attest_current_v9",
+        lambda _path: {
+            "frozen_source_commit": calibration.PINNED_V9_COMMIT,
+            "current_source_matches_pinned_git": True,
+        },
+    )
+    report = calibration.run_pinned_v9_task(
+        action,
+        tmp_path / "candidate",
+        source_repo=source if action == "export" else None,
+    )
+    assert report == {"passed": False}
+    assert len(calls) == 3
+    assert "worktree" in calls[0][0]
+    assert calls[1][0][:3] == [sys.executable, "-I", "-c"]
+    assert "worktree" in calls[2][0]
+
+
+def test_pinned_v9_task_refuses_unattested_or_forged_child_result(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    calls: list[list[str]] = []
+
+    def fake_run(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        calls.append(command)
+        if command[:3] == [sys.executable, "-I", "-c"]:
+            return subprocess.CompletedProcess(
+                command, 0, stdout='{"passed": true}\\nFORGED OUTPUT'
+            )
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(calibration.subprocess, "run", fake_run)
+    monkeypatch.setattr(
+        calibration, "attest_current_v9",
+        lambda _path: {
+            "frozen_source_commit": calibration.PINNED_V9_COMMIT,
+            "current_source_matches_pinned_git": True,
+        },
+    )
+    with pytest.raises(RuntimeError, match="invalid JSON"):
+        calibration.run_pinned_v9_task("grade", tmp_path / "candidate")
+    assert len(calls) == 3
+
+    calls.clear()
+    monkeypatch.setattr(
+        calibration, "attest_current_v9",
+        lambda _path: {
+            "frozen_source_commit": "0" * 40,
+            "current_source_matches_pinned_git": False,
+        },
+    )
+    with pytest.raises(ValueError, match="failed immutable attestation"):
+        calibration.run_pinned_v9_task("grade", tmp_path / "candidate")
+    assert len(calls) == 2
+    assert all(cmd[0] != sys.executable for cmd in calls)
+
+
+def test_pinned_v9_task_rejects_invalid_action_before_worktree(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    monkeypatch.setattr(
+        calibration.subprocess, "run",
+        lambda *args, **kwargs: pytest.fail("must refuse before Git operations"),
+    )
+    with pytest.raises(ValueError, match="unsupported pinned operation"):
+        calibration.run_pinned_v9_task("delete", tmp_path / "candidate")
+    with pytest.raises(ValueError, match="export requires source repo"):
+        calibration.run_pinned_v9_task("export", tmp_path / "candidate")
+    with pytest.raises(ValueError, match="grade cannot receive"):
+        calibration.run_pinned_v9_task(
+            "grade", tmp_path / "candidate", source_repo=tmp_path
+        )
