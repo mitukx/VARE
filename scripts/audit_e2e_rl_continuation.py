@@ -93,6 +93,7 @@ RUNTIME_PACKAGE_SOURCES = frozenset({
     "src/vare/promotion.py",
     "src/vare/promotion_journal.py",
     "src/vare/protocol.py",
+    "src/vare/qwen_patch_contract_v2.py",
     "src/vare/replay.py",
     "src/vare/reward_evidence.py",
     "src/vare/runner.py",

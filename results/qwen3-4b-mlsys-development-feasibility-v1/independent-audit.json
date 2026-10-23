@@ -1,0 +1,62 @@
+{
+  "audit_passed": true,
+  "checksums_verified": [
+    "feasibility.json",
+    "preflight.json",
+    "raw-records.jsonl"
+  ],
+  "implementation_commit": "368668e0e4d0afa6c7c5140839cb00c889df5556",
+  "model_revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+  "protocol_sha256": "a44710d75819c4c1f503481530c17c78039c6b6a484c2443a6167f5b1311f48e",
+  "rollouts": 15,
+  "task_summary": {
+    "mlxlm-1912-top-p-min-token": {
+      "failures": {
+        "format_failure": 5,
+        "wrong_patch": 0
+      },
+      "greedy_success": false,
+      "pass_at_k": false,
+      "reward_variance": 0.0,
+      "sample_successes": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "unique_sample_output_hashes": 4
+    },
+    "mlxlm-1971-mimo-value-scale": {
+      "failures": {
+        "format_failure": 5,
+        "wrong_patch": 0
+      },
+      "greedy_success": false,
+      "pass_at_k": false,
+      "reward_variance": 0.0,
+      "sample_successes": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "unique_sample_output_hashes": 4
+    },
+    "transformers-45852-4d-mask": {
+      "failures": {
+        "format_failure": 5,
+        "wrong_patch": 0
+      },
+      "greedy_success": false,
+      "pass_at_k": false,
+      "reward_variance": 0.0,
+      "sample_successes": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "unique_sample_output_hashes": 4
+    }
+  }
+}

@@ -1,3 +1,5 @@
+**Integration correction 2026-10-23 — Qwen3-4B Development v1:** The original 15 raw outputs are immutable. The append-only v2 retrospective classifies 13 as raw-diff format failures and two as patch-application failures, with **zero independently verified repairs**. Older v1 wording that describes all 15 as format failures is superseded by this classification; no post-training or held-out comparison was performed. The cohort is previously model-exposed and cannot be re-used as fresh Development or held-out evidence. See [retrospective](qwen3-4b-mlsys-development-feasibility-v1-retrospective-v2.md).
+
 **Update 2026-10-23 — historical v9 Git-object preflight (unmerged PR #99):** A new
 read-only verification path checks the current v9 protocol, lock and complete
 evaluator implementation inventory against the pinned historical Git commit
