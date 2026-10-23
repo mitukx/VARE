@@ -108,10 +108,22 @@ def classify_public_test_result(result: Any) -> str:
             or result.get("gradeable") is not expected_gradeable
         ):
             return "runner_integrity_error"
+        # A claimed pass must also agree with the process outcome.
+        if classification == "passed" and (
+            ("returncode" in result and result["returncode"] != 0)
+            or result.get("error")
+        ):
+            return "runner_integrity_error"
         return classification
     # Historical records predate the explicit class field. Exit 125 is Docker's
     # launch-failure code; it means no test assertion ran.
     code = result.get("returncode")
+    # Legacy records have no explicit class. Reject contradictory pass
+    # claims before classifying nonzero exits as ordinary test failures.
+    if result.get("passed") is True and (
+        code != 0 or result.get("error") or result.get("gradeable") is False
+    ):
+        return "runner_integrity_error"
     if code in (125, 126, 127):
         return "container_launch_failure"
     error = result.get("error")
@@ -804,10 +816,8 @@ def main() -> int:
                     write_json(output / "run-manifest.partial.json", run_manifest)
                     return 2
                 grading = json.loads(grade_path.read_text(encoding="utf-8"))
-                public_passed = (
-                    isinstance(agent.get("public_test_result"), dict)
-                    and agent["public_test_result"].get("passed") is True
-                )
+                # Never award reward from unvalidated candidate-supplied flags.
+                public_passed = public_test_status == "passed"
                 changed = agent.get("source_hashes_before") != agent.get(
                     "source_hashes_after"
                 )
