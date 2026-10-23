@@ -38,6 +38,8 @@ def _safe_path(root: Path, name: str, allowed_files: set[str]) -> Path:
         or "\\" in name
     ):
         raise StructuredEditError("path is not an exact allowlisted file")
+    if root.is_symlink():
+        raise StructuredEditError("symlinked workspace roots are not allowed")
     target = root.joinpath(*parsed.parts)
     current = root
     for part in parsed.parts:
@@ -46,6 +48,8 @@ def _safe_path(root: Path, name: str, allowed_files: set[str]) -> Path:
             raise StructuredEditError("symlink paths are not allowed")
     if not target.is_file():
         raise StructuredEditError("allowlisted file is missing")
+    if target.stat().st_nlink != 1:
+        raise StructuredEditError("hard-linked files are not allowed")
     try:
         target.resolve(strict=True).relative_to(root.resolve(strict=True))
     except (OSError, ValueError) as exc:
