@@ -1,0 +1,71 @@
+{
+  "agent_metrics": {
+    "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "edit_applied": false,
+    "edit_attempted": false,
+    "elapsed_seconds": 4.259,
+    "format_parse_failure_count": 0,
+    "max_rss_bytes": 941867008,
+    "new_tokens": 208,
+    "public_test_result": null,
+    "runtime": {
+      "device": "apple_metal",
+      "mlx": "unknown",
+      "mlx_active_memory_bytes": 724690870,
+      "mlx_lm": "0.32.2",
+      "mlx_peak_memory_bytes": 1464958198,
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "python": "3.12.12",
+      "seed": 37
+    },
+    "stop_reason": "no_tool_call_retries_exhausted",
+    "tool_turns": 3
+  },
+  "arm": "sampled",
+  "candidate_source_sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+  "grader_elapsed_seconds": 2.672,
+  "grader_error": null,
+  "grader_status": "FAIL",
+  "monitor": {
+    "abort_reason": null,
+    "elapsed_seconds": 6.097,
+    "max_agent_rss_mib": 895.266,
+    "max_wall_seconds": 600,
+    "observations": [
+      {
+        "agent_rss_mib": 9.422,
+        "elapsed_seconds": 0.017,
+        "memory_free_percent": 70,
+        "swap_used_mib": 3822.5
+      },
+      {
+        "agent_rss_mib": 891.438,
+        "elapsed_seconds": 2.037,
+        "memory_free_percent": 67,
+        "swap_used_mib": 3822.5
+      },
+      {
+        "agent_rss_mib": 895.266,
+        "elapsed_seconds": 4.061,
+        "memory_free_percent": 66,
+        "swap_used_mib": 3822.5
+      }
+    ],
+    "process_started": true,
+    "resource_after": {
+      "memory_free_percent": 71,
+      "swap_used_mib": 3822.5
+    },
+    "resource_before": {
+      "memory_free_percent": 70,
+      "swap_used_mib": 3822.5
+    },
+    "returncode": 0,
+    "status": "COMPLETED",
+    "swap_abort_threshold_mib": 3918.5,
+    "telemetry_error": null
+  },
+  "seed": 37,
+  "started_at_utc": "2026-10-23T19:26:52+00:00",
+  "status": "COMPLETED"
+}
