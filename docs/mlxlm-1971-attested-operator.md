@@ -1,0 +1,19 @@
+# Attested historical MLX-LM #1971 v9 calibration operator
+
+**Status: prospective operator path only; no new calibration is claimed by this document.**
+
+The v9 protocol, lock, historical source and historical calibration evidence are immutable. Changing a v9-hashed implementation file in place would invalidate its own source-lock checks. Do not "repair" this by resealing v9.
+
+The new `scripts/run_attested_mlxlm_1971_v9_calibration.py` creates a private temporary Git worktree at the fixed, full v9 source commit `3f12eefd71d1d2213b37e3a174b446cb5155e979`. It disables replacement refs in every Git operation and in the launched legacy process, verifies all v9 protocol/lock/evaluator bytes against independent Git objects, then runs the original v9 calibration **from that pinned worktree**. The output path must not already exist; legacy evidence under earlier run directories is untouched.
+
+Example (on a configured machine with the pinned upstream checkout and Colima image available):
+
+```bash
+python scripts/run_attested_mlxlm_1971_v9_calibration.py \
+  --source-repo /absolute/path/to/mlx-lm \
+  --output /absolute/path/to/new-append-only-calibration
+```
+
+The wrapper passes through the legacy process return code and fails closed on missing source, conflicting output, source-anchor mismatch, Git worktree failure, and historical attestation failure. Unit tests do not load a model, invoke Docker, create real calibration output, or prove that the full environment can reproduce prior grader outcomes.
+
+**Unresolved:** this does not replace the direct public `vare.mlxlm_1971_repo_task.grade_workspace` or `export_candidate` API and does not create a separately frozen v10 grader protocol. Those legacy entrypoints must not be relied on for a new provenance-sensitive study. A prospective v10 API and independent review remain required; this operator wrapper is a narrowly scoped mitigation for the calibration path.
