@@ -61,6 +61,27 @@ def verify(protocol_path: Path, model_path: Path, python_exe: Path,
     for relative, expected in lock["task"]["bundle_sha256"].items():
         if sha256(ROOT / relative) != expected:
             raise ValueError(f"locked task SHA-256 mismatch: {relative}")
+    task_workspace = ROOT / TASK_REL / "workspace"
+    git_env = {"PATH": os.environ.get("PATH", "/usr/bin:/bin"), "HOME": "/tmp",
+               "GIT_NO_REPLACE_OBJECTS": "1", "GIT_CONFIG_NOSYSTEM": "1",
+               "GIT_CONFIG_GLOBAL": os.devnull}
+    task_head = subprocess.run(
+        ["git", "-C", str(task_workspace), "rev-parse", "HEAD"],
+        env=git_env, capture_output=True, text=True, check=True,
+    ).stdout.strip()
+    task_status = subprocess.run(
+        ["git", "-C", str(task_workspace), "status", "--porcelain"],
+        env=git_env, capture_output=True, text=True, check=True,
+    ).stdout
+    if task_head != lock["task"]["vare_workspace_base_commit"] or task_status:
+        raise ValueError("candidate workspace Git baseline or cleanliness mismatch")
+    fixed_commit_probe = subprocess.run(
+        ["git", "-C", str(task_workspace), "cat-file", "-e",
+         f"{lock['task']['upstream_fixed_commit']}^{{commit}}"],
+        env=git_env, capture_output=True, check=False,
+    )
+    if fixed_commit_probe.returncode == 0:
+        raise ValueError("known-fix commit is present in the candidate workspace object database")
     license_path = ROOT / lock["task"]["license_provenance_path"]
     if sha256(license_path) != lock["task"]["license_provenance_sha256"]:
         raise ValueError("task license provenance identity mismatch")
@@ -159,9 +180,6 @@ def verify(protocol_path: Path, model_path: Path, python_exe: Path,
         raise ValueError("Colima runtime exceeds frozen CPU or memory cap")
     if not git_source.is_dir() or git_source.is_symlink():
         raise ValueError("pinned upstream Git source must be a real directory")
-    git_env = {"PATH": os.environ.get("PATH", "/usr/bin:/bin"), "HOME": "/tmp",
-               "GIT_NO_REPLACE_OBJECTS": "1", "GIT_CONFIG_NOSYSTEM": "1",
-               "GIT_CONFIG_GLOBAL": os.devnull}
     for revision in (lock["task"]["upstream_base_commit"],
                      lock["task"]["upstream_fixed_commit"]):
         source_check = subprocess.run(
