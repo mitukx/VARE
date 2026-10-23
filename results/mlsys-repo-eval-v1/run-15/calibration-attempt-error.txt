@@ -1,0 +1,5 @@
+Attempt: v10 calibration with source mirror at /Users/user/.cache/vare/source-mirrors/mlx-lm
+Command used DOCKER_CONTEXT=colima and the pinned v10 protocol, but the source mirror HEAD was 0d4d3d04f8ab7ce4a51e7209e8615755a48ba94d rather than required baseline 2af5f7ce8620115bf37fbbddf9817f083118df59.
+Fail-closed error: RepositoryTaskError: source checkout is not the clean pinned baseline.
+No baseline grading arm or known-fix grading arm ran. No model inference ran.
+Corrective action: create a separate detached source worktree at the exact frozen baseline commit before retrying under the same v10 protocol.

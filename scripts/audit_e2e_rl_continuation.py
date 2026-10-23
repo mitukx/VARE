@@ -84,9 +84,16 @@ RUNTIME_PACKAGE_SOURCES = frozenset({
     "src/vare/mlsys_repo_task.py",
     "src/vare/mlxlm_1912_repo_task.py",
     "src/vare/mlxlm_1971_repo_task.py",
+    "src/vare/mlxlm_1971_repo_task_v2.py",
+    "src/vare/mlxlm_1971_repo_task_v3.py",
+    "src/vare/mlxlm_1971_repo_task_v4.py",
+    "src/vare/mlxlm_1971_repo_task_v6.py",
+    "src/vare/mlxlm_1971_repo_task_v7.py",
+    "src/vare/mlxlm_1971_repo_task_v9.py",
     "src/vare/promotion.py",
     "src/vare/promotion_journal.py",
     "src/vare/protocol.py",
+    "src/vare/qwen_patch_contract_v2.py",
     "src/vare/replay.py",
     "src/vare/reward_evidence.py",
     "src/vare/runner.py",
@@ -108,14 +115,14 @@ RUNTIME_PACKAGE_SOURCES = frozenset({
     "src/vare/trusted_evaluation.py",
     "src/vare/trusted_scoring.py",
     "src/vare/types.py",
-    "src/vare/transformers_repo_task.py",
     "src/vare/transformers_49752_repo_task.py",
+    "src/vare/transformers_repo_task.py",
     "src/vare/update_cost_smoke.py",
     "src/vare/verifiers.py",
 })
-# This current runtime inventory is intentionally explicit. Do not derive it
-# from the live tree: older retained campaign inventories remain separately
-# accepted without rewriting their source manifests.
+# This historical 80-file inventory is intentionally explicit. Do not derive
+# it from the current runtime inventory: new runtime files must not invalidate
+# the immediately preceding fully snapshotted campaign.
 PREVIOUS_EXPECTED_SOURCES = frozenset({
     "benchmarks/e2e_rl_continuation_v2/protocol.json",
     "requirements/e2e-rl-real-model-v1.txt",

@@ -71,7 +71,7 @@ LOCKED_IMPLEMENTATION_FILES = frozenset(
 )
 CALIBRATION_INPUT_FILES = LOCKED_IMPLEMENTATION_FILES | frozenset(
     {
-        "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v9.json",
+        "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/protocol-v10.json",
         "benchmarks/mlsys_repo_eval_v1/mlxlm_1904_tool_arguments/task.md",
     }
 )
@@ -227,6 +227,45 @@ def verify_task_prompt(protocol: dict[str, Any], task_path: Path) -> str:
     if actual != expected:
         raise RepositoryTaskError("task prompt hash disagrees with the frozen protocol")
     return actual
+
+
+def read_pinned_source(
+    repo_root: Path, revision: str, relative_path: str, expected_sha256: str
+) -> bytes:
+    """Read a pinned Git blob while ignoring replacement refs and verify bytes."""
+    if not isinstance(revision, str) or not re.fullmatch(r"[0-9a-f]{40}", revision):
+        raise RepositoryTaskError("pinned source identity is malformed")
+    if not isinstance(relative_path, str) or not relative_path:
+        raise RepositoryTaskError("pinned source identity is malformed")
+    source_path = PurePosixPath(relative_path)
+    if (
+        source_path.is_absolute()
+        or ".." in source_path.parts
+        or not isinstance(expected_sha256, str)
+        or not re.fullmatch(r"[0-9a-f]{64}", expected_sha256)
+    ):
+        raise RepositoryTaskError("pinned source identity is malformed")
+    root = repo_root.resolve(strict=True)
+    try:
+        result = subprocess.run(
+            [
+                "git",
+                "--no-replace-objects",
+                "-C",
+                str(root),
+                "show",
+                f"{revision}:{relative_path}",
+            ],
+            check=True,
+            capture_output=True,
+            timeout=10,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise RepositoryTaskError("cannot read the pinned source blob") from exc
+    source = result.stdout
+    if hashlib.sha256(source).hexdigest() != expected_sha256:
+        raise RepositoryTaskError("pinned source SHA-256 mismatch")
+    return source
 
 
 def calibration_accepts(

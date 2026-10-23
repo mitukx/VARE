@@ -1,0 +1,34 @@
+{
+  "classification": [
+    "format_failure",
+    "patch_application_failure",
+    "patch_application_timeout",
+    "application_infrastructure",
+    "grader_wrong_answer",
+    "grader_timeout",
+    "grader_failure",
+    "grader_infrastructure",
+    "verified_success"
+  ],
+  "implementation_sha256": {
+    "scripts/audit_qwen3_4b_mlsys_development_feasibility_v2.py": "7318142557ee6256dfa60cff406ae5ff220f7aa1bb1bceb566a77d5a12aeac5a",
+    "src/vare/qwen_patch_contract_v2.py": "ce7ddbd897d680c648c3441e31c76a70a6301c3b89ee75989327e5a3b03717fb",
+    "tests/test_qwen_patch_contract_v2.py": "171bd5de2ed69580019b60bfaaeea3601bd1fad720369321fa67d30e0dd9ddfa"
+  },
+  "inherits_study": "vare.qwen3-4b-mlsys-development-patch-feasibility.v1",
+  "limitations": [
+    "This versioned contract does not authorize rerunning any task from the v1 study.",
+    "The v1 task cohort has been model-exposed and cannot provide fresh evaluation evidence.",
+    "No model inference or grader re-execution is performed by the retrospective audit."
+  ],
+  "output_contract": {
+    "allow_leading_or_trailing_prose": false,
+    "allow_markdown_fences": false,
+    "diff_count": 1,
+    "entire_response_must_be_diff": true,
+    "hunk_line_counts_must_be_exact": true,
+    "only_candidate_target_path": true
+  },
+  "protocol_id": "vare.qwen3-patch-output-contract.retrospective-v2",
+  "status": "retrospective-and-prospective-contract-only-no-rollouts"
+}
