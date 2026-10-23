@@ -42,6 +42,15 @@ GIT_ENV = {
     "GIT_NO_REPLACE_OBJECTS": "1",
     "GIT_CONFIG_NOSYSTEM": "1",
     "GIT_CONFIG_GLOBAL": os.devnull,
+    "GIT_CONFIG_COUNT": "4",
+    "GIT_CONFIG_KEY_0": "core.hooksPath",
+    "GIT_CONFIG_VALUE_0": os.devnull,
+    "GIT_CONFIG_KEY_1": "core.fsmonitor",
+    "GIT_CONFIG_VALUE_1": "false",
+    "GIT_CONFIG_KEY_2": "core.attributesFile",
+    "GIT_CONFIG_VALUE_2": os.devnull,
+    "GIT_CONFIG_KEY_3": "uploadpack.packObjectsHook",
+    "GIT_CONFIG_VALUE_3": "",
 }
 
 _PINNED_CHILD = """
@@ -106,6 +115,32 @@ def _materialize_sparse_operator_checkout(checkout: Path) -> None:
     )
 
 
+def _initialize_isolated_operator_repository(repository: Path) -> None:
+    """Fetch the pinned commit into fresh Git metadata before materializing it.
+
+    The caller's repository may contain executable checkout filters or local
+    attributes. A fresh bare repository does not inherit either, and the
+    pinned worktree is created there with hooks disabled and replacement refs
+    unavailable.
+    """
+    repository.mkdir(mode=0o700)
+    subprocess.run(
+        ["git", "init", "--bare", "--quiet", str(repository)],
+        env=GIT_ENV, check=True, capture_output=True, timeout=30,
+    )
+    subprocess.run(
+        _git_command(
+            repository, "fetch", "--no-tags", "--no-recurse-submodules",
+            str(ROOT), OPERATOR_COMMIT,
+        ),
+        env=GIT_ENV, check=True, capture_output=True, timeout=120,
+    )
+    subprocess.run(
+        _git_command(repository, "cat-file", "-e", f"{OPERATOR_COMMIT}^{{commit}}"),
+        env=GIT_ENV, check=True, capture_output=True, timeout=30,
+    )
+
+
 def _trusted_v9_protocol() -> dict[str, Any]:
     raw = _git_bytes(V9_COMMIT, V9_PROTOCOL_PATH)
     if hashlib.sha256(raw).hexdigest() != V9_PROTOCOL_SHA256:
@@ -155,6 +190,51 @@ def _open_parent_without_symlinks(path: Path) -> tuple[int, str]:
         raise
 
 
+def _read_regular_file(source: Path, *, max_bytes: int, label: str) -> bytes:
+    """Read a bounded, stable regular file without following a path link."""
+    absolute = _reject_symlink_components(source)
+    parent_fd, name = _open_parent_without_symlinks(absolute)
+    try:
+        descriptor = os.open(
+            name,
+            os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0),
+            dir_fd=parent_fd,
+        )
+    except OSError as exc:
+        os.close(parent_fd)
+        raise ValueError(f"{label} must be a readable regular file") from exc
+    os.close(parent_fd)
+    try:
+        before = os.fstat(descriptor)
+        if not stat.S_ISREG(before.st_mode) or before.st_size > max_bytes:
+            raise ValueError(f"{label} must be a regular file no larger than {max_bytes} bytes")
+        chunks: list[bytes] = []
+        total = 0
+        while True:
+            chunk = os.read(descriptor, min(64 * 1024, max_bytes + 1 - total))
+            if not chunk:
+                break
+            chunks.append(chunk)
+            total += len(chunk)
+            if total > max_bytes:
+                raise ValueError(f"{label} must be a regular file no larger than {max_bytes} bytes")
+        after = os.fstat(descriptor)
+        identity_before = (
+            before.st_dev, before.st_ino, before.st_size,
+            before.st_mtime_ns, before.st_ctime_ns,
+        )
+        identity_after = (
+            after.st_dev, after.st_ino, after.st_size,
+            after.st_mtime_ns, after.st_ctime_ns,
+        )
+        data = b"".join(chunks)
+        if identity_before != identity_after or len(data) != before.st_size:
+            raise ValueError(f"{label} changed while being read")
+        return data
+    finally:
+        os.close(descriptor)
+
+
 def _require_real_directory(path: Path) -> Path:
     absolute = _reject_symlink_components(path)
     parent_fd, name = _open_parent_without_symlinks(absolute)
@@ -178,46 +258,7 @@ def _require_real_directory(path: Path) -> Path:
 
 def _snapshot_patch(source: Path, destination: Path) -> Path:
     """Copy one stable, no-follow patch into the private operator directory."""
-    absolute = _reject_symlink_components(source)
-    parent_fd, name = _open_parent_without_symlinks(absolute)
-    try:
-        descriptor = os.open(
-            name,
-            os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0),
-            dir_fd=parent_fd,
-        )
-    except OSError as exc:
-        os.close(parent_fd)
-        raise ValueError("patch must be a readable regular file without symlinks") from exc
-    os.close(parent_fd)
-    try:
-        before = os.fstat(descriptor)
-        if not stat.S_ISREG(before.st_mode) or before.st_size > 256_000:
-            raise ValueError("patch must be a regular file no larger than 256000 bytes")
-        chunks: list[bytes] = []
-        total = 0
-        while True:
-            chunk = os.read(descriptor, min(64 * 1024, 256_001 - total))
-            if not chunk:
-                break
-            chunks.append(chunk)
-            total += len(chunk)
-            if total > 256_000:
-                raise ValueError("patch must be a regular file no larger than 256000 bytes")
-        after = os.fstat(descriptor)
-        identity_before = (
-            before.st_dev, before.st_ino, before.st_size,
-            before.st_mtime_ns, before.st_ctime_ns,
-        )
-        identity_after = (
-            after.st_dev, after.st_ino, after.st_size,
-            after.st_mtime_ns, after.st_ctime_ns,
-        )
-        data = b"".join(chunks)
-        if identity_before != identity_after or len(data) != before.st_size:
-            raise ValueError("patch changed while being snapshotted")
-    finally:
-        os.close(descriptor)
+    data = _read_regular_file(source, max_bytes=256_000, label="patch")
 
     out_flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
     out_fd = os.open(destination, out_flags, 0o600)
@@ -357,13 +398,10 @@ def _verify_clean_checkout(checkout: Path) -> None:
 
 def verify_v10_protocol() -> dict[str, Any]:
     """Independently verify the v10 manifest and the two historical trust roots."""
-    for path in (PROTOCOL, LOCK):
-        if path.is_symlink() or not path.is_file():
-            raise ValueError("v10 protocol or lock is missing or symlinked")
-    source = PROTOCOL.read_bytes()
+    source = _read_regular_file(PROTOCOL, max_bytes=256_000, label="v10 protocol")
     if hashlib.sha256(source).hexdigest() != PROTOCOL_SHA256:
         raise ValueError("v10 protocol differs from independently pinned bytes")
-    lock_bytes = LOCK.read_bytes()
+    lock_bytes = _read_regular_file(LOCK, max_bytes=256_000, label="v10 lock")
     if hashlib.sha256(lock_bytes).hexdigest() != LOCK_SHA256:
         raise ValueError("v10 lock differs from independently pinned bytes")
     protocol = json.loads(source)
@@ -432,11 +470,13 @@ def run_v10_operation(
             request["patch_path"] = str(snapshot)
             expected_patch_sha256 = hashlib.sha256(snapshot.read_bytes()).hexdigest()
         checkout = private / "trusted-operator"
+        operator_repository = private / "operator-objects.git"
         checkout_created = False
         try:
+            _initialize_isolated_operator_repository(operator_repository)
             subprocess.run(
                 _git_command(
-                    ROOT, "worktree", "add", "--detach", "--no-checkout",
+                    operator_repository, "worktree", "add", "--detach", "--no-checkout",
                     str(checkout), OPERATOR_COMMIT,
                 ),
                 env=GIT_ENV, check=True, capture_output=True, timeout=120,
@@ -475,7 +515,9 @@ def run_v10_operation(
         finally:
             if checkout_created:
                 subprocess.run(
-                    _git_command(ROOT, "worktree", "remove", "--force", str(checkout)),
+                    _git_command(
+                        operator_repository, "worktree", "remove", "--force", str(checkout)
+                    ),
                     env=GIT_ENV, check=True, capture_output=True, timeout=120,
                 )
 

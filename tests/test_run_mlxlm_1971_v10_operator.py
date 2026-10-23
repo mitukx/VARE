@@ -126,9 +126,11 @@ def test_v10_dispatch_uses_pinned_source_and_disables_replace_refs(
         operations.append(command)
         assert kwargs["env"]["GIT_NO_REPLACE_OBJECTS"] == "1"
         if command[:1] == ["git"]:
-            assert "core.hooksPath=/dev/null" in command
-            assert "core.fsmonitor=false" in command
             assert kwargs["env"]["GIT_CONFIG_NOSYSTEM"] == "1"
+            assert kwargs["env"]["GIT_CONFIG_COUNT"] == "4"
+            if "init" not in command:
+                assert "core.hooksPath=/dev/null" in command
+                assert "core.fsmonitor=false" in command
         if command[:1] == ["git"] and "worktree" in command:
             assert kwargs["check"] is True
             if "add" in command:
@@ -158,12 +160,12 @@ def test_v10_dispatch_uses_pinned_source_and_disables_replace_refs(
         source_repo=source if action == "export" else None,
     )
     assert result == _valid_child_report(action)
-    assert len(operations) == 7
-    assert operations[0][-1] == v10.OPERATOR_COMMIT
-    assert "--no-checkout" in operations[0]
-    assert "status" in operations[4]
-    assert operations[5][:3] == [sys.executable, "-I", "-c"]
-    assert "remove" in operations[6]
+    assert len(operations) == 10
+    assert operations[3][-1] == v10.OPERATOR_COMMIT
+    assert "--no-checkout" in operations[3]
+    assert "status" in operations[7]
+    assert operations[8][:3] == [sys.executable, "-I", "-c"]
+    assert "remove" in operations[9]
 
 
 def test_v10_forged_result_is_rejected_and_worktree_removed(
@@ -192,7 +194,7 @@ def test_v10_forged_result_is_rejected_and_worktree_removed(
     monkeypatch.setattr(v10.subprocess, "run", fake_run)
     with pytest.raises(RuntimeError, match="one JSON object"):
         v10.run_v10_operation("grade", tmp_path / "workspace")
-    assert len(calls) == 7
+    assert len(calls) == 10
     assert "remove" in calls[-1]
 
 
@@ -237,7 +239,7 @@ def test_v10_rejects_incomplete_action_specific_evidence(
             action, tmp_path / "workspace",
             source_repo=source if action == "export" else None,
         )
-    assert len(calls) == 7
+    assert len(calls) == 10
     assert "remove" in calls[-1]
 
 
@@ -294,7 +296,7 @@ def test_v10_hook_created_import_package_is_rejected_before_child(
     monkeypatch.setattr(v10.subprocess, "run", fake_run)
     with pytest.raises(ValueError, match="unexpected files"):
         v10.run_v10_operation("grade", tmp_path / "workspace")
-    assert len(calls) == 6
+    assert len(calls) == 9
     assert "remove" in calls[-1]
 
 
@@ -318,6 +320,10 @@ def test_v10_real_post_checkout_hook_is_disabled(tmp_path: Path, monkeypatch) ->
         source = repository / relative
         source.parent.mkdir(parents=True, exist_ok=True)
         source.write_text(content, encoding="utf-8")
+    (repository / ".gitattributes").write_text(
+        f"{v10.PINNED_OPERATOR_SOURCES[0]} filter=vare-marker\n",
+        encoding="utf-8",
+    )
     subprocess.run(["git", "-C", str(repository), "add", "."], check=True)
     subprocess.run(
         ["git", "-C", str(repository), "-c", "user.name=Test", "-c",
@@ -331,6 +337,16 @@ def test_v10_real_post_checkout_hook_is_disabled(tmp_path: Path, monkeypatch) ->
     hook_dir = tmp_path / "hooks"
     hook_dir.mkdir()
     marker = tmp_path / "hook-ran"
+    subprocess.run(
+        ["git", "-C", str(repository), "config", "filter.vare-marker.smudge",
+         f"printf fired > {marker}; cat"],
+        check=True,
+    )
+    subprocess.run(
+        ["git", "-C", str(repository), "config", "uploadpack.packObjectsHook",
+         f"printf fired > {marker}"],
+        check=True,
+    )
     hook = hook_dir / "post-checkout"
     hook.write_text(f"#!/bin/sh\nprintf fired > {marker}\n", encoding="utf-8")
     hook.chmod(0o755)
@@ -375,6 +391,27 @@ def test_v10_patch_fifo_is_rejected_without_blocking(tmp_path: Path) -> None:
     assert result.returncode != 0
     assert "regular file" in result.stderr
     assert not snapshot.exists()
+
+
+@pytest.mark.parametrize("field", ["PROTOCOL", "LOCK"])
+def test_v10_protocol_fifo_is_rejected_without_blocking(
+    field: str, tmp_path: Path
+) -> None:
+    if not hasattr(os, "mkfifo"):
+        pytest.skip("FIFO creation is unavailable on this platform")
+    fifo = tmp_path / "protocol-input"
+    os.mkfifo(fifo)
+    code = (
+        "from pathlib import Path; import sys; "
+        "from scripts import run_mlxlm_1971_v10_operator as op; "
+        "setattr(op, sys.argv[1], Path(sys.argv[2])); op.verify_v10_protocol()"
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", code, field, str(fifo)],
+        cwd=v10.ROOT, capture_output=True, text=True, timeout=2,
+    )
+    assert result.returncode != 0
+    assert "regular file" in result.stderr
 
 
 @pytest.mark.parametrize("field", ["source_repo", "patch_path"])
@@ -452,5 +489,5 @@ def test_v10_rejects_mutated_import_dependency_before_launch(
     monkeypatch.setattr(v10.subprocess, "run", fake_run)
     with pytest.raises(ValueError, match="untrusted operator source|differs from pinned Git"):
         v10.run_v10_operation("grade", tmp_path / "candidate")
-    assert len(commands) == 6
+    assert len(commands) == 9
     assert "remove" in commands[-1]
