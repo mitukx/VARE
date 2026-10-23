@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prospective v10 operator: source-bound MLX-LM #1971 export/grading.
+"""Prospective v11 operator: source-bound MLX-LM #1971 export/grading.
 
 This is a new operator API, not a rewrite of frozen v9. Its trusted parent
 process owns grader outputs; no model inference or qualification is implied.
@@ -21,14 +21,20 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 TASK = ROOT / "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale"
-PROTOCOL = TASK / "protocol-v10.json"
-LOCK = TASK / "protocol-v10.lock.json"
-PROTOCOL_SHA256 = "bc65db13f1a0d1d5dea571cc9ea632b25bb9d0d60b96361b5183656481976dc3"
-LOCK_SHA256 = "09c69a6b87d1265a37772fb5d53bb77c873b02ad45496f343c6968c0442df1f0"
-OPERATOR_COMMIT = "45fd0da592955205e6518c12e9e9b315797541e2"
+PROTOCOL = TASK / "protocol-v11.json"
+LOCK = TASK / "protocol-v11.lock.json"
+PROTOCOL_SHA256 = "b9643c163161ff7332446f3b3a729e3551f2ecc6a1a329038465ae60982181b6"
+LOCK_SHA256 = "bdca66c4765d13e889c20cb4f22f479b027cb35fded2adb7c7daaf64d8b0129a"
+OPERATOR_COMMIT = "8257a4dfe2106055a048ddd4b1520a08c7e4d658"
 V9_COMMIT = "3f12eefd71d1d2213b37e3a174b446cb5155e979"
 V9_PROTOCOL_SHA256 = "aa8fec4c3a3fbba119b83009c7f3c164b762758a5c1593faf3a78f3464678fb2"
 SOURCE_PATH = "scripts/run_attested_mlxlm_1971_v9_calibration.py"
+SPARSE_PATHS = (
+    "scripts",
+    "src/vare",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale",
+    "tests",
+)
 PINNED_OPERATOR_SOURCES = (
     SOURCE_PATH,
     "scripts/attest_mlxlm_1971_v9_current_git.py",
@@ -101,8 +107,7 @@ def _materialize_sparse_operator_checkout(checkout: Path) -> None:
     )
     subprocess.run(
         _git_command(
-            checkout, "sparse-checkout", "set", "scripts", "src/vare",
-            "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale",
+            checkout, "sparse-checkout", "set", *SPARSE_PATHS,
         ),
         env=GIT_ENV, check=True, capture_output=True, timeout=120,
     )
@@ -381,7 +386,7 @@ def _validate_child_report(
             raise RuntimeError("pinned child export identity or provenance is invalid")
         return
 
-    raise RuntimeError("cannot validate evidence for unsupported v10 action")
+    raise RuntimeError("cannot validate evidence for unsupported v11 action")
 
 
 def _verify_clean_checkout(checkout: Path) -> None:
@@ -396,24 +401,31 @@ def _verify_clean_checkout(checkout: Path) -> None:
         raise ValueError("pinned operator worktree contains unexpected files or changes")
 
 
-def verify_v10_protocol() -> dict[str, Any]:
-    """Independently verify the v10 manifest and the two historical trust roots."""
-    source = _read_regular_file(PROTOCOL, max_bytes=256_000, label="v10 protocol")
+def verify_v11_protocol() -> dict[str, Any]:
+    """Verify the v11 manifest and both historical trust roots."""
+    source = _read_regular_file(PROTOCOL, max_bytes=256_000, label="v11 protocol")
     if hashlib.sha256(source).hexdigest() != PROTOCOL_SHA256:
-        raise ValueError("v10 protocol differs from independently pinned bytes")
-    lock_bytes = _read_regular_file(LOCK, max_bytes=256_000, label="v10 lock")
+        raise ValueError("v11 protocol differs from independently pinned bytes")
+    lock_bytes = _read_regular_file(LOCK, max_bytes=256_000, label="v11 lock")
     if hashlib.sha256(lock_bytes).hexdigest() != LOCK_SHA256:
-        raise ValueError("v10 lock differs from independently pinned bytes")
+        raise ValueError("v11 lock differs from independently pinned bytes")
     protocol = json.loads(source)
     lock = json.loads(lock_bytes)
     if (
         lock.get("protocol_id") != protocol.get("protocol_id")
         or lock.get("protocol_sha256") != PROTOCOL_SHA256
         or protocol.get("protocol_id")
+        != "vare.mlsys-repository-task.mlxlm-1971.v11.operator"
+        or protocol.get("supersedes_protocol_id")
         != "vare.mlsys-repository-task.mlxlm-1971.v10.operator"
         or protocol.get("status") != "PROSPECTIVE_OPERATOR_INTERFACE_NOT_EXECUTED"
         or protocol.get("operator_source_commit") != OPERATOR_COMMIT
         or protocol.get("operator_source_path") != SOURCE_PATH
+        or protocol.get("sparse_checkout_paths") != list(SPARSE_PATHS)
+        or protocol.get("required_nested_v9_test_paths") != [
+            "tests/test_mlxlm_1971_calibration_v9.py",
+            "tests/test_mlxlm_1971_repo_task_v9.py",
+        ]
         or protocol.get("reference_v9_source_commit") != V9_COMMIT
         or protocol.get("reference_v9_protocol_sha256") != V9_PROTOCOL_SHA256
         or protocol.get("allowed_actions") != ["export", "grade"]
@@ -422,15 +434,15 @@ def verify_v10_protocol() -> dict[str, Any]:
         or protocol.get("requires_immutable_pinned_operator_worktree") is not True
         or protocol.get("requires_nested_v9_source_attestation") is not True
     ):
-        raise ValueError("v10 operator protocol identity mismatch")
+        raise ValueError("v11 operator protocol identity mismatch")
     _trusted_v9_protocol()
     for relative in PINNED_OPERATOR_SOURCES:
         if not _git_bytes(OPERATOR_COMMIT, relative):
-            raise ValueError(f"pinned v10 operator source missing from Git: {relative}")
+            raise ValueError(f"pinned v11 operator source missing from Git: {relative}")
     return protocol
 
 
-def run_v10_operation(
+def run_v11_operation(
     action: str,
     workspace: Path,
     *,
@@ -439,7 +451,7 @@ def run_v10_operation(
 ) -> dict[str, Any]:
     """Use the historical trusted grader only through pinned source commits."""
     if action not in {"grade", "export"}:
-        raise ValueError("unsupported v10 operation")
+        raise ValueError("unsupported v11 operation")
     if action == "grade" and (source_repo is not None or patch_path is not None):
         raise ValueError("grade cannot receive export-only arguments")
     if action == "export" and source_repo is None:
@@ -454,7 +466,7 @@ def run_v10_operation(
             patch_path = _reject_symlink_components(patch_path)
             if not patch_path.is_file():
                 raise ValueError("patch must be a regular file")
-    verify_v10_protocol()
+    verify_v11_protocol()
     protocol_v9 = _trusted_v9_protocol()
     request: dict[str, str] = {
         "action": action, "workspace": str(workspace),
@@ -463,7 +475,7 @@ def run_v10_operation(
         request["source_repo"] = str(source_repo)
 
     expected_patch_sha256: str | None = None
-    with tempfile.TemporaryDirectory(prefix="vare-v10-operator-") as temporary:
+    with tempfile.TemporaryDirectory(prefix="vare-v11-operator-") as temporary:
         private = Path(temporary)
         if patch_path is not None:
             snapshot = _snapshot_patch(patch_path, private / "candidate.patch")
@@ -500,14 +512,14 @@ def run_v10_operation(
             )
             if result.returncode != 0:
                 raise RuntimeError(
-                    f"pinned v10 operator exited nonzero: {result.returncode}"
+                    f"pinned v11 operator exited nonzero: {result.returncode}"
                 )
             try:
                 report = json.loads(result.stdout)
             except (TypeError, ValueError) as exc:
-                raise RuntimeError("v10 operator did not return one JSON object") from exc
+                raise RuntimeError("v11 operator did not return one JSON object") from exc
             if not isinstance(report, dict):
-                raise RuntimeError("v10 operator returned non-object evidence")
+                raise RuntimeError("v11 operator returned non-object evidence")
             _validate_child_report(
                 action, report, protocol_v9, expected_patch_sha256
             )
@@ -529,7 +541,7 @@ def main() -> int:
     parser.add_argument("--source-repo", type=Path)
     parser.add_argument("--patch", type=Path)
     args = parser.parse_args()
-    print(json.dumps(run_v10_operation(
+    print(json.dumps(run_v11_operation(
         args.action, args.workspace,
         source_repo=args.source_repo, patch_path=args.patch,
     ), sort_keys=True))

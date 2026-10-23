@@ -1,56 +1,41 @@
-# Prospective MLX-LM #1971 v10 operator interface
+# Retired MLX-LM #1971 v10 operator interface
 
-**Status: implemented but not used for new evaluation; review and CI required.**
+**Status: superseded before execution by v11.** The v10 protocol and lock are
+preserved unchanged, and no v10 operation was executed.
 
 This protocol is **distinct from frozen v9**. Do not edit v9 protocols,
 locks, raw calibrations or manifests to make a current checkout look clean.
 The v10 operator contract lives in `protocol-v10.json` and the separate
-SHA-256 lock `protocol-v10.lock.json`. Its protocol bytes are also anchored
-by an independent constant in `scripts/run_mlxlm_1971_v10_operator.py`.
+SHA-256 lock `protocol-v10.lock.json`. During review, two defects were found:
+its pinned source commit used an attestation that inherited executable Git
+configuration, and its sparse checkout omitted test files required by nested
+v9 attestation. The v10 runner was removed from the current tree. Protocol v11
+pins the corrected source and includes the required `tests/` path.
 
-The v10 CLI accepts only `grade` or `export`. It verifies both the operator
-protocol and its separate lock against independent SHA-256 constants, and
-checks the historical v9 protocol's bytes against pinned Git objects with Git
-replacement refs disabled. It also verifies the full three-module Python
-operator import chain against that Git source, rather than trusting only the
-entrypoint file. It creates an ephemeral detached worktree at the known
-operator source commit `45fd0da592955205e6518c12e9e9b315797541e2`,
-verifies the implementation file against its Git blob, and invokes the
-operator in a separate isolated Python process. That pinned operator in
-turn attest-checks the historical v9 grader and runs it from its own pinned
-source commit `3f12eefd71d1d2213b37e3a174b446cb5155e979`.
+The v10 proposal accepted only `grade` or `export`. It verified the operator
+protocol and lock against independent SHA-256 constants, checked v9 protocol
+bytes against pinned Git objects, and verified its three-module Python import
+chain against the pinned source commit
+`45fd0da592955205e6518c12e9e9b315797541e2`. That pinned operator then
+attested the historical v9 grader at
+`3f12eefd71d1d2213b37e3a174b446cb5155e979`. These details describe the
+retired v10 proposal; its runner is no longer present in the current tree.
 
-For a trusted operator (no agent-side grader visibility), after setup:
+Do not use the retired v10 interface for new operations. See
+[`mlxlm-1971-v11-operator.md`](mlxlm-1971-v11-operator.md) for the prospective
+replacement and its source-only nested-checkout regression.
 
-```bash
-python scripts/run_mlxlm_1971_v10_operator.py \
-  --action grade \
-  --workspace /absolute/path/to/staged-candidate
-```
-
-For `--action export`, supply `--source-repo` and an output `--workspace`,
-and optionally `--patch`. Every path must refer to the intended trusted
-runtime location. Keep hidden grader results entirely operator-side.
-
-The operator strips inherited `GIT_*` variables, disables system/global Git
-configuration, and overrides local hook and filesystem-monitor settings for
-each Git call. It adds the detached worktree with `--no-checkout`, selects only
-the `scripts`, `src/vare` and pinned task directories, then materializes those
-paths with `read-tree`; this avoids invoking `post-checkout` before trusted
-source checks. It rejects tracked, untracked, or ignored files in the selected
-checkout before Python starts. Export rejects symlink path components and
-snapshots patch bytes through no-follow, nonblocking directory/file descriptors
-into a private read-only file, rejecting FIFOs and other non-regular inputs.
-Before returning a child result, the parent requires the complete
-action-specific evidence schema, the pinned task/protocol/grader identities,
-the exact six grade case IDs, and an aggregate result consistent with those
-cases. Export patch identity must match the private snapshot hash.
+The proposal also documented Git configuration suppression, no-checkout sparse
+materialization, strict child evidence, and no-follow patch snapshots. Review
+found the attestation subprocess did not receive the sanitized Git environment
+and the nested sparse checkout omitted required test files. The replacement
+protocol v11 retains the controls and closes those two gaps.
 
 **Non-claims and limitations:**
 - No model, Docker grader, new calibration, SFT, GRPO or held-out comparison
   ran to generate this code.
-- This is a prospective trusted **operator-facing** v10 interface, *not*
-  a replacement of old `vare.mlxlm_1971_repo_task.export_candidate` and
+- The v10 implementation was prospective and operator-facing, *not* a
+  replacement of old `vare.mlxlm_1971_repo_task.export_candidate` and
   `grade_workspace` public methods. Those legacy public v9 functions are
   still vulnerable to coherent working-tree substitution if invoked directly.
 - The bootstrap v10 CLI itself must be delivered from a trusted source:
