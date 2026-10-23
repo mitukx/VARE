@@ -24,8 +24,10 @@ from vare.agent_task_contract import load_agent_task  # noqa: E402
 MODEL_REPOSITORY = 'Qwen/Qwen2.5-0.5B-Instruct'
 _LOCAL_IMAGE_ID = re.compile(r'sha256:[0-9a-f]{64}\Z')
 _REPOSITORY_IMAGE_DIGEST = re.compile(r'[a-z0-9][a-z0-9._:/-]*@sha256:[0-9a-f]{64}\Z')
+_HEADER_COMMENT_LINE = re.compile(rb'^\s*(?:#|//|/\*|\*|<!--)')
+_PROTECTED_HEADER_TERM = re.compile(rb'(?i)\b(?:copyright|spdx-license-identifier|licen[cs](?:e|ed|ing))\b')
 TOOLS = [
-    {'type': 'function', 'function': {'name': 'list_files', 'description': 'List the exact source files available in this task workspace.', 'parameters': {'type': 'object', 'properties': {}, 'additionalProperties': False}}},
+    {'type': 'function', 'function': {'name': 'list_files', 'description': 'List the exact source files available in this task workspace. Optionally provide one exact allowlisted path to list only that file.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}}, 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'read_file', 'description': 'Read up to 80 inclusive lines from one UTF-8 task source file. Provide its repository-relative path and, for a later section, optional start_line and end_line. If omitted, reads the first 80 lines. A workspace-prefixed path is mapped only if it ends in one exact allowlisted source path.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'start_line': {'type': 'integer'}, 'end_line': {'type': 'integer'}}, 'required': ['path'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'search_text', 'description': 'Search a literal string in the allowed task source files.', 'parameters': {'type': 'object', 'properties': {'query': {'type': 'string'}}, 'required': ['query'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'apply_patch', 'description': 'Apply a small unified diff to existing task source files. Keep the patch minimal; paths must be allowlisted.', 'parameters': {'type': 'object', 'properties': {'patch': {'type': 'string'}}, 'required': ['patch'], 'additionalProperties': False}}},
@@ -179,6 +181,16 @@ def attempt_configured_edit(workspace: Path, text: str, edit_format: str, allowe
             'malformed_diff' if edit_format == 'unified_diff' else 'malformed_file'
         )
         return {'applied': False, 'format_parse_failure': reason}
+    originals: dict[str, bytes] = {}
+    protected_headers: dict[str, tuple[bytes, ...]] = {}
+    for name in parsed.paths:
+        if name not in allowed:
+            continue
+        path = workspace / name
+        if path.is_file() and not path.is_symlink():
+            original = path.read_bytes()
+            originals[name] = original
+            protected_headers[name] = protected_header_lines(original)
     applied = apply_parsed_edit(workspace, parsed, allowed)
     if not applied.applied:
         return {
@@ -187,7 +199,27 @@ def attempt_configured_edit(workspace: Path, text: str, edit_format: str, allowe
             'error': applied.error or 'edit was not applied',
             'paths': list(applied.paths),
         }
+    if any(
+        protected_headers[name] != protected_header_lines((workspace / name).read_bytes())
+        for name in originals
+    ):
+        for name, original in originals.items():
+            (workspace / name).write_bytes(original)
+        return {
+            'applied': False,
+            'format_parse_failure': None,
+            'error': 'edit changed a protected copyright or license header',
+            'paths': list(applied.paths),
+        }
     return {'applied': True, 'paths': list(applied.paths), 'format_parse_failure': None}
+
+
+def protected_header_lines(source: bytes) -> tuple[bytes, ...]:
+    """Return copyright/license comment lines in the conventional file header."""
+    return tuple(
+        line for line in source.splitlines(keepends=True)[:80]
+        if _HEADER_COMMENT_LINE.match(line) and _PROTECTED_HEADER_TERM.search(line)
+    )
 
 
 def sha256(path: Path) -> str:
@@ -212,6 +244,16 @@ def resolve_allowed_path(raw_path: str, allowed: set[str]) -> str | None:
     normalized = raw_path.replace('\\', '/').lstrip('./')
     matches = [path for path in allowed if normalized == path or normalized.endswith('/' + path)]
     return matches[0] if len(matches) == 1 else None
+
+
+def list_allowed_files(allowed: set[str], raw_path: str | None = None) -> list[str] | dict[str, Any]:
+    """List all candidate-visible files or filter by one exact allowed path."""
+    if raw_path is None:
+        return sorted(allowed)
+    path = raw_path.replace('\\', '/')
+    if path not in allowed:
+        return {'error': 'path is not allowed', 'allowed_paths': sorted(allowed)}
+    return [path]
 
 
 def no_tool_retry_reminder(raw: str, *, edit_format: str, allowed_paths: list[str],
@@ -596,7 +638,7 @@ def main() -> int:
         for match, name, arguments in parsed_calls:
             try:
                 if name == 'list_files':
-                    result: Any = sorted(allowed)
+                    result: Any = list_allowed_files(allowed, arguments.get('path'))
                 elif name == 'read_file':
                     raw_path = arguments.get('path', '')
                     path = resolve_allowed_path(raw_path, allowed)

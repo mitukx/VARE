@@ -1,5 +1,9 @@
+import subprocess
+
 from scripts.run_local_agent import (
+    attempt_configured_edit,
     build_initial_messages,
+    list_allowed_files,
     normalize_tool_call_format,
     parse_tool_call_blocks,
     read_file_range,
@@ -102,9 +106,8 @@ def test_recovers_exact_duplicate_qwen_wrapper_and_parses_nested_arguments():
     ]
 
 
-def test_recovers_exact_qwen_wrapper_from_retained_trace_and_rejects_bad_arguments():
-    # Verbatim framing shape from the #1910 Qwen2.5 trace. The extra path on
-    # list_files is intentionally invalid under the declared tool schema.
+def test_recovers_exact_qwen_wrapper_from_retained_trace_and_filters_allowed_files():
+    # Verbatim framing shape from the #1910 and #45852 Qwen2.5 traces.
     raw = '<tool_call>\n{{"name": "list_files", "arguments": {"path": "qwen3_coder.py"}}}\n</tool_call>'
     tools = tools_for("unified_diff")
     names = {item["function"]["name"] for item in tools}
@@ -114,9 +117,17 @@ def test_recovers_exact_qwen_wrapper_from_retained_trace_and_rejects_bad_argumen
 
     assert recovered is True
     assert len(blocks) == 1
-    assert parsed == []
-    assert len(failures) == 1
-    assert "declared schema" in failures[0][1]
+    assert failures == []
+    assert [(name, args) for _, name, args in parsed] == [
+        ("list_files", {"path": "qwen3_coder.py"}),
+    ]
+    assert list_allowed_files({"src/module.py", "test_public.py"}, "src/module.py") == ["src/module.py"]
+    assert list_allowed_files({"src/module.py", "test_public.py"}, "qwen3_coder.py") == {
+        "error": "path is not allowed",
+        "allowed_paths": ["src/module.py", "test_public.py"],
+    }
+    assert list_allowed_files({"src/module.py"}, "./src/module.py")["error"] == "path is not allowed"
+    assert list_allowed_files({"src/module.py", "test_public.py"}) == ["src/module.py", "test_public.py"]
 
 
 def test_recovers_exact_qwen_wrapper_from_retained_trace_when_schema_is_valid():
@@ -188,6 +199,70 @@ def test_read_file_returns_bounded_inclusive_ranges(tmp_path):
     assert middle_page["content"].splitlines() == [f"line {i}" for i in range(81, 161)]
     assert too_large["error"] == "read_file range must contain at most 80 positive-numbered lines"
     assert "exceeds file length" in beyond_eof["error"]
+
+
+def test_candidate_edit_cannot_change_copyright_or_license_header(tmp_path):
+    source = tmp_path / "src/module.py"
+    source.parent.mkdir()
+    original = (
+        b"# Copyright 2026 Example\n"
+        b"# Licensed under the Apache License, Version 2.0\n"
+        b"\n"
+        b"def value():\n"
+        b"    return 1\n"
+    )
+    source.write_bytes(original)
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    patch = (
+        "diff --git a/src/module.py b/src/module.py\n"
+        "--- a/src/module.py\n"
+        "+++ b/src/module.py\n"
+        "@@ -1,5 +1,5 @@\n"
+        " # Copyright 2026 Example\n"
+        "-# Licensed under the Apache License, Version 2.0\n"
+        "+# Licensed under the MIT License\n"
+        " \n"
+        " def value():\n"
+        "     return 1\n"
+    )
+
+    result = attempt_configured_edit(
+        tmp_path, patch, "unified_diff", {"src/module.py"},
+    )
+
+    assert result["applied"] is False
+    assert result["error"] == "edit changed a protected copyright or license header"
+    assert source.read_bytes() == original
+
+
+def test_candidate_edit_preserves_header_while_changing_source(tmp_path):
+    source = tmp_path / "src/module.py"
+    source.parent.mkdir()
+    source.write_bytes(
+        b"# Copyright 2026 Example\n"
+        b"# Licensed under the Apache License, Version 2.0\n"
+        b"\n"
+        b"def value():\n"
+        b"    return 1\n"
+    )
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    patch = (
+        "diff --git a/src/module.py b/src/module.py\n"
+        "--- a/src/module.py\n"
+        "+++ b/src/module.py\n"
+        "@@ -3,3 +3,3 @@\n"
+        " \n"
+        " def value():\n"
+        "-    return 1\n"
+        "+    return 2\n"
+    )
+
+    result = attempt_configured_edit(
+        tmp_path, patch, "unified_diff", {"src/module.py"},
+    )
+
+    assert result["applied"] is True
+    assert source.read_bytes().endswith(b"    return 2\n")
 
 
 def test_line_range_arguments_require_positive_json_integers():
