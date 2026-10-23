@@ -22,9 +22,11 @@ from vare.agent_edit_format import ParseFailure, apply_parsed_edit, parse_submis
 from vare.agent_task_contract import load_agent_task  # noqa: E402
 
 MODEL_REPOSITORY = 'Qwen/Qwen2.5-0.5B-Instruct'
+_LOCAL_IMAGE_ID = re.compile(r'sha256:[0-9a-f]{64}\Z')
+_REPOSITORY_IMAGE_DIGEST = re.compile(r'[a-z0-9][a-z0-9._:/-]*@sha256:[0-9a-f]{64}\Z')
 TOOLS = [
     {'type': 'function', 'function': {'name': 'list_files', 'description': 'List the exact source files available in this task workspace.', 'parameters': {'type': 'object', 'properties': {}, 'additionalProperties': False}}},
-    {'type': 'function', 'function': {'name': 'read_file', 'description': 'Read one UTF-8 task source file. Provide its repository-relative path; a workspace-prefixed path is mapped only if it ends in one exact allowlisted source path.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}}, 'required': ['path'], 'additionalProperties': False}}},
+    {'type': 'function', 'function': {'name': 'read_file', 'description': 'Read up to 80 inclusive lines from one UTF-8 task source file. Provide its repository-relative path and, for a later section, optional start_line and end_line. If omitted, reads the first 80 lines. A workspace-prefixed path is mapped only if it ends in one exact allowlisted source path.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}, 'start_line': {'type': 'integer'}, 'end_line': {'type': 'integer'}}, 'required': ['path'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'search_text', 'description': 'Search a literal string in the allowed task source files.', 'parameters': {'type': 'object', 'properties': {'query': {'type': 'string'}}, 'required': ['query'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'apply_patch', 'description': 'Apply a small unified diff to existing task source files. Keep the patch minimal; paths must be allowlisted.', 'parameters': {'type': 'object', 'properties': {'patch': {'type': 'string'}}, 'required': ['patch'], 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'check_syntax', 'description': 'Parse one allowed Python file for syntax errors without executing it.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}}, 'required': ['path'], 'additionalProperties': False}}},
@@ -113,10 +115,11 @@ def run_public_tests(workspace: Path, image: str, expected_test_hash: str) -> di
         return {'passed': False, 'error': 'public test file is missing or changed'}
     from vare.container_isolation import DockerIsolationRunner, IsolationLimits
 
-    limits = IsolationLimits(image=image, timeout_s=45, memory_mb=512, cpus=1.0,
-                             pids_limit=32, max_output_bytes=20_000)
     started = time.perf_counter()
     try:
+        pinned_image = resolve_pinned_public_test_image(image)
+        limits = IsolationLimits(image=pinned_image, timeout_s=45, memory_mb=512, cpus=1.0,
+                                 pids_limit=32, max_output_bytes=20_000)
         result = asyncio.run(DockerIsolationRunner().run_candidate(
             limits, allowed_workspace_root=workspace.parent, workspace=workspace,
             command=['python', '/workspace/test_public.py'],
@@ -128,6 +131,34 @@ def run_public_tests(workspace: Path, image: str, expected_test_hash: str) -> di
             'stdout': result.stdout, 'stderr': result.stderr,
             'elapsed_seconds': round(time.perf_counter() - started, 3),
             'isolation': 'docker-network-none-read-only-root-only-workspace-mount'}
+
+
+def resolve_pinned_public_test_image(image: str) -> str:
+    """Map an immutable local image ID to a repository digest accepted by Docker isolation."""
+    if _LOCAL_IMAGE_ID.fullmatch(image) is None:
+        return image
+    inspected = subprocess.run(
+        ['docker', 'image', 'inspect', image, '--format', '{{json .RepoDigests}}'],
+        capture_output=True, text=True, check=False, timeout=10,
+    )
+    if inspected.returncode != 0:
+        raise ValueError('local public-test image ID is unavailable')
+    try:
+        repository_digests = json.loads(inspected.stdout)
+    except json.JSONDecodeError as exc:
+        raise ValueError('Docker returned invalid repository-digest metadata') from exc
+    if not isinstance(repository_digests, list):
+        raise ValueError('local public-test image has no repository digest')
+    for digest in sorted(repository_digests):
+        if not isinstance(digest, str) or _REPOSITORY_IMAGE_DIGEST.fullmatch(digest) is None:
+            continue
+        verified = subprocess.run(
+            ['docker', 'image', 'inspect', digest, '--format', '{{.Id}}'],
+            capture_output=True, text=True, check=False, timeout=10,
+        )
+        if verified.returncode == 0 and verified.stdout.strip() == image:
+            return digest
+    raise ValueError('local public-test image ID does not resolve to an exact repository digest')
 
 
 def refresh_public_tests_after_edit(
@@ -232,7 +263,12 @@ def normalize_tool_call_format(raw: str, tool_names: set[str]) -> tuple[str, boo
                 payload, end = json.JSONDecoder().raw_decode(content[1:])
             except json.JSONDecodeError:
                 return match.group(0)
-            if re.fullmatch(r'\s+\}\}', content[1:][end:]) is None:
+            # The malformed generations observed in the retained trace add
+            # exactly one brace at each edge: ``{{<json-object>}}``. Accept
+            # only that paired framing error. Requiring two trailing braces
+            # here misses the actual model output and sends it to json.loads
+            # with the extra leading brace still present.
+            if re.fullmatch(r'(?:\}\}?\s*|\s+\}\})', content[1:][end:]) is None:
                 return match.group(0)
             if (not isinstance(payload, dict) or set(payload) != {'name', 'arguments'}
                     or payload.get('name') not in tool_names
@@ -301,7 +337,29 @@ def parse_tool_call_payload(raw_call: str, tools: list[dict[str, Any]]) -> tuple
             raise ValueError(f'tool argument {key!r} must be a string')
         if expected_type == 'object' and not isinstance(value, dict):
             raise ValueError(f'tool argument {key!r} must be an object')
+        if expected_type == 'integer' and (type(value) is not int or value < 1):
+            raise ValueError(f'tool argument {key!r} must be a positive integer')
     return name, arguments
+
+
+def read_file_range(path: Path, display_path: str, start_line: int = 1,
+                    end_line: int | None = None) -> dict[str, Any]:
+    """Read a bounded inclusive line range without flooding the model context."""
+    lines = path.read_text(encoding='utf-8').splitlines()
+    requested_end = start_line + 79 if end_line is None else end_line
+    if start_line < 1 or requested_end < start_line or requested_end - start_line >= 80:
+        return {'error': 'read_file range must contain at most 80 positive-numbered lines'}
+    if start_line > len(lines):
+        return {'error': f'start_line exceeds file length ({len(lines)} lines)'}
+    actual_end = min(requested_end, len(lines))
+    return {
+        'resolved_path': display_path,
+        'start_line': start_line,
+        'end_line': actual_end,
+        'total_lines': len(lines),
+        'truncated': actual_end < len(lines),
+        'content': '\n'.join(lines[start_line - 1:actual_end]),
+    }
 
 
 def parse_tool_call_blocks(
@@ -416,11 +474,12 @@ def main() -> int:
     system = (
         'You are an offline code repair agent. Solve only the task below. The workspace contains only the task source files. '
         + edit_sentence
-        + 'Allowed source paths: ' + ', '.join(sorted(editable)) + '. First call list_files, then read the exact source path named in the task. '
+        + 'Allowed source paths: ' + ', '.join(sorted(editable)) + '. First call list_files. Then search for the relevant symbol and read its source with an exact path and a bounded line range. '
         + 'Do not invent paths. The workspace is already prepared; never ask for a workspace path, more information, or permission. '
         + 'The external grader is hidden. Do not describe a fix without applying it. Call finish only after changing a source file. '
         + ('After changing source, call run_public_tests; read its output and repair failures. The test file is immutable. '
            'Call finish only after the public smoke test passes. ' if args.public_test_image else '')
+        + 'For large files, use search_text to find the relevant symbol and read_file with start_line and end_line; each read is limited to 80 lines. '
         + 'You have a limited tool budget; each assistant turn before finish must call a tool. '
         'TASK:\n' + task_text.split('## Reproduce', 1)[0].rstrip()
     )
@@ -536,8 +595,11 @@ def main() -> int:
                     if path is None:
                         result = {'error': 'path is not allowed', 'allowed_paths': sorted(allowed)}
                     else:
-                        result = {'resolved_path': path,
-                                  'content': (workspace / path).read_text(encoding='utf-8')}
+                        result = read_file_range(
+                            workspace / path, path,
+                            arguments.get('start_line', 1),
+                            arguments.get('end_line'),
+                        )
                 elif name == 'search_text':
                     query = arguments.get('query', '')
                     if not query:

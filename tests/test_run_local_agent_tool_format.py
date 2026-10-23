@@ -1,6 +1,8 @@
 from scripts.run_local_agent import (
     normalize_tool_call_format,
     parse_tool_call_blocks,
+    read_file_range,
+    resolve_pinned_public_test_image,
     refresh_public_tests_after_edit,
     tools_for,
 )
@@ -75,6 +77,39 @@ def test_recovers_exact_duplicate_qwen_wrapper_and_parses_nested_arguments():
     ]
 
 
+def test_recovers_exact_qwen_wrapper_from_retained_trace_and_rejects_bad_arguments():
+    # Verbatim framing shape from the #1910 Qwen2.5 trace. The extra path on
+    # list_files is intentionally invalid under the declared tool schema.
+    raw = '<tool_call>\n{{"name": "list_files", "arguments": {"path": "qwen3_coder.py"}}}\n</tool_call>'
+    tools = tools_for("unified_diff")
+    names = {item["function"]["name"] for item in tools}
+
+    normalized, recovered = normalize_tool_call_format(raw, names)
+    blocks, parsed, failures = parse_tool_call_blocks(normalized, tools)
+
+    assert recovered is True
+    assert len(blocks) == 1
+    assert parsed == []
+    assert len(failures) == 1
+    assert "declared schema" in failures[0][1]
+
+
+def test_recovers_exact_qwen_wrapper_from_retained_trace_when_schema_is_valid():
+    raw = '<tool_call>\n{{"name": "read_file", "arguments": {"path": "qwen3_coder.py"}}}\n</tool_call>'
+    tools = tools_for("unified_diff")
+    names = {item["function"]["name"] for item in tools}
+
+    normalized, recovered = normalize_tool_call_format(raw, names)
+    blocks, parsed, failures = parse_tool_call_blocks(normalized, tools)
+
+    assert recovered is True
+    assert len(blocks) == 1
+    assert [(name, arguments) for _, name, arguments in parsed] == [
+        ("read_file", {"path": "qwen3_coder.py"}),
+    ]
+    assert failures == []
+
+
 def test_parses_nested_json_in_native_tool_call_blocks():
     raw = '<tool_call>{"name":"read_file","arguments":{"path":"src/module.py"}}</tool_call>'
     blocks, parsed, failures = parse_tool_call_blocks(raw, tools_for("unified_diff"))
@@ -109,6 +144,78 @@ def test_rejects_tool_arguments_outside_the_declared_schema():
     assert parsed == []
     assert len(failures) == 1
     assert "declared schema" in failures[0][1]
+
+
+def test_read_file_returns_bounded_inclusive_ranges(tmp_path):
+    source = tmp_path / "large.py"
+    source.write_text("".join(f"line {index}\n" for index in range(1, 202)))
+
+    first_page = read_file_range(source, "large.py")
+    middle_page = read_file_range(source, "large.py", 81, 160)
+    too_large = read_file_range(source, "large.py", 1, 81)
+    beyond_eof = read_file_range(source, "large.py", 202, 205)
+
+    assert first_page["start_line"] == 1
+    assert first_page["end_line"] == 80
+    assert first_page["truncated"] is True
+    assert first_page["content"].splitlines()[0] == "line 1"
+    assert first_page["content"].splitlines()[-1] == "line 80"
+    assert middle_page["content"].splitlines() == [f"line {i}" for i in range(81, 161)]
+    assert too_large["error"] == "read_file range must contain at most 80 positive-numbered lines"
+    assert "exceeds file length" in beyond_eof["error"]
+
+
+def test_line_range_arguments_require_positive_json_integers():
+    tools = tools_for("unified_diff")
+    blocks, parsed, failures = parse_tool_call_blocks(
+        '<tool_call>{"name":"read_file","arguments":{"path":"large.py","start_line":true}}</tool_call>',
+        tools,
+    )
+    assert len(blocks) == 1
+    assert parsed == []
+    assert "positive integer" in failures[0][1]
+
+
+def test_resolves_local_image_id_to_a_digest_that_maps_back_to_the_same_image(monkeypatch):
+    image_id = "sha256:" + "b" * 64
+    digest = "vare-test@sha256:" + "a" * 64
+    calls = []
+
+    class Result:
+        returncode = 0
+
+        def __init__(self, stdout):
+            self.stdout = stdout
+
+    def fake_run(command, **kwargs):
+        calls.append((command, kwargs))
+        return Result('["' + digest + '"]' if len(calls) == 1 else image_id + "\n")
+
+    monkeypatch.setattr("scripts.run_local_agent.subprocess.run", fake_run)
+
+    assert resolve_pinned_public_test_image(image_id) == digest
+    assert calls[0][0] == [
+        "docker", "image", "inspect", image_id, "--format", "{{json .RepoDigests}}",
+    ]
+    assert calls[1][0] == [
+        "docker", "image", "inspect", digest, "--format", "{{.Id}}",
+    ]
+    assert all(call[1]["timeout"] == 10 for call in calls)
+
+
+def test_refuses_local_image_id_without_an_exact_repository_digest(monkeypatch):
+    class Result:
+        returncode = 0
+        stdout = '["vare-test@sha256:' + "a" * 64 + '"]'
+
+    monkeypatch.setattr("scripts.run_local_agent.subprocess.run", lambda *_args, **_kwargs: Result())
+
+    try:
+        resolve_pinned_public_test_image("sha256:" + "b" * 64)
+    except ValueError as error:
+        assert "does not resolve" in str(error)
+    else:
+        raise AssertionError("mismatched image ID and repository digest were accepted")
 
 
 def test_verified_success_requires_public_test_and_independent_hidden_grade():

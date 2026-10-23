@@ -33,6 +33,8 @@ def is_safe_regular_file(path: Path, root: Path) -> bool:
 
 def workspace_archive_entry(root: Path, relative: str) -> tuple[Path, str] | None:
     parts = Path(relative).parts
+    if len(parts) >= 3 and parts[0] in {'greedy', 'sampled'} and parts[1] == 'workspace':
+        return root / parts[0] / 'workspace.tar', Path(*parts[2:]).as_posix()
     if len(parts) < 4 or parts[0] not in {'greedy', 'sampled'}:
         return None
     if parts[1:3] != ('candidate-work-root', 'workspace'):
@@ -40,13 +42,39 @@ def workspace_archive_entry(root: Path, relative: str) -> tuple[Path, str] | Non
     return root / parts[0] / 'workspace.tar', Path(*parts[3:]).as_posix()
 
 
+def manifest_entries(manifest: dict) -> tuple[list[tuple[str, dict]], list[str]]:
+    """Read both the original path-map and the later sorted-entry manifest."""
+    files = manifest.get('files', {})
+    if isinstance(files, dict):
+        return list(files.items()), []
+    if not isinstance(files, list):
+        return [], ['files must be an object or array']
+    entries: list[tuple[str, dict]] = []
+    errors: list[str] = []
+    seen: set[str] = set()
+    for index, item in enumerate(files):
+        if not isinstance(item, dict):
+            errors.append(f'files[{index}] must be an object')
+            continue
+        relative = item.get('path')
+        if not isinstance(relative, str) or not relative:
+            errors.append(f'files[{index}].path must be a nonempty string')
+            continue
+        if relative in seen:
+            errors.append(f'duplicate manifest path: {relative}')
+            continue
+        seen.add(relative)
+        entries.append((relative, item))
+    return entries, errors
+
+
 def verify(evidence: Path) -> tuple[int, list[str]]:
     root = evidence.resolve()
     manifest_path = root / 'evidence-manifest.json'
     manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
-    failures: list[str] = []
+    entries, failures = manifest_entries(manifest)
     verified = 0
-    for relative, expected in manifest.get('files', {}).items():
+    for relative, expected in entries:
         relative_path = Path(relative)
         if relative_path.is_absolute() or '..' in relative_path.parts:
             failures.append(relative)
@@ -71,7 +99,14 @@ def verify(evidence: Path) -> tuple[int, list[str]]:
                                         actual = digest_stream(archive_stream)
                     except (KeyError, tarfile.TarError, OSError):
                         actual = None
-        if actual != (expected.get('sha256'), expected.get('bytes')):
+        expected_size = expected.get('bytes')
+        expected_hash = expected.get('sha256')
+        if (type(expected_size) is not int or expected_size < 0
+                or not isinstance(expected_hash, str)
+                or len(expected_hash) != 64
+                or any(character not in '0123456789abcdef' for character in expected_hash)):
+            failures.append(relative)
+        elif actual != (expected_hash, expected_size):
             failures.append(relative)
         else:
             verified += 1
