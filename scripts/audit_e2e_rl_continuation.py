@@ -39,6 +39,7 @@ RUNTIME_PACKAGE_SOURCES = frozenset({
     "src/vare/_public.py",
     "src/vare/answer_scoring.py",
     "src/vare/agent_edit_format.py",
+    "src/vare/agent_structured_edit.py",
     "src/vare/agent_task_contract.py",
     "src/vare/attestation.py",
     "src/vare/blob_budget.py",
