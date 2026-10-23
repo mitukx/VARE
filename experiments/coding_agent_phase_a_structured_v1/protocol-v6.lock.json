@@ -1,0 +1,32 @@
+{
+  "base_head": "ee765ea6426de289a12a1197634bdbde78f2fd8a",
+  "baseline_manifests": {
+    "transformers-49116-tokenizer-routing-v2": {
+      "grader_adapter_sha256": "0f7324d4745e9ddf1096f91d04e14197d844d86628ac1e442d11acd302808e60",
+      "path": "benchmarks/mlsys_repo_eval_v4/transformers_49116_tokenizer_routing_v2/baseline-source-manifest-v1.json",
+      "sha256": "22ca3634e6c217f8aba9062e77e9cf7208ffe526e3005b27b625df382dfd6340",
+      "workspace_snapshot_sha256": "f04c92f68dca4ba2126481b65764d37dde449a174da483a334d73f77b1369896"
+    },
+    "transformers-49412-fusion-registration-idempotence-v2": {
+      "grader_adapter_sha256": "a3fcd796c770714419f8ab4b5a1de44b11782a9c865aa8f3a560ea154b887e75",
+      "path": "benchmarks/mlsys_repo_eval_v4/transformers_49412_fusion_idempotence_v2/baseline-source-manifest-v1.json",
+      "sha256": "fe9dc0745b8a74203912fc58eb179e13015b8b29a9888914622698920db236c5",
+      "workspace_snapshot_sha256": "bc8436187e5e8013ef85e3ded88367febd925c7e0709b8917a2032489683c475"
+    }
+  },
+  "container_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "implementation_sha256": {
+    "scripts/grade_transformers_phase_a_v1.py": "71598902440ae09bfaa4d8edf2b44f5668d77a14d4db61c41f83962738a76da7"
+  },
+  "note": "v2/v3 runner snapshots were not recovered from inspected Git history or retained local VARE caches; no reconstruction is claimed. v6 adds grader implementation self-binding and broader hidden task semantics.",
+  "protocol_id": "vare-coding-agent-phase-a-integrity-v6",
+  "protocol_sha256": "380231605ece1ae7ffdeb63e199dc89507a24bbbee33bea3652a794cccaa588c",
+  "schema_version": 1,
+  "test_sha256": {
+    "tests/test_grade_transformers_phase_a.py": "94a6cfc44555088a8efedf511633914960ae14a76dae4eaae63f020ff6c50d9a"
+  },
+  "tokenizer_registry_expected": {
+    "path": "benchmarks/mlsys_repo_eval_v4/transformers_49116_tokenizer_routing_v2/tokenizer-registry-expected-v1.json",
+    "sha256": "1842a3d3da446e263edda6ecb1a94b671d04b21849996bd04eedca47cf7ef934"
+  }
+}

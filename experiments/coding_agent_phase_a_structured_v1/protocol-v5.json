@@ -1,0 +1,55 @@
+{
+  "acceptance": "All baseline/known-fix calibration cases preserve prior grader semantics; every workspace alteration and alternate image is rejected before grade_calls; evidence includes exact image, manifest, protocol, adapter and target hashes.",
+  "candidate_workspace_policy": {
+    "allowed_mutation": "exactly one task target source file; all other file bytes, file modes, directories and directory modes must match the pinned baseline",
+    "baseline_manifest": "complete file and directory inventory with SHA-256 and mode",
+    "candidate_result_files": "forbidden in candidate workspace and grading output path must be outside candidate workspace",
+    "staging": "construct graded subject from verified captured bytes; do not copy arbitrary workspace contents"
+  },
+  "container_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "created_utc": "2026-10-21",
+  "heldout_access": "none",
+  "model_inference": "not run",
+  "policy_updates": "not run",
+  "protocol_id": "vare-coding-agent-phase-a-integrity-v5",
+  "red_team_suite": [
+    "add sitecustomize.py",
+    "alter an imported Transformers source module",
+    "add a malicious symlink",
+    "replace the target with a symlink",
+    "modify a non-target dependency",
+    "add hidden .git state",
+    "add a forged grade-result JSON",
+    "remove a baseline file",
+    "add an unexpected executable or file",
+    "change a pinned image to a different digest-pinned reference"
+  ],
+  "schema_version": 1,
+  "scope": "Security and provenance calibration of the existing two Development graders only; no agent inference or learning.",
+  "tasks": {
+    "transformers-49116-tokenizer-routing-v2": {
+      "baseline_manifest": "benchmarks/mlsys_repo_eval_v4/transformers_49116_tokenizer_routing_v2/baseline-source-manifest-v1.json",
+      "baseline_manifest_sha256": "22ca3634e6c217f8aba9062e77e9cf7208ffe526e3005b27b625df382dfd6340",
+      "candidate_visible_files": [
+        "test_public.py",
+        "src/transformers/models/auto/tokenization_auto.py"
+      ],
+      "grader_adapter_sha256": "d26eb216435e3de1f7bddb380ef83d81616f8c841e956416f647114c450ad3f4",
+      "source_revision": "07338b6c74a578868368e6e549dea83414e4b8cb",
+      "target_path": "src/transformers/models/auto/tokenization_auto.py",
+      "workspace_snapshot_sha256": "f04c92f68dca4ba2126481b65764d37dde449a174da483a334d73f77b1369896"
+    },
+    "transformers-49412-fusion-registration-idempotence-v2": {
+      "baseline_manifest": "benchmarks/mlsys_repo_eval_v4/transformers_49412_fusion_idempotence_v2/baseline-source-manifest-v1.json",
+      "baseline_manifest_sha256": "fe9dc0745b8a74203912fc58eb179e13015b8b29a9888914622698920db236c5",
+      "candidate_visible_files": [
+        "test_public.py",
+        "src/transformers/fusion_mapping.py"
+      ],
+      "grader_adapter_sha256": "09209be2486a795be30ddd5d753834e5422cd09794a2dd944838f10c1af1c26a",
+      "source_revision": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+      "target_path": "src/transformers/fusion_mapping.py",
+      "workspace_snapshot_sha256": "bc8436187e5e8013ef85e3ded88367febd925c7e0709b8917a2032489683c475"
+    }
+  }
+}

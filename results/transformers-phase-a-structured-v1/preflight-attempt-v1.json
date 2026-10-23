@@ -1,0 +1,12 @@
+{
+  "attempted_task": "transformers-49116-tokenizer-routing",
+  "candidate_patch_created": false,
+  "error": "run_local_agent rejected the task because task.json did not allow exactly one test_public.py; task source contract included only the editable target.",
+  "generation_started": false,
+  "model_weights_loaded": false,
+  "protocol_id": "vare-coding-agent-phase-a-structured-v1",
+  "resolution": "Preserved the original v1 task contract and created new versioned task contracts containing test_public.py as a readable but non-editable file; protocol v2 freezes these contracts.",
+  "rollout_count": 0,
+  "seed": 101,
+  "status": "preflight_aborted_before_model_load"
+}

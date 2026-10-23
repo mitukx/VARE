@@ -1,0 +1,32 @@
+{
+  "base_head": "eef2b9c29195e8cf4118f9f1a4fea221832791db",
+  "baseline_manifests": {
+    "transformers-49116-tokenizer-routing-v2": {
+      "grader_adapter_sha256": "8bc2769384317e9c94a111238c84b204f62e23e972b5d4eb29cb7e1530c6e796",
+      "path": "benchmarks/mlsys_repo_eval_v4/transformers_49116_tokenizer_routing_v2/baseline-source-manifest-v1.json",
+      "sha256": "22ca3634e6c217f8aba9062e77e9cf7208ffe526e3005b27b625df382dfd6340",
+      "workspace_snapshot_sha256": "f04c92f68dca4ba2126481b65764d37dde449a174da483a334d73f77b1369896"
+    },
+    "transformers-49412-fusion-registration-idempotence-v2": {
+      "grader_adapter_sha256": "a3fcd796c770714419f8ab4b5a1de44b11782a9c865aa8f3a560ea154b887e75",
+      "path": "benchmarks/mlsys_repo_eval_v4/transformers_49412_fusion_idempotence_v2/baseline-source-manifest-v1.json",
+      "sha256": "fe9dc0745b8a74203912fc58eb179e13015b8b29a9888914622698920db236c5",
+      "workspace_snapshot_sha256": "bc8436187e5e8013ef85e3ded88367febd925c7e0709b8917a2032489683c475"
+    }
+  },
+  "container_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "implementation_sha256": {
+    "scripts/grade_transformers_phase_a_v1.py": "8572b17653c26de7b9bf8ae7e1289cdaf0b669b8cc420f5a825c1b60438f5882"
+  },
+  "note": "v2/v3 runner snapshots were not recovered from inspected Git history or retained local VARE caches; no reconstruction is claimed. v7 adds fail-closed rejection of post-definition mutations to tokenizer runtime registries.",
+  "protocol_id": "vare-coding-agent-phase-a-integrity-v7",
+  "protocol_sha256": "eee325a414af59bd5d5c27d00ecba5a77779d7098ac017626396db640e43e9d3",
+  "schema_version": 1,
+  "test_sha256": {
+    "tests/test_grade_transformers_phase_a.py": "6afa75729dbfe64adc7ae48a24053905b03d7c082a82ed2610e18698bbdb0add"
+  },
+  "tokenizer_registry_expected": {
+    "path": "benchmarks/mlsys_repo_eval_v4/transformers_49116_tokenizer_routing_v2/tokenizer-registry-expected-v1.json",
+    "sha256": "1842a3d3da446e263edda6ecb1a94b671d04b21849996bd04eedca47cf7ef934"
+  }
+}

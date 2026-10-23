@@ -741,20 +741,28 @@ def test_import_precompute_does_not_pass_a_two_x_gate(tmp_path: Path) -> None:
     assert all(
         pair.baseline_s is not None and pair.baseline_s > 0.5 for pair in report.pairs
     )
-    assert report.mean_adjusted_ratio is not None
-    assert report.ci95_low_adjusted_ratio is not None
-    assert report.ci95_high_adjusted_ratio is not None
-    assert report.mean_adjusted_difference_s == pytest.approx(report.mean_difference_s)
-    for pair in report.pairs:
-        assert set(pair.order.split("-")) == {"baseline", "candidate", "overhead"}
-        assert pair.overhead_s is not None and 0 < pair.overhead_s < pair.candidate_s
-        assert pair.adjusted_ratio is not None
-        assert pair.adjusted_difference_s == pytest.approx(pair.difference_s)
     decision = two_x_speedup_decision(report)
     assert decision["success"] is False
     if report.workload_sufficient:
+        assert report.mean_adjusted_ratio is not None
+        assert report.ci95_low_adjusted_ratio is not None
+        assert report.ci95_high_adjusted_ratio is not None
+        assert report.mean_adjusted_difference_s == pytest.approx(report.mean_difference_s)
+        for pair in report.pairs:
+            assert set(pair.order.split("-")) == {"baseline", "candidate", "overhead"}
+            assert pair.overhead_s is not None and 0 < pair.overhead_s < pair.candidate_s
+            assert pair.adjusted_ratio is not None
+            assert pair.adjusted_difference_s == pytest.approx(pair.difference_s)
         assert decision["reason"] == "below_threshold"
     else:
+        # An empty-control-limited run cannot produce an adjusted performance
+        # estimate; retain the fail-closed result instead of requiring CI
+        # hardware to manufacture enough workload to cross the estimate gate.
+        assert report.mean_adjusted_ratio is None
+        assert report.ci95_low_adjusted_ratio is None
+        assert report.ci95_high_adjusted_ratio is None
+        assert report.mean_adjusted_difference_s is None
+        assert all(pair.adjusted_ratio is None for pair in report.pairs)
         assert decision["reason"] == "workload_below_empty_control"
 
 

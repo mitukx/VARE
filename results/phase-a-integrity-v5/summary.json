@@ -1,0 +1,77 @@
+{
+  "artifacts": {
+    "benchmarks/mlsys_repo_eval_v4/transformers_49116_tokenizer_routing_v2/baseline-source-manifest-v1.json": "22ca3634e6c217f8aba9062e77e9cf7208ffe526e3005b27b625df382dfd6340",
+    "benchmarks/mlsys_repo_eval_v4/transformers_49412_fusion_idempotence_v2/baseline-source-manifest-v1.json": "fe9dc0745b8a74203912fc58eb179e13015b8b29a9888914622698920db236c5",
+    "experiments/coding_agent_phase_a_structured_v1/integrity-v5-report.md": "f302493eabf4d66df96b64c8a2c9864d6f74bd6d10c207d27a461bb97ac1c8d4",
+    "experiments/coding_agent_phase_a_structured_v1/protocol-v5.json": "355b84c548e85299cc846e1da6dc4d9dda95403f16da492211d782f3ce5149ef",
+    "experiments/coding_agent_phase_a_structured_v1/protocol-v5.lock.json": "affd0c1b042fac274f2c0e00c87102a249882177ac1e19b7668c9c1335f7628e",
+    "results/phase-a-integrity-v5/calibration/attempt-1-invalid-label/tokenizer-fixed-tree-labeled-baseline.json": "bfc4de02848f9dcbc4e6455cd7d80be5c0553cd06b1ba6618244b011aadd327c",
+    "results/phase-a-integrity-v5/calibration/run-2/fusion-baseline.grade.json": "a95d9b28acbf65a32dd0f2dbbfa6233d5fae3c7d888e489d10a91ca46a4111ee",
+    "results/phase-a-integrity-v5/calibration/run-2/fusion-known-fix.grade.json": "89f0cdd3bdf0266936619af34fe200fac8de63d3e32ff2fcd9a0d101bf475693",
+    "results/phase-a-integrity-v5/calibration/run-2/tokenizer-baseline.grade.json": "baaf616c94bcb96ecdb66d6c618b5e334b649f949c07ebb04f3279ed3b94f95a",
+    "results/phase-a-integrity-v5/calibration/run-2/tokenizer-known-fix.grade.json": "d6105d458362ebd478f0bfff6d6a5f074c134b2dc75238ebe2e2d94af080988a",
+    "results/phase-a-integrity-v5/calibration/tokenizer-known-fix.grade.json": "0052fbced8d0148c3e49cb1e0b263948591377d42ac6e4987a143dd7af173deb",
+    "results/phase-a-integrity-v5/red-team/pytest.stdout.txt": "a4ba55c7ec7daeede2ecfea3dda9a793665ee142066911215af4f033a9e8412a",
+    "results/phase-a-integrity-v5/red-team/related-tests.stdout.txt": "6997ffb705c1c5fa984efec27d8164c9d96401110464c8e386ecce809f88569c",
+    "scripts/grade_transformers_phase_a_v1.py": "518d43c001bff30ebaf8ea7bcc60bad427c54e0513fa78301ec3ac44d00676d1",
+    "tests/test_grade_transformers_phase_a.py": "f9c54af67dd2143f31e770279ceabae289c24046b248eb40a48a50b903690705"
+  },
+  "baseline_manifests": {
+    "benchmarks/mlsys_repo_eval_v4/transformers_49116_tokenizer_routing_v2/baseline-source-manifest-v1.json": "22ca3634e6c217f8aba9062e77e9cf7208ffe526e3005b27b625df382dfd6340",
+    "benchmarks/mlsys_repo_eval_v4/transformers_49412_fusion_idempotence_v2/baseline-source-manifest-v1.json": "fe9dc0745b8a74203912fc58eb179e13015b8b29a9888914622698920db236c5"
+  },
+  "calibration": {
+    "transformers-49116-tokenizer-routing-v2": {
+      "base_revision": "07338b6c74a578868368e6e549dea83414e4b8cb",
+      "baseline_failure": "wrong_output",
+      "baseline_passed": false,
+      "baseline_target_sha256": "831ae31ec8ab6dd6c5224ea42d0c508d515a8314005064eb594a715f835a6f61",
+      "baseline_wall_s": 3.441666249964386,
+      "fixed_revision": "462bf5a50f6434e9610513b34537a892967ccd84",
+      "known_fix_passed": true,
+      "known_fix_target_sha256": "89d301092f223af0c17fd813451dfd93f344282e51a151cf00604d7647036957",
+      "known_fix_wall_s": 3.1670927919590666
+    },
+    "transformers-49412-fusion-registration-idempotence-v2": {
+      "base_revision": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+      "baseline_failure": "wrong_output",
+      "baseline_passed": false,
+      "baseline_target_sha256": "9a05ab8ccc0ab4756526bcb76c05099a8ec3f1b634c617c620305d1a81cc2f0c",
+      "baseline_wall_s": 3.447355791972236,
+      "fixed_revision": "527725cace0b038a0ac8ab738e921f118bb2668a",
+      "known_fix_passed": true,
+      "known_fix_target_sha256": "af053f2c2eaae2c744778df465002db73e99054dc059e82e394f43c1dca0b608",
+      "known_fix_wall_s": 3.423426540983762
+    }
+  },
+  "calibration_pass_criteria": {
+    "all_red_team_tests_passed": true,
+    "both_baselines_fail_wrong_output": true,
+    "both_known_fixes_pass": true,
+    "implementation_and_test_hashes_match_lock": true,
+    "related_isolation_suites_passed": true
+  },
+  "calibration_passed": true,
+  "grading_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "grading_image_config_id": "sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "heldout_access": false,
+  "historical_runner_recovery": "not found in 12 locally reachable runner revisions or inspected retained VARE caches; unreachable Git object search incomplete; no reconstruction claimed",
+  "model_inference": false,
+  "policy_updates": false,
+  "pre_change_commit": "ee765ea6426de289a12a1197634bdbde78f2fd8a",
+  "protocol_id": "vare-coding-agent-phase-a-integrity-v5",
+  "protocol_lock_sha256": "affd0c1b042fac274f2c0e00c87102a249882177ac1e19b7668c9c1335f7628e",
+  "protocol_sha256": "355b84c548e85299cc846e1da6dc4d9dda95403f16da492211d782f3ce5149ef",
+  "red_team_tests": 28,
+  "related_tests": 90,
+  "runtime": {
+    "architecture": "aarch64",
+    "colima": "0.10.3",
+    "docker_client": "29.9.1",
+    "docker_server": "29.5.2",
+    "machine": "Apple M1 Pro",
+    "memory_limit_mb": 1900,
+    "timeout_s": 60,
+    "unified_memory_bytes": 34359738368
+  }
+}

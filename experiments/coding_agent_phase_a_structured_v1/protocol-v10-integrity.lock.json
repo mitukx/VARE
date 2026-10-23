@@ -1,0 +1,29 @@
+{
+  "base_head": "5a85fa015eefeafa945eefff1fd1d1439698fe5c",
+  "baseline_manifests": {
+    "transformers-49116-tokenizer-routing-v2": {
+      "grader_adapter_sha256": "8bc2769384317e9c94a111238c84b204f62e23e972b5d4eb29cb7e1530c6e796",
+      "path": "benchmarks/mlsys_repo_eval_v4/transformers_49116_tokenizer_routing_v2/baseline-source-manifest-v1.json",
+      "sha256": "22ca3634e6c217f8aba9062e77e9cf7208ffe526e3005b27b625df382dfd6340",
+      "workspace_snapshot_sha256": "f04c92f68dca4ba2126481b65764d37dde449a174da483a334d73f77b1369896"
+    }
+  },
+  "container_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "implementation_sha256": {
+    "benchmarks/mlsys_repo_eval_v4/transformers_49116_tokenizer_routing_v2_grader_v10/grader_adapter.py": "0876441adc89ea8d64ee64af278a06ebaf5db80e85057065b3e90bb5a851577b",
+    "scripts/grade_transformers_phase_a_integrity_v10.py": "3b02c080db441d695d59df38f6d3a28d3b71a1143d9537ff5b77e56a05d617c3",
+    "scripts/grade_transformers_phase_a_v1.py": "8572b17653c26de7b9bf8ae7e1289cdaf0b669b8cc420f5a825c1b60438f5882",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/isolated_candidate.py": "8d0fbef1bb44c788dc983a814c2178c7c5a2e716fbfcc0f912f64885fe8fdccf"
+  },
+  "protocol_id": "vare-coding-agent-phase-a-integrity-v10",
+  "protocol_sha256": "9fb9e2ff79c3446ea0d029b2f8a7bf7d776364c110b23ba1d574746cb0eace9f",
+  "schema_version": 1,
+  "test_sha256": {
+    "tests/test_grade_transformers_phase_a_integrity_v10.py": "2fe485c54a3f8aa1fe4894cecb2fce18359e84bbdd06d882b499a4c375edaa55"
+  },
+  "tokenizer_registry_expected": {
+    "path": "benchmarks/mlsys_repo_eval_v4/transformers_49116_tokenizer_routing_v2/tokenizer-registry-expected-v1.json",
+    "sha256": "1842a3d3da446e263edda6ecb1a94b671d04b21849996bd04eedca47cf7ef934"
+  }
+}

@@ -1,0 +1,42 @@
+.......................................                                  [100%]
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_grade_transformers_phase_a.py::test_frozen_protocol_and_complete_baseline_manifests_are_hash_pinned
+PASSED tests/test_grade_transformers_phase_a.py::test_running_grader_must_match_the_frozen_implementation_hash
+PASSED tests/test_grade_transformers_phase_a.py::test_one_target_change_is_captured_for_clean_staging
+PASSED tests/test_grade_transformers_phase_a.py::test_tokenizer_runtime_registry_mutations_are_rejected[TOKENIZER_MAPPING_NAMES.pop('bert')\n]
+PASSED tests/test_grade_transformers_phase_a.py::test_tokenizer_runtime_registry_mutations_are_rejected[TOKENIZER_MAPPING_NAMES['bert'] = None\n]
+PASSED tests/test_grade_transformers_phase_a.py::test_tokenizer_runtime_registry_mutations_are_rejected[registry = TOKENIZER_MAPPING_NAMES\nregistry.pop('bert')\n]
+PASSED tests/test_grade_transformers_phase_a.py::test_tokenizer_runtime_registry_mutations_are_rejected[MODELS_WITH_INCORRECT_HUB_TOKENIZER_CLASS.discard('bert')\n]
+PASSED tests/test_grade_transformers_phase_a.py::test_tokenizer_registry_initializers_are_allowed
+PASSED tests/test_grade_transformers_phase_a.py::test_candidate_workspace_tampering_fails_closed[sitecustomize]
+PASSED tests/test_grade_transformers_phase_a.py::test_candidate_workspace_tampering_fails_closed[imported_module]
+PASSED tests/test_grade_transformers_phase_a.py::test_candidate_workspace_tampering_fails_closed[malicious_symlink]
+PASSED tests/test_grade_transformers_phase_a.py::test_candidate_workspace_tampering_fails_closed[target_symlink]
+PASSED tests/test_grade_transformers_phase_a.py::test_candidate_workspace_tampering_fails_closed[hardlink]
+PASSED tests/test_grade_transformers_phase_a.py::test_candidate_workspace_tampering_fails_closed[forged_grade]
+PASSED tests/test_grade_transformers_phase_a.py::test_candidate_workspace_tampering_fails_closed[hidden_git]
+PASSED tests/test_grade_transformers_phase_a.py::test_candidate_workspace_tampering_fails_closed[missing_file]
+PASSED tests/test_grade_transformers_phase_a.py::test_candidate_workspace_tampering_fails_closed[extra_executable]
+PASSED tests/test_grade_transformers_phase_a.py::test_candidate_workspace_tampering_fails_closed[extra_directory]
+PASSED tests/test_grade_transformers_phase_a.py::test_mode_change_is_rejected_even_when_source_bytes_match
+PASSED tests/test_grade_transformers_phase_a.py::test_grade_rejects_tampered_workspace_before_calling_candidate
+PASSED tests/test_grade_transformers_phase_a.py::test_full_grade_path_rejects_red_team_workspace_before_execution[sitecustomize]
+PASSED tests/test_grade_transformers_phase_a.py::test_full_grade_path_rejects_red_team_workspace_before_execution[imported_module]
+PASSED tests/test_grade_transformers_phase_a.py::test_full_grade_path_rejects_red_team_workspace_before_execution[malicious_symlink]
+PASSED tests/test_grade_transformers_phase_a.py::test_full_grade_path_rejects_red_team_workspace_before_execution[target_symlink]
+PASSED tests/test_grade_transformers_phase_a.py::test_full_grade_path_rejects_red_team_workspace_before_execution[hardlink]
+PASSED tests/test_grade_transformers_phase_a.py::test_full_grade_path_rejects_red_team_workspace_before_execution[forged_grade]
+PASSED tests/test_grade_transformers_phase_a.py::test_full_grade_path_rejects_red_team_workspace_before_execution[hidden_git]
+PASSED tests/test_grade_transformers_phase_a.py::test_full_grade_path_rejects_red_team_workspace_before_execution[missing_file]
+PASSED tests/test_grade_transformers_phase_a.py::test_full_grade_path_rejects_red_team_workspace_before_execution[extra_executable]
+PASSED tests/test_grade_transformers_phase_a.py::test_full_grade_path_rejects_red_team_workspace_before_execution[extra_directory]
+PASSED tests/test_grade_transformers_phase_a.py::test_other_digest_pinned_image_is_rejected_before_candidate_call
+PASSED tests/test_grade_transformers_phase_a.py::test_full_grade_path_rejects_alternate_image_before_candidate_execution
+PASSED tests/test_grade_transformers_phase_a.py::test_frozen_image_inspection_records_manifest_and_config_digest
+PASSED tests/test_grade_transformers_phase_a.py::test_candidate_root_symlink_is_rejected
+PASSED tests/test_grade_transformers_phase_a_integrity_v8.py::test_hashlib_and_json_monkeypatch_cannot_forge_registry_comparison
+PASSED tests/test_grade_transformers_phase_a_integrity_v8.py::test_v8_protocol_and_implementation_identities_are_locked
+PASSED tests/test_grade_transformers_phase_a_integrity_v8.py::test_v8_refuses_other_or_fresh_task_ids
+PASSED tests/test_grade_transformers_phase_a_integrity_v8.py::test_v8_dispatches_to_the_pinned_phase_a_grader_before_container_startup
+PASSED tests/test_grade_transformers_phase_a_integrity_v8.py::test_reused_grader_cannot_exceed_task_resource_limits

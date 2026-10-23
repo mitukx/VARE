@@ -17,7 +17,7 @@ import re
 import subprocess
 from typing import Mapping, Sequence
 
-EDIT_FORMATS = ("unified_diff", "whole_file")
+EDIT_FORMATS = ("unified_diff", "whole_file", "structured")
 OUTCOMES = ("no_tool_call", "malformed_edit", "edit_applied_but_wrong", "timeout", "pass")
 _TIMEOUT_STOPS = frozenset({"wall_time_exhausted", "token_budget_exhausted"})
 _FENCE = re.compile(r"```([^\n`]*)\n(.*?)```", re.DOTALL)
@@ -66,13 +66,15 @@ class ApplyResult:
 
 def require_edit_format(value: str) -> str:
     if value not in EDIT_FORMATS:
-        raise EditFormatError("edit_format must be unified_diff or whole_file")
+        raise EditFormatError("edit_format must be unified_diff, whole_file, or structured")
     return value
 
 
 def parse_submission(text: str, *, edit_format: str) -> ParsedEdit | ParseFailure:
     """Parse one configured format. The other format is a format failure."""
     require_edit_format(edit_format)
+    if edit_format == "structured":
+        return ParseFailure(edit_format, "no_edit")
     if not isinstance(text, str) or not text.strip():
         return ParseFailure(edit_format, "no_edit")
     normalized = text.replace("\r\n", "\n").replace("\r", "\n")
