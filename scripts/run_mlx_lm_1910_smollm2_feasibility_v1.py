@@ -43,6 +43,8 @@ def verify(protocol_path: Path, model_path: Path, python_exe: Path,
         raise ValueError("protocol is not frozen before inference")
     if lock.get("protocol_id") != "mlsys-repo-task-mlx-lm-1910-smollm2-feasibility-v1":
         raise ValueError("unexpected protocol identity")
+    if lock["task"].get("exposure") != "DEVELOPMENT_ONLY":
+        raise ValueError("task exposure must remain Development-only")
     ancestor = subprocess.run(
         ["git", "-C", str(ROOT), "merge-base", "--is-ancestor",
          lock["implementation"]["commit"], "HEAD"], check=False,
@@ -59,6 +61,18 @@ def verify(protocol_path: Path, model_path: Path, python_exe: Path,
     for relative, expected in lock["task"]["bundle_sha256"].items():
         if sha256(ROOT / relative) != expected:
             raise ValueError(f"locked task SHA-256 mismatch: {relative}")
+    license_path = ROOT / lock["task"]["license_provenance_path"]
+    if sha256(license_path) != lock["task"]["license_provenance_sha256"]:
+        raise ValueError("task license provenance identity mismatch")
+    prior_exposure_path = ROOT / lock["task"]["prior_exposure_manifest_path"]
+    if sha256(prior_exposure_path) != lock["task"]["prior_exposure_manifest_sha256"]:
+        raise ValueError("prior Development exposure manifest identity mismatch")
+    prior_exposure = json.loads(prior_exposure_path.read_text(encoding="utf-8"))
+    for item in prior_exposure["files"]:
+        path = ROOT / item["path"]
+        if (not path.is_file() or path.stat().st_size != item["size_bytes"]
+                or sha256(path) != item["sha256"]):
+            raise ValueError(f"prior exposure evidence changed: {item['path']}")
 
     calibration_path = ROOT / lock["grader"]["calibration_path"]
     if sha256(calibration_path) != lock["grader"]["calibration_sha256"]:
