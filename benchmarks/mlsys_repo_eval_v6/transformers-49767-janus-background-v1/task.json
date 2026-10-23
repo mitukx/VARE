@@ -1,0 +1,35 @@
+{
+  "grader": {
+    "adapter": "scripts/grade_transformers_fresh_dev_v6.py",
+    "visibility": "hidden"
+  },
+  "limits": {
+    "cpus": 2,
+    "memory_mb": 1900,
+    "pids": 32,
+    "timeout_s": 120
+  },
+  "metadata": {
+    "family": "image-preprocessing-configuration",
+    "license": "Apache-2.0",
+    "pack": "mlsys_repo_eval_v6",
+    "split": "development",
+    "task_type": "correctness"
+  },
+  "prompt": "Janus image preprocessing should derive its default padding background from the resolved image mean, including class defaults, while preserving an explicitly supplied color. The PIL and torchvision paths should use consistent configuration semantics.",
+  "schema": "vare-repository-task-v1",
+  "source": {
+    "base_revision": "849fa754e2dd24f5dd49d05f61ff40b1abc2fd36",
+    "baseline_target_sha256": "6cee8de8716b32825da9ea34d67f5806f1083d6cc7ddb0824c530ef4153d610d",
+    "baseline_workspace_sha256": "a95f2b7716db0d655dd2331e27afffcbbdc08203af05919ddb191e8a9220c95a",
+    "calibration_revision": "a3c7fcf3608e2a045d8ae1df6947de8c4ae60b3f",
+    "editable_files": [
+      "src/transformers/models/janus/image_processing_janus.py"
+    ],
+    "fixed_revision": "a3c7fcf3608e2a045d8ae1df6947de8c4ae60b3f",
+    "git_history_exported": false,
+    "repository": "huggingface/transformers"
+  },
+  "task_id": "transformers-49767-janus-background-v1",
+  "title": "Derive Janus background color from resolved image mean"
+}

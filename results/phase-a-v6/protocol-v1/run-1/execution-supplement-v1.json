@@ -1,0 +1,70 @@
+{
+  "agent_limits": {
+    "edit_format": "structured",
+    "hidden_grading": "host-side independent v6 grader in a separate execution boundary after each rollout",
+    "max_context_tokens": 6144,
+    "max_new_tokens_per_turn": 384,
+    "max_no_tool_retries": 2,
+    "max_total_new_tokens": 2048,
+    "max_turns": 12,
+    "public_test_memory_mb": 1900,
+    "public_tests": "run immutable public test functions in the network-disabled candidate container after every applied edit",
+    "resource_enforcement": "run_local_agent checks available memory and swap before model load and each turn, enforces the per-turn MLX peak, and checks the shared absolute study deadline between generations",
+    "shared_deadline_argument": "--study-deadline-epoch; every rollout in this frozen study must receive the same start_epoch + maximum_total_wall_seconds deadline",
+    "wall_seconds_per_rollout": 600
+  },
+  "backend": "mlx",
+  "container_image_id": "sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": "",
+    "DOCKER_CONTEXT": "colima",
+    "HF_HUB_OFFLINE": "1",
+    "OMP_NUM_THREADS": "4",
+    "TRANSFORMERS_OFFLINE": "1"
+  },
+  "grader_policy": "independent v7 host grader invoked after the agent process exits",
+  "grading_image": "vare/transformers-phase-a-arm64:1@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "instruction": "Please implement the requested repository change using the available tools. Run the public tests, inspect the final diff, and finish when the repair is ready.",
+  "instruction_sha256": "84630d71e4c68ec51eea1b159221981927d41cd762802a9015ef917e9dfa6a45",
+  "model_repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+  "model_revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+  "network_policy": "candidate tests run in frozen Docker image with network disabled",
+  "protocol_sha256": "77ea73f6bd2faf9e8394f6cf285859a1b8dc9f76975a3a33e2791d1c90e4ab94",
+  "resource_limits": {
+    "maximum_mlx_peak_bytes_per_turn": 17179869184,
+    "maximum_swap_used_bytes": 7516192768,
+    "maximum_total_wall_seconds": 7200,
+    "minimum_available_memory_bytes": 4294967296,
+    "minimum_free_swap_bytes": 536870912,
+    "stop_on_first_safety_limit": true
+  },
+  "rollout_order": [
+    {
+      "condition": "greedy",
+      "do_sample": false,
+      "seeds": [
+        0
+      ]
+    },
+    {
+      "condition": "sampled",
+      "do_sample": true,
+      "seeds": [
+        101,
+        202
+      ],
+      "temperature": 0.3,
+      "top_k": 20,
+      "top_p": 0.9
+    }
+  ],
+  "runner_sha256": "39d6a419b87f3c955a0d586381c0356c7d0005b48e99463982bf1a89f4faa33d",
+  "schema_version": 1,
+  "supplements_protocol": "vare-qwen3-4b-coding-agent-development-v6-2026-10-21",
+  "task_ids_in_order": [
+    "transformers-49315-watermark-repeat-v1",
+    "transformers-49515-rope-setter-v1",
+    "transformers-49731-generation-device-type-v1",
+    "transformers-49767-janus-background-v1"
+  ]
+}

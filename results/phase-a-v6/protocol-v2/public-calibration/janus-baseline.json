@@ -1,0 +1,11 @@
+{
+  "elapsed_seconds": 3.944,
+  "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+  "kind": "baseline",
+  "passed": false,
+  "returncode": 1,
+  "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/workspace/test_public.py\", line 9, in test_background_uses_resolved_image_mean\n    assert processor.background_color == expected\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+  "stdout": "",
+  "task_id": "transformers-49767-janus-background-v1",
+  "test_sha256": "00faa0abc0e8d9cce647376efe84c7b618fbc5bda5ec29c1a172c98b08cdc956"
+}

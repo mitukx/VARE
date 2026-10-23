@@ -1,0 +1,89 @@
+{
+  "candidate_container_result_count": 6,
+  "candidate_container_results": [
+    {
+      "agent_json": "transformers-49515-rope-setter-v1/greedy-0/agent.json",
+      "agent_json_sha256": "7c37cabd587f2c129b79caaea38b2b143487adb58a9fbd89478d9a056926ea7a",
+      "classification": "container_launch_failure",
+      "elapsed_seconds": 0.046,
+      "failure_signature": "Docker bind source path does not exist",
+      "returncode": 125,
+      "rollout_id": "greedy-0",
+      "task_id": "transformers-49515-rope-setter-v1",
+      "test_function_executed": false
+    },
+    {
+      "agent_json": "transformers-49515-rope-setter-v1/sampled-101/agent.json",
+      "agent_json_sha256": "8e63ccf8d67e0b62ebc845af496a124ee9cf54b04729b65b9c4d16cbbf0f83b7",
+      "classification": "container_launch_failure",
+      "elapsed_seconds": 0.097,
+      "failure_signature": "Docker bind source path does not exist",
+      "returncode": 125,
+      "rollout_id": "sampled-101",
+      "task_id": "transformers-49515-rope-setter-v1",
+      "test_function_executed": false
+    },
+    {
+      "agent_json": "transformers-49515-rope-setter-v1/sampled-202/agent.json",
+      "agent_json_sha256": "fbcf6a289f9315a36bb5f5d8384bb19d6a5763a2502ee09be513a2bdf41b81cf",
+      "classification": "container_launch_failure",
+      "elapsed_seconds": 0.097,
+      "failure_signature": "Docker bind source path does not exist",
+      "returncode": 125,
+      "rollout_id": "sampled-202",
+      "task_id": "transformers-49515-rope-setter-v1",
+      "test_function_executed": false
+    },
+    {
+      "agent_json": "transformers-49731-generation-device-type-v1/greedy-0/agent.json",
+      "agent_json_sha256": "eaee7428e971fc5bf5dad9cfbca233263ae39d9b9f54fd77dc38d0ecbdf9d8f3",
+      "classification": "container_launch_failure",
+      "elapsed_seconds": 0.095,
+      "failure_signature": "Docker bind source path does not exist",
+      "returncode": 125,
+      "rollout_id": "greedy-0",
+      "task_id": "transformers-49731-generation-device-type-v1",
+      "test_function_executed": false
+    },
+    {
+      "agent_json": "transformers-49731-generation-device-type-v1/sampled-101/agent.json",
+      "agent_json_sha256": "52f5acf0df722ced00b924a87a4993cb322acf55dc10d436d45f73ce72cfe2f0",
+      "classification": "container_launch_failure",
+      "elapsed_seconds": 0.097,
+      "failure_signature": "Docker bind source path does not exist",
+      "returncode": 125,
+      "rollout_id": "sampled-101",
+      "task_id": "transformers-49731-generation-device-type-v1",
+      "test_function_executed": false
+    },
+    {
+      "agent_json": "transformers-49731-generation-device-type-v1/sampled-202/agent.json",
+      "agent_json_sha256": "30ffed9385f8a646a1a104288ad775562a8bed235800dd55b211468c13c0c9bb",
+      "classification": "container_launch_failure",
+      "elapsed_seconds": 0.098,
+      "failure_signature": "Docker bind source path does not exist",
+      "returncode": 125,
+      "rollout_id": "sampled-202",
+      "task_id": "transformers-49731-generation-device-type-v1",
+      "test_function_executed": false
+    }
+  ],
+  "classification": "container_launch_failure",
+  "correction_id": "vare.phase-a-v6.public-test-classification.correction.v1",
+  "historical_raw_records_modified": false,
+  "historical_report_modified": false,
+  "independent_grader_outcomes_changed": false,
+  "learning_decision": "NO-GO",
+  "limitation": "The one controller automatic-test event has no serialized candidate-container result; it is not classified as a timeout or as a candidate assertion result.",
+  "observed_failure_signature": "Docker rejected the Colima bind mount because the host temporary workspace path was not visible.",
+  "recorded_public_test_attempt_events": 7,
+  "source_protocol_id": "vare-qwen3-4b-coding-agent-development-v6-2026-10-21",
+  "source_report_sha256": "6971ef657e7cfc65572997e5389b7ee2c239c644c3de7e2e650e2f71b3143572",
+  "source_run": "results/phase-a-v6/protocol-v1/run-2",
+  "source_run_checksums_sha256": "ca48da70fa1ed354232aa6d32d62834a0376cc3d6d9c9beaeb42cc68a5ef0103",
+  "source_run_manifest_sha256": "6c5c21f35d1796f01039bd89963d120f3283aae8f64eb52f9fad726302e225a2",
+  "tests_executed_count": 0,
+  "timeout_count": 0,
+  "unserialized_controller_automatic_test_events": 1,
+  "verified_successes": 0
+}

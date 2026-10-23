@@ -14,7 +14,12 @@ from pathlib import Path
 
 import pytest
 
-from vare.agent_task_contract import assert_train_only, load_agent_task, verify_agent_workspace
+from vare.agent_task_contract import (
+    assert_train_only,
+    load_agent_task,
+    verify_agent_workspace,
+    workspace_snapshot_sha256,
+)
 from vare.container_isolation import (
     DockerIsolationRunner,
     IsolationError,
@@ -940,6 +945,66 @@ def test_historical_task_pinned_workspace_checks_revision_and_source_hashes(tmp_
         subprocess.run(["git", "-C", str(workspace), "update-index", "--no-assume-unchanged", "solve.py"], check=True)
         subprocess.run(["git", "-C", str(workspace), "update-index", "--no-skip-worktree", "solve.py"], check=True)
         (workspace / "solve.py").write_text("def solve():\n    return 1\n", encoding="utf-8")
+
+
+def test_engineering_task_pins_archive_snapshot_and_editable_source_hash(tmp_path):
+    workspace = tmp_path / "archive-workspace"
+    source = workspace / "src/package/target.py"
+    source.parent.mkdir(parents=True)
+    source.write_text("VALUE = 1\n", encoding="utf-8")
+    (workspace / "dependency.py").write_text("DEPENDENCY = 2\n", encoding="utf-8")
+    source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
+    task = tmp_path / "engineering-task"
+    task.mkdir()
+    descriptor = {
+        "task_id": "archive-source-task",
+        "metadata": {"split": "development", "editable_files": ["src/package/target.py"]},
+        "prompt": "Correct the task source.",
+        "source": {
+            "base_revision": "0123456789abcdef0123456789abcdef01234567",
+            "snapshot_sha256": workspace_snapshot_sha256(workspace),
+            "file_sha256": {"src/package/target.py": source_hash},
+        },
+    }
+    (task / "task.json").write_text(json.dumps(descriptor), encoding="utf-8")
+    contract = load_agent_task(task)
+    assert verify_agent_workspace(workspace, contract) == {"src/package/target.py": source_hash}
+    (workspace / "dependency.py").write_text("DEPENDENCY = 3\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="snapshot SHA-256"):
+        verify_agent_workspace(workspace, contract)
+
+
+def test_engineering_task_pins_readonly_public_test_separately_from_edits(tmp_path):
+    workspace = tmp_path / "workspace"
+    target = workspace / "src/package/target.py"
+    target.parent.mkdir(parents=True)
+    target.write_text("VALUE = 1\n", encoding="utf-8")
+    public_test = workspace / "test_public.py"
+    public_test.write_text("def test_value():\n    assert True\n", encoding="utf-8")
+    target_hash = hashlib.sha256(target.read_bytes()).hexdigest()
+    public_hash = hashlib.sha256(public_test.read_bytes()).hexdigest()
+    task = tmp_path / "task-readonly-public"
+    task.mkdir()
+    (task / "task.json").write_text(json.dumps({
+        "task_id": "readonly-public-test",
+        "metadata": {
+            "split": "development", "editable_files": ["src/package/target.py"],
+            "readonly_files": ["test_public.py"],
+        },
+        "prompt": "Fix the source behavior.",
+        "source": {
+            "snapshot_sha256": workspace_snapshot_sha256(workspace),
+            "file_sha256": {"src/package/target.py": target_hash},
+            "readonly_file_sha256": {"test_public.py": public_hash},
+        },
+    }), encoding="utf-8")
+    contract = load_agent_task(task)
+    assert contract.allowed_files == ("src/package/target.py",)
+    assert contract.readonly_files == ("test_public.py",)
+    assert verify_agent_workspace(workspace, contract) == {"src/package/target.py": target_hash}
+    public_test.write_text("def test_value():\n    assert False\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="read-only task input SHA-256"):
+        verify_agent_workspace(workspace, contract)
 
 
 def test_local_agent_parses_engineering_task_without_loading_weights(tmp_path, monkeypatch, capsys):

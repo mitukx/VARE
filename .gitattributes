@@ -12,3 +12,5 @@ results/format-comparison-record-v1/*.xml -diff
 # Unified patch fixtures preserve the source's blank context lines verbatim.
 contributions/trl-async-stale-resume-v1/*.patch whitespace=-blank-at-eol,-blank-at-eof
 results/trl-async-stale-resume-v6/**/*.patch whitespace=-blank-at-eol,-blank-at-eof
+# Preserve the model-generated Phase A patch exactly; its two blank lines contain spaces.
+results/phase-a-v6/protocol-v1/run-2/transformers-49515-rope-setter-v1/greedy-0/candidate.patch whitespace=-blank-at-eol,-blank-at-eof

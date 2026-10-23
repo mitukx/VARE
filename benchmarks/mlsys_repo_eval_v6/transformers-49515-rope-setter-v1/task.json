@@ -1,0 +1,35 @@
+{
+  "grader": {
+    "adapter": "scripts/grade_transformers_fresh_dev_v6.py",
+    "visibility": "hidden"
+  },
+  "limits": {
+    "cpus": 2,
+    "memory_mb": 1900,
+    "pids": 32,
+    "timeout_s": 120
+  },
+  "metadata": {
+    "family": "rotary-configuration-compatibility",
+    "license": "Apache-2.0",
+    "pack": "mlsys_repo_eval_v6",
+    "split": "development",
+    "task_type": "correctness"
+  },
+  "prompt": "A legacy RoPE scaling dictionary assigned through the compatibility setter must be normalized before rotary embeddings are constructed. Keep the legacy input form usable, provide the deprecation notice, and preserve assignment of None.",
+  "schema": "vare-repository-task-v1",
+  "source": {
+    "base_revision": "1573af48b1c5cd8bfb0cfba4dc1ecf6e882d0348",
+    "baseline_target_sha256": "f1325adef714159a2c9cf6b1204ac71c65df4069259a849fd0c82c9c57092248",
+    "baseline_workspace_sha256": "aa6317d409ff3ce8990d08961904c3542d07c3e37787d0665638aa8769e2230d",
+    "calibration_revision": "93d5be6b2f7b479ea5efa5a35989ef805365d6d9",
+    "editable_files": [
+      "src/transformers/configuration_utils.py"
+    ],
+    "fixed_revision": "93d5be6b2f7b479ea5efa5a35989ef805365d6d9",
+    "git_history_exported": false,
+    "repository": "huggingface/transformers"
+  },
+  "task_id": "transformers-49515-rope-setter-v1",
+  "title": "Legacy RoPE setter normalization"
+}

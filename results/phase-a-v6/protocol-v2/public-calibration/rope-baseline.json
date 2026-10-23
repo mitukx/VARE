@@ -1,0 +1,11 @@
+{
+  "elapsed_seconds": 4.236,
+  "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+  "kind": "baseline",
+  "passed": false,
+  "returncode": 1,
+  "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/workspace/test_public.py\", line 15, in test_legacy_rope_scaling_initializes_rotary_embedding\n    assert LlamaRotaryEmbedding(config) is not None\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/src/transformers/models/llama/modeling_llama.py\", line 80, in __init__\n    self.rope_type = self.config.rope_parameters[\"rope_type\"]\n                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\nKeyError: 'rope_type'\n",
+  "stdout": "",
+  "task_id": "transformers-49515-rope-setter-v1",
+  "test_sha256": "824040be10623adb683d3a8c1268a907f5746e317e1520ec1c469cbb742d00d1"
+}

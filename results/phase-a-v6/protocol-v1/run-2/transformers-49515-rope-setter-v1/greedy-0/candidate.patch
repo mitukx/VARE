@@ -1,0 +1,18 @@
+--- a/src/transformers/configuration_utils.py
++++ b/src/transformers/configuration_utils.py
+@@ -707,7 +707,14 @@
+ 
+     @rope_scaling.setter
+     def rope_scaling(self, value):
+-        self.rope_parameters = value
++        if value is None:
++            self.rope_parameters = value
++        elif isinstance(value, dict):
++            import warnings
++            warnings.warn("\"Legacy RoPE scaling dictionary is deprecated. Use `rope_parameters` directly for standardization.\"", FutureWarning, stacklevel=2)
++            self.rope_parameters = value.copy()
++        else:
++            self.rope_parameters = value
+ 
+     def save_pretrained(self, save_directory: str | os.PathLike, push_to_hub: bool = False, **kwargs):
+         """
