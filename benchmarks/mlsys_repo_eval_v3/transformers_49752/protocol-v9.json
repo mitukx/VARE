@@ -1,0 +1,90 @@
+{
+  "baseline_commit": "6f2e80bdad560947903bb4bde8043ae95387069a",
+  "baseline_target_sha256": "c0479fc2f6a14e493f6be020f6685a7c3ebbc72891c8bdbfca66f3e24ed3d7ee",
+  "candidate_visibility": {
+    "candidate_probe_visible": true,
+    "grader_implementation_visible": false,
+    "hidden_expected_outputs_visible": false,
+    "runtime_case_seed_is_passed_to_candidate_function": true,
+    "upstream_fix_visible": false,
+    "upstream_git_history_visible": false,
+    "workspace_files": [
+      "pinned src/transformers package",
+      "task.md",
+      "test_public.py",
+      "task.json",
+      "candidate_probe.py"
+    ]
+  },
+  "claim_limit": "One new Development task has a frozen isolated regression grader and a public test calibrated baseline-fail/known-fix-pass. Public test containers mount the candidate workspace read-only. Calibration records explicitly mark terminal completed/failed status. No model rollout or policy improvement is implied.",
+  "evaluation": {
+    "cases": [
+      "stack-frames-seed-20261021",
+      "stack-frames-seed-20261022"
+    ],
+    "required_calibration": [
+      "pinned-baseline-fails",
+      "pinned-fix-passes",
+      "red-team-suite-passes"
+    ],
+    "success": "for each case, target-size and patch-count rows equal num_frames_per_video; eight visual units alternate the baseline main-frame grid with one shared composite grid"
+  },
+  "fixed_commit": "bc0e71ffef22474fc14fcaa4b399d824eebc0e50",
+  "fixed_target_sha256": "93297262c68d03a35d4b74cd6e30da71a83474c03fe07ab1cd3e3a0153e8277e",
+  "grader_test": "tests/models/minicpmv4_6/test_video_processing_minicpmv4_6.py::test_call_sample_frames_stacked_composites",
+  "grader_test_sha256": "d68b11650b26dba53f4a03a6dedd469d2554a26d2bb2f51190775367979b133b",
+  "implementation_sha256": {
+    "benchmarks/mlsys_repo_eval_v3/transformers_49752/Dockerfile": "71200d584cff1d58e6abbf84d51491ff3a2ab8da3f3120370fac2083c8e31e31",
+    "benchmarks/mlsys_repo_eval_v3/transformers_49752/candidate_probe.py": "c9f1858bf757310cc2459c446769e541a7dd863a006ed6b4ec33d19912f53664",
+    "benchmarks/mlsys_repo_eval_v3/transformers_49752/requirements.txt": "e207d9cc793d8814a462cb8c37fdb108e4a1de1901010376020ab1003f677bc1",
+    "benchmarks/mlsys_repo_eval_v3/transformers_49752/task.json": "0c378f75f39617ab885ca9a4a6ddfa60416afe3f2e19603c2f516b21d7d140de",
+    "benchmarks/mlsys_repo_eval_v3/transformers_49752/task.md": "ec2d64c6216554b2e299ccc80a2910b9854f8e777967b64df1cc548a4fcf22c7",
+    "benchmarks/mlsys_repo_eval_v3/transformers_49752/test_public.py": "13c395505dc10e7b8069b19273904ad1b6d48a471cf4f6b8b690519edb273a06",
+    "scripts/run_local_agent.py": "899a3bbaf6051bb1be63552a4b0bc1efdf3fe74bfeb8dc21f1be4fc567342e9f",
+    "scripts/run_transformers_49752_calibration.py": "5722d3adea994137188d1ad9b30a4e98ab4ab22e338751651e6a9566e4ac57b4",
+    "src/vare/agent_task_contract.py": "6ae792707ff25e0ed65fa6d5545edd565315122a0b5747199f66b37f80bb8813",
+    "src/vare/attestation.py": "785e74d7d0cd6d41a73cf75cc65c093a0afb8d5082ad3f11dd828770616e93a3",
+    "src/vare/container_isolation.py": "6d963821333f8de603bb4743ea52cb203c549695a5df9bbff9fa829b50ea8c42",
+    "src/vare/isolated_candidate.py": "8c216aa1891538156030f76ae59a768832fefa83dbbcf3702c22176019b0aaee",
+    "src/vare/transformers_49752_repo_task.py": "de27da270f986d007094a0c5ad24f3012c57bf842dbc557ae43dae495665ce8b",
+    "src/vare/types.py": "233e2b6176431140e7700cc668cfdbdc98cf3d8d4ab98de658efab7010ea82ca",
+    "tests/test_container_isolation.py": "e3262d286f6b97acc2a3152eae023e051ef510083d80432b20ccdedb40c2763e",
+    "tests/test_separated_grading.py": "aef7df2a3bfa2cf16264ea01d42a388d02b322db78ab33d34787dea00c8b4cac",
+    "tests/test_transformers_49752_repo_task.py": "d1f588daf60ffdc8bca075423d4952bb59729fe1f2576f4e885286d40e6e7d02"
+  },
+  "license": "Apache-2.0",
+  "license_sha256": "77fd4710def9ec3c0f6225800e0235f15a425abd4a8b03559127fcd782612049",
+  "protocol_id": "transformers-49752-stacked-video-v9",
+  "public_test_calibration": "results/transformers-49752-public-smoke-v1/run-4/public-smoke-calibration.json",
+  "required_security_checks": [
+    "grader-source-absent",
+    "git-history-absent",
+    "secret-environment-absent",
+    "network-denied",
+    "stdout-forgery-rejected",
+    "subprocess-child-contained",
+    "path-traversal-rejected",
+    "symlink-rejected",
+    "timeout-enforced",
+    "memory-limit-enforced",
+    "fixed-source-swap-rejected"
+  ],
+  "runtime": {
+    "candidate_container": "localhost:5000/vare/transformers-video@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+    "cpus": 1.0,
+    "dependency_note": "CPU PyTorch replay; exact pinned runtime dependencies include regex 2025.11.3 required by the source tree.",
+    "grader_mount": "absent",
+    "host_qualification": "Apple Silicon arm64 / M1 Pro, CPU PyTorch semantic replay",
+    "memory_mb": 1536,
+    "network": "none",
+    "peak_memory_measured": false,
+    "pids_limit": 64,
+    "timeout_seconds": 30
+  },
+  "source_pr": "https://github.com/huggingface/transformers/pull/49752",
+  "source_repository": "huggingface/transformers",
+  "split": "development-v2",
+  "supersedes_protocol": "transformers-49752-stacked-video-v8",
+  "target_path": "src/transformers/models/minicpmv4_6/video_processing_minicpmv4_6.py",
+  "task_id": "transformers-49752-stacked-frames"
+}

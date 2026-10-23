@@ -1,3 +1,19 @@
+## Transformers #49752 tool-agent feasibility v1 — 2026-10-21
+
+The new `transformers-49752-stacked-frames` Development task passed isolated
+baseline/fix calibration: baseline 0/2, pinned fix 2/2, all eight red-team
+checks passed, and the candidate-visible public smoke failed baseline/passed
+the exact fix in a read-only network-disabled container. Qwen3-4B-Instruct
+2507-4bit on MLX/Metal completed one greedy and two sampled iterative tool
+rollouts. All three left the baseline unchanged and scored 0; two hit the
+per-turn output ceiling while forming tool calls, and one produced a no-op
+patch and a corrupt patch. No public test ran after a patch, no policy update
+ran, and reward variance was zero. This single task is now consumed and does
+not establish Phase A or any capability gain. See the [report](transformers-49752-qwen-tool-agent-feasibility-v1-report.md),
+[latest calibration protocol v11](../benchmarks/mlsys_repo_eval_v3/transformers_49752/protocol-v11.json),
+[agent protocol](../benchmarks/mlsys_repo_eval_v3/transformers_49752/agent-protocol-v2.json),
+and [raw runs](../results/transformers-49752-qwen-tool-feasibility-v1/).
+
 **Integration correction 2026-10-23 — Qwen3-4B Development v1:** The original 15 raw outputs are immutable. The append-only v2 retrospective classifies 13 as raw-diff format failures and two as patch-application failures, with **zero independently verified repairs**. Older v1 wording that describes all 15 as format failures is superseded by this classification; no post-training or held-out comparison was performed. The cohort is previously model-exposed and cannot be re-used as fresh Development or held-out evidence. See [retrospective](qwen3-4b-mlsys-development-feasibility-v1-retrospective-v2.md).
 
 ## MLX-LM #1971 isolated task calibration v9 (2026-10-23)

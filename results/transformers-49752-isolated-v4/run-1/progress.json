@@ -1,0 +1,134 @@
+{
+  "candidate_container": "localhost:5000/vare/transformers-video@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "elapsed_seconds": 31.116,
+  "protocol_id": "transformers-49752-stacked-video-v4",
+  "results": {
+    "baseline": {
+      "candidate_image": "localhost:5000/vare/transformers-video@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+      "candidate_target_sha256": "c0479fc2f6a14e493f6be020f6685a7c3ebbc72891c8bdbfca66f3e24ed3d7ee",
+      "candidate_workspace_contents_mounted_to_grader": false,
+      "candidate_workspace_sha256": "5c88c2dc4f2543046d7b6e06d2641a55b7e1b6e07da719dff717b526b8da481e",
+      "cases": [
+        {
+          "case_id": "stack-frames-seed-20261021",
+          "failure": "wrong_output",
+          "passed": false,
+          "wall_s": 3.388809333970961
+        },
+        {
+          "case_id": "stack-frames-seed-20261022",
+          "failure": "wrong_output",
+          "passed": false,
+          "wall_s": 3.3881707500321228
+        }
+      ],
+      "configured_memory_limit_mb": 1536,
+      "grader_adapter_sha256": "c9f1858bf757310cc2459c446769e541a7dd863a006ed6b4ec33d19912f53664",
+      "network": "none",
+      "passed": false,
+      "peak_memory_bytes": null,
+      "protocol_sha256": "ce9162c8dc1793ef24a4499b1409caa310afc42edb3067f45876b79cfcdc3770",
+      "task_id": "transformers-49752-stacked-frames",
+      "task_statement_sha256": "ec2d64c6216554b2e299ccc80a2910b9854f8e777967b64df1cc548a4fcf22c7",
+      "timeout_s": 30.0
+    },
+    "known_fix": {
+      "candidate_image": "localhost:5000/vare/transformers-video@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+      "candidate_target_sha256": "93297262c68d03a35d4b74cd6e30da71a83474c03fe07ab1cd3e3a0153e8277e",
+      "candidate_workspace_contents_mounted_to_grader": false,
+      "candidate_workspace_sha256": "7cceb52082286950437b7f73c723f61d388f3e065a1b3cb26a4f7812436ec2a0",
+      "cases": [
+        {
+          "case_id": "stack-frames-seed-20261021",
+          "failure": null,
+          "passed": true,
+          "wall_s": 3.323538625070804
+        },
+        {
+          "case_id": "stack-frames-seed-20261022",
+          "failure": null,
+          "passed": true,
+          "wall_s": 3.336066207053526
+        }
+      ],
+      "configured_memory_limit_mb": 1536,
+      "grader_adapter_sha256": "c9f1858bf757310cc2459c446769e541a7dd863a006ed6b4ec33d19912f53664",
+      "network": "none",
+      "passed": true,
+      "peak_memory_bytes": null,
+      "protocol_sha256": "ce9162c8dc1793ef24a4499b1409caa310afc42edb3067f45876b79cfcdc3770",
+      "task_id": "transformers-49752-stacked-frames",
+      "task_statement_sha256": "ec2d64c6216554b2e299ccc80a2910b9854f8e777967b64df1cc548a4fcf22c7",
+      "timeout_s": 30.0
+    },
+    "red_team_suite": {
+      "checks": {
+        "grader_git_secret_network_isolation": true,
+        "grader_source_not_mounted": true,
+        "memory_limit_enforced": true,
+        "path_traversal_rejected": true,
+        "stdout_forgery_rejected": true,
+        "symlink_rejected": true,
+        "timeout_enforced": true
+      },
+      "executed": true,
+      "passed": true,
+      "raw": {
+        "forgery": {
+          "cases": [
+            {
+              "case_id": "forged",
+              "failure": "wrong_output",
+              "passed": false,
+              "wall_s": 0.09492404098757357
+            }
+          ],
+          "passed": false,
+          "task_kind": "correctness"
+        },
+        "memory": {
+          "cases": [
+            {
+              "case_id": "memory",
+              "failure": "missing_result",
+              "passed": false,
+              "wall_s": 0.1322261669982523
+            }
+          ],
+          "passed": false,
+          "task_kind": "correctness"
+        },
+        "timeout": {
+          "cases": [
+            {
+              "case_id": "timeout",
+              "failure": "missing_result",
+              "passed": false,
+              "wall_s": null
+            }
+          ],
+          "passed": false,
+          "task_kind": "correctness"
+        },
+        "visibility": {
+          "cases": [
+            {
+              "case_id": "visibility",
+              "failure": null,
+              "passed": true,
+              "wall_s": 0.1017349580923233
+            }
+          ],
+          "passed": true,
+          "task_kind": "correctness"
+        }
+      }
+    },
+    "source_swap_rejected": true,
+    "status": "complete"
+  },
+  "source_baseline_commit": "6f2e80bdad560947903bb4bde8043ae95387069a",
+  "source_fixed_commit": "bc0e71ffef22474fc14fcaa4b399d824eebc0e50",
+  "stage": "complete",
+  "task_id": "transformers-49752-stacked-frames"
+}

@@ -573,6 +573,25 @@ def test_engineering_contract_hides_evaluator_and_refuses_heldout(tmp_path):
         load_agent_task(task)
 
 
+def test_engineering_contract_accepts_development_for_feasibility_rollouts(tmp_path):
+    from vare.agent_task_contract import assert_split_member
+
+    task = _engineering_fixture(tmp_path, split="development")
+    contract = load_agent_task(task)
+    assert contract.split == "development"
+    assert_split_member(
+        contract,
+        {"train": ["train-task"], "development": ["fixture-add"], "heldout": ["held-task"]},
+        "development",
+    )
+    with pytest.raises(ValueError, match="held-out"):
+        assert_split_member(
+            contract,
+            {"train": [], "development": ["fixture-add"], "heldout": ["fixture-add"]},
+            "development",
+        )
+
+
 def test_repository_grader_argv_is_not_a_candidate_sandbox(tmp_path):
     root = tmp_path / "snapshots"
     snapshot = root / "snapshot-one"

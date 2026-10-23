@@ -1,3 +1,18 @@
+**Update 2026-10-21 — new Transformers task calibrated; iterative Qwen
+feasibility remains NO-GO:** a new Transformers #49752 Development task now
+has a source-hash-pinned, process-isolated grader; baseline fails 2/2,
+known fix passes 2/2, and the red-team suite passes. The public smoke also
+fails on baseline and passes on the exact fix in a read-only candidate
+container. Qwen3-4B MLX ran one greedy and two sampled tool-agent rollouts on
+this task; none applied a patch, all three received reward 0, and the sampled
+reward variance is zero. Two attempts hit per-turn output truncation; one
+produced a no-op and a corrupt diff. This task is consumed for development and
+is not confirmation data. No held-out task, SFT, or GRPO run occurred. See the
+[report](transformers-49752-qwen-tool-agent-feasibility-v1-report.md),
+[latest calibration protocol v11](../benchmarks/mlsys_repo_eval_v3/transformers_49752/protocol-v11.json),
+[agent protocol](../benchmarks/mlsys_repo_eval_v3/transformers_49752/agent-protocol-v2.json),
+and [raw evidence](../results/transformers-49752-qwen-tool-feasibility-v1/).
+
 **Integration correction 2026-10-23 — Qwen3-4B Development v1:** The original 15 raw outputs are immutable. The append-only v2 retrospective classifies 13 as raw-diff format failures and two as patch-application failures, with **zero independently verified repairs**. Older v1 wording that describes all 15 as format failures is superseded by this classification; no post-training or held-out comparison was performed. The cohort is previously model-exposed and cannot be re-used as fresh Development or held-out evidence. See [retrospective](qwen3-4b-mlsys-development-feasibility-v1-retrospective-v2.md).
 
 **Update 2026-10-23 — historical v9 Git-object preflight (unmerged PR #99):** A new

@@ -104,6 +104,24 @@ def test_candidate_json_io_mounts_only_readonly_workspace_and_is_interactive(tmp
     assert str(grader) not in " ".join(argv)
 
 
+def test_readonly_public_test_argv_without_modifying_frozen_runner(tmp_path):
+    root = tmp_path / "workspaces"
+    ws = root / "trial"
+    ws.mkdir(parents=True)
+    runner = DockerIsolationRunner()
+    argv = runner.candidate_argv(
+        IsolationLimits(IMAGE), name="vare-agent-" + "a" * 24,
+        allowed_workspace_root=root, workspace=ws,
+        command=("python", "/workspace/test_public.py"),
+        readonly_workspace=True,
+    )
+    mounts = [
+        argv[index + 1]
+        for index, flag in enumerate(argv[:-1]) if flag == "--mount"
+    ]
+    assert mounts == [f"type=bind,source={ws},target=/workspace,readonly"]
+
+
 def test_evaluator_only_sees_read_only_trusted_inputs(tmp_path):
     root = tmp_path / "checkpoints"
     root.mkdir()

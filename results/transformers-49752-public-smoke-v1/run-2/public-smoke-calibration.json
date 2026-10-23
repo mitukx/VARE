@@ -1,0 +1,54 @@
+{
+  "candidate_image": "localhost:5000/vare/transformers-video@sha256:7c8ba69d9269b92bb9d164c54b734da6d56532ef2b455f177d14cab7c348c25b",
+  "protocol": "transformers-49752-stacked-video-v3",
+  "public_test_calibrated": false,
+  "raw": {
+    "baseline": {
+      "metadata": {
+        "baseline_commit": "6f2e80bdad560947903bb4bde8043ae95387069a",
+        "candidate_edit_allowlist": [
+          "src/transformers/models/minicpmv4_6/video_processing_minicpmv4_6.py"
+        ],
+        "git_history_exported": false,
+        "target_source_sha256": "c0479fc2f6a14e493f6be020f6685a7c3ebbc72891c8bdbfca66f3e24ed3d7ee",
+        "task_id": "transformers-49752-stacked-frames",
+        "upstream_tests_exported": false,
+        "workspace_inventory_sha256": "869c0dd6610fc0706f6a029720633602bd520b98babe936b337d24d949547ef3"
+      },
+      "test": {
+        "elapsed_seconds": 3.569,
+        "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+        "passed": false,
+        "returncode": 1,
+        "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 72, in <module>\n    test_stacked_visual_units_keep_aligned_shape_metadata()\n  File \"/workspace/test_public.py\", line 59, in test_stacked_visual_units_keep_aligned_shape_metadata\n    frames_per_video = result[\"num_frames_per_video\"].tolist()\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'list' object has no attribute 'tolist'\n",
+        "stdout": ""
+      }
+    },
+    "known_fix": {
+      "metadata": {
+        "baseline_commit": "6f2e80bdad560947903bb4bde8043ae95387069a",
+        "candidate_edit_allowlist": [
+          "src/transformers/models/minicpmv4_6/video_processing_minicpmv4_6.py"
+        ],
+        "changed_files": [
+          "src/transformers/models/minicpmv4_6/video_processing_minicpmv4_6.py"
+        ],
+        "git_history_exported": false,
+        "patch_sha256": "0cc0923e5b98e654cbb0c31655ef7ee121931ece811e139638c0aaa5665f7773",
+        "target_source_sha256": "93297262c68d03a35d4b74cd6e30da71a83474c03fe07ab1cd3e3a0153e8277e",
+        "task_id": "transformers-49752-stacked-frames",
+        "upstream_tests_exported": false,
+        "workspace_inventory_sha256": "6e1f9fbbe51438f7059a7f363a2f1bab437e134758a963f7a6664c43a204d338"
+      },
+      "test": {
+        "elapsed_seconds": 3.87,
+        "isolation": "docker-network-none-read-only-root-only-workspace-mount",
+        "passed": false,
+        "returncode": 1,
+        "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 72, in <module>\n    test_stacked_visual_units_keep_aligned_shape_metadata()\n  File \"/workspace/test_public.py\", line 59, in test_stacked_visual_units_keep_aligned_shape_metadata\n    frames_per_video = result[\"num_frames_per_video\"].tolist()\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'list' object has no attribute 'tolist'\n",
+        "stdout": ""
+      }
+    },
+    "known_fix_patch_sha256": "0cc0923e5b98e654cbb0c31655ef7ee121931ece811e139638c0aaa5665f7773"
+  }
+}
