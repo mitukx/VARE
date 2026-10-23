@@ -160,3 +160,11 @@ def test_attested_export_entrypoint_checks_source_before_dispatch(
         "changed_files": []
     }
     assert seen == ["verify", "export"]
+
+
+def test_current_checkout_matches_immutable_historical_v9_git() -> None:
+    """CI gate: a coherently edited evaluator/lock cannot retain v9 identity."""
+    root = Path(__file__).resolve().parents[1]
+    report = preflight.attest_current_v9(root)
+    assert report["current_source_matches_pinned_git"] is True
+    assert report["implementation_files_verified"] == 20
