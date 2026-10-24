@@ -1,0 +1,346 @@
+{
+  "arm_orders": {
+    "false_accept": [
+      "sync",
+      "naive_async",
+      "vare_async"
+    ],
+    "false_reject": [
+      "naive_async",
+      "vare_async",
+      "sync"
+    ],
+    "no_drift": [
+      "sync",
+      "vare_async",
+      "naive_async"
+    ],
+    "ranking_inversion": [
+      "vare_async",
+      "sync",
+      "naive_async"
+    ]
+  },
+  "arms": {
+    "naive_async": {
+      "execution": "Version-unaware reward normalization with a two-group delayed buffer: generate g0 (v0/v1 transition) and g1 under policy 0; train g1; generate g2 under policy 1 while g0 remains queued; then train stale g0, g2 and g3. Policy and verifier lag limits both equal 1 for the naive negative control; g4 is unused.",
+      "expected_invalid_updates": "outcome measured by independent v1 recomputation"
+    },
+    "sync": {
+      "execution": "Synchronous collection and delivery under v1; groups 0..4 use successive policy versions and group 4 is unused after four commits.",
+      "expected_invalid_updates": 0
+    },
+    "vare_async": {
+      "execution": "The same producer schedule, with authenticated VARE admission. The trajectory store holds old-policy g0 beside current-policy g2; it quarantines all of g0, trains g2 during the bounded two-group scan, then trains g1,g3,g4 for four total updates. In no_drift, g0 is label-correct but policy-stale, measuring the valid-data rejection cost.",
+      "expected_invalid_updates": 0
+    }
+  },
+  "auditor_sha256": "66d4a761f6b1d7e3a6a5b13d420619e86b0975dfc076fa0945fa047c5d144058",
+  "base_commit": "613bd3f33bab6e085ef8fb114874da7a87a96eaf",
+  "crash_recovery": {
+    "condition": "Run only after the full v7 primary run and its independent audit pass, including a passed false_accept pilot gate. No crash run is inferred from the earlier single-update v6 result.",
+    "cutpoints": [
+      "rollout_complete_before_admission",
+      "admission_before_optimizer",
+      "optimizer_computed_before_commit",
+      "commit_before_acknowledgment",
+      "evaluation_before_promotion"
+    ],
+    "failure_action": "Stop at the first failed kill or state mismatch; preserve all cases and do not rerun the same cutpoint.",
+    "harness": "scripts/benchmark_verifier_consistent_grpo_sigkill.py",
+    "harness_auditor_correction_manifest": "benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v4-runner-v2.json",
+    "harness_correction_manifest": "benchmarks/verifier_consistent_async_grpo_v6/crash-runner-correction-v3.json",
+    "harness_protocol_sha256": "1e16f2452d2f0d101295df1438f87679bec621bb27f667259fe18d66db5d8523",
+    "harness_seed": 82106,
+    "harness_seed_role": "Fixed legacy crash-harness replay-order/run identifier only; all model weights and the target group come from the fresh v7 seed. No crash worker samples a new rollout.",
+    "harness_sha256": "a875f9879e402b3e29cd6a630ef6d1fc4925e50fe0e84f9a81fbd1bb2b2ddf45",
+    "limits": {
+      "max_child_timeout_seconds": 300,
+      "max_positive_swap_growth_bytes": 268435456,
+      "max_rss_bytes": 8589934592,
+      "max_total_wall_seconds": 1800
+    },
+    "optimizer_attempts_by_cutpoint": {
+      "admission_before_optimizer": 1,
+      "commit_before_acknowledgment": 1,
+      "evaluation_before_promotion": 2,
+      "optimizer_computed_before_commit": 2,
+      "rollout_complete_before_admission": 1
+    },
+    "prefix_updates": 2,
+    "required_state_comparison": [
+      "model",
+      "optimizer",
+      "cpu_rng",
+      "module_modes",
+      "promotion_journal",
+      "trajectory_ledger",
+      "active_policy_identity",
+      "verifier_identity",
+      "effective_trajectory_consumption"
+    ],
+    "source": "The false_accept/vare_async arm from this v7 run. Rebase the exact checkpoint after its first two committed updates as local policy-0, then use its retained g-03 rollout and third-update checkpoint as the reference continuation.",
+    "status": "CONDITIONAL_FOLLOWUP_PREREGISTERED",
+    "target_group": "g-03-false_accept",
+    "target_update_number": 3
+  },
+  "group_delivery_order": {
+    "naive_async": [
+      1,
+      0,
+      2,
+      3,
+      4
+    ],
+    "sync": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "vare_async": [
+      1,
+      0,
+      2,
+      3,
+      4
+    ]
+  },
+  "hardware": {
+    "concurrent_models": 1,
+    "device": "CPU fp32",
+    "host": "Apple M1 Pro, 32 GB unified memory",
+    "network_during_run": false,
+    "paid_apis_or_rented_gpus": false,
+    "torch_threads": 1
+  },
+  "hypothesis": "Under matched model, rollout, and verifier-call budgets, mixed-version reward groups can change real repeated GRPO updates. The VARE authenticated trajectory path should quarantine groups spanning a verifier transition and retain useful fresh updates, while a version-unaware asynchronous negative control can commit an update trained on labels inconsistent with the current independent oracle.",
+  "limits": [
+    "One model, synthetic task semantics, one fixed model seed per verifier scenario and one host.",
+    "Scenario selection tests distinct failure modes; it does not estimate their prevalence in natural verifiers.",
+    "CPU model generation is serialized. The bounded delayed queue tests version consistency and queue residence, not parallel throughput speedup.",
+    "The async stale group is simultaneously one policy version behind and verifier-stale; the no-drift control isolates policy-only staleness and quantifies valid-data rejection.",
+    "The optional five-cut crash extension reuses one retained third-update group across fault cutpoints to control recovery inputs; those cutpoints are not independent quality replications.",
+    "A green mechanism run is not evidence of coding-task capability or general RL robustness."
+  ],
+  "model": "roneneldan/TinyStories-1M",
+  "model_files": {
+    "config.json": "ff74c30d5ebb5ab1da0f2ea479adf7197c504b42b5522a858c334ab91ed4958c",
+    "merges.txt": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+    "pytorch_model.bin": "07f9609ea882b8163ff3b23d40e2b82cb715d409631beb15c84b164f3877dae7",
+    "special_tokens_map.json": "98412137ae43c77f8af52eb51b19c3536d3242cb55339167d841005fa94a23b7",
+    "tokenizer.json": "f6ed3d307010c244c22aeffbde05f419cf277c23e64cf98b673cac5449cfeff5",
+    "tokenizer_config.json": "3d76da0fd37493fbfcd3f0fa9757753d31f92e1779ebd9130809b45546a60261",
+    "vocab.json": "3ba3c3109ff33976c4bd966589c11ee14fcaa1f4c9e5e154c2ed7f99d80709e7"
+  },
+  "model_revision": "77f1b168e219585646439073245fe87e56b3023e",
+  "pilot_gate": {
+    "continue_only_if": [
+      "pilot naive g0 has at least one label disagreement under the independently recomputed v1 oracle",
+      "pilot naive g0 rewards are nonconstant and the prespecified naive g1 update commits",
+      "the buffered async queue is independently evidenced with policy versions 0 and 1 and, in drift scenarios, verifier versions 0 and 1",
+      "VARE quarantines every g0 member and consumes fresh buffered g2 exactly once",
+      "VARE commits exactly four actual optimizer updates and every committed group has nonconstant advantages"
+    ],
+    "failure_action": "Stop without resampling or altering the task, verifier, prompt, seed, or policy schedule; preserve the partial pilot and report NO-GO."
+  },
+  "pinned_crash_recovery_files_sha256": {
+    "benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v4-runner-v2.json": "fc5c5dde0b345b0a4e0e0ee6839d751a0061dd89b66d4e05228ab4e17e5ed804",
+    "benchmarks/verifier_consistent_async_grpo_v6/crash-runner-correction-v3.json": "61c77d7d1ac93d9552388c188cfe53906f468108d9424bd7840187e27f2199a6",
+    "benchmarks/verifier_consistent_async_grpo_v6/protocol.json": "1e16f2452d2f0d101295df1438f87679bec621bb27f667259fe18d66db5d8523",
+    "scripts/benchmark_verifier_consistent_grpo_sigkill.py": "a875f9879e402b3e29cd6a630ef6d1fc4925e50fe0e84f9a81fbd1bb2b2ddf45"
+  },
+  "preregistered_at_utc": "2026-10-24T15:36:49Z",
+  "primary_metric": "Per drift scenario, invalid committed optimizer updates among four, naive_async versus vare_async, where invalid means at least one training-group reward differs from an independent recomputation under authoritative v1. The no-drift condition separately measures VARE rejection of label-correct but policy-stale g0.",
+  "protocol_amendment": {
+    "amends_schema": "vare.verifier-drift-scenarios.v7.1",
+    "change": "Read the seed from workload.seed consistently in the runner. No task semantics, task order, budgets, arm schedule, scoring, thresholds, or analysis changed.",
+    "experimental_observations_before_amendment": false,
+    "failure_evidence": {
+      "failure_sha256": "f3f9a43c7d8845dfae6874f528bf9cae3b15123fe28f2eb62fa5df3c09ef088a",
+      "inventory_sha256": "91db9bcc7608a9cd4c407decaf9c8e45d09875cc0d6f4e79b813781a4f4b42d8",
+      "model_instantiated": false,
+      "optimizer_updates": 0,
+      "output": "results/verifier_consistent_async_grpo_v7/run-1",
+      "rollouts_sampled": 0,
+      "source_commit": "47809ec42abb65720ba2690a9e5efd8f1d30de69"
+    },
+    "prior_protocol_commit": "47809ec42abb65720ba2690a9e5efd8f1d30de69",
+    "prior_protocol_sha256": "bedcdbc81f99d9e579f93072fa29bac5557e33d6a9dd43a0807f74870c709fa4",
+    "reason": "The first runner invocation failed in preflight with KeyError: seed because the code looked for a top-level field while the frozen protocol stores it at workload.seed."
+  },
+  "resource_limits": {
+    "abort": "Stop at first source/model identity mismatch, nonidentical matched initial g0 rollout, incomplete/degenerate training group, non-finite replay, optimizer replay error >=2e-6, behavior-logprob error >=1e-4, unexpected optimizer/promotion count, stale group admitted by VARE, per-arm or total wall cap at a group boundary, 8 GiB peak RSS, or 256 MiB positive swap growth. Preserve partial output; no replacement runs.",
+    "max_positive_swap_growth_bytes": 268435456,
+    "max_rss_bytes": 8589934592,
+    "max_wall_seconds_per_arm": 600,
+    "max_wall_seconds_total": 2400
+  },
+  "runner_sha256": "a730566456202a907ba20a26564fc89d24676e40dce86357769affd23f474dd6",
+  "rvl_backend_sha256": "a35179d2ff65b35d8079b0d48a933444cac440debd736d6dc6a7a53a27cfb960",
+  "rvl_patch_sha256": "d50dfe7d65ed09ef6ee6d551d6680130bf4fd02ab11d29df81dd63ceb7e66871",
+  "rvl_revision": "e381c4b3b8c2ad8e5dc4c4b1a33b7922531c3e33",
+  "scenarios": [
+    {
+      "id": "false_accept",
+      "role": "pilot",
+      "transition": "After four of eight members are verified, v0 changes to v1 while generation remains active.",
+      "verifiers": {
+        "v0": {
+          "meaning": "accept punctuation or a landing-location word",
+          "rule": "punctuation_or_location"
+        },
+        "v1": {
+          "meaning": "accept only a whole-word ground response",
+          "rule": "ground_word"
+        }
+      }
+    },
+    {
+      "id": "false_reject",
+      "role": "prespecified expansion",
+      "transition": "After four of eight members are verified, v0 changes to v1 while generation remains active.",
+      "verifiers": {
+        "v0": {
+          "meaning": "accept only the exact answer ground followed by a period",
+          "rule": "exact_ground_period"
+        },
+        "v1": {
+          "meaning": "accept any whole-word ground response",
+          "rule": "ground_word"
+        }
+      }
+    },
+    {
+      "id": "ranking_inversion",
+      "role": "prespecified expansion",
+      "transition": "After four of eight members are verified, v0 changes to v1 while generation remains active.",
+      "verifiers": {
+        "v0": {
+          "meaning": "reward outputs without the target word ground",
+          "rule": "not_ground_word"
+        },
+        "v1": {
+          "meaning": "reward outputs with the target word ground",
+          "rule": "ground_word"
+        }
+      }
+    },
+    {
+      "id": "no_drift",
+      "role": "prespecified negative control",
+      "transition": "No verifier transition; v0 and v1 have identical ground_word semantics.",
+      "verifiers": {
+        "v0": {
+          "meaning": "accept any whole-word ground response",
+          "rule": "ground_word"
+        },
+        "v1": {
+          "meaning": "accept any whole-word ground response",
+          "rule": "ground_word"
+        }
+      }
+    }
+  ],
+  "schema": "vare.verifier-drift-scenarios.v7.2",
+  "scope": "A bounded synthetic reward-systems study using real TinyStories-1M sampling and actual RVL AdamW/GRPO updates on one CPU host. It includes a deliberately delayed two-group queue spanning behavior-policy versions and verifier versions, followed conditionally by five process-kill recoveries of a third sequential update. It does not measure coding-agent capability, natural verifier-drift prevalence, or parallel asynchronous speedup.",
+  "statistical_plan": {
+    "independent_unit": "The three deliberately distinct verifier semantic changes; no rollout member or repeated optimizer update is treated as an independent unit.",
+    "primary_comparison": "Report paired per-scenario differences in invalid committed updates and a descriptive one-sided exact sign-test resolution across three purposive drift semantics. If all three differences favor VARE, the smallest nominal p under an independent-sign assumption is 0.125. This is not population-level evidence or a confirmatory superiority claim.",
+    "quality_claim_rule": "If all held-out scores across incumbent and updated policies are constant, report only consistency/recovery mechanics and no policy-quality claim. Synthetic held-out scores never imply coding capability.",
+    "sample_size": "Three drift scenarios plus one no-drift control; one fixed seed per scenario.",
+    "secondary_metrics": "Report denominators and raw scenario results for false accepts/rejects, reward-ranking inversions, valid stale trajectories rejected, queue depth and group residence, policy/verifier lag, held-out changes, CPU/wall time, checkpoint I/O, RSS and swap. No confirmatory p-values for secondary metrics."
+  },
+  "status": "FROZEN_BEFORE_EXECUTION",
+  "training_groups": {
+    "naive_async": [
+      1,
+      0,
+      2,
+      3
+    ],
+    "sync": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "vare_async": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "v6_helper_sha256": "8406b56b4c157473d8367bff0eccda24566b699caf1c0e1859b6c8d9dfb3f50c",
+  "v7_support_sha256": {
+    "scripts/audit_sustained_crash_recovery.py": "1fe78db9c7298fe6b81f2e819cb6a5a61d72b9b2cc450efc7219db8ac2374599",
+    "scripts/prepare_sustained_crash_fixture.py": "3452e0b4f026e1f9e17c63213d963eda8a805ec91eee3004314a13ac92505122"
+  },
+  "vare_source_sha256": {
+    "scripts/benchmark_verifier_consistent_async_grpo.py": "8406b56b4c157473d8367bff0eccda24566b699caf1c0e1859b6c8d9dfb3f50c",
+    "scripts/validate_grpo_e2e_cpu.py": "f9546aeb53c3d4404de450e534de4b7cddfc0e88d72c56608c01ea862b07b580",
+    "src/vare/attestation.py": "785e74d7d0cd6d41a73cf75cc65c093a0afb8d5082ad3f11dd828770616e93a3",
+    "src/vare/config.py": "3ddcb32df475e9e1d2a1aa3689ba5955494a67971cad03aa5a88e045ba4b7051",
+    "src/vare/engine.py": "785551df9e3b5e17a7595c640a9fc0dcded750ea4d274a68c9cfd443cb04fdde",
+    "src/vare/evidence.py": "a35d0f8c1cc7756c7d351b79ff061ff2374bf5ffe3c0433ed0181b0b85868d70",
+    "src/vare/integrations/rvl_grpo.py": "d4d511a9cc71949205a25ca4dbb9b384cb38c9f430f590adafdfd0126cac1eb7",
+    "src/vare/promotion.py": "21de684ad5faef4195e95fed75ec887b345ce22e72d6144d357f1c022d1b1827",
+    "src/vare/promotion_journal.py": "2e7b98951427aa63cff61ba948a3e4eb2e480b1378ed3c891e9df20225876ee7",
+    "src/vare/telemetry.py": "85c5ebe192c9e46db418e043bb09032e614a13d51cb0f19f94e096886c15de53",
+    "src/vare/trajectory_admission.py": "db3a1fe2fd345ef99ee25338f2e43f65211ae83cfdabc68a308f332aa53b5e6c",
+    "src/vare/trajectory_learner.py": "44a38b5c25992c6af819866961c9b2f8daed9589a65e1ab9afb8657b80e1414e",
+    "src/vare/trajectory_store.py": "f915cbb6f7ee11dc7812084a5f09807eb182268dd9320fcc68a2fa2e47696db8",
+    "src/vare/types.py": "233e2b6176431140e7700cc668cfdbdc98cf3d8d4ab98de658efab7010ea82ca"
+  },
+  "versions": {
+    "accelerate": "1.12.0",
+    "huggingface_hub": "0.36.0",
+    "python": "3.12.12",
+    "safetensors": "0.7.0",
+    "tokenizers": "0.22.1",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "workload": {
+    "description": "Each arm samples 5 groups of 8 completions and makes 4 optimizer commits. Sync samples/delivers groups 0..4 sequentially and trains on 0..3. Async samples g0 and g1 under policy 0, trains g1, samples g2 under policy 1 while g0 remains buffered, then delivers g0 before g2. Naive trains on g1,g0,g2,g3; VARE quarantines g0, consumes the buffered g2 during the stale-group scan, then trains g3,g4. Group 4 is the matched unused group for sync/naive. Every sampled group receives 8 verifier calls.",
+    "evaluation": {
+      "decode": "greedy argmax, at most three tokens, independent evaluator model copy",
+      "n": 12,
+      "prompts": [
+        "A tennis ball fell and came to rest on the",
+        "The feather drifted down until it reached the",
+        "The small pebble stopped rolling on the",
+        "A blue kite landed gently on the",
+        "The dropped key remained on the",
+        "The wet seed rested on the",
+        "The soccer ball settled on the",
+        "The brown leaf came to rest on the",
+        "The toy car finally stopped on the",
+        "The bird left its nest and landed on the",
+        "The coin fell and stopped on the",
+        "The paper airplane came down to the"
+      ],
+      "verifier": "authoritative v1 scorer, isolated from training reward selection"
+    },
+    "group_size": 8,
+    "groups_per_arm": 5,
+    "max_new_tokens": 3,
+    "optimizer": "RVL HFCausalLMGRPOTrainer AdamW, learning_rate=1e-4",
+    "optimizer_updates_per_arm": 4,
+    "rollouts_per_arm": 40,
+    "seed": 83117,
+    "seed_rule": "The same seed is used across arms within a scenario; scenario index i uses seed 83117 + 100*i. No seed is repeated as independent evidence.",
+    "temperature": 0.8,
+    "trainable_parameters": "transformer.wpe.* and transformer.ln_f.* only",
+    "training_prompts": [
+      "Choose the landing surface for a bird. It touched down on the",
+      "A falling leaf came to rest on the",
+      "The marble bounced and stopped on the",
+      "The tired traveler sat down on the",
+      "After the rain, the ball lay on the"
+    ],
+    "verifier_calls_per_arm": 40
+  }
+}

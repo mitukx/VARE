@@ -151,24 +151,28 @@
     "benchmarks/verifier_consistent_async_grpo_v6/protocol.json": "1e16f2452d2f0d101295df1438f87679bec621bb27f667259fe18d66db5d8523",
     "scripts/benchmark_verifier_consistent_grpo_sigkill.py": "a875f9879e402b3e29cd6a630ef6d1fc4925e50fe0e84f9a81fbd1bb2b2ddf45"
   },
-  "preregistered_at_utc": "2026-10-24T15:36:49Z",
+  "preregistered_at_utc": "2026-10-24T15:38:36Z",
   "primary_metric": "Per drift scenario, invalid committed optimizer updates among four, naive_async versus vare_async, where invalid means at least one training-group reward differs from an independent recomputation under authoritative v1. The no-drift condition separately measures VARE rejection of label-correct but policy-stale g0.",
   "protocol_amendment": {
-    "amends_schema": "vare.verifier-drift-scenarios.v7.1",
-    "change": "Read the seed from workload.seed consistently in the runner. No task semantics, task order, budgets, arm schedule, scoring, thresholds, or analysis changed.",
+    "amends_schema": "vare.verifier-drift-scenarios.v7.2",
+    "change": "Read training and evaluation prompts from workload, validate the complete protocol shape before model construction, and use the nested seed consistently. No task semantics, task order, budgets, arm schedule, scoring, thresholds, or analysis changed.",
     "experimental_observations_before_amendment": false,
     "failure_evidence": {
-      "failure_sha256": "f3f9a43c7d8845dfae6874f528bf9cae3b15123fe28f2eb62fa5df3c09ef088a",
-      "inventory_sha256": "91db9bcc7608a9cd4c407decaf9c8e45d09875cc0d6f4e79b813781a4f4b42d8",
-      "model_instantiated": false,
+      "failure_sha256": "662d3d06c4cd72951e174baaf627dd898902d0fbe6ec87f402e532a310bdff67",
+      "initial_checkpoint_saved": true,
+      "initial_checkpoint_sha256": "b620f05db3417a86191aa6cb68d1796a19dc9a562072b4e79b0e280f23cba0c9",
+      "inventory_sha256": "05a3744100f83a5d3306acc52e3067b1c24d80c556833d658bca3a24bfbd0a21",
+      "model_completions": 0,
+      "model_instantiated": true,
       "optimizer_updates": 0,
-      "output": "results/verifier_consistent_async_grpo_v7/run-1",
-      "rollouts_sampled": 0,
-      "source_commit": "47809ec42abb65720ba2690a9e5efd8f1d30de69"
+      "output": "results/verifier_consistent_async_grpo_v7/run-2",
+      "protocol_sha256": "cfd8a712c1635ca381fd312281fb4e472dd927c885e1b7d99585a1fe15e34451",
+      "source_commit": "51859be11df5d6d574e8bb70bdfcb6bf906eb4a4",
+      "verifier_calls": 0
     },
-    "prior_protocol_commit": "47809ec42abb65720ba2690a9e5efd8f1d30de69",
-    "prior_protocol_sha256": "bedcdbc81f99d9e579f93072fa29bac5557e33d6a9dd43a0807f74870c709fa4",
-    "reason": "The first runner invocation failed in preflight with KeyError: seed because the code looked for a top-level field while the frozen protocol stores it at workload.seed."
+    "prior_protocol_commit": "51859be11df5d6d574e8bb70bdfcb6bf906eb4a4",
+    "prior_protocol_sha256": "cfd8a712c1635ca381fd312281fb4e472dd927c885e1b7d99585a1fe15e34451",
+    "reason": "The v7.2 invocation constructed and checkpointed the initial TinyStories policy, then failed when the runner requested heldout_prompts at the protocol top level; evaluation prompts are nested under workload.evaluation.prompts."
   },
   "resource_limits": {
     "abort": "Stop at first source/model identity mismatch, nonidentical matched initial g0 rollout, incomplete/degenerate training group, non-finite replay, optimizer replay error >=2e-6, behavior-logprob error >=1e-4, unexpected optimizer/promotion count, stale group admitted by VARE, per-arm or total wall cap at a group boundary, 8 GiB peak RSS, or 256 MiB positive swap growth. Preserve partial output; no replacement runs.",
@@ -177,7 +181,7 @@
     "max_wall_seconds_per_arm": 600,
     "max_wall_seconds_total": 2400
   },
-  "runner_sha256": "a730566456202a907ba20a26564fc89d24676e40dce86357769affd23f474dd6",
+  "runner_sha256": "d4ca48fd95a8c7e08ef88032e1dca63e7632286748ac2055029d75f34313f067",
   "rvl_backend_sha256": "a35179d2ff65b35d8079b0d48a933444cac440debd736d6dc6a7a53a27cfb960",
   "rvl_patch_sha256": "d50dfe7d65ed09ef6ee6d551d6680130bf4fd02ab11d29df81dd63ceb7e66871",
   "rvl_revision": "e381c4b3b8c2ad8e5dc4c4b1a33b7922531c3e33",
@@ -243,7 +247,7 @@
       }
     }
   ],
-  "schema": "vare.verifier-drift-scenarios.v7.2",
+  "schema": "vare.verifier-drift-scenarios.v7.3",
   "scope": "A bounded synthetic reward-systems study using real TinyStories-1M sampling and actual RVL AdamW/GRPO updates on one CPU host. It includes a deliberately delayed two-group queue spanning behavior-policy versions and verifier versions, followed conditionally by five process-kill recoveries of a third sequential update. It does not measure coding-agent capability, natural verifier-drift prevalence, or parallel asynchronous speedup.",
   "statistical_plan": {
     "independent_unit": "The three deliberately distinct verifier semantic changes; no rollout member or repeated optimizer update is treated as an independent unit.",

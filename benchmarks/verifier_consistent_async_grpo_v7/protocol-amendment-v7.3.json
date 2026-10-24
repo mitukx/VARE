@@ -1,0 +1,23 @@
+{
+  "amended_protocol_sha256": "2563205c498f3844a8acd3766a1e4500da77598d4ad0ed1cd439a880deb601c7",
+  "amends_schema": "vare.verifier-drift-scenarios.v7.2",
+  "change": "Read training and evaluation prompts from workload, validate the complete protocol shape before model construction, and use the nested seed consistently. No task semantics, task order, budgets, arm schedule, scoring, thresholds, or analysis changed.",
+  "experimental_observations_before_amendment": false,
+  "failure_evidence": {
+    "failure_sha256": "662d3d06c4cd72951e174baaf627dd898902d0fbe6ec87f402e532a310bdff67",
+    "initial_checkpoint_saved": true,
+    "initial_checkpoint_sha256": "b620f05db3417a86191aa6cb68d1796a19dc9a562072b4e79b0e280f23cba0c9",
+    "inventory_sha256": "05a3744100f83a5d3306acc52e3067b1c24d80c556833d658bca3a24bfbd0a21",
+    "model_completions": 0,
+    "model_instantiated": true,
+    "optimizer_updates": 0,
+    "output": "results/verifier_consistent_async_grpo_v7/run-2",
+    "protocol_sha256": "cfd8a712c1635ca381fd312281fb4e472dd927c885e1b7d99585a1fe15e34451",
+    "source_commit": "51859be11df5d6d574e8bb70bdfcb6bf906eb4a4",
+    "verifier_calls": 0
+  },
+  "prior_protocol_commit": "51859be11df5d6d574e8bb70bdfcb6bf906eb4a4",
+  "prior_protocol_sha256": "cfd8a712c1635ca381fd312281fb4e472dd927c885e1b7d99585a1fe15e34451",
+  "reason": "The v7.2 invocation constructed and checkpointed the initial TinyStories policy, then failed when the runner requested heldout_prompts at the protocol top level; evaluation prompts are nested under workload.evaluation.prompts.",
+  "schema": "vare.verifier-drift-protocol-amendment.v1"
+}

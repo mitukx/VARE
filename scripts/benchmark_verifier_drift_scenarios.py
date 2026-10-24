@@ -40,6 +40,59 @@ def require(ok: bool, message: str) -> None:
         raise RuntimeError(message)
 
 
+def validate_protocol(protocol: dict) -> None:
+    required = {
+        "arm_orders", "arms", "auditor_sha256", "base_commit", "crash_recovery",
+        "group_delivery_order", "model_files", "model_revision", "pilot_gate",
+        "primary_metric", "resource_limits", "runner_sha256", "rvl_backend_sha256",
+        "rvl_patch_sha256", "rvl_revision", "scenarios", "training_groups",
+        "v6_helper_sha256", "v7_support_sha256", "pinned_crash_recovery_files_sha256",
+        "vare_source_sha256", "versions", "workload",
+    }
+    require(required <= protocol.keys(),
+            f"protocol is missing top-level keys: {sorted(required - protocol.keys())}")
+    workload = protocol["workload"]
+    require({"seed", "training_prompts", "evaluation", "group_size",
+             "groups_per_arm", "optimizer_updates_per_arm", "rollouts_per_arm",
+             "verifier_calls_per_arm", "max_new_tokens"} <= workload.keys(),
+            "protocol workload schema is incomplete")
+    require(type(workload["seed"]) is int and workload["seed"] >= 0,
+            "protocol workload seed must be a nonnegative integer")
+    require(workload["group_size"] == GROUP_SIZE
+            and workload["groups_per_arm"] == GROUPS_PER_ARM
+            and workload["optimizer_updates_per_arm"] == UPDATES_PER_ARM
+            and workload["rollouts_per_arm"] == GROUP_SIZE * GROUPS_PER_ARM
+            and workload["verifier_calls_per_arm"] == GROUP_SIZE * GROUPS_PER_ARM,
+            "protocol workload and runner budgets differ")
+    require(isinstance(workload["evaluation"], dict)
+            and isinstance(workload["training_prompts"], list)
+            and bool(workload["training_prompts"])
+            and isinstance(workload["evaluation"].get("prompts"), list)
+            and bool(workload["evaluation"]["prompts"]),
+            "protocol prompts are missing")
+    scenarios = protocol["scenarios"]
+    scenario_ids = [row["id"] for row in scenarios]
+    require(len(scenario_ids) == len(set(scenario_ids)) and bool(scenario_ids),
+            "protocol scenario identifiers are empty or duplicated")
+    arm_names = {"sync", "naive_async", "vare_async"}
+    require(set(protocol["arm_orders"]) == set(scenario_ids),
+            "protocol arm order must specify every and only scenario")
+    for key in ("group_delivery_order", "training_groups"):
+        require(set(protocol[key]) == arm_names,
+                f"protocol {key} must specify every and only registered arm")
+    for scenario_id in scenario_ids:
+        require(set(protocol["arm_orders"][scenario_id]) == arm_names
+                and len(protocol["arm_orders"][scenario_id]) == len(arm_names),
+                f"protocol arm order is incomplete for {scenario_id}")
+    for arm in arm_names:
+        require(set(protocol["group_delivery_order"][arm]) == set(range(GROUPS_PER_ARM)),
+                f"protocol delivery schedule is incomplete for {arm}")
+        require(len(protocol["training_groups"][arm]) == UPDATES_PER_ARM
+                and len(set(protocol["training_groups"][arm])) == UPDATES_PER_ARM
+                and set(protocol["training_groups"][arm]) <= set(range(GROUPS_PER_ARM)),
+                f"protocol training schedule is invalid for {arm}")
+
+
 def whole_word(text: str, word: str) -> bool:
     return bool(re.search(rf"(?<![A-Za-z0-9_]){re.escape(word)}(?![A-Za-z0-9_])", text,
                           flags=re.IGNORECASE))
@@ -249,7 +302,8 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
     from vare.types import Task
 
     scenario_id = scenario["id"]
-    experiment_seed = int(protocol["workload"]["seed"])
+    workload = protocol["workload"]
+    experiment_seed = workload["seed"]
     arm_out = args.output / scenario_id / arm
     arm_out.mkdir(parents=True)
     naive = arm == "naive_async"
@@ -260,7 +314,8 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
     state = runtime["state"]
     initial_state_hash = runtime["initial_model_tensor_sha256"]
     state.version = 1 if scenario["id"] == "no_drift" else (0 if naive or arm == "vare_async" else 1)
-    hooks.eval_tasks = make_eval_tasks(Task, protocol["heldout_prompts"], scenario_id)
+    hooks.eval_tasks = make_eval_tasks(
+        Task, workload["evaluation"]["prompts"], scenario_id)
 
     verifier_shas = {
         version: sha256_json({"scenario": scenario_id, "version": version,
@@ -293,7 +348,7 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
     store = adapter = loop = reward_root = None
     registered_policies = {"policy-0"}
     if arm != "naive_async":
-        run_id = f"vare-grpo-v7-{scenario_id}-{arm}-seed{protocol['seed'] + scenario_index * 100}"
+        run_id = f"vare-grpo-v7-{scenario_id}-{arm}-seed{experiment_seed + scenario_index * 100}"
         store = TrajectoryStore.create(arm_out / "trajectories.sqlite",
                                        run_id=run_id, max_inflight=64)
 
@@ -339,7 +394,7 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
     else:
         signer["root"] = EvidenceTrustRoot(
             os.urandom(32), sha(PROTOCOL_PATH), verifier_shas[1],
-            f"naive-{scenario_id}-seed{protocol['seed'] + scenario_index * 100}",
+            f"naive-{scenario_id}-seed{experiment_seed + scenario_index * 100}",
             sha256_json([asdict(task) for task in hooks.eval_tasks]),
             f"naive-eval-{scenario_id}-nonce-0000", True)
         # Version-unaware RVL advantage normalization is the deliberate negative control.
@@ -354,7 +409,7 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
     # Async arms hold group 0 while training fresh group 1 and generating group
     # 2 from the promoted policy. The resulting queue contains old-policy,
     # mixed-verifier group 0 beside new-policy, current-verifier group 2.
-    prompt_list = protocol["training_prompts"]
+    prompt_list = workload["training_prompts"]
     groups_by_index = {}
     updates = []
     audit_records = []
@@ -513,7 +568,7 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
         elif arm == "naive_async" and eligible:
             signer["root"] = EvidenceTrustRoot(
                 os.urandom(32), sha(PROTOCOL_PATH), verifier_shas[1],
-                f"naive-{scenario_id}-seed{protocol['seed'] + scenario_index * 100}",
+                    f"naive-{scenario_id}-seed{experiment_seed + scenario_index * 100}",
                 sha256_json([asdict(task) for task in hooks.eval_tasks]),
                 f"naive-eval-{scenario_id}-nonce-{group_index:04d}", True)
             update_record = await run_naive_update(
@@ -559,7 +614,7 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
             if admission_attempt:
                 signer["root"] = EvidenceTrustRoot(
                     os.urandom(32), sha(PROTOCOL_PATH), verifier_shas[1],
-                    f"vare-{scenario_id}-{arm}-seed{protocol['seed'] + scenario_index * 100}",
+                    f"vare-{scenario_id}-{arm}-seed{experiment_seed + scenario_index * 100}",
                     sha256_json([asdict(t) for t in hooks.eval_tasks]),
                     f"vare-eval-{scenario_id}-{arm}-nonce-{group_index:04d}", True)
                 loop.evidence_trust_root = signer["root"]
@@ -782,6 +837,7 @@ async def run(args) -> None:
     require(sys.flags.no_site == 1, "launch with python -S for import isolation")
     require(not args.output.exists(), "output directory already exists")
     protocol = json.loads(PROTOCOL_PATH.read_text())
+    validate_protocol(protocol)
     experiment_seed = int(protocol["workload"]["seed"])
     require(sha(Path(__file__)) == protocol["runner_sha256"], "runner hash differs from protocol")
     require(sha(ROOT / "scripts/audit_verifier_drift_scenarios.py") == protocol["auditor_sha256"],
