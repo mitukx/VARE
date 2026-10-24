@@ -16,7 +16,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 PILOT = ROOT / "benchmarks/verifier_integrity_pilot_v1"
-PROTOCOL = ROOT / "protocols/verifier_integrity_pilot_v1/protocol.json"
+PROTOCOL = ROOT / "protocols/verifier_integrity_pilot_v1/protocol-v2.json"
 sys.path.insert(0, str(ROOT / "src"))
 
 from vare import mlxlm_1912_repo_task as task  # noqa: E402
@@ -205,8 +205,8 @@ def main() -> int:
         if sha(data) != expected:
             raise ValueError(f"upstream source differs from frozen bytes: {rev}:{path}")
 
-    images = {"original": protocol["original_image"]}
-    for name, build in protocol["derived_images"].items():
+    images = {"original": protocol["images"]["original_image"]}
+    for name, build in protocol["images"]["derived_images"].items():
         images[name] = build_variant(
             name,
             PILOT / build["context"],
