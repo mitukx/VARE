@@ -1,0 +1,36 @@
+{
+  "child_maxrss_bytes": 33931264,
+  "command": [
+    "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+    "-m",
+    "pytest",
+    "-vv",
+    "tests/test_run_mlxlm_1971_v12_operator.py::test_v12_snapshots_untrusted_git_without_running_filters_or_uploadpack_hooks"
+  ],
+  "environment": {
+    "git": "git version 2.50.1 (Apple Git-155)",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12",
+    "swap": "vm.swapusage: total = 5120.00M  used = 3750.44M  free = 1369.56M  (encrypted)"
+  },
+  "experiment_id": "mlxlm-1971-v12-source-git-filter-boundary-v1",
+  "hypothesis": "A fresh bare repository that fetches only the pinned commit can be checked out without executing an input repository local smudge filter or upload-pack packObjectsHook.",
+  "limits": "Synthetic source-level Git boundary check only; no upstream task grading, candidate code, model inference, training, or optimizer update.",
+  "primary_observation": "The direct-checkout positive control executed the fixture smudge filter once; the isolated snapshot checkout added no further filter marker and executed no upload-pack hook.",
+  "protocol_id": "vare.mlsys-repository-task.mlxlm-1971.v12.operator",
+  "protocol_sha256": "9bd5ef255748c41344f641b3c3383324337a07fad06fa189d4ce4f376bf19332",
+  "schema_version": 1,
+  "source_commit_at_start": "6884aa70276c57d9d218d7068ca51e4dbc741bbe",
+  "source_hashes": {
+    "lock_v12": "698087aa0c66a3f5fd4f0ef7753d76cf6f244ebc9ee193c30af9919a2f9f31b5",
+    "operator_v11": "604986569eee4ebe33d24c5009292786501d5956fb5024050a814c14659f98de",
+    "operator_v12": "f2aece2657380bd8aa6990fa834f18c552c77577ab258e24ae65d8e1208b09ac",
+    "protocol_v12": "9bd5ef255748c41344f641b3c3383324337a07fad06fa189d4ce4f376bf19332",
+    "test": "d0fdc527842bfd1930c29c3340c1e244ab4f6dc0b2c3a06db5dcab433545cda7"
+  },
+  "status": "COMPLETED",
+  "test_exit_code": 0,
+  "tests_failed": 0,
+  "tests_passed": 1,
+  "wall_seconds": 0.659524
+}

@@ -1,0 +1,44 @@
+protocol_sha256=f045675be07247152b9d908454ae0a889768a71b8ed5482d4a0490c08a96593e
+started_at_utc=2026-10-23T23:12:59.072775+00:00
+
+[init upstream bare] argv=["git", "init", "--bare", "--quiet", "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/VARE-coding-rl-experiments/work/pr117/.vare-v12-real-snapshot-22xckhwi/upstream.git"] cwd=None
+returncode=0
+stdout:
+
+stderr:
+
+
+[fetch pinned upstream commit] argv=["git", "-C", "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/VARE-coding-rl-experiments/work/pr117/.vare-v12-real-snapshot-22xckhwi/upstream.git", "fetch", "--depth=1", "--no-tags", "--no-recurse-submodules", "https://github.com/ml-explore/mlx-lm.git", "5f3c79d6bb1864a85d5343818192bd061b161e3a"] cwd=None
+returncode=0
+stdout:
+
+stderr:
+From https://github.com/ml-explore/mlx-lm
+ * branch            5f3c79d6bb1864a85d5343818192bd061b161e3a -> FETCH_HEAD
+
+
+[verify fetched commit] argv=["git", "-C", "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/VARE-coding-rl-experiments/work/pr117/.vare-v12-real-snapshot-22xckhwi/upstream.git", "rev-parse", "FETCH_HEAD"] cwd=None
+returncode=0
+stdout:
+5f3c79d6bb1864a85d5343818192bd061b161e3a
+
+stderr:
+
+budget_check wall_seconds=0.657 temp_bytes=616718 swap_delta_bytes=0 swap=vm.swapusage: total = 5120.00M  used = 3750.44M  free = 1369.56M  (encrypted)
+budget_check wall_seconds=0.828 temp_bytes=1233678 swap_delta_bytes=0 swap=vm.swapusage: total = 5120.00M  used = 3750.44M  free = 1369.56M  (encrypted)
+
+[materialize isolated baseline] argv=["git", "-c", "core.hooksPath=/dev/null", "-c", "core.fsmonitor=false", "-C", "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/VARE-coding-rl-experiments/work/pr117/.vare-v12-real-snapshot-22xckhwi/isolated-source.git", "worktree", "add", "--detach", "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/VARE-coding-rl-experiments/work/pr117/.vare-v12-real-snapshot-22xckhwi/baseline-worktree", "5f3c79d6bb1864a85d5343818192bd061b161e3a"] cwd=None
+returncode=0
+stdout:
+HEAD is now at 5f3c79d fix muse template (#1977)
+
+stderr:
+Preparing worktree (detached HEAD 5f3c79d)
+
+budget_check wall_seconds=3.896 temp_bytes=3813389 swap_delta_bytes=0 swap=vm.swapusage: total = 5120.00M  used = 3750.44M  free = 1369.56M  (encrypted)
+
+finished_at_utc=2026-10-23T23:13:03.035730+00:00
+status=COMPLETED
+wall_seconds=3.920471
+swap_before=vm.swapusage: total = 5120.00M  used = 3750.44M  free = 1369.56M  (encrypted)
+swap_after=vm.swapusage: total = 5120.00M  used = 3750.44M  free = 1369.56M  (encrypted)

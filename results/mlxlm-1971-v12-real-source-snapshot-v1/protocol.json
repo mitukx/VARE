@@ -1,0 +1,50 @@
+{
+  "frozen_at_utc": "2026-10-23T23:12:21.936097+00:00",
+  "frozen_inputs_sha256": {
+    "baseline_python_manifest": "686d220bc113df0a16542a02546c98b07d19f9ab6228dde13b77683efcc5be67",
+    "v12_lock": "698087aa0c66a3f5fd4f0ef7753d76cf6f244ebc9ee193c30af9919a2f9f31b5",
+    "v12_protocol": "9bd5ef255748c41344f641b3c3383324337a07fad06fa189d4ce4f376bf19332",
+    "v12_runner": "f2aece2657380bd8aa6990fa834f18c552c77577ab258e24ae65d8e1208b09ac"
+  },
+  "hypothesis": "A fresh, depth-one bare snapshot of the pinned MLX-LM baseline commit can materialize a clean worktree whose Python source inventory and bytes satisfy the existing v9 source manifest, without using the caller repository checkout metadata.",
+  "method": [
+    "Fetch the exact commit from the public upstream remote into a new bare repository with depth one and no tags or submodules.",
+    "Pass that bare repository to the v12 source snapshot helper, which fetches only the same exact commit into second fresh bare metadata.",
+    "Create one detached worktree from the second bare repository under the sanitized Git environment.",
+    "Run the existing read-only verify_pinned_source_tree check and compare the target-file hash and Python inventory to frozen v9 inputs."
+  ],
+  "negative_controls": {
+    "candidate_controlled_filter_execution": 0,
+    "candidate_controlled_uploadpack_hook_execution": 0
+  },
+  "no_go_claims": [
+    "No candidate patch grading or task certification.",
+    "No model loading, inference, training, or optimizer update.",
+    "No held-out evaluation or capability claim."
+  ],
+  "primary_outcome": "Pass only if commit identity, clean worktree state, complete Python inventory, and all manifest file hashes verify; otherwise retain the failing record and stop.",
+  "protocol_id": "mlxlm-1971-v12-real-source-snapshot-v1",
+  "resource_budget": {
+    "disk_available_kib_at_freeze": 134760308736,
+    "maximum_candidate_inference": 0,
+    "maximum_container_or_grader_calls": 0,
+    "maximum_download_and_temp_object_bytes": 536870912,
+    "maximum_swap_growth_bytes": 268435456,
+    "maximum_wall_seconds": 300,
+    "paid_compute_or_api_spend": 0,
+    "swap_at_freeze": "vm.swapusage: total = 5120.00M  used = 3750.44M  free = 1369.56M  (encrypted)"
+  },
+  "status": "PROSPECTIVE_NOT_RUN",
+  "stop_conditions": [
+    "Either Git fetch exceeds its 180-second command timeout.",
+    "Total temporary bare repository object storage exceeds 512 MiB.",
+    "Swap use grows by more than 256 MiB from the preflight reading.",
+    "The fetched commit, target-file hash, source manifest, clean-worktree check, or full inventory differs."
+  ],
+  "task": {
+    "baseline_commit": "5f3c79d6bb1864a85d5343818192bd061b161e3a",
+    "exposure_classification": "consumed-development-only; no model exposure or split change",
+    "task_id": "mlxlm-1971-mimo-value-scale",
+    "upstream_repository": "https://github.com/ml-explore/mlx-lm.git"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "allowed_actions": [
+    "export",
+    "grade"
+  ],
+  "hidden_evaluation_output_to_candidate": false,
+  "new_model_runs_performed": false,
+  "not_a_heldout_capability_result": true,
+  "operator_source_commit": "8257a4dfe2106055a048ddd4b1520a08c7e4d658",
+  "operator_source_path": "scripts/run_attested_mlxlm_1971_v9_calibration.py",
+  "protocol_id": "vare.mlsys-repository-task.mlxlm-1971.v11.operator",
+  "reference_v9_protocol_sha256": "aa8fec4c3a3fbba119b83009c7f3c164b762758a5c1593faf3a78f3464678fb2",
+  "reference_v9_source_commit": "3f12eefd71d1d2213b37e3a174b446cb5155e979",
+  "required_nested_v9_test_paths": [
+    "tests/test_mlxlm_1971_calibration_v9.py",
+    "tests/test_mlxlm_1971_repo_task_v9.py"
+  ],
+  "requires_disable_git_replacement_refs": true,
+  "requires_immutable_pinned_operator_worktree": true,
+  "requires_nested_v9_source_attestation": true,
+  "schema_version": 1,
+  "sparse_checkout_paths": [
+    "scripts",
+    "src/vare",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1971_mimo_value_scale",
+    "tests"
+  ],
+  "status": "PROSPECTIVE_OPERATOR_INTERFACE_NOT_EXECUTED",
+  "supersedes_protocol_id": "vare.mlsys-repository-task.mlxlm-1971.v10.operator",
+  "task_id": "mlxlm-1971-mimo-value-scale"
+}

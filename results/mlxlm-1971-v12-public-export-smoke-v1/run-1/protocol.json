@@ -1,0 +1,51 @@
+{
+  "experiment_id": "mlxlm-1971-v12-public-export-smoke-v1",
+  "protocol_version": 1,
+  "status": "FROZEN_NOT_RUN",
+  "hypothesis": "The v12 public export dispatch creates a populated detached worktree from its isolated bare snapshot and the pinned v11 exporter emits a baseline candidate whose source identity matches the frozen task manifest.",
+  "cheaper_falsification_completed": [
+    "The v12 source-boundary unit test demonstrates that direct checkout runs a source-controlled local smudge filter while snapshot materialization does not.",
+    "The exact-head regression now exercises the public dispatch path and verifies that the delegate receives a populated worktree at the pinned commit."
+  ],
+  "operator": {
+    "protocol_id": "vare.mlsys-repository-task.mlxlm-1971.v12.operator",
+    "protocol_sha256": "9bd5ef255748c41344f641b3c3383324337a07fad06fa189d4ce4f376bf19332",
+    "source_commit": "c07d498335fa1dbbf7e5e1a388378bba01b37e52",
+    "source_sha256": "576a58331cd30767ca86bca3143f35d91d5e464a3dbcb3461306b06d33c9b7ee",
+    "delegated_v11_source_sha256": "604986569eee4ebe33d24c5009292786501d5956fb5024050a814c14659f98de"
+  },
+  "task": {
+    "task_id": "mlxlm-1971-mimo-value-scale",
+    "exposure": "previously_consumed_development_only",
+    "upstream_repository": "https://github.com/ml-explore/mlx-lm.git",
+    "baseline_commit": "5f3c79d6bb1864a85d5343818192bd061b161e3a",
+    "operation": "export_baseline_candidate_workspace_without_patch"
+  },
+  "evaluator": {
+    "hidden_grader_invoked": false,
+    "grader_result": "not applicable; this is an export-path smoke only",
+    "candidate_execution": false,
+    "model_inference": false
+  },
+  "primary_metric": "One v12 public export succeeds, reports the pinned baseline commit, and exports the target source bytes and inventory matching the frozen source manifest.",
+  "stopping_rule": "Run one bounded export. Stop on any source identity, worktree, output schema, resource, or manifest mismatch; do not retry or grade.",
+  "resource_budget": {
+    "wall_clock_seconds": 300,
+    "peak_resident_memory_mib": 512,
+    "swap_growth_mib": 128,
+    "temporary_storage_mib": 128,
+    "paid_compute_or_api_spend": 0
+  },
+  "reproduction": [
+    "python -c 'from pathlib import Path; import subprocess; from scripts import run_mlxlm_1971_v11_operator as v; p=Path(\"results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git\"); p.mkdir(mode=0o700); subprocess.run([\"git\",\"init\",\"--bare\",\"--quiet\",str(p)],env=v.GIT_ENV,check=True,timeout=30); subprocess.run(v._git_command(p,\"fetch\",\"--depth=1\",\"--no-tags\",\"--no-recurse-submodules\",\"https://github.com/ml-explore/mlx-lm.git\",\"5f3c79d6bb1864a85d5343818192bd061b161e3a\"),env=v.GIT_ENV,check=True,timeout=180)'",
+    "python scripts/run_mlxlm_1971_v12_operator.py --action export --workspace results/mlxlm-1971-v12-public-export-smoke-v1/run-1/workspace --source-repo results/mlxlm-1971-v12-public-export-smoke-v1/run-1/source-mirror.git"
+  ],
+  "raw_outputs": [
+    "raw/environment.json",
+    "raw/source-fetch.log",
+    "raw/export.stdout.json",
+    "raw/export.stderr.txt",
+    "raw/resource-usage.txt",
+    "raw/workspace-manifest.json"
+  ]
+}
