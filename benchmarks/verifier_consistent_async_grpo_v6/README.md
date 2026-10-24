@@ -22,3 +22,5 @@ python -S scripts/audit_verifier_consistent_async_grpo.py \
 Check `expand_after_pilot` before seed 82107; if true, use the same commands with seed/output `82107` and audit both eligible seeds. Run the five actual SIGKILL cutpoints only after a complete eligible pilot.
 
 This is a synthetic verifier-drift and single-host recovery experiment, not coding capability, natural verifier-drift prevalence, or broad asynchronous throughput. Preserve all partial output directories; never overwrite one.
+
+The completed two-seed audit and five-cutpoint process-recovery result are summarized in [`crash-recovery-results-v6.md`](crash-recovery-results-v6.md). The crash harness applies frozen VARE replay priority ordering and is hash-bound by [`crash-runner-correction-v2.json`](crash-runner-correction-v2.json); the original failed attempt remains excluded and preserved.

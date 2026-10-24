@@ -5,7 +5,8 @@ from types import SimpleNamespace
 import torch
 
 from scripts.benchmark_verifier_consistent_grpo_sigkill import independent_eval
-from vare.types import Task
+from scripts.benchmark_verifier_consistent_grpo_sigkill import replay_ordered_experiences
+from vare.types import Attempt, Experience, Task, Verification
 
 
 class _Model(torch.nn.Module):
@@ -41,3 +42,33 @@ def test_crash_recovery_evaluator_scores_every_preregistered_task():
     assert report.primary == 1.0
     assert report.metadata["per_task_scores"] == {task.id: 1.0 for task in tasks}
     assert set(detail["outputs"]) == {task.id for task in tasks}
+
+
+def test_crash_recovery_preserves_frozen_priority_order_for_grpo_group():
+    scores = [1, 1, 0, 0, 1, 0, 0, 0]
+    experiences = []
+    for member, score in enumerate(scores):
+        task = Task(
+            "task", "prompt", "landing",
+            {"learning_rule": "terminal_action_on_policy_grpo_v1"},
+        )
+        attempt = Attempt(
+            task, "", "policy-0", 0, member,
+            metadata={
+                "vare_rollout_group": "g-01-fresh",
+                "vare_rollout_group_size": len(scores),
+                "member_index": member,
+            },
+        )
+        verification = Verification(
+            score=float(score), passed=bool(score), confidence=1.0,
+            verifier_version=1, verifier_name="landing", trusted=True,
+            metadata={"verifier_config_sha256": "a" * 64},
+        )
+        experiences.append(Experience(attempt, verification, 0, 0, 0.0))
+
+    ordered = replay_ordered_experiences(experiences, seed=82106)
+
+    assert [item.attempt.metadata["member_index"] for item in ordered] == [
+        2, 3, 5, 6, 7, 0, 1, 4,
+    ]

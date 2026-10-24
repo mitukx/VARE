@@ -1,0 +1,97 @@
+{
+  "notes": "Inventories were recomputed against the complete raw output directories in this workspace. Full raw process logs, checkpoints, SQLite stores, and ephemeral signing keys remain under results/ and are not duplicated in this index.",
+  "protocol_sha256": "1e16f2452d2f0d101295df1438f87679bec621bb27f667259fe18d66db5d8523",
+  "raw_artifact_paths": {
+    "crash_recovery": "results/verifier_consistent_async_grpo_v6/crash-82106-replay-order-v2",
+    "excluded_first_crash_attempt": "results/verifier_consistent_async_grpo_v6/crash-82106-corrected",
+    "seed_82106": "results/verifier_consistent_async_grpo_v6/seed-82106",
+    "seed_82107": "results/verifier_consistent_async_grpo_v6/seed-82107"
+  },
+  "raw_crash_recovery_bytes": 315334923,
+  "schema": "vare.v6-pilot-artifact-index.v1",
+  "selected_artifacts": [
+    {
+      "bytes": 13757,
+      "path": "pilot-audit-v2.json",
+      "sha256": "90c528cd0f6b26f8626e59aaee6da1e559b649a0ecec4db372771a02450dfb1e"
+    },
+    {
+      "bytes": 12096,
+      "path": "sigkill-summary-v2.json",
+      "sha256": "571a4a4ff9d109e88bbbbf6970097c11eb2c7d7a98194bbc4aa11dadff1debbe"
+    },
+    {
+      "bytes": 22127,
+      "path": "crash-82106-replay-order-v2-SHA256.json",
+      "sha256": "42027b0f5d1fbd6d013a785cf102731149a22d5a59bf9e098f55c64d45a80271"
+    },
+    {
+      "bytes": 4536,
+      "path": "seed-82106-SHA256.json",
+      "sha256": "c3550669bbe9419b9dbe150144b11626e548d00f76c961fabaf16147affee6f4"
+    },
+    {
+      "bytes": 4536,
+      "path": "seed-82107-SHA256.json",
+      "sha256": "b888a2e2066ce2ce67c8abd812b03a7adda1bb7f8b665468f7d5e9ccbb630b91"
+    },
+    {
+      "bytes": 4501,
+      "path": "crash-82106-corrected-failed-SHA256.json",
+      "sha256": "7b48ac7ea9c4a58239bcede37a43a895837b81615401f416e91a60016ceb3515"
+    },
+    {
+      "bytes": 1237,
+      "path": "crash-82106-corrected-failure.json",
+      "sha256": "adba9d0413bd46aa5979617f1bf35c35ed865cfc416bee8aa942b827c92ba806"
+    },
+    {
+      "bytes": 22527,
+      "path": "protocol.json",
+      "sha256": "1e16f2452d2f0d101295df1438f87679bec621bb27f667259fe18d66db5d8523"
+    },
+    {
+      "bytes": 1540,
+      "path": "crash-runner-correction-v2.json",
+      "sha256": "e7a9a2dc67286976d97a28f60ba5ca1a2789c90bb4149e63574eb1f137fc1e9d"
+    },
+    {
+      "bytes": 975,
+      "path": "auditor-correction-v2.json",
+      "sha256": "3a1d896fa9381893844e3b8d2c0119ac79ef14f18b67dd71a8050dc8e88c90b5"
+    },
+    {
+      "bytes": 7179,
+      "path": "crash-recovery-results-v6.md",
+      "sha256": "16458a1d4caec6e0c3ff9155f4f3b5777383ab0a545987967ed7e1bbd60b1ccf"
+    },
+    {
+      "bytes": 1473,
+      "path": "crash-recovery-correction-v2.md",
+      "sha256": "f1ab2c95c988975b921aab4eec69d29bd004ae306ff8ebcf243156bd02c10752"
+    },
+    {
+      "bytes": 2003,
+      "path": "README.md",
+      "sha256": "a9e229f7e429c46bd8eaf793227c89d1e08ffb3e7ba8227da4c5b86aff532154"
+    }
+  ],
+  "source_files": [
+    {
+      "bytes": 36047,
+      "path": "scripts/benchmark_verifier_consistent_grpo_sigkill.py",
+      "sha256": "a875f9879e402b3e29cd6a630ef6d1fc4925e50fe0e84f9a81fbd1bb2b2ddf45"
+    },
+    {
+      "bytes": 2404,
+      "path": "tests/test_verifier_consistent_async_grpo_crash_eval.py",
+      "sha256": "23954c018053f406b2d7120ca8f4b5e2fe1ece6afd9f7741de76447aaee33608"
+    }
+  ],
+  "verified_inventory_entry_counts": {
+    "crash_v2": 120,
+    "failed_crash_v1": 24,
+    "seed_82106": 43,
+    "seed_82107": 43
+  }
+}

@@ -226,17 +226,22 @@ def ensure_store(case: Path, run: Path, seed: int):
     return store, result, root, verifier_shas
 
 
-def verified_samples(rows: list[dict]):
-    from rvl_systems.types import Generation, VerifiedGeneration
-    result = []
-    for item in rows:
-        raw = item["attempt"].metadata["rvl_generation"]
-        generation = Generation(**raw)
-        result.append(VerifiedGeneration(
-            generation=generation, reward=float(item["score"]),
-            verifier_latency_s=0.0, verifier_version=1,
-            metadata={"verifier_name": "landing", "trusted": True}))
-    return result
+def replay_ordered_experiences(experiences, *, seed: int):
+    """Apply the frozen engine's complete-group replay ordering before GRPO."""
+    from vare.config import ReplayConfig
+    from vare.replay import PrioritizedReplay
+
+    replay = PrioritizedReplay(
+        ReplayConfig(capacity=len(experiences)), seed=seed
+    )
+    if not replay.add_group(experiences, [1.0] * len(experiences)):
+        raise RuntimeError("crash source group was rejected by frozen replay")
+    ordered = replay.sample_current(
+        len(experiences), freshness_fn=lambda _experience: 1.0, grouped=True
+    )
+    if len(ordered) != len(experiences):
+        raise RuntimeError("frozen replay did not return the complete GRPO group")
+    return ordered
 
 
 def save_state(torch, path: Path, state) -> float:
@@ -331,7 +336,29 @@ def worker(args) -> None:
     runtime = load_initial_model(args, case)
     torch, trainer, model, backend = runtime["torch"], runtime["trainer"], runtime["model"], runtime["backend"]
     rows, _ = load_rows(args.source_run)
-    samples = verified_samples(rows)
+    from benchmark_verifier_consistent_async_grpo import make_experiences
+    from rvl_systems.types import Generation, VerifiedGeneration
+    from vare.integrations.rvl_grpo import RVLGRPOHooks
+    experiences = make_experiences(
+        {"members": rows}, "g-01-fresh", verifier_shas=verifier_shas,
+        trusted=True,
+    )
+    training_experiences = replay_ordered_experiences(
+        experiences, seed=args.seed
+    )
+    converter = type("GenerationConverter", (), {
+        "_generation_factory": Generation,
+        "_verified_factory": VerifiedGeneration,
+    })()
+    samples = [
+        RVLGRPOHooks._to_verified_generation(converter, experience)
+        for experience in training_experiences
+    ]
+    advantages = RVLGRPOHooks._group_relative_advantages(
+        training_experiences, samples,
+        eps=trainer.config.advantage_eps,
+        clip=trainer.config.clip_advantage,
+    )
     journal_path = case / "promotion.sqlite"
     initial_sha = sha(checkpoint0)
     journal = runtime["journal_class"](journal_path, initial_policy_id="policy-0",
@@ -376,7 +403,7 @@ def worker(args) -> None:
             return original_step(*a, **kw)
         trainer.optimizer.step = count_step
         started = time.perf_counter()
-        trainer.train_step(samples)
+        trainer.train_step(samples, advantages=advantages)
         state = trainer.snapshot_training_state()
         attempt_number += 1
         append_jsonl(case / "optimizer-attempts.jsonl", {
@@ -473,6 +500,8 @@ def worker(args) -> None:
         "promotion_journal": status, "candidate_sha256": sha(candidate_path),
         "candidate_model_tensor_sha256": runtime["tensor_hash"](
             torch.load(candidate_path, weights_only=True)["model"]),
+        "training_reward_order": [sample.reward for sample in samples],
+        "training_group_relative_advantages": advantages,
         "main_sync_candidate_sha256": sha(args.source_run / "sync/checkpoints/policy-1.pt"),
         "main_sync_candidate_model_matches": runtime["tensor_hash"](
             torch.load(candidate_path, weights_only=True)["model"])
