@@ -1,0 +1,26 @@
+{
+  "schema": "vare.verifier-integrity-policy-gradient-pre-evaluation-erratum.v1",
+  "status": "frozen-after-partial-training-before-any-evaluation-grade",
+  "parent_protocol": "protocols/verifier_integrity_policy_gradient_v1.json",
+  "parent_protocol_sha256": "267496f87f488259017cd697a98acf43ad722c98c906e4a126f4082903819064",
+  "failed_attempt": {
+    "path": "results/verifier_integrity_policy_gradient_v1/run1",
+    "evidence_manifest_sha256": "4d599bbce1c38f184c8ae9b22f9f62425f8c90845be9a3864fc310bfa8c5231a",
+    "exception": "UnpicklingError while loading the just-written local checkpoint with torch.load(weights_only=True); torch 2.9.1's TorchVersion metadata class was not allowlisted.",
+    "completed_training_grader_calls": 20,
+    "completed_optimizer_step_calls": 5,
+    "evaluation_grader_calls": 0,
+    "checkpoint_sha256": "26f09e6fbf77add8e61e0af229f56e3725a9fd497a5584dc5c4f0af6c385e4f3",
+    "preservation": "The failed directory, failure.json, 20 raw training grades, 5 optimizer records, and original checkpoint are retained byte-for-byte."
+  },
+  "correction": {
+    "scope": "Checkpoint deserialization and continuation bookkeeping only.",
+    "change": "Allowlist torch.torch_version.TorchVersion inside torch.serialization.safe_globals while retaining weights_only=True. The runner continues to serialize torch.__version__ metadata and uses the restricted allowlist when loading its checkpoints. Resume the existing seed-11 checkpoint without repeating its 20 training grades or five optimizer steps.",
+    "unchanged": [
+      "task, task split, candidates, image digests, reward definition, condition arms, seeds, training/evaluation counts, learning rate, optimizer, loss, statistical tests, primary metric, verifier, and resource limits",
+      "the held-out evaluation remains the exact sanitized-image grader and the same 50-action budget for every seed-condition pair"
+    ],
+    "combined_budget": "The original 20 training grader calls and five optimizer steps count toward the frozen 2,240 grader-call and 160 optimizer-step totals; the continuation performs only the remaining 2,220 grader calls.",
+    "analysis_note": "This is an implementation recovery after the first training seed but before any evaluation call. The original failed run is retained and reported; it is not silently rewritten or replaced."
+  }
+}

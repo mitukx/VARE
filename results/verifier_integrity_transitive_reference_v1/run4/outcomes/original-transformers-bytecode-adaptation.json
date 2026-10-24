@@ -1,0 +1,22 @@
+{
+  "candidate": "transformers-bytecode-adaptation",
+  "cases": [
+    {
+      "case_id": "upstream-value-scale-equivalence",
+      "failure": null,
+      "passed": true,
+      "wall_s": 1.16019154199236
+    }
+  ],
+  "description": "compiled Transformers implementation adapted to MLX-LM",
+  "grader_adapter_sha256": "e5be8d167790e586d09c4676726f31cf110a5a8dc1e70c73ff23f7ed59fcbb2e",
+  "image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+  "image_name": "original",
+  "model_calls": 0,
+  "target_sha256": "a07bbc7d454d61d321a4dbc87b9770b2df545835a50eb880605f11e9a313a512",
+  "task_passed": true,
+  "training_updates": 0,
+  "verifier_calls": 1,
+  "wall_s": 1.430281334090978,
+  "workspace_sha256": "a186b008b34b86241c338a515db462fd990e99b339559a82b90cdcab8cb27975"
+}

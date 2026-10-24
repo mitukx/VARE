@@ -1,0 +1,56 @@
+{
+  "accelerator_available_but_unused": true,
+  "accelerator_used": false,
+  "grader_case_count": 14,
+  "grader_protocol": "mlxlm-1912-isolated-task-v4",
+  "host_resources": {
+    "host_available_memory_mib": 9466.125,
+    "host_available_memory_percent": 28.888320922851562,
+    "host_swap_used_mib": 2251.75,
+    "process_rss_mib": 199.015625
+  },
+  "images": {
+    "contaminated": {
+      "architecture": "arm64",
+      "image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+      "image_id": "sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+      "os": "linux",
+      "repo_digests": [
+        "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7"
+      ],
+      "size_bytes": 131913042
+    },
+    "sanitized": {
+      "architecture": "arm64",
+      "image": "localhost:5000/vare/1912-sanitized@sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+      "image_id": "sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+      "os": "linux",
+      "repo_digests": [
+        "vare-mlxlm1912-sanitized@sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+        "localhost:5000/vare/1912-sanitized@sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25"
+      ],
+      "size_bytes": 131933562
+    }
+  },
+  "optimizer_semantics": {
+    "after": [
+      0.3697831532637493,
+      0.31510842336812545,
+      0.31510842336812545
+    ],
+    "before": [
+      0.3333333333333333,
+      0.3333333333333333,
+      0.3333333333333333
+    ],
+    "optimizer": "torch.optim.Adam",
+    "optimizer_step_calls": 1,
+    "status": "pass",
+    "task_grader_calls": 0,
+    "torch_version": "2.9.1"
+  },
+  "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+  "status": "pass",
+  "torch_device": "cpu",
+  "torch_version": "2.9.1"
+}

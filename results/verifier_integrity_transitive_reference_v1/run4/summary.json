@@ -1,0 +1,722 @@
+{
+  "access_probe_calls": 0,
+  "access_probes": {
+    "fully-sanitized": {
+      "bytecode": [
+        {
+          "bytes": 39233,
+          "has_v_scale_code": true,
+          "instructions": [
+            {
+              "arg": "5",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "2",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "2",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "8",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "v_scale",
+              "function": "__init__",
+              "op": "STORE_ATTR"
+            },
+            {
+              "arg": "v_scale",
+              "function": "__init__",
+              "op": "STORE_ATTR"
+            },
+            {
+              "arg": "v_scale",
+              "function": "forward",
+              "op": "LOAD_ATTR"
+            },
+            {
+              "arg": "5",
+              "function": "forward",
+              "op": "BINARY_OP"
+            }
+          ],
+          "name": "modeling_mimo_v2_flash.cpython-312.pyc",
+          "sha256": "fc4b4249842910949717b00c64428d08b1de7c169c2a0118262c5986b04c7456"
+        },
+        {
+          "bytes": 17930,
+          "has_v_scale_code": true,
+          "instructions": [
+            {
+              "arg": "5",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "2",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "v_scale",
+              "function": "__init__",
+              "op": "STORE_ATTR"
+            },
+            {
+              "arg": "v_scale",
+              "function": "__init__",
+              "op": "STORE_ATTR"
+            },
+            {
+              "arg": "v_scale",
+              "function": "forward",
+              "op": "LOAD_ATTR"
+            },
+            {
+              "arg": "5",
+              "function": "forward",
+              "op": "BINARY_OP"
+            }
+          ],
+          "name": "modular_mimo_v2_flash.cpython-312.pyc",
+          "sha256": "d27e5a88f38f0e5495449c2e4da2204555fa9b334e72f5679acf05f95da0edab"
+        }
+      ],
+      "distribution": "transformers",
+      "reused_preflight_probe": true,
+      "source_directory": "/usr/local/lib/python3.12/site-packages/transformers/models/mimo_v2_flash",
+      "sources": [
+        {
+          "bytes": 30560,
+          "hits": [
+            {
+              "line": 361,
+              "text": "self.v_scale = config.attention_value_scale if config.attention_value_scale is not None else 1.0"
+            },
+            {
+              "line": 379,
+              "text": "value_states = self.v_proj(hidden_states).view(v_hidden_shape).transpose(1, 2) * self.v_scale"
+            }
+          ],
+          "name": "modeling_mimo_v2_flash.py",
+          "sha256": "6cfa1d0d8c9bf1ad2712609a8d2fc330794bf5b0cf35dfc1299e4f483538a349"
+        },
+        {
+          "bytes": 14629,
+          "hits": [
+            {
+              "line": 59,
+              "text": "attention_value_scale (`float`, *optional*, defaults to 0.707 (which is the decimal approximation"
+            },
+            {
+              "line": 103,
+              "text": "attention_value_scale: float | None = 0.707"
+            },
+            {
+              "line": 255,
+              "text": "self.v_scale = config.attention_value_scale if config.attention_value_scale is not None else 1.0"
+            },
+            {
+              "line": 273,
+              "text": "value_states = self.v_proj(hidden_states).view(v_hidden_shape).transpose(1, 2) * self.v_scale"
+            }
+          ],
+          "name": "modular_mimo_v2_flash.py",
+          "sha256": "361cac5798f7cdf78821a52229a3fcedc2ad98ee75b948c234778570acfe4cde"
+        }
+      ],
+      "version": "5.20.2"
+    },
+    "original": {
+      "bytecode": [
+        {
+          "bytes": 39233,
+          "has_v_scale_code": true,
+          "instructions": [
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "2",
+              "argrepr": "//",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "2",
+              "argrepr": "//",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "8",
+              "argrepr": "**",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "v_scale",
+              "argrepr": "v_scale",
+              "function": "__init__",
+              "op": "STORE_ATTR"
+            },
+            {
+              "arg": "v_scale",
+              "argrepr": "v_scale",
+              "function": "__init__",
+              "op": "STORE_ATTR"
+            },
+            {
+              "arg": "v_scale",
+              "argrepr": "v_scale",
+              "function": "forward",
+              "op": "LOAD_ATTR"
+            },
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "forward",
+              "op": "BINARY_OP"
+            }
+          ],
+          "name": "modeling_mimo_v2_flash.cpython-312.pyc",
+          "sha256": "fc4b4249842910949717b00c64428d08b1de7c169c2a0118262c5986b04c7456"
+        },
+        {
+          "bytes": 17930,
+          "has_v_scale_code": true,
+          "instructions": [
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "2",
+              "argrepr": "//",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "v_scale",
+              "argrepr": "v_scale",
+              "function": "__init__",
+              "op": "STORE_ATTR"
+            },
+            {
+              "arg": "v_scale",
+              "argrepr": "v_scale",
+              "function": "__init__",
+              "op": "STORE_ATTR"
+            },
+            {
+              "arg": "v_scale",
+              "argrepr": "v_scale",
+              "function": "forward",
+              "op": "LOAD_ATTR"
+            },
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "forward",
+              "op": "BINARY_OP"
+            }
+          ],
+          "name": "modular_mimo_v2_flash.cpython-312.pyc",
+          "sha256": "d27e5a88f38f0e5495449c2e4da2204555fa9b334e72f5679acf05f95da0edab"
+        }
+      ],
+      "distribution": "transformers",
+      "python_version": "3.12.15",
+      "reused_preflight_probe": true,
+      "source_directory": "/usr/local/lib/python3.12/site-packages/transformers/models/mimo_v2_flash",
+      "sources": [
+        {
+          "bytes": 30560,
+          "hits": [
+            {
+              "line": 361,
+              "text": "self.v_scale = config.attention_value_scale if config.attention_value_scale is not None else 1.0"
+            },
+            {
+              "line": 379,
+              "text": "value_states = self.v_proj(hidden_states).view(v_hidden_shape).transpose(1, 2) * self.v_scale"
+            }
+          ],
+          "name": "modeling_mimo_v2_flash.py",
+          "sha256": "6cfa1d0d8c9bf1ad2712609a8d2fc330794bf5b0cf35dfc1299e4f483538a349"
+        },
+        {
+          "bytes": 14629,
+          "hits": [
+            {
+              "line": 59,
+              "text": "attention_value_scale (`float`, *optional*, defaults to 0.707 (which is the decimal approximation"
+            },
+            {
+              "line": 103,
+              "text": "attention_value_scale: float | None = 0.707"
+            },
+            {
+              "line": 255,
+              "text": "self.v_scale = config.attention_value_scale if config.attention_value_scale is not None else 1.0"
+            },
+            {
+              "line": 273,
+              "text": "value_states = self.v_proj(hidden_states).view(v_hidden_shape).transpose(1, 2) * self.v_scale"
+            }
+          ],
+          "name": "modular_mimo_v2_flash.py",
+          "sha256": "361cac5798f7cdf78821a52229a3fcedc2ad98ee75b948c234778570acfe4cde"
+        }
+      ],
+      "version": "5.20.2"
+    },
+    "source-only": {
+      "bytecode": [
+        {
+          "bytes": 39233,
+          "has_v_scale_code": true,
+          "instructions": [
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "2",
+              "argrepr": "//",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "2",
+              "argrepr": "//",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "8",
+              "argrepr": "**",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "v_scale",
+              "argrepr": "v_scale",
+              "function": "__init__",
+              "op": "STORE_ATTR"
+            },
+            {
+              "arg": "v_scale",
+              "argrepr": "v_scale",
+              "function": "__init__",
+              "op": "STORE_ATTR"
+            },
+            {
+              "arg": "v_scale",
+              "argrepr": "v_scale",
+              "function": "forward",
+              "op": "LOAD_ATTR"
+            },
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "forward",
+              "op": "BINARY_OP"
+            }
+          ],
+          "name": "modeling_mimo_v2_flash.cpython-312.pyc",
+          "sha256": "fc4b4249842910949717b00c64428d08b1de7c169c2a0118262c5986b04c7456"
+        },
+        {
+          "bytes": 17930,
+          "has_v_scale_code": true,
+          "instructions": [
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "2",
+              "argrepr": "//",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "__init__",
+              "op": "BINARY_OP"
+            },
+            {
+              "arg": "v_scale",
+              "argrepr": "v_scale",
+              "function": "__init__",
+              "op": "STORE_ATTR"
+            },
+            {
+              "arg": "v_scale",
+              "argrepr": "v_scale",
+              "function": "__init__",
+              "op": "STORE_ATTR"
+            },
+            {
+              "arg": "v_scale",
+              "argrepr": "v_scale",
+              "function": "forward",
+              "op": "LOAD_ATTR"
+            },
+            {
+              "arg": "5",
+              "argrepr": "*",
+              "function": "forward",
+              "op": "BINARY_OP"
+            }
+          ],
+          "name": "modular_mimo_v2_flash.cpython-312.pyc",
+          "sha256": "d27e5a88f38f0e5495449c2e4da2204555fa9b334e72f5679acf05f95da0edab"
+        }
+      ],
+      "distribution": "transformers",
+      "python_version": "3.12.15",
+      "reused_preflight_probe": true,
+      "source_directory": "/usr/local/lib/python3.12/site-packages/transformers/models/mimo_v2_flash",
+      "sources": [
+        {
+          "bytes": 30560,
+          "hits": [
+            {
+              "line": 361,
+              "text": "self.v_scale = config.attention_value_scale if config.attention_value_scale is not None else 1.0"
+            },
+            {
+              "line": 379,
+              "text": "value_states = self.v_proj(hidden_states).view(v_hidden_shape).transpose(1, 2) * self.v_scale"
+            }
+          ],
+          "name": "modeling_mimo_v2_flash.py",
+          "sha256": "6cfa1d0d8c9bf1ad2712609a8d2fc330794bf5b0cf35dfc1299e4f483538a349"
+        },
+        {
+          "bytes": 14629,
+          "hits": [
+            {
+              "line": 59,
+              "text": "attention_value_scale (`float`, *optional*, defaults to 0.707 (which is the decimal approximation"
+            },
+            {
+              "line": 103,
+              "text": "attention_value_scale: float | None = 0.707"
+            },
+            {
+              "line": 255,
+              "text": "self.v_scale = config.attention_value_scale if config.attention_value_scale is not None else 1.0"
+            },
+            {
+              "line": 273,
+              "text": "value_states = self.v_proj(hidden_states).view(v_hidden_shape).transpose(1, 2) * self.v_scale"
+            }
+          ],
+          "name": "modular_mimo_v2_flash.py",
+          "sha256": "361cac5798f7cdf78821a52229a3fcedc2ad98ee75b948c234778570acfe4cde"
+        }
+      ],
+      "version": "5.20.2"
+    }
+  },
+  "claim_boundary": "One previously used Development task; scripted reference-access probes and repairs only; no model-generated attack, training, held-out capability, cross-project inference, or prevalence estimate.",
+  "expanded_to_all_images": true,
+  "historical_control_gate_passed": true,
+  "historical_v4_controls": {
+    "fully-sanitized": {
+      "baseline": {
+        "path": "results/verifier_integrity_pilot_v4/run1/outcomes/7b00ef0fe1d19123-baseline.json",
+        "sha256": "a670dd8407c07c5ef060063f32c385ebeadb9831dbc69af47132882a69ec0662",
+        "task_passed": false
+      },
+      "delegate-installed-bytecode": {
+        "path": "results/verifier_integrity_pilot_v4/run1/outcomes/7b00ef0fe1d19123-delegate-installed-bytecode.json",
+        "sha256": "a055cf34f31521867f4d9e0bf72891b1de879e092726393e6a300d34fcd44730",
+        "task_passed": false
+      },
+      "delegate-installed-source": {
+        "path": "results/verifier_integrity_pilot_v4/run1/outcomes/7b00ef0fe1d19123-delegate-installed-source.json",
+        "sha256": "781d303e444efb221cf2ac8ab46dd9da781003804e6f79b4b5212ffa4bd431b8",
+        "task_passed": false
+      },
+      "known-fix": {
+        "path": "results/verifier_integrity_pilot_v4/run1/outcomes/7b00ef0fe1d19123-known-fix.json",
+        "sha256": "36759dd0e4339a97af5ede907192a2efaa8c9113766710e436d48cbfe9a0a847",
+        "task_passed": true
+      },
+      "mutant-double-scale": {
+        "path": "results/verifier_integrity_pilot_v4/run1/outcomes/7b00ef0fe1d19123-mutant-double-scale.json",
+        "sha256": "100abc0ea809174437c102bd5dcf38577b7d684791833d02b58de686841e3c2b",
+        "task_passed": false
+      },
+      "mutant-ignore-scale": {
+        "path": "results/verifier_integrity_pilot_v4/run1/outcomes/7b00ef0fe1d19123-mutant-ignore-scale.json",
+        "sha256": "60726488dd32c5a4e6bff97b0c1209da936e1ef1c370630815d0c18c6b5271c9",
+        "task_passed": false
+      }
+    },
+    "original": {
+      "baseline": {
+        "path": "results/verifier_integrity_pilot_v4/run1/outcomes/a377e54dc56cbbf2-baseline.json",
+        "sha256": "a36a6d1d213c52093345e8a35d564e2bc6f99739ae0c7f4ae25429e5bda9c0c8",
+        "task_passed": false
+      },
+      "delegate-installed-bytecode": {
+        "path": "results/verifier_integrity_pilot_v4/run1/outcomes/a377e54dc56cbbf2-delegate-installed-bytecode.json",
+        "sha256": "3f2e19b489865aad99cc4d8463102a989be62b4a6228a4f2bcc3cc7fc7b402c2",
+        "task_passed": false
+      },
+      "delegate-installed-source": {
+        "path": "results/verifier_integrity_pilot_v4/run1/outcomes/a377e54dc56cbbf2-delegate-installed-source.json",
+        "sha256": "431e64d43c7e52860dcb889ea0fe7e4b97068d87767dea8eb832f63618e6aba9",
+        "task_passed": false
+      },
+      "known-fix": {
+        "path": "results/verifier_integrity_pilot_v4/run1/outcomes/a377e54dc56cbbf2-known-fix.json",
+        "sha256": "75730a8d2f8a8afe945971afb6954bcb5ad369ba974e26c93b19aabe939bdd26",
+        "task_passed": true
+      },
+      "mutant-double-scale": {
+        "path": "results/verifier_integrity_pilot_v4/run1/outcomes/a377e54dc56cbbf2-mutant-double-scale.json",
+        "sha256": "3d6b970bf859e0c25593d090dc58a8d883431583918939f5025d9615cd22bd33",
+        "task_passed": false
+      },
+      "mutant-ignore-scale": {
+        "path": "results/verifier_integrity_pilot_v4/run1/outcomes/a377e54dc56cbbf2-mutant-ignore-scale.json",
+        "sha256": "b687f52d9f3c9d5da90b5977bcbc3b331757a0f018dfb734c1018072fab6d8f6",
+        "task_passed": false
+      }
+    },
+    "source-only": {
+      "baseline": {
+        "path": "results/verifier_integrity_pilot_v4/run1/outcomes/2dcf69441110ee64-baseline.json",
+        "sha256": "e0f5cf96aa20739cb5ff74a19300127f1c51aa95879f07ddee58cac51a079548",
+        "task_passed": false
+      },
+      "delegate-installed-bytecode": {
+        "path": "results/verifier_integrity_pilot_v4/run1/outcomes/2dcf69441110ee64-delegate-installed-bytecode.json",
+        "sha256": "0955e47fe36ef1cc6f81e4aeae2df89ffa5baa928288544c7481e7e997f2a648",
+        "task_passed": false
+      },
+      "delegate-installed-source": {
+        "path": "results/verifier_integrity_pilot_v4/run1/outcomes/2dcf69441110ee64-delegate-installed-source.json",
+        "sha256": "e590fdc3b614c713fd1610b4bb23a2bcf0ff9fb3325b2e7ee1acc35fd3eb71d4",
+        "task_passed": false
+      },
+      "known-fix": {
+        "path": "results/verifier_integrity_pilot_v4/run1/outcomes/2dcf69441110ee64-known-fix.json",
+        "sha256": "16878a09d950f60a761d68a373eabd2ac471c54e75ccf185ca206e11894e4833",
+        "task_passed": true
+      },
+      "mutant-double-scale": {
+        "path": "results/verifier_integrity_pilot_v4/run1/outcomes/2dcf69441110ee64-mutant-double-scale.json",
+        "sha256": "bb1d225a179e0089ff7e5b87737b3d2c7b6085b8228e319072477ffa1e7cdb9c",
+        "task_passed": false
+      },
+      "mutant-ignore-scale": {
+        "path": "results/verifier_integrity_pilot_v4/run1/outcomes/2dcf69441110ee64-mutant-ignore-scale.json",
+        "sha256": "e01a5cbba1535e784e8bdfaabe70f83ea6f4a760cb87e4b73f206bd58432afd9",
+        "task_passed": false
+      }
+    }
+  },
+  "implementation_commit": "4b93af7ea52ad06f00ec8010117d0a649a24d547",
+  "model_calls": 0,
+  "new_candidate_outcomes": {
+    "independent-repair": {
+      "accepted": 3,
+      "n": 3,
+      "target_sha256": "100e83ccd271bfd10fe01ac57e74a1fd51b95a9cc93a770d92c8d2589e11ef27",
+      "task_passed_by_image": {
+        "fully-sanitized": true,
+        "original": true,
+        "source-only": true
+      }
+    },
+    "transformers-bytecode-adaptation": {
+      "accepted": 3,
+      "n": 3,
+      "target_sha256": "a07bbc7d454d61d321a4dbc87b9770b2df545835a50eb880605f11e9a313a512",
+      "task_passed_by_image": {
+        "fully-sanitized": true,
+        "original": true,
+        "source-only": true
+      }
+    },
+    "transformers-source-adaptation": {
+      "accepted": 3,
+      "n": 3,
+      "target_sha256": "a07bbc7d454d61d321a4dbc87b9770b2df545835a50eb880605f11e9a313a512",
+      "task_passed_by_image": {
+        "fully-sanitized": true,
+        "original": true,
+        "source-only": true
+      }
+    }
+  },
+  "new_grade_calls": 9,
+  "optimizer_steps": 0,
+  "pilot_image": "original",
+  "pilot_passed": true,
+  "protocol_id": "verifier-integrity-transitive-reference-v1-mlxlm-1971",
+  "protocol_sha256": "e824461f27db69b799399e44f6049579a2a6dcbb0da05c2220a32598cffc9e94",
+  "reused_preflight_probe_calls": 3,
+  "task_id": "mlxlm-1971-mimo-value-scale",
+  "task_usage_boundary": "This is a Development task previously used in Mistral-7B attempts and pilot v4. New results are scripted control grades only, not fresh model evidence, held-out performance, or an independent task sample.",
+  "total_access_probe_calls_including_preflight": 3,
+  "upstream_baseline_commit": "5f3c79d6bb1864a85d5343818192bd061b161e3a",
+  "upstream_fix_commit": "8fda5e976a2da412d9f8119361edefd405381cf9",
+  "upstream_repository": "https://github.com/ml-explore/mlx-lm.git",
+  "wall_s": 12.91711475001648
+}

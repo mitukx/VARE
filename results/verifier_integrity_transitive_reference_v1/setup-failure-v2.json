@@ -1,0 +1,18 @@
+{
+  "attempt": "run1-bytecode-probe-parser",
+  "disposition": "Preserve raw probe and failure. Freeze a parser that records argrepr and a one-call reuse rule before any candidate grading; keep the total read-only reference probe budget at three.",
+  "grader_calls": 0,
+  "image": "localhost:5000/vare/1912-sanitized@sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+  "image_name": "fully-sanitized",
+  "interpretation": "Probe successfully read source and pyc files and recorded LOAD_ATTR v_scale plus BINARY_OP arg 5. The parser compared argval to \"*\" rather than decoding Python 3.12 argrepr; no environment or candidate result was produced.",
+  "model_calls": 0,
+  "observed_at_utc": "2026-10-24T08:54:52.494876+00:00",
+  "optimizer_steps": 0,
+  "pre_registered_commit": "c29d7a4c",
+  "pre_registered_protocol_sha256": "959d46211d645e00e718e64527465cf01ff433e1b682fe6d6167a6456b26c1a0",
+  "probe_calls": 1,
+  "raw_probe_stdout": "results/verifier_integrity_transitive_reference_v1/run1/access-probes/7b00ef0fe1d19123.stdout.log",
+  "raw_probe_stdout_sha256": "861f80ee4c363fe4b82d7593d66446a08eaae256727cdee2f28d9150dbbd65a5",
+  "schema": "vare.verifier-integrity-transitive-reference-setup-failure.v1",
+  "stderr": "RuntimeError: compiled reference lacked the frozen value scaling operation"
+}
