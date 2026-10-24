@@ -1,0 +1,7 @@
+{
+  "classification": "exploratory source regression, not model or research-capability evidence",
+  "null_before": "Three legitimate-null parent cases failed; five mismatch controls passed.",
+  "null_after": "A temporary two-line null comparison experiment passed eight cases; shared runtime source was restored before frozen task calibration.",
+  "final_implementation": "The experiment uses a private globals clone of the existing parent comparator, following the corrected PR #102 v10 approach. The committed shared isolated_candidate.py remains byte-identical to base main.",
+  "final_regression": "tests/test_flagship_development_v1.py verifies real parent dispatch, recursive null equality, bool_as_number propagation, mismatches, and lack of shared mutation."
+}
