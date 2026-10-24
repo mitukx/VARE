@@ -1,0 +1,135 @@
+{
+  "actual_optimizer_commits": 2,
+  "checkpoint_adam_steps": {
+    "policy-0": 0,
+    "policy-1": 1,
+    "policy-2": 2
+  },
+  "claim_limit": "The frozen synthetic pilot produced two genuine optimizer commits, then stopped on an all-zero third group. The sole started sync arm used verifier v1 throughout, so the named v0-to-v1 transition was not exercised. Five held-out evaluation passes (60 prompt completions) are implied by runner control flow, but their reports and outputs were not retained. The asynchronous verifier-drift comparison was not reached; this does not support a VARE improvement claim.",
+  "decision": "NO_GO_FOR_ASYNC_COMPARISON",
+  "effective_trajectories_consumed": 16,
+  "groups": [
+    {
+      "authoritative_accepts": 4,
+      "disagreement_members": 0,
+      "group_id": "g-00-false_accept",
+      "members": 8,
+      "optimizer_trained": true,
+      "outputs": [
+        " grass and then",
+        " ground and the",
+        " grass and smiled",
+        " ground, but",
+        " rock and looked",
+        " trees, the",
+        " ground and made",
+        " ground. The"
+      ],
+      "reward_degenerate": false,
+      "reward_vector": [
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "verifier_calls": 8
+    },
+    {
+      "authoritative_accepts": 1,
+      "disagreement_members": 0,
+      "group_id": "g-01-false_accept",
+      "members": 8,
+      "optimizer_trained": true,
+      "outputs": [
+        " tree. He",
+        " tree. Then",
+        " tree. He",
+        " tree. He",
+        " grass. But",
+        " grass. He",
+        " ground. It",
+        " floor. Then"
+      ],
+      "reward_degenerate": false,
+      "reward_vector": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "verifier_calls": 8
+    },
+    {
+      "authoritative_accepts": 0,
+      "disagreement_members": 0,
+      "group_id": "g-02-false_accept",
+      "members": 8,
+      "optimizer_trained": false,
+      "outputs": [
+        " page. Tom",
+        " floor. ",
+        " beach. He",
+        " slide. The",
+        " other side.",
+        " rock. He",
+        " lake. The",
+        " beach. "
+      ],
+      "reward_degenerate": true,
+      "reward_vector": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "verifier_calls": 8
+    }
+  ],
+  "groups_generated": 3,
+  "heldout_evaluation_completions_inferred": 60,
+  "heldout_evaluation_count_basis": "one baseline evaluation plus incumbent and candidate evaluations for each of two completed promotions, inferred from runner control flow; raw evaluation reports and outputs were not retained",
+  "heldout_evaluation_evidence_retained": false,
+  "heldout_evaluation_passes_inferred": 5,
+  "heldout_prompts_per_pass": 12,
+  "model_completions": 24,
+  "named_drift_transition_observed": false,
+  "not_measured": [
+    "naive_async or VARE async arms",
+    "stale policy/verifier queue admission",
+    "held-out quality cannot be reconstructed because evaluation outputs and scores were not retained",
+    "SIGKILL recovery",
+    "coding-task performance"
+  ],
+  "observed_verifier_versions": [
+    1
+  ],
+  "partial_run_status": "RUNNING",
+  "protocol_schema": "vare.verifier-drift-scenarios.v7.3",
+  "protocol_sha256": "2563205c498f3844a8acd3766a1e4500da77598d4ad0ed1cd439a880deb601c7",
+  "report_correction": "This audit clarifies v1: the named verifier transition was not observed, and held-out evaluation outputs were not retained despite five passes being implied by runner control flow. The consumed run is unchanged.",
+  "resource_observations": {
+    "last_arm_progress_elapsed_seconds": 4.93121433397755,
+    "peak_rss_bytes": 905412608
+  },
+  "root_inventory_files": 11,
+  "root_inventory_sha256": "7952c4062e46b302e76df20999391e496106bca33e3d6319dcd475dbc0af12aa",
+  "runner_sha256": "d4ca48fd95a8c7e08ef88032e1dca63e7632286748ac2055029d75f34313f067",
+  "scenario_arms_started": [
+    "false_accept/sync"
+  ],
+  "status": "PASS_PARTIAL_STOP_AUDIT",
+  "stop_reason": "preregistered stop: degenerate GRPO group false_accept/sync/2",
+  "verifier_calls": 24
+}

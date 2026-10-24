@@ -85,10 +85,10 @@ overwritten.
 
 ## Reproduction
 
-Use Python 3.12.12 and the package versions in `protocol.json`, the locally
-retained TinyStories-1M revision and pinned RVL checkout described there, and
-launch the measured runner with `-S`. No network access, new model download,
-paid API, or concurrent model is needed.
+The following runner invocation is preserved to document the original
+preregistration only. **Do not execute it against the consumed v7.3 tasks or
+output directory.** The last command is an offline audit of retained files;
+first extract the historical runner below into a separate temporary path.
 
 ```sh
 python3.12 -S scripts/benchmark_verifier_drift_scenarios.py \
@@ -103,14 +103,34 @@ python3.12 -S scripts/audit_verifier_drift_scenarios.py \
 python3.12 scripts/audit_verifier_drift_pilot_stop.py \
   results/verifier_consistent_async_grpo_v7/run-3 \
   --protocol benchmarks/verifier_consistent_async_grpo_v7/protocol.json \
-  --runner scripts/benchmark_verifier_drift_scenarios.py \
-  --output results/verifier_consistent_async_grpo_v7/audit-run-3-partial-reproduction-v2.json
+  --runner /tmp/vare-v7.3-runner.py \
+  --output results/verifier_consistent_async_grpo_v7/audit-run-3-historical-runner-review-v1.json
 ```
 
-The pilot gate was fixed in advance and failed. The first two commands above
-describe the preregistered full-run path; neither is permission to resume this
-consumed run. The third command re-audits the retained partial output only. Do
-not resample or alter prompts, semantics, seeds, or budgets.
+The v7.3 protocol names runner SHA-256
+`d4ca48fd95a8c7e08ef88032e1dca63e7632286748ac2055029d75f34313f067`, which is
+the runner committed at `5134460b635a5083943e2856e5d29c2dc1e21c3a`. Extract
+that source into a separate temporary file before re-auditing; never pass the
+prospective runner as the historical runner:
+
+```sh
+git fetch origin refs/pull/127/head
+git show 5134460b635a5083943e2856e5d29c2dc1e21c3a:scripts/benchmark_verifier_drift_scenarios.py \
+  > /tmp/vare-v7.3-runner.py
+shasum -a 256 /tmp/vare-v7.3-runner.py
+```
+
+The prospective evaluation-retention runner has a different, separately
+recorded source identity. The first two commands above only document the
+original full-run and full-audit invocations; neither is authorized for the
+consumed v7.3 run. The final command only audits retained files and writes a new
+audit record outside the frozen run. The preregistered pilot gate failed; do
+not resume, resample, or alter its prompts, semantics, seeds, or budgets.
+
+The offline reproduction returned `PASS_PARTIAL_STOP_AUDIT` with the unchanged
+`NO_GO_FOR_ASYNC_COMPARISON` result. Its output is
+`results/verifier_consistent_async_grpo_v7/audit-run-3-historical-runner-review-v1.json`;
+the v7.3 run directory and original inventory were not changed.
 
 ## Sustained crash continuation: not run
 
@@ -193,6 +213,12 @@ resume. Any future run must pass a separate, fresh-task protocol through
 cover interruption after a completed evaluation, after a promotion is applied
 but before commit, and before arm completion. These are journal-integrity
 checks, not fresh model-run evidence.
+
+The prospective arm summary now counts valid quarantined members only in the
+actual stale group ID `g-00-<scenario>` and includes the `no_drift` control.
+Focused tests cover both that control and a drift scenario, and fail closed if
+the expected stale group is absent. This summary correction is prospective;
+it does not change or reinterpret the v7.3 run.
 
 ## Prospective dense-reward calibration (v1; NO-GO for training)
 

@@ -51,6 +51,19 @@ def require(ok: bool, message: str) -> None:
         raise RuntimeError(message)
 
 
+def count_quarantined_valid_trajectories(groups: list[dict], arm: str,
+                                          scenario_id: str) -> int:
+    """Count valid members in the exact stale group rejected by the VARE arm."""
+    if arm != "vare_async":
+        return 0
+    group_id = f"g-00-{scenario_id}"
+    matching = [group for group in groups if group.get("group_id") == group_id]
+    require(len(matching) == 1, f"expected one stale group {group_id}")
+    group = matching[0]
+    return sum(int(float(member["score"]) == float(group["independent_scores"][index]))
+               for index, member in enumerate(group["members"]))
+
+
 def inject_failure(point: str) -> None:
     """Test-only fault points exercise the real durability boundaries."""
     requested = os.environ.get("VARE_EXPERIMENT_FAILPOINT")
@@ -400,12 +413,15 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
         verifier_definition, sort_keys=True, separators=(",", ":"),
         ensure_ascii=False).encode("utf-8")).hexdigest()
 
-    async def capture_evaluation(policy_id: str, role: str, round_index: int | None = None):
+    async def capture_evaluation(policy_id: str, role: str,
+                                round_index: int | None = None, *,
+                                _hooks=hooks, _runtime=runtime,
+                                _checkpoints=checkpoints):
         invocation_id = uuid.uuid4().hex
         started_at = utc_now()
-        checkpoint_path = checkpoints[policy_id]
+        checkpoint_path = _checkpoints[policy_id]
         task_prompts = [{"task_id": task.id, "prompt": task.prompt}
-                        for task in hooks.eval_tasks]
+                        for task in _hooks.eval_tasks]
         common = {
             "invocation_id": invocation_id,
             "role": role,
@@ -433,7 +449,7 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
         })
         ACTIVE_EVALUATION_JOURNALS[str(arm_out)]["stage"] = (
             f"evaluation:{role}:{invocation_id}")
-        report, details = await helper.independent_evaluate(runtime, policy_id, 1)
+        report, details = await helper.independent_evaluate(_runtime, policy_id, 1)
         outputs = details["outputs"]
         scores = details["scores"]
         require(set(outputs) == {row["task_id"] for row in task_prompts}
@@ -470,10 +486,11 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
     eval_records = []
 
     async def evaluate(policy_id: str, _runtime=runtime, _signer=signer,
-                       _files=checkpoints, _records=eval_records):
-        active_id = hooks.active_policy()[0]
+                       _files=checkpoints, _records=eval_records,
+                       _hooks=hooks, _capture=capture_evaluation):
+        active_id = _hooks.active_policy()[0]
         role = "incumbent" if policy_id == active_id else "candidate"
-        report, details = await capture_evaluation(policy_id, role, len(_records))
+        report, details = await _capture(policy_id, role, len(_records))
         root = _signer["root"]
         signed = root.attest(report, checkpoint_sha256=sha256_file(_files[policy_id]))
         _records.append({"policy_id": policy_id, "report": asdict(signed), **details})
@@ -973,11 +990,8 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
         "rollouts_per_hour": GROUP_SIZE * GROUPS_PER_ARM * 3600 / max(total_wall, 1e-9),
         "committed_updates_per_hour": len(updates) * 3600 / max(total_wall, 1e-9),
         "valid_updates_per_hour": (len(updates) - invalid_commits) * 3600 / max(total_wall, 1e-9),
-        "quarantined_valid_trajectories": sum(
-            int(float(member["score"]) == float(group["independent_scores"][index]))
-            for group in groups if arm == "vare_async" and scenario_id != "no_drift"
-            and group["group_id"].endswith("group-00")
-            for index, member in enumerate(group["members"])),
+        "quarantined_valid_trajectories": count_quarantined_valid_trajectories(
+            groups, arm, scenario_id),
     }
     write(arm_out / "summary.json", summary)
     # Keep compact traces and checkpoints locally for independent reproduction.
