@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 import subprocess
 
@@ -40,6 +41,7 @@ def test_v12_snapshots_untrusted_git_without_running_filters_or_uploadpack_hooks
     commit = _git(source, "rev-parse", "HEAD")
 
     filter_marker = tmp_path / "filter-ran"
+    clean_marker = tmp_path / "clean-filter-ran"
     uploadpack_marker = tmp_path / "uploadpack-hook-ran"
     smudge = tmp_path / "smudge.sh"
     smudge.write_text(
@@ -47,6 +49,12 @@ def test_v12_snapshots_untrusted_git_without_running_filters_or_uploadpack_hooks
         encoding="utf-8",
     )
     smudge.chmod(0o700)
+    clean = tmp_path / "clean.sh"
+    clean.write_text(
+        '#!/bin/sh\nprintf x >> "$VARE_CLEAN_MARKER"\n/bin/cat\n',
+        encoding="utf-8",
+    )
+    clean.chmod(0o700)
     pack_hook = tmp_path / "pack-hook.sh"
     pack_hook.write_text(
         '#!/bin/sh\nprintf x >> "$VARE_PACK_MARKER"\nexec git pack-objects "$@"\n',
@@ -54,11 +62,13 @@ def test_v12_snapshots_untrusted_git_without_running_filters_or_uploadpack_hooks
     )
     pack_hook.chmod(0o700)
     _git(source, "config", "filter.redteam.smudge", f"/bin/sh {smudge}")
+    _git(source, "config", "filter.redteam.clean", f"/bin/sh {clean}")
     _git(source, "config", "uploadpack.packObjectsHook", f"/bin/sh {pack_hook}")
     (source / ".git/info/attributes").write_text(
         f"{relative.as_posix()} filter=redteam\n", encoding="utf-8"
     )
     monkeypatch.setitem(v11.GIT_ENV, "VARE_FILTER_MARKER", str(filter_marker))
+    monkeypatch.setitem(v11.GIT_ENV, "VARE_CLEAN_MARKER", str(clean_marker))
     monkeypatch.setitem(v11.GIT_ENV, "VARE_PACK_MARKER", str(uploadpack_marker))
 
     direct_checkout = tmp_path / "direct-checkout"
@@ -81,6 +91,13 @@ def test_v12_snapshots_untrusted_git_without_running_filters_or_uploadpack_hooks
     assert direct.returncode == 0, direct.stderr
     assert filter_marker.read_text(encoding="utf-8") == "x"
 
+    # Reproduce the review finding: status on the caller's source can execute
+    # a clean filter selected through .git/info/attributes.
+    os.utime(source_file, None)
+    _git(source, "status", "--porcelain", env=v11.GIT_ENV)
+    assert clean_marker.exists()
+    clean_marker.unlink()
+
     isolated = v12._snapshot_source_repository(
         source, tmp_path / "source-snapshot.git", commit
     )
@@ -89,6 +106,7 @@ def test_v12_snapshots_untrusted_git_without_running_filters_or_uploadpack_hooks
     )
     assert (safe_checkout / relative).read_bytes() == expected
     assert filter_marker.read_text(encoding="utf-8") == "x"
+    assert not clean_marker.exists()
     assert not uploadpack_marker.exists()
     assert not (isolated / "info/attributes").exists()
     filters = subprocess.run(
