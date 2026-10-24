@@ -1,0 +1,19 @@
+{
+  "amended_protocol_sha256": "cfd8a712c1635ca381fd312281fb4e472dd927c885e1b7d99585a1fe15e34451",
+  "amends_schema": "vare.verifier-drift-scenarios.v7.1",
+  "change": "Read the seed from workload.seed consistently in the runner. No task semantics, task order, budgets, arm schedule, scoring, thresholds, or analysis changed.",
+  "experimental_observations_before_amendment": false,
+  "failure_evidence": {
+    "failure_sha256": "f3f9a43c7d8845dfae6874f528bf9cae3b15123fe28f2eb62fa5df3c09ef088a",
+    "inventory_sha256": "91db9bcc7608a9cd4c407decaf9c8e45d09875cc0d6f4e79b813781a4f4b42d8",
+    "model_instantiated": false,
+    "optimizer_updates": 0,
+    "output": "results/verifier_consistent_async_grpo_v7/run-1",
+    "rollouts_sampled": 0,
+    "source_commit": "47809ec42abb65720ba2690a9e5efd8f1d30de69"
+  },
+  "prior_protocol_commit": "47809ec42abb65720ba2690a9e5efd8f1d30de69",
+  "prior_protocol_sha256": "bedcdbc81f99d9e579f93072fa29bac5557e33d6a9dd43a0807f74870c709fa4",
+  "reason": "The first runner invocation failed in preflight with KeyError: seed because the code looked for a top-level field while the frozen protocol stores it at workload.seed.",
+  "schema": "vare.verifier-drift-protocol-amendment.v1"
+}

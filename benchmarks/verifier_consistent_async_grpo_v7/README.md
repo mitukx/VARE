@@ -1,11 +1,21 @@
 # Multi-scenario verifier drift and sustained recovery
 
-This frozen protocol tests whether verifier changes can contaminate real GRPO
+This v7.2 preregistration tests whether verifier changes can contaminate real GRPO
 updates in a delayed asynchronous queue, and whether VARE rejects the stale
 group while continuing to train on a fresh group already waiting behind it.
 TinyStories-1M sampling and RVL optimizer updates are real. Tasks and rewards
 are synthetic; this does not measure coding capability or natural verifier
 drift prevalence.
+
+## Preregistration amendment and retained preflight failure
+
+The v7.1 protocol is preserved at `protocol-v7.1-failed-preflight.json`. Its
+first invocation stopped before model instantiation, sampling, or optimizer
+work because the runner read the seed from the wrong JSON path. The failure
+record and inventory remain at
+`results/verifier_consistent_async_grpo_v7/run-1/`; v7.2 changes only the seed
+field lookup and binds both protocol hashes in
+`protocol-amendment-v7.2.json`. The experiment starts at a new output path.
 
 ## Frozen primary study
 
@@ -37,13 +47,13 @@ paid API, or concurrent model is needed.
 
 ```sh
 python3.12 -S scripts/benchmark_verifier_drift_scenarios.py \
-  --output results/verifier_consistent_async_grpo_v7/run-1 \
+  --output results/verifier_consistent_async_grpo_v7/run-2 \
   --model-dir ../tinystories-1m-pinned \
   --rvl-source ../rvl-pinned
 
 python3.12 -S scripts/audit_verifier_drift_scenarios.py \
-  results/verifier_consistent_async_grpo_v7/run-1 \
-  --output results/verifier_consistent_async_grpo_v7/audit-run-1.json
+  results/verifier_consistent_async_grpo_v7/run-2 \
+  --output results/verifier_consistent_async_grpo_v7/audit-run-2.json
 ```
 
 The pilot gate is fixed in advance. If it fails, retain the partial output and
@@ -60,25 +70,25 @@ seed is fixed only for its replay/run identity.
 
 ```sh
 python3.12 -S scripts/prepare_sustained_crash_fixture.py \
-  --run results/verifier_consistent_async_grpo_v7/run-1 \
-  --audit-report results/verifier_consistent_async_grpo_v7/audit-run-1.json \
-  --output results/verifier_consistent_async_grpo_v7/crash-fixture-1
+  --run results/verifier_consistent_async_grpo_v7/run-2 \
+  --audit-report results/verifier_consistent_async_grpo_v7/audit-run-2.json \
+  --output results/verifier_consistent_async_grpo_v7/crash-fixture-2
 
 python3.12 -S scripts/benchmark_verifier_consistent_grpo_sigkill.py \
-  --source-run results/verifier_consistent_async_grpo_v7/crash-fixture-1 \
+  --source-run results/verifier_consistent_async_grpo_v7/crash-fixture-2 \
   --model-dir ../tinystories-1m-pinned --rvl-source ../rvl-pinned \
-  --output results/verifier_consistent_async_grpo_v7/sustained-crash-1 \
+  --output results/verifier_consistent_async_grpo_v7/sustained-crash-2 \
   --seed 82106 --timeout 300 \
   --crash-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/crash-runner-correction-v3.json \
   --auditor-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v4-runner-v2.json
 
 python3.12 -S scripts/audit_sustained_crash_recovery.py \
-  --crash-output results/verifier_consistent_async_grpo_v7/sustained-crash-1 \
-  --fixture results/verifier_consistent_async_grpo_v7/crash-fixture-1 \
-  --source-run results/verifier_consistent_async_grpo_v7/run-1 \
-  --source-audit results/verifier_consistent_async_grpo_v7/audit-run-1.json \
+  --crash-output results/verifier_consistent_async_grpo_v7/sustained-crash-2 \
+  --fixture results/verifier_consistent_async_grpo_v7/crash-fixture-2 \
+  --source-run results/verifier_consistent_async_grpo_v7/run-2 \
+  --source-audit results/verifier_consistent_async_grpo_v7/audit-run-2.json \
   --protocol benchmarks/verifier_consistent_async_grpo_v7/protocol.json \
-  --output results/verifier_consistent_async_grpo_v7/audit-crash-1.json
+  --output results/verifier_consistent_async_grpo_v7/audit-crash-2.json
 ```
 
 The crash auditor compares the complete resumed trainer state against the

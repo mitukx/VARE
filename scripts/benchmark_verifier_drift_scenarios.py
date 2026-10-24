@@ -249,11 +249,12 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
     from vare.types import Task
 
     scenario_id = scenario["id"]
+    experiment_seed = int(protocol["workload"]["seed"])
     arm_out = args.output / scenario_id / arm
     arm_out.mkdir(parents=True)
     naive = arm == "naive_async"
     runtime = await helper.build_runtime(
-        args, arm_out, int(protocol["seed"] + scenario_index * 100),
+        args, arm_out, int(experiment_seed + scenario_index * 100),
         naive=naive, eval_version=1)
     hooks, trainer, checkpoints = runtime["hooks"], runtime["trainer"], runtime["checkpoint_paths"]
     state = runtime["state"]
@@ -331,7 +332,7 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
                 lag=LagConfig(max_policy_lag=0, max_verifier_lag=0),
                 promotion=promotion_cfg),
             event_log=EventLog(arm_out / "events.jsonl"),
-            seed=int(protocol["seed"] + scenario_index * 100))
+            seed=int(experiment_seed + scenario_index * 100))
         hooks.evaluate = evaluate
         loop.evidence_trust_root = eval_root
         hooks.training_evidence_authorizer = adapter.authorizes
@@ -781,6 +782,7 @@ async def run(args) -> None:
     require(sys.flags.no_site == 1, "launch with python -S for import isolation")
     require(not args.output.exists(), "output directory already exists")
     protocol = json.loads(PROTOCOL_PATH.read_text())
+    experiment_seed = int(protocol["workload"]["seed"])
     require(sha(Path(__file__)) == protocol["runner_sha256"], "runner hash differs from protocol")
     require(sha(ROOT / "scripts/audit_verifier_drift_scenarios.py") == protocol["auditor_sha256"],
             "auditor hash differs from protocol")
@@ -847,7 +849,7 @@ async def run(args) -> None:
     prereg_hash = sha(PROTOCOL_PATH)
     result = {
         "status": "RUNNING", "protocol_sha256": prereg_hash,
-        "source_commit": source_head, "seed": protocol["seed"],
+        "source_commit": source_head, "seed": experiment_seed,
         "environment": {"python": sys.version, "torch": torch.__version__,
                         "transformers": transformers.__version__, "device": "CPU fp32",
                         "threads": 1, "swap_before_bytes": baseline_swap,
