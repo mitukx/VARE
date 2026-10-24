@@ -65,6 +65,12 @@ The runner made **160 Adam step calls** and recorded **117 parameter changes**: 
 
 The run completed in 1,647.3 seconds (0.458 wall-hours): 4,895 grader calls and 68,536 candidate-case executions per wall-hour. Host available memory was 28.89% at run preflight and 33.13% at completion; swap stayed at 2,251.75 MiB, below the frozen 2,800 MiB abort threshold. These are aggregate task-grader rates, not accelerator or model-training throughput.
 
+### Post-run grader transport audit and safety correction
+
+Independent review of the runner found that its 14-case count check did not reject a full-length report containing `missing_result` or `malformed_result`. Such transport/protocol failures could have been consumed as zero reward. A post-run audit of every one of the 31,360 retained case records found 12,550 passing cases, 18,810 ordinary `wrong_output` cases, **zero `missing_result` cases and zero `malformed_result` cases**. Thus the reviewed path defect did not affect any recorded reward, though the run remains a one-task mechanism result with its stated limits.
+
+The current runner now validates case identity, boolean consistency, task aggregation, and failure categories before returning a reward. It preserves ordinary `wrong_output` as a valid rejection and raises `ExperimentStop` for transport/protocol failures. The focused regression has six passing cases, including both transport categories and the frozen v1 preflight stop. This is a **post-evaluation safety correction**: the frozen v1 protocol, lock, and exact executed runner under the run snapshot were not rewritten. Because the current runner no longer matches the frozen v1 source hash, v1 preflight now stops before grading. The consumed task must not be rerun; any future experiment needs a new protocol and fresh eligible tasks. Details and source hashes are in the [post-run safety erratum](../protocols/verifier_integrity_policy_gradient_v1.post-run-safety-erratum.json).
+
 ## Failed attempt and recovery record
 
 The runner summary's `training_false_reward_count=53` covers the contaminated-feedback treatment arm. The raw training-event audit additionally counts 51 and 52 raw false passes in the reward-shuffle and frozen controls, respectively; these control observations are not included in that treatment-only summary field.

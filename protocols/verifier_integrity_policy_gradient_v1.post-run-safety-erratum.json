@@ -1,0 +1,37 @@
+{
+  "schema": "vare.verifier-integrity-policy-gradient-post-run-safety-erratum.v1",
+  "finding": {
+    "pull_request": 124,
+    "review_thread": "PRRT_kwDOVADkJc6v3f31",
+    "severity": "P1",
+    "summary": "The frozen runner checked the case count but did not reject full-length grader reports containing transport/protocol failure categories."
+  },
+  "timing": "Discovered by independent review after the frozen run completed. This correction is prospective and was not used to generate or analyze the historical outcomes.",
+  "frozen_inputs": {
+    "protocol_sha256": "267496f87f488259017cd697a98acf43ad722c98c906e4a126f4082903819064",
+    "root_protocol_lock_sha256_before_correction": "2882aaa46199554f4114f859f2fbe95447c9a251ba1dedd447a7a1b4a49ce1b3",
+    "executed_runner_snapshot": "results/verifier_integrity_policy_gradient_v1/run2/snapshots/runner.py",
+    "executed_runner_sha256": "657684d194489ad5355224f40a30a29f97f17a6b8098aa245b6c7f920c67fe12",
+    "protocol_and_run_artifacts_rewritten": false
+  },
+  "prospective_guard": {
+    "runner_path": "scripts/run_verifier_integrity_policy_gradient_v1.py",
+    "runner_sha256_after_correction": "b774c6f79d0b4df3c314f128f34679bd0ff6c24c3a60aec058ec0f81ee03f403",
+    "validator_path": "src/vare/verifier_integrity_reports.py",
+    "validator_sha256": "b683960962b4bc649d369da0688b3dddc1aecd3b8d020794e32145905a47f53a",
+    "semantics": "Accept a full-length report only when each case has a unique id, a boolean outcome, and failure null or wrong_output; require task outcome to equal the conjunction of cases. Raise ExperimentStop on missing_result, malformed_result, inconsistent outcomes, or malformed reports before returning a reward.",
+    "historical_v1_reuse": "The current runner no longer matches the frozen v1 implementation hash, so v1 preflight must fail before any grader call. Do not rerun the consumed task. A future experiment requires a fresh task and a new protocol/lock."
+  },
+  "historical_outcome_audit": {
+    "grader_invocations": 2240,
+    "case_records": 31360,
+    "failure_category_counts": {
+      "null": 12550,
+      "wrong_output": 18810,
+      "missing_result": 0,
+      "malformed_result": 0
+    },
+    "historical_rewards_affected": false,
+    "audit_source": "results/verifier_integrity_policy_gradient_v1/run2/training-events.jsonl.gz and evaluation-events.jsonl.gz, decompressed and checked against the as-collected manifest"
+  }
+}

@@ -23,6 +23,10 @@ import torch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from vare import mlxlm_1912_repo_task as task  # noqa: E402
+from vare.verifier_integrity_reports import (  # noqa: E402
+    VerifierReportIntegrityError,
+    validate_candidate_grade_report,
+)
 
 PROTOCOL_PATH = ROOT / "protocols/verifier_integrity_policy_gradient_v1.json"
 LOCK_PATH = ROOT / "protocols/verifier_integrity_policy_gradient_v1.lock.json"
@@ -210,17 +214,17 @@ def grade_action(
     finally:
         task.verify_protocol_v4 = original_verifier
     expected_cases = protocol["task"]["trusted_case_count"]
-    if len(report.get("cases", [])) != expected_cases:
-        raise ExperimentStop(
-            f"grader returned {len(report.get('cases', []))} cases; expected {expected_cases}"
-        )
+    try:
+        cases, task_passed = validate_candidate_grade_report(report, expected_cases)
+    except VerifierReportIntegrityError as exc:
+        raise ExperimentStop(f"grader report cannot be scored: {exc}") from exc
     return {
         "sequence": sequence,
         "action_id": action_id,
         "image": image,
-        "task_passed": bool(report["passed"]),
-        "case_count": len(report["cases"]),
-        "case_results": report["cases"],
+        "task_passed": task_passed,
+        "case_count": len(cases),
+        "case_results": cases,
         "candidate_source_sha256": report["candidate_source_sha256"],
         "grader_source_sha256": report["grader_source_sha256"],
         "grader_adapter_sha256": report["grader_adapter_sha256"],
