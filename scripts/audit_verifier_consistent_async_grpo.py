@@ -12,7 +12,7 @@ import sqlite3
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-PROTOCOL = ROOT / "benchmarks/verifier_consistent_async_grpo_v2/protocol.json"
+PROTOCOL = ROOT / "benchmarks/verifier_consistent_async_grpo_v3/protocol.json"
 
 
 def sha(path: Path) -> str:

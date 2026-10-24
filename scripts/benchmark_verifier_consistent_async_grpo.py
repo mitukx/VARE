@@ -23,7 +23,7 @@ import time
 from statistics import fmean
 
 ROOT = Path(__file__).resolve().parents[1]
-PROTOCOL_PATH = ROOT / "benchmarks/verifier_consistent_async_grpo_v2/protocol.json"
+PROTOCOL_PATH = ROOT / "benchmarks/verifier_consistent_async_grpo_v3/protocol.json"
 PROMPT = "Choose one label for a story: a blue bird landed on the"
 GROUP_SIZE = 8
 
@@ -734,7 +734,7 @@ async def run(args) -> None:
             100 * (time.process_time() - arm_cpu_started) /
             max(result["arms"][arm]["total_wall_s"], 1e-9))
         result["arms"][arm]["generated_tokens"] = sum(
-            int(member["attempt"]["metadata"]["rvl_generation"]["token_count"])
+            int(member["attempt"].metadata["rvl_generation"]["token_count"])
             for group in groups.values() for member in group["members"])
         result["arms"][arm]["committed_updates"] = int(
             result["arms"][arm]["journal"]["active_policy_id"] != "policy-0")
@@ -753,7 +753,7 @@ async def run(args) -> None:
         result["arms"][arm]["useful_verified_groups_per_hour"] = (
             3600 / max(result["arms"][arm]["total_wall_s"], 1e-9)
             if arm != "naive_async" else 0.0)
-        sample_latencies = [float(member["attempt"]["latency_ms"]) / 1000
+        sample_latencies = [float(member["attempt"].latency_ms) / 1000
                             for group in groups.values()
                             for member in group["members"]]
         queue_waits = [float(member["queue_wait_s"])
