@@ -26,6 +26,7 @@ from vare import mlxlm_1912_repo_task as task  # noqa: E402
 
 PROTOCOL_PATH = ROOT / "protocols/verifier_integrity_policy_gradient_v1.json"
 LOCK_PATH = ROOT / "protocols/verifier_integrity_policy_gradient_v1.lock.json"
+ERRATUM_PATH = ROOT / "protocols/verifier_integrity_policy_gradient_v1.pre-evaluation-erratum.json"
 PROTOCOL_ID = "verifier-integrity-policy-gradient-v1-mlxlm-1912"
 RUNNER_PATH = "scripts/run_verifier_integrity_policy_gradient_v1.py"
 INVALID_ACTIONS = {"delegate-installed-source", "delegate-installed-bytecode"}
@@ -81,6 +82,8 @@ def load_frozen_inputs() -> tuple[dict[str, Any], dict[str, Any]]:
     historical = protocol["task"]["historical_source_evidence"]
     if sha256_file(ROOT / historical) != lock.get("historical_source_evidence_sha256"):
         raise ExperimentStop("historical pilot evidence manifest changed")
+    if sha256_file(ERRATUM_PATH) != lock.get("pre_evaluation_erratum_sha256"):
+        raise ExperimentStop("pre-evaluation recovery erratum differs from its lock")
     return protocol, lock
 
 
@@ -236,6 +239,147 @@ def sample_action(
     probs = torch.softmax(logits.detach(), dim=0)
     index = int(torch.multinomial(probs, 1, generator=generator).item())
     return action_ids[index]
+
+
+def safe_load_checkpoint(path: Path) -> dict[str, Any]:
+    """Load our locally generated state while keeping PyTorch's restricted loader."""
+    with torch.serialization.safe_globals([torch.torch_version.TorchVersion]):
+        return torch.load(path, map_location="cpu", weights_only=True)
+
+
+def inspect_partial_run(
+    partial: Path, protocol: dict[str, Any], lock: dict[str, Any]
+) -> dict[str, Any]:
+    """Audit the preserved pre-evaluation failure and reconstruct its seed record."""
+    partial = partial.resolve(strict=True)
+    failure_path = partial / "failure.json"
+    evidence_path = partial / "evidence-manifest.json"
+    evidence_lock_path = partial / "evidence-lock.json"
+    failure = json.loads(failure_path.read_text(encoding="utf-8"))
+    manifest = json.loads(evidence_path.read_text(encoding="utf-8"))
+    old_lock = json.loads(evidence_lock_path.read_text(encoding="utf-8"))
+    if failure.get("status") != "aborted" or failure.get("exception_type") != "UnpicklingError":
+        raise ExperimentStop("resume source is not the registered checkpoint-load failure")
+    if failure.get("completed_grade_calls") != 20 or failure.get("completed_training_seed_records") != 1:
+        raise ExperimentStop("resume source has an unexpected partial-run extent")
+    if old_lock.get("protocol_sha256") != lock.get("protocol_sha256"):
+        raise ExperimentStop("resume source belongs to a different protocol")
+    if old_lock.get("manifest_sha256") != sha256_file(evidence_path):
+        raise ExperimentStop("resume source manifest is not locked")
+    if old_lock.get("runner_sha256") != sha256_file(partial / "snapshots/runner.py"):
+        raise ExperimentStop("resume source runner snapshot does not match its lock")
+    artifacts = manifest.get("artifacts", [])
+    if len(artifacts) != manifest.get("artifact_count"):
+        raise ExperimentStop("resume source evidence manifest count mismatch")
+    for item in artifacts:
+        path = partial / item["path"]
+        if not path.is_file() or path.stat().st_size != item["bytes"] or sha256_file(path) != item["sha256"]:
+            raise ExperimentStop(f"resume source evidence mismatch: {item['path']}")
+    grade_path = partial / "training-events.jsonl"
+    optimizer_path = partial / "optimizer-events.jsonl"
+    training_events = [json.loads(line) for line in grade_path.read_text(encoding="utf-8").splitlines()]
+    optimizer_events = [json.loads(line) for line in optimizer_path.read_text(encoding="utf-8").splitlines()]
+    if len(training_events) != 20 or len(optimizer_events) != 5:
+        raise ExperimentStop("resume source training traces do not match the frozen first seed")
+    condition, seed = "contaminated-feedback", 11
+    if any((row.get("condition"), row.get("seed")) != (condition, seed) for row in training_events + optimizer_events):
+        raise ExperimentStop("resume source contains unexpected condition or seed rows")
+    if any(
+        row.get("phase") != "train"
+        or row.get("grade", {}).get("case_count")
+        != protocol["task"]["trusted_case_count"]
+        for row in training_events
+    ):
+        raise ExperimentStop("resume source has a malformed training-grade record")
+    if any(row.get("optimizer_step") != index + 1 for index, row in enumerate(optimizer_events)):
+        raise ExperimentStop("resume source optimizer-step sequence is incomplete")
+    eval_path = partial / "evaluation-events.jsonl"
+    if eval_path.exists() and eval_path.stat().st_size:
+        raise ExperimentStop("resume source already contains evaluation events")
+    checkpoint = partial / "checkpoints/contaminated-feedback-seed-11.pt"
+    checkpoint_state = safe_load_checkpoint(checkpoint)
+    if checkpoint_state.get("condition") != condition or checkpoint_state.get("seed") != seed:
+        raise ExperimentStop("resume checkpoint identity differs from the expected partial seed")
+    if checkpoint_state.get("optimizer_step_calls") != 5 or checkpoint_state.get("training_action_count") != 20:
+        raise ExperimentStop("resume checkpoint step/action counts are not complete")
+    action_ids = [item["id"] for item in protocol["candidate_actions"]]
+    if checkpoint_state.get("action_ids") != action_ids:
+        raise ExperimentStop("resume checkpoint action ordering changed")
+    initial_logits = torch.tensor(
+        protocol["controller"]["initial_logits"], dtype=torch.float64
+    )
+    initial_probabilities = action_probabilities(initial_logits)
+    curve = [
+        {
+            "optimizer_step": 0,
+            "invalid_action_probability": sum(
+                initial_probabilities[action_ids.index(action)]
+                for action in INVALID_ACTIONS
+            ),
+            "probabilities": initial_probabilities,
+        }
+    ]
+    for row in optimizer_events:
+        probs = torch.softmax(torch.tensor(row["parameters_after"], dtype=torch.float64), dim=0).tolist()
+        curve.append({
+            "optimizer_step": row["optimizer_step"],
+            "loss": row["loss"],
+            "raw_batch_rewards": row["raw_batch_rewards"],
+            "training_batch_rewards": row["training_batch_rewards"],
+            "reward_shuffle_permutation": row["reward_shuffle_permutation"],
+            "parameters_changed": row["parameters_changed"],
+            "invalid_action_probability": sum(probs[action_ids.index(action)] for action in INVALID_ACTIONS),
+            "probabilities": probs,
+        })
+    false_rewards = sum(
+        row["action_id"] in INVALID_ACTIONS and row["raw_verifier_reward"] == 1
+        for row in training_events
+    )
+    committed = sum(row["parameters_changed"] for row in optimizer_events)
+    if committed != checkpoint_state.get("parameter_updates_committed"):
+        raise ExperimentStop("resume checkpoint parameter-update count differs from optimizer trace")
+    return {
+        "condition": condition,
+        "seed": seed,
+        "training_image": protocol["conditions"][condition]["training_image"],
+        "training_actions": 20,
+        "training_task_successes": sum(row["raw_verifier_reward"] for row in training_events),
+        "training_invalid_delegate_actions": sum(row["action_id"] in INVALID_ACTIONS for row in training_events),
+        "optimizer_step_calls": 5,
+        "parameter_updates_committed": committed,
+        "training_false_rewards_on_known_invalid_actions": false_rewards,
+        "final_logits": checkpoint_state["logits"].tolist(),
+        "final_action_probabilities": action_probabilities(checkpoint_state["logits"]),
+        "final_invalid_action_probability": curve[-1]["invalid_action_probability"],
+        "policy_learning_curve": curve,
+        "checkpoint_path": "checkpoints/contaminated-feedback-seed-11.pt",
+        "checkpoint_sha256": sha256_file(checkpoint),
+        "recovered_from_run": str(partial),
+        "source_manifest_sha256": old_lock["manifest_sha256"],
+        "elapsed_wall_seconds": sum(
+            row.get("grade_wall_seconds", 0) or 0 for row in training_events
+        ),
+        "source_run_wall_seconds": failure.get("wall_seconds", 0.0),
+    }
+
+
+def install_partial_run(partial: Path, output: Path, training_record: dict[str, Any]) -> None:
+    prefix = output / "resumed-prefix" / "run1"
+    prefix.parent.mkdir(parents=True)
+    shutil.copytree(partial, prefix)
+    for name in ("training-events.jsonl", "optimizer-events.jsonl"):
+        shutil.copyfile(partial / name, output / name)
+    checkpoint = output / training_record["checkpoint_path"]
+    checkpoint.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(partial / "checkpoints/contaminated-feedback-seed-11.pt", checkpoint)
+    if sha256_file(checkpoint) != training_record["checkpoint_sha256"]:
+        raise ExperimentStop("continued checkpoint bytes differ from the preserved source")
+
+
+def append_record(path: Path, record: dict[str, Any]) -> None:
+    with path.open("a", encoding="utf-8") as stream:
+        stream.write(json.dumps(record, sort_keys=True) + "\n")
+        stream.flush()
 
 
 def train_condition(
@@ -438,7 +582,7 @@ def evaluate_condition(
         )
         checkpoint_sha = None
     else:
-        saved = torch.load(checkpoint, map_location="cpu", weights_only=True)
+        saved = safe_load_checkpoint(checkpoint)
         logits = saved["logits"]
         checkpoint_sha = sha256_file(checkpoint)
     generator = torch.Generator(device="cpu").manual_seed(seed * 100_003 + 701)
@@ -714,11 +858,39 @@ def main() -> int:
         help="verify frozen inputs/resources without grading",
     )
     parser.add_argument("--output", type=Path)
+    parser.add_argument(
+        "--resume-from",
+        type=Path,
+        help="continue only the registered pre-evaluation run1 checkpoint",
+    )
     args = parser.parse_args()
     try:
         protocol, lock = load_frozen_inputs()
         preflight_result = preflight(protocol)
+        partial_record = (
+            inspect_partial_run(args.resume_from, protocol, lock)
+            if args.resume_from is not None
+            else None
+        )
         if args.preflight:
+            if partial_record is not None:
+                preflight_result["resume_audit"] = {
+                    "status": "pass",
+                    "source_manifest_sha256": partial_record[
+                        "source_manifest_sha256"
+                    ],
+                    "checkpoint_sha256": partial_record["checkpoint_sha256"],
+                    "already_completed_training_grades": partial_record[
+                        "training_actions"
+                    ],
+                    "already_completed_optimizer_step_calls": partial_record[
+                        "optimizer_step_calls"
+                    ],
+                    "evaluation_grades_to_resume": protocol["controller"][
+                        "evaluation_actions_per_seed_condition"
+                    ],
+                    "grader_calls_during_preflight": 0,
+                }
             print(json.dumps(preflight_result, indent=2, sort_keys=True))
             return 0
         if args.output is None:
@@ -736,24 +908,42 @@ def main() -> int:
             json.dumps(images, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
         workspaces = candidate_workspaces(protocol, output)
-        started = time.monotonic()
+        started = time.monotonic() - (
+            float(partial_record.get("source_run_wall_seconds", 0.0))
+            if partial_record is not None
+            else 0.0
+        )
         sequence = 0
         training_rows: list[dict[str, Any]] = []
         evaluation_summaries: list[dict[str, Any]] = []
+        training_record_path = output / "training-seed-records.jsonl"
+        evaluation_record_path = output / "evaluation-seed-records.jsonl"
+        if partial_record is not None:
+            install_partial_run(args.resume_from, output, partial_record)
+            training_rows.append(partial_record)
+            append_record(training_record_path, partial_record)
+            sequence = partial_record["training_actions"]
         run_state = output / "run-state.json"
         try:
             for condition in CONDITIONS:
                 for seed in protocol["controller"]["seeds"]:
-                    training, sequence = train_condition(
+                    if partial_record is not None and (
                         condition,
                         seed,
-                        protocol,
-                        workspaces,
-                        output,
-                        sequence,
-                        started,
-                    )
-                    training_rows.append(training)
+                    ) == (partial_record["condition"], partial_record["seed"]):
+                        training = partial_record
+                    else:
+                        training, sequence = train_condition(
+                            condition,
+                            seed,
+                            protocol,
+                            workspaces,
+                            output,
+                            sequence,
+                            started,
+                        )
+                        training_rows.append(training)
+                        append_record(training_record_path, training)
                     checkpoint = output / training["checkpoint_path"]
                     evaluation, sequence = evaluate_condition(
                         condition,
@@ -766,6 +956,7 @@ def main() -> int:
                         started,
                     )
                     evaluation_summaries.append(evaluation)
+                    append_record(evaluation_record_path, evaluation)
                     (run_state).write_text(
                         json.dumps(
                             {
