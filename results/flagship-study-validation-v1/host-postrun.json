@@ -1,0 +1,24 @@
+[
+  {
+    "command": [
+      "sysctl",
+      "hw.memsize",
+      "hw.logicalcpu",
+      "machdep.cpu.brand_string"
+    ],
+    "stdout": "hw.memsize: 34359738368\nhw.logicalcpu: 10\nmachdep.cpu.brand_string: Apple M1 Pro\n"
+  },
+  {
+    "command": [
+      "sw_vers"
+    ],
+    "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t27.0.1\nBuildVersion:\t\t26A434\n"
+  },
+  {
+    "command": [
+      "sysctl",
+      "vm.swapusage"
+    ],
+    "stdout": "vm.swapusage: total = 3072.00M  used = 2323.75M  free = 748.25M  (encrypted)\n"
+  }
+]
