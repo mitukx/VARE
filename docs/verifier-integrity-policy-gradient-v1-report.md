@@ -77,35 +77,53 @@ Verifier uncertainty was not separately modeled: this fixed candidate set was sc
 
 ## Evidence and reproduction
 
-The protocol SHA is `267496f87f488259017cd697a98acf43ad722c98c906e4a126f4082903819064`. The completed run contains 77 manifested artifacts, including raw per-grade reports, action sequences `0..2239`, optimizer traces, all checkpoints, the original failed-run prefix, preflight/final resource telemetry, and summary. Every artifact size and SHA-256 matches the manifest; the manifest SHA in its evidence lock is `5631d893209f0ad55623f2db2908e8d5df321e4679d8dcca8b289373c12c2ac8`. The run contains 640 training grades, 1,600 sanitized evaluation grades, 160 optimizer records, and no model calls.
+The protocol SHA is `267496f87f488259017cd697a98acf43ad722c98c906e4a126f4082903819064`. The collected run has 77 original artifacts, including per-grade reports, action sequences `0..2239`, optimizer traces, checkpoints, the failed-run prefix, telemetry, and summary. To comply with the repository's 1 MiB tracked-blob limit, the two event streams were gzip-compressed losslessly after collection. The exact original manifest and lock are preserved as `evidence-manifest.as-collected.json` and `evidence-lock.as-collected.json`; their original manifest SHA-256 is `5631d893209f0ad55623f2db2908e8d5df321e4679d8dcca8b289373c12c2ac8`. The current 80-artifact packaging manifest has SHA-256 `67363a06ba21f514e0024a31ee8b4afd88475eb107f63317652091e3ebdb5b72`. `event-stream-repackaging.json` records the exact original byte counts and SHA-256 values, and decompression reproduces the event bytes exactly. The uncompressed source artifacts remain retrievable from Git commit `96bcc308ab9e521a30e27c6bc9a04842efca29e1`. No grades or outcome-bearing records were changed. The run contains 640 training grades, 1,600 sanitized evaluation grades, 160 optimizer records, and no model calls.
 
 Verify the frozen run artifact from the repository root:
 
 ```bash
 python - <<'PY'
-import hashlib, json, pathlib
+import gzip, hashlib, json, pathlib
 root = pathlib.Path("results/verifier_integrity_policy_gradient_v1/run2")
 manifest = json.loads((root / "evidence-manifest.json").read_text())
 lock = json.loads((root / "evidence-lock.json").read_text())
 sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
-assert len(manifest["artifacts"]) == manifest["artifact_count"] == 77
+assert len(manifest["artifacts"]) == manifest["artifact_count"] == 80
 assert all((root / row["path"]).stat().st_size == row["bytes"]
            and sha(root / row["path"]) == row["sha256"]
            for row in manifest["artifacts"])
 assert sha(root / "evidence-manifest.json") == lock["manifest_sha256"]
+source_manifest_path = root / "evidence-manifest.as-collected.json"
+source_lock_path = root / "evidence-lock.as-collected.json"
+assert sha(source_manifest_path) == lock["source_manifest_sha256"]
+assert sha(source_lock_path) == lock["source_lock_sha256"]
+source_manifest = json.loads(source_manifest_path.read_text())
+source_lock = json.loads(source_lock_path.read_text())
+assert source_lock["manifest_sha256"] == lock["source_manifest_sha256"]
+packaging_path = root / "event-stream-repackaging.json"
+assert sha(packaging_path) == lock["stream_repackaging_sha256"]
+packaging = json.loads(packaging_path.read_text())
+stream_bytes = {}
+for row in packaging["streams"]:
+    content = gzip.decompress((root / row["archive_path"]).read_bytes())
+    original = next(x for x in source_manifest["artifacts"]
+                    if x["path"] == row["source_path"])
+    assert len(content) == row["source_bytes"] == original["bytes"]
+    assert hashlib.sha256(content).hexdigest() == row["source_sha256"] == original["sha256"]
+    stream_bytes[row["source_path"]] = content
 summary = json.loads((root / "summary.json").read_text())
 assert summary["actual_grader_invocations"] == 2240
 assert summary["optimizer_step_calls"] == 160
-training = [json.loads(x) for x in (root / "training-events.jsonl").read_text().splitlines()]
-evaluation = [json.loads(x) for x in (root / "evaluation-events.jsonl").read_text().splitlines()]
+training = [json.loads(x) for x in stream_bytes["training-events.jsonl"].splitlines()]
+evaluation = [json.loads(x) for x in stream_bytes["evaluation-events.jsonl"].splitlines()]
 sequences = sorted([x["grade"]["sequence"] for x in training + evaluation])
 assert len(training) == 640 and len(evaluation) == 1600
 assert sequences == list(range(2240))
-print("PASS: 77/77 run2 artifacts, manifest lock, and frozen totals")
+print("PASS: 80/80 packaged artifacts, original event-stream bytes, and frozen totals")
 PY
 ```
 
-Key files: [protocol](../protocols/verifier_integrity_policy_gradient_v1.json), [protocol lock](../protocols/verifier_integrity_policy_gradient_v1.lock.json), [pre-evaluation recovery erratum](../protocols/verifier_integrity_policy_gradient_v1.pre-evaluation-erratum.json), [runner](../scripts/run_verifier_integrity_policy_gradient_v1.py), [preserved failed run](../results/verifier_integrity_policy_gradient_v1/run1/), and [completed run](../results/verifier_integrity_policy_gradient_v1/run2/).
+Key files: [protocol](../protocols/verifier_integrity_policy_gradient_v1.json), [protocol lock](../protocols/verifier_integrity_policy_gradient_v1.lock.json), [pre-evaluation recovery erratum](../protocols/verifier_integrity_policy_gradient_v1.pre-evaluation-erratum.json), [runner](../scripts/run_verifier_integrity_policy_gradient_v1.py), [preserved failed run](../results/verifier_integrity_policy_gradient_v1/run1/), and [completed, losslessly packaged run](../results/verifier_integrity_policy_gradient_v1/run2/).
 
 ## Literature and novelty boundary
 

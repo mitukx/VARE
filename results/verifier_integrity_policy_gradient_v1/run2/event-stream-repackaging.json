@@ -1,0 +1,28 @@
+{
+  "encoding": "gzip; compresslevel=9; mtime=0",
+  "original_git_commit": "96bcc308ab9e521a30e27c6bc9a04842efca29e1",
+  "schema": "vare.policy-gradient-event-stream-repackaging.v1",
+  "source_evidence_lock_sha256": "03d65f5ca3cdf009cb75fce495dde082ad08ff6535c69f972dabf012dfe6ced2",
+  "source_evidence_manifest_sha256": "5631d893209f0ad55623f2db2908e8d5df321e4679d8dcca8b289373c12c2ac8",
+  "statement": "Post-run lossless packaging only. Each decompressed archive equals the exact event-stream bytes recorded in the as-collected manifest. No grade, sequence, reward, optimizer record, metric, or outcome was altered.",
+  "streams": [
+    {
+      "archive_bytes": 125526,
+      "archive_path": "training-events.jsonl.gz",
+      "archive_sha256": "86b30e4ac5afe492b645f025011a9d88c20a4f74b29fb1b35cb438d97f2ba61c",
+      "encoding": "gzip",
+      "source_bytes": 1488702,
+      "source_path": "training-events.jsonl",
+      "source_sha256": "7a59ca9d47f667408947de578af78167306af2bf0c4c1cf01c74ecf74365a62e"
+    },
+    {
+      "archive_bytes": 309247,
+      "archive_path": "evaluation-events.jsonl.gz",
+      "archive_sha256": "d4af776a5df5d926c5d3396a88f23e2519543f8a6a9cd67a0bb1fc0b56a87742",
+      "encoding": "gzip",
+      "source_bytes": 3920150,
+      "source_path": "evaluation-events.jsonl",
+      "source_sha256": "43bb472e544a28b8a690a26055bbe08ba7c2bfbe9d213248e0b204bacdfe70bc"
+    }
+  ]
+}

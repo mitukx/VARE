@@ -1,5 +1,5 @@
 {
-  "artifact_count": 77,
+  "artifact_count": 80,
   "artifacts": [
     {
       "bytes": 12956,
@@ -192,14 +192,29 @@
       "sha256": "1ca37f9a953fa02bc71bc41aafe069db1b2b0e3647d592074ded5f440c5218ad"
     },
     {
-      "bytes": 3920150,
-      "path": "evaluation-events.jsonl",
-      "sha256": "43bb472e544a28b8a690a26055bbe08ba7c2bfbe9d213248e0b204bacdfe70bc"
+      "bytes": 309247,
+      "path": "evaluation-events.jsonl.gz",
+      "sha256": "d4af776a5df5d926c5d3396a88f23e2519543f8a6a9cd67a0bb1fc0b56a87742"
     },
     {
       "bytes": 17185,
       "path": "evaluation-seed-records.jsonl",
       "sha256": "815d60010605427ad9b5364b4948b3721422ab48c4fde9fe283d75819751e89d"
+    },
+    {
+      "bytes": 1402,
+      "path": "event-stream-repackaging.json",
+      "sha256": "6ccc0b88d09e8f43b3cdcdbb7c06c80c5e6915bf467aa10a70c148417931ba5c"
+    },
+    {
+      "bytes": 1956,
+      "path": "evidence-lock.as-collected.json",
+      "sha256": "03d65f5ca3cdf009cb75fce495dde082ad08ff6535c69f972dabf012dfe6ced2"
+    },
+    {
+      "bytes": 13981,
+      "path": "evidence-manifest.as-collected.json",
+      "sha256": "5631d893209f0ad55623f2db2908e8d5df321e4679d8dcca8b289373c12c2ac8"
     },
     {
       "bytes": 980,
@@ -377,15 +392,14 @@
       "sha256": "1d571c0973147e47d81e74d462a686d8ab99064fcccd7917c4c93373da96f4b0"
     },
     {
-      "bytes": 1488702,
-      "path": "training-events.jsonl",
-      "sha256": "7a59ca9d47f667408947de578af78167306af2bf0c4c1cf01c74ecf74365a62e"
+      "bytes": 125526,
+      "path": "training-events.jsonl.gz",
+      "sha256": "86b30e4ac5afe492b645f025011a9d88c20a4f74b29fb1b35cb438d97f2ba61c"
     },
     {
       "bytes": 94527,
       "path": "training-seed-records.jsonl",
       "sha256": "0e4533bea7b3dd0b392e25d71f04c613e352139b00e30726ff009a4cb816455e"
     }
-  ],
-  "schema": "vare.verifier-integrity-policy-gradient-evidence.v1"
+  ]
 }
