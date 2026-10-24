@@ -10,6 +10,7 @@ import math
 import os
 from pathlib import Path
 import re
+from typing import Any, cast
 import uuid
 
 
@@ -54,7 +55,7 @@ def _valid_timestamp(value: object) -> bool:
     return parsed.tzinfo is not None and parsed.utcoffset() == timezone.utc.utcoffset(parsed)
 
 
-def _validate_evaluation(record: Mapping[str, object]) -> None:
+def _validate_evaluation(record: Mapping[str, Any]) -> None:
     _require(record.get("schema") == EVALUATION_SCHEMA, "unknown evaluation evidence schema")
     _require(isinstance(record.get("invocation_id"), str)
              and bool(record["invocation_id"]), "missing evaluation invocation id")
@@ -93,14 +94,17 @@ def _validate_evaluation(record: Mapping[str, object]) -> None:
              and type(aggregate.get("n")) is int
              and math.isfinite(float(aggregate["primary"])),
              "invalid aggregate evaluation score")
+    aggregate = cast(Mapping[str, Any], aggregate)
     tasks = record.get("tasks")
     _require(isinstance(tasks, list) and bool(tasks), "evaluation has no task results")
+    tasks = cast(list[Mapping[str, Any]], tasks)
     task_ids: set[str] = set()
     for row in tasks:
         _require(isinstance(row, Mapping), "malformed task evaluation result")
         task_id = row.get("task_id")
         _require(isinstance(task_id, str) and task_id not in task_ids,
                  "missing or duplicate evaluated task id")
+        task_id = cast(str, task_id)
         task_ids.add(task_id)
         _require(isinstance(row.get("prompt"), str)
                  and isinstance(row.get("output_text"), str)
@@ -130,14 +134,14 @@ def _validate_evaluation(record: Mapping[str, object]) -> None:
              "evaluation completion precedes evaluation start")
 
 
-def _with_digest(record: Mapping[str, object]) -> dict[str, object]:
+def _with_digest(record: Mapping[str, Any]) -> dict[str, Any]:
     payload = dict(record)
     payload.pop("record_sha256", None)
     payload["record_sha256"] = sha256_bytes(canonical_json(payload))
     return payload
 
 
-def _verify_digest(record: Mapping[str, object]) -> None:
+def _verify_digest(record: Mapping[str, Any]) -> None:
     digest = record.get("record_sha256")
     _require(isinstance(digest, str) and _SHA256.fullmatch(digest) is not None,
              "record has no valid self-hash")
@@ -182,18 +186,19 @@ class EvaluationEvidenceJournal:
             raise FileExistsError(f"evaluation evidence directory already exists: {self.root}")
         self.root.mkdir(parents=True, exist_ok=False)
         self._invocations: list[str] = []
-        self._started: dict[str, dict[str, object]] = {}
+        self._started: dict[str, dict[str, Any]] = {}
 
     @property
     def invocation_ids(self) -> tuple[str, ...]:
         return tuple(self._invocations)
 
-    def record_evaluation_started(self, record: Mapping[str, object]) -> Path:
+    def record_evaluation_started(self, record: Mapping[str, Any]) -> Path:
         payload = dict(record)
         _require(payload.get("schema") == START_SCHEMA, "unknown evaluation start schema")
         invocation_id = payload.get("invocation_id")
         _require(isinstance(invocation_id, str) and bool(invocation_id),
                  "missing evaluation invocation id")
+        invocation_id = cast(str, invocation_id)
         _require(invocation_id not in self._started, "duplicate started evaluation id")
         _require(_valid_timestamp(payload.get("started_at_utc")),
                  "evaluation start timestamp must be timezone-aware UTC")
@@ -210,7 +215,8 @@ class EvaluationEvidenceJournal:
                          and isinstance(row.get("task_id"), str)
                          and isinstance(row.get("prompt"), str) for row in prompts),
                  "evaluation start does not retain exact task prompts")
-        task_ids = [row["task_id"] for row in prompts]
+        prompts = cast(list[Mapping[str, Any]], prompts)
+        task_ids = [cast(str, row["task_id"]) for row in prompts]
         _require(len(task_ids) == len(set(task_ids)),
                  "evaluation start contains duplicate task IDs")
         sealed = _with_digest(payload)
@@ -226,7 +232,7 @@ class EvaluationEvidenceJournal:
         self._started[invocation_id] = sealed
         return path
 
-    def record_evaluation(self, record: Mapping[str, object]) -> Path:
+    def record_evaluation(self, record: Mapping[str, Any]) -> Path:
         payload = dict(record)
         _validate_evaluation(payload)
         invocation_id = str(payload["invocation_id"])
@@ -270,7 +276,7 @@ class EvaluationEvidenceJournal:
         _require(isinstance(message, str), "failure message must be text")
         timestamp = occurred_at_utc or utc_now()
         _require(_valid_timestamp(timestamp), "failure timestamp must be timezone-aware UTC")
-        payload: dict[str, object] = {
+        payload: dict[str, Any] = {
             "schema": FAILURE_SCHEMA,
             "failure_id": uuid.uuid4().hex,
             "failure_type": failure_type,
@@ -295,8 +301,8 @@ class EvaluationEvidenceJournal:
 def audit_evaluation_evidence(
     root: Path,
     *,
-    scorer: Callable[[Mapping[str, object], str, str], float] | None = None,
-) -> dict[str, object]:
+    scorer: Callable[[Mapping[str, Any], str, str], float] | None = None,
+) -> dict[str, Any]:
     """Verify hashes and optionally reconstruct every score with an independent scorer."""
     root = Path(root)
     _require(root.is_dir() and not root.is_symlink(), "unsafe evidence root")
@@ -306,8 +312,8 @@ def audit_evaluation_evidence(
                  and path.suffix == ".json" for path in files),
              "evidence root contains an unexpected or transient file")
     invocation_ids: set[str] = set()
-    starts: dict[str, Mapping[str, object]] = {}
-    failure_rows: list[Mapping[str, object]] = []
+    starts: dict[str, Mapping[str, Any]] = {}
+    failure_rows: list[Mapping[str, Any]] = []
     evaluations = failures = 0
     for path in files:
         record = json.loads(path.read_text(encoding="utf-8"))
