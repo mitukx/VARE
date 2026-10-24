@@ -21,7 +21,7 @@ import sys
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
-PROTOCOL = ROOT / "benchmarks/verifier_consistent_async_grpo_v1/protocol.json"
+PROTOCOL = ROOT / "benchmarks/verifier_consistent_async_grpo_v2/protocol.json"
 CUTPOINTS = (
     "rollout_complete_before_admission",
     "admission_before_optimizer",
@@ -64,6 +64,46 @@ def require(condition: bool, message: str) -> None:
         raise RuntimeError(message)
 
 
+def prepare_pinned_imports(rvl_source: Path) -> None:
+    """Make isolated recovery workers import only the frozen source trees."""
+    import site
+    for entry in site.getsitepackages():
+        if entry not in sys.path:
+            sys.path.append(entry)
+    for finder in list(sys.meta_path):
+        mapping = getattr(finder, "MAPPING", None)
+        if isinstance(mapping, dict) and ({"vare", "rvl_systems"} & set(mapping)):
+            sys.meta_path.remove(finder)
+    for name in ("vare", "rvl_systems"):
+        module = sys.modules.get(name)
+        if module is not None:
+            expected = (ROOT / "src/vare/__init__.py" if name == "vare"
+                        else rvl_source / "src/rvl_systems/__init__.py")
+            require(Path(module.__file__).resolve() == expected.resolve(),
+                    f"preloaded {name} came from outside pinned source")
+    sys.path.insert(0, str(rvl_source / "src"))
+    sys.path.insert(0, str(ROOT / "src"))
+
+
+def verify_import_origins(rvl_source: Path) -> None:
+    from importlib import import_module
+    expected = {
+        "vare": ROOT / "src/vare/__init__.py",
+        "vare.attestation": ROOT / "src/vare/attestation.py",
+        "vare.promotion": ROOT / "src/vare/promotion.py",
+        "vare.promotion_journal": ROOT / "src/vare/promotion_journal.py",
+        "vare.trajectory_store": ROOT / "src/vare/trajectory_store.py",
+        "vare.trajectory_admission": ROOT / "src/vare/trajectory_admission.py",
+        "rvl_systems": rvl_source / "src/rvl_systems/__init__.py",
+        "rvl_systems.hf_backend": rvl_source / "src/rvl_systems/hf_backend.py",
+        "rvl_systems.hf_trainer": rvl_source / "src/rvl_systems/hf_trainer.py",
+    }
+    for name, path in expected.items():
+        module = import_module(name)
+        require(Path(module.__file__).resolve() == path.resolve(),
+                f"import origin mismatch for {name}: {module.__file__}")
+
+
 def trusted_score(response: str, version: int) -> float:
     """Independent copy of the two frozen task rules."""
     if version == 0:
@@ -75,14 +115,14 @@ def trusted_score(response: str, version: int) -> float:
 
 
 def load_initial_model(args, case: Path):
-    sys.path.insert(0, str(ROOT / "src"))
-    sys.path.insert(0, str(args.rvl_source / "src"))
+    prepare_pinned_imports(args.rvl_source)
     import torch
     from rvl_systems.hf_backend import HFLocalBackend
     from rvl_systems.hf_trainer import HFCausalLMGRPOTrainer, HFTTrainerConfig
     from vare.promotion_journal import PromotionJournal
     from vare.types import Task
     from validate_grpo_e2e_cpu import tensor_hash
+    verify_import_origins(args.rvl_source)
 
     torch.set_num_threads(1)
     backend = HFLocalBackend(str(args.model_dir), max_new_tokens=3,
@@ -454,7 +494,7 @@ def parent(args) -> None:
         case = args.output / cutpoint
         require(not case.exists(), f"crash case already exists: {case}")
         case.mkdir(parents=True)
-        command = [sys.executable, str(Path(__file__).resolve()), "--worker",
+        command = [sys.executable, "-S", str(Path(__file__).resolve()), "--worker",
                    "--case", str(case), "--source-run", str(args.source_run),
                    "--model-dir", str(args.model_dir), "--rvl-source", str(args.rvl_source),
                    "--output", str(args.output), "--cutpoint", cutpoint,
@@ -540,6 +580,8 @@ def _alive(pid: int) -> bool:
 
 
 def main() -> None:
+    require(sys.flags.no_site == 1,
+            "launch the crash runner with python -S to disable site startup hooks")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-run", type=Path, required=True)
     parser.add_argument("--model-dir", type=Path, required=True)

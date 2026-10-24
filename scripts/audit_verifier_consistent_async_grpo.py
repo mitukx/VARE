@@ -12,7 +12,7 @@ import sqlite3
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-PROTOCOL = ROOT / "benchmarks/verifier_consistent_async_grpo_v1/protocol.json"
+PROTOCOL = ROOT / "benchmarks/verifier_consistent_async_grpo_v2/protocol.json"
 
 
 def sha(path: Path) -> str:
@@ -22,6 +22,45 @@ def sha(path: Path) -> str:
 def require(condition: bool, message: str) -> None:
     if not condition:
         raise RuntimeError(message)
+
+
+def prepare_pinned_imports(rvl_source: Path) -> None:
+    """Load audited code from the frozen worktree, never an editable install."""
+    import site
+    for entry in site.getsitepackages():
+        if entry not in sys.path:
+            sys.path.append(entry)
+    for finder in list(sys.meta_path):
+        mapping = getattr(finder, "MAPPING", None)
+        if isinstance(mapping, dict) and ({"vare", "rvl_systems"} & set(mapping)):
+            sys.meta_path.remove(finder)
+    for name in ("vare", "rvl_systems"):
+        module = sys.modules.get(name)
+        if module is not None:
+            expected = (ROOT / "src/vare/__init__.py" if name == "vare"
+                        else rvl_source / "src/rvl_systems/__init__.py")
+            require(Path(module.__file__).resolve() == expected.resolve(),
+                    f"preloaded {name} came from outside pinned source")
+    sys.path.insert(0, str(rvl_source / "src"))
+    sys.path.insert(0, str(ROOT / "src"))
+
+
+def verify_import_origins(rvl_source: Path) -> None:
+    from importlib import import_module
+    expected = {
+        "vare": ROOT / "src/vare/__init__.py",
+        "vare.trajectory_store": ROOT / "src/vare/trajectory_store.py",
+        "vare.trajectory_admission": ROOT / "src/vare/trajectory_admission.py",
+        "vare.trajectory_learner": ROOT / "src/vare/trajectory_learner.py",
+        "vare.promotion": ROOT / "src/vare/promotion.py",
+        "rvl_systems": rvl_source / "src/rvl_systems/__init__.py",
+        "rvl_systems.hf_backend": rvl_source / "src/rvl_systems/hf_backend.py",
+        "rvl_systems.hf_trainer": rvl_source / "src/rvl_systems/hf_trainer.py",
+    }
+    for name, path in expected.items():
+        module = import_module(name)
+        require(Path(module.__file__).resolve() == path.resolve(),
+                f"import origin mismatch for {name}: {module.__file__}")
 
 
 def trusted_oracle(version: int, response: str) -> int:
@@ -335,6 +374,8 @@ def audit_sigkill_recovery(source_run: Path, crash_run: Path) -> dict:
 
 
 def main() -> None:
+    require(sys.flags.no_site == 1,
+            "launch the independent auditor with python -S to disable site startup hooks")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run", type=Path, action="append", required=True,
                         help="one seed bundle; repeat for paired seeds")
@@ -358,6 +399,8 @@ def main() -> None:
     require(sha(args.rvl_source / "src/rvl_systems/hf_backend.py")
             == protocol["budgets"]["rvl_patched_backend_sha256"],
             "pinned RVL backend mismatch")
+    prepare_pinned_imports(args.rvl_source)
+    verify_import_origins(args.rvl_source)
     seeds = [json.loads((path / "summary.json").read_text())["seed"] for path in args.run]
     require(len(set(seeds)) == len(seeds), "duplicate seed bundle")
     if not args.allow_partial:
@@ -445,7 +488,7 @@ def main() -> None:
     paired_sign = exact_paired_sign_test(
         [row["invalid_commit_naive"] for row in per_seed],
         [row["invalid_commit_vare"] for row in per_seed])
-    pilot_signal = bool(per_seed and per_seed[0]["seed"] == protocol["budgets"]["seeds"][0]
+    pilot_signal = bool(per_seed and per_seed[0]["seed"] == protocol["stopping"]["pilot_seed"]
                         and per_seed[0]["stale_reward_disagreements"][
                             "naive_async"]["total_disagreements"] > 0)
     report = {

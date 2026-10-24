@@ -23,7 +23,7 @@ import time
 from statistics import fmean
 
 ROOT = Path(__file__).resolve().parents[1]
-PROTOCOL_PATH = ROOT / "benchmarks/verifier_consistent_async_grpo_v1/protocol.json"
+PROTOCOL_PATH = ROOT / "benchmarks/verifier_consistent_async_grpo_v2/protocol.json"
 PROMPT = "Choose one label for a story: a blue bird landed on the"
 GROUP_SIZE = 8
 
@@ -40,6 +40,54 @@ def write(path: Path, value) -> None:
 def require(condition: bool, message: str) -> None:
     if not condition:
         raise RuntimeError(message)
+
+
+def prepare_pinned_imports(rvl_source: Path) -> None:
+    """Avoid editable-install finders that can silently route VARE elsewhere."""
+    import site
+    for entry in site.getsitepackages():
+        if entry not in sys.path:
+            sys.path.append(entry)
+    for finder in list(sys.meta_path):
+        mapping = getattr(finder, "MAPPING", None)
+        if isinstance(mapping, dict) and ({"vare", "rvl_systems"} & set(mapping)):
+            sys.meta_path.remove(finder)
+    for name in ("vare", "rvl_systems"):
+        module = sys.modules.get(name)
+        if module is not None:
+            expected = (ROOT / "src/vare/__init__.py" if name == "vare"
+                        else rvl_source / "src/rvl_systems/__init__.py")
+            require(Path(module.__file__).resolve() == expected.resolve(),
+                    f"preloaded {name} module came from outside the pinned source")
+    sys.path.insert(0, str(rvl_source / "src"))
+    sys.path.insert(0, str(ROOT / "src"))
+
+
+def verify_import_origins(rvl_source: Path) -> None:
+    from importlib import import_module
+    expected = {
+        "vare": ROOT / "src/vare/__init__.py",
+        "vare.attestation": ROOT / "src/vare/attestation.py",
+        "vare.config": ROOT / "src/vare/config.py",
+        "vare.engine": ROOT / "src/vare/engine.py",
+        "vare.evidence": ROOT / "src/vare/evidence.py",
+        "vare.promotion": ROOT / "src/vare/promotion.py",
+        "vare.promotion_journal": ROOT / "src/vare/promotion_journal.py",
+        "vare.trajectory_admission": ROOT / "src/vare/trajectory_admission.py",
+        "vare.trajectory_learner": ROOT / "src/vare/trajectory_learner.py",
+        "vare.trajectory_store": ROOT / "src/vare/trajectory_store.py",
+        "vare.types": ROOT / "src/vare/types.py",
+        "vare.telemetry": ROOT / "src/vare/telemetry.py",
+        "vare.integrations.rvl_grpo": ROOT / "src/vare/integrations/rvl_grpo.py",
+        "rvl_systems": rvl_source / "src/rvl_systems/__init__.py",
+        "rvl_systems.hf_backend": rvl_source / "src/rvl_systems/hf_backend.py",
+        "rvl_systems.hf_trainer": rvl_source / "src/rvl_systems/hf_trainer.py",
+        "rvl_systems.types": rvl_source / "src/rvl_systems/types.py",
+    }
+    for name, path in expected.items():
+        module = import_module(name)
+        require(Path(module.__file__).resolve() == path.resolve(),
+                f"import origin mismatch for {name}: {module.__file__}")
 
 
 def swap_used_bytes() -> int | None:
@@ -204,14 +252,14 @@ def max_tensor_error(actual, expected) -> float:
 
 async def build_runtime(args, out: Path, seed: int, *, naive: bool,
                         eval_version: int):
-    sys.path.insert(0, str(ROOT / "src"))
-    sys.path.insert(0, str(args.rvl_source / "src"))
+    prepare_pinned_imports(args.rvl_source)
     import torch
     from rvl_systems.hf_backend import HFLocalBackend
     from rvl_systems.hf_trainer import HFCausalLMGRPOTrainer, HFTTrainerConfig
     from rvl_systems.types import Generation, VerifiedGeneration
     from vare.config import LagConfig
     from vare.integrations.rvl_grpo import RVLGRPOConfig, RVLGRPOHooks
+    verify_import_origins(args.rvl_source)
 
     torch.set_num_threads(1)
     torch.manual_seed(seed)
@@ -393,6 +441,8 @@ def serializable_group(group: dict) -> dict:
 
 
 async def run(args) -> None:
+    require(sys.flags.no_site == 1,
+            "launch the measured runner with python -S to disable site startup hooks")
     require(not args.output.exists(), "output directory already exists")
     args.output.mkdir(parents=True)
     protocol = json.loads(PROTOCOL_PATH.read_text())
@@ -408,6 +458,10 @@ async def run(args) -> None:
     for relative, digest in protocol["source_sha256"].items():
         require(sha(ROOT / relative) == digest,
                 f"VARE source differs from frozen protocol: {relative}")
+    # Do this before importing any VARE module. The host Python environment can
+    # contain editable-install finders that shadow this exact worktree.
+    prepare_pinned_imports(args.rvl_source)
+    verify_import_origins(args.rvl_source)
     budgets = protocol["budgets"]
     require(args.seed in budgets["seeds"], "undeclared seed")
     for filename, digest in budgets["model_files"].items():
@@ -456,6 +510,7 @@ async def run(args) -> None:
     from vare.types import Task
     import torch
     import transformers
+    verify_import_origins(args.rvl_source)
 
     started = time.perf_counter()
     result = {"seed": args.seed, "arms": {}, "environment": {
@@ -569,7 +624,8 @@ async def run(args) -> None:
                 "unused_group": ["fresh"],
             }
         else:
-            arm_run_id = f"vcag-{arm}-{args.seed}"
+            arm_run_id = f"varegrpo-v2-{arm}-{args.seed}"
+            require(len(arm_run_id) >= 16, "operator run ID is shorter than VARE trust-root minimum")
             store = TrajectoryStore.create(arm_out / "trajectories.sqlite",
                 run_id=arm_run_id, max_inflight=32)
             def current_policy(_hooks=hooks, _files=checkpoints):
