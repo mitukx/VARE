@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "protocol_id": "transformers-49412-source-replay-v2",
+  "status": "frozen_before_execution",
+  "frozen_at_utc": "2026-10-23T23:56:29Z",
+  "hypothesis": "Calling the upstream _register_module_fusion implementation twice for the same model type, fusion, and source patterns raises a conversion-mapping conflict at the baseline revision and is idempotent at the fixed revision, while retaining unrelated mappings and rejecting unrelated conflicts.",
+  "cheaper_alternative_considered": "The historical pinned pytest replay is cheaper, but its baseline failure occurs in test setup before the target function is invoked. Source inspection alone cannot demonstrate the registration behavior. This direct function-level replay is the minimum executable check.",
+  "scope": {
+    "evidence_level": "E1 source-level behavior reproduction; not an eligible candidate task",
+    "candidate_code_executed": false,
+    "hidden_grader_used": false,
+    "model_or_agent_used": false,
+    "upstream_pytest_suite_used": false,
+    "historical_split_changed": false,
+    "task_split_assignment": "transformers-49412-fusion-idempotence remains in the frozen v1 heldout source allocation and is quarantined from agent/model use; this replay does not reassign it",
+    "qualification_limit": "This replay does not certify candidate isolation, a repository-patch grader, task eligibility, or model capability. The harness stubs module discovery and conversion-registry storage and executes the pinned upstream registration function only."
+  },
+  "task": {
+    "repository": "https://github.com/huggingface/transformers",
+    "upstream_change": "https://github.com/huggingface/transformers/pull/49412",
+    "task_id": "transformers-49412-fusion-idempotence",
+    "upstream_license": "Apache-2.0",
+    "license_path": "LICENSE",
+    "license_sha256": "77fd4710def9ec3c0f6225800e0235f15a425abd4a8b03559127fcd782612049",
+    "baseline": {
+      "revision": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+      "path": "src/transformers/fusion_mapping.py",
+      "sha256": "9a05ab8ccc0ab4756526bcb76c05099a8ec3f1b634c617c620305d1a81cc2f0c"
+    },
+    "fixed": {
+      "revision": "01269bc99768ad45f8aeaeb701e1315371e25239",
+      "path": "src/transformers/fusion_mapping.py",
+      "sha256": "f905fd0526bb0338419ded16c8ba74f5355b3744e8aa0b9d0ce7096e6de641b9"
+    }
+  },
+  "probe": {
+    "path": "scripts/reproduce_transformers_49412_source_replay_v2.py",
+    "sha256": "4037964181790459387d353b822519ffcf95acf4717c81c1ee705c1451d29544",
+    "properties": [
+      "re-registering a fusion leaves one converter with the expected source pattern",
+      "re-registering preserves an unrelated converter",
+      "an unrelated converter with the same source pattern still raises ValueError without changing the mapping"
+    ]
+  },
+  "cases": [
+    {
+      "case": "baseline",
+      "source_revision": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+      "expected": "BASELINE_FAIL_REPRODUCED",
+      "property": "second registration raises the existing-conversion-mapping conflict"
+    },
+    {
+      "case": "fixed",
+      "source_revision": "01269bc99768ad45f8aeaeb701e1315371e25239",
+      "expected": "PASS",
+      "properties": [
+        "same-fusion idempotence",
+        "unrelated mapping retention",
+        "unrelated conflict rejection"
+      ]
+    },
+    {
+      "case": "mutant-no-deduplication",
+      "source_revision": "01269bc99768ad45f8aeaeb701e1315371e25239",
+      "mutation": "replace the exact previous-source filtering list comprehension with list(existing_converters)",
+      "mutated_source_sha256": "397091ed877a3c2c7a2efd7ff81ae5b8dd03533dc5d18da5639e2b99826ea579",
+      "expected": "MUTANT_KILLED",
+      "property": "same-fusion idempotence"
+    },
+    {
+      "case": "mutant-clear-unrelated-mappings",
+      "source_revision": "01269bc99768ad45f8aeaeb701e1315371e25239",
+      "mutation": "replace the exact previous-source filtering list comprehension with an empty list",
+      "mutated_source_sha256": "79e652808c38b8cefbf87024fed8b34a89ab82a891ec7df499dd24779c701697",
+      "expected": "MUTANT_KILLED",
+      "property": "unrelated mapping retention"
+    },
+    {
+      "case": "mutant-allow-conflict",
+      "source_revision": "01269bc99768ad45f8aeaeb701e1315371e25239",
+      "mutation": "replace the exact existing_converter is not None conflict branch with if False",
+      "mutated_source_sha256": "b71e020beddae69d3ead1b4876b6bf894d5fab14c5eee24136aa85ba3ad5b1a3",
+      "expected": "MUTANT_KILLED",
+      "property": "unrelated conflict rejection"
+    }
+  ],
+  "runtime": {
+    "docker_context": "colima",
+    "image": "vare-transformers-cpu:qualification-v1",
+    "image_id": "sha256:5461f5ec9d3022db72d49cf5bcd140c99521eba5b37747257b58a576d4e12e1f",
+    "container_python": "3.12.15",
+    "network": "disabled",
+    "cpus_per_case": 1,
+    "memory_bytes_per_case": 536870912,
+    "pids_limit_per_case": 64,
+    "wall_timeout_seconds_per_case": 30,
+    "maximum_cases": 5,
+    "maximum_total_wall_seconds": 150,
+    "paid_compute": false,
+    "model_or_optimizer_initialization": false
+  },
+  "primary_decision_rule": "Accept this source-level reproduction only if all five cases produce their frozen expected classifications, all immutable source hashes match, and no case exceeds the frozen limits. Any mismatch, timeout, OOM, or import failure stops the replay and is retained as a failure; no retry is authorized by this protocol.",
+  "stopping_rule": "Run each case once in a fresh network-disabled container. Stop after five cases or immediately after the first infrastructure/provenance/resource failure. Do not modify this protocol in response to observed outcomes.",
+  "resource_measurements": [
+    "per-case wall seconds",
+    "per-process maximum RSS from getrusage",
+    "Python allocation peak from tracemalloc",
+    "container memory/CPU limits"
+  ],
+  "reproduction": {
+    "source_acquisition": "From an immutable Transformers clone, export only src/transformers/fusion_mapping.py with git show for the exact revision. Verify the exported file SHA-256 against this protocol before each run.",
+    "per_case_command_template": "docker --context colima run --rm --network none --cpus 1 --memory 536870912 --pids-limit 64 -v <source-dir>:/source:ro -v <probe-path>:/probe.py:ro --entrypoint python vare-transformers-cpu:qualification-v1 /probe.py --case <case> --source /source/fusion_mapping.py --expected-source-sha256 <sha256>",
+    "host_timeout": "Apply a 30-second host timeout to each docker run invocation.",
+    "raw_output": "Retain each command line, stdout, stderr, exit status, start/end timestamps, and host resource snapshot under results/transformers-49412-source-replay-v2/raw/."
+  }
+}

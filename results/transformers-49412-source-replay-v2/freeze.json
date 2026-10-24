@@ -1,0 +1,44 @@
+{
+  "freeze_id": "transformers-49412-source-replay-v2-freeze-1",
+  "frozen_at_utc": "2026-10-23T23:56:29Z",
+  "protocol_path": "protocols/transformers_49412_source_replay_v2.json",
+  "protocol_sha256": "dcb554a15c33c8a08a0f4cb26d912cc743bd08af633f097523052d668d028893",
+  "probe_path": "scripts/reproduce_transformers_49412_source_replay_v2.py",
+  "probe_sha256": "4037964181790459387d353b822519ffcf95acf4717c81c1ee705c1451d29544",
+  "upstream_inputs": [
+    {
+      "repository": "https://github.com/huggingface/transformers",
+      "revision": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+      "path": "src/transformers/fusion_mapping.py",
+      "sha256": "9a05ab8ccc0ab4756526bcb76c05099a8ec3f1b634c617c620305d1a81cc2f0c",
+      "acquisition": "git show cb33194ad6152bd9fad6305378d92db385dd7b32:src/transformers/fusion_mapping.py"
+    },
+    {
+      "repository": "https://github.com/huggingface/transformers",
+      "revision": "01269bc99768ad45f8aeaeb701e1315371e25239",
+      "path": "src/transformers/fusion_mapping.py",
+      "sha256": "f905fd0526bb0338419ded16c8ba74f5355b3744e8aa0b9d0ce7096e6de641b9",
+      "acquisition": "git show 01269bc99768ad45f8aeaeb701e1315371e25239:src/transformers/fusion_mapping.py"
+    }
+  ],
+  "license": {
+    "path": "LICENSE",
+    "sha256": "77fd4710def9ec3c0f6225800e0235f15a425abd4a8b03559127fcd782612049"
+  },
+  "mutated_source_sha256": {
+    "mutant-no-deduplication": "397091ed877a3c2c7a2efd7ff81ae5b8dd03533dc5d18da5639e2b99826ea579",
+    "mutant-clear-unrelated-mappings": "79e652808c38b8cefbf87024fed8b34a89ab82a891ec7df499dd24779c701697",
+    "mutant-allow-conflict": "b71e020beddae69d3ead1b4876b6bf894d5fab14c5eee24136aa85ba3ad5b1a3"
+  },
+  "runtime_image_id": "sha256:5461f5ec9d3022db72d49cf5bcd140c99521eba5b37747257b58a576d4e12e1f",
+  "resource_envelope": {
+    "network": "disabled",
+    "cpus_per_case": 1,
+    "memory_bytes_per_case": 536870912,
+    "pids_limit_per_case": 64,
+    "wall_timeout_seconds_per_case": 30,
+    "cases": 5,
+    "maximum_total_wall_seconds": 150
+  },
+  "freeze_stage": "protocol_and_probe_fixed_before_behavioral_replay"
+}

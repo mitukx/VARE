@@ -1,0 +1,16 @@
+{
+  "stage": "preflight_before_any_frozen_case",
+  "case_executed": false,
+  "command": [
+    "docker", "--context", "colima", "run", "--rm", "--network", "none",
+    "--cpus", "1", "--memory", "536870912", "--pids-limit", "64",
+    "-v", "/Users/user/Documents/Codex/work/vare-49412-v2/fixed:/source:ro",
+    "--entrypoint", "python", "vare-transformers-cpu:qualification-v1", "-c",
+    "import hashlib,pathlib; print(hashlib.sha256(pathlib.Path(\"/source/fusion_mapping.py\").read_bytes()).hexdigest())"
+  ],
+  "exit_code": 0,
+  "stdout": "f905fd0526bb0338419ded16c8ba74f5355b3744e8aa0b9d0ce7096e6de641b9\n",
+  "stderr": "",
+  "classification": "INFRASTRUCTURE_PREFLIGHT_BIND_PATH_PASS",
+  "disposition": "Source bytes matched the fixed revision hash. No target function was invoked."
+}

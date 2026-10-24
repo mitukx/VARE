@@ -1,0 +1,18 @@
+{
+  "stage": "preflight_before_any_frozen_case",
+  "case_executed": false,
+  "timestamp_utc": null,
+  "timestamp_note": "The tool transcript did not capture a wall-clock timestamp for this preflight.",
+  "command": [
+    "docker", "--context", "colima", "run", "--rm", "--network", "none",
+    "--cpus", "1", "--memory", "536870912", "--pids-limit", "64",
+    "-v", "/private/tmp/vare-49412-source-replay-v2/fixed:/source:ro",
+    "--entrypoint", "python", "vare-transformers-cpu:qualification-v1", "-c",
+    "import hashlib,pathlib; p=pathlib.Path(\"/source/fusion_mapping.py\"); print(hashlib.sha256(p.read_bytes()).hexdigest())"
+  ],
+  "exit_code": 1,
+  "classification": "INFRASTRUCTURE_PREFLIGHT_BIND_PATH_UNAVAILABLE",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/usr/local/lib/python3.12/pathlib.py\", line 1019, in read_bytes\n    with self.open(mode='rb') as f:\n         ^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/pathlib.py\", line 1013, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: '/source/fusion_mapping.py'\n",
+  "disposition": "No source function or experiment case ran. The source was copied to a user Documents/Codex path that Colima can mount, and the hash-only bind check then succeeded before the first frozen case."
+}

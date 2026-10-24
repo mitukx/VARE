@@ -1,0 +1,174 @@
+{
+  "aggregate": {
+    "agent_trajectories": 0,
+    "baseline_conflict_on_second_registration_reproduced": true,
+    "case_count": 6,
+    "container_probe_wall_seconds": 0.120339,
+    "first_call_error_rejected": true,
+    "fixed_properties_passed": 3,
+    "host_invocation_wall_seconds": 1.163444,
+    "matched_classifications": 6,
+    "maximum_process_rss_bytes": 18743296,
+    "maximum_python_tracemalloc_peak_bytes": 632373,
+    "model_tokens": 0,
+    "mutants_killed": 3,
+    "ooms": 0,
+    "optimizer_updates": 0,
+    "timeouts": 0,
+    "verified_task_successes": 0
+  },
+  "cases": [
+    {
+      "case": "baseline",
+      "classification": "BASELINE_FAIL_REPRODUCED",
+      "executed_module_sha256": "9a05ab8ccc0ab4756526bcb76c05099a8ec3f1b634c617c620305d1a81cc2f0c",
+      "exit_code": 0,
+      "host_swap_end": "vm.swapusage: total = 5120.00M  used = 3734.44M  free = 1385.56M  (encrypted)",
+      "host_swap_start": "vm.swapusage: total = 5120.00M  used = 3734.44M  free = 1385.56M  (encrypted)",
+      "host_wall_seconds": 0.309894,
+      "probe_wall_seconds": 0.020422,
+      "process_max_rss_bytes": 18612224,
+      "property_failures": [],
+      "property_passed": [
+        "baseline_conflict_occurs_only_on_second_registration"
+      ],
+      "python_tracemalloc_peak_bytes": 630499,
+      "source_file_sha256": "9a05ab8ccc0ab4756526bcb76c05099a8ec3f1b634c617c620305d1a81cc2f0c",
+      "timed_out": false
+    },
+    {
+      "case": "fixed",
+      "classification": "PASS",
+      "executed_module_sha256": "f905fd0526bb0338419ded16c8ba74f5355b3744e8aa0b9d0ce7096e6de641b9",
+      "exit_code": 0,
+      "host_swap_end": "vm.swapusage: total = 5120.00M  used = 3734.44M  free = 1385.56M  (encrypted)",
+      "host_swap_start": "vm.swapusage: total = 5120.00M  used = 3734.44M  free = 1385.56M  (encrypted)",
+      "host_wall_seconds": 0.178496,
+      "probe_wall_seconds": 0.019758,
+      "process_max_rss_bytes": 18743296,
+      "property_failures": [],
+      "property_passed": [
+        "same_fusion_is_idempotent",
+        "unrelated_mapping_survives",
+        "unrelated_conflict_is_rejected"
+      ],
+      "python_tracemalloc_peak_bytes": 632139,
+      "source_file_sha256": "f905fd0526bb0338419ded16c8ba74f5355b3744e8aa0b9d0ce7096e6de641b9",
+      "timed_out": false
+    },
+    {
+      "case": "mutant-no-deduplication",
+      "classification": "MUTANT_KILLED",
+      "executed_module_sha256": "397091ed877a3c2c7a2efd7ff81ae5b8dd03533dc5d18da5639e2b99826ea579",
+      "exit_code": 0,
+      "host_swap_end": "vm.swapusage: total = 5120.00M  used = 3734.44M  free = 1385.56M  (encrypted)",
+      "host_swap_start": "vm.swapusage: total = 5120.00M  used = 3734.44M  free = 1385.56M  (encrypted)",
+      "host_wall_seconds": 0.158559,
+      "probe_wall_seconds": 0.019592,
+      "process_max_rss_bytes": 18743296,
+      "property_failures": [
+        {
+          "error": "ValueError: Fusion probe_fusion for model type vare_49412_probe conflicts with an existing conversion mapping for source patterns ('patch_embed.proj.weight',).",
+          "property": "same_fusion_is_idempotent"
+        }
+      ],
+      "property_passed": [],
+      "python_tracemalloc_peak_bytes": 631927,
+      "source_file_sha256": "f905fd0526bb0338419ded16c8ba74f5355b3744e8aa0b9d0ce7096e6de641b9",
+      "timed_out": false
+    },
+    {
+      "case": "mutant-clear-unrelated-mappings",
+      "classification": "MUTANT_KILLED",
+      "executed_module_sha256": "79e652808c38b8cefbf87024fed8b34a89ab82a891ec7df499dd24779c701697",
+      "exit_code": 0,
+      "host_swap_end": "vm.swapusage: total = 5120.00M  used = 3734.44M  free = 1385.56M  (encrypted)",
+      "host_swap_start": "vm.swapusage: total = 5120.00M  used = 3734.44M  free = 1385.56M  (encrypted)",
+      "host_wall_seconds": 0.168918,
+      "probe_wall_seconds": 0.020283,
+      "process_max_rss_bytes": 18481152,
+      "property_failures": [
+        {
+          "error": "AssertionError: expected unrelated and fusion converters, found 1",
+          "property": "unrelated_mapping_survives"
+        }
+      ],
+      "property_passed": [],
+      "python_tracemalloc_peak_bytes": 631818,
+      "source_file_sha256": "f905fd0526bb0338419ded16c8ba74f5355b3744e8aa0b9d0ce7096e6de641b9",
+      "timed_out": false
+    },
+    {
+      "case": "mutant-allow-conflict",
+      "classification": "MUTANT_KILLED",
+      "executed_module_sha256": "b71e020beddae69d3ead1b4876b6bf894d5fab14c5eee24136aa85ba3ad5b1a3",
+      "exit_code": 0,
+      "host_swap_end": "vm.swapusage: total = 5120.00M  used = 3734.44M  free = 1385.56M  (encrypted)",
+      "host_swap_start": "vm.swapusage: total = 5120.00M  used = 3734.44M  free = 1385.56M  (encrypted)",
+      "host_wall_seconds": 0.175774,
+      "probe_wall_seconds": 0.019387,
+      "process_max_rss_bytes": 18743296,
+      "property_failures": [
+        {
+          "error": "AssertionError: conflicting converter was silently accepted",
+          "property": "unrelated_conflict_is_rejected"
+        }
+      ],
+      "property_passed": [],
+      "python_tracemalloc_peak_bytes": 631906,
+      "source_file_sha256": "f905fd0526bb0338419ded16c8ba74f5355b3744e8aa0b9d0ce7096e6de641b9",
+      "timed_out": false
+    },
+    {
+      "case": "control-first-call-error",
+      "classification": "FIRST_CALL_ERROR_REJECTED",
+      "executed_module_sha256": "f905fd0526bb0338419ded16c8ba74f5355b3744e8aa0b9d0ce7096e6de641b9",
+      "exit_code": 0,
+      "host_swap_end": "vm.swapusage: total = 5120.00M  used = 3734.44M  free = 1385.56M  (encrypted)",
+      "host_swap_start": "vm.swapusage: total = 5120.00M  used = 3734.44M  free = 1385.56M  (encrypted)",
+      "host_wall_seconds": 0.171803,
+      "probe_wall_seconds": 0.020897,
+      "process_max_rss_bytes": 18743296,
+      "property_failures": [],
+      "property_passed": [
+        "first_call_value_error_is_not_a_baseline_reproduction"
+      ],
+      "python_tracemalloc_peak_bytes": 632373,
+      "source_file_sha256": "f905fd0526bb0338419ded16c8ba74f5355b3744e8aa0b9d0ce7096e6de641b9",
+      "timed_out": false
+    }
+  ],
+  "environment": {
+    "cpus_per_container": 1,
+    "host_swap_change_mb": "0.00",
+    "host_swap_free_mb_before": "1385.56",
+    "host_swap_used_mb_before": "3734.44",
+    "image_id": "sha256:5461f5ec9d3022db72d49cf5bcd140c99521eba5b37747257b58a576d4e12e1f",
+    "memory_limit_bytes": 536870912,
+    "network": "disabled",
+    "pids_limit": 64
+  },
+  "evidence_level": "E1 source-level reproduction, narrow function scope; not a certified repository-patch task",
+  "experiment_id": "transformers-49412-source-replay-v3",
+  "freeze_commit": "03b32492142c51750a84204da5fafae1e4bc48e5",
+  "limitations": [
+    "The probe executes the pinned upstream fusion_mapping.py source with fixed in-memory doubles for model discovery and registry persistence.",
+    "No candidate code, hidden grader, full upstream pytest suite, model, agent, or optimizer was run.",
+    "This replay does not establish isolated repository-patch grading, task eligibility, Development success, model capability, or policy improvement.",
+    "The task remains in the frozen v1 heldout source allocation and was not reassigned or shown to a model or agent."
+  ],
+  "next_gate": "Complete the repository-patch candidate/grader isolation audit and qualify the minimum eligible task set before any model/agent use.",
+  "protocol_sha256": "74039c36baa784554524d3960904417c15c19482c047327070c0988da8e8fc27",
+  "qualification_status": "BLOCKED",
+  "question": "Does the pinned baseline succeed once and then raise the exact expected conflict on repeat, while the fix is idempotent and preserves conflict safety?",
+  "result": "Baseline registration succeeded once and the second registration raised the exact required ValueError. The fixed source passed all three properties. Three source mutants were killed and the injected unrelated first-call ValueError was rejected as a baseline reproduction.",
+  "schema_version": 1,
+  "source_branch_base": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+  "status": "COMPLETED",
+  "superseded_v2": {
+    "protocol_id": "transformers-49412-source-replay-v2",
+    "review_comment_id": "PRRC_kwDOVADkJc8AAAABBC_fUg",
+    "review_finding": "The v2 classifier counted any single assertion or ValueError failure as a baseline failure, without requiring successful first registration or the exact second-call conflict.",
+    "status": "retained exploratory result; not accepted as authoritative baseline reproduction"
+  }
+}
