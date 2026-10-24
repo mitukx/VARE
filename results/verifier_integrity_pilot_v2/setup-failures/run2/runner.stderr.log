@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/flagship/scripts/run_verifier_integrity_pilot_v2.py", line 296, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/flagship/scripts/run_verifier_integrity_pilot_v2.py", line 248, in main
+    references = {key: capture_reference(value, fixed_workspace, CASES[0], output) for key, value in images.items()}
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/flagship/scripts/run_verifier_integrity_pilot_v2.py", line 177, in capture_reference
+    raise RuntimeError(f"fixed reference execution failed for {image}: {completed.stderr[-2000:]}")
+RuntimeError: fixed reference execution failed for localhost:5000/vare/1912-sanitized@sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25: docker: Error response from daemon: invalid mount config for type "bind": bind source path does not exist: /private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/vare-verifier-pilot-v2-t3s_vx7q/workspaces/known-fix
+
+Run 'docker run --help' for more information
+

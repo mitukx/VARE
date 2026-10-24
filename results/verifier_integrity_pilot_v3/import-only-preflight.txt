@@ -1,0 +1,4 @@
+Purpose: packaging/import setup check only; no model instantiation, forward pass, test assertion, or candidate scoring.
+Command: docker run --rm --pull=never --network=none --read-only --cap-drop=ALL --security-opt=no-new-privileges:true --pids-limit=64 --memory=1536m --cpus=1 --user=65534:65534 --tmpfs=/tmp:rw,nosuid,nodev,size=16m --mount type=bind,source=/Users/user/.cache/vare-isolated-candidate/preflight-v2,target=/subject,readonly --workdir=/ vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7 python -c 'import sys;sys.path.insert(0,"/subject");from mlx_lm.models import mimo_v2_flash; print(mimo_v2_flash.__file__)'
+stdout: /subject/mlx_lm/models/mimo_v2_flash.py
+result: package import succeeded with generated __version__ = '0.32.0'; this was not task-performance evidence.
