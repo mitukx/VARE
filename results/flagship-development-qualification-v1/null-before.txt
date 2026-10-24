@@ -1,0 +1,64 @@
+FFF.....                                                                 [100%]
+=================================== FAILURES ===================================
+___________________ test_null_roundtrip_through_parent[None] ___________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x105b95ca0>
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-1192/test_null_roundtrip_through_pa0')
+value = None
+
+    @pytest.mark.parametrize("value", [None, [None, 2], {"routes": [None, "ok"]}])
+    def test_null_roundtrip_through_parent(monkeypatch, tmp_path: Path, value):
+        monkeypatch.setattr(grading, "_one_call", lambda *a, **kw: (value, 0.0, None))
+        report = grading.grade_calls(
+            tmp_path, [grading.FunctionCall("null", "subject", "run", [], value)],
+            task_kind="correctness",
+            image="python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+        )
+>       assert report.passed
+E       AssertionError: assert False
+E        +  where False = CallReport(task_kind='correctness', passed=False, cases=(CaseResult(case_id='null', passed=False, failure='wrong_output', wall_s=0.0),)).passed
+
+tests/test_isolated_candidate_null.py:17: AssertionError
+__________________ test_null_roundtrip_through_parent[value1] __________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106c2c560>
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-1192/test_null_roundtrip_through_pa1')
+value = [None, 2]
+
+    @pytest.mark.parametrize("value", [None, [None, 2], {"routes": [None, "ok"]}])
+    def test_null_roundtrip_through_parent(monkeypatch, tmp_path: Path, value):
+        monkeypatch.setattr(grading, "_one_call", lambda *a, **kw: (value, 0.0, None))
+        report = grading.grade_calls(
+            tmp_path, [grading.FunctionCall("null", "subject", "run", [], value)],
+            task_kind="correctness",
+            image="python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+        )
+>       assert report.passed
+E       AssertionError: assert False
+E        +  where False = CallReport(task_kind='correctness', passed=False, cases=(CaseResult(case_id='null', passed=False, failure='wrong_output', wall_s=0.0),)).passed
+
+tests/test_isolated_candidate_null.py:17: AssertionError
+__________________ test_null_roundtrip_through_parent[value2] __________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x106e56c00>
+tmp_path = PosixPath('/private/var/folders/x1/pn5c5vhd13512v4t0r5sxnvw0000gn/T/pytest-of-user/pytest-1192/test_null_roundtrip_through_pa2')
+value = {'routes': [None, 'ok']}
+
+    @pytest.mark.parametrize("value", [None, [None, 2], {"routes": [None, "ok"]}])
+    def test_null_roundtrip_through_parent(monkeypatch, tmp_path: Path, value):
+        monkeypatch.setattr(grading, "_one_call", lambda *a, **kw: (value, 0.0, None))
+        report = grading.grade_calls(
+            tmp_path, [grading.FunctionCall("null", "subject", "run", [], value)],
+            task_kind="correctness",
+            image="python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+        )
+>       assert report.passed
+E       AssertionError: assert False
+E        +  where False = CallReport(task_kind='correctness', passed=False, cases=(CaseResult(case_id='null', passed=False, failure='wrong_output', wall_s=0.0),)).passed
+
+tests/test_isolated_candidate_null.py:17: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_isolated_candidate_null.py::test_null_roundtrip_through_parent[None]
+FAILED tests/test_isolated_candidate_null.py::test_null_roundtrip_through_parent[value1]
+FAILED tests/test_isolated_candidate_null.py::test_null_roundtrip_through_parent[value2]
+3 failed, 5 passed in 0.13s

@@ -1,0 +1,128 @@
+{
+  "reviewed_at": "2026-10-24",
+  "pull_requests": [
+    {
+      "number": 99,
+      "url": "https://github.com/mitukx/VARE/pull/99",
+      "head_sha": "762a5a65598756014d957a206ba1548cb19a348f",
+      "base": "main",
+      "base_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "draft": true,
+      "state": "open",
+      "title": "Calibrate isolated MLX-LM 1971 Development task",
+      "open_review_findings": [
+        {
+          "path": "src/vare/mlxlm_1971_repo_task_v9.py",
+          "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Anchor the v9 lock outside mutable working files**\n\nWhen the public `grade_workspace()` or `export_candidate()` entrypoint runs from a checkout where the protocol, lock, and evaluator files have been edited coherently, this check still succeeds because it compares only mutually editable working-tree data; unlike the historical auditor, it never compares v9 against the pinned `3f12eef...` Git objects. An altered grader can therefore accept a candidate while still reporting the v9 protocol identity, so the public verification path must validate the frozen protocol, lock, and implementation bytes against an immutable commit before grading.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/784b370fd11be7968834204efeae4523ff705c07/AGENTS.md#L48-L48)\n\nUseful? React with 👍 / 👎.\n\n<!-- codex-code-review-finding:v1 -->"
+        },
+        {
+          "path": "scripts/run_mlxlm_1971_calibration_v9.py",
+          "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Disable replacement refs in the v9 calibration**\n\nWhen `HEAD` has a replacement ref to a coherently tampered commit and the index/worktree is reset through that replacement, this `git status` reports clean while the later `rev-parse HEAD` still records the original SHA; the replacement can contain matching altered protocol, lock, and evaluator bytes, so the runner can emit passing evidence under the trusted implementation identity. Set `GIT_NO_REPLACE_OBJECTS=1` on this and the other revision-sensitive v9 Git calls (`show` and `worktree add/remove`), as the historical auditor now does.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/784b370fd11be7968834204efeae4523ff705c07/AGENTS.md#L48-L48)\n\nUseful? React with 👍 / 👎.\n\n<!-- codex-code-review-finding:v1 -->"
+        }
+      ],
+      "disposition": "excluded from new task runtime; historical source/evidence unchanged"
+    },
+    {
+      "number": 102,
+      "url": "https://github.com/mitukx/VARE/pull/102",
+      "head_sha": "0ba50de60f2013ea1838bb44e1068c44c26fd6c4",
+      "base": "codex/transformers-49752-repo-task",
+      "base_sha": "aef27e3b7bb3dcadb4bd8d8ee1ca6bb6ebb7634d",
+      "draft": true,
+      "state": "open",
+      "title": "Run structured-edit Qwen coding-agent feasibility study",
+      "open_review_findings": [
+        {
+          "path": "benchmarks/mlsys_repo_eval_v4/transformers_49116_tokenizer_routing_v2/grader_adapter.py",
+          "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Compute registry fingerprints with trusted primitives**\n\nWhen the candidate target uses the documented dynamic `getattr(..., \"pop\")` mutation after first computing the legitimate registry digest, it can replace the process-global `hashlib.sha256` that this adapter also uses and return the saved digest specifically for the mutated serialization. The parent then accepts the forged fingerprint even though an unrelated runtime route is absent. Unlike the earlier direct-pop case, the fresh bypass is that the fingerprinting primitive itself remains candidate-mutable because the adapter and target share one interpreter; bind trusted hashing/serialization callables before importing candidate code.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/3a7959b05423e17fa122a6bcc4811bed41fcbde0/AGENTS.md#L48-L48)\n\nUseful? React with 👍 / 👎.\n\n<!-- codex-code-review-finding:v1 -->"
+        },
+        {
+          "path": "scripts/grade_transformers_phase_a_integrity_v8.py",
+          "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Support null registry values in the parent comparison**\n\nUnder the frozen v8 feature flags, `runtime_mapping` contains ten `None` values, including `bert-generation` and `marian`. However, the reused `vare.isolated_candidate.values_close()` returns false for `None` versus `None`, so returning this full structure makes even an exact known-fix result fail as `wrong_output`. A code-only check confirms that comparing `_complete_registry_expected_output(...)` with its own JSON round-trip returns false; no candidate grading is needed to reproduce this. Add null equality support to the trusted comparator or normalize null entries consistently, and include a positive full-structure comparison regression before calibration. This currently prevents the known-passing-fix validation required by the repository's task standard.\n\nAGENTS.md reference: [AGENTS.md:L105-L105](https://github.com/mitukx/VARE/blob/HEAD/AGENTS.md#L105-L105)\n\nUseful? React with 👍 / 👎.\n\n<!-- codex-code-review-finding:v1 -->"
+        },
+        {
+          "path": "scripts/grade_transformers_phase_a_integrity_v9.py",
+          "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Accept the keyword arguments supplied by the real parent comparator**\n\nWhenever a candidate returns a valid result, the cloned `vare.isolated_candidate.grade_calls()` invokes `values_close(..., bool_as_number=bool_as_number)`, but this replacement does not accept that keyword. Consequently v9 raises `TypeError: _values_close_with_null() got an unexpected keyword argument 'bool_as_number'` instead of grading even the exact known fix. This reproduces without Docker by mocking only `_one_call` and invoking the cloned real `grade_calls`; the current regression substitutes a fake caller that omits the keyword and therefore misses it. Preserve the original comparator's keyword interface and add a regression through the real parent comparison path before calibration.\n\nAGENTS.md reference: [AGENTS.md:L105-L105](https://github.com/mitukx/VARE/blob/5a85fa015eefeafa945eefff1fd1d1439698fe5c/AGENTS.md#L105-L105)\n\nUseful? React with 👍 / 👎.\n\n<!-- codex-code-review-finding:v1 -->"
+        }
+      ],
+      "disposition": "excluded from new task runtime; historical source/evidence unchanged"
+    },
+    {
+      "number": 114,
+      "url": "https://github.com/mitukx/VARE/pull/114",
+      "head_sha": "8257a4dfe2106055a048ddd4b1520a08c7e4d658",
+      "base": "codex/mlxlm-1971-isolation",
+      "base_sha": "0d843a3e2e11920a6e8e16d55f8cd37355f7f8fc",
+      "draft": true,
+      "state": "open",
+      "title": "Preserve attested MLX-LM calibration evidence on publication failure",
+      "open_review_findings": [],
+      "disposition": "excluded from new task runtime; historical source/evidence unchanged"
+    },
+    {
+      "number": 117,
+      "url": "https://github.com/mitukx/VARE/pull/117",
+      "head_sha": "6709aed996ce5ec315cf7a87930350dca6c0ee20",
+      "base": "codex/mlxlm-1971-attested-calibration",
+      "base_sha": "8257a4dfe2106055a048ddd4b1520a08c7e4d658",
+      "draft": true,
+      "state": "open",
+      "title": "Isolate MLX-LM source snapshots before trusted export",
+      "open_review_findings": [
+        {
+          "path": "scripts/run_mlxlm_1971_v10_operator.py",
+          "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Disable repository hooks before staging trusted code**\n\nWhen the repository has an attacker-controlled `post-checkout` hook, including one selected through `core.hooksPath`, this command executes it inside the new worktree; the [Git hook documentation](https://git-scm.com/docs/githooks) confirms that `post-checkout` runs after `git worktree add` unless `--no-checkout` is used. The hook can add an untracked `scripts/__init__.py` or crafted bytecode, neither of which is covered by `PINNED_OPERATOR_SOURCES`, so the `-I` child can execute attacker code and emit forged passing evidence while all three checked source files still match Git. Disable hooks and untrusted Git configuration during both worktree checkouts and reject extra import artifacts before launching Python.\n\nAGENTS.md reference: [AGENTS.md:L48-L48](https://github.com/mitukx/VARE/blob/2c1109b141ed469e3de84fe9a8011663a937fff7/AGENTS.md#L48-L48)\n\nUseful? React with 👍 / 👎.\n\n<!-- codex-code-review-finding:v1 -->"
+        },
+        {
+          "path": "scripts/run_mlxlm_1971_v10_operator.py",
+          "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Reject export symlinks before canonicalizing paths**\n\nWhen `--source-repo` or `--patch` names a symlink, resolving it here erases that fact before the pinned v9 dispatcher receives the request, bypassing v9's explicit `source_root.is_symlink()` and `patch_path.is_symlink()` rejection. For a mutable patch referent, the historical exporter then validates, applies, and hashes the path in separate operations, allowing replacement between those steps and producing evidence for bytes different from those applied. Reject symlinks before resolution and bind the export to a stable snapshot rather than weakening the frozen input checks.\n\nAGENTS.md reference: [AGENTS.md:L72-L73](https://github.com/mitukx/VARE/blob/2c1109b141ed469e3de84fe9a8011663a937fff7/AGENTS.md#L72-L73)\n\nUseful? React with 👍 / 👎.\n\n<!-- codex-code-review-finding:v1 -->"
+        },
+        {
+          "path": "scripts/run_mlxlm_1971_v10_operator.py",
+          "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Read protocol inputs through bounded nonblocking descriptors**\n\nIf a mutable protocol or lock file is replaced with a FIFO after the preceding `is_file()` check, these ordinary `read_bytes()` calls block indefinitely before digest validation. This happens in the parent, before any subprocess timeout applies; a synchronized FIFO substitution reproduced the hang under a two-second external timeout. The patch snapshot's nonblocking protection does not cover these inputs. Open both files with no-follow/nonblocking descriptors, verify their regular-file type with `fstat`, and bound the bytes read before checking their pinned digests.\n\nAGENTS.md reference: [AGENTS.md:L103-L103](https://github.com/mitukx/VARE/blob/316f89011d9a94b9df7a9218fec617ac37d2dc20/AGENTS.md#L103-L103)\n\nUseful? React with 👍 / 👎.\n\n<!-- codex-code-review-finding:v1 -->"
+        },
+        {
+          "path": "scripts/run_mlxlm_1971_v10_operator.py",
+          "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Preserve required test files in the nested v9 checkout**\n\nOn Git 2.43.0, the nested `git worktree add` in the pinned `run_pinned_v9_task` inherits this sparse selection, excluding `tests/`. Both actions consequently fail before export or grading: `attest_current_v9` requires the two test files listed in the frozen implementation manifest and raises `ValueError: v9 input is not a regular file: tests/test_mlxlm_1971_calibration_v9.py`. Exercising the real materialization helper and nested checkout confirmed that this tracked file is absent with index flag `S`; the mocked dispatcher tests do not exercise that boundary. Git documents that sparse checkout uses skip-worktree bits to “avoid populating the contents of those files.” ([Git documentation](https://git-scm.com/docs/git-sparse-checkout#_internals_sparse_checkout)) Include the required `tests` directory in the selection or ensure the nested historical checkout is non-sparse.\n\nUseful? React with 👍 / 👎.\n\n<!-- codex-code-review-finding:v1 -->"
+        }
+      ],
+      "disposition": "excluded from new task runtime; historical source/evidence unchanged"
+    },
+    {
+      "number": 118,
+      "url": "https://github.com/mitukx/VARE/pull/118",
+      "head_sha": "552d6f61187926d78719aad8c4c7ec9e8663c242",
+      "base": "codex/transformers-49752-repo-task",
+      "base_sha": "aef27e3b7bb3dcadb4bd8d8ee1ca6bb6ebb7634d",
+      "draft": true,
+      "state": "open",
+      "title": "Extract hash-checked structured edit library without changing frozen agent runtime",
+      "open_review_findings": [],
+      "disposition": "reviewed; no merge attempted"
+    },
+    {
+      "number": 120,
+      "url": "https://github.com/mitukx/VARE/pull/120",
+      "head_sha": "58ecd9c9727a1544a5a08c9c250f1f36dd9a5f8d",
+      "base": "main",
+      "base_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "draft": true,
+      "state": "open",
+      "title": "Record real-model coding-agent feasibility and tool-boundary fixes",
+      "open_review_findings": [],
+      "disposition": "reviewed; no merge attempted"
+    },
+    {
+      "number": 121,
+      "url": "https://github.com/mitukx/VARE/pull/121",
+      "head_sha": "a937f4ad6eacb63d679952f7a05d39d04afab59a",
+      "base": "main",
+      "base_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "draft": true,
+      "state": "open",
+      "title": "Add independent source replay for Transformers fusion registration",
+      "open_review_findings": [],
+      "disposition": "reviewed; no merge attempted"
+    }
+  ]
+}
