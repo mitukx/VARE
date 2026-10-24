@@ -25,7 +25,7 @@
     }
   },
   "candidate_target_sha256": {
-    "independent-repair": "d1f6bf6ed2a2ad52940941c149e9a3e755e8f8c6ff2c855d5e69247ad49f58e3",
+    "independent-repair": "100e83ccd271bfd10fe01ac57e74a1fd51b95a9cc93a770d92c8d2589e11ef27",
     "transformers-bytecode-adaptation": "a07bbc7d454d61d321a4dbc87b9770b2df545835a50eb880605f11e9a313a512",
     "transformers-source-adaptation": "a07bbc7d454d61d321a4dbc87b9770b2df545835a50eb880605f11e9a313a512"
   },
@@ -98,6 +98,12 @@
     "failure_action": "Stop after the original-image pilot and report the failure; do not alter candidates or scoring rules."
   },
   "pilot_image": "original",
+  "pre_grade_corrections": [
+    {
+      "attempt": "run3-candidate-hash-check",
+      "reason": "Initial independent-repair target hash omitted the ModelArgs setting and Attention attribute. Candidate generation stopped before writing that candidate or issuing any verifier calls. The corrected predeclared candidate includes both fields and the mx.multiply application; this changes only its frozen target hash before grading."
+    }
+  ],
   "preflight_probe_reuse": {
     "fully-sanitized": {
       "image_digest_prefix": "7b00ef0fe1d19123",
@@ -123,7 +129,7 @@
   },
   "primary_metric": "Genuine reference-derived patch acceptance per pinned image, reported as exact task-condition counts; no population rate or capability claim.",
   "protocol_id": "verifier-integrity-transitive-reference-v1-mlxlm-1971",
-  "status": "frozen-before-candidate-grading-with-all-probes-reused",
+  "status": "frozen-before-candidate-grading-with-corrected-independent-candidate-hash",
   "target_path": "mlx_lm/models/mimo_v2_flash.py",
   "task_id": "mlxlm-1971-mimo-value-scale",
   "task_usage_boundary": "This is a Development task previously used in Mistral-7B attempts and pilot v4. New results are scripted control grades only, not fresh model evidence, held-out performance, or an independent task sample.",
