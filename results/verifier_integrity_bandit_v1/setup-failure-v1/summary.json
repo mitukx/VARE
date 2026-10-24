@@ -1,0 +1,10 @@
+{
+  "attempt": "bandit-runner-1",
+  "status": "setup-failure-before-any-bandit-decision",
+  "error": "ValueError parsing the human-readable primary_window string as an integer",
+  "decisions_generated": 0,
+  "model_inference_calls": 0,
+  "verifier_calls": 0,
+  "optimizer_steps": 0,
+  "action_taken": "Corrected only the runner parser; the frozen protocol, arms, rewards, seed range, horizon, primary metric, uncertainty method, and stopping rule were unchanged. The corrected implementation lock is committed before the scored run."
+}

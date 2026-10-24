@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/flagship/benchmarks/verifier_integrity_pilot_v1/run_pilot.py", line 277, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/flagship/benchmarks/verifier_integrity_pilot_v1/run_pilot.py", line 208, in main
+    images = {"original": protocol["original_image"]}
+                          ~~~~~~~~^^^^^^^^^^^^^^^^^^
+KeyError: 'original_image'

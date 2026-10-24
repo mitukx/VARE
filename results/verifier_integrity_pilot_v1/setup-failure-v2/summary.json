@@ -1,0 +1,48 @@
+{
+  "candidate_grader_invocations": 0,
+  "candidate_images_published": 0,
+  "candidate_outcomes": 0,
+  "failure": "Docker COPY path was relative to the nested Dockerfile instead of the repository-root build context.",
+  "frozen_commit": "eb845c907a1db7a120ad0307f9e1aa2363412eb5",
+  "protocol_sha256": "a3fdbf3bada1e3d9da6c138ef8f54d9582e09dd417c539fd904e0888b430e92e",
+  "raw_log_sha256": {
+    "build_diagnosis": "680c0a641e402c7087320bc282a0d2f817bc59997c76de363ad7176ed0e04ffe",
+    "monitor": "f21ca2b53d741b0c0b837c01c157c695766230faf9fce197a262632574500d2f",
+    "stderr": "b9452786da6d7f9abc9af623e27eba9d017ea846ba4fd4435d49bf427311519d",
+    "stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "resource_monitor": {
+    "abort_reason": null,
+    "command": [
+      "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/venv/bin/python",
+      "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/flagship/benchmarks/verifier_integrity_pilot_v1/run_pilot.py",
+      "--protocol-sha256",
+      "a3fdbf3bada1e3d9da6c138ef8f54d9582e09dd417c539fd904e0888b430e92e",
+      "--source-repo",
+      "/Users/user/.cache/vare/source-mirrors/mlx-lm",
+      "--output",
+      "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/cross-task-pilot-v1-run2"
+    ],
+    "command_paths_redacted": true,
+    "elapsed_seconds": 1.019,
+    "max_child_rss_mib": 8.906,
+    "max_wall_seconds": 1800,
+    "memory_free_abort_percent": 25,
+    "observations": [
+      {
+        "child_rss_mib": 8.906,
+        "elapsed_seconds": 0.013,
+        "memory_free_percent": 64,
+        "swap_used_mib": 2323.75
+      }
+    ],
+    "reproduction_note": "Resolve the command path tokens using protocol.lock.json and the reproduction command.",
+    "returncode": 1,
+    "rss_abort_mib": 512.0,
+    "schema_version": 1,
+    "status": "FAILED",
+    "swap_abort_mib": 2363.81,
+    "telemetry_failure": null
+  },
+  "status": "FAILED_BEFORE_COUNTERFACTUAL_EVALUATION"
+}

@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "scripts/run_verifier_integrity_bandit_v1.py", line 215, in <module>
+    raise SystemExit(main())
+  File "scripts/run_verifier_integrity_bandit_v1.py", line 206, in main
+    str(path.relative_to(ROOT)): sha256(ROOT / path)
+ValueError: 'scripts/run_verifier_integrity_bandit_v1.py' is not in the subpath of ROOT

@@ -1,0 +1,4 @@
+Direct Docker build retry output (the exact v2 context and Dockerfile):
+COPY failed: file not found in build context or excluded by .dockerignore: stat sanitize_sample_utils.py: file does not exist
+
+The sanitized Dockerfile is evaluated with the pilot directory as build context, so its COPY source must include images/sanitized/.

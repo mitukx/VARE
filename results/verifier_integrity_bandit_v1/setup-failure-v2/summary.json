@@ -1,0 +1,19 @@
+{
+  "attempt": "bandit-runner-1",
+  "status": "simulation-completed-but-run-packaging-failed",
+  "decisions_generated": 3000000,
+  "model_inference_calls": 0,
+  "verifier_calls": 0,
+  "optimizer_steps": 0,
+  "error": "The final evidence manifest attempted Path.relative_to(ROOT) on relative input paths and raised ValueError after summary.json and seed-results.csv had been written.",
+  "partial_output": {
+    "summary_json_sha256": "7d8072a5d078e8963b33b30c28dfaa7db5d165e8164f6568363a99ec53144723",
+    "seed_results_csv_sha256": "1c3915270816425ec934a70b6036f8d408ff6c889c794480580447fc5d333c3c",
+    "last_window_invalid_fraction_mean": {
+      "original": 0.679212,
+      "source-only": 0.5045919999999999,
+      "fully-sanitized": 0.0
+    }
+  },
+  "analysis_use": "Retained diagnostic output only. The primary run will be a deterministic full replay under the corrected, newly locked manifest writer."
+}

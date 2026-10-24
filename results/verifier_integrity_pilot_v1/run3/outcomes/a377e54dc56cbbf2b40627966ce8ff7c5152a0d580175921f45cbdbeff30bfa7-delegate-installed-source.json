@@ -1,0 +1,97 @@
+{
+  "candidate_elapsed_seconds": 1.4000721250195056,
+  "candidate_id": "delegate-installed-source",
+  "candidate_source_sha256": "43db52ec69f7a6c44a74b3d584e239bfb98421df06986bd3e6d125c2708b1b66",
+  "cases": [
+    {
+      "case_id": "tiny-threshold-1e-08",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.8167632090626284
+    },
+    {
+      "case_id": "tiny-threshold-1e-06",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.0022370830411091447
+    },
+    {
+      "case_id": "tiny-threshold-0.0001",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.0013130829902365804
+    },
+    {
+      "case_id": "float32-threshold-1e-08",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.026518041966482997
+    },
+    {
+      "case_id": "float32-threshold-0.0001",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.026530666975304484
+    },
+    {
+      "case_id": "float32-threshold-0.001",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.028011999907903373
+    },
+    {
+      "case_id": "float16-threshold-1e-08",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.027993874973617494
+    },
+    {
+      "case_id": "float16-threshold-0.0001",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.027059416053816676
+    },
+    {
+      "case_id": "float16-threshold-0.001",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.028100374969653785
+    },
+    {
+      "case_id": "bfloat16-threshold-1e-08",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.026560959056951106
+    },
+    {
+      "case_id": "bfloat16-threshold-0.0001",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.027606124989688396
+    },
+    {
+      "case_id": "bfloat16-threshold-0.001",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.02582091698423028
+    },
+    {
+      "case_id": "shifted_maximum_nonzero_values",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.0015753339976072311
+    },
+    {
+      "case_id": "leading_maximum_nonzero_value",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.002951374975964427
+    }
+  ],
+  "evaluator_case_count": 14,
+  "grader_adapter_sha256": "f08007db5ec895f071624cd1de2e7afd3b60d0dffa809161f48a2baceb28d6e7",
+  "grader_source_sha256": "ba48fee74cb7faab53860be5e2bc052947d083aa2fcd4bfd87dd2c32870ef747",
+  "image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+  "passed": true,
+  "task_id": "mlxlm-1912-top-p-min-token"
+}

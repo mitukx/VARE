@@ -1,0 +1,33 @@
+{
+  "abort_reason": null,
+  "command": [
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/venv/bin/python",
+    "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/flagship/benchmarks/verifier_integrity_pilot_v1/run_pilot.py",
+    "--protocol-sha256",
+    "7de1fdbabafa95c6b8fcd9b48ffcf2c75fd27b64ec315ae8ceac3a89f78c8242",
+    "--source-repo",
+    "/Users/user/.cache/vare/source-mirrors/mlx-lm",
+    "--output",
+    "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/cross-task-pilot-v1-run1"
+  ],
+  "command_paths_redacted": true,
+  "elapsed_seconds": 1.017,
+  "max_child_rss_mib": 8.406,
+  "max_wall_seconds": 1800,
+  "memory_free_abort_percent": 25,
+  "observations": [
+    {
+      "child_rss_mib": 8.406,
+      "elapsed_seconds": 0.012,
+      "memory_free_percent": 64,
+      "swap_used_mib": 2323.75
+    }
+  ],
+  "reproduction_note": "Resolve the command path tokens using protocol.lock.json and the reproduction command.",
+  "returncode": 1,
+  "rss_abort_mib": 512.0,
+  "schema_version": 1,
+  "status": "FAILED",
+  "swap_abort_mib": 2363.81,
+  "telemetry_failure": null
+}

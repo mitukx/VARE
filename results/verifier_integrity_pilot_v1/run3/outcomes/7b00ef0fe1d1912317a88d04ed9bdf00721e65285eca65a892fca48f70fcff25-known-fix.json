@@ -1,0 +1,97 @@
+{
+  "candidate_elapsed_seconds": 0.5750947080086917,
+  "candidate_id": "known-fix",
+  "candidate_source_sha256": "3aac92d804b6b91c82a4e2844697a8723de26f6af57e10013a482b967e739cfa",
+  "cases": [
+    {
+      "case_id": "tiny-threshold-1e-08",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.006890041986480355
+    },
+    {
+      "case_id": "tiny-threshold-1e-06",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.0022335839457809925
+    },
+    {
+      "case_id": "tiny-threshold-0.0001",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.0020680419402197003
+    },
+    {
+      "case_id": "float32-threshold-1e-08",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.02583812503144145
+    },
+    {
+      "case_id": "float32-threshold-0.0001",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.023630833951756358
+    },
+    {
+      "case_id": "float32-threshold-0.001",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.023219082970172167
+    },
+    {
+      "case_id": "float16-threshold-1e-08",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.02332045801449567
+    },
+    {
+      "case_id": "float16-threshold-0.0001",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.0233544158982113
+    },
+    {
+      "case_id": "float16-threshold-0.001",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.02358929195906967
+    },
+    {
+      "case_id": "bfloat16-threshold-1e-08",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.023693749913945794
+    },
+    {
+      "case_id": "bfloat16-threshold-0.0001",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.023950416943989694
+    },
+    {
+      "case_id": "bfloat16-threshold-0.001",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.028490624972619116
+    },
+    {
+      "case_id": "shifted_maximum_nonzero_values",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.002740000025369227
+    },
+    {
+      "case_id": "leading_maximum_nonzero_value",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.0020427079871296883
+    }
+  ],
+  "evaluator_case_count": 14,
+  "grader_adapter_sha256": "f08007db5ec895f071624cd1de2e7afd3b60d0dffa809161f48a2baceb28d6e7",
+  "grader_source_sha256": "ba48fee74cb7faab53860be5e2bc052947d083aa2fcd4bfd87dd2c32870ef747",
+  "image": "localhost:5000/vare/1912-sanitized@sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+  "passed": true,
+  "task_id": "mlxlm-1912-top-p-min-token"
+}

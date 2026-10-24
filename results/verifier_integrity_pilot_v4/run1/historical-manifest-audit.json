@@ -1,0 +1,35 @@
+{
+  "historical_failure_preserved": true,
+  "historical_nested_manifest": "sha256-manifest.json",
+  "historical_outer_manifest": "run-evidence-manifest.json",
+  "historical_outer_manifest_sha256": "dff27ca7548d684c18a2e99688ad2ab19371d5c4bdb8c08fea5775085248a922",
+  "original_nested_bytes_recovered": true,
+  "outer_entries": 36,
+  "outer_entry_expected_original": {
+    "bytes": 5302,
+    "path": "sha256-manifest.json",
+    "sha256": "6d7d50c79eeef3381ece26b0855051173a0644b405edf7eabb05f78407b4ebca"
+  },
+  "preserved_outer_copy": "run-evidence-manifest.as-published.json",
+  "preserved_published_nested_copy": "sha256-manifest.as-published.json",
+  "published_generic_inventory_entries": 35,
+  "published_generic_inventory_mismatches": [],
+  "published_nested_actual": {
+    "bytes": 6360,
+    "sha256": "5a25f85575679334d49905d33005606901348c55a415b08ad5c54bdc58484323"
+  },
+  "published_outer_entries_matching": 35,
+  "published_outer_mismatches": [
+    "sha256-manifest.json"
+  ],
+  "reconstructed_outer_entries_matching": 36,
+  "reconstructed_outer_mismatches": [],
+  "recovered_nested_actual": {
+    "bytes": 5302,
+    "sha256": "6d7d50c79eeef3381ece26b0855051173a0644b405edf7eabb05f78407b4ebca"
+  },
+  "recovered_original_entries": 32,
+  "recovered_original_mismatches": [],
+  "recovered_original_nested_manifest": "sha256-manifest.recovered-original.json",
+  "schema": "vare.verifier-integrity-historical-manifest-audit.v1"
+}

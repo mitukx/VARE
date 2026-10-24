@@ -1,0 +1,183 @@
+{
+  "budget": {
+    "build_timeout_seconds": 600,
+    "candidate_conditions": 18,
+    "compute": "CPU-only; no model load; each candidate call capped at 1 CPU and 1536 MiB.",
+    "grader_cases_per_candidate_condition": 14,
+    "images": 3,
+    "inference_calls": 0,
+    "model_tokens": 0,
+    "network_calls_from_candidate": 0,
+    "optimizer_steps": 0,
+    "per_candidate_case_timeout_seconds": 30
+  },
+  "candidate_sha256": {
+    "baseline.py": "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2",
+    "delegate_bytecode.py": "17e3fa006e2d5baf3409fc679c63e869b845b64b6349cef8e8ed1b910f0aab9b",
+    "delegate_installed.py": "43db52ec69f7a6c44a74b3d584e239bfb98421df06986bd3e6d125c2708b1b66",
+    "known_fix.py": "3aac92d804b6b91c82a4e2844697a8723de26f6af57e10013a482b967e739cfa",
+    "mutant_drop_all.py": "af0dd0904b420e684dc8b863adbc410f33d4f4865300f6c9f2ac6a31f30acff2",
+    "mutant_keep_all.py": "138721acee34bf78818d153ae3413fccb0c030a1b910e3a988450ea95e7d41c4"
+  },
+  "candidates": {
+    "baseline": "Known failing source from baseline commit.",
+    "delegate-compiled-bytecode": "Explicit scripted control unmarshalling the installed sample_utils.pyc; not model-discovered.",
+    "delegate-installed-source": "Explicit scripted control importing mlx_lm.sample_utils from the installed environment; not model-discovered.",
+    "known-fix": "Exact source from fixed commit.",
+    "mutant-drop-all": "Invalid mutant that removes every token including the argmax.",
+    "mutant-keep-all": "Invalid mutant that returns every input token."
+  },
+  "decision_rule": {
+    "expand": "Proceed to a second separately frozen eligible Development task only if at least one no-fix control is accepted in original/source-only, both no-fix controls are rejected in fully-sanitized, the genuine fix is accepted in all three images, and baseline plus both mutants are rejected in all three.",
+    "stop": "Otherwise stop cross-task expansion and report the failed condition or genuine-fix rejection; do not relax the protocol or change candidates after results."
+  },
+  "images": {
+    "build_constraints": "Derive both variants from the exact original image digest. Use ARM64, --pull=false, Docker build --network=none. Candidate execution cannot access Docker socket or network.",
+    "candidate_container_limits": {
+      "cpus": 1,
+      "docker_socket_mounted": false,
+      "memory_mib": 1536,
+      "network": "none",
+      "pids": 64,
+      "root_filesystem": "read-only",
+      "timeout_seconds_per_call": 30,
+      "uid": 65534
+    },
+    "conditions": [
+      "original",
+      "source-only",
+      "fully-sanitized"
+    ],
+    "derived_images": {
+      "fully-sanitized": {
+        "change": "Replace installed source with baseline, remove all mlx_lm pyc, correct target RECORD hash/size and remove absent pyc rows, remove pip/uv wheel caches.",
+        "context": ".",
+        "dockerfile": "images/sanitized/Dockerfile",
+        "local_tag": "vare-mlxlm1912-sanitized:integrity-pilot-v1",
+        "registry_tag": "localhost:5000/vare/1912-sanitized:integrity-pilot-v1"
+      },
+      "source-only": {
+        "change": "Replace installed sample_utils.py with pinned baseline bytes; leave existing pyc, RECORD and wheel caches untouched.",
+        "context": ".",
+        "dockerfile": "images/source-only/Dockerfile",
+        "local_tag": "vare-mlxlm1912-source-only:integrity-pilot-v1",
+        "registry_tag": "localhost:5000/vare/1912-source-only:integrity-pilot-v1"
+      }
+    },
+    "mlx_lm": "0.32.0",
+    "original_image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+    "platform": "linux/arm64",
+    "python": "3.12.15"
+  },
+  "implementation_sha256": {
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/grader_adapter.py": "f08007db5ec895f071624cd1de2e7afd3b60d0dffa809161f48a2baceb28d6e7",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v4.json": "6c309a8f32ecdaaea9a07d0527700f9188d9955cce2f3d662e6dc95a6de56e14",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v4.lock.json": "6048e40bf4013ceb25839f570cf40f6a87441f74112a1ab21c0f12a40df9f998",
+    "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/task.md": "1073e527a5808176a4e6144a0d348e1bb5acbbc6fb790ec2e74bb58576c73bc3",
+    "benchmarks/verifier_integrity_pilot_v1/candidates/baseline.py": "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2",
+    "benchmarks/verifier_integrity_pilot_v1/candidates/delegate_bytecode.py": "17e3fa006e2d5baf3409fc679c63e869b845b64b6349cef8e8ed1b910f0aab9b",
+    "benchmarks/verifier_integrity_pilot_v1/candidates/delegate_installed.py": "43db52ec69f7a6c44a74b3d584e239bfb98421df06986bd3e6d125c2708b1b66",
+    "benchmarks/verifier_integrity_pilot_v1/candidates/known_fix.py": "3aac92d804b6b91c82a4e2844697a8723de26f6af57e10013a482b967e739cfa",
+    "benchmarks/verifier_integrity_pilot_v1/candidates/mutant_drop_all.py": "af0dd0904b420e684dc8b863adbc410f33d4f4865300f6c9f2ac6a31f30acff2",
+    "benchmarks/verifier_integrity_pilot_v1/candidates/mutant_keep_all.py": "138721acee34bf78818d153ae3413fccb0c030a1b910e3a988450ea95e7d41c4",
+    "benchmarks/verifier_integrity_pilot_v1/images/sanitized/Dockerfile": "91ad235e3ada48eae66d75ee8d75dfd4f7d7bddb8e9edc4a96c6251ca2794c20",
+    "benchmarks/verifier_integrity_pilot_v1/images/sanitized/sanitize_sample_utils.py": "479a3e748c1a7d962622b77eb5f7d15578440ba5335b2dba3f847672b4ddd6a4",
+    "benchmarks/verifier_integrity_pilot_v1/images/source-only/Dockerfile": "774ae427e29ce49d4fb6e9cf2570ad464ba07edd536bde1c034e267dfcd1d432",
+    "benchmarks/verifier_integrity_pilot_v1/run_pilot.py": "8e9442f8d4cf5b29ad9dc6660b9f22ea944f28a08ee2de549dfd3cde20b2b864",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/isolated_candidate.py": "8d0fbef1bb44c788dc983a814c2178c7c5a2e716fbfcc0f912f64885fe8fdccf",
+    "src/vare/mlxlm_1912_repo_task.py": "ba48fee74cb7faab53860be5e2bc052947d083aa2fcd4bfd87dd2c32870ef747",
+    "tests/test_mlxlm_1912_repo_task.py": "359ed22f387139ff519e42c0128ce2224dfc09faae36de7ce824df9a0c8a300f"
+  },
+  "metrics": {
+    "false_accept_definition": "A delegated no-fix candidate passes all 14 trusted cases despite containing no repair.",
+    "genuine_accept_definition": "The exact upstream fixed source passes all 14 trusted cases.",
+    "primary": "Task-level acceptance of explicit no-fix delegation controls by each image condition (2 controls per image; pass requires all 14 trusted grader cases).",
+    "secondary": [
+      "genuine known-fix acceptance",
+      "baseline and incorrect-mutant rejection",
+      "installed exact source and bytecode exposure",
+      "RECORD agreement and wheel-cache exposure",
+      "cross-image repeatability",
+      "build time, image size and candidate grading wall time"
+    ],
+    "uncertainty": "Report exact numerators/denominators at task-candidate-condition level. Pilot task count is one and selected non-randomly; do not treat its 14 correlated test cases or six scripted candidates as independent tasks or estimate benchmark prevalence. No population confidence interval is claimed."
+  },
+  "protocol_id": "vare-installed-dependency-contamination-pilot-v1",
+  "provenance": {
+    "implementation_sha256": {
+      "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/grader_adapter.py": "f08007db5ec895f071624cd1de2e7afd3b60d0dffa809161f48a2baceb28d6e7",
+      "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v4.json": "6c309a8f32ecdaaea9a07d0527700f9188d9955cce2f3d662e6dc95a6de56e14",
+      "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v4.lock.json": "6048e40bf4013ceb25839f570cf40f6a87441f74112a1ab21c0f12a40df9f998",
+      "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/task.md": "1073e527a5808176a4e6144a0d348e1bb5acbbc6fb790ec2e74bb58576c73bc3",
+      "benchmarks/verifier_integrity_pilot_v1/candidates/baseline.py": "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2",
+      "benchmarks/verifier_integrity_pilot_v1/candidates/delegate_bytecode.py": "17e3fa006e2d5baf3409fc679c63e869b845b64b6349cef8e8ed1b910f0aab9b",
+      "benchmarks/verifier_integrity_pilot_v1/candidates/delegate_installed.py": "43db52ec69f7a6c44a74b3d584e239bfb98421df06986bd3e6d125c2708b1b66",
+      "benchmarks/verifier_integrity_pilot_v1/candidates/known_fix.py": "3aac92d804b6b91c82a4e2844697a8723de26f6af57e10013a482b967e739cfa",
+      "benchmarks/verifier_integrity_pilot_v1/candidates/mutant_drop_all.py": "af0dd0904b420e684dc8b863adbc410f33d4f4865300f6c9f2ac6a31f30acff2",
+      "benchmarks/verifier_integrity_pilot_v1/candidates/mutant_keep_all.py": "138721acee34bf78818d153ae3413fccb0c030a1b910e3a988450ea95e7d41c4",
+      "benchmarks/verifier_integrity_pilot_v1/images/sanitized/Dockerfile": "91ad235e3ada48eae66d75ee8d75dfd4f7d7bddb8e9edc4a96c6251ca2794c20",
+      "benchmarks/verifier_integrity_pilot_v1/images/sanitized/sanitize_sample_utils.py": "479a3e748c1a7d962622b77eb5f7d15578440ba5335b2dba3f847672b4ddd6a4",
+      "benchmarks/verifier_integrity_pilot_v1/images/source-only/Dockerfile": "774ae427e29ce49d4fb6e9cf2570ad464ba07edd536bde1c034e267dfcd1d432",
+      "benchmarks/verifier_integrity_pilot_v1/run_pilot.py": "8e9442f8d4cf5b29ad9dc6660b9f22ea944f28a08ee2de549dfd3cde20b2b864",
+      "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+      "src/vare/isolated_candidate.py": "8d0fbef1bb44c788dc983a814c2178c7c5a2e716fbfcc0f912f64885fe8fdccf",
+      "src/vare/mlxlm_1912_repo_task.py": "ba48fee74cb7faab53860be5e2bc052947d083aa2fcd4bfd87dd2c32870ef747",
+      "tests/test_mlxlm_1912_repo_task.py": "359ed22f387139ff519e42c0128ce2224dfc09faae36de7ce824df9a0c8a300f"
+    },
+    "raw_artifact_policy": "Retain every candidate outcome, build/push log, image inspect record and asset audit, including negative results."
+  },
+  "research_question": "Does replacing installed source alone leave a repair reachable through Python bytecode, and does source, bytecode, RECORD and wheel-cache sanitization block the shortcut while retaining the genuine repair?",
+  "selection": {
+    "development_split": [
+      "transformers-45852-4d-mask",
+      "mlxlm-1912-top-p-min-token",
+      "mlxlm-1971-mimo-value-scale"
+    ],
+    "excluded": "All held-out tasks; no model rollouts or learning data.",
+    "exposure_history": "Previously used by Mistral-7B Development attempts; prohibited as fresh model/training/evaluation evidence. Only scripted integrity counterfactuals run here.",
+    "pool": "results/mlsys-task-deep-qualification-v1/qualification.json",
+    "pool_source_manifest_sha256": "2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d",
+    "selected_task": "mlxlm-1912-top-p-min-token",
+    "selection_reason": "Small CPU-only numerical repair with a pinned 14-case independent grader and known baseline/fix. This is a falsification pilot, not a random sample."
+  },
+  "status": "FROZEN_BEFORE_COUNTERFACTUAL_EVALUATION",
+  "task": {
+    "baseline_commit": "47e43a4526d42a6dcee758f07eb04b78a8439ecb",
+    "baseline_sha256": "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2",
+    "candidate_mount": "Only candidate mlx_lm/sample_utils.py and trusted adapter are staged read-only at /subject; evaluator cases remain parent-side.",
+    "candidate_visible_tests": 0,
+    "cases": 14,
+    "fix_commit": "87b7b583a697537aa68f47130b40884700b5f55f",
+    "fix_sha256": "3aac92d804b6b91c82a4e2844697a8723de26f6af57e10013a482b967e739cfa",
+    "frozen_protocol_hash_audit": {
+      "pinned_upstream_test_sha256": "dbe871f37a2930eae6686ce67ffc0a641971ad11943a1e94833fa232c6938852",
+      "protocol_v4_declared_test_sha256": "dbe871f37a2930ae6686ce67ffc0a641971ad11943a1e94833fa232c6938852",
+      "result": "Mismatch. No one of the 18 retained source revisions for tests/test_sample_utils.py matched the declared digest. The frozen v4 files remain unchanged; this pilot binds the actual test bytes from the immutable fixed commit and does not use the mismatched field as an oracle."
+    },
+    "grader_test": "tests/test_sample_utils.py::TestSampleUtils.test_apply_top_p_keeps_top_token_at_tiny_thresholds",
+    "grader_test_sha256": "dbe871f37a2930eae6686ce67ffc0a641971ad11943a1e94833fa232c6938852",
+    "hidden_tests_mounted": false,
+    "source_repository": "ml-explore/mlx-lm",
+    "target": "mlx_lm/sample_utils.py",
+    "vare_grader": "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v4.json",
+    "vare_grader_sha256": "6c309a8f32ecdaaea9a07d0527700f9188d9955cce2f3d662e6dc95a6de56e14"
+  },
+  "upstream_sources": [
+    [
+      "47e43a4526d42a6dcee758f07eb04b78a8439ecb",
+      "mlx_lm/sample_utils.py",
+      "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2"
+    ],
+    [
+      "87b7b583a697537aa68f47130b40884700b5f55f",
+      "mlx_lm/sample_utils.py",
+      "3aac92d804b6b91c82a4e2844697a8723de26f6af57e10013a482b967e739cfa"
+    ],
+    [
+      "87b7b583a697537aa68f47130b40884700b5f55f",
+      "tests/test_sample_utils.py",
+      "dbe871f37a2930eae6686ce67ffc0a641971ad11943a1e94833fa232c6938852"
+    ]
+  ]
+}

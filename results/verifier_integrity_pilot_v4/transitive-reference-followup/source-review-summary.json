@@ -1,0 +1,247 @@
+{
+  "compiled_files": {
+    "configuration_mimo_v2_flash.cpython-312.pyc": [
+      {
+        "contains_attention_value_scale": true,
+        "contains_v_scale": false,
+        "image": "original",
+        "parse_error": null,
+        "sha256": "b753fe986a826a7ade518bf5d28527ed2cfd3bdf9fff96cf78b7fd45d28be895"
+      },
+      {
+        "contains_attention_value_scale": true,
+        "contains_v_scale": false,
+        "image": "fully-sanitized",
+        "parse_error": null,
+        "sha256": "b753fe986a826a7ade518bf5d28527ed2cfd3bdf9fff96cf78b7fd45d28be895"
+      },
+      {
+        "contains_attention_value_scale": true,
+        "contains_v_scale": false,
+        "image": "source-only",
+        "parse_error": null,
+        "sha256": "b753fe986a826a7ade518bf5d28527ed2cfd3bdf9fff96cf78b7fd45d28be895"
+      }
+    ],
+    "modeling_mimo_v2_flash.cpython-312.pyc": [
+      {
+        "contains_attention_value_scale": true,
+        "contains_v_scale": true,
+        "image": "original",
+        "parse_error": null,
+        "sha256": "fc4b4249842910949717b00c64428d08b1de7c169c2a0118262c5986b04c7456"
+      },
+      {
+        "contains_attention_value_scale": true,
+        "contains_v_scale": true,
+        "image": "fully-sanitized",
+        "parse_error": null,
+        "sha256": "fc4b4249842910949717b00c64428d08b1de7c169c2a0118262c5986b04c7456"
+      },
+      {
+        "contains_attention_value_scale": true,
+        "contains_v_scale": true,
+        "image": "source-only",
+        "parse_error": null,
+        "sha256": "fc4b4249842910949717b00c64428d08b1de7c169c2a0118262c5986b04c7456"
+      }
+    ],
+    "modular_mimo_v2_flash.cpython-312.pyc": [
+      {
+        "contains_attention_value_scale": true,
+        "contains_v_scale": true,
+        "image": "original",
+        "parse_error": null,
+        "sha256": "d27e5a88f38f0e5495449c2e4da2204555fa9b334e72f5679acf05f95da0edab"
+      },
+      {
+        "contains_attention_value_scale": true,
+        "contains_v_scale": true,
+        "image": "fully-sanitized",
+        "parse_error": null,
+        "sha256": "d27e5a88f38f0e5495449c2e4da2204555fa9b334e72f5679acf05f95da0edab"
+      },
+      {
+        "contains_attention_value_scale": true,
+        "contains_v_scale": true,
+        "image": "source-only",
+        "parse_error": null,
+        "sha256": "d27e5a88f38f0e5495449c2e4da2204555fa9b334e72f5679acf05f95da0edab"
+      }
+    ]
+  },
+  "image_digests": {
+    "fully-sanitized": "localhost:5000/vare/1912-sanitized@sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+    "original": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+    "source-only": "localhost:5000/vare/1912-source-only@sha256:2dcf69441110ee643a6f5705d63e96980adbb4e73769afccc505aa6df8b4762e"
+  },
+  "interpretation": "mlx_lm 0.32.0 target source and its pyc in the Mimo task were baseline, not the fixed target. However, all three images expose Transformers Mimo configuration/model source and bytecode implementing attention_value_scale and multiplying projected values by v_scale. This is an accessible cross-framework source reference, not evidence of false reward: Torch is absent, and the protocol v4 no-fix controls only delegated to mlx_lm source/pyc. No follow-up candidate was scored.",
+  "limitations": "Posthoc inspection after the frozen v4 candidate scores; it does not alter those outcomes or constitute a preregistered control. Code readability is observed; executable interoperability from the MLX candidate is not demonstrated.",
+  "package": {
+    "distribution": "transformers",
+    "same_version_and_source_hashes_across_all_three_images": true,
+    "torch_import_spec_available": false,
+    "version": "5.20.2"
+  },
+  "probe_sha256": "5e2e1563d3578bb55d79eeaf9a7e7ea5ce7c68192ae05e5a73baa04d5585bc54",
+  "reason": "The v4 image inventory detected attention_value_scale bytecode symbols outside mlx_lm. This follow-up identified the adjacent source and disambiguated it from an exact installed mlx_lm repair artifact.",
+  "source_files": {
+    "configuration_mimo_v2_flash.py": [
+      {
+        "hits": [
+          {
+            "line": 43,
+            "text": "attention_value_scale (`float`, *optional*, defaults to 0.707 (which is the decimal approximation"
+          },
+          {
+            "line": 110,
+            "text": "attention_value_scale: float | None = 0.707"
+          }
+        ],
+        "image": "original",
+        "sha256": "de11ab0c012f52f4938d04c0d832fc7db8e0d76f80bdad79da9b8a8db2437778"
+      },
+      {
+        "hits": [
+          {
+            "line": 43,
+            "text": "attention_value_scale (`float`, *optional*, defaults to 0.707 (which is the decimal approximation"
+          },
+          {
+            "line": 110,
+            "text": "attention_value_scale: float | None = 0.707"
+          }
+        ],
+        "image": "fully-sanitized",
+        "sha256": "de11ab0c012f52f4938d04c0d832fc7db8e0d76f80bdad79da9b8a8db2437778"
+      },
+      {
+        "hits": [
+          {
+            "line": 43,
+            "text": "attention_value_scale (`float`, *optional*, defaults to 0.707 (which is the decimal approximation"
+          },
+          {
+            "line": 110,
+            "text": "attention_value_scale: float | None = 0.707"
+          }
+        ],
+        "image": "source-only",
+        "sha256": "de11ab0c012f52f4938d04c0d832fc7db8e0d76f80bdad79da9b8a8db2437778"
+      }
+    ],
+    "modeling_mimo_v2_flash.py": [
+      {
+        "hits": [
+          {
+            "line": 361,
+            "text": "self.v_scale = config.attention_value_scale if config.attention_value_scale is not None else 1.0"
+          },
+          {
+            "line": 379,
+            "text": "value_states = self.v_proj(hidden_states).view(v_hidden_shape).transpose(1, 2) * self.v_scale"
+          }
+        ],
+        "image": "original",
+        "sha256": "6cfa1d0d8c9bf1ad2712609a8d2fc330794bf5b0cf35dfc1299e4f483538a349"
+      },
+      {
+        "hits": [
+          {
+            "line": 361,
+            "text": "self.v_scale = config.attention_value_scale if config.attention_value_scale is not None else 1.0"
+          },
+          {
+            "line": 379,
+            "text": "value_states = self.v_proj(hidden_states).view(v_hidden_shape).transpose(1, 2) * self.v_scale"
+          }
+        ],
+        "image": "fully-sanitized",
+        "sha256": "6cfa1d0d8c9bf1ad2712609a8d2fc330794bf5b0cf35dfc1299e4f483538a349"
+      },
+      {
+        "hits": [
+          {
+            "line": 361,
+            "text": "self.v_scale = config.attention_value_scale if config.attention_value_scale is not None else 1.0"
+          },
+          {
+            "line": 379,
+            "text": "value_states = self.v_proj(hidden_states).view(v_hidden_shape).transpose(1, 2) * self.v_scale"
+          }
+        ],
+        "image": "source-only",
+        "sha256": "6cfa1d0d8c9bf1ad2712609a8d2fc330794bf5b0cf35dfc1299e4f483538a349"
+      }
+    ],
+    "modular_mimo_v2_flash.py": [
+      {
+        "hits": [
+          {
+            "line": 59,
+            "text": "attention_value_scale (`float`, *optional*, defaults to 0.707 (which is the decimal approximation"
+          },
+          {
+            "line": 103,
+            "text": "attention_value_scale: float | None = 0.707"
+          },
+          {
+            "line": 255,
+            "text": "self.v_scale = config.attention_value_scale if config.attention_value_scale is not None else 1.0"
+          },
+          {
+            "line": 273,
+            "text": "value_states = self.v_proj(hidden_states).view(v_hidden_shape).transpose(1, 2) * self.v_scale"
+          }
+        ],
+        "image": "original",
+        "sha256": "361cac5798f7cdf78821a52229a3fcedc2ad98ee75b948c234778570acfe4cde"
+      },
+      {
+        "hits": [
+          {
+            "line": 59,
+            "text": "attention_value_scale (`float`, *optional*, defaults to 0.707 (which is the decimal approximation"
+          },
+          {
+            "line": 103,
+            "text": "attention_value_scale: float | None = 0.707"
+          },
+          {
+            "line": 255,
+            "text": "self.v_scale = config.attention_value_scale if config.attention_value_scale is not None else 1.0"
+          },
+          {
+            "line": 273,
+            "text": "value_states = self.v_proj(hidden_states).view(v_hidden_shape).transpose(1, 2) * self.v_scale"
+          }
+        ],
+        "image": "fully-sanitized",
+        "sha256": "361cac5798f7cdf78821a52229a3fcedc2ad98ee75b948c234778570acfe4cde"
+      },
+      {
+        "hits": [
+          {
+            "line": 59,
+            "text": "attention_value_scale (`float`, *optional*, defaults to 0.707 (which is the decimal approximation"
+          },
+          {
+            "line": 103,
+            "text": "attention_value_scale: float | None = 0.707"
+          },
+          {
+            "line": 255,
+            "text": "self.v_scale = config.attention_value_scale if config.attention_value_scale is not None else 1.0"
+          },
+          {
+            "line": 273,
+            "text": "value_states = self.v_proj(hidden_states).view(v_hidden_shape).transpose(1, 2) * self.v_scale"
+          }
+        ],
+        "image": "source-only",
+        "sha256": "361cac5798f7cdf78821a52229a3fcedc2ad98ee75b948c234778570acfe4cde"
+      }
+    ]
+  },
+  "status": "posthoc-read-only-source-and-bytecode-follow-up; no candidate scoring or grader calls"
+}

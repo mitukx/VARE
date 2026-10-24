@@ -1,0 +1,17 @@
+{
+  "candidate": "mutant-ignore-scale",
+  "cases": [
+    {
+      "case_id": "upstream-value-scale-equivalence",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 1.0001218749579937
+    }
+  ],
+  "description": "accepts the config field but ignores its scale",
+  "grader_adapter_sha256": "e5be8d167790e586d09c4676726f31cf110a5a8dc1e70c73ff23f7ed59fcbb2e",
+  "image": "localhost:5000/vare/1912-source-only@sha256:2dcf69441110ee643a6f5705d63e96980adbb4e73769afccc505aa6df8b4762e",
+  "target_sha256": "8c8c91761b121e32b69aab9658b1d978fb3bb28866436b7c8b6c43aba73f57a9",
+  "task_passed": false,
+  "workspace_sha256": "28f6fa9fa5831ae485b788f27aa0d3fe3e06541b38e204db66d52cf85cd1e305"
+}
