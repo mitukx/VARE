@@ -204,11 +204,14 @@ def replay_update(run: Path, arm: str, group: dict, model_dir: Path,
     batch = []
     for index, member in enumerate(group["members"]):
         raw = member["attempt"]
-        raw_task = raw["task"]
-        task = Task(**raw_task)
+        raw_task = dict(raw["task"])
         group_id = str(raw_task["id"])
-        task.metadata = {**task.metadata, "vare_rollout_group": group_id,
-                         "vare_rollout_group_size": 8}
+        raw_task["metadata"] = {
+            **raw_task.get("metadata", {}),
+            "vare_rollout_group": group_id,
+            "vare_rollout_group_size": 8,
+        }
+        task = Task(**raw_task)
         metadata = {**raw["metadata"], "vare_rollout_group": group_id,
                     "vare_rollout_group_size": 8,
                     "rvl_generation": copy.deepcopy(raw["metadata"]["rvl_generation"])}
@@ -385,16 +388,41 @@ def main() -> None:
     parser.add_argument("--allow-partial", action="store_true")
     parser.add_argument("--crash-run", type=Path,
                         help="optional five-cutpoint actual-process SIGKILL bundle")
+    parser.add_argument("--auditor-correction-manifest", type=Path,
+                        help="explicit hash-bound correction for the frozen v6 auditor defect")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     protocol = json.loads(PROTOCOL.read_text())
-    require(sha(Path(__file__)) == protocol["auditor_sha256"],
-            "auditor source differs from frozen protocol")
+    current_auditor_sha = sha(Path(__file__))
+    correction = None
+    if current_auditor_sha != protocol["auditor_sha256"]:
+        require(args.auditor_correction_manifest is not None,
+                "auditor differs from protocol; provide the versioned correction manifest")
+        correction = json.loads(args.auditor_correction_manifest.read_text())
+        require(correction.get("experiment_protocol_sha256") == sha(PROTOCOL)
+                and correction.get("original_auditor_sha256") == protocol["auditor_sha256"]
+                and correction.get("corrected_auditor_sha256") == current_auditor_sha,
+                "auditor correction manifest does not bind this code to frozen protocol")
+        frozen_auditor_name = (
+            "audit_verifier_consistent_async_grpo.py."
+            + protocol["auditor_sha256"][:12]
+        )
+        for run in args.run:
+            frozen_auditor = run / "source" / frozen_auditor_name
+            require(frozen_auditor.is_file()
+                    and sha(frozen_auditor) == protocol["auditor_sha256"],
+                    "run does not retain the original frozen auditor source")
+    else:
+        require(args.auditor_correction_manifest is None,
+                "correction manifest supplied while the frozen auditor is active")
     require(sha(ROOT / "scripts/benchmark_verifier_consistent_async_grpo.py")
             == protocol["runner_sha256"], "runner source differs from frozen protocol")
     require(sha(ROOT / "scripts/benchmark_verifier_consistent_grpo_sigkill.py")
             == protocol["crash_runner_sha256"], "crash runner differs from frozen protocol")
     for relative, digest in protocol["source_sha256"].items():
+        if (correction is not None
+                and relative == "scripts/audit_verifier_consistent_async_grpo.py"):
+            continue
         require(sha(ROOT / relative) == digest,
                 f"VARE source differs from frozen protocol: {relative}")
     require(sha(args.rvl_source / "src/rvl_systems/hf_backend.py")
@@ -498,6 +526,9 @@ def main() -> None:
     report = {
         "protocol_sha256": sha(PROTOCOL),
         "auditor_sha256": sha(Path(__file__)),
+        "auditor_correction_manifest_sha256": (
+            sha(args.auditor_correction_manifest)
+            if args.auditor_correction_manifest is not None else None),
         "runs": [str(path) for path in args.run],
         "seeds": per_seed,
         "primary": {

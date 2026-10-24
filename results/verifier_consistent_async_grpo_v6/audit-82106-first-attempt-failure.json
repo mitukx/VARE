@@ -1,0 +1,11 @@
+{
+  "correction_manifest": "benchmarks/verifier_consistent_async_grpo_v6/auditor-correction.json",
+  "failure_message": "cannot assign to field 'metadata' while preparing replay Task",
+  "failure_phase": "Independent numerical replay, after the auditor loaded and validated the run manifest and independently rescored rollout groups.",
+  "failure_type": "FrozenInstanceError",
+  "frozen_auditor_sha256": "62e2204950164900464073caaacaeff06ae0a3a094ef4adeba7707e402c1d9ec",
+  "metric_report_written": false,
+  "protocol_sha256": "1e16f2452d2f0d101295df1438f87679bec621bb27f667259fe18d66db5d8523",
+  "rule": "Retain this failed audit attempt. Use the corrected, hash-bound auditor to recompute the full report from the unchanged raw run.",
+  "status": "AUDIT_ABORTED_NO_REPORT"
+}
