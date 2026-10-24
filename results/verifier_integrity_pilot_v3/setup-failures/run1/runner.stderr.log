@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/flagship/scripts/run_verifier_integrity_pilot_v3.py", line 303, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/flagship/scripts/run_verifier_integrity_pilot_v3.py", line 250, in main
+    reference_checks = {key: reference_self_test(ref["value"]) for key, ref in references.items()}
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/flagship/scripts/run_verifier_integrity_pilot_v3.py", line 193, in reference_self_test
+    if abs(x - y) > FIXED_ATOL + FIXED_RTOL * abs(y):
+           ~~^~~
+TypeError: unsupported operand type(s) for -: 'list' and 'list'
