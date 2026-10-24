@@ -12,7 +12,7 @@ This is a **systems-mechanism result on a synthetic TinyStories fixture**. It is
 - Model: `roneneldan/TinyStories-1M`, revision `77f1b168e219585646439073245fe87e56b3023e`; CPU fp32, one thread, at most three generated tokens.
 - Each seed used three arms with 16 rollouts and 16 verifier calls per arm, eight-member GRPO batches, one actual AdamW update per trained arm, and four synthetic held-out prompts. The bounded async arm was serialized CPU execution; the queue overlapped only producer/verifier coroutines.
 - Seeds 82106 and 82107 were both eligible under the frozen pilot continuation rule. Earlier aborted seeds and their outcome data remain excluded.
-- Earlier independent audit and crash summary: [`pilot-audit-v2.json`](pilot-audit-v2.json) and [`sigkill-summary-v2.json`](sigkill-summary-v2.json). The original committed [`final-independent-audit-v6.json`](final-independent-audit-v6.json) remains unchanged at SHA-256 `fb5914e0f68cbcc815306eacbac709f0b0d40c92744bb73b05eed069a79768b8`. Review-driven auditor corrections produced v4 pilot and full audits. The latest [`pilot-gate-audit-82106-correction-v5.json`](pilot-gate-audit-82106-correction-v5.json) and [`final-independent-audit-v6-correction-v5.json`](final-independent-audit-v6-correction-v5.json) re-audit retained data using the output-safe matched-runner correction chain. Their outcomes exactly match v4 after excluding only correction-manifest hashes. No inference or training was rerun. [`pilot-artifact-index-v5.json`](pilot-artifact-index-v5.json) remains an immutable prior inventory; v5 audits and correction manifests are supplemental files.
+- Earlier independent audit and crash summary: [`pilot-audit-v2.json`](pilot-audit-v2.json) and [`sigkill-summary-v2.json`](sigkill-summary-v2.json). The original committed [`final-independent-audit-v6.json`](final-independent-audit-v6.json) remains unchanged at SHA-256 `fb5914e0f68cbcc815306eacbac709f0b0d40c92744bb73b05eed069a79768b8`. Review-driven auditor corrections produced v4 and v5 audits. The latest [`pilot-gate-audit-82106-correction-v6.json`](pilot-gate-audit-82106-correction-v6.json) and [`final-independent-audit-v6-correction-v6.json`](final-independent-audit-v6-correction-v6.json) use the output-safe matched-runner chain plus auditor correction v5. Primary outcomes and the decision exactly match the earlier correction-v5 report. Recovery audit rows now verify that eight SQLite trajectory states and their group-ack event agree with the worker summary, and that SQLite's active policy/checkpoint matches `active.json`, the journal, and checkpoint bytes. The full audit rechecked all five SIGKILL cutpoints; each has one committed transaction, eight consumed trajectories, and exact model/Adam/RNG/module-mode recovery. No inference or training was rerun. [`pilot-artifact-index-v5.json`](pilot-artifact-index-v5.json) and earlier audits remain immutable; the v6 audits and correction manifest are supplemental files.
 
 ## Two-seed verifier-drift results
 
@@ -61,7 +61,7 @@ The first crash attempt is retained and explicitly excluded: member-order traini
 
 ## Independent review corrections
 
-Independent review found duplicate-cutpoint acceptance, NaN-masking tensor reducers, structured crash-inventory parsing gaps, a frozen-auditor reproduction defect, and a pilot-gate preflight that incorrectly required a crash bundle. These paths have focused regression coverage. A later P1 review found that a rejected output-path invocation could overwrite or add files in a retained run; the runner now writes failure evidence only after its own exclusive directory creation succeeds. Tests reproduce both the completed-run and existing-failure-record cases. The correction chain in [`runner-output-safety-correction-v1.json`](runner-output-safety-correction-v1.json), [`matched-runner-correction-v2.json`](matched-runner-correction-v2.json), and [`auditor-correction-v4-runner-v2.json`](auditor-correction-v4-runner-v2.json) binds the current runner, regression test and auditor provenance without changing the frozen protocol or measured outcomes. The auditor still requires the exact five-cutpoint set, rejects non-finite differences, validates artifact inventories, and supports pilot-only audits without crash bundles.
+Independent review found duplicate-cutpoint acceptance, NaN-masking tensor reducers, structured crash-inventory parsing gaps, a frozen-auditor reproduction defect, and a pilot-gate preflight that incorrectly required a crash bundle. These paths have focused regression coverage. A later P1 review found that a rejected output-path invocation could overwrite or add files in a retained run; the runner now writes failure evidence only after its own exclusive directory creation succeeds. Tests reproduce both the completed-run and existing-failure-record cases. The correction chain in [`runner-output-safety-correction-v1.json`](runner-output-safety-correction-v1.json), [`matched-runner-correction-v2.json`](matched-runner-correction-v2.json), and [`auditor-correction-v5.json`](auditor-correction-v5.json) binds the current runner, regression test and auditor provenance without changing the frozen protocol or measured outcomes. Three further review findings are closed by correction v5: behavior-logprob replay must meet the frozen `<1e-4` limit; consumed counts must match complete snapshot rows and acknowledgment heads; and the durable SQLite active pointer must match the worker journal, JSON pointer, and checkpoint digest. Corruption regressions fail on stale pre-ack snapshots, mismatched acknowledgment heads, a stale database active pointer, and threshold/non-finite behavior errors. The auditor still requires the exact five-cutpoint set, rejects non-finite tensor differences, validates artifact inventories, and supports pilot-only audits without crash bundles.
 
 Two distinct failed audit observations during this correction are preserved in `results/verifier_consistent_async_grpo_v6/audit-integrity-review-postmortem-v2.json`. The first exposed the structured-manifest parser gap; the second exposed SQLite's disposable sidecars in the exact inventory check. The final v6 audit passes after handling those cases explicitly and rejecting noncanonical paths, symlinks, and unmanifested temporary files.
 
@@ -75,10 +75,10 @@ python -S scripts/audit_verifier_consistent_async_grpo.py \
   --model-dir ../tinystories-1m-pinned \
   --rvl-source ../rvl-pinned \
   --allow-partial \
-  --auditor-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v4-runner-v2.json \
+  --auditor-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v5.json \
   --runner-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/matched-runner-correction-v2.json \
   --crash-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/crash-runner-correction-v3.json \
-  --output results/verifier_consistent_async_grpo_v6/offline-audit-pilot-v5.json
+  --output results/verifier_consistent_async_grpo_v6/offline-audit-pilot-correction-v6.json
 
 python -S scripts/audit_verifier_consistent_async_grpo.py \
   --run results/verifier_consistent_async_grpo_v6/seed-82106 \
@@ -86,10 +86,10 @@ python -S scripts/audit_verifier_consistent_async_grpo.py \
   --crash-run results/verifier_consistent_async_grpo_v6/crash-82106-replay-order-v2 \
   --model-dir ../tinystories-1m-pinned \
   --rvl-source ../rvl-pinned \
-  --auditor-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v4-runner-v2.json \
+  --auditor-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v5.json \
   --runner-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/matched-runner-correction-v2.json \
   --crash-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/crash-runner-correction-v3.json \
-  --output results/verifier_consistent_async_grpo_v6/offline-audit-full-v5.json
+  --output results/verifier_consistent_async_grpo_v6/offline-audit-full-correction-v6.json
 ```
 
 To verify retained outputs, check each run's `SHA256.json` against its files. The failed first crash attempt, all aborted seeds, and their manifests remain preserved and excluded.
