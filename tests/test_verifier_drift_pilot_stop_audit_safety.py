@@ -45,6 +45,21 @@ def test_existing_failure_record_cannot_be_overwritten(tmp_path):
     assert (run / "failure.json").read_bytes() == failure
 
 
+def test_existing_external_protocol_or_runner_cannot_be_selected_as_output(tmp_path):
+    run = tmp_path / "run"
+    run.mkdir()
+    supplied_sources = [tmp_path / "protocol.json", tmp_path / "runner.py"]
+    for path in supplied_sources:
+        path.write_bytes(f"frozen:{path.name}".encode())
+    before = {path: path.read_bytes() for path in supplied_sources}
+
+    for path in supplied_sources:
+        with pytest.raises(ValueError, match="already exists"):
+            validate_output_path(path, run)
+
+    assert {path: path.read_bytes() for path in supplied_sources} == before
+
+
 def test_new_report_cannot_be_created_inside_retained_run(tmp_path):
     run = tmp_path / "run"
     run.mkdir()
@@ -57,10 +72,10 @@ def test_new_report_cannot_be_created_inside_retained_run(tmp_path):
     assert not (run / "audit.json").exists()
 
 
-def test_output_symlink_cannot_redirect_write_into_retained_run(tmp_path):
+def test_output_symlink_cannot_redirect_write_to_supplied_source(tmp_path):
     run = tmp_path / "run"
     run.mkdir()
-    protocol = run / "protocol.json"
+    protocol = tmp_path / "protocol.json"
     protocol.write_bytes(b'{"frozen":"protocol"}\n')
     output = tmp_path / "audit.json"
     output.symlink_to(protocol)
