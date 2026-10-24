@@ -123,12 +123,14 @@ class StubVerifier:
 
 
 class Hooks:
-    def __init__(self, signer, *, crash_after_publish=False, forged_hash=False):
+    def __init__(self, signer, *, crash_after_publish=False, forged_hash=False,
+                 evaluation_verifier_version=None):
         self.signer = signer
         self.active = "p0"
         self.digests = {"p0": OLD, "p1": NEW}
         self.crash_after_publish = crash_after_publish
         self.forged_hash = forged_hash
+        self.evaluation_verifier_version = evaluation_verifier_version
         self.promoted = []
         self.discarded = []
 
@@ -142,8 +144,11 @@ class Hooks:
         return "p1"
 
     async def evaluate(self, policy_id):
+        metadata = ({} if self.evaluation_verifier_version is None else
+                    {"verifier_version": self.evaluation_verifier_version})
         return self.signer.attest(
-            EvaluationReport(policy_id, 0.8 if policy_id == "p1" else 0.5, n=10),
+            EvaluationReport(policy_id, 0.8 if policy_id == "p1" else 0.5,
+                             n=10, metadata=metadata),
             checkpoint_sha256=(OTHER if self.forged_hash and policy_id == "p1"
                                else self.digests[policy_id]),
         )
@@ -158,7 +163,8 @@ class Hooks:
         self.discarded.append(candidate_id)
 
 
-def _loop(hooks, journal, signer, *, ledger=None):
+def _loop(hooks, journal, signer, *, ledger=None,
+          require_current_evaluation_verifier=False):
     return CapabilityLoop(
         hooks=hooks,
         verifier=StubVerifier(),
@@ -166,6 +172,7 @@ def _loop(hooks, journal, signer, *, ledger=None):
         evidence_trust_root=signer,
         promotion_journal=journal,
         checkpoint_hasher=lambda pid: hooks.digests[pid],
+        require_current_evaluation_verifier=require_current_evaluation_verifier,
         config=EngineConfig(
             replay_batch_size=1,
             promotion=PromotionConfig(min_eval_examples=1, min_primary_gain=0.01),
@@ -217,6 +224,36 @@ def test_engine_refuses_signed_but_nonmatching_checkpoint(tmp_path):
     result = _round(_loop(hooks, journal, signer))
     assert not result.decision.accepted
     assert result.decision.reasons == ("checkpoint_attestation_mismatch",)
+    assert hooks.promoted == []
+    assert hooks.discarded == ["p1"]
+    journal.assert_clean(policy_id="p0", checkpoint_sha256=OLD)
+
+
+def test_engine_refuses_signed_candidate_evaluation_from_stale_verifier(tmp_path):
+    signer = trust()
+    journal = PromotionJournal(tmp_path / "durable.sqlite",
+                               initial_policy_id="p0",
+                               initial_checkpoint_sha256=OLD)
+    hooks = Hooks(signer, evaluation_verifier_version=1)
+    result = _round(_loop(hooks, journal, signer,
+                          require_current_evaluation_verifier=True))
+    assert not result.decision.accepted
+    assert result.decision.reasons == ("evaluation_verifier_version_mismatch",)
+    assert hooks.promoted == []
+    assert hooks.discarded == ["p1"]
+    journal.assert_clean(policy_id="p0", checkpoint_sha256=OLD)
+
+
+def test_engine_requires_evaluation_verifier_identity_when_strict(tmp_path):
+    signer = trust()
+    journal = PromotionJournal(tmp_path / "durable.sqlite",
+                               initial_policy_id="p0",
+                               initial_checkpoint_sha256=OLD)
+    hooks = Hooks(signer)
+    result = _round(_loop(hooks, journal, signer,
+                          require_current_evaluation_verifier=True))
+    assert not result.decision.accepted
+    assert result.decision.reasons == ("evaluation_verifier_version_mismatch",)
     assert hooks.promoted == []
     assert hooks.discarded == ["p1"]
     journal.assert_clean(policy_id="p0", checkpoint_sha256=OLD)

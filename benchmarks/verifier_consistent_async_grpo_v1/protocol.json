@@ -1,0 +1,187 @@
+{
+  "arms": {
+    "naive_async": {
+      "execution": "Bounded maxsize-one producer/verifier queue. After four of eight grades, v0 changes to v1 while rollout collection is still active.",
+      "promotion_negative_control": "Signed evaluation uses stale v0 metadata. The ordinary version-unaware gate and strict expected-v1 gate receive the same reports; permissive metric thresholds exist only to exercise the promotion transaction and do not claim quality improvement.",
+      "train": "One eight-member mixed-version group. Explicit stale policy allows verifier lag <=1, without regrade or whole-group version equality; all recorded labels reach the actual trainer."
+    },
+    "sync": {
+      "execution": "Synchronous producer and verifier; two groups (audit then fresh) generated after verifier v1 is authoritative.",
+      "train": "One eight-member fresh v1 group, authenticated VARE admission, independent numerical replay, held-out evaluation, transactional promotion."
+    },
+    "vare_async": {
+      "execution": "Same bounded queue, seed, rollout steps, drift transition and two-group budget as naive_async.",
+      "promotion": "Independent v1 evaluator, expected-current-version metadata check, VARE PromotionGate and PromotionJournal.",
+      "train": "Persist both groups; VARE must quarantine the complete mixed v0/v1 group and train only the exact fresh v1 group also used by sync."
+    }
+  },
+  "auditor_sha256": "c6934e4729f25f9baec392aa23140f1de70dd73c1a5f3d8f5d08aa9ccac4fc98",
+  "budgets": {
+    "backend_concurrency": 1,
+    "crash_timeout_seconds_per_process": 1200,
+    "device": "CPU fp32",
+    "evaluation": {
+      "decode": "Greedy argmax, at most three tokens, separate model copy loaded from each saved checkpoint.",
+      "interpretation": "A synthetic diagnostic only; not a coding-task held-out capability metric.",
+      "promotion": "Same four prompts for incumbent and candidate in every arm. Strict arms require metadata verifier_version=1. Naive negative control records version=0 and compares the same signed report under version-unaware and expected-v1 gates.",
+      "prompts": "Held-out landing rule {i}: a blue bird landed on the",
+      "scorer": "Independent authoritative verifier v1; raw tokens, decoded text and per-task scores are retained.",
+      "task_count": 4,
+      "task_ids": "heldout-{seed}-{i}, i in 0..3"
+    },
+    "execution_serialization": "Three arms and five crash cases run serially on CPU; backend concurrency is one. The queue overlaps producer/verifier coroutines only; no parallel model inference or speedup is claimed.",
+    "max_new_tokens": 3,
+    "max_rss_bytes_per_learner_process": 8589934592,
+    "max_rss_bytes_per_seed": 8589934592,
+    "max_swap_growth_bytes": 268435456,
+    "max_wall_seconds_per_seed": 1200,
+    "model": "roneneldan/TinyStories-1M",
+    "model_files": {
+      "config.json": "ff74c30d5ebb5ab1da0f2ea479adf7197c504b42b5522a858c334ab91ed4958c",
+      "merges.txt": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+      "pytorch_model.bin": "07f9609ea882b8163ff3b23d40e2b82cb715d409631beb15c84b164f3877dae7",
+      "special_tokens_map.json": "98412137ae43c77f8af52eb51b19c3536d3242cb55339167d841005fa94a23b7",
+      "tokenizer.json": "f6ed3d307010c244c22aeffbde05f419cf277c23e64cf98b673cac5449cfeff5",
+      "tokenizer_config.json": "3d76da0fd37493fbfcd3f0fa9757753d31f92e1779ebd9130809b45546a60261",
+      "vocab.json": "3ba3c3109ff33976c4bd966589c11ee14fcaa1f4c9e5e154c2ed7f99d80709e7"
+    },
+    "model_revision": "77f1b168e219585646439073245fe87e56b3023e",
+    "optimizer": "RVL HFCausalLMGRPOTrainer default AdamW, learning_rate=1e-4, pinned dependency/source versions; single actual optimizer step per arm.",
+    "optimizer_calls_per_arm_per_seed": 1,
+    "rollouts_per_arm_per_seed": 16,
+    "rvl_patch_sha256": "d50dfe7d65ed09ef6ee6d551d6680130bf4fd02ab11d29df81dd63ceb7e66871",
+    "rvl_patched_backend_sha256": "a35179d2ff65b35d8079b0d48a933444cac440debd736d6dc6a7a53a27cfb960",
+    "rvl_revision": "e381c4b3b8c2ad8e5dc4c4b1a33b7922531c3e33",
+    "sample_seed_rule": "RVLGRPOHooks seed + rollout step; no resampling after a degenerate group or failed pilot.",
+    "seeds": [
+      82101,
+      82102,
+      82103
+    ],
+    "temperature": 0.8,
+    "torch_threads": 1,
+    "train_batch_size": 8,
+    "trainable_parameters": "transformer.wpe.* and transformer.ln_f.* only",
+    "training_eval_config": {
+      "learning_rate": 0.0001,
+      "max_new_tokens": 3,
+      "optimizer": "AdamW",
+      "precision": "fp32",
+      "temperature": 0.8,
+      "trainable_parameters": "transformer.wpe.* and transformer.ln_f.*",
+      "updates_per_arm": 1
+    },
+    "verifier_calls_per_arm_per_seed": 16
+  },
+  "comparison_limits": [
+    "Synthetic verifier labels are not a real coding grader.",
+    "One prompt family and three seeds cannot estimate benchmark-wide prevalence or generalization.",
+    "CPU model inference is serialized; any throughput difference is descriptive, not evidence of asynchronous parallel speedup.",
+    "Promotion thresholds are deliberately permissive and only exercise provenance/promotion transactions; no held-out quality gain is claimed."
+  ],
+  "crash_recovery": {
+    "exact_recovery_fields": [
+      "model parameters",
+      "Adam optimizer state",
+      "CPU RNG state",
+      "module training modes",
+      "policy and verifier identities",
+      "promotion journal",
+      "effective trajectory-consumption count"
+    ],
+    "independent_reference": "Recovered model/Adam/RNG state must equal the matched synchronous candidate exactly; the main offline audit independently replays the numerical update from saved token traces.",
+    "method": "Five separate learner subprocesses are each SIGSTOPped at a durable named cutpoint and killed by the supervising parent with SIGKILL. A newly created Python process reconstructs from saved rollout/SQLite/checkpoint/journal files. Cutpoints 3 and 5 intentionally recompute from the incumbent after losing an uncommitted candidate; cutpoint 4 must acknowledge the durable committed candidate without another optimizer call.",
+    "required_cutpoints": [
+      "rollout_complete_before_admission",
+      "admission_before_optimizer",
+      "optimizer_computed_before_commit",
+      "commit_before_acknowledgment",
+      "evaluation_before_promotion"
+    ],
+    "reused_data_scope": "All five isolated cutpoints reuse the same pilot sync fresh rollout group to control recovery state; these are not five independent tasks or statistical observations.",
+    "status": "FROZEN_BEFORE_EXECUTION"
+  },
+  "crash_runner_sha256": "a03211c3d346ecfc7a3e12875acdc034f8ccfd47402f286b2c6befe47e3f5f40",
+  "hypothesis": "Under a controlled verifier transition, stale asynchronous reward versions can cause a real GRPO update to differ from the independently authoritative reward objective; whole-group version-aware VARE admission should prevent committing such a reward-invalid update and reject stale evaluation provenance. Measure correctness and cost without assuming a throughput gain.",
+  "metrics": {
+    "primary": "Per-seed indicator that the naive arm committed an eight-member update whose stored rewards disagree with independent authoritative v1, compared pairwise with VARE invalid commits (must be zero); denominators are one stale group per asynchronous arm per seed.",
+    "secondary": [
+      "false accept and false reject counts against independent v1, out of eight stale group members",
+      "group admissions, quarantine and effective consumed trajectories",
+      "optimizer calls on stale/mixed versus fresh groups",
+      "ordinary stale-evaluator promotion decision and strict expected-v1 decision on identical signed reports",
+      "rollouts/hour, verifier calls/hour, correct verified groups/hour, optimizer updates/hour; all include model setup wall time",
+      "queue-inclusive group p50/p95, sample latency and producer/verifier queue wait",
+      "CPU core-equivalent utilization, process peak RSS, macOS swap growth, checkpoint bytes and I/O latency",
+      "SQLite event/trajectory audit, transaction count, duplicate effective commits, exact model/Adam/RNG recovery",
+      "independent gradient, parameter and Adam-state replay max absolute error"
+    ],
+    "statistics": "Report every seed and exact denominator; pooled group outcomes get 95% Wilson intervals and one prespecified exact paired one-sided sign test (naive invalid commits > VARE). The three seeds share one synthetic task family; intervals and p-values do not establish task generalization. One primary comparison; no multiplicity correction across secondary metrics."
+  },
+  "preflight": {
+    "accelerate": "1.12.0",
+    "host": "Apple M1 Pro, 32 GB, CPU only",
+    "huggingface_hub": "0.36.0",
+    "model_revision": "77f1b168e219585646439073245fe87e56b3023e",
+    "python": "3.12.12",
+    "rvl_backend_patch_sha256": "a35179d2ff65b35d8079b0d48a933444cac440debd736d6dc6a7a53a27cfb960",
+    "rvl_revision": "e381c4b3b8c2ad8e5dc4c4b1a33b7922531c3e33",
+    "safetensors": "0.7.0",
+    "tokenizers": "0.22.1",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "preregistered_at_utc": "2026-10-24T13:11:56.743279+00:00",
+  "reference_update_sha256": "f9546aeb53c3d4404de450e534de4b7cddfc0e88d72c56608c01ea862b07b580",
+  "runner_sha256": "ebff6f1d22b55e6fdb56d7901affd366f4adaf410febcc2fd67216fa2aef2bc2",
+  "schema": "vare.verifier-consistent-async-grpo.v2",
+  "scope": "Real TinyStories-1M inference and real RVL AdamW/GRPO updates on one CPU host; synthetic, independently specified reward task. This is a verifier-consistency and single-host transaction systems experiment, not coding capability, benchmark prevalence, or broad asynchronous throughput evidence.",
+  "source_sha256": {
+    "scripts/audit_verifier_consistent_async_grpo.py": "c6934e4729f25f9baec392aa23140f1de70dd73c1a5f3d8f5d08aa9ccac4fc98",
+    "scripts/benchmark_verifier_consistent_async_grpo.py": "ebff6f1d22b55e6fdb56d7901affd366f4adaf410febcc2fd67216fa2aef2bc2",
+    "scripts/benchmark_verifier_consistent_grpo_sigkill.py": "a03211c3d346ecfc7a3e12875acdc034f8ccfd47402f286b2c6befe47e3f5f40",
+    "scripts/validate_grpo_e2e_cpu.py": "f9546aeb53c3d4404de450e534de4b7cddfc0e88d72c56608c01ea862b07b580",
+    "src/vare/attestation.py": "785e74d7d0cd6d41a73cf75cc65c093a0afb8d5082ad3f11dd828770616e93a3",
+    "src/vare/config.py": "3ddcb32df475e9e1d2a1aa3689ba5955494a67971cad03aa5a88e045ba4b7051",
+    "src/vare/engine.py": "785551df9e3b5e17a7595c640a9fc0dcded750ea4d274a68c9cfd443cb04fdde",
+    "src/vare/evidence.py": "a35d0f8c1cc7756c7d351b79ff061ff2374bf5ffe3c0433ed0181b0b85868d70",
+    "src/vare/integrations/rvl_grpo.py": "d4d511a9cc71949205a25ca4dbb9b384cb38c9f430f590adafdfd0126cac1eb7",
+    "src/vare/promotion.py": "21de684ad5faef4195e95fed75ec887b345ce22e72d6144d357f1c022d1b1827",
+    "src/vare/promotion_journal.py": "2e7b98951427aa63cff61ba948a3e4eb2e480b1378ed3c891e9df20225876ee7",
+    "src/vare/telemetry.py": "85c5ebe192c9e46db418e043bb09032e614a13d51cb0f19f94e096886c15de53",
+    "src/vare/trajectory_admission.py": "db3a1fe2fd345ef99ee25338f2e43f65211ae83cfdabc68a308f332aa53b5e6c",
+    "src/vare/trajectory_learner.py": "44a38b5c25992c6af819866961c9b2f8daed9589a65e1ab9afb8657b80e1414e",
+    "src/vare/trajectory_store.py": "f915cbb6f7ee11dc7812084a5f09807eb182268dd9320fcc68a2fa2e47696db8",
+    "src/vare/types.py": "233e2b6176431140e7700cc668cfdbdc98cf3d8d4ab98de658efab7010ea82ca",
+    "tests/test_checkpoint_bound_promotion.py": "93724be88e282a79e523c612ac343f795488968d35ba81c33c0563059aab9c4c"
+  },
+  "status": "FROZEN_BEFORE_EXECUTION",
+  "stopping": {
+    "correctness_abort": "Stop at first source/model checksum mismatch, fresh sync/VARE rollout mismatch, independent replay error >=2e-6, behavior log-probability mismatch >=1e-4, excess optimizer call, incorrect VARE admission/quarantine, or recovery mismatch.",
+    "degenerate_group": "Stop the affected seed immediately, retain partial files, and do not resample or change prompts/rules.",
+    "no_signal": "If the pilot has no authoritative reward disagreement, stop after the pilot and report NO_GO; do not repeat the task or tune the prompt/rules.",
+    "pilot_signal": "Run 82101 first. Continue with 82102/82103 only if the naive mixed group has at least one authoritative-v1 reward disagreement, VARE explicitly quarantines its whole stale group, and its fresh v1 group is non-degenerate.",
+    "resource_abort": "Stop at 1200 seconds per seed, 8 GiB peak RSS, or 256 MiB positive swap-growth from the pre-seed baseline. Preserve partial output and mark ABORTED_RESOURCE."
+  },
+  "task": {
+    "exploration_exclusion": "Exploratory output-only generation with seed 90210 is excluded from every measured result and is never reused as an experimental seed.",
+    "family": "landing",
+    "fresh_group_pairing": "Sync and VARE use the same deterministic sampling seeds for steps 8..15; the offline auditor checks response tokens and behavior log-probabilities exactly.",
+    "group_size": 8,
+    "groups_per_arm": 2,
+    "learning_rule": "terminal_action_on_policy_grpo_v1",
+    "oracle": "The offline auditor and crash runner implement the rubric independently from the runner and recompute every recorded score from raw model text.",
+    "prompt": "Choose one label for a story: a blue bird landed on the",
+    "verifier_v0": {
+      "rule_record_sha256": "computed by runner from canonical frozen rule record",
+      "semantics": "score 1 iff output contains any sentence punctuation .!?",
+      "version": 0
+    },
+    "verifier_v1": {
+      "rule_record_sha256": "computed by runner from canonical frozen rule record",
+      "semantics": "authoritative score 1 iff output contains whole ASCII word ground, case-insensitive; punctuation may surround it",
+      "version": 1
+    }
+  },
+  "vare_base_commit": "a476feeed7ee5d711b3741b0a0ffa89f7c29cd76"
+}

@@ -137,7 +137,17 @@ class PromotionGate:
             reasons.append("paired_uncertainty")
         return mean_gain, lcb, n, reasons
 
-    def decide(self, incumbent: EvaluationReport, candidate: EvaluationReport) -> PromotionDecision:
+    def decide(
+        self,
+        incumbent: EvaluationReport,
+        candidate: EvaluationReport,
+        *,
+        expected_verifier_version: int | None = None,
+    ) -> PromotionDecision:
+        if (expected_verifier_version is not None
+                and (type(expected_verifier_version) is not int
+                     or expected_verifier_version < 0)):
+            raise ValueError("expected_verifier_version must be a nonnegative integer")
         if self.trajectory_constraint is not None:
             trajectory_reasons = tuple(
                 dict.fromkeys(
@@ -158,6 +168,18 @@ class PromotionGate:
             return PromotionDecision(
                 accepted=False,
                 reasons=("untrusted_evaluation_evidence",),
+                primary_gain=0.0,
+                worst_slice_regression=0.0,
+            )
+        if expected_verifier_version is not None and any(
+            not isinstance(report.metadata, dict)
+            or type(report.metadata.get("verifier_version")) is not int
+            or report.metadata["verifier_version"] != expected_verifier_version
+            for report in (incumbent, candidate)
+        ):
+            return PromotionDecision(
+                accepted=False,
+                reasons=("evaluation_verifier_version_mismatch",),
                 primary_gain=0.0,
                 worst_slice_regression=0.0,
             )
