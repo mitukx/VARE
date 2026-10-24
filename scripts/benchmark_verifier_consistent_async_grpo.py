@@ -470,6 +470,10 @@ async def run(args) -> None:
             "launch the measured runner with python -S to disable site startup hooks")
     require(not args.output.exists(), "output directory already exists")
     args.output.mkdir(parents=True)
+    # The outer exception handler may write failure.json only after this
+    # invocation has successfully claimed the output path. In particular, a
+    # rejected reuse of a retained run must not mutate its evidence.
+    args.output_created = True
     protocol = json.loads(PROTOCOL_PATH.read_text())
     require(sha(Path(__file__)) == protocol["runner_sha256"], "runner hash differs from frozen protocol")
     require(sha(ROOT / "scripts/audit_verifier_consistent_async_grpo.py")
@@ -854,10 +858,11 @@ if __name__ == "__main__":
     parser.add_argument("--rvl-source", type=Path, required=True)
     parser.add_argument("--seed", type=int, required=True)
     cli = parser.parse_args()
+    cli.output_created = False
     try:
         asyncio.run(asyncio.wait_for(run(cli), timeout=1200))
     except BaseException as error:
-        if cli.output.exists():
+        if cli.output_created and cli.output.exists():
             write(cli.output / "failure.json", {"type": type(error).__name__,
                 "message": str(error), "time": time.time()})
         raise
