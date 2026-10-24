@@ -23,7 +23,7 @@ import time
 from statistics import fmean
 
 ROOT = Path(__file__).resolve().parents[1]
-PROTOCOL_PATH = ROOT / "benchmarks/verifier_consistent_async_grpo_v4/protocol.json"
+PROTOCOL_PATH = ROOT / "benchmarks/verifier_consistent_async_grpo_v5/protocol.json"
 PROMPT = "Choose one label for a story: a blue bird landed on the"
 GROUP_SIZE = 8
 
@@ -82,6 +82,7 @@ def verify_import_origins(rvl_source: Path) -> None:
         "rvl_systems": rvl_source / "src/rvl_systems/__init__.py",
         "rvl_systems.hf_backend": rvl_source / "src/rvl_systems/hf_backend.py",
         "rvl_systems.hf_trainer": rvl_source / "src/rvl_systems/hf_trainer.py",
+        "rvl_systems.grpo": rvl_source / "src/rvl_systems/grpo.py",
         "rvl_systems.types": rvl_source / "src/rvl_systems/types.py",
     }
     for name, path in expected.items():
@@ -229,6 +230,25 @@ def make_experiences(group: dict, group_id: str, *, verifier_shas: dict,
     return result
 
 
+def install_naive_rvl_reward_path(hooks) -> None:
+    """Match RVL's default prompt grouping while intentionally ignoring verifier lineage."""
+    from rvl_systems.grpo import compute_group_advantages
+
+    def prompt_only_advantages(experiences, verified, *, eps, clip):
+        require(len(experiences) == len(verified),
+                "naive reward path changed sample cardinality")
+        prompt_ids = {sample.generation.prompt_id for sample in verified}
+        require(len(prompt_ids) == 1,
+                "naive fixture must be one RVL prompt-relative group")
+        return [record.advantage for record in compute_group_advantages(
+            list(verified), eps=eps, clip=clip)]
+
+    # This is the deliberate negative control: vanilla RVL normalizes reward
+    # by prompt ID and does not bind that reward to a verifier version. VARE's
+    # normal provenance-aware group guard remains unchanged in the other arms.
+    hooks._group_relative_advantages = prompt_only_advantages
+
+
 def max_tensor_error(actual, expected) -> float:
     import torch
     errors = []
@@ -287,6 +307,8 @@ async def build_runtime(args, out: Path, seed: int, *, naive: bool,
                                        max_verifier_lag=1 if naive else 0),
         generation_factory=Generation, verified_generation_factory=VerifiedGeneration,
     )
+    if naive:
+        install_naive_rvl_reward_path(hooks)
     checkpoint_paths: dict[str, Path] = {}
     checkpoint_io: list[dict] = []
     def save(policy_id: str):
@@ -614,6 +636,7 @@ async def run(args) -> None:
             result["arms"][arm] = {
                 "rollouts": GROUP_SIZE * 2, "verifier_calls": GROUP_SIZE * 2,
                 "training_group": "stale", "training_versions": groups["stale"]["versions"],
+                "training_path": protocol["naive_control"]["training_path"],
                 "stale_reward_disagreements": reward_disagreements(groups["stale"]),
                 "optimizer_calls": runtime["optimizer_calls"]["count"],
                 "naive_promotion": asdict(naive_decision),
@@ -625,7 +648,7 @@ async def run(args) -> None:
                 "unused_group": ["fresh"],
             }
         else:
-            arm_run_id = f"varegrpo-v2-{arm}-{args.seed}"
+            arm_run_id = f"varegrpo-v5-{arm}-{args.seed}"
             require(len(arm_run_id) >= 16, "operator run ID is shorter than VARE trust-root minimum")
             store = TrajectoryStore.create(arm_out / "trajectories.sqlite",
                 run_id=arm_run_id, max_inflight=32)

@@ -21,7 +21,7 @@ import sys
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
-PROTOCOL = ROOT / "benchmarks/verifier_consistent_async_grpo_v4/protocol.json"
+PROTOCOL = ROOT / "benchmarks/verifier_consistent_async_grpo_v5/protocol.json"
 CUTPOINTS = (
     "rollout_complete_before_admission",
     "admission_before_optimizer",
@@ -97,6 +97,7 @@ def verify_import_origins(rvl_source: Path) -> None:
         "rvl_systems": rvl_source / "src/rvl_systems/__init__.py",
         "rvl_systems.hf_backend": rvl_source / "src/rvl_systems/hf_backend.py",
         "rvl_systems.hf_trainer": rvl_source / "src/rvl_systems/hf_trainer.py",
+        "rvl_systems.grpo": rvl_source / "src/rvl_systems/grpo.py",
     }
     for name, path in expected.items():
         module = import_module(name)

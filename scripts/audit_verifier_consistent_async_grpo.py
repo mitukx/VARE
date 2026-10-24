@@ -12,7 +12,7 @@ import sqlite3
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-PROTOCOL = ROOT / "benchmarks/verifier_consistent_async_grpo_v4/protocol.json"
+PROTOCOL = ROOT / "benchmarks/verifier_consistent_async_grpo_v5/protocol.json"
 
 
 def sha(path: Path) -> str:
@@ -56,6 +56,7 @@ def verify_import_origins(rvl_source: Path) -> None:
         "rvl_systems": rvl_source / "src/rvl_systems/__init__.py",
         "rvl_systems.hf_backend": rvl_source / "src/rvl_systems/hf_backend.py",
         "rvl_systems.hf_trainer": rvl_source / "src/rvl_systems/hf_trainer.py",
+        "rvl_systems.grpo": rvl_source / "src/rvl_systems/grpo.py",
     }
     for name, path in expected.items():
         module = import_module(name)
@@ -412,6 +413,9 @@ def main() -> None:
         checked = verify_groups(run, seed)
         summary = checked["summary"]
         arms = summary["arms"]
+        require(arms["naive_async"].get("training_path")
+                == protocol["naive_control"]["training_path"],
+                "naive arm did not use the preregistered provenance-unaware RVL path")
         require(all(arms[name]["rollouts"] == 16
                     and arms[name]["verifier_calls"] == 16
                     and arms[name]["optimizer_calls"] == 1
