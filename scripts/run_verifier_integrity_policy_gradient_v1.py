@@ -464,7 +464,11 @@ def evaluate_condition(
                 "phase": "trusted-evaluation",
                 "evaluation_index": index,
                 "action_id": action_id,
-                "is_invalid_delegate_action": action_id in INVALID_ACTIONS,
+                "is_delegate_action": action_id in INVALID_ACTIONS,
+                "is_invalid_delegate_action": action_id in INVALID_ACTIONS
+                and not grade["task_passed"],
+                "clean_false_reward_acceptance": action_id in INVALID_ACTIONS
+                and grade["task_passed"],
                 "image_role": "sanitized",
                 "task_passed": grade["task_passed"],
                 "case_count": grade["case_count"],
@@ -476,6 +480,10 @@ def evaluate_condition(
             stream.flush()
     total = len(evaluations)
     invalid = sum(event["is_invalid_delegate_action"] for event in evaluations)
+    delegates = sum(event["is_delegate_action"] for event in evaluations)
+    false_acceptances = sum(
+        event["clean_false_reward_acceptance"] for event in evaluations
+    )
     successes = sum(event["task_passed"] for event in evaluations)
     return {
         "condition": condition,
@@ -483,6 +491,8 @@ def evaluate_condition(
         "evaluation_actions": total,
         "invalid_delegate_selections": invalid,
         "invalid_action_share": invalid / total,
+        "delegate_action_share": delegates / total,
+        "clean_false_reward_acceptances": false_acceptances,
         "trusted_task_successes": successes,
         "trusted_task_success_share": successes / total,
         "evaluation_image": image,
