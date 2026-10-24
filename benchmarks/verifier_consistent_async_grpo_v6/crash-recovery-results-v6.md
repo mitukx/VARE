@@ -12,7 +12,7 @@ This is a **systems-mechanism result on a synthetic TinyStories fixture**. It is
 - Model: `roneneldan/TinyStories-1M`, revision `77f1b168e219585646439073245fe87e56b3023e`; CPU fp32, one thread, at most three generated tokens.
 - Each seed used three arms with 16 rollouts and 16 verifier calls per arm, eight-member GRPO batches, one actual AdamW update per trained arm, and four synthetic held-out prompts. The bounded async arm was serialized CPU execution; the queue overlapped only producer/verifier coroutines.
 - Seeds 82106 and 82107 were both eligible under the frozen pilot continuation rule. Earlier aborted seeds and their outcome data remain excluded.
-- Independent audit: [`pilot-audit-v2.json`](pilot-audit-v2.json). The corrected auditor verifies the frozen source snapshots and independently replays every model update. The five-cutpoint machine-readable summary is [`sigkill-summary-v2.json`](sigkill-summary-v2.json); [`pilot-artifact-index-v2.json`](pilot-artifact-index-v2.json) links these to the full raw runs and their SHA-256 inventories.
+- Earlier independent audit and crash summary: [`pilot-audit-v2.json`](pilot-audit-v2.json) and [`sigkill-summary-v2.json`](sigkill-summary-v2.json). After independent code review, the current auditor was hardened and the retained two-seed/five-cutpoint bundle was replayed again as `results/verifier_consistent_async_grpo_v6/audit-with-crash-replay-order-v6.json` (SHA-256 `fb5914e0f68cbcc815306eacbac709f0b0d40c92744bb73b05eed069a79768b8`). The final audit independently replays every model update and reports all five process-recovery cases `PASS`, with exact model, Adam, CPU RNG, and module-mode matches. [`pilot-artifact-index-v2.json`](pilot-artifact-index-v2.json) indexes the original raw runs and manifests; the supplemental [`pilot-artifact-index-v3.json`](pilot-artifact-index-v3.json) indexes this audit and the review corrections.
 
 ## Two-seed verifier-drift results
 
@@ -43,41 +43,63 @@ Total harness time was 32.52 s. The two interrupted pre-commit attempts were rec
 
 The first crash attempt is retained and explicitly excluded: member-order training yielded a numerically close (`3.73e-9` maximum parameter difference) but non-identical model. The audit traced this to the crash harness omitting the frozen VARE replay-priority ordering and hook advantage path. The harness now applies `PrioritizedReplay.sample_current`, VARE sample conversion, and VARE group-relative advantages before the update. The frozen protocol, budgets, fixtures, and exact equality gate were not changed; the corrected run matches exactly. A later test-only correction makes the evaluator fixture skip cleanly when optional PyTorch is absent while keeping the replay-order regression runnable.
 
+## Independent review corrections
+
+Independent review found that the recovery auditor accepted duplicate cutpoint records, both tensor-difference reducers could mask a later NaN, the structured crash artifact inventory was not parsed by the auditor, and the current-source reproduction instructions did not pass the frozen runner hash gate. These paths are now covered by focused regressions. The auditor requires the exact five-cutpoint set, rejects non-finite tensor differences, validates both manifest formats with path and size checks, and permits only missing disposable SQLite shared-memory or zero-byte WAL sidecars. The corrected auditor and matched-runner sources are bound by [`auditor-correction-v3.json`](auditor-correction-v3.json) and [`matched-runner-correction-v1.json`](matched-runner-correction-v1.json); the protocol and measured run outputs are unchanged.
+
+Two distinct failed audit observations during this correction are preserved in `results/verifier_consistent_async_grpo_v6/audit-integrity-review-postmortem-v2.json`. The first exposed the structured-manifest parser gap; the second exposed SQLite's disposable sidecars in the exact inventory check. The final v6 audit passes after handling those cases explicitly and rejecting noncanonical paths, symlinks, and unmanifested temporary files.
+
 ## Reproduction
 
-Use the pinned local TinyStories and RVL checkouts named in the protocol. Run with `python -S` so site startup hooks cannot change source imports.
+Use the pinned local TinyStories and RVL checkouts named in the protocol. Run with `python -S` so site startup hooks cannot change source imports. The original matched-runner source and inventory are frozen at commit `69e9ab9b22da16413dbeababa0552e36aa06612f`; the crash-runner correction v3 and optional-PyTorch regression are present at `79b3d2fb324133d2a6fb738d431f97fcf7cde269`. The commands below are reproduction instructions, not fresh eligible evidence. Use new output paths and preserve all existing runs.
 
 ```sh
-python -S scripts/benchmark_verifier_consistent_async_grpo.py \
-  --seed 82106 \
-  --output results/verifier_consistent_async_grpo_v6/seed-82106 \
-  --model-dir ../tinystories-1m-pinned \
-  --rvl-source ../rvl-pinned
+git fetch origin codex/verifier-consistent-async-grpo-v1
+git worktree add --detach ../vare-v6-frozen-execution \
+  69e9ab9b22da16413dbeababa0552e36aa06612f
+git worktree add --detach ../vare-v6-crash-harness \
+  79b3d2fb324133d2a6fb738d431f97fcf7cde269
 
-python -S scripts/benchmark_verifier_consistent_async_grpo.py \
+(cd ../vare-v6-frozen-execution && python -S scripts/benchmark_verifier_consistent_async_grpo.py \
+  --seed 82106 \
+  --output results/v6-reproduction/seed-82106 \
+  --model-dir ../tinystories-1m-pinned \
+  --rvl-source ../rvl-pinned)
+
+(cd ../vare-v6-frozen-execution && python -S scripts/audit_verifier_consistent_async_grpo.py \
+  --run results/v6-reproduction/seed-82106 \
+  --model-dir ../tinystories-1m-pinned \
+  --rvl-source ../rvl-pinned \
+  --allow-partial \
+  --output results/v6-reproduction/audit-82106.json)
+
+# Only if audit-82106.json satisfies the frozen expand_after_pilot rule:
+(cd ../vare-v6-frozen-execution && python -S scripts/benchmark_verifier_consistent_async_grpo.py \
   --seed 82107 \
-  --output results/verifier_consistent_async_grpo_v6/seed-82107 \
+  --output results/v6-reproduction/seed-82107 \
   --model-dir ../tinystories-1m-pinned \
-  --rvl-source ../rvl-pinned
+  --rvl-source ../rvl-pinned)
 
-python -S scripts/benchmark_verifier_consistent_grpo_sigkill.py \
-  --source-run results/verifier_consistent_async_grpo_v6/seed-82106 \
+(cd ../vare-v6-crash-harness && python -S scripts/benchmark_verifier_consistent_grpo_sigkill.py \
+  --source-run ../vare-v6-frozen-execution/results/v6-reproduction/seed-82106 \
   --seed 82106 \
-  --output results/verifier_consistent_async_grpo_v6/crash-82106-replay-order-v2 \
+  --output results/v6-reproduction/crash-82106 \
   --model-dir ../tinystories-1m-pinned \
   --rvl-source ../rvl-pinned \
   --crash-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/crash-runner-correction-v3.json \
-  --auditor-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v2.json
+  --auditor-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v2.json)
 
+# Run from the current review-corrected checkout:
 python -S scripts/audit_verifier_consistent_async_grpo.py \
-  --run results/verifier_consistent_async_grpo_v6/seed-82106 \
-  --run results/verifier_consistent_async_grpo_v6/seed-82107 \
-  --crash-run results/verifier_consistent_async_grpo_v6/crash-82106-replay-order-v2 \
+  --run ../vare-v6-frozen-execution/results/v6-reproduction/seed-82106 \
+  --run ../vare-v6-frozen-execution/results/v6-reproduction/seed-82107 \
+  --crash-run ../vare-v6-crash-harness/results/v6-reproduction/crash-82106 \
   --model-dir ../tinystories-1m-pinned \
   --rvl-source ../rvl-pinned \
-  --auditor-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v2.json \
+  --auditor-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v3.json \
+  --runner-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/matched-runner-correction-v1.json \
   --crash-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/crash-runner-correction-v3.json \
-  --output results/verifier_consistent_async_grpo_v6/audit-with-crash-replay-order-v2.json
+  --output results/verifier_consistent_async_grpo_v6/audit-reproduction-v1.json
 ```
 
 Do not overwrite an existing run directory. To verify retained outputs, check each run's `SHA256.json` against its files. The failed first crash attempt, all aborted seeds, and their manifests remain preserved and excluded.

@@ -255,7 +255,10 @@ def max_tensor_error(actual, expected) -> float:
     def walk(a, b):
         if isinstance(a, torch.Tensor):
             require(isinstance(b, torch.Tensor) and a.shape == b.shape, "tensor reference shape mismatch")
-            errors.append(float((a.detach().cpu() - b.detach().cpu()).abs().max()) if a.numel() else 0.0)
+            difference = (a.detach().cpu() - b.detach().cpu()).abs()
+            require(bool(torch.isfinite(difference).all().item()),
+                    "non-finite tensor difference in independent replay")
+            errors.append(float(difference.max().item()) if a.numel() else 0.0)
         elif isinstance(a, dict):
             require(isinstance(b, dict) and a.keys() == b.keys(), "state reference keys mismatch")
             for key in a:

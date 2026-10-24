@@ -82,8 +82,10 @@ def max_error(actual, expected) -> float:
         if isinstance(a, torch.Tensor):
             require(isinstance(b, torch.Tensor) and a.shape == b.shape,
                     "independent replay tensor shape mismatch")
-            errors.append(float((a.detach().cpu() - b.detach().cpu()).abs().max())
-                          if a.numel() else 0.0)
+            difference = (a.detach().cpu() - b.detach().cpu()).abs()
+            require(bool(torch.isfinite(difference).all().item()),
+                    "non-finite tensor difference in independent replay")
+            errors.append(float(difference.max().item()) if a.numel() else 0.0)
         elif isinstance(a, dict):
             require(isinstance(b, dict) and a.keys() == b.keys(),
                     "independent replay state keys mismatch")
@@ -102,10 +104,94 @@ def max_error(actual, expected) -> float:
 
 def verify_manifest(run: Path) -> None:
     manifest = json.loads((run / "SHA256.json").read_text())
-    for relative, digest in manifest.items():
-        path = run / relative
-        require(path.is_file() and sha(path) == digest,
+    if isinstance(manifest, dict) and manifest.get("schema") == "vare.artifact-inventory.v1":
+        require(set(manifest) == {"schema", "files"}
+                and isinstance(manifest["files"], list),
+                "malformed structured artifact inventory")
+        entries = {}
+        for row in manifest["files"]:
+            require(isinstance(row, dict)
+                    and set(row) == {"path", "sha256", "bytes"}
+                    and isinstance(row["path"], str)
+                    and isinstance(row["sha256"], str)
+                    and isinstance(row["bytes"], int)
+                    and not isinstance(row["bytes"], bool)
+                    and row["bytes"] >= 0,
+                    "malformed artifact inventory row")
+            require(row["path"] not in entries,
+                    f"duplicate artifact inventory path: {row['path']}")
+            entries[row["path"]] = (row["sha256"], row["bytes"])
+    else:
+        require(isinstance(manifest, dict)
+                and all(isinstance(path, str) and isinstance(digest, str)
+                        for path, digest in manifest.items()),
+                "malformed hash-map artifact manifest")
+        entries = {path: (digest, None) for path, digest in manifest.items()}
+
+    listed_paths = set(entries)
+    for relative, (digest, expected_bytes) in entries.items():
+        rel_path = Path(relative)
+        require(relative and not rel_path.is_absolute()
+                and ".." not in rel_path.parts and "\\" not in relative
+                and rel_path.as_posix() == relative,
+                f"unsafe artifact inventory path: {relative}")
+        path = run / rel_path
+        if not path.exists():
+            disposable_shm = relative.endswith("-shm")
+            empty_wal = relative.endswith("-wal") and expected_bytes == 0
+            require(disposable_shm or empty_wal,
+                    f"missing or unsafe artifact: {relative}")
+            continue
+        resolved = path.resolve()
+        require(run.resolve() in resolved.parents and not path.is_symlink()
+                and path.is_file(), f"missing or unsafe artifact: {relative}")
+        require(re.fullmatch(r"[0-9a-f]{64}", digest) is not None
+                and sha(path) == digest,
                 f"artifact digest mismatch: {relative}")
+        if expected_bytes is not None:
+            require(path.stat().st_size == expected_bytes,
+                    f"artifact size mismatch: {relative}")
+
+    disk_entries = list(run.rglob("*"))
+    require(not any(path.is_symlink() for path in disk_entries),
+            "artifact inventory contains a symlink")
+    disk_paths = {
+        path.relative_to(run).as_posix()
+        for path in disk_entries
+        if path.is_file() and path.name != "SHA256.json"
+    }
+    unlisted_paths = disk_paths - listed_paths
+    require(all(
+        Path(relative).name.endswith("-shm")
+        or (Path(relative).name.endswith("-wal")
+            and (run / relative).stat().st_size == 0)
+        for relative in unlisted_paths),
+            "artifact inventory leaves non-transient retained files unmanifested")
+
+
+CRASH_CUTPOINT_ATTEMPTS = {
+    "rollout_complete_before_admission": 1,
+    "admission_before_optimizer": 1,
+    "optimizer_computed_before_commit": 2,
+    "commit_before_acknowledgment": 1,
+    "evaluation_before_promotion": 2,
+}
+
+
+def validate_cutpoint_inventory(cutpoints: list[dict], process_kills: int) -> dict:
+    """Require one recovery record for every prespecified process-kill phase."""
+    names = [row.get("cutpoint") if isinstance(row, dict) else None
+             for row in cutpoints]
+    required_names = set(CRASH_CUTPOINT_ATTEMPTS)
+    require(len(names) == len(required_names) and process_kills == len(required_names),
+            "all five declared learner processes were not killed")
+    require(all(isinstance(name, str) for name in names),
+            "recovery summary contains a malformed cutpoint name")
+    require(len(set(names)) == len(names),
+            "recovery summary repeats a learner-process cutpoint")
+    require(set(names) == required_names,
+            "recovery summary omits a required learner-process cutpoint")
+    return CRASH_CUTPOINT_ATTEMPTS
 
 
 def verify_groups(run: Path, seed: int) -> dict:
@@ -282,19 +368,12 @@ def audit_sigkill_recovery(source_run: Path, crash_run: Path) -> dict:
     require(summary["seed"] == seed, "crash run seed differs from matched source run")
     require(Path(summary["source_run"]).resolve() == source_run.resolve(),
             "crash run source identity mismatch")
-    require(len(summary["cutpoints"]) == 5 and summary["process_kills"] == 5,
-            "all five declared learner processes were not killed")
+    expected_attempts = validate_cutpoint_inventory(
+        summary["cutpoints"], summary["process_kills"])
     source_rollouts = source_run / "sync/rollouts.json"
     source_state = torch.load(source_run / "sync/checkpoints/policy-1.pt",
                               weights_only=True)
     cutpoints = []
-    expected_attempts = {
-        "rollout_complete_before_admission": 1,
-        "admission_before_optimizer": 1,
-        "optimizer_computed_before_commit": 2,
-        "commit_before_acknowledgment": 1,
-        "evaluation_before_promotion": 2,
-    }
     for row in summary["cutpoints"]:
         name = row["cutpoint"]
         case = crash_run / name
@@ -393,6 +472,8 @@ def main() -> None:
                         help="explicit hash-bound correction for the frozen v6 auditor defect")
     parser.add_argument("--crash-correction-manifest", type=Path,
                         help="explicit hash-bound correction for the frozen v6 crash runner")
+    parser.add_argument("--runner-correction-manifest", type=Path,
+                        help="explicit hash-bound correction for the frozen v6 matched runner")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     protocol = json.loads(PROTOCOL.read_text())
@@ -402,7 +483,8 @@ def main() -> None:
         require(args.auditor_correction_manifest is not None,
                 "auditor differs from protocol; provide the versioned correction manifest")
         correction = json.loads(args.auditor_correction_manifest.read_text())
-        require(correction.get("experiment_protocol_sha256") == sha(PROTOCOL)
+        require(correction.get("schema") == "vare.v6-auditor-correction.v3"
+                and correction.get("experiment_protocol_sha256") == sha(PROTOCOL)
                 and correction.get("original_auditor_sha256") == protocol["auditor_sha256"]
                 and correction.get("corrected_auditor_sha256") == current_auditor_sha,
                 "auditor correction manifest does not bind this code to frozen protocol")
@@ -418,8 +500,36 @@ def main() -> None:
     else:
         require(args.auditor_correction_manifest is None,
                 "correction manifest supplied while the frozen auditor is active")
-    require(sha(ROOT / "scripts/benchmark_verifier_consistent_async_grpo.py")
-            == protocol["runner_sha256"], "runner source differs from frozen protocol")
+    current_runner_sha = sha(ROOT / "scripts/benchmark_verifier_consistent_async_grpo.py")
+    runner_correction = None
+    if current_runner_sha != protocol["runner_sha256"]:
+        require(args.runner_correction_manifest is not None,
+                "runner differs from protocol; provide the versioned correction manifest")
+        runner_correction = json.loads(args.runner_correction_manifest.read_text())
+        require(runner_correction.get("schema") == "vare.v6-matched-runner-correction.v1"
+                and runner_correction.get("experiment_protocol_sha256") == sha(PROTOCOL)
+                and runner_correction.get("original_runner_sha256") == protocol["runner_sha256"]
+                and runner_correction.get("corrected_runner_sha256") == current_runner_sha,
+                "runner correction manifest does not bind this code to frozen protocol")
+        require(correction is not None
+                and runner_correction.get("frozen_source_commit")
+                == correction.get("frozen_source_commit"),
+                "matched-runner and auditor corrections refer to different source commits")
+        for run in args.run:
+            frozen_runner = (run / "source" /
+                             ("benchmark_verifier_consistent_async_grpo.py."
+                              + protocol["runner_sha256"][:12]))
+            require(frozen_runner.is_file()
+                    and sha(frozen_runner) == protocol["runner_sha256"],
+                    "run does not retain the original frozen matched runner source")
+    else:
+        require(args.runner_correction_manifest is None,
+                "runner correction manifest supplied while the frozen runner is active")
+    if correction is not None and "runner_correction_manifest_sha256" in correction:
+        require(args.runner_correction_manifest is not None
+                and sha(args.runner_correction_manifest)
+                == correction["runner_correction_manifest_sha256"],
+                "auditor correction manifest requires a different runner correction manifest")
     crash_correction = None
     current_crash_sha = sha(ROOT / "scripts/benchmark_verifier_consistent_grpo_sigkill.py")
     if current_crash_sha != protocol["crash_runner_sha256"]:
@@ -447,6 +557,9 @@ def main() -> None:
         require(args.crash_run is not None,
                 "crash correction manifest requires --crash-run")
     for relative, digest in protocol["source_sha256"].items():
+        if (runner_correction is not None
+                and relative == "scripts/benchmark_verifier_consistent_async_grpo.py"):
+            continue
         if (correction is not None
                 and relative == "scripts/audit_verifier_consistent_async_grpo.py"):
             continue
@@ -559,6 +672,9 @@ def main() -> None:
         "auditor_correction_manifest_sha256": (
             sha(args.auditor_correction_manifest)
             if args.auditor_correction_manifest is not None else None),
+        "runner_correction_manifest_sha256": (
+            sha(args.runner_correction_manifest)
+            if args.runner_correction_manifest is not None else None),
         "crash_runner_correction_manifest_sha256": (
             sha(args.crash_correction_manifest)
             if args.crash_correction_manifest is not None else None),
