@@ -7,6 +7,7 @@ import pytest
 
 from scripts.audit_verifier_consistent_async_grpo import (
     max_error,
+    require_crash_correction_manifest,
     validate_cutpoint_inventory,
     verify_manifest,
 )
@@ -43,6 +44,26 @@ def test_cutpoint_inventory_rejects_malformed_names():
 
     with pytest.raises(RuntimeError, match="malformed cutpoint"):
         validate_cutpoint_inventory(malformed, process_kills=5)
+
+
+def test_corrected_crash_runner_manifest_is_valid_for_seed_only_pilot(tmp_path):
+    manifest = tmp_path / "crash-correction.json"
+    manifest.write_text("{}")
+
+    require_crash_correction_manifest("corrected", "frozen", manifest)
+
+
+def test_corrected_crash_runner_requires_manifest_even_without_crash_bundle():
+    with pytest.raises(RuntimeError, match="provide its correction manifest"):
+        require_crash_correction_manifest("corrected", "frozen", None)
+
+
+def test_frozen_crash_runner_rejects_unneeded_correction_manifest(tmp_path):
+    manifest = tmp_path / "crash-correction.json"
+    manifest.write_text("{}")
+
+    with pytest.raises(RuntimeError, match="frozen runner is active"):
+        require_crash_correction_manifest("frozen", "frozen", manifest)
 
 
 def test_hash_map_manifest_verifies_and_rejects_unlisted_files(tmp_path):

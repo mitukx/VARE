@@ -357,6 +357,20 @@ def exact_state_equal(left, right) -> bool:
     return left == right
 
 
+def require_crash_correction_manifest(
+    current_crash_sha: str,
+    frozen_crash_sha: str,
+    correction_manifest: Path | None,
+) -> None:
+    """Bind a corrected crash-runner source even for a seed-only pilot audit."""
+    if current_crash_sha != frozen_crash_sha:
+        require(correction_manifest is not None,
+                "crash runner differs from protocol; provide its correction manifest")
+    else:
+        require(correction_manifest is None,
+                "crash correction manifest supplied while frozen runner is active")
+
+
 def audit_sigkill_recovery(source_run: Path, crash_run: Path) -> dict:
     """Independently inspect all five killed processes and reconstructed state."""
     import torch
@@ -483,7 +497,7 @@ def main() -> None:
         require(args.auditor_correction_manifest is not None,
                 "auditor differs from protocol; provide the versioned correction manifest")
         correction = json.loads(args.auditor_correction_manifest.read_text())
-        require(correction.get("schema") == "vare.v6-auditor-correction.v3"
+        require(correction.get("schema") == "vare.v6-auditor-correction.v4"
                 and correction.get("experiment_protocol_sha256") == sha(PROTOCOL)
                 and correction.get("original_auditor_sha256") == protocol["auditor_sha256"]
                 and correction.get("corrected_auditor_sha256") == current_auditor_sha,
@@ -532,10 +546,10 @@ def main() -> None:
                 "auditor correction manifest requires a different runner correction manifest")
     crash_correction = None
     current_crash_sha = sha(ROOT / "scripts/benchmark_verifier_consistent_grpo_sigkill.py")
+    require_crash_correction_manifest(
+        current_crash_sha, protocol["crash_runner_sha256"],
+        args.crash_correction_manifest)
     if current_crash_sha != protocol["crash_runner_sha256"]:
-        require(args.crash_run is not None
-                and args.crash_correction_manifest is not None,
-                "crash runner differs from protocol; provide its correction manifest with --crash-run")
         crash_correction = json.loads(args.crash_correction_manifest.read_text())
         require(crash_correction.get("experiment_protocol_sha256") == sha(PROTOCOL)
                 and crash_correction.get("original_crash_runner_sha256")
@@ -551,11 +565,13 @@ def main() -> None:
                 == protocol["crash_runner_sha256"],
                 "git does not contain the frozen original crash runner")
     else:
-        require(args.crash_correction_manifest is None,
-                "crash correction manifest supplied while frozen runner is active")
-    if args.crash_correction_manifest is not None:
-        require(args.crash_run is not None,
-                "crash correction manifest requires --crash-run")
+        crash_correction = None
+    if (correction is not None
+            and "crash_runner_correction_manifest_sha256" in correction):
+        require(args.crash_correction_manifest is not None
+                and sha(args.crash_correction_manifest)
+                == correction["crash_runner_correction_manifest_sha256"],
+                "auditor correction manifest requires a different crash-runner correction manifest")
     for relative, digest in protocol["source_sha256"].items():
         if (runner_correction is not None
                 and relative == "scripts/benchmark_verifier_consistent_async_grpo.py"):
