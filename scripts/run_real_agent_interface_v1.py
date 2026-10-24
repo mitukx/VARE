@@ -85,6 +85,18 @@ def verify_pins(protocol: dict, source_repo: Path, model_dir: Path,
         raise RuntimeError("execution order differs from the preregistered order")
     if len(planned) != 4 or len({(row["task_id"], row["edit_format"]) for row in planned}) != 4:
         raise RuntimeError("the frozen paired task/interface design is incomplete")
+    required_budget = {
+        "seed", "max_turns", "max_no_tool_retries", "max_new_tokens_per_turn",
+        "max_total_new_tokens", "max_context_tokens", "wall_seconds", "temperature",
+        "top_p", "top_k", "max_public_test_runs", "public_test_timeout_seconds",
+        "public_test_memory_mb",
+    }
+    if not required_budget.issubset(protocol["inference_budget"]):
+        raise RuntimeError("frozen inference budget is missing runner inputs")
+    if any(row["task_id"] not in protocol["tasks"]
+           or row["edit_format"] not in {"unified_diff", "structured_replace"}
+           for row in planned):
+        raise RuntimeError("frozen attempt order references an unknown task or edit format")
     expected_e0 = (ROOT / protocol["runtime"]["e0_result"]).resolve()
     if (e0_dir / "observations.json").resolve() != expected_e0:
         raise RuntimeError("E0 evidence path differs from the frozen protocol")
@@ -274,7 +286,7 @@ def main() -> int:
             "--max-public-test-runs", str(protocol["inference_budget"]["max_public_test_runs"]),
             "--output", str(attempt_dir / "agent.json"),
             "--instruction", protocol["instruction"],
-            "--seed", str(protocol["seed"]),
+            "--seed", str(protocol["inference_budget"]["seed"]),
             "--max-turns", str(protocol["inference_budget"]["max_turns"]),
             "--max-no-tool-retries", str(protocol["inference_budget"]["max_no_tool_retries"]),
             "--max-new-tokens-per-turn", str(protocol["inference_budget"]["max_new_tokens_per_turn"]),
