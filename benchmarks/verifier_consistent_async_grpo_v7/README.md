@@ -42,6 +42,35 @@ The sign comparison is descriptive and cannot establish population-level
 superiority. If held-out scores saturate, report consistency and recovery only.
 No synthetic score is a coding-capability result.
 
+## Run-3 pilot result: NO-GO
+
+The v7.3 run stopped at its frozen pilot gate on
+`false_accept/sync/g-02-false_accept`, whose eight verifier-v1 rewards were all
+zero. The first two groups had nonconstant reward vectors and produced two real
+optimizer commits; the third group was not trained. Across the successive
+policy versions, target accepts were 4/8, 1/8, and 0/8. This is a descriptive
+single-run observation, not evidence that the updates caused policy regression.
+
+The partial run generated 24 completions and made 24 verifier calls. Its three
+groups were checked against the independently implemented `ground_word`
+oracle; checkpoint Adam steps were 0, 1, and 2, and 16 trajectories were
+consumed. Peak observed RSS was 905,412,608 bytes. The separate partial-stop
+auditor passed and returned `NO_GO_FOR_ASYNC_COMPARISON`. No asynchronous arm,
+held-out evaluation, or crash-recovery case started, so this run provides no
+VARE comparison or coding-capability result. Preserve the run and do not
+resample it or relax the stop condition.
+
+The report is retained at
+[`pilot-stop-audit-v1.json`](pilot-stop-audit-v1.json); its script, protocol,
+runner, and raw-run inventory are bound in
+[`pilot-stop-audit-manifest-v1.json`](pilot-stop-audit-manifest-v1.json). The
+raw run remains locally retained at
+`results/verifier_consistent_async_grpo_v7/run-3/`; the root inventory has 11
+files and SHA-256
+`7952c4062e46b302e76df20999391e496106bca33e3d6319dcd475dbc0af12aa`.
+Its last `progress.json` snapshot still says `RUNNING`: the exception path
+retained that snapshot and recorded the stop reason separately in `failure.json`.
+
 ## Reproduction
 
 Use Python 3.12.12 and the package versions in `protocol.json`, the locally
@@ -58,19 +87,25 @@ python3.12 -S scripts/benchmark_verifier_drift_scenarios.py \
 python3.12 -S scripts/audit_verifier_drift_scenarios.py \
   results/verifier_consistent_async_grpo_v7/run-3 \
   --output results/verifier_consistent_async_grpo_v7/audit-run-3.json
+
+python3.12 scripts/audit_verifier_drift_pilot_stop.py \
+  results/verifier_consistent_async_grpo_v7/run-3 \
+  --protocol benchmarks/verifier_consistent_async_grpo_v7/protocol.json \
+  --runner scripts/benchmark_verifier_drift_scenarios.py \
+  --output results/verifier_consistent_async_grpo_v7/audit-run-3-partial-reproduction.json
 ```
 
-The pilot gate is fixed in advance. If it fails, retain the partial output and
-stop. Do not resample or alter prompts, semantics, seeds, or budgets.
+The pilot gate was fixed in advance and failed. The first two commands above
+describe the preregistered full-run path; neither is permission to resume this
+consumed run. The third command re-audits the retained partial output only. Do
+not resample or alter prompts, semantics, seeds, or budgets.
 
-## Sustained crash continuation
+## Sustained crash continuation: not run
 
-Only after the full v7 run and its independent audit pass, prepare a fixture
-from the VARE false-accept arm after two committed updates. The retained third
-update group and its no-crash checkpoint are the independent continuation
-reference. The five actual SIGKILL cutpoints use the existing corrected v6
-crash harness; no inference seed or model sampling is repeated. The harness
-seed is fixed only for its replay/run identity.
+The continuation was gated on a complete v7 run and passing independent audit.
+Those conditions were not met, so no crash fixture or SIGKILL case was created.
+The following commands remain only as the frozen conditional plan; they are
+not executed by this result.
 
 ```sh
 python3.12 -S scripts/prepare_sustained_crash_fixture.py \
@@ -117,9 +152,9 @@ audits unearned passes and reference exposure through Git history and exploit
 replay. [SpecBench](https://arxiv.org/abs/2605.21384) studies visible-test and
 held-out behavior gaps, while the [Reward Hacking Benchmark](https://arxiv.org/abs/2605.02964)
 includes evaluator and metadata shortcuts. These are related benchmark and
-reward-integrity concerns; this protocol does not claim novelty until the
-frozen scenarios and the five sustained crash cases execute and pass an
-independent audit.
+reward-integrity concerns. The v7 run stopped before its multi-scenario
+asynchronous comparison and recovery extension, so it establishes neither a
+new async mechanism nor a novelty claim.
 
 Preserve failed and partial outputs. Every run records raw generations,
 verifier versions, per-member labels, queue residence, optimizer replay,
