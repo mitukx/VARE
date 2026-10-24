@@ -170,7 +170,11 @@ class DurableTests(unittest.TestCase):
         jobs = [replace(self.job, id='job-%02d' % i) for i in range(12)]
         store = Store.create(path, jobs, self.root)
         started = time.monotonic()
-        run_workers(path, 4, 2)
+        # This checks claim exclusivity, not expiry: leave room for process
+        # startup/CI descheduling while retaining token==1 and 12 attempts.
+        # Heartbeat and crash-recovery cases below test short-lease behavior.
+        lease_seconds = 10
+        run_workers(path, 4, lease_seconds)
         rows = store.jobs()
         if not all(r['token'] == 1 and r['effective'] == 'candidate_passed' for r in rows):
             # Read only: export() refreshes inputs and could change the state
@@ -184,7 +188,7 @@ class DurableTests(unittest.TestCase):
                     attempts.append(attempt)
                 events = [dict(r) for r in db.execute('SELECT * FROM events ORDER BY sequence')]
             diagnostic = {'python': platform.python_version(), 'platform': platform.platform(),
-                          'workers': 4, 'lease_seconds': 2, 'elapsed_seconds': time.monotonic() - started,
+                          'workers': 4, 'lease_seconds': lease_seconds, 'elapsed_seconds': time.monotonic() - started,
                           'jobs': rows, 'attempts': attempts, 'events': events}
             encoded = json.dumps(diagnostic, indent=2)
             destination = os.environ.get('VARE_TEST_DIAGNOSTICS_DIR')
