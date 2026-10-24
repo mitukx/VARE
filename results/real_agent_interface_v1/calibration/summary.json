@@ -1,0 +1,185 @@
+{
+  "all_calibration_expectations_met": true,
+  "cases": [
+    {
+      "calibration_expectation": "fail",
+      "candidate_public": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 22, in <module>\n    check(max_size=8, keep=2, history=20, chunk=5)\n  File \"/workspace/test_public.py\", line 20, in check\n    assert actual == expected, (actual, expected)\n           ^^^^^^^^^^^^^^^^^^\nAssertionError: ([[True, True, True, True, True, True, True, True, False, False, False, False], [False, True, True, True, True, True, True, True, True, False, False, False], [False, False, True, True, True, True, True, True, True, True, False, False], [False, False, False, True, True, True, True, True, True, True, True, False], [False, False, False, False, True, True, True, True, True, True, True, True]], [[True, True, True, True, True, True, True, True, False, False, False, False], [True, True, False, True, True, True, True, True, True, False, False, False], [True, True, False, False, True, True, True, True, True, True, False, False], [True, True, False, False, False, True, True, True, True, True, True, False], [True, True, False, False, False, False, True, True, True, True, True, True]])\n",
+        "stderr_sha256": "9e438f84e4fbed716f1ed1fc580d9b64a0a65cfa35e41eb1c015f78e8389565a",
+        "stdout": "",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "candidate_target_sha256": "c96cb169fd5e0ec4584a162dd61dc62ab08ccdca03a9850f8a491ce6809145e6",
+      "container_image": "sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+      "hidden_test_sha256": "57d052bafc358f5dcb066efe33fe8b01c97515868277e3f9886d7b3840c6be37",
+      "public_test_sha256": "12c081b5f41df17e1fd7c5c86bd52de4c5fb6d56f7aac72825766114c3f354ec",
+      "target_file": "mlx_lm/models/cache.py",
+      "task_id": "mlx-lm-1978-rotating-cache",
+      "trusted_hidden": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_hidden.py\", line 25, in <module>\n    assert_mask(*case)\n  File \"/workspace/test_hidden.py\", line 21, in assert_mask\n    assert row == expected\n           ^^^^^^^^^^^^^^^\nAssertionError\n",
+        "stderr_sha256": "f65016b2ecc1e294f7ebb3e104ecc9935cbae828e3273e1ab245220db943f6a2",
+        "stdout": "",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "variant": "baseline"
+    },
+    {
+      "calibration_expectation": "pass",
+      "candidate_public": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout": "",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "candidate_target_sha256": "2aed31f96923edc061a2dd5a643986b8c01f74c7ccfbaeb03ff6d5ae57eb0842",
+      "container_image": "sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+      "hidden_test_sha256": "57d052bafc358f5dcb066efe33fe8b01c97515868277e3f9886d7b3840c6be37",
+      "public_test_sha256": "12c081b5f41df17e1fd7c5c86bd52de4c5fb6d56f7aac72825766114c3f354ec",
+      "target_file": "mlx_lm/models/cache.py",
+      "task_id": "mlx-lm-1978-rotating-cache",
+      "trusted_hidden": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout": "",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "variant": "known_fix"
+    },
+    {
+      "calibration_expectation": "fail",
+      "candidate_public": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 22, in <module>\n    check(max_size=8, keep=2, history=20, chunk=5)\n  File \"/workspace/test_public.py\", line 20, in check\n    assert actual == expected, (actual, expected)\n           ^^^^^^^^^^^^^^^^^^\nAssertionError: ([[True, True, True, True, True, True, True, True, False, False, False, False], [True, True, True, True, True, True, True, True, True, False, False, False], [True, True, True, True, True, True, True, True, True, True, False, False], [True, True, False, True, True, True, True, True, True, True, True, False], [True, True, False, False, True, True, True, True, True, True, True, True]], [[True, True, True, True, True, True, True, True, False, False, False, False], [True, True, False, True, True, True, True, True, True, False, False, False], [True, True, False, False, True, True, True, True, True, True, False, False], [True, True, False, False, False, True, True, True, True, True, True, False], [True, True, False, False, False, False, True, True, True, True, True, True]])\n",
+        "stderr_sha256": "a4ed59afb853bfa072096bfc29da49ec7281e92db5abc3c0112be5ac637ea921",
+        "stdout": "",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "candidate_target_sha256": "1ef50743f4e8ce70c12c76daca7c2514ae85b5b7348b0235c653a8a9c297993b",
+      "container_image": "sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+      "hidden_test_sha256": "57d052bafc358f5dcb066efe33fe8b01c97515868277e3f9886d7b3840c6be37",
+      "public_test_sha256": "12c081b5f41df17e1fd7c5c86bd52de4c5fb6d56f7aac72825766114c3f354ec",
+      "target_file": "mlx_lm/models/cache.py",
+      "task_id": "mlx-lm-1978-rotating-cache",
+      "trusted_hidden": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_hidden.py\", line 25, in <module>\n    assert_mask(*case)\n  File \"/workspace/test_hidden.py\", line 21, in assert_mask\n    assert row == expected\n           ^^^^^^^^^^^^^^^\nAssertionError\n",
+        "stderr_sha256": "f65016b2ecc1e294f7ebb3e104ecc9935cbae828e3273e1ab245220db943f6a2",
+        "stdout": "",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "variant": "wrong_mutant"
+    },
+    {
+      "calibration_expectation": "fail",
+      "candidate_public": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 28, in <module>\n    test_split_shard_loads_complete_local_stage()\n  File \"/workspace/test_public.py\", line 24, in test_split_shard_loads_complete_local_stage\n    loaded, _ = utils.load_model(Path(folder), lazy=True, strict=False)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/mlx_lm/utils.py\", line 519, in load_model\n    _quantize(quantization)\n  File \"/workspace/mlx_lm/utils.py\", line 510, in _quantize\n    nn.quantize(\n  File \"/usr/local/lib/python3.12/site-packages/mlx/nn/layers/quantized.py\", line 99, in quantize\n    leaves = tree_map_with_path(_maybe_quantize, leaves, is_leaf=Module.is_module)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 110, in tree_map_with_path\n    k: tree_map_with_path(\n       ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 110, in tree_map_with_path\n    k: tree_map_with_path(\n       ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 106, in tree_map_with_path\n    return TreeType(*subtrees) if hasattr(tree, \"_fields\") else TreeType(subtrees)\n                                                                ^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 101, in <genexpr>\n    tree_map_with_path(\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 110, in tree_map_with_path\n    k: tree_map_with_path(\n       ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 110, in tree_map_with_path\n    k: tree_map_with_path(\n       ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 96, in tree_map_with_path\n    return fn(path, tree, *rest)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/nn/layers/quantized.py\", line 75, in _maybe_quantize\n    if bool_or_params := class_predicate(path, m):\n                         ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/mlx_lm/utils.py\", line 505, in class_predicate\n    params = infer_quant_config(p, m, weights)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/mlx_lm/utils.py\", line 391, in infer_quant_config\n    bits = (weights[f\"{path}.weight\"].shape[-1] * 32) // in_dims\n            ~~~~~~~^^^^^^^^^^^^^^^^^^\nKeyError: 'model.layers.0.mlp.down_proj.weight'\n",
+        "stderr_sha256": "793ace4dc3c3cdc84cc627fbc3441d8b7709ad71f8e7c6d6717be4db0dcce265",
+        "stdout": "[INFO] Quantized model with 6.096 bits per weight.\n",
+        "stdout_sha256": "12b09fb2de301dce9269f7ec411bfccf146ba8a65e77df971ac889779227963c"
+      },
+      "candidate_target_sha256": "936667c9f30c2b9451b8e3ce8ac7b9579b176605094d435fa5128f7ac272f281",
+      "container_image": "sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+      "hidden_test_sha256": "fbad77e886e17b8439df8bbc04046eade2c3a44bb54a0faede0adc2db0278296",
+      "public_test_sha256": "0ad3e59025f8f68b3669887e6ead85ab3b376a7f80a43d5ffe23d262f3b6d433",
+      "target_file": "mlx_lm/utils.py",
+      "task_id": "mlx-lm-1980-pipeline-scales",
+      "trusted_hidden": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_hidden.py\", line 56, in <module>\n    check_orphan_stage(0)\n  File \"/workspace/test_hidden.py\", line 46, in check_orphan_stage\n    loaded = load_from_shard(shard, config, folder)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/test_hidden.py\", line 23, in load_from_shard\n    return utils.load_model(Path(folder), lazy=True, strict=False)[0]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/mlx_lm/utils.py\", line 519, in load_model\n    _quantize(quantization)\n  File \"/workspace/mlx_lm/utils.py\", line 510, in _quantize\n    nn.quantize(\n  File \"/usr/local/lib/python3.12/site-packages/mlx/nn/layers/quantized.py\", line 99, in quantize\n    leaves = tree_map_with_path(_maybe_quantize, leaves, is_leaf=Module.is_module)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 110, in tree_map_with_path\n    k: tree_map_with_path(\n       ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 110, in tree_map_with_path\n    k: tree_map_with_path(\n       ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 106, in tree_map_with_path\n    return TreeType(*subtrees) if hasattr(tree, \"_fields\") else TreeType(subtrees)\n                                                                ^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 101, in <genexpr>\n    tree_map_with_path(\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 110, in tree_map_with_path\n    k: tree_map_with_path(\n       ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 110, in tree_map_with_path\n    k: tree_map_with_path(\n       ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 96, in tree_map_with_path\n    return fn(path, tree, *rest)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/nn/layers/quantized.py\", line 75, in _maybe_quantize\n    if bool_or_params := class_predicate(path, m):\n                         ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/mlx_lm/utils.py\", line 505, in class_predicate\n    params = infer_quant_config(p, m, weights)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/mlx_lm/utils.py\", line 391, in infer_quant_config\n    bits = (weights[f\"{path}.weight\"].shape[-1] * 32) // in_dims\n            ~~~~~~~^^^^^^^^^^^^^^^^^^\nKeyError: 'model.layers.0.mlp.down_proj.weight'\n",
+        "stderr_sha256": "e249d32ed4600de0626e5ee67a39fcbbaa0b0fec39055ff8642f12e80a3a3f9b",
+        "stdout": "[INFO] Quantized model with 6.107 bits per weight.\n[INFO] Quantized model with 6.107 bits per weight.\n",
+        "stdout_sha256": "04869ed21809222bcfeb638a148feac9a4776c449d4355579f86e7708c6f41bf"
+      },
+      "variant": "baseline"
+    },
+    {
+      "calibration_expectation": "pass",
+      "candidate_public": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout": "[INFO] Quantized model with 6.096 bits per weight.\n",
+        "stdout_sha256": "12b09fb2de301dce9269f7ec411bfccf146ba8a65e77df971ac889779227963c"
+      },
+      "candidate_target_sha256": "74283f62c155579c685071a47c1221ae6bb2333492ed94bc0443c1c67bcd9f51",
+      "container_image": "sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+      "hidden_test_sha256": "fbad77e886e17b8439df8bbc04046eade2c3a44bb54a0faede0adc2db0278296",
+      "public_test_sha256": "0ad3e59025f8f68b3669887e6ead85ab3b376a7f80a43d5ffe23d262f3b6d433",
+      "target_file": "mlx_lm/utils.py",
+      "task_id": "mlx-lm-1980-pipeline-scales",
+      "trusted_hidden": {
+        "passed": true,
+        "returncode": 0,
+        "stderr": "",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout": "[INFO] Quantized model with 6.107 bits per weight.\n[INFO] Quantized model with 6.107 bits per weight.\n[INFO] Quantized model with 6.107 bits per weight.\n",
+        "stdout_sha256": "6d5b7b74a54a62a963a58a2dc921894479e495a72d22e347bce466d3c94c1823"
+      },
+      "variant": "known_fix"
+    },
+    {
+      "calibration_expectation": "fail",
+      "candidate_public": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 28, in <module>\n    test_split_shard_loads_complete_local_stage()\n  File \"/workspace/test_public.py\", line 24, in test_split_shard_loads_complete_local_stage\n    loaded, _ = utils.load_model(Path(folder), lazy=True, strict=False)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/mlx_lm/utils.py\", line 524, in load_model\n    _quantize(quantization)\n  File \"/workspace/mlx_lm/utils.py\", line 515, in _quantize\n    nn.quantize(\n  File \"/usr/local/lib/python3.12/site-packages/mlx/nn/layers/quantized.py\", line 99, in quantize\n    leaves = tree_map_with_path(_maybe_quantize, leaves, is_leaf=Module.is_module)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 110, in tree_map_with_path\n    k: tree_map_with_path(\n       ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 110, in tree_map_with_path\n    k: tree_map_with_path(\n       ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 106, in tree_map_with_path\n    return TreeType(*subtrees) if hasattr(tree, \"_fields\") else TreeType(subtrees)\n                                                                ^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 101, in <genexpr>\n    tree_map_with_path(\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 110, in tree_map_with_path\n    k: tree_map_with_path(\n       ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 110, in tree_map_with_path\n    k: tree_map_with_path(\n       ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 96, in tree_map_with_path\n    return fn(path, tree, *rest)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/nn/layers/quantized.py\", line 75, in _maybe_quantize\n    if bool_or_params := class_predicate(path, m):\n                         ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/mlx_lm/utils.py\", line 510, in class_predicate\n    params = infer_quant_config(p, m, weights)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/mlx_lm/utils.py\", line 391, in infer_quant_config\n    bits = (weights[f\"{path}.weight\"].shape[-1] * 32) // in_dims\n            ~~~~~~~^^^^^^^^^^^^^^^^^^\nKeyError: 'model.layers.0.mlp.down_proj.weight'\n",
+        "stderr_sha256": "6f845022ee76b7d1412fe300943c79c2c3826fc30e23317c6904faff9b69a3e9",
+        "stdout": "[INFO] Quantized model with 6.096 bits per weight.\n",
+        "stdout_sha256": "12b09fb2de301dce9269f7ec411bfccf146ba8a65e77df971ac889779227963c"
+      },
+      "candidate_target_sha256": "03e6f6973cc870b1c62885aba8df09daf9967d1b28502ec611a4787b0cceeb0e",
+      "container_image": "sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+      "hidden_test_sha256": "fbad77e886e17b8439df8bbc04046eade2c3a44bb54a0faede0adc2db0278296",
+      "public_test_sha256": "0ad3e59025f8f68b3669887e6ead85ab3b376a7f80a43d5ffe23d262f3b6d433",
+      "target_file": "mlx_lm/utils.py",
+      "task_id": "mlx-lm-1980-pipeline-scales",
+      "trusted_hidden": {
+        "passed": false,
+        "returncode": 1,
+        "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_hidden.py\", line 56, in <module>\n    check_orphan_stage(0)\n  File \"/workspace/test_hidden.py\", line 46, in check_orphan_stage\n    loaded = load_from_shard(shard, config, folder)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/test_hidden.py\", line 23, in load_from_shard\n    return utils.load_model(Path(folder), lazy=True, strict=False)[0]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/mlx_lm/utils.py\", line 524, in load_model\n    _quantize(quantization)\n  File \"/workspace/mlx_lm/utils.py\", line 515, in _quantize\n    nn.quantize(\n  File \"/usr/local/lib/python3.12/site-packages/mlx/nn/layers/quantized.py\", line 99, in quantize\n    leaves = tree_map_with_path(_maybe_quantize, leaves, is_leaf=Module.is_module)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 110, in tree_map_with_path\n    k: tree_map_with_path(\n       ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 110, in tree_map_with_path\n    k: tree_map_with_path(\n       ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 106, in tree_map_with_path\n    return TreeType(*subtrees) if hasattr(tree, \"_fields\") else TreeType(subtrees)\n                                                                ^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 101, in <genexpr>\n    tree_map_with_path(\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 110, in tree_map_with_path\n    k: tree_map_with_path(\n       ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 110, in tree_map_with_path\n    k: tree_map_with_path(\n       ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/utils.py\", line 96, in tree_map_with_path\n    return fn(path, tree, *rest)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/mlx/nn/layers/quantized.py\", line 75, in _maybe_quantize\n    if bool_or_params := class_predicate(path, m):\n                         ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/mlx_lm/utils.py\", line 510, in class_predicate\n    params = infer_quant_config(p, m, weights)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/mlx_lm/utils.py\", line 391, in infer_quant_config\n    bits = (weights[f\"{path}.weight\"].shape[-1] * 32) // in_dims\n            ~~~~~~~^^^^^^^^^^^^^^^^^^\nKeyError: 'model.layers.0.mlp.down_proj.weight'\n",
+        "stderr_sha256": "20fa4376ab1f2fb8aa5d55e12b1e0dca0d2350c16c4780696c29ec841016907e",
+        "stdout": "[INFO] Quantized model with 6.107 bits per weight.\n[INFO] Quantized model with 6.107 bits per weight.\n",
+        "stdout_sha256": "04869ed21809222bcfeb638a148feac9a4776c449d4355579f86e7708c6f41bf"
+      },
+      "variant": "wrong_mutant"
+    }
+  ],
+  "claim_limit": "Pre-inference task/grader qualification only; not model capability evidence.",
+  "image": "sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+  "mutant_construction": {
+    "mlx-lm-1978-rotating-cache": {
+      "base_revision": "06e03f7ce7c059ad105483a9dded0bb338cbaf53",
+      "description": "Removes the retained-prefix offset from the sliding-window boundary.",
+      "mutant_target_sha256": "1ef50743f4e8ce70c12c76daca7c2514ae85b5b7348b0235c653a8a9c297993b",
+      "patch_path": "results/real_agent_interface_v1/calibration/mutants/mlx-lm-1978-rotating-cache.patch",
+      "patch_sha256": "6e50e36d7846d4d48fc464f87aece7fa3fa1e48a1658bd10ff70f1d865381337",
+      "target_file": "mlx_lm/models/cache.py"
+    },
+    "mlx-lm-1980-pipeline-scales": {
+      "base_revision": "8fda5e976a2da412d9f8119361edefd405381cf9",
+      "description": "Requires both weight and scales to be absent before skipping a foreign-stage key; the orphan-scale condition remains mishandled.",
+      "mutant_target_sha256": "03e6f6973cc870b1c62885aba8df09daf9967d1b28502ec611a4787b0cceeb0e",
+      "patch_path": "results/real_agent_interface_v1/calibration/mutants/mlx-lm-1980-pipeline-scales.patch",
+      "patch_sha256": "6746a88e602fcccf370a435923cebb38cbaa18f79387005f0a18e23db199e98a",
+      "target_file": "mlx_lm/utils.py"
+    }
+  },
+  "n_task_clusters": 2,
+  "n_variants_per_task": 3,
+  "protocol_id": "real-agent-interface-v1-calibration",
+  "schema_version": 1
+}

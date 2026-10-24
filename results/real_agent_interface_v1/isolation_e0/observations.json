@@ -1,0 +1,234 @@
+{
+  "accepted": true,
+  "active_container": {
+    "cap_drop": [
+      "ALL"
+    ],
+    "configured_image": "sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+    "image_id": "sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+    "left_after_normal_exit": [],
+    "memory_bytes": 268435456,
+    "mounts": [
+      {
+        "destination": "/workspace",
+        "rw": true,
+        "type": "bind"
+      }
+    ],
+    "name": "vare-agent-de5d78491eda4c99d4490073",
+    "nano_cpus": 500000000,
+    "network_mode": "none",
+    "pids_limit": 12,
+    "readonly_rootfs": true,
+    "returncode": 0,
+    "running_when_inspected": true,
+    "security_opt": [
+      "no-new-privileges:true"
+    ],
+    "user": "65534:65534"
+  },
+  "candidate_probe": [
+    {
+      "new_managed_containers_after": [],
+      "observation": {
+        "cap_eff": "0000000000000000",
+        "cpu_max": "50000 100000",
+        "default_route_present": false,
+        "docker_socket_present": false,
+        "host_canary_readable": false,
+        "host_canary_writable": false,
+        "memory_max": "268435456",
+        "network_reachable": false,
+        "no_new_privs": "1",
+        "pids_limit_enforced": true,
+        "pids_max": "12",
+        "rootfs_writable": false,
+        "spawned_children": 10,
+        "uid": 65534,
+        "workspace_writable": true
+      },
+      "replicate": 1,
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "b16f103d8e5a9ec72f4d99529533c47aa13ad54e34e94f898de4b95023e4ffbb"
+    },
+    {
+      "new_managed_containers_after": [],
+      "observation": {
+        "cap_eff": "0000000000000000",
+        "cpu_max": "50000 100000",
+        "default_route_present": false,
+        "docker_socket_present": false,
+        "host_canary_readable": false,
+        "host_canary_writable": false,
+        "memory_max": "268435456",
+        "network_reachable": false,
+        "no_new_privs": "1",
+        "pids_limit_enforced": true,
+        "pids_max": "12",
+        "rootfs_writable": false,
+        "spawned_children": 10,
+        "uid": 65534,
+        "workspace_writable": true
+      },
+      "replicate": 2,
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "b16f103d8e5a9ec72f4d99529533c47aa13ad54e34e94f898de4b95023e4ffbb"
+    },
+    {
+      "new_managed_containers_after": [],
+      "observation": {
+        "cap_eff": "0000000000000000",
+        "cpu_max": "50000 100000",
+        "default_route_present": false,
+        "docker_socket_present": false,
+        "host_canary_readable": false,
+        "host_canary_writable": false,
+        "memory_max": "268435456",
+        "network_reachable": false,
+        "no_new_privs": "1",
+        "pids_limit_enforced": true,
+        "pids_max": "12",
+        "rootfs_writable": false,
+        "spawned_children": 10,
+        "uid": 65534,
+        "workspace_writable": true
+      },
+      "replicate": 3,
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "b16f103d8e5a9ec72f4d99529533c47aa13ad54e34e94f898de4b95023e4ffbb"
+    }
+  ],
+  "claim_limit": "E0 runtime configuration and synthetic boundary evidence only; not a hostile-code sandbox certification or coding capability result",
+  "environment": {
+    "colima": {
+      "arch": "aarch64",
+      "containerd_socket": "unix:///Users/user/.colima/default/containerd.sock",
+      "cpu": 4,
+      "disk": 64424509440,
+      "display_name": "colima",
+      "docker_socket": "unix:///Users/user/.colima/default/docker.sock",
+      "driver": "macOS Virtualization.Framework",
+      "kubernetes": false,
+      "memory": 3221225472,
+      "mount_type": "virtiofs",
+      "runtime": "docker"
+    },
+    "docker_context": "colima",
+    "docker_info": "[\"name=apparmor\",\"name=seccomp,profile=builtin\",\"name=cgroupns\"] linux aarch64 3040346112",
+    "docker_security_options": "[\"name=apparmor\",\"name=seccomp,profile=builtin\",\"name=cgroupns\"]",
+    "image_id": "sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+    "image_reference": "sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+    "image_repo_digests": [
+      "vare-mlsys-agent-cpu@sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1"
+    ],
+    "platform": "darwin",
+    "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]"
+  },
+  "grader_probe": [
+    {
+      "canary_visible": false,
+      "mount_flags": [
+        "type=bind,source=/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/coding-agent-interface-study/results/real_agent_interface_v1/isolation_e0/candidate-root/workspace,target=/workspace,readonly"
+      ],
+      "network_mode_none": true,
+      "readonly_mounts": true,
+      "readonly_rootfs": true,
+      "replicate": 1,
+      "returncode": 0,
+      "stdout": "CANARY_NOT_VISIBLE\n",
+      "stdout_sha256": "76c2abbcab5f573feb961da03700848bf8c5814ee17c87032a4d650d360c1f75"
+    },
+    {
+      "canary_visible": false,
+      "mount_flags": [
+        "type=bind,source=/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/coding-agent-interface-study/results/real_agent_interface_v1/isolation_e0/candidate-root/workspace,target=/workspace,readonly"
+      ],
+      "network_mode_none": true,
+      "readonly_mounts": true,
+      "readonly_rootfs": true,
+      "replicate": 2,
+      "returncode": 0,
+      "stdout": "CANARY_NOT_VISIBLE\n",
+      "stdout_sha256": "76c2abbcab5f573feb961da03700848bf8c5814ee17c87032a4d650d360c1f75"
+    },
+    {
+      "canary_visible": false,
+      "mount_flags": [
+        "type=bind,source=/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/coding-agent-interface-study/results/real_agent_interface_v1/isolation_e0/candidate-root/workspace,target=/workspace,readonly"
+      ],
+      "network_mode_none": true,
+      "readonly_mounts": true,
+      "readonly_rootfs": true,
+      "replicate": 3,
+      "returncode": 0,
+      "stdout": "CANARY_NOT_VISIBLE\n",
+      "stdout_sha256": "76c2abbcab5f573feb961da03700848bf8c5814ee17c87032a4d650d360c1f75"
+    }
+  ],
+  "image": "sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+  "lifecycle": {
+    "cancellation": [
+      {
+        "cancelled": true,
+        "new_containers_after": [],
+        "replicate": 1
+      },
+      {
+        "cancelled": true,
+        "new_containers_after": [],
+        "replicate": 2
+      },
+      {
+        "cancelled": true,
+        "new_containers_after": [],
+        "replicate": 3
+      }
+    ],
+    "output_overflow": [
+      {
+        "error": "container exceeded output byte limit",
+        "new_containers_after": [],
+        "overflowed": true,
+        "replicate": 1
+      },
+      {
+        "error": "container exceeded output byte limit",
+        "new_containers_after": [],
+        "overflowed": true,
+        "replicate": 2
+      },
+      {
+        "error": "container exceeded output byte limit",
+        "new_containers_after": [],
+        "overflowed": true,
+        "replicate": 3
+      }
+    ],
+    "timeout": [
+      {
+        "error": "container exceeded wall-time limit",
+        "expected_timeout": true,
+        "new_containers_after": [],
+        "replicate": 1
+      },
+      {
+        "error": "container exceeded wall-time limit",
+        "expected_timeout": true,
+        "new_containers_after": [],
+        "replicate": 2
+      },
+      {
+        "error": "container exceeded wall-time limit",
+        "expected_timeout": true,
+        "new_containers_after": [],
+        "replicate": 3
+      }
+    ]
+  },
+  "protocol_id": "real-agent-candidate-isolation-e0-v1",
+  "replicates": 3,
+  "schema_version": 1
+}

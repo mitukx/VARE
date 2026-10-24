@@ -1,0 +1,35 @@
+{
+  "calibration_gate_passed": true,
+  "claim_limit": "Operational setup events only; not model outcomes.",
+  "effective_protocol_sha256": "ea4afcc98cbafff632b536be32d4b27d3ede2bcb9d94908012e02c9c101ce71f",
+  "final_e0_accepted": true,
+  "final_e0_observations_sha256": "5aa1b3e26c3c17f8e702138ee3e9fc39747e10dafb1ce31858a6038918881f16",
+  "no_model_inference_occurred_before_correction": true,
+  "pre_inference_setup_events": [
+    {
+      "event": "download_preflight_helper_error",
+      "result": "A first helper invocation attempted to read psutil from the isolated inference venv, where it is intentionally not installed. It stopped before model download; a separate system-Python resource check then passed."
+    },
+    {
+      "event": "runner_integrity_gate_rejection",
+      "result": "The first launch stopped in verify_pins because the protocol named the E0 observations file while the CLI supplied its parent directory. It stopped before output creation, candidate materialization, or model loading."
+    },
+    {
+      "event": "protocol_correction",
+      "result": "Corrected the path equality check to compare e0_dir/observations.json with the frozen file path, updated implementation hashes, and reran E0 against the corrected protocol."
+    },
+    {
+      "event": "runner_budget_schema_rejection",
+      "result": "The first launch after the E0 path correction reached task materialization but raised KeyError for protocol seed lookup before spawning the MLX process. The partial candidate workspace is preserved under work/evidence/real-agent-interface-v1; it contains only the pinned baseline and public test."
+    }
+  ],
+  "protocol_id": "real-agent-interface-v1",
+  "resource_preflight_before_model_attempt": {
+    "available_memory_bytes": 10504552448,
+    "disk_free_bytes": 124351569920,
+    "swap_free_bytes": 868483072,
+    "swap_used_bytes": 2352742400,
+    "timestamp_utc": "2026-10-24T11:22:21.834313+00:00"
+  },
+  "schema_version": 1
+}

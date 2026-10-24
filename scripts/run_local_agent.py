@@ -54,14 +54,53 @@ WRITE_FILE_TOOL = {
         },
     },
 }
+READ_FILE_RANGE_TOOL = {
+    'type': 'function',
+    'function': {
+        'name': 'read_file_range',
+        'description': 'Read a bounded, one-based line range from one allowlisted UTF-8 task source file. Limit each read to 120 lines.',
+        'parameters': {
+            'type': 'object',
+            'properties': {
+                'path': {'type': 'string'},
+                'start_line': {'type': 'integer'},
+                'end_line': {'type': 'integer'},
+            },
+            'required': ['path', 'start_line', 'end_line'],
+            'additionalProperties': False,
+        },
+    },
+}
+REPLACE_TEXT_TOOL = {
+    'type': 'function',
+    'function': {
+        'name': 'replace_text',
+        'description': 'Replace one exact, unique, nonempty string in one allowlisted source file with new text. The operation fails if the old text is missing or ambiguous.',
+        'parameters': {
+            'type': 'object',
+            'properties': {
+                'path': {'type': 'string'},
+                'old_text': {'type': 'string'},
+                'new_text': {'type': 'string'},
+            },
+            'required': ['path', 'old_text', 'new_text'],
+            'additionalProperties': False,
+        },
+    },
+}
 
 
 def tools_for(edit_format: str, *, public_tests: bool = False) -> list[dict[str, Any]]:
     require_edit_format(edit_format)
     if edit_format == 'unified_diff':
         tools = list(TOOLS)
-    else:
+    elif edit_format == 'whole_file':
         tools = [WRITE_FILE_TOOL if item['function']['name'] == 'apply_patch' else item for item in TOOLS]
+    else:
+        tools = [
+            TOOLS[0], READ_FILE_RANGE_TOOL, TOOLS[2],
+            REPLACE_TEXT_TOOL, TOOLS[4], TOOLS[5],
+        ]
     if public_tests:
         tools.insert(-1, PUBLIC_TEST_TOOL)
     return tools
@@ -106,14 +145,15 @@ def generate_turn(backend: str, model: Any, tokenizer: Any, messages: list[dict[
     return tokenizer.decode(new_ids, skip_special_tokens=False), int(new_ids.shape[0]), prompt_tokens
 
 
-def run_public_tests(workspace: Path, image: str, expected_test_hash: str) -> dict[str, Any]:
+def run_public_tests(workspace: Path, image: str, expected_test_hash: str,
+                     *, timeout_s: int = 45, memory_mb: int = 512) -> dict[str, Any]:
     """Run only the immutable public smoke file in VARE's candidate sandbox."""
     test_file = workspace / 'test_public.py'
     if not test_file.is_file() or sha256(test_file) != expected_test_hash:
         return {'passed': False, 'error': 'public test file is missing or changed'}
     from vare.container_isolation import DockerIsolationRunner, IsolationLimits
 
-    limits = IsolationLimits(image=image, timeout_s=45, memory_mb=512, cpus=1.0,
+    limits = IsolationLimits(image=image, timeout_s=timeout_s, memory_mb=memory_mb, cpus=1.0,
                              pids_limit=32, max_output_bytes=20_000)
     started = time.perf_counter()
     try:
@@ -133,11 +173,54 @@ def run_public_tests(workspace: Path, image: str, expected_test_hash: str) -> di
 def refresh_public_tests_after_edit(
     edit_result: dict[str, Any], workspace: Path, image: str | None,
     expected_test_hash: str | None,
+    test_runner=None,
 ) -> dict[str, Any] | None:
     """Return a fresh smoke-test result after an applied source edit."""
     if edit_result.get('applied') is not True or not image or not expected_test_hash:
         return None
-    return run_public_tests(workspace, image, expected_test_hash)
+    return (test_runner or run_public_tests)(workspace, image, expected_test_hash)
+
+
+def read_file_range(workspace: Path, raw_path: str, start_line: int, end_line: int,
+                    allowed: set[str], *, max_lines: int = 120) -> dict[str, Any]:
+    """Read an explicitly bounded one-based source window."""
+    path = resolve_allowed_path(raw_path, allowed)
+    if path is None:
+        return {'error': 'path is not allowed', 'allowed_paths': sorted(allowed)}
+    if (isinstance(start_line, bool) or isinstance(end_line, bool)
+            or not isinstance(start_line, int) or not isinstance(end_line, int)
+            or start_line < 1 or end_line < start_line
+            or end_line - start_line + 1 > max_lines):
+        return {'error': f'line range must be one-based, ordered, and at most {max_lines} lines'}
+    lines = (workspace / path).read_text(encoding='utf-8').splitlines()
+    if start_line > len(lines):
+        return {'error': 'start_line is beyond end of file', 'line_count': len(lines)}
+    end_line = min(end_line, len(lines))
+    return {'resolved_path': path, 'start_line': start_line, 'end_line': end_line,
+            'line_count': len(lines), 'content': '\n'.join(lines[start_line - 1:end_line])}
+
+
+def replace_text(workspace: Path, raw_path: str, old_text: str, new_text: str,
+                 allowed: set[str]) -> dict[str, Any]:
+    """Apply one exact replacement only when its old text occurs once."""
+    path = resolve_allowed_path(raw_path, allowed)
+    if path is None:
+        return {'applied': False, 'error': 'path is not allowed', 'paths': []}
+    if not isinstance(old_text, str) or not old_text:
+        return {'applied': False, 'error': 'old_text must be nonempty', 'paths': [path]}
+    if not isinstance(new_text, str) or '\x00' in new_text:
+        return {'applied': False, 'error': 'new_text must be UTF-8 text without NUL', 'paths': [path]}
+    target = workspace / path
+    current = target.read_text(encoding='utf-8')
+    count = current.count(old_text)
+    if count != 1:
+        return {'applied': False, 'error': f'old_text must occur exactly once (found {count})',
+                'paths': [path], 'matches': count}
+    updated = current.replace(old_text, new_text, 1)
+    if updated == current:
+        return {'applied': False, 'error': 'replacement leaves source unchanged', 'paths': [path]}
+    target.write_text(updated, encoding='utf-8')
+    return {'applied': True, 'paths': [path], 'replacements': 1}
 
 
 def attempt_configured_edit(workspace: Path, text: str, edit_format: str, allowed: set[str]) -> dict[str, Any]:
@@ -178,7 +261,12 @@ def run_git(root: Path, *args: str) -> str:
 
 def resolve_allowed_path(raw_path: str, allowed: set[str]) -> str | None:
     """Map a model-supplied path to one exact allowlisted relative file."""
-    normalized = raw_path.replace('\\', '/').lstrip('./')
+    normalized = raw_path.replace('\\', '/')
+    if '..' in normalized.split('/'):
+        return None
+    normalized = normalized.lstrip('/')
+    while normalized.startswith('./'):
+        normalized = normalized[2:]
     matches = [path for path in allowed if normalized == path or normalized.endswith('/' + path)]
     return matches[0] if len(matches) == 1 else None
 
@@ -199,6 +287,12 @@ def no_tool_retry_reminder(raw: str, *, edit_format: str, allowed_paths: list[st
             f'Your previous tool call was cut off at the {token_limit}-token response limit. '
             'Do not reread the source or rewrite the whole file. Emit one complete apply_patch tool call '
             f'with a minimal change and exact allowed paths ({path_list}); end it with </tool_call>.'
+        )
+    if edit_format == 'structured_replace':
+        return (
+            'Your previous response did not call a tool and no source file changed. Use search_text to locate the relevant code, '
+            'read a bounded range with read_file_range, then make one exact unique replacement with replace_text. '
+            f'Use only these source paths: {", ".join(allowed_paths)}.'
         )
     return (
         'Your previous response did not call a tool and no source file changed. Continue the task now. '
@@ -256,6 +350,9 @@ def main() -> int:
     parser.add_argument('--model-repository', default=MODEL_REPOSITORY)
     parser.add_argument('--backend', choices=('transformers_cpu', 'mlx'), default='transformers_cpu')
     parser.add_argument('--public-test-image', help='Pinned Docker image for isolated execution of test_public.py')
+    parser.add_argument('--public-test-timeout-s', type=int, default=45)
+    parser.add_argument('--public-test-memory-mb', type=int, default=512)
+    parser.add_argument('--max-public-test-runs', type=int, default=12)
     parser.add_argument('--task-root', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--instruction', required=True,
@@ -271,9 +368,11 @@ def main() -> int:
     parser.add_argument('--top-p', type=float, default=0.95)
     parser.add_argument('--top-k', type=int, default=20)
     parser.add_argument('--do-sample', action=argparse.BooleanOptionalAction, default=True)
-    parser.add_argument('--edit-format', choices=('unified_diff', 'whole_file'), default='unified_diff')
+    parser.add_argument('--edit-format', choices=('unified_diff', 'whole_file', 'structured_replace'), default='unified_diff')
     parser.add_argument('--require-split', choices=('train', 'heldout'))
     args = parser.parse_args()
+    if args.max_public_test_runs < 1:
+        parser.error('--max-public-test-runs must be at least 1')
 
     model_dir = args.model_path.resolve()
     if not model_dir.is_dir():
@@ -336,15 +435,20 @@ def main() -> int:
             'Use write_file to replace an allowlisted source file with its complete new text. Do not send a unified diff. '
             'Keep the replacement concise enough to fit within the per-turn output budget. '
         )
+    elif args.edit_format == 'structured_replace':
+        edit_sentence = (
+            'Inspect source with search_text, then read only the relevant context using read_file_range. '
+            'Use replace_text for one exact, unique source replacement; do not emit a unified diff or rewrite the entire file. '
+        )
     else:
         edit_sentence = (
             'Read the source path named in the user instruction, then use tools to inspect and edit. Use apply_patch for small source diffs; never rewrite a whole file. '
             'The patch must use exact headers --- a/<allowed source path> and +++ b/<allowed source path>; do not wrap it in a code fence. '
         )
     system = (
-        'You are an offline code repair agent. Solve only the task below. The workspace contains only the task source files. '
+        'You are an offline code repair agent. Solve only the task below. The workspace contains the pinned source tree and public test; tool access is allowlisted. '
         + edit_sentence
-        + 'Allowed source paths: ' + ', '.join(sorted(editable)) + '. First call list_files, then read the exact source path named in the task. '
+        + 'Allowed source paths: ' + ', '.join(sorted(editable)) + '. First call list_files, then inspect the exact source path named in the task. '
         + 'Do not invent paths. The workspace is already prepared; never ask for a workspace path, more information, or permission. '
         + 'The external grader is hidden. Do not describe a fix without applying it. Call finish only after changing a source file. '
         + ('After changing source, call run_public_tests; read its output and repair failures. The test file is immutable. '
@@ -367,6 +471,7 @@ def main() -> int:
     edit_applied = False
     public_test_hash = sha256(workspace / next(iter(test_files))) if test_files else None
     public_test_result = None
+    public_test_runs = 0
     format_parse_failure = None
     format_parse_failure_count = 0
     pattern = re.compile(r'<tool_call>\s*(\{.*?\})\s*</tool_call>', re.DOTALL)
@@ -380,6 +485,17 @@ def main() -> int:
             format_parse_failure_count += 1
         if edit_result.get('applied') is True:
             edit_applied = True
+
+    def bounded_public_test(test_workspace: Path, image: str, expected_hash: str) -> dict[str, Any]:
+        nonlocal public_test_runs
+        if public_test_runs >= args.max_public_test_runs:
+            return {'passed': False, 'error': 'public test run budget exhausted',
+                    'calls_used': public_test_runs}
+        public_test_runs += 1
+        return run_public_tests(
+            test_workspace, image, expected_hash,
+            timeout_s=args.public_test_timeout_s, memory_mb=args.public_test_memory_mb,
+        )
 
     for turn in range(args.max_turns):
         elapsed = time.perf_counter() - start
@@ -419,6 +535,7 @@ def main() -> int:
                 if edit_result.get('applied') is True:
                     public_test_result = refresh_public_tests_after_edit(
                         edit_result, workspace, args.public_test_image, public_test_hash,
+                        test_runner=bounded_public_test,
                     )
                     if public_test_result is not None:
                         entry['automatic_public_test'] = public_test_result
@@ -477,6 +594,11 @@ def main() -> int:
                     else:
                         result = {'resolved_path': path,
                                   'content': (workspace / path).read_text(encoding='utf-8')}
+                elif name == 'read_file_range':
+                    result = read_file_range(
+                        workspace, arguments.get('path', ''),
+                        arguments.get('start_line'), arguments.get('end_line'), allowed,
+                    )
                 elif name == 'search_text':
                     query = arguments.get('query', '')
                     if not query:
@@ -496,6 +618,7 @@ def main() -> int:
                     if result.get('applied') is True:
                         public_test_result = refresh_public_tests_after_edit(
                             result, workspace, args.public_test_image, public_test_hash,
+                            test_runner=bounded_public_test,
                         )
                         if public_test_result is not None:
                             entry['automatic_public_test'] = public_test_result
@@ -514,13 +637,28 @@ def main() -> int:
                     if result.get('applied') is True:
                         public_test_result = refresh_public_tests_after_edit(
                             result, workspace, args.public_test_image, public_test_hash,
+                            test_runner=bounded_public_test,
+                        )
+                        if public_test_result is not None:
+                            entry['automatic_public_test'] = public_test_result
+                            result = {**result, 'automatic_public_test': public_test_result}
+                elif name == 'replace_text':
+                    result = replace_text(
+                        workspace, arguments.get('path', ''),
+                        arguments.get('old_text', ''), arguments.get('new_text', ''), editable,
+                    )
+                    note_edit(result)
+                    if result.get('applied') is True:
+                        public_test_result = refresh_public_tests_after_edit(
+                            result, workspace, args.public_test_image, public_test_hash,
+                            test_runner=bounded_public_test,
                         )
                         if public_test_result is not None:
                             entry['automatic_public_test'] = public_test_result
                             result = {**result, 'automatic_public_test': public_test_result}
                 elif name == 'run_public_tests':
                     if args.public_test_image and public_test_hash:
-                        public_test_result = run_public_tests(
+                        public_test_result = bounded_public_test(
                             workspace, args.public_test_image, public_test_hash,
                         )
                     else:
@@ -581,12 +719,16 @@ def main() -> int:
                     'max_total_new_tokens': args.max_total_new_tokens,
                     'max_context_tokens': args.max_context_tokens, 'wall_seconds': args.wall_seconds,
                     'max_no_tool_retries': args.max_no_tool_retries,
+                    'max_public_test_runs': args.max_public_test_runs,
+                    'public_test_timeout_s': args.public_test_timeout_s,
+                    'public_test_memory_mb': args.public_test_memory_mb,
                     'temperature': args.temperature, 'top_p': args.top_p, 'top_k': args.top_k,
                     'do_sample': args.do_sample, 'edit_format': args.edit_format},
         'edit_format': args.edit_format,
         'edit_attempted': edit_attempted,
         'edit_applied': edit_applied,
         'public_test_result': public_test_result,
+        'public_test_runs': public_test_runs,
         'format_parse_failure': format_parse_failure,
         'format_parse_failure_count': format_parse_failure_count,
         'stop_reason': stop_reason, 'agent_summary': final_summary,
@@ -599,7 +741,7 @@ def main() -> int:
         'tool_turns': len(transcript), 'no_tool_retries': no_tool_retries, 'transcript': transcript,
         'offline_environment_required': True,
         'wall_budget_checked_between_generations': True,
-        'claim_limit': 'One small cached model on one historical task; not frontier-agent performance or novel fix discovery.',
+        'claim_limit': 'Two-task Development paired-interface feasibility only; not held-out capability, generalization, or model-weight improvement.',
     }
     result_path.parent.mkdir(parents=True, exist_ok=True)
     try:
