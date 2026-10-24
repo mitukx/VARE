@@ -41,7 +41,7 @@ The five cutpoints ran serially as separate transactions against one held-fixed,
 
 Total harness time was 32.52 s. The two interrupted pre-commit attempts were recomputed, but no duplicate effective commit or consumed trajectory was observed. The five cases are not five independent tasks or rollout groups. No async throughput claim is made.
 
-The first crash attempt is retained and explicitly excluded: member-order training yielded a numerically close (`3.73e-9` maximum parameter difference) but non-identical model. The audit traced this to the crash harness omitting the frozen VARE replay-priority ordering and hook advantage path. The harness now applies `PrioritizedReplay.sample_current`, VARE sample conversion, and VARE group-relative advantages before the update. The frozen protocol, budgets, fixtures, and exact equality gate were not changed; the corrected run matches exactly.
+The first crash attempt is retained and explicitly excluded: member-order training yielded a numerically close (`3.73e-9` maximum parameter difference) but non-identical model. The audit traced this to the crash harness omitting the frozen VARE replay-priority ordering and hook advantage path. The harness now applies `PrioritizedReplay.sample_current`, VARE sample conversion, and VARE group-relative advantages before the update. The frozen protocol, budgets, fixtures, and exact equality gate were not changed; the corrected run matches exactly. A later test-only correction makes the evaluator fixture skip cleanly when optional PyTorch is absent while keeping the replay-order regression runnable.
 
 ## Reproduction
 
@@ -66,7 +66,7 @@ python -S scripts/benchmark_verifier_consistent_grpo_sigkill.py \
   --output results/verifier_consistent_async_grpo_v6/crash-82106-replay-order-v2 \
   --model-dir ../tinystories-1m-pinned \
   --rvl-source ../rvl-pinned \
-  --crash-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/crash-runner-correction-v2.json \
+  --crash-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/crash-runner-correction-v3.json \
   --auditor-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v2.json
 
 python -S scripts/audit_verifier_consistent_async_grpo.py \
@@ -76,7 +76,7 @@ python -S scripts/audit_verifier_consistent_async_grpo.py \
   --model-dir ../tinystories-1m-pinned \
   --rvl-source ../rvl-pinned \
   --auditor-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v2.json \
-  --crash-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/crash-runner-correction-v2.json \
+  --crash-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/crash-runner-correction-v3.json \
   --output results/verifier_consistent_async_grpo_v6/audit-with-crash-replay-order-v2.json
 ```
 

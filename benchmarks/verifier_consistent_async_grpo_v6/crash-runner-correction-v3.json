@@ -1,0 +1,12 @@
+{
+  "corrected_crash_runner_sha256": "a875f9879e402b3e29cd6a630ef6d1fc4925e50fe0e84f9a81fbd1bb2b2ddf45",
+  "correction": "Preserve the evaluator cardinality correction and exact VARE replay-order parity from v2. Make the torch-dependent evaluator fixture skip when PyTorch is unavailable, while retaining the replay-order unit test in the base test environment.",
+  "experiment_protocol_sha256": "1e16f2452d2f0d101295df1438f87679bec621bb27f667259fe18d66db5d8523",
+  "frozen_source_commit": "69e9ab9b22da16413dbeababa0552e36aa06612f",
+  "original_crash_runner_sha256": "8d0cf99f6f50cef4573acbc1edf484f7d4339227a96e8e03c28296a94b8ebf87",
+  "regression_test": "tests/test_verifier_consistent_async_grpo_crash_eval.py",
+  "regression_test_sha256": "3cd25339a609a6061ffe3081c93bf1187bb38e641d5bd832ba444030372e8df3",
+  "schema": "vare.v6-crash-runner-correction.v3",
+  "scope": "Test-environment portability only. The v6 protocol, measured runner, run outputs, metrics, checksums, and exact recovery gate are unchanged. The recorded crash run used correction manifest v2; this manifest binds the current regression test for source checkout and CI.",
+  "supersedes_correction_manifest_sha256": "e7a9a2dc67286976d97a28f60ba5ca1a2789c90bb4149e63574eb1f137fc1e9d"
+}
