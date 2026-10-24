@@ -1,0 +1,15 @@
+{
+  "corrected_runner_sha256": "8406b56b4c157473d8367bff0eccda24566b699caf1c0e1859b6c8d9dfb3f50c",
+  "correction_revision": 2,
+  "correction_scope": "Preserves the non-finite replay comparison correction from v1 and adds exclusive output-directory ownership. Rejected invocations cannot add or overwrite evidence files in existing output directories. No v6 task, rollout, verifier, reward, training, budget, or outcome rule changes.",
+  "experiment_protocol_sha256": "1e16f2452d2f0d101295df1438f87679bec621bb27f667259fe18d66db5d8523",
+  "frozen_source_commit": "69e9ab9b22da16413dbeababa0552e36aa06612f",
+  "original_runner_sha256": "b5a9fb33da7e18ed29937dc5077701499096652e20e2ca6cdc265a76dbe5f7f9",
+  "output_safety_correction_manifest": "benchmarks/verifier_consistent_async_grpo_v6/runner-output-safety-correction-v1.json",
+  "output_safety_correction_manifest_sha256": "d13d4d33f6f7e041bbbb0a7e743a46002c9d5fcc61d6dead0fd49afd55f8892b",
+  "previous_corrected_runner_sha256": "158ab176f161c83bd0e5a600efacf013c01ddb9e87e2ed3b835c545675399e7a",
+  "regression_test": "tests/test_verifier_consistent_async_grpo_output_safety.py",
+  "regression_test_sha256": "960c2c02e9a3709bf637dc3635cbdc229d05f5906fbe8f154519f367158edc2d",
+  "schema": "vare.v6-matched-runner-correction.v1",
+  "supersedes_correction_manifest_sha256": "03622b7458e28289440740ef2c0fbf2dca2ac1426cd6511466f10d5d3a6380fb"
+}
