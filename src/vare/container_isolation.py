@@ -33,7 +33,8 @@ class IsolationError(RuntimeError):
 
 
 def _image_pinned(image: str) -> None:
-    if not isinstance(image, str) or _IMAGE.fullmatch(image) is None:
+    local_image_id = isinstance(image, str) and re.fullmatch(r"sha256:[0-9a-f]{64}", image)
+    if not isinstance(image, str) or (_IMAGE.fullmatch(image) is None and local_image_id is None):
         raise ValueError("isolation image must be pinned by sha256 digest")
 
 

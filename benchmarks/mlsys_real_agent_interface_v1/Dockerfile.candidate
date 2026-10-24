@@ -1,0 +1,5 @@
+FROM python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1 PYTHONDONTWRITEBYTECODE=1 PIP_NO_CACHE_DIR=1
+COPY requirements-candidate-linux-aarch64-py312.lock.txt /tmp/requirements.lock.txt
+RUN python -m pip install --no-cache-dir --require-hashes -r /tmp/requirements.lock.txt
+WORKDIR /workspace

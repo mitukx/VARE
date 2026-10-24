@@ -1,4 +1,7 @@
-from scripts.run_local_agent import normalize_tool_call_format, refresh_public_tests_after_edit
+from scripts.run_local_agent import (
+    normalize_tool_call_format, read_file_range, refresh_public_tests_after_edit,
+    replace_text, tools_for,
+)
 from scripts.run_separated_coding_eval import (
     _attempted_task_run_count,
     _planned_task_run_count,
@@ -52,6 +55,33 @@ def test_does_not_promote_unknown_or_malformed_fenced_json_to_tool_calls():
 def test_preserves_native_tool_call_format():
     raw = '<tool_call>{"name":"finish","arguments":{"summary":"done"}}</tool_call>'
     assert normalize_tool_call_format(raw, {"finish"}) == (raw, False)
+
+
+def test_structured_interface_exposes_bounded_reads_and_unique_replacements():
+    names = {tool["function"]["name"] for tool in tools_for("structured_replace", public_tests=True)}
+    assert {"read_file_range", "replace_text", "run_public_tests", "finish"} <= names
+    assert "apply_patch" not in names
+    assert "write_file" not in names
+
+
+def test_bounded_read_rejects_oversized_or_disallowed_ranges(tmp_path):
+    source = tmp_path / "src.py"
+    source.write_text("one\ntwo\nthree\n", encoding="utf-8")
+    assert read_file_range(tmp_path, "src.py", 2, 3, {"src.py"})["content"] == "two\nthree"
+    assert "error" in read_file_range(tmp_path, "src.py", 1, 121, {"src.py"})
+    assert "error" in read_file_range(tmp_path, "../src.py", 1, 1, {"src.py"})
+
+
+def test_structured_replacement_requires_one_exact_match_and_allowlisted_path(tmp_path):
+    source = tmp_path / "src.py"
+    source.write_text("value = 1\n", encoding="utf-8")
+    assert replace_text(tmp_path, "src.py", "value = 1", "value = 2", {"src.py"})["applied"]
+    assert source.read_text(encoding="utf-8") == "value = 2\n"
+    source.write_text("x = 1\nx = 1\n", encoding="utf-8")
+    ambiguous = replace_text(tmp_path, "src.py", "x = 1", "x = 2", {"src.py"})
+    assert ambiguous["applied"] is False
+    assert ambiguous["matches"] == 2
+    assert replace_text(tmp_path, "../outside.py", "x", "y", {"src.py"})["applied"] is False
 
 
 def test_verified_success_requires_public_test_and_independent_hidden_grade():

@@ -1,0 +1,15 @@
+{
+  "metadata": {
+    "editable_files": [
+      "mlx_lm/utils.py",
+      "test_public.py"
+    ],
+    "split": "train"
+  },
+  "prompt": "# Task: pipeline shards with split quantization metadata\n\nIn `mlx_lm/utils.py`, make `load_model` robust when a shard selected for one pipeline stage also contains quantization scales for a layer owned by another stage, but not that layer\u2019s weight tensor. Loading should continue for the local stage and preserve its complete quantized layer weights. Do not change the treatment of layers whose local weights and scales are both present.\n\nOnly edit `mlx_lm/utils.py`. The public test constructs a tiny model and a split shard; the independent grader repeats this with a different layer count and boundary.\n",
+  "source": {
+    "base_revision": "HEAD",
+    "calibration_revision": "HEAD"
+  },
+  "task_id": "mlx-lm-1980-pipeline-scales"
+}

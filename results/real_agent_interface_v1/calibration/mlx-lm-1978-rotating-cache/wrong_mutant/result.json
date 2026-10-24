@@ -1,0 +1,26 @@
+{
+  "calibration_expectation": "fail",
+  "candidate_public": {
+    "passed": false,
+    "returncode": 1,
+    "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_public.py\", line 22, in <module>\n    check(max_size=8, keep=2, history=20, chunk=5)\n  File \"/workspace/test_public.py\", line 20, in check\n    assert actual == expected, (actual, expected)\n           ^^^^^^^^^^^^^^^^^^\nAssertionError: ([[True, True, True, True, True, True, True, True, False, False, False, False], [True, True, True, True, True, True, True, True, True, False, False, False], [True, True, True, True, True, True, True, True, True, True, False, False], [True, True, False, True, True, True, True, True, True, True, True, False], [True, True, False, False, True, True, True, True, True, True, True, True]], [[True, True, True, True, True, True, True, True, False, False, False, False], [True, True, False, True, True, True, True, True, True, False, False, False], [True, True, False, False, True, True, True, True, True, True, False, False], [True, True, False, False, False, True, True, True, True, True, True, False], [True, True, False, False, False, False, True, True, True, True, True, True]])\n",
+    "stderr_sha256": "a4ed59afb853bfa072096bfc29da49ec7281e92db5abc3c0112be5ac637ea921",
+    "stdout": "",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "candidate_target_sha256": "1ef50743f4e8ce70c12c76daca7c2514ae85b5b7348b0235c653a8a9c297993b",
+  "container_image": "sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+  "hidden_test_sha256": "57d052bafc358f5dcb066efe33fe8b01c97515868277e3f9886d7b3840c6be37",
+  "public_test_sha256": "12c081b5f41df17e1fd7c5c86bd52de4c5fb6d56f7aac72825766114c3f354ec",
+  "target_file": "mlx_lm/models/cache.py",
+  "task_id": "mlx-lm-1978-rotating-cache",
+  "trusted_hidden": {
+    "passed": false,
+    "returncode": 1,
+    "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_hidden.py\", line 25, in <module>\n    assert_mask(*case)\n  File \"/workspace/test_hidden.py\", line 21, in assert_mask\n    assert row == expected\n           ^^^^^^^^^^^^^^^\nAssertionError\n",
+    "stderr_sha256": "f65016b2ecc1e294f7ebb3e104ecc9935cbae828e3273e1ab245220db943f6a2",
+    "stdout": "",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "variant": "wrong_mutant"
+}

@@ -1,0 +1,56 @@
+{
+  "candidate_inputs": {
+    "TASK.md": "8ce12bc59e788685bc441c3922bfb4f31e6d5db66284054a122a87d4221a0a8a",
+    "task.json": "da3d679358f2720c83acebe306c4b0a27fa497ed2a73ee541b72ba2906474f2c",
+    "test_public.py": "12c081b5f41df17e1fd7c5c86bd52de4c5fb6d56f7aac72825766114c3f354ec"
+  },
+  "known_fix_access": "Evaluator provenance only; upstream fix and hidden grader are not staged in the model workspace or candidate image.",
+  "prior_exposure": {
+    "model_attempted_before": false,
+    "qualification_note": "PR appears after the public 2024 Qwen2.5-Coder model release. Task identifier/title absent from prior tracked VARE evidence. #1978 shares the RotatingKVCache API name with 2026-10-24 scripted #1971 reference-analysis artifacts, but those were not model runs and did not include make_mask/keep semantics.",
+    "tracked_head_search": [
+      {
+        "matches": 0,
+        "query": "#1978",
+        "scopes": [
+          "docs",
+          "protocols",
+          "results",
+          "benchmarks"
+        ]
+      },
+      {
+        "matches": 0,
+        "query": "Fix multi-token attention mask in RotatingKVCache",
+        "scopes": [
+          "docs",
+          "protocols",
+          "results",
+          "benchmarks"
+        ]
+      }
+    ]
+  },
+  "schema_version": 1,
+  "split": "development",
+  "task_id": "mlx-lm-1978-rotating-cache",
+  "trusted_grader": {
+    "file": "evaluator/test_hidden.py",
+    "not_mounted_during_candidate_execution": true,
+    "sha256": "57d052bafc358f5dcb066efe33fe8b01c97515868277e3f9886d7b3840c6be37"
+  },
+  "upstream": {
+    "base_revision": "06e03f7ce7c059ad105483a9dded0bb338cbaf53",
+    "base_target_sha256": "c96cb169fd5e0ec4584a162dd61dc62ab08ccdca03a9850f8a491ce6809145e6",
+    "created_at": "2026-10-15",
+    "fix_revision": "8e10a9140671e405b5d79369027d710e207c02e8",
+    "fix_target_sha256": "2aed31f96923edc061a2dd5a643986b8c01f74c7ccfbaeb03ff6d5ae57eb0842",
+    "pull_request": 1978,
+    "repository": "https://github.com/ml-explore/mlx-lm",
+    "status_as_of": "2026-10-24: open",
+    "target_file": "mlx_lm/models/cache.py",
+    "title": "Fix multi-token attention mask in RotatingKVCache",
+    "upstream_test_at_fix_sha256": "815ecd5f287a072556e8b3fb53bd053eb3e5cbcbd50d2abb1f09e0d5b1cfa8ca",
+    "upstream_test_file": "tests/test_prompt_cache.py"
+  }
+}

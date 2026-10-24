@@ -1,9 +1,10 @@
-"""One edit format for every arm, parsed without treating a bad edit as a task score.
+"""Edit formats for coding-agent evaluations, separated from task scoring.
 
-``edit_format`` is ``unified_diff`` or ``whole_file``. A protocol picks one
-value and uses it for every compared arm. The parser accepts fences and
-surrounding prose. A parsed edit is not a passing grade. ``format_parse_failure``
-is recorded even when ``task_passed`` is false. ``outcome`` is a separate label:
+``edit_format`` may be ``unified_diff``, ``whole_file``, or
+``structured_replace``. The latter is executed only through the runner's strict
+``replace_text`` tool, not this free-form parser. A parsed edit is not a passing
+grade. ``format_parse_failure`` is recorded even when ``task_passed`` is false.
+``outcome`` is a separate label:
 ``no_tool_call``, ``malformed_edit``, ``edit_applied_but_wrong``, ``timeout``,
 or ``pass``.
 """
@@ -17,7 +18,7 @@ import re
 import subprocess
 from typing import Mapping, Sequence
 
-EDIT_FORMATS = ("unified_diff", "whole_file")
+EDIT_FORMATS = ("unified_diff", "whole_file", "structured_replace")
 OUTCOMES = ("no_tool_call", "malformed_edit", "edit_applied_but_wrong", "timeout", "pass")
 _TIMEOUT_STOPS = frozenset({"wall_time_exhausted", "token_budget_exhausted"})
 _FENCE = re.compile(r"```([^\n`]*)\n(.*?)```", re.DOTALL)
@@ -66,7 +67,7 @@ class ApplyResult:
 
 def require_edit_format(value: str) -> str:
     if value not in EDIT_FORMATS:
-        raise EditFormatError("edit_format must be unified_diff or whole_file")
+        raise EditFormatError("edit_format must be unified_diff, whole_file, or structured_replace")
     return value
 
 
@@ -92,6 +93,8 @@ def parse_submission(text: str, *, edit_format: str) -> ParsedEdit | ParseFailur
         if not paths:
             return ParseFailure(edit_format, "malformed_diff")
         return ParsedEdit(edit_format, tuple(paths), diff, tuple(FileUpdate(path) for path in paths))
+    if edit_format == "structured_replace":
+        return ParseFailure(edit_format, "wrong_format" if has_diff or has_file else "no_edit")
     if has_diff and not has_file:
         return ParseFailure(edit_format, "wrong_format")
     files = _whole_files(normalized)

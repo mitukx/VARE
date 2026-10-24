@@ -41,6 +41,7 @@ def _trust():
 def test_pinned_image_and_bounded_configuration_required():
     with pytest.raises(ValueError, match="pinned"):
         IsolationLimits("python:latest")
+    IsolationLimits("sha256:" + "a" * 64)
     with pytest.raises(ValueError, match="resource"):
         IsolationLimits(IMAGE, timeout_s=0)
     with pytest.raises(ValueError, match="resource"):

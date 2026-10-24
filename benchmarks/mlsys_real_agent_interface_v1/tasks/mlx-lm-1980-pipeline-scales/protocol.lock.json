@@ -1,0 +1,56 @@
+{
+  "candidate_inputs": {
+    "TASK.md": "fb63b8ec6394e57c5c5b1d0a4f9be24b6879be97a45b760952c0f2c7f71ef8b4",
+    "task.json": "d57688dcc37b360f0e6a5dac30307531d2620935cde8eb135fbb1771791dfb0c",
+    "test_public.py": "0ad3e59025f8f68b3669887e6ead85ab3b376a7f80a43d5ffe23d262f3b6d433"
+  },
+  "known_fix_access": "Evaluator provenance only; upstream fix and hidden grader are not staged in the model workspace or candidate image.",
+  "prior_exposure": {
+    "model_attempted_before": false,
+    "qualification_note": "PR appears after the public 2024 Qwen2.5-Coder model release. Task identifier/title absent from prior tracked VARE evidence. This search establishes only that this named task was not previously recorded or attempted; it does not establish absence of generic familiarity with load_model or quantization metadata.",
+    "tracked_head_search": [
+      {
+        "matches": 0,
+        "query": "#1980",
+        "scopes": [
+          "docs",
+          "protocols",
+          "results",
+          "benchmarks"
+        ]
+      },
+      {
+        "matches": 0,
+        "query": "Fix pipeline load when a shard holds another stage\u2019s scales",
+        "scopes": [
+          "docs",
+          "protocols",
+          "results",
+          "benchmarks"
+        ]
+      }
+    ]
+  },
+  "schema_version": 1,
+  "split": "development",
+  "task_id": "mlx-lm-1980-pipeline-scales",
+  "trusted_grader": {
+    "file": "evaluator/test_hidden.py",
+    "not_mounted_during_candidate_execution": true,
+    "sha256": "fbad77e886e17b8439df8bbc04046eade2c3a44bb54a0faede0adc2db0278296"
+  },
+  "upstream": {
+    "base_revision": "8fda5e976a2da412d9f8119361edefd405381cf9",
+    "base_target_sha256": "936667c9f30c2b9451b8e3ce8ac7b9579b176605094d435fa5128f7ac272f281",
+    "created_at": "2026-10-15",
+    "fix_revision": "288453d390ac3a0c0f360700088a453220e48b7b",
+    "fix_target_sha256": "74283f62c155579c685071a47c1221ae6bb2333492ed94bc0443c1c67bcd9f51",
+    "pull_request": 1980,
+    "repository": "https://github.com/ml-explore/mlx-lm",
+    "status_as_of": "2026-10-24: open",
+    "target_file": "mlx_lm/utils.py",
+    "title": "Fix pipeline load when a shard holds another stage\u2019s scales",
+    "upstream_test_at_fix_sha256": "c23b1cb6133b653f891d17244a28d6a0f3482ffccc21f02f667d68f6d9213d93",
+    "upstream_test_file": "tests/test_utils.py"
+  }
+}

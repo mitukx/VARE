@@ -1,0 +1,247 @@
+{
+  "attempt_order": [
+    {
+      "edit_format": "structured_replace",
+      "task_id": "mlx-lm-1980-pipeline-scales"
+    },
+    {
+      "edit_format": "unified_diff",
+      "task_id": "mlx-lm-1978-rotating-cache"
+    },
+    {
+      "edit_format": "unified_diff",
+      "task_id": "mlx-lm-1980-pipeline-scales"
+    },
+    {
+      "edit_format": "structured_replace",
+      "task_id": "mlx-lm-1978-rotating-cache"
+    }
+  ],
+  "claim_limit": "Two-task Development paired-interface feasibility only; no held-out performance, broad coding capability, model-weight improvement, or asynchronous learning claim.",
+  "freeze_status": "frozen before model download and inference",
+  "frozen_before_model_inference": true,
+  "frozen_utc": "2026-10-24",
+  "hypothesis": "The structured replacement interface may reduce invalid edit actions observed in earlier real-model traces; result is a two-task feasibility comparison only.",
+  "implementation_sha256": {
+    "benchmarks/mlsys_real_agent_interface_v1/Dockerfile.candidate": "1cea2e043bd7a07cbf4840a78958f2cff345cb321739b89bb970e061d7bfe97d",
+    "benchmarks/mlsys_real_agent_interface_v1/requirements-candidate-linux-aarch64-py312.lock.txt": "16d2950bc8a72f05e907d36520d1970f1437f1df76eea9ed20cd6785149e6014",
+    "requirements/mlsys-agent-mlx.lock.txt": "ab4187759276ca759e84c9a4f12cb2a9416c7e297c69b87783c243ac9459af2a",
+    "scripts/prepare_real_agent_interface_v1.py": "b24daa909be2c21a747dedf9975f942ae451665b24cc821aeecae5eb681fb7dd",
+    "scripts/run_local_agent.py": "2bf11a4fd1818d6fe199dd8aa2fb999ad5a48793d031e4c6f2bc37f6ba10eeba",
+    "scripts/run_real_agent_interface_v1.py": "38cf24b33ce82de01ff60228fbe02835b40a1d55ef1f49071e8b7f5503972405",
+    "scripts/run_real_agent_isolation_e0_v1.py": "1c72edad001466d659bd3803d9d0098000b04869aa261ebdd48fbb78f1c94685",
+    "src/vare/agent_edit_format.py": "18759903979eb59559aee7d5eaa376e5b6739d896608a66b0260a3e29256cad9",
+    "src/vare/agent_task_contract.py": "f3cb85f1960dcaf175345bb45a6f23a08bda7a8805d37db9caf217ac5c86f3fd",
+    "src/vare/container_isolation.py": "50e51865b094ab4a1666cfc961e9c435f9626b1952904dedb2ca85770b73837f",
+    "tests/test_container_isolation.py": "faf1bc54fd2cd6f2cb7cef556d745d0e74759d41d1876f29e60c315f21c38fc2",
+    "tests/test_run_local_agent_tool_format.py": "3bba45cf1cc0b4798aa66fb6b7bdb129da7bf76c447fe5a40e0e1559ae36db16"
+  },
+  "inference_budget": {
+    "do_sample": false,
+    "gpu_hours": 0,
+    "max_context_tokens": 32768,
+    "max_new_tokens_per_turn": 768,
+    "max_no_tool_retries": 2,
+    "max_public_test_runs": 4,
+    "max_total_new_tokens": 4096,
+    "max_turns": 12,
+    "paid_api_usd": 0,
+    "public_test_memory_mb": 2048,
+    "public_test_timeout_seconds": 120,
+    "seed": 101,
+    "temperature": 0.0,
+    "top_k": 0,
+    "top_p": 1.0,
+    "wall_seconds": 900
+  },
+  "instruction": "Identify the reported failure, inspect the named source file, make a minimal source-only repair, run the public test, and finish. Do not edit test files.",
+  "model": {
+    "base_repository": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "base_revision": "c03e6d358207e414f1eca0bb1891e29f1db0e242",
+    "files_sha256": {
+      "added_tokens.json": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b",
+      "config.json": "08762352ba9fded858f24bdd7b8d2fe61aabe7bce1dfdb663db242d574c3e678",
+      "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "model.safetensors": "56a3d94706833f753e6c6b47ea57af8ef638cd8cc1d74eca1142ba640b26060e",
+      "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "tokenizer.json": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf",
+      "tokenizer_config.json": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "license": "Apache-2.0",
+    "quantization": {
+      "bits": 4,
+      "format": "MLX safetensors",
+      "group_size": 64
+    },
+    "repository": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+    "revision": "019cc73c45c770444708a6dd8690c66243cc5c80",
+    "snapshot_download": "Only the eight listed files at the exact revision; verify every SHA-256 before inference; run offline after download."
+  },
+  "preregistration": {
+    "analysis": "Report exact paired task outcomes and descriptive success proportions. With two task clusters this is feasibility evidence only; no statistical capability-improvement claim, held-out claim, training claim, or generalization claim.",
+    "attempt_order": [
+      {
+        "edit_format": "structured_replace",
+        "task_id": "mlx-lm-1980-pipeline-scales"
+      },
+      {
+        "edit_format": "unified_diff",
+        "task_id": "mlx-lm-1978-rotating-cache"
+      },
+      {
+        "edit_format": "unified_diff",
+        "task_id": "mlx-lm-1980-pipeline-scales"
+      },
+      {
+        "edit_format": "structured_replace",
+        "task_id": "mlx-lm-1978-rotating-cache"
+      }
+    ],
+    "attempt_order_seed": 20261024,
+    "exposure_history": "Both task IDs were absent in prior tracked VARE model records and have model_attempted_before=false. Generic API familiarity is not ruled out. The #1978 RotatingKVCache API name appeared in non-model scripted analysis, documented in its task lock.",
+    "paired_design": "Each task is attempted once by each interface arm using the same checkpoint, greedy decoding, seed, task prompt, tool-turn/token/public-test limits, runtime image, and independent hidden grader. Interface-specific tool schema and edit instructions are the only planned treatment differences.",
+    "primary_metric": "Independently verified successful repairs per Development task at the fixed attempt budget, reported separately by interface arm with denominator 2.",
+    "secondary_metrics": [
+      "valid source edit applied",
+      "tool calls by type",
+      "source inspection",
+      "public tests run and passed",
+      "hidden grader passed",
+      "tokens",
+      "turns",
+      "elapsed wall time",
+      "peak process-tree RSS",
+      "MLX peak memory",
+      "failure class"
+    ],
+    "selection_rule": "Select upstream MLX-LM PRs opened 2026-10-15 after the frozen public Qwen2.5-Coder model revision, absent as named tasks in prior tracked VARE model evidence; require pinned failing base, pinned known fix, independent public and trusted hidden calibration, and wrong-mutant rejection before model inference.",
+    "stopping_rules": [
+      "Do not change model, prompt, task set, tool schema, decoding, budgets, or reward after first attempt.",
+      "Abort before inference if candidate isolation E0, pinned inputs, task controls, model hashes, or resource preflight fail.",
+      "Retain timeout, crash, malformed-tool, no-edit, public failure, hidden failure, and resource-abort records.",
+      "If all four attempts yield zero verified repairs, classify failure and stop; do not tune prompts or launch SFT/GRPO."
+    ],
+    "task_split": "Development only; neither task contributes to training or held-out capability claims.",
+    "training": "No student update, SFT, GRPO, or policy-learning claim is authorized by this two-task feasibility protocol."
+  },
+  "protocol_id": "real-agent-interface-v1",
+  "research_question": "On two fresh Development repository-repair tasks, does replacing free-form unified-diff edits with bounded source reads and exact unique-string replacement improve independently verified repair success for the same frozen local coding model under matched budgets?",
+  "resource_limits": {
+    "max_model_process_rss_bytes": 10737418240,
+    "max_swap_growth_bytes": 33554432,
+    "minimum_available_memory_bytes": 2147483648,
+    "minimum_disk_free_bytes": 16106127360,
+    "minimum_free_swap_bytes": 134217728,
+    "sample_interval_seconds": 1
+  },
+  "runtime": {
+    "backend": "MLX on Apple Metal",
+    "candidate_dependency_lock_sha256": "16d2950bc8a72f05e907d36520d1970f1437f1df76eea9ed20cd6785149e6014",
+    "candidate_execution": "Docker candidate execution has network disabled, read-only root, dropped capabilities, bounded memory/CPU/PIDs, and only the source workspace mounted. The hidden grader is copied to a separate post-inference workspace/container and never mounted during model execution.",
+    "candidate_image": "sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+    "candidate_image_base": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "candidate_image_build": "docker build --platform linux/arm64 -f Dockerfile.candidate -t vare-real-agent-candidate-v1 . (run from benchmarks/mlsys_real_agent_interface_v1; Dockerfile base and all installed dependency hashes are pinned).",
+    "candidate_image_platform": "linux/arm64",
+    "dependency_lock_sha256": "ab4187759276ca759e84c9a4f12cb2a9416c7e297c69b87783c243ac9459af2a",
+    "docker_context": "colima",
+    "e0_result": "results/real_agent_interface_v1/isolation_e0/observations.json",
+    "host": "Apple M1 Pro / 32 GiB / macOS arm64",
+    "inference_python": "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/coding-agent-interface-study/work/venv-inference/bin/python",
+    "no_paid_or_remote_inference": true,
+    "python": "3.12.12"
+  },
+  "schema_version": 1,
+  "task_lock_sha256": {
+    "mlx-lm-1978-rotating-cache": "62fc9a5f273e7d274d0287753f3b0bc151789946edadc6f315ffa66d6f83e563",
+    "mlx-lm-1980-pipeline-scales": "685f43d0eb61296b2416fa83c4232f6b1af3934488704d600bfc9d4ea3a0036d"
+  },
+  "tasks": {
+    "mlx-lm-1978-rotating-cache": {
+      "base_revision": "06e03f7ce7c059ad105483a9dded0bb338cbaf53",
+      "base_target_sha256": "c96cb169fd5e0ec4584a162dd61dc62ab08ccdca03a9850f8a491ce6809145e6",
+      "candidate_inputs": {
+        "TASK.md": "8ce12bc59e788685bc441c3922bfb4f31e6d5db66284054a122a87d4221a0a8a",
+        "task.json": "da3d679358f2720c83acebe306c4b0a27fa497ed2a73ee541b72ba2906474f2c",
+        "test_public.py": "12c081b5f41df17e1fd7c5c86bd52de4c5fb6d56f7aac72825766114c3f354ec"
+      },
+      "fix_revision": "8e10a9140671e405b5d79369027d710e207c02e8",
+      "fix_target_sha256": "2aed31f96923edc061a2dd5a643986b8c01f74c7ccfbaeb03ff6d5ae57eb0842",
+      "prior_exposure": {
+        "model_attempted_before": false,
+        "qualification_note": "PR appears after the public 2024 Qwen2.5-Coder model release. Task identifier/title absent from prior tracked VARE evidence. #1978 shares the RotatingKVCache API name with 2026-10-24 scripted #1971 reference-analysis artifacts, but those were not model runs and did not include make_mask/keep semantics.",
+        "tracked_head_search": [
+          {
+            "matches": 0,
+            "query": "#1978",
+            "scopes": [
+              "docs",
+              "protocols",
+              "results",
+              "benchmarks"
+            ]
+          },
+          {
+            "matches": 0,
+            "query": "Fix multi-token attention mask in RotatingKVCache",
+            "scopes": [
+              "docs",
+              "protocols",
+              "results",
+              "benchmarks"
+            ]
+          }
+        ]
+      },
+      "pull_request": 1978,
+      "split": "Development",
+      "target_file": "mlx_lm/models/cache.py",
+      "trusted_grader_sha256": "57d052bafc358f5dcb066efe33fe8b01c97515868277e3f9886d7b3840c6be37",
+      "upstream_repository": "https://github.com/ml-explore/mlx-lm",
+      "upstream_title": "Fix multi-token attention mask in RotatingKVCache"
+    },
+    "mlx-lm-1980-pipeline-scales": {
+      "base_revision": "8fda5e976a2da412d9f8119361edefd405381cf9",
+      "base_target_sha256": "936667c9f30c2b9451b8e3ce8ac7b9579b176605094d435fa5128f7ac272f281",
+      "candidate_inputs": {
+        "TASK.md": "fb63b8ec6394e57c5c5b1d0a4f9be24b6879be97a45b760952c0f2c7f71ef8b4",
+        "task.json": "d57688dcc37b360f0e6a5dac30307531d2620935cde8eb135fbb1771791dfb0c",
+        "test_public.py": "0ad3e59025f8f68b3669887e6ead85ab3b376a7f80a43d5ffe23d262f3b6d433"
+      },
+      "fix_revision": "288453d390ac3a0c0f360700088a453220e48b7b",
+      "fix_target_sha256": "74283f62c155579c685071a47c1221ae6bb2333492ed94bc0443c1c67bcd9f51",
+      "prior_exposure": {
+        "model_attempted_before": false,
+        "qualification_note": "PR appears after the public 2024 Qwen2.5-Coder model release. Task identifier/title absent from prior tracked VARE evidence. This search establishes only that this named task was not previously recorded or attempted; it does not establish absence of generic familiarity with load_model or quantization metadata.",
+        "tracked_head_search": [
+          {
+            "matches": 0,
+            "query": "#1980",
+            "scopes": [
+              "docs",
+              "protocols",
+              "results",
+              "benchmarks"
+            ]
+          },
+          {
+            "matches": 0,
+            "query": "Fix pipeline load when a shard holds another stage\u2019s scales",
+            "scopes": [
+              "docs",
+              "protocols",
+              "results",
+              "benchmarks"
+            ]
+          }
+        ]
+      },
+      "pull_request": 1980,
+      "split": "Development",
+      "target_file": "mlx_lm/utils.py",
+      "trusted_grader_sha256": "fbad77e886e17b8439df8bbc04046eade2c3a44bb54a0faede0adc2db0278296",
+      "upstream_repository": "https://github.com/ml-explore/mlx-lm",
+      "upstream_title": "Fix pipeline load when a shard holds another stage\u2019s scales"
+    }
+  }
+}

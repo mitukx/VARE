@@ -1,0 +1,26 @@
+{
+  "calibration_expectation": "pass",
+  "candidate_public": {
+    "passed": true,
+    "returncode": 0,
+    "stderr": "",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "[INFO] Quantized model with 6.096 bits per weight.\n",
+    "stdout_sha256": "12b09fb2de301dce9269f7ec411bfccf146ba8a65e77df971ac889779227963c"
+  },
+  "candidate_target_sha256": "74283f62c155579c685071a47c1221ae6bb2333492ed94bc0443c1c67bcd9f51",
+  "container_image": "sha256:747b240f21c9d3107b5b8820dafccbb7639ea56f2ab692528b2e0f5fd84be1f1",
+  "hidden_test_sha256": "fbad77e886e17b8439df8bbc04046eade2c3a44bb54a0faede0adc2db0278296",
+  "public_test_sha256": "0ad3e59025f8f68b3669887e6ead85ab3b376a7f80a43d5ffe23d262f3b6d433",
+  "target_file": "mlx_lm/utils.py",
+  "task_id": "mlx-lm-1980-pipeline-scales",
+  "trusted_hidden": {
+    "passed": true,
+    "returncode": 0,
+    "stderr": "",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "[INFO] Quantized model with 6.107 bits per weight.\n[INFO] Quantized model with 6.107 bits per weight.\n[INFO] Quantized model with 6.107 bits per weight.\n",
+    "stdout_sha256": "6d5b7b74a54a62a963a58a2dc921894479e495a72d22e347bce466d3c94c1823"
+  },
+  "variant": "known_fix"
+}
