@@ -1,0 +1,165 @@
+{
+  "decision_rules": {
+    "all_groups_must_be_nonconstant_under_v1": true,
+    "minimum_fraction_with_absolute_reward_shift_at_least_0_25": 0.25,
+    "minimum_mean_absolute_reward_shift_v0_to_v1": 0.15,
+    "stop": "No resampling or prompt/reward changes. The fixed four-group calibration completes unless a resource abort fires. A failed reward gate is NO-GO for training under this reward."
+  },
+  "model": {
+    "files": {
+      "config.json": "ff74c30d5ebb5ab1da0f2ea479adf7197c504b42b5522a858c334ab91ed4958c",
+      "merges.txt": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+      "pytorch_model.bin": "07f9609ea882b8163ff3b23d40e2b82cb715d409631beb15c84b164f3877dae7",
+      "special_tokens_map.json": "98412137ae43c77f8af52eb51b19c3536d3242cb55339167d841005fa94a23b7",
+      "tokenizer.json": "f6ed3d307010c244c22aeffbde05f419cf277c23e64cf98b673cac5449cfeff5",
+      "tokenizer_config.json": "3d76da0fd37493fbfcd3f0fa9757753d31f92e1779ebd9130809b45546a60261",
+      "vocab.json": "3ba3c3109ff33976c4bd966589c11ee14fcaa1f4c9e5e154c2ed7f99d80709e7"
+    },
+    "name": "TinyStories-1M",
+    "revision": "77f1b168e219585646439073245fe87e56b3023e"
+  },
+  "purpose": "Reward-only calibration; new prompts; no optimizer updates and no held-out evaluation prompts.",
+  "resource_limits": {
+    "abort": "Stop after the current durable group on RSS, swap-growth, identity, non-finite-score, or wall-time limit; retain completed records and a partial-stop record.",
+    "max_positive_swap_growth_bytes": 268435456,
+    "max_rss_bytes": 8589934592,
+    "max_wall_seconds": 600
+  },
+  "reward_definition": {
+    "surface_classes": {
+      "air": [
+        "sky"
+      ],
+      "built": [
+        "floor",
+        "pavement",
+        "road",
+        "sidewalk"
+      ],
+      "earth": [
+        "ground",
+        "dirt",
+        "soil",
+        "earth"
+      ],
+      "elevated": [
+        "branch",
+        "limb",
+        "tree"
+      ],
+      "frozen": [
+        "snow",
+        "ice"
+      ],
+      "granular": [
+        "sand",
+        "beach"
+      ],
+      "rocky": [
+        "rock",
+        "stone"
+      ],
+      "vegetation": [
+        "grass",
+        "field",
+        "lawn",
+        "meadow"
+      ],
+      "water": [
+        "water",
+        "lake",
+        "river",
+        "pond"
+      ]
+    },
+    "surface_detection": "Use the earliest whole-word match, case-insensitive, across all aliases. No match is unknown.",
+    "v0": {
+      "class_scores": {
+        "air": 0.0,
+        "built": 0.85,
+        "earth": 1.0,
+        "elevated": 0.75,
+        "frozen": 0.9,
+        "granular": 0.7,
+        "rocky": 0.8,
+        "vegetation": 0.9,
+        "water": 0.65
+      },
+      "name": "generic physical-support plausibility",
+      "semantics": "A generic ordinal plausibility score for a surface supporting an ordinary dropped or landing object.",
+      "unknown_score": 0.0
+    },
+    "v1": {
+      "exact_score": 1.0,
+      "name": "target-conditioned surface compatibility",
+      "other_support_score": 0.25,
+      "related_classes": {
+        "built": [
+          "earth",
+          "rocky"
+        ],
+        "earth": [
+          "vegetation",
+          "rocky",
+          "built"
+        ],
+        "elevated": [
+          "vegetation",
+          "earth"
+        ],
+        "frozen": [
+          "granular",
+          "earth"
+        ]
+      },
+      "related_score": 0.6,
+      "semantics": "Exact target class scores 1.0; a prespecified physically related class scores 0.6; another recognized support class scores 0.25; air or no recognized surface scores 0.0.",
+      "unknown_score": 0.0
+    }
+  },
+  "runtime": {
+    "backend_sha256": "a35179d2ff65b35d8079b0d48a933444cac440debd736d6dc6a7a53a27cfb960",
+    "device": "cpu",
+    "precision": "fp32",
+    "python": "3.12.12",
+    "rvl_revision": "e381c4b3b8c2ad8e5dc4c4b1a33b7922531c3e33",
+    "threads": 1,
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "sampling": {
+    "group_size": 8,
+    "max_new_tokens": 3,
+    "seed": 94001,
+    "seed_rule": "Each task group uses seed + 100 * task_index; one backend call samples exactly eight candidates.",
+    "tasks": [
+      {
+        "id": "cal-earth-01",
+        "prompt": "The fallen maple leaf drifted down and came to rest on the",
+        "target_class": "earth"
+      },
+      {
+        "id": "cal-elevated-02",
+        "prompt": "The small bird returned to its nest and landed on the",
+        "target_class": "elevated"
+      },
+      {
+        "id": "cal-built-03",
+        "prompt": "The mug slipped from the counter and broke when it hit the",
+        "target_class": "built"
+      },
+      {
+        "id": "cal-frozen-04",
+        "prompt": "The skier slid down the mountain and came to a stop on the",
+        "target_class": "frozen"
+      }
+    ],
+    "temperature": 0.8
+  },
+  "schema": "vare.dense-verifier-reward-calibration.v1",
+  "source_identity": {
+    "auditor_sha256": "93edbd179164b10bf4ad03a546f25df6a42bf0c161de07ceefd21c74a15e2de0",
+    "helper_sha256": "8406b56b4c157473d8367bff0eccda24566b699caf1c0e1859b6c8d9dfb3f50c",
+    "sampler_sha256": "251410023f0da117a10c5e69490a60fa3cfed6897aa3d517c73b5b1c8a4f2fa7"
+  }
+}
