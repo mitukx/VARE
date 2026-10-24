@@ -23,7 +23,7 @@ import time
 from statistics import fmean
 
 ROOT = Path(__file__).resolve().parents[1]
-PROTOCOL_PATH = ROOT / "benchmarks/verifier_consistent_async_grpo_v3/protocol.json"
+PROTOCOL_PATH = ROOT / "benchmarks/verifier_consistent_async_grpo_v4/protocol.json"
 PROMPT = "Choose one label for a story: a blue bird landed on the"
 GROUP_SIZE = 8
 
@@ -572,7 +572,8 @@ async def run(args) -> None:
                 "a prespecified verifier group is degenerate; stop without resampling")
 
         if arm == "naive_async":
-            batch = make_experiences(groups["stale"], "naive-stale", verifier_shas)
+            batch = make_experiences(
+                groups["stale"], "naive-stale", verifier_shas=verifier_shas)
             candidate_id = await hooks.train_candidate_with_freshness(
                 "policy-0", batch, hooks._training_freshness_assessor)
             # The naive control deliberately ignores verifier provenance at
