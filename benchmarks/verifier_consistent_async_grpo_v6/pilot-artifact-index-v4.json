@@ -1,0 +1,97 @@
+{
+  "audit": {
+    "bytes": 13864,
+    "path": "results/verifier_consistent_async_grpo_v6/audit-with-crash-replay-order-v6.json",
+    "sha256": "fb5914e0f68cbcc815306eacbac709f0b0d40c92744bb73b05eed069a79768b8"
+  },
+  "audit_integrity_postmortem": {
+    "bytes": 2349,
+    "path": "results/verifier_consistent_async_grpo_v6/audit-integrity-review-postmortem-v2.json",
+    "sha256": "d7c9234d4f7e95f3d3d18f66732f806ef223223de404de25fff131f38a6ef58b"
+  },
+  "audit_integrity_postmortem_history": [
+    {
+      "bytes": 2081,
+      "path": "results/verifier_consistent_async_grpo_v6/audit-integrity-review-postmortem-v1.json",
+      "sha256": "d54e161bc21b4d0bf531a6121403d558cef3bf61434c8d18dfef53e2c558140e"
+    }
+  ],
+  "correction_artifacts": [
+    {
+      "bytes": 1620,
+      "path": "benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v3.json",
+      "sha256": "2ec51521bde1d45236abf7cb71737487c8ec7d031d8f4b9ded3d3aad34b0829e"
+    },
+    {
+      "bytes": 819,
+      "path": "benchmarks/verifier_consistent_async_grpo_v6/matched-runner-correction-v1.json",
+      "sha256": "03622b7458e28289440740ef2c0fbf2dca2ac1426cd6511466f10d5d3a6380fb"
+    },
+    {
+      "bytes": 1257,
+      "path": "benchmarks/verifier_consistent_async_grpo_v6/crash-runner-correction-v3.json",
+      "sha256": "61c77d7d1ac93d9552388c188cfe53906f468108d9424bd7840187e27f2199a6"
+    },
+    {
+      "bytes": 975,
+      "path": "benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v2.json",
+      "sha256": "3a1d896fa9381893844e3b8d2c0119ac79ef14f18b67dd71a8050dc8e88c90b5"
+    }
+  ],
+  "current_regression_sources": [
+    {
+      "bytes": 39084,
+      "path": "scripts/audit_verifier_consistent_async_grpo.py",
+      "sha256": "e2f2f6b83686127cd21666538e02a22c436575df427ed0ce8c79d6360116f1bd"
+    },
+    {
+      "bytes": 45645,
+      "path": "scripts/benchmark_verifier_consistent_async_grpo.py",
+      "sha256": "158ab176f161c83bd0e5a600efacf013c01ddb9e87e2ed3b835c545675399e7a"
+    },
+    {
+      "bytes": 4694,
+      "path": "tests/test_verifier_consistent_async_grpo_audit_safety.py",
+      "sha256": "475473d411eb4761172615b8b92cbf645b006471803ecfa48533d85d40fc9c70"
+    }
+  ],
+  "documentation": [
+    {
+      "bytes": 13899,
+      "path": "benchmarks/verifier_consistent_async_grpo_v6/crash-recovery-results-v6.md",
+      "sha256": "5a092bb23b4487ebda3d5c40b50125ed0d91b96dccf1ec6e945cf762a716ede0"
+    },
+    {
+      "bytes": 4451,
+      "path": "benchmarks/verifier_consistent_async_grpo_v6/README.md",
+      "sha256": "34d76fa8263cea9ffeed96ceaefdb8683308845dc02a3025467b023b600b5b33"
+    }
+  ],
+  "notes": "This supplemental index preserves the original v2 inventory and adds the post-review independent audit plus hash-bound source corrections. Raw model outputs, checkpoints, SQLite stores, ephemeral keys, and run manifests remain local under results/. The final audit did not rerun inference or training. The v4 index additionally binds the final audit into the repository and updates documentation hashes; the audit was re-run against retained raw runs and is byte-identical to the earlier indexed audit. Full model outputs, checkpoints, SQLite stores, ephemeral keys, and run manifests remain local under results/.",
+  "protocol_sha256": "1e16f2452d2f0d101295df1438f87679bec621bb27f667259fe18d66db5d8523",
+  "published_audit": {
+    "bytes": 13864,
+    "identical_to": "results/verifier_consistent_async_grpo_v6/audit-with-crash-replay-order-v6.json",
+    "path": "benchmarks/verifier_consistent_async_grpo_v6/final-independent-audit-v6.json",
+    "sha256": "fb5914e0f68cbcc815306eacbac709f0b0d40c92744bb73b05eed069a79768b8"
+  },
+  "raw_artifact_paths": {
+    "crash_recovery": "results/verifier_consistent_async_grpo_v6/crash-82106-replay-order-v2",
+    "excluded_first_crash_attempt": "results/verifier_consistent_async_grpo_v6/crash-82106-corrected",
+    "failed_audit_postmortem": "results/verifier_consistent_async_grpo_v6/audit-integrity-review-postmortem-v2.json",
+    "final_independent_audit": "results/verifier_consistent_async_grpo_v6/audit-with-crash-replay-order-v6.json",
+    "seed_82106": "results/verifier_consistent_async_grpo_v6/seed-82106",
+    "seed_82107": "results/verifier_consistent_async_grpo_v6/seed-82107"
+  },
+  "raw_crash_recovery_bytes": 315357050,
+  "raw_run_manifests": {
+    "crash_recovery_sha256": "42027b0f5d1fbd6d013a785cf102731149a22d5a59bf9e098f55c64d45a80271",
+    "excluded_first_crash_attempt_sha256": "7b48ac7ea9c4a58239bcede37a43a895837b81615401f416e91a60016ceb3515",
+    "seed_82106_sha256": "c3550669bbe9419b9dbe150144b11626e548d00f76c961fabaf16147affee6f4",
+    "seed_82107_sha256": "b888a2e2066ce2ce67c8abd812b03a7adda1bb7f8b665468f7d5e9ccbb630b91"
+  },
+  "schema": "vare.v6-pilot-artifact-index.v4",
+  "supersedes_index_v3_sha256": "dceb9b330d7ad836218fe8b502dae4317f620f15ea23c751bff63b36faa13979",
+  "supersedes_original_index_sha256": "aaa8b3cd5f6c25f32d172cb6383d848c355406cf7f9a0f793ebf81ad5feae793",
+  "supplements": "benchmarks/verifier_consistent_async_grpo_v6/pilot-artifact-index-v3.json"
+}
