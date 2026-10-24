@@ -1,0 +1,26 @@
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon  37.94kB
+Step 1/6 : FROM vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7
+ ---> a377e54dc56c
+Step 2/6 : COPY gptq.py /usr/local/lib/python3.12/site-packages/mlx_lm/quant/gptq.py
+ ---> Using cache
+ ---> 02f384405745
+Step 3/6 : COPY tokenizer_utils.py /usr/local/lib/python3.12/site-packages/mlx_lm/tokenizer_utils.py
+ ---> Using cache
+ ---> 1ac4245455d1
+Step 4/6 : COPY sanitize_installed_assets.py /tmp/vare_sanitize_installed_assets.py
+ ---> 56bd591e5586
+Step 5/6 : RUN ["python", "/tmp/vare_sanitize_installed_assets.py"]
+ ---> Running in c3eeef715629
+{"baseline_source_hashes": {"quant/gptq.py": "81d7df02f5de9ec8cb79390145f34724ee549a1a7cafadaac3edaaa7bc2cb318", "tokenizer_utils.py": "a6c3b727ae30989c5d65d4c1e81b8616cd3e960f02cf6e9cd5474c14926fe49f"}, "python_sources_preserved": 187, "record_sha256": "bda57a484441c56a4cc211badf9ff8eb804e0686fb13feee7e7790bc11ecb1fc", "removed_bytecode_files": 187}
+ ---> Removed intermediate container c3eeef715629
+ ---> 24d1ff492208
+Step 6/6 : RUN ["rm", "/tmp/vare_sanitize_installed_assets.py"]
+ ---> Running in a52cf8515de4
+ ---> Removed intermediate container a52cf8515de4
+ ---> d13df18e8ba9
+Successfully built d13df18e8ba9
+Successfully tagged localhost:5000/vare/flagship-baseline-only:portable-v1
