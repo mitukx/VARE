@@ -1,0 +1,25 @@
+{
+  "audit_report": "benchmarks/verifier_consistent_async_grpo_v7/pilot-stop-audit-v2.json",
+  "audit_report_sha256": "ed6b8e26676c1d0b7ef0fffeec37993d94cfe6bb40d2199d0463f22f7b644927",
+  "audit_script": "scripts/audit_verifier_drift_pilot_stop.py",
+  "audit_script_sha256": "7d344cd4f0835d792aca98b64b79b80f20cd950eed38cd7d630851e7af8898b0",
+  "decision": "NO_GO_FOR_ASYNC_COMPARISON",
+  "evidence_run": "results/verifier_consistent_async_grpo_v7/run-3",
+  "heldout_evaluation_completions_inferred": 60,
+  "heldout_evaluation_evidence_retained": false,
+  "heldout_evaluation_passes_inferred": 5,
+  "heldout_prompts_per_pass": 12,
+  "named_drift_transition_observed": false,
+  "observed_verifier_versions": [
+    1
+  ],
+  "protocol": "benchmarks/verifier_consistent_async_grpo_v7/protocol.json",
+  "protocol_sha256": "2563205c498f3844a8acd3766a1e4500da77598d4ad0ed1cd439a880deb601c7",
+  "run_inventory_file_count": 11,
+  "run_inventory_path": "results/verifier_consistent_async_grpo_v7/run-3/SHA256.json",
+  "run_inventory_sha256": "7952c4062e46b302e76df20999391e496106bca33e3d6319dcd475dbc0af12aa",
+  "runner": "scripts/benchmark_verifier_drift_scenarios.py",
+  "runner_sha256": "d4ca48fd95a8c7e08ef88032e1dca63e7632286748ac2055029d75f34313f067",
+  "schema": "vare.verifier-drift-pilot-stop-evidence.v2",
+  "supersedes": "pilot-stop-audit-v1.json interpretation only; frozen run and v1 file are unchanged"
+}

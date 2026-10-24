@@ -56,24 +56,32 @@ groups were checked against the independently implemented `ground_word`
 oracle; checkpoint Adam steps were 0, 1, and 2, and 16 trajectories were
 consumed. Peak observed RSS was 905,412,608 bytes. The separate partial-stop
 auditor passed and returned `NO_GO_FOR_ASYNC_COMPARISON`. No asynchronous arm,
-held-out evaluation, or crash-recovery case started, so this run provides no
-VARE comparison or coding-capability result. Preserve the run and do not
-resample it or relax the stop condition.
+or crash-recovery case started, so this run provides no VARE comparison or
+coding-capability result. The runner's control flow implies five held-out
+evaluation passes (baseline plus incumbent and candidate for each of two
+promotions), or 60 prompt completions. Their raw outputs and scores were not
+retained, so held-out quality cannot be reconstructed from this run. Preserve
+the run and do not resample it or relax the stop condition.
 
 The sole started synchronous arm recorded verifier v1 for every candidate;
 the protocol's named v0-to-v1 transition was not exercised. The zero
 per-group disagreement counts therefore do not demonstrate drift handling.
 
-The report is retained at
-[`pilot-stop-audit-v1.json`](pilot-stop-audit-v1.json); its script, protocol,
-runner, and raw-run inventory are bound in
-[`pilot-stop-audit-manifest-v1.json`](pilot-stop-audit-manifest-v1.json). The
+The original partial-stop audit remains at
+[`pilot-stop-audit-v1.json`](pilot-stop-audit-v1.json). The corrected
+interpretation is recorded separately at
+[`pilot-stop-audit-v2.json`](pilot-stop-audit-v2.json), with its script,
+protocol, runner, and raw-run inventory bound in
+[`pilot-stop-audit-manifest-v2.json`](pilot-stop-audit-manifest-v2.json). The
 raw run remains locally retained at
 `results/verifier_consistent_async_grpo_v7/run-3/`; the root inventory has 11
 files and SHA-256
 `7952c4062e46b302e76df20999391e496106bca33e3d6319dcd475dbc0af12aa`.
 Its last `progress.json` snapshot still says `RUNNING`: the exception path
 retained that snapshot and recorded the stop reason separately in `failure.json`.
+The corrected auditor rejects existing output paths and destinations inside
+the retained run, then uses exclusive file creation so a raced path is not
+overwritten.
 
 ## Reproduction
 
@@ -96,7 +104,7 @@ python3.12 scripts/audit_verifier_drift_pilot_stop.py \
   results/verifier_consistent_async_grpo_v7/run-3 \
   --protocol benchmarks/verifier_consistent_async_grpo_v7/protocol.json \
   --runner scripts/benchmark_verifier_drift_scenarios.py \
-  --output results/verifier_consistent_async_grpo_v7/audit-run-3-partial-reproduction.json
+  --output results/verifier_consistent_async_grpo_v7/audit-run-3-partial-reproduction-v2.json
 ```
 
 The pilot gate was fixed in advance and failed. The first two commands above

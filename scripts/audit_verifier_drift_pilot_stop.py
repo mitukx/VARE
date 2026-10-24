@@ -25,6 +25,28 @@ def require(ok: bool, message: str) -> None:
         raise ValueError(message)
 
 
+def validate_output_path(output: Path, run: Path) -> Path:
+    """Resolve a new report path without allowing writes into retained inputs."""
+    if output.exists() or output.is_symlink():
+        raise ValueError("audit output already exists; refusing to overwrite evidence")
+    destination = output.resolve(strict=False)
+    run_root = run.resolve(strict=True)
+    if destination == run_root or run_root in destination.parents:
+        raise ValueError("audit output must be outside the retained run directory")
+    return destination
+
+
+def write_report(output: Path, report: dict) -> None:
+    """Create a report exclusively so a raced destination is never replaced."""
+    output.parent.mkdir(parents=True, exist_ok=True)
+    payload = json.dumps(report, indent=2, sort_keys=True) + "\n"
+    try:
+        with output.open("x", encoding="utf-8") as stream:
+            stream.write(payload)
+    except FileExistsError as exc:
+        raise ValueError("audit output appeared after preflight; refusing to overwrite") from exc
+
+
 def word(text: str, target: str) -> bool:
     return bool(re.search(rf"(?<![A-Za-z0-9_]){re.escape(target)}(?![A-Za-z0-9_])",
                           text, flags=re.IGNORECASE))
@@ -128,6 +150,8 @@ def audit(run: Path, protocol_path: Path, runner_path: Path) -> dict:
     })
     require(observed_verifier_versions == [1],
             "partial sync pilot unexpectedly includes a verifier transition")
+    # The sync arm is initialized at v1. Its observed results cannot establish
+    # behavior under the protocol's named v0-to-v1 transition.
 
     events = [json.loads(line) for line in (arm_dir / "events.jsonl").read_text().splitlines()]
     promoted = [event for event in events if event.get("event") == "candidate_promoted"]
@@ -135,6 +159,8 @@ def audit(run: Path, protocol_path: Path, runner_path: Path) -> dict:
     require(len(promoted) == len(completed) == 2
             and [row["candidate_id"] for row in promoted] == ["policy-1", "policy-2"],
             "promotion/event evidence does not show exactly two completed updates")
+    heldout_passes = 1 + 2 * len(promoted)
+    heldout_prompts = len(protocol["workload"]["evaluation"]["prompts"])
 
     import site
     for entry in site.getsitepackages():
@@ -172,6 +198,10 @@ def audit(run: Path, protocol_path: Path, runner_path: Path) -> dict:
     return {
         "status": "PASS_PARTIAL_STOP_AUDIT",
         "decision": "NO_GO_FOR_ASYNC_COMPARISON",
+        "report_correction": (
+            "This audit clarifies v1: the named verifier transition was not observed, "
+            "and held-out evaluation outputs were not retained despite five passes "
+            "being implied by runner control flow. The consumed run is unchanged."),
         "protocol_schema": protocol["schema"],
         "protocol_sha256": sha(copied_protocol),
         "runner_sha256": sha(runner_path),
@@ -182,6 +212,14 @@ def audit(run: Path, protocol_path: Path, runner_path: Path) -> dict:
         "scenario_arms_started": ["false_accept/sync"],
         "observed_verifier_versions": observed_verifier_versions,
         "named_drift_transition_observed": False,
+        "heldout_evaluation_passes_inferred": heldout_passes,
+        "heldout_prompts_per_pass": heldout_prompts,
+        "heldout_evaluation_completions_inferred": heldout_passes * heldout_prompts,
+        "heldout_evaluation_evidence_retained": False,
+        "heldout_evaluation_count_basis": (
+            "one baseline evaluation plus incumbent and candidate evaluations for each "
+            "of two completed promotions, inferred from runner control flow; raw evaluation "
+            "reports and outputs were not retained"),
         "groups_generated": 3,
         "model_completions": 24,
         "verifier_calls": 24,
@@ -196,13 +234,15 @@ def audit(run: Path, protocol_path: Path, runner_path: Path) -> dict:
         "not_measured": [
             "naive_async or VARE async arms",
             "stale policy/verifier queue admission",
-            "held-out quality",
+            "held-out quality cannot be reconstructed because evaluation outputs and scores were not retained",
             "SIGKILL recovery",
             "coding-task performance",
         ],
         "claim_limit": (
             "The frozen synthetic pilot produced two genuine optimizer commits, then stopped on an all-zero third group. "
             "The sole started sync arm used verifier v1 throughout, so the named v0-to-v1 transition was not exercised. "
+            "Five held-out evaluation passes (60 prompt completions) are implied by runner control flow, "
+            "but their reports and outputs were not retained. "
             "The asynchronous verifier-drift comparison was not reached; this does not support a VARE improvement claim."),
     }
 
@@ -214,9 +254,15 @@ def main() -> None:
     parser.add_argument("--runner", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
+    try:
+        output = validate_output_path(args.output, args.run)
+    except (OSError, ValueError) as exc:
+        parser.error(str(exc))
     report = audit(args.run, args.protocol, args.runner)
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
+    try:
+        write_report(output, report)
+    except (OSError, ValueError) as exc:
+        parser.error(str(exc))
     print(json.dumps(report, indent=2, sort_keys=True))
 
 
