@@ -1,0 +1,29 @@
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon  1.641GB
+Step 1/3 : FROM vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7
+ ---> a377e54dc56c
+Step 2/3 : COPY benchmarks/mlsys_repo_eval_v3/mlxlm_1910_qwen3_coder/grader.lock.txt /tmp/grader.lock.txt
+ ---> f72140cc4677
+Step 3/3 : RUN python -m pip install --no-cache-dir --require-hashes --no-compile -r /tmp/grader.lock.txt && rm /tmp/grader.lock.txt
+ ---> Running in 447950d82657
+Collecting iniconfig==2.3.1 (from -r /tmp/grader.lock.txt (line 3))
+  Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+Requirement already satisfied: packaging==26.3 in /usr/local/lib/python3.12/site-packages (from -r /tmp/grader.lock.txt (line 7)) (26.3)
+Collecting pluggy==1.7.0 (from -r /tmp/grader.lock.txt (line 11))
+  Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+Requirement already satisfied: pygments==2.21.0 in /usr/local/lib/python3.12/site-packages (from -r /tmp/grader.lock.txt (line 15)) (2.21.0)
+Collecting pytest==8.4.2 (from -r /tmp/grader.lock.txt (line 19))
+  Downloading pytest-8.4.2-py3-none-any.whl (365 kB)
+Installing collected packages: pluggy, iniconfig, pytest
+Successfully installed iniconfig-2.3.1 pluggy-1.7.0 pytest-8.4.2
+[91mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[0m[91m
+[notice] A new release of pip is available: 25.0.1 -> 26.2.2
+[notice] To update, run: pip install --upgrade pip
+[0m ---> Removed intermediate container 447950d82657
+ ---> ce69ea5340af
+Successfully built ce69ea5340af
+Successfully tagged vare-mlx-parser-grader:1910-v1

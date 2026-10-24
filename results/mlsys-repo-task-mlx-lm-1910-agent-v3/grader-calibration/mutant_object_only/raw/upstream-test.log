@@ -1,0 +1,43 @@
+F
+=================================== FAILURES ===================================
+________________ TestToolParsing.test_qwen3_coder_untyped_param ________________
+
+self = <test_tool_parsing.TestToolParsing testMethod=test_qwen3_coder_untyped_param>
+
+    def test_qwen3_coder_untyped_param(self):
+        # Without a top-level "type", only JSON objects and arrays are parsed.
+        schema = {"anyOf": [{"type": "object"}, {"type": "array"}, {"type": "string"}]}
+        tools = [
+            {
+                "type": "function",
+                "function": {
+                    "name": "f",
+                    "parameters": {"type": "object", "properties": {"value": schema}},
+                },
+            }
+        ]
+        test_cases = [
+            ('{"kind": "new"}', {"kind": "new"}),
+            ('["a", "b"]', ["a", "b"]),
+            ("plain text", "plain text"),
+            ('["unfinished"', '["unfinished"'),
+            ("123", "123"),
+            ('"quoted"', '"quoted"'),
+        ]
+        for value, expected in test_cases:
+            with self.subTest(value=value):
+                call = f"<function=f><parameter=value>{value}</parameter></function>"
+                tool_call = qwen3_coder.parse_tool_call(call, tools)
+>               self.assertEqual(tool_call["arguments"], {"value": expected})
+E               AssertionError: {'value': '["a", "b"]'} != {'value': ['a', 'b']}
+E               - {'value': '["a", "b"]'}
+E               ?            -- ^  ^ ^ -
+E               
+E               + {'value': ['a', 'b']}
+E               ?           +  ^  ^ ^
+
+tests/test_tool_parsing.py:267: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_tool_parsing.py::TestToolParsing::test_qwen3_coder_untyped_param
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 17 deselected in 0.77s

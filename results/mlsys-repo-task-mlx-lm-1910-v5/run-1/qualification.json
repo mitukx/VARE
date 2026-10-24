@@ -1,0 +1,108 @@
+{
+  "elapsed_seconds": 14.919,
+  "image": "sha256:8bc8dbce962ad11f96fbc5c42485832f4b3726e34253f93b0fb104d1de76c1d6",
+  "protocol_id": "mlsys-repo-task-mlx-lm-1910-v5",
+  "records": [
+    {
+      "arm": "baseline",
+      "output_sha256": "fada0ab203a1cc0e1ad98e4089832c6d07a13a8125f292dedf5ed03a3cae6fbb",
+      "returncode": 1,
+      "source_sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+      "stage": "upstream_test",
+      "wall_seconds": 1.986
+    },
+    {
+      "arm": "known_fix",
+      "output_sha256": "846a22b8ba6ed5b6cf8f00d92f0a7ad58c0e7fffcc06cea6702e34a7f424e133",
+      "returncode": 0,
+      "source_sha256": "d1029aae22ed475e9d7c09d29c37e74dca8df52b0fb046f000f2e3f9b83a6583",
+      "stage": "upstream_test",
+      "wall_seconds": 1.738
+    },
+    {
+      "arm": "mutant_restore_default_string",
+      "output_sha256": "0667a207372eec638f0051921f665dec1f484a3c41eb2daafed15ba4a4fceeee",
+      "returncode": 1,
+      "source_sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+      "stage": "upstream_test",
+      "wall_seconds": 1.584
+    },
+    {
+      "arm": "mutant_parse_any_json_scalar",
+      "output_sha256": "5b94ba39252a385a1c26efe091622899c3dab7b9b0e6e0952a35d29e8651f6cb",
+      "returncode": 1,
+      "source_sha256": "67d38295ff97a018970ce672b5099ad5fb204d18cffc21787bc04ef059efe154",
+      "stage": "upstream_test",
+      "wall_seconds": 1.706
+    },
+    {
+      "arm": "mutant_object_only",
+      "output_sha256": "cb32e408b87e0fabe8387b5f86a965620d21469b38a233c9a31432109dcf05ae",
+      "returncode": 1,
+      "source_sha256": "503167d96d328ae9653c5196c3a67efbd6c4e90a59a6a30a42c7158e7b1edf56",
+      "stage": "upstream_test",
+      "wall_seconds": 1.748
+    },
+    {
+      "arm": "baseline",
+      "cases": [],
+      "output_sha256": "396871ea2b7191585ae532feffffd65f156a8ae85a56b769f60f678dcfae5719",
+      "parse_error": null,
+      "passed": false,
+      "returncode": 1,
+      "source_sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+      "stage": "independent_oracle",
+      "wall_seconds": 1.141
+    },
+    {
+      "arm": "known_fix",
+      "cases": [],
+      "output_sha256": "396871ea2b7191585ae532feffffd65f156a8ae85a56b769f60f678dcfae5719",
+      "parse_error": null,
+      "passed": false,
+      "returncode": 1,
+      "source_sha256": "d1029aae22ed475e9d7c09d29c37e74dca8df52b0fb046f000f2e3f9b83a6583",
+      "stage": "independent_oracle",
+      "wall_seconds": 1.081
+    },
+    {
+      "arm": "mutant_restore_default_string",
+      "cases": [],
+      "output_sha256": "396871ea2b7191585ae532feffffd65f156a8ae85a56b769f60f678dcfae5719",
+      "parse_error": null,
+      "passed": false,
+      "returncode": 1,
+      "source_sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+      "stage": "independent_oracle",
+      "wall_seconds": 1.061
+    },
+    {
+      "arm": "mutant_parse_any_json_scalar",
+      "cases": [],
+      "output_sha256": "396871ea2b7191585ae532feffffd65f156a8ae85a56b769f60f678dcfae5719",
+      "parse_error": null,
+      "passed": false,
+      "returncode": 1,
+      "source_sha256": "67d38295ff97a018970ce672b5099ad5fb204d18cffc21787bc04ef059efe154",
+      "stage": "independent_oracle",
+      "wall_seconds": 1.186
+    },
+    {
+      "arm": "mutant_object_only",
+      "cases": [],
+      "output_sha256": "396871ea2b7191585ae532feffffd65f156a8ae85a56b769f60f678dcfae5719",
+      "parse_error": null,
+      "passed": false,
+      "returncode": 1,
+      "source_sha256": "503167d96d328ae9653c5196c3a67efbd6c4e90a59a6a30a42c7158e7b1edf56",
+      "stage": "independent_oracle",
+      "wall_seconds": 1.082
+    }
+  ],
+  "schema_version": 1,
+  "source_commits": {
+    "baseline": "bacd9e8e1f3a5be7dd64bae3a9ad8d74471ccc3a",
+    "fixed": "a537041adc86d73cfae4cc1375b2c8851c652c60"
+  },
+  "status": "NO_GO"
+}

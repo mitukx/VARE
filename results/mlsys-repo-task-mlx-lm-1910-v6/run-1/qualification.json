@@ -1,0 +1,498 @@
+{
+  "elapsed_seconds": 12.971,
+  "image": "sha256:8bc8dbce962ad11f96fbc5c42485832f4b3726e34253f93b0fb104d1de76c1d6",
+  "protocol_id": "mlsys-repo-task-mlx-lm-1910-v6",
+  "records": [
+    {
+      "arm": "baseline",
+      "output_sha256": "43fc32f270df7ece255c2562d764a83f881d0caebe0da870bbc81082dede0bdc",
+      "returncode": 1,
+      "source_sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+      "stage": "upstream_test",
+      "wall_seconds": 1.706
+    },
+    {
+      "arm": "known_fix",
+      "output_sha256": "aca18fc1fce2498b581fd6132f1078848af1867fc3504a9875865adfc342f95c",
+      "returncode": 0,
+      "source_sha256": "d1029aae22ed475e9d7c09d29c37e74dca8df52b0fb046f000f2e3f9b83a6583",
+      "stage": "upstream_test",
+      "wall_seconds": 1.445
+    },
+    {
+      "arm": "mutant_restore_default_string",
+      "output_sha256": "10e206525b9a4c5359cb5a9c40e0be750b86761112d2da355c15f0da1fcac955",
+      "returncode": 1,
+      "source_sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+      "stage": "upstream_test",
+      "wall_seconds": 1.427
+    },
+    {
+      "arm": "mutant_parse_any_json_scalar",
+      "output_sha256": "f1fd15d1966300e5ded1c636f66b3b86ed0c4b53eaa653d8cc2c491f8ae6b648",
+      "returncode": 1,
+      "source_sha256": "67d38295ff97a018970ce672b5099ad5fb204d18cffc21787bc04ef059efe154",
+      "stage": "upstream_test",
+      "wall_seconds": 1.427
+    },
+    {
+      "arm": "mutant_object_only",
+      "output_sha256": "155bd92239e4677c2774e587592ca383e3e98e583a6756896a025597086db5c2",
+      "returncode": 1,
+      "source_sha256": "503167d96d328ae9653c5196c3a67efbd6c4e90a59a6a30a42c7158e7b1edf56",
+      "stage": "upstream_test",
+      "wall_seconds": 1.419
+    },
+    {
+      "arm": "baseline",
+      "cases": [
+        {
+          "actual": {
+            "ok": true,
+            "value": "{\"kind\":\"new\",\"nested\":{\"n\":2}}"
+          },
+          "case_id": "object",
+          "passed": false
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "[\"a\",{\"n\":2}]"
+          },
+          "case_id": "array",
+          "passed": false
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "plain text"
+          },
+          "case_id": "plain_string",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "[\"unfinished\""
+          },
+          "case_id": "malformed_json",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "123"
+          },
+          "case_id": "number_scalar",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "\"quoted\""
+          },
+          "case_id": "quoted_scalar",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": null
+          },
+          "case_id": "null_literal",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "true"
+          },
+          "case_id": "boolean_scalar",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": ""
+          },
+          "case_id": "empty_string",
+          "passed": true
+        }
+      ],
+      "output_sha256": "47aac63eda97debc6f67c0f58cc3b3dd78c9dcc8f50950802da6c90d82b9165b",
+      "parse_error": null,
+      "passed": false,
+      "returncode": 0,
+      "source_sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+      "stage": "independent_oracle",
+      "wall_seconds": 1.002
+    },
+    {
+      "arm": "known_fix",
+      "cases": [
+        {
+          "actual": {
+            "ok": true,
+            "value": {
+              "kind": "new",
+              "nested": {
+                "n": 2
+              }
+            }
+          },
+          "case_id": "object",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": [
+              "a",
+              {
+                "n": 2
+              }
+            ]
+          },
+          "case_id": "array",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "plain text"
+          },
+          "case_id": "plain_string",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "[\"unfinished\""
+          },
+          "case_id": "malformed_json",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "123"
+          },
+          "case_id": "number_scalar",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "\"quoted\""
+          },
+          "case_id": "quoted_scalar",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": null
+          },
+          "case_id": "null_literal",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "true"
+          },
+          "case_id": "boolean_scalar",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": ""
+          },
+          "case_id": "empty_string",
+          "passed": true
+        }
+      ],
+      "output_sha256": "111e59ecd9c652551320c9b3356312cd6f7885a521bd838625d3034c73d1c4ef",
+      "parse_error": null,
+      "passed": true,
+      "returncode": 0,
+      "source_sha256": "d1029aae22ed475e9d7c09d29c37e74dca8df52b0fb046f000f2e3f9b83a6583",
+      "stage": "independent_oracle",
+      "wall_seconds": 1.001
+    },
+    {
+      "arm": "mutant_restore_default_string",
+      "cases": [
+        {
+          "actual": {
+            "ok": true,
+            "value": "{\"kind\":\"new\",\"nested\":{\"n\":2}}"
+          },
+          "case_id": "object",
+          "passed": false
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "[\"a\",{\"n\":2}]"
+          },
+          "case_id": "array",
+          "passed": false
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "plain text"
+          },
+          "case_id": "plain_string",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "[\"unfinished\""
+          },
+          "case_id": "malformed_json",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "123"
+          },
+          "case_id": "number_scalar",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "\"quoted\""
+          },
+          "case_id": "quoted_scalar",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": null
+          },
+          "case_id": "null_literal",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "true"
+          },
+          "case_id": "boolean_scalar",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": ""
+          },
+          "case_id": "empty_string",
+          "passed": true
+        }
+      ],
+      "output_sha256": "47aac63eda97debc6f67c0f58cc3b3dd78c9dcc8f50950802da6c90d82b9165b",
+      "parse_error": null,
+      "passed": false,
+      "returncode": 0,
+      "source_sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+      "stage": "independent_oracle",
+      "wall_seconds": 0.992
+    },
+    {
+      "arm": "mutant_parse_any_json_scalar",
+      "cases": [
+        {
+          "actual": {
+            "ok": true,
+            "value": {
+              "kind": "new",
+              "nested": {
+                "n": 2
+              }
+            }
+          },
+          "case_id": "object",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": [
+              "a",
+              {
+                "n": 2
+              }
+            ]
+          },
+          "case_id": "array",
+          "passed": true
+        },
+        {
+          "actual": {
+            "error": "JSONDecodeError: Expecting value: line 1 column 1 (char 0)",
+            "ok": false
+          },
+          "case_id": "plain_string",
+          "passed": false
+        },
+        {
+          "actual": {
+            "error": "JSONDecodeError: Expecting ',' delimiter: line 1 column 14 (char 13)",
+            "ok": false
+          },
+          "case_id": "malformed_json",
+          "passed": false
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": 123
+          },
+          "case_id": "number_scalar",
+          "passed": false
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "quoted"
+          },
+          "case_id": "quoted_scalar",
+          "passed": false
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": null
+          },
+          "case_id": "null_literal",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": true
+          },
+          "case_id": "boolean_scalar",
+          "passed": false
+        },
+        {
+          "actual": {
+            "error": "JSONDecodeError: Expecting value: line 1 column 1 (char 0)",
+            "ok": false
+          },
+          "case_id": "empty_string",
+          "passed": false
+        }
+      ],
+      "output_sha256": "bc83d31607d0ea6ec8e9eec8d74d189b751c4471402077fefc0d37f85e211966",
+      "parse_error": null,
+      "passed": false,
+      "returncode": 0,
+      "source_sha256": "67d38295ff97a018970ce672b5099ad5fb204d18cffc21787bc04ef059efe154",
+      "stage": "independent_oracle",
+      "wall_seconds": 0.99
+    },
+    {
+      "arm": "mutant_object_only",
+      "cases": [
+        {
+          "actual": {
+            "ok": true,
+            "value": {
+              "kind": "new",
+              "nested": {
+                "n": 2
+              }
+            }
+          },
+          "case_id": "object",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "[\"a\",{\"n\":2}]"
+          },
+          "case_id": "array",
+          "passed": false
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "plain text"
+          },
+          "case_id": "plain_string",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "[\"unfinished\""
+          },
+          "case_id": "malformed_json",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "123"
+          },
+          "case_id": "number_scalar",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "\"quoted\""
+          },
+          "case_id": "quoted_scalar",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": null
+          },
+          "case_id": "null_literal",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": "true"
+          },
+          "case_id": "boolean_scalar",
+          "passed": true
+        },
+        {
+          "actual": {
+            "ok": true,
+            "value": ""
+          },
+          "case_id": "empty_string",
+          "passed": true
+        }
+      ],
+      "output_sha256": "5d41ba74b55356086e048e89538001311460036a69cc7725a9287e32463b3ab5",
+      "parse_error": null,
+      "passed": false,
+      "returncode": 0,
+      "source_sha256": "503167d96d328ae9653c5196c3a67efbd6c4e90a59a6a30a42c7158e7b1edf56",
+      "stage": "independent_oracle",
+      "wall_seconds": 0.959
+    }
+  ],
+  "schema_version": 1,
+  "source_commits": {
+    "baseline": "bacd9e8e1f3a5be7dd64bae3a9ad8d74471ccc3a",
+    "fixed": "a537041adc86d73cfae4cc1375b2c8851c652c60"
+  },
+  "status": "GRADER_CALIBRATION_PASS_DEVELOPMENT_ONLY"
+}

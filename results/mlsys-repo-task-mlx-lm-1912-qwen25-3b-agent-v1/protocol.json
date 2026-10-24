@@ -1,0 +1,282 @@
+{
+  "agent": {
+    "edit_format": "unified_diff",
+    "instruction": "Fix `mlx_lm.sample_utils.apply_top_p` so nucleus filtering retains at least the\nmost likely token for every row, including very small positive thresholds and\nlow precision log probabilities. Preserve the existing public function\nsignature, output shape, and retained log probabilities. Only edit\n`mlx_lm/sample_utils.py`.\n",
+    "max_context_tokens": 8192,
+    "max_new_tokens_per_turn": 512,
+    "max_no_tool_retries": 2,
+    "max_total_new_tokens": 2048,
+    "max_turns": 12,
+    "public_test_image": "localhost:5000/vare/mlx-cpu-task@sha256:847edcf1b2b15d00914674e89931f9d38c4aa8a0f1d763cbb96c1359a0647388",
+    "public_test_limits": {
+      "cpus": 1.0,
+      "memory_mib": 512,
+      "pids": 32,
+      "timeout_seconds": 45
+    },
+    "raw_turn_log": "JSONL appended and fsynced after every generation; preserves outputs on later interruption.",
+    "tool_interface": "Frozen scripts/run_local_agent.py tools: list_files, read_file, search_text, apply_patch, check_syntax, run_public_tests, finish; unified_diff only.",
+    "wall_seconds": 300
+  },
+  "arms": [
+    {
+      "arm": "greedy",
+      "do_sample": false,
+      "seed": 31,
+      "temperature": 0.0,
+      "top_k": 20,
+      "top_p": 0.95
+    },
+    {
+      "arm": "sampled",
+      "do_sample": true,
+      "seed": 37,
+      "temperature": 0.2,
+      "top_k": 20,
+      "top_p": 0.95
+    }
+  ],
+  "decision_and_stopping_rule": {
+    "arms": [
+      "greedy",
+      "sampled"
+    ],
+    "attempts": 2,
+    "continue_after_failure": true,
+    "learning_readiness": "NO_GO regardless of this result: the frozen minimum eligible task count is 15 and this protocol has one Development task, no Train cohort, no untouched Held-out cohort, and no optimizer update.",
+    "positive_feasibility_signal": "At least one independently correct patch; report as a one-task feasibility observation only.",
+    "retry_consumed_task": false,
+    "stop_after_any_resource_abort_or_grader_provenance_failure": true,
+    "stop_before_inference_if_public_baseline_does_not_fail_or_known_fix_does_not_pass": true
+  },
+  "frozen_at_utc": "2026-10-23T20:13:10+00:00",
+  "grader": {
+    "baseline_expected": "FAIL",
+    "calibration_evidence_path": "results/mlxlm-1912-isolated-v4/run-2/calibration.json",
+    "calibration_evidence_sha256": "65f8b985e688dcdab461fd66b63627b729f2ed3fb93ad80a4100cb712115b143",
+    "candidate_code_is_only_imported_in_isolated_container": true,
+    "candidate_never_receives_grader_assets": true,
+    "evaluation_entrypoint": "vare.mlxlm_1912_repo_task.grade_workspace",
+    "exact_known_fix_expected": "PASS",
+    "image": "localhost:5000/vare/mlx-cpu-task@sha256:847edcf1b2b15d00914674e89931f9d38c4aa8a0f1d763cbb96c1359a0647388",
+    "limits": {
+      "memory_mib": 1536,
+      "timeout_seconds": 30
+    },
+    "lock_path": "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v4.lock.json",
+    "lock_sha256": "6048e40bf4013ceb25839f570cf40f6a87441f74112a1ab21c0f12a40df9f998",
+    "protocol_id": "mlxlm-1912-isolated-task-v4",
+    "protocol_path": "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v4.json",
+    "protocol_sha256": "6c309a8f32ecdaaea9a07d0527700f9188d9955cce2f3d662e6dc95a6de56e14",
+    "red_team_expected": "PASS",
+    "source_swap_rejection_expected": true,
+    "status": "CALIBRATION_PASS_DEVELOPMENT_ONLY"
+  },
+  "hypothesis": "On the frozen Development task mlxlm-1912-top-p-min-token, at least one of one greedy and one sampled Qwen2.5-3B-Instruct-4bit attempt will produce a patch that passes the independently locked v4 grader. This is a two-attempt feasibility hypothesis and does not predict population success or learning.",
+  "model": {
+    "conversion_source": "Qwen/Qwen2.5-3B-Instruct",
+    "files": {
+      ".gitattributes": {
+        "bytes": 1519,
+        "sha256": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361"
+      },
+      "README.md": {
+        "bytes": 755,
+        "sha256": "fecf595155116837d6ccd97918cb59ae7228ee1511c2dd1d9b1725bdfeea9919"
+      },
+      "added_tokens.json": {
+        "bytes": 605,
+        "sha256": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b"
+      },
+      "config.json": {
+        "bytes": 785,
+        "sha256": "ceb97c46fe17f523ac42c0f0254fd18d9589f8725f0bbbe0bef541f8ef84547a"
+      },
+      "merges.txt": {
+        "bytes": 1671853,
+        "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5"
+      },
+      "model.safetensors": {
+        "bytes": 1736293090,
+        "sha256": "f212cf6fb9923281a09c135e05d43a052ee5ef7121f5b1dc0b0fb2de80f97cfd"
+      },
+      "model.safetensors.index.json": {
+        "bytes": 66290,
+        "sha256": "7edb73f1af3c860b1344ece4abe04b258246afdfeba4cb39d3b84a0459890bee"
+      },
+      "special_tokens_map.json": {
+        "bytes": 613,
+        "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+      },
+      "tokenizer.json": {
+        "bytes": 7031673,
+        "sha256": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf"
+      },
+      "tokenizer_config.json": {
+        "bytes": 7308,
+        "sha256": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7"
+      },
+      "vocab.json": {
+        "bytes": 2776833,
+        "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+      }
+    },
+    "license": "Qwen Research License Agreement; non-commercial research/evaluation only",
+    "license_scope_note": "Local non-commercial research/evaluation only; no weights are redistributed. This protocol performs inference only and no training.",
+    "license_source": "https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/blob/main/LICENSE",
+    "load_evidence_manifest_path": "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-load-smoke-v2/run-1/evidence.sha256.json",
+    "load_evidence_manifest_sha256": "419ff74d2b8a5de3dccf0b6c1c7eb2ce3af45b6230136fc52ee33bcdc7a048fd",
+    "load_protocol_path": "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-load-smoke-v2/protocol.json",
+    "load_protocol_sha256": "fccee8d421193af19427c868e634e56330281b312b4be94ec7c403e09094457d",
+    "load_result_path": "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-load-smoke-v2/run-1/result.json",
+    "load_result_sha256": "0650ab99ad045acf9e3e3c4e9f1649f699b11fe2c58bd58bc92ae398e3fe2459",
+    "manifest_path": "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-load-smoke-v2/model-manifest.json",
+    "manifest_sha256": "909c41a7304cc77a79dbd334dcad473dc89da3b2202b6a33d209e340197d9d16",
+    "prior_failed_load_protocol_path": "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-load-smoke-v1/protocol.json",
+    "prior_failed_load_result_sha256": "e621821fcc471372fa97c80602315074317e7f19856371d68c0993a550817474",
+    "prior_failure_preserved": true,
+    "repository": "mlx-community/Qwen2.5-3B-Instruct-4bit",
+    "revision": "4f83f8f146fdf28b512a06562b671d7af4fab457"
+  },
+  "outcomes": {
+    "do_not_rewrite_prior_results": true,
+    "failure_classes": [
+      "no_valid_edit",
+      "format/tool failure",
+      "public_test_not_invoked",
+      "public_test_failed",
+      "independent_hidden_grade_failed",
+      "resource_abort",
+      "infrastructure_or_evidence_integrity"
+    ],
+    "no_heldout_task_access": true,
+    "no_optimizer_or_training": true,
+    "success_reward": "Independent v4 grader pass on the generated candidate source, after protected-file, test-file, raw-log, and workspace-archive integrity checks.",
+    "useful_trajectory_success": "Independent success plus valid applied source edit, public test invoked and passed, and agent finish action."
+  },
+  "output_path": "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-agent-v1/run-1",
+  "primary_metric": "Number of independently correct patches among the two predeclared Development attempts; a patch is correct only if the independent v4 grader passes.",
+  "protocol_id": "vare.real-coding-agent-feasibility.mlxlm-1912-qwen25-3b-v1",
+  "repository": {
+    "base_main_sha_at_audit": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+    "branch_head_before_protocol_work": "bf9889c9975cf32b1fd624075e5d9f052277be6b",
+    "protocol_and_runner_are_committed_before_any_task_prompt_or_model_generation": true,
+    "url": "https://github.com/mitukx/VARE"
+  },
+  "reproduction_command": "python scripts/run_mlx_lm_1912_qwen25_agent_v1.py --git-source /path/to/mlx-lm --model-path /path/to/Qwen2.5-3B-Instruct-4bit/snapshot --python /path/to/mlx-venv/bin/python --output results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-agent-v1/run-1",
+  "resources": {
+    "abort_without_retry_if": [
+      "swap grows by more than 128 MiB or reaches 4096 MiB",
+      "free memory falls below 25 percent during an attempt",
+      "sampled agent-process RSS exceeds 8192 MiB",
+      "one agent attempt exceeds 300 seconds",
+      "starting swap is at least 4096 MiB, free memory is below 35 percent, or free disk is below 20 GiB",
+      "grader, task, checkpoint, or runtime provenance fails validation",
+      "Docker requires network access or the public baseline/fix gate fails"
+    ],
+    "max_absolute_swap_mib": 4096,
+    "max_agent_wall_seconds_per_attempt": 300,
+    "max_attempts": 2,
+    "max_child_rss_mib": 8192,
+    "max_start_swap_mib": 4096,
+    "max_swap_growth_mib": 128,
+    "maximum_aggregate_agent_wall_seconds": 600,
+    "maximum_total_wall_seconds": 900,
+    "maximum_validation_wall_seconds": 150,
+    "min_disk_free_gib": 20,
+    "min_runtime_free_memory_percent": 25,
+    "min_start_free_memory_percent": 35,
+    "poll_interval_seconds": 0.25
+  },
+  "runner_sha256": "1184b916b89745196a7a8413558bd6e48ba390ba66ca494178b29f43af91744e",
+  "runtime": {
+    "agent_runner": "scripts/run_local_agent.py",
+    "backend": "MLX on Apple Silicon Metal",
+    "durable_output_wrapper": "scripts/run_local_agent_streaming_v1.py",
+    "environment_inventory_path": "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-load-smoke-v2/runtime.freeze.txt",
+    "environment_inventory_sha256": "c1182bb6c8bd5edc9f85e18fb38fc48882746294a7f19e5900235a0a11ab34ae",
+    "host": "Apple M1 Pro, macOS arm64, 32 GiB unified memory",
+    "implementation_sha256": {
+      "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/grader_adapter.py": "f08007db5ec895f071624cd1de2e7afd3b60d0dffa809161f48a2baceb28d6e7",
+      "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v4.json": "6c309a8f32ecdaaea9a07d0527700f9188d9955cce2f3d662e6dc95a6de56e14",
+      "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v4.lock.json": "6048e40bf4013ceb25839f570cf40f6a87441f74112a1ab21c0f12a40df9f998",
+      "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/task.md": "1073e527a5808176a4e6144a0d348e1bb5acbbc6fb790ec2e74bb58576c73bc3",
+      "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-load-smoke-v2/model-manifest.json": "909c41a7304cc77a79dbd334dcad473dc89da3b2202b6a33d209e340197d9d16",
+      "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-load-smoke-v2/run-1/evidence.sha256.json": "419ff74d2b8a5de3dccf0b6c1c7eb2ce3af45b6230136fc52ee33bcdc7a048fd",
+      "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-load-smoke-v2/run-1/result.json": "0650ab99ad045acf9e3e3c4e9f1649f699b11fe2c58bd58bc92ae398e3fe2459",
+      "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-load-smoke-v2/runtime.freeze.txt": "c1182bb6c8bd5edc9f85e18fb38fc48882746294a7f19e5900235a0a11ab34ae",
+      "results/mlsys-task-deep-qualification-v1/protocol.json": "7ef9a28cedf2e1214a74456bb0c5209afc3e3e9f1681a430398e84710bcd26a4",
+      "results/mlsys-task-deep-qualification-v1/qualification.json": "2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d",
+      "scripts/run_local_agent.py": "f4d8f52710083fe037c8166a74b7ca6fe7424b06db337f5bb3d8314e6967faf6",
+      "scripts/run_local_agent_streaming_v1.py": "82925a5cbb10d8a1f18b4f61d5836bf523441bd4049d375e4ee0dca71f8b6a1d",
+      "scripts/run_mlxlm_1912_calibration.py": "4205fd8b94e80b1f4d185d2134de45dcade308f4d780c5deb34c5b253e6dd00f",
+      "scripts/smoke_local_mlx_model_load_v1.py": "ff75b06ef4527b35c8ec1c5d5743a2dded0d86b69db1d0ad4b20c72d19c813f4",
+      "scripts/smoke_local_qwen25_3b_model_load_v2.py": "082da7e5885b32734831054378044e7d9a3c24de8bfb517ff8314176906d1d81",
+      "src/vare/agent_edit_format.py": "00922614bdced3ed490502e33f07fe16164298e2916631016170a689b491cce4",
+      "src/vare/agent_task_contract.py": "f3cb85f1960dcaf175345bb45a6f23a08bda7a8805d37db9caf217ac5c86f3fd",
+      "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+      "src/vare/isolated_candidate.py": "8d0fbef1bb44c788dc983a814c2178c7c5a2e716fbfcc0f912f64885fe8fdccf",
+      "src/vare/mlxlm_1912_repo_task.py": "ba48fee74cb7faab53860be5e2bc052947d083aa2fcd4bfd87dd2c32870ef747",
+      "tests/test_mlx_lm_1912_streaming_agent.py": "4484bdb0d97c3e17534cc9bb5e9f240662b398697a2ef79d612d6bacf8c7de64",
+      "tests/test_mlxlm_1912_repo_task.py": "359ed22f387139ff519e42c0128ce2224dfc09faae36de7ce824df9a0c8a300f"
+    },
+    "offline_environment": [
+      "HF_HUB_OFFLINE=1",
+      "TRANSFORMERS_OFFLINE=1",
+      "HF_HUB_DISABLE_TELEMETRY=1"
+    ],
+    "packages": {
+      "mlx": "0.32.4",
+      "mlx-lm": "0.32.2",
+      "numpy": "2.5.4",
+      "safetensors": "0.8.0",
+      "tokenizers": "0.23.3",
+      "transformers": "5.20.2"
+    },
+    "python_implementation": "cpython",
+    "python_version": [
+      3,
+      12,
+      12
+    ],
+    "runner_sha256": "1184b916b89745196a7a8413558bd6e48ba390ba66ca494178b29f43af91744e",
+    "streaming_wrapper_sha256": "82925a5cbb10d8a1f18b4f61d5836bf523441bd4049d375e4ee0dca71f8b6a1d"
+  },
+  "schema_version": 1,
+  "secondary_metrics": [
+    "End-to-end useful trajectory success requires an independently correct patch, a valid applied edit, a successful public-test invocation, and an agent finish action.",
+    "Per-attempt binary independent reward and population variance across the two attempts on this one Development task.",
+    "Valid edits, format failures, tool errors, public-test invocation/pass, hidden-grade outcome, generated/prompt tokens, model/runtime identity, wall time, sampled peak RSS, swap change, and free-memory minimum.",
+    "Useful independently verified trajectory successes per agent wall-clock hour."
+  ],
+  "status": "FROZEN_NOT_RUN",
+  "task": {
+    "baseline_commit": "47e43a4526d42a6dcee758f07eb04b78a8439ecb",
+    "baseline_source_sha256": "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2",
+    "deep_qualification_protocol_path": "results/mlsys-task-deep-qualification-v1/protocol.json",
+    "deep_qualification_protocol_sha256": "7ef9a28cedf2e1214a74456bb0c5209afc3e3e9f1681a430398e84710bcd26a4",
+    "exposure_before_this_protocol": "No model/agent exposure recorded by the frozen eligibility inventory; earlier researcher-only upstream regression reproduction is disclosed.",
+    "fixed_commit": "87b7b583a697537aa68f47130b40884700b5f55f",
+    "fixed_source_sha256": "3aac92d804b6b91c82a4e2844697a8723de26f6af57e10013a482b967e739cfa",
+    "heldout_tasks_accessed": false,
+    "license": "MIT",
+    "license_file_sha256": "ccfab7ccb2ea306f71531c8a77bb55507606cd90768b1e32b8b52ab5b48cf01",
+    "no_known_fix_or_hidden_grader_in_candidate_workspace": true,
+    "only_source_file_editable_by_agent": "mlx_lm/sample_utils.py",
+    "previous_model_or_agent_exposure": false,
+    "public_task_path": "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-agent-v1/task/TASK.md",
+    "public_test_path": "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-agent-v1/task/test_public.py",
+    "public_test_sha256": "a88ccf1972d0d4a9b0d9ff79fa33d7fa4aae78a3ff638b76dc115fe63f31cdd2",
+    "qualification_manifest_path": "results/mlsys-task-deep-qualification-v1/qualification.json",
+    "qualification_manifest_sha256": "2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d",
+    "split": "development",
+    "task_id": "mlxlm-1912-top-p-min-token",
+    "upstream_public_test_sha256": "dbe871f37a2930eae6686ce67ffc0a641971ad11943a1e94833fa232c6938852",
+    "upstream_repository": "https://github.com/ml-explore/mlx-lm"
+  },
+  "task_bundle_sha256": {
+    "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-agent-v1/task/TASK.md": "1073e527a5808176a4e6144a0d348e1bb5acbbc6fb790ec2e74bb58576c73bc3",
+    "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-agent-v1/task/task.json": "44b1fe27df67a4faf508c1fae5a5aa51bebb1966491f7376c8a972a3b93717e8",
+    "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-agent-v1/task/test_public.py": "a88ccf1972d0d4a9b0d9ff79fa33d7fa4aae78a3ff638b76dc115fe63f31cdd2"
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "agent": {
+    "agent_record_token_count_matches_raw_log": true,
+    "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "durable_raw_generated_tokens": 1580,
+    "durable_raw_turn_count": 4,
+    "edit_attempted": false,
+    "elapsed_seconds": 36.521,
+    "format_parse_failure_count": 0,
+    "generated_tokens": 1580,
+    "invalid_tool_call_count": 1,
+    "peak_rss_bytes": 2042626048,
+    "prompt_tokens": 5559,
+    "public_test_invocation_count": 0,
+    "public_test_invoked": false,
+    "public_test_passed": null,
+    "raw_turn_log_error": null,
+    "raw_turn_log_sha256": "efa4f590ca78c6eab17818e68d5fa8953b94eb082daa981d46c8e4a1cbd781b9",
+    "record_present": true,
+    "source_hashes_after": {
+      "mlx_lm/sample_utils.py": "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2",
+      "test_public.py": "a88ccf1972d0d4a9b0d9ff79fa33d7fa4aae78a3ff638b76dc115fe63f31cdd2"
+    },
+    "source_hashes_before": {
+      "mlx_lm/sample_utils.py": "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2",
+      "test_public.py": "a88ccf1972d0d4a9b0d9ff79fa33d7fa4aae78a3ff638b76dc115fe63f31cdd2"
+    },
+    "stop_reason": "no_tool_call_retries_exhausted",
+    "tool_call_count": 0,
+    "tool_call_names": [],
+    "tool_turns": 4,
+    "valid_edit_applied": false
+  },
+  "arm": "sampled",
+  "binary_reward": 0,
+  "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "candidate_source_sha256": "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2",
+  "failure_classification": "no_valid_edit",
+  "grader_error": null,
+  "independent_grade_status": "FAIL",
+  "independent_success": false,
+  "model_runtime": {
+    "device": "apple_metal",
+    "mlx": "unknown",
+    "mlx_active_memory_bytes": 1736204342,
+    "mlx_lm": "0.32.2",
+    "mlx_peak_memory_bytes": 2674688414,
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12",
+    "seed": 37
+  },
+  "monitor_abort_reason": null,
+  "monitor_minimum_free_memory_percent": 48,
+  "monitor_peak_child_rss_mib": 1936.22,
+  "monitor_swap_growth_mib": 0.0,
+  "monitor_wall_seconds": 37.904,
+  "seed": 37,
+  "status": "COMPLETED",
+  "useful_trajectory_success": false,
+  "workspace_archive": {
+    "bytes": 51200,
+    "path": "workspace.tar",
+    "regular_file_count": 14,
+    "sha256": "286e1e09a3629ddbeaf7ce610efbbf4c3d7c14a79ba8f281d4ecdc5786b4f4f5"
+  },
+  "workspace_archive_error": null,
+  "workspace_base_commit": "3d96c9cd7007827b26a2bbf37887513d629c820a"
+}

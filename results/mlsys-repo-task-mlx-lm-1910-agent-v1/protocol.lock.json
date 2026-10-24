@@ -1,0 +1,141 @@
+{
+  "agent": {
+    "edit_format": "unified_diff",
+    "instruction": "Fix Qwen3 Coder argument parsing when a parameter schema has no top-level type. Preserve existing behavior for typed parameters and keep malformed input from crashing parsing.",
+    "max_context_tokens": 6144,
+    "max_new_tokens_per_turn": 256,
+    "max_total_new_tokens": 2048,
+    "public_test": "The six cases from upstream test_qwen3_coder_untyped_param, copied into immutable test_public.py; file SHA-256 is locked in task_bundle_sha256. The candidate can read and invoke this public regression, but cannot edit it.",
+    "runner": "scripts/run_local_agent.py",
+    "runner_sha256": "f4d8f52710083fe037c8166a74b7ca6fe7424b06db337f5bb3d8314e6967faf6",
+    "tool_interface_sha256": "f4d8f52710083fe037c8166a74b7ca6fe7424b06db337f5bb3d8314e6967faf6",
+    "turn_budget": 8,
+    "wall_seconds_per_attempt": 600
+  },
+  "arms": [
+    {
+      "arm": "greedy",
+      "do_sample": false,
+      "seed": 17,
+      "temperature": 0.0,
+      "top_k": 20,
+      "top_p": 0.95
+    },
+    {
+      "arm": "sampled",
+      "do_sample": true,
+      "seed": 19,
+      "temperature": 0.7,
+      "top_k": 20,
+      "top_p": 0.95
+    }
+  ],
+  "code_sha256": {
+    "scripts/calibrate_mlx_lm_1910_candidate_grader_v1.py": "334a7ef4a71d056c245293fc90c6b77409474d3905dcc507f6ae3d4fabce98d7",
+    "scripts/grade_mlx_lm_1910_candidate_v1.py": "0f676473eb14e78e666b8bd0bc1f3d68fe1f7499d076cbea44a1c8142ae0db5f",
+    "scripts/monitor_local_agent_resources_v1.py": "94828f79c4fbd3734eceb755bf017ab0cd03e7e65031cddf58cdf36d0701ca12",
+    "scripts/qualify_mlx_lm_1910_v6.py": "8cb4318dec38c8a1e882686ba777600fbb0fcae8126853bd713465e954063384",
+    "scripts/run_local_agent.py": "f4d8f52710083fe037c8166a74b7ca6fe7424b06db337f5bb3d8314e6967faf6"
+  },
+  "frozen_at_utc": "2026-10-23T18:01:16+00:00",
+  "grader": {
+    "calibration_runner": "scripts/calibrate_mlx_lm_1910_candidate_grader_v1.py",
+    "calibration_runner_sha256": "334a7ef4a71d056c245293fc90c6b77409474d3905dcc507f6ae3d4fabce98d7",
+    "grader_sha256": "0f676473eb14e78e666b8bd0bc1f3d68fe1f7499d076cbea44a1c8142ae0db5f",
+    "identity": "scripts/grade_mlx_lm_1910_candidate_v1.py",
+    "prior_protocol": "protocols/mlsys_repo_task_mlx_lm_1910_v6.lock.json",
+    "prior_protocol_sha256": "4ffd4a9d2f72f04eabac10b37c50653b7b4c4850764ce96bb85120102a0d31f6",
+    "required_before_model_prompt": "candidate grader baseline FAIL, exact fix PASS, three incorrect mutants FAIL"
+  },
+  "hypothesis": "A locally cached Qwen3-4B-Instruct-2507 4-bit policy, using VARE\u2019s bounded tool-use loop, can inspect the MLX-LM #1910 baseline, make an allowlisted edit, run public feedback, revise if needed, and produce a candidate that the isolated independent grader accepts in at least one of two matched Development attempts.",
+  "matching": "Both attempts use the same model, baseline tree, system/task prompt, tools, public test, turn/token/wall limits, and hidden grader budget. Each begins from a fresh copy; attempt outputs are paired within one task and are not independent task samples.",
+  "metrics": [
+    "attempt-level independent success (0/2 to 2/2; attempts on one task are not independent)",
+    "unique Development tasks with at least one accepted attempt (0/1 or 1/1)",
+    "public-test invocation and pass",
+    "valid edit and patch-application rates",
+    "tool calls/turns and format failures",
+    "generated tokens and wall time",
+    "peak RSS and MLX active/peak Metal memory",
+    "pre/post and sampled swap/memory pressure",
+    "failure taxonomy and raw per-turn outputs",
+    "useful attempts per wall-clock hour"
+  ],
+  "model": {
+    "base_model": "Qwen/Qwen3-4B-Instruct-2507",
+    "cached_local_before_run": true,
+    "license": "Apache-2.0 (local model card metadata)",
+    "manifest_path": "results/mlsys-repo-task-mlx-lm-1910-agent-v1/model-manifest.json",
+    "manifest_sha256": "0f87cd7d4245d981cf64644697f72418c13ce848592f921f01861fa121da2e06",
+    "network_download_during_run": false,
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "weights_bytes": 2263022417
+  },
+  "primary_metric": "Independently correct candidate patches per unique Development task at the fixed two-attempt budget; report the attempt numerator/denominator separately and do not infer a population rate from one task.",
+  "protocol_id": "mlsys-repo-task-mlx-lm-1910-agent-v1",
+  "reproduction_commands": [
+    "python3 scripts/calibrate_mlx_lm_1910_candidate_grader_v1.py --git-source <pinned-local-upstream-clone> --output results/mlsys-repo-task-mlx-lm-1910-agent-v1/grader-calibration",
+    "python3 scripts/monitor_local_agent_resources_v1.py --output results/mlsys-repo-task-mlx-lm-1910-agent-v1/greedy --max-seconds 600 --swap-abort-mib 2900 -- work/mlx-agent-venv312/bin/python scripts/run_local_agent.py ...",
+    "python3 scripts/grade_mlx_lm_1910_candidate_v1.py --git-source <pinned-local-upstream-clone> --candidate-source <attempt-workspace>/qwen3_coder.py --output <attempt-output>/independent-grade"
+  ],
+  "resources": {
+    "abort_conditions": [
+      "swap use reaches 2900 MiB",
+      "system-wide free memory falls below 15%",
+      "resource telemetry becomes unavailable",
+      "attempt exceeds 600 seconds",
+      "candidate isolation or grader boundary changes",
+      "model/checkpoint or task hashes mismatch"
+    ],
+    "disk_free_gib": 137,
+    "max_generation_tokens_total": 4096,
+    "max_total_agent_wall_seconds": 1200,
+    "max_turns_per_attempt": 8,
+    "max_wall_seconds_per_attempt": 600,
+    "memory_free_abort_percent": 15,
+    "monitor_interval_seconds": 2,
+    "preflight_memory_free_percent": 47,
+    "preflight_swap_free_mib": 388.75,
+    "preflight_swap_used_mib": 2683.25,
+    "swap_used_abort_mib": 2900
+  },
+  "runtime": {
+    "backend": "MLX/Metal on Apple Silicon arm64",
+    "candidate_workspace_mount": "read-write for agent, read-only isolated mount for public test process",
+    "container_network": "disabled",
+    "dependency_lock_path": "../mlx-agent-requirements312.lock.txt",
+    "dependency_lock_sha256": "f33435efacb0fbe0d02b6978493d6ad7b18084023c5e9a9d13c7a07d917308b1",
+    "mlx": "0.32.4",
+    "mlx_lm": "0.32.0",
+    "no_hidden_grader_or_known_fix_mount": true,
+    "public_test_image": "sha256:8bc8dbce962ad11f96fbc5c42485832f4b3726e34253f93b0fb104d1de76c1d6",
+    "python": "3.12.12",
+    "transformers": "5.20.2"
+  },
+  "schema_version": 1,
+  "status": "FROZEN_NOT_RUN",
+  "status_notes": [
+    "V1-v5 grader setup failures and v5 oracle stdin failure are retained unchanged.",
+    "V6 grader calibration passed on 2026-10-23; exact outputs and hashes are in results/mlsys-repo-task-mlx-lm-1910-v6/run-1/.",
+    "The model has not been loaded and no task prompt has been sent at freeze time."
+  ],
+  "stopping_rule": "Run both matched attempts only if the candidate grader calibration passes. Stop immediately on resource abort, hash mismatch, or isolation failure. Preserve zero-success and failed outcomes. A success establishes feasibility only; no SFT/GRPO comparison or learning claim follows from this one-task study.",
+  "task": {
+    "excluded_overlapping_task": "mlx-lm #1904 parser-family task is excluded from this prospective cohort and no independence claim will combine it.",
+    "exposure": "Development only; no local #1910 model prompt or rollout was found before protocol freeze. The upstream change was merged after the model revision date proxy; this does not establish absence from pretraining.",
+    "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1910",
+    "source_target_sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+    "task_bundle_sha256": {
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/TASK.md": "38446f2db20c6fc9fde97ce3ae703da96a5e827c7f732810d24616015ab3a621",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/task.json": "cb3528ed43b42a43ddcd5d2993fe09439328ff79e96268908f6a716aadab6f32",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/qwen3_coder.py": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/test_public.py": "d41bd79d8936db5f48f74805fdad8636ac54e64dbafe704ecdf86973178d8875"
+    },
+    "task_id": "mlx-lm-1910-development-feasibility-v1",
+    "task_prompt_sha256": "5c75d2692d9490c264cbc44b855f22e0faebe05b44f4ef571e19d90c83975f99",
+    "upstream_base_commit": "bacd9e8e1f3a5be7dd64bae3a9ad8d74471ccc3a",
+    "upstream_fixed_commit": "a537041adc86d73cfae4cc1375b2c8851c652c60",
+    "vAre_workspace_base_commit": "d151a804ca04296e758e77503bc552515f723399"
+  }
+}

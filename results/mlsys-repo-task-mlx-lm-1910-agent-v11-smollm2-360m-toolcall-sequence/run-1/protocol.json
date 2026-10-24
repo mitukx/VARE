@@ -1,0 +1,506 @@
+{
+  "agent": {
+    "adapter_sha256": "8cc884ad5112799da7aa5f54aa5e2331c7a6b69dfbf76e7135b71cf05107117f",
+    "compatibility_adapter": "scripts/run_local_agent_smollm_tool_compat_v1.py",
+    "edit_format": "unified_diff",
+    "instruction": "The tool definitions above are reference schemas, never copy them as calls. Use concrete argument values, not schema objects. Make exactly one tool call per assistant turn. First output only this complete call, then wait for its tool result: <tool_call>{\"name\":\"list_files\",\"arguments\":{}}</tool_call> On the following assistant turn, output only this complete call to read the task source: <tool_call>{\"name\":\"read_file\",\"arguments\":{\"path\":\"qwen3_coder.py\"}}</tool_call> For read_file, path must be the string \"qwen3_coder.py\"; never use an object such as {\"type\":\"string\"}. After reading the source, solve the task using the available tools and public-test feedback.",
+    "max_context_tokens": 6144,
+    "max_new_tokens_per_turn": 256,
+    "max_no_tool_retries": 2,
+    "max_total_new_tokens": 2048,
+    "prompt_protocol": "Explicit function schemas are appended to the system prompt. Tool call and result history is converted to plain assistant/user messages because this checkpoint template supports role/content only.",
+    "public_test": "Six upstream regression cases in immutable test_public.py; visible and runnable by candidate; not editable; rehashed before grading.",
+    "rendered_initial_prompt_sha256": "d3b6013fb0f07147c1d1e3d2ded948e5bdecb74004a5d3440ee99a1513a0d3a0",
+    "rendered_initial_prompt_tokens": 936,
+    "runner": "scripts/run_local_agent.py",
+    "runner_sha256": "f4d8f52710083fe037c8166a74b7ca6fe7424b06db337f5bb3d8314e6967faf6",
+    "system_prompt": "You are an offline code repair agent. Solve only the task below. The workspace contains only the task source files. Read the source path named in the user instruction, then use tools to inspect and edit. Use apply_patch for small source diffs; never rewrite a whole file. The patch must use exact headers --- a/<allowed source path> and +++ b/<allowed source path>; do not wrap it in a code fence. Allowed source paths: qwen3_coder.py. First call list_files, then read the exact source path named in the task. Do not invent paths. The workspace is already prepared; never ask for a workspace path, more information, or permission. The external grader is hidden. Do not describe a fix without applying it. Call finish only after changing a source file. After changing source, call run_public_tests; read its output and repair failures. The test file is immutable. Call finish only after the public smoke test passes. You have a limited tool budget; each assistant turn before finish must call a tool. TASK:\nFix Qwen3 Coder argument parsing when a parameter schema has no top-level type. Preserve existing behavior for typed parameters and keep malformed input from crashing parsing.\n\nEditable source: qwen3_coder.py. The public regression is test_public.py.",
+    "tool_adapter_module": "src/vare/flat_tool_chat.py",
+    "tool_adapter_module_sha256": "b049c646f32e122dabaec9c87fe4b1c90899368ff4a6713b32f79e859bc70896",
+    "tool_count": 7,
+    "tool_interface_sha256": "56e732cc4269c5f2769df89a6b1630d2d3a2b560d2a90382ef7191a45174a087",
+    "tool_schemas": [
+      {
+        "function": {
+          "description": "List the exact source files available in this task workspace.",
+          "name": "list_files",
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "type": "function"
+      },
+      {
+        "function": {
+          "description": "Read one UTF-8 task source file. Provide its repository-relative path; a workspace-prefixed path is mapped only if it ends in one exact allowlisted source path.",
+          "name": "read_file",
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {
+              "path": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "path"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "function"
+      },
+      {
+        "function": {
+          "description": "Search a literal string in the allowed task source files.",
+          "name": "search_text",
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {
+              "query": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "query"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "function"
+      },
+      {
+        "function": {
+          "description": "Apply a small unified diff to existing task source files. Keep the patch minimal; paths must be allowlisted.",
+          "name": "apply_patch",
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {
+              "patch": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "patch"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "function"
+      },
+      {
+        "function": {
+          "description": "Parse one allowed Python file for syntax errors without executing it.",
+          "name": "check_syntax",
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {
+              "path": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "path"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "function"
+      },
+      {
+        "function": {
+          "description": "Run the unchanged task-provided test_public.py inside the isolated, network-disabled candidate container. You cannot edit that test file.",
+          "name": "run_public_tests",
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "type": "function"
+      },
+      {
+        "function": {
+          "description": "Finish the attempt when you believe the task is complete. The evaluator will judge the workspace.",
+          "name": "finish",
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {
+              "summary": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "summary"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "function"
+      }
+    ],
+    "turn_budget": 8,
+    "wall_seconds_per_attempt": 600
+  },
+  "arms": [
+    {
+      "arm": "greedy",
+      "do_sample": false,
+      "seed": 31,
+      "temperature": 0.0,
+      "top_k": 20,
+      "top_p": 0.95
+    },
+    {
+      "arm": "sampled",
+      "do_sample": true,
+      "seed": 37,
+      "temperature": 0.7,
+      "top_k": 20,
+      "top_p": 0.95
+    }
+  ],
+  "claim_limit": "Two matched prompt-sequence attempts on one repeatedly exposed Development task. No held-out success, task-level population estimate, policy improvement, SFT, GRPO, or learning claim.",
+  "code_sha256": {
+    "scripts/calibrate_mlx_lm_1910_candidate_grader_v1.py": "334a7ef4a71d056c245293fc90c6b77409474d3905dcc507f6ae3d4fabce98d7",
+    "scripts/grade_mlx_lm_1910_candidate_v1.py": "51485925eb54301cf4a6d901b3ed3b4840cba67d1b412a26a636b6ddc32e6789",
+    "scripts/monitor_local_agent_resources_v1.py": "8b5296c527fba160cd79819f65ffb390cc2bedb4879554bb2e52f0f50f107fdd",
+    "scripts/qualify_mlx_lm_1910_v6.py": "8cb4318dec38c8a1e882686ba777600fbb0fcae8126853bd713465e954063384",
+    "scripts/run_local_agent.py": "f4d8f52710083fe037c8166a74b7ca6fe7424b06db337f5bb3d8314e6967faf6",
+    "scripts/run_local_agent_smollm_tool_compat_v1.py": "8cc884ad5112799da7aa5f54aa5e2331c7a6b69dfbf76e7135b71cf05107117f",
+    "scripts/run_mlx_lm_1910_smollm2_feasibility_v1.py": "7eb5153eaa093e1b2b9afc207b466809805d14375de7ee11e9e81066f3393e01",
+    "scripts/run_mlx_lm_1910_smollm2_feasibility_v2.py": "1cfb2df04d667d642303aa69e72b7dd02f92f6be408fd70184b9610d8416a1fa",
+    "scripts/run_mlx_lm_1910_smollm2_feasibility_v3.py": "b87d5ab5c38813cf130d40ca13e765a994772332939913c0bcfd4b4541920f74",
+    "src/vare/__init__.py": "548fea93dbd5c551b72d1649f3a41d2109428d7cb24b1ff524345e18cf262025",
+    "src/vare/__main__.py": "db44dd5bcafe53bb1e9e20e9b816d441a8d91a24d07ea48aac6f79efd47c9dcd",
+    "src/vare/_grader_guard.py": "b64f104d62bcd59d7c50e4b8abc5530f4db526b4071a79e082c42fac4c7f2d7c",
+    "src/vare/_public.py": "c8de7fafba40f76fc482dbbc4ade23499078cfe532d5d2734c85e535eb35ecf7",
+    "src/vare/agent_edit_format.py": "00922614bdced3ed490502e33f07fe16164298e2916631016170a689b491cce4",
+    "src/vare/agent_task_contract.py": "f3cb85f1960dcaf175345bb45a6f23a08bda7a8805d37db9caf217ac5c86f3fd",
+    "src/vare/answer_scoring.py": "4e73ef26189834bbfba3bf2e1fba46dff0115a191e3c7f62c19daf919cae4abe",
+    "src/vare/attestation.py": "785e74d7d0cd6d41a73cf75cc65c093a0afb8d5082ad3f11dd828770616e93a3",
+    "src/vare/blob_budget.py": "26cdd92819c50186b1f91d1929b5c21309e24e835e2e822a323c8409db6d88dc",
+    "src/vare/checkpoint_artifacts.py": "98f96cf1bde57011a7e787c0bf61820df6a89ae37f1c043e3dfa73288c052b5c",
+    "src/vare/cli.py": "f21e2a0385e0c1e76c5802629cc9c251836c4a3aefff57804d2a0fd3c4ce30b8",
+    "src/vare/config.py": "3ddcb32df475e9e1d2a1aa3689ba5955494a67971cad03aa5a88e045ba4b7051",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/controls.py": "a82ab9620063c84db4277fe42e6d711eeea6e77f3079b90857f61d3f1293d5b4",
+    "src/vare/curriculum.py": "80a46c7f2846b513c72a932e59d69937918ec9ff656da2d031c255d53fb41f23",
+    "src/vare/demo.py": "3386014c91bfd373fb90de6f115c881be49a3eb180f3ae96f8f3d7986f3b110f",
+    "src/vare/durable.py": "3fe7d2e449dd9156083c83c1f55effb6f1409aef3e109c573e6dcec240b549b9",
+    "src/vare/engine.py": "07edcef3e905aee0d42878a7be78e7f3fe3677809159129f87991cfc1fbe3159",
+    "src/vare/entrypoint.py": "1dc1b072d3d744ba0773a6e4dc89e862b0f01fc2904e9ecd01fc417ee9db3386",
+    "src/vare/environments/__init__.py": "f127dd0271ba91ab42fb17d4dc6e5d7861d24ae6e1b1b3250dcf908ebd7f196f",
+    "src/vare/environments/campaign.py": "b7ce56fd149a3a84ed70fd0a2f85c6465977b190de04cbf860c3e321a2c92af4",
+    "src/vare/environments/catalog.py": "b7aa164c2df123eccd8d233b08334d28bf319ca8882fb74c71d581cd03f8440f",
+    "src/vare/environments/factory.py": "d0883e25721c5d8675e89515b975d2b43990d40dc39936ad75b36559d78b894b",
+    "src/vare/environments/runner.py": "3d8b23a17656a00d49563155843db1e5a49e6fc8ba705c1c51056dae6f3c1ba1",
+    "src/vare/environments/spec.py": "99f4bd2f6889bcab295b3adda74bd6fadd665c66b5308cabc443dd393715344e",
+    "src/vare/environments/verifier.py": "33e2396d1592ac3ef7da4e902c254c128266a09cbc21c977138fe9d974f277ba",
+    "src/vare/eval_stats.py": "9ba1f27421f721200f2596df3c595b6a5622852eb18950953093cddddbfd8f06",
+    "src/vare/evidence.py": "a35d0f8c1cc7756c7d351b79ff061ff2374bf5ffe3c0433ed0181b0b85868d70",
+    "src/vare/failure.py": "8b1d04d4d1b63d6b24f3d8fdb9636061efe60a9645aeb4d751fdc063b464fc16",
+    "src/vare/failure_triage.py": "887738c6263d0dc08d0b3023d21b071f12aca816fb904e46ba88e35f8a06bdec",
+    "src/vare/flat_tool_chat.py": "b049c646f32e122dabaec9c87fe4b1c90899368ff4a6713b32f79e859bc70896",
+    "src/vare/format_vs_correctness.py": "1443a6ff3b5c0aee444f9c617e81f17495a1df91b3bcd3df141de4e6845a1d80",
+    "src/vare/format_vs_correctness_seeded_summary_v3.py": "8b353e2f6acb927d9c973cc624e55a5ce894c5569aec2e03da7927eb10304326",
+    "src/vare/format_vs_correctness_v2.py": "fca8d5174747c1f3c1a8207d179dde83e9ee7b84ccb7767ddd5a33ae2fb96c15",
+    "src/vare/heldout_exact_integer.py": "86e49dd946a6702e2656160d5bc5edd4ec6f2b9e59d17b6c3223a6400923976e",
+    "src/vare/integer_seed_split.py": "fd8b2512fa03c69884ff685a32419c4863256fc852340c49b2666351d4bb12c8",
+    "src/vare/integrations/__init__.py": "3a37d872c78d8a6ab4985d72e38ab8c73bd928bd444a09a29beedbea336507f3",
+    "src/vare/integrations/chat_completions.py": "574290048aac92a4a2c47cef3c119617aac9e243971c3016e31e4324256ce5e3",
+    "src/vare/integrations/rvl.py": "9d40de5d2765115fc95972b2df8bc0c36bdd28132dddee8e6677d38a655afd14",
+    "src/vare/integrations/rvl_grpo.py": "d4d511a9cc71949205a25ca4dbb9b384cb38c9f430f590adafdfd0126cac1eb7",
+    "src/vare/integrations/rvl_trajectory.py": "26e42e119ed951b193f5dc2956625e6fa24ded143a88f4749dc19053cf83ed15",
+    "src/vare/interfaces.py": "0ce2228cf8976cfb067943e1a20ce433dc5d762ace84710300f4a0f4c91b9c49",
+    "src/vare/isolated_candidate.py": "8d0fbef1bb44c788dc983a814c2178c7c5a2e716fbfcc0f912f64885fe8fdccf",
+    "src/vare/isolated_hooks.py": "74d481c38d3a63544455e62cea37249362abf1c20cefd46b2f50ee156913eccb",
+    "src/vare/lag.py": "506650f8aaab78b0d5615237e4f299372e364e703635032dae90b6e2de62d933",
+    "src/vare/lifecycle.py": "61ec715c6b8d596f8559052016cb887040208a8796390795651ad8a3c1d216ea",
+    "src/vare/meta_improvement.py": "4d2d12dae31bfad5e98416563d75a4501fbc6efff7512497d986b65e9a2d094d",
+    "src/vare/mlsys_coding_actions.py": "811b9c7943340b081d0b1dc9d0b112d18f7384323f513932d40a6e6b9ecd2c41",
+    "src/vare/mlsys_coding_comparison.py": "d9d34f9da00ce914b3621094671c917c374a5e397513bfb11c5b3b5397cf1155",
+    "src/vare/mlsys_repo_task.py": "90121a890edc9d816235347957b85418678f6b133e8155f81719bc97a6a07c60",
+    "src/vare/mlxlm_1912_repo_task.py": "ba48fee74cb7faab53860be5e2bc052947d083aa2fcd4bfd87dd2c32870ef747",
+    "src/vare/promotion.py": "73f2fcbd3358d1f9153a53012f49ebe41ca0d65f555ed6457c8b98ccc708474b",
+    "src/vare/promotion_journal.py": "2e7b98951427aa63cff61ba948a3e4eb2e480b1378ed3c891e9df20225876ee7",
+    "src/vare/protocol.py": "129cdcd9c9558def19e73d1757f4dbd22d2cc826e188867c8a4784a10d624838",
+    "src/vare/replay.py": "8d22b821380ddfb221df4ddc9dec8f987f74faebfe6492e7316e7b0d8ee472ff",
+    "src/vare/reward_evidence.py": "a5b5979b8f647a61d0d411acf032a60608fac2045a4d96299cec1e7471206292",
+    "src/vare/runner.py": "5aaaf6ce099dbc262c7c622336d77828b90fa73af9e436664f24c391ad7aa391",
+    "src/vare/runtime.py": "d1df9c0680b4fb4fd602694ae79eb5937dc391f53596d05a56f521ce79ecebb5",
+    "src/vare/safety.py": "b788861a60d258a9579c53986ec89c275018e94e4c63bb98f012c1b34b16342a",
+    "src/vare/sandboxed_repository.py": "dcbb0cce72ab92dd416950071012f44437a426c309e123e8b0ee440d8582cb48",
+    "src/vare/separated_candidate_harness.py": "a1a98c7ee7bbc4a05d6f0445875cf66996ce727f90ffae1ccbd078d033aad9b5",
+    "src/vare/separated_grading.py": "1e371e61297b348ec186048a17c598e9f942403dfc9e440c448cc3e30b04a2b5",
+    "src/vare/telemetry.py": "85c5ebe192c9e46db418e043bb09032e614a13d51cb0f19f94e096886c15de53",
+    "src/vare/trajectory_admission.py": "db3a1fe2fd345ef99ee25338f2e43f65211ae83cfdabc68a308f332aa53b5e6c",
+    "src/vare/trajectory_dispatch.py": "7671b9fc9e7d63bfdc35a5da47afb351ba3b7f380815aa85e51a615833aa7870",
+    "src/vare/trajectory_learner.py": "44a38b5c25992c6af819866961c9b2f8daed9589a65e1ab9afb8657b80e1414e",
+    "src/vare/trajectory_promotion.py": "a881969b10ae0b6e4f5e62b0270493d0337406c5bc82d0eb5ac4069cee582072",
+    "src/vare/trajectory_provenance.py": "ff3014ea9fccfd6bb0103b7ac5c451888278163b4280ee489ac8d184eaa5389b",
+    "src/vare/trajectory_reference.py": "1596553c0bb4f95d6588269abd8855f81d2d8e8dc8156e2ea15a7cdb33362f43",
+    "src/vare/trajectory_safety.py": "6c25d32bb86dff8f94045eb50079b2e820f20cb7ea5a4c47487a9db47513998b",
+    "src/vare/trajectory_store.py": "f915cbb6f7ee11dc7812084a5f09807eb182268dd9320fcc68a2fa2e47696db8",
+    "src/vare/trajectory_workers.py": "e06f6e224d948addf9dbc9ea494912a37ea6e17295881f5ab9727dbafea264bf",
+    "src/vare/transformers_repo_task.py": "3bc002d97ce3ec64b90ee53aba51562b7bc03ea32690c59db8f8bf452a54c44c",
+    "src/vare/trusted_evaluation.py": "9e3f68cf9be51a3a926bb955aadf8fdefb5f3cbdf24b85a3b1343a06b0b284a1",
+    "src/vare/trusted_scoring.py": "efeed5132ee96fa5c388bc73b7b779facbcf970df0ac7c3703516cabfea9d955",
+    "src/vare/types.py": "233e2b6176431140e7700cc668cfdbdc98cf3d8d4ab98de658efab7010ea82ca",
+    "src/vare/update_cost_smoke.py": "e08bb83044cfb8c515f92853fe138a768e2fb5653ae18f19f3154a007b23c77e",
+    "src/vare/verifiers.py": "fc6b1ddc73b44ce95986e4cbbd61e06f1bf78164eaa3cb8460f2f631fc2628bc",
+    "tests/test_flat_tool_chat.py": "9e85307305862e2280b7e2a1b31286a2df72c25bfb52fb9935c6553d2d74a8bd",
+    "tests/test_mlx_lm_1910_smollm2_feasibility_v2.py": "c15a35ca56b492a8e81242f86e22b75fd97451b22fbcba350348601744eecd8a",
+    "tests/test_mlx_lm_1910_smollm2_feasibility_v3.py": "7e33efb77167ef3b3b6beabbe7ffb9fc91174ed76ba650ed7a9a8872f101f5b4"
+  },
+  "frozen_at_utc": "2026-10-23T19:45:37+00:00",
+  "grader": {
+    "calibration_files_sha256": {
+      "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/baseline/grade.json": "5b973239f89c6bc701fd4c2c6d190caac7ccfabd8363ce192d9693a517eeb45d",
+      "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/baseline/raw/oracle.json": "47aac63eda97debc6f67c0f58cc3b3dd78c9dcc8f50950802da6c90d82b9165b",
+      "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/baseline/raw/upstream-test.log": "c07d132045d6b79d20f5325919ba347ec450c200f0cccd07c98e7f7cdd9f6a49",
+      "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/calibration.json": "847a7226fdfdd816ca80dd9cf08bc658b464b1460542ae9e26f970120228d93c",
+      "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/known_fix/grade.json": "e1756c43b967353379aa5f3a572b8e6e266687c0c24402b78acb5b7bff939676",
+      "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/known_fix/raw/oracle.json": "111e59ecd9c652551320c9b3356312cd6f7885a521bd838625d3034c73d1c4ef",
+      "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/known_fix/raw/upstream-test.log": "51ca48c3d43a26089aa977abf1532d4a790e7102dee7ca070883647aa4346f35",
+      "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/mutant_object_only/grade.json": "f4587f845bca43716f39ea47ef3089aa7f5a9014c44a4569edfa254d1dd7caa2",
+      "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/mutant_object_only/raw/oracle.json": "5d41ba74b55356086e048e89538001311460036a69cc7725a9287e32463b3ab5",
+      "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/mutant_object_only/raw/upstream-test.log": "973519a3f12f4fda70bcd5727832cfc559e90e937c4d25fdde9accd1bec3c592",
+      "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/mutant_parse_any_json_scalar/grade.json": "0c9783be1779cb1e209ee874c329c2423362b3042aaa07f50dd4189a14e92641",
+      "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/mutant_parse_any_json_scalar/raw/oracle.json": "bc83d31607d0ea6ec8e9eec8d74d189b751c4471402077fefc0d37f85e211966",
+      "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/mutant_parse_any_json_scalar/raw/upstream-test.log": "87757931e953aae7c48ff0a76eda9e5761ca4fb9d44cb8179dc0b17b2cc79b4a",
+      "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/mutant_restore_default_string/grade.json": "7362ad4e54f85f7ffd607c09acc8a581c9df6424aeef14a81b14bd9bf513fb7d",
+      "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/mutant_restore_default_string/raw/oracle.json": "47aac63eda97debc6f67c0f58cc3b3dd78c9dcc8f50950802da6c90d82b9165b",
+      "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/mutant_restore_default_string/raw/upstream-test.log": "ac1d59a055c799863a92fa85750233a0b8a77c6496adecde3d0aef3774bd9164"
+    },
+    "calibration_path": "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/calibration.json",
+    "calibration_runner": "scripts/calibrate_mlx_lm_1910_candidate_grader_v1.py",
+    "calibration_runner_sha256": "334a7ef4a71d056c245293fc90c6b77409474d3905dcc507f6ae3d4fabce98d7",
+    "calibration_sha256": "847a7226fdfdd816ca80dd9cf08bc658b464b1460542ae9e26f970120228d93c",
+    "grader_budget": "One independent grade per attempt; pinned image and oracle cases; at most 240 seconds per grade.",
+    "grader_sha256": "51485925eb54301cf4a6d901b3ed3b4840cba67d1b412a26a636b6ddc32e6789",
+    "identity": "scripts/grade_mlx_lm_1910_candidate_v1.py",
+    "trust_boundary": "Candidate source is mounted read-only in the digest-pinned Docker grader with network disabled, read-only root, dropped capabilities, no-new-privileges, and bounded memory/CPU/PIDs. Hidden expected values remain in the host grader; the container receives case inputs and returns JSON. Git source export disables replacement objects and hooks and checks pinned source/test hashes. Candidate code is never imported into the host grader process."
+  },
+  "hypothesis": "For the same cached SmolLM2 checkpoint and Development task #1910, an explicit one-call-at-a-time sequence with concrete string arguments will make at least one matched attempt read the exact allowlisted source file; the v2 run called list_files twice but read the source zero times.",
+  "implementation": {
+    "branch": "codex/fresh-task-qualification-mlx-lm-1910",
+    "commit": "c7f29dc8d05295681bcb3686baf59ca70ca0c45a",
+    "main_sha_at_freeze": "f3ab90a36e8724441b6b9555255f8f75a0a4d529"
+  },
+  "intervention": {
+    "changed_field": "agent.instruction",
+    "comparison": "Matched to v2 on the same Development task by greedy seed 31 and sampled seed 37; descriptive within-task debugging only.",
+    "exact_instruction": "The tool definitions above are reference schemas, never copy them as calls. Use concrete argument values, not schema objects. Make exactly one tool call per assistant turn. First output only this complete call, then wait for its tool result: <tool_call>{\"name\":\"list_files\",\"arguments\":{}}</tool_call> On the following assistant turn, output only this complete call to read the task source: <tool_call>{\"name\":\"read_file\",\"arguments\":{\"path\":\"qwen3_coder.py\"}}</tool_call> For read_file, path must be the string \"qwen3_coder.py\"; never use an object such as {\"type\":\"string\"}. After reading the source, solve the task using the available tools and public-test feedback.",
+    "type": "prompt_only_sequential_tool_call_examples",
+    "unchanged": [
+      "model checkpoint",
+      "task source",
+      "grader",
+      "tool definitions",
+      "agent code",
+      "turn budget",
+      "token budget",
+      "sampling seeds and parameters"
+    ]
+  },
+  "metrics": [
+    "Independent PASS count per graded attempt and unique Development task success per 1 task.",
+    "Binary reward mean and population variance over the two attempts; these are not independent tasks.",
+    "Valid edit/application rate, source/diff hashes, public-test invocation/pass counts, tool calls, token count and stop/failure reason.",
+    "Wall time, child RSS, MLX memory, host free-memory and swap telemetry, grader time.",
+    "Optimizer steps (zero; no training is conducted)."
+  ],
+  "model": {
+    "base_model": "HuggingFaceTB/SmolLM2-360M-Instruct",
+    "license": "Apache-2.0",
+    "license_source_sha256": "d9852365dbda76f822b05eba2852b6ffdbd3aee4f9fae780685a73fdab14eca6",
+    "parameter_scale": "360M",
+    "repository": "mlx-community/SmolLM2-360M-Instruct",
+    "resource_feasibility_result": "COMPLETED load-only: 2.386 seconds, 814.34 MiB sampled RSS, zero swap growth; no task prompt, grader, generated token, or optimizer update.",
+    "resource_smoke_manifest_path": "results/mlsys-repo-task-mlx-lm-1910-agent-v8-smollm2-360m-load-smoke-v3/evidence-manifest.json",
+    "resource_smoke_manifest_sha256": "10b8207badee48a53fab6b41edb88e53d3991a914496bbec1385d34bfc77e188",
+    "resource_smoke_protocol_path": "results/mlsys-repo-task-mlx-lm-1910-agent-v8-smollm2-360m-load-smoke-v3/protocol.json",
+    "resource_smoke_protocol_sha256": "01b67c26f4d0069db347ec849c8caa51dd97c2b757d1de102572a326319b6fd5",
+    "resource_smoke_result_path": "results/mlsys-repo-task-mlx-lm-1910-agent-v8-smollm2-360m-load-smoke-v3/run-1/result.json",
+    "resource_smoke_result_sha256": "0b7314f051e6168bfb6612caf7b92b91fd0f3fa9b3f45b5c8e27e4948a6a8052",
+    "snapshot_bytes": 728493041,
+    "snapshot_file_manifest_sha256": "155787fb371d6ec404e31f94560b038d29b38547ec3a3f77f055334aba0d08b4",
+    "snapshot_revision": "5d5e6fee5beb5d4d4d85e2203ef23e1230a9aac7"
+  },
+  "pre_experiment_validation_artifacts": [
+    {
+      "path": "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/preparation/validation-attempt-1.json",
+      "sha256": "9bf7620a0fa2ebf30bc679299544f53a1e87f0c5ac27394369ebae46e327bdb5",
+      "sidecar_path": "results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/preparation/validation-attempt-1.sha256",
+      "sidecar_sha256": "b92004be85de42424a5da2de212445710d75372ad904ca180cffd7c4c511ff69"
+    }
+  ],
+  "primary_outcome": "Number of the two attempts that invoke list_files and subsequently read qwen3_coder.py with a string path argument. Independently graded correct patches per Development task remains the capability outcome; no held-out capability estimate is made.",
+  "prior_development_run": {
+    "bundle_manifest_path": "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/bundle-manifest.json",
+    "bundle_manifest_sha256": "0e680b614febb2a730d09f6056a3fcdf56cd9079acba4e4dd9b6e9ad504b7538",
+    "bundle_root": "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt",
+    "evidence_manifest_path": "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/evidence-manifest.json",
+    "evidence_manifest_sha256": "dff14d92df4312f5ea9c3d8fdc58146bc20ba1c89eeade362657bceb5f0b10fc",
+    "exposure_classification": "DEVELOPMENT_ONLY_REUSED_TASK",
+    "protocol_path": "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/protocol.json",
+    "protocol_sha256": "74c22304f4c7954b29f2589ba73edf9c88bb5260d67ab6c21f10305b7b6e6231",
+    "recorded_outcome": {
+      "attempts": 2,
+      "generated_tokens": 208,
+      "independent_successes": 0,
+      "optimizer_steps": 0,
+      "status": "COMPLETED",
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "tool_call_count": 4,
+      "valid_edit_attempts": 0
+    },
+    "report_path": "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/report.md",
+    "report_sha256": "c02873347e3bc6f0b70ec64ac93c581eccfd5d44e458f020f21f6c5df0827bc3",
+    "summary_path": "results/mlsys-repo-task-mlx-lm-1910-agent-v10-smollm2-360m-toolcall-prompt/run-1/summary.json",
+    "summary_sha256": "79a426156bce3bf1b9ea95209e418c082c4c9c3a6d483de967f29aa5d65e736a"
+  },
+  "prospective_notes": [
+    "This is a new prospective prompt-sequence protocol frozen after the completed v2 Development run.",
+    "MLX-LM #1910 remains DEVELOPMENT_ONLY and is reused solely to debug the observed tool-argument and tool-state failures.",
+    "The only treatment is a user-message instruction with exact first and second tool calls, concrete string arguments, and one-call-per-turn guidance.",
+    "Model, source, grader, tool schemas, runtime, greedy/sampled seeds, sampling parameters, and all generation, grader, memory, and swap budgets remain fixed.",
+    "Prior v1 and v2 outcomes are recorded as exposure history; no attempt is counted as a fresh task or held-out confirmation.",
+    "Run exactly one greedy and one sampled attempt. Stop after the first resource abort, telemetry loss, integrity mismatch, grader infrastructure error, or the 1800-second total budget.",
+    "Do not initiate SFT or GRPO unless a verified repair with a valid edit and public-test pass is achieved and the repository task-diversity gate is met."
+  ],
+  "protocol_id": "mlsys-repo-task-mlx-lm-1910-smollm2-tool-call-sequence-v3",
+  "reproduction_commands": [
+    "Run scripts/run_mlx_lm_1910_smollm2_feasibility_v3.py --repo-root <VARE-checkout> --protocol <VARE-checkout>/results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/protocol.json --model-path <snapshot-5d5e6fee5beb5d4d4d85e2203ef23e1230a9aac7> --python <mlx-python-3.12> --git-source <pinned-local-mlx-lm-clone> --check-only before inference.",
+    "After exact frozen-protocol and resource preflight pass, replace --check-only with --output results/mlsys-repo-task-mlx-lm-1910-agent-v11-smollm2-360m-toolcall-sequence/run-1."
+  ],
+  "resources": {
+    "host": {
+      "architecture": "arm64",
+      "chip": "Apple M1 Pro",
+      "macos": "27.0.1",
+      "unified_memory_gib": 32
+    },
+    "max_absolute_swap_mib": 4096,
+    "max_agent_rss_mib": 3072,
+    "max_colima_cpus": 4,
+    "max_colima_memory_bytes": 3758096384,
+    "max_experiment_wall_seconds": 1800,
+    "max_grader_seconds_per_attempt": 240,
+    "max_start_swap_mib": 4000,
+    "max_swap_growth_mib": 96,
+    "max_total_model_wall_seconds": 1200,
+    "max_wall_seconds_per_attempt": 600,
+    "min_disk_free_gib": 20,
+    "min_runtime_free_memory_percent": 35,
+    "min_start_free_memory_percent": 40,
+    "poll_interval_seconds": 2,
+    "pre_inference_measurement": {
+      "captured_at_utc": "2026-10-23T19:45:37+00:00",
+      "colima_cpus": 4,
+      "colima_memory_bytes": 3040346112,
+      "disk_free_gib": 130.319,
+      "memory_free_percent": 66,
+      "swap_used_mib": 3806.5
+    },
+    "stopping_rule": "Exactly one greedy and one sampled attempt. Stop after the first resource abort, telemetry loss, integrity mismatch, grader infrastructure error, or 1800 seconds. No retries and no replacement task within this protocol."
+  },
+  "runtime": {
+    "backend": "MLX/Metal on Apple Silicon GPU",
+    "candidate_public_test_isolation": "network none, read-only root and workspace mount, 512 MiB, 1 CPU, pids limit 32",
+    "docker_context": "colima",
+    "freeze_path": "results/mlsys-repo-task-mlx-lm-1910-agent-v8-smollm2-360m-load-smoke-v3/runtime.freeze.txt",
+    "freeze_sha256": "c1182bb6c8bd5edc9f85e18fb38fc48882746294a7f19e5900235a0a11ab34ae",
+    "grader_isolation": "network none, read-only root and candidate mount, 1 GiB, 2 CPUs, pids limit 64",
+    "network": "HF_HUB_OFFLINE=1 and TRANSFORMERS_OFFLINE=1; no model downloads or API calls",
+    "packages": {
+      "mlx": "0.32.4",
+      "mlx-lm": "0.32.2",
+      "mlx-metal": "0.32.4",
+      "transformers": "5.20.2"
+    },
+    "public_test_image": "sha256:8bc8dbce962ad11f96fbc5c42485832f4b3726e34253f93b0fb104d1de76c1d6",
+    "python": "3.12.12"
+  },
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_RUN",
+  "task": {
+    "bundle_sha256": {
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/TASK.md": "38446f2db20c6fc9fde97ce3ae703da96a5e827c7f732810d24616015ab3a621",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/task.json": "cb3528ed43b42a43ddcd5d2993fe09439328ff79e96268908f6a716aadab6f32",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/COMMIT_EDITMSG": "63ddb0019f5021602207909b405a26d829524cf5de1b3d7ef3ac0ad2d53b9ca4",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/HEAD": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/config": "6b2fecd91c468cb1b9cfd3a16fb71578676a28170e1da7c5cbfb499083f81940",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/description": "85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/hooks/applypatch-msg.sample": "0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/hooks/commit-msg.sample": "1f74d5e9292979b573ebd59741d46cb93ff391acdd083d340b94370753d92437",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/hooks/fsmonitor-watchman.sample": "e0549964e93897b519bd8e333c037e51fff0f88ba13e086a331592bf801fa1d0",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/hooks/post-update.sample": "81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/hooks/pre-applypatch.sample": "e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/hooks/pre-commit.sample": "57185b7b9f05239d7ab52db045f5b89eb31348d7b2177eab214f5eb872e1971b",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/hooks/pre-merge-commit.sample": "d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/hooks/pre-push.sample": "ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/hooks/pre-rebase.sample": "4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/hooks/pre-receive.sample": "a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/hooks/prepare-commit-msg.sample": "e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/hooks/push-to-checkout.sample": "a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/hooks/sendemail-validate.sample": "44ebfc923dc5466bc009602f0ecf067b9c65459abfe8868ddc49b78e6ced7a92",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/hooks/update.sample": "8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/index": "f65b897a77b536719735e6430edad2368a4c803c81068089b20f51c7f60c335e",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/info/exclude": "6671fe83b7a07c8932ee89164d1f2793b2318058eb8b98dc5c06ee0a5a3b0ec1",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/logs/HEAD": "cddef6f26260d59782598a3a7cc1cf5a31e5d70b1583382b675d8de748629a9f",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/logs/refs/heads/main": "cddef6f26260d59782598a3a7cc1cf5a31e5d70b1583382b675d8de748629a9f",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/objects/0f/9f3df1b54234d212e906c856fd96665a14d002": "57dab802fd897cb74ce0e9e30e5de8e613119db6aff941d62668365ee1fb1d37",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/objects/6a/03b58dde4404823145cccbd5656c251c35c529": "66d6416fb44ba049b776050a2e10bb57eea5c7681e59ea382d9d9dd145790398",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/objects/b9/a6f9ffdc7a2bc886362937fda402f1f7eac5c7": "a4a3d87925e55019424a9fe8cb18e49ab36e40f178628d1b4cd403bda4de63cc",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/objects/d1/51a804ca04296e758e77503bc552515f723399": "c676fdcdd5de9090d09ee0b4dacff6cb1edf376580c480d2e3c31f7cbbd5338d",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/.git/refs/heads/main": "8d323ae4b3687a72d42120c9ceb4bd336c1b704ef9d144321b6f606d38b7631e",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/qwen3_coder.py": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+      "benchmarks/mlsys_repo_eval_v3/mlxlm_1910_agent_task/workspace/test_public.py": "d41bd79d8936db5f48f74805fdad8636ac54e64dbafe704ecdf86973178d8875"
+    },
+    "candidate_workspace_files": [
+      "qwen3_coder.py",
+      "test_public.py"
+    ],
+    "eligibility_evidence": {
+      "calibration_path": "results/mlsys-repo-task-mlx-lm-1910-agent-v3/grader-calibration/calibration.json",
+      "calibration_sha256": "847a7226fdfdd816ca80dd9cf08bc658b464b1460542ae9e26f970120228d93c",
+      "expected": {
+        "baseline": "FAIL",
+        "known_fix": "PASS",
+        "mutant_object_only": "FAIL",
+        "mutant_parse_any_json_scalar": "FAIL",
+        "mutant_restore_default_string": "FAIL"
+      },
+      "grader_calibration_status": "CALIBRATION_PASS_DEVELOPMENT_ONLY",
+      "minimum_15_task_gate_for_learning_study": "NOT_MET"
+    },
+    "exposure": "DEVELOPMENT_ONLY",
+    "exposure_reason": "Previously used in a Qwen3-4B initialization attempt that aborted on swap pressure after 4.17 seconds; no model-generated tokens or patch were recorded. Keep Development-only. Model pretraining exposure cannot be ruled out.",
+    "known_fix_exposure": "The agent receives TASK.md and the two source/test workspace files. The workspace Git store is pinned to baseline d151a804 and does not contain the upstream fixed commit.",
+    "license": "MIT",
+    "license_provenance_path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/task-license-provenance.json",
+    "license_provenance_sha256": "1e144ec66d29516deadce41704ab23ad7c03c38401f4bdf139905cee93461f62",
+    "prior_exposure_interpretation_path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/run-1/interpretation.json",
+    "prior_exposure_interpretation_sha256": "17d615dcbdaf266ac641ab0cf8c503da949817331814a1bc479169d56ddf6b1b",
+    "prior_exposure_manifest_path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/evidence-manifest.json",
+    "prior_exposure_manifest_sha256": "e41e04604c3ff59f6171041bbaa9a1031ec701a227d4dbdaa42747c666e71213",
+    "prior_exposure_manifest_sidecar_sha256": "fc179e687ba3817e128c315f89a3eff7033f3a78ee4c38fdf39107e3565f9b49",
+    "prior_exposure_protocol_path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/protocol.lock.json",
+    "prior_exposure_protocol_sha256": "cffc2839ba342b3f8c60189215450c3e6a5d06a1389fa0582f4d5de670bdebf4",
+    "prior_exposure_result_path": "results/mlsys-repo-task-mlx-lm-1910-agent-v7/run-1/summary.json",
+    "prior_exposure_result_sha256": "7df4534bc38b86fb8e053a16114f9967c91d62b24cc6a2c9a424c1a0671cfe08",
+    "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1910",
+    "target_base_sha256": "2d212e4e6f175178bd80b7db9963ccad613e29419f976e6d6b3272417f953722",
+    "target_fixed_sha256": "d1029aae22ed475e9d7c09d29c37e74dca8df52b0fb046f000f2e3f9b83a6583",
+    "target_path": "mlx_lm/tool_parsers/qwen3_coder.py",
+    "task_id": "mlx-lm-1910-development-feasibility-v1",
+    "task_prompt_sha256": "38446f2db20c6fc9fde97ce3ae703da96a5e827c7f732810d24616015ab3a621",
+    "upstream_base_commit": "bacd9e8e1f3a5be7dd64bae3a9ad8d74471ccc3a",
+    "upstream_fixed_commit": "a537041adc86d73cfae4cc1375b2c8851c652c60",
+    "upstream_repository": "https://github.com/ml-explore/mlx-lm",
+    "vare_workspace_base_commit": "d151a804ca04296e758e77503bc552515f723399"
+  }
+}

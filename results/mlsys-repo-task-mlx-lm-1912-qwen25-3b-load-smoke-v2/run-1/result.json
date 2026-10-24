@@ -1,0 +1,105 @@
+{
+  "command": [
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/mlx-smoke-venv/bin/python",
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/VARE-coding-rl-experiments/scripts/smoke_local_qwen25_3b_model_load_v2.py",
+    "--child-model",
+    "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen2.5-3B-Instruct-4bit/snapshots/4f83f8f146fdf28b512a06562b671d7af4fab457",
+    "--child-result",
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/VARE-coding-rl-experiments/results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-load-smoke-v2/run-1/load.json"
+  ],
+  "generated_tokens": 0,
+  "load_result": {
+    "generated_tokens": 0,
+    "loaded": true,
+    "model_class": "Model",
+    "tokenizer_class": "TokenizerWrapper"
+  },
+  "optimizer_steps": 0,
+  "protocol_id": "vare.local-mlx-model-load-smoke.qwen25-3b-v2",
+  "protocol_sha256": "fccee8d421193af19427c868e634e56330281b312b4be94ec7c403e09094457d",
+  "reason": null,
+  "resource": {
+    "end_free_memory_percent": 60,
+    "end_swap_mib": 3806.5,
+    "minimum_sampled_free_memory_percent": 59,
+    "peak_sampled_child_rss_mib": 1892.53,
+    "peak_sampled_swap_mib": 3806.5,
+    "samples": [
+      {
+        "child_rss_mib": 8.89,
+        "elapsed_seconds": 0.003,
+        "free_memory_percent": 63,
+        "swap_used_mib": 3806.5
+      },
+      {
+        "child_rss_mib": 38.44,
+        "elapsed_seconds": 0.273,
+        "free_memory_percent": 63,
+        "swap_used_mib": 3806.5
+      },
+      {
+        "child_rss_mib": 58.81,
+        "elapsed_seconds": 0.538,
+        "free_memory_percent": 63,
+        "swap_used_mib": 3806.5
+      },
+      {
+        "child_rss_mib": 74.03,
+        "elapsed_seconds": 0.804,
+        "free_memory_percent": 62,
+        "swap_used_mib": 3806.5
+      },
+      {
+        "child_rss_mib": 75.84,
+        "elapsed_seconds": 1.075,
+        "free_memory_percent": 62,
+        "swap_used_mib": 3806.5
+      },
+      {
+        "child_rss_mib": 78.3,
+        "elapsed_seconds": 1.338,
+        "free_memory_percent": 62,
+        "swap_used_mib": 3806.5
+      },
+      {
+        "child_rss_mib": 82.11,
+        "elapsed_seconds": 1.605,
+        "free_memory_percent": 62,
+        "swap_used_mib": 3806.5
+      },
+      {
+        "child_rss_mib": 526.97,
+        "elapsed_seconds": 1.87,
+        "free_memory_percent": 62,
+        "swap_used_mib": 3806.5
+      },
+      {
+        "child_rss_mib": 1695.16,
+        "elapsed_seconds": 2.246,
+        "free_memory_percent": 60,
+        "swap_used_mib": 3806.5
+      },
+      {
+        "child_rss_mib": 1892.53,
+        "elapsed_seconds": 2.593,
+        "free_memory_percent": 60,
+        "swap_used_mib": 3806.5
+      },
+      {
+        "child_rss_mib": 1791.5,
+        "elapsed_seconds": 2.854,
+        "free_memory_percent": 59,
+        "swap_used_mib": 3806.5
+      }
+    ],
+    "start_free_memory_percent": 63,
+    "start_swap_mib": 3806.5,
+    "swap_growth_mib": 0.0
+  },
+  "return_code": 0,
+  "runner_sha256": "082da7e5885b32734831054378044e7d9a3c24de8bfb517ff8314176906d1d81",
+  "schema_version": 1,
+  "started_at_utc": "2026-10-23T19:58:19.300250+00:00",
+  "status": "COMPLETED",
+  "wall_seconds": 3.118
+}

@@ -1,0 +1,86 @@
+{
+  "artifact_sha256": {
+    "baseline_source_target": "51a96b8d23e365014cfcd44049fda9a40a41e76ab5ba80a7b687138d3523f00a",
+    "calibration.json": "d78efe13d452acda469a7a18789b62df486adf6fdc993d2ac9c9736b5bfa07be",
+    "fixed_source_target": "5d7dfd5373e0a4b63ce0869f05f5559b01111e38bf68dd02b166ca551ec438b5",
+    "model-manifest.json": "909c41a7304cc77a79dbd334dcad473dc89da3b2202b6a33d209e340197d9d16",
+    "prompt-messages.json": "3bafbb917477dbd91ebfac6310ceeeb246d9aed33a9e3c78a13c08a6e3d761fa",
+    "protocol.json": "2fc9a1361aad3640672290d1b1d1ba23e27098bc5808004608554ce16d465154",
+    "qualification.json": "2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d",
+    "scripts/monitor_local_agent_resources_v1.py": "8b5296c527fba160cd79819f65ffb390cc2bedb4879554bb2e52f0f50f107fdd",
+    "scripts/monitor_local_agent_resources_v2.py": "6bb8f76bb6e2c5a88e2b333a769e7fede458bf3d9a18fdbbd181195b801d41e0",
+    "scripts/run_local_agent.py": "10df8ba76ab918a62fda386c50287ee31fab386ff4dde5ac3f94a54065811862",
+    "src/vare/agent_edit_format.py": "00922614bdced3ed490502e33f07fe16164298e2916631016170a689b491cce4",
+    "src/vare/agent_task_contract.py": "f3cb85f1960dcaf175345bb45a6f23a08bda7a8805d37db9caf217ac5c86f3fd",
+    "task-input/TASK.md": "99ef996ed432136483fed21a5964a918f2f90f45dc6e5491ad5490e2138e395e",
+    "task-input/task.json": "6cd61ac51354a2f4fab6026154c2fbe6e2f965b8959dbd5d6b1300507eeba1a6",
+    "task-input/test_public.py": "e232c3344e0f911790f2a5d93b90bd5ca9371bbed0afb6ed3503aff31b575936"
+  },
+  "baseline_commit": "381032b7e0a8896ae48f90dbe83eae3bf7630953",
+  "experiment_id": "transformers-45852-qwen25-3b-agent-feasibility-v1",
+  "fixed_commit": "909ece888ed4b55402dc8acbb9c13ddf8ff977b5",
+  "frozen_before_inference": true,
+  "grader_commit": "b9f5dd6b32bacad026b87a5fed43dac2108e142a",
+  "grader_implementation_sha256": {
+    "benchmarks/mlsys_repo_eval_v2/transformers_45852/Dockerfile": "71200d584cff1d58e6abbf84d51491ff3a2ab8da3f3120370fac2083c8e31e31",
+    "benchmarks/mlsys_repo_eval_v2/transformers_45852/grader_adapter.py": "85ac3740bc05d14b2ac0976f54d7d29ae695825620a16794764f160014e95031",
+    "benchmarks/mlsys_repo_eval_v2/transformers_45852/requirements.txt": "1c4a93c82e47e7c35e5dd681281e7e07498bec609abb298f678f581b3b641054",
+    "benchmarks/mlsys_repo_eval_v2/transformers_45852/task.md": "99ef996ed432136483fed21a5964a918f2f90f45dc6e5491ad5490e2138e395e",
+    "scripts/run_transformers_45852_calibration.py": "82a45d2f36c15db7b7c2cec62f573cec6ce29a067531409211818987978a019b",
+    "src/vare/attestation.py": "785e74d7d0cd6d41a73cf75cc65c093a0afb8d5082ad3f11dd828770616e93a3",
+    "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "src/vare/isolated_candidate.py": "8d0fbef1bb44c788dc983a814c2178c7c5a2e716fbfcc0f912f64885fe8fdccf",
+    "src/vare/transformers_repo_task.py": "3bc002d97ce3ec64b90ee53aba51562b7bc03ea32690c59db8f8bf452a54c44c",
+    "src/vare/types.py": "233e2b6176431140e7700cc668cfdbdc98cf3d8d4ab98de658efab7010ea82ca",
+    "tests/test_transformers_repo_task.py": "09f6658733f5c19b85997ea6d479b6acf727500eb9adaf55b8bf788ba8c311a2"
+  },
+  "model_files": {
+    ".gitattributes": {
+      "bytes": 1519,
+      "sha256": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361"
+    },
+    "README.md": {
+      "bytes": 755,
+      "sha256": "fecf595155116837d6ccd97918cb59ae7228ee1511c2dd1d9b1725bdfeea9919"
+    },
+    "added_tokens.json": {
+      "bytes": 605,
+      "sha256": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b"
+    },
+    "config.json": {
+      "bytes": 785,
+      "sha256": "ceb97c46fe17f523ac42c0f0254fd18d9589f8725f0bbbe0bef541f8ef84547a"
+    },
+    "merges.txt": {
+      "bytes": 1671853,
+      "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5"
+    },
+    "model.safetensors": {
+      "bytes": 1736293090,
+      "sha256": "f212cf6fb9923281a09c135e05d43a052ee5ef7121f5b1dc0b0fb2de80f97cfd"
+    },
+    "model.safetensors.index.json": {
+      "bytes": 66290,
+      "sha256": "7edb73f1af3c860b1344ece4abe04b258246afdfeba4cb39d3b84a0459890bee"
+    },
+    "special_tokens_map.json": {
+      "bytes": 613,
+      "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+    },
+    "tokenizer.json": {
+      "bytes": 7031673,
+      "sha256": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf"
+    },
+    "tokenizer_config.json": {
+      "bytes": 7308,
+      "sha256": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7"
+    },
+    "vocab.json": {
+      "bytes": 2776833,
+      "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    }
+  },
+  "protocol_sha256": "2fc9a1361aad3640672290d1b1d1ba23e27098bc5808004608554ce16d465154",
+  "runtime_commit": "fd4803d651c3dd6e5bf7741639aba4e6e0850534",
+  "schema_version": 1
+}

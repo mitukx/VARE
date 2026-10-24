@@ -1,0 +1,93 @@
+{
+  "candidate_source_sha256": "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2",
+  "cases": [
+    {
+      "case_id": "tiny-threshold-1e-08",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.009180207969620824
+    },
+    {
+      "case_id": "tiny-threshold-1e-06",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.002748124999925494
+    },
+    {
+      "case_id": "tiny-threshold-0.0001",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.0021224160445854068
+    },
+    {
+      "case_id": "float32-threshold-1e-08",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.024686583084985614
+    },
+    {
+      "case_id": "float32-threshold-0.0001",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.02443220908753574
+    },
+    {
+      "case_id": "float32-threshold-0.001",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.02444570802617818
+    },
+    {
+      "case_id": "float16-threshold-1e-08",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.02567495801486075
+    },
+    {
+      "case_id": "float16-threshold-0.0001",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.028204915928654373
+    },
+    {
+      "case_id": "float16-threshold-0.001",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.027477833093144
+    },
+    {
+      "case_id": "bfloat16-threshold-1e-08",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.03295537503436208
+    },
+    {
+      "case_id": "bfloat16-threshold-0.0001",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.0342323329532519
+    },
+    {
+      "case_id": "bfloat16-threshold-0.001",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.029054375016130507
+    },
+    {
+      "case_id": "shifted_maximum_nonzero_values",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.0032288329675793648
+    },
+    {
+      "case_id": "leading_maximum_nonzero_value",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.0031241660472005606
+    }
+  ],
+  "grader_adapter_sha256": "f08007db5ec895f071624cd1de2e7afd3b60d0dffa809161f48a2baceb28d6e7",
+  "grader_source_sha256": "ba48fee74cb7faab53860be5e2bc052947d083aa2fcd4bfd87dd2c32870ef747",
+  "passed": false,
+  "task_id": "mlxlm-1912-top-p-min-token"
+}

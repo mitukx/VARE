@@ -1,0 +1,58 @@
+{
+  "attempts": [
+    {
+      "agent_record_present": false,
+      "agent_stderr_path": "greedy/launcher.stderr.log",
+      "agent_stderr_sha256": "6ac3ee29fcdea5441012db975502a7143c41c9e25734c240e8324e35f210e2a3",
+      "arm": "greedy",
+      "failure_classification": "agent_workspace_setup_failed_before_model_initialization",
+      "generated_tokens": 0,
+      "independent_grader_run": false,
+      "launch_parameters_path": "greedy/launch.json",
+      "model_backend_initialized": false,
+      "optimizer_steps": 0,
+      "raw_turn_count": 0,
+      "raw_turn_log_path": "greedy/raw-turns.jsonl",
+      "raw_turn_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": "FAILED",
+      "task_prompt_encoded_or_sent_to_model": false,
+      "task_prompt_loaded_by_runtime_contract": true
+    }
+  ],
+  "claim_limit": "No model inference or task attempt occurred; this records a supervised-launch harness failure after the public baseline/fix gate.",
+  "failure": {
+    "exception_type": "KeyError",
+    "missing_resource_key": "max_wall_seconds",
+    "raised_in": "scripts/run_mlx_lm_1912_qwen25_agent_v1.py::_resource_abort",
+    "tool_process_exit_code": 1
+  },
+  "failure_classification": "agent_workspace_setup_failed_before_model_initialization",
+  "heldout_tasks_accessed": false,
+  "model_load_repeated": false,
+  "optimizer_steps": 0,
+  "protocol_id": "vare.real-coding-agent-feasibility.mlxlm-1912-qwen25-3b-v2",
+  "protocol_sha256": "d0e44b639968fc6bf19fe8aff1fd07152fc115d9aa9221799efadbe31c82cc83",
+  "public_baseline_fix_gate": {
+    "baseline": "FAIL",
+    "known_fix": "PASS",
+    "status": "PASS",
+    "task_public_test_sha256": "a88ccf1972d0d4a9b0d9ff79fa33d7fa4aae78a3ff638b76dc115fe63f31cdd2"
+  },
+  "residual_agent_process_found": false,
+  "residual_candidate_container_found": false,
+  "resource_after_supervisor_failure": {
+    "memory_free_percent": 64,
+    "swap_used_mib": 3806.5
+  },
+  "resource_before_agent_launch": {
+    "memory_free_percent": 63,
+    "swap_used_mib": 3806.5
+  },
+  "sampled_attempt": {
+    "reason": "earlier harness failure",
+    "status": "NOT_RUN"
+  },
+  "schema_version": 1,
+  "status": "FAILED",
+  "task_exposure_note": "The task contract was parsed by the agent runtime, but workspace validation failed before importing MLX or constructing/sending model input. No model output was generated. Keep this task Development-only."
+}

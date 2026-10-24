@@ -1,0 +1,143 @@
+{
+  "aggregate": {
+    "agent_wall_seconds": 59.54,
+    "attempts_with_edit_applied": 1,
+    "generated_tokens": 1077,
+    "grader_wall_seconds": 55.106,
+    "max_mlx_peak_allocated_bytes": 2712633538,
+    "maximum_process_rss_mib": 1932.828,
+    "maximum_swap_used_mib": 3758.44,
+    "minimum_host_memory_free_percent": 43,
+    "optimizer_steps_committed": 0,
+    "public_test_invocations": 2,
+    "public_test_passes": 2,
+    "swap_growth_mib": 0.0,
+    "valid_edits_applied": 1
+  },
+  "asynchronous_training": "NOT_RUN",
+  "attempts": [
+    {
+      "agent_wall_seconds": 44.344,
+      "arm": "greedy",
+      "candidate_diff_sha256": "051478afa52959747f17b4e590ede74d3e6f5d002258dc37d19fa3146e8cd7d9",
+      "candidate_target_sha256": "773245990ad6a3229fa2cd6de908605f10160875d6cfc3eddc7ea71527a7dce5",
+      "edit_applied": true,
+      "edit_attempted": true,
+      "format_parse_failure_count": 0,
+      "generated_tokens": 875,
+      "grade_case_count": 6,
+      "grade_passes": 3,
+      "grader_wall_seconds": 28.343,
+      "independently_correct": false,
+      "max_child_rss_mib": 1913.125,
+      "max_swap_used_mib": 3758.44,
+      "min_memory_free_percent": 43,
+      "mlx_active_memory_bytes": 1736204296,
+      "mlx_peak_memory_bytes": 2711552148,
+      "monitor_wall_seconds": 45.78,
+      "public_tests": [
+        true,
+        true
+      ],
+      "reward": 0,
+      "seed": 113,
+      "stop_reason": "turn_budget_exhausted",
+      "tool_invocation_counts": {
+        "apply_patch": 1,
+        "finish": 1,
+        "read_file": 1,
+        "run_public_tests": 1,
+        "search_text": 7,
+        "unknown": 1
+      },
+      "tool_turns": 12,
+      "workspace_archive_sha256": "411bfbaef17d41ff3a49d3933f580168d21224e8db2d0897400f7049853a249f"
+    },
+    {
+      "agent_wall_seconds": 15.196,
+      "arm": "sampled",
+      "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "candidate_target_sha256": "51a96b8d23e365014cfcd44049fda9a40a41e76ab5ba80a7b687138d3523f00a",
+      "edit_applied": false,
+      "edit_attempted": false,
+      "format_parse_failure_count": 0,
+      "generated_tokens": 202,
+      "grade_case_count": 6,
+      "grade_passes": 3,
+      "grader_wall_seconds": 26.763,
+      "independently_correct": false,
+      "max_child_rss_mib": 1932.828,
+      "max_swap_used_mib": 3758.44,
+      "min_memory_free_percent": 45,
+      "mlx_active_memory_bytes": 1736204342,
+      "mlx_peak_memory_bytes": 2712633538,
+      "monitor_wall_seconds": 17.259,
+      "public_tests": [],
+      "reward": 0,
+      "seed": 127,
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "tool_invocation_counts": {
+        "read_file": 1,
+        "search_text": 1,
+        "unknown": 1
+      },
+      "tool_turns": 5,
+      "workspace_archive_sha256": "ac941838bd877cc71e6d084ba0d5f477dc242437975fc73e636f8e71a6d889f6"
+    }
+  ],
+  "experiment_id": "transformers-45852-qwen25-3b-agent-feasibility-v1",
+  "grader_calibration": "Previously calibrated v3: baseline fails 3/6; exact known fix passes 6/6; six meaningful mutants and seven isolation probes were rejected/passed as declared.",
+  "grader_commit": "b9f5dd6b32bacad026b87a5fed43dac2108e142a",
+  "heldout_evaluation": "NOT_RUN",
+  "launch_failure": {
+    "cause": "system Python selected for first launch did not contain MLX",
+    "generated_tokens": 0,
+    "model_loaded": false,
+    "preserved_path": "run-1/greedy/",
+    "prompt_constructed_or_tokenized": false,
+    "status": "FAILED_BEFORE_MODEL_LOAD"
+  },
+  "learning_gate": "NO_GO",
+  "model": {
+    "license": "Qwen Research License Agreement; non-commercial research/evaluation use only",
+    "loaded_generation_runs": 2,
+    "mlx_lm_version": "0.32.2",
+    "mlx_package_version": "0.32.4",
+    "repository": "mlx-community/Qwen2.5-3B-Instruct-4bit",
+    "revision": "4f83f8f146fdf28b512a06562b671d7af4fab457",
+    "runtime_versions": {
+      "docker_server": "29.5.2 linux/arm64",
+      "mlx": "0.32.4",
+      "mlx_lm": "0.32.2",
+      "python": "3.12.12",
+      "transformers": "5.20.2"
+    },
+    "weights_sha256": "f212cf6fb9923281a09c135e05d43a052ee5ef7121f5b1dc0b0fb2de80f97cfd"
+  },
+  "next_action": "Fix read-only list_files schema compatibility and add a regression for license-header mutation detection; use a different fresh Development task only after its evaluator trust gate passes.",
+  "primary_outcome": {
+    "attempts": 2,
+    "independently_correct_patches": 0,
+    "task_units": 1,
+    "tasks_with_any_correct_patch": 0
+  },
+  "protocol_commit": "3c9fa266",
+  "protocol_lock_sha256": "74834c0526f638b4ce2ca966528f7e2a5604cb75b7f3e78836d316746bff749b",
+  "protocol_sha256": "2fc9a1361aad3640672290d1b1d1ba23e27098bc5808004608554ce16d465154",
+  "reward": {
+    "mean": 0.0,
+    "per_attempt": [
+      0,
+      0
+    ],
+    "population_variance": 0.0,
+    "sample_variance_within_task": 0.0,
+    "trainable_signal": "NO_GO: constant zero reward on one Development task"
+  },
+  "runtime_code_commit": "fd4803d651c3dd6e5bf7741639aba4e6e0850534",
+  "schema_version": 1,
+  "status": "COMPLETED",
+  "task_classification": "Development-only; consumed by these attempts and ineligible for held-out reuse",
+  "task_id": "transformers-45852-4d-mask",
+  "training": "NOT_RUN"
+}

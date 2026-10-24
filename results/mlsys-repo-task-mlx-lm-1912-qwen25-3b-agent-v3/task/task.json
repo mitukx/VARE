@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "task_id": "mlxlm-1912-top-p-min-token",
+  "prompt": "Fix `mlx_lm.sample_utils.apply_top_p` so nucleus filtering retains at least the\nmost likely token for every row, including very small positive thresholds and\nlow precision log probabilities. Preserve the existing public function\nsignature, output shape, and retained log probabilities. Only edit\n`mlx_lm/sample_utils.py`.\n",
+  "source": {
+    "upstream_repository": "https://github.com/ml-explore/mlx-lm",
+    "upstream_base_commit": "47e43a4526d42a6dcee758f07eb04b78a8439ecb",
+    "upstream_fixed_commit": "87b7b583a697537aa68f47130b40884700b5f55f"
+  },
+  "metadata": {
+    "editable_files": [
+      "mlx_lm/sample_utils.py",
+      "test_public.py"
+    ],
+    "split": null,
+    "exposure_classification": "development_only"
+  }
+}

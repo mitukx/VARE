@@ -1,0 +1,190 @@
+{
+  "cheaper_alternatives_considered": [
+    "SmolLM2-360M-Instruct already loaded, but three Development-only #1910 tool-interface trials had zero independently correct repairs and constant reward.",
+    "Qwen3-4B-Instruct-2507 model loading previously aborted under its frozen swap limit.",
+    "Qwen2.5-3B-Instruct-4bit is a materially smaller locally cached MLX checkpoint than Qwen3-4B; load-only smoke is cheaper than any agent trajectory."
+  ],
+  "claim_limit": "A successful load establishes resource feasibility only. It does not establish that the model can follow tools, generate a correct repair, or improve after training.",
+  "decision_rule": "GO to protocol preparation for a separate #1912 Development-only agent feasibility study only if this single load completes, the model/tokenizer objects are returned, all checkpoint hashes and runtime versions match, and every resource limit passes. Otherwise record NO_GO or ABORTED_RESOURCE and do not retry this model/revision in this session.",
+  "frozen_at_utc": "2026-10-23T19:58:00+00:00",
+  "hypothesis": "The locally cached 4-bit Qwen2.5-3B-Instruct snapshot can load in the pinned MLX runtime on Apple Silicon without exceeding conservative swap, free-memory, RSS, or wall-clock limits; a pass permits only a separately frozen Development-task agent feasibility run.",
+  "metrics": [
+    "model and tokenizer object classes",
+    "model file inventory and SHA-256",
+    "runtime package versions",
+    "wall-clock seconds",
+    "sampled child RSS",
+    "sampled host free-memory percentage",
+    "sampled host swap",
+    "exit code and failure classification"
+  ],
+  "model": {
+    "cache_directory": "models--mlx-community--Qwen2.5-3B-Instruct-4bit",
+    "conversion_source": "Qwen/Qwen2.5-3B-Instruct",
+    "files": {
+      ".gitattributes": {
+        "bytes": 1519,
+        "sha256": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361"
+      },
+      "README.md": {
+        "bytes": 755,
+        "sha256": "fecf595155116837d6ccd97918cb59ae7228ee1511c2dd1d9b1725bdfeea9919"
+      },
+      "added_tokens.json": {
+        "bytes": 605,
+        "sha256": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b"
+      },
+      "config.json": {
+        "bytes": 785,
+        "sha256": "ceb97c46fe17f523ac42c0f0254fd18d9589f8725f0bbbe0bef541f8ef84547a"
+      },
+      "merges.txt": {
+        "bytes": 1671853,
+        "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5"
+      },
+      "model.safetensors": {
+        "bytes": 1736293090,
+        "sha256": "f212cf6fb9923281a09c135e05d43a052ee5ef7121f5b1dc0b0fb2de80f97cfd"
+      },
+      "model.safetensors.index.json": {
+        "bytes": 66290,
+        "sha256": "7edb73f1af3c860b1344ece4abe04b258246afdfeba4cb39d3b84a0459890bee"
+      },
+      "special_tokens_map.json": {
+        "bytes": 613,
+        "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+      },
+      "tokenizer.json": {
+        "bytes": 7031673,
+        "sha256": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf"
+      },
+      "tokenizer_config.json": {
+        "bytes": 7308,
+        "sha256": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7"
+      },
+      "vocab.json": {
+        "bytes": 2776833,
+        "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+      }
+    },
+    "generated_tokens": 0,
+    "license": "Qwen Research License Agreement; non-commercial research/evaluation only",
+    "license_scope_note": "No model weights are redistributed. This load smoke performs local research/evaluation only; any later training, output redistribution, or commercial use requires a separate license review.",
+    "license_source": "https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/blob/main/LICENSE",
+    "manifest_path": "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-load-smoke-v2/model-manifest.json",
+    "manifest_sha256": "909c41a7304cc77a79dbd334dcad473dc89da3b2202b6a33d209e340197d9d16",
+    "model_card_source": "https://huggingface.co/mlx-community/Qwen2.5-3B-Instruct-4bit/blob/4f83f8f146fdf28b512a06562b671d7af4fab457/README.md",
+    "repository": "mlx-community/Qwen2.5-3B-Instruct-4bit",
+    "revision": "4f83f8f146fdf28b512a06562b671d7af4fab457"
+  },
+  "prior_protocol": {
+    "evidence_manifest_path": "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-load-smoke-v1/run-1/evidence.sha256.json",
+    "evidence_manifest_sha256": "a12805a4438913f99b69ff7d73c353e3a35f852cfc7e5bd454009840dad18256",
+    "failure_classification": "harness_configuration_error_before_model_initialization",
+    "generated_tokens": 0,
+    "model_loaded": false,
+    "protocol_path": "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-load-smoke-v1/protocol.json",
+    "protocol_sha256": "d82050025e5063636b1e1ddc685ba0499b2b9babdfbe5e5f09565d8cb6bc7ec1",
+    "reason": "The shared monitor expected resource_budget.max_wall_seconds; protocol v1 contained maximum_compute_seconds only. No model initialization or generated output occurred.",
+    "result_path": "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-load-smoke-v1/run-1/result.json",
+    "result_sha256": "e621821fcc471372fa97c80602315074317e7f19856371d68c0993a550817474",
+    "status": "FAILED"
+  },
+  "prior_setup_failure": {
+    "failure_classification": "harness_configuration_error_before_model_initialization",
+    "load_result": null,
+    "result_path": "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-load-smoke-v1/run-1/result.json",
+    "result_sha256": "e621821fcc471372fa97c80602315074317e7f19856371d68c0993a550817474",
+    "status": "FAILED"
+  },
+  "protocol_id": "vare.local-mlx-model-load-smoke.qwen25-3b-v2",
+  "repository_source_commit": "74842ad534c3ec8733394b732714befd890d46ad",
+  "resource_budget": {
+    "abort_and_do_not_retry_if": [
+      "swap grows by >256 MiB",
+      "absolute swap reaches 4096 MiB",
+      "free memory falls below 25%",
+      "child RSS exceeds 8192 MiB",
+      "wall time exceeds 300 seconds",
+      "checkpoint or environment hash differs",
+      "network is required"
+    ],
+    "max_absolute_swap_mib": 4096,
+    "max_child_rss_mib": 8192,
+    "max_start_swap_mib": 4096,
+    "max_swap_growth_mib": 256,
+    "max_wall_seconds": 300,
+    "maximum_compute_seconds": 300,
+    "min_runtime_free_memory_percent": 25,
+    "min_start_free_memory_percent": 35,
+    "poll_interval_seconds": 0.25
+  },
+  "run_design": {
+    "attempts": 1,
+    "generated_tokens": 0,
+    "grader_loaded": false,
+    "hypothesis_scope": "resource feasibility only",
+    "maximum_wall_seconds": 300,
+    "model_loads": 1,
+    "network": "disabled",
+    "optimizer_steps": 0,
+    "prompt_tokens": 0,
+    "retry_policy": "No retry after any failure or abort.",
+    "task_inputs_loaded": false
+  },
+  "runner_sha256": "082da7e5885b32734831054378044e7d9a3c24de8bfb517ff8314176906d1d81",
+  "runtime": {
+    "environment_inventory_path": "results/mlsys-repo-task-mlx-lm-1912-qwen25-3b-load-smoke-v2/runtime.freeze.txt",
+    "environment_inventory_sha256": "c1182bb6c8bd5edc9f85e18fb38fc48882746294a7f19e5900235a0a11ab34ae",
+    "host": "Apple M1 Pro, macOS arm64, 32 GiB unified memory",
+    "loader_runner": "scripts/smoke_local_qwen25_3b_model_load_v1.py",
+    "offline_flags": [
+      "HF_HUB_OFFLINE=1",
+      "TRANSFORMERS_OFFLINE=1",
+      "HF_HUB_DISABLE_TELEMETRY=1"
+    ],
+    "packages": {
+      "mlx": "0.32.4",
+      "mlx-lm": "0.32.2",
+      "numpy": "2.5.4",
+      "safetensors": "0.8.0",
+      "tokenizers": "0.23.3",
+      "transformers": "5.20.2"
+    },
+    "python_executable": "project work/mlx-smoke-venv; no absolute path retained",
+    "python_implementation": "cpython",
+    "python_version": [
+      3,
+      12,
+      12
+    ],
+    "runner": "scripts/smoke_local_qwen25_3b_model_load_v2.py",
+    "runner_sha256": "082da7e5885b32734831054378044e7d9a3c24de8bfb517ff8314176906d1d81",
+    "shared_implementation": "scripts/smoke_local_mlx_model_load_v1.py",
+    "shared_implementation_sha256": "ff75b06ef4527b35c8ec1c5d5743a2dded0d86b69db1d0ad4b20c72d19c813f4"
+  },
+  "schema_version": 1,
+  "shared_implementation_sha256": "ff75b06ef4527b35c8ec1c5d5743a2dded0d86b69db1d0ad4b20c72d19c813f4",
+  "status": "FROZEN_NOT_RUN",
+  "task_context": {
+    "calibration_evidence_path": "results/mlxlm-1912-isolated-v4/run-2/calibration.json",
+    "calibration_evidence_sha256": "65f8b985e688dcdab461fd66b63627b729f2ed3fb93ad80a4100cb712115b143",
+    "grader_protocol_path": "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v4.lock.json",
+    "grader_protocol_sha256": "6c309a8f32ecdaaea9a07d0527700f9188d9955cce2f3d662e6dc95a6de56e14",
+    "grader_status": "CALIBRATION_PASS_DEVELOPMENT_ONLY",
+    "heldout_tasks_accessed": false,
+    "model_inference_authorized_by_this_protocol": false,
+    "source": {
+      "baseline_commit": "47e43a4526d42a6dcee758f07eb04b78a8439ecb",
+      "baseline_target_sha256": "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2",
+      "fixed_commit": "87b7b583a697537aa68f47130b40884700b5f55f",
+      "fixed_target_sha256": "3aac92d804b6b91c82a4e2844697a8723de26f6af57e10013a482b967e739cfa",
+      "license": "MIT",
+      "public_test_sha256": "dbe871f37a2930eae6686ce67ffc0a641971ad11943a1e94833fa232c6938852",
+      "repository": "ml-explore/mlx-lm"
+    },
+    "split": "development",
+    "task_agent_exposure_before_this_protocol": "none recorded; frozen deep-qualification exposure entry says model_or_agent_seen_task=false",
+    "task_id": "mlxlm-1912-top-p-min-token"
+  }
+}

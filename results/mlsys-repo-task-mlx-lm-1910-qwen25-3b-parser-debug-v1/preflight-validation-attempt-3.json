@@ -1,0 +1,17 @@
+{
+  "attempts_started": 0,
+  "failure": "The model checkpoint snapshot uses Hugging Face symlinks into the shared hub-level blobs directory. The first verifier allowed only the per-repository blobs directory and rejected model.safetensors. Revision 4 will allow only resolved file targets under the per-repository or hub-level Hugging Face blobs directories.",
+  "failure_classification": "model_snapshot_symlink_policy_too_narrow",
+  "generated_tokens": 0,
+  "grader_executed": false,
+  "model_loaded": false,
+  "optimizer_steps": 0,
+  "phase": "FROZEN_NOT_RUN_CHECK_ONLY",
+  "protocol_id": "mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1",
+  "protocol_revision": 3,
+  "protocol_sha256": "e3842dd5e7c7530cac84d9398f4033aa6338986a94b22b58f9082505a46c9d24",
+  "recorded_at_utc": "2026-10-23T20:56:10+00:00",
+  "schema_version": 1,
+  "status": "FAILED",
+  "task_prompt_sent_to_model": false
+}

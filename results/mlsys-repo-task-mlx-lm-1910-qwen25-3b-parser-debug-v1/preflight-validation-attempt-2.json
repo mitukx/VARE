@@ -1,0 +1,18 @@
+{
+  "attempts_started": 0,
+  "check_only_stdout": "usage: run_mlx_lm_1910_qwen25_debug_v1.py [-h] [--repo-root REPO_ROOT] --protocol PROTOCOL --model-path MODEL_PATH --python PYTHON --git-source GIT_SOURCE --output OUTPUT [--check-only]\\nrun_mlx_lm_1910_qwen25_debug_v1.py: error: preflight failed closed: KeyError: qwen25_previous_run_path",
+  "failure": "Runner looked for qwen25_previous_run_path inside prior_exposures while the lock stored it under prior_exposures_verifier. No model process was started.",
+  "failure_classification": "protocol_prior_exposure_locator_mismatch",
+  "generated_tokens": 0,
+  "grader_executed": false,
+  "model_loaded": false,
+  "optimizer_steps": 0,
+  "phase": "FROZEN_NOT_RUN_CHECK_ONLY",
+  "protocol_id": "mlsys-repo-task-mlx-lm-1910-qwen25-3b-parser-debug-v1",
+  "protocol_revision": 2,
+  "protocol_sha256": "b87b89c2097d2ba75df3306bca9b32f3958e2423c44c168ea7c1703d3ffb99f2",
+  "recorded_at_utc": "2026-10-23T20:55:48+00:00",
+  "schema_version": 1,
+  "status": "FAILED",
+  "task_prompt_sent_to_model": false
+}
