@@ -88,6 +88,24 @@ The bounded contribution here is a paired, task-level counterfactual that isolat
 
 **NO-GO:** no prevalence estimate; no claim that all dependency references are removed; no model-discovered attack; no actual policy update; no capability gain; no SFT/GRPO; no asynchronous Long-Horizon RL comparison; and no claim of broad or publication-level novelty. The eligible pool supplied two MLX-LM tasks, and the second exposed a cross-framework source reference that needs to be handled explicitly in a future preregistered audit. Further expansion should wait for a protocol that audits semantic and executable references across transitive source, bytecode, wheels, and image layers, with additional independent repositories. The PR remains unmerged pending independent review.
 
+## Evidence-chain correction on PR #123
+
+An independent check reproduced the open P1 review finding. The historical outer `run-evidence-manifest.json` records `sha256-manifest.json` as 5,302 bytes with SHA-256 `6d7d50c79eeef3381ece26b0855051173a0644b405edf7eabb05f78407b4ebca`; the file committed at that path is 6,360 bytes with SHA-256 `5a25f85575679334d49905d33005606901348c55a415b08ad5c54bdc58484323`. The exact original 5,302-byte nested manifest was recovered from the retained external run directory and is preserved as `sha256-manifest.recovered-original.json`. Copies of the published outer and nested manifests are also retained under `.as-published.json` names. Neither historical file at its original path was rewritten.
+
+The auditor reproduces **35/36** matches against the bytes currently published in the run directory; the one mismatch is the nested manifest. Reconstructing the original directory view with the recovered nested manifest yields **36/36** outer entries, and the recovered original manifest independently validates **32/32** of its entries. The separately published generic inventory validates **35/35** entries. These checks distinguish the historical packaging defect from the underlying scored outcomes.
+
+The new prospective `evidence-chain-v2.json` binds all **41** evidence artifacts and directly binds each of the **18** scored outcome JSON records to its path, size, SHA-256, candidate, target and image. Its lock pins both the manifest and auditor source. `scripts/audit_verifier_integrity_evidence_v2.py` fails on changed or missing outcomes, unlisted files, modified historical records, mismatched hashes, and stale report or lock data. The regression tests exercise the committed evidence bundle, outcome mutation, outcome deletion and historical-record mutation.
+
+Run the check from the repository root after checkout:
+
+```bash
+python scripts/audit_verifier_integrity_evidence_v2.py \
+  --root results/verifier_integrity_pilot_v4/run1
+pytest -q tests/test_verifier_integrity_evidence_chain_v2.py
+```
+
+This correction repairs the prospective evidence chain and records the historical failure; it does not alter any frozen outcome, protocol, image, or claim boundary.
+
 ## Reproduction and artifact map
 
 - #1912 frozen protocol: [v3 JSON](../protocols/verifier_integrity_pilot_v3.json); raw scored outcomes and per-image audits: [run 3](../results/verifier_integrity_pilot_v1/run3/).
