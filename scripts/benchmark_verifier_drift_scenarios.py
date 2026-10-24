@@ -18,12 +18,23 @@ import resource
 import subprocess
 import sys
 import time
+import uuid
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+from vare.evaluation_evidence import (  # noqa: E402
+    EvaluationEvidenceJournal,
+    sha256_file as evidence_sha256_file,
+    utc_now,
+)
+
 PROTOCOL_PATH = ROOT / "benchmarks/verifier_consistent_async_grpo_v7/protocol.json"
+RETENTION_MANIFEST_PATH = ROOT / "benchmarks/verifier_consistent_async_grpo_v7/evaluation-retention-correction-v1.json"
 GROUP_SIZE = 8
 GROUPS_PER_ARM = 5
 UPDATES_PER_ARM = 4
+ACTIVE_EVALUATION_JOURNALS: dict[str, dict] = {}
+INJECTED_FAILURE_POINTS: set[str] = set()
 
 
 def sha(path: Path) -> str:
@@ -38,6 +49,34 @@ def write(path: Path, value) -> None:
 def require(ok: bool, message: str) -> None:
     if not ok:
         raise RuntimeError(message)
+
+
+def inject_failure(point: str) -> None:
+    """Test-only fault points exercise the real durability boundaries."""
+    requested = os.environ.get("VARE_EXPERIMENT_FAILPOINT")
+    if requested == point and point not in INJECTED_FAILURE_POINTS:
+        INJECTED_FAILURE_POINTS.add(point)
+        raise RuntimeError(f"injected failure at {point}")
+
+
+async def promote_then_inject(promote, candidate_id: str, mark_applied) -> None:
+    """Place the promotion fault after policy mutation but before its caller commits."""
+    await promote(candidate_id)
+    mark_applied()
+    inject_failure("during_promotion")
+
+
+def persist_active_evidence_failures(error: BaseException) -> None:
+    """Persist failures for every arm that had not reached its completion boundary."""
+    for evidence_root, context in list(ACTIVE_EVALUATION_JOURNALS.items()):
+        try:
+            context["journal"].record_failure(
+                failure_type=type(error).__name__, message=str(error),
+                stage=context.get("stage"), run_id=context.get("run_id"),
+                scenario_id=context.get("scenario_id"), arm=context.get("arm"))
+        except BaseException as evidence_error:
+            print(f"failed to persist evaluation failure record at {evidence_root}: "
+                  f"{evidence_error}", file=sys.stderr)
 
 
 def validate_protocol(protocol: dict) -> None:
@@ -91,6 +130,23 @@ def validate_protocol(protocol: dict) -> None:
                 and len(set(protocol["training_groups"][arm])) == UPDATES_PER_ARM
                 and set(protocol["training_groups"][arm]) <= set(range(GROUPS_PER_ARM)),
                 f"protocol training schedule is invalid for {arm}")
+
+
+def validate_retention_manifest() -> None:
+    manifest = json.loads(RETENTION_MANIFEST_PATH.read_text())
+    require(manifest.get("schema") == "vare.evaluation-retention-correction.v1",
+            "unknown evaluation-retention correction identity")
+    require(manifest.get("historical_v7_3_protocol_sha256") ==
+            sha(ROOT / "benchmarks/verifier_consistent_async_grpo_v7/protocol.json"),
+            "historical v7.3 protocol identity differs")
+    require(manifest.get("historical_v7_3_runner_sha256") ==
+            "d4ca48fd95a8c7e08ef88032e1dca63e7632286748ac2055029d75f34313f067",
+            "historical v7.3 runner identity differs")
+    require(manifest.get("prospective_runner_sha256") == sha(Path(__file__).resolve()),
+            "prospective runner identity differs from retention manifest")
+    require(manifest.get("evaluation_evidence_module_sha256") ==
+            sha(ROOT / "src/vare/evaluation_evidence.py"),
+            "evaluation evidence module differs from retention manifest")
 
 
 def whole_word(text: str, word: str) -> bool:
@@ -234,7 +290,8 @@ def make_eval_tasks(Task, prompts: list[str], scenario_id: str):
 
 async def run_naive_update(helper, runtime: dict, group: dict, group_id: str,
                            verifier_shas: dict, signer: dict, journal, promotion_cfg,
-                           eval_records: list, arm_out: Path, round_index: int):
+                           eval_records: list, arm_out: Path, round_index: int,
+                           capture_evaluation):
     from vare.evidence import sha256_file, sha256_json
     from vare.promotion import PromotionGate
 
@@ -244,8 +301,9 @@ async def run_naive_update(helper, runtime: dict, group: dict, group_id: str,
     candidate_id = await hooks.train_candidate_with_freshness(
         incumbent_id, experiences, hooks._training_freshness_assessor)
     checkpoint_paths = runtime["checkpoint_paths"]
-    before_report, before = await helper.independent_evaluate(runtime, incumbent_id, 1)
-    after_report, after = await helper.independent_evaluate(runtime, candidate_id, 1)
+    before_report, before = await capture_evaluation(
+        incumbent_id, "incumbent", round_index)
+    after_report, after = await capture_evaluation(candidate_id, "candidate", round_index)
     signer_root = signer["root"]
     before_signed = signer_root.attest(
         before_report, checkpoint_sha256=sha256_file(checkpoint_paths[incumbent_id]))
@@ -298,7 +356,6 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
     from vare.trajectory_store import PolicyCheckpoint, TrajectoryStore
     from vare.telemetry import EventLog
 
-    import torch
     from vare.types import Task
 
     scenario_id = scenario["id"]
@@ -306,6 +363,11 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
     experiment_seed = workload["seed"]
     arm_out = args.output / scenario_id / arm
     arm_out.mkdir(parents=True)
+    evidence_journal = EvaluationEvidenceJournal(arm_out / "evaluation_evidence")
+    ACTIVE_EVALUATION_JOURNALS[str(arm_out)] = {
+        "journal": evidence_journal, "run_id": str(args.output.name),
+        "scenario_id": scenario_id, "arm": arm, "stage": "runtime_initialization",
+    }
     naive = arm == "naive_async"
     runtime = await helper.build_runtime(
         args, arm_out, int(experiment_seed + scenario_index * 100),
@@ -317,6 +379,88 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
     hooks.eval_tasks = make_eval_tasks(
         Task, workload["evaluation"]["prompts"], scenario_id)
 
+    source_paths = {
+        "runner": Path(__file__).resolve(),
+        "protocol": args.protocol_path.resolve(),
+        "retention_manifest": RETENTION_MANIFEST_PATH.resolve(),
+        "rvl_helper": Path(helper.__file__).resolve(),
+        "rvl_backend": (args.rvl_source / "src/rvl_systems/hf_backend.py").resolve(),
+        "vare_rvl_grpo": (ROOT / "src/vare/integrations/rvl_grpo.py").resolve(),
+        "evaluation_evidence": (ROOT / "src/vare/evaluation_evidence.py").resolve(),
+    }
+    source_hashes = {name: evidence_sha256_file(path)
+                     for name, path in source_paths.items()}
+    verifier_definition = {
+        "scenario": scenario_id,
+        "version": 1,
+        "meaning": scenario["verifiers"]["v1"]["meaning"],
+        "rule": scenario["verifiers"]["v1"]["rule"],
+    }
+    verifier_identity = hashlib.sha256(json.dumps(
+        verifier_definition, sort_keys=True, separators=(",", ":"),
+        ensure_ascii=False).encode("utf-8")).hexdigest()
+
+    async def capture_evaluation(policy_id: str, role: str, round_index: int | None = None):
+        invocation_id = uuid.uuid4().hex
+        started_at = utc_now()
+        checkpoint_path = checkpoints[policy_id]
+        task_prompts = [{"task_id": task.id, "prompt": task.prompt}
+                        for task in hooks.eval_tasks]
+        common = {
+            "invocation_id": invocation_id,
+            "role": role,
+            "run_id": str(args.output.name),
+            "scenario_id": scenario_id,
+            "arm": arm,
+            "round": round_index,
+            "started_at_utc": started_at,
+            "model": {"name": "TinyStories-1M", "revision": protocol["model_revision"],
+                      "files_sha256": protocol["model_files"]},
+            "checkpoint": {"policy_id": policy_id,
+                           "file_sha256": evidence_sha256_file(checkpoint_path)},
+            "verifier": {"name": "landing", "version": 1,
+                         "identity_sha256": verifier_identity,
+                         "definition": verifier_definition,
+                         "pass_threshold": 0.5},
+            "evaluator": {"name": "independent greedy held-out evaluator",
+                          "identity_sha256": source_hashes["rvl_helper"],
+                          "decode": protocol["workload"]["evaluation"]["decode"]},
+            "source_hashes": source_hashes,
+        }
+        evidence_journal.record_evaluation_started({
+            "schema": "vare.evaluation-start.v1", **common,
+            "tasks": task_prompts,
+        })
+        ACTIVE_EVALUATION_JOURNALS[str(arm_out)]["stage"] = (
+            f"evaluation:{role}:{invocation_id}")
+        report, details = await helper.independent_evaluate(runtime, policy_id, 1)
+        outputs = details["outputs"]
+        scores = details["scores"]
+        require(set(outputs) == {row["task_id"] for row in task_prompts}
+                and set(scores) == set(outputs),
+                "independent evaluation output IDs differ from frozen task list")
+        completed_at = utc_now()
+        record = {
+            "schema": "vare.evaluation-evidence.v1", **common,
+            "completed_at_utc": completed_at,
+            "aggregate": {"primary": float(report.primary), "n": int(report.n)},
+            "tasks": [{
+                "task_id": row["task_id"], "prompt": row["prompt"],
+                "output_text": outputs[row["task_id"]]["text"],
+                "output_token_ids": outputs[row["task_id"]]["token_ids"],
+                "score": float(scores[row["task_id"]]),
+                "passed": float(scores[row["task_id"]]) >= 0.5,
+            } for row in task_prompts],
+            "evaluation_invocation": {
+                "id": invocation_id, "started_at_utc": started_at,
+                "completed_at_utc": completed_at,
+            },
+        }
+        evidence_journal.record_evaluation(record)
+        ACTIVE_EVALUATION_JOURNALS[str(arm_out)]["stage"] = "evaluation_durable"
+        inject_failure("after_evaluation")
+        return report, details
+
     verifier_shas = {
         version: sha256_json({"scenario": scenario_id, "version": version,
                               "rule": scenario["verifiers"]["v0" if version == 0 else "v1"]["rule"]})
@@ -327,11 +471,23 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
 
     async def evaluate(policy_id: str, _runtime=runtime, _signer=signer,
                        _files=checkpoints, _records=eval_records):
-        report, details = await helper.independent_evaluate(_runtime, policy_id, 1)
+        active_id = hooks.active_policy()[0]
+        role = "incumbent" if policy_id == active_id else "candidate"
+        report, details = await capture_evaluation(policy_id, role, len(_records))
         root = _signer["root"]
         signed = root.attest(report, checkpoint_sha256=sha256_file(_files[policy_id]))
         _records.append({"policy_id": policy_id, "report": asdict(signed), **details})
         return signed
+
+    original_promote = hooks.promote
+
+    async def fault_injected_promote(candidate_id: str):
+        await promote_then_inject(
+            original_promote, candidate_id,
+            lambda: ACTIVE_EVALUATION_JOURNALS[str(arm_out)].__setitem__(
+                "stage", "promotion_applied_before_commit"))
+
+    hooks.promote = fault_injected_promote
 
     # Existing GRPO helper closes over its module-level scorer; binding it here
     # makes both training-time and held-out grading use the frozen scenario.
@@ -361,10 +517,10 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
             store.register_verifier("landing", version, verifier_shas[version])
         initial_policy = current_policy()
         store.register_policy(initial_policy)
-        reward_root = TrajectoryRewardRoot(os.urandom(32), run_id, sha(PROTOCOL_PATH))
+        reward_root = TrajectoryRewardRoot(os.urandom(32), run_id, sha(args.protocol_path))
         initial_verifier_version = state.version
         eval_root = EvidenceTrustRoot(
-            os.urandom(32), sha(PROTOCOL_PATH), verifier_shas[1], run_id,
+            os.urandom(32), sha(args.protocol_path), verifier_shas[1], run_id,
             sha256_json([asdict(task) for task in hooks.eval_tasks]),
             f"eval-v7-{scenario_id}-{arm}-nonce-0000", True)
         signer["root"] = eval_root
@@ -393,7 +549,7 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
         hooks.training_evidence_authorizer = adapter.authorizes
     else:
         signer["root"] = EvidenceTrustRoot(
-            os.urandom(32), sha(PROTOCOL_PATH), verifier_shas[1],
+            os.urandom(32), sha(args.protocol_path), verifier_shas[1],
             f"naive-{scenario_id}-seed{experiment_seed + scenario_index * 100}",
             sha256_json([asdict(task) for task in hooks.eval_tasks]),
             f"naive-eval-{scenario_id}-nonce-0000", True)
@@ -416,7 +572,7 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
     delivered_groups = 0
     arm_started = time.perf_counter()
     arm_cpu_started = time.process_time()
-    baseline_report, baseline_detail = await helper.independent_evaluate(runtime, "policy-0", 1)
+    baseline_report, baseline_detail = await capture_evaluation("policy-0", "baseline")
     audit_records.append({"kind": "baseline", "report": asdict(baseline_report), **baseline_detail})
 
     def record_group(group_index: int, group: dict, task) -> None:
@@ -567,13 +723,14 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
                                   "consumer_delivery": "g-00-" + scenario_id})
         elif arm == "naive_async" and eligible:
             signer["root"] = EvidenceTrustRoot(
-                os.urandom(32), sha(PROTOCOL_PATH), verifier_shas[1],
+                os.urandom(32), sha(args.protocol_path), verifier_shas[1],
                     f"naive-{scenario_id}-seed{experiment_seed + scenario_index * 100}",
                 sha256_json([asdict(task) for task in hooks.eval_tasks]),
                 f"naive-eval-{scenario_id}-nonce-{group_index:04d}", True)
             update_record = await run_naive_update(
                 helper, runtime, group, group_id, verifier_shas, signer,
-                journal, promotion_cfg, eval_records, arm_out, len(updates))
+                journal, promotion_cfg, eval_records, arm_out, len(updates),
+                capture_evaluation)
         elif arm != "naive_async":
             if group_index not in persisted_groups:
                 persist_vare_group(group_index)
@@ -613,7 +770,7 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
                 stale_vare_quarantine)
             if admission_attempt:
                 signer["root"] = EvidenceTrustRoot(
-                    os.urandom(32), sha(PROTOCOL_PATH), verifier_shas[1],
+                    os.urandom(32), sha(args.protocol_path), verifier_shas[1],
                     f"vare-{scenario_id}-{arm}-seed{experiment_seed + scenario_index * 100}",
                     sha256_json([asdict(t) for t in hooks.eval_tasks]),
                     f"vare-eval-{scenario_id}-{arm}-nonce-{group_index:04d}", True)
@@ -731,7 +888,9 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
         store_audit = None
     final_policy = hooks.active_policy()[0]
     baseline_mean = baseline_report.primary
-    final_report, final_detail = await helper.independent_evaluate(runtime, final_policy, 1)
+    final_report, final_detail = await capture_evaluation(final_policy, "final")
+    ACTIVE_EVALUATION_JOURNALS[str(arm_out)]["stage"] = "before_arm_completion"
+    inject_failure("before_arm_completion")
     sample_latencies = [float(member["attempt"].latency_ms) / 1000.0
                         for group in groups for member in group["members"]]
     queue_waits = [float(member["queue_wait_s"])
@@ -827,6 +986,7 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
              and path.name not in {"SHA256.json"}
              and not path.name.endswith(("-wal", "-shm"))}
     write(arm_out / "SHA256.json", files)
+    ACTIVE_EVALUATION_JOURNALS.pop(str(arm_out), None)
     del runtime, hooks, trainer, store, adapter, loop
     import gc
     gc.collect()
@@ -836,8 +996,12 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
 async def run(args) -> None:
     require(sys.flags.no_site == 1, "launch with python -S for import isolation")
     require(not args.output.exists(), "output directory already exists")
-    protocol = json.loads(PROTOCOL_PATH.read_text())
+    validate_retention_manifest()
+    args.protocol_path = args.protocol.resolve()
+    protocol = json.loads(args.protocol_path.read_text())
     validate_protocol(protocol)
+    require(protocol.get("execution_authorized") is True,
+            "protocol has not authorized this new prospective run")
     experiment_seed = int(protocol["workload"]["seed"])
     require(sha(Path(__file__)) == protocol["runner_sha256"], "runner hash differs from protocol")
     require(sha(ROOT / "scripts/audit_verifier_drift_scenarios.py") == protocol["auditor_sha256"],
@@ -902,7 +1066,7 @@ async def run(args) -> None:
             == 32 * 1024**3, "host memory differs from the 32 GB preflight")
     torch.set_num_threads(1)
     baseline_swap = helper.swap_used_bytes()
-    prereg_hash = sha(PROTOCOL_PATH)
+    prereg_hash = sha(args.protocol_path)
     result = {
         "status": "RUNNING", "protocol_sha256": prereg_hash,
         "source_commit": source_head, "seed": experiment_seed,
@@ -1006,6 +1170,7 @@ async def run(args) -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--protocol", type=Path, default=PROTOCOL_PATH)
     parser.add_argument("--model-dir", type=Path, required=True)
     parser.add_argument("--rvl-source", type=Path, required=True)
     cli = parser.parse_args()
@@ -1014,6 +1179,7 @@ if __name__ == "__main__":
     try:
         asyncio.run(asyncio.wait_for(run(cli), timeout=2400))
     except BaseException as error:
+        persist_active_evidence_failures(error)
         if cli.output_created and cli.output.exists():
             write(cli.output / "failure.json", {"type": type(error).__name__,
                 "message": str(error), "time": time.time()})

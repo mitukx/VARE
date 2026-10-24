@@ -172,3 +172,23 @@ Preserve failed and partial outputs. Every run records raw generations,
 verifier versions, per-member labels, queue residence, optimizer replay,
 checkpoint hashes, ledger snapshots, resource telemetry, and SHA-256
 inventories. Never reuse a consumed output directory.
+
+## Prospective evaluation-retention correction (v7.4; not run)
+
+The v7.3 runner and its frozen output are unchanged in the recorded source
+history. The prospective runner now writes an evaluation-start record before
+decoding, then atomically creates a non-overwriting completion record with the
+exact prompt, token IDs, output, per-task score/decision, evaluator and verifier
+identity, checkpoint hash, source hashes, timestamps, and invocation ID. A
+failure record preserves the last stage and all started/completed invocation
+IDs. The offline journal auditor checks record hashes and can independently
+recompute scores from raw prompts and outputs.
+
+The new source identity is bound in
+[`evaluation-retention-correction-v1.json`](evaluation-retention-correction-v1.json).
+The v7.3 protocol is still the runner default and its frozen runner hash no
+longer matches the prospective source, so it cannot authorize a replay or
+resume. Any future run must pass a separate, fresh-task protocol through
+`--protocol` and bind the new source hashes. Fault-injection regression tests cover interruption after a completed
+evaluation, after a promotion is applied but before commit, and before arm
+completion. These are journal-integrity checks, not fresh model-run evidence.
