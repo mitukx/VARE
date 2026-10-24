@@ -1,0 +1,13 @@
+{
+  "auditor_correction_manifest_sha256": "3a1d896fa9381893844e3b8d2c0119ac79ef14f18b67dd71a8050dc8e88c90b5",
+  "corrected_crash_runner_sha256": "78f174d41d60d2d93b50b87e564fa9816e808b720fee206a22764a7d041bc0b2",
+  "correction": "Move trusted score assignment inside the four-task evaluation loop; hash-bind and validate the original frozen crash runner; propagate correction manifests to fresh recovery workers.",
+  "experiment_protocol_sha256": "1e16f2452d2f0d101295df1438f87679bec621bb27f667259fe18d66db5d8523",
+  "failed_attempt": "results/verifier_consistent_async_grpo_v6/crash-82106",
+  "frozen_source_commit": "69e9ab9b22da16413dbeababa0552e36aa06612f",
+  "original_crash_runner_sha256": "8d0cf99f6f50cef4573acbc1edf484f7d4339227a96e8e03c28296a94b8ebf87",
+  "regression_test": "tests/test_verifier_consistent_async_grpo_crash_eval.py",
+  "regression_test_sha256": "e4e241c8bcef21a8d7da0d128cdd5d417796b52a7d53bf51b9cd6a18d6462759",
+  "schema": "vare.v6-crash-runner-correction.v1",
+  "scope": "Only fixes evaluator cardinality in the crash harness and explicitly authorizes the independent auditor errata. The frozen v6 experiment, rollout source, objective, budgets, kill points and expected recovery states remain unchanged."
+}

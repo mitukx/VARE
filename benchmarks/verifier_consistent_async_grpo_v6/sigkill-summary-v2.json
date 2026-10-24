@@ -1,0 +1,352 @@
+{
+  "all_recoveries_exact": true,
+  "all_sigkill_verified": true,
+  "cutpoints": [
+    {
+      "case_wall_s": 4.511093457927927,
+      "cutpoint": "rollout_complete_before_admission",
+      "marker": {
+        "cutpoint": "rollout_complete_before_admission",
+        "pgid": 50291,
+        "pid": 50291,
+        "time": 893494.854941208
+      },
+      "old_process_alive": false,
+      "pid": 50291,
+      "process_group_id": 50291,
+      "recovery_wall_s": 4.3173360410146415,
+      "restart_returncode": 0,
+      "signal_returncode": -9,
+      "worker_summary": {
+        "actual_optimizer_step_calls_this_process": 1,
+        "candidate_model_tensor_sha256": "08bfdc4578c2a16bb104ec30f6ca1dc734766a6c860662b5141fb7898c53a158",
+        "candidate_sha256": "c0532751cf37f48421e44cbc95bd6dd31f56abe4d8caad78639504084e687d1c",
+        "committed_updates": 1,
+        "cutpoint": "rollout_complete_before_admission",
+        "effective_consumed_trajectories": 8,
+        "main_sync_candidate_model_matches": true,
+        "main_sync_candidate_sha256": "576d64b3e297dbbd70269a58d7fd8dc847f29f0420dd966435fed22c84fcb92e",
+        "optimizer_attempts": 1,
+        "peak_rss_bytes": 746045440,
+        "phase": "acknowledged",
+        "promotion_journal": {
+          "active_checkpoint_sha256": "c0532751cf37f48421e44cbc95bd6dd31f56abe4d8caad78639504084e687d1c",
+          "active_policy_id": "policy-1",
+          "pending_tx_id": null,
+          "round_owner_id": null
+        },
+        "seed": 82106,
+        "store_audit": {
+          "completions": 8,
+          "database_sha256": "7a21bd29d4b2f810c68536ed986c2c1303092702a263cdaecce3c3dd5cdba4ff",
+          "effective_duplicates": 0,
+          "events": 52,
+          "ledger_head_sha256": "ebebf0d5a19c129b2fa95d717b76bb4039f8a3bc2d10f7866426d2d855d6b286",
+          "pass": true,
+          "steps": 8
+        },
+        "store_counts": {
+          "consumed": 8
+        },
+        "training_group_relative_advantages": [
+          -0.7745950167738769,
+          -0.7745950167738769,
+          -0.7745950167738769,
+          -0.7745950167738769,
+          -0.7745950167738769,
+          1.2909916946231281,
+          1.2909916946231281,
+          1.2909916946231281
+        ],
+        "training_reward_order": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "case_wall_s": 4.513196957996115,
+      "cutpoint": "admission_before_optimizer",
+      "marker": {
+        "cutpoint": "admission_before_optimizer",
+        "pgid": 50305,
+        "pid": 50305,
+        "time": 893499.50921575
+      },
+      "old_process_alive": false,
+      "pid": 50305,
+      "process_group_id": 50305,
+      "recovery_wall_s": 4.178548792027868,
+      "restart_returncode": 0,
+      "signal_returncode": -9,
+      "worker_summary": {
+        "actual_optimizer_step_calls_this_process": 1,
+        "candidate_model_tensor_sha256": "08bfdc4578c2a16bb104ec30f6ca1dc734766a6c860662b5141fb7898c53a158",
+        "candidate_sha256": "c0532751cf37f48421e44cbc95bd6dd31f56abe4d8caad78639504084e687d1c",
+        "committed_updates": 1,
+        "cutpoint": "admission_before_optimizer",
+        "effective_consumed_trajectories": 8,
+        "main_sync_candidate_model_matches": true,
+        "main_sync_candidate_sha256": "576d64b3e297dbbd70269a58d7fd8dc847f29f0420dd966435fed22c84fcb92e",
+        "optimizer_attempts": 1,
+        "peak_rss_bytes": 724189184,
+        "phase": "acknowledged",
+        "promotion_journal": {
+          "active_checkpoint_sha256": "c0532751cf37f48421e44cbc95bd6dd31f56abe4d8caad78639504084e687d1c",
+          "active_policy_id": "policy-1",
+          "pending_tx_id": null,
+          "round_owner_id": null
+        },
+        "seed": 82106,
+        "store_audit": {
+          "completions": 8,
+          "database_sha256": "c1c065d7013eafe52daff77fae957f5259ae21df76fc1a5582488b6deedf86be",
+          "effective_duplicates": 0,
+          "events": 52,
+          "ledger_head_sha256": "91af74379e40520a9f8fdfaf6c87e04cb528f3151ba4344dbe69fc6b90e2edea",
+          "pass": true,
+          "steps": 8
+        },
+        "store_counts": {
+          "consumed": 8
+        },
+        "training_group_relative_advantages": [
+          -0.7745950167738769,
+          -0.7745950167738769,
+          -0.7745950167738769,
+          -0.7745950167738769,
+          -0.7745950167738769,
+          1.2909916946231281,
+          1.2909916946231281,
+          1.2909916946231281
+        ],
+        "training_reward_order": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "case_wall_s": 7.833402082906105,
+      "cutpoint": "optimizer_computed_before_commit",
+      "marker": {
+        "cutpoint": "optimizer_computed_before_commit",
+        "pgid": 50319,
+        "pid": 50319,
+        "time": 893507.354181416
+      },
+      "old_process_alive": false,
+      "pid": 50319,
+      "process_group_id": 50319,
+      "recovery_wall_s": 4.1581924160709605,
+      "restart_returncode": 0,
+      "signal_returncode": -9,
+      "worker_summary": {
+        "actual_optimizer_step_calls_this_process": 1,
+        "candidate_model_tensor_sha256": "08bfdc4578c2a16bb104ec30f6ca1dc734766a6c860662b5141fb7898c53a158",
+        "candidate_sha256": "c0532751cf37f48421e44cbc95bd6dd31f56abe4d8caad78639504084e687d1c",
+        "committed_updates": 1,
+        "cutpoint": "optimizer_computed_before_commit",
+        "effective_consumed_trajectories": 8,
+        "main_sync_candidate_model_matches": true,
+        "main_sync_candidate_sha256": "576d64b3e297dbbd70269a58d7fd8dc847f29f0420dd966435fed22c84fcb92e",
+        "optimizer_attempts": 2,
+        "peak_rss_bytes": 764166144,
+        "phase": "acknowledged",
+        "promotion_journal": {
+          "active_checkpoint_sha256": "c0532751cf37f48421e44cbc95bd6dd31f56abe4d8caad78639504084e687d1c",
+          "active_policy_id": "policy-1",
+          "pending_tx_id": null,
+          "round_owner_id": null
+        },
+        "seed": 82106,
+        "store_audit": {
+          "completions": 8,
+          "database_sha256": "44912439ae1164c423626f9a60776c5f48a09dd7901e55fa3597e756937a53f2",
+          "effective_duplicates": 0,
+          "events": 52,
+          "ledger_head_sha256": "43404857cf73af10966db63460bad2ec022c05948286867169e9832053dbc75f",
+          "pass": true,
+          "steps": 8
+        },
+        "store_counts": {
+          "consumed": 8
+        },
+        "training_group_relative_advantages": [
+          -0.7745950167738769,
+          -0.7745950167738769,
+          -0.7745950167738769,
+          -0.7745950167738769,
+          -0.7745950167738769,
+          1.2909916946231281,
+          1.2909916946231281,
+          1.2909916946231281
+        ],
+        "training_reward_order": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "case_wall_s": 7.727651500026695,
+      "cutpoint": "commit_before_acknowledgment",
+      "marker": {
+        "cutpoint": "commit_before_acknowledgment",
+        "pgid": 50332,
+        "pid": 50332,
+        "time": 893515.268770333
+      },
+      "old_process_alive": false,
+      "pid": 50332,
+      "process_group_id": 50332,
+      "recovery_wall_s": 3.97576762503013,
+      "restart_returncode": 0,
+      "signal_returncode": -9,
+      "worker_summary": {
+        "actual_optimizer_step_calls_this_process": 0,
+        "candidate_model_tensor_sha256": "08bfdc4578c2a16bb104ec30f6ca1dc734766a6c860662b5141fb7898c53a158",
+        "candidate_sha256": "c0532751cf37f48421e44cbc95bd6dd31f56abe4d8caad78639504084e687d1c",
+        "committed_updates": 1,
+        "cutpoint": "commit_before_acknowledgment",
+        "effective_consumed_trajectories": 8,
+        "main_sync_candidate_model_matches": true,
+        "main_sync_candidate_sha256": "576d64b3e297dbbd70269a58d7fd8dc847f29f0420dd966435fed22c84fcb92e",
+        "optimizer_attempts": 1,
+        "peak_rss_bytes": 693567488,
+        "phase": "acknowledged",
+        "promotion_journal": {
+          "active_checkpoint_sha256": "c0532751cf37f48421e44cbc95bd6dd31f56abe4d8caad78639504084e687d1c",
+          "active_policy_id": "policy-1",
+          "pending_tx_id": null,
+          "round_owner_id": null
+        },
+        "seed": 82106,
+        "store_audit": {
+          "completions": 8,
+          "database_sha256": "73d4fb44833beb52aa705116083769d28860d6e3f628fe54aa980db0a3373a80",
+          "effective_duplicates": 0,
+          "events": 52,
+          "ledger_head_sha256": "ee8a1e3fa3290e723eaec64bbe8c2473c169a44756934c4498c2b6f161a17f34",
+          "pass": true,
+          "steps": 8
+        },
+        "store_counts": {
+          "consumed": 8
+        },
+        "training_group_relative_advantages": [
+          -0.7745950167738769,
+          -0.7745950167738769,
+          -0.7745950167738769,
+          -0.7745950167738769,
+          -0.7745950167738769,
+          1.2909916946231281,
+          1.2909916946231281,
+          1.2909916946231281
+        ],
+        "training_reward_order": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "case_wall_s": 7.925478333025239,
+      "cutpoint": "evaluation_before_promotion",
+      "marker": {
+        "cutpoint": "evaluation_before_promotion",
+        "pgid": 50350,
+        "pid": 50350,
+        "time": 893523.012603791
+      },
+      "old_process_alive": false,
+      "pid": 50350,
+      "process_group_id": 50350,
+      "recovery_wall_s": 4.150318416999653,
+      "restart_returncode": 0,
+      "signal_returncode": -9,
+      "worker_summary": {
+        "actual_optimizer_step_calls_this_process": 1,
+        "candidate_model_tensor_sha256": "08bfdc4578c2a16bb104ec30f6ca1dc734766a6c860662b5141fb7898c53a158",
+        "candidate_sha256": "c0532751cf37f48421e44cbc95bd6dd31f56abe4d8caad78639504084e687d1c",
+        "committed_updates": 1,
+        "cutpoint": "evaluation_before_promotion",
+        "effective_consumed_trajectories": 8,
+        "main_sync_candidate_model_matches": true,
+        "main_sync_candidate_sha256": "576d64b3e297dbbd70269a58d7fd8dc847f29f0420dd966435fed22c84fcb92e",
+        "optimizer_attempts": 2,
+        "peak_rss_bytes": 760676352,
+        "phase": "acknowledged",
+        "promotion_journal": {
+          "active_checkpoint_sha256": "c0532751cf37f48421e44cbc95bd6dd31f56abe4d8caad78639504084e687d1c",
+          "active_policy_id": "policy-1",
+          "pending_tx_id": null,
+          "round_owner_id": null
+        },
+        "seed": 82106,
+        "store_audit": {
+          "completions": 8,
+          "database_sha256": "82ef4fb1647805b95d406ea8c48638fd066e826132af65006b3c0753c1630ff1",
+          "effective_duplicates": 0,
+          "events": 52,
+          "ledger_head_sha256": "2b64530a5a6765eb8ba4ec833a766c49b47006a4220669d1593fc735bb5c4626",
+          "pass": true,
+          "steps": 8
+        },
+        "store_counts": {
+          "consumed": 8
+        },
+        "training_group_relative_advantages": [
+          -0.7745950167738769,
+          -0.7745950167738769,
+          -0.7745950167738769,
+          -0.7745950167738769,
+          -0.7745950167738769,
+          1.2909916946231281,
+          1.2909916946231281,
+          1.2909916946231281
+        ],
+        "training_reward_order": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    }
+  ],
+  "harness_wall_s": 32.51858137501404,
+  "process_kills": 5,
+  "schema": "vare.verifier-consistent-async-grpo-sigkill.v1",
+  "scope": "Five isolated actual Python learner-process SIGKILL cases reuse one independently verified TinyStories group. This measures transaction recovery, not throughput parallelism or independent task generalization.",
+  "seed": 82106,
+  "source_run": "results/verifier_consistent_async_grpo_v6/seed-82106"
+}

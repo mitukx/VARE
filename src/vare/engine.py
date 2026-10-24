@@ -56,6 +56,7 @@ class CapabilityLoop:
         checkpoint_hasher: Callable[[str], str] | None = None,
         training_evidence_authorizer: Callable[[Experience], bool] | None = None,
         require_authenticated_training: bool = False,
+        require_current_evaluation_verifier: bool = False,
         runtime_coordinator: RuntimeCoordinator | None = None,
         seed: int = 0,
     ) -> None:
@@ -78,6 +79,9 @@ class CapabilityLoop:
         self.evidence_trust_root = evidence_trust_root
         if type(require_authenticated_training) is not bool:
             raise ValueError("require_authenticated_training must be bool")
+        if type(require_current_evaluation_verifier) is not bool:
+            raise ValueError("require_current_evaluation_verifier must be bool")
+        self.require_current_evaluation_verifier = require_current_evaluation_verifier
         if require_authenticated_training and training_evidence_authorizer is None:
             raise ValueError("authenticated training requires a trusted evidence authorizer")
         self.training_evidence_authorizer = training_evidence_authorizer
@@ -668,7 +672,31 @@ class CapabilityLoop:
             incumbent_eval, candidate_eval = await asyncio.shield(evaluation_group)
             if self.safety_interlock is not None:
                 self.safety_interlock.require("evaluate", incumbent_id=incumbent_id)
-            if (
+            if self.require_current_evaluation_verifier:
+                active_verifier_version = getattr(self.verifier, "active_version", None)
+                if type(active_verifier_version) is not int:
+                    decision = PromotionDecision(
+                        accepted=False,
+                        reasons=("evaluation_verifier_version_mismatch",),
+                        primary_gain=0.0,
+                        worst_slice_regression=0.0,
+                    )
+                elif (
+                    incumbent_eval.policy_id != incumbent_id
+                    or candidate_eval.policy_id != candidate_id
+                ):
+                    decision = PromotionDecision(
+                        accepted=False,
+                        reasons=("evaluation_policy_mismatch",),
+                        primary_gain=0.0,
+                        worst_slice_regression=0.0,
+                    )
+                else:
+                    decision = self.promotion.decide(
+                        incumbent_eval, candidate_eval,
+                        expected_verifier_version=active_verifier_version,
+                    )
+            elif (
                 incumbent_eval.policy_id != incumbent_id
                 or candidate_eval.policy_id != candidate_id
             ):

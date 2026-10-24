@@ -1,0 +1,474 @@
+{
+  "auditor_correction_manifest_sha256": "ca63d2a13bc714ab559d407cb358fd24d8d299fc7f94851cbbf8d4a5f78cb209",
+  "auditor_sha256": "fc7dad44657d995e3ceb7ad92f1ecbe21e52615016d24e53c46d8a77e1fce7f3",
+  "crash_recovery": {
+    "all_model_adam_rng_states_exact": true,
+    "cutpoints": [
+      {
+        "actual_sigkill": true,
+        "candidate_sha256": "c0532751cf37f48421e44cbc95bd6dd31f56abe4d8caad78639504084e687d1c",
+        "committed_transactions": 1,
+        "cutpoint": "rollout_complete_before_admission",
+        "effective_consumed_trajectories": 8,
+        "exact_state_match": {
+          "cpu_rng": true,
+          "model": true,
+          "module_modes": true,
+          "optimizer": true
+        },
+        "optimizer_attempts": 1,
+        "optimizer_calls": 1,
+        "peak_rss_bytes": 746045440,
+        "recovery_wall_s": 4.3173360410146415,
+        "restart_exit_code": 0,
+        "trajectory_store_audit": {
+          "completions": 8,
+          "database_sha256": "7a21bd29d4b2f810c68536ed986c2c1303092702a263cdaecce3c3dd5cdba4ff",
+          "effective_duplicates": 0,
+          "events": 52,
+          "ledger_head_sha256": "ebebf0d5a19c129b2fa95d717b76bb4039f8a3bc2d10f7866426d2d855d6b286",
+          "pass": true,
+          "steps": 8
+        }
+      },
+      {
+        "actual_sigkill": true,
+        "candidate_sha256": "c0532751cf37f48421e44cbc95bd6dd31f56abe4d8caad78639504084e687d1c",
+        "committed_transactions": 1,
+        "cutpoint": "admission_before_optimizer",
+        "effective_consumed_trajectories": 8,
+        "exact_state_match": {
+          "cpu_rng": true,
+          "model": true,
+          "module_modes": true,
+          "optimizer": true
+        },
+        "optimizer_attempts": 1,
+        "optimizer_calls": 1,
+        "peak_rss_bytes": 724189184,
+        "recovery_wall_s": 4.178548792027868,
+        "restart_exit_code": 0,
+        "trajectory_store_audit": {
+          "completions": 8,
+          "database_sha256": "c1c065d7013eafe52daff77fae957f5259ae21df76fc1a5582488b6deedf86be",
+          "effective_duplicates": 0,
+          "events": 52,
+          "ledger_head_sha256": "91af74379e40520a9f8fdfaf6c87e04cb528f3151ba4344dbe69fc6b90e2edea",
+          "pass": true,
+          "steps": 8
+        }
+      },
+      {
+        "actual_sigkill": true,
+        "candidate_sha256": "c0532751cf37f48421e44cbc95bd6dd31f56abe4d8caad78639504084e687d1c",
+        "committed_transactions": 1,
+        "cutpoint": "optimizer_computed_before_commit",
+        "effective_consumed_trajectories": 8,
+        "exact_state_match": {
+          "cpu_rng": true,
+          "model": true,
+          "module_modes": true,
+          "optimizer": true
+        },
+        "optimizer_attempts": 2,
+        "optimizer_calls": 2,
+        "peak_rss_bytes": 764166144,
+        "recovery_wall_s": 4.1581924160709605,
+        "restart_exit_code": 0,
+        "trajectory_store_audit": {
+          "completions": 8,
+          "database_sha256": "44912439ae1164c423626f9a60776c5f48a09dd7901e55fa3597e756937a53f2",
+          "effective_duplicates": 0,
+          "events": 52,
+          "ledger_head_sha256": "43404857cf73af10966db63460bad2ec022c05948286867169e9832053dbc75f",
+          "pass": true,
+          "steps": 8
+        }
+      },
+      {
+        "actual_sigkill": true,
+        "candidate_sha256": "c0532751cf37f48421e44cbc95bd6dd31f56abe4d8caad78639504084e687d1c",
+        "committed_transactions": 1,
+        "cutpoint": "commit_before_acknowledgment",
+        "effective_consumed_trajectories": 8,
+        "exact_state_match": {
+          "cpu_rng": true,
+          "model": true,
+          "module_modes": true,
+          "optimizer": true
+        },
+        "optimizer_attempts": 1,
+        "optimizer_calls": 1,
+        "peak_rss_bytes": 693567488,
+        "recovery_wall_s": 3.97576762503013,
+        "restart_exit_code": 0,
+        "trajectory_store_audit": {
+          "completions": 8,
+          "database_sha256": "73d4fb44833beb52aa705116083769d28860d6e3f628fe54aa980db0a3373a80",
+          "effective_duplicates": 0,
+          "events": 52,
+          "ledger_head_sha256": "ee8a1e3fa3290e723eaec64bbe8c2473c169a44756934c4498c2b6f161a17f34",
+          "pass": true,
+          "steps": 8
+        }
+      },
+      {
+        "actual_sigkill": true,
+        "candidate_sha256": "c0532751cf37f48421e44cbc95bd6dd31f56abe4d8caad78639504084e687d1c",
+        "committed_transactions": 1,
+        "cutpoint": "evaluation_before_promotion",
+        "effective_consumed_trajectories": 8,
+        "exact_state_match": {
+          "cpu_rng": true,
+          "model": true,
+          "module_modes": true,
+          "optimizer": true
+        },
+        "optimizer_attempts": 2,
+        "optimizer_calls": 2,
+        "peak_rss_bytes": 760676352,
+        "recovery_wall_s": 4.150318416999653,
+        "restart_exit_code": 0,
+        "trajectory_store_audit": {
+          "completions": 8,
+          "database_sha256": "82ef4fb1647805b95d406ea8c48638fd066e826132af65006b3c0753c1630ff1",
+          "effective_duplicates": 0,
+          "events": 52,
+          "ledger_head_sha256": "2b64530a5a6765eb8ba4ec833a766c49b47006a4220669d1593fc735bb5c4626",
+          "pass": true,
+          "steps": 8
+        }
+      }
+    ],
+    "effective_consumed_trajectories_total_across_isolated_cases": 40,
+    "scope": "Five independent SIGKILL transactions reuse one held-fixed, independently verified TinyStories rollout group. Exact restoration is established by fieldwise comparison to the matched synchronous candidate. This is crash-recovery evidence, not independent task generalization.",
+    "status": "PASS"
+  },
+  "crash_runner_correction_manifest_sha256": "61c77d7d1ac93d9552388c188cfe53906f468108d9424bd7840187e27f2199a6",
+  "decision": "PILOT_SIGNAL",
+  "expand_after_pilot": true,
+  "full_seed_set": true,
+  "primary": {
+    "invalid_committed_updates": {
+      "naive_async": {
+        "successes": 2,
+        "trials": 2,
+        "wilson_95": [
+          0.34238022750665303,
+          1.0
+        ]
+      },
+      "vare_async": {
+        "successes": 0,
+        "trials": 2,
+        "wilson_95": [
+          0.0,
+          0.6576197724933469
+        ]
+      }
+    },
+    "multiplicity": "One prespecified primary contrast; no adjustment across secondary systems metrics.",
+    "paired_sign_test": {
+      "exact_one_sided_p_naive_greater": 0.25,
+      "negative_pairs": 0,
+      "non_ties": 2,
+      "pairs": [
+        1,
+        1
+      ],
+      "positive_pairs": 2,
+      "ties": 0
+    },
+    "scope_limit": "Seed bundles are the independent units; this selected synthetic systems fixture does not estimate benchmark-wide contamination or coding capability."
+  },
+  "protocol_sha256": "1e16f2452d2f0d101295df1438f87679bec621bb27f667259fe18d66db5d8523",
+  "runner_correction_manifest_sha256": "03622b7458e28289440740ef2c0fbf2dca2ac1426cd6511466f10d5d3a6380fb",
+  "runs": [
+    "results/verifier_consistent_async_grpo_v6/seed-82106",
+    "results/verifier_consistent_async_grpo_v6/seed-82107"
+  ],
+  "seeds": [
+    {
+      "group_scores": {
+        "naive_async/fresh": [
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "naive_async/stale": [
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1
+        ],
+        "sync/audit": [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "sync/fresh": [
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "vare_async/fresh": [
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "vare_async/stale": [
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "invalid_commit_naive": 1,
+      "invalid_commit_vare": 0,
+      "seed": 82106,
+      "stale_eval_naive_accept": true,
+      "stale_eval_strict_accept": false,
+      "stale_false_accepts": 2,
+      "stale_reward_disagreements": {
+        "naive_async": {
+          "false_accepts": 2,
+          "false_rejects": 1,
+          "total_disagreements": 3
+        },
+        "vare_async": {
+          "false_accepts": 2,
+          "false_rejects": 1,
+          "total_disagreements": 3
+        }
+      },
+      "trajectory_store_audit": {
+        "completions": 16,
+        "database_sha256": "e2c4c335f72ab0af3c9d2cd7e0c3de322f7331388b3540c3709e993b2ca5627a",
+        "effective_duplicates": 0,
+        "events": 105,
+        "ledger_head_sha256": "8f37319cdba23a189ee2b4c3cbd96ef68aa0309de3e832258d736c4b657f850d",
+        "pass": true,
+        "steps": 16
+      },
+      "update_replay": {
+        "naive_async": {
+          "advantages": [
+            0.9999980000060001,
+            0.9999980000060001,
+            -0.9999980000060001,
+            0.9999980000060001,
+            -0.9999980000060001,
+            -0.9999980000060001,
+            -0.9999980000060001,
+            0.9999980000060001
+          ],
+          "behavior_alignment_error": 1.5735626220703125e-05,
+          "loss": 1.9073486328125e-06,
+          "model_max_abs": 3.725290298461914e-09,
+          "optimizer_max_abs": 3.725290298461914e-09
+        },
+        "sync": {
+          "advantages": [
+            1.2909916946231281,
+            1.2909916946231281,
+            -0.7745950167738769,
+            -0.7745950167738769,
+            1.2909916946231281,
+            -0.7745950167738769,
+            -0.7745950167738769,
+            -0.7745950167738769
+          ],
+          "behavior_alignment_error": 1.5735626220703125e-05,
+          "loss": 3.159046173095703e-06,
+          "model_max_abs": 7.450580596923828e-09,
+          "optimizer_max_abs": 3.725290298461914e-09
+        },
+        "vare_async": {
+          "advantages": [
+            1.2909916946231281,
+            1.2909916946231281,
+            -0.7745950167738769,
+            -0.7745950167738769,
+            1.2909916946231281,
+            -0.7745950167738769,
+            -0.7745950167738769,
+            -0.7745950167738769
+          ],
+          "behavior_alignment_error": 1.5735626220703125e-05,
+          "loss": 3.159046173095703e-06,
+          "model_max_abs": 7.450580596923828e-09,
+          "optimizer_max_abs": 3.725290298461914e-09
+        }
+      }
+    },
+    {
+      "group_scores": {
+        "naive_async/fresh": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1
+        ],
+        "naive_async/stale": [
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1
+        ],
+        "sync/audit": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1
+        ],
+        "sync/fresh": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1
+        ],
+        "vare_async/fresh": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1
+        ],
+        "vare_async/stale": [
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1
+        ]
+      },
+      "invalid_commit_naive": 1,
+      "invalid_commit_vare": 0,
+      "seed": 82107,
+      "stale_eval_naive_accept": true,
+      "stale_eval_strict_accept": false,
+      "stale_false_accepts": 3,
+      "stale_reward_disagreements": {
+        "naive_async": {
+          "false_accepts": 3,
+          "false_rejects": 1,
+          "total_disagreements": 4
+        },
+        "vare_async": {
+          "false_accepts": 3,
+          "false_rejects": 1,
+          "total_disagreements": 4
+        }
+      },
+      "trajectory_store_audit": {
+        "completions": 16,
+        "database_sha256": "2a79302241df4b7204c80d7e2c9c2e5454f7f298919a417e743b511d34a2bde4",
+        "effective_duplicates": 0,
+        "events": 105,
+        "ledger_head_sha256": "05a36132acf0eb7d1560a4d9c5e1cad619c6e77e03718bbf2ee9726c444b8874",
+        "pass": true,
+        "steps": 16
+      },
+      "update_replay": {
+        "naive_async": {
+          "advantages": [
+            0.7745950167738769,
+            -1.2909916946231281,
+            0.7745950167738769,
+            0.7745950167738769,
+            -1.2909916946231281,
+            -1.2909916946231281,
+            0.7745950167738769,
+            0.7745950167738769
+          ],
+          "behavior_alignment_error": 1.5735626220703125e-05,
+          "loss": 1.996755599975586e-06,
+          "model_max_abs": 3.725290298461914e-09,
+          "optimizer_max_abs": 3.725290298461914e-09
+        },
+        "sync": {
+          "advantages": [
+            1.2909916946231281,
+            -0.7745950167738769,
+            -0.7745950167738769,
+            1.2909916946231281,
+            -0.7745950167738769,
+            -0.7745950167738769,
+            -0.7745950167738769,
+            1.2909916946231281
+          ],
+          "behavior_alignment_error": 2.09808349609375e-05,
+          "loss": 2.4437904357910156e-06,
+          "model_max_abs": 2.3283064365386963e-10,
+          "optimizer_max_abs": 3.725290298461914e-09
+        },
+        "vare_async": {
+          "advantages": [
+            1.2909916946231281,
+            -0.7745950167738769,
+            -0.7745950167738769,
+            1.2909916946231281,
+            -0.7745950167738769,
+            -0.7745950167738769,
+            -0.7745950167738769,
+            1.2909916946231281
+          ],
+          "behavior_alignment_error": 2.09808349609375e-05,
+          "loss": 2.4437904357910156e-06,
+          "model_max_abs": 2.3283064365386963e-10,
+          "optimizer_max_abs": 3.725290298461914e-09
+        }
+      }
+    }
+  ]
+}

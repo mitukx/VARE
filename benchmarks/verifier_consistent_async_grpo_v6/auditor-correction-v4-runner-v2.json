@@ -1,0 +1,18 @@
+{
+  "corrected_auditor_sha256": "fc7dad44657d995e3ceb7ad92f1ecbe21e52615016d24e53c46d8a77e1fce7f3",
+  "correction_scope": "Rebinds the current unchanged independent auditor to matched-runner correction revision 2, which chains the original non-finite replay fix and prospective output-directory safety fix. This manifest changes only source-provenance validation; it does not change the frozen protocol, audit predicates, denominators, thresholds, or retained run outcomes.",
+  "crash_runner_correction_manifest": "benchmarks/verifier_consistent_async_grpo_v6/crash-runner-correction-v3.json",
+  "crash_runner_correction_manifest_sha256": "61c77d7d1ac93d9552388c188cfe53906f468108d9424bd7840187e27f2199a6",
+  "experiment_protocol_sha256": "1e16f2452d2f0d101295df1438f87679bec621bb27f667259fe18d66db5d8523",
+  "frozen_source_commit": "69e9ab9b22da16413dbeababa0552e36aa06612f",
+  "original_auditor_sha256": "62e2204950164900464073caaacaeff06ae0a3a094ef4adeba7707e402c1d9ec",
+  "original_auditor_snapshot": "run/source/audit_verifier_consistent_async_grpo.py.62e220495016",
+  "regression_test": "tests/test_verifier_consistent_async_grpo_audit_safety.py",
+  "regression_test_sha256": "0f6727f337372e5bb639f1b9a8c4c889d22f099144a528287db518f72a68c2f0",
+  "runner_correction_manifest": "benchmarks/verifier_consistent_async_grpo_v6/matched-runner-correction-v2.json",
+  "runner_correction_manifest_sha256": "07ca75837b3de48f19bd607f64abacb65496c8757e51eaa022315aac8d22e715",
+  "runner_regression_test": "tests/test_verifier_consistent_async_grpo_output_safety.py",
+  "runner_regression_test_sha256": "960c2c02e9a3709bf637dc3635cbdc229d05f5906fbe8f154519f367158edc2d",
+  "schema": "vare.v6-auditor-correction.v4",
+  "supersedes_correction_manifest_sha256": "ca63d2a13bc714ab559d407cb358fd24d8d299fc7f94851cbbf8d4a5f78cb209"
+}

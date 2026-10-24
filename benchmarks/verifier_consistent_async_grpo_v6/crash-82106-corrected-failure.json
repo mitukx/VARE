@@ -1,0 +1,15 @@
+{
+  "candidate_model_matches_sync": false,
+  "candidate_model_tensor_sha256": "ac5274d5e3e558b51fffa7b742895b3ca2da2852889d7cc19864bc5473bd23bd",
+  "cutpoint": "rollout_complete_before_admission",
+  "eligible_for_recovery_success_count": false,
+  "matched_sync_checkpoint_file_sha256": "576d64b3e297dbbd70269a58d7fd8dc847f29f0420dd966435fed22c84fcb92e",
+  "observed_model_max_abs_difference": 3.725290298461914e-09,
+  "parent_exact_reference_gate_passed": false,
+  "process_killed_by": "SIGKILL",
+  "protocol_changed": false,
+  "recovery_process_completed_update_and_promotion": true,
+  "resolution": "Harness-only correction preserves the frozen VARE replay ordering, VARE sample conversion and group-relative advantages. The strict exact candidate comparison remains unchanged.",
+  "root_cause": "The crash worker consumed the verified group in member order and called RVL native prompt grouping. The frozen VARE sync arm passes a complete group through PrioritizedReplay.sample_current, which ranks lower-reward failed samples before positives, then supplies VARE group-relative advantages. This changed sample accumulation order and produced a numerically close but non-identical candidate.",
+  "status": "failed_attempt_excluded"
+}

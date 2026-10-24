@@ -1,0 +1,14 @@
+{
+  "corrected_auditor_sha256": "e2f2f6b83686127cd21666538e02a22c436575df427ed0ce8c79d6360116f1bd",
+  "correction_scope": "Retains immutable-Task replay correction; rejects non-finite independent replay tensor differences; verifies hash-map and structured artifact-inventory manifests with unique canonical safe relative paths, no symlinks, byte counts, and coverage of all non-transient files; tolerates a missing SQLite -shm sidecar or a missing zero-byte -wal sidecar only. Requires every declared SIGKILL cutpoint exactly once and permits the hash-bound matched-runner and crash-runner corrections. No metric, scorer, denominator, acceptance criterion, budget, or experiment protocol changes.",
+  "experiment_protocol_sha256": "1e16f2452d2f0d101295df1438f87679bec621bb27f667259fe18d66db5d8523",
+  "frozen_source_commit": "69e9ab9b22da16413dbeababa0552e36aa06612f",
+  "original_auditor_sha256": "62e2204950164900464073caaacaeff06ae0a3a094ef4adeba7707e402c1d9ec",
+  "original_auditor_snapshot": "run/source/audit_verifier_consistent_async_grpo.py.62e220495016",
+  "regression_test": "tests/test_verifier_consistent_async_grpo_audit_safety.py",
+  "regression_test_sha256": "475473d411eb4761172615b8b92cbf645b006471803ecfa48533d85d40fc9c70",
+  "runner_correction_manifest": "benchmarks/verifier_consistent_async_grpo_v6/matched-runner-correction-v1.json",
+  "runner_correction_manifest_sha256": "03622b7458e28289440740ef2c0fbf2dca2ac1426cd6511466f10d5d3a6380fb",
+  "schema": "vare.v6-auditor-correction.v3",
+  "supersedes_correction_manifest_sha256": "3a1d896fa9381893844e3b8d2c0119ac79ef14f18b67dd71a8050dc8e88c90b5"
+}

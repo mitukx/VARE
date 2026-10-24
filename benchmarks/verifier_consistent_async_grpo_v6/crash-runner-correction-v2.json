@@ -1,0 +1,15 @@
+{
+  "auditor_correction_manifest": "benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v2.json",
+  "auditor_correction_manifest_sha256": "3a1d896fa9381893844e3b8d2c0119ac79ef14f18b67dd71a8050dc8e88c90b5",
+  "corrected_crash_runner_sha256": "a875f9879e402b3e29cd6a630ef6d1fc4925e50fe0e84f9a81fbd1bb2b2ddf45",
+  "correction": "Preserve the evaluator cardinality fix and replay complete verified experiences in the frozen PrioritizedReplay.sample_current order, converting through the frozen VARE RVL hook and computing VARE group-relative advantages before the crash-recovery optimizer step.",
+  "experiment_protocol_sha256": "1e16f2452d2f0d101295df1438f87679bec621bb27f667259fe18d66db5d8523",
+  "failed_attempt": "results/verifier_consistent_async_grpo_v6/crash-82106-corrected",
+  "frozen_source_commit": "69e9ab9b22da16413dbeababa0552e36aa06612f",
+  "original_crash_runner_sha256": "8d0cf99f6f50cef4573acbc1edf484f7d4339227a96e8e03c28296a94b8ebf87",
+  "regression_test": "tests/test_verifier_consistent_async_grpo_crash_eval.py",
+  "regression_test_sha256": "23954c018053f406b2d7120ca8f4b5e2fe1ece6afd9f7741de76447aaee33608",
+  "schema": "vare.v6-crash-runner-correction.v2",
+  "scope": "Harness-only parity correction. It restores the frozen synchronous arm training order and objective; protocol, tasks, rewards, verifier calls, model, budgets, cutpoints, and exact matched-checkpoint criterion are unchanged.",
+  "supersedes_correction_manifest_sha256": "c5e1f7f2ed1d9afe906402b1eaa880d6bf156c08d1af3e710d27bdb748a1e958"
+}

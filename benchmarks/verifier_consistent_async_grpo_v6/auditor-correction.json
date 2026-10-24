@@ -1,0 +1,10 @@
+{
+  "corrected_auditor_sha256": "d736b839e18f67af0e87087505223c46a834e2ac495c847ff1e404e8189dca68",
+  "experiment_protocol_sha256": "1e16f2452d2f0d101295df1438f87679bec621bb27f667259fe18d66db5d8523",
+  "original_auditor_sha256": "62e2204950164900464073caaacaeff06ae0a3a094ef4adeba7707e402c1d9ec",
+  "original_auditor_snapshot": "run/source/audit_verifier_consistent_async_grpo.py.62e220495016",
+  "outcome_blinding": "The correction was made from the exception and traceback. The original audit attempt had no output report; rerun the full independent audit from raw files.",
+  "schema": "vare.v6-auditor-correction.v1",
+  "scope": "Reconstruct Task with merged metadata instead of mutating it. Require the raw run to contain the exact frozen auditor snapshot. Only the explicitly identified auditor source hash check is waived for this corrected auditor; the frozen V6 protocol, runner, model, RVL, source inventory, scoring, denominators, and acceptance rules remain unchanged.",
+  "trigger": "The frozen auditor stopped during numerical replay with FrozenInstanceError because it assigned metadata to VARE Task, a frozen dataclass. It had not written an audit report."
+}

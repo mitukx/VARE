@@ -1,0 +1,309 @@
+{
+  "arms": {
+    "naive_async": {
+      "execution": "Bounded maxsize-one producer/verifier queue. After four of eight grades, v0 changes to v1 while rollout collection is still active.",
+      "promotion_negative_control": "Signed evaluation uses stale v0 metadata. The ordinary version-unaware gate and strict expected-v1 gate receive the same reports; permissive metric thresholds exist only to exercise the promotion transaction and do not claim quality improvement.",
+      "train": "One eight-member mixed-version group. Explicit stale policy allows verifier lag <=1, without regrade or whole-group version equality; all recorded labels reach the actual trainer."
+    },
+    "sync": {
+      "execution": "Synchronous producer and verifier; two groups (audit then fresh) generated after verifier v1 is authoritative.",
+      "train": "One eight-member fresh v1 group, authenticated VARE admission, independent numerical replay, held-out evaluation, transactional promotion."
+    },
+    "vare_async": {
+      "execution": "Same bounded queue, seed, rollout steps, drift transition and two-group budget as naive_async.",
+      "promotion": "Independent v1 evaluator, expected-current-version metadata check, VARE PromotionGate and PromotionJournal.",
+      "train": "Persist both groups; VARE must quarantine the complete mixed v0/v1 group and train only the exact fresh v1 group also used by sync."
+    }
+  },
+  "attempt_history": {
+    "excluded_seed": 82101,
+    "seed_82101": {
+      "analysis_rule": "Do not include any generated reward or model outcomes in v2 summaries.",
+      "committed_updates": 0,
+      "eligible_for_measurement": false,
+      "optimizer_calls": 0,
+      "preservation_path": "results/verifier_consistent_async_grpo_v1/seed-82101",
+      "raw_rollouts_generated": 16,
+      "reason_codes": [
+        "operator_run_id_too_short",
+        "runtime_import_source_mismatch"
+      ],
+      "status": "ABORTED_SETUP"
+    },
+    "seed_82102": {
+      "analysis_rule": "Do not include the partial synchronous arm, its reward data, or candidate model in v3 measurements.",
+      "arms_completed_for_analysis": [],
+      "arms_started": [
+        "sync"
+      ],
+      "cross_arm_comparison_available": false,
+      "failure": "Attempt object was indexed as a dictionary during generated-token telemetry aggregation after synchronous-arm artifacts had been written.",
+      "failure_type": "TypeError",
+      "measurement_eligible": false,
+      "optimizer_updates_attempted": 1,
+      "preservation_path": "results/verifier_consistent_async_grpo_v2/seed-82102",
+      "status": "ABORTED_RUNNER_ERROR"
+    },
+    "seed_82103": {
+      "analysis_rule": "Do not read or use reward labels, trajectories, policy state or partial arm metrics from this seed in v4.",
+      "arms_started": [
+        "sync",
+        "naive_async"
+      ],
+      "cross_arm_stale_reward_audit_performed": false,
+      "failure": "make_experiences received the verifier hash mapping positionally although its parameter is keyword-only.",
+      "failure_type": "TypeError",
+      "measurement_eligible": false,
+      "naive_async_training_started": false,
+      "optimizer_updates_attempted": 1,
+      "preservation_path": "results/verifier_consistent_async_grpo_v3/seed-82103",
+      "status": "ABORTED_RUNNER_ERROR"
+    },
+    "seed_82104": {
+      "analysis_rule": "Do not inspect or use this seed\u2019s labels, policy state or partial arm outputs in v5.",
+      "arms_started": [
+        "sync",
+        "naive_async"
+      ],
+      "cross_arm_stale_reward_audit_performed": false,
+      "failure": "VARE provenance-aware GRPO rejected a mixed verifier-version group in the naive negative-control arm before its optimizer call.",
+      "failure_type": "ValueError",
+      "measurement_eligible": false,
+      "naive_async_training_started": false,
+      "optimizer_updates_attempted": 1,
+      "preservation_path": "results/verifier_consistent_async_grpo_v4/seed-82104",
+      "status": "ABORTED_CONTROL_DESIGN"
+    },
+    "seed_82105": {
+      "analysis_rule": "Do not use any reward, update, or arm outcome from this partial seed in v6.",
+      "arms_started": [
+        "sync",
+        "naive_async"
+      ],
+      "failure": "EvidenceTrustRoot rejected the short operator run ID naive-run-82105 before independent evaluation.",
+      "failure_type": "ValueError",
+      "independent_evaluation_started": false,
+      "measurement_eligible": false,
+      "naive_async_candidate_created": true,
+      "optimizer_updates_attempted": 2,
+      "preservation_path": "results/verifier_consistent_async_grpo_v5/seed-82105",
+      "status": "ABORTED_RUNNER_SETUP"
+    }
+  },
+  "auditor_sha256": "62e2204950164900464073caaacaeff06ae0a3a094ef4adeba7707e402c1d9ec",
+  "budgets": {
+    "backend_concurrency": 1,
+    "crash_timeout_seconds_per_process": 1200,
+    "device": "CPU fp32",
+    "evaluation": {
+      "decode": "Greedy argmax, at most three tokens, separate model copy loaded from each saved checkpoint.",
+      "interpretation": "A synthetic diagnostic only; not a coding-task held-out capability metric.",
+      "promotion": "Same four prompts for incumbent and candidate in every arm. Strict arms require metadata verifier_version=1. Naive negative control records version=0 and compares the same signed report under version-unaware and expected-v1 gates.",
+      "prompts": "Held-out landing rule {i}: a blue bird landed on the",
+      "scorer": "Independent authoritative verifier v1; raw tokens, decoded text and per-task scores are retained.",
+      "task_count": 4,
+      "task_ids": "heldout-{seed}-{i}, i in 0..3"
+    },
+    "execution_serialization": "Three arms and, only after pilot signal, the five crash cases run serially on CPU; backend concurrency is one. The bounded async queue overlaps producer/verifier coroutines only; no parallel inference or speedup is claimed.",
+    "max_new_tokens": 3,
+    "max_rss_bytes_per_learner_process": 8589934592,
+    "max_rss_bytes_per_seed": 8589934592,
+    "max_swap_growth_bytes": 268435456,
+    "max_wall_seconds_per_seed": 1200,
+    "model": "roneneldan/TinyStories-1M",
+    "model_files": {
+      "config.json": "ff74c30d5ebb5ab1da0f2ea479adf7197c504b42b5522a858c334ab91ed4958c",
+      "merges.txt": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+      "pytorch_model.bin": "07f9609ea882b8163ff3b23d40e2b82cb715d409631beb15c84b164f3877dae7",
+      "special_tokens_map.json": "98412137ae43c77f8af52eb51b19c3536d3242cb55339167d841005fa94a23b7",
+      "tokenizer.json": "f6ed3d307010c244c22aeffbde05f419cf277c23e64cf98b673cac5449cfeff5",
+      "tokenizer_config.json": "3d76da0fd37493fbfcd3f0fa9757753d31f92e1779ebd9130809b45546a60261",
+      "vocab.json": "3ba3c3109ff33976c4bd966589c11ee14fcaa1f4c9e5e154c2ed7f99d80709e7"
+    },
+    "model_revision": "77f1b168e219585646439073245fe87e56b3023e",
+    "optimizer": "RVL HFCausalLMGRPOTrainer default AdamW, learning_rate=1e-4, pinned dependency/source versions; single actual optimizer step per arm.",
+    "optimizer_calls_per_arm_per_seed": 1,
+    "rollouts_per_arm_per_seed": 16,
+    "rvl_patch_sha256": "d50dfe7d65ed09ef6ee6d551d6680130bf4fd02ab11d29df81dd63ceb7e66871",
+    "rvl_patched_backend_sha256": "a35179d2ff65b35d8079b0d48a933444cac440debd736d6dc6a7a53a27cfb960",
+    "rvl_revision": "e381c4b3b8c2ad8e5dc4c4b1a33b7922531c3e33",
+    "sample_seed_rule": "Frozen RVLGRPOHooks seed + rollout step. Seed 82106 is the sole pilot. Run untouched 82107 only if the preregistered disagreement/quarantine/nondegenerate criteria pass; never resample a seed.",
+    "seeds": [
+      82106,
+      82107
+    ],
+    "temperature": 0.8,
+    "torch_threads": 1,
+    "train_batch_size": 8,
+    "trainable_parameters": "transformer.wpe.* and transformer.ln_f.* only",
+    "training_eval_config": {
+      "learning_rate": 0.0001,
+      "max_new_tokens": 3,
+      "optimizer": "AdamW",
+      "precision": "fp32",
+      "temperature": 0.8,
+      "trainable_parameters": "transformer.wpe.* and transformer.ln_f.*",
+      "updates_per_arm": 1
+    },
+    "verifier_calls_per_arm_per_seed": 16
+  },
+  "comparison_limits": [
+    "Synthetic verifier labels are not a real coding grader.",
+    "One prompt family and three seeds cannot estimate benchmark-wide prevalence or generalization.",
+    "CPU model inference is serialized; any throughput difference is descriptive, not evidence of asynchronous parallel speedup.",
+    "Promotion thresholds are deliberately permissive and only exercise provenance/promotion transactions; no held-out quality gain is claimed.",
+    "Seed 82101 is an invalid setup artifact and is excluded; v2 has at most two eligible planned seeds and only runs seed 82103 after pilot signal.",
+    "The stale label disagreement is intentionally induced by a synthetic rule transition, not a natural verifier-drift prevalence estimate.",
+    "Runtime import paths are asserted; v1 seed-82101 reward outputs are not valid measurements.",
+    "Seed 82102 is a partial runner-error artifact after the synchronous arm and is excluded. It is never retried and none of its outcomes enter v3 summaries.",
+    "The v3 pilot seed was assigned before any stale-group disagreement results were inspected; it uses the next preregistered untouched seed.",
+    "Seed 82103 is excluded after a runner error before naive training; no label-disagreement result from it was inspected or used to select v4 rules.",
+    "v4 uses the next untouched predeclared seed 82104 as pilot; seed 82105 remains conditional.",
+    "Seed 82104 is excluded because the intended naive control crossed a VARE provenance guard; no verifier-disagreement outcome was inspected or used to define v5.",
+    "The naive_async control uses RVL-native prompt-only reward normalization and deliberately bypasses only VARE\u2019s verifier-lineage consistency check. This represents an explicitly provenance-unaware controller, not a VARE configuration.",
+    "VARE\u2019s source code and verifier-aware group guard are unchanged between the naive and guarded arms.",
+    "Seed 82105 is excluded because the signed evaluation root rejected its short run ID after candidate generation; no held-out evaluation or promotion comparison completed.",
+    "Seed 82106 is the next untouched planned seed and is frozen as the new pilot before inspecting any verifier-disagreement outcome."
+  ],
+  "crash_recovery": {
+    "exact_recovery_fields": [
+      "model parameters",
+      "Adam optimizer state",
+      "CPU RNG state",
+      "module training modes",
+      "policy and verifier identities",
+      "promotion journal",
+      "effective trajectory-consumption count"
+    ],
+    "independent_reference": "Recovered model/Adam/RNG state must equal the matched synchronous candidate exactly; the main offline audit independently replays the numerical update from saved token traces.",
+    "method": "Five separate learner subprocesses are each SIGSTOPped at a durable named cutpoint and killed by the supervising parent with SIGKILL. A newly created Python process reconstructs from saved rollout/SQLite/checkpoint/journal files. Cutpoints 3 and 5 intentionally recompute from the incumbent after losing an uncommitted candidate; cutpoint 4 must acknowledge the durable committed candidate without another optimizer call.",
+    "required_cutpoints": [
+      "rollout_complete_before_admission",
+      "admission_before_optimizer",
+      "optimizer_computed_before_commit",
+      "commit_before_acknowledgment",
+      "evaluation_before_promotion"
+    ],
+    "reused_data_scope": "All five isolated cutpoints reuse the same pilot sync fresh rollout group to control recovery state; these are not five independent tasks or statistical observations.",
+    "status": "FROZEN_BEFORE_EXECUTION"
+  },
+  "crash_runner_sha256": "8d0cf99f6f50cef4573acbc1edf484f7d4339227a96e8e03c28296a94b8ebf87",
+  "hypothesis": "Under a controlled verifier transition, stale asynchronous reward versions can cause a real GRPO update to differ from the independently authoritative reward objective; whole-group version-aware VARE admission should prevent committing such a reward-invalid update and reject stale evaluation provenance. Measure correctness and cost without assuming a throughput gain.",
+  "metrics": {
+    "primary": "Per-seed indicator that the naive arm committed an eight-member update whose stored rewards disagree with independent authoritative v1, compared pairwise with VARE invalid commits (must be zero); denominators are one stale group per asynchronous arm per seed.",
+    "secondary": [
+      "false accept and false reject counts against independent v1, out of eight stale group members",
+      "group admissions, quarantine and effective consumed trajectories",
+      "optimizer calls on stale/mixed versus fresh groups",
+      "ordinary stale-evaluator promotion decision and strict expected-v1 decision on identical signed reports",
+      "rollouts/hour, verifier calls/hour, correct verified groups/hour, optimizer updates/hour; all include model setup wall time",
+      "queue-inclusive group p50/p95, sample latency and producer/verifier queue wait",
+      "CPU core-equivalent utilization, process peak RSS, macOS swap growth, checkpoint bytes and I/O latency",
+      "SQLite event/trajectory audit, transaction count, duplicate effective commits, exact model/Adam/RNG recovery",
+      "independent gradient, parameter and Adam-state replay max absolute error"
+    ],
+    "statistics": "Report every seed and exact denominator; pooled group outcomes get 95% Wilson intervals and one prespecified exact paired one-sided sign test (naive invalid commits > VARE). The three seeds share one synthetic task family; intervals and p-values do not establish task generalization. One primary comparison; no multiplicity correction across secondary metrics."
+  },
+  "naive_control": {
+    "evaluation_root_run_id_template": "naive-run-v6-{seed}",
+    "independent_check": "The offline numerical auditor recomputes the update from raw rollouts and mixed-version rewards using the frozen independent reference implementation.",
+    "scope": "Deliberate provenance-unaware baseline only. It does not call the VARE verifier-lineage guard; the sync and vare_async arms use the unmodified VARE path.",
+    "training_path": "Pinned RVL compute_group_advantages grouped only by prompt_id; verifier-version lineage is intentionally ignored for this negative control."
+  },
+  "preflight": {
+    "accelerate": "1.12.0",
+    "host": "Apple M1 Pro, 32 GB, CPU only",
+    "huggingface_hub": "0.36.0",
+    "import_isolation": {
+      "failure_mode": "Any mismatch aborts setup before model inference.",
+      "interpreter_mode": "-S disables site .pth/editable-install finders; runner manually appends the pinned interpreter site-packages.",
+      "path_order": "Exact VARE worktree src and pinned RVL src precede site-packages.",
+      "runtime_assertion": "Resolve and assert every imported VARE and RVL module __file__ against the experiment worktree before model generation/training; crash workers repeat this in fresh processes."
+    },
+    "model_revision": "77f1b168e219585646439073245fe87e56b3023e",
+    "python": "3.12.12",
+    "rvl_backend_patch_sha256": "a35179d2ff65b35d8079b0d48a933444cac440debd736d6dc6a7a53a27cfb960",
+    "rvl_revision": "e381c4b3b8c2ad8e5dc4c4b1a33b7922531c3e33",
+    "safetensors": "0.7.0",
+    "tokenizers": "0.22.1",
+    "torch": "2.9.1",
+    "transformers": "4.57.3"
+  },
+  "preregistered_at_utc": "2026-10-24T13:27:48.297978+00:00",
+  "reference_update_sha256": "f9546aeb53c3d4404de450e534de4b7cddfc0e88d72c56608c01ea862b07b580",
+  "runbook_sha256": "6390fed0b559adb8c3fcf9d366f6891715802c2af8af2e18b77f7c132e9e4743",
+  "runner_sha256": "b5a9fb33da7e18ed29937dc5077701499096652e20e2ca6cdc265a76dbe5f7f9",
+  "schema": "vare.verifier-consistent-async-grpo.v6",
+  "scope": "Real TinyStories-1M inference and real RVL AdamW/GRPO updates on one CPU host; synthetic, independently specified reward task. This is a verifier-consistency and single-host transaction systems experiment, not coding capability, benchmark prevalence, or broad asynchronous throughput evidence.",
+  "source_isolation": {
+    "auditor_independence": "The offline auditor repeats origin checks before importing model/trainer or VARE audit code.",
+    "mitigation": "Execute with -S; remove any residual editable finders; prepend pinned source directories; assert origins for VARE, RVL backend/trainer/types and all VARE modules used by the run and audit.",
+    "observed_v1_defect": "A previous setup attempt enrolled trajectory_store.py SHA 67278b05c230203170248877e3cbaa2a1eb366915c22a76da64c2ccdf4c21b9c rather than the frozen worktree SHA f915cbb6f7ee11dc7812084a5f09807eb182268dd9320fcc68a2fa2e47696db8. Python exposed an editable vare_rl install mapped to a different checkout."
+  },
+  "source_sha256": {
+    "scripts/audit_verifier_consistent_async_grpo.py": "62e2204950164900464073caaacaeff06ae0a3a094ef4adeba7707e402c1d9ec",
+    "scripts/benchmark_verifier_consistent_async_grpo.py": "b5a9fb33da7e18ed29937dc5077701499096652e20e2ca6cdc265a76dbe5f7f9",
+    "scripts/benchmark_verifier_consistent_grpo_sigkill.py": "8d0cf99f6f50cef4573acbc1edf484f7d4339227a96e8e03c28296a94b8ebf87",
+    "scripts/validate_grpo_e2e_cpu.py": "f9546aeb53c3d4404de450e534de4b7cddfc0e88d72c56608c01ea862b07b580",
+    "src/vare/__init__.py": "548fea93dbd5c551b72d1649f3a41d2109428d7cb24b1ff524345e18cf262025",
+    "src/vare/attestation.py": "785e74d7d0cd6d41a73cf75cc65c093a0afb8d5082ad3f11dd828770616e93a3",
+    "src/vare/config.py": "3ddcb32df475e9e1d2a1aa3689ba5955494a67971cad03aa5a88e045ba4b7051",
+    "src/vare/engine.py": "785551df9e3b5e17a7595c640a9fc0dcded750ea4d274a68c9cfd443cb04fdde",
+    "src/vare/evidence.py": "a35d0f8c1cc7756c7d351b79ff061ff2374bf5ffe3c0433ed0181b0b85868d70",
+    "src/vare/integrations/__init__.py": "3a37d872c78d8a6ab4985d72e38ab8c73bd928bd444a09a29beedbea336507f3",
+    "src/vare/integrations/rvl_grpo.py": "d4d511a9cc71949205a25ca4dbb9b384cb38c9f430f590adafdfd0126cac1eb7",
+    "src/vare/promotion.py": "21de684ad5faef4195e95fed75ec887b345ce22e72d6144d357f1c022d1b1827",
+    "src/vare/promotion_journal.py": "2e7b98951427aa63cff61ba948a3e4eb2e480b1378ed3c891e9df20225876ee7",
+    "src/vare/telemetry.py": "85c5ebe192c9e46db418e043bb09032e614a13d51cb0f19f94e096886c15de53",
+    "src/vare/trajectory_admission.py": "db3a1fe2fd345ef99ee25338f2e43f65211ae83cfdabc68a308f332aa53b5e6c",
+    "src/vare/trajectory_learner.py": "44a38b5c25992c6af819866961c9b2f8daed9589a65e1ab9afb8657b80e1414e",
+    "src/vare/trajectory_store.py": "f915cbb6f7ee11dc7812084a5f09807eb182268dd9320fcc68a2fa2e47696db8",
+    "src/vare/types.py": "233e2b6176431140e7700cc668cfdbdc98cf3d8d4ab98de658efab7010ea82ca",
+    "tests/test_checkpoint_bound_promotion.py": "93724be88e282a79e523c612ac343f795488968d35ba81c33c0563059aab9c4c",
+    "tests/test_verifier_consistent_async_grpo_controls.py": "e5722705098d4d1602488d31f108661dfbd2b7e571de4fe0758d1e5e73ccfbf2"
+  },
+  "status": "FROZEN_BEFORE_EXECUTION",
+  "stopping": {
+    "correctness_abort": "Stop at first source/model checksum mismatch, fresh sync/VARE rollout mismatch, independent replay error >=2e-6, behavior log-probability mismatch >=1e-4, excess optimizer call, incorrect VARE admission/quarantine, or recovery mismatch.",
+    "degenerate_group": "Stop the affected seed immediately, retain partial files, and do not resample or change prompts/rules.",
+    "no_signal": "If the 82106 pilot has no authoritative reward disagreement, stop and report NO_GO; do not consume 82107, repeat a seed, or tune prompt/rules.",
+    "pilot_seed": 82106,
+    "pilot_signal": "Continue with seed 82107 only if naive_async has at least one independently authoritative-v1 disagreement (false accept OR false reject), VARE explicitly quarantines all eight members of its stale group, and its fresh v1 group is nondegenerate. Seeds 82101\u201382105 are excluded.",
+    "resource_abort": "Stop at 1200 seconds per seed, 8 GiB peak RSS, or 256 MiB positive swap-growth from the pre-seed baseline. Preserve partial output and mark ABORTED_RESOURCE."
+  },
+  "supersedes": {
+    "excluded_seed": 82105,
+    "prior_protocols": {
+      "v1": "c7edd365062391562f74551fc6998bb1ec56abef330274d5a1d0cb76dfcb6b27",
+      "v2": "eca7f4684742a78b960bf53f9b63f85a939329c8f403e4743a1a8e6a8c47ee2c",
+      "v3": "519bca72bd8f0dbcda5279bff6eafd3a6069649f50aa29d2155e7254c7e65051",
+      "v4": "fc37d8e1531b50f14b778394f0cd5973df5b3892b44db271adc37e43628c986f"
+    },
+    "protocol": "vare.verifier-consistent-async-grpo.v5",
+    "protocol_sha256": "a7d2b2fbd26db933e557aacdf036a117622df87793f73c45c80060166cbcbffa",
+    "reason": "Seed 82105 completed a sync update and the naive mixed-reward candidate update, then the runner stopped before independent evaluation because naive-run-82105 was shorter than EvidenceTrustRoot\u2019s minimum run ID. The incomplete bundle is excluded and seed 82105 will not be retried."
+  },
+  "task": {
+    "exploration_exclusion": "Exploratory seed 90210 and invalid/partial setup seeds 82101 through 82105 are excluded from every v6 measurement. Their rollouts are never reused.",
+    "family": "landing",
+    "fresh_group_pairing": "Sync and VARE use the same deterministic sampling seeds for steps 8..15; the offline auditor checks response tokens and behavior log-probabilities exactly.",
+    "group_size": 8,
+    "groups_per_arm": 2,
+    "learning_rule": "terminal_action_on_policy_grpo_v1",
+    "oracle": "The offline auditor and crash runner implement the rubric independently from the runner and recompute every recorded score from raw model text.",
+    "pilot_seed": 82106,
+    "pilot_signal": "Any false accept or false reject in naive_async against the independent authoritative v1 oracle; plus complete VARE quarantine of all 8 stale items and a nondegenerate fresh v1 group.",
+    "prompt": "Choose one label for a story: a blue bird landed on the",
+    "verifier_v0": {
+      "rule_record_sha256": "computed by runner from canonical frozen rule record",
+      "semantics": "score 1 iff output contains any sentence punctuation .!?",
+      "version": 0
+    },
+    "verifier_v1": {
+      "rule_record_sha256": "computed by runner from canonical frozen rule record",
+      "semantics": "authoritative score 1 iff output contains whole ASCII word ground, case-insensitive; punctuation may surround it",
+      "version": 1
+    }
+  },
+  "vare_base_commit": "a476feeed7ee5d711b3741b0a0ffa89f7c29cd76"
+}

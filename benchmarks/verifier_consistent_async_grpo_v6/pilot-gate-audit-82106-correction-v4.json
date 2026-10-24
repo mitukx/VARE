@@ -1,0 +1,188 @@
+{
+  "auditor_correction_manifest_sha256": "ca63d2a13bc714ab559d407cb358fd24d8d299fc7f94851cbbf8d4a5f78cb209",
+  "auditor_sha256": "fc7dad44657d995e3ceb7ad92f1ecbe21e52615016d24e53c46d8a77e1fce7f3",
+  "crash_runner_correction_manifest_sha256": "61c77d7d1ac93d9552388c188cfe53906f468108d9424bd7840187e27f2199a6",
+  "decision": "PILOT_SIGNAL",
+  "expand_after_pilot": true,
+  "full_seed_set": false,
+  "primary": {
+    "invalid_committed_updates": {
+      "naive_async": {
+        "successes": 1,
+        "trials": 1,
+        "wilson_95": [
+          0.20654931437723745,
+          1.0
+        ]
+      },
+      "vare_async": {
+        "successes": 0,
+        "trials": 1,
+        "wilson_95": [
+          0.0,
+          0.7934506856227626
+        ]
+      }
+    },
+    "multiplicity": "One prespecified primary contrast; no adjustment across secondary systems metrics.",
+    "paired_sign_test": {
+      "exact_one_sided_p_naive_greater": 0.5,
+      "negative_pairs": 0,
+      "non_ties": 1,
+      "pairs": [
+        1
+      ],
+      "positive_pairs": 1,
+      "ties": 0
+    },
+    "scope_limit": "Seed bundles are the independent units; this selected synthetic systems fixture does not estimate benchmark-wide contamination or coding capability."
+  },
+  "protocol_sha256": "1e16f2452d2f0d101295df1438f87679bec621bb27f667259fe18d66db5d8523",
+  "runner_correction_manifest_sha256": "03622b7458e28289440740ef2c0fbf2dca2ac1426cd6511466f10d5d3a6380fb",
+  "runs": [
+    "results/verifier_consistent_async_grpo_v6/seed-82106"
+  ],
+  "seeds": [
+    {
+      "group_scores": {
+        "naive_async/fresh": [
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "naive_async/stale": [
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1
+        ],
+        "sync/audit": [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "sync/fresh": [
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "vare_async/fresh": [
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "vare_async/stale": [
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "invalid_commit_naive": 1,
+      "invalid_commit_vare": 0,
+      "seed": 82106,
+      "stale_eval_naive_accept": true,
+      "stale_eval_strict_accept": false,
+      "stale_false_accepts": 2,
+      "stale_reward_disagreements": {
+        "naive_async": {
+          "false_accepts": 2,
+          "false_rejects": 1,
+          "total_disagreements": 3
+        },
+        "vare_async": {
+          "false_accepts": 2,
+          "false_rejects": 1,
+          "total_disagreements": 3
+        }
+      },
+      "trajectory_store_audit": {
+        "completions": 16,
+        "database_sha256": "e2c4c335f72ab0af3c9d2cd7e0c3de322f7331388b3540c3709e993b2ca5627a",
+        "effective_duplicates": 0,
+        "events": 105,
+        "ledger_head_sha256": "8f37319cdba23a189ee2b4c3cbd96ef68aa0309de3e832258d736c4b657f850d",
+        "pass": true,
+        "steps": 16
+      },
+      "update_replay": {
+        "naive_async": {
+          "advantages": [
+            0.9999980000060001,
+            0.9999980000060001,
+            -0.9999980000060001,
+            0.9999980000060001,
+            -0.9999980000060001,
+            -0.9999980000060001,
+            -0.9999980000060001,
+            0.9999980000060001
+          ],
+          "behavior_alignment_error": 1.5735626220703125e-05,
+          "loss": 1.9073486328125e-06,
+          "model_max_abs": 3.725290298461914e-09,
+          "optimizer_max_abs": 3.725290298461914e-09
+        },
+        "sync": {
+          "advantages": [
+            1.2909916946231281,
+            1.2909916946231281,
+            -0.7745950167738769,
+            -0.7745950167738769,
+            1.2909916946231281,
+            -0.7745950167738769,
+            -0.7745950167738769,
+            -0.7745950167738769
+          ],
+          "behavior_alignment_error": 1.5735626220703125e-05,
+          "loss": 3.159046173095703e-06,
+          "model_max_abs": 7.450580596923828e-09,
+          "optimizer_max_abs": 3.725290298461914e-09
+        },
+        "vare_async": {
+          "advantages": [
+            1.2909916946231281,
+            1.2909916946231281,
+            -0.7745950167738769,
+            -0.7745950167738769,
+            1.2909916946231281,
+            -0.7745950167738769,
+            -0.7745950167738769,
+            -0.7745950167738769
+          ],
+          "behavior_alignment_error": 1.5735626220703125e-05,
+          "loss": 3.159046173095703e-06,
+          "model_max_abs": 7.450580596923828e-09,
+          "optimizer_max_abs": 3.725290298461914e-09
+        }
+      }
+    }
+  ]
+}

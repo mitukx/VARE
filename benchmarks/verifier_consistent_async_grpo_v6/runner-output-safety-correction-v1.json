@@ -1,0 +1,14 @@
+{
+  "corrected_runner_sha256": "8406b56b4c157473d8367bff0eccda24566b699caf1c0e1859b6c8d9dfb3f50c",
+  "correction_scope": "The runner records output-directory ownership only after its exclusive mkdir succeeds. The outer failure handler writes failure.json only for a directory created by this invocation. Rejected reuse of a completed or failed evidence directory leaves its files unchanged. No task, rollout, verifier, reward, optimizer, budget, stopping, or outcome rule changes.",
+  "experiment_protocol_sha256": "1e16f2452d2f0d101295df1438f87679bec621bb27f667259fe18d66db5d8523",
+  "frozen_source_commit": "e7c7a26883686917dc1abf0efbde8b64de88c5d2",
+  "future_execution_policy": "The frozen v6 protocol continues to pin the original runner, and its consumed seeds must not be rerun. Reproduction of historical outputs uses the pinned frozen execution checkout. Any future experiment must freeze a separate protocol that pins corrected_runner_sha256.",
+  "previous_runner_sha256": "158ab176f161c83bd0e5a600efacf013c01ddb9e87e2ed3b835c545675399e7a",
+  "previous_runner_correction_manifest": "benchmarks/verifier_consistent_async_grpo_v6/matched-runner-correction-v1.json",
+  "previous_runner_correction_manifest_sha256": "03622b7458e28289440740ef2c0fbf2dca2ac1426cd6511466f10d5d3a6380fb",
+  "original_runner_sha256": "b5a9fb33da7e18ed29937dc5077701499096652e20e2ca6cdc265a76dbe5f7f9",
+  "regression_test": "tests/test_verifier_consistent_async_grpo_output_safety.py",
+  "regression_test_sha256": "960c2c02e9a3709bf637dc3635cbdc229d05f5906fbe8f154519f367158edc2d",
+  "schema": "vare.v6-runner-output-safety-correction.v1"
+}
