@@ -16,7 +16,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 PILOT = ROOT / "benchmarks/verifier_integrity_pilot_v1"
-PROTOCOL = ROOT / "protocols/verifier_integrity_pilot_v1/protocol-v2.json"
+PROTOCOL = ROOT / "protocols/verifier_integrity_pilot_v1/protocol-v3.json"
 sys.path.insert(0, str(ROOT / "src"))
 
 from vare import mlxlm_1912_repo_task as task  # noqa: E402
@@ -67,7 +67,16 @@ def build_variant(
         "--platform=linux/arm64", "--tag", tag, "--file", str(dockerfile),
         str(context),
     ]
-    built = run(command)
+    try:
+        built = run(command)
+    except subprocess.CalledProcessError as error:
+        (output / f"build-{name}.stdout.log").write_text(
+            error.stdout or "", encoding="utf-8"
+        )
+        (output / f"build-{name}.stderr.log").write_text(
+            error.stderr or "", encoding="utf-8"
+        )
+        raise
     (output / f"build-{name}.stdout.log").write_text(built.stdout, encoding="utf-8")
     (output / f"build-{name}.stderr.log").write_text(built.stderr, encoding="utf-8")
     build_seconds = time.monotonic() - started
