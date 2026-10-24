@@ -1,0 +1,15 @@
+{
+  "attempt": "run1-launch-before-probe",
+  "command": "DOCKER_CONTEXT=colima python3.12 scripts/run_verifier_integrity_transitive_reference_v1.py --source-repo ../upstream-mlx-lm-v4 --output results/verifier_integrity_transitive_reference_v1/run1",
+  "disposition": "Setup stopped before image probes, reference outputs, candidate generation, or grading. Corrected repository import path; no protocol task, candidate, budget, or scoring rule changed.",
+  "exit_code": 1,
+  "grader_calls": 0,
+  "model_calls": 0,
+  "observed_at_utc": "2026-10-24T08:53:11.076303+00:00",
+  "optimizer_steps": 0,
+  "pre_registered_commit": "dd172890",
+  "pre_registered_protocol_sha256": "de23788dd67bbcd7dfe5dd611d11b4c075dd84fbd583736f2065f8790e54d9a4",
+  "probe_calls": 0,
+  "schema": "vare.verifier-integrity-transitive-reference-setup-failure.v1",
+  "stderr": "ModuleNotFoundError: No module named scripts"
+}
