@@ -85,7 +85,9 @@ def one_run(reward: dict[str, int], seed: int, protocol: dict) -> dict:
     alpha = {arm: float(protocol["learner"]["prior_alpha"]) for arm in ARMS}
     beta = {arm: float(protocol["learner"]["prior_beta"]) for arm in ARMS}
     horizon = int(protocol["learner"]["horizon_per_seed_and_environment"])
-    window = int(protocol["learner"]["primary_window"])
+    # The frozen protocol keeps the analysis window human-readable. Parse the
+    # leading count without changing the registered rule after outcomes exist.
+    window = int(protocol["learner"]["primary_window"].split()[1])
     counts = {arm: 0 for arm in ARMS}
     invalid = {arm for arm in ARMS if protocol["trusted_correctness"][arm] == 0}
     last_fix = 0
