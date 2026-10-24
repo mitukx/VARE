@@ -1,0 +1,24 @@
+{
+  "calibration_gate_passed": true,
+  "claim_limit": "Operational setup events only; not model outcomes.",
+  "effective_protocol_sha256": "fd0e3cef7f71e5cbff49a93946d06a7340e36ce133e4d4542bd1277c98eb6060",
+  "final_e0_accepted": true,
+  "final_e0_observations_sha256": "2c7829fecf00a08f3f97ca5b320eeef72e7ea0b50e572417623397ef20a4063a",
+  "no_model_inference_occurred_before_correction": true,
+  "pre_inference_setup_events": [
+    {
+      "event": "download_preflight_helper_error",
+      "result": "A first helper invocation attempted to read psutil from the isolated inference venv, where it is intentionally not installed. It stopped before model download; a separate system-Python resource check then passed."
+    },
+    {
+      "event": "runner_integrity_gate_rejection",
+      "result": "The first launch stopped in verify_pins because the protocol named the E0 observations file while the CLI supplied its parent directory. It stopped before output creation, candidate materialization, or model loading."
+    },
+    {
+      "event": "protocol_correction",
+      "result": "Corrected the path equality check to compare e0_dir/observations.json with the frozen file path, updated implementation hashes, and reran E0 against the corrected protocol."
+    }
+  ],
+  "protocol_id": "real-agent-interface-v1",
+  "schema_version": 1
+}

@@ -86,7 +86,7 @@ def verify_pins(protocol: dict, source_repo: Path, model_dir: Path,
     if len(planned) != 4 or len({(row["task_id"], row["edit_format"]) for row in planned}) != 4:
         raise RuntimeError("the frozen paired task/interface design is incomplete")
     expected_e0 = (ROOT / protocol["runtime"]["e0_result"]).resolve()
-    if e0_dir.resolve() != expected_e0:
+    if (e0_dir / "observations.json").resolve() != expected_e0:
         raise RuntimeError("E0 evidence path differs from the frozen protocol")
     e0_observations = json.loads((e0_dir / "observations.json").read_text(encoding="utf-8"))
     if e0_observations.get("accepted") is not True or e0_observations.get("image") != protocol["runtime"]["candidate_image"]:
