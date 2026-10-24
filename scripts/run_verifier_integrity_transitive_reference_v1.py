@@ -117,7 +117,10 @@ def check_probe(probe: dict[str, Any], expected: dict[str, Any]) -> None:
     if not all(row.get("has_v_scale_code") for row in probe["bytecode"]):
         raise RuntimeError("compiled reference did not expose v_scale code")
     operations = [item for row in probe["bytecode"] for item in row["instructions"]]
-    if not any(item["op"] == "BINARY_OP" and item["arg"] == "*" for item in operations):
+    if not any(
+        item["op"] == "BINARY_OP" and (item.get("argrepr") == "*" or item.get("arg") == "5")
+        for item in operations
+    ):
         raise RuntimeError("compiled reference lacked the frozen value scaling operation")
 
 
@@ -152,7 +155,10 @@ def _source_adaptation(baseline: bytes, probe: dict[str, Any]) -> bytes:
 def _bytecode_adaptation(baseline: bytes, probe: dict[str, Any]) -> bytes:
     instructions = [item for row in probe["bytecode"] for item in row["instructions"]]
     has_scale_load = any(item["op"] in {"LOAD_ATTR", "LOAD_METHOD"} and item["arg"] == "v_scale" for item in instructions)
-    has_multiply = any(item["op"] == "BINARY_OP" and item["arg"] == "*" for item in instructions)
+    has_multiply = any(
+        item["op"] == "BINARY_OP" and (item.get("argrepr") == "*" or item.get("arg") == "5")
+        for item in instructions
+    )
     if not has_scale_load or not has_multiply:
         raise RuntimeError("compiled-reference candidate lacks the pinned value-scale multiplication")
     return _apply_scale_mapping(baseline)
@@ -346,9 +352,26 @@ def main() -> int:
         os.environ["DOCKER_CONTEXT"] = protocol["execution"]["docker_context"]
     started = time.monotonic()
     image_probes = {}
+    new_probe_calls = 0
     historical = historical_controls(protocol)
     for image_name, image in protocol["images"].items():
-        image_probes[image_name] = probe_image(image, output, env)
+        reuse = protocol.get("preflight_probe_reuse")
+        if reuse and image_name == reuse["image_name"]:
+            raw_path = ROOT / reuse["stdout_path"]
+            if sha256_file(raw_path) != reuse["stdout_sha256"]:
+                raise RuntimeError("preflight probe evidence differs from its frozen hash")
+            if sha256_file(ROOT / reuse["stderr_path"]) != reuse["stderr_sha256"]:
+                raise RuntimeError("preflight probe stderr differs from its frozen hash")
+            image_probes[image_name] = json.loads(raw_path.read_text(encoding="utf-8"))
+            image_probes[image_name]["reused_preflight_probe"] = True
+            stem = image.split("@sha256:")[1][:16]
+            shutil.copyfile(raw_path, output / "access-probes" / f"{stem}.stdout.log")
+            shutil.copyfile(
+                ROOT / reuse["stderr_path"], output / "access-probes" / f"{stem}.stderr.log"
+            )
+        else:
+            image_probes[image_name] = probe_image(image, output, env)
+            new_probe_calls += 1
         check_probe(image_probes[image_name], protocol["transformers_reference"])
         (output / "access-probes" / f"{image_name}.json").write_text(
             json.dumps(image_probes[image_name], indent=2, sort_keys=True) + "\n", encoding="utf-8"
@@ -412,7 +435,9 @@ def main() -> int:
         "historical_v4_controls": historical,
         "new_candidate_outcomes": by_candidate,
         "new_grade_calls": len(outcomes),
-        "access_probe_calls": len(image_probes),
+        "access_probe_calls": new_probe_calls,
+        "reused_preflight_probe_calls": len(image_probes) - new_probe_calls,
+        "total_access_probe_calls_including_preflight": len(image_probes),
         "model_calls": 0,
         "optimizer_steps": 0,
         "wall_s": time.monotonic() - started,

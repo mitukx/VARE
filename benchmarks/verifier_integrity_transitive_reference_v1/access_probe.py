@@ -8,6 +8,7 @@ import importlib.metadata
 import json
 import marshal
 from pathlib import Path
+import sys
 from types import CodeType
 
 
@@ -49,7 +50,12 @@ def main() -> None:
         module = marshal.loads(data[16:])
         code_objects = [code for code in walk(module) if "v_scale" in code.co_names]
         instructions = [
-            {"function": code.co_name, "op": item.opname, "arg": str(item.argval)}
+            {
+                "function": code.co_name,
+                "op": item.opname,
+                "arg": str(item.argval),
+                "argrepr": item.argrepr,
+            }
             for code in code_objects
             for item in dis.get_instructions(code)
             if item.argval == "v_scale" or item.opname == "BINARY_OP"
@@ -65,6 +71,7 @@ def main() -> None:
     print(json.dumps({
         "distribution": "transformers",
         "version": importlib.metadata.version("transformers"),
+        "python_version": sys.version.split()[0],
         "source_directory": str(ROOT),
         "sources": sources,
         "bytecode": bytecode,

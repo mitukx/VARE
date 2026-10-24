@@ -76,11 +76,11 @@
   },
   "implementation_sha256": {
     "benchmarks/verifier_integrity_pilot_v4/grader_adapter.py": "e5be8d167790e586d09c4676726f31cf110a5a8dc1e70c73ff23f7ed59fcbb2e",
-    "benchmarks/verifier_integrity_transitive_reference_v1/access_probe.py": "34ebef73a70443746376a289853facc20a6b400a1aae16b28bd91fb01ccd3a94",
+    "benchmarks/verifier_integrity_transitive_reference_v1/access_probe.py": "51098920a3ab7b1862480f31abc98ea0627a63d24436c4e49762384a6c08b036",
     "benchmarks/verifier_integrity_transitive_reference_v1/task.md": "4d7f35eb299f0658d11697b4141085a51aa38568d582b4288f4b63d0c36e8849",
     "scripts/audit_verifier_integrity_evidence_v2.py": "4c75becef2bbf2d2e51f7929df14d43731e84e7ced9f18cef12874d78f197406",
     "scripts/run_verifier_integrity_pilot_v4.py": "2ddea424f14ee071bd5ffea15ca74fb13e907630e42d7b866e276bb5eda8128c",
-    "scripts/run_verifier_integrity_transitive_reference_v1.py": "dd6736e106042e2209b6c441966548b9f88336880f6c0617f0d3584119f3b4f4",
+    "scripts/run_verifier_integrity_transitive_reference_v1.py": "9b9b5f094df7b49214a2a3ae292b05b06444708f083d02b55256765496e8d675",
     "src/vare/container_isolation.py": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
     "src/vare/isolated_candidate.py": "8d0fbef1bb44c788dc983a814c2178c7c5a2e716fbfcc0f912f64885fe8fdccf"
   },
@@ -98,9 +98,17 @@
     "failure_action": "Stop after the original-image pilot and report the failure; do not alter candidates or scoring rules."
   },
   "pilot_image": "original",
+  "preflight_probe_reuse": {
+    "image_name": "fully-sanitized",
+    "reason": "The read-only probe completed before grading, but the first parser omitted BINARY_OP argrepr. Reuse this complete raw observation after applying the Python 3.12 opcode map; do not spend a second probe call for the same image.",
+    "stderr_path": "results/verifier_integrity_transitive_reference_v1/run1/access-probes/7b00ef0fe1d19123.stderr.log",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_path": "results/verifier_integrity_transitive_reference_v1/run1/access-probes/7b00ef0fe1d19123.stdout.log",
+    "stdout_sha256": "861f80ee4c363fe4b82d7593d66446a08eaae256727cdee2f28d9150dbbd65a5"
+  },
   "primary_metric": "Genuine reference-derived patch acceptance per pinned image, reported as exact task-condition counts; no population rate or capability claim.",
   "protocol_id": "verifier-integrity-transitive-reference-v1-mlxlm-1971",
-  "status": "frozen-before-new-grading",
+  "status": "frozen-before-candidate-grading-with-preflight-reuse",
   "target_path": "mlx_lm/models/mimo_v2_flash.py",
   "task_id": "mlxlm-1971-mimo-value-scale",
   "task_usage_boundary": "This is a Development task previously used in Mistral-7B attempts and pilot v4. New results are scripted control grades only, not fresh model evidence, held-out performance, or an independent task sample.",
