@@ -273,7 +273,7 @@ def independent_eval(model, tokenizer, state, tasks, version: int):
                     break
             text = tokenizer.decode(generated, skip_special_tokens=True)
             outputs[task.id] = {"token_ids": generated, "text": text}
-        scores[task.id] = trusted_score(text, version)
+            scores[task.id] = trusted_score(text, version)
     from statistics import fmean
     primary = fmean(scores.values())
     report = EvaluationReport("policy-1", primary, {"landing": primary}, 1.0,
@@ -500,6 +500,12 @@ def parent(args) -> None:
                    "--model-dir", str(args.model_dir), "--rvl-source", str(args.rvl_source),
                    "--output", str(args.output), "--cutpoint", cutpoint,
                    "--seed", str(args.seed)]
+        if args.crash_correction_manifest is not None:
+            command.extend(["--crash-correction-manifest",
+                            str(args.crash_correction_manifest.resolve())])
+        if args.auditor_correction_manifest is not None:
+            command.extend(["--auditor-correction-manifest",
+                            str(args.auditor_correction_manifest.resolve())])
         stdout_path, stderr_path = case / "learner.stdout.log", case / "learner.stderr.log"
         started = time.perf_counter()
         process = None
@@ -594,15 +600,66 @@ def main() -> None:
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--case", type=Path)
     parser.add_argument("--cutpoint", choices=CUTPOINTS)
+    parser.add_argument("--crash-correction-manifest", type=Path,
+                        help="hash-bound correction for the frozen v6 crash-runner defect")
+    parser.add_argument("--auditor-correction-manifest", type=Path,
+                        help="hash-bound correction for the frozen v6 auditor defect")
     args = parser.parse_args()
     protocol = json.loads(PROTOCOL.read_text())
-    require(sha(Path(__file__)) == protocol["crash_runner_sha256"],
-            "crash runner differs from frozen protocol")
+    current_runner_sha = sha(Path(__file__))
+    correction = None
+    if current_runner_sha != protocol["crash_runner_sha256"]:
+        require(args.crash_correction_manifest is not None,
+                "crash runner differs from protocol; provide the versioned correction manifest")
+        correction = json.loads(args.crash_correction_manifest.read_text())
+        require(correction.get("experiment_protocol_sha256") == sha(PROTOCOL)
+                and correction.get("original_crash_runner_sha256")
+                == protocol["crash_runner_sha256"]
+                and correction.get("corrected_crash_runner_sha256")
+                == current_runner_sha,
+                "crash-runner correction manifest does not bind this code to frozen protocol")
+        original = subprocess.check_output([
+            "git", "-C", str(ROOT), "show",
+            f"{correction['frozen_source_commit']}:scripts/benchmark_verifier_consistent_grpo_sigkill.py",
+        ])
+        require(hashlib.sha256(original).hexdigest()
+                == protocol["crash_runner_sha256"],
+                "git does not contain the frozen original crash runner")
+    else:
+        require(args.crash_correction_manifest is None,
+                "crash correction manifest supplied while frozen runner is active")
+    current_auditor_sha = sha(ROOT / "scripts/audit_verifier_consistent_async_grpo.py")
+    auditor_correction = None
+    if current_auditor_sha != protocol["auditor_sha256"]:
+        require(args.auditor_correction_manifest is not None,
+                "auditor differs from protocol; provide its correction manifest")
+        auditor_correction = json.loads(args.auditor_correction_manifest.read_text())
+        require(auditor_correction.get("experiment_protocol_sha256") == sha(PROTOCOL)
+                and auditor_correction.get("original_auditor_sha256")
+                == protocol["auditor_sha256"]
+                and auditor_correction.get("corrected_auditor_sha256")
+                == current_auditor_sha,
+                "auditor correction manifest does not bind this code to frozen protocol")
+        original = subprocess.check_output([
+            "git", "-C", str(ROOT), "show",
+            f"{auditor_correction['frozen_source_commit']}:scripts/audit_verifier_consistent_async_grpo.py",
+        ])
+        require(hashlib.sha256(original).hexdigest() == protocol["auditor_sha256"],
+                "git does not contain the frozen original auditor")
+    else:
+        require(args.auditor_correction_manifest is None,
+                "auditor correction manifest supplied while frozen auditor is active")
     require(subprocess.check_output(["git", "-C", str(ROOT), "merge-base", "HEAD",
                                      protocol["vare_base_commit"]], text=True).strip()
             == protocol["vare_base_commit"],
             "VARE base commit differs from frozen protocol")
     for relative, digest in protocol["source_sha256"].items():
+        if (correction is not None
+                and relative == "scripts/benchmark_verifier_consistent_grpo_sigkill.py"):
+            continue
+        if (auditor_correction is not None
+                and relative == "scripts/audit_verifier_consistent_async_grpo.py"):
+            continue
         require(sha(ROOT / relative) == digest,
                 f"VARE source differs from frozen protocol: {relative}")
     require(args.seed in protocol["budgets"]["seeds"], "undeclared crash seed")

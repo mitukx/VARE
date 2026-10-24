@@ -9,6 +9,7 @@ import math
 from pathlib import Path
 import re
 import sqlite3
+import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -390,6 +391,8 @@ def main() -> None:
                         help="optional five-cutpoint actual-process SIGKILL bundle")
     parser.add_argument("--auditor-correction-manifest", type=Path,
                         help="explicit hash-bound correction for the frozen v6 auditor defect")
+    parser.add_argument("--crash-correction-manifest", type=Path,
+                        help="explicit hash-bound correction for the frozen v6 crash runner")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     protocol = json.loads(PROTOCOL.read_text())
@@ -417,11 +420,38 @@ def main() -> None:
                 "correction manifest supplied while the frozen auditor is active")
     require(sha(ROOT / "scripts/benchmark_verifier_consistent_async_grpo.py")
             == protocol["runner_sha256"], "runner source differs from frozen protocol")
-    require(sha(ROOT / "scripts/benchmark_verifier_consistent_grpo_sigkill.py")
-            == protocol["crash_runner_sha256"], "crash runner differs from frozen protocol")
+    crash_correction = None
+    current_crash_sha = sha(ROOT / "scripts/benchmark_verifier_consistent_grpo_sigkill.py")
+    if current_crash_sha != protocol["crash_runner_sha256"]:
+        require(args.crash_run is not None
+                and args.crash_correction_manifest is not None,
+                "crash runner differs from protocol; provide its correction manifest with --crash-run")
+        crash_correction = json.loads(args.crash_correction_manifest.read_text())
+        require(crash_correction.get("experiment_protocol_sha256") == sha(PROTOCOL)
+                and crash_correction.get("original_crash_runner_sha256")
+                == protocol["crash_runner_sha256"]
+                and crash_correction.get("corrected_crash_runner_sha256")
+                == current_crash_sha,
+                "crash-runner correction manifest does not bind this code to frozen protocol")
+        original = subprocess.check_output([
+            "git", "-C", str(ROOT), "show",
+            f"{crash_correction['frozen_source_commit']}:scripts/benchmark_verifier_consistent_grpo_sigkill.py",
+        ])
+        require(hashlib.sha256(original).hexdigest()
+                == protocol["crash_runner_sha256"],
+                "git does not contain the frozen original crash runner")
+    else:
+        require(args.crash_correction_manifest is None,
+                "crash correction manifest supplied while frozen runner is active")
+    if args.crash_correction_manifest is not None:
+        require(args.crash_run is not None,
+                "crash correction manifest requires --crash-run")
     for relative, digest in protocol["source_sha256"].items():
         if (correction is not None
                 and relative == "scripts/audit_verifier_consistent_async_grpo.py"):
+            continue
+        if (crash_correction is not None
+                and relative == "scripts/benchmark_verifier_consistent_grpo_sigkill.py"):
             continue
         require(sha(ROOT / relative) == digest,
                 f"VARE source differs from frozen protocol: {relative}")
@@ -529,6 +559,9 @@ def main() -> None:
         "auditor_correction_manifest_sha256": (
             sha(args.auditor_correction_manifest)
             if args.auditor_correction_manifest is not None else None),
+        "crash_runner_correction_manifest_sha256": (
+            sha(args.crash_correction_manifest)
+            if args.crash_correction_manifest is not None else None),
         "runs": [str(path) for path in args.run],
         "seeds": per_seed,
         "primary": {

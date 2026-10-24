@@ -1,0 +1,10 @@
+{
+  "corrected_auditor_sha256": "ead69e96b03dc2cfd7cf355a454f15ac28257a7cadf1b5b83305ac48994588f9",
+  "correction_scope": "Retains the immutable-Task replay correction and permits the separate hash-bound crash-runner correction. It verifies each run\u2019s exact original auditor snapshot; with a crash run, it also requires the separate crash correction manifest. No metric, scorer, denominator, acceptance criterion, or experiment protocol changes.",
+  "experiment_protocol_sha256": "1e16f2452d2f0d101295df1438f87679bec621bb27f667259fe18d66db5d8523",
+  "frozen_source_commit": "69e9ab9b22da16413dbeababa0552e36aa06612f",
+  "original_auditor_sha256": "62e2204950164900464073caaacaeff06ae0a3a094ef4adeba7707e402c1d9ec",
+  "original_auditor_snapshot": "run/source/audit_verifier_consistent_async_grpo.py.62e220495016",
+  "schema": "vare.v6-auditor-correction.v2",
+  "supersedes_correction_manifest_sha256": "9fd547638b03760671705f23916a53a8467cf6904dff947fcfe8a07625bc8511"
+}

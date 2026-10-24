@@ -1,0 +1,12 @@
+{
+  "correction_manifest": "benchmarks/verifier_consistent_async_grpo_v6/crash-runner-correction.json",
+  "cutpoint": "rollout_complete_before_admission",
+  "failure_message": "recovery process failed because the crash harness scored only one of four held-out evaluation tasks; PromotionGate rejected insufficient_eval_examples.",
+  "failure_type": "RuntimeError",
+  "frozen_crash_runner_sha256": "8d0cf99f6f50cef4573acbc1edf484f7d4339227a96e8e03c28296a94b8ebf87",
+  "protocol_sha256": "1e16f2452d2f0d101295df1438f87679bec621bb27f667259fe18d66db5d8523",
+  "real_sigkill_observed": true,
+  "recovery_status": "FAILED_BEFORE_PROMOTION",
+  "rule": "Preserve this failed recovery attempt. Do not report it as a recovery success; corrected five-cutpoint run uses a new output directory.",
+  "status": "ABORTED_CRASH_HARNESS"
+}
