@@ -189,6 +189,57 @@ The new source identity is bound in
 The v7.3 protocol is still the runner default and its frozen runner hash no
 longer matches the prospective source, so it cannot authorize a replay or
 resume. Any future run must pass a separate, fresh-task protocol through
-`--protocol` and bind the new source hashes. Fault-injection regression tests cover interruption after a completed
-evaluation, after a promotion is applied but before commit, and before arm
-completion. These are journal-integrity checks, not fresh model-run evidence.
+`--protocol` and bind the new source hashes. Fault-injection regression tests
+cover interruption after a completed evaluation, after a promotion is applied
+but before commit, and before arm completion. These are journal-integrity
+checks, not fresh model-run evidence.
+
+## Prospective dense-reward calibration (v1; NO-GO for training)
+
+The frozen calibration in
+[`reward-calibration-v1.json`](reward-calibration-v1.json) used four new
+calibration prompts and one fixed group of eight outputs per prompt from the
+existing TinyStories-1M checkpoint. It did not use held-out evaluation prompts,
+make optimizer updates, or resample. The reward changed from generic support
+plausibility (v0) to target-conditioned surface compatibility (v1). This was
+a bounded reward-semantics calibration, not a coding task or policy-quality
+evaluation.
+
+All four v1 groups were nonconstant (4/4), 27 of 32 output strings were unique,
+and 17/32 samples had positive reward under each version. The mean absolute
+per-sample v0-to-v1 reward shift was 0.1140625, below the preregistered 0.15
+minimum. The fraction with shift at least 0.25 was 0.28125, above its 0.25
+minimum. Since one required gate failed, the fixed decision is
+`NO_GO_REWARD_CALIBRATION`: no GRPO run, async comparison, held-out evaluation,
+or coding-capability claim follows. This single four-group pilot does not
+estimate the probability that future groups will be nonconstant.
+
+The independent auditor reconstructed all 32 scores and confirmed the same
+gate result. Raw groups, sampler progress, summary, and the run's SHA-256
+inventory are retained under
+`results/verifier_consistent_async_grpo_v7/reward-calibration-v1/`. The
+independent audit and parent manifest bind the audit to the run inventory and
+frozen protocol. The recorded resource use was 4.18 seconds wall, 2.49 CPU
+seconds, 646 MB peak RSS, and no measured swap growth.
+
+## Deterministic verifier-drift mechanism regression (replay only)
+
+`tests/test_authenticated_verifier_drift_regression.py` exercises authenticated
+v0, v1, stale, and mixed-version trajectory receipts. It independently
+recomputes the authoritative v1 score, rejects stale and mixed groups before
+the trainer boundary (zero fake-trainer calls), and admits one fresh v1 group
+to a fake trainer (one call). The fresh fixture remains verified and the
+trajectory-store audit passes. These fixed replay fixtures test admission and
+accounting behavior; they are not fresh on-policy rollouts, an optimizer
+update, or evidence of model learning. The regression is independent of the
+reward-calibration gate and does not authorize the matched async experiment.
+
+### Combined outcome
+
+The prospective evaluation journal and its three crash-cutpoint tests pass;
+the dense-reward calibration independently reconstructs but fails its
+preregistered mean-shift gate; and the replay-only drift mechanism regression
+passes. Therefore the real-model async comparison remains **NO-GO**. The exact
+remaining blocker is that this frozen reward transition changed scores less
+than required (0.1141 mean absolute shift versus 0.15); no model training or
+async run was started to work around that result.

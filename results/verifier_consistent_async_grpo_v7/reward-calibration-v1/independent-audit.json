@@ -1,0 +1,15 @@
+{
+  "status": "PASS_INDEPENDENT_RECONSTRUCTION",
+  "calibration_gate": "NO_GO_REWARD_CALIBRATION",
+  "groups": 4,
+  "members": 32,
+  "v1_nonconstant_groups": 4,
+  "mean_absolute_reward_shift": 0.11406250000000001,
+  "fraction_with_shift_at_least_0_25": 0.28125,
+  "gates": {
+    "all_groups_nonconstant_v1": true,
+    "mean_absolute_shift": false,
+    "fraction_shift_at_least_0_25": true
+  },
+  "claim_limit": "Independent reward reconstruction only; no optimizer update or coding capability result."
+}

@@ -1,0 +1,123 @@
+{
+  "claim_limit": "Reward-only output-diversity and verifier-drift calibration; no GRPO update, asynchronous comparison, coding capability, or held-out quality result.",
+  "environment": {
+    "cpu_s": 2.4924150000000003,
+    "device": "cpu fp32",
+    "host_memory_bytes": 34359738368,
+    "peak_rss_bytes": 645840896,
+    "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+    "swap_after_bytes": 2372864573,
+    "swap_before_bytes": 2372864573,
+    "threads": 1,
+    "torch": "2.9.1",
+    "transformers": "4.57.3",
+    "wall_s": 4.17933425004594
+  },
+  "fraction_abs_shift_at_least_0_25": 0.28125,
+  "gates": {
+    "all_groups_nonconstant_v1": true,
+    "fraction_shift_at_least_0_25": true,
+    "mean_absolute_shift": false
+  },
+  "group_count": 4,
+  "groups": [
+    {
+      "task_id": "cal-earth-01",
+      "v0": {
+        "mean": 0.84375,
+        "positive_count": 7,
+        "unique_values": [
+          0.0,
+          0.75,
+          1.0
+        ]
+      },
+      "v1": {
+        "mean": 0.78125,
+        "positive_count": 7,
+        "unique_values": [
+          0.0,
+          0.25,
+          1.0
+        ]
+      }
+    },
+    {
+      "task_id": "cal-elevated-02",
+      "v0": {
+        "mean": 0.65625,
+        "positive_count": 6,
+        "unique_values": [
+          0.0,
+          0.75,
+          1.0
+        ]
+      },
+      "v1": {
+        "mean": 0.6,
+        "positive_count": 6,
+        "unique_values": [
+          0.0,
+          0.6,
+          1.0
+        ]
+      }
+    },
+    {
+      "task_id": "cal-built-03",
+      "v0": {
+        "mean": 0.2125,
+        "positive_count": 2,
+        "unique_values": [
+          0.0,
+          0.85
+        ]
+      },
+      "v1": {
+        "mean": 0.25,
+        "positive_count": 2,
+        "unique_values": [
+          0.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "task_id": "cal-frozen-04",
+      "v0": {
+        "mean": 0.21875,
+        "positive_count": 2,
+        "unique_values": [
+          0.0,
+          0.75,
+          1.0
+        ]
+      },
+      "v1": {
+        "mean": 0.10625,
+        "positive_count": 2,
+        "unique_values": [
+          0.0,
+          0.25,
+          0.6
+        ]
+      }
+    }
+  ],
+  "members": 32,
+  "model_revision": "77f1b168e219585646439073245fe87e56b3023e",
+  "optimizer_updates": 0,
+  "protocol_sha256": "64d66e4dcb01ff3b4510e6ff3b45b4e9fbd960aa65da260c89e0ce0051c71cb5",
+  "source_sha256": {
+    "auditor": "93edbd179164b10bf4ad03a546f25df6a42bf0c161de07ceefd21c74a15e2de0",
+    "backend": "a35179d2ff65b35d8079b0d48a933444cac440debd736d6dc6a7a53a27cfb960",
+    "helper": "8406b56b4c157473d8367bff0eccda24566b699caf1c0e1859b6c8d9dfb3f50c",
+    "sampler": "251410023f0da117a10c5e69490a60fa3cfed6897aa3d517c73b5b1c8a4f2fa7"
+  },
+  "status": "NO_GO_REWARD_CALIBRATION",
+  "unique_outputs": 27,
+  "v0_positive_rewards": 17,
+  "v1_nonconstant_groups": 4,
+  "v1_positive_rewards": 17,
+  "verifier_version_mean_absolute_reward_shift": 0.11406250000000001
+}
