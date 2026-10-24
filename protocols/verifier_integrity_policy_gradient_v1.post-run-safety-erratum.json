@@ -16,9 +16,8 @@
   },
   "prospective_guard": {
     "runner_path": "scripts/run_verifier_integrity_policy_gradient_v1.py",
-    "runner_sha256_after_correction": "b774c6f79d0b4df3c314f128f34679bd0ff6c24c3a60aec058ec0f81ee03f403",
-    "validator_path": "src/vare/verifier_integrity_reports.py",
-    "validator_sha256": "b683960962b4bc649d369da0688b3dddc1aecd3b8d020794e32145905a47f53a",
+    "runner_sha256_after_correction": "20dd3212e858072cc5fd934e747147150551cb4ba26066fe7d5810eb00ad768d",
+    "validator_location": "validate_candidate_grade_report in the frozen experiment runner; no runtime-package file was added",
     "semantics": "Accept a full-length report only when each case has a unique id, a boolean outcome, and failure null or wrong_output; require task outcome to equal the conjunction of cases. Raise ExperimentStop on missing_result, malformed_result, inconsistent outcomes, or malformed reports before returning a reward.",
     "historical_v1_reuse": "The current runner no longer matches the frozen v1 implementation hash, so v1 preflight must fail before any grader call. Do not rerun the consumed task. A future experiment requires a fresh task and a new protocol/lock."
   },

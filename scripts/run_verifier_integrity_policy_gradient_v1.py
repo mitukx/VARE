@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from collections.abc import Mapping
 import copy
 import hashlib
 import itertools
@@ -23,10 +24,6 @@ import torch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from vare import mlxlm_1912_repo_task as task  # noqa: E402
-from vare.verifier_integrity_reports import (  # noqa: E402
-    VerifierReportIntegrityError,
-    validate_candidate_grade_report,
-)
 
 PROTOCOL_PATH = ROOT / "protocols/verifier_integrity_policy_gradient_v1.json"
 LOCK_PATH = ROOT / "protocols/verifier_integrity_policy_gradient_v1.lock.json"
@@ -53,6 +50,50 @@ def sha256_bytes(data: bytes) -> str:
 
 def sha256_file(path: Path) -> str:
     return sha256_bytes(path.read_bytes())
+
+
+def validate_candidate_grade_report(
+    report: Any, expected_case_count: int
+) -> tuple[list[dict[str, Any]], bool]:
+    """Reject grader transport/protocol failures before producing a reward."""
+    if type(expected_case_count) is not int or expected_case_count <= 0:
+        raise ExperimentStop("expected grader case count must be positive")
+    if not isinstance(report, Mapping):
+        raise ExperimentStop("grader report is not a mapping")
+    cases = report.get("cases")
+    if not isinstance(cases, list) or len(cases) != expected_case_count:
+        actual = len(cases) if isinstance(cases, list) else "non-list"
+        raise ExperimentStop(
+            f"grader returned {actual} cases; expected {expected_case_count}"
+        )
+    seen_ids: set[str] = set()
+    for index, case in enumerate(cases):
+        if not isinstance(case, Mapping):
+            raise ExperimentStop(f"grader case {index} is not a mapping")
+        case_id = case.get("case_id")
+        if not isinstance(case_id, str) or not case_id or case_id in seen_ids:
+            raise ExperimentStop(f"grader case {index} has a missing or duplicate id")
+        seen_ids.add(case_id)
+        passed = case.get("passed")
+        if type(passed) is not bool:
+            raise ExperimentStop(f"grader case {case_id} has no boolean outcome")
+        if "failure" not in case:
+            raise ExperimentStop(f"grader case {case_id} has no failure category")
+        failure = case["failure"]
+        if failure not in (None, "wrong_output"):
+            raise ExperimentStop(
+                f"grader case {case_id} has non-scorable failure: {failure!r}"
+            )
+        if passed != (failure is None):
+            raise ExperimentStop(
+                f"grader case {case_id} outcome conflicts with its failure category"
+            )
+    task_passed = report.get("passed")
+    if type(task_passed) is not bool or task_passed != all(
+        case["passed"] for case in cases
+    ):
+        raise ExperimentStop("task outcome conflicts with grader case outcomes")
+    return [dict(case) for case in cases], task_passed
 
 
 def load_frozen_inputs() -> tuple[dict[str, Any], dict[str, Any]]:
@@ -214,10 +255,7 @@ def grade_action(
     finally:
         task.verify_protocol_v4 = original_verifier
     expected_cases = protocol["task"]["trusted_case_count"]
-    try:
-        cases, task_passed = validate_candidate_grade_report(report, expected_cases)
-    except VerifierReportIntegrityError as exc:
-        raise ExperimentStop(f"grader report cannot be scored: {exc}") from exc
+    cases, task_passed = validate_candidate_grade_report(report, expected_cases)
     return {
         "sequence": sequence,
         "action_id": action_id,

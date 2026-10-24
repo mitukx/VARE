@@ -8,11 +8,6 @@ from unittest.mock import patch
 
 import pytest
 
-from vare.verifier_integrity_reports import (
-    VerifierReportIntegrityError,
-    validate_candidate_grade_report,
-)
-
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -76,20 +71,22 @@ def test_wrong_output_remains_a_valid_zero_reward(monkeypatch):
 
 @pytest.mark.parametrize("failure", ["missing_result", "malformed_result"])
 def test_transport_and_protocol_failures_abort_before_reward(monkeypatch, failure):
-    with pytest.raises(RuntimeError, match="grader report cannot be scored"):
+    with pytest.raises(RuntimeError, match="non-scorable failure"):
         _grade(monkeypatch, _report([None, failure]))
 
 
 def test_report_validator_rejects_inconsistent_case_and_task_outcomes():
+    runner = _load_runner()
     report = _report([None, "wrong_output"])
     report["passed"] = True
-    with pytest.raises(VerifierReportIntegrityError, match="task outcome conflicts"):
-        validate_candidate_grade_report(report, 2)
+    with pytest.raises(runner.ExperimentStop, match="task outcome conflicts"):
+        runner.validate_candidate_grade_report(report, 2)
 
 
 def test_report_validator_rejects_wrong_case_count():
-    with pytest.raises(VerifierReportIntegrityError, match="expected 2"):
-        validate_candidate_grade_report(_report([None]), 2)
+    runner = _load_runner()
+    with pytest.raises(runner.ExperimentStop, match="expected 2"):
+        runner.validate_candidate_grade_report(_report([None]), 2)
 
 
 def test_historical_v1_runner_fails_preflight_after_prospective_guard():
