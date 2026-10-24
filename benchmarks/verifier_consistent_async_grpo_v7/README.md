@@ -60,6 +60,10 @@ held-out evaluation, or crash-recovery case started, so this run provides no
 VARE comparison or coding-capability result. Preserve the run and do not
 resample it or relax the stop condition.
 
+The sole started synchronous arm recorded verifier v1 for every candidate;
+the protocol's named v0-to-v1 transition was not exercised. The zero
+per-group disagreement counts therefore do not demonstrate drift handling.
+
 The report is retained at
 [`pilot-stop-audit-v1.json`](pilot-stop-audit-v1.json); its script, protocol,
 runner, and raw-run inventory are bound in

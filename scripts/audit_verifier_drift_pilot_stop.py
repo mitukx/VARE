@@ -121,6 +121,13 @@ def audit(run: Path, protocol_path: Path, runner_path: Path) -> dict:
     require([row["reward_degenerate"] for row in group_reports] == [False, False, True]
             and group_reports[2]["reward_vector"] == [0.0] * 8,
             "observed degeneracy does not match the recorded stop reason")
+    observed_verifier_versions = sorted({
+        member["verifier_version"]
+        for group in raw["groups"]
+        for member in group["members"]
+    })
+    require(observed_verifier_versions == [1],
+            "partial sync pilot unexpectedly includes a verifier transition")
 
     events = [json.loads(line) for line in (arm_dir / "events.jsonl").read_text().splitlines()]
     promoted = [event for event in events if event.get("event") == "candidate_promoted"]
@@ -173,6 +180,8 @@ def audit(run: Path, protocol_path: Path, runner_path: Path) -> dict:
         "partial_run_status": root_progress["status"],
         "stop_reason": failure["message"],
         "scenario_arms_started": ["false_accept/sync"],
+        "observed_verifier_versions": observed_verifier_versions,
+        "named_drift_transition_observed": False,
         "groups_generated": 3,
         "model_completions": 24,
         "verifier_calls": 24,
@@ -193,6 +202,7 @@ def audit(run: Path, protocol_path: Path, runner_path: Path) -> dict:
         ],
         "claim_limit": (
             "The frozen synthetic pilot produced two genuine optimizer commits, then stopped on an all-zero third group. "
+            "The sole started sync arm used verifier v1 throughout, so the named v0-to-v1 transition was not exercised. "
             "The asynchronous verifier-drift comparison was not reached; this does not support a VARE improvement claim."),
     }
 

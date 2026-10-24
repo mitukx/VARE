@@ -5,7 +5,7 @@
     "policy-1": 1,
     "policy-2": 2
   },
-  "claim_limit": "The frozen synthetic pilot produced two genuine optimizer commits, then stopped on an all-zero third group. The asynchronous verifier-drift comparison was not reached; this does not support a VARE improvement claim.",
+  "claim_limit": "The frozen synthetic pilot produced two genuine optimizer commits, then stopped on an all-zero third group. The sole started sync arm used verifier v1 throughout, so the named v0-to-v1 transition was not exercised. The asynchronous verifier-drift comparison was not reached; this does not support a VARE improvement claim.",
   "decision": "NO_GO_FOR_ASYNC_COMPARISON",
   "effective_trajectories_consumed": 16,
   "groups": [
@@ -99,12 +99,16 @@
   ],
   "groups_generated": 3,
   "model_completions": 24,
+  "named_drift_transition_observed": false,
   "not_measured": [
     "naive_async or VARE async arms",
     "stale policy/verifier queue admission",
     "held-out quality",
     "SIGKILL recovery",
     "coding-task performance"
+  ],
+  "observed_verifier_versions": [
+    1
   ],
   "partial_run_status": "RUNNING",
   "protocol_schema": "vare.verifier-drift-scenarios.v7.3",
