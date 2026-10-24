@@ -1,5 +1,25 @@
 # Calibration evidence
 
+## Installed dependency source and bytecode can create false coding-task rewards — 2026-10-24
+
+On one selected MLX-LM Development task, explicit no-fix delegates to the
+installed fixed source and compiled bytecode pass the grader in the original
+image. A source-only correction leaves the stale bytecode route open; the
+fully sanitized image blocks both while retaining known-fix acceptance. A
+second task does not reproduce target-package artifact delegation, but a
+post-run audit finds an accessible equivalent Mimo implementation in its
+transitive Transformers source and bytecode. A preregistered 3,000,000-choice
+Thompson-sampling replay illustrates how those fixed rewards can select invalid
+delegates; it is simulation only, with no model or optimizer update. This is a
+two-task purposive pilot, not a prevalence or capability estimate. The closest
+current precedent includes `.pyc` deletion and clean-container regrading in
+SWE-Bench Pro V2, so novelty beyond this narrow paired measurement is not
+established. See the [report](verifier-integrity-dependency-artifacts-v1-report.md),
+[frozen protocols](../protocols/verifier_integrity_pilot_v3.json),
+[raw image results](../results/verifier_integrity_pilot_v1/run3/),
+[second-task audit](../results/verifier_integrity_pilot_v4/run1/), and
+[bandit replay](../results/verifier_integrity_bandit_v1/run2/).
+
 ## Async trajectory worker SQLite serialization — 2026-10-18
 
 On Apple M1 Pro / Python 3.12.12, a locked paused-reader test fails 3/3 before
