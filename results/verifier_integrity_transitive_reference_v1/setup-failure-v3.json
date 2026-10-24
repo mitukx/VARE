@@ -1,0 +1,20 @@
+{
+  "attempt": "run2-candidate-patch-directory",
+  "candidate_files_written": 0,
+  "disposition": "Preserved all three completed access probes. The corrected runner reuses their frozen hashes and spends zero further access-probe calls before candidate grading.",
+  "failure": "FileExistsError while candidate workspace packaging attempted to create an already-created candidate-patches directory.",
+  "grader_calls": 0,
+  "model_calls": 0,
+  "observed_at_utc": "2026-10-24T08:55:55.935503+00:00",
+  "optimizer_steps": 0,
+  "pre_registered_commit": "b095edb3",
+  "pre_registered_protocol_sha256": "cf1078a1d65cfacc0d5b0383ce0068b86788f0c7a87adcb9372ac8c9404e542c",
+  "raw_probe_paths": [
+    "results/verifier_integrity_transitive_reference_v1/run1/access-probes/7b00ef0fe1d19123.stdout.log",
+    "results/verifier_integrity_transitive_reference_v1/run2/access-probes/a377e54dc56cbbf2.stdout.log",
+    "results/verifier_integrity_transitive_reference_v1/run2/access-probes/2dcf69441110ee64.stdout.log"
+  ],
+  "read_only_probe_calls_this_attempt": 2,
+  "schema": "vare.verifier-integrity-transitive-reference-setup-failure.v1",
+  "total_read_only_probe_calls_including_reuse": 3
+}

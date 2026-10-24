@@ -217,7 +217,6 @@ def make_workspaces(
     base_root.mkdir()
     git_archive_package(source_repo, base_root)
     (base_root / "mlx_lm" / "_version.py").write_text("__version__ = '0.32.0'\n", encoding="utf-8")
-    (output / "candidate-patches").mkdir()
     metadata: dict[str, dict[str, Any]] = {}
     for name, (target_bytes, description) in candidates.items():
         target_sha = sha256_bytes(target_bytes)
@@ -355,8 +354,8 @@ def main() -> int:
     new_probe_calls = 0
     historical = historical_controls(protocol)
     for image_name, image in protocol["images"].items():
-        reuse = protocol.get("preflight_probe_reuse")
-        if reuse and image_name == reuse["image_name"]:
+        reuse = protocol.get("preflight_probe_reuse", {}).get(image_name)
+        if reuse:
             raw_path = ROOT / reuse["stdout_path"]
             if sha256_file(raw_path) != reuse["stdout_sha256"]:
                 raise RuntimeError("preflight probe evidence differs from its frozen hash")
