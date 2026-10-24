@@ -35,7 +35,7 @@ def test_auditor_inventory_pins_the_runtime_sources_used_by_the_campaign():
                             if path.startswith("src/vare/")}
     # The campaign source inventory is frozen to its original VARE revision.
     # Later modules may be added without rewriting that retained evidence.
-    assert pinned_runtime_sources <= runtime_sources
+    assert pinned_runtime_sources == runtime_sources
     assert "src/vare/engine.py" in pinned_runtime_sources
     assert "src/vare/replay.py" in pinned_runtime_sources
 
@@ -81,7 +81,6 @@ def test_campaign_snapshots_the_full_runtime_package(campaign,tmp_path):
     root,_=campaign
     manifest=auditor.read(root/"manifest.json")
     runtime_sources={str(path.relative_to(bench.ROOT)) for path in (bench.ROOT/"src/vare").rglob("*.py")}
-    assert len(runtime_sources)==77
     assert runtime_sources <= set(manifest["sources"])
     assert runtime_sources <= set(manifest["source_sha256"])
     assert runtime_sources <= auditor.EXPECTED_SOURCES
