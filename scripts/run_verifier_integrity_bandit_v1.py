@@ -202,10 +202,13 @@ def main() -> int:
                 f"{counts['known-fix']},{counts['delegate-installed-source']},{counts['delegate-compiled-bytecode']}"
             )
     (output / "seed-results.csv").write_text("\n".join(csv_lines) + "\n")
-    evidence = {
-        str(path.relative_to(ROOT)): sha256(ROOT / path)
-        for path in (IMPLEMENTATION, Path("protocols/verifier_integrity_bandit_v1.json"), Path("protocols/verifier_integrity_bandit_v1.lock.json"), *[Path(x) for x in protocol["source_evidence_sha256"]])
-    }
+    evidence_paths = (
+        IMPLEMENTATION,
+        Path("protocols/verifier_integrity_bandit_v1.json"),
+        Path("protocols/verifier_integrity_bandit_v1.lock.json"),
+        *[Path(x) for x in protocol["source_evidence_sha256"]],
+    )
+    evidence = {path.as_posix(): sha256(ROOT / path) for path in evidence_paths}
     (output / "run-manifest.json").write_text(json.dumps({"evidence_sha256": evidence, "summary_sha256": sha256(output / "summary.json"), "seed_results_sha256": sha256(output / "seed-results.csv")}, indent=2, sort_keys=True) + "\n")
     print(json.dumps({k: v for k, v in summary.items() if k != "monte_carlo_seed_summaries"}, indent=2, sort_keys=True))
     return 0
