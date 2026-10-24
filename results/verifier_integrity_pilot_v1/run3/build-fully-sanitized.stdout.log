@@ -1,0 +1,16 @@
+Sending build context to Docker daemon  72.19kB
+
+Step 1/4 : FROM vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7
+ ---> a377e54dc56c
+Step 2/4 : COPY candidates/baseline.py /tmp/vare-sanitize/sample_utils.py
+ ---> Using cache
+ ---> b55cab5c0aa6
+Step 3/4 : COPY images/sanitized/sanitize_sample_utils.py /tmp/vare-sanitize/sanitize_sample_utils.py
+ ---> 40a938bac71f
+Step 4/4 : RUN ["python", "/tmp/vare-sanitize/sanitize_sample_utils.py"]
+ ---> Running in 2cef5b676454
+{"python_source_files_preserved": 187, "record_sha256": "1f76204c64eb61fb33e698dc4d1199187e89a443bdbaf87b8b415423f4fe3ee5", "removed_bytecode_bytes": 2897545, "removed_bytecode_files": 187, "target_sha256": "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2", "wheel_caches_removed": []}
+ ---> Removed intermediate container 2cef5b676454
+ ---> 7b00ef0fe1d1
+Successfully built 7b00ef0fe1d1
+Successfully tagged vare-mlxlm1912-sanitized:integrity-pilot-v1

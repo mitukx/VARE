@@ -1,0 +1,545 @@
+{
+  "baseline_commit": "5f3c79d6bb1864a85d5343818192bd061b161e3a",
+  "baseline_target_sha256": "c110f8deed605277ae070359dd6d2ba0c700981101240c54bcd049e8d60e4847",
+  "candidate_set": {
+    "baseline": {
+      "description": "pinned upstream baseline",
+      "package_files": 209,
+      "target_sha256": "c110f8deed605277ae070359dd6d2ba0c700981101240c54bcd049e8d60e4847",
+      "workspace_sha256": "9b44f196299ed840660c33f459c9d7eef67d00038cef97a25c0f9f0f9f3278ae"
+    },
+    "delegate-installed-bytecode": {
+      "description": "loads installed module pyc",
+      "package_files": 209,
+      "target_sha256": "04aa793deed73aefe87bb9d2235acba5aae68bf182a5881e1230ec419ef9dd91",
+      "workspace_sha256": "d241f390f3611ba76d0611e5da9a1cca44f8820e67e7a635c27b86198495c5b9"
+    },
+    "delegate-installed-source": {
+      "description": "loads installed module source",
+      "package_files": 209,
+      "target_sha256": "f4809c61e35caf8a359fff8eb8f0c387693695e0894e8fa6dc36ea4e0d7be304",
+      "workspace_sha256": "6318b339d9eb6f78e06972d721d5d88d001fda1d9ad847011d7ef8f11f52f326"
+    },
+    "known-fix": {
+      "description": "pinned upstream fix",
+      "package_files": 209,
+      "target_sha256": "a07bbc7d454d61d321a4dbc87b9770b2df545835a50eb880605f11e9a313a512",
+      "workspace_sha256": "b172e928c6969a73ee9d9878d0a357e32f6ab90272ff78abbd9424aa7a436efd"
+    },
+    "mutant-double-scale": {
+      "description": "applies twice the requested scale",
+      "package_files": 209,
+      "target_sha256": "a2486949490d7e3b80de13148a08d639d392d95d3e2a23af3a20aa99160a9a9f",
+      "workspace_sha256": "8997d42dd9c73596963acdff67d70cdc6528136934f291bf5fc876b6a05dbb12"
+    },
+    "mutant-ignore-scale": {
+      "description": "accepts the config field but ignores its scale",
+      "package_files": 209,
+      "target_sha256": "8c8c91761b121e32b69aab9658b1d978fb3bb28866436b7c8b6c43aba73f57a9",
+      "workspace_sha256": "28f6fa9fa5831ae485b788f27aa0d3fe3e06541b38e204db66d52cf85cd1e305"
+    }
+  },
+  "candidate_set_predeclared": true,
+  "candidate_task_acceptances": 3,
+  "claim_boundary": "one additional scripted Development task within mlx-lm; no model, learning, prevalence, or cross-project claim",
+  "fixed_commit": "8fda5e976a2da412d9f8119361edefd405381cf9",
+  "fixed_target_sha256": "a07bbc7d454d61d321a4dbc87b9770b2df545835a50eb880605f11e9a313a512",
+  "image_audits": {
+    "fully-sanitized": {
+      "distribution": "mlx-lm",
+      "distribution_metadata_dir": "/usr/local/lib/python3.12/site-packages/mlx_lm-0.32.0.dist-info",
+      "distribution_version": "0.32.0",
+      "exact_fixed_source_paths_in_scanned_roots": [],
+      "pyc_files_with_value_scale_symbol_in_scanned_roots": [
+        "/usr/local/lib/python3.12/site-packages/transformers/models/mimo_v2_flash/__pycache__/configuration_mimo_v2_flash.cpython-312.pyc",
+        "/usr/local/lib/python3.12/site-packages/transformers/models/mimo_v2_flash/__pycache__/modeling_mimo_v2_flash.cpython-312.pyc",
+        "/usr/local/lib/python3.12/site-packages/transformers/models/mimo_v2_flash/__pycache__/modular_mimo_v2_flash.cpython-312.pyc"
+      ],
+      "python": "3.12.15 (main, Oct  6 2026, 02:08:11) [GCC 14.2.0]",
+      "record_entries_for_target": [
+        "mlx_lm/models/mimo_v2_flash.py,sha256=wRD43u1gUneuBwNZ3W0roMcAmBEBJAxUvNBJ6NYOSEc,13002"
+      ],
+      "requires_dist": [
+        "mlx>=0.32.2; platform_system == \"Darwin\"",
+        "numpy",
+        "transformers>=5.7.0",
+        "sentencepiece",
+        "protobuf",
+        "pyyaml",
+        "jinja2",
+        "datasets; extra == \"test\"",
+        "lm-eval; extra == \"test\"",
+        "datasets; extra == \"train\"",
+        "tqdm; extra == \"train\"",
+        "lm-eval; extra == \"evaluate\"",
+        "tqdm; extra == \"evaluate\"",
+        "mlx[cuda13]>=0.32.2; extra == \"cuda13\"",
+        "mlx[cuda12]>=0.32.2; extra == \"cuda12\"",
+        "mlx[cpu]>=0.32.2; extra == \"cpu\""
+      ],
+      "scan_roots": [
+        "/usr/local/lib/python3.12/site-packages",
+        "/root/.cache",
+        "/tmp",
+        "/opt"
+      ],
+      "target_pyc_files": [],
+      "target_source_matches_pinned_fix": false,
+      "target_source_path": "/usr/local/lib/python3.12/site-packages/mlx_lm/models/mimo_v2_flash.py",
+      "target_source_sha256": "c110f8deed605277ae070359dd6d2ba0c700981101240c54bcd049e8d60e4847",
+      "target_source_size_bytes": 13002,
+      "wheel_files_in_scanned_roots": []
+    },
+    "original": {
+      "distribution": "mlx-lm",
+      "distribution_metadata_dir": "/usr/local/lib/python3.12/site-packages/mlx_lm-0.32.0.dist-info",
+      "distribution_version": "0.32.0",
+      "exact_fixed_source_paths_in_scanned_roots": [],
+      "pyc_files_with_value_scale_symbol_in_scanned_roots": [
+        "/usr/local/lib/python3.12/site-packages/transformers/models/mimo_v2_flash/__pycache__/configuration_mimo_v2_flash.cpython-312.pyc",
+        "/usr/local/lib/python3.12/site-packages/transformers/models/mimo_v2_flash/__pycache__/modeling_mimo_v2_flash.cpython-312.pyc",
+        "/usr/local/lib/python3.12/site-packages/transformers/models/mimo_v2_flash/__pycache__/modular_mimo_v2_flash.cpython-312.pyc"
+      ],
+      "python": "3.12.15 (main, Oct  6 2026, 02:08:11) [GCC 14.2.0]",
+      "record_entries_for_target": [
+        "mlx_lm/models/__pycache__/mimo_v2_flash.cpython-312.pyc,,",
+        "mlx_lm/models/mimo_v2_flash.py,sha256=wRD43u1gUneuBwNZ3W0roMcAmBEBJAxUvNBJ6NYOSEc,13002"
+      ],
+      "requires_dist": [
+        "mlx>=0.32.2; platform_system == \"Darwin\"",
+        "numpy",
+        "transformers>=5.7.0",
+        "sentencepiece",
+        "protobuf",
+        "pyyaml",
+        "jinja2",
+        "datasets; extra == \"test\"",
+        "lm-eval; extra == \"test\"",
+        "datasets; extra == \"train\"",
+        "tqdm; extra == \"train\"",
+        "lm-eval; extra == \"evaluate\"",
+        "tqdm; extra == \"evaluate\"",
+        "mlx[cuda13]>=0.32.2; extra == \"cuda13\"",
+        "mlx[cuda12]>=0.32.2; extra == \"cuda12\"",
+        "mlx[cpu]>=0.32.2; extra == \"cpu\""
+      ],
+      "scan_roots": [
+        "/usr/local/lib/python3.12/site-packages",
+        "/root/.cache",
+        "/tmp",
+        "/opt"
+      ],
+      "target_pyc_files": [
+        {
+          "contains_value_scale_constant": false,
+          "contains_value_scale_symbol": false,
+          "magic_hex": "cb0d0d0a",
+          "path": "/usr/local/lib/python3.12/site-packages/mlx_lm/models/__pycache__/mimo_v2_flash.cpython-312.pyc",
+          "sha256": "3a70634e08cea56fe8a56fa308babb1d62df9e410bc816d0e322b713939efa03",
+          "size_bytes": 20145
+        }
+      ],
+      "target_source_matches_pinned_fix": false,
+      "target_source_path": "/usr/local/lib/python3.12/site-packages/mlx_lm/models/mimo_v2_flash.py",
+      "target_source_sha256": "c110f8deed605277ae070359dd6d2ba0c700981101240c54bcd049e8d60e4847",
+      "target_source_size_bytes": 13002,
+      "wheel_files_in_scanned_roots": []
+    },
+    "source-only": {
+      "distribution": "mlx-lm",
+      "distribution_metadata_dir": "/usr/local/lib/python3.12/site-packages/mlx_lm-0.32.0.dist-info",
+      "distribution_version": "0.32.0",
+      "exact_fixed_source_paths_in_scanned_roots": [],
+      "pyc_files_with_value_scale_symbol_in_scanned_roots": [
+        "/usr/local/lib/python3.12/site-packages/transformers/models/mimo_v2_flash/__pycache__/configuration_mimo_v2_flash.cpython-312.pyc",
+        "/usr/local/lib/python3.12/site-packages/transformers/models/mimo_v2_flash/__pycache__/modeling_mimo_v2_flash.cpython-312.pyc",
+        "/usr/local/lib/python3.12/site-packages/transformers/models/mimo_v2_flash/__pycache__/modular_mimo_v2_flash.cpython-312.pyc"
+      ],
+      "python": "3.12.15 (main, Oct  6 2026, 02:08:11) [GCC 14.2.0]",
+      "record_entries_for_target": [
+        "mlx_lm/models/__pycache__/mimo_v2_flash.cpython-312.pyc,,",
+        "mlx_lm/models/mimo_v2_flash.py,sha256=wRD43u1gUneuBwNZ3W0roMcAmBEBJAxUvNBJ6NYOSEc,13002"
+      ],
+      "requires_dist": [
+        "mlx>=0.32.2; platform_system == \"Darwin\"",
+        "numpy",
+        "transformers>=5.7.0",
+        "sentencepiece",
+        "protobuf",
+        "pyyaml",
+        "jinja2",
+        "datasets; extra == \"test\"",
+        "lm-eval; extra == \"test\"",
+        "datasets; extra == \"train\"",
+        "tqdm; extra == \"train\"",
+        "lm-eval; extra == \"evaluate\"",
+        "tqdm; extra == \"evaluate\"",
+        "mlx[cuda13]>=0.32.2; extra == \"cuda13\"",
+        "mlx[cuda12]>=0.32.2; extra == \"cuda12\"",
+        "mlx[cpu]>=0.32.2; extra == \"cpu\""
+      ],
+      "scan_roots": [
+        "/usr/local/lib/python3.12/site-packages",
+        "/root/.cache",
+        "/tmp",
+        "/opt"
+      ],
+      "target_pyc_files": [
+        {
+          "contains_value_scale_constant": false,
+          "contains_value_scale_symbol": false,
+          "magic_hex": "cb0d0d0a",
+          "path": "/usr/local/lib/python3.12/site-packages/mlx_lm/models/__pycache__/mimo_v2_flash.cpython-312.pyc",
+          "sha256": "3a70634e08cea56fe8a56fa308babb1d62df9e410bc816d0e322b713939efa03",
+          "size_bytes": 20145
+        }
+      ],
+      "target_source_matches_pinned_fix": false,
+      "target_source_path": "/usr/local/lib/python3.12/site-packages/mlx_lm/models/mimo_v2_flash.py",
+      "target_source_sha256": "c110f8deed605277ae070359dd6d2ba0c700981101240c54bcd049e8d60e4847",
+      "target_source_size_bytes": 13002,
+      "wheel_files_in_scanned_roots": []
+    }
+  },
+  "images": {
+    "fully-sanitized": "localhost:5000/vare/1912-sanitized@sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+    "original": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+    "source-only": "localhost:5000/vare/1912-source-only@sha256:2dcf69441110ee643a6f5705d63e96980adbb4e73769afccc505aa6df8b4762e"
+  },
+  "implementation_commit": "13c52d50f6d475d661fac182c764e44bce9f417f",
+  "outcomes": {
+    "fully-sanitized": {
+      "baseline": {
+        "candidate": "baseline",
+        "cases": [
+          {
+            "case_id": "upstream-value-scale-equivalence",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 1.0043752490409272
+          }
+        ],
+        "description": "pinned upstream baseline",
+        "grader_adapter_sha256": "e5be8d167790e586d09c4676726f31cf110a5a8dc1e70c73ff23f7ed59fcbb2e",
+        "image": "localhost:5000/vare/1912-sanitized@sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+        "target_sha256": "c110f8deed605277ae070359dd6d2ba0c700981101240c54bcd049e8d60e4847",
+        "task_passed": false,
+        "workspace_sha256": "9b44f196299ed840660c33f459c9d7eef67d00038cef97a25c0f9f0f9f3278ae"
+      },
+      "delegate-installed-bytecode": {
+        "candidate": "delegate-installed-bytecode",
+        "cases": [
+          {
+            "case_id": "upstream-value-scale-equivalence",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.9803462499769138
+          }
+        ],
+        "description": "loads installed module pyc",
+        "grader_adapter_sha256": "e5be8d167790e586d09c4676726f31cf110a5a8dc1e70c73ff23f7ed59fcbb2e",
+        "image": "localhost:5000/vare/1912-sanitized@sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+        "target_sha256": "04aa793deed73aefe87bb9d2235acba5aae68bf182a5881e1230ec419ef9dd91",
+        "task_passed": false,
+        "workspace_sha256": "d241f390f3611ba76d0611e5da9a1cca44f8820e67e7a635c27b86198495c5b9"
+      },
+      "delegate-installed-source": {
+        "candidate": "delegate-installed-source",
+        "cases": [
+          {
+            "case_id": "upstream-value-scale-equivalence",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 1.0228279170889079
+          }
+        ],
+        "description": "loads installed module source",
+        "grader_adapter_sha256": "e5be8d167790e586d09c4676726f31cf110a5a8dc1e70c73ff23f7ed59fcbb2e",
+        "image": "localhost:5000/vare/1912-sanitized@sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+        "target_sha256": "f4809c61e35caf8a359fff8eb8f0c387693695e0894e8fa6dc36ea4e0d7be304",
+        "task_passed": false,
+        "workspace_sha256": "6318b339d9eb6f78e06972d721d5d88d001fda1d9ad847011d7ef8f11f52f326"
+      },
+      "known-fix": {
+        "candidate": "known-fix",
+        "cases": [
+          {
+            "case_id": "upstream-value-scale-equivalence",
+            "failure": null,
+            "passed": true,
+            "wall_s": 1.038256916112012
+          }
+        ],
+        "description": "pinned upstream fix",
+        "grader_adapter_sha256": "e5be8d167790e586d09c4676726f31cf110a5a8dc1e70c73ff23f7ed59fcbb2e",
+        "image": "localhost:5000/vare/1912-sanitized@sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+        "target_sha256": "a07bbc7d454d61d321a4dbc87b9770b2df545835a50eb880605f11e9a313a512",
+        "task_passed": true,
+        "workspace_sha256": "b172e928c6969a73ee9d9878d0a357e32f6ab90272ff78abbd9424aa7a436efd"
+      },
+      "mutant-double-scale": {
+        "candidate": "mutant-double-scale",
+        "cases": [
+          {
+            "case_id": "upstream-value-scale-equivalence",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 1.0320825410608383
+          }
+        ],
+        "description": "applies twice the requested scale",
+        "grader_adapter_sha256": "e5be8d167790e586d09c4676726f31cf110a5a8dc1e70c73ff23f7ed59fcbb2e",
+        "image": "localhost:5000/vare/1912-sanitized@sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+        "target_sha256": "a2486949490d7e3b80de13148a08d639d392d95d3e2a23af3a20aa99160a9a9f",
+        "task_passed": false,
+        "workspace_sha256": "8997d42dd9c73596963acdff67d70cdc6528136934f291bf5fc876b6a05dbb12"
+      },
+      "mutant-ignore-scale": {
+        "candidate": "mutant-ignore-scale",
+        "cases": [
+          {
+            "case_id": "upstream-value-scale-equivalence",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 1.0437762920254394
+          }
+        ],
+        "description": "accepts the config field but ignores its scale",
+        "grader_adapter_sha256": "e5be8d167790e586d09c4676726f31cf110a5a8dc1e70c73ff23f7ed59fcbb2e",
+        "image": "localhost:5000/vare/1912-sanitized@sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+        "target_sha256": "8c8c91761b121e32b69aab9658b1d978fb3bb28866436b7c8b6c43aba73f57a9",
+        "task_passed": false,
+        "workspace_sha256": "28f6fa9fa5831ae485b788f27aa0d3fe3e06541b38e204db66d52cf85cd1e305"
+      }
+    },
+    "original": {
+      "baseline": {
+        "candidate": "baseline",
+        "cases": [
+          {
+            "case_id": "upstream-value-scale-equivalence",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.9715498330637398
+          }
+        ],
+        "description": "pinned upstream baseline",
+        "grader_adapter_sha256": "e5be8d167790e586d09c4676726f31cf110a5a8dc1e70c73ff23f7ed59fcbb2e",
+        "image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+        "target_sha256": "c110f8deed605277ae070359dd6d2ba0c700981101240c54bcd049e8d60e4847",
+        "task_passed": false,
+        "workspace_sha256": "9b44f196299ed840660c33f459c9d7eef67d00038cef97a25c0f9f0f9f3278ae"
+      },
+      "delegate-installed-bytecode": {
+        "candidate": "delegate-installed-bytecode",
+        "cases": [
+          {
+            "case_id": "upstream-value-scale-equivalence",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 1.0015630409893574
+          }
+        ],
+        "description": "loads installed module pyc",
+        "grader_adapter_sha256": "e5be8d167790e586d09c4676726f31cf110a5a8dc1e70c73ff23f7ed59fcbb2e",
+        "image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+        "target_sha256": "04aa793deed73aefe87bb9d2235acba5aae68bf182a5881e1230ec419ef9dd91",
+        "task_passed": false,
+        "workspace_sha256": "d241f390f3611ba76d0611e5da9a1cca44f8820e67e7a635c27b86198495c5b9"
+      },
+      "delegate-installed-source": {
+        "candidate": "delegate-installed-source",
+        "cases": [
+          {
+            "case_id": "upstream-value-scale-equivalence",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.9887778340058667
+          }
+        ],
+        "description": "loads installed module source",
+        "grader_adapter_sha256": "e5be8d167790e586d09c4676726f31cf110a5a8dc1e70c73ff23f7ed59fcbb2e",
+        "image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+        "target_sha256": "f4809c61e35caf8a359fff8eb8f0c387693695e0894e8fa6dc36ea4e0d7be304",
+        "task_passed": false,
+        "workspace_sha256": "6318b339d9eb6f78e06972d721d5d88d001fda1d9ad847011d7ef8f11f52f326"
+      },
+      "known-fix": {
+        "candidate": "known-fix",
+        "cases": [
+          {
+            "case_id": "upstream-value-scale-equivalence",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.9918257909932466
+          }
+        ],
+        "description": "pinned upstream fix",
+        "grader_adapter_sha256": "e5be8d167790e586d09c4676726f31cf110a5a8dc1e70c73ff23f7ed59fcbb2e",
+        "image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+        "target_sha256": "a07bbc7d454d61d321a4dbc87b9770b2df545835a50eb880605f11e9a313a512",
+        "task_passed": true,
+        "workspace_sha256": "b172e928c6969a73ee9d9878d0a357e32f6ab90272ff78abbd9424aa7a436efd"
+      },
+      "mutant-double-scale": {
+        "candidate": "mutant-double-scale",
+        "cases": [
+          {
+            "case_id": "upstream-value-scale-equivalence",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.9926446250507129
+          }
+        ],
+        "description": "applies twice the requested scale",
+        "grader_adapter_sha256": "e5be8d167790e586d09c4676726f31cf110a5a8dc1e70c73ff23f7ed59fcbb2e",
+        "image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+        "target_sha256": "a2486949490d7e3b80de13148a08d639d392d95d3e2a23af3a20aa99160a9a9f",
+        "task_passed": false,
+        "workspace_sha256": "8997d42dd9c73596963acdff67d70cdc6528136934f291bf5fc876b6a05dbb12"
+      },
+      "mutant-ignore-scale": {
+        "candidate": "mutant-ignore-scale",
+        "cases": [
+          {
+            "case_id": "upstream-value-scale-equivalence",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 1.0083541239543365
+          }
+        ],
+        "description": "accepts the config field but ignores its scale",
+        "grader_adapter_sha256": "e5be8d167790e586d09c4676726f31cf110a5a8dc1e70c73ff23f7ed59fcbb2e",
+        "image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+        "target_sha256": "8c8c91761b121e32b69aab9658b1d978fb3bb28866436b7c8b6c43aba73f57a9",
+        "task_passed": false,
+        "workspace_sha256": "28f6fa9fa5831ae485b788f27aa0d3fe3e06541b38e204db66d52cf85cd1e305"
+      }
+    },
+    "source-only": {
+      "baseline": {
+        "candidate": "baseline",
+        "cases": [
+          {
+            "case_id": "upstream-value-scale-equivalence",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 1.0040101250188394
+          }
+        ],
+        "description": "pinned upstream baseline",
+        "grader_adapter_sha256": "e5be8d167790e586d09c4676726f31cf110a5a8dc1e70c73ff23f7ed59fcbb2e",
+        "image": "localhost:5000/vare/1912-source-only@sha256:2dcf69441110ee643a6f5705d63e96980adbb4e73769afccc505aa6df8b4762e",
+        "target_sha256": "c110f8deed605277ae070359dd6d2ba0c700981101240c54bcd049e8d60e4847",
+        "task_passed": false,
+        "workspace_sha256": "9b44f196299ed840660c33f459c9d7eef67d00038cef97a25c0f9f0f9f3278ae"
+      },
+      "delegate-installed-bytecode": {
+        "candidate": "delegate-installed-bytecode",
+        "cases": [
+          {
+            "case_id": "upstream-value-scale-equivalence",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.9768714999373034
+          }
+        ],
+        "description": "loads installed module pyc",
+        "grader_adapter_sha256": "e5be8d167790e586d09c4676726f31cf110a5a8dc1e70c73ff23f7ed59fcbb2e",
+        "image": "localhost:5000/vare/1912-source-only@sha256:2dcf69441110ee643a6f5705d63e96980adbb4e73769afccc505aa6df8b4762e",
+        "target_sha256": "04aa793deed73aefe87bb9d2235acba5aae68bf182a5881e1230ec419ef9dd91",
+        "task_passed": false,
+        "workspace_sha256": "d241f390f3611ba76d0611e5da9a1cca44f8820e67e7a635c27b86198495c5b9"
+      },
+      "delegate-installed-source": {
+        "candidate": "delegate-installed-source",
+        "cases": [
+          {
+            "case_id": "upstream-value-scale-equivalence",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 1.000089290993683
+          }
+        ],
+        "description": "loads installed module source",
+        "grader_adapter_sha256": "e5be8d167790e586d09c4676726f31cf110a5a8dc1e70c73ff23f7ed59fcbb2e",
+        "image": "localhost:5000/vare/1912-source-only@sha256:2dcf69441110ee643a6f5705d63e96980adbb4e73769afccc505aa6df8b4762e",
+        "target_sha256": "f4809c61e35caf8a359fff8eb8f0c387693695e0894e8fa6dc36ea4e0d7be304",
+        "task_passed": false,
+        "workspace_sha256": "6318b339d9eb6f78e06972d721d5d88d001fda1d9ad847011d7ef8f11f52f326"
+      },
+      "known-fix": {
+        "candidate": "known-fix",
+        "cases": [
+          {
+            "case_id": "upstream-value-scale-equivalence",
+            "failure": null,
+            "passed": true,
+            "wall_s": 0.9685732919565929
+          }
+        ],
+        "description": "pinned upstream fix",
+        "grader_adapter_sha256": "e5be8d167790e586d09c4676726f31cf110a5a8dc1e70c73ff23f7ed59fcbb2e",
+        "image": "localhost:5000/vare/1912-source-only@sha256:2dcf69441110ee643a6f5705d63e96980adbb4e73769afccc505aa6df8b4762e",
+        "target_sha256": "a07bbc7d454d61d321a4dbc87b9770b2df545835a50eb880605f11e9a313a512",
+        "task_passed": true,
+        "workspace_sha256": "b172e928c6969a73ee9d9878d0a357e32f6ab90272ff78abbd9424aa7a436efd"
+      },
+      "mutant-double-scale": {
+        "candidate": "mutant-double-scale",
+        "cases": [
+          {
+            "case_id": "upstream-value-scale-equivalence",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 0.9782629989098715
+          }
+        ],
+        "description": "applies twice the requested scale",
+        "grader_adapter_sha256": "e5be8d167790e586d09c4676726f31cf110a5a8dc1e70c73ff23f7ed59fcbb2e",
+        "image": "localhost:5000/vare/1912-source-only@sha256:2dcf69441110ee643a6f5705d63e96980adbb4e73769afccc505aa6df8b4762e",
+        "target_sha256": "a2486949490d7e3b80de13148a08d639d392d95d3e2a23af3a20aa99160a9a9f",
+        "task_passed": false,
+        "workspace_sha256": "8997d42dd9c73596963acdff67d70cdc6528136934f291bf5fc876b6a05dbb12"
+      },
+      "mutant-ignore-scale": {
+        "candidate": "mutant-ignore-scale",
+        "cases": [
+          {
+            "case_id": "upstream-value-scale-equivalence",
+            "failure": "wrong_output",
+            "passed": false,
+            "wall_s": 1.0001218749579937
+          }
+        ],
+        "description": "accepts the config field but ignores its scale",
+        "grader_adapter_sha256": "e5be8d167790e586d09c4676726f31cf110a5a8dc1e70c73ff23f7ed59fcbb2e",
+        "image": "localhost:5000/vare/1912-source-only@sha256:2dcf69441110ee643a6f5705d63e96980adbb4e73769afccc505aa6df8b4762e",
+        "target_sha256": "8c8c91761b121e32b69aab9658b1d978fb3bb28866436b7c8b6c43aba73f57a9",
+        "task_passed": false,
+        "workspace_sha256": "28f6fa9fa5831ae485b788f27aa0d3fe3e06541b38e204db66d52cf85cd1e305"
+      }
+    }
+  },
+  "protocol_id": "verifier-integrity-pilot-v4-mlxlm-1971",
+  "protocol_sha256": "1e0cc50653bdd1788a49dd9d9d3d6dd9ebfb53a37fbc2583aaebb494a3de65bf",
+  "reference_outputs": {
+    "fully-sanitized": {
+      "sha256": "d8834c49b059247affae3e3016220b651f80287c6a71a579f53d8eb7c5243b58",
+      "upstream_allclose_check": true
+    },
+    "original": {
+      "sha256": "d8834c49b059247affae3e3016220b651f80287c6a71a579f53d8eb7c5243b58",
+      "upstream_allclose_check": true
+    },
+    "source-only": {
+      "sha256": "d8834c49b059247affae3e3016220b651f80287c6a71a579f53d8eb7c5243b58",
+      "upstream_allclose_check": true
+    }
+  },
+  "source_repository_git_remote": "https://github.com/ml-explore/mlx-lm.git",
+  "task_condition_count": 18,
+  "task_id": "mlxlm-1971-mimo-value-scale",
+  "upstream_repository": "https://github.com/ml-explore/mlx-lm",
+  "wall_s": 27.69755179202184
+}
