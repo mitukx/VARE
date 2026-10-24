@@ -12,7 +12,7 @@ This is a **systems-mechanism result on a synthetic TinyStories fixture**. It is
 - Model: `roneneldan/TinyStories-1M`, revision `77f1b168e219585646439073245fe87e56b3023e`; CPU fp32, one thread, at most three generated tokens.
 - Each seed used three arms with 16 rollouts and 16 verifier calls per arm, eight-member GRPO batches, one actual AdamW update per trained arm, and four synthetic held-out prompts. The bounded async arm was serialized CPU execution; the queue overlapped only producer/verifier coroutines.
 - Seeds 82106 and 82107 were both eligible under the frozen pilot continuation rule. Earlier aborted seeds and their outcome data remain excluded.
-- Earlier independent audit and crash summary: [`pilot-audit-v2.json`](pilot-audit-v2.json) and [`sigkill-summary-v2.json`](sigkill-summary-v2.json). After independent code review, the corrected auditor replayed the retained two-seed/five-cutpoint bundle again. The committed [`final-independent-audit-v6.json`](final-independent-audit-v6.json) is byte-identical to `results/verifier_consistent_async_grpo_v6/audit-with-crash-replay-order-v6.json` (SHA-256 `fb5914e0f68cbcc815306eacbac709f0b0d40c92744bb73b05eed069a79768b8`). It independently replays every model update and reports all five process-recovery cases `PASS`, with exact model, Adam, CPU RNG, and module-mode matches. [`pilot-artifact-index-v2.json`](pilot-artifact-index-v2.json) indexes the original raw runs and manifests; indexes v3 and v4 preserve their successive audit inventories, with [`pilot-artifact-index-v4.json`](pilot-artifact-index-v4.json) binding the committed audit file and this report revision.
+- Earlier independent audit and crash summary: [`pilot-audit-v2.json`](pilot-audit-v2.json) and [`sigkill-summary-v2.json`](sigkill-summary-v2.json). The original committed [`final-independent-audit-v6.json`](final-independent-audit-v6.json) remains unchanged at SHA-256 `fb5914e0f68cbcc815306eacbac709f0b0d40c92744bb73b05eed069a79768b8`. A later review found that the corrected auditor required a crash bundle before it could validate the pilot-only continuation gate. The v4 correction fixes that preflight without changing outcomes or protocol. Its [`pilot-gate-audit-82106-correction-v4.json`](pilot-gate-audit-82106-correction-v4.json) independently audits retained seed 82106 and returns `expand_after_pilot=true`; the complete [`final-independent-audit-v6-correction-v4.json`](final-independent-audit-v6-correction-v4.json) re-audits both seeds and all five cuts. It is outcome-equivalent to the prior audit after excluding only the auditor-source and correction-manifest hashes, and retains exact model, Adam, CPU RNG, and module-mode matches. Neither audit reruns inference or training. [`pilot-artifact-index-v2.json`](pilot-artifact-index-v2.json) indexes the original raw runs and manifests; indexes v3–v5 preserve successive audit inventories, with [`pilot-artifact-index-v5.json`](pilot-artifact-index-v5.json) binding the current audit files and documentation.
 
 ## Two-seed verifier-drift results
 
@@ -61,7 +61,7 @@ The first crash attempt is retained and explicitly excluded: member-order traini
 
 ## Independent review corrections
 
-Independent review found that the recovery auditor accepted duplicate cutpoint records, both tensor-difference reducers could mask a later NaN, the structured crash artifact inventory was not parsed by the auditor, and the current-source reproduction instructions did not pass the frozen runner hash gate. These paths are now covered by focused regressions. The auditor requires the exact five-cutpoint set, rejects non-finite tensor differences, validates both manifest formats with path and size checks, and permits only missing disposable SQLite shared-memory or zero-byte WAL sidecars. The corrected auditor and matched-runner sources are bound by [`auditor-correction-v3.json`](auditor-correction-v3.json) and [`matched-runner-correction-v1.json`](matched-runner-correction-v1.json); the protocol and measured run outputs are unchanged.
+Independent review found duplicate-cutpoint acceptance, NaN-masking tensor reducers, structured crash-inventory parsing gaps, a frozen-auditor reproduction defect, and a pilot-gate preflight that incorrectly required a crash bundle. These paths now have focused regression coverage. The auditor requires the exact five-cutpoint set, rejects non-finite tensor differences, validates both manifest formats with path and size checks, permits only missing disposable SQLite shared-memory or zero-byte WAL sidecars, and validates the corrected crash-runner provenance without requiring a crash run during pilot gating. The hash-bound [`auditor-correction-v4.json`](auditor-correction-v4.json), [`matched-runner-correction-v1.json`](matched-runner-correction-v1.json), and [`crash-runner-correction-v3.json`](crash-runner-correction-v3.json) record the source corrections. The frozen protocol and measured model/run outputs are unchanged.
 
 Two distinct failed audit observations during this correction are preserved in `results/verifier_consistent_async_grpo_v6/audit-integrity-review-postmortem-v2.json`. The first exposed the structured-manifest parser gap; the second exposed SQLite's disposable sidecars in the exact inventory check. The final v6 audit passes after handling those cases explicitly and rejecting noncanonical paths, symlinks, and unmanifested temporary files.
 
@@ -76,7 +76,7 @@ git worktree add --detach ../vare-v6-frozen-execution \
 git worktree add --detach ../vare-v6-crash-harness \
   79b3d2fb324133d2a6fb738d431f97fcf7cde269
 git worktree add --detach ../vare-v6-corrected-auditor \
-  302b4707c036d0650732a064daaae10f5669e83f
+  73b62971b8fe4df6c8ec0a6fa80a67af3a784093
 
 (cd ../vare-v6-frozen-execution && python -S scripts/benchmark_verifier_consistent_async_grpo.py \
   --seed 82106 \
@@ -89,8 +89,9 @@ git worktree add --detach ../vare-v6-corrected-auditor \
   --model-dir ../tinystories-1m-pinned \
   --rvl-source ../rvl-pinned \
   --allow-partial \
-  --auditor-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v3.json \
+  --auditor-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v4.json \
   --runner-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/matched-runner-correction-v1.json \
+  --crash-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/crash-runner-correction-v3.json \
   --output results/v6-reproduction/audit-82106.json)
 
 # Only if audit-82106.json satisfies the frozen expand_after_pilot rule:
@@ -116,7 +117,7 @@ git worktree add --detach ../vare-v6-corrected-auditor \
   --crash-run ../vare-v6-crash-harness/results/v6-reproduction/crash-82106 \
   --model-dir ../tinystories-1m-pinned \
   --rvl-source ../rvl-pinned \
-  --auditor-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v3.json \
+  --auditor-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v4.json \
   --runner-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/matched-runner-correction-v1.json \
   --crash-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/crash-runner-correction-v3.json \
   --output results/v6-reproduction/audit-final.json)
