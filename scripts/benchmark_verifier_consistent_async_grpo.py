@@ -23,7 +23,7 @@ import time
 from statistics import fmean
 
 ROOT = Path(__file__).resolve().parents[1]
-PROTOCOL_PATH = ROOT / "benchmarks/verifier_consistent_async_grpo_v5/protocol.json"
+PROTOCOL_PATH = ROOT / "benchmarks/verifier_consistent_async_grpo_v6/protocol.json"
 PROMPT = "Choose one label for a story: a blue bird landed on the"
 GROUP_SIZE = 8
 
@@ -602,8 +602,12 @@ async def run(args) -> None:
             # policy selection and promotion. It trains once on the mixed group.
             eval_key = os.urandom(32)
             eval_set = [asdict(task) for task in hooks.eval_tasks]
+            naive_run_id = protocol["naive_control"]["evaluation_root_run_id_template"].format(
+                seed=args.seed)
+            require(len(naive_run_id) >= 16,
+                    "naive evaluation run ID is shorter than the trust-root minimum")
             root = EvidenceTrustRoot(
-                eval_key, protocol_sha, v0_sha, f"naive-run-{args.seed}",
+                eval_key, protocol_sha, v0_sha, naive_run_id,
                 sha256_json(eval_set), f"naive-nonce-{args.seed}-long", True)
             eval_records = []
             async def signed_eval(policy_id, _runtime=runtime, _root=root,
@@ -648,7 +652,7 @@ async def run(args) -> None:
                 "unused_group": ["fresh"],
             }
         else:
-            arm_run_id = f"varegrpo-v5-{arm}-{args.seed}"
+            arm_run_id = f"varegrpo-v6-{arm}-{args.seed}"
             require(len(arm_run_id) >= 16, "operator run ID is shorter than VARE trust-root minimum")
             store = TrajectoryStore.create(arm_out / "trajectories.sqlite",
                 run_id=arm_run_id, max_inflight=32)
