@@ -15,7 +15,7 @@
   },
   "correction": {
     "scope": "Checkpoint deserialization and continuation bookkeeping only.",
-    "change": "Allowlist torch.torch_version.TorchVersion inside torch.serialization.safe_globals while retaining weights_only=True; store future torch version metadata as str. Resume the existing seed-11 checkpoint without repeating its 20 training grades or five optimizer steps.",
+    "change": "Allowlist torch.torch_version.TorchVersion inside torch.serialization.safe_globals while retaining weights_only=True. The runner continues to serialize torch.__version__ metadata and uses the restricted allowlist when loading its checkpoints. Resume the existing seed-11 checkpoint without repeating its 20 training grades or five optimizer steps.",
     "unchanged": [
       "task, task split, candidates, image digests, reward definition, condition arms, seeds, training/evaluation counts, learning rate, optimizer, loss, statistical tests, primary metric, verifier, and resource limits",
       "the held-out evaluation remains the exact sanitized-image grader and the same 50-action budget for every seed-condition pair"
