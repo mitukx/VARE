@@ -1,0 +1,148 @@
+{
+  "arm_counts": {
+    "structured_replace": {
+      "complete": 1,
+      "planned": 2,
+      "started": 1,
+      "unrun": 1,
+      "verified_successes": 0
+    },
+    "unified_diff": {
+      "complete": 1,
+      "planned": 2,
+      "resource_aborted": 1,
+      "started": 2,
+      "verified_successes": 0
+    }
+  },
+  "attempt_level_primary_metric": {
+    "complete_independently_graded_attempts": 2,
+    "observed_rate": "0/2 complete attempts; planned 4-attempt sequence incomplete; not an arm comparison",
+    "verified_successes": 0
+  },
+  "attempts": [
+    {
+      "edit_format": "structured_replace",
+      "failure_class": [
+        "ChatML boundary-only outputs after initial source read",
+        "no edit tool call"
+      ],
+      "hidden_grader_passed": false,
+      "mlx_peak_memory_bytes": 5126457432,
+      "new_tokens": 98,
+      "public_test_runs": 0,
+      "public_tests_passed": false,
+      "source_edit_applied": false,
+      "status": "complete",
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "task_id": "mlx-lm-1980-pipeline-scales",
+      "tool_turns": 7,
+      "verified_success": false,
+      "wall_seconds": 53.587
+    },
+    {
+      "edit_format": "unified_diff",
+      "failure_class": [
+        "full-file source read",
+        "repeated full-file context caused 32751 prompt tokens against 32768 context limit",
+        "no edit applied"
+      ],
+      "hidden_grader_passed": false,
+      "mlx_peak_memory_bytes": 6779235368,
+      "new_tokens": 85,
+      "public_test_runs": 0,
+      "public_tests_passed": false,
+      "source_edit_applied": false,
+      "status": "complete",
+      "stop_reason": "context_budget_exhausted",
+      "task_id": "mlx-lm-1978-rotating-cache",
+      "tool_turns": 6,
+      "verified_success": false,
+      "wall_seconds": 381.39
+    },
+    {
+      "abort_reason": "swap_growth_above_abort_threshold",
+      "edit_format": "unified_diff",
+      "failure_class": [
+        "resource safety stop; no source edit; not a graded outcome"
+      ],
+      "hidden_grader_passed": null,
+      "new_tokens": null,
+      "public_tests_passed": null,
+      "raw_token_trajectory_available": false,
+      "source_edit_applied": false,
+      "status": "resource_aborted_before_agent_record_or_grading",
+      "swap_growth_bytes": 129171456,
+      "swap_growth_limit_bytes": 33554432,
+      "task_id": "mlx-lm-1980-pipeline-scales",
+      "tool_turns": null,
+      "verified_success": null,
+      "wall_seconds": 443.368,
+      "workspace_git_status_after": "",
+      "workspace_target_diff_bytes": 0,
+      "workspace_target_sha256_after": "936667c9f30c2b9451b8e3ce8ac7b9579b176605094d435fa5128f7ac272f281"
+    },
+    {
+      "edit_format": "structured_replace",
+      "status": "not_started_due_to_prior_resource_abort",
+      "task_id": "mlx-lm-1978-rotating-cache",
+      "verified_success": null
+    }
+  ],
+  "attempts_not_started": 1,
+  "attempts_started": 3,
+  "calibration_gate": {
+    "baseline_public_and_hidden_failures": 2,
+    "cases": 6,
+    "expected_results_met": true,
+    "known_fix_public_and_hidden_passes": 2,
+    "wrong_mutant_public_and_hidden_failures": 2
+  },
+  "claim_limit": "This is an incomplete two-task Development feasibility run. It shows two model-generated failures and one resource-aborted run; it does not establish a coding-agent capability gain, an interface treatment effect, held-out performance, or asynchronous-systems results.",
+  "complete_independent_outcomes": 2,
+  "learning_decision": "NO-GO for SFT/GRPO or policy-learning claims: zero verified positive trajectories, only two complete graded outcomes, and the protocol requires a 15-task eligibility gate for learning comparisons.",
+  "model": {
+    "all_eight_file_hashes_verified": true,
+    "repository": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+    "revision": "019cc73c45c770444708a6dd8690c66243cc5c80"
+  },
+  "planned_attempts": 4,
+  "planned_sequence": [
+    {
+      "edit_format": "structured_replace",
+      "task_id": "mlx-lm-1980-pipeline-scales"
+    },
+    {
+      "edit_format": "unified_diff",
+      "task_id": "mlx-lm-1978-rotating-cache"
+    },
+    {
+      "edit_format": "unified_diff",
+      "task_id": "mlx-lm-1980-pipeline-scales"
+    },
+    {
+      "edit_format": "structured_replace",
+      "task_id": "mlx-lm-1978-rotating-cache"
+    }
+  ],
+  "protocol_id": "real-agent-interface-v1",
+  "protocol_sha256": "ea4afcc98cbafff632b536be32d4b27d3ede2bcb9d94908012e02c9c101ce71f",
+  "raw_runner_summary_sha256": "a4651e34b5574abf029e5284fee5184f2df712897580844ee809af2fd3f0a52e",
+  "resource_abort": {
+    "available_memory_after_bytes": 6675021824,
+    "peak_process_tree_rss_bytes": 4569219072,
+    "swap_free_after_bytes": 739311616,
+    "swap_growth_bytes": 129171456,
+    "swap_used_after_bytes": 2481913856,
+    "swap_used_before_bytes": 2352742400
+  },
+  "resource_aborts": 1,
+  "schema_version": 1,
+  "source_commit_at_inference_start": "d4752bff910ad64737b28b97d1000be81fa2aae8",
+  "task_selection": "Two fresh pinned Development tasks; not held-out and not used for training.",
+  "verified_repairs": 0,
+  "wall_compute_seconds": {
+    "all_started_attempts_including_abort": 878.345,
+    "fully_completed_attempts": 434.977
+  }
+}

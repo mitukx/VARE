@@ -1,0 +1,10 @@
+{
+  "candidate_mount": "separate post-inference container; hidden test is not copied into model workspace",
+  "hidden_test_sha256": "57d052bafc358f5dcb066efe33fe8b01c97515868277e3f9886d7b3840c6be37",
+  "passed": false,
+  "returncode": 1,
+  "stderr": "Traceback (most recent call last):\n  File \"/workspace/test_hidden.py\", line 25, in <module>\n    assert_mask(*case)\n  File \"/workspace/test_hidden.py\", line 21, in assert_mask\n    assert row == expected\n           ^^^^^^^^^^^^^^^\nAssertionError\n",
+  "stderr_sha256": "f65016b2ecc1e294f7ebb3e104ecc9935cbae828e3273e1ab245220db943f6a2",
+  "stdout": "",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

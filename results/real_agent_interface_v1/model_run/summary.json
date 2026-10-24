@@ -1,0 +1,105 @@
+{
+  "all_planned_attempts_completed": false,
+  "analysis_note": "Two task clusters; exact paired outcomes are descriptive feasibility evidence and do not establish statistical capability improvement.",
+  "attempts": [
+    {
+      "agent_record_sha256": "b851ba7821f5661d79bb7372e6ec4fb5d43564cc659f17787049193384fed1ce",
+      "attempt_id": "01-mlx-lm-1980-pipeline-scales-structured_replace",
+      "budget_valid": true,
+      "changed_paths": [],
+      "edit_format": "structured_replace",
+      "elapsed_seconds": 50.185,
+      "hidden_record_sha256": "baac3203e438b58ad08006cb7f2854731b33992891e812585a34034fec098ec7",
+      "independent_hidden_passed": false,
+      "mlx_peak_memory_bytes": 5126457432,
+      "model_files_valid": true,
+      "new_tokens": 98,
+      "only_target_changed": false,
+      "peak_process_tree_rss_bytes": 4240998400,
+      "public_test_passed": false,
+      "public_test_runs": 0,
+      "source_changed": false,
+      "status": "complete",
+      "stop_reason": "no_tool_call_retries_exhausted",
+      "task_id": "mlx-lm-1980-pipeline-scales",
+      "tool_turns": 7,
+      "valid_edit_applied": false,
+      "verified_success": false
+    },
+    {
+      "agent_record_sha256": "9d864c781ce4c417db2caaca9e1c317bd2f4e06708a943134ceb395f1ed6b986",
+      "attempt_id": "02-mlx-lm-1978-rotating-cache-unified_diff",
+      "budget_valid": true,
+      "changed_paths": [],
+      "edit_format": "unified_diff",
+      "elapsed_seconds": 377.25,
+      "hidden_record_sha256": "e89538c85126ab5fe69c246f4ca7534b08a0805505e28111e84ea0af8c9921ea",
+      "independent_hidden_passed": false,
+      "mlx_peak_memory_bytes": 6779235368,
+      "model_files_valid": true,
+      "new_tokens": 85,
+      "only_target_changed": false,
+      "peak_process_tree_rss_bytes": 4538728448,
+      "public_test_passed": false,
+      "public_test_runs": 0,
+      "source_changed": false,
+      "status": "complete",
+      "stop_reason": "context_budget_exhausted",
+      "task_id": "mlx-lm-1978-rotating-cache",
+      "tool_turns": 6,
+      "valid_edit_applied": false,
+      "verified_success": false
+    },
+    {
+      "attempt_id": "03-mlx-lm-1980-pipeline-scales-unified_diff",
+      "execution": {
+        "abort_reason": "swap_growth_above_abort_threshold",
+        "aborted": true,
+        "elapsed_seconds": 443.368,
+        "exit_code": -15,
+        "peak_process_tree_rss_bytes": 4569219072,
+        "resource_after": {
+          "available_memory_bytes": 6675021824,
+          "disk_free_bytes": 124394582016,
+          "swap_free_bytes": 739311616,
+          "swap_used_bytes": 2481913856,
+          "timestamp_utc": "2026-10-24T11:37:13.257339+00:00"
+        },
+        "resource_before": {
+          "available_memory_bytes": 12379406336,
+          "disk_free_bytes": 124342620160,
+          "swap_free_bytes": 868483072,
+          "swap_used_bytes": 2352742400,
+          "timestamp_utc": "2026-10-24T11:29:49.427836+00:00"
+        },
+        "resource_samples_sha256": "3d21a1d200caed8d7f61314d6cd51c4d930d4526aad2d56f46e6602c88d69c9a",
+        "stderr_sha256": "2dc2928bf9d0f0825548562e67d1efaf146f324aecbb621ce3c51c5194b29c6c",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "status": "aborted"
+    }
+  ],
+  "by_arm": {
+    "structured_replace": {
+      "completed_attempts": 1,
+      "development_task_denominator": 2,
+      "verified_successes": 0
+    },
+    "unified_diff": {
+      "completed_attempts": 1,
+      "development_task_denominator": 2,
+      "verified_successes": 0
+    }
+  },
+  "claim_limit": "Two-task Development paired-interface feasibility only; no held-out performance, broad coding capability, model-weight improvement, or asynchronous learning claim.",
+  "protocol_id": "real-agent-interface-v1",
+  "protocol_sha256": "ea4afcc98cbafff632b536be32d4b27d3ede2bcb9d94908012e02c9c101ce71f",
+  "resource_global_start": {
+    "available_memory_bytes": 10483548160,
+    "disk_free_bytes": 124351365120,
+    "swap_free_bytes": 868483072,
+    "swap_used_bytes": 2352742400,
+    "timestamp_utc": "2026-10-24T11:22:30.063260+00:00"
+  },
+  "schema_version": 1
+}
