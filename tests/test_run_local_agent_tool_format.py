@@ -1,3 +1,4 @@
+import json
 import subprocess
 
 from scripts.run_local_agent import (
@@ -180,6 +181,27 @@ def test_rejects_tool_arguments_outside_the_declared_schema():
     assert parsed == []
     assert len(failures) == 1
     assert "declared schema" in failures[0][1]
+
+
+def test_rejects_nested_schema_object_where_read_file_requires_a_path_string():
+    tools = tools_for("unified_diff")
+    malformed_calls = (
+        {"path": {"type": "string"}},
+        {"path": ["qwen3_coder.py"]},
+        {"path": 17},
+        {"path": True},
+    )
+
+    for arguments in malformed_calls:
+        raw = '<tool_call>' + json.dumps({
+            "name": "read_file", "arguments": arguments,
+        }) + '</tool_call>'
+        blocks, parsed, failures = parse_tool_call_blocks(raw, tools)
+
+        assert len(blocks) == 1
+        assert parsed == []
+        assert len(failures) == 1
+        assert "tool argument 'path' must be a string" in failures[0][1]
 
 
 def test_read_file_returns_bounded_inclusive_ranges(tmp_path):
