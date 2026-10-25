@@ -1,0 +1,73 @@
+{
+  "attempts": [
+    {
+      "minimum_observed_available_memory_bytes": 5664407552,
+      "observations": [
+        {
+          "available_memory_bytes": 6488637440,
+          "observation_index": 1,
+          "swap_free_bytes": 1809383424,
+          "swap_used_bytes": 1411842048
+        },
+        {
+          "available_memory_bytes": 5664407552,
+          "observation_index": 2,
+          "swap_free_bytes": 1809383424,
+          "swap_used_bytes": 1411842048
+        },
+        {
+          "available_memory_bytes": 6208847872,
+          "observation_index": 3,
+          "swap_free_bytes": 1809383424,
+          "swap_used_bytes": 1411842048
+        },
+        {
+          "available_memory_bytes": 6978060288,
+          "observation_index": 4,
+          "swap_free_bytes": 1809383424,
+          "swap_used_bytes": 1411842048
+        }
+      ],
+      "observed_swap_growth_bytes": 0,
+      "task_id": "mlx-4729-negative-take"
+    },
+    {
+      "minimum_observed_available_memory_bytes": 5733859328,
+      "observations": [
+        {
+          "available_memory_bytes": 6393069568,
+          "observation_index": 1,
+          "swap_free_bytes": 1809383424,
+          "swap_used_bytes": 1411842048
+        },
+        {
+          "available_memory_bytes": 6451429376,
+          "observation_index": 2,
+          "swap_free_bytes": 1809383424,
+          "swap_used_bytes": 1411842048
+        },
+        {
+          "available_memory_bytes": 5733859328,
+          "observation_index": 3,
+          "swap_free_bytes": 1809383424,
+          "swap_used_bytes": 1411842048
+        },
+        {
+          "available_memory_bytes": 7289831424,
+          "observation_index": 4,
+          "swap_free_bytes": 1809383424,
+          "swap_used_bytes": 1411842048
+        }
+      ],
+      "observed_swap_growth_bytes": 0,
+      "task_id": "mlx-4730-normal-shape"
+    }
+  ],
+  "combined_minimum_observed_available_memory_bytes": 5664407552,
+  "interpretation": "All recorded spot samples stayed above the 5 GiB floor and swap usage stayed flat. This does not establish that the floor was continuously maintained between observations.",
+  "memory_available_floor_bytes": 5368709120,
+  "schema_version": 1,
+  "source": "Host snapshots collected in separate process-status commands while each bounded local model process was active.",
+  "swap_growth_limit_bytes": 134217728,
+  "timing_note": "The collector did not record monotonic timestamps for each snapshot. Values are preserved in observation order and are not continuous telemetry."
+}

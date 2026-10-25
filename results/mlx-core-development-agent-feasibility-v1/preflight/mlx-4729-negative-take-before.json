@@ -1,0 +1,132 @@
+{
+  "checks": {
+    "available_memory_floor": true,
+    "darwin_arm64": true,
+    "disk_floor": true,
+    "free_swap_floor": true,
+    "mlx_lm_version": true,
+    "mlx_version": true,
+    "model_snapshot": true,
+    "output_absent": true,
+    "pip_check": true,
+    "pip_freeze_matches": true,
+    "python_version": true,
+    "source_base_available": true,
+    "workspace_absent": true
+  },
+  "frozen_repository_commit": "4e820c159507802007b87481767da4d59e090516",
+  "host": {
+    "disk_free_bytes": 116220608512,
+    "machine": "arm64",
+    "memory_available_bytes": 9007890432,
+    "memory_total_bytes": 34359738368,
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12",
+    "swap_free_bytes": 1809383424,
+    "swap_used_bytes": 1411842048
+  },
+  "model_files": [
+    {
+      "exists": true,
+      "matches": true,
+      "name": ".gitattributes",
+      "sha256": "34448b82c17d60fec9b65b1f093c115ddbaadc04beb1b0140b6bfed2e012a930",
+      "size_bytes": 1570
+    },
+    {
+      "exists": true,
+      "matches": true,
+      "name": "README.md",
+      "sha256": "7b17ce562d7ea121c86d2ffdf660eed3726ac5b52cacfa9f1de11a65969f5657",
+      "size_bytes": 969
+    },
+    {
+      "exists": true,
+      "matches": true,
+      "name": "added_tokens.json",
+      "sha256": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680",
+      "size_bytes": 707
+    },
+    {
+      "exists": true,
+      "matches": true,
+      "name": "chat_template.jinja",
+      "sha256": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541",
+      "size_bytes": 4040
+    },
+    {
+      "exists": true,
+      "matches": true,
+      "name": "config.json",
+      "sha256": "574349e5a343236546fda55e4744a76e181f534182d7dc60ff1bad7e7a502849",
+      "size_bytes": 938
+    },
+    {
+      "exists": true,
+      "matches": true,
+      "name": "generation_config.json",
+      "sha256": "835fffe355c9438e7a25be099b3fccaa98350b83451f9fd2d99512e74f1ade48",
+      "size_bytes": 238
+    },
+    {
+      "exists": true,
+      "matches": true,
+      "name": "merges.txt",
+      "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "size_bytes": 1671853
+    },
+    {
+      "exists": true,
+      "matches": true,
+      "name": "model.safetensors",
+      "sha256": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f",
+      "size_bytes": 2263022417
+    },
+    {
+      "exists": true,
+      "matches": true,
+      "name": "model.safetensors.index.json",
+      "sha256": "388d811b8b7c2608dd04cce1bcb04a8bf715d19b42790894e6d3427ff429a777",
+      "size_bytes": 63964
+    },
+    {
+      "exists": true,
+      "matches": true,
+      "name": "special_tokens_map.json",
+      "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "size_bytes": 613
+    },
+    {
+      "exists": true,
+      "matches": true,
+      "name": "tokenizer.json",
+      "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "size_bytes": 11422654
+    },
+    {
+      "exists": true,
+      "matches": true,
+      "name": "tokenizer_config.json",
+      "sha256": "4397cc477eb6d79715ccd2000accd6b3531928f30029665832fa1b255f24d2b9",
+      "size_bytes": 5440
+    },
+    {
+      "exists": true,
+      "matches": true,
+      "name": "vocab.json",
+      "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+      "size_bytes": 2776833
+    }
+  ],
+  "model_snapshot_path_pattern": "$HF_HOME/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+  "passed": true,
+  "protocol_id": "mlx-core-development-agent-feasibility-v1",
+  "protocol_sha256": "62f374cc46101649ddbce9a955f6982ab4b9b544b82d604ca3d1287847485e63",
+  "runtime": {
+    "mlx": "0.32.2",
+    "mlx_lm": "0.32.2",
+    "pip_check_stderr": "",
+    "pip_check_stdout": "No broken requirements found."
+  },
+  "timestamp_utc": "2026-10-25T11:02:03.086775+00:00"
+}

@@ -1,5 +1,18 @@
 # Experimental program
 
+## MLX core Development agent feasibility — NO-GO, 2026-10-25
+
+The cached Qwen3-4B MLX policy completed one frozen attempt on each of two
+newly source/grader-certified Development tasks. It applied no edits (0/2
+verified repairs): both traces ended with three edit-tool calls truncated at
+the 192-token per-turn limit. The grader confirmed both candidate diffs were
+empty and skipped candidate builds. This is a measured tool-budget failure,
+not evidence that either completed patch was incorrect. No training, held-out
+inference, or async coding comparison followed. See the
+[report](mlx-core-development-agent-feasibility-v1-report.md),
+[protocol](../protocols/mlx_core_development_agent_feasibility_v1.json), and
+[retained traces and resource records](../results/mlx-core-development-agent-feasibility-v1/).
+
 ## MLX-LM #1904 repository-task isolation calibration — 2026-10-21
 
 The frozen Train task's narrow `process_message_content` contract passed a pinned

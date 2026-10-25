@@ -1,0 +1,37 @@
+{
+  "checks": {
+    "available_memory": true,
+    "disk": true,
+    "free_swap": true,
+    "mlx": true,
+    "mlx_lm": true,
+    "model_snapshot": true,
+    "pip_check": true,
+    "pip_freeze": true,
+    "protocol_unchanged": true,
+    "record_absent": true,
+    "requirements_lock": true,
+    "workspace_absent": true
+  },
+  "frozen_repository_commit": "4e820c159507802007b87481767da4d59e090516",
+  "host": {
+    "disk_free_bytes": 116199014400,
+    "machine": "arm64",
+    "memory_available_bytes": 9515319296,
+    "memory_total_bytes": 34359738368,
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12",
+    "swap_free_bytes": 1809383424,
+    "swap_used_bytes": 1411842048
+  },
+  "passed": true,
+  "protocol_sha256": "62f374cc46101649ddbce9a955f6982ab4b9b544b82d604ca3d1287847485e63",
+  "runtime": {
+    "mlx": "0.32.2",
+    "mlx_lm": "0.32.2",
+    "pip_check_stderr": "",
+    "pip_check_stdout": "No broken requirements found."
+  },
+  "task_id": "mlx-4730-normal-shape",
+  "timestamp_utc": "2026-10-25T11:04:33.147889+00:00"
+}
