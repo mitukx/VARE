@@ -413,6 +413,7 @@ def test_fresh_conformant_campaign_accepts_its_complete_source_inventory():
 
 def test_navigation_source_inventory_is_bound_to_its_exact_committed_tree():
     commit=auditor.PINNED_VERSIONED_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V3]
+    assert commit=="d97da36799f1ae87ed2fb920991d93f47ecd917a"
     assert len(auditor.RUNTIME_PACKAGE_SOURCES_V3)==80
     assert auditor.runtime_source_names_from_commit(commit)==auditor.RUNTIME_PACKAGE_SOURCES_V3
     source_hashes=auditor.source_hashes_from_commit(commit,auditor.SOURCE_INVENTORY_V3)
@@ -429,7 +430,7 @@ def test_navigation_source_inventory_is_bound_to_its_exact_committed_tree():
     (auditor.SOURCE_INVENTORY_V2,auditor.RUNTIME_PACKAGE_SOURCES_V2,
      "a4fe08298d1349c5aaf6d20b626f0f114c4ee114"),
     (auditor.SOURCE_INVENTORY_V3,auditor.RUNTIME_PACKAGE_SOURCES_V3,
-     "fd6e2670a5cae1dfc54178d83d47db8fd60f7d3d"),
+     "d97da36799f1ae87ed2fb920991d93f47ecd917a"),
 ],ids=["historical-77-file","diagnostic-78-file","navigation-80-file"])
 def test_versioned_source_inventory_is_bound_to_exact_committed_runtime_tree(
         inventory,runtime_sources,commit):
