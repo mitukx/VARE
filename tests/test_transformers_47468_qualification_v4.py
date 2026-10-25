@@ -151,7 +151,27 @@ def _seed_ambiguous_launch(manifest: Path, invocation_id: str, expected_test: st
     return artifacts
 
 
-def test_launch_token_recovers_and_stops_writer_before_hashing(tmp_path):
+def _limit_process_inventory(monkeypatch, *pids: int) -> None:
+    """Make recovery tests independent of unrelated runner-owned processes.
+
+    CI hosts may expose processes owned by the same account while denying
+    access to their environments. Production recovery correctly treats that
+    inventory as incomplete and fails closed; these tests exercise a known
+    complete inventory containing only the process identities under test.
+    """
+    processes = [runner.core.psutil.Process(pid) for pid in pids]
+    original_process_iter = runner.core.psutil.process_iter
+
+    def process_iter(*_args, **_kwargs):
+        if _args or _kwargs:
+            yield from original_process_iter(*_args, **_kwargs)
+        else:
+            yield from processes
+
+    monkeypatch.setattr(runner.core.psutil, "process_iter", process_iter)
+
+
+def test_launch_token_recovers_and_stops_writer_before_hashing(monkeypatch, tmp_path):
     experiment = tmp_path / "experiment"
     run_dir = tmp_path / "run"
     manifest = experiment / "records" / "manifest.jsonl"
@@ -173,6 +193,7 @@ def test_launch_token_recovers_and_stops_writer_before_hashing(tmp_path):
             stdout=stdout, stderr=stderr, stdin=subprocess.DEVNULL, start_new_session=True,
         )
         time.sleep(0.05)
+        _limit_process_inventory(monkeypatch, os.getpid(), child.pid)
         recovered = runner.core.recover_interrupted_attempts(manifest, run_dir, experiment)
         stdout.flush()
         stderr.flush()
@@ -191,7 +212,7 @@ def test_launch_token_recovers_and_stops_writer_before_hashing(tmp_path):
     assert child.poll() is not None
 
 
-def test_missing_launch_process_stays_fail_closed_without_artifact_hashes(tmp_path):
+def test_missing_launch_process_stays_fail_closed_without_artifact_hashes(monkeypatch, tmp_path):
     experiment = tmp_path / "experiment"
     run_dir = tmp_path / "run"
     manifest = experiment / "records" / "manifest.jsonl"
@@ -205,6 +226,7 @@ def test_missing_launch_process_stays_fail_closed_without_artifact_hashes(tmp_pa
     artifacts = _seed_ambiguous_launch(manifest, invocation_id, str(fake_test), tmp_path,
                                        launch_token=True)
     (run_dir / artifacts["stdout"]).write_bytes(b"partial\n")
+    _limit_process_inventory(monkeypatch, os.getpid())
     recovered = runner.core.recover_interrupted_attempts(manifest, run_dir, experiment)
     events = runner.core.load_manifest(manifest)
     assert recovered and recovered[0]["deferred"] is True
