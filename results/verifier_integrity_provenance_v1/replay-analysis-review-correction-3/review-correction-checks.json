@@ -1,38 +1,33 @@
 {
   "check_version": 1,
-  "implementation_sha256": "6b9553f77251dc1c19f2987bd03b5ca1dd54e9200d40182a2e799671a629a01a",
+  "implementation_sha256": "b491ccde78337a5bed0abb0dffeccb6eb47d0bb6b8142e4e1d360b47590fcf1d",
   "scope": "Offline receipt admission check; no model inference, training, or external task execution.",
   "tamper_injections": [
     {
-      "error_class": "ValueError",
       "exit_code": 1,
       "mutation": "grader-hash",
       "output_created": false,
       "rejected_before_output": true
     },
     {
-      "error_class": "ValueError",
       "exit_code": 1,
       "mutation": "adapter-hash",
       "output_created": false,
       "rejected_before_output": true
     },
     {
-      "error_class": "ValueError",
       "exit_code": 1,
       "mutation": "case-id",
       "output_created": false,
       "rejected_before_output": true
     },
     {
-      "error_class": "ValueError",
       "exit_code": 1,
       "mutation": "missing-case",
       "output_created": false,
       "rejected_before_output": true
     },
     {
-      "error_class": "ValueError",
       "exit_code": 1,
       "mutation": "duplicate-case",
       "output_created": false,

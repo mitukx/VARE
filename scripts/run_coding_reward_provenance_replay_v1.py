@@ -11,8 +11,6 @@ from pathlib import Path
 import statistics
 from typing import Any
 
-import torch
-
 
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL_PATH = ROOT / "protocols/coding_reward_provenance_replay_v1.json"
@@ -377,6 +375,8 @@ def build_provenance_records(run_dir: Path, current: dict[str, Any]) -> list[dic
 
 
 def optimizer_replay(rewards: list[int], invalid_indices: set[int]) -> dict[str, Any]:
+    import torch
+
     if len(rewards) != len(CANDIDATES):
         raise ValueError("optimizer replay requires one frozen reward per candidate ID")
     logits = torch.nn.Parameter(torch.zeros(len(CANDIDATES), dtype=torch.float64, device="cpu"))
@@ -509,6 +509,8 @@ def admission_results(
 
 
 def main() -> int:
+    import torch
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--run-dir", type=Path, required=True)
     parser.add_argument("--historical-dir", type=Path, required=True)
