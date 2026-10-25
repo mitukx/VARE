@@ -1,0 +1,213 @@
+{
+  "amendment_history": [
+    {
+      "amended_at_utc": "2026-10-25T12:25:34Z",
+      "prior_file_preserved_at": "protocols/archive/agent_edit_interface_systems_only_v1_pre-run.json",
+      "prior_protocol_sha256": "149cd8864ac667460d7ae9b898c442bfb754a1d5b992fb899cce4a1e8a9c8ee9",
+      "reason": "Before any systems cell ran, corrected task qualification control pointers to actual result.json files and pinned their hashes/outcomes; added measured Mac, RAM and free-swap identity/limit.",
+      "systems_cells_run_under_prior_protocol": 0
+    }
+  ],
+  "analysis": {
+    "compute_accounting": "No model or optimizer is loaded. Report host process-tree CPU seconds and wall time separately. Workload count, edit bytes and verifier invocation count are identical between modes.",
+    "design": "Run the exact same four task/interface cells once serially and once with two worker threads. Two task families and one workload per mode; report raw paired cells and ratios descriptively. No significance claim or general throughput claim.",
+    "recovery": "A separate process applies the pinned #2004 known fix, fsyncs each edit and journal event, then receives SIGKILL before grading. The parent verifies contiguous event hashes and exact target hash, runs the trusted grader once, and checks the target hash did not change during recovery.",
+    "timing_boundary": "Queue-inclusive cell timing starts after all four worktrees for that mode are materialized. Mode wall time includes controller operations and trusted grading, excludes worktree materialization."
+  },
+  "candidate_and_verifier": {
+    "candidate": "There is no model candidate. A deterministic controller constructs each edit directly from the immutable base and fix blobs using a line diff.",
+    "edit_scope": "One exact allowlisted target source file per task. The legacy read/replace and lease read/replace operations are actually executed; no synthetic list/search call is counted.",
+    "known_fix_access": "The deterministic controller intentionally reads the pinned upstream fix blob. This is a known-fix systems control, not a model trajectory or fresh repair attempt.",
+    "network": "No model/API calls. Trusted grader runs with macOS sandbox-exec deny network profile. No Docker or cgroup isolation claim.",
+    "public_tests": "None exposed or run. One trusted grader invocation per cell; one additional invocation for crash recovery.",
+    "trusted_grader": "Pinned task evaluator remains outside each source worktree. It executes after the controller using the MLX-LM venv and macOS sandbox-exec profile denying network access."
+  },
+  "cells_per_mode": 4,
+  "claim_boundary": "Deterministic known-fix execution and one injected recovery boundary on two real MLX-LM Development tasks. No model inference, policy update, learning or capability claim.",
+  "decision_rule": "Pass only if all eight mode/task/interface cells match exact upstream fix target hashes and pass the pinned trusted grader; the injected worker exits by SIGKILL after a hash-valid fsynced journal, recovery observes the exact fix without changing it, and the post-crash trusted grade passes. Any missing record, hash mismatch, grade failure, or resource abort is NO-GO.",
+  "environment": {
+    "cpu_brand": "Apple M1 Pro",
+    "grader_dependency_lock": "requirements/mlsys-agent-mlx.lock.txt",
+    "grader_dependency_lock_sha256": "ab4187759276ca759e84c9a4f12cb2a9416c7e297c69b87783c243ac9459af2a",
+    "host": "Apple M1 Pro / 32 GiB / macOS arm64",
+    "machine": "arm64",
+    "macos": "27.0.1",
+    "runner_and_host_sampler": "Python 3.12.12, psutil 7.1.3",
+    "sampler_psutil": "7.1.3",
+    "sampler_python": "3.12.12",
+    "source_checkout_head": "4cfc6478473b0668ede3eb0cc93f2a9181a15052",
+    "source_repository": "https://github.com/ml-explore/mlx-lm.git",
+    "token_count_rule": "len(tokenizer.encode(compact serialized tool-call request, add_special_tokens=False)); tokenizer worker uses the pinned MLX venv and local snapshot only",
+    "tokenizer_files_sha256": {
+      "added_tokens.json": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680",
+      "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "tokenizer.json": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "tokenizer_config.json": "4397cc477eb6d79715ccd2000accd6b3531928f30029665832fa1b255f24d2b9",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "tokenizer_runtime": {
+      "mlx_lm": "0.32.2",
+      "python": "3.12.12",
+      "tokenizers": "0.23.3",
+      "transformers": "5.20.2"
+    },
+    "tokenizer_snapshot": "mlx-community/Qwen3-4B-Instruct-2507-4bit@50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "total_memory_bytes": 34359738368,
+    "worktree_setup": "Detached worktrees at pinned base commits; only mlx_lm/_version.py is generated as untracked setup outside the target allowlist."
+  },
+  "execution_modes": [
+    {
+      "name": "synchronous",
+      "worker_count": 1
+    },
+    {
+      "name": "asynchronous",
+      "worker_count": 2
+    }
+  ],
+  "grader_timeout_seconds": 180,
+  "hypothesis": "The lease-bound edit interface and current exact structured replacement interface can both apply the same pinned known fixes; the async worker path may reduce workload wall time, while a killed worker after durable edit commit can be recovered and independently graded without a duplicate edit.",
+  "implementation_files_sha256": {
+    "scripts/calibrate_agent_edit_interface_v1.py": "d4ca4f2535f6f59e73fc995233ce41da3cfeeed27014eba63c4a1eb3d17a121d",
+    "scripts/run_agent_edit_interface_systems_v1.py": "d37798712473177218dfb88154a6b25bec97113201e145c7ef67ac158df8b297",
+    "scripts/run_local_agent.py": "a360dfce0b23f4ae9abd0850cb8c0c0dbf54dab98e47f5101edbb3ef671fbff4",
+    "src/vare/agent_edit_v2.py": "169f25c28727d101b8709f058b4fe99d4e4164685a2afcfd88028d62e3bdb5cc"
+  },
+  "interfaces": [
+    "lease_bound_lines_v1",
+    "legacy_structured_replace"
+  ],
+  "no_go_conditions": [
+    "Any frozen identity differs.",
+    "Any mode/task/interface cell fails exact target hash or trusted grading.",
+    "Crash worker does not fail at the declared boundary, journal chain is invalid, recovery target differs, recovery edits the target again, or recovery grader fails.",
+    "Resource thresholds, telemetry, or durable non-overwriting writes fail."
+  ],
+  "output": "results/agent-edit-interface-v1/systems-only-v1",
+  "preregistered_at_utc": "2026-10-25T12:23:29Z",
+  "primary_metric": "Verified deterministic known-fix cells out of four per execution mode, where a cell requires exact pinned target bytes and all pinned trusted grader assertions pass. This is a systems transaction metric, not an agent success metric.",
+  "protocol_id": "agent-edit-interface-systems-only-v1",
+  "recovery_injections": 1,
+  "resource_limits": {
+    "crash_worker_timeout_seconds": 60,
+    "grader_timeout_seconds": 180,
+    "max_process_tree_rss_bytes": 10737418240,
+    "max_swap_growth_bytes": 33554432,
+    "maximum_wall_seconds": 1200,
+    "minimum_available_memory_bytes": 5368709120,
+    "minimum_disk_free_bytes": 16106127360,
+    "minimum_free_swap_bytes": 536870912,
+    "model_weight_load_bytes": 0,
+    "paid_api_usd": 0,
+    "sample_interval_seconds": 0.5
+  },
+  "runner_commit": "c0c94ac03d77e85c8082803093ffc12bdf1b9384",
+  "runtime": {
+    "cpu_brand": "Apple M1 Pro",
+    "machine": "arm64",
+    "macos": "27.0.1",
+    "sampler_psutil": "7.1.3",
+    "sampler_python": "3.12.12",
+    "tokenizer_runtime": {
+      "mlx_lm": "0.32.2",
+      "python": "3.12.12",
+      "tokenizers": "0.23.3",
+      "transformers": "5.20.2"
+    },
+    "total_memory_bytes": 34359738368
+  },
+  "schema_version": 1,
+  "secondary_metrics": [
+    "queue-inclusive and service latency per cell",
+    "four-cell execution and grading wall time after worktree materialization",
+    "observed process-tree CPU seconds and peak RSS",
+    "minimum host available memory, maximum swap growth, and minimum free disk",
+    "serialized edit tool-call tokens by interface (diagnostic only)",
+    "recovery journal chain validity, recovered target SHA, duplicate edit check, and trusted grader result"
+  ],
+  "source_repository": "https://github.com/ml-explore/mlx-lm.git",
+  "status": "FROZEN_BEFORE_SYSTEMS_REPLAY",
+  "supporting_files_sha256": {
+    "protocols/agent_edit_interface_development_v1.json": "9dd358cd37ec8dca79ee1db2dfb8a0b5486d4b38a06348732d048458eeb8f496",
+    "requirements/mlsys-agent-mlx.lock.txt": "ab4187759276ca759e84c9a4f12cb2a9416c7e297c69b87783c243ac9459af2a",
+    "results/agent-edit-interface-v1/format-calibration-pinned-v1.json": "44df4ae3d7180acd51d2a06b9fe60d93f251359ab91072dc558a093bd3d20fa3",
+    "results/agent-edit-interface-v1/model-run-v1/manifest.json": "2c680177a351a33cae19576c5f9ed46cd5198cd807716f0ce970c38e8321a6e8",
+    "results/agent-edit-interface-v1/task-qualification/qualification-manifest-v2.json": "2c88a83c4cce0c0981fa00ee240f55f8c2b19afdcbdd9b01c156f07a65b1979c"
+  },
+  "task_cases": {
+    "mlxlm-1996-nested-parameter-tags": {
+      "base": "72be8c955d9a0d3099bd01865af288e0e947c3fa",
+      "base_target_sha256": "d1029aae22ed475e9d7c09d29c37e74dca8df52b0fb046f000f2e3f9b83a6583",
+      "development_split": "development",
+      "fix": "733925103546131e0e79bce0bcb2ff813939656c",
+      "fix_target_sha256": "be276120ce8a46c02e39333beb4ca7c87f71359a1a2de234e58a16b8885288ad",
+      "grader": "benchmarks/mlsys_agent_development_v1/tasks/mlxlm-1996-nested-parameter-tags/evaluator/test_hidden.py",
+      "grader_sha256": "b9c7c1b2e86eccd33db7cd01dbf533f6b422b86520b4b8d5f36cb6c195af3d7f",
+      "prior_qualification_controls": {
+        "baseline": {
+          "expected": "fail",
+          "path": "results/agent-edit-interface-v1/task-qualification/mlxlm-1996-nested-parameter-tags-baseline-attempt-3/result.json",
+          "sha256": "135834c4d7d093a4a340e6088c28644ff6688763019c90e96162cee994035434",
+          "state": "baseline"
+        },
+        "known_fix": {
+          "expected": "pass",
+          "path": "results/agent-edit-interface-v1/task-qualification/mlxlm-1996-nested-parameter-tags-fix-attempt-3/result.json",
+          "sha256": "f191b0b94a0119f4c04348106a0205ba5d9f1c4dc06352d3229c24c86c61d04a",
+          "state": "fix"
+        },
+        "mutant": {
+          "expected": "fail",
+          "path": "results/agent-edit-interface-v1/task-qualification/mlxlm-1996-nested-parameter-tags-incorrect-mutant-v1/result.json",
+          "sha256": "41e467b264208a4395af5b39822a2869a394b2f066a7ae48d9d0ed3767f00d97",
+          "state": "incorrect_mutant"
+        }
+      },
+      "target": "mlx_lm/tool_parsers/qwen3_coder.py"
+    },
+    "mlxlm-2004-jamba-moe-routing": {
+      "base": "4cfc6478473b0668ede3eb0cc93f2a9181a15052",
+      "base_target_sha256": "f0d5e5551127179b79f10dff764aeaa70ab3c1fc06e71487a25ad414561f28bd",
+      "development_split": "development",
+      "fix": "2cd1088e83aabf132e33647b97a25cfad23af759",
+      "fix_target_sha256": "4b3b02c6b1665aa7b5e7b659fc815ad3f325ae0134496136b55203187f1ada65",
+      "grader": "benchmarks/mlsys_agent_development_v1/tasks/mlxlm-2004-jamba-moe-routing/evaluator/test_hidden.py",
+      "grader_sha256": "f34ec089c25113824e56b3875bed8804dec717448ada08cbfbd3619c064312d6",
+      "prior_qualification_controls": {
+        "baseline": {
+          "expected": "fail",
+          "path": "results/agent-edit-interface-v1/task-qualification/mlxlm-2004-jamba-moe-routing-baseline-grader-normalized-v1/result.json",
+          "sha256": "e391409e84588457e4921bb2532c58c794135d14c071c35eb0602d3806fdbd87",
+          "state": "baseline"
+        },
+        "known_fix": {
+          "expected": "pass",
+          "path": "results/agent-edit-interface-v1/task-qualification/mlxlm-2004-jamba-moe-routing-fix-grader-normalized-v1/result.json",
+          "sha256": "3439448a56b208a4b3949f91a7a4711b5cc626459e73596eb0dde39e099d7017",
+          "state": "fix"
+        },
+        "mutant": {
+          "expected": "fail",
+          "path": "results/agent-edit-interface-v1/task-qualification/mlxlm-2004-jamba-moe-routing-incorrect-mutant-grader-normalized-v1/result.json",
+          "sha256": "c43976c571e00d852012c80a6596f7e91bf0187a90e048f0d80dc7ee18fd4e7f",
+          "state": "incorrect-mutant"
+        }
+      },
+      "target": "mlx_lm/models/jamba.py"
+    }
+  },
+  "tasks": [
+    "mlxlm-2004-jamba-moe-routing",
+    "mlxlm-1996-nested-parameter-tags"
+  ],
+  "tokenizer_files_sha256": {
+    "added_tokens.json": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680",
+    "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+    "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+    "tokenizer.json": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+    "tokenizer_config.json": "4397cc477eb6d79715ccd2000accd6b3531928f30029665832fa1b255f24d2b9",
+    "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+  },
+  "tokenizer_snapshot": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b"
+}
