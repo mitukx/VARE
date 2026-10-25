@@ -1,0 +1,197 @@
+{
+  "evidence_policy": {
+    "claim_limit": "At most one source/grader-certified Development task family. This does not establish model capability, held-out validity, task-family prevalence, learning eligibility, or success on unseen/publicly unexposed tasks.",
+    "source_control": "Historical source and grader identities are immutable; this runner creates fresh per-phase source directories and does not modify the upstream cache or frozen artifacts.",
+    "write_policy": "Phase stdout, stderr, resource samples and record files are created exclusively and never overwritten. Each manifest event is appended and fsynced with a previous-event hash. Partial stops are retained."
+  },
+  "execution": {
+    "dependency_freeze_sha256": {
+      "locks/host-pip-freeze.txt": "f4b6c278838e6f4f4be9517576136bb368f825b000a68dfdc5370cc6f6a70e50",
+      "locks/overlay-pip-freeze.txt": "a7a9bf2519e9f5c1d3c95d4b692003f52b7b6e76f287fef5644b921f8d5937ea"
+    },
+    "dependency_overlay": "Exact per-path pip freeze --all output must byte-match the versioned v2 runtime inventory before any outcome invocation. Host inventory is queried with PYTHONNOUSERSITE=1 and no PYTHONPATH, matching the execution process; overlay inventory uses --path <overlay-site-packages>. The v1 host inventory included pypdf from user site, which is excluded by the grader execution environment; v2 pins the effective no-user-site inventory prospectively. Any missing/extra/different line fails closed.",
+    "frozen_execution_identity_policy": "Before --execute or --recover-interrupted, require a protocol_frozen record; revalidate the current source lock, protocol, runner, core runner, tests and README; compare the current lock SHA-256, protocol and runner hashes, Git commit and Git tree with the frozen event; and require git status --porcelain to be empty. A modified core plus edited source lock cannot execute under an unchanged reviewed HEAD.",
+    "grader_boundary": "The test file is kept outside the candidate source tree and candidate workspace. The trusted operator runs the pinned single test in a separate process. The model process has no command-execution tool and receives no test contents or outcomes.",
+    "network_boundary_preflight": "A sandboxed AF_INET socket connection attempt to 1.1.1.1:443 must return EPERM/EACCES. The same exact macOS sandbox profile must reject os.fork() and a Python subprocess spawn; all three denials are measured before any freeze record or task phase.",
+    "no_network_or_downloads": true,
+    "overlay_site_packages": "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-agent-feasibility-v1/venv/lib/python3.12/site-packages",
+    "phase_journal_policy": {
+      "append_transaction": "Before each event append, atomically persist and fsync a pending-event record containing the exact event JSONL bytes, their SHA-256, sequence, predecessor hash, and exact prior-prefix SHA-256. Append/fsync the event, then remove/fsync the pending record.",
+      "one_shot": "Any phase_admitted event permanently blocks a second execute attempt, including recovered or deferred interruptions.",
+      "torn_tail_repair": "Repair is permitted only with a valid matching pending-event record, a verified complete prior hash chain, exact prior-prefix match, and a manifest suffix that is a byte prefix of the pending event. Quarantine exact suffix bytes under a content-addressed filename and include its path/hash/length in a journal_tail_repaired event. Atomically replace the journal with the exact verified prefix, full pending event and repair event. Corruption before the final line or any mismatch fails closed without changing the manifest."
+    },
+    "phase_recovery_policy": {
+      "ambiguous_launch": "V4 appends a UUID launch-token event before Popen and injects that UUID into the phase child's environment. Recovery scans same-user processes for the exact token and verifies admitted test command and working directory before persisting recovered PID/create-time/process-group identity. If no process matches, append a scan-completed record and retain v3's deferred, no-hash, no-outcome state. If scan access is incomplete, multiple processes match, or command/cwd differs, fail closed without hashing. The scan cannot clean up a process that removed the marker before controller loss; that case remains deferred.",
+      "partial_artifacts": "After process-group quiescence, retain exact artifact sizes and SHA-256 values in the immutable interruption record. Preserve partial outputs and never infer a pass/fail from them.",
+      "process_identity": "Persist PID, psutil create-time and isolated process-group ID immediately after launch. Recovery verifies PID create-time and current process-group identity before signaling; a mismatch fails closed and defers recovery. The process-creation denial is a separate OS preflight condition and does not broaden the v3 process-group claim.",
+      "quiescence": "After the phase leader exits, for normal completion and recovery, verify its recorded PID/create-time and isolated process group. Send SIGTERM, wait a bounded 2 seconds, send SIGKILL if live writers remain, then wait a second bounded 2 seconds. Do not finalize hashes until the exact group has no live members; fsync each artifact before hashing. If normal completion had to stop an orphan writer, mark the phase aborted rather than accepting its test result. V4 also requires the OS preflight to deny all child process creation under the exact sandbox profile; any failed denial aborts before freeze or grading.",
+      "recovery_source_identity": "Before manifest repair or artifact recovery, require the current protocol, runner, test suite, README, source lock, Git commit and Git tree to match the protocol_frozen event. A recovery checkout with changed identity fails before manifest mutation."
+    },
+    "platform": "macOS 27.0.1 arm64",
+    "preflight_record_path": "results/transformers-47468-development-qualification-v4/records/runtime-inventory-observation-v3.json",
+    "preflight_record_sha256": "283c07ca2f59333e7f70e3155a7f7ed6fd1e75331d935efe3bd2be0d3e41b749",
+    "preflight_without_test_execution": {
+      "available_memory_bytes": 13812301824,
+      "clean_source_artifacts": "The source archive was extracted fresh after the import check. It contains no __pycache__ or .pyc files; the runner refuses source archives containing tests, Git history, or symlinks.",
+      "disk_free_bytes": 106104623104,
+      "free_swap_bytes": 876281856,
+      "model_or_weights": "none",
+      "package_downloads_or_installs": "none",
+      "pinned_test_module_import": "passed; the test method was not invoked",
+      "source_package_import": "passed",
+      "total_memory_bytes": 34359738368
+    },
+    "process_creation_boundary_preflight": {
+      "claim_limit": "This is not a container or general hostile-code filesystem sandbox. The allow-default profile retains broad filesystem access; no claim is made against arbitrary filesystem writes, kernel defects, or every possible side effect.",
+      "escape_control": "Blocking process-fork prevents the task subprocess from creating a descendant that can move into a new session or process group. A changed process-group identity for the supervised process remains fail-closed in the pinned v3 core.",
+      "profile": "(version 1) (allow default) (deny network*) (deny process-fork)",
+      "required_probes": [
+        "network_connect_denied",
+        "os_fork_denied",
+        "subprocess_spawn_denied"
+      ]
+    },
+    "python_identity": {
+      "cache_tag": "cpython-312",
+      "executable": "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "implementation": "cpython",
+      "sys_version": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+      "version_info": [
+        3,
+        12,
+        12
+      ]
+    },
+    "relevant_packages": {
+      "huggingface_hub": "2.2.0",
+      "numpy": "2.5.4",
+      "pytest": "8.4.2",
+      "tokenizers": "0.23.3",
+      "torch": "2.9.1",
+      "transformers_source_version": "5.21.0.dev0 from the pinned base source tree"
+    },
+    "resource_limits": {
+      "max_seconds_per_phase": 180,
+      "maximum_process_tree_rss_bytes": 8589934592,
+      "maximum_swap_growth_bytes": 134217728,
+      "minimum_available_memory_bytes": 8589934592,
+      "minimum_disk_free_bytes": 21474836480,
+      "minimum_free_swap_bytes": 268435456,
+      "sample_interval_seconds": 0.5
+    },
+    "runtime": "macOS sandbox-exec with profile (version 1) (allow default) (deny network*) (deny process-fork), HF_HUB_OFFLINE=1, TRANSFORMERS_OFFLINE=1, HF_HUB_DISABLE_TELEMETRY=1, PIP_NO_INDEX=1, PYTEST_DISABLE_PLUGIN_AUTOLOAD=1, PYTHONDONTWRITEBYTECODE=1, PYTHONNOUSERSITE=1.",
+    "runtime_identity_policy": "Before freeze-record or execute, query the supplied interpreter itself and compare resolved sys.executable, full sys.version, version_info, implementation and cache_tag exactly; query host and overlay pip inventories with that interpreter and require byte-identical lock contents. No packages are installed or resolved.",
+    "runtime_inventory_commands": {
+      "environment": {
+        "PIP_CONFIG_FILE": "/dev/null",
+        "PIP_NO_INDEX": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONNOUSERSITE": "1",
+        "PYTHONPATH": "unset"
+      },
+      "host": [
+        "<python>",
+        "-m",
+        "pip",
+        "freeze",
+        "--all"
+      ],
+      "overlay": [
+        "<python>",
+        "-m",
+        "pip",
+        "freeze",
+        "--all",
+        "--path",
+        "<overlay-site-packages>"
+      ]
+    },
+    "serial_execution": true,
+    "test_command": "<python> -m pytest -q <grader_test_path>::GenericTester::test_torch_float"
+  },
+  "exposure": {
+    "agent_access": "The model receives only candidate-prompt.md and the baseline target source through VARE's allowlisted source tools. The model has no shell, no grader/test tool, no test file in its candidate workspace, and no access to the operator-side fix or mutant artifact.",
+    "external_pretraining_exposure": "Unknown. The upstream PR, fix and test are public; no model-unseen or novelty claim is permitted.",
+    "hidden_evaluation": "No held-out or hidden evaluation data is part of this Development qualification. The pinned public upstream test is not represented as secret.",
+    "local_task_or_model_exposure_found": false,
+    "local_vare_scan_path": "results/transformers-47468-development-qualification-v4/protocol/exposure-scan.json",
+    "local_vare_scan_scope": "Tracked Git objects at the recorded VARE PR #132 head, across benchmarks, docs, protocols, results, scripts, src and tests.",
+    "local_vare_scan_sha256": "553a452640012b0e7eb49802a0c620c154012892f452616160fdbc8739af6e1a"
+  },
+  "outcome_status": "NO_PHASE_OUTCOMES_NO_MODEL_INFERENCE",
+  "protocol_id": "transformers-47468-generic-scalar-float-development-qualification-v4",
+  "purpose": "One source/grader qualification for a Development-only real repository task, followed by possible model-feasibility work under a separate frozen protocol. This protocol contains no model attempt.",
+  "review_gate": "Do not freeze a run identity or execute any task grader phase until this exact v4 commit passes independent review of source identity, frozen-lock admission, process creation denial, and launch-token recovery.",
+  "schema_version": 4,
+  "selection": {
+    "candidate_set": [
+      "hf-transformers-generic-scalar-float-dev-v1"
+    ],
+    "candidate_set_frozen": true,
+    "historical_split_unchanged": true,
+    "selection_rationale": "A narrow Python helper regression with one candidate source file and a single upstream scalar behavior test. It is CPU-only, needs no repository build, and all required Python packages are already installed locally. It does not qualify as held-out or model-unseen evidence.",
+    "task_role": "DEVELOPMENT_ONLY"
+  },
+  "status": "PROPOSED_PRE_OUTCOME_REVIEW_REQUIRED",
+  "supersedes": {
+    "commit": "d8636def094cd83a2010980570a5c4804725166a",
+    "outcome_records_present": false,
+    "protocol_id": "transformers-47468-generic-scalar-float-development-qualification-v3",
+    "source_and_evidence_immutable": true,
+    "status": "SUPERSEDED_BEFORE_OUTCOMES_AFTER_INDEPENDENT_P1"
+  },
+  "task": {
+    "acceptance": {
+      "baseline": "The exact selected pytest case exits with one assertion failure in test_torch_float; collection/import errors do not count.",
+      "failure": "Any timeout, resource-floor breach, source/dependency/hash mismatch, sandbox failure, unrelated pytest error, or unexpected outcome marks UNQUALIFIED and stops. One attempt per phase; no retries or protocol changes after any outcome.",
+      "known_fix": "The exact fixed target bytes pass the exact selected pytest case.",
+      "mutant": "The exact selected pytest case exits with one assertion failure in test_torch_float; collection/import errors do not count.",
+      "qualification": "Only baseline assertion failure, mutant assertion failure, and exact-fix pass in the frozen phase order yields SOURCE_GRADER_QUALIFIED."
+    },
+    "attempts_per_phase": 1,
+    "base_commit": "6a994bc42f4c2c3e53ca384aff84750b85de0e6e",
+    "base_target_sha256": "222da9314771386b9666d15b242074ffc22dd440f74ce864137b793e1c2cfcda",
+    "candidate_prompt_path": "results/transformers-47468-development-qualification-v4/protocol/candidate-prompt.md",
+    "candidate_prompt_sha256": "2d69ce87a966a5609cde3d040a18bfd17fcfc6afc9a206871c828ed278d0085a",
+    "candidate_source_archive": "The upstream base commit src/transformers subtree only, produced by git archive from the pinned base commit. It contains no tests, Git history, wheels, bytecode, PR patch, or fix bytes.",
+    "candidate_source_archive_sha256": "2734b9db4f765e2fb1e69907600d4f992b463f108fa0eddcb2a3e679043791c0",
+    "candidate_source_bytes": 55922751,
+    "candidate_source_file_count": 3127,
+    "candidate_source_tree_sha256": "b758729199025c1a54f4b80a17985ed0b8ed68b59370cfbeca6b67b6cd1c55ab",
+    "candidate_visible_allowlist": [
+      "src/transformers/utils/generic.py"
+    ],
+    "fix_commit": "3da1cdf80218c71ac4b4121cca43ea7def44e68a",
+    "fix_target_sha256": "a97067244e842edc1fcaa77f0b57ea8e81d821105f6fe65311b77ccebf86f897",
+    "merge_commit": "9b322e72291d2a1d0314090ccc344c9951def14e",
+    "mutant": {
+      "claim_limit": "This mutant tests the selected scalar regression assertion only; it does not cover every torch_float call path or the whole Transformers package.",
+      "construction": "Starting from the exact target bytes at fix_commit, change only the ordinary non-tracing branch expression from float(x) to int(x); preserve all other bytes.",
+      "sha256": "4128796474bc5674408a89cc4356361736dc5b44fcb91da4c46ddc58579b1e80"
+    },
+    "phase_order": [
+      "baseline",
+      "mutant",
+      "fix"
+    ],
+    "target_path": "src/transformers/utils/generic.py",
+    "task_id": "hf-transformers-generic-scalar-float-dev-v1",
+    "test_path": "tests/utils/test_generic.py",
+    "test_revision": "3da1cdf80218c71ac4b4121cca43ea7def44e68a",
+    "test_selector": "GenericTester.test_torch_float",
+    "test_semantics": "A public upstream regression test asserts that a representative non-integral Python scalar converts to a Python float without losing its fractional value. It is imported and run only by the operator-side grader process.",
+    "test_sha256": "a399b7719d561cad462c23d32460e1afa7e62535806fbd496a01adf8991dea70",
+    "upstream_pr": 47468,
+    "upstream_pr_title": "Fix torch_float casting to int instead of float",
+    "upstream_repository": "https://github.com/huggingface/transformers"
+  },
+  "v3_audit_finding": {
+    "additional_p2": "A crash after process launch but before durable PID/create-time recording leaves recovery unable to prove cleanup. V4 prospectively adds a durable pre-launch UUID token and same-user process-table recovery; this change has not yet passed independent adversarial review.",
+    "audited_commit": "d8636def094cd83a2010980570a5c4804725166a",
+    "decision": "NO_GO_BEFORE_OUTCOMES",
+    "evidence_manifest_sha256": "26e632cf11c639060418876603515a4ae68c8c030f095625a1eebc2ffef72bd7",
+    "finding": "The allow-default network-only profile permitted fork/exec/setsid descendants to escape the recorded process group and continue writing logs after the v3 quiescence barrier.",
+    "v3_source_and_evidence_unchanged": true,
+    "v4_phase_gate": "Do not freeze or execute task phases until independent review validates the source-lock/clean-worktree execution gate, process-creation denial, and launch-token recovery, including inaccessible-marker fail-closed behavior."
+  }
+}
