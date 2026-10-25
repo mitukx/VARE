@@ -275,7 +275,9 @@ def main() -> int:
     args = parser.parse_args()
     source_repo = args.source_repo.resolve()
     dependencies = args.dependencies.resolve()
-    build_python = args.build_python.resolve()
+    # Preserve the venv/bin/python symlink; resolving it can select a different
+    # interpreter with a different package inventory and CMake executable path.
+    build_python = args.build_python.expanduser().absolute()
     output = args.output.resolve()
     worktree = args.worktree.resolve()
     if sha256_file(PROTOCOL) != args.protocol_sha256:
