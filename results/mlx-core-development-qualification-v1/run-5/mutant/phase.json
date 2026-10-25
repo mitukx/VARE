@@ -1,0 +1,163 @@
+{
+  "build": {
+    "abort_reason": null,
+    "command": [
+      "/usr/bin/sandbox-exec",
+      "-p",
+      "(version 1) (allow default) (deny network*)",
+      "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+      "setup.py",
+      "build_ext",
+      "--inplace"
+    ],
+    "elapsed_seconds": 12.859,
+    "exit_code": 0,
+    "log_sha256": "d17a3bb450207fb80b4ef269fe5a8533b06d98e717958fcd1d51b0756394b3f1",
+    "peak_process_tree_rss_bytes": 673054720,
+    "samples_sha256": "3cc34aa0585c9c2b2f020575659b57fc665de15a0f32f44d65a95bb5538df564"
+  },
+  "checks": {
+    "default_device_is_cpu": true,
+    "normal_invalid_loc_rejected": false,
+    "normal_invalid_scale_rejected": false,
+    "normal_valid_broadcast": false,
+    "take_negative_axis0": false,
+    "take_negative_axis1": false,
+    "take_negative_flat": false,
+    "take_positive_control": true
+  },
+  "native_extensions": [
+    {
+      "path": "python/mlx/core.cpython-312-darwin.so",
+      "sha256": "2e87b6d22d7a2191d5e2d9877524811da369d8fb018a7b7aa964187ce1cc4eb8",
+      "size_bytes": 1662328
+    }
+  ],
+  "observed": {
+    "default_device_is_cpu": true,
+    "mlx_core_module_path": "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/scratch/source-v5/python/mlx/core.cpython-312-darwin.so",
+    "mlx_version": "0.32.5.dev20261025+f41bec73",
+    "random_normal_shape": {
+      "invalid_loc": {
+        "value": [
+          2,
+          3
+        ]
+      },
+      "invalid_scale": {
+        "value": [
+          2,
+          3
+        ]
+      },
+      "valid_broadcast": {
+        "error": "[normal] Cannot generate random values of shape (2,3) from broadcasted shape (2,3).",
+        "error_type": "ValueError"
+      }
+    },
+    "take_negative_index": {
+      "negative_axis0": {
+        "value": [
+          0,
+          1,
+          2
+        ]
+      },
+      "negative_axis1": {
+        "value": [
+          0,
+          3
+        ]
+      },
+      "negative_flat": {
+        "value": 4
+      },
+      "positive_control": {
+        "value": [
+          1,
+          4
+        ]
+      }
+    }
+  },
+  "runtime": {
+    "abort_reason": null,
+    "command": [
+      "/usr/bin/sandbox-exec",
+      "-p",
+      "(version 1) (allow default) (deny network*)",
+      "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+      "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/scripts/mlx_core_task_observations_v1.py",
+      "--json"
+    ],
+    "elapsed_seconds": 0.518,
+    "exit_code": 0,
+    "log_sha256": "cc0cb682f5e75f899eccbc8b635456b65df7750ce12aa9900281a78a13f72412",
+    "peak_process_tree_rss_bytes": 4063232,
+    "samples_sha256": "f38f2ad131c439025fb4d255c7f83e6f6d4e796002f50e6c8795301d783634db"
+  },
+  "source_hashes": {
+    "mlx-4729-negative-take": "6229a35985660d415352e9cf74f85245366d87c69dc02eb7ce54e2bf677785ca",
+    "mlx-4730-normal-shape": "e1317bce236ce048869e4bd4e3421035a21d5026f89a94b8df52942ba2319e0b"
+  },
+  "status": "MUTANT_REJECTED",
+  "task_decisions": {
+    "mlx-4729-negative-take": {
+      "checks": {
+        "default_device_is_cpu": true,
+        "take_negative_axis0": false,
+        "take_negative_axis1": false,
+        "take_negative_flat": false,
+        "take_positive_control": true
+      },
+      "passed": false,
+      "upstream_test_passed": false
+    },
+    "mlx-4730-normal-shape": {
+      "checks": {
+        "default_device_is_cpu": true,
+        "normal_invalid_loc_rejected": false,
+        "normal_invalid_scale_rejected": false,
+        "normal_valid_broadcast": false
+      },
+      "passed": false,
+      "upstream_test_passed": false
+    }
+  },
+  "upstream_tests": {
+    "mlx-4729-negative-take": {
+      "abort_reason": null,
+      "command": [
+        "/usr/bin/sandbox-exec",
+        "-p",
+        "(version 1) (allow default) (deny network*)",
+        "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+        "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/scripts/mlx_core_upstream_test_launcher_v1.py",
+        "test_ops.TestOps.test_take"
+      ],
+      "elapsed_seconds": 0.53,
+      "exit_code": 1,
+      "log_sha256": "5d3350fcb275c0558e073e20be8c25b059d3791c0bdcf233253fd2c871cbf99f",
+      "passed": false,
+      "peak_process_tree_rss_bytes": 131072,
+      "samples_sha256": "a8fdaf11943262d642d27c9c2e449f232f30c2b50f6ddd1b5b41e302eae18a50"
+    },
+    "mlx-4730-normal-shape": {
+      "abort_reason": null,
+      "command": [
+        "/usr/bin/sandbox-exec",
+        "-p",
+        "(version 1) (allow default) (deny network*)",
+        "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+        "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/scripts/mlx_core_upstream_test_launcher_v1.py",
+        "test_random.TestRandom.test_normal_loc_scale_shape"
+      ],
+      "elapsed_seconds": 0.524,
+      "exit_code": 1,
+      "log_sha256": "fab4cf286cf810bf17d81d6d0a6bc26a6f8e7de1c8465bdac07fb53da1e4697f",
+      "passed": false,
+      "peak_process_tree_rss_bytes": 4046848,
+      "samples_sha256": "ed6eea6fa9b2aae220ebe5d5687809d3d9ee039047d2c91306b2579d2e3cb3e1"
+    }
+  }
+}

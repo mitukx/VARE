@@ -1,0 +1,164 @@
+{
+  "build": {
+    "abort_reason": null,
+    "command": [
+      "/usr/bin/sandbox-exec",
+      "-p",
+      "(version 1) (allow default) (deny network*)",
+      "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+      "setup.py",
+      "build_ext",
+      "--inplace"
+    ],
+    "elapsed_seconds": 12.876,
+    "exit_code": 0,
+    "log_sha256": "68caf9f482c23c325c66aff223f9c4624b14466ea96ef5db5b6419177d8d89ec",
+    "peak_process_tree_rss_bytes": 613662720,
+    "samples_sha256": "b116cd94becd31f1b027a15aa904a20ba95a76031cfb4b7dc5cc0749eb9c445d"
+  },
+  "checks": {
+    "default_device_is_cpu": true,
+    "normal_invalid_loc_rejected": true,
+    "normal_invalid_scale_rejected": true,
+    "normal_valid_broadcast": true,
+    "take_negative_axis0": true,
+    "take_negative_axis1": true,
+    "take_negative_flat": true,
+    "take_positive_control": true
+  },
+  "native_extensions": [
+    {
+      "path": "python/mlx/core.cpython-312-darwin.so",
+      "sha256": "2e87b6d22d7a2191d5e2d9877524811da369d8fb018a7b7aa964187ce1cc4eb8",
+      "size_bytes": 1662328
+    }
+  ],
+  "observed": {
+    "default_device_is_cpu": true,
+    "mlx_core_module_path": "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/scratch/source-v5/python/mlx/core.cpython-312-darwin.so",
+    "mlx_version": "0.32.5.dev20261025+f41bec73",
+    "random_normal_shape": {
+      "invalid_loc": {
+        "error": "[normal] Cannot generate random values of shape (3) from broadcasted shape (2,3).",
+        "error_type": "ValueError"
+      },
+      "invalid_scale": {
+        "error": "[normal] Cannot generate random values of shape (3) from broadcasted shape (2,3).",
+        "error_type": "ValueError"
+      },
+      "valid_broadcast": {
+        "value": {
+          "all_finite": true,
+          "shape": [
+            2,
+            3
+          ]
+        }
+      }
+    },
+    "take_negative_index": {
+      "negative_axis0": {
+        "value": [
+          3,
+          4,
+          5
+        ]
+      },
+      "negative_axis1": {
+        "value": [
+          1,
+          4
+        ]
+      },
+      "negative_flat": {
+        "value": 5
+      },
+      "positive_control": {
+        "value": [
+          1,
+          4
+        ]
+      }
+    }
+  },
+  "runtime": {
+    "abort_reason": null,
+    "command": [
+      "/usr/bin/sandbox-exec",
+      "-p",
+      "(version 1) (allow default) (deny network*)",
+      "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+      "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/scripts/mlx_core_task_observations_v1.py",
+      "--json"
+    ],
+    "elapsed_seconds": 0.519,
+    "exit_code": 0,
+    "log_sha256": "95498d86145e33661db50599bac9d08402c1ab6736f60d26f1c7a976f728bdc2",
+    "peak_process_tree_rss_bytes": 163840,
+    "samples_sha256": "934cd71d631dcf7b3c93bfd71a3750b75f9a7445baacb915bc8a05493c4a2666"
+  },
+  "source_hashes": {
+    "mlx-4729-negative-take": "01c76a9460199c78b1c54038071861a22e6f90d6a89268754871281a4498cbc5",
+    "mlx-4730-normal-shape": "8cb0ff3cf907dca7c0b93103581f0bbbaa3206769a5b9526e591e13c731ed7bd"
+  },
+  "status": "KNOWN_FIX_ACCEPTED",
+  "task_decisions": {
+    "mlx-4729-negative-take": {
+      "checks": {
+        "default_device_is_cpu": true,
+        "take_negative_axis0": true,
+        "take_negative_axis1": true,
+        "take_negative_flat": true,
+        "take_positive_control": true
+      },
+      "passed": true,
+      "upstream_test_passed": true
+    },
+    "mlx-4730-normal-shape": {
+      "checks": {
+        "default_device_is_cpu": true,
+        "normal_invalid_loc_rejected": true,
+        "normal_invalid_scale_rejected": true,
+        "normal_valid_broadcast": true
+      },
+      "passed": true,
+      "upstream_test_passed": true
+    }
+  },
+  "upstream_tests": {
+    "mlx-4729-negative-take": {
+      "abort_reason": null,
+      "command": [
+        "/usr/bin/sandbox-exec",
+        "-p",
+        "(version 1) (allow default) (deny network*)",
+        "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+        "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/scripts/mlx_core_upstream_test_launcher_v1.py",
+        "test_ops.TestOps.test_take"
+      ],
+      "elapsed_seconds": 0.522,
+      "exit_code": 0,
+      "log_sha256": "1a2c313422b392e58387074447870f3b7c7a48daf9543fba9da6075e5708e156",
+      "passed": true,
+      "peak_process_tree_rss_bytes": 4145152,
+      "samples_sha256": "b770468a24985f39dc04f44a7b8d81616c25b3a30f7cb7625d980f326eb2f4eb"
+    },
+    "mlx-4730-normal-shape": {
+      "abort_reason": null,
+      "command": [
+        "/usr/bin/sandbox-exec",
+        "-p",
+        "(version 1) (allow default) (deny network*)",
+        "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+        "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/scripts/mlx_core_upstream_test_launcher_v1.py",
+        "test_random.TestRandom.test_normal_loc_scale_shape"
+      ],
+      "elapsed_seconds": 0.527,
+      "exit_code": 0,
+      "log_sha256": "f97b8e0ea91ac3dafb8fd3f8dce3c635a696c6c4c3cb540c0f140d7beb907171",
+      "passed": true,
+      "peak_process_tree_rss_bytes": 32768,
+      "samples_sha256": "f8a4eb0a339f078deaf8fc1f0b94c4e26feb3a1473fe4168f6d736d0b7548a5d"
+    }
+  }
+}

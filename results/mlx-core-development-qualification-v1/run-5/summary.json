@@ -1,0 +1,535 @@
+{
+  "claim_limit": "At most two new source/grader-certified Development task families on this pinned native CPU build. This does not establish candidate-model success, model-unseen eligibility, a held-out task count, post-training improvement, asynchronous benefit, benchmark prevalence, or external pretraining non-exposure.",
+  "controller_revision": "4d9ff74b2b449ac4e553c22124043c1ae50056a5",
+  "controller_tracked_worktree_clean": true,
+  "grader_files": {
+    "mlx_tests.py": "a819a52ffece76b3fcbbd54edfffe05f1f7e5a0bc0405d4a94e98e6ad42fcc83",
+    "test_ops.py": "4fb150807d49e035aa992462649f9001cf05f4c941d9c1582fb0a892de62bf00",
+    "test_random.py": "2633a7afff08e10895e61faec5afec35ddee359a32954389d41cfb37b686180c"
+  },
+  "host": {
+    "machine": "arm64",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]"
+  },
+  "inputs": {
+    "mlx-4729-negative-take": {
+      "baseline_sha256": "24c4ff0edda004e0968e4e22db38d33b31303fe311232789560dc5fd72b56b6f",
+      "fixed_sha256": "01c76a9460199c78b1c54038071861a22e6f90d6a89268754871281a4498cbc5",
+      "target_path": "mlx/ops.cpp"
+    },
+    "mlx-4730-normal-shape": {
+      "baseline_sha256": "1f82a71893294b6409e00c735ae519bd4dbcac5b990a8e4804f64305f91110c2",
+      "fixed_sha256": "8cb0ff3cf907dca7c0b93103581f0bbbaa3206769a5b9526e591e13c731ed7bd",
+      "target_path": "mlx/random.cpp"
+    }
+  },
+  "model_inference_calls": 0,
+  "networked_grader_calls": 0,
+  "phases": {
+    "baseline": {
+      "build": {
+        "abort_reason": null,
+        "command": [
+          "/usr/bin/sandbox-exec",
+          "-p",
+          "(version 1) (allow default) (deny network*)",
+          "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+          "setup.py",
+          "build_ext",
+          "--inplace"
+        ],
+        "elapsed_seconds": 162.094,
+        "exit_code": 0,
+        "log_sha256": "109426b887e8c0304e9bdfd8e78e0482b019bad6760795347e81e82e50e3f535",
+        "peak_process_tree_rss_bytes": 1985921024,
+        "samples_sha256": "a92b3149da845087a7f8c56577b3fa919457dada01d5af32f9437c4ead84247c"
+      },
+      "checks": {
+        "default_device_is_cpu": true,
+        "normal_invalid_loc_rejected": false,
+        "normal_invalid_scale_rejected": false,
+        "normal_valid_broadcast": true,
+        "take_negative_axis0": false,
+        "take_negative_axis1": true,
+        "take_negative_flat": false,
+        "take_positive_control": true
+      },
+      "native_extensions": [
+        {
+          "path": "python/mlx/core.cpython-312-darwin.so",
+          "sha256": "2e87b6d22d7a2191d5e2d9877524811da369d8fb018a7b7aa964187ce1cc4eb8",
+          "size_bytes": 1662328
+        }
+      ],
+      "observed": {
+        "default_device_is_cpu": true,
+        "mlx_core_module_path": "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/scratch/source-v5/python/mlx/core.cpython-312-darwin.so",
+        "mlx_version": "0.32.5.dev20261025+f41bec73",
+        "random_normal_shape": {
+          "invalid_loc": {
+            "value": [
+              2,
+              3
+            ]
+          },
+          "invalid_scale": {
+            "value": [
+              2,
+              3
+            ]
+          },
+          "valid_broadcast": {
+            "value": {
+              "all_finite": true,
+              "shape": [
+                2,
+                3
+              ]
+            }
+          }
+        },
+        "take_negative_index": {
+          "negative_axis0": {
+            "error": "[squeeze] Cannot squeeze axis 0 with size 0 which is not equal to 1.",
+            "error_type": "ValueError"
+          },
+          "negative_axis1": {
+            "value": [
+              1,
+              4
+            ]
+          },
+          "negative_flat": {
+            "error": "[squeeze] Cannot squeeze axis 0 with size 0 which is not equal to 1.",
+            "error_type": "ValueError"
+          },
+          "positive_control": {
+            "value": [
+              1,
+              4
+            ]
+          }
+        }
+      },
+      "runtime": {
+        "abort_reason": null,
+        "command": [
+          "/usr/bin/sandbox-exec",
+          "-p",
+          "(version 1) (allow default) (deny network*)",
+          "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+          "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/scripts/mlx_core_task_observations_v1.py",
+          "--json"
+        ],
+        "elapsed_seconds": 0.516,
+        "exit_code": 0,
+        "log_sha256": "de79c9a8c90d422179f104dbefd61a4769020be2093ea2432504e8a903733775",
+        "peak_process_tree_rss_bytes": 32768,
+        "samples_sha256": "b7a05054003e151a24a2b24a11b213ceef202ec7268a771d03de4356e8c5bb75"
+      },
+      "source_hashes": {
+        "mlx-4729-negative-take": "24c4ff0edda004e0968e4e22db38d33b31303fe311232789560dc5fd72b56b6f",
+        "mlx-4730-normal-shape": "1f82a71893294b6409e00c735ae519bd4dbcac5b990a8e4804f64305f91110c2"
+      },
+      "status": "BASELINE_REJECTED",
+      "task_decisions": {
+        "mlx-4729-negative-take": {
+          "checks": {
+            "default_device_is_cpu": true,
+            "take_negative_axis0": false,
+            "take_negative_axis1": true,
+            "take_negative_flat": false,
+            "take_positive_control": true
+          },
+          "passed": false,
+          "upstream_test_passed": false
+        },
+        "mlx-4730-normal-shape": {
+          "checks": {
+            "default_device_is_cpu": true,
+            "normal_invalid_loc_rejected": false,
+            "normal_invalid_scale_rejected": false,
+            "normal_valid_broadcast": true
+          },
+          "passed": false,
+          "upstream_test_passed": false
+        }
+      },
+      "upstream_tests": {
+        "mlx-4729-negative-take": {
+          "abort_reason": null,
+          "command": [
+            "/usr/bin/sandbox-exec",
+            "-p",
+            "(version 1) (allow default) (deny network*)",
+            "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+            "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/scripts/mlx_core_upstream_test_launcher_v1.py",
+            "test_ops.TestOps.test_take"
+          ],
+          "elapsed_seconds": 0.516,
+          "exit_code": 1,
+          "log_sha256": "85f8af69003b3b0d476847b06ef6b6d21e611c8e34a4aafccbb31292c0f3d3a5",
+          "passed": false,
+          "peak_process_tree_rss_bytes": 4112384,
+          "samples_sha256": "a95823d3c2af7d5f4efb4afa3a6d7c1317f0ef90334be444f1ee43c908abdfc7"
+        },
+        "mlx-4730-normal-shape": {
+          "abort_reason": null,
+          "command": [
+            "/usr/bin/sandbox-exec",
+            "-p",
+            "(version 1) (allow default) (deny network*)",
+            "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+            "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/scripts/mlx_core_upstream_test_launcher_v1.py",
+            "test_random.TestRandom.test_normal_loc_scale_shape"
+          ],
+          "elapsed_seconds": 0.522,
+          "exit_code": 1,
+          "log_sha256": "fab4cf286cf810bf17d81d6d0a6bc26a6f8e7de1c8465bdac07fb53da1e4697f",
+          "passed": false,
+          "peak_process_tree_rss_bytes": 32768,
+          "samples_sha256": "e15d605d71d44c03867a37250e80715407b9520a33cc042cde719194407635ae"
+        }
+      }
+    },
+    "fixed": {
+      "build": {
+        "abort_reason": null,
+        "command": [
+          "/usr/bin/sandbox-exec",
+          "-p",
+          "(version 1) (allow default) (deny network*)",
+          "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+          "setup.py",
+          "build_ext",
+          "--inplace"
+        ],
+        "elapsed_seconds": 12.876,
+        "exit_code": 0,
+        "log_sha256": "68caf9f482c23c325c66aff223f9c4624b14466ea96ef5db5b6419177d8d89ec",
+        "peak_process_tree_rss_bytes": 613662720,
+        "samples_sha256": "b116cd94becd31f1b027a15aa904a20ba95a76031cfb4b7dc5cc0749eb9c445d"
+      },
+      "checks": {
+        "default_device_is_cpu": true,
+        "normal_invalid_loc_rejected": true,
+        "normal_invalid_scale_rejected": true,
+        "normal_valid_broadcast": true,
+        "take_negative_axis0": true,
+        "take_negative_axis1": true,
+        "take_negative_flat": true,
+        "take_positive_control": true
+      },
+      "native_extensions": [
+        {
+          "path": "python/mlx/core.cpython-312-darwin.so",
+          "sha256": "2e87b6d22d7a2191d5e2d9877524811da369d8fb018a7b7aa964187ce1cc4eb8",
+          "size_bytes": 1662328
+        }
+      ],
+      "observed": {
+        "default_device_is_cpu": true,
+        "mlx_core_module_path": "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/scratch/source-v5/python/mlx/core.cpython-312-darwin.so",
+        "mlx_version": "0.32.5.dev20261025+f41bec73",
+        "random_normal_shape": {
+          "invalid_loc": {
+            "error": "[normal] Cannot generate random values of shape (3) from broadcasted shape (2,3).",
+            "error_type": "ValueError"
+          },
+          "invalid_scale": {
+            "error": "[normal] Cannot generate random values of shape (3) from broadcasted shape (2,3).",
+            "error_type": "ValueError"
+          },
+          "valid_broadcast": {
+            "value": {
+              "all_finite": true,
+              "shape": [
+                2,
+                3
+              ]
+            }
+          }
+        },
+        "take_negative_index": {
+          "negative_axis0": {
+            "value": [
+              3,
+              4,
+              5
+            ]
+          },
+          "negative_axis1": {
+            "value": [
+              1,
+              4
+            ]
+          },
+          "negative_flat": {
+            "value": 5
+          },
+          "positive_control": {
+            "value": [
+              1,
+              4
+            ]
+          }
+        }
+      },
+      "runtime": {
+        "abort_reason": null,
+        "command": [
+          "/usr/bin/sandbox-exec",
+          "-p",
+          "(version 1) (allow default) (deny network*)",
+          "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+          "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/scripts/mlx_core_task_observations_v1.py",
+          "--json"
+        ],
+        "elapsed_seconds": 0.519,
+        "exit_code": 0,
+        "log_sha256": "95498d86145e33661db50599bac9d08402c1ab6736f60d26f1c7a976f728bdc2",
+        "peak_process_tree_rss_bytes": 163840,
+        "samples_sha256": "934cd71d631dcf7b3c93bfd71a3750b75f9a7445baacb915bc8a05493c4a2666"
+      },
+      "source_hashes": {
+        "mlx-4729-negative-take": "01c76a9460199c78b1c54038071861a22e6f90d6a89268754871281a4498cbc5",
+        "mlx-4730-normal-shape": "8cb0ff3cf907dca7c0b93103581f0bbbaa3206769a5b9526e591e13c731ed7bd"
+      },
+      "status": "KNOWN_FIX_ACCEPTED",
+      "task_decisions": {
+        "mlx-4729-negative-take": {
+          "checks": {
+            "default_device_is_cpu": true,
+            "take_negative_axis0": true,
+            "take_negative_axis1": true,
+            "take_negative_flat": true,
+            "take_positive_control": true
+          },
+          "passed": true,
+          "upstream_test_passed": true
+        },
+        "mlx-4730-normal-shape": {
+          "checks": {
+            "default_device_is_cpu": true,
+            "normal_invalid_loc_rejected": true,
+            "normal_invalid_scale_rejected": true,
+            "normal_valid_broadcast": true
+          },
+          "passed": true,
+          "upstream_test_passed": true
+        }
+      },
+      "upstream_tests": {
+        "mlx-4729-negative-take": {
+          "abort_reason": null,
+          "command": [
+            "/usr/bin/sandbox-exec",
+            "-p",
+            "(version 1) (allow default) (deny network*)",
+            "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+            "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/scripts/mlx_core_upstream_test_launcher_v1.py",
+            "test_ops.TestOps.test_take"
+          ],
+          "elapsed_seconds": 0.522,
+          "exit_code": 0,
+          "log_sha256": "1a2c313422b392e58387074447870f3b7c7a48daf9543fba9da6075e5708e156",
+          "passed": true,
+          "peak_process_tree_rss_bytes": 4145152,
+          "samples_sha256": "b770468a24985f39dc04f44a7b8d81616c25b3a30f7cb7625d980f326eb2f4eb"
+        },
+        "mlx-4730-normal-shape": {
+          "abort_reason": null,
+          "command": [
+            "/usr/bin/sandbox-exec",
+            "-p",
+            "(version 1) (allow default) (deny network*)",
+            "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+            "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/scripts/mlx_core_upstream_test_launcher_v1.py",
+            "test_random.TestRandom.test_normal_loc_scale_shape"
+          ],
+          "elapsed_seconds": 0.527,
+          "exit_code": 0,
+          "log_sha256": "f97b8e0ea91ac3dafb8fd3f8dce3c635a696c6c4c3cb540c0f140d7beb907171",
+          "passed": true,
+          "peak_process_tree_rss_bytes": 32768,
+          "samples_sha256": "f8a4eb0a339f078deaf8fc1f0b94c4e26feb3a1473fe4168f6d736d0b7548a5d"
+        }
+      }
+    },
+    "mutant": {
+      "build": {
+        "abort_reason": null,
+        "command": [
+          "/usr/bin/sandbox-exec",
+          "-p",
+          "(version 1) (allow default) (deny network*)",
+          "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+          "setup.py",
+          "build_ext",
+          "--inplace"
+        ],
+        "elapsed_seconds": 12.859,
+        "exit_code": 0,
+        "log_sha256": "d17a3bb450207fb80b4ef269fe5a8533b06d98e717958fcd1d51b0756394b3f1",
+        "peak_process_tree_rss_bytes": 673054720,
+        "samples_sha256": "3cc34aa0585c9c2b2f020575659b57fc665de15a0f32f44d65a95bb5538df564"
+      },
+      "checks": {
+        "default_device_is_cpu": true,
+        "normal_invalid_loc_rejected": false,
+        "normal_invalid_scale_rejected": false,
+        "normal_valid_broadcast": false,
+        "take_negative_axis0": false,
+        "take_negative_axis1": false,
+        "take_negative_flat": false,
+        "take_positive_control": true
+      },
+      "native_extensions": [
+        {
+          "path": "python/mlx/core.cpython-312-darwin.so",
+          "sha256": "2e87b6d22d7a2191d5e2d9877524811da369d8fb018a7b7aa964187ce1cc4eb8",
+          "size_bytes": 1662328
+        }
+      ],
+      "observed": {
+        "default_device_is_cpu": true,
+        "mlx_core_module_path": "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/scratch/source-v5/python/mlx/core.cpython-312-darwin.so",
+        "mlx_version": "0.32.5.dev20261025+f41bec73",
+        "random_normal_shape": {
+          "invalid_loc": {
+            "value": [
+              2,
+              3
+            ]
+          },
+          "invalid_scale": {
+            "value": [
+              2,
+              3
+            ]
+          },
+          "valid_broadcast": {
+            "error": "[normal] Cannot generate random values of shape (2,3) from broadcasted shape (2,3).",
+            "error_type": "ValueError"
+          }
+        },
+        "take_negative_index": {
+          "negative_axis0": {
+            "value": [
+              0,
+              1,
+              2
+            ]
+          },
+          "negative_axis1": {
+            "value": [
+              0,
+              3
+            ]
+          },
+          "negative_flat": {
+            "value": 4
+          },
+          "positive_control": {
+            "value": [
+              1,
+              4
+            ]
+          }
+        }
+      },
+      "runtime": {
+        "abort_reason": null,
+        "command": [
+          "/usr/bin/sandbox-exec",
+          "-p",
+          "(version 1) (allow default) (deny network*)",
+          "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+          "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/scripts/mlx_core_task_observations_v1.py",
+          "--json"
+        ],
+        "elapsed_seconds": 0.518,
+        "exit_code": 0,
+        "log_sha256": "cc0cb682f5e75f899eccbc8b635456b65df7750ce12aa9900281a78a13f72412",
+        "peak_process_tree_rss_bytes": 4063232,
+        "samples_sha256": "f38f2ad131c439025fb4d255c7f83e6f6d4e796002f50e6c8795301d783634db"
+      },
+      "source_hashes": {
+        "mlx-4729-negative-take": "6229a35985660d415352e9cf74f85245366d87c69dc02eb7ce54e2bf677785ca",
+        "mlx-4730-normal-shape": "e1317bce236ce048869e4bd4e3421035a21d5026f89a94b8df52942ba2319e0b"
+      },
+      "status": "MUTANT_REJECTED",
+      "task_decisions": {
+        "mlx-4729-negative-take": {
+          "checks": {
+            "default_device_is_cpu": true,
+            "take_negative_axis0": false,
+            "take_negative_axis1": false,
+            "take_negative_flat": false,
+            "take_positive_control": true
+          },
+          "passed": false,
+          "upstream_test_passed": false
+        },
+        "mlx-4730-normal-shape": {
+          "checks": {
+            "default_device_is_cpu": true,
+            "normal_invalid_loc_rejected": false,
+            "normal_invalid_scale_rejected": false,
+            "normal_valid_broadcast": false
+          },
+          "passed": false,
+          "upstream_test_passed": false
+        }
+      },
+      "upstream_tests": {
+        "mlx-4729-negative-take": {
+          "abort_reason": null,
+          "command": [
+            "/usr/bin/sandbox-exec",
+            "-p",
+            "(version 1) (allow default) (deny network*)",
+            "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+            "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/scripts/mlx_core_upstream_test_launcher_v1.py",
+            "test_ops.TestOps.test_take"
+          ],
+          "elapsed_seconds": 0.53,
+          "exit_code": 1,
+          "log_sha256": "5d3350fcb275c0558e073e20be8c25b059d3791c0bdcf233253fd2c871cbf99f",
+          "passed": false,
+          "peak_process_tree_rss_bytes": 131072,
+          "samples_sha256": "a8fdaf11943262d642d27c9c2e449f232f30c2b50f6ddd1b5b41e302eae18a50"
+        },
+        "mlx-4730-normal-shape": {
+          "abort_reason": null,
+          "command": [
+            "/usr/bin/sandbox-exec",
+            "-p",
+            "(version 1) (allow default) (deny network*)",
+            "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+            "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/scripts/mlx_core_upstream_test_launcher_v1.py",
+            "test_random.TestRandom.test_normal_loc_scale_shape"
+          ],
+          "elapsed_seconds": 0.524,
+          "exit_code": 1,
+          "log_sha256": "fab4cf286cf810bf17d81d6d0a6bc26a6f8e7de1c8465bdac07fb53da1e4697f",
+          "passed": false,
+          "peak_process_tree_rss_bytes": 4046848,
+          "samples_sha256": "ed6eea6fa9b2aae220ebe5d5687809d3d9ee039047d2c91306b2579d2e3cb3e1"
+        }
+      }
+    }
+  },
+  "protocol_sha256": "1fee3fd17fbda00a030cd87c9364e56297e09acecfb39c3da76ab8cba877d8f6",
+  "source_base_revision": "f41bec734ac9fc96723ab7d4e64e385796f15561",
+  "source_repo_url": "https://github.com/ml-explore/mlx.git",
+  "status": "PASS_TASK_CERTIFICATION_PILOT",
+  "toolchain": {
+    "build_python": "Python 3.12.12",
+    "cmake": "cmake version 3.31.6\n\nCMake suite maintained and supported by Kitware (kitware.com/cmake).",
+    "compiler": "Apple clang version 17.0.0 (clang-1700.6.3.2)\nTarget: arm64-apple-darwin27.0.0\nThread model: posix\nInstalledDir: /Library/Developer/CommandLineTools/usr/bin",
+    "git": "git version 2.50.1 (Apple Git-155)"
+  },
+  "training_updates": 0
+}

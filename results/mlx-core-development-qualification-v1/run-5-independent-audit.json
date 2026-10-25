@@ -1,0 +1,39 @@
+{
+  "claim_limit": "At most two new source/grader-certified Development task families on this pinned native CPU build. This does not establish candidate-model success, model-unseen eligibility, a held-out task count, post-training improvement, asynchronous benefit, benchmark prevalence, or external pretraining non-exposure.",
+  "decision": "PASS_TWO_DEVELOPMENT_SOURCE_GRADER_CERTIFICATES",
+  "failure_reason": null,
+  "manifest_files_verified": 32,
+  "protocol_sha256": "1fee3fd17fbda00a030cd87c9364e56297e09acecfb39c3da76ab8cba877d8f6",
+  "reconstructed_phases": {
+    "baseline": {
+      "observation_log_sha256": "de79c9a8c90d422179f104dbefd61a4769020be2093ea2432504e8a903733775",
+      "status": "BASELINE_REJECTED",
+      "task_decisions": {
+        "mlx-4729-negative-take": false,
+        "mlx-4730-normal-shape": false
+      }
+    },
+    "fixed": {
+      "observation_log_sha256": "95498d86145e33661db50599bac9d08402c1ab6736f60d26f1c7a976f728bdc2",
+      "status": "KNOWN_FIX_ACCEPTED",
+      "task_decisions": {
+        "mlx-4729-negative-take": true,
+        "mlx-4730-normal-shape": true
+      }
+    },
+    "mutant": {
+      "observation_log_sha256": "cc0cb682f5e75f899eccbc8b635456b65df7750ce12aa9900281a78a13f72412",
+      "status": "MUTANT_REJECTED",
+      "task_decisions": {
+        "mlx-4729-negative-take": false,
+        "mlx-4730-normal-shape": false
+      }
+    }
+  },
+  "schema_version": 1,
+  "source_base_revision": "f41bec734ac9fc96723ab7d4e64e385796f15561",
+  "task_ids": [
+    "mlx-4729-negative-take",
+    "mlx-4730-normal-shape"
+  ]
+}

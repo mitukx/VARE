@@ -1,0 +1,15 @@
+test_take (test_ops.TestOps.test_take) ... ERROR
+
+======================================================================
+ERROR: test_take (test_ops.TestOps.test_take)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/results/mlx-core-development-qualification-v1/run-5/grader/test_ops.py", line 1623, in test_take
+    out = mx.take(a, -1, axis=0)
+          ^^^^^^^^^^^^^^^^^^^^^^
+ValueError: [squeeze] Cannot squeeze axis 0 with size 0 which is not equal to 1.
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (errors=1)

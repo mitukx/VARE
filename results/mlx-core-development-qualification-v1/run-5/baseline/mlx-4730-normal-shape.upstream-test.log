@@ -1,0 +1,15 @@
+test_normal_loc_scale_shape (test_random.TestRandom.test_normal_loc_scale_shape) ... FAIL
+
+======================================================================
+FAIL: test_normal_loc_scale_shape (test_random.TestRandom.test_normal_loc_scale_shape)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/results/mlx-core-development-qualification-v1/run-5/grader/test_random.py", line 116, in test_normal_loc_scale_shape
+    with self.assertRaisesRegex(ValueError, msg):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (failures=1)
