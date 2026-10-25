@@ -219,6 +219,7 @@ PINNED_VERSIONED_SOURCE_COMMITS = {
     SOURCE_INVENTORY_V1: "7f7d5a4e3963adef298dee7520bcfc36971639d9",
     SOURCE_INVENTORY_V2: "a4fe08298d1349c5aaf6d20b626f0f114c4ee114",
     SOURCE_INVENTORY_V3: "d97da36799f1ae87ed2fb920991d93f47ecd917a",
+    SOURCE_INVENTORY_V4: "d251cc678fbc9940f3de460904d5d23a1967b3ce",
 }
 SUPPORTED_SOURCE_INVENTORIES = (
     LEGACY_EXPECTED_SOURCES,
@@ -226,6 +227,7 @@ SUPPORTED_SOURCE_INVENTORIES = (
     SOURCE_INVENTORY_V1,
     SOURCE_INVENTORY_V2,
     SOURCE_INVENTORY_V3,
+    SOURCE_INVENTORY_V4,
 )
 
 # The frozen v2 campaign is tied to the commit and source tree that produced it.
@@ -259,7 +261,8 @@ def validate_source_inventory(manifest, source_names, locked):
              "locked campaign source snapshots differ from the independently pinned revision")
         return
     need(source_names in (PREVIOUS_EXPECTED_SOURCES,SOURCE_INVENTORY_V1,
-                          SOURCE_INVENTORY_V2,SOURCE_INVENTORY_V3),
+                          SOURCE_INVENTORY_V2,SOURCE_INVENTORY_V3,
+                          SOURCE_INVENTORY_V4),
          "pinned source inventory differs")
     commit=manifest.get("base_commit")
     need(type(commit) is str and len(commit)==40 and
@@ -280,6 +283,11 @@ def validate_source_inventory(manifest, source_names, locked):
              "80-file campaign base commit differs from its pinned diagnostic revision")
         need(runtime_source_names_from_commit(commit)==RUNTIME_PACKAGE_SOURCES_V3,
              "runtime source inventory differs from pinned 80-file version")
+    elif source_names==SOURCE_INVENTORY_V4:
+        need(commit==PINNED_VERSIONED_SOURCE_COMMITS[SOURCE_INVENTORY_V4],
+             "V4 campaign base commit differs from its pinned source revision")
+        need(runtime_source_names_from_commit(commit)==RUNTIME_PACKAGE_SOURCES_V4,
+             "runtime source inventory differs from pinned V4 version")
     committed_sources=source_hashes_from_commit(commit,source_names)
     need(manifest.get("sources")==committed_sources,
          "source snapshot differs from recorded base commit")
@@ -1016,7 +1024,8 @@ def audit(root, check_tensors=False, model_dir=None):
             resumed_spans=trace_stages.get(("round",expected_round,1),[])
             need(len(resumed_spans)==1,"recovery endpoint lacks one resumed-round trace")
             resumed_end=resumed_spans[0]["end"]
-            if source_names in (SOURCE_INVENTORY_V1,SOURCE_INVENTORY_V2,SOURCE_INVENTORY_V3):
+            if source_names in (SOURCE_INVENTORY_V1,SOURCE_INVENTORY_V2,
+                                SOURCE_INVENTORY_V3,SOURCE_INVENTORY_V4):
                 need(progress.get("time")==resumed_end,
                      "recovery endpoint differs from resumed-round trace")
             else:
