@@ -26,6 +26,8 @@ def _lock() -> dict[str, str]:
         "tests_path": "tests/test_transformers_47468_qualification_v4.py",
         "tests_sha256": runner.sha_file(Path(__file__).resolve()),
         "readme_sha256": runner.sha_file(runner.EXPERIMENT / "README.md"),
+        "gitignore_path": ".gitignore",
+        "gitignore_sha256": runner.sha_file(runner.ROOT / ".gitignore"),
     }
 
 
@@ -346,6 +348,60 @@ def test_execute_identity_rejects_mismatched_commit(monkeypatch, tmp_path):
         runner.validate_frozen_execution_identity()
 
 
+def test_runtime_records_and_phase_output_use_versioned_ignored_paths(tmp_path):
+    assert runner.core.MANIFEST == runner.RUNTIME_ROOT / "records/manifest.jsonl"
+    assert runner.RUNTIME_RUN == runner.RUNTIME_ROOT / "run"
+    clean_repo = tmp_path / "clean-repo"
+    clean_repo.mkdir()
+    (clean_repo / ".gitignore").write_bytes((runner.ROOT / ".gitignore").read_bytes())
+    subprocess.run(["git", "init", "--quiet", str(clean_repo)], check=True)
+    subprocess.run(["git", "-C", str(clean_repo), "add", ".gitignore"], check=True)
+    subprocess.run(
+        ["git", "-C", str(clean_repo), "-c", "user.name=VARE test",
+         "-c", "user.email=vare-test@example.invalid", "commit", "--quiet", "-m", "initial"],
+        check=True,
+    )
+    for path in (
+        "work/transformers-47468-qualification-v4/records/manifest.jsonl",
+        "work/transformers-47468-qualification-v4/run/records/phase.json",
+    ):
+        result = subprocess.run(
+            ["git", "-C", str(clean_repo), "check-ignore", "--no-index", "-v", path],
+            capture_output=True, text=True, check=False,
+        )
+        assert result.returncode == 0
+        assert result.stdout.startswith(".gitignore:")
+        destination = clean_repo / path
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(b"retained runtime evidence\n")
+    status = subprocess.run(
+        ["git", "-C", str(clean_repo), "status", "--porcelain", "--untracked-files=all"],
+        capture_output=True, text=True, check=True,
+    )
+    assert status.stdout == ""
+
+
+def test_cli_recovery_records_use_the_pinned_runtime_root(monkeypatch, tmp_path):
+    manifest = tmp_path / "manifest.jsonl"
+    _seed_frozen_manifest(manifest)
+    captured = {}
+
+    def recover(manifest_path, run_dir, experiment_root):
+        captured.update({
+            "manifest": manifest_path,
+            "run_dir": run_dir,
+            "experiment_root": experiment_root,
+        })
+        return []
+
+    monkeypatch.setattr(runner, "_ORIGINAL_RECOVERY", recover)
+    result = runner._recover_interrupted_attempts_with_launch_tokens(
+        manifest, tmp_path / "run", runner.EXPERIMENT,
+    )
+    assert result == []
+    assert captured["experiment_root"] == runner.RUNTIME_ROOT
+
+
 @pytest.mark.parametrize("mode", ["--execute", "--recover-interrupted"])
 def test_cli_requires_frozen_identity_gate_before_mutating_modes(monkeypatch, mode):
     calls = []
@@ -354,6 +410,15 @@ def test_cli_requires_frozen_identity_gate_before_mutating_modes(monkeypatch, mo
     monkeypatch.setattr(runner, "_ORIGINAL_MAIN", lambda: 0)
     assert runner.core.main() == 0
     assert calls == [mode]
+    assert sys.argv[-2:] == ["--output", str(runner.RUNTIME_RUN)]
+
+
+def test_mutating_mode_rejects_output_outside_pinned_runtime_path(monkeypatch, tmp_path):
+    monkeypatch.setattr(sys, "argv", [str(runner.SCRIPT), "--execute", "--output", str(tmp_path)])
+    monkeypatch.setattr(runner, "validate_frozen_execution_identity", lambda: None)
+    monkeypatch.setattr(runner, "_ORIGINAL_MAIN", lambda: pytest.fail("core main must not run"))
+    with pytest.raises(RuntimeError, match="pinned ignored runtime directory"):
+        runner.core.main()
 
 
 @pytest.mark.skipif(platform.system() != "Darwin" or not Path("/usr/bin/sandbox-exec").is_file(),

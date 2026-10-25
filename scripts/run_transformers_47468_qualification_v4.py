@@ -21,6 +21,8 @@ import uuid
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPERIMENT = ROOT / "results/transformers-47468-development-qualification-v4"
+RUNTIME_ROOT = ROOT / "work/transformers-47468-qualification-v4"
+RUNTIME_RUN = RUNTIME_ROOT / "run"
 PROTOCOL = EXPERIMENT / "protocol/protocol-v4.json"
 LOCK = EXPERIMENT / "protocol/protocol-v4.lock.json"
 PROMPT = EXPERIMENT / "protocol/candidate-prompt.md"
@@ -57,6 +59,9 @@ def validate_locked_source_identity(lock_data: dict[str, Any]) -> None:
     require(sha_file(tests_path) == lock_data["tests_sha256"], "test suite SHA mismatch")
     require(sha_file(EXPERIMENT / "README.md") == lock_data["readme_sha256"],
             "qualification README SHA mismatch")
+    require(lock_data.get("gitignore_path") == ".gitignore", "runtime ignore path mismatch")
+    require(sha_file(ROOT / ".gitignore") == lock_data["gitignore_sha256"],
+            "runtime ignore policy SHA mismatch")
 
 
 def validate_core_before_import(lock_data: dict[str, Any]) -> None:
@@ -131,7 +136,7 @@ core.PROTOCOL = PROTOCOL
 core.LOCK = LOCK
 core.PROMPT = PROMPT
 core.SCRIPT = SCRIPT
-core.MANIFEST = EXPERIMENT / "records/manifest.jsonl"
+core.MANIFEST = RUNTIME_ROOT / "records/manifest.jsonl"
 core.PROFILE = PROFILE
 core.validate_locked_source_identity = validate_locked_source_identity
 core.validate_network_deny = validate_execution_boundary
@@ -279,7 +284,8 @@ def _recover_interrupted_attempts_with_launch_tokens(manifest_path, run_dir, exp
                 "scan_complete": True,
                 "reason": "no live same-user process carried the durable launch token",
             }, manifest_path=manifest_path)
-    return _ORIGINAL_RECOVERY(manifest_path, run_dir, experiment_root)
+    recovery_root = RUNTIME_ROOT if Path(experiment_root) == EXPERIMENT else experiment_root
+    return _ORIGINAL_RECOVERY(manifest_path, run_dir, recovery_root)
 
 
 core.recover_interrupted_attempts = _recover_interrupted_attempts_with_launch_tokens
@@ -333,6 +339,28 @@ _ORIGINAL_MAIN = core.main
 def _main_v4() -> int:
     if "--execute" in sys.argv or "--recover-interrupted" in sys.argv:
         validate_frozen_execution_identity()
+        output_values = []
+        argv = sys.argv[1:]
+        index = 0
+        while index < len(argv):
+            item = argv[index]
+            if item == "--output":
+                require(index + 1 < len(argv), "--output requires a path")
+                output_values.append(argv[index + 1])
+                index += 2
+                continue
+            if item.startswith("--output="):
+                output_values.append(item.split("=", 1)[1])
+            index += 1
+        require(len(output_values) <= 1, "provide at most one --output path")
+        if output_values:
+            requested = Path(output_values[0]).expanduser()
+            if not requested.is_absolute():
+                requested = ROOT / requested
+            require(requested.resolve() == RUNTIME_RUN,
+                    "execute/recovery output must use the pinned ignored runtime directory")
+        else:
+            sys.argv.extend(["--output", str(RUNTIME_RUN)])
     return _ORIGINAL_MAIN()
 
 
