@@ -52,6 +52,12 @@ The verifier epoch is the canonical hash of scorer identity, test-bundle identit
 
 The trusted reference score vector for candidate order `[baseline, fix, keep-all, drop-all, source-delegate, bytecode-delegate]` is `[0, 1, 0, 0, 0, 0]`. The contaminated original-image vector is `[0, 1, 0, 0, 1, 1]`.
 
+### Independent review correction: receipt identity validation
+
+Independent review of the first replay implementation found that it read grader and adapter hashes plus the case list from the first receipt, then checked only aggregate pass counts on later receipts. A later receipt could therefore change its verifier hashes or case IDs and still be labeled with the first receipt's identity. The original `replay-analysis-v1` outputs and source remain preserved as historical evidence; the issue did not change the fixed candidate scores, but it weakened their per-receipt provenance guarantee.
+
+The corrected implementation pins the task protocol file digest and derives the grader, adapter, task-prompt, isolation-source, and ordered 14-case identities from that protocol. It validates all 18 receipts against those identities, checks each case decision and the aggregate pass result, and only then constructs reward records. The source-only/sanitized candidate set and historical outcomes were not changed. A new corrected replay is retained under [`replay-analysis-review-correction-2`](../results/verifier_integrity_provenance_v1/replay-analysis-review-correction-2/); its reward vectors and analysis exactly match the original replay. Unit tests and five end-to-end tamper variants (grader hash, adapter hash, case ID, missing case, duplicate case) all reject before producing an output directory; the detailed results are in [`review-correction-checks.json`](../results/verifier_integrity_provenance_v1/replay-analysis-review-correction-2/review-correction-checks.json). The previous implementation SHA-256 remains in the correction lock.
+
 | Admission rule | New candidate grades | Positive records retained | False positive rewards admitted | Genuine fix falsely rejected | Positive labels sent to optimizer replay |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Reuse by scorer identity only | 0 | 3 | **2/5 invalid candidates (40%)** | 0/1 | 3, including 2 invalid delegates |
@@ -79,7 +85,7 @@ This finding is narrower than the established benchmark-integrity literature:
 
 The narrow contribution here is the repeated-bytecode counterfactual under a fixed scoring implementation, its genuine-fix and incorrect-mutant controls, and an explicit stale-reward admission replay. Fresh-image regrading and dependency-cache attacks are already described in Pro V2, so this report makes no first-ever, broad-hardening, or publication-level novelty claim.
 
-The external Pro V2 results provide an independently documented second real-repository example with public task/test/image provenance. That clears the bar to justify a larger, preregistered **cross-repository** consistency study, but not a benchmark-wide prevalence claim. That follow-up should reproduce one specific Go module-cache case and compare scorer-only reuse, blanket rejection and provenance-aware regrade under the published pristine-image protocol.
+SWE-Bench Pro V2 is relevant published prior art for pristine-image regrading and dependency-cache contamination. However, the public task archive and linked trajectory collection do not expose the exact affected task instance, original candidate patch/trajectory, and paired contaminated-versus-pristine receipts required by the preregistered eligibility gate. The external case is therefore **NOT_ELIGIBLE** for runtime replication from the available artifacts. No V2 attack was synthesized, no runtime preflight was attempted, and no cross-repository replication or transfer claim is made.
 
 ## Artifact integrity and availability
 

@@ -17,6 +17,8 @@ import torch
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL_PATH = ROOT / "protocols/coding_reward_provenance_replay_v1.json"
 LOCK_PATH = ROOT / "protocols/coding_reward_provenance_replay_v1.lock.json"
+TASK_PROTOCOL_PATH = ROOT / "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v4.json"
+TASK_PROTOCOL_SHA256 = "6c309a8f32ecdaaea9a07d0527700f9188d9955cce2f3d662e6dc95a6de56e14"
 OLD_PROTOCOL_PATH = ROOT / "protocols/verifier_integrity_pilot_v1/protocol-v3.json"
 OLD_PROTOCOL_SHA256 = "c209985ec5ae31be26053aacd479f43c31f83349555777b7053e91bae04ee6fb"
 EXPECTED_ARCHIVE_SHA256 = "4723319c19f96703f3671fe1de97818d61bbc028044849889964b1b67cfd655f"
@@ -41,6 +43,22 @@ CANDIDATE_FILES = {
     "delegate-compiled-bytecode": "delegate_bytecode.py",
 }
 RUN_ID = "published-base-image-independent-reproduction-1"
+TASK_CASE_IDS = (
+    "tiny-threshold-1e-08",
+    "tiny-threshold-1e-06",
+    "tiny-threshold-0.0001",
+    "float32-threshold-1e-08",
+    "float32-threshold-0.0001",
+    "float32-threshold-0.001",
+    "float16-threshold-1e-08",
+    "float16-threshold-0.0001",
+    "float16-threshold-0.001",
+    "bfloat16-threshold-1e-08",
+    "bfloat16-threshold-0.0001",
+    "bfloat16-threshold-0.001",
+    "shifted_maximum_nonzero_values",
+    "leading_maximum_nonzero_value",
+)
 
 
 def sha256(data: bytes) -> str:
@@ -99,18 +117,91 @@ def row_index(summary: dict[str, Any]) -> dict[tuple[str, str], dict[str, Any]]:
     return rows
 
 
-def read_outcome(run_dir: Path, row: dict[str, Any]) -> tuple[dict[str, Any], Path]:
-    image_digest = digest_from_image(row["image"])
-    path = run_dir / "outcomes" / f"{image_digest}-{row['candidate']}.json"
-    value = load_json(path)
+def locked_task_identity() -> dict[str, Any]:
+    """Load verifier identities from the frozen task protocol, never a receipt."""
+    if sha256_file(TASK_PROTOCOL_PATH) != TASK_PROTOCOL_SHA256:
+        raise ValueError("task protocol differs from the frozen replay identity")
+    task_protocol = load_json(TASK_PROTOCOL_PATH)
+    implementation = task_protocol["implementation_sha256"]
+    source_name = "src/vare/mlxlm_1912_repo_task.py"
+    adapter_name = "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/grader_adapter.py"
+    source_sha = implementation[source_name]
+    adapter_sha = implementation[adapter_name]
+    if sha256_file(ROOT / source_name) != source_sha:
+        raise ValueError("grader source differs from frozen task protocol")
+    if sha256_file(ROOT / adapter_name) != adapter_sha:
+        raise ValueError("grader adapter differs from frozen task protocol")
+    prompt_name = "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/task.md"
+    if sha256_file(ROOT / prompt_name) != implementation[prompt_name]:
+        raise ValueError("task prompt differs from frozen task protocol")
+    for name in ("src/vare/container_isolation.py", "src/vare/isolated_candidate.py"):
+        if sha256_file(ROOT / name) != implementation[name]:
+            raise ValueError(f"isolation runner differs from frozen task protocol: {name}")
+    if len(TASK_CASE_IDS) != 14 or len(set(TASK_CASE_IDS)) != 14:
+        raise ValueError("frozen case identity list is malformed")
+    return {
+        "grader_source_sha256": source_sha,
+        "grader_adapter_sha256": adapter_sha,
+        "case_ids": TASK_CASE_IDS,
+    }
+
+
+def validate_outcome_identity(
+    value: dict[str, Any],
+    path: Path,
+    row: dict[str, Any],
+    *,
+    grader_source_sha256: str,
+    grader_adapter_sha256: str,
+    case_ids: tuple[str, ...],
+) -> None:
+    cases = value.get("cases")
+    if not isinstance(cases, list) or any(not isinstance(case, dict) for case in cases):
+        raise ValueError(f"outcome has malformed case records: {path}")
+    actual_case_ids = [case.get("case_id") for case in cases]
+    if actual_case_ids != list(case_ids):
+        raise ValueError(f"outcome case identity differs from frozen task protocol: {path}")
+    if any(not isinstance(case.get("passed"), bool) for case in cases):
+        raise ValueError(f"outcome has a non-boolean case decision: {path}")
+    case_passed = sum(case["passed"] for case in cases)
+    if (
+        value.get("grader_source_sha256") != grader_source_sha256
+        or value.get("grader_adapter_sha256") != grader_adapter_sha256
+    ):
+        raise ValueError(f"outcome verifier identity differs from frozen task protocol: {path}")
+    if value.get("evaluator_case_count") != len(case_ids):
+        raise ValueError(f"outcome evaluator case count differs from frozen task protocol: {path}")
     if (
         value.get("candidate_id") != row["candidate"]
         or value.get("passed") is not row["passed"]
+        or not isinstance(value.get("passed"), bool)
         or value.get("image") != row["image"]
-        or sum(case["passed"] for case in value["cases"]) != row["case_passed"]
-        or len(value["cases"]) != row["case_count"]
+        or case_passed != row["case_passed"]
+        or len(cases) != row["case_count"]
+        or value["passed"] is not all(case["passed"] for case in cases)
     ):
         raise ValueError(f"outcome file differs from summary row: {path}")
+
+
+def read_outcome(
+    run_dir: Path,
+    row: dict[str, Any],
+    *,
+    grader_source_sha256: str,
+    grader_adapter_sha256: str,
+    case_ids: tuple[str, ...],
+) -> tuple[dict[str, Any], Path]:
+    image_digest = digest_from_image(row["image"])
+    path = run_dir / "outcomes" / f"{image_digest}-{row['candidate']}.json"
+    value = load_json(path)
+    validate_outcome_identity(
+        value,
+        path,
+        row,
+        grader_source_sha256=grader_source_sha256,
+        grader_adapter_sha256=grader_adapter_sha256,
+        case_ids=case_ids,
+    )
     return value, path
 
 
@@ -126,6 +217,7 @@ def verify_inputs(
         raise ValueError("unexpected provenance replay protocol")
     if sha256_file(OLD_PROTOCOL_PATH) != OLD_PROTOCOL_SHA256:
         raise ValueError("historical task protocol changed")
+    task_identity = locked_task_identity()
     archive_sha = sha256_file(archive)
     if archive_sha != EXPECTED_ARCHIVE_SHA256 or archive_sha != protocol["external_base_image_artifact"]["sha256"]:
         raise ValueError("published base-image archive digest mismatch")
@@ -149,7 +241,13 @@ def verify_inputs(
         old = old_rows[key]
         if any(row[name] != old[name] for name in ("passed", "case_passed", "case_count")):
             raise ValueError(f"reproduction differs from retained historical outcome: {key}")
-        value, path = read_outcome(run_dir, row)
+        value, path = read_outcome(
+            run_dir,
+            row,
+            grader_source_sha256=task_identity["grader_source_sha256"],
+            grader_adapter_sha256=task_identity["grader_adapter_sha256"],
+            case_ids=task_identity["case_ids"],
+        )
         candidate_file = ROOT / "benchmarks/verifier_integrity_pilot_v1/candidates" / CANDIDATE_FILES[key[1]]
         if sha256_file(candidate_file) != value["candidate_source_sha256"]:
             raise ValueError(f"candidate source differs from scored candidate: {key[1]}")
@@ -190,18 +288,16 @@ def verify_inputs(
 
 
 def build_provenance_records(run_dir: Path, current: dict[str, Any]) -> list[dict[str, Any]]:
-    task_protocol = load_json(ROOT / "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/protocol-v4.json")
+    task_identity = locked_task_identity()
     task_prompt = ROOT / "benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/task.md"
     isolation_files = (
         "src/vare/container_isolation.py",
         "src/vare/isolated_candidate.py",
     )
     isolation_identity = {name: sha256_file(ROOT / name) for name in isolation_files}
-    sample_row = next(iter(current["outcomes"]))
-    sample, _sample_path = read_outcome(run_dir, sample_row)
-    case_ids = [case["case_id"] for case in sample["cases"]]
-    scorer_source_sha = sample["grader_source_sha256"]
-    adapter_sha = sample["grader_adapter_sha256"]
+    case_ids = list(task_identity["case_ids"])
+    scorer_source_sha = task_identity["grader_source_sha256"]
+    adapter_sha = task_identity["grader_adapter_sha256"]
     test_suite_sha = canonical_sha(
         {
             "grader_source_sha256": scorer_source_sha,
@@ -219,13 +315,6 @@ def build_provenance_records(run_dir: Path, current: dict[str, Any]) -> list[dic
             "isolation_runner_sources": isolation_identity,
         }
     )
-    if scorer_source_sha != task_protocol["implementation_sha256"]["src/vare/mlxlm_1912_repo_task.py"]:
-        raise ValueError("grader source identity differs from locked task protocol")
-    if adapter_sha != task_protocol["implementation_sha256"]["benchmarks/mlsys_repo_eval_v2/mlxlm_1912_top_p/grader_adapter.py"]:
-        raise ValueError("grader adapter identity differs from locked task protocol")
-    if len(case_ids) != 14 or len(set(case_ids)) != len(case_ids):
-        raise ValueError("unexpected executed test case set")
-
     old_protocol = load_json(OLD_PROTOCOL_PATH)
     baseline_commit = old_protocol["task"]["baseline_commit"]
     if baseline_commit != EXPECTED_BASELINE_COMMIT:
@@ -241,7 +330,13 @@ def build_provenance_records(run_dir: Path, current: dict[str, Any]) -> list[dic
         epoch_sha = canonical_sha({"scorer_identity_sha256": scorer_identity, "test_suite_sha256": test_suite_sha, "environment_identity_sha256": environment_sha})
         for candidate in CANDIDATES:
             row = rows[(condition, candidate)]
-            outcome, path = read_outcome(run_dir, row)
+            outcome, path = read_outcome(
+                run_dir,
+                row,
+                grader_source_sha256=scorer_source_sha,
+                grader_adapter_sha256=adapter_sha,
+                case_ids=tuple(case_ids),
+            )
             patch_id = canonical_sha({"target_path": "mlx_lm/sample_utils.py", "candidate_source_sha256": outcome["candidate_source_sha256"]})
             cases = [{"case_id": item["case_id"], "passed": item["passed"], "failure": item["failure"]} for item in outcome["cases"]]
             records.append(
