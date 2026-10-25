@@ -523,6 +523,67 @@ def quiesce_recorded_process(
     }
 
 
+def wait_and_quiesce_phase_process(
+    process: subprocess.Popen, process_event: dict[str, Any],
+) -> tuple[int, dict[str, Any]]:
+    """Reap the phase leader and prove its recorded process group cannot write."""
+    return_code = process.wait()
+    quiescence = quiesce_recorded_process(process_event)
+    return return_code, quiescence
+
+
+def terminate_launched_process_group(
+    process: subprocess.Popen, timeout_seconds: float = 2.0,
+) -> None:
+    """Stop a just-launched isolated group if its identity event cannot be persisted."""
+    process_group_id = process.pid
+    try:
+        os.killpg(process_group_id, signal.SIGTERM)
+    except ProcessLookupError:
+        pass
+    try:
+        process.wait(timeout=timeout_seconds)
+    except subprocess.TimeoutExpired:
+        try:
+            os.killpg(process_group_id, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        process.wait(timeout=timeout_seconds)
+    deadline = time.monotonic() + timeout_seconds
+    while time.monotonic() < deadline and _group_has_live_processes(process_group_id):
+        time.sleep(0.02)
+    if _group_has_live_processes(process_group_id):
+        try:
+            os.killpg(process_group_id, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        deadline = time.monotonic() + timeout_seconds
+        while time.monotonic() < deadline and _group_has_live_processes(process_group_id):
+            time.sleep(0.02)
+    require(not _group_has_live_processes(process_group_id),
+            "unrecorded launched process group remains active after bounded termination")
+
+
+def record_phase_process_start(
+    process: subprocess.Popen, invocation_id: str, phase: str,
+) -> dict[str, Any]:
+    try:
+        process_event = {
+            "invocation_id": invocation_id,
+            "phase": phase,
+            "pid": process.pid,
+            "pid_create_time": psutil.Process(process.pid).create_time(),
+            "process_group_id": os.getpgid(process.pid),
+        }
+        append_event("phase_process_started", process_event)
+    except BaseException:
+        # The process group is known from Popen(start_new_session=True), even
+        # if collecting or durably publishing its richer identity failed.
+        terminate_launched_process_group(process)
+        raise
+    return process_event
+
+
 def recover_interrupted_attempts(
     manifest_path: Path, run_dir: Path, experiment_root: Path,
 ) -> list[dict[str, Any]]:
@@ -926,13 +987,7 @@ def run_phase(
             proc = subprocess.Popen(command, cwd=grader_test.parent, env=env,
                                     stdout=stdout, stderr=stderr, stdin=subprocess.DEVNULL,
                                     start_new_session=True)
-            append_event("phase_process_started", {
-                "invocation_id": phase_id,
-                "phase": phase,
-                "pid": proc.pid,
-                "pid_create_time": psutil.Process(proc.pid).create_time(),
-                "process_group_id": os.getpgid(proc.pid),
-            })
+            process_event = record_phase_process_start(proc, phase_id, phase)
             while proc.poll() is None:
                 row = sample_and_write(proc.pid)
                 growth = row["swap_used_bytes"] - baseline_swap
@@ -963,7 +1018,11 @@ def run_phase(
                             pass
                     break
                 time.sleep(SAMPLE_INTERVAL)
-            return_code = proc.wait()
+            return_code, process_quiescence = wait_and_quiesce_phase_process(
+                proc, process_event,
+            )
+            if process_quiescence["signals_sent"] and abort_reason is None:
+                abort_reason = "orphaned_process_group_after_phase"
             final = sample_and_write(None)
             if abort_reason is None:
                 if final["available_memory_bytes"] < MIN_AVAILABLE:
@@ -975,6 +1034,7 @@ def run_phase(
                 elif final["disk_free_bytes"] < MIN_DISK:
                     abort_reason = "completion_disk_below_floor"
         else:
+            process_quiescence = None
             sample_and_write(None)
     elapsed = round(time.monotonic() - started, 3)
     status = "ABORTED" if abort_reason else "EXITED"
@@ -1009,6 +1069,7 @@ def run_phase(
         "return_code": return_code,
         "abort_reason": abort_reason,
         "status": status,
+        "process_quiescence": process_quiescence,
         "resources": {
             "preflight": pre,
             "minimum_available_memory_bytes": min_available,

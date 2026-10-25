@@ -311,6 +311,109 @@ def test_pid_create_time_mismatch_refuses_to_signal_process_group():
             child.wait(timeout=2)
 
 
+def test_normal_phase_completion_quiesces_orphan_writer_before_hashing(tmp_path):
+    target = tmp_path / "phase-output.log"
+    pid_file = tmp_path / "writer.pid"
+    writer_program = (
+        "import os,sys,time\n"
+        "p=sys.argv[1]\n"
+        "for i in range(1000):\n"
+        "    with open(p,'ab') as f:\n"
+        "        f.write((str(i)+'\\n').encode()); f.flush(); os.fsync(f.fileno())\n"
+        "    time.sleep(0.02)\n"
+    )
+    leader_program = (
+        "import subprocess,sys,time\n"
+        "child=subprocess.Popen([sys.executable,'-c',sys.argv[3],sys.argv[1]])\n"
+        "open(sys.argv[2],'w').write(str(child.pid))\n"
+        "time.sleep(0.12)\n"
+    )
+    leader = subprocess.Popen(
+        [sys.executable, "-c", leader_program, str(target), str(pid_file), writer_program],
+        stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+        start_new_session=True,
+    )
+    try:
+        deadline = time.monotonic() + 2
+        while (not target.exists() or target.stat().st_size == 0) and time.monotonic() < deadline:
+            time.sleep(0.01)
+        assert target.exists() and target.stat().st_size > 0
+        assert pid_file.read_text().isdigit()
+        event = {
+            "pid": leader.pid,
+            "pid_create_time": psutil.Process(leader.pid).create_time(),
+            "process_group_id": os.getpgid(leader.pid),
+        }
+
+        return_code, quiescence = runner.wait_and_quiesce_phase_process(leader, event)
+
+        assert return_code == 0
+        assert "SIGTERM" in quiescence["signals_sent"]
+        assert not runner._group_has_live_processes(leader.pid)
+        size_hash_after = (target.stat().st_size, runner.sha_file(target))
+        time.sleep(0.12)
+        assert (target.stat().st_size, runner.sha_file(target)) == size_hash_after
+    finally:
+        if runner._group_has_live_processes(leader.pid):
+            try:
+                os.killpg(leader.pid, 9)
+            except ProcessLookupError:
+                pass
+            if leader.poll() is None:
+                leader.wait(timeout=2)
+
+
+def test_failed_process_identity_journal_quiesces_unrecorded_launch(tmp_path, monkeypatch):
+    target = tmp_path / "phase-output.log"
+    pid_file = tmp_path / "writer.pid"
+    writer_program = (
+        "import os,sys,time\n"
+        "p=sys.argv[1]\n"
+        "for i in range(1000):\n"
+        "    with open(p,'ab') as f:\n"
+        "        f.write((str(i)+'\\n').encode()); f.flush(); os.fsync(f.fileno())\n"
+        "    time.sleep(0.02)\n"
+    )
+    leader_program = (
+        "import subprocess,sys,time\n"
+        "child=subprocess.Popen([sys.executable,'-c',sys.argv[3],sys.argv[1]])\n"
+        "open(sys.argv[2],'w').write(str(child.pid))\n"
+        "time.sleep(5)\n"
+    )
+    leader = subprocess.Popen(
+        [sys.executable, "-c", leader_program, str(target), str(pid_file), writer_program],
+        stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+        start_new_session=True,
+    )
+    try:
+        deadline = time.monotonic() + 2
+        while (not target.exists() or target.stat().st_size == 0) and time.monotonic() < deadline:
+            time.sleep(0.01)
+        assert target.exists() and target.stat().st_size > 0
+        assert pid_file.read_text().isdigit()
+        monkeypatch.setattr(
+            runner, "append_event",
+            lambda *args, **kwargs: (_ for _ in ()).throw(OSError("journal unavailable")),
+        )
+
+        with pytest.raises(OSError, match="journal unavailable"):
+            runner.record_phase_process_start(leader, "attempt-journal-failure", "baseline")
+
+        assert leader.poll() is not None
+        assert not runner._group_has_live_processes(leader.pid)
+        size_hash_after = (target.stat().st_size, runner.sha_file(target))
+        time.sleep(0.12)
+        assert (target.stat().st_size, runner.sha_file(target)) == size_hash_after
+    finally:
+        if runner._group_has_live_processes(leader.pid):
+            try:
+                os.killpg(leader.pid, 9)
+            except ProcessLookupError:
+                pass
+            if leader.poll() is None:
+                leader.wait(timeout=2)
+
+
 def test_phase_started_without_process_record_defers_hashing(tmp_path):
     experiment = tmp_path / "experiment"
     run_dir = experiment / "run-v3"

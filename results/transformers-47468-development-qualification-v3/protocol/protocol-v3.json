@@ -23,7 +23,7 @@
       "ambiguous_launch": "If phase_started exists without phase_process_started, append a nonterminal deferred-recovery event and finalize no artifact hashes. Recovery can be retried after pending journal reconciliation supplies the process identity; no grader outcome is inferred.",
       "partial_artifacts": "After process-group quiescence, retain exact artifact sizes and SHA-256 values in the immutable interruption record. Preserve partial outputs and never infer a pass/fail from them.",
       "process_identity": "Persist PID, psutil create-time and isolated process-group ID immediately after launch. Recovery verifies PID create-time and current process-group identity before signaling; a mismatch fails closed and defers recovery.",
-      "quiescence": "Send SIGTERM to the recorded process group, wait a bounded 2 seconds, send SIGKILL if live writers remain, then wait a second bounded 2 seconds. Do not finalize hashes until the exact group has no live members; fsync each artifact before hashing."
+      "quiescence": "After the phase leader exits, for normal completion and recovery, verify its recorded PID/create-time and isolated process group. Send SIGTERM, wait a bounded 2 seconds, send SIGKILL if live writers remain, then wait a second bounded 2 seconds. Do not finalize hashes until the exact group has no live members; fsync each artifact before hashing. If normal completion had to stop an orphan writer, mark the phase aborted rather than accepting its test result."
     },
     "platform": "macOS 27.0.1 arm64",
     "preflight_record_path": "results/transformers-47468-development-qualification-v3/records/runtime-inventory-observation-v3.json",
