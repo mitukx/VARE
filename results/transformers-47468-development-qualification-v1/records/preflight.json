@@ -1,0 +1,34 @@
+{
+  "grader_test_sha256": "a399b7719d561cad462c23d32460e1afa7e62535806fbd496a01adf8991dea70",
+  "import_check": {
+    "exit_code": 0,
+    "model_or_weights_used": false,
+    "package_install_or_download": false,
+    "pinned_test_module_imported": true,
+    "pytest_collection_or_test_execution": false,
+    "source_package_imported": true,
+    "stderr": "W1025 23:54:45.703000 30654 site-packages/torch/distributed/elastic/multiprocessing/redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.",
+    "stdout": "preflight_imports_ok 5.21.0.dev0 2.9.1 2.5.4 8.4.2 0.23.3 2.2.0 True",
+    "target_test_method_invoked": false
+  },
+  "kind": "pre-outcome environment/source import check",
+  "limitation": "This validates imports and network denial only; no baseline, mutant, fix, or agent outcome has been executed.",
+  "network_socket_probe": "sandboxed AF_INET connection attempt to 1.1.1.1:443 denied with PermissionError/EPERM; verified by runner preflight.",
+  "recorded_at_utc": "2026-10-25T14:54:45Z",
+  "resource_snapshot": {
+    "available_memory_bytes": 13605224448,
+    "disk_free_bytes": 106085224448,
+    "free_swap_bytes": 876281856,
+    "total_memory_bytes": 34359738368
+  },
+  "sandbox_profile": "(version 1) (allow default) (deny network*)",
+  "schema_version": 1,
+  "source_archive_sha256": "2734b9db4f765e2fb1e69907600d4f992b463f108fa0eddcb2a3e679043791c0",
+  "source_tree": {
+    "bytes": 55922751,
+    "compiled_python_artifacts_after_import": 0,
+    "file_count": 3127,
+    "sha256": "b758729199025c1a54f4b80a17985ed0b8ed68b59370cfbeca6b67b6cd1c55ab"
+  },
+  "vARE_base_commit": "da4bc5865056afac9ee9e45f83d1c81819b49e3b"
+}
