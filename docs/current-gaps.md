@@ -1,5 +1,7 @@
 # Current evidence gaps
 
+**Update 2026-10-25 — current task gate and dependency integrity:** the retained source pool has 15 tasks but only nine originally reserved held-out definitions. A new Git-object audit verifies all 30 source-calibration log hashes and finds nine later Qwen3 Development attempts on the same Transformers #49412 baseline. Excluding that consumed family leaves a ceiling of eight, with zero complete current held-out certificates admitted by this audit; 15 are required. Training, held-out capability evaluation, and real-coding async comparison remain NO-GO. The source catalog and past outcomes are preserved. This cycle also propagates #126's missing final recovery-auditor correction into draft #127 and #128; it produces no new model-quality or systems-performance result. See the [reassessment and exact starting PR map](research-readiness-20261025.md) and [reconstructable task decision](../results/research-readiness-20261025/task-readiness.json).
+
 **Update 2026-10-21 — one repository-task grading contract passed:** the
 MLX-LM #1904 Train-task calibration now runs in VARE's separate no-network
 candidate callee; the pinned baseline fails and the exact fixed source passes.
