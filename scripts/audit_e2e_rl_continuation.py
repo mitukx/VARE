@@ -201,9 +201,17 @@ RUNTIME_PACKAGE_SOURCES_V3 = RUNTIME_PACKAGE_SOURCES_V2 | frozenset({
     "src/vare/agent_edit_v2.py",
     "src/vare/source_navigation_v1.py",
 })
+# V4 retains the same 80 runtime source paths; it additionally inventories the
+# source-visible path and real-runner integration regressions. Its exact source
+# commit is bound in the follow-up pin commit once the implementation commit
+# containing this test and the fixed runtime files exists.
+RUNTIME_PACKAGE_SOURCES_V4 = RUNTIME_PACKAGE_SOURCES_V3
 SOURCE_INVENTORY_V1 = LEGACY_EXPECTED_SOURCES | RUNTIME_PACKAGE_SOURCES_V1
 SOURCE_INVENTORY_V2 = LEGACY_EXPECTED_SOURCES | RUNTIME_PACKAGE_SOURCES_V2
 SOURCE_INVENTORY_V3 = LEGACY_EXPECTED_SOURCES | RUNTIME_PACKAGE_SOURCES_V3
+SOURCE_INVENTORY_V4 = SOURCE_INVENTORY_V3 | frozenset({
+    "tests/test_source_navigation_v1.py",
+})
 # Versioned diagnostic inventories are admitted only at the commits that were
 # actually reviewed and recorded for those versions. A later checkout may have
 # additional runtime modules; it is not silently treated as an earlier version.

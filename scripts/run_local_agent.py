@@ -718,7 +718,7 @@ def main() -> int:
             'The patch must use exact headers --- a/<allowed source path> and +++ b/<allowed source path>; do not wrap it in a code fence. '
         )
     system = (
-        'You are an offline code repair agent. Solve only the task below. The workspace contains the pinned source tree and public test; tool access is allowlisted. '
+        'You are an offline code repair agent. Solve only the task below. The workspace contains the pinned source tree; tool access is allowlisted. '
         + edit_sentence
         + 'Allowed source paths: ' + ', '.join(sorted(editable)) + '. '
         + ('Search candidate-visible source first; the search tool searches only these paths. '

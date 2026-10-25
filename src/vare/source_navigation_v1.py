@@ -1,9 +1,10 @@
-"""Bounded, hash-aware source search for candidate-visible task files.
+"""Bounded search over explicitly allowlisted and filename-filtered sources.
 
-This module indexes only the exact source paths supplied by the task
-controller. It never discovers files, executes source text, or reads task
-tests, graders, Git history, or known-fix artifacts. File reads and symlink
-checks reuse the atomic editor's pinned source reader.
+The navigator accepts only caller-supplied paths and applies VARE's local path
+policy before reading them. This cannot establish that an otherwise innocuous
+file contains no reference implementation or embedded answer; task
+qualification must certify source visibility and grader separation. Reads use
+the atomic editor's descriptor-safe primitives.
 """
 from __future__ import annotations
 
@@ -92,11 +93,12 @@ def _error(status: str, **fields: Any) -> dict[str, Any]:
 
 
 class SourceNavigatorV1:
-    """Deterministic ranked search over a bounded source snapshot.
+    """Rank the supplied, locally filtered paths in a bounded snapshot.
 
     Search results are invalidated and rebuilt whenever any indexed source
-    hash changes. The serialized response, including metadata, is capped by
-    ``max_output_bytes``.
+    hash changes. The local path filter is defense in depth, not a substitute
+    for independently qualified task isolation. The serialized response,
+    including metadata, is capped by ``max_output_bytes``.
     """
 
     def __init__(

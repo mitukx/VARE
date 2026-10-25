@@ -33,37 +33,51 @@ _PROTECTED_TASK_DIRS = {
     ".git", "test", "tests", "grader", "graders", "evaluator", "evaluators",
     "known-fix", "known-fixes", "known_fixes", "fix", "fixes", "history",
     "historical", "reference", "references", "reference-data", "__tests__",
+    "__pycache__", ".pytest_cache",
 }
-_PROTECTED_REFERENCE_BASENAMES = {
-    "known_fix", "known_fix.py", "known_fix.patch", "known_fix.diff",
-    "known-fix", "known-fix.py", "known-fix.patch", "known-fix.diff",
-    "hidden_test", "hidden_tests", "hidden_test.py", "hidden_tests.py",
+_PROTECTED_SOURCE_TOKENS = {
+    "test", "tests", "grader", "graders", "grade", "grading",
+    "evaluator", "evaluators", "solution", "solutions", "answer", "answers",
+    "oracle", "oracles", "expected", "reference", "references", "hidden",
 }
-_TEST_OR_GRADER_BASENAME = re.compile(
-    r"(?:^|[_.-])(?:test|tests|grader|graders|grade|grading|evaluator|evaluators)"
-    r"(?:$|[_.-])"
-)
+_PROTECTED_DIRECTORY_TOKENS = _PROTECTED_SOURCE_TOKENS | {
+    "fixture", "fixtures", "validation", "validations",
+}
+_COMPILED_EXTENSION_SUFFIXES = {".pyc", ".pyo", ".pyd", ".so", ".dylib", ".dll"}
+_NAME_PARTS = re.compile(r"[a-z0-9]+")
 _TEST_OR_GRADER_PREFIXES = ("test", "grader", "grade", "evaluator")
-_TEST_OR_GRADER_SUFFIXES = ("test", "grader", "grade")
+_TEST_OR_GRADER_SUFFIXES = ("test", "tests", "grader", "graders", "grade", "grading")
 
 
-def _protected_test_or_grader_name(component: str) -> bool:
-    normalized = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", component).casefold()
+def _normalized_component(component: str) -> str:
+    return re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", component).casefold()
+
+
+def _component_tokens(component: str) -> set[str]:
+    return set(_NAME_PARTS.findall(_normalized_component(component)))
+
+
+def _protected_source_name(component: str) -> bool:
+    normalized = _normalized_component(component)
     stem = normalized.split(".", 1)[0]
+    compact_stem = re.sub(r"[^a-z0-9]+", "", stem)
     return (
-        normalized in _PROTECTED_REFERENCE_BASENAMES
-        or _TEST_OR_GRADER_BASENAME.search(normalized) is not None
+        bool(_component_tokens(component) & _PROTECTED_SOURCE_TOKENS)
         or stem.startswith(_TEST_OR_GRADER_PREFIXES)
-        or stem.endswith(tuple(f"_{suffix}" for suffix in _TEST_OR_GRADER_SUFFIXES))
+        or stem.endswith(_TEST_OR_GRADER_SUFFIXES)
+        or compact_stem.startswith("knownfix")
+        or PurePosixPath(normalized).suffix in _COMPILED_EXTENSION_SUFFIXES
     )
 
 
 def candidate_visible_source_files(paths: object) -> tuple[str, ...]:
-    """Return safe source paths, fail-closed on conventional test/grader names.
+    """Return paths that pass conservative test/artifact filename filtering.
 
     The task's explicit root ``test_public.py`` remains available only to the
     dedicated sandboxed test runner. It is never a source read/edit/search
-    capability. This policy is defense in depth for malformed task allowlists.
+    capability. This filename policy is defense in depth; task qualification
+    must independently verify that allowed ordinary-looking files contain no
+    answer/reference material and that graders remain isolated.
     """
     if not isinstance(paths, (tuple, list, set, frozenset)):
         return ()
@@ -79,14 +93,15 @@ def candidate_visible_source_files(paths: object) -> tuple[str, ...]:
         for raw_component in parsed.parts[:-1]:
             component = raw_component.casefold()
             if (component in _PROTECTED_TASK_DIRS
-                    or _protected_test_or_grader_name(raw_component)):
+                    or bool(_component_tokens(raw_component) & _PROTECTED_DIRECTORY_TOKENS)
+                    or _protected_source_name(raw_component)):
                 protected_dirs = True
                 break
         if protected_dirs:
             continue
-        # Split camel-case names before applying the same delimiter rule, so
-        # TestPublic.py and implementation_test.cpp are both protected.
-        if _protected_test_or_grader_name(parsed.name):
+        # Filename tokens cover conventional tests/graders and reference
+        # implementations; compiled artifacts are never candidate source.
+        if _protected_source_name(parsed.name):
             continue
         visible.add(raw_path)
     return tuple(sorted(visible))
