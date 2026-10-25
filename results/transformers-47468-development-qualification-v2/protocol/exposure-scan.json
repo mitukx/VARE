@@ -1,0 +1,57 @@
+{
+  "external_pretraining_exposure": "unknown",
+  "limitation": "This scan covers retained VARE Git objects at the frozen head, not model pretraining or unretained interactions.",
+  "queries": [
+    {
+      "matches": [],
+      "name": "pr_anchor",
+      "pattern": "#47468"
+    },
+    {
+      "matches": [],
+      "name": "pr_title",
+      "pattern": "Fix torch_float casting to int instead of float"
+    },
+    {
+      "matches": [],
+      "name": "unique_bug_phrase",
+      "pattern": "copy-paste from torch_int"
+    },
+    {
+      "matches": [],
+      "name": "unique_bug_effect",
+      "pattern": "truncates instead of returning a float"
+    },
+    {
+      "matches": [],
+      "name": "symbol_call",
+      "pattern": "\\btorch_float\\s*\\("
+    },
+    {
+      "matches": [],
+      "name": "target_path",
+      "pattern": "src/transformers/utils/generic\\.py"
+    },
+    {
+      "matches": [],
+      "name": "test_path",
+      "pattern": "tests/utils/test_generic\\.py"
+    },
+    {
+      "matches": [],
+      "name": "test_literal",
+      "pattern": "9\\.797958971132712"
+    }
+  ],
+  "repository_head": "da4bc5865056afac9ee9e45f83d1c81819b49e3b",
+  "schema_version": 1,
+  "scope": [
+    "benchmarks",
+    "docs",
+    "protocols",
+    "results",
+    "scripts",
+    "src",
+    "tests"
+  ]
+}

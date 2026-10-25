@@ -1,0 +1,67 @@
+{
+  "all_runtime_identities_match": true,
+  "host_inventory_command": [
+    "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+    "-m",
+    "pip",
+    "freeze",
+    "--all"
+  ],
+  "host_inventory_environment": {
+    "PIP_CONFIG_FILE": "/dev/null",
+    "PIP_NO_INDEX": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONNOUSERSITE": "1",
+    "PYTHONPATH": "unset"
+  },
+  "inventories": {
+    "host": {
+      "actual_lines": 350,
+      "actual_sha256": "f4b6c278838e6f4f4be9517576136bb368f825b000a68dfdc5370cc6f6a70e50",
+      "byte_exact_match": true,
+      "expected_lines": 350,
+      "expected_sha256": "f4b6c278838e6f4f4be9517576136bb368f825b000a68dfdc5370cc6f6a70e50"
+    },
+    "overlay": {
+      "actual_lines": 35,
+      "actual_sha256": "a7a9bf2519e9f5c1d3c95d4b692003f52b7b6e76f287fef5644b921f8d5937ea",
+      "byte_exact_match": true,
+      "expected_lines": 35,
+      "expected_sha256": "a7a9bf2519e9f5c1d3c95d4b692003f52b7b6e76f287fef5644b921f8d5937ea"
+    }
+  },
+  "kind": "prospective v2 runtime identity preflight; no task grader/model outcome",
+  "limitation": "This checks interpreter identity and effective installed-distribution inventories only; it does not execute or collect the upstream test.",
+  "model_inference": false,
+  "outcome_execution": false,
+  "overlay_inventory_command": [
+    "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+    "-m",
+    "pip",
+    "freeze",
+    "--all",
+    "--path",
+    "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-agent-feasibility-v1/venv/lib/python3.12/site-packages"
+  ],
+  "overlay_inventory_environment": {
+    "PIP_CONFIG_FILE": "/dev/null",
+    "PIP_NO_INDEX": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONNOUSERSITE": "1",
+    "PYTHONPATH": "unset"
+  },
+  "python_identity": {
+    "cache_tag": "cpython-312",
+    "executable": "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+    "implementation": "cpython",
+    "sys_version": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+    "version_info": [
+      3,
+      12,
+      12
+    ]
+  },
+  "recorded_at_utc": "2026-10-25T15:04:39.818543+00:00",
+  "resolved_python_executable": "/opt/homebrew/Caskroom/miniforge/base/bin/python3.12",
+  "schema_version": 2
+}
