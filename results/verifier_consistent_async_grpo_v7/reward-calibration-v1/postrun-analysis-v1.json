@@ -1,0 +1,401 @@
+{
+  "analysis_runtime": {
+    "device": "cpu",
+    "elapsed_seconds": 4.269512,
+    "precision": "fp32",
+    "torch_threads": 1
+  },
+  "calibration_status": "NO_GO_REWARD_CALIBRATION",
+  "exact_grpo_gradient_analysis": {
+    "model_gradient_groups": [
+      {
+        "coordinate_sign_reversals": 253011,
+        "coordinates_nonzero_in_both_versions": 3615792,
+        "gradient_cosine_similarity": 0.9423378896412268,
+        "gradient_difference_l2": 111.92760680875323,
+        "max_recorded_behavior_logratio_v0": 6.4373016357421875e-06,
+        "max_recorded_behavior_logratio_v1": 6.4373016357421875e-06,
+        "relative_gradient_difference": 0.3515809612915103,
+        "task_id": "cal-earth-01",
+        "trainable_parameter_count": 3745984,
+        "trainable_parameter_tensors": 108,
+        "v0_gradient_l2": 318.35514186432135,
+        "v1_gradient_l2": 334.30059557885255
+      },
+      {
+        "coordinate_sign_reversals": 198113,
+        "coordinates_nonzero_in_both_versions": 3615744,
+        "gradient_cosine_similarity": 0.7443999753476724,
+        "gradient_difference_l2": 206.5554133958331,
+        "max_recorded_behavior_logratio_v0": 1.6689300537109375e-05,
+        "max_recorded_behavior_logratio_v1": 1.6689300537109375e-05,
+        "relative_gradient_difference": 0.6825708273228965,
+        "task_id": "cal-elevated-02",
+        "trainable_parameter_count": 3745984,
+        "trainable_parameter_tensors": 108,
+        "v0_gradient_l2": 302.6138902038369,
+        "v1_gradient_l2": 268.09847576873494
+      },
+      {
+        "coordinate_sign_reversals": 554,
+        "coordinates_nonzero_in_both_versions": 3615529,
+        "gradient_cosine_similarity": 0.9999999999996326,
+        "gradient_difference_l2": 0.00029379081610356335,
+        "max_recorded_behavior_logratio_v0": 4.5299530029296875e-06,
+        "max_recorded_behavior_logratio_v1": 4.5299530029296875e-06,
+        "relative_gradient_difference": 1.3597684860905325e-06,
+        "task_id": "cal-built-03",
+        "trainable_parameter_count": 3745984,
+        "trainable_parameter_tensors": 108,
+        "v0_gradient_l2": 216.05943887421654,
+        "v1_gradient_l2": 216.05968112855794
+      },
+      {
+        "coordinate_sign_reversals": 207884,
+        "coordinates_nonzero_in_both_versions": 3615911,
+        "gradient_cosine_similarity": 0.9713094978055894,
+        "gradient_difference_l2": 59.754942208093354,
+        "max_recorded_behavior_logratio_v0": 1.2159347534179688e-05,
+        "max_recorded_behavior_logratio_v1": 1.2159347534179688e-05,
+        "relative_gradient_difference": 0.2814370020490804,
+        "task_id": "cal-frozen-04",
+        "trainable_parameter_count": 3745984,
+        "trainable_parameter_tensors": 108,
+        "v0_gradient_l2": 212.32084542199806,
+        "v1_gradient_l2": 238.18260749172
+      }
+    ],
+    "model_state_unchanged": true,
+    "objective": "Pinned RVL token-level clipped GRPO surrogate; exact recorded outputs, token ids, behavior logprobs, reward vectors, and initial checkpoint; no optimizer.step().",
+    "optimizer_steps_executed": 0
+  },
+  "identities": {
+    "calibration_input_sha256": {
+      "SHA256.json": "a8e51a51e43396dbf97a891468b4f5e5055604495d704817cc6c80a1b18391f2",
+      "groups/cal-built-03.json": "e9ad2cf5893ae30a8140c8f3be713e7bdde0f1d5f741da92996f9321b59fe2fe",
+      "groups/cal-earth-01.json": "fe64ca7758d126967c9ce53719423271a631ff487ce4619192756b8fad0f2a84",
+      "groups/cal-elevated-02.json": "6c3ac06e9f4e3f4935fffbd1a7b6bf723b1e9452990c3355d94ac332dbbcd94e",
+      "groups/cal-frozen-04.json": "9063036568f8581f90606c0fe424103d0c38a2c092148325837d1b21b601cf16",
+      "progress.json": "16710192ad4fa0d5f46fbbc44fccb264f091ca4b1598e01875f5fb1ca2e6c53f",
+      "protocol.json": "64d66e4dcb01ff3b4510e6ff3b45b4e9fbd960aa65da260c89e0ce0051c71cb5",
+      "summary.json": "51083225ca82cbe9646623ad2a7063387c49a3df682f0eff098384da20e72d44"
+    },
+    "model_files_match_frozen_manifest": {
+      "config.json": true,
+      "merges.txt": true,
+      "pytorch_model.bin": true,
+      "special_tokens_map.json": true,
+      "tokenizer.json": true,
+      "tokenizer_config.json": true,
+      "vocab.json": true
+    },
+    "model_revision": "77f1b168e219585646439073245fe87e56b3023e",
+    "rvl_revision": "e381c4b3b8c2ad8e5dc4c4b1a33b7922531c3e33",
+    "rvl_source_directory": "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/rvl-pinned",
+    "source_sha256": {
+      "analysis_script": "2fe4d593c910dc28ff7fe6303a3bdcf2f4e02a060033358250e91c56066c2840",
+      "calibration_protocol": "64d66e4dcb01ff3b4510e6ff3b45b4e9fbd960aa65da260c89e0ce0051c71cb5",
+      "independent_reward_auditor": "93edbd179164b10bf4ad03a546f25df6a42bf0c161de07ceefd21c74a15e2de0",
+      "rvl_grpo": "a2ef6217385a206f5e6c0f43fb40e900ae3bf1b2066a1c8d1ab1878fd25d724d",
+      "rvl_hf_trainer": "3cc007b113dd992d14cf9bf7bed276fa9613f690dca0ad56532e52225e973faf",
+      "rvl_objective": "ed7ee082db036e1631c1f8eaacfb8691b102401c8342dcb9ed4dba5d26a22cf9"
+    }
+  },
+  "independent_reward_audit": {
+    "calibration_gate": "NO_GO_REWARD_CALIBRATION",
+    "claim_limit": "Independent reward reconstruction only; no optimizer update or coding capability result.",
+    "fraction_with_shift_at_least_0_25": 0.28125,
+    "gates": {
+      "all_groups_nonconstant_v1": true,
+      "fraction_shift_at_least_0_25": true,
+      "mean_absolute_shift": false
+    },
+    "groups": 4,
+    "mean_absolute_reward_shift": 0.11406250000000001,
+    "members": 32,
+    "status": "PASS_INDEPENDENT_RECONSTRUCTION",
+    "v1_nonconstant_groups": 4
+  },
+  "interpretation": {
+    "inference_limit": "Four fixed synthetic calibration prompts are descriptive only; these results do not establish coding capability, causal policy regression, asynchronous behavior, or general verifier-drift prevalence.",
+    "training_direction": "Gradient direction is computed from the exact pinned GRPO objective for each saved group and reward version at the identical starting checkpoint. No optimizer step or model update is applied."
+  },
+  "reward_and_advantage_metrics": {
+    "fraction_absolute_shift_at_least_0_25": 0.28125,
+    "fraction_strictly_changed": 0.34375,
+    "groups": [
+      {
+        "advantage_change": {
+          "max_absolute": 1.0986896037587424,
+          "mean_absolute": 0.27467240093968565,
+          "negative_positive_sign_switches": 0,
+          "one_sided_tie_breaks": 0,
+          "strict_preference_reversals": 0
+        },
+        "centered_advantages": {
+          "v0": [
+            -2.5627147677485493,
+            0.47457680884232395,
+            0.47457680884232395,
+            0.47457680884232395,
+            0.47457680884232395,
+            -0.28474608530539436,
+            0.47457680884232395,
+            0.47457680884232395
+          ],
+          "v1": [
+            -2.0344642486237308,
+            0.5696499896146446,
+            0.5696499896146446,
+            0.5696499896146446,
+            0.5696499896146446,
+            -1.3834356890641368,
+            0.5696499896146446,
+            0.5696499896146446
+          ]
+        },
+        "reward_counts": {
+          "v0": {
+            "negative": 0,
+            "positive": 7,
+            "zero": 1
+          },
+          "v1": {
+            "negative": 0,
+            "positive": 7,
+            "zero": 1
+          }
+        },
+        "rewards": {
+          "v0": [
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            0.75,
+            1.0,
+            1.0
+          ],
+          "v1": [
+            0.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            0.25,
+            1.0,
+            1.0
+          ]
+        },
+        "task_id": "cal-earth-01"
+      },
+      {
+        "advantage_change": {
+          "max_absolute": 0.8723539352050799,
+          "mean_absolute": 0.65426545140381,
+          "negative_positive_sign_switches": 0,
+          "one_sided_tie_breaks": 0,
+          "strict_preference_reversals": 9
+        },
+        "centered_advantages": {
+          "v0": [
+            -1.665402967209698,
+            0.23791470960138544,
+            0.23791470960138544,
+            0.8723539352050799,
+            0.8723539352050799,
+            0.8723539352050799,
+            -1.665402967209698,
+            0.23791470960138544
+          ],
+          "v1": [
+            -1.5491881745309912,
+            1.0327921163539944,
+            1.0327921163539944,
+            0.0,
+            0.0,
+            0.0,
+            -1.5491881745309912,
+            1.0327921163539944
+          ]
+        },
+        "reward_counts": {
+          "v0": {
+            "negative": 0,
+            "positive": 6,
+            "zero": 2
+          },
+          "v1": {
+            "negative": 0,
+            "positive": 6,
+            "zero": 2
+          }
+        },
+        "rewards": {
+          "v0": [
+            0.0,
+            0.75,
+            0.75,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.75
+          ],
+          "v1": [
+            0.0,
+            1.0,
+            1.0,
+            0.6,
+            0.6,
+            0.6,
+            0.0,
+            1.0
+          ]
+        },
+        "task_id": "cal-elevated-02"
+      },
+      {
+        "advantage_change": {
+          "max_absolute": 1.7739866779997726e-06,
+          "mean_absolute": 8.869933389721307e-07,
+          "negative_positive_sign_switches": 0,
+          "one_sided_tie_breaks": 0,
+          "strict_preference_reversals": 0
+        },
+        "centered_advantages": {
+          "v0": [
+            -0.5773481382661737,
+            -0.5773481382661737,
+            -0.5773481382661737,
+            -0.5773481382661737,
+            1.732044414798521,
+            -0.5773481382661737,
+            1.732044414798521,
+            -0.5773481382661737
+          ],
+          "v1": [
+            -0.5773487295950663,
+            -0.5773487295950663,
+            -0.5773487295950663,
+            -0.5773487295950663,
+            1.732046188785199,
+            -0.5773487295950663,
+            1.732046188785199,
+            -0.5773487295950663
+          ]
+        },
+        "reward_counts": {
+          "v0": {
+            "negative": 0,
+            "positive": 2,
+            "zero": 6
+          },
+          "v1": {
+            "negative": 0,
+            "positive": 2,
+            "zero": 6
+          }
+        },
+        "rewards": {
+          "v0": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.85,
+            0.0,
+            0.85,
+            0.0
+          ],
+          "v1": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        "task_id": "cal-built-03"
+      },
+      {
+        "advantage_change": {
+          "max_absolute": 0.6780023604609307,
+          "mean_absolute": 0.1695005901152327,
+          "negative_positive_sign_switches": 0,
+          "one_sided_tie_breaks": 0,
+          "strict_preference_reversals": 0
+        },
+        "centered_advantages": {
+          "v0": [
+            -0.5696499896146446,
+            -0.5696499896146446,
+            -0.5696499896146446,
+            2.0344642486237308,
+            -0.5696499896146446,
+            -0.5696499896146446,
+            -0.5696499896146446,
+            1.3834356890641368
+          ],
+          "v1": [
+            -0.5214072428806307,
+            -0.5214072428806307,
+            -0.5214072428806307,
+            2.423010128680578,
+            -0.5214072428806307,
+            -0.5214072428806307,
+            -0.5214072428806307,
+            0.7054333286032062
+          ]
+        },
+        "reward_counts": {
+          "v0": {
+            "negative": 0,
+            "positive": 2,
+            "zero": 6
+          },
+          "v1": {
+            "negative": 0,
+            "positive": 2,
+            "zero": 6
+          }
+        },
+        "rewards": {
+          "v0": [
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.75
+          ],
+          "v1": [
+            0.0,
+            0.0,
+            0.0,
+            0.6,
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ]
+        },
+        "task_id": "cal-frozen-04"
+      }
+    ],
+    "mean_absolute_reward_disagreement": 0.11406250000000001,
+    "members": 32,
+    "one_sided_tie_breaks": 0,
+    "pairwise_comparisons": 112,
+    "strict_pairwise_preference_reversals": 9,
+    "strictly_changed_rewards": 11
+  },
+  "schema": "vare.reward-calibration-postrun-analysis.v1",
+  "status": "DESCRIPTIVE_NO_GO_PRESERVED"
+}

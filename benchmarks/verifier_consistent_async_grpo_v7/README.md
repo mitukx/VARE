@@ -206,6 +206,13 @@ recompute scores from raw prompts and outputs.
 
 The new source identity is bound in
 [`evaluation-retention-correction-v1.json`](evaluation-retention-correction-v1.json).
+The journal implementation is kept in
+`scripts/verifier_drift_evaluation_evidence.py`, outside `src/vare/`, so the
+continuation campaign retains its pinned 77-file runtime inventory. The
+historical v7.3 runner and protocol identities are unchanged. Since the net
+PR diff does not modify a `src/vare/` path, the `e2e-system-cpu` path filter
+does not schedule itself; dispatch the full workflow against the final PR head
+before treating this correction as CI-verified.
 The v7.3 protocol is still the runner default and its frozen runner hash no
 longer matches the prospective source, so it cannot authorize a replay or
 resume. Any future run must pass a separate, fresh-task protocol through
@@ -264,8 +271,19 @@ reward-calibration gate and does not authorize the matched async experiment.
 
 The prospective evaluation journal and its three crash-cutpoint tests pass;
 the dense-reward calibration independently reconstructs but fails its
-preregistered mean-shift gate; and the replay-only drift mechanism regression
-passes. Therefore the real-model async comparison remains **NO-GO**. The exact
-remaining blocker is that this frozen reward transition changed scores less
-than required (0.1141 mean absolute shift versus 0.15); no model training or
-async run was started to work around that result.
+preregistered mean-shift gate; and both the replay-only admission regression
+and a fixed authenticated optimizer-state replay pass. The optimizer replay
+uses the 32 historical outputs, makes four version-unaware and four
+version-aware GRPO/AdamW candidate updates from reset checkpoints, rejects all
+four stale groups before an optimizer call, and promotes no candidate. Its
+reported update-direction comparison is recorded in
+[`research-reassessment-v1.md`](research-reassessment-v1.md). This is a
+deterministic systems replay, not fresh learning or a policy-quality result.
+
+The real-model async comparison remains **NO-GO**: the original calibration
+gate failed (0.1141 mean absolute reward shift versus 0.15), and the only
+measured verifier transition is synthetic surface compatibility rather than
+an externally motivated coding-task correctness change. No v7.3 task was
+resampled, no calibration gate was changed, and no asynchronous arm was run.
+The next experiment depends on a coding-relevant verifier transition with
+independently defined correctness semantics. Do not start v8 automatically.

@@ -1,0 +1,42 @@
+{
+  "arms": {
+    "version_aware": "With v1 active, reject each authenticated v0 group before training; accept the same saved action sequences re-attested under v1, then run one real GRPO candidate update.",
+    "version_unaware": "Admit each authenticated v0 group while the controller still reports v0 as active, then run one real GRPO candidate update."
+  },
+  "interpretation_limits": [
+    "All trajectories are historical fixed replay data, not fresh on-policy rollouts.",
+    "The four prompts are synthetic surface-compatibility calibration prompts, not coding tasks.",
+    "The replay tests admission and optimizer-state behavior only; it does not establish model learning, coding capability, async correctness, or population prevalence.",
+    "The version-unaware arm is a scripted systems control; it is not evidence that a model discovers or exploits the stale verifier."
+  ],
+  "purpose": "Deterministic replay of authenticated verifier-version admission and real GRPO optimizer state transitions; not fresh on-policy learning or a model-quality experiment.",
+  "schema": "vare.verifier-consistency-optimizer-replay.v1",
+  "source_data": {
+    "calibration_protocol": "reward-calibration-v1.json",
+    "calibration_protocol_sha256": "64d66e4dcb01ff3b4510e6ff3b45b4e9fbd960aa65da260c89e0ce0051c71cb5",
+    "groups": {
+      "cal-built-03": "e9ad2cf5893ae30a8140c8f3be713e7bdde0f1d5f741da92996f9321b59fe2fe",
+      "cal-earth-01": "fe64ca7758d126967c9ce53719423271a631ff487ce4619192756b8fad0f2a84",
+      "cal-elevated-02": "6c3ac06e9f4e3f4935fffbd1a7b6bf723b1e9452990c3355d94ac332dbbcd94e",
+      "cal-frozen-04": "9063036568f8581f90606c0fe424103d0c38a2c092148325837d1b21b601cf16"
+    },
+    "sampling": "No samples are generated. Reuse the exact saved prompt, output text, token IDs, and behavior logprobs from all four frozen groups."
+  },
+  "training": {
+    "checkpoint_reset": "Each candidate branch starts from the exact same initial model and empty AdamW state; candidate states are retained and hashed, then the initial state is restored.",
+    "group_size": 8,
+    "groups": 4,
+    "model": "TinyStories-1M",
+    "model_revision": "77f1b168e219585646439073245fe87e56b3023e",
+    "per_arm_per_group_optimizer_steps": 1,
+    "promotion": "No candidate is promoted to an active policy.",
+    "rvl_revision": "e381c4b3b8c2ad8e5dc4c4b1a33b7922531c3e33",
+    "total_real_optimizer_steps": 8
+  },
+  "verifier_transition": {
+    "independent_oracle": "Recompute each output under both frozen definitions using audit_verifier_reward_calibration.py before signing replay records.",
+    "v0": "Generic physical-support plausibility from the frozen calibration protocol.",
+    "v1": "Target-conditioned surface compatibility from the frozen calibration protocol.",
+    "versions_are_distinct": true
+  }
+}
