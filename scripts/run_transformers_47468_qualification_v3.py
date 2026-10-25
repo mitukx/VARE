@@ -13,9 +13,7 @@ from pathlib import Path
 import re
 import shutil
 import signal
-import socket
 import subprocess
-import sys
 import tarfile
 import tempfile
 import time

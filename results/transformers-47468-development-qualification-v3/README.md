@@ -16,6 +16,23 @@ V3 retains the v2 effective no-user-site inventory and rechecks the live interpr
 
 The task prompt remains public-task Development-only; upstream PR and test are public, external model-training exposure is unknown. This task cannot qualify as held out or model-unseen evidence.
 
+## Rebuild the pinned public inputs
+
+The source archive and grader/fix files live under the ignored `work/` directory so they are not mixed with the candidate or committed as trusted grader data. Rebuild them from the public immutable Transformers commits before running the preflight:
+
+```bash
+mkdir -p work/transformers-source-cache-v1 work/transformers-grader-v1/tests/utils work/transformers-47468-controls-v1
+git init work/transformers-source-cache-v1
+git -C work/transformers-source-cache-v1 fetch --depth=1 https://github.com/huggingface/transformers.git 6a994bc42f4c2c3e53ca384aff84750b85de0e6e
+git -C work/transformers-source-cache-v1 fetch --depth=1 https://github.com/huggingface/transformers.git 3da1cdf80218c71ac4b4121cca43ea7def44e68a
+git -C work/transformers-source-cache-v1 archive --format=tar 6a994bc42f4c2c3e53ca384aff84750b85de0e6e src/transformers > work/transformers-src-base.tar
+git -C work/transformers-source-cache-v1 show 3da1cdf80218c71ac4b4121cca43ea7def44e68a:tests/utils/test_generic.py > work/transformers-grader-v1/tests/utils/test_generic.py
+git -C work/transformers-source-cache-v1 show 3da1cdf80218c71ac4b4121cca43ea7def44e68a:src/transformers/utils/generic.py > work/transformers-47468-controls-v1/fix-generic.py
+shasum -a 256 work/transformers-src-base.tar work/transformers-grader-v1/tests/utils/test_generic.py work/transformers-47468-controls-v1/fix-generic.py
+```
+
+The resulting SHA-256 values must match the locked source archive `2734b9db4f765e2fb1e69907600d4f992b463f108fa0eddcb2a3e679043791c0`, grader `a399b7719d561cad462c23d32460e1afa7e62535806fbd496a01adf8991dea70`, and exact fix `a97067244e842edc1fcaa77f0b57ea8e81d821105f6fe65311b77ccebf86f897`. The source archive is reproducible from the pinned upstream commit; the grader and fix remain outside the candidate tree.
+
 ## Deterministic checks
 
 Run only the v3 unit suite, static check, and no-test preflight before independent review:
@@ -23,6 +40,7 @@ Run only the v3 unit suite, static check, and no-test preflight before independe
 ```bash
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q tests/test_transformers_47468_qualification_v3.py
 python -m py_compile scripts/run_transformers_47468_qualification_v3.py
+python -m ruff check scripts/run_transformers_47468_qualification_v3.py tests/test_transformers_47468_qualification_v3.py
 python scripts/run_transformers_47468_qualification_v3.py
 ```
 
