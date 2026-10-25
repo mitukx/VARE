@@ -33,15 +33,16 @@ under `scripts/` and has no `src/vare/` change; the full workflow must be
 dispatched on the final PR head and reviewed before the PR can leave draft.
 
 The exact-head E2E run on `75a86532` passed, including continuation, SIGKILL
-recovery, and pinned-RVL regression. Its independent review found that arm
-wall time excluded the final evaluation and that two report writers could
-overwrite retained inputs. The prospective runner now checks its wall budget
-after final evaluation. The full scenario auditor now rejects output paths
-inside audited inputs and writes with exclusive creation. The crash auditor's
-original v1 source is hash-pinned by the frozen protocol, so a prospective v2
-CLI adds those output protections while calling the unchanged v1 audit logic.
-These fixes require another exact-head E2E run and review before the draft can
-leave draft; no new learning run is authorized.
+recovery, and pinned-RVL regression. Review found that arm wall time excluded
+the final evaluation and that report writers could overwrite retained inputs.
+A follow-up review also identified a parent-symlink retargeting race. The
+prospective runner now checks its wall budget after final evaluation. Audit
+reports use a validated parent-directory descriptor and exclusive file
+creation, so an intervening symlink retarget cannot redirect the write. The
+protocol-pinned crash auditor v1 remains byte-identical; a prospective v2 CLI
+applies the same protections while calling the unchanged v1 audit logic. The
+final exact-head E2E and review are required before the draft can leave draft;
+no new learning run is authorized.
 
 ## Frozen calibration: independently reconstructed
 

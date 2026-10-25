@@ -311,10 +311,12 @@ if __name__ == "__main__":
     parser.add_argument("run", type=Path)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
-    output = (preflight_new_output(args.output, [args.run])
-              if args.output is not None else None)
-    report = audit(args.run)
-    rendered = json.dumps(report, indent=2, sort_keys=True) + "\n"
-    if output is not None:
-        write_new_output(output, rendered)
+    if args.output is None:
+        report = audit(args.run)
+        rendered = json.dumps(report, indent=2, sort_keys=True) + "\n"
+    else:
+        with preflight_new_output(args.output, [args.run]) as output:
+            report = audit(args.run)
+            rendered = json.dumps(report, indent=2, sort_keys=True) + "\n"
+            write_new_output(output, rendered)
     print(rendered, end="")

@@ -164,9 +164,10 @@ python3.12 -S scripts/audit_sustained_crash_recovery_v2.py \
 
 The v2 command is the prospective safe-output entry point. It wraps the
 hash-pinned v1 audit logic while refusing output paths inside retained inputs,
-existing destinations, and paths that appear after preflight. The original v1
-script remains byte-identical because its source hash is pinned by the frozen
-protocol.
+existing destinations, and paths that appear after preflight. It anchors the
+write to the validated parent directory descriptor, so retargeting a parent
+symlink cannot redirect the report. The original v1 script remains
+byte-identical because its source hash is pinned by the frozen protocol.
 
 The crash auditor compares the complete resumed trainer state against the
 third-update reference, including model weights, Adam state, CPU RNG, and module

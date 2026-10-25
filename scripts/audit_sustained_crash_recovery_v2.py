@@ -25,14 +25,14 @@ def main() -> None:
     parser.add_argument("--protocol", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    output = preflight_new_output(
+    with preflight_new_output(
         args.output,
         [args.crash_output, args.fixture, args.source_run,
          args.source_audit, args.protocol],
-    )
-    report = audit(args.crash_output, args.fixture, args.source_run,
-                   args.source_audit, args.protocol)
-    write_new_output(output, json.dumps(report, indent=2, sort_keys=True) + "\n")
+    ) as output:
+        report = audit(args.crash_output, args.fixture, args.source_run,
+                       args.source_audit, args.protocol)
+        write_new_output(output, json.dumps(report, indent=2, sort_keys=True) + "\n")
     print(json.dumps(report, indent=2, sort_keys=True))
 
 

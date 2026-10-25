@@ -54,14 +54,61 @@ def test_preflight_preserves_existing_manifest_inside_retained_run(tmp_path):
 
 
 def test_exclusive_writer_preserves_destination_created_after_preflight(tmp_path):
-    destination = preflight_new_output(tmp_path / "report.json", [])
-    sentinel = b"another writer won the race\n"
-    destination.write_bytes(sentinel)
+    with preflight_new_output(tmp_path / "report.json", []) as target:
+        destination = target.path
+        sentinel = b"another writer won the race\n"
+        destination.write_bytes(sentinel)
 
-    with pytest.raises(ValueError, match="appeared after preflight"):
-        write_new_output(destination, "replacement\n")
+        with pytest.raises(ValueError, match="appeared after preflight"):
+            write_new_output(target, "replacement\n")
 
-    assert destination.read_bytes() == sentinel
+        assert destination.read_bytes() == sentinel
+
+
+def test_parent_symlink_retarget_after_preflight_does_not_redirect_write(tmp_path):
+    retained = tmp_path / "retained-run"
+    retained.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    alias = tmp_path / "alias"
+    alias.symlink_to(outside, target_is_directory=True)
+
+    with preflight_new_output(alias / "audit.json", [retained]) as target:
+        alias.unlink()
+        alias.symlink_to(retained, target_is_directory=True)
+        write_new_output(target, "safe report\n")
+
+    assert (outside / "audit.json").read_text(encoding="utf-8") == "safe report\n"
+    assert not (retained / "audit.json").exists()
+
+
+def test_final_arm_wall_time_is_captured_after_final_evaluation():
+    runner = (ROOT / "scripts/benchmark_verifier_drift_scenarios.py").read_text(
+        encoding="utf-8"
+    )
+    module = ast.parse(runner)
+    run_arm = next(
+        node for node in module.body
+        if isinstance(node, ast.AsyncFunctionDef) and node.name == "run_arm"
+    )
+    final_eval_line = next(
+        node.lineno for node in ast.walk(run_arm)
+        if isinstance(node, ast.Await)
+        and isinstance(node.value, ast.Call)
+        and isinstance(node.value.func, ast.Name)
+        and node.value.func.id == "capture_evaluation"
+        and len(node.value.args) >= 2
+        and isinstance(node.value.args[1], ast.Constant)
+        and node.value.args[1].value == "final"
+    )
+    total_wall_line = next(
+        node.lineno for node in ast.walk(run_arm)
+        if isinstance(node, ast.Assign)
+        and any(isinstance(target, ast.Name) and target.id == "total_wall"
+                for target in node.targets)
+    )
+
+    assert total_wall_line > final_eval_line
 
 
 def test_hash_pinned_v1_crash_auditor_remains_unchanged():
@@ -115,32 +162,3 @@ def test_sustained_recovery_v2_rejects_nested_report_path_before_audit(tmp_path)
     assert result.returncode != 0
     assert "inside retained input" in result.stderr
     assert not destination.exists()
-
-
-def test_final_arm_wall_time_is_captured_after_final_evaluation():
-    runner = (ROOT / "scripts/benchmark_verifier_drift_scenarios.py").read_text(
-        encoding="utf-8"
-    )
-    module = ast.parse(runner)
-    run_arm = next(
-        node for node in module.body
-        if isinstance(node, ast.AsyncFunctionDef) and node.name == "run_arm"
-    )
-    final_eval_line = next(
-        node.lineno for node in ast.walk(run_arm)
-        if isinstance(node, ast.Await)
-        and isinstance(node.value, ast.Call)
-        and isinstance(node.value.func, ast.Name)
-        and node.value.func.id == "capture_evaluation"
-        and len(node.value.args) >= 2
-        and isinstance(node.value.args[1], ast.Constant)
-        and node.value.args[1].value == "final"
-    )
-    total_wall_line = next(
-        node.lineno for node in ast.walk(run_arm)
-        if isinstance(node, ast.Assign)
-        and any(isinstance(target, ast.Name) and target.id == "total_wall"
-                for target in node.targets)
-    )
-
-    assert total_wall_line > final_eval_line
