@@ -34,6 +34,29 @@ from vare.types import Attempt, Experience, Task, Verification
 ROOT = base.ROOT
 PROTOCOL = ROOT / "benchmarks/e2e_rl_continuation_v2/protocol.json"
 WORKER_STATE = {}
+SOURCE_INVENTORY_V4_ID = "vare.e2e-rl-continuation.source-inventory.v4"
+SOURCE_IDENTITY_SCHEMA_V1 = "vare.source-identity.v1"
+RUNTIME_SOURCE_COMMIT_V4 = "d251cc678fbc9940f3de460904d5d23a1967b3ce"
+
+
+def build_source_identity_v4(source_sha256, campaign_commit):
+    """Split immutable runtime provenance from this campaign's source revision."""
+    runtime_sources = {
+        name: digest for name, digest in source_sha256.items()
+        if name.startswith("src/vare/")
+    }
+    campaign_sources = {
+        name: digest for name, digest in source_sha256.items()
+        if not name.startswith("src/vare/")
+    }
+    return {
+        "schema": SOURCE_IDENTITY_SCHEMA_V1,
+        "inventory_id": SOURCE_INVENTORY_V4_ID,
+        "runtime_source_commit": RUNTIME_SOURCE_COMMIT_V4,
+        "runtime_source_sha256": runtime_sources,
+        "campaign_source_commit": campaign_commit,
+        "campaign_source_sha256": campaign_sources,
+    }
 
 
 def atomic_json(path, value):
@@ -586,13 +609,18 @@ def main():
                ROOT/"tests/test_source_navigation_v1.py",
                *sorted((ROOT/"src/vare").rglob("*.py"))]
     template["source_sha256"] = {str(p.relative_to(ROOT)):base.file_sha(p) for p in sources}
+    campaign_commit = subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True,
+    ).strip()
+    source_identity = build_source_identity_v4(template["source_sha256"],campaign_commit)
     for source in sources:
         target = args.output/"sources"/source.relative_to(ROOT)
         target.parent.mkdir(parents=True,exist_ok=True)
         target.write_bytes(source.read_bytes())
     atomic_json(args.output/"manifest.json", {**template, "arguments": {k:str(v) if isinstance(v,Path) else v for k,v in vars(args).items()},
-                                             "protocol_sha256":base.file_sha(PROTOCOL), "sources":{str(p.relative_to(ROOT)):base.file_sha(p) for p in sources},
-                                             "base_commit":subprocess.check_output(["git","rev-parse","HEAD"],cwd=ROOT,text=True).strip(),
+                                             "protocol_sha256":base.file_sha(PROTOCOL), "sources":template["source_sha256"],
+                                             "base_commit":campaign_commit,
+                                             "source_identity":source_identity,
                                              "environment": {k:os.environ.get(k) for k in ("OMP_NUM_THREADS","MKL_NUM_THREADS","TOKENIZERS_PARALLELISM","PYTHONHASHSEED")},
                                              "python":sys.version,"model":base.MODEL,"revision":base.REVISION,
                                              "started_unix":time.time(),"platform":platform.platform(),
