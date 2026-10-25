@@ -28,10 +28,20 @@ The journal module now lives at
 `src/vare/` restores the historical continuation auditor's exact 77-file
 runtime inventory. The v7.3 runner, protocol hashes, and NO-GO evidence remain
 unchanged. A local `python3.12 -S` import/help check and the focused journal,
-summary, and authenticated-replay suite pass. The PR path filter did not
 schedule `e2e-system-cpu` because the net PR diff adds the prospective module
 under `scripts/` and has no `src/vare/` change; the full workflow must be
 dispatched on the final PR head and reviewed before the PR can leave draft.
+
+The exact-head E2E run on `75a86532` passed, including continuation, SIGKILL
+recovery, and pinned-RVL regression. Its independent review found that arm
+wall time excluded the final evaluation and that two report writers could
+overwrite retained inputs. The prospective runner now checks its wall budget
+after final evaluation. The full scenario auditor now rejects output paths
+inside audited inputs and writes with exclusive creation. The crash auditor's
+original v1 source is hash-pinned by the frozen protocol, so a prospective v2
+CLI adds those output protections while calling the unchanged v1 audit logic.
+These fixes require another exact-head E2E run and review before the draft can
+leave draft; no new learning run is authorized.
 
 ## Frozen calibration: independently reconstructed
 

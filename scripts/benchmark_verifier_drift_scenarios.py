@@ -890,7 +890,6 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
     require(len(groups) == GROUPS_PER_ARM, "arm did not generate the complete fixed workload")
     write(arm_out / "evaluations.json", eval_records)
     write(arm_out / "audit_records.json", audit_records)
-    total_wall = time.perf_counter() - arm_started
     require(len(updates) == UPDATES_PER_ARM,
             f"{arm} committed {len(updates)} updates, expected {UPDATES_PER_ARM}")
     require(runtime["optimizer_calls"]["count"] == UPDATES_PER_ARM,
@@ -909,6 +908,12 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
     final_report, final_detail = await capture_evaluation(final_policy, "final")
     ACTIVE_EVALUATION_JOURNALS[str(arm_out)]["stage"] = "before_arm_completion"
     inject_failure("before_arm_completion")
+    total_wall = time.perf_counter() - arm_started
+    limits = protocol["resource_limits"]
+    require(total_wall <= limits["max_wall_seconds_per_arm"],
+            "per-arm wall-time budget exceeded after final evaluation")
+    require(time.perf_counter() - args.started <= limits["max_wall_seconds_total"],
+            "total wall-time budget exceeded after final evaluation")
     sample_latencies = [float(member["attempt"].latency_ms) / 1000.0
                         for group in groups for member in group["members"]]
     queue_waits = [float(member["queue_wait_s"])
