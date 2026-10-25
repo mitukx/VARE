@@ -37,6 +37,8 @@ The result manifest covers all 13 retained run files and has SHA-256 `3e0d039b7f
 - Independent grader cohort summary: `a9f3230eeec111cec7422e6d120aebb7994806d63461827b4cd1874a0f2847a3`.
 - V5 task certification audit: `81849c340276d7a2d09511a7853ab5c0d81efd4243fda9f62d23e41823978574`.
 
+The initial broad V1 exposure scan is retained losslessly as `results/mlx-core-development-qualification-v1/exposure-audit.json.gz` to fit the repository's per-blob size limit. Its sidecar manifest records compressed and uncompressed SHA-256 digests; decompressing it reconstructs the original 2,396,541-byte JSON exactly. The frozen V1 protocol uses the corrected V2 exposure audit, whose hash is unchanged.
+
 See the [frozen protocol](../protocols/mlx_core_development_agent_feasibility_v1.json), [raw run bundle](../results/mlx-core-development-agent-feasibility-v1/), and the [V5 source/grader qualification report](mlx-core-development-qualification-v5-report.md).
 
 ## Decision and next gate
