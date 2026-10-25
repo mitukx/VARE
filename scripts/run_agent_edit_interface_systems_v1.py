@@ -585,10 +585,6 @@ def execute_cell(
             "known_fix_controller_complete", task_id=task_id, interface=interface,
             target_sha256=sha256_path(workspace / task["target"]),
         )
-        journal.append(
-            "known_fix_controller_complete", task_id=task_id, interface=interface,
-            target_sha256=sha256_path(workspace / task["target"]),
-        )
     finally:
         journal.close()
     grade = _grade(workspace, task_id, venv_python, monitor)

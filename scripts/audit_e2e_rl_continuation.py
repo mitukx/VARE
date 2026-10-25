@@ -197,6 +197,13 @@ RUNTIME_PACKAGE_SOURCES_V2 = RUNTIME_PACKAGE_SOURCES_V1 | frozenset({
 })
 SOURCE_INVENTORY_V1 = LEGACY_EXPECTED_SOURCES | RUNTIME_PACKAGE_SOURCES_V1
 SOURCE_INVENTORY_V2 = LEGACY_EXPECTED_SOURCES | RUNTIME_PACKAGE_SOURCES_V2
+# Versioned diagnostic inventories are admitted only at the commits that were
+# actually reviewed and recorded for those versions. A later checkout may have
+# additional runtime modules; it is not silently treated as the 78-file V2.
+PINNED_VERSIONED_SOURCE_COMMITS = {
+    SOURCE_INVENTORY_V1: "7f7d5a4e3963adef298dee7520bcfc36971639d9",
+    SOURCE_INVENTORY_V2: "a4fe08298d1349c5aaf6d20b626f0f114c4ee114",
+}
 SUPPORTED_SOURCE_INVENTORIES = (
     LEGACY_EXPECTED_SOURCES,
     PREVIOUS_EXPECTED_SOURCES,
@@ -241,9 +248,13 @@ def validate_source_inventory(manifest, source_names, locked):
          all(char in "0123456789abcdef" for char in commit),
          "campaign base commit is not a full SHA")
     if source_names==SOURCE_INVENTORY_V1:
+        need(commit==PINNED_VERSIONED_SOURCE_COMMITS[SOURCE_INVENTORY_V1],
+             "77-file campaign base commit differs from its pinned diagnostic revision")
         need(runtime_source_names_from_commit(commit)==RUNTIME_PACKAGE_SOURCES_V1,
              "runtime source inventory differs from pinned 77-file version")
     elif source_names==SOURCE_INVENTORY_V2:
+        need(commit==PINNED_VERSIONED_SOURCE_COMMITS[SOURCE_INVENTORY_V2],
+             "78-file campaign base commit differs from its pinned diagnostic revision")
         need(runtime_source_names_from_commit(commit)==RUNTIME_PACKAGE_SOURCES_V2,
              "runtime source inventory differs from pinned 78-file version")
     committed_sources=source_hashes_from_commit(commit,source_names)

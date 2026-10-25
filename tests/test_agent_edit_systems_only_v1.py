@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import time
+from pathlib import Path
 
 import pytest
 
+from scripts import run_agent_edit_interface_systems_v1 as systems
 from scripts.run_agent_edit_interface_systems_v1 import (
     ResourceMonitor,
     TASKS,
@@ -97,3 +101,63 @@ def test_resource_monitor_durably_samples_system_and_fails_closed_on_preflight(t
     with pytest.raises(RuntimeError, match="available memory is below"):
         ResourceMonitor(blocked, blocked, impossible_limits)
     assert (blocked / "resources.jsonl").is_file()
+
+
+def test_execute_cell_records_one_terminal_completion_event(tmp_path, monkeypatch):
+    task_id = "mlxlm-2004-jamba-moe-routing"
+    target_name = "src/module.py"
+    source = tmp_path / "source"
+    source.mkdir()
+    subprocess.run(["git", "init", "-q", str(source)], check=True)
+    subprocess.run(["git", "-C", str(source), "config", "user.name", "test"], check=True)
+    subprocess.run(["git", "-C", str(source), "config", "user.email", "test@example.invalid"], check=True)
+    source_target = source / target_name
+    source_target.parent.mkdir()
+    base_text = "def value():\n    return 1\n"
+    fixed_text = "def value():\n    return 2\n"
+    source_target.write_text(base_text, encoding="utf-8")
+    subprocess.run(["git", "-C", str(source), "add", target_name], check=True)
+    subprocess.run(["git", "-C", str(source), "commit", "-qm", "base"], check=True)
+    base = subprocess.run(
+        ["git", "-C", str(source), "rev-parse", "HEAD"],
+        check=True, capture_output=True, text=True,
+    ).stdout.strip()
+    source_target.write_text(fixed_text, encoding="utf-8")
+    subprocess.run(["git", "-C", str(source), "add", target_name], check=True)
+    subprocess.run(["git", "-C", str(source), "commit", "-qm", "fix"], check=True)
+    fix = subprocess.run(
+        ["git", "-C", str(source), "rev-parse", "HEAD"],
+        check=True, capture_output=True, text=True,
+    ).stdout.strip()
+
+    workspace = tmp_path / "workspace"
+    subprocess.run(["git", "clone", "-q", str(source), str(workspace)], check=True)
+    subprocess.run(["git", "-C", str(workspace), "checkout", "-q", "--detach", base], check=True)
+    monkeypatch.setitem(TASKS[task_id], "base", base)
+    monkeypatch.setitem(TASKS[task_id], "fix", fix)
+    monkeypatch.setitem(TASKS[task_id], "target", target_name)
+    monkeypatch.setattr(systems, "_grade", lambda *_args: {
+        "command": [], "network_denied": True, "grader_sha256": "0" * 64,
+        "returncode": 0, "passed": True, "stdout": "", "stderr": "",
+        "stdout_sha256": systems.sha256_bytes(b""),
+        "stderr_sha256": systems.sha256_bytes(b""), "elapsed_seconds": 0.0,
+    })
+
+    class NoAbort:
+        abort_reason = None
+
+        def check(self):
+            return None
+
+    output = tmp_path / "cell"
+    output.mkdir()
+    systems.execute_cell(
+        source_repo=source, workspace=workspace, output=output, task_id=task_id,
+        interface="lease_bound_lines_v1", tokenizer=WordCounter(),
+        venv_python=Path("/usr/bin/python3"), queue_submitted_at=time.monotonic(),
+        monitor=NoAbort(),
+    )
+    records = [json.loads(line) for line in (output / "events.jsonl").read_text().splitlines()]
+    events = [row["event"] for row in records]
+    assert sum(event["event_type"] == "known_fix_controller_complete" for event in events) == 1
+    assert sum(event["event_type"] == "deterministic_tool_action_committed" for event in events) == 1
