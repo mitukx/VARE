@@ -1,0 +1,14 @@
+test_vmap_tri_inverse (test_vmap.TestVmap.test_vmap_tri_inverse) ... FAIL
+
+======================================================================
+FAIL: test_vmap_tri_inverse (test_vmap.TestVmap.test_vmap_tri_inverse)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-pr4748-development-v1/runs/run-v4/grader/test_vmap.py", line 508, in test_vmap_tri_inverse
+    self.assertTrue(mx.allclose(out, expected, rtol=1e-4, atol=1e-5))
+AssertionError: array(False, dtype=bool) is not true
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (failures=1)

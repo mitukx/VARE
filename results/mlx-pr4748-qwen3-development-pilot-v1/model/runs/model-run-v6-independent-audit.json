@@ -1,0 +1,98 @@
+{
+  "agent_record_sha256": "d36101e872ee012eb9a5c44f7a9d4b38b0ac3c30c2a28aabf731b25e835eb628",
+  "audit": "INDEPENDENT_MODEL_PILOT_RUN_V6",
+  "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "checks": {
+    "agent_runner_exited_cleanly": true,
+    "all_tool_outputs_complete": true,
+    "attempt_classification_no_source_edit": true,
+    "empty_diff_hash": true,
+    "event_chain_valid": true,
+    "generation_event_count_matches": true,
+    "model_run_manifest_complete": true,
+    "model_run_manifest_valid": true,
+    "no_edit_tool_call": true,
+    "no_model_grade_by_rule": true,
+    "no_training_or_heldout": true,
+    "offline_wrapper_used": true,
+    "process_rss_within_limit": true,
+    "protocol_locked": true,
+    "resource_floors": true,
+    "runner_locked": true,
+    "source_unchanged": true,
+    "swap_growth_within_limit": true,
+    "tool_result_count_matches": true,
+    "turn_budget_stop": true
+  },
+  "event_count": 19,
+  "failed_checks": [],
+  "final_event_sha256": "86041f623c34fe02a58e0ecb9d0386964991e4a7dcbe9884bcd34c75167d72fb",
+  "interpretation": "All eight model tool calls were complete and valid, but the model read consecutive 100-line ranges from the start of a 6,450-line C++ file and exhausted its turn budget before searching for or editing the relevant symbol. This is a single Development interface/inspection-strategy feasibility failure, not an estimate of coding capability.",
+  "model_attempt": {
+    "attempt_seconds": 108.75,
+    "complete_tool_call_rate": 1.0,
+    "generated_tokens": 279,
+    "heldout_evaluations": 0,
+    "independent_grade_invocations": 0,
+    "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "model_output_events": 8,
+    "outer_process_seconds": 111.153,
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "source_diff_nonempty": false,
+    "source_edits_applied": 0,
+    "stop_reason": "turn_budget_exhausted",
+    "task_id": "mlx-4748-vmap-tri-inverse-model-pilot-v1",
+    "task_role": "DEVELOPMENT_ONLY",
+    "tool_actions": {
+      "list_files": 1,
+      "read_lines": 7
+    },
+    "training_updates": 0,
+    "turns": 8
+  },
+  "resources": {
+    "cgroup_memory": "unavailable on macOS; not claimed",
+    "maximum_sampled_process_tree_rss_bytes": 2580807680,
+    "maximum_swap_growth_bytes": 0,
+    "minimum_available_memory_bytes": 8970829824,
+    "minimum_free_swap_bytes": 540737536,
+    "mlx_active_memory_bytes": 2264693768,
+    "mlx_peak_memory_bytes": 4164598836
+  },
+  "run_manifest_sha256": "cdd8fea9e6f0ae576cf323297bcec2435ba20f44fe23061f3b78f5fc81daff9b",
+  "status": "AUDIT_PASS_NO_SOURCE_EDIT",
+  "tool_trace": [
+    [
+      "list_files",
+      "complete_tool_call"
+    ],
+    [
+      "read_lines",
+      "complete_tool_call"
+    ],
+    [
+      "read_lines",
+      "complete_tool_call"
+    ],
+    [
+      "read_lines",
+      "complete_tool_call"
+    ],
+    [
+      "read_lines",
+      "complete_tool_call"
+    ],
+    [
+      "read_lines",
+      "complete_tool_call"
+    ],
+    [
+      "read_lines",
+      "complete_tool_call"
+    ],
+    [
+      "read_lines",
+      "complete_tool_call"
+    ]
+  ]
+}

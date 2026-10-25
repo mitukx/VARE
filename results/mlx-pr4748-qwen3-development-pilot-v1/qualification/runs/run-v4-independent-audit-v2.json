@@ -1,0 +1,116 @@
+{
+  "audit": "INDEPENDENT_RECONSTRUCTION_MLX_PR4748_V4",
+  "checks": {
+    "baseline_build_pass": true,
+    "baseline_independent_control": true,
+    "baseline_network_and_abort_metadata": true,
+    "baseline_raw_log_hashes": true,
+    "baseline_sampled_resource_floors": true,
+    "baseline_target_identity": true,
+    "fixed_build_pass": true,
+    "fixed_independent_control": true,
+    "fixed_network_and_abort_metadata": true,
+    "fixed_raw_log_hashes": true,
+    "fixed_sampled_resource_floors": true,
+    "fixed_target_identity": true,
+    "grader_inputs_pinned": true,
+    "lock_points_to_protocol": true,
+    "manifest_complete_and_valid": true,
+    "mutant_build_pass": true,
+    "mutant_independent_control": true,
+    "mutant_network_and_abort_metadata": true,
+    "mutant_raw_log_hashes": true,
+    "mutant_sampled_resource_floors": true,
+    "mutant_target_identity": true,
+    "phase_order_pinned": true,
+    "protocol_hash_locked": true,
+    "protocol_hash_matches_summary": true,
+    "runner_hash_locked": true,
+    "summary_reconstructed": true
+  },
+  "claim_limit": "One source/grader-certified Development family; no model inference, held-out eligibility, learning, or capability claim.",
+  "failed_checks": [],
+  "phase_first_sample_times_utc": {
+    "baseline": "2026-10-25T13:15:48.967837+00:00",
+    "fixed": "2026-10-25T13:18:44.518553+00:00",
+    "mutant": "2026-10-25T13:18:32.743369+00:00"
+  },
+  "phase_order_observed": [
+    "baseline",
+    "mutant",
+    "fixed"
+  ],
+  "phase_reconstruction": {
+    "baseline": {
+      "build_peak_process_tree_rss_bytes": 2317811712,
+      "build_seconds": 162.741,
+      "direct_passes": 2,
+      "independent_cases": 6,
+      "maximum_swap_used_bytes": 7059341312,
+      "minimum_available_memory_bytes": 12914786304,
+      "minimum_free_swap_bytes": 456851456,
+      "oracle_semantics": {
+        "baseline_direct_or_fix_direct": true,
+        "fixed_all_six": false,
+        "vmapped_controls_detect_bug": true
+      },
+      "phase_status": "CONTROL_EXPECTED",
+      "resource_samples": 320,
+      "source_sha256": "06b9ffc486d7fc74556911c4a99a11683ba35c4015868e968a4c07b342f18cf1",
+      "upstream_test_exit_code": 1,
+      "vmap_passes": 0
+    },
+    "fixed": {
+      "build_peak_process_tree_rss_bytes": 485933056,
+      "build_seconds": 10.753,
+      "direct_passes": 2,
+      "independent_cases": 6,
+      "maximum_swap_used_bytes": 6992232448,
+      "minimum_available_memory_bytes": 13445251072,
+      "minimum_free_swap_bytes": 523960320,
+      "oracle_semantics": {
+        "baseline_direct_or_fix_direct": true,
+        "fixed_all_six": true,
+        "vmapped_controls_detect_bug": false
+      },
+      "phase_status": "KNOWN_FIX_ACCEPTED",
+      "resource_samples": 23,
+      "source_sha256": "381182d146060c89ec3a589f50f0514e4adf1ab7ad819abf9fd90feb25407d18",
+      "upstream_test_exit_code": 0,
+      "vmap_passes": 4
+    },
+    "mutant": {
+      "build_peak_process_tree_rss_bytes": 490356736,
+      "build_seconds": 10.741,
+      "direct_passes": 2,
+      "independent_cases": 6,
+      "maximum_swap_used_bytes": 6992232448,
+      "minimum_available_memory_bytes": 13462700032,
+      "minimum_free_swap_bytes": 523960320,
+      "oracle_semantics": {
+        "baseline_direct_or_fix_direct": true,
+        "fixed_all_six": false,
+        "vmapped_controls_detect_bug": true
+      },
+      "phase_status": "CONTROL_EXPECTED",
+      "resource_samples": 23,
+      "source_sha256": "16590a38b26c44a43e9acc4b9eae165d91e18db5e1385c8c9e42352264e189a8",
+      "upstream_test_exit_code": 1,
+      "vmap_passes": 0
+    }
+  },
+  "protocol_sha256": "43ce2432257b0a2cd51955cace416a09264d3e3361487acf9dc6cf53cd340998",
+  "resources": {
+    "cgroup_memory": "unavailable on macOS; not claimed",
+    "max_sampled_swap_growth_vs_global_preflight_bytes": 0,
+    "maximum_process_tree_rss_bytes": 2317811712,
+    "maximum_sampled_swap_used_bytes": 7059341312,
+    "minimum_available_memory_bytes": 12914786304,
+    "minimum_disk_free_bytes": 111556083712,
+    "minimum_free_swap_bytes": 456851456,
+    "preflight_swap_used_bytes": 7059341312
+  },
+  "run_manifest_sha256": "920bb1c60c8fc12e49c96d7b927a8147588061e6898dc0fe0f319fe4769c411b",
+  "runner_sha256": "5fa12b64c813ba0bc90cc725221288f3240e2df0a36c2d2864aad0a4cf69a015",
+  "status": "PASS_TASK_CERTIFICATION_PILOT"
+}

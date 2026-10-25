@@ -1,0 +1,135 @@
+{
+  "baseline_archive_sha256": "02963739a6ad52fd0d79da69f4df580e73915635ef95a2e99520d3e62986826b",
+  "build": {
+    "abort_reason": null,
+    "argv": [
+      "/usr/bin/sandbox-exec",
+      "-p",
+      "(version 1) (allow default) (deny network*)",
+      "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+      "setup.py",
+      "build_ext",
+      "--inplace"
+    ],
+    "cwd": "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-pr4748-development-v1/source-v4",
+    "elapsed_seconds": 162.741,
+    "exit_code": 0,
+    "network_profile": "(version 1) (allow default) (deny network*)",
+    "peak_process_tree_rss_bytes": 2317811712,
+    "samples_sha256": "fd52420f49745564ddc3069f50bc9ae0e367e6e9fd00b5d1c383f1badb715265",
+    "stdout_sha256": "590236281a45c37db38c65a3adc4dd3d8818cb6fdf80807a7659d3e7403f1955"
+  },
+  "oracle": {
+    "case_seed": 20261025,
+    "cases": {
+      "lower_direct": {
+        "max_abs_error": 7.450580596923828e-09,
+        "passed": true,
+        "shape": [
+          3,
+          4,
+          4
+        ]
+      },
+      "lower_vmap_axis0": {
+        "max_abs_error": 0.10008104890584946,
+        "passed": false,
+        "shape": [
+          3,
+          4,
+          4
+        ]
+      },
+      "lower_vmap_axis1": {
+        "max_abs_error": 0.10008104890584946,
+        "passed": false,
+        "shape": [
+          3,
+          4,
+          4
+        ]
+      },
+      "upper_direct": {
+        "max_abs_error": 7.450580596923828e-09,
+        "passed": true,
+        "shape": [
+          3,
+          4,
+          4
+        ]
+      },
+      "upper_vmap_axis0": {
+        "max_abs_error": 0.10806404054164886,
+        "passed": false,
+        "shape": [
+          3,
+          4,
+          4
+        ]
+      },
+      "upper_vmap_axis1": {
+        "max_abs_error": 0.10806404054164886,
+        "passed": false,
+        "shape": [
+          3,
+          4,
+          4
+        ]
+      }
+    },
+    "completed_unix_ns": 1792934312127291000,
+    "device": "Device(cpu, 0)",
+    "input_shape": [
+      3,
+      4,
+      4
+    ],
+    "passed": false
+  },
+  "oracle_runtime": {
+    "abort_reason": null,
+    "argv": [
+      "/usr/bin/sandbox-exec",
+      "-p",
+      "(version 1) (allow default) (deny network*)",
+      "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+      "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-pr4748-development-v1/grader/independent_oracle.py"
+    ],
+    "cwd": "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-pr4748-development-v1/source-v4",
+    "elapsed_seconds": 0.517,
+    "exit_code": 1,
+    "network_profile": "(version 1) (allow default) (deny network*)",
+    "peak_process_tree_rss_bytes": 4096000,
+    "samples_sha256": "63900a18b46d27984541f016d1b873450552d1757df7c2c1bc9e47c516994217",
+    "stdout_sha256": "2e4b694220f15e805af41850a7704c84fb23732ac25f24cd9abb3a266c5b1528"
+  },
+  "phase": "baseline",
+  "phase_accepted": true,
+  "semantic_checks": {
+    "all_cases_pass": false,
+    "any_vmapped_fail": true,
+    "direct_all_pass": true
+  },
+  "status": "CONTROL_EXPECTED",
+  "target_sha256": "06b9ffc486d7fc74556911c4a99a11683ba35c4015868e968a4c07b342f18cf1",
+  "upstream_test": {
+    "abort_reason": null,
+    "argv": [
+      "/usr/bin/sandbox-exec",
+      "-p",
+      "(version 1) (allow default) (deny network*)",
+      "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+      "-m",
+      "unittest",
+      "-v",
+      "test_vmap.TestVmap.test_vmap_tri_inverse"
+    ],
+    "cwd": "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-pr4748-development-v1/runs/run-v4/grader",
+    "elapsed_seconds": 0.511,
+    "exit_code": 1,
+    "network_profile": "(version 1) (allow default) (deny network*)",
+    "peak_process_tree_rss_bytes": 4063232,
+    "samples_sha256": "e8107c347e20034edc800cb105220bc3ca866022b041377f00c46caca658787b",
+    "stdout_sha256": "d7e43d7647e85aa401fbb1fdba68928e6a581bad5ec41723cc0e8733aab03e65"
+  }
+}

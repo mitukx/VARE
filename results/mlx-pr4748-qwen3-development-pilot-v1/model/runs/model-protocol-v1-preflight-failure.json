@@ -1,0 +1,14 @@
+{
+  "attempted_command": "work/mlx-core-development-qualification-v1/venv/bin/python work/mlx-core-pr4748-development-v1/model_pilot_runner_v1.py --protocol work/mlx-core-pr4748-development-v1/model-protocol-v1.json --protocol-sha256 3b1222bcd84eb854e0d957962e987e3859bf314ff9d1a02bcccb9a28ae22c02d --lock work/mlx-core-pr4748-development-v1/model-protocol-v1.lock.json --lock-sha256 917c5327e45c9c4398b92574f0e2183fb338521140db69f65f062aa002e6e5a8",
+  "candidate_workspace_created": false,
+  "disposition": "No task outcome, model sample, inference, or retry occurred. Preserve as launcher-validation failure.",
+  "exception": "KeyError(\"runner_sha256\") while validating frozen model-runner lock; lock used the declared key model_runner_sha256.",
+  "model_output_events": 0,
+  "model_process_started": false,
+  "output_root_created": false,
+  "protocol_id": "mlx-core-pr4748-qwen3-development-edit-pilot-v1",
+  "protocol_sha256": "3b1222bcd84eb854e0d957962e987e3859bf314ff9d1a02bcccb9a28ae22c02d",
+  "runner_sha256": "d2fc07213544fddbece93b228e5a6e5fd079705d0ab2204df772624943264a48",
+  "schema_version": 1,
+  "status": "PREFLIGHT_ABORT_BEFORE_MODEL_PROCESS"
+}

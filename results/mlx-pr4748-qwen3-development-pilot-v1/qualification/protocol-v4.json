@@ -1,0 +1,207 @@
+{
+  "build_environment": {
+    "build_command": "PYPI_RELEASE=1 CMAKE_BUILD_PARALLEL_LEVEL=2 CMAKE_ARGS=\"-DMLX_BUILD_METAL=OFF -DFETCHCONTENT_FULLY_DISCONNECTED=ON -DFETCHCONTENT_SOURCE_DIR_FMT=<pinned fmt> -DFETCHCONTENT_SOURCE_DIR_JSON=<pinned json> -DFETCHCONTENT_SOURCE_DIR_NANOBIND=<pinned nanobind> -DFETCHCONTENT_SOURCE_DIR_GGUFLIB=<pinned gguflib>\" python setup.py build_ext --inplace",
+    "build_python": "work/mlx-core-development-qualification-v1/venv/bin/python",
+    "cgroup_memory": "unavailable on this macOS host; not claimed",
+    "dependency_root": "work/mlx-core-development-qualification-v1/dependencies-complete-v1",
+    "dependency_sources": {
+      "fmt": {
+        "commit": "407c905e45ad75fc29bf0f9bb7c5c2fd3475976f",
+        "fetchcontent_name": "fmt",
+        "kind": "git",
+        "path": "fmt",
+        "tree_sha256": "7b31e78a56d918f8f8bcee422c04ee01fb2a4d044434be50f8fb62aea557caa9"
+      },
+      "gguflib": {
+        "commit": "8fa6eb65236618e28fd7710a0fba565f7faa1848",
+        "fetchcontent_name": "gguflib",
+        "kind": "git",
+        "path": "gguflib",
+        "tree_sha256": "e16b9f9ff075f3c55bf281594aaf6b913885e13bfcc31e0e966d671cba1c21e9"
+      },
+      "json": {
+        "archive_filename": "json-3.11.3.tar.xz",
+        "archive_sha256": "d6c65aca6b1ed68e7a182f4757257b107ae403032760ed6ef121c9d55e81757d",
+        "fetchcontent_name": "json",
+        "kind": "archive_extracted",
+        "path": "json",
+        "tree_sha256": "a6f4bbaecb441d501d869bdc9456592305da40cedf009796c3584c830e2cec0f"
+      },
+      "nanobind": {
+        "commit": "68480a9e6883bb1bf65e1925423321e2a89d07f9",
+        "fetchcontent_name": "nanobind",
+        "kind": "git",
+        "path": "nanobind",
+        "submodule_commits": {
+          "ext/robin_map": "4ec1bf19c6a96125ea22062f38c2cf5b958e448e"
+        },
+        "tree_sha256": "214c47f8e11097088db6dc4d3d6891526e305fe02476ec561634c04409d7c935"
+      }
+    },
+    "preflight_snapshot": {
+      "available_memory_bytes": 14298218496,
+      "cgroup_limit_bytes": null,
+      "disk_free_bytes": 111781171200,
+      "free_swap_bytes": 414908416,
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "python": "3.12.12",
+      "swap_used_bytes": 7101284352,
+      "timestamp_utc": "2026-10-25T13:12:15.543222+00:00",
+      "total_memory_bytes": 34359738368
+    },
+    "python_build_environment": {
+      "build_python_freeze": [
+        "cmake==3.31.6",
+        "numpy==2.5.4",
+        "pip==25.0.1",
+        "psutil==7.1.3",
+        "setuptools==80.9.0",
+        "typing_extensions==4.16.0",
+        "wheel==0.45.1"
+      ],
+      "cmake": "3.31.6",
+      "compiler": "Apple clang 17.0.0",
+      "platform": "macOS arm64, Python 3.12.12",
+      "requirements_lock_path": "requirements/mlx-core-development-qualification-v1.lock.txt",
+      "requirements_lock_sha256": "c89309fc1b8dec9d57666da7d3847b637d8f583f9bfcf09e8e563e1a00d02fd1",
+      "wheels_sha256": {
+        "cmake-3.31.6-py3-none-macosx_10_10_universal2.whl": "da9d4fd9abd571fd016ddb27da0428b10277010b23bb21e3678f8b9e96e1686e",
+        "numpy-2.5.4-cp312-cp312-macosx_14_0_arm64.whl": "9cb18a327b49c5c337f972b03682f6a49855525faaf3c0d3e9c96cd0fd8880a8",
+        "pip-25.0.1-py3-none-any.whl": "c46efd13b6aa8279f33f2864459c8ce587ea6a1a59ee20de055868d8f7688f7f",
+        "psutil-7.1.3-cp36-abi3-macosx_11_0_arm64.whl": "bc31fa00f1fbc3c3802141eede66f3a2d51d89716a194bf2cd6fc68310a19880",
+        "setuptools-80.9.0-py3-none-any.whl": "062d34222ad13e0cc312a4c02d73f059e86a4acbfbdea8f8f76b28c99f306922",
+        "typing_extensions-4.16.0-py3-none-any.whl": "481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8",
+        "wheel-0.45.1-py3-none-any.whl": "708e7481cc80179af0e556bbf0cc00b8444c7321e2700b8d8580231d13017248"
+      }
+    },
+    "resource_limits": {
+      "build_parallelism": 2,
+      "max_phase_seconds": 1800,
+      "max_swap_growth_bytes": 134217728,
+      "minimum_available_memory_bytes": 8589934592,
+      "minimum_disk_free_bytes": 21474836480,
+      "minimum_free_swap_bytes": 268435456,
+      "network": "Denied for all build, oracle, and upstream-test subprocesses using macOS sandbox-exec; dependencies are pre-cached and hash-pinned.",
+      "platform": "Darwin arm64; native CPU build with MLX_BUILD_METAL=OFF; no model weights.",
+      "sample_interval_seconds": 0.5
+    }
+  },
+  "claim_limit": "At most one source/grader-certified Development task family. The upstream fix is public and was inspected by the operator. External model pretraining exposure is unknown. This does not increase the frozen held-out count or authorize learning.",
+  "execution": {
+    "build_command": "PYPI_RELEASE=1 CMAKE_BUILD_PARALLEL_LEVEL=2 CMAKE_ARGS=\"-DMLX_BUILD_METAL=OFF -DFETCHCONTENT_FULLY_DISCONNECTED=ON -DFETCHCONTENT_SOURCE_DIR_FMT=<pinned fmt> -DFETCHCONTENT_SOURCE_DIR_JSON=<pinned json> -DFETCHCONTENT_SOURCE_DIR_NANOBIND=<pinned nanobind> -DFETCHCONTENT_SOURCE_DIR_GGUFLIB=<pinned gguflib>\" <pinned build_python> setup.py build_ext --inplace",
+    "dependency_tree_hash_algorithm": "SHA-256 over sorted relative path length, UTF-8 relative path, and file SHA-256; exclude every file whose relative path contains a .git component.",
+    "failure_retention": "unique run directory; exclusive phase record writes; logs and sampled host/process telemetry; partial failure record; SHA-256 manifest",
+    "network_sandbox": "/usr/bin/sandbox-exec -p \"(version 1) (allow default) (deny network*)\" for build, oracle, upstream test",
+    "oracle_command": "<pinned build_python> <independent_oracle.py>",
+    "phase_order": [
+      "baseline",
+      "mutant",
+      "fixed"
+    ],
+    "runner_path": "work/mlx-core-pr4748-development-v1/qualification_runner_v4.py",
+    "runner_sha256": "5fa12b64c813ba0bc90cc725221288f3240e2df0a36c2d2864aad0a4cf69a015",
+    "runtime_import_order": "grader directory precedes the exact source worktree python/ directory on PYTHONPATH; mlx.core must load from the built worktree",
+    "upstream_test_command": "<pinned build_python> -m unittest -v test_vmap.TestVmap.test_vmap_tri_inverse"
+  },
+  "frozen_at_utc": "2026-10-25T13:15:44.703629+00:00",
+  "grader_files": [
+    {
+      "path": "test_vmap.py",
+      "revision": "ae765377fbb9f0c238e2f4f6981def1fc01a75bb",
+      "sha256": "b226ac049b59898e95b5e7d0b8d982f6cc9030b120992592e0928f6c7f450966",
+      "source_path": "python/tests/test_vmap.py"
+    },
+    {
+      "path": "mlx_tests.py",
+      "revision": "ae765377fbb9f0c238e2f4f6981def1fc01a75bb",
+      "sha256": "a819a52ffece76b3fcbbd54edfffe05f1f7e5a0bc0405d4a94e98e6ad42fcc83",
+      "source_path": "python/tests/mlx_tests.py"
+    }
+  ],
+  "integrity": {
+    "candidate_model_access": "NOT_RUN during qualification; source and grader remain separate.",
+    "frozen_inputs_sha256": {
+      "baseline_target_sha256": "06b9ffc486d7fc74556911c4a99a11683ba35c4015868e968a4c07b342f18cf1",
+      "build_requirements_lock_sha256": "c89309fc1b8dec9d57666da7d3847b637d8f583f9bfcf09e8e563e1a00d02fd1",
+      "fixed_target_sha256": "381182d146060c89ec3a589f50f0514e4adf1ab7ad819abf9fd90feb25407d18",
+      "independent_oracle_sha256": "2070503f078736e1683fbb89c31763df51a1c17e9f3f7961b348d88cc0223126",
+      "mutant_target_sha256": "16590a38b26c44a43e9acc4b9eae165d91e18db5e1385c8c9e42352264e189a8",
+      "repository_license_sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+      "task_prompt_sha256": "3ce83fb91370424a6e932441b8579458a7c0a1dd04bbfae8da8b7f16351e42d6",
+      "upstream_regression_test_sha256": "b226ac049b59898e95b5e7d0b8d982f6cc9030b120992592e0928f6c7f450966"
+    },
+    "grader_setup": "Only the pinned test_vmap.py and mlx_tests.py public test fixture are placed in the external grader directory; independent_oracle.py stays alongside protocol outside the candidate source tree.",
+    "hidden_tests": "No hidden upstream tests. The independent NumPy oracle is operator-side and not mounted in the future candidate workspace.",
+    "network": "Denied for build and test child processes; all CMake FetchContent dependencies are local, pinned and hash-checked.",
+    "no_outcome_mutation": "V1 was not executed; no build, baseline, mutant, fixed, or grader outcome was observed before this v2 freeze.",
+    "source_identity": "Full upstream commit SHAs and target file SHA-256 values recorded above; source trees are reconstructed from Git objects, not the mutable checkout."
+  },
+  "protocol_id": "mlx-core-pr4748-development-qualification-v4",
+  "purpose": "Qualify one newly selected CPU-executable MLX-core repository repair before any model exposure. This is not held-out evaluation, learning, or a capability result.",
+  "schema_version": 1,
+  "selection": {
+    "candidate_set": [
+      "mlx-4748-vmap-tri-inverse"
+    ],
+    "candidate_set_frozen": true,
+    "excluded_alternatives": [
+      {
+        "reason": "Broad multi-file stream propagation change (8 implementation files plus a new static checker); not bounded to a single repair family.",
+        "task": "MLX #4746 missing stream arguments"
+      },
+      {
+        "reason": "Metal-specific regression outside the CPU-only qualification lane.",
+        "task": "MLX #4755 int8/uint8 any/all"
+      },
+      {
+        "reason": "The local task environment lacks PyTorch; adding its large dependency is not justified for this smallest pilot.",
+        "task": "Transformers #49842 MusicGen positional cache"
+      }
+    ],
+    "historical_allocation": "No frozen Train/Development/Held-out allocation is edited. This new task is Development-only and contributes zero held-out families.",
+    "local_exposure_audit": "The current VARE task catalogs and Development protocol/task IDs were inspected. No prior model/agent receipt names PR #4748 or the alias mlx-4748-vmap-tri-inverse. This is a bounded local scan; it cannot establish absence from external model pretraining.",
+    "rationale": "MLX #4748 changes one primitive vmap rule; upstream reports a CPU reproducer and adds a focused batch test. It is outside the frozen 15-task source allocation and the 24-item manual queue; its semantic family differs from consumed #4729 negative take, #4730 random-normal shape, and #4731 NumPy dtype conversion.",
+    "selection_rule": "From post-2026-10-22 merged PR metadata, select a one-file, native-CPU MLX C++ semantic regression with an upstream test and no model-weight/service requirement. Freeze before candidate-model inference."
+  },
+  "stopping": "Stop after the three frozen source phases. Do not change task, test cases, tolerance, mutation, resource thresholds or acceptance after observing outcomes. Any post-freeze change requires a new protocol and is not a retry.",
+  "supersedes": {
+    "protocol_path": "work/mlx-core-pr4748-development-v1/protocol-v3.json",
+    "protocol_sha256": "90d9a2fa5b9b5f06cb8bfbfeb77b5358e38829a78b1939f6a4d73f2ce3bcdf0b",
+    "reason": "Pre-phase preflight aborted before source extraction/build because runner v3 counted .git metadata in dependency tree hashes, whereas the frozen dependency pins were defined over source files with all .git path components excluded. No task source, oracle, or grader outcome was observed under v3."
+  },
+  "task": {
+    "attempts_per_phase": 1,
+    "baseline_commit": "c6abf0dbb4fc141fad739b32ae486c06728e49e5",
+    "baseline_sha256": "06b9ffc486d7fc74556911c4a99a11683ba35c4015868e968a4c07b342f18cf1",
+    "candidate_source_allowlist": [
+      "mlx/primitives.cpp"
+    ],
+    "fixed_commit": "ae765377fbb9f0c238e2f4f6981def1fc01a75bb",
+    "fixed_sha256": "381182d146060c89ec3a589f50f0514e4adf1ab7ad819abf9fd90feb25407d18",
+    "independent_oracle_path": "work/mlx-core-pr4748-development-v1/grader/independent_oracle.py",
+    "independent_oracle_sha256": "2070503f078736e1683fbb89c31763df51a1c17e9f3f7961b348d88cc0223126",
+    "independent_reference": "NumPy float64 inverse of the upper/lower triangular projection of three fixed-seed non-triangular float32 matrices; compare direct, vmap axis 0, and vmap axis 1 with rtol=5e-4, atol=5e-5.",
+    "license": "MIT (repository LICENSE at baseline revision; no target-file-specific notice found in pinned diff)",
+    "license_sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+    "merge_commit": "001a2da27525c9a4894e677f6dbbcd3bb65f95ad",
+    "mutant_sha256": "16590a38b26c44a43e9acc4b9eae165d91e18db5e1385c8c9e42352264e189a8",
+    "phase_order": [
+      "baseline",
+      "mutant",
+      "fixed"
+    ],
+    "predeclared_mutation": "Invert the upper_ flag in the vmap triangular-inverse branch. Mutant source bytes are locked by mutant_sha256.",
+    "prompt_path": "work/mlx-core-pr4748-development-v1/input/task.md",
+    "prompt_sha256": "3ce83fb91370424a6e932441b8579458a7c0a1dd04bbfae8da8b7f16351e42d6",
+    "qualification_acceptance": "Baseline: direct controls pass and at least one vmap case fails; fixed: all six direct/vmap mode cases pass and pinned upstream regression passes; mutant: at least one vmap case fails. Any build, resource, provenance, or network-control failure leaves task UNQUALIFIED.",
+    "target_path": "mlx/primitives.cpp",
+    "task_id": "mlx-4748-vmap-tri-inverse",
+    "upstream_pr": 4748,
+    "upstream_repository": "ml-explore/mlx",
+    "upstream_test_path": "python/tests/test_vmap.py",
+    "upstream_test_revision": "ae765377fbb9f0c238e2f4f6981def1fc01a75bb",
+    "upstream_test_selector": "test_vmap.TestVmap.test_vmap_tri_inverse",
+    "upstream_test_sha256": "b226ac049b59898e95b5e7d0b8d982f6cc9030b120992592e0928f6c7f450966"
+  },
+  "task_role": "DEVELOPMENT_ONLY"
+}

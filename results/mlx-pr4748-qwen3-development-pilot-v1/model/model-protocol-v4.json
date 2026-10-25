@@ -1,0 +1,209 @@
+{
+  "budget": {
+    "do_sample": false,
+    "max_context_tokens": 8192,
+    "max_new_tokens_per_turn": 384,
+    "max_no_tool_retries": 0,
+    "max_total_new_tokens": 3072,
+    "max_turns": 8,
+    "model_load_attempts": 1,
+    "protocol_retries": 0,
+    "public_test_runs": 0,
+    "seed": 20261025,
+    "startup_grace_seconds": 180,
+    "task_attempts": 1,
+    "temperature": 0.0,
+    "top_k": 0,
+    "top_p": 0.0,
+    "wall_seconds": 600
+  },
+  "claim_limit": "One model sample on one operator-exposed, public-PR Development task; external Qwen pretraining exposure is unknown. This is transport/task feasibility only, not capability improvement, held-out evaluation, learning, async benefit, or benchmark evidence.",
+  "execution": {
+    "build_python": "work/mlx-core-development-qualification-v1/venv/bin/python",
+    "candidate_workspace": "work/mlx-core-pr4748-development-v1/model-candidate-v4",
+    "dependencies": "work/mlx-core-development-qualification-v1/dependencies-complete-v1",
+    "dependency_sources": {
+      "fmt": {
+        "commit": "407c905e45ad75fc29bf0f9bb7c5c2fd3475976f",
+        "fetchcontent_name": "fmt",
+        "kind": "git",
+        "path": "fmt",
+        "tree_sha256": "7b31e78a56d918f8f8bcee422c04ee01fb2a4d044434be50f8fb62aea557caa9"
+      },
+      "gguflib": {
+        "commit": "8fa6eb65236618e28fd7710a0fba565f7faa1848",
+        "fetchcontent_name": "gguflib",
+        "kind": "git",
+        "path": "gguflib",
+        "tree_sha256": "e16b9f9ff075f3c55bf281594aaf6b913885e13bfcc31e0e966d671cba1c21e9"
+      },
+      "json": {
+        "archive_filename": "json-3.11.3.tar.xz",
+        "archive_sha256": "d6c65aca6b1ed68e7a182f4757257b107ae403032760ed6ef121c9d55e81757d",
+        "fetchcontent_name": "json",
+        "kind": "archive_extracted",
+        "path": "json",
+        "tree_sha256": "a6f4bbaecb441d501d869bdc9456592305da40cedf009796c3584c830e2cec0f"
+      },
+      "nanobind": {
+        "commit": "68480a9e6883bb1bf65e1925423321e2a89d07f9",
+        "fetchcontent_name": "nanobind",
+        "kind": "git",
+        "path": "nanobind",
+        "submodule_commits": {
+          "ext/robin_map": "4ec1bf19c6a96125ea22062f38c2cf5b958e448e"
+        },
+        "tree_sha256": "214c47f8e11097088db6dc4d3d6891526e305fe02476ec561634c04409d7c935"
+      }
+    },
+    "environment_allowlist": [
+      "HF_HUB_OFFLINE=1",
+      "TRANSFORMERS_OFFLINE=1",
+      "PYTHONPATH=<repository>/src"
+    ],
+    "grade_output": "work/mlx-core-pr4748-development-v1/runs/model-grade-v4",
+    "grader_file_hashes": {
+      "independent_oracle.py": "2070503f078736e1683fbb89c31763df51a1c17e9f3f7961b348d88cc0223126",
+      "mlx_tests.py": "a819a52ffece76b3fcbbd54edfffe05f1f7e5a0bc0405d4a94e98e6ad42fcc83",
+      "test_vmap.py": "b226ac049b59898e95b5e7d0b8d982f6cc9030b120992592e0928f6c7f450966"
+    },
+    "grader_path": "work/mlx-core-pr4748-development-v1/model-grader-v1",
+    "grader_runner_path": "work/mlx-core-pr4748-development-v1/model_candidate_grade_v1.py",
+    "hidden_data": "No hidden tests in the task. Independent oracle and public upstream regression test remain outside model task root and candidate allowlist.",
+    "model_runner_sha256": "caf14e6cfa0178dfa5a9719d3ab3fd41bfe5648d80830b295d8b370841937895",
+    "outcome_rule": "If no nonempty source diff is applied, record NO_SOURCE_EDIT and skip build/grading. Otherwise build exactly the candidate workspace offline and run only the six-case independent oracle plus pinned upstream regression test. No retries.",
+    "output_root": "work/mlx-core-pr4748-development-v1/runs/model-run-v4",
+    "preflight_output": "work/mlx-core-pr4748-development-v1/runs/model-preflight-v4",
+    "runner_path": "work/mlx-core-pr4748-development-v1/model_pilot_runner_v4.py"
+  },
+  "frozen_at_utc": "2026-10-25T13:28:30.389499+00:00",
+  "grade_resources": {
+    "build_parallelism": 2,
+    "max_model_process_tree_rss_bytes": 10737418240,
+    "max_phase_seconds": 1800,
+    "max_swap_growth_bytes": 134217728,
+    "minimum_available_memory_bytes": 8589934592,
+    "minimum_disk_free_bytes": 21474836480,
+    "minimum_free_swap_bytes": 268435456,
+    "sample_interval_seconds": 1
+  },
+  "heldout_evaluations": 0,
+  "hypothesis": "A local Qwen3-4B model can submit one complete hash-bound source edit through VARE\u2019s lease_bound_lines_v1 tool interface on a freshly source/grader-certified real Development task, and the edit can be independently rebuilt and graded.",
+  "interface": {
+    "calibration_basis": "Four independent serialized-edit fixtures; max action 73 tokens for lease-bound lines and 132 for legacy structured replacement. No task/model outcomes used to choose 384.",
+    "calibration_record": "results/agent-edit-interface-v1/format-calibration-pinned-v1.json",
+    "calibration_sha256": "44df4ae3d7180acd51d2a06b9fe60d93f251359ab91072dc558a093bd3d20fa3",
+    "edit_format": "structured_replace",
+    "per_turn_output_tokens": 384,
+    "tool_behavior": "One-time full-file-hash/range lease; exact complete JSON only; no retries or auto-repair of truncated calls.",
+    "tool_interface": "lease_bound_lines_v1"
+  },
+  "model": {
+    "backend": "MLX Apple Metal",
+    "files_sha256": {
+      ".gitattributes": "34448b82c17d60fec9b65b1f093c115ddbaadc04beb1b0140b6bfed2e012a930",
+      "README.md": "7b17ce562d7ea121c86d2ffdf660eed3726ac5b52cacfa9f1de11a65969f5657",
+      "added_tokens.json": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680",
+      "chat_template.jinja": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541",
+      "config.json": "574349e5a343236546fda55e4744a76e181f534182d7dc60ff1bad7e7a502849",
+      "generation_config.json": "835fffe355c9438e7a25be099b3fccaa98350b83451f9fd2d99512e74f1ade48",
+      "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "model.safetensors": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f",
+      "model.safetensors.index.json": "388d811b8b7c2608dd04cce1bcb04a8bf715d19b42790894e6d3427ff429a777",
+      "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "tokenizer.json": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "tokenizer_config.json": "4397cc477eb6d79715ccd2000accd6b3531928f30029665832fa1b255f24d2b9",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "paid_api_usd": 0,
+    "pretraining_task_exposure": "UNKNOWN",
+    "prior_same_model_task_exposure": [
+      "MLX #4729 and #4730; both are consumed and excluded. No reuse here."
+    ],
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "snapshot_path": "/Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3-4B-Instruct-2507-4bit/snapshots/50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "total_file_bytes": 2278972236,
+    "weights_download_bytes": 0
+  },
+  "primary_metric": "One-attempt complete source edit independently passing all six oracle cases and pinned upstream test (binary single-task feasibility outcome only).",
+  "protocol_id": "mlx-core-pr4748-qwen3-development-edit-pilot-v4",
+  "qualification_inputs_sha256": {
+    "protocol-v4.json": "43ce2432257b0a2cd51955cace416a09264d3e3361487acf9dc6cf53cd340998",
+    "protocol-v4.lock.json": "1e581123deaaf6bdfe035dac6681b5f3df3a8c0d75f9cc0c65888764ebb460da",
+    "runs/run-v4-independent-audit-v2.json": "d245e8f97c0c3e595e5618be9ecfde4ecf61fe96fc8b01751953f6404b97488e"
+  },
+  "resources": {
+    "cgroup_memory": "Unavailable on macOS; not claimed.",
+    "max_model_process_tree_rss_bytes": 10737418240,
+    "max_swap_growth_bytes": 134217728,
+    "minimum_available_memory_bytes": 8589934592,
+    "minimum_disk_free_bytes": 21474836480,
+    "minimum_free_swap_bytes": 268435456,
+    "network": "Denied for model process with macOS sandbox-exec; HF_HUB_OFFLINE=1 and TRANSFORMERS_OFFLINE=1.",
+    "sample_interval_seconds": 1
+  },
+  "runtime": {
+    "implementation_sha256": {
+      "requirements/mlsys-agent-mlx.lock.txt": "ab4187759276ca759e84c9a4f12cb2a9416c7e297c69b87783c243ac9459af2a",
+      "scripts/run_local_agent.py": "a360dfce0b23f4ae9abd0850cb8c0c0dbf54dab98e47f5101edbb3ef671fbff4",
+      "src/vare/agent_edit_format.py": "18759903979eb59559aee7d5eaa376e5b6739d896608a66b0260a3e29256cad9",
+      "src/vare/agent_edit_v2.py": "b455e8b1b8c2097693b7c3491d6285b025547b38548726d160183d68d825e21c",
+      "src/vare/agent_task_contract.py": "bd5f9b3f6008d4e03f25664ca3248f50ecc52d0095228977118a12abd049e9aa"
+    },
+    "model_python": "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-agent-feasibility-v1/venv/bin/python",
+    "model_venv_freeze_path": "work/mlx-core-pr4748-development-v1/model-venv-freeze-v1.txt",
+    "model_venv_freeze_sha256": "a7a9bf2519e9f5c1d3c95d4b692003f52b7b6e76f287fef5644b921f8d5937ea",
+    "monitor_python": "work/mlx-core-development-qualification-v1/venv/bin/python",
+    "monitor_python_psutil": "7.1.3",
+    "platform": "Darwin arm64, macOS 27.0.1",
+    "policy_source_commit": "1046507ed3b9472685f03e46c284176fee354448",
+    "python_model_environment": "Python 3.12.12, MLX 0.32.2, mlx-lm 0.32.2, Transformers 5.20.2, tokenizers 0.23.3"
+  },
+  "schema_version": 1,
+  "source": {
+    "base_commit": "c6abf0dbb4fc141fad739b32ae486c06728e49e5",
+    "baseline_target_sha256": "06b9ffc486d7fc74556911c4a99a11683ba35c4015868e968a4c07b342f18cf1",
+    "remote": "https://github.com/ml-explore/mlx.git",
+    "repo_path": "source/mlx.git",
+    "target_path": "mlx/primitives.cpp"
+  },
+  "status": "FROZEN_BEFORE_MODEL_INFERENCE",
+  "stopping": [
+    "Stop after this one model attempt; no prompt/budget/interface tuning on #4748.",
+    "Do not run SFT/GRPO, held-out inference, or asynchronous learning comparison.",
+    "Abort on source/model/protocol hash mismatch, model load error, network access, resource threshold, or wall-clock limit. Preserve partial evidence.",
+    "A successful edit is Development feasibility evidence only; model exposure and capability generality remain unknown."
+  ],
+  "supersedes": {
+    "protocol_path": "work/mlx-core-pr4748-development-v1/model-protocol-v3.json",
+    "protocol_sha256": "aa0a14f101eaf84955de1982a18c5be4570c69fed514ba75988ed587fbc6d451",
+    "reason": "V3 no-generation preflight stopped on a baseline Git stdout/hash adapter bug. No model process, workspace, or task outcome was produced."
+  },
+  "task": {
+    "baseline_commit": "c6abf0dbb4fc141fad739b32ae486c06728e49e5",
+    "baseline_target_sha256": "06b9ffc486d7fc74556911c4a99a11683ba35c4015868e968a4c07b342f18cf1",
+    "candidate_model_access": "Prompt and only mlx/primitives.cpp via the task contract tool allowlist; no shell, network, public test, or grader access.",
+    "editable_files": [
+      "mlx/primitives.cpp"
+    ],
+    "external_pretraining_exposure": "Unknown; no absence-of-pretraining claim.",
+    "input_sha256": {
+      "TASK.md": "3ce83fb91370424a6e932441b8579458a7c0a1dd04bbfae8da8b7f16351e42d6",
+      "exposure-audit.json": "c593b0a6e6f7cc5e7331e157db8a11690ba7b7c87233ccc2f788eaf040de995c",
+      "protocol.lock.json": "6666b11ddda457ebb8dc20852724f0bb5ec0f80c0b14bfffd487a87d028e3501",
+      "task.json": "a447bbdca3fa34ff889f8cbd63b22be20684b2235dc7d7e7334cc325aadc7460"
+    },
+    "instruction": "Implement the requested repair in the allowed source file and finish only after applying your edit.",
+    "operator_exposure": "Operator inspected public upstream fix and regression test during Development qualification; model not provided either.",
+    "prompt_sha256": "3ce83fb91370424a6e932441b8579458a7c0a1dd04bbfae8da8b7f16351e42d6",
+    "qualification_audit_sha256": "d245e8f97c0c3e595e5618be9ecfde4ecf61fe96fc8b01751953f6404b97488e",
+    "qualification_protocol_sha256": "43ce2432257b0a2cd51955cace416a09264d3e3361487acf9dc6cf53cd340998",
+    "qualification_run_manifest_sha256": "920bb1c60c8fc12e49c96d7b927a8147588061e6898dc0fe0f319fe4769c411b",
+    "role": "DEVELOPMENT_ONLY",
+    "split": "development",
+    "task_id": "mlx-4748-vmap-tri-inverse-model-pilot-v1",
+    "task_root": "work/mlx-core-pr4748-development-v1/model-task-v1"
+  },
+  "training_updates": 0
+}
