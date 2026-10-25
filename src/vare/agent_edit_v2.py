@@ -88,6 +88,7 @@ def read_source_lines_v1(
     parts, error = _path_parts(raw_path, allowed)
     if error:
         return {"status": "valid_call_rejected_by_policy", "error": error}
+    assert parts is not None
     if (isinstance(start_line, bool) or isinstance(end_line, bool)
             or not isinstance(start_line, int) or not isinstance(end_line, int)
             or start_line < 1 or end_line < start_line
@@ -95,7 +96,7 @@ def read_source_lines_v1(
         return {"status": "valid_call_rejected_by_policy", "error": "invalid_line_range"}
     parent_fd = -1
     try:
-        parent_fd, basename = _open_parent(workspace, parts or ())
+        parent_fd, basename = _open_parent(workspace, parts)
         data, _file_stat = _read_current(parent_fd, basename)
         text = _decode_source(data)
         lines = text.splitlines(keepends=True)
@@ -135,6 +136,7 @@ def replace_source_lines_v1(
     parts, error = _path_parts(raw_path, allowed)
     if error:
         return {"applied": False, "status": "valid_call_rejected_by_policy", "error": error}
+    assert parts is not None
     if (not isinstance(expected_sha256, str) or len(expected_sha256) != 64
             or any(char not in "0123456789abcdef" for char in expected_sha256)):
         return {"applied": False, "status": "invalid_json_or_schema", "error": "invalid_sha256"}
@@ -155,7 +157,7 @@ def replace_source_lines_v1(
     parent_fd = -1
     temp_name: str | None = None
     try:
-        parent_fd, basename = _open_parent(workspace, parts or ())
+        parent_fd, basename = _open_parent(workspace, parts)
         original, original_stat = _read_current(parent_fd, basename)
         before_hash = hashlib.sha256(original).hexdigest()
         if before_hash != expected_sha256:
