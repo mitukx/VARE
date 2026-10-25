@@ -32,7 +32,10 @@ LEGACY_EXPECTED_SOURCES = frozenset({
     "src/vare/runtime.py",
     "tests/test_e2e_rl_continuation.py",
 })
-RUNTIME_PACKAGE_SOURCES = frozenset({
+# Runtime source inventories are explicit protocol versions. V1 is the 77-file
+# runtime tree used by the historical campaign; V2 adds the held-out task pilot
+# module. Never derive either inventory from the checkout being audited.
+RUNTIME_PACKAGE_SOURCES_V1 = frozenset({
     "src/vare/__init__.py",
     "src/vare/__main__.py",
     "src/vare/_grader_guard.py",
@@ -111,7 +114,7 @@ RUNTIME_PACKAGE_SOURCES = frozenset({
     "src/vare/update_cost_smoke.py",
     "src/vare/verifiers.py",
 })
-# This historical 80-file inventory is intentionally explicit. Do not derive
+# This earlier historical inventory is intentionally explicit. Do not derive
 # it from the current runtime inventory: new runtime files must not invalidate
 # the immediately preceding fully snapshotted campaign.
 PREVIOUS_EXPECTED_SOURCES = frozenset({
@@ -189,7 +192,17 @@ PREVIOUS_EXPECTED_SOURCES = frozenset({
     "src/vare/verifiers.py",
     "tests/test_e2e_rl_continuation.py",
 })
-EXPECTED_SOURCES = LEGACY_EXPECTED_SOURCES | RUNTIME_PACKAGE_SOURCES
+RUNTIME_PACKAGE_SOURCES_V2 = RUNTIME_PACKAGE_SOURCES_V1 | frozenset({
+    "src/vare/mlsys_heldout_task_pilot_v1.py",
+})
+SOURCE_INVENTORY_V1 = LEGACY_EXPECTED_SOURCES | RUNTIME_PACKAGE_SOURCES_V1
+SOURCE_INVENTORY_V2 = LEGACY_EXPECTED_SOURCES | RUNTIME_PACKAGE_SOURCES_V2
+SUPPORTED_SOURCE_INVENTORIES = (
+    LEGACY_EXPECTED_SOURCES,
+    PREVIOUS_EXPECTED_SOURCES,
+    SOURCE_INVENTORY_V1,
+    SOURCE_INVENTORY_V2,
+)
 
 # The frozen v2 campaign is tied to the commit and source tree that produced it.
 # This independent pin prevents a re-sealed archive from choosing its own code.
@@ -221,15 +234,36 @@ def validate_source_inventory(manifest, source_names, locked):
         need(manifest.get("sources")==PINNED_LOCKED_SOURCE_SHA256,
              "locked campaign source snapshots differ from the independently pinned revision")
         return
-    need(source_names in (PREVIOUS_EXPECTED_SOURCES,EXPECTED_SOURCES),
+    need(source_names in (PREVIOUS_EXPECTED_SOURCES,SOURCE_INVENTORY_V1,SOURCE_INVENTORY_V2),
          "pinned source inventory differs")
     commit=manifest.get("base_commit")
     need(type(commit) is str and len(commit)==40 and
          all(char in "0123456789abcdef" for char in commit),
          "campaign base commit is not a full SHA")
+    if source_names==SOURCE_INVENTORY_V1:
+        need(runtime_source_names_from_commit(commit)==RUNTIME_PACKAGE_SOURCES_V1,
+             "runtime source inventory differs from pinned 77-file version")
+    elif source_names==SOURCE_INVENTORY_V2:
+        need(runtime_source_names_from_commit(commit)==RUNTIME_PACKAGE_SOURCES_V2,
+             "runtime source inventory differs from pinned 78-file version")
     committed_sources=source_hashes_from_commit(commit,source_names)
     need(manifest.get("sources")==committed_sources,
          "source snapshot differs from recorded base commit")
+
+
+def runtime_source_names_from_commit(commit):
+    """Return the complete Python runtime inventory present at a Git commit."""
+    git_env={**os.environ,"GIT_NO_REPLACE_OBJECTS":"1"}
+    try:
+        tree=subprocess.run(
+            ["git","-C",str(REPOSITORY_ROOT),"ls-tree","-r","-z","--name-only",
+             "--full-tree",commit,"--","src/vare"],
+            check=True,capture_output=True,env=git_env,
+        )
+    except (OSError,subprocess.CalledProcessError) as exc:
+        raise ValueError("campaign base commit is unavailable for runtime inventory verification") from exc
+    return frozenset(os.fsdecode(path) for path in tree.stdout.split(b"\0")
+                     if path.endswith(b".py"))
 
 
 def source_hashes_from_commit(commit, source_names):
@@ -377,7 +411,7 @@ def audit(root, check_tensors=False, model_dir=None):
         need(sha(root/name)==digest,f"changed artifact: {name}")
     manifest,summary,rows=read(root/"manifest.json"),read(root/"summary.json"),read(root/"progress.json")
     source_names=set(manifest.get("sources",{}))
-    need(source_names in (LEGACY_EXPECTED_SOURCES,PREVIOUS_EXPECTED_SOURCES,EXPECTED_SOURCES) and
+    need(source_names in SUPPORTED_SOURCE_INVENTORIES and
          manifest.get("source_sha256")==manifest.get("sources"),
          "pinned source inventory differs")
     for name,digest in manifest["sources"].items():
@@ -948,7 +982,7 @@ def audit(root, check_tensors=False, model_dir=None):
             resumed_spans=trace_stages.get(("round",expected_round,1),[])
             need(len(resumed_spans)==1,"recovery endpoint lacks one resumed-round trace")
             resumed_end=resumed_spans[0]["end"]
-            if source_names==EXPECTED_SOURCES:
+            if source_names in (SOURCE_INVENTORY_V1,SOURCE_INVENTORY_V2):
                 need(progress.get("time")==resumed_end,
                      "recovery endpoint differs from resumed-round trace")
             else:
