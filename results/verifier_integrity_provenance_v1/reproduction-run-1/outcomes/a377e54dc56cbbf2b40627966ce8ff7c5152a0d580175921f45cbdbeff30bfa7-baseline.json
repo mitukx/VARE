@@ -1,0 +1,97 @@
+{
+  "candidate_elapsed_seconds": 0.5929445000365376,
+  "candidate_id": "baseline",
+  "candidate_source_sha256": "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2",
+  "cases": [
+    {
+      "case_id": "tiny-threshold-1e-08",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.009969166945666075
+    },
+    {
+      "case_id": "tiny-threshold-1e-06",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.0028384169563651085
+    },
+    {
+      "case_id": "tiny-threshold-0.0001",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.0026859999634325504
+    },
+    {
+      "case_id": "float32-threshold-1e-08",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.027015874977223575
+    },
+    {
+      "case_id": "float32-threshold-0.0001",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.024713332997635007
+    },
+    {
+      "case_id": "float32-threshold-0.001",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.026677582995034754
+    },
+    {
+      "case_id": "float16-threshold-1e-08",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.024925249977968633
+    },
+    {
+      "case_id": "float16-threshold-0.0001",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.026214541983790696
+    },
+    {
+      "case_id": "float16-threshold-0.001",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.02588116703554988
+    },
+    {
+      "case_id": "bfloat16-threshold-1e-08",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.024263457977212965
+    },
+    {
+      "case_id": "bfloat16-threshold-0.0001",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.025543958065100014
+    },
+    {
+      "case_id": "bfloat16-threshold-0.001",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.028183334041386843
+    },
+    {
+      "case_id": "shifted_maximum_nonzero_values",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.005333542008884251
+    },
+    {
+      "case_id": "leading_maximum_nonzero_value",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.002511666971258819
+    }
+  ],
+  "evaluator_case_count": 14,
+  "grader_adapter_sha256": "f08007db5ec895f071624cd1de2e7afd3b60d0dffa809161f48a2baceb28d6e7",
+  "grader_source_sha256": "ba48fee74cb7faab53860be5e2bc052947d083aa2fcd4bfd87dd2c32870ef747",
+  "image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+  "passed": false,
+  "task_id": "mlxlm-1912-top-p-min-token"
+}

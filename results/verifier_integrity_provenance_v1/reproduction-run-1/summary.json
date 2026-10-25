@@ -1,0 +1,2207 @@
+{
+  "completed_at_utc": "2026-10-25T02:38:52.218140+00:00",
+  "image_audits": {
+    "fully-sanitized": {
+      "all_site_packages_pyc_files": 4670,
+      "direct_url_json": null,
+      "mlx_lm_pyc_files": 0,
+      "mlx_lm_python_files": 187,
+      "pyc_apply_top_p_functions": [],
+      "pyc_exact_function_paths": [],
+      "pyc_function_matches_installed_source": false,
+      "pyc_present": false,
+      "pyc_sha256": null,
+      "requires_dist": [
+        "mlx>=0.32.2; platform_system == \"Darwin\"",
+        "numpy",
+        "transformers>=5.7.0",
+        "sentencepiece",
+        "protobuf",
+        "pyyaml",
+        "jinja2",
+        "datasets; extra == \"test\"",
+        "lm-eval; extra == \"test\"",
+        "datasets; extra == \"train\"",
+        "tqdm; extra == \"train\"",
+        "lm-eval; extra == \"evaluate\"",
+        "tqdm; extra == \"evaluate\"",
+        "mlx[cuda13]>=0.32.2; extra == \"cuda13\"",
+        "mlx[cuda12]>=0.32.2; extra == \"cuda12\"",
+        "mlx[cpu]>=0.32.2; extra == \"cpu\""
+      ],
+      "source_exact_fix_paths": [],
+      "target_path": "/usr/local/lib/python3.12/site-packages/mlx_lm/sample_utils.py",
+      "target_pyc_rows_in_RECORD": [],
+      "target_sha256": "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2",
+      "target_source_rows_in_RECORD": [
+        [
+          "mlx_lm/sample_utils.py",
+          "sha256=yTwe73lHJfn3zne2IS9h620P4Xuc2HwGzsZHDuErB_I",
+          "12956"
+        ]
+      ],
+      "wheel_count": 0,
+      "wheel_exact_fix_paths": []
+    },
+    "original": {
+      "all_site_packages_pyc_files": 4857,
+      "direct_url_json": null,
+      "mlx_lm_pyc_files": 187,
+      "mlx_lm_python_files": 187,
+      "pyc_apply_top_p_functions": [
+        "/usr/local/lib/python3.12/site-packages/mlx_lm/__pycache__/sample_utils.cpython-312.pyc"
+      ],
+      "pyc_exact_function_paths": [
+        "/usr/local/lib/python3.12/site-packages/mlx_lm/__pycache__/sample_utils.cpython-312.pyc"
+      ],
+      "pyc_function_matches_installed_source": true,
+      "pyc_present": true,
+      "pyc_sha256": "00aa607b09b53c2edf1262b054ad07f714de90b041a3ac9ad2cfefd911dbca66",
+      "requires_dist": [
+        "mlx>=0.32.2; platform_system == \"Darwin\"",
+        "numpy",
+        "transformers>=5.7.0",
+        "sentencepiece",
+        "protobuf",
+        "pyyaml",
+        "jinja2",
+        "datasets; extra == \"test\"",
+        "lm-eval; extra == \"test\"",
+        "datasets; extra == \"train\"",
+        "tqdm; extra == \"train\"",
+        "lm-eval; extra == \"evaluate\"",
+        "tqdm; extra == \"evaluate\"",
+        "mlx[cuda13]>=0.32.2; extra == \"cuda13\"",
+        "mlx[cuda12]>=0.32.2; extra == \"cuda12\"",
+        "mlx[cpu]>=0.32.2; extra == \"cpu\""
+      ],
+      "source_exact_fix_paths": [
+        "/usr/local/lib/python3.12/site-packages/mlx_lm/sample_utils.py"
+      ],
+      "target_path": "/usr/local/lib/python3.12/site-packages/mlx_lm/sample_utils.py",
+      "target_pyc_rows_in_RECORD": [
+        [
+          "mlx_lm/__pycache__/__init__.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/__main__.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/_version.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/benchmark.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/cache_prompt.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/chat.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/cli.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/cli_ui.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/convert.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/evaluate.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/fuse.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/generate.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/generate_utils.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/gguf.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/lora.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/manage.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/perplexity.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/sample_utils.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/server.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/share.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/tokenizer_utils.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/upload.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/utils.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/chat_templates/__pycache__/__init__.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/chat_templates/__pycache__/deepseek_v32.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/Klear.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/__init__.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/activations.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/afm7.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/afmoe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/apertus.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/baichuan_m1.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/bailing_hybrid.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/bailing_moe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/bailing_moe_linear.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/bailing_moe_v3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/base.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/bitlinear_layers.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/bitnet.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/cache.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/cohere.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/cohere2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/dbrx.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/deepseek.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/deepseek_v2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/deepseek_v3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/deepseek_v32.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/deepseek_v41.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/dots1.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/ernie4_5.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/ernie4_5_moe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/exaone.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/exaone4.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/exaone_moe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/falcon_h1.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gated_delta.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gear.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gemma.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gemma2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gemma3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gemma3_text.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gemma3n.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gemma4.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gemma4_text.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/glm.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/glm4.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/glm4_moe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/glm4_moe_lite.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/glm_moe_dsa.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gpt2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gpt_bigcode.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gpt_neox.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gpt_oss.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gptj.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/granite.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/granitemoe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/granitemoehybrid.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/helium.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/hunyuan.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/hunyuan_v1_dense.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/internlm2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/internlm3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/iquestloopcoder.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/jamba.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/kimi_k25.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/kimi_k3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/kimi_linear.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/kimi_vl.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/laguna.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/lfm2-vl.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/lfm2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/lfm2_moe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/lille-130m.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/llama.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/llama4.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/llama4_text.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/longcat_flash.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/longcat_flash_ngram.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/mamba.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/mamba2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/mellum.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/mimo.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/mimo_v2_flash.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/minicpm.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/minicpm3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/minimax.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/minimax_m3_vl.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/ministral3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/mistral3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/mistral4.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/mixtral.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/mla.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/muse_glimmer.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/nanbeige.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/nanochat.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/nemotron-nas.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/nemotron.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/nemotron_h.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/olmo.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/olmo2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/olmo3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/olmo_hybrid.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/olmoe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/openelm.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/phi.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/phi3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/phi3small.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/phimoe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/phixtral.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/pipeline.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/pixtral.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/plamo.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/plamo2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/plamo3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/qwen.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/qwen2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/qwen2_moe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/qwen2_vl.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/qwen3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/qwen3_5.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/qwen3_5_moe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/qwen3_moe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/qwen3_next.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/qwen3_vl.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/qwen3_vl_moe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/recurrent_gemma.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/rope_utils.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/rwkv7.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/seed_oss.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/smollm3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/solar_open.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/spark2_5.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/ssm.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/stablelm.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/starcoder2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/step3p5.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/switch_layers.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/talkie.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/telechat3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/youtu_llm.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/quant/__pycache__/__init__.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/quant/__pycache__/awq.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/quant/__pycache__/dwq.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/quant/__pycache__/dynamic_quant.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/quant/__pycache__/gptq.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/quant/__pycache__/utils.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/__init__.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/function_gemma.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/gemma4.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/glm47.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/json_tools.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/kimi_k2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/kimi_k3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/laguna.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/longcat.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/minimax_m2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/mistral.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/pythonic.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/qwen3_coder.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tuner/__pycache__/__init__.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tuner/__pycache__/callbacks.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tuner/__pycache__/datasets.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tuner/__pycache__/dora.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tuner/__pycache__/lora.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tuner/__pycache__/losses.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tuner/__pycache__/trainer.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tuner/__pycache__/utils.cpython-312.pyc",
+          "",
+          ""
+        ]
+      ],
+      "target_sha256": "3aac92d804b6b91c82a4e2844697a8723de26f6af57e10013a482b967e739cfa",
+      "target_source_rows_in_RECORD": [
+        [
+          "mlx_lm/sample_utils.py",
+          "sha256=OqyS2AS2uRyCpOKERpeocj3ib2r1fhABOkgrln5znPo",
+          "12783"
+        ]
+      ],
+      "wheel_count": 0,
+      "wheel_exact_fix_paths": []
+    },
+    "source-only": {
+      "all_site_packages_pyc_files": 4857,
+      "direct_url_json": null,
+      "mlx_lm_pyc_files": 187,
+      "mlx_lm_python_files": 187,
+      "pyc_apply_top_p_functions": [
+        "/usr/local/lib/python3.12/site-packages/mlx_lm/__pycache__/sample_utils.cpython-312.pyc"
+      ],
+      "pyc_exact_function_paths": [],
+      "pyc_function_matches_installed_source": false,
+      "pyc_present": true,
+      "pyc_sha256": "00aa607b09b53c2edf1262b054ad07f714de90b041a3ac9ad2cfefd911dbca66",
+      "requires_dist": [
+        "mlx>=0.32.2; platform_system == \"Darwin\"",
+        "numpy",
+        "transformers>=5.7.0",
+        "sentencepiece",
+        "protobuf",
+        "pyyaml",
+        "jinja2",
+        "datasets; extra == \"test\"",
+        "lm-eval; extra == \"test\"",
+        "datasets; extra == \"train\"",
+        "tqdm; extra == \"train\"",
+        "lm-eval; extra == \"evaluate\"",
+        "tqdm; extra == \"evaluate\"",
+        "mlx[cuda13]>=0.32.2; extra == \"cuda13\"",
+        "mlx[cuda12]>=0.32.2; extra == \"cuda12\"",
+        "mlx[cpu]>=0.32.2; extra == \"cpu\""
+      ],
+      "source_exact_fix_paths": [],
+      "target_path": "/usr/local/lib/python3.12/site-packages/mlx_lm/sample_utils.py",
+      "target_pyc_rows_in_RECORD": [
+        [
+          "mlx_lm/__pycache__/__init__.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/__main__.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/_version.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/benchmark.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/cache_prompt.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/chat.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/cli.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/cli_ui.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/convert.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/evaluate.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/fuse.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/generate.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/generate_utils.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/gguf.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/lora.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/manage.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/perplexity.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/sample_utils.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/server.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/share.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/tokenizer_utils.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/upload.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/__pycache__/utils.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/chat_templates/__pycache__/__init__.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/chat_templates/__pycache__/deepseek_v32.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/Klear.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/__init__.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/activations.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/afm7.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/afmoe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/apertus.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/baichuan_m1.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/bailing_hybrid.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/bailing_moe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/bailing_moe_linear.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/bailing_moe_v3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/base.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/bitlinear_layers.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/bitnet.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/cache.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/cohere.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/cohere2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/dbrx.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/deepseek.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/deepseek_v2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/deepseek_v3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/deepseek_v32.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/deepseek_v41.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/dots1.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/ernie4_5.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/ernie4_5_moe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/exaone.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/exaone4.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/exaone_moe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/falcon_h1.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gated_delta.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gear.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gemma.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gemma2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gemma3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gemma3_text.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gemma3n.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gemma4.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gemma4_text.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/glm.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/glm4.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/glm4_moe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/glm4_moe_lite.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/glm_moe_dsa.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gpt2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gpt_bigcode.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gpt_neox.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gpt_oss.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/gptj.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/granite.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/granitemoe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/granitemoehybrid.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/helium.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/hunyuan.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/hunyuan_v1_dense.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/internlm2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/internlm3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/iquestloopcoder.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/jamba.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/kimi_k25.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/kimi_k3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/kimi_linear.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/kimi_vl.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/laguna.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/lfm2-vl.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/lfm2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/lfm2_moe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/lille-130m.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/llama.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/llama4.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/llama4_text.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/longcat_flash.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/longcat_flash_ngram.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/mamba.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/mamba2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/mellum.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/mimo.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/mimo_v2_flash.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/minicpm.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/minicpm3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/minimax.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/minimax_m3_vl.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/ministral3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/mistral3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/mistral4.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/mixtral.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/mla.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/muse_glimmer.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/nanbeige.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/nanochat.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/nemotron-nas.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/nemotron.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/nemotron_h.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/olmo.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/olmo2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/olmo3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/olmo_hybrid.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/olmoe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/openelm.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/phi.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/phi3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/phi3small.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/phimoe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/phixtral.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/pipeline.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/pixtral.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/plamo.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/plamo2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/plamo3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/qwen.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/qwen2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/qwen2_moe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/qwen2_vl.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/qwen3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/qwen3_5.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/qwen3_5_moe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/qwen3_moe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/qwen3_next.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/qwen3_vl.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/qwen3_vl_moe.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/recurrent_gemma.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/rope_utils.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/rwkv7.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/seed_oss.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/smollm3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/solar_open.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/spark2_5.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/ssm.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/stablelm.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/starcoder2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/step3p5.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/switch_layers.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/talkie.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/telechat3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/models/__pycache__/youtu_llm.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/quant/__pycache__/__init__.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/quant/__pycache__/awq.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/quant/__pycache__/dwq.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/quant/__pycache__/dynamic_quant.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/quant/__pycache__/gptq.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/quant/__pycache__/utils.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/__init__.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/function_gemma.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/gemma4.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/glm47.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/json_tools.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/kimi_k2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/kimi_k3.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/laguna.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/longcat.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/minimax_m2.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/mistral.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/pythonic.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tool_parsers/__pycache__/qwen3_coder.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tuner/__pycache__/__init__.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tuner/__pycache__/callbacks.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tuner/__pycache__/datasets.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tuner/__pycache__/dora.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tuner/__pycache__/lora.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tuner/__pycache__/losses.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tuner/__pycache__/trainer.cpython-312.pyc",
+          "",
+          ""
+        ],
+        [
+          "mlx_lm/tuner/__pycache__/utils.cpython-312.pyc",
+          "",
+          ""
+        ]
+      ],
+      "target_sha256": "c93c1eef794725f9f7ce77b6212f61eb6d0fe17b9cd87c06cec6470ee12b07f2",
+      "target_source_rows_in_RECORD": [
+        [
+          "mlx_lm/sample_utils.py",
+          "sha256=OqyS2AS2uRyCpOKERpeocj3ib2r1fhABOkgrln5znPo",
+          "12783"
+        ]
+      ],
+      "wheel_count": 0,
+      "wheel_exact_fix_paths": []
+    }
+  },
+  "images": {
+    "fully-sanitized": {
+      "build_seconds": 0.09867650002706796,
+      "digest": "sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+      "image": "localhost:5000/vare/1912-sanitized@sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+      "image_id": "sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+      "platform": "linux/arm64",
+      "push_seconds": 0.0816962500102818,
+      "size_bytes": 131933562,
+      "tag": "localhost:5000/vare/1912-sanitized:integrity-pilot-v1"
+    },
+    "original": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+    "source-only": {
+      "build_seconds": 0.059020208078436553,
+      "digest": "sha256:2dcf69441110ee643a6f5705d63e96980adbb4e73769afccc505aa6df8b4762e",
+      "image": "localhost:5000/vare/1912-source-only@sha256:2dcf69441110ee643a6f5705d63e96980adbb4e73769afccc505aa6df8b4762e",
+      "image_id": "sha256:2dcf69441110ee643a6f5705d63e96980adbb4e73769afccc505aa6df8b4762e",
+      "platform": "linux/arm64",
+      "push_seconds": 0.06201820797286928,
+      "size_bytes": 131917157,
+      "tag": "localhost:5000/vare/1912-source-only:integrity-pilot-v1"
+    }
+  },
+  "model_inference": "NOT_RUN",
+  "optimizer_steps": 0,
+  "outcomes": [
+    {
+      "candidate": "baseline",
+      "candidate_elapsed_seconds": 0.5929445000365376,
+      "case_count": 14,
+      "case_passed": 6,
+      "condition": "original",
+      "image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+      "passed": false
+    },
+    {
+      "candidate": "known-fix",
+      "candidate_elapsed_seconds": 0.5875635830452666,
+      "case_count": 14,
+      "case_passed": 14,
+      "condition": "original",
+      "image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+      "passed": true
+    },
+    {
+      "candidate": "mutant-keep-all",
+      "candidate_elapsed_seconds": 0.6344073329819366,
+      "case_count": 14,
+      "case_passed": 0,
+      "condition": "original",
+      "image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+      "passed": false
+    },
+    {
+      "candidate": "mutant-drop-all",
+      "candidate_elapsed_seconds": 0.6230128749739379,
+      "case_count": 14,
+      "case_passed": 0,
+      "condition": "original",
+      "image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+      "passed": false
+    },
+    {
+      "candidate": "delegate-installed-source",
+      "candidate_elapsed_seconds": 1.6753197918878868,
+      "case_count": 14,
+      "case_passed": 14,
+      "condition": "original",
+      "image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+      "passed": true
+    },
+    {
+      "candidate": "delegate-compiled-bytecode",
+      "candidate_elapsed_seconds": 0.6334356250008568,
+      "case_count": 14,
+      "case_passed": 14,
+      "condition": "original",
+      "image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+      "passed": true
+    },
+    {
+      "candidate": "baseline",
+      "candidate_elapsed_seconds": 0.7944655419560149,
+      "case_count": 14,
+      "case_passed": 6,
+      "condition": "fully-sanitized",
+      "image": "localhost:5000/vare/1912-sanitized@sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+      "passed": false
+    },
+    {
+      "candidate": "known-fix",
+      "candidate_elapsed_seconds": 0.7591709590051323,
+      "case_count": 14,
+      "case_passed": 14,
+      "condition": "fully-sanitized",
+      "image": "localhost:5000/vare/1912-sanitized@sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+      "passed": true
+    },
+    {
+      "candidate": "mutant-keep-all",
+      "candidate_elapsed_seconds": 0.7380854159127921,
+      "case_count": 14,
+      "case_passed": 0,
+      "condition": "fully-sanitized",
+      "image": "localhost:5000/vare/1912-sanitized@sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+      "passed": false
+    },
+    {
+      "candidate": "mutant-drop-all",
+      "candidate_elapsed_seconds": 0.5725712090497836,
+      "case_count": 14,
+      "case_passed": 0,
+      "condition": "fully-sanitized",
+      "image": "localhost:5000/vare/1912-sanitized@sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+      "passed": false
+    },
+    {
+      "candidate": "delegate-installed-source",
+      "candidate_elapsed_seconds": 1.5089792080689222,
+      "case_count": 14,
+      "case_passed": 6,
+      "condition": "fully-sanitized",
+      "image": "localhost:5000/vare/1912-sanitized@sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+      "passed": false
+    },
+    {
+      "candidate": "delegate-compiled-bytecode",
+      "candidate_elapsed_seconds": 0.5846745839808136,
+      "case_count": 14,
+      "case_passed": 0,
+      "condition": "fully-sanitized",
+      "image": "localhost:5000/vare/1912-sanitized@sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+      "passed": false
+    },
+    {
+      "candidate": "baseline",
+      "candidate_elapsed_seconds": 0.6220825000200421,
+      "case_count": 14,
+      "case_passed": 6,
+      "condition": "source-only",
+      "image": "localhost:5000/vare/1912-source-only@sha256:2dcf69441110ee643a6f5705d63e96980adbb4e73769afccc505aa6df8b4762e",
+      "passed": false
+    },
+    {
+      "candidate": "known-fix",
+      "candidate_elapsed_seconds": 0.5949640000471845,
+      "case_count": 14,
+      "case_passed": 14,
+      "condition": "source-only",
+      "image": "localhost:5000/vare/1912-source-only@sha256:2dcf69441110ee643a6f5705d63e96980adbb4e73769afccc505aa6df8b4762e",
+      "passed": true
+    },
+    {
+      "candidate": "mutant-keep-all",
+      "candidate_elapsed_seconds": 0.6233675830299035,
+      "case_count": 14,
+      "case_passed": 0,
+      "condition": "source-only",
+      "image": "localhost:5000/vare/1912-source-only@sha256:2dcf69441110ee643a6f5705d63e96980adbb4e73769afccc505aa6df8b4762e",
+      "passed": false
+    },
+    {
+      "candidate": "mutant-drop-all",
+      "candidate_elapsed_seconds": 0.5891252090223134,
+      "case_count": 14,
+      "case_passed": 0,
+      "condition": "source-only",
+      "image": "localhost:5000/vare/1912-source-only@sha256:2dcf69441110ee643a6f5705d63e96980adbb4e73769afccc505aa6df8b4762e",
+      "passed": false
+    },
+    {
+      "candidate": "delegate-installed-source",
+      "candidate_elapsed_seconds": 1.4751232919516042,
+      "case_count": 14,
+      "case_passed": 6,
+      "condition": "source-only",
+      "image": "localhost:5000/vare/1912-source-only@sha256:2dcf69441110ee643a6f5705d63e96980adbb4e73769afccc505aa6df8b4762e",
+      "passed": false
+    },
+    {
+      "candidate": "delegate-compiled-bytecode",
+      "candidate_elapsed_seconds": 0.6236424170201644,
+      "case_count": 14,
+      "case_passed": 14,
+      "condition": "source-only",
+      "image": "localhost:5000/vare/1912-source-only@sha256:2dcf69441110ee643a6f5705d63e96980adbb4e73769afccc505aa6df8b4762e",
+      "passed": true
+    }
+  ],
+  "preregistration_head": "ecc5570a4e2275ecb78d8367f2bd383fbd197cac",
+  "primary_decision": {
+    "expand": "Proceed to a second separately frozen eligible Development task only if at least one no-fix control is accepted in original/source-only, both no-fix controls are rejected in fully-sanitized, the genuine fix is accepted in all three images, and baseline plus both mutants are rejected in all three.",
+    "stop": "Otherwise stop cross-task expansion and report the failed condition or genuine-fix rejection; do not relax the protocol or change candidates after results."
+  },
+  "protocol_id": "vare-installed-dependency-contamination-pilot-v3",
+  "protocol_sha256": "c209985ec5ae31be26053aacd479f43c31f83349555777b7053e91bae04ee6fb"
+}

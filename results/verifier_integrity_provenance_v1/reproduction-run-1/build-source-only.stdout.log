@@ -1,0 +1,9 @@
+Sending build context to Docker daemon  54.27kB
+
+Step 1/2 : FROM vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7
+ ---> a377e54dc56c
+Step 2/2 : COPY candidates/baseline.py /usr/local/lib/python3.12/site-packages/mlx_lm/sample_utils.py
+ ---> Using cache
+ ---> 2dcf69441110
+Successfully built 2dcf69441110
+Successfully tagged vare-mlxlm1912-source-only:integrity-pilot-v1

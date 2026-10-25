@@ -1,0 +1,97 @@
+{
+  "candidate_elapsed_seconds": 0.5891252090223134,
+  "candidate_id": "mutant-drop-all",
+  "candidate_source_sha256": "af0dd0904b420e684dc8b863adbc410f33d4f4865300f6c9f2ac6a31f30acff2",
+  "cases": [
+    {
+      "case_id": "tiny-threshold-1e-08",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.005255249910987914
+    },
+    {
+      "case_id": "tiny-threshold-1e-06",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.0012451250804588199
+    },
+    {
+      "case_id": "tiny-threshold-0.0001",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.0011187499621883035
+    },
+    {
+      "case_id": "float32-threshold-1e-08",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.02364154194947332
+    },
+    {
+      "case_id": "float32-threshold-0.0001",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.023444499936886132
+    },
+    {
+      "case_id": "float32-threshold-0.001",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.024519833037629724
+    },
+    {
+      "case_id": "float16-threshold-1e-08",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.024021958000957966
+    },
+    {
+      "case_id": "float16-threshold-0.0001",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.023391416063532233
+    },
+    {
+      "case_id": "float16-threshold-0.001",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.02398633398115635
+    },
+    {
+      "case_id": "bfloat16-threshold-1e-08",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.02783124998677522
+    },
+    {
+      "case_id": "bfloat16-threshold-0.0001",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.026897499919869006
+    },
+    {
+      "case_id": "bfloat16-threshold-0.001",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.027360167005099356
+    },
+    {
+      "case_id": "shifted_maximum_nonzero_values",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.001682666945271194
+    },
+    {
+      "case_id": "leading_maximum_nonzero_value",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.001303790952078998
+    }
+  ],
+  "evaluator_case_count": 14,
+  "grader_adapter_sha256": "f08007db5ec895f071624cd1de2e7afd3b60d0dffa809161f48a2baceb28d6e7",
+  "grader_source_sha256": "ba48fee74cb7faab53860be5e2bc052947d083aa2fcd4bfd87dd2c32870ef747",
+  "image": "localhost:5000/vare/1912-source-only@sha256:2dcf69441110ee643a6f5705d63e96980adbb4e73769afccc505aa6df8b4762e",
+  "passed": false,
+  "task_id": "mlxlm-1912-top-p-min-token"
+}

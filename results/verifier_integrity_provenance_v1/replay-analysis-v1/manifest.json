@@ -1,0 +1,37 @@
+{
+  "artifacts": {
+    "admission-and-optimizer-replay.json": {
+      "sha256": "94bf3d3201940c8ace36ce35d0d5b7115e10662a61559232f46a27fcbc62ce7b",
+      "size_bytes": 8831
+    },
+    "reward-provenance-records.jsonl": {
+      "sha256": "5ba82508ee409ee302a21cbb8dab098905e821ea4a260c2f04204940e59af449",
+      "size_bytes": 55614
+    },
+    "summary.json": {
+      "sha256": "e024d78719c4d40e560abbbdfdcd4a550a58054ff0d87518e37cf8a2f50a549b",
+      "size_bytes": 10203
+    }
+  },
+  "implementation_sha256": "1b3bccf9228b0335f31daf84a4f765ab60dbd0c6ac758ada671612ddaacea428",
+  "inputs": {
+    "archive": {
+      "path": "work/pr122-published-artifact/grading-images-arm64.tar.gz",
+      "sha256": "4723319c19f96703f3671fe1de97818d61bbc028044849889964b1b67cfd655f",
+      "size_bytes": 131195285
+    },
+    "historical": {
+      "path": "results/verifier_integrity_pilot_v1/run3/summary.json",
+      "sha256": "f672444b774aedf2c2a2ce8f27b3a59ad69bcbfec5b37dde0fd3249f8235edca",
+      "size_bytes": 54680
+    },
+    "run": {
+      "path": "results/verifier_integrity_provenance_v1/reproduction-run-1/summary.json",
+      "sha256": "b1b2a9a2fe29a6c80367165c75ae549c98090f9cc440cd012dd72326ea2ea3a5",
+      "size_bytes": 54682
+    }
+  },
+  "manifest_version": 1,
+  "note": "This manifest is not self-hashed or signed. Artifact integrity is content-addressed; publisher identity requires an external signature/attestation.",
+  "protocol_sha256": "8e51c1d2b2eb4bf0d7d3c819c81acab1c0a5e780f409252f5a07d52e5161723a"
+}

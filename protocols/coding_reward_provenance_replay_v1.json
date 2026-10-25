@@ -1,0 +1,87 @@
+{
+  "protocol_id": "coding-reward-provenance-replay-v1",
+  "status": "retrospective-mechanism-replay-frozen-before-optimizer-replay",
+  "date": "2026-10-25",
+  "purpose": "Test whether reward reuse keyed only by scoring-code identity can admit stale false rewards when the executable grading image changes, and whether image-plus-installed-provenance identity forces safe regrading.",
+  "scope": {
+    "task_id": "mlxlm-1912-top-p-min-token",
+    "split": "Development",
+    "baseline_commit": "47e43a4526d42a6dcee758f07eb04b78a8439ecb",
+    "historical_candidate_set": [
+      "baseline",
+      "known-fix",
+      "mutant-keep-all",
+      "mutant-drop-all",
+      "delegate-installed-source",
+      "delegate-compiled-bytecode"
+    ],
+    "source_reproduction_run": "results/verifier_integrity_provenance_v1/reproduction-run-1",
+    "historical_comparator_run": "results/verifier_integrity_pilot_v1/run3",
+    "source_of_contamination": "Published original MLX-LM 0.32.0 grading image contains the installed #1912 fixed sample_utils.py and its compiled sample_utils.pyc.",
+    "trusted_reference_environment": "localhost:5000/vare/1912-sanitized@sha256:7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+    "trusted_reference_limit": "Trusted for this target only after source, bytecode, RECORD and wheel-cache audit; not a claim that every transitive dependency or image layer is artifact-free."
+  },
+  "reward_identity": {
+    "required_fields": [
+      "task_baseline_commit",
+      "candidate_target_and_source_sha256",
+      "grader_source_sha256",
+      "grader_adapter_sha256",
+      "executed_test_bundle_sha256",
+      "executable_image_manifest_digest",
+      "installed_source_bytecode_audit_sha256",
+      "verifier_epoch_sha256",
+      "result_and_case_decisions",
+      "evaluation_invocation_id",
+      "execution_receipt_sha256"
+    ],
+    "epoch_rule": "A reward is stale if either the scorer/test identity or executable image/provenance identity differs. The image digest is not replaced by a distribution version string.",
+    "test_bundle_rule": "Bind the exact task grader source containing the 14 executed parent-owned cases, its invocation adapter, task protocol, task prompt and isolation runner. The separate upstream test-file digest field with a known historical mismatch is not treated as the executable scored suite."
+  },
+  "admission_arms": [
+    {
+      "id": "version-unaware-reuse",
+      "rule": "Reuse original-image rewards when scorer source, adapter and declared tests match; ignore executable image and installed-provenance changes."
+    },
+    {
+      "id": "blanket-stale-rejection",
+      "rule": "Reject every old reward after the environment epoch changes; do not regrade."
+    },
+    {
+      "id": "provenance-aware-trusted-regrade",
+      "rule": "Reject stale cache entries, regrade the same six fixed candidate sources in the pinned sanitized image, and admit only those new receipts."
+    }
+  ],
+  "offline_optimizer_replay": {
+    "model": "Six-logit categorical selector; no language model, prompt, patch text, token probabilities or checkpoint is used.",
+    "input": "One scalar frozen pass/fail reward for each of the six candidate IDs. The fixed source files are not loaded by the optimizer replay.",
+    "objective": "One-step baseline-centered REINFORCE over the six logged candidate IDs: loss = -mean((reward - mean(reward)) * log_softmax(logits)[action]).",
+    "optimizer": "PyTorch 2.9.1 SGD, CPU, float64 logits initialized to zero, learning rate 1.0, one optimizer.step() per arm when at least one record is admitted.",
+    "torch_version": "2.9.1",
+    "candidate_order": [
+      "baseline",
+      "known-fix",
+      "mutant-keep-all",
+      "mutant-drop-all",
+      "delegate-installed-source",
+      "delegate-compiled-bytecode"
+    ],
+    "optimizer_hyperparameter_selection": "Fixed for a one-step mechanism replay; no tuning against optimizer outputs or held-out tasks.",
+    "eligibility": "This is offline scripted reward replay only. No candidate set has policy log-probabilities, so zero groups are eligible for GRPO or on-policy training.",
+    "purpose": "Check whether a false positive reward is delivered to an actual optimizer API call and moves probability mass toward the two invalid delegate actions; not model learning or agent-discovered reward hacking."
+  },
+  "cost_accounting": {
+    "trusted_regrade_invocations": "One candidate-level task grade for each of the six frozen candidate sources.",
+    "case_count": 14,
+    "cpu": "Container CPU is capped at one core. Candidate CPU seconds are reported only as a wall-time-derived upper bound; actual cgroup CPU counters were not retained by the historical grader runner.",
+    "no_model_inference": true,
+    "no_hidden_evaluation": true
+  },
+  "external_base_image_artifact": {
+    "url": "https://github.com/mitukx/VARE/releases/download/vare-pr122-grading-images-v1/grading-images-arm64.tar.gz",
+    "sha256": "4723319c19f96703f3671fe1de97818d61bbc028044849889964b1b67cfd655f",
+    "size_bytes": 131195285,
+    "image_digest": "sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7"
+  },
+  "decision_boundary": "One pre-existing task mechanism and an offline optimizer replay. No prevalence, cross-project replication, model-update, held-out capability, on-policy learning or asynchronous-systems claim."
+}

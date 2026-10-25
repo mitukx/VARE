@@ -1,0 +1,271 @@
+{
+  "arms": [
+    {
+      "accepted_positive_candidate_ids": [
+        "known-fix",
+        "delegate-installed-source",
+        "delegate-compiled-bytecode"
+      ],
+      "additional_candidate_grade_invocations": 0,
+      "additional_test_case_executions": 0,
+      "admitted_positive_records": 3,
+      "admitted_reward_records": 6,
+      "arm": "version-unaware-reuse",
+      "candidate_cpu_seconds_observed": null,
+      "candidate_cpu_seconds_upper_bound_at_one_cpu_quota": 0.0,
+      "false_reward_admission_denominator": 5,
+      "false_reward_admission_rate_over_invalid_candidates": 0.4,
+      "false_reward_admissions": 2,
+      "genuine_fix_false_rejection_denominator": 1,
+      "genuine_fix_false_rejections": 0,
+      "grpo_eligible_groups_retained": 0,
+      "invalid_positive_candidate_ids": [
+        "delegate-installed-source",
+        "delegate-compiled-bytecode"
+      ],
+      "observed_additional_candidate_wall_seconds": 0.0,
+      "optimizer_replay": {
+        "admitted_candidate_ids": [
+          "baseline",
+          "known-fix",
+          "mutant-keep-all",
+          "mutant-drop-all",
+          "delegate-installed-source",
+          "delegate-compiled-bytecode"
+        ],
+        "admitted_reward_vector": [
+          0,
+          1,
+          0,
+          0,
+          1,
+          1
+        ],
+        "final_logits": [
+          -0.08333333333333333,
+          0.08333333333333333,
+          -0.08333333333333333,
+          -0.08333333333333333,
+          0.08333333333333333,
+          0.08333333333333333
+        ],
+        "final_probabilities": [
+          0.1528098389277334,
+          0.18052349440559998,
+          0.1528098389277334,
+          0.1528098389277334,
+          0.18052349440559998,
+          0.18052349440559998
+        ],
+        "includes_patch_text_or_historical_fix_source": false,
+        "initial_logits": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "initial_probabilities": [
+          0.16666666666666666,
+          0.16666666666666666,
+          0.16666666666666666,
+          0.16666666666666666,
+          0.16666666666666666,
+          0.16666666666666666
+        ],
+        "invalid_delegate_mass_after": 0.36104698881119995,
+        "invalid_delegate_mass_before": 0.3333333333333333,
+        "invalid_delegate_mass_delta": 0.02771365547786664,
+        "invalid_positive_records_in_optimizer_batch": 2,
+        "loss": -0.0,
+        "optimizer_calls": 1,
+        "optimizer_identity": "torch.optim.SGD(lr=1.0), one CPU float64 step",
+        "optimizer_step_calls": 1,
+        "torch_version": "2.9.1"
+      },
+      "reason_no_grpo_groups": "Fixed scripted candidate records contain no policy log-probabilities or on-policy rollout identity."
+    },
+    {
+      "accepted_positive_candidate_ids": [],
+      "additional_candidate_grade_invocations": 0,
+      "additional_test_case_executions": 0,
+      "admitted_positive_records": 0,
+      "admitted_reward_records": 0,
+      "arm": "blanket-stale-rejection",
+      "candidate_cpu_seconds_observed": null,
+      "candidate_cpu_seconds_upper_bound_at_one_cpu_quota": 0.0,
+      "false_reward_admission_denominator": 5,
+      "false_reward_admission_rate_over_invalid_candidates": 0.0,
+      "false_reward_admissions": 0,
+      "genuine_fix_false_rejection_denominator": 1,
+      "genuine_fix_false_rejections": 1,
+      "grpo_eligible_groups_retained": 0,
+      "invalid_positive_candidate_ids": [],
+      "observed_additional_candidate_wall_seconds": 0.0,
+      "optimizer_replay": {
+        "admitted_candidate_ids": [],
+        "admitted_reward_vector": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final_logits": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_probabilities": [
+          0.16666666666666666,
+          0.16666666666666666,
+          0.16666666666666666,
+          0.16666666666666666,
+          0.16666666666666666,
+          0.16666666666666666
+        ],
+        "includes_patch_text_or_historical_fix_source": false,
+        "initial_logits": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "initial_probabilities": [
+          0.16666666666666666,
+          0.16666666666666666,
+          0.16666666666666666,
+          0.16666666666666666,
+          0.16666666666666666,
+          0.16666666666666666
+        ],
+        "invalid_delegate_mass_after": 0.3333333333333333,
+        "invalid_delegate_mass_before": 0.3333333333333333,
+        "invalid_delegate_mass_delta": 0.0,
+        "invalid_positive_records_in_optimizer_batch": 0,
+        "loss": null,
+        "optimizer_calls": 0,
+        "optimizer_step_calls": 0
+      },
+      "reason_no_grpo_groups": "Fixed scripted candidate records contain no policy log-probabilities or on-policy rollout identity."
+    },
+    {
+      "accepted_positive_candidate_ids": [
+        "known-fix"
+      ],
+      "additional_candidate_grade_invocations": 6,
+      "additional_test_case_executions": 84,
+      "admitted_positive_records": 1,
+      "admitted_reward_records": 6,
+      "arm": "provenance-aware-trusted-regrade",
+      "candidate_cpu_seconds_observed": null,
+      "candidate_cpu_seconds_upper_bound_at_one_cpu_quota": 4.957946917973459,
+      "false_reward_admission_denominator": 5,
+      "false_reward_admission_rate_over_invalid_candidates": 0.0,
+      "false_reward_admissions": 0,
+      "genuine_fix_false_rejection_denominator": 1,
+      "genuine_fix_false_rejections": 0,
+      "grpo_eligible_groups_retained": 0,
+      "invalid_positive_candidate_ids": [],
+      "observed_additional_candidate_wall_seconds": 4.957946917973459,
+      "optimizer_replay": {
+        "admitted_candidate_ids": [
+          "baseline",
+          "known-fix",
+          "mutant-keep-all",
+          "mutant-drop-all",
+          "delegate-installed-source",
+          "delegate-compiled-bytecode"
+        ],
+        "admitted_reward_vector": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final_logits": [
+          -0.02777777777777778,
+          0.1388888888888889,
+          -0.02777777777777778,
+          -0.02777777777777778,
+          -0.02777777777777778,
+          -0.02777777777777778
+        ],
+        "final_probabilities": [
+          0.16177668558504346,
+          0.19111657207478275,
+          0.16177668558504346,
+          0.16177668558504346,
+          0.16177668558504346,
+          0.16177668558504346
+        ],
+        "includes_patch_text_or_historical_fix_source": false,
+        "initial_logits": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "initial_probabilities": [
+          0.16666666666666666,
+          0.16666666666666666,
+          0.16666666666666666,
+          0.16666666666666666,
+          0.16666666666666666,
+          0.16666666666666666
+        ],
+        "invalid_delegate_mass_after": 0.3235533711700869,
+        "invalid_delegate_mass_before": 0.3333333333333333,
+        "invalid_delegate_mass_delta": -0.009779962163246392,
+        "invalid_positive_records_in_optimizer_batch": 0,
+        "loss": 3.700743415417188e-17,
+        "optimizer_calls": 1,
+        "optimizer_identity": "torch.optim.SGD(lr=1.0), one CPU float64 step",
+        "optimizer_step_calls": 1,
+        "torch_version": "2.9.1"
+      },
+      "reason_no_grpo_groups": "Fixed scripted candidate records contain no policy log-probabilities or on-policy rollout identity."
+    }
+  ],
+  "candidate_case_count": 14,
+  "environment_identity_changed": true,
+  "image_epoch_transition_stale_rewards": true,
+  "limitations": [
+    "The original image is untrusted; the sanitized image is a per-target corrected reference, not a universal clean-environment certificate.",
+    "CPU usage counters were not retained. The reported CPU figure is only an upper bound from one-core quota multiplied by observed candidate-grade wall time.",
+    "The optimizer is a real PyTorch SGD API call on a six-logit scripted selector, not an LLM, VARE/RVL GRPO trainer, or on-policy update.",
+    "No hidden tests, model-generated samples, checkpoint, or held-out task were used."
+  ],
+  "original_reward_vector": [
+    0,
+    1,
+    0,
+    0,
+    1,
+    1
+  ],
+  "sanitized_candidate_grade_wall_seconds_median": 0.7486281874589622,
+  "sanitized_candidate_grade_wall_seconds_sum": 4.957946917973459,
+  "scorer_code_identity_unchanged_across_image_change": true,
+  "true_positive_candidate_id": "known-fix",
+  "trusted_oracle_image_digest": "7b00ef0fe1d1912317a88d04ed9bdf00721e65285eca65a892fca48f70fcff25",
+  "trusted_reward_vector": [
+    0,
+    1,
+    0,
+    0,
+    0,
+    0
+  ]
+}
