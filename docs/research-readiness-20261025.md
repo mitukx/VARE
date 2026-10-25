@@ -32,8 +32,8 @@ Eight relevant regression files complete with **40 passed, 1 skipped**, includin
 
 **PR dependency map at the initial snapshot.**
 
-`main → #99 → #100 → #101 → #102 → #103 → #104 → #105 → #106 → #107 → #108`  
-`#99 → #114 → #117; #101 → #118; main → #120, #121, #88`  
+`main → #99 → #100 → #101 → #102 → #103 → #104 → #105 → #106 → #107 → #108`
+`#99 → #114 → #117; #101 → #118; main → #120, #121, #88`
 `main → #122 → #123 → #124 → #125 → #126 → #127 → #128`
 
 The parent heads were not ancestors at #99→#100, #102→#103, #106→#107, #107→#108, #99→#114, and #126→#127. Only the final edge is addressed here. The older gaps include omitted grader/controller corrections and require separate review; the entire stacks must not be merged mechanically. #99 and #102 still have unresolved P1 threads; #107 has an unresolved protocol-source P1. #117 has unresolved outdated review threads that require adjudication, not automatic closure.
