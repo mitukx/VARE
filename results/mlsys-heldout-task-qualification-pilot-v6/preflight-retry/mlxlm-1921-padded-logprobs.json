@@ -1,0 +1,24 @@
+{
+  "command": [
+    "python",
+    "-m",
+    "pytest",
+    "--collect-only",
+    "-q",
+    "tests/test_models.py",
+    "-k",
+    "granitemoehybrid_padded_batch",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "image_id": "sha256:2f907d158fa9aa08a2073ca580f85facf99e52e5cc792ac1b096f19f1cc56939",
+  "phase": "selected-test-collection-only",
+  "preflight_passed": false,
+  "raw_log": "mlxlm-1921-padded-logprobs.collect-only.log",
+  "raw_log_sha256": "0201f5e0bf02b532b6ed52c553c89ce595011ebb6c26aca63f26bd12732d21d0",
+  "return_code": 1,
+  "selected_node_observed": false,
+  "task_id": "mlxlm-1921-padded-logprobs",
+  "task_test_body_executed": false,
+  "wall_seconds": 0.13083312499999877
+}

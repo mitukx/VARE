@@ -1,0 +1,315 @@
+{
+  "claim_boundary": "Task-grader and environment qualification only; no coding-agent success, held-out inference, capability, learning, or generalization claim.",
+  "controls": {
+    "acceptance": "A task is certifiable only when baseline fails the selected assertion, exact known fix passes, and the prespecified target-only mutant fails. Missing test collection or environment/import failure is a blocked certificate.",
+    "candidate_uid": 65534,
+    "container_root": "read-only",
+    "cpu_limit": 1,
+    "maximum_variant_executions": 3,
+    "memory_limit_mib": 1536,
+    "network": "none",
+    "ordered_variants": [
+      "baseline",
+      "known_fix",
+      "incorrect_mutant"
+    ],
+    "resource_measurement": "Read cgroup-v2 memory.peak and memory.max from inside the container after each test; if unavailable, report memory as unknown, never zero.",
+    "run_output": "results/mlsys-heldout-task-qualification-pilot-v9/run-1",
+    "test_grader_mount": "Trusted, read-only /grader mount; task source only in read-only /subject; no model/agent is run.",
+    "timeout_seconds_per_variant": 120
+  },
+  "environment_amendment": {
+    "builds": {
+      "mlx": {
+        "base_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+        "dockerfile": "benchmarks/mlsys_heldout_qualification_v1/Dockerfile.mlx",
+        "dockerfile_sha256": "91a368b157f141c32fde916350c968c870bd4360af69a72d5af449f241ff3598",
+        "identity_type": "local Docker image configuration ID; run by exact immutable ID on linux/arm64",
+        "image": "sha256:2f907d158fa9aa08a2073ca580f85facf99e52e5cc792ac1b096f19f1cc56939",
+        "image_size_bytes": 135589386,
+        "platform": "linux/arm64",
+        "requirements_lock": "benchmarks/mlsys_heldout_qualification_v1/requirements-mlx.lock.txt",
+        "requirements_lock_sha256": "fc2e0a20b6996e42b97bbfd9f9ff680ea597624980372677f72c88d388a57254",
+        "verification": "Rebuilt from pinned base and exact 34-package pip freeze lock; pip freeze matches lock byte-for-byte; offline preflight confirmed mlx-lm 0.32.0, transformers 5.20.2, tokenizers 0.23.3, hub 2.3.0, numpy 2.5.4, and mlx CPU default device."
+      },
+      "transformers": {
+        "base_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+        "dockerfile": "benchmarks/mlsys_heldout_qualification_v1/Dockerfile.transformers",
+        "dockerfile_sha256": "f3c818643c508dfad517658c2a7719419f1070791705825f72710efc209b2c72",
+        "identity_type": "local Docker image configuration ID; run by exact immutable ID on linux/arm64",
+        "image": "sha256:c495275587d4e17bb19e4058636afd75ccfc6913e9d17dbd80a6d8cb75444326",
+        "image_size_bytes": 318436698,
+        "platform": "linux/arm64",
+        "requirements_lock": "benchmarks/mlsys_heldout_qualification_v1/requirements-transformers.lock.txt",
+        "requirements_lock_sha256": "1bda9653babb18a5558a5e75dcf9b27854c548527c2a2ce735169dc5778bd010",
+        "verification": "Rebuilt from pinned base and exact 52-package pip freeze lock; pip freeze matches lock byte-for-byte; offline import preflight confirmed python 3.12.15, torch 2.9.1+cpu, tokenizers 0.23.3, huggingface_hub 1.33.0, is_offline_mode export, pytest 8.4.2."
+      }
+    },
+    "carried_forward_certificates": {
+      "candidate_model_or_agent_run": false,
+      "new_task_body_calls_under_v9": 3,
+      "transformers-48319-stale-best-checkpoint": "All three controls passed under v8; known-fix pass independently adjudicated from raw output because pytest quiet mode omits the passing test node.",
+      "transformers-49208-resume-metrics": "All three controls passed under v8."
+    },
+    "method": "No source, grader, selector, mutant, task order, split, or outcome criteria changed. The only prospective change is replacing incompatible execution images with source-compatible, pinned, offline images. Run selected-test collection-only preflight before task bodies; collection preflight is not a task outcome. For MLX-LM source archives only, the missing setuptools-scm generated mlx_lm/_version.py is supplied as an environment build artifact derived from the exact Git describe output using setuptools-scm guess-next-dev and node-and-date semantics; this generated file is separately hashed and is not counted as task source or a repair.",
+    "mlx_generated_version_overlay": {
+      "baseline": {
+        "git_describe": "v0.32.0-11-g05b7aed",
+        "sha256": "9cdd44be79702072f02fdde8fe8fe9091960ef846eab55cb6d220a86f622f1a1",
+        "source_revision": "05b7aed425453057c511ec0d5ec9732c325b3444",
+        "version": "0.32.1.dev11+g05b7aed"
+      },
+      "format": "__version__ = <derived PEP 440 version> followed by newline",
+      "generator": "setuptools-scm guess-next-dev + node-and-date semantics for a clean commit",
+      "known_fix_and_mutant": {
+        "git_describe": "v0.32.0-12-g9d8abd9",
+        "sha256": "14660a471e462f883ed86422cb68eebfe0dcefda07a283df2b4cdd4996da75e9",
+        "source_revision": "9d8abd94d63a9b3c72e7e9b146e43af1005368fa",
+        "version": "0.32.1.dev12+g9d8abd9"
+      },
+      "mutant_applied_after_overlay_to_only_target_file": true,
+      "source": "git describe --tags --long <exact source revision>",
+      "task_source_manifest_excludes_generated_file": true,
+      "task_target_is_unchanged_by_overlay": true
+    },
+    "prior_failures": [
+      {
+        "failure": "Import stopped before test collection: installed huggingface_hub lacked is_offline_mode. No task assertion ran.",
+        "protocol": "mlsys-heldout-task-qualification-pilot-v4",
+        "raw_log": "results/mlsys-heldout-task-qualification-pilot-v4/run-1/transformers-48319-stale-best-checkpoint-baseline.log",
+        "raw_log_sha256": "619fef5897612283677b0676ebc1025919c8bad09980089749278e428751e499"
+      },
+      {
+        "failure": "Collection stopped before selected test body: installed tokenizers 0.22.2 failed the source-declared >=0.23.1,<0.24 constraint. No task assertion ran.",
+        "protocol": "mlsys-heldout-task-qualification-pilot-v5",
+        "raw_log": "results/mlsys-heldout-task-qualification-pilot-v5/run-1/transformers-48319-stale-best-checkpoint-baseline.log",
+        "raw_log_sha256": "1b055e1a68c53f56224d782d0ea129cd05d2080631160539609f63162b7b4a64"
+      }
+    ],
+    "v6_preflight_history": [
+      {
+        "outcome": "Host Python did not support tarfile.extractall(filter=); failed before Docker or test collection.",
+        "record": "results/mlsys-heldout-task-qualification-pilot-v6/preflight/orchestration-failure.json",
+        "sha256": "e32be7698d1e491d32fb609b7c7716c7ecef8a686b7e24cbeb48a1a0ad74e0ea"
+      },
+      {
+        "outcome": "Selected test collected only; no body.",
+        "raw_log_sha256": "e8767c7527b4335e182d0030dfa8a3b65b500179959467f0bec5fcb52d944a68",
+        "record": "results/mlsys-heldout-task-qualification-pilot-v6/preflight-retry2/transformers-48319-stale-best-checkpoint.json",
+        "sha256": "53af4764effe7d18e1a73855e8c5193d9fbcea9e967b07a28a3b4eae9d5e8fb3"
+      },
+      {
+        "outcome": "Selected test collected only; no body.",
+        "raw_log_sha256": "69a396d61f1f21916df8b7df98fa3b9114a6886b7c71afac68d09b4932fa661b",
+        "record": "results/mlsys-heldout-task-qualification-pilot-v6/preflight-retry2/transformers-49208-resume-metrics.json",
+        "sha256": "74e8414211e4aebbafd23ce36d8ca63c2a1ef6e978ca070b55f161641d180b4d"
+      },
+      {
+        "outcome": "Collection import blocked by missing generated mlx_lm/_version.py in raw Git archive; no body.",
+        "raw_log_sha256": "bd863ae083a7342c092aa8349de349fad44a467c5a5b25d342d269ec54821e85",
+        "record": "results/mlsys-heldout-task-qualification-pilot-v6/preflight-retry2/mlxlm-1921-padded-logprobs.json",
+        "sha256": "287ed93e6f376449308752e9446b1f899dde2977212a8affe8ef36d8a6f4b352"
+      },
+      {
+        "outcome": "Preflight harness attempted pytest collection although the frozen MLX grader is unittest; pytest is absent. No task body.",
+        "raw_log_sha256": "0201f5e0bf02b532b6ed52c553c89ce595011ebb6c26aca63f26bd12732d21d0",
+        "record": "results/mlsys-heldout-task-qualification-pilot-v6/preflight-retry/mlxlm-1921-padded-logprobs.json",
+        "sha256": "23032a96d4716b82aff34bebf2a2f28c24ffbb5c0010205ecbfdbc6dd9c9a9ca"
+      },
+      {
+        "outcome": "MLX import and selected unittest collection passed with commit-derived metadata; no body.",
+        "raw_log_sha256": "8d7ab63ebf79a5a4f11aba4a0acaedcf0260703f7fbfe3ba46596d433fd29803",
+        "record": "results/mlsys-heldout-task-qualification-pilot-v6/preflight-overlay/baseline.json",
+        "sha256": "09b5c39890a7f636a59d6f55ec974758aff0a042babe5361bc90531abd2872b1"
+      },
+      {
+        "outcome": "MLX import and selected unittest collection passed with commit-derived metadata; no body.",
+        "raw_log_sha256": "8d7ab63ebf79a5a4f11aba4a0acaedcf0260703f7fbfe3ba46596d433fd29803",
+        "record": "results/mlsys-heldout-task-qualification-pilot-v6/preflight-overlay/known_fix.json",
+        "sha256": "f5979ab28a080b2e5689f1be340b61bfb30d895f5bcf349cb115404d8cf370b5"
+      },
+      {
+        "outcome": "MLX import and selected unittest collection passed with commit-derived metadata; no body.",
+        "raw_log_sha256": "8d7ab63ebf79a5a4f11aba4a0acaedcf0260703f7fbfe3ba46596d433fd29803",
+        "record": "results/mlsys-heldout-task-qualification-pilot-v6/preflight-overlay/incorrect_mutant.json",
+        "sha256": "39ad9abf567dfad2c17f477f54a3d862d6fc4a1762612979bb1bc1d35ccf5e09"
+      }
+    ],
+    "v7_protocol_correction": {
+      "correct_raw_log_sha256": "69a396d61f1f21916df8b7df98fa3b9114a6886b7c71afac68d09b4932fa661b",
+      "predecessor_protocol": "mlsys-heldout-task-qualification-pilot-v7",
+      "raw_log": "results/mlsys-heldout-task-qualification-pilot-v6/preflight-retry2/transformers-49208-resume-metrics.collect-only.log",
+      "reason": "The raw_log_sha256 recorded for the v6 Transformers #49208 collection-only preflight was transcribed incorrectly. No task body ran; this protocol records the actual SHA-256 verified directly from the immutable log.",
+      "record": "results/mlsys-heldout-task-qualification-pilot-v6/preflight-retry2/transformers-49208-resume-metrics.json"
+    },
+    "v8_prior_execution_evidence": [
+      {
+        "control_gate_passed": true,
+        "raw_log": "results/mlsys-heldout-task-qualification-pilot-v8/run-1/transformers-48319-stale-best-checkpoint-baseline.log",
+        "raw_log_sha256": "9df4f700c26f904332621016c3bc68dc663ac4ef75e36a7b643c9dec8329601c",
+        "record": "results/mlsys-heldout-task-qualification-pilot-v8/run-1/transformers-48319-stale-best-checkpoint-baseline.json",
+        "record_sha256": "4712d61f8a30fcbb8aa4f3159b15e2fdc692198780cb537a8618e2508f80f992",
+        "task_id": "transformers-48319-stale-best-checkpoint",
+        "variant": "baseline"
+      },
+      {
+        "control_gate_passed": "independently adjudicated from raw pytest output and exact one-node collection",
+        "raw_log": "results/mlsys-heldout-task-qualification-pilot-v8/run-1/transformers-48319-stale-best-checkpoint-known_fix.log",
+        "raw_log_sha256": "1abcdce09234aa1c91e2b3c6e60a5c1c1d0636c11bcc8dd5767d9f6d03a7624e",
+        "record": "results/mlsys-heldout-task-qualification-pilot-v8/run-1/transformers-48319-stale-best-checkpoint-known_fix.json",
+        "record_sha256": "8a88d0badb59897e9280352cba3cfdc23db6a99a5643546f3c3b6b0c9952b434",
+        "task_id": "transformers-48319-stale-best-checkpoint",
+        "variant": "known_fix"
+      },
+      {
+        "control_gate_passed": true,
+        "raw_log": "results/mlsys-heldout-task-qualification-pilot-v8/run-1/transformers-48319-stale-best-checkpoint-incorrect_mutant.log",
+        "raw_log_sha256": "6246e6dc528907257864098dfa9ba8fbcd629c7893e0c64c137d09c02619da0e",
+        "record": "results/mlsys-heldout-task-qualification-pilot-v8/run-1/transformers-48319-stale-best-checkpoint-incorrect_mutant.json",
+        "record_sha256": "74facc8f9e2e199cc519f78216cedbd4d23cdfea74efb76d057bf70f8ff27d0a",
+        "task_id": "transformers-48319-stale-best-checkpoint",
+        "variant": "incorrect_mutant"
+      },
+      {
+        "control_gate_passed": true,
+        "raw_log": "results/mlsys-heldout-task-qualification-pilot-v8/run-1/transformers-49208-resume-metrics-baseline.log",
+        "raw_log_sha256": "b6cff4cd7fad021fa7f7c0ca7a00f71176754e934374084dd29dd639582b11dc",
+        "record": "results/mlsys-heldout-task-qualification-pilot-v8/run-1/transformers-49208-resume-metrics-baseline.json",
+        "record_sha256": "7e316d13ced0adbce18e2ef9463137931c3a1fb33831c115d13f56dcb2e7c540",
+        "task_id": "transformers-49208-resume-metrics",
+        "variant": "baseline"
+      },
+      {
+        "control_gate_passed": true,
+        "raw_log": "results/mlsys-heldout-task-qualification-pilot-v8/run-1/transformers-49208-resume-metrics-known_fix.log",
+        "raw_log_sha256": "e6aed3e4350b04363083e33dc29d196978010b2d15ed1841f0db678447ff3989",
+        "record": "results/mlsys-heldout-task-qualification-pilot-v8/run-1/transformers-49208-resume-metrics-known_fix.json",
+        "record_sha256": "ea08037647e2a8920072fb68b68a339bc109424bdb4538de556096500d3f0348",
+        "task_id": "transformers-49208-resume-metrics",
+        "variant": "known_fix"
+      },
+      {
+        "control_gate_passed": true,
+        "raw_log": "results/mlsys-heldout-task-qualification-pilot-v8/run-1/transformers-49208-resume-metrics-incorrect_mutant.log",
+        "raw_log_sha256": "897512b3aad4bfb56fc7faf7d22a617b675e7cd92bb7d7a615b34a2099a2b65b",
+        "record": "results/mlsys-heldout-task-qualification-pilot-v8/run-1/transformers-49208-resume-metrics-incorrect_mutant.json",
+        "record_sha256": "de04f4c9876d3f686cca92e70af0dbb7406aa463b38251eb72968032f6c54c48",
+        "task_id": "transformers-49208-resume-metrics",
+        "variant": "incorrect_mutant"
+      },
+      {
+        "control_gate_passed": true,
+        "record": "results/mlsys-heldout-task-qualification-pilot-v8/run-1/adjudication-transformers-48319-known-fix.json",
+        "record_sha256": "49eb14eb88a43575b2ddf1577515c450a5951ceb09948d98cd05646ac202b8e1",
+        "task_id": "transformers-48319-stale-best-checkpoint",
+        "variant": "known_fix_adjudication"
+      },
+      {
+        "failure": "shell could not find unittest executable; rc=127, no Python process/test collection/test body; the frozen intended unittest target is unchanged",
+        "raw_log": "results/mlsys-heldout-task-qualification-pilot-v8/run-1/mlxlm-1921-padded-logprobs-baseline.log",
+        "raw_log_sha256": "3f44c178fe3dbe1c3109fe39a11cd2f92b458a85cec646950013a84d9f8b4d2e",
+        "record": "results/mlsys-heldout-task-qualification-pilot-v8/run-1/mlxlm-1921-padded-logprobs-baseline.json",
+        "record_sha256": "bc0ffd7a4c92b3745d64b97869936359d6759a1d29702e7ed516958f6225cd68",
+        "task_body_executed": false,
+        "task_id": "mlxlm-1921-padded-logprobs",
+        "variant": "v8_invocation_setup_failure"
+      }
+    ],
+    "v8_repair_reason": "v8 froze the intended unittest test target but its test_command field was shorthand rather than an executable command. The container reported `sh: 1: unittest: not found`, return code 127, without starting Python. v9 prospectively prefixes the same target with `python -m`; selected collection/import was already independently verified for baseline, fix, and mutant using this exact image and deterministic generated metadata overlay."
+  },
+  "exposure_audit": {
+    "local_artifact_files_scanned": 5796,
+    "matches": 0,
+    "path": "results/mlsys-heldout-task-qualification-pilot-v4/exposure-audit.json",
+    "retained_git_refs_scanned": 147,
+    "scope": "Retained VARE refs and current local worktrees, limited to identified model/agent artifact paths; external pretraining and paths outside audited worktrees remain unknown.",
+    "sha256": "330d6bf8cb039687d224f9dc58354c28dd443e653f3c9b8aeebf404bd85aa796"
+  },
+  "frozen_at_utc": "2026-10-25T08:45:19Z",
+  "protocol_id": "mlsys-heldout-task-qualification-pilot-v9",
+  "purpose": "Prospective completion of the MLX-LM #1921 deterministic held-out task controls after v8 established that the frozen command string was not executable (shell returned 127 before Python started). v9 uses the same source revisions, grader, selector, mutant, environment image, generated version overlay, and control gates; the command is made executable by adding the standard Python module launcher. No task test body ran for #1921 under v8. The two Transformers families carry forward only after raw evidence review; no tasks are re-executed.",
+  "selection": {
+    "candidate_model_access": false,
+    "selection_source": "User-directed continuation; frozen before new control outcomes",
+    "task_ids": [
+      "transformers-48319-stale-best-checkpoint",
+      "transformers-49208-resume-metrics",
+      "mlxlm-1921-padded-logprobs"
+    ],
+    "task_split_changes": false
+  },
+  "source_catalog": {
+    "allocation_path": "results/mlsys-task-deep-qualification-v1/protocol.json",
+    "allocation_sha256": "7ef9a28cedf2e1214a74456bb0c5209afc3e3e9f1681a430398e84710bcd26a4",
+    "path": "results/mlsys-task-deep-qualification-v1/qualification.json",
+    "sha256": "2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d",
+    "split_changes": false
+  },
+  "status": "FROZEN_BEFORE_MLX_TASK_BODY_EXECUTION",
+  "stop_criteria": [
+    "Any source, target, or grader hash mismatch.",
+    "Any positive task-exposure match pending adjudication.",
+    "Any task needs network access, model weights, GPU, or relaxation of its frozen test contract.",
+    "Any container exceeds the fixed CPU, memory, or timeout bound.",
+    "A baseline or mutant passes, or the exact known fix fails."
+  ],
+  "tasks": [
+    {
+      "baseline_revision": "05b7aed425453057c511ec0d5ec9732c325b3444",
+      "baseline_target_sha256": "6af68e8476fd5a7144fca175a8235427caf8681e03f3210772f9c58f6e98d4a6",
+      "candidate_prompt": "NOT_MATERIALIZED; no candidate model or agent is run in this certification protocol.",
+      "environment_build_recipe": {
+        "base_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+        "dockerfile": "benchmarks/mlsys_heldout_qualification_v1/Dockerfile.mlx",
+        "dockerfile_sha256": "91a368b157f141c32fde916350c968c870bd4360af69a72d5af449f241ff3598",
+        "image_id": "sha256:2f907d158fa9aa08a2073ca580f85facf99e52e5cc792ac1b096f19f1cc56939",
+        "image_rebuild_tested": true,
+        "requirements_lock": "benchmarks/mlsys_heldout_qualification_v1/requirements-mlx.lock.txt",
+        "requirements_lock_sha256": "fc2e0a20b6996e42b97bbfd9f9ff680ea597624980372677f72c88d388a57254"
+      },
+      "fixed_revision": "9d8abd94d63a9b3c72e7e9b146e43af1005368fa",
+      "fixed_target_sha256": "e98e1821acd904d12396116fdcf80bc96ada3aef2ff5eeed2bb8b6fed513c5f8",
+      "grader_archive_paths": [
+        "tests"
+      ],
+      "grader_path": "tests/test_models.py",
+      "grader_revision": "9d8abd94d63a9b3c72e7e9b146e43af1005368fa",
+      "grader_selector": "granitemoehybrid_padded_batch",
+      "grader_sha256": "5e172da806e5934365d2c91656f472cbc4aceeb36b8d607f6d495219cbd25f33",
+      "image": "sha256:2f907d158fa9aa08a2073ca580f85facf99e52e5cc792ac1b096f19f1cc56939",
+      "repository": "ml-explore/mlx-lm",
+      "source_level_reproduction_log_sha256": {
+        "raw/mlx-lm-1921-base.log": "7cf925d20a3784e4e027e7a7e60e7610e3a3a786f325ee24cfc6b9b0eb123367",
+        "raw/mlx-lm-1921-merge.log": "419ab903b698318e456f43ff3b52032e51789435bca01f1300443072139fc7fe"
+      },
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1921",
+      "source_repository_origin": "https://github.com/ml-explore/mlx-lm.git",
+      "split": "heldout",
+      "subject_archive_paths": [
+        "mlx_lm"
+      ],
+      "target_path": "mlx_lm/models/granitemoehybrid.py",
+      "task_family": "padded_batch_logprob_consistency",
+      "task_id": "mlxlm-1921-padded-logprobs",
+      "test_command": "python -m unittest tests.test_models.TestModels.test_granitemoehybrid_padded_batch",
+      "variants": [
+        {
+          "expected_gate": "task test fails",
+          "name": "baseline",
+          "source_revision": "05b7aed425453057c511ec0d5ec9732c325b3444"
+        },
+        {
+          "expected_gate": "task test passes",
+          "name": "known_fix",
+          "source_revision": "9d8abd94d63a9b3c72e7e9b146e43af1005368fa"
+        },
+        {
+          "expected_gate": "task test fails",
+          "mutant": "Replace lengths = cache.lengths with lengths = None.",
+          "name": "incorrect_mutant",
+          "source_revision": "9d8abd94d63a9b3c72e7e9b146e43af1005368fa"
+        }
+      ]
+    }
+  ]
+}

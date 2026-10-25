@@ -1,0 +1,35 @@
+{
+  "allocation_id": "mlsys-heldout-extension-20261025-v1",
+  "candidate_model_or_agent_access": false,
+  "candidate_queue": "docs/mlsys-candidate-manual-qualification-queue.md",
+  "candidate_queue_sha256": "8f9b188cc20646fd53c488157e50cb6fdeac50dc8401e43174cb5945fca2d31f",
+  "development_pool": "unchanged from parent allocation; no candidate added",
+  "exposure_audit": "results/mlsys-heldout-queue-exposure-v1.json",
+  "exposure_audit_sha256": "d5f913900351fb30993a71ca6c9a4d5773b2dcd7a17a82059250e432194cef0a",
+  "exposure_scope": "147 retained Git refs listed; artifact pathspec matched 0 tracked result paths; 5,796 local model/agent artifact files across 14 VARE worktrees scanned; zero candidate-specific matches. External pretraining and unmounted paths remain UNKNOWN.",
+  "frozen_at_utc": "2026-10-25T08:57:07Z",
+  "new_membership_assigned_before_any_candidate_prompt_use": true,
+  "original_train_dev_heldout_allocation_changed": false,
+  "parent_allocation": "results/mlsys-task-deep-qualification-v1/protocol.json",
+  "parent_allocation_sha256": "7ef9a28cedf2e1214a74456bb0c5209afc3e3e9f1681a430398e84710bcd26a4",
+  "prospective_heldout_candidates": [
+    {
+      "prompt_path": "benchmarks/mlsys_heldout_qualification_v1/prompts/transformers-49147-gemma3n-fp16-gradient-clipping.md",
+      "prompt_sha256": "f3f607bbc65d9693cb8b949b5dba9d8a799d4388a8edad0f90226a14998a3eac",
+      "source_pr": "https://github.com/huggingface/transformers/pull/49147",
+      "status": "PROVISIONAL_HELDOUT_CANDIDATE_PENDING_CERTIFICATION",
+      "task_id": "transformers-49147-gemma3n-fp16-gradient-clipping"
+    },
+    {
+      "prompt_path": "benchmarks/mlsys_heldout_qualification_v1/prompts/mlxlm-1925-minicpm3-phixtral-left-padding.md",
+      "prompt_sha256": "3370594e609fecd9a4dcf2466269939bee6db5a69110562b94834ab10956b027",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1925",
+      "status": "PROVISIONAL_HELDOUT_CANDIDATE_PENDING_CERTIFICATION_AND_OVERLAP_ADJUDICATION",
+      "task_id": "mlxlm-1925-minicpm3-phixtral-left-padding"
+    }
+  ],
+  "selection_rule": "Select locally reproducible CPU/MLX source-changing candidates from the existing manual queue, outside the original 15-task allocation, with no matching task-specific rollout artifacts in the audited VARE evidence scope. This reserves candidates only; eligibility requires baseline-fail, exact-fix-pass, and mutant-fail controls.",
+  "source_screen": "results/mlsys-task-candidate-survey-v1/screen-1/screen.json",
+  "source_screen_sha256": "1307e98b5fbd73826ed031a3042848895b9a3c1617db215cbbed9ee54e2edf86",
+  "train_pool": "unchanged from parent allocation; no candidate added"
+}

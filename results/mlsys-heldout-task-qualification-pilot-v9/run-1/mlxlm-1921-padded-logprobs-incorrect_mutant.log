@@ -1,0 +1,15 @@
+F
+======================================================================
+FAIL: test_granitemoehybrid_padded_batch (tests.test_models.TestModels.test_granitemoehybrid_padded_batch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/grader/tests/test_models.py", line 3204, in test_granitemoehybrid_padded_batch
+    self.assertLess(err, 1e-5)
+AssertionError: 0.5144457817077637 not less than 1e-05
+
+----------------------------------------------------------------------
+Ran 1 test in 0.014s
+
+FAILED (failures=1)
+
+VARE_CGROUP_V2_MEMORY peak=63500288 max=1610612736

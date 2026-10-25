@@ -1,0 +1,26 @@
+{
+  "command": [
+    "python",
+    "-m",
+    "pytest",
+    "--collect-only",
+    "-q",
+    "tests/trainer/test_trainer_checkpointing.py",
+    "-k",
+    "resume_training_with_checkpoint",
+    "--disable-warnings",
+    "--maxfail=1",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "image_id": "sha256:c495275587d4e17bb19e4058636afd75ccfc6913e9d17dbd80a6d8cb75444326",
+  "phase": "selected-test-collection-only",
+  "preflight_passed": true,
+  "raw_log": "transformers-49208-resume-metrics.collect-only.log",
+  "raw_log_sha256": "5be85005f35979a6ad0c4a6a2e2720e6a1586ad4e007814f4c19b64f0ff55594",
+  "return_code": 0,
+  "selected_node_observed": true,
+  "task_id": "transformers-49208-resume-metrics",
+  "task_test_body_executed": false,
+  "wall_seconds": 7.140585333000001
+}

@@ -1,0 +1,150 @@
+{
+  "allocation": {
+    "path": "results/mlsys-heldout-queue-qualification-v3/allocation.json",
+    "sha256": "cfea024ab3054b8311cfb4f45cbf27363b719f7c26671ab6884b7e679dd5441c"
+  },
+  "claim_boundary": "Task/grader qualification within the finite audited VARE exposure scope only. No model capability, generalization, complete no-exposure, or training claim.",
+  "controls": {
+    "candidate_model_access": false,
+    "candidate_output_writable_location": "/tmp only",
+    "candidate_prompts_consumed": 0,
+    "candidate_uid": "65534:65534",
+    "container_read_only": true,
+    "cpu_limit": 1,
+    "failure_policy": "Stop that candidate on first source/hash mismatch, missing selected test, skip, timeout, environment failure, unexpected control outcome, or resource violation; preserve all already written records. Do not retry body execution.",
+    "grader_mount_read_only": true,
+    "heldout_inference": false,
+    "max_total_variant_executions": 6,
+    "max_variant_executions_per_task": 3,
+    "memory_limit_bytes": 1610612736,
+    "network": "none",
+    "ordered_variants": [
+      "baseline",
+      "known_fix",
+      "incorrect_mutant"
+    ],
+    "resource_measurement": "Read cgroup v2 memory.peak and memory.max from inside each Docker container; unavailable values are null/unknown, never zero.",
+    "source_mount_read_only": true,
+    "timeout_seconds_per_variant": 180,
+    "training": false
+  },
+  "environment": {
+    "host": {
+      "actual_container_cpu_limit": 1,
+      "actual_container_memory_limit_bytes": 1610612736,
+      "hardware": "Apple M1 Pro; Colima Linux/aarch64 container, 4 vCPU configured, 3 GiB VM memory"
+    },
+    "image_id": "sha256:2f907d158fa9aa08a2073ca580f85facf99e52e5cc792ac1b096f19f1cc56939",
+    "image_platform": "linux/arm64",
+    "image_rebuild": {
+      "base_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+      "dockerfile": "benchmarks/mlsys_heldout_qualification_v1/Dockerfile.mlx",
+      "dockerfile_sha256": "91a368b157f141c32fde916350c968c870bd4360af69a72d5af449f241ff3598",
+      "installed_mlx_lm": "0.32.0 source loaded from immutable task revision via read-only PYTHONPATH overlay; the container's installed dependency is not used for task source.",
+      "requirements_lock": "benchmarks/mlsys_heldout_qualification_v1/requirements-mlx.lock.txt",
+      "requirements_lock_sha256": "fc2e0a20b6996e42b97bbfd9f9ff680ea597624980372677f72c88d388a57254"
+    },
+    "image_size_bytes": 135589386
+  },
+  "frozen_at_utc": "2026-10-25T09:21:30Z",
+  "output_directory": "results/mlsys-heldout-queue-qualification-v3/run-1",
+  "protocol_id": "mlsys-heldout-extension-v3",
+  "purpose": "Deterministic prospective certification of two independently audited MLX-LM CPU regression task families. No model or agent is run and no training or held-out model inference occurs.",
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_TEST_BODY_EXECUTION",
+  "tasks": [
+    {
+      "baseline_revision": "dcbcf786c0cf56f9a12fabe9468c887781431ae2",
+      "baseline_target_sha256": "4a1af8edd75d461980e9593d1cc37eb26f33f0fc80dacc175e50ca71b6303c8c",
+      "candidate_prompt_path": "benchmarks/mlsys_heldout_qualification_v1/prompts/mlxlm-1877-compressed-tensors-format-validation.md",
+      "candidate_prompt_sha256": "ec09f62d356100fbe201c7ff40f4d89fa3a2841f5f9d1d9c733580cf056239bd",
+      "fixed_revision": "796b466f305c814080ddab53546ee7432f20b88a",
+      "fixed_target_sha256": "d0e6867e3695600adaf975c0fa7e58b96a1c629d1aa12cb5d09e2f8f2aa133c9",
+      "grader_path": "benchmarks/mlsys_heldout_qualification_v1/graders/test_mlx_1877_format_validation.py",
+      "grader_provenance": "VARE-authored independent observable load_model contract; invokes the full compressed-tensors dispatch path with model quantization mocked, asserts FP8 rejection before quantization and supported formats preserved.",
+      "grader_revision": "VARE-authored at pre-run repository head 505ce808581f8010d1d389999e5cef7602d02eb6",
+      "grader_sha256": "148717b4a06935ccd1c0dc4f159df31dd6c330476ffbb49c93803ac5542f0b3a",
+      "grader_source_revisions": {
+        "baseline": "dcbcf786c0cf56f9a12fabe9468c887781431ae2",
+        "fix": "796b466f305c814080ddab53546ee7432f20b88a"
+      },
+      "hidden_grader_exposed_to_candidate": false,
+      "incorrect_mutant": "On fixed source, replace the unsupported-format ValueError branch with an affine 4-bit mapping; the independent grader must observe that float-quantized proceeds into quantization.",
+      "license_sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+      "prior_exposure_result": "0 matching model/agent evidence artifacts within the finite audited VARE scope; external corpus unknown.",
+      "prior_exposure_task_patterns": [
+        "#1877",
+        "test_compressed_tensors_known_formats",
+        "test_compressed_tensors_float_quantized_is_rejected",
+        "compressed-tensors float-quantized and packed format routing"
+      ],
+      "repository": "ml-explore/mlx-lm",
+      "selected_test_cases": [
+        "test_float_quantized_is_rejected_before_quantization",
+        "test_nvfp4_format_preserves_mode",
+        "test_mxfp4_format_preserves_mode",
+        "test_packed_affine_format_remains_supported"
+      ],
+      "source_change_allowlist": [
+        "mlx_lm/utils.py"
+      ],
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1877",
+      "split": "prospective_heldout_extension_v3",
+      "target_path": "mlx_lm/utils.py",
+      "task_family": "compressed_tensor_format_routing",
+      "task_id": "mlxlm-1877-compressed-tensors-format-validation",
+      "test_command": [
+        "python",
+        "-m",
+        "unittest",
+        "-v",
+        "test_mlx_1877_format_validation"
+      ]
+    },
+    {
+      "baseline_revision": "e5962529e5614ce00f14bdd39fe5fc6e410ca2b0",
+      "baseline_target_sha256": "81d7df02f5de9ec8cb79390145f34724ee549a1a7cafadaac3edaaa7bc2cb318",
+      "candidate_prompt_path": "benchmarks/mlsys_heldout_qualification_v1/prompts/mlxlm-1880-gptq-group-error-propagation.md",
+      "candidate_prompt_sha256": "065f447e183c3910f500b82a2677232350a57928f6350edfccd43f663f6a84a7",
+      "fixed_revision": "d4d38d96485c6546a920b3c8431e455c7aa60980",
+      "fixed_target_sha256": "bd4c08453a24fe41fea8ce5885f433b718628c16c4e7a0596900fc72553daf16",
+      "grader_path": "tests/test_gptq.py",
+      "grader_provenance": "Pinned upstream regression evaluator computes a column-by-column GPTQ reference independently of the block-group update implementation and compares synthetic correlated data; only the multi-group test is selected.",
+      "grader_revision": "d4d38d96485c6546a920b3c8431e455c7aa60980",
+      "grader_sha256": "f7fcf46389897ee7e5a6994fac7d32ab257e7240e316f8e5f2df870273ae582e",
+      "grader_source_revisions": {
+        "baseline": "e5962529e5614ce00f14bdd39fe5fc6e410ca2b0",
+        "fix": "d4d38d96485c6546a920b3c8431e455c7aa60980"
+      },
+      "hidden_grader_exposed_to_candidate": false,
+      "incorrect_mutant": "On fixed source, restore the incorrect absolute error-buffer index and allow the in-group update to extend through k+j; the independent multi-group reference comparison must fail.",
+      "license_sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+      "prior_exposure_result": "0 matching model/agent evidence artifacts within the finite audited VARE scope; external corpus unknown.",
+      "prior_exposure_task_patterns": [
+        "#1880",
+        "test_multiple_groups",
+        "reference_gptq",
+        "GPTQ grouped error propagation across group boundaries"
+      ],
+      "repository": "ml-explore/mlx-lm",
+      "selected_test_cases": [
+        "tests.test_gptq.TestGPTQ.test_multiple_groups"
+      ],
+      "source_change_allowlist": [
+        "mlx_lm/quant/gptq.py"
+      ],
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1880",
+      "split": "prospective_heldout_extension_v3",
+      "target_path": "mlx_lm/quant/gptq.py",
+      "task_family": "gptq_grouped_error_propagation",
+      "task_id": "mlxlm-1880-gptq-group-error-propagation",
+      "test_command": [
+        "python",
+        "-m",
+        "unittest",
+        "-v",
+        "tests.test_gptq.TestGPTQ.test_multiple_groups"
+      ]
+    }
+  ]
+}

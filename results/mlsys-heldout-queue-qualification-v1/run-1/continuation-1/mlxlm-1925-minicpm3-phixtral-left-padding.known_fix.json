@@ -1,0 +1,32 @@
+{
+  "cgroup_memory_max_bytes": 1610612736,
+  "cgroup_memory_peak_bytes": 69906432,
+  "command": [
+    "python",
+    "-m",
+    "unittest",
+    "tests.test_models.TestModels.test_minicpm3",
+    "tests.test_models.TestModels.test_phixtral"
+  ],
+  "container_read_only": true,
+  "control_matches_expectation": true,
+  "exit_code": 0,
+  "expected_pass": true,
+  "grader_revision": "2af5f7ce8620115bf37fbbddf9817f083118df59",
+  "grader_tree_sha256": "1234a159c31a7fb4079d114574e9ace0d0ea32b8f07e9cf6c5bef658c4d2cfc2",
+  "image_id": "sha256:2f907d158fa9aa08a2073ca580f85facf99e52e5cc792ac1b096f19f1cc56939",
+  "network": "none",
+  "raw_log": "mlxlm-1925-minicpm3-phixtral-left-padding.known_fix.log",
+  "raw_log_sha256": "9b3418139f39b2e2b1e95eaf623ee5300484d552a5d992565359038e31841b7a",
+  "source_revision": "2af5f7ce8620115bf37fbbddf9817f083118df59",
+  "source_tree_sha256": "485e2f553304b79056178461c0dfcd34258723b0404c02ad8cc0d3c03bc852a9",
+  "task_id": "mlxlm-1925-minicpm3-phixtral-left-padding",
+  "test_passed": true,
+  "unittest_two_selected_tests_ran": true,
+  "variant": "known_fix",
+  "version_overlay": {
+    "sha256": "ba424ad067e938d29ef3254ae9c39fe9f188389aa4d41a023b2cbcfab415eb24",
+    "version": "0.32.1.dev1+g2af5f7ce"
+  },
+  "wall_seconds": 1.192302
+}

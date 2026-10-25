@@ -1,0 +1,25 @@
+{
+  "base_revision": "a9bd8af5c02118882af735cef60705d2efce9fd0",
+  "command": [
+    "python",
+    "-c",
+    "import unittest, tests.test_models as m; names=unittest.defaultTestLoader.getTestCaseNames(m.TestModels); want=['test_minicpm3','test_phixtral']; assert all(x in names for x in want), names; suite=unittest.TestSuite([unittest.defaultTestLoader.loadTestsFromName('TestModels.'+x,m) for x in want]); assert suite.countTestCases()==2; print('COLLECTED TestModels.test_minicpm3 TestModels.test_phixtral')"
+  ],
+  "fixed_revision": "2af5f7ce8620115bf37fbbddf9817f083118df59",
+  "generated_environment_overlay": {
+    "git_describe": "v0.32.0-0-ga9bd8af5",
+    "sha256": "0fcc50589c218f41ae0d08e006ec50dc56a6a097df497b5da92d2ad3158a5dff",
+    "version": "0.32.1.dev0+ga9bd8af5"
+  },
+  "grader_revision": "2af5f7ce8620115bf37fbbddf9817f083118df59",
+  "image_id": "sha256:2f907d158fa9aa08a2073ca580f85facf99e52e5cc792ac1b096f19f1cc56939",
+  "passed": true,
+  "phase": "selected-test-collection-only",
+  "raw_log": "mlxlm-1925-minicpm3-phixtral-left-padding.collect-only.log",
+  "raw_log_sha256": "128ea640666be54f3f52b800a2fc93f71a0eebc69934976965afd7cf408b1c22",
+  "return_code": 0,
+  "selected_node_observed": true,
+  "task_id": "mlxlm-1925-minicpm3-phixtral-left-padding",
+  "task_test_body_executed": false,
+  "wall_seconds": 1.6587475420000004
+}

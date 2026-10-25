@@ -1,0 +1,133 @@
+{
+  "allocation": {
+    "original_15_task_split_changed": false,
+    "path": "results/mlsys-heldout-queue-qualification-v2/mlxlm-1898-allocation.json",
+    "sha256": "ff8fc7b53ce8ce9644d5310b138222798a796fc902f26ad5f604f61ce79446ed"
+  },
+  "claim_boundary": "Task/grader eligibility only within the documented finite VARE exposure audit. No external pretraining or generalization claim.",
+  "controls": {
+    "candidate_agent_access": false,
+    "candidate_model_access": false,
+    "candidate_uid": 65534,
+    "container_root": "read-only",
+    "cpu_limit": 1,
+    "failure_policy": "A skipped or unexecuted test, source/hash mismatch, unexpected baseline or mutant pass, known-fix failure, timeout, resource violation, or environment failure blocks certification; no retry after any v1 task body execution.",
+    "grader_mount_read_only": true,
+    "heldout_inference": false,
+    "maximum_variant_executions": 3,
+    "memory_limit_bytes": 1610612736,
+    "model_or_agent_prompts": 0,
+    "network": "none",
+    "ordered_variants": [
+      "baseline",
+      "known_fix",
+      "incorrect_mutant"
+    ],
+    "resource_measurement": "Read cgroup-v2 memory.peak and memory.max inside each task container; unavailable must be null, never zero.",
+    "subject_mount_read_only": true,
+    "timeout_seconds_per_variant": 120,
+    "training": false
+  },
+  "environment": {
+    "base_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "dockerfile": "benchmarks/mlsys_heldout_qualification_v1/Dockerfile.mlx",
+    "dockerfile_sha256": "91a368b157f141c32fde916350c968c870bd4360af69a72d5af449f241ff3598",
+    "generated_version_overlay": {
+      "baseline": {
+        "git_describe": "v0.31.3-122-g28e9ccd9",
+        "sha256": "537970920b10332c3c01ab6d24c9a46900b1e60f1ef0b628d4969c17dc87d5d1",
+        "version": "0.31.4.dev122+g28e9ccd9"
+      },
+      "known_fix_and_mutant": {
+        "generator": "setuptools-scm guess-next-dev + node-and-date semantics for clean commit",
+        "git_describe": "v0.31.3-123-g29040de9",
+        "version": "0.31.4.dev123+g29040de9"
+      }
+    },
+    "image_id": "sha256:2f907d158fa9aa08a2073ca580f85facf99e52e5cc792ac1b096f19f1cc56939",
+    "image_size_bytes": 135589386,
+    "installed_packages_match_lock": true,
+    "package_environment": "mlx-lm 0.32.0 source-only, transformers 5.20.2, tokenizers 0.23.3, huggingface_hub 2.3.0; MLX CPU default device",
+    "platform": "linux/arm64",
+    "requirements_lock": "benchmarks/mlsys_heldout_qualification_v1/requirements-mlx.lock.txt",
+    "requirements_lock_sha256": "fc2e0a20b6996e42b97bbfd9f9ff680ea597624980372677f72c88d388a57254"
+  },
+  "frozen_at_utc": "2026-10-25T09:14:54Z",
+  "preflight": {
+    "initial_failure": {
+      "outcome": "No pytest module in the pinned image; no selected test body ran.",
+      "raw_log": "results/mlsys-heldout-queue-qualification-v2/mlxlm-1898-preflight/collect-only.log",
+      "raw_log_sha256": "0201f5e0bf02b532b6ed52c553c89ce595011ebb6c26aca63f26bd12732d21d0",
+      "record": "results/mlsys-heldout-queue-qualification-v2/mlxlm-1898-preflight/collect-only.json",
+      "record_sha256": "318606eeeca9347f026fea1df4994cd37ec0c0e14a82b4e37646dd0fe3267bdc"
+    },
+    "successful_retry": {
+      "outcome": "Standard-library unittest loader imported suite and observed exact selected method; no test body ran.",
+      "raw_log": "results/mlsys-heldout-queue-qualification-v2/mlxlm-1898-preflight-retry1/collect-only.log",
+      "raw_log_sha256": "c9efbd81e281ea0f306549c49909f9415bfbbdff92be7bfbd975b0c96a8f8456",
+      "record": "results/mlsys-heldout-queue-qualification-v2/mlxlm-1898-preflight-retry1/collect-only.json",
+      "record_sha256": "2dda65c23ac3f63d11e1fc31add4b715608c3087bdfc5859103260464b3519a5"
+    }
+  },
+  "protocol_id": "mlxlm-1898-certification-v1",
+  "purpose": "Deterministically certify the prospective outside-original-pool MLX-LM #1898 Qwen3 nested rotary configuration regression, with no candidate model or agent execution, inference, or training.",
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_TASK_BODY_EXECUTION",
+  "task": {
+    "baseline_revision": "28e9ccd9cb52d1d4a6f674b7914bae2de49d9aad",
+    "baseline_target_sha256": "d047da8d9378b94bc184a9c521d44e767eaed02c805841c08364a4c9cc33b524",
+    "baseline_test_behavior": "Nested rope_parameters lacks the flat required rope_theta; expect task assertion/construction failure.",
+    "candidate_prompt_access": "not provided to a model or agent",
+    "candidate_prompt_path": "benchmarks/mlsys_heldout_qualification_v1/prompts/mlxlm-1898-qwen3-rope-parameters.md",
+    "candidate_prompt_sha256": "cdaa226bbcbbfee9acbd2116d52111df92aafa59ee413b2f1339af3e3fd2d54d",
+    "fixed_revision": "29040de9246bb7dd85bef9d8bcd4761a004d2efe",
+    "fixed_target_sha256": "7e29b7055d8e526a0ede6e2740a3038ad24d0cef6a1abb446c411d3fbd0efa2d",
+    "grader_archive_paths": [
+      "tests"
+    ],
+    "grader_path": "tests/test_models.py",
+    "grader_revision": "29040de9246bb7dd85bef9d8bcd4761a004d2efe",
+    "grader_selector": "TestModels.test_qwen3_rope_parameters",
+    "grader_sha256": "c13670a1dbaafd7d74668ae9f80201a90e88b88795f34f2701e3e9b8926fae18",
+    "incorrect_mutant": "On fixed source, omit assignment of rope_parameters to rope_scaling in ModelArgs.__post_init__; this must make the YarnRoPE selected assertion fail.",
+    "known_fix_behavior": "Reads rope_theta and rope_scaling from rope_parameters while preserving explicit flat-field values.",
+    "license_path": "LICENSE",
+    "license_sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+    "prior_exposure_audit_implementation": "scripts/audit_mlx_1898_exposure_v1.py",
+    "prior_exposure_audit_implementation_sha256": "1b02889b019996f333a7f418d385f0cda2f2b8e8d8ac6ba6a78fe58b615bcf6d",
+    "prior_exposure_audit_path": "results/mlsys-heldout-queue-qualification-v2/mlxlm-1898-exposure-audit.json",
+    "prior_exposure_audit_sha256": "97df612999c0ee0e4b48597231adabbf890504072ef6a94a8c73a836357f3013",
+    "prior_exposure_result": "zero task-specific artifact matches in 147 retained refs and 5,796 local model/agent artifacts; external pretraining unknown.",
+    "repository": "ml-explore/mlx-lm",
+    "repository_origin": "https://github.com/ml-explore/mlx-lm.git",
+    "source_change_allowlist": [
+      "mlx_lm/models/qwen3.py"
+    ],
+    "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1898",
+    "source_pr_head": "243f932b78ee9a42499abf06a60fa9673d5536cc",
+    "subject_archive_paths": [
+      "mlx_lm"
+    ],
+    "target_path": "mlx_lm/models/qwen3.py",
+    "task_family": "qwen3_model_rope_parameter_nesting",
+    "task_id": "mlxlm-1898-qwen3-rope-parameters",
+    "test_command": "python -m unittest tests.test_models.TestModels.test_qwen3_rope_parameters",
+    "variants": [
+      {
+        "expected": "selected test executes and fails",
+        "name": "baseline",
+        "source_revision": "28e9ccd9cb52d1d4a6f674b7914bae2de49d9aad"
+      },
+      {
+        "expected": "selected test executes and passes",
+        "name": "known_fix",
+        "source_revision": "29040de9246bb7dd85bef9d8bcd4761a004d2efe"
+      },
+      {
+        "expected": "selected test executes and fails",
+        "name": "incorrect_mutant",
+        "source_revision": "29040de9246bb7dd85bef9d8bcd4761a004d2efe"
+      }
+    ]
+  }
+}

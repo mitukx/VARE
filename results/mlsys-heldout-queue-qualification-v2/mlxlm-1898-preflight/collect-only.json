@@ -1,0 +1,33 @@
+{
+  "baseline_revision": "28e9ccd9cb52d1d4a6f674b7914bae2de49d9aad",
+  "command": [
+    "sha256:2f907d158fa9aa08a2073ca580f85facf99e52e5cc792ac1b096f19f1cc56939",
+    "python",
+    "-m",
+    "pytest",
+    "--collect-only",
+    "-q",
+    "tests/test_models.py",
+    "-k",
+    "test_qwen3_rope_parameters",
+    "--disable-warnings",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "fixed_revision": "29040de9246bb7dd85bef9d8bcd4761a004d2efe",
+  "grader_revision": "29040de9246bb7dd85bef9d8bcd4761a004d2efe",
+  "image_id": "sha256:2f907d158fa9aa08a2073ca580f85facf99e52e5cc792ac1b096f19f1cc56939",
+  "phase": "selected-test-collection-only",
+  "raw_log": "results/mlsys-heldout-queue-qualification-v2/mlxlm-1898-preflight/collect-only.log",
+  "raw_log_sha256": "0201f5e0bf02b532b6ed52c553c89ce595011ebb6c26aca63f26bd12732d21d0",
+  "return_code": 1,
+  "selected_node_observed": false,
+  "task_id": "mlxlm-1898-qwen3-rope-parameters",
+  "task_test_body_executed": false,
+  "version_overlay": {
+    "revision": "28e9ccd9cb52d1d4a6f674b7914bae2de49d9aad",
+    "sha256": "537970920b10332c3c01ab6d24c9a46900b1e60f1ef0b628d4969c17dc87d5d1",
+    "version": "0.31.4.dev122+g28e9ccd9"
+  },
+  "wall_seconds": 0.239136
+}

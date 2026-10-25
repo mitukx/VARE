@@ -1,0 +1,19 @@
+E
+======================================================================
+ERROR: test_qwen3_rope_parameters (tests.test_models.TestModels.test_qwen3_rope_parameters)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/grader/tests/test_models.py", line 910, in test_qwen3_rope_parameters
+    args = qwen3.ModelArgs.from_dict(config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/subject/mlx_lm/models/base.py", line 15, in from_dict
+    return cls(
+           ^^^^
+TypeError: ModelArgs.__init__() missing 1 required positional argument: 'rope_theta'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.004s
+
+FAILED (errors=1)
+VARE_CGROUP_MEMORY_PEAK=68272128
+VARE_CGROUP_MEMORY_MAX=1610612736

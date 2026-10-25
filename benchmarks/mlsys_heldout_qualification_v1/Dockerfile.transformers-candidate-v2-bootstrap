@@ -1,0 +1,4 @@
+FROM sha256:cbafeb524d614d6c1b33c6549d3335bb717043e4c3572ada90ec42279c0862ee
+USER root
+RUN python -m pip install --no-cache-dir timm==1.0.22 torchvision==0.24.1 && python -m pip check
+USER 65534:65534

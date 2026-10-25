@@ -1,0 +1,33 @@
+{
+  "baseline_revision": "28e9ccd9cb52d1d4a6f674b7914bae2de49d9aad",
+  "command": [
+    "--env",
+    "HOME=/tmp",
+    "--env",
+    "XDG_CACHE_HOME=/tmp/cache",
+    "--env",
+    "HF_HUB_OFFLINE=1",
+    "--env",
+    "HF_DATASETS_OFFLINE=1",
+    "sha256:2f907d158fa9aa08a2073ca580f85facf99e52e5cc792ac1b096f19f1cc56939",
+    "python",
+    "-c",
+    "import unittest, tests.test_models as m; names=[t.id() for t in unittest.defaultTestLoader.loadTestsFromTestCase(m.TestModels)]; target=[n for n in names if n.endswith('test_qwen3_rope_parameters')]; assert len(target)==1, target; print('COLLECTED '+target[0])"
+  ],
+  "fixed_revision": "29040de9246bb7dd85bef9d8bcd4761a004d2efe",
+  "grader_revision": "29040de9246bb7dd85bef9d8bcd4761a004d2efe",
+  "image_id": "sha256:2f907d158fa9aa08a2073ca580f85facf99e52e5cc792ac1b096f19f1cc56939",
+  "phase": "selected-test-collection-only-unittest-retry1",
+  "raw_log": "results/mlsys-heldout-queue-qualification-v2/mlxlm-1898-preflight-retry1/collect-only.log",
+  "raw_log_sha256": "c9efbd81e281ea0f306549c49909f9415bfbbdff92be7bfbd975b0c96a8f8456",
+  "return_code": 0,
+  "selected_node_observed": true,
+  "task_id": "mlxlm-1898-qwen3-rope-parameters",
+  "task_test_body_executed": false,
+  "version_overlay": {
+    "revision": "28e9ccd9cb52d1d4a6f674b7914bae2de49d9aad",
+    "sha256": "537970920b10332c3c01ab6d24c9a46900b1e60f1ef0b628d4969c17dc87d5d1",
+    "version": "0.31.4.dev122+g28e9ccd9"
+  },
+  "wall_seconds": 1.360467
+}

@@ -1,0 +1,15 @@
+F
+======================================================================
+FAIL: test_qwen3_rope_parameters (tests.test_models.TestModels.test_qwen3_rope_parameters)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/grader/tests/test_models.py", line 926, in test_qwen3_rope_parameters
+    self.assertEqual(args.rope_scaling, config["rope_parameters"])
+AssertionError: None != {'rope_theta': 1000.0, 'rope_type': 'yarn[54 chars]1024}
+
+----------------------------------------------------------------------
+Ran 1 test in 0.008s
+
+FAILED (failures=1)
+VARE_CGROUP_MEMORY_PEAK=68435968
+VARE_CGROUP_MEMORY_MAX=1610612736

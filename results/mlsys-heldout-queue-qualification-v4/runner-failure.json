@@ -1,0 +1,16 @@
+{
+  "candidate_test_bodies_executed": 0,
+  "exit_code": 128,
+  "failed_operation": [
+    "git",
+    "archive",
+    "--format=tar",
+    "d4d38d96485c6546a920b3c8431e455c7aa60980",
+    "tests/__init__.py",
+    "tests/test_gptq.py"
+  ],
+  "failure": "git archive stopped before test body: pinned revision d4d38d96485c6546a920b3c8431e455c7aa60980 does not contain tests/__init__.py; tests/test_gptq.py exists. #1877 import/collect preflight passed; no task test body executed; no optimizer/model action.",
+  "protocol_id": "mlsys-heldout-extension-v4",
+  "protocol_sha256": "7592168f173bdf8507e3f9d92b865370fafb6666aa4c1f3c61ec0123dae38923",
+  "runner_sha256": "4cf2c0afa523416c9a56ab5fc582de1de038ad91496f4e98dcf70e732c3b550e"
+}

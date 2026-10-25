@@ -1,0 +1,140 @@
+{
+  "claim_boundary": "Task/grader eligibility only, within the documented finite VARE exposure audit; no capability, external pretraining, or generalization claim.",
+  "controls": {
+    "candidate_agent_access": false,
+    "candidate_model_access": false,
+    "candidate_uid": 65534,
+    "container_root": "read-only",
+    "cpu_limit": 1,
+    "expected_outcomes": {
+      "baseline": "selected test executes and fails",
+      "incorrect_mutant": "selected test executes and fails",
+      "known_fix": "selected test executes and passes"
+    },
+    "failure_policy": "A skipped test, missing test execution, source/hash mismatch, unexpected baseline or mutant pass, known-fix failure, timeout, resource violation, or environment failure blocks v2. Do not retry this v2 candidate after any variant task body executes.",
+    "grader_mount_read_only": true,
+    "heldout_inference": false,
+    "maximum_variant_executions": 3,
+    "memory_limit_bytes": 1610612736,
+    "model_or_agent_prompts": 0,
+    "network": "none",
+    "ordered_variants": [
+      "baseline",
+      "known_fix",
+      "incorrect_mutant"
+    ],
+    "subject_mount_read_only": true,
+    "test_must_run": "Exact selected test must execute (not skip); use raw pytest result and selected-node output, and record cgroup-v2 memory.peak/max.",
+    "timeout_seconds_per_variant": 120,
+    "training": false
+  },
+  "environment_build_recipe": {
+    "base_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+    "direct_test_dependencies": [
+      "timm==1.0.22",
+      "torchvision==0.24.1"
+    ],
+    "dockerfile": "benchmarks/mlsys_heldout_qualification_v1/Dockerfile.transformers-candidate-v2",
+    "dockerfile_sha256": "29bbacf2c226387fc958866c7b1b083c60c003c33e0d637e0a0b34daf3e9e542",
+    "image_id": "sha256:b8cabc228eed6d2d594a93938e5d471e5154e3e76c941902c2a2022c91794f48",
+    "image_size_bytes": 333452629,
+    "package_inventory": "pip freeze exactly matches full pinned lock; pip check has no broken requirements",
+    "platform": "linux/arm64",
+    "requirements_lock": "benchmarks/mlsys_heldout_qualification_v1/requirements-transformers-candidate-v2.lock.txt",
+    "requirements_lock_sha256": "2cea834635cb3eba070c6ee7a3a6aa54f64ee9bf98419ab50dc17e3f29f5de4f",
+    "test_dependency_basis": "Upstream test class is decorated with require_timm. PyTorch official previous-version mapping pairs torch 2.9.1 with torchvision 0.24.1; exact lock pins both."
+  },
+  "frozen_at_utc": "2026-10-25T09:05:18Z",
+  "preflight": {
+    "phase": "dependency-corrected-v2-collect-only",
+    "raw_log": "results/mlsys-heldout-queue-qualification-v1/preflight-v2/transformers-49147.collect-only.log",
+    "raw_log_sha256": "0dfb09ed5b8a842be85b31c30ddb9c63e151f3d0c44c7e77bc45ac2cc5f71274",
+    "record": "results/mlsys-heldout-queue-qualification-v1/preflight-v2/transformers-49147.collect-only.json",
+    "record_sha256": "ca8e96097f78571a0d39d895a64a500ac741356795962124cf149b4ea25e6ca4",
+    "return_code": 0,
+    "selected_node_collected": true,
+    "task_test_body_executed": false,
+    "timm_import_observed": true
+  },
+  "protocol_id": "transformers-49147-certification-v2",
+  "purpose": "Prospective dependency-corrected certification of the same already allocated Transformers #49147 task after protocol v1 discovered its selected test was skipped by the upstream require_timm guard. Protocol v1 remains immutable and records the skip. This version adds the declared test dependency only; it does not change the source revisions, grader bytes, selected node, expected controls, or task split. No model or agent is invoked.",
+  "relation_to_v1": {
+    "allocation_path": "results/mlsys-heldout-queue-qualification-v1/allocation.json",
+    "allocation_sha256": "1db594413b39ea9a1d40b140b17f9590619a513376c19557f066f45c985a07b7",
+    "prior_attempt_raw_log": "results/mlsys-heldout-queue-qualification-v1/run-1/transformers-49147-gemma3n-fp16-gradient-clipping.baseline.log",
+    "prior_attempt_raw_log_sha256": "edf671681140eaf4fba51b60be033721b09e92ad9209d8ead625c2fbb230cdb2",
+    "prior_attempt_record": "results/mlsys-heldout-queue-qualification-v1/run-1/transformers-49147-gemma3n-fp16-gradient-clipping.baseline.json",
+    "prior_attempt_record_sha256": "b53aaea597b3646e67d4d74f45b8907d936d2ce702d302af30da4714124c1c22",
+    "prior_outcome": "pytest process returned zero but exact selected test was skipped because timm was absent; no test body ran; candidate was not certified under v1.",
+    "protocol_path": "protocols/mlsys_heldout_queue_qualification_v1.json",
+    "protocol_sha256": "f6f7d9615252bdcff38aa4c1cb4dd95c4ff5ba1757c4a5eb168ed034429ceaad"
+  },
+  "schema_version": 1,
+  "status": "FROZEN_BEFORE_TASK_BODY_EXECUTION",
+  "task": {
+    "baseline_revision": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+    "baseline_target_sha256": "1bcd89c35459ed8795ffe8c38337cf63d58c1e645f5e02301b4f581187004b78",
+    "candidate_prompt_access": "not provided to a model or agent",
+    "candidate_prompt_path": "benchmarks/mlsys_heldout_qualification_v1/prompts/transformers-49147-gemma3n-fp16-gradient-clipping.md",
+    "candidate_prompt_sha256": "f3f607bbc65d9693cb8b949b5dba9d8a799d4388a8edad0f90226a14998a3eac",
+    "environment_build_recipe": {
+      "additional_test_dependency": "parameterized==0.9.0",
+      "base_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+      "dockerfile": "benchmarks/mlsys_heldout_qualification_v1/Dockerfile.transformers-candidate",
+      "dockerfile_sha256": "6fbc8d75508e0bfa7dda2c18c9b0e373452791fd35ad7e24506a7bf3cf26fe05",
+      "image_id": "sha256:cbafeb524d614d6c1b33c6549d3335bb717043e4c3572ada90ec42279c0862ee",
+      "image_size_bytes": 318481074,
+      "installed_package_inventory_matches_lock": true,
+      "platform": "linux/arm64",
+      "requirements_lock": "benchmarks/mlsys_heldout_qualification_v1/requirements-transformers-candidate.lock.txt",
+      "requirements_lock_sha256": "e5d342fd1ededf79ad870054c8cd46367cfc772b8b3f8746effbcd19b87ce49d"
+    },
+    "fixed_revision": "f35aeb9308836547b0eaed8b4cd334da16e2af10",
+    "fixed_target_sha256": "5154036a66b07a695129a510fcd741fd852d43e27e480673c5d84b1ee4ef910d",
+    "grader_archive_paths": [
+      "tests",
+      "utils"
+    ],
+    "grader_path": "tests/models/gemma3n/test_modeling_gemma3n.py",
+    "grader_revision": "f35aeb9308836547b0eaed8b4cd334da16e2af10",
+    "grader_selector": "test_from_pretrained_fp16_initializes_gradient_clipping",
+    "grader_sha256": "9abcea16b66e619de4648ebfd66c43259450a2c18708759cc34c698a8eaa752f",
+    "grader_source_alias": "Trusted grader imports the exact per-variant /subject/src read-only at /grader/src because the pinned upstream test helper resolves PATH_TO_TRANSFORMERS from the repository root. This alias exists only inside the trusted test container; no model or agent runs.",
+    "mutant": "On the fixed revision, replace gradient_clipping = min(self.config.gradient_clipping, torch.finfo(module.gradient_clipping.dtype).max) with gradient_clipping = self.config.gradient_clipping in _init_weights; no other file changes.",
+    "prior_exposure_adjudication": "Exact task-specific scan returned no match in audited VARE artifacts. Baseline revision is shared with Transformers #49412; only its distinct task prompt was model-exposed in retained receipts, and those receipts do not establish access to this Gemma3n prompt. External pretraining remains unknown.",
+    "repository": "huggingface/transformers",
+    "source_pr": "https://github.com/huggingface/transformers/pull/49147",
+    "source_pr_head": "35b8b112b46b5adc3296abf142e15874ee5d4971",
+    "source_repository_origin": "https://github.com/huggingface/transformers.git",
+    "split": "prospective_heldout_extension_v1",
+    "subject_archive_paths": [
+      "src"
+    ],
+    "target_path": "src/transformers/models/gemma3n/modeling_gemma3n.py",
+    "task_family": "gemma3n_fp16_gradient_clipping_checkpoint_load",
+    "task_id": "transformers-49147-gemma3n-fp16-gradient-clipping",
+    "task_source_change_allowlist": [
+      "src/transformers/models/gemma3n/modeling_gemma3n.py"
+    ],
+    "test_command": "python -m pytest -q tests/models/gemma3n/test_modeling_gemma3n.py -k test_from_pretrained_fp16_initializes_gradient_clipping --disable-warnings --maxfail=1 -p no:cacheprovider",
+    "test_node": "test_from_pretrained_fp16_initializes_gradient_clipping",
+    "upstream_fixed_commit_unrelated_change": "The PR merge also edits modular_gemma3n.py constructor syntax; it is outside this candidate task allowlist and not required by the selected regression.",
+    "variants": [
+      {
+        "expected": "selected test fails",
+        "name": "baseline",
+        "source_revision": "cb33194ad6152bd9fad6305378d92db385dd7b32"
+      },
+      {
+        "expected": "selected test passes",
+        "name": "known_fix",
+        "source_revision": "f35aeb9308836547b0eaed8b4cd334da16e2af10"
+      },
+      {
+        "expected": "selected test fails",
+        "name": "incorrect_mutant",
+        "source_revision": "f35aeb9308836547b0eaed8b4cd334da16e2af10"
+      }
+    ]
+  }
+}

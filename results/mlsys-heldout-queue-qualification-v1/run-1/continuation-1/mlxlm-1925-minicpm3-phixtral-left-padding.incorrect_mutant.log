@@ -1,0 +1,17 @@
+F.
+======================================================================
+FAIL: test_minicpm3 (tests.test_models.TestModels.test_minicpm3)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/grader/tests/test_models.py", line 1701, in test_minicpm3
+    self.left_padding_test_runner(model)
+  File "/grader/tests/test_models.py", line 432, in left_padding_test_runner
+    self.assertTrue(mx.allclose(single, batched, rtol=1e-4, atol=1e-4))
+AssertionError: array(False, dtype=bool) is not true
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.024s
+
+FAILED (failures=1)
+VARE_CGROUP_MEMORY_PEAK=69296128
+VARE_CGROUP_MEMORY_MAX=1610612736

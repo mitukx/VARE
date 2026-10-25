@@ -1,0 +1,1 @@
+Task: In the Gemma3n PyTorch model, make loading a locally saved checkpoint with fp16 weights complete successfully when model initialization creates state that is not present in the checkpoint. Preserve dtype behavior for other model families. Do not change the regression tests or add network dependencies.

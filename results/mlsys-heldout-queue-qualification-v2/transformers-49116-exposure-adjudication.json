@@ -1,0 +1,32 @@
+{
+  "adjudication_id": "transformers-49116-prior-exposure-adjudication-v1",
+  "audit_path": "results/mlsys-heldout-queue-qualification-v2/exposure-audit.json",
+  "audit_sha256": "dd706fb51577d8ce59f1b0dec65e8c56c25aea2efbc019a8097b0fc73b5c73fb",
+  "audit_summary": {
+    "git_ref_entries": 693,
+    "local_artifact_entries": 18,
+    "raw_match_entries": 711,
+    "retained_git_refs_scanned": 147,
+    "unique_content_hashes": 18,
+    "unique_paths": 18
+  },
+  "candidate_model_or_agent_runs_this_turn": 0,
+  "candidate_task_id": "transformers-49116-qwen35-auto-tokenizer",
+  "decision": "INELIGIBLE_EXPOSED_RETIRED_FROM_HELDOUT_CANDIDATE_POOL",
+  "representative_exact_exposure": {
+    "candidate_edit_applied": false,
+    "exposure_basis": "Retained model/agent rollout input hash covers the exact historical TASK.md and task id names the same Qwen3 tokenizer-routing family. Exposure is disqualifying even though this representative rollout did not apply an edit.",
+    "path": "results/transformers-phase-a-structured-v1/rollouts/49116-seed-101.json",
+    "seed": 101,
+    "sha256": "7e331301bff10caaba4a3db48f48c0b465401e2a6416ba7b1e4d51956e4bd69b",
+    "task_id": "transformers-49116-tokenizer-routing-v2",
+    "task_input_hashes": {
+      "TASK.md": "b88a7b989b35e07923e289df91775b62c0e45d9cea99cf9d349d26be5e867e07",
+      "grader.py": "c77379ab37ae61b866c27584a310bbd7c4b529aa9930df0f553b40132bf0463c",
+      "protocol.lock.json": "7e0d21b1a625a8654e1c4a6cf1fb9332573ca661f2dde720b1e0aad70814303a",
+      "task.json": "42bc29015aa0fd242a949b6d13221eb343936b6168ccdffc1e68ab7d6fbde934"
+    }
+  },
+  "scope_limit": "Retained VARE Git refs and 14 listed local worktrees only; external pretraining and unmounted paths are unknown. This local record is sufficient to retire the candidate under the frozen exposure rule.",
+  "test_body_executed_this_turn": false
+}

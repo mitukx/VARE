@@ -1,0 +1,1 @@
+Task: For MiniCPM3 and Phixtral, ensure batched inference with left padding preserves each prompt’s logits during prefill and a one-token decode compared with processing that prompt alone. Keep other cache and attention-mask behavior intact. Do not modify tests or download model weights.

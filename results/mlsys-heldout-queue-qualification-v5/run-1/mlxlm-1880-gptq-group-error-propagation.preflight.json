@@ -1,0 +1,27 @@
+{
+  "actual_test_case_suffixes": [
+    "test_gptq"
+  ],
+  "cgroup_memory_max_bytes": 1610612736,
+  "cgroup_memory_peak_bytes": 15671296,
+  "collected_test_ids": [
+    "unittest.loader._FailedTest.test_gptq"
+  ],
+  "command": [
+    "python",
+    "-c",
+    "import unittest; suite=unittest.defaultTestLoader.loadTestsFromName('test_gptq.TestGPTQ.test_multiple_groups'); flatten=lambda s: [x for t in s for x in (flatten(t) if isinstance(t, unittest.TestSuite) else [t])]; ids=sorted(t.id() for t in flatten(suite)); print('VARE_COLLECTED_IDS='+__import__('json').dumps(ids)); assert ids, 'no test cases collected'"
+  ],
+  "exit_code": 0,
+  "expected_test_case_suffixes": [
+    "test_multiple_groups"
+  ],
+  "preflight_passed": false,
+  "protocol_sha256": "5d638dcd84d3f2a08df796b01f24aeac80a368ce704036212bd304b2a97cfb94",
+  "raw_log": "mlxlm-1880-gptq-group-error-propagation.preflight.log",
+  "raw_log_sha256": "c5bfe7a65adb02e0ba1a2ac87160fe095bd10208b384752d422ee6cc572d0f7d",
+  "task_id": "mlxlm-1880-gptq-group-error-propagation",
+  "test_body_executed": false,
+  "timeout": null,
+  "wall_seconds": 0.181784
+}

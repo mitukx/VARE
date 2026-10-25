@@ -1,0 +1,35 @@
+{
+  "cgroup_memory_max_bytes": 1610612736,
+  "cgroup_memory_peak_bytes": 70983680,
+  "command": [
+    "python",
+    "-m",
+    "unittest",
+    "tests.test_models.TestModels.test_qwen3_rope_parameters"
+  ],
+  "container_read_only": true,
+  "control_matches_expectation": true,
+  "exit_code": 0,
+  "expected_pass": true,
+  "generated_version_overlay": {
+    "sha256": "a51f90d806cf2fa9a3ccd799328982ab8df9b789cee5c23d148fe817f44f6b0c",
+    "version": "0.31.4.dev123+g29040de9"
+  },
+  "grader_file_sha256": "c13670a1dbaafd7d74668ae9f80201a90e88b88795f34f2701e3e9b8926fae18",
+  "grader_revision": "29040de9246bb7dd85bef9d8bcd4761a004d2efe",
+  "grader_tree_sha256": "b2f1c3b5a9c7319bb3f3aad5eceb3d17b015331a6fdf98772a98925d7d2a4d80",
+  "image_id": "sha256:2f907d158fa9aa08a2073ca580f85facf99e52e5cc792ac1b096f19f1cc56939",
+  "network": "none",
+  "protocol_id": "mlxlm-1898-certification-v1",
+  "protocol_sha256": "df2725275157a3b0aed11c8379c99805f276f5d7dd0430c3b317ebf356f1117a",
+  "raw_log": "mlxlm-1898-qwen3-rope-parameters.known_fix.log",
+  "raw_log_sha256": "e4cb1cb74e3bd25cee678b88aae80df66879e861cd4536528db867770e1dc0d1",
+  "selected_test_executed": true,
+  "selected_test_passed": true,
+  "source_revision": "29040de9246bb7dd85bef9d8bcd4761a004d2efe",
+  "source_tree_sha256": "63b2227fe3e98384ba1d7fd2754670e6d5852ca3538f0a3502e1489ec191d2e0",
+  "target_sha256": "7e29b7055d8e526a0ede6e2740a3038ad24d0cef6a1abb446c411d3fbd0efa2d",
+  "task_id": "mlxlm-1898-qwen3-rope-parameters",
+  "variant": "known_fix",
+  "wall_seconds": 1.136546
+}

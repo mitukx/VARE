@@ -1,0 +1,262 @@
+{
+  "allocation": {
+    "original_15_task_split_changed": false,
+    "path": "results/mlsys-heldout-queue-qualification-v1/allocation.json",
+    "sha256": "1db594413b39ea9a1d40b140b17f9590619a513376c19557f066f45c985a07b7"
+  },
+  "claim_boundary": "Task/grader eligibility within the finite audited VARE scope only; no agent capability, model improvement, external no-exposure claim, or generalization claim.",
+  "controls": {
+    "candidate_agent_runs": 0,
+    "candidate_model_access": false,
+    "candidate_uid": 65534,
+    "container_root": "read-only",
+    "cpu_limit": 1,
+    "failure_policy": "Any source/hash mismatch, collection/environment failure, unexpected baseline/mutant pass, known-fix failure, missing selected test execution, timeout, or resource-limit violation blocks that candidate. Preserve every record.",
+    "grader_mount_read_only": true,
+    "maximum_variant_executions": 6,
+    "memory_limit_mib": 1536,
+    "model_or_agent_prompts": 0,
+    "network": "none",
+    "ordered_variants": [
+      "baseline",
+      "known_fix",
+      "incorrect_mutant"
+    ],
+    "resource_measurement": "Read cgroup-v2 memory.peak and memory.max from inside each test container; unavailable values are null/unknown, never zero.",
+    "run_output": "results/mlsys-heldout-queue-qualification-v1/run-1",
+    "subject_mount_read_only": true,
+    "timeout_seconds_per_variant": 120,
+    "training": false
+  },
+  "exposure_audit": {
+    "artifact_paths_scanned_across_refs": 0,
+    "external_pretraining": "UNKNOWN_NOT_AUDITED",
+    "implementation": "scripts/audit_heldout_queue_exposure_v1.py",
+    "implementation_sha256": "e59fa24ecc7e5d52d49f81648b9df5202f372118642df5f43d3928e5c1e63c1d",
+    "local_artifact_files_scanned": 5796,
+    "local_worktrees_scanned": 14,
+    "matches": 0,
+    "path": "results/mlsys-heldout-queue-exposure-v1.json",
+    "retained_git_refs_scanned": 147,
+    "scope_limit": "Search covers retained VARE Git refs and local worktrees in the listed model/agent evidence paths only; it cannot establish absence from external pretraining, unmounted paths, or semantic paraphrases without the searched identifiers/symptoms.",
+    "sha256": "d5f913900351fb30993a71ca6c9a4d5773b2dcd7a17a82059250e432194cef0a"
+  },
+  "frozen_at_utc": "2026-10-25T08:57:07Z",
+  "preflight_boundary": "The final preflights imported and collected the selected tests only; no test body executed. Earlier dependency-path and mount-setup failures are retained in preflight_history.",
+  "preflight_history": [
+    {
+      "raw_log": "results/mlsys-heldout-queue-qualification-v1/preflight/transformers-49147-gemma3n-fp16-gradient-clipping.collect-only.log",
+      "raw_log_sha256": "45bffe306a0e599fe009dda92e11a3c59c3a6b015fcf30861ed7c1a890d9bd27",
+      "record": "results/mlsys-heldout-queue-qualification-v1/preflight/transformers-49147-gemma3n-fp16-gradient-clipping.json",
+      "record_sha256": "87cb5f8f413ce3c8de8ca91cc867020a53ca8646f8470aa235fe21acfc402a17",
+      "task_body_executed": false
+    },
+    {
+      "raw_log": "results/mlsys-heldout-queue-qualification-v1/preflight-retry1/transformers-49147-gemma3n-fp16-gradient-clipping.collect-only.log",
+      "raw_log_sha256": "943f7cfe7a520d8b8330be75b315f6d694f538845aba72f99c6c90b179152fcd",
+      "record": "results/mlsys-heldout-queue-qualification-v1/preflight-retry1/transformers-49147-gemma3n-fp16-gradient-clipping.json",
+      "record_sha256": "bbf0f3555d07d9d833351723fb01a91f61f0b705fd14ea722e060c9784fe91c0",
+      "task_body_executed": false
+    },
+    {
+      "raw_log": "results/mlsys-heldout-queue-qualification-v1/preflight-retry2/transformers-49147-gemma3n-fp16-gradient-clipping.collect-only.log",
+      "raw_log_sha256": "815f89670ff2dbf747f4f6beb2bbe66a02d68a02f5e3879a9cacddfa2b21bc6b",
+      "record": "results/mlsys-heldout-queue-qualification-v1/preflight-retry2/transformers-49147-gemma3n-fp16-gradient-clipping.json",
+      "record_sha256": "97c6d6cd4cfd3f064f07ac3eaff72fa95daf59cfce4c3381aea7b5244e3417c0",
+      "task_body_executed": false
+    },
+    {
+      "raw_log": "results/mlsys-heldout-queue-qualification-v1/preflight-retry3/transformers-49147-gemma3n-fp16-gradient-clipping.collect-only.log",
+      "raw_log_sha256": "d7e069b7da035f686b689e8ef9ee17e4483b1f8335d91c32379b22302db2a25f",
+      "record": "results/mlsys-heldout-queue-qualification-v1/preflight-retry3/transformers-49147-gemma3n-fp16-gradient-clipping.json",
+      "record_sha256": "2c646a559e00c71c3709e0f4f60917184e217bd9199ddfd18cf7a247d8cbd80d",
+      "task_body_executed": false
+    },
+    {
+      "raw_log": "results/mlsys-heldout-queue-qualification-v1/preflight-retry4/transformers-49147-gemma3n-fp16-gradient-clipping.collect-only.log",
+      "raw_log_sha256": "780b0678b1cf490bd7696aef75341fe2578ab421a54e762fc09510544c003edf",
+      "record": "results/mlsys-heldout-queue-qualification-v1/preflight-retry4/transformers-49147-gemma3n-fp16-gradient-clipping.json",
+      "record_sha256": "b3f9065aaacd4500b945847e3e9050d61fe4a08203643d6003178f804323683c",
+      "task_body_executed": false
+    },
+    {
+      "raw_log": "results/mlsys-heldout-queue-qualification-v1/preflight-retry4/mlxlm-1925-minicpm3-phixtral-left-padding.collect-only.log",
+      "raw_log_sha256": "128ea640666be54f3f52b800a2fc93f71a0eebc69934976965afd7cf408b1c22",
+      "record": "results/mlsys-heldout-queue-qualification-v1/preflight-retry4/mlxlm-1925-minicpm3-phixtral-left-padding.json",
+      "record_sha256": "eff7ef784f9189cd9a486eb6ce0471d15a6af73e5fd8d002925757dd9cb2673b",
+      "task_body_executed": false
+    }
+  ],
+  "protocol_id": "mlsys-heldout-queue-qualification-v1",
+  "purpose": "Certify two outside-original-pool CPU/MLX coding-task candidates from the existing 24-item manual queue using immutable baseline, exact merged fix, and target-only mutant controls. This is deterministic task/grader certification only: no candidate model or agent is run, no training occurs, and no held-out inference occurs.",
+  "schema_version": 1,
+  "source_queue": {
+    "path": "docs/mlsys-candidate-manual-qualification-queue.md",
+    "screen_path": "results/mlsys-task-candidate-survey-v1/screen-1/screen.json",
+    "screen_sha256": "1307e98b5fbd73826ed031a3042848895b9a3c1617db215cbbed9ee54e2edf86",
+    "selected_task_ids": [
+      "transformers-49147-gemma3n-fp16-gradient-clipping",
+      "mlxlm-1925-minicpm3-phixtral-left-padding"
+    ],
+    "sha256": "8f9b188cc20646fd53c488157e50cb6fdeac50dc8401e43174cb5945fca2d31f"
+  },
+  "status": "FROZEN_BEFORE_TASK_BODY_EXECUTION",
+  "tasks": [
+    {
+      "baseline_revision": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+      "baseline_target_sha256": "1bcd89c35459ed8795ffe8c38337cf63d58c1e645f5e02301b4f581187004b78",
+      "candidate_prompt_access": "not provided to a model or agent",
+      "candidate_prompt_path": "benchmarks/mlsys_heldout_qualification_v1/prompts/transformers-49147-gemma3n-fp16-gradient-clipping.md",
+      "candidate_prompt_sha256": "f3f607bbc65d9693cb8b949b5dba9d8a799d4388a8edad0f90226a14998a3eac",
+      "environment_build_recipe": {
+        "additional_test_dependency": "parameterized==0.9.0",
+        "base_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+        "dockerfile": "benchmarks/mlsys_heldout_qualification_v1/Dockerfile.transformers-candidate",
+        "dockerfile_sha256": "6fbc8d75508e0bfa7dda2c18c9b0e373452791fd35ad7e24506a7bf3cf26fe05",
+        "image_id": "sha256:cbafeb524d614d6c1b33c6549d3335bb717043e4c3572ada90ec42279c0862ee",
+        "image_size_bytes": 318481074,
+        "installed_package_inventory_matches_lock": true,
+        "platform": "linux/arm64",
+        "requirements_lock": "benchmarks/mlsys_heldout_qualification_v1/requirements-transformers-candidate.lock.txt",
+        "requirements_lock_sha256": "e5d342fd1ededf79ad870054c8cd46367cfc772b8b3f8746effbcd19b87ce49d"
+      },
+      "fixed_revision": "f35aeb9308836547b0eaed8b4cd334da16e2af10",
+      "fixed_target_sha256": "5154036a66b07a695129a510fcd741fd852d43e27e480673c5d84b1ee4ef910d",
+      "grader_archive_paths": [
+        "tests",
+        "utils"
+      ],
+      "grader_path": "tests/models/gemma3n/test_modeling_gemma3n.py",
+      "grader_revision": "f35aeb9308836547b0eaed8b4cd334da16e2af10",
+      "grader_selector": "test_from_pretrained_fp16_initializes_gradient_clipping",
+      "grader_sha256": "9abcea16b66e619de4648ebfd66c43259450a2c18708759cc34c698a8eaa752f",
+      "grader_source_alias": "Trusted grader imports the exact per-variant /subject/src read-only at /grader/src because the pinned upstream test helper resolves PATH_TO_TRANSFORMERS from the repository root. This alias exists only inside the trusted test container; no model or agent runs.",
+      "mutant": "On the fixed revision, replace gradient_clipping = min(self.config.gradient_clipping, torch.finfo(module.gradient_clipping.dtype).max) with gradient_clipping = self.config.gradient_clipping in _init_weights; no other file changes.",
+      "prior_exposure_adjudication": "Exact task-specific scan returned no match in audited VARE artifacts. Baseline revision is shared with Transformers #49412; only its distinct task prompt was model-exposed in retained receipts, and those receipts do not establish access to this Gemma3n prompt. External pretraining remains unknown.",
+      "repository": "huggingface/transformers",
+      "source_pr": "https://github.com/huggingface/transformers/pull/49147",
+      "source_pr_head": "35b8b112b46b5adc3296abf142e15874ee5d4971",
+      "source_repository_origin": "https://github.com/huggingface/transformers.git",
+      "split": "prospective_heldout_extension_v1",
+      "subject_archive_paths": [
+        "src"
+      ],
+      "target_path": "src/transformers/models/gemma3n/modeling_gemma3n.py",
+      "task_family": "gemma3n_fp16_gradient_clipping_checkpoint_load",
+      "task_id": "transformers-49147-gemma3n-fp16-gradient-clipping",
+      "task_source_change_allowlist": [
+        "src/transformers/models/gemma3n/modeling_gemma3n.py"
+      ],
+      "test_command": "python -m pytest -q tests/models/gemma3n/test_modeling_gemma3n.py -k test_from_pretrained_fp16_initializes_gradient_clipping --disable-warnings --maxfail=1 -p no:cacheprovider",
+      "test_node": "test_from_pretrained_fp16_initializes_gradient_clipping",
+      "upstream_fixed_commit_unrelated_change": "The PR merge also edits modular_gemma3n.py constructor syntax; it is outside this candidate task allowlist and not required by the selected regression.",
+      "variants": [
+        {
+          "expected": "selected test fails",
+          "name": "baseline",
+          "source_revision": "cb33194ad6152bd9fad6305378d92db385dd7b32"
+        },
+        {
+          "expected": "selected test passes",
+          "name": "known_fix",
+          "source_revision": "f35aeb9308836547b0eaed8b4cd334da16e2af10"
+        },
+        {
+          "expected": "selected test fails",
+          "name": "incorrect_mutant",
+          "source_revision": "f35aeb9308836547b0eaed8b4cd334da16e2af10"
+        }
+      ]
+    },
+    {
+      "baseline_revision": "a9bd8af5c02118882af735cef60705d2efce9fd0",
+      "baseline_target_sha256": {
+        "mlx_lm/models/minicpm3.py": "7cae4617eb0b6c86004c80767875d490f7166c6b2042fa8b895d2f99538f1e1a",
+        "mlx_lm/models/phixtral.py": "7adde1569363f127a4a3c259a83267d0c3e464093e495673ff1eab92ae9f9aaf"
+      },
+      "candidate_prompt_access": "not provided to a model or agent",
+      "candidate_prompt_path": "benchmarks/mlsys_heldout_qualification_v1/prompts/mlxlm-1925-minicpm3-phixtral-left-padding.md",
+      "candidate_prompt_sha256": "3370594e609fecd9a4dcf2466269939bee6db5a69110562b94834ab10956b027",
+      "environment_build_recipe": {
+        "base_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+        "dockerfile": "benchmarks/mlsys_heldout_qualification_v1/Dockerfile.mlx",
+        "dockerfile_sha256": "91a368b157f141c32fde916350c968c870bd4360af69a72d5af449f241ff3598",
+        "generated_version_files": {
+          "2af5f7ce8620115bf37fbbddf9817f083118df59": {
+            "file_sha256": "ba424ad067e938d29ef3254ae9c39fe9f188389aa4d41a023b2cbcfab415eb24",
+            "git_describe": "v0.32.0-1-g2af5f7ce",
+            "version": "0.32.1.dev1+g2af5f7ce"
+          },
+          "a9bd8af5c02118882af735cef60705d2efce9fd0": {
+            "file_sha256": "0fcc50589c218f41ae0d08e006ec50dc56a6a097df497b5da92d2ad3158a5dff",
+            "git_describe": "v0.32.0-0-ga9bd8af5",
+            "version": "0.32.1.dev0+ga9bd8af5"
+          }
+        },
+        "image_id": "sha256:2f907d158fa9aa08a2073ca580f85facf99e52e5cc792ac1b096f19f1cc56939",
+        "image_size_bytes": 135589386,
+        "installed_package_inventory_matches_lock": true,
+        "platform": "linux/arm64",
+        "requirements_lock": "benchmarks/mlsys_heldout_qualification_v1/requirements-mlx.lock.txt",
+        "requirements_lock_sha256": "fc2e0a20b6996e42b97bbfd9f9ff680ea597624980372677f72c88d388a57254"
+      },
+      "fixed_revision": "2af5f7ce8620115bf37fbbddf9817f083118df59",
+      "fixed_target_sha256": {
+        "mlx_lm/models/minicpm3.py": "430887681a39a2217e84d8001a7e4d5334e2b93c977d64f9d2f6c9e10c03f24a",
+        "mlx_lm/models/phixtral.py": "52486a072e0f01d8e5e0d590454a9519a248763d75f70ac6d6229e50c2165867"
+      },
+      "grader_archive_paths": [
+        "tests"
+      ],
+      "grader_path": "tests/test_models.py",
+      "grader_revision": "2af5f7ce8620115bf37fbbddf9817f083118df59",
+      "grader_selector": [
+        "TestModels.test_minicpm3",
+        "TestModels.test_phixtral"
+      ],
+      "grader_sha256": "ff8a0ede552e2b0327ce696cd1ed1a446aec41afc24db7453a0fe5702a6911ac",
+      "mutant": "On the fixed revision only, replace mask = create_attention_mask(h, cache[0]) with mask = create_attention_mask(h, cache) in mlx_lm/models/minicpm3.py; keep the Phixtral fix and all other files.",
+      "prior_exposure_adjudication": "Exact task-specific scan returned no match in audited VARE artifacts. The changed models and selected tests are distinct from #1921 Granite log probabilities, #1938 Phi3Small mask axis, and #1979 SSM right padding, but share a broad padding/masking theme; unique-family count requires review.",
+      "repository": "ml-explore/mlx-lm",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1925",
+      "source_pr_head": "a1e69fd7f1cb1eb95233c84cb10eb252c210c000",
+      "source_repository_origin": "https://github.com/ml-explore/mlx-lm.git",
+      "split": "prospective_heldout_extension_v1",
+      "subject_archive_paths": [
+        "mlx_lm"
+      ],
+      "target_paths": [
+        "mlx_lm/models/minicpm3.py",
+        "mlx_lm/models/phixtral.py"
+      ],
+      "task_family": "minicpm3_phixtral_left_padding_batch_cache",
+      "task_id": "mlxlm-1925-minicpm3-phixtral-left-padding",
+      "task_source_change_allowlist": [
+        "mlx_lm/models/minicpm3.py",
+        "mlx_lm/models/phixtral.py"
+      ],
+      "test_command": "python -m unittest tests.test_models.TestModels.test_minicpm3 tests.test_models.TestModels.test_phixtral",
+      "test_nodes": [
+        "test_minicpm3",
+        "test_phixtral"
+      ],
+      "variants": [
+        {
+          "expected": "both selected tests fail",
+          "name": "baseline",
+          "source_revision": "a9bd8af5c02118882af735cef60705d2efce9fd0"
+        },
+        {
+          "expected": "both selected tests pass",
+          "name": "known_fix",
+          "source_revision": "2af5f7ce8620115bf37fbbddf9817f083118df59"
+        },
+        {
+          "expected": "selected MiniCPM3 test fails",
+          "name": "incorrect_mutant",
+          "source_revision": "2af5f7ce8620115bf37fbbddf9817f083118df59"
+        }
+      ]
+    }
+  ]
+}

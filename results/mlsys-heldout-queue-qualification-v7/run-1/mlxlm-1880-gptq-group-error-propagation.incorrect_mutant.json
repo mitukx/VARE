@@ -1,0 +1,43 @@
+{
+  "allocation_sha256": "e1e3abec364cfe3c93a0b7519e820d799716e1094468aa6ceca998a13c4bb80e",
+  "cgroup_memory_max_bytes": 1610612736,
+  "cgroup_memory_peak_bytes": 68022272,
+  "command": [
+    "python",
+    "-m",
+    "unittest",
+    "-v",
+    "test_gptq.TestGPTQ.test_multiple_groups"
+  ],
+  "container_image_id": "sha256:2f907d158fa9aa08a2073ca580f85facf99e52e5cc792ac1b096f19f1cc56939",
+  "container_read_only": true,
+  "container_uid": "65534:65534",
+  "control_matches_expectation": true,
+  "cpu_limit": 1,
+  "exit_code": 1,
+  "expected_test_outcomes": {
+    "test_multiple_groups": "FAIL"
+  },
+  "grader_sha256": "f7fcf46389897ee7e5a6994fac7d32ab257e7240e316f8e5f2df870273ae582e",
+  "grader_tree_sha256": "3a1159219cdce6f16b13d18a067c27877fe8eb0ee42bfda0ebfcc0b1deaadb72",
+  "memory_limit_bytes": 1610612736,
+  "mutant_applied": true,
+  "network": "none",
+  "protocol_id": "mlsys-heldout-extension-v7",
+  "protocol_sha256": "ff0778b3554ff3af979762524cbc3434bec99fa0481969c8da53cb0965dcb06e",
+  "raw_log": "mlxlm-1880-gptq-group-error-propagation.incorrect_mutant.log",
+  "raw_log_sha256": "bfb9519571b1516c2b07e1dfd3982608977f0cab8e4560677b554dc11df2b222",
+  "runner_sha256": "a86865185c6f91d3d9f6244bc9a0165467a243cc9f60734f666787764493e1dd",
+  "source_and_grader_mounts_read_only": true,
+  "source_revision": "d4d38d96485c6546a920b3c8431e455c7aa60980",
+  "source_tree_sha256": "53d180a54590d2f1436dbb87a9564fccf7a323e1ee2a511d203b749117acd52c",
+  "target_sha256": "80d1653c97fa6ca55977296444d2236cbff777f358325f174bdfb8c24e93dd06",
+  "task_id": "mlxlm-1880-gptq-group-error-propagation",
+  "test_body_executed": true,
+  "test_outcomes": {
+    "test_multiple_groups": "FAIL"
+  },
+  "timeout": null,
+  "variant": "incorrect_mutant",
+  "wall_seconds": 1.16704
+}

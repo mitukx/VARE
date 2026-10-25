@@ -1,0 +1,36 @@
+{
+  "actual_test_case_suffixes": [
+    "test_float_quantized_is_rejected_before_quantization",
+    "test_mxfp4_format_preserves_mode",
+    "test_nvfp4_format_preserves_mode",
+    "test_packed_affine_format_remains_supported"
+  ],
+  "cgroup_memory_max_bytes": 1610612736,
+  "cgroup_memory_peak_bytes": 67858432,
+  "collected_test_ids": [
+    "test_mlx_1877_format_validation.CompressedTensorFormatContract.test_float_quantized_is_rejected_before_quantization",
+    "test_mlx_1877_format_validation.CompressedTensorFormatContract.test_mxfp4_format_preserves_mode",
+    "test_mlx_1877_format_validation.CompressedTensorFormatContract.test_nvfp4_format_preserves_mode",
+    "test_mlx_1877_format_validation.CompressedTensorFormatContract.test_packed_affine_format_remains_supported"
+  ],
+  "command": [
+    "python",
+    "-c",
+    "import unittest; suite=unittest.defaultTestLoader.loadTestsFromName('test_mlx_1877_format_validation'); flatten=lambda s: [x for t in s for x in (flatten(t) if isinstance(t, unittest.TestSuite) else [t])]; ids=sorted(t.id() for t in flatten(suite)); print('VARE_COLLECTED_IDS='+__import__('json').dumps(ids)); assert ids, 'no test cases collected'"
+  ],
+  "exit_code": 0,
+  "expected_test_case_suffixes": [
+    "test_float_quantized_is_rejected_before_quantization",
+    "test_nvfp4_format_preserves_mode",
+    "test_mxfp4_format_preserves_mode",
+    "test_packed_affine_format_remains_supported"
+  ],
+  "preflight_passed": true,
+  "protocol_sha256": "7592168f173bdf8507e3f9d92b865370fafb6666aa4c1f3c61ec0123dae38923",
+  "raw_log": "mlxlm-1877-compressed-tensors-format-validation.preflight.log",
+  "raw_log_sha256": "1f54eaace6a07f959fcd2aef5df82e96a0d5c199bdefaedd3f4fa7e61a9eaf65",
+  "task_id": "mlxlm-1877-compressed-tensors-format-validation",
+  "test_body_executed": false,
+  "timeout": null,
+  "wall_seconds": 1.190328
+}

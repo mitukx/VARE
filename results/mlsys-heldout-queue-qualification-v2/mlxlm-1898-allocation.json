@@ -1,0 +1,43 @@
+{
+  "allocation_id": "mlsys-heldout-extension-20261025-v2",
+  "candidate_model_or_agent_access": false,
+  "candidate_prompt_path": "benchmarks/mlsys_heldout_qualification_v1/prompts/mlxlm-1898-qwen3-rope-parameters.md",
+  "candidate_prompt_sha256": "cdaa226bbcbbfee9acbd2116d52111df92aafa59ee413b2f1339af3e3fd2d54d",
+  "candidate_selected_from": {
+    "base_sha": "28e9ccd9cb52d1d4a6f674b7914bae2de49d9aad",
+    "changed_paths": [
+      "mlx_lm/models/qwen3.py",
+      "tests/test_models.py"
+    ],
+    "coarse_screen": "excluded_from_shortlist",
+    "coarse_screen_reason": [
+      "title_flags_specialized_or_feature_scope_for_manual_review"
+    ],
+    "head_sha": "243f932b78ee9a42499abf06a60fa9673d5536cc",
+    "merge_commit_sha": "29040de9246bb7dd85bef9d8bcd4761a004d2efe",
+    "repository": "ml-explore/mlx-lm",
+    "test_paths": [
+      "tests/test_models.py"
+    ],
+    "title": "fix(qwen3): support rope_parameters config",
+    "upstream_pr": 1898
+  },
+  "evaluation_status": "PROSPECTIVE_CANDIDATE_NOT_YET_RUN",
+  "exposure_audit_implementation": "scripts/audit_mlx_1898_exposure_v1.py",
+  "exposure_audit_implementation_sha256": "1b02889b019996f333a7f418d385f0cda2f2b8e8d8ac6ba6a78fe58b615bcf6d",
+  "exposure_audit_path": "results/mlsys-heldout-queue-qualification-v2/mlxlm-1898-exposure-audit.json",
+  "exposure_audit_sha256": "97df612999c0ee0e4b48597231adabbf890504072ef6a94a8c73a836357f3013",
+  "exposure_scope": "147 retained Git refs, 5,796 model/agent artifact files across 14 local VARE worktrees, 0 task-specific matches; external pretraining remains unknown.",
+  "frozen_at_utc": "2026-10-25T09:13:57Z",
+  "model_prompts": 0,
+  "original_train_dev_heldout_membership_changed": false,
+  "parent_source_split": "results/mlsys-task-deep-qualification-v1/protocol.json",
+  "parent_source_split_sha256": "7ef9a28cedf2e1214a74456bb0c5209afc3e3e9f1681a430398e84710bcd26a4",
+  "proposed_split": "prospective_heldout_extension_v2",
+  "selection_rule": "Prospectively add an outside-original-pool CPU/MLX candidate when its source-level regression test uses a synthetic configuration and no remote model weights, its target patch is limited to Qwen3 configuration parsing, it has no frozen prior-task family exclusion, and exact task-specific VARE exposure scan is clean. No candidate model or agent has been given this task.",
+  "source_survey": "results/mlsys-task-candidate-survey-v1/screen-1/screen.json",
+  "source_survey_sha256": "1307e98b5fbd73826ed031a3042848895b9a3c1617db215cbbed9ee54e2edf86",
+  "task_family": "qwen3_model_rope_parameter_nesting",
+  "task_id": "mlxlm-1898-qwen3-rope-parameters",
+  "training_or_update": false
+}

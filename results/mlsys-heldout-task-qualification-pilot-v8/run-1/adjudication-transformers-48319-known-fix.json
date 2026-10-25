@@ -1,0 +1,13 @@
+{
+  "adjudication": "The source-only pytest command completed with 1 passed and 55 deselected. The independent collection-only preflight for this exact command established that its one selected node is test_resume_from_checkpoint_with_stale_best_model_checkpoint. Pytest quiet success output omits the node name, so the runner\u2019s extra requirement for the node string was an incorrect output-parser condition, not a test failure. This adjudication preserves and references the original raw output; it does not change the test, source, verifier, task selection, or acceptance criterion.",
+  "baseline_passed_selected_test": false,
+  "baseline_raw_log_sha256": "9df4f700c26f904332621016c3bc68dc663ac4ef75e36a7b643c9dec8329601c",
+  "collection_only_raw_log_sha256": "e8767c7527b4335e182d0030dfa8a3b65b500179959467f0bec5fcb52d944a68",
+  "incorrect_mutant_pending": true,
+  "known_fix_passed_selected_test": true,
+  "known_fix_raw_log_sha256": "1abcdce09234aa1c91e2b3c6e60a5c1c1d0636c11bcc8dd5767d9f6d03a7624e",
+  "protocol_id": "mlsys-heldout-task-qualification-pilot-v8",
+  "protocol_sha256": "65c8bd27bbbb6c5b427fdde9158294e2d18b4e48e763adc9e5d83d74dba59446",
+  "recorded_at_utc": "2026-10-25T08:44:03.293735+00:00",
+  "task_id": "transformers-48319-stale-best-checkpoint"
+}

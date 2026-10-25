@@ -1,0 +1,52 @@
+
+==================================== ERRORS ====================================
+________ ERROR collecting tests/models/gemma3n/test_modeling_gemma3n.py ________
+tests/models/gemma3n/test_modeling_gemma3n.py:52: in <module>
+    from ...causal_lm_tester import CausalLMModelTest, CausalLMModelTester
+tests/causal_lm_tester.py:41: in <module>
+    from .test_pipeline_mixin import PipelineTesterMixin
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+/usr/local/lib/python3.12/site-packages/_pytest/assertion/rewrite.py:186: in exec_module
+    exec(co, module.__dict__)
+tests/test_pipeline_mixin.py:59: in <module>
+    from .pipelines.test_pipelines_any_to_any import AnyToAnyPipelineTests
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+/usr/local/lib/python3.12/site-packages/_pytest/assertion/rewrite.py:186: in exec_module
+    exec(co, module.__dict__)
+tests/pipelines/test_pipelines_any_to_any.py:39: in <module>
+    from .test_pipelines_common import ANY
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+/usr/local/lib/python3.12/site-packages/_pytest/assertion/rewrite.py:186: in exec_module
+    exec(co, module.__dict__)
+tests/pipelines/test_pipelines_common.py:75: in <module>
+    transformers_module = direct_transformers_import(PATH_TO_TRANSFORMERS)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/subject/src/transformers/utils/import_utils.py:2845: in direct_transformers_import
+    spec.loader.exec_module(module)
+<frozen importlib._bootstrap_external>:995: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1132: in get_code
+    ???
+<frozen importlib._bootstrap_external>:1190: in get_data
+    ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/grader/src/transformers/__init__.py'
+=========================== short test summary info ============================
+ERROR tests/models/gemma3n/test_modeling_gemma3n.py - FileNotFoundError: [Err...
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+no tests collected, 1 error in 6.11s

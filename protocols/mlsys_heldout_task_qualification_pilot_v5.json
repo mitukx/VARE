@@ -1,0 +1,232 @@
+{
+  "claim_boundary": "Task-grader and environment qualification only; no coding-agent success, held-out inference, capability, learning, or generalization claim.",
+  "controls": {
+    "acceptance": "A task is certifiable only when baseline fails the selected assertion, exact known fix passes, and the prespecified target-only mutant fails. Missing test collection or environment/import failure is a blocked certificate.",
+    "candidate_uid": 65534,
+    "container_root": "read-only",
+    "cpu_limit": 1,
+    "maximum_variant_executions": 9,
+    "memory_limit_mib": 1536,
+    "network": "none",
+    "ordered_variants": [
+      "baseline",
+      "known_fix",
+      "incorrect_mutant"
+    ],
+    "resource_measurement": "Read cgroup-v2 memory.peak and memory.max from inside the container after each test; if unavailable, report memory as unknown, never zero.",
+    "run_output": "results/mlsys-heldout-task-qualification-pilot-v5/run-1",
+    "test_grader_mount": "Trusted, read-only /grader mount; task source only in read-only /subject; no model/agent is run.",
+    "timeout_seconds_per_variant": 120
+  },
+  "environment_amendment": {
+    "fixed_environment": "Use the previously pinned vare-transformers-cpu image built from the existing repository Dockerfile and its fixed requirements; do not change task sources, tests, selectors, mutants, or outcome gates.",
+    "observed_failure": "test collection stopped because huggingface_hub 0.36.2 lacked is_offline_mode; selected upstream task test body did not execute.",
+    "predecessor_failure_path": "results/mlsys-heldout-task-qualification-pilot-v4/run-1/transformers-48319-stale-best-checkpoint-baseline.log",
+    "predecessor_failure_sha256": "619fef5897612283677b0676ebc1025919c8bad09980089749278e428751e499",
+    "predecessor_protocol": "mlsys-heldout-task-qualification-pilot-v4"
+  },
+  "exposure_audit": {
+    "local_artifact_files_scanned": 5796,
+    "matches": 0,
+    "path": "results/mlsys-heldout-task-qualification-pilot-v4/exposure-audit.json",
+    "retained_git_refs_scanned": 147,
+    "scope": "Retained VARE refs and current local worktrees, limited to identified model/agent artifact paths; external pretraining and paths outside audited worktrees remain unknown.",
+    "sha256": "330d6bf8cb039687d224f9dc58354c28dd443e653f3c9b8aeebf404bd85aa796"
+  },
+  "frozen_at_utc": "2026-10-25T08:31:14Z",
+  "protocol_id": "mlsys-heldout-task-qualification-pilot-v5",
+  "purpose": "Prospective rerun of the same three deterministic held-out source/fix/mutant controls using the previously pinned Transformers task-qualification environment. The v4 baseline invocation stopped during test-module import; no task test was collected and no task assertion ran. The v4 failure record remains immutable.",
+  "selection": {
+    "candidate_model_access": false,
+    "selection_source": "User-directed continuation; frozen before new control outcomes",
+    "task_ids": [
+      "transformers-48319-stale-best-checkpoint",
+      "transformers-49208-resume-metrics",
+      "mlxlm-1921-padded-logprobs"
+    ],
+    "task_split_changes": false
+  },
+  "source_catalog": {
+    "allocation_path": "results/mlsys-task-deep-qualification-v1/protocol.json",
+    "allocation_sha256": "7ef9a28cedf2e1214a74456bb0c5209afc3e3e9f1681a430398e84710bcd26a4",
+    "path": "results/mlsys-task-deep-qualification-v1/qualification.json",
+    "sha256": "2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d",
+    "split_changes": false
+  },
+  "status": "FROZEN_BEFORE_TASK_CONTROL_EXECUTION",
+  "stop_criteria": [
+    "Any source, target, or grader hash mismatch.",
+    "Any positive task-exposure match pending adjudication.",
+    "Any task needs network access, model weights, GPU, or relaxation of its frozen test contract.",
+    "Any container exceeds the fixed CPU, memory, or timeout bound.",
+    "A baseline or mutant passes, or the exact known fix fails."
+  ],
+  "tasks": [
+    {
+      "baseline_revision": "6ec0f83563f56335d4227354614459a01d76ba0d",
+      "baseline_target_sha256": "de9b74abdacb86b828e4df06de2679f9a2d9e970d1b8bc758e498f3845f9faa0",
+      "candidate_prompt": "NOT_MATERIALIZED; no candidate model or agent is run in this certification protocol.",
+      "environment_build_recipe": {
+        "base_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+        "dockerfile": "benchmarks/mlsys_repo_eval_v2/transformers_45852/Dockerfile",
+        "dockerfile_sha256": "71200d584cff1d58e6abbf84d51491ff3a2ab8da3f3120370fac2083c8e31e31",
+        "locked_huggingface_hub": "1.33.0",
+        "preflight": "Pinned offline image reports huggingface_hub 1.33.0 and exports is_offline_mode.",
+        "requirements": "benchmarks/mlsys_repo_eval_v2/transformers_45852/requirements.txt",
+        "requirements_sha256": "1c4a93c82e47e7c35e5dd681281e7e07498bec609abb298f678f581b3b641054"
+      },
+      "fixed_revision": "36deb0b53ed0863f4b4dfdea23dcaec7f3df3701",
+      "fixed_target_sha256": "93f0fab15633c0e69acee8af8b73e1a98c985f4741860bb78eb2b29bfd5d92ad",
+      "grader_archive_paths": [
+        "tests"
+      ],
+      "grader_path": "tests/trainer/test_trainer_checkpointing.py",
+      "grader_revision": "36deb0b53ed0863f4b4dfdea23dcaec7f3df3701",
+      "grader_selector": "stale_best_model_checkpoint",
+      "grader_sha256": "f5e0338c53ceebf54ec88bda9d3686c0fd64c2169f9286ab28122bba711d6f8a",
+      "image": "localhost:5000/vare/transformers-cpu@sha256:5461f5ec9d3022db72d49cf5bcd140c99521eba5b37747257b58a576d4e12e1f",
+      "repository": "huggingface/transformers",
+      "source_level_reproduction_log_sha256": {
+        "raw/48319-base.log": "722ebdf48b4fb9eacf787f5b4fa3fb711725ac6b0f3d429b07dc50a2e7da7fad",
+        "raw/48319-merge.log": "46e553cd97e8632d74f7daa1d8c769a96c6e8f682ffee80e942172b0c53ab65a"
+      },
+      "source_pr": "https://github.com/huggingface/transformers/pull/48319",
+      "source_repository_origin": "https://github.com/huggingface/transformers.git",
+      "split": "heldout",
+      "subject_archive_paths": [
+        "src"
+      ],
+      "target_path": "src/transformers/trainer.py",
+      "task_family": "stale_best_checkpoint_recovery",
+      "task_id": "transformers-48319-stale-best-checkpoint",
+      "test_command": "pytest -q tests/trainer/test_trainer_checkpointing.py -k stale_best_model_checkpoint --disable-warnings --maxfail=1 -p no:cacheprovider",
+      "variants": [
+        {
+          "expected_gate": "task test fails",
+          "name": "baseline",
+          "source_revision": "6ec0f83563f56335d4227354614459a01d76ba0d"
+        },
+        {
+          "expected_gate": "task test passes",
+          "name": "known_fix",
+          "source_revision": "36deb0b53ed0863f4b4dfdea23dcaec7f3df3701"
+        },
+        {
+          "expected_gate": "task test fails",
+          "mutant": "Invert the stale-best-path directory guard: not os.path.isdir(path) -> os.path.isdir(path).",
+          "name": "incorrect_mutant",
+          "source_revision": "36deb0b53ed0863f4b4dfdea23dcaec7f3df3701"
+        }
+      ]
+    },
+    {
+      "baseline_revision": "dbac24c0f04a39d68cc24d2fa2abecf196713ae2",
+      "baseline_target_sha256": "d64bcb33d318cc161935c5d86cfca9d489e4802e8deae7aa2e1cbdd348fb8233",
+      "candidate_prompt": "NOT_MATERIALIZED; no candidate model or agent is run in this certification protocol.",
+      "environment_build_recipe": {
+        "base_image": "python@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258",
+        "dockerfile": "benchmarks/mlsys_repo_eval_v2/transformers_45852/Dockerfile",
+        "dockerfile_sha256": "71200d584cff1d58e6abbf84d51491ff3a2ab8da3f3120370fac2083c8e31e31",
+        "locked_huggingface_hub": "1.33.0",
+        "preflight": "Pinned offline image reports huggingface_hub 1.33.0 and exports is_offline_mode.",
+        "requirements": "benchmarks/mlsys_repo_eval_v2/transformers_45852/requirements.txt",
+        "requirements_sha256": "1c4a93c82e47e7c35e5dd681281e7e07498bec609abb298f678f581b3b641054"
+      },
+      "fixed_revision": "7fb5bcd1d4b8a5c225a2c33429b2e9e023dd61ae",
+      "fixed_target_sha256": "c4b0e18f0b9a4c54b18ff286b23a99e9f29950bb94e2d0c7ba645dac1600b95c",
+      "grader_archive_paths": [
+        "tests"
+      ],
+      "grader_path": "tests/trainer/test_trainer_checkpointing.py",
+      "grader_revision": "7fb5bcd1d4b8a5c225a2c33429b2e9e023dd61ae",
+      "grader_selector": "resume_training_with_checkpoint",
+      "grader_sha256": "85990d7e985525797ac7ed14881e8319e9dddbee5dfeefe00fab9bb89f1e84b2",
+      "image": "localhost:5000/vare/transformers-cpu@sha256:5461f5ec9d3022db72d49cf5bcd140c99521eba5b37747257b58a576d4e12e1f",
+      "repository": "huggingface/transformers",
+      "source_level_reproduction_log_sha256": {
+        "raw/49208-base.log": "b3f55ba4d59eb8b9b5a0a0ea4e45261689e1eb732fd9df93f0b4cb5bc189b79f",
+        "raw/49208-merge.log": "ac55343de363edc2ee6cb14cb326ebdef185fcdb5d24d6a8c47f6d51c189d8f1"
+      },
+      "source_pr": "https://github.com/huggingface/transformers/pull/49208",
+      "source_repository_origin": "https://github.com/huggingface/transformers.git",
+      "split": "heldout",
+      "subject_archive_paths": [
+        "src"
+      ],
+      "target_path": "src/transformers/trainer.py",
+      "task_family": "resume_training_metrics",
+      "task_id": "transformers-49208-resume-metrics",
+      "test_command": "pytest -q tests/trainer/test_trainer_checkpointing.py -k resume_training_with_checkpoint --disable-warnings --maxfail=1 -p no:cacheprovider",
+      "variants": [
+        {
+          "expected_gate": "task test fails",
+          "name": "baseline",
+          "source_revision": "dbac24c0f04a39d68cc24d2fa2abecf196713ae2"
+        },
+        {
+          "expected_gate": "task test passes",
+          "name": "known_fix",
+          "source_revision": "7fb5bcd1d4b8a5c225a2c33429b2e9e023dd61ae"
+        },
+        {
+          "expected_gate": "task test fails",
+          "mutant": "Replace num_steps_trained = state.global_step - _initial_global_step with num_steps_trained = state.global_step.",
+          "name": "incorrect_mutant",
+          "source_revision": "7fb5bcd1d4b8a5c225a2c33429b2e9e023dd61ae"
+        }
+      ]
+    },
+    {
+      "baseline_revision": "05b7aed425453057c511ec0d5ec9732c325b3444",
+      "baseline_target_sha256": "6af68e8476fd5a7144fca175a8235427caf8681e03f3210772f9c58f6e98d4a6",
+      "candidate_prompt": "NOT_MATERIALIZED; no candidate model or agent is run in this certification protocol.",
+      "environment_build_recipe": {
+        "image_rebuild": "UNKNOWN_NOT_RECONSTRUCTED_IN_THIS_CYCLE",
+        "image_sha256": "a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7"
+      },
+      "fixed_revision": "9d8abd94d63a9b3c72e7e9b146e43af1005368fa",
+      "fixed_target_sha256": "e98e1821acd904d12396116fdcf80bc96ada3aef2ff5eeed2bb8b6fed513c5f8",
+      "grader_archive_paths": [
+        "tests"
+      ],
+      "grader_path": "tests/test_models.py",
+      "grader_revision": "9d8abd94d63a9b3c72e7e9b146e43af1005368fa",
+      "grader_selector": "granitemoehybrid_padded_batch",
+      "grader_sha256": "5e172da806e5934365d2c91656f472cbc4aceeb36b8d607f6d495219cbd25f33",
+      "image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+      "repository": "ml-explore/mlx-lm",
+      "source_level_reproduction_log_sha256": {
+        "raw/mlx-lm-1921-base.log": "7cf925d20a3784e4e027e7a7e60e7610e3a3a786f325ee24cfc6b9b0eb123367",
+        "raw/mlx-lm-1921-merge.log": "419ab903b698318e456f43ff3b52032e51789435bca01f1300443072139fc7fe"
+      },
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1921",
+      "source_repository_origin": "https://github.com/ml-explore/mlx-lm.git",
+      "split": "heldout",
+      "subject_archive_paths": [
+        "mlx_lm"
+      ],
+      "target_path": "mlx_lm/models/granitemoehybrid.py",
+      "task_family": "padded_batch_logprob_consistency",
+      "task_id": "mlxlm-1921-padded-logprobs",
+      "test_command": "unittest tests.test_models.TestModels.test_granitemoehybrid_padded_batch",
+      "variants": [
+        {
+          "expected_gate": "task test fails",
+          "name": "baseline",
+          "source_revision": "05b7aed425453057c511ec0d5ec9732c325b3444"
+        },
+        {
+          "expected_gate": "task test passes",
+          "name": "known_fix",
+          "source_revision": "9d8abd94d63a9b3c72e7e9b146e43af1005368fa"
+        },
+        {
+          "expected_gate": "task test fails",
+          "mutant": "Replace lengths = cache.lengths with lengths = None.",
+          "name": "incorrect_mutant",
+          "source_revision": "9d8abd94d63a9b3c72e7e9b146e43af1005368fa"
+        }
+      ]
+    }
+  ]
+}

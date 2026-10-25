@@ -1,0 +1,144 @@
+{
+  "allocation_sha256": "e1e3abec364cfe3c93a0b7519e820d799716e1094468aa6ceca998a13c4bb80e",
+  "candidate_model_or_agent_runs": 0,
+  "container_image_inspect": "sha256:2f907d158fa9aa08a2073ca580f85facf99e52e5cc792ac1b096f19f1cc56939 linux/arm64 135589386",
+  "heldout_inference": false,
+  "preflight_records": [
+    {
+      "actual_test_case_suffixes": [
+        "test_multiple_groups"
+      ],
+      "cgroup_memory_max_bytes": 1610612736,
+      "cgroup_memory_peak_bytes": 67915776,
+      "collected_test_ids": [
+        "test_gptq.TestGPTQ.test_multiple_groups"
+      ],
+      "command": [
+        "python",
+        "-c",
+        "import unittest; suite=unittest.defaultTestLoader.loadTestsFromName('test_gptq.TestGPTQ.test_multiple_groups'); flatten=lambda s: [x for t in s for x in (flatten(t) if isinstance(t, unittest.TestSuite) else [t])]; ids=sorted(t.id() for t in flatten(suite)); print('VARE_COLLECTED_IDS='+__import__('json').dumps(ids)); assert ids, 'no test cases collected'"
+      ],
+      "exit_code": 0,
+      "expected_test_case_suffixes": [
+        "test_multiple_groups"
+      ],
+      "preflight_passed": true,
+      "protocol_sha256": "ff0778b3554ff3af979762524cbc3434bec99fa0481969c8da53cb0965dcb06e",
+      "raw_log": "mlxlm-1880-gptq-group-error-propagation.preflight.log",
+      "raw_log_sha256": "1881c3d166dfaba0310e64d78ff25d02a02f4fcd101601178661f4d46e10bb13",
+      "task_id": "mlxlm-1880-gptq-group-error-propagation",
+      "test_body_executed": false,
+      "timeout": null,
+      "wall_seconds": 1.183547
+    }
+  ],
+  "protocol_id": "mlsys-heldout-extension-v7",
+  "protocol_sha256": "ff0778b3554ff3af979762524cbc3434bec99fa0481969c8da53cb0965dcb06e",
+  "records": [
+    {
+      "allocation_sha256": "e1e3abec364cfe3c93a0b7519e820d799716e1094468aa6ceca998a13c4bb80e",
+      "cgroup_memory_max_bytes": 1610612736,
+      "cgroup_memory_peak_bytes": 68063232,
+      "command": [
+        "python",
+        "-m",
+        "unittest",
+        "-v",
+        "test_gptq.TestGPTQ.test_multiple_groups"
+      ],
+      "container_image_id": "sha256:2f907d158fa9aa08a2073ca580f85facf99e52e5cc792ac1b096f19f1cc56939",
+      "container_read_only": true,
+      "container_uid": "65534:65534",
+      "control_matches_expectation": true,
+      "cpu_limit": 1,
+      "exit_code": 0,
+      "expected_test_outcomes": {
+        "test_multiple_groups": "ok"
+      },
+      "grader_sha256": "f7fcf46389897ee7e5a6994fac7d32ab257e7240e316f8e5f2df870273ae582e",
+      "grader_tree_sha256": "3a1159219cdce6f16b13d18a067c27877fe8eb0ee42bfda0ebfcc0b1deaadb72",
+      "memory_limit_bytes": 1610612736,
+      "mutant_applied": false,
+      "network": "none",
+      "protocol_id": "mlsys-heldout-extension-v7",
+      "protocol_sha256": "ff0778b3554ff3af979762524cbc3434bec99fa0481969c8da53cb0965dcb06e",
+      "raw_log": "mlxlm-1880-gptq-group-error-propagation.known_fix.log",
+      "raw_log_sha256": "c4b7dce1b0877fba77efe06a7cfebd35d223a7a5ad1cbc1370cb04a9cafb8269",
+      "record_path": "results/mlsys-heldout-queue-qualification-v7/run-1/mlxlm-1880-gptq-group-error-propagation.known_fix.json",
+      "record_sha256": "d82e054591844301f8a32a8a6befe05a1339288b827d593c1db2b6a1265ca7fd",
+      "runner_sha256": "a86865185c6f91d3d9f6244bc9a0165467a243cc9f60734f666787764493e1dd",
+      "source_and_grader_mounts_read_only": true,
+      "source_revision": "d4d38d96485c6546a920b3c8431e455c7aa60980",
+      "source_tree_sha256": "d3c52414b1d1c679dccbe98934f8c1720f36787d39f27023a45a94a1fddc5f2b",
+      "target_sha256": "bd4c08453a24fe41fea8ce5885f433b718628c16c4e7a0596900fc72553daf16",
+      "task_id": "mlxlm-1880-gptq-group-error-propagation",
+      "test_body_executed": true,
+      "test_outcomes": {
+        "test_multiple_groups": "ok"
+      },
+      "timeout": null,
+      "variant": "known_fix",
+      "wall_seconds": 1.22406
+    },
+    {
+      "allocation_sha256": "e1e3abec364cfe3c93a0b7519e820d799716e1094468aa6ceca998a13c4bb80e",
+      "cgroup_memory_max_bytes": 1610612736,
+      "cgroup_memory_peak_bytes": 68022272,
+      "command": [
+        "python",
+        "-m",
+        "unittest",
+        "-v",
+        "test_gptq.TestGPTQ.test_multiple_groups"
+      ],
+      "container_image_id": "sha256:2f907d158fa9aa08a2073ca580f85facf99e52e5cc792ac1b096f19f1cc56939",
+      "container_read_only": true,
+      "container_uid": "65534:65534",
+      "control_matches_expectation": true,
+      "cpu_limit": 1,
+      "exit_code": 1,
+      "expected_test_outcomes": {
+        "test_multiple_groups": "FAIL"
+      },
+      "grader_sha256": "f7fcf46389897ee7e5a6994fac7d32ab257e7240e316f8e5f2df870273ae582e",
+      "grader_tree_sha256": "3a1159219cdce6f16b13d18a067c27877fe8eb0ee42bfda0ebfcc0b1deaadb72",
+      "memory_limit_bytes": 1610612736,
+      "mutant_applied": true,
+      "network": "none",
+      "protocol_id": "mlsys-heldout-extension-v7",
+      "protocol_sha256": "ff0778b3554ff3af979762524cbc3434bec99fa0481969c8da53cb0965dcb06e",
+      "raw_log": "mlxlm-1880-gptq-group-error-propagation.incorrect_mutant.log",
+      "raw_log_sha256": "bfb9519571b1516c2b07e1dfd3982608977f0cab8e4560677b554dc11df2b222",
+      "record_path": "results/mlsys-heldout-queue-qualification-v7/run-1/mlxlm-1880-gptq-group-error-propagation.incorrect_mutant.json",
+      "record_sha256": "3709cc38fed5c0c8a2b6f09394321146d4c9ffc0aa1816845ec0ed8fe293cfbc",
+      "runner_sha256": "a86865185c6f91d3d9f6244bc9a0165467a243cc9f60734f666787764493e1dd",
+      "source_and_grader_mounts_read_only": true,
+      "source_revision": "d4d38d96485c6546a920b3c8431e455c7aa60980",
+      "source_tree_sha256": "53d180a54590d2f1436dbb87a9564fccf7a323e1ee2a511d203b749117acd52c",
+      "target_sha256": "80d1653c97fa6ca55977296444d2236cbff777f358325f174bdfb8c24e93dd06",
+      "task_id": "mlxlm-1880-gptq-group-error-propagation",
+      "test_body_executed": true,
+      "test_outcomes": {
+        "test_multiple_groups": "FAIL"
+      },
+      "timeout": null,
+      "variant": "incorrect_mutant",
+      "wall_seconds": 1.16704
+    }
+  ],
+  "retained_baseline_evidence": {
+    "adjudication_path": "results/mlsys-heldout-queue-qualification-v6/baseline-adjudication.json",
+    "adjudication_sha256": "43919c001fa2248bf274837190687e6227834e42c8b07ad7d2bc5e08efdecb07",
+    "outcome": "EXPECTED_BASELINE_FAILURE",
+    "raw_log_path": "results/mlsys-heldout-queue-qualification-v6/run-1/mlxlm-1880-gptq-group-error-propagation.baseline.log",
+    "raw_log_sha256": "f5dd8dc1decb72217f3b2ef20b7824219285aa1169c508cefac4ad703317f53c",
+    "record_path": "results/mlsys-heldout-queue-qualification-v6/run-1/mlxlm-1880-gptq-group-error-propagation.baseline.json",
+    "record_sha256": "ba0796f9db47f15ef03acef7dbf4f558ee1cfe355df53c056c4f9b86b9916d3c",
+    "rerun_performed": false
+  },
+  "runner_sha256": "a86865185c6f91d3d9f6244bc9a0165467a243cc9f60734f666787764493e1dd",
+  "task_decisions": {
+    "mlxlm-1880-gptq-group-error-propagation": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE"
+  },
+  "training": false
+}

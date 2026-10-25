@@ -1,0 +1,24 @@
+{
+  "cgroup_memory_max_bytes": 1610612736,
+  "cgroup_memory_peak_bytes": 67866624,
+  "collected_marker_present": true,
+  "command": [
+    "python",
+    "-c",
+    "import unittest; s=unittest.defaultTestLoader.loadTestsFromName('test_mlx_1877_format_validation'); ids=[str(x) for x in s]; print('VARE_COLLECTED='+repr(ids)); assert set(x.rsplit('.',1)[-1].split(' ')[0] for x in ids)==set(['test_float_quantized_is_rejected_before_quantization', 'test_nvfp4_format_preserves_mode', 'test_mxfp4_format_preserves_mode', 'test_packed_affine_format_remains_supported'])"
+  ],
+  "exit_code": 1,
+  "protocol_sha256": "50cc5ac5931d45960179fd268ba943b8674b4bb5ad8ca2cf1d84c2d38e468b00",
+  "raw_log": "mlxlm-1877-compressed-tensors-format-validation.preflight.log",
+  "raw_log_sha256": "197ca53ab4e5d70399b81d1ad54e7472e681174110ddeafeaa6f93a9c858bdc4",
+  "selected_cases_collected": [
+    "test_float_quantized_is_rejected_before_quantization",
+    "test_nvfp4_format_preserves_mode",
+    "test_mxfp4_format_preserves_mode",
+    "test_packed_affine_format_remains_supported"
+  ],
+  "task_id": "mlxlm-1877-compressed-tensors-format-validation",
+  "test_body_executed": false,
+  "timeout": null,
+  "wall_seconds": 1.172404
+}

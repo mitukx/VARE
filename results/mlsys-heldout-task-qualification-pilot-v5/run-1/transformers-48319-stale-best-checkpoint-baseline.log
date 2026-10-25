@@ -1,0 +1,31 @@
+
+==================================== ERRORS ====================================
+_________ ERROR collecting tests/trainer/test_trainer_checkpointing.py _________
+ImportError while importing test module '/grader/tests/trainer/test_trainer_checkpointing.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/local/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/trainer/test_trainer_checkpointing.py:42: in <module>
+    from transformers import (
+/subject/src/transformers/__init__.py:30: in <module>
+    from . import dependency_versions_check
+/subject/src/transformers/dependency_versions_check.py:56: in <module>
+    require_version_core(deps[pkg])
+/subject/src/transformers/utils/versions.py:116: in require_version_core
+    return require_version(requirement, hint)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/subject/src/transformers/utils/versions.py:110: in require_version
+    _compare_versions(op, got_ver, want_ver, requirement, pkg, hint)
+/subject/src/transformers/utils/versions.py:43: in _compare_versions
+    raise ImportError(
+E   ImportError: tokenizers>=0.23.1,<0.24.0 is required for a normal functioning of this module, but found tokenizers==0.22.2.
+E   Try: `pip install transformers -U` or `pip install -e '.[dev]'` if you're working with git main
+=========================== short test summary info ============================
+ERROR tests/trainer/test_trainer_checkpointing.py
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 1.27s
+
+VARE_CGROUP_V2_MEMORY peak=196288512 max=1610612736

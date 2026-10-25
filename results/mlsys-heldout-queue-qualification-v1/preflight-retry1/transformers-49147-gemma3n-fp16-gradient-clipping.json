@@ -1,0 +1,30 @@
+{
+  "base_revision": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+  "command": [
+    "python",
+    "-m",
+    "pytest",
+    "--collect-only",
+    "-q",
+    "tests/models/gemma3n/test_modeling_gemma3n.py",
+    "-k",
+    "test_from_pretrained_fp16_initializes_gradient_clipping",
+    "--disable-warnings",
+    "--maxfail=1",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "fixed_revision": "f35aeb9308836547b0eaed8b4cd334da16e2af10",
+  "generated_environment_overlay": null,
+  "grader_revision": "f35aeb9308836547b0eaed8b4cd334da16e2af10",
+  "image_id": "sha256:cbafeb524d614d6c1b33c6549d3335bb717043e4c3572ada90ec42279c0862ee",
+  "passed": false,
+  "phase": "selected-test-collection-only",
+  "raw_log": "transformers-49147-gemma3n-fp16-gradient-clipping.collect-only.log",
+  "raw_log_sha256": "943f7cfe7a520d8b8330be75b315f6d694f538845aba72f99c6c90b179152fcd",
+  "return_code": 2,
+  "selected_node_observed": false,
+  "task_id": "transformers-49147-gemma3n-fp16-gradient-clipping",
+  "task_test_body_executed": false,
+  "wall_seconds": 7.607800167
+}

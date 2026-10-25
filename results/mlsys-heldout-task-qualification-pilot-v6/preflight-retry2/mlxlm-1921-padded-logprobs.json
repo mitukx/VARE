@@ -1,0 +1,17 @@
+{
+  "command": [
+    "python",
+    "-c",
+    "import unittest, tests.test_models as m; names=unittest.defaultTestLoader.getTestCaseNames(m.TestModels); name='test_granitemoehybrid_padded_batch'; assert name in names, names; suite=unittest.defaultTestLoader.loadTestsFromName('TestModels.'+name, m); assert suite.countTestCases()==1; print('COLLECTED TestModels.'+name)"
+  ],
+  "image_id": "sha256:2f907d158fa9aa08a2073ca580f85facf99e52e5cc792ac1b096f19f1cc56939",
+  "phase": "selected-test-collection-only",
+  "preflight_passed": false,
+  "raw_log": "mlxlm-1921-padded-logprobs.collect-only.log",
+  "raw_log_sha256": "bd863ae083a7342c092aa8349de349fad44a467c5a5b25d342d269ec54821e85",
+  "return_code": 1,
+  "selected_node_observed": false,
+  "task_id": "mlxlm-1921-padded-logprobs",
+  "task_test_body_executed": false,
+  "wall_seconds": 0.3915114580000001
+}

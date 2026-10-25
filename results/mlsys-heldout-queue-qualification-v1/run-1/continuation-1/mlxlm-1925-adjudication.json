@@ -1,0 +1,55 @@
+{
+  "adjudication_id": "mlxlm-1925-selected-test-execution-adjudication-v1",
+  "candidate_model_or_agent_access": false,
+  "finding": "All three selected variants executed both unittest methods. The continuation record parser incorrectly treated failing unittest output without an OK trailer as if two tests had not run. Raw logs show Ran 2 tests in baseline, known_fix, and incorrect_mutant. This is an interpretation correction based only on retained raw output; no source, test, protocol, or expected-control criterion changed.",
+  "frozen_candidate_set_preserved": true,
+  "original_15_task_allocation_changed": false,
+  "protocol_id": "mlsys-heldout-queue-qualification-v1",
+  "protocol_sha256": "f6f7d9615252bdcff38aa4c1cb4dd95c4ff5ba1757c4a5eb168ed034429ceaad",
+  "resources": {
+    "cgroup_memory_peak_bytes": {
+      "baseline": 125505536,
+      "incorrect_mutant": 69296128,
+      "known_fix": 69906432
+    },
+    "cpu_limit": 1,
+    "memory_limit_bytes": 1610612736,
+    "network": "none",
+    "wall_seconds": {
+      "baseline": 1.423694,
+      "incorrect_mutant": 1.180307,
+      "known_fix": 1.192302
+    }
+  },
+  "scope_limit": "Task/grader certification only, finite VARE evidence scope. External pretraining remains unknown. No model or agent inference, heldout model evaluation, or training.",
+  "status": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE",
+  "task_family_relation": {
+    "basis": "The root cause is using the per-layer cache sequence instead of cache[0] when constructing the causal attention mask in MiniCPM3 and Phixtral; the selected oracle compares batched left-padded model outputs to independent single-sequence outputs. Existing certified #1938 changes Phi3Small logit masking along a different model/file path, while #1979 changes SSM state masking for right padding. They share a broad mask/padding topic but have distinct target code, affected model/cache representation, and oracle condition.",
+    "conservative_note": "Counted as one additional independent family under root-cause and target-oracle definition; do not claim independence from all padding-related work.",
+    "decision": "distinct_task_family_with_related_padding_semantics"
+  },
+  "task_id": "mlxlm-1925-minicpm3-phixtral-left-padding",
+  "variant_results": {
+    "baseline": {
+      "expected": "both fail",
+      "log": "results/mlsys-heldout-queue-qualification-v1/run-1/continuation-1/mlxlm-1925-minicpm3-phixtral-left-padding.baseline.log",
+      "log_sha256": "49d674ec3526daa9ea00a79e1d3fe86701c74294b4ce2d35ebc743c4cdfa7a71",
+      "observed": "both fail",
+      "ran_two_tests": true
+    },
+    "incorrect_mutant": {
+      "expected": "MiniCPM3 fails; Phixtral passes",
+      "log": "results/mlsys-heldout-queue-qualification-v1/run-1/continuation-1/mlxlm-1925-minicpm3-phixtral-left-padding.incorrect_mutant.log",
+      "log_sha256": "67b27e63b36df00931659d827b415d382228f7653e7acb2d40b837bb45ae1446",
+      "observed": "MiniCPM3 fails; Phixtral passes",
+      "ran_two_tests": true
+    },
+    "known_fix": {
+      "expected": "both pass",
+      "log": "results/mlsys-heldout-queue-qualification-v1/run-1/continuation-1/mlxlm-1925-minicpm3-phixtral-left-padding.known_fix.log",
+      "log_sha256": "9b3418139f39b2e2b1e95eaf623ee5300484d552a5d992565359038e31841b7a",
+      "observed": "both pass",
+      "ran_two_tests": true
+    }
+  }
+}

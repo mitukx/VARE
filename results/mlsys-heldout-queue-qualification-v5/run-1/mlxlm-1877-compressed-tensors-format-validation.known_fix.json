@@ -1,0 +1,49 @@
+{
+  "allocation_sha256": "6568c021f343331fa8421ce6b7cc27891b446de3491a7518862e23b98a825942",
+  "cgroup_memory_max_bytes": 1610612736,
+  "cgroup_memory_peak_bytes": 67817472,
+  "command": [
+    "python",
+    "-m",
+    "unittest",
+    "-v",
+    "test_mlx_1877_format_validation"
+  ],
+  "container_image_id": "sha256:2f907d158fa9aa08a2073ca580f85facf99e52e5cc792ac1b096f19f1cc56939",
+  "container_read_only": true,
+  "container_uid": "65534:65534",
+  "control_matches_expectation": true,
+  "cpu_limit": 1,
+  "exit_code": 0,
+  "expected_test_outcomes": {
+    "test_float_quantized_is_rejected_before_quantization": "ok",
+    "test_mxfp4_format_preserves_mode": "ok",
+    "test_nvfp4_format_preserves_mode": "ok",
+    "test_packed_affine_format_remains_supported": "ok"
+  },
+  "grader_sha256": "148717b4a06935ccd1c0dc4f159df31dd6c330476ffbb49c93803ac5542f0b3a",
+  "grader_tree_sha256": "c81abf4509270cb7b8ae655d519e5549288cb381cdf977113c928f0123646692",
+  "memory_limit_bytes": 1610612736,
+  "mutant_applied": false,
+  "network": "none",
+  "protocol_id": "mlsys-heldout-extension-v5",
+  "protocol_sha256": "5d638dcd84d3f2a08df796b01f24aeac80a368ce704036212bd304b2a97cfb94",
+  "raw_log": "mlxlm-1877-compressed-tensors-format-validation.known_fix.log",
+  "raw_log_sha256": "4bd50cf424e4aeb85cc519c9f5408ea0f03ddf0155f4f062c7145b78141b0b83",
+  "runner_sha256": "687315893389ae357db30c0ad770b3d46e0646d927c1e63d312842e7f9be74bb",
+  "source_and_grader_mounts_read_only": true,
+  "source_revision": "796b466f305c814080ddab53546ee7432f20b88a",
+  "source_tree_sha256": "06fee232e42217b46f9bba268f7328c9f057e457ad05ca056dc6ec21c1869e8f",
+  "target_sha256": "d0e6867e3695600adaf975c0fa7e58b96a1c629d1aa12cb5d09e2f8f2aa133c9",
+  "task_id": "mlxlm-1877-compressed-tensors-format-validation",
+  "test_body_executed": true,
+  "test_outcomes": {
+    "test_float_quantized_is_rejected_before_quantization": "ok",
+    "test_mxfp4_format_preserves_mode": "ok",
+    "test_nvfp4_format_preserves_mode": "ok",
+    "test_packed_affine_format_remains_supported": "ok"
+  },
+  "timeout": null,
+  "variant": "known_fix",
+  "wall_seconds": 1.117334
+}

@@ -1,0 +1,43 @@
+{
+  "artifact_paths_scanned_across_refs": 0,
+  "audit_id": "mlsys-heldout-queue-exposure-v1",
+  "candidate_model_prompts": 0,
+  "candidate_model_rollouts_started": false,
+  "candidate_rollout_or_training_matches": [],
+  "completed_at_utc": "2026-10-25T08:50:21.335567+00:00",
+  "decision": "CLEAN_WITHIN_AUDITED_VARE_SCOPE",
+  "external_pretraining_corpus": "UNKNOWN_NOT_AUDITED",
+  "implementation_sha256": "e59fa24ecc7e5d52d49f81648b9df5202f372118642df5f43d3928e5c1e63c1d",
+  "local_artifact_files_scanned": 5796,
+  "local_large_files_skipped": [],
+  "local_worktrees": [
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/VARE",
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/pr102",
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/pr114",
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/transformers45852-grader-v3",
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/VARE-49412-qualification",
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/VARE-coding-rl-experiments",
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/VARE-coding-rl-experiments/work/pr117",
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/VARE-coding-rl-experiments/work/pr99",
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/VARE-review",
+    "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/coding-agent-interface-study",
+    "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/flagship",
+    "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/pr127-integrity-sync",
+    "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025",
+    "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/verifier-consistent-async-grpo-v1"
+  ],
+  "repository_head": "505ce808581f8010d1d389999e5cef7602d02eb6",
+  "resources": {
+    "peak_rss_bytes": 46759936,
+    "system_cpu_seconds": 4.509117,
+    "user_cpu_seconds": 42.350011,
+    "wall_seconds": 55.039829291000004
+  },
+  "retained_git_refs_scanned": 147,
+  "scope_limit": "Search covers retained VARE Git refs and local worktrees in the listed model/agent evidence paths only; it cannot establish absence from external pretraining, unmounted paths, or semantic paraphrases without the searched identifiers/symptoms.",
+  "task_ids": [
+    "transformers-49147-gemma3n-fp16-gradient-clipping",
+    "mlxlm-1925-minicpm3-phixtral-left-padding"
+  ],
+  "training_or_update_started": false
+}

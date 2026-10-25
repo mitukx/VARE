@@ -1,0 +1,20 @@
+test_multiple_groups (test_gptq.TestGPTQ.test_multiple_groups) ... Computing Hessians:   0%|          | 0/8 [00:00<?, ?it/s]Computing Hessians: 100%|██████████| 8/8 [00:00<00:00, 3619.29it/s]
+Quantizing:   0%|          | 0/1 [00:00<?, ?it/s]Quantizing: 100%|██████████| 1/1 [00:00<00:00, 78.70it/s]
+FAIL
+
+======================================================================
+FAIL: test_multiple_groups (test_gptq.TestGPTQ.test_multiple_groups)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/grader/tests/test_gptq.py", line 98, in test_multiple_groups
+    self._check(in_features=128, group_size=32)
+  File "/grader/tests/test_gptq.py", line 89, in _check
+    self.assertTrue(
+AssertionError: False is not true : max abs diff 0.3834570646286011
+
+----------------------------------------------------------------------
+Ran 1 test in 0.038s
+
+FAILED (failures=1)
+VARE_CGROUP_MEMORY_PEAK=68022272
+VARE_CGROUP_MEMORY_MAX=1610612736

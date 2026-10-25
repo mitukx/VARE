@@ -1,0 +1,40 @@
+{
+  "allocation_id": "mlsys-heldout-extension-v4",
+  "candidate_model_or_agent_runs": 0,
+  "candidate_model_prompts_delivered": 0,
+  "frozen_at_utc": "2026-10-25T09:24:02Z",
+  "heldout_inference": false,
+  "original_task_allocation": {
+    "original_15_task_split_changed": false,
+    "path": "results/mlsys-task-deep-qualification-v1/protocol.json",
+    "sha256": "7ef9a28cedf2e1214a74456bb0c5209afc3e3e9f1681a430398e84710bcd26a4"
+  },
+  "pre_run_certified_task_families": 8,
+  "prior_exposure_audit": {
+    "external_pretraining": "UNKNOWN_NOT_AUDITED",
+    "implementation": "scripts/audit_mlx_1877_1880_exposure_v1.py",
+    "implementation_sha256": "c614c308904dd7615f6b74894dc3a6847096878b07dfef9de71c032785fc3e97",
+    "local_artifact_files": 5796,
+    "matched_artifacts": 0,
+    "path": "results/mlsys-heldout-queue-qualification-v3/exposure-audit.json",
+    "retained_refs": 147,
+    "sha256": "9cc1ba8c23d11cd56d06b9385405b0a8fc9ab7409dd8aa83d6b4d383d6e6679f"
+  },
+  "prior_preflight_attempt": {
+    "outcome": "No test body ran. Test collection succeeded for four #1877 cases, but a local parser assertion incorrectly interpreted unittest's nested TestSuite repr; this protocol freezes a corrected recursive collection check and the exact runner source hash.",
+    "protocol": "protocols/mlsys_heldout_extension_v3.json",
+    "protocol_sha256": "50cc5ac5931d45960179fd268ba943b8674b4bb5ad8ca2cf1d84c2d38e468b00",
+    "summary": "results/mlsys-heldout-queue-qualification-v3/run-1/summary.json",
+    "summary_sha256": "ab6431acc88f7740d78fa879d47f99d55a2a4d6052c98efe614cb2b85d923dba"
+  },
+  "source_candidate_queue": {
+    "manual_24_path": "docs/mlsys-candidate-manual-qualification-queue.md",
+    "manual_24_sha256": "8f9b188cc20646fd53c488157e50cb6fdeac50dc8401e43174cb5945fca2d31f",
+    "selection_note": "The frozen 24-item manual queue was reviewed first; all remaining candidates there were previously blocked by overlap, exposure, unsupported execution, GPU dependence, weak grader behavior, or an already certified source family. These two are explicitly prospective additions from the wider 57-PR source survey and are not retroactively added to the 24-item list."
+  },
+  "task_families": {
+    "mlxlm-1877-compressed-tensors-format-validation": "Distinct compressed-tensors config format dispatch; no overlap with frozen original task families or extension v1/v2.",
+    "mlxlm-1880-gptq-group-error-propagation": "Distinct GPTQ group-boundary error propagation; no overlap with frozen original task families or extension v1/v2."
+  },
+  "training": false
+}
