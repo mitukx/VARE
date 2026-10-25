@@ -341,6 +341,35 @@ def load_manifest(manifest_path: Path = MANIFEST) -> list[dict[str, Any]]:
         return _load_manifest_locked(manifest_path)
 
 
+def validate_locked_source_identity(lock_data: dict[str, Any]) -> None:
+    require(sha_file(PROTOCOL) == lock_data["protocol_sha256"], "protocol SHA mismatch")
+    require(sha_file(SCRIPT) == lock_data["runner_sha256"], "runner SHA mismatch")
+    tests_path = ROOT / lock_data["tests_path"]
+    require(sha_file(tests_path) == lock_data["tests_sha256"], "test suite SHA mismatch")
+    require(sha_file(EXPERIMENT / "README.md") == lock_data["readme_sha256"], "qualification README SHA mismatch")
+
+
+def validate_recovery_identity(
+    manifest_path: Path, *, protocol_commit: str, protocol_tree: str,
+    protocol_sha256: str, runner_sha256: str, lock_sha256: str,
+) -> None:
+    data = manifest_path.read_bytes() if manifest_path.exists() else b""
+    rows, _, _ = _verified_prefix_and_suffix(data)
+    if rows:
+        frozen = rows[0]
+    else:
+        pending_path = _manifest_pending_path(manifest_path)
+        require(pending_path.is_file(), "frozen identity is absent from manifest and pending journal")
+        _, event_line = _verify_pending_record(pending_path)
+        frozen = json.loads(event_line)
+    require(frozen.get("event_type") == "protocol_frozen", "manifest does not start with protocol_frozen")
+    require(frozen.get("protocol_commit") == protocol_commit, "recovery checkout commit differs from frozen identity")
+    require(frozen.get("protocol_tree") == protocol_tree, "recovery checkout tree differs from frozen identity")
+    require(frozen.get("protocol_sha256") == protocol_sha256, "recovery protocol differs from frozen identity")
+    require(frozen.get("runner_sha256") == runner_sha256, "recovery runner differs from frozen identity")
+    require(frozen.get("lock_sha256") == lock_sha256, "recovery source lock differs from frozen identity")
+
+
 def append_event(
     event_type: str, fields: dict[str, Any], manifest_path: Path = MANIFEST,
 ) -> dict[str, Any]:
@@ -744,8 +773,7 @@ def validate_inputs(args: argparse.Namespace) -> dict[str, Any]:
     require(PROTOCOL.is_file() and LOCK.is_file(), "protocol or lock is missing")
     protocol_raw = PROTOCOL.read_bytes()
     lock_data = json.loads(LOCK.read_text(encoding="utf-8"))
-    require(sha_bytes(protocol_raw) == lock_data["protocol_sha256"], "protocol SHA mismatch")
-    require(sha_file(SCRIPT) == lock_data["runner_sha256"], "runner SHA mismatch")
+    validate_locked_source_identity(lock_data)
     protocol = json.loads(protocol_raw)
     require(sha_file(PROMPT) == protocol["task"]["candidate_prompt_sha256"], "candidate prompt SHA mismatch")
 
@@ -1140,6 +1168,15 @@ def main() -> int:
     if args.recover_interrupted:
         run_dir = resolve(args.output)
         require(MANIFEST.is_file(), "protocol manifest is missing; there are no attempts to reconstruct")
+        lock_data = json.loads(LOCK.read_text(encoding="utf-8"))
+        validate_locked_source_identity(lock_data)
+        commit, tree = repo_identity()
+        validate_recovery_identity(
+            MANIFEST, protocol_commit=commit, protocol_tree=tree,
+            protocol_sha256=lock_data["protocol_sha256"],
+            runner_sha256=lock_data["runner_sha256"],
+            lock_sha256=sha_file(LOCK),
+        )
         recovered = recover_interrupted_attempts(MANIFEST, run_dir, EXPERIMENT)
         print(json.dumps({
             "status": "RECOVERY_COMPLETE_NO_TEST_EXECUTED",

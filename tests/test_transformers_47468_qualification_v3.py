@@ -129,6 +129,37 @@ def _seed_manifest(manifest: Path) -> None:
     runner.write_new(manifest, (json.dumps(event, sort_keys=True) + "\n").encode())
 
 
+def test_recovery_requires_the_exact_frozen_checkout_and_source_hashes(tmp_path):
+    manifest = tmp_path / "manifest.jsonl"
+    event = {
+        "sequence": 1,
+        "event_type": "protocol_frozen",
+        "timestamp_utc": "2026-01-01T00:00:00+00:00",
+        "previous_event_sha256": "0" * 64,
+        "protocol_commit": "a" * 40,
+        "protocol_tree": "b" * 40,
+        "protocol_sha256": "c" * 64,
+        "runner_sha256": "d" * 64,
+        "lock_sha256": "e" * 64,
+    }
+    event["event_sha256"] = runner.event_hash(event)
+    runner.write_new(manifest, (json.dumps(event, sort_keys=True) + "\n").encode())
+    expected = {
+        "protocol_commit": "a" * 40,
+        "protocol_tree": "b" * 40,
+        "protocol_sha256": "c" * 64,
+        "runner_sha256": "d" * 64,
+        "lock_sha256": "e" * 64,
+    }
+
+    runner.validate_recovery_identity(manifest, **expected)
+    with pytest.raises(RuntimeError, match="checkout commit differs"):
+        runner.validate_recovery_identity(manifest, **{**expected, "protocol_commit": "f" * 40})
+    with pytest.raises(RuntimeError, match="source lock differs"):
+        runner.validate_recovery_identity(manifest, **{**expected, "lock_sha256": "f" * 64})
+    assert manifest.read_bytes().endswith(b"\n")
+
+
 def _prepare_pending_tail(manifest: Path, suffix: bytes) -> tuple[bytes, bytes]:
     rows = runner.load_manifest(manifest)
     prefix = manifest.read_bytes()
