@@ -1,0 +1,24 @@
+{
+  "auditor_source_sha256": "2d35fe1982c2fdb8fa59b98197efd4fd2abf44b357d41d060553563a8ed79766",
+  "created_at_utc": "2026-10-25T10:19:29.685126+00:00",
+  "external_pretraining_or_recognition": "UNKNOWN_NOT_AUDITED",
+  "local_prior_vare_model_or_agent_exposure": "NO_MATCH_IN_PINNED_LOCAL_EVIDENCE",
+  "matches": {
+    "mlx-4729-negative-take": [],
+    "mlx-4730-normal-shape": []
+  },
+  "reference_revision": "4920c249f11d20dc0846ab8966066b1b5d4600e8",
+  "schema_version": 1,
+  "scope": "Tracked VARE benchmark, protocol, documentation, script and result files at PR #129 head only. No claim about external models, public code pretraining, other repositories, untracked files, or prior task exposure outside this tree.",
+  "search_paths": [
+    "benchmarks",
+    "docs",
+    "protocols",
+    "results",
+    "scripts"
+  ],
+  "search_patterns": {
+    "mlx-4729-negative-take": "(^|[^A-Za-z0-9])#[[:space:]]*4729([^0-9]|$)|mlx[-_ ]4729[-_]negative[-_]take|negative integer index(es)? (to|in) mx\\.take",
+    "mlx-4730-normal-shape": "(^|[^A-Za-z0-9])#[[:space:]]*4730([^0-9]|$)|mlx[-_ ]4730[-_]normal[-_]shape|normal (loc[/ ]scale|location[/ ]scale) shape mismatch"
+  }
+}
