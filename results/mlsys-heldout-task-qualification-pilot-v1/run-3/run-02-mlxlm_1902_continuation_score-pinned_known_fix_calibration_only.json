@@ -1,0 +1,44 @@
+{
+  "candidate_changed_paths": [
+    "mlx_lm/evaluate.py"
+  ],
+  "candidate_file_manifest_sha256": "259d718f6773cccaa4fac937af2442c4a89819cd2e46856d31d00c063d2e70d4",
+  "candidate_files": 191,
+  "candidate_target_sha256": "468f1f519e3af2573ad1ec38f4acd8d2d22fe31d5399c83d18da598a2381220d",
+  "candidate_visible_git_history": false,
+  "candidate_visible_grader": false,
+  "candidate_visible_task_prompt": false,
+  "case_results": [
+    {
+      "case_id": "max_tokens_4",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.23942312491313367
+    },
+    {
+      "case_id": "max_tokens_3",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.24330320793959928
+    },
+    {
+      "case_id": "max_tokens_2",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.2419780420378713
+    }
+  ],
+  "completed_at_utc": "2026-10-25T05:21:22.926413+00:00",
+  "decision": "FAIL",
+  "event_id": 2,
+  "grader_passed": false,
+  "network": "none",
+  "patch_paths": [
+    "mlx_lm/evaluate.py",
+    "mlx_lm/evaluate.py"
+  ],
+  "patch_sha256": "8d8637e7815c60c0006390ef0832044122447fac1d7f3abfb8acb04f2132ea72",
+  "started_at_utc": "2026-10-25T05:21:21.455482+00:00",
+  "task_id": "mlxlm-1902-continuation-score-truncation",
+  "variant": "pinned_known_fix_calibration_only"
+}

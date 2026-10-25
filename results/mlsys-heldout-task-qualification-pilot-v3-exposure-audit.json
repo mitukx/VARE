@@ -1,0 +1,82 @@
+{
+  "audit_id": "mlsys-heldout-task-exposure-pilot-v1",
+  "audit_implementation_sha256": "4115123953db8648bb18fb8cff4e5debeafa3ce8fe7edde6e907361f7110e58b",
+  "candidate_model_prompts": 0,
+  "candidate_model_rollouts_started": false,
+  "candidate_rollout_or_training_matches": [
+    {
+      "content_sha256": "9d864c781ce4c417db2caaca9e1c317bd2f4e06708a943134ceb395f1ed6b986",
+      "match_class": "local_model_or_agent_artifact",
+      "path": "results/real_agent_interface_v1/model_run/02-mlx-lm-1978-rotating-cache-unified_diff/agent.json",
+      "task_ids": [
+        "mlxlm-1979-ssm-padding-mask"
+      ],
+      "worktree": "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/coding-agent-interface-study"
+    },
+    {
+      "content_sha256": "9d864c781ce4c417db2caaca9e1c317bd2f4e06708a943134ceb395f1ed6b986",
+      "match_class": "local_model_or_agent_artifact",
+      "path": "results/real_agent_interface_v1/model_run/02-mlx-lm-1978-rotating-cache-unified_diff/agent.json",
+      "task_ids": [
+        "mlxlm-1979-ssm-padding-mask"
+      ],
+      "worktree": "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/pr127-integrity-sync"
+    },
+    {
+      "content_sha256": "9d864c781ce4c417db2caaca9e1c317bd2f4e06708a943134ceb395f1ed6b986",
+      "match_class": "local_model_or_agent_artifact",
+      "path": "results/real_agent_interface_v1/model_run/02-mlx-lm-1978-rotating-cache-unified_diff/agent.json",
+      "task_ids": [
+        "mlxlm-1979-ssm-padding-mask"
+      ],
+      "worktree": "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025"
+    },
+    {
+      "content_sha256": "9d864c781ce4c417db2caaca9e1c317bd2f4e06708a943134ceb395f1ed6b986",
+      "match_class": "local_model_or_agent_artifact",
+      "path": "results/real_agent_interface_v1/model_run/02-mlx-lm-1978-rotating-cache-unified_diff/agent.json",
+      "task_ids": [
+        "mlxlm-1979-ssm-padding-mask"
+      ],
+      "worktree": "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/verifier-consistent-async-grpo-v1"
+    }
+  ],
+  "completed_at_utc": "2026-10-25T05:36:47.384915+00:00",
+  "external_pretraining_corpus": "UNKNOWN_NOT_AUDITED",
+  "git_exposure_candidate_paths_scanned_across_refs": 0,
+  "local_exposure_files_scanned": 5796,
+  "local_large_files_skipped": [],
+  "local_worktrees": [
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/VARE",
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/pr102",
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/pr114",
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/transformers45852-grader-v3",
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/VARE-49412-qualification",
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/VARE-coding-rl-experiments",
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/VARE-coding-rl-experiments/work/pr117",
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/VARE-coding-rl-experiments/work/pr99",
+    "/Users/user/Documents/Codex/2026-10-23/vare-autonomous-engineering-experimentation-merge-authorization/work/VARE-review",
+    "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/coding-agent-interface-study",
+    "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/flagship",
+    "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/pr127-integrity-sync",
+    "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025",
+    "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/verifier-consistent-async-grpo-v1"
+  ],
+  "observed_vare_candidate_exposure": true,
+  "repository_head": "7f7d5a4e3963adef298dee7520bcfc36971639d9",
+  "resources": {
+    "peak_rss_bytes": 91193344,
+    "system_cpu_seconds": 4.436055,
+    "user_cpu_seconds": 103.202365,
+    "wall_seconds": 120.25745541590732
+  },
+  "retained_git_refs": 146,
+  "scope_limit": "Search covers the listed retained VARE refs/worktrees and identified model/agent-artifact paths only. It cannot prove absence from files outside this inventory, public model pretraining corpora, or semantically paraphrased records that contain none of the frozen identifiers/symptoms.",
+  "task_ids": [
+    "mlxlm-1902-continuation-score-truncation",
+    "mlxlm-1926-falcon-cache-gradient",
+    "mlxlm-1938-phi3small-logits-mask",
+    "mlxlm-1979-ssm-padding-mask"
+  ],
+  "training_or_update_started": false
+}

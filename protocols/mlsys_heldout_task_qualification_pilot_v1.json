@@ -1,0 +1,125 @@
+{
+  "arms": [
+    "pinned_baseline",
+    "pinned_known_fix_calibration_only",
+    "prespecified_incorrect_mutant"
+  ],
+  "claim_boundary": "Task-grader qualification only; not a model or agent result, not a capability result, and not permission to train or access other held-out tasks.",
+  "exposure": {
+    "audit_scope": "Search locally retained VARE Git refs, task/rollout/manifests, and local worktree artifacts for source PR, task ID, test selector, and task-family aliases. This does not establish absence from external model pretraining corpora.",
+    "candidate_model_prompts": 0,
+    "candidate_model_rollouts": 0,
+    "research_operator_source_inspection": "Permitted only for qualification; no candidate coding model or learning agent receives task prompt, fix, test source, or grader result.",
+    "training_or_update": false
+  },
+  "frozen_at_utc": "2026-10-25T05:09:43Z",
+  "protocol_id": "mlsys-heldout-task-qualification-pilot-v1",
+  "purpose": "Qualify two reserved held-out MLX-LM task families with source-only candidates and parent-owned isolated graders; do not run a model or change the frozen task allocation.",
+  "qualification_gate": "For each task, baseline must fail; exact target-only known fix must pass; the prespecified mutant must fail; source/task/grader hashes must match; unsafe patches and symlinks must be rejected before execution; all grading calls must use the pinned no-network bounded container and independently recomputable parent-owned expected values.",
+  "runtime": {
+    "architecture": "linux/arm64",
+    "candidate_cpus": 1,
+    "candidate_memory_mb": 1536,
+    "candidate_mount": "source-only read-only at /subject",
+    "candidate_timeout_seconds": 30,
+    "candidate_uid": 65534,
+    "candidate_visible_files": "Only Python source under the pinned mlx_lm package plus a pure call adapter with no assertions, expected values, tests, Git metadata, or grader files.",
+    "container_root": "read-only",
+    "docker_context": "colima",
+    "grader_mount": "absent",
+    "host_swap_growth_abort_bytes": 268435456,
+    "image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+    "maximum_new_candidate_invocations": 17,
+    "network": "none"
+  },
+  "selection": {
+    "criteria": [
+      "Candidate is one of the eight surviving source families in the frozen held-out allocation.",
+      "Use pinned local synthetic fixtures; no pretrained model, dataset, external service, or GPU is required.",
+      "Prefer small CPU test shapes and reuse the existing pinned Linux ARM64 MLX runtime.",
+      "Select distinct MLX-LM bug families and retain their original held-out allocation."
+    ],
+    "excluded_static_preflight": {
+      "reason": "The pinned upstream TestServer fixture constructs DummyModelProvider and calls mlx_lm.utils.load on mlx-community/Qwen1.5-0.5B-Chat-4bit; this violates the no-model-download pilot budget. No test was run.",
+      "task_id": "mlxlm-1935-zero-max-tokens"
+    },
+    "queue": "docs/mlsys-candidate-manual-qualification-queue.md",
+    "selected": [
+      "mlxlm-1902-continuation-score-truncation",
+      "mlxlm-1926-falcon-cache-gradient"
+    ],
+    "selection_outcomes_used_for_model_tuning": false
+  },
+  "shared_boundary_probes": [
+    "grader path absent from candidate namespace",
+    "Git history absent from candidate namespace",
+    "network connection blocked",
+    "candidate source mount is read-only",
+    "candidate stdout cannot forge parent result frame"
+  ],
+  "source_catalog": {
+    "allocation_path": "results/mlsys-task-deep-qualification-v1/protocol.json",
+    "allocation_sha256": "7ef9a28cedf2e1214a74456bb0c5209afc3e3e9f1681a430398e84710bcd26a4",
+    "catalog_path": "results/mlsys-task-deep-qualification-v1/qualification.json",
+    "catalog_revision": "acca07004eb9a44cf23d31ff0d68929b7ea3fc1d",
+    "catalog_sha256": "2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d",
+    "split_changes": false
+  },
+  "status": "FROZEN_BEFORE_NEW_GRADER_EXECUTION",
+  "stop_criteria": [
+    "Stop without substituting or weakening the grader if a pinned source/test hash differs.",
+    "Stop without installing or downloading model/dependency assets if the existing image lacks a required dependency.",
+    "Stop if any candidate reaches network or grader namespace, if the container exceeds its memory/time limits, or if host swap grows by more than 256 MiB.",
+    "A task that misses any gate remains UNQUALIFIED and stays in its original frozen split."
+  ],
+  "task_contracts": [
+    {
+      "adversarial_controls": [
+        "reject path traversal patch",
+        "reject non-allowlisted source file",
+        "reject target symlink",
+        "reject source hash drift"
+      ],
+      "baseline_commit": "9d1e356e7cc6549e7d1697adabe2ea01ff8e062c",
+      "baseline_target_sha256": "d070c4a9a323101908d40b41d06df4632d36bd9e89ab803619b1b2eb94efecc1",
+      "candidate_prompt_path": "benchmarks/mlsys_repo_eval_v3/mlxlm_1902_continuation_score/task.md",
+      "candidate_prompt_sha256": "0f28a525b73ec4869d36442d37f81dffcd2c23765999ca325920778402e8063b",
+      "expected_assertions": "The isolated trusted parent reproduces the pinned test's continuation-only score and truncated-prefix assertions over max_tokens 4, 3, and 2; expected values never enter the subject container.",
+      "fixed_commit": "c69d1288440a0dc4e6401fc417098b07598dccd5",
+      "fixed_target_sha256": "468f1f519e3af2573ad1ec38f4acd8d2d22fe31d5399c83d18da598a2381220d",
+      "grader_path": "tests/test_evaluate.py",
+      "grader_revision": "c69d1288440a0dc4e6401fc417098b07598dccd5",
+      "grader_selector": "scores_only_continuation_after_context_truncation",
+      "grader_sha256": "53de59f08389fae188b83eeee901e163458d03ab76ce2fe9fe53b26405670dd0",
+      "incorrect_mutant": "Replace the pinned fix's completion_start = len(prefix) with completion_start = len(prefix) - 1.",
+      "repository": "ml-explore/mlx-lm",
+      "split": "heldout",
+      "target_path": "mlx_lm/evaluate.py",
+      "task_id": "mlxlm-1902-continuation-score-truncation"
+    },
+    {
+      "adversarial_controls": [
+        "reject path traversal patch",
+        "reject non-allowlisted source file",
+        "reject target symlink",
+        "reject source hash drift"
+      ],
+      "baseline_commit": "87b7b583a697537aa68f47130b40884700b5f55f",
+      "baseline_target_sha256": "68c25a5b53a8f87bf843e87c93b8c35caf1a059600583506d7180d2f79863ca6",
+      "candidate_prompt_path": "benchmarks/mlsys_repo_eval_v3/mlxlm_1926_falcon_cache_gradient/task.md",
+      "candidate_prompt_sha256": "5bceecda7fa40cd2e9d78dc8197194ebbe698d39ff9e00af4a0fce808bf1584f",
+      "expected_assertions": "The isolated trusted parent reproduces the pinned test's no-cache/cache logit-equivalence, finite loss, and finite nonzero feed-forward gradients for a deterministic three-layer synthetic model; expected values never enter the subject container.",
+      "fixed_commit": "3051e26bc72b8ab426af17d14c5599447eb306a5",
+      "fixed_target_sha256": "cc3acc9bb4d3c6ed8ff3f67ed6d85ba8828d973712e9ce13c8865a5064f6a999",
+      "grader_path": "tests/test_models.py",
+      "grader_revision": "3051e26bc72b8ab426af17d14c5599447eb306a5",
+      "grader_selector": "falcon_h1_without_cache",
+      "grader_sha256": "f7c9a3eafca6ba9fcfc9c281177ebb15a93a6e1f4d0a31c70264e10ae5d0362d",
+      "incorrect_mutant": "Replace cache = [(None, None)] * len(self.layers) with cache = [(None, None)] * max(len(self.layers) - 1, 0).",
+      "repository": "ml-explore/mlx-lm",
+      "split": "heldout",
+      "target_path": "mlx_lm/models/falcon_h1.py",
+      "task_id": "mlxlm-1926-falcon-cache-gradient"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "adjudicated_task_id": "mlxlm-1979-ssm-padding-mask",
+  "adjudicator": "VARE research audit process; not independent human review",
+  "audit_id": "mlxlm-1979-adjacent-task-exposure-adjudication-v1",
+  "created_at_utc": "2026-10-25T06:00:00+00:00",
+  "decision": "NOT_A_TASK_FAMILY_EXPOSURE_FOR_1979_WITHIN_AUDITED_VARE_SCOPE",
+  "initial_broad_scan_match": {
+    "adjacent_task_id": "mlx-lm-1978-rotating-cache",
+    "artifact_path": "results/real_agent_interface_v1/model_run/02-mlx-lm-1978-rotating-cache-unified_diff/agent.json",
+    "artifact_sha256": "9d864c781ce4c417db2caaca9e1c317bd2f4e06708a943134ceb395f1ed6b986",
+    "distinct_content_hashes": 1,
+    "duplicate_worktree_copies": 4
+  },
+  "prior_agent_record": {
+    "agent_model": "mlx-community/Qwen2.5-Coder-7B-Instruct-4bit",
+    "candidate_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "edit_applied": false,
+    "edit_attempted": false,
+    "listed_workspace_files": [
+      "mlx_lm/models/cache.py",
+      "test_public.py"
+    ],
+    "model_snapshot": "019cc73c45c770444708a6dd8690c66243cc5c80",
+    "public_test_runs": 0,
+    "source_files_read": [
+      "mlx_lm/models/cache.py"
+    ],
+    "stop_reason": "context_budget_exhausted",
+    "task_input_sha256": "8ce12bc59e788685bc441c3922bfb4f31e6d5db66284054a122a87d4221a0a8a",
+    "task_prompt_excerpt": "Fix the attention mask produced by RotatingKVCache in mlx_lm/models/cache.py after cache wrap; preserve prefix positions and prevent future-token attention."
+  },
+  "rationale": "The retained agent record concerns RotatingKVCache after wrap, with the only allowed/read source mlx_lm/models/cache.py. It contains no SSM, right-padding, sequence-state-decay prompt or edit; no source change was attempted and no public test was run. The #1979 target and regression are mlx_lm/models/ssm.py. This manual artifact-level adjudication resolves the false positive from the broad matcher; it does not rule out external pretraining or records outside the searched VARE inventory."
+}

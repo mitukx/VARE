@@ -1,0 +1,32 @@
+{
+  "candidate_changed_paths": [
+    "mlx_lm/models/falcon_h1.py"
+  ],
+  "candidate_file_manifest_sha256": "b52d147683e1b083f881a55456a3af4c9652435e407bf53d33d9c6000706d31e",
+  "candidate_files": 186,
+  "candidate_target_sha256": "b9c5fe64e6734e14ca12ce55929dbf4dfad26aa9af4b22f599aa4182ab199991",
+  "candidate_visible_git_history": false,
+  "candidate_visible_grader": false,
+  "candidate_visible_task_prompt": false,
+  "case_results": [
+    {
+      "case_id": "tiny_three_layer_no_cache_and_gradient",
+      "failure": "wrong_output",
+      "passed": false,
+      "wall_s": 0.17200629197949285
+    }
+  ],
+  "completed_at_utc": "2026-10-25T05:21:28.849243+00:00",
+  "decision": "FAIL",
+  "event_id": 6,
+  "grader_passed": false,
+  "network": "none",
+  "patch_paths": [
+    "mlx_lm/models/falcon_h1.py",
+    "mlx_lm/models/falcon_h1.py"
+  ],
+  "patch_sha256": "c5b7fc3ecc7bbbd2624a98c202cdccefd506659fd1278dc79b1e2c86ebfd24b1",
+  "started_at_utc": "2026-10-25T05:21:28.444859+00:00",
+  "task_id": "mlxlm-1926-falcon-cache-gradient",
+  "variant": "prespecified_incorrect_mutant"
+}

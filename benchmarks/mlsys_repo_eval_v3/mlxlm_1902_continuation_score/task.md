@@ -1,0 +1,1 @@
+Fix continuation log-likelihood scoring in `mlx_lm/evaluate.py` when the input context is truncated to fit the scoring window. The score for a request must include only continuation tokens, including when different token limits truncate different amounts of context. Keep the change within this file.

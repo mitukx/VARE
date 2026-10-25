@@ -1,0 +1,95 @@
+{
+  "arms": [
+    "pinned_baseline",
+    "pinned_known_fix_calibration_only",
+    "prespecified_incorrect_mutant"
+  ],
+  "claim_boundary": "Task-grader qualification only; not a model or agent result, capability result, fresh task exposure to a model, or learning authorization.",
+  "dependency_note": "Use the existing digest-pinned MLX CPU image with synthetic inputs and pinned mlx-lm source; no pytest, model weights, datasets, network, or new downloads. The grader calls only the task adapter and keeps expected results in the parent.",
+  "exposure": {
+    "audit_path": "results/mlsys-heldout-task-qualification-pilot-v4-exposure-audit.json",
+    "audit_scope": "146 retained VARE refs and 5,796 local VARE evidence files under model/agent artifact paths; exact task identifiers and explicit SSM padding/right-padding descriptions searched. External model pretraining remains unknown. A first broad-pattern scan found an adjacent #1978 task; manual review confirmed its model prompt only named RotatingKVCache in cache.py, did not mention SSM/padding, did not edit source, and ran no tests. The initial false-positive scan is preserved separately.",
+    "candidate_model_prompts": 0,
+    "candidate_model_rollouts": 0,
+    "training_or_update": false
+  },
+  "frozen_at_utc": "2026-10-25T05:41:17.479911+00:00",
+  "protocol_id": "mlsys-heldout-task-qualification-pilot-v3",
+  "purpose": "Qualify one additional original held-out task with immutable source/test/prompt identity, an audited VARE exposure search, a source-only sandbox, and bounded parent-owned semantic checks. This does not change the frozen split and is not model or agent evidence.",
+  "qualification_gate": "Pinned source, grader, prompt and license hashes match; baseline fails; exact target-only known fix passes; prespecified incorrect mutant fails; unsafe patch controls reject before execution; common no-network/grader-separation boundary passes.",
+  "runtime": {
+    "architecture": "linux/arm64",
+    "candidate_cpus": 1,
+    "candidate_memory_mb": 1536,
+    "candidate_mount": "source-only read-only at /subject",
+    "candidate_timeout_seconds": 30,
+    "candidate_uid": 65534,
+    "candidate_visible_files": "Only Python source under pinned mlx_lm plus a call adapter; no task prompt, tests, Git metadata, grader or expected values.",
+    "container_root": "read-only",
+    "docker_context": "colima",
+    "grader_mount": "absent",
+    "host_swap_growth_abort_bytes": 268435456,
+    "image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+    "maximum_new_candidate_invocations": 4,
+    "network": "none"
+  },
+  "schema_version": 1,
+  "selection": {
+    "criteria": [
+      "Task is in the original frozen held-out allocation; no task outcome was used to select it or tune a model.",
+      "Pinned source-level MLX-LM regression has a local CPU path with synthetic inputs and no model weights.",
+      "Exposure scan covers the frozen VARE refs and identified model/agent artifact paths; any match is reviewed and preserved.",
+      "No model, coding agent, or learning process receives the task prompt, fix, test source, grader values, or outcomes."
+    ],
+    "selection_outcomes_used_for_model_tuning": false,
+    "source_queue": "docs/mlsys-candidate-manual-qualification-queue.md and frozen source catalog",
+    "split_changes": false
+  },
+  "source_catalog": {
+    "allocation_path": "results/mlsys-task-deep-qualification-v1/protocol.json",
+    "allocation_sha256": "7ef9a28cedf2e1214a74456bb0c5209afc3e3e9f1681a430398e84710bcd26a4",
+    "catalog_path": "results/mlsys-task-deep-qualification-v1/qualification.json",
+    "catalog_revision": "acca07004eb9a44cf23d31ff0d68929b7ea3fc1d",
+    "catalog_sha256": "2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d",
+    "split_changes": false
+  },
+  "status": "FROZEN_BEFORE_NEW_GRADER_EXECUTION",
+  "stop_criteria": [
+    "Stop if any pinned source, test, prompt, license, image or exposure hash differs.",
+    "Do not install or download model/dependency assets.",
+    "Stop if the candidate can access the network or grader, if resource limits are exceeded, or if host swap grows over 256 MiB.",
+    "A task that misses any gate remains UNQUALIFIED in its original held-out split."
+  ],
+  "task_contracts": [
+    {
+      "adversarial_controls": [
+        "reject path traversal patch",
+        "reject non-allowlisted source file",
+        "reject target symlink",
+        "reject source hash drift"
+      ],
+      "baseline_commit": "8fda5e976a2da412d9f8119361edefd405381cf9",
+      "baseline_target_sha256": "32ccdb827cdd03ad900b90697b48963106b4c7466ba446b56ff7cedeecfb526e",
+      "candidate_prompt_path": "benchmarks/mlsys_repo_eval_v3/mlxlm_1979_ssm_padding_mask/task.md",
+      "candidate_prompt_sha256": "c0f3977bc65c08a89ee9be4f56510c39641796924229674d3428fa6e14e90996",
+      "expected_assertions": "For deterministic synthetic inputs and a nonzero initial state, compare valid-token outputs and returned final state from the fixed-length sequence against the same sequence with right padding and an explicit mask/length. Both comparisons use the upstream test tolerance 1e-4 absolute and relative. Require finite padded outputs and state. Hidden expected booleans are parent-owned; no exact expected tensor values or upstream test enter the candidate container.",
+      "fixed_commit": "1e511c1f72a93f47e3c6d73254f1b5da2ae92d2d",
+      "fixed_target_sha256": "485811a1dbc475553eaa4dd9c8d8ceb9a86da8de3b7cc383211ef2075f762ff4",
+      "grader_path": "tests/test_models.py",
+      "grader_revision": "1e511c1f72a93f47e3c6d73254f1b5da2ae92d2d",
+      "grader_selector": "ssm_right_pad",
+      "grader_sha256": "f6259e68a49fc4570d078a2066e507872c068362dd06d760fb0c514d0402a74a",
+      "incorrect_mutant": "Starting from the pinned fix, replace dtA = dtA * mask[..., None] with dtA = dtA; this prevents padding from being excluded from state decay.",
+      "license_file_path": "LICENSE",
+      "license_file_sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+      "license_spdx": "MIT",
+      "repository": "ml-explore/mlx-lm",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1979",
+      "split": "heldout",
+      "status_note": "Known fix is calibration-only. No model or agent inference, update, or training is authorized by this task certificate.",
+      "target_path": "mlx_lm/models/ssm.py",
+      "task_family": "ssm_padding_mask_state_equivalence",
+      "task_id": "mlxlm-1979-ssm-padding-mask"
+    }
+  ]
+}

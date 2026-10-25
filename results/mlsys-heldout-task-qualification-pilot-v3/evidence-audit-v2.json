@@ -1,0 +1,167 @@
+{
+  "audit_id": "mlsys-heldout-task-qualification-pilots-v1-independent-audit",
+  "audit_implementation_sha256": "fca8188f225e3609dab3a0520e8f2dd8cf31276379252a95e427a8766797ab78",
+  "audited_at_utc": "2026-10-25T05:42:41.265185+00:00",
+  "certificate_counts": {
+    "qualified": 3,
+    "unqualified": 1
+  },
+  "claim_boundary": "Same-host independent audit of frozen task source identities, exposure records, raw variant records, manifests, and declared certificate gates. Not an external reproduction or model/agent result.",
+  "external_pretraining_corpus": "UNKNOWN_NOT_AUDITED",
+  "frozen_allocation_sha256": "7ef9a28cedf2e1214a74456bb0c5209afc3e3e9f1681a430398e84710bcd26a4",
+  "heldout_gate": {
+    "additional_eligible_tasks_required": 12,
+    "eligible_tasks_now": 3,
+    "model_learning_admitted": false,
+    "original_families_not_certified_or_retired": 5,
+    "original_reserved_families_after_known_exposure": 8,
+    "required_eligible_tasks": 15
+  },
+  "model_inference_or_training": "NOT_RUN",
+  "original_frozen_heldout_matrix": [
+    {
+      "reason": "No complete current task certificate was produced in this cycle.",
+      "status": "UNASSESSED",
+      "task_id": "transformers-48319-stale-best-checkpoint"
+    },
+    {
+      "reason": "No complete current task certificate was produced in this cycle.",
+      "status": "UNASSESSED",
+      "task_id": "transformers-49208-resume-metrics"
+    },
+    {
+      "reason": "Nine retained Qwen3-4B Development attempts are recorded in the frozen readiness audit.",
+      "status": "RETIRED_EXPOSED",
+      "task_id": "transformers-49412-fusion-idempotence"
+    },
+    {
+      "reason": "The frozen calibration did not pass all baseline/fix/mutant gates; the task remains in its original split but is not eligible.",
+      "status": "UNQUALIFIED",
+      "task_id": "mlxlm-1902-continuation-score-truncation"
+    },
+    {
+      "reason": "No complete current task certificate was produced in this cycle.",
+      "status": "UNASSESSED",
+      "task_id": "mlxlm-1921-padded-logprobs"
+    },
+    {
+      "reason": "Frozen baseline/fix/mutant and boundary gates passed within the audited local VARE exposure scope.",
+      "status": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE",
+      "task_id": "mlxlm-1926-falcon-cache-gradient"
+    },
+    {
+      "reason": "Static preflight excluded the task because its pinned test fixture would download model weights.",
+      "status": "UNQUALIFIED_NOT_RUN",
+      "task_id": "mlxlm-1935-zero-max-tokens"
+    },
+    {
+      "reason": "Frozen baseline/fix/mutant and boundary gates passed within the audited local VARE exposure scope.",
+      "status": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE",
+      "task_id": "mlxlm-1938-phi3small-logits-mask"
+    },
+    {
+      "reason": "Frozen baseline/fix/mutant and boundary gates passed within the audited local VARE exposure scope.",
+      "status": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE",
+      "task_id": "mlxlm-1979-ssm-padding-mask"
+    }
+  ],
+  "pilot_runs": {
+    "mlsys-heldout-task-qualification-pilot-v1": {
+      "candidate_invocations": 13,
+      "candidate_memory_sample_count": 1,
+      "candidate_memory_sampled_peak_bytes": null,
+      "candidate_memory_usable_sample_count": 0,
+      "candidate_memory_zero_only_samples": true,
+      "decision": "NO_GO",
+      "elapsed_from_recorded_start_to_completion_seconds": 12.879156,
+      "host_swap_growth_bytes": 0,
+      "host_wall_seconds_recorded": 12.88283587503247,
+      "manifest_sha256": "6209a58bba51b5279a752bbde147587e8a72bc550821bdb856a8bd3cb2db7628",
+      "tasks": {
+        "mlxlm-1902-continuation-score-truncation": {
+          "baseline": "FAIL",
+          "known_fix": "FAIL",
+          "mutant": "FAIL",
+          "status": "UNQUALIFIED"
+        },
+        "mlxlm-1926-falcon-cache-gradient": {
+          "baseline": "FAIL",
+          "known_fix": "PASS",
+          "mutant": "FAIL",
+          "status": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE"
+        }
+      },
+      "wall_time_note": "Elapsed time is computed from the frozen run start and completion timestamps."
+    },
+    "mlsys-heldout-task-qualification-pilot-v2": {
+      "candidate_invocations": 4,
+      "candidate_memory_sample_count": 0,
+      "candidate_memory_sampled_peak_bytes": null,
+      "candidate_memory_usable_sample_count": 0,
+      "candidate_memory_zero_only_samples": false,
+      "decision": "TASK_GRADER_CERTIFICATE_PASS_WITHIN_AUDITED_VARE_SCOPE",
+      "elapsed_from_recorded_start_to_completion_seconds": 129.582926,
+      "host_swap_growth_bytes": 0,
+      "host_wall_seconds_recorded": 4.391213292023167,
+      "manifest_sha256": "a0582d6724796ca261acd375e8e42e83116a448a92197e143f771329ca2c6fe2",
+      "tasks": {
+        "mlxlm-1938-phi3small-logits-mask": {
+          "baseline": "FAIL",
+          "known_fix": "PASS",
+          "mutant": "FAIL",
+          "status": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE"
+        }
+      },
+      "wall_time_note": "The v2 runner's host_wall_seconds covers its resume process only; elapsed timestamps include the original attempt and the preserved interruption interval."
+    },
+    "mlsys-heldout-task-qualification-pilot-v3": {
+      "candidate_invocations": 4,
+      "candidate_memory_sample_count": 1,
+      "candidate_memory_sampled_peak_bytes": null,
+      "candidate_memory_usable_sample_count": 0,
+      "candidate_memory_zero_only_samples": true,
+      "decision": "TASK_GRADER_CERTIFICATE_PASS_WITHIN_AUDITED_VARE_SCOPE",
+      "elapsed_from_recorded_start_to_completion_seconds": 5.363323,
+      "host_swap_growth_bytes": 0,
+      "host_wall_seconds_recorded": 5.369029792025685,
+      "manifest_sha256": "fbaa96b26f4ff94e8a1350b3a9c57cd7c0aa5f0b073a92d7d72de852a91c0f91",
+      "tasks": {
+        "mlxlm-1979-ssm-padding-mask": {
+          "baseline": "FAIL",
+          "known_fix": "PASS",
+          "mutant": "FAIL",
+          "status": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE"
+        }
+      },
+      "wall_time_note": "Elapsed time is computed from the frozen run start and completion timestamps."
+    }
+  },
+  "source_catalog_sha256": "2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d",
+  "supersedes_audit_file": "results/mlsys-heldout-task-qualification-pilot-v1/evidence-audit-v3.json; this audit adds the subsequently frozen and measured v3 #1979 certificate, and interprets raw 0 B Docker memory samples as unusable rather than a zero peak. Earlier audit-v1's #1902 reason-text correction remains preserved in evidence-audit-v2.json.",
+  "task_results": {
+    "mlxlm-1902-continuation-score-truncation": {
+      "baseline": "FAIL",
+      "known_fix": "FAIL",
+      "mutant": "FAIL",
+      "status": "UNQUALIFIED"
+    },
+    "mlxlm-1926-falcon-cache-gradient": {
+      "baseline": "FAIL",
+      "known_fix": "PASS",
+      "mutant": "FAIL",
+      "status": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE"
+    },
+    "mlxlm-1938-phi3small-logits-mask": {
+      "baseline": "FAIL",
+      "known_fix": "PASS",
+      "mutant": "FAIL",
+      "status": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE"
+    },
+    "mlxlm-1979-ssm-padding-mask": {
+      "baseline": "FAIL",
+      "known_fix": "PASS",
+      "mutant": "FAIL",
+      "status": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE"
+    }
+  }
+}

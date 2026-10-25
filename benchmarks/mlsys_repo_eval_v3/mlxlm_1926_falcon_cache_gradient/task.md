@@ -1,0 +1,1 @@
+Fix Falcon-H1 forward execution in `mlx_lm/models/falcon_h1.py` so a call with no explicit cache works across all layers. Preserve parity with explicit-cache execution and finite, nonzero gradients in the feed-forward layers. Keep the change within this file.

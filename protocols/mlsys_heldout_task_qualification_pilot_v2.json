@@ -1,0 +1,93 @@
+{
+  "arms": [
+    "pinned_baseline",
+    "pinned_known_fix_calibration_only",
+    "prespecified_incorrect_mutant"
+  ],
+  "claim_boundary": "Task-grader qualification only; not a model or agent result and not a capability result.",
+  "dependency_note": "The pinned image has MLX 0.32.4, NumPy 2.5.4 and tqdm 4.70.1 on CPU; pytest and lm-eval are absent. The adapter runs the pinned target model source with synthetic parameters and does not install weights or dependencies.",
+  "exposure": {
+    "audit_path": "results/mlsys-heldout-task-qualification-pilot-v2/exposure-audit.json",
+    "audit_scope": "146 retained Git refs and local VARE worktree evidence paths matching rollout/trajectory/prompt/agent/training patterns; external model pretraining is unknown.",
+    "candidate_model_prompts": 0,
+    "candidate_model_rollouts": 0,
+    "training_or_update": false
+  },
+  "frozen_at_utc": "2026-10-25T05:26:42.699292+00:00",
+  "protocol_id": "mlsys-heldout-task-qualification-pilot-v2",
+  "purpose": "Extend source/environment/grader qualification to one remaining task in the original held-out allocation. This is not an agent/model result, capability result, split change, or permission to train.",
+  "qualification_gate": "Pinned source, grader, prompt and license hashes match; baseline fails; exact target-only known fix passes; prespecified incorrect mutant fails; unsafe patch controls reject before execution; common no-network/grader-separation boundary passes.",
+  "runtime": {
+    "architecture": "linux/arm64",
+    "candidate_cpus": 1,
+    "candidate_memory_mb": 1536,
+    "candidate_mount": "source-only read-only at /subject",
+    "candidate_timeout_seconds": 30,
+    "candidate_uid": 65534,
+    "candidate_visible_files": "Only Python source under pinned mlx_lm plus a call adapter; no task prompt, tests, Git metadata, grader or expected values.",
+    "container_root": "read-only",
+    "docker_context": "colima",
+    "grader_mount": "absent",
+    "host_swap_growth_abort_bytes": 268435456,
+    "image": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+    "maximum_new_candidate_invocations": 4,
+    "network": "none"
+  },
+  "schema_version": 1,
+  "selection": {
+    "criteria": [
+      "Task is in the original frozen held-out allocation and has no retained VARE model/agent exposure match within the declared audit scope.",
+      "Use the already locked MLX CPU image and synthetic random model inputs; no weights, datasets, network, or external service.",
+      "Select from source-level candidates with pinned baseline/fix and upstream regression test; no model outcome is used to select or tune."
+    ],
+    "selection_outcomes_used_for_model_tuning": false,
+    "source_queue": "docs/mlsys-candidate-manual-qualification-queue.md and frozen source catalog",
+    "split_changes": false
+  },
+  "source_catalog": {
+    "allocation_path": "results/mlsys-task-deep-qualification-v1/protocol.json",
+    "allocation_sha256": "7ef9a28cedf2e1214a74456bb0c5209afc3e3e9f1681a430398e84710bcd26a4",
+    "catalog_path": "results/mlsys-task-deep-qualification-v1/qualification.json",
+    "catalog_revision": "acca07004eb9a44cf23d31ff0d68929b7ea3fc1d",
+    "catalog_sha256": "2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d",
+    "split_changes": false
+  },
+  "status": "FROZEN_BEFORE_NEW_GRADER_EXECUTION",
+  "stop_criteria": [
+    "Stop if any pinned source, test, prompt, license, image or exposure hash differs.",
+    "Do not install or download model/dependency assets.",
+    "Stop if the candidate can access the network or grader, if resource limits are exceeded, or if host swap grows over 256 MiB.",
+    "A task that misses any gate remains UNQUALIFIED in its original held-out split."
+  ],
+  "task_contracts": [
+    {
+      "adversarial_controls": [
+        "reject path traversal patch",
+        "reject non-allowlisted source file",
+        "reject target symlink",
+        "reject source hash drift"
+      ],
+      "baseline_commit": "caed1943d38ecb58f6e466a72bed98310c9d45a5",
+      "baseline_target_sha256": "952c180419d2999648e95aa4d3d6eb5bfec16f7aaee2920ff97844690d14b8b4",
+      "candidate_prompt_path": "benchmarks/mlsys_repo_eval_v3/mlxlm_1938_phi3small_logits_mask/task.md",
+      "candidate_prompt_sha256": "eb4846f2d35f2cc125a18373d0b18ac40f0de2394a22c82be0ac3c0af98d1e94",
+      "expected_assertions": "For a deterministic 4-layer, randomly initialized model with vocab_size=100352, output shape is (1, 3, 100352), there are 91 designated dummy-token logits per position, all are negative infinity, and the model has four layers. This is a narrow parent-owned semantic subset of the pinned upstream test; no upstream tests or expected outputs enter the candidate container.",
+      "fixed_commit": "011f2f6e2f4ff91e99b3fed3a7f51d3a42a6335c",
+      "fixed_target_sha256": "615f982081350e9f10511ff65f6046c8ea05812521c8f59e283209b72ea780c8",
+      "grader_path": "tests/test_models.py",
+      "grader_revision": "011f2f6e2f4ff91e99b3fed3a7f51d3a42a6335c",
+      "grader_selector": "test_phi3small",
+      "grader_sha256": "6203007cf38c93eae653ecd902737166e9099a6f51ba5947a8397e0b73a97b7f",
+      "incorrect_mutant": "Replace out[..., self._dummy_tokenizer_ids] = -float(\"inf\") with the original row-axis expression out[self._dummy_tokenizer_ids] = -float(\"inf\").",
+      "license_file_path": "LICENSE",
+      "license_file_sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+      "license_spdx": "MIT",
+      "repository": "ml-explore/mlx-lm",
+      "source_pr": "https://github.com/ml-explore/mlx-lm/pull/1938",
+      "split": "heldout",
+      "target_path": "mlx_lm/models/phi3small.py",
+      "task_family": "phi3small_vocab_mask_axis",
+      "task_id": "mlxlm-1938-phi3small-logits-mask"
+    }
+  ]
+}

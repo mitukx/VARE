@@ -1,0 +1,26 @@
+{
+  "architecture": "arm64",
+  "candidate_dependency_preflight": {
+    "default_device": "Device(cpu, 0)",
+    "python": "3.12.15",
+    "versions": {
+      "lm-eval": null,
+      "mlx": "0.32.4",
+      "numpy": "2.5.4",
+      "pytest": null,
+      "tqdm": "4.70.1"
+    }
+  },
+  "docker_server": "linux/aarch64 29.5.2",
+  "image_id": "sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+  "image_reference": "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7",
+  "image_size_bytes": 131913042,
+  "os": "linux",
+  "package_metadata_note": "mlx-lm is supplied only as source under /subject; lm-eval absence is recorded and the #1902 adapter executes only the pinned target method AST.",
+  "repo_digests": [
+    "vare-mlx-cpu@sha256:a377e54dc56cbbf2b40627966ce8ff7c5152a0d580175921f45cbdbeff30bfa7"
+  ],
+  "repo_tags": [
+    "vare-mlx-cpu:0.32.4-0.32.0"
+  ]
+}

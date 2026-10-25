@@ -1,0 +1,32 @@
+{
+  "candidate_changed_paths": [
+    "mlx_lm/models/phi3small.py"
+  ],
+  "candidate_file_manifest_sha256": "eb679fde6aba391f7e4494f9e79aeae77c22c206457dab1c58f65edc8d16fb38",
+  "candidate_files": 187,
+  "candidate_target_sha256": "615f982081350e9f10511ff65f6046c8ea05812521c8f59e283209b72ea780c8",
+  "candidate_visible_git_history": false,
+  "candidate_visible_grader": false,
+  "candidate_visible_task_prompt": false,
+  "case_results": [
+    {
+      "case_id": "dummy_token_logits_masked_along_vocab_axis",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.31467508408556244
+    }
+  ],
+  "completed_at_utc": "2026-10-25T05:27:02.636434+00:00",
+  "decision": "PASS",
+  "event_id": 2,
+  "grader_passed": true,
+  "network": "none",
+  "patch_paths": [
+    "mlx_lm/models/phi3small.py",
+    "mlx_lm/models/phi3small.py"
+  ],
+  "patch_sha256": "9e8e165f2d5fc196c680c9af5a8c2c9f6e5e08e02f7834b9bd18c057f3f9f9f1",
+  "started_at_utc": "2026-10-25T05:27:02.089916+00:00",
+  "task_id": "mlxlm-1938-phi3small-logits-mask",
+  "variant": "pinned_known_fix_calibration_only"
+}

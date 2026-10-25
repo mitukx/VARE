@@ -1,0 +1,177 @@
+{
+  "candidate_invocation_budget": 17,
+  "candidate_invocations": 13,
+  "candidate_memory_sampling": {
+    "limitation": "Short-lived container peaks can occur between polling samples; the 1536 MiB container limit is authoritative containment, sampled peaks are not exact high-water marks.",
+    "method": "docker stats --no-stream sampled every 150ms while vare-call containers are running",
+    "per_container_peak_bytes": {
+      "aca7c85e8573": 0
+    },
+    "sample_count": 1,
+    "sampled_container_count": 1,
+    "sampled_peak_bytes": 0,
+    "samples": [
+      {
+        "at_utc": "2026-10-25T05:21:21.861987+00:00",
+        "container_id": "aca7c85e8573",
+        "memory_bytes": 0,
+        "raw": "0B / 0B 0.00%"
+      }
+    ]
+  },
+  "claim_boundary": "Task-grader qualification only; not a model or agent result, not a capability result, and not permission to train or access other held-out tasks.",
+  "completed_at_utc": "2026-10-25T05:21:29.229628+00:00",
+  "decision": "NO_GO",
+  "dependency_friction": "mlx-lm is supplied only as source under /subject; lm-eval absence is recorded and the #1902 adapter executes only the pinned target method AST.",
+  "exposure_audit": {
+    "audit_file_sha256": "71783e135060cd4ad0399787f1fb0b42a82d12131bfe7e44597f2fc02a1f5c3c",
+    "audit_status": "CLEAN_WITHIN_AUDITED_VARE_SCOPE",
+    "candidate_model_prompts": 0,
+    "candidate_model_rollouts": 0,
+    "external_pretraining_corpus": "UNKNOWN_NOT_AUDITED",
+    "note": "No candidate coding model or learning agent received either prompt, fix, test source, or grader result. This is not a model pretraining-corpus audit.",
+    "retained_candidate_artifact_matches": 0,
+    "scope_limit": "Search covers the listed retained VARE refs/worktrees and identified model/agent-artifact paths only. It cannot prove absence from files outside this inventory, public model pretraining corpora, or semantically paraphrased records that contain none of the frozen identifiers/symptoms.",
+    "training_or_update": false
+  },
+  "host_resource_usage": {
+    "python_launcher_peak_rss_bytes": 32849920,
+    "swap_end_bytes": 1411844669,
+    "swap_growth_bytes": 0,
+    "swap_start_bytes": 1411844669,
+    "system_cpu_seconds": 1.33678,
+    "user_cpu_seconds": 0.411057,
+    "wall_seconds": 12.88283587503247
+  },
+  "model_rollouts": "NOT_RUN",
+  "model_training": "NOT_RUN",
+  "protocol_id": "mlsys-heldout-task-qualification-pilot-v1",
+  "protocol_sha256": "83b7f68874e4441f3da511c94727c92dc198a97559ff9c3adef5c91b007d8b1c",
+  "shared_boundary_probe": {
+    "cases": [
+      {
+        "case_id": "separated_no_network_boundary",
+        "failure": null,
+        "passed": true,
+        "wall_s": 0.11533004189752788
+      }
+    ],
+    "passed": true
+  },
+  "source_provenance": {
+    "container_isolation_sha256": "f6399f29f37d3d2c03c63f04c91efb25e60c31919ec3b83a8dda49cde6792e6a",
+    "exposure_audit_runner_sha256": "8f96d283f80c2be8efb61b7e14c8b40dbe47c41d2458a183cdb77746ab13d5ab",
+    "isolation_harness_sha256": "8d0fbef1bb44c788dc983a814c2178c7c5a2e716fbfcc0f912f64885fe8fdccf",
+    "qualification_module_sha256": "5bab3022bbc53c4a3083d6bec98a88c4ca65b694e0ba421300a539ce7337acad",
+    "qualification_runner_sha256": "d3d1d651be18a1118e4193da3bef38963564f9ed0a244bd2fb7a245672c930ee",
+    "repository_head": "7f7d5a4e3963adef298dee7520bcfc36971639d9"
+  },
+  "source_repo": {
+    "git_version": "git version 2.50.1 (Apple Git-155)",
+    "is_bare": false,
+    "origin": "https://github.com/ml-explore/mlx-lm.git"
+  },
+  "started_at_utc": "2026-10-25T05:21:16.350472+00:00",
+  "task_certificates": [
+    {
+      "candidate_adapter_sha256": "397059aa0c4b72a148c4b26150c629e302bbf3dffcabd2df3f2f24488639095c",
+      "candidate_source_python_file_count": 190,
+      "candidate_source_tree_sha256": "9e88633cb23806dbc4c603468ca67e250e834579755a5d87ec64c57fa7fd4062",
+      "certificate_gate_passed": false,
+      "patch_admission_controls": {
+        "non_allowlisted_target_rejected": true,
+        "path_traversal_rejected": true,
+        "pinned_fix_patch_paths": [
+          "mlx_lm/evaluate.py",
+          "mlx_lm/evaluate.py"
+        ],
+        "pinned_fix_patch_sha256": "8d8637e7815c60c0006390ef0832044122447fac1d7f3abfb8acb04f2132ea72"
+      },
+      "source": {
+        "baseline_commit": "9d1e356e7cc6549e7d1697adabe2ea01ff8e062c",
+        "baseline_target_sha256": "d070c4a9a323101908d40b41d06df4632d36bd9e89ab803619b1b2eb94efecc1",
+        "candidate_prompt_path": "benchmarks/mlsys_repo_eval_v3/mlxlm_1902_continuation_score/task.md",
+        "candidate_prompt_sha256": "0f28a525b73ec4869d36442d37f81dffcd2c23765999ca325920778402e8063b",
+        "fixed_commit": "c69d1288440a0dc4e6401fc417098b07598dccd5",
+        "fixed_target_sha256": "468f1f519e3af2573ad1ec38f4acd8d2d22fe31d5399c83d18da598a2381220d",
+        "grader_path": "tests/test_evaluate.py",
+        "grader_revision": "c69d1288440a0dc4e6401fc417098b07598dccd5",
+        "grader_sha256": "53de59f08389fae188b83eeee901e163458d03ab76ce2fe9fe53b26405670dd0",
+        "repository": "ml-explore/mlx-lm"
+      },
+      "split": "heldout",
+      "status": "UNQUALIFIED",
+      "task_id": "mlxlm-1902-continuation-score-truncation",
+      "variants": [
+        {
+          "decision": "FAIL",
+          "record": "run-01-mlxlm_1902_continuation_score-pinned_baseline.json",
+          "record_sha256": "f492c38a11ee1f2b510db2e5717e6600e8a28d0cbe437e21b7a07be0951962a1",
+          "variant": "pinned_baseline"
+        },
+        {
+          "decision": "FAIL",
+          "record": "run-02-mlxlm_1902_continuation_score-pinned_known_fix_calibration_only.json",
+          "record_sha256": "2bdd8aa97ac58e2b0c1d9697f4bc59cf7fb79a3efc47289177026ec27fd8074e",
+          "variant": "pinned_known_fix_calibration_only"
+        },
+        {
+          "decision": "FAIL",
+          "record": "run-03-mlxlm_1902_continuation_score-prespecified_incorrect_mutant.json",
+          "record_sha256": "4b24c030f487786a453cfc8b6bcb611bf5298246bc9908d77d5495abb890edc1",
+          "variant": "prespecified_incorrect_mutant"
+        }
+      ]
+    },
+    {
+      "candidate_adapter_sha256": "46d2f059fcc22fa6bfc8b0c88cf94fc2b3451a4e62de74993a51c953290dc115",
+      "candidate_source_python_file_count": 185,
+      "candidate_source_tree_sha256": "dd1948ce7a83315e3afdd3d54acdb7e672a70e88bb03a251a8a76684e22fad9b",
+      "certificate_gate_passed": true,
+      "patch_admission_controls": {
+        "non_allowlisted_target_rejected": true,
+        "path_traversal_rejected": true,
+        "pinned_fix_patch_paths": [
+          "mlx_lm/models/falcon_h1.py",
+          "mlx_lm/models/falcon_h1.py"
+        ],
+        "pinned_fix_patch_sha256": "4080f7c873ab6d8cd83830f0d40f268a512af31063553b83dab8cafd033dd107"
+      },
+      "source": {
+        "baseline_commit": "87b7b583a697537aa68f47130b40884700b5f55f",
+        "baseline_target_sha256": "68c25a5b53a8f87bf843e87c93b8c35caf1a059600583506d7180d2f79863ca6",
+        "candidate_prompt_path": "benchmarks/mlsys_repo_eval_v3/mlxlm_1926_falcon_cache_gradient/task.md",
+        "candidate_prompt_sha256": "5bceecda7fa40cd2e9d78dc8197194ebbe698d39ff9e00af4a0fce808bf1584f",
+        "fixed_commit": "3051e26bc72b8ab426af17d14c5599447eb306a5",
+        "fixed_target_sha256": "cc3acc9bb4d3c6ed8ff3f67ed6d85ba8828d973712e9ce13c8865a5064f6a999",
+        "grader_path": "tests/test_models.py",
+        "grader_revision": "3051e26bc72b8ab426af17d14c5599447eb306a5",
+        "grader_sha256": "f7c9a3eafca6ba9fcfc9c281177ebb15a93a6e1f4d0a31c70264e10ae5d0362d",
+        "repository": "ml-explore/mlx-lm"
+      },
+      "split": "heldout",
+      "status": "CERTIFIED_WITHIN_AUDITED_VARE_SCOPE",
+      "task_id": "mlxlm-1926-falcon-cache-gradient",
+      "variants": [
+        {
+          "decision": "FAIL",
+          "record": "run-04-mlxlm_1926_falcon_cache_gradient-pinned_baseline.json",
+          "record_sha256": "5d7eb8150c71313aa8644376584387d86635c39dbad92d5860ba5d0a8b6ef310",
+          "variant": "pinned_baseline"
+        },
+        {
+          "decision": "PASS",
+          "record": "run-05-mlxlm_1926_falcon_cache_gradient-pinned_known_fix_calibration_only.json",
+          "record_sha256": "6077a1df5c57162fa32cc2d554f379524f13a5cb6a349bec49d466d5e967714c",
+          "variant": "pinned_known_fix_calibration_only"
+        },
+        {
+          "decision": "FAIL",
+          "record": "run-06-mlxlm_1926_falcon_cache_gradient-prespecified_incorrect_mutant.json",
+          "record_sha256": "5dc531a15d055834a255a26311c47315f93e03f0dfe3288e13ae3dbb3edb8f89",
+          "variant": "prespecified_incorrect_mutant"
+        }
+      ]
+    }
+  ]
+}

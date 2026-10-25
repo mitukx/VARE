@@ -1,0 +1,1 @@
+The recurrent model should produce the same valid-token outputs and final state when a sequence includes right-padding as when it processes only the unpadded sequence. Review the sequence-mask handling in the state-space attention path and make the smallest target-file change needed to preserve that behavior.

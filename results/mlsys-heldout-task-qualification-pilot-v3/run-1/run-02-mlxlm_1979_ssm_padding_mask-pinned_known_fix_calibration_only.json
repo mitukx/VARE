@@ -1,0 +1,32 @@
+{
+  "candidate_changed_paths": [
+    "mlx_lm/models/ssm.py"
+  ],
+  "candidate_file_manifest_sha256": "a3d77f7f12a532e441fa28329e7b7297002916387ed216c78e519b12bde4838b",
+  "candidate_files": 202,
+  "candidate_target_sha256": "485811a1dbc475553eaa4dd9c8d8ceb9a86da8de3b7cc383211ef2075f762ff4",
+  "candidate_visible_git_history": false,
+  "candidate_visible_grader": false,
+  "candidate_visible_task_prompt": false,
+  "case_results": [
+    {
+      "case_id": "right_padding_matches_unpadded_outputs_and_final_state",
+      "failure": null,
+      "passed": true,
+      "wall_s": 0.1671695829308033
+    }
+  ],
+  "completed_at_utc": "2026-10-25T05:41:39.450069+00:00",
+  "decision": "PASS",
+  "event_id": 2,
+  "grader_passed": true,
+  "network": "none",
+  "patch_paths": [
+    "mlx_lm/models/ssm.py",
+    "mlx_lm/models/ssm.py"
+  ],
+  "patch_sha256": "ef3a41efa3acdcd70b066dbecef6ec97284758e66c06a64a5d1416fa0dd0474b",
+  "started_at_utc": "2026-10-25T05:41:39.003071+00:00",
+  "task_id": "mlxlm-1979-ssm-padding-mask",
+  "variant": "pinned_known_fix_calibration_only"
+}
