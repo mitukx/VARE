@@ -378,10 +378,18 @@ def controller_source_hashes(tool_interface: str) -> dict[str, str]:
     paths = {
         'scripts/run_local_agent.py': Path(__file__).resolve(),
         'src/vare/agent_edit_v2.py': ROOT / 'src/vare/agent_edit_v2.py',
+        'src/vare/agent_task_contract.py': ROOT / 'src/vare/agent_task_contract.py',
     }
     if tool_interface == 'lease_bound_navigation_v1':
         paths['src/vare/source_navigation_v1.py'] = ROOT / 'src/vare/source_navigation_v1.py'
     return {name: sha256(path) for name, path in sorted(paths.items())}
+
+
+def candidate_file_sets(contract: Any) -> tuple[set[str], set[str], set[str]]:
+    """Separate agent source capabilities from the runner-only smoke file."""
+    agent_sources = set(contract.candidate_visible_source_files)
+    public_tests = {name for name in contract.allowed_files if name == 'test_public.py'}
+    return agent_sources, public_tests, agent_sources | public_tests
 
 
 def run_git(root: Path, *args: str) -> str:
@@ -619,8 +627,14 @@ def main() -> int:
     contract = load_agent_task(task_root)
     if args.require_split is not None and contract.split != args.require_split:
         parser.error(f'task split {contract.split!r} does not match required split {args.require_split}')
-    allowed = set(contract.allowed_files)
-    missing = sorted(name for name in allowed if not (workspace / name).is_file())
+    # `test_public.py` is retained only for its dedicated sandboxed runner. It
+    # is never part of any source read/edit/search/list tool capability. Every
+    # other test/grader-shaped path is dropped by the shared task contract
+    # policy before constructing an agent-facing capability.
+    allowed, test_files, tracked_files = candidate_file_sets(contract)
+    if not allowed:
+        parser.error('task contract contains no candidate-visible source files')
+    missing = sorted(name for name in tracked_files if not (workspace / name).is_file())
     if missing:
         parser.error(f'workspace missing allowed source files: {missing}')
     if not os.environ.get('HF_HUB_OFFLINE') == '1' or not os.environ.get('TRANSFORMERS_OFFLINE') == '1':
@@ -657,8 +671,7 @@ def main() -> int:
                    'mps_available_unused': torch.backends.mps.is_available()}
 
     task_text = contract.prompt_text
-    test_files = {name for name in allowed if Path(name).name == 'test_public.py'}
-    editable = allowed - test_files
+    editable = set(allowed)
     edit_leases = SourceEditLeaseStoreV1(workspace, editable)
     source_navigator = (
         SourceNavigatorV1(workspace, editable)
@@ -724,7 +737,7 @@ def main() -> int:
     ]
     initial_messages = [dict(message) for message in messages]
     transcript: list[dict[str, Any]] = []
-    before = digest_tree(workspace, sorted(allowed))
+    before = digest_tree(workspace, sorted(tracked_files))
     event_journal = DurableEventJournal(event_path) if event_path is not None else None
     if event_journal is not None:
         event_journal.append(
@@ -897,7 +910,7 @@ def main() -> int:
                     break
                 messages.append({'role': 'assistant', 'content': raw})
                 transcript.append(entry)
-                current_hashes = digest_tree(workspace, sorted(allowed))
+                current_hashes = digest_tree(workspace, sorted(tracked_files))
                 if current_hashes == before and no_tool_retries < args.max_no_tool_retries:
                     no_tool_retries += 1
                     messages.append({'role': 'user', 'content': no_tool_retry_reminder(
@@ -1045,7 +1058,7 @@ def main() -> int:
                         except SyntaxError as exc:
                             result = {'syntax_valid': False, 'path': path, 'error': str(exc)}
                 else:
-                    if digest_tree(workspace, sorted(allowed)) == before:
+                    if digest_tree(workspace, sorted(tracked_files)) == before:
                         result = {'finished': False, 'error': 'source is unchanged; inspect and edit before finishing'}
                     elif args.public_test_image and not (public_test_result or {}).get('passed'):
                         result = {'finished': False, 'error': 'public tests have not passed; run them and repair failures'}
@@ -1071,7 +1084,7 @@ def main() -> int:
             break
 
     elapsed = time.perf_counter() - start
-    after = digest_tree(workspace, sorted(allowed))
+    after = digest_tree(workspace, sorted(tracked_files))
     diff = run_git(workspace, 'diff', '--binary', contract.diff_revision, '--', *sorted(allowed))
     if args.backend == 'mlx':
         runtime['mlx_active_memory_bytes'] = int(mx.metal.get_active_memory())

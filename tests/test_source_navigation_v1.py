@@ -4,8 +4,15 @@ import hashlib
 import json
 from pathlib import Path
 
-from scripts.run_local_agent import controller_source_hashes, sha256, tools_for
+from scripts.run_local_agent import (
+    candidate_file_sets,
+    controller_source_hashes,
+    sha256,
+    tools_for,
+)
 from vare.agent_edit_v2 import SourceEditLeaseStoreV1
+from vare.agent_task_contract import load_agent_task
+from vare import source_navigation_v1 as navigation_module
 from vare.source_navigation_v1 import SourceNavigatorV1
 
 
@@ -35,10 +42,14 @@ def test_navigation_run_identity_includes_all_selected_interface_sources() -> No
     assert set(sources) == {
         "scripts/run_local_agent.py",
         "src/vare/agent_edit_v2.py",
+        "src/vare/agent_task_contract.py",
         "src/vare/source_navigation_v1.py",
     }
     assert sources["src/vare/source_navigation_v1.py"] == sha256(
         Path(__file__).parents[1] / "src/vare/source_navigation_v1.py"
+    )
+    assert sources["src/vare/agent_task_contract.py"] == sha256(
+        Path(__file__).parents[1] / "src/vare/agent_task_contract.py"
     )
 
 
@@ -119,6 +130,156 @@ def test_test_and_grader_paths_are_excluded_and_symlinks_fail_closed(tmp_path: P
     result = linked.search("secret_reference")
     assert result["status"] == "source_read_failed"
     assert "grader answer" not in json.dumps(result)
+
+
+def test_contract_and_runner_capabilities_drop_test_grader_basename_variants(tmp_path: Path) -> None:
+    blocked = {
+        "test.py", "test.cpp", "src/TEST.CPP", "src/ops_test.cpp", "src/ops_test.py",
+        "src/TestPublic.py", "src/grade.py", "src/grader.py",
+        "src/ops_grader.cpp", "src/test_tools.py", "hidden_tests.py",
+        "src/known_fix.py", "src/testPublic/worker.py", "src/my_tests/worker.py",
+        "grader/answers.py", "src/evaluator/grade.py", "src/answer_test.cpp",
+    }
+    secret = "LEAKED_REFERENCE_IMPLEMENTATION_TOKEN_7fa3"
+    for index, path in enumerate(sorted(blocked)):
+        _write(tmp_path, path, f"reference_{index} = {secret!r}\n")
+    _write(tmp_path, "src/healthy_module.py", "visible_symbol = 1\n")
+    # This exact root smoke-test path remains for the dedicated test runner,
+    # never as a source read/edit/search capability.
+    _write(tmp_path, "test_public.py", f"assert {secret!r} == {secret!r}\n")
+
+    task_root = tmp_path / "task"
+    task_root.mkdir()
+    (task_root / "task.json").write_text(json.dumps({
+        "task_id": "adversarial-allowlist",
+        "source": {},
+        "metadata": {
+            "editable_files": sorted(blocked | {"src/healthy_module.py", "test_public.py"}),
+            "split": "development",
+        },
+        "prompt": "Repair the visible source implementation.",
+    }), encoding="utf-8")
+    contract = load_agent_task(task_root)
+    capabilities, public_tests, tracked = candidate_file_sets(contract)
+    assert capabilities == {"src/healthy_module.py"}
+    assert public_tests == {"test_public.py"}
+    assert "test_public.py" not in capabilities
+    assert tracked == capabilities | public_tests
+
+    (task_root / "task.json").write_text(json.dumps({
+        "task_id": "hidden-only-adversarial-allowlist",
+        "source": {},
+        "metadata": {"editable_files": sorted(blocked), "split": "development"},
+        "prompt": "Repair the visible source implementation.",
+    }), encoding="utf-8")
+    hidden_only_contract = load_agent_task(task_root)
+    assert hidden_only_contract.candidate_visible_source_files == ()
+    assert candidate_file_sets(hidden_only_contract)[0] == set()
+    hidden_only_navigation = SourceNavigatorV1(tmp_path, set(blocked))
+    assert hidden_only_navigation.search("reference")["status"] == "no_candidate_visible_source_files"
+
+    navigator = SourceNavigatorV1(tmp_path, set(contract.allowed_files))
+    assert navigator.indexed_paths == ("src/healthy_module.py",)
+    searched = navigator.search("reference")
+    assert secret not in json.dumps(searched)
+
+    leases = SourceEditLeaseStoreV1(tmp_path, capabilities)
+    for path in sorted(blocked | {"test_public.py"}):
+        read = leases.read_lines(path, 1, 1)
+        assert read["status"] == "valid_call_rejected_by_policy", path
+        assert read["error"] == "path_not_allowlisted", path
+        assert secret not in json.dumps(read), path
+
+
+def test_dense_large_file_uses_one_fd_read_per_snapshot_and_linear_line_scans(
+        tmp_path: Path, monkeypatch) -> None:
+    line_count = 25_000
+    content = "".join(
+        f"dense target payload index_{index:05d} metadata\n"
+        for index in range(line_count)
+    )
+    source = _write(tmp_path, "src/dense.py", content)
+    read_sizes: list[int] = []
+    line_visits = 0
+    original_read = navigation_module._read_current
+    original_match = navigation_module._line_match
+
+    def counted_read(parent_fd: int, basename: str):
+        data, source_stat = original_read(parent_fd, basename)
+        read_sizes.append(len(data))
+        return data, source_stat
+
+    def counted_match(line: str, query_terms: list[str], query_term_set: set[str]):
+        nonlocal line_visits
+        line_visits += 1
+        return original_match(line, query_terms, query_term_set)
+
+    monkeypatch.setattr(navigation_module, "_read_current", counted_read)
+    monkeypatch.setattr(navigation_module, "_line_match", counted_match)
+    navigator = SourceNavigatorV1(tmp_path, {"src/dense.py"})
+
+    assert read_sizes == [source.stat().st_size]
+    result = navigator.search("dense target")
+    # One bounded descriptor read checks freshness; the index itself was built
+    # with one read rather than one complete-file rescan per 120-line window.
+    assert read_sizes == [source.stat().st_size, source.stat().st_size]
+    assert line_visits == line_count
+    assert result["status"] == "ok"
+    assert result["truncated"] is True
+    assert len(result["results"]) == 8
+    assert result["results"][0]["line"] == 1
+
+
+def test_source_index_enforces_aggregate_byte_and_line_limits_before_indexing(
+        tmp_path: Path, monkeypatch) -> None:
+    _write(tmp_path, "src/bytes.py", "one = 1\ntwo = 2\n")
+    def unexpected_decode(_data: bytes) -> str:
+        raise AssertionError("aggregate byte limit must be checked before decoding")
+
+    with monkeypatch.context() as patcher:
+        patcher.setattr(navigation_module, "_decode_source", unexpected_decode)
+        byte_limited = SourceNavigatorV1(
+            tmp_path, {"src/bytes.py"}, max_total_source_bytes=4,
+        )
+    assert byte_limited.search("one")["status"] == "source_index_limit_exceeded"
+    assert byte_limited.search("one")["limit"] == "total_source_bytes"
+
+    def unexpected_split(_text: str) -> list[str]:
+        raise AssertionError("line limit must be checked before splitting")
+
+    with monkeypatch.context() as patcher:
+        patcher.setattr(navigation_module, "_split_source_lines", unexpected_split)
+        line_limited = SourceNavigatorV1(
+            tmp_path, {"src/bytes.py"}, max_total_source_lines=1,
+        )
+    assert line_limited.search("one")["status"] == "source_index_limit_exceeded"
+    assert line_limited.search("one")["limit"] == "total_source_lines"
+
+
+def test_source_index_rejects_per_file_byte_and_line_overflow(tmp_path: Path) -> None:
+    too_many_bytes = tmp_path / "src" / "oversized.py"
+    too_many_bytes.parent.mkdir(parents=True)
+    too_many_bytes.write_bytes(b"x" * (navigation_module.MAX_FILE_SOURCE_BYTES + 1))
+    oversized = SourceNavigatorV1(tmp_path, {"src/oversized.py"})
+    assert oversized.search("x")["status"] == "source_read_failed"
+
+    too_many_lines = tmp_path / "src" / "many_lines.py"
+    too_many_lines.write_text("x\n" * (navigation_module.MAX_FILE_SOURCE_LINES + 1),
+                              encoding="utf-8")
+    line_limited = SourceNavigatorV1(tmp_path, {"src/many_lines.py"})
+    result = line_limited.search("x")
+    assert result["status"] == "source_index_limit_exceeded"
+    assert result["limit"] == "per_file_lines"
+
+
+def test_line_counter_matches_python_splitlines_for_cr_and_crlf() -> None:
+    for source in (
+        "first\rsecond",
+        "first\r\nsecond",
+        "first\r\nsecond\r\n",
+        "\r\n\r",
+    ):
+        assert navigation_module._source_line_count(source) == len(source.splitlines())
 
 
 def test_changed_source_invalidates_and_rebuilds_the_index(tmp_path: Path) -> None:
