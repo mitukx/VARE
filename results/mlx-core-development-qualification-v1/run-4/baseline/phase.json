@@ -1,0 +1,24 @@
+{
+  "build": {
+    "abort_reason": null,
+    "command": [
+      "/usr/bin/sandbox-exec",
+      "-p",
+      "(version 1) (allow default) (deny network*)",
+      "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/work/mlx-core-development-qualification-v1/venv/bin/python",
+      "setup.py",
+      "build_ext",
+      "--inplace"
+    ],
+    "elapsed_seconds": 2.022,
+    "exit_code": 1,
+    "log_sha256": "36ee889445beff4fd0fb922b01f11002fc29556af460969556a57c5ff1b4d501",
+    "peak_process_tree_rss_bytes": 147456,
+    "samples_sha256": "ae12aa4a9fdd6de9b1404ce5cfd03be1b3b0f28c5aec9c714dbe4b150b2b48a2"
+  },
+  "source_hashes": {
+    "mlx-4729-negative-take": "24c4ff0edda004e0968e4e22db38d33b31303fe311232789560dc5fd72b56b6f",
+    "mlx-4730-normal-shape": "1f82a71893294b6409e00c735ae519bd4dbcac5b990a8e4804f64305f91110c2"
+  },
+  "status": "BUILD_FAILED"
+}

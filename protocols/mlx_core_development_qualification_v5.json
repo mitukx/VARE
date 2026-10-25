@@ -1,0 +1,321 @@
+{
+  "amendment_reason": "V4 reached the pinned source build but its offline CMake configuration failed before compilation or task outcomes: the pinned gguflib FetchContent source was missing and nanobind ext/robin_map was uninitialized. V5 preserves that NO-GO record and supplies both exact dependency sources. The runner maps every protocol-listed FetchContent dependency to its pinned local source and verifies the robin_map submodule commit before the offline build. The resource sampler interval changes from 2.0 to 0.5 seconds because the V4 configuration failure completed in about 2 seconds and its RSS sample did not measure a useful build peak. The task set, source revisions, grader, baseline/fix/mutant controls, phase order, resource floors, swap/time limits and stop criteria are unchanged.",
+  "base_revision": "f41bec734ac9fc96723ab7d4e64e385796f15561",
+  "base_revision_description": "Common MLX main base used by both upstream repair pull requests; MLX 0.32.5 source.",
+  "build_python_freeze": [
+    "cmake==3.31.6",
+    "numpy==2.5.4",
+    "pip==25.0.1",
+    "psutil==7.1.3",
+    "setuptools==80.9.0",
+    "typing_extensions==4.16.0",
+    "wheel==0.45.1"
+  ],
+  "build_python_path": "work/mlx-core-development-qualification-v1/venv/bin/python",
+  "claim_limit": "At most two new source/grader-certified Development task families on this pinned native CPU build. This does not establish candidate-model success, model-unseen eligibility, a held-out task count, post-training improvement, asynchronous benefit, benchmark prevalence, or external pretraining non-exposure.",
+  "controller_parent_revision": "faf5ade9ccedfddf19e185fb3cd6f0a89a124f6d",
+  "dependency_root": "work/mlx-core-development-qualification-v1/dependencies-complete-v1",
+  "dependency_sources": {
+    "fmt": {
+      "commit": "407c905e45ad75fc29bf0f9bb7c5c2fd3475976f",
+      "fetchcontent_name": "fmt",
+      "kind": "git",
+      "path": "fmt",
+      "tree_sha256": "7b31e78a56d918f8f8bcee422c04ee01fb2a4d044434be50f8fb62aea557caa9"
+    },
+    "gguflib": {
+      "commit": "8fa6eb65236618e28fd7710a0fba565f7faa1848",
+      "fetchcontent_name": "gguflib",
+      "kind": "git",
+      "path": "gguflib",
+      "tree_sha256": "e16b9f9ff075f3c55bf281594aaf6b913885e13bfcc31e0e966d671cba1c21e9"
+    },
+    "json": {
+      "archive_filename": "json-3.11.3.tar.xz",
+      "archive_sha256": "d6c65aca6b1ed68e7a182f4757257b107ae403032760ed6ef121c9d55e81757d",
+      "fetchcontent_name": "json",
+      "kind": "archive_extracted",
+      "path": "json",
+      "tree_sha256": "a6f4bbaecb441d501d869bdc9456592305da40cedf009796c3584c830e2cec0f"
+    },
+    "nanobind": {
+      "commit": "68480a9e6883bb1bf65e1925423321e2a89d07f9",
+      "fetchcontent_name": "nanobind",
+      "kind": "git",
+      "path": "nanobind",
+      "submodule_commits": {
+        "ext/robin_map": "4ec1bf19c6a96125ea22062f38c2cf5b958e448e"
+      },
+      "tree_sha256": "214c47f8e11097088db6dc4d3d6891526e305fe02476ec561634c04409d7c935"
+    }
+  },
+  "exposure": {
+    "audit_decision": "NO_MATCH_IN_PINNED_LOCAL_EVIDENCE",
+    "audit_path": "results/mlx-core-development-qualification-v1/exposure-audit-v2.json",
+    "audit_scope": "Tracked benchmarks, docs, protocols, results, and scripts at PR #129 head. This includes retained VARE model and agent receipts in those paths.",
+    "audit_sha256": "8f0b5fa0e44b6ac3bfd30ca478ccb14c74f2bc212feb4f698ea622b92a252a9d",
+    "candidate_model_or_agent_inference": "NOT_RUN",
+    "candidate_prompt_delivered": false,
+    "external_pretraining_or_recognition": "UNKNOWN_NOT_AUDITED",
+    "operator_exposure": "The research agent/operator has inspected upstream source fixes, regression tests, and 0.32.4 triage outcomes. Both tasks are permanently Development-only in this study.",
+    "reference_vare_revision": "4920c249f11d20dc0846ab8966066b1b5d4600e8"
+  },
+  "grader_contract": {
+    "acceptance": "Qualify a task only if its baseline fails, its exact upstream fix passes, and its preregistered incorrect mutant fails. Pilot GO requires both task families to satisfy all three controls. Any build failure, timeout, unexpected result, or missing record is NO-GO; no retries or protocol changes are allowed in this version.",
+    "control_outcomes": {
+      "baseline": "Each task must be rejected by at least one task-specific oracle check and its pinned regression test must fail.",
+      "incorrect_mutant": "Each task must be rejected by at least one task-specific oracle check and its pinned regression test must fail.",
+      "known_fix": "Both tasks must pass all task-specific oracle checks and the pinned regression test."
+    },
+    "failure_retention": "Unique output and worktree paths; exclusive file creation; per-phase raw logs, telemetry and records; a SHA-256 manifest; partial-failure record on caught exceptions.",
+    "hidden_tests": "NONE. The task is Development-only. Pinned upstream tests and the explicit public oracle checks are used.",
+    "independent_oracle": "Parent-side deterministic semantic checks on returned scalar values, shapes, exception classes/messages, finiteness and CPU device identity, combined with the pinned upstream test result.",
+    "network": "Denied for build, observation and regression-test subprocesses using macOS sandbox-exec deny network profile.",
+    "public_test_authorship": "Upstream MLX regression tests from the merged repair pull requests; exact file hashes and source revisions are pinned below.",
+    "trust_boundary": "Candidate observations run as a separate CPU-only child process; expected values are computed by the trusted parent. The exact upstream public regression tests are copied to a grader directory outside the pinned source worktree and executed by a separate launcher. No model is run in this pilot."
+  },
+  "grader_files": [
+    {
+      "path": "test_ops.py",
+      "revision": "0f31bb7d38ef07d8adb5452fec64d1ce47528e5e",
+      "sha256": "4fb150807d49e035aa992462649f9001cf05f4c941d9c1582fb0a892de62bf00",
+      "source_path": "python/tests/test_ops.py"
+    },
+    {
+      "path": "test_random.py",
+      "revision": "1bffde455d7ab2d13a76e30e40b2043239a3221c",
+      "sha256": "2633a7afff08e10895e61faec5afec35ddee359a32954389d41cfb37b686180c",
+      "source_path": "python/tests/test_random.py"
+    },
+    {
+      "path": "mlx_tests.py",
+      "revision": "f41bec734ac9fc96723ab7d4e64e385796f15561",
+      "sha256": "a819a52ffece76b3fcbbd54edfffe05f1f7e5a0bc0405d4a94e98e6ad42fcc83",
+      "source_path": "python/tests/mlx_tests.py"
+    }
+  ],
+  "implementation_sha256": {
+    "requirements/mlx-core-development-qualification-v1.lock.txt": "c89309fc1b8dec9d57666da7d3847b637d8f583f9bfcf09e8e563e1a00d02fd1",
+    "scripts/audit_mlx_core_development_qualification_v5.py": "8943f08c0d7a2dcbd3ff7cb2cfc1a524e375169aae1906c2226b13e1a52cbe4b",
+    "scripts/audit_mlx_core_development_qualification_v5_launcher.py": "4ef691e9fdca7e7d3b1d439435b97b34067a5951f1adbf3839eedafec8788629",
+    "scripts/audit_mlx_core_task_exposure_v1.py": "c67badd39c890071439f99147f6447f58661b9e308fcc7ca702297dd66137f40",
+    "scripts/mlx_core_task_observations_v1.py": "e120f897bf43d6521d48c0bd7678d6ae4a493c9fe757a51253e4cd59ef88335a",
+    "scripts/mlx_core_upstream_test_launcher_v1.py": "c51b4504097c730443c2fabe162fbde6981f6ebd8629b814a9c530092ee0a319",
+    "scripts/run_mlx_core_development_qualification_v5.py": "eca1311077bb9d1c133c47d8dd1606380417192b784362c04abe3453299a4fc2",
+    "scripts/run_mlx_core_development_qualification_v5_launcher.py": "44647870deafb0dbb24ea97bf8e81eee8b1a40755970f5ae249dda3ceb7ec48d"
+  },
+  "output_path": "results/mlx-core-development-qualification-v1/run-5",
+  "phase_order": [
+    "baseline",
+    "fixed",
+    "mutant"
+  ],
+  "preregistered_at_utc": "2026-10-25T10:38:59.728716Z",
+  "preregistration_inputs": {
+    "benchmarks/mlx_core_development_qualification_v1/prompts/mlx-4729-negative-take.md": "272cd48229cfcc7a625a9f684b7948f6b8ecbbb0fe857ff56d9450c27860f97d",
+    "benchmarks/mlx_core_development_qualification_v1/prompts/mlx-4730-normal-shape.md": "cabb466ebe146ef6b5ec0855d66ae921e3808ec3648523bf35df8491c77fe150",
+    "protocols/mlx_core_development_qualification_v4.json": "fa3a23cae2ecd10757f644b228089facb866144d74e50278233e8e2f7e47b947",
+    "protocols/mlx_core_development_qualification_v4.lock.json": "60cdd534ef2c09df06f956d96234b3fe4902a9b5df25975ba99b173ece703835",
+    "results/mlx-core-development-qualification-v1/exposure-audit-v2.json": "8f0b5fa0e44b6ac3bfd30ca478ccb14c74f2bc212feb4f698ea622b92a252a9d",
+    "results/mlx-core-development-qualification-v1/run-4-independent-audit.json": "a943934cd5c3483a49b452e58a23057331424be8888c531bb2ec44c3f5f636a2",
+    "results/mlx-core-development-qualification-v1/run-4/manifest.json": "ec112d24a85716272194454675e313b691dd802b5d947cb1cbfd3821a64c0c17",
+    "results/mlx-core-development-qualification-v1/run-4/summary.json": "4d84bbd8dc5954459c4838c8f2afd88e5e25d07f59c488bf31804ca8a2bd3748",
+    "results/mlx-core-development-qualification-v1/setup-attempt-v1.json": "427d444e5390351efd2e0fab93cb9786c4cfef648bdef42c488ed1c61e7f3ebf",
+    "results/mlx-core-development-qualification-v1/setup-attempt-v2.json": "6c9e8db9cbf10267fe1c6058e199655b6b233bedd4565d668e6b96304dbda29d",
+    "results/mlx-core-development-qualification-v1/setup-attempt-v3.json": "33b3d696ba5e8e25f4909a4f652e656852c323426fa532e6e8cebf23c50d6c83"
+  },
+  "prior_attempts": {
+    "setup_v1": {
+      "path": "results/mlx-core-development-qualification-v1/setup-attempt-v1.json",
+      "sha256": "427d444e5390351efd2e0fab93cb9786c4cfef648bdef42c488ed1c61e7f3ebf"
+    },
+    "setup_v2": {
+      "path": "results/mlx-core-development-qualification-v1/setup-attempt-v2.json",
+      "sha256": "6c9e8db9cbf10267fe1c6058e199655b6b233bedd4565d668e6b96304dbda29d"
+    },
+    "setup_v3": {
+      "path": "results/mlx-core-development-qualification-v1/setup-attempt-v3.json",
+      "sha256": "33b3d696ba5e8e25f4909a4f652e656852c323426fa532e6e8cebf23c50d6c83"
+    },
+    "v4_independent_audit": {
+      "path": "results/mlx-core-development-qualification-v1/run-4-independent-audit.json",
+      "sha256": "a943934cd5c3483a49b452e58a23057331424be8888c531bb2ec44c3f5f636a2"
+    },
+    "v4_outcome": "NO_GO_BUILD_FAILED_BEFORE_COMPILATION_OR_TASK_OUTCOMES",
+    "v4_protocol": {
+      "path": "protocols/mlx_core_development_qualification_v4.json",
+      "sha256": "fa3a23cae2ecd10757f644b228089facb866144d74e50278233e8e2f7e47b947"
+    },
+    "v4_run_manifest": {
+      "path": "results/mlx-core-development-qualification-v1/run-4/manifest.json",
+      "sha256": "ec112d24a85716272194454675e313b691dd802b5d947cb1cbfd3821a64c0c17"
+    },
+    "v4_run_summary": {
+      "path": "results/mlx-core-development-qualification-v1/run-4/summary.json",
+      "sha256": "4d84bbd8dc5954459c4838c8f2afd88e5e25d07f59c488bf31804ca8a2bd3748"
+    }
+  },
+  "protocol_id": "mlx-core-development-qualification-v5",
+  "purpose": "Qualify two prospective CPU-executable MLX-core Development task source/grader pairs with pinned baseline, known-fix and incorrect-mutant controls. This is not a held-out model evaluation.",
+  "python_build_environment": {
+    "build_python_freeze": [
+      "cmake==3.31.6",
+      "numpy==2.5.4",
+      "pip==25.0.1",
+      "psutil==7.1.3",
+      "setuptools==80.9.0",
+      "typing_extensions==4.16.0",
+      "wheel==0.45.1"
+    ],
+    "cmake": "3.31.6",
+    "compiler": "Apple clang 17.0.0",
+    "platform": "macOS arm64, Python 3.12.12",
+    "requirements_lock_path": "requirements/mlx-core-development-qualification-v1.lock.txt",
+    "requirements_lock_sha256": "c89309fc1b8dec9d57666da7d3847b637d8f583f9bfcf09e8e563e1a00d02fd1",
+    "wheels_sha256": {
+      "cmake-3.31.6-py3-none-macosx_10_10_universal2.whl": "da9d4fd9abd571fd016ddb27da0428b10277010b23bb21e3678f8b9e96e1686e",
+      "numpy-2.5.4-cp312-cp312-macosx_14_0_arm64.whl": "9cb18a327b49c5c337f972b03682f6a49855525faaf3c0d3e9c96cd0fd8880a8",
+      "pip-25.0.1-py3-none-any.whl": "c46efd13b6aa8279f33f2864459c8ce587ea6a1a59ee20de055868d8f7688f7f",
+      "psutil-7.1.3-cp36-abi3-macosx_11_0_arm64.whl": "bc31fa00f1fbc3c3802141eede66f3a2d51d89716a194bf2cd6fc68310a19880",
+      "setuptools-80.9.0-py3-none-any.whl": "062d34222ad13e0cc312a4c02d73f059e86a4acbfbdea8f8f76b28c99f306922",
+      "typing_extensions-4.16.0-py3-none-any.whl": "481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8",
+      "wheel-0.45.1-py3-none-any.whl": "708e7481cc80179af0e556bbf0cc00b8444c7321e2700b8d8580231d13017248"
+    }
+  },
+  "resource_limits": {
+    "build_parallelism": 2,
+    "max_phase_seconds": 1800,
+    "max_swap_growth_bytes": 134217728,
+    "memory_telemetry": "psutil process-tree RSS plus host available memory, total memory, swap and free disk. macOS has no cgroup boundary here; cgroup memory is unavailable and will not be claimed.",
+    "minimum_available_memory_bytes": 8589934592,
+    "minimum_disk_free_bytes": 21474836480,
+    "minimum_free_swap_bytes": 268435456,
+    "network": "deny for every build, observation and test subprocess",
+    "platform": "Darwin arm64 native CPU; require Metal disabled at compile time.",
+    "sample_interval_seconds": 0.5
+  },
+  "schema_version": 1,
+  "selection": {
+    "candidate_set": [
+      "mlx-4729-negative-take",
+      "mlx-4730-normal-shape"
+    ],
+    "candidate_set_frozen": true,
+    "excluded_candidates": [
+      {
+        "reason": "Requires Metal behavior; xcrun cannot locate the Metal compiler in this environment.",
+        "task": "MLX #4731 same-width NumPy dtype conversion"
+      },
+      {
+        "reason": "Requires Metal kernel execution and is outside the CPU-only pilot.",
+        "task": "MLX #4740 FFT partial-threadgroup regression"
+      }
+    ],
+    "selection_criteria": [
+      "Distinct MLX core functions and source files with separate regression semantics.",
+      "Native CPU execution is sufficient; no Metal, CUDA, network service, or model weights are required.",
+      "Both repairs and public regression tests are pinned to upstream commits that were merged on 2026-10-23.",
+      "Neither task family appears in the frozen VARE task catalog, exposure records, or the 24-item manual qualification queue at PR #129 head."
+    ],
+    "selection_limitations": [
+      "Convenience pilot selected after a triage run against installed MLX 0.32.4 showed both behaviors failing; that wheel is not the pinned source build and contributes no qualification outcome.",
+      "The research operator inspected the upstream fixes and tests before freezing this protocol.",
+      "The sample is not representative of MLX, coding benchmarks, or held-out tasks and must not be used to estimate prevalence.",
+      "A prior VARE-tree scan cannot rule out public-code pretraining or external task recognition."
+    ]
+  },
+  "source_checkout_path": "source/mlx.git",
+  "source_repo_url": "https://github.com/ml-explore/mlx.git",
+  "status": "FROZEN_AFTER_V4_OFFLINE_DEPENDENCY_CLOSURE_FAILURE",
+  "supersedes_protocol": {
+    "lock_path": "protocols/mlx_core_development_qualification_v4.lock.json",
+    "lock_sha256": "60cdd534ef2c09df06f956d96234b3fe4902a9b5df25975ba99b173ece703835",
+    "protocol_path": "protocols/mlx_core_development_qualification_v4.json",
+    "protocol_sha256": "fa3a23cae2ecd10757f644b228089facb866144d74e50278233e8e2f7e47b947"
+  },
+  "task_role": "DEVELOPMENT_ONLY",
+  "tasks": [
+    {
+      "baseline_revision": "f41bec734ac9fc96723ab7d4e64e385796f15561",
+      "baseline_sha256": "24c4ff0edda004e0968e4e22db38d33b31303fe311232789560dc5fd72b56b6f",
+      "candidate_source_allowlist": [
+        "mlx/ops.cpp"
+      ],
+      "fixed_revision": "0f31bb7d38ef07d8adb5452fec64d1ce47528e5e",
+      "fixed_sha256": "01c76a9460199c78b1c54038071861a22e6f90d6a89268754871281a4498cbc5",
+      "mutant_sha256": "6229a35985660d415352e9cf74f85245366d87c69dc02eb7ce54e2bf677785ca",
+      "mutations": [
+        {
+          "description": "Off-by-one negative-index normalization.",
+          "new": "index = index < 0 ? a.shape(axis) + index - 1 : index;",
+          "old": "index = index < 0 ? a.shape(axis) + index : index;"
+        }
+      ],
+      "oracle_checks": [
+        "default_device_is_cpu",
+        "take_negative_axis0",
+        "take_negative_flat",
+        "take_negative_axis1",
+        "take_positive_control"
+      ],
+      "prompt_delivered": false,
+      "prompt_path": "benchmarks/mlx_core_development_qualification_v1/prompts/mlx-4729-negative-take.md",
+      "prompt_sha256": "272cd48229cfcc7a625a9f684b7948f6b8ecbbb0fe857ff56d9450c27860f97d",
+      "repository": "ml-explore/mlx",
+      "target_path": "mlx/ops.cpp",
+      "task_family": "mlx_core_scalar_negative_take_index",
+      "task_id": "mlx-4729-negative-take",
+      "upstream_issue": "https://github.com/ml-explore/mlx/pull/4729",
+      "upstream_merge_commit": "7cfbc6a3a62c68e1170e81e71dad960f6e203070",
+      "upstream_merged_at": "2026-10-23T00:17:07Z",
+      "upstream_pr_title": "Fix mx.take's negative indices",
+      "upstream_test_path": "python/tests/test_ops.py",
+      "upstream_test_selector": "test_ops.TestOps.test_take",
+      "upstream_test_sha256": "4fb150807d49e035aa992462649f9001cf05f4c941d9c1582fb0a892de62bf00"
+    },
+    {
+      "baseline_revision": "f41bec734ac9fc96723ab7d4e64e385796f15561",
+      "baseline_sha256": "1f82a71893294b6409e00c735ae519bd4dbcac5b990a8e4804f64305f91110c2",
+      "candidate_source_allowlist": [
+        "mlx/random.cpp"
+      ],
+      "fixed_revision": "1bffde455d7ab2d13a76e30e40b2043239a3221c",
+      "fixed_sha256": "8cb0ff3cf907dca7c0b93103581f0bbbaa3206769a5b9526e591e13c731ed7bd",
+      "mutant_sha256": "e1317bce236ce048869e4bd4e3421035a21d5026f89a94b8df52942ba2319e0b",
+      "mutations": [
+        {
+          "description": "Invert the guard that rejects parameter broadcasting beyond the requested sample shape.",
+          "new": "if (out_shape == shape) {\n    std::ostringstream msg;\n    msg << \"[normal] Cannot generate random values of shape \"",
+          "old": "if (out_shape != shape) {\n    std::ostringstream msg;\n    msg << \"[normal] Cannot generate random values of shape \""
+        }
+      ],
+      "oracle_checks": [
+        "default_device_is_cpu",
+        "normal_invalid_loc_rejected",
+        "normal_invalid_scale_rejected",
+        "normal_valid_broadcast"
+      ],
+      "prompt_delivered": false,
+      "prompt_path": "benchmarks/mlx_core_development_qualification_v1/prompts/mlx-4730-normal-shape.md",
+      "prompt_sha256": "cabb466ebe146ef6b5ec0855d66ae921e3808ec3648523bf35df8491c77fe150",
+      "repository": "ml-explore/mlx",
+      "target_path": "mlx/random.cpp",
+      "task_family": "mlx_random_normal_loc_scale_shape_expansion",
+      "task_id": "mlx-4730-normal-shape",
+      "upstream_issue": "https://github.com/ml-explore/mlx/pull/4730",
+      "upstream_merge_commit": "81770e8d8050de5c16ee53f35ddd9d1a8c5b1ea7",
+      "upstream_merged_at": "2026-10-23T00:18:37Z",
+      "upstream_pr_title": "Fix normal loc scale shape",
+      "upstream_test_path": "python/tests/test_random.py",
+      "upstream_test_selector": "test_random.TestRandom.test_normal_loc_scale_shape",
+      "upstream_test_sha256": "2633a7afff08e10895e61faec5afec35ddee359a32954389d41cfb37b686180c"
+    }
+  ],
+  "training": {
+    "heldout_evaluation": false,
+    "historical_task_allocation_modified": false,
+    "model_inference_calls": 0,
+    "optimizer_updates": 0
+  },
+  "worktree_path": "work/mlx-core-development-qualification-v1/scratch/source-v5"
+}
