@@ -21,7 +21,7 @@ import uuid
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPERIMENT = ROOT / "results/transformers-47468-development-qualification-v4"
-RUNTIME_ROOT = ROOT / "work/transformers-47468-qualification-v4"
+RUNTIME_ROOT = EXPERIMENT / "run-v4"
 RUNTIME_RUN = RUNTIME_ROOT / "run"
 PROTOCOL = EXPERIMENT / "protocol/protocol-v4.json"
 LOCK = EXPERIMENT / "protocol/protocol-v4.lock.json"

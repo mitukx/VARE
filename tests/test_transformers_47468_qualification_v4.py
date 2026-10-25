@@ -351,6 +351,9 @@ def test_execute_identity_rejects_mismatched_commit(monkeypatch, tmp_path):
 def test_runtime_records_and_phase_output_use_versioned_ignored_paths(tmp_path):
     assert runner.core.MANIFEST == runner.RUNTIME_ROOT / "records/manifest.jsonl"
     assert runner.RUNTIME_RUN == runner.RUNTIME_ROOT / "run"
+    assert runner.RUNTIME_ROOT.is_relative_to(runner.EXPERIMENT)
+    assert runner.core.MANIFEST.is_relative_to(runner.EXPERIMENT)
+    assert runner.RUNTIME_RUN.is_relative_to(runner.EXPERIMENT)
     clean_repo = tmp_path / "clean-repo"
     clean_repo.mkdir()
     (clean_repo / ".gitignore").write_bytes((runner.ROOT / ".gitignore").read_bytes())
@@ -362,8 +365,9 @@ def test_runtime_records_and_phase_output_use_versioned_ignored_paths(tmp_path):
         check=True,
     )
     for path in (
-        "work/transformers-47468-qualification-v4/records/manifest.jsonl",
-        "work/transformers-47468-qualification-v4/run/records/phase.json",
+        "results/transformers-47468-development-qualification-v4/run-v4/records/manifest.jsonl",
+        "results/transformers-47468-development-qualification-v4/run-v4/run/records/phase.json",
+        "results/transformers-47468-development-qualification-v4/run-v4/records/recovered-phase.json",
     ):
         result = subprocess.run(
             ["git", "-C", str(clean_repo), "check-ignore", "--no-index", "-v", path],
