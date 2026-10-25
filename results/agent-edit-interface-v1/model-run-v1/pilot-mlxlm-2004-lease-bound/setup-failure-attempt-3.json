@@ -1,0 +1,23 @@
+{
+  "attempt_id": "pilot-mlxlm-2004-lease-bound",
+  "evidence": {
+    "agent_record_present": false,
+    "candidate_source_target_sha256": "f0d5e5551127179b79f10dff764aeaa70ab3c1fc06e71487a25ad414561f28bd",
+    "candidate_workspace_revision": "4cfc6478473b0668ede3eb0cc93f2a9181a15052",
+    "observed_child_process_tree_rss_bytes": 7208960,
+    "resource_sample_path": "results/agent-edit-interface-v1/model-run-v1/pilot-mlxlm-2004-lease-bound/resources.jsonl",
+    "resource_sample_sha256": "b17e1e18faa5d3c6aadf357b193a43c75a29f61d4b1ad870ec65d4e2b25d033b",
+    "runner_event_journal_present": false,
+    "sample_count": 1,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "target_unchanged_from_base": true
+  },
+  "failure": "The host monitor raised KeyError(\"inference_budget\") after spawning the runner because its frozen schema omitted the legacy monitor wrapper input. Earlier setup attempts also exposed missing psutil in model venv and a resource-key alias mismatch; all are retained.",
+  "interpretation": "No generated model output, applied edit, or semantic grade was recorded. The pilot does not measure model task-solving. The frozen protocol stops at this infrastructure error; no same-protocol retry will occur.",
+  "later_model_calls_under_this_protocol": "STOPPED",
+  "protocol_sha256": "9dd358cd37ec8dca79ee1db2dfb8a0b5486d4b38a06348732d048458eeb8f496",
+  "schema_version": 1,
+  "status": "infrastructure_stopped_before_recorded_model_generation",
+  "vare_commit": "5eb573da201378407892b46c3814daf30567587b"
+}

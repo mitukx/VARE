@@ -1,0 +1,7 @@
+{
+  "action": "Retain failure and adapt the monitor input alias in the launch wrapper without changing the frozen resource limit.",
+  "attempt_id": "pilot-mlxlm-2004-lease-bound",
+  "failure": "The reused resource monitor expects max_model_process_rss_bytes while the frozen protocol names max_model_process_tree_rss_bytes. The preflight passed, but the monitor exited before spawning the model runner.",
+  "schema_version": 1,
+  "status": "orchestration_setup_failure_no_model_inference"
+}

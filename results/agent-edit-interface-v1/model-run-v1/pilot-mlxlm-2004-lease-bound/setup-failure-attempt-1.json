@@ -1,0 +1,7 @@
+{
+  "action": "Run host-side monitor with the base Python 3.12 installation; keep model inference inside the pinned MLX venv.",
+  "attempt_id": "pilot-mlxlm-2004-lease-bound",
+  "failure": "The experiment wrapper used the model venv, which does not include psutil needed by the reused host resource monitor. Import failed before model runner creation.",
+  "schema_version": 1,
+  "status": "orchestration_setup_failure_no_model_inference"
+}
