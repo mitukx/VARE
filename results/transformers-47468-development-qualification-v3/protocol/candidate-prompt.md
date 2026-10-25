@@ -1,0 +1,1 @@
+The scalar conversion helper in `src/transformers/utils/generic.py` truncates fractional input on an ordinary, non-tracing call. Repair that behavior so ordinary Python numeric scalars become Python floats with their fractional value intact, while traced tensor inputs keep their existing tensor behavior. Keep your change in the named file. Work offline.
