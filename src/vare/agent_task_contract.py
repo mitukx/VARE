@@ -10,6 +10,8 @@ import hashlib
 import json
 from dataclasses import dataclass
 from pathlib import Path
+from pathlib import PurePosixPath
+import re
 
 
 def _sha256(path: Path) -> str:
@@ -27,6 +29,84 @@ def _safe_relative(name: str) -> str:
     return path.as_posix()
 
 
+_PROTECTED_TASK_DIRS = {
+    ".git", "test", "tests", "grader", "graders", "evaluator", "evaluators",
+    "known-fix", "known-fixes", "known_fixes", "fix", "fixes", "history",
+    "historical", "reference", "references", "reference-data", "__tests__",
+    "__pycache__", ".pytest_cache",
+}
+_PROTECTED_SOURCE_TOKENS = {
+    "test", "tests", "grader", "graders", "grade", "grading",
+    "evaluator", "evaluators", "solution", "solutions", "answer", "answers",
+    "oracle", "oracles", "expected", "reference", "references", "hidden",
+}
+_PROTECTED_DIRECTORY_TOKENS = _PROTECTED_SOURCE_TOKENS | {
+    "fixture", "fixtures", "validation", "validations",
+}
+_COMPILED_EXTENSION_SUFFIXES = {".pyc", ".pyo", ".pyd", ".so", ".dylib", ".dll"}
+_NAME_PARTS = re.compile(r"[a-z0-9]+")
+_TEST_OR_GRADER_PREFIXES = ("test", "grader", "grade", "evaluator")
+_TEST_OR_GRADER_SUFFIXES = ("test", "tests", "grader", "graders", "grade", "grading")
+
+
+def _normalized_component(component: str) -> str:
+    return re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", component).casefold()
+
+
+def _component_tokens(component: str) -> set[str]:
+    return set(_NAME_PARTS.findall(_normalized_component(component)))
+
+
+def _protected_source_name(component: str) -> bool:
+    normalized = _normalized_component(component)
+    stem = normalized.split(".", 1)[0]
+    compact_stem = re.sub(r"[^a-z0-9]+", "", stem)
+    return (
+        bool(_component_tokens(component) & _PROTECTED_SOURCE_TOKENS)
+        or stem.startswith(_TEST_OR_GRADER_PREFIXES)
+        or stem.endswith(_TEST_OR_GRADER_SUFFIXES)
+        or compact_stem.startswith("knownfix")
+        or PurePosixPath(normalized).suffix in _COMPILED_EXTENSION_SUFFIXES
+    )
+
+
+def candidate_visible_source_files(paths: object) -> tuple[str, ...]:
+    """Return paths that pass conservative test/artifact filename filtering.
+
+    The task's explicit root ``test_public.py`` remains available only to the
+    dedicated sandboxed test runner. It is never a source read/edit/search
+    capability. This filename policy is defense in depth; task qualification
+    must independently verify that allowed ordinary-looking files contain no
+    answer/reference material and that graders remain isolated.
+    """
+    if not isinstance(paths, (tuple, list, set, frozenset)):
+        return ()
+    visible: set[str] = set()
+    for raw_path in paths:
+        if not isinstance(raw_path, str) or not raw_path or "\\" in raw_path:
+            continue
+        parsed = PurePosixPath(raw_path)
+        if (parsed.is_absolute() or raw_path != parsed.as_posix()
+                or any(part in {"", ".", ".."} for part in parsed.parts)):
+            continue
+        protected_dirs = False
+        for raw_component in parsed.parts[:-1]:
+            component = raw_component.casefold()
+            if (component in _PROTECTED_TASK_DIRS
+                    or bool(_component_tokens(raw_component) & _PROTECTED_DIRECTORY_TOKENS)
+                    or _protected_source_name(raw_component)):
+                protected_dirs = True
+                break
+        if protected_dirs:
+            continue
+        # Filename tokens cover conventional tests/graders and reference
+        # implementations; compiled artifacts are never candidate source.
+        if _protected_source_name(parsed.name):
+            continue
+        visible.add(raw_path)
+    return tuple(sorted(visible))
+
+
 @dataclass(frozen=True, slots=True)
 class AgentTaskContract:
     task_id: str
@@ -37,6 +117,11 @@ class AgentTaskContract:
     calibration_revision: str | None
     split: str | None
     input_hashes: dict[str, str]
+
+    @property
+    def candidate_visible_source_files(self) -> tuple[str, ...]:
+        """Candidate read/edit/search set after test/grader path filtering."""
+        return candidate_visible_source_files(self.allowed_files)
 
     @property
     def diff_revision(self) -> str:

@@ -34,7 +34,9 @@ LEGACY_EXPECTED_SOURCES = frozenset({
 })
 # Runtime source inventories are explicit protocol versions. V1 is the 77-file
 # runtime tree used by the historical campaign; V2 adds the held-out task pilot
-# module. Never derive either inventory from the checkout being audited.
+# module; V3 adds the lease-bound editor and candidate-visible source
+# navigation component. Never derive an inventory from the checkout being
+# audited.
 RUNTIME_PACKAGE_SOURCES_V1 = frozenset({
     "src/vare/__init__.py",
     "src/vare/__main__.py",
@@ -195,20 +197,44 @@ PREVIOUS_EXPECTED_SOURCES = frozenset({
 RUNTIME_PACKAGE_SOURCES_V2 = RUNTIME_PACKAGE_SOURCES_V1 | frozenset({
     "src/vare/mlsys_heldout_task_pilot_v1.py",
 })
+RUNTIME_PACKAGE_SOURCES_V3 = RUNTIME_PACKAGE_SOURCES_V2 | frozenset({
+    "src/vare/agent_edit_v2.py",
+    "src/vare/source_navigation_v1.py",
+})
+# V4 retains the same 80 runtime source paths; it additionally inventories the
+# source-visible path and real-runner integration regressions. Its exact source
+# commit is bound in the follow-up pin commit once the implementation commit
+# containing this test and the fixed runtime files exists.
+RUNTIME_PACKAGE_SOURCES_V4 = RUNTIME_PACKAGE_SOURCES_V3
 SOURCE_INVENTORY_V1 = LEGACY_EXPECTED_SOURCES | RUNTIME_PACKAGE_SOURCES_V1
 SOURCE_INVENTORY_V2 = LEGACY_EXPECTED_SOURCES | RUNTIME_PACKAGE_SOURCES_V2
+SOURCE_INVENTORY_V3 = LEGACY_EXPECTED_SOURCES | RUNTIME_PACKAGE_SOURCES_V3
+SOURCE_INVENTORY_V4 = SOURCE_INVENTORY_V3 | frozenset({
+    "tests/test_source_navigation_v1.py",
+})
+SOURCE_INVENTORY_V4_ID = "vare.e2e-rl-continuation.source-inventory.v4"
+SOURCE_IDENTITY_SCHEMA_V1 = "vare.source-identity.v1"
 # Versioned diagnostic inventories are admitted only at the commits that were
 # actually reviewed and recorded for those versions. A later checkout may have
-# additional runtime modules; it is not silently treated as the 78-file V2.
+# additional runtime modules; it is not silently treated as an earlier version.
 PINNED_VERSIONED_SOURCE_COMMITS = {
     SOURCE_INVENTORY_V1: "7f7d5a4e3963adef298dee7520bcfc36971639d9",
     SOURCE_INVENTORY_V2: "a4fe08298d1349c5aaf6d20b626f0f114c4ee114",
+    SOURCE_INVENTORY_V3: "d97da36799f1ae87ed2fb920991d93f47ecd917a",
+}
+# V4 deliberately separates immutable runtime provenance from the per-run
+# campaign controller identity. The runtime source tree remains fixed while
+# benchmark/auditor/test files are snapshotted at the exact campaign commit.
+PINNED_RUNTIME_SOURCE_COMMITS = {
+    SOURCE_INVENTORY_V4: "d251cc678fbc9940f3de460904d5d23a1967b3ce",
 }
 SUPPORTED_SOURCE_INVENTORIES = (
     LEGACY_EXPECTED_SOURCES,
     PREVIOUS_EXPECTED_SOURCES,
     SOURCE_INVENTORY_V1,
     SOURCE_INVENTORY_V2,
+    SOURCE_INVENTORY_V3,
+    SOURCE_INVENTORY_V4,
 )
 
 # The frozen v2 campaign is tied to the commit and source tree that produced it.
@@ -241,7 +267,9 @@ def validate_source_inventory(manifest, source_names, locked):
         need(manifest.get("sources")==PINNED_LOCKED_SOURCE_SHA256,
              "locked campaign source snapshots differ from the independently pinned revision")
         return
-    need(source_names in (PREVIOUS_EXPECTED_SOURCES,SOURCE_INVENTORY_V1,SOURCE_INVENTORY_V2),
+    need(source_names in (PREVIOUS_EXPECTED_SOURCES,SOURCE_INVENTORY_V1,
+                          SOURCE_INVENTORY_V2,SOURCE_INVENTORY_V3,
+                          SOURCE_INVENTORY_V4),
          "pinned source inventory differs")
     commit=manifest.get("base_commit")
     need(type(commit) is str and len(commit)==40 and
@@ -257,6 +285,47 @@ def validate_source_inventory(manifest, source_names, locked):
              "78-file campaign base commit differs from its pinned diagnostic revision")
         need(runtime_source_names_from_commit(commit)==RUNTIME_PACKAGE_SOURCES_V2,
              "runtime source inventory differs from pinned 78-file version")
+    elif source_names==SOURCE_INVENTORY_V3:
+        need(commit==PINNED_VERSIONED_SOURCE_COMMITS[SOURCE_INVENTORY_V3],
+             "80-file campaign base commit differs from its pinned diagnostic revision")
+        need(runtime_source_names_from_commit(commit)==RUNTIME_PACKAGE_SOURCES_V3,
+             "runtime source inventory differs from pinned 80-file version")
+    elif source_names==SOURCE_INVENTORY_V4:
+        identity=manifest.get("source_identity")
+        need(type(identity) is dict and set(identity)=={
+                 "schema","inventory_id","runtime_source_commit",
+                 "runtime_source_sha256","campaign_source_commit",
+                 "campaign_source_sha256",
+             } and
+             identity.get("schema")==SOURCE_IDENTITY_SCHEMA_V1 and
+             identity.get("inventory_id")==SOURCE_INVENTORY_V4_ID,
+             "V4 source identity schema or inventory differs")
+        runtime_commit=identity.get("runtime_source_commit")
+        campaign_commit=identity.get("campaign_source_commit")
+        need(runtime_commit==PINNED_RUNTIME_SOURCE_COMMITS[SOURCE_INVENTORY_V4],
+             "V4 runtime source commit differs from its immutable pin")
+        need(campaign_commit==commit,
+             "V4 campaign source commit differs from recorded base commit")
+        need(runtime_source_names_from_commit(runtime_commit)==RUNTIME_PACKAGE_SOURCES_V4,
+             "runtime source inventory differs from pinned V4 version")
+        need(runtime_source_names_from_commit(campaign_commit)==RUNTIME_PACKAGE_SOURCES_V4,
+             "campaign runtime inventory differs from V4 version")
+        campaign_names=source_names-RUNTIME_PACKAGE_SOURCES_V4
+        runtime_sources=source_hashes_from_commit(runtime_commit,RUNTIME_PACKAGE_SOURCES_V4)
+        campaign_runtime_sources=source_hashes_from_commit(
+            campaign_commit,RUNTIME_PACKAGE_SOURCES_V4,
+        )
+        need(campaign_runtime_sources==runtime_sources,
+             "campaign runtime source hashes differ from immutable runtime commit")
+        campaign_sources=source_hashes_from_commit(campaign_commit,campaign_names)
+        need(identity.get("runtime_source_sha256")==runtime_sources,
+             "V4 runtime source hashes differ from immutable runtime commit")
+        need(identity.get("campaign_source_sha256")==campaign_sources,
+             "V4 campaign source hashes differ from recorded campaign commit")
+        expected_sources={**runtime_sources,**campaign_sources}
+        need(manifest.get("sources")==expected_sources,
+             "V4 combined source snapshot differs from runtime and campaign identities")
+        return
     committed_sources=source_hashes_from_commit(commit,source_names)
     need(manifest.get("sources")==committed_sources,
          "source snapshot differs from recorded base commit")
@@ -993,7 +1062,8 @@ def audit(root, check_tensors=False, model_dir=None):
             resumed_spans=trace_stages.get(("round",expected_round,1),[])
             need(len(resumed_spans)==1,"recovery endpoint lacks one resumed-round trace")
             resumed_end=resumed_spans[0]["end"]
-            if source_names in (SOURCE_INVENTORY_V1,SOURCE_INVENTORY_V2):
+            if source_names in (SOURCE_INVENTORY_V1,SOURCE_INVENTORY_V2,
+                                SOURCE_INVENTORY_V3,SOURCE_INVENTORY_V4):
                 need(progress.get("time")==resumed_end,
                      "recovery endpoint differs from resumed-round trace")
             else:
