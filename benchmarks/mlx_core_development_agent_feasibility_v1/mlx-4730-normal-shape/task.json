@@ -1,0 +1,12 @@
+{
+  "metadata": {
+    "editable_files": [
+      "mlx/random.cpp"
+    ]
+  },
+  "prompt": "# Task: requested output shape for `mlx.random.normal`\n\nMake `mlx.random.normal` preserve the requested sample shape when `loc` or `scale` is broadcast. Reject parameter shapes that would enlarge the requested output, while continuing to accept broadcasts whose result is exactly the requested shape.\n\nKeep the change focused on the implementation. Do not access the network or modify unrelated files.\n",
+  "source": {
+    "base_revision": "f41bec734ac9fc96723ab7d4e64e385796f15561"
+  },
+  "task_id": "mlx-4730-normal-shape"
+}

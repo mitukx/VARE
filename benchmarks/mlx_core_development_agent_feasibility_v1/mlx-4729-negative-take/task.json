@@ -1,0 +1,12 @@
+{
+  "metadata": {
+    "editable_files": [
+      "mlx/ops.cpp"
+    ]
+  },
+  "prompt": "# Task: negative integer indexing in `mlx.core.take`\n\nCorrect the scalar integer-index overload of `mlx.core.take` so negative indices select the corresponding element from the end of the selected dimension. The flattening overload must follow the same behavior, and existing positive-index behavior must remain intact.\n\nKeep the change focused on the implementation. Do not access the network or modify unrelated files.\n",
+  "source": {
+    "base_revision": "f41bec734ac9fc96723ab7d4e64e385796f15561"
+  },
+  "task_id": "mlx-4729-negative-take"
+}

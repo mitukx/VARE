@@ -1,0 +1,275 @@
+{
+  "build_environment": {
+    "build_python_path": "work/mlx-core-development-qualification-v1/venv/bin/python",
+    "candidate_grader_worktree_root": "work/mlx-core-development-agent-feasibility-v1/grader-worktrees",
+    "dependency_root": "work/mlx-core-development-qualification-v1/dependencies-complete-v1",
+    "grader_resource_limits": {
+      "build_parallelism": 2,
+      "max_phase_seconds": 1800,
+      "max_swap_growth_bytes": 134217728,
+      "memory_telemetry": "psutil process-tree RSS plus host available memory, total memory, swap and free disk. macOS has no cgroup boundary here; cgroup memory is unavailable and will not be claimed.",
+      "minimum_available_memory_bytes": 8589934592,
+      "minimum_disk_free_bytes": 21474836480,
+      "minimum_free_swap_bytes": 268435456,
+      "network": "deny for every build, observation and test subprocess",
+      "platform": "Darwin arm64 native CPU; require Metal disabled at compile time.",
+      "sample_interval_seconds": 0.5
+    },
+    "metal": "disabled",
+    "network": "deny for every candidate build, observation and regression-test subprocess",
+    "source_repo_path": "source/mlx.git"
+  },
+  "claim_boundary": "A two-task, one-sample Development feasibility pilot only. It cannot establish held-out generalization, statistical capability gain, policy learning, RL improvement, asynchronous benefit, or pretraining independence.",
+  "decision_criteria": {
+    "development_feasibility_go": "At least one independently verified repair among the two tasks, with all run and grader artifacts complete and resource bounds satisfied.",
+    "learning": "NO-GO remains until the independent 15-task eligibility gate and separate positive-training-signal gates pass."
+  },
+  "hypothesis": "On two newly source/grader-certified MLX Development tasks, the cached Qwen3-4B-Instruct MLX policy can make an independently verified repair through VARE’s existing bounded tool runner.",
+  "implementation_sha256": {
+    "protocols/mlx_core_development_qualification_v5.json": "1fee3fd17fbda00a030cd87c9364e56297e09acecfb39c3da76ab8cba877d8f6",
+    "requirements/mlsys-agent-mlx.lock.txt": "ab4187759276ca759e84c9a4f12cb2a9416c7e297c69b87783c243ac9459af2a",
+    "results/mlx-core-development-agent-feasibility-v1/preflight/pip-freeze.txt": "a8e378fbe5831cf16c3ab0969aaddbf12b225f1e70f9428eae7b29ec248fb0dd",
+    "results/mlx-core-development-qualification-v1/run-5-independent-audit.json": "81849c340276d7a2d09511a7853ab5c0d81efd4243fda9f62d23e41823978574",
+    "results/mlx-core-development-qualification-v1/run-5/manifest.json": "d5c058a0a2b798583696fe7e7d9a420a00cc7aba4663f6e0f3d4493faf40a175",
+    "scripts/grade_mlx_core_development_agent_candidates_v1.py": "ceb94ee1bb22251194df6a0d43b40864095370b73e5425e605076fc224e4b1c9",
+    "scripts/mlx_core_task_observations_v1.py": "e120f897bf43d6521d48c0bd7678d6ae4a493c9fe757a51253e4cd59ef88335a",
+    "scripts/mlx_core_upstream_test_launcher_v1.py": "c51b4504097c730443c2fabe162fbde6981f6ebd8629b814a9c530092ee0a319",
+    "scripts/run_local_agent.py": "2bf11a4fd1818d6fe199dd8aa2fb999ad5a48793d031e4c6f2bc37f6ba10eeba",
+    "scripts/run_mlx_core_development_qualification_v5.py": "eca1311077bb9d1c133c47d8dd1606380417192b784362c04abe3453299a4fc2",
+    "src/vare/agent_edit_format.py": "18759903979eb59559aee7d5eaa376e5b6739d896608a66b0260a3e29256cad9",
+    "src/vare/agent_task_contract.py": "f3cb85f1960dcaf175345bb45a6f23a08bda7a8805d37db9caf217ac5c86f3fd"
+  },
+  "independent_grading": {
+    "acceptance": "A patch must apply to exactly its one allowlisted source file, compile in a fresh pinned MLX source worktree with Metal disabled and network denied, pass every task-specific independent semantic check in V5, and pass that task’s pinned upstream regression test. Baseline, exact-fix and incorrect-mutant controls were independently calibrated in V5.",
+    "candidate_grader_visibility": "All upstream regression tests and expected semantic checks remain outside the agent workspace and are used only after the agent record is finalized.",
+    "grader_protocol_sha256": "1fee3fd17fbda00a030cd87c9364e56297e09acecfb39c3da76ab8cba877d8f6",
+    "independence": "The candidate score is recomputed from the patch in a separate clean source worktree by the pinned native build and V5 parent-side oracle.",
+    "script": "scripts/grade_mlx_core_development_agent_candidates_v1.py",
+    "script_sha256": "ceb94ee1bb22251194df6a0d43b40864095370b73e5425e605076fc224e4b1c9"
+  },
+  "inference": {
+    "concurrency": "one serial attempt at a time; no concurrent model loading",
+    "edit_format": "structured_replace",
+    "instruction_template": "Repair only the described behavior in {target_path}. First inspect the available source using the provided tools, make a minimal implementation change, then call finish with a short summary. Do not access the network or modify unrelated files.",
+    "public_test_tool": "not enabled; no tests or grader files are exposed to the agent",
+    "runner": "scripts/run_local_agent.py",
+    "runner_budgets": {
+      "do_sample": false,
+      "edit_format": "structured_replace",
+      "max_context_tokens": 8192,
+      "max_new_tokens_per_turn": 192,
+      "max_no_tool_retries": 2,
+      "max_public_test_runs": 12,
+      "max_total_new_tokens": 2048,
+      "max_turns": 12,
+      "public_test_memory_mb": 512,
+      "public_test_timeout_s": 45,
+      "temperature": 0.0,
+      "top_k": 20,
+      "top_p": 0.95,
+      "wall_seconds": 900
+    },
+    "runner_sha256": "2bf11a4fd1818d6fe199dd8aa2fb999ad5a48793d031e4c6f2bc37f6ba10eeba",
+    "samples_per_task": 1,
+    "sampling": "greedy; do_sample=false; temperature=0",
+    "seed": 101
+  },
+  "model": {
+    "backend": "MLX on Apple Metal; one process/model instance at a time",
+    "base_repository": "Qwen/Qwen3-4B-Instruct-2507",
+    "base_revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+    "network": "Offline local snapshot only; HF_HUB_OFFLINE=1 and TRANSFORMERS_OFFLINE=1.",
+    "quantization": {
+      "bits": 4,
+      "format": "MLX safetensors",
+      "group_size": 64
+    },
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "snapshot_files": [
+      {
+        "name": ".gitattributes",
+        "sha256": "34448b82c17d60fec9b65b1f093c115ddbaadc04beb1b0140b6bfed2e012a930",
+        "size_bytes": 1570
+      },
+      {
+        "name": "README.md",
+        "sha256": "7b17ce562d7ea121c86d2ffdf660eed3726ac5b52cacfa9f1de11a65969f5657",
+        "size_bytes": 969
+      },
+      {
+        "name": "added_tokens.json",
+        "sha256": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680",
+        "size_bytes": 707
+      },
+      {
+        "name": "chat_template.jinja",
+        "sha256": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541",
+        "size_bytes": 4040
+      },
+      {
+        "name": "config.json",
+        "sha256": "574349e5a343236546fda55e4744a76e181f534182d7dc60ff1bad7e7a502849",
+        "size_bytes": 938
+      },
+      {
+        "name": "generation_config.json",
+        "sha256": "835fffe355c9438e7a25be099b3fccaa98350b83451f9fd2d99512e74f1ade48",
+        "size_bytes": 238
+      },
+      {
+        "name": "merges.txt",
+        "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+        "size_bytes": 1671853
+      },
+      {
+        "name": "model.safetensors",
+        "sha256": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f",
+        "size_bytes": 2263022417
+      },
+      {
+        "name": "model.safetensors.index.json",
+        "sha256": "388d811b8b7c2608dd04cce1bcb04a8bf715d19b42790894e6d3427ff429a777",
+        "size_bytes": 63964
+      },
+      {
+        "name": "special_tokens_map.json",
+        "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+        "size_bytes": 613
+      },
+      {
+        "name": "tokenizer.json",
+        "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+        "size_bytes": 11422654
+      },
+      {
+        "name": "tokenizer_config.json",
+        "sha256": "4397cc477eb6d79715ccd2000accd6b3531928f30029665832fa1b255f24d2b9",
+        "size_bytes": 5440
+      },
+      {
+        "name": "vocab.json",
+        "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+        "size_bytes": 2776833
+      }
+    ]
+  },
+  "output": {
+    "agent_records": "results/mlx-core-development-agent-feasibility-v1/agent/{task_id}.json",
+    "grader_records": "results/mlx-core-development-agent-feasibility-v1/grading-v1/",
+    "manifest_algorithm": "SHA-256; unique output paths; no overwrites",
+    "resource_preflight_records": "results/mlx-core-development-agent-feasibility-v1/preflight/{task_id}-{before,after}.json"
+  },
+  "preregistered_at_utc": "2026-10-25T10:59:21.634754+00:00",
+  "primary_metric": "Number of the two task-level candidate patches that pass the pinned V5 task-specific semantic checks and the matching upstream regression test, divided by two.",
+  "protocol_id": "mlx-core-development-agent-feasibility-v1",
+  "resource_preflight": {
+    "check_timing": "Before each task attempt; record the host snapshot after the runner exits. The local runner checks wall budget between generations and records process RSS and MLX active/peak memory.",
+    "maximum_mlx_peak_memory_bytes": 8589934592,
+    "maximum_swap_growth_bytes": 134217728,
+    "minimum_available_memory_bytes": 5368709120,
+    "minimum_disk_free_bytes": 16106127360,
+    "minimum_free_swap_bytes": 536870912,
+    "stop": "Do not begin an attempt if any preflight floor fails. A final MLX peak above 8 GiB or swap growth above 128 MiB is an environment NO-GO, not a task failure."
+  },
+  "runtime": {
+    "host": "Apple M1 Pro / 32 GiB, macOS arm64",
+    "metal_available": "true, checked before preregistration",
+    "mlx": "0.32.2",
+    "mlx_lm": "0.32.2",
+    "pip_check": "passed before preregistration",
+    "pip_freeze_path": "results/mlx-core-development-agent-feasibility-v1/preflight/pip-freeze.txt",
+    "pip_freeze_sha256": "a8e378fbe5831cf16c3ab0969aaddbf12b225f1e70f9428eae7b29ec248fb0dd",
+    "python": "3.12.12",
+    "requirements_lock_path": "requirements/mlsys-agent-mlx.lock.txt",
+    "requirements_lock_sha256": "ab4187759276ca759e84c9a4f12cb2a9416c7e297c69b87783c243ac9459af2a"
+  },
+  "schema_version": 1,
+  "secondary_metrics": [
+    "patch applied",
+    "stop reason",
+    "tool turns",
+    "generated tokens",
+    "wall time",
+    "process peak RSS",
+    "MLX active and peak memory",
+    "task-specific oracle checks",
+    "upstream test outcome"
+  ],
+  "selection": {
+    "candidate_set_frozen": true,
+    "excluded_from_this_run": [
+      "all held-out task families",
+      "all historically consumed coding tasks",
+      "any task outside the two frozen Development families"
+    ],
+    "exposure_audit": {
+      "VARE_local_model_inference_on_these_task_prompts_before_this_protocol": "NONE_FOUND_IN_RETAINED_VARE_EVIDENCE",
+      "external_pretraining_or_public_task_recognition": "UNKNOWN; tasks and fixes are public upstream material.",
+      "operator_exposure": "The operator inspected source fixes and tests during task qualification."
+    },
+    "role": "DEVELOPMENT_ONLY",
+    "selection_rule": "Use the two newly V5-certified, CPU-executable MLX core families from distinct source files. Both have pinned baseline failure, exact upstream known-fix pass, incorrect-mutant rejection and an independent semantic oracle.",
+    "tasks": [
+      "mlx-4729-negative-take",
+      "mlx-4730-normal-shape"
+    ]
+  },
+  "source": {
+    "base_revision": "f41bec734ac9fc96723ab7d4e64e385796f15561",
+    "candidate_visibility": "The model receives the task statement and can use the runner tools only on the single target source path. It receives no Git history, grader source, regression-test source, expected values, known-fix patch, or other repository files.",
+    "qualification_independent_audit_sha256": "81849c340276d7a2d09511a7853ab5c0d81efd4243fda9f62d23e41823978574",
+    "qualification_protocol_path": "protocols/mlx_core_development_qualification_v5.json",
+    "qualification_protocol_sha256": "1fee3fd17fbda00a030cd87c9364e56297e09acecfb39c3da76ab8cba877d8f6",
+    "qualification_run_manifest_sha256": "d5c058a0a2b798583696fe7e7d9a420a00cc7aba4663f6e0f3d4493faf40a175",
+    "repository": "https://github.com/ml-explore/mlx.git"
+  },
+  "status": "FROZEN_BEFORE_AGENT_INFERENCE",
+  "stopping_and_interpretation": {
+    "attempt_rule": "Exactly one sample per task. No prompt, decoding, model, budget, task, or reward changes after the first attempt. Continue to the second frozen task only if the runtime remains within resource bounds and no integrity check fails.",
+    "candidate_rejection": "Retain the incorrect or unsupported patch and grader output; do not tune and rerun.",
+    "infrastructure_failure": "Retain the failing record and stop; do not retry a consumed task under this protocol.",
+    "no_patch": "Count as no independently verified repair; retain full transcript and diff.",
+    "training": "No SFT, GRPO, optimizer, or policy update is part of this protocol."
+  },
+  "tasks": [
+    {
+      "agent_record_path": "results/mlx-core-development-agent-feasibility-v1/agent/mlx-4729-negative-take.json",
+      "baseline_sha256": "24c4ff0edda004e0968e4e22db38d33b31303fe311232789560dc5fd72b56b6f",
+      "fixed_revision": "0f31bb7d38ef07d8adb5452fec64d1ce47528e5e",
+      "fixed_sha256": "01c76a9460199c78b1c54038071861a22e6f90d6a89268754871281a4498cbc5",
+      "preflight_after_path": "results/mlx-core-development-agent-feasibility-v1/preflight/mlx-4729-negative-take-after.json",
+      "preflight_before_path": "results/mlx-core-development-agent-feasibility-v1/preflight/mlx-4729-negative-take-before.json",
+      "prompt": "# Task: negative integer indexing in `mlx.core.take`\n\nCorrect the scalar integer-index overload of `mlx.core.take` so negative indices select the corresponding element from the end of the selected dimension. The flattening overload must follow the same behavior, and existing positive-index behavior must remain intact.\n\nKeep the change focused on the implementation. Do not access the network or modify unrelated files.\n",
+      "prompt_path": "benchmarks/mlx_core_development_qualification_v1/prompts/mlx-4729-negative-take.md",
+      "prompt_sha256": "272cd48229cfcc7a625a9f684b7948f6b8ecbbb0fe857ff56d9450c27860f97d",
+      "target_path": "mlx/ops.cpp",
+      "task_id": "mlx-4729-negative-take",
+      "task_json_path": "benchmarks/mlx_core_development_agent_feasibility_v1/mlx-4729-negative-take/task.json",
+      "task_json_sha256": "6aad3c837e24ddf052317aaa0eb3ed9a0419460db7a62b41de1e30cb28df1cae",
+      "task_root": "benchmarks/mlx_core_development_agent_feasibility_v1/mlx-4729-negative-take",
+      "upstream_test_file": "test_ops.py",
+      "upstream_test_selector": "test_ops.TestOps.test_take",
+      "workspace_path": "work/mlx-core-development-agent-feasibility-v1/workspaces/mlx-4729-negative-take"
+    },
+    {
+      "agent_record_path": "results/mlx-core-development-agent-feasibility-v1/agent/mlx-4730-normal-shape.json",
+      "baseline_sha256": "1f82a71893294b6409e00c735ae519bd4dbcac5b990a8e4804f64305f91110c2",
+      "fixed_revision": "1bffde455d7ab2d13a76e30e40b2043239a3221c",
+      "fixed_sha256": "8cb0ff3cf907dca7c0b93103581f0bbbaa3206769a5b9526e591e13c731ed7bd",
+      "preflight_after_path": "results/mlx-core-development-agent-feasibility-v1/preflight/mlx-4730-normal-shape-after.json",
+      "preflight_before_path": "results/mlx-core-development-agent-feasibility-v1/preflight/mlx-4730-normal-shape-before.json",
+      "prompt": "# Task: requested output shape for `mlx.random.normal`\n\nMake `mlx.random.normal` preserve the requested sample shape when `loc` or `scale` is broadcast. Reject parameter shapes that would enlarge the requested output, while continuing to accept broadcasts whose result is exactly the requested shape.\n\nKeep the change focused on the implementation. Do not access the network or modify unrelated files.\n",
+      "prompt_path": "benchmarks/mlx_core_development_qualification_v1/prompts/mlx-4730-normal-shape.md",
+      "prompt_sha256": "cabb466ebe146ef6b5ec0855d66ae921e3808ec3648523bf35df8491c77fe150",
+      "target_path": "mlx/random.cpp",
+      "task_id": "mlx-4730-normal-shape",
+      "task_json_path": "benchmarks/mlx_core_development_agent_feasibility_v1/mlx-4730-normal-shape/task.json",
+      "task_json_sha256": "2976edd6a701804f29e04733f187cb69f4d722b192ac8d836a2d80f5e335449f",
+      "task_root": "benchmarks/mlx_core_development_agent_feasibility_v1/mlx-4730-normal-shape",
+      "upstream_test_file": "test_random.py",
+      "upstream_test_selector": "test_random.TestRandom.test_normal_loc_scale_shape",
+      "workspace_path": "work/mlx-core-development-agent-feasibility-v1/workspaces/mlx-4730-normal-shape"
+    }
+  ]
+}
