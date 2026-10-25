@@ -12,6 +12,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import stat
 import subprocess
 import sys
 import time
@@ -42,6 +43,76 @@ def sha_file(path: Path) -> str:
 def require(condition: bool, message: str) -> None:
     if not condition:
         raise RuntimeError(message)
+
+
+def validate_runtime_directory(path: Path) -> None:
+    """Reject symlinked/non-directory components before writing runtime evidence."""
+    absolute = Path(os.path.abspath(path))
+    require(absolute.is_absolute(), "runtime directory must be absolute")
+    repository = ROOT.resolve(strict=True)
+    require(absolute.is_relative_to(repository),
+            "pinned runtime directory is outside the repository")
+    cursor = Path(absolute.anchor)
+    for component in absolute.parts[1:]:
+        cursor = cursor / component
+        try:
+            metadata = cursor.lstat()
+        except FileNotFoundError:
+            # No descendant can exist yet; execution will create this tree.
+            break
+        except OSError as exc:
+            raise RuntimeError("cannot inspect pinned runtime directory") from exc
+        require(not stat.S_ISLNK(metadata.st_mode),
+                "pinned runtime directory contains a symlink")
+        require(stat.S_ISDIR(metadata.st_mode),
+                "pinned runtime path component is not a directory")
+
+
+def validate_runtime_file(path: Path) -> None:
+    """Reject symlinked manifest files and sidecars before the V3 core opens them."""
+    absolute = Path(os.path.abspath(path))
+    repository = ROOT.resolve(strict=True)
+    require(absolute.is_relative_to(repository),
+            "pinned runtime file is outside the repository")
+    validate_runtime_directory(absolute.parent)
+    try:
+        metadata = absolute.lstat()
+    except FileNotFoundError:
+        return
+    except OSError as exc:
+        raise RuntimeError("cannot inspect pinned runtime file") from exc
+    require(not stat.S_ISLNK(metadata.st_mode),
+            "pinned runtime file is a symlink")
+    require(stat.S_ISREG(metadata.st_mode),
+            "pinned runtime path is not a regular file")
+
+
+def validate_pinned_runtime_location() -> None:
+    """Require the runtime directory to remain physically inside this checkout."""
+    root = ROOT.resolve(strict=True)
+    runtime = Path(os.path.abspath(RUNTIME_RUN))
+    try:
+        runtime.relative_to(root)
+    except ValueError as exc:
+        raise RuntimeError("pinned runtime directory is outside the repository") from exc
+    records = RUNTIME_ROOT / "records"
+    for directory in (RUNTIME_ROOT, records, runtime):
+        validate_runtime_directory(directory)
+    manifest = records / "manifest.jsonl"
+    for path in (
+        manifest,
+        manifest.with_name(manifest.name + ".lock"),
+        manifest.with_name(manifest.name + ".pending.json"),
+    ):
+        validate_runtime_file(path)
+    if records.is_dir():
+        for entry in records.iterdir():
+            try:
+                metadata = entry.lstat()
+            except OSError as exc:
+                raise RuntimeError("cannot inspect pinned runtime records") from exc
+            require(not stat.S_ISLNK(metadata.st_mode),
+                    "pinned runtime records contain a symlink")
 
 
 def validate_locked_source_identity(lock_data: dict[str, Any]) -> None:
@@ -143,15 +214,42 @@ core.validate_network_deny = validate_execution_boundary
 
 _ORIGINAL_APPEND_EVENT = core.append_event
 _ORIGINAL_LOAD_MANIFEST = core.load_manifest
+_ORIGINAL_WRITE_NEW = core.write_new
+_ORIGINAL_WRITE_REPLACE = core._write_replace
+
+
+def _guard_runtime_write(path: Path) -> None:
+    target = Path(os.path.abspath(path))
+    runtime_root = Path(os.path.abspath(RUNTIME_ROOT))
+    if target.is_relative_to(runtime_root):
+        validate_pinned_runtime_location()
+
+
+def _write_new_v4(path, data):
+    _guard_runtime_write(Path(path))
+    return _ORIGINAL_WRITE_NEW(path, data)
+
+
+def _write_replace_v4(path, data):
+    _guard_runtime_write(Path(path))
+    return _ORIGINAL_WRITE_REPLACE(path, data)
+
+
+core.write_new = _write_new_v4
+core._write_replace = _write_replace_v4
 
 
 def _append_event_v4(event_type, fields, manifest_path=None):
     target = core.MANIFEST if manifest_path is None else manifest_path
+    if target == core.MANIFEST:
+        validate_pinned_runtime_location()
     return _ORIGINAL_APPEND_EVENT(event_type, fields, manifest_path=target)
 
 
 def _load_manifest_v4(manifest_path=None):
     target = core.MANIFEST if manifest_path is None else manifest_path
+    if target == core.MANIFEST:
+        validate_pinned_runtime_location()
     return _ORIGINAL_LOAD_MANIFEST(manifest_path=target)
 
 
@@ -234,6 +332,8 @@ _ORIGINAL_RECOVERY = core.recover_interrupted_attempts
 
 def _recover_interrupted_attempts_with_launch_tokens(manifest_path, run_dir, experiment_root):
     """Recover a launch-window PID from its durable marker before core recovery."""
+    if manifest_path == core.MANIFEST:
+        validate_pinned_runtime_location()
     rows = core.load_manifest(manifest_path)
     admissions = {row["invocation_id"]: row for row in rows if row.get("event_type") == "phase_admitted"}
     starts = {row["invocation_id"]: row for row in rows if row.get("event_type") == "phase_started"}
@@ -314,6 +414,7 @@ def _read_frozen_event_without_repair() -> dict[str, Any]:
 
 def validate_frozen_execution_identity() -> dict[str, str]:
     """Reject changed or dirty source before execute/recover can touch evidence."""
+    validate_pinned_runtime_location()
     lock_data = json.loads(LOCK.read_text(encoding="utf-8"))
     validate_locked_source_identity(lock_data)
     frozen = _read_frozen_event_without_repair()
@@ -337,6 +438,9 @@ _ORIGINAL_MAIN = core.main
 
 
 def _main_v4() -> int:
+    mutating_modes = {"--freeze-record", "--execute", "--recover-interrupted"}
+    if any(argument in mutating_modes for argument in sys.argv):
+        validate_pinned_runtime_location()
     if "--execute" in sys.argv or "--recover-interrupted" in sys.argv:
         validate_frozen_execution_identity()
         output_values = []
@@ -357,7 +461,7 @@ def _main_v4() -> int:
             requested = Path(output_values[0]).expanduser()
             if not requested.is_absolute():
                 requested = ROOT / requested
-            require(requested.resolve() == RUNTIME_RUN,
+            require(Path(os.path.abspath(requested)) == Path(os.path.abspath(RUNTIME_RUN)),
                     "execute/recovery output must use the pinned ignored runtime directory")
         else:
             sys.argv.extend(["--output", str(RUNTIME_RUN)])

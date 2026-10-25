@@ -385,6 +385,112 @@ def test_runtime_records_and_phase_output_use_versioned_ignored_paths(tmp_path):
     assert status.stdout == ""
 
 
+@pytest.mark.parametrize("component", ["results", "experiment", "runtime-root", "records", "run"])
+def test_pinned_runtime_location_rejects_symlinked_components(tmp_path, monkeypatch, component):
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    results = repo / "results"
+    experiment = results / "qualification-v4"
+    runtime_root = experiment / "run-v4"
+    runtime_run = runtime_root / "run"
+
+    if component == "results":
+        results.symlink_to(outside, target_is_directory=True)
+    else:
+        results.mkdir()
+        if component == "experiment":
+            experiment.symlink_to(outside, target_is_directory=True)
+        else:
+            experiment.mkdir()
+            if component == "runtime-root":
+                runtime_root.symlink_to(outside, target_is_directory=True)
+            elif component == "records":
+                runtime_root.mkdir()
+                (runtime_root / "records").symlink_to(outside, target_is_directory=True)
+            else:
+                runtime_root.mkdir(exist_ok=True)
+                if component == "run":
+                    runtime_run.symlink_to(outside, target_is_directory=True)
+
+    monkeypatch.setattr(runner, "ROOT", repo)
+    monkeypatch.setattr(runner, "EXPERIMENT", experiment)
+    monkeypatch.setattr(runner, "RUNTIME_ROOT", runtime_root)
+    monkeypatch.setattr(runner, "RUNTIME_RUN", runtime_run)
+    with pytest.raises(RuntimeError, match="contains a symlink"):
+        runner.validate_pinned_runtime_location()
+    assert list(outside.iterdir()) == []
+
+
+@pytest.mark.parametrize("sidecar", ["manifest.jsonl", "manifest.jsonl.lock", "manifest.jsonl.pending.json"])
+def test_pinned_runtime_location_rejects_symlinked_manifest_files(tmp_path, monkeypatch, sidecar):
+    repo = tmp_path / "repo"
+    records = repo / "results/qualification-v4/run-v4/records"
+    records.mkdir(parents=True)
+    outside = tmp_path / "outside-file"
+    outside.write_text("must remain untouched")
+
+    monkeypatch.setattr(runner, "ROOT", repo)
+    monkeypatch.setattr(runner, "EXPERIMENT", repo / "results/qualification-v4")
+    monkeypatch.setattr(runner, "RUNTIME_ROOT", repo / "results/qualification-v4/run-v4")
+    monkeypatch.setattr(runner, "RUNTIME_RUN", runner.RUNTIME_ROOT / "run")
+    (records / sidecar).symlink_to(outside)
+
+    with pytest.raises(RuntimeError, match="symlink"):
+        runner.validate_pinned_runtime_location()
+    assert outside.read_text() == "must remain untouched"
+
+
+def test_runtime_write_wrapper_rechecks_symlinked_records_before_write(tmp_path, monkeypatch):
+    repo = tmp_path / "repo"
+    experiment = repo / "results/qualification-v4"
+    runtime_root = experiment / "run-v4"
+    experiment.mkdir(parents=True)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (runtime_root).mkdir()
+    (runtime_root / "records").symlink_to(outside, target_is_directory=True)
+
+    monkeypatch.setattr(runner, "ROOT", repo)
+    monkeypatch.setattr(runner, "EXPERIMENT", experiment)
+    monkeypatch.setattr(runner, "RUNTIME_ROOT", runtime_root)
+    monkeypatch.setattr(runner, "RUNTIME_RUN", runtime_root / "run")
+
+    with pytest.raises(RuntimeError, match="contains a symlink"):
+        runner.core.write_new(runtime_root / "records" / "manifest.jsonl", b"blocked\n")
+    assert list(outside.iterdir()) == []
+
+
+@pytest.mark.parametrize("mode", ["--freeze-record", "--execute", "--recover-interrupted"])
+def test_mutating_cli_modes_reject_runtime_symlink_before_core(monkeypatch, tmp_path, mode):
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    results = repo / "results"
+    results.mkdir()
+    experiment = results / "qualification-v4"
+    experiment.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    runtime_root = experiment / "run-v4"
+    runtime_root.symlink_to(outside, target_is_directory=True)
+
+    monkeypatch.setattr(runner, "ROOT", repo)
+    monkeypatch.setattr(runner, "EXPERIMENT", experiment)
+    monkeypatch.setattr(runner, "RUNTIME_ROOT", runtime_root)
+    monkeypatch.setattr(runner, "RUNTIME_RUN", runtime_root / "run")
+    monkeypatch.setattr(sys, "argv", [str(runner.SCRIPT), mode])
+    monkeypatch.setattr(
+        runner, "validate_frozen_execution_identity",
+        lambda: pytest.fail("frozen identity gate must not run through a symlink"),
+    )
+    monkeypatch.setattr(runner, "_ORIGINAL_MAIN", lambda: pytest.fail("core main must not run"))
+
+    with pytest.raises(RuntimeError, match="contains a symlink"):
+        runner.core.main()
+    assert list(outside.iterdir()) == []
+
+
 def test_cli_recovery_records_use_the_pinned_runtime_root(monkeypatch, tmp_path):
     manifest = tmp_path / "manifest.jsonl"
     _seed_frozen_manifest(manifest)
