@@ -1,0 +1,151 @@
+{
+  "audit_id": "coding-task-exposure-20261025",
+  "catalog_revision": "acca07004eb9a44cf23d31ff0d68929b7ea3fc1d",
+  "decision": "NO_GO",
+  "eligible_heldout_tasks_admitted_by_this_audit": 0,
+  "exposed_reserved_task": "transformers-49412-fusion-idempotence",
+  "exposed_task_alias": "transformers-49412-fusion-registration-idempotence-v2",
+  "exposed_task_definition": {
+    "path": "benchmarks/mlsys_repo_eval_v4/transformers_49412_fusion_idempotence_v2/task.json",
+    "sha256": "65a5984196f4918bcaf4eff5f751d3f76dd3e7e94fca7a1dcfe73a5eeb81f024"
+  },
+  "exposure_revision": "02684dcce4c0a5474256b1d97a2adbda879388d2",
+  "input_sha256": {
+    "protocols/mlsys_actual_model_update_no_go_v1.lock.json": "12db5f0a7200ce64de3801781e45b41d3667bd80a405ec8c4dc23fea8f550081",
+    "results/mlsys-task-deep-qualification-v1/protocol.json": "7ef9a28cedf2e1214a74456bb0c5209afc3e3e9f1681a430398e84710bcd26a4",
+    "results/mlsys-task-deep-qualification-v1/qualification.json": "2b2a1a7c6e64a866dd3732fcd9723999969a1ac69d86f8a4d9f35edf67322c9d"
+  },
+  "model_exposure_receipts": [
+    {
+      "baseline_revision": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+      "model_repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+      "model_snapshot": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+      "new_tokens": 1159,
+      "path": "results/transformers-phase-a-structured-v1/rollouts/49412-seed-201.json",
+      "seed": 201,
+      "sha256": "c4b74e7ebaf51b01f8472c22dd469bf439885eed9a12cce39f3b291cdfae637b",
+      "task_id": "transformers-49412-fusion-registration-idempotence-v2"
+    },
+    {
+      "baseline_revision": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+      "model_repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+      "model_snapshot": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+      "new_tokens": 1159,
+      "path": "results/transformers-phase-a-structured-v1/rollouts/49412-seed-202.json",
+      "seed": 202,
+      "sha256": "9e29c5a3abe3795b1a30ac655e56277f375a059a9e95e905eea0cd50140e6ada",
+      "task_id": "transformers-49412-fusion-registration-idempotence-v2"
+    },
+    {
+      "baseline_revision": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+      "model_repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+      "model_snapshot": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+      "new_tokens": 1159,
+      "path": "results/transformers-phase-a-structured-v1/rollouts/49412-seed-203.json",
+      "seed": 203,
+      "sha256": "100dd61abef3eb84748003dfe1eff64680fd9d54c5ebd3e7677bf10e9c938ed2",
+      "task_id": "transformers-49412-fusion-registration-idempotence-v2"
+    },
+    {
+      "baseline_revision": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+      "model_repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+      "model_snapshot": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+      "new_tokens": 2168,
+      "path": "results/transformers-phase-a-structured-v1/rollouts/49412-v3-seed-401.json",
+      "seed": 401,
+      "sha256": "d59e2315be6811dc3c925ceead6908eec4c8fa235db2dfa01a842dcd57d6fe20",
+      "task_id": "transformers-49412-fusion-registration-idempotence-v2"
+    },
+    {
+      "baseline_revision": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+      "model_repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+      "model_snapshot": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+      "new_tokens": 959,
+      "path": "results/transformers-phase-a-structured-v1/rollouts/49412-v3-seed-402.json",
+      "seed": 402,
+      "sha256": "0a00333306b27d197e4e1ea9ca57ef9a8d5684b487e8963424f96b7bbf600c35",
+      "task_id": "transformers-49412-fusion-registration-idempotence-v2"
+    },
+    {
+      "baseline_revision": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+      "model_repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+      "model_snapshot": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+      "new_tokens": 1152,
+      "path": "results/transformers-phase-a-structured-v1/rollouts/49412-v3-seed-403.json",
+      "seed": 403,
+      "sha256": "f1b13d40c7b3c65668edf9bf394c1a213e64e50bf875740bc921fcb9c115fb5f",
+      "task_id": "transformers-49412-fusion-registration-idempotence-v2"
+    },
+    {
+      "baseline_revision": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+      "model_repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+      "model_snapshot": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+      "new_tokens": 3544,
+      "path": "results/transformers-phase-a-structured-v1/rollouts/49412-v4-seed-601.json",
+      "seed": 601,
+      "sha256": "e3e6e5216e3108e45bed21a409663e1555735a7a15e571bcf00a9f52d57061f9",
+      "task_id": "transformers-49412-fusion-registration-idempotence-v2"
+    },
+    {
+      "baseline_revision": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+      "model_repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+      "model_snapshot": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+      "new_tokens": 2491,
+      "path": "results/transformers-phase-a-structured-v1/rollouts/49412-v4-seed-602.json",
+      "seed": 602,
+      "sha256": "234b05b0b604b047a9979fbdbfd132b13dfcf28019d5fb54be49755d5ac1644a",
+      "task_id": "transformers-49412-fusion-registration-idempotence-v2"
+    },
+    {
+      "baseline_revision": "cb33194ad6152bd9fad6305378d92db385dd7b32",
+      "model_repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+      "model_snapshot": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+      "new_tokens": 3544,
+      "path": "results/transformers-phase-a-structured-v1/rollouts/49412-v4-seed-603.json",
+      "seed": 603,
+      "sha256": "25ac535c7034e48ade16e8c533119d9af1938b4029ec215f89b0d8191577b267",
+      "task_id": "transformers-49412-fusion-registration-idempotence-v2"
+    }
+  ],
+  "model_inference": "NOT_RUN",
+  "original_split": {
+    "development": [
+      "transformers-45852-4d-mask",
+      "mlxlm-1912-top-p-min-token",
+      "mlxlm-1971-mimo-value-scale"
+    ],
+    "heldout": [
+      "transformers-48319-stale-best-checkpoint",
+      "transformers-49208-resume-metrics",
+      "transformers-49412-fusion-idempotence",
+      "mlxlm-1902-continuation-score-truncation",
+      "mlxlm-1921-padded-logprobs",
+      "mlxlm-1926-falcon-cache-gradient",
+      "mlxlm-1935-zero-max-tokens",
+      "mlxlm-1938-phi3small-logits-mask",
+      "mlxlm-1979-ssm-padding-mask"
+    ],
+    "train": [
+      "mlx-4662-padding-input-gradient",
+      "mlxlm-1795-moe-routing-gradient",
+      "mlxlm-1904-tool-arguments"
+    ]
+  },
+  "remaining_reserved_ceiling_before_further_qualification": 8,
+  "remaining_reserved_task_ids": [
+    "transformers-48319-stale-best-checkpoint",
+    "transformers-49208-resume-metrics",
+    "mlxlm-1902-continuation-score-truncation",
+    "mlxlm-1921-padded-logprobs",
+    "mlxlm-1926-falcon-cache-gradient",
+    "mlxlm-1935-zero-max-tokens",
+    "mlxlm-1938-phi3small-logits-mask",
+    "mlxlm-1979-ssm-padding-mask"
+  ],
+  "remaining_task_status": "UNKNOWN: source-level reproduction is not a complete current isolated-grader, exposure, and environment certificate",
+  "required_eligible_heldout_tasks": 15,
+  "scope": "Finite retained-record audit. No absence-of-exposure claim outside inspected artifacts; no hidden label access or new task outcome.",
+  "source_calibration_log_hashes_verified": 30,
+  "source_task_count": 15,
+  "training": "NOT_RUN"
+}

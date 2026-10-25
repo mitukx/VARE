@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+from contextlib import closing
 import hashlib
 import json
 import math
@@ -100,6 +101,13 @@ def max_error(actual, expected) -> float:
             require(a == b, "independent replay scalar mismatch")
     walk(actual, expected)
     return max(errors, default=0.0)
+
+
+def require_behavior_alignment(error: float, threshold: float = 1e-4) -> None:
+    """Apply the frozen replay correctness limit to independent behavior logs."""
+    require(isinstance(error, (int, float)) and math.isfinite(error)
+            and error < threshold,
+            f"behavior log-probability mismatch >= {threshold}: {error}")
 
 
 def verify_manifest(run: Path) -> None:
@@ -316,6 +324,7 @@ def replay_update(run: Path, arm: str, group: dict, model_dir: Path,
     optimizer_error = max_error(candidate["optimizer"], oracle["optimizer"])
     require(max(model_error, optimizer_error) < 2e-6,
             f"offline GRPO replay mismatch for {arm}: {model_error}/{optimizer_error}")
+    require_behavior_alignment(oracle["max_behavior_alignment_error"])
     return {"model_max_abs": model_error, "optimizer_max_abs": optimizer_error,
             "loss": oracle["loss"], "advantages": oracle["advantages"],
             "behavior_alignment_error": oracle["max_behavior_alignment_error"]}
@@ -355,6 +364,79 @@ def exact_state_equal(left, right) -> bool:
         return isinstance(right, type(left)) and len(left) == len(right) and all(
             exact_state_equal(a, b) for a, b in zip(left, right))
     return left == right
+
+
+def _connect_readonly(path: Path) -> sqlite3.Connection:
+    return sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)
+
+
+def audit_recovered_consumption(snapshot: Path, worker: dict,
+                                expected_members: int = 8) -> dict:
+    """Bind claimed acknowledgments to complete consumed rows and ledger events."""
+    group_id = "crash-group"
+    with closing(_connect_readonly(snapshot)) as db:
+        rows = db.execute(
+            "SELECT id,member,group_size,state,head FROM trajectories "
+            "WHERE group_id=? ORDER BY member", (group_id,)).fetchall()
+        group_events = [json.loads(row[0]) for row in db.execute(
+            "SELECT event FROM events WHERE json_extract(event,'$.kind')="
+            "'group_acknowledged' AND json_extract(event,'$.job_id')=? "
+            "ORDER BY sequence", (group_id,))]
+    require(len(rows) == expected_members,
+            f"recovery snapshot group member count differs: {len(rows)}")
+    require([row[1] for row in rows] == list(range(expected_members))
+            and all(row[2] == expected_members for row in rows),
+            "recovery snapshot has missing, duplicate, or malformed group members")
+    counts: dict[str, int] = {}
+    expected_heads = {}
+    for trajectory_id, _member, _size, state, head in rows:
+        counts[state] = counts.get(state, 0) + 1
+        expected_heads[trajectory_id] = head
+    claimed = worker.get("store_counts", {})
+    require(counts.get("consumed", 0) == expected_members
+            and counts.get("quarantined", 0) == 0
+            and claimed.get("consumed", 0) == counts.get("consumed", 0)
+            and claimed.get("quarantined", 0) == counts.get("quarantined", 0),
+            f"snapshot terminal states disagree with worker acknowledgment: {counts}/{claimed}")
+    require(len(group_events) == 1,
+            f"recovery snapshot requires one group acknowledgment event, found {len(group_events)}")
+    details = group_events[0]["details"]
+    require(details.get("state") == "consumed"
+            and details.get("heads") == expected_heads,
+            "recovery group acknowledgment does not cover the exact consumed snapshot rows")
+    return {"group_id": group_id, "trajectory_count": len(rows),
+            "state_counts": counts, "acknowledgment_events": len(group_events),
+            "acknowledged_heads": len(details["heads"])}
+
+
+def audit_durable_promotion(case: Path, worker_journal: dict) -> dict:
+    """Compare SQLite's active row, journal, JSON pointer, and checkpoint bytes."""
+    with closing(_connect_readonly(case / "promotion.sqlite")) as db:
+        active_rows = db.execute(
+            "SELECT singleton,policy_id,checkpoint_sha256 FROM active").fetchall()
+        transactions = db.execute(
+            "SELECT candidate_id,candidate_sha256,state FROM transactions "
+            "ORDER BY tx_id").fetchall()
+    require(len(active_rows) == 1,
+            "durable promotion database must contain one active pointer")
+    checkpoint_sha = sha(case / "checkpoints/policy-1.pt")
+    durable = active_rows[0]
+    expected_active = (1, "policy-1", checkpoint_sha)
+    require(durable == expected_active,
+            f"durable active pointer differs from recovered checkpoint: {durable}/{expected_active}")
+    require(len(transactions) == 1
+            and transactions[0] == ("policy-1", checkpoint_sha, "committed"),
+            f"promotion transaction does not commit the durable active checkpoint: {transactions}")
+    active_json = json.loads((case / "active.json").read_text())
+    require(active_json == {"policy_id": "policy-1",
+                            "checkpoint_sha256": checkpoint_sha},
+            "active.json differs from durable promotion pointer/checkpoint")
+    require(worker_journal.get("active_policy_id") == "policy-1"
+            and worker_journal.get("active_checkpoint_sha256") == checkpoint_sha
+            and worker_journal.get("pending_tx_id") is None,
+            "worker promotion journal differs from durable pointer/checkpoint")
+    return {"policy_id": "policy-1", "checkpoint_sha256": checkpoint_sha,
+            "committed_transactions": len(transactions)}
 
 
 def require_crash_correction_manifest(
@@ -420,22 +502,13 @@ def audit_sigkill_recovery(source_run: Path, crash_run: Path) -> dict:
         store_audit = audit_trajectory_store(case / "trajectory-snapshot.sqlite")
         require(store_audit.get("pass") is True,
                 f"trajectory-store audit failed after recovery: {name}")
-        require(worker["store_counts"].get("consumed", 0) == 8
-                and worker["store_counts"].get("quarantined", 0) == 0,
-                f"effective trajectory acknowledgment count differs: {name}")
+        consumption = audit_recovered_consumption(
+            case / "trajectory-snapshot.sqlite", worker, expected_members=8)
         journal = worker["promotion_journal"]
         require(journal["active_policy_id"] == "policy-1"
                 and journal["pending_tx_id"] is None,
                 f"promotion journal is not clean after recovery: {name}")
-        with sqlite3.connect(case / "promotion.sqlite") as db:
-            transactions = db.execute(
-                "SELECT tx_id,state FROM transactions ORDER BY tx_id").fetchall()
-        require(len(transactions) == 1 and transactions[0][1] == "committed",
-                f"recovery produced duplicate or noncommitted transactions: {name}")
-        active = json.loads((case / "active.json").read_text())
-        require(active == {"policy_id": "policy-1",
-                           "checkpoint_sha256": journal["active_checkpoint_sha256"]},
-                f"promotion pointer/journal mismatch: {name}")
+        promotion = audit_durable_promotion(case, journal)
         recovered = torch.load(case / "checkpoints/policy-1.pt", weights_only=True)
         state_fields = ("model", "optimizer", "cpu_rng", "module_modes")
         require(all(field in recovered and field in source_state for field in state_fields),
@@ -453,8 +526,10 @@ def audit_sigkill_recovery(source_run: Path, crash_run: Path) -> dict:
             "recovery_wall_s": proof["recovery_wall_s"],
             "optimizer_attempts": len(attempts),
             "optimizer_calls": sum(item["optimizer_calls"] for item in attempts),
-            "committed_transactions": len(transactions),
+            "committed_transactions": promotion["committed_transactions"],
             "effective_consumed_trajectories": worker["effective_consumed_trajectories"],
+            "snapshot_consumption": consumption,
+            "durable_promotion": promotion,
             "exact_state_match": exact_fields,
             "candidate_sha256": sha(case / "checkpoints/policy-1.pt"),
             "trajectory_store_audit": store_audit,
@@ -497,11 +572,36 @@ def main() -> None:
         require(args.auditor_correction_manifest is not None,
                 "auditor differs from protocol; provide the versioned correction manifest")
         correction = json.loads(args.auditor_correction_manifest.read_text())
-        require(correction.get("schema") == "vare.v6-auditor-correction.v4"
+        correction_schema = correction.get("schema")
+        require(correction_schema in {
+                    "vare.v6-auditor-correction.v4",
+                    "vare.v6-auditor-correction.v5",
+                }
                 and correction.get("experiment_protocol_sha256") == sha(PROTOCOL)
                 and correction.get("original_auditor_sha256") == protocol["auditor_sha256"]
                 and correction.get("corrected_auditor_sha256") == current_auditor_sha,
                 "auditor correction manifest does not bind this code to frozen protocol")
+        if correction_schema == "vare.v6-auditor-correction.v5":
+            previous_manifest = correction.get("previous_auditor_correction_manifest")
+            require(previous_manifest ==
+                    "benchmarks/verifier_consistent_async_grpo_v6/"
+                    "auditor-correction-v4-runner-v2.json",
+                    "v5 auditor correction names an unexpected predecessor")
+            previous_path = ROOT / previous_manifest
+            require(sha(previous_path) == correction.get(
+                "previous_auditor_correction_manifest_sha256"),
+                "v5 auditor correction predecessor hash mismatch")
+            previous = json.loads(previous_path.read_text())
+            require(previous.get("schema") == "vare.v6-auditor-correction.v4"
+                    and previous.get("experiment_protocol_sha256")
+                    == correction.get("experiment_protocol_sha256")
+                    and previous.get("original_auditor_sha256")
+                    == correction.get("original_auditor_sha256")
+                    and previous.get("frozen_source_commit")
+                    == correction.get("frozen_source_commit")
+                    and previous.get("runner_correction_manifest_sha256")
+                    == correction.get("runner_correction_manifest_sha256"),
+                    "v5 auditor correction does not preserve its predecessor bindings")
         frozen_auditor_name = (
             "audit_verifier_consistent_async_grpo.py."
             + protocol["auditor_sha256"][:12]

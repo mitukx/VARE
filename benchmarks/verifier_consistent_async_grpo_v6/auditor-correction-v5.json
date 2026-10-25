@@ -1,0 +1,16 @@
+{
+  "corrected_auditor_sha256": "8f647bbbb9df5ff795ac34a6bb1db7465ef6d14aec7ff443beefcf4dc0ee509d",
+  "correction_scope": "Enforces the frozen behavior-log-probability error limit and audits consumed trajectory rows plus group acknowledgment events and the durable SQLite active pointer against the worker journal, active.json, and recovered checkpoint bytes. The v6 protocol, task outcomes, thresholds, and retained run artifacts remain unchanged.",
+  "experiment_protocol_sha256": "1e16f2452d2f0d101295df1438f87679bec621bb27f667259fe18d66db5d8523",
+  "frozen_source_commit": "69e9ab9b22da16413dbeababa0552e36aa06612f",
+  "original_auditor_sha256": "62e2204950164900464073caaacaeff06ae0a3a094ef4adeba7707e402c1d9ec",
+  "original_auditor_snapshot": "run/source/audit_verifier_consistent_async_grpo.py.62e220495016",
+  "previous_auditor_correction_manifest": "benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v4-runner-v2.json",
+  "previous_auditor_correction_manifest_sha256": "fc5c5dde0b345b0a4e0e0ee6839d751a0061dd89b66d4e05228ab4e17e5ed804",
+  "regression_test": "tests/test_verifier_consistent_async_grpo_audit_safety.py",
+  "regression_test_sha256": "ee8dacfc2a20828aface9792935d289b1bbce6a2d59cf2c08e76b4c3ac0bf3a6",
+  "runner_correction_manifest": "benchmarks/verifier_consistent_async_grpo_v6/matched-runner-correction-v2.json",
+  "runner_correction_manifest_sha256": "07ca75837b3de48f19bd607f64abacb65496c8757e51eaa022315aac8d22e715",
+  "schema": "vare.v6-auditor-correction.v5",
+  "supersedes_correction_manifest_sha256": "fc5c5dde0b345b0a4e0e0ee6839d751a0061dd89b66d4e05228ab4e17e5ed804"
+}

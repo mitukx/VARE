@@ -1,0 +1,456 @@
+{
+  "branch_protection": [
+    {
+      "allowsForcePushes": false,
+      "pattern": "main",
+      "requiredApprovingReviewCount": 1,
+      "requiredStatusCheckContexts": [
+        "blob-budget",
+        "lint",
+        "math500-grader",
+        "rvl-inference-cpu",
+        "seeded-summary-cpu",
+        "test (3.11)",
+        "test (3.12)",
+        "test (3.13)",
+        "typecheck"
+      ],
+      "requiresApprovingReviews": true,
+      "requiresCodeOwnerReviews": false,
+      "requiresStatusChecks": true
+    }
+  ],
+  "main_sha": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+  "pull_requests": [
+    {
+      "base_ref": "main",
+      "base_sha_as_recorded": "4728d478c1b9b50ad6aead1f1043ab03560b449a",
+      "check_failure_count": 0,
+      "check_success_count": 20,
+      "current_parent_not_ancestor_at_snapshot": false,
+      "draft": true,
+      "head_sha": "ae6e469769127d042623f31dd8cc8247b1babba6",
+      "number": 88,
+      "parent_pr": null,
+      "review_decision": "REVIEW_REQUIRED",
+      "title": "Record a 14B CPU MLSys coding-agent run",
+      "unresolved_threads": [
+        {
+          "finding": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Reject clipped gradients with the wrong shape**",
+          "outdated": false,
+          "path": "benchmarks/mlsys_coding_v1/tasks/global_grad_clip/evaluator/test_hidden.py",
+          "url": "https://github.com/mitukx/VARE/pull/88#discussion_r4321198051"
+        },
+        {
+          "finding": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Verify the files listed in the frozen pack manifest**",
+          "outdated": false,
+          "path": "scripts/run_mlsys_coding_agent_e2e.py",
+          "url": "https://github.com/mitukx/VARE/pull/88#discussion_r4321198062"
+        },
+        {
+          "finding": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Enforce the candidate worker's declared resource limits**",
+          "outdated": false,
+          "path": "src/vare/coding_agent_loop.py",
+          "url": "https://github.com/mitukx/VARE/pull/88#discussion_r4321198066"
+        }
+      ],
+      "url": "https://github.com/mitukx/VARE/pull/88"
+    },
+    {
+      "base_ref": "main",
+      "base_sha_as_recorded": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "check_failure_count": 0,
+      "check_success_count": 20,
+      "current_parent_not_ancestor_at_snapshot": false,
+      "draft": true,
+      "head_sha": "762a5a65598756014d957a206ba1548cb19a348f",
+      "number": 99,
+      "parent_pr": null,
+      "review_decision": "REVIEW_REQUIRED",
+      "title": "Calibrate isolated MLX-LM 1971 Development task",
+      "unresolved_threads": [
+        {
+          "finding": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Anchor the v9 lock outside mutable working files**",
+          "outdated": false,
+          "path": "src/vare/mlxlm_1971_repo_task_v9.py",
+          "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4356004859"
+        },
+        {
+          "finding": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Disable replacement refs in the v9 calibration**",
+          "outdated": false,
+          "path": "scripts/run_mlxlm_1971_calibration_v9.py",
+          "url": "https://github.com/mitukx/VARE/pull/99#discussion_r4356004865"
+        }
+      ],
+      "url": "https://github.com/mitukx/VARE/pull/99"
+    },
+    {
+      "base_ref": "codex/mlxlm-1971-isolation",
+      "base_sha_as_recorded": "0d843a3e2e11920a6e8e16d55f8cd37355f7f8fc",
+      "check_failure_count": 0,
+      "check_success_count": 20,
+      "current_parent_not_ancestor_at_snapshot": true,
+      "draft": false,
+      "head_sha": "4c03f12992c6ff45a6e5342a58e6b1927a8d28d2",
+      "number": 100,
+      "parent_pr": 99,
+      "review_decision": null,
+      "title": "Measure Qwen3-4B patch feasibility on Development tasks",
+      "unresolved_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/100"
+    },
+    {
+      "base_ref": "codex/qwen-development-feasibility",
+      "base_sha_as_recorded": "4c03f12992c6ff45a6e5342a58e6b1927a8d28d2",
+      "check_failure_count": 0,
+      "check_success_count": 29,
+      "current_parent_not_ancestor_at_snapshot": false,
+      "draft": true,
+      "head_sha": "aef27e3b7bb3dcadb4bd8d8ee1ca6bb6ebb7634d",
+      "number": 101,
+      "parent_pr": 100,
+      "review_decision": null,
+      "title": "Calibrate Transformers coding task and record Qwen tool feasibility",
+      "unresolved_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/101"
+    },
+    {
+      "base_ref": "codex/transformers-49752-repo-task",
+      "base_sha_as_recorded": "aef27e3b7bb3dcadb4bd8d8ee1ca6bb6ebb7634d",
+      "check_failure_count": 0,
+      "check_success_count": 20,
+      "current_parent_not_ancestor_at_snapshot": false,
+      "draft": true,
+      "head_sha": "0ba50de60f2013ea1838bb44e1068c44c26fd6c4",
+      "number": 102,
+      "parent_pr": 101,
+      "review_decision": null,
+      "title": "Run structured-edit Qwen coding-agent feasibility study",
+      "unresolved_threads": [
+        {
+          "finding": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Compute registry fingerprints with trusted primitives**",
+          "outdated": false,
+          "path": "benchmarks/mlsys_repo_eval_v4/transformers_49116_tokenizer_routing_v2/grader_adapter.py",
+          "url": "https://github.com/mitukx/VARE/pull/102#discussion_r4357713502"
+        },
+        {
+          "finding": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Support null registry values in the parent comparison**",
+          "outdated": false,
+          "path": "scripts/grade_transformers_phase_a_integrity_v8.py",
+          "url": "https://github.com/mitukx/VARE/pull/102#discussion_r4364721743"
+        },
+        {
+          "finding": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Accept the keyword arguments supplied by the real parent comparator**",
+          "outdated": false,
+          "path": "scripts/grade_transformers_phase_a_integrity_v9.py",
+          "url": "https://github.com/mitukx/VARE/pull/102#discussion_r4364772045"
+        }
+      ],
+      "url": "https://github.com/mitukx/VARE/pull/102"
+    },
+    {
+      "base_ref": "codex/structured-edit-agent-v1",
+      "base_sha_as_recorded": "ab4bda75574db0b4855dbf8cb36d4463f8fbe1d5",
+      "check_failure_count": 0,
+      "check_success_count": 20,
+      "current_parent_not_ancestor_at_snapshot": true,
+      "draft": false,
+      "head_sha": "031255fe3f2bf5b2913a393e2da3fb26d2a01d13",
+      "number": 103,
+      "parent_pr": 102,
+      "review_decision": null,
+      "title": "feat: improve structured coding-agent repair loop",
+      "unresolved_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/103"
+    },
+    {
+      "base_ref": "codex/structured-edit-controller-v2",
+      "base_sha_as_recorded": "031255fe3f2bf5b2913a393e2da3fb26d2a01d13",
+      "check_failure_count": 0,
+      "check_success_count": 20,
+      "current_parent_not_ancestor_at_snapshot": false,
+      "draft": false,
+      "head_sha": "02684dcce4c0a5474256b1d97a2adbda879388d2",
+      "number": 104,
+      "parent_pr": 103,
+      "review_decision": null,
+      "title": "Enforce coding grader limits and improve source inspection",
+      "unresolved_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/104"
+    },
+    {
+      "base_ref": "codex/fresh-coding-task-cohort",
+      "base_sha_as_recorded": "02684dcce4c0a5474256b1d97a2adbda879388d2",
+      "check_failure_count": 0,
+      "check_success_count": 20,
+      "current_parent_not_ancestor_at_snapshot": false,
+      "draft": false,
+      "head_sha": "a6c3071b5f47e988fe6c3330922c45833be04694",
+      "number": 105,
+      "parent_pr": 104,
+      "review_decision": null,
+      "title": "Record fresh coding-task cohort and Qwen resource gate",
+      "unresolved_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/105"
+    },
+    {
+      "base_ref": "codex/fresh-dev-agent-study-v5",
+      "base_sha_as_recorded": "a6c3071b5f47e988fe6c3330922c45833be04694",
+      "check_failure_count": 0,
+      "check_success_count": 20,
+      "current_parent_not_ancestor_at_snapshot": false,
+      "draft": false,
+      "head_sha": "075095c650ac372ff8d686e4461314feda26444a",
+      "number": 106,
+      "parent_pr": 105,
+      "review_decision": null,
+      "title": "Fix Phase A public-test Colima mounts",
+      "unresolved_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/106"
+    },
+    {
+      "base_ref": "codex/phase-a-v6-colima-public-tests",
+      "base_sha_as_recorded": "0db31d223a132105b2a8e8577f73e858f9ded6d2",
+      "check_failure_count": 0,
+      "check_success_count": 19,
+      "current_parent_not_ancestor_at_snapshot": true,
+      "draft": true,
+      "head_sha": "4bdca9b51640e60c47c3aefe63c1c8f12834de85",
+      "number": 107,
+      "parent_pr": 106,
+      "review_decision": null,
+      "title": "Qualify fresh HF coding tasks and analyze Phase A v6",
+      "unresolved_threads": [
+        {
+          "finding": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Re-freeze the protocol against the integrated runner**",
+          "outdated": false,
+          "path": "experiments/hf_coding_dev_inference_v1/protocol-v1.lock.json",
+          "url": "https://github.com/mitukx/VARE/pull/107#discussion_r4354348633"
+        }
+      ],
+      "url": "https://github.com/mitukx/VARE/pull/107"
+    },
+    {
+      "base_ref": "codex/fresh-hf-dev-candidates-v1",
+      "base_sha_as_recorded": "ab8d7c0b55d5b1c28365f2f002509ce3a37df501",
+      "check_failure_count": 0,
+      "check_success_count": 19,
+      "current_parent_not_ancestor_at_snapshot": true,
+      "draft": true,
+      "head_sha": "710dbc0d28aa33a78521a29f067c9a9493f6c56d",
+      "number": 108,
+      "parent_pr": 107,
+      "review_decision": null,
+      "title": "Add dual-Python HF Coding Development protocol v2",
+      "unresolved_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/108"
+    },
+    {
+      "base_ref": "codex/mlxlm-1971-isolation",
+      "base_sha_as_recorded": "0d843a3e2e11920a6e8e16d55f8cd37355f7f8fc",
+      "check_failure_count": 0,
+      "check_success_count": 19,
+      "current_parent_not_ancestor_at_snapshot": true,
+      "draft": true,
+      "head_sha": "8257a4dfe2106055a048ddd4b1520a08c7e4d658",
+      "number": 114,
+      "parent_pr": 99,
+      "review_decision": null,
+      "title": "Preserve attested MLX-LM calibration evidence on publication failure",
+      "unresolved_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/114"
+    },
+    {
+      "base_ref": "codex/mlxlm-1971-attested-calibration",
+      "base_sha_as_recorded": "8257a4dfe2106055a048ddd4b1520a08c7e4d658",
+      "check_failure_count": 0,
+      "check_success_count": 19,
+      "current_parent_not_ancestor_at_snapshot": false,
+      "draft": true,
+      "head_sha": "6709aed996ce5ec315cf7a87930350dca6c0ee20",
+      "number": 117,
+      "parent_pr": 114,
+      "review_decision": null,
+      "title": "Isolate MLX-LM source snapshots before trusted export",
+      "unresolved_threads": [
+        {
+          "finding": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Disable repository hooks before staging trusted code**",
+          "outdated": true,
+          "path": "scripts/run_mlxlm_1971_v10_operator.py",
+          "url": "https://github.com/mitukx/VARE/pull/117#discussion_r4357560734"
+        },
+        {
+          "finding": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Reject export symlinks before canonicalizing paths**",
+          "outdated": true,
+          "path": "scripts/run_mlxlm_1971_v10_operator.py",
+          "url": "https://github.com/mitukx/VARE/pull/117#discussion_r4357560750"
+        },
+        {
+          "finding": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Read protocol inputs through bounded nonblocking descriptors**",
+          "outdated": true,
+          "path": "scripts/run_mlxlm_1971_v10_operator.py",
+          "url": "https://github.com/mitukx/VARE/pull/117#discussion_r4364794432"
+        },
+        {
+          "finding": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Preserve required test files in the nested v9 checkout**",
+          "outdated": true,
+          "path": "scripts/run_mlxlm_1971_v10_operator.py",
+          "url": "https://github.com/mitukx/VARE/pull/117#discussion_r4364853009"
+        }
+      ],
+      "url": "https://github.com/mitukx/VARE/pull/117"
+    },
+    {
+      "base_ref": "codex/transformers-49752-repo-task",
+      "base_sha_as_recorded": "aef27e3b7bb3dcadb4bd8d8ee1ca6bb6ebb7634d",
+      "check_failure_count": 0,
+      "check_success_count": 20,
+      "current_parent_not_ancestor_at_snapshot": false,
+      "draft": true,
+      "head_sha": "552d6f61187926d78719aad8c4c7ec9e8663c242",
+      "number": 118,
+      "parent_pr": 101,
+      "review_decision": null,
+      "title": "Extract hash-checked structured edit library without changing frozen agent runtime",
+      "unresolved_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/118"
+    },
+    {
+      "base_ref": "main",
+      "base_sha_as_recorded": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "check_failure_count": 0,
+      "check_success_count": 20,
+      "current_parent_not_ancestor_at_snapshot": false,
+      "draft": true,
+      "head_sha": "58ecd9c9727a1544a5a08c9c250f1f36dd9a5f8d",
+      "number": 120,
+      "parent_pr": null,
+      "review_decision": "REVIEW_REQUIRED",
+      "title": "Record real-model coding-agent feasibility and tool-boundary fixes",
+      "unresolved_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/120"
+    },
+    {
+      "base_ref": "main",
+      "base_sha_as_recorded": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "check_failure_count": 0,
+      "check_success_count": 19,
+      "current_parent_not_ancestor_at_snapshot": false,
+      "draft": true,
+      "head_sha": "a937f4ad6eacb63d679952f7a05d39d04afab59a",
+      "number": 121,
+      "parent_pr": null,
+      "review_decision": "REVIEW_REQUIRED",
+      "title": "Add independent source replay for Transformers fusion registration",
+      "unresolved_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/121"
+    },
+    {
+      "base_ref": "main",
+      "base_sha_as_recorded": "f3ab90a36e8724441b6b9555255f8f75a0a4d529",
+      "check_failure_count": 0,
+      "check_success_count": 28,
+      "current_parent_not_ancestor_at_snapshot": false,
+      "draft": false,
+      "head_sha": "37b31519818b5dfbf245075cc541d6c8a38b4099",
+      "number": 122,
+      "parent_pr": null,
+      "review_decision": "REVIEW_REQUIRED",
+      "title": "Close installed-repair leakage and record the 7B teacher NO-GO",
+      "unresolved_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/122"
+    },
+    {
+      "base_ref": "codex/flagship-teacher-gate",
+      "base_sha_as_recorded": "37b31519818b5dfbf245075cc541d6c8a38b4099",
+      "check_failure_count": 0,
+      "check_success_count": 19,
+      "current_parent_not_ancestor_at_snapshot": false,
+      "draft": false,
+      "head_sha": "a02d6cb64f2531cbe6152266b431d8a466f0bdbc",
+      "number": 123,
+      "parent_pr": 122,
+      "review_decision": null,
+      "title": "Measure false rewards from installed repair artifacts",
+      "unresolved_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/123"
+    },
+    {
+      "base_ref": "codex/dependency-artifact-pilot",
+      "base_sha_as_recorded": "a02d6cb64f2531cbe6152266b431d8a466f0bdbc",
+      "check_failure_count": 0,
+      "check_success_count": 19,
+      "current_parent_not_ancestor_at_snapshot": false,
+      "draft": false,
+      "head_sha": "af4bc1f862f2b8b2d0564cd8731b81129c1195ec",
+      "number": 124,
+      "parent_pr": 123,
+      "review_decision": null,
+      "title": "Measure contaminated rewards shifting a trainable repair policy",
+      "unresolved_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/124"
+    },
+    {
+      "base_ref": "codex/transitive-reference-exposure-v1",
+      "base_sha_as_recorded": "af4bc1f862f2b8b2d0564cd8731b81129c1195ec",
+      "check_failure_count": 1,
+      "check_success_count": 28,
+      "current_parent_not_ancestor_at_snapshot": false,
+      "draft": false,
+      "head_sha": "a476feeed7ee5d711b3741b0a0ffa89f7c29cd76",
+      "number": 125,
+      "parent_pr": 124,
+      "review_decision": null,
+      "title": "Measure real coding-agent interface feasibility on fresh MLX-LM tasks",
+      "unresolved_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/125"
+    },
+    {
+      "base_ref": "codex/real-agent-interface-v1",
+      "base_sha_as_recorded": "a476feeed7ee5d711b3741b0a0ffa89f7c29cd76",
+      "check_failure_count": 0,
+      "check_success_count": 20,
+      "current_parent_not_ancestor_at_snapshot": false,
+      "draft": false,
+      "head_sha": "c728b9f2ece5dbd1f08878520b0efe5e17ca3b48",
+      "number": 126,
+      "parent_pr": 125,
+      "review_decision": null,
+      "title": "Measure verifier-version-aware GRPO under drift and crashes",
+      "unresolved_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/126"
+    },
+    {
+      "base_ref": "codex/verifier-consistent-async-grpo-v1",
+      "base_sha_as_recorded": "c728b9f2ece5dbd1f08878520b0efe5e17ca3b48",
+      "check_failure_count": 0,
+      "check_success_count": 19,
+      "current_parent_not_ancestor_at_snapshot": true,
+      "draft": true,
+      "head_sha": "ecc5570a4e2275ecb78d8367f2bd383fbd197cac",
+      "number": 127,
+      "parent_pr": 126,
+      "review_decision": null,
+      "title": "Report preregistered v7 verifier-drift pilot NO-GO",
+      "unresolved_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/127"
+    },
+    {
+      "base_ref": "codex/verifier-drift-multiscenario-v1",
+      "base_sha_as_recorded": "ecc5570a4e2275ecb78d8367f2bd383fbd197cac",
+      "check_failure_count": 0,
+      "check_success_count": 19,
+      "current_parent_not_ancestor_at_snapshot": false,
+      "draft": true,
+      "head_sha": "acca07004eb9a44cf23d31ff0d68929b7ea3fc1d",
+      "number": 128,
+      "parent_pr": 127,
+      "review_decision": null,
+      "title": "Replay coding reward provenance under verifier contamination",
+      "unresolved_threads": [],
+      "url": "https://github.com/mitukx/VARE/pull/128"
+    }
+  ],
+  "snapshot_scope": "before this cycle\u2019s integration; exact starting heads are historical records, not live merge authorization",
+  "source_snapshot_sha256": "816d217f62070f51f27211329cdd29e6c1007040e9e5c0261e96112fd41c9f0e"
+}

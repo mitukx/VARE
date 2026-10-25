@@ -6,7 +6,7 @@ This was a synthetic TinyStories verifier-drift and single-host recovery pilot, 
 
 ## Offline audit of retained runs
 
-The runner output-safety correction changes no experiment rule. Current source corrections are bound by [`runner-output-safety-correction-v1.json`](runner-output-safety-correction-v1.json), [`matched-runner-correction-v2.json`](matched-runner-correction-v2.json), and [`auditor-correction-v4-runner-v2.json`](auditor-correction-v4-runner-v2.json). The latter binds the exact runner-manifest hash, while the runner manifest chains the earlier non-finite replay correction. The original v1/v4 manifests and frozen protocol are unchanged.
+The runner output-safety correction changes no experiment rule. Current source corrections are bound by [`runner-output-safety-correction-v1.json`](runner-output-safety-correction-v1.json), [`matched-runner-correction-v2.json`](matched-runner-correction-v2.json), [`auditor-correction-v4-runner-v2.json`](auditor-correction-v4-runner-v2.json), and [`auditor-correction-v5.json`](auditor-correction-v5.json). Auditor correction v5 chains v4 and additionally enforces the frozen behavior-logprob threshold, compares claimed trajectory consumption with snapshot rows and acknowledgment events, and binds the durable active row to the journal, JSON pointer, and recovered checkpoint bytes. The original frozen protocol and earlier correction manifests are unchanged.
 
 Use `python -S` and the already pinned local model and RVL source directories. These commands audit retained bundles only; they do not run inference or training. Each output path must be new.
 
@@ -18,10 +18,10 @@ python -S scripts/audit_verifier_consistent_async_grpo.py \
   --model-dir ../tinystories-1m-pinned \
   --rvl-source ../rvl-pinned \
   --allow-partial \
-  --auditor-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v4-runner-v2.json \
+  --auditor-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v5.json \
   --runner-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/matched-runner-correction-v2.json \
   --crash-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/crash-runner-correction-v3.json \
-  --output results/verifier_consistent_async_grpo_v6/offline-audit-pilot-v5.json
+  --output results/verifier_consistent_async_grpo_v6/offline-audit-pilot-correction-v6.json
 ```
 
 Full two-seed and five-cutpoint audit:
@@ -33,10 +33,10 @@ python -S scripts/audit_verifier_consistent_async_grpo.py \
   --crash-run results/verifier_consistent_async_grpo_v6/crash-82106-replay-order-v2 \
   --model-dir ../tinystories-1m-pinned \
   --rvl-source ../rvl-pinned \
-  --auditor-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v4-runner-v2.json \
+  --auditor-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/auditor-correction-v5.json \
   --runner-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/matched-runner-correction-v2.json \
   --crash-correction-manifest benchmarks/verifier_consistent_async_grpo_v6/crash-runner-correction-v3.json \
-  --output results/verifier_consistent_async_grpo_v6/offline-audit-full-v5.json
+  --output results/verifier_consistent_async_grpo_v6/offline-audit-full-correction-v6.json
 ```
 
-The resulting [`pilot-gate-audit-82106-correction-v5.json`](pilot-gate-audit-82106-correction-v5.json) and [`final-independent-audit-v6-correction-v5.json`](final-independent-audit-v6-correction-v5.json) are retained supplemental audits. Their measured outcomes exactly match the v4 audit after excluding the auditor- and runner-correction-manifest hashes. The older [`pilot-artifact-index-v5.json`](pilot-artifact-index-v5.json) remains an immutable snapshot of its earlier inventory; these later audits and manifests supplement it without changing raw-run artifacts.
+The retained [`pilot-gate-audit-82106-correction-v6.json`](pilot-gate-audit-82106-correction-v6.json) and [`final-independent-audit-v6-correction-v6.json`](final-independent-audit-v6-correction-v6.json) are reruns under correction v5. The full audit's primary metrics and decision exactly match correction v5; its recovery records additionally expose the independently queried SQLite consumption and promotion rows. Earlier audit reports and [`pilot-artifact-index-v5.json`](pilot-artifact-index-v5.json) remain immutable; the supplemental audits do not modify raw-run artifacts. The correction-v6 output paths above are for independent reruns and must be new when used.
