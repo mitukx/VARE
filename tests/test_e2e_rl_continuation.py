@@ -116,7 +116,7 @@ def test_campaign_snapshots_the_full_runtime_package(campaign,tmp_path):
         config["source_sha256"][source]=digest
         bench.atomic_json(config_path,config)
     reseal_records(changed)
-    with pytest.raises(ValueError,match="source snapshot differs from recorded base commit"):
+    with pytest.raises(ValueError,match="V4 combined source snapshot differs"):
         auditor.audit(changed)
 
 
