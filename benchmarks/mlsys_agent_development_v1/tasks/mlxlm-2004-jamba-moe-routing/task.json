@@ -1,0 +1,12 @@
+{
+  "metadata": {
+    "editable_files": ["mlx_lm/models/jamba.py"],
+    "split": "development"
+  },
+  "prompt": "In `mlx_lm/models/jamba.py`, correct `JambaSparseMoeBlock` routing so selected expert outputs use probabilities normalized across all experts. Preserve top-k expert selection and make the probability dtype safe for mixed precision. Keep the change focused on the routing calculation.",
+  "source": {
+    "base_revision": "4cfc6478473b0668ede3eb0cc93f2a9181a15052",
+    "calibration_revision": "2cd1088e83aabf132e33647b97a25cfad23af759"
+  },
+  "task_id": "mlxlm-2004-jamba-moe-routing"
+}

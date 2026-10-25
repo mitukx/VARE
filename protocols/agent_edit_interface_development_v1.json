@@ -1,0 +1,238 @@
+{
+  "analysis": {
+    "method": "List all four task/interface cells actually executed and conditionally skipped cells. Do not compute significance tests from two task families. Report exact task-level paired outcomes and uncertainty only as broad descriptive binomial bounds if useful.",
+    "success_definition": "A success requires a nonempty applied source diff plus all task-specific independent hidden assertions passing after the agent record is finalized.",
+    "training": "No SFT/GRPO/optimizer update; existing historical held-out gate remains below 15 eligible independent families."
+  },
+  "claim_limit": "Two-task, one-sample-per-task Development feasibility comparison only. It does not establish general coding capability, held-out performance, pretraining independence, policy learning, asynchronous benefit, or RSI improvement.",
+  "format_calibration": {
+    "independent_fixture_count": 4,
+    "lease_bound_max_edit_action_tokens": 73,
+    "lease_bound_tool_output_tokens": 406,
+    "legacy_arm_mapping": "The calibration arm uses the exact legacy structured-replacement JSON action schema and payload; the versioned runner flag only selects strict parsing and is not the model comparison arm.",
+    "per_turn_budget": 384,
+    "per_turn_budget_formula": "max(256, ceil(max fixture edit-action tokens across both interfaces * 2.5 / 64) * 64)",
+    "purpose": "Protocol sizing only; no model inference or task outcome was used to choose the budget.",
+    "record": "results/agent-edit-interface-v1/format-calibration-pinned-v1.json",
+    "record_sha256": "44df4ae3d7180acd51d2a06b9fe60d93f251359ab91072dc558a093bd3d20fa3",
+    "script": "scripts/calibrate_agent_edit_interface_v1.py",
+    "script_sha256": "d4ca4f2535f6f59e73fc995233ce41da3cfeeed27014eba63c4a1eb3d17a121d",
+    "structured_replace_max_edit_action_tokens": 132,
+    "structured_replace_tool_output_tokens": 508,
+    "token_reduction_max_edit_action_percent": 44.696969696969695,
+    "token_reduction_total_percent": 20.078740157480315,
+    "tokenizer_rule": "Qwen3-4B snapshot tokenizer; len(tokenizer.encode(raw complete serialized tool output, add_special_tokens=False))"
+  },
+  "hypothesis": "On two newly certified Development repository-repair tasks, a lease-bound line replacement interface submits complete edits more reliably within an output budget calibrated from independent edit fixtures than the existing exact structured-replacement interface.",
+  "implementation_sha256": {
+    "requirements/mlsys-agent-mlx.lock.txt": "ab4187759276ca759e84c9a4f12cb2a9416c7e297c69b87783c243ac9459af2a",
+    "scripts/audit_agent_development_task_exposure_v1.py": "5c7d595022fac816e6cf92f8eec19e1ce1c1071a5cfa3bfa0d5360a7365d71b2",
+    "scripts/calibrate_agent_edit_interface_v1.py": "d4ca4f2535f6f59e73fc995233ce41da3cfeeed27014eba63c4a1eb3d17a121d",
+    "scripts/run_local_agent.py": "a360dfce0b23f4ae9abd0850cb8c0c0dbf54dab98e47f5101edbb3ef671fbff4",
+    "scripts/run_real_agent_interface_v1.py": "575ef504c969018be990ba64d7a9a76dff2bf33e89cc1284a888221c536a4cc9",
+    "src/vare/agent_edit_v2.py": "169f25c28727d101b8709f058b4fe99d4e4164685a2afcfd88028d62e3bdb5cc",
+    "src/vare/agent_task_contract.py": "bd5f9b3f6008d4e03f25664ca3248f50ecc52d0095228977118a12abd049e9aa",
+    "tests/test_agent_edit_v2.py": "2ec7471b82502991e69dcef862da682ad5e3e2bf3b6c59c242f36639c103e11e",
+    "tests/test_run_local_agent_tool_format.py": "0c4f70bdd10e13b5fdd3282ec32cc286569e8696bf90b41f4f372890902e99f1",
+    "tests/test_separated_grading.py": "af4c45af06015ff50a755240a16ca412bea7cfaaed8c4da41ef17abb4f781721"
+  },
+  "model": {
+    "backend": "MLX on Apple Metal",
+    "files_sha256": {
+      ".gitattributes": "34448b82c17d60fec9b65b1f093c115ddbaadc04beb1b0140b6bfed2e012a930",
+      "README.md": "7b17ce562d7ea121c86d2ffdf660eed3726ac5b52cacfa9f1de11a65969f5657",
+      "added_tokens.json": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680",
+      "chat_template.jinja": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541",
+      "config.json": "574349e5a343236546fda55e4744a76e181f534182d7dc60ff1bad7e7a502849",
+      "generation_config.json": "835fffe355c9438e7a25be099b3fccaa98350b83451f9fd2d99512e74f1ade48",
+      "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "model.safetensors": "2a73c6c248601ab904e035548abd8e6abb65ea27dcb5f342fb0a8910eb44173f",
+      "model.safetensors.index.json": "388d811b8b7c2608dd04cce1bcb04a8bf715d19b42790894e6d3427ff429a777",
+      "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "tokenizer.json": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "tokenizer_config.json": "4397cc477eb6d79715ccd2000accd6b3531928f30029665832fa1b255f24d2b9",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "revision": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+    "snapshot_path": "local Hugging Face cache snapshot at the recorded revision; no download during inference",
+    "total_file_bytes": 2278972236
+  },
+  "outputs": {
+    "agent_record": "agent.json",
+    "event_journal": "events.jsonl",
+    "execution_record": "execution.json",
+    "independent_grade": "trusted-grade.json",
+    "resource_samples": "resources.jsonl",
+    "root": "results/agent-edit-interface-v1/model-run-v1",
+    "stderr": "stderr.log",
+    "stdout": "stdout.log"
+  },
+  "parent_commit": "071352981ad2e6bb1601ae50f935600f28aba8fc",
+  "preregistered_at_utc": "2026-10-25T12:02:02.206105+00:00",
+  "primary_metric": "Independently verified successful repairs per Development task under the fixed one-attempt budget; report each interface denominator and the paired task rows. n=2 is feasibility-only descriptive evidence.",
+  "protocol_id": "agent-edit-interface-development-v1",
+  "resource_limits": {
+    "max_model_process_tree_rss_bytes": 10737418240,
+    "max_swap_growth_bytes": 33554432,
+    "minimum_available_memory_bytes": 5368709120,
+    "minimum_disk_free_bytes": 16106127360,
+    "minimum_free_swap_bytes": 536870912,
+    "paid_api_usd": 0,
+    "sample_interval_seconds": 1,
+    "weight_download_bytes": 0
+  },
+  "runtime": {
+    "candidate_access": "No shell, no network, only the task allowlisted source through the VARE tool controller.",
+    "dependency_lock": "requirements/mlsys-agent-mlx.lock.txt",
+    "dependency_lock_sha256": "ab4187759276ca759e84c9a4f12cb2a9416c7e297c69b87783c243ac9459af2a",
+    "grader_isolation": "Trusted test file stays outside candidate workspace; grader runs after attempt in a separate sandbox-exec profile denying network. Docker was unavailable; no Docker/cgroup claim.",
+    "host": "Apple M1 Pro / 32 GiB / macOS arm64",
+    "macos": "27.0.1 (26A434)",
+    "mlx": "0.32.2",
+    "mlx_lm": "0.32.2",
+    "python": "3.12.12",
+    "source_setup": "Fresh detached upstream base worktree; generated mlx_lm/_version.py matching pinned installed mlx-lm version is untracked and outside the editable-file allowlist.",
+    "tokenizers": "0.23.3",
+    "transformers": "5.20.2"
+  },
+  "schema_version": 1,
+  "secondary_metrics": [
+    "complete tool-call rate",
+    "valid edit applied rate",
+    "successful hidden grade rate",
+    "serialized edit-action tokens from output transcript",
+    "total generated tokens",
+    "turn count",
+    "elapsed generation/attempt time",
+    "peak process-tree RSS",
+    "MLX peak memory",
+    "swap growth",
+    "failure class"
+  ],
+  "selection": {
+    "candidate_set_frozen": true,
+    "excluded_consumed_tasks": [
+      "mlx-4729-negative-take",
+      "mlx-4730-normal-shape",
+      "mlx-lm-1978-rotating-cache",
+      "mlx-lm-1980-pipeline-scales"
+    ],
+    "exposure_audit_path": "results/agent-edit-interface-v1/task-qualification/exposure-audit-v2.json",
+    "exposure_audit_sha256": "916036c528d5e722c371461d48cd36c2cdc6cc714c836ae7513e82d9d624002a",
+    "external_model_pretraining_exposure": "unknown; no absence-of-pretraining claim.",
+    "operator_exposure": "Operator reviewed upstream fixes and hidden tests during qualification; model received only the task prompt and allowlisted target source.",
+    "role": "DEVELOPMENT_ONLY",
+    "selection_rule": "Choose two locally reproducible CPU/MLX-LM source repair families absent as exact task identities from the retained local VARE task/inference history; require a pinned failing base, upstream fix pass, independent hidden grader, and a predeclared semantic mutant rejection before model inference.",
+    "tasks": {
+      "mlxlm-1996-nested-parameter-tags": {
+        "base_revision": "72be8c955d9a0d3099bd01865af288e0e947c3fa",
+        "base_target_sha256": "d1029aae22ed475e9d7c09d29c37e74dca8df52b0fb046f000f2e3f9b83a6583",
+        "controls": {
+          "baseline": "FAIL",
+          "predeclared_semantic_mutant": "FAIL",
+          "upstream_fix": "PASS"
+        },
+        "external_pretraining_exposure": "unknown",
+        "fix_revision": "733925103546131e0e79bce0bcb2ff813939656c",
+        "fix_target_sha256": "be276120ce8a46c02e39333beb4ca7c87f71359a1a2de234e58a16b8885288ad",
+        "grader_sha256": "b9c7c1b2e86eccd33db7cd01dbf533f6b422b86520b4b8d5f36cb6c195af3d7f",
+        "grader_test_count": 2,
+        "local_exact_task_identity_prior_matches": 0,
+        "local_exposure_audit_path": "results/agent-edit-interface-v1/task-qualification/exposure-audit-v2.json",
+        "local_exposure_audit_sha256": "916036c528d5e722c371461d48cd36c2cdc6cc714c836ae7513e82d9d624002a",
+        "split": "development",
+        "task_json_sha256": "0a4a2826525c3c8e30ffa3b17066ed75c05b2937523b00af6715a94e226cebeb",
+        "task_lock_sha256": "6e6c1525f6db9a8262a9397defde6872956658c51d19d15f69228167537e88b9",
+        "task_md_sha256": "66410d318b49d7e5547403768b25d60ce17a78f312409fa1ab5cf7b026713784",
+        "title": "fix: handle nested parameter tags in Qwen3 Coder parser",
+        "upstream_pr": 1996,
+        "upstream_repository": "https://github.com/ml-explore/mlx-lm"
+      },
+      "mlxlm-2004-jamba-moe-routing": {
+        "base_revision": "4cfc6478473b0668ede3eb0cc93f2a9181a15052",
+        "base_target_sha256": "f0d5e5551127179b79f10dff764aeaa70ab3c1fc06e71487a25ad414561f28bd",
+        "controls": {
+          "baseline": "FAIL",
+          "predeclared_semantic_mutant": "FAIL",
+          "upstream_fix": "PASS"
+        },
+        "external_pretraining_exposure": "unknown",
+        "fix_revision": "2cd1088e83aabf132e33647b97a25cfad23af759",
+        "fix_target_sha256": "4b3b02c6b1665aa7b5e7b659fc815ad3f325ae0134496136b55203187f1ada65",
+        "grader_sha256": "f34ec089c25113824e56b3875bed8804dec717448ada08cbfbd3619c064312d6",
+        "grader_test_count": 1,
+        "local_exact_task_identity_prior_matches": 0,
+        "local_exposure_audit_path": "results/agent-edit-interface-v1/task-qualification/exposure-audit-v2.json",
+        "local_exposure_audit_sha256": "916036c528d5e722c371461d48cd36c2cdc6cc714c836ae7513e82d9d624002a",
+        "qualification_control_record": "results/agent-edit-interface-v1/task-qualification/summary-grader-normalized-v1.json",
+        "qualification_control_record_sha256": "e40db34bd993bd95d0ffa75cec1d8c1ca20561554f2afb8999f77afa3ac04bc6",
+        "split": "development",
+        "task_json_sha256": "7429fa2eafa0e114c3cf4a53c45a5943a2ddbd6aca50c337c3252648ed669962",
+        "task_lock_sha256": "74aaeacceb5accb3daaa2c8ae3e9dfab8e3da0d6ee1ff3778f0a477f554db25e",
+        "task_md_sha256": "80ddcd482ea89a6458138637a733d04e01389adc46973c56eb40ca79df266e67",
+        "title": "Fix Jamba MoE routing weights to match reference",
+        "upstream_pr": 2004,
+        "upstream_repository": "https://github.com/ml-explore/mlx-lm"
+      }
+    }
+  },
+  "status": "FROZEN_BEFORE_MODEL_INFERENCE",
+  "stopping_and_failures": [
+    "Do not run the consumed Qwen3 or Qwen2.5 tasks listed above.",
+    "Retain previous setup failures and negative task runs as separate immutable evidence; they are not overwritten or reclassified.",
+    "Stop after pilot if no source edit was applied; do not tune prompts or budgets.",
+    "Stop on low memory, swap growth above threshold, wall timeout, source/hash drift, grader integrity error, or model-load error; retain logs and journal.",
+    "Do not infer pretraining independence from a local exposure scan."
+  ],
+  "treatment": {
+    "arms": [
+      "lease_bound_lines_v1",
+      "legacy_structured_replace"
+    ],
+    "attempt_order": [
+      {
+        "interface": "lease_bound_lines_v1",
+        "role": "pilot_stop_gate",
+        "task_id": "mlxlm-2004-jamba-moe-routing"
+      },
+      {
+        "interface": "legacy_structured_replace",
+        "role": "paired_control",
+        "task_id": "mlxlm-2004-jamba-moe-routing"
+      },
+      {
+        "interface": "lease_bound_lines_v1",
+        "role": "paired_task",
+        "task_id": "mlxlm-1996-nested-parameter-tags"
+      },
+      {
+        "interface": "legacy_structured_replace",
+        "role": "paired_control",
+        "task_id": "mlxlm-1996-nested-parameter-tags"
+      }
+    ],
+    "budget": {
+      "max_context_tokens": 8192,
+      "max_new_tokens_per_turn": 384,
+      "max_no_tool_retries": 0,
+      "max_public_test_runs": 1,
+      "max_total_new_tokens": 3072,
+      "max_turns": 12,
+      "public_test_run_limit_is_inactive_without_an_image": true,
+      "public_test_runs": 0,
+      "public_tests_exposed": false,
+      "wall_seconds": 900
+    },
+    "conditional_stop_rule": "Run the first pilot only. Grade and retain its candidate. If it did not apply one complete source edit, stop all remaining model calls. Also stop if a resource/integrity gate fails or the runner aborts. No retries or prompt changes.",
+    "decoding": {
+      "do_sample": false,
+      "seed": 101,
+      "temperature": 0.0,
+      "top_k": 20,
+      "top_p": 0.95
+    },
+    "pairing": "Same checkpoint, task prompt, seed, decoding, turn/token/context/wall limits, source commit, verifier semantics and clean base workspace per task. Only the versioned lease-bound edit tools and prompt versus the existing legacy structured-replacement tools and prompt differ.",
+    "prompt": "Identify the reported failure, inspect the named source file, make a minimal source-only repair, and finish. Do not edit test files."
+  }
+}

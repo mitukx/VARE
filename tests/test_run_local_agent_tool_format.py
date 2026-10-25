@@ -1,7 +1,14 @@
+import hashlib
+import json
+
+import pytest
+
 from scripts.run_local_agent import (
-    normalize_tool_call_format, read_file_range, refresh_public_tests_after_edit,
-    replace_text, tools_for,
+    DurableEventJournal, normalize_tool_call_format, parse_tool_output_v1, read_file_range,
+    refresh_public_tests_after_edit, replace_text, tools_for,
 )
+from vare.agent_edit_v2 import SourceEditLeaseStoreV1
+from scripts.calibrate_agent_edit_interface_v1 import FIXTURES, _validate_fixture, tool_output
 from scripts.run_separated_coding_eval import (
     _attempted_task_run_count,
     _planned_task_run_count,
@@ -62,6 +69,117 @@ def test_structured_interface_exposes_bounded_reads_and_unique_replacements():
     assert {"read_file_range", "replace_text", "run_public_tests", "finish"} <= names
     assert "apply_patch" not in names
     assert "write_file" not in names
+
+
+def test_lease_bound_interface_exposes_only_the_versioned_atomic_edit():
+    names = {tool["function"]["name"] for tool in tools_for(
+        "structured_replace", tool_interface="lease_bound_lines_v1",
+    )}
+    assert {"read_lines", "replace_lines", "list_files", "finish"} <= names
+    assert "replace_text" not in names
+    assert "apply_patch" not in names
+
+
+def test_versioned_parser_distinguishes_complete_truncated_invalid_and_policy_rejected():
+    tools = tools_for("structured_replace", tool_interface="lease_bound_lines_v1")
+    complete = '<tool_call>{"name":"list_files","arguments":{}}</tool_call>'
+    assert parse_tool_output_v1(complete, tools)[0] == "complete_tool_call"
+    truncated = '<tool_call>{"name":"replace_lines","arguments":{"lease":"12ab34cd56ef","text":"'
+    assert parse_tool_output_v1(truncated, tools) == ("truncated_tool_call", None)
+    invalid = '<tool_call>{"name":"list_files","arguments":[]}</tool_call>'
+    assert parse_tool_output_v1(invalid, tools)[0] == "invalid_json_or_schema"
+    denied = '<tool_call>{"name":"write_file","arguments":{"path":"src/value.py"}}</tool_call>'
+    assert parse_tool_output_v1(denied, tools)[0] == "valid_call_rejected_by_policy"
+    assert parse_tool_output_v1("I will inspect the code first.", tools) == ("no_tool_call", None)
+
+
+def test_versioned_parser_rejects_bad_schema_without_repairing_it():
+    tools = tools_for("structured_replace", tool_interface="lease_bound_lines_v1")
+    bad_type = (
+        '<tool_call>{"name":"read_lines","arguments":'
+        '{"path":"src/value.py","start":true,"end":1}}</tool_call>'
+    )
+    extra = '<tool_call>{"name":"list_files","arguments":{"surprise":1}}</tool_call>'
+    assert parse_tool_output_v1(bad_type, tools)[0] == "invalid_json_or_schema"
+    assert parse_tool_output_v1(extra, tools)[0] == "invalid_json_or_schema"
+    # The transport parser must leave the old truncated action byte-for-byte untouched.
+    raw = '<tool_call>{"name":"replace_lines","arguments":{"lease":"12ab34cd56ef","text":"partial'
+    assert parse_tool_output_v1(raw, tools) == ("truncated_tool_call", None)
+
+
+def test_token_calibration_fixtures_have_valid_unique_legacy_preimages():
+    for fixture in FIXTURES:
+        _validate_fixture(fixture)
+    assert len({fixture["name"] for fixture in FIXTURES}) == len(FIXTURES)
+
+
+def test_token_calibration_rejects_ambiguous_legacy_preimage():
+    fixture = dict(FIXTURES[1], legacy_old_text="    return x\n")
+    with pytest.raises(ValueError, match="legacy old_text is not unique"):
+        _validate_fixture(fixture)
+
+
+def test_tool_output_uses_compact_complete_envelope():
+    assert tool_output("finish", {"summary": "ok"}) == (
+        '<tool_call>{"name":"finish","arguments":{"summary":"ok"}}</tool_call>'
+    )
+
+
+def test_durable_event_journal_fsyncs_a_non_overwriting_hash_chain(tmp_path):
+    path = tmp_path / "attempt.events.jsonl"
+    journal = DurableEventJournal(path)
+    journal.append("model_output_completed", turn=1, model_output="<tool_call>{}</tool_call>")
+    last_hash = journal.append("run_finished", stop_reason="no_tool_call")
+    journal.close()
+
+    records = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+    assert [item["event"]["event_type"] for item in records] == [
+        "journal_created", "model_output_completed", "run_finished",
+    ]
+    previous = "0" * 64
+    for record in records:
+        assert record["previous_event_sha256"] == previous
+        canonical = json.dumps(
+            record["event"], ensure_ascii=False, sort_keys=True, separators=(",", ":"),
+        )
+        digest = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+        assert record["event_sha256"] == digest
+        previous = digest
+    assert last_hash == previous
+    with pytest.raises(FileExistsError):
+        DurableEventJournal(path)
+
+
+def test_mocked_full_edit_reaches_an_independent_fixture_oracle(tmp_path):
+    import json
+    import runpy
+
+    source = tmp_path / "src" / "value.py"
+    source.parent.mkdir()
+    source.write_text("def value():\n    return 1\n", encoding="utf-8")
+    allowed = {"src/value.py"}
+    leases = SourceEditLeaseStoreV1(
+        tmp_path, allowed, token_factory=lambda: "12ab34cd56ef",
+    )
+    observed = leases.read_lines("src/value.py", 2, 2)
+    request = {
+        "name": "replace_lines",
+        "arguments": {
+            "lease": observed["lease"], "text": "    return 2\n",
+        },
+    }
+    raw = "<tool_call>" + json.dumps(request, separators=(",", ":")) + "</tool_call>"
+    status, call = parse_tool_output_v1(
+        raw, tools_for("structured_replace", tool_interface="lease_bound_lines_v1"),
+    )
+    assert status == "complete_tool_call"
+    assert call is not None
+    assert "sha256" not in observed
+    applied = leases.replace_lines(call["arguments"]["lease"], call["arguments"]["text"])
+    assert applied["status"] == "edit_applied"
+    # The oracle is separately specified and reads the committed candidate file.
+    assert runpy.run_path(str(source))["value"]() == 2
+    assert leases.audit_records()[0]["expected_sha256"] == applied["before_sha256"]
 
 
 def test_bounded_read_rejects_oversized_or_disallowed_ranges(tmp_path):

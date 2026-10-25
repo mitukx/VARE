@@ -1,0 +1,79 @@
+{
+  "candidate_inputs": {
+    "candidate_workspace_contains_fix": false,
+    "candidate_workspace_contains_trusted_grader": false,
+    "editable_files": [
+      "mlx_lm/tool_parsers/qwen3_coder.py"
+    ],
+    "task_json_sha256": "0a4a2826525c3c8e30ffa3b17066ed75c05b2937523b00af6715a94e226cebeb",
+    "task_md_sha256": "66410d318b49d7e5547403768b25d60ce17a78f312409fa1ab5cf7b026713784"
+  },
+  "environment": {
+    "dependency_lock": "requirements/mlsys-agent-mlx.lock.txt",
+    "dependency_lock_sha256": "ab4187759276ca759e84c9a4f12cb2a9416c7e297c69b87783c243ac9459af2a",
+    "docker": "unavailable; no Docker image or container claim",
+    "execution_isolation": "sandbox-exec deny network*; CPU grader; trusted grader file remains outside the candidate workspace",
+    "generated_package_version": "0.32.2",
+    "generated_package_version_file": "mlx_lm/_version.py",
+    "generated_package_version_file_sha256": "0535332270ef61856dbb5bab8de8085f7974d518062d4f748ba26039bc8fc030",
+    "mlx": "0.32.2",
+    "mlx_lm": "0.32.2",
+    "numpy": "2.5.4",
+    "platform": "macOS arm64; Apple M1 Pro / 32 GiB host",
+    "python": "3.12.12",
+    "regex": "2026.9.29",
+    "tokenizers": "0.23.3",
+    "transformers": "5.20.2"
+  },
+  "prior_exposure": {
+    "exact_identity_prior_match_count": 0,
+    "external_model_pretraining_exposure": "unknown",
+    "local_audit_path": "results/agent-edit-interface-v1/task-qualification/exposure-audit-v2.json",
+    "local_audit_sha256": "916036c528d5e722c371461d48cd36c2cdc6cc714c836ae7513e82d9d624002a",
+    "preexisting_vare_task_records_for_this_exact_pr_or_title": 0,
+    "qualification_scope": "Local VARE tracked evidence, refs and artifact inventory only; not a claim about external pretraining.",
+    "task_specific_model_attempts_before_this_protocol": 0
+  },
+  "protocol_id": "mlsys-agent-development-v1-task-certificate",
+  "qualification_controls": {
+    "baseline": "FAIL",
+    "incorrect_mutant": "FAIL",
+    "independent_test_case_count": 2,
+    "known_fix": "PASS",
+    "result_root": "results/agent-edit-interface-v1/task-qualification"
+  },
+  "qualification_evidence": {
+    "controls": {
+      "path": "results/agent-edit-interface-v1/task-qualification/summary-attempt-3.json",
+      "sha256": "47da2935e69fce19453c848d056355b5147d6a99a5f6d93ecf34ef78d893f24a"
+    },
+    "incorrect_mutants": {
+      "path": "results/agent-edit-interface-v1/task-qualification/mutant-summary-v1.json",
+      "sha256": "433993be745aed05d477445e00a4cc60efd12e9681b1dba45c863379b0dca052"
+    }
+  },
+  "schema_version": 1,
+  "split": "development",
+  "task_id": "mlxlm-1996-nested-parameter-tags",
+  "trusted_grader": {
+    "candidate_agent_access": false,
+    "file": "evaluator/test_hidden.py",
+    "network": "denied by macOS sandbox-exec profile",
+    "run_on_trusted_side_only": true,
+    "sha256": "b9c7c1b2e86eccd33db7cd01dbf533f6b422b86520b4b8d5f36cb6c195af3d7f"
+  },
+  "upstream": {
+    "base_revision": "72be8c955d9a0d3099bd01865af288e0e947c3fa",
+    "base_target_sha256": "d1029aae22ed475e9d7c09d29c37e74dca8df52b0fb046f000f2e3f9b83a6583",
+    "fix_revision": "733925103546131e0e79bce0bcb2ff813939656c",
+    "fix_target_sha256": "be276120ce8a46c02e39333beb4ca7c87f71359a1a2de234e58a16b8885288ad",
+    "pull_request": 1996,
+    "repository": "https://github.com/ml-explore/mlx-lm",
+    "source_family_adjudication": "Qwen3 Coder nested parameter-block parsing; no same-task local VARE model attempt located.",
+    "status_as_of": "2026-10-25: open",
+    "target_file": "mlx_lm/tool_parsers/qwen3_coder.py",
+    "title": "fix: handle nested parameter tags in Qwen3 Coder parser",
+    "upstream_test_at_fix_sha256": "2b37dd4a990e7080fa69e5460411b652b4be98dc4b4ca633b3205634da61d022",
+    "upstream_test_file_at_fix": "tests/test_tool_parsing.py"
+  }
+}

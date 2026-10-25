@@ -1,0 +1,21 @@
+test_nested_function_markup_is_preserved_and_sibling_arguments_continue (test_hidden.TestQwen3CoderNestedParameters.test_nested_function_markup_is_preserved_and_sibling_arguments_continue) ... FAIL
+test_unbalanced_nested_opening_tag_remains_literal_and_sibling_parses (test_hidden.TestQwen3CoderNestedParameters.test_unbalanced_nested_opening_tag_remains_literal_and_sibling_parses) ... ok
+
+======================================================================
+FAIL: test_nested_function_markup_is_preserved_and_sibling_arguments_continue (test_hidden.TestQwen3CoderNestedParameters.test_nested_function_markup_is_preserved_and_sibling_arguments_continue)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/benchmarks/mlsys_agent_development_v1/tasks/mlxlm-1996-nested-parameter-tags/evaluator/test_hidden.py", line 38, in test_nested_function_markup_is_preserved_and_sibling_arguments_continue
+    self.assertEqual(result["arguments"], {
+AssertionError: {'pat[48 chars]<parameter=a>\nv', 'mode': 'append'} != {'pat[48 chars]<parameter=a>\nv\n</parameter>\n</function>', 'mode': 'append'}
+- {'content': '<function=demo>\n<parameter=a>\nv',
++ {'content': '<function=demo>\n<parameter=a>\nv\n</parameter>\n</function>',
+?                                               +++++++++++++++++++++++++++
+
+   'mode': 'append',
+   'path': 'example.txt'}
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.002s
+
+FAILED (failures=1)

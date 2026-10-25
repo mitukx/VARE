@@ -1,0 +1,12 @@
+{
+  "metadata": {
+    "editable_files": ["mlx_lm/tool_parsers/qwen3_coder.py"],
+    "split": "development"
+  },
+  "prompt": "In `mlx_lm/tool_parsers/qwen3_coder.py`, fix parsing of a parameter value that contains nested function or parameter markup. Preserve the full value and continue parsing later sibling parameters. A nested opening marker that does not balance should remain literal content when a closing tag is present.",
+  "source": {
+    "base_revision": "72be8c955d9a0d3099bd01865af288e0e947c3fa",
+    "calibration_revision": "733925103546131e0e79bce0bcb2ff813939656c"
+  },
+  "task_id": "mlxlm-1996-nested-parameter-tags"
+}

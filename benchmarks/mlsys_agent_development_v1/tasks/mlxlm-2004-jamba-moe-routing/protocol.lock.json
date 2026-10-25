@@ -1,0 +1,82 @@
+{
+  "candidate_inputs": {
+    "candidate_workspace_contains_fix": false,
+    "candidate_workspace_contains_trusted_grader": false,
+    "editable_files": [
+      "mlx_lm/models/jamba.py"
+    ],
+    "task_json_sha256": "7429fa2eafa0e114c3cf4a53c45a5943a2ddbd6aca50c337c3252648ed669962",
+    "task_md_sha256": "80ddcd482ea89a6458138637a733d04e01389adc46973c56eb40ca79df266e67"
+  },
+  "environment": {
+    "dependency_lock": "requirements/mlsys-agent-mlx.lock.txt",
+    "dependency_lock_sha256": "ab4187759276ca759e84c9a4f12cb2a9416c7e297c69b87783c243ac9459af2a",
+    "docker": "unavailable; no Docker image or container claim",
+    "execution_isolation": "sandbox-exec deny network*; CPU grader; trusted grader file remains outside the candidate workspace",
+    "generated_package_version": "0.32.2",
+    "generated_package_version_file": "mlx_lm/_version.py",
+    "generated_package_version_file_sha256": "0535332270ef61856dbb5bab8de8085f7974d518062d4f748ba26039bc8fc030",
+    "mlx": "0.32.2",
+    "mlx_lm": "0.32.2",
+    "numpy": "2.5.4",
+    "platform": "macOS arm64; Apple M1 Pro / 32 GiB host",
+    "python": "3.12.12",
+    "regex": "2026.9.29",
+    "tokenizers": "0.23.3",
+    "transformers": "5.20.2"
+  },
+  "prior_exposure": {
+    "exact_identity_prior_match_count": 0,
+    "external_model_pretraining_exposure": "unknown",
+    "local_audit_path": "results/agent-edit-interface-v1/task-qualification/exposure-audit-v2.json",
+    "local_audit_sha256": "916036c528d5e722c371461d48cd36c2cdc6cc714c836ae7513e82d9d624002a",
+    "preexisting_vare_task_records_for_this_exact_pr_or_title": 0,
+    "qualification_scope": "Local VARE tracked evidence, refs and artifact inventory only; not a claim about external pretraining.",
+    "task_specific_model_attempts_before_this_protocol": 0
+  },
+  "protocol_id": "mlsys-agent-development-v1-task-certificate",
+  "qualification_controls": {
+    "baseline": "FAIL",
+    "control_summary_path": "results/agent-edit-interface-v1/task-qualification/summary-grader-normalized-v1.json",
+    "control_summary_sha256": "e40db34bd993bd95d0ffa75cec1d8c1ca20561554f2afb8999f77afa3ac04bc6",
+    "incorrect_mutant": "FAIL",
+    "independent_test_case_count": 1,
+    "known_fix": "PASS",
+    "result_root": "results/agent-edit-interface-v1/task-qualification"
+  },
+  "qualification_evidence": {
+    "baseline_and_known_fix_and_incorrect_mutant": {
+      "path": "results/agent-edit-interface-v1/task-qualification/summary-grader-normalized-v1.json",
+      "sha256": "e40db34bd993bd95d0ffa75cec1d8c1ca20561554f2afb8999f77afa3ac04bc6"
+    },
+    "prior_attempts_preserved": [
+      "results/agent-edit-interface-v1/task-qualification/mlxlm-2004-jamba-moe-routing-baseline-attempt-2",
+      "results/agent-edit-interface-v1/task-qualification/mlxlm-2004-jamba-moe-routing-fix-attempt-2",
+      "results/agent-edit-interface-v1/task-qualification/mlxlm-2004-jamba-moe-routing-incorrect-mutant-v1"
+    ]
+  },
+  "schema_version": 1,
+  "split": "development",
+  "task_id": "mlxlm-2004-jamba-moe-routing",
+  "trusted_grader": {
+    "candidate_agent_access": false,
+    "file": "evaluator/test_hidden.py",
+    "network": "denied by macOS sandbox-exec profile",
+    "run_on_trusted_side_only": true,
+    "sha256": "f34ec089c25113824e56b3875bed8804dec717448ada08cbfbd3619c064312d6"
+  },
+  "upstream": {
+    "base_revision": "4cfc6478473b0668ede3eb0cc93f2a9181a15052",
+    "base_target_sha256": "f0d5e5551127179b79f10dff764aeaa70ab3c1fc06e71487a25ad414561f28bd",
+    "fix_revision": "2cd1088e83aabf132e33647b97a25cfad23af759",
+    "fix_target_sha256": "4b3b02c6b1665aa7b5e7b659fc815ad3f325ae0134496136b55203187f1ada65",
+    "pull_request": 2004,
+    "repository": "https://github.com/ml-explore/mlx-lm",
+    "source_family_adjudication": "Jamba sparse-MoE probability weighting; distinct source, architecture, and oracle from previously qualified MLX-LM routing tasks.",
+    "status_as_of": "2026-10-25: open",
+    "target_file": "mlx_lm/models/jamba.py",
+    "title": "Fix Jamba MoE routing weights to match reference",
+    "upstream_test_at_fix_sha256": "5c0bb6d2492b7c7abca1784d0dce0ffdde214834437ea5db9c4c1809b4189e5b",
+    "upstream_test_file_at_fix": "tests/test_models.py"
+  }
+}

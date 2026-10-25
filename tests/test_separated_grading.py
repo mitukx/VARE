@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from vare.agent_task_contract import assert_train_only, load_agent_task
+from vare.agent_task_contract import assert_split_member, assert_train_only, load_agent_task
 from vare.container_isolation import (
     DockerIsolationRunner,
     IsolationError,
@@ -571,6 +571,33 @@ def test_engineering_contract_hides_evaluator_and_refuses_heldout(tmp_path):
     }), encoding="utf-8")
     with pytest.raises(ValueError, match="escapes"):
         load_agent_task(task)
+
+
+def test_engineering_contract_accepts_an_explicit_development_split(tmp_path):
+    task = _engineering_fixture(tmp_path, split="development")
+    contract = load_agent_task(task)
+    assert contract.split == "development"
+    with pytest.raises(ValueError, match="outside the frozen train split"):
+        assert_train_only(contract, {"train": [contract.task_id], "heldout": []})
+    with pytest.raises(ValueError, match="outside the frozen train split"):
+        assert_split_member(contract, {"train": [contract.task_id]}, "train")
+    assert_split_member(contract, {"development": [contract.task_id]}, "development")
+
+
+@pytest.mark.parametrize("task_id", [
+    "mlxlm-2004-jamba-moe-routing",
+    "mlxlm-1996-nested-parameter-tags",
+])
+def test_new_agent_development_task_contract_keeps_grader_outside_candidate_inputs(task_id):
+    task_root = ROOT / "benchmarks/mlsys_agent_development_v1/tasks" / task_id
+    contract = load_agent_task(task_root)
+
+    assert contract.split == "development"
+    assert len(contract.allowed_files) == 1
+    assert "evaluator/test_hidden.py" not in contract.allowed_files
+    assert "grader.py" not in contract.input_hashes
+    assert "evaluator/test_hidden.py" not in contract.input_hashes
+    assert_split_member(contract, {"development": [task_id]}, "development")
 
 
 def test_repository_grader_argv_is_not_a_candidate_sandbox(tmp_path):
