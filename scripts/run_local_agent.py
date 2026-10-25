@@ -19,7 +19,13 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from vare.agent_edit_format import ParseFailure, apply_parsed_edit, parse_submission, require_edit_format  # noqa: E402
-from vare.agent_edit_v2 import SourceEditLeaseStoreV1  # noqa: E402
+from vare.agent_edit_v2 import (  # noqa: E402
+    SourceEditLeaseStoreV1,
+    _decode_source,
+    _open_parent,
+    _path_parts,
+    _read_current,
+)
 from vare.agent_task_contract import load_agent_task  # noqa: E402
 from vare.source_navigation_v1 import SourceNavigatorV1  # noqa: E402
 
@@ -378,6 +384,7 @@ def controller_source_hashes(tool_interface: str) -> dict[str, str]:
     paths = {
         'scripts/run_local_agent.py': Path(__file__).resolve(),
         'src/vare/agent_edit_v2.py': ROOT / 'src/vare/agent_edit_v2.py',
+        'src/vare/agent_edit_format.py': ROOT / 'src/vare/agent_edit_format.py',
         'src/vare/agent_task_contract.py': ROOT / 'src/vare/agent_task_contract.py',
     }
     if tool_interface == 'lease_bound_navigation_v1':
@@ -407,6 +414,39 @@ def resolve_allowed_path(raw_path: str, allowed: set[str]) -> str | None:
         normalized = normalized[2:]
     matches = [path for path in allowed if normalized == path or normalized.endswith('/' + path)]
     return matches[0] if len(matches) == 1 else None
+
+
+def check_syntax_source(workspace: Path, raw_path: str, allowed: set[str]) -> dict[str, Any]:
+    """Parse an allowlisted Python source using bounded no-follow descriptor reads."""
+    path = resolve_allowed_path(raw_path, allowed)
+    if path is None:
+        return {'error': 'path is not allowed', 'allowed_paths': sorted(allowed)}
+    parts, error = _path_parts(path, allowed)
+    if error is not None or parts is None:
+        return {'error': 'path is not allowed', 'allowed_paths': sorted(allowed)}
+    parent_fd = -1
+    try:
+        parent_fd, basename = _open_parent(workspace, parts)
+        source_bytes, _source_stat = _read_current(parent_fd, basename)
+        source = _decode_source(source_bytes)
+        import ast
+        ast.parse(source, filename=path)
+        return {'syntax_valid': True, 'path': path}
+    except SyntaxError as exc:
+        return {
+            'syntax_valid': False,
+            'path': path,
+            'error': {
+                'message': str(exc.msg)[:160],
+                'lineno': exc.lineno,
+                'offset': exc.offset,
+            },
+        }
+    except (OSError, UnicodeError, ValueError) as exc:
+        return {'error': 'source read failed', 'reason': str(exc)[:160]}
+    finally:
+        if parent_fd >= 0:
+            os.close(parent_fd)
 
 
 def no_tool_retry_reminder(raw: str, *, edit_format: str, allowed_paths: list[str],
@@ -1046,17 +1086,9 @@ def main() -> int:
                         }
                     result = public_test_result
                 elif name == 'check_syntax':
-                    raw_path = arguments.get('path', '')
-                    path = resolve_allowed_path(raw_path, allowed)
-                    if path is None:
-                        result = {'error': 'path is not allowed', 'allowed_paths': sorted(allowed)}
-                    else:
-                        import ast
-                        try:
-                            ast.parse((workspace / path).read_text(encoding='utf-8'), filename=path)
-                            result = {'syntax_valid': True, 'path': path}
-                        except SyntaxError as exc:
-                            result = {'syntax_valid': False, 'path': path, 'error': str(exc)}
+                    result = check_syntax_source(
+                        workspace, arguments.get('path', ''), allowed,
+                    )
                 else:
                     if digest_tree(workspace, sorted(tracked_files)) == before:
                         result = {'finished': False, 'error': 'source is unchanged; inspect and edit before finishing'}
