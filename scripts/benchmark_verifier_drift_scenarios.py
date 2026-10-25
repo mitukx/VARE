@@ -21,8 +21,9 @@ import time
 import uuid
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
-from vare.evaluation_evidence import (  # noqa: E402
+from scripts.verifier_drift_evaluation_evidence import (  # noqa: E402
     EvaluationEvidenceJournal,
     sha256_file as evidence_sha256_file,
     utc_now,
@@ -158,7 +159,7 @@ def validate_retention_manifest() -> None:
     require(manifest.get("prospective_runner_sha256") == sha(Path(__file__).resolve()),
             "prospective runner identity differs from retention manifest")
     require(manifest.get("evaluation_evidence_module_sha256") ==
-            sha(ROOT / "src/vare/evaluation_evidence.py"),
+            sha(ROOT / "scripts/verifier_drift_evaluation_evidence.py"),
             "evaluation evidence module differs from retention manifest")
 
 
@@ -399,7 +400,7 @@ async def run_arm(args, helper, protocol: dict, scenario: dict,
         "rvl_helper": Path(helper.__file__).resolve(),
         "rvl_backend": (args.rvl_source / "src/rvl_systems/hf_backend.py").resolve(),
         "vare_rvl_grpo": (ROOT / "src/vare/integrations/rvl_grpo.py").resolve(),
-        "evaluation_evidence": (ROOT / "src/vare/evaluation_evidence.py").resolve(),
+        "evaluation_evidence": (ROOT / "scripts/verifier_drift_evaluation_evidence.py").resolve(),
     }
     source_hashes = {name: evidence_sha256_file(path)
                      for name, path in source_paths.items()}

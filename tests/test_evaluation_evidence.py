@@ -4,7 +4,7 @@ import re
 
 import pytest
 
-from vare.evaluation_evidence import (
+from scripts.verifier_drift_evaluation_evidence import (
     EvaluationEvidenceJournal,
     audit_evaluation_evidence,
     utc_now,
