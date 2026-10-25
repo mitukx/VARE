@@ -285,14 +285,32 @@ def _recover_interrupted_attempts_with_launch_tokens(manifest_path, run_dir, exp
 core.recover_interrupted_attempts = _recover_interrupted_attempts_with_launch_tokens
 
 
+def _read_frozen_event_without_repair() -> dict[str, Any]:
+    """Read only the first journal event; never repair or append the manifest."""
+    manifest_path = core.MANIFEST
+    require(manifest_path.is_file(), "frozen protocol manifest is absent")
+    raw = manifest_path.read_bytes()
+    first_line, separator, _tail = raw.partition(b"\n")
+    require(bool(separator), "frozen protocol event is incomplete")
+    try:
+        frozen = json.loads(first_line)
+    except json.JSONDecodeError as exc:
+        raise RuntimeError("frozen protocol event is invalid JSON") from exc
+    require(
+        frozen.get("sequence") == 1
+        and frozen.get("event_type") == "protocol_frozen"
+        and frozen.get("previous_event_sha256") == "0" * 64
+        and frozen.get("event_sha256") == core.event_hash(frozen),
+        "frozen protocol event identity is invalid",
+    )
+    return frozen
+
+
 def validate_frozen_execution_identity() -> dict[str, str]:
     """Reject changed or dirty source before execute/recover can touch evidence."""
-    rows = core.load_manifest()
-    require(rows and rows[0].get("event_type") == "protocol_frozen",
-            "frozen protocol identity is absent")
-    frozen = rows[0]
     lock_data = json.loads(LOCK.read_text(encoding="utf-8"))
     validate_locked_source_identity(lock_data)
+    frozen = _read_frozen_event_without_repair()
     require(sha_file(LOCK) == frozen.get("lock_sha256"),
             "source lock differs from the frozen protocol identity")
     require(sha_file(PROTOCOL) == frozen.get("protocol_sha256"),

@@ -18,6 +18,8 @@ The launch-token scan depends on the child retaining its environment marker. If 
 
 Before `--execute` or `--recover-interrupted`, V4 also compares the current source-lock SHA-256, protocol and runner hashes, Git commit and tree with the frozen manifest identity, and requires a clean worktree. This prevents an altered core plus edited lock from executing under an unchanged reviewed HEAD.
 
+The identity gate reads and authenticates only the first `protocol_frozen` event before invoking any journal loader. If source identity fails while a pending event and torn manifest tail exist, both remain byte-for-byte untouched for later, authorized recovery.
+
 The copied runtime inventory, dependency locks, task prompt, and exposure scan are byte-preserved from v3 and individually hashed. They are provenance inputs, not v4 outcome evidence. The runner, protocol, tests, and this README each receive new v4 hashes. V3 evidence and source are not edited.
 
 ## Checks allowed before independent review

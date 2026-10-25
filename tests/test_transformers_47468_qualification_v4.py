@@ -281,6 +281,50 @@ def test_execute_identity_rejects_lock_mutation_after_freeze(monkeypatch, tmp_pa
         runner.validate_frozen_execution_identity()
 
 
+def test_identity_mismatch_does_not_repair_pending_manifest_before_rejection(monkeypatch, tmp_path):
+    manifest = tmp_path / "manifest.jsonl"
+    commit, tree = "a" * 40, "b" * 40
+    _seed_full_frozen_identity(manifest, commit, tree)
+    prefix = manifest.read_bytes()
+    first = json.loads(prefix.splitlines()[0])
+    row = {
+        "sequence": 2,
+        "event_type": "phase_admitted",
+        "timestamp_utc": "2026-10-26T00:00:01+00:00",
+        "previous_event_sha256": first["event_sha256"],
+        "invocation_id": str(uuid.uuid4()),
+    }
+    row["event_sha256"] = runner.core.event_hash(row)
+    event_line = (json.dumps(row, sort_keys=True) + "\n").encode()
+    manifest.write_bytes(prefix + event_line[:19])
+    pending_path = manifest.with_name(manifest.name + ".pending.json")
+    pending = runner.core._pending_record(row, event_line, prefix)
+    pending_path.write_text(json.dumps(pending, sort_keys=True), encoding="utf-8")
+
+    altered_lock = tmp_path / "protocol-v4.lock.json"
+    altered_lock.write_bytes(runner.LOCK.read_bytes() + b"\n")
+    before_manifest = manifest.read_bytes()
+    before_pending = pending_path.read_bytes()
+    monkeypatch.setattr(runner.core, "MANIFEST", manifest)
+    monkeypatch.setattr(runner, "LOCK", altered_lock)
+    monkeypatch.setattr(runner.core, "repo_identity", lambda: (commit, tree))
+    monkeypatch.setattr(runner.core.subprocess, "check_output", lambda *a, **k: "")
+
+    with pytest.raises(RuntimeError, match="source lock differs from the frozen"):
+        runner.validate_frozen_execution_identity()
+
+    assert manifest.read_bytes() == before_manifest
+    assert pending_path.read_bytes() == before_pending
+    assert not list(tmp_path.glob("manifest.jsonl.quarantine-*.suffix"))
+
+    repair_probe = tmp_path / "repair-probe.jsonl"
+    repair_probe.write_bytes(before_manifest)
+    repair_probe.with_name(repair_probe.name + ".pending.json").write_bytes(before_pending)
+    repaired = runner._ORIGINAL_LOAD_MANIFEST(repair_probe)
+    assert repaired[-1]["event_type"] == "journal_tail_repaired"
+    assert not repair_probe.with_name(repair_probe.name + ".pending.json").exists()
+
+
 def test_execute_identity_rejects_dirty_worktree(monkeypatch, tmp_path):
     manifest = tmp_path / "manifest.jsonl"
     commit, tree = "a" * 40, "b" * 40
