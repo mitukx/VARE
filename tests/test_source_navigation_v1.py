@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 import subprocess
 import sys
 import types
@@ -15,7 +16,7 @@ from scripts.run_local_agent import (
     tools_for,
 )
 from vare.agent_edit_v2 import SourceEditLeaseStoreV1
-from vare.agent_task_contract import load_agent_task
+from vare.agent_task_contract import candidate_visible_source_files, load_agent_task
 from vare import source_navigation_v1 as navigation_module
 from vare.source_navigation_v1 import SourceNavigatorV1
 
@@ -66,6 +67,53 @@ def test_navigation_run_identity_includes_all_selected_interface_sources() -> No
     assert sources["src/vare/agent_edit_format.py"] == sha256(
         Path(__file__).parents[1] / "src/vare/agent_edit_format.py"
     )
+
+
+def test_navigation_run_identity_changes_when_active_parser_changes(
+    tmp_path: Path, monkeypatch,
+) -> None:
+    repository = Path(__file__).parents[1]
+    for relative in (
+        "src/vare/agent_edit_v2.py",
+        "src/vare/agent_edit_format.py",
+        "src/vare/agent_task_contract.py",
+        "src/vare/source_navigation_v1.py",
+    ):
+        target = tmp_path / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(repository / relative, target)
+    monkeypatch.setattr(local_agent, "ROOT", tmp_path)
+
+    before = controller_source_hashes("lease_bound_navigation_v1")
+    parser = tmp_path / "src/vare/agent_edit_format.py"
+    parser.write_text(parser.read_text() + "\n# identity mutation\n", encoding="utf-8")
+    after = controller_source_hashes("lease_bound_navigation_v1")
+
+    assert before["src/vare/agent_edit_format.py"] != after["src/vare/agent_edit_format.py"]
+    assert before != after
+
+
+def test_search_splits_snake_case_and_camel_case_identifiers(tmp_path: Path) -> None:
+    _write(
+        tmp_path,
+        "src/masks.py",
+        "attention_mask_for_batch = build_mask()\n"
+        "class AttentionMaskBuilder:\n"
+        "    pass\n",
+    )
+    navigator = SourceNavigatorV1(tmp_path, {"src/masks.py"})
+
+    snake_case = navigator.search("attention mask")
+    camel_case = navigator.search("attention_mask_builder")
+
+    assert snake_case["status"] == "ok"
+    assert [item["line"] for item in snake_case["results"]] == [1, 2]
+    assert snake_case["results"][0]["matched_terms"] == ["attention", "mask"]
+    assert camel_case["status"] == "ok"
+    assert [item["line"] for item in camel_case["results"]] == [2]
+    assert camel_case["results"][0]["matched_terms"] == [
+        "attention", "mask", "builder",
+    ]
 
 
 def test_large_file_search_finds_late_target_and_ranks_deterministically(tmp_path: Path) -> None:
@@ -145,6 +193,20 @@ def test_test_and_grader_paths_are_excluded_and_symlinks_fail_closed(tmp_path: P
     result = linked.search("secret_reference")
     assert result["status"] == "source_read_failed"
     assert "grader answer" not in json.dumps(result)
+
+
+def test_unicode_confusable_protected_directory_is_excluded(tmp_path: Path) -> None:
+    # The second character is Cyrillic small letter ie (U+0435), not ASCII e.
+    confusable = "t\u0435sts/config.py"
+    _write(tmp_path, confusable, "LEAKED_TEST_REFERENCE = True\n")
+    _write(tmp_path, "src/public.py", "visible_symbol = True\n")
+
+    assert candidate_visible_source_files([confusable, "src/public.py"]) == (
+        "src/public.py",
+    )
+    navigator = SourceNavigatorV1(tmp_path, {confusable, "src/public.py"})
+    assert navigator.indexed_paths == ("src/public.py",)
+    assert navigator.search("LEAKED_TEST_REFERENCE")["results"] == []
 
 
 def test_contract_and_runner_capabilities_drop_test_grader_basename_variants(tmp_path: Path) -> None:

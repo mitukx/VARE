@@ -648,6 +648,10 @@ def main() -> int:
     ), default='legacy')
     parser.add_argument('--require-split', choices=('train', 'development', 'heldout'))
     args = parser.parse_args()
+    # Hash the controller modules loaded by this process before model loading
+    # or any generation; the run-start journal is written later but retains
+    # this same source identity even if execution stops partway through.
+    controller_sources = controller_source_hashes(args.tool_interface)
     if args.max_public_test_runs < 1:
         parser.error('--max-public-test-runs must be at least 1')
     if args.tool_interface != 'legacy' and args.edit_format != 'structured_replace':
@@ -787,6 +791,7 @@ def main() -> int:
             task_input_hashes=contract.input_hashes,
             model_repository=args.model_repository, model_snapshot=model_dir.name,
             policy_source_commit=run_git(ROOT, 'rev-parse', 'HEAD'),
+            controller_source_files_sha256=controller_sources,
             workspace_revision=run_git(workspace, 'rev-parse', 'HEAD'),
             source_hashes_before=before,
             initial_messages=initial_messages,
@@ -1147,7 +1152,7 @@ def main() -> int:
     result = {
         'schema_version': 2 if args.tool_interface != 'legacy' else 1,
         'tool_interface': args.tool_interface,
-        'controller_source_files_sha256': controller_source_hashes(args.tool_interface),
+        'controller_source_files_sha256': controller_sources,
         'agent_outcome': agent_outcome,
         'independent_semantic_status': 'pending_independent_grade',
         'transport_outcomes': transport_outcomes,
