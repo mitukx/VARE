@@ -621,6 +621,7 @@ def main() -> int:
     parser.add_argument('--model-path', type=Path, required=True, help='Local model snapshot directory; no network download is attempted')
     parser.add_argument('--model-repository', default=MODEL_REPOSITORY)
     parser.add_argument('--backend', choices=('transformers_cpu', 'mlx'), default='transformers_cpu')
+    parser.add_argument('--mlx-device', choices=('metal', 'cpu'), default='metal')
     parser.add_argument('--public-test-image', help='Pinned Docker image for isolated execution of test_public.py')
     parser.add_argument('--public-test-timeout-s', type=int, default=45)
     parser.add_argument('--public-test-memory-mb', type=int, default=512)
@@ -807,12 +808,15 @@ def main() -> int:
                 raise RuntimeError('the MLX backend requires Apple Silicon macOS')
             import mlx.core as mx
             from mlx_lm import load
+            mx.set_default_device(mx.cpu if args.mlx_device == 'cpu' else mx.gpu)
             mx.random.seed(args.seed)
             model, tokenizer = load(str(model_dir))
             mlx_lm = __import__('mlx_lm')
             runtime = {'python': platform.python_version(), 'mlx': getattr(__import__('mlx'), '__version__', 'unknown'),
                        'mlx_lm': getattr(mlx_lm, '__version__', 'unknown'),
-                       'platform': platform.platform(), 'device': 'apple_metal', 'seed': args.seed}
+                   'platform': platform.platform(),
+                   'device': 'cpu' if args.mlx_device == 'cpu' else 'apple_metal',
+                   'seed': args.seed}
         else:
             import torch
             from transformers import AutoModelForCausalLM, AutoTokenizer

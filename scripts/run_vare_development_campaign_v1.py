@@ -162,6 +162,7 @@ def run_case(output: Path, case: dict, protocol: dict, *, fault: bool) -> None:
         command = [protocol["model_python"], str(ROOT / "scripts/development_campaign_model_entry_v1.py"),
                    "--workspace", str(workspace), "--model-path", case["model_path"],
                    "--model-repository", case["model_repository"], "--backend", "mlx",
+                   "--mlx-device", case.get("mlx_device", "metal"),
                    "--task-root", str(task_root), "--output", str(directory / "agent-record.json"),
                    "--event-journal", str(directory / "events.jsonl"), "--instruction", case["instruction"],
                    "--seed", str(case["seed"]), "--max-turns", "12", "--max-no-tool-retries", "1",
@@ -214,11 +215,14 @@ def run_case(output: Path, case: dict, protocol: dict, *, fault: bool) -> None:
 
 
 def main() -> int:
+    global PROTOCOL
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--protocol", type=Path, default=PROTOCOL)
     parser.add_argument("--case")
     parser.add_argument("--fault", action="store_true")
     args = parser.parse_args()
+    PROTOCOL = args.protocol.resolve()
     protocol = json.loads(PROTOCOL.read_text())
     validate_protocol(protocol)
     output = args.output.resolve()
@@ -231,7 +235,8 @@ def main() -> int:
     rows = []
     for case in protocol["cases"]:
         print(f"START {case['id']}", flush=True)
-        command = [sys.executable, str(Path(__file__)), "--output", str(output), "--case", case["id"]]
+        command = [sys.executable, str(Path(__file__)), "--output", str(output),
+                   "--protocol", str(PROTOCOL), "--case", case["id"]]
         fault = case["id"] == protocol["fault_case"]
         process = subprocess.run(command + (["--fault"] if fault else []), check=False)
         if fault and process.returncode == -signal.SIGKILL:
