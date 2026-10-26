@@ -1,0 +1,23 @@
+test_hidden (unittest.loader._FailedTest.test_hidden) ... ERROR
+
+======================================================================
+ERROR: test_hidden (unittest.loader._FailedTest.test_hidden)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_hidden
+Traceback (most recent call last):
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/benchmarks/mlsys_agent_development_v1/tasks/mlxlm-1996-nested-parameter-tags/evaluator/test_hidden.py", line 5, in <module>
+    from mlx_lm.tool_parsers import qwen3_coder
+  File "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/coding-agent-interface-v2/mlx-lm-source/work/coding-agent-interface-v2/tasks/parser-1996/base/mlx_lm/__init__.py", line 5, in <module>
+    from ._version import __version__
+ModuleNotFoundError: No module named 'mlx_lm._version'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

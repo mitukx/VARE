@@ -1,0 +1,62 @@
+{
+  "audit_scope": "all local Git refs, plus current docs/protocols/results/benchmarks outside the new candidate task directory and this campaign's own evidence",
+  "external_model_pretraining_exposure": "unknown",
+  "git_replacement_refs_disabled": true,
+  "schema_version": 1,
+  "tasks": {
+    "mlxlm-1996-nested-parameter-tags": {
+      "exact_task_identity_prior_matches": 0,
+      "queries": [
+        {
+          "history_commit_matches": [],
+          "literal": "#1996",
+          "working_tree_matches_before_this_task": []
+        },
+        {
+          "history_commit_matches": [],
+          "literal": "mlxlm-1996-nested-parameter-tags",
+          "working_tree_matches_before_this_task": []
+        },
+        {
+          "history_commit_matches": [],
+          "literal": "handle nested parameter tags in Qwen3 Coder parser",
+          "working_tree_matches_before_this_task": []
+        },
+        {
+          "history_commit_matches": [],
+          "literal": "_find_parameter_blocks",
+          "working_tree_matches_before_this_task": []
+        }
+      ]
+    },
+    "mlxlm-2004-jamba-moe-routing": {
+      "exact_task_identity_prior_matches": 0,
+      "queries": [
+        {
+          "history_commit_matches": [],
+          "literal": "#2004",
+          "working_tree_matches_before_this_task": []
+        },
+        {
+          "history_commit_matches": [],
+          "literal": "mlxlm-2004-jamba-moe-routing",
+          "working_tree_matches_before_this_task": []
+        },
+        {
+          "history_commit_matches": [],
+          "literal": "Fix Jamba MoE routing weights to match reference",
+          "working_tree_matches_before_this_task": []
+        },
+        {
+          "history_commit_matches": [],
+          "literal": "JambaSparseMoeBlock",
+          "working_tree_matches_before_this_task": []
+        }
+      ]
+    }
+  },
+  "working_tree_exclusions": [
+    "benchmarks/mlsys_agent_development_v1/tasks",
+    "results/agent-edit-interface-v1"
+  ]
+}

@@ -19,9 +19,57 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from vare.agent_edit_format import ParseFailure, apply_parsed_edit, parse_submission, require_edit_format  # noqa: E402
+from vare.agent_edit_v2 import SourceEditLeaseStoreV1  # noqa: E402
 from vare.agent_task_contract import load_agent_task  # noqa: E402
 
 MODEL_REPOSITORY = 'Qwen/Qwen2.5-0.5B-Instruct'
+
+
+class DurableEventJournal:
+    """Append-only, fsynced event chain for preserving completed model turns."""
+
+    def __init__(self, path: Path) -> None:
+        self.path = path.resolve()
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self._fd = os.open(self.path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        parent_fd = os.open(self.path.parent, os.O_RDONLY | getattr(os, 'O_DIRECTORY', 0))
+        try:
+            os.fsync(parent_fd)
+        finally:
+            os.close(parent_fd)
+        self._sequence = 0
+        self._previous_hash = '0' * 64
+        self.append('journal_created')
+
+    def append(self, event_type: str, **payload: Any) -> str:
+        event = {'sequence': self._sequence + 1, 'event_type': event_type, **payload}
+        canonical = json.dumps(event, ensure_ascii=False, sort_keys=True, separators=(',', ':'))
+        event_hash = hashlib.sha256(canonical.encode('utf-8')).hexdigest()
+        record = {
+            'event': event,
+            'previous_event_sha256': self._previous_hash,
+            'event_sha256': event_hash,
+        }
+        encoded = (json.dumps(record, ensure_ascii=False, sort_keys=True) + '\n').encode('utf-8')
+        view = memoryview(encoded)
+        while view:
+            written = os.write(self._fd, view)
+            if written <= 0:
+                raise OSError('event journal write made no progress')
+            view = view[written:]
+        os.fsync(self._fd)
+        self._sequence += 1
+        self._previous_hash = event_hash
+        return event_hash
+
+    @property
+    def last_event_sha256(self) -> str:
+        return self._previous_hash
+
+    def close(self) -> None:
+        if self._fd >= 0:
+            os.close(self._fd)
+            self._fd = -1
 TOOLS = [
     {'type': 'function', 'function': {'name': 'list_files', 'description': 'List the exact source files available in this task workspace.', 'parameters': {'type': 'object', 'properties': {}, 'additionalProperties': False}}},
     {'type': 'function', 'function': {'name': 'read_file', 'description': 'Read one UTF-8 task source file. Provide its repository-relative path; a workspace-prefixed path is mapped only if it ends in one exact allowlisted source path.', 'parameters': {'type': 'object', 'properties': {'path': {'type': 'string'}}, 'required': ['path'], 'additionalProperties': False}}},
@@ -88,11 +136,58 @@ REPLACE_TEXT_TOOL = {
         },
     },
 }
+HASH_BOUND_READ_LINES_TOOL = {
+    'type': 'function',
+    'function': {
+        'name': 'read_lines',
+        'description': 'Read exact one-based source lines and return a short one-time lease bound to the complete file preimage and this line range.',
+        'parameters': {
+            'type': 'object',
+            'properties': {
+                'path': {'type': 'string'},
+                'start': {'type': 'integer'},
+                'end': {'type': 'integer'},
+            },
+            'required': ['path', 'start', 'end'],
+            'additionalProperties': False,
+        },
+    },
+}
+HASH_BOUND_REPLACE_LINES_TOOL = {
+    'type': 'function',
+    'function': {
+        'name': 'replace_lines',
+        'description': 'Atomically replace the lines associated with a one-time lease returned by read_lines. The lease is bound to the exact file preimage and range.',
+        'parameters': {
+            'type': 'object',
+            'properties': {
+                'lease': {'type': 'string'},
+                'text': {'type': 'string'},
+            },
+            'required': ['lease', 'text'],
+            'additionalProperties': False,
+        },
+    },
+}
 
 
-def tools_for(edit_format: str, *, public_tests: bool = False) -> list[dict[str, Any]]:
+def tools_for(edit_format: str, *, public_tests: bool = False,
+              tool_interface: str = 'legacy') -> list[dict[str, Any]]:
     require_edit_format(edit_format)
-    if edit_format == 'unified_diff':
+    if tool_interface == 'lease_bound_lines_v1':
+        if edit_format != 'structured_replace':
+            raise ValueError('lease_bound_lines_v1 requires --edit-format structured_replace')
+        tools = [
+            TOOLS[0], HASH_BOUND_READ_LINES_TOOL, TOOLS[2],
+            HASH_BOUND_REPLACE_LINES_TOOL, TOOLS[4], TOOLS[5],
+        ]
+    elif tool_interface == 'structured_replace_v1':
+        if edit_format != 'structured_replace':
+            raise ValueError('structured_replace_v1 requires --edit-format structured_replace')
+        tools = [TOOLS[0], READ_FILE_RANGE_TOOL, TOOLS[2], REPLACE_TEXT_TOOL, TOOLS[4], TOOLS[5]]
+    elif tool_interface != 'legacy':
+        raise ValueError('unknown tool interface version')
+    elif edit_format == 'unified_diff':
         tools = list(TOOLS)
     elif edit_format == 'whole_file':
         tools = [WRITE_FILE_TOOL if item['function']['name'] == 'apply_patch' else item for item in TOOLS]
@@ -272,7 +367,7 @@ def resolve_allowed_path(raw_path: str, allowed: set[str]) -> str | None:
 
 
 def no_tool_retry_reminder(raw: str, *, edit_format: str, allowed_paths: list[str],
-                           token_limit: int) -> str:
+                           token_limit: int, tool_interface: str = 'legacy') -> str:
     """Give the agent actionable feedback when a bounded response has no tool call."""
     if '<tool_call>' in raw and '</tool_call>' not in raw:
         path_list = ', '.join(allowed_paths)
@@ -287,6 +382,12 @@ def no_tool_retry_reminder(raw: str, *, edit_format: str, allowed_paths: list[st
             f'Your previous tool call was cut off at the {token_limit}-token response limit. '
             'Do not reread the source or rewrite the whole file. Emit one complete apply_patch tool call '
             f'with a minimal change and exact allowed paths ({path_list}); end it with </tool_call>.'
+        )
+    if tool_interface == 'lease_bound_lines_v1':
+        return (
+            'The previous output contained no complete tool call and no source changed. '
+            'Use read_lines, then one complete replace_lines call with the returned one-time lease and replacement text. '
+            f'Use only these source paths: {", ".join(allowed_paths)}.'
         )
     if edit_format == 'structured_replace':
         return (
@@ -343,6 +444,87 @@ def normalize_tool_call_format(raw: str, tool_names: set[str]) -> tuple[str, boo
     return f"<tool_call>{encoded}</tool_call>", True
 
 
+def _validate_tool_arguments(name: str, arguments: dict[str, Any],
+                             tools: list[dict[str, Any]]) -> bool:
+    tool = next((item for item in tools if item['function']['name'] == name), None)
+    if tool is None:
+        return False
+    schema = tool['function']['parameters']
+    properties = schema.get('properties', {})
+    required = set(schema.get('required', []))
+    if not required.issubset(arguments):
+        return False
+    if schema.get('additionalProperties') is False and set(arguments) - set(properties):
+        return False
+    for key, value in arguments.items():
+        expected = properties.get(key, {}).get('type')
+        if expected == 'string' and not isinstance(value, str):
+            return False
+        if expected == 'integer' and (not isinstance(value, int) or isinstance(value, bool)):
+            return False
+        if expected == 'number' and (not isinstance(value, (int, float)) or isinstance(value, bool)):
+            return False
+        if expected == 'boolean' and not isinstance(value, bool):
+            return False
+        if expected == 'array' and not isinstance(value, list):
+            return False
+        if expected == 'object' and not isinstance(value, dict):
+            return False
+    return True
+
+
+def parse_tool_output_v1(raw: str, tools: list[dict[str, Any]]) -> tuple[str, dict[str, Any] | None]:
+    """Parse exactly one complete strict call; never repair a truncated payload."""
+    opening, closing = '<tool_call>', '</tool_call>'
+    payload_text: str | None = None
+    if opening in raw or closing in raw:
+        if raw.count(opening) != 1:
+            return 'invalid_json_or_schema', None
+        if raw.count(closing) == 0:
+            return 'truncated_tool_call', None
+        if raw.count(closing) != 1:
+            return 'invalid_json_or_schema', None
+        start = raw.index(opening)
+        end = raw.index(closing, start + len(opening))
+        if raw[:start].strip() or raw[end + len(closing):].strip():
+            return 'invalid_json_or_schema', None
+        payload_text = raw[start + len(opening):end].strip()
+    else:
+        candidate = raw.strip()
+        candidate = re.sub(r'^<\|im_start\|>\s*(?:assistant)?\s*', '', candidate)
+        if candidate.startswith('```json'):
+            candidate = re.sub(r'^```json\s*', '', candidate, flags=re.IGNORECASE)
+        try:
+            payload, end = json.JSONDecoder().raw_decode(candidate)
+        except json.JSONDecodeError as exc:
+            looks_like_call = candidate.startswith('{') and ('"name"' in candidate or '"arguments"' in candidate)
+            if looks_like_call and exc.pos >= len(candidate) - 1:
+                return 'truncated_tool_call', None
+            return ('invalid_json_or_schema' if looks_like_call else 'no_tool_call'), None
+        suffix = candidate[end:]
+        if not re.fullmatch(r'(?:\s|```|<\|im_start\|>|<\|im_end\|>|<\|endoftext\|>)*', suffix):
+            return 'invalid_json_or_schema', None
+        payload_text = json.dumps(payload, ensure_ascii=False, separators=(',', ':'))
+
+    try:
+        payload = json.loads(payload_text)
+    except (TypeError, json.JSONDecodeError):
+        return 'invalid_json_or_schema', None
+    if (not isinstance(payload, dict) or set(payload) != {'name', 'arguments'}
+            or not isinstance(payload.get('name'), str)
+            or not isinstance(payload.get('arguments'), dict)):
+        return 'invalid_json_or_schema', None
+    name = payload['name']
+    arguments = payload['arguments']
+    if not any(item['function']['name'] == name for item in tools):
+        return 'valid_call_rejected_by_policy', {'name': name, 'arguments': arguments,
+                                                'raw_json': payload_text}
+    if not _validate_tool_arguments(name, arguments, tools):
+        return 'invalid_json_or_schema', {'name': name, 'arguments': arguments,
+                                          'raw_json': payload_text}
+    return 'complete_tool_call', {'name': name, 'arguments': arguments, 'raw_json': payload_text}
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument('--workspace', type=Path, required=True)
@@ -355,6 +537,8 @@ def main() -> int:
     parser.add_argument('--max-public-test-runs', type=int, default=12)
     parser.add_argument('--task-root', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--event-journal', type=Path,
+                        help='Optional exclusive, fsynced JSONL event chain written after each completed generation/tool action')
     parser.add_argument('--instruction', required=True,
                         help='Task-specific user message; preserve the exact text in the run record')
     parser.add_argument('--seed', type=int, required=True)
@@ -369,10 +553,13 @@ def main() -> int:
     parser.add_argument('--top-k', type=int, default=20)
     parser.add_argument('--do-sample', action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument('--edit-format', choices=('unified_diff', 'whole_file', 'structured_replace'), default='unified_diff')
-    parser.add_argument('--require-split', choices=('train', 'heldout'))
+    parser.add_argument('--tool-interface', choices=('legacy', 'structured_replace_v1', 'lease_bound_lines_v1'), default='legacy')
+    parser.add_argument('--require-split', choices=('train', 'development', 'heldout'))
     args = parser.parse_args()
     if args.max_public_test_runs < 1:
         parser.error('--max-public-test-runs must be at least 1')
+    if args.tool_interface != 'legacy' and args.edit_format != 'structured_replace':
+        parser.error('versioned structured tool interfaces require --edit-format structured_replace')
 
     model_dir = args.model_path.resolve()
     if not model_dir.is_dir():
@@ -382,6 +569,9 @@ def main() -> int:
     result_path = args.output.resolve()
     if result_path.exists():
         parser.error(f'refusing to overwrite existing agent record: {result_path}')
+    event_path = args.event_journal.resolve() if args.event_journal else None
+    if event_path is not None and (event_path == result_path or event_path.exists()):
+        parser.error(f'refusing to overwrite agent record or event journal: {event_path}')
     contract = load_agent_task(task_root)
     if args.require_split is not None and contract.split != args.require_split:
         parser.error(f'task split {contract.split!r} does not match required split {args.require_split}')
@@ -425,11 +615,23 @@ def main() -> int:
     task_text = contract.prompt_text
     test_files = {name for name in allowed if Path(name).name == 'test_public.py'}
     editable = allowed - test_files
+    edit_leases = SourceEditLeaseStoreV1(workspace, editable)
     if args.public_test_image and len(test_files) != 1:
         parser.error('isolated public-test execution requires exactly one test_public.py in the task')
-    tools = tools_for(args.edit_format, public_tests=bool(args.public_test_image))
+    try:
+        tools = tools_for(args.edit_format, public_tests=bool(args.public_test_image),
+                          tool_interface=args.tool_interface)
+    except ValueError as exc:
+        parser.error(str(exc))
     tool_names = {item['function']['name'] for item in tools}
-    if args.edit_format == 'whole_file':
+    if args.tool_interface == 'lease_bound_lines_v1':
+        edit_sentence = (
+            'Inspect with search_text or read a bounded source window using read_lines. '
+            'Then use replace_lines once with the returned one-time lease and only the replacement text. '
+            'The lease binds the exact allowlisted path, complete-file hash, and line range you read. The edit is atomic. '
+            'Do not invent, reuse, or modify a lease. Do not use another edit format. '
+        )
+    elif args.edit_format == 'whole_file':
         edit_sentence = (
             'Read the source path named in the user instruction, then use tools to inspect and edit. '
             'Use write_file to replace an allowlisted source file with its complete new text. Do not send a unified diff. '
@@ -463,6 +665,27 @@ def main() -> int:
     initial_messages = [dict(message) for message in messages]
     transcript: list[dict[str, Any]] = []
     before = digest_tree(workspace, sorted(allowed))
+    event_journal = DurableEventJournal(event_path) if event_path is not None else None
+    if event_journal is not None:
+        event_journal.append(
+            'run_context', task_id=contract.task_id, task_schema=contract.schema,
+            task_revisions={'base': contract.base_revision,
+                            'calibration': contract.calibration_revision},
+            task_input_hashes=contract.input_hashes,
+            model_repository=args.model_repository, model_snapshot=model_dir.name,
+            policy_source_commit=run_git(ROOT, 'rev-parse', 'HEAD'),
+            workspace_revision=run_git(workspace, 'rev-parse', 'HEAD'),
+            source_hashes_before=before,
+            initial_messages=initial_messages,
+            budgets={
+                'max_turns': args.max_turns,
+                'max_new_tokens_per_turn': args.max_new_tokens_per_turn,
+                'max_total_new_tokens': args.max_total_new_tokens,
+                'max_context_tokens': args.max_context_tokens,
+                'wall_seconds': args.wall_seconds,
+                'tool_interface': args.tool_interface,
+            },
+        )
     token_total = 0
     stop_reason = 'turn_budget_exhausted'
     final_summary = ''
@@ -500,10 +723,12 @@ def main() -> int:
     for turn in range(args.max_turns):
         elapsed = time.perf_counter() - start
         if elapsed >= args.wall_seconds:
+            transcript.append({'turn': turn + 1, 'turn_outcome': 'wall_time_exhausted'})
             stop_reason = 'wall_time_exhausted'
             break
         remaining = args.max_total_new_tokens - token_total
         if remaining <= 0:
+            transcript.append({'turn': turn + 1, 'turn_outcome': 'token_budget_exhausted'})
             stop_reason = 'token_budget_exhausted'
             break
         limit = min(args.max_new_tokens_per_turn, remaining)
@@ -512,9 +737,22 @@ def main() -> int:
             raw, generated_tokens, prompt_tokens = generate_turn(
                 args.backend, model, tokenizer, messages, tools, limit=limit, args=args,
             )
+        except MemoryError:
+            transcript.append({'turn': turn + 1, 'turn_outcome': 'memory_budget_exhausted',
+                               'generation_failure': 'MemoryError'})
+            if event_journal is not None:
+                event_journal.append('generation_failure', turn=turn + 1,
+                                     status='memory_budget_exhausted', error='MemoryError')
+            stop_reason = 'memory_budget_exhausted'
+            break
         except ValueError as exc:
             if str(exc) != 'context_budget_exhausted':
                 raise
+            transcript.append({'turn': turn + 1, 'turn_outcome': 'context_exhausted',
+                               'generation_failure': str(exc)})
+            if event_journal is not None:
+                event_journal.append('generation_failure', turn=turn + 1,
+                                     status='context_exhausted', error=str(exc))
             stop_reason = 'context_budget_exhausted'
             break
         generation_elapsed = time.perf_counter() - generation_start
@@ -523,69 +761,130 @@ def main() -> int:
                                  'generated_tokens': generated_tokens,
                                  'prompt_tokens': prompt_tokens,
                                  'generation_seconds': round(generation_elapsed, 6)}
-        parse_text, recovered_tool_format = normalize_tool_call_format(raw, tool_names)
-        if recovered_tool_format:
-            entry['tool_call_format_recovery'] = 'strict_qwen_json_normalization'
-        calls = list(pattern.finditer(parse_text))
-        if not calls:
-            recovered = parse_submission(raw, edit_format=args.edit_format)
-            if not isinstance(recovered, ParseFailure) or recovered.reason != 'no_edit':
-                edit_result = attempt_configured_edit(workspace, raw, args.edit_format, editable)
-                note_edit(edit_result)
-                if edit_result.get('applied') is True:
-                    public_test_result = refresh_public_tests_after_edit(
-                        edit_result, workspace, args.public_test_image, public_test_hash,
-                        test_runner=bounded_public_test,
-                    )
-                    if public_test_result is not None:
-                        entry['automatic_public_test'] = public_test_result
-                        edit_result = {**edit_result, 'automatic_public_test': public_test_result}
-                entry['tool_calls'].append({'name': 'recovered_edit', 'result': edit_result})
-                messages.append({'role': 'assistant', 'content': raw})
-                messages.append({
-                    'role': 'tool', 'name': 'recovered_edit',
-                    'content': json.dumps(edit_result, ensure_ascii=False),
+        if event_journal is not None:
+            event_journal.append(
+                'model_output_completed', turn=turn + 1, model_output=raw,
+                generated_tokens=generated_tokens, prompt_tokens=prompt_tokens,
+                generation_seconds=round(generation_elapsed, 6),
+            )
+        if time.perf_counter() - start >= args.wall_seconds:
+            entry['turn_outcome'] = 'wall_time_exhausted_after_generation'
+            transcript.append(entry)
+            stop_reason = 'wall_time_exhausted'
+            break
+        if args.tool_interface != 'legacy':
+            transport_status, strict_call = parse_tool_output_v1(raw, tools)
+            entry['tool_output_status'] = transport_status
+            if transport_status in {'truncated_tool_call', 'invalid_json_or_schema'}:
+                entry['turn_outcome'] = transport_status
+                transcript.append(entry)
+                stop_reason = transport_status
+                break
+            if transport_status == 'valid_call_rejected_by_policy':
+                entry['turn_outcome'] = transport_status
+                entry['tool_calls'].append({
+                    'outcome': transport_status,
+                    'raw_json': strict_call['raw_json'] if strict_call else raw,
+                    'result': {'accepted': False, 'error': 'tool is not exposed by this protocol'},
                 })
                 transcript.append(entry)
-                if edit_result.get('applied') is True:
-                    continue
-                stop_reason = 'malformed_edit'
+                stop_reason = 'tool_policy_rejected'
                 break
-            messages.append({'role': 'assistant', 'content': raw})
-            transcript.append(entry)
-            current_hashes = digest_tree(workspace, sorted(allowed))
-            if current_hashes == before and no_tool_retries < args.max_no_tool_retries:
-                no_tool_retries += 1
-                messages.append({'role': 'user', 'content': no_tool_retry_reminder(
-                    raw, edit_format=args.edit_format, allowed_paths=sorted(editable),
-                    token_limit=limit,
-                )})
-                entry['automatic_reminder'] = no_tool_retries
-                continue
-            stop_reason = 'no_tool_call_after_edit' if current_hashes != before else 'no_tool_call_retries_exhausted'
-            break
-        parsed_calls = []
-        for match in calls:
-            try:
-                call = json.loads(match.group(1))
-                name = call.get('name')
-                arguments = call.get('arguments', {})
-                if name not in tool_names or not isinstance(arguments, dict):
-                    raise ValueError('unsupported tool call')
-                parsed_calls.append((match, name, arguments))
-            except Exception as exc:
-                entry['tool_calls'].append({'error': f'{type(exc).__name__}: {exc}', 'raw_call': match.group(1)})
+            if transport_status == 'no_tool_call':
+                entry['turn_outcome'] = 'no_tool_call'
+                messages.append({'role': 'assistant', 'content': raw})
+                transcript.append(entry)
+                if no_tool_retries < args.max_no_tool_retries:
+                    no_tool_retries += 1
+                    messages.append({'role': 'user', 'content': no_tool_retry_reminder(
+                        raw, edit_format=args.edit_format, allowed_paths=sorted(editable),
+                        token_limit=limit, tool_interface=args.tool_interface,
+                    )})
+                    entry['automatic_reminder'] = no_tool_retries
+                    continue
+                stop_reason = 'no_tool_call_retries_exhausted'
+                break
+            assert strict_call is not None
+            parsed_calls = [(strict_call['raw_json'], strict_call['name'], strict_call['arguments'])]
+        else:
+            parse_text, recovered_tool_format = normalize_tool_call_format(raw, tool_names)
+            if recovered_tool_format:
+                entry['tool_call_format_recovery'] = 'strict_qwen_json_normalization'
+            calls = list(pattern.finditer(parse_text))
+            if not calls:
+                recovered = parse_submission(raw, edit_format=args.edit_format)
+                if not isinstance(recovered, ParseFailure) or recovered.reason != 'no_edit':
+                    edit_result = attempt_configured_edit(workspace, raw, args.edit_format, editable)
+                    note_edit(edit_result)
+                    if edit_result.get('applied') is True:
+                        public_test_result = refresh_public_tests_after_edit(
+                            edit_result, workspace, args.public_test_image, public_test_hash,
+                            test_runner=bounded_public_test,
+                        )
+                        if public_test_result is not None:
+                            entry['automatic_public_test'] = public_test_result
+                            edit_result = {**edit_result, 'automatic_public_test': public_test_result}
+                    entry['tool_calls'].append({'name': 'recovered_edit', 'result': edit_result})
+                    messages.append({'role': 'assistant', 'content': raw})
+                    messages.append({
+                        'role': 'tool', 'name': 'recovered_edit',
+                        'content': json.dumps(edit_result, ensure_ascii=False),
+                    })
+                    transcript.append(entry)
+                    if edit_result.get('applied') is True:
+                        continue
+                    stop_reason = 'malformed_edit'
+                    break
+                messages.append({'role': 'assistant', 'content': raw})
+                transcript.append(entry)
+                current_hashes = digest_tree(workspace, sorted(allowed))
+                if current_hashes == before and no_tool_retries < args.max_no_tool_retries:
+                    no_tool_retries += 1
+                    messages.append({'role': 'user', 'content': no_tool_retry_reminder(
+                        raw, edit_format=args.edit_format, allowed_paths=sorted(editable),
+                        token_limit=limit, tool_interface=args.tool_interface,
+                    )})
+                    entry['automatic_reminder'] = no_tool_retries
+                    continue
+                stop_reason = 'no_tool_call_after_edit' if current_hashes != before else 'no_tool_call_retries_exhausted'
+                break
+            parsed_calls = []
+            for match in calls:
+                try:
+                    call = json.loads(match.group(1))
+                    name = call.get('name')
+                    arguments = call.get('arguments', {})
+                    if name not in tool_names or not isinstance(arguments, dict):
+                        raise ValueError('unsupported tool call')
+                    parsed_calls.append((match.group(1), name, arguments))
+                except Exception as exc:
+                    entry['tool_calls'].append({'error': f'{type(exc).__name__}: {exc}', 'raw_call': match.group(1)})
         if parsed_calls:
             messages.append({'role': 'assistant', 'tool_calls': [
                 {'type': 'function', 'function': {'name': name, 'arguments': arguments}}
-                for _, name, arguments in parsed_calls
+                for _raw_call, name, arguments in parsed_calls
             ]})
         else:
             messages.append({'role': 'assistant', 'content': raw})
-        for match, name, arguments in parsed_calls:
+        for raw_call, name, arguments in parsed_calls:
             try:
-                if name == 'list_files':
-                    result: Any = sorted(allowed)
+                if name == 'read_lines':
+                    result = edit_leases.read_lines(
+                        arguments.get('path'), arguments.get('start'), arguments.get('end'),
+                    )
+                elif name == 'replace_lines':
+                    result = edit_leases.replace_lines(arguments.get('lease'), arguments.get('text'))
+                    note_edit(result)
+                    if result.get('applied') is True:
+                        public_test_result = refresh_public_tests_after_edit(
+                            result, workspace, args.public_test_image, public_test_hash,
+                            test_runner=bounded_public_test,
+                        )
+                        if public_test_result is not None:
+                            entry['automatic_public_test'] = public_test_result
+                            result = {**result, 'automatic_public_test': public_test_result}
+                elif name == 'list_files':
+                    result = sorted(allowed)
                 elif name == 'read_file':
                     raw_path = arguments.get('path', '')
                     path = resolve_allowed_path(raw_path, allowed)
@@ -688,12 +987,18 @@ def main() -> int:
                         final_summary = str(arguments.get('summary', ''))
                         result = {'finished': True}
                         stop_reason = 'agent_finished'
-                entry['tool_calls'].append({'name': name, 'arguments': arguments, 'result': result})
+                entry['tool_calls'].append({'name': name, 'arguments': arguments, 'result': result,
+                                            'outcome': result.get('status') if isinstance(result, dict) else None})
+                if event_journal is not None:
+                    event_journal.append(
+                        'tool_result', turn=turn + 1, name=name, arguments=arguments,
+                        result=result,
+                    )
                 messages.append({'role': 'tool', 'name': name, 'content': json.dumps(result, ensure_ascii=False)})
                 if name == 'finish':
                     break
             except Exception as exc:
-                entry['tool_calls'].append({'error': f'{type(exc).__name__}: {exc}', 'raw_call': match.group(1)})
+                entry['tool_calls'].append({'error': f'{type(exc).__name__}: {exc}', 'raw_call': raw_call})
                 messages.append({'role': 'tool', 'name': 'invalid_tool_call', 'content': json.dumps({'error': str(exc)})})
         transcript.append(entry)
         if stop_reason == 'agent_finished':
@@ -705,12 +1010,42 @@ def main() -> int:
     if args.backend == 'mlx':
         runtime['mlx_active_memory_bytes'] = int(mx.metal.get_active_memory())
         runtime['mlx_peak_memory_bytes'] = int(mx.metal.get_peak_memory())
+    transport_outcomes = [
+        {'turn': item.get('turn'), 'status': item.get('tool_output_status', item.get('turn_outcome'))}
+        for item in transcript if item.get('tool_output_status') or item.get('turn_outcome')
+    ]
+    if edit_applied:
+        agent_outcome = 'edit_applied_awaiting_independent_grade'
+    elif stop_reason == 'context_budget_exhausted':
+        agent_outcome = 'context_exhausted'
+    elif stop_reason in {'wall_time_exhausted', 'memory_budget_exhausted'}:
+        agent_outcome = stop_reason
+    elif stop_reason in {'truncated_tool_call', 'invalid_json_or_schema', 'tool_policy_rejected'}:
+        agent_outcome = stop_reason
+    else:
+        agent_outcome = stop_reason
+    final_journal_hash = None
+    if event_journal is not None:
+        final_journal_hash = event_journal.append(
+            'run_finished', stop_reason=stop_reason, agent_outcome=agent_outcome,
+            elapsed_seconds=round(elapsed, 3), new_tokens=token_total,
+            source_hashes_after=after,
+            candidate_diff_sha256=hashlib.sha256(diff.encode()).hexdigest(),
+        )
+        event_journal.close()
     result = {
-        'schema_version': 1, 'task_id': contract.task_id, 'task_schema': contract.schema,
+        'schema_version': 2 if args.tool_interface != 'legacy' else 1,
+        'tool_interface': args.tool_interface,
+        'agent_outcome': agent_outcome,
+        'independent_semantic_status': 'pending_independent_grade',
+        'transport_outcomes': transport_outcomes,
+        'task_id': contract.task_id, 'task_schema': contract.schema,
         'seed': args.seed,
         'task_revisions': {'base': contract.base_revision,
                            'calibration': contract.calibration_revision},
         'task_input_hashes': contract.input_hashes,
+        'event_journal': str(event_path) if event_path is not None else None,
+        'event_journal_final_event_sha256': final_journal_hash,
         'initial_messages': initial_messages,
         'model_repository': args.model_repository, 'model_snapshot': model_dir.name,
         'model_files': {path.name: sha256(path) for path in sorted(model_dir.iterdir()) if path.is_file()},
@@ -723,6 +1058,7 @@ def main() -> int:
                     'public_test_timeout_s': args.public_test_timeout_s,
                     'public_test_memory_mb': args.public_test_memory_mb,
                     'temperature': args.temperature, 'top_p': args.top_p, 'top_k': args.top_k,
+                    'tool_interface': args.tool_interface,
                     'do_sample': args.do_sample, 'edit_format': args.edit_format},
         'edit_format': args.edit_format,
         'edit_attempted': edit_attempted,
@@ -731,6 +1067,7 @@ def main() -> int:
         'public_test_runs': public_test_runs,
         'format_parse_failure': format_parse_failure,
         'format_parse_failure_count': format_parse_failure_count,
+        'edit_lease_records': edit_leases.audit_records(),
         'stop_reason': stop_reason, 'agent_summary': final_summary,
         'elapsed_seconds': round(elapsed, 3), 'new_tokens': token_total,
         'max_rss_bytes': resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
@@ -740,7 +1077,7 @@ def main() -> int:
         'source_hashes_before': before, 'source_hashes_after': after,
         'tool_turns': len(transcript), 'no_tool_retries': no_tool_retries, 'transcript': transcript,
         'offline_environment_required': True,
-        'wall_budget_checked_between_generations': True,
+        'wall_budget_checked_before_and_after_generations': True,
         'claim_limit': 'Two-task Development paired-interface feasibility only; not held-out capability, generalization, or model-weight improvement.',
     }
     result_path.parent.mkdir(parents=True, exist_ok=True)

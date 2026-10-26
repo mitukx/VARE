@@ -1,0 +1,30 @@
+{
+  "command": [
+    "/usr/bin/time",
+    "-l",
+    "sandbox-exec",
+    "-p",
+    "(version 1) (deny network*) (allow default)",
+    "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/coding-agent-interface-v2/.venv/bin/python",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/benchmarks/mlsys_agent_development_v1/tasks/mlxlm-2004-jamba-moe-routing/evaluator",
+    "-p",
+    "test_hidden.py",
+    "-v"
+  ],
+  "elapsed_seconds": 1.1517,
+  "exit_code": 1,
+  "expectation_met": true,
+  "expected": "fail",
+  "grader_sha256": "f34ec089c25113824e56b3875bed8804dec717448ada08cbfbd3619c064312d6",
+  "network": "sandbox-exec denied",
+  "state": "incorrect-mutant",
+  "stderr_sha256": "41995a1a2357610a5c41d47853fde60ac12c2436e4807ec9ac0cdee3f37c0aa9",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "target_sha256": "cfd0ce113bd7092f89ca28e47bd2715e12891e92610f4d509251254e7f332a5f",
+  "task_id": "mlxlm-2004-jamba-moe-routing",
+  "workspace_revision": "4cfc6478473b0668ede3eb0cc93f2a9181a15052"
+}

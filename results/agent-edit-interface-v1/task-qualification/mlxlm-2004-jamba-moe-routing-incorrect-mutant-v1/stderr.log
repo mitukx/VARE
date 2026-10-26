@@ -1,0 +1,14 @@
+test_sparse_moe_uses_full_router_distribution_without_topk_renormalization (test_hidden.TestJambaRouting.test_sparse_moe_uses_full_router_distribution_without_topk_renormalization) ... FAIL
+
+======================================================================
+FAIL: test_sparse_moe_uses_full_router_distribution_without_topk_renormalization (test_hidden.TestJambaRouting.test_sparse_moe_uses_full_router_distribution_without_topk_renormalization)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/user/Documents/Codex/2026-10-24/vare-flagship-research-verified-coding-agent/work/task-certification-20261025/benchmarks/mlsys_agent_development_v1/tasks/mlxlm-2004-jamba-moe-routing/evaluator/test_hidden.py", line 61, in test_sparse_moe_uses_full_router_distribution_without_topk_renormalization
+    self.assertTrue(mx.allclose(observed, expected, atol=1e-6).item())
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)

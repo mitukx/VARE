@@ -31,9 +31,72 @@ def test_v2_task_namespaces_are_round_and_evaluation_disjoint():
 def test_auditor_inventory_pins_the_runtime_sources_used_by_the_campaign():
     runtime_sources={str(path.relative_to(bench.ROOT))
                      for path in (bench.ROOT/"src/vare").rglob("*.py")}
-    assert runtime_sources==auditor.RUNTIME_PACKAGE_SOURCES_V2
+    historical_77=auditor.PINNED_VERSIONED_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V1]
+    diagnostic_78=auditor.PINNED_VERSIONED_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V2]
+    diagnostic_79=auditor.PINNED_VERSIONED_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V3]
+    assert auditor.runtime_source_names_from_commit(historical_77)==auditor.RUNTIME_PACKAGE_SOURCES_V1
+    assert auditor.runtime_source_names_from_commit(diagnostic_78)==auditor.RUNTIME_PACKAGE_SOURCES_V2
+    assert auditor.runtime_source_names_from_commit(diagnostic_79)==auditor.RUNTIME_PACKAGE_SOURCES_V3
+    assert runtime_sources==auditor.RUNTIME_PACKAGE_SOURCES_V3
     assert auditor.RUNTIME_PACKAGE_SOURCES_V1 < auditor.RUNTIME_PACKAGE_SOURCES_V2
+    assert auditor.RUNTIME_PACKAGE_SOURCES_V2 < auditor.RUNTIME_PACKAGE_SOURCES_V3
     assert "src/vare/mlsys_heldout_task_pilot_v1.py" not in auditor.RUNTIME_PACKAGE_SOURCES_V1
+    assert auditor.RUNTIME_PACKAGE_SOURCES_V3-auditor.RUNTIME_PACKAGE_SOURCES_V2=={
+        "src/vare/agent_edit_v2.py",
+    }
+
+
+def test_v1_and_v2_inventory_pins_accept_only_complete_exact_snapshots():
+    for inventory in (auditor.SOURCE_INVENTORY_V1,auditor.SOURCE_INVENTORY_V2):
+        commit=auditor.PINNED_VERSIONED_SOURCE_COMMITS[inventory]
+        hashes=auditor.source_hashes_from_commit(commit,inventory)
+        manifest={"base_commit":commit,"sources":hashes}
+        auditor.validate_source_inventory(manifest,inventory,False)
+
+        with pytest.raises(ValueError,match="pinned source inventory differs"):
+            auditor.validate_source_inventory(manifest,set(inventory)-{next(iter(inventory))},False)
+        with pytest.raises(ValueError,match="pinned source inventory differs"):
+            auditor.validate_source_inventory(
+                manifest,set(inventory)|{"src/vare/unpinned_extra.py"},False,
+            )
+        changed_hashes=dict(hashes)
+        changed_hashes[next(iter(inventory))]="0"*64
+        with pytest.raises(ValueError,match="source snapshot differs from recorded base commit"):
+            auditor.validate_source_inventory(
+                {"base_commit":commit,"sources":changed_hashes},inventory,False,
+            )
+        wrong_commit="0"*40
+        with pytest.raises(ValueError,match="pinned diagnostic revision"):
+            auditor.validate_source_inventory(
+                {"base_commit":wrong_commit,"sources":hashes},inventory,False,
+            )
+
+
+def test_v3_inventory_accepts_only_pinned_79_file_snapshot_and_merge_alias():
+    inventory=auditor.SOURCE_INVENTORY_V3
+    commit=auditor.PINNED_VERSIONED_SOURCE_COMMITS[inventory]
+    hashes=auditor.source_hashes_from_commit(commit,inventory)
+    manifest={"base_commit":commit,"sources":hashes}
+    auditor.validate_source_inventory(manifest,inventory,False)
+
+    merge_alias=next(iter(auditor.PINNED_V3_EQUIVALENT_MERGE_COMMITS))
+    auditor.validate_source_inventory(
+        {"base_commit":merge_alias,"sources":hashes},inventory,False,
+    )
+    with pytest.raises(ValueError):
+        auditor.validate_source_inventory(manifest,set(inventory)-{"src/vare/agent_edit_v2.py"},False)
+    with pytest.raises(ValueError,match="pinned source inventory differs"):
+        auditor.validate_source_inventory(
+            manifest,set(inventory)|{"src/vare/unpinned_extra.py"},False,
+        )
+    changed=dict(manifest)
+    changed["sources"]={**manifest["sources"],"src/vare/agent_edit_v2.py":"0"*64}
+    with pytest.raises(ValueError,match="79-file source snapshot differs"):
+        auditor.validate_source_inventory(changed,inventory,False)
+    changed=dict(manifest)
+    changed["base_commit"]="0"*40
+    with pytest.raises(ValueError,match="79-file campaign base commit differs"):
+        auditor.validate_source_inventory(changed,inventory,False)
 
 
 def test_restart_refuses_changed_learner_source_before_loading_model(tmp_path):
@@ -52,13 +115,23 @@ def campaign(tmp_path_factory):
     pytest.importorskip("transformers")
     pytest.importorskip("psutil")
     target=tmp_path_factory.mktemp("continuation")/"run"
-    process=subprocess.run([sys.executable,str(bench.ROOT/"scripts/benchmark_e2e_rl_continuation.py"),
+    source_root=tmp_path_factory.mktemp("pinned-source")/"repo"
+    source_commit=auditor.PINNED_VERSIONED_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V3]
+    checkout=subprocess.run(["git","-C",str(bench.ROOT),"worktree","add","--detach",
+                             str(source_root),source_commit],capture_output=True,text=True,timeout=60)
+    assert checkout.returncode==0,checkout.stdout+checkout.stderr
+    try:
+        process=subprocess.run([sys.executable,str(source_root/"scripts/benchmark_e2e_rl_continuation.py"),
                             "--output",str(target),"--model-dir",str(Path(model).resolve()),
                             "--workers","2","--seeds","3901","--rounds","6","--tasks","4","--eval-tasks","4"],
-                           capture_output=True,text=True,timeout=240,
-                           env={**os.environ,"OMP_NUM_THREADS":"1","MKL_NUM_THREADS":"1","TOKENIZERS_PARALLELISM":"false","PYTHONHASHSEED":"0"})
-    assert process.returncode==0,process.stdout+process.stderr
-    return target,Path(model).resolve()
+                               capture_output=True,text=True,timeout=240,
+                               env={**os.environ,"OMP_NUM_THREADS":"1","MKL_NUM_THREADS":"1","TOKENIZERS_PARALLELISM":"false","PYTHONHASHSEED":"0"})
+        assert process.returncode==0,process.stdout+process.stderr
+        return target,Path(model).resolve()
+    finally:
+        removed=subprocess.run(["git","-C",str(bench.ROOT),"worktree","remove","--force",
+                                str(source_root)],capture_output=True,text=True,timeout=60)
+        assert removed.returncode==0,removed.stdout+removed.stderr
 
 
 def test_actual_checkpoint_state_and_scores_replay(campaign):
@@ -77,10 +150,16 @@ def test_campaign_snapshots_the_full_runtime_package(campaign,tmp_path):
     root,_=campaign
     manifest=auditor.read(root/"manifest.json")
     runtime_sources={str(path.relative_to(bench.ROOT)) for path in (bench.ROOT/"src/vare").rglob("*.py")}
-    assert len(runtime_sources)==78
-    assert runtime_sources==auditor.RUNTIME_PACKAGE_SOURCES_V2
-    assert set(manifest["sources"])==auditor.SOURCE_INVENTORY_V2
-    assert set(manifest["source_sha256"])==auditor.SOURCE_INVENTORY_V2
+    assert len(runtime_sources)==79
+    assert runtime_sources==auditor.RUNTIME_PACKAGE_SOURCES_V3
+    assert set(manifest["sources"])==auditor.SOURCE_INVENTORY_V3
+    assert set(manifest["source_sha256"])==auditor.SOURCE_INVENTORY_V3
+    assert manifest["base_commit"]==auditor.PINNED_VERSIONED_SOURCE_COMMITS[
+        auditor.SOURCE_INVENTORY_V3
+    ]
+    assert manifest["sources"]==auditor.source_hashes_from_commit(
+        manifest["base_commit"],auditor.SOURCE_INVENTORY_V3,
+    )
     changed=tmp_path/"changed-runtime-dependency"
     shutil.copytree(root,changed)
     source="src/vare/curriculum.py"
@@ -96,7 +175,7 @@ def test_campaign_snapshots_the_full_runtime_package(campaign,tmp_path):
         config["source_sha256"][source]=digest
         bench.atomic_json(config_path,config)
     reseal_records(changed)
-    with pytest.raises(ValueError,match="source snapshot differs from recorded base commit"):
+    with pytest.raises(ValueError,match="79-file source snapshot differs"):
         auditor.audit(changed)
 
 
@@ -396,7 +475,7 @@ def test_immediately_previous_source_inventory_remains_accepted(tmp_path,monkeyp
 
 
 def test_fresh_conformant_campaign_accepts_its_complete_source_inventory():
-    commit=bench.subprocess.check_output(["git","rev-parse","HEAD"],cwd=bench.ROOT,text=True).strip()
+    commit=auditor.PINNED_VERSIONED_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V2]
     source_hashes=auditor.source_hashes_from_commit(commit,auditor.SOURCE_INVENTORY_V2)
     manifest={"base_commit":commit,"sources":source_hashes}
     auditor.validate_source_inventory(manifest,auditor.SOURCE_INVENTORY_V2,True)
@@ -416,21 +495,34 @@ def test_versioned_source_inventory_is_bound_to_exact_committed_runtime_tree(
     assert auditor.runtime_source_names_from_commit(commit)==runtime_sources
 
 
-def test_77_file_inventory_cannot_omit_the_78th_runtime_file_at_a_newer_commit():
+def test_77_file_inventory_cannot_omit_the_78th_runtime_file_at_a_newer_commit(monkeypatch):
     old_inventory=auditor.SOURCE_INVENTORY_V1
     newer_commit="a4fe08298d1349c5aaf6d20b626f0f114c4ee114"
+    monkeypatch.setitem(auditor.PINNED_VERSIONED_SOURCE_COMMITS,old_inventory,newer_commit)
     manifest={"base_commit":newer_commit,
               "sources":auditor.source_hashes_from_commit(newer_commit,old_inventory)}
     with pytest.raises(ValueError,match="runtime source inventory differs from pinned 77-file version"):
         auditor.validate_source_inventory(manifest,old_inventory,False)
 
 
-def test_78_file_inventory_requires_a_commit_with_the_added_runtime_file():
+def test_78_file_inventory_requires_a_commit_with_the_added_runtime_file(monkeypatch):
     newer_inventory=auditor.SOURCE_INVENTORY_V2
     historical_commit="7f7d5a4e3963adef298dee7520bcfc36971639d9"
+    monkeypatch.setitem(auditor.PINNED_VERSIONED_SOURCE_COMMITS,newer_inventory,historical_commit)
     with pytest.raises(ValueError,match="runtime source inventory differs from pinned 78-file version"):
         auditor.validate_source_inventory(
             {"base_commit":historical_commit,"sources":{}},newer_inventory,False)
+
+
+def test_78_file_inventory_rejects_other_commits_even_if_the_tree_is_unchanged():
+    pinned=auditor.PINNED_VERSIONED_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V2]
+    descendant="071352981ad2e6bb1601ae50f935600f28aba8fc"
+    assert auditor.runtime_source_names_from_commit(descendant)==auditor.RUNTIME_PACKAGE_SOURCES_V2
+    manifest={"base_commit":descendant,
+              "sources":auditor.source_hashes_from_commit(descendant,auditor.SOURCE_INVENTORY_V2)}
+    assert pinned != descendant
+    with pytest.raises(ValueError,match="78-file campaign base commit differs from its pinned diagnostic revision"):
+        auditor.validate_source_inventory(manifest,auditor.SOURCE_INVENTORY_V2,False)
 
 
 @pytest.mark.parametrize("inventory,runtime_sources",[
@@ -452,6 +544,7 @@ def test_versioned_inventory_rejects_missing_unexpected_changed_or_mismatched_so
     subprocess.run(["git","-C",str(repo),"commit","-qm","complete inventory"],check=True)
     first_commit=subprocess.check_output(["git","-C",str(repo),"rev-parse","HEAD"],text=True).strip()
     monkeypatch.setattr(auditor,"REPOSITORY_ROOT",repo)
+    monkeypatch.setitem(auditor.PINNED_VERSIONED_SOURCE_COMMITS,inventory,first_commit)
     hashes=auditor.source_hashes_from_commit(first_commit,inventory)
     manifest={"base_commit":first_commit,"sources":hashes}
     auditor.validate_source_inventory(manifest,inventory,False)
@@ -464,6 +557,13 @@ def test_versioned_inventory_rejects_missing_unexpected_changed_or_mismatched_so
     changed_hashes={**hashes,next(iter(inventory)):"0"*64}
     with pytest.raises(ValueError,match="source snapshot differs from recorded base commit"):
         auditor.validate_source_inventory({**manifest,"sources":changed_hashes},inventory,False)
+    missing_snapshot=dict(hashes)
+    del missing_snapshot[next(iter(inventory))]
+    with pytest.raises(ValueError,match="source snapshot differs from recorded base commit"):
+        auditor.validate_source_inventory({**manifest,"sources":missing_snapshot},inventory,False)
+    unexpected_snapshot={**hashes,"src/vare/unexpected.py":"0"*64}
+    with pytest.raises(ValueError,match="source snapshot differs from recorded base commit"):
+        auditor.validate_source_inventory({**manifest,"sources":unexpected_snapshot},inventory,False)
 
     changed_source=next(iter(runtime_sources))
     path=repo/changed_source
@@ -471,6 +571,7 @@ def test_versioned_inventory_rejects_missing_unexpected_changed_or_mismatched_so
     subprocess.run(["git","-C",str(repo),"add",changed_source],check=True)
     subprocess.run(["git","-C",str(repo),"commit","-qm","different source identity"],check=True)
     second_commit=subprocess.check_output(["git","-C",str(repo),"rev-parse","HEAD"],text=True).strip()
+    monkeypatch.setitem(auditor.PINNED_VERSIONED_SOURCE_COMMITS,inventory,second_commit)
     with pytest.raises(ValueError,match="source snapshot differs from recorded base commit"):
         auditor.validate_source_inventory({**manifest,"base_commit":second_commit},inventory,False)
 
@@ -479,6 +580,7 @@ def test_versioned_inventory_rejects_missing_unexpected_changed_or_mismatched_so
     subprocess.run(["git","-C",str(repo),"add","src/vare/unexpected.py"],check=True)
     subprocess.run(["git","-C",str(repo),"commit","-qm","unexpected runtime source"],check=True)
     third_commit=subprocess.check_output(["git","-C",str(repo),"rev-parse","HEAD"],text=True).strip()
+    monkeypatch.setitem(auditor.PINNED_VERSIONED_SOURCE_COMMITS,inventory,third_commit)
     with pytest.raises(ValueError,match="runtime source inventory differs from pinned"):
         auditor.validate_source_inventory({**manifest,"base_commit":third_commit},inventory,False)
 
@@ -518,8 +620,14 @@ def test_new_source_inventory_requires_a_full_base_commit():
         auditor.validate_source_inventory(manifest,auditor.SOURCE_INVENTORY_V2,True)
 
 
-def test_new_source_inventory_requires_a_locally_verifiable_commit():
-    manifest={"base_commit":"f"*40,
+def test_new_source_inventory_requires_a_locally_verifiable_commit(monkeypatch):
+    absent_commit="f"*40
+    monkeypatch.setitem(
+        auditor.PINNED_VERSIONED_SOURCE_COMMITS,
+        auditor.SOURCE_INVENTORY_V2,
+        absent_commit,
+    )
+    manifest={"base_commit":absent_commit,
               "sources":{name:"0"*64 for name in auditor.SOURCE_INVENTORY_V2}}
     with pytest.raises(ValueError,match="base commit is unavailable"):
         auditor.validate_source_inventory(manifest,auditor.SOURCE_INVENTORY_V2,True)

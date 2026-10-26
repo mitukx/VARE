@@ -59,7 +59,11 @@ def build_step(index, state, total, ident, delay=0.):
 
 def killed_worker(path, pipe):
     store = TrajectoryStore(path)
-    lease = store.claim("execute", "sigkill-worker", lease_seconds=.1)
+    # A spawned Python worker may spend more than 100 ms importing this
+    # benchmark before it persists its first step. Keep the lease alive through
+    # that transaction; the coordinator kills the worker immediately after the
+    # step, then recovery waits for this bounded lease to expire.
+    lease = store.claim("execute", "sigkill-worker", lease_seconds=5.0)
     resumed = store.resume_state(lease.trajectory_id)
     store.append_step(lease, build_step(0, {}, resumed["spec"]["expected_steps"], lease.trajectory_id))
     pipe.send(asdict(lease))

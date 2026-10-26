@@ -1,0 +1,8 @@
+{
+  "correction": "Use the deterministic generated package version file already created by the existing real-agent task materializer; rerun the controls under fresh attempt identifiers.",
+  "finding": "All four attempt-2 records failed while importing mlx_lm because setuptools-scm generated mlx_lm/_version.py was absent. Test methods did not run. No candidate was certified and no model inference occurred.",
+  "schema_version": 1,
+  "status": "qualification_controls_invalidated_by_setup_failure",
+  "supersedes_summary_sha256": "97c8d9ce3fabb5201aedb2d9d65c7b0e45f6aab26a6f3a130677a179576fa506",
+  "version_file_content": "__version__ = \"0.32.2\"\n"
+}

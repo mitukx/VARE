@@ -34,7 +34,8 @@ LEGACY_EXPECTED_SOURCES = frozenset({
 })
 # Runtime source inventories are explicit protocol versions. V1 is the 77-file
 # runtime tree used by the historical campaign; V2 adds the held-out task pilot
-# module. Never derive either inventory from the checkout being audited.
+# module; V3 adds the hash-bound edit module. Never derive an inventory from the
+# checkout being audited.
 RUNTIME_PACKAGE_SOURCES_V1 = frozenset({
     "src/vare/__init__.py",
     "src/vare/__main__.py",
@@ -195,13 +196,30 @@ PREVIOUS_EXPECTED_SOURCES = frozenset({
 RUNTIME_PACKAGE_SOURCES_V2 = RUNTIME_PACKAGE_SOURCES_V1 | frozenset({
     "src/vare/mlsys_heldout_task_pilot_v1.py",
 })
+RUNTIME_PACKAGE_SOURCES_V3 = RUNTIME_PACKAGE_SOURCES_V2 | frozenset({
+    "src/vare/agent_edit_v2.py",
+})
 SOURCE_INVENTORY_V1 = LEGACY_EXPECTED_SOURCES | RUNTIME_PACKAGE_SOURCES_V1
 SOURCE_INVENTORY_V2 = LEGACY_EXPECTED_SOURCES | RUNTIME_PACKAGE_SOURCES_V2
+# V3 is the complete 85-source snapshot from PR #131's exact 79-runtime-file
+# tree. The previous failing CI used a merge commit with this same source set;
+# admit that one recorded identity only after matching every source hash to
+# the immutable PR-head snapshot. Future checkouts are not implicit versions.
+SOURCE_INVENTORY_V3 = LEGACY_EXPECTED_SOURCES | RUNTIME_PACKAGE_SOURCES_V3
+PINNED_VERSIONED_SOURCE_COMMITS = {
+    SOURCE_INVENTORY_V1: "7f7d5a4e3963adef298dee7520bcfc36971639d9",
+    SOURCE_INVENTORY_V2: "a4fe08298d1349c5aaf6d20b626f0f114c4ee114",
+    SOURCE_INVENTORY_V3: "1046507ed3b9472685f03e46c284176fee354448",
+}
+PINNED_V3_EQUIVALENT_MERGE_COMMITS = frozenset({
+    "3cfc0bd6a539ca347b6a314bc76b0bc6355e53b1",
+})
 SUPPORTED_SOURCE_INVENTORIES = (
     LEGACY_EXPECTED_SOURCES,
     PREVIOUS_EXPECTED_SOURCES,
     SOURCE_INVENTORY_V1,
     SOURCE_INVENTORY_V2,
+    SOURCE_INVENTORY_V3,
 )
 
 # The frozen v2 campaign is tied to the commit and source tree that produced it.
@@ -234,18 +252,33 @@ def validate_source_inventory(manifest, source_names, locked):
         need(manifest.get("sources")==PINNED_LOCKED_SOURCE_SHA256,
              "locked campaign source snapshots differ from the independently pinned revision")
         return
-    need(source_names in (PREVIOUS_EXPECTED_SOURCES,SOURCE_INVENTORY_V1,SOURCE_INVENTORY_V2),
+    need(source_names in (PREVIOUS_EXPECTED_SOURCES,SOURCE_INVENTORY_V1,
+                          SOURCE_INVENTORY_V2,SOURCE_INVENTORY_V3),
          "pinned source inventory differs")
     commit=manifest.get("base_commit")
     need(type(commit) is str and len(commit)==40 and
          all(char in "0123456789abcdef" for char in commit),
          "campaign base commit is not a full SHA")
     if source_names==SOURCE_INVENTORY_V1:
+        need(commit==PINNED_VERSIONED_SOURCE_COMMITS[SOURCE_INVENTORY_V1],
+             "77-file campaign base commit differs from its pinned diagnostic revision")
         need(runtime_source_names_from_commit(commit)==RUNTIME_PACKAGE_SOURCES_V1,
              "runtime source inventory differs from pinned 77-file version")
     elif source_names==SOURCE_INVENTORY_V2:
+        need(commit==PINNED_VERSIONED_SOURCE_COMMITS[SOURCE_INVENTORY_V2],
+             "78-file campaign base commit differs from its pinned diagnostic revision")
         need(runtime_source_names_from_commit(commit)==RUNTIME_PACKAGE_SOURCES_V2,
              "runtime source inventory differs from pinned 78-file version")
+    elif source_names==SOURCE_INVENTORY_V3:
+        pinned_commit=PINNED_VERSIONED_SOURCE_COMMITS[SOURCE_INVENTORY_V3]
+        need(commit==pinned_commit or commit in PINNED_V3_EQUIVALENT_MERGE_COMMITS,
+             "79-file campaign base commit differs from its pinned source revision")
+        need(runtime_source_names_from_commit(pinned_commit)==RUNTIME_PACKAGE_SOURCES_V3,
+             "runtime source inventory differs from pinned 79-file version")
+        pinned_sources=source_hashes_from_commit(pinned_commit,SOURCE_INVENTORY_V3)
+        need(manifest.get("sources")==pinned_sources,
+             "79-file source snapshot differs from its pinned source revision")
+        return
     committed_sources=source_hashes_from_commit(commit,source_names)
     need(manifest.get("sources")==committed_sources,
          "source snapshot differs from recorded base commit")
@@ -982,13 +1015,8 @@ def audit(root, check_tensors=False, model_dir=None):
             resumed_spans=trace_stages.get(("round",expected_round,1),[])
             need(len(resumed_spans)==1,"recovery endpoint lacks one resumed-round trace")
             resumed_end=resumed_spans[0]["end"]
-            if source_names in (SOURCE_INVENTORY_V1,SOURCE_INVENTORY_V2):
-                need(progress.get("time")==resumed_end,
-                     "recovery endpoint differs from resumed-round trace")
-            else:
-                next_spans=trace_stages.get(("round",expected_round+1,1),[])
-                need(len(next_spans)==1 and resumed_end<=progress.get("time")<=next_spans[0]["start"],
-                     "legacy recovery endpoint falls outside the resumed-round trace interval")
+            need(progress.get("time")==resumed_end,
+                 "recovery endpoint differs from resumed-round trace")
             need(row["recovery_to_next_update_s"]==progress["time"]-killed["killed_at"]>0,
                  "recovery clock differs")
     for row in rows:

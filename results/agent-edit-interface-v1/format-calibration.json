@@ -1,0 +1,203 @@
+{
+  "aggregate": {
+    "fixture_count": 4,
+    "lease_bound_max_edit_action_tokens": 73,
+    "lease_bound_total_tool_output_tokens": 406,
+    "maximum_edit_action_tokens_across_both_interfaces": 132,
+    "per_turn_token_budget": 384,
+    "per_turn_token_budget_formula": "max(256, ceil(max_fixture_edit_action_tokens * 2.5 / 64) * 64)",
+    "structured_replace_max_edit_action_tokens": 132,
+    "structured_replace_total_tool_output_tokens": 508
+  },
+  "calibration_kind": "tokenizer_only_no_model_inference",
+  "fixtures": [
+    {
+      "fixture": {
+        "end": 2,
+        "legacy_old_text": "    return x + 1\n",
+        "name": "unique_single_line",
+        "new_text": "    return x * 2\n",
+        "query": "return x + 1",
+        "source": "def amount(x):\n    return x + 1\n",
+        "start": 2
+      },
+      "lease_bound_lines_v1": {
+        "edit_action_tokens": 35,
+        "serialized_tool_outputs": [
+          "<tool_call>{\"name\":\"list_files\",\"arguments\":{}}</tool_call>",
+          "<tool_call>{\"name\":\"search_text\",\"arguments\":{\"query\":\"return x + 1\"}}</tool_call>",
+          "<tool_call>{\"name\":\"read_lines\",\"arguments\":{\"path\":\"src/fixture.py\",\"start\":2,\"end\":2}}</tool_call>",
+          "<tool_call>{\"name\":\"replace_lines\",\"arguments\":{\"lease\":\"a1b2c3d4e5f6\",\"text\":\"    return x * 2\\n\"}}</tool_call>"
+        ],
+        "tool_output_tokens_by_turn": [
+          12,
+          18,
+          25,
+          35
+        ],
+        "total_tool_output_tokens": 90
+      },
+      "structured_replace_v1": {
+        "edit_action_tokens": 39,
+        "serialized_tool_outputs": [
+          "<tool_call>{\"name\":\"list_files\",\"arguments\":{}}</tool_call>",
+          "<tool_call>{\"name\":\"search_text\",\"arguments\":{\"query\":\"return x + 1\"}}</tool_call>",
+          "<tool_call>{\"name\":\"read_file_range\",\"arguments\":{\"path\":\"src/fixture.py\",\"start_line\":2,\"end_line\":2}}</tool_call>",
+          "<tool_call>{\"name\":\"replace_text\",\"arguments\":{\"path\":\"src/fixture.py\",\"old_text\":\"    return x + 1\\n\",\"new_text\":\"    return x * 2\\n\"}}</tool_call>"
+        ],
+        "tool_output_tokens_by_turn": [
+          12,
+          18,
+          28,
+          39
+        ],
+        "total_tool_output_tokens": 97
+      }
+    },
+    {
+      "fixture": {
+        "end": 4,
+        "legacy_old_text": "def score(x):\n    if x < 0:\n        return 0\n    return x\n",
+        "name": "repeated_line_needs_context",
+        "new_text": "    return max(x, 0)\n",
+        "query": "return x",
+        "source": "def score(x):\n    if x < 0:\n        return 0\n    return x\n\ndef fallback(x):\n    return x\n",
+        "start": 4
+      },
+      "lease_bound_lines_v1": {
+        "edit_action_tokens": 37,
+        "serialized_tool_outputs": [
+          "<tool_call>{\"name\":\"list_files\",\"arguments\":{}}</tool_call>",
+          "<tool_call>{\"name\":\"search_text\",\"arguments\":{\"query\":\"return x\"}}</tool_call>",
+          "<tool_call>{\"name\":\"read_lines\",\"arguments\":{\"path\":\"src/fixture.py\",\"start\":4,\"end\":4}}</tool_call>",
+          "<tool_call>{\"name\":\"replace_lines\",\"arguments\":{\"lease\":\"a1b2c3d4e5f6\",\"text\":\"    return max(x, 0)\\n\"}}</tool_call>"
+        ],
+        "tool_output_tokens_by_turn": [
+          12,
+          15,
+          25,
+          37
+        ],
+        "total_tool_output_tokens": 89
+      },
+      "structured_replace_v1": {
+        "edit_action_tokens": 56,
+        "serialized_tool_outputs": [
+          "<tool_call>{\"name\":\"list_files\",\"arguments\":{}}</tool_call>",
+          "<tool_call>{\"name\":\"search_text\",\"arguments\":{\"query\":\"return x\"}}</tool_call>",
+          "<tool_call>{\"name\":\"read_file_range\",\"arguments\":{\"path\":\"src/fixture.py\",\"start_line\":4,\"end_line\":4}}</tool_call>",
+          "<tool_call>{\"name\":\"replace_text\",\"arguments\":{\"path\":\"src/fixture.py\",\"old_text\":\"def score(x):\\n    if x < 0:\\n        return 0\\n    return x\\n\",\"new_text\":\"    return max(x, 0)\\n\"}}</tool_call>"
+        ],
+        "tool_output_tokens_by_turn": [
+          12,
+          15,
+          28,
+          56
+        ],
+        "total_tool_output_tokens": 111
+      }
+    },
+    {
+      "fixture": {
+        "end": 3,
+        "legacy_old_text": "    value = int(raw)\n    return value\n",
+        "name": "three_line_rewrite",
+        "new_text": "    value = int(raw.strip())\n    return max(value, 0)\n",
+        "query": "int(raw)",
+        "source": "def parse_count(raw):\n    value = int(raw)\n    return value\n\ndef unrelated():\n    return 0\n",
+        "start": 2
+      },
+      "lease_bound_lines_v1": {
+        "edit_action_tokens": 46,
+        "serialized_tool_outputs": [
+          "<tool_call>{\"name\":\"list_files\",\"arguments\":{}}</tool_call>",
+          "<tool_call>{\"name\":\"search_text\",\"arguments\":{\"query\":\"int(raw)\"}}</tool_call>",
+          "<tool_call>{\"name\":\"read_lines\",\"arguments\":{\"path\":\"src/fixture.py\",\"start\":2,\"end\":3}}</tool_call>",
+          "<tool_call>{\"name\":\"replace_lines\",\"arguments\":{\"lease\":\"a1b2c3d4e5f6\",\"text\":\"    value = int(raw.strip())\\n    return max(value, 0)\\n\"}}</tool_call>"
+        ],
+        "tool_output_tokens_by_turn": [
+          12,
+          16,
+          25,
+          46
+        ],
+        "total_tool_output_tokens": 99
+      },
+      "structured_replace_v1": {
+        "edit_action_tokens": 54,
+        "serialized_tool_outputs": [
+          "<tool_call>{\"name\":\"list_files\",\"arguments\":{}}</tool_call>",
+          "<tool_call>{\"name\":\"search_text\",\"arguments\":{\"query\":\"int(raw)\"}}</tool_call>",
+          "<tool_call>{\"name\":\"read_file_range\",\"arguments\":{\"path\":\"src/fixture.py\",\"start_line\":2,\"end_line\":3}}</tool_call>",
+          "<tool_call>{\"name\":\"replace_text\",\"arguments\":{\"path\":\"src/fixture.py\",\"old_text\":\"    value = int(raw)\\n    return value\\n\",\"new_text\":\"    value = int(raw.strip())\\n    return max(value, 0)\\n\"}}</tool_call>"
+        ],
+        "tool_output_tokens_by_turn": [
+          12,
+          16,
+          28,
+          54
+        ],
+        "total_tool_output_tokens": 110
+      }
+    },
+    {
+      "fixture": {
+        "end": 7,
+        "legacy_old_text": "    if not values:\n        return {\"count\": 0, \"total\": 0}\n    count = len(values)\n    total = sum(values)\n    mean = total / count\n    return {\"count\": count, \"total\": total, \"mean\": mean}\n",
+        "name": "eight_line_function_rewrite",
+        "new_text": "    count = len(values)\n    total = sum(values)\n    mean = total / count if count else 0\n    return {\"count\": count, \"total\": total, \"mean\": mean}\n",
+        "query": "mean = total / count",
+        "source": "def summarize(values):\n    if not values:\n        return {\"count\": 0, \"total\": 0}\n    count = len(values)\n    total = sum(values)\n    mean = total / count\n    return {\"count\": count, \"total\": total, \"mean\": mean}\n\ndef other():\n    return None\n",
+        "start": 2
+      },
+      "lease_bound_lines_v1": {
+        "edit_action_tokens": 73,
+        "serialized_tool_outputs": [
+          "<tool_call>{\"name\":\"list_files\",\"arguments\":{}}</tool_call>",
+          "<tool_call>{\"name\":\"search_text\",\"arguments\":{\"query\":\"mean = total / count\"}}</tool_call>",
+          "<tool_call>{\"name\":\"read_lines\",\"arguments\":{\"path\":\"src/fixture.py\",\"start\":2,\"end\":7}}</tool_call>",
+          "<tool_call>{\"name\":\"replace_lines\",\"arguments\":{\"lease\":\"a1b2c3d4e5f6\",\"text\":\"    count = len(values)\\n    total = sum(values)\\n    mean = total / count if count else 0\\n    return {\\\"count\\\": count, \\\"total\\\": total, \\\"mean\\\": mean}\\n\"}}</tool_call>"
+        ],
+        "tool_output_tokens_by_turn": [
+          12,
+          18,
+          25,
+          73
+        ],
+        "total_tool_output_tokens": 128
+      },
+      "structured_replace_v1": {
+        "edit_action_tokens": 132,
+        "serialized_tool_outputs": [
+          "<tool_call>{\"name\":\"list_files\",\"arguments\":{}}</tool_call>",
+          "<tool_call>{\"name\":\"search_text\",\"arguments\":{\"query\":\"mean = total / count\"}}</tool_call>",
+          "<tool_call>{\"name\":\"read_file_range\",\"arguments\":{\"path\":\"src/fixture.py\",\"start_line\":2,\"end_line\":7}}</tool_call>",
+          "<tool_call>{\"name\":\"replace_text\",\"arguments\":{\"path\":\"src/fixture.py\",\"old_text\":\"    if not values:\\n        return {\\\"count\\\": 0, \\\"total\\\": 0}\\n    count = len(values)\\n    total = sum(values)\\n    mean = total / count\\n    return {\\\"count\\\": count, \\\"total\\\": total, \\\"mean\\\": mean}\\n\",\"new_text\":\"    count = len(values)\\n    total = sum(values)\\n    mean = total / count if count else 0\\n    return {\\\"count\\\": count, \\\"total\\\": total, \\\"mean\\\": mean}\\n\"}}</tool_call>"
+        ],
+        "tool_output_tokens_by_turn": [
+          12,
+          18,
+          28,
+          132
+        ],
+        "total_tool_output_tokens": 190
+      }
+    }
+  ],
+  "lease_token": "a1b2c3d4e5f6",
+  "model_repository": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+  "model_snapshot": "50d427756c6b1b2fe0c0a10f67fbda1fc8e82c1b",
+  "schema_version": 1,
+  "token_count_rule": "len(tokenizer.encode(raw_tool_output, add_special_tokens=False))",
+  "tokenizer_class": "Qwen2TokenizerFast",
+  "tokenizer_files_sha256": {
+    "added_tokens.json": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680",
+    "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+    "special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+    "tokenizer.json": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+    "tokenizer_config.json": "4397cc477eb6d79715ccd2000accd6b3531928f30029665832fa1b255f24d2b9",
+    "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+  },
+  "tokenizer_vocab_size": 151669,
+  "tool_call_envelope": "<tool_call>{compact JSON}</tool_call>"
+}
