@@ -686,36 +686,30 @@ def main() -> int:
     if not os.environ.get('HF_HUB_OFFLINE') == '1' or not os.environ.get('TRANSFORMERS_OFFLINE') == '1':
         parser.error('HF_HUB_OFFLINE=1 and TRANSFORMERS_OFFLINE=1 are required')
 
-    start = time.perf_counter()
-    if args.backend == 'mlx':
-        if platform.system() != 'Darwin' or platform.machine() != 'arm64':
-            parser.error('the MLX backend requires Apple Silicon macOS')
-        import mlx.core as mx
-        from mlx_lm import load
-        mx.random.seed(args.seed)
-        model, tokenizer = load(str(model_dir))
-        mlx_lm = __import__('mlx_lm')
-        runtime = {'python': platform.python_version(), 'mlx': getattr(__import__('mlx'), '__version__', 'unknown'),
-                   'mlx_lm': getattr(mlx_lm, '__version__', 'unknown'),
-                   'platform': platform.platform(), 'device': 'apple_metal', 'seed': args.seed}
-    else:
-        import torch
-        from transformers import AutoModelForCausalLM, AutoTokenizer
-        torch.manual_seed(args.seed)
-        torch.use_deterministic_algorithms(True)
-        torch.set_num_threads(4)
-        model = AutoModelForCausalLM.from_pretrained(
-            model_dir, local_files_only=True, dtype=torch.float32,
-        ).to('cpu').eval()
-        tokenizer = AutoTokenizer.from_pretrained(model_dir, local_files_only=True)
-        if not all(parameter.device.type == 'cpu' for parameter in model.parameters()):
-            raise RuntimeError('model parameter escaped CPU')
-        runtime = {'python': platform.python_version(), 'torch': torch.__version__,
-                   'transformers': __import__('transformers').__version__,
-                   'platform': platform.platform(), 'device': 'cpu', 'threads': torch.get_num_threads(),
-                   'cuda_available': torch.cuda.is_available(),
-                   'mps_available_unused': torch.backends.mps.is_available()}
+    model_files = {path.name: sha256(path) for path in sorted(model_dir.iterdir()) if path.is_file()}
+    event_journal = DurableEventJournal(event_path) if event_path is not None else None
+    if event_journal is not None:
+        event_journal.append(
+            'invocation_started', task_id=contract.task_id, task_schema=contract.schema,
+            task_revisions={'base': contract.base_revision,
+                            'calibration': contract.calibration_revision},
+            task_input_hashes=contract.input_hashes,
+            task_prompt=contract.prompt_text, instruction=args.instruction,
+            model_repository=args.model_repository, model_snapshot=model_dir.name,
+            model_files_sha256=model_files,
+            policy_source_commit=run_git(ROOT, 'rev-parse', 'HEAD'),
+            controller_source_files_sha256=controller_sources,
+            budgets={
+                'max_turns': args.max_turns,
+                'max_new_tokens_per_turn': args.max_new_tokens_per_turn,
+                'max_total_new_tokens': args.max_total_new_tokens,
+                'max_context_tokens': args.max_context_tokens,
+                'wall_seconds': args.wall_seconds,
+                'tool_interface': args.tool_interface,
+            },
+        )
 
+    start = time.perf_counter()
     task_text = contract.prompt_text
     editable = set(allowed)
     edit_leases = SourceEditLeaseStoreV1(workspace, editable)
@@ -784,7 +778,6 @@ def main() -> int:
     initial_messages = [dict(message) for message in messages]
     transcript: list[dict[str, Any]] = []
     before = digest_tree(workspace, sorted(tracked_files))
-    event_journal = DurableEventJournal(event_path) if event_path is not None else None
     if event_journal is not None:
         event_journal.append(
             'run_context', task_id=contract.task_id, task_schema=contract.schema,
@@ -806,6 +799,48 @@ def main() -> int:
                 'tool_interface': args.tool_interface,
             },
         )
+        event_journal.append('model_load_started', model_files_sha256=model_files)
+
+    try:
+        if args.backend == 'mlx':
+            if platform.system() != 'Darwin' or platform.machine() != 'arm64':
+                raise RuntimeError('the MLX backend requires Apple Silicon macOS')
+            import mlx.core as mx
+            from mlx_lm import load
+            mx.random.seed(args.seed)
+            model, tokenizer = load(str(model_dir))
+            mlx_lm = __import__('mlx_lm')
+            runtime = {'python': platform.python_version(), 'mlx': getattr(__import__('mlx'), '__version__', 'unknown'),
+                       'mlx_lm': getattr(mlx_lm, '__version__', 'unknown'),
+                       'platform': platform.platform(), 'device': 'apple_metal', 'seed': args.seed}
+        else:
+            import torch
+            from transformers import AutoModelForCausalLM, AutoTokenizer
+            torch.manual_seed(args.seed)
+            torch.use_deterministic_algorithms(True)
+            torch.set_num_threads(4)
+            model = AutoModelForCausalLM.from_pretrained(
+                model_dir, local_files_only=True, dtype=torch.float32,
+            ).to('cpu').eval()
+            tokenizer = AutoTokenizer.from_pretrained(model_dir, local_files_only=True)
+            if not all(parameter.device.type == 'cpu' for parameter in model.parameters()):
+                raise RuntimeError('model parameter escaped CPU')
+            runtime = {'python': platform.python_version(), 'torch': torch.__version__,
+                       'transformers': __import__('transformers').__version__,
+                       'platform': platform.platform(), 'device': 'cpu', 'threads': torch.get_num_threads(),
+                       'cuda_available': torch.cuda.is_available(),
+                       'mps_available_unused': torch.backends.mps.is_available()}
+    except Exception as exc:
+        if event_journal is not None:
+            event_journal.append(
+                'model_load_failed', exception_type=type(exc).__name__,
+                exception_message=str(exc)[:1000],
+            )
+            event_journal.close()
+        raise
+    if event_journal is not None:
+        event_journal.append('model_load_completed', runtime=runtime)
+
     token_total = 0
     stop_reason = 'turn_budget_exhausted'
     final_summary = ''
@@ -1167,7 +1202,7 @@ def main() -> int:
         'event_journal_final_event_sha256': final_journal_hash,
         'initial_messages': initial_messages,
         'model_repository': args.model_repository, 'model_snapshot': model_dir.name,
-        'model_files': {path.name: sha256(path) for path in sorted(model_dir.iterdir()) if path.is_file()},
+        'model_files': model_files,
         'runtime': runtime,
         'budgets': {'max_turns': args.max_turns, 'max_new_tokens_per_turn': args.max_new_tokens_per_turn,
                     'max_total_new_tokens': args.max_total_new_tokens,

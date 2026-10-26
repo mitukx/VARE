@@ -166,18 +166,82 @@ def test_navigation_runs_require_durable_event_journal_before_model_loading(
 
 
 def test_navigation_runs_accept_a_supplied_event_journal_before_model_loading(
-        tmp_path, monkeypatch, capsys):
+        tmp_path, monkeypatch):
+    import sys
+    from types import ModuleType, SimpleNamespace
+
+    workspace = tmp_path / "workspace"
+    (workspace / "src").mkdir(parents=True)
+    (workspace / "src" / "value.py").write_text("value = 1\n", encoding="utf-8")
+    task_root = tmp_path / "task"
+    task_root.mkdir()
+    (task_root / "TASK.md").write_text("Fix the value function.\n", encoding="utf-8")
+    (task_root / "task.json").write_text(json.dumps({
+        "task_id": "journal-model-load-failure-fixture",
+        "source": {"base_revision": "base-sha", "calibration_revision": "fix-sha"},
+        "metadata": {"editable_files": ["src/value.py"], "split": "development"},
+        "prompt": "Change the value.",
+    }), encoding="utf-8")
+    model_dir = tmp_path / "model"
+    model_dir.mkdir()
+    model_file = model_dir / "weights.safetensors"
+    model_file.write_bytes(b"pinned fixture checkpoint\n")
+    journal_path = tmp_path / "events.jsonl"
+
+    fake_mlx = ModuleType("mlx")
+    fake_mlx.__path__ = []
+    fake_mlx.__version__ = "fixture"
+    fake_core = ModuleType("mlx.core")
+    fake_core.random = SimpleNamespace(seed=lambda seed: None)
+    fake_mlx.core = fake_core
+    fake_mlx_lm = ModuleType("mlx_lm")
+
+    def fail_model_load(path):
+        raise OSError("fixture model load failed")
+
+    fake_mlx_lm.load = fail_model_load
+    monkeypatch.setitem(sys.modules, "mlx", fake_mlx)
+    monkeypatch.setitem(sys.modules, "mlx.core", fake_core)
+    monkeypatch.setitem(sys.modules, "mlx_lm", fake_mlx_lm)
+    monkeypatch.setattr("scripts.run_local_agent.platform.system", lambda: "Darwin")
+    monkeypatch.setattr("scripts.run_local_agent.platform.machine", lambda: "arm64")
+    monkeypatch.setattr("scripts.run_local_agent.run_git", lambda *args: "a" * 40)
+    monkeypatch.setenv("HF_HUB_OFFLINE", "1")
+    monkeypatch.setenv("TRANSFORMERS_OFFLINE", "1")
     monkeypatch.setattr("sys.argv", [
-        "run_local_agent.py", "--workspace", str(tmp_path / "workspace"),
-        "--model-path", str(tmp_path / "missing-model"), "--task-root", str(tmp_path / "task"),
-        "--output", str(tmp_path / "agent.json"), "--event-journal", str(tmp_path / "events.jsonl"),
+        "run_local_agent.py", "--workspace", str(workspace),
+        "--model-path", str(model_dir), "--task-root", str(task_root),
+        "--output", str(tmp_path / "agent.json"), "--event-journal", str(journal_path),
         "--instruction", "inspect and repair", "--seed", "7",
+        "--backend", "mlx", "--model-repository", "fixture/model",
         "--tool-interface", "lease_bound_navigation_v1", "--edit-format", "structured_replace",
     ])
-    with pytest.raises(SystemExit) as error:
+    with pytest.raises(OSError, match="fixture model load failed"):
         main()
-    assert error.value.code == 2
-    assert "--event-journal is required" not in capsys.readouterr().err
+    records = [json.loads(line) for line in journal_path.read_text(encoding="utf-8").splitlines()]
+    assert [item["event"]["event_type"] for item in records] == [
+        "journal_created", "invocation_started", "run_context",
+        "model_load_started", "model_load_failed",
+    ]
+    invocation = records[1]["event"]
+    assert invocation["task_id"] == "journal-model-load-failure-fixture"
+    assert invocation["task_prompt"] == "Fix the value function.\n"
+    assert invocation["instruction"] == "inspect and repair"
+    assert invocation["model_repository"] == "fixture/model"
+    model_hash = hashlib.sha256(model_file.read_bytes()).hexdigest()
+    assert invocation["model_files_sha256"] == {model_file.name: model_hash}
+    assert records[3]["event"]["model_files_sha256"] == {model_file.name: model_hash}
+    assert records[-1]["event"]["exception_type"] == "OSError"
+    previous = "0" * 64
+    for record in records:
+        assert record["previous_event_sha256"] == previous
+        canonical = json.dumps(
+            record["event"], ensure_ascii=False, sort_keys=True, separators=(",", ":"),
+        )
+        expected = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+        assert record["event_sha256"] == expected
+        previous = expected
+    assert not (tmp_path / "agent.json").exists()
 
 
 def test_mocked_full_edit_reaches_an_independent_fixture_oracle(tmp_path):
