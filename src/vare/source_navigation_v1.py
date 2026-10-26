@@ -36,6 +36,9 @@ MAX_FILE_SOURCE_LINES = 100_000
 MAX_TOTAL_SOURCE_LINES = 250_000
 MAX_CONTEXT_CHARS = 512
 _TOKEN = re.compile(r"[A-Za-z_][A-Za-z_0-9]*")
+_IDENTIFIER_BOUNDARY = re.compile(
+    r"(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|_+"
+)
 _LINE_BREAK = re.compile(r"\r\n|[\r\n\v\f\x1c-\x1e\x85\u2028\u2029]")
 _LINE_BREAK_CHARS = frozenset("\r\n\v\f\x1c\x1d\x1e\x85\u2028\u2029")
 
@@ -46,7 +49,13 @@ def _candidate_source_path(path: str) -> bool:
 
 
 def _terms(text: str) -> list[str]:
-    return list(dict.fromkeys(token.casefold() for token in _TOKEN.findall(text)))
+    """Split query identifiers and prose into comparable search terms."""
+    terms: list[str] = []
+    for token in _TOKEN.findall(text):
+        terms.extend(
+            part.casefold() for part in _IDENTIFIER_BOUNDARY.split(token) if part
+        )
+    return list(dict.fromkeys(terms))
 
 
 def _source_line_count(text: str) -> int:
@@ -66,11 +75,14 @@ def _line_match(line: str, query_terms: list[str], query_term_set: set[str]) -> 
     """Collect only matched query terms; do not materialize every line token."""
     found: set[str] = set()
     for match in _TOKEN.finditer(line):
-        term = match.group(0).casefold()
-        if term in query_term_set:
-            found.add(term)
-            if len(found) == len(query_term_set):
-                break
+        token = match.group(0)
+        found.update(
+            part.casefold()
+            for part in _IDENTIFIER_BOUNDARY.split(token)
+            if part and part.casefold() in query_term_set
+        )
+        if len(found) == len(query_term_set):
+            break
     return [term for term in query_terms if term in found]
 
 
@@ -285,7 +297,10 @@ class SourceNavigatorV1:
             for offset, line in enumerate(lines):
                 matched = _line_match(line, query_terms, terms_set)
                 phrase_match = bool(phrase_pattern and phrase_pattern.search(line.casefold()))
-                if not matched and not phrase_match:
+                # Multi-part identifier queries are conjunctions. Returning a
+                # hit for only the shared half of `old_symbol` on
+                # `new_symbol`, for example, creates misleading stale matches.
+                if (len(matched) != len(terms_set)) and not phrase_match:
                     continue
                 match_count += 1
                 score = 100 * int(phrase_match) + 10 * len(matched)

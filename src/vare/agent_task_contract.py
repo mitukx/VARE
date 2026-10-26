@@ -85,6 +85,12 @@ def candidate_visible_source_files(paths: object) -> tuple[str, ...]:
     for raw_path in paths:
         if not isinstance(raw_path, str) or not raw_path or "\\" in raw_path:
             continue
+        # ASCII-only components prevent visually confusable directory names
+        # (for example Cyrillic `е` in `tеsts/`) from bypassing the name rules.
+        # This remains defense in depth; task qualification must inspect source
+        # contents and independently isolate grader assets.
+        if not raw_path.isascii():
+            continue
         parsed = PurePosixPath(raw_path)
         if (parsed.is_absolute() or raw_path != parsed.as_posix()
                 or any(part in {"", ".", ".."} for part in parsed.parts)):

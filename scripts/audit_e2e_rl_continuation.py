@@ -213,6 +213,13 @@ SOURCE_INVENTORY_V4 = SOURCE_INVENTORY_V3 | frozenset({
     "tests/test_source_navigation_v1.py",
 })
 SOURCE_INVENTORY_V4_ID = "vare.e2e-rl-continuation.source-inventory.v4"
+SOURCE_INVENTORY_V5 = SOURCE_INVENTORY_V4 | frozenset({
+    # Navigation runs must retain the controller that issued candidate-visible
+    # source searches and edits. Keep this out of V4 so historical snapshots
+    # continue to validate exactly as frozen.
+    "scripts/run_local_agent.py",
+})
+SOURCE_INVENTORY_V5_ID = "vare.e2e-rl-continuation.source-inventory.v5"
 SOURCE_IDENTITY_SCHEMA_V1 = "vare.source-identity.v1"
 # Versioned diagnostic inventories are admitted only at the commits that were
 # actually reviewed and recorded for those versions. A later checkout may have
@@ -227,6 +234,9 @@ PINNED_VERSIONED_SOURCE_COMMITS = {
 # benchmark/auditor/test files are snapshotted at the exact campaign commit.
 PINNED_RUNTIME_SOURCE_COMMITS = {
     SOURCE_INVENTORY_V4: "d251cc678fbc9940f3de460904d5d23a1967b3ce",
+    # V5 is prospective: the navigation-hardening runtime tree at the reviewed
+    # PR #137 source commit. Campaign/controller files are pinned separately.
+    SOURCE_INVENTORY_V5: "8246fc25c30e0fd60dc036a47b3192254e123ce8",
 }
 SUPPORTED_SOURCE_INVENTORIES = (
     LEGACY_EXPECTED_SOURCES,
@@ -235,6 +245,7 @@ SUPPORTED_SOURCE_INVENTORIES = (
     SOURCE_INVENTORY_V2,
     SOURCE_INVENTORY_V3,
     SOURCE_INVENTORY_V4,
+    SOURCE_INVENTORY_V5,
 )
 
 # The frozen v2 campaign is tied to the commit and source tree that produced it.
@@ -269,7 +280,7 @@ def validate_source_inventory(manifest, source_names, locked):
         return
     need(source_names in (PREVIOUS_EXPECTED_SOURCES,SOURCE_INVENTORY_V1,
                           SOURCE_INVENTORY_V2,SOURCE_INVENTORY_V3,
-                          SOURCE_INVENTORY_V4),
+                          SOURCE_INVENTORY_V4,SOURCE_INVENTORY_V5),
          "pinned source inventory differs")
     commit=manifest.get("base_commit")
     need(type(commit) is str and len(commit)==40 and
@@ -325,6 +336,42 @@ def validate_source_inventory(manifest, source_names, locked):
         expected_sources={**runtime_sources,**campaign_sources}
         need(manifest.get("sources")==expected_sources,
              "V4 combined source snapshot differs from runtime and campaign identities")
+        return
+    elif source_names==SOURCE_INVENTORY_V5:
+        identity=manifest.get("source_identity")
+        need(type(identity) is dict and set(identity)=={
+                 "schema","inventory_id","runtime_source_commit",
+                 "runtime_source_sha256","campaign_source_commit",
+                 "campaign_source_sha256",
+             } and
+             identity.get("schema")==SOURCE_IDENTITY_SCHEMA_V1 and
+             identity.get("inventory_id")==SOURCE_INVENTORY_V5_ID,
+             "V5 source identity schema or inventory differs")
+        runtime_commit=identity.get("runtime_source_commit")
+        campaign_commit=identity.get("campaign_source_commit")
+        need(runtime_commit==PINNED_RUNTIME_SOURCE_COMMITS[SOURCE_INVENTORY_V5],
+             "V5 runtime source commit differs from its immutable pin")
+        need(campaign_commit==commit,
+             "V5 campaign source commit differs from recorded base commit")
+        need(runtime_source_names_from_commit(runtime_commit)==RUNTIME_PACKAGE_SOURCES_V4,
+             "runtime source inventory differs from pinned V5 version")
+        need(runtime_source_names_from_commit(campaign_commit)==RUNTIME_PACKAGE_SOURCES_V4,
+             "campaign runtime inventory differs from V5 version")
+        campaign_names=source_names-RUNTIME_PACKAGE_SOURCES_V4
+        runtime_sources=source_hashes_from_commit(runtime_commit,RUNTIME_PACKAGE_SOURCES_V4)
+        campaign_runtime_sources=source_hashes_from_commit(
+            campaign_commit,RUNTIME_PACKAGE_SOURCES_V4,
+        )
+        need(campaign_runtime_sources==runtime_sources,
+             "campaign runtime source hashes differ from immutable V5 runtime commit")
+        campaign_sources=source_hashes_from_commit(campaign_commit,campaign_names)
+        need(identity.get("runtime_source_sha256")==runtime_sources,
+             "V5 runtime source hashes differ from immutable runtime commit")
+        need(identity.get("campaign_source_sha256")==campaign_sources,
+             "V5 campaign source hashes differ from recorded campaign commit")
+        expected_sources={**runtime_sources,**campaign_sources}
+        need(manifest.get("sources")==expected_sources,
+             "V5 combined source snapshot differs from runtime and campaign identities")
         return
     committed_sources=source_hashes_from_commit(commit,source_names)
     need(manifest.get("sources")==committed_sources,
@@ -1063,7 +1110,8 @@ def audit(root, check_tensors=False, model_dir=None):
             need(len(resumed_spans)==1,"recovery endpoint lacks one resumed-round trace")
             resumed_end=resumed_spans[0]["end"]
             if source_names in (SOURCE_INVENTORY_V1,SOURCE_INVENTORY_V2,
-                                SOURCE_INVENTORY_V3,SOURCE_INVENTORY_V4):
+                                SOURCE_INVENTORY_V3,SOURCE_INVENTORY_V4,
+                                SOURCE_INVENTORY_V5):
                 need(progress.get("time")==resumed_end,
                      "recovery endpoint differs from resumed-round trace")
             else:

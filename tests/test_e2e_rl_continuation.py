@@ -46,6 +46,11 @@ def test_auditor_inventory_pins_the_runtime_sources_used_by_the_campaign():
     assert auditor.SOURCE_INVENTORY_V4==auditor.SOURCE_INVENTORY_V3 | {
         "tests/test_source_navigation_v1.py",
     }
+    assert auditor.SOURCE_INVENTORY_V5==auditor.SOURCE_INVENTORY_V4 | {
+        "scripts/run_local_agent.py",
+    }
+    assert auditor.PINNED_RUNTIME_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V5]==\
+        "8246fc25c30e0fd60dc036a47b3192254e123ce8"
     assert "src/vare/mlsys_heldout_task_pilot_v1.py" not in auditor.RUNTIME_PACKAGE_SOURCES_V1
     assert "src/vare/agent_edit_v2.py" not in auditor.RUNTIME_PACKAGE_SOURCES_V2
     assert "src/vare/source_navigation_v1.py" not in auditor.RUNTIME_PACKAGE_SOURCES_V2
@@ -94,12 +99,14 @@ def test_campaign_snapshots_the_full_runtime_package(campaign,tmp_path):
     runtime_sources={str(path.relative_to(bench.ROOT)) for path in (bench.ROOT/"src/vare").rglob("*.py")}
     assert len(runtime_sources)==80
     assert runtime_sources==auditor.RUNTIME_PACKAGE_SOURCES_V4
-    assert set(manifest["sources"])==auditor.SOURCE_INVENTORY_V4
-    assert set(manifest["source_sha256"])==auditor.SOURCE_INVENTORY_V4
+    assert set(manifest["sources"])==auditor.SOURCE_INVENTORY_V5
+    assert set(manifest["source_sha256"])==auditor.SOURCE_INVENTORY_V5
     identity=manifest["source_identity"]
     assert identity["runtime_source_commit"]==auditor.PINNED_RUNTIME_SOURCE_COMMITS[
-        auditor.SOURCE_INVENTORY_V4
+        auditor.SOURCE_INVENTORY_V5
     ]
+    assert identity["inventory_id"]==auditor.SOURCE_INVENTORY_V5_ID
+    assert "scripts/run_local_agent.py" in identity["campaign_source_sha256"]
     assert identity["campaign_source_commit"]==manifest["base_commit"]
     changed=tmp_path/"changed-runtime-dependency"
     shutil.copytree(root,changed)
@@ -116,7 +123,7 @@ def test_campaign_snapshots_the_full_runtime_package(campaign,tmp_path):
         config["source_sha256"][source]=digest
         bench.atomic_json(config_path,config)
     reseal_records(changed)
-    with pytest.raises(ValueError,match="V4 combined source snapshot differs"):
+    with pytest.raises(ValueError,match="V5 combined source snapshot differs"):
         auditor.audit(changed)
 
 
@@ -458,10 +465,23 @@ def _v4_manifest_for_campaign_commit(campaign_commit):
     }
 
 
+def _v5_manifest_for_campaign_commit(campaign_commit):
+    runtime_commit=auditor.PINNED_RUNTIME_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V5]
+    runtime_sources=auditor.source_hashes_from_commit(
+        runtime_commit,auditor.RUNTIME_PACKAGE_SOURCES_V4,
+    )
+    campaign_names=auditor.SOURCE_INVENTORY_V5-auditor.RUNTIME_PACKAGE_SOURCES_V4
+    campaign_sources=auditor.source_hashes_from_commit(campaign_commit,campaign_names)
+    sources={**runtime_sources,**campaign_sources}
+    return {
+        "base_commit":campaign_commit,
+        "sources":sources,
+        "source_identity":bench.build_source_identity_v5(sources,campaign_commit),
+    }
+
+
 def test_v4_accepts_exact_campaign_identity_with_immutable_runtime_pin():
-    campaign_commit=subprocess.check_output(
-        ["git","-C",str(bench.ROOT),"rev-parse","HEAD"],text=True,
-    ).strip()
+    campaign_commit=auditor.PINNED_RUNTIME_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V4]
     manifest=_v4_manifest_for_campaign_commit(campaign_commit)
     assert set(manifest["sources"])==auditor.SOURCE_INVENTORY_V4
     assert manifest["source_identity"]["campaign_source_commit"]==campaign_commit
@@ -469,9 +489,7 @@ def test_v4_accepts_exact_campaign_identity_with_immutable_runtime_pin():
 
 
 def test_v4_rejects_wrong_runtime_commit_campaign_commit_and_source_hashes():
-    campaign_commit=subprocess.check_output(
-        ["git","-C",str(bench.ROOT),"rev-parse","HEAD"],text=True,
-    ).strip()
+    campaign_commit=auditor.PINNED_RUNTIME_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V4]
     manifest=_v4_manifest_for_campaign_commit(campaign_commit)
 
     wrong_runtime={**manifest,"source_identity":{
@@ -515,6 +533,15 @@ def test_v4_rejects_wrong_runtime_commit_campaign_commit_and_source_hashes():
     with pytest.raises(ValueError,match="V4 combined source snapshot differs"):
         auditor.validate_source_inventory(wrong_combined_hash,auditor.SOURCE_INVENTORY_V4,False)
 
+    missing_source={**manifest,"sources":dict(manifest["sources"])}
+    missing_source["sources"].pop("tests/test_source_navigation_v1.py")
+    with pytest.raises(ValueError,match="V4 combined source snapshot differs"):
+        auditor.validate_source_inventory(missing_source,auditor.SOURCE_INVENTORY_V4,False)
+
+    unexpected_source={**manifest,"sources":{**manifest["sources"],"tests/unpinned.py":"0"*64}}
+    with pytest.raises(ValueError,match="V4 combined source snapshot differs"):
+        auditor.validate_source_inventory(unexpected_source,auditor.SOURCE_INVENTORY_V4,False)
+
     runtime_changed_campaign=_v4_manifest_for_campaign_commit(
         auditor.PINNED_VERSIONED_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V3]
     )
@@ -522,6 +549,71 @@ def test_v4_rejects_wrong_runtime_commit_campaign_commit_and_source_hashes():
         auditor.validate_source_inventory(
             runtime_changed_campaign,auditor.SOURCE_INVENTORY_V4,False,
         )
+
+
+def test_v5_accepts_current_campaign_with_separate_immutable_runtime_pin():
+    campaign_commit=subprocess.check_output(
+        ["git","-C",str(bench.ROOT),"rev-parse","HEAD"],text=True,
+    ).strip()
+    manifest=_v5_manifest_for_campaign_commit(campaign_commit)
+    assert set(manifest["sources"])==auditor.SOURCE_INVENTORY_V5
+    assert manifest["source_identity"]["inventory_id"]==auditor.SOURCE_INVENTORY_V5_ID
+    assert manifest["source_identity"]["runtime_source_commit"]==\
+        auditor.PINNED_RUNTIME_SOURCE_COMMITS[auditor.SOURCE_INVENTORY_V5]
+    assert "scripts/run_local_agent.py" in manifest["source_identity"]["campaign_source_sha256"]
+    auditor.validate_source_inventory(manifest,auditor.SOURCE_INVENTORY_V5,False)
+
+
+def test_v5_rejects_wrong_identity_base_hashes_and_source_sets():
+    campaign_commit=subprocess.check_output(
+        ["git","-C",str(bench.ROOT),"rev-parse","HEAD"],text=True,
+    ).strip()
+    manifest=_v5_manifest_for_campaign_commit(campaign_commit)
+
+    wrong_runtime={**manifest,"source_identity":{
+        **manifest["source_identity"],"runtime_source_commit":"0"*40,
+    }}
+    with pytest.raises(ValueError,match="V5 runtime source commit differs from its immutable pin"):
+        auditor.validate_source_inventory(wrong_runtime,auditor.SOURCE_INVENTORY_V5,False)
+
+    wrong_base={**manifest,"base_commit":"f"*40}
+    with pytest.raises(ValueError,match="V5 campaign source commit differs from recorded base commit"):
+        auditor.validate_source_inventory(wrong_base,auditor.SOURCE_INVENTORY_V5,False)
+
+    wrong_runtime_hash={**manifest,"source_identity":{
+        **manifest["source_identity"],
+        "runtime_source_sha256":{
+            **manifest["source_identity"]["runtime_source_sha256"],
+            "src/vare/engine.py":"0"*64,
+        },
+    }}
+    with pytest.raises(ValueError,match="V5 runtime source hashes differ from immutable runtime commit"):
+        auditor.validate_source_inventory(wrong_runtime_hash,auditor.SOURCE_INVENTORY_V5,False)
+
+    wrong_campaign_hash={**manifest,"source_identity":{
+        **manifest["source_identity"],
+        "campaign_source_sha256":{
+            **manifest["source_identity"]["campaign_source_sha256"],
+            "scripts/run_local_agent.py":"0"*64,
+        },
+    }}
+    with pytest.raises(ValueError,match="V5 campaign source hashes differ from recorded campaign commit"):
+        auditor.validate_source_inventory(wrong_campaign_hash,auditor.SOURCE_INVENTORY_V5,False)
+
+    wrong_combined={**manifest,"sources":{
+        **manifest["sources"],"scripts/benchmark_e2e_rl_continuation.py":"0"*64,
+    }}
+    with pytest.raises(ValueError,match="V5 combined source snapshot differs"):
+        auditor.validate_source_inventory(wrong_combined,auditor.SOURCE_INVENTORY_V5,False)
+
+    missing={**manifest,"sources":dict(manifest["sources"])}
+    missing["sources"].pop("scripts/run_local_agent.py")
+    with pytest.raises(ValueError,match="V5 combined source snapshot differs"):
+        auditor.validate_source_inventory(missing,auditor.SOURCE_INVENTORY_V5,False)
+
+    unexpected={**manifest,"sources":{**manifest["sources"],"scripts/not-pinned.py":"0"*64}}
+    with pytest.raises(ValueError,match="V5 combined source snapshot differs"):
+        auditor.validate_source_inventory(unexpected,auditor.SOURCE_INVENTORY_V5,False)
 
 
 @pytest.mark.parametrize("inventory,runtime_sources,commit",[
