@@ -684,25 +684,25 @@ class MissionJournal:
         record_ref: str | None = None,
         record_sha256: str | None = None,
     ) -> None:
-        for value, field in (
+        for identity_value, field in (
             (task_id, "task_id"),
             (family_id, "family_id"),
             (source_identity, "source_identity"),
         ):
-            _identity(value, field)
+            _identity(identity_value, field)
         if split not in {"train", "development", "heldout"}:
             raise MissionError("split must be train, development, or heldout")
         if eligibility not in {"candidate", "qualified", "eligible", "rejected"}:
             raise MissionError("unknown task eligibility status")
         if exposure not in {"unseen", "unknown", "exposed", "consumed"}:
             raise MissionError("unknown task exposure state")
-        for value, field in (
+        for digest_value, field in (
             (grader_sha256, "grader_sha256"),
             (certificate_sha256, "certificate_sha256"),
             (exposure_audit_sha256, "exposure_audit_sha256"),
         ):
-            if value is not None:
-                _require_sha(value, field)
+            if digest_value is not None:
+                _require_sha(digest_value, field)
         if record_ref is None and record_sha256 is not None:
             raise MissionError("record_sha256 requires a task record_ref")
         if record_ref is not None:
@@ -710,6 +710,8 @@ class MissionJournal:
                 raise MissionError(
                     "record_ref must be a nonempty evidence reference of at most 1024 characters"
                 )
+            if record_sha256 is None:
+                raise MissionError("record_ref requires a record_sha256")
             _require_sha(record_sha256, "record_sha256")
         if eligibility in {"qualified", "eligible"} and (
             not grader_sha256 or not certificate_sha256
@@ -745,6 +747,8 @@ class MissionJournal:
             self._assert_chain(db, mission)
             self._assert_artifacts(db, mission)
             if record_ref is not None:
+                if record_sha256 is None:
+                    raise MissionError("record_ref requires a record_sha256")
                 record_ref = _verified_evidence_ref(
                     record_ref,
                     record_sha256,
@@ -1814,6 +1818,7 @@ def _parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
+        payload: dict[str, Any] | None
         if args.command == "init":
             budget = (
                 json.loads(Path(args.budget_json).read_text(encoding="utf-8"))
