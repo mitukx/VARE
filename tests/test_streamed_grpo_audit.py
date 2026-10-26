@@ -90,6 +90,15 @@ def test_unpinned_revision_uses_complete_hash_bound_artifact_snapshot(monkeypatc
     finally:
         cleanup()
 
+    # Importing the pinned package creates interpreter bytecode; a second audit
+    # must still see the same complete source snapshot.
+    pinned,cleanup=module.load_snapshot_store("f"*40,expected,
+                                              source_tree=source_tree,source_files=source_files)
+    try:
+        assert callable(pinned.audit_trajectory_store)
+    finally:
+        cleanup()
+
     incomplete=dict(source_files)
     incomplete.pop("src/vare/engine.py")
     with pytest.raises(ValueError,match="snapshot is incomplete"):
@@ -120,3 +129,31 @@ def test_run_protocol_is_preserved_and_later_protocol_is_versioned():
     assert "every tracked src/vare file" in next_protocol["audit_source_snapshot"]
     runner_hash=hashlib.sha256((root/"scripts/validate_streamed_grpo_cpu.py").read_bytes()).hexdigest()
     assert next_protocol["runner_sha256"] == runner_hash
+
+
+def test_sprint_ii_protocol_is_exactly_registered_with_its_archived_runner():
+    spec=importlib.util.spec_from_file_location("stream_audit_protocols",Path("scripts/audit_streamed_grpo_cpu.py"))
+    module=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    root=Path(__file__).resolve().parents[1]
+    protocol_path=root/"results/sprint_ii_20261027/streamed_grpo_v32/protocol.json"
+    protocol=json.loads(protocol_path.read_text())
+    registered_path,runner_path=module.protocol_registry()[protocol["schema"]]
+
+    assert registered_path == protocol_path
+    assert hashlib.sha256(protocol_path.read_bytes()).hexdigest() == (
+        "8507aede0b57ea08e75ae1d758df78b813adf637d0ee52bbe2554e9c5007cbe5"
+    )
+    runner_hash=hashlib.sha256((root/"scripts/validate_streamed_grpo_cpu_sprint_ii_v1.py").read_bytes()).hexdigest()
+    assert protocol["runner_sha256"] == runner_hash
+    assert runner_path == "source/scripts/validate_streamed_grpo_cpu_sprint_ii_v1.py"
+    assert module.archived_runner_for_protocol(protocol) == runner_path
+
+    tampered=dict(protocol)
+    tampered["rounds"] += 1
+    with pytest.raises(ValueError,match="frozen protocol mismatch"):
+        module.archived_runner_for_protocol(tampered)
+    unknown=dict(protocol,schema="vare.streamed-grpo-systems.future")
+    with pytest.raises(ValueError,match="unsupported protocol"):
+        module.archived_runner_for_protocol(unknown)

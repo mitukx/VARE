@@ -1,0 +1,1700 @@
+[
+  {
+    "actual_candidate_s": 0.2914345829995,
+    "batch": [
+      {
+        "attempt": {
+          "created_step": 0,
+          "latency_ms": null,
+          "logprob": null,
+          "metadata": {
+            "learning_rule": "terminal_action_on_policy_grpo_v1",
+            "lookup_value": 261,
+            "policy_checkpoint_sha256": "078bf000f1c2f8d740d8eeb51be125e72fcdf9dab91ad8185db5cf70899a3d06",
+            "rvl_generation": {
+              "latency_s": 0.024601124998298474,
+              "logprob": -6.285344839096069,
+              "metadata": {
+                "backend": "hf-local",
+                "device": "cpu",
+                "logprob_distribution": "neutral_temperature_scaled_policy",
+                "model": "/tmp/vare-tinystories-1m-sprint-ii",
+                "precision": "fp32",
+                "prompt_token_ids": [
+                  12124,
+                  2891,
+                  12854,
+                  807,
+                  4626,
+                  14,
+                  15,
+                  25,
+                  317,
+                  2266,
+                  21831,
+                  2497,
+                  11086,
+                  8520,
+                  35847,
+                  1988,
+                  25,
+                  39166,
+                  13
+                ],
+                "response_token_ids": [
+                  5436,
+                  373,
+                  523
+                ],
+                "response_token_logprobs": [
+                  -4.249390602111816,
+                  -0.6370875835418701,
+                  -1.3988666534423828
+                ],
+                "sampling_temperature": 0.8
+              },
+              "prompt": "Stream tool trace 82015/0: A red fox saw Observed lookup value: 261.",
+              "prompt_id": "stream-train-82015-0",
+              "response": " Max was so",
+              "token_count": 3
+            },
+            "source_task_sha256": "ec2be4a6c4c1cb062dd13199d4ae13d3cc7c2140933c1b54d813c1618efc3fe1",
+            "trajectory_id": "r0-2",
+            "trajectory_sha256": "0d7361edbb256468b107e2651d4f36119efdabbeee6d4436bc7838981ecfb8a3",
+            "vare_rollout_group": "r0",
+            "vare_rollout_group_size": 4
+          },
+          "output": " Max was so",
+          "policy_id": "policy-0",
+          "policy_version": 0,
+          "task": {
+            "family": "train",
+            "id": "stream-train-82015-0",
+            "metadata": {
+              "learning_rule": "terminal_action_on_policy_grpo_v1",
+              "lookup_value": 261,
+              "source_task_sha256": "ec2be4a6c4c1cb062dd13199d4ae13d3cc7c2140933c1b54d813c1618efc3fe1",
+              "trajectory_id": "r0-2",
+              "trajectory_sha256": "0d7361edbb256468b107e2651d4f36119efdabbeee6d4436bc7838981ecfb8a3",
+              "vare_rollout_group": "r0",
+              "vare_rollout_group_size": 4
+            },
+            "prompt": "Stream tool trace 82015/0: A red fox saw Observed lookup value: 261."
+          }
+        },
+        "failure_label": null,
+        "policy_lag": 0,
+        "priority": 0.9266106528059139,
+        "shift_score": 0.0,
+        "verification": {
+          "confidence": 1.0,
+          "disagreement": 0.0,
+          "metadata": {
+            "trajectory_reward_receipt": "4111924bde591026e1ae8ee8b637a7775d10531628ffb85c5e8fcfd77522a05d",
+            "trajectory_sha256": "0d7361edbb256468b107e2651d4f36119efdabbeee6d4436bc7838981ecfb8a3",
+            "verifier_config_sha256": "b33dd80556c10426f99475b7b5c049e93ecce6ddc3cb567d6d4ff7f750690b89"
+          },
+          "passed": true,
+          "score": 0.963305326402957,
+          "trusted": true,
+          "verifier_name": "checksum",
+          "verifier_version": 0
+        },
+        "verifier_lag": 0
+      },
+      {
+        "attempt": {
+          "created_step": 0,
+          "latency_ms": null,
+          "logprob": null,
+          "metadata": {
+            "learning_rule": "terminal_action_on_policy_grpo_v1",
+            "lookup_value": 261,
+            "policy_checkpoint_sha256": "078bf000f1c2f8d740d8eeb51be125e72fcdf9dab91ad8185db5cf70899a3d06",
+            "rvl_generation": {
+              "latency_s": 0.012113417004002258,
+              "logprob": -4.605361700057983,
+              "metadata": {
+                "backend": "hf-local",
+                "device": "cpu",
+                "logprob_distribution": "neutral_temperature_scaled_policy",
+                "model": "/tmp/vare-tinystories-1m-sprint-ii",
+                "precision": "fp32",
+                "prompt_token_ids": [
+                  12124,
+                  2891,
+                  12854,
+                  807,
+                  4626,
+                  14,
+                  15,
+                  25,
+                  317,
+                  2266,
+                  21831,
+                  2497,
+                  11086,
+                  8520,
+                  35847,
+                  1988,
+                  25,
+                  39166,
+                  13
+                ],
+                "response_token_ids": [
+                  198,
+                  50256
+                ],
+                "response_token_logprobs": [
+                  -0.8471906185150146,
+                  -3.7581710815429688
+                ],
+                "sampling_temperature": 0.8
+              },
+              "prompt": "Stream tool trace 82015/0: A red fox saw Observed lookup value: 261.",
+              "prompt_id": "stream-train-82015-0",
+              "response": "\n",
+              "token_count": 2
+            },
+            "source_task_sha256": "ec2be4a6c4c1cb062dd13199d4ae13d3cc7c2140933c1b54d813c1618efc3fe1",
+            "trajectory_id": "r0-1",
+            "trajectory_sha256": "40e1993615cbc78cc63c52ae1113e623425ea834c485fc981de22bb363df4d97",
+            "vare_rollout_group": "r0",
+            "vare_rollout_group_size": 4
+          },
+          "output": "\n",
+          "policy_id": "policy-0",
+          "policy_version": 0,
+          "task": {
+            "family": "train",
+            "id": "stream-train-82015-0",
+            "metadata": {
+              "learning_rule": "terminal_action_on_policy_grpo_v1",
+              "lookup_value": 261,
+              "source_task_sha256": "ec2be4a6c4c1cb062dd13199d4ae13d3cc7c2140933c1b54d813c1618efc3fe1",
+              "trajectory_id": "r0-1",
+              "trajectory_sha256": "40e1993615cbc78cc63c52ae1113e623425ea834c485fc981de22bb363df4d97",
+              "vare_rollout_group": "r0",
+              "vare_rollout_group_size": 4
+            },
+            "prompt": "Stream tool trace 82015/0: A red fox saw Observed lookup value: 261."
+          }
+        },
+        "failure_label": null,
+        "policy_lag": 0,
+        "priority": 0.789935191113021,
+        "shift_score": 0.0,
+        "verification": {
+          "confidence": 1.0,
+          "disagreement": 0.0,
+          "metadata": {
+            "trajectory_reward_receipt": "f741314a0886a9e846a55428760217f3c25076db20d971a166886c354f699809",
+            "trajectory_sha256": "40e1993615cbc78cc63c52ae1113e623425ea834c485fc981de22bb363df4d97",
+            "verifier_config_sha256": "b33dd80556c10426f99475b7b5c049e93ecce6ddc3cb567d6d4ff7f750690b89"
+          },
+          "passed": true,
+          "score": 0.10503240444348948,
+          "trusted": true,
+          "verifier_name": "checksum",
+          "verifier_version": 0
+        },
+        "verifier_lag": 0
+      },
+      {
+        "attempt": {
+          "created_step": 0,
+          "latency_ms": null,
+          "logprob": null,
+          "metadata": {
+            "learning_rule": "terminal_action_on_policy_grpo_v1",
+            "lookup_value": 261,
+            "policy_checkpoint_sha256": "078bf000f1c2f8d740d8eeb51be125e72fcdf9dab91ad8185db5cf70899a3d06",
+            "rvl_generation": {
+              "latency_s": 0.0188503329991363,
+              "logprob": -1.5363464523106813,
+              "metadata": {
+                "backend": "hf-local",
+                "device": "cpu",
+                "logprob_distribution": "neutral_temperature_scaled_policy",
+                "model": "/tmp/vare-tinystories-1m-sprint-ii",
+                "precision": "fp32",
+                "prompt_token_ids": [
+                  12124,
+                  2891,
+                  12854,
+                  807,
+                  4626,
+                  14,
+                  15,
+                  25,
+                  317,
+                  2266,
+                  21831,
+                  2497,
+                  11086,
+                  8520,
+                  35847,
+                  1988,
+                  25,
+                  39166,
+                  13
+                ],
+                "response_token_ids": [
+                  198,
+                  198,
+                  464
+                ],
+                "response_token_logprobs": [
+                  -0.8471906185150146,
+                  -0.028142886236310005,
+                  -0.6610129475593567
+                ],
+                "sampling_temperature": 0.8
+              },
+              "prompt": "Stream tool trace 82015/0: A red fox saw Observed lookup value: 261.",
+              "prompt_id": "stream-train-82015-0",
+              "response": "\n\nThe",
+              "token_count": 3
+            },
+            "source_task_sha256": "ec2be4a6c4c1cb062dd13199d4ae13d3cc7c2140933c1b54d813c1618efc3fe1",
+            "trajectory_id": "r0-3",
+            "trajectory_sha256": "9207399bf40042bad2fd7ecbe1cb25d49f94d58a18feb1d0b5c311b0028f0f5d",
+            "vare_rollout_group": "r0",
+            "vare_rollout_group_size": 4
+          },
+          "output": "\n\nThe",
+          "policy_id": "policy-0",
+          "policy_version": 0,
+          "task": {
+            "family": "train",
+            "id": "stream-train-82015-0",
+            "metadata": {
+              "learning_rule": "terminal_action_on_policy_grpo_v1",
+              "lookup_value": 261,
+              "source_task_sha256": "ec2be4a6c4c1cb062dd13199d4ae13d3cc7c2140933c1b54d813c1618efc3fe1",
+              "trajectory_id": "r0-3",
+              "trajectory_sha256": "9207399bf40042bad2fd7ecbe1cb25d49f94d58a18feb1d0b5c311b0028f0f5d",
+              "vare_rollout_group": "r0",
+              "vare_rollout_group_size": 4
+            },
+            "prompt": "Stream tool trace 82015/0: A red fox saw Observed lookup value: 261."
+          }
+        },
+        "failure_label": null,
+        "policy_lag": 0,
+        "priority": 0.3264916733201807,
+        "shift_score": 0.0,
+        "verification": {
+          "confidence": 1.0,
+          "disagreement": 0.0,
+          "metadata": {
+            "trajectory_reward_receipt": "46b3fa8b8d39a7a0cacc09f715a6d0c530525189cb03aa8d468d0ed3f9fcc55f",
+            "trajectory_sha256": "9207399bf40042bad2fd7ecbe1cb25d49f94d58a18feb1d0b5c311b0028f0f5d",
+            "verifier_config_sha256": "b33dd80556c10426f99475b7b5c049e93ecce6ddc3cb567d6d4ff7f750690b89"
+          },
+          "passed": true,
+          "score": 0.33675416333990965,
+          "trusted": true,
+          "verifier_name": "checksum",
+          "verifier_version": 0
+        },
+        "verifier_lag": 0
+      },
+      {
+        "attempt": {
+          "created_step": 0,
+          "latency_ms": null,
+          "logprob": null,
+          "metadata": {
+            "learning_rule": "terminal_action_on_policy_grpo_v1",
+            "lookup_value": 261,
+            "policy_checkpoint_sha256": "078bf000f1c2f8d740d8eeb51be125e72fcdf9dab91ad8185db5cf70899a3d06",
+            "rvl_generation": {
+              "latency_s": 0.015840542000660207,
+              "logprob": -4.9165975619107485,
+              "metadata": {
+                "backend": "hf-local",
+                "device": "cpu",
+                "logprob_distribution": "neutral_temperature_scaled_policy",
+                "model": "/tmp/vare-tinystories-1m-sprint-ii",
+                "precision": "fp32",
+                "prompt_token_ids": [
+                  12124,
+                  2891,
+                  12854,
+                  807,
+                  4626,
+                  14,
+                  15,
+                  25,
+                  317,
+                  2266,
+                  21831,
+                  2497,
+                  11086,
+                  8520,
+                  35847,
+                  1988,
+                  25,
+                  39166,
+                  13
+                ],
+                "response_token_ids": [
+                  198,
+                  198,
+                  38582
+                ],
+                "response_token_logprobs": [
+                  -0.8471906185150146,
+                  -0.028142886236310005,
+                  -4.041264057159424
+                ],
+                "sampling_temperature": 0.8
+              },
+              "prompt": "Stream tool trace 82015/0: A red fox saw Observed lookup value: 261.",
+              "prompt_id": "stream-train-82015-0",
+              "response": "\n\nSuddenly",
+              "token_count": 3
+            },
+            "source_task_sha256": "ec2be4a6c4c1cb062dd13199d4ae13d3cc7c2140933c1b54d813c1618efc3fe1",
+            "trajectory_id": "r0-0",
+            "trajectory_sha256": "ad407ae5abf00cd2bcce216b5667ae40eba801ff91d539f5d557e50d838b3d60",
+            "vare_rollout_group": "r0",
+            "vare_rollout_group_size": 4
+          },
+          "output": "\n\nSuddenly",
+          "policy_id": "policy-0",
+          "policy_version": 0,
+          "task": {
+            "family": "train",
+            "id": "stream-train-82015-0",
+            "metadata": {
+              "learning_rule": "terminal_action_on_policy_grpo_v1",
+              "lookup_value": 261,
+              "source_task_sha256": "ec2be4a6c4c1cb062dd13199d4ae13d3cc7c2140933c1b54d813c1618efc3fe1",
+              "trajectory_id": "r0-0",
+              "trajectory_sha256": "ad407ae5abf00cd2bcce216b5667ae40eba801ff91d539f5d557e50d838b3d60",
+              "vare_rollout_group": "r0",
+              "vare_rollout_group_size": 4
+            },
+            "prompt": "Stream tool trace 82015/0: A red fox saw Observed lookup value: 261."
+          }
+        },
+        "failure_label": null,
+        "policy_lag": 0,
+        "priority": 0.05,
+        "shift_score": 0.0,
+        "verification": {
+          "confidence": 1.0,
+          "disagreement": 0.0,
+          "metadata": {
+            "trajectory_reward_receipt": "df266f2acf7a2761dc36b0a2a96146ea9d3846aa53c040de76296b9bfc4a06a4",
+            "trajectory_sha256": "ad407ae5abf00cd2bcce216b5667ae40eba801ff91d539f5d557e50d838b3d60",
+            "verifier_config_sha256": "b33dd80556c10426f99475b7b5c049e93ecce6ddc3cb567d6d4ff7f750690b89"
+          },
+          "passed": true,
+          "score": 0.5029402853695071,
+          "trusted": true,
+          "verifier_name": "checksum",
+          "verifier_version": 0
+        },
+        "verifier_lag": 0
+      }
+    ],
+    "behavior_alignment_error": 1.8596649169921875e-05,
+    "candidate": "policy-1",
+    "changed_tensors": 3,
+    "errors": {
+      "gradient": 1.4901161193847656e-08,
+      "loss": 0.0,
+      "optimizer": 1.862645149230957e-09,
+      "parameter": 3.725290298461914e-09
+    },
+    "metrics": {
+      "behavior_kl_estimate": 2.017865563530563e-08,
+      "clip_fraction": 0.0,
+      "grad_norm": 22.636625289916992,
+      "loss": 4.539266228675842e-06,
+      "max_abs_log_ratio": 1.8596649169921875e-05,
+      "mean_reward": 0.4770080448889658,
+      "samples": 4.0
+    },
+    "reference_s": 0.06779937499959487,
+    "wall_s": 0.45312454200029606
+  },
+  {
+    "actual_candidate_s": 0.30971216699981596,
+    "batch": [
+      {
+        "attempt": {
+          "created_step": 0,
+          "latency_ms": null,
+          "logprob": null,
+          "metadata": {
+            "learning_rule": "terminal_action_on_policy_grpo_v1",
+            "lookup_value": 262,
+            "policy_checkpoint_sha256": "67b80baee64b0ddc68d5ef9992374c2b7ae9b843fe853399e40422dd41ea36d9",
+            "rvl_generation": {
+              "latency_s": 0.01573541599645978,
+              "logprob": -4.027444660663605,
+              "metadata": {
+                "backend": "hf-local",
+                "device": "cpu",
+                "logprob_distribution": "neutral_temperature_scaled_policy",
+                "model": "/tmp/vare-tinystories-1m-sprint-ii",
+                "precision": "fp32",
+                "prompt_token_ids": [
+                  12124,
+                  2891,
+                  12854,
+                  807,
+                  4626,
+                  14,
+                  16,
+                  25,
+                  317,
+                  2266,
+                  21831,
+                  2497,
+                  11086,
+                  8520,
+                  35847,
+                  1988,
+                  25,
+                  35404,
+                  13
+                ],
+                "response_token_ids": [
+                  679,
+                  373,
+                  523
+                ],
+                "response_token_logprobs": [
+                  -1.868154764175415,
+                  -0.9840171933174133,
+                  -1.1752727031707764
+                ],
+                "sampling_temperature": 0.8
+              },
+              "prompt": "Stream tool trace 82015/1: A red fox saw Observed lookup value: 262.",
+              "prompt_id": "stream-train-82015-1",
+              "response": " He was so",
+              "token_count": 3
+            },
+            "source_task_sha256": "494526395c8af9254f104bee8a116b3d38077c9388c3edbc5c6620cb3b1b2a40",
+            "trajectory_id": "r1-0",
+            "trajectory_sha256": "6758f72e8f5d3c56665aceb68ccbd3cf5d2a973151bd56888db0228a604cb618",
+            "vare_rollout_group": "r1",
+            "vare_rollout_group_size": 4
+          },
+          "output": " He was so",
+          "policy_id": "policy-1",
+          "policy_version": 1,
+          "task": {
+            "family": "train",
+            "id": "stream-train-82015-1",
+            "metadata": {
+              "learning_rule": "terminal_action_on_policy_grpo_v1",
+              "lookup_value": 262,
+              "source_task_sha256": "494526395c8af9254f104bee8a116b3d38077c9388c3edbc5c6620cb3b1b2a40",
+              "trajectory_id": "r1-0",
+              "trajectory_sha256": "6758f72e8f5d3c56665aceb68ccbd3cf5d2a973151bd56888db0228a604cb618",
+              "vare_rollout_group": "r1",
+              "vare_rollout_group_size": 4
+            },
+            "prompt": "Stream tool trace 82015/1: A red fox saw Observed lookup value: 262."
+          }
+        },
+        "failure_label": null,
+        "policy_lag": 0,
+        "priority": 0.4006483488252033,
+        "shift_score": 0.0,
+        "verification": {
+          "confidence": 1.0,
+          "disagreement": 0.0,
+          "metadata": {
+            "trajectory_reward_receipt": "11ee480346421f594c0567c8828df7af73df18176389a28e6a15d237fe977f5b",
+            "trajectory_sha256": "6758f72e8f5d3c56665aceb68ccbd3cf5d2a973151bd56888db0228a604cb618",
+            "verifier_config_sha256": "b33dd80556c10426f99475b7b5c049e93ecce6ddc3cb567d6d4ff7f750690b89"
+          },
+          "passed": true,
+          "score": 0.29967582558739836,
+          "trusted": true,
+          "verifier_name": "checksum",
+          "verifier_version": 0
+        },
+        "verifier_lag": 0
+      },
+      {
+        "attempt": {
+          "created_step": 0,
+          "latency_ms": null,
+          "logprob": null,
+          "metadata": {
+            "learning_rule": "terminal_action_on_policy_grpo_v1",
+            "lookup_value": 262,
+            "policy_checkpoint_sha256": "67b80baee64b0ddc68d5ef9992374c2b7ae9b843fe853399e40422dd41ea36d9",
+            "rvl_generation": {
+              "latency_s": 0.020050541999808047,
+              "logprob": -2.5874134229961783,
+              "metadata": {
+                "backend": "hf-local",
+                "device": "cpu",
+                "logprob_distribution": "neutral_temperature_scaled_policy",
+                "model": "/tmp/vare-tinystories-1m-sprint-ii",
+                "precision": "fp32",
+                "prompt_token_ids": [
+                  12124,
+                  2891,
+                  12854,
+                  807,
+                  4626,
+                  14,
+                  16,
+                  25,
+                  317,
+                  2266,
+                  21831,
+                  2497,
+                  11086,
+                  8520,
+                  35847,
+                  1988,
+                  25,
+                  35404,
+                  13
+                ],
+                "response_token_ids": [
+                  220,
+                  198,
+                  198
+                ],
+                "response_token_logprobs": [
+                  -2.567749261856079,
+                  -0.0018078426364809275,
+                  -0.01785631850361824
+                ],
+                "sampling_temperature": 0.8
+              },
+              "prompt": "Stream tool trace 82015/1: A red fox saw Observed lookup value: 262.",
+              "prompt_id": "stream-train-82015-1",
+              "response": " \n\n",
+              "token_count": 3
+            },
+            "source_task_sha256": "494526395c8af9254f104bee8a116b3d38077c9388c3edbc5c6620cb3b1b2a40",
+            "trajectory_id": "r1-1",
+            "trajectory_sha256": "6353e46c570242674c39d1a24ac068f29d0303d96fc0eb573c74257f78de15b9",
+            "vare_rollout_group": "r1",
+            "vare_rollout_group_size": 4
+          },
+          "output": " \n\n",
+          "policy_id": "policy-1",
+          "policy_version": 1,
+          "task": {
+            "family": "train",
+            "id": "stream-train-82015-1",
+            "metadata": {
+              "learning_rule": "terminal_action_on_policy_grpo_v1",
+              "lookup_value": 262,
+              "source_task_sha256": "494526395c8af9254f104bee8a116b3d38077c9388c3edbc5c6620cb3b1b2a40",
+              "trajectory_id": "r1-1",
+              "trajectory_sha256": "6353e46c570242674c39d1a24ac068f29d0303d96fc0eb573c74257f78de15b9",
+              "vare_rollout_group": "r1",
+              "vare_rollout_group_size": 4
+            },
+            "prompt": "Stream tool trace 82015/1: A red fox saw Observed lookup value: 262."
+          }
+        },
+        "failure_label": null,
+        "policy_lag": 0,
+        "priority": 0.3971851443399641,
+        "shift_score": 0.0,
+        "verification": {
+          "confidence": 1.0,
+          "disagreement": 0.0,
+          "metadata": {
+            "trajectory_reward_receipt": "521599fe8826b8d888d0827af515a46413494f24942e997b92a1f40256ad06a9",
+            "trajectory_sha256": "6353e46c570242674c39d1a24ac068f29d0303d96fc0eb573c74257f78de15b9",
+            "verifier_config_sha256": "b33dd80556c10426f99475b7b5c049e93ecce6ddc3cb567d6d4ff7f750690b89"
+          },
+          "passed": true,
+          "score": 0.698592572169982,
+          "trusted": true,
+          "verifier_name": "checksum",
+          "verifier_version": 0
+        },
+        "verifier_lag": 0
+      },
+      {
+        "attempt": {
+          "created_step": 0,
+          "latency_ms": null,
+          "logprob": null,
+          "metadata": {
+            "learning_rule": "terminal_action_on_policy_grpo_v1",
+            "lookup_value": 262,
+            "policy_checkpoint_sha256": "67b80baee64b0ddc68d5ef9992374c2b7ae9b843fe853399e40422dd41ea36d9",
+            "rvl_generation": {
+              "latency_s": 0.01807804199779639,
+              "logprob": -2.5874134229961783,
+              "metadata": {
+                "backend": "hf-local",
+                "device": "cpu",
+                "logprob_distribution": "neutral_temperature_scaled_policy",
+                "model": "/tmp/vare-tinystories-1m-sprint-ii",
+                "precision": "fp32",
+                "prompt_token_ids": [
+                  12124,
+                  2891,
+                  12854,
+                  807,
+                  4626,
+                  14,
+                  16,
+                  25,
+                  317,
+                  2266,
+                  21831,
+                  2497,
+                  11086,
+                  8520,
+                  35847,
+                  1988,
+                  25,
+                  35404,
+                  13
+                ],
+                "response_token_ids": [
+                  220,
+                  198,
+                  198
+                ],
+                "response_token_logprobs": [
+                  -2.567749261856079,
+                  -0.0018078426364809275,
+                  -0.01785631850361824
+                ],
+                "sampling_temperature": 0.8
+              },
+              "prompt": "Stream tool trace 82015/1: A red fox saw Observed lookup value: 262.",
+              "prompt_id": "stream-train-82015-1",
+              "response": " \n\n",
+              "token_count": 3
+            },
+            "source_task_sha256": "494526395c8af9254f104bee8a116b3d38077c9388c3edbc5c6620cb3b1b2a40",
+            "trajectory_id": "r1-2",
+            "trajectory_sha256": "0b71500a9c5ab99170b752e7a7915f7cd6330d3b81b055b7df3e4e6ad7f99cb0",
+            "vare_rollout_group": "r1",
+            "vare_rollout_group_size": 4
+          },
+          "output": " \n\n",
+          "policy_id": "policy-1",
+          "policy_version": 1,
+          "task": {
+            "family": "train",
+            "id": "stream-train-82015-1",
+            "metadata": {
+              "learning_rule": "terminal_action_on_policy_grpo_v1",
+              "lookup_value": 262,
+              "source_task_sha256": "494526395c8af9254f104bee8a116b3d38077c9388c3edbc5c6620cb3b1b2a40",
+              "trajectory_id": "r1-2",
+              "trajectory_sha256": "0b71500a9c5ab99170b752e7a7915f7cd6330d3b81b055b7df3e4e6ad7f99cb0",
+              "vare_rollout_group": "r1",
+              "vare_rollout_group_size": 4
+            },
+            "prompt": "Stream tool trace 82015/1: A red fox saw Observed lookup value: 262."
+          }
+        },
+        "failure_label": null,
+        "policy_lag": 0,
+        "priority": 0.3971851443399641,
+        "shift_score": 0.0,
+        "verification": {
+          "confidence": 1.0,
+          "disagreement": 0.0,
+          "metadata": {
+            "trajectory_reward_receipt": "47dc0517da05f76351170304fbb3fde7e034bedf015d6d3f726eccfa9f3698e8",
+            "trajectory_sha256": "0b71500a9c5ab99170b752e7a7915f7cd6330d3b81b055b7df3e4e6ad7f99cb0",
+            "verifier_config_sha256": "b33dd80556c10426f99475b7b5c049e93ecce6ddc3cb567d6d4ff7f750690b89"
+          },
+          "passed": true,
+          "score": 0.698592572169982,
+          "trusted": true,
+          "verifier_name": "checksum",
+          "verifier_version": 0
+        },
+        "verifier_lag": 0
+      },
+      {
+        "attempt": {
+          "created_step": 0,
+          "latency_ms": null,
+          "logprob": null,
+          "metadata": {
+            "learning_rule": "terminal_action_on_policy_grpo_v1",
+            "lookup_value": 262,
+            "policy_checkpoint_sha256": "67b80baee64b0ddc68d5ef9992374c2b7ae9b843fe853399e40422dd41ea36d9",
+            "rvl_generation": {
+              "latency_s": 0.01883583400194766,
+              "logprob": -10.430123805999756,
+              "metadata": {
+                "backend": "hf-local",
+                "device": "cpu",
+                "logprob_distribution": "neutral_temperature_scaled_policy",
+                "model": "/tmp/vare-tinystories-1m-sprint-ii",
+                "precision": "fp32",
+                "prompt_token_ids": [
+                  12124,
+                  2891,
+                  12854,
+                  807,
+                  4626,
+                  14,
+                  16,
+                  25,
+                  317,
+                  2266,
+                  21831,
+                  2497,
+                  11086,
+                  8520,
+                  35847,
+                  1988,
+                  25,
+                  35404,
+                  13
+                ],
+                "response_token_ids": [
+                  3409,
+                  531,
+                  284
+                ],
+                "response_token_logprobs": [
+                  -5.949950218200684,
+                  -1.4827938079833984,
+                  -2.997379779815674
+                ],
+                "sampling_temperature": 0.8
+              },
+              "prompt": "Stream tool trace 82015/1: A red fox saw Observed lookup value: 262.",
+              "prompt_id": "stream-train-82015-1",
+              "response": " Sam said to",
+              "token_count": 3
+            },
+            "source_task_sha256": "494526395c8af9254f104bee8a116b3d38077c9388c3edbc5c6620cb3b1b2a40",
+            "trajectory_id": "r1-3",
+            "trajectory_sha256": "389dbf03c3854c6124a2a3e95d1377b5aa9d01ea607e03846120b3b07dbcf2c3",
+            "vare_rollout_group": "r1",
+            "vare_rollout_group_size": 4
+          },
+          "output": " Sam said to",
+          "policy_id": "policy-1",
+          "policy_version": 1,
+          "task": {
+            "family": "train",
+            "id": "stream-train-82015-1",
+            "metadata": {
+              "learning_rule": "terminal_action_on_policy_grpo_v1",
+              "lookup_value": 262,
+              "source_task_sha256": "494526395c8af9254f104bee8a116b3d38077c9388c3edbc5c6620cb3b1b2a40",
+              "trajectory_id": "r1-3",
+              "trajectory_sha256": "389dbf03c3854c6124a2a3e95d1377b5aa9d01ea607e03846120b3b07dbcf2c3",
+              "vare_rollout_group": "r1",
+              "vare_rollout_group_size": 4
+            },
+            "prompt": "Stream tool trace 82015/1: A red fox saw Observed lookup value: 262."
+          }
+        },
+        "failure_label": null,
+        "policy_lag": 0,
+        "priority": 0.3447992478834463,
+        "shift_score": 0.0,
+        "verification": {
+          "confidence": 1.0,
+          "disagreement": 0.0,
+          "metadata": {
+            "trajectory_reward_receipt": "a065e099114c7e7cfec6b62d2f30c1fa3ddc7299afe05fbfc05727caf3ad67ce",
+            "trajectory_sha256": "389dbf03c3854c6124a2a3e95d1377b5aa9d01ea607e03846120b3b07dbcf2c3",
+            "verifier_config_sha256": "b33dd80556c10426f99475b7b5c049e93ecce6ddc3cb567d6d4ff7f750690b89"
+          },
+          "passed": true,
+          "score": 0.32760037605827685,
+          "trusted": true,
+          "verifier_name": "checksum",
+          "verifier_version": 0
+        },
+        "verifier_lag": 0
+      }
+    ],
+    "behavior_alignment_error": 1.049041748046875e-05,
+    "candidate": "policy-2",
+    "changed_tensors": 3,
+    "errors": {
+      "gradient": 2.9802322387695312e-08,
+      "loss": 0.0,
+      "optimizer": 3.259629011154175e-09,
+      "parameter": 2.3283064365386963e-10
+    },
+    "metrics": {
+      "behavior_kl_estimate": 5.277494746769307e-09,
+      "clip_fraction": 0.0,
+      "grad_norm": 13.739319801330566,
+      "loss": -7.301568984985352e-07,
+      "max_abs_log_ratio": 1.049041748046875e-05,
+      "mean_reward": 0.5061153364964098,
+      "samples": 4.0
+    },
+    "reference_s": 0.05622724999557249,
+    "wall_s": 0.46075487499911105
+  },
+  {
+    "actual_candidate_s": 0.2596679589987616,
+    "batch": [
+      {
+        "attempt": {
+          "created_step": 0,
+          "latency_ms": null,
+          "logprob": null,
+          "metadata": {
+            "learning_rule": "terminal_action_on_policy_grpo_v1",
+            "lookup_value": 263,
+            "policy_checkpoint_sha256": "67b80baee64b0ddc68d5ef9992374c2b7ae9b843fe853399e40422dd41ea36d9",
+            "rvl_generation": {
+              "latency_s": 0.016310499995597638,
+              "logprob": -9.494460891932249,
+              "metadata": {
+                "backend": "hf-local",
+                "device": "cpu",
+                "logprob_distribution": "neutral_temperature_scaled_policy",
+                "model": "/tmp/vare-tinystories-1m-sprint-ii",
+                "precision": "fp32",
+                "prompt_token_ids": [
+                  12124,
+                  2891,
+                  12854,
+                  807,
+                  4626,
+                  14,
+                  17,
+                  25,
+                  317,
+                  2266,
+                  21831,
+                  2497,
+                  11086,
+                  8520,
+                  35847,
+                  1988,
+                  25,
+                  39135,
+                  13
+                ],
+                "response_token_ids": [
+                  198,
+                  198,
+                  24441
+                ],
+                "response_token_logprobs": [
+                  -0.875673770904541,
+                  -0.019330333918333054,
+                  -8.599456787109375
+                ],
+                "sampling_temperature": 0.8
+              },
+              "prompt": "Stream tool trace 82015/2: A red fox saw Observed lookup value: 263.",
+              "prompt_id": "stream-train-82015-2",
+              "response": "\n\nInside",
+              "token_count": 3
+            },
+            "source_task_sha256": "2fa1a4a90ccd8fd4d7361895b9b0db25fbddfd37783598d9ce578bbbb4de5a80",
+            "trajectory_id": "r2-1",
+            "trajectory_sha256": "45359296aa601dab08f8c478bda0224396ad206c44a163c10027fcf8045f7790",
+            "vare_rollout_group": "r2",
+            "vare_rollout_group_size": 4
+          },
+          "output": "\n\nInside",
+          "policy_id": "policy-1",
+          "policy_version": 1,
+          "task": {
+            "family": "train",
+            "id": "stream-train-82015-2",
+            "metadata": {
+              "learning_rule": "terminal_action_on_policy_grpo_v1",
+              "lookup_value": 263,
+              "source_task_sha256": "2fa1a4a90ccd8fd4d7361895b9b0db25fbddfd37783598d9ce578bbbb4de5a80",
+              "trajectory_id": "r2-1",
+              "trajectory_sha256": "45359296aa601dab08f8c478bda0224396ad206c44a163c10027fcf8045f7790",
+              "vare_rollout_group": "r2",
+              "vare_rollout_group_size": 4
+            },
+            "prompt": "Stream tool trace 82015/2: A red fox saw Observed lookup value: 263."
+          }
+        },
+        "failure_label": null,
+        "policy_lag": 0,
+        "priority": 0.9731840346877425,
+        "shift_score": 0.0,
+        "verification": {
+          "confidence": 1.0,
+          "disagreement": 0.0,
+          "metadata": {
+            "trajectory_reward_receipt": "d5073c614f42c861f65668ba868a196717248f7b96dc285ec6ba40deee268efc",
+            "trajectory_sha256": "45359296aa601dab08f8c478bda0224396ad206c44a163c10027fcf8045f7790",
+            "verifier_config_sha256": "b33dd80556c10426f99475b7b5c049e93ecce6ddc3cb567d6d4ff7f750690b89"
+          },
+          "passed": true,
+          "score": 0.9865920173438713,
+          "trusted": true,
+          "verifier_name": "checksum",
+          "verifier_version": 0
+        },
+        "verifier_lag": 0
+      },
+      {
+        "attempt": {
+          "created_step": 0,
+          "latency_ms": null,
+          "logprob": null,
+          "metadata": {
+            "learning_rule": "terminal_action_on_policy_grpo_v1",
+            "lookup_value": 263,
+            "policy_checkpoint_sha256": "67b80baee64b0ddc68d5ef9992374c2b7ae9b843fe853399e40422dd41ea36d9",
+            "rvl_generation": {
+              "latency_s": 0.014844500001345295,
+              "logprob": -1.5957353822886944,
+              "metadata": {
+                "backend": "hf-local",
+                "device": "cpu",
+                "logprob_distribution": "neutral_temperature_scaled_policy",
+                "model": "/tmp/vare-tinystories-1m-sprint-ii",
+                "precision": "fp32",
+                "prompt_token_ids": [
+                  12124,
+                  2891,
+                  12854,
+                  807,
+                  4626,
+                  14,
+                  17,
+                  25,
+                  317,
+                  2266,
+                  21831,
+                  2497,
+                  11086,
+                  8520,
+                  35847,
+                  1988,
+                  25,
+                  39135,
+                  13
+                ],
+                "response_token_ids": [
+                  198,
+                  198,
+                  464
+                ],
+                "response_token_logprobs": [
+                  -0.875673770904541,
+                  -0.019330333918333054,
+                  -0.7007312774658203
+                ],
+                "sampling_temperature": 0.8
+              },
+              "prompt": "Stream tool trace 82015/2: A red fox saw Observed lookup value: 263.",
+              "prompt_id": "stream-train-82015-2",
+              "response": "\n\nThe",
+              "token_count": 3
+            },
+            "source_task_sha256": "2fa1a4a90ccd8fd4d7361895b9b0db25fbddfd37783598d9ce578bbbb4de5a80",
+            "trajectory_id": "r2-2",
+            "trajectory_sha256": "c8cb17506c6d419945ffc16b3da420030f213a226f26e17cb0cd22bb9c589f65",
+            "vare_rollout_group": "r2",
+            "vare_rollout_group_size": 4
+          },
+          "output": "\n\nThe",
+          "policy_id": "policy-1",
+          "policy_version": 1,
+          "task": {
+            "family": "train",
+            "id": "stream-train-82015-2",
+            "metadata": {
+              "learning_rule": "terminal_action_on_policy_grpo_v1",
+              "lookup_value": 263,
+              "source_task_sha256": "2fa1a4a90ccd8fd4d7361895b9b0db25fbddfd37783598d9ce578bbbb4de5a80",
+              "trajectory_id": "r2-2",
+              "trajectory_sha256": "c8cb17506c6d419945ffc16b3da420030f213a226f26e17cb0cd22bb9c589f65",
+              "vare_rollout_group": "r2",
+              "vare_rollout_group_size": 4
+            },
+            "prompt": "Stream tool trace 82015/2: A red fox saw Observed lookup value: 263."
+          }
+        },
+        "failure_label": null,
+        "policy_lag": 0,
+        "priority": 0.3264916733201807,
+        "shift_score": 0.0,
+        "verification": {
+          "confidence": 1.0,
+          "disagreement": 0.0,
+          "metadata": {
+            "trajectory_reward_receipt": "0141dfb26148491cbc52edd35ed0f396d3e5ef66b9d8919ef634a3e7be7413c4",
+            "trajectory_sha256": "c8cb17506c6d419945ffc16b3da420030f213a226f26e17cb0cd22bb9c589f65",
+            "verifier_config_sha256": "b33dd80556c10426f99475b7b5c049e93ecce6ddc3cb567d6d4ff7f750690b89"
+          },
+          "passed": true,
+          "score": 0.33675416333990965,
+          "trusted": true,
+          "verifier_name": "checksum",
+          "verifier_version": 0
+        },
+        "verifier_lag": 0
+      },
+      {
+        "attempt": {
+          "created_step": 0,
+          "latency_ms": null,
+          "logprob": null,
+          "metadata": {
+            "learning_rule": "terminal_action_on_policy_grpo_v1",
+            "lookup_value": 263,
+            "policy_checkpoint_sha256": "67b80baee64b0ddc68d5ef9992374c2b7ae9b843fe853399e40422dd41ea36d9",
+            "rvl_generation": {
+              "latency_s": 0.017781416994694155,
+              "logprob": -18.25839900970459,
+              "metadata": {
+                "backend": "hf-local",
+                "device": "cpu",
+                "logprob_distribution": "neutral_temperature_scaled_policy",
+                "model": "/tmp/vare-tinystories-1m-sprint-ii",
+                "precision": "fp32",
+                "prompt_token_ids": [
+                  12124,
+                  2891,
+                  12854,
+                  807,
+                  4626,
+                  14,
+                  17,
+                  25,
+                  317,
+                  2266,
+                  21831,
+                  2497,
+                  11086,
+                  8520,
+                  35847,
+                  1988,
+                  25,
+                  39135,
+                  13
+                ],
+                "response_token_ids": [
+                  366,
+                  2949,
+                  395
+                ],
+                "response_token_logprobs": [
+                  -4.39983606338501,
+                  -3.149125576019287,
+                  -10.709437370300293
+                ],
+                "sampling_temperature": 0.8
+              },
+              "prompt": "Stream tool trace 82015/2: A red fox saw Observed lookup value: 263.",
+              "prompt_id": "stream-train-82015-2",
+              "response": " \"Noest",
+              "token_count": 3
+            },
+            "source_task_sha256": "2fa1a4a90ccd8fd4d7361895b9b0db25fbddfd37783598d9ce578bbbb4de5a80",
+            "trajectory_id": "r2-3",
+            "trajectory_sha256": "61fbda02f6925a20e97b88507a83cc0b2e59204a4aac277fd0cb2cd38eaea62d",
+            "vare_rollout_group": "r2",
+            "vare_rollout_group_size": 4
+          },
+          "output": " \"Noest",
+          "policy_id": "policy-1",
+          "policy_version": 1,
+          "task": {
+            "family": "train",
+            "id": "stream-train-82015-2",
+            "metadata": {
+              "learning_rule": "terminal_action_on_policy_grpo_v1",
+              "lookup_value": 263,
+              "source_task_sha256": "2fa1a4a90ccd8fd4d7361895b9b0db25fbddfd37783598d9ce578bbbb4de5a80",
+              "trajectory_id": "r2-3",
+              "trajectory_sha256": "61fbda02f6925a20e97b88507a83cc0b2e59204a4aac277fd0cb2cd38eaea62d",
+              "vare_rollout_group": "r2",
+              "vare_rollout_group_size": 4
+            },
+            "prompt": "Stream tool trace 82015/2: A red fox saw Observed lookup value: 263."
+          }
+        },
+        "failure_label": null,
+        "policy_lag": 0,
+        "priority": 0.24814643739912334,
+        "shift_score": 0.0,
+        "verification": {
+          "confidence": 1.0,
+          "disagreement": 0.0,
+          "metadata": {
+            "trajectory_reward_receipt": "10a8d43c11071f4ce6240708dfc901cbfb35ea5d742c07734e892f240cc32075",
+            "trajectory_sha256": "61fbda02f6925a20e97b88507a83cc0b2e59204a4aac277fd0cb2cd38eaea62d",
+            "verifier_config_sha256": "b33dd80556c10426f99475b7b5c049e93ecce6ddc3cb567d6d4ff7f750690b89"
+          },
+          "passed": true,
+          "score": 0.6240732186995617,
+          "trusted": true,
+          "verifier_name": "checksum",
+          "verifier_version": 0
+        },
+        "verifier_lag": 0
+      },
+      {
+        "attempt": {
+          "created_step": 0,
+          "latency_ms": null,
+          "logprob": null,
+          "metadata": {
+            "learning_rule": "terminal_action_on_policy_grpo_v1",
+            "lookup_value": 263,
+            "policy_checkpoint_sha256": "67b80baee64b0ddc68d5ef9992374c2b7ae9b843fe853399e40422dd41ea36d9",
+            "rvl_generation": {
+              "latency_s": 0.015283167005691212,
+              "logprob": -6.86546690389514,
+              "metadata": {
+                "backend": "hf-local",
+                "device": "cpu",
+                "logprob_distribution": "neutral_temperature_scaled_policy",
+                "model": "/tmp/vare-tinystories-1m-sprint-ii",
+                "precision": "fp32",
+                "prompt_token_ids": [
+                  12124,
+                  2891,
+                  12854,
+                  807,
+                  4626,
+                  14,
+                  17,
+                  25,
+                  317,
+                  2266,
+                  21831,
+                  2497,
+                  11086,
+                  8520,
+                  35847,
+                  1988,
+                  25,
+                  39135,
+                  13
+                ],
+                "response_token_ids": [
+                  198,
+                  198,
+                  16190
+                ],
+                "response_token_logprobs": [
+                  -0.875673770904541,
+                  -0.019330333918333054,
+                  -5.970462799072266
+                ],
+                "sampling_temperature": 0.8
+              },
+              "prompt": "Stream tool trace 82015/2: A red fox saw Observed lookup value: 263.",
+              "prompt_id": "stream-train-82015-2",
+              "response": "\n\nEveryone",
+              "token_count": 3
+            },
+            "source_task_sha256": "2fa1a4a90ccd8fd4d7361895b9b0db25fbddfd37783598d9ce578bbbb4de5a80",
+            "trajectory_id": "r2-0",
+            "trajectory_sha256": "f4a3827b086042755c6e87d95aab79a5690a1bb2af4f3a542fbc4932f9b4be4f",
+            "vare_rollout_group": "r2",
+            "vare_rollout_group_size": 4
+          },
+          "output": "\n\nEveryone",
+          "policy_id": "policy-1",
+          "policy_version": 1,
+          "task": {
+            "family": "train",
+            "id": "stream-train-82015-2",
+            "metadata": {
+              "learning_rule": "terminal_action_on_policy_grpo_v1",
+              "lookup_value": 263,
+              "source_task_sha256": "2fa1a4a90ccd8fd4d7361895b9b0db25fbddfd37783598d9ce578bbbb4de5a80",
+              "trajectory_id": "r2-0",
+              "trajectory_sha256": "f4a3827b086042755c6e87d95aab79a5690a1bb2af4f3a542fbc4932f9b4be4f",
+              "vare_rollout_group": "r2",
+              "vare_rollout_group_size": 4
+            },
+            "prompt": "Stream tool trace 82015/2: A red fox saw Observed lookup value: 263."
+          }
+        },
+        "failure_label": null,
+        "policy_lag": 0,
+        "priority": 0.10617720687440069,
+        "shift_score": 0.0,
+        "verification": {
+          "confidence": 1.0,
+          "disagreement": 0.0,
+          "metadata": {
+            "trajectory_reward_receipt": "5dfcd4066b0f43bab51269489ac70c3655262e312596c80ea07624368e386134",
+            "trajectory_sha256": "f4a3827b086042755c6e87d95aab79a5690a1bb2af4f3a542fbc4932f9b4be4f",
+            "verifier_config_sha256": "b33dd80556c10426f99475b7b5c049e93ecce6ddc3cb567d6d4ff7f750690b89"
+          },
+          "passed": true,
+          "score": 0.5530886034372003,
+          "trusted": true,
+          "verifier_name": "checksum",
+          "verifier_version": 0
+        },
+        "verifier_lag": 0
+      }
+    ],
+    "behavior_alignment_error": 1.9073486328125e-05,
+    "candidate": "policy-3",
+    "changed_tensors": 3,
+    "errors": {
+      "gradient": 1.4901161193847656e-08,
+      "loss": 1.979060471057892e-09,
+      "optimizer": 1.862645149230957e-09,
+      "parameter": 7.450580596923828e-09
+    },
+    "metrics": {
+      "behavior_kl_estimate": 5.898376176372011e-09,
+      "clip_fraction": 0.0,
+      "grad_norm": 9.719823837280273,
+      "loss": 2.739834599196911e-06,
+      "max_abs_log_ratio": 1.9073486328125e-05,
+      "mean_reward": 0.6251270007051357,
+      "samples": 4.0
+    },
+    "reference_s": 0.05322883299959358,
+    "wall_s": 0.4122728750007809
+  },
+  {
+    "actual_candidate_s": 0.2828518750029616,
+    "batch": [
+      {
+        "attempt": {
+          "created_step": 0,
+          "latency_ms": null,
+          "logprob": null,
+          "metadata": {
+            "learning_rule": "terminal_action_on_policy_grpo_v1",
+            "lookup_value": 264,
+            "policy_checkpoint_sha256": "3883f3c24420da48da06a8c6fdfcf79165420ca1d3e5caa4b780579cc2aa7aed",
+            "rvl_generation": {
+              "latency_s": 0.016415000005508773,
+              "logprob": -4.487006979063153,
+              "metadata": {
+                "backend": "hf-local",
+                "device": "cpu",
+                "logprob_distribution": "neutral_temperature_scaled_policy",
+                "model": "/tmp/vare-tinystories-1m-sprint-ii",
+                "precision": "fp32",
+                "prompt_token_ids": [
+                  12124,
+                  2891,
+                  12854,
+                  807,
+                  4626,
+                  14,
+                  18,
+                  25,
+                  317,
+                  2266,
+                  21831,
+                  2497,
+                  11086,
+                  8520,
+                  35847,
+                  1988,
+                  25,
+                  32158,
+                  13
+                ],
+                "response_token_ids": [
+                  198,
+                  198,
+                  2215
+                ],
+                "response_token_logprobs": [
+                  -0.9845040440559387,
+                  -0.015696780756115913,
+                  -3.4868061542510986
+                ],
+                "sampling_temperature": 0.8
+              },
+              "prompt": "Stream tool trace 82015/3: A red fox saw Observed lookup value: 264.",
+              "prompt_id": "stream-train-82015-3",
+              "response": "\n\nWhen",
+              "token_count": 3
+            },
+            "source_task_sha256": "533b3437c647e2c922e19a5b0b9ba68c738c0e429522ee44b3905697f9a7dc56",
+            "trajectory_id": "r3-2",
+            "trajectory_sha256": "cdac17ef6b784f2052269dcbdd3076068ac9714c1812239027111b4c66da98e6",
+            "vare_rollout_group": "r3",
+            "vare_rollout_group_size": 4
+          },
+          "output": "\n\nWhen",
+          "policy_id": "policy-3",
+          "policy_version": 2,
+          "task": {
+            "family": "train",
+            "id": "stream-train-82015-3",
+            "metadata": {
+              "learning_rule": "terminal_action_on_policy_grpo_v1",
+              "lookup_value": 264,
+              "source_task_sha256": "533b3437c647e2c922e19a5b0b9ba68c738c0e429522ee44b3905697f9a7dc56",
+              "trajectory_id": "r3-2",
+              "trajectory_sha256": "cdac17ef6b784f2052269dcbdd3076068ac9714c1812239027111b4c66da98e6",
+              "vare_rollout_group": "r3",
+              "vare_rollout_group_size": 4
+            },
+            "prompt": "Stream tool trace 82015/3: A red fox saw Observed lookup value: 264."
+          }
+        },
+        "failure_label": null,
+        "policy_lag": 0,
+        "priority": 0.42609718801130003,
+        "shift_score": 0.0,
+        "verification": {
+          "confidence": 1.0,
+          "disagreement": 0.0,
+          "metadata": {
+            "trajectory_reward_receipt": "8114924acbd218f842f3e9caf33efd012422b9ed86979426ec9767e09cc7e3f3",
+            "trajectory_sha256": "cdac17ef6b784f2052269dcbdd3076068ac9714c1812239027111b4c66da98e6",
+            "verifier_config_sha256": "b33dd80556c10426f99475b7b5c049e93ecce6ddc3cb567d6d4ff7f750690b89"
+          },
+          "passed": true,
+          "score": 0.71304859400565,
+          "trusted": true,
+          "verifier_name": "checksum",
+          "verifier_version": 0
+        },
+        "verifier_lag": 0
+      },
+      {
+        "attempt": {
+          "created_step": 0,
+          "latency_ms": null,
+          "logprob": null,
+          "metadata": {
+            "learning_rule": "terminal_action_on_policy_grpo_v1",
+            "lookup_value": 264,
+            "policy_checkpoint_sha256": "3883f3c24420da48da06a8c6fdfcf79165420ca1d3e5caa4b780579cc2aa7aed",
+            "rvl_generation": {
+              "latency_s": 0.016630500002065673,
+              "logprob": -14.065735936164856,
+              "metadata": {
+                "backend": "hf-local",
+                "device": "cpu",
+                "logprob_distribution": "neutral_temperature_scaled_policy",
+                "model": "/tmp/vare-tinystories-1m-sprint-ii",
+                "precision": "fp32",
+                "prompt_token_ids": [
+                  12124,
+                  2891,
+                  12854,
+                  807,
+                  4626,
+                  14,
+                  18,
+                  25,
+                  317,
+                  2266,
+                  21831,
+                  2497,
+                  11086,
+                  8520,
+                  35847,
+                  1988,
+                  25,
+                  32158,
+                  13
+                ],
+                "response_token_ids": [
+                  43999,
+                  373,
+                  3772
+                ],
+                "response_token_logprobs": [
+                  -11.306595802307129,
+                  -0.5873750448226929,
+                  -2.171765089035034
+                ],
+                "sampling_temperature": 0.8
+              },
+              "prompt": "Stream tool trace 82015/3: A red fox saw Observed lookup value: 264.",
+              "prompt_id": "stream-train-82015-3",
+              "response": " Theo was happy",
+              "token_count": 3
+            },
+            "source_task_sha256": "533b3437c647e2c922e19a5b0b9ba68c738c0e429522ee44b3905697f9a7dc56",
+            "trajectory_id": "r3-3",
+            "trajectory_sha256": "69600732d6a6d0b60429b41496ec3c67fca0289a49a99a88d66874d7786c0ebd",
+            "vare_rollout_group": "r3",
+            "vare_rollout_group_size": 4
+          },
+          "output": " Theo was happy",
+          "policy_id": "policy-3",
+          "policy_version": 2,
+          "task": {
+            "family": "train",
+            "id": "stream-train-82015-3",
+            "metadata": {
+              "learning_rule": "terminal_action_on_policy_grpo_v1",
+              "lookup_value": 264,
+              "source_task_sha256": "533b3437c647e2c922e19a5b0b9ba68c738c0e429522ee44b3905697f9a7dc56",
+              "trajectory_id": "r3-3",
+              "trajectory_sha256": "69600732d6a6d0b60429b41496ec3c67fca0289a49a99a88d66874d7786c0ebd",
+              "vare_rollout_group": "r3",
+              "vare_rollout_group_size": 4
+            },
+            "prompt": "Stream tool trace 82015/3: A red fox saw Observed lookup value: 264."
+          }
+        },
+        "failure_label": null,
+        "policy_lag": 0,
+        "priority": 0.21096055005000913,
+        "shift_score": 0.0,
+        "verification": {
+          "confidence": 1.0,
+          "disagreement": 0.0,
+          "metadata": {
+            "trajectory_reward_receipt": "fe66a4b9d7af462e8529bdd50db4989b35f2d77c13079ee31e8a08609834e271",
+            "trajectory_sha256": "69600732d6a6d0b60429b41496ec3c67fca0289a49a99a88d66874d7786c0ebd",
+            "verifier_config_sha256": "b33dd80556c10426f99475b7b5c049e93ecce6ddc3cb567d6d4ff7f750690b89"
+          },
+          "passed": true,
+          "score": 0.39451972497499543,
+          "trusted": true,
+          "verifier_name": "checksum",
+          "verifier_version": 0
+        },
+        "verifier_lag": 0
+      },
+      {
+        "attempt": {
+          "created_step": 0,
+          "latency_ms": null,
+          "logprob": null,
+          "metadata": {
+            "learning_rule": "terminal_action_on_policy_grpo_v1",
+            "lookup_value": 264,
+            "policy_checkpoint_sha256": "3883f3c24420da48da06a8c6fdfcf79165420ca1d3e5caa4b780579cc2aa7aed",
+            "rvl_generation": {
+              "latency_s": 0.013184708004700951,
+              "logprob": -5.049871044233441,
+              "metadata": {
+                "backend": "hf-local",
+                "device": "cpu",
+                "logprob_distribution": "neutral_temperature_scaled_policy",
+                "model": "/tmp/vare-tinystories-1m-sprint-ii",
+                "precision": "fp32",
+                "prompt_token_ids": [
+                  12124,
+                  2891,
+                  12854,
+                  807,
+                  4626,
+                  14,
+                  18,
+                  25,
+                  317,
+                  2266,
+                  21831,
+                  2497,
+                  11086,
+                  8520,
+                  35847,
+                  1988,
+                  25,
+                  32158,
+                  13
+                ],
+                "response_token_ids": [
+                  198,
+                  198,
+                  7554
+                ],
+                "response_token_logprobs": [
+                  -0.9845040440559387,
+                  -0.015696780756115913,
+                  -4.049670219421387
+                ],
+                "sampling_temperature": 0.8
+              },
+              "prompt": "Stream tool trace 82015/3: A red fox saw Observed lookup value: 264.",
+              "prompt_id": "stream-train-82015-3",
+              "response": "\n\nJohn",
+              "token_count": 3
+            },
+            "source_task_sha256": "533b3437c647e2c922e19a5b0b9ba68c738c0e429522ee44b3905697f9a7dc56",
+            "trajectory_id": "r3-0",
+            "trajectory_sha256": "baca087d48dd0ba67ce3273c988718d8c6345c8780132ae0857cc5bcd51508f4",
+            "vare_rollout_group": "r3",
+            "vare_rollout_group_size": 4
+          },
+          "output": "\n\nJohn",
+          "policy_id": "policy-3",
+          "policy_version": 2,
+          "task": {
+            "family": "train",
+            "id": "stream-train-82015-3",
+            "metadata": {
+              "learning_rule": "terminal_action_on_policy_grpo_v1",
+              "lookup_value": 264,
+              "source_task_sha256": "533b3437c647e2c922e19a5b0b9ba68c738c0e429522ee44b3905697f9a7dc56",
+              "trajectory_id": "r3-0",
+              "trajectory_sha256": "baca087d48dd0ba67ce3273c988718d8c6345c8780132ae0857cc5bcd51508f4",
+              "vare_rollout_group": "r3",
+              "vare_rollout_group_size": 4
+            },
+            "prompt": "Stream tool trace 82015/3: A red fox saw Observed lookup value: 264."
+          }
+        },
+        "failure_label": null,
+        "policy_lag": 0,
+        "priority": 0.19118775175679192,
+        "shift_score": 0.0,
+        "verification": {
+          "confidence": 1.0,
+          "disagreement": 0.0,
+          "metadata": {
+            "trajectory_reward_receipt": "0762eb377cf22c878ed12d7a1254e4955fba7f89107d7c9d1005ce5cd479a0e2",
+            "trajectory_sha256": "baca087d48dd0ba67ce3273c988718d8c6345c8780132ae0857cc5bcd51508f4",
+            "verifier_config_sha256": "b33dd80556c10426f99475b7b5c049e93ecce6ddc3cb567d6d4ff7f750690b89"
+          },
+          "passed": true,
+          "score": 0.40440612412160404,
+          "trusted": true,
+          "verifier_name": "checksum",
+          "verifier_version": 0
+        },
+        "verifier_lag": 0
+      },
+      {
+        "attempt": {
+          "created_step": 0,
+          "latency_ms": null,
+          "logprob": null,
+          "metadata": {
+            "learning_rule": "terminal_action_on_policy_grpo_v1",
+            "lookup_value": 264,
+            "policy_checkpoint_sha256": "3883f3c24420da48da06a8c6fdfcf79165420ca1d3e5caa4b780579cc2aa7aed",
+            "rvl_generation": {
+              "latency_s": 0.014576832996681333,
+              "logprob": -10.132544040679932,
+              "metadata": {
+                "backend": "hf-local",
+                "device": "cpu",
+                "logprob_distribution": "neutral_temperature_scaled_policy",
+                "model": "/tmp/vare-tinystories-1m-sprint-ii",
+                "precision": "fp32",
+                "prompt_token_ids": [
+                  12124,
+                  2891,
+                  12854,
+                  807,
+                  4626,
+                  14,
+                  18,
+                  25,
+                  317,
+                  2266,
+                  21831,
+                  2497,
+                  11086,
+                  8520,
+                  35847,
+                  1988,
+                  25,
+                  32158,
+                  13
+                ],
+                "response_token_ids": [
+                  2735,
+                  340,
+                  447
+                ],
+                "response_token_logprobs": [
+                  -6.487675189971924,
+                  -1.4651641845703125,
+                  -2.1797046661376953
+                ],
+                "sampling_temperature": 0.8
+              },
+              "prompt": "Stream tool trace 82015/3: A red fox saw Observed lookup value: 264.",
+              "prompt_id": "stream-train-82015-3",
+              "response": " Now it\ufffd",
+              "token_count": 3
+            },
+            "source_task_sha256": "533b3437c647e2c922e19a5b0b9ba68c738c0e429522ee44b3905697f9a7dc56",
+            "trajectory_id": "r3-1",
+            "trajectory_sha256": "b1bdfeebbda6dc9e31da4fb554aea7e533bc8ea54e585503f52b196e1898339f",
+            "vare_rollout_group": "r3",
+            "vare_rollout_group_size": 4
+          },
+          "output": " Now it\ufffd",
+          "policy_id": "policy-3",
+          "policy_version": 2,
+          "task": {
+            "family": "train",
+            "id": "stream-train-82015-3",
+            "metadata": {
+              "learning_rule": "terminal_action_on_policy_grpo_v1",
+              "lookup_value": 264,
+              "source_task_sha256": "533b3437c647e2c922e19a5b0b9ba68c738c0e429522ee44b3905697f9a7dc56",
+              "trajectory_id": "r3-1",
+              "trajectory_sha256": "b1bdfeebbda6dc9e31da4fb554aea7e533bc8ea54e585503f52b196e1898339f",
+              "vare_rollout_group": "r3",
+              "vare_rollout_group_size": 4
+            },
+            "prompt": "Stream tool trace 82015/3: A red fox saw Observed lookup value: 264."
+          }
+        },
+        "failure_label": null,
+        "policy_lag": 0,
+        "priority": 0.05,
+        "shift_score": 0.0,
+        "verification": {
+          "confidence": 1.0,
+          "disagreement": 0.0,
+          "metadata": {
+            "trajectory_reward_receipt": "cb368df8c0595e534fcdfc5ef8ca9e88523c96d91a76360e9eda4ad5a6e8c314",
+            "trajectory_sha256": "b1bdfeebbda6dc9e31da4fb554aea7e533bc8ea54e585503f52b196e1898339f",
+            "verifier_config_sha256": "b33dd80556c10426f99475b7b5c049e93ecce6ddc3cb567d6d4ff7f750690b89"
+          },
+          "passed": true,
+          "score": 0.5205904595834646,
+          "trusted": true,
+          "verifier_name": "checksum",
+          "verifier_version": 0
+        },
+        "verifier_lag": 0
+      }
+    ],
+    "behavior_alignment_error": 1.430511474609375e-05,
+    "candidate": "policy-4",
+    "changed_tensors": 3,
+    "errors": {
+      "gradient": 2.9802322387695312e-08,
+      "loss": 0.0,
+      "optimizer": 3.725290298461914e-09,
+      "parameter": 4.656612873077393e-10
+    },
+    "metrics": {
+      "behavior_kl_estimate": -1.2417634698280722e-09,
+      "clip_fraction": 0.0,
+      "grad_norm": 13.279411315917969,
+      "loss": -7.264316082000732e-08,
+      "max_abs_log_ratio": 1.430511474609375e-05,
+      "mean_reward": 0.5081412256714285,
+      "samples": 4.0
+    },
+    "reference_s": 0.05727816600119695,
+    "wall_s": 0.4395728750023409
+  }
+]
