@@ -189,7 +189,19 @@ PREVIOUS_EXPECTED_SOURCES = frozenset({
     "src/vare/verifiers.py",
     "tests/test_e2e_rl_continuation.py",
 })
-EXPECTED_SOURCES = LEGACY_EXPECTED_SOURCES | RUNTIME_PACKAGE_SOURCES
+# Versioned runtime inventories are explicit. V1 preserves the 77-file runtime
+# package used by retained campaigns. V2 adds research_mission.py and is used
+# only by campaigns whose manifest names this version and whose complete source
+# snapshot is recomputed from its recorded Git commit.
+RUNTIME_PACKAGE_SOURCES_V1 = RUNTIME_PACKAGE_SOURCES
+RUNTIME_PACKAGE_SOURCES_V2 = RUNTIME_PACKAGE_SOURCES_V1 | frozenset({
+    "src/vare/research_mission.py",
+})
+EXPECTED_SOURCES_V1 = LEGACY_EXPECTED_SOURCES | RUNTIME_PACKAGE_SOURCES_V1
+EXPECTED_SOURCES_V2 = LEGACY_EXPECTED_SOURCES | RUNTIME_PACKAGE_SOURCES_V2
+SOURCE_INVENTORY_VERSION_V2 = "runtime-package-78-v2"
+# Historical name retained for callers that construct or audit v1 snapshots.
+EXPECTED_SOURCES = EXPECTED_SOURCES_V1
 
 # The frozen v2 campaign is tied to the commit and source tree that produced it.
 # This independent pin prevents a re-sealed archive from choosing its own code.
@@ -215,14 +227,24 @@ PINNED_LOCKED_SOURCE_SHA256 = {
 
 def validate_source_inventory(manifest, source_names, locked):
     """Keep the frozen archive pinned while accepting fully snapshotted reruns."""
+    inventory_version=manifest.get("source_inventory_version")
     if source_names == LEGACY_EXPECTED_SOURCES:
+        need(inventory_version is None,
+             "frozen legacy source inventory cannot claim a newer version")
         need(locked and manifest.get("base_commit")==PINNED_LOCKED_BASE_COMMIT,
              "locked campaign commit differs from the independently pinned revision")
         need(manifest.get("sources")==PINNED_LOCKED_SOURCE_SHA256,
              "locked campaign source snapshots differ from the independently pinned revision")
         return
-    need(source_names in (PREVIOUS_EXPECTED_SOURCES,EXPECTED_SOURCES),
-         "pinned source inventory differs")
+    if inventory_version is None:
+        # Historical campaigns did not carry a version field. Preserve their
+        # exact inventories without broadening them to accept later source sets.
+        need(source_names in (PREVIOUS_EXPECTED_SOURCES,EXPECTED_SOURCES_V1),
+             "pinned source inventory differs")
+    else:
+        need(inventory_version==SOURCE_INVENTORY_VERSION_V2 and
+             source_names==EXPECTED_SOURCES_V2,
+             "versioned source inventory differs")
     commit=manifest.get("base_commit")
     need(type(commit) is str and len(commit)==40 and
          all(char in "0123456789abcdef" for char in commit),
@@ -377,7 +399,8 @@ def audit(root, check_tensors=False, model_dir=None):
         need(sha(root/name)==digest,f"changed artifact: {name}")
     manifest,summary,rows=read(root/"manifest.json"),read(root/"summary.json"),read(root/"progress.json")
     source_names=set(manifest.get("sources",{}))
-    need(source_names in (LEGACY_EXPECTED_SOURCES,PREVIOUS_EXPECTED_SOURCES,EXPECTED_SOURCES) and
+    need(source_names in (LEGACY_EXPECTED_SOURCES,PREVIOUS_EXPECTED_SOURCES,
+                          EXPECTED_SOURCES_V1,EXPECTED_SOURCES_V2) and
          manifest.get("source_sha256")==manifest.get("sources"),
          "pinned source inventory differs")
     for name,digest in manifest["sources"].items():
@@ -416,6 +439,8 @@ def audit(root, check_tensors=False, model_dir=None):
         config=read(case/"config.json")
         need(config.get("source_sha256")==manifest["sources"],
              "case source inventory differs from the pinned source set")
+        need(config.get("source_inventory_version")==manifest.get("source_inventory_version"),
+             "case source inventory version differs from the campaign manifest")
         need((row["seed"],row["workers"],row["mode"])==
              (config["seed"],config["workers"],config["mode"]),
              "progress case metadata differs from retained configuration")
@@ -948,7 +973,7 @@ def audit(root, check_tensors=False, model_dir=None):
             resumed_spans=trace_stages.get(("round",expected_round,1),[])
             need(len(resumed_spans)==1,"recovery endpoint lacks one resumed-round trace")
             resumed_end=resumed_spans[0]["end"]
-            if source_names==EXPECTED_SOURCES:
+            if source_names in (EXPECTED_SOURCES_V1,EXPECTED_SOURCES_V2):
                 need(progress.get("time")==resumed_end,
                      "recovery endpoint differs from resumed-round trace")
             else:

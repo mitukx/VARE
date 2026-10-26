@@ -20,6 +20,7 @@ import uuid
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from scripts import benchmark_e2e_rl_real_model as base
+from scripts import audit_e2e_rl_continuation as source_audit
 from vare.attestation import EvidenceTrustRoot
 from vare.checkpoint_artifacts import TrustedCheckpointStore
 from vare.config import EngineConfig, LagConfig, PromotionConfig
@@ -577,13 +578,21 @@ def main():
         args.model_dir = Path(snapshot_download(base.MODEL, revision=base.REVISION, allow_patterns=list(protocol["model_files"])))
     args.model_dir = args.model_dir.resolve()
     base.require(all(base.file_sha(args.model_dir/name)==sha for name,sha in protocol["model_files"].items()), "model revision bytes differ")
+    runtime_paths=sorted((ROOT/"src/vare").rglob("*.py"))
+    runtime_names=frozenset(str(path.relative_to(ROOT)) for path in runtime_paths)
+    base.require(runtime_names==source_audit.RUNTIME_PACKAGE_SOURCES_V2,
+                 "runtime source files do not match the explicit v2 inventory")
     template = {"model_dir": str(args.model_dir), "rounds": args.rounds, "tasks": args.tasks,
                 "eval_tasks": args.eval_tasks, "kill_round": protocol["kill_round"],
                 "protocol_id": protocol["schema"] if conformant else protocol["schema"]+".diagnostic",
-                "protocol_conformant": conformant}
+                "protocol_conformant": conformant,
+                "source_inventory_version": source_audit.SOURCE_INVENTORY_VERSION_V2}
     sources = [Path(__file__), Path(base.__file__), PROTOCOL, ROOT/"requirements/e2e-rl-real-model-v1.txt",
                ROOT/"scripts/audit_e2e_rl_continuation.py", ROOT/"tests/test_e2e_rl_continuation.py",
-               *sorted((ROOT/"src/vare").rglob("*.py"))]
+               *runtime_paths]
+    source_names=frozenset(str(path.relative_to(ROOT)) for path in sources)
+    base.require(source_names==source_audit.EXPECTED_SOURCES_V2,
+                 "campaign files do not match the explicit v2 inventory")
     template["source_sha256"] = {str(p.relative_to(ROOT)):base.file_sha(p) for p in sources}
     for source in sources:
         target = args.output/"sources"/source.relative_to(ROOT)
