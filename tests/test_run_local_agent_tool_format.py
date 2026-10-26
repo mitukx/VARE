@@ -4,7 +4,7 @@ import json
 import pytest
 
 from scripts.run_local_agent import (
-    DurableEventJournal, normalize_tool_call_format, parse_tool_output_v1, read_file_range,
+    DurableEventJournal, main, normalize_tool_call_format, parse_tool_output_v1, read_file_range,
     refresh_public_tests_after_edit, replace_text, tools_for,
 )
 from vare.agent_edit_v2 import SourceEditLeaseStoreV1
@@ -148,6 +148,36 @@ def test_durable_event_journal_fsyncs_a_non_overwriting_hash_chain(tmp_path):
     assert last_hash == previous
     with pytest.raises(FileExistsError):
         DurableEventJournal(path)
+
+
+def test_navigation_runs_require_durable_event_journal_before_model_loading(
+        tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr("sys.argv", [
+        "run_local_agent.py", "--workspace", str(tmp_path / "workspace"),
+        "--model-path", str(tmp_path / "missing-model"), "--task-root", str(tmp_path / "task"),
+        "--output", str(tmp_path / "agent.json"), "--instruction", "inspect and repair",
+        "--seed", "7", "--tool-interface", "lease_bound_navigation_v1",
+        "--edit-format", "structured_replace",
+    ])
+    with pytest.raises(SystemExit) as error:
+        main()
+    assert error.value.code == 2
+    assert "--event-journal is required for lease_bound_navigation_v1 runs" in capsys.readouterr().err
+
+
+def test_navigation_runs_accept_a_supplied_event_journal_before_model_loading(
+        tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr("sys.argv", [
+        "run_local_agent.py", "--workspace", str(tmp_path / "workspace"),
+        "--model-path", str(tmp_path / "missing-model"), "--task-root", str(tmp_path / "task"),
+        "--output", str(tmp_path / "agent.json"), "--event-journal", str(tmp_path / "events.jsonl"),
+        "--instruction", "inspect and repair", "--seed", "7",
+        "--tool-interface", "lease_bound_navigation_v1", "--edit-format", "structured_replace",
+    ])
+    with pytest.raises(SystemExit) as error:
+        main()
+    assert error.value.code == 2
+    assert "--event-journal is required" not in capsys.readouterr().err
 
 
 def test_mocked_full_edit_reaches_an_independent_fixture_oracle(tmp_path):

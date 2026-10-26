@@ -35,8 +35,10 @@ ROOT = base.ROOT
 PROTOCOL = ROOT / "benchmarks/e2e_rl_continuation_v2/protocol.json"
 WORKER_STATE = {}
 SOURCE_INVENTORY_V4_ID = "vare.e2e-rl-continuation.source-inventory.v4"
+SOURCE_INVENTORY_V5_ID = "vare.e2e-rl-continuation.source-inventory.v5"
 SOURCE_IDENTITY_SCHEMA_V1 = "vare.source-identity.v1"
 RUNTIME_SOURCE_COMMIT_V4 = "d251cc678fbc9940f3de460904d5d23a1967b3ce"
+RUNTIME_SOURCE_COMMIT_V5 = "8246fc25c30e0fd60dc036a47b3192254e123ce8"
 
 
 def build_source_identity_v4(source_sha256, campaign_commit):
@@ -53,6 +55,26 @@ def build_source_identity_v4(source_sha256, campaign_commit):
         "schema": SOURCE_IDENTITY_SCHEMA_V1,
         "inventory_id": SOURCE_INVENTORY_V4_ID,
         "runtime_source_commit": RUNTIME_SOURCE_COMMIT_V4,
+        "runtime_source_sha256": runtime_sources,
+        "campaign_source_commit": campaign_commit,
+        "campaign_source_sha256": campaign_sources,
+    }
+
+
+def build_source_identity_v5(source_sha256, campaign_commit):
+    """Bind navigation diagnostics to the reviewed runtime and campaign tree."""
+    runtime_sources = {
+        name: digest for name, digest in source_sha256.items()
+        if name.startswith("src/vare/")
+    }
+    campaign_sources = {
+        name: digest for name, digest in source_sha256.items()
+        if not name.startswith("src/vare/")
+    }
+    return {
+        "schema": SOURCE_IDENTITY_SCHEMA_V1,
+        "inventory_id": SOURCE_INVENTORY_V5_ID,
+        "runtime_source_commit": RUNTIME_SOURCE_COMMIT_V5,
         "runtime_source_sha256": runtime_sources,
         "campaign_source_commit": campaign_commit,
         "campaign_source_sha256": campaign_sources,
@@ -606,13 +628,13 @@ def main():
                 "protocol_conformant": conformant}
     sources = [Path(__file__), Path(base.__file__), PROTOCOL, ROOT/"requirements/e2e-rl-real-model-v1.txt",
                ROOT/"scripts/audit_e2e_rl_continuation.py", ROOT/"tests/test_e2e_rl_continuation.py",
-               ROOT/"tests/test_source_navigation_v1.py",
+               ROOT/"tests/test_source_navigation_v1.py", ROOT/"scripts/run_local_agent.py",
                *sorted((ROOT/"src/vare").rglob("*.py"))]
     template["source_sha256"] = {str(p.relative_to(ROOT)):base.file_sha(p) for p in sources}
     campaign_commit = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True,
     ).strip()
-    source_identity = build_source_identity_v4(template["source_sha256"],campaign_commit)
+    source_identity = build_source_identity_v5(template["source_sha256"],campaign_commit)
     for source in sources:
         target = args.output/"sources"/source.relative_to(ROOT)
         target.parent.mkdir(parents=True,exist_ok=True)

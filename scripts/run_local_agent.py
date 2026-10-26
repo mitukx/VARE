@@ -628,7 +628,7 @@ def main() -> int:
     parser.add_argument('--task-root', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--event-journal', type=Path,
-                        help='Optional exclusive, fsynced JSONL event chain written after each completed generation/tool action')
+                        help='Exclusive, fsynced JSONL event chain written after each completed generation/tool action; required for navigation runs')
     parser.add_argument('--instruction', required=True,
                         help='Task-specific user message; preserve the exact text in the run record')
     parser.add_argument('--seed', type=int, required=True)
@@ -648,6 +648,8 @@ def main() -> int:
     ), default='legacy')
     parser.add_argument('--require-split', choices=('train', 'development', 'heldout'))
     args = parser.parse_args()
+    if args.tool_interface == 'lease_bound_navigation_v1' and args.event_journal is None:
+        parser.error('--event-journal is required for lease_bound_navigation_v1 runs')
     # Hash the controller modules loaded by this process before model loading
     # or any generation; the run-start journal is written later but retains
     # this same source identity even if execution stops partway through.
