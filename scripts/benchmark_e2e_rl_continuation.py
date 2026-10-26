@@ -19,6 +19,7 @@ import time
 import uuid
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from scripts import audit_e2e_rl_continuation as source_audit
 from scripts import benchmark_e2e_rl_real_model as base
 from vare.attestation import EvidenceTrustRoot
 from vare.checkpoint_artifacts import TrustedCheckpointStore
@@ -577,21 +578,50 @@ def main():
         args.model_dir = Path(snapshot_download(base.MODEL, revision=base.REVISION, allow_patterns=list(protocol["model_files"])))
     args.model_dir = args.model_dir.resolve()
     base.require(all(base.file_sha(args.model_dir/name)==sha for name,sha in protocol["model_files"].items()), "model revision bytes differ")
+    campaign_commit = subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True,
+    ).strip()
+    runtime_commit = source_audit.PINNED_RUNTIME_SOURCE_COMMITS[
+        source_audit.SOURCE_INVENTORY_V3
+    ]
+    runtime_names = source_audit.RUNTIME_PACKAGE_SOURCES_V3
+    campaign_names = source_audit.CAMPAIGN_SOURCE_NAMES_V3
+    base.require(source_audit.runtime_source_names_from_commit(runtime_commit)==runtime_names,
+                 "pinned V3 runtime source inventory differs")
+    base.require(source_audit.runtime_source_names_from_commit(campaign_commit)==runtime_names,
+                 "campaign runtime source inventory differs from pinned V3")
+    runtime_hashes = source_audit.source_hashes_from_commit(runtime_commit, runtime_names)
+    campaign_runtime_hashes = source_audit.source_hashes_from_commit(
+        campaign_commit, runtime_names,
+    )
+    base.require(campaign_runtime_hashes==runtime_hashes,
+                 "campaign runtime source differs from pinned V3")
+    campaign_hashes = source_audit.source_hashes_from_commit(campaign_commit, campaign_names)
+    source_hashes = {**runtime_hashes, **campaign_hashes}
+    source_identity = {
+        "schema": source_audit.SOURCE_IDENTITY_SCHEMA_V1,
+        "inventory_id": source_audit.SOURCE_INVENTORY_V3_ID,
+        "runtime_source_commit": runtime_commit,
+        "runtime_source_sha256": runtime_hashes,
+        "campaign_source_commit": campaign_commit,
+        "campaign_source_sha256": campaign_hashes,
+    }
     template = {"model_dir": str(args.model_dir), "rounds": args.rounds, "tasks": args.tasks,
                 "eval_tasks": args.eval_tasks, "kill_round": protocol["kill_round"],
                 "protocol_id": protocol["schema"] if conformant else protocol["schema"]+".diagnostic",
-                "protocol_conformant": conformant}
-    sources = [Path(__file__), Path(base.__file__), PROTOCOL, ROOT/"requirements/e2e-rl-real-model-v1.txt",
-               ROOT/"scripts/audit_e2e_rl_continuation.py", ROOT/"tests/test_e2e_rl_continuation.py",
-               *sorted((ROOT/"src/vare").rglob("*.py"))]
-    template["source_sha256"] = {str(p.relative_to(ROOT)):base.file_sha(p) for p in sources}
-    for source in sources:
-        target = args.output/"sources"/source.relative_to(ROOT)
+                "protocol_conformant": conformant,
+                "source_sha256": source_hashes}
+    for source_name, expected_hash in source_hashes.items():
+        source = ROOT / source_name
+        base.require(base.file_sha(source)==expected_hash,
+                     f"source file differs from pinned V3 identity: {source_name}")
+        target = args.output/"sources"/source_name
         target.parent.mkdir(parents=True,exist_ok=True)
         target.write_bytes(source.read_bytes())
     atomic_json(args.output/"manifest.json", {**template, "arguments": {k:str(v) if isinstance(v,Path) else v for k,v in vars(args).items()},
-                                             "protocol_sha256":base.file_sha(PROTOCOL), "sources":{str(p.relative_to(ROOT)):base.file_sha(p) for p in sources},
-                                             "base_commit":subprocess.check_output(["git","rev-parse","HEAD"],cwd=ROOT,text=True).strip(),
+                                             "protocol_sha256":base.file_sha(PROTOCOL), "sources":source_hashes,
+                                             "source_identity":source_identity,
+                                             "base_commit":campaign_commit,
                                              "environment": {k:os.environ.get(k) for k in ("OMP_NUM_THREADS","MKL_NUM_THREADS","TOKENIZERS_PARALLELISM","PYTHONHASHSEED")},
                                              "python":sys.version,"model":base.MODEL,"revision":base.REVISION,
                                              "started_unix":time.time(),"platform":platform.platform(),
