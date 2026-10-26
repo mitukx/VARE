@@ -1,0 +1,49 @@
+{
+  "model_inference": "NOT_RUN",
+  "outcomes": [
+    {
+      "expected_success": false,
+      "observed_success": false,
+      "qualification_gate_passed": true,
+      "task_id": "label-smooth",
+      "variant": "baseline"
+    },
+    {
+      "expected_success": true,
+      "observed_success": true,
+      "qualification_gate_passed": true,
+      "task_id": "label-smooth",
+      "variant": "known-fix"
+    },
+    {
+      "expected_success": false,
+      "observed_success": false,
+      "qualification_gate_passed": true,
+      "task_id": "label-smooth",
+      "variant": "incorrect-mutant"
+    },
+    {
+      "expected_success": false,
+      "observed_success": false,
+      "qualification_gate_passed": true,
+      "task_id": "ema-bias",
+      "variant": "baseline"
+    },
+    {
+      "expected_success": true,
+      "observed_success": true,
+      "qualification_gate_passed": true,
+      "task_id": "ema-bias",
+      "variant": "known-fix"
+    },
+    {
+      "expected_success": false,
+      "observed_success": false,
+      "qualification_gate_passed": true,
+      "task_id": "ema-bias",
+      "variant": "incorrect-mutant"
+    }
+  ],
+  "protocol_sha256": "b3da098f58a975e67776cdd10a07df48b51295d820cc15b5825e2298d13cad7a",
+  "qualification_passed": true
+}

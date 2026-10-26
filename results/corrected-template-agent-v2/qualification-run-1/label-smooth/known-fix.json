@@ -1,0 +1,82 @@
+{
+  "expected_success": true,
+  "observation": {
+    "admitted": true,
+    "checks": {
+      "distribution-0": true,
+      "distribution-1": true,
+      "distribution-2": true,
+      "distribution-3": true,
+      "distribution-4": true,
+      "distribution-5": true,
+      "distribution-6": true,
+      "inputs-preserved-0": true,
+      "inputs-preserved-1": true,
+      "inputs-preserved-2": true,
+      "inputs-preserved-3": true,
+      "inputs-preserved-4": true,
+      "inputs-preserved-5": true,
+      "inputs-preserved-6": true,
+      "invalid-0": true,
+      "invalid-1": true,
+      "invalid-2": true,
+      "invalid-3": true,
+      "invalid-4": true,
+      "sum-to-one-0": true,
+      "sum-to-one-1": true,
+      "sum-to-one-2": true,
+      "sum-to-one-3": true,
+      "sum-to-one-4": true,
+      "sum-to-one-5": true,
+      "sum-to-one-6": true
+    },
+    "public": false,
+    "source_sha256": "ac8f402c9698462b6fe76546620e5cbf15e9e8aeaeac90bbd10c25694c0d86d1",
+    "success": true,
+    "task": "label-smooth",
+    "task_pack_hidden_harness": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "",
+      "timeout": false
+    },
+    "task_pack_hidden_harness_passed": true
+  },
+  "process": {
+    "abort": null,
+    "command": [
+      "/opt/homebrew/Caskroom/miniforge/base/bin/python",
+      "-I",
+      "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/scripts/grade_mlsys_coding_v2_candidate_v1.py",
+      "--task",
+      "label-smooth",
+      "--source",
+      "/Users/user/Documents/Codex/2026-10-26/vare-flagship-research-sprint-real-coding/work/VARE/benchmarks/corrected_template_agent_v2/label-smooth-known-fix.py.txt"
+    ],
+    "elapsed_s": 0.222,
+    "peak_sampled_rss_bytes": 52559872,
+    "returncode": 0,
+    "samples": [
+      {
+        "available_memory_bytes": 14721286144,
+        "elapsed_s": 0.008,
+        "process_tree_rss_bytes": 6029312,
+        "swap_used_bytes": 883949568
+      },
+      {
+        "available_memory_bytes": 14721286144,
+        "elapsed_s": 0.117,
+        "process_tree_rss_bytes": 52559872,
+        "swap_used_bytes": 883949568
+      }
+    ],
+    "stderr": "",
+    "stdout": "{\"admitted\": true, \"checks\": {\"distribution-0\": true, \"distribution-1\": true, \"distribution-2\": true, \"distribution-3\": true, \"distribution-4\": true, \"distribution-5\": true, \"distribution-6\": true, \"inputs-preserved-0\": true, \"inputs-preserved-1\": true, \"inputs-preserved-2\": true, \"inputs-preserved-3\": true, \"inputs-preserved-4\": true, \"inputs-preserved-5\": true, \"inputs-preserved-6\": true, \"invalid-0\": true, \"invalid-1\": true, \"invalid-2\": true, \"invalid-3\": true, \"invalid-4\": true, \"sum-to-one-0\": true, \"sum-to-one-1\": true, \"sum-to-one-2\": true, \"sum-to-one-3\": true, \"sum-to-one-4\": true, \"sum-to-one-5\": true, \"sum-to-one-6\": true}, \"public\": false, \"source_sha256\": \"ac8f402c9698462b6fe76546620e5cbf15e9e8aeaeac90bbd10c25694c0d86d1\", \"success\": true, \"task\": \"label-smooth\", \"task_pack_hidden_harness\": {\"returncode\": 0, \"stderr\": \"\", \"stdout\": \"\", \"timeout\": false}, \"task_pack_hidden_harness_passed\": true}\n",
+    "swap_used_end_bytes": 883949568,
+    "swap_used_start_bytes": 883949568
+  },
+  "qualification_gate_passed": true,
+  "source_sha256": "ac8f402c9698462b6fe76546620e5cbf15e9e8aeaeac90bbd10c25694c0d86d1",
+  "task_id": "label-smooth",
+  "variant": "known-fix"
+}

@@ -1,0 +1,15 @@
+{
+  "metadata": {
+    "editable_files": [
+      "mlx_lm/utils.py"
+    ],
+    "split": "development",
+    "upstream_repository": "ml-explore/mlx-lm",
+    "upstream_revision": "e99e3df975562e4363d60b4b6ad43d731a25df1d"
+  },
+  "prompt": "Repair `make_shards` in `mlx_lm/utils.py`. It currently can emit an empty leading shard when one tensor exceeds the size limit, and can emit an empty shard for an empty weight mapping. Ensure every tensor is assigned exactly once, no empty shard is emitted, oversized tensors occupy their own shard, input order is retained, and the input mapping is not changed. Preserve the function signature and all source outside its body.",
+  "source": {
+    "base_revision": "7b55a0f152a1f2df49f8ef82a82812d56e25f817"
+  },
+  "task_id": "mlx-lm-1721-checkpoint-shards-development-v1"
+}

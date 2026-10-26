@@ -1,0 +1,97 @@
+{
+  "campaign_complete": true,
+  "cells": [
+    {
+      "cell_id": "cell-01-checkpoint-shards-original",
+      "metrics": {
+        "completed_verified_repair": false,
+        "edit_applied": false,
+        "edit_attempted": false,
+        "edit_tool_calls": 0,
+        "independent_grade_success": false,
+        "invalid_json_or_schema": 1,
+        "list_files_calls": 0,
+        "public_test_calls": 0,
+        "public_test_passed": false,
+        "source_changed": false,
+        "source_read_calls": 0,
+        "source_search_calls": 0,
+        "truncated_tool_calls": 0,
+        "valid_json_tool_calls": 0
+      },
+      "status": "GRADED",
+      "task_id": "checkpoint-shards",
+      "template_arm": "original"
+    },
+    {
+      "cell_id": "cell-02-gqa-repeat-corrected",
+      "metrics": {
+        "completed_verified_repair": false,
+        "edit_applied": false,
+        "edit_attempted": false,
+        "edit_tool_calls": 0,
+        "independent_grade_success": false,
+        "invalid_json_or_schema": 1,
+        "list_files_calls": 1,
+        "public_test_calls": 0,
+        "public_test_passed": false,
+        "source_changed": false,
+        "source_read_calls": 0,
+        "source_search_calls": 1,
+        "truncated_tool_calls": 0,
+        "valid_json_tool_calls": 2
+      },
+      "status": "GRADED",
+      "task_id": "gqa-repeat",
+      "template_arm": "corrected"
+    },
+    {
+      "cell_id": "cell-03-gqa-repeat-original",
+      "metrics": {
+        "completed_verified_repair": false,
+        "edit_applied": false,
+        "edit_attempted": false,
+        "edit_tool_calls": 0,
+        "independent_grade_success": false,
+        "invalid_json_or_schema": 1,
+        "list_files_calls": 0,
+        "public_test_calls": 0,
+        "public_test_passed": false,
+        "source_changed": false,
+        "source_read_calls": 0,
+        "source_search_calls": 0,
+        "truncated_tool_calls": 0,
+        "valid_json_tool_calls": 0
+      },
+      "status": "GRADED",
+      "task_id": "gqa-repeat",
+      "template_arm": "original"
+    },
+    {
+      "cell_id": "cell-04-checkpoint-shards-corrected",
+      "metrics": {
+        "completed_verified_repair": false,
+        "edit_applied": false,
+        "edit_attempted": false,
+        "edit_tool_calls": 0,
+        "independent_grade_success": false,
+        "invalid_json_or_schema": 1,
+        "list_files_calls": 0,
+        "public_test_calls": 0,
+        "public_test_passed": false,
+        "source_changed": false,
+        "source_read_calls": 0,
+        "source_search_calls": 0,
+        "truncated_tool_calls": 0,
+        "valid_json_tool_calls": 0
+      },
+      "status": "GRADED",
+      "task_id": "checkpoint-shards",
+      "template_arm": "corrected"
+    }
+  ],
+  "heldout_evaluation": "NOT_RUN",
+  "protocol_sha256": "5af4c4e159d8838ed49a9c9e3444cea2e1940371948b290df4dc515efb962e10",
+  "training": "NO_GO_SINGLE_GREEDY_ATTEMPT_PER_TASK_AND_ARM",
+  "verified_repairs": 0
+}
