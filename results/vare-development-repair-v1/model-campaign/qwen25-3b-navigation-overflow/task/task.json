@@ -1,0 +1,15 @@
+{
+  "id": "navigation-overflow",
+  "metadata": {
+    "editable_files": [
+      "src/vare/source_navigation_v1.py"
+    ],
+    "split": "development",
+    "upstream_repository": "mitukx/VARE",
+    "upstream_revision": "6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1"
+  },
+  "prompt": "Repair SourceNavigatorV1._bounded in src/vare/source_navigation_v1.py. Search indexes up to 128 valid source paths. With many long paths, the indexed_paths metadata can exhaust the serialized JSON response budget, removing every useful match and yielding output_limit_too_small. Preserve useful ranked matches when the auxiliary inventory is too large. Every response must still fit max_output_bytes and report an accurate output_bytes when present. Keep existing invalid-query and no-match behavior. Change only the body of _bounded, preserving its signature and every other definition. Do not add imports, IO, reflection, nested definitions, or changes to module state. Hidden behavioral checks run only after the attempt. This is Development feasibility, not held-out evaluation.",
+  "source": {
+    "base_revision": "5de290bc4e4feaee4dbc27a163d677bb6f5677b3"
+  }
+}

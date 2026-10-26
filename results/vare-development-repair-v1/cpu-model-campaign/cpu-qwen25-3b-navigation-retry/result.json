@@ -1,0 +1,27 @@
+{
+  "candidate_sha256": "23d8aeee1a7ecd0fb28cde8e8b204aeaa9752b1e2bc04436bb1951abf8f3f162",
+  "case_id": "cpu-qwen25-3b-navigation-retry",
+  "event_chain_final_sha256": "0e28ec32aadc74eb63f3794afcbe22ecdd4a66728425781e3186231f34e4b7d9",
+  "grade": {
+    "admitted": true,
+    "candidate_sha256": "23d8aeee1a7ecd0fb28cde8e8b204aeaa9752b1e2bc04436bb1951abf8f3f162",
+    "checks": {
+      "empty-allowlist-fails": true,
+      "fresh-content": false,
+      "initial-build-recovers": false,
+      "initial-success": true,
+      "missing-source-fails": true,
+      "oversized-fails": true,
+      "recovers-after-repair": false,
+      "stable-generation": false
+    },
+    "success": false,
+    "task": "navigation-retry"
+  },
+  "model": "mlx-community/Qwen2.5-3B-Instruct-4bit",
+  "model_invocations": 1,
+  "recovered_after_sigkill": false,
+  "source_changed": false,
+  "status": "GRADED",
+  "task": "navigation-retry"
+}

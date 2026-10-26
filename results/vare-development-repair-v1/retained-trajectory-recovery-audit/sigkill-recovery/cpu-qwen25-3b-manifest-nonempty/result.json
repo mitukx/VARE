@@ -1,0 +1,29 @@
+{
+  "candidate_sha256": "d8e9981e5bbec210cb6f90e3af3abb3e5fb496810a422f7a3d5e18b82fd24bf1",
+  "case_id": "cpu-qwen25-3b-manifest-nonempty",
+  "event_chain_final_sha256": "e29229e5315aa00b0d6849688334b2f08752104bd2c3eb6eb79fb3997ba556a9",
+  "grade": {
+    "admitted": true,
+    "candidate_sha256": "d8e9981e5bbec210cb6f90e3af3abb3e5fb496810a422f7a3d5e18b82fd24bf1",
+    "checks": {
+      "array-preserved": true,
+      "duplicates-rejected": true,
+      "invalid-0": false,
+      "invalid-1": false,
+      "invalid-2": false,
+      "invalid-3": true,
+      "invalid-4": true,
+      "invalid-5": true,
+      "malformed-array-rejected": true,
+      "mapping-preserved": true
+    },
+    "success": false,
+    "task": "manifest-nonempty"
+  },
+  "model": "mlx-community/Qwen2.5-3B-Instruct-4bit",
+  "model_invocations": 1,
+  "recovered_after_sigkill": true,
+  "source_changed": false,
+  "status": "GRADED",
+  "task": "manifest-nonempty"
+}

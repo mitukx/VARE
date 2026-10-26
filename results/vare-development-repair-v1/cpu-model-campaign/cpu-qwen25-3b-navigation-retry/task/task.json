@@ -1,0 +1,15 @@
+{
+  "id": "navigation-retry",
+  "metadata": {
+    "editable_files": [
+      "src/vare/source_navigation_v1.py"
+    ],
+    "split": "development",
+    "upstream_repository": "mitukx/VARE",
+    "upstream_revision": "6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1"
+  },
+  "prompt": "Repair SourceNavigatorV1.search in src/vare/source_navigation_v1.py. A source file can temporarily exceed the index limits or be unreadable. After that file is repaired, subsequent searches currently keep returning the old build error for the rest of the session. Make valid later searches recover, retaining bounded rebuilds, current error behavior while the source remains invalid, accurate index_rebuilt metadata, and failure for an empty allowlist. Change only the body of search, preserving its signature and every other definition. Do not add imports, IO, reflection, nested definitions, or changes to module state. Hidden behavioral checks run only after the attempt. This is Development feasibility, not held-out evaluation.",
+  "source": {
+    "base_revision": "f7a95e11d5677fa20143f32767c480e45ff59c8f"
+  }
+}

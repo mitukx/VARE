@@ -551,10 +551,10 @@ def test_v4_rejects_wrong_runtime_commit_campaign_commit_and_source_hashes():
         )
 
 
-def test_v5_accepts_current_campaign_with_separate_immutable_runtime_pin():
-    campaign_commit=subprocess.check_output(
-        ["git","-C",str(bench.ROOT),"rev-parse","HEAD"],text=True,
-    ).strip()
+def test_v5_accepts_pinned_campaign_with_separate_immutable_runtime_pin():
+    # V5 accepts only campaigns whose package still matches its frozen
+    # runtime. Later unrelated runtime edits must not redefine that record.
+    campaign_commit="6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1"
     manifest=_v5_manifest_for_campaign_commit(campaign_commit)
     assert set(manifest["sources"])==auditor.SOURCE_INVENTORY_V5
     assert manifest["source_identity"]["inventory_id"]==auditor.SOURCE_INVENTORY_V5_ID
@@ -564,10 +564,16 @@ def test_v5_accepts_current_campaign_with_separate_immutable_runtime_pin():
     auditor.validate_source_inventory(manifest,auditor.SOURCE_INVENTORY_V5,False)
 
 
+def test_v5_rejects_a_campaign_with_changed_runtime_sources():
+    manifest=_v5_manifest_for_campaign_commit(
+        "6c2718e17c0afa43cd8304a1581666ea80799545",
+    )
+    with pytest.raises(ValueError,match="campaign runtime source hashes differ"):
+        auditor.validate_source_inventory(manifest,auditor.SOURCE_INVENTORY_V5,False)
+
+
 def test_v5_rejects_wrong_identity_base_hashes_and_source_sets():
-    campaign_commit=subprocess.check_output(
-        ["git","-C",str(bench.ROOT),"rev-parse","HEAD"],text=True,
-    ).strip()
+    campaign_commit="6d95bd9196645ec7ecf7ff5d0c9ec997b24dcab1"
     manifest=_v5_manifest_for_campaign_commit(campaign_commit)
 
     wrong_runtime={**manifest,"source_identity":{
